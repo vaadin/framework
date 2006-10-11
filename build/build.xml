@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+
+<project name="Enably" basedir="../" default="all">
+
+    <!-- Default build target -->
+    <target name="all" depends="package" description="Build all">
+    </target>
+
+    <!-- Initialization - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+    <target name="init">
+
+    	<!-- TODO: Version should be read from a file -->
+    	<property name="version" value="4.0-alpha-1"/>
+        <property name="product" value="enably-toolkit"/>
+
+        <!-- Destination files -->
+        <property name="package-file-name" value="${product}-${version}.zip"/>	
+        <property name="lib-bin-jar-name" value="${product}-${version}.jar"/>
+        <property name="lib-src-jar-name" value="${product}-src-${version}.jar"/>
+        <property name="web-themes-jar-name" value="${product}-themes-${version}.jar"/>
+        <property name="demo-war-name" value="${product}-demo-${version}.war"/>
+
+        <echo message="Prepared to build ${product} version ${version} packages"/>
+
+		<!-- Output directory -->
+        <property name="output-dir" value="build/${product}-${version}"/>
+    	<mkdir dir="${output-dir}"/>
+      
+
+        <!-- Copy/filter core documentation to correct places -->
+		<!-- Disabled 
+    	<copy todir="${output-dir}">
+	    	<filterset>
+    	       <filter token="VERSION" value="${version}"/>
+        	</filterset>
+            <fileset dir="${release-docs}">
+                <include name="readme.txt"/>
+                <include name="install.txt"/>
+                <include name="license.txt"/>
+                <include name="release-notes.txt"/>
+                <include name="changes.txt"/>
+            </fileset>
+        </copy>
+        -->
+	
+        <!-- Convert to CRLF -->
+        <fixcrlf srcdir="${output-dir}"
+                 eol="crlf"
+		 		 tablength="4"
+		 		 tab="remove"
+	         	 includes="*.txt"/>
+	
+        <!-- Create Output Directory Hierarchy -->
+        <mkdir dir="${output-dir}/docs/manual" />
+        <mkdir dir="${output-dir}/docs/api" />
+        <mkdir dir="${output-dir}/lib" />
+        <mkdir dir="${output-dir}/demo" />
+    
+    </target>
+    
+    
+    <!-- Target for generation manifest file
+  			parameters: name,title -->
+	<!--
+    <target name="generate-manifest">
+		<manifest file="${manifest-dir}/${file}">
+    		<attribute name="Built-By" value="${user.name}"/>
+    		<section name="${name}">
+      		<attribute name="Specification-Title" value="${spec-title}"/>
+      		<attribute name="Specification-Version" value="${version}"/>
+      		<attribute name="Specification-Vendor" value="IT Mill Ltd"/>
+      		<attribute name="Implementation-Title" value="${impl-title}"/>
+      		<attribute name="Implementation-Version" value="${version}"/> 
+      		<attribute name="Implementation-Vendor" value="IT Mill Ltd"/>
+    		</section>
+		</manifest>
+    </target>
+	-->
+    
+    
+    <!-- Base - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+    <target name="lib" depends="init">
+    </target>
+  
+    <!-- Documentation- - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+    <target name="docs" depends="init">
+    </target>
+
+    <!-- Examples - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+    <target name="demo" depends="init,lib">
+    </target>
+
+
+    <!-- ZIP Package creation - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+    <target name="package" depends="init,docs,lib,demo">
+        <zip zipfile="build/${package-file-name}">
+	     <fileset dir="build">
+              <patternset>
+                <include name="${product}-${version}/**"/>
+              </patternset>
+            </fileset>
+	 </zip>
+    </target>
+
+    
+</project>
