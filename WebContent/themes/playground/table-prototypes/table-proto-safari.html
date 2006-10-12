@@ -1,0 +1,69 @@
+<html>
+	<head>
+		<title>Table concept prototype</title>
+		<style>
+			.header {
+				color:white;
+				padding-left:2px;
+				padding-bottom:2px;
+				border:1px solid #458cee;
+				background: transparent url(aquaHeaderIcon.gif) 0 -5px repeat-x;
+			}
+
+			#header {
+				position: relative;
+			}
+			
+			div.table {
+				border: 1px solid silver; 
+				width: 515px;
+				height: 315px; 
+				overflow: auto; 
+			}
+
+			div.table td {
+				font: 11px "Lucida Grande",LucidaGrande,verdana,sans-serif;
+			}
+			
+			div.table tbody td {
+				border-bottom: 1px solid #eee;
+			}
+
+			div.table tbody td.unknown {
+				background-color: #eee;
+			}
+			
+		</style>
+	</head>
+	<body>
+		<script lang="JavaScript">
+			cols = 19;
+			rows = 100;
+			function scr() {
+				var t = document.getElementById("tbody");
+				var h = document.getElementById("header");
+				h.style.top = "" + t.scrollTop + "px";
+			}
+		</script>
+		
+		<div id="tbody" class="table" onscroll="scr()">
+			<TABLE border="0" cellspacing="0" style="width: 1000px;" id="header">
+				<tr class="header"  ><script>for (var i=0; cols > i; i++) document.write("<td>Col " + (1+i) + "</td>");</script></tr>
+			</TABLE>
+			<TABLE border="0" cellspacing="0" style="width: 1000px;">
+				<script>
+					document.write('<tr><td class="unknown" colspan="'+cols+'" height="1000"> </td></tr>');
+					for (var j=0; rows > j; j++) {
+						document.write("<tr>");
+						for (var i=0; cols > i; i++) document.write("<td>" + (1+i) + "," + (1+j) + "</td>");
+						document.write("</tr>");
+					}
+					document.write('<tr><td class="unknown" colspan="'+cols+'" height="2000"> </td></tr>');
+				</script>
+			</TABLE>			
+		</div>
+		
+		<!-- Add script to match header widths to table column widths !!!! -->
+		
+	</body>
+</html>

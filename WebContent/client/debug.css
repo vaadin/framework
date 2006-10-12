@@ -1,0 +1,57 @@
+/* 
+
+	Styles for ajax adapter debug window.
+		
+*/
+
+body {
+	overflow: scroll;
+}
+* {
+    font-size: 10pt;
+    font-family: sans-serif;
+}
+
+xmp {
+	margin: 0px;
+	padding: 0px;
+}
+
+
+.folded {
+	margin-top: 4px;
+	background-color: #eeeeee; 
+	background-image: url(img/on.gif); 
+	background-repeat: no-repeat; 
+	border: 1px dotted gray; 
+	padding-left: 20px;
+	height: 20px; 
+	width: 100%; 
+	overflow: hidden; 
+	cursor: hand; 
+	cursor: pointer;
+}
+
+.unfolded {
+	margin-top: 4px;
+	background-color: #eeeeee; 
+	background-image: url(img/off.gif); 
+	background-repeat: no-repeat; 
+	border: 1px dotted gray; 
+	padding-left: 20px;
+	height:;
+	width: 100%; 
+	overflow: hidden; 
+	cursor: hand; 
+	cursor: pointer;
+}
+
+.normal {
+	margin-top: 4px;
+	border-top: 1px dotted gray; 
+	width: 100%;
+}
+
+.error {
+	border: 1px solid red;
+}
