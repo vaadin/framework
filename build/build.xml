@@ -10,21 +10,21 @@
 
 	<target name="init">
 
-		<!-- TODO: Version should be read from a file -->
-		<property name="version" value="4.0-alpha-1" />
-		<property name="product" value="enably-toolkit" />
+		<property file="build/VERSION" />
+		<property name="product-file" value="enably-toolkit" />
+		<property name="product-name" value="Enably Toolkit" />
 
 		<!-- Destination files -->
-		<property name="package-file-name" value="${product}-${version}.zip" />
-		<property name="lib-bin-jar-name" value="${product}-${version}.jar" />
-		<property name="lib-src-jar-name" value="${product}-src-${version}.jar" />
-		<property name="web-themes-jar-name" value="${product}-themes-${version}.jar" />
-		<property name="demo-war-name" value="${product}-demo-${version}.war" />
+		<property name="package-file-name" value="${product-file}-${version}.zip" />
+		<property name="lib-bin-jar-name" value="${product-file}-${version}.jar" />
+		<property name="lib-src-jar-name" value="${product-file}-src-${version}.jar" />
+		<property name="web-themes-jar-name" value="${product-file}-themes-${version}.jar" />
+		<property name="demo-war-name" value="${product-file}-demo-${version}.war" />
 
-		<echo message="Prepared to build ${product} version ${version} packages" />
+		<echo message="Prepared to build ${product-file} version ${version} packages" />
 
 		<!-- Output directory -->
-		<property name="output-dir" value="build/result/${product}-${version}" />
+		<property name="output-dir" value="build/result/${product-file}-${version}" />
 		<mkdir dir="${output-dir}" />
 
 
@@ -91,12 +91,12 @@
 		           author="true"
 		           version="true"
 		           use="true"
-		           windowtitle="IT Mill Toolkit API">
+		           windowtitle="${product-name}">
 			<packageset dir="src">
 				<include name="com/itmill/tk/**" />
 				<exclude name="com/itmill/tk/demo/**" />
 			</packageset>
-		    <doctitle><![CDATA[<h1>IT Mill Toolkit</h1>]]></doctitle>
+		    <doctitle><![CDATA[<h1>Enably Toolkit</h1>]]></doctitle>
 		   	<bottom><![CDATA[<i>Copyright &#169; 2000-2006 IT Mill Ltd. All Rights Reserved.</i>]]></bottom>
 		    <link offline="true" href="http://java.sun.com/j2se/1.5.0/docs/api/" packagelistLoc="/tmp/"/>
 		    <link offline="true" href="http://java.sun.com/j2ee/1.4/docs/api/" packagelistLoc="/tmp/"/>
@@ -104,7 +104,7 @@
 	</target>
 
 	<target name="book-part2" depends="dbdoclet">
-
+		<!-- TODO Add XSLT to transform dbdoclet results to book part 2 -->
 	</target>
 
 	<target name="dbdoclet" depends="init">
@@ -119,10 +119,10 @@
 		</javadoc>
 	</target>
 
-	<target name="manual-pdf" depends="init,book-part2">
+	<target name="manual-pdf" depends="init">
 	</target>
 
-	<target name="manual-html" depends="init,book-part2">
+	<target name="manual-html" depends="init">
 		<path id="docbook-xsl.classpath">
 			<pathelement path="build/lib/fop-0.92/serializer-2.7.0.jar" />
 			<pathelement path="build/lib/fop-0.92/xalan-2.7.0.jar" />
@@ -155,7 +155,7 @@
 		<zip zipfile="build/${package-file-name}">
 			<fileset dir="build">
 				<patternset>
-					<include name="${product}-${version}/**" />
+					<include name="${product-file}-${version}/**" />
 				</patternset>
 			</fileset>
 		</zip>
