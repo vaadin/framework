@@ -2,33 +2,33 @@
 
 <project name="Enably" basedir="../" default="all">
 
-    <!-- Default build target -->
-    <target name="all" depends="package" description="Build all">
-    </target>
+	<!-- Default build target -->
+	<target name="all" depends="package" description="Build all">
+	</target>
 
-    <!-- Initialization - - - - - - - - - - - - - - - - - - - - - - - - -->
+	<!-- Initialization - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-    <target name="init">
+	<target name="init">
 
-    	<!-- TODO: Version should be read from a file -->
-    	<property name="version" value="4.0-alpha-1"/>
-        <property name="product" value="enably-toolkit"/>
+		<!-- TODO: Version should be read from a file -->
+		<property name="version" value="4.0-alpha-1" />
+		<property name="product" value="enably-toolkit" />
 
-        <!-- Destination files -->
-        <property name="package-file-name" value="${product}-${version}.zip"/>	
-        <property name="lib-bin-jar-name" value="${product}-${version}.jar"/>
-        <property name="lib-src-jar-name" value="${product}-src-${version}.jar"/>
-        <property name="web-themes-jar-name" value="${product}-themes-${version}.jar"/>
-        <property name="demo-war-name" value="${product}-demo-${version}.war"/>
+		<!-- Destination files -->
+		<property name="package-file-name" value="${product}-${version}.zip" />
+		<property name="lib-bin-jar-name" value="${product}-${version}.jar" />
+		<property name="lib-src-jar-name" value="${product}-src-${version}.jar" />
+		<property name="web-themes-jar-name" value="${product}-themes-${version}.jar" />
+		<property name="demo-war-name" value="${product}-demo-${version}.war" />
 
-        <echo message="Prepared to build ${product} version ${version} packages"/>
+		<echo message="Prepared to build ${product} version ${version} packages" />
 
 		<!-- Output directory -->
-        <property name="output-dir" value="build/result/${product}-${version}"/>
-    	<mkdir dir="${output-dir}"/>
-      
+		<property name="output-dir" value="build/result/${product}-${version}" />
+		<mkdir dir="${output-dir}" />
 
-        <!-- Copy/filter core documentation to correct places -->
+
+		<!-- Copy/filter core documentation to correct places -->
 		<!-- Disabled 
     	<copy todir="${output-dir}">
 	    	<filterset>
@@ -43,24 +43,20 @@
             </fileset>
         </copy>
         -->
-	
-        <!-- Convert to CRLF -->
-        <fixcrlf srcdir="${output-dir}"
-                 eol="crlf"
-		 		 tablength="4"
-		 		 tab="remove"
-	         	 includes="*.txt"/>
-	
-        <!-- Create Output Directory Hierarchy -->
-        <mkdir dir="${output-dir}/doc/manual" />
-        <mkdir dir="${output-dir}/doc/api" />
-        <mkdir dir="${output-dir}/lib" />
-        <mkdir dir="${output-dir}/demo" />
-    
-    </target>
-    
-    
-    <!-- Target for generation manifest file
+
+		<!-- Convert to CRLF -->
+		<fixcrlf srcdir="${output-dir}" eol="crlf" tablength="4" tab="remove" includes="*.txt" />
+
+		<!-- Create Output Directory Hierarchy -->
+		<mkdir dir="${output-dir}/doc/manual" />
+		<mkdir dir="${output-dir}/doc/api" />
+		<mkdir dir="${output-dir}/lib" />
+		<mkdir dir="${output-dir}/demo" />
+
+	</target>
+
+
+	<!-- Target for generation manifest file
   			parameters: name,title -->
 	<!--
     <target name="generate-manifest">
@@ -77,66 +73,64 @@
 		</manifest>
     </target>
 	-->
-    
-    
-    <!-- Base - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-    <target name="lib" depends="init">
-    </target>
-  
-    <!-- Documentation- - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-    <target name="docs" depends="javadoc,manual-pdf,manual-html">
-    </target>
-
-    <target name="javadoc" depends="init">
-    </target>
-
-    <target name="manual-pdf" depends="init">
-    </target>
-
-    <target name="manual-html" depends="init">
-        <path id="docbook-xsl.classpath">
-            <pathelement path="build/lib/docbook-xsl-xalan25.jar"/>
-            <pathelement path="build/lib/resolver.jar"/>
-            <pathelement path="build/lib/xincluder.jar"/>
-        </path>
-    	  <java classname="org.apache.xalan.xslt.Process"
-    	            failonerror="yes" fork="yes" maxmemory="764m">
-    	            <arg value="-ENTITYRESOLVER"/>
-    	            <arg value="org.apache.xml.resolver.tools.CatalogResolver"/>
-    	            <arg value="-URIRESOLVER"/>
-    	            <arg value="org.apache.xml.resolver.tools.CatalogResolver"/>
-    	            <arg value="-IN"/>
-    	            <arg value="doc/manual/book.xml"/>
-    	            <arg value="-XSL"/>
-    	            <arg value="build/docbook/xsl/html/chunk.xsl"/>
-    	            <arg value="-OUT"/>
-    	            <arg value="${output-dir}/doc/manual/index.html"/>
-    	            <jvmarg value="-Xbootclasspath/p:build/lib/xml-apis.jar:build/lib/xercesImpl.jar:build/lib/fop-0.92/xalan-2.7.0.jar:build/lib/fop-0.92/serializer-2.7.0.jar"/>
-    	            <classpath refid="docbook-xsl.classpath"/>
-    	  	</java>
-    <!-- <xslt style="build/docbook-xsl/xhtml/docbook.xsl" basedir="doc/manual" 
-    		in="doc/manual/book.xml" destdir="${output-dir}/doc/manual"></xslt> -->
-    </target>
-
-    <!-- Examples - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-    <target name="demo" depends="init,lib">
-    </target>
 
 
-    <!-- ZIP Package creation - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	<!-- Base - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-    <target name="package" depends="init,docs,lib,demo">
-        <zip zipfile="build/${package-file-name}">
-	     <fileset dir="build">
-              <patternset>
-                <include name="${product}-${version}/**"/>
-              </patternset>
-            </fileset>
-	 </zip>
-    </target>
+	<target name="lib" depends="init">
+	</target>
 
-    
+	<!-- Documentation- - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+	<target name="docs" depends="javadoc,manual-pdf,manual-html">
+	</target>
+
+	<target name="javadoc" depends="init">
+	</target>
+
+	<target name="manual-pdf" depends="init">
+	</target>
+
+	<target name="manual-html" depends="init">
+		<path id="docbook-xsl.classpath">
+			<pathelement path="build/lib/fop-0.92/serializer-2.7.0.jar" />
+			<pathelement path="build/lib/fop-0.92/xalan-2.7.0.jar" />
+			<pathelement path="build/lib/fop-0.92/xercesImpl-2.7.1.jar" />
+			<pathelement path="build/lib/fop-0.92/xml-apis-1.3.02.jar" />
+		</path>
+		<java classname="org.apache.xalan.xslt.Process" failonerror="yes" fork="yes" maxmemory="764m">
+			<arg value="-in" />
+			<arg value="doc/manual/book.xml" />
+			<arg value="-xsl" />
+			<arg value="build/docbook/xsl/html/chunk.xsl" />
+			<arg value="-out" />
+			<arg value="${output-dir}/doc/manual/index.html" />
+			<arg value="-param" />
+			<arg value="use.extensions" />
+			<arg value="1" />
+				<!--    	            <jvmarg value="-Xbootclasspath/p:build/lib/fop-0.92/xml-apis-1.3.02.jar:build/lib/fop-0.92/xercesImpl-2.7.1.jar:build/lib/fop-0.92/xalan-2.7.0.jar:build/lib/fop-0.92/serializer-2.7.0.jar"/> 
+ -->
+			<classpath refid="docbook-xsl.classpath" />
+		</java>
+		</target>
+
+	<!-- Examples - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+	<target name="demo" depends="init,lib">
+	</target>
+
+
+	<!-- ZIP Package creation - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+	<target name="package" depends="init,docs,lib,demo">
+		<zip zipfile="build/${package-file-name}">
+			<fileset dir="build">
+				<patternset>
+					<include name="${product}-${version}/**" />
+				</patternset>
+			</fileset>
+		</zip>
+	</target>
+
+
 </project>
