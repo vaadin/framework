@@ -152,8 +152,8 @@
 	<!-- ZIP Package creation - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 	<target name="package" depends="init,docs,lib,demo">
-		<zip zipfile="build/${package-file-name}">
-			<fileset dir="build">
+		<zip zipfile="build/result/${package-file-name}">
+			<fileset dir="build/result">
 				<patternset>
 					<include name="${product-file}-${version}/**" />
 				</patternset>
