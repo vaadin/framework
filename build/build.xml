@@ -13,6 +13,7 @@
 		<property file="build/VERSION" />
 		<property name="product-file" value="enably-toolkit" />
 		<property name="product-name" value="Enably Toolkit" />
+		<property name="toolkit-package" value="com/itmill/tk" />
 
 		<!-- Destination files -->
 		<property name="package-file-name" value="${product-file}-${version}.zip" />
@@ -55,29 +56,64 @@
 
 	</target>
 
+	<!-- Themes - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-	<!-- Target for generation manifest file
-  			parameters: name,title -->
-	<!--
-    <target name="generate-manifest">
-		<manifest file="${manifest-dir}/${file}">
-    		<attribute name="Built-By" value="${user.name}"/>
-    		<section name="${name}">
-      		<attribute name="Specification-Title" value="${spec-title}"/>
-      		<attribute name="Specification-Version" value="${version}"/>
-      		<attribute name="Specification-Vendor" value="IT Mill Ltd"/>
-      		<attribute name="Implementation-Title" value="${impl-title}"/>
-      		<attribute name="Implementation-Version" value="${version}"/> 
-      		<attribute name="Implementation-Vendor" value="IT Mill Ltd"/>
-    		</section>
-		</manifest>
-    </target>
-	-->
+	<target name="themes" depends="init">
+		<!-- TODO Create theme-jars -->
+	</target>
 
+	<!-- Libs - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-	<!-- Base - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	<target name="compile-java" depends="init">
+		<!-- Compile -->
+		<mkdir dir="build/result/classes" />
+		<javac srcdir="src" destdir="build/result/classes" classpath="build/lib/servlet-api.jar" includes="${toolkit-package}/**" />
+	</target>
 
-	<target name="lib" depends="init">
+	<target name="libs" depends="compile-java">
+
+		<!-- Create binary JAR -->
+		<jar jarfile="${output-dir}/lib/${lib-bin-jar-name}" compress="true" 
+			includes="${toolkit-package}/**" basedir="build/result/classes" excludes="${toolkit-package}/demo/**"/>
+		<!--	<fileset dir="src">
+				<patternset>
+					<include name="${toolkit-package}/**/*.class" />
+					<exclude name="${toolkit-package}/demo/**/*.class" />
+				</patternset>
+			</fileset>
+		</jar>-->
+
+		<!-- Create source JAR -->
+		<jar jarfile="${output-dir}/lib/${lib-src-jar-name}" compress="true">
+			<fileset dir="src">
+				<patternset>
+					<include name="${toolkit-package}/**/*.java" />
+					<exclude name="${toolkit-package}/demo/**/*.java" />
+				</patternset>
+			</fileset>
+		</jar>
+	</target>
+
+	<!-- Demo WAR - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+	<target name="demo" depends="libs,compile-java">
+
+		<war warfile="${output-dir}/demo/${product-file}.war" webxml="WebContent/WEB-INF/web.xml">
+			<classes dir="build/result/classes">
+				<include name="${toolkit-package}/demo/**/*.class" />
+			</classes>
+			<lib dir="${output-dir}/lib">
+				<include name="${lib-bin-jar-name}" />
+			</lib>
+			<fileset dir="">
+				<include name="src/${toolkit-package}/demo/**/*.java" />
+			</fileset>
+			<fileset dir="WebContent">
+				<include name="**" />
+				<exclude name="WEB-INF/web.xml" />
+			</fileset>
+		</war>
+
 	</target>
 
 	<!-- Documentation- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -86,80 +122,77 @@
 	</target>
 
 	<target name="javadoc" depends="init">
-		 <javadoc
-		           destdir="${output-dir}/doc/api"
-		           author="true"
-		           version="true"
-		           use="true"
-		           windowtitle="${product-name}">
+		<javadoc destdir="${output-dir}/doc/api" author="true" version="true" use="true" windowtitle="${product-name}">
 			<packageset dir="src">
-				<include name="com/itmill/tk/**" />
-				<exclude name="com/itmill/tk/demo/**" />
+				<include name="${toolkit-package}/**" />
+				<exclude name="${toolkit-package}/demo/**" />
 			</packageset>
-		    <doctitle><![CDATA[<h1>Enably Toolkit</h1>]]></doctitle>
-		   	<bottom><![CDATA[<i>Copyright &#169; 2000-2006 IT Mill Ltd. All Rights Reserved.</i>]]></bottom>
-		    <link offline="true" href="http://java.sun.com/j2se/1.5.0/docs/api/" packagelistLoc="/tmp/"/>
-		    <link offline="true" href="http://java.sun.com/j2ee/1.4/docs/api/" packagelistLoc="/tmp/"/>
-		  </javadoc>
-	</target>
+			<doctitle>
+				<![CDATA[<h1>Enably Toolkit</h1>]]></doctitle>
+		<bottom>
+			<![CDATA[<i>Copyright &#169; 2000-2006 IT Mill Ltd. All Rights Reserved.</i>]]></bottom>
+	<link offline="true" href="http://java.sun.com/j2se/1.5.0/docs/api/" packagelistLoc="/tmp/" />
+	<link offline="true" href="http://java.sun.com/j2ee/1.4/docs/api/" packagelistLoc="/tmp/" />
+</javadoc>
+</target>
 
-	<target name="book-part2" depends="dbdoclet">
-		<!-- TODO Add XSLT to transform dbdoclet results to book part 2 -->
-	</target>
+<target name="book-part2" depends="dbdoclet">
+<!-- TODO Add XSLT to transform dbdoclet results to book part 2 -->
+</target>
 
-	<target name="dbdoclet" depends="init">
-		<javadoc access="public" charset="UTF-8" docencoding="UTF-8" encoding="ISO-8859-15" failonerror="yes" classpath="build/lib/servlet-api.jar" maxmemory="512m" source="1.5">
-			<packageset dir="src">
-				<include name="com/itmill/tk/**" />
-				<exclude name="com/itmill/tk/demo/**" />
-			</packageset>
-			<doclet name="org.dbdoclet.doclet.docbook.DocBookDoclet" path="build/lib/jdk${java.specification.version}/dbdoclet.jar">
-				<param name="-d" value="result/docbook" />
-			</doclet>
-		</javadoc>
-	</target>
+<target name="dbdoclet" depends="init">
+<javadoc access="public" charset="UTF-8" docencoding="UTF-8" encoding="ISO-8859-15" failonerror="yes" classpath="build/lib/servlet-api.jar" maxmemory="512m" source="1.5">
+	<packageset dir="src">
+		<include name="${toolkit-package}/**" />
+		<exclude name="${toolkit-package}/demo/**" />
+	</packageset>
+	<doclet name="org.dbdoclet.doclet.docbook.DocBookDoclet" path="build/lib/jdk${java.specification.version}/dbdoclet.jar">
+		<param name="-d" value="result/docbook" />
+	</doclet>
+</javadoc>
+</target>
 
-	<target name="manual-pdf" depends="init">
-	</target>
+<target name="manual-pdf" depends="init">
+<!-- TODO Include XEP-based FO building in future -->
+</target>
 
-	<target name="manual-html" depends="init">
-		<path id="docbook-xsl.classpath">
-			<pathelement path="build/lib/fop-0.92/serializer-2.7.0.jar" />
-			<pathelement path="build/lib/fop-0.92/xalan-2.7.0.jar" />
-			<pathelement path="build/lib/fop-0.92/xercesImpl-2.7.1.jar" />
-			<pathelement path="build/lib/fop-0.92/xml-apis-1.3.02.jar" />
-		</path>
-		<java classname="org.apache.xalan.xslt.Process" failonerror="yes" fork="yes" maxmemory="764m">
-			<arg value="-in" />
-			<arg value="doc/manual/book.xml" />
-			<arg value="-xsl" />
-			<arg value="build/docbook/xsl/html/chunk.xsl" />
-			<arg value="-out" />
-			<arg value="${output-dir}/doc/manual/index.html" />
-			<arg value="-param" />
-			<arg value="use.extensions" />
-			<arg value="1" />
-			<classpath refid="docbook-xsl.classpath" />
-		</java>
-	</target>
+<target name="manual-html" depends="init">
+<path id="docbook-xsl.classpath">
+	<pathelement path="build/lib/fop-0.92/serializer-2.7.0.jar" />
+	<pathelement path="build/lib/fop-0.92/xalan-2.7.0.jar" />
+	<pathelement path="build/lib/fop-0.92/xercesImpl-2.7.1.jar" />
+	<pathelement path="build/lib/fop-0.92/xml-apis-1.3.02.jar" />
+</path>
+<java classname="org.apache.xalan.xslt.Process" failonerror="yes" fork="yes" maxmemory="764m">
+	<arg value="-in" />
+	<arg value="doc/manual/book.xml" />
+	<arg value="-xsl" />
+	<arg value="build/docbook/xsl/html/chunk.xsl" />
+	<arg value="-out" />
+	<arg value="${output-dir}/doc/manual/index.html" />
+	<arg value="-param" />
+	<arg value="use.extensions" />
+	<arg value="1" />
+	<classpath refid="docbook-xsl.classpath" />
+</java>
+</target>
 
-	<!-- Examples - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- ZIP Package creation - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-	<target name="demo" depends="init,lib">
-	</target>
+<target name="package" depends="libs,demo,docs">
+<zip zipfile="build/result/${package-file-name}">
+	<fileset dir="build/result">
+		<patternset>
+			<include name="${product-file}-${version}/**" />
+		</patternset>
+	</fileset>
+</zip>
+</target>
 
-
-	<!-- ZIP Package creation - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	<target name="package" depends="init,docs,lib,demo">
-		<zip zipfile="build/result/${package-file-name}">
-			<fileset dir="build/result">
-				<patternset>
-					<include name="${product-file}-${version}/**" />
-				</patternset>
-			</fileset>
-		</zip>
-	</target>
+<!-- ZIP Package creation - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<target name="clean-all" depends="">
+<delete dir="build/result" />
+</target>
 
 
 </project>
