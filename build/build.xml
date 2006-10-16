@@ -24,7 +24,7 @@
         <echo message="Prepared to build ${product} version ${version} packages"/>
 
 		<!-- Output directory -->
-        <property name="output-dir" value="build/${product}-${version}"/>
+        <property name="output-dir" value="build/result/${product}-${version}"/>
     	<mkdir dir="${output-dir}"/>
       
 
@@ -110,10 +110,10 @@
     	            <arg value="-IN"/>
     	            <arg value="doc/manual/book.xml"/>
     	            <arg value="-XSL"/>
-    	            <arg value="build/docbook-xsl/xhtml/docbook.xsl"/>
+    	            <arg value="build/docbook-styles/xhtml/docbook.xsl"/>
     	            <arg value="-OUT"/>
     	            <arg value="${output-dir}/doc/manual/index.html"/>
-    	            <jvmarg value="-Xbootclasspath/p:build/lib/xml-apis.jar:build/lib/xercesImpl.jar:build/lib/xalan.jar"/>
+    	            <jvmarg value="-Xbootclasspath/p:build/lib/xml-apis.jar:build/lib/xercesImpl.jar:build/lib/fop-0.92/xalan-2.7.0.jar:build/lib/fop-0.92/serializer-2.7.0.jar"/>
     	            <classpath refid="docbook-xsl.classpath"/>
     	  	</java>
     <!-- <xslt style="build/docbook-xsl/xhtml/docbook.xsl" basedir="doc/manual" 
