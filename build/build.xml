@@ -86,16 +86,33 @@
 	</target>
 
 	<target name="javadoc" depends="init">
+		 <javadoc
+		           destdir="${output-dir}/doc/api"
+		           author="true"
+		           version="true"
+		           use="true"
+		           windowtitle="IT Mill Toolkit API">
+			<packageset dir="src">
+				<include name="com/itmill/tk/**" />
+				<exclude name="com/itmill/tk/demo/**" />
+			</packageset>
+		    <doctitle><![CDATA[<h1>IT Mill Toolkit</h1>]]></doctitle>
+		   	<bottom><![CDATA[<i>Copyright &#169; 2000-2006 IT Mill Ltd. All Rights Reserved.</i>]]></bottom>
+		    <link offline="true" href="http://java.sun.com/j2se/1.5.0/docs/api/" packagelistLoc="/tmp/"/>
+		    <link offline="true" href="http://java.sun.com/j2ee/1.4/docs/api/" packagelistLoc="/tmp/"/>
+		  </javadoc>
 	</target>
 
 	<target name="book-part2" depends="dbdoclet">
-		
+
 	</target>
 
 	<target name="dbdoclet" depends="init">
-		<javadoc access="public" charset="UTF-8" docencoding="UTF-8" encoding="ISO-8859-15" failonerror="yes" 
-			classpath="build/lib/servlet-api.jar" maxmemory="512m" source="1.5">
-			<packageset dir="src" />
+		<javadoc access="public" charset="UTF-8" docencoding="UTF-8" encoding="ISO-8859-15" failonerror="yes" classpath="build/lib/servlet-api.jar" maxmemory="512m" source="1.5">
+			<packageset dir="src">
+				<include name="com/itmill/tk/**" />
+				<exclude name="com/itmill/tk/demo/**" />
+			</packageset>
 			<doclet name="org.dbdoclet.doclet.docbook.DocBookDoclet" path="build/lib/jdk${java.specification.version}/dbdoclet.jar">
 				<param name="-d" value="result/docbook" />
 			</doclet>
