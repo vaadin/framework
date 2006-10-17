@@ -13,7 +13,7 @@
 		<property file="build/VERSION" />
 		<property name="product-file" value="enably-toolkit" />
 		<property name="product-name" value="Enably Toolkit" />
-		<property name="toolkit-package" value="com/itmill/tk" />
+		<property name="toolkit-package" value="com/enably/tk" />
 
 		<!-- Destination files -->
 		<property name="package-file-name" value="${product-file}-${version}.zip" />
@@ -73,8 +73,7 @@
 	<target name="libs" depends="compile-java">
 
 		<!-- Create binary JAR -->
-		<jar jarfile="${output-dir}/lib/${lib-bin-jar-name}" compress="true" 
-			includes="${toolkit-package}/**" basedir="build/result/classes" excludes="${toolkit-package}/demo/**"/>
+		<jar jarfile="${output-dir}/lib/${lib-bin-jar-name}" compress="true" includes="${toolkit-package}/**" basedir="build/result/classes" excludes="${toolkit-package}/demo/**" />
 		<!--	<fileset dir="src">
 				<patternset>
 					<include name="${toolkit-package}/**/*.class" />
@@ -101,6 +100,9 @@
 		<war warfile="${output-dir}/demo/${product-file}.war" webxml="WebContent/WEB-INF/web.xml">
 			<classes dir="build/result/classes">
 				<include name="${toolkit-package}/demo/**/*.class" />
+				<include name="src/${package-file-name}/demo/**/*.jpg" />
+				<include name="src/${package-file-name}/demo/**/*.png" />
+				<include name="src/${package-file-name}/demo/**/*.gif" />
 			</classes>
 			<lib dir="${output-dir}/lib">
 				<include name="${lib-bin-jar-name}" />
@@ -122,16 +124,21 @@
 	</target>
 
 	<target name="package-docs" depends="init">
-		  <copy todir="${output-dir}">
-		    <fileset dir="doc/package-docs">
-		      <exclude name="**/.svn"/>
-		    </fileset>
-		  </copy>
-		  <copy todir="${output-dir}/doc">
-		    <fileset dir="doc">
-		      <include name="dtd/**/*.dtd"/>
-		    </fileset>
-		  </copy>
+		<copy todir="${output-dir}">
+			<fileset dir="doc/package-docs">
+				<exclude name="**/.svn" />
+			</fileset>
+		</copy>
+		<copy todir="${output-dir}/.html-style">
+			<fileset dir="doc/html-style">
+				<exclude name="**/.svn" />
+			</fileset>
+		</copy>
+		<copy todir="${output-dir}/doc">
+			<fileset dir="doc">
+				<include name="dtd/**/*.dtd" />
+			</fileset>
+		</copy>
 	</target>
 
 	<target name="javadoc" depends="init">
@@ -202,7 +209,7 @@
 </zip>
 </target>
 
-<!-- ZIP Package creation - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- Clean results - - - - - - - - - - - - - - - - - - - - - - - - - -->
 <target name="clean-all" depends="">
 <delete dir="build/result" />
 </target>
