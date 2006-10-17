@@ -118,7 +118,15 @@
 
 	<!-- Documentation- - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-	<target name="docs" depends="javadoc,manual-pdf,manual-html">
+	<target name="docs" depends="javadoc,manual-pdf,manual-html,package-docs">
+	</target>
+
+	<target name="package-docs" depends="init">
+		  <copy todir="${output-dir}">
+		    <fileset dir="doc/package-docs">
+		      <exclude name="**/.svn"/>
+		    </fileset>
+		  </copy>
 	</target>
 
 	<target name="javadoc" depends="init">
