@@ -97,20 +97,11 @@ DefaultTheme.prototype.renderWindow = function(renderer,uidl,target,layoutInfo) 
 	var theme = renderer.theme;
 	
     theme.addHidePopupListener(theme,renderer.client,div,"click",true);
-	
 	// Render children to div
 	theme.renderChildNodes(renderer, uidl, div);
 	
 	// Apply width and height
 	theme.applyWidthAndHeight(uidl,div);
-	if (!div.ownerDocument.isMainDocument && div.ownerDocument.body.clientHeight && div.ownerDocument.body.firstChild.style) {
-		theme.registerWindowLayoutFunction(client,target);
-		// Make frames in framewindow scrollable 
-		/*
-		div.ownerDocument.body.firstChild.style.height = div.ownerDocument.body.clientHeight+ "px";
-		div.ownerDocument.body.firstChild.style.overflow = "auto";
-		*/
-	}
 	
 	// Focusing
 	var focused = theme.getVariableElement(uidl,"string","focused");
@@ -153,29 +144,6 @@ DefaultTheme.prototype.renderWindow = function(renderer,uidl,target,layoutInfo) 
 		}
 	}
 }
-DefaultTheme.prototype.registerWindowLayoutFunction = function(client,target) {
-	
-	//target.ownerDocument.body.firstChild.style.height = target.ownerDocument.body.clientHeight+ "px";
-	//target.ownerDocument.body.firstChild.style.overflow = "auto";	
-	var ua = navigator.userAgent.toLowerCase();
-    var msie = ua.indexOf("msie")>=0;
-	client.registerLayoutFunction(target, function() {
-	
-			
-			if (msie) return; //TODO make it work in all browsers
-			var iframes = target.getElementsByTagName("iframe");
-			if (iframes&&iframes.length>0) {
-				iframes[0].style.height = (target.ownerDocument.body.clientHeight-2)+ "px";
-			}
-			
-			target.ownerDocument.body.firstChild.style.overflow = "auto";	
-			target.ownerDocument.body.firstChild.style.border = "1px solid gray";
-			target.ownerDocument.body.firstChild.style.display = "none";
-			var h = target.ownerDocument.body.clientHeight;
-			target.ownerDocument.body.firstChild.style.display = "";
-			target.ownerDocument.body.firstChild.style.height = (h-2)+ "px";
-		});
-}
 
 DefaultTheme.prototype.renderOpen = function(renderer,uidl,target,layoutInfo) {
 	// Shortcuts
@@ -183,19 +151,13 @@ DefaultTheme.prototype.renderOpen = function(renderer,uidl,target,layoutInfo) {
  	
  	var src = uidl.getAttribute("src");
  	var name = uidl.getAttribute("name");
-
-	if (name == "_new") {
-		window.open(src);
-	} else { 
-	 	var div = theme.createPaintableElement(renderer,uidl,target,layoutInfo);
-	 	div.innerHTML = "<IFRAME name=\""+name+"\" id=\""+name+"\" width=100% height=100% style=\"border:none;margin:0px;padding:0px;background:none;\" src=\""+src+"\"></IFRAME>";
-		theme.registerOpenLayoutFunction(client,target,div.firstChild);
+ 	
+ 	if (name) {
+ 		window.open(src,name);
+ 	} else {
+ 		var div = theme.createPaintableElement(renderer,uidl,target,layoutInfo);
+ 		div.innerHTML = "<IFRAME name=\""+name+"\" id=\""+name+"\" width=100% height=100% style=\"border:none;margin:0px;padding:0px;background:none;\" src=\""+src+"\"></IFRAME>";
 	}
-}
-DefaultTheme.prototype.registerOpenLayoutFunction = function(client,target,iframe) {
-	client.registerLayoutFunction(target, function() {
-			iframe.style.height = target.ownerDocument.body.clientHeight+ "px";
-		});
 }
 
 DefaultTheme.prototype.renderFramewindow = function(renderer,uidl,target,layoutInfo) {
@@ -297,10 +259,8 @@ DefaultTheme.prototype.renderOrderedLayout = function(renderer,uidl,target,layou
 	var style = uidl.getAttribute("style");
 	var form = style == "form";
 	
-	var childUIDL = uidl.firstChild;
-	while (childUIDL) {
-	//for (var i=0; i<uidl.childNodes.length; i++) {
-	//	var childUIDL = uidl.childNodes.item(i);
+	for (var i=0; i<uidl.childNodes.length; i++) {
+		var childUIDL = uidl.childNodes.item(i);
 		td = null;
 		if (childUIDL.nodeType == Node.ELEMENT_NODE) {
 		
@@ -308,7 +268,7 @@ DefaultTheme.prototype.renderOrderedLayout = function(renderer,uidl,target,layou
 			if (tr == null || vertical) {
 				if (table == null) {
 					table = renderer.theme.createElementTo(div,"table","orderedlayout");
-                    table.width="100%";                    
+                    //table.width="100%";                    
 					renderer.theme.addCSSClass(table,"layout");
 					table = renderer.theme.createElementTo(table,"tbody","layout");
 				}
@@ -330,9 +290,6 @@ DefaultTheme.prototype.renderOrderedLayout = function(renderer,uidl,target,layou
 			renderer.client.renderUIDL(childUIDL,td, null, layoutInfo);
 			
 		}
-		
-		childUIDL = childUIDL.nextSibling;
-
 	}			
 }
 
@@ -355,10 +312,8 @@ DefaultTheme.prototype.renderGridLayout = function(renderer,uidl,target,layoutIn
 	table = renderer.theme.createElementTo(table,"tbody","layout");
 	var tr = null;
 	var td = null;
-	var rowUidl = uidl.firstChild;
-	while (rowUidl) {
-		//for (var y=0; y<uidl.childNodes.length; y++) {
-		//var rowUidl = uidl.childNodes[y];
+	for (var y=0; y<uidl.childNodes.length; y++) {
+		var rowUidl = uidl.childNodes[y];
 				
 		if (rowUidl.nodeType == Node.ELEMENT_NODE || rowUidl.nodeName == "gr") {
 		
@@ -398,12 +353,9 @@ DefaultTheme.prototype.renderGridLayout = function(renderer,uidl,target,layoutIn
 				}
 			}
 		}
-		rowUidl = rowUidl.nextSibling;
 	}
 }
 
-/* Deprecated - 8.6.2006, Jouni Koivuviita
-*
 DefaultTheme.prototype.renderPanel = function(renderer,uidl,target,layoutInfo) {
     // Supports styles "light" and "none"
 
@@ -447,8 +399,7 @@ DefaultTheme.prototype.renderPanel = function(renderer,uidl,target,layoutInfo) {
 			theme.applyWidthAndHeight(uidl,outer);
 			
 }
-*/
-/*
+
 DefaultTheme.prototype.renderTabSheet = function(renderer,uidl,target,layoutInfo) {
 
 			var theme = renderer.theme;
@@ -514,7 +465,7 @@ DefaultTheme.prototype.renderTabSheet = function(renderer,uidl,target,layoutInfo
 				theme.renderChildNodes(renderer,selectedTabNode, content);
 			}
 }
-*/
+
 DefaultTheme.prototype.renderTree = function(renderer,uidl,target,layoutInfo) {
 			
 	var theme = renderer.theme;
@@ -558,12 +509,11 @@ DefaultTheme.prototype.renderTree = function(renderer,uidl,target,layoutInfo) {
 	var content = theme.createElementTo(div,"div","content"); 
 	
 	// Iterate all nodes
-	var node = uidl.firstChild;
-	while (node) {
+	for (var i = 0; i< uidl.childNodes.length;i++) {
+		var node = uidl.childNodes[i];
 		if (node.nodeName == "node" || node.nodeName == "leaf") {
 			theme.renderTreeNode(renderer,node,content,selectable,selectMode,selected,selectionVariable,expandVariable,collapseVariable,actions,actionVar,immediate,disabled,readonly);
-		} 
-		node = node.nextSibling;	
+		} 	
 	}
 }
 
@@ -663,6 +613,7 @@ DefaultTheme.prototype.renderTreeNode = function(renderer,node,target,selectable
 }
 
 DefaultTheme.prototype.renderTextField = function(renderer,uidl,target, layoutInfo) {
+
 	var client = renderer.client;
 	var theme = renderer.theme;
 	var immediate = uidl.getAttribute("immediate") == "true";
@@ -688,12 +639,14 @@ DefaultTheme.prototype.renderTextField = function(renderer,uidl,target, layoutIn
 	// Create input
 	var input = null;
 	if (multiline) {
-		input = renderer.theme.createElementTo(border,"textarea");		
+		input = renderer.theme.createElementTo(border,"textarea");	
+		input.wrap = "off";	
 		if (focusid) {
 			input.focusid = focusid;
 		}
 	} else {
 		input = renderer.theme.createInputElementTo(border,(secret?"password":"text"),null,focusid);
+		
 	}
 	if (tabindex) input.tabIndex = tabindex;
 	if (disabled||readonly) {
@@ -726,7 +679,6 @@ DefaultTheme.prototype.renderTextField = function(renderer,uidl,target, layoutIn
 		
 	// Listener 
 	theme.addSetVarListener(theme,client,input,"change",inputId,input,immediate);
-
 }
 
 DefaultTheme.prototype.renderDateField = function(renderer,uidl,target,layoutInfo) {
@@ -751,8 +703,7 @@ DefaultTheme.prototype.renderDateField = function(renderer,uidl,target,layoutInf
 	var readonly = uidl.getAttribute("readonly") == "true";
 	
 	/* locale, translate UI */
-	var locale = uidl.getAttribute("locale")
-	/*	
+	var locale = uidl.getAttribute("locale")	
 	if (locale && !disabled && !readonly) {
 		locale = locale.toLowerCase().split("_")[0];
 		var lang = renderer.client.loadDocument(theme.root+"jscalendar/lang/calendar-"+locale+".js",false);
@@ -763,8 +714,7 @@ DefaultTheme.prototype.renderDateField = function(renderer,uidl,target,layoutInf
 				client.error("Could not eval DateField lang ("+locale+"):"+e );
 			}
 		}
-	}	
-	*/	
+	}		
 	
 	// Render default header
 	renderer.theme.renderDefaultComponentHeader(renderer,uidl,div,layoutInfo);
@@ -797,7 +747,7 @@ DefaultTheme.prototype.renderDateField = function(renderer,uidl,target,layoutInf
     var minValue = minVar != null? minVar.getAttribute("value"): null;
     var secValue = secVar != null? secVar.getAttribute("value"): null;
     var msecValue = msecVar != null? msecVar.getAttribute("value"): null;
-   
+    
     if (style != "time") {
 		if (dayValue) {
 			// Using calendar - create textfield
@@ -838,7 +788,6 @@ DefaultTheme.prototype.renderDateField = function(renderer,uidl,target,layoutInf
 			    			year.options[i+1].selected = true;
 			    		}
 			    	}
-			    	
 				    if (disabled) {
 				    	year.disabled = true;
 				    }
@@ -870,24 +819,19 @@ DefaultTheme.prototype.renderDateField = function(renderer,uidl,target,layoutInf
     	if (readonly) {
     		theme.createTextNodeTo(div," "+(hourValue<10?"0"+hourValue:hourValue));
     	} else {
-    		if (div.ownerDocument.__datefieldhourselect) {
-	    		hour = div.ownerDocument.__datefieldhourselect;
-	    		div.appendChild(hour);
-	    		div.ownerDocument.__datefieldhourselect = hour.cloneNode(true);
-	    	} else {
-		    	hour = theme.createElementTo(div,"select");
-		    	hour.options[0] = new Option("",-1);
-		    	for (var i=0;i<24;i++) {
-		    		var cap = (i+1<10?"0"+(i+1):(i+1));
-		    		if (!minVar) {
-		    			// Append anyway, makes it easier to recognize as time
-		    			cap = cap + ":00";
-		    		}
-		    		hour.options[i+1] = new Option(cap,i+1);
-		    	}
-		    	div.ownerDocument.__datefieldhourselect = hour.cloneNode(true);
-		    }
-		    if (hourValue) hour.options[parseInt(hourValue)+1].selected = true;
+	    	hour = theme.createElementTo(div,"select");
+	    	hour.options[0] = new Option("",-1);
+	    	for (var i=0;i<24;i++) {
+	    		var cap = (i+1<10?"0"+(i+1):(i+1));
+	    		if (!minVar) {
+	    			// Append anyway, makes it easier to recognize as time
+	    			cap = cap + ":00";
+	    		}
+	    		hour.options[i+1] = new Option(cap,i+1);
+	    		if (hourValue == i+1) {
+	    			hour.options[i+1].selected = true;
+	    		}
+	    	}
 		    if (disabled) {
 		    	hour.disabled = true;
 		    }
@@ -900,19 +844,14 @@ DefaultTheme.prototype.renderDateField = function(renderer,uidl,target,layoutInf
     		theme.createTextNodeTo(div,":"+(minValue<10?"0"+minValue:minValue));
     	} else {
 	    	theme.createTextNodeTo(div,":");
-	    	if (div.ownerDocument.__datefieldminselect) {
-	    		min = div.ownerDocument.__datefieldminselect;
-	    		div.appendChild(min);
-	    		div.ownerDocument.__datefieldminselect = min.cloneNode(true);
-	    	} else {
-		    	min = theme.createElementTo(div,"select");
-		    	min.options[0] = new Option("",-1);
-		    	for (var i=0;i<60;i++) {
-		    		min.options[i+1] = new Option((i<10?"0"+(i):(i)),i);
-		    	}
-		    	div.ownerDocument.__datefieldminselect = min.cloneNode(true);
+	    	min = theme.createElementTo(div,"select");
+	    	min.options[0] = new Option("",-1);
+	    	for (var i=0;i<60;i++) {
+	    		min.options[i+1] = new Option((i<10?"0"+(i):(i)),i);
+	    		if (minValue == i) {
+	    			min.options[i+1].selected = true;
+	    		}
 	    	}
-	    	if (minValue) min.options[parseInt(minValue)+1].selected = true;
 		    if (disabled) {
 		    	min.disabled = true;
 		    }
@@ -925,52 +864,33 @@ DefaultTheme.prototype.renderDateField = function(renderer,uidl,target,layoutInf
     		theme.createTextNodeTo(div,":"+(secValue<10?"0"+secValue:secValue));
     	} else {
 	    	theme.createTextNodeTo(div,":");
-	    	if (div.ownerDocument.__datefieldsecselect) {
-	    		sec = div.ownerDocument.__datefieldsecselect;
-	    		div.appendChild(sec);
-	    		div.ownerDocument.__datefieldsecselect = sec.cloneNode(true);
-	    	} else {
-		    	sec = theme.createElementTo(div,"select");
-		    	sec.options[0] = new Option("",-1);
-		    	for (var i=0;i<60;i++) {
-		    		sec.options[i+1] = new Option((i<10?"0"+(i):(i)),i);
-		    	}
-		    	div.ownerDocument.__datefieldsecselect = sec.cloneNode(true);
+	    	sec = theme.createElementTo(div,"select");
+	    	sec.options[0] = new Option("",-1);
+	    	for (var i=0;i<60;i++) {
+	    		sec.options[i+1] = new Option((i<10?"0"+(i):(i)),i);
+	    		if (secValue == i) {
+	    			sec.options[i+1].selected = true;
+	    		}
 	    	}
-	    	if (secValue) sec.options[parseInt(secValue)+1].selected = true;
 		    if (disabled) {
 		    	sec.disabled = true;
 		    }
 	    	if (!readonly) theme.addSetVarListener(theme,client,sec,"change",secVar.getAttribute("id"),sec,immediate);
 	    }
-     }
+    }
     if (msecVar) {
-   	// Millisecond select
+    	// Millisecond select
     	if (readonly) {
-    		var cap = msecValue;
-    		if (msecValue < 100) {
-    			cap = "0"+cap;
-    		}
-    		if (msecValue < 10) {
-    			cap = "0"+cap;
-    		}
-    		if (msecValue < 0) cap = "";
+	    		var cap = msecValue;
+	    		if (i+1 < 100) {
+	    			cap = "0"+cap;
+	    		}
+	    		if (i+1 < 10) {
+	    			cap = "0"+cap;
+	    		}
     		theme.createTextNodeTo(div,"."+cap);
     	} else {
-    		var cap = msecValue;
-    		if (msecValue < 100) {
-    			cap = "0"+cap;
-    		}
-    		if (msecValue < 10) {
-    			cap = "0"+cap;
-    		}
-    		if (msecValue < 0) cap = "";
- 	    	theme.createTextNodeTo(div,".");
-	    	msec = theme.createInputElementTo(div,"text",null);
-	    	msec.value = cap;
-	    	msec.size = 3;
-	    	msec.setAttribute("maxlength", 3);
-	    	/*
+	    	theme.createTextNodeTo(div,".");
 	    	msec = theme.createElementTo(div,"select");
 	    	msec.options[0] = new Option("",-1);
 	    	for (var i=0;i<1000;i++) {
@@ -986,12 +906,11 @@ DefaultTheme.prototype.renderDateField = function(renderer,uidl,target,layoutInf
 	    			msec.options[i+1].selected = true;
 	    		}
 	    	}
-	    	*/
 		    if (disabled) {
 		    	msec.disabled = true;
 		    }
 	    	if (!readonly) theme.addSetVarListener(theme,client,msec,"change",msecVar.getAttribute("id"),msec,immediate);
-	    }
+	    }	    
    }
    
    if (!readonly) {
@@ -1060,8 +979,7 @@ DefaultTheme.prototype.renderDateField = function(renderer,uidl,target,layoutInf
 	 	// javascript problems with event handlers scopes.
 	 	var temp = "datefield_" + (new Date()).getTime();;
 	    eval (temp + " = new Object();");
-	    var tempObj = (eval (temp));
-	    tempObj.update = function () { updateFunc() };
+	    (eval (temp)).update = function () { updateFunc() };
 	    var st = "Calendar.setup({onUpdate : function () { " + temp + 
 	                    ".update(); } ,inputField : '"+inputId+"', firstDay : 1,"+
 	                    " ifFormat : '%d.%m.%Y', button : '"+buttonId+"'});";
@@ -1071,64 +989,25 @@ DefaultTheme.prototype.renderDateField = function(renderer,uidl,target,layoutInf
 	
 		// TODO externalize:
 	    // Assign initialization to button mouseover (lazy initialization)
-	    //theme.addDateFieldInitListener(client,theme,button,temp,locale,st,disabled,readonly);
-	   
-	   	
 	    client.addEventListener(button, "mouseover", function(event) { 
 	 			if (!eval(temp).initialized) {
 	 				eval(temp).initialized =true; 
-					if (locale && !disabled && !readonly) {
-						locale = locale.toLowerCase().split("_")[0];
-						var lang = renderer.client.loadDocument(theme.root+"jscalendar/lang/calendar-"+locale+".js",false);
-						if (lang) {			
-							try {
-								window.eval(lang);
-							} catch (e) {
-								client.error("Could not eval DateField lang ("+locale+"):"+e );
-							}
-						}
-					}	
 	 				eval(st); 
 	 			} 
 	 		}
 	 	); 
-	 	
-	 	
 	}
-
-}
-DefaultTheme.prototype.addDateFieldInitListener = function(client,theme,button,temp,locale,st,disabled,readonly) {
-	    client.addEventListener(button, "mouseover", function(event) { 
-	 			if (!eval(temp).initialized) {
-	 				eval(temp).initialized =true; 
-					if (locale && !disabled && !readonly) {
-						locale = locale.toLowerCase().split("_")[0];
-						var lang = renderer.client.loadDocument(theme.root+"jscalendar/lang/calendar-"+locale+".js",false);
-						if (lang) {			
-							try {
-								window.eval(lang);
-							} catch (e) {
-								client.error("Could not eval DateField lang ("+locale+"):"+e );
-							}
-						}
-					}	
-	 				eval(st); 
-	 				client.removeAllEventListeners(button);
-	 			} 
-	 		}
-	 	); 
 }
 DefaultTheme.prototype.addDateFieldNullListener = function (client,elm,text,msec,sec,min,hour,day,month,year,yearVar,immediate) {
 	client.addEventListener(elm, "change", function(event) {
 
-		if ( !elm || (elm.value != -1 && elm.value != "")) return;
+		if ( !elm || elm.value != -1) return;
 
 
    			if (text) text.value = "";
    			
    			if (msec) {
-   				//msec.options[0].selected = true;
-   				msec.value = "";
+   				msec.options[0].selected = true;
    				//client.changeVariable(msecVar.getAttribute("id"), -1, false);
    			}
    			if (sec) {
@@ -1254,9 +1133,6 @@ DefaultTheme.prototype.renderUpload = function(renderer,uidl,target,layoutInfo) 
 	// Create containing element
 	var div = renderer.theme.createPaintableElement(renderer,uidl,target,layoutInfo);
 	if (uidl.getAttribute("invisible")) return; // Don't render content if invisible
-
-	var caption = uidl.getAttribute("caption")||"Send";
-	
 	
 	// Render default header
 	renderer.theme.renderDefaultComponentHeader(renderer,uidl,div,layoutInfo);
@@ -1265,7 +1141,7 @@ DefaultTheme.prototype.renderUpload = function(renderer,uidl,target,layoutInfo) 
 	var frameName = "upload_"+varNode.getAttribute("id")+"_iframe";
 	
 	var iframe = theme.createElementTo(div, "iframe");
-	iframe.style.width = '350px';
+	iframe.style.width = '300px';
 	iframe.style.height = '30px';
 	iframe.id = frameName;
 	iframe.name = frameName;
@@ -1276,17 +1152,16 @@ DefaultTheme.prototype.renderUpload = function(renderer,uidl,target,layoutInfo) 
 	iframe.style.background = 'none';
 
 
-	var win = target.ownerDocument.ownerWindow;
 	// Get the window object of the iframe		
-	var ifr = win.frames[frameName];	
+	var ifr = window.frames[frameName];	
 	
 	// TODO: FF fix. The above does not work in FF, so we
 	// have to work our way around it. Iterate all frames.
 	if (ifr == null) {
 		var fi = 0;
-		while (fi < win.frames.length) {
-			if (win.frames[fi].frameElement != null && win.frames[fi].frameElement.name == frameName) {
-				ifr = win.frames[fi];
+		while (fi < window.frames.length) {
+			if (window.frames[fi].frameElement != null && window.frames[fi].frameElement.name == frameName) {
+				ifr = window.frames[fi];
 			}
 			fi++;
 		}
@@ -1316,30 +1191,29 @@ DefaultTheme.prototype.renderUpload = function(renderer,uidl,target,layoutInfo) 
 		upload.id = varNode.getAttribute("id");
 		upload.name = varNode.getAttribute("id");
 		var submit  = theme.createInputElementTo(form, "submit");	
-		submit.value = caption;
-		submit.disabled = true;
-		upload.onchange = function() {
-			if(upload.value) {
-				submit.disabled = false;
-			} else {
-				submit.disabled = true;
-			}
-		}
+		submit.value = "Send";
 		ifr.document.body.appendChild(form);
 
 		// Attach event listeners for processing the chencges after upload.
 		if (document.all) {
 			iframe.onreadystatechange = function() {			
 				if (iframe.readyState == "complete") {
-					iframe.onreadystatechange = null;
-					client.processUpdates(ifr.document.XMLDocument);
+					//TODO: Is there a better way? Cannot figure out a 
+					// way to take the changes out of iframes document in IE.
+					// FF seems to be working, but IE just renders the
+					// XML as highlight HTML and looses the original XML.
+					//div.ownerDocument.location.reload();
+					div.ownerDocument.location.href = div.ownerDocument.location.href;
 				}
 			};
 		} else {
 			iframe.onload = function() {				
 				if (ifr.document != null && (ifr.document.contentType == "application/xml")) {
-					iframe.onload = null;
-					client.processUpdates(ifr.document);					
+					// TODO: Damn. This would be nice but seems to be unreliable:
+					//client.processUpdates(ifr.document);
+					//div.ownerDocument.location.reload();
+					div.ownerDocument.location.href = div.ownerDocument.location.href;
+					
 				}
 			};
 		}
@@ -1817,25 +1691,13 @@ DefaultTheme.prototype.renderScrollTable = function(renderer,uidl,target,layoutI
 	var sortasc = theme.getVariableElement(uidl,"boolean","sortascending");
 	var sortascVar = theme.createVariableElementTo(div,sortasc);
 	sortasc = (sortasc != null && "true"==sortasc.getAttribute("value"));
-	
+
 	// Create default header
-	//var caption = theme.renderDefaultComponentHeader(renderer,uidl,div,layoutInfo);
+	var caption = theme.renderDefaultComponentHeader(renderer,uidl,div,layoutInfo);
 	// column collapsing
-	
-	// Renewed theme, 9.6.2006 - Jouni Koivuviita
-	// Table container divs
-	var capsule = theme.createElementTo(div,"div","header");
-	var capsuleContent; // pointer, in which the actual table is fitted
-	if(uidl.getAttribute("caption")) {
-		capsule.innerHTML = "<div class=\"left\"></div><div class=\"title\"></div><div class=\"right\"></div>";
-		var caption = theme.renderDefaultComponentHeader(renderer,uidl,capsule.childNodes[1],layoutInfo);
-	}
-	div.innerHTML += "<div class=\"top\"><div class=\"right\"></div><div class=\"left\"></div></div><div id=\""+pid+"-tablecontent\" class=\"middle\"></div><div class=\"bottom\"><div class=\"right\"></div><div class=\"left\"></div></div>";
-	var tableContent = div.ownerDocument.getElementById(pid + "-tablecontent");
-	
+
 	// main div
-	//var inner  = theme.createElementTo(div,"div","border");
-	var inner = tableContent;
+	var inner  = theme.createElementTo(div,"div","border");
 	inner.innerHTML = "<TABLE width=\"100%\"><TR><TD></TD></TR></TABLE>";
 	if (!wholeWidth) {
 		wholeWidth = inner.offsetWidth||inner.clientWidth||300;
@@ -1859,11 +1721,11 @@ DefaultTheme.prototype.renderScrollTable = function(renderer,uidl,target,layoutI
 	}
 	delete alNode;
 
-	inner.innerHTML = "<DIV id=\""+pid+"status\" align=\"center\" class=\"abs border pad\" style=\"width:"+(wholeWidth/2)+"px;background-color:white;display:none;\"></DIV><TABLE cellpadding=0 cellspacing=0 border=0 width=100%><TBODY><TR valign=top><TD></TD><TD width=16></TD></TR></TBODY></TABLE><TABLE>";
+	inner.innerHTML = "<DIV id=\""+pid+"status\" align=\"center\" class=\"abs border pad\" style=\"width:"+(wholeWidth/2)+"px;background-color:white;display:none;\"></DIV><TABLE cellpadding=0 cellspacing=0 border=0 width=100%><TBODY><TR valign=top class=bg><TD></TD><TD width=16></TD></TR></TBODY></TABLE><TABLE>";
 	//inner.style.width = wholeWidth+"px";
 	var vcols = inner.childNodes[1].firstChild.firstChild.childNodes[1];
 	if (visiblecols) {			
-		vcols.innerHTML = "<IMG class=\"icon\" src=\""+theme.root+"img/table/colsel.gif\"/>";
+		vcols.innerHTML = "<IMG class=\"bg icon\" src=\""+theme.root+"/img/table/colsel.gif\"/>";
 		var icon = vcols.firstChild; 
 		vcols.id = pid+"vcols";
 		var popup = theme.createElementTo(div,"div","border popup hide");
@@ -1891,7 +1753,7 @@ DefaultTheme.prototype.renderScrollTable = function(renderer,uidl,target,layoutI
 	var alignments = new Array();
 	
 	// headers
-	var hout = theme.createElementTo(inner.childNodes[1].firstChild.firstChild.firstChild,"div","col-headers");
+	var hout = theme.createElementTo(inner.childNodes[1].firstChild.firstChild.firstChild,"div","bg");
 	hout.style.width = (wholeWidth-16)+"px";
 	hout.style.paddingRight = "0px";
 	hout.id = pid+"hout";
@@ -1906,14 +1768,13 @@ DefaultTheme.prototype.renderScrollTable = function(renderer,uidl,target,layoutI
 				if (colWidths["heh"]) {
 					html += "width:"+colWidths["heh"]+"px;";
 				}
-				html += "overflow:hidden;height:100%;white-space:nowrap;border-right:1px solid #cdcdcd;\"><IMG id=\""+pid+"hah\" align=\"right\" src=\""+theme.root+"img/table/handle.gif\" border=\"0\" style=\"height:100%;width:3px;cursor:w-resize;\"></DIV></TD>";
+				html += "overflow:hidden;height:100%;white-space:nowrap;border-right:1px solid gray;\"><IMG id=\""+pid+"hah\" align=\"right\" src=\""+theme.root+"/img/table/handle.gif\" border=\"0\" style=\"height:100%;width:2px;cursor:w-resize;\"></DIV></TD>";
 	}	
 	var chs = theme.getFirstElement(uidl, "cols").getElementsByTagName("ch");
 	var len = chs.length;
 	for (var i=0;i<len;i++) {
 		var col = chs[i];
 		var cap =  col.getAttribute("caption")||(visiblecols?"":"");
-		var hheight = (cap?"1.5em":"5px");
 		var sort =  col.getAttribute("sortable");
 		var cid =  col.getAttribute("cid");
 		var iconUrl =  col.getAttribute("icon");
@@ -1947,7 +1808,7 @@ DefaultTheme.prototype.renderScrollTable = function(renderer,uidl,target,layoutI
 		if (colWidths[cid]) {
 			html += "width:"+colWidths[cid]+"px;";
 		}
-		html += "overflow:hidden;font-weight:bold;height:100%;white-space:nowrap;border-right:1px solid #cdcdcd;\"><IMG id=\""+pid+"ha"+cid+"\" align=\"right\" src=\""+theme.root+"img/table/handle.gif\" border=\"0\" style=\"height:"+hheight+";width:4px;cursor:w-resize;\">";
+		html += "overflow:hidden;font-weight:bold;height:100%;white-space:nowrap;border-right:1px solid gray;\"><IMG id=\""+pid+"ha"+cid+"\" align=\"right\" src=\""+theme.root+"/img/table/handle.gif\" border=\"0\" style=\"height:100%;width:4px;cursor:w-resize;\">";
 		html += (iconUrl?"<IMG src=\""+iconUrl+"\" class=\"icon\">":"")+cap+"</DIV></TD>";
 	}
 	html += "</TR></TBODY></TABLE>";
@@ -1956,31 +1817,23 @@ DefaultTheme.prototype.renderScrollTable = function(renderer,uidl,target,layoutI
 	// content
 	// scroll padding calculations 
 	// TODO these need to be calculated better, perhaps updated after rendering content
-	var rowHeight = 22;
-	var prePad = (fv==1?1:fv*rowHeight);
-	var postPad = (totalrows-fv-rows+1)*rowHeight;
+	var prePad = (fv==1?1:fv*22);
+	var postPad = (totalrows-fv-rows+1)*22;
 	// html
 	cout = theme.createElementTo(inner,"div");
 	cout.style.width = wholeWidth+"px";
-	cout.style.height = ((hout.offsetHeight>18?hout.offsetHeight:18)*pagelength)+"px";
+	cout.style.height = (18*rows)+"px";
 	cout.id = pid+"cout";
-	cout.style.overflow = "auto";
+	cout.style.overflow = "scroll";
 	html = "<TABLE border=\"0\" cellpadding=\"0\" cellspacing=\"0\" id=\""+pid+"cin\"><TBODY><TR height=\""+prePad+"\"></TR>";
 	var trs = theme.getFirstElement(uidl, "rows").getElementsByTagName("tr");
-	// dummy object, used when creating empty rows up to pagelength
-	var dummy = {getAttribute: function () {return "";}, childNodes : [] };
-	for (var i=0;i<len;i++) {
-		// fill dummy columns (len is still column count)
-		dummy.childNodes[i] = ""; 
-	}
-	len = pagelength;//trs.length;
-	
+	len = trs.length;
 	if (len==0) {
 		html += "<TR id=\""+pid+"firstrow\"><TD style=\"overflow:hidden\">";
 		html += "<DIV class=\"pad\" style=\"overflow:hidden;height:100%;white-space:nowrap;border-right:1px solid gray;\"></DIV></TD></TR>";
 	}
 	for (var i=0;i<len;i++) {
-		var row = trs[i]||dummy;
+		var row = trs[i];
 		var cap =  row.getAttribute("caption");
 		var key =  row.getAttribute("key");
 		var seld = row.getAttribute("selected");
@@ -1989,8 +1842,6 @@ DefaultTheme.prototype.renderScrollTable = function(renderer,uidl,target,layoutI
 		html += " key=\""+key+"\"";
 		if (seld) {
 			html += " selected=\"true\" class=\"selected\" ";
-		} else if(i%2!=0) {
-			html += " class=\"odd\" ";
 		}
 		html += ">";	
 		if (rowheaders) {
@@ -2002,7 +1853,7 @@ DefaultTheme.prototype.renderScrollTable = function(renderer,uidl,target,layoutI
 			if (colWidths["heh"]) {
 				html += "width:"+colWidths["heh"]+"px;";
 			}
-			html += "overflow:hidden;height:100%;white-space:nowrap;border-right:1px dotted gray;\">";
+			html += "overflow:hidden;height:100%;white-space:nowrap;border-right:1px solid gray;\">";
 			if (iconUrl) {
 				if (iconUrl.indexOf("theme://") == 0) {
 		    		iconUrl = (theme.iconRoot != null ? theme.iconRoot : theme.root) 
@@ -2015,7 +1866,7 @@ DefaultTheme.prototype.renderScrollTable = function(renderer,uidl,target,layoutI
 		var comps = row.childNodes;
 		var l = comps.length;
 		if (l==0) {
-			html += "<TD><DIV class=\"padnr\" style=\"overflow:hidden;height:100%;white-space:nowrap;border-right:1px dotted gray;\"></DIV></TD>";
+			html += "<TD><DIV class=\"padnr\" style=\"overflow:hidden;height:100%;white-space:nowrap;border-right:1px solid gray;\"></DIV></TD>";
 		}
 		
 		var colNum = -1;
@@ -2043,7 +1894,7 @@ DefaultTheme.prototype.renderScrollTable = function(renderer,uidl,target,layoutI
 			if (colWidths[colorder[colNum]]) {
 				html += "width:"+colWidths[colorder[colNum]]+"px;";
 			}
-			html += "overflow:hidden;height:100%;white-space:nowrap;border-right:1px dotted #c6c6c6;\">&nbsp;</DIV></TD>";
+			html += "overflow:hidden;height:100%;white-space:nowrap;border-right:1px solid gray;\"></DIV></TD>";
 		}	
 		html += "</TR>";
 	}
@@ -2056,13 +1907,7 @@ DefaultTheme.prototype.renderScrollTable = function(renderer,uidl,target,layoutI
 	for (var i=0;i<len;i++) {
 		var tr = trs[i+1];
 		var key = tr.getAttribute("key");
-		var utr = utrs[i];
-		var dummyrow = false;
-		if (!utr) {
-			utr = dummy;
-			dummyrow = true;
-		}
-		var comps = utr.childNodes;
+		var comps = utrs[i].childNodes;
 		var l = comps.length;
 		var currentCol = (rowheaders?1:0);
 		var al = null;
@@ -2074,21 +1919,15 @@ DefaultTheme.prototype.renderScrollTable = function(renderer,uidl,target,layoutI
 				continue;
 			}
 			var trg = tr.childNodes[currentCol++].firstChild;
-			if (dummyrow) {
-				trg.innerHTML = "&nbsp;";
-			} else {
-				trg.innerHTML = "";
-				client.renderUIDL(comp, trg);
-			}
+			client.renderUIDL(comp, trg);
 		}
 		
-		
-		if (!dummyrow&&al&&tr.firstChild) {
+		if (al&&tr.firstChild) {
 			theme.renderActionPopup(renderer,al,tr,actions,actionVar,key,"rightclick");
-		} 
+		}	
 		
 		// selection
-		if (!dummyrow&&selectmode) {
+		if (selectmode) {
 			selected[selected.length] = tr;
 			theme.addCSSClass(tr,"clickable");
 			theme.addToggleClassListener(theme,client,tr,"mouseover","selectable");
@@ -2104,11 +1943,10 @@ DefaultTheme.prototype.renderScrollTable = function(renderer,uidl,target,layoutI
 	}
 
 	// THIRD do some initial sizing and scrolling
-	// FIX SAFARI lr is constantly 0
 	var fr = target.ownerDocument.getElementById(pid+"firstrow").offsetTop;
    	var lr = target.ownerDocument.getElementById(pid+"lastrow").offsetTop;
-	cout.style.height = (lr-fr)+"px";//(lr-fr+(cout.scrollWidth>cout.offsetWidth?0:0))+"px";	
-    cout.scrollTop = fr;//(fv>totalrows-rows?cout.scrollHeight:fr);
+	cout.style.height = (lr-fr+20)+"px";	
+    cout.scrollTop = (fv>totalrows-rows?cout.scrollHeight:fr);
 	div.recalc = theme.scrollTableRecalc;
 	div.initialWidth = wholeWidth;
  	div.recalc(pid,target);
@@ -2217,7 +2055,7 @@ DefaultTheme.prototype.tableAddWidthListeners = function(client,theme,element,ci
 
 DefaultTheme.prototype.scrollTableRegisterLF = function(client,theme,paintableElement,inner,cout,hout,cin,hin) {
 	client.registerLayoutFunction(paintableElement,function() {
-		var w = (inner.offsetWidth-6) +"px";
+		var w = (inner.offsetWidth-2) +"px";
 		cout.style.width = w;
 		//cin.style.width = w;
 		//hout.style.width = w;
@@ -2273,7 +2111,7 @@ DefaultTheme.prototype.scrollTableAddScrollHandler = function(client,theme,cout,
  			} else {
  				// else realign
  				status.style.display = "none";
- 				//cout.scrollTop = fr;
+ 				cout.scrollTop = fr;
  			}
  	};
 } 
@@ -2438,6 +2276,7 @@ DefaultTheme.prototype.addToDragOrderGroup = function (client,theme,element,grou
 }
 
 DefaultTheme.prototype.renderSelect = function(renderer,uidl,target,layoutInfo) {
+			
 	var theme = renderer.theme;
 	var client = renderer.client;
 	
@@ -2454,8 +2293,6 @@ DefaultTheme.prototype.renderSelect = function(renderer,uidl,target,layoutInfo) 
 	var newitem = ("true" == uidl.getAttribute("allownewitem"));
 	var focusid = uidl.getAttribute("focusid");
 	var tabindex = uidl.getAttribute("tabindex");
-	var style = uidl.getAttribute("style");
-	var cache = (style?style.indexOf("cache-")==0:false);
 	
 	var selectionVariable = theme.createVariableElementTo(div,theme.getVariableElement(uidl,"array","selected"));
 
@@ -2492,23 +2329,14 @@ DefaultTheme.prototype.renderSelect = function(renderer,uidl,target,layoutInfo) 
 	
 	// Selected options
 	if (options != null && options.length >0) {
-
-		var len = options.length;
-		for (var i=0; i<len;i++) {
-			var uop = options[i];
-			var op = new Option(uop.getAttribute("caption"),uop.getAttribute("key"));
-			select.options[i] = op;
-			if (uop.getAttribute("selected") == "true") op.selected = "true";
-			/*
+		for (var i=0; i<options.length;i++) {
 			var optionNode = theme.createElementTo(select,"option");
 			optionNode.setAttribute("value", options[i].getAttribute("key"));	
 			if (options[i].getAttribute("selected") == "true") {
 				optionNode.selected="true";	
 			}
 			theme.createTextNodeTo(optionNode,options[i].getAttribute("caption"));
-			*/
 		}
-
 	}
 	
 	if (newitem) {
@@ -2658,6 +2486,7 @@ DefaultTheme.prototype.renderPre = function(renderer,uidl,target) {
 
 DefaultTheme.prototype.renderButton = function(renderer,uidl,target,layoutInfo) {
 			// Branch for checkbox
+
 			if (uidl.getAttribute("type") == "switch") {
 				return renderer.theme.renderCheckBox(renderer,uidl,target,layoutInfo);
 			}
@@ -2670,18 +2499,14 @@ DefaultTheme.prototype.renderButton = function(renderer,uidl,target,layoutInfo) 
 			var readonly = "true"==uidl.getAttribute("readonly");
 			var immediate = "true"==uidl.getAttribute("immediate");
 			var tabindex = uidl.getAttribute("tabindex");
-			var style = uidl.getAttribute("style");
-			var linkStyle = (style&&style.indexOf("link")>=0);
+			
+			var linkStyle = "link"==uidl.getAttribute("style");
 			
 			var div = theme.createPaintableElement(renderer,uidl,target,layoutInfo);
 			if (uidl.getAttribute("invisible")) return; // Don't render content if invisible
 			
-			if(!linkStyle) renderer.theme.createElementTo(div,"div","btn-left clickable");
-			var div_btn = renderer.theme.createElementTo(div,"div",(linkStyle?"link clickable":"btn clickable"));
-			if(!linkStyle) renderer.theme.createElementTo(div,"div","btn-right clickable");
-			var inner = renderer.theme.createElementTo(div_btn,"div",(linkStyle?"pad":""));
-			//var div = renderer.theme.createElementTo(div,"div",(linkStyle?"link clickable":"outset clickable"));			
-			//var inner = renderer.theme.createElementTo(div,"div",(linkStyle?"pad":"border pad bg"));
+			div = renderer.theme.createElementTo(div,"div",(linkStyle?"link clickable":"outset clickable"));;
+			var inner = renderer.theme.createElementTo(div,"div",(linkStyle?"pad":"border pad bg"));
 			
 			var caption = theme.renderDefaultComponentHeader(renderer,uidl,inner);
 			theme.addTabtoHandlers(client,theme,caption,div,tabindex,("default"==uidl.getAttribute("style")));
@@ -2737,14 +2562,13 @@ DefaultTheme.prototype.renderCheckBox = function(renderer,uidl,target,layoutInfo
 }
 
 DefaultTheme.prototype.renderChildNodes = function(renderer, uidl, to) {
-	var child = uidl.firstChild;
-	while (child) {
+	for (var i=0; i<uidl.childNodes.length; i++) {
+		var child = uidl.childNodes.item(i);
 		if (child.nodeType == Node.ELEMENT_NODE) {
 			renderer.client.renderUIDL(child,to);
 		} else if (child.nodeType == Node.TEXT_NODE) {
 			to.appendChild(to.ownerDocument.createTextNode(child.data));
 		}
-		child = child.nextSibling;	
 	}
 }
 
@@ -2759,7 +2583,6 @@ DefaultTheme.prototype.renderActionPopup = function(renderer, uidl, to, actions,
 	if (len < 1) return;
 
 	var popup = theme.createElementTo((to.nodeName=="TR"?to.firstChild:to),"div", "popup outset hide");
-	popup.style.position = "absolute";
 	theme.addHidePopupListener(theme,client,popup,"click");
 	theme.addStopListener(theme,client,popup,"click");
 	
@@ -2824,6 +2647,8 @@ DefaultTheme.prototype.createPaintableElement = function (renderer, uidl, target
 	if (pid != null && target.getAttribute("id") == pid){
 		div = target;
 	} else {
+		//TODO: Remove this if the statement below works.
+		// div = renderer.theme.createElementTo(target,"div");
 		div = renderer.client.createPaintableElement(uidl,target);
 	}
 	div.layoutInfo = li;
@@ -2902,58 +2727,28 @@ DefaultTheme.prototype.setCSSClass = function(element, className) {
 }
 
 DefaultTheme.prototype.getFirstElement = function(parent, elementName) {
-	/*
 	if (parent && parent.childNodes) {
-		var cn = parent.childNodes;
-		var len = cn.length;
-		for (var i=0;i<len;i++) {
-			if (cn[i].nodeName == elementName) {
-				return cn[i];
+		for (var i=0;i<parent.childNodes.length;i++) {
+			if (parent.childNodes[i].nodeName == elementName) {
+				return parent.childNodes[i];
 			}
 		}
 	}
-	*/
-	
-	
-	if (parent && parent.firstChild) {
-		var n = parent.firstChild;
-		while (n) {
-			if (n.nodeName == elementName) {
-				return n;
-			} else {
-				n = n.nextSibling;
-			}
-		}
-	}
-	
-
-	/*
-	try {
-		var els = parent.getElementsByTagName(elementName)[0];
-		if (els.parentNode == parent) {
-			return els;
-		}
-	} catch (e) {
-	}
-	*/
-	
-	//return parent.selectNodes(elementName)[0];
-
 	return null;
 }
 
-DefaultTheme.prototype.getFirstTextNode = function(parent) {	
-	try {
-		var child = parent.firstChild;
-		while (child) {
-			if (child.nodeType == Node.TEXT_NODE) {
-				return child;
-			}
-			child = child.nextSibling;
+DefaultTheme.prototype.getFirstTextNode = function(parent) {
+	if (parent == null || parent.childNodes == null) return null;
+	
+	var cns = parent.childNodes;
+	var len = cns.length;
+	for (var i=0; i<len; i++) {
+		var child = cns[i];
+		if (child.nodeType == Node.TEXT_NODE) {
+			return child;
 		}
-	} catch (e) {
 	}
-	return null;
+	
 }
 
 /**
@@ -2967,15 +2762,8 @@ DefaultTheme.prototype.removeAllChildNodes = function(element) {
 	//TODO event listener leakage prevention, verify
 	// MOVED to client
 	//this.removeAllEventListeners(element);
-	
-	
-	/*
 	while (element.childNodes&&element.childNodes.length > 0) {
 		element.removeChild(element.childNodes[0]);
-	}
-	*/
-	while (element.firstChild) {
-		element.removeChild(element.firstChild);
 	}
 	return element;
 }
@@ -3016,8 +2804,6 @@ DefaultTheme.prototype.renderDefaultComponentHeader = function(renderer,uidl,tar
 	var error = this.getFirstElement(uidl,"error");
 	var descriptionText = this.getElementContent(uidl,"description");
 	var icon = uidl.getAttribute("icon");
-	var style = uidl.getAttribute("style");
-	var altdesc = (style && style.indexOf("-altdesc")>-1);
 	
 	if (!captionText && !error && !descriptionText && !icon) {
 		return null;
@@ -3058,12 +2844,32 @@ DefaultTheme.prototype.renderDefaultComponentHeader = function(renderer,uidl,tar
 		this.addCSSClass(caption,"clickable");
 	}
 
-	if (error||(descriptionText&&!altdesc)) {		
+	if (error||descriptionText) {
 		var popup = this.renderDescriptionPopup(renderer,uidl,(captionText?caption:target));
 	}
 
 	var iconUrl = uidl.getAttribute("icon");	
 	
+	if (error) {
+		var icon = this.createElementTo(caption,"img","icon");
+		icon.src = theme.root+"/img/icon/error-mini.gif";
+		if (iconUrl) {
+			/* overlay icon */
+			this.setCSSClass(icon,"overlay");
+		} else {
+			this.setCSSClass(icon,"error");
+		}
+	} else if (descriptionText) {
+		var icon = this.createElementTo(caption,"img","icon");
+		icon.src = theme.root+"/img/icon/info-mini.gif";
+		if (iconUrl) {
+			/* overlay icon */
+			this.setCSSClass(icon,"overlay");
+		} else {
+			this.setCSSClass(icon,"error");
+		}
+	}
+
 	if (iconUrl) {
     	if (iconUrl.indexOf("theme://") == 0) {
     		iconUrl = (theme.iconRoot != null ? theme.iconRoot : theme.root) 
@@ -3071,35 +2877,9 @@ DefaultTheme.prototype.renderDefaultComponentHeader = function(renderer,uidl,tar
     	}
 		var icon = this.createElementTo(caption,"img","icon");
 		icon.src = iconUrl;
-		icon.align = "bottom";
 	}
-
 	// Caption text
 	this.createTextNodeTo(caption,captionText);
-
-	var icon;
-	if (error) {
-		icon = this.createElementTo(caption,"span","icon-mini error"); // Using span + inline-block in css
-		//icon.src = theme.root+"/img/icon/error-mini.gif";    //Now read from CSS (8.6.2006)
-		if (iconUrl) {
-			/* overlay icon */
-			//this.setCSSClass(icon,"error");
-		} else {
-			//this.setCSSClass(icon,"error");
-		}
-	} else if (descriptionText&&!altdesc) {
-		icon = this.createElementTo(caption,"span","icon-mini info"); // Using span + inline-block in css
-		//icon.src = theme.root+"/img/icon/info-mini.gif";    //Now read from CSS (8.6.2006)
-		if (iconUrl) {
-			/* overlay icon */
-			//this.setCSSClass(icon,"error");
-		} else {
-			//this.setCSSClass(icon,"error");
-		}
-	}
-	if (!error && altdesc && descriptionText) {
-		caption.title = descriptionText;
-	}
 
 	return caption;
 }
@@ -3201,8 +2981,9 @@ DefaultTheme.prototype.styleToCSSClass = function(prefix,style) {
 }
 
 DefaultTheme.prototype.getChildElements = function(parent, tagName) {
-	/*
-	if (parent == null || parent.childNodes == null || tagName == null) return null;	
+	
+	if (parent == null || parent.childNodes == null || tagName == null) return null;
+
 	// Iterate all child nodes
 	var res = new Array();
 	for (var i=0; i < parent.childNodes.length; i++) {
@@ -3211,21 +2992,7 @@ DefaultTheme.prototype.getChildElements = function(parent, tagName) {
 			res[res.length++] = n;
 		}
 	}
-	return res;
-	*/
-	var res = new Array();
-	try {
-		var child = parent.firstChild;
-		while (child) {
-			if (child.nodeType == Node.ELEMENT_NODE && child.nodeName == tagName) {
-				res[res.length] = child;
-			}
-			child = child.nextSibling;
-		}
-	} catch (e) {
-	}	
-	return res;
-	
+	return res;	
 }
 
 DefaultTheme.prototype.getVariableElement = function(uidl,type,name) {
@@ -3244,31 +3011,27 @@ DefaultTheme.prototype.getVariableElement = function(uidl,type,name) {
 }
 
 
-DefaultTheme.prototype.applyWidthAndHeight = function(uidl,target,which) {
+DefaultTheme.prototype.applyWidthAndHeight = function(uidl,target) {
 	if (target == null || uidl == null) return;
 	
 	
 	// Width
-	if(!which || which == "width") {
-		var widthEl = this.getVariableElement(uidl,"integer","width");
-		if (widthEl) {
-			var w = widthEl.getAttribute("value");
-			if (w > 0) {
-				target.style.width = ""+w+"px";
-			}
+	var widthEl = this.getVariableElement(uidl,"integer","width");
+	if (widthEl) {
+		var w = widthEl.getAttribute("value");
+		if (w > 0) {
+			target.style.width = ""+w+"px";
 		}
 	}
 	
 	// Height
-	if(!which || which == "height") {
-		var heightEl = this.getVariableElement(uidl,"integer","height");
-		if (heightEl) {
-			var h = heightEl.getAttribute("value");
-			if (h > 0) {
-				target.style.height = ""+h+"px";
-			}
+	var heightEl = this.getVariableElement(uidl,"integer","height");
+	if (heightEl) {
+		var h = heightEl.getAttribute("value");
+		if (h > 0) {
+			target.style.height = ""+h+"px";
 		}
-	}
+	}	
 }
 
 DefaultTheme.prototype.createInputElementTo = function(target,type,className,focusid) {
@@ -3366,7 +3129,7 @@ DefaultTheme.prototype.removeArrayVariable = function(client, variableNode, valu
 DefaultTheme.prototype.arrayToList = function(arrayVariableElement) {
 
   var list = "";
-  if (arrayVariableElement == null) return list;
+  if (arrayVariableElement == null || arrayVariableElement.childNodes == null) return list;
   
   var items = arrayVariableElement.getElementsByTagName("ai");
   if (items == null) return list;
@@ -3495,8 +3258,6 @@ DefaultTheme.prototype.showPopup = function(client,popup, x, y, delay, defWidth)
 			}
 		}
 		/* TODO fix popup width & position */
-		//popup.style.left = x + "px";
-		//popup.style.top = y + "px";
 		return;		
 	}
 	if (!delay) var delay = 0;
@@ -3515,8 +3276,8 @@ DefaultTheme.prototype.showPopup = function(client,popup, x, y, delay, defWidth)
 		p.w = Math.round(document.body.clientWidth/2);
 	}
 
-    var posX = x;//||p.x;
-    var posY = y;//||p.y;
+    var posX = x||p.x;
+    var posY = y||p.y;
     if (posX+p.w>document.body.clientWidth) {
     	posX = document.body.clientWidth-p.w;
     	if (posX<0) posX=0;
@@ -3553,21 +3314,13 @@ DefaultTheme.prototype.hidePopup = function() {
 		var len = this.popupSelectsHidden.length;
 		for (var i=0;i<len;i++) {
 			var sel = this.popupSelectsHidden[i];
-			try {
-				sel.style.visibility = "visible";
-			} catch (e) {
-				// select in other window, which was closed?
-			}
+			sel.style.visibility = "visible";
 		}
 		this.popupSelectsHidden = null;
 	}
 
 	if (this.popup) {
-		try {
-			this.addCSSClass(this.popup,"hide");
-		} catch (e) {
-			// popup in other window, which was closed?
-		}
+		this.addCSSClass(this.popup,"hide");
 		this.popupShowing = false;
 	}
 	if (this.popupTimeout) {
@@ -3750,13 +3503,10 @@ DefaultTheme.prototype.addTogglePopupListener = function(theme,client,element,ev
 			if(evt.target.nodeName == "INPUT" || evt.target.nodeName == "SELECT") return;
             if (evt.alt) return;
             if (popupAt) {
-            	//var p = client.getElementPosition(popupAt);
-				//theme.togglePopup(popup,p.x,(p.y+p.h),(delay?delay:0),(defWidth?defWidth:100));  
-				
-				// Now using mouse coordinates, 9.6.2006 - Jouni Koivuviita
-				theme.togglePopup(popup,(evt.mouseX+6),(evt.mouseY+12),(delay?delay:0),(defWidth?defWidth:100));  
+            	var p = client.getElementPosition(popupAt);
+ 				theme.togglePopup(popup,p.x,(p.y+p.h),(delay?delay:0),(defWidth?defWidth:100));           	
             } else {
-				theme.togglePopup(popup,(evt.mouseX+6),(evt.mouseY+12),(delay?delay:0),(defWidth?defWidth:100));
+				theme.togglePopup(popup,evt.mouseX,evt.mouseY,(delay?delay:0),(defWidth?defWidth:100));
 			}
 			evt.stop();
 		}
@@ -3785,7 +3535,6 @@ DefaultTheme.prototype.addHidePopupListener = function(theme,client,element,even
 		}
 	);
 }
-
 
 
 
@@ -3863,13 +3612,13 @@ DefaultTheme.prototype.renderTreeMenuNode = function(renderer,node,target,select
 	theme.createTextNodeTo(cap,node.getAttribute("caption"));	
 
 	// Expand/collapse/spacer button
-	var img = theme.createElementTo(n,"img","icon-mini");
+	var img = theme.createElementTo(n,"img","icon");
     img.align = "absbottom";
 	var key = node.getAttribute("key");	
 	var icon = node.getAttribute("icon");
     if (icon) {
         var iconurl = theme.root+icon.split("theme:")[1];
-        var iimg = theme.createElementTo(n,"img","icon-mini");
+        var iimg = theme.createElementTo(n,"img","icon");
 	    iimg.src = iconurl;
     }
 
@@ -3953,11 +3702,12 @@ DefaultTheme.prototype.renderTreeMenuNode = function(renderer,node,target,select
 
 
 /**
-* Additions from rondocontrol.js
 * 5.6.2006 - Jouni Koivuviita
+* New innerHTML components
+* RENAMED for testing both - marc
 */
 
-DefaultTheme.prototype.renderPanel = function(renderer,uidl,target,layoutInfo) {
+DefaultTheme.prototype.renderNewPanel = function(renderer,uidl,target,layoutInfo) {
     // Shortcuts
     var theme = renderer.theme;
 	var style = uidl.getAttribute("style");
@@ -3981,7 +3731,7 @@ DefaultTheme.prototype.renderPanel = function(renderer,uidl,target,layoutInfo) {
     theme.renderChildNodes(renderer, uidl, content);
 }
 
-DefaultTheme.prototype.renderPanelModal = function(renderer,uidl,target,layoutInfo,alignment) {
+DefaultTheme.prototype.renderNewPanelModal = function(renderer,uidl,target,layoutInfo,alignment) {
     // Shortcuts
     var theme = renderer.theme;
     //var parentTheme = theme.parent;
@@ -4006,7 +3756,7 @@ DefaultTheme.prototype.renderPanelModal = function(renderer,uidl,target,layoutIn
    ifrdiv.innerHTML += html;
 }
 
-DefaultTheme.prototype.renderPanelLight = function(renderer,uidl,target,layoutInfo) {
+DefaultTheme.prototype.renderNewPanelLight = function(renderer,uidl,target,layoutInfo) {
     // Shortcuts
     var theme = renderer.theme;
 	var style = uidl.getAttribute("style");
@@ -4021,7 +3771,7 @@ DefaultTheme.prototype.renderPanelLight = function(renderer,uidl,target,layoutIn
     theme.renderChildNodes(renderer, uidl, content);
 }
 
-DefaultTheme.prototype.renderPanelNone = function(renderer,uidl,target,layoutInfo) {
+DefaultTheme.prototype.renderNewPanelNone = function(renderer,uidl,target,layoutInfo) {
     // Shortcuts
     var theme = renderer.theme;
 	var style = uidl.getAttribute("style");
@@ -4034,7 +3784,7 @@ DefaultTheme.prototype.renderPanelNone = function(renderer,uidl,target,layoutInf
     theme.renderChildNodes(renderer, uidl, content);
 }
 
-DefaultTheme.prototype.renderTabSheet = function(renderer,uidl,target,layoutInfo) {
+DefaultTheme.prototype.renderNewTabSheet = function(renderer,uidl,target,layoutInfo) {
     // Shortcuts
     var theme = renderer.theme;
 

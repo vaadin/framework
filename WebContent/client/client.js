@@ -59,12 +59,9 @@ function MillstoneAjaxClient(windowElementNode, servletUrl, clientRoot, waitElem
 				window.eventMap = null;
 			}
 			
-			// FIXME remove
-			//alert("Removed " + removed + " event listeners.");
-			warn("Removed " + removed + " event listeners.");
-			//warn("Removed " + removeAllEventListeners(window) + " event listeners.");
+			debug("Removed " + removed + " event listeners.");
 			// TODO close all windows
-			warn("Removed " + unregisterAllLayoutFunctions()+ " layout functions.");
+			debug("Removed " + unregisterAllLayoutFunctions()+ " layout functions.");
 			
 			window.png = null;
 		});
@@ -82,6 +79,9 @@ function MillstoneAjaxClient(windowElementNode, servletUrl, clientRoot, waitElem
 	}
 	
 	window.png = function(img) {
+       var src = img.src;
+        if (!src || src.indexOf("pixel.gif")>0) return;
+        if (src.indexOf(".png")<1) return
         var ua = navigator.userAgent.toLowerCase();
         if (ua.indexOf("windows")<0) return;
         var msie = ua.indexOf("msie");
@@ -89,11 +89,9 @@ function MillstoneAjaxClient(windowElementNode, servletUrl, clientRoot, waitElem
         var v = parseInt(ua.substring(msie+5,msie+6));
         if (!v || v < 5 || v > 6) return;
         
-        var src = img.src;
-        var w = img.width;
-        var h = img.height;
-        
-        if (src && src.indexOf("pixel.gif")>0) return;
+        var w = img.width||16; // def width 16, hidden icons fail otherwise
+        var h = img.height||16;
+
         
         img.onload = null;
         img.src = clientRoot + "pixel.gif";
@@ -463,14 +461,15 @@ MillstoneAjaxClient.prototype.createRequestChangeListener = function(client, req
  *  This function sends all pending (non-immediate) variable changes to the 
  *  server and registers callback to render process the server response.
  *
- *  @paran repaintAll True if full window UIDL should be requested from server.
+ *  @param repaintAll True if full window UIDL should be requested from server.
+ *  @param nowait True if the wait-window should not be shown
  *
  *  @author Oy IT Mill Ltd / Sami Ekblad
  *
  */
-MillstoneAjaxClient.prototype.processVariableChanges = function (repaintAll) {
+MillstoneAjaxClient.prototype.processVariableChanges = function (repaintAll,nowait) {
 	
-	if (this.waitElement) {
+	if (this.waitElement&&!nowait) {
 		this.waitElement.style.display = "inline";
 	}
 	
@@ -578,21 +577,19 @@ MillstoneAjaxClient.prototype.initializeNewWindow = function (win,uidl,theme) {
     with (this) {
 		addEventListener(win,"unload", function () {
 			try {
-				// TODO detect external url instead?
 				removeAllEventListeners(win.document);
 				removeAllEventListeners(win);
 				unregisterAllLayoutFunctions(win.document);
 			} catch (e) {
-				// IGNORED FIXME
+				// IGNORED
 			}
 		});
 		var client = this;
 		addEventListener(win,"resize", function () {			
 			try {
-				// TODO detect external url instead?
 				setTimeout(function() {client.processAllLayoutFunctions()},1);
 			} catch (e) {
-				// IGNORED FIXME
+				// IGNORED
 			}
 		});
 		
@@ -629,7 +626,7 @@ MillstoneAjaxClient.prototype.initializeNewWindow = function (win,uidl,theme) {
 		winElement = win.document.getElementById(uidl.getAttribute("id"));
 	}	
 	if (winElement == null && this.debugEnabled) {
-			this.debug("NOTE: Window element not found!");
+			this.warn("Window element not found!");
 	}
 	win.document.millstoneWindowElement = winElement;
 	
@@ -839,8 +836,6 @@ MillstoneAjaxClient.prototype.findPaintableById = function (paintableId) {
  *
  */
 MillstoneAjaxClient.prototype.processUpdates = function (updates) {
-var T = new Date().getTime();
-
 	if (this.debugEnabled) {
 		this.debug("Processing updates.");
 	}
@@ -910,7 +905,6 @@ var T = new Date().getTime();
 			if (currentNode != null) {
 			
 				if (invisible) {
-					//alert("invisible");
 					// Special hiding procesedure for windows
 					if (windowName != null) {
 						this.unregisterWindow(windowName);					
@@ -928,34 +922,7 @@ var T = new Date().getTime();
 				// Process all uidl nodes inside a change
 				var uidl = change.firstChild;
 				while (uidl) {
-				//var clen = change.childNodes.length;
-				//for (var j=0; j<clen; j++) {
-			  			
-					//var uidl = change.childNodes.item(j);
 					if (uidl.nodeType == Node.ELEMENT_NODE) {
-				    
-						// Replace the contents of the current representation				
-						// Create empty div for rendering			
-							
-						/* Render method 2 code
-						var newNode = this.createPaintableElement(uidl);
-						
-						// Swap the old one with new one
-						if (currentNode.parentNode != null) {
-							var parent =  currentNode.parentNode;					
-							parent.replaceChild(newNode,currentNode);
-							newNode.id = paintableId;
-							// TODO working:
-							var removed = this.removeAllEventListeners(currentNode);
-							
-							
-							// Render to target div
-							this.renderUIDL(uidl,newNode,null,currentNode);
-							delete currentNode;
-						}	
-						*/
-						
-						
 						if (!currentNode) {
 							currentNode = this.createPaintableElement(uidl);
 						}
@@ -997,8 +964,6 @@ var T = new Date().getTime();
 		this.waitElement.style.display = "none";
 	}
 
-// FIXME REMOVE
-//alert("EventListeners:" + document.eventListenerCount +"\nTotal ms: " + (new Date().getTime() -T));
 }
 
 /** Render the given UIDL to target.
@@ -1179,18 +1144,19 @@ MillstoneAjaxClient.prototype.getXMLtext = function(xml) {
  *
  *  @param name The name of the variable to change.
  *  @param value New value of the variable.
- *  @immediate True if the variable change should immediately propagate to server.
+ *  @param immediate True if the variable change should immediately propagate to server.
+ *  @param nowait True if the wait-window should not be shown
  * 
  *  @author Oy IT Mill Ltd / Sami Ekblad
  * 
  */
-MillstoneAjaxClient.prototype.changeVariable = function (name, value, immediate) {
+MillstoneAjaxClient.prototype.changeVariable = function (name, value, immediate, nowait) {
 	this.debug("variableChange('" + name + "', '" + value + "', " + immediate + ");");
 
 	this.variableStates[name] = escape(value);
 
 	if (immediate) 
-		this.processVariableChanges(false);
+		this.processVariableChanges(false,nowait);
 }
 
 /** Create new containing element for a paintable (component).
@@ -1279,11 +1245,7 @@ MillstoneAjaxClient.prototype.addEventListener = function(element,type,func) {
 	if (!element.eventMap[type]) element.eventMap[type] = new Array();
 	element.eventMap[type][element.eventMap[type].length] = func;
 	
-	// FIXME remove 
-	if (!document.eventListenerCount) document.eventListenerCount = 0;
-	document.eventListenerCount++;
-	
-	return func;	
+	return func;
 }
 /**
  *   Remove event listener function from a element. The parameters should match addEventListener()
@@ -1311,7 +1273,6 @@ MillstoneAjaxClient.prototype.removeEventListener = function(element,type,func) 
 			}
 		}
 	}
-	document.eventListenerCount--;
 }
 
 /**
@@ -1524,36 +1485,8 @@ MillstoneAjaxClient.prototype.getEvent = function(e) {
 	}
 	props.rightclick = rightclick;
 	
-	/* New way to calculate mouse position, 9.6.2006 - Jouni Koivuviita */
-	var d = document, v = window, window_w, window_h, window_l, window_t;
-	if( typeof v.innerWidth==='number' ) {
-		
-		window_w = v.innerWidth;
-		window_h = v.innerHeight;
-		window_l = v.pageXOffset;
-		window_t = v.pageYOffset;
-		
-	} else if( ( v = d.documentElement ) &&
-		typeof v.clientWidth==='number' &&
-		v.clientWidth !== 0 || ( v = document.body ) ) {
-		
-		window_w = v.clientWidth;
-		window_h = v.clientHeight;
-		window_l = v.scrollLeft;
-		window_t = v.scrollTop;
-		
-	}
-	
-	if( typeof e.pageX==='number' ) {
-		props.mouseX = e.pageX;
-		props.mouseY = e.pageY;
-	} else {
-		props.mouseX = e.x + window_l;
-		props.mouseY = e.y + window_t;
-	}
-	
-	//props.mouseX = e.pageX||e.clientX;
-	//props.mouseY = e.pageY||e.clientY;
+	props.mouseX = e.pageX||e.clientX;
+	props.mouseY = e.pageY||e.clientY;
 	
 	props.stop = function() {
 		e.cancelBubble = true;
@@ -1564,7 +1497,6 @@ MillstoneAjaxClient.prototype.getEvent = function(e) {
 	
 	return props;
 }
-
 MillstoneAjaxClient.prototype.getElementPosition = function(element) {
 	var props = new Object();
 // TODO scroll offsets testing in IE
