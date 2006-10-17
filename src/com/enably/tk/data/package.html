@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+</head>
+
+<body bgcolor="white">
+
+<p>Provides interfaces for the MillStone data layer which contains classes
+for typed data values, data collections, and handlers. A 
+{@link org.millstone.base.data.Property Property} is a simple typed data
+value; an {@link org.millstone.base.data.Item Item} is a collection of
+Properties, each corresponding to a unique identifier; a
+{@link org.millstone.base.data.Container Container} is a collection of
+identified Items with special constraints; a
+{@link org.millstone.base.data.Buffered Buffered} class is able to track
+its changes and to commit or discard them later.</p>
+
+<h2>Package Specification</h2>
+
+<p>The package contains a three-tiered structure for typed data objects and
+collections of them:</p>
+
+<center>
+<p><a href=Property.html target="classFrame"><img src=doc-files/Property.gif></a></p>
+<p><a href=Item.html target="classFrame"><img src=doc-files/Item.gif></a></p>
+<p><a href=Container.html target="classFrame"><img src=doc-files/Container_simple.gif></a></p>
+</center>
+
+<ul>
+	<li>The simplest of these is the
+	{@link org.millstone.base.data.Property Property} which represents a
+	single typed data value. A Property may be read-only in which
+	case attempts to modify its contents will throw an exception.	 
+
+	<li>The second level of the data layer is represented by the
+	{@link org.millstone.base.data.Item Item} which embodies a set of
+	<i>Properties</i>. Each Property in an Item corresponds to a locally
+	unique(that is, inside the Item) identifier.
+	
+	<li>The third level is called the
+	{@link org.millstone.base.data.Container Container} which can be
+	visualized as a set of Items, each corresponding to a locally unique
+	identifier. Note that the Container imposes a few restrictions on the
+	data stored in it, see further documentation in the
+	<a href=Container.html target="classFrame">class specification</a>.
+</ul>
+
+<p>In addition to these interfaces the package contains the 
+{@link org.millstone.base.data.Buffered Buffered} interface, which defines
+the methods to make an object buffered, that is, track the changes to an
+object and allow committing or discarding them at a later time.</p>
+
+<p>Provides interfaces for the MillStone validation framework. The framework
+defines two interfaces; one for classes that need to support external
+validation, and another one for the validators themselves.</p>
+
+<h2>Validation</h2>
+
+<p>The most important method defined by the
+{@link org.millstone.base.data.Validatable Validatable} interface is
+{@link org.millstone.base.data.Validatable#isValid() isValid()}. It
+asks all registered validators to verify if the object's value is valid
+or not. Note that it depends on the validators registered for a object which
+values are valid and which are not. For example, a <code>null</code> value
+can be valid value for one validator but invalid for another.<p>
+
+<p>In addition to <code>isValid()</code>, <code>Validatable</code> defines
+methods to add, remove and list validators of a validatable object.</p>
+
+<p>{@link org.millstone.base.data.Validator Validator} defines the
+interface for an external validator.  These validators may be added to
+any <code>Validatable</code> object, and their task is to check, when
+requested, that the object which they are attached to contains a valid
+value. The actual validation logic is hidden in the 
+{@link org.millstone.base.data.Validator#validate(Object) validate(Object)}
+method.</p>
+
+<p>In addition to <code>check(Object)</code>, <code>Validator</code> defines
+the <code>InvalidValueException</code> which is used to signal that a
+checked value is invalid, and the
+{@link org.millstone.base.data.Validator.Suggestive Suggestive}
+subinterface which includes functionality to suggest a valid value for
+the validated object.</p><!-- Put @see and @since tags down here. -->
+
+</body>
+</html>
