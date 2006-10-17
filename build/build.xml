@@ -126,6 +126,9 @@
 		    <fileset dir="doc/package-docs">
 		      <exclude name="**/.svn"/>
 		    </fileset>
+		    <fileset dir="doc">
+		      <include name="dtd/**/*.dtd"/>
+		    </fileset>
 		  </copy>
 	</target>
 
