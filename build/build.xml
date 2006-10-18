@@ -132,6 +132,19 @@
 		<copy todir="${output-dir}/.html-style">
 			<fileset dir="doc/html-style">
 				<exclude name="**/.svn" />
+				<exclude name="**/test.html" />
+			</fileset>
+		</copy>
+		<copy todir="${output-dir}/doc/manual/.html-style">
+			<fileset dir="doc/html-style">
+				<exclude name="**/.svn" />
+				<exclude name="**/test.html" />
+			</fileset>
+		</copy>
+		<copy todir="${output-dir}/doc/api/.html-style">
+			<fileset dir="doc/html-style">
+				<exclude name="**/.svn" />
+				<exclude name="**/test.html" />
 			</fileset>
 		</copy>
 		<copy todir="${output-dir}/doc">
@@ -142,17 +155,19 @@
 	</target>
 
 	<target name="javadoc" depends="init">
-		<javadoc destdir="${output-dir}/doc/api" author="true" version="true" use="true" windowtitle="${product-name}">
+		<javadoc destdir="${output-dir}/doc/api" author="true" version="true" use="true" 
+			windowtitle="${product-name}" classpath="build/lib/servlet-api.jar">
 			<packageset dir="src">
 				<include name="${toolkit-package}/**" />
 				<exclude name="${toolkit-package}/demo/**" />
 			</packageset>
 			<doctitle>
 				<![CDATA[<h1>Enably Toolkit</h1>]]></doctitle>
+			<header><![CDATA[<script type="text/javascript" src=".html-style/style.js"></script>]]></header>
 		<bottom>
 			<![CDATA[<i>Copyright &#169; 2000-2006 IT Mill Ltd. All Rights Reserved.</i>]]></bottom>
-	<link offline="true" href="http://java.sun.com/j2se/1.5.0/docs/api/" packagelistLoc="/tmp/" />
-	<link offline="true" href="http://java.sun.com/j2ee/1.4/docs/api/" packagelistLoc="/tmp/" />
+	<link offline="true" href="http://java.sun.com/j2se/1.5.0/docs/api/" packagelistLoc="build/javadoc/j2se-1.5.0" />
+	<link offline="true" href="http://java.sun.com/j2ee/1.4/docs/api/" packagelistLoc="build/javadoc/j2ee-1.4"/>
 </javadoc>
 </target>
 
@@ -187,7 +202,7 @@
 	<arg value="-in" />
 	<arg value="doc/manual/book.xml" />
 	<arg value="-xsl" />
-	<arg value="build/docbook/xsl/html/chunk.xsl" />
+	<arg value="build/docbook/conf/custom-html-docbook.xsl" />
 	<arg value="-out" />
 	<arg value="${output-dir}/doc/manual/index.html" />
 	<arg value="-param" />
