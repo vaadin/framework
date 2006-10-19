@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app id="WebApp_ID" version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
-	<display-name>
-	itmill-toolkit</display-name>
-	
+	<display-name>enably-toolkit</display-name>
 	
     <servlet>
         <servlet-name>features-web</servlet-name>
-        <servlet-class>com.itmill.tk.terminal.web.WebAdapterServlet</servlet-class>
+        <servlet-class>com.enably.tk.terminal.web.WebAdapterServlet</servlet-class>
         <init-param>
             <param-name>application</param-name>
-            <param-value>com.itmill.tk.demo.features.FeaturesApplication</param-value>
+            <param-value>com.enably.tk.demo.features.FeaturesApplication</param-value>
+        </init-param>
+        <init-param>
+            <param-name>debug</param-name>
+            <param-value>false</param-value>
         </init-param>
     </servlet>
     
     <servlet>
         <servlet-name>features-ajax</servlet-name>
-        <servlet-class>com.itmill.tk.terminal.ajax.AjaxAdapterServlet</servlet-class>
+        <servlet-class>com.enably.tk.terminal.ajax.AjaxAdapterServlet</servlet-class>
         <init-param>
             <param-name>application</param-name>
-            <param-value>com.itmill.tk.demo.features.FeaturesApplication</param-value>
+            <param-value>com.enably.tk.demo.features.FeaturesApplication</param-value>
         </init-param>
     </servlet>    
-
-	<!-- Namespace mappings for servlets -->
 
     <servlet-mapping>
         <servlet-name>features-web</servlet-name>
