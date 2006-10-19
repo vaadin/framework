@@ -59,7 +59,22 @@
 	<!-- Themes - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 	<target name="themes" depends="init">
-		<!-- TODO Create theme-jars -->
+		<!-- TODO Create theme-jars and copy AJAX theme -->
+		<copy todir="${output-dir}/lib/web-themes">
+			<fileset dir="WebContent/WEB-INF/lib/themes">
+				<exclude name="**/.svn" />
+			</fileset>
+		</copy>
+		<copy todir="${output-dir}/lib/ajax-themes">
+			<fileset dir="WebContent">
+				<exclude name="**/.svn" />
+				<include name="themes/**" />
+			</fileset>
+			<fileset dir="WebContent">
+				<exclude name="**/.svn" />
+				<include name="client/**" />
+			</fileset>
+		</copy>
 	</target>
 
 	<!-- Libs - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -125,24 +140,13 @@
 
 	<target name="package-docs" depends="init">
 		<copy todir="${output-dir}">
-			<fileset dir="doc/package-docs">
-				<exclude name="**/.svn" />
+			<fileset dir="">
+				<include name="*.html" />
+				<include name="*.txt" />
 			</fileset>
 		</copy>
-		<copy todir="${output-dir}/.html-style">
-			<fileset dir="doc/html-style">
-				<exclude name="**/.svn" />
-				<exclude name="**/test.html" />
-			</fileset>
-		</copy>
-		<copy todir="${output-dir}/doc/manual/.html-style">
-			<fileset dir="doc/html-style">
-				<exclude name="**/.svn" />
-				<exclude name="**/test.html" />
-			</fileset>
-		</copy>
-		<copy todir="${output-dir}/doc/api/.html-style">
-			<fileset dir="doc/html-style">
+		<copy todir="${output-dir}/doc/manual/html-style">
+			<fileset dir="doc/manual/html-style">
 				<exclude name="**/.svn" />
 				<exclude name="**/test.html" />
 			</fileset>
@@ -163,7 +167,7 @@
 			</packageset>
 			<doctitle>
 				<![CDATA[<h1>Enably Toolkit</h1>]]></doctitle>
-			<header><![CDATA[<script type="text/javascript" src=".html-style/style.js"></script>]]></header>
+<!--			<header><![CDATA[<script type="text/javascript" src=".html-style/style.js"></script>]]></header> -->
 		<bottom>
 			<![CDATA[<i>Copyright &#169; 2000-2006 IT Mill Ltd. All Rights Reserved.</i>]]></bottom>
 	<link offline="true" href="http://java.sun.com/j2se/1.5.0/docs/api/" packagelistLoc="build/javadoc/j2se-1.5.0" />
@@ -214,7 +218,7 @@
 
 <!-- ZIP Package creation - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-<target name="package" depends="libs,demo,docs">
+<target name="package" depends="clean-all,libs,demo,docs,themes">
 <zip zipfile="build/result/${package-file-name}">
 	<fileset dir="build/result">
 		<patternset>
