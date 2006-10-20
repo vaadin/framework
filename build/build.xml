@@ -108,7 +108,7 @@
 		</jar>
 	</target>
 
-	<!-- Demo WAR - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	<!-- Demo  - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 	<target name="demo" depends="libs,compile-java">
 
@@ -134,6 +134,12 @@
 		<copy todir="${output-dir}/demo">
 			<fileset dir="build/demo">
 				<exclude name="**/.svn" />
+			</fileset>
+		</copy>
+
+		<copy todir="${output-dir}/demo/src">
+			<fileset dir="src">
+				<include name="${package-file-name}/demo/**/*.java" />
 			</fileset>
 		</copy>
 	</target>
