@@ -15,6 +15,10 @@
 		<property name="product-name" value="Enably Toolkit" />
 		<property name="toolkit-package" value="com/enably/tk" />
 
+		<property file="build/html-style.properties" />
+		<property name="html.body.tag" value="&lt;body>" />
+		<property name="html.body.endtag" value="&lt;/body>" />
+
 		<!-- Destination files -->
 		<property name="package-file-name" value="${product-file}-${version}.zip" />
 		<property name="lib-bin-jar-name" value="${product-file}-${version}.jar" />
@@ -143,6 +147,10 @@
 		<copy todir="${output-dir}">
 			<filterchain>
 				<expandproperties />
+				<replacetokens begintoken="&lt;" endtoken=">">
+					<token key="body" value="${html.body.tag}${html.body.start}" />
+					<token key="/body" value="${html.body.end}${html.body.endtag}" />
+				</replacetokens>
 			</filterchain>
 			<fileset dir="">
 				<include name="*.html" />
@@ -199,6 +207,14 @@
 </target>
 
 <target name="manual-html" depends="init">
+<copy file="build/docbook/conf/custom-html-docbook.xsl" tofile="build/docbook/conf/temp.xsl">
+	<filterchain>
+		<replacetokens>
+			<token key="BODYHEADER" value="${html.body.start}" />
+			<token key="BODYFOOTER" value="${html.body.end}" />
+		</replacetokens>
+	</filterchain>
+</copy>
 <path id="docbook-xsl.classpath">
 	<pathelement path="build/lib/fop-0.92/serializer-2.7.0.jar" />
 	<pathelement path="build/lib/fop-0.92/xalan-2.7.0.jar" />
@@ -209,7 +225,7 @@
 	<arg value="-in" />
 	<arg value="doc/manual/book.xml" />
 	<arg value="-xsl" />
-	<arg value="build/docbook/conf/custom-html-docbook.xsl" />
+	<arg value="build/docbook/conf/temp.xsl" />
 	<arg value="-out" />
 	<arg value="${output-dir}/doc/manual/index.html" />
 	<arg value="-param" />
@@ -217,6 +233,7 @@
 	<arg value="1" />
 	<classpath refid="docbook-xsl.classpath" />
 </java>
+<delete file="build/docbook/conf/temp.xsl" />
 </target>
 
 <!-- ZIP Package creation - - - - - - - - - - - - - - - - - - - - - - - - - -->
