@@ -45,9 +45,6 @@
         </copy>
         -->
 
-		<!-- Convert to CRLF -->
-		<fixcrlf srcdir="${output-dir}" eol="crlf" tablength="4" tab="remove" includes="*.txt" />
-
 		<!-- Create Output Directory Hierarchy -->
 		<mkdir dir="${output-dir}/doc/manual" />
 		<mkdir dir="${output-dir}/doc/api" />
@@ -89,13 +86,6 @@
 
 		<!-- Create binary JAR -->
 		<jar jarfile="${output-dir}/lib/${lib-bin-jar-name}" compress="true" includes="${toolkit-package}/**" basedir="build/result/classes" excludes="${toolkit-package}/demo/**" />
-		<!--	<fileset dir="src">
-				<patternset>
-					<include name="${toolkit-package}/**/*.class" />
-					<exclude name="${toolkit-package}/demo/**/*.class" />
-				</patternset>
-			</fileset>
-		</jar>-->
 
 		<!-- Create source JAR -->
 		<jar jarfile="${output-dir}/lib/${lib-src-jar-name}" compress="true">
@@ -139,7 +129,7 @@
 
 		<copy todir="${output-dir}/demo/src">
 			<fileset dir="src">
-				<include name="${package-file-name}/demo/**/*.java" />
+				<include name="${toolkit-package}/demo/**/*.java" />
 			</fileset>
 		</copy>
 	</target>
@@ -151,6 +141,9 @@
 
 	<target name="package-docs" depends="init">
 		<copy todir="${output-dir}">
+			<filterchain>
+				<expandproperties />
+			</filterchain>
 			<fileset dir="">
 				<include name="*.html" />
 				<include name="*.txt" />
