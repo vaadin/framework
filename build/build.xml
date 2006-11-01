@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="Enably" basedir="../" default="all">
+<project name="IT Mill Toolkit" basedir="../" default="all">
 
 	<!-- Default build target -->
 	<target name="all" depends="package" description="Build all">
@@ -11,9 +11,9 @@
 	<target name="init">
 
 		<property file="build/VERSION" />
-		<property name="product-file" value="enably-toolkit" />
-		<property name="product-name" value="Enably Toolkit" />
-		<property name="toolkit-package" value="com/enably/tk" />
+		<property name="product-file" value="itmill-toolkit" />
+		<property name="product-name" value="IT Mill Toolkit" />
+		<property name="toolkit-package" value="com/itmill/toolkit" />
 
 		<property file="build/html-style.properties" />
 		<property name="html.body.tag" value="&lt;body>" />
@@ -177,7 +177,7 @@
 				<exclude name="${toolkit-package}/demo/**" />
 			</packageset>
 			<doctitle>
-				<![CDATA[<h1>Enably Toolkit</h1>]]></doctitle>
+				<![CDATA[<h1>IT Mill Toolkit</h1>]]></doctitle>
 		<!--			<header><![CDATA[<script type="text/javascript" src=".html-style/style.js"></script>]]></header> -->
 		<bottom>
 			<![CDATA[<i>Copyright &#169; 2000-2006 IT Mill Ltd. All Rights Reserved.</i>]]></bottom>
