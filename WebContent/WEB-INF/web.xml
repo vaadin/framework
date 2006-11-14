@@ -4,10 +4,10 @@
 	
     <servlet>
         <servlet-name>features-web</servlet-name>
-        <servlet-class>com.enably.tk.terminal.web.WebAdapterServlet</servlet-class>
+        <servlet-class>com.itmill.toolkit.terminal.web.WebAdapterServlet</servlet-class>
         <init-param>
             <param-name>application</param-name>
-            <param-value>com.enably.tk.demo.features.FeaturesApplication</param-value>
+            <param-value>com.itmill.toolkit.demo.features.FeaturesApplication</param-value>
         </init-param>
         <init-param>
             <param-name>debug</param-name>
@@ -17,10 +17,10 @@
     
     <servlet>
         <servlet-name>features-ajax</servlet-name>
-        <servlet-class>com.enably.tk.terminal.ajax.AjaxAdapterServlet</servlet-class>
+        <servlet-class>com.itmill.toolkit.terminal.ajax.AjaxAdapterServlet</servlet-class>
         <init-param>
             <param-name>application</param-name>
-            <param-value>com.enably.tk.demo.features.FeaturesApplication</param-value>
+            <param-value>com.itmill.toolkit.demo.features.FeaturesApplication</param-value>
         </init-param>
     </servlet>    
 
