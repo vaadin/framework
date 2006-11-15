@@ -80,7 +80,7 @@ public class FeatureBrowser
 		close.setStyle("link");
 		layout.addComponent(left, 0, 0, 0, 0);
 		Label greeting = new Label(WELCOME_TEXT, Label.CONTENT_XHTML);
-		//welcomePanel = new Panel((String) null);
+		OrderedLayout welcomePanel = new OrderedLayout();
 		welcome =
 			new Embedded(
 				"",
@@ -88,8 +88,9 @@ public class FeatureBrowser
 					getClass(),
 					"millstone-logo.gif",
 					getApplication()));
-		//	welcomePanel.addComponent(greeting);
-		layout.addComponent(welcome, 1, 0, 1, 0);
+		welcomePanel.addComponent(welcome);
+		welcomePanel.addComponent(greeting);
+		layout.addComponent(welcomePanel, 1, 0, 1, 0);
 
 		// Test component
 		registerFeature(

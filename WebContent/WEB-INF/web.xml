@@ -34,6 +34,63 @@
         <url-pattern>/demo/features/ajax/*</url-pattern>
     </servlet-mapping>    
 
+<!-- APPLICATION: ...demo.calc -->
+    <servlet>
+        <servlet-name>calc-ajax</servlet-name>
+        <servlet-class>com.itmill.toolkit.terminal.ajax.AjaxAdapterServlet</servlet-class>
+        <init-param>
+            <param-name>application</param-name>
+            <param-value>com.itmill.toolkit.demo.Calc</param-value>
+        </init-param>
+    </servlet>    
+    <servlet-mapping>
+        <servlet-name>calc-ajax</servlet-name>
+        <url-pattern>/demo/calc/ajax/*</url-pattern>
+    </servlet-mapping>
+
+<!-- APPLICATION: ...demo.chat -->
+    <servlet>
+        <servlet-name>chat-ajax</servlet-name>
+        <servlet-class>com.itmill.toolkit.terminal.ajax.AjaxAdapterServlet</servlet-class>
+        <init-param>
+            <param-name>application</param-name>
+            <param-value>com.itmill.toolkit.demo.Chat</param-value>
+        </init-param>
+    </servlet>    
+    <servlet-mapping>
+        <servlet-name>chat-ajax</servlet-name>
+        <url-pattern>/demo/chat/ajax/*</url-pattern>
+    </servlet-mapping>
+
+<!-- APPLICATION: ...demo.Hello -->
+    <servlet>
+        <servlet-name>hello-ajax</servlet-name>
+        <servlet-class>com.itmill.toolkit.terminal.ajax.AjaxAdapterServlet</servlet-class>
+        <init-param>
+            <param-name>application</param-name>
+            <param-value>com.itmill.toolkit.demo.HelloWorld</param-value>
+        </init-param>
+    </servlet>    
+    <servlet-mapping>
+        <servlet-name>hello-ajax</servlet-name>
+        <url-pattern>/demo/hello/ajax/*</url-pattern>
+    </servlet-mapping>
+
+<!-- APPLICATION: ...demo.Login -->
+    <servlet>
+        <servlet-name>login-ajax</servlet-name>
+        <servlet-class>com.itmill.toolkit.terminal.ajax.AjaxAdapterServlet</servlet-class>
+        <init-param>
+            <param-name>application</param-name>
+            <param-value>com.itmill.toolkit.demo.Login</param-value>
+        </init-param>
+    </servlet>    
+    <servlet-mapping>
+        <servlet-name>login-ajax</servlet-name>
+        <url-pattern>/demo/login/ajax/*</url-pattern>
+    </servlet-mapping>
+
+
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
 		<welcome-file>index.htm</welcome-file>
