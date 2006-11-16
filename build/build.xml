@@ -60,7 +60,6 @@
 	<!-- Themes - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 	<target name="themes" depends="init">
-		<!-- TODO Create theme-jars and copy AJAX theme -->
 		<copy todir="${output-dir}/lib/web-themes">
 			<fileset dir="WebContent/WEB-INF/lib/themes">
 				<exclude name="**/.svn" />
@@ -109,9 +108,11 @@
 		<war warfile="${output-dir}/demo/${product-file}.war" webxml="WebContent/WEB-INF/web.xml">
 			<classes dir="build/result/classes">
 				<include name="${toolkit-package}/demo/**/*.class" />
-				<include name="src/${package-file-name}/demo/**/*.jpg" />
-				<include name="src/${package-file-name}/demo/**/*.png" />
-				<include name="src/${package-file-name}/demo/**/*.gif" />
+			</classes>
+			<classes dir="src">
+				<include name="${toolkit-package}/demo/**/*.jpg" />
+				<include name="${toolkit-package}/demo/**/*.png" />
+				<include name="${toolkit-package}/demo/**/*.gif" />
 			</classes>
 			<lib dir="${output-dir}/lib">
 				<include name="${lib-bin-jar-name}" />
@@ -120,7 +121,7 @@
 				<include name="src/${toolkit-package}/demo/**/*.java" />
 			</fileset>
 			<fileset dir="WebContent">
-				<include name="**" />
+				<include name="**/*" />
 				<exclude name="WEB-INF/web.xml" />
 			</fileset>
 		</war>
