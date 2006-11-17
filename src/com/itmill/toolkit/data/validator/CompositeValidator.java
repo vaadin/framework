@@ -173,6 +173,10 @@ public class CompositeValidator implements Validator {
 	 * sub-validators are used instead.
 	 */
 	public String getErrorMessage() {
+		if (this.errorMessage != null) return this.errorMessage;
+		
+		// TODO Return composite error message
+		
 		return null;
 	}
 
