@@ -30,24 +30,15 @@ package com.itmill.toolkit.service;
 
 import java.io.ByteArrayInputStream;
 import java.io.CharArrayWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.security.InvalidKeyException;
-import java.security.Key;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.Signature;
 import java.security.SignatureException;
-import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
@@ -84,28 +75,7 @@ public class License {
 			+ "LwAkKye6dzALBgcqhkjOOAQDBQADLwAwLAIUDgvWt7ItRyZfpWNEeJ0P9yaxOwoCFC21LRtwLi1t\n"
 			+ "c+yomHtX+mpxF7VO\n" + "-----END CERTIFICATE-----\n";
 
-	/** Public key that is used to check the license signature */
-	static private PublicKey publicKey;
-
-	/** Initialize public key */
-	static {
-
-		try {
-			// Get X.509 factory implementation
-			CertificateFactory x509factory = CertificateFactory
-					.getInstance("X.509");
-
-			// Decode statically linked X.509 certificate
-			X509Certificate cert = (X509Certificate) x509factory
-					.generateCertificate(new ByteArrayInputStream(certificate
-							.getBytes()));
-
-			publicKey = cert.getPublicKey();
-		} catch (CertificateException e) {
-			e.printStackTrace();
-		}
-	}
-
+	/** License XML Document */
 	private static Document licenseXML = null;
 
 	/** Has the license already been verified */
@@ -132,16 +102,18 @@ public class License {
 	public String getDescription() {
 
 		// TODO
+		
 		return "";
 	}
 
 	public boolean hasBeenVerified() {
-
 		return isVerified;
 	}
 
 	public void verifyLicense() {
-
+		
+		// TODO
+		
 		// License is only verified once
 		if (isVerified)
 			return;
@@ -241,12 +213,21 @@ public class License {
 	private static boolean isSignatureValid() throws LicenseFileCanNotBeRead,
 			InvalidLicenseFile {
 
-		// Get signature algorithm instance
-		Signature dsa;
 		try {
 
+			// Get X.509 factory implementation
+			CertificateFactory x509factory = CertificateFactory
+					.getInstance("X.509");
+
+			// Decode statically linked X.509 certificate
+			X509Certificate cert = (X509Certificate) x509factory
+					.generateCertificate(new ByteArrayInputStream(certificate
+							.getBytes()));
+
+			PublicKey publicKey = cert.getPublicKey();
+
 			// Verify signature with DSA
-			dsa = Signature.getInstance("SHA1withDSA");
+			Signature dsa = Signature.getInstance("SHA1withDSA");
 			dsa.initVerify(publicKey);
 			dsa.update(getNormalizedLisenceData().getBytes("UTF-8"));
 			if (dsa.verify(getSignature()))
@@ -259,6 +240,8 @@ public class License {
 		} catch (SignatureException e) {
 			throw new InvalidLicenseFile("Signature does not match contents.");
 		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
+		} catch (CertificateException e) {
 			throw new RuntimeException(e);
 		}
 
@@ -749,10 +732,10 @@ public class License {
 		 * Valid options:
 		 * 
 		 * <pre>
-		 *      ENCODE or DECODE: Encode or Decode as data is read.
-		 *      DONT_BREAK_LINES: don't break lines at 76 characters
-		 *        (only meaningful when encoding)
-		 *        &lt;i&gt;Note: Technically, this makes your encoding non-compliant.&lt;/i&gt;
+		 *       ENCODE or DECODE: Encode or Decode as data is read.
+		 *       DONT_BREAK_LINES: don't break lines at 76 characters
+		 *         (only meaningful when encoding)
+		 *         &lt;i&gt;Note: Technically, this makes your encoding non-compliant.&lt;/i&gt;
 		 * </pre>
 		 * 
 		 * <p>
@@ -971,10 +954,10 @@ public class License {
 		 * Valid options:
 		 * 
 		 * <pre>
-		 *      ENCODE or DECODE: Encode or Decode as data is read.
-		 *      DONT_BREAK_LINES: don't break lines at 76 characters
-		 *        (only meaningful when encoding)
-		 *        &lt;i&gt;Note: Technically, this makes your encoding non-compliant.&lt;/i&gt;
+		 *       ENCODE or DECODE: Encode or Decode as data is read.
+		 *       DONT_BREAK_LINES: don't break lines at 76 characters
+		 *         (only meaningful when encoding)
+		 *         &lt;i&gt;Note: Technically, this makes your encoding non-compliant.&lt;/i&gt;
 		 * </pre>
 		 * 
 		 * <p>
