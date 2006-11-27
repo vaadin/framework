@@ -38,10 +38,16 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.security.InvalidKeyException;
+import java.security.Key;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.Signature;
 import java.security.SignatureException;
+import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
@@ -228,14 +234,12 @@ public class License {
 			throw new InvalidLicenseFile("Invalid signature element");
 		String base64 = text.getNodeValue();
 
-		// Decode base64
-
-		// TODO
-		return null;
+		return base64_decode(base64);
 
 	}
 
-	private boolean isSignatureValid() throws LicenseFileCanNotBeRead, InvalidLicenseFile {
+	private static boolean isSignatureValid() throws LicenseFileCanNotBeRead,
+			InvalidLicenseFile {
 
 		// Get signature algorithm instance
 		Signature dsa;
@@ -245,27 +249,20 @@ public class License {
 			dsa = Signature.getInstance("SHA1withDSA");
 			dsa.initVerify(publicKey);
 			dsa.update(getNormalizedLisenceData().getBytes("UTF-8"));
-			boolean verifies = dsa.verify(getSignature());
-			System.out.println("signature verifies: " + verifies);
+			if (dsa.verify(getSignature()))
+				return true;
 
 		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-			return false;
+			throw new RuntimeException(e);
 		} catch (InvalidKeyException e) {
-			e.printStackTrace();
-			return false;
+			throw new RuntimeException(e);
 		} catch (SignatureException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new InvalidLicenseFile("Signature does not match contents.");
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			return false;
+			throw new RuntimeException(e);
 		}
 
-		/* Update and verify the data */
-		/*
-		 */
-		// TODO
+		// Verification failed
 		return false;
 	}
 
@@ -302,46 +299,7 @@ public class License {
 
 	}
 
-	public static void main(String[] attrs) {
-
-		File f = new File(
-				"/Users/phoenix/Documents/workspace/itmill-toolkit/doc/project/license-system/license-file-template.xml");
-		try {
-			License.readLicenseFile(new FileInputStream(f));
-			System.out.println(getNormalizedLisenceData());
-			System.out.println("Signature='" + getSignature() + "'");
-
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SAXException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (LicenseFileCanNotBeRead e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InvalidLicenseFile e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-	}
-
-	/*
-	 * Encodes and decodes to and from Base64 notation.
-	 * 
-	 * @author Robert Harder @author rob@iharder.net
-	 * 
-	 * @version 2.1
-	 */
-
-	/* ******** P U B L I C F I E L D S ******** */
-
-	/** No options specified. Value is zero. */
-	private final static int Base64_NO_OPTIONS = 0;
+	/* ****** BASE64 implementation created by Robert Harder ****** */
 
 	/** Specify encoding. */
 	private final static int Base64_ENCODE = 1;
@@ -349,13 +307,8 @@ public class License {
 	/** Specify decoding. */
 	private final static int Base64_DECODE = 0;
 
-	/** Specify that data should be gzip-compressed. */
-	private final static int Base64_GZIP = 2;
-
 	/** Don't break lines when encoding (violates strict Base64 specification) */
 	private final static int Base64_DONT_BREAK_LINES = 8;
-
-	/* ******** P R I V A T E F I E L D S ******** */
 
 	/** Maximum line length (76) of Base64 output. */
 	private final static int Base64_MAX_LINE_LENGTH = 76;
@@ -372,8 +325,8 @@ public class License {
 	/** The 64 valid Base64 values. */
 	private final static byte[] Base64_ALPHABET;
 
-	private final static byte[] Base64_NATIVE_ALPHABET = 
-	{ (byte) 'A', (byte) 'B', (byte) 'C', (byte) 'D', (byte) 'E', (byte) 'F',
+	private final static byte[] Base64_NATIVE_ALPHABET = { (byte) 'A',
+			(byte) 'B', (byte) 'C', (byte) 'D', (byte) 'E', (byte) 'F',
 			(byte) 'G', (byte) 'H', (byte) 'I', (byte) 'J', (byte) 'K',
 			(byte) 'L', (byte) 'M', (byte) 'N', (byte) 'O', (byte) 'P',
 			(byte) 'Q', (byte) 'R', (byte) 'S', (byte) 'T', (byte) 'U',
@@ -410,7 +363,7 @@ public class License {
 			-9, -9, // Decimal 11 - 12
 			-5, // Whitespace: Carriage Return
 			-9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, // Decimal 14 -
-																// 26
+			// 26
 			-9, -9, -9, -9, -9, // Decimal 27 - 31
 			-5, // Whitespace: Space
 			-9, -9, -9, -9, -9, -9, -9, -9, -9, -9, // Decimal 33 - 42
@@ -422,39 +375,27 @@ public class License {
 			-1, // Equals sign at decimal 61
 			-9, -9, -9, // Decimal 62 - 64
 			0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, // Letters 'A'
-															// through 'N'
+			// through 'N'
 			14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, // Letters 'O'
-															// through 'Z'
+			// through 'Z'
 			-9, -9, -9, -9, -9, -9, // Decimal 91 - 96
 			26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, // Letters 'a'
-																// through 'm'
+			// through 'm'
 			39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, // Letters 'n'
-																// through 'z'
+			// through 'z'
 			-9, -9, -9, -9 // Decimal 123 - 126
-	/*
-	 * ,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9, // Decimal 127 - 139
-	 * -9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9, // Decimal 140 - 152
-	 * -9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9, // Decimal 153 - 165
-	 * -9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9, // Decimal 166 - 178
-	 * -9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9, // Decimal 179 - 191
-	 * -9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9, // Decimal 192 - 204
-	 * -9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9, // Decimal 205 - 217
-	 * -9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9, // Decimal 218 - 230
-	 * -9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9, // Decimal 231 - 243
-	 * -9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9 // Decimal 244 - 255
-	 */
 	};
 
 	// I think I end up not using the BAD_ENCODING indicator.
 	// private final static byte BAD_ENCODING = -9; // Indicates error in
 	// encoding
 	private final static byte Base64_WHITE_SPACE_ENC = -5; // Indicates white
-															// space in encoding
+
+	// space in encoding
 
 	private final static byte Base64_EQUALS_SIGN_ENC = -1; // Indicates equals
-															// sign in encoding
 
-	/* ******** E N C O D I N G M E T H O D S ******** */
+	// sign in encoding
 
 	/**
 	 * Encodes up to the first three bytes of array <var>threeBytes</var> and
@@ -546,277 +487,6 @@ public class License {
 			return destination;
 		} // end switch
 	} // end encode3to4
-
-
-
-	/**
-	 * Serializes an object and returns the Base64-encoded version of that
-	 * serialized object. If the object cannot be serialized or there is another
-	 * error, the method will return <tt>null</tt>.
-	 * <p>
-	 * Valid options:
-	 * 
-	 * <pre>
-	 *    GZIP: gzip-compresses object before encoding it.
-	 *    DONT_BREAK_LINES: don't break lines at 76 characters
-	 *      &lt;i&gt;Note: Technically, this makes your encoding non-compliant.&lt;/i&gt;
-	 * </pre>
-	 * 
-	 * <p>
-	 * Example: <code>encodeObject( myObj, Base64.GZIP )</code> or
-	 * <p>
-	 * Example:
-	 * <code>encodeObject( myObj, Base64.GZIP | Base64.DONT_BREAK_LINES )</code>
-	 * 
-	 * @param serializableObject
-	 *            The object to encode
-	 * @param options
-	 *            Specified options
-	 * @return The Base64-encoded object
-	 * @see Base64#Base64_GZIP
-	 * @see Base64#Base64_DONT_BREAK_LINES
-	 * @since 2.0
-	 */
-	private static String base64_encodeObject(
-			java.io.Serializable serializableObject, int options) {
-		// Streams
-		java.io.ByteArrayOutputStream baos = null;
-		java.io.OutputStream b64os = null;
-		java.io.ObjectOutputStream oos = null;
-		java.util.zip.GZIPOutputStream gzos = null;
-
-		// Isolate options
-		int gzip = (options & Base64_GZIP);
-		int dontBreakLines = (options & Base64_DONT_BREAK_LINES);
-
-		try {
-			// ObjectOutputStream -> (GZIP) -> Base64 -> ByteArrayOutputStream
-			baos = new java.io.ByteArrayOutputStream();
-			b64os = new Base64_OutputStream(baos, Base64_ENCODE
-					| dontBreakLines);
-
-			// GZip?
-			if (gzip == Base64_GZIP) {
-				gzos = new java.util.zip.GZIPOutputStream(b64os);
-				oos = new java.io.ObjectOutputStream(gzos);
-			} // end if: gzip
-			else
-				oos = new java.io.ObjectOutputStream(b64os);
-
-			oos.writeObject(serializableObject);
-		} // end try
-		catch (java.io.IOException e) {
-			e.printStackTrace();
-			return null;
-		} // end catch
-		finally {
-			try {
-				oos.close();
-			} catch (Exception e) {
-			}
-			try {
-				gzos.close();
-			} catch (Exception e) {
-			}
-			try {
-				b64os.close();
-			} catch (Exception e) {
-			}
-			try {
-				baos.close();
-			} catch (Exception e) {
-			}
-		} // end finally
-
-		// Return value according to relevant encoding.
-		try {
-			return new String(baos.toByteArray(), Base64_PREFERRED_ENCODING);
-		} // end try
-		catch (java.io.UnsupportedEncodingException uue) {
-			return new String(baos.toByteArray());
-		} // end catch
-
-	} // end encode
-
-	/**
-	 * Encodes a byte array into Base64 notation. Does not GZip-compress data.
-	 * 
-	 * @param source
-	 *            The data to convert
-	 * @since 1.4
-	 */
-	private static String base64_encodeBytes(byte[] source) {
-		return base64_encodeBytes(source, 0, source.length, Base64_NO_OPTIONS);
-	} // end encodeBytes
-
-	/**
-	 * Encodes a byte array into Base64 notation.
-	 * <p>
-	 * Valid options:
-	 * 
-	 * <pre>
-	 *    GZIP: gzip-compresses object before encoding it.
-	 *    DONT_BREAK_LINES: don't break lines at 76 characters
-	 *      &lt;i&gt;Note: Technically, this makes your encoding non-compliant.&lt;/i&gt;
-	 * </pre>
-	 * 
-	 * <p>
-	 * Example: <code>encodeBytes( myData, Base64.GZIP )</code> or
-	 * <p>
-	 * Example:
-	 * <code>encodeBytes( myData, Base64.GZIP | Base64.DONT_BREAK_LINES )</code>
-	 * 
-	 * 
-	 * @param source
-	 *            The data to convert
-	 * @param options
-	 *            Specified options
-	 * @see Base64#Base64_GZIP
-	 * @see Base64#Base64_DONT_BREAK_LINES
-	 * @since 2.0
-	 */
-	private static String base64_encodeBytes(byte[] source, int options) {
-		return base64_encodeBytes(source, 0, source.length, options);
-	} // end encodeBytes
-
-	/**
-	 * Encodes a byte array into Base64 notation. Does not GZip-compress data.
-	 * 
-	 * @param source
-	 *            The data to convert
-	 * @param off
-	 *            Offset in array where conversion should begin
-	 * @param len
-	 *            Length of data to convert
-	 * @since 1.4
-	 */
-	private static String base64_encodeBytes(byte[] source, int off, int len) {
-		return base64_encodeBytes(source, off, len, Base64_NO_OPTIONS);
-	} // end encodeBytes
-
-	/**
-	 * Encodes a byte array into Base64 notation.
-	 * <p>
-	 * Valid options:
-	 * 
-	 * <pre>
-	 *    GZIP: gzip-compresses object before encoding it.
-	 *    DONT_BREAK_LINES: don't break lines at 76 characters
-	 *      &lt;i&gt;Note: Technically, this makes your encoding non-compliant.&lt;/i&gt;
-	 * </pre>
-	 * 
-	 * <p>
-	 * Example: <code>encodeBytes( myData, Base64.GZIP )</code> or
-	 * <p>
-	 * Example:
-	 * <code>encodeBytes( myData, Base64.GZIP | Base64.DONT_BREAK_LINES )</code>
-	 * 
-	 * 
-	 * @param source
-	 *            The data to convert
-	 * @param off
-	 *            Offset in array where conversion should begin
-	 * @param len
-	 *            Length of data to convert
-	 * @param options
-	 *            Specified options
-	 * @see Base64#Base64_GZIP
-	 * @see Base64#Base64_DONT_BREAK_LINES
-	 * @since 2.0
-	 */
-	private static String base64_encodeBytes(byte[] source, int off, int len,
-			int options) {
-		// Isolate options
-		int dontBreakLines = (options & Base64_DONT_BREAK_LINES);
-		int gzip = (options & Base64_GZIP);
-
-		// Compress?
-		if (gzip == Base64_GZIP) {
-			java.io.ByteArrayOutputStream baos = null;
-			java.util.zip.GZIPOutputStream gzos = null;
-			Base64_OutputStream b64os = null;
-
-			try {
-				// GZip -> Base64 -> ByteArray
-				baos = new java.io.ByteArrayOutputStream();
-				b64os = new Base64_OutputStream(baos, Base64_ENCODE
-						| dontBreakLines);
-				gzos = new java.util.zip.GZIPOutputStream(b64os);
-
-				gzos.write(source, off, len);
-				gzos.close();
-			} // end try
-			catch (java.io.IOException e) {
-				e.printStackTrace();
-				return null;
-			} // end catch
-			finally {
-				try {
-					gzos.close();
-				} catch (Exception e) {
-				}
-				try {
-					b64os.close();
-				} catch (Exception e) {
-				}
-				try {
-					baos.close();
-				} catch (Exception e) {
-				}
-			} // end finally
-
-			// Return value according to relevant encoding.
-			try {
-				return new String(baos.toByteArray(), Base64_PREFERRED_ENCODING);
-			} // end try
-			catch (java.io.UnsupportedEncodingException uue) {
-				return new String(baos.toByteArray());
-			} // end catch
-		} // end if: compress
-
-		// Else, don't compress. Better not to use streams at all then.
-		else {
-			// Convert option to boolean in way that code likes it.
-			boolean breakLines = dontBreakLines == 0;
-
-			int len43 = len * 4 / 3;
-			byte[] outBuff = new byte[(len43) // Main 4:3
-					+ ((len % 3) > 0 ? 4 : 0) // Account for padding
-					+ (breakLines ? (len43 / Base64_MAX_LINE_LENGTH) : 0)]; // New
-																			// lines
-			int d = 0;
-			int e = 0;
-			int len2 = len - 2;
-			int lineLength = 0;
-			for (; d < len2; d += 3, e += 4) {
-				base64_encode3to4(source, d + off, 3, outBuff, e);
-
-				lineLength += 4;
-				if (breakLines && lineLength == Base64_MAX_LINE_LENGTH) {
-					outBuff[e + 4] = Base64_NEW_LINE;
-					e++;
-					lineLength = 0;
-				} // end if: end of line
-			} // en dfor: each piece of array
-
-			if (d < len) {
-				base64_encode3to4(source, d + off, len - d, outBuff, e);
-				e += 4;
-			} // end if: some padding needed
-
-			// Return value according to relevant encoding.
-			try {
-				return new String(outBuff, 0, e, Base64_PREFERRED_ENCODING);
-			} // end try
-			catch (java.io.UnsupportedEncodingException uue) {
-				return new String(outBuff, 0, e);
-			} // end catch
-
-		} // end else: don't compress
-
-	} // end encodeBytes
-
-	/* ******** D E C O D I N G M E T H O D S ******** */
 
 	/**
 	 * Decodes four bytes from array <var>source</var> and writes the resulting
@@ -935,7 +605,7 @@ public class License {
 			sbiDecode = Base64_DECODABET[sbiCrop];
 
 			if (sbiDecode >= Base64_WHITE_SPACE_ENC) // White space, Equals
-														// sign or better
+			// sign or better
 			{
 				if (sbiDecode >= Base64_EQUALS_SIGN_ENC) {
 					b4[b4Posn++] = sbiCrop;
@@ -1035,7 +705,6 @@ public class License {
 		return bytes;
 	} // end decode
 
-	
 	/* ******** I N N E R C L A S S I N P U T S T R E A M ******** */
 
 	/**
@@ -1080,10 +749,10 @@ public class License {
 		 * Valid options:
 		 * 
 		 * <pre>
-		 *    ENCODE or DECODE: Encode or Decode as data is read.
-		 *    DONT_BREAK_LINES: don't break lines at 76 characters
-		 *      (only meaningful when encoding)
-		 *      &lt;i&gt;Note: Technically, this makes your encoding non-compliant.&lt;/i&gt;
+		 *      ENCODE or DECODE: Encode or Decode as data is read.
+		 *      DONT_BREAK_LINES: don't break lines at 76 characters
+		 *        (only meaningful when encoding)
+		 *        &lt;i&gt;Note: Technically, this makes your encoding non-compliant.&lt;/i&gt;
 		 * </pre>
 		 * 
 		 * <p>
@@ -1302,10 +971,10 @@ public class License {
 		 * Valid options:
 		 * 
 		 * <pre>
-		 *    ENCODE or DECODE: Encode or Decode as data is read.
-		 *    DONT_BREAK_LINES: don't break lines at 76 characters
-		 *      (only meaningful when encoding)
-		 *      &lt;i&gt;Note: Technically, this makes your encoding non-compliant.&lt;/i&gt;
+		 *      ENCODE or DECODE: Encode or Decode as data is read.
+		 *      DONT_BREAK_LINES: don't break lines at 76 characters
+		 *        (only meaningful when encoding)
+		 *        &lt;i&gt;Note: Technically, this makes your encoding non-compliant.&lt;/i&gt;
 		 * </pre>
 		 * 
 		 * <p>
