@@ -3103,17 +3103,6 @@ DefaultTheme.prototype.setVariable = function(client, variableNode, newValue, im
 	variableNode.value = newValue;
 	client.changeVariable(variableNode.variableId, newValue, immediate);
 }
-DefaultTheme.prototype.setStringVariable = function(client, variableNode, newValue, immediate) {
-	alert("REMOVED FUNC!");
-}
-DefaultTheme.prototype.setBooleanVariable = function(client, variableNode, newValue, immediate) {
-	alert("REMOVED FUNC!");
-}
-
-DefaultTheme.prototype.setArrayVariable = function(client, variableNode, newValue, immediate) {
-	alert("REMOVED FUNC!");
-}
-
 DefaultTheme.prototype.addArrayVariable = function(client, variableNode, newValue, immediate) {
 	if (variableNode == null) return;
 	variableNode.value = this.listAddInt(variableNode.value,newValue);
@@ -3152,16 +3141,6 @@ DefaultTheme.prototype.arrayToList = function(arrayVariableElement) {
   
   return list;
 }
-
-/** TODO REMOVE */
-DefaultTheme.prototype.addEventListener = function(element,type,func) {
-	alert("addEventListener -> client");
-}
-/** TODO REMOVE */
-DefaultTheme.prototype.removeEventListener = function(element,type,func) {
-	alert("removeEventListener -> client");
-}
-
 
 /**
  *   Check if integer list contains a number.
@@ -3353,11 +3332,6 @@ DefaultTheme.prototype.togglePopup = function(popup, x, y, delay, defWidth) {
 	} else {
 		this.showPopup(client,popup,x,y,delay,defWidth);
 	}
-}
-
-// TODO REMOVE
-DefaultTheme.prototype.getEventProperties = function(e) {
-	alert("getEventProperties() -> client.getEvent()");
 }
 
 DefaultTheme.prototype.nodeToString = function(node, deep) {
