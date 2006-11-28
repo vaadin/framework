@@ -2885,13 +2885,21 @@ DefaultTheme.prototype.renderDefaultComponentHeader = function(renderer,uidl,tar
 }
 
 // TODO move generalized func:
+/**
+* Adds a hidden button with a tabindex; adds .over to hoverTarget when focused
+*/
 DefaultTheme.prototype.addTabtoHandlers = function(client,theme,target,hoverTarget,tabindex,defaultButton) {
-	var b = this.createInputElementTo(target,(defaultButton?"submit":"button"));
-	b.style.border = "none";
-	b.style.background = "none";
-	b.style.padding = "0px";
-	b.style.width = "0px";
-	b.style.height = "0px";
+	
+	var d = this.createElementTo(target,"div");
+	d.style.border = "none";
+	d.style.background = "none";
+	d.style.padding = "0px";
+	d.style.margin = "0px;"	
+	d.style.width = "0px";
+	d.style.height = "0px";
+	d.style.overflow = "hidden";
+
+	var b = this.createInputElementTo(d,(defaultButton?"submit":"button"));
 
 	if (tabindex) b.tabIndex = tabindex;
 
