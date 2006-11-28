@@ -1,5 +1,5 @@
 
-/** Creates new Millstone ajax client.
+/** Creates new ITMillToolkit ajax client.
  *  @param windowElementNode Reference to element that will contain the 
  * 				application window.
  *  @param servletUrl Base URL to server-side ajax adapter.
@@ -8,14 +8,14 @@
  *
  *  @author Oy IT Mill Ltd / Sami Ekblad
  */
-function MillstoneAjaxClient(windowElementNode, servletUrl, clientRoot, waitElement) {
+function ITMillToolkitClient(windowElementNode, servletUrl, clientRoot, waitElement) {
 
 	// Store parameters
 	this.mainWindowElement = windowElementNode;
 	if (this.mainWindowElement == null) {
 		alert("Invalid window element. Ajax client not properly initialized.");
 	}
-	this.millstoneMainWindow = window;
+	this.itmtkMainWindow = window;
 	
 	this.ajaxAdapterServletUrl = servletUrl;
 	if (this.ajaxAdapterServletUrl == null) {
@@ -107,7 +107,7 @@ function MillstoneAjaxClient(windowElementNode, servletUrl, clientRoot, waitElem
  *
  *  @author Oy IT Mill Ltd / Sami Ekblad
  */
-MillstoneAjaxClient.prototype.start = function() {
+ITMillToolkitClient.prototype.start = function() {
     
     if (this.debugEnabled) {
     	this.debug("Starting Ajax client");
@@ -127,9 +127,9 @@ MillstoneAjaxClient.prototype.start = function() {
  *
  *  @author Oy IT Mill Ltd / Sami Ekblad
  */
-MillstoneAjaxClient.prototype.createDebugWindow = function() {
+ITMillToolkitClient.prototype.createDebugWindow = function() {
 
-	var dw = window.open("","MillstoneAjaxDebugWindow","width=500,height=700,scrollbars=1,menubar=0,status=0,titlebar=0,toolbar=0,resizable=1");
+	var dw = window.open("","ITMillToolkitDebugWindow","width=500,height=700,scrollbars=1,menubar=0,status=0,titlebar=0,toolbar=0,resizable=1");
 	if (dw != null) {
 		with (dw.document) {
 		
@@ -138,7 +138,7 @@ MillstoneAjaxClient.prototype.createDebugWindow = function() {
 			}
 			
 			write("<html><head>");
-			write("<title>Millstone Ajax Adapter Debug</title>");
+			write("<title>IT Mill Toolkit Adapter Debug</title>");
 			write("<link rel=\"stylesheet\" href=\""+this.clientRoot+"debug.css\" type=\"text/css\" >");
 			write("</head>");
 			write("<body><h2>Debug</h2>");
@@ -151,7 +151,7 @@ MillstoneAjaxClient.prototype.createDebugWindow = function() {
 }
 
 
-MillstoneAjaxClient.prototype.warn = function (message, folded, extraStyle, html) {
+ITMillToolkitClient.prototype.warn = function (message, folded, extraStyle, html) {
 
 	// Check if we are in debug mode
 	if (!this.debugEnabled)	{ return; }
@@ -167,7 +167,7 @@ MillstoneAjaxClient.prototype.warn = function (message, folded, extraStyle, html
  *  @author Oy IT Mill Ltd / Sami Ekblad
  *
  */
-MillstoneAjaxClient.prototype.debug = function (message, folded, extraStyle, html) {
+ITMillToolkitClient.prototype.debug = function (message, folded, extraStyle, html) {
 
 	// Check if we are in debug mode
 	if (!this.debugEnabled)	{ return; }
@@ -218,7 +218,7 @@ MillstoneAjaxClient.prototype.debug = function (message, folded, extraStyle, htm
  *  @author Oy IT Mill Ltd / Sami Ekblad
  *
  */
-MillstoneAjaxClient.prototype.debugObject = function (obj,level) {
+ITMillToolkitClient.prototype.debugObject = function (obj,level) {
 	this.debug(this.printObject(obj,level),true,null,true);
 }
 
@@ -230,7 +230,7 @@ MillstoneAjaxClient.prototype.debugObject = function (obj,level) {
  *  @author Oy IT Mill Ltd / Sami Ekblad
  *
  */
-MillstoneAjaxClient.prototype.error = function (message, causeException) {
+ITMillToolkitClient.prototype.error = function (message, causeException) {
 
 	// Check if we are in debug mode
 	if (!this.debugEnabled)	{ return; }
@@ -271,7 +271,7 @@ MillstoneAjaxClient.prototype.error = function (message, causeException) {
  *
  *  @author Oy IT Mill Ltd / Sami Ekblad
  */
-MillstoneAjaxClient.prototype.getXMLHttpRequest = function () {
+ITMillToolkitClient.prototype.getXMLHttpRequest = function () {
 
 	var req = false;
   	
@@ -308,7 +308,7 @@ MillstoneAjaxClient.prototype.getXMLHttpRequest = function () {
  *  @author Oy IT Mill Ltd / Sami Ekblad
  * 
  */
-MillstoneAjaxClient.prototype.loadDocument = function (url,skipCache) {
+ITMillToolkitClient.prototype.loadDocument = function (url,skipCache) {
 
 	if (!skipCache) {
 		if (!this.loadcache) this.loadcache = new Object();
@@ -354,7 +354,7 @@ MillstoneAjaxClient.prototype.loadDocument = function (url,skipCache) {
  *  @author Oy IT Mill Ltd / Sami Ekblad
  * 
  */
-MillstoneAjaxClient.prototype.registerRenderer = function (theme, tag, componentStyle, renderFunction) {
+ITMillToolkitClient.prototype.registerRenderer = function (theme, tag, componentStyle, renderFunction) {
 
 	if (renderFunction == null) {
 		alert("Theme error: Invalid renderer function registered for '"+tag+(componentStyle == null ? "" : "." + componentStyle)+"'");
@@ -389,7 +389,7 @@ MillstoneAjaxClient.prototype.registerRenderer = function (theme, tag, component
  *  @author Oy IT Mill Ltd / Sami Ekblad
  * 
  */
-MillstoneAjaxClient.prototype.unregisterAllRenderers = function () {
+ITMillToolkitClient.prototype.unregisterAllRenderers = function () {
 
 	// We just create new, empty rederer map.
 	this.renderers = new Object();
@@ -405,7 +405,7 @@ MillstoneAjaxClient.prototype.unregisterAllRenderers = function () {
  *  @author Oy IT Mill Ltd / Sami Ekblad
  * 
  */
-MillstoneAjaxClient.prototype.createRequestChangeListener = function(client, req) {
+ITMillToolkitClient.prototype.createRequestChangeListener = function(client, req) {
 	
 	return (function()  {
 		if (req.readyState != 4 || req.status == null) {
@@ -467,7 +467,7 @@ MillstoneAjaxClient.prototype.createRequestChangeListener = function(client, req
  *  @author Oy IT Mill Ltd / Sami Ekblad
  *
  */
-MillstoneAjaxClient.prototype.processVariableChanges = function (repaintAll,nowait) {
+ITMillToolkitClient.prototype.processVariableChanges = function (repaintAll,nowait) {
 	
 	if (this.waitElement&&!nowait) {
 		this.waitElement.style.display = "inline";
@@ -505,7 +505,7 @@ MillstoneAjaxClient.prototype.processVariableChanges = function (repaintAll,nowa
  *  @author Oy IT Mill Ltd / Sami Ekblad
  *
  */
-MillstoneAjaxClient.prototype.getFirstChildElement = function (parent) {
+ITMillToolkitClient.prototype.getFirstChildElement = function (parent) {
 	/*
 	if (parent == null || parent.childNodes == null) {
 		return null;
@@ -539,12 +539,12 @@ MillstoneAjaxClient.prototype.getFirstChildElement = function (parent) {
  *  to contain a window component.
  *
  *  @param win The window to be initialized.
- *  @param name Millstone name of the window to be initialized.
+ *  @param name IT Mill Toolkit name of the window to be initialized.
  *  @return reference to div in document that should contain the window.
  *  @author Oy IT Mill Ltd / Sami Ekblad
  *
  */
-MillstoneAjaxClient.prototype.initializeNewWindow = function (win,uidl,theme) {
+ITMillToolkitClient.prototype.initializeNewWindow = function (win,uidl,theme) {
 
 	if (win == null) {
 		return null;
@@ -564,7 +564,7 @@ MillstoneAjaxClient.prototype.initializeNewWindow = function (win,uidl,theme) {
 	if (framewindow) {
 		html = this.createFramesetHtml(uidl,theme)
 	} else {
-		html = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\"><HTML><HEAD id=\"html-head\"><TITLE>"+caption+"</TITLE></HEAD>"+"<BODY STYLE=\" overflow: hidden; border: none; margin: 0px; padding: 0px;\"><div id=\"millstone-window\" class=\"window\"></div><\/BODY><\/HTML>";			
+		html = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\"><HTML><HEAD id=\"html-head\"><TITLE>"+caption+"</TITLE></HEAD>"+"<BODY STYLE=\" overflow: hidden; border: none; margin: 0px; padding: 0px;\"><div id=\"itmtk-window\" class=\"window\"></div><\/BODY><\/HTML>";			
 	}
     win.document.open();
     win.document.write(html);
@@ -618,17 +618,17 @@ MillstoneAjaxClient.prototype.initializeNewWindow = function (win,uidl,theme) {
 	}
 	
 	// Ensure the name
-	win.millstoneWindowName = name;
+	win.itmtkWindowName = name;
 	
 	// Assign the current node into that window
-	var winElement = win.document.getElementById("millstone-window");
+	var winElement = win.document.getElementById("itmtk-window");
 	if (framewindow) {
 		winElement = win.document.getElementById(uidl.getAttribute("id"));
 	}	
 	if (winElement == null && this.debugEnabled) {
 			this.warn("Window element not found!");
 	}
-	win.document.millstoneWindowElement = winElement;
+	win.document.itmtkWindowElement = winElement;
 	
 	
 	if (!win.png) {
@@ -663,12 +663,12 @@ MillstoneAjaxClient.prototype.initializeNewWindow = function (win,uidl,theme) {
 /** Recursively create frameset html for FrameWindow initialization.
  *
  *  @param win The window to be initialized.
- *  @param name Millstone name of the window to be initialized.
+ *  @param name IT Mill Toolkit name of the window to be initialized.
  *  @return reference to div in document that should contain the window.
  *  @author Oy IT Mill Ltd / Sami Ekblad
  *
  */
-MillstoneAjaxClient.prototype.createFramesetHtml = function(uidl,theme) {
+ITMillToolkitClient.prototype.createFramesetHtml = function(uidl,theme) {
 
 	if (uidl == null) {
 		return "";
@@ -720,7 +720,7 @@ MillstoneAjaxClient.prototype.createFramesetHtml = function(uidl,theme) {
  *  @author Oy IT Mill Ltd / Sami Ekblad
  *
  */
-MillstoneAjaxClient.prototype.unregisterWindow = function (windowName) {
+ITMillToolkitClient.prototype.unregisterWindow = function (windowName) {
 	if (this.debugEnabled) {
 		this.debug("Unregistering window '"+windowName+"'");
 	}
@@ -754,9 +754,9 @@ MillstoneAjaxClient.prototype.unregisterWindow = function (windowName) {
  *  @author Oy IT Mill Ltd / Sami Ekblad
  *
  */
-MillstoneAjaxClient.prototype.registerWindow = function (windowName,win,doc) {
+ITMillToolkitClient.prototype.registerWindow = function (windowName,win,doc) {
 	if (win != null && doc != null && windowName != null) {	
-		doc.millstoneWindowName = windowName;
+		doc.itmtkWindowName = windowName;
 		this.documents[windowName] = doc;
 		this.windows[windowName] = win;
 		if (this.debugEnabled) {
@@ -774,7 +774,7 @@ MillstoneAjaxClient.prototype.registerWindow = function (windowName,win,doc) {
  *  @author Oy IT Mill Ltd / Sami Ekblad
  *
  */
-MillstoneAjaxClient.prototype.findPaintableById = function (paintableId) {
+ITMillToolkitClient.prototype.findPaintableById = function (paintableId) {
 
 	if (this.documents == null) {
 		return null;
@@ -784,7 +784,7 @@ MillstoneAjaxClient.prototype.findPaintableById = function (paintableId) {
 		var win = this.windows[name];
 		
 		try {
-			if (win && win.location && this.millstoneMainWindow.location.href != win.location.href) {
+			if (win && win.location && this.itmtkMainWindow.location.href != win.location.href) {
 				// referencing external url, we cannot access, but no problem:
 				// it can't contain the paitable either.
 				if (this.debugEnabled) {
@@ -803,12 +803,12 @@ MillstoneAjaxClient.prototype.findPaintableById = function (paintableId) {
 				if (el != null) {
 					if (this.debugEnabled) {
 						var isMain = el.ownerDocument == this.mainDocument? "main":" child";
-						this.debug("Paintable '"+paintableId+"' found in "+isMain+"-window: '"+d.millstoneWindowName+"'");
+						this.debug("Paintable '"+paintableId+"' found in "+isMain+"-window: '"+d.itmtkWindowName+"'");
 					}			
 					return el;
 				} else {
 					if (this.debugEnabled) {
-						this.debug("Window: '"+d.millstoneWindowName+"' does NOT contain Paintable '"+paintableId+"'");
+						this.debug("Window: '"+d.itmtkWindowName+"' does NOT contain Paintable '"+paintableId+"'");
 					}			
 				}
 			}
@@ -835,7 +835,7 @@ MillstoneAjaxClient.prototype.findPaintableById = function (paintableId) {
  *  @author Oy IT Mill Ltd / Sami Ekblad
  *
  */
-MillstoneAjaxClient.prototype.processUpdates = function (updates) {
+ITMillToolkitClient.prototype.processUpdates = function (updates) {
 	if (this.debugEnabled) {
 		this.debug("Processing updates.");
 	}
@@ -979,7 +979,7 @@ MillstoneAjaxClient.prototype.processUpdates = function (updates) {
  *  @author Oy IT Mill Ltd / Sami Ekblad
  *
  */
-MillstoneAjaxClient.prototype.renderUIDL = function (uidl, target, renderer) {
+ITMillToolkitClient.prototype.renderUIDL = function (uidl, target, renderer) {
 
 	// Sanity check
 	if (uidl == null || uidl.nodeType != Node.ELEMENT_NODE) return;
@@ -1053,7 +1053,7 @@ MillstoneAjaxClient.prototype.renderUIDL = function (uidl, target, renderer) {
  *  @author Oy IT Mill Ltd / Sami Ekblad
  * 
  */
-MillstoneAjaxClient.prototype.findRenderer = function (tag, componentStyle) {
+ITMillToolkitClient.prototype.findRenderer = function (tag, componentStyle) {
 	var renderer = null;
 	var rendererId = tag + (componentStyle == null ? "" : "__" + componentStyle);
 
@@ -1081,7 +1081,7 @@ MillstoneAjaxClient.prototype.findRenderer = function (tag, componentStyle) {
  *  @author Oy IT Mill Ltd / Sami Ekblad
  * 
  */
-MillstoneAjaxClient.prototype.renderHTML = function (xml, target) {
+ITMillToolkitClient.prototype.renderHTML = function (xml, target) {
 
 	var n = this.createElement("div",target);
 	target.appendChild(n);
@@ -1115,7 +1115,7 @@ MillstoneAjaxClient.prototype.renderHTML = function (xml, target) {
  *  @author Oy IT Mill Ltd / Sami Ekblad
  * 
  */
-MillstoneAjaxClient.prototype.getXMLtext = function(xml) {
+ITMillToolkitClient.prototype.getXMLtext = function(xml) {
 	var n = "";
 	n += "<" + xml.nodeName;
 	if (xml.attributes.length > 0)
@@ -1150,7 +1150,7 @@ MillstoneAjaxClient.prototype.getXMLtext = function(xml) {
  *  @author Oy IT Mill Ltd / Sami Ekblad
  * 
  */
-MillstoneAjaxClient.prototype.changeVariable = function (name, value, immediate, nowait) {
+ITMillToolkitClient.prototype.changeVariable = function (name, value, immediate, nowait) {
 	this.debug("variableChange('" + name + "', '" + value + "', " + immediate + ");");
 
 	this.variableStates[name] = escape(value);
@@ -1173,7 +1173,7 @@ MillstoneAjaxClient.prototype.changeVariable = function (name, value, immediate,
  *  @author Oy IT Mill Ltd / Sami Ekblad
  * 
  */
-MillstoneAjaxClient.prototype.createPaintableElement = function (uidl, target) {
+ITMillToolkitClient.prototype.createPaintableElement = function (uidl, target) {
 
 	// Create DIV as container to right document.
 	var div = this.createElement("div", target);
@@ -1213,7 +1213,7 @@ MillstoneAjaxClient.prototype.createPaintableElement = function (uidl, target) {
  *  @author Oy IT Mill Ltd / Sami Ekblad
  *
  */
-MillstoneAjaxClient.prototype.setElementClassName = function(element,className) {
+ITMillToolkitClient.prototype.setElementClassName = function(element,className) {
 	if (element == null) { return; }
 		element.style.className = className;
 	
@@ -1228,7 +1228,7 @@ MillstoneAjaxClient.prototype.setElementClassName = function(element,className) 
  *  
  *   @return the listener function added
  */
-MillstoneAjaxClient.prototype.addEventListener = function(element,type,func) {
+ITMillToolkitClient.prototype.addEventListener = function(element,type,func) {
 	if (element.addEventListener) {
 		element.addEventListener(type, func, false);
 		
@@ -1255,7 +1255,7 @@ MillstoneAjaxClient.prototype.addEventListener = function(element,type,func) {
  *   @param func         The listener function to remove.
  *  
  */
-MillstoneAjaxClient.prototype.removeEventListener = function(element,type,func) {
+ITMillToolkitClient.prototype.removeEventListener = function(element,type,func) {
 	if (element.removeEventListener) {
 		element.removeEventListener(type, func, false);
 		
@@ -1283,7 +1283,7 @@ MillstoneAjaxClient.prototype.removeEventListener = function(element,type,func) 
  *   @param func         The listener function to remove.
  *  
  */
- MillstoneAjaxClient.prototype.removeAllEventListeners = function(element) {
+ ITMillToolkitClient.prototype.removeAllEventListeners = function(element) {
  	var removed = 0;
 	if (element.eventMap) {
 		for (var t in element.eventMap) {
@@ -1319,7 +1319,7 @@ MillstoneAjaxClient.prototype.removeEventListener = function(element,type,func) 
 	return removed;
 }
 
-MillstoneAjaxClient.prototype.registerLayoutFunction = function (paintableElement,func) {
+ITMillToolkitClient.prototype.registerLayoutFunction = function (paintableElement,func) {
 	if (!paintableElement || !func) {
 		this.error("Invalid layout function registration; paintableElement:"+paintableElement+" func:"+func);
 		return;
@@ -1344,7 +1344,7 @@ MillstoneAjaxClient.prototype.registerLayoutFunction = function (paintableElemen
 
 	this.debug("Registered layout function for ("+paintableElement.nodeName+") pid " + pid + " as number " + idx);
 }
-MillstoneAjaxClient.prototype.unregisterLayoutFunction = function (paintableElement) {
+ITMillToolkitClient.prototype.unregisterLayoutFunction = function (paintableElement) {
 	if (!paintableElement) {
 		this.error("unregisterLayoutFunction(): NULL paintableElement!");
 		return false;
@@ -1374,7 +1374,7 @@ MillstoneAjaxClient.prototype.unregisterLayoutFunction = function (paintableElem
 
 	return true;
 }
-MillstoneAjaxClient.prototype.unregisterAllLayoutFunctions = function (paintableElement) {
+ITMillToolkitClient.prototype.unregisterAllLayoutFunctions = function (paintableElement) {
 	var removed = 0;
 	if (!paintableElement) {
 		removed = (this.layoutFunctions?this.layoutFunctions.length:0);
@@ -1401,7 +1401,7 @@ MillstoneAjaxClient.prototype.unregisterAllLayoutFunctions = function (paintable
 	
 	return removed;
 }
-MillstoneAjaxClient.prototype.processAllLayoutFunctions = function() {
+ITMillToolkitClient.prototype.processAllLayoutFunctions = function() {
 	if (this.layoutFunctions) {
 		this.debug("Processing layout functions...");
 		var lf = this.layoutFunctions;
@@ -1442,7 +1442,7 @@ MillstoneAjaxClient.prototype.processAllLayoutFunctions = function() {
  *
  *	@return Properties object.  
  */
-MillstoneAjaxClient.prototype.getEvent = function(e) {
+ITMillToolkitClient.prototype.getEvent = function(e) {
 	var props = new Object()
 
 	if (!e) var e = window.event;
@@ -1497,7 +1497,7 @@ MillstoneAjaxClient.prototype.getEvent = function(e) {
 	
 	return props;
 }
-MillstoneAjaxClient.prototype.getElementPosition = function(element) {
+ITMillToolkitClient.prototype.getElementPosition = function(element) {
 	var props = new Object();
 // TODO scroll offsets testing in IE
 	var obj = element;
@@ -1527,7 +1527,7 @@ MillstoneAjaxClient.prototype.getElementPosition = function(element) {
  *  @obj Object to be printed
  *  @level recursion level
  */
-MillstoneAjaxClient.prototype.debugObjectWindow = function(obj,level) {
+ITMillToolkitClient.prototype.debugObjectWindow = function(obj,level) {
 
 	// Default level
 	if (level == null) {
@@ -1550,7 +1550,7 @@ MillstoneAjaxClient.prototype.debugObjectWindow = function(obj,level) {
  *  @obj Object to be printed
  *  @level recursion level
  */
-MillstoneAjaxClient.prototype.printObject = function(obj,level) {
+ITMillToolkitClient.prototype.printObject = function(obj,level) {
 	if (level == null || level < 1) {
 		level = 1;
 	}
@@ -1584,7 +1584,7 @@ MillstoneAjaxClient.prototype.printObject = function(obj,level) {
  *  @target Target element
  *  @text Textnode content
  */
-MillstoneAjaxClient.prototype.createTextNode = function(text, target) {
+ITMillToolkitClient.prototype.createTextNode = function(text, target) {
 	if (target != null && target.ownerDocument != null) {
 		return target.ownerDocument.createTextNode(text);
 	} else {
@@ -1599,7 +1599,7 @@ MillstoneAjaxClient.prototype.createTextNode = function(text, target) {
  *  @nodeName Element nodeName
  *  @text Textnode content
  */
-MillstoneAjaxClient.prototype.createElement = function(nodeName, target) {
+ITMillToolkitClient.prototype.createElement = function(nodeName, target) {
 	
 	if (target != null && target.ownerDocument != null) {
 		return target.ownerDocument.createElement(nodeName);
