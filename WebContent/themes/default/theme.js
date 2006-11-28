@@ -405,6 +405,16 @@ DefaultTheme.prototype.createVariableElementTo = function(target,variableElement
 	if (!variableElement) {
 		return null;
 	}
+	/* TODO FF kludge try, does not work - how to prevent flashing hiddens?
+	var d = this.createElementTo(target,"div");
+	d.style.border = "none";
+	d.style.background = "none";
+	d.style.padding = "0px";
+	d.style.margin = "0px;"	
+	d.style.width = "0px";
+	d.style.height = "0px";
+	d.style.overflow = "hidden";
+	*/
 	var input = this.createInputElementTo(target,"hidden");
 	input.variableId = variableElement.getAttribute("id");
 	input.variableName = variableElement.getAttribute("name");
@@ -528,8 +538,15 @@ DefaultTheme.prototype.createPaintableElement = function (renderer, uidl, target
 	div.layoutInfo = li;
 	
 	// Remove possible previous content from target
+	/* TODO remove when tested
 	while (div.firstChild != null) {
 		div.removeChild(div.firstChild);
+	}
+	*/
+	div.innerHTML = "";
+	if (li&&li.captionNode) {
+		// caption placed elsewhere (form); see renderDefaultComponentHeader()
+		li.captionNode.innerHTML = "";
 	}
 		
 	// Assign CSS class
@@ -541,7 +558,6 @@ DefaultTheme.prototype.createPaintableElement = function (renderer, uidl, target
 		this.addCSSClass(div,"error");
 	}
 	
-	// Return reference to newly created div
 	return div;	
 }
 
@@ -1105,7 +1121,6 @@ DefaultTheme.prototype.renderWindow = function(renderer,uidl,target,layoutInfo) 
 }
 
 DefaultTheme.prototype.renderOpen = function(renderer,uidl,target,layoutInfo) {
-	// Shortcuts
 	var theme = renderer.theme;
  	
  	var src = uidl.getAttribute("src");
@@ -1119,8 +1134,7 @@ DefaultTheme.prototype.renderOpen = function(renderer,uidl,target,layoutInfo) {
 	}
 }
 
-DefaultTheme.prototype.renderFramewindow = function(renderer,uidl,target,layoutInfo) {
-	
+DefaultTheme.prototype.renderFramewindow = function(renderer,uidl,target,layoutInfo) {	
 	var theme = renderer.theme;
 	var client = renderer.client;
 	
@@ -1588,7 +1602,7 @@ DefaultTheme.prototype.renderTextField = function(renderer,uidl,target, layoutIn
 	// Create containing element
 	var div = renderer.theme.createPaintableElement(renderer,uidl,target,layoutInfo);
 	if (uidl.getAttribute("invisible")) return; // Don't render content if invisible
-	
+
 	// Render default header
 	renderer.theme.renderDefaultComponentHeader(renderer,uidl,div, layoutInfo);
 	
@@ -3315,7 +3329,8 @@ DefaultTheme.prototype.renderSelectOptionGroup = function(renderer,uidl,target,l
 	
 	// Create containing element
 	var div = theme.createPaintableElement(renderer,uidl,target);	
-
+	if (uidl.getAttribute("invisible")) return; // Don't render content if invisible
+	
 	// Create selection variable
 	var selectMode = uidl.getAttribute("selectmode");
 	var selectable = selectMode == "multi" || selectMode == "single";
@@ -3519,7 +3534,7 @@ DefaultTheme.prototype.renderCheckBox = function(renderer,uidl,target,layoutInfo
 
 
 ///////
-
+/* TODO merge or delete the rest
 
 /**
  *   Render tree as a menubar.
