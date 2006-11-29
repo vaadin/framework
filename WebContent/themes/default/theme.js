@@ -1281,7 +1281,6 @@ DefaultTheme.prototype.renderGridLayout = function(renderer,uidl,target,layoutIn
 	//var px = Math.floor(width/parseInt(w));
 	
 	var table = theme.createElementTo(div,"table", "layout");
-	//table.width = "100%";
 	table = renderer.theme.createElementTo(table,"tbody","layout");
 	var tr = null;
 	var td = null;
@@ -1307,10 +1306,10 @@ DefaultTheme.prototype.renderGridLayout = function(renderer,uidl,target,layoutIn
 					//var cont = renderer.theme.createElementTo(td,"div");
 					//cont.style.width = ((w?w:1)*px)+"px";
 					if (w != null) {
-						td.setAttribute('colspan',w);
+						td.setAttribute('colSpan',w);
 					}
 					if (h != null) {
-						td.setAttribute('rowspan',h);
+						td.setAttribute('rowSpan',h);
 					}					
 					// Render the component(s) to TD
 					if (cellUidl.childNodes != null && cellUidl.childNodes.length >0) {
