@@ -1350,7 +1350,7 @@ DefaultTheme.prototype.renderPanel = function(renderer,uidl,target,layoutInfo) {
             }
 			if ("light"==style) {
 				theme.addCSSClass(div,"light");
-				borderStyle += "light";
+				//borderStyle += "light";
 			}
 			
 			// Create extra DIV for visual layout

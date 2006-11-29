@@ -176,7 +176,7 @@ IMG.overlay {
 	color: CaptionText;
 	background-color: ActiveCaption;
 }
-.panel-light .borderlight {
+.panel .border, .panel-light .border {
 	border: 2px groove ThreeDHighlight;
 }
 
