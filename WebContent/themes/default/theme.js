@@ -791,9 +791,12 @@ DefaultTheme.prototype.showPopup = function(client,popup, x, y, delay, defWidth)
 		this.hidePopup();
 	} 
 	this.popup = popup;
+/*	THIS CODE IS NOT NEEDED IF WE CAN POSITION THE POPUP BEFOREHAND
+
 	popup.style.left = 0+"px";
 	popup.style.top = 0+"px";
 	this.removeCSSClass(popup,"hide");
+
     var p = client.getElementPosition(popup);
     this.addCSSClass(popup,"hide");
     // TODOO!!! width not working properly
@@ -822,7 +825,7 @@ DefaultTheme.prototype.showPopup = function(client,popup, x, y, delay, defWidth)
     
 	popup.style.left = posX+"px";
 	popup.style.top = posY+"px";
-
+*/
 	if (delay > 0) {
 		with ({theme:this}) {
 			theme.popupTimeout = setTimeout(function(){
@@ -1336,6 +1339,8 @@ DefaultTheme.prototype.renderPanel = function(renderer,uidl,target,layoutInfo) {
 			
 			var style = uidl.getAttribute("style");
 			
+			var borderStyle = "border";
+			
 			// Create component element
 			var outer = theme.createPaintableElement(renderer,uidl,target,layoutInfo);
 			if (uidl.getAttribute("invisible")) return; // Don't render content if invisible
@@ -1345,19 +1350,20 @@ DefaultTheme.prototype.renderPanel = function(renderer,uidl,target,layoutInfo) {
             }
 			if ("light"==style) {
 				theme.addCSSClass(div,"light");
+				borderStyle += "light";
 			}
 			
 			// Create extra DIV for visual layout
 			var div = theme.createElementTo(outer,"div");
             if ("none"!=style) {
-			    theme.setCSSClass(div,"border");
+			    theme.setCSSClass(div,borderStyle);
             }
 
 			// Create default header
 			var caption = theme.renderDefaultComponentHeader(renderer,uidl,div);
-			theme.addCSSClass(caption,"pad");
+			theme.addCSSClass(caption,"panelcaption");
             if ("light"==style) {
-				theme.addCSSClass(caption,"lightcap");
+				theme.addCSSClass(caption,"panelcaptionlight");
 			}
 
 			// Create content DIV
@@ -1382,7 +1388,6 @@ DefaultTheme.prototype.renderTabSheet = function(renderer,uidl,target,layoutInfo
 
 			// Create default header
 			var caption = renderer.theme.renderDefaultComponentHeader(renderer,uidl,div,layoutInfo);
-			theme.createElementTo(div,"br");
 			
 			//  Render tabs
 			var tabs = theme.createElementTo(div,"div","tabs");
@@ -1404,7 +1409,9 @@ DefaultTheme.prototype.renderTabSheet = function(renderer,uidl,target,layoutInfo
 					if (tabNode.getAttribute("selected") == "true") {
 						theme.addCSSClass(tab,"tab-on inline");
 						selectedTabNode = tabNode;
-					} else if (tabNode.getAttribute("disabled") == "true") {
+					} else if (tabNode.getAttribute("disabled") == "true" 
+								|| uidl.getAttribute("disabled") == "true"
+								|| uidl.getAttribute("readonly") == "true") {
 						theme.setCSSClass(tab,"tab disabled inline");
 					} else {
 						theme.setCSSClass(tab,"tab clickable inline");
@@ -1417,22 +1424,18 @@ DefaultTheme.prototype.renderTabSheet = function(renderer,uidl,target,layoutInfo
 					
 					// Icon
 					if (iconUrl) {
-						tab.innerHTML = "<IMG src=\""+iconUrl+"\" class=\"icon\" />"+tabNode.getAttribute("caption");
-						//var icon = theme.createElementTo(tab,"img","icon");
-						//icon.src = iconUrl;
+						tab.innerHTML = "<IMG src=\""+iconUrl+"\" class=\"icon\" />" + tabNode.getAttribute("caption");
 					} else {
 						tab.innerHTML = tabNode.getAttribute("caption");
 					}
-					
-					// Caption
-					//theme.createTextNodeTo(tab,tabNode.getAttribute("caption"));
 				
 				}
 			}
 			
-			// Render content
+			// Render content (IE renderbug need three)
 			var content = theme.createElementTo(div,"div","outset");
-			content = theme.createElementTo(content,"div","content border");
+			content = theme.createElementTo(content,"div","border");
+			content = theme.createElementTo(content,"div","content");
 			if (selectedTabNode != null) {
 				theme.renderChildNodes(renderer,selectedTabNode, content);
 			}
@@ -1617,14 +1620,12 @@ DefaultTheme.prototype.renderTextField = function(renderer,uidl,target, layoutIn
 			input.focusid = focusid;
 		}
 	} else {
-		input = renderer.theme.createInputElementTo(border,(secret?"password":"text"),null,focusid);
-		
+		input = renderer.theme.createInputElementTo(border,(secret?"password":"text"),null,focusid);	
 	}
 	if (tabindex) input.tabIndex = tabindex;
 	if (disabled||readonly) {
 		input.disabled = "true";
 	}
-	
 	
 	// Assign cols and rows
 	if (cols >0) {
@@ -1632,6 +1633,7 @@ DefaultTheme.prototype.renderTextField = function(renderer,uidl,target, layoutIn
 			input.cols = cols;
 		} else {
 			input.size = cols;
+			input.maxlength = cols;
 		}
 	}
 	if (rows >0) {
@@ -1740,7 +1742,7 @@ DefaultTheme.prototype.renderDateField = function(renderer,uidl,target,layoutInf
 		    }
 			
 			// Create button
-		    var button = theme.createInputElementTo(div,"button");
+		    var button = theme.createInputElementTo(div,"button","btn clickable");
 		    button.id =buttonId;
 		    button.value = "...";
 		    if (disabled||readonly) {
@@ -2305,8 +2307,8 @@ DefaultTheme.prototype.renderLink = function(renderer,uidl,target,layoutInfo) {
 	var link = theme.createElementTo(div,"div", "link pad clickable");
 	
 	if (!disabled&&!readonly) {
-		theme.addAddClassListener(theme,client,div,"mouseover","over");
-		theme.addRemoveClassListener(theme,client,div,"mouseout","over");
+		theme.addAddClassListener(theme,client,link,"mouseover","over");
+		theme.addRemoveClassListener(theme,client,link,"mouseout","over");
 		
 		var feat;
 		switch (border) {
@@ -3273,7 +3275,7 @@ DefaultTheme.prototype.renderSelect = function(renderer,uidl,target,layoutInfo) 
 	if (focusid) select.focusid = focusid;
 	if (tabindex) select.tabIndex = tabindex;
 	if (selectMode == "multi") {
-		select.setAttribute("multiple", "true"); 
+		select.setAttribute("multiple", "true");
 		if (newitem) {
 			theme.createElementTo(div,"br");
 		} 
@@ -3285,6 +3287,9 @@ DefaultTheme.prototype.renderSelect = function(renderer,uidl,target,layoutInfo) 
 	var options = theme.getFirstElement(uidl,"options");
 	if (options != null) {
 		options = options.getElementsByTagName("so");
+		if (options && options.length && selectMode == "multi") {
+			select.size = (options.length>7?7:options.length);
+		}
 	}	
 	if (disabled||readonly) {
 		select.disabled = "true";
@@ -3313,7 +3318,7 @@ DefaultTheme.prototype.renderSelect = function(renderer,uidl,target,layoutInfo) 
 		var button = theme.createElementTo(div,"button");
 		theme.createTextNodeTo(button,"+");
 		var newitemVariable = theme.createVariableElementTo(div,theme.getVariableElement(uidl,"string","newitem"));
-		theme.addSetVarListener(theme,client,input,"change",newitemVariable,input,immediate);
+		theme.addSetVarListener(theme,client,input,"change",newitemVariable,input,true);
 	}
 }
 
@@ -3364,9 +3369,9 @@ DefaultTheme.prototype.renderSelectOptionGroup = function(renderer,uidl,target,l
 			var caption =  optionUidl.getAttribute("caption");
 			var html;
 			if (selectMode == "multi") {
-				html = "<input type=checkbox name=\""+inputName+"\" id=\""+inputId+"\" ";
+				html = "<input class=\"option\" type=checkbox name=\""+inputName+"\" id=\""+inputId+"\" ";
 			} else {	
-				html = "<input type=radio name=\""+inputName+"\" id=\""+inputId+"\" ";			
+				html = "<input class=\"option\" type=radio name=\""+inputName+"\" id=\""+inputId+"\" ";			
 			}
 			if (disabled||readonly) html += " disabled=\"true\" "
 			if (optionUidl.getAttribute("selected") == "true") {
@@ -3395,11 +3400,11 @@ DefaultTheme.prototype.renderSelectOptionGroup = function(renderer,uidl,target,l
 		}
 	}
 	if (newitem) {
-		theme.createElementTo(div,"br");
-		var input = theme.createInputElementTo(div,"text");
-		var button = theme.createElementTo(div,"button");
+		var ni = theme.createElementTo(div,"div","newitem");
+		var input = theme.createInputElementTo(ni,"text");
+		var button = theme.createElementTo(ni,"button");
 		theme.createTextNodeTo(button,"+");
-		var newitemVariable = theme.createVariableElementTo(div,theme.getVariableElement(uidl,"string","newitem"));
+		var newitemVariable = theme.createVariableElementTo(ni,theme.getVariableElement(uidl,"string","newitem"));
 		theme.addSetVarListener(theme,client,input,"change",newitemVariable,input,true);
 	}
 }

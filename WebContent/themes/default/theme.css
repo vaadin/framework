@@ -1,803 +1,225 @@
-/**
-* Various styles for debug mode
-*/
+/* Debug styles */
 .uidl {
+	position: absolute;
 	z-index: 1001;
 	text-indent: 18px;
-	border: 1px dashed red;
+	background-color: white;
+	background-image: url('img/debug.gif');
+	background-repeat: no-repeat;
+	background-position: 1 1;
 	font-weight: normal;
 	white-space: nowrap;
-	cursor: hand;
-	cursor: pointer;
 }
-
 .minimized {
 	overflow: hidden;
-	width: 5px;
-	height: 5px;
+	width: 18px;
+	height: 18px;
 	z-index: 1000;
-	float: left;
 }
 
+/* General styles */
 
-
-/**
-* Common attribute classes
-*/
-.abs { position: absolute; }
-.right { float: right; }
-.nobr {	white-space: nowrap; }
-.inline { display: inline; }
-.hidden { display: none; }
-.pad {
-    padding: 3px 7px 3px 10px;
-}
-.padnr {
-    padding: 4px 0 4px 10px;	
+* {
+    background-color: ThreeDFace;
+    font-family: sans-serif;
+    Xfont-size: 10pt;
+    font-weight: normal;
 }
 
-/**
-* Background used in various headers
-*/
-.bg {
-    background-image: url(img/bg1.gif);
-    background-repeat: repeat-x; 
-    background-color: white;    
+.inline {
+    display: inline;
 }
 
+.hidden {
+    display: none;
+}
 
+.border {
+    background-color: ButtonFace;
+    border-width: 1px;
+    border-style: solid;
+    border-color: ButtonHighlight ButtonShadow ButtonShadow ButtonHighlight;    
+}
 
-
-
-
-
-
-
-
-
+.outset {
+	border: 1px solid ButtonFace;
+}
+/* DISABLED */
 .disabled {
-    color: #999999;
+    color: GrayText;
     opacity: 0.5;
     filter: alpha(opacity=50);
 }
 .disabled .caption {
-    color: #999999;
+    color: GrayText;
 }
 .disabled .border .caption {
-    color:#999999;
+    color: GrayText;
 }
-.disabled * {
-    color:#999999;
+INPUT, SELECT, SELECT OPTION, TEXTAREA {
+	background-color: ThreeDHighlight;
+}
+.disabled INPUT, .disabled SELECT, .disabled SELECT OPTION {
+	background-color: ThreeDFace;
 }
 
+/* CAPTION */
 .caption {
-    font-weight:bold;
-    color: black;
-    white-space:nowrap;
-    /*height: 16px;*/
+    color: ButtonText;
 }
-.caption .error {
-	/*width: 16px;
-	height: 16px;*/	
-	padding-left:5px;
-}
-
-.content {
-	padding:5px;
+.caption .icon {
+	width: 1em;
+	height: 1em;	
+	vertical-align: middle;
+	padding-right: 5px;
 }
 
 .clickable {
-    cursor:hand;
-    cursor:pointer;
+    cursor: hand;
+    cursor: pointer;
 }
 
-
-/*.over {
-	border: 1px solid #eeeeee;
+.over {
+	border: 1px solid ThreeDDarkShadow;
 }
-.over .border {
- 	border: 1px solid #9999ee;
-	margin-left:-1px;
-}*/
-
-/*
-.over.outset {
- 	border: 1px solid #eeeeee !important;
- 	border: inherit;
-}*/
-
-.border {
-    border: 1px solid #aaaaaa;
+.over .caption {
+ 	color: ActiveCaption;
 }
 
-.border.error {
-    border-color: #ee6666;
+.selected {
+	font-weight: bold;
+	background: #aaaaaa;
 }
 
+.content {
+    padding: 7px;
+}
+
+/* TOOLTIP */
 IMG.overlay {
 	position: absolute;
 	z-index: 5;
 }
-IMG.error {
-	width: 11px;
-	height: 16px;
-}
-
-.inset {
-    border-top: 2px solid #eeeeee;
-    border-left: 2px solid #eeeeee;
-}
-
-.outset {
-    border-bottom: 2px solid #eeeeee;
-    border-right: 2px solid #eeeeee;
-}
-
-.odd {
-    background-color:#f1f1f1;
-}
-
-
-.selectable {
-    color:white;
-	background:#0075d9;
-}
-.selected {
-	background-color:#c6e5fa;
-}
-
-/* Popup */
 .popup {
-	font-weight: normal;
 	position: absolute;
-	z-index: 10000;
-	background: #f5f5fa;
-}
-.popup TD {
-	padding: 0px;
-	border: 0px;
-	margin: 0px;
-}
-.popup .icon {
-	vertical-align: middle;
-	display: inline;
-	/*width: auto;
-	height: auto;*/
-}
-.popup .error {
-	border: 1px solid red;
+	z-index: 99999;
+	overflow: hidden;
 }
 .popup.hide {
 	display: none;
-}/*
-.popup.hide .border {
-	display: inline;
-	border: none;
 }
-.popup.hide .icon {
-	display: inline;
-	/*width: 16px;
-	height: 16px;
+.popup .border {
+	border: 1px solid InfoText;
+	background-color: InfoBackground;
 }
-.popup.hide .content {
-	display: none;
+.popup .caption {
+	text-align: left;
 }
-.popup.hide .error {
-	display: none;
-}*/
-
-
-
-.item {
-	border: 1px solid #e9e9ef;
-	border-top: 1px solid white;
+.popup * {
 	white-space: nowrap;
+	color: InfoText;
+	background-color: InfoBackground;
 }
-.item.over {
-	border: 1px solid #9999ee;
-	background-color: white;
-    background-image: url('img/bg1.gif');
-    background-repeat: repeat-x;   
+.popup .error {
+	font-size: 0.9em;
 }
-.item .icon {
-	width:16px;
-	height:16px;
-}
-
-
-
-
-
-/**
-* Icons
-*/
-
-.icon {
-	vertical-align:bottom;
-	width:32px;
-	height:32px;
-}
-.icon-mini {
-	width:14px;
-	height:11px;
-	display:-moz-inline-box;
-	display:inline-block;
-	vertical-align:top;
-}
-.icon.error {
-	background:url(img/icon/error.gif) no-repeat top right;
-}
-.icon-mini.error {
-	background:url(img/icon/error-mini.gif) no-repeat;
-}
-.icon.info {
-	background:url(img/icon/info.gif) no-repeat;
-}
-.icon-mini.info {
-	background:url(img/icon/info-mini.gif) no-repeat top right;
-}
-
 
 /* COMPONENTS */
 
-
-/**
-* Layouts
-*/
-.gridlayout TABLE TD {
-	text-align: left;
-	vertical-align: top;
+/* Button */
+.button .border {
+	height: 1.2em;
+	overflow: hidden;
+	padding: 0.2em 0.4em 0.2em 0.4em;
+	text-align: center;
 }
 
-.orderedlayout TABLE {
-	/* TODO works in FF not IE */
-	Xwidth: 100%;
-}
-
-
-/**
-* Button
-*/
-
-/* Button-style */
-.button {
-	margin-left:-5px;
-}
-.button .icon-mini {
-	padding-left:5px;
-}
-.btn {
-	float:left;
-	padding:5px 12px 0 0;
-	height:23px;
-	color:#fff;
-	background:url(img/button/btn-bg.gif) repeat-x;
-}
-
-.over .btn {
-	background:url(img/button/btn-bg.gif) repeat-x bottom left;
-	border:none;
-}
-.btn-left, .btn-right {
-	width:16px;
-	height:28px;
-	float:left;
-	background:url(img/button/btn-left.gif) no-repeat;
-}
-.btn-right {
-	background:url(img/button/btn-right.gif) no-repeat;
-}
-.over .btn-left {
-	background:url(img/button/btn-left.gif) no-repeat bottom left;
-}
-.over .btn-right {
-	background:url(img/button/btn-right.gif) no-repeat bottom left;
-}
-.btn .caption {
-	color:#fff;
-}
-.btn .popup, .btn .popup .caption {
-	color:#494949;
-}
-.button.over {
-	border:none;
-}
-.button.over .btn .caption {
-	color:#fff;
-}
-
-/* Link-style */
 .button-link .caption {
-	color:#6db201;
-	text-decoration:underline;
+	color: ActiveCaption;
+	font-style: italic;
 }
-.button-link.over .caption {
-	color:#2a7acc;
+.button-link .over {
+	border: none;
 }
-.button-link .popup, .button-link .popup .caption, .button-link.over .caption .popup .content {
-	color:#494949;
-	text-decoration:none;
+.button-link .over .caption {
+	text-decoration: underline;
 }
 
-
-
-/**
-* Link
-*/
-.link {
-    
+/* DateField */
+.datefield .btn {
+	background-color: ButtonFace;
+	margin-right: 3px;
 }
-.link.over {
-	background:none;
-}
+
+/* Link */
 .link .caption {
-    color:#6db201;
-	text-decoration:underline;
+	color: ActiveCaption;
+	font-style: italic;
 }
-.link.over .caption {
-	color:#2a7acc;
+.link .over {
+	border: none;
+}
+.link .over .caption {
+	text-decoration: underline;
 }
 .link .description {
-    font-size:0.9em;
-}
-.link .popup .caption, .link .popup .content  {
-    color:#494949;
-	text-decoration:none;
+	font-size: 0.8em;
+	text-indent: 1.5em;
 }
 
-
-
-
-/**
-* Tabsheet
-*/
-/*
-.tabs {
-	padding-left: 0px !important;
-    padding-left: 1px;
-    padding-top: 5px;
-    padding-bottom: 3px !important;   
-    padding-bottom: 2px;
-    white-space: nowrap;
+/* Panel */
+.panelcaption {
+	padding: 0.2em 0.4em 0.2em 0.4em;
 }
-.tab, .tab-on {
-   border-right: 2px solid #eeeeee;
-   border-bottom: none;
+.panel .panelcaption {
+	border-bottom: 2px groove ButtonShadow;
+	color: CaptionText;
+	background-color: ActiveCaption;
 }
-.tab-on {
-    position: relative;
-    top: 1px;
-}
-.tab .caption {
-    background-image: url('img/bg1.gif');
-    background-repeat: repeat-x;        
-    border-bottom: none;
-}
-.tab .over {
-    /*border: 1px solid #9999ee;
-    border-bottom: none;
-}
-.tab-on .caption {
-    border-bottom: 1px solid white;
-    border-bottom: none;
-    background-color: white;
-}
-*/
-
-
-.node {
-    border: 1px solid white;
-    white-space: nowrap;
-    padding-bottom: 2px;
-}
-.nodes {
-    padding-left: 16px;
-}
-.node .caption {
-    vertical-align: top;
-    font-weight: normal;
+.panel-light .borderlight {
+	border: 2px groove ThreeDHighlight;
 }
 
-.node.over {
-    /*border: 1px solid #9999ee;
-    background-image: url('img/bg1.gif');
-    background-repeat: repeat-x;
-    background-color: white;*/
+/* Select */
+.select-optiongroup INPUT.option {
+	background-color: ThreeDFace;
 }
-.node.over .caption {
-    /*color: blue;*/
-}
-.node .icon {
-	width:16px;
-	height:16px;
+.select-optiongroup DIV.newitem {
+	margin-left: 1.2em;
+	margin-top: 0.3em;
 }
 
-/**
-* Panel
-*/
-
-/* Normal style */
-.panel {
-	margin:14px 9px 14px 0;
+/* TabSheet */
+.tabsheet .tabs {
+	margin-top: 0.5em;
 }
-.panel .top {
-	height:35px;
+.tabsheet .tabs .tab .caption, .tabsheet .tabs .tab-on .caption {
+	margin-left: 1px;
+	margin-right: 1px;
+	padding: 0.2em 0.4em 0.1em 0.4em;
 }
-.panel .top .left {
-	background:transparent url(img/panel/top-left.gif) no-repeat;
-	margin-right:19px;
-	height:35px;
+.tabsheet .tabs .tab .border {
+	border-bottom: 1px solid ThreeDHighlight;
 }
-.panel .top .right {
-	background:transparent url(img/panel/top-right.gif) no-repeat right top;
-	margin-left:-19px;
-	width:19px;
-	height:35px;
-	float:right;
-	display:inline;
+.tabsheet .tabs .tab-on .border {
+	border-bottom: 1px solid ThreeDFace;
 }
-.panel .middle {
-	background:#f8f8f8 url(img/panel/middle.gif) repeat-x;
-	border-left:solid 2px #ededed;
-	border-right:solid 2px #ededed;
-	padding:12px 19px 12px 19px;
-	overflow:auto;
-}
-.panel .bottom {
-	height:21px;	
-}
-.panel .bottom .left {
-	background:url(img/panel/bottom-left.gif) no-repeat;
-	margin-right:19px;
-	height:21px;
-	
-}
-.panel .bottom .right {
-	background:url(img/panel/bottom-right.gif) no-repeat right top;
-	width:19px;
-	height:21px;
-	float:right;
-}
-/* FIX IE6 (5.5) leaves a four pixel gap between left and right div's */
-* html .panel .bottom .right {
-	position:relative;
-	left:-4px;
-}
-.panel .top .left .title {	
-	padding:8px 19px 3px 19px;
-	height:22px;
-	margin-right:-19px;
-	border-bottom:solid 1px #dedede;
-}
-.panel .top .left .title .caption {
-	font-family:'Trebuchet MS', Tahoma, Arial, Helvetica, sans-serif;
-	color:#0076c9;
-	font-style:italic;
-	font-weight:bold;
-	font-size:12pt;
-	letter-spacing:-0.04em;
-	white-space:nowrap;
-}
-
-
-/* Light style */
-.panel-light {
-    margin:20px 9px 20px 0;
-}
-.panel-light .top {
-	height:31px;
-	overflow:hidden;
-}
-.panel-light .top .left {
-	background:transparent url(img/panel/top-left-light.gif) no-repeat;
-	margin-right:19px;
-	height:31px;
-}
-.panel-light .top .right {
-	background:transparent url(img/panel/top-right-light.gif) no-repeat right top;
-	margin-left:-19px;
-	width:19px;
-	height:31px;
-	float:right;
-	display:inline;
-}
-.panel-light .middle {
-	background:#fff url(img/panel/middle-light.gif) repeat-x;
-	padding:12px 19px 12px 19px;
-	overflow:auto;
-}
-.panel-light .top .left .title {	
-	padding:5px 19px 3px 19px;
-	height:18px;	
-}
-.panel-light .top .left .title .caption {
-	font-family:'Trebuchet MS', Tahoma, Arial, Helvetica, sans-serif;
-	color:#0076c9;
-	font-style:italic;
-	font-weight:bold;
-	font-size:11pt;
-	letter-spacing:-0.04em;
-	white-space:nowrap;
-}
-
-/* Description popup fixes */
-.panel .title .caption .popup .caption, .panel .title .caption .popup .caption {
-	font-family:Tahoma, Arial, Helvetica, sans-serif;
-	font-style:normal;
-	font-size:8pt;
-	color:#494949;
-}
-
-
-
-
-
-/*
-.textfield.over .border {    
-    border: 1px solid #9999ee;
-}
-*/
-.textfield INPUT {
-    border: none;
-    padding-top: 2px;
-    padding-bottom: 2px;
-    padding-left: 5px;
-    padding-right: 5px;
-}
-
-
-
-
-/* 
-* Table
- */
-
-/* Renewed theme styles, 8.6.2006 - Jouni Koivuviita */
-.table {
-	margin:14px 10px 14px 0;
-	color:#494949;
-}
-.table .header {
-	height:25px;
-	overflow:hidden;
-	position:relative;
-	top:3px;
-	z-index:1;
-}
-.table .header .left {
-	width:20px;
-	height:25px;
-	float:left;
-	background:url(img/table/caption-left.gif) no-repeat;
-}
-.table .header .title {
-	height:25px;
-	float:left;
-	background:url(img/table/caption-bg.gif) repeat-x;
-	padding-right:20px;
-}
-.table .header .right {
-	width:20px;
-	height:25px;
-	float:left;
-	background:url(img/table/caption-right.gif) no-repeat;
-}
-.table .header .title {
-	padding-top:7px;
-	color:#fff;
-}
-.table .top {
-	height:3px;
-	overflow:hidden;
-}
-.table .top .left {
-	background:url(img/table/top-left.gif) no-repeat;
-	margin-right:4px;
-	height:3px;	
-}
-.table .top .right {
-	background:url(img/table/top-right.gif) no-repeat right top;
-	width:4px;
-	height:3px;
-	float:right;
-}
-
-.table .middle {
-	background-color:#f8f8f8;
-	border-left:solid 3px #f1f1f1;
-	border-right:solid 3px #f1f1f1;
-	color:#494949;
-}
-.table .bottom {
-	height:3px;	
-}
-.table .bottom .left {
-	background:url(img/table/bottom-left.gif) no-repeat;
-	margin-right:4px;
-	height:3px;
-	
-}
-.table .bottom .right {
-	background:url(img/table/bottom-right.gif) no-repeat right top;
-	width:4px;
-	height:3px;
-	float:right;
-}
-.table .header .title .caption {
-	color:#fff;
-}
-.table .col-headers {
-	background:#f4f4f4 url(img/table/col-header-bg.gif) repeat-x;
-	color:#0076c9;
-}
-
-
-/* Old table styles */
-.list .bg {
-	background-image: none;
-}
-.list .cheader {
-	border-width: 1px 1px 1px 1px;
-}
-.list .content TABLE {
-	width: 100%;
-}
-.list .nav {
-    border-top: 2px solid #eeeeee;
-    text-align: center;
-    font-size: smaller;
-}
-.list .nav .small {
-    font-size: smaller;
-}
-.list .content TR.over {
-    background-image: url('img/bg1.gif');
-    background-repeat: repeat-x;
-    background-color: white;
-}
-.list .content TD.scroll {
-	background: white;
-}
-.list .content TD.scroll {
-	background: white;
-}
-.table .content {
-	padding: 0px;
-}
-.table .content TABLE {
-    border-collapse: collapse;
-    empty-cells: show;
-    width: 100%;
-}
-.table .content TD {
-    padding-left: 5px;
-    padding-right: 5px;
-    padding-top: 3px;
-    padding-bottom: 3px;    
-    border-left: 1px solid #eeeeee;
-    border-bottom: 1px solid #eeeeee;
-}
-
-.table .cheader {
-	border-bottom-color: #999999;
-	border-left: 1px solid #cdcdcd;
-	padding-top: 5px;
-	padding-bottom: 5px;
-	vertical-align: middle;
-}
-.table .cheader.over {
-	border-color: #9999ee;
-	padding-bottom: 4px;
-}
-.table .cheader.sorted {
-	border-color: #9999ee;
-	padding-bottom: 4px;
-}
-.table .rheader {
-   text-align: right;
-   border-right-color: #999999;  
-   border-left: none;
-}
-.table .selected .rheader {
-	background-color: white;
-}
-.table .empty {
-   border-bottom-color: #999999;
-   border-right-color: #999999;
-}
-.table .nav {
-    border-top: 2px solid #eeeeee;
-    text-align: center;
-    font-size: smaller;
-}
-.table .nav .small {
-    font-size: smaller;
-}
-.table .content TR.over {
-    background-image: url(img/bg1.gif);
-    background-repeat: repeat-x;
-    background-color: white;
-}
-.table .content TR.over TD {
-    border-bottom: 1px solid #9999ee;
-}
-
-.table .content TD.scroll {
-	padding: 0px;
+.tabsheet .tabs .over {
 	border: none;
-	width: 16px;
-	height: 100%;
 }
-.table .content TD.cheader.scroll {
-	border-left: 1px solid #999999;
-	border-bottom: 1px solid #999999;
-	width: 16px;
-}
-.table DIV.scroll {
-	width: 16px;
-	border-left: 1px solid #eeeeee;
-	/*overflow: scroll;*/
-	height: 100%;
-}
-td.header {
-	background: url(img/bg1.gif);
-	background-repeat: repeat-x;
-}
-.table .icon {
-	width:16px;
-	height:16px;
-	background:url(img/table/col-header-bg.gif) repeat-x;
+.tabsheet .tabs .over .border {
+	border-bottom: 1px solid ThreeDFace;
 }
 
 
-/**
-* General HTML-tag styles
-* Added 6.6.2006
-* Jouni Koivuviita
-**/
-
-body {
-	margin:0;
-	padding:20px;
-	background: url(img/body_bg.gif) repeat-x #fff;
-	color:#494949;
-	font-family:Tahoma, Arial, Helvetica, sans-serif;
-	font-size:62.5%;
+/* TextField */
+.textfield {
+	margin-top: 0.05em;
 }
-td {
-	font-size:8pt;
+.textfield .border {
+	border: none;
 }
-p {
-	font-size:1em;
-}
-
-h1, h2, h3, h4, h5, h6 {
-	font-family: "Trebuchet MS", sans-serif;
-	color:#494949;
-	letter-spacing:-0.03em;
-}
-h1 {
-	font-size: 18pt;
-	text-transform:uppercase;
-	margin:1em 0 0.6em 0;
-}
-h2 {
-	font-size:17pt;
-	font-weight:normal;	
-	color:#0076c9;
-	margin:0.8em 0 0.5em 0;
-}
-h3 {
-	font-size: 14pt;
-	margin:0.6em 0 0.4em 0;
-}
-h4 {
-	font-size:12.4pt;
-	font-style:italic;
-	color:#0076c9;
-	margin:0.4em 0 0.3em 0;
-}
-h5 {
-	font-size:10pt;
-	margin:0.3em 0 0.2em 0;
+.textfield INPUT {
+	font-size: 1em;
+	padding: 0.12em 0.4em 0.12em 0.4em;
 }

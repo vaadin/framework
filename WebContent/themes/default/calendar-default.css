@@ -28,7 +28,6 @@ div.calendar { position: relative; }
   font-weight: bold;      /* Pressing it will take you to the current date */
   text-align: center;
   background: #fff;
-  background-image: url('img/bg1.gif');
   background-repeat: repeat-x;  color: #000;
   padding: 2px;
 }
