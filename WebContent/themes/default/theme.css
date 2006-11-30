@@ -22,15 +22,18 @@
 * {
     background-color: ThreeDFace;
     font-family: sans-serif;
-    Xfont-size: 10pt;
+    /* font-size: 10pt; */
     font-weight: normal;
+}
+.abs {
+	position: absolute;
 }
 
 .inline {
     display: inline;
 }
 
-.hidden {
+.hidden, .hide {
     display: none;
 }
 
@@ -127,6 +130,9 @@ IMG.overlay {
 /* COMPONENTS */
 
 /* Button */
+.button INPUT {
+	background-color: ThreeDFace;
+}
 .button .border {
 	height: 1.2em;
 	overflow: hidden;
@@ -172,11 +178,14 @@ IMG.overlay {
 	padding: 0.2em 0.4em 0.2em 0.4em;
 }
 .panel .panelcaption {
+	border-bottom: 2px groove ThreeDHighlight;
+}
+.panel-strong .panelcaption {
 	border-bottom: 2px groove ButtonShadow;
 	color: CaptionText;
 	background-color: ActiveCaption;
 }
-.panel .border, .panel-light .border {
+.panel .panelborder, .panel-strong .panelborder, .panel-light .panelborder {
 	border: 2px groove ThreeDHighlight;
 }
 
@@ -188,6 +197,107 @@ IMG.overlay {
 	margin-left: 1.2em;
 	margin-top: 0.3em;
 }
+
+/* Table */
+
+.table .tablestatus {
+	position: absolute;
+	padding: 0.2em 0.4em 0.1em 0.4em;
+	border: 1px solid InfoText;
+	background-color: InfoBackground;
+}
+
+.table .colsel {
+	margin: 0.25em ; 
+	width: 0.4em;
+	height: 0.4em;
+	border: 1px solid ButtonText;
+	border-top: 2px solid ButtonText;
+	cursor: hand;
+	cursor: pointer;
+}
+.table .popup {
+	position: absolute;
+
+}
+.table {
+	border: 1px solid;
+	border-color: ButtonShadow ButtonHighlight ButtonHighlight ButtonShadow;
+}
+.table .cout, .table .cin {
+	background-color: Window;
+}
+.table .tablecaption {
+	border: 1px solid;
+	border-color: ButtonHighlight ButtonShadow ButtonShadow ButtonHighlight;
+	padding: 0.0em 0.4em 0.1em 0.4em;
+}
+
+.table .hout {
+	height: 1em;
+	overflow: hidden;
+	padding-bottom: 0.2em;
+	border-bottom: 1px solid ButtonShadow;
+}
+.table .hin .hah {
+	border-right: 1px solid ButtonShadow; 
+	padding-left: 0.2em;
+}
+.table .hin .hah IMG, .table .hin .tableheader IMG {
+	height: 1em;
+	width: 2px;
+	cursor:w-resize;
+}
+.table .hin .tableheader IMG.sort {
+	Xposition: absolute;
+	Xmargin-top: 0.5em;
+	Xmargin-left: 2px;
+	width: 9px;
+	height: 5px;
+	background-repeat: no-repeat;
+}
+.table .hin .tableheader IMG.sortasc {
+	background-image: url('img/table/asc.gif');
+}
+.table .hin .tableheader IMG.sortdesc {
+	background-image: url('img/table/desc.gif');
+}
+.table .hin .tableheader {
+	border-left: 1px solid ButtonHighlight;
+	border-right: 1px solid ButtonShadow;
+	padding-left: 0.2em;
+}
+.table TABLE {
+	border-collapse: collapse;
+	empty-cells: show;
+}
+.table .cin .tableheader {
+	padding-left: 0.2em;
+}
+.table .cin .tablecell {
+	padding-left: 0.2em;
+}
+
+.table .selected TD DIV {
+	background-color: Highlight;
+	color: HighlightText;
+}
+.table .selected TD {
+	background-color: Highlight;
+	color: HighlightText;
+	border-left: 1px solid Highlight;
+}
+.table .even TD DIV {
+	border-left: 1px solid Window;
+	background-color: Window;
+}
+.table .odd TD DIV {
+	border-left: 1px solid ButtonFace;
+	background-color: ButtonFace;
+}
+
+
+
 
 /* TabSheet */
 .tabsheet .tabs {
@@ -211,7 +321,6 @@ IMG.overlay {
 	border-bottom: 1px solid ThreeDFace;
 }
 
-
 /* TextField */
 .textfield {
 	margin-top: 0.05em;
@@ -223,3 +332,63 @@ IMG.overlay {
 	font-size: 1em;
 	padding: 0.12em 0.4em 0.12em 0.4em;
 }
+
+/* Tree */
+.tree {
+	border: 1px solid;
+	border-color: ButtonShadow ButtonHighlight ButtonHighlight ButtonShadow;
+}
+.tree .caption {
+	border: 1px solid;
+	border-color: ButtonHighlight ButtonShadow ButtonShadow ButtonHighlight;
+	padding: 0.0em 0.4em 0.1em 0.4em;
+}
+.tree .content, .tree .content .node, .tree .content .nodes, .tree .content .node IMG {
+	background-color: Window;
+}
+.tree .node {
+	border: none;
+	padding: 0.1em 0.4em 0.2em 0em;
+}
+
+.tree .nodes {
+	padding-left: 1em;
+}
+.tree .over  {
+	text-decoration: underline;
+	color: Highlight;
+}
+.tree .content DIV.selected, .tree .content .selected IMG {
+	background-color: Highlight;
+	color: HighlightText;
+	font-weight: normal;
+}
+
+/* ACTIONS */
+
+.actions {
+	position: absolute;
+	border: 1px solid;
+	border-color: ButtonShadow ButtonText ButtonText ButtonShadow;
+}
+.actions .border {
+	background-color: ButtonFace;
+	border: 1px solid;
+	border-color: ButtonHighlight ButtonShadow ButtonShadow ButtonHighlight;
+		
+}
+.actions .item {
+	padding: 0.2em 1em 0.2em 1em;
+	color: ButtonText;
+	white-space: nowrap;
+}
+.actions .over {
+	border: none;
+	text-decoration: none;
+	color: HighlightText;
+	background-color: Highlight;
+}
+.table .actions .over {
+	background-color: Highlight;
+}
+

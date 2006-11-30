@@ -659,7 +659,7 @@ DefaultTheme.prototype.renderActionPopup = function(renderer, uidl, to, actions,
 	var len = ak.length;
 	if (len < 1) return;
 
-	var popup = theme.createElementTo((to.nodeName=="TR"?to.firstChild:to),"div", "popup outset hide");
+	var popup = theme.createElementTo((to.nodeName=="TR"?to.firstChild:to),"div", "actions outset hide");
 	theme.addHidePopupListener(theme,client,popup,"click");
 	theme.addStopListener(theme,client,popup,"click");
 	
@@ -670,7 +670,6 @@ DefaultTheme.prototype.renderActionPopup = function(renderer, uidl, to, actions,
 		var key = theme.getFirstTextNode(ak[k]).data;
 		var item = theme.createElementTo(inner,"div", "item pad clickable");
 		theme.createTextNodeTo(item,actions[key]);
-		item.style.color = "black";
 		theme.addAddClassListener(theme,client,item,"mouseover","over");
 		theme.addRemoveClassListener(theme,client,item,"mouseout","over");
 		theme.addSetVarListener(theme,client,item,"click",actionVar,id+","+key,true);
@@ -710,11 +709,11 @@ DefaultTheme.prototype.renderDescriptionPopup = function (renderer,uidl,target) 
 		icon.src = iconUrl;
 	}
 	td = this.createElementTo(tr,"td");
-	var caption = this.createElementTo(td,"div","caption");
+	var caption = this.createElementTo(td,"div","popupcaption");
 	this.createTextNodeTo(caption,captionText);
 	
 	if (desc) {
-		var description = this.createElementTo(td,"div","content");	
+		var description = this.createElementTo(td,"div","popupcontent");	
 		description.innerHTML = renderer.client.getXMLtext(desc);
 		description.style.whiteSpace ="normal";
 	}
@@ -1339,7 +1338,7 @@ DefaultTheme.prototype.renderPanel = function(renderer,uidl,target,layoutInfo) {
 			
 			var style = uidl.getAttribute("style");
 			
-			var borderStyle = "border";
+			var borderStyle = "panelborder";
 			
 			// Create component element
 			var outer = theme.createPaintableElement(renderer,uidl,target,layoutInfo);
@@ -1510,7 +1509,7 @@ DefaultTheme.prototype.renderTreeNode = function(renderer,node,target,selectable
     }
 	
 	// Caption
-	var cap = theme.createElementTo(n,"div","caption inline");
+	var cap = theme.createElementTo(n,"div","nodecaption inline");
 	theme.createTextNodeTo(n,node.getAttribute("caption"));	
 	
 	// Hover effects
@@ -1582,7 +1581,7 @@ DefaultTheme.prototype.renderTreeNode = function(renderer,node,target,selectable
 		}
 		
 	} else {
-			img.src = theme.root + "img/tree/empty.gif";			
+		img.src = theme.root + "img/tree/empty.gif";	
 	}
 
 }
@@ -2665,6 +2664,8 @@ DefaultTheme.prototype.renderScrollTable = function(renderer,uidl,target,layoutI
 
 	// Create default header
 	var caption = theme.renderDefaultComponentHeader(renderer,uidl,div,layoutInfo);
+	theme.addCSSClass(caption,"tablecaption");
+	
 	// column collapsing
 
 	// main div
@@ -2692,11 +2693,11 @@ DefaultTheme.prototype.renderScrollTable = function(renderer,uidl,target,layoutI
 	}
 	delete alNode;
 
-	inner.innerHTML = "<DIV id=\""+pid+"status\" align=\"center\" class=\"abs border pad\" style=\"width:"+(wholeWidth/2)+"px;background-color:white;display:none;\"></DIV><TABLE cellpadding=0 cellspacing=0 border=0 width=100%><TBODY><TR valign=top class=bg><TD></TD><TD width=16></TD></TR></TBODY></TABLE><TABLE>";
+	inner.innerHTML = "<DIV id=\""+pid+"status\" align=\"center\" class=\"tablestatus\" style=\"width:"+(wholeWidth/2)+"px;display:none;\"></DIV><TABLE cellpadding=0 cellspacing=0 border=0 width=100%><TBODY><TR valign=top class=bg><TD></TD><TD align=center width=16></TD></TR></TBODY></TABLE><TABLE>";
 	//inner.style.width = wholeWidth+"px";
 	var vcols = inner.childNodes[1].firstChild.firstChild.childNodes[1];
 	if (visiblecols) {			
-		vcols.innerHTML = "<IMG class=\"bg icon\" src=\""+theme.root+"/img/table/colsel.gif\"/>";
+		vcols.innerHTML = "<DIV class=\"colsel\"><DIV/></DIV>";
 		var icon = vcols.firstChild; 
 		vcols.id = pid+"vcols";
 		var popup = theme.createElementTo(div,"div","border popup hide");
@@ -2729,17 +2730,18 @@ DefaultTheme.prototype.renderScrollTable = function(renderer,uidl,target,layoutI
 	hout.style.paddingRight = "0px";
 	hout.id = pid+"hout";
 	hout.style.overflow = "hidden";	
-	var html = "<TABLE id=\""+pid+"hin\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><TBODY><TR>";	
+	theme.addCSSClass(hout,"hout");
+	var html = "<TABLE id=\""+pid+"hin\" class=\"hin\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><TBODY><TR>";	
 	if (rowheaders) {
 				html += "<TD ";
 				if (colWidths["heh"]) {
 					html += "width=\""+colWidths["heh"]+"\" ";
 				}
-				html += "style=\"overflow:hidden\" cid=\"heh\" id=\""+pid+"heh\"><DIV class=\"padnr\" style=\"";
+				html += "style=\"overflow:hidden\" cid=\"heh\" id=\""+pid+"heh\"><DIV class=\"padnr hah\" style=\"";
 				if (colWidths["heh"]) {
 					html += "width:"+colWidths["heh"]+"px;";
 				}
-				html += "overflow:hidden;height:100%;white-space:nowrap;border-right:1px solid gray;\"><IMG id=\""+pid+"hah\" align=\"right\" src=\""+theme.root+"/img/table/handle.gif\" border=\"0\" style=\"height:100%;width:2px;cursor:w-resize;\"></DIV></TD>";
+				html += "overflow:hidden;height:100%;white-space:nowrap;\"><IMG id=\""+pid+"hah\" align=\"right\" src=\""+theme.root+"/img/table/handle.gif\" border=\"0\"></DIV></TD>";
 	}	
 	var chs = theme.getFirstElement(uidl, "cols").getElementsByTagName("ch");
 	var len = chs.length;
@@ -2758,12 +2760,12 @@ DefaultTheme.prototype.renderScrollTable = function(renderer,uidl,target,layoutI
 		html += "<TD ";
 		if (colWidths[cid]) {
 			html += "width=\""+colWidths[cid]+"\" ";
-		}
+		} 
 		if (sortkey == cid) {
-			html += "sorted=\"true\" ";
+			html += "sorted=\"true\" class=\"sorted\" ";
 		}
 		html += "style=\"overflow:hidden\" cid=\""+cid+"\" id=\""+pid+"he"+i+"\" >"
-		html += "<DIV class=\"padnr\" ";
+		html += "<DIV class=\"padnr tableheader\" ";
 		if (alignments[i]) {
 			switch (alignments[i]) {
 				case "e":
@@ -2778,9 +2780,9 @@ DefaultTheme.prototype.renderScrollTable = function(renderer,uidl,target,layoutI
 		html += " style=\"";
 		if (colWidths[cid]) {
 			html += "width:"+colWidths[cid]+"px;";
-		}
-		html += "overflow:hidden;font-weight:bold;height:100%;white-space:nowrap;border-right:1px solid gray;\"><IMG id=\""+pid+"ha"+cid+"\" align=\"right\" src=\""+theme.root+"/img/table/handle.gif\" border=\"0\" style=\"height:100%;width:4px;cursor:w-resize;\">";
-		html += (iconUrl?"<IMG src=\""+iconUrl+"\" class=\"icon\">":"")+cap+"</DIV></TD>";
+		} 
+		html += "overflow:hidden;height:100%;white-space:nowrap;\"><IMG id=\""+pid+"ha"+cid+"\" align=\"right\" src=\""+theme.root+"/img/table/handle.gif\" border=\"0\">";
+		html += (iconUrl?"<IMG src=\""+iconUrl+"\" class=\"icon\">":"")+cap+(sortkey==cid?"<IMG align=right class=\"sort sort"+(sortasc?"asc":"desc")+"\"/>":"")+"</DIV></TD>";
 	}
 	html += "</TR></TBODY></TABLE>";
 	hout.innerHTML = html;
@@ -2795,13 +2797,14 @@ DefaultTheme.prototype.renderScrollTable = function(renderer,uidl,target,layoutI
 	cout.style.width = wholeWidth+"px";
 	cout.style.height = (18*rows)+"px";
 	cout.id = pid+"cout";
+	theme.addCSSClass(cout,"cout");
 	cout.style.overflow = "scroll";
-	html = "<TABLE border=\"0\" cellpadding=\"0\" cellspacing=\"0\" id=\""+pid+"cin\"><TBODY><TR height=\""+prePad+"\"></TR>";
+	html = "<TABLE border=\"0\" cellpadding=\"0\" cellspacing=\"0\" class=\"cin\" id=\""+pid+"cin\"><TBODY><TR height=\""+prePad+"\"></TR>";
 	var trs = theme.getFirstElement(uidl, "rows").getElementsByTagName("tr");
 	len = trs.length;
 	if (len==0) {
 		html += "<TR id=\""+pid+"firstrow\"><TD style=\"overflow:hidden\">";
-		html += "<DIV class=\"pad\" style=\"overflow:hidden;height:100%;white-space:nowrap;border-right:1px solid gray;\"></DIV></TD></TR>";
+		html += "<DIV class=\"tablecell pad\" style=\"overflow:hidden;height:100%;white-space:nowrap;border-right:1px solid gray;\"></DIV></TD></TR>";
 	}
 	for (var i=0;i<len;i++) {
 		var row = trs[i];
@@ -2813,14 +2816,16 @@ DefaultTheme.prototype.renderScrollTable = function(renderer,uidl,target,layoutI
 		html += " key=\""+key+"\"";
 		if (seld) {
 			html += " selected=\"true\" class=\"selected\" ";
+		} else {
+			html += "class=\""+(i%2!=0?"odd":"even")+"\" ";
 		}
 		html += ">";	
 		if (rowheaders) {
 			html += "<TD ";
 			if (colWidths["heh"]) {
 				html += "width=\""+colWidths["heh"]+"\" ";
-			}
-			html += "style=\"overflow:hidden\"><DIV class=\"padnr\" style=\"";
+			} 
+			html += "style=\"overflow:hidden\"><DIV class=\"padnr tableheader\" style=\"";
 			if (colWidths["heh"]) {
 				html += "width:"+colWidths["heh"]+"px;";
 			}
@@ -2837,7 +2842,7 @@ DefaultTheme.prototype.renderScrollTable = function(renderer,uidl,target,layoutI
 		var comps = row.childNodes;
 		var l = comps.length;
 		if (l==0) {
-			html += "<TD><DIV class=\"padnr\" style=\"overflow:hidden;height:100%;white-space:nowrap;border-right:1px solid gray;\"></DIV></TD>";
+			html += "<TD><DIV class=\"padnr tablecell\" style=\"overflow:hidden;height:100%;white-space:nowrap;border-right:1px solid gray;\"></DIV></TD>";
 		}
 		
 		var colNum = -1;
@@ -2849,7 +2854,12 @@ DefaultTheme.prototype.renderScrollTable = function(renderer,uidl,target,layoutI
 			html += "<TD "
 			if (colWidths[colorder[colNum]]) {
 				html += "width=\""+colWidths[colorder[colNum]]+"\" ";
-			}
+			} 
+			html += "style=\"overflow:hidden\"><DIV class=\"padnr tablecell\" style=\"";
+			if (colWidths[colorder[colNum]]) {
+				html += "width:"+colWidths[colorder[colNum]]+"px;";
+			} 
+			html += "overflow:hidden;height:100%;white-space:nowrap;border-right:1px solid gray;\" ";
 			if (alignments[colNum]) {
 				switch (alignments[colNum]) {
 					case "e":
@@ -2861,11 +2871,7 @@ DefaultTheme.prototype.renderScrollTable = function(renderer,uidl,target,layoutI
 					default:
 				}
 			}
-			html += "style=\"overflow:hidden\"><DIV class=\"padnr\" style=\"";
-			if (colWidths[colorder[colNum]]) {
-				html += "width:"+colWidths[colorder[colNum]]+"px;";
-			}
-			html += "overflow:hidden;height:100%;white-space:nowrap;border-right:1px solid gray;\"></DIV></TD>";
+			html += "></DIV></TD>";
 		}	
 		html += "</TR>";
 	}
@@ -3101,6 +3107,7 @@ DefaultTheme.prototype.scrollTableRecalc = function(pid,target) {
     var cin = target.ownerDocument.getElementById(pid+"cin");
     var h = hin.getElementsByTagName("td");
     var c = cin.getElementsByTagName("td");           
+        
     var whole = 0;   
     var col = -1;
     for (var i = 0;i<h.length;i++) {    
@@ -3112,14 +3119,16 @@ DefaultTheme.prototype.scrollTableRecalc = function(pid,target) {
         var cw = (h.length>1?colWidths[h[i].getAttribute("cid")]:hout.clientWidth-20);
         var w1 = h[i].firstChild.clientWidth + defPad; 
         var w2 = (c[col]?c[col].firstChild.clientWidth + defPad:0);
-                                
-        var w = parseInt((cw?cw:(w1>w2?w1:w2)));                       
+        
+        var w = parseInt((cw?cw:(w1>w2?w1:w2)));
+
         h[i].width = w;
         h[i].style.width = w+"px";
         h[i].firstChild.style.width = w+"px";
         var rows = c.length/h.length;
         for (var j=0;j<rows;j++) {
         	var idx = j*h.length+col;
+                      
 	        if (c[idx]) {
 		        c[idx].width = w;
 		        c[idx].firstChild.style.width = w+"px";
@@ -3127,8 +3136,9 @@ DefaultTheme.prototype.scrollTableRecalc = function(pid,target) {
 		        colWidths[h[i].getAttribute("cid")] = w;
 	        }
         }
-    	whole += parseInt(w);        
+    	whole += parseInt(w);
     }
+         
 }
 // Header order drag & drop	
 DefaultTheme.prototype.addToDragOrderGroup = function (client,theme,element,group,variable,sortVar,sortascVar,sortasc) {
