@@ -47,7 +47,7 @@ public class DirectoryThemeSource implements ThemeSource {
 
 	private File path;
 	private Theme theme;
-	private WebAdapterServlet webAdapterServlet;
+	private ApplicationServlet webAdapterServlet;
 
 	/** Collection of subdirectory entries */
 	private Collection subdirs = new LinkedList();
@@ -58,7 +58,7 @@ public class DirectoryThemeSource implements ThemeSource {
 	 * @param url External URL of the repository
 	 * @throws FileNotFoundException if no theme files are found
 	 */
-	public DirectoryThemeSource(File path, WebAdapterServlet webAdapterServlet)
+	public DirectoryThemeSource(File path, ApplicationServlet webAdapterServlet)
 		throws ThemeException, FileNotFoundException, IOException {
 
 		this.path = path;

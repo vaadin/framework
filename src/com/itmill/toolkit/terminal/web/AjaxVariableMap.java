@@ -26,7 +26,7 @@
 
    ********************************************************************** */
 
-package com.itmill.toolkit.terminal.ajax;
+package com.itmill.toolkit.terminal.web;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -56,7 +56,7 @@ import com.itmill.toolkit.terminal.VariableOwner;
  * @version @VERSION@
  * @since 3.1
  */
-public class VariableMap {
+public class AjaxVariableMap {
 
 
 	// Id <-> (Owner,Name) mapping
@@ -474,7 +474,8 @@ public class VariableMap {
 					Class varType = (Class) idToTypeMap.get(param);
 					Object varOldValue = idToValueMap.get(param);
 					if (varName == null || varType == null)
-						Log.warn(
+						// TODO Remove this?
+						System.err.println(
 							"VariableMap: No variable found for parameter "
 								+ param
 								+ " ("
@@ -502,7 +503,7 @@ public class VariableMap {
 										param,
 										MultipartRequest.CONTENT_TYPE);
 								UploadStream upload =
-									new HttpUploadStream(
+									new AjaxHttpUploadStream(
 										varName,
 										parser.getFileContents(param),
 										filename,
@@ -546,7 +547,8 @@ public class VariableMap {
 											changed
 												|= (!val.equals(varOldValue));
 										} else {
-											Log.warn(
+											// TODO Remove this?
+											System.err.println(
 												"Empty variable '"
 													+ varName
 													+ "' of type "
@@ -554,9 +556,10 @@ public class VariableMap {
 										}
 
 									} catch (java.lang.ClassCastException e) {
-										Log.except(
-											"WebVariableMap conversion exception",
-											e);
+										// TODO Remove this?
+										System.err.println(
+											"WebVariableMap conversion exception");
+											e.printStackTrace(System.err);
 										errorListener.terminalError(
 											new TerminalErrorImpl(e));
 									}

@@ -26,7 +26,7 @@
 
    ********************************************************************** */
 
-package com.itmill.toolkit.terminal.ajax;
+package com.itmill.toolkit.terminal.web;
 
 import com.itmill.toolkit.Application;
 import com.itmill.toolkit.terminal.ApplicationResource;
@@ -54,7 +54,7 @@ import java.util.Stack;
  * @VERSION@
  * @since 3.1
  */
-public class UIDLPaintTarget implements PaintTarget {
+public class AjaxPaintTarget implements PaintTarget {
 
     /* Document type declarations */
     private final static String UIDL_XML_DECL = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
@@ -78,13 +78,13 @@ public class UIDLPaintTarget implements PaintTarget {
 
     private PrintWriter uidlBuffer;
 
-    private VariableMap variableMap;
+    private AjaxVariableMap variableMap;
 
     private boolean closed = false;
 
     private OutputStream output;
 
-    private ApplicationManager manager; 
+    private AjaxApplicationManager manager; 
 
     private String paintableId;
     
@@ -99,7 +99,7 @@ public class UIDLPaintTarget implements PaintTarget {
      * @param out
      *            A character-output stream.
      */
-    public UIDLPaintTarget(VariableMap variableMap, ApplicationManager manager,
+    public AjaxPaintTarget(AjaxVariableMap variableMap, AjaxApplicationManager manager,
             OutputStream output) throws PaintException {
 
         // Set the cache

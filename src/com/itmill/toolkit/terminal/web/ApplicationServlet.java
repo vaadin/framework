@@ -89,16 +89,17 @@ import com.itmill.toolkit.ui.Window;
  * @since 3.0
  */
 
-public class WebAdapterServlet extends HttpServlet
+public class ApplicationServlet extends HttpServlet
 		implements
 			Application.WindowAttachListener,
 			Application.WindowDetachListener,
 			Paintable.RepaintRequestListener {
 
 	// Versions
-	private static final int VERSION_MAJOR = 3;
-	private static final int VERSION_MINOR = 1;
-	private static final int VERSION_BUILD = 1;
+	// TODO AUTOUPDATE VERSION NUMBER
+	private static final int VERSION_MAJOR = 4;
+	private static final int VERSION_MINOR = 0;
+	private static final int VERSION_BUILD = 0;
 	private static final String VERSION = "" + VERSION_MAJOR + "."
 			+ VERSION_MINOR + "." + VERSION_BUILD;
 
@@ -114,22 +115,23 @@ public class WebAdapterServlet extends HttpServlet
 	private static int DEFAULT_BUFFER_SIZE = 32 * 1024;
 	private static int DEFAULT_MAX_TRANSFORMERS = 1;
 	private static int MAX_BUFFER_SIZE = 64 * 1024;
-	private static String SESSION_ATTR_VARMAP = "varmap";
-	static String SESSION_ATTR_CONTEXT = "millstone_context";
-	static String SESSION_ATTR_APPS = "apps";
-	private static String SESSION_BINDING_LISTENER = "bindinglistener";
-	private static String SESSION_DEFAULT_THEME = "default";
+	private static String SESSION_ATTR_VARMAP = "itmill-toolkit-varmap";
+	static String SESSION_ATTR_CONTEXT = "itmill-toolkit-context";
+	static String SESSION_ATTR_APPS = "itmill-toolkit-apps";
+	private static String SESSION_BINDING_LISTENER = "itmill-toolkit-bindinglistener";
+	private static String DEFAULT_THEME = "default";
 	private static String RESOURCE_URI = "/RES/";
+	private static String AJAX_UIDL_URI = "/UIDL/";
 	private static String THEME_DIRECTORY_PATH = "WEB-INF/lib/themes/";
 	private static String THEME_LISTING_FILE = THEME_DIRECTORY_PATH
 			+ "themes.txt";
-	private static String DEFAULT_THEME_JAR_PREFIX = "millstone-web-themes";
+	private static String DEFAULT_THEME_JAR_PREFIX = "itmill-toolkit-web-themes";
 	private static String DEFAULT_THEME_JAR = "WEB-INF/lib/"
 			+ DEFAULT_THEME_JAR_PREFIX + "-" + VERSION + ".jar";
 	private static String DEFAULT_THEME_SNAPSHOT_JAR = "WEB-INF/lib/"
 			+ DEFAULT_THEME_JAR_PREFIX + "-" + VERSION_MAJOR + "."
 			+ VERSION_MINOR + "-SNAPSHOT.jar";
-	private static String DEFAULT_THEME_TEMP_FILE_PREFIX = "WA_TMP_";
+	private static String DEFAULT_THEME_TEMP_FILE_PREFIX = "ITMILL_TMP_";
 	private static String SERVER_COMMAND_PARAM = "SERVER_COMMANDS";
 	private static int SERVER_COMMAND_STREAM_MAINTAIN_PERIOD = 15000;
 	private static int SERVER_COMMAND_HEADER_PADDING = 2000;
@@ -140,7 +142,6 @@ public class WebAdapterServlet extends HttpServlet
 	private UIDLTransformerFactory transformerFactory;
 	private CollectionThemeSource themeSource;
 	private String resourcePath = null;
-	//private boolean enableBrowserProbe = false;
 	private boolean debugMode = false;
 	private int maxConcurrentTransformers;
 	private long transformerCacheTime;
@@ -149,6 +150,9 @@ public class WebAdapterServlet extends HttpServlet
 	private WeakHashMap applicationToServerCommandStreamLock = new WeakHashMap();
 	private WeakHashMap applicationToLastRequestDate = new WeakHashMap();
 	private List allWindows = new LinkedList();
+    private WeakHashMap applicationToAjaxAppMgrMap = new WeakHashMap();
+
+
 
 	/**
 	 * Called by the servlet container to indicate to a servlet that the servlet
@@ -472,14 +476,29 @@ public class WebAdapterServlet extends HttpServlet
 				appContext.startTransaction(application, request);
 			}
 
+			// Set the last application request date
+			applicationToLastRequestDate.put(application, new Date());
+
 			// The rest of the process is synchronized with the application
 			// in order to guarantee that no parallel variable handling is
 			// made
 			synchronized (application) {
 
-				// Set the last application request date
-				applicationToLastRequestDate.put(application, new Date());
+				// Handle UIDL requests?
+				String resourceId = request.getPathInfo();
+				if (resourceId != null && resourceId.startsWith(AJAX_UIDL_URI)) {
+					
+					getApplicationManager(application).handleXmlHttpRequest(
+		                    request, response);
 
+		            // Notify transaction end
+					if (appContext != null) {
+						appContext.endTransaction(application, request);
+					}
+					
+					return;
+				}
+					
 				// Get the variable map
 				variableMap = getVariableMap(application, request);
 				if (variableMap == null)
@@ -581,7 +600,7 @@ public class WebAdapterServlet extends HttpServlet
 					// Use default theme if selected theme was not found.
 					if (transformerType == null) {
 						Theme defaultTheme = this.themeSource
-								.getThemeByName(WebAdapterServlet.SESSION_DEFAULT_THEME);
+								.getThemeByName(ApplicationServlet.DEFAULT_THEME);
 						if (defaultTheme == null) {
 							throw new ServletException(
 									"Default theme not found in the specified theme source(s).");
@@ -1098,8 +1117,12 @@ public class WebAdapterServlet extends HttpServlet
 		try {
 			application = (Application) this.applicationClass.newInstance();
 			applications.add(application);
+			
+			// Listen to window add/removes (for web mode)
 			application.addListener((Application.WindowAttachListener) this);
 			application.addListener((Application.WindowDetachListener) this);
+			
+			// Set localte
 			application.setLocale(request.getLocale());
 
 			// Get application context for this session
@@ -1555,4 +1578,34 @@ public class WebAdapterServlet extends HttpServlet
 			return this.owner;
 		}
 	}
+
+	/** Get AJAX application manager for an application.
+	 * 
+	 * If this application has not been running in ajax mode before, new manager
+	 * is created and web adapter stops listening to changes.
+	 * 
+	 * @param application
+	 * @return AJAX Application Manager
+	 */
+    private AjaxApplicationManager getApplicationManager(Application application) {
+        AjaxApplicationManager mgr = (AjaxApplicationManager) applicationToAjaxAppMgrMap
+                .get(application);
+        
+        // This application is going from Web to AJAX mode, create new manager
+        if (mgr == null) {
+        	
+        	// Create new manager
+            mgr = new AjaxApplicationManager(application);
+            applicationToAjaxAppMgrMap.put(application, mgr);
+            
+            // Stop sending changes to this servlet because manager will take
+            // control
+			application.removeListener((Application.WindowAttachListener) this);
+			application.removeListener((Application.WindowDetachListener) this);
+            
+            // Manager takes control over the application
+            mgr.takeControl();
+        }
+        return mgr;
+    }
 }

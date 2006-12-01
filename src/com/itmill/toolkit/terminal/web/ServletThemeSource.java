@@ -56,7 +56,7 @@ public class ServletThemeSource implements ThemeSource {
 	private ServletContext context;
 	private Theme theme;
 	private String path;
-	private WebAdapterServlet webAdapterServlet;
+	private ApplicationServlet webAdapterServlet;
 	private Cache resourceCache = new Cache();
 
 	/** Collection of subdirectory entries */
@@ -71,7 +71,7 @@ public class ServletThemeSource implements ThemeSource {
 	 */
 	public ServletThemeSource(
 		ServletContext context,
-		WebAdapterServlet webAdapterServlet,
+		ApplicationServlet webAdapterServlet,
 		String path)
 		throws IOException, ThemeException {
 

@@ -26,7 +26,7 @@
 
    ********************************************************************** */
 
-package com.itmill.toolkit.terminal.ajax;
+package com.itmill.toolkit.terminal.web;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -66,7 +66,7 @@ import com.itmill.toolkit.ui.Window;
  * @version @VERSION@
  * @since 3.1
  */
-public class ApplicationManager implements Paintable.RepaintRequestListener,
+public class AjaxApplicationManager implements Paintable.RepaintRequestListener,
         Application.WindowAttachListener, Application.WindowDetachListener {
 
     private static String GET_PARAM_VARIABLE_CHANGES = "changeVariables";
@@ -91,17 +91,17 @@ public class ApplicationManager implements Paintable.RepaintRequestListener,
 
     private Set removedWindows = new HashSet();
 
-    private UIDLPaintTarget paintTarget;
+    private AjaxPaintTarget paintTarget;
 
-    public ApplicationManager(Application application) {
+    public AjaxApplicationManager(Application application) {
         this.application = application;
     }
 
-    private VariableMap getVariableMap() {
-        VariableMap vm = (VariableMap) applicationToVariableMapMap
+    private AjaxVariableMap getVariableMap() {
+        AjaxVariableMap vm = (AjaxVariableMap) applicationToVariableMapMap
                 .get(application);
         if (vm == null) {
-            vm = new VariableMap();
+            vm = new AjaxVariableMap();
             applicationToVariableMapMap.put(application, vm);
         }
         return vm;
@@ -169,7 +169,7 @@ public class ApplicationManager implements Paintable.RepaintRequestListener,
                     // Set the response type
                     response.setContentType("application/xml; charset=UTF-8");
 
-                    paintTarget = new UIDLPaintTarget(
+                    paintTarget = new AjaxPaintTarget(
                                                 getVariableMap(), this, out);
                     
                     // Render the removed windows
@@ -463,11 +463,6 @@ public class ApplicationManager implements Paintable.RepaintRequestListener,
         String logoutUrl = application.getLogoutURL();
         if (logoutUrl == null)
             logoutUrl = application.getURL().toString();
-
-        AjaxApplicationContext context = (AjaxApplicationContext) application
-                .getContext();
-        if (context != null)
-            context.removeApplication(application);
 
         response.sendRedirect(response.encodeRedirectURL(logoutUrl));
     }

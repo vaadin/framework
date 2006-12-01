@@ -68,7 +68,7 @@ public class ThemeFunctionLibrary {
 		Window window,
 		WebBrowser webBrowser,
 		HttpSession session,
-		WebAdapterServlet webAdapterServlet,
+		ApplicationServlet webAdapterServlet,
 		String theme) {
 		state.set(
 			new Object[] {
@@ -144,7 +144,7 @@ public class ThemeFunctionLibrary {
 	static public String resource(String resource, String theme) {
 		try {
 			return (
-				(WebAdapterServlet)
+				(ApplicationServlet)
 					(
 						(Object[]) state
 							.get())[WEBADAPTERSERVLET])
@@ -161,7 +161,7 @@ public class ThemeFunctionLibrary {
 	static public String resource(String resource) {
 		try {
 			return (
-				(WebAdapterServlet)
+				(ApplicationServlet)
 					(
 						(Object[]) state
 							.get())[WEBADAPTERSERVLET])
@@ -198,14 +198,14 @@ public class ThemeFunctionLibrary {
 		return generateWindowScript(
 			window(),
 			application(),
-			(WebAdapterServlet) ((Object[]) state.get())[WEBADAPTERSERVLET],
+			(ApplicationServlet) ((Object[]) state.get())[WEBADAPTERSERVLET],
 			browser());
 	}
 
 	static protected String generateWindowScript(
 		Window window,
 		Application app,
-		WebAdapterServlet wa,
+		ApplicationServlet wa,
 		WebBrowser browser) {
 
 		StringBuffer script = new StringBuffer();

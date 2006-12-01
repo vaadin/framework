@@ -26,7 +26,7 @@
 
    ********************************************************************** */
 
-package com.itmill.toolkit.terminal.ajax;
+package com.itmill.toolkit.terminal.web;
 
 import java.io.InputStream;
 
@@ -36,7 +36,7 @@ import java.io.InputStream;
  * @version @VERSION@
  * @since 3.1
  */
-public class HttpUploadStream
+public class AjaxHttpUploadStream
 	implements com.itmill.toolkit.terminal.UploadStream {
 
 	/** Holds value of property variableName. */
@@ -56,7 +56,7 @@ public class HttpUploadStream
 	 *       (for parallel events (for example in 
 	 *       same http request), times are equal)
 	 */
-	public HttpUploadStream(
+	public AjaxHttpUploadStream(
 		String name,
 		InputStream stream,
 		String contentName,

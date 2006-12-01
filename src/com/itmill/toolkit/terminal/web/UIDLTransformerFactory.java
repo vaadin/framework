@@ -69,7 +69,7 @@ public class UIDLTransformerFactory {
 
 	private Map transformerSpool = new HashMap();
 	private ThemeSource themeSource;
-	private WebAdapterServlet webAdapterServlet;
+	private ApplicationServlet webAdapterServlet;
 	private int transformerCount = 0;
 	private int transformersInUse = 0;
 
@@ -82,7 +82,7 @@ public class UIDLTransformerFactory {
 	 */
 	public UIDLTransformerFactory(
 		ThemeSource themeSource,
-		WebAdapterServlet webAdapterServlet,
+		ApplicationServlet webAdapterServlet,
 		int maxConcurrentTransformers,
 		long cacheTime) {
 		this.webAdapterServlet = webAdapterServlet;

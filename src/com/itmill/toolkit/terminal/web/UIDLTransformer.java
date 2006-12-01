@@ -92,7 +92,7 @@ public class UIDLTransformer {
 	/** Theme repository used for late error reporting */
 	private ThemeSource themeSource;
 
-	private WebAdapterServlet webAdapterServlet;
+	private ApplicationServlet webAdapterServlet;
 
 	/** UIDLTransformer constructor.
 	 * @param type Type of the transformer
@@ -103,7 +103,7 @@ public class UIDLTransformer {
 	public UIDLTransformer(
 		UIDLTransformerType type,
 		ThemeSource themes,
-		WebAdapterServlet webAdapterServlet)
+		ApplicationServlet webAdapterServlet)
 		throws UIDLTransformerException {
 		this.transformerType = type;
 		this.themeSource = themes;

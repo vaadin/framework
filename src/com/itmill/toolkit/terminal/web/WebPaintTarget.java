@@ -65,7 +65,7 @@ public class WebPaintTarget implements PaintTarget {
 	private StringBuffer tagBuffer;
 	private HttpVariableMap variableMap;
 	private boolean closed = false;
-	private WebAdapterServlet webAdapterServlet;
+	private ApplicationServlet webAdapterServlet;
 	private Theme theme;
     private static final int TAG_BUFFER_DEFAULT_SIZE = 20;
     private boolean mSuppressOutput = false;
@@ -79,7 +79,7 @@ public class WebPaintTarget implements PaintTarget {
 	public WebPaintTarget(
 		HttpVariableMap variableMap,
 		UIDLTransformerType type,
-		WebAdapterServlet webAdapterServlet,
+		ApplicationServlet webAdapterServlet,
 		Theme theme)
 		throws PaintException {
 

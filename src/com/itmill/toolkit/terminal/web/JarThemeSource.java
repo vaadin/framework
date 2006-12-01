@@ -58,7 +58,7 @@ public class JarThemeSource implements ThemeSource {
 	private Theme theme;
 	private String path;
 	private String name;
-	private WebAdapterServlet webAdapterServlet;
+	private ApplicationServlet webAdapterServlet;
 	private Cache resourceCache = new Cache();
 
 	/** Collection of subdirectory entries */
@@ -72,7 +72,7 @@ public class JarThemeSource implements ThemeSource {
 	 */
 	public JarThemeSource(
 		File file,
-		WebAdapterServlet webAdapterServlet,
+		ApplicationServlet webAdapterServlet,
 		String path)
 		throws ThemeException, FileNotFoundException, IOException {
 

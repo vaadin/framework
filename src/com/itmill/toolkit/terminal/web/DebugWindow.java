@@ -66,7 +66,7 @@ public class DebugWindow extends Window {
 
 	private Application debuggedApplication;
 	private HashMap rawUIDL = new HashMap();
-	private WebAdapterServlet servlet;
+	private ApplicationServlet servlet;
 	private HttpSession session;
 
 	private TabSheet tabs = new TabSheet();
@@ -81,7 +81,7 @@ public class DebugWindow extends Window {
 	protected DebugWindow(
 		Application debuggedApplication,
 		HttpSession session,
-		WebAdapterServlet servlet) {
+		ApplicationServlet servlet) {
 
 		super("Debug window");
 		setName(WINDOW_NAME);
@@ -385,7 +385,7 @@ public class DebugWindow extends Window {
 	 * Returns the servlet.
 	 * @return WebAdapterServlet
 	 */
-	protected WebAdapterServlet getServlet() {
+	protected ApplicationServlet getServlet() {
 		return servlet;
 	}
 
@@ -401,7 +401,7 @@ public class DebugWindow extends Window {
 	 * Sets the servlet.
 	 * @param servlet The servlet to set
 	 */
-	protected void setServlet(WebAdapterServlet servlet) {
+	protected void setServlet(ApplicationServlet servlet) {
 		this.servlet = servlet;
 	}
 

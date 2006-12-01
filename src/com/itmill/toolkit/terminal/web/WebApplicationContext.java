@@ -97,6 +97,7 @@ public class WebApplicationContext implements ApplicationContext {
 	 */
 	public File getBaseDirectory() {
 		String realPath = session.getServletContext().getRealPath("/");
+		if (realPath == null) return null;
 		return new File(realPath);
 	}
 
@@ -114,7 +115,7 @@ public class WebApplicationContext implements ApplicationContext {
 	public Collection getApplications() {
 		LinkedList applications =
 			(LinkedList) session.getAttribute(
-				WebAdapterServlet.SESSION_ATTR_APPS);
+				ApplicationServlet.SESSION_ATTR_APPS);
 
 		return Collections.unmodifiableCollection(
 			applications == null ? (new LinkedList()) : applications);
@@ -175,4 +176,5 @@ public class WebApplicationContext implements ApplicationContext {
 			((ApplicationContext.TransactionListener)i.next()).transactionEnd(application,request);
 		}
 	}
+
 }
