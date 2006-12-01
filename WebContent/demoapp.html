@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+	
+<html>
+	<head>
+ 		<title>IT Mill Toolkit Demo</title>
+ 		
+		<!-- This the default Client application -->
+		<script src="client/client.js" type="text/javascript"></script>
+
+		<!-- These are the "DefaultTheme" related CSS and JS files -->
+        <script type="text/javascript" src="themes/default/theme.js"></script>
+        <script type="text/javascript" src="themes/default/jscalendar/calendar.js"></script> 
+        <script type="text/javascript" src="themes/default/jscalendar/lang/calendar-en.js"></script> 
+        <script type="text/javascript" src="themes/default/jscalendar/calendar-setup.js"></script>    
+        <link rel="stylesheet" media="screen, projection" href="themes/default/calendar-default.css" type="text/css" /> 
+        <link rel="stylesheet" media="screen, projection" href="themes/default/theme.css" type="text/css" />
+
+		<!-- These are the "ExampleTheme" related CSS and JS files -->
+        <script type="text/javascript" src="themes/example/example_theme.js"></script>
+        <link rel="stylesheet" media="screen, projection" href="themes/example/example_styles.css" type="text/css" />
+        
+    </head>
+    
+	<body>	
+	
+		<!-- Loading indicator -->
+		<div id="ajax-wait" class="outset" 
+			style="top:4px;right:4px;cursor:wait;z-index:10000;background:white;display:none;position:absolute;">
+			<div class="border pad">Loading...</div>
+		</div>
+		
+		<!-- Div where the client puts the IT Mill Toolkit Application main window -->
+		<div class="window" id="ajax-window" style=""></div>				
+		
+		<!-- Start the application  -->
+		<script language="JavaScript">
+			var baseUrl = document.location.href.split("demoapp.html")[0];
+			
+			// Determine the demo application
+			var app = document.location.href.split("app=")[1].split("&")[0];
+			document.title = document.title + " - " + app;
+			
+			// Create ajax-client for the application
+			var client = new ITMillToolkitClient(
+				document.getElementById('ajax-window'),		// Element where to put main window
+				baseUrl + app + "/UIDL/", 					// Adapter servlet URL (see WEB-INF/web.xml)
+				baseUrl + "client/",						// Base directory for the client
+				document.getElementById('ajax-wait'));		// Element to show while loading
+				
+			// Should we also show debug information?
+			var debug = document.location.href.split("debug=")[1];
+			if (debug && debug.split("&")[0] == "1") 
+				client.debugEnabled = true;
+			     
+			// Create the default theme and register the theme to the ajax-client
+			var defaultTheme = new DefaultTheme(baseUrl + "themes/default/");		 
+			defaultTheme.registerTo(client);
+
+			// Create the example theme and register the theme to the ajax-client
+			var exampleTheme = new ExampleTheme(baseUrl + "themes/example/",defaultTheme);		 
+			exampleTheme.registerTo(client);
+				 
+			// Start the client					 
+			client.start();
+				 
+		</script>
+		
+ 	</body>
+ </html>
+ 		
