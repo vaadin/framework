@@ -94,8 +94,7 @@ public class License {
 			db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 			licenseXML = db.parse(is);
 		} catch (ParserConfigurationException e) {
-			// This should succees
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 	}
 
