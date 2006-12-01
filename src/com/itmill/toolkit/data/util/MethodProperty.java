@@ -28,12 +28,10 @@
 
 package com.itmill.toolkit.data.util;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Constructor;
 import java.util.LinkedList;
-
-import sun.reflect.ReflectionFactory.GetReflectionFactoryAction;
 
 import com.itmill.toolkit.data.Property;
 
