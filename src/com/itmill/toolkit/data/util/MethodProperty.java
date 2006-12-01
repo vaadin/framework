@@ -33,6 +33,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Constructor;
 import java.util.LinkedList;
 
+import sun.reflect.ReflectionFactory.GetReflectionFactoryAction;
+
 import com.itmill.toolkit.data.Property;
 
 /** <p>Proxy class for creating Properties from pairs of getter and setter
@@ -607,10 +609,13 @@ public class MethodProperty implements Property {
 	  * @param newStatus new read-only status of the Property
 	  */
 	public void setReadOnly(boolean newStatus) {
+		boolean prevStatus = readOnly;
 		if (newStatus)
 			readOnly = true;
 		else
 			readOnly = (setMethod == null);
+		if (prevStatus != readOnly)
+			fireReadOnlyStatusChange();
 	}
 
 	/** <code>Exception</code> object that signals that there were
