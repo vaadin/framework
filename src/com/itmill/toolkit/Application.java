@@ -132,9 +132,6 @@ public abstract class Application
 	/** Window detach listeners */
 	private LinkedList windowDetachListeners = null;
 
-	/** Application error listeners */
-	private LinkedList errorListeners = null;
-
 	/** Application resource mapping: key <-> resource */
 	private Hashtable resourceKeyMap = new Hashtable();
 	private Hashtable keyResourceMap = new Hashtable();
