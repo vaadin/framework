@@ -151,7 +151,10 @@ Property.ReadOnlyStatusChangeNotifier {
      * @param newStatus new read-only status of the Property
      */	
     public void setReadOnly(boolean newStatus) {
-        readOnly = newStatus;
+    	if (newStatus != readOnly) {
+    		readOnly = newStatus;
+    		fireReadOnlyStatusChange();
+    	}
     }
     
     /** Set the value of the property. This method supports setting from
