@@ -479,7 +479,7 @@ ITMillToolkitClient.prototype.processVariableChanges = function (repaintAll,nowa
 	// Build variable change query string
 	var changes = "";
 	for (var i in this.variableStates) {
-		changes  += i + "=" + this.variableStates[i] + "&";
+		changes  += i + "=" + encodeURIComponent(this.variableStates[i]) + "&";
 	}
 	
 	// Build up request URL
@@ -492,8 +492,8 @@ ITMillToolkitClient.prototype.processVariableChanges = function (repaintAll,nowa
     var changeListener = this.createRequestChangeListener(this,activeRequest);  
 	activeRequest.onreadystatechange = changeListener;
 	activeRequest.open("POST",url, true);
-	activeRequest.setRequestHeader('Content-Type', 
-		     'application/x-www-form-urlencoded')
+	activeRequest.setRequestHeader('Content-Type',
+                      'application/x-www-form-urlencoded; charset=UTF-8');
 	activeRequest.send(changes);	
 	
 }
@@ -1153,8 +1153,8 @@ ITMillToolkitClient.prototype.getXMLtext = function(xml) {
 ITMillToolkitClient.prototype.changeVariable = function (name, value, immediate, nowait) {
 	this.debug("variableChange('" + name + "', '" + value + "', " + immediate + ");");
 
-	this.variableStates[name] = escape(value);
-
+	this.variableStates[name] = value;
+	
 	if (immediate) 
 		this.processVariableChanges(false,nowait);
 }
