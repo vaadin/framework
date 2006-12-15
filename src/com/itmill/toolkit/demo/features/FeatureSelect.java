@@ -57,6 +57,10 @@ public class FeatureSelect extends Feature {
 			.addItem("optiongroup")
 			.getItemProperty(themes.getItemCaptionPropertyId())
 			.setValue("optiongroup");
+		themes
+			.addItem("twincol")
+			.getItemProperty(themes.getItemCaptionPropertyId())
+			.setValue("twincol");
 		l.addComponent(p);
 
 		return l;

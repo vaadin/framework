@@ -55,6 +55,7 @@ DefaultTheme.prototype.registerTo = function(client) {
 	client.registerRenderer(this,"datefield","calendar",this.renderDateFieldCalendar);
 	client.registerRenderer(this,"select",null,this.renderSelect);
 	client.registerRenderer(this,"select","optiongroup",this.renderSelectOptionGroup);
+	client.registerRenderer(this,"select","twincol",this.renderSelectTwincol);
 	client.registerRenderer(this,"upload",null,this.renderUpload);
 	client.registerRenderer(this,"embedded",null,this.renderEmbedded);
 
@@ -3314,12 +3315,18 @@ DefaultTheme.prototype.renderSelect = function(renderer,uidl,target,layoutInfo) 
 	// Selected options
 	if (options != null && options.length >0) {
 		for (var i=0; i<options.length;i++) {
-			var optionNode = theme.createElementTo(select,"option");
-			optionNode.setAttribute("value", options[i].getAttribute("key"));	
+            var optionNode = new Option(
+                options[i].getAttribute("caption"),
+                options[i].getAttribute("key")
+            );
+            select.options[select.options.length] = optionNode;
 			if (options[i].getAttribute("selected") == "true") {
-				optionNode.selected="true";	
+				optionNode.selected = true;
+                // IE bug workaraund to preserve selection in multiselect
+                if(document.all) {
+                    window.scrollBy(0,0);
+                }
 			}
-			theme.createTextNodeTo(optionNode,options[i].getAttribute("caption"));
 		}
 	}
 	
@@ -3332,6 +3339,160 @@ DefaultTheme.prototype.renderSelect = function(renderer,uidl,target,layoutInfo) 
 	}
 }
 
+DefaultTheme.prototype.renderSelectTwincol = function(renderer,uidl,target,layoutInfo) {
+    function deleteOptionFromSelectByOptionValue(select, value) {
+        for(var i = 0; i < select.options.length; i++) {
+            if(select.options[i].value == value) {
+                select.options[i] = null;
+                return true;
+            }
+        }
+    }
+    function setSelectedOfOptionFromSelectByOptionValue(select, value, sel) {
+        for(var i = 0; i < select.options.length; i++) {
+            if(select.options[i].value == value) {
+                select.options[i].selected = sel;
+                return true;
+            }
+        }
+    }
+	var theme = renderer.theme;
+	var client = renderer.client;
+	
+	// Create containing element
+	var div = renderer.theme.createPaintableElement(renderer,uidl,target,layoutInfo);	
+	if (uidl.getAttribute("invisible")) return; // Don't render content if invisible
+
+	// Create selection variable
+	var selectMode = uidl.getAttribute("selectmode");
+	var selectable = selectMode == "multi" || selectMode == "single";
+	var immediate = ("true" == uidl.getAttribute("immediate"));
+	var disabled = ("true" == uidl.getAttribute("disabled"));
+	var readonly = ("true" == uidl.getAttribute("readonly"));
+	var newitem = ("true" == uidl.getAttribute("allownewitem"));
+	var focusid = uidl.getAttribute("focusid");
+	var tabindex = uidl.getAttribute("tabindex");
+	
+	var selectionVariable = theme.createVariableElementTo(div,theme.getVariableElement(uidl,"array","selected"));
+
+	// Render default header
+	theme.renderDefaultComponentHeader(renderer,uidl,div,layoutInfo);
+
+    if (newitem) {
+        theme.createElementTo(div,"br");
+    }
+    // create two selects
+    var unselected = theme.createElementTo(div,"select");
+    unselected.setAttribute("multiple","true");
+    unselected.className = "unselected";
+    var selected = theme.createElementTo(div,"select");
+    selected.setAttribute("multiple","true");
+    selected.className = "selected";
+    // buttons to move selections
+    var buttonsDiv = theme.createElementTo(div,"div");
+    buttonsDiv.className = "buttons";
+
+    //set focus and tabindex to unselected select    
+	if (focusid) unselected.focusid = focusid;
+	if (tabindex) unselected.tabIndex = tabindex;
+
+	var options = theme.getFirstElement(uidl,"options");
+	if (options != null) {
+		options = options.getElementsByTagName("so");
+		unselected.size = (options.length>7?7:options.length);
+        selected.size = (options.length>7?7:options.length);
+	}
+    
+	// Select options
+	if (options != null && options.length >0) {
+        for (var i=0; i<options.length;i++) {
+            var modelOptionNode;
+            if (options[i].getAttribute("selected") == "true") {
+                modelOptionNode = theme.createElementTo(selected,"option");
+            } else {
+                modelOptionNode = theme.createElementTo(unselected,"option");
+            }
+            theme.createTextNodeTo(modelOptionNode,options[i].getAttribute("caption"));
+            modelOptionNode.setAttribute("value", options[i].getAttribute("key"));
+        }
+	}
+	
+	if (newitem) {
+		var input = theme.createInputElementTo(div,"text");
+		var button = theme.createElementTo(div,"button");
+		theme.createTextNodeTo(button,"+");
+		var newitemVariable = theme.createVariableElementTo(div,theme.getVariableElement(uidl,"string","newitem"));
+		theme.addSetVarListener(theme,client,input,"change",newitemVariable,input,true);
+	}
+    var moveRightButton = theme.createElementTo(buttonsDiv, "button");
+    moveRightButton.innerHTML = "&gt;&gt;";
+    moveRightButton.onclick = function() {
+        // loop all selected options unselected-list
+        while(unselected.selectedIndex > -1) {
+            var option = unselected.options[unselected.selectedIndex];
+            //add selected options to end of selected-list
+            selected.options[selected.options.length] = 
+                new Option(
+                    option.text,
+                    option.value                  
+                    );
+            // remove from unselected-list
+            deleteOptionFromSelectByOptionValue(unselected,option.value)
+        }
+        if(selectMode != "multi") {
+            // in single select mode, ensure only one option on right side
+            // not ment for single select mode, just to be more compatible
+            while(selected.options.length > 1) {
+                var optionToLeft = selected.options[0];
+                unselected.options[unselected.options.length] = 
+                    new Option(
+                        optionToLeft.text,
+                        optionToLeft.value                  
+                );
+                selected.options[0] = null;
+                // remove from selected-list
+                deleteOptionFromSelectByOptionValue(selected,optionToLeft.value)
+            }
+        } // end checking for single variable
+        // fire variable change
+        var s = new Array();
+		for (var i = 0; i < selected.options.length; i++) {
+			s[s.length] = selected.options[i].value;
+		}
+		var value = s.join(',');		
+        theme.setVariable(client,selectionVariable,value,immediate);
+    }
+    var moveLeftButton = theme.createElementTo(buttonsDiv, "button");
+    moveLeftButton.innerHTML = "&lt;&lt;";
+    moveLeftButton.onclick = function() {
+        // loop all selected options selected-list
+        while(selected.selectedIndex > -1) {
+            var option = selected.options[selected.selectedIndex];
+            //add selected options to end of selected-list
+            unselected.options[unselected.options.length] = 
+                new Option(
+                    option.text,
+                    option.value                  
+                    );
+            // remove from unselected-list
+            deleteOptionFromSelectByOptionValue(selected,option.value)
+        }
+        // fire variable change
+        var s = new Array();
+		for (var i = 0; i < selected.options.length; i++) {
+			s[s.length] = selected.options[i].value;
+		}
+		var value = s.join(',');		
+        theme.setVariable(client,selectionVariable,value,immediate);
+    }
+    if (disabled||readonly) {
+        selected.disabled = "true";
+        unselected.disabled = "true";
+        moveLeftButton.disabled = "true";
+        moveRightButton.disabled = "true";
+    }
+    
+}
 
 DefaultTheme.prototype.renderSelectOptionGroup = function(renderer,uidl,target,layoutInfo) {
 	// TODO: 

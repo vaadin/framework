@@ -197,6 +197,28 @@ IMG.overlay {
 	margin-left: 1.2em;
 	margin-top: 0.3em;
 }
+.select-twincol {
+	width: 350px;
+}
+.select-twincol div.buttons {
+	text-align:center;
+}
+.select-twincol div.buttons button {
+	text-align:center;
+	widht:35px;
+}
+.select-twincol select.unselected {
+	float:left;
+	width: 150px;
+	/* force white, may be grey if empty initially */
+	background-color: white;
+}
+.select-twincol select.selected {
+	float:right;
+	width: 150px;
+	/* force white, may be grey if empty initially */
+	background-color: white;
+}
 
 /* Table */
 
