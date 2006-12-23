@@ -562,16 +562,17 @@ DefaultTheme.prototype.createPaintableElement = function (renderer, uidl, target
 	return div;	
 }
 
-DefaultTheme.prototype.renderDefaultComponentHeader = function(renderer,uidl,target, layoutInfo) {
+DefaultTheme.prototype.renderDefaultComponentHeader = function(renderer, uidl, target, layoutInfo) {
 	var theme = renderer.theme;
 	var doc = renderer.doc;
+	var client = renderer.client;
 
 	var captionText = uidl.getAttribute("caption");
-	var error = this.getFirstElement(uidl,"error");
-	var descriptionText = this.getElementContent(uidl,"description");
+	var error = theme.getFirstElement(uidl,"error");
+	var description = theme.getFirstElement(uidl,"description");
 	var icon = uidl.getAttribute("icon");
 	
-	if (!captionText && !error && !descriptionText && !icon) {
+	if (!captionText && !error && !description && !icon) {
 		return null;
 	}
 	
@@ -601,21 +602,18 @@ DefaultTheme.prototype.renderDefaultComponentHeader = function(renderer,uidl,tar
 			}
 		);	
 	}
-	if (captionText||error||descriptionText||icon) {
+	if (captionText||error||description||icon) {
 		this.addCSSClass(caption,"caption");
 	} else {
 		return caption;
 	}
-	if (descriptionText || error) {
+	if (description || error) {
 		this.addCSSClass(caption,"clickable");
 	}
-
-	if (error||descriptionText) {
-		var popup = this.renderDescriptionPopup(renderer,uidl,(captionText?caption:target));
-	}
-
+	
 	var iconUrl = uidl.getAttribute("icon");	
 	
+	var errorIcon;
 	if (error) {
 		var icon = this.createElementTo(caption,"img","icon");
 		icon.src = theme.root+"/img/icon/error-mini.gif";
@@ -625,7 +623,8 @@ DefaultTheme.prototype.renderDefaultComponentHeader = function(renderer,uidl,tar
 		} else {
 			this.setCSSClass(icon,"error");
 		}
-	} else if (descriptionText) {
+		errorIcon = icon;
+	} else if (description) {
 		var icon = this.createElementTo(caption,"img","icon");
 		icon.src = theme.root+"/img/icon/info-mini.gif";
 		if (iconUrl) {
@@ -634,6 +633,13 @@ DefaultTheme.prototype.renderDefaultComponentHeader = function(renderer,uidl,tar
 		} else {
 			this.setCSSClass(icon,"error");
 		}
+	}
+	
+	var popupTarget = (captionText)?caption:target;
+	if (error||description) {
+		if(description) popupTarget._descriptionHTML = client.getXMLtext(description);
+		if(error) popupTarget._errorHTML = client.getXMLtext(error);
+		this.addDescriptionAndErrorPopupListener(theme, client, popupTarget, errorIcon);
 	}
 
 	if (iconUrl) {
@@ -680,68 +686,8 @@ DefaultTheme.prototype.renderActionPopup = function(renderer, uidl, to, actions,
 	theme.addStopListener(theme,client,to,"contextmenu");
 	//theme.addStopListener(theme,client,to,evtName);
 	theme.addTogglePopupListener(theme,client,to,evtName,popup);
-}	
-
-DefaultTheme.prototype.renderDescriptionPopup = function (renderer,uidl,target) {
-	var theme = renderer.theme;
-	var doc = renderer.doc;
-	
-	var captionText = uidl.getAttribute("caption");
-	var desc = this.getFirstElement(uidl,"description");
-	
-	var error = this.getFirstElement(uidl,"error");
-	var iconUrl = uidl.getAttribute("icon");		
-	if (!iconUrl&&desc) {
-		iconUrl = theme.root+"/img/icon/info.gif";
-	}
-	
-	// Caption container
-	var popup = this.createElementTo(target,"div","outset popup hide");
-	var inner = this.createElementTo(popup,"table","border pad");
-	inner = this.createElementTo(inner,"tbody");
-	var tr = this.createElementTo(inner,"tr");
-	var td = this.createElementTo(tr,"td");
-	if (iconUrl) {
-		if (iconUrl.indexOf("theme://") == 0) {
-    		iconUrl = (theme.iconRoot != null ? theme.iconRoot : theme.root) 
-    					+ iconUrl.substring(8);
-    	}
-		var icon = this.createElementTo(td,"img","icon");
-		icon.src = iconUrl;
-	}
-	td = this.createElementTo(tr,"td");
-	var caption = this.createElementTo(td,"div","popupcaption");
-	this.createTextNodeTo(caption,captionText);
-	
-	if (desc) {
-		var description = this.createElementTo(td,"div","popupcontent");	
-		description.innerHTML = renderer.client.getXMLtext(desc);
-		description.style.whiteSpace ="normal";
-	}
-	if (error) {
-		tr = this.createElementTo(inner,"tr");
-		td = this.createElementTo(tr,"td");
-		icon = this.createElementTo(td,"img","icon");
-		icon.src = theme.root+"/img/icon/error.gif";
-		td = this.createElementTo(tr,"td");
-		var errorDiv = this.createElementTo(td,"div","error pad");
-		this.renderData(renderer,error,errorDiv);
-		var ew = errorDiv.ownerDocument.getElementById("error-window");
-		if (ew) {
-			ew.innerHTML += "<DIV><B>"+captionText+":</B> "+errorDiv.innerHTML+"</DIV><BR/>";
-			ew.style.display = "inline";
-		}
-	}
-	if (desc||error) {
-        this.addTogglePopupListener(theme,client,target,"mouseover",popup,1000,500,target);
-        //theme.addTogglePopupListener(theme,client,target,"click",popup,0,500);
-        this.addHidePopupListener(theme,client,popup,"click",popup);
-        this.addHidePopupListener(theme,client,target,"mouseout",popup);
-        this.addHidePopupListener(theme,client,popup,"mouseout",popup);
-	}
-			
-	return popup;
 }
+
 
 /** Show popup at specified position.
  *  Hides previous popup.
@@ -4035,4 +3981,264 @@ DefaultTheme.prototype.renderNewTabSheet = function(renderer,uidl,target,layoutI
 		
 	}
 	
+}
+
+
+DefaultTheme.prototype.addDescriptionAndErrorPopupListener = function(theme, client, target, errorIcon) {
+	
+	client.addEventListener(target, "mouseover", 
+		function(e) {
+			var pos = theme.calculateAbsoluteEventPosition(theme, client, e);
+			theme.showDescriptionAndErrorPopup(theme, target, pos, 500); // 500 = delay
+		}
+	);
+	client.addEventListener(target, "mouseout", 
+		function(e) {
+			if(!target._forcedOpen) theme.hideDescriptionAndErrorPopup(target);
+		}
+	);
+	client.addEventListener(target.ownerDocument.body, "click", 
+		function(e) {
+			var ev = e? e:window.event;
+			if(!ev.cancelBubble) theme.hideDescriptionAndErrorPopup(target, true); // true = force close
+		}
+	);
+	
+	if(errorIcon) {
+		client.addEventListener(errorIcon, "click", 
+			function(e) {
+				var ev = e? e:window.event;
+				var pos = theme.calculateAbsoluteEventPosition(theme, client, e);
+				theme.showDescriptionAndErrorPopup(theme, target, pos, null, true); // null = no delay, true = force open
+				if(e.stopPropagation) e.stopPropagation();
+				ev.cancelBubble = true;
+			}
+		);
+	}
+	
+}
+
+DefaultTheme.prototype.showDescriptionAndErrorPopup = function(theme, target, pos, delay, forceOpen) {
+
+	if(target._descriptionPopupTimeout) clearTimeout(target._descriptionPopupTimeout);
+	
+	var descHTML = target._descriptionHTML;
+	var errorHTML = target._errorHTML;
+	if(!descHTML && !errorHTML) return;
+	
+	if(!delay) {
+		// Reference to correct document
+		var doc = target.ownerDocument;
+		
+		// Maximum css width of the description popup
+		var maxPopupWidth = "35em";
+		
+		var popupContainer;
+		var description;
+		var error;
+		
+		// TODO IFRAME below popup?
+		
+		// If the container div is not found, create it once
+		if(!(popupContainer = doc.getElementById("popup-container-div"))) {
+			popupContainer = doc.createElement("div");
+			popupContainer.className = "popup";
+			popupContainer.id = "popup-container-div";
+			popupContainer.style.left = "-10000px";
+			popupContainer.style.top = "-10000px";
+			
+			description = doc.createElement("div");
+			description.className = "description border";
+			popupContainer.appendChild(description);
+			
+			error = doc.createElement("div");
+			error.className = "error";
+			popupContainer.appendChild(error);
+			
+			doc.body.appendChild(popupContainer);
+			
+			// Enable clicking on container
+			client.addEventListener(popupContainer, "click", 
+				function(e) {
+					var ev = e? e:window.event;
+					if(e.stopPropagation) e.stopPropagation();
+					ev.cancelBubble = true;
+				}
+			);
+		// If already create, restore references
+		} else {
+			description = popupContainer.firstChild;
+			error = popupContainer.childNodes[1];
+		}
+		
+		description.innerHTML = descHTML? descHTML : "";
+		error.innerHTML = errorHTML? errorHTML : "";
+		
+		if(!descHTML) description.style.display = "none";
+		else description.style.display = "block";
+		if(!errorHTML) error.style.display = "none";
+		else error.style.display = "block";
+		popupContainer.style.width = "auto";
+		
+		// Align the popup
+		// TODO take smaller resolutions into consideration (i.e. if the popupWidth is wider than the browser window)
+		var popupWidth = popupContainer.clientWidth;
+		var available = doc.body.clientWidth-pos.x;
+		
+		if(popupWidth > available) {
+			popupContainer.style.width = maxPopupWidth;
+			popupWidth = popupContainer.clientWidth;
+			if(popupWidth > available) popupContainer.style.left = pos.x + 12 - (popupWidth-available) + "px";
+			else popupContainer.style.left = pos.x + 12 + "px";
+			popupContainer.style.top = pos.y + 20 + "px";
+		} else {
+			popupContainer.style.left = pos.x + 12 + "px";
+			popupContainer.style.top = pos.y + 20 + "px";
+		}
+		
+		if(forceOpen) target._forcedOpen = true;
+		else target._forcedOpen = false;
+
+	} else {
+		target._descriptionPopupTimeout = setTimeout(function() {theme.showDescriptionAndErrorPopup(theme, target, pos);}, delay);
+	}
+}
+
+DefaultTheme.prototype.hideDescriptionAndErrorPopup = function(target, forceClose) {
+	if(target._descriptionPopupTimeout) clearTimeout(target._descriptionPopupTimeout);
+	if((popupContainer = target.ownerDocument.getElementById("popup-container-div")) && (!target._forcedOpen || forceClose)) {
+		popupContainer.style.left = "-10000px";
+		popupContainer.style.top = "-10000px";
+		target._forcedOpen = false;
+	}
+}
+	
+
+
+
+/** 
+* Calculate the absolute coordinates relative to this documents window of 
+* the event using mouse and browser window positions relative to the screen (IE)
+* (Not 100% accurate, some pixels off in both IE and FF)
+* Firefox uses normal DOM calculations.
+*
+* @param boolean modFF   Don't use DOM calculations to get the position in Firefox.
+* (Not reliable with all frame and browser plugin compositions)
+*
+* Returns an object with x and y properties.
+*/
+DefaultTheme.prototype.calculateAbsoluteEventPosition = function(theme, client, e, modFF) {
+	
+	if (!e) var e = window.event;
+	
+	if(window.screenY) { // Firefox
+		
+		// Calculate with default DOM calculation
+		if(!modFF) return theme.eventPosition(e);
+		
+		// Doesn't actually work, always returns true.
+		var statusBarHeight = (window.statusbar.visible)? 26 : 0; // Default XP Blue theme estimate
+		
+		// Coordinates to browser windows content area, with no frames.
+		// Substract browser chrome (toolbars and such) from the height.
+		// Some plugins, that require screen estate from the browser content 
+		// window, may misalign the coordinates.
+		var windowY = window.screenY + (window.outerHeight - window.innerHeight - statusBarHeight);
+		var windowX = window.screenX + (window.outerWidth - window.innerWidth);
+		
+		// Gecko needs to take frames into consideration when calculating the position.
+		// TODO Only works reliably when the page is simply divided either into rows or cols.
+		
+		// Are we in a frame?
+		// (this script is in one of the frames, so the parent will have frames)
+		var frames = window.parent.frames;
+		var len = frames.length;
+		
+		if(len > 0) { // Frames in use
+			var precedingWidth = 0, precedingHeight = 0;
+			var flagSucceeding = false;
+			
+			for(var i=0; i < len; i++) {
+				var frame = frames[i];
+				
+				if(window==frame) flagSucceeding = true;
+				
+				// Only count preceding widths that are different from this window (don't count row widths)
+				if(frame.innerWidth != window.innerWidth || frame != window) {
+					if(!flagSucceeding) {
+						precedingWidth += frame.innerWidth;
+						continue; // Don't count the height anymore
+					}
+				}
+				// Same for preceding heights, if no width was added
+				if(frame.innerHeight != window.innerHeight || frame != window) {
+					if(!flagSucceeding) precedingHeight += frame.innerHeight;
+				}
+				
+			}
+			
+			// Do the math :)
+			windowY = window.screenY + (window.outerHeight - window.parent.innerHeight + precedingHeight - statusBarHeight);
+			windowX = window.screenX + (window.outerWidth - window.parent.innerWidth + precedingWidth);
+		}
+		
+	} else if(window.screenTop) { // IE, handles frames correct natively
+		var windowY = window.screenTop;
+		var windowX = window.screenLeft;
+	}
+	
+	var scroll = theme.getScrollXY(window);
+	
+	// TODO Relative positioned containers for the popup 
+	// will cause wrong positioning
+	var posx = e.screenX - windowX + scroll.x;
+	var posy = e.screenY - windowY + scroll.y;
+	return {x:posx, y:posy};
+	
+}
+
+/**
+* Calculate the scroll amount of a window, both x and y.
+*
+* Returns an object with x and y properties.
+*/
+DefaultTheme.prototype.getScrollXY = function(win) {
+	var doc = win.document;
+	var scrOfX = 0, scrOfY = 0;
+	if( typeof( win.pageYOffset ) == 'number' ) {
+		//Netscape compliant
+		scrOfY = win.pageYOffset;
+		scrOfX = win.pageXOffset;
+	} else if( doc.body && ( doc.body.scrollLeft || doc.body.scrollTop ) ) {
+		//DOM compliant
+		scrOfY = doc.body.scrollTop;
+		scrOfX = doc.body.scrollLeft;
+	} else if( doc.documentElement && ( doc.documentElement.scrollLeft || doc.documentElement.scrollTop ) ) {
+		//IE6 standards compliant mode
+		scrOfY = doc.documentElement.scrollTop;
+		scrOfX = doc.documentElement.scrollLeft;
+	}
+
+	return {x:scrOfX, y:scrOfY};
+}
+
+/**
+* Calculate event position (Quirksmode.org script)
+*/
+DefaultTheme.prototype.eventPosition = function(e) {
+	var posx = 0;
+	var posy = 0;
+	if (!e) var e = window.event;
+	
+	if (e.pageX || e.pageY) 	{
+		posx = e.pageX;
+		posy = e.pageY;
+	} else if (e.clientX || e.clientY) 	{
+		posx = e.clientX + document.body.scrollLeft
+			+ document.documentElement.scrollLeft;
+		posy = e.clientY + document.body.scrollTop
+			+ document.documentElement.scrollTop;
+	}
+	
+	return {x:posx, y:posy};
 }
