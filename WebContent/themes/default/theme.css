@@ -119,12 +119,14 @@ IMG.overlay {
 	text-align: left;
 }
 .popup * {
-	white-space: nowrap;
+	/*white-space: nowrap;*/ /* Really, there's no point doing it like this. If we need nowrap, we define it in the content that needs it, not on all. */
 	color: InfoText;
 	background-color: InfoBackground;
 }
 .popup .error {
 	font-size: 0.9em;
+	overflow: auto;
+	border: solid 1px red;
 }
 
 /* COMPONENTS */
