@@ -158,6 +158,10 @@ public class FeatureTable extends Feature implements Action.Handler {
 			.addItem("list")
 			.getItemProperty(themes.getItemCaptionPropertyId())
 			.setValue("list");
+		themes
+			.addItem("paging")
+			.getItemProperty(themes.getItemCaptionPropertyId())
+			.setValue("paging");
 		p.addProperties("Table Properties", ap);
 		l.addComponent(p);
 

@@ -70,6 +70,7 @@ DefaultTheme.prototype.registerTo = function(client) {
 	client.registerRenderer(this,"tabsheet",null,this.renderTabSheet);
 
 	client.registerRenderer(this,"table",null,this.renderScrollTable);
+    client.registerRenderer(this,"table","paging",this.renderPagingTable);
 	client.registerRenderer(this,"tree",null,this.renderTree);
 	client.registerRenderer(this,"tree","coolmenu",this.renderTreeMenu);
 	//client.registerRenderer(this,"tree","menu",this.renderTreeMenu);
@@ -2345,7 +2346,7 @@ DefaultTheme.prototype.addLinkOpenWindowListener = function(theme,client,element
 		}
 	);
 }
-DefaultTheme.prototype.renderTable = function(renderer,uidl,target,layoutInfo) {
+DefaultTheme.prototype.renderPagingTable = function(renderer,uidl,target,layoutInfo) {
 	// Shortcut variables
 	var theme = renderer.theme;
 	var client = renderer.client;
@@ -2540,7 +2541,7 @@ DefaultTheme.prototype.renderTable = function(renderer,uidl,target,layoutInfo) {
 		theme.addCSSClass(button,"clickable");
 		theme.addAddClassListener(theme,client,button,"mouseover","bg");
 		theme.addRemoveClassListener(theme,client,button,"mouseout","bg");
-		theme.addSetVarListener(theme,client,button,"click",firstvisibleVar,(parseInt(firstvisible)-parseInt(pagelength)),true);
+		theme.addSetVarListener(theme,client,button,"click",firstvisibleVar,(String) (parseInt(firstvisible)-parseInt(pagelength)),true);
 	} else {
 		theme.addCSSClass(button,"disabled");
 	}
@@ -2554,7 +2555,7 @@ DefaultTheme.prototype.renderTable = function(renderer,uidl,target,layoutInfo) {
 		theme.addCSSClass(button,"clickable");
 		theme.addAddClassListener(theme,client,button,"mouseover","bg");
 		theme.addRemoveClassListener(theme,client,button,"mouseout","bg");
-		theme.addSetVarListener(theme,client,button,"click",firstvisibleVar,(parseInt(firstvisible)+parseInt(pagelength)),true);
+		theme.addSetVarListener(theme,client,button,"click",firstvisibleVar, (String) (parseInt(firstvisible)+parseInt(pagelength)),true);
 	} else {
 		theme.addCSSClass(button,"disabled");
 	}
