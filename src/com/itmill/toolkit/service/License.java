@@ -44,7 +44,6 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.Calendar;
 import java.util.Iterator;
-import java.util.TooManyListenersException;
 import java.util.TreeSet;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -57,6 +56,8 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
+import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 
 public class License {
 
