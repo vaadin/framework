@@ -59,18 +59,11 @@ public class AjaxPaintTarget implements PaintTarget {
     /* Document type declarations */
     private final static String UIDL_XML_DECL = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 
-    private final static String UIDL_DOCTYPE_DECL = "<!DOCTYPE uidl PUBLIC \"-//MILLSTONE//DTD UIDL//EN\" \"http://millstone.org/xml/3.0/UIDL.dtd\">";
-
-    /* commonly used tags and argument names */
-    private final static String UIDL_TAG_VARIABLE = "var";
-
     private final static String UIDL_ARG_NAME = "name";
 
     private final static String UIDL_ARG_VALUE = "value";
 
     private final static String UIDL_ARG_ID = "id";
-
-    private final static String UIDL_ARG_TYPE = "type";
 
     private Stack mOpenTags;
 
@@ -82,11 +75,7 @@ public class AjaxPaintTarget implements PaintTarget {
 
     private boolean closed = false;
 
-    private OutputStream output;
-
     private AjaxApplicationManager manager; 
-
-    private String paintableId;
     
     private boolean trackPaints = false;
     
@@ -107,9 +96,6 @@ public class AjaxPaintTarget implements PaintTarget {
 
         // Set the variable map
         this.variableMap = variableMap;
-
-        // Set the output stream
-        this.output = output;
 
         // Set the target for UIDL writing
         try {

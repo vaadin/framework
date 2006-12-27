@@ -170,7 +170,7 @@ public class UIDLTransformerFactory {
 
 			// Create new list, if not found
 			if (list == null) {
-				list = new TransformerList(type);
+				list = new TransformerList();
 				this.transformerSpool.put(type, list);
 				if (webAdapterServlet.isDebugMode()) {
 					Log.info("Created new type: " + type);
@@ -225,13 +225,8 @@ public class UIDLTransformerFactory {
 
 	private class TransformerList {
 
-		private UIDLTransformerType type = null;
 		private LinkedList list = new LinkedList();
 		private long lastUsed = 0;
-
-		public TransformerList(UIDLTransformerType type) {
-			this.type = type;
-		}
 
 		public void add(UIDLTransformer transformer) {
 			list.add(transformer);

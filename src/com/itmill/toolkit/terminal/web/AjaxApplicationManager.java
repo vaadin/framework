@@ -69,11 +69,7 @@ import com.itmill.toolkit.ui.Window;
 public class AjaxApplicationManager implements Paintable.RepaintRequestListener,
         Application.WindowAttachListener, Application.WindowDetachListener {
 
-    private static String GET_PARAM_VARIABLE_CHANGES = "changeVariables";
-
     private static String GET_PARAM_REPAINT_ALL = "repaintAll";
-
-    private static String GET_PARAM_UI_CHANGES_FORMAT = "format";
 
     private static int DEFAULT_BUFFER_SIZE = 32 * 1024;
 

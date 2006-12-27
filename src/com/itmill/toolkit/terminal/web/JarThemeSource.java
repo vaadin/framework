@@ -299,7 +299,7 @@ public class JarThemeSource implements ThemeSource {
 		public void put(Object key, Object value) {
 			data.put(
 				key,
-				new SoftReference(new CacheItem(value, key.toString())));
+				new SoftReference(new CacheItem(value)));
 		}
 
 		public Object get(Object key) {
@@ -322,10 +322,8 @@ public class JarThemeSource implements ThemeSource {
 	private class CacheItem {
 
 		private Object data;
-		private String name;
 
-		public CacheItem(Object data, String name) {
-			this.name = name;
+		public CacheItem(Object data) {
 			this.data = data;
 		}
 
@@ -335,7 +333,6 @@ public class JarThemeSource implements ThemeSource {
 
 		public void finalize() throws Throwable {
 			this.data = null;
-			this.name = null;
 			super.finalize();
 		}
 

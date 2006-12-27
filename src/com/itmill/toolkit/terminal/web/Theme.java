@@ -138,8 +138,6 @@ public class Theme extends DefaultHandler {
 	/** Name of the theme. */
 	private String name;
 
-	/** Description file. */
-	private java.io.File file;
 
 	/** Version of the theme. */
 	private String version;
@@ -174,7 +172,6 @@ public class Theme extends DefaultHandler {
 	 *  @throws FileNotFoundException Thrown if the given file is not found.
 	 */
 	public Theme(java.io.File descriptionFile) throws FileNotFoundException {
-		this.file = descriptionFile;
 		parse(new InputSource(new FileInputStream(descriptionFile)));
 	}
 
@@ -838,11 +835,6 @@ public class Theme extends DefaultHandler {
 			this.files.add(file);
 		}
 
-		/** Remove a file from fileset. */
-		private void removeFile(File file) {
-			this.files.add(file);
-		}
-
 		/** Get requirements in this fileset. */
 		private RequirementCollection getRequirements() {
 			return this.requirements;
@@ -950,6 +942,11 @@ public class Theme extends DefaultHandler {
 	 */
 	public String getVersion() {
 		return version;
+	}
+
+	/** Get theme description */
+	public String getDescription() {
+		return description;
 	}
 
 }
