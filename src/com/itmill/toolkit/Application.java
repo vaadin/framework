@@ -773,7 +773,7 @@ public abstract class Application
 	 * 
 	 * @return License this application is currently using
 	 */
-	public License getLicense() {
+	public License getToolkitLicense() {
 		return license;
 	}
 
@@ -784,7 +784,7 @@ public abstract class Application
      *
 	 * @param license New license for this application.
 	 */
-	public void setLicense(License license) {
+	public void setToolkitLicense(License license) {
 		this.license = license;
 	}
 	
