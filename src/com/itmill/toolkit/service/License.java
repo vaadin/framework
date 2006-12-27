@@ -133,7 +133,7 @@ public class License {
 		checkThatLicenseDOMisValid();
 
 		NodeList lL = licenseXML.getElementsByTagName("limits");
-		if (lL == null || lL.getLength() > 0)
+		if (lL == null || lL.getLength() == 0)
 			throw new InvalidLicenseFile("limits not found from license-file");
 
 		Element e = (Element) lL.item(0);
@@ -291,7 +291,7 @@ public class License {
 			String classPrefix = ((Element) appL.item(0))
 					.getAttribute("classPrefix");
 			if (classPrefix != null && classPrefix.length() > 0
-					&& applicationClass.getName().startsWith(classPrefix))
+					&& !applicationClass.getName().startsWith(classPrefix))
 				throw new LicenseViolation(
 						"License limits application class prefix to '"
 								+ classPrefix
@@ -328,7 +328,8 @@ public class License {
 		NodeList cuL = licenseXML.getElementsByTagName("concurrent-jvms");
 		if (cuL == null && cuL.getLength() == 0)
 			return -1;
-		String limit = ((Element) cuL.item(0)).getAttribute("limit");
+		Element e= (Element) cuL.item(0);
+		String limit = e == null ? null : e.getAttribute("limit");
 		if (limit != null && limit.length() > 0
 				&& !limit.equalsIgnoreCase("unlimited"))
 			return Integer.parseInt(limit);
@@ -363,7 +364,7 @@ public class License {
 										+ " but license requires it to be "
 										+ eq);
 						if (eqol != null && eqol.length() > 0)
-							if (value <= Integer.parseInt(eqol))
+							if (value > Integer.parseInt(eqol))
 								throw new LicenseViolation(
 										"Product "
 												+ tag
@@ -372,7 +373,7 @@ public class License {
 												+ " but license requires it to be equal or less than"
 												+ eqol);
 						if (eqom != null && eqom.length() > 0)
-							if (value != Integer.parseInt(eqom))
+							if (value < Integer.parseInt(eqom))
 								throw new LicenseViolation(
 										"Product "
 												+ tag
@@ -411,7 +412,7 @@ public class License {
 	
 	private void appendVersionDescription(String num, StringBuffer v, String tag, String relation) {
 		if (num == null || num.length() == 0) return;
-		if (v.length() == 0) v.append(" and ");
+		if (v.length() > 0) v.append(" and ");
 		v.append(tag + " version " + relation + " " + num);
 	}
 
