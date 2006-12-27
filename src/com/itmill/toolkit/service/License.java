@@ -156,8 +156,13 @@ public class License {
 			d.append("  Edition: " + getProductEdition());
 		d.append("\n");
 
+		// Print version info
+		String versionDescription = getVersionDescription();
+		if (versionDescription != null)
+			d.append("Version: " + versionDescription + "\n");
+
 		if (getLicenseeName() != null)
-			d.append("Licensed for: " + getLicenseeName() + "\n");
+			d.append("Licensed to: " + getLicenseeName() + "\n");
 
 		if (getPurpose() != null)
 			d.append("Use is limited to: " + getPurpose() + "\n");
@@ -169,13 +174,35 @@ public class License {
 		if (getMaxJVMs() >= 0)
 			d.append("Maximum number of JVM:s this license"
 					+ " can be used concurrently: " + getMaxJVMs() + "\n");
-		
-		// TODO Print date info
-		
-		// TODO Print version info
-		
-		// TODO Print application info
-		
+
+		// Print valid-until date
+		NodeList vuL = licenseXML.getElementsByTagName("valid-until");
+		if (vuL != null && vuL.getLength() > 0) {
+			Element e = (Element) vuL.item(0);
+			String year = e.getAttribute("year");
+			String month = e.getAttribute("month");
+			String day = e.getAttribute("day");
+			d.append("License is valid until: " + year + "-" + month + "-"
+					+ day + "\n");
+		}
+
+		// Print application info
+		NodeList aL = licenseXML.getElementsByTagName("application");
+		if (aL != null && aL.getLength() > 0) {
+			Element e = (Element) aL.item(0);
+			String app = e.getAttribute("name");
+			String purpose = e.getAttribute("purpose");
+			String prefix = e.getAttribute("classPrefix");
+			if (app != null && app.length() > 0)
+				d.append("For use with this application only: " + app + "\n");
+			if (app != null && app.length() > 0)
+				d.append("Application usage purpose is limited to: " + purpose
+						+ "\n");
+			if (app != null && app.length() > 0)
+				d.append("Application class name must match prefix: " + prefix
+						+ "\n");
+		}
+
 		d.append("--------------------------------------------------------\n");
 
 		return d.toString();
@@ -356,6 +383,35 @@ public class License {
 				}
 			}
 		}
+	}
+
+	private String getVersionDescription() {
+
+		StringBuffer v = new StringBuffer();
+		
+		NodeList verL = licenseXML.getElementsByTagName("version");
+		if (verL != null && verL.getLength() > 0) {
+			NodeList checks = verL.item(0).getChildNodes();
+			for (int i = 0; i < checks.getLength(); i++) {
+				Node n = checks.item(i);
+				if (n.getNodeType() == Node.ELEMENT_NODE) {
+					Element e = (Element) n;
+					String tag = e.getTagName();
+					appendVersionDescription(e.getAttribute("equals-to"),v,tag,"=");
+					appendVersionDescription(e.getAttribute("equals-to-or-is-less-than"),v,tag,"<=");
+					appendVersionDescription(e.getAttribute("equals-to-or-is-more-than"),v,tag,">=");
+				}
+			}
+		}
+		
+		if (v.length() == 0) return null;
+		return v.toString();
+	}
+	
+	private void appendVersionDescription(String num, StringBuffer v, String tag, String relation) {
+		if (num == null || num.length() == 0) return;
+		if (v.length() == 0) v.append(" and ");
+		v.append(tag + " version " + relation + " " + num);
 	}
 
 	private void checkProductNameAndEdition(String productName,
@@ -1066,10 +1122,10 @@ public class License {
 		 * Valid options:
 		 * 
 		 * <pre>
-		 *                                  ENCODE or DECODE: Encode or Decode as data is read.
-		 *                                  DONT_BREAK_LINES: don't break lines at 76 characters
-		 *                                    (only meaningful when encoding)
-		 *                                    &lt;i&gt;Note: Technically, this makes your encoding non-compliant.&lt;/i&gt;
+		 *                                   ENCODE or DECODE: Encode or Decode as data is read.
+		 *                                   DONT_BREAK_LINES: don't break lines at 76 characters
+		 *                                     (only meaningful when encoding)
+		 *                                     &lt;i&gt;Note: Technically, this makes your encoding non-compliant.&lt;/i&gt;
 		 * </pre>
 		 * 
 		 * <p>
@@ -1288,10 +1344,10 @@ public class License {
 		 * Valid options:
 		 * 
 		 * <pre>
-		 *                                  ENCODE or DECODE: Encode or Decode as data is read.
-		 *                                  DONT_BREAK_LINES: don't break lines at 76 characters
-		 *                                    (only meaningful when encoding)
-		 *                                    &lt;i&gt;Note: Technically, this makes your encoding non-compliant.&lt;/i&gt;
+		 *                                   ENCODE or DECODE: Encode or Decode as data is read.
+		 *                                   DONT_BREAK_LINES: don't break lines at 76 characters
+		 *                                     (only meaningful when encoding)
+		 *                                     &lt;i&gt;Note: Technically, this makes your encoding non-compliant.&lt;/i&gt;
 		 * </pre>
 		 * 
 		 * <p>
