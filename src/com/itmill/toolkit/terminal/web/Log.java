@@ -53,7 +53,6 @@ package com.itmill.toolkit.terminal.web;
  */
 public class Log {
 
-    private static String logFilename;
     private static boolean useStdOut = true;
     
     private static String LOG_MSG_INFO   = "[INFO]";
