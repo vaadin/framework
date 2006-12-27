@@ -29,6 +29,7 @@
 package com.itmill.toolkit;
 
 import com.itmill.toolkit.service.ApplicationContext;
+import com.itmill.toolkit.service.License;
 import com.itmill.toolkit.terminal.*;
 import com.itmill.toolkit.ui.AbstractComponent;
 import com.itmill.toolkit.ui.Window;
@@ -131,6 +132,9 @@ public abstract class Application
 
 	/** Window detach listeners */
 	private LinkedList windowDetachListeners = null;
+	
+	/** License for running this application */
+	private License license = null;
 
 	/** Application resource mapping: key <-> resource */
 	private Hashtable resourceKeyMap = new Hashtable();
@@ -759,6 +763,29 @@ public abstract class Application
 	 */
 	public ApplicationContext getContext() {
 		return context;
+	}
+
+	/** Get the license this application is running on.
+	 * 
+	 * The license is initialized by the ApplicationServlet before application is started.
+	 * The the license-file can not be found in WEB-INF/itmill-toolkit-license.xml, you
+	 * can set its source in application init().
+	 * 
+	 * @return License this application is currently using
+	 */
+	public License getLicense() {
+		return license;
+	}
+
+	/** Set the license this application is currently using.
+	 * 
+	 * The license is initialized by the ApplicationServlet before application is started.
+	 * Changing the license after application init has no effect.
+     *
+	 * @param license New license for this application.
+	 */
+	public void setLicense(License license) {
+		this.license = license;
 	}
 	
 }
