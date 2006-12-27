@@ -21,14 +21,13 @@
 	<!-- This license is only valid for the product specified below -->
 	<product>
 		<name>IT Mill Toolkit</name>
-		<edition>Standard edition</edition>
 	</product>
 	
 	<!--  These limits define how you can use the product (defined above) -->
 	<limits print-limits-on-init="true">
 	
 		<!--  This license can only be used for the purpose defined below -->
-		<purpose>For development and testing only, production use is forbidden</purpose>
+		<purpose>Development and testing only, production use is forbidden</purpose>
 		
 		<!-- Number of concurrent users per server -->
 		<concurrent-users-per-server limit="unlimited"/>
@@ -44,5 +43,5 @@
 
 	</limits>
 	
-	<signature>MC0CFDB8PQQaNTgOlagGvTVNfdzwj4OOAhUAkhmYPjGyv3GofIREkONyJQF0qt8=</signature>
+	<signature>MCwCFEtw/xNqGCUEyLBdd4+OLtJqf2TiAhRrex2SEWk3FYE+4GZlLqoKxL9d4w==</signature>
 </license>
