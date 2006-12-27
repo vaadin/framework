@@ -1,30 +1,30 @@
 /* *************************************************************************
  
-                               IT Mill Toolkit 
+ IT Mill Toolkit 
 
-               Development of Browser User Intarfaces Made Easy
+ Development of Browser User Intarfaces Made Easy
 
-                    Copyright (C) 2000-2006 IT Mill Ltd
-                     
-   *************************************************************************
+ Copyright (C) 2000-2006 IT Mill Ltd
+ 
+ *************************************************************************
 
-   This product is distributed under commercial license that can be found
-   from the product package on license/license.txt. Use of this product might 
-   require purchasing a commercial license from IT Mill Ltd. For guidelines 
-   on usage, see license/licensing-guidelines.html
+ This product is distributed under commercial license that can be found
+ from the product package on license/license.txt. Use of this product might 
+ require purchasing a commercial license from IT Mill Ltd. For guidelines 
+ on usage, see license/licensing-guidelines.html
 
-   *************************************************************************
-   
-   For more information, contact:
-   
-   IT Mill Ltd                           phone: +358 2 4802 7180
-   Ruukinkatu 2-4                        fax:   +358 2 4802 7181
-   20540, Turku                          email:  info@itmill.com
-   Finland                               company www: www.itmill.com
-   
-   Primary source for information and releases: www.itmill.com
+ *************************************************************************
+ 
+ For more information, contact:
+ 
+ IT Mill Ltd                           phone: +358 2 4802 7180
+ Ruukinkatu 2-4                        fax:   +358 2 4802 7181
+ 20540, Turku                          email:  info@itmill.com
+ Finland                               company www: www.itmill.com
+ 
+ Primary source for information and releases: www.itmill.com
 
-   ********************************************************************** */
+ ********************************************************************** */
 
 package com.itmill.toolkit.terminal.web;
 
@@ -44,6 +44,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -63,6 +64,7 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
 
+import org.xml.sax.SAXException;
 
 import com.itmill.toolkit.Application;
 import com.itmill.toolkit.Application.WindowAttachEvent;
@@ -76,6 +78,12 @@ import com.itmill.toolkit.terminal.URIHandler;
 import com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent;
 import com.itmill.toolkit.terminal.web.ThemeSource.ThemeException;
 import com.itmill.toolkit.ui.Window;
+import com.itmill.toolkit.service.License;
+import com.itmill.toolkit.service.License.InvalidLicenseFile;
+import com.itmill.toolkit.service.License.LicenseFileHasAlreadyBeenRead;
+import com.itmill.toolkit.service.License.LicenseFileHasNotBeenRead;
+import com.itmill.toolkit.service.License.LicenseSignatureIsInvalid;
+import com.itmill.toolkit.service.License.LicenseViolation;
 
 /**
  * This servlet is the core of the MillStone Web Adapter, that adapts the
@@ -89,70 +97,108 @@ import com.itmill.toolkit.ui.Window;
  * @since 3.0
  */
 
-public class ApplicationServlet extends HttpServlet
-		implements
-			Application.WindowAttachListener,
-			Application.WindowDetachListener,
-			Paintable.RepaintRequestListener {
+public class ApplicationServlet extends HttpServlet implements
+		Application.WindowAttachListener, Application.WindowDetachListener,
+		Paintable.RepaintRequestListener {
 
 	// Versions
-	// TODO AUTOUPDATE VERSION NUMBER
+	// TODO AUTOUPDATE VERSION NUMBER FROM BUILDSCRIPT
 	private static final int VERSION_MAJOR = 4;
+
 	private static final int VERSION_MINOR = 0;
+
 	private static final int VERSION_BUILD = 0;
+
 	private static final String VERSION = "" + VERSION_MAJOR + "."
 			+ VERSION_MINOR + "." + VERSION_BUILD;
 
-	//Configurable parameter names
+	// Configurable parameter names
 	private static final String PARAMETER_DEBUG = "Debug";
+
 	private static final String PARAMETER_DEFAULT_THEME_JAR = "DefaultThemeJar";
+
 	private static final String PARAMETER_THEMESOURCE = "ThemeSource";
+
 	private static final String PARAMETER_THEME_CACHETIME = "ThemeCacheTime";
+
 	private static final String PARAMETER_MAX_TRANSFORMERS = "MaxTransformers";
+
 	private static final String PARAMETER_TRANSFORMER_CACHETIME = "TransformerCacheTime";
 
 	private static int DEFAULT_THEME_CACHETIME = 1000 * 60 * 60 * 24;
+
 	private static int DEFAULT_BUFFER_SIZE = 32 * 1024;
+
 	private static int DEFAULT_MAX_TRANSFORMERS = 1;
+
 	private static int MAX_BUFFER_SIZE = 64 * 1024;
+
 	private static String SESSION_ATTR_VARMAP = "itmill-toolkit-varmap";
+
 	static String SESSION_ATTR_CONTEXT = "itmill-toolkit-context";
+
 	static String SESSION_ATTR_APPS = "itmill-toolkit-apps";
+
 	private static String SESSION_BINDING_LISTENER = "itmill-toolkit-bindinglistener";
+
 	private static String DEFAULT_THEME = "default";
+
 	private static String RESOURCE_URI = "/RES/";
+
 	private static String AJAX_UIDL_URI = "/UIDL/";
+
 	private static String THEME_DIRECTORY_PATH = "WEB-INF/lib/themes/";
+
 	private static String THEME_LISTING_FILE = THEME_DIRECTORY_PATH
 			+ "themes.txt";
+
 	private static String DEFAULT_THEME_JAR_PREFIX = "itmill-toolkit-web-themes";
+
 	private static String DEFAULT_THEME_JAR = "WEB-INF/lib/"
 			+ DEFAULT_THEME_JAR_PREFIX + "-" + VERSION + ".jar";
+
 	private static String DEFAULT_THEME_SNAPSHOT_JAR = "WEB-INF/lib/"
 			+ DEFAULT_THEME_JAR_PREFIX + "-" + VERSION_MAJOR + "."
 			+ VERSION_MINOR + "-SNAPSHOT.jar";
+
 	private static String DEFAULT_THEME_TEMP_FILE_PREFIX = "ITMILL_TMP_";
+
 	private static String SERVER_COMMAND_PARAM = "SERVER_COMMANDS";
+
 	private static int SERVER_COMMAND_STREAM_MAINTAIN_PERIOD = 15000;
+
 	private static int SERVER_COMMAND_HEADER_PADDING = 2000;
 
 	// Private fields
 	private Class applicationClass;
+
 	private Properties applicationProperties;
+
 	private UIDLTransformerFactory transformerFactory;
+
 	private CollectionThemeSource themeSource;
+
 	private String resourcePath = null;
+
 	private boolean debugMode = false;
+
 	private int maxConcurrentTransformers;
+
 	private long transformerCacheTime;
+
 	private long themeCacheTime;
+
 	private WeakHashMap applicationToDirtyWindowSetMap = new WeakHashMap();
+
 	private WeakHashMap applicationToServerCommandStreamLock = new WeakHashMap();
+
 	private WeakHashMap applicationToLastRequestDate = new WeakHashMap();
+
 	private List allWindows = new LinkedList();
-    private WeakHashMap applicationToAjaxAppMgrMap = new WeakHashMap();
 
+	private WeakHashMap applicationToAjaxAppMgrMap = new WeakHashMap();
 
+	private HashMap licenseForApplicationClass = new HashMap();
 
 	/**
 	 * Called by the servlet container to indicate to a servlet that the servlet
@@ -226,7 +272,7 @@ public class ApplicationServlet extends HttpServlet
 		}
 
 		// Add the default theme source
-		String[] defaultThemeFiles = new String[]{
+		String[] defaultThemeFiles = new String[] {
 				getApplicationOrSystemProperty(PARAMETER_DEFAULT_THEME_JAR,
 						DEFAULT_THEME_JAR), DEFAULT_THEME_SNAPSHOT_JAR
 
@@ -298,15 +344,16 @@ public class ApplicationServlet extends HttpServlet
 		}
 
 		// Try system properties
-        String pkgName;
+		String pkgName;
 		Package pkg = this.getClass().getPackage();
 		if (pkg != null) {
-		    pkgName = pkg.getName();
-         } else {
-             String clazzName = this.getClass().getName();
-             pkgName = new String(clazzName.toCharArray(), 0,clazzName.lastIndexOf('.'));
-         }
-     	val = System.getProperty(pkgName + "." + parameterName);
+			pkgName = pkg.getName();
+		} else {
+			String clazzName = this.getClass().getName();
+			pkgName = new String(clazzName.toCharArray(), 0, clazzName
+					.lastIndexOf('.'));
+		}
+		val = System.getProperty(pkgName + "." + parameterName);
 		if (val != null) {
 			return val;
 		}
@@ -487,18 +534,18 @@ public class ApplicationServlet extends HttpServlet
 				// Handle UIDL requests?
 				String resourceId = request.getPathInfo();
 				if (resourceId != null && resourceId.startsWith(AJAX_UIDL_URI)) {
-					
-					getApplicationManager(application).handleXmlHttpRequest(
-		                    request, response);
 
-		            // Notify transaction end
+					getApplicationManager(application).handleXmlHttpRequest(
+							request, response);
+
+					// Notify transaction end
 					if (appContext != null) {
 						appContext.endTransaction(application, request);
 					}
-					
+
 					return;
 				}
-					
+
 				// Get the variable map
 				variableMap = getVariableMap(application, request);
 				if (variableMap == null)
@@ -806,8 +853,8 @@ public class ApplicationServlet extends HttpServlet
 				response.setDateHeader("Expires", System.currentTimeMillis()
 						+ cacheTime);
 				response.setHeader("Pragma", "cache"); // Required to apply
-													   // caching in some
-													   // Tomcats
+				// caching in some
+				// Tomcats
 			}
 
 			// Copy download stream parameters directly
@@ -966,8 +1013,8 @@ public class ApplicationServlet extends HttpServlet
 							.currentTimeMillis()
 							+ this.themeCacheTime);
 					response.setHeader("Pragma", "cache"); // Required to apply
-														   // caching in some
-														   // Tomcats
+					// caching in some
+					// Tomcats
 				}
 				// Write the data to client
 				byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
@@ -1088,10 +1135,15 @@ public class ApplicationServlet extends HttpServlet
 	 * Create a new application.
 	 * 
 	 * @return New application instance
+	 * @throws SAXException 
+	 * @throws LicenseViolation 
+	 * @throws InvalidLicenseFile 
+	 * @throws LicenseSignatureIsInvalid 
+	 * @throws LicenseFileHasNotBeenRead 
 	 */
 	private Application createApplication(HttpServletRequest request)
 			throws MalformedURLException, InstantiationException,
-			IllegalAccessException {
+			IllegalAccessException, LicenseFileHasNotBeenRead, LicenseSignatureIsInvalid, InvalidLicenseFile, LicenseViolation, SAXException {
 
 		Application application = null;
 
@@ -1117,11 +1169,11 @@ public class ApplicationServlet extends HttpServlet
 		try {
 			application = (Application) this.applicationClass.newInstance();
 			applications.add(application);
-			
+
 			// Listen to window add/removes (for web mode)
 			application.addListener((Application.WindowAttachListener) this);
 			application.addListener((Application.WindowDetachListener) this);
-			
+
 			// Set localte
 			application.setLocale(request.getLocale());
 
@@ -1132,9 +1184,12 @@ public class ApplicationServlet extends HttpServlet
 				context = new WebApplicationContext(session);
 				session.setAttribute(SESSION_ATTR_CONTEXT, context);
 			}
-
+			
+			// Start application and check license
+			initializeLicense(application);
 			application.start(applicationUrl, this.applicationProperties,
 					context);
+			checkLicense(application);
 
 		} catch (IllegalAccessException e) {
 			Log.error("Illegal access to application class "
@@ -1147,6 +1202,59 @@ public class ApplicationServlet extends HttpServlet
 		}
 
 		return application;
+	}
+
+	private void initializeLicense(Application application) {
+
+		License license = (License) licenseForApplicationClass.get(application
+				.getClass());
+		if (license == null) {
+			license = new License();
+			licenseForApplicationClass.put(application.getClass(), license);
+		}
+		application.setToolkitLicense(license);
+	}
+
+	private void checkLicense(Application application) throws LicenseFileHasNotBeenRead, LicenseSignatureIsInvalid, InvalidLicenseFile, LicenseViolation, SAXException{
+		License license = application.getToolkitLicense();
+		if (!license.hasBeenRead()) {
+			InputStream lis;
+			try {
+				lis = getServletContext().getResource(
+						"/WEB-INF/itmill-toolkit-license.xml").openStream();
+				license.readLicenseFile(lis);
+			} catch (MalformedURLException e) {
+				// This should not happen
+				throw new RuntimeException(e);
+			} catch (IOException e) {
+				// This should not happen
+				throw new RuntimeException(e);
+			} catch (LicenseFileHasAlreadyBeenRead e) {
+				// This should not happen
+				throw new RuntimeException(e);
+			}
+		}
+
+		// TODO Should we only print this once?
+		System.out.print(license.getDescription());
+		
+		// TODO Add concurrent users check
+		try {
+			license.check(applicationClass, 1, VERSION_MAJOR,
+					VERSION_MINOR, "IT Mill Toolkit", null);
+		} catch (LicenseFileHasNotBeenRead e) {
+			application.close();
+			throw e;
+		} catch (LicenseSignatureIsInvalid e) {
+			application.close();
+			throw e;
+		} catch (InvalidLicenseFile e) {
+			application.close();
+			throw e;
+		} catch (LicenseViolation e) {
+			application.close();
+			throw e;
+		}
 	}
 
 	/** End application */
@@ -1267,6 +1375,7 @@ public class ApplicationServlet extends HttpServlet
 	public boolean isDebugMode() {
 		return debugMode;
 	}
+
 	/**
 	 * Returns the theme source.
 	 * 
@@ -1479,6 +1588,7 @@ public class ApplicationServlet extends HttpServlet
 
 	private class SessionBindingListener implements HttpSessionBindingListener {
 		private LinkedList applications;
+
 		protected SessionBindingListener(LinkedList applications) {
 			this.applications = applications;
 		}
@@ -1526,11 +1636,11 @@ public class ApplicationServlet extends HttpServlet
 	}
 
 	/** Implementation of ParameterHandler.ErrorEvent interface. */
-	public class ParameterHandlerErrorImpl
-			implements
-				ParameterHandler.ErrorEvent {
+	public class ParameterHandlerErrorImpl implements
+			ParameterHandler.ErrorEvent {
 
 		private ParameterHandler owner;
+
 		private Throwable throwable;
 
 		private ParameterHandlerErrorImpl(ParameterHandler owner,
@@ -1545,6 +1655,7 @@ public class ApplicationServlet extends HttpServlet
 		public Throwable getThrowable() {
 			return this.throwable;
 		}
+
 		/**
 		 * @see com.itmill.toolkit.terminal.ParameterHandler.ErrorEvent#getParameterHandler()
 		 */
@@ -1558,6 +1669,7 @@ public class ApplicationServlet extends HttpServlet
 	public class URIHandlerErrorImpl implements URIHandler.ErrorEvent {
 
 		private URIHandler owner;
+
 		private Throwable throwable;
 
 		private URIHandlerErrorImpl(URIHandler owner, Throwable throwable) {
@@ -1571,6 +1683,7 @@ public class ApplicationServlet extends HttpServlet
 		public Throwable getThrowable() {
 			return this.throwable;
 		}
+
 		/**
 		 * @see com.itmill.toolkit.terminal.URIHandler.ErrorEvent#getURIHandler()
 		 */
@@ -1579,7 +1692,8 @@ public class ApplicationServlet extends HttpServlet
 		}
 	}
 
-	/** Get AJAX application manager for an application.
+	/**
+	 * Get AJAX application manager for an application.
 	 * 
 	 * If this application has not been running in ajax mode before, new manager
 	 * is created and web adapter stops listening to changes.
@@ -1587,25 +1701,25 @@ public class ApplicationServlet extends HttpServlet
 	 * @param application
 	 * @return AJAX Application Manager
 	 */
-    private AjaxApplicationManager getApplicationManager(Application application) {
-        AjaxApplicationManager mgr = (AjaxApplicationManager) applicationToAjaxAppMgrMap
-                .get(application);
-        
-        // This application is going from Web to AJAX mode, create new manager
-        if (mgr == null) {
-        	
-        	// Create new manager
-            mgr = new AjaxApplicationManager(application);
-            applicationToAjaxAppMgrMap.put(application, mgr);
-            
-            // Stop sending changes to this servlet because manager will take
-            // control
+	private AjaxApplicationManager getApplicationManager(Application application) {
+		AjaxApplicationManager mgr = (AjaxApplicationManager) applicationToAjaxAppMgrMap
+				.get(application);
+
+		// This application is going from Web to AJAX mode, create new manager
+		if (mgr == null) {
+
+			// Create new manager
+			mgr = new AjaxApplicationManager(application);
+			applicationToAjaxAppMgrMap.put(application, mgr);
+
+			// Stop sending changes to this servlet because manager will take
+			// control
 			application.removeListener((Application.WindowAttachListener) this);
 			application.removeListener((Application.WindowDetachListener) this);
-            
-            // Manager takes control over the application
-            mgr.takeControl();
-        }
-        return mgr;
-    }
+
+			// Manager takes control over the application
+			mgr.takeControl();
+		}
+		return mgr;
+	}
 }
