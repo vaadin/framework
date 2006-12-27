@@ -227,7 +227,7 @@ DefaultTheme.prototype.nodeToString = function(node, deep) {
 DefaultTheme.prototype.createInputElementTo = function(target,type,className,focusid) {
 	
 	var input = null;
-	if (document.all) {
+	if (document.all && !window.opera) {
 		// IE only
 		input = this.createElementTo(target,"<input type='"+type+"'>");
 	} else {
