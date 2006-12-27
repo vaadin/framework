@@ -168,6 +168,9 @@ public class ApplicationServlet extends HttpServlet implements
 	private static int SERVER_COMMAND_STREAM_MAINTAIN_PERIOD = 15000;
 
 	private static int SERVER_COMMAND_HEADER_PADDING = 2000;
+	
+	// Maximum delay between request for an user to be considered active (in ms)
+	private static long  ACTIVE_USER_REQUEST_INTERVAL = 1000 * 45;
 
 	// Private fields
 	private Class applicationClass;
@@ -192,13 +195,15 @@ public class ApplicationServlet extends HttpServlet implements
 
 	private WeakHashMap applicationToServerCommandStreamLock = new WeakHashMap();
 
-	private WeakHashMap applicationToLastRequestDate = new WeakHashMap();
+	private static WeakHashMap applicationToLastRequestDate = new WeakHashMap();
 
 	private List allWindows = new LinkedList();
 
 	private WeakHashMap applicationToAjaxAppMgrMap = new WeakHashMap();
 
 	private HashMap licenseForApplicationClass = new HashMap();
+
+	private static HashSet licensePrintedForApplicationClass = new HashSet();
 
 	/**
 	 * Called by the servlet container to indicate to a servlet that the servlet
@@ -1235,12 +1240,16 @@ public class ApplicationServlet extends HttpServlet implements
 			}
 		}
 
-		// TODO Should we only print this once?
-		System.out.print(license.getDescription());
+		// For each application class, print license description - once
+		if (!licensePrintedForApplicationClass.contains(applicationClass)) {
+			licensePrintedForApplicationClass.add(applicationClass);
+			if (license.shouldLimitsBePrintedOnInit())
+				System.out.print(license.getDescription());
+		}
 		
-		// TODO Add concurrent users check
+		// Check license validity
 		try {
-			license.check(applicationClass, 1, VERSION_MAJOR,
+			license.check(applicationClass, getNumberOfActiveUsers()+1, VERSION_MAJOR,
 					VERSION_MINOR, "IT Mill Toolkit", null);
 		} catch (LicenseFileHasNotBeenRead e) {
 			application.close();
@@ -1255,6 +1264,27 @@ public class ApplicationServlet extends HttpServlet implements
 			application.close();
 			throw e;
 		}
+	}
+	
+	/** Get the number of active application-user pairs.
+	 * 
+	 * This returns total number of all applications in the server that are considered to be active. For
+	 * an application to be active, it must have been accessed less than ACTIVE_USER_REQUEST_INTERVAL ms.
+	 * 
+	 * @return Number of active application instances in the server.
+	 */
+	private int getNumberOfActiveUsers() {
+
+		Set apps = applicationToLastRequestDate.keySet();
+		int active = 0;
+		long now = System.currentTimeMillis();
+		for (Iterator i=apps.iterator(); i.hasNext();) {
+			Date lastReq = (Date) applicationToLastRequestDate.get(i.next());
+			if (now - lastReq.getTime() < ACTIVE_USER_REQUEST_INTERVAL)
+				active++;
+		}
+		
+		return active;
 	}
 
 	/** End application */
