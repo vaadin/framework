@@ -97,10 +97,6 @@ public abstract class AbstractComponent
 	 */
 	private boolean immediate = false;
 
-	/** Debug mode: if true, the component may output visual debug information
-	 */
-	private boolean debug = false;
-
 	/** Locale of this component. */
 	private Locale locale;
 

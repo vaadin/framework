@@ -43,11 +43,6 @@ import com.itmill.toolkit.terminal.PaintTarget;
  */
 public class Button extends AbstractField {
 
-	/* Final members *************************************************** */
-
-	/** strings to be catched at adatapter (transformer) */
-	private static final String BUTTON_VAR_NAME = "clicked";
-
 	/* Private members ************************************************* */
 
 	boolean switchMode = false;

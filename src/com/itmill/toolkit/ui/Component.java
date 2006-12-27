@@ -266,7 +266,6 @@ public interface Component extends Paintable, VariableOwner {
         private static final long serialVersionUID = 4051323457293857333L;
         
         private ErrorMessage message;
-		private Throwable throwable;
 
 		/** Constructs a new event with a specified source component.
 			*
