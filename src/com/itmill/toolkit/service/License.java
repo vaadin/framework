@@ -42,7 +42,9 @@ import java.security.SignatureException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.util.Calendar;
 import java.util.Iterator;
+import java.util.TooManyListenersException;
 import java.util.TreeSet;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -50,6 +52,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -76,17 +79,31 @@ public class License {
 			+ "c+yomHtX+mpxF7VO\n" + "-----END CERTIFICATE-----\n";
 
 	/** License XML Document */
-	private static Document licenseXML = null;
+	private Document licenseXML = null;
 
-	/** Has the license already been verified */
-	private static boolean isVerified = false;
+	/** The signature has already been checked and is valid */
+	private boolean signatureIsValid = false;
 
-	public static void readLicenseFile(InputStream is) throws SAXException,
-			IOException {
+	/**
+	 * Read the license-file from input stream.
+	 * 
+	 * License file can only ne read once, after it has been read it stays.
+	 * 
+	 * @param is
+	 *            Input stream where the license file is read from.
+	 * @throws SAXException
+	 *             Error parsing the license file
+	 * @throws IOException
+	 *             Error reading the license file
+	 * @throws LicenseFileHasAlreadyBeenRead
+	 *             License file has already been read.
+	 */
+	public void readLicenseFile(InputStream is) throws SAXException,
+			IOException, LicenseFileHasAlreadyBeenRead {
 
 		// Once the license has been read, it stays
-		if (licenseXML != null)
-			return;
+		if (hasBeenRead())
+			throw new LicenseFileHasAlreadyBeenRead();
 
 		// Parse XML
 		DocumentBuilder db;
@@ -98,34 +115,334 @@ public class License {
 		}
 	}
 
-	public String getDescription() {
-
-		// TODO
-		
-		return "";
+	/**
+	 * Is the license file already been read.
+	 * 
+	 * @return true if the license-file has already been read.
+	 */
+	public boolean hasBeenRead() {
+		return licenseXML != null;
 	}
 
-	public boolean hasBeenVerified() {
-		return isVerified;
+	/** Should the license description be printed on (first) application init. */
+	public boolean shouldLimitsBePrintedOnInit()
+			throws LicenseFileHasNotBeenRead, LicenseSignatureIsInvalid,
+			InvalidLicenseFile {
+
+		checkThatLicenseDOMisValid();
+
+		NodeList lL = licenseXML.getElementsByTagName("limits");
+		if (lL == null || lL.getLength() > 0)
+			throw new InvalidLicenseFile("limits not found from license-file");
+
+		Element e = (Element) lL.item(0);
+		String print = e.getAttribute("print-limits-on-init");
+
+		return "true".equalsIgnoreCase(print);
 	}
 
-	public void verifyLicense() {
+	public String getDescription() throws LicenseFileHasNotBeenRead,
+			InvalidLicenseFile, LicenseSignatureIsInvalid {
+
+		checkThatLicenseDOMisValid();
+
+		StringBuffer d = new StringBuffer();
+		d.append("------------------ License Info -----------------------\n");
+
+		d.append("License number: " + getLicenseNumber() + "\n");
+
+		d.append("Product: " + getProductName());
+		if (getProductEdition() != null)
+			d.append("  Edition: " + getProductEdition());
+		d.append("\n");
+
+		if (getLicenseeName() != null)
+			d.append("Licensed for: " + getLicenseeName() + "\n");
+
+		if (getPurpose() != null)
+			d.append("Use is limited to: " + getPurpose() + "\n");
+
+		if (getMaxConcurrentUsers() >= 0)
+			d.append("Maximum number of concurrent (active) users allowed: "
+					+ getMaxConcurrentUsers() + "\n");
+
+		if (getMaxJVMs() >= 0)
+			d.append("Maximum number of JVM:s this license"
+					+ " can be used concurrently: " + getMaxJVMs() + "\n");
 		
-		// TODO
+		// TODO Print date info
 		
-		// License is only verified once
-		if (isVerified)
-			return;
+		// TODO Print version info
+		
+		// TODO Print application info
+		
+		d.append("--------------------------------------------------------\n");
+
+		return d.toString();
+	}
+
+	private void checkThatLicenseDOMisValid() throws LicenseFileHasNotBeenRead,
+			InvalidLicenseFile, LicenseSignatureIsInvalid {
+
+		// Check that the license file has already been read
+		if (!hasBeenRead())
+			throw new LicenseFileHasNotBeenRead();
+
+		// Check validity of the signature
+		if (!isSignatureValid())
+			throw new LicenseSignatureIsInvalid();
+	}
+
+	/**
+	 * Check if the license valid for given usage?
+	 * 
+	 * Checks that the license is valid for specified usage. Throws an exception
+	 * if there is something wrong with the license or use.
+	 * 
+	 * @param applicationClass
+	 *            Class of the application this license is used for
+	 * @param concurrentUsers
+	 *            Number if users concurrently using this application
+	 * @param majorVersion
+	 *            Major version number (for example 4 if version is 4.1.7)
+	 * @param minorVersion
+	 *            Minor version number (for example 1 if version is 4.1.7)
+	 * @param productName
+	 *            The name of the product
+	 * @param productEdition
+	 *            The name of the product edition
+	 * @throws LicenseFileHasNotBeenRead
+	 *             if the license file has not been read
+	 * @throws LicenseSignatureIsInvalid
+	 *             if the license file has been changed or signature is
+	 *             otherwise invalid
+	 * @throws InvalidLicenseFile
+	 *             License if the license file is not of correct XML format
+	 * @throws LicenseViolation
+	 * 
+	 */
+	public void check(Class applicationClass, int concurrentUsers,
+			int majorVersion, int minorVersion, String productName,
+			String productEdition) throws LicenseFileHasNotBeenRead,
+			LicenseSignatureIsInvalid, InvalidLicenseFile, LicenseViolation {
+
+		checkThatLicenseDOMisValid();
+
+		// Check usage
+		checkProductNameAndEdition(productName, productEdition);
+		checkVersion(majorVersion, minorVersion);
+		checkConcurrentUsers(concurrentUsers);
+		checkApplicationClass(applicationClass);
+		checkDate();
+	}
+
+	private void checkDate() throws LicenseViolation {
+		NodeList vuL = licenseXML.getElementsByTagName("valid-until");
+		if (vuL != null && vuL.getLength() > 0) {
+			Element e = (Element) vuL.item(0);
+			String year = e.getAttribute("year");
+			String month = e.getAttribute("month");
+			String day = e.getAttribute("day");
+			Calendar cal = Calendar.getInstance();
+			if ((year != null && year.length() > 0 && Integer.parseInt(year) < cal
+					.get(Calendar.YEAR))
+					|| (month != null && month.length() > 0 && Integer
+							.parseInt(month) < (1 + cal.get(Calendar.MONTH)))
+					|| (day != null && day.length() > 0 && Integer
+							.parseInt(day) < cal.get(Calendar.DAY_OF_MONTH)))
+				throw new LicenseViolation("The license is valid until " + year
+						+ "-" + month + "-" + day);
+		}
+	}
+
+	private void checkApplicationClass(Class applicationClass)
+			throws LicenseViolation {
+		// check class
+		NodeList appL = licenseXML.getElementsByTagName("application");
+		if (appL != null && appL.getLength() > 0) {
+			String classPrefix = ((Element) appL.item(0))
+					.getAttribute("classPrefix");
+			if (classPrefix != null && classPrefix.length() > 0
+					&& applicationClass.getName().startsWith(classPrefix))
+				throw new LicenseViolation(
+						"License limits application class prefix to '"
+								+ classPrefix
+								+ "' but requested application class is '"
+								+ applicationClass.getName() + "'");
+		}
+	}
+
+	private void checkConcurrentUsers(int concurrentUsers)
+			throws TooManyConcurrentUsers {
+		int max = getMaxConcurrentUsers();
+		if (max >= 0 && concurrentUsers > max)
+			throw new TooManyConcurrentUsers(
+					"Currently "
+							+ concurrentUsers
+							+ " concurrent users are connected, while license sets limit to "
+							+ max);
 
 	}
 
-	private static String getNormalizedLisenceData()
-			throws LicenseFileCanNotBeRead, InvalidLicenseFile {
+	private int getMaxConcurrentUsers() {
+		NodeList cuL = licenseXML
+				.getElementsByTagName("concurrent-users-per-server");
+		if (cuL == null && cuL.getLength() == 0)
+			return -1;
+		String limit = ((Element) cuL.item(0)).getAttribute("limit");
+		if (limit != null && limit.length() > 0
+				&& !limit.equalsIgnoreCase("unlimited"))
+			return Integer.parseInt(limit);
+		return -1;
+	}
+
+	private int getMaxJVMs() {
+		NodeList cuL = licenseXML.getElementsByTagName("concurrent-jvms");
+		if (cuL == null && cuL.getLength() == 0)
+			return -1;
+		String limit = ((Element) cuL.item(0)).getAttribute("limit");
+		if (limit != null && limit.length() > 0
+				&& !limit.equalsIgnoreCase("unlimited"))
+			return Integer.parseInt(limit);
+		return -1;
+	}
+
+	private void checkVersion(int majorVersion, int minorVersion)
+			throws LicenseViolation {
+		// check version
+		NodeList verL = licenseXML.getElementsByTagName("version");
+		if (verL != null && verL.getLength() > 0) {
+			NodeList checks = verL.item(0).getChildNodes();
+			for (int i = 0; i < checks.getLength(); i++) {
+				Node n = checks.item(i);
+				if (n.getNodeType() == Node.ELEMENT_NODE) {
+					Element e = (Element) n;
+					String tag = e.getTagName();
+					String eq = e.getAttribute("equals-to");
+					String eqol = e.getAttribute("equals-to-or-is-less-than");
+					String eqom = e.getAttribute("equals-to-or-is-more-than");
+					int value = -1;
+					if ("major".equalsIgnoreCase(tag)) {
+						value = majorVersion;
+					} else if ("minor".equalsIgnoreCase(tag)) {
+						value = minorVersion;
+					}
+					if (value >= 0) {
+						if (eq != null && eq.length() > 0)
+							if (value != Integer.parseInt(eq))
+								throw new LicenseViolation("Product " + tag
+										+ " version is " + value
+										+ " but license requires it to be "
+										+ eq);
+						if (eqol != null && eqol.length() > 0)
+							if (value <= Integer.parseInt(eqol))
+								throw new LicenseViolation(
+										"Product "
+												+ tag
+												+ " version is "
+												+ value
+												+ " but license requires it to be equal or less than"
+												+ eqol);
+						if (eqom != null && eqom.length() > 0)
+							if (value != Integer.parseInt(eqom))
+								throw new LicenseViolation(
+										"Product "
+												+ tag
+												+ " version is "
+												+ value
+												+ " but license requires it to be equal or more than"
+												+ eqom);
+					}
+				}
+			}
+		}
+	}
+
+	private void checkProductNameAndEdition(String productName,
+			String productEdition) throws InvalidLicenseFile, LicenseViolation {
+		// Check product name
+		if (productName == null || productName.length() == 0)
+			throw new IllegalArgumentException(
+					"productName must not be empty or null");
+		if (productEdition != null && productEdition.length() == 0)
+			throw new IllegalArgumentException(
+					"productEdition must either be null (not present) or non-empty string");
+		String name = getProductName();
+		if (!name.equals(productName))
+			throw new LicenseViolation("The license file is for product '"
+					+ name + "' but it was requested to be used with '"
+					+ productName + "'");
+
+		// Check product edition
+		String edition = getProductEdition();
+		if (productEdition != null || edition != null)
+			if (edition == null || !edition.equals(productEdition))
+				throw new LicenseViolation("Requested edition '"
+						+ productEdition + "', but license-file is for '"
+						+ edition + "'");
+
+	}
+
+	private String getProductEdition() throws InvalidLicenseFile {
+		Element prod = (Element) licenseXML.getElementsByTagName("product")
+				.item(0);
+		if (prod == null)
+			throw new InvalidLicenseFile("product not found in license-file");
+		NodeList editionE = (NodeList) prod.getElementsByTagName("edition");
+		if (editionE == null || editionE.getLength() == 0)
+			return null;
+		return editionE.item(0).getTextContent();
+	}
+
+	private String getProductName() throws InvalidLicenseFile {
+		Element prod = (Element) licenseXML.getElementsByTagName("product")
+				.item(0);
+		if (prod == null)
+			throw new InvalidLicenseFile("product not found in license-file");
+		String name = ((Element) prod.getElementsByTagName("name").item(0))
+				.getTextContent();
+		if (name == null || name.length() == 0)
+			throw new InvalidLicenseFile(
+					"product name not found in license-file");
+		return name;
+	}
+
+	private String getLicenseeName() {
+		NodeList licenseeL = licenseXML.getElementsByTagName("licensee");
+		if (licenseeL == null || licenseeL.getLength() == 0)
+			return null;
+		NodeList nameL = ((Element) licenseeL.item(0))
+				.getElementsByTagName("name");
+		if (nameL == null || nameL.getLength() == 0)
+			return null;
+		String name = nameL.item(0).getTextContent();
+		if (name == null || name.length() == 0)
+			return null;
+		return name;
+	}
+
+	private String getPurpose() {
+		NodeList purposeL = licenseXML.getElementsByTagName("purpose");
+		if (purposeL == null || purposeL.getLength() == 0)
+			return null;
+		return purposeL.item(0).getTextContent();
+	}
+
+	private String getLicenseNumber() throws InvalidLicenseFile {
+		Element lic = (Element) licenseXML.getElementsByTagName("license")
+				.item(0);
+		if (lic == null)
+			throw new InvalidLicenseFile(
+					"license element not found in license-file");
+		return lic.getAttribute("number");
+	}
+
+	private String getNormalizedLisenceData() throws InvalidLicenseFile,
+			LicenseFileHasNotBeenRead {
 
 		// License must be read before
 		if (licenseXML == null)
-			throw new LicenseFileCanNotBeRead(
-					"File was not found in standard location and it has not been explicitely read during Application.init().");
+			throw new LicenseFileHasNotBeenRead();
 
 		// Initialize result
 		CharArrayWriter sink = new CharArrayWriter();
@@ -191,7 +508,7 @@ public class License {
 
 	}
 
-	private static byte[] getSignature() throws InvalidLicenseFile {
+	private byte[] getSignature() throws InvalidLicenseFile {
 
 		if (licenseXML == null)
 			return null;
@@ -209,8 +526,11 @@ public class License {
 
 	}
 
-	private static boolean isSignatureValid() throws LicenseFileCanNotBeRead,
-			InvalidLicenseFile {
+	private boolean isSignatureValid() throws InvalidLicenseFile,
+			LicenseFileHasNotBeenRead, LicenseSignatureIsInvalid {
+
+		if (signatureIsValid)
+			return true;
 
 		try {
 
@@ -229,15 +549,17 @@ public class License {
 			Signature dsa = Signature.getInstance("SHA1withDSA");
 			dsa.initVerify(publicKey);
 			dsa.update(getNormalizedLisenceData().getBytes("UTF-8"));
-			if (dsa.verify(getSignature()))
+			if (dsa.verify(getSignature())) {
+				signatureIsValid = true;
 				return true;
+			}
 
 		} catch (NoSuchAlgorithmException e) {
 			throw new RuntimeException(e);
 		} catch (InvalidKeyException e) {
 			throw new RuntimeException(e);
 		} catch (SignatureException e) {
-			throw new InvalidLicenseFile("Signature does not match contents.");
+			throw new LicenseSignatureIsInvalid();
 		} catch (UnsupportedEncodingException e) {
 			throw new RuntimeException(e);
 		} catch (CertificateException e) {
@@ -248,33 +570,46 @@ public class License {
 		return false;
 	}
 
-	public static class LicenseViolation extends Exception {
-		// TODO
-
+	public class LicenseViolation extends Exception {
+		public LicenseViolation(String msg) {
+			super(msg);
+		}
 	}
 
-	public static class TooManyConcurrentUsers extends LicenseViolation {
-		// TODO
-
+	public class LicenseFileHasAlreadyBeenRead extends Exception {
 	}
 
-	public static class LicenseHasExpired extends LicenseViolation {
-		// TODO
-
+	public class LicenseFileHasNotBeenRead extends Exception {
 	}
 
-	public static class ApplicationClassNameDoesNotMatch extends
-			LicenseViolation {
-
+	public class LicenseSignatureIsInvalid extends Exception {
 	}
 
-	public static class InvalidLicenseFile extends Exception {
+	public class TooManyConcurrentUsers extends LicenseViolation {
+		public TooManyConcurrentUsers(String msg) {
+			super(msg);
+		}
+	}
+
+	public class LicenseHasExpired extends LicenseViolation {
+		public LicenseHasExpired(String msg) {
+			super(msg);
+		}
+	}
+
+	public class ApplicationClassNameDoesNotMatch extends LicenseViolation {
+		public ApplicationClassNameDoesNotMatch(String msg) {
+			super(msg);
+		}
+	}
+
+	public class InvalidLicenseFile extends Exception {
 		InvalidLicenseFile(String message) {
 			super(message);
 		}
 	}
 
-	public static class LicenseFileCanNotBeRead extends Exception {
+	public class LicenseFileCanNotBeRead extends Exception {
 		LicenseFileCanNotBeRead(String message) {
 			super(message);
 		}
@@ -731,10 +1066,10 @@ public class License {
 		 * Valid options:
 		 * 
 		 * <pre>
-		 *       ENCODE or DECODE: Encode or Decode as data is read.
-		 *       DONT_BREAK_LINES: don't break lines at 76 characters
-		 *         (only meaningful when encoding)
-		 *         &lt;i&gt;Note: Technically, this makes your encoding non-compliant.&lt;/i&gt;
+		 *                                  ENCODE or DECODE: Encode or Decode as data is read.
+		 *                                  DONT_BREAK_LINES: don't break lines at 76 characters
+		 *                                    (only meaningful when encoding)
+		 *                                    &lt;i&gt;Note: Technically, this makes your encoding non-compliant.&lt;/i&gt;
 		 * </pre>
 		 * 
 		 * <p>
@@ -953,10 +1288,10 @@ public class License {
 		 * Valid options:
 		 * 
 		 * <pre>
-		 *       ENCODE or DECODE: Encode or Decode as data is read.
-		 *       DONT_BREAK_LINES: don't break lines at 76 characters
-		 *         (only meaningful when encoding)
-		 *         &lt;i&gt;Note: Technically, this makes your encoding non-compliant.&lt;/i&gt;
+		 *                                  ENCODE or DECODE: Encode or Decode as data is read.
+		 *                                  DONT_BREAK_LINES: don't break lines at 76 characters
+		 *                                    (only meaningful when encoding)
+		 *                                    &lt;i&gt;Note: Technically, this makes your encoding non-compliant.&lt;/i&gt;
 		 * </pre>
 		 * 
 		 * <p>
