@@ -617,7 +617,7 @@ DefaultTheme.prototype.renderDefaultComponentHeader = function(renderer, uidl, t
 	var errorIcon;
 	if (error) {
 		var icon = this.createElementTo(caption,"img","icon");
-		icon.src = theme.root+"/img/icon/error-mini.gif";
+		icon.src = theme.root+"img/icon/error-mini.gif";
 		if (iconUrl) {
 			/* overlay icon */
 			this.setCSSClass(icon,"overlay");
@@ -627,7 +627,7 @@ DefaultTheme.prototype.renderDefaultComponentHeader = function(renderer, uidl, t
 		errorIcon = icon;
 	} else if (description) {
 		var icon = this.createElementTo(caption,"img","icon");
-		icon.src = theme.root+"/img/icon/info-mini.gif";
+		icon.src = theme.root+"img/icon/info-mini.gif";
 		if (iconUrl) {
 			/* overlay icon */
 			this.setCSSClass(icon,"overlay");
@@ -2446,7 +2446,7 @@ DefaultTheme.prototype.renderPagingTable = function(renderer,uidl,target,layoutI
 		if (visibleCols) {
 			var iconDiv = theme.createElementTo(td,"div");
 			var icon = theme.createElementTo(iconDiv,"img","icon");
-			icon.src = theme.root+"/img/table/colsel.gif";
+			icon.src = theme.root+"img/table/colsel.gif";
 			var popup = theme.createElementTo(td,"div","outset popup hide");
 			var inner = theme.createElementTo(popup,"div","border");
 			// empty row to allow closing:
@@ -2462,7 +2462,7 @@ DefaultTheme.prototype.renderPagingTable = function(renderer,uidl,target,layoutI
 				var row = theme.createElementTo(inner,"div","item clickable pad border");
 				var collapsed = "true"==cols[i].getAttribute("collapsed");
 				icon = theme.createElementTo(row,"img","icon");
-				icon.src = theme.root+"/img/table/"+(collapsed?"off.gif":"on.gif");				
+				icon.src = theme.root+"img/table/"+(collapsed?"off.gif":"on.gif");				
 				theme.createTextNodeTo(row,cols[i].getAttribute("caption"));
 
 				theme.addToggleClassListener(theme,client,row,"mouseover","over");
@@ -2659,7 +2659,7 @@ DefaultTheme.prototype.renderScrollTable = function(renderer,uidl,target,layoutI
 			var row = theme.createElementTo(popup,"div","item clickable pad border");
 			var collapsed = "true"==cols[i].getAttribute("collapsed");
 			icon = theme.createElementTo(row,"img","icon");
-			icon.src = theme.root+"/img/table/"+(collapsed?"off.gif":"on.gif");				
+			icon.src = theme.root+"img/table/"+(collapsed?"off.gif":"on.gif");				
 			theme.createTextNodeTo(row,cols[i].getAttribute("caption"));
 			theme.addAddClassListener(theme,client,row,"mouseover","over");
 			theme.addRemoveClassListener(theme,client,row,"mouseout","over");
@@ -2689,7 +2689,7 @@ DefaultTheme.prototype.renderScrollTable = function(renderer,uidl,target,layoutI
 				if (colWidths["heh"]) {
 					html += "width:"+colWidths["heh"]+"px;";
 				}
-				html += "overflow:hidden;height:100%;white-space:nowrap;\"><IMG id=\""+pid+"hah\" align=\"right\" src=\""+theme.root+"/img/table/handle.gif\" border=\"0\"></DIV></TD>";
+				html += "overflow:hidden;height:100%;white-space:nowrap;\"><IMG id=\""+pid+"hah\" align=\"right\" src=\""+theme.root+"img/table/handle.gif\" border=\"0\"></DIV></TD>";
 	}	
 	var chs = theme.getFirstElement(uidl, "cols").getElementsByTagName("ch");
 	var len = chs.length;
@@ -2729,7 +2729,7 @@ DefaultTheme.prototype.renderScrollTable = function(renderer,uidl,target,layoutI
 		if (colWidths[cid]) {
 			html += "width:"+colWidths[cid]+"px;";
 		} 
-		html += "overflow:hidden;height:100%;white-space:nowrap;\"><IMG id=\""+pid+"ha"+cid+"\" align=\"right\" src=\""+theme.root+"/img/table/handle.gif\" border=\"0\">";
+		html += "overflow:hidden;height:100%;white-space:nowrap;\"><IMG id=\""+pid+"ha"+cid+"\" align=\"right\" src=\""+theme.root+"img/table/handle.gif\" border=\"0\">";
 		html += (iconUrl?"<IMG src=\""+iconUrl+"\" class=\"icon\">":"")+cap+(sortkey==cid?"<IMG align=right class=\"sort sort"+(sortasc?"asc":"desc")+"\"/>":"")+"</DIV></TD>";
 	}
 	html += "</TR></TBODY></TABLE>";
