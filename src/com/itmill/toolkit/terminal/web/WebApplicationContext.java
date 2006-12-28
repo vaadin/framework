@@ -1,34 +1,37 @@
 /* *************************************************************************
  
-                               IT Mill Toolkit 
+ IT Mill Toolkit 
 
-               Development of Browser User Intarfaces Made Easy
+ Development of Browser User Intarfaces Made Easy
 
-                    Copyright (C) 2000-2006 IT Mill Ltd
-                     
-   *************************************************************************
+ Copyright (C) 2000-2006 IT Mill Ltd
+ 
+ *************************************************************************
 
-   This product is distributed under commercial license that can be found
-   from the product package on license/license.txt. Use of this product might 
-   require purchasing a commercial license from IT Mill Ltd. For guidelines 
-   on usage, see license/licensing-guidelines.html
+ This product is distributed under commercial license that can be found
+ from the product package on license/license.txt. Use of this product might 
+ require purchasing a commercial license from IT Mill Ltd. For guidelines 
+ on usage, see license/licensing-guidelines.html
 
-   *************************************************************************
-   
-   For more information, contact:
-   
-   IT Mill Ltd                           phone: +358 2 4802 7180
-   Ruukinkatu 2-4                        fax:   +358 2 4802 7181
-   20540, Turku                          email:  info@itmill.com
-   Finland                               company www: www.itmill.com
-   
-   Primary source for information and releases: www.itmill.com
+ *************************************************************************
+ 
+ For more information, contact:
+ 
+ IT Mill Ltd                           phone: +358 2 4802 7180
+ Ruukinkatu 2-4                        fax:   +358 2 4802 7181
+ 20540, Turku                          email:  info@itmill.com
+ Finland                               company www: www.itmill.com
+ 
+ Primary source for information and releases: www.itmill.com
 
-   ********************************************************************** */
+ ********************************************************************** */
 
 package com.itmill.toolkit.terminal.web;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -43,65 +46,78 @@ import com.itmill.toolkit.Application;
 import com.itmill.toolkit.service.ApplicationContext;
 import com.itmill.toolkit.ui.Window;
 
-/** Web application context for Millstone applications.
- *
+/**
+ * Web application context for Millstone applications.
+ * 
  * @author IT Mill Ltd.
- * @version @VERSION@
+ * @version
+ * @VERSION@
  * @since 3.1
  */
 public class WebApplicationContext implements ApplicationContext {
 
 	private List listeners;
+
 	private HttpSession session;
+
 	private WeakHashMap formActions = new WeakHashMap();
-	
+
 	/** Create a new Web Application Context. */
 	WebApplicationContext(HttpSession session) {
 		this.session = session;
 	}
 
-	/** Get the form action for given window.
+	/**
+	 * Get the form action for given window.
 	 * 
 	 * By default, this action is "", which preserves the current url. Commonly
 	 * this is wanted to be set to <code>application.getUrl().toString()</code>
-	 * or <code>window.getUrl().toString()</code> in order to clean any
-	 * local links or parameters set from the action.
+	 * or <code>window.getUrl().toString()</code> in order to clean any local
+	 * links or parameters set from the action.
 	 * 
-	 * @param window Window for which the action is queried
+	 * @param window
+	 *            Window for which the action is queried
 	 * @return Action to be set into Form action attribute
-	 */ 
+	 */
 	public String getWindowFormAction(Window window) {
 		String action = (String) formActions.get(window);
 		return action == null ? "" : action;
 	}
-	
-	/** Set the form action for given window.
+
+	/**
+	 * Set the form action for given window.
 	 * 
 	 * By default, this action is "", which preserves the current url. Commonly
 	 * this is wanted to be set to <code>application.getUrl().toString()</code>
-	 * or <code>window.getUrl().toString()</code> in order to clean any
-	 * local links or parameters set from the action.
+	 * or <code>window.getUrl().toString()</code> in order to clean any local
+	 * links or parameters set from the action.
 	 * 
-	 * @param window Window for which the action is set
-	 * @param action New action for the window.
-	 */ 
+	 * @param window
+	 *            Window for which the action is set
+	 * @param action
+	 *            New action for the window.
+	 */
 	public void setWindowFormAction(Window window, String action) {
-		if (action == null || action == "") 
+		if (action == null || action == "")
 			formActions.remove(window);
 		else
-			formActions.put(window,action);
+			formActions.put(window, action);
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.itmill.toolkit.service.ApplicationContext#getBaseDirectory()
 	 */
 	public File getBaseDirectory() {
 		String realPath = session.getServletContext().getRealPath("/");
-		if (realPath == null) return null;
+		if (realPath == null)
+			return null;
 		return new File(realPath);
 	}
 
-	/** Get the http-session application is running in.
+	/**
+	 * Get the http-session application is running in.
 	 * 
 	 * @return HttpSession this application context resides in
 	 */
@@ -109,41 +125,51 @@ public class WebApplicationContext implements ApplicationContext {
 		return session;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.itmill.toolkit.service.ApplicationContext#getApplications()
 	 */
 	public Collection getApplications() {
-		LinkedList applications =
-			(LinkedList) session.getAttribute(
-				ApplicationServlet.SESSION_ATTR_APPS);
+		LinkedList applications = (LinkedList) session
+				.getAttribute(ApplicationServlet.SESSION_ATTR_APPS);
 
-		return Collections.unmodifiableCollection(
-			applications == null ? (new LinkedList()) : applications);
+		return Collections
+				.unmodifiableCollection(applications == null ? (new LinkedList())
+						: applications);
 	}
-	
-	/** Get application context for HttpSession.
+
+	/**
+	 * Get application context for HttpSession.
 	 * 
 	 * @return application context for HttpSession.
 	 */
-	static public WebApplicationContext getApplicationContext(HttpSession session) {
+	static public WebApplicationContext getApplicationContext(
+			HttpSession session) {
 		return new WebApplicationContext(session);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	public boolean equals(Object obj) {
 		return session.equals(obj);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	public int hashCode() {
 		return session.hashCode();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.itmill.toolkit.service.ApplicationContext#addTransactionListener(com.itmill.toolkit.service.ApplicationContext.TransactionListener)
 	 */
 	public void addTransactionListener(TransactionListener listener) {
@@ -152,28 +178,58 @@ public class WebApplicationContext implements ApplicationContext {
 		this.listeners.add(listener);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.itmill.toolkit.service.ApplicationContext#removeTransactionListener(com.itmill.toolkit.service.ApplicationContext.TransactionListener)
 	 */
 	public void removeTransactionListener(TransactionListener listener) {
 		if (this.listeners != null)
 			this.listeners.remove(listener);
-		
+
 	}
 
 	/** Notify transaction start */
-	protected void startTransaction(Application application, HttpServletRequest request) {
-		if (this.listeners == null) return;
+	protected void startTransaction(Application application,
+			HttpServletRequest request) {
+		if (this.listeners == null)
+			return;
 		for (Iterator i = this.listeners.iterator(); i.hasNext();) {
-			((ApplicationContext.TransactionListener)i.next()).transactionStart(application,request);			
+			((ApplicationContext.TransactionListener) i.next())
+					.transactionStart(application, request);
 		}
 	}
 
 	/** Notify transaction end */
-	protected void endTransaction(Application application, HttpServletRequest request) {
-		if (this.listeners == null) return;
-		for (Iterator i = this.listeners.iterator(); i.hasNext();) {
-			((ApplicationContext.TransactionListener)i.next()).transactionEnd(application,request);
+	protected void endTransaction(Application application,
+			HttpServletRequest request) {
+		if (this.listeners == null)
+			return;
+
+		LinkedList exceptions = null;
+		for (Iterator i = this.listeners.iterator(); i.hasNext();)
+			try {
+				((ApplicationContext.TransactionListener) i.next())
+						.transactionEnd(application, request);
+			} catch (RuntimeException t) {
+				if (exceptions == null)
+					exceptions = new LinkedList();
+				exceptions.add(t);
+			}
+
+		// If any runtime exceptions occurred, throw a combined exception
+		if (exceptions != null) {
+			StringBuffer msg = new StringBuffer();
+			for (Iterator i = listeners.iterator(); i.hasNext();) {
+				RuntimeException e = (RuntimeException) i.next();
+				if (msg.length() == 0)
+					msg.append("\n\n--------------------------\n\n");
+				msg.append(e.getMessage() + "\n");
+				StringWriter trace = new StringWriter();
+				e.printStackTrace(new PrintWriter(trace,true));
+				msg.append(trace.toString());
+			}
+			throw new RuntimeException(msg.toString());
 		}
 	}
 
