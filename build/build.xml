@@ -23,7 +23,7 @@
 		<property name="package-file-name" value="${product-file}-${version}.zip" />
 		<property name="lib-bin-jar-name" value="${product-file}-${version}.jar" />
 		<property name="lib-src-jar-name" value="${product-file}-src-${version}.jar" />
-		<property name="web-themes-jar-name" value="${product-file}-themes-${version}.jar" />
+		<property name="themes-jar-name" value="${product-file}-themes-${version}.jar" />
 		<property name="demo-war-name" value="${product-file}-demo-${version}.war" />
 
 		<echo message="Prepared to build ${product-file} version ${version} packages" />
@@ -33,7 +33,7 @@
 		<mkdir dir="${output-dir}" />
 
 
-		<!-- Copy/filter core documentation to correct places -->
+		<!-- TODO: Copy/filter core documentation to correct places -->
 		<!-- Disabled 
     	<copy todir="${output-dir}">
 	    	<filterset>
@@ -59,7 +59,9 @@
 
 	<!-- Themes - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-	<target name="themes" depends="init">
+	<target name="themes" depends="copy-themes-to-lib, theme-jar" />
+
+	<target name="copy-themes-to-lib" depends="init">
 		<copy todir="${output-dir}/lib/web-themes">
 			<fileset dir="WebContent/WEB-INF/lib/themes">
 				<exclude name="**/.svn" />
@@ -77,12 +79,56 @@
 		</copy>
 	</target>
 
+	<target name="theme-jar" depends="init">
+		<jar jarfile="${output-dir}/lib/${themes-jar-name}" compress="false">
+			<fileset dir="WebContent/WEB-INF/lib/themes">
+				<patternset>
+					<exclude name="**/.svn" />
+					<include name="default/**/*" />
+					<include name="corporate/**/*" />
+					<include name="base/**/*" />
+				</patternset>
+			</fileset>
+		</jar>
+	</target>
+
 	<!-- Libs - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-	<target name="compile-java" depends="init">
+	<!-- Copy and preprocess sources for packaging -->
+	<target name="preprocess-src" depends="init">
+		<mkdir dir="build/result/src" />
+
+		<copy todir="build/result/src">
+			<filterset>
+				<filter token="VERSION" value="${version}" />
+			</filterset>
+			<fileset dir="src">
+				<patternset>
+					<include name="**/*.java" />
+					<include name="**/*.html" />
+				</patternset>
+			</fileset>
+		</copy>
+		<!-- Convert to CRLF's and tabs -->
+		<fixcrlf srcdir="build/result/src" eol="crlf" tablength="4" tab="remove" includes="**/*.java" />
+
+
+		<!-- Un-Filtered files -->
+		<copy todir="build/result/src">
+			<fileset dir="src">
+				<patternset>
+					<include name="**/*.gif" />
+					<include name="**/*.jpg" />
+					<include name="**/*.png" />
+				</patternset>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="compile-java" depends="preprocess-src">
 		<!-- Compile -->
 		<mkdir dir="build/result/classes" />
-		<javac srcdir="src" destdir="build/result/classes" classpath="build/lib/servlet-api.jar" includes="${toolkit-package}/**" />
+		<javac srcdir="build/result/src" destdir="build/result/classes" classpath="build/lib/servlet-api.jar" includes="${toolkit-package}/**" />
 	</target>
 
 	<target name="libs" depends="compile-java">
@@ -92,7 +138,7 @@
 
 		<!-- Create source JAR -->
 		<jar jarfile="${output-dir}/lib/${lib-src-jar-name}" compress="true">
-			<fileset dir="src">
+			<fileset dir="build/result/src">
 				<patternset>
 					<include name="${toolkit-package}/**/*.java" />
 					<exclude name="${toolkit-package}/demo/**/*.java" />
@@ -103,7 +149,7 @@
 
 	<!-- Demo  - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-	<target name="demo" depends="libs,compile-java">
+	<target name="demo" depends="libs,compile-java,theme-jar">
 
 		<war warfile="${output-dir}/demo/${product-file}.war" webxml="WebContent/WEB-INF/web.xml">
 			<classes dir="build/result/classes">
@@ -116,13 +162,17 @@
 			</classes>
 			<lib dir="${output-dir}/lib">
 				<include name="${lib-bin-jar-name}" />
+				<include name="${themes-jar-name}" />
 			</lib>
 			<fileset dir="">
 				<include name="src/${toolkit-package}/demo/**/*.java" />
 			</fileset>
 			<fileset dir="WebContent">
-				<include name="**/*" />
+				<exclude name="**/.svn" />
 				<exclude name="WEB-INF/web.xml" />
+				<include name="WEB-INF/lib/themes/example/**/*" />
+				<exclude name="WEB-INF/lib/themes/**/*" />
+				<include name="**/*" />
 			</fileset>
 		</war>
 
@@ -133,7 +183,7 @@
 		</copy>
 
 		<copy todir="${output-dir}/demo/src">
-			<fileset dir="src">
+			<fileset dir="build/result/src">
 				<include name="${toolkit-package}/demo/**/*.java" />
 			</fileset>
 		</copy>
@@ -171,9 +221,9 @@
 		</copy>
 	</target>
 
-	<target name="javadoc" depends="init">
+	<target name="javadoc" depends="preprocess-src">
 		<javadoc destdir="${output-dir}/doc/api" author="true" version="true" use="true" windowtitle="${product-name}" classpath="build/lib/servlet-api.jar">
-			<packageset dir="src">
+			<packageset dir="build/result/src">
 				<include name="${toolkit-package}/**" />
 				<exclude name="${toolkit-package}/demo/**" />
 			</packageset>
@@ -191,9 +241,9 @@
 <!-- TODO Add XSLT to transform dbdoclet results to book part 2 -->
 </target>
 
-<target name="dbdoclet" depends="init">
+<target name="dbdoclet" depends="preprocess-src">
 <javadoc access="public" charset="UTF-8" docencoding="UTF-8" encoding="ISO-8859-15" failonerror="yes" classpath="build/lib/servlet-api.jar" maxmemory="512m" source="1.5">
-	<packageset dir="src">
+	<packageset dir="build/result/src">
 		<include name="${toolkit-package}/**" />
 		<exclude name="${toolkit-package}/demo/**" />
 	</packageset>
