@@ -92,8 +92,7 @@ import com.itmill.toolkit.service.License.LicenseViolation;
  * technologies.
  * 
  * @author IT Mill Ltd.
- * @version
- * @VERSION@
+ * @version @VERSION@
  * @since 3.0
  */
 
@@ -101,17 +100,29 @@ public class ApplicationServlet extends HttpServlet implements
 		Application.WindowAttachListener, Application.WindowDetachListener,
 		Paintable.RepaintRequestListener {
 
-	// Versions
-	// TODO AUTOUPDATE VERSION NUMBER FROM BUILDSCRIPT
-	private static final int VERSION_MAJOR = 4;
+	// Version
+	public static final String VERSION;
 
-	private static final int VERSION_MINOR = 0;
+	public static final int VERSION_MAJOR;
 
-	private static final int VERSION_BUILD = 0;
+	public static final int VERSION_MINOR;
 
-	private static final String VERSION = "" + VERSION_MAJOR + "."
-			+ VERSION_MINOR + "." + VERSION_BUILD;
+	public static final String VERSION_BUILD;
 
+	static {
+		if ("@VERSION@".equals("@"+"VERSION"+"@"))
+			VERSION = "4.0.0-INTERNAL-NONVERSIONED-DEBUG-BUILD";
+		else 
+			VERSION = "@VERSION@";
+		String[] digits = VERSION.split("\\.");
+		VERSION_MAJOR = Integer.parseInt(digits[0]);
+		VERSION_MINOR= Integer.parseInt(digits[1]);
+		VERSION_BUILD = digits[2];
+		
+		// TODO REMOVE DEBUG
+		System.out.println(VERSION + "," + VERSION_MAJOR + "," + VERSION_MINOR + "," + VERSION_BUILD);
+	}
+	
 	// Configurable parameter names
 	private static final String PARAMETER_DEBUG = "Debug";
 
@@ -152,14 +163,10 @@ public class ApplicationServlet extends HttpServlet implements
 	private static String THEME_LISTING_FILE = THEME_DIRECTORY_PATH
 			+ "themes.txt";
 
-	private static String DEFAULT_THEME_JAR_PREFIX = "itmill-toolkit-web-themes";
+	private static String DEFAULT_THEME_JAR_PREFIX = "itmill-toolkit-themes";
 
 	private static String DEFAULT_THEME_JAR = "WEB-INF/lib/"
 			+ DEFAULT_THEME_JAR_PREFIX + "-" + VERSION + ".jar";
-
-	private static String DEFAULT_THEME_SNAPSHOT_JAR = "WEB-INF/lib/"
-			+ DEFAULT_THEME_JAR_PREFIX + "-" + VERSION_MAJOR + "."
-			+ VERSION_MINOR + "-SNAPSHOT.jar";
 
 	private static String DEFAULT_THEME_TEMP_FILE_PREFIX = "ITMILL_TMP_";
 
@@ -279,8 +286,7 @@ public class ApplicationServlet extends HttpServlet implements
 		// Add the default theme source
 		String[] defaultThemeFiles = new String[] {
 				getApplicationOrSystemProperty(PARAMETER_DEFAULT_THEME_JAR,
-						DEFAULT_THEME_JAR), DEFAULT_THEME_SNAPSHOT_JAR
-
+						DEFAULT_THEME_JAR)
 		};
 		File f = findDefaultThemeJar(defaultThemeFiles);
 		try {
