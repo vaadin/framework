@@ -118,9 +118,6 @@ public class ApplicationServlet extends HttpServlet implements
 		VERSION_MAJOR = Integer.parseInt(digits[0]);
 		VERSION_MINOR= Integer.parseInt(digits[1]);
 		VERSION_BUILD = digits[2];
-		
-		// TODO REMOVE DEBUG
-		System.out.println(VERSION + "," + VERSION_MAJOR + "," + VERSION_MINOR + "," + VERSION_BUILD);
 	}
 	
 	// Configurable parameter names
@@ -152,6 +149,7 @@ public class ApplicationServlet extends HttpServlet implements
 
 	private static String SESSION_BINDING_LISTENER = "itmill-toolkit-bindinglistener";
 
+	// TODO Should default or base theme be the default?
 	private static String DEFAULT_THEME = "default";
 
 	private static String RESOURCE_URI = "/RES/";
