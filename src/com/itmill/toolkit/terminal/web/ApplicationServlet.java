@@ -494,6 +494,8 @@ public class ApplicationServlet extends HttpServlet implements
 		HttpVariableMap variableMap = null;
 		OutputStream out = response.getOutputStream();
 		HashSet currentlyDirtyWindowsForThisApplication = new HashSet();
+		WebApplicationContext appContext = null;
+		Application application = null;
 		try {
 
 			// If the resource path is unassigned, initialize it
@@ -510,7 +512,7 @@ public class ApplicationServlet extends HttpServlet implements
 				return;
 
 			// Get the application
-			Application application = getApplication(request);
+			application = getApplication(request);
 
 			// Create application if it doesn't exist
 			if (application == null)
@@ -520,7 +522,6 @@ public class ApplicationServlet extends HttpServlet implements
 			DownloadStream download = null;
 
 			// Invoke context transaction listeners
-			WebApplicationContext appContext = null;
 			if (application != null) {
 				appContext = (WebApplicationContext) application.getContext();
 			}
@@ -543,10 +544,6 @@ public class ApplicationServlet extends HttpServlet implements
 					getApplicationManager(application).handleXmlHttpRequest(
 							request, response);
 
-					// Notify transaction end
-					if (appContext != null) {
-						appContext.endTransaction(application, request);
-					}
 
 					return;
 				}
@@ -731,11 +728,6 @@ public class ApplicationServlet extends HttpServlet implements
 				handleDownload(download, request, response);
 			}
 
-			// Notify context of transaction end
-			if (appContext != null) {
-				appContext.endTransaction(application, request);
-			}
-
 		} catch (UIDLTransformerException te) {
 
 			try {
@@ -771,6 +763,11 @@ public class ApplicationServlet extends HttpServlet implements
 			// Release transformer
 			if (transformer != null)
 				transformerFactory.releaseTransformer(transformer);
+
+			// Notify transaction end
+			if (appContext != null && application != null) {
+				appContext.endTransaction(application, request);
+			}
 
 			// Clean the function library state for this thread
 			// for security reasons
