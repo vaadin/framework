@@ -32,23 +32,6 @@
 		<property name="output-dir" value="build/result/${product-file}-${version}" />
 		<mkdir dir="${output-dir}" />
 
-
-		<!-- TODO: Copy/filter core documentation to correct places -->
-		<!-- Disabled 
-    	<copy todir="${output-dir}">
-	    	<filterset>
-    	       <filter token="VERSION" value="${version}"/>
-        	</filterset>
-            <fileset dir="${release-docs}">
-                <include name="readme.txt"/>
-                <include name="install.txt"/>
-                <include name="license.txt"/>
-                <include name="release-notes.txt"/>
-                <include name="changes.txt"/>
-            </fileset>
-        </copy>
-        -->
-
 		<!-- Create Output Directory Hierarchy -->
 		<mkdir dir="${output-dir}/doc/manual" />
 		<mkdir dir="${output-dir}/doc/api" />
@@ -204,6 +187,7 @@
 				</replacetokens>
 			</filterchain>
 			<fileset dir="">
+				<exclude name="**/.svn" />
 				<include name="*.html" />
 				<include name="*.txt" />
 			</fileset>
@@ -216,6 +200,7 @@
 		</copy>
 		<copy todir="${output-dir}/doc">
 			<fileset dir="doc">
+				<exclude name="**/.svn" />
 				<include name="dtd/**/*.dtd" />
 			</fileset>
 		</copy>
