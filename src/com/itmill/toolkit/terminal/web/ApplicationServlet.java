@@ -86,40 +86,43 @@ import com.itmill.toolkit.service.License.LicenseSignatureIsInvalid;
 import com.itmill.toolkit.service.License.LicenseViolation;
 
 /**
- * This servlet is the core of the MillStone Web Adapter, that adapts the
- * MillStone applications to Web standards. The web adapter can be used to
- * represent the most MillStone application using Web browsers and corresponding
- * technologies.
+ * This servlet connects IT Mill Toolkit Application to Web. This servlet
+ * replaces both WebAdapterServlet and AjaxAdapterServlet.
  * 
  * @author IT Mill Ltd.
- * @version @VERSION@
- * @since 3.0
+ * @version
+ * @VERSION@
+ * @since 4.0
  */
 
 public class ApplicationServlet extends HttpServlet implements
 		Application.WindowAttachListener, Application.WindowDetachListener,
 		Paintable.RepaintRequestListener {
 
-	// Version
+	/** Version number of this release. For example "4.0.0" */
 	public static final String VERSION;
 
+	/** Major version number. For example 4 in 4.1.0. */
 	public static final int VERSION_MAJOR;
 
+	/** Minor version number. For example 1 in 4.1.0. */
 	public static final int VERSION_MINOR;
 
+	/** Build number. For example 0-beta1 in 4.0.0-beta1. */
 	public static final String VERSION_BUILD;
 
+	/* Initialize version numbers from string replaced by build-script. */
 	static {
-		if ("@VERSION@".equals("@"+"VERSION"+"@"))
+		if ("@VERSION@".equals("@" + "VERSION" + "@"))
 			VERSION = "4.0.0-INTERNAL-NONVERSIONED-DEBUG-BUILD";
-		else 
+		else
 			VERSION = "@VERSION@";
 		String[] digits = VERSION.split("\\.");
 		VERSION_MAJOR = Integer.parseInt(digits[0]);
-		VERSION_MINOR= Integer.parseInt(digits[1]);
+		VERSION_MINOR = Integer.parseInt(digits[1]);
 		VERSION_BUILD = digits[2];
 	}
-	
+
 	// Configurable parameter names
 	private static final String PARAMETER_DEBUG = "Debug";
 
@@ -173,9 +176,9 @@ public class ApplicationServlet extends HttpServlet implements
 	private static int SERVER_COMMAND_STREAM_MAINTAIN_PERIOD = 15000;
 
 	private static int SERVER_COMMAND_HEADER_PADDING = 2000;
-	
+
 	// Maximum delay between request for an user to be considered active (in ms)
-	private static long  ACTIVE_USER_REQUEST_INTERVAL = 1000 * 45;
+	private static long ACTIVE_USER_REQUEST_INTERVAL = 1000 * 45;
 
 	// Private fields
 	private Class applicationClass;
@@ -282,10 +285,8 @@ public class ApplicationServlet extends HttpServlet implements
 		}
 
 		// Add the default theme source
-		String[] defaultThemeFiles = new String[] {
-				getApplicationOrSystemProperty(PARAMETER_DEFAULT_THEME_JAR,
-						DEFAULT_THEME_JAR)
-		};
+		String[] defaultThemeFiles = new String[] { getApplicationOrSystemProperty(
+				PARAMETER_DEFAULT_THEME_JAR, DEFAULT_THEME_JAR) };
 		File f = findDefaultThemeJar(defaultThemeFiles);
 		try {
 			// Add themes.jar if exists
@@ -547,7 +548,6 @@ public class ApplicationServlet extends HttpServlet implements
 
 					getApplicationManager(application).handleXmlHttpRequest(
 							request, response);
-
 
 					return;
 				}
@@ -1141,15 +1141,17 @@ public class ApplicationServlet extends HttpServlet implements
 	 * Create a new application.
 	 * 
 	 * @return New application instance
-	 * @throws SAXException 
-	 * @throws LicenseViolation 
-	 * @throws InvalidLicenseFile 
-	 * @throws LicenseSignatureIsInvalid 
-	 * @throws LicenseFileHasNotBeenRead 
+	 * @throws SAXException
+	 * @throws LicenseViolation
+	 * @throws InvalidLicenseFile
+	 * @throws LicenseSignatureIsInvalid
+	 * @throws LicenseFileHasNotBeenRead
 	 */
 	private Application createApplication(HttpServletRequest request)
 			throws MalformedURLException, InstantiationException,
-			IllegalAccessException, LicenseFileHasNotBeenRead, LicenseSignatureIsInvalid, InvalidLicenseFile, LicenseViolation, SAXException {
+			IllegalAccessException, LicenseFileHasNotBeenRead,
+			LicenseSignatureIsInvalid, InvalidLicenseFile, LicenseViolation,
+			SAXException {
 
 		Application application = null;
 
@@ -1190,7 +1192,7 @@ public class ApplicationServlet extends HttpServlet implements
 				context = new WebApplicationContext(session);
 				session.setAttribute(SESSION_ATTR_CONTEXT, context);
 			}
-			
+
 			// Start application and check license
 			initializeLicense(application);
 			application.start(applicationUrl, this.applicationProperties,
@@ -1221,7 +1223,9 @@ public class ApplicationServlet extends HttpServlet implements
 		application.setToolkitLicense(license);
 	}
 
-	private void checkLicense(Application application) throws LicenseFileHasNotBeenRead, LicenseSignatureIsInvalid, InvalidLicenseFile, LicenseViolation, SAXException{
+	private void checkLicense(Application application)
+			throws LicenseFileHasNotBeenRead, LicenseSignatureIsInvalid,
+			InvalidLicenseFile, LicenseViolation, SAXException {
 		License license = application.getToolkitLicense();
 		if (!license.hasBeenRead()) {
 			InputStream lis;
@@ -1247,11 +1251,11 @@ public class ApplicationServlet extends HttpServlet implements
 			if (license.shouldLimitsBePrintedOnInit())
 				System.out.print(license.getDescription());
 		}
-		
+
 		// Check license validity
 		try {
-			license.check(applicationClass, getNumberOfActiveUsers()+1, VERSION_MAJOR,
-					VERSION_MINOR, "IT Mill Toolkit", null);
+			license.check(applicationClass, getNumberOfActiveUsers() + 1,
+					VERSION_MAJOR, VERSION_MINOR, "IT Mill Toolkit", null);
 		} catch (LicenseFileHasNotBeenRead e) {
 			application.close();
 			throw e;
@@ -1266,11 +1270,13 @@ public class ApplicationServlet extends HttpServlet implements
 			throw e;
 		}
 	}
-	
-	/** Get the number of active application-user pairs.
+
+	/**
+	 * Get the number of active application-user pairs.
 	 * 
-	 * This returns total number of all applications in the server that are considered to be active. For
-	 * an application to be active, it must have been accessed less than ACTIVE_USER_REQUEST_INTERVAL ms.
+	 * This returns total number of all applications in the server that are
+	 * considered to be active. For an application to be active, it must have
+	 * been accessed less than ACTIVE_USER_REQUEST_INTERVAL ms.
 	 * 
 	 * @return Number of active application instances in the server.
 	 */
@@ -1279,12 +1285,12 @@ public class ApplicationServlet extends HttpServlet implements
 		Set apps = applicationToLastRequestDate.keySet();
 		int active = 0;
 		long now = System.currentTimeMillis();
-		for (Iterator i=apps.iterator(); i.hasNext();) {
+		for (Iterator i = apps.iterator(); i.hasNext();) {
 			Date lastReq = (Date) applicationToLastRequestDate.get(i.next());
 			if (now - lastReq.getTime() < ACTIVE_USER_REQUEST_INTERVAL)
 				active++;
 		}
-		
+
 		return active;
 	}
 
