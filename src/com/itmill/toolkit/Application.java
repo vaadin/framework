@@ -1,30 +1,30 @@
 /* *************************************************************************
  
-                               IT Mill Toolkit 
+ IT Mill Toolkit 
 
-               Development of Browser User Intarfaces Made Easy
+ Development of Browser User Intarfaces Made Easy
 
-                    Copyright (C) 2000-2006 IT Mill Ltd
-                     
-   *************************************************************************
+ Copyright (C) 2000-2006 IT Mill Ltd
+ 
+ *************************************************************************
 
-   This product is distributed under commercial license that can be found
-   from the product package on license/license.txt. Use of this product might 
-   require purchasing a commercial license from IT Mill Ltd. For guidelines 
-   on usage, see license/licensing-guidelines.html
+ This product is distributed under commercial license that can be found
+ from the product package on license/license.txt. Use of this product might 
+ require purchasing a commercial license from IT Mill Ltd. For guidelines 
+ on usage, see license/licensing-guidelines.html
 
-   *************************************************************************
-   
-   For more information, contact:
-   
-   IT Mill Ltd                           phone: +358 2 4802 7180
-   Ruukinkatu 2-4                        fax:   +358 2 4802 7181
-   20540, Turku                          email:  info@itmill.com
-   Finland                               company www: www.itmill.com
-   
-   Primary source for information and releases: www.itmill.com
+ *************************************************************************
+ 
+ For more information, contact:
+ 
+ IT Mill Ltd                           phone: +358 2 4802 7180
+ Ruukinkatu 2-4                        fax:   +358 2 4802 7181
+ 20540, Turku                          email:  info@itmill.com
+ Finland                               company www: www.itmill.com
+ 
+ Primary source for information and releases: www.itmill.com
 
-   ********************************************************************** */
+ ********************************************************************** */
 
 package com.itmill.toolkit;
 
@@ -48,58 +48,69 @@ import java.util.Random;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-/** <p>Abstract base class required for all MillStone applications. This
- * class provides all the basic services required by the MillStone
- * framework. These services allow external discovery and manipulation of
- * the user, {@link com.itmill.toolkit.ui.Window windows} and
- *  themes, and starting and stopping the application.</p>
- *
- * <p>As mentioned, all MillStone applications must inherit this class.
- * However, this is almost all of what one needs to do to create a fully
- * functional MillStone application. The only thing a class inheriting the
+/**
+ * <p>
+ * Base class required for all IT Mill Toolkit applications. This class provides
+ * all the basic services required by the toolkit. These services allow external
+ * discovery and manipulation of the user,
+ * {@link com.itmill.toolkit.ui.Window windows} and themes, and starting and
+ * stopping the application.
+ * </p>
+ * 
+ * <p>
+ * As mentioned, all IT Mill Toolkit applications must inherit this class. However,
+ * this is almost all of what one needs to do to create a fully functional
+ * application. The only thing a class inheriting the
  * <code>Application</code> needs to do is implement the <code>init()</code>
- * where it creates the windows it needs to perform its function. Note that
- * all MillStone applications must have at least one window: the main
- * window. The first unnamed window constructed by an application
- * automatically becomes the main window which behaves just like other
- * windows with one exception: when accessing windows using URLs the main
- * window corresponds to the application URL whereas other windows
- * correspond to a URL gotten by catenating the window's name to the
- * application URL.</p>
+ * where it creates the windows it needs to perform its function. Note that all
+ * applications must have at least one window: the main window. The
+ * first unnamed window constructed by an application automatically becomes the
+ * main window which behaves just like other windows with one exception: when
+ * accessing windows using URLs the main window corresponds to the application
+ * URL whereas other windows correspond to a URL gotten by catenating the
+ * window's name to the application URL.
+ * </p>
  * 
- * <p>See the class <code>com.itmill.toolkit.demo.HelloWorld</code> for
- * a simple example of a fully working MillStone Application.</p>
+ * <p>
+ * See the class <code>com.itmill.toolkit.demo.HelloWorld</code> for a simple
+ * example of a fully working application.
+ * </p>
  * 
- * <p><strong>Window access.</strong> <code>Application</code> provides
- * methods to list, add and remove the windows it contains.</p> 
+ * <p>
+ * <strong>Window access.</strong> <code>Application</code> provides methods
+ * to list, add and remove the windows it contains.
+ * </p>
  * 
- * <p><strong>Execution control.</strong> This class includes method to
- * start and finish the execution of the application. Being finished means
- * basically that no windows will be available from the application
- * anymore.</p>
+ * <p>
+ * <strong>Execution control.</strong> This class includes method to start and
+ * finish the execution of the application. Being finished means basically that
+ * no windows will be available from the application anymore.
+ * </p>
  * 
- * <p><strong>Theme selection.</strong> The MillStone theme selection
- * process allows a theme to be specified at three different levels. When
- * a window's theme needs to be found out, the window itself is queried
- * for a preferred theme. If the window does not prefer a specific theme,
- * the application containing the window is queried. If neither the
- * application prefers a theme, the default theme for the
- * {@link com.itmill.toolkit.terminal.Terminal terminal} is used. The
- * terminal always defines a default theme.</p>
+ * <p>
+ * <strong>Theme selection.</strong> The theme selection process
+ * allows a theme to be specified at three different levels. When a window's
+ * theme needs to be found out, the window itself is queried for a preferred
+ * theme. If the window does not prefer a specific theme, the application
+ * containing the window is queried. If neither the application prefers a theme,
+ * the default theme for the
+ * {@link com.itmill.toolkit.terminal.Terminal terminal} is used. The terminal
+ * always defines a default theme.
+ * </p>
  * 
  * @author IT Mill Ltd.
- * @version @VERSION@
+ * @version
+ * @VERSION@
  * @since 3.0
  */
-public abstract class Application
-	implements URIHandler, Terminal.ErrorListener {
+public abstract class Application implements URIHandler, Terminal.ErrorListener {
 
 	/** Random window name generator */
 	private static Random nameGenerator = new Random();
 
 	/** Application context the application is running in */
 	private ApplicationContext context;
-	
+
 	/** The current user or <code>null</code> if no user has logged in. */
 	private Object user;
 
@@ -132,24 +143,30 @@ public abstract class Application
 
 	/** Window detach listeners */
 	private LinkedList windowDetachListeners = null;
-	
+
 	/** License for running this application */
 	private License license = null;
 
 	/** Application resource mapping: key <-> resource */
 	private Hashtable resourceKeyMap = new Hashtable();
+
 	private Hashtable keyResourceMap = new Hashtable();
+
 	private long lastResourceKeyNumber = 0;
 
-	/** URL the user is redirected to on application close or
-	 * null if application is just closed */
+	/**
+	 * URL the user is redirected to on application close or null if application
+	 * is just closed
+	 */
 	private String logoutURL = null;
 
-	/** Gets a window by name. Returns <code>null</code>
-	 * if the application is not running or it does not contain a window
-	 * corresponding to <code>name</code>.
+	/**
+	 * Gets a window by name. Returns <code>null</code> if the application is
+	 * not running or it does not contain a window corresponding to
+	 * <code>name</code>.
 	 * 
-	 * @param name The name of the window.
+	 * @param name
+	 *            The name of the window.
 	 * @return The window associated with the given URI or <code>null</code>
 	 */
 	public Window getWindow(String name) {
@@ -164,20 +181,25 @@ public abstract class Application
 		return window;
 	}
 
-	/** Adds a new window to the application.  
+	/**
+	 * Adds a new window to the application.
 	 * 
-	 * <p>This implicitly invokes the 
-	 * {@link com.itmill.toolkit.ui.Window#setApplication(Application)}
-	 * method. </p>
+	 * <p>
+	 * This implicitly invokes the
+	 * {@link com.itmill.toolkit.ui.Window#setApplication(Application)} method.
+	 * </p>
 	 * 
-	 * @param window the new <code>Window</code> to add
-	 * @throws IllegalArgumentException if a window with the same name
-	 * as the new window already exists in the application
-	 * @throws NullPointerException if the given <code>Window</code> or
-	 * its name is <code>null</code>
+	 * @param window
+	 *            the new <code>Window</code> to add
+	 * @throws IllegalArgumentException
+	 *             if a window with the same name as the new window already
+	 *             exists in the application
+	 * @throws NullPointerException
+	 *             if the given <code>Window</code> or its name is
+	 *             <code>null</code>
 	 */
-	public void addWindow(Window window)
-		throws IllegalArgumentException, NullPointerException {
+	public void addWindow(Window window) throws IllegalArgumentException,
+			NullPointerException {
 
 		// Nulls can not be added to application
 		if (window == null)
@@ -194,9 +216,8 @@ public abstract class Application
 			if (window == windows.get(name))
 				return;
 
-			// Otherwise complain		
-			throw new IllegalArgumentException(
-				"Window with name '"
+			// Otherwise complain
+			throw new IllegalArgumentException("Window with name '"
 					+ window.getName()
 					+ "' is already present in the application");
 		}
@@ -232,9 +253,11 @@ public abstract class Application
 			setMainWindow(window);
 	}
 
-	/** Removes the specified window from the application.
+	/**
+	 * Removes the specified window from the application.
 	 * 
-	 *  @param window The window to be removed
+	 * @param window
+	 *            The window to be removed
 	 */
 	public void removeWindow(Window window) {
 		if (window != null && windows.contains(window)) {
@@ -242,7 +265,7 @@ public abstract class Application
 			// Remove window from application
 			windows.remove(window.getName());
 
-			// If the window was main window, clear it		
+			// If the window was main window, clear it
 			if (getMainWindow() == window)
 				setMainWindow(null);
 
@@ -261,7 +284,8 @@ public abstract class Application
 		}
 	}
 
-	/** Gets the user of the application.
+	/**
+	 * Gets the user of the application.
 	 * 
 	 * @return User of the application.
 	 */
@@ -269,13 +293,15 @@ public abstract class Application
 		return user;
 	}
 
-	/** Sets the user of the application instance. An application instance
-	 * may have a user associated to it. This can be set in login procedure
-	 * or application initialization. A component performing the user login
-	 * procedure can assign the user property of the application and make
-	 * the user object available to other components of the application.
+	/**
+	 * Sets the user of the application instance. An application instance may
+	 * have a user associated to it. This can be set in login procedure or
+	 * application initialization. A component performing the user login
+	 * procedure can assign the user property of the application and make the
+	 * user object available to other components of the application.
 	 * 
-	 * @param user the new user.
+	 * @param user
+	 *            the new user.
 	 */
 	public void setUser(Object user) {
 		Object prevUser = this.user;
@@ -283,17 +309,18 @@ public abstract class Application
 			this.user = user;
 			if (userChangeListeners != null) {
 				Object[] listeners = userChangeListeners.toArray();
-				UserChangeEvent event =
-					new UserChangeEvent(this, user, prevUser);
+				UserChangeEvent event = new UserChangeEvent(this, user,
+						prevUser);
 				for (int i = 0; i < listeners.length; i++) {
-					((UserChangeListener) listeners[i]).applicationUserChanged(
-						event);
+					((UserChangeListener) listeners[i])
+							.applicationUserChanged(event);
 				}
 			}
 		}
 	}
 
-	/** Gets the URL of the application.
+	/**
+	 * Gets the URL of the application.
 	 * 
 	 * @return the application's URL.
 	 */
@@ -301,23 +328,29 @@ public abstract class Application
 		return applicationUrl;
 	}
 
-	/** Ends the Application. In effect this will cause the application stop
+	/**
+	 * Ends the Application. In effect this will cause the application stop
 	 * returning any windows when asked.
 	 */
 	public void close() {
 		applicationIsRunning = false;
 	}
 
-	/** Starts the application on the given URL. After this call the
-	 * application corresponds to the given URL and it will return windows
-	 * when asked for them. 
+	/**
+	 * Starts the application on the given URL. After this call the application
+	 * corresponds to the given URL and it will return windows when asked for
+	 * them.
 	 * 
-	 * @param applicationUrl The URL the application should respond to
-	 * @param applicationProperties Application properties as specified by the adapter.
-	 * @param context The context application will be running in
+	 * @param applicationUrl
+	 *            The URL the application should respond to
+	 * @param applicationProperties
+	 *            Application properties as specified by the adapter.
+	 * @param context
+	 *            The context application will be running in
 	 * 
 	 */
-	public void start(URL applicationUrl, Properties applicationProperties, ApplicationContext context) {
+	public void start(URL applicationUrl, Properties applicationProperties,
+			ApplicationContext context) {
 		this.applicationUrl = applicationUrl;
 		this.properties = applicationProperties;
 		this.context = context;
@@ -325,16 +358,18 @@ public abstract class Application
 		applicationIsRunning = true;
 	}
 
-	/** Tests if the application is running or if it has it been finished.
+	/**
+	 * Tests if the application is running or if it has it been finished.
 	 * 
 	 * @return <code>true</code> if the application is running,
-	 * <code>false</code> if not
+	 *         <code>false</code> if not
 	 */
 	public boolean isRunning() {
 		return applicationIsRunning;
 	}
 
-	/** Gets the set of windows contained by the application.
+	/**
+	 * Gets the set of windows contained by the application.
 	 * 
 	 * @return Unmodifiable collection of windows
 	 */
@@ -342,16 +377,18 @@ public abstract class Application
 		return Collections.unmodifiableCollection(windows.values());
 	}
 
-	/** Main initializer of the application. This method is called by the
-	 * framework when the application is started, and it should perform
-	 * whatever initialization operations the application needs, such
-	 * as creating windows and adding components to them. 
+	/**
+	 * Main initializer of the application. This method is called by the
+	 * framework when the application is started, and it should perform whatever
+	 * initialization operations the application needs, such as creating windows
+	 * and adding components to them.
 	 */
 	public abstract void init();
 
-	/** Gets the application's theme.  The application's theme is the default
+	/**
+	 * Gets the application's theme. The application's theme is the default
 	 * theme used by all the windows in it that do not explicitly specify a
-	 * theme. If the  application theme is not explicitly set, the
+	 * theme. If the application theme is not explicitly set, the
 	 * <code>null</code> is returned.
 	 * 
 	 * @return the name of the application's theme
@@ -360,10 +397,12 @@ public abstract class Application
 		return theme;
 	}
 
-	/** Sets the application's theme. Note that this theme can be overridden
-	 * by the windows. <code>null</code> implies the default terminal theme.
+	/**
+	 * Sets the application's theme. Note that this theme can be overridden by
+	 * the windows. <code>null</code> implies the default terminal theme.
 	 * 
-	 * @param theme The new theme for this application
+	 * @param theme
+	 *            The new theme for this application
 	 */
 	public void setTheme(String theme) {
 
@@ -374,7 +413,8 @@ public abstract class Application
 			Window w = (Window) i.next();
 			String windowTheme = w.getTheme();
 			if ((windowTheme == null)
-				|| (!theme.equals(windowTheme) && windowTheme.equals(myTheme))) {
+					|| (!theme.equals(windowTheme) && windowTheme
+							.equals(myTheme))) {
 				toBeUpdated.add(w);
 			}
 		}
@@ -384,20 +424,25 @@ public abstract class Application
 
 		// Ask windows to update themselves
 		for (Iterator i = getWindows().iterator(); i.hasNext();)
-			 ((Window) i.next()).requestRepaint();
+			((Window) i.next()).requestRepaint();
 	}
 
-	/** Returns the mainWindow of the application. 
+	/**
+	 * Returns the mainWindow of the application.
+	 * 
 	 * @return Window
 	 */
 	public Window getMainWindow() {
 		return mainWindow;
 	}
 
-	/** Sets the mainWindow. If the main window is not explicitly set, the 
-	 * main window defaults to first created window. Setting window as 
-	 * a main window of this application also adds the window to this application.
-	 * @param mainWindow The mainWindow to set
+	/**
+	 * Sets the mainWindow. If the main window is not explicitly set, the main
+	 * window defaults to first created window. Setting window as a main window
+	 * of this application also adds the window to this application.
+	 * 
+	 * @param mainWindow
+	 *            The mainWindow to set
 	 */
 	public void setMainWindow(Window mainWindow) {
 
@@ -405,27 +450,33 @@ public abstract class Application
 		this.mainWindow = mainWindow;
 	}
 
-	/** Returns an enumeration of all the names in this application.
-	 * @return an enumeration of all the keys in this property list, including the keys in 
-	 * 	the default property list.
-	 *
+	/**
+	 * Returns an enumeration of all the names in this application.
+	 * 
+	 * @return an enumeration of all the keys in this property list, including
+	 *         the keys in the default property list.
+	 * 
 	 */
 	public Enumeration getPropertyNames() {
 		return this.properties.propertyNames();
 	}
 
-	/** Searches for the property with the specified name in this application. 
-	 * The method returns null if the property is not found. 
+	/**
+	 * Searches for the property with the specified name in this application.
+	 * The method returns null if the property is not found.
 	 * 
-	 * @param name The name of the property.
+	 * @param name
+	 *            The name of the property.
 	 * @return The value in this property list with the specified key value.
 	 */
 	public String getProperty(String name) {
 		return this.properties.getProperty(name);
 	}
 
-	/** Add new resource to the application. The resource can be
-	 * accessed by the user of the application. */
+	/**
+	 * Add new resource to the application. The resource can be accessed by the
+	 * user of the application.
+	 */
 	public void addResource(ApplicationResource resource) {
 
 		// Check if the resource is already mapped
@@ -440,7 +491,7 @@ public abstract class Application
 		keyResourceMap.put(key, resource);
 	}
 
-	/** Remove resource from the application.  */
+	/** Remove resource from the application. */
 	public void removeResource(ApplicationResource resource) {
 		Object key = resourceKeyMap.get(resource);
 		if (key != null) {
@@ -466,11 +517,18 @@ public abstract class Application
 			return "APP/" + key + "/" + filename;
 	}
 
-	/* @see com.itmill.toolkit.terminal.URIHandler#handleURI(URL, String)
+	/*
+	 * @see com.itmill.toolkit.terminal.URIHandler#handleURI(URL, String)
 	 */
-	public DownloadStream handleURI(
-		URL context,
-		String relativeUri) { // If the relative uri is null, we are ready
+	public DownloadStream handleURI(URL context, String relativeUri) { // If
+																		// the
+																		// relative
+																		// uri
+																		// is
+																		// null,
+																		// we
+																		// are
+																		// ready
 		if (relativeUri == null)
 			return null;
 
@@ -488,8 +546,8 @@ public abstract class Application
 			if (next < 0)
 				return null;
 			String key = relativeUri.substring(index + 1, next);
-			ApplicationResource resource =
-				(ApplicationResource) keyResourceMap.get(key);
+			ApplicationResource resource = (ApplicationResource) keyResourceMap
+					.get(key);
 			if (resource != null)
 				return resource.getStream();
 
@@ -503,9 +561,8 @@ public abstract class Application
 			URL windowContext;
 			try {
 				windowContext = new URL(context, prefix + "/");
-				String windowUri =
-					relativeUri.length() > prefix.length() + 1
-						? relativeUri.substring(prefix.length() + 1)
+				String windowUri = relativeUri.length() > prefix.length() + 1 ? relativeUri
+						.substring(prefix.length() + 1)
 						: "";
 				return window.handleURI(windowContext, windowUri);
 			} catch (MalformedURLException e) {
@@ -534,29 +591,30 @@ public abstract class Application
 		this.locale = locale;
 	}
 
-	/** Application user change event sent when the setUser is called to
-	 * change the current user of the application.
-	 * @version @VERSION@
+	/**
+	 * Application user change event sent when the setUser is called to change
+	 * the current user of the application.
+	 * 
+	 * @version
+	 * @VERSION@
 	 * @since 3.0
 	 */
 	public class UserChangeEvent extends java.util.EventObject {
 
 		/**
-         * Serial generated by eclipse.
-         */
-        private static final long serialVersionUID = 3544951069307188281L;
+		 * Serial generated by eclipse.
+		 */
+		private static final long serialVersionUID = 3544951069307188281L;
 
-        /** New user of the application */
+		/** New user of the application */
 		private Object newUser;
 
 		/** Previous user of the application */
 		private Object prevUser;
 
 		/** Contructor for user change event */
-		public UserChangeEvent(
-			Application source,
-			Object newUser,
-			Object prevUser) {
+		public UserChangeEvent(Application source, Object newUser,
+				Object prevUser) {
 			super(source);
 			this.newUser = newUser;
 			this.prevUser = prevUser;
@@ -578,9 +636,12 @@ public abstract class Application
 		}
 	}
 
-	/** Public interface for listening application user changes 
-	 * @version @VERSION@
-	 * @since 3.0  
+	/**
+	 * Public interface for listening application user changes
+	 * 
+	 * @version
+	 * @VERSION@
+	 * @since 3.0
 	 */
 	public interface UserChangeListener extends EventListener {
 
@@ -608,13 +669,17 @@ public abstract class Application
 	public class WindowDetachEvent extends EventObject {
 
 		/**
-         * Serial generated by eclipse.
-         */
-        private static final long serialVersionUID = 3544669568644691769L;
-        private Window window;
+		 * Serial generated by eclipse.
+		 */
+		private static final long serialVersionUID = 3544669568644691769L;
 
-		/** Create event.
-		 * @param window Detached window.
+		private Window window;
+
+		/**
+		 * Create event.
+		 * 
+		 * @param window
+		 *            Detached window.
 		 */
 		public WindowDetachEvent(Window window) {
 			super(Application.this);
@@ -636,13 +701,17 @@ public abstract class Application
 	public class WindowAttachEvent extends EventObject {
 
 		/**
-         * Serial generated by eclipse.
-         */
-        private static final long serialVersionUID = 3977578104367822392L;
-        private Window window;
+		 * Serial generated by eclipse.
+		 */
+		private static final long serialVersionUID = 3977578104367822392L;
 
-		/** Create event.
-		 * @param window Attached window.
+		private Window window;
+
+		/**
+		 * Create event.
+		 * 
+		 * @param window
+		 *            Attached window.
 		 */
 		public WindowAttachEvent(Window window) {
 			super(Application.this);
@@ -706,11 +775,11 @@ public abstract class Application
 		}
 	}
 
-	/** Returns the URL user is redirected to on application close.
-	 * If the URL is null, the application is closed normally as 
-	 * defined by the application running environment: Desctop application
-	 * just closes the application window and web-application redirects
-	 * the browser to application main URL.
+	/**
+	 * Returns the URL user is redirected to on application close. If the URL is
+	 * null, the application is closed normally as defined by the application
+	 * running environment: Desctop application just closes the application
+	 * window and web-application redirects the browser to application main URL.
 	 * 
 	 * @return URL
 	 */
@@ -718,13 +787,14 @@ public abstract class Application
 		return logoutURL;
 	}
 
-	/** Sets the URL user is redirected to on application close.
-	 * If the URL is null, the application is closed normally as 
-	 * defined by the application running environment: Desctop application
-	 * just closes the application window and web-application redirects
-	 * the browser to application main URL.
+	/**
+	 * Sets the URL user is redirected to on application close. If the URL is
+	 * null, the application is closed normally as defined by the application
+	 * running environment: Desctop application just closes the application
+	 * window and web-application redirects the browser to application main URL.
 	 * 
-	 * @param logoutURL The logoutURL to set
+	 * @param logoutURL
+	 *            The logoutURL to set
 	 */
 	public void setLogoutURL(String logoutURL) {
 		this.logoutURL = logoutURL;
@@ -751,25 +821,28 @@ public abstract class Application
 			if (e instanceof ErrorMessage)
 				((AbstractComponent) owner).setComponentError((ErrorMessage) e);
 			else
-				((AbstractComponent) owner).setComponentError(
-					new SystemError(e));
+				((AbstractComponent) owner)
+						.setComponentError(new SystemError(e));
 		}
 	}
-	
-	/** Get application context.
+
+	/**
+	 * Get application context.
 	 * 
-	 * The application context is the environment where the application 
-	 * is running in.
+	 * The application context is the environment where the application is
+	 * running in.
 	 */
 	public ApplicationContext getContext() {
 		return context;
 	}
 
-	/** Get the license this application is running on.
+	/**
+	 * Get the license this application is running on.
 	 * 
-	 * The license is initialized by the ApplicationServlet before application is started.
-	 * The the license-file can not be found in WEB-INF/itmill-toolkit-license.xml, you
-	 * can set its source in application init().
+	 * The license is initialized by the ApplicationServlet before application
+	 * is started. The the license-file can not be found in
+	 * WEB-INF/itmill-toolkit-license.xml, you can set its source in application
+	 * init().
 	 * 
 	 * @return License this application is currently using
 	 */
@@ -777,15 +850,17 @@ public abstract class Application
 		return license;
 	}
 
-	/** Set the license this application is currently using.
+	/**
+	 * Set the license this application is currently using.
 	 * 
-	 * The license is initialized by the ApplicationServlet before application is started.
-	 * Changing the license after application init has no effect.
-     *
-	 * @param license New license for this application.
+	 * The license is initialized by the ApplicationServlet before application
+	 * is started. Changing the license after application init has no effect.
+	 * 
+	 * @param license
+	 *            New license for this application.
 	 */
 	public void setToolkitLicense(License license) {
 		this.license = license;
 	}
-	
+
 }
