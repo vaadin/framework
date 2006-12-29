@@ -2058,17 +2058,10 @@ DefaultTheme.prototype.renderUpload = function(renderer,uidl,target,layoutInfo) 
 	// Unique name for iframes
 	var frameName = "upload_"+varNode.getAttribute("id")+"_iframe";
 	
-	var iframe = theme.createElementTo(div, "iframe");
-	iframe.style.width = '300px';
-	iframe.style.height = '30px';
+	var iframe = theme.createElementTo(div, "iframe","upload-iframe");
 	iframe.id = frameName;
 	iframe.name = frameName;
 	iframe.src = 'about:blank';	
-	iframe.style.border = 'none';
-	iframe.style.margin = '0px';
-	iframe.style.padding = '0px';
-	iframe.style.background = 'none';
-
 
 	// Get the window object of the iframe		
 	var ifr = window.frames[frameName];	
@@ -2087,10 +2080,11 @@ DefaultTheme.prototype.renderUpload = function(renderer,uidl,target,layoutInfo) 
 		
 	if (ifr != null) {
 	
-		// TODO: Put some initial content to IFRAME.
+		// Put some initial content to IFRAME.
 		// Nasty, but without this the browsers fail 
 		// to create any elements into window.
-		var code="<HTML>"+"<BODY STYLE=\" overflow: hidden; border: none; margin: 0px; padding: 0px;\"><\/BODY><\/HTML>";			
+        // TODO import CSS file to get right background-color for IE
+		var code="<HTML><BODY STYLE=\" overflow: hidden; border: none; margin: 0px; padding: 0px;background-color: transparent;\"><\/BODY><\/HTML>";
 	    ifr.document.open();
 	    ifr.document.write(code);
 	    ifr.document.close();
@@ -2110,28 +2104,38 @@ DefaultTheme.prototype.renderUpload = function(renderer,uidl,target,layoutInfo) 
 		upload.name = varNode.getAttribute("id");
 		var submit  = theme.createInputElementTo(form, "submit");	
 		submit.value = "Send";
+        // submit.value = caption
+        submit.disabled = true;
+        submit.onclick = function() {
+            iframe.style.visibility='hidden';
+        }
+        upload.onchange = function() {
+            if(upload.value) {
+                submit.disabled = false;
+            } else {
+                submit.disabled = true;
+            }
+        }
+        
 		ifr.document.body.appendChild(form);
 
 		// Attach event listeners for processing the chencges after upload.
 		if (document.all) {
 			iframe.onreadystatechange = function() {			
 				if (iframe.readyState == "complete") {
-					//TODO: Is there a better way? Cannot figure out a 
-					// way to take the changes out of iframes document in IE.
-					// FF seems to be working, but IE just renders the
-					// XML as highlight HTML and looses the original XML.
-					//div.ownerDocument.location.reload();
-					div.ownerDocument.location.href = div.ownerDocument.location.href;
+                    iframe.onreadystatechange = null;
+                    client.processVariableChanges(true);
+                    // FIXME next line is workaround to 'iframe is not instantly updated after upload is done' bug.
+                    // location.reload();   
 				}
 			};
 		} else {
 			iframe.onload = function() {				
 				if (ifr.document != null && (ifr.document.contentType == "application/xml")) {
-					// TODO: Damn. This would be nice but seems to be unreliable:
-					//client.processUpdates(ifr.document);
-					//div.ownerDocument.location.reload();
-					div.ownerDocument.location.href = div.ownerDocument.location.href;
-					
+                    iframe.onload = null;
+                    client.processVariableChanges(true);
+                    // FIXME next line is workaround to 'iframe is not instantly updated after upload is done' bug.
+                    // location.reload();
 				}
 			};
 		}

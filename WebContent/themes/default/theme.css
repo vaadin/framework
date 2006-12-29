@@ -415,4 +415,11 @@ IMG.overlay {
 .table .actions .over {
 	background-color: Highlight;
 }
-
+.upload-iframe {
+	width: 450px;
+	height: 30px;
+	border: none;
+	margin: 0px;
+	padding: 0px;
+	background: transparent;
+}
