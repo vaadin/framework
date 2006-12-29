@@ -48,6 +48,9 @@ public interface ThemeSource {
 	 *  UIDL data. The <code>type</code> parameter is used to limit
 	 *  the templates, which are returned based on the theme fileset
 	 *  requirements.
+	 *  
+	 *  This implicitly operates in xslt mode.
+	 *  
 	 *  @param theme Theme, which XSL should be returned
 	 *  @param type The type of the current client.
 	 *  @return Collection of ThemeSource.XSLStream objects.

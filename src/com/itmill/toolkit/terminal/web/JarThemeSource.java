@@ -1,30 +1,30 @@
 /* *************************************************************************
  
-                               IT Mill Toolkit 
+ IT Mill Toolkit 
 
-               Development of Browser User Intarfaces Made Easy
+ Development of Browser User Intarfaces Made Easy
 
-                    Copyright (C) 2000-2006 IT Mill Ltd
-                     
-   *************************************************************************
+ Copyright (C) 2000-2006 IT Mill Ltd
+ 
+ *************************************************************************
 
-   This product is distributed under commercial license that can be found
-   from the product package on license/license.txt. Use of this product might 
-   require purchasing a commercial license from IT Mill Ltd. For guidelines 
-   on usage, see license/licensing-guidelines.html
+ This product is distributed under commercial license that can be found
+ from the product package on license/license.txt. Use of this product might 
+ require purchasing a commercial license from IT Mill Ltd. For guidelines 
+ on usage, see license/licensing-guidelines.html
 
-   *************************************************************************
-   
-   For more information, contact:
-   
-   IT Mill Ltd                           phone: +358 2 4802 7180
-   Ruukinkatu 2-4                        fax:   +358 2 4802 7181
-   20540, Turku                          email:  info@itmill.com
-   Finland                               company www: www.itmill.com
-   
-   Primary source for information and releases: www.itmill.com
+ *************************************************************************
+ 
+ For more information, contact:
+ 
+ IT Mill Ltd                           phone: +358 2 4802 7180
+ Ruukinkatu 2-4                        fax:   +358 2 4802 7181
+ 20540, Turku                          email:  info@itmill.com
+ Finland                               company www: www.itmill.com
+ 
+ Primary source for information and releases: www.itmill.com
 
-   ********************************************************************** */
+ ********************************************************************** */
 
 package com.itmill.toolkit.terminal.web;
 
@@ -44,37 +44,48 @@ import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-/** Theme source for reading themes from a JAR archive.
- *  At this time only jar files are supported and an archive
- *  may not contain any recursive archives.
+/**
+ * Theme source for reading themes from a JAR archive. At this time only jar
+ * files are supported and an archive may not contain any recursive archives.
+ * 
  * @author IT Mill Ltd.
- * @version @VERSION@
+ * @version
+ * @VERSION@
  * @since 3.0
  */
 public class JarThemeSource implements ThemeSource {
 
 	private File file;
+
 	private JarFile jar;
+
 	private Theme theme;
+
 	private String path;
+
 	private String name;
+
 	private ApplicationServlet webAdapterServlet;
+
 	private Cache resourceCache = new Cache();
 
 	/** Collection of subdirectory entries */
 	private Collection subdirs = new LinkedList();
 
-	/** Creates a new instance of ThemeRepository by reading the themes
-	 * from a local directory.
-	 * @param file Path to the JAR archive .
-	 * @param path Path inside the archive to be processed.
-	 * @throws FileNotFoundException if no theme files are found
+	/**
+	 * Creates a new instance of ThemeRepository by reading the themes from a
+	 * local directory.
+	 * 
+	 * @param file
+	 *            Path to the JAR archive .
+	 * @param path
+	 *            Path inside the archive to be processed.
+	 * @throws FileNotFoundException
+	 *             if no theme files are found
 	 */
-	public JarThemeSource(
-		File file,
-		ApplicationServlet webAdapterServlet,
-		String path)
-		throws ThemeException, FileNotFoundException, IOException {
+	public JarThemeSource(File file, ApplicationServlet webAdapterServlet,
+			String path) throws ThemeException, FileNotFoundException,
+			IOException {
 
 		this.file = file;
 		this.jar = new JarFile(file);
@@ -88,7 +99,6 @@ public class JarThemeSource implements ThemeSource {
 			this.name = this.name.substring(0, this.name.length() - 4);
 		}
 
-
 		this.webAdapterServlet = webAdapterServlet;
 
 		// Load description file
@@ -97,55 +107,49 @@ public class JarThemeSource implements ThemeSource {
 			try {
 				this.theme = new Theme(jar.getInputStream(entry));
 			} catch (Exception e) {
-				throw new ThemeException(
-					"JarThemeSource: Failed to load '" + path + "': ",e);
+				throw new ThemeException("JarThemeSource: Failed to load '"
+						+ path + "': ", e);
 			}
 
 			// Debug info
 			if (webAdapterServlet.isDebugMode()) {
-				Log.debug("Added JarThemeSource: " + this.file + ":" + this.path);
+				Log.debug("Added JarThemeSource: " + this.file + ":"
+						+ this.path);
 			}
 
 		} else {
-			// There was no description file found. 
-			// Handle subdirectories recursively		
-			for (Enumeration entries = jar.entries();
-				entries.hasMoreElements();
-				) {
+			// There was no description file found.
+			// Handle subdirectories recursively
+			for (Enumeration entries = jar.entries(); entries.hasMoreElements();) {
 				JarEntry e = (JarEntry) entries.nextElement();
 				if (e.getName().startsWith(this.path)) {
 					if (e.getName().endsWith("/")
-						&& e.getName().indexOf('/', this.path.length())
-							== (e.getName().length() - 1)) {
-						this.subdirs.add(
-							new JarThemeSource(
-								this.file,
-								this.webAdapterServlet,
-								e.getName()));
+							&& e.getName().indexOf('/', this.path.length()) == (e
+									.getName().length() - 1)) {
+						this.subdirs.add(new JarThemeSource(this.file,
+								this.webAdapterServlet, e.getName()));
 					}
 				}
 			}
 
 			if (this.subdirs.isEmpty()) {
 				if (webAdapterServlet.isDebugMode()) {
-					Log.info(
-						"JarThemeSource: Ignoring empty JAR path: "
-							+ this.file
-							+ " path: "
-							+ this.path);
+					Log.info("JarThemeSource: Ignoring empty JAR path: "
+							+ this.file + " path: " + this.path);
 				}
 			}
 		}
 	}
 
 	/**
-	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getXSLStreams(Theme, WebBrowser)
+	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getXSLStreams(Theme,
+	 *      WebBrowser)
 	 */
 	public Collection getXSLStreams(Theme theme, WebBrowser type)
-		throws ThemeException {
+			throws ThemeException {
 		Collection xslFiles = new LinkedList();
-		// If this directory contains a theme 
-		// return XSL from this theme	
+		// If this directory contains a theme
+		// return XSL from this theme
 		if (this.theme != null) {
 
 			if (webAdapterServlet.isDebugMode()) {
@@ -158,28 +162,27 @@ public class JarThemeSource implements ThemeSource {
 				try {
 					this.theme = new Theme(jar.getInputStream(entry));
 				} catch (IOException e) {
-					throw new ThemeException(
-						"Failed to read description: "
-							+ this.file
-							+ ":"
-							+ this.path
+					throw new ThemeException("Failed to read description: "
+							+ this.file + ":" + this.path
 							+ Theme.DESCRIPTIONFILE);
 				}
 			}
 
-			Collection fileNames = theme.getFileNames(type);
+			Collection fileNames = theme.getFileNames(type, Theme.MODE_XSLT);
 			// Add all XSL file streams
 			for (Iterator i = fileNames.iterator(); i.hasNext();) {
 				entry = jar.getJarEntry(this.path + (String) i.next());
-				try {
-					xslFiles.add(new XSLStream(entry.getName(),jar.getInputStream(entry)));
-				} catch (java.io.FileNotFoundException e) {
-					throw new ThemeException(
-						"XSL File not found: " + this.file + ": " + entry);
-				} catch (java.io.IOException e) {
-					throw new ThemeException(
-						"Failed to read XSL file. " + this.file + ": " + entry);
-				}
+				if (entry.getName().endsWith(".xsl"))
+					try {
+						xslFiles.add(new XSLStream(entry.getName(), jar
+								.getInputStream(entry)));
+					} catch (java.io.FileNotFoundException e) {
+						throw new ThemeException("XSL File not found: "
+								+ this.file + ": " + entry);
+					} catch (java.io.IOException e) {
+						throw new ThemeException("Failed to read XSL file. "
+								+ this.file + ": " + entry);
+					}
 			}
 
 		} else {
@@ -195,7 +198,9 @@ public class JarThemeSource implements ThemeSource {
 		return xslFiles;
 	}
 
-	/** Return modication time of the jar file.
+	/**
+	 * Return modication time of the jar file.
+	 * 
 	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getModificationTime()
 	 */
 	public long getModificationTime() {
@@ -206,15 +211,15 @@ public class JarThemeSource implements ThemeSource {
 	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getResource(String)
 	 */
 	public InputStream getResource(String resourceId)
-		throws ThemeSource.ThemeException {
+			throws ThemeSource.ThemeException {
 
 		// Strip off the theme name prefix from resource id
-		if (this.theme != null && 
-				this.theme.getName() != null && 
-				resourceId.startsWith(this.theme.getName()+"/")){
-			resourceId = resourceId.substring(this.theme.getName().length()+1);
+		if (this.theme != null && this.theme.getName() != null
+				&& resourceId.startsWith(this.theme.getName() + "/")) {
+			resourceId = resourceId
+					.substring(this.theme.getName().length() + 1);
 		}
-		
+
 		// Return the resource inside the jar file
 		JarEntry entry = jar.getJarEntry(resourceId);
 		if (entry != null)
@@ -243,13 +248,13 @@ public class JarThemeSource implements ThemeSource {
 			} catch (IOException e) {
 			}
 
-		throw new ThemeSource.ThemeException(
-			"Resource " + resourceId + " not found.");
+		throw new ThemeSource.ThemeException("Resource " + resourceId
+				+ " not found.");
 	}
 
 	/**
-	* @see com.itmill.toolkit.terminal.web.ThemeSource#getThemes()
-	*/
+	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getThemes()
+	 */
 	public Collection getThemes() {
 		Collection themes = new LinkedList();
 		if (this.theme != null) {
@@ -264,8 +269,8 @@ public class JarThemeSource implements ThemeSource {
 	}
 
 	/**
-	* @see com.itmill.toolkit.terminal.web.ThemeSource#getName()
-	*/
+	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getName()
+	 */
 	public String getName() {
 		if (this.theme != null) {
 			return this.theme.getName();
@@ -274,9 +279,9 @@ public class JarThemeSource implements ThemeSource {
 		}
 	}
 
-	/**																											 
-	* @see com.itmill.toolkit.terminal.web.ThemeSource#getThemeByName(String)
-	*/
+	/**
+	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getThemeByName(String)
+	 */
 	public Theme getThemeByName(String name) {
 		Collection themes = this.getThemes();
 		for (Iterator i = themes.iterator(); i.hasNext();) {
@@ -289,17 +294,16 @@ public class JarThemeSource implements ThemeSource {
 
 	/**
 	 * @author IT Mill Ltd.
-		 * @version @VERSION@
-		 * @since 3.0
-		 */
+	 * @version
+	 * @VERSION@
+	 * @since 3.0
+	 */
 	private class Cache {
 
 		private Map data = new HashMap();
 
 		public void put(Object key, Object value) {
-			data.put(
-				key,
-				new SoftReference(new CacheItem(value)));
+			data.put(key, new SoftReference(new CacheItem(value)));
 		}
 
 		public Object get(Object key) {
@@ -316,7 +320,8 @@ public class JarThemeSource implements ThemeSource {
 
 	/**
 	 * @author IT Mill Ltd.
-	 * @version @VERSION@
+	 * @version
+	 * @VERSION@
 	 * @since 3.0
 	 */
 	private class CacheItem {

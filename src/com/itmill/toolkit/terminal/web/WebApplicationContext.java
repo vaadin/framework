@@ -28,7 +28,6 @@
 
 package com.itmill.toolkit.terminal.web;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;

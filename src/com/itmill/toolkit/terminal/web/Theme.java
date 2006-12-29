@@ -1,30 +1,30 @@
 /* *************************************************************************
  
-                               IT Mill Toolkit 
+ IT Mill Toolkit 
 
-               Development of Browser User Intarfaces Made Easy
+ Development of Browser User Intarfaces Made Easy
 
-                    Copyright (C) 2000-2006 IT Mill Ltd
-                     
-   *************************************************************************
+ Copyright (C) 2000-2006 IT Mill Ltd
+ 
+ *************************************************************************
 
-   This product is distributed under commercial license that can be found
-   from the product package on license/license.txt. Use of this product might 
-   require purchasing a commercial license from IT Mill Ltd. For guidelines 
-   on usage, see license/licensing-guidelines.html
+ This product is distributed under commercial license that can be found
+ from the product package on license/license.txt. Use of this product might 
+ require purchasing a commercial license from IT Mill Ltd. For guidelines 
+ on usage, see license/licensing-guidelines.html
 
-   *************************************************************************
-   
-   For more information, contact:
-   
-   IT Mill Ltd                           phone: +358 2 4802 7180
-   Ruukinkatu 2-4                        fax:   +358 2 4802 7181
-   20540, Turku                          email:  info@itmill.com
-   Finland                               company www: www.itmill.com
-   
-   Primary source for information and releases: www.itmill.com
+ *************************************************************************
+ 
+ For more information, contact:
+ 
+ IT Mill Ltd                           phone: +358 2 4802 7180
+ Ruukinkatu 2-4                        fax:   +358 2 4802 7181
+ 20540, Turku                          email:  info@itmill.com
+ Finland                               company www: www.itmill.com
+ 
+ Primary source for information and releases: www.itmill.com
 
-   ********************************************************************** */
+ ********************************************************************** */
 
 package com.itmill.toolkit.terminal.web;
 
@@ -33,6 +33,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -45,65 +46,68 @@ import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.Attributes;
 
-/** This class provides an interface to the meta-information
- *  regarding a particular webadapter theme. This entails for
- *  instanace the inheritance tree of the various xsl-template files,
- *  the different requirments that the theme imposes on the client browser,
- *  etc.
- *  <p>
- *  The WebAdapter uses themes to convert the UIDL description into
- *  client representation, typically HTML or XHTML.
- *  A theme consists of set of XSL template files which are used to 
- *  perform XSL transform.
- *  </p>
- *  <p>
- *  XSL files are divided into sets, which can have requirements.
- *  A file set is included in transformation only if the given requirements
- *  are met. Following requirements are supported:
- *  <ul>
- *  	<li>User-Agent HTTP header substring matching</li>
- *  	<li>Markup language version</li>
- *  	<li>JavaScript version</li>
- *  </ul>
- *  Additionally following boolean operators may be applied to above
- *  requirements:
- *  <ul>
- *  	<li>NOT</li>
- *  	<li>AND</li>
- *  	<li>OR</li>
- *  </ul>
- *  The requirements are introduced in XML description file. See example below.
- *  </p>
- *  <p>
- *  The theme description is XML data, and it can be loaded from file or stream. 
- *  The default filename is specified by <code>Theme.DESCRIPTIONFILE</code>.
- *  Example of theme description file:
- *  <pre>
- *  &lt;?xml version="1.0" encoding="UTF-8"?&gt;
- *
- *	&lt;theme name="normal"&gt;
+/**
+ * This class provides an interface to the meta-information regarding a
+ * particular webadapter theme. This entails for instanace the inheritance tree
+ * of the various xsl-template files, the different requirments that the theme
+ * imposes on the client browser, etc.
+ * <p>
+ * The WebAdapter uses themes to convert the UIDL description into client
+ * representation, typically HTML or XHTML. A theme consists of set of XSL
+ * template files which are used to perform XSL transform.
+ * </p>
+ * <p>
+ * XSL files are divided into sets, which can have requirements. A file set is
+ * included in transformation only if the given requirements are met. Following
+ * requirements are supported:
+ * <ul>
+ * <li>User-Agent HTTP header substring matching</li>
+ * <li>Markup language version</li>
+ * <li>JavaScript version</li>
+ * </ul>
+ * Additionally following boolean operators may be applied to above
+ * requirements:
+ * <ul>
+ * <li>NOT</li>
+ * <li>AND</li>
+ * <li>OR</li>
+ * </ul>
+ * The requirements are introduced in XML description file. See example below.
+ * </p>
+ * <p>
+ * The theme description is XML data, and it can be loaded from file or stream.
+ * The default filename is specified by <code>Theme.DESCRIPTIONFILE</code>.
+ * Example of theme description file:
  * 
- *	&lt;extends theme="simple"/&gt;
- *     
- *	&lt;description&gt;The normal theme for all browsers&lt;/description&gt;
- * 	&lt;author name="IT Mill Ltd" email="millstone@itmill.com" /&gt;
- *
- *		&lt;fileset&gt;
- *  		&lt;require&gt;
- *   			&lt;supports javascript="JavaScript 1.0"/&gt;
- *   		&lt;/require&gt;
- *
- *			&lt;file name="common/error.xsl" /&gt; 
- *			&lt;file name="components/button.xsl" /&gt; 
- *			&lt;file name="components/select.xsl" /&gt;
- *			&lt;file name="components/textfield.xsl" /&gt;
- *			&lt;file name="components/table.xsl" /&gt;
- * 		&lt;/fileset&gt;
- * 	&lt;/theme&gt;
- *  </pre>
- *  </p>
+ * <pre>
+ *   &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+ * 
+ * 	&lt;theme name=&quot;normal&quot;&gt;
+ *  
+ * 	&lt;extends theme=&quot;simple&quot;/&gt;
+ *      
+ * 	&lt;description&gt;The normal theme for all browsers&lt;/description&gt;
+ *  	&lt;author name=&quot;IT Mill Ltd&quot; email=&quot;millstone@itmill.com&quot; /&gt;
+ * 
+ * 		&lt;fileset&gt;
+ *   		&lt;require&gt;
+ *    			&lt;supports javascript=&quot;JavaScript 1.0&quot;/&gt;
+ *    		&lt;/require&gt;
+ * 
+ * 			&lt;file name=&quot;common/error.xsl&quot; /&gt; 
+ * 			&lt;file name=&quot;components/button.xsl&quot; /&gt; 
+ * 			&lt;file name=&quot;components/select.xsl&quot; /&gt;
+ * 			&lt;file name=&quot;components/textfield.xsl&quot; /&gt;
+ * 			&lt;file name=&quot;components/table.xsl&quot; /&gt;
+ *  		&lt;/fileset&gt;
+ *  	&lt;/theme&gt;
+ * </pre>
+ * 
+ * </p>
+ * 
  * @author IT Mill Ltd.
- * @version @VERSION@
+ * @version
+ * @VERSION@
  * @since 3.0
  */
 public class Theme extends DefaultHandler {
@@ -112,35 +116,55 @@ public class Theme extends DefaultHandler {
 	public static final String DESCRIPTIONFILE = "description.xml";
 
 	private static final String TAG_THEME = "theme";
+
 	private static final String TAG_EXTENDS = "extends";
+
 	private static final String TAG_DESCRIPTION = "description";
 
 	private static final String TAG_FILE = "file";
+
 	private static final String TAG_FILESET = "fileset";
+
+	private static final String TAG_MODE = "mode";
+
+	private static final String TAG_MODES = "modes";
+
 	private static final String TAG_REQUIRE = "require";
+
 	private static final String TAG_SUPPORTS = "supports";
+
 	private static final String TAG_AUTHOR = "author";
 
 	private static final String TAG_AND = "and";
+
 	private static final String TAG_OR = "or";
+
 	private static final String TAG_NOT = "not";
 
 	private static final String ATTR_NAME = "name";
+
 	private static final String ATTR_THEME = "theme";
+
 	private static final String ATTR_EMAIL = "email";
 
+	private static final String ATTR_MODE = "mode";
+
 	private static final String ATTR_JAVASCRIPT = "javascript";
+
 	private static final String ATTR_AGENT = "agent";
+
 	private static final String ATTR_MARKUP = "markup";
 
 	private static final String UNNAMED_FILESET = "unnamed";
 
+	public static final String MODE_UIDL = "uidl";
+
+	public static final String MODE_XSLT = "xslt";
+
+	public static final String MODE_FALLBACK = MODE_XSLT;
+
 	/** Name of the theme. */
 	private String name;
-
-
-	/** Version of the theme. */
-	private String version;
 
 	/** Theme description. */
 	private String description;
@@ -160,24 +184,40 @@ public class Theme extends DefaultHandler {
 	/** Stack of string buffers used while parsing XML. */
 	private Stack openStrings = new Stack();
 
+	/** Supported modes name-to-requirements */
+	private LinkedHashMap supportedModes = new LinkedHashMap();
+
+	/** Currently open mode */
+	private String currentlyOpenMode = null;
+
+	/** Are we processing modes */
+	private boolean modesListCurrentlyOpen = false;
+
 	/** Is a NOT requirement element open. */
 	private boolean isNOTRequirementOpen = false;
 
 	/** Currently open requirements while parsing. */
 	private Stack openRequirements = new Stack();
 
-	/** Creates a new instance using XML description file. 
-	 *  Instantiate new theme, by loading the description from given File.
-	 *  @param descriptionFile Description file
-	 *  @throws FileNotFoundException Thrown if the given file is not found.
+	/**
+	 * Creates a new instance using XML description file. Instantiate new theme,
+	 * by loading the description from given File.
+	 * 
+	 * @param descriptionFile
+	 *            Description file
+	 * @throws FileNotFoundException
+	 *             Thrown if the given file is not found.
 	 */
 	public Theme(java.io.File descriptionFile) throws FileNotFoundException {
 		parse(new InputSource(new FileInputStream(descriptionFile)));
 	}
 
-	/** Creates a new instance using XML description stream. 
-	 *  Instantiate new theme, by loading the description from given InputSource.
-	 *  @param descriptionStream XML input to parse
+	/**
+	 * Creates a new instance using XML description stream. Instantiate new
+	 * theme, by loading the description from given InputSource.
+	 * 
+	 * @param descriptionStream
+	 *            XML input to parse
 	 */
 	public Theme(InputStream descriptionStream) {
 		try {
@@ -190,8 +230,50 @@ public class Theme extends DefaultHandler {
 		}
 	}
 
-	/** Parse XML data.
-	 *  @param descriptionSource XML input source to parse
+	/**
+	 * Get the preferred operating mode supported by this theme for given
+	 * terminal.
+	 */
+	public String getPreferredMode(WebBrowser terminal) {
+
+		// If no supported modes are declared, then we use parents preferred
+		// mode
+		if (parentThemes != null && parentThemes.size() > 0
+				&& supportedModes.keySet().isEmpty())
+			return ((Theme) parentThemes.get(0)).getPreferredMode(terminal);
+
+		// Iterate and test the modes in order
+		for (Iterator i = supportedModes.keySet().iterator(); i.hasNext();) {
+			String mode = (String) i.next();
+			if (supportsMode(mode, terminal))
+				return mode;
+		}
+
+		return MODE_FALLBACK;
+	}
+
+	/** Tests if this theme suppors given mode */
+	public boolean supportsMode(String mode, WebBrowser terminal) {
+
+		// Theme must explicitly support the given mode
+		RequirementCollection rc = (RequirementCollection) supportedModes
+				.get(mode);
+		if (rc == null || !rc.isMet(terminal))
+			return false;
+
+		// All parents must also support the mode
+		for (Iterator i = parentThemes.iterator(); i.hasNext();)
+			if (!((Theme) i.next()).supportsMode(mode, terminal))
+				return false;
+
+		return true;
+	}
+
+	/**
+	 * Parse XML data.
+	 * 
+	 * @param descriptionSource
+	 *            XML input source to parse
 	 */
 	private synchronized void parse(InputSource descriptionSource) {
 
@@ -203,8 +285,8 @@ public class Theme extends DefaultHandler {
 
 		// Parse the Document
 		try {
-			XMLReader xr =
-				SAXParserFactory.newInstance().newSAXParser().getXMLReader();
+			XMLReader xr = SAXParserFactory.newInstance().newSAXParser()
+					.getXMLReader();
 
 			xr.setContentHandler(this);
 			xr.setErrorHandler(this);
@@ -223,15 +305,14 @@ public class Theme extends DefaultHandler {
 
 	}
 
-	/** Parse start tag in XML stream.
+	/**
+	 * Parse start tag in XML stream.
 	 * 
-	 * @see org.xml.sax.ContentHandler#startElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
+	 * @see org.xml.sax.ContentHandler#startElement(java.lang.String,
+	 *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
 	 */
-	public void startElement(
-		String uri,
-		String local,
-		String qName,
-		Attributes atts) {
+	public void startElement(String uri, String local, String qName,
+			Attributes atts) {
 
 		if (TAG_THEME.equals(qName)) {
 			this.name = atts.getValue(ATTR_NAME);
@@ -241,28 +322,28 @@ public class Theme extends DefaultHandler {
 		} else if (TAG_EXTENDS.equals(qName)) {
 			String themeName = atts.getValue(ATTR_THEME);
 			if (this.name.equals(themeName))
-				throw new IllegalArgumentException(
-					"Theme " + this.name + " extends itself.");
+				throw new IllegalArgumentException("Theme " + this.name
+						+ " extends itself.");
 			this.parentThemes.add(themeName);
 		} else if (TAG_FILE.equals(qName)) {
 			File f = new File(atts.getValue(ATTR_NAME));
 			if (this.openFilesets.isEmpty()) {
-				throw new IllegalStateException(
-					"Element '"
-						+ TAG_FILE
-						+ "' must be within '"
-						+ TAG_FILESET
-						+ "' element.");
+				throw new IllegalStateException("Element '" + TAG_FILE
+						+ "' must be within '" + TAG_FILESET + "' element.");
 			}
 			Fileset fs = (Fileset) this.openFilesets.peek();
 			fs.addFile(f);
 		} else if (TAG_FILESET.equals(qName)) {
 			Fileset fs;
-			if (atts.getValue(ATTR_NAME) != null) {
-				fs = new Fileset(atts.getValue(ATTR_NAME));
-			} else {
-				fs = new Fileset(atts.getValue(UNNAMED_FILESET));
-			}
+			String mode = atts.getValue(ATTR_MODE);
+			if (mode != null && mode.length() == 0)
+				mode = null;
+			if (mode != null && !mode.equals(MODE_UIDL)
+					&& !mode.equals(MODE_XSLT))
+				throw new IllegalStateException("Given mode '" + mode
+						+ "' is not supported. (This version only supports '"
+						+ MODE_XSLT + "' and '" + MODE_UIDL + "')");
+			fs = new Fileset(mode);
 
 			// Use the first fileset as root fileset
 			if (this.files == null) {
@@ -276,43 +357,56 @@ public class Theme extends DefaultHandler {
 
 			this.openFilesets.push(fs);
 		} else if (TAG_AUTHOR.equals(qName)) {
-			this.author =
-				new Author(atts.getValue(ATTR_NAME), atts.getValue(ATTR_EMAIL));
+			this.author = new Author(atts.getValue(ATTR_NAME), atts
+					.getValue(ATTR_EMAIL));
+		} else if (TAG_MODES.equals(qName)) {
+			if (modesListCurrentlyOpen)
+				throw new IllegalStateException(
+						"Modes element can not be inside another modes element");
+			modesListCurrentlyOpen = true;
+		} else if (TAG_MODE.equals(qName)) {
+			if (!modesListCurrentlyOpen)
+				throw new IllegalStateException(
+						"Mode elements must be placed inside modes element");
+			if (currentlyOpenMode != null)
+				throw new IllegalStateException(
+						"No mode is allowed inside mode");
+			String name = atts.getValue(ATTR_NAME);
+			if (name == null || name.length() == 0)
+				throw new IllegalStateException(
+						"Name is required for mode elements");
+			this.currentlyOpenMode = name;
+			RequirementCollection rc = new AndRequirement();
+			supportedModes.put(name, rc);
 		}
-
 		// Requirements
 		else if (TAG_REQUIRE.equals(qName)) {
-			if (this.openFilesets.isEmpty()) {
-				throw new IllegalStateException(
-					"Element '"
-						+ TAG_REQUIRE
-						+ "' must be within '"
-						+ TAG_FILESET
-						+ "' element.");
+			if (currentlyOpenMode != null) {
+				RequirementCollection rc = (RequirementCollection) supportedModes
+						.get(this.currentlyOpenMode);
+				if (rc == null)
+					throw new IllegalStateException("Tried to add requirements to mode '" + name + "', but requirements set was not properly created. (internal error)");
+				this.openRequirements.push(rc);
+			} else {
+				if (this.openFilesets.isEmpty()) {
+					throw new IllegalStateException("Element '" + TAG_REQUIRE
+							+ "' must be within '" + TAG_FILESET + "' element.");
+				}
+				Fileset fs = (Fileset) this.openFilesets.peek();
+				this.openRequirements.push(fs.getRequirements());
 			}
-			Fileset fs = (Fileset) this.openFilesets.peek();
-			this.openRequirements.push(fs.getRequirements());
 		} else if (TAG_SUPPORTS.equals(qName)) {
-			if (this.openFilesets.isEmpty()) {
-				throw new IllegalStateException(
-					"Element '"
-						+ TAG_REQUIRE
-						+ "' must be within '"
-						+ TAG_FILESET
-						+ "' element.");
+			if (this.openFilesets.isEmpty() && currentlyOpenMode == null) {
+				throw new IllegalStateException("Element '" + TAG_REQUIRE
+						+ "' must be within '" + TAG_FILESET + "' element.");
 			}
 			if (this.openRequirements.isEmpty()) {
-				throw new IllegalStateException(
-					"Element '"
-						+ TAG_SUPPORTS
-						+ "' must be within '"
-						+ TAG_REQUIRE
-						+ "' element.");
+				throw new IllegalStateException("Element '" + TAG_SUPPORTS
+						+ "' must be within '" + TAG_REQUIRE + "' element.");
 			}
-			this.addRequirements(
-				atts,
-				(RequirementCollection) this.openRequirements.peek(),
-				this.isNOTRequirementOpen);
+			this.addRequirements(atts,
+					(RequirementCollection) this.openRequirements.peek(),
+					this.isNOTRequirementOpen);
 		} else if (TAG_NOT.equals(qName)) {
 			this.isNOTRequirementOpen = true;
 		} else if (TAG_AND.equals(qName)) {
@@ -322,50 +416,58 @@ public class Theme extends DefaultHandler {
 		}
 	}
 
-	/** Parse end tag in XML stream.
+	/**
+	 * Parse end tag in XML stream.
+	 * 
 	 * @see org.xml.sax.ContentHandler#endElement(String, String, String)
 	 */
 	public void endElement(String namespaceURI, String localName, String qName)
-		throws SAXException {
+			throws SAXException {
 
 		if (TAG_FILESET.equals(qName)) {
 			this.openFilesets.pop();
 		} else if (TAG_DESCRIPTION.equals(qName)) {
-			this.description =
-				((StringBuffer) this.openStrings.pop()).toString();
+			this.description = ((StringBuffer) this.openStrings.pop())
+					.toString();
 		} else if (TAG_REQUIRE.equals(qName)) {
 			this.openRequirements.pop();
-
 		} else if (TAG_NOT.equals(qName)) {
 			this.isNOTRequirementOpen = false;
+		} else if (TAG_MODES.equals(qName)) {
+			this.modesListCurrentlyOpen = false;
+		} else if (TAG_MODE.equals(qName)) {
+			this.currentlyOpenMode = null;
 		}
 	}
 
-	/** Parse character data in XML stream.
+	/**
+	 * Parse character data in XML stream.
+	 * 
 	 * @see org.xml.sax.ContentHandler#characters(char[], int, int)
 	 */
 	public void characters(char[] data, int start, int length) {
 
 		// if stack is not ready, data is not content of recognized element
 		if (!this.openStrings.isEmpty()) {
-			((StringBuffer) this.openStrings.peek()).append(
-				data,
-				start,
-				length);
+			((StringBuffer) this.openStrings.peek())
+					.append(data, start, length);
 		} else {
 			// read data which is not part of recognized element
 		}
 	}
 
-	/** Add all requirements specified in attributes to fileset. 
-	 *  @param atts Attribute set
-	 *  @param requirements Collection where to add requirement rules.
-	 *  @param applyNot Should the meaning of these requirement be negated.
+	/**
+	 * Add all requirements specified in attributes to fileset.
+	 * 
+	 * @param atts
+	 *            Attribute set
+	 * @param requirements
+	 *            Collection where to add requirement rules.
+	 * @param applyNot
+	 *            Should the meaning of these requirement be negated.
 	 */
-	private void addRequirements(
-		Attributes atts,
-		RequirementCollection requirements,
-		boolean applyNot) {
+	private void addRequirements(Attributes atts,
+			RequirementCollection requirements, boolean applyNot) {
 
 		// Create temporary collection for requirements
 		Collection tmpReqs = new LinkedList();
@@ -374,22 +476,20 @@ public class Theme extends DefaultHandler {
 		for (int i = 0; i < atts.getLength(); i++) {
 			req = null;
 			if (ATTR_JAVASCRIPT.equals(atts.getQName(i))) {
-				req =
-					new JavaScriptRequirement(
-						WebBrowser.parseJavaScriptVersion(atts.getValue(i)));
+				req = new JavaScriptRequirement(WebBrowser
+						.parseJavaScriptVersion(atts.getValue(i)));
 			} else if (ATTR_AGENT.equals(atts.getQName(i))) {
 				req = new AgentRequirement(atts.getValue(i));
 			} else if (ATTR_MARKUP.equals(atts.getQName(i))) {
-				req =
-					new MarkupLanguageRequirement(
-						WebBrowser.parseHTMLVersion(atts.getValue(i)));
+				req = new MarkupLanguageRequirement(WebBrowser
+						.parseHTMLVersion(atts.getValue(i)));
 			}
 			// Add to temporary requirement collection and clear reference
 			if (req != null)
 				tmpReqs.add(req);
 		}
 
-		// Create implicit AND requirement if more than one 
+		// Create implicit AND requirement if more than one
 		// Rrequirements were specified in attributes
 		if (tmpReqs.size() > 1) {
 			req = new AndRequirement(tmpReqs);
@@ -404,7 +504,9 @@ public class Theme extends DefaultHandler {
 		requirements.addRequirement(req);
 	}
 
-	/** Get list of all files in this theme.
+	/**
+	 * Get list of all files in this theme.
+	 * 
 	 * @return List of filenames belonging to this theme.
 	 */
 	public List getFileNames() {
@@ -413,61 +515,66 @@ public class Theme extends DefaultHandler {
 		return files.getFileNames();
 	}
 
-	/** Get list of file names matching WebBrowserType.
+	/**
+	 * Get list of file names matching WebBrowserType.
+	 * 
 	 * @return list of filenames in this theme supporting the given terminal.
 	 */
-	public List getFileNames(WebBrowser terminal) {
+	public List getFileNames(WebBrowser terminal, String mode) {
 		if (files == null)
 			return new LinkedList();
-		return this.files.getFileNames(terminal);
+		return this.files.getFileNames(terminal, mode);
 	}
 
-	/** String representation of Theme object.
-	 *  Used for debugging purposes only.
-	 *  @see java.lang.Object#toString()
+	/**
+	 * String representation of Theme object. Used for debugging purposes only.
+	 * 
+	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
-		return this.name
-			+ " author=["
-			+ this.author
-			+ "]"
-			+ " inherits="
-			+ parentThemes
-			+ "]"
-			+ " files={"
-			+ (files != null ? files.toString() : "null")
-			+ "}";
+		return this.name + " author=[" + this.author + "]" + " inherits="
+				+ parentThemes + "]" + " files={"
+				+ (files != null ? files.toString() : "null") + "}";
 	}
 
-	/** Author information class.
-	 *  This class represents an single author of a theme package.
-	 *  Authors have name and contact email address properties.
+	/**
+	 * Author information class. This class represents an single author of a
+	 * theme package. Authors have name and contact email address properties.
+	 * 
 	 * @author IT Mill Ltd.
-	 * @version @VERSION@
-	 * @since 3.0	
+	 * @version
+	 * @VERSION@
+	 * @since 3.0
 	 */
 	public class Author {
 
 		private String name;
+
 		private String email;
 
 		public Author(String name, String email) {
 			this.name = name;
 			this.email = email;
 		}
-		/** Get the name of the author.
+
+		/**
+		 * Get the name of the author.
+		 * 
 		 * @return Name of the author.
 		 */
 		public String getName() {
 			return this.name;
 		}
 
-		/** Get the email address of the author.
+		/**
+		 * Get the email address of the author.
+		 * 
 		 * @return Email address of the author.
 		 */
 		public String getEmail() {
 			return this.email;
 		}
+
 		/**
 		 * @see java.lang.Object#toString()
 		 */
@@ -476,62 +583,86 @@ public class Theme extends DefaultHandler {
 		}
 	}
 
-	/** Generic requirement.
-	 *  Interface implemented by reuirements introducing
-	 *  method for checking compability with given terminal.
+	/**
+	 * Generic requirement. Interface implemented by reuirements introducing
+	 * method for checking compability with given terminal.
+	 * 
 	 * @author IT Mill Ltd.
-	 * @version @VERSION@
+	 * @version
+	 * @VERSION@
 	 * @since 3.0
 	 */
 	public interface Requirement {
 
-		/** Check that this requirement is met by given type of browser.
-		 * @param terminal type of the web browser.
-		 * @return True if terminal is compatible with this rule. False otherwise.
+		/**
+		 * Check that this requirement is met by given type of browser.
+		 * 
+		 * @param terminal
+		 *            type of the web browser.
+		 * @return True if terminal is compatible with this rule. False
+		 *         otherwise.
 		 */
 		public boolean isMet(WebBrowser terminal);
 
 	}
 
-	/** Generic requirement collection interface.
-	 *  Requirement collection introducing methods for
-	 *  combining requirements into single requirement.
+	/**
+	 * Generic requirement collection interface. Requirement collection
+	 * introducing methods for combining requirements into single requirement.
+	 * 
 	 * @author IT Mill Ltd.
-		 * @version @VERSION@
-		 * @since 3.0
+	 * @version
+	 * @VERSION@
+	 * @since 3.0
 	 */
 	public interface RequirementCollection extends Requirement {
 
-		/** Add new requirement to this collection. 
-		 * @param requirement Requirement to be added.
+		/**
+		 * Add new requirement to this collection.
+		 * 
+		 * @param requirement
+		 *            Requirement to be added.
 		 */
 		public void addRequirement(Requirement requirement);
 
-		/** Remove a requirement from this collection. 
-		 * @param requirement Requirement to be removed.
+		/**
+		 * Remove a requirement from this collection.
+		 * 
+		 * @param requirement
+		 *            Requirement to be removed.
 		 */
 		public void removeRequirement(Requirement requirement);
 	}
 
-	/** Logical NOT requirement.
-	 *  Requirement implementing logical NOT operation.
-	 *  Wraps an another requirement and negates the meaning of it.
+	/**
+	 * Logical NOT requirement. Requirement implementing logical NOT operation.
+	 * Wraps an another requirement and negates the meaning of it.
+	 * 
 	 * @author IT Mill Ltd.
-	 * @version @VERSION@
+	 * @version
+	 * @VERSION@
 	 * @since 3.0
 	 */
 	public class NotRequirement implements Requirement {
 		private Requirement requirement;
-		/** Create new NOT requirement based on another requirement.
-		 * @param requirement The requirement to ne negated.
+
+		/**
+		 * Create new NOT requirement based on another requirement.
+		 * 
+		 * @param requirement
+		 *            The requirement to ne negated.
 		 */
 		public NotRequirement(Requirement requirement) {
 			this.requirement = requirement;
 		}
 
-		/** Check that this requirement is met by given type of browser.
-		 * @param terminal type of the web browser.
-		 * @return True if terminal is compatible with this rule. False otherwise.
+		/**
+		 * Check that this requirement is met by given type of browser.
+		 * 
+		 * @param terminal
+		 *            type of the web browser.
+		 * @return True if terminal is compatible with this rule. False
+		 *         otherwise.
 		 */
 		public boolean isMet(WebBrowser terminal) {
 			return !this.requirement.isMet(terminal);
@@ -546,11 +677,13 @@ public class Theme extends DefaultHandler {
 
 	}
 
-	/** Logical AND requirement. 
-	 *  Implements a collection of requirements combining the 
-	 *  included requirements using logical AND operation.
+	/**
+	 * Logical AND requirement. Implements a collection of requirements
+	 * combining the included requirements using logical AND operation.
+	 * 
 	 * @author IT Mill Ltd.
-	 * @version @VERSION@
+	 * @version
+	 * @VERSION@
 	 * @since 3.0
 	 */
 	public class AndRequirement implements RequirementCollection {
@@ -577,7 +710,9 @@ public class Theme extends DefaultHandler {
 			this.requirements.remove(requirement);
 		}
 
-		/** Checks that all os the requirements in this collection are met. 
+		/**
+		 * Checks that all os the requirements in this collection are met.
+		 * 
 		 * @see Theme.Requirement#isMet(WebBrowser)
 		 */
 		public boolean isMet(WebBrowser terminal) {
@@ -600,11 +735,13 @@ public class Theme extends DefaultHandler {
 
 	}
 
-	/** Logical OR requirement. 
-	 *  Implements a collection of requirements combining the 
-	 *  included requirements using logical AND operation.
+	/**
+	 * Logical OR requirement. Implements a collection of requirements combining
+	 * the included requirements using logical AND operation.
+	 * 
 	 * @author IT Mill Ltd.
-	 * @version @VERSION@
+	 * @version
+	 * @VERSION@
 	 * @since 3.0
 	 */
 	public class OrRequirement implements RequirementCollection {
@@ -631,7 +768,9 @@ public class Theme extends DefaultHandler {
 			this.requirements.remove(requirement);
 		}
 
-		/** Checks that some of the requirements in this collection is met. 
+		/**
+		 * Checks that some of the requirements in this collection is met.
+		 * 
 		 * @see Theme.Requirement#isMet(WebBrowser)
 		 */
 		public boolean isMet(WebBrowser terminal) {
@@ -653,11 +792,14 @@ public class Theme extends DefaultHandler {
 		}
 	}
 
-	/** HTTP user agent requirement 
-	 *  This requirements is used to ensure that the User-Agent string
-	 *  provided in HTTP request headers contains given substring.
+	/**
+	 * HTTP user agent requirement This requirements is used to ensure that the
+	 * User-Agent string provided in HTTP request headers contains given
+	 * substring.
+	 * 
 	 * @author IT Mill Ltd.
-	 * @version @VERSION@
+	 * @version
+	 * @VERSION@
 	 * @since 3.0
 	 */
 	public class AgentRequirement implements Requirement {
@@ -669,14 +811,10 @@ public class Theme extends DefaultHandler {
 		}
 
 		public boolean isMet(WebBrowser terminal) {
-			if (terminal.getBrowserApplication().indexOf(this.agentSubstring)
-				> 0)
+			if (terminal.getBrowserApplication().indexOf(this.agentSubstring) > 0)
 				return true;
-			Log.info(
-				"Requirement: '"
-					+ this.agentSubstring
-					+ "' is not met by "
-					+ terminal.getBrowserApplication());
+			Log.info("Requirement: '" + this.agentSubstring
+					+ "' is not met by " + terminal.getBrowserApplication());
 			return false;
 		}
 
@@ -688,11 +826,13 @@ public class Theme extends DefaultHandler {
 		}
 	}
 
-	/** Javascript version requirement 
-	 *  This requirement is used to ensure a certain level of 
-	 *  JavaScript version support.
+	/**
+	 * Javascript version requirement This requirement is used to ensure a
+	 * certain level of JavaScript version support.
+	 * 
 	 * @author IT Mill Ltd.
-	 * @version @VERSION@
+	 * @version
+	 * @VERSION@
 	 * @since 3.0
 	 */
 	public class JavaScriptRequirement implements Requirement {
@@ -700,17 +840,14 @@ public class Theme extends DefaultHandler {
 		private WebBrowser.JavaScriptVersion requiredVersion;
 
 		public JavaScriptRequirement(
-			WebBrowser.JavaScriptVersion requiredVersion) {
+				WebBrowser.JavaScriptVersion requiredVersion) {
 			this.requiredVersion = requiredVersion;
 		}
 
 		public boolean isMet(WebBrowser terminal) {
 			if (terminal.getJavaScriptVersion().supports(this.requiredVersion))
 				return true;
-			Log.info(
-				"Requirement: "
-					+ this.requiredVersion
-					+ " is not met by "
+			Log.info("Requirement: " + this.requiredVersion + " is not met by "
 					+ terminal.getJavaScriptVersion());
 			return false;
 		}
@@ -723,11 +860,13 @@ public class Theme extends DefaultHandler {
 		}
 	}
 
-	/** Markup language version requirement 
-	 *  This requirement is used to ensure a certain level of 
-	 *  Markup language version support.
+	/**
+	 * Markup language version requirement This requirement is used to ensure a
+	 * certain level of Markup language version support.
+	 * 
 	 * @author IT Mill Ltd.
-	 * @version @VERSION@
+	 * @version
+	 * @VERSION@
 	 * @since 3.0
 	 */
 	public class MarkupLanguageRequirement implements Requirement {
@@ -735,17 +874,14 @@ public class Theme extends DefaultHandler {
 		private WebBrowser.MarkupVersion requiredVersion;
 
 		public MarkupLanguageRequirement(
-			WebBrowser.MarkupVersion requiredVersion) {
+				WebBrowser.MarkupVersion requiredVersion) {
 			this.requiredVersion = requiredVersion;
 		}
 
 		public boolean isMet(WebBrowser terminal) {
 			if (terminal.getMarkupVersion().supports(this.requiredVersion))
 				return true;
-			Log.info(
-				"Requirement: "
-					+ this.requiredVersion
-					+ " is not met by "
+			Log.info("Requirement: " + this.requiredVersion + " is not met by "
 					+ terminal.getMarkupVersion());
 			return false;
 
@@ -760,34 +896,43 @@ public class Theme extends DefaultHandler {
 
 	}
 
-	/** Theme XSL file description 
-	 *  Description of a single XSL file included a theme.
+	/**
+	 * Theme XSL file description Description of a single XSL file included a
+	 * theme.
+	 * 
 	 * @author IT Mill Ltd.
-	 * @version @VERSION@
+	 * @version
+	 * @VERSION@
 	 * @since 3.0
 	 */
 	public class File {
 
 		private String name;
 
-		/** Create new file.
-		 * @param name Name of the file.
+		/**
+		 * Create new file.
+		 * 
+		 * @param name
+		 *            Name of the file.
 		 */
 		public File(String name) {
 			this.name = name;
 		}
 
-		/** Get name of the file.
-		 *  The file name is relative and unique within a theme.
-		 *  @return Name of the file.
+		/**
+		 * Get name of the file. The file name is relative and unique within a
+		 * theme.
+		 * 
+		 * @return Name of the file.
 		 */
 		public String getName() {
 			return this.name;
 		}
 
-		/** Does this file support the given terminal.
-		 *  Single file requirements are not supported and
-		 *  therefore this always returns true.
+		/**
+		 * Does this file support the given terminal. Single file requirements
+		 * are not supported and therefore this always returns true.
+		 * 
 		 * @see Theme.Fileset
 		 * @return Always returns true.
 		 */
@@ -804,10 +949,13 @@ public class Theme extends DefaultHandler {
 
 	}
 
-	/** A recursive set of files sharing the same requirements.
+	/**
+	 * A recursive set of files sharing the same requirements.
+	 * 
 	 * @author IT Mill Ltd.
-	 * @version @VERSION@
-	 * @since 3.0	 
+	 * @version
+	 * @VERSION@
+	 * @since 3.0
 	 */
 	public class Fileset extends File {
 
@@ -815,22 +963,20 @@ public class Theme extends DefaultHandler {
 
 		private Collection files = new LinkedList();
 
-		/** Create new empty fileset. 
-		 * @param name Name of the fileset.
+		private String mode;
+
+		/**
+		 * Create new empty fileset.
+		 * 
+		 * @param name
+		 *            Name of the fileset.
 		 */
-		public Fileset(String name) {
-			super(name);
+		public Fileset(String mode) {
+			super(null);
+			this.mode = mode;
 		}
 
-		/** Create new fileset. 
-		 * @param name Name of the fileset.
-		 * @param files Collection of files to include in the set.
-		 */
-		public Fileset(String name, Collection files) {
-			super(name);
-		}
-
-		/**Add a file into fileset. */
+		/** Add a file into fileset. */
 		private void addFile(File file) {
 			this.files.add(file);
 		}
@@ -840,7 +986,9 @@ public class Theme extends DefaultHandler {
 			return this.requirements;
 		}
 
-		/** Get list of all files in this theme.
+		/**
+		 * Get list of all files in this theme.
+		 * 
 		 * @return list of filenames.
 		 */
 		public List getFileNames() {
@@ -861,14 +1009,20 @@ public class Theme extends DefaultHandler {
 
 		}
 
-		/** Get list of file names matching WebBrowserType.
+		/**
+		 * Get list of file names matching WebBrowserType.
+		 * 
 		 * @return list of filenames supporting the given terminal.
 		 */
-		public List getFileNames(WebBrowser terminal) {
+		public List getFileNames(WebBrowser terminal, String mode) {
 
 			List list = new LinkedList();
 
-			if (!this.supports(terminal))
+			// If this set is not supported by the terminal or is explicitly set
+			// into
+			// another mode, no files are given
+			if (!this.supports(terminal)
+					|| (this.mode != null && !this.mode.equals(mode)))
 				return list;
 
 			for (Iterator i = this.files.iterator(); i.hasNext();) {
@@ -877,7 +1031,7 @@ public class Theme extends DefaultHandler {
 				// Recursively add included filesets if they are
 				// supported
 				if (f instanceof Fileset) {
-					list.addAll(((Fileset) f).getFileNames(terminal));
+					list.addAll(((Fileset) f).getFileNames(terminal, mode));
 
 				} else {
 					list.add(f.getName());
@@ -886,16 +1040,15 @@ public class Theme extends DefaultHandler {
 			return list;
 		}
 
-		/** Does this file support the given terminal.
+		/**
+		 * Does this file support the given terminal.
+		 * 
 		 * @return True if fileset supports the given browser. False otherwise.
 		 */
 		public boolean supports(WebBrowser terminal) {
 			if (requirements.isMet(terminal))
 				return true;
-			Log.info(
-				"Skipped fileset "
-					+ Theme.this.getName()
-					+ "/"
+			Log.info("Skipped fileset " + Theme.this.getName() + "/"
 					+ this.getName()
 					+ " because all requirements were not met.");
 			return false;
@@ -905,43 +1058,37 @@ public class Theme extends DefaultHandler {
 		 * @see java.lang.Object#toString()
 		 */
 		public String toString() {
-			return "name=["
-				+ this.getName()
-				+ "] requires=["
-				+ this.requirements
-				+ "] files=["
-				+ files
-				+ "]";
+			return "name=[" + this.getName() + "] requires=["
+					+ this.requirements + "] files=[" + files + "]";
 		}
 	}
 
-	/** Returns the author of this theme.
+	/**
+	 * Returns the author of this theme.
+	 * 
 	 * @return Author of the theme.
 	 */
 	public Author getAuthor() {
 		return author;
 	}
 
-	/** Returns the name of this theme.
+	/**
+	 * Returns the name of this theme.
+	 * 
 	 * @return Name of the theme.
 	 */
 	public String getName() {
 		return name;
 	}
 
-	/** Returns the list of parent themes of this theme.
-	 * Returns list of all inherited themes in the inheritance order.
+	/**
+	 * Returns the list of parent themes of this theme. Returns list of all
+	 * inherited themes in the inheritance order.
+	 * 
 	 * @return List of parent theme instances.
 	 */
 	public List getParentThemes() {
 		return parentThemes;
-	}
-
-	/** Returns the version of this theme.
-	 * @return Version string
-	 */
-	public String getVersion() {
-		return version;
 	}
 
 	/** Get theme description */

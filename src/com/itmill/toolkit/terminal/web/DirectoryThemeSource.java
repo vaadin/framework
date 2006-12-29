@@ -76,7 +76,7 @@ public class DirectoryThemeSource implements ThemeSource {
 				this.theme = new Theme(description);
 			} catch (Exception e) {
 				throw new ThemeException(
-					"ServletThemeSource: Failed to load '" + path + "': " + e);
+					"ServletThemeSource: Failed to load '" + path,e);
 			}
 
 			// Debug info
@@ -134,11 +134,12 @@ public class DirectoryThemeSource implements ThemeSource {
 				}
 			}
 
-			Collection fileNames = theme.getFileNames(type);
+			Collection fileNames = theme.getFileNames(type, Theme.MODE_XSLT);
 
 			// Add all XSL file streams
 			for (Iterator i = fileNames.iterator(); i.hasNext();) {
 				File f = new File(this.path, (String) i.next());
+				if (f.getName().endsWith(".xsl"))
 				try {
 					xslFiles.add(new XSLStream(f.getName(),new FileInputStream(f)));
 				} catch (FileNotFoundException e) {

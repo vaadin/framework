@@ -1,30 +1,30 @@
 /* *************************************************************************
  
-                               IT Mill Toolkit 
+ IT Mill Toolkit 
 
-               Development of Browser User Intarfaces Made Easy
+ Development of Browser User Intarfaces Made Easy
 
-                    Copyright (C) 2000-2006 IT Mill Ltd
-                     
-   *************************************************************************
+ Copyright (C) 2000-2006 IT Mill Ltd
+ 
+ *************************************************************************
 
-   This product is distributed under commercial license that can be found
-   from the product package on license/license.txt. Use of this product might 
-   require purchasing a commercial license from IT Mill Ltd. For guidelines 
-   on usage, see license/licensing-guidelines.html
+ This product is distributed under commercial license that can be found
+ from the product package on license/license.txt. Use of this product might 
+ require purchasing a commercial license from IT Mill Ltd. For guidelines 
+ on usage, see license/licensing-guidelines.html
 
-   *************************************************************************
-   
-   For more information, contact:
-   
-   IT Mill Ltd                           phone: +358 2 4802 7180
-   Ruukinkatu 2-4                        fax:   +358 2 4802 7181
-   20540, Turku                          email:  info@itmill.com
-   Finland                               company www: www.itmill.com
-   
-   Primary source for information and releases: www.itmill.com
+ *************************************************************************
+ 
+ For more information, contact:
+ 
+ IT Mill Ltd                           phone: +358 2 4802 7180
+ Ruukinkatu 2-4                        fax:   +358 2 4802 7181
+ 20540, Turku                          email:  info@itmill.com
+ Finland                               company www: www.itmill.com
+ 
+ Primary source for information and releases: www.itmill.com
 
-   ********************************************************************** */
+ ********************************************************************** */
 
 package com.itmill.toolkit.terminal.web;
 
@@ -35,6 +35,7 @@ import com.itmill.toolkit.ui.Window;
 
 import java.text.DateFormatSymbols;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -42,50 +43,48 @@ import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 
-/** This a function library that can be used from the theme XSL-files. It provides
- * easy access to current application, window, theme, webbrowser and session. The
- * internal threadlocal state must be maintained by the webadapter in order go guarantee
- * that it works.
+/**
+ * This a function library that can be used from the theme XSL-files. It
+ * provides easy access to current application, window, theme, webbrowser and
+ * session. The internal threadlocal state must be maintained by the webadapter
+ * in order go guarantee that it works.
  * 
  * @author IT Mill Ltd.
- * @version @VERSION@
+ * @version
+ * @VERSION@
  * @since 3.0
  */
 
 public class ThemeFunctionLibrary {
 
 	static private final int APPLICATION = 0;
+
 	static private final int WINDOW = 1;
+
 	static private final int WEBBROWSER = 2;
+
 	static private final int SESSION = 3;
+
 	static private final int WEBADAPTERSERVLET = 4;
+
 	static private final int THEME = 5;
 
 	static private ThreadLocal state = new ThreadLocal();
 
-	static protected void setState(
-		Application application,
-		Window window,
-		WebBrowser webBrowser,
-		HttpSession session,
-		ApplicationServlet webAdapterServlet,
-		String theme) {
-		state.set(
-			new Object[] {
-				application,
-				window,
-				webBrowser,
-				session,
-				webAdapterServlet,
-				theme });
+	static protected void setState(Application application, Window window,
+			WebBrowser webBrowser, HttpSession session,
+			ApplicationServlet webAdapterServlet, String theme) {
+		state.set(new Object[] { application, window, webBrowser, session,
+				webAdapterServlet, theme });
 	}
 
 	static protected void cleanState() {
 		state.set(null);
 	}
 
-	/** Returns a reference to the application object associated
-	 * with the session that the call came from.
+	/**
+	 * Returns a reference to the application object associated with the session
+	 * that the call came from.
 	 */
 	static public Application application() {
 		try {
@@ -95,8 +94,9 @@ public class ThemeFunctionLibrary {
 		}
 	}
 
-	/** Returns a reference to the current window object associated
-	 * with the session that the call came from.
+	/**
+	 * Returns a reference to the current window object associated with the
+	 * session that the call came from.
 	 */
 	static public Window window() {
 		try {
@@ -106,8 +106,9 @@ public class ThemeFunctionLibrary {
 		}
 	}
 
-	/** Returns a reference to the browser object associated
-	 * with the session that the call came from.
+	/**
+	 * Returns a reference to the browser object associated with the session
+	 * that the call came from.
 	 */
 	static public WebBrowser browser() {
 		try {
@@ -117,8 +118,9 @@ public class ThemeFunctionLibrary {
 		}
 	}
 
-	/** Returns a reference to the current servlet http session object
-	 * that is associated with the session that the call came from.
+	/**
+	 * Returns a reference to the current servlet http session object that is
+	 * associated with the session that the call came from.
 	 */
 	static public HttpSession session() {
 		try {
@@ -128,8 +130,9 @@ public class ThemeFunctionLibrary {
 		}
 	}
 
-	/** Return a reference to the current theme object that is
-	 * associated with the session that the call came from.
+	/**
+	 * Return a reference to the current theme name that is associated with the
+	 * session that the call came from.
 	 */
 	static public String theme() {
 		try {
@@ -139,74 +142,62 @@ public class ThemeFunctionLibrary {
 		}
 	}
 
-	/** Return an URI to the named resource from the named theme.
+	/**
+	 * Return an URI to the named resource from the named theme.
 	 */
 	static public String resource(String resource, String theme) {
 		try {
-			return (
-				(ApplicationServlet)
-					(
-						(Object[]) state
-							.get())[WEBADAPTERSERVLET])
-							.getResourceLocation(
-				theme,
-				new ThemeResource(resource));
+			return ((ApplicationServlet) ((Object[]) state.get())[WEBADAPTERSERVLET])
+					.getResourceLocation(theme, new ThemeResource(resource));
 		} catch (NullPointerException e) {
 			throw new IllegalStateException();
 		}
 	}
 
-	/** Return an URI to the named resource.
+	/**
+	 * Return an URI to the named resource.
 	 */
 	static public String resource(String resource) {
 		try {
-			return (
-				(ApplicationServlet)
-					(
-						(Object[]) state
-							.get())[WEBADAPTERSERVLET])
-							.getResourceLocation(
-				theme(),
-				new ThemeResource(resource));
+			return ((ApplicationServlet) ((Object[]) state.get())[WEBADAPTERSERVLET])
+					.getResourceLocation(theme(), new ThemeResource(resource));
 		} catch (NullPointerException e) {
 			throw new IllegalStateException();
 		}
 	}
 
-	/** Generate JavaScript for page that performs 
-	 * client-side combility checks.
-	 * The script includes HTML/JavaScript commands to be included
-	 * in the body of the millstone-form.
+	/**
+	 * Generate JavaScript for page that performs client-side combility checks.
+	 * The script includes HTML/JavaScript commands to be included in the body
+	 * of the millstone-form.
 	 */
 	static public boolean probeClient() {
-		return (
-			browser().performClientCheck() && !browser().isClientSideChecked());
+		return (browser().performClientCheck() && !browser()
+				.isClientSideChecked());
 	}
 
-	/** Generate JavaScript for page header that handles 
-	 * window refreshing, opening and closing.
+	/**
+	 * Generate JavaScript for page header that handles window refreshing,
+	 * opening and closing.
 	 * 
 	 * Generates script that:
-	 * <ul> 
-	 *  <li>Requests that all windows that need repaint be reloaded</li>
-	 *  <li>Sets the window name</li>
-	 *  <li>Closes window if it is set to be closed </li>
+	 * <ul>
+	 * <li>Requests that all windows that need repaint be reloaded</li>
+	 * <li>Sets the window name</li>
+	 * <li>Closes window if it is set to be closed </li>
 	 * <ul>
 	 * 
 	 */
 	static public String windowScript() {
 		return generateWindowScript(
-			window(),
-			application(),
-			(ApplicationServlet) ((Object[]) state.get())[WEBADAPTERSERVLET],
-			browser());
+				window(),
+				application(),
+				(ApplicationServlet) ((Object[]) state.get())[WEBADAPTERSERVLET],
+				browser());
 	}
 
-	static protected String generateWindowScript(
-		Window window,
-		Application app,
-		ApplicationServlet wa,
-		WebBrowser browser) {
+	static protected String generateWindowScript(Window window,
+			Application app, ApplicationServlet wa, WebBrowser browser) {
 
 		StringBuffer script = new StringBuffer();
 		LinkedList update = new LinkedList();
@@ -235,11 +226,9 @@ public class ThemeFunctionLibrary {
 				LinkedList framesets = new LinkedList();
 				framesets.add(w.getFrameset());
 				while (!framesets.isEmpty()) {
-					FrameWindow.Frameset fs =
-						(FrameWindow.Frameset) framesets.removeFirst();
-					for (Iterator j = fs.getFrames().iterator();
-						j.hasNext();
-						) {
+					FrameWindow.Frameset fs = (FrameWindow.Frameset) framesets
+							.removeFirst();
+					for (Iterator j = fs.getFrames().iterator(); j.hasNext();) {
 						FrameWindow.Frame f = (FrameWindow.Frame) j.next();
 						if (f instanceof FrameWindow.Frameset)
 							framesets.add(f);
@@ -255,9 +244,7 @@ public class ThemeFunctionLibrary {
 
 		// Set window name
 		if (window != null) {
-			script.append(
-				"window.name = \""
-					+ getWindowTargetName(app, window)
+			script.append("window.name = \"" + getWindowTargetName(app, window)
 					+ "\";\n");
 		}
 
@@ -280,14 +267,17 @@ public class ThemeFunctionLibrary {
 		return script.toString();
 	}
 
-	/** Returns an unique target name for a given window name.
-	 *  @param windowName Name of the window.
-	 *  @return An unique ID for window target
-	 *  @throws IllegalStateException If application for window is null.
+	/**
+	 * Returns an unique target name for a given window name.
+	 * 
+	 * @param windowName
+	 *            Name of the window.
+	 * @return An unique ID for window target
+	 * @throws IllegalStateException
+	 *             If application for window is null.
 	 */
-	static public String getWindowTargetName(
-		Application application,
-		Window window) {
+	static public String getWindowTargetName(Application application,
+			Window window) {
 		try {
 			return "" + application.hashCode() + "_" + window.getName();
 		} catch (NullPointerException e) {
@@ -295,16 +285,21 @@ public class ThemeFunctionLibrary {
 		}
 	}
 
-	/** Returns an unique target name for current window.
-	 *  @return An unique ID for window target
+	/**
+	 * Returns an unique target name for current window.
+	 * 
+	 * @return An unique ID for window target
 	 */
 	static public String getWindowTargetName() {
 		return getWindowTargetName(application(), window());
 	}
 
-	/** Returns an unique target name for current window.
-	 *  @return An unique ID for window target
-	 *  @throws IllegalStateException If application for window is null.
+	/**
+	 * Returns an unique target name for current window.
+	 * 
+	 * @return An unique ID for window target
+	 * @throws IllegalStateException
+	 *             If application for window is null.
 	 */
 	static public String getWindowTargetName(String name) {
 		Window w = application().getWindow(name);
@@ -315,52 +310,50 @@ public class ThemeFunctionLibrary {
 	}
 
 	/* Static mapping for 0 to be sunday. */
-	private static int[] weekdays =
-		new int[] {
-			Calendar.SUNDAY,
-			Calendar.MONDAY,
-			Calendar.TUESDAY,
-			Calendar.WEDNESDAY,
-			Calendar.THURSDAY,
-			Calendar.FRIDAY,
-			Calendar.SATURDAY };
+	private static int[] weekdays = new int[] { Calendar.SUNDAY,
+			Calendar.MONDAY, Calendar.TUESDAY, Calendar.WEDNESDAY,
+			Calendar.THURSDAY, Calendar.FRIDAY, Calendar.SATURDAY };
 
-
-	/** Returns the country and region code for current application locale.
+	/**
+	 * Returns the country and region code for current application locale.
+	 * 
 	 * @see Locale#getCountry()
 	 * @return language Country code of the current application locale.
 	 */
 	static public String getLocaleCountryId() {
 		try {
-			Application app =
-				(Application) ((Object[]) state.get())[APPLICATION];
+			Application app = (Application) ((Object[]) state.get())[APPLICATION];
 			return app.getLocale().getCountry();
 		} catch (NullPointerException e) {
 			throw new IllegalStateException();
 		}
 	}
-	/** Returns the language code for current application locale.
+
+	/**
+	 * Returns the language code for current application locale.
+	 * 
 	 * @see Locale#getLanguage()
 	 * @return language Language code for current application locale.
 	 */
 	static public String getLocaleLanguageId() {
 		try {
-			Application app =
-				(Application) ((Object[]) state.get())[APPLICATION];
+			Application app = (Application) ((Object[]) state.get())[APPLICATION];
 			return app.getLocale().getLanguage();
 		} catch (NullPointerException e) {
 			throw new IllegalStateException();
 		}
 	}
 
-	/** Get name for week day.
-	 * @param Number of week day. 0 first day of week.
+	/**
+	 * Get name for week day.
+	 * 
+	 * @param Number
+	 *            of week day. 0 first day of week.
 	 * @return Name of week day in applications current locale.
 	 */
 	static public int getFirstDayOfWeek() {
 		try {
-			Application app =
-				(Application) ((Object[]) state.get())[APPLICATION];
+			Application app = (Application) ((Object[]) state.get())[APPLICATION];
 			Calendar cal = new GregorianCalendar(app.getLocale());
 			int first = cal.getFirstDayOfWeek();
 			for (int i = 0; i < 7; i++) {
@@ -373,14 +366,16 @@ public class ThemeFunctionLibrary {
 		}
 	}
 
-	/** Get name for week day.
-	 * @param Number of week day. 0 sunday, 1 monday, ...
+	/**
+	 * Get name for week day.
+	 * 
+	 * @param Number
+	 *            of week day. 0 sunday, 1 monday, ...
 	 * @return Name of week day in applications current locale.
 	 */
 	static public String getShortWeekday(int dayOfWeek) {
 		try {
-			Application app =
-				(Application) ((Object[]) state.get())[APPLICATION];
+			Application app = (Application) ((Object[]) state.get())[APPLICATION];
 			DateFormatSymbols df = new DateFormatSymbols(app.getLocale());
 			return df.getShortWeekdays()[weekdays[dayOfWeek]];
 		} catch (NullPointerException e) {
@@ -388,14 +383,16 @@ public class ThemeFunctionLibrary {
 		}
 	}
 
-	/** Get short name for month.
-	 * @param Number of month. 0 is January, 1 is February, and so on.
+	/**
+	 * Get short name for month.
+	 * 
+	 * @param Number
+	 *            of month. 0 is January, 1 is February, and so on.
 	 * @return Name of month in applications current locale.
 	 */
 	static public String getShortMonth(int month) {
 		try {
-			Application app =
-				(Application) ((Object[]) state.get())[APPLICATION];
+			Application app = (Application) ((Object[]) state.get())[APPLICATION];
 			DateFormatSymbols df = new DateFormatSymbols(app.getLocale());
 			String monthName = df.getShortMonths()[month];
 			return monthName;
@@ -404,14 +401,16 @@ public class ThemeFunctionLibrary {
 		}
 	}
 
-	/** Get name for month.
-	 * @param Number of month. 0 is January, 1 is February, and so on.
+	/**
+	 * Get name for month.
+	 * 
+	 * @param Number
+	 *            of month. 0 is January, 1 is February, and so on.
 	 * @return Name of month in applications current locale.
 	 */
 	static public String getMonth(int month) {
 		try {
-			Application app =
-				(Application) ((Object[]) state.get())[APPLICATION];
+			Application app = (Application) ((Object[]) state.get())[APPLICATION];
 			DateFormatSymbols df = new DateFormatSymbols(app.getLocale());
 			String monthName = df.getMonths()[month];
 			return monthName;
@@ -420,26 +419,61 @@ public class ThemeFunctionLibrary {
 		}
 	}
 
-	/** Get Form Action URL for the requested window.
+	/**
+	 * Get Form Action URL for the requested window.
 	 * 
-	 * <p>This returns the action for the window main form. This action
-	 * can be set through WebApplicationContect setWindowFormAction method..</p>
+	 * <p>
+	 * This returns the action for the window main form. This action can be set
+	 * through WebApplicationContect setWindowFormAction method..
+	 * </p>
 	 * 
 	 * @return Form action for the current window.
 	 */
 	static public String getFormAction() {
-		
+
 		Window win = window();
 		Application app = application();
-		
-		return ((WebApplicationContext)app.getContext()).getWindowFormAction(win);
+
+		return ((WebApplicationContext) app.getContext())
+				.getWindowFormAction(win);
+	}
+
+	/** Generate links for CSS files to be included in html head. */
+	static public String getCssLinksForHead() {
+		ApplicationServlet as = (ApplicationServlet) ((Object[]) state.get())[WEBADAPTERSERVLET];
+		Theme t = as.getThemeSource().getThemeByName(theme());
+		Collection allFiles = t.getFileNames(browser(), Theme.MODE_XSLT);
+		StringBuffer links = new StringBuffer();
+		for (Iterator i = allFiles.iterator(); i.hasNext();) {
+			String file = (String) i.next();
+			if (file.endsWith(".css")) {
+				links
+						.append("<LINK REL=\"STYLESHEET\" TYPE=\"text/css\" HREF=\""
+								+ resource(file) + "\"/>\n");
+			}
+		}
+		return links.toString();
+	}
+
+	/** Generate links for JavaScript files to be included in html head. */
+	static public String getJavaScriptLinksForHead() {
+		ApplicationServlet as = (ApplicationServlet) ((Object[]) state.get())[WEBADAPTERSERVLET];
+		Theme t = as.getThemeSource().getThemeByName(theme());
+		Collection allFiles = t.getFileNames(browser(), Theme.MODE_XSLT);
+		StringBuffer links = new StringBuffer();
+		for (Iterator i = allFiles.iterator(); i.hasNext();) {
+			String file = (String) i.next();
+			if (file.endsWith(".js")) {
+				links.append("<SCRIPT LANGUAGE=\"Javascript\" SRC=\""
+						+ resource(file) + "\"></SCRIPT>\n");
+			}
+		}
+		return links.toString();
 	}
 
 	/** Generate JavaScript for updating given window */
-	static protected String getWindowRefreshScript(
-		Application application,
-		Window window,
-		WebBrowser browser) {
+	static protected String getWindowRefreshScript(Application application,
+			Window window, WebBrowser browser) {
 
 		if (application == null)
 			return "";
@@ -453,9 +487,8 @@ public class ThemeFunctionLibrary {
 		// If window is closed or hidden
 		if (window.getApplication() == null || !window.isVisible())
 			return "win = window.open(\"\",\""
-				+ getWindowTargetName(application, window)
-				+ "\");\n  "
-				+ "if (win != null) { win.close(); }\n";
+					+ getWindowTargetName(application, window) + "\");\n  "
+					+ "if (win != null) { win.close(); }\n";
 
 		String url = window.getURL().toString();
 
@@ -465,51 +498,43 @@ public class ThemeFunctionLibrary {
 		if (width >= 0)
 			features += "width=" + width;
 		if (height >= 0)
-			features += ((features.length() > 0) ? "," : "")
-				+ "height="
-				+ height;
+			features += ((features.length() > 0) ? "," : "") + "height="
+					+ height;
 		switch (window.getBorder()) {
-			case Window.BORDER_NONE :
-				features += ((features.length() > 0) ? "," : "")
+		case Window.BORDER_NONE:
+			features += ((features.length() > 0) ? "," : "")
 					+ "toolbar=0,location=0,menubar=0,status=0,resizable=1,scrollbars="
 					+ (window.isScrollable() ? "1" : "0");
-				break;
-			case Window.BORDER_MINIMAL :
-				features += ((features.length() > 0) ? "," : "")
+			break;
+		case Window.BORDER_MINIMAL:
+			features += ((features.length() > 0) ? "," : "")
 					+ "toolbar=1,location=0,menubar=0,status=1,resizable=1,scrollbars="
 					+ (window.isScrollable() ? "1" : "0");
-				break;
-			case Window.BORDER_DEFAULT :
-				features += ((features.length() > 0) ? "," : "")
+			break;
+		case Window.BORDER_DEFAULT:
+			features += ((features.length() > 0) ? "," : "")
 					+ "toolbar=1,location=1,menubar=1,status=1,resizable=1,scrollbars="
 					+ (window.isScrollable() ? "1" : "0");
-				break;
+			break;
 		}
 
-		String script =
-			"win = window.open(\"\",\""
-				+ getWindowTargetName(application, window)
-				+ "\",\""
-				+ features
-				+ "\");\n"
-				+ "if (win != null) {"
-				+ "var form = null;";
+		String script = "win = window.open(\"\",\""
+				+ getWindowTargetName(application, window) + "\",\"" + features
+				+ "\");\n" + "if (win != null) {" + "var form = null;";
 
 		if (browser != null
-			&& (browser.getJavaScriptVersion().supports(WebBrowser.JAVASCRIPT_1_5)
-				|| browser.getJavaScriptVersion().supports(
-					WebBrowser.JSCRIPT_1_0))) {
+				&& (browser.getJavaScriptVersion().supports(
+						WebBrowser.JAVASCRIPT_1_5) || browser
+						.getJavaScriptVersion()
+						.supports(WebBrowser.JSCRIPT_1_0))) {
 			script += "try { form = win.document.forms[\"millstone\"];"
-				+ "} catch (e) { form = null;}";
+					+ "} catch (e) { form = null;}";
 		} else {
 			script += "form = win.document.forms[\"millstone\"];";
 		}
 
-		script += "if (form != null) {"
-			+ "form.submit();"
-			+ "} else {win.location.href = \""
-			+ url
-			+ "\";}}";
+		script += "if (form != null) {" + "form.submit();"
+				+ "} else {win.location.href = \"" + url + "\";}}";
 
 		return script;
 	}

@@ -1,31 +1,30 @@
 /* *************************************************************************
  
-                               IT Mill Toolkit 
+ IT Mill Toolkit 
 
-               Development of Browser User Intarfaces Made Easy
+ Development of Browser User Intarfaces Made Easy
 
-                    Copyright (C) 2000-2006 IT Mill Ltd
-                     
-   *************************************************************************
+ Copyright (C) 2000-2006 IT Mill Ltd
+ 
+ *************************************************************************
 
-   This product is distributed under commercial license that can be found
-   from the product package on license/license.txt. Use of this product might 
-   require purchasing a commercial license from IT Mill Ltd. For guidelines 
-   on usage, see license/licensing-guidelines.html
+ This product is distributed under commercial license that can be found
+ from the product package on license/license.txt. Use of this product might 
+ require purchasing a commercial license from IT Mill Ltd. For guidelines 
+ on usage, see license/licensing-guidelines.html
 
-   *************************************************************************
-   
-   For more information, contact:
-   
-   IT Mill Ltd                           phone: +358 2 4802 7180
-   Ruukinkatu 2-4                        fax:   +358 2 4802 7181
-   20540, Turku                          email:  info@itmill.com
-   Finland                               company www: www.itmill.com
-   
-   Primary source for information and releases: www.itmill.com
+ *************************************************************************
+ 
+ For more information, contact:
+ 
+ IT Mill Ltd                           phone: +358 2 4802 7180
+ Ruukinkatu 2-4                        fax:   +358 2 4802 7181
+ 20540, Turku                          email:  info@itmill.com
+ Finland                               company www: www.itmill.com
+ 
+ Primary source for information and releases: www.itmill.com
 
-   ********************************************************************** */
-
+ ********************************************************************** */
 
 package com.itmill.toolkit.terminal.web;
 
@@ -44,35 +43,44 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 
-/** Theme source for reading themes from a JAR archive.
- *  At this time only jar files are supported and an archive
- *  may not contain any recursive archives.
+/**
+ * Theme source for reading themes from a JAR archive. At this time only jar
+ * files are supported and an archive may not contain any recursive archives.
+ * 
  * @author IT Mill Ltd.
- * @version @VERSION@
+ * @version
+ * @VERSION@
  * @since 3.0
  */
 public class ServletThemeSource implements ThemeSource {
 
 	private ServletContext context;
+
 	private Theme theme;
+
 	private String path;
+
 	private ApplicationServlet webAdapterServlet;
+
 	private Cache resourceCache = new Cache();
 
 	/** Collection of subdirectory entries */
 	private URL descFile;
 
-	/** Creates a new instance of ThemeRepository by reading the themes
-	 * from a local directory.
-	 * @param file Path to the JAR archive .
-	 * @param path Path inside the archive to be processed.
-	 * @throws FileNotFoundException if no theme files are found
+	/**
+	 * Creates a new instance of ThemeRepository by reading the themes from a
+	 * local directory.
+	 * 
+	 * @param file
+	 *            Path to the JAR archive .
+	 * @param path
+	 *            Path inside the archive to be processed.
+	 * @throws FileNotFoundException
+	 *             if no theme files are found
 	 */
-	public ServletThemeSource(
-		ServletContext context,
-		ApplicationServlet webAdapterServlet,
-		String path)
-		throws IOException, ThemeException {
+	public ServletThemeSource(ServletContext context,
+			ApplicationServlet webAdapterServlet, String path)
+			throws IOException, ThemeException {
 
 		this.theme = null;
 		this.webAdapterServlet = webAdapterServlet;
@@ -84,23 +92,21 @@ public class ServletThemeSource implements ThemeSource {
 			this.path = this.path + "/";
 		}
 		if ((this.path.length() > 0) && !this.path.startsWith("/")) {
-			this.path = "/" +this.path;
+			this.path = "/" + this.path;
 		}
-		
+
 		// Load description file
 		this.descFile = context.getResource(this.path + Theme.DESCRIPTIONFILE);
-		InputStream entry =
-			context.getResourceAsStream(this.path + Theme.DESCRIPTIONFILE);
+		InputStream entry = context.getResourceAsStream(this.path
+				+ Theme.DESCRIPTIONFILE);
 		try {
 			if (entry != null) {
 				try {
 					this.theme = new Theme(entry);
 				} catch (Exception e) {
 					throw new ThemeException(
-						"ServletThemeSource: Failed to load '"
-							+ path
-							+ "': "
-							+ e);
+							"ServletThemeSource: Failed to load '" + path
+									+ "': " + e);
 				}
 				entry.close();
 
@@ -111,7 +117,7 @@ public class ServletThemeSource implements ThemeSource {
 
 			} else {
 				throw new IllegalArgumentException(
-					"ServletThemeSource: Invalid theme resource: " + path);
+						"ServletThemeSource: Invalid theme resource: " + path);
 			}
 		} finally {
 			if (entry != null)
@@ -120,14 +126,15 @@ public class ServletThemeSource implements ThemeSource {
 	}
 
 	/**
-	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getXSLStreams(Theme, WebBrowser)
+	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getXSLStreams(Theme,
+	 *      WebBrowser)
 	 */
 	public Collection getXSLStreams(Theme theme, WebBrowser type)
-		throws ThemeException {
+			throws ThemeException {
 		Collection xslFiles = new LinkedList();
 
-		// If this directory contains a theme 
-		// return XSL from this theme	
+		// If this directory contains a theme
+		// return XSL from this theme
 		if (this.theme != null) {
 
 			if (webAdapterServlet.isDebugMode()) {
@@ -135,15 +142,15 @@ public class ServletThemeSource implements ThemeSource {
 			}
 
 			// Reload the description file
-			InputStream entry =
-				context.getResourceAsStream(this.path + Theme.DESCRIPTIONFILE);
+			InputStream entry = context.getResourceAsStream(this.path
+					+ Theme.DESCRIPTIONFILE);
 			try {
 				if (entry != null) {
 					this.theme = new Theme(entry);
 				}
 			} catch (Exception e) {
-				throw new ThemeException(
-					"ServletThemeSource: Failed to load '" + path + "': " + e);
+				throw new ThemeException("ServletThemeSource: Failed to load '"
+						+ path + "': " + e);
 			} finally {
 				if (entry != null)
 					try {
@@ -152,21 +159,25 @@ public class ServletThemeSource implements ThemeSource {
 					}
 			}
 
-			Collection fileNames = theme.getFileNames(type);
+			Collection fileNames = theme.getFileNames(type, Theme.MODE_XSLT);
 			// Add all XSL file streams
 			for (Iterator i = fileNames.iterator(); i.hasNext();) {
 				String entryName = (String) i.next();
-				entry =
-					context.getResourceAsStream(
-						(this.path + entryName));
-				xslFiles.add(new XSLStream(entryName,entry));
+				if (entryName.endsWith(".xsl")) {
+
+					entry = context
+							.getResourceAsStream((this.path + entryName));
+					xslFiles.add(new XSLStream(entryName, entry));
+				}
 			}
 
 		}
 		return xslFiles;
 	}
 
-	/** Return modication time of the description file.
+	/**
+	 * Return modication time of the description file.
+	 * 
 	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getModificationTime()
 	 */
 	public long getModificationTime() {
@@ -184,14 +195,13 @@ public class ServletThemeSource implements ThemeSource {
 	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getResource(String)
 	 */
 	public InputStream getResource(String resourceId)
-		throws ThemeSource.ThemeException {
+			throws ThemeSource.ThemeException {
 
 		// Check the id
 		String name = this.getName();
 		int namelen = name.length();
-		if (resourceId == null
-			|| !resourceId.startsWith(name + "/")
-			|| resourceId.length() <= (namelen + 1)) {
+		if (resourceId == null || !resourceId.startsWith(name + "/")
+				|| resourceId.length() <= (namelen + 1)) {
 			return null;
 		}
 
@@ -214,9 +224,9 @@ public class ServletThemeSource implements ThemeSource {
 				while ((n = stream.read(buf)) >= 0) {
 					out.write(buf, 0, n);
 				}
-				try{
+				try {
 					stream.close();
-				} catch (IOException ignored){
+				} catch (IOException ignored) {
 				}
 				data = out.toByteArray();
 
@@ -226,13 +236,13 @@ public class ServletThemeSource implements ThemeSource {
 			} catch (IOException e) {
 			}
 
-		throw new ThemeSource.ThemeException(
-			"Resource " + resourceId + " not found.");
+		throw new ThemeSource.ThemeException("Resource " + resourceId
+				+ " not found.");
 	}
 
 	/**
-	* @see com.itmill.toolkit.terminal.web.ThemeSource#getThemes()
-	*/
+	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getThemes()
+	 */
 	public Collection getThemes() {
 		Collection themes = new LinkedList();
 		if (this.theme != null) {
@@ -242,15 +252,15 @@ public class ServletThemeSource implements ThemeSource {
 	}
 
 	/**
-	* @see com.itmill.toolkit.terminal.web.ThemeSource#getName()
-	*/
+	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getName()
+	 */
 	public String getName() {
 		return this.theme.getName();
 	}
 
-	/**																											 
-	* @see com.itmill.toolkit.terminal.web.ThemeSource#getThemeByName(String)
-	*/
+	/**
+	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getThemeByName(String)
+	 */
 	public Theme getThemeByName(String name) {
 		Collection themes = this.getThemes();
 		for (Iterator i = themes.iterator(); i.hasNext();) {
@@ -263,17 +273,16 @@ public class ServletThemeSource implements ThemeSource {
 
 	/**
 	 * @author IT Mill Ltd.
-		 * @version @VERSION@
-		 * @since 3.0
-		 */
+	 * @version
+	 * @VERSION@
+	 * @since 3.0
+	 */
 	private class Cache {
 
 		private Map data = new HashMap();
 
 		public void put(Object key, Object value) {
-			data.put(
-				key,
-				new SoftReference(new CacheItem(value)));
+			data.put(key, new SoftReference(new CacheItem(value)));
 		}
 
 		public Object get(Object key) {
@@ -290,7 +299,8 @@ public class ServletThemeSource implements ThemeSource {
 
 	/**
 	 * @author IT Mill Ltd.
-	 * @version @VERSION@
+	 * @version
+	 * @VERSION@
 	 * @since 3.0
 	 */
 	private class CacheItem {
