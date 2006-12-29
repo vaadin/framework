@@ -791,9 +791,9 @@ public class Theme extends DefaultHandler {
 		public boolean isMet(WebBrowser terminal) {
 			for (Iterator i = this.requirements.iterator(); i.hasNext();) {
 				if (!((Requirement) i.next()).isMet(terminal))
-					return false;
+					return true;
 			}
-			return true;
+			return false;
 		}
 
 		public String toString() {
