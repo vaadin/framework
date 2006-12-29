@@ -2130,7 +2130,7 @@ DefaultTheme.prototype.renderUpload = function(renderer,uidl,target,layoutInfo) 
 			};
 		} else {
 			iframe.onload = function() {				
-				if (ifr.document != null && (ifr.document.contentType == "application/xml")) {
+				if (ifr.document != null) {
                     iframe.onload = null;
                     client.processVariableChanges(true);
                     // FIXME next line is workaround to 'iframe is not instantly updated after upload is done' bug.
