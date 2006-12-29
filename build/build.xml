@@ -45,19 +45,12 @@
 	<target name="themes" depends="copy-themes-to-lib, theme-jar" />
 
 	<target name="copy-themes-to-lib" depends="init">
-		<copy todir="${output-dir}/lib/web-themes">
+		<copy todir="${output-dir}/lib/themes">
 			<fileset dir="WebContent/WEB-INF/lib/themes">
 				<exclude name="**/.svn" />
-			</fileset>
-		</copy>
-		<copy todir="${output-dir}/lib/ajax-themes">
-			<fileset dir="WebContent">
-				<exclude name="**/.svn" />
-				<include name="themes/**" />
-			</fileset>
-			<fileset dir="WebContent">
-				<exclude name="**/.svn" />
-				<include name="client/**" />
+				<include name="corporate/**/*" />
+				<include name="demo/**/*" />
+				<include name="base/**/*" />
 			</fileset>
 		</copy>
 	</target>
@@ -67,7 +60,6 @@
 			<fileset dir="WebContent/WEB-INF/lib/themes">
 				<patternset>
 					<exclude name="**/.svn" />
-					<include name="default/**/*" />
 					<include name="corporate/**/*" />
 					<include name="base/**/*" />
 				</patternset>
