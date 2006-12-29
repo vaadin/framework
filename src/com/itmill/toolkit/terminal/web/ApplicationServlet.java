@@ -693,12 +693,13 @@ public class ApplicationServlet extends HttpServlet implements
 						page.write("<div id=\"ajax-window\"></div>\n");
 
 						page.write("<script language=\"JavaScript\">\n");
+						String appUrl = getApplicationUrl(request).toString();
 						page
 								.write("var client = new ITMillToolkitClient("
 										+ "document.getElementById('ajax-window'),"
 										+ "\""
-										+ getApplicationUrl(request)
-										+ "/UIDL/"
+										+ appUrl + (appUrl.endsWith("/") ? "" : "/")
+										+ "UIDL/"
 										+ "\",\""
 										+ resourcePath +  ((Theme)themes.get(themes.size()-1)).getName() + "/"
 										
