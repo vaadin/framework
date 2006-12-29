@@ -114,7 +114,7 @@ public class AjaxApplicationManager implements Paintable.RepaintRequestListener,
         application.removeListener((Application.WindowDetachListener) this);
     }
 
-    public void handleXmlHttpRequest(HttpServletRequest request,
+    public void handleUidlRequest(HttpServletRequest request,
             HttpServletResponse response) throws IOException {
 
         boolean repaintAll = request.getParameter(GET_PARAM_REPAINT_ALL) != null;

@@ -52,7 +52,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.Stack;
 import java.util.StringTokenizer;
+import java.util.Vector;
 import java.util.WeakHashMap;
 
 import javax.servlet.ServletContext;
@@ -136,49 +138,49 @@ public class ApplicationServlet extends HttpServlet implements
 
 	private static final String PARAMETER_TRANSFORMER_CACHETIME = "TransformerCacheTime";
 
-	private static int DEFAULT_THEME_CACHETIME = 1000 * 60 * 60 * 24;
+	private static final int DEFAULT_THEME_CACHETIME = 1000 * 60 * 60 * 24;
 
-	private static int DEFAULT_BUFFER_SIZE = 32 * 1024;
+	private static final int DEFAULT_BUFFER_SIZE = 32 * 1024;
 
-	private static int DEFAULT_MAX_TRANSFORMERS = 1;
+	private static final int DEFAULT_MAX_TRANSFORMERS = 1;
 
-	private static int MAX_BUFFER_SIZE = 64 * 1024;
+	private static final int MAX_BUFFER_SIZE = 64 * 1024;
 
-	private static String SESSION_ATTR_VARMAP = "itmill-toolkit-varmap";
+	private static final String SESSION_ATTR_VARMAP = "itmill-toolkit-varmap";
 
-	static String SESSION_ATTR_CONTEXT = "itmill-toolkit-context";
+	private static final String SESSION_ATTR_CONTEXT = "itmill-toolkit-context";
 
-	static String SESSION_ATTR_APPS = "itmill-toolkit-apps";
+	protected static final String SESSION_ATTR_APPS = "itmill-toolkit-apps";
 
-	private static String SESSION_BINDING_LISTENER = "itmill-toolkit-bindinglistener";
+	private static final String SESSION_BINDING_LISTENER = "itmill-toolkit-bindinglistener";
 
 	// TODO Should default or base theme be the default?
-	private static String DEFAULT_THEME = "default";
+	protected static final String DEFAULT_THEME = "base";
 
-	private static String RESOURCE_URI = "/RES/";
+	private static final String RESOURCE_URI = "/RES/";
 
-	private static String AJAX_UIDL_URI = "/UIDL/";
+	private static final String AJAX_UIDL_URI = "/UIDL/";
 
-	private static String THEME_DIRECTORY_PATH = "WEB-INF/lib/themes/";
+	private static final String THEME_DIRECTORY_PATH = "WEB-INF/lib/themes/";
 
-	private static String THEME_LISTING_FILE = THEME_DIRECTORY_PATH
+	private static final String THEME_LISTING_FILE = THEME_DIRECTORY_PATH
 			+ "themes.txt";
 
-	private static String DEFAULT_THEME_JAR_PREFIX = "itmill-toolkit-themes";
+	private static final String DEFAULT_THEME_JAR_PREFIX = "itmill-toolkit-themes";
 
-	private static String DEFAULT_THEME_JAR = "WEB-INF/lib/"
+	private static final String DEFAULT_THEME_JAR = "WEB-INF/lib/"
 			+ DEFAULT_THEME_JAR_PREFIX + "-" + VERSION + ".jar";
 
-	private static String DEFAULT_THEME_TEMP_FILE_PREFIX = "ITMILL_TMP_";
+	private static final String DEFAULT_THEME_TEMP_FILE_PREFIX = "ITMILL_TMP_";
 
-	private static String SERVER_COMMAND_PARAM = "SERVER_COMMANDS";
+	private static final String SERVER_COMMAND_PARAM = "SERVER_COMMANDS";
 
-	private static int SERVER_COMMAND_STREAM_MAINTAIN_PERIOD = 15000;
+	private static final int SERVER_COMMAND_STREAM_MAINTAIN_PERIOD = 15000;
 
-	private static int SERVER_COMMAND_HEADER_PADDING = 2000;
+	private static final int SERVER_COMMAND_HEADER_PADDING = 2000;
 
 	// Maximum delay between request for an user to be considered active (in ms)
-	private static long ACTIVE_USER_REQUEST_INTERVAL = 1000 * 45;
+	private static final long ACTIVE_USER_REQUEST_INTERVAL = 1000 * 45;
 
 	// Private fields
 	private Class applicationClass;
@@ -499,14 +501,8 @@ public class ApplicationServlet extends HttpServlet implements
 		HttpVariableMap variableMap = null;
 		OutputStream out = response.getOutputStream();
 		HashSet currentlyDirtyWindowsForThisApplication = new HashSet();
-		WebApplicationContext appContext = null;
 		Application application = null;
 		try {
-
-			// If the resource path is unassigned, initialize it
-			if (resourcePath == null)
-				resourcePath = request.getContextPath()
-						+ request.getServletPath() + RESOURCE_URI;
 
 			// Handle resource requests
 			if (handleResourceRequest(request, response))
@@ -523,19 +519,15 @@ public class ApplicationServlet extends HttpServlet implements
 			if (application == null)
 				application = createApplication(request);
 
-			// Is this a download request from application
-			DownloadStream download = null;
-
-			// Invoke context transaction listeners
-			if (application != null) {
-				appContext = (WebApplicationContext) application.getContext();
-			}
-			if (appContext != null) {
-				appContext.startTransaction(application, request);
-			}
-
 			// Set the last application request date
 			applicationToLastRequestDate.put(application, new Date());
+
+			// Invoke context transaction listeners
+			((WebApplicationContext) application.getContext())
+					.startTransaction(application, request);
+
+			// Is this a download request from application
+			DownloadStream download = null;
 
 			// The rest of the process is synchronized with the application
 			// in order to guarantee that no parallel variable handling is
@@ -546,7 +538,7 @@ public class ApplicationServlet extends HttpServlet implements
 				String resourceId = request.getPathInfo();
 				if (resourceId != null && resourceId.startsWith(AJAX_UIDL_URI)) {
 
-					getApplicationManager(application).handleXmlHttpRequest(
+					getApplicationManager(application).handleUidlRequest(
 							request, response);
 
 					return;
@@ -594,6 +586,7 @@ public class ApplicationServlet extends HttpServlet implements
 											window, t));
 						}
 					}
+
 					// Remove application if it has stopped
 					if (!application.isRunning()) {
 						endApplication(request, response, application);
@@ -634,33 +627,127 @@ public class ApplicationServlet extends HttpServlet implements
 						window.setTerminal(terminalType);
 					}
 
-					// Find theme and initialize TransformerType
-					UIDLTransformerType transformerType = null;
-					if (window.getTheme() != null) {
-						Theme activeTheme;
-						if ((activeTheme = this.themeSource
-								.getThemeByName(window.getTheme())) != null) {
-							transformerType = new UIDLTransformerType(
-									terminalType, activeTheme);
-						} else {
-							Log
-									.info("Theme named '"
-											+ window.getTheme()
-											+ "' not found. Using system default theme.");
+					// Find theme
+					Theme theme = themeSource
+							.getThemeByName(window.getTheme() != null ? window
+									.getTheme() : DEFAULT_THEME);
+					if (theme == null)
+						throw new ServletException("Default theme (named '"
+								+ DEFAULT_THEME + "') can not be found");
+
+					// If UIDL rendering mode is preferred, a page for it is
+					// rendered
+					String renderingMode = theme.getPreferredMode(terminalType,
+							themeSource);
+					if (Theme.MODE_UIDL.equals(renderingMode)) {
+						response.setContentType("text/html");
+						BufferedWriter page = new BufferedWriter(
+								new OutputStreamWriter(out));
+
+						page
+								.write("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" "
+										+ "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n");
+
+						page.write("<html><head>\n<title>"
+								+ window.getCaption() + "</title>\n");
+
+						Theme t = theme;
+						Vector themes = new Vector();
+						themes.add(t);
+						while (t.getParent() != null) {
+							String parentName = t.getParent();
+							t = themeSource.getThemeByName(parentName);
+							themes.add(t);
 						}
+						for (int k=themes.size()-1; k>=0; k--) {
+							t = (Theme) themes.get(k);
+							Collection files = t.getFileNames(terminalType,
+									Theme.MODE_UIDL);
+							for (Iterator i = files.iterator(); i.hasNext();) {
+								String file = (String) i.next();
+								if (file.endsWith(".css"))
+									page
+											.write("<link rel=\"stylesheet\" href=\""
+													+ getResourceLocation(t
+															.getName(),
+															new ThemeResource(
+																	file))
+													+ "\" type=\"text/css\" />\n");
+								else if (file.endsWith(".js"))
+									page
+											.write("<script src=\""
+													+ getResourceLocation(t
+															.getName(),
+															new ThemeResource(
+																	file))
+													+ "\" type=\"text/javascript\"></script>\n");
+							}
+
+						}
+
+						page.write("</head><body>\n");
+
+						page
+								.write("<div id=\"ajax-wait\"><div>Loading...</div></div>\n");
+
+						page.write("<div id=\"ajax-window\"></div>\n");
+
+						page.write("<script language=\"JavaScript\">\n");
+						page
+								.write("var client = new ITMillToolkitClient("
+										+ "document.getElementById('ajax-window'),"
+										+ "\""
+										+ getApplicationUrl(request)
+										+ "/UIDL/"
+										+ "\",\""
+										+ resourcePath +  ((Theme)themes.get(themes.size()-1)).getName() + "/"
+										
+										+ "client/\",document.getElementById('ajax-wait'));\n");
+
+						// TODO Should we also show debug information?
+						/*
+						 * var debug =
+						 * document.location.href.split("debug=")[1]; if (debug &&
+						 * debug.split("&")[0] == "1") client.debugEnabled =
+						 * true;
+						 */
+
+						for (int k=themes.size()-1; k>=0; k--) {
+							t = (Theme) themes.get(k);
+							String themeObjName = t.getName() + "Theme";
+							themeObjName = themeObjName.substring(0,1).toUpperCase() + themeObjName.substring(1);
+							page
+							.write(" (new "+themeObjName+"(\"" + resourcePath + ((Theme)themes.get(k)).getName()  + "/\")).registerTo(client);\n");
+						}
+						 
+						page.write("client.start();\n");
+
+						page.write("</script>\n");
+
+						page.write("</body></html>\n");
+						page.close();
+
+						return;
 					}
 
-					// Use default theme if selected theme was not found.
-					if (transformerType == null) {
-						Theme defaultTheme = this.themeSource
-								.getThemeByName(ApplicationServlet.DEFAULT_THEME);
-						if (defaultTheme == null) {
-							throw new ServletException(
-									"Default theme not found in the specified theme source(s).");
-						}
-						transformerType = new UIDLTransformerType(terminalType,
-								defaultTheme);
+					// If other than XSLT or UIDL mode is requested
+					if (!Theme.MODE_XSLT.equals(renderingMode)) {
+						// TODO More informal message should be given is browser
+						// is not supported
+						response.setContentType("text/html");
+						BufferedWriter page = new BufferedWriter(
+								new OutputStreamWriter(out));
+						page.write("<html><head></head><body>");
+						page.write("Unsupported browser.");
+						page.write("</body></html>");
+						page.close();
+
+						return;
 					}
+
+					// Initialize Transformer
+					UIDLTransformerType transformerType = new UIDLTransformerType(
+							terminalType, theme);
 
 					transformer = this.transformerFactory
 							.getTransformer(transformerType);
@@ -769,9 +856,9 @@ public class ApplicationServlet extends HttpServlet implements
 				transformerFactory.releaseTransformer(transformer);
 
 			// Notify transaction end
-			if (appContext != null && application != null) {
-				appContext.endTransaction(application, request);
-			}
+			if (application != null)
+				((WebApplicationContext) application.getContext())
+						.endTransaction(application, request);
 
 			// Clean the function library state for this thread
 			// for security reasons
@@ -987,6 +1074,11 @@ public class ApplicationServlet extends HttpServlet implements
 	 */
 	private boolean handleResourceRequest(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException {
+
+		// If the resource path is unassigned, initialize it
+		if (resourcePath == null)
+			resourcePath = request.getContextPath() + request.getServletPath()
+					+ RESOURCE_URI;
 
 		String resourceId = request.getPathInfo();
 

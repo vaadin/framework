@@ -100,7 +100,7 @@ public class WebBrowser implements Terminal {
 	 * @return Name of the terminal window
 	 */
 	public String getDefaultTheme() {
-		return "default";
+		return ApplicationServlet.DEFAULT_THEME;
 	}
 
 	/** Get the name and version of the web browser application.

@@ -1,30 +1,30 @@
 /* *************************************************************************
  
-                               IT Mill Toolkit 
+ IT Mill Toolkit 
 
-               Development of Browser User Intarfaces Made Easy
+ Development of Browser User Intarfaces Made Easy
 
-                    Copyright (C) 2000-2006 IT Mill Ltd
-                     
-   *************************************************************************
+ Copyright (C) 2000-2006 IT Mill Ltd
+ 
+ *************************************************************************
 
-   This product is distributed under commercial license that can be found
-   from the product package on license/license.txt. Use of this product might 
-   require purchasing a commercial license from IT Mill Ltd. For guidelines 
-   on usage, see license/licensing-guidelines.html
+ This product is distributed under commercial license that can be found
+ from the product package on license/license.txt. Use of this product might 
+ require purchasing a commercial license from IT Mill Ltd. For guidelines 
+ on usage, see license/licensing-guidelines.html
 
-   *************************************************************************
-   
-   For more information, contact:
-   
-   IT Mill Ltd                           phone: +358 2 4802 7180
-   Ruukinkatu 2-4                        fax:   +358 2 4802 7181
-   20540, Turku                          email:  info@itmill.com
-   Finland                               company www: www.itmill.com
-   
-   Primary source for information and releases: www.itmill.com
+ *************************************************************************
+ 
+ For more information, contact:
+ 
+ IT Mill Ltd                           phone: +358 2 4802 7180
+ Ruukinkatu 2-4                        fax:   +358 2 4802 7181
+ 20540, Turku                          email:  info@itmill.com
+ Finland                               company www: www.itmill.com
+ 
+ Primary source for information and releases: www.itmill.com
 
-   ********************************************************************** */
+ ********************************************************************** */
 
 package com.itmill.toolkit.terminal.web;
 
@@ -34,12 +34,15 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-/** Theme source for consisting of collection of other theme sources.
- * This class is used to implement the retrieval of themes
- * from multiple sources. Also this class implements the inheritance 
- * of themes by first retrieving the relevant parent theme information.
+/**
+ * Theme source for consisting of collection of other theme sources. This class
+ * is used to implement the retrieval of themes from multiple sources. Also this
+ * class implements the inheritance of themes by first retrieving the relevant
+ * parent theme information.
+ * 
  * @author IT Mill Ltd.
- * @version @VERSION@
+ * @version
+ * @VERSION@
  * @since 3.0
  */
 public class CollectionThemeSource implements ThemeSource {
@@ -54,10 +57,11 @@ public class CollectionThemeSource implements ThemeSource {
 	}
 
 	/**
-	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getXSLStreams(Theme, WebBrowser)
+	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getXSLStreams(Theme,
+	 *      WebBrowser)
 	 */
 	public Collection getXSLStreams(Theme theme, WebBrowser type)
-		throws ThemeException {
+			throws ThemeException {
 		Collection xslFiles = new LinkedList();
 
 		// Add parent theme XSL
@@ -74,17 +78,16 @@ public class CollectionThemeSource implements ThemeSource {
 	}
 
 	private Collection getParentXSLStreams(Theme theme, WebBrowser type)
-		throws ThemeException {
+			throws ThemeException {
 		Collection xslFiles = new LinkedList();
-		Collection parents = theme.getParentThemes();
-		for (Iterator i = parents.iterator(); i.hasNext();) {
-			String name = (String) i.next();
-			Theme parent = this.getThemeByName(name);
+		String parentName = theme.getParent();
+		if (parentName != null) {
+			Theme parent = this.getThemeByName(parentName);
 			if (parent != null) {
 				xslFiles.addAll(this.getXSLStreams(parent, type));
 			} else {
 				throw new ThemeSource.ThemeException(
-					"Parent theme not found for name: " + name);
+						"Parent theme not found for name: " + parentName);
 			}
 		}
 		return xslFiles;
@@ -112,7 +115,7 @@ public class CollectionThemeSource implements ThemeSource {
 		int delim = resourceId.indexOf("/");
 		String subResourceId = "";
 		String themeName = "";
-		if (delim >=0 && delim < resourceId.length() - 1) {
+		if (delim >= 0 && delim < resourceId.length() - 1) {
 			subResourceId = resourceId.substring(delim + 1);
 			themeName = resourceId.substring(0, delim);
 		}
@@ -122,8 +125,9 @@ public class CollectionThemeSource implements ThemeSource {
 		if (themeName.length() > 0) {
 			Theme t = this.getThemeByName(themeName);
 			if (t != null) {
-				themes.add(t.getName());
-				addAllParents(themes, t);
+				themes.add(themeName);
+				if (t.getParent() != null)
+					themes.add(t.getParent());
 			}
 		}
 
@@ -134,8 +138,8 @@ public class CollectionThemeSource implements ThemeSource {
 			// Search all sources
 			for (Iterator i = this.sources.iterator(); i.hasNext();) {
 				try {
-					InputStream in =
-						((ThemeSource) i.next()).getResource(resource);
+					InputStream in = ((ThemeSource) i.next())
+							.getResource(resource);
 					if (in != null)
 						return in;
 				} catch (ThemeException e) {
@@ -144,26 +148,8 @@ public class CollectionThemeSource implements ThemeSource {
 			}
 		}
 
-		throw new ThemeException(
-			"Theme resource not found:"
-				+ subResourceId
-				+ " in themes "
-				+ themes);
-	}
-	/** Recusrivelu get list of parent themes in inheritace order.
-	 *  
-	 * @param t Theme which parents should be listed
-	 * @return Collection of themes in inheritance order.
-	 */
-	private void addAllParents(List list, Theme t) {
-		if (t == null)
-			return;
-
-		List parents = t.getParentThemes();
-		list.addAll(parents);
-		for (Iterator i = parents.iterator(); i.hasNext();) {
-			addAllParents(list, this.getThemeByName((String) i.next()));
-		}
+		throw new ThemeException("Theme resource not found:" + subResourceId
+				+ " in themes " + themes);
 	}
 
 	/**
@@ -190,8 +176,11 @@ public class CollectionThemeSource implements ThemeSource {
 		return null;
 	}
 
-	/**Add new theme source to this collection.
-	 * @param source Theme source to be added.
+	/**
+	 * Add new theme source to this collection.
+	 * 
+	 * @param source
+	 *            Theme source to be added.
 	 */
 	public void add(ThemeSource source) {
 		this.sources.add(source);

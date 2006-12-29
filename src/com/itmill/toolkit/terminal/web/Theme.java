@@ -172,8 +172,8 @@ public class Theme extends DefaultHandler {
 	/** Author of the theme. */
 	private Author author;
 
-	/** List of parent themes */
-	private List parentThemes = new LinkedList();
+	/** Name of the theme, which this theme extends */
+	private String parentTheme = null;
 
 	/** Fileset of included XSL files. */
 	private Fileset files = null;
@@ -234,26 +234,30 @@ public class Theme extends DefaultHandler {
 	 * Get the preferred operating mode supported by this theme for given
 	 * terminal.
 	 */
-	public String getPreferredMode(WebBrowser terminal) {
+	public String getPreferredMode(WebBrowser terminal, ThemeSource themeSource) {
 
 		// If no supported modes are declared, then we use parents preferred
 		// mode
-		if (parentThemes != null && parentThemes.size() > 0
-				&& supportedModes.keySet().isEmpty())
-			return ((Theme) parentThemes.get(0)).getPreferredMode(terminal);
-
+		if (parentTheme != null
+				&& supportedModes.keySet().isEmpty()) {
+			Theme parent = themeSource.getThemeByName(parentTheme);
+			if (parent == null)
+				throw new IllegalStateException("Parent theme '"+parentTheme+"' is not found for theme '"+getName()+"'.");
+			return parent.getPreferredMode(terminal, themeSource);
+		}
+		
 		// Iterate and test the modes in order
 		for (Iterator i = supportedModes.keySet().iterator(); i.hasNext();) {
 			String mode = (String) i.next();
-			if (supportsMode(mode, terminal))
+			if (supportsMode(mode, terminal,themeSource))
 				return mode;
 		}
 
-		return MODE_FALLBACK;
+		return null;
 	}
 
 	/** Tests if this theme suppors given mode */
-	public boolean supportsMode(String mode, WebBrowser terminal) {
+	public boolean supportsMode(String mode, WebBrowser terminal, ThemeSource themeSource) {
 
 		// Theme must explicitly support the given mode
 		RequirementCollection rc = (RequirementCollection) supportedModes
@@ -262,9 +266,13 @@ public class Theme extends DefaultHandler {
 			return false;
 
 		// All parents must also support the mode
-		for (Iterator i = parentThemes.iterator(); i.hasNext();)
-			if (!((Theme) i.next()).supportsMode(mode, terminal))
-				return false;
+		if (parentTheme != null) {
+			Theme parent = themeSource.getThemeByName(parentTheme);
+			if (parent == null)
+				throw new IllegalStateException("Parent theme '"+parentTheme+"' is not found for theme '"+getName()+"'.");
+			if(!parent.supportsMode(mode, terminal, themeSource))
+			return false;
+		}
 
 		return true;
 	}
@@ -324,7 +332,9 @@ public class Theme extends DefaultHandler {
 			if (this.name.equals(themeName))
 				throw new IllegalArgumentException("Theme " + this.name
 						+ " extends itself.");
-			this.parentThemes.add(themeName);
+			if (parentTheme != null)
+				throw new IllegalArgumentException("Only one extends statement is allowed");
+			this.parentTheme = themeName;
 		} else if (TAG_FILE.equals(qName)) {
 			File f = new File(atts.getValue(ATTR_NAME));
 			if (this.openFilesets.isEmpty()) {
@@ -437,6 +447,11 @@ public class Theme extends DefaultHandler {
 			this.modesListCurrentlyOpen = false;
 		} else if (TAG_MODE.equals(qName)) {
 			this.currentlyOpenMode = null;
+		} else if (TAG_OR.equals(qName) || TAG_AND.equals(qName)) {
+			RequirementCollection r = (RequirementCollection) openRequirements.pop();
+			if (openRequirements.size() < 1)
+				throw new IllegalStateException();
+			((RequirementCollection)openRequirements.peek()).addRequirement(r);
 		}
 	}
 
@@ -532,8 +547,8 @@ public class Theme extends DefaultHandler {
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
-		return this.name + " author=[" + this.author + "]" + " inherits="
-				+ parentThemes + "]" + " files={"
+		return this.name + " author='" + this.author + "'" + (parentTheme != null ? " inherits='"
+				+ parentTheme + "'" : "" )+ " files={"
 				+ (files != null ? files.toString() : "null") + "}";
 	}
 
@@ -1082,13 +1097,11 @@ public class Theme extends DefaultHandler {
 	}
 
 	/**
-	 * Returns the list of parent themes of this theme. Returns list of all
-	 * inherited themes in the inheritance order.
+	 * Returns the name of the parent theme.
 	 * 
-	 * @return List of parent theme instances.
 	 */
-	public List getParentThemes() {
-		return parentThemes;
+	public String getParent() {
+		return parentTheme;
 	}
 
 	/** Get theme description */
