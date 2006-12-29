@@ -2084,11 +2084,10 @@ DefaultTheme.prototype.renderUpload = function(renderer,uidl,target,layoutInfo) 
 		// Nasty, but without this the browsers fail 
 		// to create any elements into window.
         // TODO import CSS file to get right background-color for IE
-		var code="<HTML><BODY STYLE=\" overflow: hidden; border: none; margin: 0px; padding: 0px;background-color: transparent;\"><\/BODY><\/HTML>";
+		var code="<HTML><HEAD><STYLE TYPE=\"text/css\">html,body {overflow: hidden; border: none; margin: 0px; padding: 0px;background: transparent;}</STYLE></HEAD><BODY><\/BODY><\/HTML>";
 	    ifr.document.open();
 	    ifr.document.write(code);
 	    ifr.document.close();
-	    
 	        
 	    // Ok. Now we are ready render the actual upload form and 
 	    // inputs.
@@ -2096,10 +2095,10 @@ DefaultTheme.prototype.renderUpload = function(renderer,uidl,target,layoutInfo) 
 		form.setAttribute("action",client.ajaxAdapterServletUrl);
 		form.setAttribute("method", "post");
 		form.setAttribute("enctype", "multipart/form-data");
-		if (document.all) {
+		if (document.all && !window.opera) {
 		    form = ifr.document.createElement('<form action="'+client.ajaxAdapterServletUrl+'" method="post" enctype="multipart/form-data">');		    
 		}
-		var upload  = theme.createInputElementTo(form, "file");		
+		var upload  = theme.createInputElementTo(form, "file");
 		upload.id = varNode.getAttribute("id");
 		upload.name = varNode.getAttribute("id");
 		var submit  = theme.createInputElementTo(form, "submit");	
@@ -2120,7 +2119,7 @@ DefaultTheme.prototype.renderUpload = function(renderer,uidl,target,layoutInfo) 
 		ifr.document.body.appendChild(form);
 
 		// Attach event listeners for processing the chencges after upload.
-		if (document.all) {
+		if (document.all && !window.opera) {
 			iframe.onreadystatechange = function() {			
 				if (iframe.readyState == "complete") {
                     iframe.onreadystatechange = null;
