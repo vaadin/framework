@@ -52,7 +52,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import java.util.Stack;
 import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.WeakHashMap;
@@ -72,6 +71,12 @@ import com.itmill.toolkit.Application;
 import com.itmill.toolkit.Application.WindowAttachEvent;
 import com.itmill.toolkit.Application.WindowDetachEvent;
 import com.itmill.toolkit.service.FileTypeResolver;
+import com.itmill.toolkit.service.License;
+import com.itmill.toolkit.service.License.InvalidLicenseFile;
+import com.itmill.toolkit.service.License.LicenseFileHasAlreadyBeenRead;
+import com.itmill.toolkit.service.License.LicenseFileHasNotBeenRead;
+import com.itmill.toolkit.service.License.LicenseSignatureIsInvalid;
+import com.itmill.toolkit.service.License.LicenseViolation;
 import com.itmill.toolkit.terminal.DownloadStream;
 import com.itmill.toolkit.terminal.Paintable;
 import com.itmill.toolkit.terminal.ParameterHandler;
@@ -80,12 +85,6 @@ import com.itmill.toolkit.terminal.URIHandler;
 import com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent;
 import com.itmill.toolkit.terminal.web.ThemeSource.ThemeException;
 import com.itmill.toolkit.ui.Window;
-import com.itmill.toolkit.service.License;
-import com.itmill.toolkit.service.License.InvalidLicenseFile;
-import com.itmill.toolkit.service.License.LicenseFileHasAlreadyBeenRead;
-import com.itmill.toolkit.service.License.LicenseFileHasNotBeenRead;
-import com.itmill.toolkit.service.License.LicenseSignatureIsInvalid;
-import com.itmill.toolkit.service.License.LicenseViolation;
 
 /**
  * This servlet connects IT Mill Toolkit Application to Web. This servlet
