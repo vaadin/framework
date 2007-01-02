@@ -36,6 +36,7 @@ package com.itmill.toolkit.terminal.web;
  */
 public class UIDLTransformerException extends java.lang.Exception {
 
+	private static final long serialVersionUID = 5648982356058143223L;
 	private String HTMLDescription = null;
 	private Throwable transformException = null;
 	

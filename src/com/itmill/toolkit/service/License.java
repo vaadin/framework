@@ -627,45 +627,65 @@ public class License {
 	}
 
 	public class LicenseViolation extends Exception {
+
+		private static final long serialVersionUID = -1907168254265902098L;
+
 		public LicenseViolation(String msg) {
 			super(msg);
 		}
 	}
 
 	public class LicenseFileHasAlreadyBeenRead extends Exception {
+		private static final long serialVersionUID = 6531225916088537239L;
 	}
 
 	public class LicenseFileHasNotBeenRead extends Exception {
+		private static final long serialVersionUID = -2298284163422128284L;
 	}
 
 	public class LicenseSignatureIsInvalid extends Exception {
+		private static final long serialVersionUID = -1931663861678614927L;
 	}
 
 	public class TooManyConcurrentUsers extends LicenseViolation {
+		private static final long serialVersionUID = -2388655757006023599L;
+
 		public TooManyConcurrentUsers(String msg) {
 			super(msg);
 		}
 	}
 
 	public class LicenseHasExpired extends LicenseViolation {
+
+		private static final long serialVersionUID = -8631335939895587668L;
+
 		public LicenseHasExpired(String msg) {
 			super(msg);
 		}
 	}
 
 	public class ApplicationClassNameDoesNotMatch extends LicenseViolation {
+		
+		private static final long serialVersionUID = 5837570791695513847L;
+
 		public ApplicationClassNameDoesNotMatch(String msg) {
 			super(msg);
 		}
 	}
 
 	public class InvalidLicenseFile extends Exception {
+
+		private static final long serialVersionUID = -1624980115082095017L;
+
 		InvalidLicenseFile(String message) {
 			super(message);
 		}
 	}
 
 	public class LicenseFileCanNotBeRead extends Exception {
+
+		private static final long serialVersionUID = -362237440802937818L;
+
 		LicenseFileCanNotBeRead(String message) {
 			super(message);
 		}

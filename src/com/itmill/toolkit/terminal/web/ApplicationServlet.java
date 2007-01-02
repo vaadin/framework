@@ -100,6 +100,8 @@ public class ApplicationServlet extends HttpServlet implements
 		Application.WindowAttachListener, Application.WindowDetachListener,
 		Paintable.RepaintRequestListener {
 
+	private static final long serialVersionUID = -4937882979845826574L;
+
 	/** Version number of this release. For example "4.0.0" */
 	public static final String VERSION;
 
