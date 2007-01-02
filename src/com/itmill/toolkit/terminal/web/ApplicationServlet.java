@@ -745,7 +745,8 @@ public class ApplicationServlet extends HttpServlet implements
 					}
 
 					// If other than XSLT or UIDL mode is requested
-					if (!Theme.MODE_XSLT.equals(renderingMode) && !(window instanceof DebugWindow)) {
+					if (!Theme.MODE_XSLT.equals(renderingMode)
+							&& !(window instanceof DebugWindow)) {
 						// TODO More informal message should be given is browser
 						// is not supported
 						response.setContentType("text/html");
@@ -1492,8 +1493,8 @@ public class ApplicationServlet extends HttpServlet implements
 				}
 		} else if (window != debugWindow) {
 			if (isDebugMode(params))
-			debugWindow.requestRepaint();
-			else 
+				debugWindow.requestRepaint();
+			else
 				application.removeWindow(debugWindow);
 		}
 
@@ -1525,7 +1526,8 @@ public class ApplicationServlet extends HttpServlet implements
 	public boolean isDebugMode(Map parameters) {
 		if (parameters != null) {
 			Object[] debug = (Object[]) parameters.get("debug");
-			if (debug != null && !"false".equals(debug[0].toString()))
+			if (debug != null && !"false".equals(debug[0].toString())
+					&& !"false".equals(debugMode))
 				return true;
 		}
 		return "true".equals(debugMode);
