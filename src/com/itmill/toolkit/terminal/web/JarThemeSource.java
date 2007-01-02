@@ -112,7 +112,7 @@ public class JarThemeSource implements ThemeSource {
 			}
 
 			// Debug info
-			if (webAdapterServlet.isDebugMode()) {
+			if (webAdapterServlet.isDebugMode(null)) {
 				Log.debug("Added JarThemeSource: " + this.file + ":"
 						+ this.path);
 			}
@@ -133,7 +133,7 @@ public class JarThemeSource implements ThemeSource {
 			}
 
 			if (this.subdirs.isEmpty()) {
-				if (webAdapterServlet.isDebugMode()) {
+				if (webAdapterServlet.isDebugMode(null)) {
 					Log.info("JarThemeSource: Ignoring empty JAR path: "
 							+ this.file + " path: " + this.path);
 				}
@@ -152,7 +152,7 @@ public class JarThemeSource implements ThemeSource {
 		// return XSL from this theme
 		if (this.theme != null) {
 
-			if (webAdapterServlet.isDebugMode()) {
+			if (webAdapterServlet.isDebugMode(null)) {
 				Log.info("JarThemeSource: Loading XSL from: " + theme);
 			}
 

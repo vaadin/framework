@@ -131,7 +131,7 @@ public class UIDLTransformerFactory {
 			//  list if necessary
 			long lastmod = this.themeSource.getModificationTime();
 			if (list != null && this.themeSourceModificationTime < lastmod) {
-				if (webAdapterServlet.isDebugMode()) {
+				if (webAdapterServlet.isDebugMode(null)) {
 					Log.info(
 						"Theme source modified since "
 							+ new Date(this.themeSourceModificationTime)
@@ -151,7 +151,7 @@ public class UIDLTransformerFactory {
 		if (list != null && !list.isEmpty()) {
 			// If available, return the first available transformer
 			t = (UIDLTransformer) list.removeFirst();
-			if (webAdapterServlet.isDebugMode()) {
+			if (webAdapterServlet.isDebugMode(null)) {
 				Log.info("Reserved existing transformer: " + type);
 			}
 		} else {
@@ -160,7 +160,7 @@ public class UIDLTransformerFactory {
 			// spool when they are released.
 			t = new UIDLTransformer(type, themeSource, webAdapterServlet);
 			transformerCount++;
-			if (webAdapterServlet.isDebugMode()) {
+			if (webAdapterServlet.isDebugMode(null)) {
 				Log.info(
 					"Created new transformer ("
 						+ transformerCount
@@ -172,7 +172,7 @@ public class UIDLTransformerFactory {
 			if (list == null) {
 				list = new TransformerList();
 				this.transformerSpool.put(type, list);
-				if (webAdapterServlet.isDebugMode()) {
+				if (webAdapterServlet.isDebugMode(null)) {
 					Log.info("Created new type: " + type);
 				}
 			}
@@ -198,7 +198,7 @@ public class UIDLTransformerFactory {
 					transformer.getTransformerType());
 			if (list != null) {
 				list.add(transformer);
-				if (webAdapterServlet.isDebugMode()) {
+				if (webAdapterServlet.isDebugMode(null)) {
 					Log.info(
 						"Released transformer: "
 							+ transformer.getTransformerType()
@@ -256,7 +256,7 @@ public class UIDLTransformerFactory {
 			if (l != null) {
 				if (l.lastUsed > 0
 					&& l.lastUsed < (currentTime - this.cacheTime)) {
-					if (webAdapterServlet.isDebugMode()) {
+					if (webAdapterServlet.isDebugMode(null)) {
 						Log.info(
 							"Removed transformer: "
 								+ type

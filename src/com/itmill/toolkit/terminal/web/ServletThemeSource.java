@@ -111,7 +111,7 @@ public class ServletThemeSource implements ThemeSource {
 				entry.close();
 
 				// Debug info
-				if (webAdapterServlet.isDebugMode()) {
+				if (webAdapterServlet.isDebugMode(null)) {
 					Log.debug("Added ServletThemeSource: " + this.path);
 				}
 
@@ -137,7 +137,7 @@ public class ServletThemeSource implements ThemeSource {
 		// return XSL from this theme
 		if (this.theme != null) {
 
-			if (webAdapterServlet.isDebugMode()) {
+			if (webAdapterServlet.isDebugMode(null)) {
 				Log.info("ServletThemeSource: Loading theme: " + theme);
 			}
 

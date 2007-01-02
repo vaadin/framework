@@ -101,10 +101,6 @@ public class WebPaintTarget implements PaintTarget {
 		//Add document declaration
 		this.print(UIDL_XML_DECL + "\n\n");
 
-		// In debug mode add DOCTYPE element
-		if (webAdapterServlet.isDebugMode()) {
-			//this.print(UIDL_DOCTYPE_DECL + "\n\n");
-		}
 		// Add UIDL start tag and its attributes
 		this.startTag("uidl");
 

@@ -193,7 +193,7 @@ public class ApplicationServlet extends HttpServlet implements
 
 	private String resourcePath = null;
 
-	private boolean debugMode = false;
+	private String debugMode = "";
 
 	private int maxConcurrentTransformers;
 
@@ -256,9 +256,14 @@ public class ApplicationServlet extends HttpServlet implements
 		}
 
 		// Get the debug window parameter
-		String debug = getApplicationOrSystemProperty(PARAMETER_DEBUG, "false");
+		String debug = getApplicationOrSystemProperty(PARAMETER_DEBUG, "")
+				.toLowerCase();
 		// Enable application specific debug
-		this.debugMode = debug.equals("true");
+		if (!"".equals(debug) && !"true".equals(debug)
+				&& !"false".equals(debug))
+			throw new ServletException(
+					"If debug parameter is given for an application, it must be 'true' or 'false'");
+		this.debugMode = debug;
 
 		// Get the maximum number of simultaneous transformers
 		this.maxConcurrentTransformers = Integer
@@ -403,7 +408,7 @@ public class ApplicationServlet extends HttpServlet implements
 			while ((line = reader.readLine()) != null) {
 				sourcePaths.add(THEME_DIRECTORY_PATH + line.trim());
 			}
-			if (this.isDebugMode()) {
+			if (this.isDebugMode(null)) {
 				Log.debug("Listed " + sourcePaths.size() + " themes in "
 						+ THEME_LISTING_FILE + ". Loading " + sourcePaths);
 			}
@@ -414,7 +419,7 @@ public class ApplicationServlet extends HttpServlet implements
 		// If no file was found or it was empty,
 		// try to add themes filesystem directory if it is accessible
 		if (sourcePaths.size() <= 0) {
-			if (this.isDebugMode()) {
+			if (this.isDebugMode(null)) {
 				Log.debug("No themes listed in " + THEME_LISTING_FILE
 						+ ". Trying to read the content of directory "
 						+ THEME_DIRECTORY_PATH);
@@ -572,7 +577,8 @@ public class ApplicationServlet extends HttpServlet implements
 					// Find the window within the application
 					Window window = null;
 					if (application.isRunning())
-						window = getApplicationWindow(request, application);
+						window = getApplicationWindow(request, application,
+								unhandledParameters);
 
 					// Handle the unhandled parameters if the application is
 					// still running
@@ -639,7 +645,11 @@ public class ApplicationServlet extends HttpServlet implements
 					// rendered
 					String renderingMode = theme.getPreferredMode(terminalType,
 							themeSource);
-					if (Theme.MODE_UIDL.equals(renderingMode)) {
+					if (unhandledParameters.get("renderingMode") != null)
+						renderingMode = (String) ((Object[]) unhandledParameters
+								.get("renderingMode"))[0];
+					if (Theme.MODE_UIDL.equals(renderingMode)
+							&& !(window instanceof DebugWindow)) {
 						response.setContentType("text/html");
 						BufferedWriter page = new BufferedWriter(
 								new OutputStreamWriter(out));
@@ -659,7 +669,7 @@ public class ApplicationServlet extends HttpServlet implements
 							t = themeSource.getThemeByName(parentName);
 							themes.add(t);
 						}
-						for (int k=themes.size()-1; k>=0; k--) {
+						for (int k = themes.size() - 1; k >= 0; k--) {
 							t = (Theme) themes.get(k);
 							Collection files = t.getFileNames(terminalType,
 									Theme.MODE_UIDL);
@@ -698,29 +708,32 @@ public class ApplicationServlet extends HttpServlet implements
 								.write("var client = new ITMillToolkitClient("
 										+ "document.getElementById('ajax-window'),"
 										+ "\""
-										+ appUrl + (appUrl.endsWith("/") ? "" : "/")
+										+ appUrl
+										+ (appUrl.endsWith("/") ? "" : "/")
 										+ "UIDL/"
 										+ "\",\""
-										+ resourcePath +  ((Theme)themes.get(themes.size()-1)).getName() + "/"
-										
+										+ resourcePath
+										+ ((Theme) themes
+												.get(themes.size() - 1))
+												.getName()
+										+ "/"
+
 										+ "client/\",document.getElementById('ajax-wait'));\n");
 
-						// TODO Should we also show debug information?
-						/*
-						 * var debug =
-						 * document.location.href.split("debug=")[1]; if (debug &&
-						 * debug.split("&")[0] == "1") client.debugEnabled =
-						 * true;
-						 */
-
-						for (int k=themes.size()-1; k>=0; k--) {
+						for (int k = themes.size() - 1; k >= 0; k--) {
 							t = (Theme) themes.get(k);
 							String themeObjName = t.getName() + "Theme";
-							themeObjName = themeObjName.substring(0,1).toUpperCase() + themeObjName.substring(1);
-							page
-							.write(" (new "+themeObjName+"(\"" + resourcePath + ((Theme)themes.get(k)).getName()  + "/\")).registerTo(client);\n");
+							themeObjName = themeObjName.substring(0, 1)
+									.toUpperCase()
+									+ themeObjName.substring(1);
+							page.write(" (new " + themeObjName + "(\""
+									+ resourcePath
+									+ ((Theme) themes.get(k)).getName()
+									+ "/\")).registerTo(client);\n");
 						}
-						 
+
+						if (isDebugMode(unhandledParameters))
+							page.write("client.debugEnabled =true;\n");
 						page.write("client.start();\n");
 
 						page.write("</script>\n");
@@ -732,7 +745,7 @@ public class ApplicationServlet extends HttpServlet implements
 					}
 
 					// If other than XSLT or UIDL mode is requested
-					if (!Theme.MODE_XSLT.equals(renderingMode)) {
+					if (!Theme.MODE_XSLT.equals(renderingMode) && !(window instanceof DebugWindow)) {
 						// TODO More informal message should be given is browser
 						// is not supported
 						response.setContentType("text/html");
@@ -1418,7 +1431,7 @@ public class ApplicationServlet extends HttpServlet implements
 	 * @return Window mathing the given URI or null if not found.
 	 */
 	private Window getApplicationWindow(HttpServletRequest request,
-			Application application) throws ServletException {
+			Application application, Map params) throws ServletException {
 
 		Window window = null;
 
@@ -1464,18 +1477,25 @@ public class ApplicationServlet extends HttpServlet implements
 		}
 
 		// Create and open new debug window for application if requested
-		if (this.debugMode
-				&& application.getWindow(DebugWindow.WINDOW_NAME) == null)
-			try {
-				DebugWindow debugWindow = new DebugWindow(application, request
-						.getSession(false), this);
-				debugWindow.setWidth(370);
-				debugWindow.setHeight(480);
-				application.addWindow(debugWindow);
-			} catch (Exception e) {
-				throw new ServletException(
-						"Failed to create debug window for application", e);
-			}
+		Window debugWindow = application.getWindow(DebugWindow.WINDOW_NAME);
+		if (debugWindow == null) {
+			if (isDebugMode(params))
+				try {
+					debugWindow = new DebugWindow(application, request
+							.getSession(false), this);
+					debugWindow.setWidth(370);
+					debugWindow.setHeight(480);
+					application.addWindow(debugWindow);
+				} catch (Exception e) {
+					throw new ServletException(
+							"Failed to create debug window for application", e);
+				}
+		} else if (window != debugWindow) {
+			if (isDebugMode(params))
+			debugWindow.requestRepaint();
+			else 
+				application.removeWindow(debugWindow);
+		}
 
 		return window;
 	}
@@ -1502,8 +1522,13 @@ public class ApplicationServlet extends HttpServlet implements
 	 * 
 	 * @return Debug mode
 	 */
-	public boolean isDebugMode() {
-		return debugMode;
+	public boolean isDebugMode(Map parameters) {
+		if (parameters != null) {
+			Object[] debug = (Object[]) parameters.get("debug");
+			if (debug != null && !"false".equals(debug[0].toString()))
+				return true;
+		}
+		return "true".equals(debugMode);
 	}
 
 	/**

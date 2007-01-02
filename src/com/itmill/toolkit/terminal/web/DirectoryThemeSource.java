@@ -80,7 +80,7 @@ public class DirectoryThemeSource implements ThemeSource {
 			}
 
 			// Debug info
-			if (webAdapterServlet.isDebugMode()) {
+			if (webAdapterServlet.isDebugMode(null)) {
 				Log.info("Added DirectoryThemeSource: " + this.path);
 			}
 
@@ -99,7 +99,7 @@ public class DirectoryThemeSource implements ThemeSource {
 			}
 
 			if (this.subdirs.isEmpty()) {
-				if (webAdapterServlet.isDebugMode()) {
+				if (webAdapterServlet.isDebugMode(null)) {
 					Log.debug(
 						"DirectoryThemeSource: Ignoring empty directory: "
 							+ path);
@@ -119,7 +119,7 @@ public class DirectoryThemeSource implements ThemeSource {
 		// return XSL from this theme	
 		if (this.theme != null) {
 
-			if (webAdapterServlet.isDebugMode()) {
+			if (webAdapterServlet.isDebugMode(null)) {
 				Log.info("DirectoryThemeSource: Loading XSL from: " + theme);
 			}
 
