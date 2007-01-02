@@ -142,11 +142,6 @@ public class Upload extends AbstractComponent implements Component.Focusable {
 		target.addUploadStreamVariable(this, "stream");
 	}
 
-	/** Notify all upload listeners */
-	private void notifyListeners() {
-		// TODO This should be implemented and called
-	}
-
 	/** Interface that must be implemented by the upload receivers. 
 	 * @author IT Mill Ltd.
 	 * @version @VERSION@
