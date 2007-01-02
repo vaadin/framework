@@ -70,7 +70,7 @@ public class ProgressIndicator
 
 	/** Creates an a new ProgressIndicator. */
 	public ProgressIndicator() {
-		setPropertyDataSource(new ObjectProperty(0, Float.class));
+		setPropertyDataSource(new ObjectProperty(new Float(0), Float.class));
 	}
 
 	/** Creates a new instance of ProgressIndicator with given state. */
