@@ -175,7 +175,12 @@ public class WebBrowserProbe {
 		// See Microsoft documentation for details:
 		// http://msdn.microsoft.com/library/default.asp?url=/library/
 		//        en-us/script56/html/js56jsoriversioninformation.asp
-		else if (agent.indexOf("MSIE 6.") >= 0) {
+		else if (agent.indexOf("MSIE 7.") >= 0) {
+			res.setJavaScriptVersion(WebBrowser.JSCRIPT_5_7);
+			res.setJavaEnabled(true);
+			res.setFrameSupport(true);
+			res.setMarkupVersion(WebBrowser.MARKUP_HTML_4_0);		
+		} else if (agent.indexOf("MSIE 6.") >= 0) {
 			res.setJavaScriptVersion(WebBrowser.JSCRIPT_5_6);
 			res.setJavaEnabled(true);
 			res.setFrameSupport(true);
