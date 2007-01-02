@@ -155,8 +155,6 @@ public class Theme extends DefaultHandler {
 
 	private static final String ATTR_MARKUP = "markup";
 
-	private static final String UNNAMED_FILESET = "unnamed";
-
 	public static final String MODE_UIDL = "uidl";
 
 	public static final String MODE_XSLT = "xslt";
