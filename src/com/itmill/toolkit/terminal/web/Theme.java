@@ -828,8 +828,6 @@ public class Theme extends DefaultHandler {
 		public boolean isMet(WebBrowser terminal) {
 			if (terminal.getBrowserApplication().indexOf(this.agentSubstring) > 0)
 				return true;
-			Log.info("Requirement: '" + this.agentSubstring
-					+ "' is not met by " + terminal.getBrowserApplication());
 			return false;
 		}
 
@@ -862,8 +860,6 @@ public class Theme extends DefaultHandler {
 		public boolean isMet(WebBrowser terminal) {
 			if (terminal.getJavaScriptVersion().supports(this.requiredVersion))
 				return true;
-			Log.info("Requirement: " + this.requiredVersion + " is not met by "
-					+ terminal.getJavaScriptVersion());
 			return false;
 		}
 
@@ -896,8 +892,6 @@ public class Theme extends DefaultHandler {
 		public boolean isMet(WebBrowser terminal) {
 			if (terminal.getMarkupVersion().supports(this.requiredVersion))
 				return true;
-			Log.info("Requirement: " + this.requiredVersion + " is not met by "
-					+ terminal.getMarkupVersion());
 			return false;
 
 		}
