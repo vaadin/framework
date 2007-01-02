@@ -91,6 +91,23 @@
         <servlet-name>chat</servlet-name>
         <url-pattern>/chat/*</url-pattern>
     </servlet-mapping>
+    <!-- APPLICATION: ...demo.ajaxchat -->
+    <servlet>
+        <servlet-name>ajaxchat</servlet-name>
+        <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
+        <init-param>
+            <param-name>application</param-name>
+            <param-value>com.itmill.toolkit.demo.AjaxChat</param-value>
+        </init-param>
+        <init-param>
+            <param-name>debug</param-name>
+            <param-value>false</param-value>
+        </init-param>
+    </servlet>    
+    <servlet-mapping>
+        <servlet-name>ajaxchat</servlet-name>
+        <url-pattern>/ajaxchat/*</url-pattern>
+    </servlet-mapping>
 
 <!-- APPLICATION: ...demo.Login -->
     <servlet>
