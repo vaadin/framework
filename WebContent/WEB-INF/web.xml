@@ -10,10 +10,6 @@
             <param-name>application</param-name>
             <param-value>com.itmill.toolkit.demo.HelloWorld</param-value>
         </init-param>
-        <init-param>
-            <param-name>debug</param-name>
-            <param-value>false</param-value>
-        </init-param>
     </servlet>
     <servlet-mapping>
         <servlet-name>hello</servlet-name>
@@ -27,10 +23,6 @@
         <init-param>
             <param-name>application</param-name>
             <param-value>com.itmill.toolkit.demo.features.FeaturesApplication</param-value>
-        </init-param>
-        <init-param>
-            <param-name>debug</param-name>
-            <param-value>false</param-value>
         </init-param>
     </servlet>
     <servlet-mapping>
@@ -46,10 +38,6 @@
             <param-name>application</param-name>
             <param-value>com.itmill.toolkit.demo.table.TableDemoApplication</param-value>
         </init-param>
-        <init-param>
-            <param-name>debug</param-name>
-            <param-value>false</param-value>
-        </init-param>
     </servlet>
     <servlet-mapping>
         <servlet-name>table</servlet-name>
@@ -63,10 +51,6 @@
         <init-param>
             <param-name>application</param-name>
             <param-value>com.itmill.toolkit.demo.Calc</param-value>
-        </init-param>
-        <init-param>
-            <param-name>debug</param-name>
-            <param-value>false</param-value>
         </init-param>
     </servlet>
     <servlet-mapping>
@@ -82,10 +66,6 @@
             <param-name>application</param-name>
             <param-value>com.itmill.toolkit.demo.Chat</param-value>
         </init-param>
-        <init-param>
-            <param-name>debug</param-name>
-            <param-value>false</param-value>
-        </init-param>
     </servlet>    
     <servlet-mapping>
         <servlet-name>chat</servlet-name>
@@ -98,10 +78,6 @@
         <init-param>
             <param-name>application</param-name>
             <param-value>com.itmill.toolkit.demo.AjaxChat</param-value>
-        </init-param>
-        <init-param>
-            <param-name>debug</param-name>
-            <param-value>false</param-value>
         </init-param>
     </servlet>    
     <servlet-mapping>
@@ -117,10 +93,6 @@
             <param-name>application</param-name>
             <param-value>com.itmill.toolkit.demo.Login</param-value>
         </init-param>
-        <init-param>
-            <param-name>debug</param-name>
-            <param-value>false</param-value>
-        </init-param>
     </servlet>
     <servlet-mapping>
         <servlet-name>login</servlet-name>
@@ -134,10 +106,6 @@
         <init-param>
             <param-name>application</param-name>
             <param-value>com.itmill.toolkit.demo.gogame.Go</param-value>
-        </init-param>
-        <init-param>
-            <param-name>debug</param-name>
-            <param-value>false</param-value>
         </init-param>
     </servlet>
     <servlet-mapping>
