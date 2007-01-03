@@ -85,7 +85,7 @@ public class FeatureBrowser
 				"",
 				new ClassResource(
 					getClass(),
-					"m-bullet-blue.gif",
+					"itmill.gif",
 					getApplication()));
 		welcomePanel.addComponent(welcome);
 		welcomePanel.addComponent(greeting);
