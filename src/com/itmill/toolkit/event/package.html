@@ -11,13 +11,13 @@
 model. The model supports inheritable events and a flexible way of
 registering and unregistering event listeners. It's a fundamental building
 block of the MillStone framework, and as it is included in
-{@link org.millstone.base.ui.AbstractComponent}, all UI components
+{@link com.itmill.toolkit.ui.AbstractComponent}, all UI components
 automatically support it.</p>
 
 <h2>Package Specification</h2>
 
 <p>The core of the MillStone event model is the inheritable event class
-hierarchy, and the {@link org.millstone.base.event.EventRouter EventRouter}
+hierarchy, and the {@link com.itmill.toolkit.event.EventRouter EventRouter}
 which provide a simple, ubiquitous mechanism to transport events to all
 interested parties.</p>
 
@@ -42,13 +42,13 @@ object owning the method. From these a new listener is constructed and added
 to the event router of the specified component.</p>
 
 <p>The interface is defined in
-{@link org.millstone.base.event.MethodEventSource MethodEventSource}, and a
+{@link com.itmill.toolkit.event.MethodEventSource MethodEventSource}, and a
 straightforward implementation of it is defined in
-{@link org.millstone.base.event.EventRouter EventRouter} which also includes
+{@link com.itmill.toolkit.event.EventRouter EventRouter} which also includes
 a method to actually fire the events.</p>
 
 <p>All fired events are passed to all registered listeners, which are of
-type {@link org.millstone.base.event.ListenerMethod ListenerMethod}. The
+type {@link com.itmill.toolkit.event.ListenerMethod ListenerMethod}. The
 listener then checks if the event type matches with the specified event
 type and calls the specified trigger method if it does.</p>
 
