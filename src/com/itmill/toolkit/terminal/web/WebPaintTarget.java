@@ -153,7 +153,7 @@ public class WebPaintTarget implements PaintTarget {
 	/** Print element end tag.
 	 *
 	 * If the parent tag is closed before
-	 * every child tag is closed an MillstoneException is raised.
+	 * every child tag is closed a PaintException is raised.
 	 *
 	 * @param tag The name of the end tag
 	 */

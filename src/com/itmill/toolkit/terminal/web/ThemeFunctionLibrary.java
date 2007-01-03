@@ -168,8 +168,6 @@ public class ThemeFunctionLibrary {
 
 	/**
 	 * Generate JavaScript for page that performs client-side combility checks.
-	 * The script includes HTML/JavaScript commands to be included in the body
-	 * of the millstone-form.
 	 */
 	static public boolean probeClient() {
 		return (browser().performClientCheck() && !browser()

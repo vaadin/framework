@@ -51,7 +51,7 @@ import java.util.LinkedList;
 import java.util.Iterator;
 
 /**
- * Class implementing the MillStone WebAdapter variable mappings.
+ * Class implementing the variable mappings.
  * 
  * @author IT Mill Ltd.
  * @version @VERSION@

@@ -46,7 +46,7 @@ import org.xml.sax.SAXNotSupportedException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 
-/** Class implementing XMLReader for the MillStone WebAdapter UIDLTransformer.
+/** Class implementing XMLReader for the UIDLTransformer.
  *
  * @author IT Mill Ltd.
  * @version @VERSION@
@@ -90,7 +90,7 @@ public class XSLReader implements XMLReader, ContentHandler {
 			xsltProcessor = XSLT_WEBLOGIC;
 		else {
 			throw new RuntimeException(
-				"\nThis version of Millstone Web Adapter "
+				"\nThis version of IT Mill Toolkit "
 					+ " does not support the selected XSLT-processer:\n  "
 					+ transformerName
 					+ "\n"
@@ -421,7 +421,6 @@ public class XSLReader implements XMLReader, ContentHandler {
 		public String getURI(int index) {
 			String uri = original.getURI(index);
 
-			// Map millstone:// namespaces to transformer specific namespaces
 			if (uri != null && uri.startsWith(JAVA_PREFIX)) {
 
 				System.out.print("DEBUG " + uri + " --> ");

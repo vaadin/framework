@@ -180,7 +180,7 @@ public class AjaxPaintTarget implements PaintTarget {
      * Print element end tag.
      * 
      * If the parent tag is closed before every child tag is closed an
-     * MillstoneException is raised.
+     * PaintException is raised.
      * 
      * @param tag
      *            The name of the end tag

@@ -35,7 +35,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Iterator;
 
-/** Class implementing the MillStone WebAdapter UIDLTransformer Factory.
+/** Class implementing the UIDLTransformer Factory.
  * The factory creates and maintains a pool of transformers that are used
  * for transforming UIDL to HTML.
  * 

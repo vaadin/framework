@@ -31,8 +31,7 @@ package com.itmill.toolkit.ui;
 /** Extension to the {@link ComponentContainer} interface which adds the
  * layouting control to the elements in the container. This is
  * required by the various layout components to enable them to place other
- * components in specific locations in the UI. This interface is empty in
- * MillStone 3.0, but will be extended in MillStone 3.1.
+ * components in specific locations in the UI. 
  *
  * @author IT Mill Ltd.
  * @version @VERSION@

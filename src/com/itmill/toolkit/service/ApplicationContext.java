@@ -45,7 +45,7 @@ public interface ApplicationContext {
 	
 	/** Returns application context base directory.
 	 * 
-	 * Typically millstone application is deployed in a such way that is 
+	 * Typically an application is deployed in a such way that is 
 	 * has application directory. For web applications this directory is the
 	 * root directory of the web applications. In some cases application 
 	 * might not have application directory (for example web applications 

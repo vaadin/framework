@@ -51,7 +51,7 @@ import javax.xml.transform.ErrorListener;
 import javax.xml.transform.SourceLocator;
 import javax.xml.transform.OutputKeys;
 
-/** Class implementing the MillStone WebAdapter UIDLTransformer.
+/** Class implementing the UIDLTransformer.
  *
  * The thansformer should not be created directly; it should be contructed
  * using getTransformer() provided by UIDLTransformerFactory. 

@@ -35,7 +35,7 @@ import java.util.Iterator;
 /** Extension to {@link AbstractComponent} that defines the default
  * implementation for the methods in {@link ComponentContainer}. Basic UI
  * components that need to contain other components inherit this class to
- * easily qualify as a MillStone component container.
+ * easily qualify as a component container.
  * 
  * @author  IT Mill Ltd
  * @version @VERSION@

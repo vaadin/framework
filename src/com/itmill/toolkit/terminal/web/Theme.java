@@ -48,7 +48,7 @@ import org.xml.sax.Attributes;
 
 /**
  * This class provides an interface to the meta-information regarding a
- * particular webadapter theme. This entails for instanace the inheritance tree
+ * particular theme. This entails for instanace the inheritance tree
  * of the various xsl-template files, the different requirments that the theme
  * imposes on the client browser, etc.
  * <p>
@@ -77,31 +77,6 @@ import org.xml.sax.Attributes;
  * <p>
  * The theme description is XML data, and it can be loaded from file or stream.
  * The default filename is specified by <code>Theme.DESCRIPTIONFILE</code>.
- * Example of theme description file:
- * 
- * <pre>
- *   &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
- * 
- * 	&lt;theme name=&quot;normal&quot;&gt;
- *  
- * 	&lt;extends theme=&quot;simple&quot;/&gt;
- *      
- * 	&lt;description&gt;The normal theme for all browsers&lt;/description&gt;
- *  	&lt;author name=&quot;IT Mill Ltd&quot; email=&quot;millstone@itmill.com&quot; /&gt;
- * 
- * 		&lt;fileset&gt;
- *   		&lt;require&gt;
- *    			&lt;supports javascript=&quot;JavaScript 1.0&quot;/&gt;
- *    		&lt;/require&gt;
- * 
- * 			&lt;file name=&quot;common/error.xsl&quot; /&gt; 
- * 			&lt;file name=&quot;components/button.xsl&quot; /&gt; 
- * 			&lt;file name=&quot;components/select.xsl&quot; /&gt;
- * 			&lt;file name=&quot;components/textfield.xsl&quot; /&gt;
- * 			&lt;file name=&quot;components/table.xsl&quot; /&gt;
- *  		&lt;/fileset&gt;
- *  	&lt;/theme&gt;
- * </pre>
  * 
  * </p>
  * 

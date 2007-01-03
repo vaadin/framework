@@ -389,7 +389,7 @@ public class ApplicationServlet extends HttpServlet implements
 	 * Get ThemeSources from given path. Construct the list of avalable themes
 	 * in path using the following sources: 1. content of THEME_PATH directory
 	 * (if available) 2. The themes listed in THEME_LIST_FILE 3. "themesource"
-	 * application parameter - "org. millstone.webadapter. themesource" system
+	 * application parameter - "ThemeSource" system
 	 * property
 	 * 
 	 * @param THEME_DIRECTORY_PATH

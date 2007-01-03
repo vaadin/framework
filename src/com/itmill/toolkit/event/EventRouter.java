@@ -33,7 +33,7 @@ import java.util.LinkedList;
 import java.util.Iterator;
 import java.lang.reflect.Method;
 
-/** Event router class implementing the MillStone inheritable event
+/** Event router class implementing the inheritable event
  * listening model. For more information on the event model see the
  * {@link com.itmill.toolkit.event package documentation}.
  *

@@ -40,8 +40,7 @@ import java.util.EventObject;
 import java.util.Locale;
 
 /** The top-level component interface which must be implemented by all
- * MillStone UI components. It contains the methods the MillStone framework
- * needs to handle the components in a user interface.
+ *  UI components that use IT Mill Toolkit
  *
  * @author IT Mill Ltd.
  * @version @VERSION@

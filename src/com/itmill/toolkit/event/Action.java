@@ -30,7 +30,7 @@ package com.itmill.toolkit.event;
 
 import com.itmill.toolkit.terminal.*;
 
-/** Implements the MillStone action framework. This class contains
+/** Implements the action framework. This class contains
  * subinterfaces for action handling and listing, and for action handler
  * registrations and unregistration.
  *

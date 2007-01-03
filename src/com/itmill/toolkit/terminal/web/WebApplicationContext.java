@@ -46,7 +46,7 @@ import com.itmill.toolkit.service.ApplicationContext;
 import com.itmill.toolkit.ui.Window;
 
 /**
- * Web application context for Millstone applications.
+ * Web application context for the IT Mill Toolkit applications.
  * 
  * @author IT Mill Ltd.
  * @version

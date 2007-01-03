@@ -79,7 +79,7 @@ public interface PaintTarget {
 	/** Print element end tag.
 	 *
 	 * If the parent tag is closed before
-	 * every child tag is closed an MillstoneException is raised.
+	 * every child tag is closed an PaintException is raised.
 	 *
 	 * @param tag The name of the end tag
 	 * @exception IOException The writing failed due to input/output error
