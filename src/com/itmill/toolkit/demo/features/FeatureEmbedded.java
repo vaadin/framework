@@ -91,8 +91,8 @@ public class FeatureEmbedded extends Feature {
 			"source",
 			new Object[] {
 				null,
-				new ClassResource("millstone-logo.gif", getApplication())},
-			new Object[] { "null", "Millstone logo" });
+				new ClassResource("m-bullet-blue.gif", getApplication())},
+			new Object[] { "null", "IT Mill (m)" });
 		p.addProperties("Embedded Properties", ap);
 		p.getField("standby").setDescription(
 			"The text to display while loading the object.");

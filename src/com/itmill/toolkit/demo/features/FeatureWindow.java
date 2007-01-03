@@ -89,7 +89,7 @@ public class FeatureWindow extends Feature {
 	}
 
 	protected String getDescriptionXHTML() {
-		return "The window support of Millstone allows for opening and closing windows, "
+		return "The window support in IT Mill Toolkit allows for opening and closing windows, "
 			+ "refreshing one window from another (for asynchronous terminals), "
 			+ "resizing windows and scrolling window content. "
 			+ "There are also a number of preset window border styles defined by "

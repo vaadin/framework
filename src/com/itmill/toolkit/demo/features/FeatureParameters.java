@@ -155,6 +155,3 @@ public class FeatureParameters
 		}
 	}
 }
-
-/* This Millstone sample code is public domain. *  
- * For more information see www.millstone.org.  */

@@ -74,6 +74,7 @@ public class FeatureSelect extends Feature {
 		"s.addItem(\"Volvo\");\n";
 
 	}
+	
 	/**
 	 * @see com.itmill.toolkit.demo.features.Feature#getDescriptionXHTML()
 	 */

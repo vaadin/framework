@@ -46,14 +46,13 @@ public class FeatureBrowser
 	private boolean initialized = false;
 
 	private static final String WELCOME_TEXT =
-		"<h3>Welcome to the Millstone feature tour!</h3>"
-			+ "In this Millstone application you may view a demonstration of some of its "
-			+ "features.<br/>"
+		"<h3>Welcome to the IT Mill Toolkit feature tour!</h3>"
+			+ "In this application you may view and play with some features of IT Mill Toolkit.<br/>"
 			+ "Most of the features can be tested online and include simple example of their "
 			+ "usage associated with it.<br/><br/>"
 			+ "Start your tour by selecting features from the list on the left.<br/><br/>"
-			+ "For more information, point your browser to: <a href=\"http://www.millstone.org\""
-			+ " target=\"_new\">www.millstone.org</a>";
+			+ "For more information, point your browser to: <a href=\"http://www.itmill.com\""
+			+ " target=\"_new\">www.itmill.com</a>";
 
 	public void attach() {
 
@@ -86,7 +85,7 @@ public class FeatureBrowser
 				"",
 				new ClassResource(
 					getClass(),
-					"millstone-logo.gif",
+					"m-bullet-blue.gif",
 					getApplication()));
 		welcomePanel.addComponent(welcome);
 		welcomePanel.addComponent(greeting);
@@ -144,9 +143,6 @@ public class FeatureBrowser
 		registerFeature("/Data Model/Validators", new FeatureValidators());
 		registerFeature("/Data Model/Buffering", new FeatureBuffering());
 		registerFeature(
-			"/Terminal/Server Initiated Events",
-			new FeatureServerEvents());
-		registerFeature(
 			"/Terminal/Parameters and URI Handling",
 			new FeatureParameters());
 
@@ -194,7 +190,7 @@ public class FeatureBrowser
 					layout.removeComponent(1, 0);
 					layout.addComponent(currentFeature, 1, 0);
 					getWindow().setCaption(
-						"Millstone Features / "
+						"IT Mill Toolkit Features / "
 							+ features.getContainerProperty(id, "name"));
 				}
 			}

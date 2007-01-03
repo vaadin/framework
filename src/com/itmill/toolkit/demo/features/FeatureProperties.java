@@ -39,7 +39,7 @@ public class FeatureProperties extends Feature {
 	}
 
 	protected String getDescriptionXHTML() {
-		return "<p>Millstone data model is one of the core concepts "
+		return "<p>IT Mill Toolkti data model is one of the core concepts "
 			+ "in the library and Property-interface is the base of that "
 			+ "model. Property provides standardized API for a singe data object "
 			+ "that can be getted and setted. A property is always typed, but can optionally "
@@ -50,7 +50,7 @@ public class FeatureProperties extends Feature {
 			+ "editor and viewer classes. Typically this is used to connect different "
 			+ "data sources to UI components for editing and viewing their contents.</p>"
 			+ "<p>Properties can be utilized either by implementing the interface "
-			+ "or by using some of the existing property implementations. Millstone "
+			+ "or by using some of the existing property implementations. IT Mill Toolkit "
 			+ "includes Property interface implementations for "
 			+ "arbitrary function pairs or Bean-properties as well as simple object "
 			+ "properties.</p>"

@@ -162,7 +162,7 @@ public class FeatureTree extends Feature implements Action.Handler {
 	protected String getDescriptionXHTML() {
 		return "<p>A tree is a natural way to represent datasets that have"
 			+ " hierarchical relationships, such as filesystems, message "
-			+ "threads or... family trees. Millstone features a versatile "
+			+ "threads or... family trees. IT Mill Toolkit features a versatile "
 			+ "and powerful Tree component that works much like the tree components "
 			+ "of most modern operating systems. </p>"
 			+ "<p>The most prominent use of the Tree component is to "

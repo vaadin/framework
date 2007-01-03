@@ -36,7 +36,7 @@ public class FeatureContainers extends Feature {
 
 	protected String getDescriptionXHTML() {
 		return "<p>Container is the most advanced of the data "
-			+ "model supported by Millstone. It provides a very flexible "
+			+ "model supported by IT Mill Toolkit. It provides a very flexible "
 			+ "way of managing set of items that share common properties. Each "
 			+ "item is identified by an item id. "
 			+ "Properties can be requested from container with item "

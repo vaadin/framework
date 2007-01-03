@@ -40,7 +40,7 @@ public class FeatureBuffering extends Feature {
 	 * @see com.itmill.toolkit.demo.features.Feature#getDescriptionXHTML()
 	 */
 	protected String getDescriptionXHTML() {
-		return "<p>Millstone data model provides interface for implementing "
+		return "<p>IT Mill Toolkit data model provides interface for implementing "
 			+ "buffering in data components. The basic idea is that a component "
 			+ "reading their state from data source can implement "
 			+ "Buffered-interface, for storing the value internally. "

@@ -40,7 +40,7 @@ public class FeatureValidators extends Feature {
 
 	protected String getDescriptionXHTML() {
 	return 
-		"<p>Millstone contains simple, yet powerful validation interface, "+
+		"<p>IT Mill Toolkit contains simple, yet powerful validation interface, "+
 		"that consists of two parts: Validator and Validatable. Validator is "+
 		"any class that can check validity of an Object. Validatable is "+
 		"a class with configurable validation. "+

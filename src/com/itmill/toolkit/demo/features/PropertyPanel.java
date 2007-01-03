@@ -267,7 +267,7 @@ public class PropertyPanel
 			"Those components that have internal state that can be written are settable to readOnly-mode,"
 				+ " where the object can only be read, not written.");
 		set.getField("componentError").setDescription(
-			"Millstone supports extensive error reporting. One part of the error reporting are component"
+			"IT Mill Toolkit supports extensive error reporting. One part of the error reporting are component"
 				+ " errors that can be controlled by the programmer. This example only contains couple of "
 				+ "sample errors; to get the full picture, read browse ErrorMessage-interface implementors "
 				+ "API documentation.");

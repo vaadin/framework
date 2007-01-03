@@ -34,7 +34,7 @@ public class FeaturesApplication
 	extends com.itmill.toolkit.Application {
 
 	public void init() {
-		Window main = new Window("Millstone Features Tour");
+		Window main = new Window("IT Mill Toolkit Features Tour");
 		setMainWindow(main);
 		main.addComponent(new FeatureBrowser());
 	}
