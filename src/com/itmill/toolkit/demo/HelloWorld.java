@@ -2,7 +2,7 @@ package com.itmill.toolkit.demo;
 
 import com.itmill.toolkit.ui.*;
 
-/** The classic "hello, world!" example for the MillStone framework. The
+/** The classic "hello, world!" example for IT Mill Toolkit. The
  * class simply implements the abstract 
  * {@link com.itmill.toolkit.Application#init() init()} method
  * in which it creates a Window and adds a Label to it.

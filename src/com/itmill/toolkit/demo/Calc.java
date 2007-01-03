@@ -2,8 +2,8 @@ package com.itmill.toolkit.demo;
 
 import com.itmill.toolkit.ui.*;
 
-/** <p>An example application implementing a simple web-based calculator.
- * using the MillStone UI library. The application opens up a window and
+/** <p>An example application implementing a simple web-based calculator
+ * using IT Mill Toolkit. The application opens up a window and
  * places the needed UI components (display label, buttons etc.) on it, and
  * registers a button click listener for them.</p>
  * 
@@ -34,7 +34,7 @@ public class Calc
 		private static String[] captions = // Captions for the buttons
 	{"7","8","9","/","4","5","6","*","1","2","3","-","0","=","C","+" };
 
-	/** <p>Initializes the application. This is the only method a MillStone
+	/** <p>Initializes the application. This is the only method an
 	 * application is required to implement. It's called by the framework
 	 * and it should perform whatever initialization tasks the application
 	 * needs to perform.</p>
@@ -66,7 +66,7 @@ public class Calc
 		 * Create the main window with a caption and add it to the
 		 * application.
 		 */
-		addWindow(new Window("MillStone calculator", layout));
+		addWindow(new Window("Calculator", layout));
 
 	}
 

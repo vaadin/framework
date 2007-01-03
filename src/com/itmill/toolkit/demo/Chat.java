@@ -57,7 +57,7 @@ public class Chat
 	private long idleSince = (new Date()).getTime();
 
 	/** framewindow for following the discussion and control */
-	FrameWindow frames = new FrameWindow("Millstone chat");
+	FrameWindow frames = new FrameWindow("Chat");
 
 	/** Last messages */
 	private static LinkedList lastMessages = new LinkedList();

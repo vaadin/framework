@@ -7,7 +7,7 @@ import com.itmill.toolkit.data.util.IndexedContainer;
 import com.itmill.toolkit.event.*;
 import com.itmill.toolkit.ui.*;
 
-/** The classic game 'Go' as an example for the Millstone framework. 
+/** The classic game 'Go' as an example for the IT Mill Toolkit. 
  *
  * @author IT Mill Ltd.
  * @see com.itmill.toolkit.Application

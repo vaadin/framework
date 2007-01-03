@@ -25,7 +25,7 @@ public class TableDemoApplication extends Application implements Action.Handler 
 	private Action deleteAction = new Action("Delete row");
 
 	public void init() {
-		Window mainWindow = new Window("Millstone Example");
+		Window mainWindow = new Window("Table Demo");
 		setMainWindow(mainWindow);
 		
 		GridLayout gl1 = new GridLayout(1,2);
@@ -73,7 +73,7 @@ public class TableDemoApplication extends Application implements Action.Handler 
 		
 		Label info = new Label();
 		info.setContentMode(Label.CONTENT_XHTML);
-		info.setValue("<h1>Millstone AjaxAdapter</h1><p>Examples of Millstone components.</p><h2>Table Component demo</h2><p>General info about the component and its properties (static HTML).</p><h3>Third level heading</h3><h4>Subheading</h4><h5>Paragraph heading</h5><p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Fusce pharetra congue nunc. Vestibulum odio metus, tristiqueeu, venenatis eget, nonummy vel, mauris.</p><p>Mauris lobortis dictum dolor. Phasellus suscipit. Nam feugiat est in risus.</p>");
+		info.setValue("<h1>IT Mill Toolkit</h1><p>Examples of toolkit components.</p><h2>Table Component demo</h2><p>General info about the component and its properties (static HTML).</p><h3>Third level heading</h3><h4>Subheading</h4><h5>Paragraph heading</h5><p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Fusce pharetra congue nunc. Vestibulum odio metus, tristiqueeu, venenatis eget, nonummy vel, mauris.</p><p>Mauris lobortis dictum dolor. Phasellus suscipit. Nam feugiat est in risus.</p>");
 		ts.addTab(myTable,"Info", null);
 				
 		//mainWindow.addComponent(ts);
