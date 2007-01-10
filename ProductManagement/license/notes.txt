@@ -1,8 +1,0 @@
-license.doc
-This is the EULA for IT Mill Toolkit. Use this to produce pdf, txt, html versions.
-
-license-toolkit_compare_this_to_backbase.odt
-Compare this to license-backbase.odt if you wish to see what basically has been changed.
-
-license-backbase.odt
-Backbase EULA as an reference
