@@ -635,12 +635,17 @@ public class ApplicationServlet extends HttpServlet implements
 					}
 
 					// Find theme
+					String themeName = window.getTheme() != null ? window
+							.getTheme() : DEFAULT_THEME;
+					if (unhandledParameters.get("theme") != null) {
+						themeName = (String) ((Object[]) unhandledParameters
+								.get("theme"))[0];
+					}
 					Theme theme = themeSource
-							.getThemeByName(window.getTheme() != null ? window
-									.getTheme() : DEFAULT_THEME);
+							.getThemeByName(themeName);
 					if (theme == null)
-						throw new ServletException("Default theme (named '"
-								+ DEFAULT_THEME + "') can not be found");
+						throw new ServletException("Theme (named '"
+								+ themeName + "') can not be found");
 
 					// If UIDL rendering mode is preferred, a page for it is
 					// rendered
@@ -706,7 +711,7 @@ public class ApplicationServlet extends HttpServlet implements
 						page.write("<script language=\"JavaScript\">\n");
 						String appUrl = getApplicationUrl(request).toString();
 						page
-								.write("var client = new ITMillToolkitClient("
+								.write("var client = new itmill.toolkit.Client("
 										+ "document.getElementById('ajax-window'),"
 										+ "\""
 										+ appUrl
@@ -723,10 +728,10 @@ public class ApplicationServlet extends HttpServlet implements
 
 						for (int k = themes.size() - 1; k >= 0; k--) {
 							t = (Theme) themes.get(k);
-							String themeObjName = t.getName() + "Theme";
-							themeObjName = themeObjName.substring(0, 1)
+							String themeObjName = "itmill.toolkit.themes." + 
+								t.getName().substring(0, 1)
 									.toUpperCase()
-									+ themeObjName.substring(1);
+									+ t.getName().substring(1);
 							page.write(" (new " + themeObjName + "(\""
 									+ resourcePath
 									+ ((Theme) themes.get(k)).getName()
