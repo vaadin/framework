@@ -20,7 +20,7 @@ public class Login
 	private Tree menu = new Tree();
 
 	/* Contents of the website */
-	private String[][] pages = { { "Welcome", "Welcome to out website..." }, {
+	private String[][] pages = { { "Welcome", "Welcome to our website..." }, {
 			"Products", "Public product information." }, {
 			"Contact", "Public contact information." }, {
 			"CRM", "CRM Database requiring login." }, {
