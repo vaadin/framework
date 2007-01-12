@@ -2,7 +2,7 @@
  
  IT Mill Toolkit 
 
- Development of Browser User Intarfaces Made Easy
+ Development of Browser User Interfaces Made Easy
 
  Copyright (C) 2000-2006 IT Mill Ltd
  
