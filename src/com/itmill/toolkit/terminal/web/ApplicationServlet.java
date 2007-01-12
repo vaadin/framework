@@ -656,97 +656,7 @@ public class ApplicationServlet extends HttpServlet implements
 								.get("renderingMode"))[0];
 					if (Theme.MODE_UIDL.equals(renderingMode)
 							&& !(window instanceof DebugWindow)) {
-						response.setContentType("text/html");
-						BufferedWriter page = new BufferedWriter(
-								new OutputStreamWriter(out));
-
-						page
-								.write("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" "
-										+ "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n");
-
-						page.write("<html><head>\n<title>"
-								+ window.getCaption() + "</title>\n");
-
-						Theme t = theme;
-						Vector themes = new Vector();
-						themes.add(t);
-						while (t.getParent() != null) {
-							String parentName = t.getParent();
-							t = themeSource.getThemeByName(parentName);
-							themes.add(t);
-						}
-						for (int k = themes.size() - 1; k >= 0; k--) {
-							t = (Theme) themes.get(k);
-							Collection files = t.getFileNames(terminalType,
-									Theme.MODE_UIDL);
-							for (Iterator i = files.iterator(); i.hasNext();) {
-								String file = (String) i.next();
-								if (file.endsWith(".css"))
-									page
-											.write("<link rel=\"stylesheet\" href=\""
-													+ getResourceLocation(t
-															.getName(),
-															new ThemeResource(
-																	file))
-													+ "\" type=\"text/css\" />\n");
-								else if (file.endsWith(".js"))
-									page
-											.write("<script src=\""
-													+ getResourceLocation(t
-															.getName(),
-															new ThemeResource(
-																	file))
-													+ "\" type=\"text/javascript\"></script>\n");
-							}
-
-						}
-
-						page.write("</head><body>\n");
-
-						page
-								.write("<div id=\"ajax-wait\"><div>Loading...</div></div>\n");
-
-						page.write("<div id=\"ajax-window\"></div>\n");
-
-						page.write("<script language=\"JavaScript\">\n");
-						String appUrl = getApplicationUrl(request).toString();
-						page
-								.write("var client = new itmill.Client("
-										+ "document.getElementById('ajax-window'),"
-										+ "\""
-										+ appUrl
-										+ (appUrl.endsWith("/") ? "" : "/")
-										+ "UIDL/"
-										+ "\",\""
-										+ resourcePath
-										+ ((Theme) themes
-												.get(themes.size() - 1))
-												.getName()
-										+ "/"
-
-										+ "client/\",document.getElementById('ajax-wait'));\n");
-
-						for (int k = themes.size() - 1; k >= 0; k--) {
-							t = (Theme) themes.get(k);
-							String themeObjName = "itmill.themes." + 
-								t.getName().substring(0, 1)
-									.toUpperCase()
-									+ t.getName().substring(1);
-							page.write(" (new " + themeObjName + "(\""
-									+ resourcePath
-									+ ((Theme) themes.get(k)).getName()
-									+ "/\")).registerTo(client);\n");
-						}
-
-						if (isDebugMode(unhandledParameters))
-							page.write("client.debugEnabled =true;\n");
-						page.write("client.start();\n");
-
-						page.write("</script>\n");
-
-						page.write("</body></html>\n");
-						page.close();
-
+						writeAjaxPage(request, response, out, unhandledParameters, window, terminalType, theme);
 						return;
 					}
 
@@ -885,6 +795,99 @@ public class ApplicationServlet extends HttpServlet implements
 			// for security reasons
 			ThemeFunctionLibrary.cleanState();
 		}
+	}
+
+	private void writeAjaxPage(HttpServletRequest request, HttpServletResponse response, OutputStream out, Map unhandledParameters, Window window, WebBrowser terminalType, Theme theme) throws IOException, MalformedURLException {
+		response.setContentType("text/html");
+		BufferedWriter page = new BufferedWriter(
+				new OutputStreamWriter(out));
+
+		page
+				.write("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" "
+						+ "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n");
+
+		page.write("<html><head>\n<title>"
+				+ window.getCaption() + "</title>\n");
+
+		Theme t = theme;
+		Vector themes = new Vector();
+		themes.add(t);
+		while (t.getParent() != null) {
+			String parentName = t.getParent();
+			t = themeSource.getThemeByName(parentName);
+			themes.add(t);
+		}
+		for (int k = themes.size() - 1; k >= 0; k--) {
+			t = (Theme) themes.get(k);
+			Collection files = t.getFileNames(terminalType,
+					Theme.MODE_UIDL);
+			for (Iterator i = files.iterator(); i.hasNext();) {
+				String file = (String) i.next();
+				if (file.endsWith(".css"))
+					page
+							.write("<link rel=\"stylesheet\" href=\""
+									+ getResourceLocation(t
+											.getName(),
+											new ThemeResource(
+													file))
+									+ "\" type=\"text/css\" />\n");
+				else if (file.endsWith(".js"))
+					page
+							.write("<script src=\""
+									+ getResourceLocation(t
+											.getName(),
+											new ThemeResource(
+													file))
+									+ "\" type=\"text/javascript\"></script>\n");
+			}
+
+		}
+
+		page.write("</head><body>\n");
+
+		page
+				.write("<div id=\"ajax-wait\"><div>Loading...</div></div>\n");
+
+		page.write("<div id=\"ajax-window\"></div>\n");
+
+		page.write("<script language=\"JavaScript\">\n");
+		String appUrl = getApplicationUrl(request).toString();
+		page
+				.write("var client = new itmill.Client("
+						+ "document.getElementById('ajax-window'),"
+						+ "\""
+						+ appUrl
+						+ (appUrl.endsWith("/") ? "" : "/")
+						+ "UIDL/"
+						+ "\",\""
+						+ resourcePath
+						+ ((Theme) themes
+								.get(themes.size() - 1))
+								.getName()
+						+ "/"
+
+						+ "client/\",document.getElementById('ajax-wait'));\n");
+
+		for (int k = themes.size() - 1; k >= 0; k--) {
+			t = (Theme) themes.get(k);
+			String themeObjName = "itmill.themes." + 
+				t.getName().substring(0, 1)
+					.toUpperCase()
+					+ t.getName().substring(1);
+			page.write(" (new " + themeObjName + "(\""
+					+ resourcePath
+					+ ((Theme) themes.get(k)).getName()
+					+ "/\")).registerTo(client);\n");
+		}
+
+		if (isDebugMode(unhandledParameters))
+			page.write("client.debugEnabled =true;\n");
+		page.write("client.start();\n");
+
+		page.write("</script>\n");
+
+		page.write("</body></html>\n");
+		page.close();
 	}
 
 	/**
