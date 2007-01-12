@@ -9,9 +9,9 @@
    *************************************************************************
 
    This product is distributed under commercial license that can be found
-   from the product package on license/license.txt. Use of this product might 
+   from the product package on license.pdf. Use of this product might 
    require purchasing a commercial license from IT Mill Ltd. For guidelines 
-   on usage, see license/licensing-guidelines.html
+   on usage, see licensing-guidelines.html
 
    *************************************************************************
    
