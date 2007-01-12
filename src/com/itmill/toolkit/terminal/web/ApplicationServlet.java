@@ -868,17 +868,19 @@ public class ApplicationServlet extends HttpServlet implements
 
 						+ "client/\",document.getElementById('ajax-wait'));\n");
 
-		for (int k = themes.size() - 1; k >= 0; k--) {
-			t = (Theme) themes.get(k);
+		// TODO Only current theme is registered to the client
+		//for (int k = themes.size() - 1; k >= 0; k--) {
+		//	t = (Theme) themes.get(k);
+		t = theme;
 			String themeObjName = "itmill.themes." + 
 				t.getName().substring(0, 1)
 					.toUpperCase()
 					+ t.getName().substring(1);
 			page.write(" (new " + themeObjName + "(\""
 					+ resourcePath
-					+ ((Theme) themes.get(k)).getName()
+					+ t.getName()
 					+ "/\")).registerTo(client);\n");
-		}
+		//}
 
 		if (isDebugMode(unhandledParameters))
 			page.write("client.debugEnabled =true;\n");
