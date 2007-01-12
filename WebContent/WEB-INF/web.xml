@@ -30,20 +30,6 @@
         <url-pattern>/features/*</url-pattern>
     </servlet-mapping>
 
-<!-- APPLICATION: ...demo.table -->
-    <servlet>
-        <servlet-name>table</servlet-name>
-        <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
-        <init-param>
-            <param-name>application</param-name>
-            <param-value>com.itmill.toolkit.demo.table.TableDemoApplication</param-value>
-        </init-param>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>table</servlet-name>
-        <url-pattern>/table/*</url-pattern>
-    </servlet-mapping>
-
 <!-- APPLICATION: ...demo.calc -->
     <servlet>
         <servlet-name>calc</servlet-name>
@@ -56,61 +42,6 @@
     <servlet-mapping>
         <servlet-name>calc</servlet-name>
         <url-pattern>/calc/*</url-pattern>
-    </servlet-mapping>
-
-<!-- APPLICATION: ...demo.chat -->
-    <servlet>
-        <servlet-name>chat</servlet-name>
-        <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
-        <init-param>
-            <param-name>application</param-name>
-            <param-value>com.itmill.toolkit.demo.Chat</param-value>
-        </init-param>
-    </servlet>    
-    <servlet-mapping>
-        <servlet-name>chat</servlet-name>
-        <url-pattern>/chat/*</url-pattern>
-    </servlet-mapping>
-    <!-- APPLICATION: ...demo.ajaxchat -->
-    <servlet>
-        <servlet-name>ajaxchat</servlet-name>
-        <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
-        <init-param>
-            <param-name>application</param-name>
-            <param-value>com.itmill.toolkit.demo.AjaxChat</param-value>
-        </init-param>
-    </servlet>    
-    <servlet-mapping>
-        <servlet-name>ajaxchat</servlet-name>
-        <url-pattern>/ajaxchat/*</url-pattern>
-    </servlet-mapping>
-
-<!-- APPLICATION: ...demo.Login -->
-    <servlet>
-        <servlet-name>login</servlet-name>
-        <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
-        <init-param>
-            <param-name>application</param-name>
-            <param-value>com.itmill.toolkit.demo.Login</param-value>
-        </init-param>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>login</servlet-name>
-        <url-pattern>/login/*</url-pattern>
-    </servlet-mapping>
-
-<!-- APPLICATION: ...demo.GoGame -->
-    <servlet>
-        <servlet-name>gogame</servlet-name>
-        <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
-        <init-param>
-            <param-name>application</param-name>
-            <param-value>com.itmill.toolkit.demo.gogame.Go</param-value>
-        </init-param>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>gogame</servlet-name>
-        <url-pattern>/gogame/*</url-pattern>
     </servlet-mapping>
 
 	<welcome-file-list>
