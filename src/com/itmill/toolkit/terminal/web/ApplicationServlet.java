@@ -711,7 +711,7 @@ public class ApplicationServlet extends HttpServlet implements
 						page.write("<script language=\"JavaScript\">\n");
 						String appUrl = getApplicationUrl(request).toString();
 						page
-								.write("var client = new itmill.toolkit.Client("
+								.write("var client = new itmill.Client("
 										+ "document.getElementById('ajax-window'),"
 										+ "\""
 										+ appUrl
@@ -728,7 +728,7 @@ public class ApplicationServlet extends HttpServlet implements
 
 						for (int k = themes.size() - 1; k >= 0; k--) {
 							t = (Theme) themes.get(k);
-							String themeObjName = "itmill.toolkit.themes." + 
+							String themeObjName = "itmill.themes." + 
 								t.getName().substring(0, 1)
 									.toUpperCase()
 									+ t.getName().substring(1);
