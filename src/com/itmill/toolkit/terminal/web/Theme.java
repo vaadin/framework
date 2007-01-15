@@ -130,11 +130,11 @@ public class Theme extends DefaultHandler {
 
 	private static final String ATTR_MARKUP = "markup";
 
-	public static final String MODE_UIDL = "uidl";
+	public static final String MODE_AJAX = "ajax";
 
-	public static final String MODE_XSLT = "xslt";
+	public static final String MODE_HTML = "html";
 
-	public static final String MODE_FALLBACK = MODE_XSLT;
+	public static final String MODE_FALLBACK = MODE_HTML;
 
 	/** Name of the theme. */
 	private String name;
@@ -321,11 +321,11 @@ public class Theme extends DefaultHandler {
 			String mode = atts.getValue(ATTR_MODE);
 			if (mode != null && mode.length() == 0)
 				mode = null;
-			if (mode != null && !mode.equals(MODE_UIDL)
-					&& !mode.equals(MODE_XSLT))
+			if (mode != null && !mode.equals(MODE_AJAX)
+					&& !mode.equals(MODE_HTML))
 				throw new IllegalStateException("Given mode '" + mode
 						+ "' is not supported. (This version only supports '"
-						+ MODE_XSLT + "' and '" + MODE_UIDL + "')");
+						+ MODE_HTML + "' and '" + MODE_AJAX + "')");
 			fs = new Fileset(mode);
 
 			// Use the first fileset as root fileset

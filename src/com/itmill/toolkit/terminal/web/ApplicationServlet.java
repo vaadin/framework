@@ -647,21 +647,21 @@ public class ApplicationServlet extends HttpServlet implements
 						throw new ServletException("Theme (named '"
 								+ themeName + "') can not be found");
 
-					// If UIDL rendering mode is preferred, a page for it is
+					// If ajax rendering mode is preferred, a page for it is
 					// rendered
 					String renderingMode = theme.getPreferredMode(terminalType,
 							themeSource);
 					if (unhandledParameters.get("renderingMode") != null)
 						renderingMode = (String) ((Object[]) unhandledParameters
 								.get("renderingMode"))[0];
-					if (Theme.MODE_UIDL.equals(renderingMode)
+					if (Theme.MODE_AJAX.equals(renderingMode)
 							&& !(window instanceof DebugWindow)) {
 						writeAjaxPage(request, response, out, unhandledParameters, window, terminalType, theme);
 						return;
 					}
 
-					// If other than XSLT or UIDL mode is requested
-					if (!Theme.MODE_XSLT.equals(renderingMode)
+					// If other than html or ajax mode is requested
+					if (!Theme.MODE_HTML.equals(renderingMode)
 							&& !(window instanceof DebugWindow)) {
 						// TODO More informal message should be given is browser
 						// is not supported
@@ -820,7 +820,7 @@ public class ApplicationServlet extends HttpServlet implements
 		for (int k = themes.size() - 1; k >= 0; k--) {
 			t = (Theme) themes.get(k);
 			Collection files = t.getFileNames(terminalType,
-					Theme.MODE_UIDL);
+					Theme.MODE_AJAX);
 			for (Iterator i = files.iterator(); i.hasNext();) {
 				String file = (String) i.next();
 				if (file.endsWith(".css"))

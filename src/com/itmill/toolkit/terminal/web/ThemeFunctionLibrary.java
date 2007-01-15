@@ -440,7 +440,7 @@ public class ThemeFunctionLibrary {
 	static public String getCssLinksForHead() {
 		ApplicationServlet as = (ApplicationServlet) ((Object[]) state.get())[WEBADAPTERSERVLET];
 		Theme t = as.getThemeSource().getThemeByName(theme());
-		Collection allFiles = t.getFileNames(browser(), Theme.MODE_XSLT);
+		Collection allFiles = t.getFileNames(browser(), Theme.MODE_HTML);
 		StringBuffer links = new StringBuffer();
 		for (Iterator i = allFiles.iterator(); i.hasNext();) {
 			String file = (String) i.next();
@@ -457,7 +457,7 @@ public class ThemeFunctionLibrary {
 	static public String getJavaScriptLinksForHead() {
 		ApplicationServlet as = (ApplicationServlet) ((Object[]) state.get())[WEBADAPTERSERVLET];
 		Theme t = as.getThemeSource().getThemeByName(theme());
-		Collection allFiles = t.getFileNames(browser(), Theme.MODE_XSLT);
+		Collection allFiles = t.getFileNames(browser(), Theme.MODE_HTML);
 		StringBuffer links = new StringBuffer();
 		for (Iterator i = allFiles.iterator(); i.hasNext();) {
 			String file = (String) i.next();

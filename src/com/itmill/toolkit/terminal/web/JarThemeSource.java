@@ -168,7 +168,7 @@ public class JarThemeSource implements ThemeSource {
 				}
 			}
 
-			Collection fileNames = theme.getFileNames(type, Theme.MODE_XSLT);
+			Collection fileNames = theme.getFileNames(type, Theme.MODE_HTML);
 			// Add all XSL file streams
 			for (Iterator i = fileNames.iterator(); i.hasNext();) {
 				entry = jar.getJarEntry(this.path + (String) i.next());
