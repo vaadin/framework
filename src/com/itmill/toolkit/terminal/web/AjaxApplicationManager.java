@@ -62,7 +62,7 @@ import com.itmill.toolkit.ui.Window;
 /** Application manager processes changes and paints for single
  *  application instance.
  * 
- * @author IT Mill Ltd, Joonas Lehtinen, Sami Ekblad
+ * @author IT Mill Ltd.
  * @version @VERSION@
  * @since 3.1
  */

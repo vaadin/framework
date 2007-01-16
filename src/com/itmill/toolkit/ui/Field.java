@@ -33,7 +33,7 @@ import com.itmill.toolkit.data.Property;
 import com.itmill.toolkit.ui.Component.Focusable;
 
 /**
- * @author Sami Ekblad
+ * @author IT Mill Ltd.
  *
  */
 public interface Field

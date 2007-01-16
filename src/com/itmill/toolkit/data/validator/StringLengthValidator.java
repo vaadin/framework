@@ -32,7 +32,7 @@ import com.itmill.toolkit.data.*;
 
 
 /**
- * @author Administrator
+ * @author IT Mill Ltd.
  *
  * To change this generated comment edit the template variable "typecomment":
  * Window>Preferences>Java>Templates.

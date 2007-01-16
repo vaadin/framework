@@ -52,7 +52,7 @@ import com.itmill.toolkit.terminal.VariableOwner;
 
 /** Variable map for ajax applications.
  * 
- * @author IT Mill Ltd, Joonas Lehtinen
+ * @author IT Mill Ltd.
  * @version @VERSION@
  * @since 3.1
  */
