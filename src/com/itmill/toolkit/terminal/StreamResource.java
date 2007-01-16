@@ -168,7 +168,7 @@ public class StreamResource implements ApplicationResource {
 		return cacheTime;
 	}
 
-	/** Set lenght of cache expiracy time.
+	/** Set lenght of cache expiration time.
 	 * 
 	 * <p>This gives the adapter the possibility cache streams sent to the
 	 * client. The caching may be made in adapter or at the client if the 

@@ -116,7 +116,7 @@ public class FileResource implements ApplicationResource {
 		return FileTypeResolver.getMIMEType(sourceFile);
 	}
 	
-	/** Get lenght of cache expiracy time.
+	/** Get lenght of cache expiration time.
 	 *  This gives the adapter the possibility cache streams sent to the client.
 	 *  The caching may be made in adapter or at the client if the client supports
 	 *  caching. Default is DownloadStream.DEFAULT_CACHETIME.
@@ -126,7 +126,7 @@ public class FileResource implements ApplicationResource {
 		return cacheTime;
 	}
 
-	/** Set lenght of cache expiracy time.
+	/** Set lenght of cache expiration time.
 	 *  This gives the adapter the possibility cache streams sent to the client.
 	 *  The caching may be made in adapter or at the client if the client supports
 	 *  caching. Zero or negavive value disbales the caching of this stream.

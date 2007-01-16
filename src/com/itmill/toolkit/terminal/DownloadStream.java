@@ -145,7 +145,7 @@ public class DownloadStream {
 		return null;
 	}
 	
-	/** Get lenght of cache expiracy time.
+	/** Get lenght of cache expiration time.
 	 *  This gives the adapter the possibility cache streams sent to the client.
 	 *  The caching may be made in adapter or at the client if the client supports
 	 *  caching. Default is DEFAULT_CACHETIME.
@@ -155,7 +155,7 @@ public class DownloadStream {
 		return cacheTime;
 	}
 
-	/** Set lenght of cache expiracy time.
+	/** Set lenght of cache expiration time.
 	 *  This gives the adapter the possibility cache streams sent to the client.
 	 *  The caching may be made in adapter or at the client if the client supports
 	 *  caching. Zero or negavive value disbales the caching of this stream.

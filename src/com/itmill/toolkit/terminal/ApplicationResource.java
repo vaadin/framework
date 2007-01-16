@@ -54,7 +54,7 @@ public interface ApplicationResource extends Resource {
 	/** Get virtual filename for the resource */
 	public String getFilename();
 	
-	/** Get lenght of cache expiracy time.
+	/** Get lenght of cache expiration time.
 	 * 
 	 * <p>This gives the adapter the possibility cache streams sent to the 
 	 * client. The caching may be made in adapter or at the client if the 
