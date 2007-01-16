@@ -34,17 +34,17 @@ import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
 
 /** 
- * ProgressIndicator is component that shows user state of a prosess 
+ * ProgressIndicator is component that shows user state of a process 
  * (like long computing or file upload)
  *
- * ProgressIndicator has two mainmodes. One for indeterminete prosesses and 
- * other (default) for prosesses which progress can be measured
+ * ProgressIndicator has two mainmodes. One for indeterminate processes and 
+ * other (default) for processes which progress can be measured
  *
  * May view an other property that indicates progress 0...1
  * 
  * @author IT Mill Ltd.
  * @version @VERSION@
- * @since 29122006
+ * @since 3.1
  */
 public class ProgressIndicator
 	extends AbstractField

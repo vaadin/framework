@@ -54,7 +54,8 @@ import com.itmill.toolkit.terminal.Resource;
  * selectable table.
  * 
  * @author IT Mill Ltd.
- * @version @VERSION@ @since 3.0
+ * @version @VERSION@ 
+ * @since 3.0
  */
 public class Table extends Select implements Action.Container,
         Container.Ordered, Container.Sortable {

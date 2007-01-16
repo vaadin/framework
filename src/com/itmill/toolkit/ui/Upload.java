@@ -303,7 +303,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
 		public void uploadFinished(FinishedEvent event);
 	}
 
-	/** Receives events when the uploads are finished, but unsuccessfull. 
+	/** Receives events when the uploads are finished, but unsuccessful.
 	 * @author IT Mill Ltd.
 		 * @version @VERSION@
 	 * @since 3.0
