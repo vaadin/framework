@@ -62,11 +62,11 @@ public class ProgressIndicator
 	 */
 	public static final int CONTENT_PREFORMATTED = 1;
 	
-	private boolean indeterminate;
+	private boolean indeterminate = false;
 
 	private Property dataSource;
 
-	private int pollingInterval;
+	private int pollingInterval = 1000;
 
 	/** Creates an a new ProgressIndicator. */
 	public ProgressIndicator() {
