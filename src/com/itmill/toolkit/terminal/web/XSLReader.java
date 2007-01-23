@@ -101,7 +101,7 @@ public class XSLReader implements XMLReader, ContentHandler {
 		}
 	}
 
-	private static final String JAVA_PREFIX = "java://";
+	private static final String[] JAVA_PREFIX = {"java://", "millstone://"};
 	private Collection streams;
 	private boolean startTagHandled = false;
 	private String xslNamespace = "";
@@ -421,29 +421,30 @@ public class XSLReader implements XMLReader, ContentHandler {
 		public String getURI(int index) {
 			String uri = original.getURI(index);
 
-			if (uri != null && uri.startsWith(JAVA_PREFIX)) {
+			for (int i=0; i<JAVA_PREFIX.length; i++)
+			if (uri != null && uri.startsWith(JAVA_PREFIX[i])) {
 
 				System.out.print("DEBUG " + uri + " --> ");
 				switch (xsltProcessor) {
 					case XSLT_SAXON6 :
 						uri =
 							"saxon://"
-								+ uri.substring(JAVA_PREFIX.length());
+								+ uri.substring(JAVA_PREFIX[i].length());
 						break;
 					case XSLT_SAXON7 :
 						uri =
 							"saxon://"
-								+ uri.substring(JAVA_PREFIX.length());
+								+ uri.substring(JAVA_PREFIX[i].length());
 						break;
 					case XSLT_XALAN :
 						uri =
 							"xalan://"
-								+ uri.substring(JAVA_PREFIX.length());
+								+ uri.substring(JAVA_PREFIX[i].length());
 						break;
 					default :
 						uri =
 							"xalan://"
-								+ uri.substring(JAVA_PREFIX.length());
+								+ uri.substring(JAVA_PREFIX[i].length());
 						break;
 				}
 				System.out.println(uri);
