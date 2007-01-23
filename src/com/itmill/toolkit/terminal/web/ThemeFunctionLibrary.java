@@ -525,10 +525,10 @@ public class ThemeFunctionLibrary {
 						WebBrowser.JAVASCRIPT_1_5) || browser
 						.getJavaScriptVersion()
 						.supports(WebBrowser.JSCRIPT_1_0))) {
-			script += "try { form = win.document.forms[\"itmill\"]; if (typeof form != 'undefined') form = win.document.forms[\"millstone\"];"
+			script += "try { form = win.document.forms[\"itmill\"]; if (typeof form == 'undefined') form = win.document.forms[\"millstone\"];"
 					+ "} catch (e) { form = null;}";
 		} else {
-			script += "form = win.document.forms[\"itmill\"]; if (typeof form != 'undefined') form = win.document.forms[\"millstone\"];";
+			script += "form = win.document.forms[\"itmill\"]; if (typeof form == 'undefined') form = win.document.forms[\"millstone\"];";
 		}
 
 		script += "if (form != null) {" + "form.submit();"
