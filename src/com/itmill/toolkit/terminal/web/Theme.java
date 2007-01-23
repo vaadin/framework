@@ -1030,9 +1030,6 @@ public class Theme extends DefaultHandler {
 		public boolean supports(WebBrowser terminal) {
 			if (requirements.isMet(terminal))
 				return true;
-			Log.info("Skipped fileset " + Theme.this.getName() + "/"
-					+ this.getName()
-					+ " because all requirements were not met.");
 			return false;
 		}
 
