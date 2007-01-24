@@ -348,6 +348,9 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
         // Set the window name
         target.addAttribute("name", getName());
 
+        // Set the window theme
+        target.addAttribute("theme", getTheme());
+
         // Mark main window
         if (getApplication() != null
                 && this == getApplication().getMainWindow())
