@@ -16,8 +16,6 @@
 		<property name="toolkit-package" value="com/itmill/toolkit" />
 
 		<property file="build/html-style.properties" />
-		<property name="html.body.tag" value="&lt;body>" />
-		<property name="html.body.endtag" value="&lt;/body>" />
 
 		<!-- Destination files -->
 		<property name="package-file-name" value="${product-file}-${version}.zip" />
@@ -174,7 +172,7 @@
 			<filterchain>
 				<expandproperties />
 				<replacetokens begintoken="&lt;" endtoken=">">
-					<token key="body" value="${html.body.tag}${html.body.start}" />
+					<token key="body" value="${html.body.tag}${html.body.start1}${product-name}${html.body.start2}" />
 					<token key="/body" value="${html.body.end}${html.body.endtag}" />
 				</replacetokens>
 			</filterchain>
@@ -239,7 +237,7 @@
 <copy file="build/docbook/conf/custom-html-docbook.xsl" tofile="build/docbook/conf/temp.xsl">
 	<filterchain>
 		<replacetokens>
-			<token key="BODYHEADER" value="${html.body.start}" />
+			<token key="BODYHEADER" value="${html.body.start1}${docbook.head.title}${html.body.start2}" />
 			<token key="BODYFOOTER" value="${html.body.end}" />
 		</replacetokens>
 	</filterchain>
