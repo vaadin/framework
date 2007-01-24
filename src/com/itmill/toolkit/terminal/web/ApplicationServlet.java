@@ -808,7 +808,7 @@ public class ApplicationServlet extends HttpServlet implements
 
 		page.write("<html><head>\n<title>"
 				+ window.getCaption() + "</title>\n");
-
+		page.write("<NOSCRIPT><META http-equiv=\"refresh\" content=\"0; url=?WA_NOSCRIPT=1\" /></NOSCRIPT>\n");
 		Theme t = theme;
 		Vector themes = new Vector();
 		themes.add(t);
