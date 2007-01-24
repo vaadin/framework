@@ -31,6 +31,8 @@ package com.itmill.toolkit.demo.features;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 
+import quicktime.streaming.SettingsDialog;
+
 import com.itmill.toolkit.data.*;
 import com.itmill.toolkit.terminal.ClassResource;
 import com.itmill.toolkit.ui.*;
@@ -44,6 +46,7 @@ public class FeatureBrowser
 	private GridLayout layout;
 	private Component welcome;
 	private boolean initialized = false;
+	private Select themeSelector = new Select("Theme");
 
 	private static final String WELCOME_TEXT =
 		"<h3>Welcome to the IT Mill Toolkit feature tour!</h3>"
@@ -74,9 +77,6 @@ public class FeatureBrowser
 		setCompositionRoot(layout);
 		OrderedLayout left = new OrderedLayout();
 		left.addComponent(features);
-		Button close = new Button("restart", getApplication(), "close");
-		left.addComponent(close);
-		close.setStyle("link");
 		layout.addComponent(left, 0, 0, 0, 0);
 		Label greeting = new Label(WELCOME_TEXT, Label.CONTENT_XHTML);
 		OrderedLayout welcomePanel = new OrderedLayout();
@@ -90,6 +90,20 @@ public class FeatureBrowser
 		welcomePanel.addComponent(welcome);
 		welcomePanel.addComponent(greeting);
 		layout.addComponent(welcomePanel, 1, 0, 1, 0);
+
+		// Theme selector
+		left.addComponent(themeSelector);
+		themeSelector.addItem("demo");
+		themeSelector.addItem("corporate");
+		themeSelector.addItem("base");
+		themeSelector.addListener(this);
+		themeSelector.select("corporate");
+		themeSelector.setImmediate(true);
+		
+		// Restart button
+		Button close = new Button("restart", getApplication(), "close");
+		left.addComponent(close);
+		close.setStyle("link");
 
 		// Test component
 		registerFeature(
@@ -194,6 +208,8 @@ public class FeatureBrowser
 							+ features.getContainerProperty(id, "name"));
 				}
 			}
+		} else if (event.getProperty() == themeSelector) {
+			getApplication().setTheme(themeSelector.toString());
 		}
 	}
 }
