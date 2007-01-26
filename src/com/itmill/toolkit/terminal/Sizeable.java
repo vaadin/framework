@@ -67,6 +67,11 @@ public interface Sizeable {
 	 */
 	public static final int UNITS_PERCENTAGE = 8;
 
+	/** Unit code representing in rows of text. This unit is only applicaple 
+	 * to some components can it's meaning is specified by component implementation.
+	 */
+	public static final int UNITS_ROWS = 9;
+
 	/** Textual representations of units symbols.
 	 *  Supported units and their symbols are:
 	 *  <ul>
@@ -79,11 +84,12 @@ public interface Sizeable {
 	 *  <li><code>UNITS_CM</code>. "cm"</li>
 	 *  <li><code>UNITS_INCH</code>: "in"</li>
 	 *  <li><code>UNITS_PERCENTAGE</code>: "%"</li>
+	 *  <li><code>UNITS_ROWS</code>: "rows"</li>
 	 *  </ul>
 	 *  These can be used like <code>Sizeable.UNIT_SYMBOLS[UNITS_PIXELS]</code>.
 	 */
 	public static final String[] UNIT_SYMBOLS =
-		{ "", "pt", "pc", "em", "ex", "mm", "cm", "in", "%" };
+		{ "", "pt", "pc", "em", "ex", "mm", "cm", "in", "%", "rows" };
 
 	/** Get width of the object. Negative number implies unspecified size
 	 * (terminal is free to set the size).
