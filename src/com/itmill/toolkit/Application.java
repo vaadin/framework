@@ -423,7 +423,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 		this.theme = theme;
 
 		// Ask windows to update themselves
-		for (Iterator i = getWindows().iterator(); i.hasNext();)
+		for (Iterator i = toBeUpdated.iterator(); i.hasNext();)
 			((Window) i.next()).requestRepaint();
 	}
 
