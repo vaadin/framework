@@ -164,6 +164,12 @@ public class FeatureTable extends Feature implements Action.Handler {
 		p.addProperties("Table Properties", ap);
 		l.addComponent(p);
 
+		t.setRowHeaderMode(Table.ROW_HEADER_MODE_EXPLICIT_DEFAULTS_ID);
+		t.setColumnHeaderMode(Table.COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID);
+		t.setColumnCollapsingAllowed(true);
+		t.setColumnReorderingAllowed(true);
+		t.setSelectable(true);
+		
 		return l;
 	}
 
