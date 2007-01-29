@@ -56,7 +56,7 @@ public class FeatureDateField extends Feature {
 
 		// Example panel
 		Panel show = new Panel("DateField component");
-		DateField df = new DateField("Caption");
+		DateField df = new DateField();
 		df.setValue(new java.util.Date());
 		show.addComponent(df);
 		l.addComponent(show);
@@ -100,6 +100,7 @@ public class FeatureDateField extends Feature {
 			.addItem("calendar")
 			.getItemProperty(themes.getItemCaptionPropertyId())
 			.setValue("calendar");
+		df.setStyle("calendar");
 		p.addProperties("DateField Properties", ap);
 		l.addComponent(p);
 
