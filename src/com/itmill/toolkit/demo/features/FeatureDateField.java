@@ -90,6 +90,7 @@ public class FeatureDateField extends Feature {
 				"Minute",
 				"Second",
 				"Millisecond" });
+		ap.setValue(DateField.RESOLUTION_DAY);
 		Select themes = (Select) p.getField("style");
 		themes
 			.addItem("text")
@@ -100,6 +101,7 @@ public class FeatureDateField extends Feature {
 			.getItemProperty(themes.getItemCaptionPropertyId())
 			.setValue("calendar");
 		p.addProperties("DateField Properties", ap);
+		themes.setValue("calendar");
 		l.addComponent(p);
 
 		return l;
