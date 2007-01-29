@@ -1885,6 +1885,10 @@ public class ApplicationServlet extends HttpServlet implements
 			application.removeListener((Application.WindowAttachListener) this);
 			application.removeListener((Application.WindowDetachListener) this);
 
+			// Deregister all window listeners
+			for (Iterator wins = application.getWindows().iterator(); wins.hasNext();)
+				((Window)wins.next()).removeListener((Paintable.RepaintRequestListener)this);
+			
 			// Manager takes control over the application
 			mgr.takeControl();
 		}
