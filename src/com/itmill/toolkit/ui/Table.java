@@ -48,6 +48,7 @@ import com.itmill.toolkit.terminal.KeyMapper;
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
 import com.itmill.toolkit.terminal.Resource;
+import com.itmill.toolkit.terminal.Sizeable;
 
 /**
  * Table component is used for representing data or components in pageable and
@@ -58,7 +59,7 @@ import com.itmill.toolkit.terminal.Resource;
  * @since 3.0
  */
 public class Table extends Select implements Action.Container,
-        Container.Ordered, Container.Sortable {
+        Container.Ordered, Container.Sortable, Sizeable {
 
     private static final int CELL_KEY = 0;
 
@@ -69,6 +70,18 @@ public class Table extends Select implements Action.Container,
     private static final int CELL_ITEMID = 3;
 
     private static final int CELL_FIRSTCOL = 4;
+    
+	/** Width of the table or -1 if unspecified */
+	private int width = -1;
+
+	/** Height of the table or -1 if unspecified */
+	private int height = -1;
+
+	/** Width unit */
+	private int widthUnit = Sizeable.UNITS_PIXELS;
+
+	/** Height unit */
+	private int heightUnit = Sizeable.UNITS_PIXELS;
 
     /**
      * Left column alignment. <b>This is the default behaviour. </b>
@@ -1246,6 +1259,13 @@ public class Table extends Select implements Action.Container,
         if (this.getTabIndex() > 0)
             target.addAttribute("tabindex", this.getTabIndex());
 
+        // Size
+        if (getHeight() >= 0)
+        	target.addAttribute("height", "" + getHeight() + Sizeable.UNIT_SYMBOLS[getHeightUnits()]);
+        if (getWidth() >= 0)
+        	target.addAttribute("width", "" + getWidth()+ Sizeable.UNIT_SYMBOLS[getWidthUnits()]);
+
+        
         // Initialize temps
         Object[] colids = getVisibleColumns();
         int cols = colids.length;
@@ -2112,4 +2132,72 @@ public class Table extends Select implements Action.Container,
             refreshCurrentPage();
         }
     }
+
+	/**
+	 * @see com.itmill.toolkit.terminal.Sizeable#getHeightUnits()
+	 */
+	public int getHeightUnits() {
+		return heightUnit;
+	}
+
+	/**
+	 * @see com.itmill.toolkit.terminal.Sizeable#getWidthUnits()
+	 */
+	public int getWidthUnits() {
+		return widthUnit;
+	}
+
+	/** Set height units.
+	 * Table supports only Sizeable.UNITS_PIXELS and Sizeable.UNITS_ROWS. Setting to any other throws
+	 * IllegalArgumentException.
+	 * @see com.itmill.toolkit.terminal.Sizeable#setHeightUnits(int)
+	 */
+	public void setHeightUnits(int units) {
+		if (units != Sizeable.UNITS_PIXELS && units != Sizeable.UNITS_ROWS)
+			throw new IllegalArgumentException();
+		this.heightUnit = units;
+	}
+
+	/** Set width units.
+	 *  Tabel supports only Sizeable.UNITS_PIXELS. Setting to any other throws
+	 * IllegalArgumentException.
+	 * @see com.itmill.toolkit.terminal.Sizeable#setWidthUnits(int)
+	 */
+	public void setWidthUnits(int units) {
+		if (units != Sizeable.UNITS_PIXELS)
+			throw new IllegalArgumentException();
+		this.heightUnit = units;
+	}
+	
+	/**
+	 * @return  The height in pixels or negative value if not assigned.
+	 */
+	public int getHeight() {
+		return height;
+	}
+
+	/**
+	 * @return The width in pixels or negative value if not assigned. 
+	 */
+	public int getWidth() {
+		return width;
+	}
+
+	/** Sets the height in pixels.
+	 * Use negative value to let the client decide the height.
+	 * @param height The height to set
+	 */
+	public void setHeight(int height) {
+		this.height = height;
+		requestRepaint();
+	}
+
+	/** Sets the width in pixels.
+	 * Use negative value to allow the client decide the width.
+	 * @param width The width to set
+	 */
+	public void setWidth(int width) {
+		this.width = width;
+		requestRepaint();
+	}
 }
