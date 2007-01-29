@@ -244,6 +244,18 @@ public class Table extends Select implements Action.Container,
      * sortable. */
     private boolean sortDisabled = false;
     
+    /** Number of rows explicitly requested by the client to be painted on next paint. 
+     * This is -1 if no request by the client is made. Painting the component will automatically
+     * reset this to -1. 
+     */
+    private int reqRowsToPaint = -1;
+    
+    /** Index of the first rows explicitly requested by the client to be painted.
+     * This is -1 if no request by the client is made. Painting the component will automatically
+     * reset this to -1.  
+     */
+    private int reqFirstRowToPaint = -1;     
+    
     /* Table constructors *************************************************** */
 
     /** Create new empty table */
@@ -1172,6 +1184,18 @@ public class Table extends Select implements Action.Container,
                 setCurrentPageFirstItemIndex(value.intValue() - 1);
         }
 
+        // Set requested firstrow and rows for the next paint
+        if (variables.containsKey("reqfirstrow") || variables.containsKey("reqrows")) {
+            Integer value = (Integer) variables.get("reqfirstrow");
+            if (value != null) 
+                reqFirstRowToPaint = value.intValue() -1;
+            value = (Integer) variables.get("reqrows");
+            if (value != null) 
+                reqRowsToPaint = value.intValue();
+            pageBuffer = null;
+            requestRepaint();
+        }
+
         // Actions
         if (variables.containsKey("action")) {
             StringTokenizer st = new StringTokenizer((String) variables
@@ -1295,6 +1319,7 @@ public class Table extends Select implements Action.Container,
             target.addAttribute("selectmode", "none");
         target.addAttribute("cols", cols);
         target.addAttribute("rows", cells[0].length);
+        target.addAttribute("firstrow", (reqFirstRowToPaint >= 0 ? reqFirstRowToPaint : first) + 1);
         target.addAttribute("totalrows", total);
         if (pagelen != 0)
             target.addAttribute("pagelength", pagelen);
@@ -1302,7 +1327,7 @@ public class Table extends Select implements Action.Container,
             target.addAttribute("colheaders", true);
         if (rowheads)
             target.addAttribute("rowheaders", true);
-
+        
         // Columns
         target.startTag("cols");
         Collection sortables = getSortableContainerPropertyIds();
@@ -1416,6 +1441,13 @@ public class Table extends Select implements Action.Container,
             target.addVariable(this, "sortascending", this.sortAscending);
         }
 
+        // Reset and paint "to be painted next" variables. Also reset pageBuffer
+        reqFirstRowToPaint = -1;
+        reqRowsToPaint = -1;
+        pageBuffer = null;
+        target.addVariable(this, "reqrows", reqRowsToPaint);
+        target.addVariable(this, "reqfirstrow", reqFirstRowToPaint);        
+
         // Actions
         if (!actionSet.isEmpty()) {
             target.startTag("actions");
@@ -1519,19 +1551,33 @@ public class Table extends Select implements Action.Container,
         int rows = size();
         if (rows > 0 && firstIndex >= 0)
             rows -= firstIndex;
-        
         if (pagelen > 0 && pagelen < rows)
             rows = pagelen;
+        
+        // If "to be painted next" variables are set, use them
+        if (reqRowsToPaint >= 0) rows = reqRowsToPaint;
+        Object id;
+        if (reqFirstRowToPaint >= 0 && reqFirstRowToPaint < size()) 
+        	firstIndex = reqFirstRowToPaint;
+        if (rows + firstIndex > size()) rows = size() - firstIndex;
+
+        // Get first item id
+        if (items instanceof Container.Indexed) 
+        	id = ((Container.Indexed) items).getIdByIndex(firstIndex);
+        else {
+        	id = ((Container.Ordered) items).firstItemId();
+        	for (int i=0; i<firstIndex; i++) id = ((Container.Ordered) items).nextItemId(id);
+        }
+
         Object[][] cells = new Object[cols + CELL_FIRSTCOL][rows];
         if (rows == 0)
             return cells;
-        Object id = getCurrentPageFirstItemId();
         int headmode = getRowHeaderMode();
         boolean[] iscomponent = new boolean[cols];
         for (int i = 0; i < cols; i++)
             iscomponent[i] = Component.class
                     .isAssignableFrom(getType(colids[i]));
-
+        
         // Create page contents
         int filledRows = 0;
         for (int i = 0; i < rows && id != null; i++) {
@@ -2200,4 +2246,5 @@ public class Table extends Select implements Action.Container,
 		this.width = width;
 		requestRepaint();
 	}
+
 }
