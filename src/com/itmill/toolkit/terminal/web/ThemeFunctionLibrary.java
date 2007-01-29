@@ -40,6 +40,7 @@ import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
+import java.util.Vector;
 
 import javax.servlet.http.HttpSession;
 
@@ -440,16 +441,30 @@ public class ThemeFunctionLibrary {
 	static public String getCssLinksForHead() {
 		ApplicationServlet as = (ApplicationServlet) ((Object[]) state.get())[WEBADAPTERSERVLET];
 		Theme t = as.getThemeSource().getThemeByName(theme());
-		Collection allFiles = t.getFileNames(browser(), Theme.MODE_HTML);
+
+		// Also iterate parent themes
+		Vector themes = new Vector();
+		themes.add(t);
+		while (t.getParent() != null) {
+			String parentName = t.getParent();
+			t = as.getThemeSource().getThemeByName(parentName);
+			themes.add(t);
+		}
+
+		// Generate links
 		StringBuffer links = new StringBuffer();
-		for (Iterator i = allFiles.iterator(); i.hasNext();) {
-			String file = (String) i.next();
-			if (file.endsWith(".css")) {
-				links
-						.append("<LINK REL=\"STYLESHEET\" TYPE=\"text/css\" HREF=\""
-								+ resource(file) + "\"/>\n");
+		for (int k = themes.size() - 1; k >= 0; k--) {
+			Collection allFiles = ((Theme)themes.get(k)).getFileNames(browser(), Theme.MODE_HTML);
+			for (Iterator i = allFiles.iterator(); i.hasNext();) {
+				String file = (String) i.next();
+				if (file.endsWith(".css")) {
+					links
+							.append("<LINK REL=\"STYLESHEET\" TYPE=\"text/css\" HREF=\""
+									+ resource(file) + "\"/>\n");
+				}
 			}
 		}
+
 		return links.toString();
 	}
 
@@ -457,15 +472,30 @@ public class ThemeFunctionLibrary {
 	static public String getJavaScriptLinksForHead() {
 		ApplicationServlet as = (ApplicationServlet) ((Object[]) state.get())[WEBADAPTERSERVLET];
 		Theme t = as.getThemeSource().getThemeByName(theme());
-		Collection allFiles = t.getFileNames(browser(), Theme.MODE_HTML);
+
+		// Also iterate parent themes
+		Vector themes = new Vector();
+		themes.add(t);
+		while (t.getParent() != null) {
+			String parentName = t.getParent();
+			t = as.getThemeSource().getThemeByName(parentName);
+			themes.add(t);
+		}
+
+		// Generate links
 		StringBuffer links = new StringBuffer();
-		for (Iterator i = allFiles.iterator(); i.hasNext();) {
-			String file = (String) i.next();
-			if (file.endsWith(".js")) {
-				links.append("<SCRIPT LANGUAGE=\"Javascript\" SRC=\""
-						+ resource(file) + "\"></SCRIPT>\n");
+		for (int k = themes.size() - 1; k >= 0; k--) {
+			Collection allFiles = ((Theme) themes.get(k)).getFileNames(
+					browser(), Theme.MODE_HTML);
+			for (Iterator i = allFiles.iterator(); i.hasNext();) {
+				String file = (String) i.next();
+				if (file.endsWith(".js")) {
+					links.append("<SCRIPT LANGUAGE=\"Javascript\" SRC=\""
+							+ resource(file) + "\"></SCRIPT>\n");
+				}
 			}
 		}
+
 		return links.toString();
 	}
 
