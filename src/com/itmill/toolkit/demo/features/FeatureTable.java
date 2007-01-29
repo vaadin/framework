@@ -104,7 +104,6 @@ public class FeatureTable extends Feature implements Action.Handler {
 					eyecolors[(int) (Math.random() * 3)],
 					haircolors[(int) (Math.random() * 4)] },
 				new Integer(j));
-			t.setItemIcon(id,getSampleIcon());
 		}
 
 		// Actions
