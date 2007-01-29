@@ -62,13 +62,15 @@ public class FeatureDateField extends Feature {
 		l.addComponent(show);
 
 		// Create locale selector
+		/* Hide locale selector, until this bug #244
 		Select selector = new Select("Application Locale",localeContainer);
 		selector.setItemCaptionPropertyId("name");
 		selector.setImmediate(true);
 		selector.setPropertyDataSource(
 			new MethodProperty(this.getApplication(), "locale"));
 		l.addComponent(selector);
-
+		*/
+	
 		// Properties
 		PropertyPanel p = new PropertyPanel(df);
 		Form ap = p.createBeanPropertySet(new String[] { "resolution" });
