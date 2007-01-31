@@ -38,6 +38,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import com.itmill.toolkit.data.*;
+import com.itmill.toolkit.data.Property.ValueChangeListener;
 import com.itmill.toolkit.data.util.*;
 import com.itmill.toolkit.terminal.*;
 import com.itmill.toolkit.ui.*;
@@ -300,7 +301,7 @@ public class PropertyPanel
 	private void addSelectProperties() {
 		Form set =
 			createBeanPropertySet(
-				new String[] { "multiSelect", "newItemsAllowed" });
+				new String[] {  "newItemsAllowed", "lazyLoading" ,"multiSelect"});
 		addProperties("Select Properties", set);
 
 		set.getField("multiSelect").setDescription(
@@ -309,9 +310,19 @@ public class PropertyPanel
 			"Select component (but not Tree or Table) can allow the user to directly "
 				+ "add new items to set of options. The new items are constrained to be "
 				+ "strings and thus feature only applies to simple lists.");
+		Button ll = (Button) set.getField("lazyLoading");
+		ll.setDescription("In Ajax rendering mode select supports lazy loading and filtering of options.");
+		ll.addListener((ValueChangeListener)this);
+		ll.setImmediate(true);
+		if (((Boolean)ll.getValue()).booleanValue()) {
+			set.getField("multiSelect").setVisible(false);
+			set.getField("newItemsAllowed").setVisible(false);
+		}
 		if (objectToConfigure instanceof Tree
-			|| objectToConfigure instanceof Table)
-			set.removeItemProperty("newItemsAllowed");
+				|| objectToConfigure instanceof Table) {
+				set.removeItemProperty("newItemsAllowed");
+				set.removeItemProperty("lazyLoading");
+		}
 	}
 
 	/** Field special properties */
@@ -414,6 +425,19 @@ public class PropertyPanel
 				}
 
 				addComponent.setValue(null);
+			}
+		} else if (event.getProperty() == getField("lazyLoading")) {
+			boolean newValue = ((Boolean)event.getProperty().getValue()).booleanValue();
+			Field multiselect = getField("multiSelect");
+			Field newitems = getField("newItemsAllowed");
+			if (newValue) {
+				newitems.setValue(Boolean.FALSE);
+				newitems.setVisible(false);
+				multiselect.setValue(Boolean.FALSE);
+				multiselect.setVisible(false);
+			} else {
+				newitems.setVisible(true);
+				multiselect.setVisible(true);
 			}
 		}
 	}

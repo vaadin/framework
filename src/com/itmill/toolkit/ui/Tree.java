@@ -759,5 +759,14 @@ public class Tree extends Select implements Container.Hierarchical, Action.Conta
 	public void focus() throws UnsupportedOperationException {
 		throw new UnsupportedOperationException();
 	}
+	
+	/** Tree does not support lazy options loading mode. 
+	 * Setting this true will throw UnsupportedOperationException. 
+	 */
+    public void setLazyLoading(boolean useLazyLoading) {
+    	if (useLazyLoading)
+    		throw new UnsupportedOperationException("Lazy options loading is not supported by Tree.");
+	}
+
 
 }

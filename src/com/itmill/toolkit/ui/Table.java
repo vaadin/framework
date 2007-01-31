@@ -61,7 +61,7 @@ import com.itmill.toolkit.terminal.Sizeable;
 public class Table extends Select implements Action.Container,
         Container.Ordered, Container.Sortable, Sizeable {
 
-    private static final int CELL_KEY = 0;
+	private static final int CELL_KEY = 0;
 
     private static final int CELL_HEADER = 1;
 
@@ -2246,5 +2246,14 @@ public class Table extends Select implements Action.Container,
 		this.width = width;
 		requestRepaint();
 	}
+
+	/** Table does not support lazy options loading mode. 
+	 * Setting this true will throw UnsupportedOperationException. 
+	 */
+    public void setLazyLoading(boolean useLazyLoading) {
+    	if (useLazyLoading)
+    		throw new UnsupportedOperationException("Lazy options loading is not supported by Table.");
+	}
+
 
 }

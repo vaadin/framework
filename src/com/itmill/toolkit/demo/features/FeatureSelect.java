@@ -32,6 +32,45 @@ import com.itmill.toolkit.ui.*;
 
 public class FeatureSelect extends Feature {
 
+	private static final String[] firstnames =
+		new String[] {
+			"John",
+			"Mary",
+			"Joe",
+			"Sarah",
+			"Jeff",
+			"Jane",
+			"Peter",
+			"Marc",
+			"Robert",
+			"Paula",
+			"Lenny",
+			"Kenny",
+			"Nathan",
+			"Nicole",
+			"Laura",
+			"José",
+			"Josie",
+			"Linus" };
+	private static final String[] lastnames =
+		new String[] {
+			"Torvalds",
+			"Smith",
+			"Adams",
+			"Black",
+			"Wilson",
+			"Richards",
+			"Thompson",
+			"McGoff",
+			"Halas",
+			"Jones",
+			"Beck",
+			"Sheridan",
+			"Picard",
+			"Hill",
+			"Fielding",
+			"Einstein" };
+	
 	public FeatureSelect() {
 		super();
 	}
@@ -42,11 +81,10 @@ public class FeatureSelect extends Feature {
 
 		// Example panel
 		Panel show = new Panel("Select component");
-		Select s = new Select("Select Car");
-		s.addItem("Audi");
-		s.addItem("BMW");
-		s.addItem("Chrysler");
-		s.addItem("Volvo");
+		Select s = new Select("Select Person");
+		for (int i=0; i<1000; i++)
+			s.addItem(firstnames[(int) (Math.random() * (firstnames.length-1))] + " " +
+					lastnames[(int) (Math.random() * (lastnames.length-1))]);
 		show.addComponent(s);
 		l.addComponent(show);
 
@@ -62,7 +100,7 @@ public class FeatureSelect extends Feature {
 			.getItemProperty(themes.getItemCaptionPropertyId())
 			.setValue("twincol");
 		l.addComponent(p);
-
+		
 		return l;
 	}
 
