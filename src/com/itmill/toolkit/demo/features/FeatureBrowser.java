@@ -93,7 +93,6 @@ public class FeatureBrowser
 
 		// Theme selector
 		left.addComponent(themeSelector);
-		themeSelector.addItem("demo");
 		themeSelector.addItem("corporate");
 		themeSelector.addItem("base");
 		themeSelector.addListener(this);
