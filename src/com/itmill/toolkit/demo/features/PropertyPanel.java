@@ -234,11 +234,20 @@ public class PropertyPanel
 				"Sample System Error" });
 
 		// Style
+		String currentStyle = ((Component)objectToConfigure).getStyle();
+		if (currentStyle == null)
 		set
 			.replaceWithSelect(
 				"style",
 				new Object[] { null },
 				new Object[] { "Default" })
+			.setNewItemsAllowed(true);
+		else
+			set
+			.replaceWithSelect(
+				"style",
+				new Object[] { null, currentStyle },
+				new Object[] { "Default", currentStyle })
 			.setNewItemsAllowed(true);
 
 		// Set up descriptions
