@@ -95,7 +95,7 @@ public class FeatureTable extends Feature implements Action.Handler {
 		t.addContainerProperty("Haircolor", String.class, "");
 
 		// Add random rows to table
-		for (int j = 0; j < 50; j++) {
+		for (int j = 0; j < 500; j++) {
 			Object id = t.addItem(
 				new Object[] {
 					firstnames[(int) (Math.random() * (firstnames.length-1))],
@@ -164,7 +164,7 @@ public class FeatureTable extends Feature implements Action.Handler {
 		p.addProperties("Table Properties", ap);
 		l.addComponent(p);
 
-		t.setRowHeaderMode(Table.ROW_HEADER_MODE_EXPLICIT_DEFAULTS_ID);
+		t.setRowHeaderMode(Table.ROW_HEADER_MODE_INDEX);
 		t.setColumnHeaderMode(Table.COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID);
 		t.setColumnCollapsingAllowed(true);
 		t.setColumnReorderingAllowed(true);
