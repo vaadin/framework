@@ -845,7 +845,7 @@ public class ApplicationServlet extends HttpServlet implements
 
 		page.write("</head><body class=\"itmtk\">\n");
 
-		page.write("<div id=\"ajax-wait\"><div>Loading...</div>\n");
+		page.write("<div id=\"ajax-wait\">Loading...</div>\n");
 
 		page.write("<div id=\"ajax-window\"></div>\n");
 
