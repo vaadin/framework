@@ -1,30 +1,30 @@
 /* *************************************************************************
  
-                               IT Mill Toolkit 
+ IT Mill Toolkit 
 
-               Development of Browser User Interfaces Made Easy
+ Development of Browser User Interfaces Made Easy
 
-                    Copyright (C) 2000-2006 IT Mill Ltd
-                     
-   *************************************************************************
+ Copyright (C) 2000-2006 IT Mill Ltd
+ 
+ *************************************************************************
 
-   This product is distributed under commercial license that can be found
-   from the product package on license.pdf. Use of this product might 
-   require purchasing a commercial license from IT Mill Ltd. For guidelines 
-   on usage, see licensing-guidelines.html
+ This product is distributed under commercial license that can be found
+ from the product package on license.pdf. Use of this product might 
+ require purchasing a commercial license from IT Mill Ltd. For guidelines 
+ on usage, see licensing-guidelines.html
 
-   *************************************************************************
-   
-   For more information, contact:
-   
-   IT Mill Ltd                           phone: +358 2 4802 7180
-   Ruukinkatu 2-4                        fax:   +358 2 4802 7181
-   20540, Turku                          email:  info@itmill.com
-   Finland                               company www: www.itmill.com
-   
-   Primary source for information and releases: www.itmill.com
+ *************************************************************************
+ 
+ For more information, contact:
+ 
+ IT Mill Ltd                           phone: +358 2 4802 7180
+ Ruukinkatu 2-4                        fax:   +358 2 4802 7181
+ 20540, Turku                          email:  info@itmill.com
+ Finland                               company www: www.itmill.com
+ 
+ Primary source for information and releases: www.itmill.com
 
-   ********************************************************************** */
+ ********************************************************************** */
 
 package com.itmill.toolkit.demo.features;
 
@@ -38,12 +38,13 @@ import com.itmill.toolkit.terminal.ParameterHandler;
 import com.itmill.toolkit.terminal.URIHandler;
 import com.itmill.toolkit.ui.*;
 
-public class FeatureParameters
-	extends Feature
-	implements URIHandler, ParameterHandler {
+public class FeatureParameters extends Feature implements URIHandler,
+		ParameterHandler {
 
 	private Label context = new Label();
+
 	private Label relative = new Label();
+
 	private Table params = new Table();
 
 	public FeatureParameters() {
@@ -55,29 +56,27 @@ public class FeatureParameters
 
 		OrderedLayout l = new OrderedLayout();
 
-		Label info =
-			new Label(
-				"To test this feature, try to "
-					+ "add some get parameters to URL. For example if you have "
-					+ "the feature browser installed in your local host, try url: ");
+		Label info = new Label("To test this feature, try to "
+				+ "add some get parameters to URL. For example if you have "
+				+ "the feature browser installed in your local host, try url: ");
 		info.setCaption("Usage info");
 		l.addComponent(info);
 		try {
-			URL u1 = new URL(getApplication().getURL(),"test/uri?test=1&test=2");
-			URL u2 = new URL(getApplication().getURL(),"foo/bar?mary=john&count=3");
-			
-			l.addComponent(
-				new Link(u1.toString(),new ExternalResource(u1)));
+			URL u1 = new URL(getApplication().getURL(),
+					"test/uri?test=1&test=2");
+			URL u2 = new URL(getApplication().getURL(),
+					"foo/bar?mary=john&count=3");
+
+			l.addComponent(new Link(u1.toString(), new ExternalResource(u1)));
 			l.addComponent(new Label("Or this: "));
-			l.addComponent(
-				new Link(u2.toString(),new ExternalResource(u2)));
+			l.addComponent(new Link(u2.toString(), new ExternalResource(u2)));
 		} catch (Exception e) {
-			System.out.println(
-				"Couldn't get hostname for this machine: " + e.toString());
+			System.out.println("Couldn't get hostname for this machine: "
+					+ e.toString());
 			e.printStackTrace();
 		}
 
-		// URI 
+		// URI
 		Panel p1 = new Panel("URI Handler");
 		context.setCaption("Last URI handler context");
 		p1.addComponent(context);
@@ -98,8 +97,8 @@ public class FeatureParameters
 
 	protected String getDescriptionXHTML() {
 		return "This is a demonstration of how URL parameters can be recieved and handled."
-			+ "Parameters and URL:s can be received trough the windows by registering "
-			+ "URIHandler and ParameterHandler classes window.";
+				+ "Parameters and URL:s can be received trough the windows by registering "
+				+ "URIHandler and ParameterHandler classes window.";
 	}
 
 	protected String getImage() {
@@ -110,7 +109,9 @@ public class FeatureParameters
 		return "Parameters";
 	}
 
-	/** Add URI and parametes handlers to window.
+	/**
+	 * Add URI and parametes handlers to window.
+	 * 
 	 * @see com.itmill.toolkit.ui.Component#attach()
 	 */
 	public void attach() {
@@ -119,7 +120,9 @@ public class FeatureParameters
 		getWindow().addParameterHandler(this);
 	}
 
-	/** Remove all handlers from window
+	/**
+	 * Remove all handlers from window
+	 * 
 	 * @see com.itmill.toolkit.ui.Component#detach()
 	 */
 	public void detach() {
@@ -128,7 +131,9 @@ public class FeatureParameters
 		getWindow().removeParameterHandler(this);
 	}
 
-	/** Update URI
+	/**
+	 * Update URI
+	 * 
 	 * @see com.itmill.toolkit.terminal.URIHandler#handleURI(URL, String)
 	 */
 	public DownloadStream handleURI(URL context, String relativeUri) {
@@ -137,7 +142,9 @@ public class FeatureParameters
 		return null;
 	}
 
-	/** Update parameters table
+	/**
+	 * Update parameters table
+	 * 
 	 * @see com.itmill.toolkit.terminal.ParameterHandler#handleParameters(Map)
 	 */
 	public void handleParameters(Map parameters) {

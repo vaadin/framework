@@ -1,30 +1,30 @@
 /* *************************************************************************
  
-                               IT Mill Toolkit 
+ IT Mill Toolkit 
 
-               Development of Browser User Interfaces Made Easy
+ Development of Browser User Interfaces Made Easy
 
-                    Copyright (C) 2000-2006 IT Mill Ltd
-                     
-   *************************************************************************
+ Copyright (C) 2000-2006 IT Mill Ltd
+ 
+ *************************************************************************
 
-   This product is distributed under commercial license that can be found
-   from the product package on license.pdf. Use of this product might 
-   require purchasing a commercial license from IT Mill Ltd. For guidelines 
-   on usage, see licensing-guidelines.html
+ This product is distributed under commercial license that can be found
+ from the product package on license.pdf. Use of this product might 
+ require purchasing a commercial license from IT Mill Ltd. For guidelines 
+ on usage, see licensing-guidelines.html
 
-   *************************************************************************
-   
-   For more information, contact:
-   
-   IT Mill Ltd                           phone: +358 2 4802 7180
-   Ruukinkatu 2-4                        fax:   +358 2 4802 7181
-   20540, Turku                          email:  info@itmill.com
-   Finland                               company www: www.itmill.com
-   
-   Primary source for information and releases: www.itmill.com
+ *************************************************************************
+ 
+ For more information, contact:
+ 
+ IT Mill Ltd                           phone: +358 2 4802 7180
+ Ruukinkatu 2-4                        fax:   +358 2 4802 7181
+ 20540, Turku                          email:  info@itmill.com
+ Finland                               company www: www.itmill.com
+ 
+ Primary source for information and releases: www.itmill.com
 
-   ********************************************************************** */
+ ********************************************************************** */
 
 package com.itmill.toolkit.demo.features;
 
@@ -33,14 +33,17 @@ import java.util.Date;
 import com.itmill.toolkit.data.Property;
 import com.itmill.toolkit.ui.*;
 
-public class FeatureForm
-	extends Feature
-	implements Property.ValueChangeListener {
+public class FeatureForm extends Feature implements
+		Property.ValueChangeListener {
 
 	OrderedLayout demo = null;
+
 	Form test;
+
 	Layout formLayout = null;
+
 	Select addField = new Select("Add field");
+
 	Select resetLayout = new Select("Restart");
 
 	protected Component getDemoComponent() {
@@ -65,8 +68,8 @@ public class FeatureForm
 			test = new Form(formLayout);
 		testPanel.addComponent(test);
 		demo.addComponent(testPanel);
-		OrderedLayout actions =
-			new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
+		OrderedLayout actions = new OrderedLayout(
+				OrderedLayout.ORIENTATION_HORIZONTAL);
 		demo.addComponent(actions);
 
 		// form adder
@@ -91,9 +94,8 @@ public class FeatureForm
 		actions.addComponent(resetLayout);
 
 		// Properties
-		PropertyPanel p = new PropertyPanel(test);
-		p.addProperties("Form special properties", new Form());
-		demo.addComponent(p);
+		propertyPanel = new PropertyPanel(test);
+		propertyPanel.addProperties("Form special properties", new Form());
 	}
 
 	public void valueChange(Property.ValueChangeEvent event) {
@@ -108,8 +110,8 @@ public class FeatureForm
 				if (value.equals("Two columns (2x1 GridLayout)"))
 					formLayout = new GridLayout(2, 1);
 				if (value.equals("Horizontal (OrderedLayout)"))
-					formLayout =
-						new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
+					formLayout = new OrderedLayout(
+							OrderedLayout.ORIENTATION_HORIZONTAL);
 
 				createDemo();
 				resetLayout.setValue(null);
@@ -125,16 +127,16 @@ public class FeatureForm
 					test.addField(new Object(), new TextField("Test field"));
 				if (value.equals("Time")) {
 					DateField d = new DateField("Time", new Date());
-					d.setDescription(
-						"This is a DateField-component with text-style");
+					d
+							.setDescription("This is a DateField-component with text-style");
 					d.setResolution(DateField.RESOLUTION_MIN);
 					d.setStyle("text");
 					test.addField(new Object(), d);
 				}
 				if (value.equals("Calendar")) {
 					DateField c = new DateField("Calendar", new Date());
-					c.setDescription(
-						"DateField-component with calendar-style and day-resolution");
+					c
+							.setDescription("DateField-component with calendar-style and day-resolution");
 					c.setStyle("calendar");
 					c.setResolution(DateField.RESOLUTION_DAY);
 					test.addField(new Object(), c);
@@ -157,8 +159,7 @@ public class FeatureForm
 	}
 
 	protected String getDescriptionXHTML() {
-		return 
-			"<p>Form is a flexible, yet simple container for fields. "
+		return "<p>Form is a flexible, yet simple container for fields. "
 				+ " It provides support for any layouts and provides buffering interface for"
 				+ " easy connection of commit- and discard buttons. All the form"
 				+ " fields can be customized by adding validators, setting captions and icons, "
@@ -176,9 +177,8 @@ public class FeatureForm
 				+ " BeanItem.</p>"
 				+ " <p>The best example of Form usage is the this feature browser itself; "
 				+ " all the Property-panels in demos are composed of Form-components.</p>";
-		}
-		
-		
+	}
+
 	protected String getTitle() {
 		return "Form";
 	}
@@ -186,5 +186,5 @@ public class FeatureForm
 	protected String getImage() {
 		return "form.jpg";
 	}
-	
+
 }

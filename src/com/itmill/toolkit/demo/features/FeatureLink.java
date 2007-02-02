@@ -1,30 +1,30 @@
 /* *************************************************************************
  
-                               IT Mill Toolkit 
+ IT Mill Toolkit 
 
-               Development of Browser User Interfaces Made Easy
+ Development of Browser User Interfaces Made Easy
 
-                    Copyright (C) 2000-2006 IT Mill Ltd
-                     
-   *************************************************************************
+ Copyright (C) 2000-2006 IT Mill Ltd
+ 
+ *************************************************************************
 
-   This product is distributed under commercial license that can be found
-   from the product package on license.pdf. Use of this product might 
-   require purchasing a commercial license from IT Mill Ltd. For guidelines 
-   on usage, see licensing-guidelines.html
+ This product is distributed under commercial license that can be found
+ from the product package on license.pdf. Use of this product might 
+ require purchasing a commercial license from IT Mill Ltd. For guidelines 
+ on usage, see licensing-guidelines.html
 
-   *************************************************************************
-   
-   For more information, contact:
-   
-   IT Mill Ltd                           phone: +358 2 4802 7180
-   Ruukinkatu 2-4                        fax:   +358 2 4802 7181
-   20540, Turku                          email:  info@itmill.com
-   Finland                               company www: www.itmill.com
-   
-   Primary source for information and releases: www.itmill.com
+ *************************************************************************
+ 
+ For more information, contact:
+ 
+ IT Mill Ltd                           phone: +358 2 4802 7180
+ Ruukinkatu 2-4                        fax:   +358 2 4802 7181
+ 20540, Turku                          email:  info@itmill.com
+ Finland                               company www: www.itmill.com
+ 
+ Primary source for information and releases: www.itmill.com
 
-   ********************************************************************** */
+ ********************************************************************** */
 
 package com.itmill.toolkit.demo.features;
 
@@ -43,31 +43,21 @@ public class FeatureLink extends Feature {
 
 		// Example panel
 		Panel show = new Panel("Link component");
-		Link lnk =
-			new Link(
-				"Link caption",
-				new ExternalResource("http://www.itmill.com"));
+		Link lnk = new Link("Link caption", new ExternalResource(
+				"http://www.itmill.com"));
 		show.addComponent(lnk);
 		l.addComponent(show);
 
 		// Properties
-		PropertyPanel p = new PropertyPanel(lnk);
-		Form ap =
-			p.createBeanPropertySet(
-				new String[] {
-					"targetName",
-					"targetWidth",
-					"targetHeight",
-					"targetBorder" });
-		ap.replaceWithSelect(
-			"targetBorder",
-			new Object[] {
+		propertyPanel = new PropertyPanel(lnk);
+		Form ap = propertyPanel.createBeanPropertySet(new String[] {
+				"targetName", "targetWidth", "targetHeight", "targetBorder" });
+		ap.replaceWithSelect("targetBorder", new Object[] {
 				new Integer(Link.TARGET_BORDER_DEFAULT),
 				new Integer(Link.TARGET_BORDER_MINIMAL),
-				new Integer(Link.TARGET_BORDER_NONE)},
-			new Object[] { "Default", "Minimal", "None" });
-		p.addProperties("Link Properties", ap);
-		l.addComponent(p);
+				new Integer(Link.TARGET_BORDER_NONE) }, new Object[] {
+				"Default", "Minimal", "None" });
+		propertyPanel.addProperties("Link Properties", ap);
 
 		return l;
 	}
@@ -78,10 +68,10 @@ public class FeatureLink extends Feature {
 
 	protected String getDescriptionXHTML() {
 		return "The link feature allows for making refences to both internal and external resources. "
-			+ "The link can open the new resource in a new window, allowing for control of the newly "
-			+ "opened windows attributes, such as size and border. "
-			+ "<br /><br />"
-			+ " For example you can create an application pop-up or create link to external resources.";
+				+ "The link can open the new resource in a new window, allowing for control of the newly "
+				+ "opened windows attributes, such as size and border. "
+				+ "<br /><br />"
+				+ " For example you can create an application pop-up or create link to external resources.";
 
 	}
 
