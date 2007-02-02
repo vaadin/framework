@@ -261,6 +261,7 @@ public class Select extends AbstractField implements Container,
 		
 		// Paint options and create array of selected id keys
 		target.startTag("options");
+		// TODO Also use conventional rendering if lazy loading is not supported by terminal
 		if (!isLazyLoading()) {
 			int keyIndex = 0;
 
@@ -1353,10 +1354,8 @@ public class Select extends AbstractField implements Container,
 	 */
 	public void attach() {
 		super.attach();
-		if (optionsStream != null) {
-			getWindow().removeURIHandler(optionsStream);
+		if (optionsStream != null) 
 			getWindow().addURIHandler(optionsStream);
-		}
 	}
 
 	/**
