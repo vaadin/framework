@@ -1486,11 +1486,10 @@ public class ApplicationServlet extends HttpServlet implements
 				return null;
 			}
 		}
-
 		// Create and open new debug window for application if requested
 		Window debugWindow = application.getWindow(DebugWindow.WINDOW_NAME);
 		if (debugWindow == null) {
-			if (isDebugMode(params))
+			if (isDebugMode(params)  && !request.getPathInfo().startsWith(AJAX_UIDL_URI))
 				try {
 					debugWindow = new DebugWindow(application, request
 							.getSession(false), this);
