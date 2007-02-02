@@ -72,8 +72,8 @@ public class FeatureDateField extends Feature {
 		 */
 
 		// Properties
-		PropertyPanel p = new PropertyPanel(df);
-		Form ap = p.createBeanPropertySet(new String[] { "resolution" });
+		propertyPanel = new PropertyPanel(df);
+		Form ap = propertyPanel.createBeanPropertySet(new String[] { "resolution" });
 		ap.replaceWithSelect("resolution", new Object[] {
 				new Integer(DateField.RESOLUTION_YEAR),
 				new Integer(DateField.RESOLUTION_MONTH),
@@ -86,13 +86,13 @@ public class FeatureDateField extends Feature {
 				"Millisecond" });
 		ap.getField("resolution").setValue(
 				new Integer(DateField.RESOLUTION_DAY));
-		Select themes = (Select) p.getField("style");
+		Select themes = (Select) propertyPanel.getField("style");
 		themes.addItem("text").getItemProperty(
 				themes.getItemCaptionPropertyId()).setValue("text");
 		themes.addItem("calendar").getItemProperty(
 				themes.getItemCaptionPropertyId()).setValue("calendar");
 		df.setStyle("calendar");
-		p.addProperties("DateField Properties", ap);
+		propertyPanel.addProperties("DateField Properties", ap);
 
 		return l;
 	}
