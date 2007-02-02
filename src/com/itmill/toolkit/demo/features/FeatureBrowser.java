@@ -32,17 +32,20 @@ import java.util.Iterator;
 import java.util.StringTokenizer;
 
 import com.itmill.toolkit.data.*;
-import com.itmill.toolkit.terminal.ClassResource;
 import com.itmill.toolkit.ui.*;
+import com.itmill.toolkit.ui.Button.ClickEvent;
+import com.itmill.toolkit.ui.Button.ClickListener;
 
 public class FeatureBrowser extends CustomComponent implements
-		Property.ValueChangeListener {
+		Property.ValueChangeListener, ClickListener {
 
 	private Tree features;
 
 	private Feature currentFeature = null;
 
 	private OrderedLayout layout;
+	
+	private Button propertiesSelect;
 
 	private OrderedLayout right;
 
@@ -164,9 +167,11 @@ public class FeatureBrowser extends CustomComponent implements
 		right = new OrderedLayout(OrderedLayout.ORIENTATION_VERTICAL);
 		layout.addComponent(right);
 
-		Select propertiesSelect = new Select("Show properties");
+		propertiesSelect = new Button("Show properties",this);
+		propertiesSelect.setSwitchMode(true);
 		right.addComponent(propertiesSelect);
 		properties = currentFeature.getPropertyPanel();
+		properties.setVisible(false);
 		right.addComponent(properties);
 	}
 
@@ -208,6 +213,7 @@ public class FeatureBrowser extends CustomComponent implements
 					right.replaceComponent(properties, feature
 							.getPropertyPanel());
 					properties = feature.getPropertyPanel();
+					properties.setVisible(((Boolean)propertiesSelect.getValue()).booleanValue());
 
 					getWindow()
 							.setCaption(
@@ -219,5 +225,9 @@ public class FeatureBrowser extends CustomComponent implements
 		} else if (event.getProperty() == themeSelector) {
 			getApplication().setTheme(themeSelector.toString());
 		}
+	}
+
+	public void buttonClick(ClickEvent event) {
+		properties.setVisible(((Boolean)propertiesSelect.getValue()).booleanValue());
 	}
 }
