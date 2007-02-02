@@ -848,7 +848,7 @@ public class ApplicationServlet extends HttpServlet implements
 		page
 				.write("<div id=\"ajax-wait\"><div>Loading...</div></div>\n");
 
-		page.write("<div id=\"ajax-window\"></div>\n");
+		page.write("<div id=\"ajax-window\" class=\"itmtk\"></div>\n");
 
 		page.write("<script language=\"JavaScript\">\n");
 		String appUrl = getApplicationUrl(request).toString();
