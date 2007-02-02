@@ -56,6 +56,8 @@ public class Feature extends CustomComponent {
 	 */
 	public void attach() {
 
+		super.attach();
+		
 		// Check if the feature is already initialized
 		if (initialized)
 			return;
