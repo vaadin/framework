@@ -170,8 +170,6 @@ extends AbstractComponent implements ComponentContainer {
 	 */
 	public void addComponent(Component c) {
 		c.setParent(this);
-		if (getApplication() != null)
-			c.attach();
 		fireComponentAttachEvent(c);
 	}
 
@@ -181,8 +179,6 @@ extends AbstractComponent implements ComponentContainer {
 	 * @see com.itmill.toolkit.ui.ComponentContainer#removeComponent(Component)
 	 */
 	public void removeComponent(Component c) {
-		if (getApplication() != null)
-			c.detach();
 		c.setParent(null);
 		fireComponentDetachEvent(c);
 	}
