@@ -133,6 +133,9 @@
 				<include name="${toolkit-package}/demo/**/*.png" />
 				<include name="${toolkit-package}/demo/**/*.gif" />
 			</classes>
+			<lib dir="WebContent/WEB-INF/lib">
+				<include name="themes/demo/**/*" />
+			</lib>
 			<lib dir="${output-dir}/lib">
 				<include name="${lib-bin-jar-name}" />
 				<include name="${themes-jar-name}" />
@@ -143,7 +146,6 @@
 			<fileset dir="WebContent">
 				<exclude name="**/.svn" />
 				<exclude name="WEB-INF/web.xml" />
-				<include name="WEB-INF/lib/themes/example/**/*" />
 				<exclude name="WEB-INF/lib/themes/**/*" />
 				<include name="**/*" />
 			</fileset>
