@@ -122,13 +122,11 @@ public class CollectionThemeSource implements ThemeSource {
 
 		// Get list of themes to look for the resource
 		List themes = new LinkedList();
-		if (themeName.length() > 0) {
+		while (themeName != null && themeName.length() > 0) {
 			Theme t = this.getThemeByName(themeName);
-			if (t != null) {
+			if (t != null) 
 				themes.add(themeName);
-				if (t.getParent() != null)
-					themes.add(t.getParent());
-			}
+			themeName = t.getParent();
 		}
 
 		// Iterate all themes in list
