@@ -55,7 +55,7 @@ public class FeatureBrowser extends CustomComponent implements
 
 	private boolean initialized = false;
 
-	private Select themeSelector = new Select("Theme");
+	private Select themeSelector = new Select();
 
 	private static final String WELCOME_TEXT = "<h3>Welcome to the IT Mill Toolkit feature tour!</h3>"
 			+ "In this application you may view and play with some features of IT Mill Toolkit.<br/>"
@@ -82,6 +82,7 @@ public class FeatureBrowser extends CustomComponent implements
 
 		// Configure component layout
 		layout = new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
+		layout.setStyle("featurebrowser-mainlayout");
 		setCompositionRoot(layout);
 		OrderedLayout left = new OrderedLayout(
 				OrderedLayout.ORIENTATION_VERTICAL);
@@ -104,16 +105,17 @@ public class FeatureBrowser extends CustomComponent implements
 
 		// Theme selector
 		left.addComponent(themeSelector);
+		themeSelector.addItem("demo");
 		themeSelector.addItem("corporate");
 		themeSelector.addItem("base");
 		themeSelector.addListener(this);
-		themeSelector.select("corporate");
+		themeSelector.select("demo");
 		themeSelector.setImmediate(true);
 
 		// Restart button
 		Button close = new Button("restart", getApplication(), "close");
-		left.addComponent(close);
 		close.setStyle("link");
+		left.addComponent(close);
 
 		// Test component
 		registerFeature("/UI Components", new UIComponents());
