@@ -44,7 +44,7 @@ public class FeatureBrowser extends CustomComponent implements
 	private Feature currentFeature = null;
 
 	private OrderedLayout layout;
-	
+
 	private Button propertiesSelect;
 
 	private OrderedLayout right;
@@ -169,7 +169,7 @@ public class FeatureBrowser extends CustomComponent implements
 		right = new OrderedLayout(OrderedLayout.ORIENTATION_VERTICAL);
 		layout.addComponent(right);
 
-		propertiesSelect = new Button("Show properties",this);
+		propertiesSelect = new Button("Show properties", this);
 		propertiesSelect.setSwitchMode(true);
 		right.addComponent(propertiesSelect);
 		properties = currentFeature.getPropertyPanel();
@@ -212,11 +212,13 @@ public class FeatureBrowser extends CustomComponent implements
 				if (feature != null) {
 					layout.replaceComponent(currentFeature, feature);
 					currentFeature = feature;
-					right.replaceComponent(properties, feature
-							.getPropertyPanel());
 					properties = feature.getPropertyPanel();
-					properties.setVisible(((Boolean)propertiesSelect.getValue()).booleanValue());
-
+					if (properties != null) {
+						right.replaceComponent(properties, feature
+								.getPropertyPanel());
+						properties.setVisible(((Boolean) propertiesSelect
+								.getValue()).booleanValue());
+					}
 					getWindow()
 							.setCaption(
 									"IT Mill Toolkit Features / "
@@ -230,6 +232,7 @@ public class FeatureBrowser extends CustomComponent implements
 	}
 
 	public void buttonClick(ClickEvent event) {
-		properties.setVisible(((Boolean)propertiesSelect.getValue()).booleanValue());
+		properties.setVisible(((Boolean) propertiesSelect.getValue())
+				.booleanValue());
 	}
 }
