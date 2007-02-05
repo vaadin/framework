@@ -336,7 +336,7 @@
 </zip>
 </target>
 
-<target name="package-release" depends="clean-all,libs,themes-optimize-obfuscate,demo">
+<target name="package-release" depends="clean-all,libs,themes-optimize-obfuscate,demo,docs">
 <zip zipfile="build/result/${package-file-name}">
 	<fileset dir="build/result">
 		<patternset>
