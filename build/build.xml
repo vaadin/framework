@@ -87,13 +87,13 @@
 				<exec dir="build" executable="cmd.exe" os="Windows 2000, Windows XP" failonerror="true">
 					<arg line="/c bin\csstidy-win.exe @{file} @{file}" />
 				</exec>
-				<!-- untested -->
-				<exec dir="build" executable="build/bin/csstidy-osx" os="Mac OS X" failonerror="true">
+				<!-- tested -->
+				<exec dir="build" executable="bin/csstidy-osx.sh" os="Mac OS X" failonerror="true">
 					<arg line="@{file}" />
 					<arg line="@{file}" />
 				</exec>
 				<!-- tested -->
-				<exec dir="build" executable="bin/csstidy-unix.sh" os="Linux" failonerror="true">
+				<exec dir="build" executable="bin/csstidy-linux.sh" os="Linux" failonerror="true">
 					<arg line="@{file}" />
 				</exec>
 			</sequential>
