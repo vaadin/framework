@@ -10,16 +10,22 @@
 	</taskdef>
 
 	<!-- Internal build target -->
-	<target name="internal" depends="package" description="Build internal release. Never distribute this outside IT Mill.">
-		<property name="release-type" value="-internal" />
+	<target name="internal" depends="init-internal,package" description="Build internal release. Never distribute this outside IT Mill.">
 	</target>
 
 	<!-- Release build target -->
-	<target name="release" depends="package-release" description="Build public release, optimized and obfuscated themes.">
-		<property name="release-type" value="" />
+	<target name="release" depends="init-release,package-release" description="Build public release. Theme files are syntax checked, optimized and obfuscated.">
 	</target>
 
 	<!-- Initialization - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+	<target name="init-internal">
+		<property name="release-type" value="-internal" />
+	</target>
+
+	<target name="init-release">
+		<property name="release-type" value="" />
+	</target>
 
 	<target name="init">
 
@@ -67,8 +73,32 @@
 	</target>
 
 	<!-- Executed for release builds only -->
-	<target name="themes-optimize-obfuscate" depends="themes">
-		<echo>Optimizing and obfuscating files</echo>
+	<target name="themes-optimize-obfuscate" depends="copy-themes-to-lib">
+		<echo>CSS syntax check and optimizing.</echo>
+		<for param="file">
+			<path>
+				<fileset dir="${output-dir}/lib/themes">
+					<include name="**/*.css" />
+				</fileset>
+			</path>
+			<sequential>
+				<echo>@{file}</echo>
+				<!-- untested -->
+				<exec dir="build" executable="cmd.exe" os="Windows 2000, Windows XP" failonerror="true">
+					<arg line="/c bin\csstidy-win.exe @{file} @{file}" />
+				</exec>
+				<!-- untested -->
+				<exec dir="build" executable="build/bin/csstidy-osx" os="Mac OS X" failonerror="true">
+					<arg line="@{file}" />
+					<arg line="@{file}" />
+				</exec>
+				<!-- tested -->
+				<exec dir="build" executable="bin/csstidy-unix.sh" os="Linux" failonerror="true">
+					<arg line="@{file}" />
+				</exec>
+			</sequential>
+		</for>
+		<echo>JavaScript syntax check, optimizing and obfuscation.</echo>
 		<for param="file">
 			<path>
 				<fileset dir="${output-dir}/lib/themes">
@@ -137,10 +167,8 @@
 	</target>
 
 	<target name="libs" depends="compile-java">
-
 		<!-- Create binary JAR -->
 		<jar jarfile="${output-dir}/lib/${lib-bin-jar-name}" compress="true" includes="${toolkit-package}/**" basedir="build/result/classes" excludes="${toolkit-package}/demo/**" />
-
 		<!-- Create source JAR -->
 		<jar jarfile="${output-dir}/lib/${lib-src-jar-name}" compress="true">
 			<fileset dir="build/result/src">
@@ -155,7 +183,6 @@
 	<!-- Demo  - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 	<target name="demo" depends="libs,compile-java,theme-jar">
-
 		<war warfile="${output-dir}/demo/${product-file}${release-type}.war" webxml="WebContent/WEB-INF/web.xml">
 			<classes dir="build/result/classes">
 				<include name="${toolkit-package}/demo/**/*.class" />
@@ -165,7 +192,7 @@
 				<include name="${toolkit-package}/demo/**/*.png" />
 				<include name="${toolkit-package}/demo/**/*.gif" />
 			</classes>
-			<lib dir="WebContent/WEB-INF/lib">
+			<lib dir="${output-dir}/lib">
 				<include name="themes/demo/**/*" />
 			</lib>
 			<lib dir="${output-dir}/lib">
@@ -299,7 +326,7 @@
 
 <!-- ZIP Package creation - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-<target name="package" depends="clean-all,libs,docs,themes,demo">
+<target name="package" depends="clean-all,libs,themes,demo,docs">
 <zip zipfile="build/result/${package-file-name}">
 	<fileset dir="build/result">
 		<patternset>
@@ -309,7 +336,7 @@
 </zip>
 </target>
 
-<target name="package-release" depends="clean-all,libs,docs,themes-optimize-obfuscate,demo">
+<target name="package-release" depends="clean-all,libs,themes-optimize-obfuscate,demo">
 <zip zipfile="build/result/${package-file-name}">
 	<fileset dir="build/result">
 		<patternset>
