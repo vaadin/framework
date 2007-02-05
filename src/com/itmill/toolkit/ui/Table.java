@@ -2194,12 +2194,12 @@ public class Table extends Select implements Action.Container,
 	}
 
 	/** Set height units.
-	 * Table supports only Sizeable.UNITS_PIXELS, Sizeable.UNITS_PERCENTAGE and Sizeable.UNITS_ROWS. Setting to any other throws
+	 * Table supports only Sizeable.UNITS_PIXELS. Setting to any other throws
 	 * IllegalArgumentException.
 	 * @see com.itmill.toolkit.terminal.Sizeable#setHeightUnits(int)
 	 */
 	public void setHeightUnits(int units) {
-		if (units != Sizeable.UNITS_PIXELS && units != Sizeable.UNITS_ROWS && units != Sizeable.UNITS_PERCENTAGE)
+		if (units != Sizeable.UNITS_PIXELS)
 			throw new IllegalArgumentException();
 		this.heightUnit = units;
 	}
@@ -2212,7 +2212,7 @@ public class Table extends Select implements Action.Container,
 	public void setWidthUnits(int units) {
 		if (units != Sizeable.UNITS_PIXELS && units != Sizeable.UNITS_PERCENTAGE)
 			throw new IllegalArgumentException();
-		this.heightUnit = units;
+		this.widthUnit = units;
 	}
 	
 	/**
