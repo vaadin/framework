@@ -214,8 +214,13 @@ public class FeatureBrowser extends CustomComponent implements
 					currentFeature = feature;
 					properties = feature.getPropertyPanel();
 					if (properties != null) {
-						right.replaceComponent(properties, feature
-								.getPropertyPanel());
+						Iterator i = right.getComponentIterator();
+						i.next();
+						PropertyPanel oldProps = (PropertyPanel) i.next();
+						if (oldProps != null)
+							right.replaceComponent(oldProps, properties);
+						else 
+							right.addComponent(properties);
 						properties.setVisible(((Boolean) propertiesSelect
 								.getValue()).booleanValue());
 					}
