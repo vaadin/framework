@@ -9,23 +9,11 @@
 		</classpath>
 	</taskdef>
 
-	<!-- Internal build target -->
-	<target name="internal" depends="init-internal,package" description="Build internal release. Never distribute this outside IT Mill.">
-	</target>
-
 	<!-- Release build target -->
-	<target name="release" depends="init-release,package-release" description="Build public release. Theme files are syntax checked, optimized and obfuscated.">
+	<target name="release" depends="package" description="Build public release. Theme files are syntax checked, optimized and obfuscated.">
 	</target>
 
 	<!-- Initialization - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	<target name="init-internal">
-		<!-- <property name="release-type" value="-internal" /> -->
-	</target>
-
-	<target name="init-release">
-		<property name="release-type" value="" />
-	</target>
 
 	<target name="init">
 
@@ -43,10 +31,10 @@
 		<property name="themes-jar-name" value="${product-file}-themes-${version}.jar" />
 		<property name="demo-war-name" value="${product-file}-demo-${version}.war" />
 
-		<echo message="Prepared to build ${product-file}${release-type} version ${version} packages" />
+		<echo message="Prepared to build ${product-file} version ${version} packages" />
 
 		<!-- Output directory -->
-		<property name="output-dir" value="build/result/${product-file}${release-type}-${version}" />
+		<property name="output-dir" value="build/result/${product-file}-${version}" />
 		<mkdir dir="${output-dir}" />
 
 		<!-- Create Output Directory Hierarchy -->
@@ -59,7 +47,7 @@
 
 	<!-- Themes - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-	<target name="themes" depends="copy-themes-to-lib" />
+	<target name="themes" depends="copy-themes-to-lib,themes-optimize-obfuscate" />
 
 	<target name="copy-themes-to-lib" depends="init">
 		<copy todir="${output-dir}/lib/themes">
@@ -87,12 +75,9 @@
 				<exec dir="build" executable="cmd.exe" os="Windows 2000, Windows XP" failonerror="true">
 					<arg line="/c bin\csstidy-win.exe @{file} @{file}" />
 				</exec>
-				<!-- tested -->
 				<exec dir="build" executable="bin/csstidy-osx.sh" os="Mac OS X" failonerror="true">
 					<arg line="@{file}" />
-					<arg line="@{file}" />
 				</exec>
-				<!-- tested -->
 				<exec dir="build" executable="bin/csstidy-linux.sh" os="Linux" failonerror="true">
 					<arg line="@{file}" />
 				</exec>
@@ -183,7 +168,7 @@
 	<!-- Demo  - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 	<target name="demo" depends="libs,compile-java,theme-jar">
-		<war warfile="${output-dir}/demo/${product-file}${release-type}.war" webxml="WebContent/WEB-INF/web.xml">
+		<war warfile="${output-dir}/demo/${product-file}.war" webxml="WebContent/WEB-INF/web.xml">
 			<classes dir="build/result/classes">
 				<include name="${toolkit-package}/demo/**/*.class" />
 			</classes>
@@ -330,17 +315,7 @@
 <zip zipfile="build/result/${package-file-name}">
 	<fileset dir="build/result">
 		<patternset>
-			<include name="${product-file}${release-type}-${version}/**" />
-		</patternset>
-	</fileset>
-</zip>
-</target>
-
-<target name="package-release" depends="clean-all,libs,themes-optimize-obfuscate,demo,docs">
-<zip zipfile="build/result/${package-file-name}">
-	<fileset dir="build/result">
-		<patternset>
-			<include name="${product-file}${release-type}-${version}/**" />
+			<include name="${product-file}-${version}/**" />
 		</patternset>
 	</fileset>
 </zip>
