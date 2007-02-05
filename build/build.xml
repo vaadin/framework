@@ -1,9 +1,22 @@
 <?xml version="1.0"?>
 
-<project name="IT Mill Toolkit" basedir="../" default="all">
+<project name="IT Mill Toolkit" basedir="../" default="release">
 
-	<!-- Default build target -->
-	<target name="all" depends="package" description="Build all">
+	<!-- ant contrib required for flow control (for loop) -->
+	<taskdef resource="net/sf/antcontrib/antlib.xml">
+		<classpath>
+			<pathelement location="build/lib/ant-contrib-1.0b3.jar" />
+		</classpath>
+	</taskdef>
+
+	<!-- Internal build target -->
+	<target name="internal" depends="package" description="Build internal release. Never distribute this outside IT Mill.">
+		<property name="release-type" value="-internal" />
+	</target>
+
+	<!-- Release build target -->
+	<target name="release" depends="package-release" description="Build public release, optimized and obfuscated themes.">
+		<property name="release-type" value="" />
 	</target>
 
 	<!-- Initialization - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -24,10 +37,10 @@
 		<property name="themes-jar-name" value="${product-file}-themes-${version}.jar" />
 		<property name="demo-war-name" value="${product-file}-demo-${version}.war" />
 
-		<echo message="Prepared to build ${product-file} version ${version} packages" />
+		<echo message="Prepared to build ${product-file}${release-type} version ${version} packages" />
 
 		<!-- Output directory -->
-		<property name="output-dir" value="build/result/${product-file}-${version}" />
+		<property name="output-dir" value="build/result/${product-file}${release-type}-${version}" />
 		<mkdir dir="${output-dir}" />
 
 		<!-- Create Output Directory Hierarchy -->
@@ -40,7 +53,7 @@
 
 	<!-- Themes - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-	<target name="themes" depends="copy-themes-to-lib, theme-jar" />
+	<target name="themes" depends="copy-themes-to-lib" />
 
 	<target name="copy-themes-to-lib" depends="init">
 		<copy todir="${output-dir}/lib/themes">
@@ -53,11 +66,31 @@
 		</copy>
 	</target>
 
-	<target name="theme-jar" depends="init">
+	<!-- Executed for release builds only -->
+	<target name="themes-optimize-obfuscate" depends="themes">
+		<echo>Optimizing and obfuscating files</echo>
+		<for param="file">
+			<path>
+				<fileset dir="${output-dir}/lib/themes">
+					<include name="**/*.js" />
+				</fileset>
+			</path>
+			<sequential>
+				<echo>@{file}</echo>
+				<!-- <replaceregexp file="@{file}" match="foo" replace="x1" byline="true" /> -->
+				<java dir="${output-dir}/lib/themes" jar="build/lib/custom_rhino.jar" fork="true" failonerror="true" maxmemory="128m" output="@{file}">
+					<arg value="-c" />
+					<arg value="@{file}" />
+				</java>
+			</sequential>
+		</for>
+		<fixcrlf srcdir="${output-dir}/lib/themes" includes="**/*.js **/*.css" eol="lf" eof="remove" />
+	</target>
+
+	<target name="theme-jar" depends="init, themes">
 		<jar jarfile="${output-dir}/lib/${themes-jar-name}" compress="false">
-			<fileset dir="WebContent/WEB-INF/lib/themes">
+			<fileset dir="${output-dir}/lib/themes">
 				<patternset>
-					<exclude name="**/.svn" />
 					<include name="corporate/**/*" />
 					<include name="base/**/*" />
 				</patternset>
@@ -84,7 +117,6 @@
 		</copy>
 		<!-- Convert to CRLF's and tabs -->
 		<fixcrlf srcdir="build/result/src" eol="crlf" tablength="4" tab="remove" includes="**/*.java" />
-
 
 		<!-- Un-Filtered files -->
 		<copy todir="build/result/src">
@@ -124,7 +156,7 @@
 
 	<target name="demo" depends="libs,compile-java,theme-jar">
 
-		<war warfile="${output-dir}/demo/${product-file}.war" webxml="WebContent/WEB-INF/web.xml">
+		<war warfile="${output-dir}/demo/${product-file}${release-type}.war" webxml="WebContent/WEB-INF/web.xml">
 			<classes dir="build/result/classes">
 				<include name="${toolkit-package}/demo/**/*.class" />
 			</classes>
@@ -267,11 +299,21 @@
 
 <!-- ZIP Package creation - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-<target name="package" depends="clean-all,libs,demo,docs,themes">
+<target name="package" depends="clean-all,libs,docs,themes,demo">
 <zip zipfile="build/result/${package-file-name}">
 	<fileset dir="build/result">
 		<patternset>
-			<include name="${product-file}-${version}/**" />
+			<include name="${product-file}${release-type}-${version}/**" />
+		</patternset>
+	</fileset>
+</zip>
+</target>
+
+<target name="package-release" depends="clean-all,libs,docs,themes-optimize-obfuscate,demo">
+<zip zipfile="build/result/${package-file-name}">
+	<fileset dir="build/result">
+		<patternset>
+			<include name="${product-file}${release-type}-${version}/**" />
 		</patternset>
 	</fileset>
 </zip>
@@ -281,6 +323,5 @@
 <target name="clean-all" depends="">
 <delete dir="build/result" />
 </target>
-
 
 </project>
