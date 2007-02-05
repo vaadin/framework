@@ -20,7 +20,7 @@
 	<!-- Initialization - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 	<target name="init-internal">
-		<property name="release-type" value="-internal" />
+		<!-- <property name="release-type" value="-internal" /> -->
 	</target>
 
 	<target name="init-release">
