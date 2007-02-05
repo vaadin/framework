@@ -143,8 +143,9 @@ public class FeatureBrowser extends CustomComponent implements
 		registerFeature("/UI Components/Layouts/Tab Sheet",
 				new FeatureTabSheet());
 		registerFeature("/UI Components/Layouts/Window", new FeatureWindow());
-		registerFeature("/UI Components/Layouts/Frame Window",
-				new FeatureFrameWindow());
+		// Disabled for now
+//		registerFeature("/UI Components/Layouts/Frame Window",
+//				new FeatureFrameWindow());
 		registerFeature("/UI Components/Data handling/Embedded Objects",
 				new FeatureEmbedded());
 		registerFeature("/UI Components/Data handling/Upload",

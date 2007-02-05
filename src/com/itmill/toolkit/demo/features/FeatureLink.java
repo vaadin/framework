@@ -40,13 +40,10 @@ public class FeatureLink extends Feature {
 	protected Component getDemoComponent() {
 
 		OrderedLayout l = new OrderedLayout();
-
-		// Example panel
-		Panel show = new Panel("Link component");
+		
 		Link lnk = new Link("Link caption", new ExternalResource(
 				"http://www.itmill.com"));
-		show.addComponent(lnk);
-		l.addComponent(show);
+		l.addComponent(lnk);
 
 		// Properties
 		propertyPanel = new PropertyPanel(lnk);

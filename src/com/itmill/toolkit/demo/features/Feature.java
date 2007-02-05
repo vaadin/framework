@@ -32,7 +32,7 @@ import com.itmill.toolkit.terminal.ClassResource;
 import com.itmill.toolkit.terminal.Resource;
 import com.itmill.toolkit.ui.*;
 
-public class Feature extends CustomComponent {
+public abstract class Feature extends CustomComponent {
 
 	private OrderedLayout layout;
 
@@ -57,7 +57,7 @@ public class Feature extends CustomComponent {
 	public void attach() {
 
 		super.attach();
-		
+
 		// Check if the feature is already initialized
 		if (initialized)
 			return;

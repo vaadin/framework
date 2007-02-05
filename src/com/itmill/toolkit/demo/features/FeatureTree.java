@@ -81,8 +81,6 @@ public class FeatureTree extends Feature implements Action.Handler {
 
 		OrderedLayout l = new OrderedLayout();
 
-		// Create names
-		Panel show = new Panel("Tree component");
 		String[] names = new String[100];
 		for (int i = 0; i < names.length; i++)
 			names[i] = firstnames[(int) (Math.random() * (firstnames.length - 1))]
@@ -102,9 +100,8 @@ public class FeatureTree extends Feature implements Action.Handler {
 		for (int i = 0; i < 100; i++)
 			if (!t.hasChildren(names[i]))
 				t.setChildrenAllowed(names[i], false);
-
-		show.addComponent(t);
-		l.addComponent(show);
+		
+		l.addComponent(t);
 
 		// Actions
 		l.addComponent(this.actionHandlerSwitch);

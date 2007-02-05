@@ -43,9 +43,7 @@ public class FeatureTextField extends Feature {
 
 		// Test component
 		TextField tf = new TextField("Caption");
-		Panel test = new Panel("TextField Component Demo");
-		test.addComponent(tf);
-		l.addComponent(test);
+		l.addComponent(tf);
 
 		// Properties
 		propertyPanel = new PropertyPanel(tf);

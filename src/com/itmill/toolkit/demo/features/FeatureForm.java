@@ -61,13 +61,12 @@ public class FeatureForm extends Feature implements
 		demo.removeAllComponents();
 
 		// Test form
-		Panel testPanel = new Panel("Form component");
 		if (formLayout == null)
 			test = new Form();
 		else
 			test = new Form(formLayout);
-		testPanel.addComponent(test);
-		demo.addComponent(testPanel);
+		
+		demo.addComponent(test);
 		OrderedLayout actions = new OrderedLayout(
 				OrderedLayout.ORIENTATION_HORIZONTAL);
 		demo.addComponent(actions);

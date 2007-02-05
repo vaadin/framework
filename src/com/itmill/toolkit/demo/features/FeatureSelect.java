@@ -50,16 +50,13 @@ public class FeatureSelect extends Feature {
 
 		OrderedLayout l = new OrderedLayout();
 
-		// Example panel
-		Panel show = new Panel("Select component");
 		Select s = new Select("Select Person");
 		for (int i = 0; i < 1000; i++)
 			s
 					.addItem(firstnames[(int) (Math.random() * (firstnames.length - 1))]
 							+ " "
 							+ lastnames[(int) (Math.random() * (lastnames.length - 1))]);
-		show.addComponent(s);
-		l.addComponent(show);
+		l.addComponent(s);
 
 		// Properties
 		propertyPanel = new PropertyPanel(s);

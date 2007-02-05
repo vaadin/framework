@@ -68,6 +68,7 @@ public class FeatureCustomLayout extends Feature {
 	protected Component getDemoComponent() {
 		OrderedLayout l = new OrderedLayout();
 
+		// TODO doc change
 		l
 				.addComponent(new Label(
 						"<p>For demonstration, see GO-Game example application. All of the "

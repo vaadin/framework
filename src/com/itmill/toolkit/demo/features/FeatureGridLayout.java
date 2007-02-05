@@ -42,16 +42,13 @@ public class FeatureGridLayout extends Feature {
 
 		OrderedLayout l = new OrderedLayout();
 
-		// Example panel
-		Panel show = new Panel("GridLayout component");
 		GridLayout gl = new GridLayout(3, 3);
 		DateField cal = new DateField("Test component 1", new Date());
 		cal.setStyle("calendar");
 		gl.addComponent(cal, 1, 0, 2, 1);
 		for (int i = 2; i < 7; i++)
 			gl.addComponent(new TextField("Test component " + i));
-		show.addComponent(gl);
-		l.addComponent(show);
+		l.addComponent(gl);
 
 		// Properties
 		propertyPanel = new PropertyPanel(gl);

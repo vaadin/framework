@@ -55,11 +55,9 @@ public class FeatureDateField extends Feature {
 		OrderedLayout l = new OrderedLayout();
 
 		// Example panel
-		Panel show = new Panel("DateField component");
 		DateField df = new DateField();
 		df.setValue(new java.util.Date());
-		show.addComponent(df);
-		l.addComponent(show);
+		l.addComponent(df);
 
 		// Create locale selector
 		// TODO: see #244 (broken for AJAX mode), known issue exists

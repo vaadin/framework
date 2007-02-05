@@ -40,11 +40,8 @@ public class FeatureButton extends Feature {
 
 		OrderedLayout l = new OrderedLayout();
 
-		// Example panel
-		Panel show = new Panel("Button component");
 		Button b = new Button("Caption");
-		show.addComponent(b);
-		l.addComponent(show);
+		l.addComponent(b);
 
 		// Properties
 		propertyPanel = new PropertyPanel(b);

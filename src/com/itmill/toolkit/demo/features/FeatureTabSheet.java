@@ -40,16 +40,11 @@ public class FeatureTabSheet extends Feature {
 
 		OrderedLayout l = new OrderedLayout();
 
-		// Example panel
-		Panel show = new Panel("TabSheet component");
-
 		TabSheet ts = new TabSheet();
 		ts.addTab(new Label("Tab 1 Body"), "Tab 1 caption", null);
 		ts.addTab(new Label("Tab 2 Body"), "Tab 2 caption", null);
 		ts.addTab(new Label("Tab 3 Body"), "Tab 3 caption", null);
-
-		show.addComponent(ts);
-		l.addComponent(show);
+		l.addComponent(ts);
 
 		// Properties
 		propertyPanel = new PropertyPanel(ts);

@@ -53,14 +53,9 @@ public class FeatureFrameWindow extends Feature implements Button.ClickListener 
 		demoWindow.getFrameset()
 				.newFrame(createFrame(demoWindow.getFrameset()));
 
-		// Example panel
-		Panel show = new Panel("Test Window Control");
-		((OrderedLayout) show.getLayout())
-				.setOrientation(OrderedLayout.ORIENTATION_HORIZONTAL);
-		show.addComponent(addButton);
-		show.addComponent(removeButton);
+		l.addComponent(addButton);
+		l.addComponent(removeButton);
 		updateWinStatus();
-		l.addComponent(show);
 
 		// Properties
 		propertyPanel = new PropertyPanel(demoWindow);

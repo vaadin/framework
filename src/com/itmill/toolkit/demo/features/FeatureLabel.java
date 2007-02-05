@@ -40,11 +40,8 @@ public class FeatureLabel extends Feature {
 
 		OrderedLayout l = new OrderedLayout();
 
-		// Example panel
-		Panel show = new Panel("Label component");
 		Label lab = new Label("Label text");
-		show.addComponent(lab);
-		l.addComponent(show);
+		l.addComponent(lab);
 
 		// Properties
 		propertyPanel = new PropertyPanel(lab);
