@@ -28,14 +28,34 @@
 
 package com.itmill.toolkit.demo.features;
 
+import com.itmill.toolkit.ui.Component;
+import com.itmill.toolkit.ui.Label;
+import com.itmill.toolkit.ui.OrderedLayout;
+
 public class FeatureBuffering extends Feature {
-	protected String getExampleSrc() {
-		return super.getExampleSrc();
+	
+	public FeatureBuffering() {
+		super();
+	}
+	
+	protected Component getDemoComponent() {
+
+		OrderedLayout l = new OrderedLayout();
+
+		Label lab = new Label();
+		lab.setStyle("featurebrowser-none");
+		l.addComponent(lab);
+
+		// Properties
+		propertyPanel = null;
+		
+		return l;
 	}
 
-	protected String getTitle() {
-		return "Buffering";
+	protected String getExampleSrc() {
+		return "";
 	}
+
 	/**
 	 * @see com.itmill.toolkit.demo.features.Feature#getDescriptionXHTML()
 	 */
@@ -58,11 +78,13 @@ public class FeatureBuffering extends Feature {
 			+ "immediately updated to the data source.</p>";
 	}
 
-	/**
-	 * @see com.itmill.toolkit.demo.features.Feature#getImage()
-	 */
+
 	protected String getImage() {
 		return "buffering.jpg";
+	}
+
+	protected String getTitle() {
+		return "Introduction of Data Model Buffering";
 	}
 
 }

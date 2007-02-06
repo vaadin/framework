@@ -28,12 +28,37 @@
 
 package com.itmill.toolkit.demo.features;
 
+import com.itmill.toolkit.ui.Component;
+import com.itmill.toolkit.ui.Label;
+import com.itmill.toolkit.ui.OrderedLayout;
+
 public class FeatureItems extends Feature {
 
-	protected String getTitle() {
-		return "Item Data Model";
+	public FeatureItems() {
+		super();
+	}
+	
+	protected Component getDemoComponent() {
+
+		OrderedLayout l = new OrderedLayout();
+
+		Label lab = new Label();
+		lab.setStyle("featurebrowser-none");
+		l.addComponent(lab);
+
+		// Properties
+		propertyPanel = null;
+		
+		return l;
 	}
 
+	protected String getExampleSrc() {
+		return "";
+	}
+
+	/**
+	 * @see com.itmill.toolkit.demo.features.Feature#getDescriptionXHTML()
+	 */
 	protected String getDescriptionXHTML() {
 		return "<p>Item is an object, which contains a set of named "
 				+ "properties. Each property is identified by an "
@@ -50,6 +75,10 @@ public class FeatureItems extends Feature {
 
 	protected String getImage() {
 		return "items.jpg";
+	}
+
+	protected String getTitle() {
+		return "Introduction of Data Model Item";
 	}
 
 }

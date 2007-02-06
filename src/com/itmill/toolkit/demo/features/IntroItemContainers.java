@@ -32,12 +32,12 @@ import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.OrderedLayout;
 
-public class FeatureProperties extends Feature {
+public class IntroItemContainers extends Feature {
 
-	public FeatureProperties() {
+	public IntroItemContainers() {
 		super();
 	}
-	
+
 	protected Component getDemoComponent() {
 
 		OrderedLayout l = new OrderedLayout();
@@ -48,7 +48,7 @@ public class FeatureProperties extends Feature {
 
 		// Properties
 		propertyPanel = null;
-		
+
 		return l;
 	}
 
@@ -56,35 +56,19 @@ public class FeatureProperties extends Feature {
 		return "";
 	}
 
+	/**
+	 * @see com.itmill.toolkit.demo.features.Feature#getDescriptionXHTML()
+	 */
 	protected String getDescriptionXHTML() {
-		return "<p>IT Mill Toolkti data model is one of the core concepts "
-				+ "in the library and Property-interface is the base of that "
-				+ "model. Property provides standardized API for a singe data object "
-				+ "that can be getted and setted. A property is always typed, but can optionally "
-				+ "support data type conversions. Optionally properties can provide "
-				+ "value change events for following the state changes.</p>"
-				+ "<p>The most important function of the Property as well as other "
-				+ "data models is to connect classes implementing the interface directly to "
-				+ "editor and viewer classes. Typically this is used to connect different "
-				+ "data sources to UI components for editing and viewing their contents.</p>"
-				+ "<p>Properties can be utilized either by implementing the interface "
-				+ "or by using some of the existing property implementations. IT Mill Toolkit "
-				+ "includes Property interface implementations for "
-				+ "arbitrary function pairs or Bean-properties as well as simple object "
-				+ "properties.</p>"
-				+ "<p>Many of the UI components also imlement Property interface and allow "
-				+ "setting of other components as their data-source. These UI-components "
-				+ "include TextField, DateField, Select, Table, Button, "
-				+ "Label and Tree.</p>";
+		return "";
 	}
 
-
 	protected String getImage() {
-		return "properties.jpg";
+		return "";
 	}
 
 	protected String getTitle() {
-		return "Introduction of Data Model Properties";
+		return "Introduction for item containers";
 	}
 
 }

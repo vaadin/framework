@@ -28,16 +28,37 @@
 
 package com.itmill.toolkit.demo.features;
 
+import com.itmill.toolkit.ui.Component;
+import com.itmill.toolkit.ui.Label;
+import com.itmill.toolkit.ui.OrderedLayout;
+
 public class FeatureValidators extends Feature {
 
+	public FeatureValidators() {
+		super();
+	}
+	
+	protected Component getDemoComponent() {
+
+		OrderedLayout l = new OrderedLayout();
+
+		Label lab = new Label();
+		lab.setStyle("featurebrowser-none");
+		l.addComponent(lab);
+
+		// Properties
+		propertyPanel = null;
+		
+		return l;
+	}
+
 	protected String getExampleSrc() {
-		return super.getExampleSrc();
+		return "";
 	}
 
-	protected String getTitle() {
-		return "Validators";
-	}
-
+	/**
+	 * @see com.itmill.toolkit.demo.features.Feature#getDescriptionXHTML()
+	 */
 	protected String getDescriptionXHTML() {
 		return "<p>IT Mill Toolkit contains simple, yet powerful validation interface, "
 				+ "that consists of two parts: Validator and Validatable. Validator is "
@@ -54,6 +75,10 @@ public class FeatureValidators extends Feature {
 
 	protected String getImage() {
 		return "validators.gif";
+	}
+
+	protected String getTitle() {
+		return "Introduction of Data Model Validators";
 	}
 
 }

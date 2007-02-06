@@ -118,7 +118,8 @@ public class FeatureBrowser extends CustomComponent implements
 		left.addComponent(close);
 
 		// Test component
-		registerFeature("/UI Components", new UIComponents());
+		registerFeature("/UI Components", new IntroComponents());
+		registerFeature("/UI Components/Basic", new IntroBasic());
 		registerFeature("/UI Components/Basic/Text Field",
 				new FeatureTextField());
 		registerFeature("/UI Components/Basic/Date Field",
@@ -127,12 +128,15 @@ public class FeatureBrowser extends CustomComponent implements
 		registerFeature("/UI Components/Basic/Form", new FeatureForm());
 		registerFeature("/UI Components/Basic/Label", new FeatureLabel());
 		registerFeature("/UI Components/Basic/Link", new FeatureLink());
+		registerFeature("/UI Components/Item Containers",
+				new IntroItemContainers());
 		registerFeature("/UI Components/Item Containers/Select",
 				new FeatureSelect());
 		registerFeature("/UI Components/Item Containers/Table",
 				new FeatureTable());
 		registerFeature("/UI Components/Item Containers/Tree",
 				new FeatureTree());
+		registerFeature("/UI Components/Layouts", new IntroLayouts());
 		registerFeature("/UI Components/Layouts/Ordered Layout",
 				new FeatureOrderedLayout());
 		registerFeature("/UI Components/Layouts/Grid Layout",
@@ -144,17 +148,20 @@ public class FeatureBrowser extends CustomComponent implements
 				new FeatureTabSheet());
 		registerFeature("/UI Components/Layouts/Window", new FeatureWindow());
 		// Disabled for now
-//		registerFeature("/UI Components/Layouts/Frame Window",
-//				new FeatureFrameWindow());
+		// registerFeature("/UI Components/Layouts/Frame Window",
+		// new FeatureFrameWindow());
+		registerFeature("/UI Components/Data handling", new IntroDataHandling());
 		registerFeature("/UI Components/Data handling/Embedded Objects",
 				new FeatureEmbedded());
 		registerFeature("/UI Components/Data handling/Upload",
 				new FeatureUpload());
+		registerFeature("/Data Model", new IntroDataModel());
 		registerFeature("/Data Model/Properties", new FeatureProperties());
 		registerFeature("/Data Model/Items", new FeatureItems());
 		registerFeature("/Data Model/Containers", new FeatureContainers());
 		registerFeature("/Data Model/Validators", new FeatureValidators());
 		registerFeature("/Data Model/Buffering", new FeatureBuffering());
+		registerFeature("/Terminal", new IntroTerminal());
 		registerFeature("/Terminal/Parameters and URI Handling",
 				new FeatureParameters());
 
@@ -163,7 +170,7 @@ public class FeatureBrowser extends CustomComponent implements
 			features.expandItem(i.next());
 
 		// Add demo component and tabs
-		currentFeature = new FeatureButton();
+		currentFeature = new FeatureTable();
 		layout.addComponent(currentFeature);
 
 		// Add properties
@@ -220,7 +227,7 @@ public class FeatureBrowser extends CustomComponent implements
 						PropertyPanel oldProps = (PropertyPanel) i.next();
 						if (oldProps != null)
 							right.replaceComponent(oldProps, properties);
-						else 
+						else
 							right.addComponent(properties);
 						properties.setVisible(((Boolean) propertiesSelect
 								.getValue()).booleanValue());

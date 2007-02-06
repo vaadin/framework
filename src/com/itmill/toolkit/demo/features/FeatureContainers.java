@@ -28,10 +28,32 @@
 
 package com.itmill.toolkit.demo.features;
 
+import com.itmill.toolkit.ui.Component;
+import com.itmill.toolkit.ui.Label;
+import com.itmill.toolkit.ui.OrderedLayout;
+
 public class FeatureContainers extends Feature {
 
-	protected String getTitle() {
-		return "Container Data Model";
+	public FeatureContainers() {
+		super();
+	}
+	
+	protected Component getDemoComponent() {
+
+		OrderedLayout l = new OrderedLayout();
+
+		Label lab = new Label();
+		lab.setStyle("featurebrowser-none");
+		l.addComponent(lab);
+
+		// Properties
+		propertyPanel = null;
+		
+		return l;
+	}
+
+	protected String getExampleSrc() {
+		return "";
 	}
 
 	protected String getDescriptionXHTML() {
@@ -58,7 +80,13 @@ public class FeatureContainers extends Feature {
 				+ "file system access.</p>";
 	}
 
+
 	protected String getImage() {
 		return "containers.jpg";
 	}
+
+	protected String getTitle() {
+		return "Introduction of Data Model Containers";
+	}
+
 }

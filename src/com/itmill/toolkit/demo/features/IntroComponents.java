@@ -28,8 +28,37 @@
 
 package com.itmill.toolkit.demo.features;
 
-public class UIComponents extends Feature {
+import com.itmill.toolkit.ui.Component;
+import com.itmill.toolkit.ui.Label;
+import com.itmill.toolkit.ui.OrderedLayout;
 
+public class IntroComponents extends Feature {
+
+	public IntroComponents() {
+		super();
+	}
+
+	protected Component getDemoComponent() {
+
+		OrderedLayout l = new OrderedLayout();
+
+		Label lab = new Label();
+		lab.setStyle("featurebrowser-none");
+		l.addComponent(lab);
+
+		// Properties
+		propertyPanel = null;
+
+		return l;
+	}
+
+	protected String getExampleSrc() {
+		return "";
+	}
+
+	/**
+	 * @see com.itmill.toolkit.demo.features.Feature#getDescriptionXHTML()
+	 */
 	protected String getDescriptionXHTML() {
 		return "";
 	}
@@ -39,7 +68,7 @@ public class UIComponents extends Feature {
 	}
 
 	protected String getTitle() {
-		return "";
+		return "Introduction for UI components";
 	}
 
 }
