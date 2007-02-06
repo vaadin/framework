@@ -35,6 +35,7 @@ import java.io.OutputStream;
 
 import com.itmill.toolkit.terminal.StreamResource;
 import com.itmill.toolkit.ui.Component;
+import com.itmill.toolkit.ui.Form;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.Link;
 import com.itmill.toolkit.ui.OrderedLayout;
@@ -43,7 +44,6 @@ import com.itmill.toolkit.ui.Upload;
 import com.itmill.toolkit.ui.Upload.FinishedEvent;
 
 public class FeatureUpload extends Feature implements Upload.FinishedListener {
-
 	Buffer buffer = new Buffer();
 
 	Panel status = new Panel("Uploaded file:");
@@ -56,19 +56,17 @@ public class FeatureUpload extends Feature implements Upload.FinishedListener {
 
 		OrderedLayout l = new OrderedLayout();
 
-		// Example panel
-		Panel show = new Panel("Upload component");
-
-		Upload up = new Upload("Upload a file:", buffer);
-		up.addListener(this);
-
-		show.addComponent(up);
-		status.setVisible(false);
-		l.addComponent(status);
-		l.addComponent(show);
+		Upload up = new Upload("Upload a file:", null);
+		//up.addListener(this);
+		
+		//status.setVisible(false);
+		
+		l.addComponent(up);
+		//l.addComponent(status);
 
 		// Properties
-		propertyPanel = new PropertyPanel(up);
+		//propertyPanel = new PropertyPanel(up);
+		propertyPanel = null;
 
 		return l;
 	}
