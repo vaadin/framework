@@ -58,14 +58,14 @@ import java.net.URL;
  * </p>
  * 
  * <p>
- * As mentioned, all IT Mill Toolkit applications must inherit this class. However,
- * this is almost all of what one needs to do to create a fully functional
- * application. The only thing a class inheriting the
+ * As mentioned, all IT Mill Toolkit applications must inherit this class.
+ * However, this is almost all of what one needs to do to create a fully
+ * functional application. The only thing a class inheriting the
  * <code>Application</code> needs to do is implement the <code>init()</code>
  * where it creates the windows it needs to perform its function. Note that all
- * applications must have at least one window: the main window. The
- * first unnamed window constructed by an application automatically becomes the
- * main window which behaves just like other windows with one exception: when
+ * applications must have at least one window: the main window. The first
+ * unnamed window constructed by an application automatically becomes the main
+ * window which behaves just like other windows with one exception: when
  * accessing windows using URLs the main window corresponds to the application
  * URL whereas other windows correspond to a URL gotten by catenating the
  * window's name to the application URL.
@@ -88,14 +88,13 @@ import java.net.URL;
  * </p>
  * 
  * <p>
- * <strong>Theme selection.</strong> The theme selection process
- * allows a theme to be specified at three different levels. When a window's
- * theme needs to be found out, the window itself is queried for a preferred
- * theme. If the window does not prefer a specific theme, the application
- * containing the window is queried. If neither the application prefers a theme,
- * the default theme for the
- * {@link com.itmill.toolkit.terminal.Terminal terminal} is used. The terminal
- * always defines a default theme.
+ * <strong>Theme selection.</strong> The theme selection process allows a theme
+ * to be specified at three different levels. When a window's theme needs to be
+ * found out, the window itself is queried for a preferred theme. If the window
+ * does not prefer a specific theme, the application containing the window is
+ * queried. If neither the application prefers a theme, the default theme for
+ * the {@link com.itmill.toolkit.terminal.Terminal terminal} is used. The
+ * terminal always defines a default theme.
  * </p>
  * 
  * @author IT Mill Ltd.
@@ -520,15 +519,9 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 	/*
 	 * @see com.itmill.toolkit.terminal.URIHandler#handleURI(URL, String)
 	 */
-	public DownloadStream handleURI(URL context, String relativeUri) { // If
-																		// the
-																		// relative
-																		// uri
-																		// is
-																		// null,
-																		// we
-																		// are
-																		// ready
+	public DownloadStream handleURI(URL context, String relativeUri) {
+		
+		// If the relative uri is null, we are ready
 		if (relativeUri == null)
 			return null;
 
