@@ -51,19 +51,9 @@ public class FeatureBrowser extends CustomComponent implements
 
 	private PropertyPanel properties;
 
-	private Component welcome;
-
 	private boolean initialized = false;
 
 	private Select themeSelector = new Select();
-
-	private static final String WELCOME_TEXT = "<h3>Welcome to the IT Mill Toolkit feature tour!</h3>"
-			+ "In this application you may view and play with some features of IT Mill Toolkit.<br/>"
-			+ "Most of the features can be tested online and include simple example of their "
-			+ "usage associated with it.<br/><br/>"
-			+ "Start your tour by selecting features from the list on the left.<br/><br/>"
-			+ "For more information, point your browser to: <a href=\"http://www.itmill.com\""
-			+ " target=\"_new\">www.itmill.com</a>";
 
 	public void attach() {
 
@@ -118,6 +108,7 @@ public class FeatureBrowser extends CustomComponent implements
 		left.addComponent(close);
 
 		// Test component
+		registerFeature("/Welcome", new IntroWelcome());
 		registerFeature("/UI Components", new IntroComponents());
 		registerFeature("/UI Components/Basic", new IntroBasic());
 		registerFeature("/UI Components/Basic/Text Field",
@@ -170,7 +161,7 @@ public class FeatureBrowser extends CustomComponent implements
 			features.expandItem(i.next());
 
 		// Add demo component and tabs
-		currentFeature = new FeatureTable();
+		currentFeature = new IntroWelcome();
 		layout.addComponent(currentFeature);
 
 		// Add properties
@@ -181,8 +172,10 @@ public class FeatureBrowser extends CustomComponent implements
 		propertiesSelect.setSwitchMode(true);
 		right.addComponent(propertiesSelect);
 		properties = currentFeature.getPropertyPanel();
-		properties.setVisible(false);
-		right.addComponent(properties);
+		if (properties != null) {
+			properties.setVisible(false);
+			right.addComponent(properties);
+		}
 	}
 
 	public void registerFeature(String path, Feature feature) {
@@ -245,7 +238,8 @@ public class FeatureBrowser extends CustomComponent implements
 	}
 
 	public void buttonClick(ClickEvent event) {
-		properties.setVisible(((Boolean) propertiesSelect.getValue())
-				.booleanValue());
+		if (properties != null)
+			properties.setVisible(((Boolean) propertiesSelect.getValue())
+					.booleanValue());
 	}
 }
