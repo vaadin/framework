@@ -13,12 +13,10 @@
 	<taskdef name="java2html" classname="de.java2html.anttasks.Java2HtmlTask" classpath="build/lib/java2html.jar" />
 
 	<!-- Release build target -->
-	<target name="release" depends="package" description="Build public release. Theme files are syntax checked, optimized and obfuscated.">
-	</target>
+	<target name="release" depends="package" description="Build public release. Theme files are syntax checked, optimized and obfuscated." />
 
 	<!-- Testing build target -->
-	<target name="testing" depends="package-testing" description="Like release target but without documentation or zip. Faster iteration for functional testing.">
-	</target>
+	<target name="testing" depends="package-testing" description="Like release target but without documentation or zip. Faster iteration for functional testing." />
 
 	<!-- Initialization - - - - - - - - - - - - - - - - - - - - - - - - -->
 
@@ -175,6 +173,7 @@
 	<!-- Demo  - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 	<target name="demo" depends="libs,compile-java,theme-jar">
+		<java2html srcdir="src/${toolkit-package}/demo" destdir="src/${toolkit-package}/demo" includes="**/*.java" style="eclipse" showLineNumbers="true" showFileName="true" showTableBorder="false" />
 		<war warfile="${output-dir}/demo/${product-file}.war" webxml="WebContent/WEB-INF/web.xml">
 			<classes dir="build/result/classes">
 				<include name="${toolkit-package}/demo/**/*.class" />
@@ -192,7 +191,9 @@
 				<include name="${themes-jar-name}" />
 			</lib>
 			<fileset dir="">
-				<include name="src/${toolkit-package}/demo/**/*.java" />
+				<!-- <include name="src/${toolkit-package}/demo/**/*.java" /> -->
+				<include name="src/${toolkit-package}/demo/Calc.*" />
+				<include name="src/${toolkit-package}/demo/HelloWorld.*" />
 			</fileset>
 			<fileset dir="WebContent">
 				<exclude name="**/.svn" />
@@ -210,7 +211,8 @@
 
 		<copy todir="${output-dir}/demo/src">
 			<fileset dir="build/result/src">
-				<include name="${toolkit-package}/demo/**/*.java" />
+				<include name="src/${toolkit-package}/demo/Calc.*" />
+				<include name="src/${toolkit-package}/demo/HelloWorld.*" />
 			</fileset>
 		</copy>
 	</target>
@@ -306,7 +308,7 @@
 	<pathelement path="build/lib/fop-0.92/xercesImpl-2.7.1.jar" />
 	<pathelement path="build/lib/fop-0.92/xml-apis-1.3.02.jar" />
 </path>
-<java classname="org.apache.xalan.xslt.Process" failonerror="yes" fork="yes" maxmemory="764m">
+<java classname="org.apache.xalan.xslt.Process" failonerror="yes" fork="yes" maxmemory="768m">
 	<arg value="-in" />
 	<arg value="doc/manual/book.xml" />
 	<arg value="-xsl" />
@@ -334,12 +336,13 @@
 </target>
 
 <!-- As release, but no documentation or zip package -->
-<target name="package-testing" depends="clean-all,libs,themes,demo,package-docs">
-</target>
+<target name="package-testing" depends="clean-all,libs,themes,demo,package-docs" />
 
 <!-- Clean results - - - - - - - - - - - - - - - - - - - - - - - - - -->
 <target name="clean-all" depends="">
-<delete dir="build/result/*" />
+<delete includeemptydirs="true" defaultexcludes="false">
+	<fileset dir="build/result" includes="**/*" />
+</delete>
 <delete file="build/docbook/conf/temp.xsl" />
 </target>
 
