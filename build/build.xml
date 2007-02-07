@@ -13,6 +13,10 @@
 	<target name="release" depends="package" description="Build public release. Theme files are syntax checked, optimized and obfuscated.">
 	</target>
 
+	<!-- Testing build target -->
+	<target name="testing" depends="package-testing" description="Like release target but without documentation or zip. Faster iteration for functional testing.">
+	</target>
+
 	<!-- Initialization - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 	<target name="init">
@@ -71,7 +75,6 @@
 			</path>
 			<sequential>
 				<echo>@{file}</echo>
-				<!-- untested -->
 				<exec dir="build" executable="cmd.exe" os="Windows 2000, Windows XP" failonerror="true">
 					<arg line="/c bin\csstidy-win.exe @{file} @{file}" />
 				</exec>
@@ -93,7 +96,8 @@
 			<sequential>
 				<echo>@{file}</echo>
 				<!-- <replaceregexp file="@{file}" match="foo" replace="x1" byline="true" /> -->
-				<java dir="${output-dir}/lib/themes" jar="build/lib/custom_rhino.jar" fork="true" failonerror="true" maxmemory="128m" output="@{file}">
+				<!-- TODO: ERROR: for some reason this does not work on Windows platform -->
+				<java dir="${output-dir}/lib/themes" jar="build/lib/custom_rhino.jar" fork="true" failonerror="true" maxmemory="64m" output="@{file}">
 					<arg value="-c" />
 					<arg value="@{file}" />
 				</java>
@@ -324,6 +328,10 @@
 		</patternset>
 	</fileset>
 </zip>
+</target>
+
+<!-- As release, but no documentation or zip package -->
+<target name="package-testing" depends="clean-all,libs,themes,demo,package-docs">
 </target>
 
 <!-- Clean results - - - - - - - - - - - - - - - - - - - - - - - - - -->
