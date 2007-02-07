@@ -84,7 +84,7 @@ public class FeatureTable extends Feature implements Action.Handler {
 
 		// Add random rows to table
 		for (int j = 0; j < 300; j++) {
-			Object id = t
+			t
 					.addItem(
 							new Object[] {
 									firstnames[(int) (Math.random() * (firstnames.length - 1))],
