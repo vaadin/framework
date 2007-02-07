@@ -284,6 +284,7 @@
 </target>
 
 <target name="manual-html" depends="init">
+<delete file="build/docbook/conf/temp.xsl" />
 <copy file="build/docbook/conf/custom-html-docbook.xsl" tofile="build/docbook/conf/temp.xsl">
 	<filterchain>
 		<replacetokens>
@@ -328,6 +329,7 @@
 <!-- Clean results - - - - - - - - - - - - - - - - - - - - - - - - - -->
 <target name="clean-all" depends="">
 <delete dir="build/result" />
+<delete file="build/docbook/conf/temp.xsl" />
 </target>
 
 </project>
