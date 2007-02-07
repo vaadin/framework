@@ -28,8 +28,6 @@
 
 package com.itmill.toolkit.demo.features;
 
-import sun.awt.geom.AreaOp.IntOp;
-
 import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.OrderedLayout;
