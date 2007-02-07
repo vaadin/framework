@@ -9,6 +9,9 @@
 		</classpath>
 	</taskdef>
 
+	<!-- java2html converter -->
+	<taskdef name="java2html" classname="de.java2html.anttasks.Java2HtmlTask" classpath="build/lib/java2html.jar" />
+
 	<!-- Release build target -->
 	<target name="release" depends="package" description="Build public release. Theme files are syntax checked, optimized and obfuscated.">
 	</target>
@@ -336,7 +339,7 @@
 
 <!-- Clean results - - - - - - - - - - - - - - - - - - - - - - - - - -->
 <target name="clean-all" depends="">
-<delete dir="build/result" />
+<delete dir="build/result/*" />
 <delete file="build/docbook/conf/temp.xsl" />
 </target>
 
