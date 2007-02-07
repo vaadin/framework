@@ -29,6 +29,7 @@
 package com.itmill.toolkit.demo.features;
 
 import com.itmill.toolkit.event.Action;
+import com.itmill.toolkit.terminal.Sizeable;
 import com.itmill.toolkit.ui.*;
 
 public class FeatureTable extends Feature implements Action.Handler {
@@ -80,9 +81,11 @@ public class FeatureTable extends Feature implements Action.Handler {
 		t.addContainerProperty("Age", String.class, "");
 		t.addContainerProperty("Eyecolor", String.class, "");
 		t.addContainerProperty("Haircolor", String.class, "");
+		t.setHeight(250);
+		t.setWidth(400);
 
 		// Add random rows to table
-		for (int j = 0; j < 500; j++) {
+		for (int j = 0; j < 300; j++) {
 			Object id = t
 					.addItem(
 							new Object[] {
@@ -102,7 +105,7 @@ public class FeatureTable extends Feature implements Action.Handler {
 		Form ap = propertyPanel.createBeanPropertySet(new String[] {
 				"pageLength", "rowHeaderMode", "selectable",
 				"columnHeaderMode", "columnCollapsingAllowed",
-				"columnReorderingAllowed" });
+				"columnReorderingAllowed", "width", "height" });
 		ap.replaceWithSelect("columnHeaderMode", new Object[] {
 				new Integer(Table.COLUMN_HEADER_MODE_EXPLICIT),
 				new Integer(Table.COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID),
