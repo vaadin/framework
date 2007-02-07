@@ -44,10 +44,7 @@ public class Calc
 	 */
 	public void init() {
 
-		/*
-		 * Create a new {@link com.itmill.toolkit.ui.GridLayout GridLayout}
-		 * to hold the UI components needed by the calculator.
-		 */
+		 //Create a new layout for the components used by the calculator
 		GridLayout layout = new GridLayout(4, 5);
 
 		//Create a new label component for displaying the result
@@ -62,11 +59,11 @@ public class Calc
 			layout.addComponent(new Button(captions[i], this));
 		}
 
-		/*
-		 * Create the main window with a caption and add it to the
-		 * application.
-		 */
+		// Create the main window with a caption and add it to the application.
 		addWindow(new Window("Calculator", layout));
+		
+		//Set the application to use Corporate -theme
+		setTheme("corporate");
 
 	}
 
