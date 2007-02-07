@@ -37,4 +37,15 @@ public class FeaturesApplication extends com.itmill.toolkit.Application {
 		setMainWindow(main);
 		main.addComponent(new FeatureBrowser());
 	}
+
+	/**
+	 * ErrorEvents are printed to default error stream and not in GUI.
+	 */
+	@Override
+	public void terminalError(
+			com.itmill.toolkit.terminal.Terminal.ErrorEvent event) {
+		Throwable e = event.getThrowable();
+		e.printStackTrace();
+	}
+
 }

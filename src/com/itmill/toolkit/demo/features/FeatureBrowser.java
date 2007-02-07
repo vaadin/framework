@@ -64,14 +64,14 @@ public class FeatureBrowser extends CustomComponent implements
 		// Configure tree
 		features = new Tree();
 		// TODO see #321
-		//features.setStyle("default");
+		// features.setStyle("default");
 		features.addContainerProperty("name", String.class, "");
 		features.addContainerProperty("feature", Feature.class, null);
 		features.setItemCaptionPropertyId("name");
 		features.addListener(this);
 		features.setImmediate(true);
 		features.setStyle("menu");
-		
+
 		// Configure component layout
 		layout = new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
 		layout.setStyle("featurebrowser-mainlayout");
@@ -154,9 +154,9 @@ public class FeatureBrowser extends CustomComponent implements
 		registerFeature("/Data Model/Containers", new FeatureContainers());
 		registerFeature("/Data Model/Validators", new FeatureValidators());
 		registerFeature("/Data Model/Buffering", new FeatureBuffering());
-//		registerFeature("/Terminal", new IntroTerminal());
-//		registerFeature("/Terminal/Parameters and URI Handling",
-//				new FeatureParameters());
+		// registerFeature("/Terminal", new IntroTerminal());
+		// registerFeature("/Terminal/Parameters and URI Handling",
+		// new FeatureParameters());
 
 		// Pre-open all menus
 		for (Iterator i = features.getItemIds().iterator(); i.hasNext();)
