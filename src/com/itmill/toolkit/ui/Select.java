@@ -256,8 +256,6 @@ public class Select extends AbstractField implements Container,
 		else
 			selectedKeys = new String[(getValue() == null
 					&& getNullSelectionItemId() == null ? 0 : 1)];
-		String[] selectedCaptions;
-		selectedCaptions = new String[selectedKeys.length];
 		
 		// Paint options and create array of selected id keys
 		target.startTag("options");
