@@ -851,13 +851,14 @@ public class ApplicationServlet extends HttpServlet implements
 
 		page.write("<script language=\"JavaScript\">\n");
 		String appUrl = getApplicationUrl(request).toString();
+		if (appUrl.endsWith("/")) appUrl = appUrl.substring(0,appUrl.length()-1);
+		if (appUrl.endsWith(":80")) appUrl = appUrl.substring(0,appUrl.length()-3);
 		page
 				.write("var client = new itmill.Client("
 						+ "document.getElementById('ajax-window'),"
 						+ "\""
-						+ appUrl
-						+ (appUrl.endsWith("/") ? "" : "/")
-						+ "UIDL/"
+						+ appUrl 
+						+ "/UIDL/"
 						+ "\",\""
 						+ resourcePath
 						+ ((Theme) themes
