@@ -5,90 +5,98 @@
 </head>
 <body>
 
-<table width="100%" border="0">
+ <div id="intro">
+  <div class="top"><div></div></div>
+  <div class="content">
+   <div class="preview"></div>
+   <h2>Introduction</h2>
+    <p>
+	IT Mill Toolkit allows easy creation of first class user interfaces (UI) for Java-based programs. 
+	UI can be programmed in Java with easy to learn <a href="doc/api/index.html">API</a> and the toolkit takes care of 
+	creating stunning <a href="http://www.openajax.org/whitepaper.html" target="new">AJAX-based</a> UI.
+	</p>
+	<p>
+	AJAX user interfaces support <a href="http://www.microsoft.com/windows/ie/default.mspx" target="new">
+	Internet Explorer</a> 6-7, <a href="http://www.mozilla.com/firefox/" target="new">
+	Firefox</a> 1.5-2 and <a href="http://www.apple.com/safari/" target="new">Safari</a> 2. 
+	Older browsers are supported by automatically providing traditional web-based UI.
+	</p>
+   </div>
+  <div class="bottom"><div></div></div>
+ </div>
+ 
 
-<tr><td width="50%" valign="top">
+<div id="contents">
+<h2>Package contents</h2>
+<div class="top"><div></div></div>
+  <div class="content">
+	<h4>Library</h4>
+	<ul>
+	<li><a href="lib/itmill-toolkit-4.0.0-alpha-20070206-1.jar">Toolkit</a></li>
+	<li><a href="lib/itmill-toolkit-src-4.0.0-alpha-20070206-1.jar">Toolkit Source</a></li>
+	<li><a href="lib/ajax-themes">AJAX themes</a></li>
+	<li><a href="lib/web-themes">Web themes</a></li>
+	</ul>
 
-<h2>Introduction</h2>
+	<h4>Documentation</h4>
+	<ul>
+	<li><a href="doc/manual/index.html">Manual</a>
+		<ul>
+			<li><a href="doc/manual/ch01.html">Introduction</a></li>
+			<li><a href="doc/manual/ch01s02.html">Example application walkthrough</a></li>
+			<li><a href="doc/manual/ch01s03.html">Development environment setup</a></li>
+		</ul>
+	</li>
+	<li><a href="doc/api/index.html">API Documentation</a></li>
+	</ul>
 
-<div class="front-page-box">
-IT Mill Toolkit allows easy creation of first class user interfaces (UI) for Java-based programs. 
-UI can be programmed completely in Java with easy to learn <a href="doc/api/index.html">API</a> and the toolkit takes care of 
-creating stunning <a href="http://www.openajax.org/whitepaper.html" target="new">AJAX-based</a> UI. 
+	<h4>Examples</h4>
+	<ul>
+	<li><a href="demo/src">Demo application sources</a></li>
+	<li><a href="demo/itmill-toolkit.war">Demo WAR-package</a></li>
+	</ul>
+   </div>
+  <div class="bottom"><div></div></div>
+</div> <!-- // contents -->
 
-<br/><br/>
 
-AJAX user interfaces support <a href="http://www.microsoft.com/windows/ie/default.mspx" target="new">
-Internet Explorer</a> 6-7, <a href="http://www.mozilla.com/firefox/" target="new">
-Firefox</a> 1.5-2 and <a href="http://www.apple.com/safari/" target="new">Safari</a> 2. 
-Older browsers are supported by automatically providing traditional web-based UI.
+<div id="demo">
+ <h2>Demo and sample code</h2>
+ <p>To get quick feel of the toolkit, look at the demos:</p>
+	<ul>
+	<li><a href="http://toolkit.itmill.com/demo/">Online at IT Mill</a></li>
+	<li>To run demos locally, run start.bat (on Windows) or start.sh (on Mac or Linux) in <a href="demo">demo -directory</a></li>
+	</ul>
 </div>
 
-<h2>Demo and sample code</h2>
-
-<div class="front-page-box">
-To get quick feel of the toolkit, look at the demos:
-<ul>
-<li><a href="http://toolkit.itmill.com/demo/">Online at IT Mill</a></li>
-<li>To run demos locally, run start.bat (on Windows) or start.sh (on Mac or Linux) in <a href="demo">demo-directory</a></li>
-</ul>
-<br/>
-</div>
-
+<div id="support">
 <h2>Support</h2>
-
-<div class="front-page-box">
+<p>
 Free support forum contains answers to most commonly asked questions,
 it will be opened later. For the time being use
 <a href="mailto:support@itmill.com">support@itmill.com</a>. IT Mill offers wide range
-of <a href="http://www.itmill.com/">professional support and service offering</a>. 
+of <a href="http://www.itmill.com/">professional support and service offering</a>.
+</p> 
 </div>
 
-</td><td width="50%" valign="top">
-
-<h2>Contents</h2>
-
-<div class="front-page-box">
-<b>Library</b><br/>
-<ul>
-<li><a href="lib/${lib-bin-jar-name}">Toolkit</a></li>
-<li><a href="lib/${lib-src-jar-name}">Toolkit Source</a></li>
-<li><a href="lib/ajax-themes">AJAX themes</a></li>
-<li><a href="lib/web-themes">Web themes</a></li>
-</ul>
-
-<b>Documentation</b><br/>
-
-<ul>
-<li><a href="doc/manual/index.html">Manual</a>
-	<ul>
-		<li><a href="doc/manual/ch01.html">Introduction</a></li>
-		<li><a href="doc/manual/ch01s02.html">Example application walkthrough</a></li>
-		<li><a href="doc/manual/ch01s03.html">Development environment setup</a></li>
-	</ul>
-</li>
-<li><a href="doc/api/index.html">API Documentation</a></li>
-</ul>
-
-<b>Examples</b><br/>
-
-<ul>
-<li><a href="demo/src">Demo application sources</a></li>
-<li><a href="demo/itmill-toolkit.war">Demo WAR-package</a></li>
-</ul>
-</div>
-
+<div id="license">
 <h2>License</h2>
-<div class="front-page-box">
+<p>
 <ul>
-	<li><a href="licensing-guidelines.html">Licensing
-	guidelines</a></lI>
+	<li><a href="licensing-guidelines.html">Licensing guidelines</a></li>
 	<li><a href="license.pdf">License</a></lI>
 	<li>Prices and purchase from <a href="mailto:support@itmill.com">sales@itmill.com</a></li>
 </ul>
+</p>
 </div>
 
-</td></tr></table>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
 
 </body>
 </html>
