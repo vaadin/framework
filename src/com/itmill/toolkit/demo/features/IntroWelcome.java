@@ -28,6 +28,8 @@
 
 package com.itmill.toolkit.demo.features;
 
+import sun.awt.geom.AreaOp.IntOp;
+
 import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.OrderedLayout;
@@ -68,7 +70,7 @@ public class IntroWelcome extends Feature {
 	 * @see com.itmill.toolkit.demo.features.Feature#getDescriptionXHTML()
 	 */
 	protected String getDescriptionXHTML() {
-		return this.WELCOME_TEXT;
+		return WELCOME_TEXT;
 	}
 
 	protected String getImage() {
