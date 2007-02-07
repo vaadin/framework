@@ -850,9 +850,13 @@ public class ApplicationServlet extends HttpServlet implements
 		page.write("<div id=\"ajax-window\"></div>\n");
 
 		page.write("<script language=\"JavaScript\">\n");
-		String appUrl = getApplicationUrl(request).toString();
+		
+		String[] urlParts = getApplicationUrl(request).toString().split("\\/");
+		if (urlParts[2].endsWith(":80")) urlParts[2] = urlParts[2].substring(0,urlParts[2].length()-3);
+		String appUrl = "";
+		for (int i=0; i<urlParts.length; i++)
+			appUrl += (i>0?"/":"") + urlParts[i];
 		if (appUrl.endsWith("/")) appUrl = appUrl.substring(0,appUrl.length()-1);
-		if (appUrl.endsWith(":80")) appUrl = appUrl.substring(0,appUrl.length()-3);
 		page
 				.write("var client = new itmill.Client("
 						+ "document.getElementById('ajax-window'),"
