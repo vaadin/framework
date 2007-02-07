@@ -226,7 +226,11 @@
 				<exclude name="**/.svn" />
 				<include name="*.html" />
 				<include name="*.txt" />
-				<include name="*.pdf" />
+			</fileset>
+		</copy>
+		<copy todir="${output-dir}">
+			<fileset dir="">
+				<filename name="*.pdf" />
 			</fileset>
 		</copy>
 		<copy todir="${output-dir}/doc/manual/html-style">
