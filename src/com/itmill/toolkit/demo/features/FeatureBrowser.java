@@ -70,7 +70,8 @@ public class FeatureBrowser extends CustomComponent implements
 		features.setItemCaptionPropertyId("name");
 		features.addListener(this);
 		features.setImmediate(true);
-
+		features.setStyle("menu");
+		
 		// Configure component layout
 		layout = new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
 		layout.setStyle("featurebrowser-mainlayout");
