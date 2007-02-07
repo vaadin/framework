@@ -35,7 +35,6 @@ import java.io.OutputStream;
 
 import com.itmill.toolkit.terminal.StreamResource;
 import com.itmill.toolkit.ui.Component;
-import com.itmill.toolkit.ui.Form;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.Link;
 import com.itmill.toolkit.ui.OrderedLayout;
@@ -66,7 +65,6 @@ public class FeatureUpload extends Feature implements Upload.FinishedListener {
 
 		// Properties
 		propertyPanel = new PropertyPanel(up);
-		// propertyPanel = null;
 
 		return l;
 	}
