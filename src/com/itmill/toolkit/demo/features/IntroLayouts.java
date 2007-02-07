@@ -64,7 +64,7 @@ public class IntroLayouts extends Feature {
 	}
 
 	protected String getImage() {
-		return "";
+		return null;
 	}
 
 	protected String getTitle() {

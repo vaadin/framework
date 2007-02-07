@@ -64,7 +64,7 @@ public class IntroTerminal extends Feature {
 	}
 
 	protected String getImage() {
-		return "";
+		return null;
 	}
 
 	protected String getTitle() {

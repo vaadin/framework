@@ -57,16 +57,16 @@ public class FeatureUpload extends Feature implements Upload.FinishedListener {
 		OrderedLayout l = new OrderedLayout();
 
 		Upload up = new Upload("Upload a file:", null);
-		//up.addListener(this);
-		
-		//status.setVisible(false);
-		
+		up.addListener(this);
+
+		status.setVisible(false);
+
 		l.addComponent(up);
-		//l.addComponent(status);
+		l.addComponent(status);
 
 		// Properties
-		//propertyPanel = new PropertyPanel(up);
-		propertyPanel = null;
+		propertyPanel = new PropertyPanel(up);
+		// propertyPanel = null;
 
 		return l;
 	}
