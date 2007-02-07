@@ -793,7 +793,12 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 		this.logoutURL = logoutURL;
 	}
 
-	/**
+	/** This method is invoked by the terminal on any exception that occurs in application 
+	 * and is thrown by the setVariable() to the terminal. The default implementation sets
+	 * the exceptions as ComponentErrors to the component that initiated the exception. 
+	 * You can safely override this method in your application in order to direct the errors
+	 * to some other destination (for example log).
+	 * 
 	 * @see com.itmill.toolkit.terminal.Terminal.ErrorListener#terminalError(com.itmill.toolkit.terminal.Terminal.ErrorEvent)
 	 */
 	public void terminalError(Terminal.ErrorEvent event) {
