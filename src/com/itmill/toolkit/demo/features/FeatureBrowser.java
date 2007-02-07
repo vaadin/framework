@@ -161,7 +161,7 @@ public class FeatureBrowser extends CustomComponent implements
 			features.expandItem(i.next());
 
 		// Add demo component and tabs
-		currentFeature = new IntroWelcome();
+		currentFeature = new FeatureTable();
 		layout.addComponent(currentFeature);
 
 		// Add properties
@@ -172,10 +172,8 @@ public class FeatureBrowser extends CustomComponent implements
 		propertiesSelect.setSwitchMode(true);
 		right.addComponent(propertiesSelect);
 		properties = currentFeature.getPropertyPanel();
-		if (properties != null) {
-			properties.setVisible(false);
-			right.addComponent(properties);
-		}
+		properties.setVisible(false);
+		right.addComponent(properties);
 	}
 
 	public void registerFeature(String path, Feature feature) {
