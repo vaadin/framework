@@ -310,7 +310,7 @@
 	<pathelement path="build/lib/fop-0.92/xercesImpl-2.7.1.jar" />
 	<pathelement path="build/lib/fop-0.92/xml-apis-1.3.02.jar" />
 </path>
-<java classname="org.apache.xalan.xslt.Process" failonerror="yes" fork="yes" maxmemory="768m">
+<java classname="org.apache.xalan.xslt.Process" failonerror="yes" fork="yes" maxmemory="1268m">
 	<arg value="-in" />
 	<arg value="doc/manual/book.xml" />
 	<arg value="-xsl" />
