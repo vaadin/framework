@@ -64,7 +64,7 @@ public class IntroComponents extends Feature {
 	}
 
 	protected String getImage() {
-		return "ui-components.gif";
+		return "components.png";
 	}
 
 	protected String getTitle() {
