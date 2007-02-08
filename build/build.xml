@@ -305,12 +305,12 @@
 	</filterchain>
 </copy>
 <path id="docbook-xsl.classpath">
-	<pathelement path="build/lib/fop-0.92/serializer-2.7.0.jar" />
-	<pathelement path="build/lib/fop-0.92/xalan-2.7.0.jar" />
-	<pathelement path="build/lib/fop-0.92/xercesImpl-2.7.1.jar" />
-	<pathelement path="build/lib/fop-0.92/xml-apis-1.3.02.jar" />
+	<pathelement path="build/lib/fserializer.jar" />
+	<pathelement path="build/lib/xalan.jar" />
+	<pathelement path="build/lib/xercesImpl.jar" />
+	<pathelement path="build/lib/xml-apis.jar" />
 </path>
-<java classname="org.apache.xalan.xslt.Process" failonerror="yes" fork="yes" maxmemory="1268m">
+<java classname="org.apache.xalan.xslt.Process" failonerror="yes" fork="yes" maxmemory="1300m">
 	<arg value="-in" />
 	<arg value="doc/manual/book.xml" />
 	<arg value="-xsl" />
