@@ -89,7 +89,6 @@ public class FeatureDateField extends Feature {
 				themes.getItemCaptionPropertyId()).setValue("text");
 		themes.addItem("calendar").getItemProperty(
 				themes.getItemCaptionPropertyId()).setValue("calendar");
-		df.setStyle("calendar");
 		propertyPanel.addProperties("DateField Properties", ap);
 
 		return l;
