@@ -67,6 +67,7 @@
 
 	<!-- Executed for release builds only -->
 	<target name="themes-optimize-obfuscate" depends="copy-themes-to-lib">
+		<!-- CSS optimization disabled as it is broken
 		<echo>CSS syntax check and optimizing.</echo>
 		<for param="file">
 			<path>
@@ -87,6 +88,7 @@
 				</exec>
 			</sequential>
 		</for>
+		-->
 		<echo>JavaScript syntax check, optimizing and obfuscation.</echo>
 		<for param="file">
 			<path>
