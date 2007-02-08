@@ -1,93 +1,75 @@
 <html>
 <head>
 <title>IT Mill Toolkit Demo</title>
+<link rel="stylesheet" type="text/css" href="styles/demos.css" />
 </head>
 <body>
 
-<center>
+<div id="container">
 
-<h1>IT Mill Toolkit Demo</h1>
+<div id="itmilllogo"><h1>IT Mill Toolkit</h1></div>
 
-<table width="90%" border="1" cellpadding="30px">
-
-	<tr>
-		<td>
-		<h2>Feature Browser</h2>
-		<table cellpadding="5px">
-			<tr>
-				<td><a href="features/">Autodetected mode</a></td>
-				<td>Use AJAX if supported by browser, then fallback to HTML
-				mode</td>
-			</tr>
-			<tr>
-				<td><a href="features/?renderingMode=ajax">AJAX mode</a></td>
-				<td>Select AJAX-based technology mode</td>
-			</tr>
-			<tr>
-				<td><a href="features/?renderingMode=ajax&debug=true">AJAX
-				mode with debug</a></td>
-				<td>As above but with <a href="http://www.getfirebug.com/">firebug</a> debug extensions</td>
-			</tr>
-			<tr>
-				<td><a href="features/?renderingMode=html">HTML mode</a></td>
-				<td>Select page based request/response technology mode</td>
-			</tr>
-			<tr>
-				<td><a href="features/?renderingMode=html&debug=true">HTML
-				mode with debug</a></td>
-				<td>As above but with <a href="http://www.getfirebug.com/">firebug</a> debug extensions</td>
-			</tr>
-			<tr>
-				<td></td>
-			</tr>
-		</table>
-</table>
-
-<h1>IT Mill Toolkit Sample Code</h1>
-
-<table width="90%" border="1" cellpadding="30px">
-
-	<tr>
-		<td>
-		<h2>Hello World</h2>
-		<table cellpadding="5px">
-			<tr>
-				<td><a href="hello/">Autodetected mode</a></td>
-				<td>Use AJAX if supported by browser, then fallback to HTML
-				mode</td>
-			</tr>
-			<tr>
-				<td><a href="src/com/itmill/toolkit/demo/HelloWorld.java.html">Source
-				code</a></td>
-				<td>See source code how an simple Toolkit application is
-				created.</td>
-			</tr>
-		</table>
-		</td>
-	</tr>
+<div id="toolkit"></div>
+<!--
+<h2>IT Mill Toolkit Demo</h2>
+-->
+  <div id="feature-browser">
+	<h3>Feature Browser</h3>
+	<div class="option">
+	 <span class="link"><a href="features/">Autodetected mode</a></span>
+	 <span class="desc">Use AJAX if supported by browser, otherwise fallback to HTML mode.</span>
+	</div>
 	
-	<tr>
-		<td>
-		<h2>Calculator</h2>
-		<table cellpadding="5px">
-			<tr>
-				<td><a href="calc/">Autodetected mode</a></td>
-				<td>Use AJAX if supported by browser, then fallback to HTML
-				mode</td>
-			</tr>
-			<tr>
-				<td><a href="src/com/itmill/toolkit/demo/Calc.java.html">Source
-				code</a></td>
-				<td>See source code how an simple Toolkit application is
-				created.</td>
-			</tr>
-		</table>
-		</td>
-	</tr>
+	<div class="option">
+	 <span class="link"><a href="features/?renderingMode=ajax">AJAX mode</a></span>
+	 <span class="desc">Select AJAX-based technology mode</span>
+	</div>
+	
+	<div class="option">
+	 <span class="link"><a href="features/?renderingMode=ajax&debug=true">AJAX mode with debug</a></span>
+	 <span class="desc">As above but with <a href="http://www.getfirebug.com/">firebug</a> debug extensions</span>
+	</div>
+	
+	<div class="option">
+	 <span class="link"><a href="features/?renderingMode=html">HTML mode</a></span>
+	 <span class="desc">Select page based request/response technology mode</span>
+	</div>
+	
+	<div class="option">
+	 <span class="link"><a href="features/?renderingMode=html&debug=true">HTML mode with debug</a></span>
+	 <span class="desc">As above but with <a href="http://www.getfirebug.com/">firebug</a> debug extensions</span>
+	</div>
+  </div>
 
-</table>
+  <div id="sample-code">
+	<h3>IT Mill Toolkit Sample Code</h3>
 
-</center>
+	<h4>Hello World</h4>
+	
+	<div class="option">
+	 <span class="link"><a href="hello/">Autodetected mode</a></span>
+	 <span class="desc">Use AJAX if supported by browser, otherwise fallback to HTML mode</span>
+	</div>
+	
+	<div class="option">
+	 <span class="link"><a href="src/com/itmill/toolkit/demo/HelloWorld.java.html">Source code</a></span>
+	 <span class="desc">See source code how a simple Toolkit application is created.</span>
+	</div>
+	
+	<h4>Calculator</h4>
+	
+	<div class="option">
+	 <span class="link"><a href="calc/">Autodetected mode</a></span>
+	 <span class="desc">Use AJAX if supported by browser, otherwise fallback to HTMLmode</span>
+	</div>
+	
+	<div class="option">
+	 <span class="link"><a href="src/com/itmill/toolkit/demo/Calc.java.html">Source	code</a></span>
+	 <span class="desc">See source code how a simple Toolkit application is created.</span>
+    </div>
+  </div>
+
+</div><!-- // Container -->
 
 </body>
 </html>
