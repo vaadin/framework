@@ -1,0 +1,140 @@
+/* Basic styles */
+
+body {
+	background-color: #c7e4ff;
+	font-family: Georgia, Arial, Tahoma, Verdana, sans-serif;
+	margin: 0;
+	padding: 0;
+	letter-spacing: 0.01em;
+	color: #4c4c4c;
+	font-size: 62.5%;
+}
+
+h1,h2,h3,h4,h5,h6 {
+	font-family: Arial, Tahoma, Verdana, sans-serif;
+	color: #ee4411;
+	font-weight: normal;
+}
+h1 {
+	font-size: 3em;
+}
+h2 {
+	font-size: 2.4em;
+}
+h3 {
+	font-size: 2em;
+}
+h4 {
+	font-size: 1.8em;
+	color: #3798f3;
+	margin-bottom: 0.4em;
+}
+h5 {
+	font-size: 1.5em;
+}
+h6 {
+	font-size: 1.2em;
+	font-weight: bold;
+}
+
+a:link {
+	color: #ee4411;
+	text-decoration: none;
+	border-bottom: dotted 1px #539dc9;
+}
+a:visited {
+	color: #5d7178;
+	text-decoration: none;
+	border-bottom: dotted 1px #539dc9;
+}
+a:active {
+	color: #3a9bff;
+	text-decoration: none;
+}
+a:hover {
+	color: #3b62b1;
+	background-color: #e7f3fa;
+	border-bottom: solid 1px #ee4411;
+	text-decoration: none;
+}
+
+ul {
+	list-style-type: square;
+}
+
+/* Layout */
+
+#container {
+	margin: 30px 30px;
+	text-align: left;
+	padding: 35px 30px 30px 30px;
+	overflow: hidden;
+	margin-right: 30px;
+	background-color: #fff;
+}
+
+#itmilllogo {
+	background-image: url(itmill-logo-small.gif);
+	width: 195px;
+	height: 32px;
+	overflow: hidden;
+	text-indent: -90000px;
+	float: left;
+}
+
+#toolkit {
+	float: left;
+	width: 100px;
+	height: 25px;
+	background: transparent url(frontpage_logo.png) no-repeat;
+	margin: 3px 0 30px 10px;
+}
+
+pre {
+	background-color: #f7f7f7;
+	border: solid 2px #e6e6e6;
+	font-family: monospace;
+	font-size: 1.1em;
+	padding: 0.5em 1em;
+}
+
+hr {
+	height: 1px;
+	overflow: hidden;
+	color: #b2d2e5;
+	background-color: #b2d2e5;
+	border: none;
+}
+
+#feature-browser,
+#sample-code {
+	clear: both;
+	padding: 10px 10px 20px 50px;
+	background-color: #f7f7f7;
+	border: solid 2px #e6e6e6;
+	font-size: 1.2em;
+	line-height: 1.6em;
+	margin: 30px 0;
+}
+
+#feature-browser {
+	background: #f7f7f7 url(feature_browser_bg.gif) no-repeat top right;
+}
+
+#sample-code {
+	background: #f7f7f7 url(sample_code_bg.gif) no-repeat top right;
+}
+
+.option {
+	clear: both;
+	height: 2em;
+	overflow: hidden;
+}
+
+.option .link {
+	float: left;
+	width: 15em;
+}
+.option .desc {
+	float: left;
+}
