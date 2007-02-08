@@ -61,12 +61,14 @@ public class FeatureDateField extends Feature {
 
 		// Create locale selector
 		// TODO: see #244 (broken for AJAX mode), known issue exists
+		/* DISABLE UNTIL WORKS
 		Select selector = new Select("Application Locale", localeContainer);
 		selector.setItemCaptionPropertyId("name");
 		selector.setImmediate(true);
 		selector.setPropertyDataSource(new MethodProperty(
 				this.getApplication(), "locale"));
 		l.addComponent(selector);
+		*/
 
 		// Properties
 		propertyPanel = new PropertyPanel(df);
