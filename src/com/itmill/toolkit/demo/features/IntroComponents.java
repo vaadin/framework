@@ -68,7 +68,7 @@ public class IntroComponents extends Feature {
 	}
 
 	protected String getTitle() {
-		return "Introduction for UI components";
+		return "";
 	}
 
 }
