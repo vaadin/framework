@@ -175,7 +175,7 @@
 	<!-- Demo  - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 	<target name="demo" depends="libs,compile-java,theme-jar">
-		<java2html srcdir="src/${toolkit-package}/demo" destdir="src/${toolkit-package}/demo" includes="**/*.java" style="eclipse" showLineNumbers="true" showFileName="true" showTableBorder="false" />
+		<!-- <java2html srcdir="src/${toolkit-package}/demo" destdir="src/${toolkit-package}/demo" includes="**/*.java" style="eclipse" showLineNumbers="true" showFileName="true" showTableBorder="false" /> -->
 		<war warfile="${output-dir}/demo/${product-file}.war" webxml="WebContent/WEB-INF/web.xml">
 			<classes dir="build/result/classes">
 				<include name="${toolkit-package}/demo/**/*.class" />
