@@ -326,7 +326,7 @@ public class License {
 		NodeList cuL = licenseXML.getElementsByTagName("concurrent-jvms");
 		if (cuL == null && cuL.getLength() == 0)
 			return -1;
-		Element e= (Element) cuL.item(0);
+		Element e = (Element) cuL.item(0);
 		String limit = e == null ? null : e.getAttribute("limit");
 		if (limit != null && limit.length() > 0
 				&& !limit.equalsIgnoreCase("unlimited"))
@@ -388,7 +388,7 @@ public class License {
 	private String getVersionDescription() {
 
 		StringBuffer v = new StringBuffer();
-		
+
 		NodeList verL = licenseXML.getElementsByTagName("version");
 		if (verL != null && verL.getLength() > 0) {
 			NodeList checks = verL.item(0).getChildNodes();
@@ -397,20 +397,29 @@ public class License {
 				if (n.getNodeType() == Node.ELEMENT_NODE) {
 					Element e = (Element) n;
 					String tag = e.getTagName();
-					appendVersionDescription(e.getAttribute("equals-to"),v,tag,"=");
-					appendVersionDescription(e.getAttribute("equals-to-or-is-less-than"),v,tag,"<=");
-					appendVersionDescription(e.getAttribute("equals-to-or-is-more-than"),v,tag,">=");
+					appendVersionDescription(e.getAttribute("equals-to"), v,
+							tag, "=");
+					appendVersionDescription(e
+							.getAttribute("equals-to-or-is-less-than"), v, tag,
+							"<=");
+					appendVersionDescription(e
+							.getAttribute("equals-to-or-is-more-than"), v, tag,
+							">=");
 				}
 			}
 		}
-		
-		if (v.length() == 0) return null;
+
+		if (v.length() == 0)
+			return null;
 		return v.toString();
 	}
-	
-	private void appendVersionDescription(String num, StringBuffer v, String tag, String relation) {
-		if (num == null || num.length() == 0) return;
-		if (v.length() > 0) v.append(" and ");
+
+	private void appendVersionDescription(String num, StringBuffer v,
+			String tag, String relation) {
+		if (num == null || num.length() == 0)
+			return;
+		if (v.length() > 0)
+			v.append(" and ");
 		v.append(tag + " version " + relation + " " + num);
 	}
 
@@ -447,7 +456,7 @@ public class License {
 		NodeList editionE = (NodeList) prod.getElementsByTagName("edition");
 		if (editionE == null || editionE.getLength() == 0)
 			return null;
-		return editionE.item(0).getTextContent();
+		return getTextContent(editionE.item(0));
 	}
 
 	private String getProductName() throws InvalidLicenseFile {
@@ -455,12 +464,22 @@ public class License {
 				.item(0);
 		if (prod == null)
 			throw new InvalidLicenseFile("product not found in license-file");
-		String name = ((Element) prod.getElementsByTagName("name").item(0))
-				.getTextContent();
+		String name = getTextContent(((Element) prod.getElementsByTagName(
+				"name").item(0)));
 		if (name == null || name.length() == 0)
 			throw new InvalidLicenseFile(
 					"product name not found in license-file");
 		return name;
+	}
+
+	private String getTextContent(Node n) {
+		String val = "";
+		if (n.getChildNodes().getLength() > 0) {
+			for (int i = 0; i < n.getChildNodes().getLength(); i++)
+				if (n.getChildNodes().item(i).getNodeType() == Node.TEXT_NODE)
+					val += n.getChildNodes().item(i).getNodeValue();
+		}
+		return val;
 	}
 
 	private String getLicenseeName() {
@@ -471,7 +490,7 @@ public class License {
 				.getElementsByTagName("name");
 		if (nameL == null || nameL.getLength() == 0)
 			return null;
-		String name = nameL.item(0).getTextContent();
+		String name = getTextContent(nameL.item(0));
 		if (name == null || name.length() == 0)
 			return null;
 		return name;
@@ -481,7 +500,7 @@ public class License {
 		NodeList purposeL = licenseXML.getElementsByTagName("purpose");
 		if (purposeL == null || purposeL.getLength() == 0)
 			return null;
-		return purposeL.item(0).getTextContent();
+		return getTextContent(purposeL.item(0));
 	}
 
 	private String getLicenseNumber() throws InvalidLicenseFile {
@@ -665,7 +684,7 @@ public class License {
 	}
 
 	public class ApplicationClassNameDoesNotMatch extends LicenseViolation {
-		
+
 		private static final long serialVersionUID = 5837570791695513847L;
 
 		public ApplicationClassNameDoesNotMatch(String msg) {
