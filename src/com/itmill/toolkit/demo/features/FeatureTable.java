@@ -125,11 +125,13 @@ public class FeatureTable extends Feature implements Action.Handler {
 				new Integer(Table.ROW_HEADER_MODE_PROPERTY) }, new Object[] {
 				"Explicit", "Explicit defaults ID", "Hidden", "Icon only",
 				"ID", "Index", "Item", "Property" });
+		/* Disabled theme changer before #356, #357 are fixed
 		Select themes = (Select) propertyPanel.getField("style");
 		themes.addItem("list").getItemProperty(
 				themes.getItemCaptionPropertyId()).setValue("list");
 		themes.addItem("paging").getItemProperty(
 				themes.getItemCaptionPropertyId()).setValue("paging");
+				*/
 		propertyPanel.addProperties("Table Properties", ap);
 
 		t.setRowHeaderMode(Table.ROW_HEADER_MODE_INDEX);
