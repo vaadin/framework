@@ -16,7 +16,7 @@
 	<target name="release" depends="package" description="Build public release. Theme files are syntax checked, optimized and obfuscated." />
 
 	<!-- Testing build target -->
-	<target name="testing" depends="package-testing" description="Like release target but without documentation or zip. Faster iteration for functional testing." />
+	<target name="testing" depends="package-testing" description="Like release target but without docbook related documentation. Faster iteration for functional testing." />
 
 	<!-- Initialization - - - - - - - - - - - - - - - - - - - - - - - - -->
 
@@ -56,7 +56,8 @@
 	</target>
 
 	<!-- Themes - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	<target name="themes" depends="copy-themes-to-lib,themes-optimize-obfuscate" />
+	<target name="themes" depends="copy-themes-to-lib" />
+	<!-- ,themes-optimize-obfuscate" /> -->
 
 	<target name="copy-themes-to-lib" depends="init">
 		<copy todir="${output-dir}/lib/themes">
@@ -241,14 +242,11 @@
 			<lib dir="${output-dir}/lib">
 				<include name="themes/demo/**/*" />
 			</lib>
-			<!-- Javadoc -->
-
 			<!-- Calc and HelloWorld source and html source -->
 			<fileset dir="build/result">
 				<include name="src/${toolkit-package}/demo/Calc.*" />
 				<include name="src/${toolkit-package}/demo/HelloWorld.*" />
 			</fileset>
-
 		</war>
 
 		<!-- Jetty -->
@@ -313,88 +311,94 @@
 				<include name="${toolkit-package}/**" />
 				<exclude name="${toolkit-package}/demo/**" />
 			</packageset>
-			<doctitle>
-				<![CDATA[<h1>IT Mill Toolkit</h1>]]></doctitle>
-		<!--			<header><![CDATA[<script type="text/javascript" src=".html-style/style.js"></script>]]></header> -->
-		<bottom>
-			<![CDATA[<i>Copyright &#169; 2000-2006 IT Mill Ltd. All Rights Reserved.</i>]]></bottom>
-	<link offline="true" href="http://java.sun.com/j2se/1.5.0/docs/api/" packagelistLoc="build/javadoc/j2se-1.5.0" />
-	<link offline="true" href="http://java.sun.com/j2ee/1.4/docs/api/" packagelistLoc="build/javadoc/j2ee-1.4" />
-</javadoc>
-</target>
+			<doctitle>${javadoc.doctitle}</doctitle>
+			<!-- <header><![CDATA[<script type="text/javascript" src=".html-style/style.js"></script>]]></header> -->
+			<bottom>${javadoc.bottom}</bottom>
+			<link offline="true" href="http://java.sun.com/j2se/1.5.0/docs/api/" packagelistLoc="build/javadoc/j2se-1.5.0" />
+			<link offline="true" href="http://java.sun.com/j2ee/1.4/docs/api/" packagelistLoc="build/javadoc/j2ee-1.4" />
+		</javadoc>
+	</target>
 
-<target name="book-part2" depends="dbdoclet">
-<!-- TODO Add XSLT to transform dbdoclet results to book part 2 -->
-</target>
+	<target name="book-part2" depends="dbdoclet">
+		<!-- TODO Add XSLT to transform dbdoclet results to book part 2 -->
+	</target>
 
-<target name="dbdoclet" depends="preprocess-src">
-<javadoc access="public" charset="UTF-8" docencoding="UTF-8" encoding="ISO-8859-15" failonerror="yes" classpath="build/lib/servlet-api.jar" maxmemory="512m" source="1.5">
-	<packageset dir="build/result/src">
-		<include name="${toolkit-package}/**" />
-		<exclude name="${toolkit-package}/demo/**" />
-	</packageset>
-	<doclet name="org.dbdoclet.doclet.docbook.DocBookDoclet" path="build/lib/jdk${java.specification.version}/dbdoclet.jar">
-		<param name="-d" value="result/docbook" />
-	</doclet>
-</javadoc>
-</target>
+	<target name="dbdoclet" depends="preprocess-src">
+		<javadoc access="public" charset="UTF-8" docencoding="UTF-8" encoding="ISO-8859-15" failonerror="yes" classpath="build/lib/servlet-api.jar" maxmemory="512m" source="1.5">
+			<packageset dir="build/result/src">
+				<include name="${toolkit-package}/**" />
+				<exclude name="${toolkit-package}/demo/**" />
+			</packageset>
+			<doclet name="org.dbdoclet.doclet.docbook.DocBookDoclet" path="build/lib/jdk${java.specification.version}/dbdoclet.jar">
+				<param name="-d" value="result/docbook" />
+			</doclet>
+		</javadoc>
+	</target>
 
-<target name="manual-pdf" depends="init">
-<!-- TODO Include XEP-based FO building in future -->
-</target>
+	<target name="manual-pdf" depends="init">
+		<!-- TODO Include XEP-based FO building in future -->
+	</target>
 
-<target name="manual-html" depends="init">
-<delete file="build/docbook/conf/temp.xsl" />
-<copy file="build/docbook/conf/custom-html-docbook.xsl" tofile="build/docbook/conf/temp.xsl">
-	<filterchain>
-		<replacetokens>
-			<token key="BODYHEADER" value="${html.body.start1}${docbook.head.title}${html.body.start2}" />
-			<token key="BODYFOOTER" value="${html.body.end}" />
-		</replacetokens>
-	</filterchain>
-</copy>
-<path id="docbook-xsl.classpath">
-	<pathelement path="build/lib/fserializer.jar" />
-	<pathelement path="build/lib/xalan.jar" />
-	<pathelement path="build/lib/xercesImpl.jar" />
-	<pathelement path="build/lib/xml-apis.jar" />
-</path>
-<java classname="org.apache.xalan.xslt.Process" failonerror="yes" fork="yes" maxmemory="1300m">
-	<arg value="-in" />
-	<arg value="doc/manual/book.xml" />
-	<arg value="-xsl" />
-	<arg value="build/docbook/conf/temp.xsl" />
-	<arg value="-out" />
-	<arg value="${output-dir}/doc/manual/index.html" />
-	<arg value="-param" />
-	<arg value="use.extensions" />
-	<arg value="1" />
-	<classpath refid="docbook-xsl.classpath" />
-</java>
-<delete file="build/docbook/conf/temp.xsl" />
-</target>
+	<target name="manual-html" depends="init">
+		<delete file="build/docbook/conf/temp.xsl" />
+		<copy file="build/docbook/conf/custom-html-docbook.xsl" tofile="build/docbook/conf/temp.xsl">
+			<filterchain>
+				<replacetokens>
+					<token key="BODYHEADER" value="${html.body.start1}${docbook.head.title}${html.body.start2}" />
+					<token key="BODYFOOTER" value="${html.body.end}" />
+				</replacetokens>
+			</filterchain>
+		</copy>
+		<path id="docbook-xsl.classpath">
+			<pathelement path="build/lib/fserializer.jar" />
+			<pathelement path="build/lib/xalan.jar" />
+			<pathelement path="build/lib/xercesImpl.jar" />
+			<pathelement path="build/lib/xml-apis.jar" />
+		</path>
+		<java classname="org.apache.xalan.xslt.Process" failonerror="yes" fork="yes" maxmemory="1300m">
+			<arg value="-in" />
+			<arg value="doc/manual/book.xml" />
+			<arg value="-xsl" />
+			<arg value="build/docbook/conf/temp.xsl" />
+			<arg value="-out" />
+			<arg value="${output-dir}/doc/manual/index.html" />
+			<arg value="-param" />
+			<arg value="use.extensions" />
+			<arg value="1" />
+			<classpath refid="docbook-xsl.classpath" />
+		</java>
+		<delete file="build/docbook/conf/temp.xsl" />
+	</target>
 
-<!-- ZIP Package creation - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	<!-- ZIP Package creation - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-<target name="package" depends="clean-all,libs,themes,demo,docs">
-<zip zipfile="build/result/${package-file-name}">
-	<fileset dir="build/result">
-		<patternset>
-			<include name="${product-file}-${version}/**" />
-		</patternset>
-	</fileset>
-</zip>
-</target>
+	<target name="package" depends="clean-all,libs,themes,demo,docs">
+		<zip zipfile="build/result/${package-file-name}">
+			<fileset dir="build/result">
+				<patternset>
+					<include name="${product-file}-${version}/**" />
+				</patternset>
+			</fileset>
+		</zip>
+	</target>
 
-<!-- As release, but no documentation or zip package -->
-<target name="package-testing" depends="clean-all,libs,themes,demo,package-docs" />
+	<!-- As release, but no docbook tasks -->
+	<target name="package-testing" depends="clean-all,libs,themes,demo,package-docs,javadoc">
+		<zip zipfile="build/result/${package-file-name}">
+			<fileset dir="build/result">
+				<patternset>
+					<include name="${product-file}-${version}/**" />
+				</patternset>
+			</fileset>
+		</zip>
+	</target>
 
-<!-- Clean results - - - - - - - - - - - - - - - - - - - - - - - - - -->
-<target name="clean-all" depends="">
-<delete includeemptydirs="true" defaultexcludes="false">
-	<fileset dir="build/result" includes="**/*" />
-</delete>
-<delete file="build/docbook/conf/temp.xsl" />
-</target>
+	<!-- Clean results - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	<target name="clean-all" depends="">
+		<delete includeemptydirs="true" defaultexcludes="false">
+			<fileset dir="build/result" includes="**/*" />
+		</delete>
+		<delete file="build/docbook/conf/temp.xsl" />
+	</target>
 
 </project>
