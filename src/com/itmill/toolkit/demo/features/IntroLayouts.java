@@ -68,7 +68,7 @@ public class IntroLayouts extends Feature {
 	}
 
 	protected String getTitle() {
-		return "Introduction for layouts";
+		return "Introduction for layouts (TODO)";
 	}
 
 }

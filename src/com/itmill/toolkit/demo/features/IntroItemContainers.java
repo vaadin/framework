@@ -68,7 +68,7 @@ public class IntroItemContainers extends Feature {
 	}
 
 	protected String getTitle() {
-		return "Introduction for item containers";
+		return "Introduction for item containers (TODO)";
 	}
 
 }

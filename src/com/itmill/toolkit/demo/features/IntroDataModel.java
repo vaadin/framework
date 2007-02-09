@@ -68,7 +68,7 @@ public class IntroDataModel extends Feature {
 	}
 
 	protected String getTitle() {
-		return "Introduction for data model";
+		return "Introduction for data model (TODO)";
 	}
 
 }

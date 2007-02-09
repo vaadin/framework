@@ -54,7 +54,8 @@ public class IntroWelcome extends Feature {
 		Label lab = new Label();
 		lab.setStyle("featurebrowser-none");
 		Label version = new Label();
-		version.setValue("IT Mill Toolkit Version: "+ApplicationServlet.VERSION);
+		version.setValue("IT Mill Toolkit version: "+ApplicationServlet.VERSION);
+		l.addComponent(version);
 		l.addComponent(lab);
 
 		// Properties
@@ -79,7 +80,7 @@ public class IntroWelcome extends Feature {
 	}
 
 	protected String getTitle() {
-		return "Welcome to the IT Mill Toolkit feature tour!";
+		return "Welcome to the IT Mill Toolkit feature tour! (TODO)";
 	}
 
 }

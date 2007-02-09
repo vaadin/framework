@@ -68,7 +68,7 @@ public class IntroComponents extends Feature {
 	}
 
 	protected String getTitle() {
-		return "";
+		return "Introduction of basic components (TODO)";
 	}
 
 }

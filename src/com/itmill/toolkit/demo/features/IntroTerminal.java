@@ -68,7 +68,7 @@ public class IntroTerminal extends Feature {
 	}
 
 	protected String getTitle() {
-		return "Introduction for terminals";
+		return "Introduction for terminals (TODO)";
 	}
 
 }

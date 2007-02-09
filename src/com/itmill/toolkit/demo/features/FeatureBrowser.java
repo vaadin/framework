@@ -81,20 +81,6 @@ public class FeatureBrowser extends CustomComponent implements
 		left.addComponent(features);
 		layout.addComponent(left);
 
-		// Welcome temporarily disabled
-		// Label greeting = new Label(WELCOME_TEXT, Label.CONTENT_XHTML);
-		// OrderedLayout welcomePanel = new OrderedLayout();
-		// welcome =
-		// new Embedded(
-		// "",
-		// new ClassResource(
-		// getClass(),
-		// "itmill.gif",
-		// getApplication()));
-		// welcomePanel.addComponent(welcome);
-		// welcomePanel.addComponent(greeting);
-		// layout.addComponent(welcomePanel);
-
 		// Theme selector
 		left.addComponent(themeSelector);
 		themeSelector.addItem("demo");
