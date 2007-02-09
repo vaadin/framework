@@ -56,6 +56,8 @@ public class FeaturePanel extends Feature {
 				themes.getItemCaptionPropertyId()).setValue("strong");
 		propertyPanel.addProperties("Panel Properties", ap);
 
+		setJavadocURL("ui/Panel.html");
+		
 		return l;
 	}
 

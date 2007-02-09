@@ -52,6 +52,8 @@ public class FeatureForm extends Feature implements
 			demo = new OrderedLayout();
 			createDemo();
 		}
+		
+		setJavadocURL("ui/Form.html");
 
 		return demo;
 	}

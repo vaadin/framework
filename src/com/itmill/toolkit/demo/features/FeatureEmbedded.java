@@ -89,6 +89,8 @@ public class FeatureEmbedded extends Feature {
 				.setDescription(
 						"Unique object id. This can be used for example to identify windows components.");
 
+		setJavadocURL("ui/Embedded.html");
+		
 		return l;
 	}
 

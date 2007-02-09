@@ -52,6 +52,8 @@ public class FeatureButton extends Feature {
 				.createBeanPropertySet(new String[] { "switchMode" });
 		propertyPanel.addProperties("Button Properties", ap);
 
+		setJavadocURL("ui/Button.html");
+		
 		return l;
 	}
 

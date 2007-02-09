@@ -118,7 +118,9 @@ public class FeatureTree extends Feature implements Action.Handler {
 		themes.addItem("menu").getItemProperty(
 				themes.getItemCaptionPropertyId()).setValue("menu");
 		propertyPanel.addProperties("Tree Properties", ap);
-
+		
+		setJavadocURL("ui/Tree.html");
+		
 		return l;
 	}
 

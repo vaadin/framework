@@ -59,6 +59,8 @@ public class FeatureGridLayout extends Feature {
 		propertyPanel.addProperties("GridLayout Features", ap);
 		propertyPanel.getField("height").dependsOn(
 				propertyPanel.getField("add component"));
+		
+		setJavadocURL("ui/GridLayout.html");
 
 		return l;
 	}

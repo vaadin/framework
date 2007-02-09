@@ -70,6 +70,8 @@ public class FeatureCustomLayout extends Feature {
 
 		// Properties
 		propertyPanel = null;
+		
+		setJavadocURL("ui/CustomLayout.html");
 
 		return l;
 	}

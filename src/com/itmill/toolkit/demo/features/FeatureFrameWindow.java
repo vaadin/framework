@@ -70,6 +70,8 @@ public class FeatureFrameWindow extends Feature implements Button.ClickListener 
 				"None", "Minimal" });
 
 		propertyPanel.addProperties("FrameWindow Properties", ap);
+		
+		setJavadocURL("ui/FrameWindow.html");
 
 		return l;
 	}

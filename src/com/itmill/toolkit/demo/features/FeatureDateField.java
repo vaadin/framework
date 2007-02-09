@@ -92,6 +92,8 @@ public class FeatureDateField extends Feature {
 		themes.addItem("calendar").getItemProperty(
 				themes.getItemCaptionPropertyId()).setValue("calendar");
 		propertyPanel.addProperties("DateField Properties", ap);
+		
+		setJavadocURL("ui/DateField");
 
 		return l;
 	}

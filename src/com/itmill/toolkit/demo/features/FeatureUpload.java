@@ -65,6 +65,8 @@ public class FeatureUpload extends Feature implements Upload.FinishedListener {
 
 		// Properties
 		propertyPanel = new PropertyPanel(up);
+		
+		setJavadocURL("ui/Upload.html");
 
 		return l;
 	}

@@ -49,6 +49,8 @@ public class FeatureBuffering extends Feature {
 		// Properties
 		propertyPanel = null;
 		
+		setJavadocURL("data/Buffered.html");
+		
 		return l;
 	}
 

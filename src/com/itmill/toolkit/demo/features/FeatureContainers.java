@@ -49,6 +49,8 @@ public class FeatureContainers extends Feature {
 		// Properties
 		propertyPanel = null;
 		
+		setJavadocURL("data/Container.html");
+		
 		return l;
 	}
 

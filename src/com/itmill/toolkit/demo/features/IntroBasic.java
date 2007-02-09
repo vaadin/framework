@@ -45,10 +45,12 @@ public class IntroBasic extends Feature {
 		Label lab = new Label();
 		lab.setStyle("featurebrowser-none");
 		l.addComponent(lab);
-
+		
 		// Properties
 		propertyPanel = null;
 
+		setJavadocURL("ui/package-summary.html");
+		
 		return l;
 	}
 

@@ -48,6 +48,8 @@ public class FeatureTabSheet extends Feature {
 
 		// Properties
 		propertyPanel = new PropertyPanel(ts);
+		
+		setJavadocURL("ui/TabSheet.html");
 
 		return l;
 	}

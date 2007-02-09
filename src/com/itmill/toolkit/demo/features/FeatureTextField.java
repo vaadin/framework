@@ -51,7 +51,9 @@ public class FeatureTextField extends Feature {
 				"rows", "wordwrap", "writeThrough", "readThrough",
 				"nullRepresentation", "nullSettingAllowed", "secret" });
 		propertyPanel.addProperties("Text field properties", f);
-
+		
+		setJavadocURL("ui/TextField.html");
+		
 		return l;
 	}
 

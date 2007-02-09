@@ -44,10 +44,20 @@ public abstract class Feature extends CustomComponent {
 
 	protected PropertyPanel propertyPanel;
 
+	private Label javadoc;
+
 	/** Constuctor for the feature component */
 	public Feature() {
 		layout = new OrderedLayout(OrderedLayout.ORIENTATION_VERTICAL);
 		setCompositionRoot(layout);
+	}
+	
+	/**
+	 * Actual URL consists of "/doc/api/com/itmill/toolkit/"+url
+	 * @param url
+	 */
+	public void setJavadocURL(String url) {
+		javadoc.setValue("<iframe width=\"100%\" src=\"/doc/api/com/itmill/toolkit/"+url+"\"></iframe>");
 	}
 
 	/**
@@ -62,6 +72,10 @@ public abstract class Feature extends CustomComponent {
 		if (initialized)
 			return;
 		initialized = true;
+		
+		// Javadoc
+		javadoc = new Label();
+		javadoc.setContentMode(Label.CONTENT_RAW);
 
 		// Demo
 		Component demo = getDemoComponent();
@@ -71,7 +85,7 @@ public abstract class Feature extends CustomComponent {
 		ts = new TabSheet();
 		layout.addComponent(ts);
 
-		// Description
+		// Description tab
 		String desc = getDescriptionXHTML();
 		String title = getTitle();
 		if (desc != null && title != null) {
@@ -84,7 +98,7 @@ public abstract class Feature extends CustomComponent {
 			ts.addTab(gl, "Description", null);
 		}
 
-		// Code Sample
+		// Code Sample tab
 		String example = getExampleSrc();
 		if (example != null) {
 			OrderedLayout l = new OrderedLayout();
@@ -93,11 +107,9 @@ public abstract class Feature extends CustomComponent {
 			l.addComponent(new Label(example, Label.CONTENT_PREFORMATTED));
 			ts.addTab(l, "Code Sample", null);
 		}
-
-		// Javadoc
-		Label javadocPlaceholder = new Label(
-				"This is a placeholder for Javadoc");
-		ts.addTab(javadocPlaceholder, "Javadoc", null);
+		
+		// Javadoc tab
+		ts.addTab(javadoc, "Javadoc", null);
 
 		// Properties tab
 		// if (properties != null)

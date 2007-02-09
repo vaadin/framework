@@ -65,7 +65,9 @@ public class FeatureWindow extends Feature {
 				new Integer(Window.BORDER_MINIMAL) }, new Object[] { "Default",
 				"None", "Minimal" });
 		propertyPanel.addProperties("Window Properties", windowProperties);
-
+		
+		setJavadocURL("ui/Window.html");
+		
 		return l;
 	}
 

@@ -49,6 +49,8 @@ public class FeatureProperties extends Feature {
 		// Properties
 		propertyPanel = null;
 		
+		setJavadocURL("ui/package-summary.html");
+		
 		return l;
 	}
 

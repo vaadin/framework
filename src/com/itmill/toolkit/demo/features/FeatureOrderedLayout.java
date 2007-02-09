@@ -58,6 +58,8 @@ public class FeatureOrderedLayout extends Feature {
 				themes.getItemCaptionPropertyId()).setValue("form");
 		propertyPanel.addProperties("OrderedLayout Properties", ap);
 
+		setJavadocURL("ui/OrderedLayout.html");
+		
 		return l;
 	}
 

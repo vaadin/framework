@@ -49,6 +49,8 @@ public class FeatureValidators extends Feature {
 		// Properties
 		propertyPanel = null;
 		
+		setJavadocURL("data/Validator.html");
+		
 		return l;
 	}
 

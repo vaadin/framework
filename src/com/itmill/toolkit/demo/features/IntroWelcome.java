@@ -60,7 +60,9 @@ public class IntroWelcome extends Feature {
 
 		// Properties
 		propertyPanel = null;
-
+		
+		setJavadocURL("package-summary.html");
+	
 		return l;
 	}
 

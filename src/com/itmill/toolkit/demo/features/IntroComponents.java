@@ -48,7 +48,9 @@ public class IntroComponents extends Feature {
 
 		// Properties
 		propertyPanel = null;
-
+		
+		setJavadocURL("ui/package-summary.html");
+		
 		return l;
 	}
 

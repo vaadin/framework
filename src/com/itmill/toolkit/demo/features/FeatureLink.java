@@ -56,6 +56,8 @@ public class FeatureLink extends Feature {
 				"Default", "Minimal", "None" });
 		propertyPanel.addProperties("Link Properties", ap);
 
+		setJavadocURL("ui/Link.html");
+		
 		return l;
 	}
 

@@ -58,6 +58,8 @@ public class FeatureLabel extends Feature {
 						"XML (Subtree with namespace)" });
 		propertyPanel.addProperties("Label Properties", ap);
 
+		setJavadocURL("ui/Label.html");
+		
 		return l;
 	}
 
