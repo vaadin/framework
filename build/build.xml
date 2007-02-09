@@ -22,6 +22,9 @@
 
 	<target name="init">
 
+		<!-- Create result dir unless already exists -->
+		<mkdir dir="build/result" />
+
 		<property file="build/VERSION" />
 		<property name="product-file" value="itmill-toolkit" />
 		<property name="product-name" value="IT Mill Toolkit" />
@@ -32,9 +35,11 @@
 		<!-- Destination files -->
 		<property name="package-file-name" value="${product-file}-${version}.zip" />
 		<property name="lib-bin-jar-name" value="${product-file}-${version}.jar" />
+		<property name="demo-lib-jar-name" value="${product-file}-demo-${version}.jar" />
 		<property name="lib-src-jar-name" value="${product-file}-src-${version}.jar" />
 		<property name="themes-jar-name" value="${product-file}-themes-${version}.jar" />
 		<property name="demo-war-name" value="${product-file}-demo-${version}.war" />
+		<property name="demo-themes-jar-name" value="${product-file}-demo-themes-${version}.jar" />
 
 		<echo message="Prepared to build ${product-file} version ${version} packages" />
 
@@ -52,7 +57,9 @@
 
 	<!-- Themes - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-	<target name="themes" depends="copy-themes-to-lib,themes-optimize-obfuscate" />
+	<target name="themes" depends="copy-themes-to-lib" />
+	<!-- TODO -->
+	<!--	<target name="themes" depends="copy-themes-to-lib,themes-optimize-obfuscate" />-->
 
 	<target name="copy-themes-to-lib" depends="init">
 		<copy todir="${output-dir}/lib/themes">
@@ -67,7 +74,6 @@
 
 	<!-- Executed for release builds only -->
 	<target name="themes-optimize-obfuscate" depends="copy-themes-to-lib">
-		<!-- CSS optimization disabled as it is broken
 		<echo>CSS syntax check and optimizing.</echo>
 		<for param="file">
 			<path>
@@ -88,7 +94,6 @@
 				</exec>
 			</sequential>
 		</for>
-		-->
 		<echo>JavaScript syntax check, optimizing and obfuscation.</echo>
 		<for param="file">
 			<path>
@@ -110,11 +115,22 @@
 	</target>
 
 	<target name="theme-jar" depends="init, themes">
-		<jar jarfile="${output-dir}/lib/${themes-jar-name}" compress="false">
+		<!-- Toolkit themes -->
+		<jar jarfile="${output-dir}/lib/themes/${themes-jar-name}" compress="false">
 			<fileset dir="${output-dir}/lib/themes">
 				<patternset>
 					<include name="corporate/**/*" />
 					<include name="base/**/*" />
+				</patternset>
+			</fileset>
+		</jar>
+		<!-- Demo themes -->
+		<jar jarfile="${output-dir}/lib/themes/${demo-themes-jar-name}" compress="false">
+			<fileset dir="${output-dir}/lib/themes">
+				<patternset>
+					<exclude name="corporate/**/*" />
+					<exclude name="base/**/*" />
+					<include name="demo/**/*" />
 				</patternset>
 			</fileset>
 		</jar>
@@ -170,53 +186,83 @@
 				</patternset>
 			</fileset>
 		</jar>
+		<!-- Create demo binary JAR, including pictures -->
+		<jar jarfile="${output-dir}/lib/${demo-lib-jar-name}" includes="${toolkit-package}/demo/**" basedir="build/result/classes" compress="true">
+			<fileset dir="build/result/src">
+				<patternset>
+					<include name="${toolkit-package}/demo/**/*.jpg" />
+					<include name="${toolkit-package}/demo/**/*.png" />
+					<include name="${toolkit-package}/demo/**/*.gif" />
+				</patternset>
+			</fileset>
+		</jar>
 	</target>
 
 	<!-- Demo  - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 	<target name="demo" depends="libs,compile-java,theme-jar">
-		<!-- <java2html srcdir="src/${toolkit-package}/demo" destdir="src/${toolkit-package}/demo" includes="**/*.java" style="eclipse" showLineNumbers="true" showFileName="true" showTableBorder="false" /> -->
-		<war warfile="${output-dir}/demo/${product-file}.war" webxml="WebContent/WEB-INF/web.xml">
-			<classes dir="build/result/classes">
-				<include name="${toolkit-package}/demo/**/*.class" />
-			</classes>
-			<classes dir="src">
-				<include name="${toolkit-package}/demo/**/*.jpg" />
-				<include name="${toolkit-package}/demo/**/*.png" />
-				<include name="${toolkit-package}/demo/**/*.gif" />
-			</classes>
-			<lib dir="${output-dir}/lib">
-				<include name="themes/demo/**/*" />
-			</lib>
-			<lib dir="${output-dir}/lib">
-				<include name="${lib-bin-jar-name}" />
-				<include name="${themes-jar-name}" />
-			</lib>
-			<fileset dir="">
-				<!-- <include name="src/${toolkit-package}/demo/**/*.java" /> -->
-				<include name="src/${toolkit-package}/demo/Calc.*" />
-				<include name="src/${toolkit-package}/demo/HelloWorld.*" />
+		<echo>Building demo</echo>
+		<java2html srcdir="build/result/src/${toolkit-package}/demo" destdir="build/result/src/${toolkit-package}/demo" includes="**/*.java" style="eclipse" showLineNumbers="true" showFileName="true" showTableBorder="false" />
+		<!--		<copy todir="${output-dir}/lib/themes">
+			<fileset dir="${output-dir}/lib">
+				<include name="${demo-themes-jar-name}" />
+				<exclude name="**/.svn" />
 			</fileset>
+		</copy>
+		-->
+		<war warfile="${output-dir}/demo/${product-file}.war" webxml="WebContent/WEB-INF/web.xml">
+			<!-- WebContent: htmls, styles, license-->
 			<fileset dir="WebContent">
 				<exclude name="**/.svn" />
 				<exclude name="WEB-INF/web.xml" />
 				<exclude name="WEB-INF/lib/themes/**/*" />
+				<exclude name="WEB-INF/classes" />
+				<exclude name="WEB-INF/classes/**/*" />
 				<include name="**/*" />
 			</fileset>
+			<!-- Toolkit package and themes -->
+			<lib dir="${output-dir}/lib">
+				<include name="${lib-bin-jar-name}" />
+				<include name="${themes-jar-name}" />
+			</lib>
+			<lib dir="${output-dir}/lib/themes">
+				<include name="${themes-jar-name}" />
+			</lib>
+
+			<!-- Demo package -->
+			<lib dir="${output-dir}/lib">
+				<include name="${demo-lib-jar-name}" />
+				<!-- Toolkit could automatically add all JARs in lib/themes -->
+				<!-- <include name="${demo-themes-jar-name}" /> -->
+			</lib>
+			<!-- Demo themes -->
+			<lib dir="${output-dir}/lib">
+				<include name="themes/demo/**/*" />
+			</lib>
+
+			<!-- Calc and HelloWorld source and html source -->
+			<fileset dir="build/result">
+				<include name="src/${toolkit-package}/demo/Calc.*" />
+				<include name="src/${toolkit-package}/demo/HelloWorld.*" />
+			</fileset>
+
 		</war>
 
+		<!-- Jetty -->
 		<copy todir="${output-dir}/demo">
 			<fileset dir="build/demo">
 				<exclude name="**/.svn" />
 			</fileset>
 		</copy>
 
+		<!-- Sources -->
 		<copy todir="${output-dir}/demo/src">
 			<fileset dir="build/result/src">
 				<include name="src/${toolkit-package}/demo/Calc.*" />
 				<include name="src/${toolkit-package}/demo/HelloWorld.*" />
 			</fileset>
 		</copy>
+
 	</target>
 
 	<!-- Documentation- - - - - - - - - - - - - - - - - - - - - - - - - -->
