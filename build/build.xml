@@ -56,10 +56,7 @@
 	</target>
 
 	<!-- Themes - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	<target name="themes" depends="copy-themes-to-lib" />
-	<!-- TODO -->
-	<!--	<target name="themes" depends="copy-themes-to-lib,themes-optimize-obfuscate" />-->
+	<target name="themes" depends="copy-themes-to-lib,themes-optimize-obfuscate" />
 
 	<target name="copy-themes-to-lib" depends="init">
 		<copy todir="${output-dir}/lib/themes">
@@ -103,8 +100,7 @@
 			</path>
 			<sequential>
 				<echo>@{file}</echo>
-				<!-- <replaceregexp file="@{file}" match="foo" replace="x1" byline="true" /> -->
-				<!-- TODO: ERROR: for some reason this does not work on Windows platform -->
+				<!-- TODO: ERROR: for some reason this does not work on Windows platform, please fix! -->
 				<java dir="${output-dir}/lib/themes" jar="build/lib/custom_rhino.jar" fork="true" failonerror="true" maxmemory="64m" output="@{file}">
 					<arg value="-c" />
 					<arg value="@{file}" />
@@ -203,13 +199,21 @@
 	<target name="demo" depends="libs,compile-java,theme-jar">
 		<echo>Building demo</echo>
 		<java2html srcdir="build/result/src/${toolkit-package}/demo" destdir="build/result/src/${toolkit-package}/demo" includes="**/*.java" style="eclipse" showLineNumbers="true" showFileName="true" showTableBorder="false" />
-		<!--		<copy todir="${output-dir}/lib/themes">
-			<fileset dir="${output-dir}/lib">
-				<include name="${demo-themes-jar-name}" />
+		<!-- have to use "temp" dir for some reason here. Overwrite does not work, at least on Linux -->
+		<copy todir="build/result/srcTemp" overwrite="true">
+			<filterchain>
+				<expandproperties />
+				<replacetokens begintoken="&lt;" endtoken=">">
+					<token key="body" value="${html.body.tag}${html.body.start1}${product-name}${html.body.start2}" />
+					<token key="/body" value="${html.body.end}${html.body.endtag}" />
+					<token key="head" value="${html.head.tag}${html.head.style}" />
+				</replacetokens>
+			</filterchain>
+			<fileset dir="build/result/src">
 				<exclude name="**/.svn" />
+				<include name="**/*.html" />
 			</fileset>
 		</copy>
-		-->
 		<war warfile="${output-dir}/demo/${product-file}.war" webxml="WebContent/WEB-INF/web.xml">
 			<!-- WebContent: htmls, styles, license-->
 			<fileset dir="WebContent">
@@ -228,17 +232,16 @@
 			<lib dir="${output-dir}/lib/themes">
 				<include name="${themes-jar-name}" />
 			</lib>
-
-			<!-- Demo package -->
+			<!-- Demo package and themes -->
 			<lib dir="${output-dir}/lib">
 				<include name="${demo-lib-jar-name}" />
 				<!-- Toolkit could automatically add all JARs in lib/themes -->
 				<!-- <include name="${demo-themes-jar-name}" /> -->
 			</lib>
-			<!-- Demo themes -->
 			<lib dir="${output-dir}/lib">
 				<include name="themes/demo/**/*" />
 			</lib>
+			<!-- Javadoc -->
 
 			<!-- Calc and HelloWorld source and html source -->
 			<fileset dir="build/result">
