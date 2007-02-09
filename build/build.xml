@@ -56,8 +56,16 @@
 	</target>
 
 	<!-- Themes - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	<target name="themes" depends="copy-themes-to-lib" />
-	<!-- ,themes-optimize-obfuscate" /> -->
+	<target name="themes" depends="license-to-lib,copy-themes-to-lib" />
+
+	<target name="license-to-lib" depends="init">
+		<copy todir="${output-dir}/lib">
+			<fileset dir="WebContent/WEB-INF">
+				<exclude name="**/.svn" />
+				<include name="itmill-toolkit-license.xml" />
+			</fileset>
+		</copy>
+	</target>
 
 	<target name="copy-themes-to-lib" depends="init">
 		<copy todir="${output-dir}/lib/themes">
