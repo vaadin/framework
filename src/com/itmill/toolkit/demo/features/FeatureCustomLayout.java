@@ -28,10 +28,6 @@
 
 package com.itmill.toolkit.demo.features;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import com.itmill.toolkit.terminal.ExternalResource;
 import com.itmill.toolkit.ui.*;
 
 public class FeatureCustomLayout extends Feature {
@@ -68,27 +64,12 @@ public class FeatureCustomLayout extends Feature {
 	protected Component getDemoComponent() {
 		OrderedLayout l = new OrderedLayout();
 
-		// TODO doc change
-		l
-				.addComponent(new Label(
-						"<p>For demonstration, see GO-Game example application. All of the "
-								+ "layouting done in the aplication is handled by CustomLayout with \"goroom\"-style "
-								+ "that is defined in \"gogame\"-theme. The theme is simply created by exteding "
-								+ "default theme trough theme-inheritance and adding couple of xsl-templates</p>",
-						Label.CONTENT_UIDL));
+		Label lab = new Label();
+		lab.setStyle("featurebrowser-none");
+		l.addComponent(lab);
 
-		URL goUrl = null;
-		try {
-			goUrl = new URL(getApplication().getURL(), "../go/");
-		} catch (MalformedURLException e) {
-		}
-
-		if (goUrl != null) {
-			Link link = new Link("Start GO-Game", new ExternalResource(goUrl));
-			link.setTargetName("gogame");
-			link.setTargetBorder(Link.TARGET_BORDER_NONE);
-			l.addComponent(link);
-		}
+		// Properties
+		propertyPanel = null;
 
 		return l;
 	}
