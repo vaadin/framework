@@ -1,22 +1,32 @@
 <?xml version="1.0"?>
 
-<project name="IT Mill Toolkit" basedir="../" default="release">
+<project name="IT Mill Toolkit" basedir="../" default="package">
 
-	<!-- ant contrib required for flow control (for loop) -->
-	<taskdef resource="net/sf/antcontrib/antlib.xml">
-		<classpath>
-			<pathelement location="build/lib/ant-contrib-1.0b3.jar" />
-		</classpath>
-	</taskdef>
+	<!-- Package creation - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-	<!-- java2html converter -->
-	<taskdef name="java2html" classname="de.java2html.anttasks.Java2HtmlTask" classpath="build/lib/java2html.jar" />
+	<target name="package" depends="clean-all,libs,themes,demo,docs,license"
+		description="Build public release">
+		<zip zipfile="build/result/${package-file-name}">
+			<fileset dir="build/result">
+				<patternset>
+					<include name="${product-file}-${version}/**" />
+				</patternset>
+			</fileset>
+		</zip>
+	</target>
 
-	<!-- Release build target -->
-	<target name="release" depends="package" description="Build public release. Theme files are syntax checked, optimized and obfuscated." />
-
-	<!-- Testing build target -->
-	<target name="testing" depends="package-testing" description="Like release target but without docbook related documentation. Faster iteration for functional testing." />
+	<!-- As release, but no javadoc or docbook tasks -->
+	<target name="package-without-documentation" 
+		depends="clean-all,libs,themes,demo,package-docs,license"
+		description="Build testing package without javadocs or manual">
+		<zip zipfile="build/result/TESTING-${package-file-name}">
+			<fileset dir="build/result">
+				<patternset>
+					<include name="${product-file}-${version}/**" />
+				</patternset>
+			</fileset>
+		</zip>
+	</target>
 
 	<!-- Initialization - - - - - - - - - - - - - - - - - - - - - - - - -->
 
@@ -39,7 +49,6 @@
 		<property name="lib-src-jar-name" value="${product-file}-src-${version}.jar" />
 		<property name="themes-jar-name" value="${product-file}-themes-${version}.jar" />
 		<property name="demo-war-name" value="${product-file}-demo-${version}.war" />
-		<property name="demo-themes-jar-name" value="${product-file}-demo-themes-${version}.jar" />
 
 		<echo message="Prepared to build ${product-file} version ${version} packages" />
 
@@ -55,10 +64,8 @@
 
 	</target>
 
-	<!-- Themes - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	<target name="themes" depends="license-to-lib,copy-themes-to-lib" />
-
-	<target name="license-to-lib" depends="init">
+	<!-- License - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --> 
+	<target name="license" depends="init">
 		<copy todir="${output-dir}/lib">
 			<fileset dir="WebContent/WEB-INF">
 				<exclude name="**/.svn" />
@@ -67,7 +74,9 @@
 		</copy>
 	</target>
 
-	<target name="copy-themes-to-lib" depends="init">
+	<!-- Themes - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	<target name="themes" depends="init">
+	
 		<copy todir="${output-dir}/lib/themes">
 			<fileset dir="WebContent/WEB-INF/lib/themes">
 				<exclude name="**/.svn" />
@@ -76,10 +85,7 @@
 				<include name="base/**/*" />
 			</fileset>
 		</copy>
-	</target>
 
-	<!-- Executed for release builds only -->
-	<target name="themes-optimize-obfuscate" depends="copy-themes-to-lib">
 		<echo>CSS syntax check and optimizing.</echo>
 		<for param="file">
 			<path>
@@ -100,6 +106,7 @@
 				</exec>
 			</sequential>
 		</for>
+
 		<echo>JavaScript syntax check, optimizing and obfuscation.</echo>
 		<for param="file">
 			<path>
@@ -117,25 +124,12 @@
 			</sequential>
 		</for>
 		<fixcrlf srcdir="${output-dir}/lib/themes" includes="**/*.js **/*.css" eol="lf" eof="remove" />
-	</target>
-
-	<target name="theme-jar" depends="init, themes">
-		<!-- Toolkit themes -->
-		<jar jarfile="${output-dir}/lib/themes/${themes-jar-name}" compress="false">
+	
+		<jar jarfile="${output-dir}/lib/${themes-jar-name}" compress="false">
 			<fileset dir="${output-dir}/lib/themes">
 				<patternset>
 					<include name="corporate/**/*" />
 					<include name="base/**/*" />
-				</patternset>
-			</fileset>
-		</jar>
-		<!-- Demo themes -->
-		<jar jarfile="${output-dir}/lib/themes/${demo-themes-jar-name}" compress="false">
-			<fileset dir="${output-dir}/lib/themes">
-				<patternset>
-					<exclude name="corporate/**/*" />
-					<exclude name="base/**/*" />
-					<include name="demo/**/*" />
 				</patternset>
 			</fileset>
 		</jar>
@@ -191,21 +185,11 @@
 				</patternset>
 			</fileset>
 		</jar>
-		<!-- Create demo binary JAR, including pictures -->
-		<jar jarfile="${output-dir}/lib/${demo-lib-jar-name}" includes="${toolkit-package}/demo/**" basedir="build/result/classes" compress="true">
-			<fileset dir="build/result/src">
-				<patternset>
-					<include name="${toolkit-package}/demo/**/*.jpg" />
-					<include name="${toolkit-package}/demo/**/*.png" />
-					<include name="${toolkit-package}/demo/**/*.gif" />
-				</patternset>
-			</fileset>
-		</jar>
 	</target>
 
 	<!-- Demo  - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-	<target name="demo" depends="libs,compile-java,theme-jar">
+	<target name="demo" depends="libs,compile-java,themes">
 		<echo>Building demo</echo>
 		<java2html srcdir="build/result/src/${toolkit-package}/demo" destdir="build/result/src/${toolkit-package}/demo" includes="**/*.java" style="eclipse" showLineNumbers="true" showFileName="true" showTableBorder="false" />
 		<!-- have to use "temp" dir for some reason here. Overwrite does not work, at least on Linux -->
@@ -223,6 +207,17 @@
 				<include name="**/*.html" />
 			</fileset>
 		</copy>
+		<!-- Create demo binary JAR, including pictures -->
+		<mkdir dir="build/result/lib"/>
+		<jar jarfile="build/result/lib/${demo-lib-jar-name}" includes="${toolkit-package}/demo/**" basedir="build/result/classes" compress="true">
+			<fileset dir="build/result/src">
+				<patternset>
+					<include name="${toolkit-package}/demo/**/*.jpg" />
+					<include name="${toolkit-package}/demo/**/*.png" />
+					<include name="${toolkit-package}/demo/**/*.gif" />
+				</patternset>
+			</fileset>
+		</jar>
 		<war warfile="${output-dir}/demo/${product-file}.war" webxml="WebContent/WEB-INF/web.xml">
 			<!-- WebContent: htmls, styles, license-->
 			<fileset dir="WebContent">
@@ -238,14 +233,9 @@
 				<include name="${lib-bin-jar-name}" />
 				<include name="${themes-jar-name}" />
 			</lib>
-			<lib dir="${output-dir}/lib/themes">
-				<include name="${themes-jar-name}" />
-			</lib>
 			<!-- Demo package and themes -->
-			<lib dir="${output-dir}/lib">
+			<lib dir="build/result/lib">
 				<include name="${demo-lib-jar-name}" />
-				<!-- Toolkit could automatically add all JARs in lib/themes -->
-				<!-- <include name="${demo-themes-jar-name}" /> -->
 			</lib>
 			<lib dir="${output-dir}/lib">
 				<include name="themes/demo/**/*" />
@@ -383,29 +373,6 @@
 		</copy>
 	</target>
 
-	<!-- ZIP Package creation - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	<target name="package" depends="clean-all,libs,themes,demo,docs">
-		<zip zipfile="build/result/${package-file-name}">
-			<fileset dir="build/result">
-				<patternset>
-					<include name="${product-file}-${version}/**" />
-				</patternset>
-			</fileset>
-		</zip>
-	</target>
-
-	<!-- As release, but no docbook tasks -->
-	<target name="package-testing" depends="clean-all,libs,themes,demo,package-docs,javadoc">
-		<zip zipfile="build/result/${package-file-name}">
-			<fileset dir="build/result">
-				<patternset>
-					<include name="${product-file}-${version}/**" />
-				</patternset>
-			</fileset>
-		</zip>
-	</target>
-
 	<!-- Clean results - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	<target name="clean-all" depends="">
 		<delete includeemptydirs="true" defaultexcludes="false">
@@ -413,5 +380,16 @@
 		</delete>
 		<delete file="build/docbook/conf/temp.xsl" />
 	</target>
+
+	<!-- ant contrib required for flow control (for loop) -->
+	<taskdef resource="net/sf/antcontrib/antlib.xml">
+		<classpath>
+			<pathelement location="build/lib/ant-contrib-1.0b3.jar" />
+		</classpath>
+	</taskdef>
+
+	<!-- java2html converter -->
+	<taskdef name="java2html" classname="de.java2html.anttasks.Java2HtmlTask" classpath="build/lib/java2html.jar" />
+
 
 </project>
