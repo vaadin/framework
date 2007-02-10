@@ -376,6 +376,11 @@
 			<classpath refid="docbook-xsl.classpath" />
 		</java>
 		<delete file="build/docbook/conf/temp.xsl" />
+		<copy todir="${output-dir}/doc/manual/img">
+			<fileset dir="doc/manual/img">
+				<exclude name="**/.svn" />
+			</fileset>
+		</copy>
 	</target>
 
 	<!-- ZIP Package creation - - - - - - - - - - - - - - - - - - - - - - - - - -->
