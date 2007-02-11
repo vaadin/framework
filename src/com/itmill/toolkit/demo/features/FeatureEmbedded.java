@@ -45,16 +45,8 @@ public class FeatureEmbedded extends Feature {
 		ClassResource flashResource = new ClassResource(
 				"itmill_spin.swf", this.getApplication());
 		Embedded emb = new Embedded("Embedded Caption", flashResource);
-		emb.setCodebase("http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0");
-		emb.setClassId("clsid:D27CDB6E-AE6D-11cf-96B8-444553540000");
-//		emb.setClassId("clsid:F08DF954-8592-11D1-B16A-00C0F0283628");
-//		emb.setWidth(100);
-//		emb.setHeight(50);
-//		emb.setParameter("BorderStyle", "1");
-//		emb.setParameter("MousePointer", "1");
-		emb.setParameter("Enabled", "1");
-//		emb.setParameter("Min", "1");
-//		emb.setParameter("Max", "10");
+		emb.setWidth(250);
+		emb.setHeight(100);
 		l.addComponent(emb);
 
 		// Properties
