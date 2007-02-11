@@ -45,10 +45,13 @@ public class FeatureEmbedded extends Feature {
 		ClassResource flashResource = new ClassResource(
 				"itmill_spin.swf", this.getApplication());
 		Embedded emb = new Embedded("Embedded Caption", flashResource);
+		emb.setType(Embedded.TYPE_OBJECT);
+		emb.setMimeType("application/x-shockwave-flash");
 		emb.setWidth(250);
 		emb.setHeight(100);
 		l.addComponent(emb);
 
+		
 		// Properties
 		propertyPanel = null;
 		if (false) {
