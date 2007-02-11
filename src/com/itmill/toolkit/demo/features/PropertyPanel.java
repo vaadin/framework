@@ -346,11 +346,9 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
 		addComponent = new Select();
 		addComponent.setImmediate(true);
 		addComponent.addItem("Add component to container");
-		addComponent.setNullSelectionItemId("Add field");
+		addComponent.setNullSelectionItemId("Add component to container");
 		addComponent.addItem("Text field");
-		addComponent.addItem("Time");
 		addComponent.addItem("Option group");
-		addComponent.addItem("Calendar");
 		addComponent.addListener(this);
 
 		set.addField("component adder", addComponent);
