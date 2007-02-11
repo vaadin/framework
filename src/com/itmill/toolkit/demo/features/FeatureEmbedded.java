@@ -29,7 +29,6 @@
 package com.itmill.toolkit.demo.features;
 
 import com.itmill.toolkit.terminal.ClassResource;
-import com.itmill.toolkit.terminal.ExternalResource;
 import com.itmill.toolkit.terminal.Sizeable;
 import com.itmill.toolkit.ui.*;
 

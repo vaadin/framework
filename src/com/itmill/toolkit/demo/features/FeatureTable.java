@@ -32,9 +32,7 @@ import com.itmill.toolkit.event.Action;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.Form;
-import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.OrderedLayout;
-import com.itmill.toolkit.ui.Select;
 import com.itmill.toolkit.ui.Table;
 
 public class FeatureTable extends Feature implements Action.Handler {

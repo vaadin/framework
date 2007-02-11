@@ -31,7 +31,6 @@ package com.itmill.toolkit.demo.features;
 import java.util.Locale;
 
 import com.itmill.toolkit.data.util.IndexedContainer;
-import com.itmill.toolkit.data.util.MethodProperty;
 import com.itmill.toolkit.ui.*;
 
 public class FeatureDateField extends Feature {
