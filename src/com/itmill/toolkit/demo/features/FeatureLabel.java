@@ -85,7 +85,7 @@ public class FeatureLabel extends Feature {
 	}
 
 	protected String getImage() {
-		return "label.jpg";
+		return "icon_demo.png";
 	}
 
 	protected String getTitle() {

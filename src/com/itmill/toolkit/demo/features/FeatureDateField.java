@@ -116,7 +116,7 @@ public class FeatureDateField extends Feature {
 	}
 
 	protected String getImage() {
-		return "datefield.jpg";
+		return "icon_demo.png";
 	}
 
 	protected String getTitle() {

@@ -84,7 +84,7 @@ public class FeatureGridLayout extends Feature {
 	}
 
 	protected String getImage() {
-		return "gridlayout.jpg";
+		return "icon_demo.png";
 	}
 
 	protected String getTitle() {

@@ -28,7 +28,6 @@
 
 package com.itmill.toolkit.demo.features;
 
-import com.itmill.toolkit.Application;
 import com.itmill.toolkit.terminal.ClassResource;
 import com.itmill.toolkit.terminal.Resource;
 import com.itmill.toolkit.ui.*;
@@ -98,18 +97,23 @@ public abstract class Feature extends CustomComponent {
 		String desc = getDescriptionXHTML();
 		String title = getTitle();
 		if (desc != null) {
-			GridLayout gl = new GridLayout(2, 1);
+			OrderedLayout mainLayout = new OrderedLayout(OrderedLayout.ORIENTATION_VERTICAL);
+			OrderedLayout layout = new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
+			mainLayout.addComponent(layout);
 			if (getImage() != null)
-				gl.addComponent(new Embedded("", new ClassResource(getImage(),
+				layout.addComponent(new Embedded("", new ClassResource(getImage(),
 						this.getApplication())));
 			String label = "";
-			if (title != null)
-				label += "<h2>" + title + "</h2>";
 			label += desc;
 			if (propsReminder)
 				label += PROP_REMINDER_TEXT;
-			gl.addComponent(new Label(label, Label.CONTENT_XHTML));
-			ts.addTab(gl, "Description", null);
+			if (title != null) {
+				layout.addComponent(new Label("<h3>" + title + "</h3>",
+						Label.CONTENT_XHTML));
+			}
+			mainLayout.addComponent(new Label(label, Label.CONTENT_XHTML));
+
+			ts.addTab(mainLayout, "Description", null);
 		}
 
 		// Javadoc tab

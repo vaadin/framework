@@ -185,7 +185,7 @@ public class FeatureForm extends Feature implements
 	}
 
 	protected String getImage() {
-		return "form.jpg";
+		return "icon_demo.png";
 	}
 
 }

@@ -181,7 +181,7 @@ public class FeatureTable extends Feature implements Action.Handler {
 	}
 
 	protected String getImage() {
-		return "table.jpg";
+		return "icon_demo.png";
 	}
 
 	protected String getTitle() {

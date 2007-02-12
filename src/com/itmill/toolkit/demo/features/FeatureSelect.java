@@ -88,7 +88,7 @@ public class FeatureSelect extends Feature {
 				+ "allows for multiple item selection, this is usually represented as either a "
 				+ "listbox of selectable items or as a group of checkboxes."
 				+ "<br/><br/>"
-				+ "Data source can be associated both with selected item and the list of selections. "
+				+ "Data soutree.jpgrce can be associated both with selected item and the list of selections. "
 				+ "This way you can easily present a selection based on items specified elsewhere in application. "
 				+ "<br/><br/>"
 				+ "On the demo tab you can try out how the different properties affect the"
@@ -96,7 +96,7 @@ public class FeatureSelect extends Feature {
 	}
 
 	protected String getImage() {
-		return "select.jpg";
+		return "icon_demo.png";
 	}
 
 	protected String getTitle() {

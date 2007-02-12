@@ -79,7 +79,7 @@ public class FeatureTextField extends Feature {
 	}
 
 	protected String getImage() {
-		return "textfield.gif";
+		return "icon_demo.png";
 	}
 
 	protected String getTitle() {

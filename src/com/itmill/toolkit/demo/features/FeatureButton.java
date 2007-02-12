@@ -77,7 +77,7 @@ public class FeatureButton extends Feature {
 	}
 
 	protected String getImage() {
-		return "button.jpg";
+		return "icon_demo.png";
 	}
 
 	protected String getTitle() {

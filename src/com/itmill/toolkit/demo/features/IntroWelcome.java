@@ -103,7 +103,6 @@ public class IntroWelcome extends Feature {
 
 	protected String getExampleSrc() {
 		return ""
-				+ "// Hello World example application\n\n"
 				+ "package com.itmill.toolkit.demo;\n"
 				+ "import com.itmill.toolkit.ui.*;\n"
 				+ "public class HelloWorld extends com.itmill.toolkit.Application {\n"
@@ -122,11 +121,11 @@ public class IntroWelcome extends Feature {
 	}
 
 	protected String getImage() {
-		return null;
+		return "icon_intro.png";
 	}
 
 	protected String getTitle() {
-		return null;
+		return "Welcome";
 	}
 
 }

@@ -75,13 +75,13 @@ public class FeatureTabSheet extends Feature {
 
 	protected String getDescriptionXHTML() {
 		return "A multicomponent container with tabs for switching between them.<br/>"
-				+ "In the normal case, one would place a layout component on each tab.<br/><br />"
+				+ "In the ntable.jpgormal case, one would place a layout component on each tab.<br/><br />"
 				+ "On the demo tab you can try out how the different properties affect "
 				+ "the presentation of the component.";
 	}
 
 	protected String getImage() {
-		return "tabsheet.jpg";
+		return "icon_demo.png";
 	}
 
 	protected String getTitle() {

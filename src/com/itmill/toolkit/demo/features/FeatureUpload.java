@@ -88,7 +88,7 @@ public class FeatureUpload extends Feature implements Upload.FinishedListener {
 	}
 
 	protected String getImage() {
-		return "filetransfer.jpg";
+		return "icon_demo.png";
 	}
 
 	protected String getTitle() {

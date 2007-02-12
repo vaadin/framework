@@ -77,7 +77,7 @@ public class FeaturePanel extends Feature {
 	}
 
 	protected String getImage() {
-		return "panel.jpg";
+		return "icon_demo.png";
 	}
 
 	protected String getTitle() {

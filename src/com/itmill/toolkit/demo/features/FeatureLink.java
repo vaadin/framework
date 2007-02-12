@@ -75,7 +75,7 @@ public class FeatureLink extends Feature {
 	}
 
 	protected String getImage() {
-		return "link.jpg";
+		return "icon_demo.png";
 	}
 
 	protected String getTitle() {

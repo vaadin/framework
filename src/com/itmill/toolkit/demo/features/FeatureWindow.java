@@ -95,7 +95,7 @@ public class FeatureWindow extends Feature {
 	}
 
 	protected String getImage() {
-		return "window.jpg";
+		return "icon_demo.png";
 	}
 
 	protected String getTitle() {

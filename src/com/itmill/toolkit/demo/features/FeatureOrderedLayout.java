@@ -85,7 +85,7 @@ public class FeatureOrderedLayout extends Feature {
 	}
 
 	protected String getImage() {
-		return "orderedlayout.jpg";
+		return "icon_demo.png";
 	}
 
 	protected String getTitle() {

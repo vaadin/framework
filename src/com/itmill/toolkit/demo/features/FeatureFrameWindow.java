@@ -89,7 +89,7 @@ public class FeatureFrameWindow extends Feature implements Button.ClickListener 
 	}
 
 	protected String getImage() {
-		return "framewindow.jpg";
+		return "icon_demo.png";
 	}
 
 	protected String getTitle() {

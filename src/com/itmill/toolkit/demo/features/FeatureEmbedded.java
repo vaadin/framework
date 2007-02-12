@@ -105,7 +105,7 @@ public class FeatureEmbedded extends Feature {
 	}
 
 	protected String getImage() {
-		return "embedded.jpg";
+		return "icon_demo.png";
 	}
 
 	protected String getTitle() {

@@ -96,7 +96,7 @@ public class FeatureItems extends Feature {
 	}
 
 	protected String getImage() {
-		return "items.jpg";
+		return "icon_demo.png";
 	}
 
 	protected String getTitle() {

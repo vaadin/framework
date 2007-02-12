@@ -158,7 +158,7 @@ public class FeatureTree extends Feature implements Action.Handler {
 	}
 
 	protected String getImage() {
-		return "tree.jpg";
+		return "icon_demo.png";
 	}
 
 	protected String getTitle() {
