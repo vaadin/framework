@@ -66,12 +66,8 @@ public abstract class Feature extends CustomComponent {
 	 * @param url
 	 */
 	public void setJavadocURL(String url) {
-		// TODO: FIXME!!!
 		javadoc
 				.setValue("<iframe width=\"100%\" src=\"/doc/api/com/itmill/toolkit/"
-						+ url + "\"></iframe>");
-		javadoc
-				.setValue("<iframe width=\"100%\" src=\"http://toolkit.itmill.com/doc/api/com/itmill/toolkit/"
 						+ url + "\"></iframe>");
 	}
 
@@ -125,7 +121,8 @@ public abstract class Feature extends CustomComponent {
 		if (example != null) {
 			OrderedLayout l = new OrderedLayout();
 			if (getTitle() != null)
-				l.addComponent(new Label("<b>// " + getTitle() + " example</b>",
+				l.addComponent(new Label(
+						"<b>// " + getTitle() + " example</b>",
 						Label.CONTENT_XHTML));
 			l.addComponent(new Label(example, Label.CONTENT_PREFORMATTED));
 			ts.addTab(l, "Code Sample", null);
