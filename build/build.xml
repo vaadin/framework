@@ -173,7 +173,7 @@
 	<target name="compile-java" depends="preprocess-src">
 		<!-- Compile -->
 		<mkdir dir="build/result/classes" />
-		<javac srcdir="build/result/src" destdir="build/result/classes" classpath="build/lib/servlet-api.jar" includes="${toolkit-package}/**" />
+		<javac source="1.4" target="1.4" srcdir="build/result/src" destdir="build/result/classes" classpath="build/lib/servlet-api.jar" includes="${toolkit-package}/**" />
 	</target>
 
 	<target name="libs" depends="compile-java">
