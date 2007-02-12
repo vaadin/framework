@@ -29,58 +29,78 @@
 package com.itmill.toolkit.demo.features;
 
 import com.itmill.toolkit.ui.Component;
+import com.itmill.toolkit.ui.Form;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.OrderedLayout;
+import com.itmill.toolkit.ui.Panel;
+import com.itmill.toolkit.ui.Select;
 
 public class FeatureValidators extends Feature {
+
+	private static final String INTRO_TEXT = ""
+			+ "IT Mill Toolkit contains simple, yet powerful validation interface, "
+			+ "that consists of two parts: Validator and Validatable. Validator is "
+			+ "any class that can check validity of an Object. Validatable is "
+			+ "a class with configurable validation. "
+			+ "Validation errors are passed as special exceptions that implement "
+			+ "ErrorMessage interface. This way the validation errors can be "
+			+ "automatically added to components."
+			+ "<br /><br />Utilities for simple string and null validation are provided, as "
+			+ "well as combinative validators. The validation interface can also "
+			+ "be easily implemented by the applications for more complex "
+			+ "validation needs.";
 
 	public FeatureValidators() {
 		super();
 	}
-	
+
 	protected Component getDemoComponent() {
 
 		OrderedLayout l = new OrderedLayout();
 
-		Label lab = new Label();
-		lab.setStyle("featurebrowser-none");
-		l.addComponent(lab);
+		Panel panel = new Panel();
+		panel.setCaption("Validators");
+		l.addComponent(panel);
+
+		Label label = new Label();
+		panel.addComponent(label);
+
+		label.setContentMode(Label.CONTENT_XHTML);
+		label.setValue(INTRO_TEXT);
 
 		// Properties
-		propertyPanel = null;
-		
+		propertyPanel = new PropertyPanel(panel);
+		Form ap = propertyPanel.createBeanPropertySet(new String[] { "width",
+				"height" });
+		Select themes = (Select) propertyPanel.getField("style");
+		themes.addItem("light").getItemProperty(
+				themes.getItemCaptionPropertyId()).setValue("light");
+		themes.addItem("strong").getItemProperty(
+				themes.getItemCaptionPropertyId()).setValue("strong");
+		propertyPanel.addProperties("Panel Properties", ap);
+
 		setJavadocURL("data/Validator.html");
-		
+
 		return l;
 	}
 
 	protected String getExampleSrc() {
-		return "";
+		return null;
 	}
 
 	/**
 	 * @see com.itmill.toolkit.demo.features.Feature#getDescriptionXHTML()
 	 */
 	protected String getDescriptionXHTML() {
-		return "<p>IT Mill Toolkit contains simple, yet powerful validation interface, "
-				+ "that consists of two parts: Validator and Validatable. Validator is "
-				+ "any class that can check validity of an Object. Validatable is "
-				+ "a class with configurable validation. "
-				+ "Validation errors are passed as special exceptions that implement "
-				+ "ErrorMessage interface. This way the validation errors can be "
-				+ "automatically added to components.</p>"
-				+ "<p>Utilities for simple string and null validation are provided, as "
-				+ "well as combinative validators. The validation interface can also "
-				+ "be easily implemented by the applications for more complex "
-				+ "validation needs.</p>";
+		return null;
 	}
 
 	protected String getImage() {
-		return "validators.gif";
+		return null;
 	}
 
 	protected String getTitle() {
-		return "Introduction of Data Model Validators";
+		return null;
 	}
 
 }

@@ -59,7 +59,7 @@ public class FeatureGridLayout extends Feature {
 		propertyPanel.addProperties("GridLayout Features", ap);
 		propertyPanel.getField("height").dependsOn(
 				propertyPanel.getField("add component"));
-		
+
 		setJavadocURL("ui/GridLayout.html");
 
 		return l;
@@ -77,10 +77,10 @@ public class FeatureGridLayout extends Feature {
 	 * @see com.itmill.toolkit.demo.features.Feature#getDescriptionXHTML()
 	 */
 	protected String getDescriptionXHTML() {
-		return "<p>This feature provides a container that lays out components "
-				+ "into a grid of given width and height.</p>"
-				+ "<p>On the demo tab you can try out how the different "
-				+ "properties affect the presentation of the component.</p>";
+		return "This feature provides a container that lays out components "
+				+ "into a grid of given width and height."
+				+ "<br /><br />On the demo tab you can try out how the different "
+				+ "properties affect the presentation of the component.";
 	}
 
 	protected String getImage() {

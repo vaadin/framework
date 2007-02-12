@@ -65,7 +65,7 @@ public class FeatureUpload extends Feature implements Upload.FinishedListener {
 
 		// Properties
 		propertyPanel = new PropertyPanel(up);
-		
+
 		setJavadocURL("ui/Upload.html");
 
 		return l;
@@ -84,8 +84,7 @@ public class FeatureUpload extends Feature implements Upload.FinishedListener {
 	protected String getDescriptionXHTML() {
 		return "This demonstrates the use of the Upload component together with the Link component. "
 				+ "This implementation does not actually store the file to disk, it only keeps it in a buffer. "
-				+ "The example given on the example-tab on the other hand stores the file to disk and binds the link to that file.<br/>"
-				+ "<br/>On the demo tab you can try out how the different properties affect the presentation of the component.";
+				+ "The example given on the <em>Code Sample</em>-tab on the other hand stores the file to disk and binds the link to that file.";
 	}
 
 	protected String getImage() {

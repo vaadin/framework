@@ -100,7 +100,7 @@ public class FeatureTree extends Feature implements Action.Handler {
 		for (int i = 0; i < 100; i++)
 			if (!t.hasChildren(names[i]))
 				t.setChildrenAllowed(names[i], false);
-		
+
 		l.addComponent(t);
 
 		// Actions
@@ -118,9 +118,9 @@ public class FeatureTree extends Feature implements Action.Handler {
 		themes.addItem("menu").getItemProperty(
 				themes.getItemCaptionPropertyId()).setValue("menu");
 		propertyPanel.addProperties("Tree Properties", ap);
-		
+
 		setJavadocURL("ui/Tree.html");
-		
+
 		return l;
 	}
 
@@ -140,21 +140,21 @@ public class FeatureTree extends Feature implements Action.Handler {
 	}
 
 	protected String getDescriptionXHTML() {
-		return "<p>A tree is a natural way to represent datasets that have"
+		return "A tree is a natural way to represent datasets that have"
 				+ " hierarchical relationships, such as filesystems, message "
-				+ "threads or... family trees. IT Mill Toolkit features a versatile "
+				+ "threads or, as in this example, family trees. IT Mill Toolkit features a versatile "
 				+ "and powerful Tree component that works much like the tree components "
-				+ "of most modern operating systems. </p>"
-				+ "<p>The most prominent use of the Tree component is to "
+				+ "of most modern operating systems."
+				+ "<br /><br />The most prominent use of the Tree component is to "
 				+ "use it for displaying a hierachical menu, like the "
 				+ "menu on the left side of the screen for instance "
-				+ "or to display filesystems or other hierarchical datasets.</p>"
-				+ "<p>The tree component uses <code>Container</code> "
+				+ "or to display filesystems or other hierarchical datasets."
+				+ "<br /><br />The tree component uses <code>Container</code> "
 				+ "datasources much like the Table component, "
 				+ "with the addition that it also utilizes the hierarchy "
-				+ "information maintained by the container. </p><p>On "
-				+ "the demo tab you can try out how the different properties "
-				+ "affect the presentation of the tree component.</p>";
+				+ "information maintained by the container."
+				+ "<br /><br />On the demo tab you can try out how the different properties "
+				+ "affect the presentation of the tree component.";
 	}
 
 	protected String getImage() {

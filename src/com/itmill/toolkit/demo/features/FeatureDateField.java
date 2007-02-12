@@ -60,14 +60,13 @@ public class FeatureDateField extends Feature {
 
 		// Create locale selector
 		// TODO: see #244 (broken for AJAX mode), known issue exists
-		/* DISABLE UNTIL WORKS
-		Select selector = new Select("Application Locale", localeContainer);
-		selector.setItemCaptionPropertyId("name");
-		selector.setImmediate(true);
-		selector.setPropertyDataSource(new MethodProperty(
-				this.getApplication(), "locale"));
-		l.addComponent(selector);
-		*/
+		/*
+		 * DISABLE UNTIL WORKS Select selector = new Select("Application
+		 * Locale", localeContainer); selector.setItemCaptionPropertyId("name");
+		 * selector.setImmediate(true); selector.setPropertyDataSource(new
+		 * MethodProperty( this.getApplication(), "locale"));
+		 * l.addComponent(selector);
+		 */
 
 		// Properties
 		propertyPanel = new PropertyPanel(df);
@@ -91,8 +90,8 @@ public class FeatureDateField extends Feature {
 		themes.addItem("calendar").getItemProperty(
 				themes.getItemCaptionPropertyId()).setValue("calendar");
 		propertyPanel.addProperties("DateField Properties", ap);
-		
-		setJavadocURL("ui/DateField");
+
+		setJavadocURL("ui/DateField.html");
 
 		return l;
 	}
@@ -100,21 +99,20 @@ public class FeatureDateField extends Feature {
 	protected String getExampleSrc() {
 		return "DateField df = new DateField(\"Caption\");\n"
 				+ "df.setValue(new java.util.Date());\n";
-
 	}
 
 	protected String getDescriptionXHTML() {
-		return "<p>Representing Dates and times and providing a way to select "
+		return "Representing Dates and times and providing a way to select "
 				+ "or enter some specific date and/or time is an typical need in "
-				+ "data-entry userinterfaces. IT Mill Toolkit provides a DateField "
+				+ "data-entry user interfaces (UI). IT Mill Toolkit provides a DateField "
 				+ "component that is intuitive to use and yet controllable through "
-				+ "its properties.</p>"
-				+ "<p>The calendar-style allows point-and-click selection "
+				+ "its properties."
+				+ "<br /><br />The calendar-style allows point-and-click selection "
 				+ "of dates while text-style shows only minimalistic user interface."
-				+ "Validators may be bound to the component to check and "
-				+ "validate the given input.</p>"
-				+ "<p>On the demo tab you can try out how the different properties affect the "
-				+ "presentation of the component.</p>";
+				+ " Validators may be bound to the component to check and "
+				+ "validate the given input."
+				+ "<br /><br />On the demo tab you can try out how the different properties affect the "
+				+ "presentation of the component.";
 	}
 
 	protected String getImage() {

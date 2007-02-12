@@ -59,7 +59,7 @@ public class FeatureOrderedLayout extends Feature {
 		propertyPanel.addProperties("OrderedLayout Properties", ap);
 
 		setJavadocURL("ui/OrderedLayout.html");
-		
+
 		return l;
 	}
 
@@ -77,9 +77,9 @@ public class FeatureOrderedLayout extends Feature {
 		return "This feature provides a container for laying out components either "
 				+ "vertically, horizontally or flowingly. The orientation may be changed "
 				+ "during runtime. It also defines a special style for themes to implement called \"form\""
-				+ "that is used for input forms where the components are layed-out side-by-side "
+				+ "that is used for input forms where the components are laid-out side-by-side "
 				+ "with their captions."
-				+ "<br/><br/>"
+				+ "<br /><br />"
 				+ "On the demo tab you can try out how the different properties "
 				+ "affect the presentation of the component.";
 	}

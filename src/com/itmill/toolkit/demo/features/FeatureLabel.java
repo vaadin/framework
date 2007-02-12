@@ -59,7 +59,7 @@ public class FeatureLabel extends Feature {
 		propertyPanel.addProperties("Label Properties", ap);
 
 		setJavadocURL("ui/Label.html");
-		
+
 		return l;
 	}
 

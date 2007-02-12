@@ -42,7 +42,9 @@ public class FeaturePanel extends Feature {
 
 		// Example panel
 		Panel show = new Panel("Panel caption");
-		show.addComponent(new Label("Label in Panel"));
+		show
+				.addComponent(new Label(
+						"This is an example Label component that is added into Panel."));
 		l.addComponent(show);
 
 		// Properties
@@ -57,23 +59,21 @@ public class FeaturePanel extends Feature {
 		propertyPanel.addProperties("Panel Properties", ap);
 
 		setJavadocURL("ui/Panel.html");
-		
+
 		return l;
 	}
 
 	protected String getExampleSrc() {
 		return "Panel show = new Panel(\"Panel caption\");\n"
-				+ "show.addComponent(new Label(\"Label in Panel\"));";
+				+ "show.addComponent(new Label(\"This is an example Label component that is added into Panel.\"));";
 
 	}
 
 	protected String getDescriptionXHTML() {
-		return "The Panel is a container for other components, it usually draws a frame around it's "
-				+ "extremities and may have a caption to clarify the nature of the contained components purpose."
-				+ "A panel always contains firstly a layout onto which the actual contained components are added, "
-				+ "this layout may be switched on the fly. <br/><br/>"
-				+ "On the demo tab you can try out how the different properties "
-				+ "affect the presentation of the component.";
+		return "Panel is a container for other components, by default it draws a frame around it's "
+				+ "extremities and may have a caption to clarify the nature of the contained components' purpose."
+				+ " Panel contains an layout where the actual contained components are added, "
+				+ "this layout may be switched on the fly.";
 	}
 
 	protected String getImage() {

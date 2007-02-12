@@ -45,14 +45,21 @@ public class FeatureWindow extends Feature {
 
 	protected Component getDemoComponent() {
 
-		OrderedLayout l = new OrderedLayout();
+		OrderedLayout layoutRoot = new OrderedLayout();
+		OrderedLayout layoutUpper = new OrderedLayout();
+		OrderedLayout layoutLower = new OrderedLayout();
 		demoWindow = new Window("Feature Test Window");
 
-		l.addComponent(addButton);
-		l.addComponent(removeButton);
+		layoutUpper.addComponent(addButton);
+		layoutUpper.addComponent(removeButton);
+
+		layoutLower.addComponent(new Label(
+				"Note: depending on your browser, you may have to "
+						+ "allow popups from this web site in order"
+						+ " to get this demo to work."));
 		updateWinStatus();
 
-		// Properties
+		// Propertiesc
 		propertyPanel = new PropertyPanel(demoWindow);
 		propertyPanel.dependsOn(addButton);
 		propertyPanel.dependsOn(removeButton);
@@ -65,10 +72,12 @@ public class FeatureWindow extends Feature {
 				new Integer(Window.BORDER_MINIMAL) }, new Object[] { "Default",
 				"None", "Minimal" });
 		propertyPanel.addProperties("Window Properties", windowProperties);
-		
+
 		setJavadocURL("ui/Window.html");
-		
-		return l;
+
+		layoutRoot.addComponent(layoutUpper);
+		layoutRoot.addComponent(layoutLower);
+		return layoutRoot;
 	}
 
 	protected String getExampleSrc() {
@@ -95,6 +104,28 @@ public class FeatureWindow extends Feature {
 
 	public void addWin() {
 		getApplication().addWindow(demoWindow);
+
+		demoWindow.removeAllComponents();
+		demoWindow.setWidth(500);
+		demoWindow.setHeight(200);
+
+		// Panel panel = new Panel("New window");
+		// panel.addComponent(new Label(
+		// "This is a new window created by selecting <em>Add to "
+		// + "application</em>.<br /><br />You can close"
+		// + " this window by selecting <em>Remove from"
+		// + " application</em> from the Feature Browser window.",
+		// Label.CONTENT_XHTML));
+		// demoWindow.addComponent(panel);
+
+		demoWindow
+				.addComponent(new Label(
+						"<br /><br />This is a new window created by <em>Add to "
+								+ "application</em> button's event.<br /><br />You may simply"
+								+ " close this window or select <em>Remove from"
+								+ " application</em> from the Feature Browser window.",
+						Label.CONTENT_XHTML));
+
 		windowProperties.getField("name").setReadOnly(true);
 		updateWinStatus();
 	}

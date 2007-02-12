@@ -28,11 +28,20 @@
 
 package com.itmill.toolkit.demo.features;
 
+import com.itmill.toolkit.terminal.ClassResource;
 import com.itmill.toolkit.ui.Component;
+import com.itmill.toolkit.ui.Embedded;
+import com.itmill.toolkit.ui.Form;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.OrderedLayout;
+import com.itmill.toolkit.ui.Panel;
+import com.itmill.toolkit.ui.Select;
 
 public class IntroComponents extends Feature {
+
+	private static final String INTRO_TEXT = ""
+			+ "This picture summarizes the relations between different user interface (UI) components."
+			+ "<br /><br />See API documentation below for more information.";
 
 	public IntroComponents() {
 		super();
@@ -42,35 +51,52 @@ public class IntroComponents extends Feature {
 
 		OrderedLayout l = new OrderedLayout();
 
-		Label lab = new Label();
-		lab.setStyle("featurebrowser-none");
-		l.addComponent(lab);
+		Panel panel = new Panel();
+		panel.setCaption("UI component diagram");
+		l.addComponent(panel);
+
+		Label label = new Label();
+		panel.addComponent(label);
+
+		label.setContentMode(Label.CONTENT_XHTML);
+		label.setValue(INTRO_TEXT);
+
+		panel.addComponent(new Embedded("", new ClassResource("components.png",
+				this.getApplication())));
 
 		// Properties
-		propertyPanel = null;
-		
+		propertyPanel = new PropertyPanel(panel);
+		Form ap = propertyPanel.createBeanPropertySet(new String[] { "width",
+				"height" });
+		Select themes = (Select) propertyPanel.getField("style");
+		themes.addItem("light").getItemProperty(
+				themes.getItemCaptionPropertyId()).setValue("light");
+		themes.addItem("strong").getItemProperty(
+				themes.getItemCaptionPropertyId()).setValue("strong");
+		propertyPanel.addProperties("Panel Properties", ap);
+
 		setJavadocURL("ui/package-summary.html");
-		
+
 		return l;
 	}
 
 	protected String getExampleSrc() {
-		return "";
+		return null;
 	}
 
 	/**
 	 * @see com.itmill.toolkit.demo.features.Feature#getDescriptionXHTML()
 	 */
 	protected String getDescriptionXHTML() {
-		return "";
+		return null;
 	}
 
 	protected String getImage() {
-		return "components.png";
+		return null;
 	}
 
 	protected String getTitle() {
-		return "Introduction of basic components (TODO)";
+		return null;
 	}
 
 }

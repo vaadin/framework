@@ -124,13 +124,14 @@ public class FeatureTable extends Feature implements Action.Handler {
 				new Integer(Table.ROW_HEADER_MODE_PROPERTY) }, new Object[] {
 				"Explicit", "Explicit defaults ID", "Hidden", "Icon only",
 				"ID", "Index", "Item", "Property" });
-		/* Disabled theme changer before #356, #357 are fixed
-		Select themes = (Select) propertyPanel.getField("style");
-		themes.addItem("list").getItemProperty(
-				themes.getItemCaptionPropertyId()).setValue("list");
-		themes.addItem("paging").getItemProperty(
-				themes.getItemCaptionPropertyId()).setValue("paging");
-				*/
+		/*
+		 * Disabled theme changer before #356, #357 are fixed Select themes =
+		 * (Select) propertyPanel.getField("style");
+		 * themes.addItem("list").getItemProperty(
+		 * themes.getItemCaptionPropertyId()).setValue("list");
+		 * themes.addItem("paging").getItemProperty(
+		 * themes.getItemCaptionPropertyId()).setValue("paging");
+		 */
 		propertyPanel.addProperties("Table Properties", ap);
 
 		t.setRowHeaderMode(Table.ROW_HEADER_MODE_INDEX);
@@ -140,7 +141,7 @@ public class FeatureTable extends Feature implements Action.Handler {
 		t.setSelectable(true);
 
 		setJavadocURL("ui/Table.html");
-		
+
 		return l;
 	}
 
@@ -167,16 +168,16 @@ public class FeatureTable extends Feature implements Action.Handler {
 
 	protected String getDescriptionXHTML() {
 
-		return "<p>The Table component is designed for displaying large volumes of tabular data, "
-				+ "in multiple pages whenever needed.</p> "
-				+ "<p>Selection of the displayed data is supported both in selecting exclusively one row "
+		return "The Table component is designed for displaying large volumes of tabular data, "
+				+ "in multiple pages whenever needed."
+				+ "<br /><br />Selection of the displayed data is supported both in selecting exclusively one row "
 				+ "or multiple rows at the same time. For each row, there may be a set of actions associated, "
 				+ "depending on the theme these actions may be displayed either as a drop-down "
-				+ "menu for each row or a set of command buttons.</p><p>"
-				+ "Table may be connected to any datasource implementing the <code>Container</code> interface."
+				+ "menu for each row or a set of command buttons."
+				+ "<br /><br />Table may be connected to any datasource implementing the <code>Container</code> interface."
 				+ "This way data found in external datasources can be directly presented in the table component."
-				+ "</p><p>"
-				+ "Table implements a number of features and you can test most of them in the table demo tab.</p>";
+				+ "<br /><br />"
+				+ "Table implements a number of features and you can test most of them in the table demo tab.";
 	}
 
 	protected String getImage() {

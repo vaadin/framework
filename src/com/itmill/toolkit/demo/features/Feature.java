@@ -28,11 +28,19 @@
 
 package com.itmill.toolkit.demo.features;
 
+import com.itmill.toolkit.Application;
 import com.itmill.toolkit.terminal.ClassResource;
 import com.itmill.toolkit.terminal.Resource;
 import com.itmill.toolkit.ui.*;
 
 public abstract class Feature extends CustomComponent {
+
+	private static final String PROP_REMINDER_TEXT = ""
+			+ "<br /><br />Note: Use <b>Properties</b> panel located at the top"
+			+ " right corner to try out how different properties affect"
+			+ " the presentation or functionality of currently selected component.";
+
+	private boolean propsReminder = true;
 
 	private OrderedLayout layout;
 
@@ -51,13 +59,20 @@ public abstract class Feature extends CustomComponent {
 		layout = new OrderedLayout(OrderedLayout.ORIENTATION_VERTICAL);
 		setCompositionRoot(layout);
 	}
-	
+
 	/**
 	 * Actual URL consists of "/doc/api/com/itmill/toolkit/"+url
+	 * 
 	 * @param url
 	 */
 	public void setJavadocURL(String url) {
-		javadoc.setValue("<iframe width=\"100%\" src=\"/doc/api/com/itmill/toolkit/"+url+"\"></iframe>");
+		// TODO: FIXME!!!
+		javadoc
+				.setValue("<iframe width=\"100%\" src=\"/doc/api/com/itmill/toolkit/"
+						+ url + "\"></iframe>");
+		javadoc
+				.setValue("<iframe width=\"100%\" src=\"http://toolkit.itmill.com/doc/api/com/itmill/toolkit/"
+						+ url + "\"></iframe>");
 	}
 
 	/**
@@ -65,14 +80,13 @@ public abstract class Feature extends CustomComponent {
 	 * attached to application
 	 */
 	public void attach() {
-
 		super.attach();
 
 		// Check if the feature is already initialized
 		if (initialized)
 			return;
 		initialized = true;
-		
+
 		// Javadoc
 		javadoc = new Label();
 		javadoc.setContentMode(Label.CONTENT_RAW);
@@ -83,37 +97,42 @@ public abstract class Feature extends CustomComponent {
 			layout.addComponent(demo);
 
 		ts = new TabSheet();
-		layout.addComponent(ts);
 
 		// Description tab
 		String desc = getDescriptionXHTML();
 		String title = getTitle();
-		if (desc != null && title != null) {
+		if (desc != null) {
 			GridLayout gl = new GridLayout(2, 1);
 			if (getImage() != null)
 				gl.addComponent(new Embedded("", new ClassResource(getImage(),
 						this.getApplication())));
-			gl.addComponent(new Label("<h2>" + title + "</h2>" + desc,
-					Label.CONTENT_XHTML));
+			String label = "";
+			if (title != null)
+				label += "<h2>" + title + "</h2>";
+			label += desc;
+			if (propsReminder)
+				label += PROP_REMINDER_TEXT;
+			gl.addComponent(new Label(label, Label.CONTENT_XHTML));
 			ts.addTab(gl, "Description", null);
 		}
+
+		// Javadoc tab
+		if (!javadoc.getValue().equals(""))
+			ts.addTab(javadoc, "Javadoc", null);
 
 		// Code Sample tab
 		String example = getExampleSrc();
 		if (example != null) {
 			OrderedLayout l = new OrderedLayout();
-			l.addComponent(new Label("<h2>" + getTitle() + " example</h2>",
-					Label.CONTENT_XHTML));
+			if (getTitle() != null)
+				l.addComponent(new Label("<b>// " + getTitle() + " example</b>",
+						Label.CONTENT_XHTML));
 			l.addComponent(new Label(example, Label.CONTENT_PREFORMATTED));
 			ts.addTab(l, "Code Sample", null);
 		}
-		
-		// Javadoc tab
-		ts.addTab(javadoc, "Javadoc", null);
 
-		// Properties tab
-		// if (properties != null)
-		// ts.addTab(properties, "Properties", null);
+		layout.addComponent(ts);
+
 	}
 
 	/** Get the desctiption of the feature as XHTML fragment */
@@ -150,6 +169,10 @@ public abstract class Feature extends CustomComponent {
 
 	public PropertyPanel getPropertyPanel() {
 		return propertyPanel;
+	}
+
+	public void setPropsReminder(boolean propsReminder) {
+		this.propsReminder = propsReminder;
 	}
 
 }

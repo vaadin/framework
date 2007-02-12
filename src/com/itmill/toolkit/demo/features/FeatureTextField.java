@@ -51,9 +51,9 @@ public class FeatureTextField extends Feature {
 				"rows", "wordwrap", "writeThrough", "readThrough",
 				"nullRepresentation", "nullSettingAllowed", "secret" });
 		propertyPanel.addProperties("Text field properties", f);
-		
+
 		setJavadocURL("ui/TextField.html");
-		
+
 		return l;
 	}
 
@@ -66,17 +66,16 @@ public class FeatureTextField extends Feature {
 	 * @see com.itmill.toolkit.demo.features.Feature#getDescriptionXHTML()
 	 */
 	protected String getDescriptionXHTML() {
-		return "<p>TextField combines the logic of both the single line text-entry field and the multi-line "
+		return "TextField combines the logic of both the single line text-entry field and the multi-line "
 				+ "text-area into one component. "
 				+ "As with all Data-components of IT Mill Toolkit, the TextField can also be bound to an "
 				+ "underlying data source, both directly or in a buffered (asynchronous) "
 				+ "mode. In buffered mode its background color will change to indicate "
-				+ "that the value has changed but is not committed.</p>"
-				+ "<p>Furthermore a validators may be bound to the component to "
-				+ "check and validate the given input before it is actually commited."
-				+ "</p>"
-				+ "<p>On the demo tab you can try out how the different properties affect the "
-				+ "presentation of the component.</p>";
+				+ "that the value has changed but is not committed."
+				+ "<br /><br />Furthermore a validators may be bound to the component to "
+				+ "check and validate the given input before it is actually committed."
+				+ "<br /><br />On the demo tab you can try out how the different properties affect the "
+				+ "presentation of the component.";
 	}
 
 	protected String getImage() {

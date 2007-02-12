@@ -53,7 +53,7 @@ public class IntroTerminal extends Feature {
 	}
 
 	protected String getExampleSrc() {
-		return "";
+		return null;
 	}
 
 	/**

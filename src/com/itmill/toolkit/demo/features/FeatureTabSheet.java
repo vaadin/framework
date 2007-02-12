@@ -41,24 +41,36 @@ public class FeatureTabSheet extends Feature {
 		OrderedLayout l = new OrderedLayout();
 
 		TabSheet ts = new TabSheet();
-		ts.addTab(new Label("Tab 1 Body"), "Tab 1 caption", null);
-		ts.addTab(new Label("Tab 2 Body"), "Tab 2 caption", null);
-		ts.addTab(new Label("Tab 3 Body"), "Tab 3 caption", null);
+		ts
+				.addTab(
+						new Label(
+								"This is an example Label component that is added into Tab 1."),
+						"Tab 1 caption", null);
+		ts
+				.addTab(
+						new Label(
+								"This is an example Label component that is added into Tab 2."),
+						"Tab 2 caption", null);
+		ts
+				.addTab(
+						new Label(
+								"This is an example Label component that is added into Tab 3."),
+						"Tab 3 caption", null);
 		l.addComponent(ts);
 
 		// Properties
 		propertyPanel = new PropertyPanel(ts);
-		
+
 		setJavadocURL("ui/TabSheet.html");
 
 		return l;
 	}
 
 	protected String getExampleSrc() {
-		return "TabSheet ts = new TabSheet();"
-				+ "ts.addTab(new Label(\"Tab 1 Body\"),\"Tab 1 caption\",null);"
-				+ "ts.addTab(new Label(\"Tab 2 Body\"),\"Tab 2 caption\",null);"
-				+ "ts.addTab(new Label(\"Tab 3 Body\"),\"Tab 3 caption\",null);";
+		return "TabSheet ts = new TabSheet();\n"
+				+ "ts.addTab(new Label(\"This is an example Label component that is added into Tab 1.\"),\"Tab 1 caption\",null);\n"
+				+ "ts.addTab(new Label(\"This is an example Label component that is added into Tab 2.\"),\"Tab 2 caption\",null);\n"
+				+ "ts.addTab(new Label(\"This is an example Label component that is added into Tab 3.\"),\"Tab 3 caption\",null);";
 	}
 
 	protected String getDescriptionXHTML() {

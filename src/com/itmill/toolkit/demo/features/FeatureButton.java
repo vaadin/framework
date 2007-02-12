@@ -53,7 +53,7 @@ public class FeatureButton extends Feature {
 		propertyPanel.addProperties("Button Properties", ap);
 
 		setJavadocURL("ui/Button.html");
-		
+
 		return l;
 	}
 

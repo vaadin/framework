@@ -40,7 +40,7 @@ public class FeatureLink extends Feature {
 	protected Component getDemoComponent() {
 
 		OrderedLayout l = new OrderedLayout();
-		
+
 		Link lnk = new Link("Link caption", new ExternalResource(
 				"http://www.itmill.com"));
 		l.addComponent(lnk);
@@ -57,12 +57,12 @@ public class FeatureLink extends Feature {
 		propertyPanel.addProperties("Link Properties", ap);
 
 		setJavadocURL("ui/Link.html");
-		
+
 		return l;
 	}
 
 	protected String getExampleSrc() {
-		return "Link lnk = new Link(\"Link caption\",new ExternalResource(\"http://www.itmill.com\"));\n";
+		return "Link link = new Link(\"Link caption\",new ExternalResource(\"http://www.itmill.com\"));\n";
 	}
 
 	protected String getDescriptionXHTML() {

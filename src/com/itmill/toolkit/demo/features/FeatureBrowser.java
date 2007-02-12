@@ -149,7 +149,7 @@ public class FeatureBrowser extends CustomComponent implements
 			features.expandItem(i.next());
 
 		// Add demo component and tabs
-		currentFeature = new FeatureTable();
+		currentFeature = new IntroWelcome();
 		layout.addComponent(currentFeature);
 
 		// Add properties
