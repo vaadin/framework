@@ -163,6 +163,7 @@
 				<patternset>
 					<include name="**/*.gif" />
 					<include name="**/*.jpg" />
+					<include name="**/*.swf" />
 					<include name="**/*.png" />
 				</patternset>
 			</fileset>
@@ -214,6 +215,7 @@
 		<jar jarfile="build/result/lib/${demo-lib-jar-name}" includes="${toolkit-package}/demo/**" basedir="build/result/classes" compress="true">
 			<fileset dir="build/result/src">
 				<patternset>
+					<include name="${toolkit-package}/demo/**/*.swf" />
 					<include name="${toolkit-package}/demo/**/*.jpg" />
 					<include name="${toolkit-package}/demo/**/*.png" />
 					<include name="${toolkit-package}/demo/**/*.gif" />
