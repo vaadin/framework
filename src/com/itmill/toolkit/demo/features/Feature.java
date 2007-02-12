@@ -130,8 +130,8 @@ public abstract class Feature extends CustomComponent {
 				l.addComponent(new Label(
 						"<b>// " + getTitle() + " example</b>",
 						Label.CONTENT_XHTML));
-			l.addComponent(new Label("<pre>" + example + "</pre>",
-					Label.CONTENT_XHTML));
+			l.addComponent(new Label(example,
+					Label.CONTENT_PREFORMATTED));
 			ts.addTab(l, "Code Sample", null);
 		}
 
