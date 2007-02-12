@@ -52,7 +52,7 @@ public class FeatureContainers extends Feature {
 			+ "hierarchically. Those ordering models provide basis for "
 			+ "Table, Tree and Select UI components. As with other data "
 			+ "models, the containers support events for notifying about the "
-			+ "chaembedded.jpgnges."
+			+ "changes."
 			+ "<br /><br />Set of utilities for converting between container models by "
 			+ "adding external indexing or hierarchy into existing containers. "
 			+ "In memory containers implementing indexed and hierarchical "
