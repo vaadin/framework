@@ -28,6 +28,7 @@
 
 package com.itmill.toolkit.demo.features;
 
+import com.itmill.toolkit.terminal.web.ApplicationServlet;
 import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.Form;
 import com.itmill.toolkit.ui.Label;
@@ -83,7 +84,8 @@ public class IntroWelcome extends Feature {
 		label.setContentMode(Label.CONTENT_XHTML);
 		label.setValue(WELCOME_TEXT_UPPER);
 
-		// Properties
+		// Propertiesversion.setValue("IT Mill Toolkit version:
+		// "+ApplicationServlet.VERSION);
 		propertyPanel = new PropertyPanel(panel);
 		Form ap = propertyPanel.createBeanPropertySet(new String[] { "width",
 				"height" });
@@ -104,7 +106,7 @@ public class IntroWelcome extends Feature {
 	protected String getExampleSrc() {
 		return ""
 				+ "package com.itmill.toolkit.demo;\n"
-				+ "import com.itmill.toolkit.ui.*;\n"
+				+ "import com.itmill.toolkit.ui.*;\n\n"
 				+ "public class HelloWorld extends com.itmill.toolkit.Application {\n"
 				+ "    public void init() {\n"
 				+ "        Window main = new Window(\"Hello window\");\n"
@@ -117,7 +119,8 @@ public class IntroWelcome extends Feature {
 	 * @see com.itmill.toolkit.demo.features.Feature#getDescriptionXHTML()
 	 */
 	protected String getDescriptionXHTML() {
-		return WELCOME_TEXT_LOWER;
+		return WELCOME_TEXT_LOWER + "<br /><br />IT Mill Toolkit version: "
+				+ ApplicationServlet.VERSION;
 	}
 
 	protected String getImage() {
