@@ -97,12 +97,14 @@ public abstract class Feature extends CustomComponent {
 		String desc = getDescriptionXHTML();
 		String title = getTitle();
 		if (desc != null) {
-			OrderedLayout mainLayout = new OrderedLayout(OrderedLayout.ORIENTATION_VERTICAL);
-			OrderedLayout layout = new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
+			OrderedLayout mainLayout = new OrderedLayout(
+					OrderedLayout.ORIENTATION_VERTICAL);
+			OrderedLayout layout = new OrderedLayout(
+					OrderedLayout.ORIENTATION_HORIZONTAL);
 			mainLayout.addComponent(layout);
 			if (getImage() != null)
-				layout.addComponent(new Embedded("", new ClassResource(getImage(),
-						this.getApplication())));
+				layout.addComponent(new Embedded("", new ClassResource(
+						getImage(), this.getApplication())));
 			String label = "";
 			label += desc;
 			if (propsReminder)
@@ -128,7 +130,8 @@ public abstract class Feature extends CustomComponent {
 				l.addComponent(new Label(
 						"<b>// " + getTitle() + " example</b>",
 						Label.CONTENT_XHTML));
-			l.addComponent(new Label(example, Label.CONTENT_PREFORMATTED));
+			l.addComponent(new Label("<pre>" + example + "</pre>",
+					Label.CONTENT_XHTML));
 			ts.addTab(l, "Code Sample", null);
 		}
 
