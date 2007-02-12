@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+
+<project name="www.itmill.com" basedir="../" default="site">
+
+	<target name="site" depends="clean-all, manual-html"/>
+	
+	<target name="init">
+
+		<!-- Create result dir unless already exists -->
+		<mkdir dir="build/result" />
+
+		<property file="build/VERSION" />
+		<property name="product-file" value="itmill-toolkit" />
+		<property name="product-name" value="IT Mill Toolkit" />
+		<property name="toolkit-package" value="com/itmill/toolkit" />
+
+		<property file="build/html-style.properties" />
+
+		<!-- Destination files -->
+		<property name="package-file-name" value="${product-file}-${version}.zip" />
+		<property name="lib-bin-jar-name" value="${product-file}-${version}.jar" />
+		<property name="demo-lib-jar-name" value="${product-file}-demo-${version}.jar" />
+		<property name="lib-src-jar-name" value="${product-file}-src-${version}.jar" />
+		<property name="themes-jar-name" value="${product-file}-themes-${version}.jar" />
+		<property name="demo-war-name" value="${product-file}-demo-${version}.war" />
+
+		<echo message="Prepared to build www.itmill.com html" />
+
+	</target>
+
+	<target name="manual-html" depends="init">
+		<mkdir dir="build/result/www.itmill.com/manual"/>
+		<delete file="build/docbook/conf/temp.xsl" />
+		<copy file="build/docbook/www.itmill.com/custom-www.itmill.com-docbook.xsl" 
+			tofile="build/docbook/conf/temp.xsl">
+
+			<filterchain>
+				<replacetokens>
+					<token key="BODYHEADER" value="${www.manual.body.start1}${www.manual.docbook.head.title}${www.manual.body.start2}" />
+					<token key="BODYFOOTER" value="${www.manual.body.end}" />
+				</replacetokens>
+			</filterchain>
+		</copy>
+		<path id="docbook-xsl.classpath">
+			<pathelement path="build/lib/fserializer.jar" />
+			<pathelement path="build/lib/xalan.jar" />
+			<pathelement path="build/lib/xercesImpl.jar" />
+			<pathelement path="build/lib/xml-apis.jar" />
+		</path>
+		<java classname="org.apache.xalan.xslt.Process" failonerror="yes" fork="yes" maxmemory="1300m">
+			<arg value="-in" />
+			<arg value="doc/manual/book.xml" />
+			<arg value="-xsl" />
+			<arg value="build/docbook/conf/temp.xsl" />
+			<arg value="-out" />
+			<arg value="build/result/www.itmill.com/manual/index.html" />
+			<arg value="-param" />
+			<arg value="use.extensions" />
+			<arg value="1" />
+			<classpath refid="docbook-xsl.classpath" />
+		</java>
+		<delete file="build/docbook/conf/temp.xsl" />
+		<copy todir="build/result/www.itmill.com/manual/img">
+			<fileset dir="doc/manual/img">
+				<exclude name="**/.svn" />
+			</fileset>
+		</copy>
+	</target>
+
+	<!-- Clean results - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	<target name="clean-all" depends="">
+		<delete includeemptydirs="true" defaultexcludes="false">
+			<fileset dir="build/result" includes="**/*" />
+		</delete>
+		<delete file="build/docbook/conf/temp.xsl" />
+	</target>
+
+</project>
