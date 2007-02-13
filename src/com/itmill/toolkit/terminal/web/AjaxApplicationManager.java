@@ -117,8 +117,10 @@ public class AjaxApplicationManager implements Paintable.RepaintRequestListener,
     public void handleUidlRequest(HttpServletRequest request,
             HttpServletResponse response) throws IOException {
 
-        boolean repaintAll = request.getParameter(GET_PARAM_REPAINT_ALL) != null;
-
+    	// repaint requested or sesssion has timed out and new one is created
+        boolean repaintAll = ( request.getParameter(GET_PARAM_REPAINT_ALL) != null ) 
+    	|| request.getSession().isNew();
+        
         OutputStream out = response.getOutputStream();
         try {
 
