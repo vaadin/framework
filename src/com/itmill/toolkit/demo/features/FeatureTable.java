@@ -85,6 +85,10 @@ public class FeatureTable extends Feature implements Action.Handler {
 		t.addContainerProperty("Age", String.class, "");
 		t.addContainerProperty("Eyecolor", String.class, "");
 		t.addContainerProperty("Haircolor", String.class, "");
+		
+		// set alignments to demonstrate features
+		t.setColumnAlignment("Age", Table.ALIGN_CENTER);
+		t.setColumnAlignment("Haircolor", Table.ALIGN_RIGHT);
 
 		// Add random rows to table
 		for (int j = 0; j < 300; j++) {
