@@ -45,6 +45,7 @@ import java.util.Set;
 import java.util.WeakHashMap;
 
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -461,8 +462,13 @@ public class AjaxApplicationManager implements Paintable.RepaintRequestListener,
         String logoutUrl = application.getLogoutURL();
         if (logoutUrl == null)
             logoutUrl = application.getURL().toString();
-
-        response.sendRedirect(response.encodeRedirectURL(logoutUrl));
+        // clients JS app is still running, send a special xml file to
+        // tell client that application is quit and where to point browser now
+        // Set the response type
+        response.setContentType("application/xml; charset=UTF-8");
+        ServletOutputStream out = response.getOutputStream();
+        out.println("<redirect url=\""+logoutUrl+"\">");
+        out.println("</redirect>");
     }
 
     /**
