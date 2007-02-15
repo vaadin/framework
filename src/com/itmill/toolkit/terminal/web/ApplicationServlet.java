@@ -84,6 +84,8 @@ import com.itmill.toolkit.terminal.ThemeResource;
 import com.itmill.toolkit.terminal.URIHandler;
 import com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent;
 import com.itmill.toolkit.terminal.web.ThemeSource.ThemeException;
+import com.itmill.toolkit.terminal.Terminal;
+import com.itmill.toolkit.terminal.web.WebBrowser;
 import com.itmill.toolkit.ui.Window;
 
 /**
@@ -562,6 +564,28 @@ public class ApplicationServlet extends HttpServlet implements
 				// Check/handle client side feature checks
 				WebBrowserProbe
 						.handleProbeRequest(request, unhandledParameters);
+				
+				// If rendering mode is not defined try to detect it
+				WebBrowser wb = WebBrowserProbe.getTerminalType(request.getSession());
+				if(wb.getRenderingMode() == WebBrowser.RENDERING_MODE_UNDEFINED) {
+					String themeName = application.getTheme();
+					if (unhandledParameters.get("theme") != null) {
+						themeName = (String) ((Object[]) unhandledParameters
+								.get("theme"))[0];
+					}
+					Theme theme = themeSource.getThemeByName(themeName);
+
+					String renderingMode = theme.getPreferredMode(wb,
+							themeSource);
+					if (unhandledParameters.get("renderingMode") != null)
+						renderingMode = (String) ((Object[]) unhandledParameters
+								.get("renderingMode"))[0];
+					if (Theme.MODE_AJAX.equals(renderingMode)) {
+						wb.setRenderingMode(WebBrowser.RENDERING_MODE_AJAX);
+					} else {
+						wb.setRenderingMode(WebBrowser.RENDERING_MODE_HTML);
+					}
+				}
 
 				// Handle the URI if the application is still running
 				if (application.isRunning())
@@ -629,9 +653,7 @@ public class ApplicationServlet extends HttpServlet implements
 
 					// Set terminal type for the window, if not already set
 					if (terminalType == null) {
-						terminalType = WebBrowserProbe.getTerminalType(request
-								.getSession());
-						window.setTerminal(terminalType);
+						window.setTerminal(terminalType = wb);
 					}
 
 					// Find theme
@@ -647,18 +669,14 @@ public class ApplicationServlet extends HttpServlet implements
 						throw new ServletException("Theme (named '"
 								+ themeName + "') can not be found");
 
-					// If ajax rendering mode is preferred, a page for it is
-					// rendered
-					String renderingMode = theme.getPreferredMode(terminalType,
-							themeSource);
-					if (unhandledParameters.get("renderingMode") != null)
-						renderingMode = (String) ((Object[]) unhandledParameters
-								.get("renderingMode"))[0];
-					if (Theme.MODE_AJAX.equals(renderingMode)
-							&& !(window instanceof DebugWindow)) {
+					// If in ajax rendering mode, print an html page for it
+					if(terminalType.getRenderingMode() == WebBrowser.RENDERING_MODE_AJAX) {
 						writeAjaxPage(request, response, out, unhandledParameters, window, terminalType, theme);
 						return;
 					}
+					
+					String renderingMode = theme.getPreferredMode(terminalType,
+							themeSource);
 
 					// If other than html or ajax mode is requested
 					if (!Theme.MODE_HTML.equals(renderingMode)
@@ -1494,7 +1512,9 @@ public class ApplicationServlet extends HttpServlet implements
 		// Create and open new debug window for application if requested
 		Window debugWindow = application.getWindow(DebugWindow.WINDOW_NAME);
 		if (debugWindow == null) {
-			if (isDebugMode(params)  && !request.getPathInfo().startsWith(AJAX_UIDL_URI))
+			if (isDebugMode(params) && 
+					WebBrowserProbe.getTerminalType(request.getSession()).getRenderingMode() 
+					!= WebBrowser.RENDERING_MODE_AJAX ) {
 				try {
 					debugWindow = new DebugWindow(application, request
 							.getSession(false), this);
@@ -1505,6 +1525,7 @@ public class ApplicationServlet extends HttpServlet implements
 					throw new ServletException(
 							"Failed to create debug window for application", e);
 				}
+			}
 		} else if (window != debugWindow) {
 			if (isDebugMode(params))
 				debugWindow.requestRepaint();
