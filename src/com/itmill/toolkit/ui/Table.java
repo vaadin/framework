@@ -190,7 +190,7 @@ public class Table extends Select implements Action.Container,
     private HashMap columnAlignments = new HashMap();
 
     /** Holds value of property pageLength. 0 disables paging. */
-    private int pageLength = 0;
+    private int pageLength = 15;
 
     /** Id the first item on the current page. */
     private Object currentPageFirstItemId = null;
@@ -205,7 +205,7 @@ public class Table extends Select implements Action.Container,
     private boolean selectable = false;
 
     /** Holds value of property columnHeaderMode. */
-    private int columnHeaderMode = COLUMN_HEADER_MODE_HIDDEN;
+    private int columnHeaderMode = COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID;
 
     /** True iff the row captions are hidden. */
     private boolean rowCaptionsAreHidden = true;
