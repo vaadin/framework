@@ -577,13 +577,19 @@ public class ApplicationServlet extends HttpServlet implements
 
 					String renderingMode = theme.getPreferredMode(wb,
 							themeSource);
-					if (unhandledParameters.get("renderingMode") != null)
-						renderingMode = (String) ((Object[]) unhandledParameters
-								.get("renderingMode"))[0];
 					if (Theme.MODE_AJAX.equals(renderingMode)) {
 						wb.setRenderingMode(WebBrowser.RENDERING_MODE_AJAX);
 					} else {
 						wb.setRenderingMode(WebBrowser.RENDERING_MODE_HTML);
+					}
+				}
+				if (unhandledParameters.get("renderingMode") != null) {
+					String renderingMode = (String) ((Object[]) unhandledParameters	
+							.get("renderingMode"))[0];
+					if (renderingMode.equals("html")) {
+						wb.setRenderingMode(WebBrowser.RENDERING_MODE_HTML);
+					} else {
+						wb.setRenderingMode(WebBrowser.RENDERING_MODE_AJAX);
 					}
 				}
 
@@ -648,13 +654,11 @@ public class ApplicationServlet extends HttpServlet implements
 						return;
 					}
 
-					// Get the terminal type for the window
-					WebBrowser terminalType = (WebBrowser) window.getTerminal();
-
 					// Set terminal type for the window, if not already set
-					if (terminalType == null) {
-						window.setTerminal(terminalType = wb);
+					if (window.getTerminal() == null) {
+						window.setTerminal(wb);
 					}
+
 
 					// Find theme
 					String themeName = window.getTheme() != null ? window
@@ -670,16 +674,16 @@ public class ApplicationServlet extends HttpServlet implements
 								+ themeName + "') can not be found");
 
 					// If in ajax rendering mode, print an html page for it
-					if(terminalType.getRenderingMode() == WebBrowser.RENDERING_MODE_AJAX) {
-						writeAjaxPage(request, response, out, unhandledParameters, window, terminalType, theme);
+					if(wb.getRenderingMode() == WebBrowser.RENDERING_MODE_AJAX) {
+						writeAjaxPage(request, response, out, unhandledParameters, window, wb, theme);
 						return;
 					}
 					
-					String renderingMode = theme.getPreferredMode(terminalType,
+					String renderingMode = theme.getPreferredMode(wb,
 							themeSource);
 
 					// If other than html or ajax mode is requested
-					if (!Theme.MODE_HTML.equals(renderingMode)
+					if(wb.getRenderingMode() == WebBrowser.RENDERING_MODE_UNDEFINED
 							&& !(window instanceof DebugWindow)) {
 						// TODO More informal message should be given is browser
 						// is not supported
@@ -696,13 +700,13 @@ public class ApplicationServlet extends HttpServlet implements
 
 					// Initialize Transformer
 					UIDLTransformerType transformerType = new UIDLTransformerType(
-							terminalType, theme);
+							wb, theme);
 
 					transformer = this.transformerFactory
 							.getTransformer(transformerType);
 
 					// Set the response type
-					response.setContentType(terminalType.getContentType());
+					response.setContentType(wb.getContentType());
 
 					// Create UIDL writer
 					WebPaintTarget paintTarget = transformer
