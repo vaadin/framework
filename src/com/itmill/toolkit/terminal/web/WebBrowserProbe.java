@@ -1,30 +1,30 @@
 /* *************************************************************************
  
-                               IT Mill Toolkit 
+ IT Mill Toolkit 
 
-               Development of Browser User Interfaces Made Easy
+ Development of Browser User Interfaces Made Easy
 
-                    Copyright (C) 2000-2006 IT Mill Ltd
-                     
-   *************************************************************************
+ Copyright (C) 2000-2006 IT Mill Ltd
+ 
+ *************************************************************************
 
-   This product is distributed under commercial license that can be found
-   from the product package on license.pdf. Use of this product might 
-   require purchasing a commercial license from IT Mill Ltd. For guidelines 
-   on usage, see licensing-guidelines.html
+ This product is distributed under commercial license that can be found
+ from the product package on license.pdf. Use of this product might 
+ require purchasing a commercial license from IT Mill Ltd. For guidelines 
+ on usage, see licensing-guidelines.html
 
-   *************************************************************************
-   
-   For more information, contact:
-   
-   IT Mill Ltd                           phone: +358 2 4802 7180
-   Ruukinkatu 2-4                        fax:   +358 2 4802 7181
-   20540, Turku                          email:  info@itmill.com
-   Finland                               company www: www.itmill.com
-   
-   Primary source for information and releases: www.itmill.com
+ *************************************************************************
+ 
+ For more information, contact:
+ 
+ IT Mill Ltd                           phone: +358 2 4802 7180
+ Ruukinkatu 2-4                        fax:   +358 2 4802 7181
+ 20540, Turku                          email:  info@itmill.com
+ Finland                               company www: www.itmill.com
+ 
+ Primary source for information and releases: www.itmill.com
 
-   ********************************************************************** */
+ ********************************************************************** */
 
 package com.itmill.toolkit.terminal.web;
 
@@ -37,10 +37,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 /**
- * The WebBrowserProbe uses JavaScript to determine the capabilities
- * of the client browser.
+ * The WebBrowserProbe uses JavaScript to determine the capabilities of the
+ * client browser.
+ * 
  * @author IT Mill Ltd.
- * @version @VERSION@
+ * @version
+ * @VERSION@
  * @since 3.0
  */
 public class WebBrowserProbe {
@@ -49,8 +51,10 @@ public class WebBrowserProbe {
 
 	private static final String CLIENT_TYPE = "wa_browser";
 
-	/** Return the terminal type from the given session. 
-	 *  @return WebBrowser instance for the given session. 
+	/**
+	 * Return the terminal type from the given session.
+	 * 
+	 * @return WebBrowser instance for the given session.
 	 */
 	public static WebBrowser getTerminalType(HttpSession session) {
 		if (session != null)
@@ -58,25 +62,27 @@ public class WebBrowserProbe {
 		return null;
 	}
 
-	/** Set the terminal type for the given session. 
-	 *  @return WebBrowser instance for the given session. 
+	/**
+	 * Set the terminal type for the given session.
+	 * 
+	 * @return WebBrowser instance for the given session.
 	 */
-	public static void setTerminalType(
-		HttpSession session,
-		WebBrowser terminal) {
+	public static void setTerminalType(HttpSession session, WebBrowser terminal) {
 		if (session != null)
 			session.setAttribute(CLIENT_TYPE, terminal);
 	}
 
-	/** Handle client checking. 
-	 *  @param request The HTTP request to process.
-	 *  @param response HTTP response to write to.
-	 *  @return true if response should include a probe script
-	 **/
-	public static boolean handleProbeRequest(
-		HttpServletRequest request,
-		Map parameters)
-		throws ServletException {
+	/**
+	 * Handle client checking.
+	 * 
+	 * @param request
+	 *            The HTTP request to process.
+	 * @param response
+	 *            HTTP response to write to.
+	 * @return true if response should include a probe script
+	 */
+	public static boolean handleProbeRequest(HttpServletRequest request,
+			Map parameters) throws ServletException {
 
 		HttpSession s = request.getSession();
 		WebBrowser browser = getTerminalType(s);
@@ -102,9 +108,9 @@ public class WebBrowserProbe {
 
 		// Create new type based on client parameters
 		browser = probe(browser, request, parameters);
-		setTerminalType(s,browser);
+		setTerminalType(s, browser);
 
-		// Set client as checked if parameters were found			
+		// Set client as checked if parameters were found
 		if (parameters.containsKey("wa_clientprobe")) {
 			String val = ((String[]) parameters.get("wa_clientprobe"))[0];
 			browser.setClientSideChecked(val != null && "1".equals(val));
@@ -115,9 +121,12 @@ public class WebBrowserProbe {
 
 	}
 
-	/** Determine versions based on user agent string. 
-	 *  @param agent HTTP User-Agent request header.
-	 *  @return new WebBrowser instance initialized based on agent features.
+	/**
+	 * Determine versions based on user agent string.
+	 * 
+	 * @param agent
+	 *            HTTP User-Agent request header.
+	 * @return new WebBrowser instance initialized based on agent features.
 	 */
 	public static WebBrowser probe(String agent) {
 		WebBrowser res = new WebBrowser();
@@ -135,18 +144,17 @@ public class WebBrowserProbe {
 		}
 
 		// Opera
-		else if (
-			(agent.indexOf("Opera 6.") >= 0)
-				|| (agent.indexOf("Opera 5.") >= 0)
-				|| (agent.indexOf("Opera 4.") >= 0)) {
-			res.setJavaScriptVersion(WebBrowser.JAVASCRIPT_1_3);
-			res.setJavaEnabled(true);
-			res.setFrameSupport(true);
-					res.setMarkupVersion(WebBrowser.MARKUP_HTML_4_0);
-		} else if (agent.indexOf("Opera 3.") >= 0) {
+		else if (agent.indexOf("Opera 3.") >= 0) {
 			res.setJavaScriptVersion(WebBrowser.JAVASCRIPT_1_3);
 			res.setJavaEnabled(false);
 			res.setFrameSupport(true);
+		} else if (agent.indexOf("Opera") >= 0) {
+			res.setJavaScriptVersion(WebBrowser.JAVASCRIPT_1_3);
+			res.setJavaEnabled(true);
+			res.setFrameSupport(true);
+			res.setMarkupVersion(WebBrowser.MARKUP_HTML_4_0);
+			if (agent.indexOf("Opera/9") >= 0)
+				res.setJavaScriptVersion(WebBrowser.JAVASCRIPT_1_5);
 		}
 
 		// OmniWeb
@@ -174,12 +182,12 @@ public class WebBrowserProbe {
 		// Microsoft Browsers
 		// See Microsoft documentation for details:
 		// http://msdn.microsoft.com/library/default.asp?url=/library/
-		//        en-us/script56/html/js56jsoriversioninformation.asp
+		// en-us/script56/html/js56jsoriversioninformation.asp
 		else if (agent.indexOf("MSIE 7.") >= 0) {
 			res.setJavaScriptVersion(WebBrowser.JSCRIPT_5_7);
 			res.setJavaEnabled(true);
 			res.setFrameSupport(true);
-			res.setMarkupVersion(WebBrowser.MARKUP_HTML_4_0);		
+			res.setMarkupVersion(WebBrowser.MARKUP_HTML_4_0);
 		} else if (agent.indexOf("MSIE 6.") >= 0) {
 			res.setJavaScriptVersion(WebBrowser.JSCRIPT_5_6);
 			res.setJavaEnabled(true);
@@ -220,13 +228,12 @@ public class WebBrowserProbe {
 			res.setJavaEnabled(true);
 			res.setFrameSupport(true);
 			res.setMarkupVersion(WebBrowser.MARKUP_HTML_4_0);
-		} else if (
-			(agent.indexOf("Mozilla/4.06") >= 0)
+		} else if ((agent.indexOf("Mozilla/4.06") >= 0)
 				|| (agent.indexOf("Mozilla/4.7") >= 0)) {
 			res.setJavaScriptVersion(WebBrowser.JAVASCRIPT_1_3);
 			res.setJavaEnabled(true);
 			res.setFrameSupport(true);
-					res.setMarkupVersion(WebBrowser.MARKUP_HTML_4_0);
+			res.setMarkupVersion(WebBrowser.MARKUP_HTML_4_0);
 		} else if (agent.indexOf("Mozilla/4.") >= 0) {
 			res.setJavaScriptVersion(WebBrowser.JAVASCRIPT_1_2);
 			res.setJavaEnabled(true);
@@ -241,7 +248,7 @@ public class WebBrowserProbe {
 			res.setFrameSupport(true);
 		}
 
-		// Mozilla Open-Source Browsers		
+		// Mozilla Open-Source Browsers
 		else if (agent.indexOf("Mozilla/5.") >= 0) {
 			res.setJavaScriptVersion(WebBrowser.JAVASCRIPT_1_5);
 			res.setJavaEnabled(true);
@@ -260,17 +267,20 @@ public class WebBrowserProbe {
 		return res;
 	}
 
-	/** Create new instance of WebBrowser by initializing the values
-	 *  based on user request.
-	 *  @param browser The browser to be updated. If null a new instance is created.
-	 *  @param request Request to be used as defaults.
-	 *  @param params Parameters to be used as defaults.
-	 *  @return new WebBrowser instance initialized based on request parameters.
+	/**
+	 * Create new instance of WebBrowser by initializing the values based on
+	 * user request.
+	 * 
+	 * @param browser
+	 *            The browser to be updated. If null a new instance is created.
+	 * @param request
+	 *            Request to be used as defaults.
+	 * @param params
+	 *            Parameters to be used as defaults.
+	 * @return new WebBrowser instance initialized based on request parameters.
 	 */
-	public static WebBrowser probe(
-		WebBrowser browser,
-		HttpServletRequest request,
-		Map params) {
+	public static WebBrowser probe(WebBrowser browser,
+			HttpServletRequest request, Map params) {
 
 		// Initialize defaults based on client features
 		WebBrowser res = browser;
@@ -285,22 +295,23 @@ public class WebBrowserProbe {
 			locales.add(e.nextElement());
 		}
 
-		//Javascript version
+		// Javascript version
 		if (params.containsKey("wa_jsversion")) {
 			String val = ((String[]) params.get("wa_jsversion"))[0];
 			if (val != null) {
-				res.setJavaScriptVersion(
-					WebBrowser.parseJavaScriptVersion(val));
+				res
+						.setJavaScriptVersion(WebBrowser
+								.parseJavaScriptVersion(val));
 			}
 		}
-		//Java support
+		// Java support
 		if (params.containsKey("wa_javaenabled")) {
 			String val = ((String[]) params.get("wa_javaenabled"))[0];
 			if (val != null) {
 				res.setJavaEnabled(Boolean.valueOf(val).booleanValue());
 			}
 		}
-		//Screen width
+		// Screen width
 		if (params.containsKey("wa_screenwidth")) {
 			String val = ((String[]) params.get("wa_screenwidth"))[0];
 			if (val != null) {
@@ -311,7 +322,7 @@ public class WebBrowserProbe {
 				}
 			}
 		}
-		//Screen height
+		// Screen height
 		if (params.containsKey("wa_screenheight")) {
 			String val = ((String[]) params.get("wa_screenheight"))[0];
 			if (val != null) {
