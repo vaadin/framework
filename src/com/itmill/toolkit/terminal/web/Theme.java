@@ -235,6 +235,7 @@ public class Theme extends DefaultHandler {
 		// Theme must explicitly support the given mode
 		RequirementCollection rc = (RequirementCollection) supportedModes
 				.get(mode);
+		
 		if (rc == null || !rc.isMet(terminal))
 			return false;
 
@@ -705,8 +706,9 @@ public class Theme extends DefaultHandler {
 		 */
 		public boolean isMet(WebBrowser terminal) {
 			for (Iterator i = this.requirements.iterator(); i.hasNext();) {
-				if (!((Requirement) i.next()).isMet(terminal))
+				if (!((Requirement) i.next()).isMet(terminal)) {
 					return false;
+				}
 			}
 			return true;
 		}
@@ -763,8 +765,9 @@ public class Theme extends DefaultHandler {
 		 */
 		public boolean isMet(WebBrowser terminal) {
 			for (Iterator i = this.requirements.iterator(); i.hasNext();) {
-				if (!((Requirement) i.next()).isMet(terminal))
+				if (((Requirement) i.next()).isMet(terminal)) {
 					return true;
+				}
 			}
 			return false;
 		}
@@ -799,9 +802,7 @@ public class Theme extends DefaultHandler {
 		}
 
 		public boolean isMet(WebBrowser terminal) {
-			if (terminal.getBrowserApplication().indexOf(this.agentSubstring) > 0)
-				return true;
-			return false;
+			return terminal.getBrowserApplication().indexOf(this.agentSubstring) > 0;
 		}
 
 		/**
