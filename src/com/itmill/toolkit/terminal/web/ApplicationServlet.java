@@ -84,7 +84,6 @@ import com.itmill.toolkit.terminal.ThemeResource;
 import com.itmill.toolkit.terminal.URIHandler;
 import com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent;
 import com.itmill.toolkit.terminal.web.ThemeSource.ThemeException;
-import com.itmill.toolkit.terminal.Terminal;
 import com.itmill.toolkit.terminal.web.WebBrowser;
 import com.itmill.toolkit.ui.Window;
 
@@ -679,9 +678,6 @@ public class ApplicationServlet extends HttpServlet implements
 						return;
 					}
 					
-					String renderingMode = theme.getPreferredMode(wb,
-							themeSource);
-
 					// If other than html or ajax mode is requested
 					if(wb.getRenderingMode() == WebBrowser.RENDERING_MODE_UNDEFINED
 							&& !(window instanceof DebugWindow)) {
