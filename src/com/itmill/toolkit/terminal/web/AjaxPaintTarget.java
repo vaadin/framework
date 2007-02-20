@@ -171,7 +171,7 @@ public class AjaxPaintTarget implements PaintTarget {
         mOpenTags.push(tagName);
 
         // Print the tag with attributes
-        append("\n<" + tagName);
+        append("<" + tagName);
 
         mTagArgumentListOpen = true;
     }
@@ -210,7 +210,7 @@ public class AjaxPaintTarget implements PaintTarget {
         }
 
         //Write the end (closing) tag
-        append("</" + lastTag + ">\n");
+        append("</" + lastTag + ">");
         flush();
     }
 
