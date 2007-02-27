@@ -876,7 +876,7 @@ public class ApplicationServlet extends HttpServlet implements
 			appUrl += (i>0?"/":"") + urlParts[i];
 		if (appUrl.endsWith("/")) appUrl = appUrl.substring(0,appUrl.length()-1);
 		page
-				.write("var client = new itmill.Client("
+				.write("itmill.tmp = new itmill.Client("
 						+ "document.getElementById('ajax-window'),"
 						+ "\""
 						+ appUrl 
@@ -901,12 +901,13 @@ public class ApplicationServlet extends HttpServlet implements
 			page.write(" (new " + themeObjName + "(\""
 					+ resourcePath
 					+ t.getName()
-					+ "/\")).registerTo(client);\n");
+					+ "/\")).registerTo(itmill.tmp);\n");
 		//}
 
 		if (isDebugMode(unhandledParameters))
-			page.write("client.debugEnabled =true;\n");
-		page.write("client.start();\n");
+			page.write("itmill.tmp.debugEnabled =true;\n");
+		page.write("itmill.tmp.start();\n");
+		page.write("delete itmill.tmp;\n");
 
 		page.write("</script>\n");
 
