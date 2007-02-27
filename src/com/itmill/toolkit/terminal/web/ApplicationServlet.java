@@ -567,7 +567,8 @@ public class ApplicationServlet extends HttpServlet implements
 				// If rendering mode is not defined try to detect it
 				WebBrowser wb = WebBrowserProbe.getTerminalType(request.getSession());
 				if(wb.getRenderingMode() == WebBrowser.RENDERING_MODE_UNDEFINED) {
-					String themeName = application.getTheme();
+					String themeName =  application.getTheme();
+					if (themeName == null) themeName = DEFAULT_THEME;
 					if (unhandledParameters.get("theme") != null) {
 						themeName = (String) ((Object[]) unhandledParameters
 								.get("theme"))[0];
