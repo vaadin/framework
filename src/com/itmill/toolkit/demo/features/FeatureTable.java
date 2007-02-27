@@ -138,8 +138,14 @@ public class FeatureTable extends Feature implements Action.Handler {
 		 
 		propertyPanel.addProperties("Table Properties", ap);
 
+		// Set first name as item caption propertyId in cas somebody selecs it
+		t.setItemCaptionPropertyId("Firstname");
+
+		// this overrides previous
 		t.setRowHeaderMode(Table.ROW_HEADER_MODE_INDEX);
 		t.setColumnHeaderMode(Table.COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID);
+		
+		
 		t.setColumnCollapsingAllowed(true);
 		t.setColumnReorderingAllowed(true);
 		t.setSelectable(true);
