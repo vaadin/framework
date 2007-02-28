@@ -557,8 +557,7 @@ public class Table extends Select implements Action.Container,
      * Set the page length.
      * 
      * <p>
-     * Setting page length 0 disables paging. The page length defaults to 0 (no
-     * paging).
+     * Setting page length 0 disables paging. The page length defaults to 15.
      * </p>
      * 
      * @param Lenght
@@ -567,7 +566,8 @@ public class Table extends Select implements Action.Container,
     public void setPageLength(int pageLength) {
         if (pageLength >= 0 && this.pageLength != pageLength) {
             this.pageLength = pageLength;
-
+            // "scroll" to first row
+            this.setCurrentPageFirstItemIndex(0);
             // Assure visual refresh
             refreshCurrentPage();
         }
