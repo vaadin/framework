@@ -42,8 +42,8 @@ public class FeatureEmbedded extends Feature {
 
 		OrderedLayout l = new OrderedLayout();
 
-		ClassResource flashResource = new ClassResource("itmill_spin.swf", this
-				.getApplication());
+		ClassResource flashResource = new ClassResource("itmill_spin.swf",
+				getApplication());
 		Embedded emb = new Embedded("Embedded Caption", flashResource);
 		emb.setType(Embedded.TYPE_OBJECT);
 		emb.setMimeType("application/x-shockwave-flash");
@@ -52,47 +52,44 @@ public class FeatureEmbedded extends Feature {
 		l.addComponent(emb);
 
 		// Properties
-		propertyPanel = null;
-		if (false) {
-			propertyPanel = new PropertyPanel(emb);
-			Form ap = propertyPanel.createBeanPropertySet(new String[] {
-					"type", "source", "width", "height", "widthUnits",
-					"heightUnits", "codebase", "codetype", "archive",
-					"mimeType", "standby", "classId" });
-			ap.replaceWithSelect("type", new Object[] {
-					new Integer(Embedded.TYPE_IMAGE),
-					new Integer(Embedded.TYPE_OBJECT) }, new Object[] {
-					"Image", "Object" });
-			Object[] units = new Object[Sizeable.UNIT_SYMBOLS.length];
-			Object[] symbols = new Object[Sizeable.UNIT_SYMBOLS.length];
-			for (int i = 0; i < units.length; i++) {
-				units[i] = new Integer(i);
-				symbols[i] = Sizeable.UNIT_SYMBOLS[i];
-			}
-			ap.replaceWithSelect("heightUnits", units, symbols);
-			ap.replaceWithSelect("widthUnits", units, symbols);
-			ap.replaceWithSelect("source", new Object[] { null,
-					new ClassResource("m-bullet-blue.gif", getApplication()) },
-					new Object[] { "null", "IT Mill (m)" });
-			propertyPanel.addProperties("Embedded Properties", ap);
-			propertyPanel.getField("standby").setDescription(
-					"The text to display while loading the object.");
-			propertyPanel.getField("codebase").setDescription(
-					"root-path used to access resources with relative paths.");
-			propertyPanel.getField("codetype").setDescription(
-					"MIME-type of the code.");
-			propertyPanel
-					.getField("classId")
-					.setDescription(
-							"Unique object id. This can be used for example to identify windows components.");
+		propertyPanel = new PropertyPanel(emb);
+		Form ap = propertyPanel.createBeanPropertySet(new String[] { "type",
+				"source", "width", "height", "widthUnits", "heightUnits",
+				"codebase", "codetype", "archive", "mimeType", "standby",
+				"classId" });
+		ap.replaceWithSelect("type", new Object[] {
+				new Integer(Embedded.TYPE_IMAGE),
+				new Integer(Embedded.TYPE_OBJECT) }, new Object[] { "Image",
+				"Object" });
+		Object[] units = new Object[Sizeable.UNIT_SYMBOLS.length];
+		Object[] symbols = new Object[Sizeable.UNIT_SYMBOLS.length];
+		for (int i = 0; i < units.length; i++) {
+			units[i] = new Integer(i);
+			symbols[i] = Sizeable.UNIT_SYMBOLS[i];
 		}
+		ap.replaceWithSelect("heightUnits", units, symbols);
+		ap.replaceWithSelect("widthUnits", units, symbols);
+		ap.replaceWithSelect("source", new Object[] { flashResource },
+				new Object[] { "itmill_spin.swf" });
+		propertyPanel.addProperties("Embedded Properties", ap);
+		propertyPanel.getField("standby").setDescription(
+				"The text to display while loading the object.");
+		propertyPanel.getField("codebase").setDescription(
+				"root-path used to access resources with relative paths.");
+		propertyPanel.getField("codetype").setDescription(
+				"MIME-type of the code.");
+		propertyPanel
+				.getField("classId")
+				.setDescription(
+						"Unique object id. This can be used for example to identify windows components.");
+
 		setJavadocURL("ui/Embedded.html");
 
 		return l;
 	}
 
 	protected String getExampleSrc() {
-		return "// Load image from jpg-file, that is in the same package with the application\n"
+		return "// LOad image from jpg-file, that is in the same package with the application\n"
 				+ "Embedded e = new Embedded(\"Image title\",\n"
 				+ "   new ClassResource(\"image.jpg\", getApplication()));";
 	}
