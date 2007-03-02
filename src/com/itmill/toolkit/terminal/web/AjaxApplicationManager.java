@@ -193,7 +193,14 @@ public class AjaxApplicationManager implements Paintable.RepaintRequestListener,
                     Set paintables;
                     if (repaintAll) {
                         paintables = new LinkedHashSet();
-                        paintables.add(window);
+                		paintables.add(window);
+                        
+                        // Add all non-native windows
+                        for (Iterator i=window.getApplication().getWindows().iterator(); i.hasNext();) {
+                        	Window w = (Window) i.next();
+                        	if (!"native".equals(w.getStyle()) && w != window)
+                        		paintables.add(w);
+                        }
                     } else
                         paintables = getDirtyComponents();
                     if (paintables != null) {
