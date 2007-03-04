@@ -109,7 +109,8 @@ public class WebApplicationContext implements ApplicationContext {
 	 * @see com.itmill.toolkit.service.ApplicationContext#getBaseDirectory()
 	 */
 	public File getBaseDirectory() {
-		String realPath = session.getServletContext().getRealPath("/");
+		String realPath = ApplicationServlet.getResourcePath(session
+				.getServletContext(), "/");
 		if (realPath == null)
 			return null;
 		return new File(realPath);
@@ -225,7 +226,7 @@ public class WebApplicationContext implements ApplicationContext {
 					msg.append("\n\n--------------------------\n\n");
 				msg.append(e.getMessage() + "\n");
 				StringWriter trace = new StringWriter();
-				e.printStackTrace(new PrintWriter(trace,true));
+				e.printStackTrace(new PrintWriter(trace, true));
 				msg.append(trace.toString());
 			}
 			throw new RuntimeException(msg.toString());

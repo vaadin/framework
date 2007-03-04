@@ -163,14 +163,14 @@ public class ApplicationServlet extends HttpServlet implements
 
 	private static final String AJAX_UIDL_URI = "/UIDL/";
 
-	private static final String THEME_DIRECTORY_PATH = "WEB-INF/lib/themes/";
+	private static final String THEME_DIRECTORY_PATH = "/WEB-INF/lib/themes/";
 
 	private static final String THEME_LISTING_FILE = THEME_DIRECTORY_PATH
 			+ "themes.txt";
 
 	private static final String DEFAULT_THEME_JAR_PREFIX = "itmill-toolkit-themes";
 
-	private static final String DEFAULT_THEME_JAR = "WEB-INF/lib/"
+	private static final String DEFAULT_THEME_JAR = "/WEB-INF/lib/"
 			+ DEFAULT_THEME_JAR_PREFIX + "-" + VERSION + ".jar";
 
 	private static final String DEFAULT_THEME_TEMP_FILE_PREFIX = "ITMILL_TMP_";
@@ -390,8 +390,7 @@ public class ApplicationServlet extends HttpServlet implements
 	 * Get ThemeSources from given path. Construct the list of avalable themes
 	 * in path using the following sources: 1. content of THEME_PATH directory
 	 * (if available) 2. The themes listed in THEME_LIST_FILE 3. "themesource"
-	 * application parameter - "ThemeSource" system
-	 * property
+	 * application parameter - "ThemeSource" system property
 	 * 
 	 * @param THEME_DIRECTORY_PATH
 	 * @return List
@@ -428,7 +427,7 @@ public class ApplicationServlet extends HttpServlet implements
 			}
 
 			try {
-				String path = this.getServletContext().getRealPath(
+				String path = getResourcePath(getServletContext(),
 						THEME_DIRECTORY_PATH);
 				if (path != null) {
 					File f = new File(path);
@@ -563,12 +562,14 @@ public class ApplicationServlet extends HttpServlet implements
 				// Check/handle client side feature checks
 				WebBrowserProbe
 						.handleProbeRequest(request, unhandledParameters);
-				
+
 				// If rendering mode is not defined try to detect it
-				WebBrowser wb = WebBrowserProbe.getTerminalType(request.getSession());
-				if(wb.getRenderingMode() == WebBrowser.RENDERING_MODE_UNDEFINED) {
-					String themeName =  application.getTheme();
-					if (themeName == null) themeName = DEFAULT_THEME;
+				WebBrowser wb = WebBrowserProbe.getTerminalType(request
+						.getSession());
+				if (wb.getRenderingMode() == WebBrowser.RENDERING_MODE_UNDEFINED) {
+					String themeName = application.getTheme();
+					if (themeName == null)
+						themeName = DEFAULT_THEME;
 					if (unhandledParameters.get("theme") != null) {
 						themeName = (String) ((Object[]) unhandledParameters
 								.get("theme"))[0];
@@ -584,7 +585,7 @@ public class ApplicationServlet extends HttpServlet implements
 					}
 				}
 				if (unhandledParameters.get("renderingMode") != null) {
-					String renderingMode = (String) ((Object[]) unhandledParameters	
+					String renderingMode = (String) ((Object[]) unhandledParameters
 							.get("renderingMode"))[0];
 					if (renderingMode.equals("html")) {
 						wb.setRenderingMode(WebBrowser.RENDERING_MODE_HTML);
@@ -659,7 +660,6 @@ public class ApplicationServlet extends HttpServlet implements
 						window.setTerminal(wb);
 					}
 
-
 					// Find theme
 					String themeName = window.getTheme() != null ? window
 							.getTheme() : DEFAULT_THEME;
@@ -667,20 +667,20 @@ public class ApplicationServlet extends HttpServlet implements
 						themeName = (String) ((Object[]) unhandledParameters
 								.get("theme"))[0];
 					}
-					Theme theme = themeSource
-							.getThemeByName(themeName);
+					Theme theme = themeSource.getThemeByName(themeName);
 					if (theme == null)
-						throw new ServletException("Theme (named '"
-								+ themeName + "') can not be found");
+						throw new ServletException("Theme (named '" + themeName
+								+ "') can not be found");
 
 					// If in ajax rendering mode, print an html page for it
-					if(wb.getRenderingMode() == WebBrowser.RENDERING_MODE_AJAX) {
-						writeAjaxPage(request, response, out, unhandledParameters, window, wb, theme);
+					if (wb.getRenderingMode() == WebBrowser.RENDERING_MODE_AJAX) {
+						writeAjaxPage(request, response, out,
+								unhandledParameters, window, wb, theme);
 						return;
 					}
-					
+
 					// If other than html or ajax mode is requested
-					if(wb.getRenderingMode() == WebBrowser.RENDERING_MODE_UNDEFINED
+					if (wb.getRenderingMode() == WebBrowser.RENDERING_MODE_UNDEFINED
 							&& !(window instanceof DebugWindow)) {
 						// TODO More informal message should be given is browser
 						// is not supported
@@ -816,18 +816,22 @@ public class ApplicationServlet extends HttpServlet implements
 		}
 	}
 
-	private void writeAjaxPage(HttpServletRequest request, HttpServletResponse response, OutputStream out, Map unhandledParameters, Window window, WebBrowser terminalType, Theme theme) throws IOException, MalformedURLException {
+	private void writeAjaxPage(HttpServletRequest request,
+			HttpServletResponse response, OutputStream out,
+			Map unhandledParameters, Window window, WebBrowser terminalType,
+			Theme theme) throws IOException, MalformedURLException {
 		response.setContentType("text/html");
-		BufferedWriter page = new BufferedWriter(
-				new OutputStreamWriter(out));
+		BufferedWriter page = new BufferedWriter(new OutputStreamWriter(out));
 
 		page
 				.write("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" "
 						+ "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n");
 
-		page.write("<html><head>\n<title>"
-				+ window.getCaption() + "</title>\n");
-		page.write("<NOSCRIPT><META http-equiv=\"refresh\" content=\"0; url=?WA_NOSCRIPT=1\" /></NOSCRIPT>\n");
+		page
+				.write("<html><head>\n<title>" + window.getCaption()
+						+ "</title>\n");
+		page
+				.write("<NOSCRIPT><META http-equiv=\"refresh\" content=\"0; url=?WA_NOSCRIPT=1\" /></NOSCRIPT>\n");
 		Theme t = theme;
 		Vector themes = new Vector();
 		themes.add(t);
@@ -838,26 +842,19 @@ public class ApplicationServlet extends HttpServlet implements
 		}
 		for (int k = themes.size() - 1; k >= 0; k--) {
 			t = (Theme) themes.get(k);
-			Collection files = t.getFileNames(terminalType,
-					Theme.MODE_AJAX);
+			Collection files = t.getFileNames(terminalType, Theme.MODE_AJAX);
 			for (Iterator i = files.iterator(); i.hasNext();) {
 				String file = (String) i.next();
 				if (file.endsWith(".css"))
-					page
-							.write("<link rel=\"stylesheet\" href=\""
-									+ getResourceLocation(t
-											.getName(),
-											new ThemeResource(
-													file))
-									+ "\" type=\"text/css\" />\n");
+					page.write("<link rel=\"stylesheet\" href=\""
+							+ getResourceLocation(t.getName(),
+									new ThemeResource(file))
+							+ "\" type=\"text/css\" />\n");
 				else if (file.endsWith(".js"))
-					page
-							.write("<script src=\""
-									+ getResourceLocation(t
-											.getName(),
-											new ThemeResource(
-													file))
-									+ "\" type=\"text/javascript\"></script>\n");
+					page.write("<script src=\""
+							+ getResourceLocation(t.getName(),
+									new ThemeResource(file))
+							+ "\" type=\"text/javascript\"></script>\n");
 			}
 
 		}
@@ -869,41 +866,32 @@ public class ApplicationServlet extends HttpServlet implements
 		page.write("<div id=\"ajax-window\"></div>\n");
 
 		page.write("<script language=\"JavaScript\">\n");
-		
-		String[] urlParts = getApplicationUrl(request).toString().split("\\/");
-		if (urlParts[2].endsWith(":80")) urlParts[2] = urlParts[2].substring(0,urlParts[2].length()-3);
-		String appUrl = "";
-		for (int i=0; i<urlParts.length; i++)
-			appUrl += (i>0?"/":"") + urlParts[i];
-		if (appUrl.endsWith("/")) appUrl = appUrl.substring(0,appUrl.length()-1);
-		page
-				.write("itmill.tmp = new itmill.Client("
-						+ "document.getElementById('ajax-window'),"
-						+ "\""
-						+ appUrl 
-						+ "/UIDL/"
-						+ "\",\""
-						+ resourcePath
-						+ ((Theme) themes
-								.get(themes.size() - 1))
-								.getName()
-						+ "/"
 
-						+ "client/\",document.getElementById('ajax-wait'));\n");
+		String[] urlParts = getApplicationUrl(request).toString().split("\\/");
+		if (urlParts[2].endsWith(":80"))
+			urlParts[2] = urlParts[2].substring(0, urlParts[2].length() - 3);
+		String appUrl = "";
+		for (int i = 0; i < urlParts.length; i++)
+			appUrl += (i > 0 ? "/" : "") + urlParts[i];
+		if (appUrl.endsWith("/"))
+			appUrl = appUrl.substring(0, appUrl.length() - 1);
+		page.write("itmill.tmp = new itmill.Client("
+				+ "document.getElementById('ajax-window')," + "\"" + appUrl
+				+ "/UIDL/" + "\",\"" + resourcePath
+				+ ((Theme) themes.get(themes.size() - 1)).getName() + "/"
+
+				+ "client/\",document.getElementById('ajax-wait'));\n");
 
 		// TODO Only current theme is registered to the client
-		//for (int k = themes.size() - 1; k >= 0; k--) {
-		//	t = (Theme) themes.get(k);
+		// for (int k = themes.size() - 1; k >= 0; k--) {
+		// t = (Theme) themes.get(k);
 		t = theme;
-			String themeObjName = "itmill.themes." + 
-				t.getName().substring(0, 1)
-					.toUpperCase()
-					+ t.getName().substring(1);
-			page.write(" (new " + themeObjName + "(\""
-					+ resourcePath
-					+ t.getName()
-					+ "/\")).registerTo(itmill.tmp);\n");
-		//}
+		String themeObjName = "itmill.themes."
+				+ t.getName().substring(0, 1).toUpperCase()
+				+ t.getName().substring(1);
+		page.write(" (new " + themeObjName + "(\"" + resourcePath + t.getName()
+				+ "/\")).registerTo(itmill.tmp);\n");
+		// }
 
 		if (isDebugMode(unhandledParameters))
 			page.write("itmill.tmp.debugEnabled =true;\n");
@@ -1041,7 +1029,7 @@ public class ApplicationServlet extends HttpServlet implements
 
 		// Try to find the default theme JAR file based on the given path
 		for (int i = 0; i < fileList.length; i++) {
-			String path = this.getServletContext().getRealPath(fileList[i]);
+			String path = getResourcePath(getServletContext(), fileList[i]);
 			File file = null;
 			if (path != null && (file = new File(path)).exists()) {
 				return file;
@@ -1061,9 +1049,8 @@ public class ApplicationServlet extends HttpServlet implements
 
 		// Try to find the default theme JAR file based on file naming scheme
 		// NOTE: This is for backward compability with 3.0.2 and earlier.
-		String path = this.getServletContext().getRealPath("/WEB-INF/lib");
+		String path = getResourcePath(getServletContext(), "/WEB-INF/lib");
 		if (path != null) {
-
 			File lib = new File(path);
 			String[] files = lib.list();
 			if (files != null) {
@@ -1514,9 +1501,9 @@ public class ApplicationServlet extends HttpServlet implements
 		// Create and open new debug window for application if requested
 		Window debugWindow = application.getWindow(DebugWindow.WINDOW_NAME);
 		if (debugWindow == null) {
-			if (isDebugMode(params) && 
-					WebBrowserProbe.getTerminalType(request.getSession()).getRenderingMode() 
-					!= WebBrowser.RENDERING_MODE_AJAX ) {
+			if (isDebugMode(params)
+					&& WebBrowserProbe.getTerminalType(request.getSession())
+							.getRenderingMode() != WebBrowser.RENDERING_MODE_AJAX) {
 				try {
 					debugWindow = new DebugWindow(application, request
 							.getSession(false), this);
@@ -1912,12 +1899,39 @@ public class ApplicationServlet extends HttpServlet implements
 			application.removeListener((Application.WindowDetachListener) this);
 
 			// Deregister all window listeners
-			for (Iterator wins = application.getWindows().iterator(); wins.hasNext();)
-				((Window)wins.next()).removeListener((Paintable.RepaintRequestListener)this);
-			
+			for (Iterator wins = application.getWindows().iterator(); wins
+					.hasNext();)
+				((Window) wins.next())
+						.removeListener((Paintable.RepaintRequestListener) this);
+
 			// Manager takes control over the application
 			mgr.takeControl();
 		}
 		return mgr;
 	}
+
+	/**
+	 * Get resource path using different implementations. Required fo supporting
+	 * different servlet container implementations (application servers).
+	 * 
+	 * @param path
+	 * @return
+	 */
+	protected static String getResourcePath(ServletContext servletContext,
+			String path) {
+		String resultPath = null;
+		resultPath = servletContext.getRealPath(path);
+		if (resultPath != null) {
+			return resultPath;
+		} else {
+			try {
+				URL url = servletContext.getResource(path);
+				resultPath = url.getFile();
+			} catch (Exception e) {
+				// ignored
+			}
+		}
+		return resultPath;
+	}
+
 }
