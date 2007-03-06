@@ -802,7 +802,7 @@ public class Theme extends DefaultHandler {
 		}
 
 		public boolean isMet(WebBrowser terminal) {
-			return terminal.getBrowserApplication().indexOf(this.agentSubstring) > 0;
+			return terminal.getBrowserApplication().indexOf(this.agentSubstring) >= 0;
 		}
 
 		/**

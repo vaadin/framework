@@ -231,7 +231,7 @@ public class WebBrowser implements Terminal {
 	 *  @return true if this type matches the given browser.
 	 */
 	public boolean supports(String browser) {
-		return this.getBrowserApplication().indexOf(browser) > 0;
+		return this.getBrowserApplication().indexOf(browser) >= 0;
 	}
 
 	/** Check if this type supports given markup language version.
