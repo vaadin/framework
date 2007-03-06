@@ -567,7 +567,7 @@ public class ApplicationServlet extends HttpServlet implements
 				// try to detect it
 				WebBrowser wb = WebBrowserProbe.getTerminalType(request
 						.getSession());
-				if (unhandledParameters.get("renderingMode").equals("detect") 
+				if ( "detect".equals(unhandledParameters.get("renderingMode"))  
 						|| wb.getRenderingMode() == WebBrowser.RENDERING_MODE_UNDEFINED) {
 					String themeName = application.getTheme();
 					if (themeName == null)
