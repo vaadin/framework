@@ -563,10 +563,12 @@ public class ApplicationServlet extends HttpServlet implements
 				WebBrowserProbe
 						.handleProbeRequest(request, unhandledParameters);
 
-				// If rendering mode is not defined try to detect it
+				// If rendering mode is not defined or detecting requested
+				// try to detect it
 				WebBrowser wb = WebBrowserProbe.getTerminalType(request
 						.getSession());
-				if (wb.getRenderingMode() == WebBrowser.RENDERING_MODE_UNDEFINED) {
+				if (unhandledParameters.get("renderingMode").equals("detect") 
+						|| wb.getRenderingMode() == WebBrowser.RENDERING_MODE_UNDEFINED) {
 					String themeName = application.getTheme();
 					if (themeName == null)
 						themeName = DEFAULT_THEME;
@@ -589,7 +591,7 @@ public class ApplicationServlet extends HttpServlet implements
 							.get("renderingMode"))[0];
 					if (renderingMode.equals("html")) {
 						wb.setRenderingMode(WebBrowser.RENDERING_MODE_HTML);
-					} else {
+					} else if(renderingMode.equals("ajax")){
 						wb.setRenderingMode(WebBrowser.RENDERING_MODE_AJAX);
 					}
 				}
