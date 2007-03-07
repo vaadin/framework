@@ -1561,6 +1561,10 @@ public class Table extends Select implements Action.Container,
         	firstIndex = reqFirstRowToPaint;
         if (rows + firstIndex > size()) rows = size() - firstIndex;
 
+        Object[][] cells = new Object[cols + CELL_FIRSTCOL][rows];
+        if (rows == 0)
+            return cells;
+
         // Get first item id
         if (items instanceof Container.Indexed) 
         	id = ((Container.Indexed) items).getIdByIndex(firstIndex);
@@ -1569,9 +1573,6 @@ public class Table extends Select implements Action.Container,
         	for (int i=0; i<firstIndex; i++) id = ((Container.Ordered) items).nextItemId(id);
         }
 
-        Object[][] cells = new Object[cols + CELL_FIRSTCOL][rows];
-        if (rows == 0)
-            return cells;
         int headmode = getRowHeaderMode();
         boolean[] iscomponent = new boolean[cols];
         for (int i = 0; i < cols; i++)
