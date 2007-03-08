@@ -253,6 +253,15 @@ public class AjaxApplicationManager implements Paintable.RepaintRequestListener,
                         for (Iterator i = currentPaintables.iterator(); i
                                 .hasNext();) {
                             Paintable p = (Paintable) i.next();
+                            
+                            
+                            // TODO CLEAN
+                            if (p instanceof Window) {
+                            	Window w = (Window)p;
+                            	if (w.getTerminal() == null)
+                            		w.setTerminal(application.getMainWindow().getTerminal());
+                            }
+                            
                             paintTarget.startTag("change");
                             paintTarget.addAttribute("format", "uidl");
                             String pid = getPaintableId(p);
