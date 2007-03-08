@@ -1562,7 +1562,7 @@ public class Table extends Select implements Action.Container,
         if (rows + firstIndex > size()) rows = size() - firstIndex;
 
         Object[][] cells = new Object[cols + CELL_FIRSTCOL][rows];
-        if (rows == 0)
+        if (rows == 0 || size() == 0)
             return cells;
 
         // Get first item id
