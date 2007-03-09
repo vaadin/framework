@@ -1559,10 +1559,14 @@ public class Table extends Select implements Action.Container,
         Object id;
         if (reqFirstRowToPaint >= 0 && reqFirstRowToPaint < size()) 
         	firstIndex = reqFirstRowToPaint;
-        if (rows + firstIndex > size()) rows = size() - firstIndex;
+        if(size() > 0) {
+            if (rows + firstIndex > size()) rows = size() - firstIndex;
+        } else {
+        	rows = 0;
+        }
 
         Object[][] cells = new Object[cols + CELL_FIRSTCOL][rows];
-        if (rows == 0 || size() == 0)
+        if (rows == 0)
             return cells;
 
         // Get first item id
