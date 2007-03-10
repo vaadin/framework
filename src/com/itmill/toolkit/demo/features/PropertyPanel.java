@@ -55,10 +55,7 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
 	private Button setButton = new Button("Set", this);
 
 	private Button discardButton = new Button("Discard changes", this);
-
-	private Button showAllProperties = new Button("List of All Properties",
-			this);
-
+	
 	private Table allProperties = new Table();
 
 	private Object objectToConfigure;
@@ -79,7 +76,7 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
 
 		// Control buttons
 		OrderedLayout buttons = new OrderedLayout(
-				OrderedLayout.ORIENTATION_VERTICAL);
+				OrderedLayout.ORIENTATION_HORIZONTAL);
 		buttons.addComponent(setButton);
 		buttons.addComponent(discardButton);
 		addComponent(buttons);
@@ -96,9 +93,6 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
 			addComponentContainerProperties();
 
 		// The list of all properties
-		addComponent(showAllProperties);
-		showAllProperties.setSwitchMode(true);
-		allProperties.setVisible(false);
 		allProperties.addContainerProperty("Name", String.class, "");
 		allProperties.addContainerProperty("Type", String.class, "");
 		allProperties.addContainerProperty("R/W", String.class, "");
@@ -106,8 +100,8 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
 		allProperties.setColumnAlignments(new String[] { Table.ALIGN_LEFT,
 				Table.ALIGN_LEFT, Table.ALIGN_CENTER, Table.ALIGN_CENTER });
 		allProperties.setColumnHeaderMode(Table.COLUMN_HEADER_MODE_ID);
+		allProperties.setPageLength(0);
 		updatePropertyList();
-		addComponent(allProperties);
 	}
 
 	/** Add a formful of properties to property panel */
@@ -146,11 +140,6 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
 				((Form) i.next()).discard();
 		}
 
-		// Show property list
-		if (event.getButton() == showAllProperties) {
-			allProperties.setVisible(((Boolean) showAllProperties.getValue())
-					.booleanValue());
-		}
 	}
 
 	/** Recreate property list contents */
@@ -463,5 +452,9 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
 				return af;
 		}
 		return null;
+	}
+
+	public Table getAllProperties() {
+		return allProperties;
 	}
 }

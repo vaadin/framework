@@ -117,6 +117,9 @@ public abstract class Feature extends CustomComponent {
 
 			ts.addTab(mainLayout, "Description", null);
 		}
+		
+		// Properties table tab
+		ts.addTab(getPropertyPanel().getAllProperties(), "Properties", null);
 
 		// Javadoc tab
 		if (!javadoc.getValue().equals(""))
@@ -134,7 +137,7 @@ public abstract class Feature extends CustomComponent {
 					Label.CONTENT_PREFORMATTED));
 			ts.addTab(l, "Code Sample", null);
 		}
-
+		
 		layout.addComponent(ts);
 
 	}
