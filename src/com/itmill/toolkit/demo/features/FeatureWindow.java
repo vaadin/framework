@@ -29,8 +29,9 @@
 package com.itmill.toolkit.demo.features;
 
 import com.itmill.toolkit.ui.*;
+import com.itmill.toolkit.ui.Window.CloseEvent;
 
-public class FeatureWindow extends Feature {
+public class FeatureWindow extends Feature implements Window.CloseListener {
 	Button addButton = new Button("Add to application", this, "addWin");
 
 	Button removeButton = new Button("Remove from application", this, "delWin");
@@ -49,6 +50,7 @@ public class FeatureWindow extends Feature {
 		OrderedLayout layoutUpper = new OrderedLayout();
 		OrderedLayout layoutLower = new OrderedLayout();
 		demoWindow = new Window("Feature Test Window");
+		demoWindow.addListener(this);
 
 		layoutUpper.addComponent(addButton);
 		layoutUpper.addComponent(removeButton);
@@ -127,6 +129,7 @@ public class FeatureWindow extends Feature {
 						Label.CONTENT_XHTML));
 
 		windowProperties.getField("name").setReadOnly(true);
+		demoWindow.setVisible(true);
 		updateWinStatus();
 	}
 
@@ -144,5 +147,9 @@ public class FeatureWindow extends Feature {
 			addButton.setEnabled(false);
 			removeButton.setEnabled(true);
 		}
+	}
+
+	public void windowClose(CloseEvent e) {
+		delWin();
 	}
 }
