@@ -45,11 +45,15 @@ public class FeatureTable extends Feature implements Action.Handler {
 			"Smith", "Jones", "Beck", "Sheridan", "Picard", "Hill", "Fielding",
 			"Einstein" };
 
-	private static final String[] eyecolors = new String[] { "Blue", "Green",
-			"Brown" };
+	private static final String[] title = new String[] { "Project Manager",
+			"Marketing Manager", "Sales Manager", "Trainer", "IT Support",
+			"Account Manager", "Customer Support", "Testing Engineer",
+			"Software Designer", "Programmer", "Consultant" };
 
-	private static final String[] haircolors = new String[] { "Brown", "Black",
-			"Red", "Blonde" };
+	private static final String[] unit = new String[] { "Tokyo", "Mexico City",
+			"Seoul", "New York", "Sao Paulo", "Bombay", "Delhi", "Shanghai",
+			"Los Angeles", "London", "Bangalore", "Hong Kong", "Madrid",
+			"Milano", "Beijing", "Paris", "Moscow", "Helsinki" };
 
 	private Table t;
 
@@ -75,20 +79,19 @@ public class FeatureTable extends Feature implements Action.Handler {
 		OrderedLayout l = new OrderedLayout();
 
 		// Sample table
-		t = new Table("Most Wanted Persons List");
+		t = new Table("Corporate Employees");
 		t.setPageLength(10);
 		l.addComponent(t);
 
 		// Add columns to table
 		t.addContainerProperty("Firstname", String.class, "");
 		t.addContainerProperty("Lastname", String.class, "");
-		t.addContainerProperty("Age", String.class, "");
-		t.addContainerProperty("Eyecolor", String.class, "");
-		t.addContainerProperty("Haircolor", String.class, "");
-		
+		t.addContainerProperty("Title", String.class, "");
+		t.addContainerProperty("Unit", String.class, "");
+
 		// set alignments to demonstrate features
-		t.setColumnAlignment("Age", Table.ALIGN_CENTER);
-		t.setColumnAlignment("Haircolor", Table.ALIGN_RIGHT);
+		t.setColumnAlignment("Title", Table.ALIGN_CENTER);
+		t.setColumnAlignment("Unit", Table.ALIGN_RIGHT);
 
 		// Add random rows to table
 		for (int j = 0; j < 300; j++) {
@@ -97,9 +100,8 @@ public class FeatureTable extends Feature implements Action.Handler {
 							new Object[] {
 									firstnames[(int) (Math.random() * (firstnames.length - 1))],
 									lastnames[(int) (Math.random() * (lastnames.length - 1))],
-									new Integer((int) (Math.random() * 80)),
-									eyecolors[(int) (Math.random() * 3)],
-									haircolors[(int) (Math.random() * 4)] },
+									title[(int) (Math.random() * title.length)],
+									unit[(int) (Math.random() * unit.length)] },
 							new Integer(j));
 		}
 
@@ -129,13 +131,13 @@ public class FeatureTable extends Feature implements Action.Handler {
 				new Integer(Table.ROW_HEADER_MODE_PROPERTY) }, new Object[] {
 				"Explicit", "Explicit defaults ID", "Hidden", "Icon only",
 				"ID", "Index", "Item", "Property" });
-		
+
 		Select themes = (Select) propertyPanel.getField("style");
 		themes.addItem("list").getItemProperty(
-		themes.getItemCaptionPropertyId()).setValue("list");
+				themes.getItemCaptionPropertyId()).setValue("list");
 		themes.addItem("paging").getItemProperty(
-		themes.getItemCaptionPropertyId()).setValue("paging");
-		 
+				themes.getItemCaptionPropertyId()).setValue("paging");
+
 		propertyPanel.addProperties("Table Properties", ap);
 
 		// Set first name as item caption propertyId in cas somebody selecs it
@@ -144,8 +146,7 @@ public class FeatureTable extends Feature implements Action.Handler {
 		// this overrides previous
 		t.setRowHeaderMode(Table.ROW_HEADER_MODE_INDEX);
 		t.setColumnHeaderMode(Table.COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID);
-		
-		
+
 		t.setColumnCollapsingAllowed(true);
 		t.setColumnReorderingAllowed(true);
 		t.setSelectable(true);
@@ -157,22 +158,21 @@ public class FeatureTable extends Feature implements Action.Handler {
 
 	protected String getExampleSrc() {
 		return "// Sample table\n"
-				+ "t = new Table(\"Most Wanted Persons List\");\n"
+				+ "t = new Table(\"Corporate Employees\");\n"
 				+ "t.setPageLength(10);\n\n"
 				+ "// Add columns to table\n"
 				+ "t.addContainerProperty(\"Firstname\", String.class, \"\");\n"
 				+ "t.addContainerProperty(\"Lastname\", String.class, \"\");\n"
 				+ "t.addContainerProperty(\"Age\", String.class, \"\");\n"
-				+ "t.addContainerProperty(\"Eyecolor\", String.class, \"\");\n"
-				+ "t.addContainerProperty(\"Haircolor\", String.class, \"\");\n\n"
+				+ "t.addContainerProperty(\"Title\", String.class, \"\");\n"
+				+ "t.addContainerProperty(\"Unit\", String.class, \"\");\n\n"
 				+ "// Add random rows to table\n"
 				+ "for (int j = 0; j < 50; j++) {\n" + "	t.addItem(\n"
 				+ "		new Object[] {\n"
 				+ "			firstnames[(int) (Math.random() * 9)],\n"
 				+ "			lastnames[(int) (Math.random() * 9)],\n"
-				+ "			new Integer((int) (Math.random() * 80)),\n"
-				+ "			eyecolors[(int) (Math.random() * 3)],\n"
-				+ "			haircolors[(int) (Math.random() * 4)] },\n"
+				+ "			title[(int) (Math.random() * title.length)],\n"
+				+ "			unit[(int) (Math.random() * unit.length)] },\n"
 				+ "		new Integer(j));\n" + "}\n";
 	}
 

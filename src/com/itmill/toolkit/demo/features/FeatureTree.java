@@ -88,7 +88,7 @@ public class FeatureTree extends Feature implements Action.Handler {
 					+ lastnames[(int) (Math.random() * (lastnames.length - 1))];
 
 		// Create tree
-		t = new Tree("Family Tree");
+		t = new Tree("Organization Structure");
 		for (int i = 0; i < 100; i++) {
 			t.addItem(names[i]);
 			String parent = names[(int) (Math.random() * (names.length - 1))];
@@ -126,7 +126,7 @@ public class FeatureTree extends Feature implements Action.Handler {
 
 	protected String getExampleSrc() {
 		return "// Create tree\n"
-				+ "t = new Tree(\"Family Tree\");\n"
+				+ "t = new Tree(\"Organization Structure\");\n"
 				+ "for (int i = 0; i < 100; i++) {\n"
 				+ "	t.addItem(names[i]);\n"
 				+ "	String parent = names[(int) (Math.random() * (names.length - 1))];\n"
@@ -142,7 +142,7 @@ public class FeatureTree extends Feature implements Action.Handler {
 	protected String getDescriptionXHTML() {
 		return "A tree is a natural way to represent datasets that have"
 				+ " hierarchical relationships, such as filesystems, message "
-				+ "threads or, as in this example, family trees. IT Mill Toolkit features a versatile "
+				+ "threads or, as in this example, organization structure. IT Mill Toolkit features a versatile "
 				+ "and powerful Tree component that works much like the tree components "
 				+ "of most modern operating systems."
 				+ "<br /><br />The most prominent use of the Tree component is to "

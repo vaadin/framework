@@ -50,7 +50,7 @@ public class FeatureSelect extends Feature {
 
 		OrderedLayout l = new OrderedLayout();
 
-		Select s = new Select("Select Person");
+		Select s = new Select("Select employee");
 		for (int i = 0; i < 50; i++)
 			s
 					.addItem(firstnames[(int) (Math.random() * (firstnames.length - 1))]
