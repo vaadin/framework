@@ -567,7 +567,7 @@ public class ApplicationServlet extends HttpServlet implements
 				// try to detect it
 				WebBrowser wb = WebBrowserProbe.getTerminalType(request
 						.getSession());
-				if ( "detect".equals(unhandledParameters.get("renderingMode"))  
+				if ("detect".equals(unhandledParameters.get("renderingMode"))
 						|| wb.getRenderingMode() == WebBrowser.RENDERING_MODE_UNDEFINED) {
 					String themeName = application.getTheme();
 					if (themeName == null)
@@ -591,7 +591,7 @@ public class ApplicationServlet extends HttpServlet implements
 							.get("renderingMode"))[0];
 					if (renderingMode.equals("html")) {
 						wb.setRenderingMode(WebBrowser.RENDERING_MODE_HTML);
-					} else if(renderingMode.equals("ajax")){
+					} else if (renderingMode.equals("ajax")) {
 						wb.setRenderingMode(WebBrowser.RENDERING_MODE_AJAX);
 					}
 				}
@@ -1118,6 +1118,9 @@ public class ApplicationServlet extends HttpServlet implements
 		if (resourcePath == null)
 			resourcePath = request.getContextPath() + request.getServletPath()
 					+ RESOURCE_URI;
+
+		// WebSphere Application Server related fix
+		resourcePath = resourcePath.replaceAll("//", "/");
 
 		String resourceId = request.getPathInfo();
 
