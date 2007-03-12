@@ -94,6 +94,13 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
 	/** Focused component */
 	private Focusable focusedComponent;
+	
+	/** Distance of Window top border in pixels from top border of the containing (main window) or -1 if unspecified */
+	private int positionY = -1;
+
+	/** Distance of Window left border in pixels from left border of the containing (main window) or -1 if unspecified */
+	private int positionX = -1;
+
 
 	/* ********************************************************************* */
 
@@ -370,6 +377,13 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 		// Contents of the window panel is painted
 		super.paintContent(target);
 
+		// Window position
+		target.addVariable(this, "positionx", getPositionX());
+		target.addVariable(this, "positiony", getPositionY());
+		
+		// Window closing
+		target.addVariable(this, "close", false);
+
 		// Set focused component
 		if (this.focusedComponent != null)
 			target.addVariable(this, "focused", ""
@@ -644,7 +658,26 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 				// We ignore invalid focusable ids
 			}
 		}
-
+		
+		// Positioning
+		Integer positionx = (Integer) variables.get("positionx");
+		if (positionx != null) {
+			int x = positionx.intValue();
+			setPositionX(x<0?-1:x);
+		}
+		Integer positiony = (Integer) variables.get("positiony");
+		if (positiony != null) {
+			int y = positiony.intValue();
+			setPositionY(y<0?-1:y);
+		}
+			
+		// Closing
+		Boolean close = (Boolean) variables.get("close");
+		if (close != null && close.booleanValue()) {
+			
+			// TODO We should also throw an event to listeners
+			this.setVisible(false);
+		}
 	}
 
 	/**
@@ -699,5 +732,39 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 		WeakReference ref = (WeakReference) focusableComponents.get(id);
 		ref.clear();
 		focusableComponents.remove(id);
+	}
+
+	/** Get the distance of Window left border in pixels from left border of the containing (main window).
+	 * @return Distance of Window left border in pixels from left border of the containing (main window). or -1 if unspecified.
+ 	 * @since 4.0.0
+	 */
+	public int getPositionX() {
+		return positionX;
+	}
+
+	/** Set the distance of Window left border in pixels from left border of the containing (main window).
+	 * @param positionX Distance of Window left border in pixels from left border of the containing (main window). or -1 if unspecified 
+ 	 * @since 4.0.0
+ 	 */
+	public void setPositionX(int positionX) {
+		this.positionX = positionX;
+	}
+
+	/** Get the distance of Window top border in pixels from top border of the containing (main window).
+	 * @return Distance of Window top border in pixels from top border of the containing (main window). or -1 if unspecified 
+	 * 
+	 * @since 4.0.0
+	 */
+	public int getPositionY() {
+		return positionY;
+	}
+
+	/** Set the distance of Window top border in pixels from top border of the containing (main window).
+	 * @param positionY of Window top border in pixels from top border of the containing (main window). or -1 if unspecified 
+	 * 
+	 * @since 4.0.0
+	 */
+	public void setPositionY(int positionY) {
+		this.positionY = positionY;
 	}
 }
