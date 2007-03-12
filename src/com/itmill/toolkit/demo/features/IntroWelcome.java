@@ -58,7 +58,7 @@ public class IntroWelcome extends Feature {
 			+ " <a href=\"http://www.itmill.com\" target=\"_new\">www.itmill.com</a>.";
 
 	private static final String WELCOME_TEXT_LOWER = ""
-			+ "This area contains the selected component's description, API documentation"
+			+ "This area contains the selected component's description, list of properties, javadoc"
 			+ " and optional code sample."
 			+ "<br /><br />To see how simple it is to create IT Mill Toolkit application,"
 			+ " click <em>Code Sample</em> tab."
