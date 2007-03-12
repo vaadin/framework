@@ -55,10 +55,6 @@ public class FeatureWindow extends Feature implements Window.CloseListener {
 		layoutUpper.addComponent(addButton);
 		layoutUpper.addComponent(removeButton);
 
-		layoutLower.addComponent(new Label(
-				"Note: depending on your browser, you may have to "
-						+ "allow popups from this web site in order"
-						+ " to get this demo to work."));
 		updateWinStatus();
 
 		// Propertiesc
