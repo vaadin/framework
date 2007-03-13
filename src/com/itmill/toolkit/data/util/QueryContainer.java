@@ -1,30 +1,30 @@
 /* *************************************************************************
  
-                               IT Mill Toolkit 
+ IT Mill Toolkit 
 
-               Development of Browser User Interfaces Made Easy
+ Development of Browser User Interfaces Made Easy
 
-                    Copyright (C) 2000-2006 IT Mill Ltd
-                     
-   *************************************************************************
+ Copyright (C) 2000-2006 IT Mill Ltd
+ 
+ *************************************************************************
 
-   This product is distributed under commercial license that can be found
-   from the product package on license.pdf. Use of this product might 
-   require purchasing a commercial license from IT Mill Ltd. For guidelines 
-   on usage, see licensing-guidelines.html
+ This product is distributed under commercial license that can be found
+ from the product package on license.pdf. Use of this product might 
+ require purchasing a commercial license from IT Mill Ltd. For guidelines 
+ on usage, see licensing-guidelines.html
 
-   *************************************************************************
-   
-   For more information, contact:
-   
-   IT Mill Ltd                           phone: +358 2 4802 7180
-   Ruukinkatu 2-4                        fax:   +358 2 4802 7181
-   20540, Turku                          email:  info@itmill.com
-   Finland                               company www: www.itmill.com
-   
-   Primary source for information and releases: www.itmill.com
+ *************************************************************************
+ 
+ For more information, contact:
+ 
+ IT Mill Ltd                           phone: +358 2 4802 7180
+ Ruukinkatu 2-4                        fax:   +358 2 4802 7181
+ 20540, Turku                          email:  info@itmill.com
+ Finland                               company www: www.itmill.com
+ 
+ Primary source for information and releases: www.itmill.com
 
-   ********************************************************************** */
+ ********************************************************************** */
 
 package com.itmill.toolkit.data.util;
 
@@ -43,252 +43,305 @@ import com.itmill.toolkit.data.Item;
 import com.itmill.toolkit.data.Property;
 import com.itmill.toolkit.data.util.ObjectProperty;
 
-/** SQL query container.
- * Implementation of container interface for SQL tables accessed through
- * JDBC connection.
+/**
+ * SQL query container. Implementation of container interface for SQL tables
+ * accessed through JDBC connection.
  * 
  * @author IT Mill Ltd.
  * @version
  * @VERSION@
  * @since 4.0
  */
-public class QueryContainer implements Container, Container.Ordered, Container.Indexed {
+public class QueryContainer implements Container, Container.Ordered,
+		Container.Indexed {
 
-    String queryStatement;
+	// default ResultSet type
+	public static final int DEFAULT_RESULTSET_TYPE = ResultSet.TYPE_SCROLL_INSENSITIVE;
 
-    Connection connection;
+	// default ResultSet concurrency
+	public static final int DEFAULT_RESULTSET_CONCURRENCY = ResultSet.CONCUR_READ_ONLY;
 
-    ResultSet result;
+	private int resultSetType = DEFAULT_RESULTSET_TYPE;
 
-    Collection propertyIds;
+	private int resultSetConcurrency = DEFAULT_RESULTSET_CONCURRENCY;
 
-    HashMap propertyTypes = new HashMap();
+	String queryStatement;
 
-    int size = -1;
+	Connection connection;
 
-    Statement statement;
+	ResultSet result;
 
-    /**
-     * Constructor for Query.
-     */
-    public QueryContainer(String queryStatement, Connection connection)
-            throws SQLException {
-        this.connection = connection;
-        this.queryStatement = queryStatement;
-        refresh();
-        ResultSetMetaData metadata;
-        metadata = result.getMetaData();
-        int count = metadata.getColumnCount();
-        ArrayList list = new ArrayList(count);
-        for (int i = 1; i <= count; i++) {
-            String columnName = metadata.getColumnName(i);
-            list.add(columnName);
-            Property p = getContainerProperty(new Integer(1), columnName);
-            propertyTypes.put(columnName, p == null ? Object.class : p
-                    .getType());
-        }
-        propertyIds = Collections.unmodifiableCollection(list);
-    }
+	Collection propertyIds;
 
-    public void refresh() throws SQLException {
-        close();
-        statement = connection.createStatement();
-        result = statement.executeQuery(queryStatement);
-        result.last();
-        size = result.getRow();
-    }
+	HashMap propertyTypes = new HashMap();
 
-    public void close() throws SQLException {
-        if (statement != null)
-            statement.close();
-        statement = null;
-    }
+	int size = -1;
 
-    public Item getItem(Object id) {
-        return new Row(id);
-    }
+	Statement statement;
 
-    public Collection getContainerPropertyIds() {
-        return propertyIds;
-    }
+	/**
+	 * Create new QueryContainer with specific ResultSet type and concurrency.
+	 * 
+	 * @param queryStatement
+	 * @param connection
+	 * @param resultSetType
+	 * @param resultSetConcurrency
+	 * @throws SQLException
+	 */
+	public QueryContainer(String queryStatement, Connection connection,
+			int resultSetType, int resultSetConcurrency) throws SQLException {
+		this.queryStatement = queryStatement;
+		this.connection = connection;
+		this.resultSetType = resultSetType;
+		this.resultSetConcurrency = resultSetConcurrency;
+		init();
+	}
 
-    public Collection getItemIds() {
-        Collection c = new ArrayList(size);
-        for (int i = 1; i <= size; i++)
-            c.add(new Integer(i));
-        return c;
-    }
+	/**
+	 * Create new QueryContainer.
+	 * 
+	 * @param queryStatement
+	 * @param connection
+	 * @throws SQLException
+	 */
+	public QueryContainer(String queryStatement, Connection connection)
+			throws SQLException {
+		this(queryStatement, connection, DEFAULT_RESULTSET_TYPE,
+				DEFAULT_RESULTSET_CONCURRENCY);
+	}
 
-    public synchronized Property getContainerProperty(Object itemId,
-            Object propertyId) {
-        if (!(itemId instanceof Integer && propertyId instanceof String))
-            return null;
-        Object value;
-        try {
-            result.absolute(((Integer) itemId).intValue());
-            value = result.getObject((String) propertyId);
-        } catch (Exception e) {
-            return null;
-        }
+	private void init() throws SQLException {
+		refresh();
+		ResultSetMetaData metadata;
+		metadata = result.getMetaData();
+		int count = metadata.getColumnCount();
+		ArrayList list = new ArrayList(count);
+		for (int i = 1; i <= count; i++) {
+			String columnName = metadata.getColumnName(i);
+			list.add(columnName);
+			Property p = getContainerProperty(new Integer(1), columnName);
+			propertyTypes.put(columnName, p == null ? Object.class : p
+					.getType());
+		}
+		propertyIds = Collections.unmodifiableCollection(list);
+	}
 
-        // Also deal with null values from the DB
-        return new ObjectProperty(value != null ? value : new String(""));
-    }
+	/**
+	 * Refresh QueryContainer items from the database.
+	 * 
+	 * @throws SQLException
+	 */
+	public void refresh() throws SQLException {
+		close();
+		statement = connection.createStatement(resultSetType,
+				resultSetConcurrency);
+		result = statement.executeQuery(queryStatement);
+		result.last();
+		size = result.getRow();
+	}
 
-    public Class getType(Object id) {
-        return (Class) propertyTypes.get(id);
-    }
+	/**
+	 * Close QueryContainer. Closes SQL statement if open.
+	 * 
+	 * @throws SQLException
+	 */
+	public void close() throws SQLException {
+		if (statement != null)
+			statement.close();
+		statement = null;
+	}
 
-    public int size() {
-        return size;
-    }
+	/**
+	 * Get Item from QueryContainer with given id.
+	 * 
+	 * @param Object
+	 *            id
+	 */
+	public Item getItem(Object id) {
+		return new Row(id);
+	}
 
-    public boolean containsId(Object id) {
-        if (!(id instanceof Integer))
-            return false;
-        int i = ((Integer) id).intValue();
-        if (i < 1)
-            return false;
-        if (i > size)
-            return false;
-        return true;
-    }
+	public Collection getContainerPropertyIds() {
+		return propertyIds;
+	}
 
-    public Item addItem(Object arg0) throws UnsupportedOperationException {
-        throw new UnsupportedOperationException();
-    }
+	public Collection getItemIds() {
+		Collection c = new ArrayList(size);
+		for (int i = 1; i <= size; i++)
+			c.add(new Integer(i));
+		return c;
+	}
 
-    public Object addItem() throws UnsupportedOperationException {
-        throw new UnsupportedOperationException();
-    }
+	public synchronized Property getContainerProperty(Object itemId,
+			Object propertyId) {
+		if (!(itemId instanceof Integer && propertyId instanceof String))
+			return null;
+		Object value;
+		try {
+			result.absolute(((Integer) itemId).intValue());
+			value = result.getObject((String) propertyId);
+		} catch (Exception e) {
+			return null;
+		}
 
-    public boolean removeItem(Object arg0) throws UnsupportedOperationException {
-        throw new UnsupportedOperationException();
-    }
+		// Handle also null values from the database
+		return new ObjectProperty(value != null ? value : new String(""));
+	}
 
-    public boolean addContainerProperty(Object arg0, Class arg1, Object arg2)
-            throws UnsupportedOperationException {
-        throw new UnsupportedOperationException();
-    }
+	public Class getType(Object id) {
+		return (Class) propertyTypes.get(id);
+	}
 
-    public boolean removeContainerProperty(Object arg0)
-            throws UnsupportedOperationException {
-        throw new UnsupportedOperationException();
-    }
+	public int size() {
+		return size;
+	}
 
-    public boolean removeAllItems() throws UnsupportedOperationException {
-        throw new UnsupportedOperationException();
-    }
+	public boolean containsId(Object id) {
+		if (!(id instanceof Integer))
+			return false;
+		int i = ((Integer) id).intValue();
+		if (i < 1)
+			return false;
+		if (i > size)
+			return false;
+		return true;
+	}
 
-    public Item addItemAfter(Object arg0, Object arg1)
-            throws UnsupportedOperationException {
-        throw new UnsupportedOperationException();
-    }
+	public Item addItem(Object arg0) throws UnsupportedOperationException {
+		throw new UnsupportedOperationException();
+	}
 
-    public Object addItemAfter(Object arg0)
-            throws UnsupportedOperationException {
-        throw new UnsupportedOperationException();
-    }
+	public Object addItem() throws UnsupportedOperationException {
+		throw new UnsupportedOperationException();
+	}
 
-    public Object firstItemId() {
-        if (size < 1)
-            return null;
-        return new Integer(1);
-    }
+	public boolean removeItem(Object arg0) throws UnsupportedOperationException {
+		throw new UnsupportedOperationException();
+	}
 
-    public boolean isFirstId(Object id) {
-        return size > 0 && (id instanceof Integer)
-                && ((Integer) id).intValue() == 1;
-    }
+	public boolean addContainerProperty(Object arg0, Class arg1, Object arg2)
+			throws UnsupportedOperationException {
+		throw new UnsupportedOperationException();
+	}
 
-    public boolean isLastId(Object id) {
-        return size > 0 && (id instanceof Integer)
-                && ((Integer) id).intValue() == size;
-    }
+	public boolean removeContainerProperty(Object arg0)
+			throws UnsupportedOperationException {
+		throw new UnsupportedOperationException();
+	}
 
-    public Object lastItemId() {
-        if (size < 1)
-            return null;
-        return new Integer(size);
-    }
+	public boolean removeAllItems() throws UnsupportedOperationException {
+		throw new UnsupportedOperationException();
+	}
 
-    public Object nextItemId(Object id) {
-        if (size < 1 || !(id instanceof Integer))
-            return null;
-        int i = ((Integer) id).intValue();
-        if (i >= size)
-            return null;
-        return new Integer(i + 1);
-    }
+	public Item addItemAfter(Object arg0, Object arg1)
+			throws UnsupportedOperationException {
+		throw new UnsupportedOperationException();
+	}
 
-    public Object prevItemId(Object id) {
-        if (size < 1 || !(id instanceof Integer))
-            return null;
-        int i = ((Integer) id).intValue();
-        if (i <= 1)
-            return null;
-        return new Integer(i - 1);
-    }
+	public Object addItemAfter(Object arg0)
+			throws UnsupportedOperationException {
+		throw new UnsupportedOperationException();
+	}
 
-    /** Query result row */
-    class Row implements Item {
+	public Object firstItemId() {
+		if (size < 1)
+			return null;
+		return new Integer(1);
+	}
 
-        Object id;
+	public boolean isFirstId(Object id) {
+		return size > 0 && (id instanceof Integer)
+				&& ((Integer) id).intValue() == 1;
+	}
 
-        private Row(Object rowId) {
-            id = rowId;
-        }
+	public boolean isLastId(Object id) {
+		return size > 0 && (id instanceof Integer)
+				&& ((Integer) id).intValue() == size;
+	}
 
-        public boolean addItemProperty(Object arg0, Property arg1)
-                throws UnsupportedOperationException {
-            throw new UnsupportedOperationException();
-        }
+	public Object lastItemId() {
+		if (size < 1)
+			return null;
+		return new Integer(size);
+	}
 
-        public Property getItemProperty(Object propertyId) {
-            return getContainerProperty(id, propertyId);
-        }
+	public Object nextItemId(Object id) {
+		if (size < 1 || !(id instanceof Integer))
+			return null;
+		int i = ((Integer) id).intValue();
+		if (i >= size)
+			return null;
+		return new Integer(i + 1);
+	}
 
-        public Collection getItemPropertyIds() {
-            return propertyIds;
-        }
+	public Object prevItemId(Object id) {
+		if (size < 1 || !(id instanceof Integer))
+			return null;
+		int i = ((Integer) id).intValue();
+		if (i <= 1)
+			return null;
+		return new Integer(i - 1);
+	}
 
-        public boolean removeItemProperty(Object arg0)
-                throws UnsupportedOperationException {
-            throw new UnsupportedOperationException();
-        }
+	/** Query result row */
+	class Row implements Item {
 
-    }
+		Object id;
 
-    public void finalize() {
-        try {
-            close();
-        } catch (SQLException ignored) {
+		private Row(Object rowId) {
+			id = rowId;
+		}
 
-        }
-    }
+		public boolean addItemProperty(Object arg0, Property arg1)
+				throws UnsupportedOperationException {
+			throw new UnsupportedOperationException();
+		}
 
-    public Item addItemAt(int arg0, Object arg1)
-            throws UnsupportedOperationException {
-        throw new UnsupportedOperationException();
-    }
+		public Property getItemProperty(Object propertyId) {
+			return getContainerProperty(id, propertyId);
+		}
 
-    public Object addItemAt(int arg0) throws UnsupportedOperationException {
-        throw new UnsupportedOperationException();
-    }
+		public Collection getItemPropertyIds() {
+			return propertyIds;
+		}
 
-    public Object getIdByIndex(int index) {
-        if (size < 1 || index < 0 || index >= size)
-            return null;
-        return new Integer(index + 1);
-    }
+		public boolean removeItemProperty(Object arg0)
+				throws UnsupportedOperationException {
+			throw new UnsupportedOperationException();
+		}
 
-    public int indexOfId(Object id) {
-        if (size < 1 || !(id instanceof Integer))
-            return -1;
-        int i = ((Integer) id).intValue();
-        if (i >= size || i < 1)
-            return -1;
-        return i - 1;
-    }
+	}
+
+	public void finalize() {
+		try {
+			close();
+		} catch (SQLException ignored) {
+
+		}
+	}
+
+	public Item addItemAt(int arg0, Object arg1)
+			throws UnsupportedOperationException {
+		throw new UnsupportedOperationException();
+	}
+
+	public Object addItemAt(int arg0) throws UnsupportedOperationException {
+		throw new UnsupportedOperationException();
+	}
+
+	public Object getIdByIndex(int index) {
+		if (size < 1 || index < 0 || index >= size)
+			return null;
+		return new Integer(index + 1);
+	}
+
+	public int indexOfId(Object id) {
+		if (size < 1 || !(id instanceof Integer))
+			return -1;
+		int i = ((Integer) id).intValue();
+		if (i >= size || i < 1)
+			return -1;
+		return i - 1;
+	}
 
 }
