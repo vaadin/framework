@@ -314,7 +314,10 @@ public class ApplicationServlet extends HttpServlet implements
 		// Check that at least one themesource was loaded
 		if (this.themeSource.getThemes().size() <= 0) {
 			throw new ServletException(
-					"No themes found in specified themesources.");
+					"No themes found in specified themesources. "
+							+ "You can provide themes by e.g. adding "
+							+ "itmill-toolkit-x.y.z-themes.jar "
+							+ "to WEB-INF/lib directory.");
 		}
 
 		// Initialize the transformer factory, if not initialized
@@ -1364,8 +1367,15 @@ public class ApplicationServlet extends HttpServlet implements
 		if (!license.hasBeenRead()) {
 			InputStream lis;
 			try {
-				lis = getServletContext().getResource(
-						"/WEB-INF/itmill-toolkit-license.xml").openStream();
+				URL url = getServletContext().getResource(
+						"/WEB-INF/itmill-toolkit-license.xml");
+				if (url == null) {
+					throw new RuntimeException(
+							"License file could not be read. "
+									+ "You can install it to "
+									+ "WEB-INF/itmill-toolkit-license.xml.");
+				}
+				lis = url.openStream();
 				license.readLicenseFile(lis);
 			} catch (MalformedURLException e) {
 				// This should not happen
