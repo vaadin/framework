@@ -29,6 +29,7 @@
 package com.itmill.toolkit.demo.features;
 
 import com.itmill.toolkit.terminal.web.ApplicationServlet;
+import com.itmill.toolkit.terminal.web.WebBrowser;
 import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.Form;
 import com.itmill.toolkit.ui.Label;
@@ -119,8 +120,10 @@ public class IntroWelcome extends Feature {
 	 * @see com.itmill.toolkit.demo.features.Feature#getDescriptionXHTML()
 	 */
 	protected String getDescriptionXHTML() {
+		WebBrowser wb = (WebBrowser) getWindow().getTerminal();
 		return WELCOME_TEXT_LOWER + "<br /><br />IT Mill Toolkit version: "
-				+ ApplicationServlet.VERSION;
+				+ ApplicationServlet.VERSION + 
+				(wb != null ? "<br />Browser: " + wb.getBrowserApplication(): "");
 	}
 
 	protected String getImage() {
