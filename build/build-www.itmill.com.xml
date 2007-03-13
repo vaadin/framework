@@ -65,7 +65,16 @@
 				<exclude name="**/.svn" />
 			</fileset>
 		</copy>
-	</target>
+		<!-- rename to JSP -->
+		 <move todir="build/result/www.itmill.com/manual">
+			<fileset dir="build/result/www.itmill.com/manual">
+				<include name="*.html"/>
+			</fileset>
+			<mapper type="glob" from="*.html" to="*.jsp"/>
+		</move>
+		<!-- make a zip file -->
+		<zip destfile="build/result/www.itmill.com//manual.zip"	basedir="build/result/www.itmill.com/manual" />
+  </target>
 
 	<!-- Clean results - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	<target name="clean-all" depends="">
