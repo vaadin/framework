@@ -52,7 +52,7 @@ public abstract class Feature extends CustomComponent {
 	protected PropertyPanel propertyPanel;
 
 	private Label javadoc;
-	
+
 	private Label description;
 
 	/** Constuctor for the feature component */
@@ -119,7 +119,7 @@ public abstract class Feature extends CustomComponent {
 
 			ts.addTab(mainLayout, "Description", null);
 		}
-		
+
 		// Properties table tab
 		ts.addTab(getPropertyPanel().getAllProperties(), "Properties", null);
 
@@ -135,11 +135,10 @@ public abstract class Feature extends CustomComponent {
 				l.addComponent(new Label(
 						"<b>// " + getTitle() + " example</b>",
 						Label.CONTENT_XHTML));
-			l.addComponent(new Label(example,
-					Label.CONTENT_PREFORMATTED));
+			l.addComponent(new Label(example, Label.CONTENT_PREFORMATTED));
 			ts.addTab(l, "Code Sample", null);
 		}
-		
+
 		layout.addComponent(ts);
 
 	}
@@ -183,7 +182,7 @@ public abstract class Feature extends CustomComponent {
 	public void setPropsReminder(boolean propsReminder) {
 		this.propsReminder = propsReminder;
 	}
-	
+
 	public void updateDescription() {
 		String label = "";
 		label += getDescriptionXHTML();
