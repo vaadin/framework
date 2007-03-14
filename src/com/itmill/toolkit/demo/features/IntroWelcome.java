@@ -34,7 +34,6 @@ import java.util.Iterator;
 import java.util.Map;
 
 import com.itmill.toolkit.terminal.DownloadStream;
-import com.itmill.toolkit.terminal.ExternalResource;
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
 import com.itmill.toolkit.terminal.ParameterHandler;
@@ -44,7 +43,6 @@ import com.itmill.toolkit.terminal.web.WebBrowser;
 import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.Form;
 import com.itmill.toolkit.ui.Label;
-import com.itmill.toolkit.ui.Link;
 import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Panel;
 import com.itmill.toolkit.ui.Select;
