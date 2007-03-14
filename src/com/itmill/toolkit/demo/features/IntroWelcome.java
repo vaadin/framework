@@ -143,6 +143,14 @@ public class IntroWelcome extends Feature implements URIHandler,
 				super.getDescription().setValue(
 						description + "<br />Browser: "
 								+ webBrowser.getBrowserApplication());
+				try {
+					FeatureUtil.debug(getApplication().getUser().toString(),
+							"timestamp=[" + FeatureUtil.getTimestamp()
+									+ "] userAgent=["
+									+ webBrowser.getBrowserApplication() + "]");
+				} catch (Exception e) {
+					// ignored, should never happen
+				}
 			}
 		}
 		super.paint(target);

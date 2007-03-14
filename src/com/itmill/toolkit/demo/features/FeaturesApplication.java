@@ -33,6 +33,9 @@ import com.itmill.toolkit.ui.*;
 public class FeaturesApplication extends com.itmill.toolkit.Application {
 
 	public void init() {
+		if (getProperty("statistics") != null)
+			FeatureUtil.setStatistics(true);
+		setUser(new Long(System.currentTimeMillis()).toString());
 		Window main = new Window("IT Mill Toolkit Features Tour");
 		setMainWindow(main);
 		main.addComponent(new FeatureBrowser());
@@ -44,6 +47,8 @@ public class FeaturesApplication extends com.itmill.toolkit.Application {
 	public void terminalError(
 			com.itmill.toolkit.terminal.Terminal.ErrorEvent event) {
 		Throwable e = event.getThrowable();
+		FeatureUtil.debug(getUser().toString(), "terminalError: "
+				+ e.toString());
 		e.printStackTrace();
 	}
 

@@ -55,7 +55,7 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
 	private Button setButton = new Button("Set", this);
 
 	private Button discardButton = new Button("Discard changes", this);
-	
+
 	private Table allProperties = new Table();
 
 	private Object objectToConfigure;
@@ -123,23 +123,6 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
 		// Maintain property lists
 		forms.add(properties);
 		updatePropertyList();
-	}
-
-	/** Handle all button clicks for this panel */
-	public void buttonClick(Button.ClickEvent event) {
-
-		// Commit all changed on all forms
-		if (event.getButton() == setButton) {
-			for (Iterator i = forms.iterator(); i.hasNext();)
-				((Form) i.next()).commit();
-		}
-
-		// Discard all changed on all forms
-		if (event.getButton() == discardButton) {
-			for (Iterator i = forms.iterator(); i.hasNext();)
-				((Form) i.next()).discard();
-		}
-
 	}
 
 	/** Recreate property list contents */
@@ -351,6 +334,16 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
 	/** Value change listener for listening selections */
 	public void valueChange(Property.ValueChangeEvent event) {
 
+		// FIXME: navigation statistics
+		try {
+			FeatureUtil.debug(getApplication().getUser().toString(),
+					"valueChange "
+							+ ((AbstractComponent) event.getProperty())
+									.getTag() + ", " + event.getProperty());
+		} catch (Exception e) {
+			// ignored, should never happen
+		}
+
 		// Adding components to component container
 		if (event.getProperty() == addComponent) {
 			String value = (String) addComponent.getValue();
@@ -414,6 +407,31 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
 				multiselect.setVisible(true);
 			}
 		}
+	}
+
+	/** Handle all button clicks for this panel */
+	public void buttonClick(Button.ClickEvent event) {
+		// FIXME: navigation statistics
+		try {
+			FeatureUtil.debug(getApplication().getUser().toString(),
+					"buttonClick " + event.getButton().getTag() + ", "
+							+ event.getButton().getCaption() + ", "
+							+ event.getButton().getValue());
+		} catch (Exception e) {
+			// ignored, should never happen
+		}
+		// Commit all changed on all forms
+		if (event.getButton() == setButton) {
+			for (Iterator i = forms.iterator(); i.hasNext();)
+				((Form) i.next()).commit();
+		}
+
+		// Discard all changed on all forms
+		if (event.getButton() == discardButton) {
+			for (Iterator i = forms.iterator(); i.hasNext();)
+				((Form) i.next()).discard();
+		}
+
 	}
 
 	/**

@@ -188,6 +188,22 @@ public class FeatureBrowser extends CustomComponent implements
 
 	public void valueChange(Property.ValueChangeEvent event) {
 
+		// FIXME: navigation statistics
+		try {
+			if ((event.getProperty().toString() == null)
+					&& ((AbstractComponent) event.getProperty()).getTag()
+							.equals("tree")) {
+				// ignore tree initialization
+			} else {
+				FeatureUtil.debug(getApplication().getUser().toString(),
+						"valueChange "
+								+ ((AbstractComponent) event.getProperty())
+										.getTag() + ", " + event.getProperty());
+			}
+		} catch (Exception e) {
+			// ignored, should never happen
+		}
+
 		// Change feature
 		if (event.getProperty() == features) {
 			Object id = features.getValue();
@@ -224,6 +240,16 @@ public class FeatureBrowser extends CustomComponent implements
 	}
 
 	public void buttonClick(ClickEvent event) {
+		// FIXME: navigation statistics
+		try {
+			FeatureUtil.debug(getApplication().getUser().toString(),
+					"buttonClick " + event.getButton().getTag() + ", "
+							+ event.getButton().getCaption() + ", "
+							+ event.getButton().getValue());
+		} catch (Exception e) {
+			// ignored, should never happen
+		}
+
 		if (properties != null)
 			properties.setVisible(((Boolean) propertiesSelect.getValue())
 					.booleanValue());
