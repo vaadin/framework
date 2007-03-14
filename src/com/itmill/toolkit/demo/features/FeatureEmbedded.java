@@ -89,7 +89,7 @@ public class FeatureEmbedded extends Feature {
 	}
 
 	protected String getExampleSrc() {
-		return "// LOad image from jpg-file, that is in the same package with the application\n"
+		return "// Load image from jpg-file, that is in the same package with the application\n"
 				+ "Embedded e = new Embedded(\"Image title\",\n"
 				+ "   new ClassResource(\"image.jpg\", getApplication()));";
 	}
