@@ -28,16 +28,33 @@
 
 package com.itmill.toolkit.demo.features;
 
+import java.net.URL;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.Map;
+
+import com.itmill.toolkit.terminal.DownloadStream;
+import com.itmill.toolkit.terminal.ExternalResource;
+import com.itmill.toolkit.terminal.PaintException;
+import com.itmill.toolkit.terminal.PaintTarget;
+import com.itmill.toolkit.terminal.ParameterHandler;
+import com.itmill.toolkit.terminal.URIHandler;
 import com.itmill.toolkit.terminal.web.ApplicationServlet;
 import com.itmill.toolkit.terminal.web.WebBrowser;
 import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.Form;
 import com.itmill.toolkit.ui.Label;
+import com.itmill.toolkit.ui.Link;
 import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Panel;
 import com.itmill.toolkit.ui.Select;
 
-public class IntroWelcome extends Feature {
+public class IntroWelcome extends Feature implements URIHandler,
+		ParameterHandler {
+
+	private WebBrowser webBrowser = null;
+
+	Panel panel = new Panel();
 
 	private static final String WELCOME_TEXT_UPPER = ""
 			+ "This application lets you view and play with some features of "
@@ -60,12 +77,14 @@ public class IntroWelcome extends Feature {
 
 	private static final String WELCOME_TEXT_LOWER = ""
 			+ "This area contains the selected component's description, list of properties, javadoc"
-			+ " and optional code sample."
-			+ "<br /><br />To see how simple it is to create IT Mill Toolkit application,"
-			+ " click <em>Code Sample</em> tab."
-			+ "<br /><br />Start your tour now by selecting features from the list"
+			+ " and optional code sample. "
+			+ "Start your tour now by selecting features from the list"
 			+ " on the left and remember to experiment with the <b>Properties panel</b>"
 			+ " located at the top right corner area.";
+
+	private String description = WELCOME_TEXT_LOWER
+			+ "<br /><br />IT Mill Toolkit version: "
+			+ ApplicationServlet.VERSION;
 
 	public IntroWelcome() {
 		super();
@@ -75,7 +94,6 @@ public class IntroWelcome extends Feature {
 
 		OrderedLayout l = new OrderedLayout();
 
-		Panel panel = new Panel();
 		panel.setCaption("Welcome to the IT Mill Toolkit feature tour!");
 		l.addComponent(panel);
 
@@ -85,8 +103,6 @@ public class IntroWelcome extends Feature {
 		label.setContentMode(Label.CONTENT_XHTML);
 		label.setValue(WELCOME_TEXT_UPPER);
 
-		// Propertiesversion.setValue("IT Mill Toolkit version:
-		// "+ApplicationServlet.VERSION);
 		propertyPanel = new PropertyPanel(panel);
 		Form ap = propertyPanel.createBeanPropertySet(new String[] { "width",
 				"height" });
@@ -116,14 +132,22 @@ public class IntroWelcome extends Feature {
 				+ "    }\n" + "}\n";
 	}
 
-	/**
-	 * @see com.itmill.toolkit.demo.features.Feature#getDescriptionXHTML()
-	 */
+	// not ready yet to give description, see paint instead
 	protected String getDescriptionXHTML() {
-		WebBrowser wb = (WebBrowser) getWindow().getTerminal();
-		return WELCOME_TEXT_LOWER + "<br /><br />IT Mill Toolkit version: "
-				+ ApplicationServlet.VERSION + 
-				(wb != null ? "<br />Browser: " + wb.getBrowserApplication(): "");
+		return description;
+	}
+
+	// Hack for #512: set description right (WebBrowser now exists)
+	public void paint(PaintTarget target) throws PaintException {
+		if (webBrowser == null) {
+			webBrowser = (WebBrowser) getWindow().getTerminal();
+			if (webBrowser != null) {
+				super.getDescription().setValue(
+						description + "<br />Browser: "
+								+ webBrowser.getBrowserApplication());
+			}
+		}
+		super.paint(target);
 	}
 
 	protected String getImage() {
@@ -132,6 +156,56 @@ public class IntroWelcome extends Feature {
 
 	protected String getTitle() {
 		return "Welcome";
+	}
+
+	/**
+	 * Add URI and parametes handlers to window.
+	 * 
+	 * @see com.itmill.toolkit.ui.Component#attach()
+	 */
+	public void attach() {
+		super.attach();
+		getWindow().addURIHandler(this);
+		getWindow().addParameterHandler(this);
+	}
+
+	/**
+	 * Remove all handlers from window
+	 * 
+	 * @see com.itmill.toolkit.ui.Component#detach()
+	 */
+	public void detach() {
+		super.detach();
+		getWindow().removeURIHandler(this);
+		getWindow().removeParameterHandler(this);
+	}
+
+	/**
+	 * Update URI
+	 * 
+	 * @see com.itmill.toolkit.terminal.URIHandler#handleURI(URL, String)
+	 */
+	public DownloadStream handleURI(URL context, String relativeUri) {
+		return null;
+	}
+
+	/**
+	 * Show system status if systemStatus is given on URL
+	 * 
+	 * @see com.itmill.toolkit.terminal.ParameterHandler#handleParameters(Map)
+	 */
+	public void handleParameters(Map parameters) {
+		for (Iterator i = parameters.keySet().iterator(); i.hasNext();) {
+			String name = (String) i.next();
+			if (name.equals("systemStatus")) {
+				String status = "";
+				status += "timestamp=" + new Date() + " ";
+				status += "free=" + Runtime.getRuntime().freeMemory() + ", ";
+				status += "total=" + Runtime.getRuntime().totalMemory() + ", ";
+				status += "max=" + Runtime.getRuntime().maxMemory() + "\n";
+				System.out.println(status);
+			}
+		}
 	}
 
 }

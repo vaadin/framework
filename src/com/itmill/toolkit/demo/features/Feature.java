@@ -52,6 +52,8 @@ public abstract class Feature extends CustomComponent {
 	protected PropertyPanel propertyPanel;
 
 	private Label javadoc;
+	
+	private Label description;
 
 	/** Constuctor for the feature component */
 	public Feature() {
@@ -94,9 +96,8 @@ public abstract class Feature extends CustomComponent {
 		ts = new TabSheet();
 
 		// Description tab
-		String desc = getDescriptionXHTML();
 		String title = getTitle();
-		if (desc != null) {
+		if (getDescriptionXHTML() != null) {
 			OrderedLayout mainLayout = new OrderedLayout(
 					OrderedLayout.ORIENTATION_VERTICAL);
 			OrderedLayout layout = new OrderedLayout(
@@ -106,14 +107,15 @@ public abstract class Feature extends CustomComponent {
 				layout.addComponent(new Embedded("", new ClassResource(
 						getImage(), this.getApplication())));
 			String label = "";
-			label += desc;
+			label += getDescriptionXHTML();
 			if (propsReminder)
 				label += PROP_REMINDER_TEXT;
 			if (title != null) {
 				layout.addComponent(new Label("<h3>" + title + "</h3>",
 						Label.CONTENT_XHTML));
 			}
-			mainLayout.addComponent(new Label(label, Label.CONTENT_XHTML));
+			description = new Label(label, Label.CONTENT_XHTML);
+			mainLayout.addComponent(description);
 
 			ts.addTab(mainLayout, "Description", null);
 		}
@@ -180,6 +182,19 @@ public abstract class Feature extends CustomComponent {
 
 	public void setPropsReminder(boolean propsReminder) {
 		this.propsReminder = propsReminder;
+	}
+	
+	public void updateDescription() {
+		String label = "";
+		label += getDescriptionXHTML();
+		if (propsReminder)
+			label += PROP_REMINDER_TEXT;
+		description.setValue(label);
+	}
+
+	// Fix for #512
+	public Label getDescription() {
+		return description;
 	}
 
 }
