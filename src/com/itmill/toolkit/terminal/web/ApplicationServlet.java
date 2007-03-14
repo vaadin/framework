@@ -1211,7 +1211,10 @@ public class ApplicationServlet extends HttpServlet implements
 		URL applicationUrl;
 		try {
 			URL reqURL = new URL((request.isSecure() ? "https://" : "http://")
-					+ request.getServerName() + ":" + request.getServerPort()
+					+ request.getServerName() + (
+							(request.isSecure() && request.getServerPort() == 443) ||
+							(!request.isSecure() && request.getServerPort() == 80)?"":
+							":" + request.getServerPort())
 					+ request.getRequestURI());
 			String servletPath = request.getContextPath()
 					+ request.getServletPath();
