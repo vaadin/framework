@@ -14,7 +14,7 @@ my $SVN_ROOT = "https://svn.itmill.com/svn/itmill-toolkit";
 my $SVN_URL_BUILDS = $SVN_ROOT."/builds";
 
 my $usage = 
-  "Usage: make-release.sh <branch> <version> <dir>\n".
+  "Usage: $0 <branch> <version> <dir>\n".
   " <branch> is new major.minor version, e.g. 4.0\n".
   " <version> is new version, e.g. 4.0.1-rc3\n".
   " <target> is directory to store release zip file, e.g. internal/4.0.1-rc/\n";
