@@ -174,8 +174,8 @@
 		<!-- Compile -->
 		<mkdir dir="build/result/classes" />
 		<javac source="1.4" target="1.4" srcdir="build/result/src" destdir="build/result/classes" 
-			classpath="build/lib/servlet-api.jar" includes="${toolkit-package}/**" 
-		    debug="true" debuglevel="lines, vars, source" 
+			classpath="build/lib/servlet-api.jar" includes="${toolkit-package}/**"
+		    debug="true"
 		/>
 	</target>
 
