@@ -6,6 +6,12 @@ use strict;
 # NOTE: tested only with Jani Laakso's environment
 #
 
+#
+# NOTE: if you need manual intervention at any point
+# edit this script at set an "breakpoint"
+# continue later with "goto STEP" and "STEP:"
+#
+
 # working directory to make releases
 my $WORKDIR = "/home/jani/crypt/tk";
 
@@ -45,8 +51,11 @@ if (
 }
 
 # Open log file
-open(LOG, "> $WORKDIR/builds/$TARGET/itmill-toolkit-$VERSION.make.log");
+open(LOG, ">>$WORKDIR/builds/$TARGET/itmill-toolkit-$VERSION.make.log");
 
+# BRAKEPOINT disabled
+# goto STEP;
+  
 # Make sure $WORKDIR directory exists
 &message(
   "\n  BRANCH [$BRANCH]\n  VERSION [$VERSION]\n".
@@ -72,6 +81,12 @@ chdir($WORKDIR) || &failure("Could not chdir to $WORKDIR.\n");
 # checkout $BRANCH
 &execute("svn co $SVN_ROOT/branches/$BRANCH | grep \"Checked out\"");
 
+# Use brakepoint if you need to do additional merging or 
+# file based revision changes
+# BRAKEPOINT, disabled
+# exit;
+# STEP:
+  
 &message(" Changing VERSION");
 # go to $BRANCH directory
 chdir("$WORKDIR/$BRANCH");
@@ -115,7 +130,7 @@ chdir("$WORKDIR/builds/$TARGET");
 # store log to SVN
 close(LOG);
 `svn add $WORKDIR/builds/$TARGET/itmill-toolkit-$VERSION.make.log`;
-`svn ci $WORKDIR/builds/$TARGET/itmill-toolkit-$VERSION.make.log -m \"Added $VERSION toolkit-release-make log file.\"`;
+`svn ci $WORKDIR/builds/$TARGET/itmill-toolkit-$VERSION.make.log -m \"Release $VERSION build completed. See toolkit-release-make log file.\"`;
 
 exit;
 
@@ -130,7 +145,7 @@ sub execute() {
     my $cmd = shift;   
     print "  $cmd\n";
     print LOG "  $cmd\n";
-    my $result = `$cmd`;
+    my $result = `$cmd 2>/dev/stdout`;
     print $result."\n";
     print LOG $result."\n";
 }
