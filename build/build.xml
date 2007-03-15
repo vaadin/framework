@@ -4,8 +4,7 @@
 
 	<!-- Package creation - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-	<target name="package" depends="clean-all,libs,themes,demo,docs,license"
-		description="Build public release">
+	<target name="package" depends="clean-all,libs,themes,demo,docs,license" description="Build public release">
 		<zip zipfile="build/result/${package-file-name}">
 			<fileset dir="build/result">
 				<patternset>
@@ -16,9 +15,7 @@
 	</target>
 
 	<!-- As release, but no javadoc or docbook tasks -->
-	<target name="package-without-documentation" 
-		depends="clean-all,libs,themes,demo,package-docs,license"
-		description="Build testing package without javadocs or manual">
+	<target name="package-without-documentation" depends="clean-all,libs,themes,demo,package-docs,license" description="Build testing package without javadocs or manual">
 		<zip zipfile="build/result/TESTING-${package-file-name}">
 			<fileset dir="build/result">
 				<patternset>
@@ -64,7 +61,7 @@
 
 	</target>
 
-	<!-- License - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --> 
+	<!-- License - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	<target name="license" depends="init">
 		<copy todir="${output-dir}/lib">
 			<fileset dir="WebContent/WEB-INF">
@@ -76,7 +73,7 @@
 
 	<!-- Themes - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	<target name="themes" depends="init">
-	
+
 		<copy todir="${output-dir}/lib/themes">
 			<fileset dir="WebContent/WEB-INF/lib/themes">
 				<exclude name="**/.svn" />
@@ -108,7 +105,7 @@
 			</sequential>
 		</for>
 		-->
-		
+
 		<echo>JavaScript syntax check, optimizing and obfuscation.</echo>
 		<for param="file">
 			<path>
@@ -126,7 +123,7 @@
 			</sequential>
 		</for>
 		<fixcrlf srcdir="${output-dir}/lib/themes" includes="**/*.js **/*.css" eol="lf" eof="remove" />
-	
+
 		<jar jarfile="${output-dir}/lib/${themes-jar-name}" compress="false">
 			<fileset dir="${output-dir}/lib/themes">
 				<patternset>
@@ -173,10 +170,7 @@
 	<target name="compile-java" depends="preprocess-src">
 		<!-- Compile -->
 		<mkdir dir="build/result/classes" />
-		<javac source="1.4" target="1.4" srcdir="build/result/src" destdir="build/result/classes" 
-			classpath="build/lib/servlet-api.jar" includes="${toolkit-package}/**"
-		    debug="true"
-		/>
+		<javac source="1.4" target="1.4" srcdir="build/result/src" destdir="build/result/classes" classpath="build/lib/servlet-api.jar" includes="${toolkit-package}/**" debug="true" />
 	</target>
 
 	<target name="libs" depends="compile-java">
@@ -214,7 +208,7 @@
 			</fileset>
 		</copy>
 		<!-- Create demo binary JAR, including pictures -->
-		<mkdir dir="build/result/lib"/>
+		<mkdir dir="build/result/lib" />
 		<jar jarfile="build/result/lib/${demo-lib-jar-name}" includes="${toolkit-package}/demo/**" basedir="build/result/classes" compress="true">
 			<fileset dir="build/result/src">
 				<patternset>
@@ -287,6 +281,7 @@
 			</filterchain>
 			<fileset dir="">
 				<exclude name="**/.svn" />
+				<exclude name="ReleaseNotes.html" />
 				<include name="*.html" />
 				<include name="*.txt" />
 			</fileset>
@@ -294,6 +289,11 @@
 		<copy todir="${output-dir}">
 			<fileset dir="">
 				<filename name="*.pdf" />
+			</fileset>
+		</copy>
+		<copy todir="${output-dir}">
+			<fileset dir="">
+				<filename name="ReleaseNotes.html" />
 			</fileset>
 		</copy>
 		<copy todir="${output-dir}/doc/manual/html-style">
