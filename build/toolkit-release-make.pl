@@ -53,7 +53,7 @@ if (
 # Open log file
 open(LOG, ">>$WORKDIR/builds/$TARGET/itmill-toolkit-$VERSION.make.log");
 
-# BRAKEPOINT disabled
+# BRAKEPOINT
 # goto STEP;
   
 # Make sure $WORKDIR directory exists
@@ -85,6 +85,7 @@ chdir($WORKDIR) || &failure("Could not chdir to $WORKDIR.\n");
 # file based revision changes
 # BRAKEPOINT, disabled
 # exit;
+
 # STEP:
   
 &message(" Changing VERSION");
