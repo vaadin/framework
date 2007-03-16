@@ -85,7 +85,6 @@ chdir($WORKDIR) || &failure("Could not chdir to $WORKDIR.\n");
 # file based revision changes
 # BRAKEPOINT, disabled
 # exit;
-
 # STEP:
   
 &message(" Changing VERSION");
