@@ -859,11 +859,17 @@ public class ApplicationServlet extends HttpServlet implements
 							+ getResourceLocation(t.getName(),
 									new ThemeResource(file))
 							+ "\" type=\"text/css\" />\n");
-				else if (file.endsWith(".js"))
-					page.write("<script src=\""
-							+ getResourceLocation(t.getName(),
-									new ThemeResource(file))
-							+ "\" type=\"text/javascript\"></script>\n");
+				else if (file.endsWith(".js")) {
+					page.write("<script src=\"");
+					
+					// TODO remove this and implement behaviour in themes description.xml files
+					if(file.endsWith("firebug.js") && !isDebugMode(unhandledParameters)) {
+						file = file.replace("bug.js", "bugx.js");
+					}
+					page.write(getResourceLocation(t.getName(),
+									new ThemeResource(file)));
+					page.write( "\" type=\"text/javascript\"></script>\n");
+				}
 			}
 
 		}
