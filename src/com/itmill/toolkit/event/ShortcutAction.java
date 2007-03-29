@@ -94,7 +94,7 @@ public class ShortcutAction extends Action {
 	 */
 	public interface ModifierKey {
 		public static final int SHIFT = 16;
-		public static final int CNTRL = 17;
+		public static final int CTRL = 17;
 		public static final int ALT = 18;
 	}
 }
