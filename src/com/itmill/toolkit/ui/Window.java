@@ -696,6 +696,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	 *            Focused component or null if none is focused.
 	 */
 	public void setFocusedComponent(Component.Focusable focusable) {
+		this.application.setFocusedComponent(focusable);
 		this.focusedComponent = focusable;
 	}
 
