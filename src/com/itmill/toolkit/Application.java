@@ -32,7 +32,9 @@ import com.itmill.toolkit.service.ApplicationContext;
 import com.itmill.toolkit.service.License;
 import com.itmill.toolkit.terminal.*;
 import com.itmill.toolkit.ui.AbstractComponent;
+import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.Window;
+import com.itmill.toolkit.ui.Component.Focusable;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -158,6 +160,8 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 	 * is just closed
 	 */
 	private String logoutURL = null;
+
+	private Focusable pendingFocus;
 
 	/**
 	 * Gets a window by name. Returns <code>null</code> if the application is
@@ -859,6 +863,20 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 	 */
 	public void setToolkitLicense(License license) {
 		this.license = license;
+	}
+
+	public void setFocusedComponent(Focusable focusable) {
+		this.pendingFocus = focusable;
+	}
+	/**
+	 * Gets and nulls focused component in this window
+	 * 
+	 * @return Focused component or null if none is focused.
+	 */
+	public Component.Focusable consumeFocus() {
+		Component.Focusable f = this.pendingFocus;
+		this.pendingFocus= null;
+		return f;
 	}
 
 }
