@@ -28,21 +28,21 @@
 
 package com.itmill.toolkit.ui;
 
+import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
-import java.lang.reflect.Method;
 
 import com.itmill.toolkit.data.Property;
+import com.itmill.toolkit.event.Action;
+import com.itmill.toolkit.event.ShortcutAction;
 import com.itmill.toolkit.terminal.KeyMapper;
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
-import com.itmill.toolkit.event.Action;
-import com.itmill.toolkit.event.ShortcutAction;
-import com.itmill.toolkit.event.Action.Handler;
 
 
 /** A generic button component.
