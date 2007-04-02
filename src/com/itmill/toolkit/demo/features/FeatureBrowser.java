@@ -141,8 +141,8 @@ public class FeatureBrowser extends CustomComponent implements
 		registerFeature("/Data Model/Validators", new FeatureValidators());
 		registerFeature("/Data Model/Buffering", new FeatureBuffering());
 		// registerFeature("/Terminal", new IntroTerminal());
-		// registerFeature("/Terminal/Parameters and URI Handling",
-		// new FeatureParameters());
+		registerFeature("/Terminal/Parameters and URI Handling",
+				new FeatureParameters());
 
 		// Pre-open all menus
 		for (Iterator i = features.getItemIds().iterator(); i.hasNext();)

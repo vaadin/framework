@@ -56,7 +56,9 @@ public class Calc
 
 		// Create the buttons and place them in the grid
 		for (int i = 0; i < captions.length; i++) {
-			layout.addComponent(new Button(captions[i], this));
+			Button button = new Button(captions[i], this);
+			button.setStaticPid("_Button"+captions[i]);
+			layout.addComponent(button);
 		}
 
 		// Create the main window with a caption and add it to the application.

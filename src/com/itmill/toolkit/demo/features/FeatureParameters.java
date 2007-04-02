@@ -92,6 +92,19 @@ public class FeatureParameters extends Feature implements URIHandler,
 		p2.addComponent(params);
 		l.addComponent(p2);
 
+		// Properties
+		propertyPanel = new PropertyPanel(p1);
+		Form ap = propertyPanel.createBeanPropertySet(new String[] { "width",
+				"height" });
+		Select themes = (Select) propertyPanel.getField("style");
+		themes.addItem("light").getItemProperty(
+				themes.getItemCaptionPropertyId()).setValue("light");
+		themes.addItem("strong").getItemProperty(
+				themes.getItemCaptionPropertyId()).setValue("strong");
+		propertyPanel.addProperties("Panel Properties", ap);
+
+		setJavadocURL("ui/Panel.html");
+
 		return l;
 	}
 
