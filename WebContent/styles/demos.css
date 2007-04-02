@@ -15,6 +15,12 @@ h1,h2,h3,h4,h5,h6 {
 	color: #ee4411;
 	font-weight: normal;
 }
+h3 a {
+	color: #ee4411;
+}
+h3 a:visited {
+	color: #ee4411;
+}
 h1 {
 	font-size: 3em;
 }
@@ -127,8 +133,6 @@ hr {
 
 .option {
 	clear: both;
-	height: 2em;
-	overflow: hidden;
 }
 
 .option .link {

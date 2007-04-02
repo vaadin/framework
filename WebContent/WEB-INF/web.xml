@@ -2,21 +2,6 @@
 <web-app id="WebApp_ID" version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
 	<display-name>IT Mill Toolkit</display-name>
 
-<!-- APPLICATION: ...demo.Hello -->
-    <servlet>
-        <servlet-name>hello</servlet-name>
-        <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
-        <init-param>
-            <param-name>application</param-name>
-            <param-value>com.itmill.toolkit.demo.HelloWorld</param-value>
-        </init-param>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>hello</servlet-name>
-        <url-pattern>/hello/*</url-pattern>
-    </servlet-mapping>
-
-<!-- APPLICATION: ...demo.features -->
     <servlet>
         <servlet-name>features</servlet-name>
         <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
@@ -30,9 +15,112 @@
         <url-pattern>/features/*</url-pattern>
     </servlet-mapping>
 
-<!-- APPLICATION: ...demo.calc -->
+	<servlet>
+        <servlet-name>Parameters</servlet-name>
+        <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
+        <init-param>
+            <param-name>application</param-name>
+            <param-value>com.itmill.toolkit.example.Parameters</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Parameters</servlet-name>
+        <url-pattern>/Parameters/*</url-pattern>
+    </servlet-mapping>
+    
+ 	<servlet>
+        <servlet-name>Login</servlet-name>
+        <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
+        <init-param>
+            <param-name>application</param-name>
+            <param-value>com.itmill.toolkit.demo.Login</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Login</servlet-name>
+        <url-pattern>/Login/*</url-pattern>
+    </servlet-mapping>
+    
     <servlet>
-        <servlet-name>calc</servlet-name>
+        <servlet-name>QueryContainerDemo</servlet-name>
+        <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
+        <init-param>
+            <param-name>application</param-name>
+            <param-value>com.itmill.toolkit.demo.QueryContainerDemo</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>QueryContainerDemo</servlet-name>
+        <url-pattern>/QueryContainerDemo/*</url-pattern>
+    </servlet-mapping>
+    
+     <servlet>
+        <servlet-name>TableDemo</servlet-name>
+        <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
+        <init-param>
+            <param-name>application</param-name>
+            <param-value>com.itmill.toolkit.demo.TableDemo</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>TableDemo</servlet-name>
+        <url-pattern>/TableDemo/*</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>TreeFilesystemContainer</servlet-name>
+        <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
+        <init-param>
+            <param-name>application</param-name>
+            <param-value>com.itmill.toolkit.demo.TreeFilesystemContainer</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>TreeFilesystemContainer</servlet-name>
+        <url-pattern>/TreeFilesystemContainer/*</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>TreeFilesystem</servlet-name>
+        <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
+        <init-param>
+            <param-name>application</param-name>
+            <param-value>com.itmill.toolkit.demo.TreeFilesystem</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>TreeFilesystem</servlet-name>
+        <url-pattern>/TreeFilesystem/*</url-pattern>
+    </servlet-mapping>
+    
+     <servlet>
+        <servlet-name>ModalWindow</servlet-name>
+        <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
+        <init-param>
+            <param-name>application</param-name>
+            <param-value>com.itmill.toolkit.demo.ModalWindow</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ModalWindow</servlet-name>
+        <url-pattern>/ModalWindow/*</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>HelloWorld</servlet-name>
+        <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
+        <init-param>
+            <param-name>application</param-name>
+            <param-value>com.itmill.toolkit.demo.HelloWorld</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>HelloWorld</servlet-name>
+        <url-pattern>/HelloWorld/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Calc</servlet-name>
         <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
         <init-param>
             <param-name>application</param-name>
@@ -40,9 +128,23 @@
         </init-param>
     </servlet>
     <servlet-mapping>
-        <servlet-name>calc</servlet-name>
-        <url-pattern>/calc/*</url-pattern>
+        <servlet-name>Calc</servlet-name>
+        <url-pattern>/Calc/*</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>KeyboardShortcut</servlet-name>
+        <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
+        <init-param>
+            <param-name>application</param-name>
+            <param-value>com.itmill.toolkit.demo.Shortcut</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>KeyboardShortcut</servlet-name>
+        <url-pattern>/shortcut/*</url-pattern>
+    </servlet-mapping>
+    
 
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>

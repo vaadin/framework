@@ -10,28 +10,137 @@
 <div id="itmilllogo"><h1>IT Mill Toolkit</h1></div>
 
 <div id="toolkit"></div>
-<!--
-<h2>IT Mill Toolkit Demo</h2>
--->
+
   <div id="feature-browser">
 	<h3>Feature Browser</h3>
 	<div class="option">
 	 <span class="link"><a href="features/?renderingMode=detect">Autodetected mode</a></span>
 	 <span class="desc">Use AJAX if supported by browser, otherwise fallback to HTML mode</span>
 	</div>
-	
 	<div class="option">
 	 <span class="link"><a href="features/?renderingMode=ajax">AJAX mode</a></span>
 	 <span class="desc">Select AJAX-based technology mode</span>
 	</div>
-	
 	<div class="option">
 	 <span class="link"><a href="features/?renderingMode=html">HTML mode</a></span>
 	 <span class="desc">Select page based request/response technology mode</span>
 	</div>
-	
+	<br />	
+  </div>
+  
+  <div id="sample-code">
+	<h4>Simple applications</h4>
+	<div class="option">
+	 <span class="link"><a href="HelloWorld">HelloWorld</a></span>
+	 <span class="desc">Simple Toolkit application.</span>
+	</div>
+	<div class="option">
+	 <span class="link"><a href="Calc">Calc</a></span>
+	 <span class="desc">Simple Toolkit application where events are used.</span>
+	</div>
+	<br />
+  </div>
+  
+  <div id="feature-browser">
+	<h3><a href="openajax/index.html">OpenAjax Hub Conformance tests</a></h3>
+	<div class="option">
+	 Integrates sample Toolkit application to HTML page which performs basic OpenAjax hub conformance tests.
+	 See HTML source what is required for integration.
+	 <b>Note:</b> Embedded FeatureBrowser application is the same
+	 application instance that can be accessed as standalone application, see <code>FeatureBrowser</code>.
+	</div>	
+  </div>
+  
+   <div id="feature-browser">
+	<h3><a href="EmbeddedToolkit.jsp">Embedding Toolkit application to other frameworks</a></h3>
+	<div class="option">
+	 Integrates sample Toolkit application to JSP page. See HTML source or respective jsp 
+	 file what is required for integration. <b>Note:</b> Embedded TableDemo application is the same
+	 application instance that can be accessed as standalone application, see <code>TableDemo</code>.
+	</div>	
+  </div>
+  
+  <div id="feature-browser">
+	<h3><a href="QueryContainerDemo">QueryContainerDemo</a></h3>
+	<div class="option">
+	 This example shows how Table, Select and Tree UI components can use Containers. 
+	 QueryContainer is used to bind SQL table rows into Toolkit UI components. 
+	 Table has few example actions added. Also embedding XHTML through Label components is used. 
+	 Demonstrates: how to create <code>com.itmill.toolkit.data.Container</code> and set it as 
+	 datasource to UI components <code>com.itmill.toolkit.ui.Component.Tree</code>, how to 
+	 receive ExpandEvent and implement <code>com.itmill.toolkit.ui.Tree.ExpandListener</code>, 
+	 how to use <code>com.itmill.toolkit.event.Action</code>.
+	</div>	
+  </div>
+  
+   <div id="feature-browser">
+	<h3><a href="TableDemo">TableDemo</a></h3>
+	<div class="option">
+	 Similar to QueryContainerDemo but uses table only. Two buttons demonstrate another 
+	 possibility how event framework works, in this example specific methods are 
+	 registered for button click events. <b>Note:</b> This application instance is embedded
+	 to jsp page also, see <code>EmbeddedToolkit.jsp</code> above.
+	</div>	
+  </div>
+  
+  <div id="feature-browser">
+	<h3><a href="TreeFilesystemContainer">TreeFilesystemContainer</a></h3>
+	<div class="option">
+	 Browsable file explorer using Toolkit Tree component. Demonstrates: how to
+  	 use <code>com.itmill.toolkit.ui.Component.Tree</code> datasource container,
+	 how to create <code>com.itmill.toolkit.data.util.FilesystemContainer</code>,
+	 how to read <code>com.itmill.toolkit.ui.Component.Event</code> objects, how
+	 to receive and handle any event by implementing
+	 <code>com.itmill.toolkit.ui.Component.Listener</code>.
+	</div>	
+  </div>
+  
+  <div id="feature-browser">
+	<h3><a href="TreeFilesystem">TreeFilesystem</a></h3>
+	<div class="option">
+	 Browsable file explorer using Toolkit Tree component. Demonstrates: how
+ 	 to add items hierarchially into
+	 <code>com.itmill.toolkit.ui.Component.Tree</code>, how to receive
+	 ExpandEvent and implement
+	 <code>com.itmill.toolkit.ui.Tree.ExpandListener</code>.
+	</div>	
+  </div>
+  
+  <div id="feature-browser">
+	<h3><a href="ModalWindow">Modal window</a></h3>
+	<div class="option">
+	 Example of Modal Window.
+	</div>	
   </div>
 
+  <div id="feature-browser">
+	<h3><a href="shortcut">Keyboard events demo</a></h3>
+	<div class="option">
+	 Contains few Toolkit UI components that can be interacted by pressing keys in keyboard.
+	</div>	
+  </div>
+  
+  <div id="feature-browser">
+	<h3><a href="Parameters">URI and Parameter handling demo</a></h3>
+	<div class="option">
+	 This is a demonstration of how URL parameters can be recieved and handled.
+	 Parameters and URL:s can be received trough the windows by registering
+	 URIHandler and ParameterHandler classes window.
+	</div>	
+  </div>
+
+ 
+  <div id="sample-code">
+	<h4>Upgrading from Millstone 3 to Toolkit 4.0.0</h4>
+	<div class="option">
+	 <span class="link"><a href="Login">Login</a></span>
+	 <span class="desc">Simple Millstone 3.1.1 application that was upgraded to Toolkit 4.0.0 by updating three import rows.</span>
+	</div>
+	<br />
+	<br />
+  </div>
+  
+<!--
   <div id="sample-code">
 	<h3>IT Mill Toolkit Sample Code</h3>
 
@@ -59,6 +168,7 @@
 	 <span class="desc">See source code how a simple Toolkit application is created</span>
     </div>
   </div>
+-->
 
 </div><!-- // Container -->
 
