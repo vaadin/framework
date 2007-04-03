@@ -570,12 +570,14 @@ public class ApplicationServlet extends HttpServlet implements
 				// try to detect it
 				WebBrowser wb = WebBrowserProbe.getTerminalType(request
 						.getSession());
-				
+
 				boolean detect = false;
 				if (unhandledParameters.get("renderingMode") != null) {
-					detect = ((String) ( (Object[]) unhandledParameters.get("renderingMode"))[0]).equals("detect");
+					detect = ((String) ((Object[]) unhandledParameters
+							.get("renderingMode"))[0]).equals("detect");
 				}
-				if (detect || wb.getRenderingMode() == WebBrowser.RENDERING_MODE_UNDEFINED) {
+				if (detect
+						|| wb.getRenderingMode() == WebBrowser.RENDERING_MODE_UNDEFINED) {
 					String themeName = application.getTheme();
 					if (themeName == null)
 						themeName = DEFAULT_THEME;
@@ -583,7 +585,14 @@ public class ApplicationServlet extends HttpServlet implements
 						themeName = (String) ((Object[]) unhandledParameters
 								.get("theme"))[0];
 					}
+
 					Theme theme = themeSource.getThemeByName(themeName);
+					if (theme == null)
+						throw new ServletException(
+								"Failed to load theme with name "
+										+ themeName
+										+ ". Check that theme's description.xml "
+										+ "contains correct theme name.");
 
 					String renderingMode = theme.getPreferredMode(wb,
 							themeSource);
@@ -861,14 +870,16 @@ public class ApplicationServlet extends HttpServlet implements
 							+ "\" type=\"text/css\" />\n");
 				else if (file.endsWith(".js")) {
 					page.write("<script src=\"");
-					
-					// TODO remove this and implement behaviour in themes description.xml files
-					if(file.endsWith("firebug.js") && !isDebugMode(unhandledParameters)) {
+
+					// TODO remove this and implement behaviour in themes
+					// description.xml files
+					if (file.endsWith("firebug.js")
+							&& !isDebugMode(unhandledParameters)) {
 						file = file.replace("bug.js", "bugx.js");
 					}
 					page.write(getResourceLocation(t.getName(),
-									new ThemeResource(file)));
-					page.write( "\" type=\"text/javascript\"></script>\n");
+							new ThemeResource(file)));
+					page.write("\" type=\"text/javascript\"></script>\n");
 				}
 			}
 
@@ -1220,12 +1231,14 @@ public class ApplicationServlet extends HttpServlet implements
 
 		URL applicationUrl;
 		try {
-			URL reqURL = new URL((request.isSecure() ? "https://" : "http://")
-					+ request.getServerName() + (
-							(request.isSecure() && request.getServerPort() == 443) ||
-							(!request.isSecure() && request.getServerPort() == 80)?"":
-							":" + request.getServerPort())
-					+ request.getRequestURI());
+			URL reqURL = new URL(
+					(request.isSecure() ? "https://" : "http://")
+							+ request.getServerName()
+							+ ((request.isSecure() && request.getServerPort() == 443)
+									|| (!request.isSecure() && request
+											.getServerPort() == 80) ? "" : ":"
+									+ request.getServerPort())
+							+ request.getRequestURI());
 			String servletPath = request.getContextPath()
 					+ request.getServletPath();
 			if (servletPath.length() == 0
