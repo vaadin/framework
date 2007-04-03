@@ -31,6 +31,9 @@ public class ObjectPropertyDemo extends com.itmill.toolkit.Application {
 		ob = new ObjectProperty(floatValue);
 		textField = new TextField("Textfield that uses ObjectProperty", ob);
 		ob.setReadOnly(false);
+		// needed because of bug in variable change handling?
+		// change textfield value and unfocus it to change textfields value
+		// succesfully
 		textField.setImmediate(true);
 		textField.setInvalidCommitted(true);
 
@@ -53,7 +56,7 @@ public class ObjectPropertyDemo extends com.itmill.toolkit.Application {
 		textField.discard();
 		printValues();
 	}
-	
+
 	private void printValues() {
 		System.out.println("textField.getValue()=" + textField.getValue());
 		System.out.println("floatValue=" + floatValue);
