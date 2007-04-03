@@ -106,7 +106,6 @@ public class Shortcut extends com.itmill.toolkit.Application implements Handler 
 	}
 
 	public void handleAction(Action action, Object sender, Object target) {
-		main.addComponent(new Label("ShortcutAction fired" + action));
 		if (target == a)
 			this.buttonAHandler();
 		if (target == b)
@@ -117,15 +116,15 @@ public class Shortcut extends com.itmill.toolkit.Application implements Handler 
 			this.close();
 	}
 
+	public void buttonAHandler() {
+		main.addComponent(new Label("Button A handler fired"));
+	}
+
 	public void buttonBHandler() {
 		main.addComponent(new Label("Button B handler fired"));
 	}
 
 	public void buttonCHandler() {
 		main.addComponent(new Label("Button C handler fired"));
-	}
-
-	public void buttonAHandler() {
-		main.addComponent(new Label("Button A handler fired"));
 	}
 }

@@ -92,8 +92,8 @@ public class Parameters extends com.itmill.toolkit.Application implements
 	 * communicate with EmbeddedToolkit.jsp
 	 */
 	public void handleParameters(Map parameters) {
-		// disabled, see bug #550
-		//params.removeAllItems();
+		// TODO: disabled, see bug #550
+		// params.removeAllItems();
 		System.out.println("handleParameters()");
 		for (Iterator i = parameters.keySet().iterator(); i.hasNext();) {
 			String name = (String) i.next();
@@ -105,7 +105,6 @@ public class Parameters extends com.itmill.toolkit.Application implements
 				v += "'" + values[j] + "'";
 			}
 			params.addItem(new Object[] { v }, name);
-			System.out.println("parameter name="+name+", value="+v);
 		}
 	}
 }
