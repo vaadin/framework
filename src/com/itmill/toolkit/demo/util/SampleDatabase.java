@@ -6,34 +6,48 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+/**
+ * Creates temporary database named toolkit with sample table named employee and
+ * populates it with data. By default we use HSQLDB. Ensure that you have
+ * hsqldb.jar under WEB-INF/lib directory. Database is will be created into
+ * memory.
+ * 
+ * @author IT Mill Ltd.
+ * 
+ */
 public class SampleDatabase {
 
 	public static final int ROWCOUNT = 1000;
 
 	private Connection connection = null;
 
-	private static final String[] firstnames = new String[] { "John", "Mary",
-			"Joe", "Sarah", "Jeff", "Jane", "Peter", "Marc", "Josie", "Linus" };
+	private static final String[] firstnames = new String[] { "Amanda",
+			"Andrew", "Bill", "Frank", "Matt", "Xavier", "John", "Mary", "Joe",
+			"Gloria", "Marcus", "Belinda", "David", "Anthony", "Julian",
+			"Paul", "Carrie", "Susan", "Gregg", "Michael", "William", "Ethan",
+			"Thomas", "Oscar", "Norman", "Roy", "Sarah", "Jeff", "Jane",
+			"Peter", "Marc", "Josie", "Linus" };
 
 	private static final String[] lastnames = new String[] { "Torvalds",
-			"Smith", "Jones", "Beck", "Sheridan", "Picard", "Hill", "Fielding",
-			"Einstein" };
+			"Smith", "Jones", "Beck", "Burton", "Bell", "Davis", "Burke",
+			"Bernard", "Hood", "Scott", "Smith", "Carter", "Roller", "Conrad",
+			"Martin", "Fisher", "Martell", "Freeman", "Hackman", "Jones",
+			"Harper", "Russek", "Johnson", "Sheridan", "Hill", "Parker",
+			"Foster", "Moss", "Fielding" };
 
 	private static final String[] titles = new String[] { "Project Manager",
-			"Marketing Manager", "Sales Manager", "Trainer", "IT Support",
-			"Account Manager", "Customer Support", "Testing Engineer",
-			"Software Designer", "Programmer", "Consultant" };
+			"Marketing Manager", "Sales Manager", "Sales", "Trainer",
+			"Technical Support", "Account Manager", "Customer Support",
+			"Testing Engineer", "Software Designer", "Programmer", "Consultant" };
 
 	private static final String[] units = new String[] { "Tokyo",
 			"Mexico City", "Seoul", "New York", "Sao Paulo", "Bombay", "Delhi",
-			"Shanghai", "Los Angeles", "London", "Bangalore", "Hong Kong",
-			"Madrid", "Milano", "Beijing", "Paris", "Moscow", "Helsinki" };
+			"Shanghai", "Los Angeles", "London", "Shanghai", "Sydney",
+			"Bangalore", "Hong Kong", "Madrid", "Milano", "Beijing", "Paris",
+			"Moscow", "Berlin", "Helsinki" };
 
 	/**
-	 * Creates temporary database named toolkit with sample table named employee
-	 * and populates it with data. By default we use HSQLDB. Ensure that you
-	 * have hsqldb.jar under WEB-INF/lib directory. Database is will be created
-	 * into memory.
+	 * Create temporary database.
 	 * 
 	 */
 	public SampleDatabase() {
@@ -77,7 +91,12 @@ public class SampleDatabase {
 		}
 	}
 
-	// use for SQL commands CREATE, DROP, INSERT and UPDATE
+	/**
+	 * use for SQL commands CREATE, DROP, INSERT and UPDATE
+	 * 
+	 * @param expression
+	 * @throws SQLException
+	 */
 	public void update(String expression) throws SQLException {
 		Statement st = null;
 		st = connection.createStatement();
