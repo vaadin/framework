@@ -5,11 +5,13 @@ import com.itmill.toolkit.ui.*;
 
 public class ObjectPropertyDemo extends com.itmill.toolkit.Application {
 
-	private TextField textField = null;
+	private TextField floatTextField = null;
+	
+	private Label floatLabel = new Label();
 
-	private Float floatValue = new Float(1.0f);
+	private Float floatObject = new Float(1.0f);
 
-	private ObjectProperty ob = null;
+	private ObjectProperty floatObjectProperty = null;
 
 	private Button storeButton = new Button("Set", this,
 			"storeButtonClickedEvent");
@@ -27,20 +29,23 @@ public class ObjectPropertyDemo extends com.itmill.toolkit.Application {
 
 		setTheme("corporate");
 
-		// Textfield
-		ob = new ObjectProperty(floatValue);
-		textField = new TextField("Textfield that uses ObjectProperty", ob);
-		ob.setReadOnly(false);
+		// Textfield that uses ObjectProperty
+		floatObjectProperty = new ObjectProperty(floatObject);
+		floatTextField = new TextField("floatTextField (uses ObjectProperty)", floatObjectProperty);
+		floatObjectProperty.setReadOnly(false);
 		// needed because of bug in variable change handling?
 		// change textfield value and unfocus it to change textfields value
 		// succesfully
-		textField.setImmediate(true);
-		textField.setInvalidCommitted(true);
+		floatTextField.setImmediate(true);
+		floatTextField.setInvalidCommitted(true);
+		
+		floatLabel.setCaption("floatObject value");
 
-		main.addComponent(textField);
+		main.addComponent(floatTextField);
 		main.addComponent(storeButton);
 		main.addComponent(commitButton);
 		main.addComponent(discardButton);
+		main.addComponent(floatLabel);
 	}
 
 	public void storeButtonClickedEvent() {
@@ -48,18 +53,19 @@ public class ObjectPropertyDemo extends com.itmill.toolkit.Application {
 	}
 
 	public void commitButtonClickedEvent() {
-		textField.commit();
+		floatTextField.commit();
 		printValues();
 	}
 
 	public void discardButtonClickedEvent() {
-		textField.discard();
+		floatTextField.discard();
 		printValues();
 	}
 
 	private void printValues() {
-		System.out.println("textField.getValue()=" + textField.getValue());
-		System.out.println("floatValue=" + floatValue);
+		System.out.println("textField.getValue()=" + floatTextField.getValue());
+		System.out.println("floatValue=" + floatObject);
+		floatLabel.setValue(floatObject);
 	}
 
 }
