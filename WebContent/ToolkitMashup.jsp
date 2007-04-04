@@ -2,6 +2,11 @@
   //
   // Demonstrates how Toolkit application can be integrated into jsp pages
   //
+  // You need to add 
+  // 1. one code block under <head>
+  // 2. one tag to <body>
+  // 3. one code block under <body>
+  //
   String test = "This text comes from EmbeddedToolkit.jsp file";
   // Toolkit application name. This is servlet URL pattern, see web.xml
   String applicationName = "TableDemo";
@@ -15,7 +20,10 @@
  <head>
  <title>Embedding Toolkit to JSP pages</title>
  
-	 <!-- Toolkit code block starts -->
+ 
+	 <!-- 
+	 	Toolkit code block starts 
+	 -->
 	 
 	 <NOSCRIPT><META http-equiv="refresh" content="0; url=?WA_NOSCRIPT=1" /></NOSCRIPT>
 	 <link rel="stylesheet" href="<%=applicationName %>/RES/base/css/base-ajax.css" type="text/css" />
@@ -29,17 +37,25 @@
 	 <link rel="stylesheet" href="<%=applicationName %>/RES/corporate/css/corporate-ajax.css" type="text/css" />
 	 <script src="<%=applicationName %>/RES/corporate/script/corporate-ajax-components.js" type="text/javascript"></script>
 	 
-	 <!-- Toolkit code block ends -->
+	 <!-- 
+	 	Toolkit code block ends
+	 -->
+	 
 	 
  </head>
  
- <!-- Toolkit code: for body set tag class with value itmtk -->
+ <!-- 
+ 	Toolkit code: for body set tag class with value itmtk 
+ -->
  <body class="itmtk">
  <center>
  <h3><%=test %> before Toolkit application.</h3>
  <hr />
  
-	 <!-- Toolkit code block starts -->
+ 
+	 <!--
+	 	Toolkit code block starts 
+	 -->
 	 
 	 <div id="ajax-wait">Loading...</div>
 	 <div id="ajax-window"></div>
@@ -50,7 +66,10 @@
 	 delete itmill.tmp;
 	 </script>
 	 
-	 <!-- Toolkit code block ends -->
+	 <!--
+	 	Toolkit code block ends 
+	 -->
+	 
 	 
  </tr></td></table>
  
