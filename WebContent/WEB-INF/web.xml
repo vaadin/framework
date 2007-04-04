@@ -3,6 +3,19 @@
 	<display-name>IT Mill Toolkit</display-name>
 
 	<servlet>
+        <servlet-name>BufferedComponents</servlet-name>
+        <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
+        <init-param>
+            <param-name>application</param-name>
+            <param-value>com.itmill.toolkit.demo.BufferedComponents</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>BufferedComponents</servlet-name>
+        <url-pattern>/BufferedComponents/*</url-pattern>
+    </servlet-mapping>
+    
+	<servlet>
         <servlet-name>CustomLayoutDemo</servlet-name>
         <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
         <init-param>
