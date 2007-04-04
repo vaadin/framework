@@ -371,8 +371,8 @@ public class ApplicationServlet extends HttpServlet implements
 		if (pkg != null) {
 			pkgName = pkg.getName();
 		} else {
-			String clazzName = this.getClass().getName();
-			pkgName = new String(clazzName.toCharArray(), 0, clazzName
+			String className = this.getClass().getName();
+			pkgName = new String(className.toCharArray(), 0, className
 					.lastIndexOf('.'));
 		}
 		val = System.getProperty(pkgName + "." + parameterName);
