@@ -68,16 +68,16 @@
     </servlet-mapping>
     
  	<servlet>
-        <servlet-name>Login</servlet-name>
+        <servlet-name>UpgradingSample</servlet-name>
         <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
         <init-param>
             <param-name>application</param-name>
-            <param-value>com.itmill.toolkit.demo.Login</param-value>
+            <param-value>com.itmill.toolkit.demo.UpgradingSample</param-value>
         </init-param>
     </servlet>
     <servlet-mapping>
-        <servlet-name>Login</servlet-name>
-        <url-pattern>/Login/*</url-pattern>
+        <servlet-name>UpgradingSample</servlet-name>
+        <url-pattern>/UpgradingSample/*</url-pattern>
     </servlet-mapping>
     
     <servlet>
@@ -176,12 +176,12 @@
         <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
         <init-param>
             <param-name>application</param-name>
-            <param-value>com.itmill.toolkit.demo.Shortcut</param-value>
+            <param-value>com.itmill.toolkit.demo.KeyboardShortcut</param-value>
         </init-param>
     </servlet>
     <servlet-mapping>
         <servlet-name>KeyboardShortcut</servlet-name>
-        <url-pattern>/shortcut/*</url-pattern>
+        <url-pattern>/KeyboardShortcut/*</url-pattern>
     </servlet-mapping>
     
 	<welcome-file-list>

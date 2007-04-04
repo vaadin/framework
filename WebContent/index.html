@@ -38,11 +38,14 @@
 	 <span class="link"><a href="Calc">Calc</a></span>
 	 <span class="desc">Simple Toolkit application where events are used.</span>
 	</div>
+	<br /><br />Source code:
+	<span class="link"><a href="src/com/itmill/toolkit/demo/HelloWorld.java.html">HelloWorld.java</a></span>
+	<span class="link"><a href="src/com/itmill/toolkit/demo/Calc.java.html">Calc.java</a></span>
 	<br />
   </div>
   
   <div id="sample-code">
-	<h3><a href="Login">Long lifecycle of Toolkit applications</a></h3>
+	<h3><a href="UpgradingSample">Long lifecycle of Toolkit applications</a></h3>
 	<div class="option">
 	<p>
 	Demonstrates sample <a href="http://www.millstone.org">Millstone</a> application that was ajaxified (upgraded to Toolkit 4.0.0)
@@ -50,8 +53,10 @@
 	Initial IT Mill Toolkit framework has existed since 2001 (see <a href="http://www.millstone.org">Millstone</a>) and is
 	ready for production use today.
 	</p>
-	<b>Note: This sample application was created on year 2002.</b>
+	<b>Note:</b> This sample application was created on year 2002.
 	</div>	
+	<br />Source code:
+	<span class="link"><a href="src/com/itmill/toolkit/demo/UpgradingSample.java.html">UpgradingSample.java</a></span>
   </div>
   
   
@@ -63,40 +68,42 @@
 	 Also demonstrates how to integrate Toolkit applications into HTML pages.
 	 </p>
 	 <b>Note:</b> Embedded FeatureBrowser application is the same
-	 application instance that can be accessed as standalone application, see <code>FeatureBrowser</code>.
+	 application instance that can be accessed as standalone application, see <code>FeatureBrowser</em>.
 	</div>	
   </div>
   
    <div id="feature-browser">
-	<h3><a href="ToolkitMashup.jsp">Toolkit application mashup</a></h3>
+	<h3><a href="ToolkitMashup.jsp">Toolkit application mashup demo</a></h3>
 	<div class="option">
 	 <p>
 	 Demonstrates how Toolkit application may be integrated into other frameworks. In this example we use JSP pages.
 	 See HTML source or respective jsp file what code blocks are required for integration.
 	 </p>
 	 <b>Note:</b> Integrated TableDemo application is the same
-	 application instance that can be accessed as standalone application, see <code>TableDemo</code>.
+	 application instance that can be accessed as standalone application, see <em>TableDemo</em>.
 	</div>	
   </div>
   
   <div id="feature-browser">
-	<h3><a href="LayoutDemo">LayoutDemo</a></h3>
+	<h3><a href="LayoutDemo">Layout demo</a></h3>
 	<div class="option">
 	<p>
 	 This example demonstrates layouts for Tookit application.
 	</p>
 	<p>
-	 Demonstrates: how to use
-	 <code>com.itmill.toolkit.ui.OrderedLayout</code>,
-	 <code>com.itmill.toolkit.ui.GridLayout</code>,
-	 <code>com.itmill.toolkit.ui.Panel</code> and
-	 <code>com.itmill.toolkit.ui.TabSheet</code> 
+	 Demonstrates how to use
+	 <em>com.itmill.toolkit.ui.OrderedLayout</em>,
+	 <em>com.itmill.toolkit.ui.GridLayout</em>,
+	 <em>com.itmill.toolkit.ui.Panel</em> and
+	 <em>com.itmill.toolkit.ui.TabSheet</em>.
     </p>
 	</div>	
+	Source code:
+	<span class="link"><a href="src/com/itmill/toolkit/demo/LayoutDemo.java.html">LayoutDemo.java</a></span>
   </div>
   
   <div id="feature-browser">
-	<h3><a href="CustomLayoutDemo">CustomLayoutDemo</a></h3>
+	<h3><a href="CustomLayoutDemo">Custom layout and custom theme demo</a></h3>
 	<div class="option">
 	<p>
 	 This example demonstrates how Toolkit interacts with HTML pages
@@ -105,14 +112,16 @@
 	 framework.
 	</p>
 	<p>
-	 Demonstrates: how to create
-	 <code>com.itmill.toolkit.ui.CustomLayout</code>
+	 Demonstrates how to create
+	 <em>com.itmill.toolkit.ui.CustomLayout</em>.
     </p>
 	</div>	
+	Source code:
+	<span class="link"><a href="src/com/itmill/toolkit/demo/CustomLayoutDemo.java.html">CustomLayoutDemo.java</a></span>
   </div>
   
   <div id="feature-browser">
-	<h3><a href="QueryContainerDemo">QueryContainerDemo</a></h3>
+	<h3><a href="QueryContainerDemo">Tree using QueryContainer demo</a></h3>
 	<div class="option">
 	<p>
 	 This example shows how Table, Select and Tree UI components can use Containers. 
@@ -120,78 +129,96 @@
 	 Table has few example actions added. Also embedding XHTML through Label components is used. 
 	</p>
 	<p>
-	 Demonstrates: how to create <code>com.itmill.toolkit.data.Container</code> and set it as 
-	 datasource to UI components <code>com.itmill.toolkit.ui.Component.Tree</code>, how to 
-	 receive ExpandEvent and implement <code>com.itmill.toolkit.ui.Tree.ExpandListener</code>, 
-	 how to use <code>com.itmill.toolkit.event.Action</code>.
+	 Demonstrates how to create <em>com.itmill.toolkit.data.Container</em> and set it as 
+	 datasource to UI components <em>com.itmill.toolkit.ui.Component.Tree</em>, how to 
+	 receive ExpandEvent and implement <em>com.itmill.toolkit.ui.Tree.ExpandListener</em>, 
+	 how to use <em>com.itmill.toolkit.event.Action</em>.
     </p>
-	</div>	
+	</div>
+	Source code:
+	<span class="link"><a href="src/com/itmill/toolkit/demo/QueryContainerDemo.java.html">QueryContainerDemo.java</a></span>
   </div>
   
    <div id="feature-browser">
-	<h3><a href="TableDemo">TableDemo</a></h3>
+	<h3><a href="TableDemo">Table demo</a></h3>
 	<div class="option">
 	 <p>
-	 Similar to QueryContainerDemo but uses only Table component.
+	 Similar to <em>Tree using QueryContainer demo</em> but uses different style
+	 for handling events with Table component.
 	 </p>
 	 <p>
-	 Two buttons demonstrate another 
-	 possibility how event framework may be used, in this example specific methods are 
-	 registered for button click events.
+	 Demonstrates another possibility how event framework may be used,
+	 in this example specific methods are registered for button click events.
 	 </p>
 	 <b>Note:</b> This application instance is embedded
-	 to jsp page also, see <code>ToolkitMashup.jsp</code>.
-	</div>	
+	 to jsp page also, see <em>ToolkitMashup.jsp</em>.
+	</div>
+	<br />Source code:
+	<span class="link"><a href="src/com/itmill/toolkit/demo/TableDemo.java.html">TableDemo.java</a></span>
   </div>
   
   <div id="feature-browser">
-	<h3><a href="TreeFilesystemContainer">TreeFilesystemContainer</a></h3>
+	<h3><a href="TreeFilesystemContainer">Tree using FilesystemContainer demo</a></h3>
 	<div class="option">
 	 <p>
 	 Browsable file explorer using Toolkit Tree component.
 	 </p>
-	 Demonstrates: how to
-  	 use <code>com.itmill.toolkit.ui.Component.Tree</code> datasource container,
-	 how to create <code>com.itmill.toolkit.data.util.FilesystemContainer</code>,
-	 how to read <code>com.itmill.toolkit.ui.Component.Event</code> objects, how
+	 Demonstrates how to
+  	 use <em>com.itmill.toolkit.ui.Component.Tree</em> datasource container,
+	 how to create <em>com.itmill.toolkit.data.util.FilesystemContainer</em>,
+	 how to read <em>com.itmill.toolkit.ui.Component.Event</em> objects, how
 	 to receive and handle any event by implementing
-	 <code>com.itmill.toolkit.ui.Component.Listener</code>.
-	</div>	
+	 <em>com.itmill.toolkit.ui.Component.Listener</em>.
+	</div>
+	<br />Source code:
+	<span class="link"><a href="src/com/itmill/toolkit/demo/TreeFilesystemContainer.java.html">TreeFilesystemContainer.java</a></span>
   </div>
   
   <div id="feature-browser">
-	<h3><a href="TreeFilesystem">TreeFilesystem</a></h3>
+	<h3><a href="TreeFilesystem">Tree item handling demo</a></h3>
 	<div class="option">
-	 Browsable file explorer using Toolkit Tree component. Demonstrates: how
+	 <p>
+	 Browsable file explorer using Toolkit Tree component.
+	 </p>
+	 Demonstrates: how
  	 to add items hierarchially into
-	 <code>com.itmill.toolkit.ui.Component.Tree</code>, how to receive
+	 <em>com.itmill.toolkit.ui.Component.Tree</em>, how to receive
 	 ExpandEvent and implement
-	 <code>com.itmill.toolkit.ui.Tree.ExpandListener</code>.
+	 <em>com.itmill.toolkit.ui.Tree.ExpandListener</em>.
 	</div>	
+	<br />Source code:
+	<span class="link"><a href="src/com/itmill/toolkit/demo/TreeFilesystem.java.html">TreeFilesystem.java</a></span>
   </div>
   
   <div id="feature-browser">
-	<h3><a href="SelectDemo">SelectDemo</a></h3>
+	<h3><a href="SelectDemo">Select demo</a></h3>
 	<div class="option">
 	<p>
 	 This example shows select component with default and lazy loading functionality enabled (a.k.a Google Suggest).
-	 Click to first select component and type few letters to see it in action. Second select component has default functionality.
+	 Click to first select component and type few letters using your keyboard to see it in action.
+	 Second select component has default functionality.
 	</p>
-	</div>	
+	</div>
+	Source code:
+	<span class="link"><a href="src/com/itmill/toolkit/demo/SelectDemo.java.html">SelectDemo.java</a></span>
   </div>
   
   <div id="feature-browser">
 	<h3><a href="ModalWindow">Modal window</a></h3>
 	<div class="option">
 	 Example of how Modal Windows may be created using Window component.
-	</div>	
+	</div>
+	<br />Source code:
+	<span class="link"><a href="src/com/itmill/toolkit/demo/ModalWindow.java.html">ModalWindow.java</a></span>
   </div>
 
   <div id="feature-browser">
-	<h3><a href="shortcut">Keyboard events demo</a></h3>
+	<h3><a href="KeyboardShortcut">Keyboard events demo</a></h3>
 	<div class="option">
 	 Contains few Toolkit UI components that can be interacted by pressing keys in keyboard.
-	</div>	
+	</div>
+	<br />Source code:
+	<span class="link"><a href="src/com/itmill/toolkit/demo/KeyboardShortcut.java.html">KeyboardShortcut.java</a></span>
   </div>
   
   <div id="feature-browser">
@@ -200,38 +227,10 @@
 	 This is a demonstration of how URL parameters can be recieved and handled.
 	 Parameters and URL:s can be received trough the windows by registering
 	 URIHandler and ParameterHandler classes window.
-	</div>	
+	</div>
+	<br />Source code:
+	<span class="link"><a href="src/com/itmill/toolkit/demo/Parameters.java.html">Parameters.java</a></span>
   </div>
-
-<!--
-  <div id="sample-code">
-	<h3>IT Mill Toolkit Sample Code</h3>
-
-	<h4>Hello World</h4>
-	
-	<div class="option">
-	 <span class="link"><a href="hello/?renderingMode=detect">Autodetected mode</a></span>
-	 <span class="desc">Use AJAX if supported by browser, otherwise fallback to HTML mode</span>
-	</div>
-	
-	<div class="option">
-	 <span class="link"><a href="src/com/itmill/toolkit/demo/HelloWorld.java.html">Source code</a></span>
-	 <span class="desc">See source code how a simple Toolkit application is created</span>
-	</div>
-	
-	<h4>Calculator</h4>
-	
-	<div class="option">
-	 <span class="link"><a href="calc/?renderingMode=detect">Autodetected mode</a></span>
-	 <span class="desc">Use AJAX if supported by browser, otherwise fallback to HTMLmode</span>
-	</div>
-	
-	<div class="option">
-	 <span class="link"><a href="src/com/itmill/toolkit/demo/Calc.java.html">Source	code</a></span>
-	 <span class="desc">See source code how a simple Toolkit application is created</span>
-    </div>
-  </div>
--->
 
 </div><!-- // Container -->
 
