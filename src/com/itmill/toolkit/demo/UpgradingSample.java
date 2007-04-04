@@ -1,5 +1,12 @@
 package com.itmill.toolkit.demo;
 
+//
+// Millstone imports were replaced
+//
+// import org.millstone.base.Application;
+// import org.millstone.base.ui.*;
+// import org.millstone.base.data.*;
+//
 import com.itmill.toolkit.Application;
 import com.itmill.toolkit.data.Property;
 import com.itmill.toolkit.ui.*;
@@ -9,13 +16,14 @@ import com.itmill.toolkit.ui.*;
  * Example application demonstrating simple user login. This example is from
  * MillStone 3.1.1 examples section. Upgrading from 3.1.1 to 4.0.0 was done by
  * updating imports, also setTheme("corporate") call was added to application
- * init method. 
+ * init method.
  * </p>
  * 
  * @since 3.1.1
  * @author IT Mill Ltd.
  */
-public class UpgradingSample extends Application implements Property.ValueChangeListener {
+public class UpgradingSample extends Application implements
+		Property.ValueChangeListener {
 
 	/* Menu for navigating inside the application. */
 	private Tree menu = new Tree();
@@ -96,7 +104,8 @@ public class UpgradingSample extends Application implements Property.ValueChange
 
 		private Panel statusPanel = new Panel();
 
-		private Button logoutButton = new Button("Logout", UpgradingSample.this, "close");
+		private Button logoutButton = new Button("Logout",
+				UpgradingSample.this, "close");
 
 		private Label statusLabel = new Label();
 
