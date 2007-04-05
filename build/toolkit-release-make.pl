@@ -103,7 +103,7 @@ if ($MERGE eq "continue") {
 );
 
 # collect data from host
-&message("Host information");
+&message(" Host information ");
 &execute("date -R");
 &execute("uname -a");
 &execute("java -version");
