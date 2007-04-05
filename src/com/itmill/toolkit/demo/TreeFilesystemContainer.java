@@ -48,13 +48,11 @@ public class TreeFilesystemContainer extends com.itmill.toolkit.Application
 
 		// Explorer panel contains tree
 		explorerPanel.addComponent(filesystem);
-		explorerPanel.setWidth(500);
 
 		// Property panel contains label
 		propertyPanel.addComponent(fileProperties);
 		fileProperties.setCaption("No file selected.");
 		propertyPanel.setEnabled(false);
-		propertyPanel.setWidth(500);
 
 		// Get sample directory
 		File sampleDir = SampleDirectory.getDirectory(this);
