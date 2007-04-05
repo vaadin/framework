@@ -126,6 +126,14 @@
             <param-name>application</param-name>
             <param-value>com.itmill.toolkit.demo.TreeFilesystemContainer</param-value>
         </init-param>
+        <!-- Set this property if demo cannot access context base directory
+         because of Application Server or Servlet Container security constraints-->
+        <!--
+        <init-param>
+        	<param-name>sampleDirectory</param-name>
+        	<param-value>/mySampleDirectory</param-value>
+        </init-param>
+        -->
     </servlet>
     <servlet-mapping>
         <servlet-name>TreeFilesystemContainer</servlet-name>
@@ -139,6 +147,14 @@
             <param-name>application</param-name>
             <param-value>com.itmill.toolkit.demo.TreeFilesystem</param-value>
         </init-param>
+        <!-- Set this property if demo cannot access context base directory
+         because of Application Server or Servlet Container security constraints-->
+        <!--
+        <init-param>
+        	<param-name>sampleDirectory</param-name>
+        	<param-value>/mySampleDirectory</param-value>
+        </init-param>
+        -->
     </servlet>
     <servlet-mapping>
         <servlet-name>TreeFilesystem</servlet-name>

@@ -2,6 +2,8 @@ package com.itmill.toolkit.demo;
 
 import java.io.File;
 import com.itmill.toolkit.data.Item;
+import com.itmill.toolkit.data.util.FilesystemContainer;
+import com.itmill.toolkit.demo.util.SampleDirectory;
 import com.itmill.toolkit.ui.*;
 import com.itmill.toolkit.ui.Tree.ExpandEvent;
 
@@ -17,9 +19,6 @@ import com.itmill.toolkit.ui.Tree.ExpandEvent;
  */
 public class TreeFilesystem extends com.itmill.toolkit.Application implements
 		Tree.ExpandListener {
-
-	// Default is root directory, e.g. / on unix or \ on windows
-	private static final String DIR_ROOT = "" + File.separatorChar;
 
 	// Filesystem explorer panel and it's components
 	private Panel explorerPanel = new Panel("Filesystem explorer");
@@ -43,8 +42,12 @@ public class TreeFilesystem extends com.itmill.toolkit.Application implements
 
 		// "this" handles tree's expand event
 		tree.addListener((Tree.ExpandListener) this);
-		// populate tree's root node
-		populateNode(DIR_ROOT, null);
+
+		// Get sample directory
+		File sampleDir = SampleDirectory.getDirectory(this);
+		// populate tree's root node with example directory
+		if (sampleDir != null)
+			populateNode(sampleDir.getAbsolutePath(), null);
 	}
 
 	/**

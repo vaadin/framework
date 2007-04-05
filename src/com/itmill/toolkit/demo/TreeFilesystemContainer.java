@@ -4,6 +4,7 @@ import java.io.File;
 
 import com.itmill.toolkit.data.util.FilesystemContainer;
 import com.itmill.toolkit.data.util.FilesystemContainer.FileItem;
+import com.itmill.toolkit.demo.util.SampleDirectory;
 import com.itmill.toolkit.ui.*;
 import com.itmill.toolkit.ui.Component.Event;
 import com.itmill.toolkit.ui.Component.Listener;
@@ -21,9 +22,6 @@ import com.itmill.toolkit.ui.Component.Listener;
  */
 public class TreeFilesystemContainer extends com.itmill.toolkit.Application
 		implements Listener {
-
-	// Default is root directory, e.g. / on unix or \ on windows
-	private static final String DIR_ROOT = "" + File.separatorChar;
 
 	// Filesystem explorer panel and it's components
 	private Panel explorerPanel = new Panel("Filesystem explorer");
@@ -58,9 +56,10 @@ public class TreeFilesystemContainer extends com.itmill.toolkit.Application
 		propertyPanel.setEnabled(false);
 		propertyPanel.setWidth(500);
 
+		// Get sample directory
+		File sampleDir = SampleDirectory.getDirectory(this);
 		// Populate tree with FilesystemContainer
-		FilesystemContainer fsc = new FilesystemContainer(new File(DIR_ROOT),
-				true);
+		FilesystemContainer fsc = new FilesystemContainer(sampleDir, true);
 		filesystem.setContainerDataSource(fsc);
 		// "this" handles all filesystem events
 		// e.g. node clicked, expanded etc.
