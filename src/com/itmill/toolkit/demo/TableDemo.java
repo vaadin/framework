@@ -67,8 +67,8 @@ public class TableDemo extends com.itmill.toolkit.Application implements
 
 	// Links for switching between TableDemo and EmbeddedToolkit.jsp page
 	private Link embeddedToolkitLink = new Link(
-			"See same application instance through EmbeddedToolkit.jsp",
-			new ExternalResource("EmbeddedToolkit.jsp"));
+			"See same application instance through ToolkitMashup.jsp",
+			new ExternalResource("ToolkitMashup.jsp"));
 
 	private Link tableDemoLink = new Link(
 			"See same application instance through TableDemo",
