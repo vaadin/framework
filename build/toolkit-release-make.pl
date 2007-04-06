@@ -33,6 +33,11 @@ my $usage =
   " continue : called after manual merging completed.\n\n".
   "Examples:\n\n".
   "No merging example:\n".
+  "toolkit-release-make.pl nomerge 4.0 4.0.1-testing2 internal/4.0.1-rc\n".
+  "  Recreates 4.0 branch from trunk,\n".
+  "  continues automatically with build (no merging allowed),\n".
+  "  release is fully based on trunk.\n\n".
+  "No merging example:\n".
   "toolkit-release-make.pl nomerge 4.1 4.1.0 release\n".
   "  Recreates 4.1 branch from trunk,\n".
   "  continues automatically with build (no merging allowed),\n".
