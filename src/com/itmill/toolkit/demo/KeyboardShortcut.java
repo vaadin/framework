@@ -18,6 +18,8 @@ public class KeyboardShortcut extends com.itmill.toolkit.Application implements 
 
 	Button d;
 
+	Button e;
+
 	private AbstractField f;
 
 	public void init() {
@@ -70,6 +72,9 @@ public class KeyboardShortcut extends com.itmill.toolkit.Application implements 
 		main.addComponent(d);
 		d = new Button("Click to focus Textfield", this, "setFocusF");
 		main.addComponent(d);
+		e = new Button("Test buton", this, "buttonEHandler");
+		e.addActionHandler(this);
+		main.addComponent(e);
 		f.focus();
 	}
 
@@ -93,6 +98,18 @@ public class KeyboardShortcut extends com.itmill.toolkit.Application implements 
 					ShortcutAction.KeyCode.C, new int[] {
 							ShortcutAction.ModifierKey.CTRL,
 							ShortcutAction.ModifierKey.SHIFT });
+		} else if (sender == e) {
+			actions = new Action[5];
+			actions[0] = (Action) new ShortcutAction("Button E action A",
+					ShortcutAction.KeyCode.A, null);
+			actions[1] = (Action) new ShortcutAction("Button E action B",
+					ShortcutAction.KeyCode.B, null);
+			actions[2] = (Action) new ShortcutAction("Button E action F1",
+					ShortcutAction.KeyCode.F1, null);
+			actions[3] = (Action) new ShortcutAction("Button E action F2",
+					ShortcutAction.KeyCode.F2, null);
+			actions[4] = (Action) new ShortcutAction("Button E action F3",
+					ShortcutAction.KeyCode.F3, null);
 		} else if (sender == a) {
 			actions[0] = (Action) new ShortcutAction("Button a action",
 					ShortcutAction.KeyCode.A,
@@ -112,6 +129,8 @@ public class KeyboardShortcut extends com.itmill.toolkit.Application implements 
 			this.buttonBHandler();
 		if (target == c)
 			this.buttonCHandler();
+		if (target == e)
+			this.buttonEHandler();
 		if (target == close)
 			this.close();
 	}
@@ -126,5 +145,8 @@ public class KeyboardShortcut extends com.itmill.toolkit.Application implements 
 
 	public void buttonCHandler() {
 		main.addComponent(new Label("Button C handler fired"));
+	}
+	public void buttonEHandler() {
+		main.addComponent(new Label("Button E handler fired"));
 	}
 }
