@@ -62,6 +62,8 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
 
 	private BeanItem config;
 
+	protected static final int COLUMNS = 3;
+
 	/** Contruct new property panel for configuring given object. */
 	public PropertyPanel(Object objectToConfigure) {
 		super();
@@ -297,14 +299,13 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
 
 	/** Field special properties */
 	private void addFieldProperties() {
-		// TODO This is temporarily disabled, until bug #211 is fixed
-		/*
-		 * Form set = new Form(new GridLayout(COLUMNS, 1));
-		 * set.addField("focus", new Button("Focus", objectToConfigure,
-		 * "focus")); set.getField("focus").setDescription( "Focus the cursor to
-		 * this field. Not all " + "components and/or terminals support this
-		 * feature."); addProperties("Field Features", set);
-		 */
+		// TODO verify that bug #211 is fixed
+		Form set = new Form(new GridLayout(COLUMNS, 1));
+		set.addField("focus", new Button("Focus", objectToConfigure, "focus"));
+		set.getField("focus").setDescription(
+				"Focus the cursor to this field. Not all "
+						+ "components and/or terminals support this feature.");
+		addProperties("Field Features", set);
 	}
 
 	/**
