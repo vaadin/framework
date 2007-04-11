@@ -99,17 +99,10 @@ public class KeyboardShortcut extends com.itmill.toolkit.Application implements 
 							ShortcutAction.ModifierKey.CTRL,
 							ShortcutAction.ModifierKey.SHIFT });
 		} else if (sender == e) {
-			actions = new Action[5];
-			actions[0] = (Action) new ShortcutAction("Button E action A",
-					ShortcutAction.KeyCode.A, null);
-			actions[1] = (Action) new ShortcutAction("Button E action B",
-					ShortcutAction.KeyCode.B, null);
-			actions[2] = (Action) new ShortcutAction("Button E action F1",
-					ShortcutAction.KeyCode.F1, null);
-			actions[3] = (Action) new ShortcutAction("Button E action F2",
-					ShortcutAction.KeyCode.F2, null);
-			actions[4] = (Action) new ShortcutAction("Button E action F3",
-					ShortcutAction.KeyCode.F3, null);
+			actions[0] = (Action) new ShortcutAction("Button E action 2",
+					ShortcutAction.KeyCode.X, new int[] {
+					ShortcutAction.ModifierKey.CTRL,
+					ShortcutAction.ModifierKey.SHIFT});
 		} else if (sender == a) {
 			actions[0] = (Action) new ShortcutAction("Button a action",
 					ShortcutAction.KeyCode.A,
