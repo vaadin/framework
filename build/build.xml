@@ -230,7 +230,7 @@
 		</copy>
 		
 		<!-- Create demo WAR -->
-		<war warfile="${output-dir}/demo/webapps/${product-file}.war" webxml="WebContent/WEB-INF/web.xml">
+		<war warfile="${output-dir}/demo/${product-file}.war" webxml="WebContent/WEB-INF/web.xml">
 			<!-- WebContent: htmls, styles, license-->
 			<fileset dir="WebContent">
 				<exclude name="**/.svn" />
