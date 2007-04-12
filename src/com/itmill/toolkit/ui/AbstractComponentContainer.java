@@ -32,7 +32,8 @@ import java.lang.reflect.Method;
 import java.util.LinkedList;
 import java.util.Iterator;
 
-/** Extension to {@link AbstractComponent} that defines the default
+/** 
+ * Extension to {@link AbstractComponent} that defines the default
  * implementation for the methods in {@link ComponentContainer}. Basic UI
  * components that need to contain other components inherit this class to
  * easily qualify as a component container.
@@ -44,23 +45,26 @@ import java.util.Iterator;
 public abstract class AbstractComponentContainer 
 extends AbstractComponent implements ComponentContainer {
 
-	/** Constructs a new component container. */
+	/** 
+	 * Constructs a new component container. 
+	 */
 	public AbstractComponentContainer() {
 		super();
 	}
 
-    /** Removes all components from the container. This should probably be
-     * reimplemented in extending classes for a more powerfu
+    /** 
+     * Removes all components from the container. This should probably be
+     * reimplemented in extending classes for a more powerfull
      * implementation. 
      */
     public void removeAllComponents() {
         LinkedList l = new LinkedList();
 
-		// Add all components
+		// Adds all components
         for (Iterator i = getComponentIterator(); i.hasNext();)
         	l.add(i.next());
         	
-        // Remove all component
+        // Removes all component
         for (Iterator i = l.iterator(); i.hasNext();)
         	removeComponent((Component)i.next());
     }
@@ -81,7 +85,8 @@ extends AbstractComponent implements ComponentContainer {
 		}
     }
     
-	/** Notifies all contained components that the container is attached to
+	/** 
+	 * Notifies all contained components that the container is attached to
 	 * a window.
 	 * 
 	 * @see com.itmill.toolkit.ui.Component#attach()
@@ -93,7 +98,8 @@ extends AbstractComponent implements ComponentContainer {
 			((Component)i.next()).attach();
 	}
 
-	/** Notifies all contained components that the container is detached
+	/** 
+	 * Notifies all contained components that the container is detached
 	 * from a window.
 	 * 
 	 * @see com.itmill.toolkit.ui.Component#detach()
@@ -147,23 +153,26 @@ extends AbstractComponent implements ComponentContainer {
 		removeListener(ComponentContainer.ComponentDetachEvent.class, listener, COMPONENT_DETACHED_METHOD);
 	}
 
-	/** Fire component attached event. This should be called by the addComponent 
+	/** 
+	 * Fires the component attached event. This should be called by the addComponent 
 	 * methods after the component have been added to this container. 
-	 * @param component The component that has been added to this container.
+	 * @param component the component that has been added to this container.
 	 */
 	protected void fireComponentAttachEvent(Component component) {
 		fireEvent(new ComponentAttachEvent(this,component));
 	}
 
-	/** Fire component detached event. This should be called by the removeComponent 
+	/** 
+	 * Fires the component detached event. This should be called by the removeComponent 
 	 * methods after the component have been removed from this container. 
-	 * @param component The component that has been removed from this container.
+	 * @param component the component that has been removed from this container.
 	 */
 	protected void fireComponentDetachEvent(Component component) {
 		fireEvent(new ComponentAttachEvent(this,component));
 	}
 	
-	/** This only implements the events and component parent calls. The extending
+	/** 
+	 * This only implements the events and component parent calls. The extending
 	 * classes must implement component list maintenance and call this method 
 	 * after component list maintenance.
 	 * @see com.itmill.toolkit.ui.ComponentContainer#addComponent(Component)
@@ -173,7 +182,8 @@ extends AbstractComponent implements ComponentContainer {
 		fireComponentAttachEvent(c);
 	}
 
-	/** This only implements the events and component parent calls. The extending
+	/** 
+	 * This only implements the events and component parent calls. The extending
 	 * classes must implement component list maintenance and call this method 
 	 * before component list maintenance.
 	 * @see com.itmill.toolkit.ui.ComponentContainer#removeComponent(Component)

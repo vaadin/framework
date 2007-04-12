@@ -33,7 +33,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-/** Downloadable stream.
+/** 
+ * Downloadable stream.
  *
  * @author IT Mill Ltd.
  * @version @VERSION@
@@ -41,10 +42,14 @@ import java.util.Map;
  */
 public class DownloadStream {
 
-	/** Maximum cache time. */
+	/** 
+	 * Maximum cache time. 
+	 */
 	public static final long MAX_CACHETIME = Long.MAX_VALUE;
 	
-	/** Default cache time. */
+	/** 
+	 * Default cache time. 
+	 */
 	public static final long DEFAULT_CACHETIME = 1000*60*60*24;
 	
 	private InputStream stream;
@@ -54,7 +59,9 @@ public class DownloadStream {
 	private long cacheTime = DEFAULT_CACHETIME;
 	private int bufferSize = 0;
 
-	/** Creates a new instance of DownloadStream */
+	/** 
+	 * Creates a new instance of DownloadStream. 
+	 */
 	public DownloadStream(
 		InputStream stream,
 		String contentType,
@@ -64,57 +71,64 @@ public class DownloadStream {
 		setFileName(fileName);
 	}
 
-	/** Get downloadable stream.
+	/** 
+	 * Gets downloadable stream.
 	 * @return output stream.
 	 */
 	public InputStream getStream() {
 		return this.stream;
 	}
 
-	/** Sets the stream.
+	/** 
+	 * Sets the stream.
 	 * @param stream The stream to set
 	 */
 	public void setStream(InputStream stream) {
 		this.stream = stream;
 	}
 
-	/** Get stream content type.
+	/** 
+	 * Gets stream content type.
 	 * @return type of the stream content.
 	 */
 	public String getContentType() {
 		return this.contentType;
 	}
 
-	/** Set stream content type.
-	 * @param contentType The contentType to set
+	/** 
+	 * Sets stream content type.
+	 * @param contentType the contentType to set
 	 */
 	public void setContentType(String contentType) {
 		this.contentType = contentType;
 	}
 
-	/** Returns the file name.
-	 * @return The name of the file.
+	/** 
+	 * Returns the file name.
+	 * @return the name of the file.
 	 */
 	public String getFileName() {
 		return fileName;
 	}
 
-	/** Sets the file name.
-	 * @param fileName The file name to set
+	/** 
+	 * Sets the file name.
+	 * @param fileName the file name to set.
 	 */
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
 	}
 
-	/** Set a paramater for download stream.
-	 *  Parameters are optional information about the downloadable stream
-	 *  and their meaning depends on the used adapter. For example in
-	 *  WebAdapter they are interpreted as HTTP response headers.
+	/** 
+	 * Sets a paramater for download stream.
+	 * Parameters are optional information about the downloadable stream
+	 * and their meaning depends on the used adapter. For example in
+	 * WebAdapter they are interpreted as HTTP response headers.
 	 * 	
-	 * 	If the parameters by this name exists, the old value is replaced.
+	 * If the parameters by this name exists, the old value is replaced.
 	 * 
-	 *  @param name Name of the parameter to set.
-	 *  @param value Value of the parameter to set.
+	 * @param name the Name of the parameter to set.
+	 * @param value the Value of the parameter to set.
 	 */
 	public void setParameter(String name, String value) {
 		if (this.params == null) {
@@ -123,12 +137,13 @@ public class DownloadStream {
 		this.params.put(name, value);
 	}
 
-	/** Get a paramater for download stream.
-	 *  Parameters are optional information about the downloadable stream
-	 *  and their meaning depends on the used adapter. For example in
-	 *  WebAdapter they are interpreted as HTTP response headers.
-	 *  @param name Name of the parameter to set.
-	 *  @return Value of the parameter or null if the parameter does not exist.
+	/** 
+	 * Gets a paramater for download stream.
+	 * Parameters are optional information about the downloadable stream
+	 * and their meaning depends on the used adapter. For example in
+	 * WebAdapter they are interpreted as HTTP response headers.
+	 * @param name the Name of the parameter to set.
+	 * @return Value of the parameter or null if the parameter does not exist.
 	 */
 	public String getParameter(String name) {
 		if (this.params != null)
@@ -136,8 +151,9 @@ public class DownloadStream {
 		return null;
 	}
 
-	/** Get the names of the parameters.
-	 * @return Iteraror of names or null if no parameters are set.
+	/** 
+	 * Gets the names of the parameters.
+	 * @return Iterator of names or null if no parameters are set.
 	 */
 	public Iterator getParameterNames() {
 		if (this.params != null)
@@ -145,35 +161,39 @@ public class DownloadStream {
 		return null;
 	}
 	
-	/** Get lenght of cache expiration time.
-	 *  This gives the adapter the possibility cache streams sent to the client.
-	 *  The caching may be made in adapter or at the client if the client supports
-	 *  caching. Default is DEFAULT_CACHETIME.
+	/** 
+	 * Gets length of cache expiration time.
+	 * This gives the adapter the possibility cache streams sent to the client.
+	 * The caching may be made in adapter or at the client if the client supports
+	 * caching. Default is <code>DEFAULT_CACHETIME</code>.
 	 * @return Cache time in milliseconds
 	 */
 	public long getCacheTime() {
 		return cacheTime;
 	}
 
-	/** Set lenght of cache expiration time.
-	 *  This gives the adapter the possibility cache streams sent to the client.
-	 *  The caching may be made in adapter or at the client if the client supports
-	 *  caching. Zero or negavive value disbales the caching of this stream.
-	 * @param cacheTime The cache time in milliseconds.
+	/** 
+	 * Sets length of cache expiration time.
+	 * This gives the adapter the possibility cache streams sent to the client.
+	 * The caching may be made in adapter or at the client if the client supports
+	 * caching. Zero or negavive value disbales the caching of this stream.
+	 * @param cacheTime the cache time in milliseconds.
 	 */
 	public void setCacheTime(long cacheTime) {
 		this.cacheTime = cacheTime;
 	}
 
-	/** Get the size of the download buffer.
+	/** 
+	 * Gets the size of the download buffer.
 	 * @return int The size of the buffer in bytes.
 	 */
 	public int getBufferSize() {
 		return bufferSize;
 	}
 
-	/** Set the size of the download buffer.
-	 * @param bufferSize The size of the buffer in bytes.
+	/** 
+	 * Sets the size of the download buffer.
+	 * @param bufferSize the size of the buffer in bytes.
 	 */
 	public void setBufferSize(int bufferSize) {
 		this.bufferSize = bufferSize;

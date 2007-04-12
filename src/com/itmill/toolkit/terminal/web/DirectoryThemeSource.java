@@ -49,14 +49,20 @@ public class DirectoryThemeSource implements ThemeSource {
 	private Theme theme;
 	private ApplicationServlet webAdapterServlet;
 
-	/** Collection of subdirectory entries */
+	/** 
+	 * Collection of subdirectory entries. 
+	 */
 	private Collection subdirs = new LinkedList();
 
-	/** Creates a new instance of ThemeRepository by reading the themes
+	/** 
+	 * Creates a new instance of ThemeRepository by reading the themes
 	 * from a local directory.
-	 * @param path Path to the source directory .
-	 * @param url External URL of the repository
-	 * @throws FileNotFoundException if no theme files are found
+	 * @param path the Path to the source directory .
+	 * @param webAdapterServlet 
+	 * @throws ThemeException If the resource is not found or there was
+	 * 			 			some problem finding the resource.
+	 * @throws FileNotFoundException if no theme files are found.
+	 * @throws IOException if the writing failed due to input/output error.
 	 */
 	public DirectoryThemeSource(File path, ApplicationServlet webAdapterServlet)
 		throws ThemeException, FileNotFoundException, IOException {
@@ -69,7 +75,7 @@ public class DirectoryThemeSource implements ThemeSource {
 			throw new java.io.FileNotFoundException(
 				"Theme path must be a directory ('" + this.path + "')");
 
-		// Load description file
+		// Loads description file
 		File description = new File(path, Theme.DESCRIPTIONFILE);
 		if (description.exists()) {
 			try {
@@ -109,6 +115,7 @@ public class DirectoryThemeSource implements ThemeSource {
 	}
 
 	/**
+	 * Gets the XSL stream for the specified theme and web-browser type.
 	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getXSLStreams(Theme, WebBrowser)
 	 */
 	public Collection getXSLStreams(Theme theme, WebBrowser type)
@@ -123,7 +130,7 @@ public class DirectoryThemeSource implements ThemeSource {
 				Log.info("DirectoryThemeSource: Loading XSL from: " + theme);
 			}
 
-			// Reload the description file
+			// Reloads the description file
 			File description = new File(path, Theme.DESCRIPTIONFILE);
 			if (description.exists()) {
 				try {
@@ -136,7 +143,7 @@ public class DirectoryThemeSource implements ThemeSource {
 
 			Collection fileNames = theme.getFileNames(type, Theme.MODE_HTML);
 
-			// Add all XSL file streams
+			// Adds all XSL file streams
 			for (Iterator i = fileNames.iterator(); i.hasNext();) {
 				File f = new File(this.path, (String) i.next());
 				if (f.getName().endsWith(".xsl"))
@@ -149,7 +156,7 @@ public class DirectoryThemeSource implements ThemeSource {
 
 		} else {
 
-			// Handle subdirectories: return the first match
+			// Handles subdirectories: return the first match
 			for (Iterator i = this.subdirs.iterator(); i.hasNext();) {
 				ThemeSource source = (ThemeSource) i.next();
 				if (source.getThemes().contains(theme))
@@ -157,12 +164,13 @@ public class DirectoryThemeSource implements ThemeSource {
 			}
 		}
 
-		// Return the concatenated stream
+		// Returns the concatenated stream
 		return xslFiles;
 
 	}
 
 	/**
+	 * Gets the last modification time, used to reload theme on changes.
 	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getModificationTime()
 	 */
 	public long getModificationTime() {
@@ -170,13 +178,13 @@ public class DirectoryThemeSource implements ThemeSource {
 		long modTime = 0;
 
 		// If this directory contains a theme 
-		// return XSL from this theme	
+		// returns XSL from this theme	
 		if (this.theme != null) {
 
-			// Get modification time of the description file
+			// Gets modification time of the description file
 			modTime = new File(this.path, Theme.DESCRIPTIONFILE).lastModified();
 
-			// Get modification time of the themes directory itself
+			// Gets modification time of the themes directory itself
 			if (this.path.lastModified() > modTime) {
 				modTime = this.path.lastModified();
 			}
@@ -190,7 +198,7 @@ public class DirectoryThemeSource implements ThemeSource {
 				}
 			}
 		} else {
-			// Handle subdirectories
+			// Handles subdirectories
 			for (Iterator i = this.subdirs.iterator(); i.hasNext();) {
 				ThemeSource source = (ThemeSource) i.next();
 				long t = source.getModificationTime();
@@ -204,6 +212,7 @@ public class DirectoryThemeSource implements ThemeSource {
 	}
 
 	/**
+	 * Gets the input stream for the resource with the specified resource id.
 	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getResource(String)
 	 */
 	public InputStream getResource(String resourceId)
@@ -240,6 +249,7 @@ public class DirectoryThemeSource implements ThemeSource {
 	}
 
 	/**
+	 * Gets the list of themes in the theme source.
 	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getThemes()
 	 */
 	public Collection getThemes() {
@@ -257,6 +267,7 @@ public class DirectoryThemeSource implements ThemeSource {
 	}
 
 	/**
+	 * Gets the name of the ThemeSource.
 	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getName()
 	 */
 	public String getName() {
@@ -268,6 +279,7 @@ public class DirectoryThemeSource implements ThemeSource {
 	}
 
 	/**
+	 * Gets the Theme instance by name.
 	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getThemeByName(String)
 	 */
 	public Theme getThemeByName(String name) {

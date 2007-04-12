@@ -69,7 +69,9 @@ public class JarThemeSource implements ThemeSource {
 
 	private Cache resourceCache = new Cache();
 
-	/** Collection of subdirectory entries */
+	/** 
+	 * Collection of subdirectory entries. 
+	 */
 	private Collection subdirs = new LinkedList();
 
 	/**
@@ -77,11 +79,18 @@ public class JarThemeSource implements ThemeSource {
 	 * local directory.
 	 * 
 	 * @param file
-	 *            Path to the JAR archive .
+	 *            the Path to the JAR archive .
+	 * @param webAdapterServlet
 	 * @param path
-	 *            Path inside the archive to be processed.
+	 *            the Path inside the archive to be processed.
+	 * @throws ThemeException 
+	 * 					If the resource is not found or there was
+	 * 			 			  some problem finding the resource.
+	 * 
 	 * @throws FileNotFoundException
-	 *             if no theme files are found
+	 *             if no theme files are found.
+	 * @throws IOException
+	 * 				if the writing failed due to input/output error.
 	 */
 	public JarThemeSource(File file, ApplicationServlet webAdapterServlet,
 			String path) throws ThemeException, FileNotFoundException,
@@ -101,7 +110,7 @@ public class JarThemeSource implements ThemeSource {
 
 		this.webAdapterServlet = webAdapterServlet;
 
-		// Load description file
+		// Loads description file
 		JarEntry entry = jar.getJarEntry(this.path + Theme.DESCRIPTIONFILE);
 		if (entry != null) {
 			try {
@@ -142,6 +151,7 @@ public class JarThemeSource implements ThemeSource {
 	}
 
 	/**
+	 * Gets the XSL stream for the specified theme and web-browser type.
 	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getXSLStreams(Theme,
 	 *      WebBrowser)
 	 */
@@ -199,7 +209,7 @@ public class JarThemeSource implements ThemeSource {
 	}
 
 	/**
-	 * Return modication time of the jar file.
+	 * Returns modication time of the jar file.
 	 * 
 	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getModificationTime()
 	 */
@@ -208,6 +218,7 @@ public class JarThemeSource implements ThemeSource {
 	}
 
 	/**
+	 * Gets the input stream for the resource with the specified resource id.
 	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getResource(String)
 	 */
 	public InputStream getResource(String resourceId)
@@ -220,7 +231,7 @@ public class JarThemeSource implements ThemeSource {
 					.substring(this.theme.getName().length() + 1);
 		}
 
-		// Return the resource inside the jar file
+		// Returns the resource inside the jar file
 		JarEntry entry = jar.getJarEntry(resourceId);
 		if (entry != null)
 			try {
@@ -230,7 +241,7 @@ public class JarThemeSource implements ThemeSource {
 				if (data != null)
 					return new ByteArrayInputStream(data);
 
-				// Read data
+				// Reads data
 				int bufSize = 1024;
 				ByteArrayOutputStream out = new ByteArrayOutputStream(bufSize);
 				InputStream in = jar.getInputStream(entry);
@@ -253,6 +264,7 @@ public class JarThemeSource implements ThemeSource {
 	}
 
 	/**
+	 * Gets the list of themes in the theme source.
 	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getThemes()
 	 */
 	public Collection getThemes() {
@@ -269,6 +281,7 @@ public class JarThemeSource implements ThemeSource {
 	}
 
 	/**
+	 * Gets the name of the ThemeSource.
 	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getName()
 	 */
 	public String getName() {
@@ -280,6 +293,7 @@ public class JarThemeSource implements ThemeSource {
 	}
 
 	/**
+	 * Gets the Theme instance by name.
 	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getThemeByName(String)
 	 */
 	public Theme getThemeByName(String name) {
@@ -301,18 +315,32 @@ public class JarThemeSource implements ThemeSource {
 	private class Cache {
 
 		private Map data = new HashMap();
-
+		
+/**
+ * 
+ * @param key
+ * @param value
+ */
 		public void put(Object key, Object value) {
 			data.put(key, new SoftReference(new CacheItem(value)));
 		}
-
+		
+/**
+ * 
+ * @param key
+ * @return
+ */
 		public Object get(Object key) {
 			SoftReference ref = (SoftReference) data.get(key);
 			if (ref != null)
 				return ((CacheItem) ref.get()).getData();
 			return null;
 		}
-
+		
+		/**
+		 * Clears the data.
+		 *
+		 */
 		public void clear() {
 			data.clear();
 		}
@@ -327,15 +355,26 @@ public class JarThemeSource implements ThemeSource {
 	private class CacheItem {
 
 		private Object data;
-
+		
+/**
+ * 
+ * @param data
+ */
 		public CacheItem(Object data) {
 			this.data = data;
 		}
-
+		
+/**
+ * 
+ * @return
+ */
 		public Object getData() {
 			return this.data;
 		};
-
+		
+		/**
+		 * @see java.lang.Object#finalize()
+		 */
 		public void finalize() throws Throwable {
 			this.data = null;
 			super.finalize();

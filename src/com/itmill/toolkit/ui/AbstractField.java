@@ -76,40 +76,64 @@ public abstract class AbstractField extends AbstractComponent implements Field,
 
     private boolean delayedFocus;
 
-    /** Value of the datafield */
+    /** 
+     * Value of the datafield. 
+     */
     private Object value;
 
-    /** Connected data-source. */
+    /** 
+     * Connected data-source. 
+     */
     private Property dataSource = null;
 
-    /** The list of validators. */
+    /** 
+     * The list of validators. 
+     */
     private LinkedList validators = null;
 
-    /** Auto commit mode. */
+    /** 
+     * Auto commit mode. 
+     */
     private boolean writeTroughMode = true;
 
-    /** Read the value from data-source, when it is not modified. */
+    /** 
+     * Reads the value from data-source, when it is not modified. 
+     */
     private boolean readTroughMode = true;
 
-    /** Is the field modified but not committed. */
+    /** 
+     * Is the field modified but not committed. 
+     */
     private boolean modified = false;
 
-    /** Current source exception */
+    /** 
+     * Current source exception. 
+     */
     private Buffered.SourceException currentBufferedSourceException = null;
 
-    /** Are the invalid values alloved in fields ? */
+    /** 
+     * Are the invalid values alloved in fields ? 
+     */
     private boolean invalidAllowed = true;
 
-    /** Are the invalid values committed */
+    /** 
+     * Are the invalid values committed ? 
+     */
     private boolean invalidCommitted = false;
 
-    /** The tab order number of this field */
+    /** 
+     * The tab order number of this field. 
+     */
     private int tabIndex = 0;
 
-    /** Unique focusable id */
+    /** 
+     * Unique focusable id. 
+     */
     private long focusableId = -1;
 
-    /** Required field */
+    /** 
+     * Required field. 
+     */
     private boolean required = false;
 
     /* Component basics ************************************************ */
@@ -119,7 +143,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     }
 
     /*
-     * Paint the field. Don't add a JavaDoc comment here, we use the default
+     * Paints the field. Don't add a JavaDoc comment here, we use the default
      * documentation from the implemented interface.
      */
     public void paintContent(PaintTarget target) throws PaintException {
@@ -137,7 +161,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
         if (isModified())
             target.addAttribute("modified", true);
 
-        // Add required attribute
+        // Adds the required attribute
         if (isRequired())
             target.addAttribute("required", true);
 
@@ -159,7 +183,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     }
 
     /**
-     * Change the readonly state and throw read-only status change events.
+     * Changes the readonly state and throw read-only status change events.
      * 
      * @see com.itmill.toolkit.ui.Component#setReadOnly(boolean)
      */
@@ -168,18 +192,24 @@ public abstract class AbstractField extends AbstractComponent implements Field,
         fireReadOnlyStatusChange();
     }
 
-    /* Buffering ******************************************************* */
-
+    /**
+     * Tests if the invalid data is committed to datasource.
+     * @see com.itmill.toolkit.data.BufferedValidatable#isInvalidCommitted()
+     */
     public boolean isInvalidCommitted() {
         return invalidCommitted;
     }
-
+    
+	/**
+	 * Sets if the invalid data should be committed to datasource.
+	 * @see com.itmill.toolkit.data.BufferedValidatable#setInvalidCommitted(boolean)
+	 */
     public void setInvalidCommitted(boolean isCommitted) {
         this.invalidCommitted = isCommitted;
     }
 
     /*
-     * Save the current value to the data source Don't add a JavaDoc comment
+     * Saves the current value to the data source Don't add a JavaDoc comment
      * here, we use the default documentation from the implemented interface.
      */
     public void commit() throws Buffered.SourceException {
@@ -188,17 +218,17 @@ public abstract class AbstractField extends AbstractComponent implements Field,
             Object newValue = getValue();
             try {
 
-                // Commit the value to datasource
+                // Commits the value to datasource.
                 dataSource.setValue(newValue);
 
             } catch (Throwable e) {
 
-                // Set the buffering state
+                // Sets the buffering state.
                 currentBufferedSourceException = new Buffered.SourceException(
                         this, e);
                 requestRepaint();
 
-                // Throw the source exception
+                // Throws the source exception.
                 throw currentBufferedSourceException;
             }
         }
@@ -222,17 +252,17 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     }
 
     /*
-     * Update the value from the data source. Don't add a JavaDoc comment here,
+     * Updates the value from the data source. Don't add a JavaDoc comment here,
      * we use the default documentation from the implemented interface.
      */
     public void discard() throws Buffered.SourceException {
         if (dataSource != null) {
 
-            // Get the correct value from datasource
+            // Gets the correct value from datasource
             Object newValue;
             try {
 
-                // Discard buffer by overwriting from datasource
+                // Discards buffer by overwriting from datasource
                 newValue = dataSource.getValue();
 
                 // If successful, remove set the buffering state to be ok
@@ -242,12 +272,12 @@ public abstract class AbstractField extends AbstractComponent implements Field,
                 }
             } catch (Throwable e) {
 
-                // Set the buffering state
+                // Sets the buffering state
                 currentBufferedSourceException = new Buffered.SourceException(
                         this, e);
                 requestRepaint();
 
-                // Throw the source exception
+                // Throws the source exception
                 throw currentBufferedSourceException;
             }
 
@@ -278,7 +308,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     }
 
     /*
-     * Test if the field is in write-through mode. Don't add a JavaDoc comment
+     * Tests if the field is in write-through mode. Don't add a JavaDoc comment
      * here, we use the default documentation from the implemented interface.
      */
     public boolean isWriteThrough() {
@@ -286,7 +316,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     }
 
     /*
-     * Set the field's write-through mode to the specified status Don't add a
+     * Sets the field's write-through mode to the specified status Don't add a
      * JavaDoc comment here, we use the default documentation from the
      * implemented interface.
      */
@@ -300,7 +330,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     }
 
     /*
-     * Test if the field is in read-through mode. Don't add a JavaDoc comment
+     * Tests if the field is in read-through mode. Don't add a JavaDoc comment
      * here, we use the default documentation from the implemented interface.
      */
     public boolean isReadThrough() {
@@ -308,7 +338,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     }
 
     /*
-     * Set the field's read-through mode to the specified status Don't add a
+     * Sets the field's read-through mode to the specified status Don't add a
      * JavaDoc comment here, we use the default documentation from the
      * implemented interface.
      */
@@ -324,13 +354,11 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     }
 
     /* Property interface implementation ******************************* */
-
-    /**
-     * Returns the value of the Property in human readable textual format.
-     * 
-     * @return <code>String</code> representation of the value stored in the
-     *         Property
-     */
+    
+   /**
+    * Returns the value of the Property in human readable textual format.
+    * @see java.lang.Object#toString()
+    */
     public String toString() {
         Object value = getValue();
         if (value == null)
@@ -344,7 +372,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      * read-through mode, the abstract buffer is also updated and validation is
      * performed.
      * 
-     * @return the current value of the field
+     * @return the current value of the field.
      */
     public Object getValue() {
 
@@ -363,10 +391,12 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     }
 
     /**
-     * Set the value of the field.
+     * Sets the value of the field.
      * 
      * @param newValue
-     *            New value of the field.
+     *            the New value of the field.
+     * @throws Property.ReadOnlyException
+     * @throws Property.ConversionException
      */
     public void setValue(Object newValue) throws Property.ReadOnlyException,
             Property.ConversionException {
@@ -386,7 +416,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
                         ((Validator) i.next()).validate(newValue);
             }
 
-            // Change the value
+            // Changes the value
             setInternalValue(newValue);
             modified = dataSource != null;
 
@@ -395,7 +425,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
                     && (isInvalidCommitted() || isValid())) {
                 try {
 
-                    // Commit the value to datasource
+                    // Commits the value to datasource
                     dataSource.setValue(newValue);
 
                     // The buffer is now unmodified
@@ -403,12 +433,12 @@ public abstract class AbstractField extends AbstractComponent implements Field,
 
                 } catch (Throwable e) {
 
-                    // Set the buffering state
+                    // Sets the buffering state
                     currentBufferedSourceException = new Buffered.SourceException(
                             this, e);
                     requestRepaint();
 
-                    // Throw the source exception
+                    // Throws the source exception
                     throw currentBufferedSourceException;
                 }
             }
@@ -419,7 +449,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
                 requestRepaint();
             }
 
-            // Fire value change
+            // Fires the value change
             fireValueChange();
         }
     }
@@ -429,7 +459,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     /**
      * Gets the current data source of the field, if any.
      * 
-     * @return The current data source as a Property, or <code>null</code> if
+     * @return the current data source as a Property, or <code>null</code> if
      *         none defined.
      */
     public Property getPropertyDataSource() {
@@ -453,29 +483,29 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      * </p>
      * 
      * @param newDataSource
-     *            the new data source Property
+     *            the new data source Property.
      */
     public void setPropertyDataSource(Property newDataSource) {
 
-        // Save the old value
+        // Saves the old value
         Object oldValue = value;
 
-        // Discard all changes to old datasource
+        // Discards all changes to old datasource
         try {
             discard();
         } catch (Buffered.SourceException ignored) {
         }
 
-        // Stop listening the old data source changes
+        // Stops listening the old data source changes
         if (dataSource != null
                 && Property.ValueChangeNotifier.class
                         .isAssignableFrom(dataSource.getClass()))
             ((Property.ValueChangeNotifier) dataSource).removeListener(this);
 
-        // Set the new data source
+        // Sets the new data source
         dataSource = newDataSource;
 
-        // Get the value from source
+        // Gets the value from source
         try {
             if (dataSource != null)
                 setInternalValue(dataSource.getValue());
@@ -486,7 +516,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
             modified = true;
         }
 
-        // Listen the new data source if possible
+        // Listens the new data source if possible
         if (dataSource instanceof Property.ValueChangeNotifier)
             ((Property.ValueChangeNotifier) dataSource).addListener(this);
 
@@ -498,7 +528,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
                     addValidator((Validator) i.next());
         }
 
-        // Fire value change if the value has changed
+        // Fires value change if the value has changed
         if ((value != oldValue)
                 && ((value != null && !value.equals(oldValue)) || value == null))
             fireValueChange();
@@ -511,7 +541,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      * field are checked each time the its value changes.
      * 
      * @param validator
-     *            the new validator to be added
+     *            the new validator to be added.
      */
     public void addValidator(Validator validator) {
         if (validators == null)
@@ -522,7 +552,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     /**
      * Gets the validators of the field.
      * 
-     * @return Unmodifiable collection that holds all validators for the field.
+     * @return the Unmodifiable collection that holds all validators for the field.
      */
     public Collection getValidators() {
         if (validators == null || validators.isEmpty())
@@ -531,10 +561,10 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     }
 
     /**
-     * Removes a validator from the field.
+     * Removes the validator from the field.
      * 
      * @param validator
-     *            the validator to remove
+     *            the validator to remove.
      */
     public void removeValidator(Validator validator) {
         if (validators != null)
@@ -545,7 +575,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      * Tests the current value against all registered validators.
      * 
      * @return <code>true</code> if all registered validators claim that the
-     *         current value is valid, <code>false</code> otherwise
+     *         current value is valid, <code>false</code> otherwise.
      */
     public boolean isValid() {
 
@@ -559,7 +589,11 @@ public abstract class AbstractField extends AbstractComponent implements Field,
 
         return true;
     }
-
+    
+	/**
+	 * Checks the validity of the validatable
+	 * @see com.itmill.toolkit.data.Validatable#validate()
+	 */
     public void validate() throws Validator.InvalidValueException {
 
         // If there is no validator, there can not be any errors
@@ -571,7 +605,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
         LinkedList errors = null;
         Object value = getValue();
 
-        // Get all the validation errors
+        // Gets all the validation errors
         for (Iterator i = validators.iterator(); i.hasNext();)
             try {
                 ((Validator) i.next()).validate(value);
@@ -595,7 +629,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
         if (errors == null)
             throw firstError;
 
-        // Create composite validator
+        // Creates composite validator
         Validator.InvalidValueException[] exceptions = new Validator.InvalidValueException[errors
                 .size()];
         int index = 0;
@@ -608,10 +642,8 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     /**
      * Fields allow invalid values by default. In most cases this is wanted,
      * because the field otherwise visually forget the user input immediately.
-     * 
-     * @see com.itmill.toolkit.data.Validatable#isInvalidAllowed()
-     * 
      * @return true iff the invalid values are allowed.
+     * @see com.itmill.toolkit.data.Validatable#isInvalidAllowed()
      */
     public boolean isInvalidAllowed() {
         return invalidAllowed;
@@ -620,12 +652,13 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     /**
      * Fields allow invalid values by default. In most cases this is wanted,
      * because the field otherwise visually forget the user input immediately.
+     * <p>
      * In common setting where the user wants to assure the correctness of the
      * datasource, but allow temporarily invalid contents in the field, the user
      * should add the validators to datasource, that should not allow invalid
      * values. The validators are automatically copied to the field when the
      * datasource is set.
-     * 
+     * </p>
      * @see com.itmill.toolkit.data.Validatable#setInvalidAllowed(boolean)
      */
     public void setInvalidAllowed(boolean invalidAllowed)
@@ -673,7 +706,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     }
 
     /*
-     * Add a value change listener for the field. Don't add a JavaDoc comment
+     * Adds a value change listener for the field. Don't add a JavaDoc comment
      * here, we use the default documentation from the implemented interface.
      */
     public void addListener(Property.ValueChangeListener listener) {
@@ -682,7 +715,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     }
 
     /*
-     * Remove a value change listener from the field. Don't add a JavaDoc
+     * Removes a value change listener from the field. Don't add a JavaDoc
      * comment here, we use the default documentation from the implemented
      * interface.
      */
@@ -692,7 +725,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     }
 
     /**
-     * Emit a value change event. The value contained in the field is validated
+     * Emits the value change event. The value contained in the field is validated
      * before the event is created.
      */
     protected void fireValueChange() {
@@ -734,19 +767,19 @@ public abstract class AbstractField extends AbstractComponent implements Field,
         private static final long serialVersionUID = 3258688823264161846L;
 
         /**
-         * New instance of text change event
+         * New instance of text change event.
          * 
          * @param source
-         *            Source of the event.
+         *            the Source of the event.
          */
         public ReadOnlyStatusChangeEvent(AbstractField source) {
             super(source);
         }
 
         /**
-         * Property where the event occurred
+         * Property where the event occurred.
          * 
-         * @return Source of the event.
+         * @return the Source of the event.
          */
         public Property getProperty() {
             return (Property) getSource();
@@ -754,7 +787,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     }
 
     /*
-     * Add a read-only status change listener for the field. Don't add a JavaDoc
+     * Adds a read-only status change listener for the field. Don't add a JavaDoc
      * comment here, we use the default documentation from the implemented
      * interface.
      */
@@ -774,7 +807,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     }
 
     /**
-     * Emit a read-only status change event. The value contained in the field is
+     * Emits the read-only status change event. The value contained in the field is
      * validated before the event is created.
      */
     protected void fireReadOnlyStatusChange() {
@@ -787,14 +820,16 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      * 
      * @param event
      *            the value change event telling the data source contents have
-     *            changed
+     *            changed.
      */
     public void valueChange(Property.ValueChangeEvent event) {
         if (isReadThrough() || !isModified())
             fireValueChange();
     }
 
-    /** Ask the terminal to place the cursor to this field. */
+    /** 
+     * Asks the terminal to place the cursor to this field. 
+     */
     public void focus() {
         Window w = getWindow();
         if (w != null) {
@@ -805,14 +840,14 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     }
 
     /**
-     * Create abstract field by the type of the property.
+     * Creates abstract field by the type of the property.
      * 
      * <p>
-     * This returns most suitable field type for editing property of given type
+     * This returns most suitable field type for editing property of given type.
      * </p>
      * 
      * @param propertyType
-     *            Type of the property, that needs to be edited.
+     *            the Type of the property, that needs to be edited.
      */
     public static AbstractField constructField(Class propertyType) {
 
@@ -838,21 +873,21 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     }
 
     /**
-     * Get the tab index of this field. The tab index property is used to
+     * Gets the tab index of this field. The tab index property is used to
      * specify the natural tab ordering of fields.
      * 
-     * @return Tab index of this field. Negative value means unspecified.
+     * @return the Tab index of this field. Negative value means unspecified.
      */
     public int getTabIndex() {
         return tabIndex;
     }
 
     /**
-     * Get the tab index of this field. The tab index property is used to
+     * Gets the tab index of this field. The tab index property is used to
      * specify the natural tab ordering of fields.
      * 
      * @param tabIndex
-     *            The tab order of this component. Negative value means
+     *            the tab order of this component. Negative value means
      *            unspecified.
      */
     public void setTabIndex(int tabIndex) {
@@ -860,18 +895,19 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     }
 
     /**
-     * Set the internal field value. This is purely used by AbstractField to
+     * Sets the internal field value. This is purely used by AbstractField to
      * change the internal Field value. It does not trigger any events. It can
      * be overriden by the inheriting classes to update all dependent variables.
      * 
      * @param newValue
-     *            The new value to be set.
+     *            the new value to be set.
      */
     protected void setInternalValue(Object newValue) {
         this.value = newValue;
     }
 
     /**
+     * Gets the unique ID of focusable
      * @see com.itmill.toolkit.ui.Component.Focusable#getFocusableId()
      */
     public long getFocusableId() {
@@ -879,6 +915,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     }
 
     /**
+     * Notifies the component that it is connected to an application.
      * @see com.itmill.toolkit.ui.Component#attach()
      */
     public void attach() {
@@ -891,20 +928,19 @@ public abstract class AbstractField extends AbstractComponent implements Field,
 
     /**
      * Is this field required.
-     * 
      * Required fields must filled by the user.
      * 
-     * @return true if the
+     * @return <code>true</code> if the field is required .otherwise <code>false</code>.
      */
     public boolean isRequired() {
         return required;
     }
 
     /**
-     * Set the field required. Required fields must filled by the user.
+     * Sets the field required. Required fields must filled by the user.
      * 
      * @param required
-     *            Is the field required
+     *            Is the field required.
      */
     public void setRequired(boolean required) {
         this.required = required;
@@ -912,6 +948,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
 
     /**
      * Free used resources.
+     * @see java.lang.Object#finalize()
      */
     public void finalize() throws Throwable {
         if (focusableId > -1) {

@@ -35,13 +35,12 @@ import java.util.LinkedList;
 
 import com.itmill.toolkit.data.*;
 
-/** Composite validator.
- * 
- * This validator allows you to chain (compose) many validators
+/** 
+ * The <code>CompositeValidator</code> allows you to chain (compose) many validators
  * to validate one field. The contained validators may be required
  * to all validate the value to validate or it may be enough that
  * one contained validator validates the value. This behaviour is
- * controlled by the modes AND and OR.
+ * controlled by the modes <code>AND</code> and <code>OR</code>.
  * 
  * @author IT Mill Ltd.
  * @version @VERSION@
@@ -49,43 +48,58 @@ import com.itmill.toolkit.data.*;
  */
 public class CompositeValidator implements Validator {
 
-	/** The validators are combined with AND clause: validity of the
+	/** 
+	 * The validators are combined with <code>AND</code> clause: validity of the
 	 * composite implies validity of the all validators it is composed of
 	 * must be valid.
 	 */
 	public static final int MODE_AND = 0;
 
-	/** The validators are combined with OR clause: validity of the
+	/** 
+	 * The validators are combined with <code>OR</code> clause: validity of the
 	 * composite implies that some of validators it is composed of
 	 * must be valid.
 	 */
 	public static final int MODE_OR = 1;
 
-	/** The validators are combined with and clause: validity of the
+	/** 
+	 * The validators are combined with and clause: validity of the
 	 * composite implies validity of the all validators it is composed of
 	 */
 	public static final int MODE_DEFAULT = MODE_AND;
 
-	/** Operation mode */
+	/** 
+	 * Operation mode. 
+	 */
 	private int mode = MODE_DEFAULT;
 
-	/** List of contained validators */
+	/** 
+	 * List of contained validators. 
+	 */
 	private LinkedList validators = new LinkedList();
 
-	/** Error message */
+	/** 
+	 * Error message. 
+	 */
 	private String errorMessage;
 
-	/** Construct composite validator in AND mode without error message */
+	/** 
+	 * Construct composite validator in <code>AND</code> mode without error message. 
+	 */
 	public CompositeValidator() {
 	}
 
-	/** Construct composite validator in given mode */
+	/** 
+	 * Constructs composite validator in given mode. 
+	 */
 	public CompositeValidator(int mode, String errorMessage) {
 		setMode(mode);
 		setErrorMessage(errorMessage);
 	}
 
-	/** Validate the the given value.
+	/** 
+	 * Validates the given value.
+	 * <p>
 	 * The value is valid, if:
 	 * <ul>
 	 * <li><code>MODE_AND</code>: All of the sub-validators are valid
@@ -95,6 +109,10 @@ public class CompositeValidator implements Validator {
 	 * If the value is invalid, validation error is thrown. If the
 	 * error message is set (non-null), it is used. If the error message
 	 * has not been set, the first error occurred is thrown.
+	 * </p>
+	 * @param value the value to check.
+	 * @throws Validator.InvalidValueException
+	 * 										if the value is not valid.
 	 */
 	public void validate(Object value) throws Validator.InvalidValueException {
 		switch (mode) {
@@ -117,15 +135,17 @@ public class CompositeValidator implements Validator {
 				if (em != null) throw new Validator.InvalidValueException(em);
 				else throw first;
 		}
-		throw new IllegalStateException("The valitor is in unsupported operation mode");
+		throw new IllegalStateException("The validator is in unsupported operation mode");
 	}
 
-	/** Check the validity of the the given value.
+	/** 
+	 * Checks the validity of the the given value.
 	 * The value is valid, if:
 	 * <ul>
 	 * <li><code>MODE_AND</code>: All of the sub-validators are valid
 	 * <li><code>MODE_OR</code>: Any of the sub-validators are valid
 	 * </ul>
+	 * @param value the value to check.
 	 */
 	public boolean isValid(Object value) {
 		switch (mode) {
@@ -148,7 +168,8 @@ public class CompositeValidator implements Validator {
 		throw new IllegalStateException("The valitor is in unsupported operation mode");
 	}
 
-	/** Get the mode of the validator.
+	/** 
+	 * Gets the mode of the validator.
 	 * @return Operation mode of the validator: 
 	 * <code>MODE_AND</code> or <code>MODE_OR</code>.
 	 */
@@ -156,11 +177,13 @@ public class CompositeValidator implements Validator {
 		return mode;
 	}
 
-	/** Set the mode of the validator. The valid modes are:
+	/** 
+	 * Sets the mode of the validator. The valid modes are:
 	 * <ul>
 	 * <li><code>MODE_AND</code>  (default)
 	 * <li><code>MODE_OR</code>
 	 * </ul>
+	 * @param mode the mode to set.
 	 */
 	public void setMode(int mode) {
 		if (mode != MODE_AND && mode != MODE_OR)
@@ -168,7 +191,8 @@ public class CompositeValidator implements Validator {
 		this.mode = mode;
 	}
 
-	/** Get the error message for the composite validator. 
+	/** 
+	 * Gets the error message for the composite validator. 
 	 * If the error message is null, original error messages of the 
 	 * sub-validators are used instead.
 	 */
@@ -180,37 +204,48 @@ public class CompositeValidator implements Validator {
 		return null;
 	}
 
-	/** Set the error message for the composite validator. 
+	/** 
+	 * Sets the error message for the composite validator. 
 	 * If the error message is null, original error messages of the 
 	 * sub-validators are used instead.
+	 * @param errorMessage the Error Message to set.
 	 */
 	public void setErrorMessage(String errorMessage) {
 		this.errorMessage = errorMessage;
 	}
 
-	/** Add validator to the interface */
+	/** 
+	 * Adds validator to the interface.
+	 * @param validator the Validator object which performs validation checks
+	 *  on this set of data field values.
+	 */
 	public void addValidator(Validator validator) {
 		if (validator == null)
 			return;
 		validators.add(validator);
 	}
 
-	/** Remove a validator from the composite */
+	/**
+	 * Removes a validator from the composite.
+	 * @param validator  the Validator object which performs validation checks
+	 *  on this set of data field values.
+	 */
 	public void removeValidator(Validator validator) {
 		validators.remove(validator);
 	}
 
-	/** Get sub-validators by class. 
+	/** 
+	 * Gets sub-validators by class. 
 	 * 
 	 * <p>If the component contains
 	 * directly or recursively (it contains another composite 
 	 * containing the validator) validators compatible with given type they
-	 * are returned. This only applies to AND mode composite 
+	 * are returned. This only applies to <code>AND</code> mode composite 
 	 * validators.</p>
 	 * 
-	 * <p>If the validator is in OR mode or does not contain any
+	 * <p>If the validator is in <code>OR</code> mode or does not contain any
 	 * validators of given type null is returned. </p>
-	 * 
+	 *  
 	 * @return Collection of validators compatible with given type that 
 	 * must apply or null if none fould.
 	 */

@@ -29,9 +29,11 @@
 package com.itmill.toolkit.data;
 
 
-/** <p>This interface defines the combination of Validatable and Buffered interfaces.
- * The combination of the interfaces defines if the invalid data is committed to 
- * datasource.</p>
+/** <p>
+ * This interface defines the combination of <code>Validatable</code> and
+ * <code>Buffered</code> interfaces. The combination of the interfaces defines
+ * if the invalid data is committed to datasource.
+ * </p>
  * 
  * @author IT Mill Ltd.
  * @version @VERSION@
@@ -39,11 +41,15 @@ package com.itmill.toolkit.data;
  */
 public interface BufferedValidatable extends Buffered, Validatable {
 
-	/** Is the invalid data committed to datasource. 
-	 * The default is false. */
+	/** 
+	 * Tests if the invalid data is committed to datasource. 
+	 * The default is <code>false</code>.
+	 */
 	public boolean isInvalidCommitted();
 	
-	/** Set if the invalid data should be committed to datasource. 
-	 * The default is false. */	
+	/** 
+	 * Sets if the invalid data should be committed to datasource. 
+	 * The default is <code>false</code>.
+	 */	
 	public void setInvalidCommitted(boolean isCommitted);
 }

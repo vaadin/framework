@@ -103,16 +103,24 @@ public class ApplicationServlet extends HttpServlet implements
 
 	private static final long serialVersionUID = -4937882979845826574L;
 
-	/** Version number of this release. For example "4.0.0" */
+	/** 
+	 * Version number of this release. For example "4.0.0". 
+	 */
 	public static final String VERSION;
 
-	/** Major version number. For example 4 in 4.1.0. */
+	/** 
+	 * Major version number. For example 4 in 4.1.0. 
+	 */
 	public static final int VERSION_MAJOR;
 
-	/** Minor version number. For example 1 in 4.1.0. */
+	/** 
+	 * Minor version number. For example 1 in 4.1.0. 
+	 */
 	public static final int VERSION_MINOR;
 
-	/** Build number. For example 0-beta1 in 4.0.0-beta1. */
+	/** 
+	 * Builds number. For example 0-beta1 in 4.0.0-beta1. 
+	 */
 	public static final String VERSION_BUILD;
 
 	/* Initialize version numbers from string replaced by build-script. */
@@ -222,9 +230,9 @@ public class ApplicationServlet extends HttpServlet implements
 	 * is being placed into service.
 	 * 
 	 * @param servletConfig
-	 *            object containing the servlet's configuration and
+	 *            the object containing the servlet's configuration and
 	 *            initialization parameters
-	 * @throws ServletException
+	 * @throws javax.servlet.ServletException
 	 *             if an exception has occurred that interferes with the
 	 *             servlet's normal operation.
 	 */
@@ -232,14 +240,14 @@ public class ApplicationServlet extends HttpServlet implements
 			throws javax.servlet.ServletException {
 		super.init(servletConfig);
 
-		// Get the application class name
+		// Gets the application class name
 		String applicationClassName = servletConfig
 				.getInitParameter("application");
 		if (applicationClassName == null) {
 			Log.error("Application not specified in servlet parameters");
 		}
 
-		// Store the application parameters into Properties object
+		// Stores the application parameters into Properties object
 		this.applicationProperties = new Properties();
 		for (Enumeration e = servletConfig.getInitParameterNames(); e
 				.hasMoreElements();) {
@@ -248,7 +256,7 @@ public class ApplicationServlet extends HttpServlet implements
 					.getInitParameter(name));
 		}
 
-		// Override with server.xml parameters
+		// Overrides with server.xml parameters
 		ServletContext context = servletConfig.getServletContext();
 		for (Enumeration e = context.getInitParameterNames(); e
 				.hasMoreElements();) {
@@ -257,48 +265,48 @@ public class ApplicationServlet extends HttpServlet implements
 					.getInitParameter(name));
 		}
 
-		// Get the debug window parameter
+		// Gets the debug window parameter
 		String debug = getApplicationOrSystemProperty(PARAMETER_DEBUG, "")
 				.toLowerCase();
-		// Enable application specific debug
+		// Enables application specific debug
 		if (!"".equals(debug) && !"true".equals(debug)
 				&& !"false".equals(debug))
 			throw new ServletException(
 					"If debug parameter is given for an application, it must be 'true' or 'false'");
 		this.debugMode = debug;
 
-		// Get the maximum number of simultaneous transformers
+		// Gets the maximum number of simultaneous transformers
 		this.maxConcurrentTransformers = Integer
 				.parseInt(getApplicationOrSystemProperty(
 						PARAMETER_MAX_TRANSFORMERS, "-1"));
 		if (this.maxConcurrentTransformers < 1)
 			this.maxConcurrentTransformers = DEFAULT_MAX_TRANSFORMERS;
 
-		// Get cache time for transformers
+		// Gets cache time for transformers
 		this.transformerCacheTime = Integer
 				.parseInt(getApplicationOrSystemProperty(
 						PARAMETER_TRANSFORMER_CACHETIME, "-1")) * 1000;
 
-		// Get cache time for theme resources
+		// Gets cache time for theme resources
 		this.themeCacheTime = Integer.parseInt(getApplicationOrSystemProperty(
 				PARAMETER_THEME_CACHETIME, "-1")) * 1000;
 		if (this.themeCacheTime < 0) {
 			this.themeCacheTime = DEFAULT_THEME_CACHETIME;
 		}
 
-		// Add all specified theme sources
+		// Adds all specified theme sources
 		this.themeSource = new CollectionThemeSource();
 		List directorySources = getThemeSources();
 		for (Iterator i = directorySources.iterator(); i.hasNext();) {
 			this.themeSource.add((ThemeSource) i.next());
 		}
 
-		// Add the default theme source
+		// Adds the default theme source
 		String[] defaultThemeFiles = new String[] { getApplicationOrSystemProperty(
 				PARAMETER_DEFAULT_THEME_JAR, DEFAULT_THEME_JAR) };
 		File f = findDefaultThemeJar(defaultThemeFiles);
 		try {
-			// Add themes.jar if exists
+			// Adds themes.jar if exists
 			if (f != null && f.exists())
 				this.themeSource.add(new JarThemeSource(f, this, ""));
 			else {
@@ -311,7 +319,7 @@ public class ApplicationServlet extends HttpServlet implements
 					+ Arrays.asList(defaultThemeFiles), e);
 		}
 
-		// Check that at least one themesource was loaded
+		// Checks that at least one themesource was loaded
 		if (this.themeSource.getThemes().size() <= 0) {
 			throw new ServletException(
 					"No themes found in specified themesources. "
@@ -320,7 +328,7 @@ public class ApplicationServlet extends HttpServlet implements
 							+ "to WEB-INF/lib directory.");
 		}
 
-		// Initialize the transformer factory, if not initialized
+		// Initializes the transformer factory, if not initialized
 		if (this.transformerFactory == null) {
 
 			this.transformerFactory = new UIDLTransformerFactory(
@@ -328,7 +336,7 @@ public class ApplicationServlet extends HttpServlet implements
 					this.transformerCacheTime);
 		}
 
-		// Load the application class using the same class loader
+		// Loads the application class using the same class loader
 		// as the servlet itself
 		ClassLoader loader = this.getClass().getClassLoader();
 		try {
@@ -340,12 +348,12 @@ public class ApplicationServlet extends HttpServlet implements
 	}
 
 	/**
-	 * Get an application or system property value.
+	 * Gets an application or system property value.
 	 * 
 	 * @param parameterName
-	 *            Name or the parameter
+	 *            the Name or the parameter.
 	 * @param defaultValue
-	 *            Default to be used
+	 *            the Default to be used.
 	 * @return String value or default if not found
 	 */
 	private String getApplicationOrSystemProperty(String parameterName,
@@ -390,13 +398,21 @@ public class ApplicationServlet extends HttpServlet implements
 	}
 
 	/**
-	 * Get ThemeSources from given path. Construct the list of avalable themes
-	 * in path using the following sources: 1. content of THEME_PATH directory
-	 * (if available) 2. The themes listed in THEME_LIST_FILE 3. "themesource"
-	 * application parameter - "ThemeSource" system property
-	 * 
-	 * @param THEME_DIRECTORY_PATH
-	 * @return List
+	 * Gets ThemeSources from given path. Construct the list of avalable themes
+	 * in path using the following sources:
+	 * <p> 
+	 * 1. Content of <code>THEME_PATH</code> directory (if available). 
+	 * </p>
+	 * <p>
+	 * 2. The themes listed in <code>THEME_LIST_FILE</code>.
+	 * </p>
+	 * <p> 
+	 * 3. "themesource" application parameter - "ThemeSource" system property.
+	 * </p>
+	 * @return the List
+	 * @throws ServletException
+	 * 						if an exception has occurred that interferes with the
+	 *             			servlet's normal operation.
 	 */
 	private List getThemeSources() throws ServletException {
 
@@ -446,7 +462,7 @@ public class ApplicationServlet extends HttpServlet implements
 			}
 		}
 
-		// Add the theme sources from application properties
+		// Adds the theme sources from application properties
 		String paramValue = getApplicationOrSystemProperty(
 				PARAMETER_THEMESOURCE, null);
 		if (paramValue != null) {
@@ -456,7 +472,7 @@ public class ApplicationServlet extends HttpServlet implements
 			}
 		}
 
-		// Construct appropriate theme source instances for each path
+		// Constructs appropriate theme source instances for each path
 		for (Iterator i = sourcePaths.iterator(); i.hasNext();) {
 			String source = (String) i.next();
 			File sourceFile = new File(source);
@@ -482,7 +498,7 @@ public class ApplicationServlet extends HttpServlet implements
 			}
 		}
 
-		// Return the constructed list of theme sources
+		// Returns the constructed list of theme sources
 		return returnValue;
 	}
 
@@ -491,16 +507,16 @@ public class ApplicationServlet extends HttpServlet implements
 	 * dispatches them.
 	 * 
 	 * @param request
-	 *            object that contains the request the client made of the
-	 *            servlet
+	 *            the object that contains the request the client made of the
+	 *            servlet.
 	 * @param response
-	 *            object that contains the response the servlet returns to the
-	 *            client
+	 *            the object that contains the response the servlet returns to the
+	 *            client.
 	 * @throws ServletException
 	 *             if an input or output error occurs while the servlet is
-	 *             handling the TRACE request
+	 *             handling the TRACE request.
 	 * @throws IOException
-	 *             if the request for the TRACE cannot be handled
+	 *             if the request for the TRACE cannot be handled.
 	 */
 	protected void service(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
@@ -513,25 +529,25 @@ public class ApplicationServlet extends HttpServlet implements
 		Application application = null;
 		try {
 
-			// Handle resource requests
+			// Handles resource requests
 			if (handleResourceRequest(request, response))
 				return;
 
-			// Handle server commands
+			// Handles server commands
 			if (handleServerCommands(request, response))
 				return;
 
-			// Get the application
+			// Gets the application
 			application = getApplication(request);
 
-			// Create application if it doesn't exist
+			// Creates application if it doesn't exist
 			if (application == null)
 				application = createApplication(request);
 
-			// Set the last application request date
+			// Sets the last application request date
 			applicationToLastRequestDate.put(application, new Date());
 
-			// Invoke context transaction listeners
+			// Invokes context transaction listeners
 			((WebApplicationContext) application.getContext())
 					.startTransaction(application, request);
 
@@ -543,7 +559,7 @@ public class ApplicationServlet extends HttpServlet implements
 			// made
 			synchronized (application) {
 
-				// Handle UIDL requests?
+				// Handles UIDL requests?
 				String resourceId = request.getPathInfo();
 				if (resourceId != null && resourceId.startsWith(AJAX_UIDL_URI)) {
 
@@ -553,7 +569,7 @@ public class ApplicationServlet extends HttpServlet implements
 					return;
 				}
 
-				// Get the variable map
+				// Gets the variable map
 				variableMap = getVariableMap(application, request);
 				if (variableMap == null)
 					return;
@@ -612,7 +628,7 @@ public class ApplicationServlet extends HttpServlet implements
 					}
 				}
 
-				// Handle the URI if the application is still running
+				// Handles the URI if the application is still running
 				if (application.isRunning())
 					download = handleURI(application, request, response);
 
@@ -624,13 +640,13 @@ public class ApplicationServlet extends HttpServlet implements
 					response.setHeader("Pragma", "no-cache");
 					response.setDateHeader("Expires", 0);
 
-					// Find the window within the application
+					// Finds the window within the application
 					Window window = null;
 					if (application.isRunning())
 						window = getApplicationWindow(request, application,
 								unhandledParameters);
 
-					// Handle the unhandled parameters if the application is
+					// Handles the unhandled parameters if the application is
 					// still running
 					if (window != null && unhandledParameters != null
 							&& !unhandledParameters.isEmpty()) {
@@ -643,13 +659,13 @@ public class ApplicationServlet extends HttpServlet implements
 						}
 					}
 
-					// Remove application if it has stopped
+					// Removes application if it has stopped
 					if (!application.isRunning()) {
 						endApplication(request, response, application);
 						return;
 					}
 
-					// Return blank page, if no window found
+					// Returns blank page, if no window found
 					if (window == null) {
 						response.setContentType("text/html");
 						BufferedWriter page = new BufferedWriter(
@@ -673,12 +689,12 @@ public class ApplicationServlet extends HttpServlet implements
 						return;
 					}
 
-					// Set terminal type for the window, if not already set
+					// Sets terminal type for the window, if not already set
 					if (window.getTerminal() == null) {
 						window.setTerminal(wb);
 					}
 
-					// Find theme
+					// Finds theme
 					String themeName = window.getTheme() != null ? window
 							.getTheme() : DEFAULT_THEME;
 					if (unhandledParameters.get("theme") != null) {
@@ -720,14 +736,14 @@ public class ApplicationServlet extends HttpServlet implements
 					transformer = this.transformerFactory
 							.getTransformer(transformerType);
 
-					// Set the response type
+					// Sets the response type
 					response.setContentType(wb.getContentType());
 
-					// Create UIDL writer
+					// Creates UIDL writer
 					WebPaintTarget paintTarget = transformer
 							.getPaintTarget(variableMap);
 
-					// Assure that the correspoding debug window will be
+					// Assures that the correspoding debug window will be
 					// repainted property
 					// by clearing it before the actual paint.
 					DebugWindow debugWindow = (DebugWindow) application
@@ -736,7 +752,7 @@ public class ApplicationServlet extends HttpServlet implements
 						debugWindow.setWindowUIDL(window, "Painting...");
 					}
 
-					// Paint window
+					// Paints window
 					window.paint(paintTarget);
 					paintTarget.close();
 
@@ -760,7 +776,7 @@ public class ApplicationServlet extends HttpServlet implements
 								.setWindowUIDL(window, paintTarget.getUIDL());
 					}
 
-					// Set the function library state for this thread
+					// Sets the function library state for this thread
 					ThemeFunctionLibrary.setState(application, window,
 							transformerType.getWebBrowser(), request
 									.getSession(), this, transformerType
@@ -790,7 +806,7 @@ public class ApplicationServlet extends HttpServlet implements
 		} catch (UIDLTransformerException te) {
 
 			try {
-				// Write the error report to client
+				// Writes the error report to client
 				response.setContentType("text/html");
 				BufferedWriter err = new BufferedWriter(new OutputStreamWriter(
 						out));
@@ -805,7 +821,7 @@ public class ApplicationServlet extends HttpServlet implements
 						+ ". Original exception was: ", te);
 			}
 
-			// Add previously dirty windows to dirtyWindowList in order
+			// Adds previously dirty windows to dirtyWindowList in order
 			// to make sure that eventually they are repainted
 			Application currentApplication = getApplication(request);
 			for (Iterator iter = currentlyDirtyWindowsForThisApplication
@@ -819,21 +835,35 @@ public class ApplicationServlet extends HttpServlet implements
 			throw new ServletException(e);
 		} finally {
 
-			// Release transformer
+			// Releases transformer
 			if (transformer != null)
 				transformerFactory.releaseTransformer(transformer);
 
-			// Notify transaction end
+			// Notifies transaction end
 			if (application != null)
 				((WebApplicationContext) application.getContext())
 						.endTransaction(application, request);
 
-			// Clean the function library state for this thread
+			// Cleans the function library state for this thread
 			// for security reasons
 			ThemeFunctionLibrary.cleanState();
 		}
 	}
-
+/**
+ * 
+ * @param request the HTTP request.
+ * @param response the HTTP response to write to.
+ * @param out
+ * @param unhandledParameters
+ * @param window
+ * @param terminalType
+ * @param theme
+ * @throws IOException 
+ * 						if the writing failed due to input/output error.
+ * @throws MalformedURLException 
+ * 						if the application is denied access 
+ * 								the persistent data store represented by the given URL.
+ */
 	private void writeAjaxPage(HttpServletRequest request,
 			HttpServletResponse response, OutputStream out,
 			Map unhandledParameters, Window window, WebBrowser terminalType,
@@ -931,21 +961,20 @@ public class ApplicationServlet extends HttpServlet implements
 	}
 
 	/**
-	 * Handle the requested URI. An application can add handlers to do special
+	 * Handles the requested URI. An application can add handlers to do special
 	 * processing, when a certain URI is requested. The handlers are invoked
 	 * before any windows URIs are processed and if a DownloadStream is returned
 	 * it is sent to the client.
 	 * 
-	 * @see com.itmill.toolkit.terminal.URIHandler
-	 * 
 	 * @param application
-	 *            Application owning the URI
+	 *            the Application owning the URI.
 	 * @param request
-	 *            HTTP request instance
+	 *            the HTTP request instance.
 	 * @param response
-	 *            HTTP response to write to.
-	 * @return boolean True if the request was handled and further processing
-	 *         should be suppressed, false otherwise.
+	 *            the HTTP response to write to.
+	 * @return boolean <code>true</code> if the request was handled and further processing
+	 *         should be suppressed, <code>false</code> otherwise.
+	 * @see com.itmill.toolkit.terminal.URIHandler
 	 */
 	private DownloadStream handleURI(Application application,
 			HttpServletRequest request, HttpServletResponse response) {
@@ -956,11 +985,11 @@ public class ApplicationServlet extends HttpServlet implements
 		if (uri == null || uri.length() == 0 || uri.equals("/"))
 			return null;
 
-		// Remove the leading /
+		// Removes the leading /
 		while (uri.startsWith("/") && uri.length() > 0)
 			uri = uri.substring(1);
 
-		// Handle the uri
+		// Handles the uri
 		DownloadStream stream = null;
 		try {
 			stream = application.handleURI(application.getURL(), uri);
@@ -972,21 +1001,19 @@ public class ApplicationServlet extends HttpServlet implements
 	}
 
 	/**
-	 * Handle the requested URI. An application can add handlers to do special
+	 * Handles the requested URI. An application can add handlers to do special
 	 * processing, when a certain URI is requested. The handlers are invoked
 	 * before any windows URIs are processed and if a DownloadStream is returned
 	 * it is sent to the client.
 	 * 
-	 * @see com.itmill.toolkit.terminal.URIHandler
-	 * 
-	 * @param application
-	 *            Application owning the URI
+	 * @param stream the download stream.
+	 *            
 	 * @param request
-	 *            HTTP request instance
+	 *            the HTTP request instance.
 	 * @param response
-	 *            HTTP response to write to.
-	 * @return boolean True if the request was handled and further processing
-	 *         should be suppressed, false otherwise.
+	 *            the HTTP response to write to.
+	 * 
+	 * @see com.itmill.toolkit.terminal.URIHandler
 	 */
 	private void handleDownload(DownloadStream stream,
 			HttpServletRequest request, HttpServletResponse response) {
@@ -995,10 +1022,10 @@ public class ApplicationServlet extends HttpServlet implements
 		InputStream data = stream.getStream();
 		if (data != null) {
 
-			// Set content type
+			// Sets content type
 			response.setContentType(stream.getContentType());
 
-			// Set cache headers
+			// Sets cache headers
 			long cacheTime = stream.getCacheTime();
 			if (cacheTime <= 0) {
 				response.setHeader("Cache-Control", "no-cache");
@@ -1047,8 +1074,8 @@ public class ApplicationServlet extends HttpServlet implements
 	}
 
 	/**
-	 * Look for default theme JAR file.
-	 * 
+	 * Looks for default theme JAR file.
+	 * @param fileList
 	 * @return Jar file or null if not found.
 	 */
 	private File findDefaultThemeJar(String[] fileList) {
@@ -1094,13 +1121,13 @@ public class ApplicationServlet extends HttpServlet implements
 	}
 
 	/**
-	 * Create a temporary file for given stream.
+	 * Creates a temporary file for given stream.
 	 * 
 	 * @param stream
-	 *            Stream to be stored into temporary file.
+	 *            the Stream to be stored into temporary file.
 	 * @param extension
-	 *            File type extension
-	 * @return File
+	 *            the File type extension.
+	 * @return the temporary File.
 	 */
 	private File createTemporaryFile(InputStream stream, String extension) {
 		File tmpFile;
@@ -1125,15 +1152,17 @@ public class ApplicationServlet extends HttpServlet implements
 	}
 
 	/**
-	 * Handle theme resource file requests. Resources supplied with the themes
+	 * Handles theme resource file requests. Resources supplied with the themes
 	 * are provided by the WebAdapterServlet.
 	 * 
 	 * @param request
-	 *            HTTP request
+	 *            the HTTP request.
 	 * @param response
-	 *            HTTP response
-	 * @return boolean True if the request was handled and further processing
-	 *         should be suppressed, false otherwise.
+	 *            the HTTP response.
+	 * @return boolean <code>true</code> if the request was handled and further processing
+	 *         should be suppressed, <code>false</code> otherwise.
+	 * @throws ServletException if an exception has occurred that interferes with the
+	 *             				servlet's normal operation.
 	 */
 	private boolean handleResourceRequest(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException {
@@ -1148,14 +1177,14 @@ public class ApplicationServlet extends HttpServlet implements
 
 		String resourceId = request.getPathInfo();
 
-		// Check if this really is a resource request
+		// Checks if this really is a resource request
 		if (resourceId == null || !resourceId.startsWith(RESOURCE_URI))
 			return false;
 
-		// Check the resource type
+		// Checks the resource type
 		resourceId = resourceId.substring(RESOURCE_URI.length());
 		InputStream data = null;
-		// Get theme resources
+		// Gets theme resources
 		try {
 			data = themeSource.getResource(resourceId);
 		} catch (ThemeSource.ThemeException e) {
@@ -1163,7 +1192,7 @@ public class ApplicationServlet extends HttpServlet implements
 			data = null;
 		}
 
-		// Write the response
+		// Writes the response
 		try {
 			if (data != null) {
 				response.setContentType(FileTypeResolver
@@ -1180,7 +1209,7 @@ public class ApplicationServlet extends HttpServlet implements
 					// caching in some
 					// Tomcats
 				}
-				// Write the data to client
+				// Writes the data to client
 				byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
 				int bytesRead = 0;
 				OutputStream out = response.getOutputStream();
@@ -1201,20 +1230,26 @@ public class ApplicationServlet extends HttpServlet implements
 		return true;
 	}
 
-	/** Get the variable map for the session */
+	/** 
+	 * Gets the variable map for the session.
+	 * @param application
+	 * @param request the HTTP request.
+	 * @return the variable map.
+	 *  
+	 */
 	private static synchronized HttpVariableMap getVariableMap(
 			Application application, HttpServletRequest request) {
 
 		HttpSession session = request.getSession();
 
-		// Get the application to variablemap map
+		// Gets the application to variablemap map
 		Map varMapMap = (Map) session.getAttribute(SESSION_ATTR_VARMAP);
 		if (varMapMap == null) {
 			varMapMap = new WeakHashMap();
 			session.setAttribute(SESSION_ATTR_VARMAP, varMapMap);
 		}
 
-		// Create a variable map, if it does not exists.
+		// Creates a variable map, if it does not exists.
 		HttpVariableMap variableMap = (HttpVariableMap) varMapMap
 				.get(application);
 		if (variableMap == null) {
@@ -1225,7 +1260,12 @@ public class ApplicationServlet extends HttpServlet implements
 		return variableMap;
 	}
 
-	/** Get the current application URL from request */
+	/** 
+	 * Gets the current application URL from request.
+	 * @param request the HTTP request.
+	 * @throws MalformedURLException if the application is denied access to the
+	 * 								 persistent data store represented by the given URL.
+	 */
 	private URL getApplicationUrl(HttpServletRequest request)
 			throws MalformedURLException {
 
@@ -1255,23 +1295,25 @@ public class ApplicationServlet extends HttpServlet implements
 	}
 
 	/**
-	 * Get the existing application for given request. Looks for application
+	 * Gets the existing application for given request. Looks for application
 	 * instance for given request based on the requested URL.
 	 * 
 	 * @param request
-	 *            HTTP request
+	 *            the HTTP request.
 	 * @return Application instance, or null if the URL does not map to valid
 	 *         application.
+	 * @throws MalformedURLException if the application is denied access to the
+	 * 								 persistent data store represented by the given URL.
 	 */
 	private Application getApplication(HttpServletRequest request)
 			throws MalformedURLException {
 
-		// Ensure that the session is still valid
+		// Ensures that the session is still valid
 		HttpSession session = request.getSession(false);
 		if (session == null)
 			return null;
 
-		// Get application list for the session.
+		// Gets application list for the session.
 		LinkedList applications = (LinkedList) session
 				.getAttribute(SESSION_ATTR_APPS);
 		if (applications == null)
@@ -1291,7 +1333,7 @@ public class ApplicationServlet extends HttpServlet implements
 				application = a;
 		}
 
-		// Remove stopped applications from the list
+		// Removes stopped applications from the list
 		if (application != null && !application.isRunning()) {
 			applications.remove(application);
 			application = null;
@@ -1301,14 +1343,27 @@ public class ApplicationServlet extends HttpServlet implements
 	}
 
 	/**
-	 * Create a new application.
-	 * 
-	 * @return New application instance
-	 * @throws SAXException
-	 * @throws LicenseViolation
-	 * @throws InvalidLicenseFile
-	 * @throws LicenseSignatureIsInvalid
+	 * Creates a new application.
+	 * @param request the HTTP request.
+	 * @return the New application instance.
+	 * @throws MalformedURLException 
+	 * 								if the application is denied access to the persistent 
+	 * 								data store represented by the given URL.
+	 * @throws InstantiationException
+	 * 								if a new instance of the class cannot be instantiated.
+	 * @throws IllegalAccessException
+	 * 								if it does not have access to the property accessor method.
 	 * @throws LicenseFileHasNotBeenRead
+	 * 								  if the license file has not been read.
+	 * @throws LicenseSignatureIsInvalid 
+	 * 								  if the license file has been changed or signature is
+	 *             					  otherwise invalid.
+	 * @throws InvalidLicenseFile
+	 * 							if the license file is not of correct XML format.
+	 * @throws LicenseViolation
+	 * 
+	 * @throws SAXException 
+	 * 					the Error parsing the license file.
 	 */
 	private Application createApplication(HttpServletRequest request)
 			throws MalformedURLException, InstantiationException,
@@ -1318,10 +1373,10 @@ public class ApplicationServlet extends HttpServlet implements
 
 		Application application = null;
 
-		// Get the application url
+		// Gets the application url
 		URL applicationUrl = getApplicationUrl(request);
 
-		// Get application list.
+		// Gets application list.
 		HttpSession session = request.getSession();
 		if (session == null)
 			return null;
@@ -1336,19 +1391,19 @@ public class ApplicationServlet extends HttpServlet implements
 					sessionBindingListener);
 		}
 
-		// Create new application and start it
+		// Creates new application and start it
 		try {
 			application = (Application) this.applicationClass.newInstance();
 			applications.add(application);
 
-			// Listen to window add/removes (for web mode)
+			// Listens to window add/removes (for web mode)
 			application.addListener((Application.WindowAttachListener) this);
 			application.addListener((Application.WindowDetachListener) this);
 
-			// Set localte
+			// Sets localte
 			application.setLocale(request.getLocale());
 
-			// Get application context for this session
+			// Gets application context for this session
 			WebApplicationContext context = (WebApplicationContext) session
 					.getAttribute(SESSION_ATTR_CONTEXT);
 			if (context == null) {
@@ -1356,7 +1411,7 @@ public class ApplicationServlet extends HttpServlet implements
 				session.setAttribute(SESSION_ATTR_CONTEXT, context);
 			}
 
-			// Start application and check license
+			// Starts application and check license
 			initializeLicense(application);
 			application.start(applicationUrl, this.applicationProperties,
 					context);
@@ -1374,7 +1429,11 @@ public class ApplicationServlet extends HttpServlet implements
 
 		return application;
 	}
-
+	
+/**
+ * 
+ * @param application
+ */
 	private void initializeLicense(Application application) {
 
 		License license = (License) licenseForApplicationClass.get(application
@@ -1385,7 +1444,22 @@ public class ApplicationServlet extends HttpServlet implements
 		}
 		application.setToolkitLicense(license);
 	}
-
+	
+/**
+ * 
+ * @param application
+ * @throws LicenseFileHasNotBeenRead
+ * 									if the license file has not been read.						
+ * @throws LicenseSignatureIsInvalid
+ * 									if the license file has been changed or signature is
+ *             					    otherwise invalid.
+ * @throws InvalidLicenseFile
+ * 							if the license file is not of correct XML format.
+ * @throws LicenseViolation
+ * 
+ * @throws SAXException
+ * 					the Error parsing the license file.
+ */
 	private void checkLicense(Application application)
 			throws LicenseFileHasNotBeenRead, LicenseSignatureIsInvalid,
 			InvalidLicenseFile, LicenseViolation, SAXException {
@@ -1422,7 +1496,7 @@ public class ApplicationServlet extends HttpServlet implements
 				System.out.print(license.getDescription());
 		}
 
-		// Check license validity
+		// Checks license validity
 		try {
 			license.check(applicationClass, getNumberOfActiveUsers() + 1,
 					VERSION_MAJOR, VERSION_MINOR, "IT Mill Toolkit", null);
@@ -1442,13 +1516,13 @@ public class ApplicationServlet extends HttpServlet implements
 	}
 
 	/**
-	 * Get the number of active application-user pairs.
+	 * Gets the number of active application-user pairs.
 	 * 
 	 * This returns total number of all applications in the server that are
 	 * considered to be active. For an application to be active, it must have
 	 * been accessed less than ACTIVE_USER_REQUEST_INTERVAL ms.
 	 * 
-	 * @return Number of active application instances in the server.
+	 * @return the Number of active application instances in the server.
 	 */
 	private int getNumberOfActiveUsers() {
 
@@ -1464,7 +1538,13 @@ public class ApplicationServlet extends HttpServlet implements
 		return active;
 	}
 
-	/** End application */
+	/** 
+	 * Ends the application.
+	 * @param request the HTTP request.
+	 * @param response the HTTP response to write to.
+	 * @param application the application to end.
+	 * @throws IOException if the writing failed due to input/output error.
+	 */
 	private void endApplication(HttpServletRequest request,
 			HttpServletResponse response, Application application)
 			throws IOException {
@@ -1485,21 +1565,23 @@ public class ApplicationServlet extends HttpServlet implements
 	}
 
 	/**
-	 * Get the existing application or create a new one. Get a window within an
+	 * Gets the existing application or create a new one. Get a window within an
 	 * application based on the requested URI.
 	 * 
 	 * @param request
-	 *            HTTP Request.
+	 *            the HTTP Request.
 	 * @param application
-	 *            Application to query for window.
+	 *           the Application to query for window.
 	 * @return Window mathing the given URI or null if not found.
+	 * @throws ServletException if an exception has occurred that interferes with the
+	 *             				servlet's normal operation.
 	 */
 	private Window getApplicationWindow(HttpServletRequest request,
 			Application application, Map params) throws ServletException {
 
 		Window window = null;
 
-		// Find the window where the request is handled
+		// Finds the window where the request is handled
 		String path = request.getPathInfo();
 
 		// Main window as the URI is empty
@@ -1539,7 +1621,7 @@ public class ApplicationServlet extends HttpServlet implements
 				return null;
 			}
 		}
-		// Create and open new debug window for application if requested
+		// Creates and open new debug window for application if requested
 		Window debugWindow = application.getWindow(DebugWindow.WINDOW_NAME);
 		if (debugWindow == null) {
 			if (isDebugMode(params)
@@ -1567,12 +1649,12 @@ public class ApplicationServlet extends HttpServlet implements
 	}
 
 	/**
-	 * Get relative location of a theme resource.
+	 * Gets relative location of a theme resource.
 	 * 
 	 * @param theme
-	 *            Theme name
+	 *            the Theme name.
 	 * @param resource
-	 *            Theme resource
+	 *            the Theme resource.
 	 * @return External URI specifying the resource
 	 */
 	public String getResourceLocation(String theme, ThemeResource resource) {
@@ -1583,10 +1665,10 @@ public class ApplicationServlet extends HttpServlet implements
 	}
 
 	/**
-	 * Check if web adapter is in debug mode. Extra output is generated to log
+	 * Checks if web adapter is in debug mode. Extra output is generated to log
 	 * when debug mode is enabled.
-	 * 
-	 * @return Debug mode
+	 * @param parameters
+	 * @return <code>true</code> if the web adapter is in debug mode. otherwise <code>false</code>.
 	 */
 	public boolean isDebugMode(Map parameters) {
 		if (parameters != null) {
@@ -1606,7 +1688,12 @@ public class ApplicationServlet extends HttpServlet implements
 	public ThemeSource getThemeSource() {
 		return themeSource;
 	}
-
+	
+/**
+ * 
+ * @param application
+ * @param window
+ */
 	protected void addDirtyWindow(Application application, Window window) {
 		synchronized (applicationToDirtyWindowSetMap) {
 			HashSet dirtyWindows = (HashSet) applicationToDirtyWindowSetMap
@@ -1618,7 +1705,12 @@ public class ApplicationServlet extends HttpServlet implements
 			dirtyWindows.add(window);
 		}
 	}
-
+	
+/**
+ * 
+ * @param application
+ * @param window
+ */
 	protected void removeDirtyWindow(Application application, Window window) {
 		synchronized (applicationToDirtyWindowSetMap) {
 			HashSet dirtyWindows = (HashSet) applicationToDirtyWindowSetMap
@@ -1654,11 +1746,12 @@ public class ApplicationServlet extends HttpServlet implements
 		event.getWindow().removeListener(
 				(Paintable.RepaintRequestListener) this);
 
-		// Add dirty window reference for closing the window
+		// Adds dirty window reference for closing the window
 		addDirtyWindow(event.getApplication(), event.getWindow());
 	}
 
 	/**
+	 * Receives repaint request events.
 	 * @see com.itmill.toolkit.terminal.Paintable.RepaintRequestListener#repaintRequested(Paintable.RepaintRequestEvent)
 	 */
 	public void repaintRequested(RepaintRequestEvent event) {
@@ -1678,7 +1771,11 @@ public class ApplicationServlet extends HttpServlet implements
 			}
 	}
 
-	/** Get the list of dirty windows in application */
+	/** 
+	 * Gets the list of dirty windows in application.
+	 * @param app 
+	 * @return 
+	 */
 	protected Set getDirtyWindows(Application app) {
 		HashSet dirtyWindows;
 		synchronized (applicationToDirtyWindowSetMap) {
@@ -1687,14 +1784,20 @@ public class ApplicationServlet extends HttpServlet implements
 		return dirtyWindows;
 	}
 
-	/** Remove a window from the list of dirty windows */
+	/** 
+	 * Removes a window from the list of dirty windows.
+	 * @param app
+	 * @param window  
+	 */
 	private void windowPainted(Application app, Window window) {
 		removeDirtyWindow(app, window);
 	}
 
 	/**
-	 * Generate server commands stream. If the server commands are not
-	 * requested, return false
+	 * Generates server commands stream. If the server commands are not
+	 * requested, return false.
+	 * @param request the HTTP request instance.
+	 * @param response the HTTP response to write to.
 	 */
 	private boolean handleServerCommands(HttpServletRequest request,
 			HttpServletResponse response) {
@@ -1703,7 +1806,7 @@ public class ApplicationServlet extends HttpServlet implements
 		if (request.getParameter(SERVER_COMMAND_PARAM) == null)
 			return false;
 
-		// Get the application
+		// Gets the application
 		Application application;
 		try {
 			application = getApplication(request);
@@ -1713,13 +1816,13 @@ public class ApplicationServlet extends HttpServlet implements
 		if (application == null)
 			return false;
 
-		// Create continuous server commands stream
+		// Creates continuous server commands stream
 		try {
 
 			// Writer for writing the stream
 			PrintWriter w = new PrintWriter(response.getOutputStream());
 
-			// Print necessary http page headers and padding
+			// Prints necessary http page headers and padding
 			w.println("<html><head></head><body>");
 			for (int i = 0; i < SERVER_COMMAND_HEADER_PADDING; i++)
 				w.print(' ');
@@ -1782,7 +1885,7 @@ public class ApplicationServlet extends HttpServlet implements
 					}
 				}
 
-				// Send the generated commands and newline immediately to
+				// Sends the generated commands and newline immediately to
 				// browser
 				w.println(" ");
 				w.flush();
@@ -1810,7 +1913,10 @@ public class ApplicationServlet extends HttpServlet implements
 
 	private class SessionBindingListener implements HttpSessionBindingListener {
 		private LinkedList applications;
-
+/**
+ * 
+ * @param applications
+ */
 		protected SessionBindingListener(LinkedList applications) {
 			this.applications = applications;
 		}
@@ -1839,7 +1945,7 @@ public class ApplicationServlet extends HttpServlet implements
 						// Close app
 						((Application) apps[i]).close();
 
-						// Stop application server commands stream
+						// Stops application server commands stream
 						Object lock = applicationToServerCommandStreamLock
 								.get(apps[i]);
 						if (lock != null)
@@ -1857,14 +1963,20 @@ public class ApplicationServlet extends HttpServlet implements
 
 	}
 
-	/** Implementation of ParameterHandler.ErrorEvent interface. */
+	/** 
+	 * Implementation of ParameterHandler.ErrorEvent interface. 
+	 */
 	public class ParameterHandlerErrorImpl implements
 			ParameterHandler.ErrorEvent {
 
 		private ParameterHandler owner;
 
 		private Throwable throwable;
-
+/**
+ * 
+ * @param owner
+ * @param throwable
+ */
 		private ParameterHandlerErrorImpl(ParameterHandler owner,
 				Throwable throwable) {
 			this.owner = owner;
@@ -1872,6 +1984,7 @@ public class ApplicationServlet extends HttpServlet implements
 		}
 
 		/**
+		 * Gets the contained throwable.
 		 * @see com.itmill.toolkit.terminal.Terminal.ErrorEvent#getThrowable()
 		 */
 		public Throwable getThrowable() {
@@ -1879,6 +1992,7 @@ public class ApplicationServlet extends HttpServlet implements
 		}
 
 		/**
+		 * Gets the source ParameterHandler.
 		 * @see com.itmill.toolkit.terminal.ParameterHandler.ErrorEvent#getParameterHandler()
 		 */
 		public ParameterHandler getParameterHandler() {
@@ -1887,19 +2001,26 @@ public class ApplicationServlet extends HttpServlet implements
 
 	}
 
-	/** Implementation of URIHandler.ErrorEvent interface. */
+	/** 
+	 * Implementation of URIHandler.ErrorEvent interface. 
+	 */
 	public class URIHandlerErrorImpl implements URIHandler.ErrorEvent {
 
 		private URIHandler owner;
 
 		private Throwable throwable;
-
+/**
+ * 
+ * @param owner
+ * @param throwable
+ */
 		private URIHandlerErrorImpl(URIHandler owner, Throwable throwable) {
 			this.owner = owner;
 			this.throwable = throwable;
 		}
 
 		/**
+		 * Gets the contained throwable.
 		 * @see com.itmill.toolkit.terminal.Terminal.ErrorEvent#getThrowable()
 		 */
 		public Throwable getThrowable() {
@@ -1907,6 +2028,7 @@ public class ApplicationServlet extends HttpServlet implements
 		}
 
 		/**
+		 * Gets the source URIHandler.
 		 * @see com.itmill.toolkit.terminal.URIHandler.ErrorEvent#getURIHandler()
 		 */
 		public URIHandler getURIHandler() {
@@ -1915,7 +2037,7 @@ public class ApplicationServlet extends HttpServlet implements
 	}
 
 	/**
-	 * Get AJAX application manager for an application.
+	 * Gets AJAX application manager for an application.
 	 * 
 	 * If this application has not been running in ajax mode before, new manager
 	 * is created and web adapter stops listening to changes.
@@ -1930,11 +2052,11 @@ public class ApplicationServlet extends HttpServlet implements
 		// This application is going from Web to AJAX mode, create new manager
 		if (mgr == null) {
 
-			// Create new manager
+			// Creates new manager
 			mgr = new AjaxApplicationManager(application);
 			applicationToAjaxAppMgrMap.put(application, mgr);
 
-			// Stop sending changes to this servlet because manager will take
+			// Stops sending changes to this servlet because manager will take
 			// control
 			application.removeListener((Application.WindowAttachListener) this);
 			application.removeListener((Application.WindowDetachListener) this);
@@ -1952,11 +2074,12 @@ public class ApplicationServlet extends HttpServlet implements
 	}
 
 	/**
-	 * Get resource path using different implementations. Required fo supporting
+	 * Gets resource path using different implementations. Required fo supporting
 	 * different servlet container implementations (application servers).
 	 * 
-	 * @param path
-	 * @return
+	 * @param servletContext
+	 * @param path the resource path.
+	 * @return the resource path.
 	 */
 	protected static String getResourcePath(ServletContext servletContext,
 			String path) {

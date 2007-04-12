@@ -70,7 +70,12 @@ public class HttpVariableMap {
 	// Id generator
 	private long lastId = 0;
 
-	/** Convert the string to a supported class */
+	/** 
+	 * Converts the string to a supported class.
+	 * @param type 
+	 * @param value 
+	 * @throws java.lang.ClassCastException
+	 */
 	private static Object convert(Class type, String value)
 		throws java.lang.ClassCastException {
 		try {
@@ -94,7 +99,12 @@ public class HttpVariableMap {
 		}
 	}
 
-	/** Register a new variable.
+	/** 
+	 * Registers a new variable.
+	 * @param name the name of the variable.
+	 * @param type
+	 * @param value
+	 * @param owner the Listener for variable changes.
 	 *
 	 * @return id to assigned for this variable.
 	 */
@@ -104,7 +114,7 @@ public class HttpVariableMap {
 		Object value,
 		VariableOwner owner) {
 
-		// Check that the type of the class is supported
+		// Checks that the type of the class is supported
 		if (!(type.equals(Boolean.class)
 			|| type.equals(Integer.class)
 			|| type.equals(String.class)
@@ -115,7 +125,7 @@ public class HttpVariableMap {
 
 		synchronized (mapLock) {
 
-			// Check if the variable is already mapped
+			// Checks if the variable is already mapped
 			HashMap nameToIdMap = (HashMap) ownerToNameToIdMap.get(owner);
 			if (nameToIdMap == null) {
 				nameToIdMap = new HashMap();
@@ -124,7 +134,7 @@ public class HttpVariableMap {
 			String id = (String) nameToIdMap.get(name);
 
 			if (id == null) {
-				// Generate new id and register it
+				// Generates new id and register it
 				id = "v" + String.valueOf(++lastId);
 				nameToIdMap.put(name, id);
 				idToOwnerMap.put(id, new WeakReference(owner));
@@ -138,12 +148,16 @@ public class HttpVariableMap {
 		}
 	}
 
-	/** Unregisters a variable. */
+	/** 
+	 * Unregisters the variable.
+	 * @param name the name of the variable.
+	 * @param owner the Listener for variable changes.
+	 */
 	public void unregisterVariable(String name, VariableOwner owner) {
 
 		synchronized (mapLock) {
 
-			// Get the id
+			// Gets the id
 			HashMap nameToIdMap = (HashMap) ownerToNameToIdMap.get(owner);
 			if (nameToIdMap == null)
 				return;
@@ -151,7 +165,7 @@ public class HttpVariableMap {
 			if (id != null)
 				return;
 
-			// Remove all the mappings
+			// Removes all the mappings
 			nameToIdMap.remove(name);
 			if (nameToIdMap.isEmpty())
 				ownerToNameToIdMap.remove(owner);
@@ -170,20 +184,31 @@ public class HttpVariableMap {
 	 */
 	private class ParameterContainer {
 
-		/** Construct the mapping: listener to set of listened parameter names */
+		/** 
+		 * Constructs the mapping: listener to set of listened parameter names. 
+		 */
 		private HashMap parameters = new HashMap();
 
-		/** Parameter values */
+		/** 
+		 * Parameter values. 
+		 */
 		private HashMap values = new HashMap();
 
-		/** Multipart parser used for parsing the request */
+		/** 
+		 * Multipart parser used for parsing the request. 
+		 */
 		private ServletMultipartRequest parser = null;
 
-		/** Name - Value mapping of parameters that are not variables */
+		/** 
+		 * Name - Value mapping of parameters that are not variables. 
+		 */
 		private HashMap nonVariables = new HashMap();
 
-		/** Create new parameter container and parse the parameters from the request using
-		 * GET, POST and POST/MULTIPART parsing
+		/** 
+		 * Creates the new parameter container and parse the parameters from the request using
+		 * GET, POST and POST/MULTIPART parsing.
+		 * @param req the HTTP request.
+		 * @throws IOException if the writing failed due to input/output error.
 		 */
 		public ParameterContainer(HttpServletRequest req) throws IOException {
 			// Parse GET / POST parameters
@@ -235,7 +260,11 @@ public class HttpVariableMap {
 
 		}
 
-		/** Add parameter to container */
+		/** 
+		 * Adds the parameter to container.
+		 * @param name the name of the parameter.
+		 * @param value 
+		 */
 		private void addParam(String name, String[] value) {
 
 			// Support name="set:name=value" value="ignored" notation
@@ -330,7 +359,7 @@ public class HttpVariableMap {
 				String[] curVal = (String[]) values.get(name);
 				ArrayList elems = new ArrayList();
 
-				// Add old values if present.
+				// Adds old values if present.
 				if (curVal != null) {
 					for (int i = 0; i < curVal.length; i++)
 						elems.add(curVal[i]);
@@ -355,7 +384,7 @@ public class HttpVariableMap {
 				String[] curVal = (String[]) values.get(name);
 				ArrayList elems = new ArrayList();
 
-				// Add old values if present.
+				// Adds old values if present.
 				if (curVal != null) {
 					for (int i = 0; i < curVal.length; i++)
 						elems.add(curVal[i]);
@@ -378,13 +407,13 @@ public class HttpVariableMap {
 					value = new String[0];
 			}
 
-			// Get the owner
+			// Gets the owner
 			WeakReference ref = (WeakReference) idToOwnerMap.get(name);
 			VariableOwner owner = null;
 			if (ref != null)
 				owner = (VariableOwner) ref.get();
 
-			// Add the parameter to mapping only if they have owners
+			// Adds the parameter to mapping only if they have owners
 			if (owner != null) {
 				Set p = (Set) parameters.get(owner);
 				if (p == null)
@@ -407,58 +436,77 @@ public class HttpVariableMap {
 					idToValueMap.remove(name);
 				}
 
-				// Add the parameter to set of non-variables
+				// Adds the parameter to set of non-variables
 				nonVariables.put(name, value);
 			}
 
 		}
 
-		/** Get the set of all parameters connected to given variable owner */
+		/** 
+		 * Gets the set of all parameters connected to given variable owner.
+		 * @param owner the Listener for variable changes.
+		 * @return  the set of all parameters connected to variable owner.
+		 */
 		public Set getParameters(VariableOwner owner) {
 			if (owner == null)
 				return null;
 			return (Set) parameters.get(owner);
 		}
 
-		/** Get the set of all variable owners owning parameters in this request */
+		/** 
+		 * Gets the set of all variable owners owning parameters in this request.
+		 * @return  
+		 */
 		public Set getOwners() {
 			return parameters.keySet();
 		}
 
-		/** Get the value of a parameter */
+		/** 
+		 * Gets the value of a parameter.
+		 * @param parameterName the name of the parameter.
+		 * @return  the value of the parameter.
+		 */
 		public String[] getValue(String parameterName) {
 			return (String[]) values.get(parameterName);
 		}
 
-		/** Get the servlet multipart parser */
+		/** 
+		 * Gets the servlet multipart parser.
+		 * @return the parser.
+		 */
 		public ServletMultipartRequest getParser() {
 			return parser;
 		}
 
-		/** Get the name - value[] mapping of non variable paramteres */
+		/** 
+		 * Gets the name - value[] mapping of non variable paramteres.
+		 * @return  
+		 */
 		public Map getNonVariables() {
 			return nonVariables;
 		}
 	}
 
-	/** Handle all variable changes in this request.
-	*  @param req Http request to handle
-	*  @param listeners If the list is non null, only the listed listeners are
-	*  served. Otherwise all the listeners are served.
-	*  @return Name to Value[] mapping of unhandled variables
-	*/
+	/** 
+	 * Handles all variable changes in this request.
+	 * @param req the Http request to handle.
+	 * @param errorListener If the list is non null, only the listed listeners are
+	 * served. Otherwise all the listeners are served.
+	 * @return Name to Value[] mapping of unhandled variables.
+	 * @throws IOException if the writing failed due to input/output error.
+	 */
 	public Map handleVariables(
 		HttpServletRequest req,
 		Terminal.ErrorListener errorListener)
 		throws IOException {
 
-		// Get the parameters
+		// Gets the parameters
 		ParameterContainer parcon = new ParameterContainer(req);
 
-		// Sort listeners to dependency order
+		// Sorts listeners to dependency order
 		List listeners = getDependencySortedListenerList(parcon.getOwners());
 
-		// Handle all parameters for all listeners
+		// Handles all parameters for all listeners
 		while (!listeners.isEmpty()) {
 			VariableOwner listener = (VariableOwner) listeners.remove(0);
 			boolean changed = false; // Has any of this owners variabes changed
@@ -467,9 +515,9 @@ public class HttpVariableMap {
 			if (params != null) { // Name value mapping
 				Map variables = new HashMap();
 				for (Iterator pi = params.iterator(); pi.hasNext();) {
-					// Get the name of the parameter
+					// Gets the name of the parameter
 					String param = (String) pi.next();
-					// Extract more information about the parameter
+					// Extracts more information about the parameter
 					String varName = (String) idToNameMap.get(param);
 					Class varType = (Class) idToTypeMap.get(param);
 					Object varOldValue = idToValueMap.get(param);
@@ -582,15 +630,22 @@ public class HttpVariableMap {
 		return parcon.getNonVariables();
 	}
 
-	/** Implementation of VariableOwner.Error interface. */
+	/** 
+	 * Implementation of VariableOwner.Error interface. 
+	 */
 	public class TerminalErrorImpl implements Terminal.ErrorEvent {
 		private Throwable throwable;
-
+		
+/**
+ * 
+ * @param throwable
+ */
 		private TerminalErrorImpl(Throwable throwable) {
 			this.throwable = throwable;
 		}
 
 		/**
+		 * Gets the contained throwable.
 		 * @see com.itmill.toolkit.terminal.Terminal.ErrorEvent#getThrowable()
 		 */
 		public Throwable getThrowable() {
@@ -599,13 +654,20 @@ public class HttpVariableMap {
 
 	}
 
-	/** Implementation of VariableOwner.Error interface. */
+	/** 
+	 * Implementation of VariableOwner.Error interface. 
+	 */
 	public class VariableOwnerErrorImpl
 		extends TerminalErrorImpl
 		implements VariableOwner.ErrorEvent {
 
 		private VariableOwner owner;
-
+		
+/**
+ * 
+ * @param owner the Listener for variable changes.
+ * @param throwable
+ */
 		private VariableOwnerErrorImpl(
 			VariableOwner owner,
 			Throwable throwable) {
@@ -614,6 +676,7 @@ public class HttpVariableMap {
 		}
 
 		/**
+		 * Gets the source VariableOwner.
 		 * @see com.itmill.toolkit.terminal.VariableOwner.ErrorEvent#getVariableOwner()
 		 */
 		public VariableOwner getVariableOwner() {
@@ -622,12 +685,13 @@ public class HttpVariableMap {
 
 	}
 
-	/** Resolve the VariableOwners needed from the request and sort
+	/** 
+	 * Resolves the VariableOwners needed from the request and sort
 	 * them to assure that the dependencies are met (as well as possible).
+	 * 
+	 * @param listeners 
 	 * @return List of variable list changers, that are needed for handling
 	 * all the variables in the request
-	 * @param req request to be handled
-	 * @param parser multipart parser for the request
 	 */
 	private List getDependencySortedListenerList(Set listeners) {
 
@@ -695,12 +759,12 @@ public class HttpVariableMap {
 			}
 		}
 
-		// Add the listeners with dependencies in sane order to the result
+		// Adds the listeners with dependencies in sane order to the result
 		for (Iterator li = deepdeps.keySet().iterator(); li.hasNext();) {
 			VariableOwner l = (VariableOwner) li.next();
 			boolean immediate = l.isImmediate();
 
-			// Add each listener after the last depended listener already in
+			// Adds each listener after the last depended listener already in
 			// the list
 			int index = -1;
 			for (Iterator di = ((Set) deepdeps.get(l)).iterator();
@@ -723,7 +787,7 @@ public class HttpVariableMap {
 			}
 		}
 
-		// Append immediate listeners to normal listeners
+		// Appends immediate listeners to normal listeners
 		// This way the normal handlers are always called before
 		// immediate ones
 		resultNormal.addAll(resultImmediate);

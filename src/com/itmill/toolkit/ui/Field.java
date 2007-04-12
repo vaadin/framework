@@ -45,35 +45,47 @@ public interface Field
 		Property.ValueChangeListener,
 		Property.Editor,
 		Focusable {
-
+	
+	/**
+	 * Sets the Caption.
+	 * @param caption
+	 */
 	void setCaption(String caption);
 
 	String getDescription();
 	
+	/**
+	 * Sets the Description.
+	 * @param caption
+	 */
 	void setDescription(String caption);
 
-	/** Is this field required.
+	/** 
+	 * Is this field required.
 	 * 
 	 * Required fields must filled by the user.
 	 * 
-	 * @return true if the
+	 * @return <code>true</code> if the field is required,otherwise <code>false</code>.
 	 * @since 3.1 
 	 */
 	public boolean isRequired();
 
-	/** Set the field required.
+	/** 
+	 * Sets the field required.
 	 * Required fields must filled by the user.
 	 * 
-	 * @param required Is the field required
+	 * @param required Is the field required.
 	 * @since 3.1 
 	 */
 	public void setRequired(boolean required);
 
-	/** An <code>Event</code> object specifying the Field whose value
+	/** 
+	 * An <code>Event</code> object specifying the Field whose value
 	 * has been changed.
+	 * 
 	 * @author IT Mill Ltd.
-		 * @version @VERSION@
-		 * @since 3.0
+	 * @version @VERSION@
+	 * @since 3.0
 	 */
 	public class ValueChangeEvent
 		extends Component.Event
@@ -84,18 +96,20 @@ public interface Field
          */
         private static final long serialVersionUID = 3545803169444672816L;
 
-        /** Constructs a new event object with the specified source
+        /** 
+         * Constructs a new event object with the specified source
 		 * field object.
 		 *
-		 * @param source the field that caused the event
+		 * @param source the field that caused the event.
 		 */
 		public ValueChangeEvent(Field source) {
 			super(source);
 		}
 
-		/** Gets the Property which triggered the event.
+		/** 
+		 * Gets the Property which triggered the event.
 		 *
-		 * @return Source Property of the event.
+		 * @return the Source Property of the event.
 		 */
 		public Property getProperty() {
 			return (Property) getSource();

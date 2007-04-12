@@ -33,7 +33,8 @@ import com.itmill.toolkit.data.Property;
 import java.lang.reflect.Constructor;
 import java.util.LinkedList;
 
-/** A simple data object containing one typed value. This class is a
+/** 
+ * A simple data object containing one typed value. This class is a
  * straightforward implementation of the the
  * {@link com.itmill.toolkit.data.Property} interface.
  *
@@ -44,39 +45,50 @@ import java.util.LinkedList;
 public class ObjectProperty implements Property, Property.ValueChangeNotifier,
 Property.ReadOnlyStatusChangeNotifier {
   
-  	/** A boolean value storing the Property's read-only status
+  	/** 
+  	 * A boolean value storing the Property's read-only status
   	 * information.
   	 */  
     private boolean readOnly = false;
   
-  	/** The value contained by the Property. */  
+  	/** 
+  	 * The value contained by the Property. 
+  	 */  
     private Object value;
   
-  	/** Data type of the Property's value */  
+  	/** 
+  	 * Data type of the Property's value. 
+  	 */  
     private Class type;
   
-  	/** Internal list of registered value change listeners. */  
+  	/** 
+  	 * Internal list of registered value change listeners. 
+  	 */  
     private LinkedList valueChangeListeners = null;
   
-  	/** Internal list of registered read-only status change listeners. */
+  	/** 
+  	 * Internal list of registered read-only status change listeners. 
+  	 */
     private LinkedList readOnlyStatusChangeListeners = null;
     
-    /** Creates a new instance of ObjectProperty with the given value.
+    /** 
+     * Creates a new instance of ObjectProperty with the given value.
      * The type of the property is automatically initialized to be
      * the type of the given value.
      *
-     * @param value Initial value of the Property
+     * @param value the Initial value of the Property.
      */
     public ObjectProperty(Object value) {
         this(value,value.getClass());
     }
     
-    /** Creates a new instance of ObjectProperty with the given value and
+    /** 
+     * Creates a new instance of ObjectProperty with the given value and
      * type.
      * 
-     * @param value Initial value of the Property
-     * @param type The type of the value. The value must be assignable to
-     * given type
+     * @param value the Initial value of the Property.
+     * @param type the type of the value. The value must be assignable to
+     * given type.
      */
     public ObjectProperty(Object value, Class type) {
         
@@ -85,20 +97,22 @@ Property.ReadOnlyStatusChangeNotifier {
         setValue(value);
     }
     
-    /** Creates a new instance of ObjectProperty with the given value, type
+    /** 
+     * Creates a new instance of ObjectProperty with the given value, type
      * and read-only mode status.
      * 
-     * @param value Initial value of the property.
-     * @param type The type of the value. <code>value</code> must be
+     * @param value the Initial value of the property.
+     * @param type the type of the value. <code>value</code> must be
      * assignable to this type.
-     * @param readOnly Sets the read-only mode.
+     * @param readOnly  Sets the read-only mode.
      */
     public ObjectProperty(Object value, Class type, boolean readOnly) {
         this(value,type);
         setReadOnly(readOnly);
     }
     
-    /** Returns the type of the ObjectProperty. The methods
+    /** 
+     * Returns the type of the ObjectProperty. The methods
      * <code>getValue</code> and <code>setValue</code> must be compatible
      * with this type: one must be able to safely cast the value returned
      * from <code>getValue</code> to the given type and pass any variable
@@ -110,7 +124,8 @@ Property.ReadOnlyStatusChangeNotifier {
         return type;
     }
     
-    /** Gets the value stored in the Property.
+    /** 
+     * Gets the value stored in the Property.
      * 
      * @return the value stored in the Property
      */
@@ -118,7 +133,8 @@ Property.ReadOnlyStatusChangeNotifier {
         return value;
     }
     
-    /** Returns the value of the ObjectProperty in human readable textual
+    /** 
+     * Returns the value of the ObjectProperty in human readable textual
      * format. The return value should be assignable to the
      * <code>setValue</code> method if the Property is not in read-only
      * mode.
@@ -134,7 +150,8 @@ Property.ReadOnlyStatusChangeNotifier {
         	return null;
     }
     
-    /** Tests if the Property is in read-only mode. In read-only mode calls
+    /** 
+     * Tests if the Property is in read-only mode. In read-only mode calls
      * to the method <code>setValue</code> will throw
      * <code>ReadOnlyException</code>s and will not modify the value of the
      * Property.
@@ -146,9 +163,10 @@ Property.ReadOnlyStatusChangeNotifier {
         return readOnly;
     }
     
-    /** Sets the Property's read-only mode to the specified status.
+    /** 
+     * Sets the Property's read-only mode to the specified status.
      * 
-     * @param newStatus new read-only status of the Property
+     * @param newStatus the new read-only status of the Property.
      */	
     public void setReadOnly(boolean newStatus) {
     	if (newStatus != readOnly) {
@@ -157,36 +175,37 @@ Property.ReadOnlyStatusChangeNotifier {
     	}
     }
     
-    /** Set the value of the property. This method supports setting from
-     * <code>String</code>s if either <code>String</code> is directly
+    /** 
+     * Sets the value of the property. This method supports setting from
+     * <code>String</code> if either <code>String</code> is directly
      * assignable to property type, or the type class contains a string
      * constructor.
      *
-     * @param newValue New value of the property.
+     * @param newValue the New value of the property.
      * @throws <code>Property.ReadOnlyException</code> if the object is in
      * read-only mode
-     * @throws <code>Property.ConversionException</code> if
-     * <code>newValue</code> can't be converted into the Property's native
+     * @throws <code>Property.ConversionException</code> if the 
+     * newValue can't be converted into the Property's native
      * type directly or through <code>String</code>
      */
     public void setValue(Object newValue)
     throws Property.ReadOnlyException, Property.ConversionException {
         
-        // Check the mode
+        // Checks the mode
         if (isReadOnly()) throw new Property.ReadOnlyException();
         
-        // Try to assign the compatible value directly
+        // Tries to assign the compatible value directly
         if (newValue == null || type.isAssignableFrom(newValue.getClass()))
             value = newValue;
         
         // Otherwise try to convert the value trough string constructor
         else try {
             
-            // Get the string constructor
+            // Gets the string constructor
             Constructor constr =
             getType().getConstructor(new Class[] { String.class });
             
-            // Create new object from the string
+            // Creates new object from the string
             value = constr.newInstance(new Object[] {newValue.toString()});
             
         } catch (java.lang.Exception e) {
@@ -198,7 +217,8 @@ Property.ReadOnlyStatusChangeNotifier {
 
     /* Events *************************************************************** */
     
-    /** An <code>Event</code> object specifying the ObjectProperty whose value
+    /** 
+     * An <code>Event</code> object specifying the ObjectProperty whose value
      * has changed.
      * @author IT Mill Ltd.
      * @version @VERSION@
@@ -212,24 +232,27 @@ Property.ReadOnlyStatusChangeNotifier {
          */
         private static final long serialVersionUID = 3256718468479725873L;
 
-        /** Constructs a new value change event for this object.
+        /** 
+         * Constructs a new value change event for this object.
          * 
-         * @param source source object of the event
+         * @param source the source object of the event.
          */
         protected ValueChangeEvent(ObjectProperty source) {
             super(source);
         }
         
-        /** Gets the Property whose read-only state has changed.
+        /** 
+         * Gets the Property whose read-only state has changed.
          * 
-         * @return source Property of the event.
+         * @return source the Property of the event.
          */
         public Property getProperty() {
             return (Property) getSource();
         }
     }
     
-   /** An <code>Event</code> object specifying the Property whose read-only
+   /** 
+    * An <code>Event</code> object specifying the Property whose read-only
      * status has been changed.
      * @author IT Mill Ltd.
      * @version @VERSION@
@@ -243,7 +266,8 @@ Property.ReadOnlyStatusChangeNotifier {
          */
         private static final long serialVersionUID = 3907208273529616696L;
 
-        /** Constructs a new read-only status change event for this object.
+        /** 
+         * Constructs a new read-only status change event for this object.
          * 
          * @param source source object of the event
          */
@@ -251,7 +275,8 @@ Property.ReadOnlyStatusChangeNotifier {
             super(source);
         }
         
-        /** Gets the Property whose read-only state has changed.
+        /** 
+         * Gets the Property whose read-only state has changed.
          * 
          * @return source Property of the event.
          */
@@ -260,16 +285,18 @@ Property.ReadOnlyStatusChangeNotifier {
         }
     }
     
-    /** Remove a previously registered value change listener.
+    /** 
+     * Removes a previously registered value change listener.
      * 
-     * @param listener listener to be removed
+     * @param listener the listener to be removed.
      */
     public void removeListener(Property.ValueChangeListener listener) {
         if (valueChangeListeners != null) 
             valueChangeListeners.remove(listener);
     }
     
-    /** Registers a new value change listener for this ObjectProperty.
+    /** 
+     * Registers a new value change listener for this ObjectProperty.
      * 
      * @param listener the new Listener to be registered
      */
@@ -279,7 +306,8 @@ Property.ReadOnlyStatusChangeNotifier {
         valueChangeListeners.add(listener);
     }
     
-    /** Registers a new read-only status change listener for this Property.
+    /** 
+     * Registers a new read-only status change listener for this Property.
      * 
      * @param listener the new Listener to be registered
      */
@@ -289,16 +317,18 @@ Property.ReadOnlyStatusChangeNotifier {
         readOnlyStatusChangeListeners.add(listener);
     }
     
-    /** Remove a previously registered read-only status change listener.
+    /** 
+     * Removes a previously registered read-only status change listener.
      * 
-     * @param listener listener to be removed
+     * @param listener the listener to be removed.
      */
     public void removeListener(Property.ReadOnlyStatusChangeListener listener) {
         if (readOnlyStatusChangeListeners != null)
             readOnlyStatusChangeListeners.remove(listener);
     }
     
-    /** Send a value change event to all registered listeners.
+    /** 
+     * Sends a value change event to all registered listeners.
      */
     private void fireValueChange() {
         if (valueChangeListeners != null) {
@@ -310,7 +340,8 @@ Property.ReadOnlyStatusChangeNotifier {
         }
     }
 
-    /** Send a read only status change event to all registered listeners.
+    /** 
+     * Sends a read only status change event to all registered listeners.
      */
     private void fireReadOnlyStatusChange() {
         if (readOnlyStatusChangeListeners != null) {

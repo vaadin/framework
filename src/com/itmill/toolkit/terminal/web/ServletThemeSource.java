@@ -64,7 +64,9 @@ public class ServletThemeSource implements ThemeSource {
 
 	private Cache resourceCache = new Cache();
 
-	/** Collection of subdirectory entries */
+	/** 
+	 * Collection of subdirectory entries. 
+	 */
 	private URL descFile;
 
 	/**
@@ -72,11 +74,13 @@ public class ServletThemeSource implements ThemeSource {
 	 * local directory.
 	 * 
 	 * @param file
-	 *            Path to the JAR archive .
+	 *            the Path to the JAR archive .
 	 * @param path
-	 *            Path inside the archive to be processed.
-	 * @throws FileNotFoundException
-	 *             if no theme files are found
+	 *            the Path inside the archive to be processed.
+	 * @throws IOException
+	 *             if the writing failed due to input/output error.
+	 * @throws ThemeException  If the resource is not found or there was
+	 * 			 some problem finding the resource.
 	 */
 	public ServletThemeSource(ServletContext context,
 			ApplicationServlet webAdapterServlet, String path)
@@ -86,7 +90,7 @@ public class ServletThemeSource implements ThemeSource {
 		this.webAdapterServlet = webAdapterServlet;
 		this.context = context;
 
-		// Format path
+		// Formats path
 		this.path = path;
 		if ((this.path.length() > 0) && !this.path.endsWith("/")) {
 			this.path = this.path + "/";
@@ -95,7 +99,7 @@ public class ServletThemeSource implements ThemeSource {
 			this.path = "/" + this.path;
 		}
 
-		// Load description file
+		// Loads description file
 		this.descFile = context.getResource(this.path + Theme.DESCRIPTIONFILE);
 		InputStream entry = context.getResourceAsStream(this.path
 				+ Theme.DESCRIPTIONFILE);
@@ -126,6 +130,7 @@ public class ServletThemeSource implements ThemeSource {
 	}
 
 	/**
+	 * Gets the XSL stream for the specified theme and web-browser type.
 	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getXSLStreams(Theme,
 	 *      WebBrowser)
 	 */
@@ -141,7 +146,7 @@ public class ServletThemeSource implements ThemeSource {
 				Log.info("ServletThemeSource: Loading theme: " + theme);
 			}
 
-			// Reload the description file
+			// Reloads the description file
 			InputStream entry = context.getResourceAsStream(this.path
 					+ Theme.DESCRIPTIONFILE);
 			try {
@@ -160,7 +165,7 @@ public class ServletThemeSource implements ThemeSource {
 			}
 
 			Collection fileNames = theme.getFileNames(type, Theme.MODE_HTML);
-			// Add all XSL file streams
+			// Adds all XSL file streams
 			for (Iterator i = fileNames.iterator(); i.hasNext();) {
 				String entryName = (String) i.next();
 				if (entryName.endsWith(".xsl")) {
@@ -176,7 +181,7 @@ public class ServletThemeSource implements ThemeSource {
 	}
 
 	/**
-	 * Return modication time of the description file.
+	 * Returns the modification time of the description file.
 	 * 
 	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getModificationTime()
 	 */
@@ -192,12 +197,13 @@ public class ServletThemeSource implements ThemeSource {
 	}
 
 	/**
+	 * Gets the input stream for the resource with the specified resource id.
 	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getResource(String)
 	 */
 	public InputStream getResource(String resourceId)
 			throws ThemeSource.ThemeException {
 
-		// Check the id
+		// Checks the id
 		String name = this.getName();
 		int namelen = name.length();
 		if (resourceId == null || !resourceId.startsWith(name + "/")
@@ -205,7 +211,7 @@ public class ServletThemeSource implements ThemeSource {
 			return null;
 		}
 
-		// Find the resource
+		// Finds the resource
 		String streamName = this.path + resourceId.substring(namelen + 1);
 		InputStream stream = context.getResourceAsStream(streamName);
 		if (stream != null)
@@ -241,6 +247,7 @@ public class ServletThemeSource implements ThemeSource {
 	}
 
 	/**
+	 * Gets the list of themes in the theme source. 
 	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getThemes()
 	 */
 	public Collection getThemes() {
@@ -252,6 +259,7 @@ public class ServletThemeSource implements ThemeSource {
 	}
 
 	/**
+	 * Gets the name of the ThemeSource.
 	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getName()
 	 */
 	public String getName() {
@@ -259,6 +267,7 @@ public class ServletThemeSource implements ThemeSource {
 	}
 
 	/**
+	 * Gets the Theme instance by name.
 	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getThemeByName(String)
 	 */
 	public Theme getThemeByName(String name) {
@@ -280,18 +289,40 @@ public class ServletThemeSource implements ThemeSource {
 	private class Cache {
 
 		private Map data = new HashMap();
-
+		
+		/**
+		 * Associates the specified value with the specified key in this map.
+		 * If the map previously contained a mapping for this key, the old value
+		 * is replaced by the specified value.
+		 * @param key the key with which the specified value is to be associated.
+		 * @param value the value to be associated with the specified key. 
+		 */
 		public void put(Object key, Object value) {
 			data.put(key, new SoftReference(new CacheItem(value)));
 		}
-
+		
+		/**
+		 * Returns the value to which this map maps the specified key. Returns null
+		 * if the map contains no mapping for this key. 
+		 * <p>
+		 * A return value of null does not necessarily indicate that the map contains
+		 * no mapping for the key; it's also possible that the map explicitly maps 
+		 * the key to null. The containsKey operation may be used to distinguish these two cases. 
+		 * </p>
+		 * @param key the key whose associated value is to be returned. 
+		 * @return the value to which this map maps the specified key, or null
+		 *  		if the map contains no mapping for this key.
+		 */
 		public Object get(Object key) {
 			SoftReference ref = (SoftReference) data.get(key);
 			if (ref != null)
 				return ((CacheItem) ref.get()).getData();
 			return null;
 		}
-
+		
+		/**
+		 * Clears the data and removes all mappings from this map .
+		 */
 		public void clear() {
 			data.clear();
 		}
@@ -306,15 +337,35 @@ public class ServletThemeSource implements ThemeSource {
 	private class CacheItem {
 
 		private Object data;
-
+		
+		/**
+		 * 
+		 * @param data
+		 */
 		public CacheItem(Object data) {
 			this.data = data;
 		}
-
+		
+		/**
+		 * Gets the data.
+		 * @return the data.
+		 */
 		public Object getData() {
 			return this.data;
 		};
-
+		
+		/**
+		 * Called by the garbage collector on an object when garbage collection 
+		 * determines that there are no more references to the object. A subclass 
+		 * overrides the finalize method to dispose of system resources or to 
+		 * perform other cleanup.
+		 * <p>
+		 * The finalize method is never invoked more than once by a Java virtual
+		 * machine for any given object.
+		 * </p>
+		 * @throws Throwable the Exception raised by this method
+		 * @see java.lang.Object#finalize()
+		 */
 		public void finalize() throws Throwable {
 			this.data = null;
 			super.finalize();

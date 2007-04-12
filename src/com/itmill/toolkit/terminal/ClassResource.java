@@ -31,10 +31,11 @@ package com.itmill.toolkit.terminal;
 import com.itmill.toolkit.Application;
 import com.itmill.toolkit.service.FileTypeResolver;
 
-/** Class resource is a named resource accessed with the class loader.
+/** 
+ * <code>ClassResource</code> is a named resource accessed with the class loader.
  *  
- *  This can be used to access resources such as icons, files, etc.
- *  @see java.lang.Class#getResource(java.lang.String)
+ * This can be used to access resources such as icons, files, etc.
+ * @see java.lang.Class#getResource(java.lang.String)
  *
  * @author IT Mill Ltd.
  * @version @VERSION@
@@ -42,26 +43,37 @@ import com.itmill.toolkit.service.FileTypeResolver;
  */
 public class ClassResource implements ApplicationResource {
 
-	/** Default buffer size for this stream resource */
+	/** 
+	 * Default buffer size for this stream resource. 
+	 */
 	private int bufferSize = 0;
 
-	/** Default cache time for this stream resource */
+	/** 
+	 * Default cache time for this stream resource. 
+	 */
 	private long cacheTime = DEFAULT_CACHETIME;	
 
-	/** Associated class used for indetifying the source of the resource */
+	/** 
+	 * Associated class used for indetifying the source of the resource. 
+	 */
 	private Class associatedClass;
 	
-	/** Name of the resource is relative to the associated class */
+	/** 
+	 * Name of the resource is relative to the associated class. 
+	 */
 	private String resourceName;
 	
-	/** Application used for serving the class */
+	/** 
+	 * Application used for serving the class. 
+	 */
 	private Application application;
 
-	/** Create new application resource instance. 
+	/** 
+	 * Creates new application resource instance. 
 	 * The resource id is relative to the location of the application class.
 	 * 
-	 * @param resourceName Unique identifier of the resource within the application.
-	 * @param application The application this resource will be added to.
+	 * @param resourceName the Unique identifier of the resource within the application.
+	 * @param application the application this resource will be added to.
 	 * */
 	public ClassResource(String resourceName, Application application) {
 		this.associatedClass = application.getClass();
@@ -72,12 +84,13 @@ public class ClassResource implements ApplicationResource {
 		application.addResource(this);
 	}
 
-	/** Create new application resource instance. 
+	/** 
+	 * Creates new application resource instance. 
 	 * 
-	 * @param associatedClass The class of the which the resource is associated.
-	 * @param resourceName Unique identifier of the resource within the application.
-	 * @param application The application this resource will be added to.
-	 * */
+	 * @param associatedClass the class of the which the resource is associated.
+	 * @param resourceName the Unique identifier of the resource within the application.
+	 * @param application the application this resource will be added to.
+	 */
 	public ClassResource(
 		Class associatedClass,
 		String resourceName,
@@ -89,15 +102,25 @@ public class ClassResource implements ApplicationResource {
 			throw new NullPointerException();
 		application.addResource(this);
 	}
-
+	/**
+	 * Gets the MIME type of this resource.
+	 * @see com.itmill.toolkit.terminal.Resource#getMIMEType()
+	 */
 	public String getMIMEType() {
 		return FileTypeResolver.getMIMEType(this.resourceName);
 	}
-
+	/**
+	 * Gets the application of this resource.
+	 * @see com.itmill.toolkit.terminal.ApplicationResource#getApplication()
+	 */
 	public Application getApplication() {
 		return application;
 	}
-
+	/**
+	 * Gets the virtual filename for this resource.
+	 * @return the file name associated to this resource.
+	 * @see com.itmill.toolkit.terminal.ApplicationResource#getFilename()
+	 */
 	public String getFilename() {
 		int index = 0;
 		int next = 0;
@@ -106,7 +129,10 @@ public class ClassResource implements ApplicationResource {
 			index = next + 1;
 		return resourceName.substring(index);
 	}
-
+	/**
+	 * Gets resource as stream.
+	 * @see com.itmill.toolkit.terminal.ApplicationResource#getStream()
+	 */
 	public DownloadStream getStream() {
 		DownloadStream ds = new DownloadStream(
 			associatedClass.getResourceAsStream(resourceName),
@@ -122,8 +148,9 @@ public class ClassResource implements ApplicationResource {
 		return bufferSize;
 	}
 
-	/** Set the size of the download buffer used for this resource.
-	 * @param bufferSize The size of the buffer in bytes.
+	/** 
+	 * Sets the size of the download buffer used for this resource.
+	 * @param bufferSize the size of the buffer in bytes.
 	 */
 	public void setBufferSize(int bufferSize) {
 		this.bufferSize = bufferSize;
@@ -134,14 +161,17 @@ public class ClassResource implements ApplicationResource {
 		return cacheTime;
 	}
 
-	/** Set lenght of cache expiration time.
+	/** 
+	 * Sets the length of cache expiration time.
 	 * 
-	 * <p>This gives the adapter the possibility cache streams sent to the
+	 * <p>
+	 * This gives the adapter the possibility cache streams sent to the
 	 * client. The caching may be made in adapter or at the client if the 
 	 * client supports caching. Zero or negavive value disbales the 
-	 * caching of this stream.</p>
+	 * caching of this stream.
+	 * </p>
 	 * 
-	 * @param cacheTime The cache time in milliseconds.
+	 * @param cacheTime the cache time in milliseconds.
 	 * 
 	 */
 	public void setCacheTime(long cacheTime) {

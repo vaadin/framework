@@ -32,7 +32,8 @@ import java.net.URL;
 
 import com.itmill.toolkit.service.FileTypeResolver;
 
-/** External resource implements source for resources fetched from 
+/** 
+ * <code>ExternalResource</code> implements source for resources fetched from 
  * location specified by URL:s. The resources are fetched directly by the
  * client terminal and are not fetched trough the terminal adapter.
  * 
@@ -42,12 +43,16 @@ import com.itmill.toolkit.service.FileTypeResolver;
  */
 public class ExternalResource implements Resource {
 
-	/** Url of the download */
+	/** 
+	 * Url of the download. 
+	 */
 	private String sourceURL = null;
 
 
-	/** Create new download component for downloading directly from given URL. 
-	 * */
+	/** 
+	 * Creates new download component for downloading directly from given URL.
+	 * @param sourceURL the source URL. 
+	 */
 	public ExternalResource(URL sourceURL) {
 		if (sourceURL == null) 
 			throw new RuntimeException("Source must be non-null");
@@ -55,8 +60,10 @@ public class ExternalResource implements Resource {
 		this.sourceURL = sourceURL.toString();
 	}
 
-	/** Create new download component for downloading directly from given URL. 
-	 * */
+	/** 
+	 * Creates new download component for downloading directly from given URL.
+	 * @param  sourceURL the source URL.
+	 */
 	public ExternalResource(String sourceURL) {
 		if (sourceURL == null) 
 			throw new RuntimeException("Source must be non-null");
@@ -64,11 +71,18 @@ public class ExternalResource implements Resource {
 		this.sourceURL = sourceURL.toString();
 	}
 
-	/** Get the URL of the external resource */
+	/** 
+	 * Gets the URL of the external resource.
+	 * @return the URL of the external resource. 
+	 */
 	public String getURL() {
 		return sourceURL;
 	}
 	
+	/**
+	 * Gets the MIME type of the resource.
+	 * @see com.itmill.toolkit.terminal.Resource#getMIMEType()
+	 */
 	public String getMIMEType() {
 		return FileTypeResolver.getMIMEType(getURL().toString());
 	}

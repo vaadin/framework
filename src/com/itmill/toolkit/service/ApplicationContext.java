@@ -33,7 +33,8 @@ import java.util.Collection;
 
 import com.itmill.toolkit.Application;
 
-/** Application context provides information about the running context of
+/** 
+ * <code>ApplicationContext</code> provides information about the running context of
  * the application. Each context is shared by all applications that are open
  * for one user. In web-environment this corresponds to HttpSession.
  * 
@@ -43,7 +44,8 @@ import com.itmill.toolkit.Application;
  */
 public interface ApplicationContext {
 	
-	/** Returns application context base directory.
+	/** 
+	 * Returns application context base directory.
 	 * 
 	 * Typically an application is deployed in a such way that is 
 	 * has application directory. For web applications this directory is the
@@ -55,9 +57,10 @@ public interface ApplicationContext {
 	 */
 	public File getBaseDirectory();
 	
-	/** Get the applications in this context.
+	/** 
+	 * Gets the applications in this context.
 	 * 
-	 * Get all applications in this context. Each application context contains
+	 * Gets all applications in this context. Each application context contains
 	 * all applications that are open for one user.
 	 * 
 	 * @return Collection containing all applications in this context
@@ -65,33 +68,40 @@ public interface ApplicationContext {
 	public Collection getApplications();
 	
 	
-	/** Add transaction listener to this context.
-	 * @param listener The listener to be added.
+	/** 
+	 * Adds transaction listener to this context.
+	 * @param listener the listener to be added.
 	 * @see TransactionListener
 	 */
 	public void addTransactionListener(TransactionListener listener);
 
-	/** Remove transaction listener from this context.
-	 * @param listener The listener to be removed.
+	/** 
+	 * Removes transaction listener from this context.
+	 * @param listener the listener to be removed.
 	 * @see TransactionListener
 	 */
 	public void removeTransactionListener(TransactionListener listener);
 	
-	/** Interface for listening the application transaction events. 
-	 *  Implementations of this interface can be used to listen all 
-	 *  transactions between the client and the application.
+	/** 
+	 * Interface for listening the application transaction events. 
+	 * Implementations of this interface can be used to listen all 
+	 * transactions between the client and the application.
 	 *  
 	 */
 	public interface TransactionListener {
 	
-		/** Invoked at the beginning of every transaction.
-		 * @param transactionData Data identifying the transaction.
+		/** 
+		 * Invoked at the beginning of every transaction.
+		 * @param application the Application object.
+		 * @param transactionData the Data identifying the transaction.
 		 */
 		public void transactionStart(Application application, Object transactionData);
 		
 
-		/** Invoked at the end of every transaction.
-		 * @param transactionData Data identifying the transaction.
+		/** 
+		 * Invoked at the end of every transaction.
+		 * @param applcation the Application object.
+		 * @param transactionData the Data identifying the transaction.
 		 */
 		public void transactionEnd(Application application, Object transactionData);
 

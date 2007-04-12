@@ -296,7 +296,7 @@ public interface Container {
         public boolean isLastId(Object itemId);
 
         /**
-         * Add new item after the given item.
+         * Adds new item after the given item.
          * <p>
          * Adding an item after null item adds the item as first item of the
          * ordered container.
@@ -311,7 +311,7 @@ public interface Container {
                 throws UnsupportedOperationException;
 
         /**
-         * Add new item after the given item.
+         * Adds new item after the given item.
          * <p>
          * Adding an item after null item adds the item as first item of the
          * ordered container.
@@ -334,13 +334,13 @@ public interface Container {
         /**
          * Sort method.
          * 
-         * Sort the container items.
+         * Sorts the container items.
          * 
          * @param propertyId
          *            Array of container property IDs, which values are used to
          *            sort the items in container as primary, secondary, ... 
          * 			 sorting criterion. All of the item IDs must be in the 
-         *            collection returned by <code>getSortableContainerPropertyIds()</code>
+         *            collection returned by <code>getSortableContainerPropertyIds</code>
          * @param ascending
          *  			Array of sorting order flags corresponding to each property ID
          *  			used in sorting. If this array is shorter than propertyId array,
@@ -352,7 +352,7 @@ public interface Container {
         void sort(Object[] propertyId, boolean[] ascending);
 
         /**
-         * Get the container property IDs, which can be used to sort the item.
+         * Gets the container property IDs, which can be used to sort the item.
          * 
          * @return The sortable field ids.
          */
@@ -364,8 +364,8 @@ public interface Container {
     public interface Indexed extends Ordered {
 
         /**
-         * Gets the index of the Item corresponding to <code>itemId</code>.
-         * The following is true for the returned index: 0 <= index < size().
+         * Gets the index of the Item corresponding to the itemId.
+         * The following is <code>true</code> for the returned index: 0 <= index < size().
          * 
          * @param itemId
          *            ID of an Item in the Container
@@ -375,8 +375,7 @@ public interface Container {
         public int indexOfId(Object itemId);
 
         /**
-         * Get the ID of an Item by an index number. The following is true for
-         * the index: 0 <= index < size().
+         * Gets the ID of an Item by an index number. 
          * 
          * @param index
          *            Index of the requested id in the Container
@@ -385,7 +384,7 @@ public interface Container {
         public Object getIdByIndex(int index);
 
         /**
-         * Add new item at given index.
+         * Adds new item at given index.
          * <p>
          * The indexes of the item currently in the given position and all the
          * following items are incremented.
@@ -399,7 +398,7 @@ public interface Container {
         public Object addItemAt(int index) throws UnsupportedOperationException;
 
         /**
-         * Add new item at given index.
+         * Adds new item at given index.
          * <p>
          * The indexes of the item currently in the given position and all the
          * following items are incremented.
@@ -493,8 +492,7 @@ public interface Container {
          * Container also implements the <code>Managed</code> interface, the
          * items created with <code>newItem</code> can have children by
          * default.
-         * </p>
-         * 
+         *  
          * @param itemId
          *            ID of the Item in the container whose child capability is
          *            to be tested
@@ -509,8 +507,10 @@ public interface Container {
          * Sets the given Item's capability to have children. If the Item
          * identified with <code>itemId</code> already has children and
          * <code>areChildrenAllowed</code> is false this method fails and
-         * <code>false</code> is returned; the children must be first
-         * explicitly removed with
+         * <code>false</code> is returned.
+         * </p>
+         * <p>
+         * The children must be first explicitly removed with
          * {@link #setParent(Object itemId, Object newParentId)}or
          * {@link com.itmill.toolkit.data.Container#removeItem(Object itemId)}.
          * </p>
@@ -575,7 +575,7 @@ public interface Container {
     public interface Viewer {
 
         /**
-         * Set the Container that serves as the data source of the viewer.
+         * Sets the Container that serves as the data source of the viewer.
          * 
          * @param newDataSource
          *            The new data source Item
@@ -583,7 +583,7 @@ public interface Container {
         public void setContainerDataSource(Container newDataSource);
 
         /**
-         * Get the Container serving as the data source of the viewer.
+         * Gets the Container serving as the data source of the viewer.
          * 
          * @return data source Container
          */
@@ -592,11 +592,15 @@ public interface Container {
     }
 
     /**
+     * <p>
      * Interface implemented by the editor classes supporting editing the
      * Container. Implementing this interface means that the Container serving
-     * as the data source of the editor can be modified through it. Note that
-     * not implementing the <code>Container.Editor</code> interface does not
+     * as the data source of the editor can be modified through it.
+     * </p>
+     * <p>
+     *  Note that not implementing the <code>Container.Editor</code> interface does not
      * restrict the class from editing the Container contents internally.
+     * </p>
      */
     public interface Editor extends Container.Viewer {
 
@@ -607,7 +611,7 @@ public interface Container {
     /**
      * An <code>Event</code> object specifying the Container whose Item set
      * has changed. Note that these events are triggered only through succesful
-     * calls to the <code>newItem()</code> and <code>removeAllItems</code>
+     * calls to the <code>newItem</code> and <code>removeAllItems</code>
      * methods in the Container.Managed interface.
      */
     public interface ItemSetChangeEvent {
@@ -637,18 +641,19 @@ public interface Container {
      * listeners. By implementing this interface a class explicitly announces
      * that it will generate a <code>ItemSetChangeEvent</code> when its
      * contents are modified.
-     * 
-     * Note that the general Java convention is not to explicitly declare that a
+     * <p>
+     * Note: The general Java convention is not to explicitly declare that a
      * class generates events, but to directly define the
      * <code>addListener</code> and <code>removeListener</code> methods.
      * That way the caller of these methods has no real way of finding out if
      * the class really will send the events, or if it just defines the methods
      * to be able to implement an interface.
+     * </p>
      */
     public interface ItemSetChangeNotifier {
 
         /**
-         * Adds a Item set change listener for the object.
+         * Adds an Item set change listener for the object.
          * 
          * @param listener
          *            listener to be added
@@ -656,7 +661,7 @@ public interface Container {
         public void addListener(Container.ItemSetChangeListener listener);
 
         /**
-         * Removes a Item set change listener from the object.
+         * Removes the Item set change listener from the object.
          * 
          * @param listener
          *            listener to be removed
@@ -668,9 +673,12 @@ public interface Container {
 
     /**
      * An <code>Event</code> object specifying the Container whose Property
-     * set has changed. Note that these events are triggered only through
-     * succesful calls to the <code>addProperty</code> and
+     * set has changed.
+     *<p>
+     * Note: These events are triggered only through succesful calls to
+     * the <code>addProperty</code> and
      * <code>removeProperty</code> methods in the Container.Managed interface.
+     * </p>
      */
     public interface PropertySetChangeEvent {
 
@@ -699,17 +707,20 @@ public interface Container {
     }
 
     /**
+     * <p>
      * The interface for adding and removing <code>PropertySetChangeEvent</code>
      * listeners. By implementing this interface a class explicitly announces
      * that it will generate a <code>PropertySetChangeEvent</code> when its
      * contents are modified.
-     * 
+     * </p>
+     * <p>
      * Note that the general Java convention is not to explicitly declare that a
      * class generates events, but to directly define the
      * <code>addListener</code> and <code>removeListener</code> methods.
      * That way the caller of these methods has no real way of finding out if
      * the class really will send the events, or if it just defines the methods
      * to be able to implement an interface.
+     * </p>
      */
     public interface PropertySetChangeNotifier {
 

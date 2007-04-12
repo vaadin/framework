@@ -37,13 +37,18 @@ import com.itmill.toolkit.data.Container;
 import com.itmill.toolkit.data.Item;
 import com.itmill.toolkit.data.Property;
 
-/** <p>A wrapper class for adding external ordering to containers not
+/** 
+ * <p>
+ * A wrapper class for adding external ordering to containers not
  * implementing the {@link com.itmill.toolkit.data.Container.Ordered}
- * interface.</p>
+ * interface.
+ * </p>
  * 
- * <p>If the wrapped container is changed directly (that is, not through
+ * <p>
+ * If the wrapped container is changed directly (that is, not through
  * the wrapper), the ordering must be updated with the
- * {@link #updateOrderWrapper()} method.</p>
+ * {@link #updateOrderWrapper()} method.
+ * </p>
  * 
  * @author IT Mill Ltd.
  * @version @VERSION@
@@ -55,55 +60,67 @@ public class ContainerOrderedWrapper
 		Container.ItemSetChangeNotifier,
 		Container.PropertySetChangeNotifier {
 
-	/** The wrapped container */
+	/**
+	 * The wrapped container 
+	 */
 	private Container container;
 
-	/** Ordering information, ie. the mapping from Item ID to the next
+	/** 
+	 * Ordering information, ie. the mapping from Item ID to the next
 	 * item ID
 	 */
 	private Hashtable next;
 
-	/** Reverse ordering information for convenience and performance
+	/** 
+	 * Reverse ordering information for convenience and performance
 	 * reasons.
 	 */
 	private Hashtable prev;
 
-	/** ID of the first Item in the container. */
+	/** 
+	 * ID of the first Item in the container. 
+	 */
 	private Object first;
 
-	/** ID of the last Item in the container. */
+	/**
+	 * ID of the last Item in the container. 
+	 */
 	private Object last;
 
-	/** Is the wrapped container ordered by itself, ie. does it implement
+	/** 
+	 * Is the wrapped container ordered by itself, ie. does it implement
 	 * the Container.Ordered interface by itself? If it does, this class
 	 * will use the methods of the underlying container directly.
 	 */
 	private boolean ordered = false;
 
-	/** Constructs a new ordered wrapper for an existing Container. Works
+	/** 
+	 * Constructs a new ordered wrapper for an existing Container. Works
 	 * even if the to-be-wrapped container already implements the
 	 * Container.Ordered interface.
 	 * 
-	 * @param toBeWrapped the container whose contents need to be ordered
+	 * @param toBeWrapped the container whose contents need to be ordered.
 	 */
 	public ContainerOrderedWrapper(Container toBeWrapped) {
 
 		container = toBeWrapped;
 		ordered = container instanceof Container.Ordered;
 
-		// Check arguments
+		// Checks arguments
 		if (container == null)
 			throw new NullPointerException("Null can not be wrapped");
 
-		// Create initial order if needed
+		// Creates initial order if needed
 		updateOrderWrapper();
 	}
 
-	/** Removes the specified Item from the wrapper's internal hierarchy
-	 * structure. Note that the Item is not removed from the underlying
-	 * Container.
-	 * 
-	 * @param id ID of the Item to be removed from the ordering
+	/** 
+	 * Removes the specified Item from the wrapper's internal hierarchy
+	 * structure. 
+	 * <p>
+	 * Note : The Item is not removed from the underlying Container.
+	 * </p>
+	 * @param id the ID of the Item to be removed from the ordering.
 	 */
 	private void removeFromOrderWrapper(Object id) {
 		if (id != null) {
@@ -122,14 +139,15 @@ public class ContainerOrderedWrapper
 		}
 	}
 
-	/** Adds the specified Item to the last position in the wrapper's
+	/** 
+	 * Registers the specified Item to the last position in the wrapper's
 	 * internal ordering. The underlying container is not modified.
 	 * 
-	 * @param id ID of the Item to be added to the ordering
+	 * @param id the ID of the Item to be added to the ordering.
 	 */
 	private void addToOrderWrapper(Object id) {
 
-		// Add the if to tail
+		// Adds the if to tail
 		if (last != null) {
 			next.put(last, id);
 			prev.put(id, last);
@@ -139,11 +157,13 @@ public class ContainerOrderedWrapper
 		}
 	}
 
-	/** Adds the specified Item after the specified itemId in the wrapper's
+	/** 
+	 * Registers the specified Item after the specified itemId in the wrapper's
 	 * internal ordering. The underlying container is not modified.
 	 * Given item id must be in the container, or must be null.
 	 * 
-	 * @param id ID of the Item to be added to the ordering
+	 * @param id the ID of the Item to be added to the ordering.
+	 * @param previousItemId the Id of the previous item.
 	 */
 	private void addToOrderWrapper(Object id, Object previousItemId) {
 
@@ -163,10 +183,14 @@ public class ContainerOrderedWrapper
 		}
 	}
 
-	/** Updates the wrapper's internal ordering information to include all
-	 * Items in the underlying container. If the contents of the wrapped
-	 * container change without the wrapper's knowledge, this method needs
-	 * to be called to update the ordering information of the Items.
+	/** 
+	 * Updates the wrapper's internal ordering information to include all
+	 * Items in the underlying container. 
+	 * <p>
+	 * Note : If the contents of the wrapped container change without the 
+	 * wrapper's knowledge, this method needs to be called to update
+	 * the ordering information of the Items.
+	 * </p>
 	 */
 	public void updateOrderWrapper() {
 
@@ -174,7 +198,7 @@ public class ContainerOrderedWrapper
 
 			Collection ids = container.getItemIds();
 
-			// Recreate ordering if some parts of it are missing
+			// Recreates ordering if some parts of it are missing
 			if (next == null
 				|| first == null
 				|| last == null
@@ -193,7 +217,7 @@ public class ContainerOrderedWrapper
 					removeFromOrderWrapper(id);
 			}
 
-			// Add missing items
+			// Adds missing items
 			for (Iterator i = ids.iterator(); i.hasNext();) {
 				Object id = i.next();
 				if (!next.containsKey(id))
@@ -212,7 +236,7 @@ public class ContainerOrderedWrapper
 		return first;
 	}
 
-	/* Test if the given item is the first item in the container
+	/* Tests if the given item is the first item in the container
 	 * Don't add a JavaDoc comment here, we use the default documentation
 	 * from implemented interface.
 	 */
@@ -222,7 +246,7 @@ public class ContainerOrderedWrapper
 		return first != null && first.equals(itemId);
 	}
 
-	/* Test if the given item is the last item in the container
+	/* Tests if the given item is the last item in the container
 	 * Don't add a JavaDoc comment here, we use the default documentation
 	 * from implemented interface.
 	 */
@@ -242,7 +266,7 @@ public class ContainerOrderedWrapper
 		return last;
 	}
 
-	/* Get the item that is next from the specified item.
+	/* Gets the item that is next from the specified item.
 	 * Don't add a JavaDoc comment here, we use the default documentation
 	 * from implemented interface.
 	 */
@@ -252,7 +276,7 @@ public class ContainerOrderedWrapper
 		return next.get(itemId);
 	}
 
-	/* Get the item that is previous from the specified item.
+	/* Gets the item that is previous from the specified item.
 	 * Don't add a JavaDoc comment here, we use the default documentation
 	 * from implemented interface.
 	 */
@@ -262,12 +286,13 @@ public class ContainerOrderedWrapper
 		return prev.get(itemId);
 	}
 
-	/** Adds a new Property to all Items in the Container.
+	/** 
+	 * Registers a new Property to all Items in the Container.
 	 *
-	 * @param propertyId ID of the new Property
-	 * @param type Data type of the new Property
-	 * @param defaultValue The value all created Properties are
-	 * initialized to
+	 * @param propertyId the ID of the new Property.
+	 * @param type the Data type of the new Property.
+	 * @param defaultValue the value all created Properties are
+	 * initialized to.
 	 * @return <code>true</code> if the operation succeeded,
 	 * <code>false</code> if not
 	 */
@@ -280,11 +305,14 @@ public class ContainerOrderedWrapper
 		return container.addContainerProperty(propertyId, type, defaultValue);
 	}
 
-	/** Creates a new Item into the Container, assigns it an
+	/** 
+	 * Creates a new Item into the Container, assigns it an
 	 * automatic ID, and adds it to the ordering.
 	 * 
 	 * @return the autogenerated ID of the new Item or <code>null</code>
 	 * if the operation failed
+	 * @throws UnsupportedOperationException
+	 * 									if the addItem is not supported.
 	 */
 	public Object addItem() throws UnsupportedOperationException {
 
@@ -294,10 +322,14 @@ public class ContainerOrderedWrapper
 		return id;
 	}
 
-	/** Adds a new Item by its ID to the underlying container and to the
+	/** 
+	 * Registers a new Item by its ID to the underlying container and to the
 	 * ordering.
-	 * 
+	 * @param itemId
+	 * 				the ID of the Item to be created.
 	 * @return the added Item or <code>null</code> if the operation failed
+	 * @throws UnsupportedOperationException
+	 * 										if the addItem is not supported.
 	 */
 	public Item addItem(Object itemId) throws UnsupportedOperationException {
 		Item item = container.addItem(itemId);
@@ -306,11 +338,14 @@ public class ContainerOrderedWrapper
 		return item;
 	}
 
-	/** Removes all items from the underlying container and from the
+	/** 
+	 * Removes all items from the underlying container and from the
 	 * ordering.
 	 * 
-	 * @return <code>true</code> if the operation succeeded,
-	 * <code>false</code> if not
+	 * @return <code>true</code> if the operation succeeded, otherwise
+	 * <code>false</code> 
+	 * @throws UnsupportedOperationException
+	 * 										if the removeAllItems is not supported.
 	 */
 	public boolean removeAllItems() throws UnsupportedOperationException {
 		boolean success = container.removeAllItems();
@@ -322,11 +357,15 @@ public class ContainerOrderedWrapper
 		return success;
 	}
 
-	/** Removes an Item specified by <code>itemId</code> from the underlying
+	/** 
+	 * Removes an Item specified by the itemId from the underlying
 	 * container and from the ordering.
-	 * 
+	 * @param itemId
+	 * 				the ID of the Item to be removed.
 	 * @return <code>true</code> if the operation succeeded,
 	 * <code>false</code> if not
+	 * @throws UnsupportedOperationException
+	 * 									if the removeItem is not supported.
 	 */
 	public boolean removeItem(Object itemId)
 		throws UnsupportedOperationException {
@@ -337,13 +376,17 @@ public class ContainerOrderedWrapper
 		return success;
 	}
 
-	/** Removes the specified Property from the underlying container and
-	 * from the ordering. Note that the Property will be removed from all
-	 * Items in the Container.
-	 *
-	 * @param propertyId ID of the Property to remove
+	/** 
+	 * Removes the specified Property from the underlying container and
+	 * from the ordering.
+	 * <p> 
+	 * Note : The Property will be removed from all the Items in the Container.
+	 * </p>
+	 * @param propertyId the ID of the Property to remove.
 	 * @return <code>true</code> if the operation succeeded,
 	 * <code>false</code> if not
+	 * @throws UnsupportedOperationException
+	 * 								if the removeContainerProperty is not supported.
 	 */
 	public boolean removeContainerProperty(Object propertyId)
 		throws UnsupportedOperationException {
@@ -456,10 +499,10 @@ public class ContainerOrderedWrapper
 		if (previousItemId != null && !containsId(previousItemId))
 			return null;
 
-		// Add the item to container
+		// Adds the item to container
 		Item item = container.addItem(newItemId);
 
-		// Put the new item to its correct place
+		// Puts the new item to its correct place
 		if (item != null)
 			addToOrderWrapper(newItemId, previousItemId);
 
@@ -476,10 +519,10 @@ public class ContainerOrderedWrapper
 		if (previousItemId != null && !containsId(previousItemId))
 			return null;
 
-		// Add the item to container
+		// Adds the item to container
 		Object id = container.addItem();
 
-		// Put the new item to its correct place
+		// Puts the new item to its correct place
 		if (id != null)
 			addToOrderWrapper(id, previousItemId);
 

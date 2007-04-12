@@ -35,7 +35,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Locale;
 
-/** Web browser terminal type.
+/** 
+ * Web browser terminal type.
  *
  * This class implements web browser properties, which declare the features of
  * the web browser.
@@ -48,46 +49,69 @@ public class WebBrowser implements Terminal {
 
 	private static WebBrowser DEFAULT = new WebBrowser();
 
-	/** Content type */
+	/** 
+	 * Content type. 
+	 */
 	private String contentType = "text/html; charset=utf-8";
 
-	/** Holds the collection of accepted locales */
+	/** 
+	 * Holds the collection of accepted locales. 
+	 */
 	private Collection locales = new ArrayList();
 
-	/** Holds value of property browserApplication. */
+	/** 
+	 * Holds value of property browserApplication. 
+	 */
 	private String browserApplication = null;
 
-	/** Should the client side checkking be done. */
+	/** 
+	 * Should the client side checkking be done. 
+	 */
 	private boolean performClientCheck = true;
 
-	/** Holds value for property isClientSideChecked. */
+	/** 
+	 * Holds value for property isClientSideChecked. 
+	 */
 	private boolean clientSideChecked = false;
 
-	/** Holds value of property javaScriptVersion. */
+	/** 
+	 * Holds value of property javaScriptVersion. 
+	 */
 	private JavaScriptVersion javaScriptVersion = JAVASCRIPT_UNCHECKED;
 
-	/** Holds value of property javaEnabled. */
+	/** 
+	 * Holds value of property javaEnabled. 
+	 */
 	private boolean javaEnabled = false;
 
-	/** Holds value of property frameSupport. */
+	/** 
+	 * Holds value of property frameSupport. 
+	 */
 	private boolean frameSupport = false;
 
-	/** Holds value of property markup version. */
+	/** 
+	 * Holds value of property markup version. 
+	 */
 	private MarkupVersion markupVersion = MARKUP_HTML_3_2;
 
-	/** Pixel width of the terminal screen */
+	/** 
+	 * Pixel width of the terminal screen. 
+	 */
 	private int screenWidth = -1;
 
-	/** Pixel height of the terminal screen */
+	/** 
+	 * Pixel height of the terminal screen. 
+	 */
 	private int screenHeight = -1;
 	
 	private RenderingMode renderingMode = RENDERING_MODE_UNDEFINED;
 
-	/** Constuctor with some autorecognition capabilities 
-	 *  Retrieves all capability information reported in http request headers:
+	/** 
+	 * Constuctor with some autorecognition capabilities 
+	 * Retrieves all capability information reported in http request headers:
 	 * <ul>
-	 *  <li>User web browser (User-Agent)</li>
-	 *  <li>Supported locale(s)</li>
+	 * <li>User web browser (User-Agent)</li>
+	 * <li>Supported locale(s)</li>
 	 * </ul>
 	 */
 
@@ -98,69 +122,78 @@ public class WebBrowser implements Terminal {
 	public WebBrowser() {
 	}
 
-	/** Get name of the default theme
-	 * @return Name of the terminal window
+	/** 
+	 * Gets the name of the default theme.
+	 * @return the Name of the terminal window.
 	 */
 	public String getDefaultTheme() {
 		return ApplicationServlet.DEFAULT_THEME;
 	}
 
-	/** Get the name and version of the web browser application.
-	 *
+	/** 
+	 * Gets the name and version of the web browser application.
 	 * This is the version string reported by the web-browser in http headers.
-	 * @return Web browser application.
+	 * 
+	 * @return the Web browser application.
 	 */
 	public String getBrowserApplication() {
 		return this.browserApplication;
 	}
 
-	/** Get the version of the supported Java Script by the browser.
+	/** 
+	 * Gets the version of the supported Java Script by the browser.
 	 *
-	 * Null if the Java Script is not supported.
-	 * @return Version of the supported Java Script
+	 * <code>Null</code> if the Java Script is not supported.
+	 * @return the Version of the supported Java Script.
 	 */
 	public JavaScriptVersion getJavaScriptVersion() {
 		return this.javaScriptVersion;
 	}
 
-	/** Does the browser support frames ?
-	 * @return True if the browser supports frames, False if not
+	/** 
+	 * Does the browser support frames ?
+	 * @return <code>true</code> if the browser supports frames, otherwise <code>false</code>.
 	 */
 	public boolean isFrameSupport() {
 		return this.frameSupport;
 	}
 
-	/** Set the browser frame support
-	 * @param frameSupport True if the browser supports frames, False if not
+	/** 
+	 * Sets the browser frame support.
+	 * @param frameSupport True if the browser supports frames, False if not.
 	 */
 	public void setFrameSupport(boolean frameSupport) {
 		this.frameSupport = frameSupport;
 	}
 
-	/** Get the supported markup language.
+	/** 
+	 * Gets the supported markup language.
 	 *
-	 * @return Supported markup language
+	 * @return the Supported markup language
 	 */
 	public MarkupVersion getMarkupVersion() {
 		return this.markupVersion;
 	}
 
-	/** Get height of the terminal window in pixels
-	 * @return Height of the terminal window
+	/** 
+	 * Gets the height of the terminal window in pixels.
+	 * @return the Height of the terminal window.
 	 */
 	public int getScreenHeight() {
 		return this.screenHeight;
 	}
 
-	/** Get width of the terminal window in pixels
-	 * @return Width of the terminal window
+	/** 
+	 * Gets the width of the terminal window in pixels.
+	 * @return the Width of the terminal window.
 	 */
 	public int getScreenWidth() {
 		return this.screenWidth;
 	}
 
-	/** Get the default locale requested by the browser.
-	 * @return Default locale
+	/** 
+	 * Gets the default locale requested by the browser.
+	 * @return the Default locale.
 	 */
 	public Locale getDefaultLocale() {
 		if (this.locales.isEmpty())
@@ -168,12 +201,18 @@ public class WebBrowser implements Terminal {
 		return (Locale) this.locales.iterator().next();
 	}
 
-	/** Hash code composed of the properties of the web browser type */
+	/**
+	 * Hash code composed of the properties of the web browser type.
+	 * @see java.lang.Object#hashCode()
+	 */
 	public int hashCode() {
 		return toString().hashCode();
 	}
 
-	/** Test the equality of the properties for two web browser types */
+	/**
+	 * Tests the equality of the properties for two web browser types.
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	public boolean equals(Object obj) {
 		if (obj != null && obj instanceof WebBrowser) {
 			return toString().equals(obj.toString());
@@ -181,7 +220,9 @@ public class WebBrowser implements Terminal {
 		return false;
 	}
 
-	/** Repsent the type of the web browser as string */
+	/**
+	 * @see java.lang.Object#toString()
+	 */
 	public String toString() {
 
 		String localeString = "[";
@@ -192,7 +233,7 @@ public class WebBrowser implements Terminal {
 		}
 		localeString += "]";
 
-		// Return catenation of the properties
+		// Returns catenation of the properties
 		return "Browser:"
 			+ this.browserApplication
 			+ ", "
@@ -222,34 +263,44 @@ public class WebBrowser implements Terminal {
 			+ this.clientSideChecked;
 	}
 
-	/** Get preferred content type */
+	/** 
+	 * Gets the preferred content type.
+	 * @return the content type. 
+	 */
 	public String getContentType() {
 		return contentType;
 	}
 
-	/** Check if this type supports also given browser.
-	 *  @return true if this type matches the given browser.
+	/** 
+	 * Checks if this type supports also given browser.
+	 * @param browser the browser type.
+	 * @return true if this type matches the given browser.
 	 */
 	public boolean supports(String browser) {
 		return this.getBrowserApplication().indexOf(browser) >= 0;
 	}
 
-	/** Check if this type supports given markup language version.
-	 *  @return true if this type supports the given markup version.
+	/** 
+	 * Checks if this type supports given markup language version.
+	 * @param html the markup language version.
+	 * @return <code>true</ocde> if this type supports the given markup version,otherwise <code>false</code>.
 	 */
 	public boolean supports(MarkupVersion html) {
 		return this.getMarkupVersion().supports(html);
 	}
 
-	/** Check if this type supports given javascript version.
-	 *  @param js The javascript version to check for.
-	 *  @return true if this type supports the given javascript version.
+	/** 
+	 * Checks if this type supports given javascript version.
+	 * @param js the javascript version to check for.
+	 * @return true if this type supports the given javascript version.
 	 */
 	public boolean supports(JavaScriptVersion js) {
 		return this.getJavaScriptVersion().supports(js);
 	}
 
-	/** Parse HTML version from string.
+	/** 
+	 * Parses HTML version from string.
+	 * @param html 
 	 * @return HTMLVersion instance.
 	 */
 	private MarkupVersion doParseHTMLVersion(String html) {
@@ -260,8 +311,10 @@ public class WebBrowser implements Terminal {
 		return MARKUP_UNKNOWN;
 	}
 
-	/** Parse JavaScript version from string.
-		 * @return HTMLVersion instance.
+	/** 
+	 * Parses JavaScript version from string.
+	 * @param js the javascript version to check for.
+	 * @return HTMLVersion instance.
 	 */
 	private JavaScriptVersion doParseJavaScriptVersion(String js) {
 		for (int i = 0; i < JAVASCRIPT_VERSIONS.length; i++) {
@@ -274,116 +327,135 @@ public class WebBrowser implements Terminal {
 		return JAVASCRIPT_NONE;
 	}
 
-	/** Parse HTML version from string.
-	 * @return HTMLVersion instance.
+	/** 
+	 * Parses HTML version from string.
+	 * @param html
+	 * @return the HTMLVersion instance.
 	 */
 	public static MarkupVersion parseHTMLVersion(String html) {
 		return DEFAULT.doParseHTMLVersion(html);
 	}
 
-	/** Parse JavaScript version from string.
-	 * @return HTMLVersion instance.
+	/** 
+	 * Parse JavaScript version from string.
+	 * @param js the javascript version to check for.
+	 * @return the HTMLVersion instance.
 	 */
 	public static JavaScriptVersion parseJavaScriptVersion(String js) {
 		return DEFAULT.doParseJavaScriptVersion(js);
 	}
 
-	/** Get the client side cheked property.
-	 *  Certain terminal features can only be detected at client side. This
-	 *  property indicates if the client side detections have been performed
-	 *  for this type.
-	 * @return true if client has sent information about its properties. Default false
+	/** 
+	 * Gets the client side cheked property.
+	 * Certain terminal features can only be detected at client side. This
+	 * property indicates if the client side detections have been performed
+	 * for this type.
+	 * @return <code>true</code> if client has sent information about its properties. Default is <code>false</code>.
 	 */
 	public boolean isClientSideChecked() {
 		return this.clientSideChecked;
 	}
 
-	/** Set the client side checked property.
-	 *  Certain terminal features can only be detected at client side. This
-	 *  property indicates if the client side detections have been performed
-	 *  for this type.
-	 * @param true if client has sent information about its properties, false otherweise.
+	/** 
+	 * Sets the client side checked property.
+	 * Certain terminal features can only be detected at client side. This
+	 * property indicates if the client side detections have been performed
+	 * for this type.
+	 * @param value true if client has sent information about its properties, false otherweise.
 	 */
 	public void setClientSideChecked(boolean value) {
 		this.clientSideChecked = value;
 	}
 
-	/** Should the client features be checked using remote scripts.
-	 *  Should the client side terminal feature check be performed.
-	 * @return true if client side checking should be performed for this terminal type. Default false.
+	/** 
+	 * Should the client features be checked using remote scripts.
+	 * Should the client side terminal feature check be performed.
+	 * @return <code>true</code> if client side checking should be performed 
+	 * 					for this terminal type. Default is <code>false</code>.
 	 */
 	public boolean performClientCheck() {
 		return this.performClientCheck;
 	}
 
-	/** Should the  client features be checked using remote scripts.
-	 * 
-	 * @return true if client side checking should be performed for this terminal type. Default false.
+	/** 
+	 * Should the  client features be checked using remote scripts.
+	 * @param value
+	 * @return <code>true</code> if client side checking should be performed
+	 * 				 for this terminal type. Default <code>false</code>.
 	 */
 	public void performClientCheck(boolean value) {
 		this.performClientCheck = value;
 	}
 
-	/** Check if web browser supports Java.
-	 * @return boolean
+	/** 
+	 * Checks if web browser supports Java.
+	 * @return <code>true<code> if the browser supports java otherwise <code>false</code>.
 	 */
 	public boolean isJavaEnabled() {
 		return javaEnabled;
 	}
 
-	/** Returns the locales supported by the web browser.
-	 * @return Collection
+	/** 
+	 * Returns the locales supported by the web browser.
+	 * @return the Collection.
 	 */
 	public Collection getLocales() {
 		return locales;
 	}
 
-	/** Sets the browser application.
-	 *  This corresponds to User-Agent HTTP header.
-	 * @param browserApplication The browserApplication to set
+	/** 
+	 * Sets the browser application.
+	 * This corresponds to User-Agent HTTP header.
+	 * @param browserApplication the browserApplication to set.
 	 */
 	public void setBrowserApplication(String browserApplication) {
 		this.browserApplication = browserApplication;
 	}
 
-	/** Sets the default content type.
-	 *  Default is <code>text/html</code>
-	 * @param contentType The contentType to set
+	/** 
+	 * Sets the default content type.
+	 * Default is <code>text/html</code>
+	 * @param contentType the contentType to set.
 	 */
 	public void setContentType(String contentType) {
 		this.contentType = contentType;
 	}
 
-	/** Sets the java enabled property.
-	 * @param javaEnabled The javaEnabled to set
+	/** 
+	 * Sets the java enabled property.
+	 * @param javaEnabled the javaEnabled to set.
 	 */
 	public void setJavaEnabled(boolean javaEnabled) {
 		this.javaEnabled = javaEnabled;
 	}
 
-	/**Sets the JavaScript version.
-	 * @param javaScriptVersion The JavaScript version to set
+	/**
+	 * Sets the JavaScript version.
+	 * @param javaScriptVersion the JavaScript version to set.
 	 */
 	public void setJavaScriptVersion(JavaScriptVersion javaScriptVersion) {
 		this.javaScriptVersion = javaScriptVersion;
 	}
 
-	/** Sets the markup language version.
-	 * @param markupVersion ersion The markup language version to set
+	/** 
+	 * Sets the markup language version.
+	 * @param markupVersion the markup language version to set.
 	 */
 	public void setMarkupVersion(MarkupVersion markupVersion) {
 		this.markupVersion = markupVersion;
 	}
 
-	/** Sets the screen height.
-	 * @param screenHeight The screen height to set in pixels.
+	/** 
+	 * Sets the screen height.
+	 * @param screenHeight the screen height to set in pixels.
 	 */
 	public void setScreenHeight(int screenHeight) {
 		this.screenHeight = screenHeight;
 	}
 
-	/** Sets the screen width.
-	 * @param screenWidth The screenWidth to set in pixels.
+	/** 
+	 * Sets the screen width.
+	 * @param screenWidth the screenWidth to set in pixels.
 	 */
 	public void setScreenWidth(int screenWidth) {
 		this.screenWidth = screenWidth;
@@ -400,6 +472,9 @@ public class WebBrowser implements Terminal {
 		private int order;
 
 		/**
+		 * Returns <code>true</code> if and only if the argument is not <code>null</code> and is a 
+		 * Boolean object that represents the same boolean value as this object.
+		 * @param obj the object to compare with.
 		 * @see java.lang.Object#equals(Object)
 		 */
 		public boolean equals(Object obj) {
@@ -414,14 +489,21 @@ public class WebBrowser implements Terminal {
 		public String toString() {
 			return name;
 		}
-
+		
+/**
+ * 
+ * @param name
+ * @param order
+ */
 		private MarkupVersion(String name, int order) {
 			this.name = name;
 			this.order = order;
 		}
 
-		/** Check compability with other HTML version.
-		 *  @return true if this is compatible with the other, false otherwise
+		/** 
+		 * Checks the compability with other HTML version.
+		 * @param other the HTML version.
+		 * @return <code>true</code> if this is compatible with the other, otherwise <code>false</code>. 
 		 */
 		public boolean supports(MarkupVersion other) {
 			return (this.order >= other.order);
@@ -484,16 +566,23 @@ public class WebBrowser implements Terminal {
 		public String toString() {
 			return name;
 		}
-
+		
+/**
+ * 
+ * @param name
+ * @param order
+ */
 		private JavaScriptVersion(String name, int order) {
 			this.name = name;
 			this.order = order;
 		}
 
-		/** Check compability with other JavaScript version.
-		 *  Use this like:
-		 *  <code>boolean isEcma = someVersion.supports(ECMA_262);</code>
-		 *  @return true if this supports the other, false otherwise
+		/** 
+		 * Checks the compability with other JavaScript version.
+		 * Use this like:
+		 * <code>boolean isEcma = someVersion.supports(ECMA_262);</code>
+		 * @param other the java script version.
+		 * @return <code>true</code> if this supports the other, otherwise <code>false</code>. 
 		 */
 		public boolean supports(JavaScriptVersion other) {
 
@@ -594,16 +683,16 @@ public class WebBrowser implements Terminal {
 	public static final RenderingMode RENDERING_MODE_AJAX = DEFAULT.new RenderingMode();
 
 	/**
-	 * Gets current rendering mode
-	 * @return current rendering mode
+	 * Gets the current rendering mode.
+	 * @return the current rendering mode.
 	 */
 	public RenderingMode getRenderingMode() {
 		return renderingMode;
 	}
 
 	/**
-	 * Sets current rendering mode
-	 * @param renderingMode 
+	 * Sets the current rendering mode.
+	 * @param renderingMode the rendering mode. 
 	 */
 	public void setRenderingMode(RenderingMode renderingMode) {
 		this.renderingMode = renderingMode;

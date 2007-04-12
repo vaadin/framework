@@ -54,7 +54,7 @@ import com.itmill.toolkit.ui.*;
  * This class provides a debugging window where one may view the UIDL of
  * the current window, or in a tabset the UIDL of an active frameset.
  * 
- * It is primarily inteded for creating and debugging themes.
+ * It is primarily intended for creating and debugging themes.
  * 
  * @author IT Mill Ltd.
  * @version @VERSION@
@@ -73,10 +73,11 @@ public class DebugWindow extends Window {
 	private Select themeSelector;
 	private Label applicationInfo = new Label("", Label.CONTENT_XHTML);
 
-	/**Create new debug window for an application.
-	 * @param debuggedApplication Application to be debugged.
-	 * @param session Session to be debugged.
-	 * @param servlet Servlet to be debugged.
+	/**
+	 * Creates the new debug window for an application.
+	 * @param debuggedApplication the Application to be debugged.
+	 * @param session the Session to be debugged.
+	 * @param servlet the Servlet to be debugged.
 	 */
 	protected DebugWindow(
 		Application debuggedApplication,
@@ -90,7 +91,7 @@ public class DebugWindow extends Window {
 		setBorder(Window.BORDER_NONE);
 		
 
-		// Create control buttons
+		// Creates control buttons
 		OrderedLayout controls =
 			new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
 		controls.addComponent(
@@ -103,7 +104,7 @@ public class DebugWindow extends Window {
 			names.add(((Theme) i.next()).getName());
 		}
 
-		// Create theme selector
+		// Creates theme selector
 		themeSelector = new Select("Application Theme", names);
 		themeSelector.setWriteThrough(false);
 
@@ -150,11 +151,18 @@ public class DebugWindow extends Window {
 		termInfo.addComponent(browser);
 		termInfo.addComponent(setbrowser);
 
-		// Set the debugged application
+		// Sets the debugged application
 		setDebuggedApplication(debuggedApplication);
 
 	}
-
+	
+/**
+ * 
+ * @param caption
+ * @param keys
+ * @param names
+ * @return
+ */
 	protected Select createSelect(
 		String caption,
 		Object[] keys,
@@ -167,7 +175,10 @@ public class DebugWindow extends Window {
 		s.setItemCaptionPropertyId("name");
 		return s;
 	}
-
+	
+	/**
+	 * Saves the UIDL.
+	 */
 	public void saveUIDL() {
 
 		synchronized (rawUIDL) {
@@ -200,20 +211,36 @@ public class DebugWindow extends Window {
 			}
 		}
 	}
-
+	
+	/**
+	 * Commits the theme.
+	 *
+	 */
 	public void commitTheme() {
 		themeSelector.commit();
 	}
-
+	
+	/**
+	 * Clears the session.
+	 */
 	public void clearSession() {
 		session.invalidate();
 	}
-
+	
+	/**
+	 * Restarts the Application.
+	 *
+	 */
 	public void restartApplication() {
 		if (debuggedApplication != null)
 			debuggedApplication.close();
 	}
-
+	
+/**
+ * 
+ * @param window
+ * @param uidl
+ */
 	protected void setWindowUIDL(Window window, String uidl) {
 		String caption = "UIDL:" + window.getName();
 		synchronized (tabs) {
@@ -236,7 +263,13 @@ public class DebugWindow extends Window {
 			}
 		}
 	}
-
+	
+/**
+ * 
+ * @param caption
+ * @param uidl
+ * @return
+ */
 	protected String getHTMLFormattedUIDL(String caption, String uidl) {
 		StringBuffer sb = new StringBuffer();
 
@@ -318,22 +351,21 @@ public class DebugWindow extends Window {
 	 * with characters in the specified <code>String</code>. The substring
 	 * begins at the specified <code>start</code> and extends to the character
 	 * at index <code>end - 1</code> or to the end of the
-	 * <code>String</code> if no such character exists. First the
-	 * characters in the substring are removed and then the specified
+	 * <code>String</code> if no such character exists. 
+	 * <p>
+	 * First the characters in the substring are removed and then the specified
 	 * <code>String</code> is inserted at <code>start</code>. (The
 	 * <code>StringBuffer</code> will be lengthened to accommodate the
 	 * specified String if necessary.)
+	 * </p>
 	 * <p>
 	 * NOTE: This operation is slow.
 	 * </p>
-	 * 
-	 * @param      start    The beginning index, inclusive.
-	 * @param      end      The ending index, exclusive.
-	 * @param      str   String that will replace previous contents.
+	 * @param      text
+	 * @param      start    the beginning index, inclusive.
+	 * @param      end      the ending index, exclusive.
+	 * @param      str      the String that will replace previous contents.
 	 * @return     This string buffer.
-	 * @exception  StringIndexOutOfBoundsException  if <code>start</code>
-	 *             is negative, greater than <code>length()</code>, or
-	 *		   greater than <code>end</code>.
 	 */
 	protected static String replace(
 		String text,
@@ -342,7 +374,14 @@ public class DebugWindow extends Window {
 		String str) {
 		return new StringBuffer(text).replace(start, end, str).toString();
 	}
-
+	
+/**
+ * 
+ * @param text
+ * @param oldStr
+ * @param newStr
+ * @return
+ */
 	protected static String replaceAll(
 		String text,
 		String oldStr,
@@ -368,7 +407,7 @@ public class DebugWindow extends Window {
 
 	/**
 	 * Sets the application.
-	 * @param application The application to set
+	 * @param application the application to set.
 	 */
 	protected void setDebuggedApplication(Application application) {
 		this.debuggedApplication = application;
@@ -383,7 +422,7 @@ public class DebugWindow extends Window {
 
 	/**
 	 * Returns the servlet.
-	 * @return WebAdapterServlet
+	 * @return the WebAdapterServlet.
 	 */
 	protected ApplicationServlet getServlet() {
 		return servlet;
@@ -391,7 +430,7 @@ public class DebugWindow extends Window {
 
 	/**
 	 * Returns the session.
-	 * @return HttpSession
+	 * @return the HttpSession.
 	 */
 	protected HttpSession getSession() {
 		return session;
@@ -399,7 +438,7 @@ public class DebugWindow extends Window {
 
 	/**
 	 * Sets the servlet.
-	 * @param servlet The servlet to set
+	 * @param servlet the servlet to set.
 	 */
 	protected void setServlet(ApplicationServlet servlet) {
 		this.servlet = servlet;
@@ -407,7 +446,7 @@ public class DebugWindow extends Window {
 
 	/**
 	 * Sets the session.
-	 * @param session The session to set
+	 * @param session the session to set.
 	 */
 	protected void setSession(HttpSession session) {
 		this.session = session;

@@ -42,8 +42,8 @@ import com.itmill.toolkit.terminal.PaintTarget;
 /**
  * <p>
  * A date editor component that can be bound to any bindable Property. that is
- * compatible with java.util.Date.
- * 
+ * compatible with <code>java.util.Date</code>.
+ * </p>
  * <p>
  * Since <code>DateField</code> extends <code>AbstractField</code> it
  * implements the {@link com.itmill.toolkit.data.Buffered}interface. A
@@ -61,39 +61,61 @@ public class DateField extends AbstractField {
 
     /* Private members ************************************************* */
 
-    /** Resolution identifier: milliseconds */
+    /** 
+     * Resolution identifier: milliseconds. 
+     */
     public static final int RESOLUTION_MSEC = 0;
 
-    /** Resolution identifier: seconds. */
+    /** 
+     * Resolution identifier: seconds. 
+     */
     public static final int RESOLUTION_SEC = 1;
 
-    /** Resolution identifier: minutes. */
+    /** 
+     * Resolution identifier: minutes. 
+     */
     public static final int RESOLUTION_MIN = 2;
 
-    /** Resolution identifier: hours. */
+    /** 
+     * Resolution identifier: hours. 
+     */
     public static final int RESOLUTION_HOUR = 3;
 
-    /** Resolution identifier: days. */
+    /** 
+     * Resolution identifier: days. 
+     */
     public static final int RESOLUTION_DAY = 4;
 
-    /** Resolution identifier: months. */
+    /** 
+     * Resolution identifier: months. 
+     */
     public static final int RESOLUTION_MONTH = 5;
 
-    /** Resolution identifier: years. */
+    /** 
+     * Resolution identifier: years. 
+     */
     public static final int RESOLUTION_YEAR = 6;
 
-    /** Specified smallest modifiable unit */
+    /** 
+     * Specified smallest modifiable unit. 
+     */
     private int resolution = RESOLUTION_MSEC;
 
-    /** Specified largest modifiable unit */
+    /** 
+     * Specified largest modifiable unit. 
+     */
     private static final int largestModifiable = RESOLUTION_YEAR;
 
-    /** The internal calendar to be used in java.utl.Date conversions */
+    /** 
+     * The internal calendar to be used in java.utl.Date conversions. 
+     */
     private Calendar calendar;
 
     /* Constructors **************************************************** */
 
-    /** Constructs an empty <code>DateField</code> with no caption. */
+    /** 
+     * Constructs an empty <code>DateField</code> with no caption. 
+     */
     public DateField() {
     }
 
@@ -101,7 +123,7 @@ public class DateField extends AbstractField {
      * Constructs an empty <code>DateField</code> with caption.
      * 
      * @param caption
-     *            The caption of the datefield.
+     *            the caption of the datefield.
      */
     public DateField(String caption) {
         setCaption(caption);
@@ -112,9 +134,9 @@ public class DateField extends AbstractField {
      * <code>Property</code> and has the given caption <code>String</code>.
      * 
      * @param caption
-     *            caption <code>String</code> for the editor
+     *            the caption <code>String</code> for the editor.
      * @param dataSource
-     *            the Property to be edited with this editor
+     *            the Property to be edited with this editor.
      */
     public DateField(String caption, Property dataSource) {
         this(dataSource);
@@ -126,7 +148,7 @@ public class DateField extends AbstractField {
      * <code>Property</code> and has no caption.
      * 
      * @param dataSource
-     *            the Property to be edited with this editor
+     *            the Property to be edited with this editor.
      */
     public DateField(Property dataSource) throws IllegalArgumentException {
         if (!Date.class.isAssignableFrom(dataSource.getType()))
@@ -145,9 +167,9 @@ public class DateField extends AbstractField {
      * is called to bind it.
      * 
      * @param caption
-     *            caption <code>String</code> for the editor
-     * @param text
-     *            initial text content of the editor
+     *            the caption <code>String</code> for the editor.
+     * @param value
+     *            the Date value.
      */
     public DateField(String caption, Date value) {
         setValue(value);
@@ -157,19 +179,19 @@ public class DateField extends AbstractField {
     /* Component basic features ********************************************* */
 
     /*
-     * Paint this component. Don't add a JavaDoc comment here, we use the
+     * Paints this component. Don't add a JavaDoc comment here, we use the
      * default documentation from implemented interface.
      */
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);
 
-        // Add locale as attribute
+        // Adds the locale as attribute
         Locale l = getLocale();
         if (l != null) {
             target.addAttribute("locale",l.toString());
         }
         
-        // Get the calendar
+        // Gets the calendar
         Calendar calendar = getCalendar();
         Date currentDate = (Date) getValue();
         
@@ -235,7 +257,7 @@ public class DateField extends AbstractField {
             Date oldDate = (Date) getValue();
             Date newDate = null;
 
-            // Get the new date in parts
+            // Gets the new date in parts
             // Null values are converted to negative values.
             int year = variables.containsKey("year") ? (variables.get("year") == null ? -1
                     : ((Integer) variables.get("year")).intValue())
@@ -279,7 +301,7 @@ public class DateField extends AbstractField {
                 sec = sec < 0 ? cal.get(Calendar.SECOND) : sec;
                 msec = msec < 0 ? cal.get(Calendar.MILLISECOND) : msec;
 
-                // Set the calendar fields
+                // Sets the calendar fields
                 cal.set(Calendar.YEAR, year);
                 cal.set(Calendar.MONTH, month);
                 cal.set(Calendar.DAY_OF_MONTH, day);
@@ -288,7 +310,7 @@ public class DateField extends AbstractField {
                 cal.set(Calendar.SECOND, sec);
                 cal.set(Calendar.MILLISECOND, msec);
 
-                // Assign the date
+                // Assigns the date
                 newDate = cal.getTime();
             }
 
@@ -309,7 +331,7 @@ public class DateField extends AbstractField {
     }
 
     /*
-     * Return the value of the property in human readable textual format. Don't
+     * Returns the value of the property in human readable textual format. Don't
      * add a JavaDoc comment here, we use the default documentation from
      * implemented interface.
      */
@@ -321,13 +343,13 @@ public class DateField extends AbstractField {
     }
 
     /*
-     * Set the value of the property. Don't add a JavaDoc comment here, we use
+     * Sets the value of the property. Don't add a JavaDoc comment here, we use
      * the default documentation from implemented interface.
      */
     public void setValue(Object newValue) throws Property.ReadOnlyException,
             Property.ConversionException {
 
-        // Allow setting dates directly
+        // Allows setting dates directly
         if (newValue == null || newValue instanceof Date)
             super.setValue(newValue);
         else {
@@ -344,7 +366,7 @@ public class DateField extends AbstractField {
     }
 
     /**
-     * Set DateField datasource. Datasource type must assignable to Date.
+     * Sets the DateField datasource. Datasource type must assignable to Date.
      * 
      * @see com.itmill.toolkit.data.Property.Viewer#setPropertyDataSource(Property)
      */
@@ -358,7 +380,7 @@ public class DateField extends AbstractField {
     }
 
     /**
-     * Returns the resolution.
+     * Gets the resolution.
      * 
      * @return int
      */
@@ -367,10 +389,10 @@ public class DateField extends AbstractField {
     }
 
     /**
-     * Sets the resolution of the DateField
+     * Sets the resolution of the DateField.
      * 
      * @param resolution
-     *            The resolution to set
+     *            the resolution to set.
      */
     public void setResolution(int resolution) {
         this.resolution = resolution;
@@ -382,14 +404,13 @@ public class DateField extends AbstractField {
      * Returns new clone of the calendar object initialized using the the
      * current date (if available)
      * 
-     * If this is no calendar is assigned the Calendar.getInstance() is used.
-     * 
+     * If this is no calendar is assigned the <code>Calendar.getInstance</code> is used.
+     * @return the Calendar.
      * @see #setCalendar(Calendar)
-     * @return Calendar
      */
     private Calendar getCalendar() {
 
-        // Make sure we have an calendar instance
+        // Makes sure we have an calendar instance
         if (this.calendar == null) {
             this.calendar = Calendar.getInstance();
         }
@@ -397,7 +418,7 @@ public class DateField extends AbstractField {
         // Clone the instance
         Calendar newCal = (Calendar) this.calendar.clone();
 
-        // Assign the current time tom calendar.
+        // Assigns the current time tom calendar.
         Date currentDate = (Date) getValue();
         if (currentDate != null)
             newCal.setTime(currentDate);

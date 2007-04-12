@@ -32,12 +32,12 @@ import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
 import com.itmill.toolkit.terminal.Resource;
 
-/** Link component.
- *  Link is used to create external or internal URL links.
+/** 
+ * Link is used to create external or internal URL links.
  *
- *  Internal links can be used to create action items, which
- *  change the state to application to one of the predefined states.
- *  For example, a link can be created for existing MenuTree items.
+ * Internal links can be used to create action items, which
+ * change the state to application to one of the predefined states.
+ * For example, a link can be created for existing MenuTree items.
  *
  * @author IT Mill Ltd.
  * @version @VERSION@
@@ -59,17 +59,22 @@ public class Link extends AbstractComponent {
 	private int targetWidth = -1;
 	private int targetHeight = -1;
 
-	/** Creates a new link. */
+	/** 
+	 * Creates a new link. 
+	 */
 	public Link() {
 		
 	}
-	/** Creates a new link to a window. */
+	
+	/** 
+	 * Creates a new link to a window. 
+	 */
 	public Link(Window window) {
 
-		// Set the link caption to match window caption
+		// Sets the link caption to match window caption
 		setCaption(window.getCaption());
 
-		// Set the target
+		// Sets the target
 		setTargetName(window.getName());
 
 		setTargetName(window.getName());
@@ -78,22 +83,27 @@ public class Link extends AbstractComponent {
 		setTargetBorder(window.getBorder());
 	}
 
-	/** Creates a new instance of Link */
+	/** 
+	 * Creates a new instance of Link. 
+	 * @param caption
+	 * @param resource 
+	 */
 	public Link(String caption, Resource resource) {
 		setCaption(caption);
 		this.resource = resource;
 	}
 
-	/** Creates a new instance of Link that opens a new window. 
+	/** 
+	 * Creates a new instance of Link that opens a new window. 
 	 * 
 	 * 
-	 * @param caption Link text.
-	 * @param targetName The name of the target window where the link 
+	 * @param caption the Link text.
+	 * @param targetName the name of the target window where the link 
 	 * opens to. Empty name of null implies that
 	 * the target is opened to the window containing the link.
-	 * @param width Width of the target window.
-	 * @param height Height of the target window.
-	 * @param border Borget style of the target window.
+	 * @param width the Width of the target window.
+	 * @param height the Height of the target window.
+	 * @param border the Border style of the target window.
 	 * 
 	 */
 	public Link(
@@ -111,16 +121,18 @@ public class Link extends AbstractComponent {
 		setTargetBorder(border);
 	}
 
-	/** Get component UIDL tag.
-	 *  @return Component UIDL tag as string.
+	/** 
+	 * Gets the component UIDL tag.
+	 * @return the Component UIDL tag as string.
 	 */
 	public String getTag() {
 		return "link";
 	}
 
-	/** Paint the content of this component.
-	 * @param event PaintEvent.
-	 * @throws PaintException The paint operation failed.
+	/** 
+	 * Paints the content of this component.
+	 * @param target the Paint Event.
+	 * @throws PaintException if the paint operation failed.
 	 */
 	public void paintContent(PaintTarget target) throws PaintException {
 
@@ -153,37 +165,42 @@ public class Link extends AbstractComponent {
 		}
 	}
 
-	/** Returns the target window border.
-	 * @return int
+	/** 
+	 * Returns the target window border.
+	 * @return the target window border.
 	 */
 	public int getTargetBorder() {
 		return targetBorder;
 	}
 
-	/** Returns the target window height or -1 if not set.
-	 * @return int
+	/** 
+	 * Returns the target window height or -1 if not set.
+	 * @return the target window height.
 	 */
 	public int getTargetHeight() {
 		return targetHeight < 0 ? -1 : targetHeight;
 	}
 
-	/** Returns the target window name. Empty name of null implies that
+	/** 
+	 * Returns the target window name. Empty name of null implies that
 	 * the target is opened to the window containing the link.
-	 * @return String
+	 * @return the target window name.
 	 */
 	public String getTargetName() {
 		return targetName;
 	}
 
-	/** Returns the target window width or -1 if not set.
-	 * @return int
+	/** 
+	 * Returns the target window width or -1 if not set.
+	 * @return the target window width.
 	 */
 	public int getTargetWidth() {
 		return targetWidth < 0 ? -1 : targetWidth;
 	}
 
-	/** Sets the border of the target window.
-	 * @param targetBorder The targetBorder to set
+	/** 
+	 * Sets the border of the target window.
+	 * @param targetBorder the targetBorder to set.
 	 */
 	public void setTargetBorder(int targetBorder) {
 		if (targetBorder == TARGET_BORDER_DEFAULT
@@ -194,45 +211,51 @@ public class Link extends AbstractComponent {
 		}
 	}
 
-	/** Sets the target window height.
-	 * @param targetHeight The targetHeight to set
+	/** 
+	 * Sets the target window height.
+	 * @param targetHeight the targetHeight to set.
 	 */
 	public void setTargetHeight(int targetHeight) {
 		this.targetHeight = targetHeight;
 		requestRepaint();
 	}
 
-	/** Sets the target window name.
-	 * @param targetName The targetName to set
+	/** 
+	 * Sets the target window name.
+	 * @param targetName the targetName to set.
 	 */
 	public void setTargetName(String targetName) {
 		this.targetName = targetName;
 		requestRepaint();
 	}
 
-	/** Sets the target window width.
-	 * @param targetWidth The targetWidth to set
+	/** 
+	 * Sets the target window width.
+	 * @param targetWidth the targetWidth to set.
 	 */
 	public void setTargetWidth(int targetWidth) {
 		this.targetWidth = targetWidth;
 		requestRepaint();
 	}
-	/** Returns the resource this link opens.
-	 * @return Resource
+	/** 
+	 * Returns the resource this link opens.
+	 * @return the Resource.
 	 */
 	public Resource getResource() {
 		return resource;
 	}
 
-	/** Returns the window this link opens.
-	 * @return Window
+	/** 
+	 * Returns the window this link opens.
+	 * @return the Window.
 	 */
 	public Window getWindow() {
 		return window;
 	}
 
-	/** Sets the resource this link opens.
-	 * @param resource The resource to set
+	/** 
+	 * Sets the resource this link opens.
+	 * @param resource the resource to set.
 	 */
 	public void setResource(Resource resource) {
 		this.resource = resource;
@@ -242,8 +265,9 @@ public class Link extends AbstractComponent {
 		requestRepaint();
 	}
 
-	/** Sets the window this link opens.
-	 * @param window The window to set
+	/** 
+	 * Sets the window this link opens.
+	 * @param window the window to set.
 	 */
 	public void setWindow(Window window) {
 		this.window = window;

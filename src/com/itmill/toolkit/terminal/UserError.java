@@ -28,7 +28,8 @@
 
 package com.itmill.toolkit.terminal;
 
-/** User error is a controlled error occurred in application. User errors
+/** 
+ * <code>UserError</code> is a controlled error occurred in application. User errors
  * are occur in normal usage of the application and guide the user.
  *
  * @author IT Mill Ltd.
@@ -37,37 +38,51 @@ package com.itmill.toolkit.terminal;
  */
 public class UserError implements ErrorMessage {
 
-	/** Content mode, where the error contains only plain text. 
+	/** 
+	 * Content mode, where the error contains only plain text. 
 	 */
 	public static final int CONTENT_TEXT = 0;
 
-	/** Content mode, where the error contains preformatted text.
+	/** 
+	 * Content mode, where the error contains preformatted text.
 	 */
 	public static final int CONTENT_PREFORMATTED = 1;
 
-	/** Formatted content mode, where the contents is XML restricted to the
+	/** 
+	 * Formatted content mode, where the contents is XML restricted to the
 	 * UIDL 1.0 formatting markups.
 	 */
 	public static final int CONTENT_UIDL = 2;
 
-	/** Content mode */
+	/** 
+	 * Content mode. 
+	 */
 	private int mode = CONTENT_TEXT;
 
-	/** Message in content mode */
+	/** 
+	 * Message in content mode. 
+	 */
 	private String msg;
 
-	/** Error level */
+	/** 
+	 * Error level. 
+	 */
 	private int level = ErrorMessage.ERROR;
 
-	/** Create a textual error message of level ERROR.
+	/** 
+	 * Creates a textual error message of level ERROR.
 	 * 
-	 * @param textErrorMessage The text of the error message. 
+	 * @param textErrorMessage the text of the error message. 
 	 */
 	public UserError(String textErrorMessage) {
 		this.msg = textErrorMessage;
 	}
 
-	/** Create error message with level and content mode.
+	/** 
+	 * Creates error message with level and content mode.
+	 * @param message the error message.
+	 * @param contentMode the content Mode.
+	 * @param errorLevel the level of error.
 	 */
 	public UserError(String message, int contentMode, int errorLevel) {
 

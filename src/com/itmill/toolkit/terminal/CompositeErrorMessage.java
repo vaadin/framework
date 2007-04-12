@@ -33,7 +33,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-/** Class for combining multiple error messages together.
+/** 
+ * Class for combining multiple error messages together.
  *
  * @author  IT Mill Ltd
  * @version @VERSION@
@@ -41,19 +42,22 @@ import java.util.List;
  */
 public class CompositeErrorMessage implements ErrorMessage {
 
-	/** Array of all the errors */
+	/** 
+	 * Array of all the errors. 
+	 */
 	private List errors;
 
-	/** Level of the error */
+	/** 
+	 * Level of the error. 
+	 */
 	private int level;
 
-	/** Constructor for CompositeErrorMessage.
+	/** 
+	 * Constructor for CompositeErrorMessage.
 	 * 
-	 * @param errorMessages Array of error messages that are listed togeter. 
+	 * @param errorMessages the Array of error messages that are listed togeter. 
 	 * Nulls are ignored, but at least one message is required.
-	 * @throws NullPointerException if errorMessages is null.
-	 * 	 * @throws IllegalArgumentException if the array was empty. 	 
-	  */
+	 */
 	public CompositeErrorMessage(ErrorMessage[] errorMessages) {
 		errors = new ArrayList(errorMessages.length);
 		level = Integer.MIN_VALUE;
@@ -67,11 +71,10 @@ public class CompositeErrorMessage implements ErrorMessage {
 
 	}
 
-	/** Constructor for CompositeErrorMessage.
-	 * @param errorMessages Collection of error messages that are listed
+	/** 
+	 * Constructor for CompositeErrorMessage.
+	 * @param errorMessages the Collection of error messages that are listed
 	 * togeter. At least one message is required.
-	 * @throws NullPointerException if the collection is null.
-	 * @throws IllegalArgumentException if the collection was empty.
 	 */
 	public CompositeErrorMessage(Collection errorMessages) {
 		errors = new ArrayList(errorMessages.size());
@@ -85,16 +88,18 @@ public class CompositeErrorMessage implements ErrorMessage {
 			throw new IllegalArgumentException("Composite error message must have at least one error");
 	}
 
-	/** The error level is the largest error level in 
+	/** 
+	 * The error level is the largest error level in 
 	 * @see com.itmill.toolkit.terminal.ErrorMessage#getErrorLevel()
 	 */
 	public final int getErrorLevel() {
 		return level;
 	}
 
-	/** Add a error message into this composite message.
-	 *  Updates the level field.
-	 * @param error The error message to be added. Duplicate errors are ignored.
+	/** 
+	 * Adds a error message into this composite message.
+	 * Updates the level field.
+	 * @param error the error message to be added. Duplicate errors are ignored.
 	 */
 	private void addErrorMessage(ErrorMessage error) {
 		if (error != null && !errors.contains(error)) {
@@ -105,11 +110,17 @@ public class CompositeErrorMessage implements ErrorMessage {
 		}
 	}
 
-	/** Get Error Iterator. */
+	/** 
+	 * Gets Error Iterator.
+	 * @return the error iterator. 
+	 */
 	public Iterator iterator() {
 		return errors.iterator();
 	}
-
+	
+	/**
+	 * @see com.itmill.toolkit.terminal.Paintable#paint(com.itmill.toolkit.terminal.PaintTarget)
+	 */
 	public void paint(PaintTarget target) throws PaintException {
 
 		if (errors.size() == 1)
@@ -153,7 +164,8 @@ public class CompositeErrorMessage implements ErrorMessage {
 	public void requestRepaintRequests() {
 	}
 
-	/** Returns a comma separated list of the error messages.
+	/** 
+	 * Returns a comma separated list of the error messages.
 	 * @return String, comma separated list of error messages.
 	 */
 	public String toString() {

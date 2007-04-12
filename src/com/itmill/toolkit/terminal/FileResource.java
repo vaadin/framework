@@ -35,8 +35,9 @@ import java.io.FileNotFoundException;
 import com.itmill.toolkit.Application;
 import com.itmill.toolkit.service.FileTypeResolver;
 
-/** File resources are files or directories on local filesystem. The files and directories
- * are served trough URI:s to the client terminal and thus must be registered to an 
+/** 
+ * <code>FileResources</code> are files or directories on local filesystem. The files and directories
+ * are served through URI:s to the client terminal and thus must be registered to an 
  * URI context before they can be used. The resource is automatically registered
  * to the application when it is created.
  *
@@ -46,19 +47,28 @@ import com.itmill.toolkit.service.FileTypeResolver;
  */
 public class FileResource implements ApplicationResource {
 
-	/** Default buffer size for this stream resource */
+	/** 
+	 * Default buffer size for this stream resource. 
+	 */
 	private int bufferSize = 0;
 
-	/** File where the downloaded content is fetched from. */
+	/** 
+	 * File where the downloaded content is fetched from. 
+	 */
 	private File sourceFile;
 
-	/** Application */
+	/** 
+	 * Application. 
+	 */
 	private Application application;
 
-	/** Default cache time for this stream resource */
+	/** 
+	 * Default cache time for this stream resource. 
+	 */
 	private long cacheTime = DownloadStream.DEFAULT_CACHETIME;		
 
-	/** Create new file resource for providing given file for
+	/** 
+	 * Creates new file resource for providing given file for
 	 * client terminals.
 	 */
 	public FileResource(File sourceFile, Application application) {
@@ -66,7 +76,11 @@ public class FileResource implements ApplicationResource {
 		setSourceFile(sourceFile);
 		application.addResource(this);
 	}
-
+	
+	/**
+	 * Gets the resource as stream.
+	 * @see com.itmill.toolkit.terminal.ApplicationResource#getStream()
+	 */
 	public DownloadStream getStream() {
 		try {
 			DownloadStream ds = new DownloadStream(
@@ -81,15 +95,17 @@ public class FileResource implements ApplicationResource {
 		}
 	}
 
-	/** Returns the source file.
-	 * @return File
+	/** 
+	 * Gets the source file.
+	 * @return the source File.
 	 */
 	public File getSourceFile() {
 		return sourceFile;
 	}
 
-	/** Sets the source file.
-	 * @param sourceFile The source file to set
+	/** 
+	 * Sets the source file.
+	 * @param sourceFile the source file to set.
 	 */
 	public void setSourceFile(File sourceFile) {
 		this.sourceFile = sourceFile;
@@ -116,21 +132,23 @@ public class FileResource implements ApplicationResource {
 		return FileTypeResolver.getMIMEType(sourceFile);
 	}
 	
-	/** Get lenght of cache expiration time.
-	 *  This gives the adapter the possibility cache streams sent to the client.
-	 *  The caching may be made in adapter or at the client if the client supports
-	 *  caching. Default is DownloadStream.DEFAULT_CACHETIME.
-	 * @return Cache time in milliseconds
+	/** 
+	 * Gets the length of cache expiration time.
+	 * This gives the adapter the possibility cache streams sent to the client.
+	 * The caching may be made in adapter or at the client if the client supports
+	 * caching. Default is <code>DownloadStream.DEFAULT_CACHETIME</code>.
+	 * @return Cache time in milliseconds.
 	 */
 	public long getCacheTime() {
 		return cacheTime;
 	}
 
-	/** Set lenght of cache expiration time.
-	 *  This gives the adapter the possibility cache streams sent to the client.
-	 *  The caching may be made in adapter or at the client if the client supports
-	 *  caching. Zero or negavive value disbales the caching of this stream.
-	 * @param cacheTime The cache time in milliseconds.
+	/** 
+	 * Sets the length of cache expiration time.
+	 * This gives the adapter the possibility cache streams sent to the client.
+	 * The caching may be made in adapter or at the client if the client supports
+	 * caching. Zero or negavive value disbales the caching of this stream.
+	 * @param cacheTime the cache time in milliseconds.
 	 */
 	public void setCacheTime(long cacheTime) {
 		this.cacheTime = cacheTime;
@@ -141,8 +159,9 @@ public class FileResource implements ApplicationResource {
 		return bufferSize;
 	}
 
-	/** Set the size of the download buffer used for this resource.
-	 * @param bufferSize The size of the buffer in bytes.
+	/** 
+	 * Sets the size of the download buffer used for this resource.
+	 * @param bufferSize the size of the buffer in bytes.
 	 */
 	public void setBufferSize(int bufferSize) {
 		this.bufferSize = bufferSize;

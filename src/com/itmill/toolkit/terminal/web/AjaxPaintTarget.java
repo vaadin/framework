@@ -82,22 +82,24 @@ public class AjaxPaintTarget implements PaintTarget {
     private int numberOfPaints = 0;
 
     /**
-     * Create a new XMLPrintWriter, without automatic line flushing.
+     * Creates a new XMLPrintWriter, without automatic line flushing.
      * 
-     * 
-     * @param out
+     * @param variableMap
+     * @param manager
+     * @param output
      *            A character-output stream.
+     * @throws PaintException if the paint operation failed. 
      */
     public AjaxPaintTarget(AjaxVariableMap variableMap, AjaxApplicationManager manager,
             OutputStream output) throws PaintException {
 
-        // Set the cache
+        // Sets the cache
         this.manager = manager;
 
-        // Set the variable map
+        // Sets the variable map
         this.variableMap = variableMap;
 
-        // Set the target for UIDL writing
+        // Sets the target for UIDL writing
         try {
             this.uidlBuffer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(output,"UTF-8")));
         } catch (UnsupportedEncodingException e) {
@@ -108,10 +110,10 @@ public class AjaxPaintTarget implements PaintTarget {
         mOpenTags = new Stack();
         mTagArgumentListOpen = false;
 
-        //Add document declaration
+        //Adds document declaration
         this.print(UIDL_XML_DECL + "\n\n");
 
-        // Add UIDL start tag and its attributes
+        // Adds UIDL start tag and its attributes
         this.startTag("changes");
 
     }
@@ -127,16 +129,16 @@ public class AjaxPaintTarget implements PaintTarget {
     }
 
     /**
-     * Method append.
+     * Method append.This method is thread safe.
      * 
-     * @param string
+     * @param string the text to insert.
      */
     private void append(String string) {
         uidlBuffer.print(string);
     }
 
     /**
-     * Print element start tag.
+     * Prints the element start tag.
      * 
      * <pre>
      * Todo:
@@ -145,7 +147,8 @@ public class AjaxPaintTarget implements PaintTarget {
      * </pre>
      * 
      * @param tagName
-     *            The name of the start tag
+     *            the name of the start tag.
+     * @throws PaintException  if the paint operation failed.          
      *  
      */
     public void startTag(String tagName) throws PaintException {
@@ -153,37 +156,38 @@ public class AjaxPaintTarget implements PaintTarget {
         if (tagName == null)
             throw new NullPointerException();
 
-        // Incerement paint tracker
+        // Increments paint tracker
         if (this.isTrackPaints()) {
         	this.numberOfPaints++;
         }
         
-        //Ensure that the target is open
+        //Ensures that the target is open
         if (this.closed)
             throw new PaintException(
                     "Attempted to write to a closed PaintTarget.");
 
-        // Make sure that the open start tag is closed before
+        // Makes sure that the open start tag is closed before
         // anything is written.
         ensureClosedTag();
 
-        // Check tagName and attributes here
+        // Checks tagName and attributes here
         mOpenTags.push(tagName);
 
-        // Print the tag with attributes
+        // Prints the tag with attributes
         append("<" + tagName);
 
         mTagArgumentListOpen = true;
     }
 
     /**
-     * Print element end tag.
+     * Prints the element end tag.
      * 
      * If the parent tag is closed before every child tag is closed an
      * PaintException is raised.
      * 
      * @param tag
-     *            The name of the end tag
+     *            the name of the end tag.
+     * @throws Paintexception if the paint operation failed. 
      */
     public void endTag(String tagName) throws PaintException {
         // In case of null data output nothing:
@@ -209,14 +213,15 @@ public class AjaxPaintTarget implements PaintTarget {
             mTagArgumentListOpen = false;
         }
 
-        //Write the end (closing) tag
+        //Writes the end (closing) tag
         append("</" + lastTag + ">");
         flush();
     }
 
     /**
-     * Substitute the XML sensitive characters with predefined XML entities.
-     * 
+     * Substitutes the XML sensitive characters with predefined XML entities.
+     * @param xml
+     * 			the String to be substituted.
      * @return A new string instance where all occurrences of XML sensitive
      *         characters are substituted with entities.
      */
@@ -227,10 +232,10 @@ public class AjaxPaintTarget implements PaintTarget {
     }
 
     /**
-     * Substitute the XML sensitive characters with predefined XML entities.
+     * Substitutes the XML sensitive characters with predefined XML entities.
      * 
      * @param xml
-     *            the String to be substituted
+     *            the String to be substituted.
      * @return A new StringBuffer instance where all occurrences of XML
      *         sensitive characters are substituted with entities.
      *  
@@ -254,10 +259,10 @@ public class AjaxPaintTarget implements PaintTarget {
     }
 
     /**
-     * Substitute a XML sensitive character with predefined XML entity.
+     * Substitutes a XML sensitive character with predefined XML entity.
      * 
      * @param c
-     *            Character to be replaced with an entity.
+     *            the Character to be replaced with an entity.
      * @return String of the entity or null if character is not to be replaced
      *         with an entity.
      */
@@ -279,7 +284,7 @@ public class AjaxPaintTarget implements PaintTarget {
     }
 
     /**
-     * Print XML.
+     * Prints XML.
      * 
      * Writes pre-formatted XML to stream. Well-formness of XML is checked.
      * 
@@ -288,6 +293,7 @@ public class AjaxPaintTarget implements PaintTarget {
      *  TODO: XML checking should be made
      *  
      * </pre>
+     * @param str the string to print.
      */
     private void print(String str) {
         // In case of null data output nothing:
@@ -303,7 +309,9 @@ public class AjaxPaintTarget implements PaintTarget {
     }
 
     /**
-     * Print XML-escaped text.
+     * Prints XML-escaped text.
+     * @param str
+     * @throws PaintException if the paint operation failed.
      *  
      */
     public void addText(String str) throws PaintException {
@@ -315,9 +323,10 @@ public class AjaxPaintTarget implements PaintTarget {
      * content is written.
      * 
      * @param name
-     *            Attribute name
+     *            the Attribute name.
      * @param value
-     *            Attribute value
+     *            the Attribute value.
+     * @throws PaintException if the paint operation failed.
      */
     public void addAttribute(String name, boolean value) throws PaintException {
         addAttribute(name, String.valueOf(value));
@@ -328,9 +337,11 @@ public class AjaxPaintTarget implements PaintTarget {
      * any content is written.
      * 
      * @param name
-     *            Attribute name
+     *            the Attribute name.
      * @param value
-     *            Attribute value
+     *            the Attribute value.
+     *            
+     * @throws PaintException if the paint operation failed.
      */
     public void addAttribute(String name, Resource value) throws PaintException {
 
@@ -365,10 +376,11 @@ public class AjaxPaintTarget implements PaintTarget {
      * content is written.
      * 
      * @param name
-     *            Attribute name
+     *            the Attribute name.
      * @param value
-     *            Attribute value
-     * @return this object
+     *            the Attribute value.
+     * 
+     * @throws PaintException if the paint operation failed.
      */
     public void addAttribute(String name, int value) throws PaintException {
         addAttribute(name, String.valueOf(value));
@@ -379,10 +391,11 @@ public class AjaxPaintTarget implements PaintTarget {
      * content is written.
      * 
      * @param name
-     *            Attribute name
+     *            the Attribute name.
      * @param value
-     *            Attribute value
-     * @return this object
+     *           the Attribute value.
+     * 
+     * @throws PaintException if the paint operation failed.
      */
     public void addAttribute(String name, long value) throws PaintException {
         addAttribute(name, String.valueOf(value));
@@ -393,10 +406,11 @@ public class AjaxPaintTarget implements PaintTarget {
      * content is written.
      * 
      * @param name
-     *            Boolean attribute name
+     *            the Boolean attribute name.
      * @param value
-     *            Boolean attribute value
-     * @return this object
+     *            the Boolean attribute value.
+     * 
+     * @throws PaintException if the paint operation failed.
      */
     public void addAttribute(String name, String value) throws PaintException {
         // In case of null data output nothing:
@@ -417,15 +431,16 @@ public class AjaxPaintTarget implements PaintTarget {
     }
 
     /**
-     * Add a string type variable.
+     * Adds a string type variable.
      * 
      * @param owner
-     *            Listener for variable changes
+     *            the Listener for variable changes.
      * @param name
-     *            Variable name
+     *            the Variable name.
      * @param value
-     *            Variable initial value
-     * @return Reference to this.
+     *            the Variable initial value.
+     * 
+     * @throws PaintException if the paint operation failed.
      */
     public void addVariable(VariableOwner owner, String name, String value)
             throws PaintException {
@@ -439,15 +454,16 @@ public class AjaxPaintTarget implements PaintTarget {
     }
 
     /**
-     * Add a int type variable.
+     * Adds a int type variable.
      * 
      * @param owner
-     *            Listener for variable changes
+     *            the Listener for variable changes.
      * @param name
-     *            Variable name
+     *            the Variable name.
      * @param value
-     *            Variable initial value
-     * @return Reference to this.
+     *            the Variable initial value.
+     * 
+     * @throws PaintException if the paint operation failed.
      */
     public void addVariable(VariableOwner owner, String name, int value)
             throws PaintException {
@@ -461,15 +477,16 @@ public class AjaxPaintTarget implements PaintTarget {
     }
 
     /**
-     * Add a boolean type variable.
+     * Adds a boolean type variable.
      * 
      * @param owner
-     *            Listener for variable changes
+     *            the Listener for variable changes.
      * @param name
-     *            Variable name
+     *            the Variable name.
      * @param value
-     *            Variable initial value
-     * @return Reference to this.
+     *            the Variable initial value.
+     * 
+     * @throws PaintException if the paint operation failed.
      */
     public void addVariable(VariableOwner owner, String name, boolean value)
             throws PaintException {
@@ -483,15 +500,16 @@ public class AjaxPaintTarget implements PaintTarget {
     }
 
     /**
-     * Add a string array type variable.
+     * Adds a string array type variable.
      * 
      * @param owner
-     *            Listener for variable changes
+     *            the Listener for variable changes.
      * @param name
-     *            Variable name
+     *            the Variable name.
      * @param value
-     *            Variable initial value
-     * @return Reference to this.
+     *            the Variable initial value.
+     * 
+     * @throws PaintException if the paint operation failed.
      */
     public void addVariable(VariableOwner owner, String name, String[] value)
             throws PaintException {
@@ -506,15 +524,14 @@ public class AjaxPaintTarget implements PaintTarget {
     }
 
     /**
-     * Add a upload stream type variable.
+     * Adds a upload stream type variable.
      * 
      * @param owner
-     *            Listener for variable changes
+     *            the Listener for variable changes.
      * @param name
-     *            Variable name
-     * @param value
-     *            Variable initial value
-     * @return Reference to this.
+     *            the Variable name.        
+     * 
+     * @throws PaintException if the paint operation failed.
      */
     public void addUploadStreamVariable(VariableOwner owner, String name)
             throws PaintException {
@@ -527,10 +544,13 @@ public class AjaxPaintTarget implements PaintTarget {
     }
 
     /**
-     * Print single text section.
+     * Prints the single text section.
      * 
      * Prints full text section. The section data is escaped from XML tags and
      * surrounded by XML start and end-tags.
+     * @param sectionTagName the name of the tag.
+     * @param sectionData the section data to be printed.
+     * @throws PaintException if the paint operation failed.
      */
     public void addSection(String sectionTagName, String sectionData)
             throws PaintException {
@@ -539,7 +559,11 @@ public class AjaxPaintTarget implements PaintTarget {
         endTag(sectionTagName);
     }
 
-    /** Add XML dirctly to UIDL */
+    /** 
+     * Adds XML directly to UIDL.
+     * @param xml the Xml to be added.
+     * @throws PaintException  if the paint operation failed.
+     */
     public void addUIDL(String xml) throws PaintException {
 
         //Ensure that the target is open
@@ -558,7 +582,11 @@ public class AjaxPaintTarget implements PaintTarget {
     }
 
     /**
-     * Add XML section with namespace
+     * Adds XML section with namespace.
+     * @param sectionTagName the name of the tag.
+     * @param sectionData the section data.
+     * @param namespace the namespace to be added.
+     * @throws PaintException if the paint operation failed.
      * 
      * @see com.itmill.toolkit.terminal.PaintTarget#addXMLSection(String,
      *      String, String)
@@ -583,8 +611,9 @@ public class AjaxPaintTarget implements PaintTarget {
     }
 
     /**
-     * Get the UIDL already printed to stream. Paint target must be closed
-     * before the getUIDL() cn be called.
+     * Gets the UIDL already printed to stream. Paint target must be closed
+     * before the <code>getUIDL</code> can be called.
+     * @return the UIDL.
      */
     public String getUIDL() {
         if (this.closed) {
@@ -595,10 +624,11 @@ public class AjaxPaintTarget implements PaintTarget {
     }
 
     /**
-     * Close the paint target. Paint target must be closed before the getUIDL()
-     * cn be called. Subsequent attempts to write to paint target. If the target
+     * Closes the paint target. Paint target must be closed before the <code>getUIDL</code>
+     * can be called. Subsequent attempts to write to paint target. If the target
      * was already closed, call to this function is ignored. will generate an
      * exception.
+     * @throws PaintException if the paint operation failed.
      */
     public void close() throws PaintException {
         if (!this.closed) {
@@ -631,9 +661,7 @@ public class AjaxPaintTarget implements PaintTarget {
         return false;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
      * @see com.itmill.toolkit.terminal.PaintTarget#addCharacterData(java.lang.String)
      */
     public void addCharacterData(String text) throws PaintException {
@@ -641,23 +669,29 @@ public class AjaxPaintTarget implements PaintTarget {
     	ensureClosedTag();
     	append(escapeXML(text));
     }
-
+    
+/**
+ * 
+ * @return
+ */
 	public boolean isTrackPaints() {
 		return trackPaints;
 	}
 	
-	/** Get number of paints. 
+	/** 
+	 * Gets the number of paints. 
 	 * 
-	 * @return
+	 * @return the number of paints.
 	 */
 	public int getNumberOfPaints() {
 		return numberOfPaints;
 	}
 	
-	/** Set tracking to true or false.
+	/** 
+	 * Sets the tracking to true or false.
 	 * 
 	 * This also resets the number of paints.
-	 * @param trackPaints
+	 * @param enabled is the tracking is enabled or not.
 	 * @see #getNumberOfPaints()
 	 */
 	public void setTrackPaints(boolean enabled) {

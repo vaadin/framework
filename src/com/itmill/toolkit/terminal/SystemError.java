@@ -31,8 +31,9 @@ package com.itmill.toolkit.terminal;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-/** System error is a runtime exception caused by error in system. The system
- * error can be shown to the user as it implements ErrorMessage interface,
+/** 
+ * <code>SystemError</code> is a runtime exception caused by error in system. The system
+ * error can be shown to the user as it implements <code>ErrorMessage</code> interface,
  * but contains technical information such as stack trace and exception.
  *
  * @author IT Mill Ltd.
@@ -46,37 +47,48 @@ public class SystemError extends RuntimeException implements ErrorMessage {
      */
     private static final long serialVersionUID = 3256445789512675891L;
     
-    /** The cause of the system error. The cause is stored separately as 
-	 * JDK 1.3 does not support causes natively */
+    /** 
+     * The cause of the system error. The cause is stored separately as 
+	 * JDK 1.3 does not support causes natively. 
+	 */
 	private Throwable cause = null;
 
-	/** Constructor for SystemError with error message specified.
-	 * @param message Textual error description.
+	/** 
+	 * Constructor for SystemError with error message specified.
+	 * @param message the Textual error description.
 	 */
 	public SystemError(String message) {
 		super(message);
 	}
 
-	/** Constructor for SystemError with causing exception and error message.
-	 * @param message Textual error description.
-	 * @param cause The throwable causing the system error.
+	/** 
+	 * Constructor for SystemError with causing exception and error message.
+	 * @param message the Textual error description.
+	 * @param cause the throwable causing the system error.
 	 */
 	public SystemError(String message, Throwable cause) {
 		super(message);
 		this.cause = cause;
 	}
 
-	/** Constructor for SystemError with cause.
-	 * @param cause The throwable causing the system error.
+	/** 
+	 * Constructor for SystemError with cause.
+	 * @param cause the throwable causing the system error.
 	 */
 	public SystemError(Throwable cause) {
 		this.cause = cause;
 	}
-
+	
+	/**
+	 * @see com.itmill.toolkit.terminal.ErrorMessage#getErrorLevel()
+	 */
 	public final int getErrorLevel() {
 		return ErrorMessage.SYSTEMERROR;
 	}
-
+	
+	/**
+	 * @see com.itmill.toolkit.terminal.Paintable#paint(com.itmill.toolkit.terminal.PaintTarget)
+	 */
 	public void paint(PaintTarget target) throws PaintException {
 
 		target.startTag("error");
@@ -100,10 +112,14 @@ public class SystemError extends RuntimeException implements ErrorMessage {
 		}
 
 		target.endTag("error");
-
+		
 	}
 
-	/** Get cause for the error */
+	/**
+	 * Gets cause for the error.
+	 * @return the cause.
+	 * @see java.lang.Throwable#getCause()
+	 */
 	public Throwable getCause() {
 		return cause;
 	}

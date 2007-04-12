@@ -35,7 +35,8 @@ import com.itmill.toolkit.data.util.ObjectProperty;
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
 
-/** Label component for showing non-editable short texts.
+/** 
+ * Label component for showing non-editable short texts.
  *
  * The label content can be set to the modes specified by the final members
  * CONTENT_*
@@ -65,31 +66,37 @@ public class Label
 		Property.ValueChangeListener,
 		Property.ValueChangeNotifier, Comparable {
 
-	/** Content mode, where the label contains only plain text. The getValue()
+	/** 
+	 * Content mode, where the label contains only plain text. The getValue()
 	 * result is coded to XML when painting. 
 	 */
 	public static final int CONTENT_TEXT = 0;
 
-	/** Content mode, where the label contains preformatted text.
+	/** 
+	 * Content mode, where the label contains preformatted text.
 	 */
 	public static final int CONTENT_PREFORMATTED = 1;
 
-	/** Formatted content mode, where the contents is XML restricted to the
+	/** 
+	 * Formatted content mode, where the contents is XML restricted to the
 	 * UIDL 1.0 formatting markups.
 	 */
 	public static final int CONTENT_UIDL = 2;
 
-	/** Content mode, where the label contains XHTML. Contents is then enclosed in
+	/** 
+	 * Content mode, where the label contains XHTML. Contents is then enclosed in
 	 * DIV elements having namespace of "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd".	 
 	 */
 	public static final int CONTENT_XHTML = 3;
 
-	/** Content mode, where the label contains well-formed or well-balanced XML. 
+	/** 
+	 * Content mode, where the label contains well-formed or well-balanced XML. 
 	 * Each of the root elements must have their default namespace specified.
 	 */
 	public static final int CONTENT_XML = 4;
 
-	/** Content mode, where the label contains RAW output. Output is not 
+	/** 
+	 * Content mode, where the label contains RAW output. Output is not 
 	 * required to comply to with XML. In Web Adapter output is inserted inside
 	 * the resulting HTML document as-is. This is useful for some specific 
 	 * purposes where possibly broken HTML content needs to be shown, but in 
@@ -97,49 +104,69 @@ public class Label
 	 */
 	public static final int CONTENT_RAW = 5;
 
-	/** The default content mode is plain text */
+	/** 
+	 * The default content mode is plain text. 
+	 */
 	public static final int CONTENT_DEFAULT = CONTENT_TEXT;
 
 	private Property dataSource;
 	private int contentMode = CONTENT_DEFAULT;
 
-	/** Creates an empty Label. */
+	/** 
+	 * Creates an empty Label. 
+	 */
 	public Label() {
 		setPropertyDataSource(new ObjectProperty("", String.class));
 	}
 
-	/** Creates a new instance of Label with text-contents. */
+	/** 
+	 * Creates a new instance of Label with text-contents.
+	 * @param content  
+	 */
 	public Label(String content) {
 		setPropertyDataSource(new ObjectProperty(content, String.class));
 	}
 
-	/** Creates a new instance of Label with text-contents read from given datasource. */
+	/** 
+	 * Creates a new instance of Label with text-contents read from given datasource.
+	 * @param contentSource 
+	 */
 	public Label(Property contentSource) {
 		setPropertyDataSource(contentSource);
 	}
 
-	/** Creates a new instance of Label with text-contents. */
+	/** 
+	 * Creates a new instance of Label with text-contents. 
+	 * @param content
+	 * @param contentMode
+	 */
 	public Label(String content, int contentMode) {
 		setPropertyDataSource(new ObjectProperty(content, String.class));
 		setContentMode(contentMode);
 	}
 
-	/** Creates a new instance of Label with text-contents read from given datasource. */
+	/** 
+	 * Creates a new instance of Label with text-contents read from given datasource.
+	 * @param contentSource
+	 * @param contentMode 
+	 */
 	public Label(Property contentSource, int contentMode) {
 		setPropertyDataSource(contentSource);
 		setContentMode(contentMode);
 	}
 
-	/** Get component UIDL tag.
-	 * @return Component UIDL tag as string.
+	/** 
+	 * Get the component UIDL tag.
+	 * @return the Component UIDL tag as string.
 	 */
 	public String getTag() {
 		return "label";
 	}
 
-	/** Set the component to read-only.
+	/** 
+	 * Set the component to read-only.
 	 * Readonly is not used in label.
-	 * @param readOnly True to enable read-only mode, False to disable it
+	 * @param readOnly True to enable read-only mode, False to disable it.
 	 */
 	public void setReadOnly(boolean readOnly) {
 		if (dataSource == null)
@@ -147,9 +174,10 @@ public class Label
 		dataSource.setReadOnly(readOnly);
 	}
 
-	/** Is the component read-only ?
+	/** 
+	 * Is the component read-only ?
 	 * Readonly is not used in label - this returns allways false.
-	 * @return True iff the component is in read only mode
+	 * @return <code>true</code> if the component is in read only mode.
 	 */
 	public boolean isReadOnly() {
 		if (dataSource == null)
@@ -157,8 +185,10 @@ public class Label
 		return dataSource.isReadOnly();
 	}
 
-	/** Paint the content of this component.
-	 * @param event PaintEvent.
+	/** 
+	 * Paints the content of this component.
+	 * @param target the Paint Event.
+	 * @throws PaintException if the Paint Operation fails.
 	 */
 	public void paintContent(PaintTarget target) throws PaintException {
 		if (contentMode == CONTENT_TEXT)
@@ -187,9 +217,10 @@ public class Label
 
 	}
 
-	/** Get the value of the label.
+	/** 
+	 * Gets the value of the label.
 	 * Value of the label is the XML contents of the label.
-	 * @return Value of the label
+	 * @return the Value of the label.
 	 */
 	public Object getValue() {
 		if (dataSource == null)
@@ -197,52 +228,69 @@ public class Label
 		return dataSource.getValue();
 	}
 
-	/** Set the value of the label.
+	/** 
+	 * Set the value of the label.
 	 * Value of the label is the XML contents of the label.
-	 * @param newValue New value of the label
+	 * @param newValue the New value of the label.
 	 */
 	public void setValue(Object newValue) {
 		if (dataSource == null)
 			throw new IllegalStateException("Datasource must be se");
 		this.dataSource.setValue(newValue);
 	}
-
+	
+	/**
+	 * @see java.lang.Object#toString()
+	 */
 	public String toString() {
 		if (dataSource == null)
 			throw new IllegalStateException("Datasource must be se");
 		return dataSource.toString();
 	}
-
+	
+	/**
+	 * Gets the type of the Property.
+	 * @see com.itmill.toolkit.data.Property#getType()
+	 */
 	public Class getType() {
 		if (dataSource == null)
 			throw new IllegalStateException("Datasource must be se");
 		return dataSource.getType();
 	}
 
-	/** Get viewing data-source property.  */
+	/**
+	 * Gets the viewing data-source property. 
+	 * @return the data source property. 
+	 * @see com.itmill.toolkit.data.Property.Viewer#getPropertyDataSource()
+	 */
 	public Property getPropertyDataSource() {
 		return dataSource;
 	}
 
-	/** Set the property as data-source for viewing.  */
+	/**
+	 * Sets the property as data-source for viewing. 
+	 * @param newDataSource the new data source Property
+	 * @see com.itmill.toolkit.data.Property.Viewer#setPropertyDataSource(com.itmill.toolkit.data.Property)
+	 */
 	public void setPropertyDataSource(Property newDataSource) {
-		// Stop listening the old data source changes
+		// Stops listening the old data source changes
 		if (dataSource != null
 			&& Property.ValueChangeNotifier.class.isAssignableFrom(
 				dataSource.getClass()))
 			 ((Property.ValueChangeNotifier) dataSource).removeListener(this);
 
-		// Set the new data source
+		// Sets the new data source
 		dataSource = newDataSource;
 
-		// Listen the new data source if possible
+		// Listens the new data source if possible
 		if (dataSource != null
 			&& Property.ValueChangeNotifier.class.isAssignableFrom(
 				dataSource.getClass()))
 			 ((Property.ValueChangeNotifier) dataSource).addListener(this);
 	}
 
-	/** Get the content mode of the Label.
+	/** 
+	 * Gets the content mode of the Label.
 	 * 
 	 * <p>Possible content modes include:
 	 *   <ul>
@@ -271,13 +319,14 @@ public class Label
 	 * 			be preferred.</li>
 	 *   </ul></p>
 	 * 
-	 * @return Content mode of the label.
+	 * @return the Content mode of the label.
 	 */
 	public int getContentMode() {
 		return contentMode;
 	}
 
-	/** Set the content mode of the Label.
+	/** 
+	 * Sets the content mode of the Label.
 	 * 
 	 * <p>Possible content modes include:
 	 *   <ul>
@@ -306,7 +355,7 @@ public class Label
 	 * 			be preferred.</li>
 	 *   </ul></p>
 	 * 
-	 * @param contentMode New content mode of the label.
+	 * @param contentMode the New content mode of the label.
 	 */
 	public void setContentMode(int contentMode) {
 		if (contentMode >= CONTENT_TEXT && contentMode <= CONTENT_RAW)
@@ -329,7 +378,8 @@ public class Label
 		}
 	}
 
-	/** Value change event 
+	/** 
+	 * Value change event 
 	 * @author IT Mill Ltd.
 	 * @version @VERSION@
 	 * @since 3.0
@@ -343,23 +393,27 @@ public class Label
          */
         private static final long serialVersionUID = 3906084563938586935L;
 
-        /** New instance of text change event
-		 * @param source Source of the event.
+        /** 
+         * New instance of text change event
+		 * @param source the Source of the event.
 		 */
 		public ValueChangeEvent(Label source) {
 			super(source);
 		}
 
-		/** Value where the event occurred
-		 * @return Source of the event.
+		/**
+		 * Gets the Property that has been modified.
+		 * @see com.itmill.toolkit.data.Property.ValueChangeEvent#getProperty()
 		 */
 		public Property getProperty() {
 			return (Property) getSource();
 		}
 	}
 
-	/** Add value change listener
-	 * @param listener Listener to be added.
+	/** 
+	 * Adds the value change listener.
+	 * @param listener the Listener to be added.
+	 * @see com.itmill.toolkit.data.Property.ValueChangeNotifier#addListener(com.itmill.toolkit.data.Property.ValueChangeListener)
 	 */
 	public void addListener(Property.ValueChangeListener listener) {
 		addListener(
@@ -368,8 +422,10 @@ public class Label
 			VALUE_CHANGE_METHOD);
 	}
 
-	/** Remove value change listener
-	 * @param listener Listener to be removed.
+	/**
+	 * Removes the value change listener.
+	 * @param listener the Listener to be removed. 
+	 * @see com.itmill.toolkit.data.Property.ValueChangeNotifier#removeListener(com.itmill.toolkit.data.Property.ValueChangeListener)
 	 */
 	public void removeListener(Property.ValueChangeListener listener) {
 		removeListener(
@@ -378,21 +434,25 @@ public class Label
 			VALUE_CHANGE_METHOD);
 	}
 
-	/** Emit options change event. */
+	/** 
+	 * Emits the options change event. 
+	 */
 	protected void fireValueChange() {
 		// Set the error message
 		fireEvent(new Label.ValueChangeEvent(this));
 		requestRepaint();
 	}
 
-	/** Listen value change events from data source.
+	/** 
+	 * Listens the value change events from data source.
 	 * @see com.itmill.toolkit.data.Property.ValueChangeListener#valueChange(Property.ValueChangeEvent)
 	 */
 	public void valueChange(Property.ValueChangeEvent event) {
 		fireValueChange();
 	}
 
-	/** Compare Label to other objects. 
+	/** 
+	 * Compares the Label to other objects. 
 	 * 
 	 * <p>Labels can be compared to other labels for sorting label contents. 
 	 * This is especially handy for sorting table columns.</p>
@@ -401,10 +461,10 @@ public class Label
 	 * compared as is. In XML, UIDL and XHTML modes, only CDATA is compared and
 	 * tags ignored. If the other object is not a Label, its toString() return
 	 * value is used in comparison.</p>
-	 * 
+	 * @param other the Other object to compare to.
+	 * @return a negative integer, zero, or a positive integer as this object  
+	 * 					is less than, equal to, or greater than the specified object.
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)
-	 * @param other Other object to compare to
-	 * @return a negative integer, zero, or a positive integer as this object  is less than, equal to, or greater than the specified object.
 	 */
 	public int compareTo(Object other) {
 		
@@ -426,10 +486,11 @@ public class Label
 		return thisValue.compareTo(otherValue);
 	}
 
-	/** Strip tags from the XML.
+	/** 
+	 * Strips the tags from the XML.
 	 * 
-	 * @param xml String containing a XML snippet
-	 * @return The original XML without tags
+	 * @param xml the String containing a XML snippet.
+	 * @return the original XML without tags.
 	 */
 	private String stripTags(String xml) {
 		

@@ -30,7 +30,8 @@ package com.itmill.toolkit.ui;
 
 import java.util.Iterator;
 
-/** Extension to the {@link Component} interface which adds to it the capacity
+/** 
+ * Extension to the {@link Component} interface which adds to it the capacity
  * to contain other components. All UI elements that can have child elements
  * implement this interface.
  * 
@@ -40,22 +41,27 @@ import java.util.Iterator;
  */
 public interface ComponentContainer extends Component {
 
-    /** Adds a component into this container.
+    /** 
+     * Adds the component into this container.
      * 
-     * @param c the component to be added
+     * @param c the component to be added.
      */
     public void addComponent(Component c);
 
-    /** Removes a component from this container.
+    /** 
+     * Removes the component from this container.
      * 
-     * @param c the component to be added
+     * @param c the component to be added.
      */
     public void removeComponent(Component c);
     
-    /** Removes all components from this container. */    
+    /** 
+     * Removes all components from this container. 
+     */    
     public void removeAllComponents();
 
-	/** Replace a component in the container with another one without changing position.
+	/** 
+	 * Replaces the component in the container with another one without changing position.
 	 * 
 	 * <p>This method replaces component with another one is such way that the new component
 	 * overtakes the position of the old component. If the old component is not in the 
@@ -63,54 +69,78 @@ public interface ComponentContainer extends Component {
 	 * already in the container, their positions are swapped.
 	 * Component attach and detach events should be taken care as with add and remove.</p>
 	 * 
-	 * @param oldComponent The old component that will be replaced.
-	 * @param newComponent The new component to be replaced
+	 * @param oldComponent the old component that will be replaced.
+	 * @param newComponent the new component to be replaced.
 	 */
 	public void replaceComponent(Component oldComponent, Component newComponent);
 
-    /** Gets an iterator to the collection of contained components. Using
+    /** 
+     * Gets an iterator to the collection of contained components. Using
      * this iterator it is possible to step through all components contained
      * in this container.
      * 
-     * @return component iterator
+     * @return the component iterator.
      */    
     public Iterator getComponentIterator();
     
-    /** Moves all components from an another container into this container.
+    /** 
+     * Moves all components from an another container into this container.
      * The components are removed from <code>source</code>.
      * 
      * @param source the container which contains the components that are to
-     * be moved to this container
+     * be moved to this container.
      */
     public void moveComponentsFrom(ComponentContainer source);
     
-    /** Listen component attach events */
+    /** 
+     * Listens the component attach events.
+     * @param listener the listener to add. 
+     */
     public void addListener(ComponentAttachListener listener);
 
-    /** Stop listening component attach events */
+    /** 
+     * Stops the listening component attach events.
+     * @param listener the listener to removed. 
+     */
     public void removeListener(ComponentAttachListener listener);
 
-    /** Listen component detach events */
+    /** 
+     * Listens the component detach events. 
+     */
     public void addListener(ComponentDetachListener listener);
     
-    /** Stop listening component detach events */
+    /** 
+     * Stops the listening component detach events. 
+     */
     public void removeListener(ComponentDetachListener listener);
 
-	/** Component attach listener interface. */
+	/** 
+	 * Component attach listener interface. 
+	 */
 	public interface ComponentAttachListener {
 
-		/** A new component is attached to container */		
+		/**
+		 * A new component is attached to container.
+		 * @param event the component attach event. 
+		 */		
 		public void componentAttachedToContainer(ComponentAttachEvent event);
 	}    
 
-	/** Component detach listener interface. */
+	/** 
+	 * Component detach listener interface. 
+	 */
 	public interface ComponentDetachListener {
 
-		/** A component has been detached from container */		
+		/** 
+		 * A component has been detached from container.
+		 * @param event the component detach event.
+		 */		
 		public void componentDetachedFromContainer(ComponentDetachEvent event);
 	}    
 
-	/** Component attach event sent when a component is attached to container */
+	/** 
+	 * Component attach event sent when a component is attached to container. 
+	 */
 	public class ComponentAttachEvent extends Component.Event {	
 	
 		/**
@@ -120,27 +150,36 @@ public interface ComponentContainer extends Component {
         
         private Component component;
 
-		/** Create new attach event.
-		 * @param container The component container the component has been detached to.
-		 * @param attachedComponent The component that has been attached
+		/** 
+		 * Creates the new attach event.
+		 * @param container the component container the component has been detached to.
+		 * @param attachedComponent the component that has been attached.
 		 */
 		public ComponentAttachEvent(ComponentContainer container, Component attachedComponent) {
 			super(container);
 			this.component = attachedComponent;	
 		}	
 		
-		/** Get the component container */
+		/** 
+		 * Gets the component container.
+		 * @param the component container. 
+		 */
 		public ComponentContainer getContainer() {
 			return (ComponentContainer) getSource();	
 		}
 		
-		/** Get the attached component */
+		/** 
+		 * Gets the attached component.
+		 * @param the attach component. 
+		 */
 		public Component getAttachedComponent() {
 			return component;	
 		}
 	}
 
-	/** Component detach event sent when a component is detached from container */
+	/** 
+	 * Component detach event sent when a component is detached from container. 
+	 */
 	public class ComponentDetachEvent extends Component.Event {	
 	
 		/**
@@ -150,21 +189,28 @@ public interface ComponentContainer extends Component {
         
         private Component component;
 
-		/** Create new detach event.
-		 * @param container The component container the component has been detached from.
-		 * @param detachedComponent The component that has been detached
+		/** 
+		 * Creates the new detach event.
+		 * @param container the component container the component has been detached from.
+		 * @param detachedComponent the component that has been detached.
 		 */
 		public ComponentDetachEvent(ComponentContainer container, Component detachedComponent) {
 			super(container);
 			this.component = detachedComponent;	
 		}	
 		
-		/** Get the component container */
+		/** 
+		 * Gets the component container.
+		 * @param the component container. 
+		 */
 		public ComponentContainer getContainer() {
 			return (ComponentContainer) getSource();	
 		}
 		
-		/** Get the detached component */
+		/** 
+		 * Gets the detached component.
+		 * @return the detached component. 
+		 */
 		public Component getDetachedComponent() {
 			return component;	
 		}

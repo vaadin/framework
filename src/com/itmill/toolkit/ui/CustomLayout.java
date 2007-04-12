@@ -34,21 +34,28 @@ import com.itmill.toolkit.terminal.PaintTarget;
 import java.util.Iterator;
 import java.util.HashMap;
 
-/** <p>A container component with freely designed layout and style. The
+/** 
+ * <p>
+ * A container component with freely designed layout and style. The
  * container consists of items with textually represented locations. Each
  * item contains one sub-component. The adapter and theme are resposible for
  * rendering the layout with given style by placing the items on the screen
- * in defined locations.</p>
+ * in defined locations.
+ * </p>
  *
- * <p>The definition of locations is not fixed - the each style can define
+ * <p>
+ * The definition of locations is not fixed - the each style can define
  * its locations in a way that is suitable for it. One typical example would
  * be to create visual design for a website as a custom layout: the visual
  * design could define locations for "menu", "body" and "title" for example.
  * The layout would then be implemented as XLS-template with for given
- * style.</p>
+ * style.
+ * </p>
  *
- * <p>The default theme handles the styles that are not defined by just
- * drawing the subcomponents with flowlayout.</p>
+ * <p>
+ * The default theme handles the styles that are not defined by just
+ * drawing the subcomponents with flowlayout.
+ * </p>
  *
  * @author IT Mill Ltd.
  * @version @VERSION@
@@ -56,24 +63,30 @@ import java.util.HashMap;
  */
 public class CustomLayout extends AbstractComponentContainer implements Layout {
 
-	/** Custom layout slots containing the components */
+	/** 
+	 * Custom layout slots containing the components. 
+	 */
 	private HashMap slots = new HashMap();
 
-	/** Constructor for custom layout with given style */
+	/** 
+	 * Constructor for custom layout with given style. 
+	 */
 	public CustomLayout(String style) {
 		setStyle(style);
 	}
 
-	/** Get component UIDL tag.
-	 * @return Component UIDL tag as string.
+	/** 
+	 * Gets the component UIDL tag.
+	 * @return the Component UIDL tag as string.
 	 */
 	public String getTag() {
 		return "customlayout";
 	}
 
-	/** Add a component into this container to given location.
-	 * @param c The component to be added.
-	 * @param location The location of the component
+	/** 
+	 * Adds the component into this container to given location.
+	 * @param c the component to be added.
+	 * @param location the location of the component.
 	 */
 	public void addComponent(Component c, String location) {
 		Component old = (Component)slots.get(location);
@@ -86,18 +99,20 @@ public class CustomLayout extends AbstractComponentContainer implements Layout {
 		requestRepaint();
 	}
 
-	/** Add a component into this container. The component is added without
+	/** 
+	 * Adds the component into this container. The component is added without
 	 * specifying the location (empty string is then used as location). Only 
 	 * one component can be added to the default "" location and adding
 	 * more components into that location overwrites the old components.
-	 * @param c The component to be added.
+	 * @param c the component to be added.
 	 */
 	public void addComponent(Component c) {
 		this.addComponent(c, "");
 	}
 
-	/** Remove a component from this container.
-	 * @param c The component to be removed.
+	/** 
+	 * Removes the component from this container.
+	 * @param c the component to be removed.
 	 */
 	public void removeComponent(Component c) {
 		if (c == null) return;
@@ -107,45 +122,49 @@ public class CustomLayout extends AbstractComponentContainer implements Layout {
 		requestRepaint();
 	}
 
-	/** Remove a component from this container from given location.
-	 * @param location Location identifier of the component
+	/** 
+	 * Removes the component from this container from given location.
+	 * @param location the Location identifier of the component.
 	 */
 	public void removeComponent(String location) {
 		this.removeComponent((Component) slots.get(location));
 	}
 
-	/** Get component container iterator for going trough all the components in 
+	/** 
+	 * Gets the component container iterator for going trough all the components in 
 	 * the container.
-	 * @return Iterator of the components inside the container.
+	 * @return the Iterator of the components inside the container.
 	 */
 	public Iterator getComponentIterator() {
 		return slots.values().iterator();
 	}
 
-	/** Get child-component by its location.
+	/** 
+	 * Gets the child-component by its location.
 	 * 
-	 * @param location The name of the location where the requested 
-	 *         component resides
-	 * @return Component in the given location or null if not found.
+	 * @param location the name of the location where the requested 
+	 *         component resides.
+	 * @return the Component in the given location or null if not found.
 	 */
 	public Component getComponent(String location) {
 		return (Component) slots.get(location);
 	}
 
-	/** Paint the content of this component.
-	 * @param event PaintEvent.
-	 * @throws PaintException The paint operation failed.
+	/** 
+	 * Paints the content of this component.
+	 * @param target 
+	 * @throws PaintException  if the paint operation failed.
 	 */
 	public void paintContent(PaintTarget target) throws PaintException {
 
-		// Add all items in all the locations
+		// Adds all items in all the locations
 		for (Iterator i = slots.keySet().iterator(); i.hasNext();) {
 
-			// Get the (location,component)
+			// Gets the (location,component)
 			String location = (String) i.next();
 			Component c = (Component) slots.get(location);
 
-			// Write the item
+			// Writes the item
 			target.startTag("location");
 			target.addAttribute("name", location);
 			c.paint(target);
@@ -158,7 +177,7 @@ public class CustomLayout extends AbstractComponentContainer implements Layout {
 		Component oldComponent,
 		Component newComponent) {
 
-		// Get the locations			
+		// Gets the locations			
 		String oldLocation = null;
 		String newLocation  = null;
 		for (Iterator i=slots.keySet().iterator(); i.hasNext();) {

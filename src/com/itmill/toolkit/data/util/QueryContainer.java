@@ -99,7 +99,7 @@ public class QueryContainer implements Container, Container.Ordered,
 
 	/**
 	 * Constructs a new <code>QueryContainer</code> with the specified
-	 * queryStatement
+	 * <code>queryStatement</code>.
 	 * 
 	 * @param queryStatement
 	 *            Database query
@@ -121,7 +121,7 @@ public class QueryContainer implements Container, Container.Ordered,
 
 	/**
 	 * Constructs a new <code>QueryContainer</code> with the specified  
-	 * queryStatement using the default resultset type and default resultset concurrency 
+	 * queryStatement using the default resultset type and default resultset concurrency. 
 	 * 
 	 * @param queryStatement
 	 *            Database query
@@ -140,9 +140,11 @@ public class QueryContainer implements Container, Container.Ordered,
 	
 	/**
 	 * <p>
-	 * The <code>init</code> method s invoked by the constructor. This 
-	 * method fills the container with the items and properties
+	 * Fills the container with the items and properties. Invoked by the constructor.
 	 * </p>
+	 * @throws SQLException
+	 *             when parameter initialization fails.
+	 * @see QueryContainer#QueryContainer(String, Connection, int, int).
 	 */
 	private void init() throws SQLException {
 		refresh();
@@ -162,8 +164,7 @@ public class QueryContainer implements Container, Container.Ordered,
 
 	/**
 	 * <p>
-	 * The <code>refresh</code> method refreshes the items in the container.
-	 * This method will update the latest data to the container. 
+	 * Restores the items in the container. This method will update the latest data to the container. 
 	 * </p>
 	 * Note : This method should be used to update the container with the latest items.
 	 * @throws SQLException
@@ -181,8 +182,7 @@ public class QueryContainer implements Container, Container.Ordered,
 	}
 
 	/**
-	 * The <code>close</code> method closes the statement and nullify the
-	 * statement.
+	 * Releases and nullify the statement.
 	 * 
 	 * @throws SQLException
 	 *             when database operation fails
@@ -195,8 +195,7 @@ public class QueryContainer implements Container, Container.Ordered,
 	}
 
 	/**
-	 * The <code>getItem</code> method gets the Item with the given Item ID
-	 * from the Container.
+	 * Gets the Item with the given Item ID from the Container.
 	 * 
 	 * @param id
 	 *            ID of the Item to retrieve
@@ -209,8 +208,7 @@ public class QueryContainer implements Container, Container.Ordered,
 
 	/**
 	 * <p>
-	 * The <code>getContainerPropertyIds</code> method gets the collection of
-	 * propertyId from the Container.
+	 * Gets the collection of propertyId from the Container.
 	 * </p>
 	 * 
 	 * @return Collection of Property ID.
@@ -221,9 +219,7 @@ public class QueryContainer implements Container, Container.Ordered,
 	}
 
 	/**
-	 * <p>
-	 * The <code>getItemIds</code> method gets the collection of all the item id in the container.
-	 * </p>
+	 * Gets the collection of all the item id in the container.
 	 * 
 	 * @return collection of Item IDs
 	 */
@@ -236,8 +232,7 @@ public class QueryContainer implements Container, Container.Ordered,
 
 	/**
 	 * <p>
-	 * The <code>getContainerProperty</code> method gets the property
-	 * identified by the given itemId and propertyId from the container.If the
+	 * Gets the property identified by the given itemId and propertyId from the container.If the
 	 * container does not contain the property <code>null</code> is returned.
 	 * </p>
 	 * 
@@ -266,11 +261,7 @@ public class QueryContainer implements Container, Container.Ordered,
 	}
 
 	/**
-	 * <p>
-	 * The <code>getType</code> gets the data type of all properties
-	 * identified by the given type ID.
-	 * </p>
-	 * 
+	 * Gets the data type of all properties identified by the given type ID.
 	 * @param id
 	 *            ID identifying the Properties
 	 * 
@@ -282,21 +273,17 @@ public class QueryContainer implements Container, Container.Ordered,
 	}
 
 	/**
-	 * The <code>size</code> method gets the number of items in the container.
+	 * Gets the number of items in the container.
 	 * 
 	 * @return the number of items in the container.
 	 */
-
 	public int size() {
 		return size;
 	}
 
 	/**
-	 * <p>
-	 * The <code>containsId</code> method returns <code>true</code> if given
-	 * id is there in container else <code>false</code>.
-	 * <p>
-	 * 
+	 * Tests if the list contains the specified Item. Returns <code>true</code> if 
+	 * given id is there in container else <code>false</code>.
 	 * @param id
 	 *            ID the of Item to be tested.
 	 */
@@ -312,23 +299,23 @@ public class QueryContainer implements Container, Container.Ordered,
 	}
 
 	/**
-	 * The <code>addItem</code> method creates a new Item with the given ID
-	 * into the Container.
+	 * Creates a new Item with the given ID into the Container.
 	 * 
-	 * @param arg0
+	 * @param itemId
 	 *            ID of the Item to be created.
+	 *            
+	 * @return Created new Item, or <code>null</code> if it fails.
 	 * 
 	 * @throws UnsupportedOperationException
 	 *             if the addItem method is not supported.
 	 */
-	public Item addItem(Object arg0) throws UnsupportedOperationException {
+	public Item addItem(Object itemId) throws UnsupportedOperationException {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * The <code>addItem</code> method creates a new Item into the Container,
-	 * and assign it an ID.
-	 * 
+	 * Creates a new Item into the Container, and assign it an ID.
+	 * @return ID of the newly created Item, or <code>null</code> if it fails.
 	 * @throws UnsupportedOperationException
 	 *             if the addItem method is not supported.
 	 */
@@ -337,54 +324,52 @@ public class QueryContainer implements Container, Container.Ordered,
 	}
 
 	/**
-	 * The <code>addItem</code> method removes the Item identified by ItemId
-	 * from the Container.
-	 * 
+	 * Removes the Item identified by ItemId from the Container.
+	 * @param itemId 
+	 * 				ID of the Item to remove. 
+	 * @return <code>true</code> if the operation succeeded, otherwise <code>false</code>.
 	 * @throws UnsupportedOperationException
 	 *             if the removeItem method is not supported.
 	 */
-	public boolean removeItem(Object arg0) throws UnsupportedOperationException {
+	public boolean removeItem(Object itemId) throws UnsupportedOperationException {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * The <code>addContainerProperty</code> method adds a new Property to all
-	 * Items in the Container.
+	 * Adds a new Property to all Items in the Container.
 	 * 
-	 * @param arg0
+	 * @param propertyId
 	 *            ID of the Property
-	 * @param arg1
+	 * @param type
 	 *            Data type of the new Property
-	 * @param arg2
-	 *            The value all created Properties are initialized to
-	 * 
+	 * @param defaultValue
+	 *            The value all created Properties are initialized to.
+	 * @return <code>true</code> if the operation succeeded, otherwise <code>false</code>.
 	 * @throws UnsupportedOperationException
 	 *             if the addContainerProperty method is not supported.
 	 */
-	public boolean addContainerProperty(Object arg0, Class arg1, Object arg2)
+	public boolean addContainerProperty(Object propertyId, Class type, Object defaultValue)
 			throws UnsupportedOperationException {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * The <code>removeContainerProperty</code> method removes a Property
-	 * specified by the given Property ID from the Container.
+	 * Removes a Property specified by the given Property ID from the Container.
 	 * 
-	 * @param arg0
+	 * @param propertyId
 	 *            ID of the Property to remove
-	 * 
+	 * @return <code>true</code> if the operation succeeded, otherwise <code>false</code>.
 	 * @throws UnsupportedOperationException
 	 *             if the removeContainerProperty method is not supported.
 	 */
-	public boolean removeContainerProperty(Object arg0)
+	public boolean removeContainerProperty(Object propertyId)
 			throws UnsupportedOperationException {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * The <code>removeAllItems</code> method removes all Items from the
-	 * Container
-	 * 
+	 * Removes all Items from the Container.
+	 * @return <code>true</code> if the operation succeeded, otherwise <code>false</code>.
 	 * @throws UnsupportedOperationException
 	 *             if the removeAllItems method is not supported.
 	 */
@@ -393,36 +378,38 @@ public class QueryContainer implements Container, Container.Ordered,
 	}
 
 	/**
-	 * The <code>addItemAfter</code> method add new item after the given item.
+	 * Adds new item after the given item.
 	 * 
-	 * @param arg0
+	 * @param previousItemId
 	 *            Id of the previous item in ordered container.
-	 * @param arg1
+	 * @param newItemId
 	 *            Id of the new item to be added.
+	 * @return Returns new item or <code>null</code> if the operation fails.           
 	 * @throws UnsupportedOperationException
 	 *             if the addItemAfter method is not supported.
 	 */
-	public Item addItemAfter(Object arg0, Object arg1)
+	public Item addItemAfter(Object previousItemId, Object newItemId)
 			throws UnsupportedOperationException {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * The <code>addItemAfter</code> method add new item after the given item.
+	 * Adds new item after the given item.
 	 * 
-	 * @param arg0
+	 * @param previousItemId
 	 *            Id of the previous item in ordered container.
+	 * @return Returns item id  created new item or <code>null</code> if the operation fails.
+	 * @throws UnsupportedOperationException
+	 * 								if the addItemAfter method is not supported.          
 	 */
-	public Object addItemAfter(Object arg0)
+	public Object addItemAfter(Object previousItemId)
 			throws UnsupportedOperationException {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * <p>
-	 * The <code>firstItemId</code> method returns id of first item in the
-	 * Container.
-	 * </p>
+	 * Returns id of first item in the Container.
+	 * @return ID of the first Item in the list.
 	 */
 	public Object firstItemId() {
 		if (size < 1)
@@ -431,10 +418,7 @@ public class QueryContainer implements Container, Container.Ordered,
 	}
 
 	/**
-	 * <p>
-	 * The <code>isFirstId</code> method return <code>true</code> if given
-	 * id is first id at first index.
-	 * </p>
+	 * Returns <code>true</code> if given id is first id at first index.
 	 * 
 	 * @param id
 	 *            ID of an Item in the Container.
@@ -445,13 +429,11 @@ public class QueryContainer implements Container, Container.Ordered,
 	}
 
 	/**
-	 * <p>
-	 * The <code>isLastId</code> method return <code>true</code> if given id
-	 * is last id at last index
-	 * </p>
+	 * Returns <code>true</code> if given id is last id at last index.
 	 * 
 	 * @param id
 	 *            ID of an Item in the Container
+	 *            
 	 */
 	public boolean isLastId(Object id) {
 		return size > 0 && (id instanceof Integer)
@@ -459,10 +441,8 @@ public class QueryContainer implements Container, Container.Ordered,
 	}
 
 	/**
-	 * <p>
-	 * The <code>lastItemId</code> method returns id of last item in the
-	 * Container.
-	 * </p>
+	 * Returns id of last item in the Container.
+	 * @return ID of the last Item. 
 	 */
 	public Object lastItemId() {
 		if (size < 1)
@@ -471,13 +451,11 @@ public class QueryContainer implements Container, Container.Ordered,
 	}
 
 	/**
-	 * <p>
-	 * The <code>nextItemId</code> method return id of next item in container
-	 * at next index.
-	 * </p>
+	 * Returns id of next item in container at next index.
 	 * 
 	 * @param id
 	 *            ID of an Item in the Container.
+	 * @return ID of the next Item or null.         
 	 */
 	public Object nextItemId(Object id) {
 		if (size < 1 || !(id instanceof Integer))
@@ -489,14 +467,12 @@ public class QueryContainer implements Container, Container.Ordered,
 	}
 
 	/**
-	 * <p>
-	 * The <code>prevItemId</code> method return id of previous item in
-	 * container at previous index.
-	 * </p>
+	 * Returns id of previous item in container at previous index.
 	 * 
 	 * @param id
 	 *            ID of an Item in the Container.
-	 */
+	 * @return ID of the previous Item or null.
+ 	 */
 	public Object prevItemId(Object id) {
 		if (size < 1 || !(id instanceof Integer))
 			return null;
@@ -507,9 +483,7 @@ public class QueryContainer implements Container, Container.Ordered,
 	}
 
 	/**
-	 * <p>
 	 * The <code>Row</code> class implements methods of Item.
-	 * </p>
 	 */
 	/** Query result row */
 	class Row implements Item {
@@ -521,30 +495,23 @@ public class QueryContainer implements Container, Container.Ordered,
 		}
 
 		/**
-		 * <p>
-		 * The <code>addItemProperty</code> method adds the item property.
-		 * </p>
-		 * 
-		 * @param arg0
+		 * Adds the item property.
+		 * @param id
 		 *            ID of the new Property.
-		 * @param arg1
+		 * @param property
 		 *            Property to be added and associated with ID.
+		 * @return <code>true</code> if the operation succeeded, otherwise <code>false</code>.          
 		 * @throws UnsupportedOperationException
 		 *             if the addItemProperty method is not supported.
 		 */
-		public boolean addItemProperty(Object arg0, Property arg1)
+		public boolean addItemProperty(Object id, Property property)
 				throws UnsupportedOperationException {
 			throw new UnsupportedOperationException();
 		}
 
 		/**
-		 * <p>
-		 * The <code>getItemProperty</code> gets the property corresponding to
-		 * the given property ID stored in the Item. If the Item does not
-		 * contain the Property, <code>null</code> is returned.
-		 * </p>
-		 * 
-		 * @param id
+		 * Gets the property corresponding to the given property ID stored in the Item. 
+		 * @param propertyId
 		 *            identifier of the Property to get
 		 * @return the Property with the given ID or <code>null</code>
 		 */
@@ -553,11 +520,7 @@ public class QueryContainer implements Container, Container.Ordered,
 		}
 
 		/**
-		 * <p>
-		 * The <code>getItemPropertyIds</code> method gets the collection of
-		 * property IDs stored in the Item.
-		 * </p>
-		 * 
+		 * Gets the collection of property IDs stored in the Item.
 		 * @return unmodifiable collection containing IDs of the Properties
 		 *         stored the Item.
 		 */
@@ -567,15 +530,14 @@ public class QueryContainer implements Container, Container.Ordered,
 
 		/**
 		 * <p>
-		 * The <code>removeItemProperty</code> method removes given item
-		 * property return <code>true</code> if the item property is removed
+		 * Removes given item property return <code>true</code> if the item property is removed
 		 * <code>false</code> if not.
 		 * </p>
-		 * 
+		 * @param id ID of the Property to be removed.
 		 * @throws UnsupportedOperationException
 		 *             if the removeItemProperty is not supported.
 		 */
-		public boolean removeItemProperty(Object arg0)
+		public boolean removeItemProperty(Object id)
 				throws UnsupportedOperationException {
 			throw new UnsupportedOperationException();
 		}
@@ -583,7 +545,7 @@ public class QueryContainer implements Container, Container.Ordered,
 	}
 
 	/**
-	 * The <code>finalize</code> method closes the statement.
+	 * Closes the statement.
 	 * 
 	 * @see #close()
 	 */
@@ -596,42 +558,42 @@ public class QueryContainer implements Container, Container.Ordered,
 	}
 
 	/**
-	 * The <code>addItemAt</code> method adds the given item at the position
-	 * of given index.
+	 * Adds the given item at the position of given index.
 	 * 
-	 * @param arg0
+	 * @param index
 	 *            Index to add the new item.
-	 * @param arg1
+	 * @param newItemId
 	 *            Id of the new item to be added.
-	 * 
+	 * @return Returns new item or <code>null</code> if the operation fails.
 	 * @throws UnsupportedOperationException
+	 * 							if the addItemAt is not supported.
 	 */
-	public Item addItemAt(int arg0, Object arg1)
+	public Item addItemAt(int index, Object newItemId)
 			throws UnsupportedOperationException {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * The <code>addItemAt</code> method adds the item at the position of
-	 * provided index in the container.
+	 * Adds the item at the position of provided index in the container.
 	 * 
-	 * @param arg0
+	 * @param index
 	 *            Index to add the new item.
+	 * @return Returns item id created new item or <code>null</code> if the operation fails.           
 	 * 
 	 * @throws UnsupportedOperationException
 	 *             if the addItemAt is not supported.
 	 */
 
-	public Object addItemAt(int arg0) throws UnsupportedOperationException {
+	public Object addItemAt(int index) throws UnsupportedOperationException {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * The <code>getIdByIndex</code> method gets the Index id in the
-	 * container.
+	 * Gets the Index id in the container.
 	 * 
 	 * @param index
 	 *            Index Id.
+	 * @return ID in the given index.           
 	 */
 	public Object getIdByIndex(int index) {
 		if (size < 1 || index < 0 || index >= size)
@@ -640,8 +602,7 @@ public class QueryContainer implements Container, Container.Ordered,
 	}
 
 	/**
-	 * The <code>indexOfId</code> gets the index of the Item corresponding to
-	 * <code>id</code> in the container.
+	 * Gets the index of the Item corresponding to id in the container.
 	 * 
 	 * @param id
 	 *            ID of an Item in the Container

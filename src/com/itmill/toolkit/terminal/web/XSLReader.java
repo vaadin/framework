@@ -46,7 +46,8 @@ import org.xml.sax.SAXNotSupportedException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 
-/** Class implementing XMLReader for the UIDLTransformer.
+/** 
+ * Class implementing XMLReader for the UIDLTransformer.
  *
  * @author IT Mill Ltd.
  * @version @VERSION@
@@ -118,8 +119,9 @@ public class XSLReader implements XMLReader, ContentHandler {
 		this.streams = streams;
 	}
 
-	/** Parse all streams given for constructor parameter.
-	 *  The input parameter is ignored.
+	/** 
+	 * Parses all streams given for constructor parameter.
+	 * The input parameter is ignored.
 	 * @see org.xml.sax.XMLReader#parse(InputSource)
 	 */
 	public synchronized void parse(InputSource input)
@@ -140,6 +142,7 @@ public class XSLReader implements XMLReader, ContentHandler {
 		handler.endElement(xslNamespace, "stylesheet", "xsl:stylesheet");
 		handler.endDocument();
 	}
+	
 	/**
 	 * @see org.xml.sax.ContentHandler#endElement(String, String, String)
 	 */
@@ -257,19 +260,22 @@ public class XSLReader implements XMLReader, ContentHandler {
 		handler.startPrefixMapping(prefix, uri);
 	}
 
-	/** Override the default content handler.
+	/** 
+	 * Overrides the default content handler.
 	 * @see org.xml.sax.XMLReader#getContentHandler()
 	 */
 	public ContentHandler getContentHandler() {
 		return this.handler;
 	}
 
-	/** Override the default content handler.
+	/** 
+	 * Overrides the default content handler.
 	 * @see org.xml.sax.XMLReader#setContentHandler(ContentHandler)
 	 */
 	public void setContentHandler(ContentHandler handler) {
 		this.handler = handler;
 	}
+	
 	/**
 	 * @see org.xml.sax.XMLReader#getDTDHandler()
 	 */
@@ -307,7 +313,8 @@ public class XSLReader implements XMLReader, ContentHandler {
 		return reader.getProperty(name);
 	}
 
-	/** Override the parse.
+	/** 
+	 * Overrides the parse.
 	 * @see org.xml.sax.XMLReader#parse(String)
 	 */
 	public void parse(String systemId) throws IOException, SAXException {
@@ -354,7 +361,11 @@ public class XSLReader implements XMLReader, ContentHandler {
 	public class AttributeMapper implements Attributes {
 
 		private Attributes original;
-
+		
+		/**
+		 * 
+		 * @param originalAttributes
+		 */
 		public AttributeMapper(Attributes originalAttributes) {
 			original = originalAttributes;
 		}
@@ -478,31 +489,53 @@ public class XSLReader implements XMLReader, ContentHandler {
 	public class XSLStreamLocator implements Locator {
 
 		private String id;
-
+		
+/**
+ * 
+ * @param id
+ */
 		public XSLStreamLocator(String id) {
 			this.id = id;
 		}
-
+		
+		/**
+		 * 
+		 * @see org.xml.sax.Locator#getPublicId()
+		 */
 		public String getPublicId() {
 			return streamLocator.getPublicId();
 		}
-
+		
+		/**
+		 * 
+		 * @see org.xml.sax.Locator#getSystemId()
+		 */
 		public String getSystemId() {
 			return streamLocator.getSystemId()+""+id;
 		}
-
+		/**
+		 * 
+		 * @see org.xml.sax.Locator#getLineNumber()
+		 */
 		public int getLineNumber() {
 			return streamLocator.getLineNumber();
 		}
-		
+	
 		public int getCombinedLineNumber() {
 			return streamLocator.getLineNumber()+streamStartLineNumber;
-		}		
-
+		}
+		
+		/**
+		 * @see org.xml.sax.Locator#getColumnNumber()
+		 */
 		public int getColumnNumber() {
 			return streamLocator.getColumnNumber();
 		}
-
+		
+		/**
+		 * Gets the id.
+		 * @return the id .
+		 */
 		public String getId() {
 			return id;
 		}
@@ -511,11 +544,18 @@ public class XSLReader implements XMLReader, ContentHandler {
 	public class SAXStreamErrorHandler implements ErrorHandler {
 
 		private ErrorHandler handler;
-
+		
+/**
+ * 
+ * @param origHandler
+ */
 		SAXStreamErrorHandler(ErrorHandler origHandler) {
 			this.handler = origHandler;
 		}
-
+		
+		/**
+		 * @see org.xml.sax.ErrorHandler#warning(org.xml.sax.SAXParseException)
+		 */
 		public void warning(SAXParseException exception) throws SAXException {
 			handler.warning(
 				new SAXParseException(
@@ -523,7 +563,10 @@ public class XSLReader implements XMLReader, ContentHandler {
 					locator,
 					exception));
 		}
-
+		
+		/**
+		 * @see org.xml.sax.ErrorHandler#error(org.xml.sax.SAXParseException)
+		 */
 		public void error(SAXParseException exception) throws SAXException {
 			handler.error(
 				new SAXParseException(
@@ -531,7 +574,10 @@ public class XSLReader implements XMLReader, ContentHandler {
 					locator,
 					exception));
 		}
-
+		
+		/**
+		 * @see org.xml.sax.ErrorHandler#fatalError(org.xml.sax.SAXParseException)
+		 */
 		public void fatalError(SAXParseException exception)
 			throws SAXException {
 			handler.fatalError(

@@ -30,7 +30,8 @@ package com.itmill.toolkit.terminal;
 
 import java.io.IOException;
 
-/** Paint exepction is trown if painting of a component fails.
+/** 
+ * <code>PaintExcepection</code> is thrown if painting of a component fails.
  *
  * @author IT Mill Ltd.
  * @version @VERSION@
@@ -43,15 +44,17 @@ public class PaintException extends IOException {
      */
     private static final long serialVersionUID = 3762535607221891897L;
 
-    /** Constructs an instance of <code>PaintExecption</code> with the specified detail message.
+    /** 
+     * Constructs an instance of <code>PaintExeception</code> with the specified detail message.
      * @param msg the detail message.
      */
     public PaintException(String msg) {
         super(msg);
     }
     
-    /** Constructs an instance of <code>PaintExecption</code> from IOException.
-     * @param exception The original exception.
+    /** 
+     * Constructs an instance of <code>PaintExeception</code> from IOException.
+     * @param exception the original exception.
      */
     public PaintException(IOException exception) {
         super(exception.getMessage());

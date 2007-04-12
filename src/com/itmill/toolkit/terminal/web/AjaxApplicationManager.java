@@ -61,8 +61,9 @@ import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.FrameWindow;
 import com.itmill.toolkit.ui.Window;
 
-/** Application manager processes changes and paints for single
- *  application instance.
+/** 
+ * Application manager processes changes and paints for single
+ * application instance.
  * 
  * @author IT Mill Ltd.
  * @version @VERSION@
@@ -94,7 +95,11 @@ public class AjaxApplicationManager implements Paintable.RepaintRequestListener,
     public AjaxApplicationManager(Application application) {
         this.application = application;
     }
-
+    
+/**
+ * 
+ * @return
+ */
     private AjaxVariableMap getVariableMap() {
         AjaxVariableMap vm = (AjaxVariableMap) applicationToVariableMapMap
                 .get(application);
@@ -104,18 +109,32 @@ public class AjaxApplicationManager implements Paintable.RepaintRequestListener,
         }
         return vm;
     }
-
+    
+/**
+ * 
+ *
+ */
     public void takeControl() {
         application.addListener((Application.WindowAttachListener) this);
         application.addListener((Application.WindowDetachListener) this);
 
     }
-
+    
+/**
+ * 
+ *
+ */
     public void releaseControl() {
         application.removeListener((Application.WindowAttachListener) this);
         application.removeListener((Application.WindowDetachListener) this);
     }
-
+    
+/**
+ * 
+ * @param request the HTTP Request.
+ * @param response the HTTP Response.
+ * @throws IOException if the writing failed due to input/output error.
+ */
     public void handleUidlRequest(HttpServletRequest request,
             HttpServletResponse response) throws IOException {
 
@@ -138,35 +157,35 @@ public class AjaxApplicationManager implements Paintable.RepaintRequestListener,
                 Map unhandledParameters = getVariableMap().handleVariables(
                         request, application);
 
-                // Handle the URI if the application is still running
+                // Handles the URI if the application is still running
                 if (application.isRunning())
                     download = handleURI(application, request, response);
 
                 // If this is not a download request
                 if (download == null) {
                     
-                    // Find the window within the application
+                    // Finds the window within the application
                     Window window = null;
                     if (application.isRunning())
                         window = getApplicationWindow(request, application);
 
-                    // Handle the unhandled parameters if the application is
+                    // Handles the unhandled parameters if the application is
                     // still running
                     if (window != null && unhandledParameters != null
                             && !unhandledParameters.isEmpty())
                         window.handleParameters(unhandledParameters);
 
-                    // Remove application if it has stopped
+                    // Removes application if it has stopped
                     if (!application.isRunning()) {
                         endApplication(request, response, application);
                         return;
                     }
 
-                    // Return if no window found
+                    // Returns if no window found
                     if (window == null)
                         return;
 
-                    // Set the response type
+                    // Sets the response type
                     response.setContentType("application/xml; charset=UTF-8");
 
                     paintTarget = new AjaxPaintTarget(
@@ -190,13 +209,13 @@ public class AjaxApplicationManager implements Paintable.RepaintRequestListener,
                         }
                     }
 
-                    // Paint components
+                    // Paints components
                     Set paintables;
                     if (repaintAll) {
                         paintables = new LinkedHashSet();
                 		paintables.add(window);
                         
-                        // Add all non-native windows
+                        // Adds all non-native windows
                         for (Iterator i=window.getApplication().getWindows().iterator(); i.hasNext();) {
                         	Window w = (Window) i.next();
                         	if (!"native".equals(w.getStyle()) && w != window)
@@ -206,10 +225,10 @@ public class AjaxApplicationManager implements Paintable.RepaintRequestListener,
                         paintables = getDirtyComponents();
                     if (paintables != null) {
 
-                        // Create "working copy" of the current state.
+                        // Creates "working copy" of the current state.
                         List currentPaintables = new ArrayList(paintables);
 
-                        // Sort the paintable so that parent windows
+                        // Sorts the paintable so that parent windows
                         // are always painted before child windows
                         Collections.sort(currentPaintables, new Comparator() {
 
@@ -304,7 +323,7 @@ public class AjaxApplicationManager implements Paintable.RepaintRequestListener,
             out.close();
 
         } catch (Throwable e) {
-            // Write the error report to client
+            // Writes the error report to client
             OutputStreamWriter w = new OutputStreamWriter(out);
             PrintWriter err = new PrintWriter(w);
             err
@@ -320,14 +339,16 @@ public class AjaxApplicationManager implements Paintable.RepaintRequestListener,
     }
 
     /**
-     * Get the existing application or create a new one. Get a window within an
+     * Gets the existing application or create a new one. Get a window within an
      * application based on the requested URI.
      * 
      * @param request
-     *            HTTP Request.
+     *            the HTTP Request.
      * @param application
-     *            Application to query for window.
+     *            the Application to query for window.
      * @return Window mathing the given URI or null if not found.
+     * @throws ServletException if an exception has occurred that interferes with the
+	 *             				servlet's normal operation.
      */
     private Window getApplicationWindow(HttpServletRequest request,
             Application application) throws ServletException {
@@ -365,21 +386,20 @@ public class AjaxApplicationManager implements Paintable.RepaintRequestListener,
     }
 
     /**
-     * Handle the requested URI. An application can add handlers to do special
+     * Handles the requested URI. An application can add handlers to do special
      * processing, when a certain URI is requested. The handlers are invoked
      * before any windows URIs are processed and if a DownloadStream is returned
      * it is sent to the client.
      * 
-     * @see com.itmill.toolkit.terminal.URIHandler
-     * 
      * @param application
-     *            Application owning the URI
+     *            the Application owning the URI.
      * @param request
-     *            HTTP request instance
+     *            the HTTP request instance.
      * @param response
-     *            HTTP response to write to.
-     * @return boolean True if the request was handled and further processing
-     *         should be suppressed, false otherwise.
+     *            the HTTP response to write to.
+     * @return boolean <code>true</code> if the request was handled and further processing
+     *         should be suppressed, otherwise <code>false</code>.
+     * @see com.itmill.toolkit.terminal.URIHandler
      */
     private DownloadStream handleURI(Application application,
             HttpServletRequest request, HttpServletResponse response) {
@@ -406,21 +426,18 @@ public class AjaxApplicationManager implements Paintable.RepaintRequestListener,
     }
 
     /**
-     * Handle the requested URI. An application can add handlers to do special
+     * Handles the requested URI. An application can add handlers to do special
      * processing, when a certain URI is requested. The handlers are invoked
      * before any windows URIs are processed and if a DownloadStream is returned
      * it is sent to the client.
+     * @param stream the downloadable stream.
+     *            
+     * @param request
+     *            the HTTP request instance.
+     * @param response
+     *            the HTTP response to write to.
      * 
      * @see com.itmill.toolkit.terminal.URIHandler
-     * 
-     * @param application
-     *            Application owning the URI
-     * @param request
-     *            HTTP request instance
-     * @param response
-     *            HTTP response to write to.
-     * @return boolean True if the request was handled and further processing
-     *         should be suppressed, false otherwise.
      */
     private void handleDownload(DownloadStream stream,
             HttpServletRequest request, HttpServletResponse response) {
@@ -429,10 +446,10 @@ public class AjaxApplicationManager implements Paintable.RepaintRequestListener,
         InputStream data = stream.getStream();
         if (data != null) {
 
-            // Set content type
+            // Sets content type
             response.setContentType(stream.getContentType());
 
-            // Set cache headers
+            // Sets cache headers
             long cacheTime = stream.getCacheTime();
             if (cacheTime <= 0) {
                 response.setHeader("Cache-Control", "no-cache");
@@ -480,7 +497,13 @@ public class AjaxApplicationManager implements Paintable.RepaintRequestListener,
 
     }
 
-    /** End application */
+   /**
+    * Ends the Application.
+    * @param request the HTTP request instance.
+    * @param response the HTTP response to write to.
+    * @param application the Application to end.
+    * @throws IOException if the writing failed due to input/output error.
+    */
     private void endApplication(HttpServletRequest request,
             HttpServletResponse response, Application application)
             throws IOException {
@@ -497,10 +520,11 @@ public class AjaxApplicationManager implements Paintable.RepaintRequestListener,
         out.println("</redirect>");
     }
 
-    /**
-     * @param window
-     * @return
-     */
+   /**
+    * Gets the Paintable Id.
+    * @param paintable
+    * @return the paintable Id.
+    */
     public synchronized String getPaintableId(Paintable paintable) {
 
         String id = (String) paintableIdMap.get(paintable);
@@ -511,7 +535,11 @@ public class AjaxApplicationManager implements Paintable.RepaintRequestListener,
 
         return id;
     }
-
+    
+/**
+ * 
+ * @return
+ */
     public synchronized Set getDirtyComponents() {
         
         // Remove unnecessary repaints from the list
@@ -536,11 +564,18 @@ public class AjaxApplicationManager implements Paintable.RepaintRequestListener,
         
         return Collections.unmodifiableSet(dirtyPaintabletSet);
     }
-
+    
+	/**
+	 * Clears the Dirty Components.
+	 *
+	 */
     public synchronized void clearDirtyComponents() {
         dirtyPaintabletSet.clear();
     }
-
+    
+	/**
+	 * @see com.itmill.toolkit.terminal.Paintable.RepaintRequestListener#repaintRequested(com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent)
+	 */
     public void repaintRequested(RepaintRequestEvent event) {
         Paintable p = event.getPaintable();
         dirtyPaintabletSet.add(p);
@@ -552,9 +587,10 @@ public class AjaxApplicationManager implements Paintable.RepaintRequestListener,
         }
     }
 
-    /** Recursively request repaint for all frames in frameset.
+    /** 
+     * Recursively request repaint for all frames in frameset.
      * 
-     * @param fs Framewindow.Frameset
+     * @param fs the Framewindow.Frameset.
      */
     private void repaintFrameset(FrameWindow.Frameset fs) {
         List frames = fs.getFrames();
@@ -570,43 +606,73 @@ public class AjaxApplicationManager implements Paintable.RepaintRequestListener,
             }
         }               
     }
-
+    
+/**
+ * 
+ * @param p
+ */
     public void paintablePainted(Paintable p) {
         dirtyPaintabletSet.remove(p);
         p.requestRepaintRequests();
     }
-
+    
+/**
+ * 
+ * @param paintable
+ * @return
+ */
     public boolean isDirty(Paintable paintable) {
         return (dirtyPaintabletSet.contains(paintable));
     }
-
+    
+	/**
+	 * @see com.itmill.toolkit.Application.WindowAttachListener#windowAttached(com.itmill.toolkit.Application.WindowAttachEvent)
+	 */
     public void windowAttached(WindowAttachEvent event) {
         event.getWindow().addListener(this);
         dirtyPaintabletSet.add(event.getWindow());
     }
-
+    
+	/**
+	 * @see com.itmill.toolkit.Application.WindowDetachListener#windowDetached(com.itmill.toolkit.Application.WindowDetachEvent)
+	 */
     public void windowDetached(WindowDetachEvent event) {
         event.getWindow().removeListener(this);
         // Notify client of the close operation
         removedWindows.add(event.getWindow());
     }
-
+    
+/**
+ * 
+ * @return
+ */
     public synchronized Set getRemovedWindows() {
         return Collections.unmodifiableSet(removedWindows);
 
     }
-
+    
+/**
+ * 
+ * @param w
+ */
     private void removedWindowNotified(Window w) {
         this.removedWindows.remove(w);
     }
 
-    /** Implementation of URIHandler.ErrorEvent interface. */
+    /** 
+     * Implementation of URIHandler.ErrorEvent interface. 
+     */
     public class URIHandlerErrorImpl implements URIHandler.ErrorEvent {
 
         private URIHandler owner;
 
         private Throwable throwable;
-
+        
+/**
+ * 
+ * @param owner
+ * @param throwable
+ */
         private URIHandlerErrorImpl(URIHandler owner, Throwable throwable) {
             this.owner = owner;
             this.throwable = throwable;

@@ -33,7 +33,8 @@ import java.util.LinkedList;
 import java.util.Iterator;
 import java.lang.reflect.Method;
 
-/** Event router class implementing the inheritable event
+/** 
+ * <code>EventRouter</code> class implementing the inheritable event
  * listening model. For more information on the event model see the
  * {@link com.itmill.toolkit.event package documentation}.
  *
@@ -43,7 +44,9 @@ import java.lang.reflect.Method;
  */
 public class EventRouter implements MethodEventSource {
     
-    /** List of registered listeners. */
+    /** 
+     * List of registered listeners. 
+     */
     private LinkedList listenerList =  null;
     
 	/* Registers a new listener with the specified activation method to
@@ -143,15 +146,18 @@ public class EventRouter implements MethodEventSource {
         }
     }
     
-    /** Remove all listeners from event router */
+    /** 
+     * Removes all listeners from event router. 
+     */
     public void removeAllListeners() {
     	listenerList = null;	
     }
     
-    /** Send an event to all registered listeners. The listeners will decide
+    /** 
+     * Sends an event to all registered listeners. The listeners will decide
      * if the activation method should be called or not.
      * 
-     * @param event Event to be sent to all listeners
+     * @param event the Event to be sent to all listeners.
      */
     public void fireEvent(EventObject event) {
         

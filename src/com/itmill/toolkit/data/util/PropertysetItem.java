@@ -40,7 +40,7 @@ import com.itmill.toolkit.data.Property;
 
 /**
  * Class for handling a set of identified Properties. The elements contained in
- * a</code> MapItem</code> can be referenced using locally unique identifiers.
+ * a </code>MapItem</code> can be referenced using locally unique identifiers.
  * The class supports listeners who are interested in changes to the Property
  * set managed by the class.
  * 
@@ -54,13 +54,19 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
 
     /* Private representation of the item *********************************** */
 
-    /** Mapping from property id to property */
+    /** 
+     * Mapping from property id to property.
+     */
     private HashMap map = new HashMap();
 
-    /** List of all property ids to maintain the order */
+    /** 
+     * List of all property ids to maintain the order. 
+     */
     private LinkedList list = new LinkedList();
 
-    /** List of property set modification listeners */
+    /** 
+     * List of property set modification listeners. 
+     */
     private LinkedList propertySetChangeListeners = null;
 
     /* Item methods ******************************************************** */
@@ -71,7 +77,7 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
      * returned.
      * 
      * @param id
-     *            identifier of the Property to get
+     *            the identifier of the Property to get.
      * @return the Property with the given ID or <code>null</code>
      */
     public Property getItemProperty(Object id) {
@@ -96,7 +102,7 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
      * <code>false</code>.
      * 
      * @param id
-     *            ID of the Property to be removed
+     *            the ID of the Property to be removed.
      * @return <code>true</code> if the operation succeeded <code>false</code>
      *         if not
      */
@@ -118,9 +124,9 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
      * Tries to add a new Property into the Item.
      * 
      * @param id
-     *            ID of the new Property
+     *            the ID of the new Property.
      * @param property
-     *            the Property to be added and associated with <code>id</code>
+     *            the Property to be added and associated with the id.
      * @return <code>true</code> if the operation succeeded,
      *         <code>false</code> if not
      */
@@ -198,7 +204,7 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
      * Registers a new property set change listener for this Item.
      * 
      * @param listener
-     *            The new Listener to be registered.
+     *            the new Listener to be registered.
      */
     public void addListener(Item.PropertySetChangeListener listener) {
         if (propertySetChangeListeners == null)
@@ -210,14 +216,16 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
      * Removes a previously registered property set change listener.
      * 
      * @param listener
-     *            Listener to be removed.
+     *            the Listener to be removed.
      */
     public void removeListener(Item.PropertySetChangeListener listener) {
         if (propertySetChangeListeners != null)
             propertySetChangeListeners.remove(listener);
     }
 
-    /** Send a Property set change event to all interested listeners */
+    /** 
+     * Sends a Property set change event to all interested listeners.
+     */
     private void fireItemPropertySetChange() {
         if (propertySetChangeListeners != null) {
             Object[] l = propertySetChangeListeners.toArray();
@@ -228,7 +236,25 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
                         .itemPropertySetChange(event);
         }
     }
-
+    
+	/**
+	 * Creates and returns a copy of this object.
+	 * <p>
+	 * The method <code>clone</code> performs a shallow copy of the <code>PropertysetItem</code>.
+	 * </p>
+	 * <p>
+	 * Note : All arrays are considered to implement the interface Cloneable. 
+	 * Otherwise, this method creates a new instance of the class of this object 
+	 * and initializes all its fields with exactly the contents of the corresponding 
+	 * fields of this object, as if by assignment, the contents of the fields are not
+	 * themselves cloned. Thus, this method performs a "shallow copy"  of this object,
+	 * not a "deep copy" operation. 
+	 * </p>
+	 * @throws CloneNotSupportedException
+	 * 							if the object's class does not support the Cloneable interface.
+	 * 
+	 * @see java.lang.Object#clone()
+	 */
     public Object clone() throws CloneNotSupportedException {
 
         PropertysetItem npsi = new PropertysetItem();
@@ -241,7 +267,14 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
 
         return npsi;
     }
-
+    
+	/**
+	 * Returns <code>true</code> if and only if the argument is not <code>null</code> and is a 
+	 * Boolean object that represents the same boolean value as this object.
+	 * @param obj the object to compare with.
+	 * @return <code>true</code> if the Boolean objects represent the same value otherwise <code>false</code>.
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
     public boolean equals(Object obj) {
 
         if (obj == null || !(obj instanceof PropertysetItem))
@@ -271,7 +304,12 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
 
         return true;
     }
-
+    
+	/**
+	 * Returns the hash code value for this list.
+	 * @return the hash code value.
+	 * @see java.lang.Object#hashCode()
+	 */
     public int hashCode() {
 
         return (list == null ? 0 : list.hashCode())

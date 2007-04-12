@@ -34,16 +34,14 @@ import com.itmill.toolkit.data.Container;
 import com.itmill.toolkit.data.Item;
 import com.itmill.toolkit.data.Property;
 
-/** Default implementation of the 
-
- * 	 
- * 
- *  The following Field types are used by default:
+/** 
+ * Default implementation of the 
+ * the following Field types are used by default:
  * <p>
- *  <b>Boolean</b>: Button(switchMode:true)<br/> 
- *  <b>Date</b>:  DateField(resolution: day) 
- *  <b>Item</b>:  Form<br/>   
- *  <b>default   field type</b>: TextField
+ *  <b>Boolean</b>: Button(switchMode:true).<br/> 
+ *  <b>Date</b>:  DateField(resolution: day).<br/> 
+ *  <b>Item</b>:  Form. <br/>   
+ *  <b>default   field type</b>: TextField.
  * <p>
  * @author IT Mill Ltd.
  * @version  @VERSION@
@@ -52,11 +50,12 @@ import com.itmill.toolkit.data.Property;
 
 public class BaseFieldFactory implements FieldFactory {
 
-	/** Creates field based on type of data.
+	/** 
+	 * Creates the field based on type of data.
 	 * 	
 	 *  
-	 * @param type The type of data presented in field
-	 * @param uiContext The context where the Field is presented.
+	 * @param type the type of data presented in field.
+	 * @param uiContext the context where the Field is presented.
 	 * 
 	 * @see com.itmill.toolkit.ui.FieldFactory#createField(Class, Component)
 	 */
@@ -90,7 +89,8 @@ public class BaseFieldFactory implements FieldFactory {
 		return new TextField();
 	}
 
-	/** Create field based on the datasource property.
+	/** 
+	 * Creates the field based on the datasource property.
 	 * 
 	 * @see com.itmill.toolkit.ui.FieldFactory#createField(Property, Component)
 	 */
@@ -101,7 +101,8 @@ public class BaseFieldFactory implements FieldFactory {
 			return null;
 	}
 
-	/** Creates field based on the item and property id.
+	/** 
+	 * Creates the field based on the item and property id.
 	 * 
 	 * @see com.itmill.toolkit.ui.FieldFactory#createField(Item, Object, Component)
 	 */

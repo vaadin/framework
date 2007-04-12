@@ -37,7 +37,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 /**
- * The WebBrowserProbe uses JavaScript to determine the capabilities of the
+ * The <code>WebBrowserProbe</code> uses JavaScript to determine the capabilities of the
  * client browser.
  * 
  * @author IT Mill Ltd.
@@ -52,8 +52,8 @@ public class WebBrowserProbe {
 	private static final String CLIENT_TYPE = "wa_browser";
 
 	/**
-	 * Return the terminal type from the given session.
-	 * 
+	 * Returns the terminal type from the given session.
+	 * @param session the HTTP session.
 	 * @return WebBrowser instance for the given session.
 	 */
 	public static WebBrowser getTerminalType(HttpSession session) {
@@ -63,8 +63,9 @@ public class WebBrowserProbe {
 	}
 
 	/**
-	 * Set the terminal type for the given session.
-	 * 
+	 * Sets the terminal type for the given session.
+	 * @param session the HTTP session.
+	 * @param terminal the web browser. 
 	 * @return WebBrowser instance for the given session.
 	 */
 	public static void setTerminalType(HttpSession session, WebBrowser terminal) {
@@ -73,13 +74,15 @@ public class WebBrowserProbe {
 	}
 
 	/**
-	 * Handle client checking.
+	 * Handles the client checking.
 	 * 
 	 * @param request
-	 *            The HTTP request to process.
-	 * @param response
-	 *            HTTP response to write to.
-	 * @return true if response should include a probe script
+	 *            the HTTP request to process.
+	 * @param parameters
+	 *            the Parameters to be used as defaults.
+	 * @return <code>true</code> if response should include a probe script,otherwise <code>false</code>.
+	 * @throws ServletException if an exception has occurred that interferes with the
+	 *             				servlet's normal operation.
 	 */
 	public static boolean handleProbeRequest(HttpServletRequest request,
 			Map parameters) throws ServletException {
@@ -106,11 +109,11 @@ public class WebBrowserProbe {
 
 		}
 
-		// Create new type based on client parameters
+		// Creates new type based on client parameters
 		browser = probe(browser, request, parameters);
 		setTerminalType(s, browser);
 
-		// Set client as checked if parameters were found
+		// Sets client as checked if parameters were found
 		if (parameters.containsKey("wa_clientprobe")) {
 			String val = ((String[]) parameters.get("wa_clientprobe"))[0];
 			browser.setClientSideChecked(val != null && "1".equals(val));
@@ -122,10 +125,10 @@ public class WebBrowserProbe {
 	}
 
 	/**
-	 * Determine versions based on user agent string.
+	 * Determines versions based on user agent string.
 	 * 
 	 * @param agent
-	 *            HTTP User-Agent request header.
+	 *            the HTTP User-Agent request header.
 	 * @return new WebBrowser instance initialized based on agent features.
 	 */
 	public static WebBrowser probe(String agent) {
@@ -268,15 +271,15 @@ public class WebBrowserProbe {
 	}
 
 	/**
-	 * Create new instance of WebBrowser by initializing the values based on
+	 * Creates new instance of WebBrowser by initializing the values based on
 	 * user request.
 	 * 
 	 * @param browser
-	 *            The browser to be updated. If null a new instance is created.
+	 *            the browser to be updated. If null a new instance is created.
 	 * @param request
-	 *            Request to be used as defaults.
+	 *            the Request to be used as defaults.
 	 * @param params
-	 *            Parameters to be used as defaults.
+	 *            the Parameters to be used as defaults.
 	 * @return new WebBrowser instance initialized based on request parameters.
 	 */
 	public static WebBrowser probe(WebBrowser browser,

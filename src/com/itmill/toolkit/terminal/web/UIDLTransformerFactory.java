@@ -35,7 +35,8 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Iterator;
 
-/** Class implementing the UIDLTransformer Factory.
+/** 
+ * Class implementing the UIDLTransformer Factory.
  * The factory creates and maintains a pool of transformers that are used
  * for transforming UIDL to HTML.
  * 
@@ -46,25 +47,39 @@ import java.util.Iterator;
 
 public class UIDLTransformerFactory {
 
-	/** Time between repository modified queries. */
+	/** 
+	 * Time between repository modified queries. 
+	 */
 	private static final int CACHE_CHECK_INTERVAL_MILLIS = 5 * 1000;
 
-	/** The time transformers are cached by default*/
+	/** 
+	 * The time transformers are cached by default.
+	 */
 	private static final long DEFAULT_TRANSFORMER_CACHETIME = 60 * 60 * 1000;
 
-	/** Maximum number of transformers in use */
+	/** 
+	 * Maximum number of transformers in use. 
+	 */
 	private int maxConcurrentTransformers = 1;
 
-	/** Last time theme modification time was checked */
+	/** 
+	 * Last time theme modification time was checked. 
+	 */
 	private long lastModificationCheckTime = 0;
 
-	/** Last time theme source was modified */
+	/** 
+	 * Last time theme source was modified. 
+	 */
 	private long themeSourceModificationTime = 0;
 
-	/** How long to cache transformers. */
+	/** 
+	 * How long to cache transformers. 
+	 */
 	private long cacheTime = DEFAULT_TRANSFORMER_CACHETIME;
 
-	/** Spool manager thread */
+	/** 
+	 * Spool manager thread. 
+	 */
 	private SpoolManager spoolManager;
 
 	private Map transformerSpool = new HashMap();
@@ -73,12 +88,13 @@ public class UIDLTransformerFactory {
 	private int transformerCount = 0;
 	private int transformersInUse = 0;
 
-	/** Constructor for transformer factory.
+	/** 
+	 * Constructor for transformer factory.
 	 * Method UIDLTransformerFactory.
-	 * @param themeSource Theme source to be used for themes.
-	 * @param webAdapterServlet The Adapter servlet.
-	 * @param maxConcurrentTransformers Maximum number of concurrent themes in use.
-	 * @param cacheTime Time to cache the transformers.
+	 * @param themeSource the Theme source to be used for themes.
+	 * @param webAdapterServlet the Adapter servlet.
+	 * @param maxConcurrentTransformers the Maximum number of concurrent themes in use.
+	 * @param cacheTime the Time to cache the transformers.
 	 */
 	public UIDLTransformerFactory(
 		ThemeSource themeSource,
@@ -100,10 +116,12 @@ public class UIDLTransformerFactory {
 			this.spoolManager.start();
 	}
 
-	/** Get new transformer of the specified type
-	 * @param type Type of the requested transformer.
-	 * @param variableMap WebVariable map used by the transformer
+	/** 
+	 * Gets the new transformer of the specified type.
+	 * @param type the Type of the requested transformer.
 	 * @return Created new transformer.
+	 * @throws UIDLTransformerException 
+	 * 									if the transform can not be created.
 	 */
 	public synchronized UIDLTransformer getTransformer(UIDLTransformerType type)
 		throws UIDLTransformerException {
@@ -116,18 +134,18 @@ public class UIDLTransformerFactory {
 			}
 		}
 
-		// Get list of transformers for this type
+		// Gets the list of transformers for this type
 		TransformerList list =
 			(TransformerList) this.transformerSpool.get(type);
 
-		// Check the modification time between fixed intervals
+		// Checks the modification time between fixed intervals
 		long now = System.currentTimeMillis();
 		if (now - CACHE_CHECK_INTERVAL_MILLIS
 			> this.lastModificationCheckTime) {
 
 			this.lastModificationCheckTime = now;
 
-			//  Check if the theme source has been modified and flush 
+			//  Checks if the theme source has been modified and flush 
 			//  list if necessary
 			long lastmod = this.themeSource.getModificationTime();
 			if (list != null && this.themeSourceModificationTime < lastmod) {
@@ -156,7 +174,7 @@ public class UIDLTransformerFactory {
 			}
 		} else {
 
-			// Create new transformer and return it. Transformers are added to
+			// Creates the new transformer and return it. Transformers are added to
 			// spool when they are released.
 			t = new UIDLTransformer(type, themeSource, webAdapterServlet);
 			transformerCount++;
@@ -168,7 +186,7 @@ public class UIDLTransformerFactory {
 						+ type);
 			}
 
-			// Create new list, if not found
+			// Creates the new list, if not found
 			if (list == null) {
 				list = new TransformerList();
 				this.transformerSpool.put(type, list);
@@ -182,14 +200,15 @@ public class UIDLTransformerFactory {
 		return t;
 	}
 
-	/** Recycle a used transformer back to spool.
+	/** 
+	 * Recycle a used transformer back to spool.
 	 * One must guarantee not to use the transformer after it have been released.
-	 * @param transformer UIDLTransformer to be recycled
+	 * @param transformer the UIDLTransformer to be recycled.
 	 */
 	public synchronized void releaseTransformer(UIDLTransformer transformer) {
 
 		try {
-			// Reset the transformer before returning it to spool
+			// Resets the transformer before returning it to spool
 			transformer.reset();
 
 			// Recycle the transformer back to spool
@@ -222,29 +241,54 @@ public class UIDLTransformerFactory {
 			notifyAll();
 		}
 	}
-
+	
+/**
+ * 
+ * 
+ *
+ */
 	private class TransformerList {
 
 		private LinkedList list = new LinkedList();
 		private long lastUsed = 0;
-
+		
+/**
+ * 
+ * @param transformer
+ */
 		public void add(UIDLTransformer transformer) {
 			list.add(transformer);
 		}
-
+		
+/**
+ * 
+ * @return
+ */
 		public UIDLTransformer removeFirst() {
 			return (UIDLTransformer) ((LinkedList) list).removeFirst();
 		}
-
+		
+/**
+ * 
+ * @return
+ */
 		public boolean isEmpty() {
 			return list.isEmpty();
 		}
-
+		
+/**
+ * 
+ * @return
+ */
 		public int size() {
 			return list.size();
 		}
 	}
-
+	
+/**
+ * 
+ *
+ */
 	private synchronized void removeUnusedTransformers() {
 		long currentTime = System.currentTimeMillis();
 		HashSet keys = new HashSet();
@@ -269,7 +313,8 @@ public class UIDLTransformerFactory {
 		}
 	}
 
-	/** Class for periodically remove unused transformers from memory.
+	/** 
+	 * Class for periodically remove unused transformers from memory.
 	 * @author IT Mill Ltd.
 	 * @version @VERSION@
 	 * @since 3.0
@@ -277,12 +322,20 @@ public class UIDLTransformerFactory {
 	protected class SpoolManager extends Thread {
 
 		long refreshTime;
-
+		
+/**
+ * 
+ * @param refreshTime
+ */
 		public SpoolManager(long refreshTime) {
 			super("UIDLTransformerFactory.SpoolManager");
 			this.refreshTime = refreshTime;
 		}
-
+		
+		/**
+		 *
+		 * @see java.lang.Thread#run()
+		 */
 		public void run() {
 			while (true) {
 				try {

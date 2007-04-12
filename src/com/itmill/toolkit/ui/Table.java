@@ -51,7 +51,7 @@ import com.itmill.toolkit.terminal.Resource;
 import com.itmill.toolkit.terminal.Sizeable;
 
 /**
- * Table component is used for representing data or components in pageable and
+ * <code>TableComponent</code> is used for representing data or components in pageable and
  * selectable table.
  * 
  * @author IT Mill Ltd.
@@ -71,16 +71,24 @@ public class Table extends Select implements Action.Container,
 
     private static final int CELL_FIRSTCOL = 4;
     
-	/** Width of the table or -1 if unspecified */
+	/** 
+	 * Width of the table or -1 if unspecified. 
+	 */
 	private int width = -1;
 
-	/** Height of the table or -1 if unspecified */
+	/** 
+	 * Height of the table or -1 if unspecified. 
+	 */
 	private int height = -1;
 
-	/** Width unit */
+	/** 
+	 * Width unit. 
+	 */
 	private int widthUnit = Sizeable.UNITS_PIXELS;
 
-	/** Height unit */
+	/** 
+	 * Height unit. 
+	 */
 	private int heightUnit = Sizeable.UNITS_PIXELS;
 
     /**
@@ -88,10 +96,14 @@ public class Table extends Select implements Action.Container,
      */
     public static final String ALIGN_LEFT = "b";
 
-    /** Center column alignment. */
+    /** 
+     * Center column alignment. 
+     */
     public static final String ALIGN_CENTER = "c";
 
-    /** Right column alignment. */
+    /** 
+     * Right column alignment. 
+     */
     public static final String ALIGN_RIGHT = "e";
 
     /**
@@ -107,13 +119,13 @@ public class Table extends Select implements Action.Container,
 
     /**
      * Column header mode: Column headers are explicitly specified with
-     * <code>setColumnHeaders()</code>
+     * <code>setColumnHeaders</code>.
      */
     public static final int COLUMN_HEADER_MODE_EXPLICIT = 1;
 
     /**
      * Column header mode: Column headers are explicitly specified with
-     * <code>setColumnHeaders()</code>
+     * <code>setColumnHeaders</code>
      */
     public static final int COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID = 2;
 
@@ -124,19 +136,19 @@ public class Table extends Select implements Action.Container,
     public static final int ROW_HEADER_MODE_HIDDEN = -1;
 
     /**
-     * Row caption mode: Items Id-objects toString() is used as row caption.
+     * Row caption mode: Items Id-objects toString is used as row caption.
      */
     public static final int ROW_HEADER_MODE_ID = Select.ITEM_CAPTION_MODE_ID;
 
     /**
-     * Row caption mode: Item-objects toString() is used as row caption.
+     * Row caption mode: Item-objects toString is used as row caption.
      */
     public static final int ROW_HEADER_MODE_ITEM = Select.ITEM_CAPTION_MODE_ITEM;
 
     /**
-     * Row caption mode: Index of the item is used as item caption. * The index
-     * mode can only be used with the containers implementing Container.Indexed
-     * interface.
+     * Row caption mode: Index of the item is used as item caption. 
+     * The index mode can only be used with the containers implementing 
+     * Container.Indexed interface.
      */
     public static final int ROW_HEADER_MODE_INDEX = Select.ITEM_CAPTION_MODE_INDEX;
 
@@ -165,52 +177,84 @@ public class Table extends Select implements Action.Container,
 
     /* Private table extensions to Select *********************************** */
 
-    /** True if column collapsing is allowed */
+    /** 
+     * True if column collapsing is allowed. 
+     */
     private boolean columnCollapsingAllowed = false;
 
-    /** True if reordering of columns is allowed on the client side */
+    /** 
+     * True if reordering of columns is allowed on the client side. 
+     */
     private boolean columnReorderingAllowed = false;
 
-    /** Keymapper for column ids */
+    /** 
+     * Keymapper for column ids. 
+     */
     private KeyMapper columnIdMap = new KeyMapper();
 
-    /** Holds visible column propertyIds - in order */
+    /** 
+     * Holds visible column propertyIds - in order. 
+     */
     private LinkedList visibleColumns = new LinkedList();
 
-    /** Holds propertyIds of currently collapsed columns */
+    /** 
+     * Holds propertyIds of currently collapsed columns. 
+     */
     private HashSet collapsedColumns = new HashSet();
 
-    /** Holds headers for visible columns (by propertyId) */
+    /** 
+     * Holds headers for visible columns (by propertyId). 
+     */
     private HashMap columnHeaders = new HashMap();
 
-    /** Holds icons for visible columns (by propertyId) */
+    /** 
+     * Holds icons for visible columns (by propertyId). 
+     */
     private HashMap columnIcons = new HashMap();
 
-    /** Holds alignments for visible columns (by propertyId) */
+    /** 
+     * Holds alignments for visible columns (by propertyId). 
+     */
     private HashMap columnAlignments = new HashMap();
 
-    /** Holds value of property pageLength. 0 disables paging. */
+    /** 
+     * Holds value of property pageLength. 0 disables paging. 
+     */
     private int pageLength = 15;
 
-    /** Id the first item on the current page. */
+    /** 
+     * Id the first item on the current page. 
+     */
     private Object currentPageFirstItemId = null;
 
-    /** Index of the first item on the current page. */
+    /** 
+     * Index of the first item on the current page. 
+     */
     private int currentPageFirstItemIndex = 0;
 
-    /** Holds value of property pageBuffering. */
+    /** 
+     * Holds value of property pageBuffering. 
+     */
     private boolean pageBuffering = false;
 
-    /** Holds value of property selectable. */
+    /** 
+     * Holds value of property selectable. 
+     */
     private boolean selectable = false;
 
-    /** Holds value of property columnHeaderMode. */
+    /** 
+     * Holds value of property columnHeaderMode. 
+     */
     private int columnHeaderMode = COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID;
 
-    /** True iff the row captions are hidden. */
+    /** 
+     * True iff the row captions are hidden. 
+     */
     private boolean rowCaptionsAreHidden = true;
 
-    /** Page contents buffer used in buffered mode */
+    /** 
+     * Page contents buffer used in buffered mode. 
+     */
     private Object[][] pageBuffer = null;
 
     /**
@@ -219,38 +263,56 @@ public class Table extends Select implements Action.Container,
      */
     private LinkedList listenedProperties = null;
 
-    /** List of visible components - the is used for needsRepaint calculation. */
+    /** 
+     * List of visible components - the is used for needsRepaint calculation. 
+     */
     private LinkedList visibleComponents = null;
 
-    /** List of action handlers */
+    /** 
+     * List of action handlers. 
+     */
     private LinkedList actionHandlers = null;
 
-    /** Action mapper */
+    /** 
+     * Action mapper. 
+     */
     private KeyMapper actionMapper = null;
 
-    /** Table cell editor factory */
+    /** 
+     * Table cell editor factory. 
+     */
     private FieldFactory fieldFactory = new BaseFieldFactory();
 
-    /** Is table editable */
+    /** 
+     * Is table editable. 
+     */
     private boolean editable = false;
 
-    /** Current sorting direction */
+    /** 
+     * Current sorting direction. 
+     */
     private boolean sortAscending = true;
 
-    /** Currently table is sorted on this propertyId */
+    /** 
+     * Currently table is sorted on this propertyId. 
+     */
     private Object sortContainerPropertyId = null;
 
-    /** Is table sorting disabled alltogether; even if some of the properties would be 
-     * sortable. */
+    /** 
+     * Is table sorting disabled alltogether; even if some of the properties would be 
+     * sortable. 
+     */
     private boolean sortDisabled = false;
     
-    /** Number of rows explicitly requested by the client to be painted on next paint. 
+    /** 
+     * Number of rows explicitly requested by the client to be painted on next paint. 
      * This is -1 if no request by the client is made. Painting the component will automatically
      * reset this to -1. 
      */
     private int reqRowsToPaint = -1;
     
-    /** Index of the first rows explicitly requested by the client to be painted.
+    /** 
+     * Index of the first rows explicitly requested by the client to be painted.
      * This is -1 if no request by the client is made. Painting the component will automatically
      * reset this to -1.  
      */
@@ -258,18 +320,27 @@ public class Table extends Select implements Action.Container,
     
     /* Table constructors *************************************************** */
 
-    /** Create new empty table */
+    /** 
+     * Creates new empty table. 
+     */
     public Table() {
         setRowHeaderMode(ROW_HEADER_MODE_HIDDEN);
     }
 
-    /** Create new empty table with caption. */
+    /** 
+     * Creates the new empty table with caption. 
+     * @param caption
+     */
     public Table(String caption) {
         this();
         setCaption(caption);
     }
 
-    /** Create new table with caption and connect it to a Container. */
+    /** 
+     * Creates the new table with caption and connect it to a Container.
+     * @param caption
+     * @param dataSource  
+     */
     public Table(String caption, Container dataSource) {
         this();
         setCaption(caption);
@@ -279,13 +350,13 @@ public class Table extends Select implements Action.Container,
     /* Table functionality ************************************************** */
 
     /**
-     * Get the array of visible column property id:s.
+     * Gets the array of visible column property id:s.
      * 
      * <p>
-     * The columns are show in the order of their appearance in this array
+     * The columns are show in the order of their appearance in this array.
      * </p>
      * 
-     * @return Value of property availableColumns.
+     * @return the Value of property availableColumns.
      */
     public Object[] getVisibleColumns() {
         if (this.visibleColumns == null) {
@@ -295,14 +366,14 @@ public class Table extends Select implements Action.Container,
     }
 
     /**
-     * Set the array of visible column property id:s.
+     * Sets the array of visible column property id:s.
      * 
      * <p>
-     * The columns are show in the order of their appearance in this array
+     * The columns are show in the order of their appearance in this array.
      * </p>
      * 
-     * @param availableColumns
-     *            Array of shown property id:s.
+     * @param visibleColumns
+     *            the Array of shown property id:s.
      */
     public void setVisibleColumns(Object[] visibleColumns) {
 
@@ -311,7 +382,7 @@ public class Table extends Select implements Action.Container,
             throw new NullPointerException(
                     "Can not set visible columns to null value");
 
-        // Check that the new visible columns contains no nulls and properties
+        // Checks that the new visible columns contains no nulls and properties
         // exist
         Collection properties = getContainerPropertyIds();
         for (int i = 0; i < visibleColumns.length; i++) {
@@ -330,7 +401,7 @@ public class Table extends Select implements Action.Container,
             newVC.add(visibleColumns[i]);
         }
 
-        // Remove alignments, icons and headers from hidden columns
+        // Removes alignments, icons and headers from hidden columns
         if (this.visibleColumns != null)
             for (Iterator i = this.visibleColumns.iterator(); i.hasNext();) {
                 Object col = i.next();
@@ -343,12 +414,12 @@ public class Table extends Select implements Action.Container,
 
         this.visibleColumns = newVC;
 
-        // Assure visual refresh
+        // Assures visual refresh
         refreshCurrentPage();
     }
 
     /**
-     * Get the headers of the columns.
+     * Gets the headers of the columns.
      * 
      * <p>
      * The headers match the property id:s given my the set visible column
@@ -359,7 +430,7 @@ public class Table extends Select implements Action.Container,
      * with id.toString() outputs when rendering.
      * </p>
      * 
-     * @return Array of column headers.
+     * @return the Array of column headers.
      */
     public String[] getColumnHeaders() {
         if (this.columnHeaders == null) {
@@ -374,7 +445,7 @@ public class Table extends Select implements Action.Container,
     }
 
     /**
-     * Set the headers of the columns.
+     * Sets the headers of the columns.
      * 
      * <p>
      * The headers match the property id:s given my the set visible column
@@ -386,8 +457,8 @@ public class Table extends Select implements Action.Container,
      * </p>
      * 
      * @param columnHeaders
-     *            Array of column headers that match the
-     *            <code>getVisibleColumns()</code>.
+     *            the Array of column headers that match the
+     *            <code>getVisibleColumns</code> method.
      */
     public void setColumnHeaders(String[] columnHeaders) {
 
@@ -402,12 +473,12 @@ public class Table extends Select implements Action.Container,
             this.columnHeaders.put(it.next(), columnHeaders[i]);
         }
 
-        // Assure visual refresh
+        // Assures the visual refresh
         refreshCurrentPage();
     }
 
     /**
-     * Get the icons of the columns.
+     * Gets the icons of the columns.
      * 
      * <p>
      * The icons in headers match the property id:s given my the set visible
@@ -417,7 +488,7 @@ public class Table extends Select implements Action.Container,
      * headers with icons.
      * </p>
      * 
-     * @return Array of icons that match the <code>getVisibleColumns()</code>.
+     * @return the Array of icons that match the <code>getVisibleColumns</code>.
      */
     public Resource[] getColumnIcons() {
         if (this.columnIcons == null) {
@@ -433,7 +504,7 @@ public class Table extends Select implements Action.Container,
     }
 
     /**
-     * Set the icons of the columns.
+     * Sets the icons of the columns.
      * 
      * <p>
      * The icons in headers match the property id:s given my the set visible
@@ -444,7 +515,7 @@ public class Table extends Select implements Action.Container,
      * </p>
      * 
      * @param columnIcons
-     *            Array of icons that match the <code>getVisibleColumns()</code>.
+     *            the Array of icons that match the <code>getVisibleColumns</code>.
      */
     public void setColumnIcons(Resource[] columnIcons) {
 
@@ -464,7 +535,7 @@ public class Table extends Select implements Action.Container,
     }
 
     /**
-     * Get array of column alignments.
+     * Gets the array of column alignments.
      * 
      * <p>
      * The items in the array must match the properties identified by
@@ -479,7 +550,7 @@ public class Table extends Select implements Action.Container,
      * rendered as align lefts.
      * </p>
      * 
-     * @return Column alignments array.
+     * @return the Column alignments array.
      */
     public String[] getColumnAlignments() {
         if (this.columnAlignments == null) {
@@ -495,7 +566,7 @@ public class Table extends Select implements Action.Container,
     }
 
     /**
-     * Set the column alignments.
+     * Sets the column alignments.
      * 
      * <p>
      * The items in the array must match the properties identified by
@@ -510,7 +581,7 @@ public class Table extends Select implements Action.Container,
      * </p>
      * 
      * @param columnAlignments
-     *            Column alignments array.
+     *            the Column alignments array.
      */
     public void setColumnAlignments(String[] columnAlignments) {
 
@@ -518,7 +589,7 @@ public class Table extends Select implements Action.Container,
             throw new IllegalArgumentException(
                     "The length of the alignments array must match the number of visible columns");
 
-        // Check all alignments
+        // Checks all alignments
         for (int i = 0; i < columnAlignments.length; i++) {
             String a = columnAlignments[i];
             if (a != null && !a.equals(ALIGN_LEFT) && !a.equals(ALIGN_CENTER)
@@ -527,7 +598,7 @@ public class Table extends Select implements Action.Container,
                         + " aligment '" + a + "' is invalid");
         }
 
-        // Reset alignments
+        // Resets the alignments
         HashMap newCA = new HashMap();
         int i = 0;
         for (Iterator it = this.visibleColumns.iterator(); it.hasNext()
@@ -536,39 +607,38 @@ public class Table extends Select implements Action.Container,
         }
         this.columnAlignments = newCA;
 
-        // Assure visual refresh
+        // Assures the visual refresh
         refreshCurrentPage();
     }
 
     /**
-     * Get the page length.
+     * Gets the page length.
      * 
      * <p>
      * Setting page length 0 disables paging.
      * </p>
      * 
-     * @return Lenght of one page.
+     * @return the Length of one page.
      */
     public int getPageLength() {
         return this.pageLength;
     }
 
     /**
-     * Set the page length.
+     * Sets the page length.
      * 
      * <p>
      * Setting page length 0 disables paging. The page length defaults to 15.
      * </p>
      * 
-     * @param Lenght
-     *            of one page.
+     * @param pageLength the Length of one page.
      */
     public void setPageLength(int pageLength) {
         if (pageLength >= 0 && this.pageLength != pageLength) {
             this.pageLength = pageLength;
             // "scroll" to first row
             this.setCurrentPageFirstItemIndex(0);
-            // Assure visual refresh
+            // Assures the visual refresh
             refreshCurrentPage();
         }
     }
@@ -576,7 +646,7 @@ public class Table extends Select implements Action.Container,
     /**
      * Getter for property currentPageFirstItem.
      * 
-     * @return Value of property currentPageFirstItem.
+     * @return the Value of property currentPageFirstItem.
      */
     public Object getCurrentPageFirstItemId() {
 
@@ -598,14 +668,14 @@ public class Table extends Select implements Action.Container,
     }
 
     /**
-     * Setter for property currentPageFirstItem.
+     * Setter for property currentPageFirstItemId.
      * 
-     * @param currentPageFirstItem
-     *            New value of property currentPageFirstItem.
+     * @param currentPageFirstItemId
+     *            the New value of property currentPageFirstItemId.
      */
     public void setCurrentPageFirstItemId(Object currentPageFirstItemId) {
 
-        // Get the corresponding index
+        // Gets the corresponding index
         int index = -1;
         try {
             index = ((Container.Indexed) items)
@@ -613,7 +683,7 @@ public class Table extends Select implements Action.Container,
         } catch (ClassCastException e) {
 
             // If the table item container does not have index, we have to
-            // calculate the index by hand
+            // calculates the index by hand
             Object id = ((Container.Ordered) items).firstItemId();
             while (id != null && !id.equals(currentPageFirstItemId)) {
                 index++;
@@ -629,7 +699,7 @@ public class Table extends Select implements Action.Container,
             this.currentPageFirstItemIndex = index;
         }
 
-        // Assure visual refresh
+        // Assures the visual refresh
         refreshCurrentPage();
 
     }
@@ -664,7 +734,7 @@ public class Table extends Select implements Action.Container,
         else
             this.columnIcons.put(propertyId, icon);
 
-        // Assure visual refresh
+        // Assures the visual refresh
         refreshCurrentPage();
     }
 
@@ -689,7 +759,7 @@ public class Table extends Select implements Action.Container,
     }
 
     /**
-     * Sets column header for the specified column;
+     * Sets the column header for the specified column;
      * 
      * @param propertyId
      *            the propertyId indentifying the column.
@@ -704,7 +774,7 @@ public class Table extends Select implements Action.Container,
         }
         this.columnHeaders.put(propertyId, header);
 
-        // Assure visual refresh
+        // Assures the visual refresh
         refreshCurrentPage();
     }
 
@@ -735,7 +805,7 @@ public class Table extends Select implements Action.Container,
      */
     public void setColumnAlignment(Object propertyId, String alignment) {
 
-        // Check for valid alignments
+        // Checks for valid alignments
         if (alignment != null && !alignment.equals(ALIGN_LEFT)
                 && !alignment.equals(ALIGN_CENTER)
                 && !alignment.equals(ALIGN_RIGHT))
@@ -749,7 +819,7 @@ public class Table extends Select implements Action.Container,
 
         this.columnAlignments.put(propertyId, alignment);
 
-        // Assure visual refresh
+        // Assures the visual refresh
         refreshCurrentPage();
     }
 
@@ -773,6 +843,7 @@ public class Table extends Select implements Action.Container,
      *            the propertyID identifying the column.
      * @param collapsed
      *            the desired collapsedness.
+     * @throws IllegalAccessException
      */
     public void setColumnCollapsed(Object propertyId, boolean collapsed)
             throws IllegalAccessException {
@@ -785,12 +856,12 @@ public class Table extends Select implements Action.Container,
         else
             this.collapsedColumns.remove(propertyId);
 
-        // Assure visual refresh
+        // Assures the visual refresh
         refreshCurrentPage();
     }
 
     /**
-     * Check if column collapsing is allowed.
+     * Checks if column collapsing is allowed.
      * 
      * @return true if columns can be collapsed; false otherwise.
      */
@@ -810,12 +881,12 @@ public class Table extends Select implements Action.Container,
         if (!collapsingAllowed)
             collapsedColumns.clear();
 
-        // Assure visual refresh
+        // Assures the visual refresh
         refreshCurrentPage();
     }
 
     /**
-     * Check if column reordering is allowed.
+     * Checks if column reordering is allowed.
      * 
      * @return true if columns can be reordered; false otherwise.
      */
@@ -832,7 +903,7 @@ public class Table extends Select implements Action.Container,
     public void setColumnReorderingAllowed(boolean reorderingAllowed) {
         this.columnReorderingAllowed = reorderingAllowed;
 
-        // Assure visual refresh
+        // Assures the visual refresh
         refreshCurrentPage();
     }
 
@@ -868,7 +939,7 @@ public class Table extends Select implements Action.Container,
     /**
      * Getter for property currentPageFirstItem.
      * 
-     * @return Value of property currentPageFirstItem.
+     * @return the Value of property currentPageFirstItem.
      */
     public int getCurrentPageFirstItemIndex() {
         return this.currentPageFirstItemIndex;
@@ -878,11 +949,11 @@ public class Table extends Select implements Action.Container,
      * Setter for property currentPageFirstItem.
      * 
      * @param newIndex
-     *            New value of property currentPageFirstItem.
+     *            the New value of property currentPageFirstItem.
      */
     public void setCurrentPageFirstItemIndex(int newIndex) {
 
-        // Ensure that the new value is valid
+        // Ensures that the new value is valid
         if (newIndex < 0)
             newIndex = 0;
         if (newIndex >= size())
@@ -949,14 +1020,14 @@ public class Table extends Select implements Action.Container,
             }
         }
 
-        // Assure visual refresh
+        // Assures the visual refresh
         refreshCurrentPage();
     }
 
     /**
      * Getter for property pageBuffering.
      * 
-     * @return Value of property pageBuffering.
+     * @return the Value of property pageBuffering.
      */
     public boolean isPageBufferingEnabled() {
         return this.pageBuffering;
@@ -966,7 +1037,7 @@ public class Table extends Select implements Action.Container,
      * Setter for property pageBuffering.
      * 
      * @param pageBuffering
-     *            New value of property pageBuffering.
+     *            the New value of property pageBuffering.
      */
     public void setPageBufferingEnabled(boolean pageBuffering) {
 
@@ -984,7 +1055,7 @@ public class Table extends Select implements Action.Container,
      * The table is not selectable by default.
      * </p>
      * 
-     * @return Value of property selectable.
+     * @return the Value of property selectable.
      */
     public boolean isSelectable() {
         return this.selectable;
@@ -998,7 +1069,7 @@ public class Table extends Select implements Action.Container,
      * </p>
      * 
      * @param selectable
-     *            New value of property selectable.
+     *           the New value of property selectable.
      */
     public void setSelectable(boolean selectable) {
         if (this.selectable != selectable) {
@@ -1010,7 +1081,7 @@ public class Table extends Select implements Action.Container,
     /**
      * Getter for property columnHeaderMode.
      * 
-     * @return Value of property columnHeaderMode.
+     * @return the Value of property columnHeaderMode.
      */
     public int getColumnHeaderMode() {
         return this.columnHeaderMode;
@@ -1020,19 +1091,19 @@ public class Table extends Select implements Action.Container,
      * Setter for property columnHeaderMode.
      * 
      * @param columnHeaderMode
-     *            New value of property columnHeaderMode.
+     *           the New value of property columnHeaderMode.
      */
     public void setColumnHeaderMode(int columnHeaderMode) {
         if (columnHeaderMode >= COLUMN_HEADER_MODE_HIDDEN
                 && columnHeaderMode <= COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID)
             this.columnHeaderMode = columnHeaderMode;
 
-        // Assure visual refresh
+        // Assures the visual refresh
         refreshCurrentPage();
     }
 
     /**
-     * Refresh the current page contents. If the page buffering is turned off,
+     * Refreshes the current page contents. If the page buffering is turned off,
      * it is not necessary to call this explicitely.
      */
     public void refreshCurrentPage() {
@@ -1043,7 +1114,7 @@ public class Table extends Select implements Action.Container,
     }
 
     /**
-     * Set the row header mode.
+     * Sets the row header mode.
      * <p>
      * The mode can be one of the following ones:
      * <ul>
@@ -1068,7 +1139,7 @@ public class Table extends Select implements Action.Container,
      * </p>
      * 
      * @param mode
-     *            One of the modes listed above.
+     *            the One of the modes listed above.
      */
     public void setRowHeaderMode(int mode) {
         if (ROW_HEADER_MODE_HIDDEN == mode)
@@ -1083,9 +1154,9 @@ public class Table extends Select implements Action.Container,
     }
 
     /**
-     * Get the row header mode.
+     * Gets the row header mode.
      * 
-     * @return Row header mode.
+     * @return the Row header mode.
      * @see #setRowHeaderMode(int)
      */
     public int getRowHeaderMode() {
@@ -1094,14 +1165,14 @@ public class Table extends Select implements Action.Container,
     }
 
     /**
-     * Add new row to table and fill the visible cells with given values.
+     * Adds the new row to table and fill the visible cells with given values.
      * 
      * @param cells
-     *            Object array that is used for filling the visible cells new
+     *            the Object array that is used for filling the visible cells new
      *            row. The types must be settable to visible column property
      *            types.
      * @param itemId
-     *            Id the new row. If null, a new id is automatically assigned.
+     *            the Id the new row. If null, a new id is automatically assigned.
      *            If given, the table cant already have a item with given id.
      * @return Returns item id for the new row. Returns null if operation fails.
      */
@@ -1110,11 +1181,11 @@ public class Table extends Select implements Action.Container,
 
         Object[] cols = getVisibleColumns();
 
-        // Check that a correct number of cells are given
+        // Checks that a correct number of cells are given
         if (cells.length != cols.length)
             return null;
 
-        // Create new item
+        // Creates new item
         Item item;
         if (itemId == null) {
             itemId = items.addItem();
@@ -1126,7 +1197,7 @@ public class Table extends Select implements Action.Container,
         if (item == null)
             return null;
 
-        // Fill the item properties
+        // Fills the item properties
         for (int i = 0; i < cols.length; i++)
             item.getItemProperty(cols[i]).setValue(cells[i]);
 
@@ -1136,6 +1207,7 @@ public class Table extends Select implements Action.Container,
     /* Overriding select behavior******************************************** */
 
     /**
+     * Sets the Container that serves as the data source of the viewer.
      * @see com.itmill.toolkit.data.Container.Viewer#setContainerDataSource(Container)
      */
     public void setContainerDataSource(Container newDataSource) {
@@ -1143,7 +1215,7 @@ public class Table extends Select implements Action.Container,
         if (newDataSource == null)
             newDataSource = new IndexedContainer();
 
-        // Assure that the data source is ordered by making unordered
+        // Assures that the data source is ordered by making unordered
         // containers ordered by wrapping them
         if (newDataSource instanceof Container.Ordered)
             super.setContainerDataSource(newDataSource);
@@ -1151,11 +1223,11 @@ public class Table extends Select implements Action.Container,
             super.setContainerDataSource(new ContainerOrderedWrapper(
                     newDataSource));
 
-        // Reset page position
+        // Resets page position
         currentPageFirstItemId = null;
         currentPageFirstItemIndex = 0;
 
-        // Reset column properties
+        // Resets column properties
         if (this.collapsedColumns != null)
             this.collapsedColumns.clear();
         setVisibleColumns(getContainerPropertyIds().toArray());
@@ -1164,14 +1236,11 @@ public class Table extends Select implements Action.Container,
         refreshCurrentPage();
     }
 
-    /* Component basics ***************************************************** */
+     /* Component basics ***************************************************** */
 
     /**
      * Invoked when the value of a variable has changed.
-     * 
-     * @param event
-     *            Variable change event containing the information about the
-     *            changed variable.
+     * @see com.itmill.toolkit.ui.Select#changeVariables(java.lang.Object, java.util.Map)
      */
     public void changeVariables(Object source, Map variables) {
 
@@ -1184,7 +1253,7 @@ public class Table extends Select implements Action.Container,
                 setCurrentPageFirstItemIndex(value.intValue() - 1);
         }
 
-        // Set requested firstrow and rows for the next paint
+        // Sets requested firstrow and rows for the next paint
         if (variables.containsKey("reqfirstrow") || variables.containsKey("reqrows")) {
             Integer value = (Integer) variables.get("reqfirstrow");
             if (value != null) 
@@ -1265,12 +1334,12 @@ public class Table extends Select implements Action.Container,
     }
 
     /**
-     * Paint the content of this component.
+     * Paints the content of this component.
      * 
      * @param target
-     *            Paint target.
+     *            the Paint target.
      * @throws PaintException
-     *             The paint operation failed.
+     *             if the paint operation failed.
      */
     public void paintContent(PaintTarget target) throws PaintException {
 
@@ -1441,7 +1510,7 @@ public class Table extends Select implements Action.Container,
             target.addVariable(this, "sortascending", this.sortAscending);
         }
 
-        // Reset and paint "to be painted next" variables. Also reset pageBuffer
+        // Resets and paints "to be painted next" variables. Also reset pageBuffer
         reqFirstRowToPaint = -1;
         reqRowsToPaint = -1;
         pageBuffer = null;
@@ -1512,22 +1581,25 @@ public class Table extends Select implements Action.Container,
     }
 
     /**
-     * Get UIDL tag corresponding to component.
+     * Gets the UIDL tag corresponding to component.
      * 
-     * @return UIDL tag as string.
+     * @return the UIDL tag as string.
      */
     public String getTag() {
         return "table";
     }
 
-    /** Return cached visible table contents */
+    /** 
+     * Gets the cached visible table contents.
+     * @return the cahced visible table conetents.
+     */
     private Object[][] getVisibleCells() {
 
-        // Return a buffered value if possible
+        // Returns a buffered value if possible
         if (pageBuffer != null && isPageBufferingEnabled())
             return pageBuffer;
 
-        // Stop listening the old properties and initialise the list
+        // Stops listening the old properties and initialise the list
         if (listenedProperties == null)
             listenedProperties = new LinkedList();
         else
@@ -1543,7 +1615,7 @@ public class Table extends Select implements Action.Container,
                 ((Component) i.next()).setParent(null);
             }
 
-        // Collect basic facts about the table page
+        // Collects the basic facts about the table page
         Object[] colids = getVisibleColumns();
         int cols = colids.length;
         int pagelen = getPageLength();
@@ -1569,7 +1641,7 @@ public class Table extends Select implements Action.Container,
         if (rows == 0)
             return cells;
 
-        // Get first item id
+        // Gets the first item id
         if (items instanceof Container.Indexed) 
         	id = ((Container.Indexed) items).getIdByIndex(firstIndex);
         else {
@@ -1583,7 +1655,7 @@ public class Table extends Select implements Action.Container,
             iscomponent[i] = Component.class
                     .isAssignableFrom(getType(colids[i]));
         
-        // Create page contents
+        // Creates the page contents
         int filledRows = 0;
         for (int i = 0; i < rows && id != null; i++) {
             cells[CELL_ITEMID][i] = id;
@@ -1632,7 +1704,7 @@ public class Table extends Select implements Action.Container,
             filledRows++;
         }
 
-        // Assure that all the rows of the cell-buffer are valid
+        // Assures that all the rows of the cell-buffer are valid
         if (filledRows != cells[0].length) {
             Object[][] temp = new Object[cells.length][filledRows];
             for (int i = 0; i < cells.length; i++)
@@ -1641,7 +1713,7 @@ public class Table extends Select implements Action.Container,
             cells = temp;
         }
 
-        // Save the results to internal buffer iff in buffering mode
+        // Saves the results to internal buffer iff in buffering mode
         // to possible conserve memory from large non-buffered pages
         if (isPageBufferingEnabled())
             pageBuffer = cells;
@@ -1650,20 +1722,20 @@ public class Table extends Select implements Action.Container,
     }
 
     /**
-     * Get value of property.
+     * Gets the value of property.
      * 
      * By default if the table is editable the fieldFactory is used to create
      * editors for table cells. Otherwise formatPropertyValue is used to format
      * the value representation.
      * 
-     * @see #setFieldFactory(FieldFactory)
      * @param rowId
-     *            Id of the row (same as item Id)
+     *            the Id of the row (same as item Id).
      * @param colId
-     *            Id of the column
+     *            the Id of the column.
      * @param property
-     *            Property to be presented
+     *            the Property to be presented.
      * @return Object Either formatted value or Component for field.
+     * @see #setFieldFactory(FieldFactory)
      */
     protected Object getPropertyValue(Object rowId, Object colId,
             Property property) {
@@ -1683,10 +1755,11 @@ public class Table extends Select implements Action.Container,
      * Formats table cell property values. By default the property.toString()
      * and return a empty string for null properties.
      * 
-     * @param itemId
+     * @param rowId   the Id of the row (same as item Id).
+     * @param colId the Id of the column.
      * @param property
-     *            Property to be formatted
-     * @return String representation of property and its value.
+     *            the Property to be formatted.
+     * @return the String representation of property and its value.
      * @since 3.1
      */
     protected String formatPropertyValue(Object rowId, Object colId,
@@ -1700,6 +1773,7 @@ public class Table extends Select implements Action.Container,
     /* Action container *************************************************** */
 
     /**
+     * Registers a new action handler for this container
      * @see com.itmill.toolkit.event.Action.Container#addActionHandler(Action.Handler)
      */
     public void addActionHandler(Action.Handler actionHandler) {
@@ -1720,6 +1794,8 @@ public class Table extends Select implements Action.Container,
     }
 
     /**
+     * Removes a previously registered action handler for the contents
+	 * of this container.
      * @see com.itmill.toolkit.event.Action.Container#removeActionHandler(Action.Handler)
      */
     public void removeActionHandler(Action.Handler actionHandler) {
@@ -1740,6 +1816,7 @@ public class Table extends Select implements Action.Container,
     /* Property value change listening support **************************** */
 
     /**
+     * Notifies this listener that the Property's value has changed.
      * @see com.itmill.toolkit.data.Property.ValueChangeListener#valueChange(Property.ValueChangeEvent)
      */
     public void valueChange(Property.ValueChangeEvent event) {
@@ -1748,6 +1825,7 @@ public class Table extends Select implements Action.Container,
     }
 
     /**
+     * Notifies the component that it is connected to an application.
      * @see com.itmill.toolkit.ui.Component#attach()
      */
     public void attach() {
@@ -1759,7 +1837,8 @@ public class Table extends Select implements Action.Container,
     }
 
     /**
-     * @see com.itmill.toolkit.ui.Component#attach()
+     * Notifies the component that it is detached from the application
+     * @see com.itmill.toolkit.ui.Component#detach()
      */
     public void detach() {
         super.detach();
@@ -1770,6 +1849,7 @@ public class Table extends Select implements Action.Container,
     }
 
     /**
+     * Removes all Items from the Container.
      * @see com.itmill.toolkit.data.Container#removeAllItems()
      */
     public boolean removeAllItems() {
@@ -1779,6 +1859,7 @@ public class Table extends Select implements Action.Container,
     }
 
     /**
+     * Removes the Item identified by <code>ItemId</code> from the Container.
      * @see com.itmill.toolkit.data.Container#removeItem(Object)
      */
     public boolean removeItem(Object itemId) {
@@ -1792,6 +1873,7 @@ public class Table extends Select implements Action.Container,
     }
 
     /**
+     * Removes a Property specified by the given Property ID from the Container.
      * @see com.itmill.toolkit.data.Container#removeContainerProperty(Object)
      */
     public boolean removeContainerProperty(Object propertyId)
@@ -1808,16 +1890,14 @@ public class Table extends Select implements Action.Container,
 
     /**
      * Adds a new property to the table and show it as a visible column.
-     * 
+     * @param propertyId
+     *            the Id of the proprty.
+     * @param type
+     *            the class of the property.
+     * @param defaultValue
+     *            the default value given for all existing items.
      * @see com.itmill.toolkit.data.Container#addContainerProperty(Object,
      *      Class, Object)
-     * 
-     * @param propertyId
-     *            Id of the proprty
-     * @param type
-     *            The class of the property
-     * @param defaultValue
-     *            The default value given for all existing items
      */
     public boolean addContainerProperty(Object propertyId, Class type,
             Object defaultValue) throws UnsupportedOperationException {
@@ -1831,23 +1911,23 @@ public class Table extends Select implements Action.Container,
     /**
      * Adds a new property to the table and show it as a visible column.
      * 
-     * @see com.itmill.toolkit.data.Container#addContainerProperty(Object,
-     *      Class, Object)
-     * 
      * @param propertyId
-     *            Id of the proprty
+     *            the Id of the proprty
      * @param type
-     *            The class of the property
+     *            the class of the property
      * @param defaultValue
-     *            The default value given for all existing items
+     *            the default value given for all existing items
      * @param columnHeader
-     *            Explicit header of the column. If explicit header is not
+     *            the Explicit header of the column. If explicit header is not
      *            needed, this should be set null.
      * @param columnIcon
-     *            Icon of the column. If icon is not needed, this should be set
+     *            the Icon of the column. If icon is not needed, this should be set
      *            null.
      * @param columnAlignment
-     *            Alignment of the column. Null implies align left.
+     *            the Alignment of the column. Null implies align left.
+     * @throws UnsupportedOperationException if the operation is not supported.
+     * @see com.itmill.toolkit.data.Container#addContainerProperty(Object,
+     *      Class, Object)
      */
     public boolean addContainerProperty(Object propertyId, Class type,
             Object defaultValue, String columnHeader, Resource columnIcon,
@@ -1861,7 +1941,7 @@ public class Table extends Select implements Action.Container,
     }
 
     /**
-     * Return list of items on the current page
+     * Returns the list of items on the current page
      * 
      * @see com.itmill.toolkit.ui.Select#getVisibleItemIds()
      */
@@ -1902,10 +1982,9 @@ public class Table extends Select implements Action.Container,
 
     /**
      * Adding new items is not supported.
-     * 
-     * @see com.itmill.toolkit.ui.Select#setNewItemsAllowed(boolean)
      * @throws UnsupportedOperationException
      *             if set to true.
+     * @see com.itmill.toolkit.ui.Select#setNewItemsAllowed(boolean)
      */
     public void setNewItemsAllowed(boolean allowNewOptions)
             throws UnsupportedOperationException {
@@ -1915,16 +1994,17 @@ public class Table extends Select implements Action.Container,
 
     /**
      * Focusing to this component is not supported.
-     * 
-     * @see com.itmill.toolkit.ui.AbstractField#focus()
      * @throws UnsupportedOperationException
      *             if invoked.
+     * @see com.itmill.toolkit.ui.AbstractField#focus()
      */
     public void focus() throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
 
     /**
+     * Gets the ID of the Item following the Item that corresponds to
+     * itemId.
      * @see com.itmill.toolkit.data.Container.Ordered#nextItemId(java.lang.Object)
      */
     public Object nextItemId(Object itemId) {
@@ -1932,6 +2012,8 @@ public class Table extends Select implements Action.Container,
     }
 
     /**
+     * Gets the ID of the Item preceding the Item that corresponds to
+     * the itemId.
      * @see com.itmill.toolkit.data.Container.Ordered#prevItemId(java.lang.Object)
      */
     public Object prevItemId(Object itemId) {
@@ -1939,6 +2021,7 @@ public class Table extends Select implements Action.Container,
     }
 
     /**
+     * Gets the ID of the first Item in the Container.
      * @see com.itmill.toolkit.data.Container.Ordered#firstItemId()
      */
     public Object firstItemId() {
@@ -1946,6 +2029,7 @@ public class Table extends Select implements Action.Container,
     }
 
     /**
+     * Gets the ID of the last Item in the Container.
      * @see com.itmill.toolkit.data.Container.Ordered#lastItemId()
      */
     public Object lastItemId() {
@@ -1953,6 +2037,8 @@ public class Table extends Select implements Action.Container,
     }
 
     /**
+     * Tests if the Item corresponding to the given Item ID is the first
+     * Item in the Container.
      * @see com.itmill.toolkit.data.Container.Ordered#isFirstId(java.lang.Object)
      */
     public boolean isFirstId(Object itemId) {
@@ -1960,6 +2046,8 @@ public class Table extends Select implements Action.Container,
     }
 
     /**
+     * Tests if the Item corresponding to the given Item ID is the last Item
+     * in the Container.
      * @see com.itmill.toolkit.data.Container.Ordered#isLastId(java.lang.Object)
      */
     public boolean isLastId(Object itemId) {
@@ -1967,6 +2055,7 @@ public class Table extends Select implements Action.Container,
     }
 
     /**
+     * Adds new item after the given item.
      * @see com.itmill.toolkit.data.Container.Ordered#addItemAfter(java.lang.Object)
      */
     public Object addItemAfter(Object previousItemId)
@@ -1975,6 +2064,7 @@ public class Table extends Select implements Action.Container,
     }
 
     /**
+     * Adds new item after the given item.
      * @see com.itmill.toolkit.data.Container.Ordered#addItemAfter(java.lang.Object,
      *      java.lang.Object)
      */
@@ -1985,27 +2075,26 @@ public class Table extends Select implements Action.Container,
     }
 
     /**
-     * Get the FieldFactory that is used to create editor for table cells.
+     * Gets the FieldFactory that is used to create editor for table cells.
      * 
      * The FieldFactory is only used if the Table is editable.
-     * 
-     * @see #isEditable
      * @return FieldFactory used to create the Field instances.
+     * @see #isEditable
      */
     public FieldFactory getFieldFactory() {
         return fieldFactory;
     }
 
     /**
-     * Set the FieldFactory that is used to create editor for table cells.
+     * Sets the FieldFactory that is used to create editor for table cells.
      * 
      * The FieldFactory is only used if the Table is editable. By default the
      * BaseFieldFactory is used.
-     * 
+     * @param fieldFactory
+     *            the field factory to set.
      * @see #isEditable
      * @see BaseFieldFactory
-     * @param fieldFactory
-     *            The field factory to set
+
      */
     public void setFieldFactory(FieldFactory fieldFactory) {
         this.fieldFactory = fieldFactory;
@@ -2023,17 +2112,17 @@ public class Table extends Select implements Action.Container,
      * To provide custom editors for table cells create a class implementins the
      * FieldFactory interface, and assign it to table, and set the editable
      * property to true.
-     * 
+     * @return true if table is editable, false oterwise.
      * @see Field
      * @see FieldFactory
-     * @return true if table is editable, false oterwise.
+     * 
      */
     public boolean isEditable() {
         return editable;
     }
 
     /**
-     * Set the editable property.
+     * Sets the editable property.
      * 
      * If table is editable a editor of type Field is created for each table
      * cell. The assigned FieldFactory is used to create the instances.
@@ -2041,11 +2130,11 @@ public class Table extends Select implements Action.Container,
      * To provide custom editors for table cells create a class implementins the
      * FieldFactory interface, and assign it to table, and set the editable
      * property to true.
-     * 
-     * @see Field
-     * @see FieldFactory
      * @param editable
      *            true if table should be editable by user.
+     * @see Field
+     * @see FieldFactory
+     * 
      */
     public void setEditable(boolean editable) {
         this.editable = editable;
@@ -2055,14 +2144,13 @@ public class Table extends Select implements Action.Container,
     }
 
     /**
-     * Sort table.
-     * 
-     * @see com.itmill.toolkit.data.Container.Sortable#sort(java.lang.Object[],
-     *      boolean[])
-     * 
+     * Sorts the table.
      * @throws UnsupportedOperationException
      *             if the container data source does not implement
      *             Container.Sortable
+     * @see com.itmill.toolkit.data.Container.Sortable#sort(java.lang.Object[],
+     *      boolean[])
+     * 
      */
     public void sort(Object[] propertyId, boolean[] ascending)
             throws UnsupportedOperationException {
@@ -2078,7 +2166,7 @@ public class Table extends Select implements Action.Container,
     }
 
     /**
-     * Sort table by currently selected sorting column.
+     * Sorts the table by currently selected sorting column.
      * 
      * @throws UnsupportedOperationException
      *             if the container data source does not implement
@@ -2091,8 +2179,8 @@ public class Table extends Select implements Action.Container,
                 new boolean[] { this.sortAscending });
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Gets the container property IDs, which can be used to sort the item.
      * 
      * @see com.itmill.toolkit.data.Container.Sortable#getSortableContainerPropertyIds()
      */
@@ -2106,19 +2194,19 @@ public class Table extends Select implements Action.Container,
     }
 
     /**
-     * Get the currently sorted column property ID.
+     * Gets the currently sorted column property ID.
      * 
-     * @return Container property id of the currently sorted column.
+     * @return the Container property id of the currently sorted column.
      */
     public Object getSortContainerPropertyId() {
         return this.sortContainerPropertyId;
     }
 
     /**
-     * Set the currently sorted column property id.
+     * Sets the currently sorted column property id.
      * 
      * @param propertyId
-     *            Container property id of the currently sorted column.
+     *            the Container property id of the currently sorted column.
      */
     public void setSortContainerPropertyId(Object propertyId) {
         if ((this.sortContainerPropertyId != null && !this.sortContainerPropertyId
@@ -2128,7 +2216,7 @@ public class Table extends Select implements Action.Container,
             sort();
         }
 
-        // Assure visual refresh
+        // Assures the visual refresh
         refreshCurrentPage();
     }
 
@@ -2136,18 +2224,18 @@ public class Table extends Select implements Action.Container,
      * Is the table currently sorted in ascending order.
      * 
      * @return <code>true</code> if ascending, <code>false</code> if
-     *         descending
+     *         descending.
      */
     public boolean isSortAscending() {
         return this.sortAscending;
     }
 
     /**
-     * Set the table in ascending order.
+     * Sets the table in ascending order.
      * 
      * @param ascending
      *            <code>true</code> if ascending, <code>false</code> if
-     *            descending
+     *            descending.
      */
     public void setSortAscending(boolean ascending) {
         if (this.sortAscending != ascending) {
@@ -2155,11 +2243,12 @@ public class Table extends Select implements Action.Container,
             sort();
         }
 
-        // Assure visual refresh
+        // Assures the visual refresh
         refreshCurrentPage();
     }
 
-    /** Is sorting disabled alltogether.
+    /**
+     *  Is sorting disabled alltogether.
      * 
      * True iff no sortable columns are given even in the case where datasource would support this.
      * 
@@ -2170,12 +2259,13 @@ public class Table extends Select implements Action.Container,
     }
 
 
-    /** Disable sorting alltogether.
+    /** 
+     * Disables the sorting alltogether.
      * 
      * To disable sorting alltogether, set to true. In this case no 
      * sortable columns are given even in the case where datasource would support this.
      * 
-     * @param sortDisabled True iff sorting is disabled
+     * @param sortDisabled True iff sorting is disabled.
      */
     public void setSortDisabled(boolean sortDisabled) {
         if (this.sortDisabled != sortDisabled) {
@@ -2185,6 +2275,7 @@ public class Table extends Select implements Action.Container,
     }
 
 	/**
+	 * Gets the height property units.
 	 * @see com.itmill.toolkit.terminal.Sizeable#getHeightUnits()
 	 */
 	public int getHeightUnits() {
@@ -2192,13 +2283,15 @@ public class Table extends Select implements Action.Container,
 	}
 
 	/**
+	 * Gets the width property units.
 	 * @see com.itmill.toolkit.terminal.Sizeable#getWidthUnits()
 	 */
 	public int getWidthUnits() {
 		return widthUnit;
 	}
 
-	/** Set height units.
+	/** 
+	 * Sets the height units.
 	 * Table supports only Sizeable.UNITS_PIXELS. Setting to any other throws
 	 * IllegalArgumentException.
 	 * @see com.itmill.toolkit.terminal.Sizeable#setHeightUnits(int)
@@ -2209,8 +2302,9 @@ public class Table extends Select implements Action.Container,
 		this.heightUnit = units;
 	}
 
-	/** Set width units.
-	 *  Tabel supports only Sizeable.UNITS_PIXELS and Sizeable.UNITS_PERCENTAGE. Setting to any other throws
+	/** 
+	 * Sets the width units.
+	 * Tabel supports only Sizeable.UNITS_PIXELS and Sizeable.UNITS_PERCENTAGE. Setting to any other throws
 	 * IllegalArgumentException.
 	 * @see com.itmill.toolkit.terminal.Sizeable#setWidthUnits(int)
 	 */
@@ -2221,39 +2315,47 @@ public class Table extends Select implements Action.Container,
 	}
 	
 	/**
-	 * @return  The height in pixels or negative value if not assigned.
+	 * Gets the height in pixels.
+	 * @return  the height in pixels or negative value if not assigned.
+	 * @see com.itmill.toolkit.terminal.Sizeable#getHeight()
 	 */
 	public int getHeight() {
 		return height;
 	}
 
 	/**
-	 * @return The width in pixels or negative value if not assigned. 
+	 * Gets the width in pixels.
+	 * @return the width in pixels or negative value if not assigned. 
+	 * @see com.itmill.toolkit.terminal.Sizeable#getWidth()
 	 */
 	public int getWidth() {
 		return width;
 	}
 
-	/** Sets the height in pixels.
+	/** 
+	 * Sets the height in pixels.
 	 * Use negative value to let the client decide the height.
-	 * @param height The height to set
+	 * @param height the height to set.
 	 */
 	public void setHeight(int height) {
 		this.height = height;
 		requestRepaint();
 	}
 
-	/** Sets the width in pixels.
+	/** 
+	 * Sets the width in pixels.
 	 * Use negative value to allow the client decide the width.
-	 * @param width The width to set
+	 * @param width the width to set.
 	 */
 	public void setWidth(int width) {
 		this.width = width;
 		requestRepaint();
 	}
 
-	/** Table does not support lazy options loading mode. 
+	/**
+	 * Table does not support lazy options loading mode. 
 	 * Setting this true will throw UnsupportedOperationException. 
+	 * @see com.itmill.toolkit.ui.Select#setLazyLoading(boolean)
 	 */
     public void setLazyLoading(boolean useLazyLoading) {
     	if (useLazyLoading)

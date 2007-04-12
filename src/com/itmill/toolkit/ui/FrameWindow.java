@@ -39,14 +39,19 @@ import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
 import com.itmill.toolkit.terminal.Resource;
 
-/** <p>An application frame window component. This component implements a
+/** 
+ * <p>
+ * An application frame window component. This component implements a
  * window that contains a hierarchical set of frames. Each frame can contain
  * a web-page, window or a set of frames that divides the space horizontally
- * or vertically.</p>
+ * or vertically.
+ * </p>
  * 
- * <p>A <code>FrameWindow</code> can't contain any components directly (as
+ * <p>
+ * A <code>FrameWindow</code> can't contain any components directly (as
  * it contains only a set of frames) and thus the container interface
- * methods do nothing.</p>
+ * methods do nothing.
+ * </p>
  *
  * @author IT Mill Ltd.
  * @version @VERSION@
@@ -56,43 +61,46 @@ public class FrameWindow extends Window {
 
 	private Frameset frameset = new Frameset();
 
-	/** <p>Constructs a new frame window.
-	 *
+	/** 
+	 * Constructs a new frame window.
 	 */
 	public FrameWindow() {
 	}
 
 
-	/** <p>Constructs a new frame window. 
-	 * 
-	 * @param caption title of the window
+	/** 
+	 * Constructs a new frame window. 
+	 * @param caption th etitle of the window.
 	 */
 	public FrameWindow(String caption) {
 		super(caption);
 	}
 
-	/** Gets the window's UIDL tag.
+	/** 
+	 * Gets the window's UIDL tag.
 	 * 
-	 * @return window's UIDL tag as <code>String</code>
+	 * @return the window's UIDL tag as <code>String</code>.
 	 */
 	public String getTag() {
 		return "framewindow";
 	}
 
-	/** Gets the main frameset of the window. This set contains all the 
+	/** 
+	 * Gets the main frameset of the window. This set contains all the 
 	 * top-level frames of the window. New contents are added by adding
 	 * frames to this frameset.
 	 * 
-	 * @return top-level frame set of this frame window
+	 * @return the top-level frame set of this frame window.
 	 */
 	public Frameset getFrameset() {
 		return frameset;
 	}
 
-	/** Paints the window contents.
+	/** 
+	 * Paints the window contents.
 	 * 
-	 * @param target A paint target event
-	 * @throws PaintException if the paint operation fails
+	 * @param target the paint target event.
+	 * @throws PaintException if the paint operation fails.
 	 * 
 	 * @see com.itmill.toolkit.ui.AbstractComponent#paintContent(PaintTarget)
 	 */
@@ -104,71 +112,109 @@ public class FrameWindow extends Window {
 		getFrameset().paint(target);
 	}
 
-	/** An individual frame that contains either a window or the contents of the 
+	/** 
+	 * An individual frame that contains either a window or the contents of the 
 	 * url set to frame. 
 	 * 
-	 * <p>The frames can be only created to framesets using the 
-	 * <code>newFrame()</code> functions of the frameset.</p>
+	 * <p>
+	 * The frames can be only created to framesets using the 
+	 * <code>newFrame</code> method of the frameset.
+	 * </p>
 	*/
 	public class Frame {
 
-		/** URL of the frame contents */
+		/** 
+		 * URL of the frame contents. 
+		 */
 		private URL url;
 
-		/** Name of the frame */
+		/** 
+		 * Name of the frame. 
+		 */
 		private String name;
 
-		/** Window connected to frame or null */
+		/** 
+		 * Window connected to frame or null. 
+		 */
 		private Window window;
 
-		/** Window connected to frame or null */
+		/** 
+		 * Window connected to frame or null. 
+		 */
 		private Resource resource;
 
-		/** String representation of the width */
+		/** 
+		 * String representation of the width. 
+		 */
 		private String width = "*";
 
-		/** Parent frameset */
+		/** 
+		 * Parent frameset. 
+		 */
 		protected Frameset parentFrameset;
 
-		/** URL of the frame */
+		/** 
+		 * Gets the URL of the frame. 
+		 * @return  the URl.
+		 */
 		public URL getURL() {
 			return window == null ? url : window.getURL();
 		}
 
-		/** Get the parent frameset */
+		/** 
+		 * Gets the parent frameset. 
+		 * @return the parent frameset.
+		 */
 		public Frameset getParentFrameset() {
 			return parentFrameset;
 		}
 
-		/** Name of the freame */
+		/** 
+		 * Gets the Name of the frame. 
+		 * @return the Name.
+		 */
 		public String getName() {
 			return window == null ? name : window.getName();
 		}
 
-		/** Window connected to frame */
+		/** 
+		 * Gets the Window connected to frame.
+		 * @return the window. 
+		 */
 		public Window getWindow() {
 			return window;
 		}
 
-		/** Resource connected to frame */
+		/** 
+		 * Gets the Resource connected to frame. 
+		 * @return the resource.
+		 */
 		public Resource getResource() {
 			return resource;
 		}
 
-		/** Absolute width/height of the frame in pixels */
+		/** 
+		 * Sets the Absolute width/height of the frame in pixels.
+		 * @param widthInPixel the width in Pixel.
+		 */
 		public void setAbsoluteSize(int widthInPixels) {
 			width = String.valueOf(widthInPixels);
 			requestRepaint();
 		}
 
-		/** Set the frame size to be freely specified by the terminal */
+		/** 
+		 * Sets the frame size to be freely specified by the terminal. 
+		 */
 		public void setFreeSize() {
 			width = "*";
 			requestRepaint();
 		}
 
-		/** Set the frame width/height as a percentage of the containing 
-		 * frameset size */
+		/** 
+		 * Sets the frame width/height as a percentage of the containing 
+		 * frameset size. 
+		 * @param widthInPercents the frame width in percent.
+		 */
 		public void setRelativeSize(int widthInPercents) {
 			if (widthInPercents < 0 || widthInPercents > 100)
 				throw new IllegalArgumentException(
@@ -177,7 +223,11 @@ public class FrameWindow extends Window {
 			requestRepaint();
 		}
 
-		/** Paint the frame */
+		/** 
+		 * Paints the frame. 
+		 * @param target the paint target.
+		 * @throws PaintException if the paint operation fails.
+		 */
 		private void paint(PaintTarget target) throws PaintException {
 			target.startTag("frame");
 			if (getResource() != null)
@@ -189,39 +239,55 @@ public class FrameWindow extends Window {
 		}
 	}
 
-	/** Vertical or horizontal set of frames */
+	/** 
+	 * Vertical or horizontal set of frames. 
+	 */
 	public class Frameset extends Frame {
 
-		/** List of frames ordered from left to right or from top to bottom */
+		/** 
+		 * List of frames ordered from left to right or from top to bottom.
+		 */
 		private LinkedList frames = new LinkedList();
 
-		/** True iff the frames are on top of each other. If false the frames
+		/** 
+		 * <code>true</code> if the frames are on top of each other. If <code>false</code> the frames
 		 * are side by side.
 		 */
 		private boolean vertical = false;
 
-		/** Get a list of frames.
+		/** 
+		 * Gets the list of frames.
 		 * 
-		 * @return unmodifiable list of frames.
+		 * @return the unmodifiable list of frames.
 		 */
 		public List getFrames() {
 			return Collections.unmodifiableList(frames);
 		}
 
-		/** Create new frame containing a window.
+		/** 
+		 * Creates the new frame containing a window.
 		 * 
-		 * <p>The new frame will be in the end of the frames list.</p>
+		 * <p>
+		 * The new frame will be in the end of the frames list.
+		 * </p>
+		 * @param window the window connected to the frame.
+		 * @return the new Frame.
 		 */
 		public Frame newFrame(Window window) {
 			return newFrame(window, size());
 		}
 
-		/** Create new frame containing a window.
+		/** 
+		 * Creates the new frame containing a window.
 		 * 
-		 * <p>The new frame will be put before the frame identified
+		 * <p>
+		 * The new frame will be put before the frame identified
 		 * by the given index. The indexes of the frame previously in the 
 		 * given position and all the positions after it are incremented
-		 * by one.</p>
+		 * by one.
+		 * </p>
+		 * @param window the window connected to the frame.
+		 * @param index the given index.
 		 */
 		public Frame newFrame(Window window, int index) {
 			Frame f = new Frame();
@@ -234,28 +300,47 @@ public class FrameWindow extends Window {
 			return f;
 		}
 
-		/** Create new frame containing a url.
+		/** 
+		 * Creates the new frame containing a url.
 		 * 
-		 * <p>The new frame will be put in the end of the frames list..</p>
+		 * <p>
+		 * The new frame will be put in the end of the frames list.
+		 * </p>
+		 * @param url the URL of the frame contents.
+		 * @param name the Name of the frame.
+		 * @return the new frame.
 		 */
 		public Frame newFrame(URL url, String name) {
 			return newFrame(url, name, size());
 		}
 
-		/** Create new frame containing a resource.
+		/** 
+		 * Creates the new frame containing a resource.
 		 * 
-		 * <p>The new frame will be put in the end of the frames list..</p>
+		 * <p>
+		 * The new frame will be put in the end of the frames list.
+		 * </p>
+		 * @param resource the resource.
+		 * @param name the Name of the frame.
+		 * @return the new frame.
 		 */
 		public Frame newFrame(Resource resource, String name) {
 			return newFrame(resource, name, size());
 		}
 
-		/** Create new frame containing a url.
+		/** 
+		 * Creates the new frame containing a url.
 		 * 
-		 * <p>The new frame will be put before the frame identified
+		 * <p>
+		 * The new frame will be put before the frame identified
 		 * by the given index. The indexes of the frame previously in the 
 		 * given position and all the positions after it are incremented
-		 * by one.</p>
+		 * by one.
+		 * </p>
+		 * @param url the URL of the frame contents.
+		 * @param name the Name of the frame.
+		 * @param index the given index.
+		 * @return the new frame.
 		 */
 		public Frame newFrame(URL url, String name, int index) {
 			Frame f = new Frame();
@@ -267,12 +352,19 @@ public class FrameWindow extends Window {
 			return f;
 		}
 
-		/** Create new frame containing a resource.
+		/** 
+		 * Creates the new frame containing a resource.
 		 * 
-		 * <p>The new frame will be put before the frame identified
+		 * <p>
+		 * The new frame will be put before the frame identified
 		 * by the given index. The indexes of the frame previously in the 
 		 * given position and all the positions after it are incremented
-		 * by one.</p>
+		 * by one.
+		 * </p>
+		 * @param resource the resource.
+		 * @param name the Name of the frame.
+		 * @param index the given index.
+		 * @return the new frame.
 		 */
 		public Frame newFrame(Resource resource, String name, int index) {
 			Frame f = new Frame();
@@ -284,12 +376,18 @@ public class FrameWindow extends Window {
 			return f;
 		}
 
-		/** Create new frameset.
+		/** 
+		 * Creates the new frameset.
 		 * 
-		 * <p>The new frame will be put before the frame identified
+		 * <p>
+		 * The new frame will be put before the frame identified
 		 * by the given index. The indexes of the frame previously in the 
 		 * given position and all the positions after it are incremented
-		 * by one.</p>
+		 * by one.
+		 * </p>
+		 * @param isVertical is the frames are on top of each other.
+		 * @param index the given index.
+		 * @return the new frameset.
 		 */
 		public Frameset newFrameset(boolean isVertical, int index) {
 			Frameset f = new Frameset();
@@ -300,14 +398,19 @@ public class FrameWindow extends Window {
 			return f;
 		}
 
-		/** Remove a frame from this frameset */
+		/** 
+		 * Removes the frame from this frameset. 
+		 * @param frame the frame to remove.
+		 */
 		public void removeFrame(Frame frame) {
 			frames.remove(frame);
 			frame.parentFrameset = null;
 			requestRepaint();
 		}
 
-		/** Remove all frames from this frameset */
+		/** 
+		 * Removes all frames from this frameset. 
+		 */
 		public void removeAllFrames() {
 			for (Iterator i = frames.iterator(); i.hasNext();)
 				 ((Frame) i.next()).parentFrameset = null;
@@ -315,35 +418,48 @@ public class FrameWindow extends Window {
 			requestRepaint();
 		}
 
-		/** Number of frames in this frameset */
+		/** 
+		 * Number of frames in this frameset. 
+		 * @return the size.
+		 */
 		public int size() {
 			return frames.size();
 		}
 
-		/** Set the framaset to be vertical. 
+		/** 
+		 * Sets the framaset to be vertical. 
 		 * 
-		 * <p>By setting this true, the frames will be ordered on top
+		 * <p>
+		 * By setting this true, the frames will be ordered on top
 		 * of each other from top to bottom. Setting this false, the
-		 * frames will be ordered side by side from left to right.</p>
+		 * frames will be ordered side by side from left to right.
+		 * </p>
+		 * @param isVertical is the frames are on top of each other.
 		 */
 		public void setVertical(boolean isVertical) {
 			this.vertical = isVertical;
 			requestRepaint();
 		}
 
-		/** Check if the frameset is vertical. 
+		/** 
+		 * Checks if the frameset is vertical. 
 		 * 
-		 * <p>If this is true, the frames will be ordered on top
+		 * <p>
+		 * If this is true, the frames will be ordered on top
 		 * of each other from top to bottom, otherwise the
-		 * frames will be ordered side by side from left to right.</p>
+		 * frames will be ordered side by side from left to right.
+		 * </p>
+		 * @return <code>true</code> if the frameset is Vertical, otherwise <code>false</code>.
 		 */
 		public boolean isVertical() {
 			return vertical;
 		}
 
-		/** Get frame by name.
-		 * @return Frame having the given name or null if the frame is
-		 * not found
+		/** 
+		 * Gets the frame by name.
+		 * @param name the Name of the frame.
+		 * @return the Frame having the given name or null if the frame is
+		 * not found.
 		 */
 		public Frame getFrame(String name) {
 			if (name == null)
@@ -356,8 +472,10 @@ public class FrameWindow extends Window {
 			return null;
 		}
 
-		/** Get frame by index.
-		 * @return Frame having the given index or null if the frame is
+		/** 
+		 * Gets the frame by index.
+		 * @param index the given index.
+		 * @return the Frame having the given index or null if the frame is
 		 * not found
 		 */
 		public Frame getFrame(int index) {
@@ -366,7 +484,11 @@ public class FrameWindow extends Window {
 			return null;
 		}
 
-		/** Paint the frameset */
+		/** 
+		 * Paints the frameset.
+		 * @param target the Paint Target.
+		 * @throws PaintException  if the Paint operation fails.
+		 */
 		private void paint(PaintTarget target) throws PaintException {
 			target.startTag("frameset");
 			if (!frames.isEmpty()) {
@@ -394,7 +516,11 @@ public class FrameWindow extends Window {
 			target.endTag("frameset");
 		}
 
-		/** Set the application for all the frames in this frameset */
+		/** 
+		 * Sets the application for all the frames in this frameset.
+		 * @param fromApplication
+		 * @param toApplication  
+		 */
 		private void setApplication(
 			Application fromApplication,
 			Application toApplication) {
@@ -414,7 +540,8 @@ public class FrameWindow extends Window {
 		}
 	}
 
-	/** Setting the application for frame window also sets the application
+	/** 
+	 * Setting the application for frame window also sets the application
 	 * for all the frames.
 	 * @see com.itmill.toolkit.ui.Window#setApplication(Application)
 	 */
@@ -426,40 +553,48 @@ public class FrameWindow extends Window {
 			fs.setApplication(fromApplication, application);
 	}
 
-	/** Frame windows does not support scrolling.
+	/** 
+	 * Frame windows does not support scrolling.
+	 * @return <code>true</code> if it is scrollable,otherwise <code>false</code>.
 	 */
 	public boolean isScrollable() {
 		return false;
 	}
 
-	/** Frame windows does not support scrolling.
+	/** 
+	 * Enables or disables scrolling.
 	 *
 	 * @see com.itmill.toolkit.terminal.Scrollable#setScrollable(boolean)
 	 */
 	public void setScrollable(boolean isScrollingEnabled) {
 	}
 
-	/** Frame windows does not support scrolling.
+	/** 
+	 * Sets the scroll X offset.
 	 *
 	 * @see com.itmill.toolkit.terminal.Scrollable#setScrollOffsetX(int)
 	 */
 	public void setScrollOffsetX(int pixelsScrolledLeft) {
 	}
 
-	/** Frame windows does not support scrolling.
+	/** 
+	 * Gets the scroll Y offset.
 	 *
 	 * @see com.itmill.toolkit.terminal.Scrollable#setScrollOffsetY(int)
 	 */
 	public void setScrollOffsetY(int pixelsScrolledDown) {
 	}
 
-	/** Frame window does not support adding components directly.
+	/** 
+	 * Frame window does not support adding components directly.
 	 * 
-	 * <p>To add component to frame window, normal window must be
-	 * first created and then attached to frame window as a frame.</p>
-	 * 
+	 * <p>
+	 * To add component to frame window, normal window must be
+	 * first created and then attached to frame window as a frame.
+	 * </p>
+	 * @param c the component to be added.
 	 * @see com.itmill.toolkit.ui.ComponentContainer#addComponent(Component)
-	 * @throws UnsupportedOperationException if invoked.
+	 * 
 	 */
 	public void addComponent(Component c)
 		throws UnsupportedOperationException {

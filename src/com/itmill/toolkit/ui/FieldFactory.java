@@ -32,8 +32,9 @@ import com.itmill.toolkit.data.Container;
 import com.itmill.toolkit.data.Item;
 import com.itmill.toolkit.data.Property;
 
-/** Factory for creating new Field-instances based on type,
- *  datasource and/or context.
+/** 
+ * Factory for creating new Field-instances based on type,
+ * datasource and/or context.
  *
  * @author IT Mill Ltd.
  * @version  @VERSION@
@@ -42,40 +43,43 @@ import com.itmill.toolkit.data.Property;
 public interface FieldFactory {
 
 
-	/** Creates field based on type of data.
+	/** 
+	 * Creates the field based on type of data.
 	 *
-	 *
-	 * @param type The type of data presented in field
-	 * @param uiContext The component where the field is presented.
-	 * @return Field The field suitable for editing the specified data.
+	 * @param type the type of data presented in field.
+	 * @param uiContext the component where the field is presented.
+	 * @return Field the field suitable for editing the specified data.
 	 *	 
 	 */
 	Field createField(Class type, Component uiContext);
 	
-	/** Creates field based on the property datasource.
+	/** 
+	 * Creates the field based on the property datasource.
 	 *
-	 * @param property The property datasource.
-	 * @param uiContext The component where the field is presented.
-	 * @return Field The field suitable for editing the specified data.
+	 * @param property the property datasource.
+	 * @param uiContext the component where the field is presented.
+	 * @return Field the field suitable for editing the specified data.
 	 */
 	Field createField(Property property, Component uiContext);
 
-	/** Creates field based on the item and property id.
+	/** 
+	 * Creates the field based on the item and property id.
 	 * 
-	 * @param item The item where the property belongs to.
-	 * @param propertyId Id of the property.
-	 * @param uiContext The component where the field is presented.
-	 * @return Field The field suitable for editing the specified data.
+	 * @param item the item where the property belongs to.
+	 * @param propertyId the Id of the property.
+	 * @param uiContext the component where the field is presented.
+	 * @return Field the field suitable for editing the specified data.
 	 */
 	Field createField(Item item, Object propertyId, Component uiContext);
 
-	/** Creates field based on the container item id and property id.
+	/** 
+	 * Creates the field based on the container item id and property id.
 	 *
-	 * @param container Container where the property belongs to.
-	 * @param itemId The item Id.
-	 * @param propertyId Id of the property.
-	 * @param uiContext The component where the field is presented.
-	 * @return Field The field suitable for editing the specified data.
+	 * @param container the Container where the property belongs to.
+	 * @param itemId the item Id.
+	 * @param propertyId the Id of the property.
+	 * @param uiContext the component where the field is presented.
+	 * @return Field the field suitable for editing the specified data.
 	 */
 	Field createField(Container container, Object itemId, Object propertyId, Component uiContext);
 

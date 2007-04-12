@@ -61,22 +61,25 @@ public class WebApplicationContext implements ApplicationContext {
 
 	private WeakHashMap formActions = new WeakHashMap();
 
-	/** Create a new Web Application Context. */
+	/** 
+	 * Creates a new Web Application Context.
+	 * @param session  the HTTP session.
+	 */
 	WebApplicationContext(HttpSession session) {
 		this.session = session;
 	}
 
 	/**
-	 * Get the form action for given window.
-	 * 
+	 * Gets the form action for given window.
+	 * <p>
 	 * By default, this action is "", which preserves the current url. Commonly
-	 * this is wanted to be set to <code>application.getUrl().toString()</code>
-	 * or <code>window.getUrl().toString()</code> in order to clean any local
+	 * this is wanted to be set to <code>application.getUrl.toString</code>
+	 * or <code>window.getUrl.toString</code> in order to clean any local
 	 * links or parameters set from the action.
-	 * 
+	 * </p>
 	 * @param window
-	 *            Window for which the action is queried
-	 * @return Action to be set into Form action attribute
+	 *            the Window for which the action is queried.
+	 * @return the Action to be set into Form action attribute.
 	 */
 	public String getWindowFormAction(Window window) {
 		String action = (String) formActions.get(window);
@@ -84,17 +87,17 @@ public class WebApplicationContext implements ApplicationContext {
 	}
 
 	/**
-	 * Set the form action for given window.
-	 * 
+	 * Sets the form action for given window.
+	 * <p>
 	 * By default, this action is "", which preserves the current url. Commonly
-	 * this is wanted to be set to <code>application.getUrl().toString()</code>
-	 * or <code>window.getUrl().toString()</code> in order to clean any local
+	 * this is wanted to be set to <code>application.getUrl.toString</code>
+	 * or <code>window.getUrl.toString</code> in order to clean any local
 	 * links or parameters set from the action.
-	 * 
+	 * </p>
 	 * @param window
-	 *            Window for which the action is set
+	 *            the Window for which the action is set.
 	 * @param action
-	 *            New action for the window.
+	 *            the New action for the window.
 	 */
 	public void setWindowFormAction(Window window, String action) {
 		if (action == null || action == "")
@@ -103,9 +106,8 @@ public class WebApplicationContext implements ApplicationContext {
 			formActions.put(window, action);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/**
+	 * Gets the application context base directory.
 	 * @see com.itmill.toolkit.service.ApplicationContext#getBaseDirectory()
 	 */
 	public File getBaseDirectory() {
@@ -117,17 +119,16 @@ public class WebApplicationContext implements ApplicationContext {
 	}
 
 	/**
-	 * Get the http-session application is running in.
+	 * Gets the http-session application is running in.
 	 * 
-	 * @return HttpSession this application context resides in
+	 * @return HttpSession this application context resides in.
 	 */
 	public HttpSession getHttpSession() {
 		return session;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/**
+	 * Gets the applications in this context.
 	 * @see com.itmill.toolkit.service.ApplicationContext#getApplications()
 	 */
 	public Collection getApplications() {
@@ -140,36 +141,35 @@ public class WebApplicationContext implements ApplicationContext {
 	}
 
 	/**
-	 * Get application context for HttpSession.
-	 * 
-	 * @return application context for HttpSession.
+	 * Gets the application context for HttpSession.
+	 * @param session the HTTP session.
+	 * @return the application context for HttpSession.
 	 */
 	static public WebApplicationContext getApplicationContext(
 			HttpSession session) {
 		return new WebApplicationContext(session);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/**
+	 * Returns <code>true</code> if and only if the argument is not <code>null</code> and is a 
+	 * Boolean object that represents the same boolean value as this object.
+	 * @param obj the object to compare with.
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	public boolean equals(Object obj) {
 		return session.equals(obj);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/**
+	 * Returns the hash code value .
 	 * @see java.lang.Object#hashCode()
 	 */
 	public int hashCode() {
 		return session.hashCode();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/**
+	 * Adds the transaction listener to this context.
 	 * @see com.itmill.toolkit.service.ApplicationContext#addTransactionListener(com.itmill.toolkit.service.ApplicationContext.TransactionListener)
 	 */
 	public void addTransactionListener(TransactionListener listener) {
@@ -178,9 +178,8 @@ public class WebApplicationContext implements ApplicationContext {
 		this.listeners.add(listener);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/**
+	 * Removes the transaction listener from this context.
 	 * @see com.itmill.toolkit.service.ApplicationContext#removeTransactionListener(com.itmill.toolkit.service.ApplicationContext.TransactionListener)
 	 */
 	public void removeTransactionListener(TransactionListener listener) {
@@ -189,7 +188,11 @@ public class WebApplicationContext implements ApplicationContext {
 
 	}
 
-	/** Notify transaction start */
+	/** 
+	 * Notifies the transaction start.
+	 * @param application 
+	 * @param request the HTTP request. 
+	 */
 	protected void startTransaction(Application application,
 			HttpServletRequest request) {
 		if (this.listeners == null)
@@ -200,7 +203,11 @@ public class WebApplicationContext implements ApplicationContext {
 		}
 	}
 
-	/** Notify transaction end */
+	/** 
+	 * Notifies the transaction end.
+	 * @param application 
+	 * @param request the HTTP request. 
+	 */
 	protected void endTransaction(Application application,
 			HttpServletRequest request) {
 		if (this.listeners == null)

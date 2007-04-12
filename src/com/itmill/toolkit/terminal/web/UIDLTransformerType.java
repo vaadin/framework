@@ -28,7 +28,8 @@
 
 package com.itmill.toolkit.terminal.web;
 
-/** Type of the transformer.
+/** 
+ * Type of the transformer.
  * 
  * @author IT Mill Ltd.
  * @version @VERSION@
@@ -36,13 +37,21 @@ package com.itmill.toolkit.terminal.web;
  */
 public class UIDLTransformerType {
 
-	/** Holds value of property webBrowserType. */
+	/** 
+	 * Holds the value of property webBrowserType. 
+	 */
 	private WebBrowser webBrowser;
 
-	/** Holds value of property theme. */
+	/** 
+	 * Holds the value of property theme. 
+	 */
 	private Theme theme;
 
-	/** Creates a new instance of TransformerType */
+	/** 
+	 * Creates the new instance of TransformerType.
+	 * @param webBrowserType the web browser type.
+	 * @param theme the property theme.
+	 */
 	public UIDLTransformerType(WebBrowser webBrowserType, Theme theme) {
 		if (webBrowserType == null || theme == null)
 			throw new IllegalArgumentException("WebBrowserType and Theme must be non-null values");
@@ -50,37 +59,48 @@ public class UIDLTransformerType {
 		this.theme = theme;
 	}
 
-	/** The hash code of the equal types are the same */
+	/** 
+	 * Returns the hash code for this string.
+	 * @return the hash code value. 
+	 */
 	public int hashCode() {
 
 		return this.toString().hashCode();
 	}
 
-	/** Get the web browser type used in the UIDLTransformer of this type.
-	 * @return Web browser type used.
+	/** 
+	 * Gets the web browser type used in the UIDLTransformer of this type.
+	 * @return the Web browser type used.
 	 */
 	public WebBrowser getWebBrowser() {
 		return this.webBrowser;
 	}
 
-	/** Get the theme used in the UIDLTransformer of this type.
-	 * @return Theme used.
+	/** 
+	 * Gets the theme used in the UIDLTransformer of this type.
+	 * @return the Theme used.
 	 */
 	public Theme getTheme() {
 		return this.theme;
 	}
 
-	/** Two types are equal, if their properties are equal */
+	/**
+	 * Two types are equal, if their properties are equal.
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	public boolean equals(Object obj) {
-		// Check that the object are of the same class
+		// Checks that the object are of the same class
 		if (!(obj.getClass().equals(this.getClass())))
 			return false;
 
-		// Check that the properties of the types are equal
+		// Checks that the properties of the types are equal
 		return this.toString().equals(obj.toString());
 	}
 
-	/** Textual representation of the UIDLTransformer type */
+	/**
+	 * Textual representation of the UIDLTransformer type.
+	 * @see java.lang.Object#toString()
+	 */
 	public String toString() {
 		return " theme='"
 			+ theme.getName()

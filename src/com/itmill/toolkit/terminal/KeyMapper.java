@@ -30,8 +30,9 @@ package com.itmill.toolkit.terminal;
 
 import java.util.Hashtable;
 
-/** Simple two-way map for generating textual keys for objects and
- * retrieving the objects later with the key.
+/** 
+ * <code>KeyMapper</code> is the simple two-way map for generating textual 
+ * keys for objects and retrieving the objects later with the key.
  *
  * @author IT Mill Ltd.
  * @version @VERSION@
@@ -43,7 +44,10 @@ public class KeyMapper {
     private Hashtable objectKeyMap = new Hashtable();
     private Hashtable keyObjectMap = new Hashtable();
     
-    /** Get key for an object */
+    /** 
+     * Gets key for an object.
+     * @param o the object. 
+     */
     public String key(Object o) {
         
         if (o == null) return "null";
@@ -60,32 +64,44 @@ public class KeyMapper {
         return key;
     }
 
-	/** Check if the key belongs to a new id. 
+	/** 
+	 * Checks if the key belongs to a new id. 
 	 * <p>Usage of new id:s are specific to components, but for example Select
 	 * component uses newItemId:s for selection of newly added items in 
-	 * <code>allowNewItems</code>-mode
+	 * <code>allowNewItems</code>-mode.
+	 * @param key
+	 * @return <code>true</code> if the key belongs to the new id,otherwise <code>false</code>.
 	 */ 
 	public boolean isNewIdKey(String key) {
 		return "NEW".equals(key);
 	}
     
-    /** Retrieve object with the key*/
+    /** 
+     * Retrieves object with the key.
+     * @param key the name with the desired value.
+     * @return the object with the key.
+     */
     public Object get(String key) {
 
         return keyObjectMap.get(key);
     }
     
-    /** Remove object from the mapper. */
-    public void remove(Object o) {
-        String key = (String) objectKeyMap.get(o);
+    /** 
+     * Removes object from the mapper.
+     * @param  removeobj the object to be removed.
+     */
+    public void remove(Object removeobj) {
+        String key = (String) objectKeyMap.get(removeobj);
         
         if (key != null) {
             objectKeyMap.remove(key);
-            keyObjectMap.remove(o);
+            keyObjectMap.remove(removeobj);
         }
     }
     
-    /** Remove all objects from the mapper. */
+    /** 
+     * Removes all objects from the mapper. 
+     */
     public void removeAll() {
     	objectKeyMap.clear();
     	keyObjectMap.clear();

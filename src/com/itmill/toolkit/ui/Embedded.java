@@ -36,7 +36,8 @@ import com.itmill.toolkit.terminal.PaintTarget;
 import com.itmill.toolkit.terminal.Resource;
 import com.itmill.toolkit.terminal.Sizeable;
 
-/** Component for embedding external objects.
+/** 
+ * Component for embedding external objects.
  *
  * @author IT Mill Ltd.
  * @version @VERSION@
@@ -44,64 +45,89 @@ import com.itmill.toolkit.terminal.Sizeable;
  */
 public class Embedded extends AbstractComponent implements Sizeable {
 
-	/** General object type */
+	/** 
+	 * General object type. 
+	 */
 	public static final int TYPE_OBJECT = 0;
 
-	/** Image types */
+	/** 
+	 * Image types. 
+	 */
 	public static final int TYPE_IMAGE = 1;
 
-	/** Type of the object */
+	/** 
+	 * Type of the object. 
+	 */
 	private int type = TYPE_OBJECT;
 
-	/** Source of the embedded object */
+	/** 
+	 * Source of the embedded object. 
+	 */
 	private Resource source = null;
 
-	/** Dimensions of the object. */
+	/** 
+	 * Dimensions of the object. 
+	 */
 	private int width = -1;
 	private int height = -1;
 	private int widthUnits = Sizeable.UNITS_PIXELS;
 	private int heightUnits = Sizeable.UNITS_PIXELS;
 
-	/** Generic object attributes */
+	/** 
+	 * Generic object attributes. 
+	 */
 	private String mimeType = null;
 	private String standby = null;
 
-	/** Hash of object parameteres.  */
+	/** 
+	 * Hash of object parameteres.  
+	 */
 	private Hashtable parameters = new Hashtable();
 
-	/** Applet or other client side runnable properties. */
+	/** 
+	 * Applet or other client side runnable properties. 
+	 */
 	private String codebase = null;
 	private String codetype = null;
 	private String classId = null;
 	private String archive = null;
 
-	/** Creates a new empty Embedded object.
+	/** 
+	 * Creates a new empty Embedded object.
 	 */
 	public Embedded() {
 	}
 
-	/** Creates a new empty Embedded object with caption.
+	/** 
+	 * Creates a new empty Embedded object with caption.
+	 * @param caption
 	 */
 	public Embedded(String caption) {
 		setCaption(caption);
 	}
 
-	/** Creates a new Embedded object whose contents is loaded from given resource. 
+	/** 
+	 * Creates a new Embedded object whose contents is loaded from given resource. 
 	 * The dimensions are assumed if possible. The type is guessed from resource.
+	 * @param caption
+	 * @param source the Source of the embedded object.
 	 */
 	public Embedded(String caption, Resource source) {
 		setCaption(caption);
 		setSource(source);
 	}
 
-	/** Get component UIDL tag.
-	 * @return Component UIDL tag as string.
+	/** 
+	 * Gets the component UIDL tag.
+	 * @return the Component UIDL tag as string.
 	 */
 	public String getTag() {
 		return "embedded";
 	}
 
-	/** Invoked when the component state should be painted  */
+	/** 
+	 * Invoked when the component state should be painted.  
+	 */
 	public void paintContent(PaintTarget target) throws PaintException {
 
 		if (type == TYPE_IMAGE) {
@@ -143,70 +169,74 @@ public class Embedded extends AbstractComponent implements Sizeable {
 		}
 	}
 
-	/** Set an object parameter.
-	 *  Parameters are optional information, and they are passed to the 
-	 *  instantiated object. Parameters are are stored as name value pairs.
-	 *  This overrides the previous value assigned to this parameter.
-	 * @param name - The name of the parameter.
-	 * @param value - The value of the parameter.
+	/** 
+	 * Sets an object parameter.
+	 * Parameters are optional information, and they are passed to the 
+	 * instantiated object. Parameters are are stored as name value pairs.
+	 * This overrides the previous value assigned to this parameter.
+	 * @param name the name of the parameter.
+	 * @param value the value of the parameter.
 	 */
 	public void setParameter(String name, String value) {
 		parameters.put(name, value);
 		requestRepaint();
 	}
 
-	/** Get the value of an object parameter.
-	 *  Parameters are optional information, and they are passed to the 
-	 *  instantiated object. Parameters are are stored as name value pairs.
-	 * @return Value of parameter or null if not found.
+	/** 
+	 * Gets the value of an object parameter.
+	 * Parameters are optional information, and they are passed to the 
+	 * instantiated object. Parameters are are stored as name value pairs.
+	 * @return the Value of parameter or null if not found.
 	 */
 	public String getParameter(String name) {
 		return (String) parameters.get(name);
 	}
 
-	/** Remove an object parameter from the list.
-	 * @param name - The name of the parameter to remove.
+	/** 
+	 * Removes an object parameter from the list.
+	 * @param name the name of the parameter to remove.
 	 */
 	public void removeParameter(String name) {
 		parameters.remove(name);
 		requestRepaint();
 	}
 
-	/** Get embedded object parameter names.
-	 * @return Iterator of parameters names.
+	/** 
+	 * Gets the embedded object parameter names.
+	 * @return the Iterator of parameters names.
 	 */
 	public Iterator getParameterNames() {
 		return parameters.keySet().iterator();
 	}
 
 	/**
-	 * Returns the codebase, the root-path used to access resources with relative paths.
-	 * @return String
+	 * Gets the codebase, the root-path used to access resources with relative paths.
+	 * @return the code base.
 	 */
 	public String getCodebase() {
 		return codebase;
 	}
 
 	/**
-	 * Returns the MIME-Type of the code.
-	 * @return String
+	 * Gets the MIME-Type of the code.
+	 * @return the MIME-Type of the code.
 	 */
 	public String getCodetype() {
 		return codetype;
 	}
 
 	/**
-	 * Returns the MIME-Type of the object
-	 * @return String
+	 * Gets the MIME-Type of the object.
+	 * @return the MIME-Type of the object.
 	 */
 	public String getMimeType() {
 		return mimeType;
 	}
 
 	/**
-	 * Returns the standby text displayed when
+	 * Gets the standby text displayed when
 	 * the object is loading.
-	 * @return String
+	 * @return the standby text.
 	 */
 	public String getStandby() {
 		return standby;
@@ -214,7 +244,7 @@ public class Embedded extends AbstractComponent implements Sizeable {
 
 	/**
 	 * Sets the codebase, the root-path used to access resources with relative paths.
-	 * @param codebase The codebase to set
+	 * @param codebase the codebase to set.
 	 */
 	public void setCodebase(String codebase) {
 		if (codebase != this.codebase
@@ -226,7 +256,7 @@ public class Embedded extends AbstractComponent implements Sizeable {
 
 	/**
 	 * Sets the codetype, the MIME-Type of the code.
-	 * @param codetype The codetype to set
+	 * @param codetype the codetype to set.
 	 */
 	public void setCodetype(String codetype) {
 		if (codetype != this.codetype
@@ -238,7 +268,7 @@ public class Embedded extends AbstractComponent implements Sizeable {
 
 	/**
 	 * Sets the mimeType, the MIME-Type of the object.
-	 * @param mimeType The mimeType to set
+	 * @param mimeType the mimeType to set.
 	 */
 	public void setMimeType(String mimeType) {
 		if (mimeType != this.mimeType
@@ -250,7 +280,7 @@ public class Embedded extends AbstractComponent implements Sizeable {
 
 	/**
 	 * Sets the standby, the text to display while loading the object.
-	 * @param standby The standby to set
+	 * @param standby the standby to set.
 	 */
 	public void setStandby(String standby) {
 		if (standby != this.standby
@@ -263,7 +293,7 @@ public class Embedded extends AbstractComponent implements Sizeable {
 	/**
 	 * Returns the visual height of the object.
 	 * Default height is -1, which is interpreted as "unspecified".
-	 * @return The height in units specified by heightUnits property.
+	 * @return the height in units specified by heightUnits property.
 	 */
 	public int getHeight() {
 		return height;
@@ -272,15 +302,16 @@ public class Embedded extends AbstractComponent implements Sizeable {
 	/**
 	 * Returns the visual width of the object.
 	 * Default width is -1, which is interpreted as "unspecified".
-	 * @return The width in units specified by widthUnits property.
+	 * @return the width in units specified by widthUnits property.
 	 */
 	public int getWidth() {
 		return width;
 	}
 
-	/** Sets the visual height of the object.
-	 *  Default height is -1, which is interpreted as "unspecified".
-	 * @param height The height in units specified by heightUnits property.
+	/** 
+	 * Sets the visual height of the object.
+	 * Default height is -1, which is interpreted as "unspecified".
+	 * @param height the height in units specified by heightUnits property.
 	 */
 	public void setHeight(int height) {
 		if (this.height != height) {
@@ -289,9 +320,10 @@ public class Embedded extends AbstractComponent implements Sizeable {
 		}
 	}
 
-	/** Sets the visual width of the object.
-	 *  Default width is -1, which is interpreted as "unspecified".
-	 * @param width The width in units specified by widthUnits property.
+	/** 
+	 * Sets the visual width of the object.
+	 * Default width is -1, which is interpreted as "unspecified".
+	 * @param width the width in units specified by widthUnits property.
 	 */
 	public void setWidth(int width) {
 		if (this.width != width) {
@@ -301,8 +333,8 @@ public class Embedded extends AbstractComponent implements Sizeable {
 	}
 
 	/**
-	 * Returns the classId attribute.
-	 * @return String
+	 * Gets the classId attribute.
+	 * @return the class id.
 	 */
 	public String getClassId() {
 		return classId;
@@ -310,7 +342,7 @@ public class Embedded extends AbstractComponent implements Sizeable {
 
 	/**
 	 * Sets the classId attribute.
-	 * @param classId The classId to set
+	 * @param classId the classId to set.
 	 */
 	public void setClassId(String classId) {
 		if (classId != this.classId
@@ -320,29 +352,32 @@ public class Embedded extends AbstractComponent implements Sizeable {
 		}
 	}
 
-	/** Get the resource contained in the embedded object.
-	 * @return Resource
+	/** 
+	 * Gets the resource contained in the embedded object.
+	 * @return the Resource
 	 */
 	public Resource getSource() {
 		return source;
 	}
 
-	/** Get the type of the embedded object.
+	/** 
+	 * Gets the type of the embedded object.
 	 * <p>This can be one of the following:<ul>
 	 * <li>TYPE_OBJECT <i>(This is the default)</i>
 	 * <li>TYPE_IMAGE
 	 * </ul>
 	 * </p>
-	 * @return int
+	 * @return the type.
 	 */
 	public int getType() {
 		return type;
 	}
 
-	/** Set the object source resource.
+	/** 
+	 * Sets the object source resource.
 	 * The dimensions are assumed if possible. 
 	 * The type is guessed from resource.
-	 * @param source The source to set
+	 * @param source the source to set.
 	 */
 	public void setSource(Resource source) {
 		if (source != null && !source.equals(this.source)) {
@@ -357,13 +392,14 @@ public class Embedded extends AbstractComponent implements Sizeable {
 		}
 	}
 
-	/** Sets the object type.
+	/** 
+	 * Sets the object type.
 	 * <p>This can be one of the following:<ul>
 	 * <li>TYPE_OBJECT <i>(This is the default)</i>
 	 * <li>TYPE_IMAGE
 	 * </ul>
 	 * </p>
-	 * @param type The type to set
+	 * @param type the type to set.
 	 */
 	public void setType(int type) {
 		if (type != TYPE_OBJECT && type != TYPE_IMAGE)
@@ -375,8 +411,8 @@ public class Embedded extends AbstractComponent implements Sizeable {
 	}
 
 	/**
-	 * Returns the archive attribute.
-	 * @return String
+	 * Gets the archive attribute.
+	 * @return the archive attribute.
 	 */
 	public String getArchive() {
 		return archive;
@@ -384,7 +420,7 @@ public class Embedded extends AbstractComponent implements Sizeable {
 
 	/**
 	 * Sets the archive attribute.
-	 * @param archive The archive string to set
+	 * @param archive the archive string to set.
 	 */
 	public void setArchive(String archive) {
 		if (archive != this.archive
@@ -394,7 +430,8 @@ public class Embedded extends AbstractComponent implements Sizeable {
 		}
 	}
 
-	/**Get height property units.
+	/**
+	 * Gets the height property units.
 	 * Default units are <code>Sizeable.UNITS_PIXELS</code>.
 	 * @see com.itmill.toolkit.terminal.Sizeable#getHeightUnits()
 	 */
@@ -402,7 +439,8 @@ public class Embedded extends AbstractComponent implements Sizeable {
 		return this.heightUnits;
 	}
 
-	/**Get width property units.
+	/**
+	 * Gets the width property units.
 	 * Default units are <code>Sizeable.UNITS_PIXELS</code>.
 	 * @see com.itmill.toolkit.terminal.Sizeable#getWidthUnits()
 	 */
@@ -410,7 +448,8 @@ public class Embedded extends AbstractComponent implements Sizeable {
 		return this.widthUnits;
 	}
 
-	/**Set height property units.
+	/**
+	 * Sets the height property units.
 	 * @see com.itmill.toolkit.terminal.Sizeable#setHeightUnits(int)
 	 */
 	public void setHeightUnits(int units) {
@@ -420,7 +459,8 @@ public class Embedded extends AbstractComponent implements Sizeable {
 		}
 	}
 
-	/**Set width property units.
+	/**
+	 * Sets the width property units.
 	 * @see com.itmill.toolkit.terminal.Sizeable#setWidthUnits(int)
 	 */
 	public void setWidthUnits(int units) {

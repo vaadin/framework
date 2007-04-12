@@ -63,7 +63,7 @@ import java.net.URL;
  * As mentioned, all IT Mill Toolkit applications must inherit this class.
  * However, this is almost all of what one needs to do to create a fully
  * functional application. The only thing a class inheriting the
- * <code>Application</code> needs to do is implement the <code>init()</code>
+ * <code>Application</code> needs to do is implement the <code>init</code> method
  * where it creates the windows it needs to perform its function. Note that all
  * applications must have at least one window: the main window. The first
  * unnamed window constructed by an application automatically becomes the main
@@ -164,9 +164,10 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 	private Focusable pendingFocus;
 
 	/**
-	 * Gets a window by name. Returns <code>null</code> if the application is
-	 * not running or it does not contain a window corresponding to
-	 * <code>name</code>.
+	 * <p>
+	 * Gets a window by name. Returns <code>null</code>  if the application is not
+	 * running or it does not contain a window corresponding to the name.
+	 * </p>
 	 * 
 	 * @param name
 	 *            The name of the window.
@@ -183,7 +184,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 
 		return window;
 	}
-
+	
 	/**
 	 * Adds a new window to the application.
 	 * 
@@ -196,7 +197,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 	 *            the new <code>Window</code> to add
 	 * @throws IllegalArgumentException
 	 *             if a window with the same name as the new window already
-	 *             exists in the application
+	 *             exists in the application.
 	 * @throws NullPointerException
 	 *             if the given <code>Window</code> or its name is
 	 *             <code>null</code>
@@ -257,10 +258,10 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 	}
 
 	/**
-	 * Removes the specified window from the application.
+	 * Removes the specified window  from the application.
 	 * 
 	 * @param window
-	 *            The window to be removed
+	 *            The window to be removed.
 	 */
 	public void removeWindow(Window window) {
 		if (window != null && windows.contains(window)) {
@@ -297,11 +298,15 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 	}
 
 	/**
-	 * Sets the user of the application instance. An application instance may
-	 * have a user associated to it. This can be set in login procedure or
-	 * application initialization. A component performing the user login
-	 * procedure can assign the user property of the application and make the
-	 * user object available to other components of the application.
+	 * <p>
+	 * Sets the user of the application instance. An application instance may have
+	 * a user associated to it. This can be set in login procedure or application initialization. 
+	 * </p>
+	 * <p>
+	 * A component performing the user login procedure can assign the user property
+	 * of the application and make the user object available to other components 
+	 * of the application.
+	 * </p>
 	 * 
 	 * @param user
 	 *            the new user.
@@ -332,24 +337,24 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 	}
 
 	/**
-	 * Ends the Application. In effect this will cause the application stop
-	 * returning any windows when asked.
+	 * Ends the Application. In effect this will cause the application 
+	 * stop returning any windows when asked.
 	 */
 	public void close() {
 		applicationIsRunning = false;
 	}
 
 	/**
-	 * Starts the application on the given URL. After this call the application
-	 * corresponds to the given URL and it will return windows when asked for
-	 * them.
+	 * Starts the application on the given URL.After this call the 
+	 * application corresponds to the given URL and it will return 
+	 * windows when asked for them.
 	 * 
 	 * @param applicationUrl
-	 *            The URL the application should respond to
+	 *            The URL the application should respond to.
 	 * @param applicationProperties
 	 *            Application properties as specified by the adapter.
 	 * @param context
-	 *            The context application will be running in
+	 *            The context application will be running in.
 	 * 
 	 */
 	public void start(URL applicationUrl, Properties applicationProperties,
@@ -362,10 +367,10 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 	}
 
 	/**
-	 * Tests if the application is running or if it has it been finished.
+	 * Tests if the application is running or if it has been finished.
 	 * 
 	 * @return <code>true</code> if the application is running,
-	 *         <code>false</code> if not
+	 *         <code>false</code> if not.
 	 */
 	public boolean isRunning() {
 		return applicationIsRunning;
@@ -381,18 +386,19 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 	}
 
 	/**
-	 * Main initializer of the application. This method is called by the
+	 * <p>
+	 * Main initializer of the application. The <code>init</code> method is called by the
 	 * framework when the application is started, and it should perform whatever
 	 * initialization operations the application needs, such as creating windows
 	 * and adding components to them.
+	 * </p>
 	 */
 	public abstract void init();
 
 	/**
-	 * Gets the application's theme. The application's theme is the default
-	 * theme used by all the windows in it that do not explicitly specify a
-	 * theme. If the application theme is not explicitly set, the
-	 * <code>null</code> is returned.
+	 * Gets the application's theme. The application's theme is the default theme
+	 * used by all the windows in it that do not explicitly  specify a theme. 
+	 * If the application theme is not explicitly set, the <code>null</code> is returned.
 	 * 
 	 * @return the name of the application's theme
 	 */
@@ -401,9 +407,11 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 	}
 
 	/**
-	 * Sets the application's theme. Note that this theme can be overridden by
-	 * the windows. <code>null</code> implies the default terminal theme.
-	 * 
+	 * Sets the application's theme. 
+	 * <p>
+	 * Note that this theme can be overridden by the windows. <code>null</code> 
+	 * implies the default terminal theme.
+	 * </p>
 	 * @param theme
 	 *            The new theme for this application
 	 */
@@ -431,19 +439,20 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 	}
 
 	/**
-	 * Returns the mainWindow of the application.
+	 * Gets the mainWindow of the application.
 	 * 
-	 * @return Window
+	 * @return the main window
 	 */
 	public Window getMainWindow() {
 		return mainWindow;
 	}
 
 	/**
-	 * Sets the mainWindow. If the main window is not explicitly set, the main
-	 * window defaults to first created window. Setting window as a main window
-	 * of this application also adds the window to this application.
-	 * 
+	 * <p>
+	 * Sets the mainWindow. If the main window is not explicitly set, the main window
+	 * defaults to first created window. Setting window as a main window of this 
+	 * application also adds the window to this application.
+	 * </p>
 	 * @param mainWindow
 	 *            The mainWindow to set
 	 */
@@ -466,7 +475,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 
 	/**
 	 * Searches for the property with the specified name in this application.
-	 * The method returns null if the property is not found.
+	 * This method returns <code>null</code> if the property is not found.
 	 * 
 	 * @param name
 	 *            The name of the property.
@@ -477,8 +486,10 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 	}
 
 	/**
-	 * Add new resource to the application. The resource can be accessed by the
-	 * user of the application.
+	 * Adds new resource to the application. The resource can be accessed 
+	 * by the user of the application.
+	 * @param resource
+	 * 					the resource to add.
 	 */
 	public void addResource(ApplicationResource resource) {
 
@@ -494,7 +505,11 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 		keyResourceMap.put(key, resource);
 	}
 
-	/** Remove resource from the application. */
+	/** 
+	 * Removes the  resource from the application. 
+	 * @param resource
+	 * 					the resource to remove.
+	 */
 	public void removeResource(ApplicationResource resource) {
 		Object key = resourceKeyMap.get(resource);
 		if (key != null) {
@@ -503,7 +518,11 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 		}
 	}
 
-	/** Get relative uri of the resource */
+	/**
+	 *  Gets the relative uri of the resource. 
+	 *  @param resource
+	 *  				the resource to get relative location.
+	 */
 	public String getRelativeLocation(ApplicationResource resource) {
 
 		// Get the key
@@ -576,19 +595,27 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 		return null;
 	}
 
-	/** Get thed default locale for this application */
+	/** 
+	 * Gets the default locale for this application. 
+	 * @return the locale of this application. 
+	 */
 	public Locale getLocale() {
 		if (this.locale != null)
 			return this.locale;
 		return Locale.getDefault();
 	}
 
-	/** Set the default locale for this application */
+	/**
+	 * Sets the default locale for this application.
+	 * @param locale	Locale object
+	 * 			
+	 */
 	public void setLocale(Locale locale) {
 		this.locale = locale;
 	}
 
 	/**
+	 * <p>An event that characterizes a change in the current selection.</p>
 	 * Application user change event sent when the setUser is called to change
 	 * the current user of the application.
 	 * 
@@ -609,7 +636,12 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 		/** Previous user of the application */
 		private Object prevUser;
 
-		/** Contructor for user change event */
+		/** 
+		 * Contructor for user change event.
+		 * @param source
+		 * @param newUser new User
+		 * @param prevUser previous User
+		 */
 		public UserChangeEvent(Application source, Object newUser,
 				Object prevUser) {
 			super(source);
@@ -617,24 +649,34 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 			this.prevUser = prevUser;
 		}
 
-		/** Get the new user of the application */
+		/** 
+		 * Gets the new user of the application.
+		 * @return new User.
+		 */
 		public Object getNewUser() {
 			return newUser;
 		}
 
-		/** Get the previous user of the application */
+		/**
+		 * Gets the previous user of the application.
+		 * @return previous Toolkit user, if user has not changed 
+		 * 			ever on application it returns <code>null</code>
+		 */
 		public Object getPreviousUser() {
 			return prevUser;
 		}
 
-		/** Get the application where the user change occurred */
+		/**
+		 * Gets the application where the user change occurred.
+		 * @return Application
+		 */
 		public Application getApplication() {
 			return (Application) getSource();
 		}
 	}
 
 	/**
-	 * Public interface for listening application user changes
+	 * The <code>UserChangeListener</code> interface for listening application user changes.
 	 * 
 	 * @version
 	 * @VERSION@
@@ -642,18 +684,30 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 	 */
 	public interface UserChangeListener extends EventListener {
 
-		/** Invoked when the application user has changed */
+		/**
+		 * The <code>applicationUserChanged</code> method Invoked when the application user has changed.
+		 * @param event 
+		 * 				change event.
+		 */
 		public void applicationUserChanged(Application.UserChangeEvent event);
 	}
 
-	/** Add user change listener */
+	/**
+	 * Adds user change listener.
+	 * @param listener
+	 * 					user change listener to add.
+     */
 	public void addListener(UserChangeListener listener) {
 		if (userChangeListeners == null)
 			userChangeListeners = new LinkedList();
 		userChangeListeners.add(listener);
 	}
 
-	/** Remove user change listener */
+	/**
+	 * Removes user change listener.
+	 * @param listener
+	 * 					user change listener to remove.
+	 */
 	public void removeListener(UserChangeListener listener) {
 		if (userChangeListeners == null)
 			return;
@@ -683,18 +737,25 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 			this.window = window;
 		}
 
-		/** Get the detached window */
+		/**
+		 * Gets the detached window.
+		 * @return detached window
+		 */
 		public Window getWindow() {
 			return window;
 		}
 
-		/** Get the application from which the window was detached */
+		/** 
+		 * Gets the application from which the window was detached. 
+		 * @return Application
+		 */
 		public Application getApplication() {
 			return (Application) getSource();
 		}
 	}
 
 	/** Window attach event */
+	
 	public class WindowAttachEvent extends EventObject {
 
 		/**
@@ -705,7 +766,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 		private Window window;
 
 		/**
-		 * Create event.
+		 * Creates event.
 		 * 
 		 * @param window
 		 *            Attached window.
@@ -715,12 +776,18 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 			this.window = window;
 		}
 
-		/** Get the attached window */
+		/** 
+		 * Gets the attached window.
+		 * @return attached window.
+		 */
 		public Window getWindow() {
 			return window;
 		}
 
-		/** Get the application to which the window was attached */
+		/**
+		 * Gets the application to which the window was attached.
+		 * @return Application.
+		 */
 		public Application getApplication() {
 			return (Application) getSource();
 		}
@@ -729,32 +796,52 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 	/** Window attach listener interface */
 	public interface WindowAttachListener {
 
-		/** Window attached */
+		/** 
+		 * Window attached
+		 * @param event 
+		 * 				change event. 
+		 */
 		public void windowAttached(WindowAttachEvent event);
 	}
 
 	/** Window detach listener interface */
 	public interface WindowDetachListener {
 
-		/** Window attached */
+		/** 
+		 * Window detached.
+		 * @param event 
+		 * 				change event.
+		 */
 		public void windowDetached(WindowDetachEvent event);
 	}
 
-	/** Add window attach listener */
+	/**
+	 *  Adds window attach listener.
+	 *  @param listener 
+	 *  				window attach listener to add.
+	 */
 	public void addListener(WindowAttachListener listener) {
 		if (windowAttachListeners == null)
 			windowAttachListeners = new LinkedList();
 		windowAttachListeners.add(listener);
 	}
 
-	/** Add window detach listener */
+	/**
+	 *  Adds window detach listener.
+	 *  @param listener 
+	 *  				window detach listener to add.
+	 */
 	public void addListener(WindowDetachListener listener) {
 		if (windowDetachListeners == null)
 			windowDetachListeners = new LinkedList();
 		windowDetachListeners.add(listener);
 	}
 
-	/** Remove window attach listener */
+	/**
+	 *  Removes window attach listener.
+	 *  @param listener
+	 *  				window attach listener to remove.
+	 */
 	public void removeListener(WindowAttachListener listener) {
 		if (windowAttachListeners != null) {
 			windowAttachListeners.remove(listener);
@@ -763,7 +850,11 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 		}
 	}
 
-	/** Remove window detach listener */
+	/** 
+	 * Removes window detach listener.
+	 * @param listener 
+	 * 					window detach listener to remove.
+	 */
 	public void removeListener(WindowDetachListener listener) {
 		if (windowDetachListeners != null) {
 			windowDetachListeners.remove(listener);
@@ -773,11 +864,13 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 	}
 
 	/**
-	 * Returns the URL user is redirected to on application close. If the URL is
-	 * null, the application is closed normally as defined by the application
-	 * running environment: Desctop application just closes the application
-	 * window and web-application redirects the browser to application main URL.
-	 * 
+	 * Returns the URL user is redirected to on application close.If the URL
+	 * is <code>null</code>, the application is closed normally as defined by
+	 * the application running environment.
+	 * <p>
+	 * Desctop application just closes the application window and web-application redirects 
+	 * the browser to application main URL.
+	 * </p>
 	 * @return URL
 	 */
 	public String getLogoutURL() {
@@ -785,10 +878,10 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 	}
 
 	/**
-	 * Sets the URL user is redirected to on application close. If the URL is
-	 * null, the application is closed normally as defined by the application
-	 * running environment: Desctop application just closes the application
-	 * window and web-application redirects the browser to application main URL.
+	 * Sets the URL user is redirected to on application close. If the URL is <code>null</code>,
+	 * the application is closed normally as defined by the application running environment:
+	 * Desctop application just closes the application window and web-application redirects
+	 * the browser to application main URL.
 	 * 
 	 * @param logoutURL
 	 *            The logoutURL to set
@@ -797,12 +890,18 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 		this.logoutURL = logoutURL;
 	}
 
-	/** This method is invoked by the terminal on any exception that occurs in application 
-	 * and is thrown by the setVariable() to the terminal. The default implementation sets
-	 * the exceptions as ComponentErrors to the component that initiated the exception. 
+	/** 
+	 * <p>
+	 * Invoked by the terminal on any exception that occurs in application and is thrown by 
+	 * the <code>setVariable</code> to the terminal. The default implementation sets
+	 * the exceptions as <code>ComponentErrors</code> to the component that initiated the exception.
+	 * </p>
+	 * <p> 
 	 * You can safely override this method in your application in order to direct the errors
 	 * to some other destination (for example log).
-	 * 
+	 * </p>
+	 * @param event 
+	 * 				change event.
 	 * @see com.itmill.toolkit.terminal.Terminal.ErrorListener#terminalError(com.itmill.toolkit.terminal.Terminal.ErrorEvent)
 	 */
 	public void terminalError(Terminal.ErrorEvent event) {
@@ -829,23 +928,24 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 	}
 
 	/**
-	 * Get application context.
-	 * 
+	 * Gets application context.
+	 * <p>
 	 * The application context is the environment where the application is
 	 * running in.
+	 * </p>
+	 * @return context
 	 */
 	public ApplicationContext getContext() {
 		return context;
 	}
 
 	/**
-	 * Get the license this application is running on.
-	 * 
-	 * The license is initialized by the ApplicationServlet before application
-	 * is started. The the license-file can not be found in
-	 * WEB-INF/itmill-toolkit-license.xml, you can set its source in application
-	 * init().
-	 * 
+	 * Gets the license this application is running on.
+	 * <p>
+	 * The license is initialized by the <code>ApplicationServlet</code> class before application
+	 * is started. The license-file can not be found in <code>WEB-INF/itmill-toolkit-license.xml</code>,
+	 * you can set its source in application <code>init</code> method.
+	 * </p>
 	 * @return License this application is currently using
 	 */
 	public License getToolkitLicense() {
@@ -853,11 +953,12 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 	}
 
 	/**
-	 * Set the license this application is currently using.
-	 * 
-	 * The license is initialized by the ApplicationServlet before application
-	 * is started. Changing the license after application init has no effect.
-	 * 
+	 * Sets the license this application is currently using.
+	 * <p>
+	 * The license is initialized by the <code>ApplicationServlet</code> before application
+	 * is started. Changing the license after application <code>init</code> method has no effect.
+	 * </p>
+	 *  
 	 * @param license
 	 *            New license for this application.
 	 */

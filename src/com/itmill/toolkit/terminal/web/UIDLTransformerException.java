@@ -28,7 +28,8 @@
 
 package com.itmill.toolkit.terminal.web;
 
-/** Exception in transform process.
+/** 
+ * Exception in the transform process.
  *
  * @author IT Mill Ltd.
  * @version @VERSION@
@@ -50,8 +51,8 @@ public class UIDLTransformerException extends java.lang.Exception {
 	/**
 	 * Constructs an instance of UIDLTransformerException with the specified
 	 * detail message.
-	 * @param msg description of exception that occurred
-	 * @param te Transform exception that occurred.
+	 * @param msg the description of exception that occurred.
+	 * @param te the Transform exception that occurred.
 	 * @param desc the detailed description.
 	 */
 	public UIDLTransformerException(String msg, Throwable te, String desc) {
@@ -59,15 +60,18 @@ public class UIDLTransformerException extends java.lang.Exception {
 		this.transformException = te;
 		this.HTMLDescription = desc;
 	}
-	/** Returns the detailed description.
-	 * @return Detailed description of exception.
+	
+	/** 
+	 * Returns the detailed description.
+	 * @return the Detailed description of exception.
 	 */
 	public String getHTMLDescription() {
 		return HTMLDescription;
 	}
 
-	/** Returns the nested transform exception that occurred.
-	 * @return Throwable
+	/** 
+	 * Returns the nested transform exception that occurred.
+	 * @return the transform exception
 	 */
 	public Throwable getTransformException() {
 		return transformException;

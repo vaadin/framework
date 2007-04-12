@@ -41,7 +41,8 @@ import java.util.Set;
 import java.util.HashSet;
 import java.lang.reflect.Method;
 
-/** An abstract class that defines default implementation for the
+/** 
+ * An abstract class that defines default implementation for the
  * {@link Component} interface. Basic UI components that are not derived
  * from an external component can inherit this class to easily qualify as a
  * IT Mill Toolkit component. Most components in the toolkit do
@@ -56,67 +57,101 @@ public abstract class AbstractComponent
 
 	/* Private members ************************************************* */
 
-	/** Look-and-feel style of the component. */
+	/** 
+	 * Look-and-feel style of the component. 
+	 */
 	private String style;
 
-	/** Caption text. */
+	/** 
+	 * Caption text. 
+	 */
 	private String caption;
     
-    /** Application specific data object. */
+    /** 
+     * Application specific data object. 
+     */
     private Object applicationData;
 
-	/** Icon to be shown together with caption. */
+	/** 
+	 * Icon to be shown together with caption. 
+	 */
 	private Resource icon;
 
-	/** Is the component enable (its normal usage is allowed). */
+	/** 
+	 * Is the component enable (its normal usage is allowed). 
+	 */
 	private boolean enabled = true;
 
-	/** Is the component visible (it is rendered). */
+	/** 
+	 * Is the component visible (it is rendered). 
+	 */
 	private boolean visible = true;
 
-	/** Is the component read-only ? */
+	/** 
+	 * Is the component read-only ? 
+	 */
 	private boolean readOnly = false;
 
-	/** Description of the usage (XML). */
+	/** 
+	 * Description of the usage (XML). 
+	 */
 	private String description = null;
 
-	/** The container this component resides in. */
+	/** 
+	 * The container this component resides in. 
+	 */
 	private Component parent = null;
 
-	/** The EventRouter used for the event model. */
+	/** 
+	 * The EventRouter used for the event model. 
+	 */
 	private EventRouter eventRouter = null;
 
-	/** The internal error message of the component. */
+	/** 
+	 * The internal error message of the component. 
+	 */
 	private ErrorMessage componentError = null;
 
-	/** List of event variable change event handling dependencies */
+	/** 
+	 * List of event variable change event handling dependencies. 
+	 */
 	private Set dependencies = null;
 
-	/** Immediate mode: if true, all variable changes are required to be sent
-	 * from the terminal immediately
+	/** 
+	 * Immediate mode: if true, all variable changes are required to be sent
+	 * from the terminal immediately.
 	 */
 	private boolean immediate = false;
 
-	/** Locale of this component. */
+	/** 
+	 * Locale of this component. 
+	 */
 	private Locale locale;
 
-	/** List of repaint request listeners or null if not listened at all */
+	/** 
+	 * List of repaint request listeners or null if not listened at all. 
+	 */
 	private LinkedList repaintRequestListeners = null;
 
-	/** Are all the repaint listeners notified about recent changes ? */
+	/** 
+	 * Are all the repaint listeners notified about recent changes ? 
+	 */
 	private boolean repaintRequestListenersNotified = false;
 
 	/* Constructor ***************************************************** */
 
-	/** Constructs a new Component */
+	/** 
+	 * Constructs a new Component. 
+	 */
 	public AbstractComponent() {
 	}
 
 	/* Get/Set component properties ************************************ */
 
-	/** Gets the UIDL tag corresponding to the component.
+	/** 
+	 * Gets the UIDL tag corresponding to the component.
 	 * 
-	 * @return component's UIDL tag as <code>String</code>
+	 * @return the component's UIDL tag as <code>String</code>
 	 */
 	public abstract String getTag();
 
@@ -145,11 +180,12 @@ public abstract class AbstractComponent
 		return this.caption;
 	}
 
-	/** Sets the component's caption <code>String</code>. Caption is the
+	/** 
+	 * Sets the component's caption <code>String</code>. Caption is the
 	 * visible name of the component. This method will trigger a
 	 * {@link com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent RepaintRequestEvent}.
 	 * 
-	 * @param caption new caption <code>String</code> for the component
+	 * @param caption the new caption <code>String</code> for the component.
 	 */
 	public void setCaption(String caption) {
 		this.caption = caption;
@@ -170,8 +206,9 @@ public abstract class AbstractComponent
 		return null;
 	}
 
-	/** Sets the locale of this component.
-	 * @param locale The locale to become this component's locale.
+	/** 
+	 * Sets the locale of this component.
+	 * @param locale the locale to become this component's locale.
 	 */
 	public void setLocale(Locale locale) {
 		this.locale = locale;
@@ -185,11 +222,12 @@ public abstract class AbstractComponent
 		return this.icon;
 	}
 
-	/** Sets the component's icon.  This method will trigger a
-	  * {@link com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent RepaintRequestEvent}.
-	  * 
-	  * @param icon the icon to be shown with the component's caption
-	  */
+	/** 
+	 * Sets the component's icon.  This method will trigger a
+	 *{@link com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent RepaintRequestEvent}.
+	 * 
+	 * @param icon the icon to be shown with the component's caption.
+     */
 	public void setIcon(Resource icon) {
 		this.icon = icon;
 		requestRepaint();
@@ -222,11 +260,12 @@ public abstract class AbstractComponent
 		return immediate;
 	}
 
-	/** Sets the component's immediate mode to the specified status. This
+	/** 
+	 * Sets the component's immediate mode to the specified status. This
 	 * method will trigger a 
 	 * {@link com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent RepaintRequestEvent}.
 	 * 
-	 * @param immediate boolean value specifying if the component should
+	 * @param immediate the boolean value specifying if the component should
 	 * be in the immediate mode after the call.
 	 * @see Component#isImmediate()
 	 */
@@ -259,9 +298,12 @@ public abstract class AbstractComponent
 		}
 	}
 
-	/** <p>Gets the component's description. The description can be used to
+	/** 
+	 * <p>
+	 * Gets the component's description. The description can be used to
 	 * briefly describe the state of the component to the user. The
-	 * description string may contain certain XML tags:</p>
+	 * description string may contain certain XML tags:
+	 * </p>
 	 * 
 	 * <p><table border=1>
 	 * <tr><td width=120><b>Tag</b></td>
@@ -298,11 +340,12 @@ public abstract class AbstractComponent
 		return this.description;
 	}
 
-	/** Sets the component's description. See {@link #getDescription()} for
+	/** 
+	 * Sets the component's description. See {@link #getDescription()} for
 	 * more information on what the description is. This method will trigger
 	 * a {@link com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent RepaintRequestEvent}.
 	 *
-	 * @param description new description string for the component
+	 * @param description the new description string for the component.
 	 */
 	public void setDescription(String description) {
 		this.description = description;
@@ -317,7 +360,7 @@ public abstract class AbstractComponent
 		return this.parent;
 	}
 
-	/* Set the parent component.
+	/* Sets the parent component.
 	 * Don't add a JavaDoc comment here, we use the default documentation
 	 * from implemented interface.
 	 */
@@ -341,7 +384,8 @@ public abstract class AbstractComponent
 			attach();
 	}
 
-	/** Get the error message for this component.
+	/** 
+	 * Gets the error message for this component.
 	 * 
 	 * @return ErrorMessage containing the description of the error state
 	 * of the component or null, if the component contains no errors. Extending
@@ -353,20 +397,22 @@ public abstract class AbstractComponent
 		return this.componentError;
 	}
 
-	/** Gets the component's error message. 
+	/** 
+	 * Gets the component's error message. 
 	 * @link Terminal.ErrorMessage#ErrorMessage(String, int)
 	 *
-	 * @return component's error message
+	 * @return the component's error message.
 	 */
 	public ErrorMessage getComponentError() {
 		return this.componentError;
 	}
 
-	/** Sets the component's error message. The message may contain certain
+	/** 
+	 * Sets the component's error message. The message may contain certain
 	 * XML tags, for more information see
 	 * @link Component.ErrorMessage#ErrorMessage(String, int)
 	 * 
-	 * @param errorMessage new <code>ErrorMessage</code> of the component
+	 * @param componentError the new <code>ErrorMessage</code> of the component.
 	 */
 	public void setComponentError(ErrorMessage componentError) {
 		this.componentError = componentError;
@@ -382,7 +428,7 @@ public abstract class AbstractComponent
 		return readOnly;
 	}
 
-	/* Set the component's read-only mode.
+	/* Sets the component's read-only mode.
 	 * Don't add a JavaDoc comment here, we use the default documentation
 	 * from implemented interface.
 	 */
@@ -391,7 +437,7 @@ public abstract class AbstractComponent
 		requestRepaint();
 	}
 
-	/* Get the parent window of the component.
+	/* Gets the parent window of the component.
 	 * Don't add a JavaDoc comment here, we use the default documentation
 	 * from implemented interface.
 	 */
@@ -416,7 +462,7 @@ public abstract class AbstractComponent
 	public void detach() {
 	}
 
-	/* Get the parent application of the component.
+	/* Gets the parent application of the component.
 	 * Don't add a JavaDoc comment here, we use the default documentation
 	 * from implemented interface.
 	 */
@@ -477,14 +523,15 @@ public abstract class AbstractComponent
 		repaintRequestListenersNotified = false;
 	}
 
-	/** Paints any needed component-specific things to the given UIDL
+	/** 
+	 * Paints any needed component-specific things to the given UIDL
 	 * stream. The more general {@link #paint(PaintTarget)} method handles
 	 * all general attributes common to all components, and it calls this
 	 * method to paint any component-specific attributes to the UIDL stream.
 	 * 
-	 * @param target target UIDL stream where the component should paint
+	 * @param target the target UIDL stream where the component should paint
 	 * itself to
-	 * @throws PaintException if the operation failed
+	 * @throws PaintException if the paint operation failed.
 	 */
 	public void paintContent(PaintTarget target) throws PaintException {
 
@@ -508,7 +555,10 @@ public abstract class AbstractComponent
 		fireRequestRepaintEvent(alreadyNotified);
 	}
 
-	/** Fire repaint request event */
+	/** 
+	 * Fires the repaint request event.
+	 * @param alreadyNotified 
+	 */
 	private void fireRequestRepaintEvent(Collection alreadyNotified) {
 
 		// Notify listeners only once
@@ -590,7 +640,7 @@ public abstract class AbstractComponent
 	 */
 	public void removeDirectDependency(VariableOwner depended) {
 
-		// Remove the listener if necessary
+		// Removes the listener if necessary
 		if (dependencies != null && depended != null)
 			dependencies.remove(depended);
 	}
@@ -620,21 +670,24 @@ public abstract class AbstractComponent
 		}
 	}
 
-	/** <p>Registers a new listener with the specified activation method to
+	/** 
+	 * <p>
+	 * Registers a new listener with the specified activation method to
 	 * listen events generated by this component. If the activation method
 	 * does not have any arguments the event object will not be passed to it
-	 * when it's called.</p>
+	 * when it's called.
+	 * </p>
 	 * 
-	 * <p>For more information on the inheritable event mechanism
+	 * <p>
+	 * For more information on the inheritable event mechanism
 	 * see the 
-	 * {@link com.itmill.toolkit.event com.itmill.toolkit.event package documentation}.</p>
+	 * {@link com.itmill.toolkit.event com.itmill.toolkit.event package documentation}.
+	 * </p>
 	 * 
-	 * @param eventType type of the listened event. Events of this type or
+	 * @param eventType the type of the listened event. Events of this type or
 	 * its subclasses activate the listener.
-	 * @param object the object instance who owns the activation method
-	 * @param method the activation method
-	 * @throws java.lang.IllegalArgumentException unless <code>method</code>
-	 * has exactly one match in <code>object</code>
+	 * @param object the object instance who owns the activation method.
+	 * @param method the activation method.
 	 */
 	public void addListener(Class eventType, Object object, Method method) {
 		if (eventRouter == null)
@@ -642,26 +695,31 @@ public abstract class AbstractComponent
 		eventRouter.addListener(eventType, object, method);
 	}
 
-	/** <p>Registers a new listener with the specified activation method to
+	/** 
+	 * <p>
+	 * Registers a new listener with the specified activation method to
 	 * listen events generated by this component. If the activation method
 	 * does not have any arguments the event object will not be passed to it
-	 * when it's called.</p>
+	 * when it's called.
+	 * </p>
 	 * 
-	 * <p>This version of <code>addListener</code> gets the name of the
+	 * <p>
+	 * This version of <code>addListener</code> gets the name of the
 	 * activation method as a parameter. The actual method is reflected from
 	 * <code>object</code>, and unless exactly one match is found,
-	 * <code>java.lang.IllegalArgumentException</code> is thrown.</p>
+	 * <code>java.lang.IllegalArgumentException</code> is thrown.
+	 * </p>
 	 * 
-	 * <p>For more information on the inheritable event mechanism
+	 * <p>
+	 * For more information on the inheritable event mechanism
 	 * see the 
-	 * {@link com.itmill.toolkit.event com.itmill.toolkit.event package documentation}.</p>
+	 * {@link com.itmill.toolkit.event com.itmill.toolkit.event package documentation}.
+	 * </p>
 	 * 
-	 * @param eventType type of the listened event. Events of this type or
+	 * @param eventType the type of the listened event. Events of this type or
 	 * its subclasses activate the listener.
-	 * @param object the object instance who owns the activation method
-	 * @param methodName the name of the activation method
-	 * @throws java.lang.IllegalArgumentException unless <code>method</code>
-	 * has exactly one match in <code>object</code>
+	 * @param object the object instance who owns the activation method.
+	 * @param methodName the name of the activation method.
 	 */
 	public void addListener(
 		Class eventType,
@@ -672,26 +730,30 @@ public abstract class AbstractComponent
 		eventRouter.addListener(eventType, object, methodName);
 	}
 
-	/** Removes all registered listeners matching the given parameters.
+	/** 
+	 * Removes all registered listeners matching the given parameters.
 	 * Since this method receives the event type and the listener object as
 	 * parameters, it will unregister all <code>object</code>'s methods that
 	 * are registered to listen to events of type <code>eventType</code>
 	 * generated by this component.
 	 * 
-	 * <p>For more information on the inheritable event mechanism
+	 * <p>
+	 * For more information on the inheritable event mechanism
 	 * see the 
-	 * {@link com.itmill.toolkit.event com.itmill.toolkit.event package documentation}.</p>
+	 * {@link com.itmill.toolkit.event com.itmill.toolkit.event package documentation}.
+	 * </p>
 	 * 
-	 * @param eventType exact event type the <code>object</code> listens to
-	 * @param target target object that has registered to listen to events
-	 * of type <code>eventType</code> with one or more methods
+	 * @param eventType the exact event type the <code>object</code> listens to.
+	 * @param target the target object that has registered to listen to events
+	 * of type <code>eventType</code> with one or more methods.
 	 */
 	public void removeListener(Class eventType, Object target) {
 		if (eventRouter != null)
 			eventRouter.removeListener(eventType, target);
 	}
 
-	/** Removes one registered listener method. The given method owned by
+	/** 
+	 * Removes one registered listener method. The given method owned by
 	 * the given object will no longer be called when the specified events
 	 * are generated by this component.
 	 * 
@@ -699,35 +761,42 @@ public abstract class AbstractComponent
 	 * see the 
 	 * {@link com.itmill.toolkit.event com.itmill.toolkit.event package documentation}.</p>
 	 * 
-	 * @param eventType exact event type the <code>object</code> listens to
+	 * @param eventType the exact event type the <code>object</code> listens to.
 	 * @param target target object that has registered to listen to events
-	 * of type <code>eventType</code> with one or more methods
+	 * of type <code>eventType</code> with one or more methods.
 	 * @param method the method owned by <code>target</code> that's
-	 * registered to listen to events of type <code>eventType</code>
+	 * registered to listen to events of type <code>eventType</code>.
 	 */
 	public void removeListener(Class eventType, Object target, Method method) {
 		if (eventRouter != null)
 			eventRouter.removeListener(eventType, target, method);
 	}
 
-	/** <p>Removes one registered listener method. The given method owned by
+	/** 
+	 * <p>
+	 * Removes one registered listener method. The given method owned by
 	 * the given object will no longer be called when the specified events
-	 * are generated by this component.</p>
+	 * are generated by this component.
+	 * </p>
 	 * 
-	 * <p>This version of <code>removeListener</code> gets the name of the
+	 * <p>
+	 * This version of <code>removeListener</code> gets the name of the
 	 * activation method as a parameter. The actual method is reflected from
 	 * <code>target</code>, and unless exactly one match is found,
-	 * <code>java.lang.IllegalArgumentException</code> is thrown.</p>
+	 * <code>java.lang.IllegalArgumentException</code> is thrown.
+	 * </p>
 	 * 
-	 * <p>For more information on the inheritable event mechanism
+	 * <p>
+	 * For more information on the inheritable event mechanism
 	 * see the 
-	 * {@link com.itmill.toolkit.event com.itmill.toolkit.event package documentation}.</p>
+	 * {@link com.itmill.toolkit.event com.itmill.toolkit.event package documentation}.
+	 * </p>
 	 * 
-	 * @param eventType exact event type the <code>object</code> listens to
-	 * @param target target object that has registered to listen to events
-	 * of type <code>eventType</code> with one or more methods
-	 * @param methodName name of the method owned by <code>target</code>
-	 * that's registered to listen to events of type <code>eventType</code>
+	 * @param eventType the exact event type the <code>object</code> listens to.
+	 * @param target the target object that has registered to listen to events
+	 * of type <code>eventType</code> with one or more methods.
+	 * @param methodName the name of the method owned by <code>target</code>
+	 * that's registered to listen to events of type <code>eventType</code>.
 	 */
 	public void removeListener(
 		Class eventType,
@@ -737,8 +806,9 @@ public abstract class AbstractComponent
 			eventRouter.removeListener(eventType, target, methodName);
 	}
 
-	/** Send event to all listeners
-	 * @param event Event to be sent to all listeners
+	/** 
+	 * Sends the event to all listeners.
+	 * @param event the Event to be sent to all listeners.
 	 */
 	protected void fireEvent(Component.Event event) {
 
@@ -779,32 +849,36 @@ public abstract class AbstractComponent
 		}
 	}
 
-	/** Emits a component event. It is transmitted to all registered
+	/** 
+	 * Emits the component event. It is transmitted to all registered
 	 * listeners interested in such events.
 	 */
 	protected void fireComponentEvent() {
 		fireEvent(new Component.Event(this));
 	}
 
-	/** Emits a component error event. It is transmitted to all registered
+	/** 
+	 * Emits the component error event. It is transmitted to all registered
 	 * listeners interested in such events.
 	 */
 	protected void fireComponentErrorEvent() {
 		fireEvent(new Component.ErrorEvent(this.getComponentError(),this));
 	}
 
-	/** Sets application specific data object.
+	/** 
+	 * Sets the application specific data object.
      * 
-     * @param data Application specific data.
+     * @param data the Application specific data.
      * @since 3.1
 	 */
     public void setData(Object data) {
         this.applicationData = data;
     }
     
-    /** Gets application specific data.
+    /** 
+     * Gets the application specific data.
      * 
-     * @return Application specific data set with setData function.
+     * @return the Application specific data set with setData function.
      * @since 3.1
      */
     public Object getData() {

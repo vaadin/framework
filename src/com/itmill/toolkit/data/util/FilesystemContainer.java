@@ -47,7 +47,8 @@ import com.itmill.toolkit.data.Property;
 import com.itmill.toolkit.service.FileTypeResolver;
 import com.itmill.toolkit.terminal.Resource;
 
-/** A hierarchical container wrapper for a filesystem.
+/**
+ * A hierarchical container wrapper for a filesystem.
  * 
  * @author IT Mill Ltd.
  * @version @VERSION@
@@ -55,19 +56,29 @@ import com.itmill.toolkit.terminal.Resource;
  */
 public class FilesystemContainer implements Container.Hierarchical {
 
-	/** String identifier of a file's "name" property. */
+	/** 
+	 * String identifier of a file's "name" property. 
+	 */
 	public static String PROPERTY_NAME = "Name";
 
-	/** String identifier of a file's "size" property. */
+	/**
+	 * String identifier of a file's "size" property. 
+	 */
 	public static String PROPERTY_SIZE = "Size";
 
-	/** String identifier of a file's "icon" property. */
+	/** 
+	 * String identifier of a file's "icon" property. 
+	 */
 	public static String PROPERTY_ICON = "Icon";
 
-	/** String identifier of a file's "last modified" property. */
+	/**
+	 * String identifier of a file's "last modified" property.
+	 */
 	public static String PROPERTY_LASTMODIFIED = "Last Modified";
 
-	/** List of the string identifiers for the available properties */
+	/**
+	 * List of the string identifiers for the available properties. 
+	 */
 	public static Collection FILE_PROPERTIES;
 
 	private static Method FILEITEM_LASTMODIFIED;
@@ -104,10 +115,11 @@ public class FilesystemContainer implements Container.Hierarchical {
 	private FilenameFilter filter = null;
 	private boolean recursive = true;
 
-	/** Construct a new <code>FileSystemContainer</code> with the specified
+	/** 
+	 * Constructs a new <code>FileSystemContainer</code> with the specified
 	 * file as the root of the filesystem. The files are included recursively.
 	 * 
-	 * @param root root file for the new file-system container. Null values are ignored.
+	 * @param root the root file for the new file-system container. Null values are ignored.
 	 */
 	public FilesystemContainer(File root) {
 		if (root != null) {
@@ -115,10 +127,11 @@ public class FilesystemContainer implements Container.Hierarchical {
 		}
 	}
 
-	/** Construct a new <code>FileSystemContainer</code> with the specified
+	/** 
+	 * Constructs a new <code>FileSystemContainer</code> with the specified
 	 * file as the root of the filesystem. The files are included recursively.
 	 * 
-	 * @param root root file for the new file-system container
+	 * @param root the root file for the new file-system container.
 	 * @param recursive should the container recursively contain subdirectories.
 	 */
 	public FilesystemContainer(File root, boolean recursive) {
@@ -126,11 +139,12 @@ public class FilesystemContainer implements Container.Hierarchical {
 		this.setRecursive(recursive);
 	}
 
-	/** Construct a new <code>FileSystemContainer</code> with the specified
+	/** 
+	 * Constructs a new <code>FileSystemContainer</code> with the specified
 	 * file as the root of the filesystem.
 	 * 
-	 * @param root root file for the new file-system container
-	 * @param extension Filename extension (w/o separator) to limit the files in container.
+	 * @param root the root file for the new file-system container.
+	 * @param extension the Filename extension (w/o separator) to limit the files in container.
 	 * @param recursive should the container recursively contain subdirectories.
 	 */
 	public FilesystemContainer(
@@ -142,11 +156,12 @@ public class FilesystemContainer implements Container.Hierarchical {
 		this.setRecursive(recursive);
 	}
 
-	/** Construct a new <code>FileSystemContainer</code> with the specified
+	/** 
+	 * Constructs a new <code>FileSystemContainer</code> with the specified
 	 * root and recursivity status.
 	 * 
-	 * @param root root file for the new file-system container
-	 * @param filter Filename filter to limit the files in container.
+	 * @param root the root file for the new file-system container.
+	 * @param filter the Filename filter to limit the files in container.
 	 * @param recursive should the container recursively contain subdirectories.
 	 */
 	public FilesystemContainer(
@@ -158,9 +173,10 @@ public class FilesystemContainer implements Container.Hierarchical {
 		this.setRecursive(recursive);
 	}
 
-	/** Add new root file directory. 
-	 *  Adds a file to be included as root file directory in the FilesystemContainer.
-	 *  @param root File to be added as root directory. Null values are ignored.
+	/** 
+	 * Adds new root file directory. 
+	 * Adds a file to be included as root file directory in the <code>FilesystemContainer</code>.
+	 * @param root the File to be added as root directory. Null values are ignored.
 	 */
 	public void addRoot(File root) {
 		if (root != null) {
@@ -173,11 +189,12 @@ public class FilesystemContainer implements Container.Hierarchical {
 		}
 	}
 
-	/** Tests if the specified Item in the container may have children.
+	/** 
+	 * Tests if the specified Item in the container may have children.
 	 * Since a <code>FileSystemContainer</code> contains files and
 	 * directories, this method returns <code>true</code> for directory
 	 * Items only.
-	 * 
+	 * @param itemId the id of the item.
 	 * @return <code>true</code> if the specified Item is a directory,
 	 * <code>false</code> otherwise.
 	 */
@@ -187,7 +204,7 @@ public class FilesystemContainer implements Container.Hierarchical {
 			&& ((File) itemId).isDirectory();
 	}
 
-	/* Get the ID's of all Items who are children of the specified Item.
+	/* Gets the ID's of all Items who are children of the specified Item.
 	 * Don't add a JavaDoc comment here, we use the default documentation
 	 * from implemented interface.
 	 */
@@ -210,7 +227,7 @@ public class FilesystemContainer implements Container.Hierarchical {
 		return Collections.unmodifiableCollection(l);
 	}
 
-	/* Get the parent item of the specified Item.
+	/* Gets the parent item of the specified Item.
 	 * Don't add a JavaDoc comment here, we use the default documentation
 	 * from implemented interface.
 	 */
@@ -221,7 +238,7 @@ public class FilesystemContainer implements Container.Hierarchical {
 		return ((File) itemId).getParentFile();
 	}
 
-	/* Test if the specified Item has any children.
+	/* Tests if the specified Item has any children.
 	 * Don't add a JavaDoc comment here, we use the default documentation
 	 * from implemented interface.
 	 */
@@ -237,7 +254,7 @@ public class FilesystemContainer implements Container.Hierarchical {
 		return (l != null) && (l.length > 0);
 	}
 
-	/* Test if the specified Item is the root of the filesystem.
+	/* Tests if the specified Item is the root of the filesystem.
 	 * Don't add a JavaDoc comment here, we use the default documentation
 	 * from implemented interface.
 	 */
@@ -252,7 +269,7 @@ public class FilesystemContainer implements Container.Hierarchical {
 		return false;
 	}
 
-	/* Get the ID's of all root Items in the container.
+	/* Gets the ID's of all root Items in the container.
 	 * Don't add a JavaDoc comment here, we use the default documentation
 	 * from implemented interface.
 	 */
@@ -279,10 +296,17 @@ public class FilesystemContainer implements Container.Hierarchical {
 		return Collections.unmodifiableCollection(l);
 	}
 
-	/** Return false - conversion from files to directories is not
+	/** 
+	 * Returns <code>false</code> when conversion from files to directories is not
 	 * supported.
-	 * 
-	 * @return <code>false</code>
+	 * @param itemId 
+	 * 				the ID of the item.
+	 * @param areChildrenAllowed 
+	 * 				the boolean value specifying if the Item can have children or not. 
+	 * @return <code>true</code> if the operaton is successful otherwise 
+	 * <code>false</code>.
+	 * @throws UnsupportedOperationException
+	 * 									if the setChildrenAllowed is not supported.
 	 */
 	public boolean setChildrenAllowed(
 		Object itemId,
@@ -292,10 +316,16 @@ public class FilesystemContainer implements Container.Hierarchical {
 		throw new UnsupportedOperationException("Conversion file to/from directory is not supported");
 	}
 
-	/** Return false - moving files around in the filesystem is not
+	/** 
+	 * Returns <code>false</code> when moving files around in the filesystem is not
 	 * supported.
-	 * 
-	 * @return <code>false</code>
+	 * @param itemId the ID of the item.
+	 * @param newParentId the ID of the Item that's to be the new parent
+	 * of the Item identified with itemId.
+	 * @return <code>true</code> if the operation is successful otherwise
+	 * <code>false</code>.
+	 * @throws UnsupportedOperationException
+	 * 										if the setParent is not supported.
 	 */
 	public boolean setParent(Object itemId, Object newParentId)
 		throws UnsupportedOperationException {
@@ -303,7 +333,7 @@ public class FilesystemContainer implements Container.Hierarchical {
 		throw new UnsupportedOperationException("File moving is not supported");
 	}
 
-	/* Test if the filesystem contains the specified Item.
+	/* Tests if the filesystem contains the specified Item.
 	 * Don't add a JavaDoc comment here, we use the default documentation
 	 * from implemented interface.
 	 */
@@ -343,7 +373,8 @@ public class FilesystemContainer implements Container.Hierarchical {
 		return new FileItem((File) itemId);
 	}
 
-	/** Internal recursive method to add the files under the specified
+	/** 
+	 * Internal recursive method to add the files under the specified
 	 * directory to the collection.
 	 * 
 	 * @param col the collection where the found items are added
@@ -402,13 +433,14 @@ public class FilesystemContainer implements Container.Hierarchical {
 		
 	}
 
-	/** Gets the specified property of the specified file Item. The
+	/** 
+	 * Gets the specified property of the specified file Item. The
 	 * available file properties are "Name", "Size" and "Last Modified".
-	 * If <code>propertyId</code> is not one of those, <code>null</code> is
+	 * If propertyId is not one of those, <code>null</code> is
 	 * returned.
 	 * 
-	 * @param itemId ID of the file whose property is requested
-	 * @param propertyId The property's ID
+	 * @param itemId the ID of the file whose property is requested.
+	 * @param propertyId the property's ID.
 	 * @return the requested property's value, or <code>null</code>
 	 */
 	public Property getContainerProperty(Object itemId, Object propertyId) {
@@ -447,7 +479,8 @@ public class FilesystemContainer implements Container.Hierarchical {
 		return null;
 	}
 
-	/** Gets the collection of available file properties.
+	/** 
+	 * Gets the collection of available file properties.
 	 * 
 	 * @return Unmodifiable collection containing all available file
 	 * properties.
@@ -456,12 +489,13 @@ public class FilesystemContainer implements Container.Hierarchical {
 		return FILE_PROPERTIES;
 	}
 
-	/** Gets the specified property's data type. "Name" is a
+	/** 
+	 * Gets the specified property's data type. "Name" is a
 	 * <code>String</code>, "Size" is a <code>Long</code>, "Last Modified"
-	 * is a <code>Date</code>. If <code>propertyId</code> is not one of
+	 * is a <code>Date</code>. If propertyId is not one of
 	 * those, <code>null</code> is returned.
 	 * 
-	 * @param propertyId ID of the property whose type is requested.
+	 * @param propertyId the ID of the property whose type is requested.
 	 * @return data type of the requested property, or <code>null</code>
 	 */
 	public Class getType(Object propertyId) {
@@ -477,7 +511,8 @@ public class FilesystemContainer implements Container.Hierarchical {
 		return null;
 	}
 
-	/** Internal method to recursively calculate the number of files under
+	/** 
+	 * Internal method to recursively calculate the number of files under
 	 * a root directory.
 	 * 
 	 * @param f the root to start counting from.
@@ -499,7 +534,8 @@ public class FilesystemContainer implements Container.Hierarchical {
 		return ret;
 	}
 
-	/** Gets the number of Items in the container. In effect, this is the
+	/** 
+	 * Gets the number of Items in the container. In effect, this is the
 	 * combined amount of files and directories.
 	 * 
 	 * @return Number of Items in the container.
@@ -529,22 +565,27 @@ public class FilesystemContainer implements Container.Hierarchical {
 		}
 	}
 
-	/** A Item wrapper for files in a filesystem.
+	/** 
+	 * A Item wrapper for files in a filesystem.
 	 * @author IT Mill Ltd.
 	 * @version @VERSION@
 	 * @since 3.0
 	 */
 	public class FileItem implements Item {
 
-		/** The wrapped file. */
+		/** 
+		 * The wrapped file. 
+		 */
 		private File file;
 
-		/** Construct a FileItem from a existing file. */
+		/** 
+		 * Constructs a FileItem from a existing file. 
+		 */
 		private FileItem(File file) {
 			this.file = file;
 		}
 
-		/* Get the specified property of this file.
+		/* Gets the specified property of this file.
 		 * Don't add a JavaDoc comment here, we use the default documentation
 		 * from implemented interface.
 		 */
@@ -552,7 +593,7 @@ public class FilesystemContainer implements Container.Hierarchical {
 			return FilesystemContainer.this.getContainerProperty(file, id);
 		}
 
-		/* Get the IDs of all properties available for this item
+		/* Gets the IDs of all properties available for this item
 		 * Don't add a JavaDoc comment here, we use the default documentation
 		 * from implemented interface.
 		 */
@@ -560,7 +601,8 @@ public class FilesystemContainer implements Container.Hierarchical {
 			return FilesystemContainer.this.getContainerPropertyIds();
 		}
 
-		/* Calculates a integer hash-code for the Property that's unique
+		/**
+		 * Calculates a integer hash-code for the Property that's unique
 		 * inside the Item containing the Property. Two different Properties
 		 * inside the same Item contained in the same list always have
 		 * different hash-codes, though Properties in different Items may
@@ -572,10 +614,11 @@ public class FilesystemContainer implements Container.Hierarchical {
 			return file.hashCode() ^ FilesystemContainer.this.hashCode();
 		}
 
-		/* Tests if the given object is the same as the this object.
+		/**
+		 * Tests if the given object is the same as the this object.
 		 * Two Properties got from an Item with the same ID are equal.
 		 * 
-		 * @param obj an object to compare with this object
+		 * @param obj an object to compare with this object.
 		 * @return <code>true</code> if the given object is the same as
 		 * this object, <code>false</code> if not
 		 */
@@ -585,23 +628,37 @@ public class FilesystemContainer implements Container.Hierarchical {
 			FileItem fi = (FileItem) obj;
 			return fi.getHost() == getHost() && fi.file.equals(file);
 		}
-
+		/**
+		 * Gets the host of this file.
+		 */
 		private FilesystemContainer getHost() {
 			return FilesystemContainer.this;
 		}
-
+		/**
+		 * Gets the last modified date of this file.
+		 * @return Date
+		 */
 		public Date lastModified() {
 			return new Date(this.file.lastModified());
 		}
-
+		/**
+		 * Gets the name of this file.
+		 * @return file name of this file.
+		 */
 		public String getName() {
 			return this.file.getName();
 		}
-
+		/**
+		 * Gets the icon of this file.
+		 * @return the icon of this file.
+		 */
 		public Resource getIcon() {
 			return FileTypeResolver.getIcon(this.file);
 		}
-
+		/**
+		 * Gets the size of this file.
+		 * @return size
+		 */
 		public long getSize() {
 			if (this.file.isDirectory())
 				return 0;
@@ -617,7 +674,8 @@ public class FilesystemContainer implements Container.Hierarchical {
 			return file.getName();
 		}
 
-		/** Filesystem container does not support adding new properties.
+		/** 
+		 * Filesystem container does not support adding new properties.
 		 * @see com.itmill.toolkit.data.Item#addItemProperty(Object, Property)
 		 */
 		public boolean addItemProperty(Object id, Property property)
@@ -627,7 +685,8 @@ public class FilesystemContainer implements Container.Hierarchical {
 					+ "does not support adding new properties");
 		}
 
-		/** Filesystem container does not support removing properties.
+		/**
+		 * Filesystem container does not support removing properties.
 		 * @see com.itmill.toolkit.data.Item#removeItemProperty(Object)
 		 */
 		public boolean removeItemProperty(Object id)
@@ -637,7 +696,8 @@ public class FilesystemContainer implements Container.Hierarchical {
 
 	}
 
-	/** Generic file extension filter for displaying only files having certain extension.
+	/** 
+	 * Generic file extension filter for displaying only files having certain extension.
 	 * @author IT Mill Ltd.
 	 * @version @VERSION@
 	 * @since 3.0
@@ -646,14 +706,16 @@ public class FilesystemContainer implements Container.Hierarchical {
 
 		private String filter;
 
-		/** Construct new FileExtensionFilter using given extension.
-		 * @param fileExtension File extension without the separator (dot).
-		 * */
+		/** 
+		 * Constructs new FileExtensionFilter using given extension.
+		 * @param fileExtension the File extension without the separator (dot).
+		 */
 		public FileExtensionFilter(String fileExtension) {
 			this.filter = "." + fileExtension;
 		}
 
-		/** Allow only files with the extension and directories.
+		/** 
+		 * Allows only files with the extension and directories.
 		 * @see java.io.FilenameFilter#accept(File, String)
 		 */
 		public boolean accept(File dir, String name) {
@@ -663,38 +725,45 @@ public class FilesystemContainer implements Container.Hierarchical {
 		}
 
 	}
-	/** Returns the file filter used to limit the files in this container.
+	/**
+	 * Returns the file filter used to limit the files in this container.
 	 * @return Used filter instance or null if no filter is assigned.
 	 */
 	public FilenameFilter getFilter() {
 		return filter;
 	}
 
-	/** Sets the file filter used to limit the files in this container.
+	/**
+	 * Sets the file filter used to limit the files in this container.
 	 * @param filter The filter to set. <code>null</code> disables filtering.
 	 */
 	public void setFilter(FilenameFilter filter) {
 		this.filter = filter;
 	}
 
-	/** Sets the file filter used to limit the files in this container.
-	 * @param extension Filename extension (w/o separator) to limit the files in container.
+	/**
+	 * Sets the file filter used to limit the files in this container.
+	 * @param extension the Filename extension (w/o separator) to limit the files in container.
 	 */
 	public void setFilter(String extension) {
 		this.filter = new FileExtensionFilter(extension);
 	}
 
-	/**Is this container recursive filesystem.
-	 * @return true if container is recursive, false otherwise.
+	/**
+	 * Is this container recursive filesystem.
+	 * @return <code>true</code> if container is recursive, <code>false</code> otherwise.
 	 */
 	public boolean isRecursive() {
 		return recursive;
 	}
 
-	/** Sets the container recursive property.
-	 *  Set this to false to limit the files directly under the root file.
-	 *  Note, that this is meaningful only if the root really is a directory.
-	 * @param New value for recursive property.
+	/**
+	 * Sets the container recursive property.
+	 * Set this to false to limit the files directly under the root file.
+	 * <p>
+	 * Note : This is meaningful only if the root really is a directory.
+	 * </p>
+	 * @param recursive the  New value for recursive property.
 	 */
 	public void setRecursive(boolean recursive) {
 		this.recursive = recursive;

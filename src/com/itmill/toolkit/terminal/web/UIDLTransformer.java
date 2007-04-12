@@ -51,13 +51,14 @@ import javax.xml.transform.ErrorListener;
 import javax.xml.transform.SourceLocator;
 import javax.xml.transform.OutputKeys;
 
-/** Class implementing the UIDLTransformer.
+/** 
+ * Class implementing the UIDLTransformer.
  *
- * The thansformer should not be created directly; it should be contructed
- * using getTransformer() provided by UIDLTransformerFactory. 
+ * The transformer should not be created directly; it should be contructed
+ * using <code>getTransformer</code> provided by <code>UIDLTransformerFactory</code>. 
  * 
  * After the transform has been done, the transformer can be recycled with
- * releaseTransformer() by UIDLTransformerFactory.
+ * <code>releaseTransformer</code> by <code>UIDLTransformerFactory</code>.
  *
  * @author IT Mill Ltd.
  * @version @VERSION@
@@ -66,7 +67,9 @@ import javax.xml.transform.OutputKeys;
 
 public class UIDLTransformer {
 
-	/** XSLT factory */
+	/** 
+	 * XSLT factory. 
+	 */
 	protected static javax.xml.transform.TransformerFactory xsltFactory;
 	static {
 		xsltFactory = javax.xml.transform.TransformerFactory.newInstance();
@@ -77,28 +80,40 @@ public class UIDLTransformer {
 					+ "not included in classpath.");
 	}
 
-	/** Source of the transform containing UIDL */
+	/** 
+	 * Source of the transform containing UIDL. 
+	 */
 	private WebPaintTarget paintTarget;
 
-	/** Holds the type of the transformer. */
+	/** 
+	 * Holds the type of the transformer. 
+	 */
 	private UIDLTransformerType transformerType;
 
-	/** Prepared XSLT transformer for UIDL transformations */
+	/** 
+	 * Prepared XSLT transformer for UIDL transformations. 
+	 */
 	private javax.xml.transform.Transformer uidlTransformer;
 
-	/** Error handled used */
+	/** 
+	 * Error handled used. 
+	 */
 	private TransformerErrorHandler errorHandler;
 
-	/** Theme repository used for late error reporting */
+	/** 
+	 * Theme repository used for late error reporting. 
+	 */
 	private ThemeSource themeSource;
 
 	private ApplicationServlet webAdapterServlet;
 
-	/** UIDLTransformer constructor.
-	 * @param type Type of the transformer
-	 * @param themes Theme implemented by the transformer
+	/** 
+	 * UIDLTransformer constructor.
+	 * @param type the Type of the transformer.
+	 * @param themes the theme implemented by the transformer.
+	 * @param webAdapterServlet the Adapter servlet.
 	 * @throws UIDLTransformerException UIDLTransformer exception is thrown, 
-	 * if the transform can not be created.
+	 * 									if the transform can not be created.
 	 */
 	public UIDLTransformer(
 		UIDLTransformerType type,
@@ -109,17 +124,17 @@ public class UIDLTransformer {
 		this.themeSource = themes;
 		this.webAdapterServlet = webAdapterServlet;
 
-		// Register error handler
+		// Registers the error handler
 		errorHandler = new TransformerErrorHandler();
 		xsltFactory.setErrorListener(errorHandler);
 
 		try {
 
-			// Create XML Reader to be used by
+			// Creates XML Reader to be used by
 			// XSLReader as the actual parser object.
 			XMLReader parser = XMLReaderFactory.createXMLReader();
 
-			// Create XML reader for concatenating
+			// Creates XML reader for concatenating
 			// multiple XSL files as one.
 
 			XMLReader xmlReader =
@@ -131,23 +146,23 @@ public class UIDLTransformer {
 
 			xmlReader.setErrorHandler(errorHandler);
 
-			// Create own SAXSource using a dummy inputSource.
+			// Creates own SAXSource using a dummy inputSource.
 			SAXSource source = new SAXSource(xmlReader, new InputSource());
 			uidlTransformer = xsltFactory.newTransformer(source);
 
 			if (uidlTransformer != null) {
 
-				// Register transformer error handler
+				// Registers transformer error handler
 				uidlTransformer.setErrorListener(errorHandler);
 
-				// Ensure HTML output
+				// Ensures HTML output
 				uidlTransformer.setOutputProperty(OutputKeys.METHOD, "html");
 
-				// Ensure no indent
+				// Ensures no indent
 				uidlTransformer.setOutputProperty(OutputKeys.INDENT, "no");
 			}
 
-			// Check if transform itself failed, meaning either
+			// Checks if transform itself failed, meaning either
 			// UIDL error or error in XSL/T semantics (like XPath)
 			if (errorHandler.hasFatalErrors()) {
 				throw new UIDLTransformerException(
@@ -169,16 +184,18 @@ public class UIDLTransformer {
 		}
 	}
 
-	/** Get the type of the transformer.
-	* @return Type of the transformer.
-	*/
+	/** 
+	 * Gets the type of the transformer.
+	 * @return the Type of the transformer.
+	 */
 	public UIDLTransformerType getTransformerType() {
 		return this.transformerType;
 	}
 
-	/** Attach the output stream to transformer and get corresponding UIDLStream for 
+	/** 
+	 * Attaches the output stream to transformer and get corresponding UIDLStream for 
 	 * writing UI description language trough transform to given output.
-	 * @param variableMap The variable map used for UIDL creation.
+	 * @param variableMap the variable map used for UIDL creation.
 	 * @return returns UI description language stream, that can be used for writing UIDL to
 	 *  transformer.
 	 */
@@ -198,9 +215,10 @@ public class UIDLTransformer {
 		return paintTarget;
 	}
 
-	/** Reset the transformer, before it can be used again. This also interrupts
+	/** 
+	 * Resets the transformer, before it can be used again. This also interrupts
 	 * any ongoing transform and thus should not be called before the transform
-	 * is ready. This is automaticalled by the UIDLTransformFactory, when the UIDLTransformer
+	 * is ready. This is automatically called by the UIDLTransformFactory, when the UIDLTransformer
 	 * has been released.
 	 * @see UIDLTransformerFactory#releaseTransformer(UIDLTransformer)
 	 */
@@ -218,9 +236,11 @@ public class UIDLTransformer {
 	}
 
 	/**
-	 * Transform the UIDL to HTML and output to the OutputStream.
+	 * Transforms the UIDL to HTML and output to the OutputStream.
 	 * 
-	 * @param servletOutputStream - The output stream to render to.
+	 * @param outputStream the output stream to render to.
+	 * @throws UIDLTransformerException UIDLTransformer exception is thrown, 
+	 * 								if the transform can not be created.
 	 */
 	public void transform(OutputStream outputStream)
 		throws UIDLTransformerException {
@@ -236,7 +256,7 @@ public class UIDLTransformer {
 				org.xml.sax.helpers.XMLReaderFactory.createXMLReader();
 			reader.setErrorHandler(this.errorHandler);
 
-			// Validate if requested. We validate the UIDL separately,
+			// Validates if requested. We validate the UIDL separately,
 			// toget the SAXExceptions instead of TransformerExceptions.
 			// This is required to get the line numbers right.
 			/* FIXME: Disable due abnormalities in DTD handling.
@@ -261,7 +281,7 @@ public class UIDLTransformer {
 				errorHandler.getUIDLErrorReport());
 		}
 
-		// Check if transform itself failed, meaning either
+		// Checks if transform itself failed, meaning either
 		// UIDL error or error in XSL/T semantics (like XPath)
 		if (errorHandler.hasFatalErrors()) {
 			throw new UIDLTransformerException(
@@ -274,7 +294,12 @@ public class UIDLTransformer {
 						transformerType));
 		}
 	}
-
+	
+/**
+ * 
+ * 
+ *
+ */
 	protected class TransformerErrorHandler
 		implements ErrorListener, org.xml.sax.ErrorHandler {
 
@@ -283,21 +308,36 @@ public class UIDLTransformer {
 		LinkedList fatals = new LinkedList();
 		Hashtable rowToErrorMap = new Hashtable();
 		Hashtable errorToRowMap = new Hashtable();
-
+		
+/**
+ * 
+ * @return
+ */
 		public boolean hasNoErrors() {
 			return errors.isEmpty() && warnings.isEmpty() && fatals.isEmpty();
 		}
-
+		
+/**
+ * 
+ * @return
+ */
 		public boolean hasFatalErrors() {
 			return !fatals.isEmpty();
 		}
-
+		
+/**
+ * 
+ *
+ */
 		public void clear() {
 			errors.clear();
 			warnings.clear();
 			fatals.clear();
 		}
-
+		
+		/**
+		 * @see java.lang.Object#toString()
+		 */
 		public String toString() {
 			return getHTMLErrors("Fatal Errors", fatals)
 				+ "<br />"
@@ -306,7 +346,13 @@ public class UIDLTransformer {
 				+ getHTMLErrors("Warnings", warnings)
 				+ "<br />";
 		}
-
+		
+/**
+ * 
+ * @param title
+ * @param l
+ * @return
+ */
 		private String getHTMLErrors(String title, LinkedList l) {
 			String r = "";
 			r = "<b>" + title + "</b><br />";
@@ -405,12 +451,16 @@ public class UIDLTransformer {
 			}
 		}
 
-		/** Gets the formated error report on XSL. */
+		/** 
+		 * Gets the formated error report on XSL. 
+		 * @param themes
+		 * @param type
+		 */
 		public String getXSLErrorReport(
 			ThemeSource themes,
 			UIDLTransformerType type) {
 
-			// Recreate XSL for error reporting
+			// Recreates the XSL for error reporting
 			StringBuffer readBuffer = new StringBuffer();
 			try {
 				Collection c =
@@ -517,7 +567,10 @@ public class UIDLTransformer {
 			return sb.toString();
 		}
 
-		/** Gets the formated error report on UIDL. */
+		/** 
+		 * Gets the formated error report on UIDL. 
+		 * @return the formatted error report.
+		 */
 		public String getUIDLErrorReport() {
 
 			String uidl = "UIDL Source Not Available.";
@@ -525,16 +578,16 @@ public class UIDLTransformer {
 				uidl = paintTarget.getUIDL();
 			StringBuffer sb = new StringBuffer();
 
-			// Print formatted UIDL with errors embedded
+			// Prints the formatted UIDL with errors embedded
 			int row = 0;
 			int prev = 0;
 			int index = 0;
 			boolean lastLineWasEmpty = false;
 
-			// Append error report
+			// Appends the error report
 			sb.append(toString());
 
-			// Append UIDL
+			// Appends UIDL
 			sb.append(
 				"<table width=\"100%\" style=\"border-left: 1px solid black; "
 					+ "border-right: 1px solid black; border-bottom: "
@@ -575,7 +628,11 @@ public class UIDLTransformer {
 			return sb.toString();
 		}
 
-		/** Highlight the XML source. */
+		/** 
+		 * Highlights the XML source.
+		 * @param xmlSnippet
+		 * @return  
+		 */
 		private String xmlHighlight(String xmlSnippet) {
 			String res = xmlSnippet;
 
@@ -597,7 +654,10 @@ public class UIDLTransformer {
 			return res;
 		}
 
-		/** Get the first fatal error. */
+		/** 
+		 * Gets the first fatal error.
+		 * @return the fatal error. 
+		 */
 		public Throwable getFirstFatalError() {
 			return (Throwable) fatals.iterator().next();
 		}

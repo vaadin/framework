@@ -40,17 +40,20 @@ import com.itmill.toolkit.data.util.BeanItem;
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
 
-/** Form component provides easy way of creating and managing sets fields.
+/** 
+ * Form component provides easy way of creating and managing sets fields.
  * 
- * <p>Form is a container for fields implementing {@link Field} interface. It
+ * <p>
+ * <code>Form</code> is a container for fields implementing {@link Field} interface. It
  * provides support for any layouts and provides buffering interface for easy
- * connection of commit- and discard buttons. All the form fields can be
+ * connection of commit and discard buttons. All the form fields can be
  * customized by adding validators, setting captions and icons, setting
  * immediateness, etc. Also direct mechanism for replacing existing fields with
  * selections is given.
  * </p>
  * 
- * <p>Form provides customizable editor for classes implementing
+ * <p>
+ * <code>Form</code> provides customizable editor for classes implementing
  * {@link com.itmill.toolkit.data.Item} interface. Also the form itself
  * implements this interface for easier connectivity to other items.
  * To use the form as editor for an item, just connect the item to
@@ -61,7 +64,8 @@ import com.itmill.toolkit.terminal.PaintTarget;
  * be added. If you need to connect a class that does not implement
  * {@link com.itmill.toolkit.data.Item} interface, most properties of any
  * class following bean pattern, can be accessed trough 
- * {@link com.itmill.toolkit.data.util.BeanItem}.</p>
+ * {@link com.itmill.toolkit.data.util.BeanItem}.
+ * </p>
  * 
  * @author IT Mill Ltd.
  * @version @VERSION@
@@ -73,59 +77,83 @@ public class Form
 
 	private Object propertyValue;
 
-	/** Layout of the form */
+	/** 
+	 * Layout of the form. 
+	 */
 	private Layout layout;
 
-	/** Item connected to this form as datasource */
+	/** 
+	 * Item connected to this form as datasource. 
+	 */
 	private Item itemDatasource;
 
-	/** Ordered list of property ids in this editor */
+	/** 
+	 * Ordered list of property ids in this editor. 
+	 */
 	private LinkedList propertyIds = new LinkedList();
 
-	/** Current buffered source exception */
+	/** 
+	 * Current buffered source exception. 
+	 */
 	private Buffered.SourceException currentBufferedSourceException = null;
 
-	/** Is the form in write trough mode */
+	/** 
+	 * Is the form in write trough mode. 
+	 */
 	private boolean writeThrough = true;
 
-	/** Is the form in read trough mode */
+	/** 
+	 * Is the form in read trough mode. 
+	 */
 	private boolean readThrough = true;
 
-	/** Mapping from propertyName to corresponding field */
+	/** 
+	 * Mapping from propertyName to corresponding field. 
+	 */
 	private HashMap fields = new HashMap();
 
-	/** Field factory for this form */
+	/** 
+	 * Field factory for this form. 
+	 */
 	private FieldFactory fieldFactory;
 
-	/** Registered Validators */
+	/** 
+	 * Registered Validators. 
+	 */
 	private LinkedList validators;
 
-	/** Visible item properties */
+	/** 
+	 * Visible item properties. 
+	 */
 	private Collection visibleItemProperties;
 
-	/** Contruct a new form with default layout.
+	/** 
+	 * Contructs a new form with default layout.
 	 * 
-	 * <p>By default the form uses <code>OrderedLayout</code>
+	 * <p>
+	 * By default the form uses <code>OrderedLayout</code>
 	 * with <code>form</code>-style.
-	 * 
-	 * @param formLayout The layout of the form.
+	 * </p>
+	 * @param formLayout the layout of the form.
 	 */
 	public Form() {
 		this(null);
 	}
 
-	/** Contruct a new form with given layout.
+	/** 
+	 * Contructs a new form with given layout.
 	 * 
-	 * @param formLayout The layout of the form.
+	 * @param formLayout the layout of the form.
 	 */
 	public Form(Layout formLayout) {
 		this(formLayout, new BaseFieldFactory());
 	}
 
-	/** Contruct a new form with given layout and FieldFactory.
+	/** 
+	 * Contructs a new form with given layout and FieldFactory.
 	 *
-	 * @param formLayout The layout of the form.
-	 * @param fieldFactory FieldFactory of the form
+	 * @param formLayout the layout of the form.
+	 * @param fieldFactory the FieldFactory of the form.
 	 */
 	public Form(Layout formLayout, FieldFactory fieldFactory) {
 		super();
@@ -187,7 +215,7 @@ public class Form
 		throw e;
 	}
 
-	/* Discard local changes and refresh values from the data source
+	/* Discards local changes and refresh values from the data source
 	 * Don't add a JavaDoc comment here, we use the default one from the
 	 * interface.
 	 */
@@ -214,7 +242,7 @@ public class Form
 			return;
 		}
 
-		// Discard problems occurred		
+		// Discards problems occurred		
 		Throwable[] causes = new Throwable[problems.size()];
 		int index = 0;
 		for (Iterator i = problems.iterator(); i.hasNext();)
@@ -279,26 +307,27 @@ public class Form
 		}
 	}
 
-	/** Add a new property to form and create corresponding field.
+	/** 
+	 * Adds a new property to form and create corresponding field.
 	 * 
 	 * @see com.itmill.toolkit.data.Item#addItemProperty(Object, Property)
 	 */
 	public boolean addItemProperty(Object id, Property property) {
 
-		// Check inputs
+		// Checks inputs
 		if (id == null || property == null)
 			throw new NullPointerException("Id and property must be non-null");
 
-		// Check that the property id is not reserved
+		// Checks that the property id is not reserved
 		if (propertyIds.contains(id))
 			return false;
 
-		// Get suitable field
+		// Gets suitable field
 		Field field = this.fieldFactory.createField(property, this);
 		if (field == null)
 			return false;
 
-		// Configure the field
+		// Configures the field
 		try {
 			field.setPropertyDataSource(property);
 			String caption = id.toString();
@@ -319,9 +348,11 @@ public class Form
 		return true;
 	}
 
-	/** Add field to form. 
+	/** 
+	 * Adds the field to form. 
 	 * 
-	 * <p>The property id must not be already used in the form.  
+	 * <p>
+	 * The property id must not be already used in the form.  
 	 * </p>
 	 * 
 	 * <p>This field is added to the form layout in the default position
@@ -330,8 +361,8 @@ public class Form
 	 * string representation of the property id is used instead of the
 	 * default location.</p>
 	 * 
-	 * @param propertyId Property id the the field.
-	 * @param field New field added to the form.
+	 * @param propertyId the Property id the the field.
+	 * @param field the New field added to the form.
 	 */
 	public void addField(Object propertyId, Field field) {
 
@@ -354,12 +385,15 @@ public class Form
 		}
 	}
 
-	/** The property identified by the property id.
+	/** 
+	 * The property identified by the property id.
 	 * 
-	 * <p>The property data source of the field specified with
+	 * <p>
+	 * The property data source of the field specified with
 	 * property id is returned. If there is a (with specified property id) 
 	 * having no data source,
-	 * the field is returned instead of the data source.</p>
+	 * the field is returned instead of the data source.
+	 * </p>
 	 * 
 	 * @see com.itmill.toolkit.data.Item#getItemProperty(Object)
 	 */
@@ -375,7 +409,10 @@ public class Form
 			return field;
 	}
 
-	/** Get the field identified by the propertyid */
+	/** 
+	 * Gets the field identified by the propertyid.
+	 * @param propertyId the id of the property. 
+	 */
 	public Field getField(Object propertyId) {
 		return (Field) fields.get(propertyId);
 	}
@@ -385,7 +422,8 @@ public class Form
 		return Collections.unmodifiableCollection(propertyIds);
 	}
 
-	/** Removes the property and corresponding field from the form.
+	/** 
+	 * Removes the property and corresponding field from the form.
 	 * 
 	 * @see com.itmill.toolkit.data.Item#removeItemProperty(Object)
 	 */
@@ -405,10 +443,11 @@ public class Form
 		return false;
 	}
 
-	/** Removes all properties and fields from the form.
+	/** 
+	 * Removes all properties and fields from the form.
 	 * 
-	 * @return Success of the operation. Removal of all fields succeeded 
-	 * if (and only if) the return value is true.
+	 * @return the Success of the operation. Removal of all fields succeeded 
+	 * if (and only if) the return value is <code>true</code>.
 	 */
 	public boolean removeAllProperties() {
 		Object[] properties = propertyIds.toArray();
@@ -426,10 +465,13 @@ public class Form
 		return itemDatasource;
 	}
 
-	/** Set the item datasource for the form.
+	/** 
+	 * Sets the item datasource for the form.
 	 * 
-	 * <p>Setting item datasource clears any fields, the form might contain
-	 * and adds all the properties as fields to the form.</p>
+	 * <p>
+	 * Setting item datasource clears any fields, the form might contain
+	 * and adds all the properties as fields to the form.
+	 * </p>
 	 * 
 	 * @see com.itmill.toolkit.data.Item.Viewer#setItemDataSource(Item)
 	 */
@@ -439,28 +481,31 @@ public class Form
 			newDataSource != null ? newDataSource.getItemPropertyIds() : null);
 	}
 
-	/** Set the item datasource for the form, but limit the form contents
+	/** 
+	 * Set the item datasource for the form, but limit the form contents
 	 * to specified properties of the item.
 	 * 
-	 * <p>Setting item datasource clears any fields, the form might contain
+	 * <p>
+	 * Setting item datasource clears any fields, the form might contain
 	 * and adds the specified the properties as fields to the form, in the
-	 * specified order.</p>
+	 * specified order.
+	 * </p>
 	 * 
 	 * @see com.itmill.toolkit.data.Item.Viewer#setItemDataSource(Item)
 	 */
 	public void setItemDataSource(Item newDataSource, Collection propertyIds) {
 
-		// Remove all fields first from the form
+		// Removes all fields first from the form
 		removeAllProperties();
 
-		// Set the datasource
+		// Sets the datasource
 		itemDatasource = newDataSource;
 
 		//If the new datasource is null, just set null datasource
 		if (itemDatasource == null)
 			return;
 
-		// Add all the properties to this form
+		// Adds all the properties to this form
 		for (Iterator i = propertyIds.iterator(); i.hasNext();) {
 			Object id = i.next();
 			Property property = itemDatasource.getItemProperty(id);
@@ -475,21 +520,27 @@ public class Form
 		}
 	}
 
-	/** Get the layout of the form. 
+	/** 
+	 * Gets the layout of the form. 
 	 * 
-	 * <p>By default form uses <code>OrderedLayout</code> with <code>form</code>-style.</p>
+	 * <p>
+	 * By default form uses <code>OrderedLayout</code> with <code>form</code>-style.
+	 * </p>
 	 * 
-	 * @return Layout of the form.
+	 * @return the Layout of the form.
 	 */
 	public Layout getLayout() {
 		return layout;
 	}
 
-	/** Set the layout of the form.
+	/** 
+	 * Sets the layout of the form.
 	 *
-	 * <p>By default form uses <code>OrderedLayout</code> with <code>form</code>-style.</p>
+	 * <p>
+	 * By default form uses <code>OrderedLayout</code> with <code>form</code>-style.
+	 * </p>
 	 *
-	 * @param layout Layout of the form.
+	 * @param newLayout the Layout of the form.
 	 */
 	public void setLayout(Layout newLayout) {
 
@@ -510,26 +561,31 @@ public class Form
 		this.layout = newLayout;
 	}
 
-	/** Set a form field to be selectable from static list of changes.
+	/** 
+	 * Sets the form field to be selectable from static list of changes.
 	 * 
-	 * <p>The list values and descriptions are given as array. The value-array must contain the 
+	 * <p>
+	 * The list values and descriptions are given as array. The value-array must contain the 
 	 * current value of the field and the lengths of the arrays must match. Null values are not
-	 * supported.</p>
-	 * 
-	 * @return The select property generated
+	 * supported.
+	 * </p>
+	 * @param propertyId the id of the property.
+	 * @param values
+	 * @param descriptions
+	 * @return the select property generated
 	 */
 	public Select replaceWithSelect(
 		Object propertyId,
 		Object[] values,
 		Object[] descriptions) {
 
-		// Check the parameters
+		// Checks the parameters
 		if (propertyId == null || values == null || descriptions == null)
 			throw new NullPointerException("All parameters must be non-null");
 		if (values.length != descriptions.length)
 			throw new IllegalArgumentException("Value and description list are of different size");
 
-		// Get the old field
+		// Gets the old field
 		Field oldField = (Field) fields.get(propertyId);
 		if (oldField == null)
 			throw new IllegalArgumentException(
@@ -538,7 +594,7 @@ public class Form
 					+ "' can not be found.");
 		Object value = oldField.getValue();
 
-		// Check that the value exists and check if the select should
+		// Checks that the value exists and check if the select should
 		// be forced in multiselect mode
 		boolean found = false;
 		boolean isMultiselect = false;
@@ -575,7 +631,7 @@ public class Form
 						+ "' was not found");
 		}
 
-		// Create new field matching to old field parameters
+		// Creates the new field matching to old field parameters
 		Select newField = new Select();
 		if (isMultiselect) newField.setMultiSelect(true);
 		newField.setCaption(oldField.getCaption());
@@ -583,7 +639,7 @@ public class Form
 		newField.setReadThrough(oldField.isReadThrough());
 		newField.setWriteThrough(oldField.isWriteThrough());
 
-		// Create options list
+		// Creates the options list
 		newField.addContainerProperty("desc", String.class, "");
 		newField.setItemCaptionPropertyId("desc");
 		for (int i = 0; i < values.length; i++) {
@@ -598,12 +654,12 @@ public class Form
 					descriptions[i].toString());
 		}
 
-		// Set the property data source
+		// Sets the property data source
 		Property property = oldField.getPropertyDataSource();
 		oldField.setPropertyDataSource(null);
 		newField.setPropertyDataSource(property);
 
-		// Replace the old field with new one
+		// Replaces the old field with new one
 		layout.replaceComponent(oldField, newField);
 		fields.put(propertyId, newField);
 		this.removeDirectDependency(oldField);
@@ -615,6 +671,7 @@ public class Form
 	}
 
 	/**
+	 * Notifies the component that it is connected to an application
 	 * @see com.itmill.toolkit.ui.Component#attach()
 	 */
 	public void attach() {
@@ -623,6 +680,7 @@ public class Form
 	}
 
 	/**
+	 * Notifies the component that it is detached from the application.
 	 * @see com.itmill.toolkit.ui.Component#detach()
 	 */
 	public void detach() {
@@ -631,6 +689,7 @@ public class Form
 	}
 
 	/**
+	 * Adds a new validator for this object.
 	 * @see com.itmill.toolkit.data.Validatable#addValidator(com.itmill.toolkit.data.Validator)
 	 */
 	public void addValidator(Validator validator) {
@@ -640,7 +699,9 @@ public class Form
 		}
 		this.validators.add(validator);
 	}
+	
 	/**
+	 * Removes a previously registered validator from the object.
 	 * @see com.itmill.toolkit.data.Validatable#removeValidator(com.itmill.toolkit.data.Validator)
 	 */
 	public void removeValidator(Validator validator) {
@@ -648,7 +709,9 @@ public class Form
 			this.validators.remove(validator);
 		}
 	}
+	
 	/**
+	 * Gets the Lists all validators currently registered for the object.
 	 * @see com.itmill.toolkit.data.Validatable#getValidators()
 	 */
 	public Collection getValidators() {
@@ -657,7 +720,10 @@ public class Form
 		}
 		return null;
 	}
+	
 	/**
+	 * Tests the current value of the object against all registered
+     * validators
 	 * @see com.itmill.toolkit.data.Validatable#isValid()
 	 */
 	public boolean isValid() {
@@ -666,7 +732,9 @@ public class Form
 			valid &= ((Field) fields.get(i.next())).isValid();
 		return valid;
 	}
+	
 	/**
+	 * Checks the validity of the validatable.
 	 * @see com.itmill.toolkit.data.Validatable#validate()
 	 */
 	public void validate() throws InvalidValueException {
@@ -675,19 +743,24 @@ public class Form
 	}
 
 	/**
+	 * Checks the validabtable object accept invalid values.
 	 * @see com.itmill.toolkit.data.Validatable#isInvalidAllowed()
 	 */
 	public boolean isInvalidAllowed() {
 		return true;
 	}
+	
 	/**
+	 * Should the validabtable object accept invalid values.
 	 * @see com.itmill.toolkit.data.Validatable#setInvalidAllowed(boolean)
 	 */
 	public void setInvalidAllowed(boolean invalidValueAllowed)
 		throws UnsupportedOperationException {
 		throw new UnsupportedOperationException();
 	}
+	
 	/**
+	 * Sets the component's to read-only mode to the specified state.
 	 * @see com.itmill.toolkit.ui.Component#setReadOnly(boolean)
 	 */
 	public void setReadOnly(boolean readOnly) {
@@ -696,12 +769,13 @@ public class Form
 			 ((Field) fields.get(i.next())).setReadOnly(readOnly);
 	}
 
-	/** Set the field factory of Form.
+	/** 
+	 * Sets the field factory of Form.
 	 *
-	 * FieldFacroty is used to create fields for form properties.
+	 * <code>FieldFactory</code> is used to create fields for form properties.
 	 * By default the form uses BaseFieldFactory to create Field instances.
 	 *
-	 * @param fieldFactory New factory used to create the fields
+	 * @param fieldFactory the New factory used to create the fields.
 	 * @see Field
 	 * @see FieldFactory
 	 */
@@ -709,15 +783,17 @@ public class Form
 		this.fieldFactory = fieldFactory;
 	}
 
-	/** Get the field factory of the form.
+	/** 
+	 * Get the field factory of the form.
 	 *
-	 * @return FieldFactory Factory used to create the fields
+	 * @return the FieldFactory Factory used to create the fields.
 	 */
 	public FieldFactory getFieldFactory() {
 		return this.fieldFactory;
 	}
 
 	/**
+	 * Gets the field type.
 	 * @see com.itmill.toolkit.ui.AbstractField#getType()
 	 */
 	public Class getType() {
@@ -726,27 +802,29 @@ public class Form
 		return Object.class;
 	}
 
-	/** Set the internal value.
+	/** 
+	 * Sets the internal value.
 	 * 
 	 * This is relevant when the Form is used as Field.
 	 * @see com.itmill.toolkit.ui.AbstractField#setInternalValue(java.lang.Object)
 	 */
 	protected void setInternalValue(Object newValue) {
-		// Store old value
+		// Stores the old value
 		Object oldValue = this.propertyValue;
 		
-		// Set the current Value
+		// Sets the current Value
 		super.setInternalValue(newValue);
 		this.propertyValue = newValue;
 
-		// Ignore form updating if data object has not changed.
+		// Ignores form updating if data object has not changed.
 		if (oldValue != newValue) {
 			setFormDataSource(newValue, getVisibleItemProperties());
 		}
 	}
 
-	/**Get first field in form.
-	 * @return Field
+	/**
+	 * Gets the first field in form.
+	 * @return the Field.
 	 */
 	private Field getFirstField() {
 		Object id = null;
@@ -758,10 +836,12 @@ public class Form
 		return null;
 	}
 
-	/** Update the internal form datasource.
+	/** 
+	 * Updates the internal form datasource.
 	 * 
 	 * Method setFormDataSource.
-	 * @param value
+	 * @param data
+	 * @param properties
 	 */
 	protected void setFormDataSource(Object data, Collection properties) {
 
@@ -773,19 +853,19 @@ public class Form
 			item = new BeanItem(data);
 		}
 
-		// Set the datasource to form
+		// Sets the datasource to form
 		if (item != null && properties != null) {
-			// Show only given properties
+			// Shows only given properties
 			this.setItemDataSource(item, properties);
 		} else {
-			// Show all properties
+			// Shows all properties
 			this.setItemDataSource(item);
 		}
 	}
 
 	/**
 	 * Returns the visibleProperties.
-	 * @return Collection
+	 * @return the Collection of visible Item properites.
 	 */
 	public Collection getVisibleItemProperties() {
 		return visibleItemProperties;
@@ -793,7 +873,7 @@ public class Form
 
 	/**
 	 * Sets the visibleProperties.
-	 * @param visibleProperties The visibleProperties to set
+	 * @param visibleProperties the visibleProperties to set.
 	 */
 	public void setVisibleItemProperties(Collection visibleProperties) {
 		this.visibleItemProperties = visibleProperties;
@@ -801,7 +881,8 @@ public class Form
 		setFormDataSource(value, getVisibleItemProperties());
 	}
 
-	/** Focuses the first field in the form.
+	/** 
+	 * Focuses the first field in the form.
 	 * @see com.itmill.toolkit.ui.Component.Focusable#focus()
 	 */
 	public void focus() {
@@ -812,6 +893,7 @@ public class Form
 	}
 
 	/**
+	 * Sets the Tabulator index of this Focusable component.
 	 * @see com.itmill.toolkit.ui.Component.Focusable#setTabIndex(int)
 	 */
 	public void setTabIndex(int tabIndex) {

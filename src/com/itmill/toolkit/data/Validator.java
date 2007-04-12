@@ -32,7 +32,8 @@ import com.itmill.toolkit.terminal.ErrorMessage;
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
 
-/** Object validator interface. Implementors of this class can be added to
+/** 
+ * Object validator interface. Implementors of this class can be added to
  * any {@link com.itmill.toolkit.data.Validatable} object to verify
  * its value. The <code>Validatable#isValid(Object)</code> iterates all
  * registered <code>Validator</code>s, calling their {@link #validate(Object)}
@@ -46,7 +47,8 @@ import com.itmill.toolkit.terminal.PaintTarget;
  */
 public interface Validator {
 
-	/** Checks the given value against this validator. If the value is valid
+	/** 
+	 * Checks the given value against this validator. If the value is valid
 	 * this method should do nothing, and if it's not valid, it should throw
 	 * <code>Validator.InvalidValueException</code>
 	 * 
@@ -55,12 +57,15 @@ public interface Validator {
 	 */
 	public void validate(Object value) throws Validator.InvalidValueException;
 
-	/** Test if the the given value is valid.
+	/** 
+	 * Tests if the given value is valid.
 	 * @param value the value to check
+	 * @return <code>true</code> for valid value, otherwise <code>false</code>.
 	 */
 	public boolean isValid(Object value);
 
-	/** Adds the proposing functionality to a {@link Validator}. A
+	/** 
+	 * Adds the proposing functionality to a {@link Validator}. A
 	 * <code>Suggestive</code> validator can propose a valid value for the
 	 * object it is attached to validate. This way the {@link Validatable}
 	 * object may avoid situations where it contains a value that could
@@ -71,8 +76,9 @@ public interface Validator {
 	 */
 	public interface Suggestive extends Validator {
 
-		/** Suggest another value that can be used instead of
-		 * <code>proposedValue</code> if it is invalid. If it is valid
+		/** 
+		 * Suggests another value that can be used instead of the
+		 * proposedValue if it is invalid. If it is valid
 		 * in the opinion of this validator, however, it is returned as is.
 		 * 
 		 * @param proposedValue Originally proposed value that could be
@@ -82,7 +88,8 @@ public interface Validator {
 		public Object suggestValidValue(Object proposedValue);
 	}
 
-	/** Invalid value exception can be thrown by {@link Validator} when a
+	/** 
+	 * Invalid value exception can be thrown by {@link Validator} when a
 	 * given value is not valid.
 	 * @author IT Mill Ltd.
 	 * @version @VERSION@
@@ -99,7 +106,8 @@ public interface Validator {
         /** Array of validation errors that are causing the problem. */
 		private InvalidValueException[] causes = null;
 
-		/** Constructs a new <code>InvalidValueException</code> with the
+		/** 
+		 * Constructs a new <code>InvalidValueException</code> with the
 		 * specified detail message.
 		 * 
 		 * @param message The detail message of the problem.
@@ -109,10 +117,11 @@ public interface Validator {
 			});
 		}
 
-		/** Constructs a new <code>InvalidValueException</code> with a set 
-		 * of causing validation exceptions. The
-		 * error message contains first the given message and then a list
-		 * of validation errors in the given validatables. 
+		/** 
+		 * Constructs a new <code>InvalidValueException</code> with a set 
+		 * of causing validation exceptions. The error message contains
+		 * first the given message and then a list of validation errors 
+		 * in the given validatables. 
 		 * 
 		 * @param message The detail message of the problem.
 		 * @param causes Array of validatables whos invalidities are possiblity causing the invalidity.

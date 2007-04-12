@@ -39,7 +39,8 @@ import com.itmill.toolkit.terminal.UploadStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-/** Component for client file uploading.
+/** 
+ * Component for client file uploading.
  *
  * @author IT Mill Ltd.
  * @version @VERSION@
@@ -47,25 +48,35 @@ import java.io.OutputStream;
  */
 public class Upload extends AbstractComponent implements Component.Focusable {
 
-	/** Upload buffer size. */
+	/** 
+	 * Upload buffer size. 
+	 */
 	private static final int BUFFER_SIZE = 64 * 1024; // 64k
 
-	/** Should the field be focused on next repaint */
+	/** 
+	 * Should the field be focused on next repaint? 
+	 */
 	private boolean focus = false;
 
-	/** The tab order number of this field */
+	/** 
+	 * The tab order number of this field. 
+	 */
 	private int tabIndex = 0;
 
-	/** The output of the upload is redirected to this receiver. */
+	/** 
+	 * The output of the upload is redirected to this receiver. 
+	 */
 	private Receiver receiver;
 	
 	private long focusableId = -1;
 
     /* TODO: Add a default constructor, receive to temp file. */
     
-	/** Creates a new instance of Upload that redirects the 
+	/** 
+	 * Creates a new instance of Upload that redirects the 
 	 * uploaded data to given stream. 
-	 * 
+	 * @param caption
+	 * @param uploadReceiver
 	 */
 	public Upload(String caption, Receiver uploadReceiver) {
 		this.focusableId = Window.getNewFocusableId(this);
@@ -73,28 +84,32 @@ public class Upload extends AbstractComponent implements Component.Focusable {
 		receiver = uploadReceiver;
 	}
 
-	/** Get component type.
+	/** 
+	 * Gets the component type.
 	 * @return Component type as string.
 	 */
 	public String getTag() {
 		return "upload";
 	}
 
-	/** Invoked when the value of a variable has changed.  */
+	/**
+	 * Invoked when the value of a variable has changed. 
+	 * @see com.itmill.toolkit.ui.AbstractComponent#changeVariables(java.lang.Object, java.util.Map)
+	 */
 	public void changeVariables(Object source, Map variables) {
 
-		// Check the variable name
+		// Checks the variable name
 		if (!variables.containsKey("stream"))
 			return;
 
-		// Get the upload stream    
+		// Gets the upload stream    
 		UploadStream upload = (UploadStream) variables.get("stream");
 
-		// Get file properties
+		// Gets file properties
 		String filename = upload.getContentName();
 		String type = upload.getContentType();
 
-		// Get the output target stream
+		// Gets the output target stream
 		OutputStream out = receiver.receiveUpload(filename, type);
 		if (out == null)
 			throw new RuntimeException("Error getting outputstream from upload receiver");
@@ -126,9 +141,10 @@ public class Upload extends AbstractComponent implements Component.Focusable {
 		}
 	}
 
-	/** Paint the content of this component.
+	/** 
+	 * Paints the content of this component.
 	 * @param target Target to paint the content on.
-	 * @throws PaintException The paint operation failed.
+	 * @throws PaintException if the paint operation failed.
 	 */
 	public void paintContent(PaintTarget target) throws PaintException {
 		// The field should be focused
@@ -142,16 +158,19 @@ public class Upload extends AbstractComponent implements Component.Focusable {
 		target.addUploadStreamVariable(this, "stream");
 	}
 
-	/** Interface that must be implemented by the upload receivers. 
+	/** 
+	 * Interface that must be implemented by the upload receivers.
+	 *  
 	 * @author IT Mill Ltd.
 	 * @version @VERSION@
 	 * @since 3.0
 	 */
 	public interface Receiver {
 
-		/** Invoked when a new upload arrives. 
-		 * @param filename The desired filename of the upload, usually as specified by the client.
-		 * @param MIMEType The MIME type of the uploaded file. 
+		/** 
+		 * Invoked when a new upload arrives. 
+		 * @param filename the desired filename of the upload, usually as specified by the client.
+		 * @param MIMEType the MIME type of the uploaded file. 
 		 * @return Stream to which the uploaded file should be written.
 		 */
 		public OutputStream receiveUpload(String filename, String MIMEType);
@@ -183,8 +202,10 @@ public class Upload extends AbstractComponent implements Component.Focusable {
 		}
 	}
 
-	/** Upload.Received event is sent when the upload receives a file,
+	/** 
+	 * Upload.Received event is sent when the upload receives a file,
 	 * regardless if the receival was successfull.
+	 * 
 	 * @author IT Mill Ltd.
 	 * @version @VERSION@
 	 * @since 3.0
@@ -196,15 +217,28 @@ public class Upload extends AbstractComponent implements Component.Focusable {
          */
         private static final long serialVersionUID = 3257288015385670969L;
 
-        /** Length of the received file. */
+        /** 
+         * Length of the received file. 
+         */
 		private long length;
 
-		/** MIME type of the received file. */
+		/** 
+		 * MIME type of the received file. 
+		 */
 		private String type;
 
-		/** Received file name */
+		/** 
+		 * Received file name. 
+		 */
 		private String filename;
-
+		
+		/**
+		 * 
+		 * @param source the source of the file.
+		 * @param filename the received file name.
+		 * @param MIMEType the MIME type of the received file.
+		 * @param length the length of the received file.
+		 */
 		public FinishedEvent(
 			Upload source,
 			String filename,
@@ -216,28 +250,32 @@ public class Upload extends AbstractComponent implements Component.Focusable {
 			this.length = length;
 		}
 
-		/** Upload where the event occurred
-		 * @return Source of the event.
+		/** 
+		 * Uploads where the event occurred.
+		 * @return the Source of the event.
 		 */
 		public Upload getUpload() {
 			return (Upload) getSource();
 		}
 		/**
-		 * Returns the filename.
+		 * Gets the file name.
+		 * @return the filename.
 		 */
 		public String getFilename() {
 			return filename;
 		}
 
 		/**
-		 * Returns the length.
+		 * Gets the length of the file.
+		 * @return the length.
 		 */
 		public long getLength() {
 			return length;
 		}
 
 		/**
-		 * Returns the type.
+		 * Gets the MIME Type of the file.
+		 * @return the MIME type.
 		 */
 		public String getMIMEType() {
 			return type;
@@ -245,8 +283,10 @@ public class Upload extends AbstractComponent implements Component.Focusable {
 
 	}
 
-	/** Upload.Interrupted event is sent when the upload is received, but the
+	/** 
+	 * Upload.Interrupted event is sent when the upload is received, but the
 	 * reception is interrupted for some reason.
+	 * 
 	 * @author IT Mill Ltd.
 	 * @version @VERSION@
 	 * @since 3.0
@@ -257,7 +297,14 @@ public class Upload extends AbstractComponent implements Component.Focusable {
          * Serial generated by eclipse.
          */
         private static final long serialVersionUID = 3833746590157386293L;
-
+        
+		/**
+		 * 
+		 * @param source
+		 * @param filename
+		 * @param MIMEType
+		 * @param length
+		 */
         public FailedEvent(
 			Upload source,
 			String filename,
@@ -268,7 +315,9 @@ public class Upload extends AbstractComponent implements Component.Focusable {
 
 	}
 
-	/** Upload.Success event is sent when the upload is received successfully.
+	/** 
+	 * Upload.Success event is sent when the upload is received successfully.
+	 * 
 	 * @author IT Mill Ltd.
 	 * @version @VERSION@
 	 * @since 3.0
@@ -279,7 +328,14 @@ public class Upload extends AbstractComponent implements Component.Focusable {
          * Serial generated by eclipse.
          */
         private static final long serialVersionUID = 3256445798169524023L;
-
+        
+		/**
+		 * 
+		 * @param source
+		 * @param filename
+		 * @param MIMEType
+		 * @param length
+		 */
         public SucceededEvent(
 			Upload source,
 			String filename,
@@ -290,88 +346,107 @@ public class Upload extends AbstractComponent implements Component.Focusable {
 
 	}
 
-	/** Receives events when the uploads are ready.
+	/** 
+	 * Receives the events when the uploads are ready.
+	 * 
 	 * @author IT Mill Ltd.
 	 * @version @VERSION@
 	 * @since 3.0
 	 */
 	public interface FinishedListener {
 
-		/** Upload has finished.
-		 * @param event Upload finished event.
+		/** 
+		 * Upload has finished.
+		 * @param event the Upload finished event.
 		 */
 		public void uploadFinished(FinishedEvent event);
 	}
 
-	/** Receives events when the uploads are finished, but unsuccessful.
+	/** 
+	 * Receives events when the uploads are finished, but unsuccessful.
+	 * 
 	 * @author IT Mill Ltd.
-		 * @version @VERSION@
+	 * @version @VERSION@
 	 * @since 3.0
 	 */
 	public interface FailedListener {
 
-		/** Upload has finished unsuccessfully.
-		 * @param event Upload failed event.
+		/** 
+		 * Upload has finished unsuccessfully.
+		 * @param event the Upload failed event.
 		 */
 		public void uploadFailed(FailedEvent event);
 	}
 
-	/** Receives events when the uploads are successfully finished.
+	/** 
+	 * Receives events when the uploads are successfully finished.
 	 * @author IT Mill Ltd.
-		 * @version @VERSION@
+	 * @version @VERSION@
 	 * @since 3.0
 	 */
 	public interface SucceededListener {
 
-		/** Upload successfull..
-		 * @param event Upload successfull event.
+		/** 
+		 * Upload successfull..
+		 * @param event the Upload successfull event.
 		 */
 		public void uploadSucceeded(SucceededEvent event);
 	}
 
-	/** Add upload received event listener
-	 * @param listener Listener to be added.
+	/** 
+	 * Adds the upload received event listener.
+	 * @param listener the Listener to be added.
 	 */
 	public void addListener(FinishedListener listener) {
 		addListener(FinishedEvent.class, listener, UPLOAD_FINISHED_METHOD);
 	}
 
-	/** Remove upload received event listener
-	 * @param listener Listener to be removed.
+	/** 
+	 * Removes the upload received event listener.
+	 * @param listener the Listener to be removed.
 	 */
 	public void removeListener(FinishedListener listener) {
 		removeListener(FinishedEvent.class, listener, UPLOAD_FINISHED_METHOD);
 	}
 
-	/** Add upload interrupted event listener
-	 * @param listener Listener to be added.
+	/** 
+	 * Adds the upload interrupted event listener.
+	 * @param listener the Listener to be added.
 	 */
 	public void addListener(FailedListener listener) {
 		addListener(FailedEvent.class, listener, UPLOAD_FAILED_METHOD);
 	}
 
-	/** Remove upload interrupted event listener
-	 * @param listener Listener to be removed.
+	/** 
+	 * Removes the upload interrupted event listener.
+	 * @param listener the Listener to be removed.
 	 */
 	public void removeListener(FailedListener listener) {
 		removeListener(FinishedEvent.class, listener, UPLOAD_FAILED_METHOD);
 	}
 
-	/** Add upload success event listener
-	 * @param listener Listener to be added.
+	/** 
+	 * Adds the upload success event listener.
+	 * @param listener the Listener to be added.
 	 */
 	public void addListener(SucceededListener listener) {
 		addListener(SucceededEvent.class, listener, UPLOAD_SUCCEEDED_METHOD);
 	}
 
-	/** Remove upload success event listener
-	 * @param listener Listener to be removed.
+	/** 
+	 * Removes the upload success event listener.
+	 * @param listener the Listener to be removed.
 	 */
 	public void removeListener(SucceededListener listener) {
 		removeListener(SucceededEvent.class, listener, UPLOAD_SUCCEEDED_METHOD);
 	}
 
-	/** Emit upload received event. */
+	/** 
+	 * Emit upload received event.
+	 * @param filename
+	 * @param MIMEType 
+	 * @param length 
+	 */
 	protected void fireUploadReceived(
 		String filename,
 		String MIMEType,
@@ -379,7 +454,12 @@ public class Upload extends AbstractComponent implements Component.Focusable {
 		fireEvent(new Upload.FinishedEvent(this, filename, MIMEType, length));
 	}
 
-	/** Emit upload interrupted event. */
+	/** 
+	 * Emits the upload interrupted event.
+	 * @param filename
+	 * @param MIMEType
+	 * @param length  
+	 */
 	protected void fireUploadInterrupted(
 		String filename,
 		String MIMEType,
@@ -387,27 +467,37 @@ public class Upload extends AbstractComponent implements Component.Focusable {
 		fireEvent(new Upload.FailedEvent(this, filename, MIMEType, length));
 	}
 
-	/** Emit upload success event. */
+	/** 
+	 * Emits the upload success event.
+	 * @param filename
+	 * @param MIMEType
+	 * @param length
+	 *  
+	 */
 	protected void fireUploadSuccess(
 		String filename,
 		String MIMEType,
 		long length) {
 		fireEvent(new Upload.SucceededEvent(this, filename, MIMEType, length));
 	}
-	/** Returns the current receiver.
-	 * @return Receiver
+	/** 
+	 * Returns the current receiver.
+	 * @return the Receiver.
 	 */
 	public Receiver getReceiver() {
 		return receiver;
 	}
 
-	/** Sets the receiver.
-	 * @param receiver The receiver to set
+	/** 
+	 * Sets the receiver.
+	 * @param receiver the receiver to set.
 	 */
 	public void setReceiver(Receiver receiver) {
 		this.receiver = receiver;
 	}
+	
 	/**
+	 * Sets the focus to this component.
 	 * @see com.itmill.toolkit.ui.Component.Focusable#focus()
 	 */
 	public void focus() {
@@ -418,6 +508,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
 	}
 	
 	/**
+	 * Gets the Tabulator index of this Focusable component.
 	 * @see com.itmill.toolkit.ui.Component.Focusable#getTabIndex()
 	 */
 	public int getTabIndex() {
@@ -425,6 +516,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
 	}
 	
 	/**
+	 * Sets the Tabulator index of this Focusable component.
 	 * @see com.itmill.toolkit.ui.Component.Focusable#setTabIndex(int)
 	 */
 	public void setTabIndex(int tabIndex) {
@@ -432,6 +524,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
 	}
 	
 	/**
+	 * Gets the unique ID of focusable.
 	 * @see com.itmill.toolkit.ui.Component.Focusable#getFocusableId()
 	 */
 	public long getFocusableId() {

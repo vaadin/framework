@@ -37,7 +37,8 @@ import java.util.Iterator;
 
 import com.itmill.toolkit.data.Property;
 
-/** A wrapper class for adding the Item interface to any Java Bean.
+/** 
+ * A wrapper class for adding the Item interface to any Java Bean.
  * 
  * @author IT Mill Ltd.
  * @version @VERSION@
@@ -45,18 +46,26 @@ import com.itmill.toolkit.data.Property;
  */
 public class BeanItem extends PropertysetItem {
 
-	/** The bean wich this Item is based on. */
+	/**
+	 * The bean which this Item is based on. 
+	 */
 	private Object bean;
 
-	/** <p>Creates a new instance of BeanItem and adds all properties of a
+	/** 
+	 * <p>
+	 * Creates a new instance of <code>BeanItem</code> and adds all properties of a
 	 * Java Bean to it. The properties are identified by their respective
-	 * bean names.</p>
+	 * bean names.
+	 * </p>
 	 * 
-	 * <p>Note that this version only supports introspectable bean
-	 * properties and their getter and setter methods. Stand-alone "is" and
-	 * "are" methods are not supported.</p>
+	 * <p>
+	 * Note : This version only supports introspectable bean
+	 * properties and their getter and setter methods. Stand-alone <code>is</code> and
+	 * <code>are</code> methods are not supported.
+	 * </p>
 	 * 
-	 * @param bean the Java Bean to copy properties from
+	 * @param bean the Java Bean to copy properties from.
+	 * 
 	 */
 	public BeanItem(Object bean) {
 
@@ -83,15 +92,22 @@ public class BeanItem extends PropertysetItem {
 		}
 	}
 
-	/** <p>Creates a new instance of BeanItem and adds all listed properties of a
+	/** 
+	 * <p>
+	 * Creates a new instance of <code>BeanItem</code> and adds all listed properties of a
 	 * Java Bean to it - in specified order. The properties are identified by their 
-	 * respective bean names.</p>
+	 * respective bean names.
+	 * </p>
 	 * 
-	 * <p>Note that this version only supports introspectable bean
-	 * properties and their getter and setter methods. Stand-alone "is" and
-	 * "are" methods are not supported.</p>
+	 * <p>
+	 * Note : This version only supports introspectable bean properties and their getter
+	 * and setter methods. Stand-alone <code>is</code> and <code>are</code> methods
+	 * are not supported.
+	 * </p>
 	 * 
-	 * @param bean the Java Bean to copy properties from
+	 * @param bean the Java Bean to copy properties from.
+	 * @param propertyIds
+	 * 					id of the property.
 	 */
 	public BeanItem(Object bean, Collection propertyIds) {
 		
@@ -129,7 +145,8 @@ public class BeanItem extends PropertysetItem {
 
 	}
 
-	/** Get the underlying JavaBean object. 
+	/** 
+	 * Gets the underlying JavaBean object. 
 	 * @return the bean object.
 	 */
 	public Object getBean() {

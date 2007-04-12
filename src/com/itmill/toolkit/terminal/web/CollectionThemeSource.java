@@ -50,6 +50,7 @@ public class CollectionThemeSource implements ThemeSource {
 	private List sources = new LinkedList();
 
 	/**
+	 * Gets the name of the ThemeSource.
 	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getName()
 	 */
 	public String getName() {
@@ -57,6 +58,7 @@ public class CollectionThemeSource implements ThemeSource {
 	}
 
 	/**
+	 * Gets the XSL stream for the specified theme and web-browser type.
 	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getXSLStreams(Theme,
 	 *      WebBrowser)
 	 */
@@ -64,10 +66,10 @@ public class CollectionThemeSource implements ThemeSource {
 			throws ThemeException {
 		Collection xslFiles = new LinkedList();
 
-		// Add parent theme XSL
+		// Adds parent theme XSL
 		xslFiles.addAll(this.getParentXSLStreams(theme, type));
 
-		// Add theme XSL, Handle subdirectories: return the first match
+		// Adds theme XSL, Handle subdirectories: return the first match
 		for (Iterator i = this.sources.iterator(); i.hasNext();) {
 			ThemeSource source = (ThemeSource) i.next();
 			if (source.getThemes().contains(theme))
@@ -76,7 +78,15 @@ public class CollectionThemeSource implements ThemeSource {
 
 		return xslFiles;
 	}
-
+	
+/**
+ * 
+ * @param theme
+ * @param type
+ * @return
+ * @throws ThemeException If the resource is not found or there was
+ * 			 some problem finding the resource.
+ */
 	private Collection getParentXSLStreams(Theme theme, WebBrowser type)
 			throws ThemeException {
 		Collection xslFiles = new LinkedList();
@@ -94,6 +104,7 @@ public class CollectionThemeSource implements ThemeSource {
 	}
 
 	/**
+	 * Gets the last modification time, used to reload theme on changes.
 	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getModificationTime()
 	 */
 	public long getModificationTime() {
@@ -107,11 +118,12 @@ public class CollectionThemeSource implements ThemeSource {
 	}
 
 	/**
+	 * Gets the input stream for the resource with the specified resource id.
 	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getResource(String)
 	 */
 	public InputStream getResource(String resourceId) throws ThemeException {
 
-		// Resolve theme name and resource name
+		// Resolves theme name and resource name
 		int delim = resourceId.indexOf("/");
 		String subResourceId = "";
 		String themeName = "";
@@ -120,7 +132,7 @@ public class CollectionThemeSource implements ThemeSource {
 			themeName = resourceId.substring(0, delim);
 		}
 
-		// Get list of themes to look for the resource
+		// Gets the list of themes to look for the resource
 		List themes = new LinkedList();
 		while (themeName != null && themeName.length() > 0) {
 			Theme t = this.getThemeByName(themeName);
@@ -151,6 +163,7 @@ public class CollectionThemeSource implements ThemeSource {
 	}
 
 	/**
+	 * Gets the list of themes in the theme source.
 	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getThemes()
 	 */
 	public Collection getThemes() {
@@ -163,6 +176,8 @@ public class CollectionThemeSource implements ThemeSource {
 	}
 
 	/**
+	 * Gets the theme instance by name.
+	 * @param name the theme name.
 	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getThemeByName(String)
 	 */
 	public Theme getThemeByName(String name) {
@@ -175,10 +190,10 @@ public class CollectionThemeSource implements ThemeSource {
 	}
 
 	/**
-	 * Add new theme source to this collection.
+	 * Adds new theme source to this collection.
 	 * 
 	 * @param source
-	 *            Theme source to be added.
+	 *            the Theme source to be added.
 	 */
 	public void add(ThemeSource source) {
 		this.sources.add(source);

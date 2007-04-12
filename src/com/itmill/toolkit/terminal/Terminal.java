@@ -28,7 +28,8 @@
 
 package com.itmill.toolkit.terminal;
 
-/** Interface for different terminal types.
+/** 
+ * Interface for different terminal types.
  *
  * @author IT Mill Ltd.
  * @version @VERSION@
@@ -37,33 +38,45 @@ package com.itmill.toolkit.terminal;
 public interface Terminal {
  
  
-    /** Get name of the default theme
-     * @return Name of the terminal window
+    /** 
+     * Gets the name of the default theme.
+     * @return the Name of the terminal window.
      */    
     public String getDefaultTheme();
     
-    /** Get width of the terminal window in pixels
-     * @return Width of the terminal window
+    /** 
+     * Gets the width of the terminal window in pixels.
+     * @return the Width of the terminal window.
      */    
     public int getScreenWidth();
     
-    /** Get height of the terminal window in pixels
-     * @return Height of the terminal window
+    /** 
+     * Gets the height of the terminal window in pixels.
+     * @return the Height of the terminal window.
      */    
     public int getScreenHeight();    
     
-	/** Terminal error event */
+	/** 
+	 * Terminal error event. 
+	 */
 	public interface ErrorEvent {
 
-		/** Get the contained throwable */
+		/** 
+		 * Gets the contained throwable. 
+		 */
 		public Throwable getThrowable();
 
 	}
 
-	/** Terminal error listener interface */
+	/** 
+	 * Terminal error listener interface. 
+	 */
 	public interface ErrorListener {
 
-		/** Invoked when terminal error occurs. */
+		/** 
+		 * Invoked when terminal error occurs.
+		 * @param event the fired event. 
+		 */
 		public void terminalError(Terminal.ErrorEvent event);
 	}    
 }

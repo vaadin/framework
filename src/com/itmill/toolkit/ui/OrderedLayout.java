@@ -36,7 +36,7 @@ import java.util.LinkedList;
 
 /** Ordered layout.
  *
- * Ordered layout is a component container, which shows the subcomponents in the
+ * <code>OrderedLayout</code> is a component container, which shows the subcomponents in the
  * order of their addition in specified orientation.
  *
  * @author IT Mill Ltd.
@@ -49,43 +49,55 @@ public class OrderedLayout
 
 	/* Predefined orientations ***************************************** */
 
-	/** Components are to be layed out vertically. */
+	/** 
+	 * Components are to be layed out vertically. 
+	 */
 	public static int ORIENTATION_VERTICAL = 0;
-	/** Components are to be layed out horizontally. */
+	/** 
+	 * Components are to be layed out horizontally. 
+	 */
 	public static int ORIENTATION_HORIZONTAL = 1;
 
-	/** Custom layout slots containing the components */
+	/** 
+	 * Custom layout slots containing the components. 
+	 */
 	private LinkedList components = new LinkedList();
 
-	/** Orientation of the layout. */
+	/** 
+	 * Orientation of the layout. 
+	 */
 	private int orientation;
 
-	/** Create a new ordered layout.
-	 * The order of the layout is ORIENTATION_VERTICAL.
+	/** 
+	 * Creates a new ordered layout.
+	 * The order of the layout is <code>ORIENTATION_VERTICAL</code>.
 	 */
 	public OrderedLayout() {
 		orientation = ORIENTATION_VERTICAL;
 	}
 
-	/** Create a new ordered layout.
+	/** 
+	 * Create a new ordered layout.
 	 * The orientation of the layout is given as parameters.
 	 *
-	 * @param orientation Orientation of the layout.
+	 * @param orientation the Orientation of the layout.
 	 */
 	public OrderedLayout(int orientation) {
 		this.orientation = orientation;
 	}
 
-	/** Get component UIDL tag.
-	 * @return Component UIDL tag as string.
+	/** 
+	 * Gets the component UIDL tag.
+	 * @return the Component UIDL tag as string.
 	 */
 	public String getTag() {
 		return "orderedlayout";
 	}
 
-	/** Add a component into this container. The component is added to the
+	/** 
+	 * Add a component into this container. The component is added to the
 	 * right or under the previous component.
-	 * @param c The component to be added.
+	 * @param c the component to be added.
 	 */
 	public void addComponent(Component c) {
 		components.add(c);
@@ -93,9 +105,10 @@ public class OrderedLayout
 		requestRepaint();
 	}
 
-	/** Add a component into this container. The component is added to the
+	/** 
+	 * Adds a component into this container. The component is added to the
 	 * left or on top of the other components.
-	 * @param c The component to be added.
+	 * @param c the component to be added.
 	 */
 	public void addComponentAsFirst(Component c) {
 		components.addFirst(c);
@@ -103,9 +116,10 @@ public class OrderedLayout
 		requestRepaint();
 	}
 
-	/** Add a component into indexed position in this container. 
-	 * @param c The component to be added.
-	 * @param index Index of the component position. 
+	/** 
+	 * Adds a component into indexed position in this container. 
+	 * @param c the component to be added.
+	 * @param index the Index of the component position. 
 	 * The components currently in and after the position are shifted forwards.
 	 */
 	public void addComponent(Component c, int index) {
@@ -114,8 +128,9 @@ public class OrderedLayout
 		requestRepaint();
 	}
 
-	/** Remove a component from this container.
-	 * @param c The component to be removed.
+	/** 
+	 * Removes the component from this container.
+	 * @param c the component to be removed.
 	 */
 	public void removeComponent(Component c) {
 		super.removeComponent(c);
@@ -123,26 +138,28 @@ public class OrderedLayout
 		requestRepaint();
 	}
 
-	/** Get component container iterator for going trough all the components in
+	/** 
+	 * Gets the component container iterator for going trough all the components in
 	 * the container.
-	 * @return Iterator of the components inside the container.
+	 * @return the Iterator of the components inside the container.
 	 */
 	public Iterator getComponentIterator() {
 		return components.iterator();
 	}
 
-	/** Paint the content of this component.
-	 * @param event PaintEvent.
-	 * @throws PaintException The paint operation failed.
+	/** 
+	 * Paints the content of this component.
+	 * @param target the Paint Event.
+	 * @throws PaintException if the paint operation failed.
 	 */
 	public void paintContent(PaintTarget target) throws PaintException {
 
-		// Add the attributes: orientation 
+		// Adds the attributes: orientation 
 		// note that the default values (b/vertival) are omitted
 		if (orientation == ORIENTATION_HORIZONTAL)
 			target.addAttribute("orientation", "horizontal");
 
-		// Add all items in all the locations
+		// Adds all items in all the locations
 		for (Iterator i = components.iterator(); i.hasNext();) {
 			Component c = (Component) i.next();
 			if (c != null) {
@@ -151,19 +168,21 @@ public class OrderedLayout
 		}
 	}
 
-	/** Get the orientation of the container.
-	 * @return Value of property orientation.
+	/** 
+	 * Gets the orientation of the container.
+	 * @return the Value of property orientation.
 	 */
 	public int getOrientation() {
 		return this.orientation;
 	}
 
-	/** Set the orientation of the container.
-	 * @param orientation New value of property orientation.
+	/** 
+	 * Set the orientation of the container.
+	 * @param orientation the New value of property orientation.
 	 */
 	public void setOrientation(int orientation) {
 
-		// Check the validity of the argument
+		// Checks the validity of the argument
 		if (orientation < ORIENTATION_VERTICAL
 			|| orientation > ORIENTATION_HORIZONTAL)
 			throw new IllegalArgumentException();
@@ -176,7 +195,7 @@ public class OrderedLayout
 		Component oldComponent,
 		Component newComponent) {
 
-		// Get the locations			
+		// Gets the locations			
 		int oldLocation = -1;
 		int newLocation = -1;
 		int location = 0;

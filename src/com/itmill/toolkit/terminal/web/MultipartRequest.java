@@ -44,75 +44,76 @@ import java.util.Vector;
 import java.io.File;
 
 /**
-	A Multipart form data parser.  Parses an input stream and writes out any files found, 
-	making available a hashtable of other url parameters.  As of version 1.17 the files can
-	be saved to memory, and optionally written to a database, etc.
-	
-	<BR>
-	<BR>
-	Copyright (C)2001 Jason Pell.
-	<BR>
-
-	<PRE>
-	This library is free software; you can redistribute it and/or
-	modify it under the terms of the GNU Lesser General Public
-	License as published by the Free Software Foundation; either
-	version 2.1 of the License, or (at your option) any later version.
-	<BR>
-	This library is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-	Lesser General Public License for more details.
-	<BR>
-	You should have received a copy of the GNU Lesser General Public
-	License along with this library; if not, write to the Free Software
-	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-	<BR>	
-	Email: 	jasonpell@hotmail.com
-	Url:	http://www.geocities.com/jasonpell
-	</PRE>
-
-	@author Jason Pell
-
-	@version 1.18	Fixed some serious bugs.  A new method readAndWrite(InputStream in, OutputStream out) which now does
-					the generic processing in common for readAndWriteFile and readFile.  The differences are that now
-					the two extra bytes at the end of a file upload are processed once, instead of after each line.  Also
-					if an empty file is encountered, an outputstream is opened, but then deleted if no data written to it.
-					The getCharArray() method has been removed.  Replaced by the new String(bytes, encoding) method using
-					a specific encoding (Defaults to ISO-8859-1) to ensure that extended characters are supported.  
-					All strings are processed using this encoding.  The addition of static methods setEncoding(String) 
-					and getEncoding() to allow the 	use of MultipartRequest with a specific encoding type.  All instances
-					of MultipartRequest will utilise the static charEncoding variable value, that the setEncoding() method
-					can be used to set.  Started to introduce support for multiple file uploads with the same form field 
-					name, but not completed for v1.18.  26/06/2001
-	@version 1.17	A few _very_ minor fixes.  Plus a cool new feature added.  The ability to save files into memory.
-					<b>Thanks to Mark Latham for the idea and some of the code.</b> 11/04/2001
-	@version 1.16	Added support for multiple parameter values.  Also fixed getCharArray(...) method to support 
-					parameters with non-english ascii values (ascii above 127).  Thanks to Stefan Schmidt & 
-					Michael Elvers for this.  (No fix yet for reported problems with Tomcat 3.2 or a single extra 
-					byte appended to uploads of certain files).  By 1.17 hopefully will have a resolution for the
-					second problem.  14/03/2001
-	@version 1.15	A new parameter added, intMaxReadBytes, to allow arbitrary length files.  Released under
-					the LGPL (Lesser General Public License).  	03/02/2001
-	@version 1.14	Fix for IE problem with filename being empty.  This is because IE includes a default Content-Type
-					even when no file is uploaded.  16/02/2001
-	@version 1.13	If an upload directory is not specified, then all file contents are sent into oblivion, but the
-					rest of the parsing works as normal.
-	@version 1.12	Fix, was allowing zero length files.  Will not even create the output file until there is
-					something to write.  getFile(String) now returns null, if a zero length file was specified.  06/11/2000
-	@version 1.11	Fix, in case Content-type is not specified.
-	@version 1.1	Removed dependence on Servlets.  Now passes in a generic InputStream instead.
-					"Borrowed" readLine from Tomcat 3.1 ServletInputStream class,
-    				so we can remove some of the dependencies on ServletInputStream.
-					Fixed bug where a empty INPUT TYPE="FILE" value, would cause an exception.
-	@version 1.0	Initial Release.
-*/
+ * A Multipart form data parser.  Parses an input stream and writes out any files found, 
+ * making available a hashtable of other url parameters.  As of version 1.17 the files can
+ * be saved to memory, and optionally written to a database, etc.
+ *
+ * <BR>
+ * <BR>
+ * Copyright (C)2001 Jason Pell.
+ * <BR>
+ *
+ * <PRE>
+ *	This library is free software; you can redistribute it and/or
+ *	modify it under the terms of the GNU Lesser General Public
+ *	License as published by the Free Software Foundation; either
+ *	version 2.1 of the License, or (at your option) any later version.
+ *	<BR>
+ *	This library is distributed in the hope that it will be useful,
+ * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *	Lesser General Public License for more details.
+ *	<BR>
+ *	You should have received a copy of the GNU Lesser General Public
+ *	License along with this library; if not, write to the Free Software
+ *	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *	<BR>	
+ *	Email: 	jasonpell@hotmail.com
+ *	Url:	http://www.geocities.com/jasonpell
+ *	</PRE>
+ *
+ * @author Jason Pell
+ *
+ * @version 1.18	Fixed some serious bugs.  A new method readAndWrite(InputStream in, OutputStream out) which now does
+ *					the generic processing in common for readAndWriteFile and readFile.  The differences are that now
+ *					the two extra bytes at the end of a file upload are processed once, instead of after each line.  Also
+ *					if an empty file is encountered, an outputstream is opened, but then deleted if no data written to it.
+ *					The <code>getCharArray</code> method has been removed.  Replaced by the new String(bytes, encoding) method using
+ *					a specific encoding (Defaults to ISO-8859-1) to ensure that extended characters are supported.  
+ *					All strings are processed using this encoding.  The addition of static methods setEncoding(String) 
+ *					and <code>getEncoding</code> method to allow the 	use of <code>MultipartRequest</code> with a specific encoding type.  All instances
+ *					of MultipartRequest will utilise the static charEncoding variable value, that the <code>setEncoding</code> method
+ *					can be used to set.  Started to introduce support for multiple file uploads with the same form field 
+ *					name, but not completed for v1.18.  26/06/2001
+ *
+ * @version 1.17	A few _very_ minor fixes.  Plus a cool new feature added.  The ability to save files into memory.
+ *					<b>Thanks to Mark Latham for the idea and some of the code.</b> 11/04/2001
+ * @version 1.16	Added support for multiple parameter values.  Also fixed getCharArray(...) method to support 
+ *					parameters with non-english ascii values (ascii above 127).  Thanks to Stefan Schmidt & 
+ *					Michael Elvers for this.  (No fix yet for reported problems with Tomcat 3.2 or a single extra 
+ *					byte appended to uploads of certain files).  By 1.17 hopefully will have a resolution for the
+ *					second problem.  14/03/2001
+ * @version 1.15	A new parameter added, intMaxReadBytes, to allow arbitrary length files.  Released under
+ *					the LGPL (Lesser General Public License).  	03/02/2001
+ * @version 1.14	Fix for IE problem with filename being empty.  This is because IE includes a default Content-Type
+ *					even when no file is uploaded.  16/02/2001
+ * @version 1.13	If an upload directory is not specified, then all file contents are sent into oblivion, but the
+ *					rest of the parsing works as normal.
+ * @version 1.12	Fix, was allowing zero length files.  Will not even create the output file until there is
+ *					something to write.  getFile(String) now returns null, if a zero length file was specified.  06/11/2000
+ * @version 1.11	Fix, in case Content-type is not specified.
+ * @version 1.1		Removed dependence on Servlets.  Now passes in a generic InputStream instead.
+ *					"Borrowed" readLine from Tomcat 3.1 ServletInputStream class,
+ *   				so we can remove some of the dependencies on ServletInputStream.
+ *				    Fixed bug where a empty INPUT TYPE="FILE" value, would cause an exception.
+ * @version 1.0		Initial Release.
+ */
 
 public class MultipartRequest
 {
 	/**
-		Define Character Encoding method here.
-	*/
+	 * Defines Character Encoding method here.
+	 */
 	private String charEncoding = "UTF-8";
 
 	// If not null, send debugging out here.
@@ -131,61 +132,61 @@ public class MultipartRequest
 	private long intTotalRead = -1;
 
 	/**
-		Prevent a denial of service by defining this, will never read more data.
-		If Content-Length is specified to be more than this, will throw an exception.
-
-		This limits the maximum number of bytes to the value of an int, which is 2 Gigabytes.
-	*/
+	 * Prevent a denial of service by defining this, will never read more data.
+	 * If Content-Length is specified to be more than this, will throw an exception.
+     *
+     * This limits the maximum number of bytes to the value of an int, which is 2 Gigabytes.
+	 */
 	public static final int MAX_READ_BYTES = Integer.MAX_VALUE;
 
 	/**
-		Defines the number of bytes to read per readLine call. 128K
-	*/
+	 * Defines the number of bytes to read per readLine call. 128K
+	 */
 	public static final int READ_LINE_BLOCK = 1024 * 128;
 
 	/**
-		Store a read from the input stream here.  Global so we do not keep creating new arrays each read.
-	*/
+	 * Store a read from the input stream here.  Global so we do not keep creating new arrays each read.
+	 */
 	private byte[] blockOfBytes = null;
 
 	/**
-		Type constant for File FILENAME.
-	*/
+	 * Type constant for File FILENAME.
+	 */
 	public static final int FILENAME = 0;
 	
 	/**
-		Type constant for the File CONTENT_TYPE.
-	*/
+	 * Type constant for the File CONTENT_TYPE.
+	 */
 	public static final int CONTENT_TYPE = 1;
 
 	/**
-		Type constant for the File SIZE.
-	*/
+	 *	Type constant for the File SIZE.
+	 */
 	public static final int SIZE = 2;
 	
 	/**
-		Type constant for the File CONTENTS.
-
-		<b>Note: </b>Only used for file upload to memory.
-	*/
+	 * Type constant for the File CONTENTS.
+     *
+	 * <b>Note: </b>Only used for file upload to memory.
+	 */
 	public static final int CONTENTS = 3;
 
 	/**
-		This method should be called on the MultipartRequest itself, not on any
-		instances of MultipartRequest, because this sets up the encoding for all
-		instances of multipartrequest.  You can set the encoding to null, in which
-		case the default encoding will be applied.  The default encoding if this method
-		is not called has been set to ISO-8859-1, which seems to offer the best hope
-		of support for international characters, such as german "Umlaut" characters.
-
-		<p><b>Warning:</b> In multithreaded environments it is the responsibility of the
-		implementer to make sure that this method is not called while another instance
-		is being constructed.  When an instance of MultipartRequest is constructed, it parses
-		the input data, and uses the result of getEncoding() to convert between bytes and
-		strings.  If setEncoding() is called by another thread, while the private parse() is 
-		executing, the method will utilise this new encoding, which may cause serious
-		problems.</p>
-	*/
+	 * This method should be called on the <code>MultipartRequest</code> itself, not on any
+	 * instances of <code>MultipartRequest</code>, because this sets up the encoding for all
+	 * instances of multipartrequest.  You can set the encoding to null, in which
+	 * case the default encoding will be applied.  The default encoding if this method
+	 * is not called has been set to ISO-8859-1, which seems to offer the best hope
+	 * of support for international characters, such as german "Umlaut" characters.
+     *
+     * <p><b>Warning:</b> In multithreaded environments it is the responsibility of the
+     * implementer to make sure that this method is not called while another instance
+     * is being constructed.  When an instance of MultipartRequest is constructed, it parses
+     * the input data, and uses the result of <code>getEncoding</code> method to convert between bytes and
+     * strings.  If <code>setEncoding</code> method is called by another thread, while the private <code>parse</code> method is 
+     * executing, the method will utilise this new encoding, which may cause serious
+     * problems.</p>
+	 */
 	public  void setEncoding(String enc) throws UnsupportedEncodingException
 	{
 		if (enc==null || enc.trim()=="")
@@ -200,8 +201,9 @@ public class MultipartRequest
 	}
 
 	/**
-		Returns the current encoding method.
-	*/
+	 * Gets the current encoding method.
+	 * @return the encoding method.
+	 */
 	public String getEncoding()
 	{
 		return charEncoding;
@@ -210,10 +212,10 @@ public class MultipartRequest
 	/** 
 	 * Constructor.
 	 *
-	 * @param strContentTypeText 	The &quot;Content-Type&quot; HTTP header value.
-	 * @param intContentLength 		The &quot;Content-Length&quot; HTTP header value.
-	 * @param in					The InputStream to read and parse.
-	 * @param strSaveDirectory		The temporary directory to save the file from where they can then be moved to wherever by the
+	 * @param strContentTypeText 	the &quot;Content-Type&quot; HTTP header value.
+	 * @param intContentLength 		the &quot;Content-Length&quot; HTTP header value.
+	 * @param in					the InputStream to read and parse.
+	 * @param strSaveDirectory		the temporary directory to save the file from where they can then be moved to wherever by the
 	 * 								calling process.  <b>If you specify <u>null</u> for this parameter, then any files uploaded
 	 *								will be silently ignored.</b>
 	 *
@@ -233,10 +235,10 @@ public class MultipartRequest
 	/** 
 	 * Constructor.
 	 *
-	 * @param strContentTypeText 	The &quot;Content-Type&quot; HTTP header value.
-	 * @param intContentLength 		The &quot;Content-Length&quot; HTTP header value.
-	 * @param in					The InputStream to read and parse.
-	 * @param strSaveDirectory		The temporary directory to save the file from where they can then be moved to wherever by the
+	 * @param strContentTypeText 	the &quot;Content-Type&quot; HTTP header value.
+	 * @param intContentLength 		the &quot;Content-Length&quot; HTTP header value.
+	 * @param in					the InputStream to read and parse.
+	 * @param strSaveDirectory		the temporary directory to save the file from where they can then be moved to wherever by the
 	 * 								calling process.  <b>If you specify <u>null</u> for this parameter, then any files uploaded
 	 *								will be silently ignored.</B>
 	 * @param intMaxReadBytes		Overrides the MAX_BYTES_READ value, to allow arbitrarily long files.
@@ -259,10 +261,10 @@ public class MultipartRequest
 	 * Constructor.
 	 *
 	 * @param debug					A PrintWriter that can be used for debugging.
-	 * @param strContentTypeText 	The &quot;Content-Type&quot; HTTP header value.
-	 * @param intContentLength 		The &quot;Content-Length&quot; HTTP header value.
-	 * @param in					The InputStream to read and parse.
-	 * @param strSaveDirectory		The temporary directory to save the file from where they can then be moved to wherever by the
+	 * @param strContentTypeText 	the &quot;Content-Type&quot; HTTP header value.
+	 * @param intContentLength 		the &quot;Content-Length&quot; HTTP header value.
+	 * @param in					the InputStream to read and parse.
+	 * @param strSaveDirectory		the temporary directory to save the file from where they can then be moved to wherever by the
 	 * 								calling process.  <b>If you specify <u>null</u> for this parameter, then any files uploaded
 	 *								will be silently ignored.</B>
 	 *
@@ -287,9 +289,9 @@ public class MultipartRequest
 	 * Constructor - load into memory constructor
 	 *
 	 * @param debug					A PrintWriter that can be used for debugging.
-	 * @param strContentTypeText 	The &quot;Content-Type&quot; HTTP header value.
-	 * @param intContentLength 		The &quot;Content-Length&quot; HTTP header value.
-	 * @param in					The InputStream to read and parse.
+	 * @param strContentTypeText 	the &quot;Content-Type&quot; HTTP header value.
+	 * @param intContentLength 		the &quot;Content-Length&quot; HTTP header value.
+	 * @param in					the InputStream to read and parse.
 	 * @param intMaxReadBytes		Overrides the MAX_BYTES_READ value, to allow arbitrarily long files.
 	 *
 	 * @exception IllegalArgumentException 	If the strContentTypeText does not contain a Content-Type of "multipart/form-data" or the boundary is not found.
@@ -313,10 +315,10 @@ public class MultipartRequest
 	 * Constructor.
 	 *
 	 * @param debug					A PrintWriter that can be used for debugging.
-	 * @param strContentTypeText 	The &quot;Content-Type&quot; HTTP header value.
-	 * @param intContentLength 		The &quot;Content-Length&quot; HTTP header value.
-	 * @param in					The InputStream to read and parse.
-	 * @param strSaveDirectory		The temporary directory to save the file from where they can then be moved to wherever by the
+	 * @param strContentTypeText 	the &quot;Content-Type&quot; HTTP header value.
+	 * @param intContentLength 		the &quot;Content-Length&quot; HTTP header value.
+	 * @param in					the InputStream to read and parse.
+	 * @param strSaveDirectory		the temporary directory to save the file from where they can then be moved to wherever by the
 	 * 								calling process.  <b>If you specify <u>null</u> for this parameter, then any files uploaded
 	 *								will be silently ignored.</B>
 	 * @param intMaxReadBytes		Overrides the MAX_BYTES_READ value, to allow arbitrarily long files.
@@ -351,10 +353,10 @@ public class MultipartRequest
 	 * Initialise the parser.
 	 *
 	 * @param debug					A PrintWriter that can be used for debugging.
-	 * @param strContentTypeText 	The &quot;Content-Type&quot; HTTP header value.
-	 * @param intContentLength 		The &quot;Content-Length&quot; HTTP header value.
-	 * @param in					The InputStream to read and parse.
-	 * @param strSaveDirectory		The temporary directory to save the file from where they can then be moved to wherever by the
+	 * @param strContentTypeText 	the &quot;Content-Type&quot; HTTP header value.
+	 * @param intContentLength 		the &quot;Content-Length&quot; HTTP header value.
+	 * @param in					the InputStream to read and parse.
+	 * @param strSaveDirectory		the temporary directory to save the file from where they can then be moved to wherever by the
 	 * 								calling process.  <b>If you specify <u>null</u> for this parameter, then any files uploaded
 	 *								will be silently ignored.</B>
 	 * @param intMaxReadBytes		Overrides the MAX_BYTES_READ value, to allow arbitrarily long files.
@@ -370,7 +372,7 @@ public class MultipartRequest
 						InputStream in, 
 						int intMaxReadBytes) throws IllegalArgumentException, IOException
 	{
-		// save reference to debug stream for later.
+		// saves reference to debug stream for later.
 		this.debug = debug;
 
 		if (strContentTypeText!=null && strContentTypeText.startsWith("multipart/form-data") && strContentTypeText.indexOf("boundary=")!=-1)
@@ -402,10 +404,13 @@ public class MultipartRequest
 	}
 
 	/**
-		Return the value of the strName URLParameter.
-  	    If more than one value for a particular Parameter, will return the first.
-		If an error occurs will return null.
-    */
+	 * Gets the value of the strName URLParameter.
+  	 * If more than one value for a particular Parameter, will return the first.
+	 * If an error occurs will return null.
+	 * @param strName the form field name, used to upload the file.  This identifies
+	 *				  the formfield location in the storage facility.
+	 * @return the value of the  URL Parameter.
+     */
 	public String getURLParameter(String strName)
 	{										 
 		Object value = htParameters.get(strName);
@@ -416,11 +421,14 @@ public class MultipartRequest
 	}
 
 	/**
-		Return an enumeration of all values for the strName parameter.
-		Even if a single value for, will always return an enumeration, although
-		it may actually be empty if no value was encountered for strName or
-		it is an invalid parameter name.
-	*/
+	 * Gets an enumeration of all values for the strName parameter.
+	 * Even if a single value for, will always return an enumeration, although
+	 * it may actually be empty if no value was encountered for strName or
+	 * it is an invalid parameter name.
+	 * @param strName the form field name, used to upload the file.  This identifies
+	 *				  the formfield location in the storage facility.
+	 * @return the enumeration of all values.
+	 */
 	public Enumeration getURLParameters(String strName)
 	{
 		Object value = htParameters.get(strName);
@@ -436,27 +444,29 @@ public class MultipartRequest
 	}
 
 	/**
-		An enumeration of all URL Parameters for the current HTTP Request.
-	*/
+	 * Gets the enumeration of all URL Parameters for the current HTTP Request.
+	 * @return the enumeration of URl Parameters.
+	 */
 	public Enumeration getParameterNames()
 	{
 		return htParameters.keys();
 	}
 
 	/**
-		This enumeration will return all INPUT TYPE=FILE parameter NAMES as encountered
-		during the upload.
-	*/
+	 * Gets the enumeration of all INPUT TYPE=FILE parameter NAMES as encountered
+	 * during the upload.
+	 * @return 
+	 */
 	public Enumeration getFileParameterNames()
 	{
 		return htFiles.keys();
 	}
 
 	/**
-		Returns the Content-Type of a file.
-
-		@see #getFileParameter(java.lang.String, int)
-	*/
+	 * Returns the Content-Type of a file.
+     *
+	 * @see #getFileParameter(java.lang.String, int)
+	 */
 	public String getContentType(String strName)
 	{
 		// Can cast null, it will be ignored.
@@ -464,14 +474,14 @@ public class MultipartRequest
 	}
     
 	/**
-		If files were uploaded into memory, this method will retrieve the contents
-		of the file as a InputStream.  
-
-		@return the contents of the file as a InputStream, or null if not file uploaded,
-		or file uploaded to file system directory.
-
-		@see #getFileParameter(java.lang.String, int)
-	*/
+	 * If files were uploaded into memory, this method will retrieve the contents
+	 * of the file as a InputStream.
+	 * @param strName the form field name, used to upload the file.  This identifies
+	 *				  the formfield location in the storage facility.
+	 * @return the contents of the file as a InputStream, or null if not file uploaded,
+	 * or file uploaded to file system directory.
+	 * @see #getFileParameter(java.lang.String, int)
+	 */
 	public InputStream getFileContents(String strName)
 	{
 		Object obj = getFileParameter(strName, CONTENTS);
@@ -482,19 +492,22 @@ public class MultipartRequest
 	}
 
 	/**
-		Returns a File reference to the uploaded file.  This reference is to the files uploaded location,
-		and allows you to read/move/delete the file.
-
-		This method is only of use, if files were uploaded to the file system.  Will return null if 
-		uploaded to memory, in which case you should use getFileContents(strName) instead.
-
-		@return Returns a null file reference if a call to getFileSize(strName) returns zero or files were
-		uploaded to memory.
-
-		@see #getFileSize(java.lang.String)
-		@see #getFileContents(java.lang.String)
-		@see #getFileSystemName(java.lang.String)
-	*/
+	 * Returns a File reference to the uploaded file.  This 
+	 * reference is to the files uploaded location,
+	 * and allows you to read/move/delete the file.
+	 * This method is only of use, if files were uploaded to the 
+	 * file system.  Will return null if 
+	 * uploaded to memory, in which case you should use 
+	 * getFileContents(strName) instead.
+	 * @param strName the form field name, used to upload the file.  This identifies
+	 *				  the formfield location in the storage facility.
+	 * @return  a null file reference if a call to 
+	 * getFileSize(strName) returns zero or files were
+	 * uploaded to memory.
+	 * @see #getFileSize(java.lang.String)
+	 * @see #getFileContents(java.lang.String)
+	 * @see #getFileSystemName(java.lang.String)
+	 */
 	public File getFile(String strName)
 	{
 		String filename = getFileSystemName(strName);
@@ -506,12 +519,13 @@ public class MultipartRequest
 	}
 
 	/**
-		Get the file system basename of an uploaded file.
-
-		@return null if strName not found.
-		
-		@see #getFileParameter(java.lang.String, int)
-	*/
+	 * Gets the file system basename of an uploaded file.
+	 * @param strName the form field name, used to upload the file.  This identifies
+	 *				  the formfield location in the storage facility.
+	 * @return null if strName not found.
+	 *		
+	 * @see #getFileParameter(java.lang.String, int)
+	 */
 	public String getFileSystemName(String strName)
 	{
 		// Can cast null, it will be ignored.
@@ -519,12 +533,13 @@ public class MultipartRequest
 	}
 
 	/**
-		Returns the File Size of a uploaded file.
-
-		@return -1 if file size not defined.
-
-		@see #getFileParameter(java.lang.String, int)
-	*/
+	 * Returns the File Size of a uploaded file.
+	 * @param strName the form field name, used to upload the file.  This identifies
+	 *				  the formfield location in the storage facility.
+	 * @return -1 if file size not defined.
+	 *
+	 * @see #getFileParameter(java.lang.String, int)
+	 */
 	public long getFileSize(String strName)
 	{
 		Object obj = getFileParameter(strName, SIZE);
@@ -535,32 +550,30 @@ public class MultipartRequest
 	}
 
 	/**
-		Access an attribute of a file upload parameter record.
-
-		@param strName is the form field name, used to upload the file.  This identifies
-				the formfield location in the storage facility.
-
-		@param strFilename	This is the FileSystemName of the file
-		@param type	What attribute you want from the File Parameter.
-			The following types are supported:
-				MultipartRequest.FILENAME, 
-				MultipartRequest.CONTENT_TYPE, 
-				MultipartRequest.SIZE,
-				MultipartRequest.CONTENTS
-
-		<p>The getFileSystemName(String strName),getFileSize(String strName),getContentType(String strName),
-		getContents(String strName) methods all use this method passing in a different type argument.</p>
-
-		<p><b>Note: </b>This class has been changed to provide for future functionality where you
-		will be able to access all files uploaded, even if they are uploaded using the same
-		form field name.  At this point however, only the first file uploaded via a form
-		field name is accessible.</p>
-
-		@see #getContentType(java.lang.String)
-		@see #getFileSize(java.lang.String)
-		@see #getFileContents(java.lang.String)
-		@see #getFileSystemName(java.lang.String)
-	*/
+	 * Access an attribute of a file upload parameter record.
+     * <p>The getFileSystemName(String strName),getFileSize(String strName),getContentType(String strName),
+	 * getContents(String strName) methods all use this method passing in a different type argument.</p>
+     *
+	 * <p><b>Note: </b>This class has been changed to provide for future functionality where you
+	 * will be able to access all files uploaded, even if they are uploaded using the same
+	 * form field name. At this point however, only the first file uploaded via a form
+	 * field name is accessible.</p>
+	 * 
+	 * @param strName the form field name, used to upload the file.  This identifies
+	 *				  the formfield location in the storage facility.
+     *
+	 * @param type	What attribute you want from the File Parameter.
+	 *		  The following types are supported:
+	 *			MultipartRequest.FILENAME, 
+	 *			MultipartRequest.CONTENT_TYPE, 
+	 *			MultipartRequest.SIZE,
+	 *			MultipartRequest.CONTENTS
+	 *
+ 	 * @see #getContentType(java.lang.String)
+	 * @see #getFileSize(java.lang.String)
+	 * @see #getFileContents(java.lang.String)
+	 * @see #getFileSystemName(java.lang.String)
+	 */
 	public Object getFileParameter(String strName, int type)
 	{
 		Object[] objArray = null;
@@ -578,8 +591,11 @@ public class MultipartRequest
 	}
 
 	/**
-		This is the main parse method.
-	*/
+	 * This is the main parse method.
+	 * @param in the InputStream to read and parse.
+	 * @throws IOException If the intContentLength is higher than MAX_READ_BYTES or 
+	 * 						strSaveDirectory is invalid or cannot be written to.
+	 */
 	private void parse(InputStream in) throws IOException
 	{
 		String strContentType = null;
@@ -690,9 +706,12 @@ public class MultipartRequest
 	}
 	
 	/**
-		So we can put the logic for supporting multiple parameters with the same
-		form field name in the one location.
-	*/
+	 * So we can put the logic for supporting multiple parameters with the same
+	 * form field name in the one location.
+	 * @param strName the form field name, used to upload the file.  This identifies
+	 *				  the formfield location in the storage facility.
+	 * @param value  the form field value.
+	 */
 	private void addParameter(String strName, String value)
 	{
 		// Fix NPE in case of null name
@@ -702,7 +721,7 @@ public class MultipartRequest
 		// Fix 1.16: for multiple parameter values.
 		Object objParms = htParameters.get(strName);
 
-		// Add an new entry to the param vector.
+		// Adds an new entry to the param vector.
 		if (objParms instanceof Vector)
 			((Vector)objParms).addElement(value);
 		else if (objParms instanceof String)// There is only one entry, so we create a vector!
@@ -718,11 +737,14 @@ public class MultipartRequest
 	}
 
 	/**
-		So we can put the logic for supporting multiple files with the same
-		form field name in the one location.
-
-		Assumes that this method will never be called with a null fileObj or strFilename.
-	*/
+	 * So we can put the logic for supporting multiple files with the same
+	 * form field name in the one location.
+	 *
+	 * Assumes that this method will never be called with a null fileObj or strFilename.
+	 * @param strName the form field name, used to upload the file.  This identifies
+	 *				  the formfield location in the storage facility.
+	 * @param fileObj 
+	 */
 	private void addFileParameter(String strName, Object[] fileObj)
 	{
 		Object objParms = htFiles.get(strName);
@@ -743,10 +765,11 @@ public class MultipartRequest
 	}
 
 	/**
-		Read parameters, assume already passed Content-Disposition and blank line.
-
-		@return the value read in.
-	*/
+	 * Reads the parameters, assume already passed Content-Disposition and blank line.
+     * @param in the InputStream to read and parse.
+	 * @return the value read in.
+	 * @throws IOException if an error occurs writing the file.
+	 */
 	private String readParameter(InputStream in) throws IOException
 	{
 		StringBuffer buf = new StringBuffer();
@@ -773,8 +796,11 @@ public class MultipartRequest
 	}
 
 	/**
-		Read from in, write to out, minus last two line ending bytes.
-	*/
+	 * Read from in, write to out, minus last two line ending bytes.
+	 * @param in the InputStream to read and parse.
+	 * @param out the OutputStream.
+	 * @throws IOException if an error occurs writing the file.
+	 */
 	private long readAndWrite(InputStream in, OutputStream out) throws IOException
 	{
 		long fileSize = 0;
@@ -794,7 +820,7 @@ public class MultipartRequest
 			// Found boundary.
 			if (read<blockOfBytes.length && new String(blockOfBytes, 0, read, charEncoding).indexOf(this.strBoundary)!=-1)
 			{
-				// Write the line, minus any line ending bytes.
+				// Writes the line, minus any line ending bytes.
 				//The secondLineOfBytes will NEVER BE NON-NULL if out==null, so there is no need to included this in the test
 				if(sizeOfSecondArray!=0)
 				{
@@ -803,7 +829,7 @@ public class MultipartRequest
 					if (actualLength>0 && out!=null)
 					{
 						out.write(secondLineOfBytes, 0, actualLength);
-						// Update file size.
+						// Updates the file size.
 						fileSize+=actualLength;
 					}
 				}
@@ -811,12 +837,12 @@ public class MultipartRequest
 			}
 			else
 			{
-				// Write out previous line.
+				// Writes the out previous line.
 				//The sizeOfSecondArray will NEVER BE ZERO if out==null, so there is no need to included this in the test
 				if(sizeOfSecondArray!=0)
 				{
 					out.write(secondLineOfBytes, 0, sizeOfSecondArray);
-					// Update file size.
+					// Updates the file size.
 					fileSize+=sizeOfSecondArray;
 				}
 
@@ -831,21 +857,21 @@ public class MultipartRequest
 			}
 		}
 
-		//Return the number of bytes written to outstream.
+		//Returns the number of bytes written to outstream.
 		return fileSize;
 	}
 
 	/**
-		Read a Multipart section that is a file type.  Assumes that the Content-Disposition/Content-Type and blank line
-	 	have already been processed.  So we read until we hit a boundary, then close file and return.
-
-		@exception IOException if an error occurs writing the file.
-
-		@return the number of bytes read.
-	*/
+	 * Reads a Multipart section that is a file type.  Assumes that the Content-Disposition/Content-Type and blank line
+	 * have already been processed.  So we read until we hit a boundary, then close file and return.
+     * @param in the InputStream to read and parse.
+     * @param strFilename the FileSystemName of the file.
+     * @return the number of bytes read.
+	 * @throws IOException if an error occurs writing the file.
+     */
 	private long readAndWriteFile(InputStream in, String strFilename) throws IOException
 	{
-		// Store a reference to this, as we may need to delete it later.
+		// Stores a reference to this, as we may need to delete it later.
 		File outFile = new File(fileOutPutDirectory, strFilename);
 
 		BufferedOutputStream out = null;
@@ -863,17 +889,18 @@ public class MultipartRequest
 		else
 		{
 			out.close();
-			// Delete file as empty.  We should be able to delete it, if we can open it!
+			// Deletes the file as empty.  We should be able to delete it, if we can open it!
 			outFile.delete();
 		}
 		return count;
 	}
 
 	/**
-	 *  If the fileOutPutDirectory wasn't specified, just read the file to memory.
+	 * If the fileOutPutDirectory wasn't specified, just read the file to memory.
 	 *
-	 *  @param strName - Url parameter this file was loaded under.
-	 *  @return contents of file, from which you can garner the size as well.
+	 * @param in the InputStream to read and parse.
+	 * @return contents of file, from which you can garner the size as well.
+	 * @throws IOException if the writing failed due to input/output error.
 	 */
 	private byte[] readFile(InputStream in) throws IOException
 	{
@@ -892,12 +919,13 @@ public class MultipartRequest
 	}
 
 	/**
-		Returns the length of the line minus line ending.
-
-		@param endOfArray 	This is because in many cases the byteLine will have garbage data at the end, so we
-							act as though the actual end of the array is this parameter.  If you want to process
-							the complete byteLine, specify byteLine.length as the endOfArray parameter.
-	*/
+	 * Gets the length of the line minus line ending.
+	 * @param byteLine
+	 * @param endOfArray  This is because in many cases the byteLine will have garbage data at the end, so we
+	 *					  act as though the actual end of the array is this parameter.  If you want to process
+	 *					  the complete byteLine, specify byteLine.length as the endOfArray parameter.
+	 *@return the length. 
+	 */
 	private static final int getLengthMinusEnding(byte byteLine[], int endOfArray)
 	{
 		if (byteLine==null)
@@ -910,7 +938,12 @@ public class MultipartRequest
 		else
 			return endOfArray;
 	}
-
+	
+	/**
+	 * 
+	 * @param buf
+	 * @return
+	 */
 	private static final int getLengthMinusEnding(StringBuffer buf)
 	{
 		if (buf.length()>=2 && buf.charAt(buf.length()-2) == '\r' && buf.charAt(buf.length()-1) == '\n')
@@ -922,17 +955,19 @@ public class MultipartRequest
 	}
 
 	/**
-		Reads at most READ_BLOCK blocks of data, or a single line whichever is smaller.
-		Returns -1, if nothing to read, or we have reached the specified content-length.
-
-		Assumes that bytToBeRead.length indicates the block size to read.
-
-		@return -1 if stream has ended, before a newline encountered (should never happen) OR
-		we have read past the Content-Length specified.  (Should also not happen).  Otherwise
-		return the number of characters read.  You can test whether the number returned is less
-		than bytesToBeRead.length, which indicates that we have read the last line of a file or parameter or 
-		a border line, or some other formatting stuff.
-	*/
+	 * Reads at most READ_BLOCK blocks of data, or a single line whichever is smaller.
+	 * Returns -1, if nothing to read, or we have reached the specified content-length.
+     *
+	 * Assumes that bytToBeRead.length indicates the block size to read.
+     * @param in the InputStream to read and parse.
+     * @param bytesToBeRead the bytes to be read.
+	 * @return -1 if stream has ended, before a newline encountered (should never happen) OR
+	 * we have read past the Content-Length specified.  (Should also not happen).  Otherwise
+	 * return the number of characters read.  You can test whether the number returned is less
+	 * than bytesToBeRead.length, which indicates that we have read the last line of a file or parameter or 
+	 * a border line, or some other formatting stuff.
+	 * @throws IOException if the writing failed due to input/output error.
+	 */
 	private int readLine(InputStream in, byte[] bytesToBeRead) throws IOException 
 	{
 		// Ensure that there is still stuff to read...
@@ -956,11 +991,11 @@ public class MultipartRequest
 	}
 
 	/**
-		This needs to support the possibility of a / or a \ separator.
-
-		Returns strFilename after removing all characters before the last
-		occurence of / or \.
-	*/
+	 * This needs to support the possibility of a / or a \ separator.
+     * @param strFilename the FileSystemName of the file.
+	 * @return the strFilename after removing all characters before the last
+	 * occurence of / or \.
+	 */
 	private static final String getBasename (String strFilename)
 	{
 		if (strFilename==null)
@@ -977,15 +1012,17 @@ public class MultipartRequest
 	}
 
 	/**
-		trimQuotes trims any quotes from the start and end of a string and returns the trimmed string...
-	*/
+	 * Trims any quotes from the start and end of a string.
+	 * @param strItem
+	 * @return the trimmed string.
+	 */
 	private static final String trimQuotes (String strItem)
 	{
 		// Saves having to go any further....
 		if (strItem==null || strItem.indexOf("\"")==-1)
 			return strItem;
 		
-		// Get rid of any whitespace..
+		// Gets the rid of any whitespace..
 	    strItem = strItem.trim();
 
 		if (strItem.charAt(0) == '\"')
@@ -998,10 +1035,13 @@ public class MultipartRequest
 	}
 
 	/**
-		Format of string name=value; name=value;
-
-		If not found, will return null.
-	*/
+	 * Format of string name=value; name=value;
+	 * If not found, will return null.
+     * @param strName the form field name, used to upload the file.  This identifies
+	 *				  the formfield location in the storage facility.
+     * @param strToDecode 
+	 * 
+	 */
 	private static final String getValue(String strName, String strToDecode)
 	{
 		strName = strName + "=";
@@ -1040,23 +1080,23 @@ public class MultipartRequest
      *
      * <p>This method <u><b>does not</b></u> returns -1 if it reaches the end of the input
      * stream before reading the maximum number of bytes, it returns -1, if no bytes read.
+     * @param in    the InputStream to read and parse.
+     * @param b 	an array of bytes into which data is read.
      *
-     * @param b 		an array of bytes into which data is read
+     * @param off 	an integer specifying the character at which
+     *				this method begins reading.
      *
-     * @param off 		an integer specifying the character at which
-     *					this method begins reading
+     * @param len	an integer specifying the maximum number of 
+     *				bytes to read.
      *
-     * @param len		an integer specifying the maximum number of 
-     *					bytes to read
+     * @return		an integer specifying the actual number of bytes 
+     *					read, or -1 if the end of the stream is reached.
      *
-     * @return			an integer specifying the actual number of bytes 
-     *					read, or -1 if the end of the stream is reached
+     * @throws IOException	if an input or output exception has occurred
      *
-     * @exception IOException	if an input or output exception has occurred
-     *
-	 
-		Note: We have a problem with Tomcat reporting an erroneous number of bytes, so we need to check this.
-		This is the method where we get an infinite loop, but only with binary files.
+	 *
+	 * Note: We have a problem with Tomcat reporting an erroneous number of bytes, so we need to check this.
+	 * This is the method where we get an infinite loop, but only with binary files.
      */
     private int readLine(InputStream in, byte[] b, int off, int len) throws IOException 
 	{
@@ -1077,8 +1117,9 @@ public class MultipartRequest
     }
 
 	/**
-		Use when debugging this object.
-	*/
+	 * Prints the given debugging message.
+	 * @param x the message to print.
+	 */
 	protected void debug(String x)
 	{
 		if (debug!=null)
@@ -1089,7 +1130,7 @@ public class MultipartRequest
 	}
 
 	/** 
-		For debugging.
+	 * Gets the Html Table.For debugging.
 	 */
 	public String getHtmlTable()
 	{

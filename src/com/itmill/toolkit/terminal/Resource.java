@@ -28,8 +28,9 @@
 
 package com.itmill.toolkit.terminal;
 
-/** Resource provided to the client terminal. Support for actually displaying the resource type
- *  is left to the terminal.
+/** 
+ * <code>Resource</code> provided to the client terminal. Support for actually
+ * displaying the resource type is left to the terminal.
  *
  * @author IT Mill Ltd.
  * @version @VERSION@
@@ -37,6 +38,9 @@ package com.itmill.toolkit.terminal;
  */
 public interface Resource {
 	
-	/** Get the MIME type of the resource. */
+	/** 
+	 * Gets the MIME type of the resource.
+	 * @return the MIME type of the resource. 
+	 */
 	public String getMIMEType();
 }

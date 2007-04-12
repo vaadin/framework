@@ -34,10 +34,10 @@ import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
 
 /** 
- * ProgressIndicator is component that shows user state of a process 
+ * <code>ProgressIndicator</code> is component that shows user state of a process 
  * (like long computing or file upload)
  *
- * ProgressIndicator has two mainmodes. One for indeterminate processes and 
+ * <code>ProgressIndicator</code> has two mainmodes. One for indeterminate processes and 
  * other (default) for processes which progress can be measured
  *
  * May view an other property that indicates progress 0...1
@@ -53,12 +53,14 @@ public class ProgressIndicator
 		Property.Viewer,
 		Property.ValueChangeListener {
 
-	/** Content mode, where the label contains only plain text. The getValue()
+	/** 
+	 * Content mode, where the label contains only plain text. The getValue()
 	 * result is coded to XML when painting. 
 	 */
 	public static final int CONTENT_TEXT = 0;
 
-	/** Content mode, where the label contains preformatted text.
+	/** 
+	 * Content mode, where the label contains preformatted text.
 	 */
 	public static final int CONTENT_PREFORMATTED = 1;
 	
@@ -68,31 +70,41 @@ public class ProgressIndicator
 
 	private int pollingInterval = 1000;
 
-	/** Creates an a new ProgressIndicator. */
+	/** 
+	 * Creates an a new ProgressIndicator. 
+	 */
 	public ProgressIndicator() {
 		setPropertyDataSource(new ObjectProperty(new Float(0), Float.class));
 	}
 
-	/** Creates a new instance of ProgressIndicator with given state. */
+	/** 
+	 * Creates a new instance of ProgressIndicator with given state.
+	 * @param value 
+	 */
 	public ProgressIndicator(Float value) {
 		setPropertyDataSource(new ObjectProperty(value, Float.class));
 	}
 
-	/** Creates a new instance of ProgressIndicator with stae read from given datasource. */
+	/** 
+	 * Creates a new instance of ProgressIndicator with stae read from given datasource. 
+	 * @param contentSource
+	 */
 	public ProgressIndicator(Property contentSource) {
 		setPropertyDataSource(contentSource);
 	}
 
-	/** Get component UIDL tag.
-	 * @return Component UIDL tag as string.
+	/** 
+	 * Gets the component UIDL tag.
+	 * @return the Component UIDL tag as string.
 	 */
 	public String getTag() {
 		return "progressindicator";
 	}
 
-	/** Set the component to read-only.
+	/** 
+	 * Sets the component to read-only.
 	 * Readonly is not used in ProgressIndicator.
-	 * @param readOnly True to enable read-only mode, False to disable it
+	 * @param readOnly True to enable read-only mode, False to disable it.
 	 */
 	public void setReadOnly(boolean readOnly) {
 		if (dataSource == null)
@@ -100,9 +112,10 @@ public class ProgressIndicator
 		dataSource.setReadOnly(readOnly);
 	}
 
-	/** Is the component read-only ?
+	/** 
+	 * Is the component read-only ?
 	 * Readonly is not used in ProgressIndicator - this returns allways false.
-	 * @return True iff the component is in read only mode
+	 * @return True if the component is in read only mode.
 	 */
 	public boolean isReadOnly() {
 		if (dataSource == null)
@@ -110,8 +123,10 @@ public class ProgressIndicator
 		return dataSource.isReadOnly();
 	}
 
-	/** Paint the content of this component.
-	 * @param event PaintEvent.
+	/** 
+	 * Paints the content of this component.
+	 * @param target the Paint Event.
+	 * @throws PaintException if the Paint Operation fails.
 	 */
 	public void paintContent(PaintTarget target) throws PaintException {
 		target.addAttribute("indeterminate", indeterminate);
@@ -119,9 +134,11 @@ public class ProgressIndicator
 		target.addAttribute("state", this.getValue().toString());
 	}
 
-	/** Get the value of the ProgressIndicator.
-	 * Value of the ProgressIndicator is Float between 0 and 1
-	 * @return Value of the ProgressIndicator
+	/** 
+	 * Gets the value of the ProgressIndicator.
+	 * Value of the ProgressIndicator is Float between 0 and 1.
+	 * @return the Value of the ProgressIndicator.
+	 * @see com.itmill.toolkit.ui.AbstractField#getValue()
 	 */
 	public Object getValue() {
 		if (dataSource == null)
@@ -129,79 +146,96 @@ public class ProgressIndicator
 		return dataSource.getValue();
 	}
 
-	/** Set the value of the ProgressIndicator.
-	 * Value of the ProgressIndicator is the Float  between 0 and 1
-	 * @param newValue New value of the ProgressIndicator
+	/**
+	 * Sets the value of the ProgressIndicator.
+	 * Value of the ProgressIndicator is the Float  between 0 and 1.
+	 * @param newValue the New value of the ProgressIndicator.
+	 * @see com.itmill.toolkit.ui.AbstractField#setValue(java.lang.Object)
 	 */
 	public void setValue(Object newValue) {
 		if (dataSource == null)
 			throw new IllegalStateException("Datasource must be se");
 		this.dataSource.setValue(newValue);
 	}
-
+	
+	/**
+	 * @see com.itmill.toolkit.ui.AbstractField#toString()
+	 */
 	public String toString() {
 		if (dataSource == null)
 			throw new IllegalStateException("Datasource must be se");
 		return dataSource.toString();
 	}
-
+	
+	/**
+	 * @see com.itmill.toolkit.ui.AbstractField#getType()
+	 */
 	public Class getType() {
 		if (dataSource == null)
 			throw new IllegalStateException("Datasource must be se");
 		return dataSource.getType();
 	}
 
-	/** Get viewing data-source property.  */
+	/**
+	 * Gets the viewing data-source property.
+	 * @return the datasource.  
+	 * @see com.itmill.toolkit.ui.AbstractField#getPropertyDataSource()
+	 */
 	public Property getPropertyDataSource() {
 		return dataSource;
 	}
 
-	/** Set the property as data-source for viewing.  */
+	/**
+	 * Sets the property as data-source for viewing.
+	 * @param newDataSource the new data source.  
+	 * @see com.itmill.toolkit.ui.AbstractField#setPropertyDataSource(com.itmill.toolkit.data.Property)
+	 */
 	public void setPropertyDataSource(Property newDataSource) {
-		// Stop listening the old data source changes
+		// Stops listening the old data source changes
 		if (dataSource != null
 			&& Property.ValueChangeNotifier.class.isAssignableFrom(
 				dataSource.getClass()))
 			 ((Property.ValueChangeNotifier) dataSource).removeListener(this);
 
-		// Set the new data source
+		// Sets the new data source
 		dataSource = newDataSource;
 
-		// Listen the new data source if possible
+		// Listens the new data source if possible
 		if (dataSource != null
 			&& Property.ValueChangeNotifier.class.isAssignableFrom(
 				dataSource.getClass()))
 			 ((Property.ValueChangeNotifier) dataSource).addListener(this);
 	}
 
-	/** Get the mode of ProgressIndicator.
+	/** 
+	 * Gets the mode of ProgressIndicator.
 	 * 
-	 * @return true if in indeterminate mode
+	 * @return true if in indeterminate mode.
 	 */
 	public boolean getContentMode() {
 		return indeterminate;
 	}
 	
 	/**
-	 * Set ProgressIndicator to indeterminate mode
+	 * Sets the ProgressIndicator to indeterminate mode.
 	 * 
-	 * @param newValue true to set to indeterminate mode
+	 * @param newValue true to set to indeterminate mode.
 	 */
 	public void setIndeterminate(boolean newValue) {
 		indeterminate = newValue;
 	}
 	
 	/**
-	 * Set interval that compnent checks for progress
-	 * @param newValue interval in milliseconds
+	 * Sets the interval that component checks for progress.
+	 * @param newValue the interval in milliseconds.
 	 */
 	public void setPollingInterval(int newValue) {
 		pollingInterval = newValue;
 	}
 	
 	/**
-	 * Get interval that component checks for progress
-	 * @return interval in milliseconds
+	 * Gets the interval that component checks for progress.
+	 * @return the interval in milliseconds.
 	 */
 	public int getPollingInterval() {
 		return pollingInterval;

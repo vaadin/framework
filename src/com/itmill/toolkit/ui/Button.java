@@ -44,8 +44,8 @@ import com.itmill.toolkit.terminal.KeyMapper;
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
 
-
-/** A generic button component.
+/** 
+ * A generic button component.
  *
  * @author IT Mill Ltd.
  * @version @VERSION@
@@ -63,9 +63,8 @@ public class Button extends AbstractField implements Action.Container {
 	/** Action mapper */
 	private KeyMapper actionMapper = null;
 
-
-	/** Creates a new push button.
-	 *
+	/** 
+	 * Creates the new push button.
 	 * The value of the push button is allways false and they are
 	 * immediate by default.
 	 *
@@ -74,42 +73,47 @@ public class Button extends AbstractField implements Action.Container {
 		setSwitchMode(false);
 	}
 
-	/** Creates a new push button.
+	/** 
+	 * Creates the new push button.
 	 * 
 	 * The value of the push button is allways false and they are 
 	 * immediate by default.
 	 * 
-	 *  @param caption Button caption
+	 * @param caption the Button caption.
 	 */
 	public Button(String caption) {
 		setCaption(caption);
 		setSwitchMode(false);
 	}
 
-	/** Creates a new push button with click listener.
-	 *  @param caption Button caption
-	 *  @param listener Button click listener
+	/** 
+	 * Creates the new push button with click listener.
+	 * @param caption the Button caption.
+	 * @param listener the Button click listener.
 	 */
 	public Button(String caption, ClickListener listener) {
 		this(caption);
 		addListener(listener);
 	}
 
-	/** Creates a new push button with a method listening button clicks.
+	/** 
+	 * Creates the new push button with a method listening button clicks.
 	 * The method must have either no parameters, or only one parameter of
 	 * Button.ClickEvent type.
-	 *  @param caption Button caption
-	 *  @param target Object having the method for listening button clicks
-	 *  @param methodName The name of the method in target object, that
-	 *   receives button click events.
+	 * @param caption the Button caption.
+	 * @param target the Object having the method for listening button clicks.
+	 * @param methodName the name of the method in target object, that
+	 *   				receives button click events.
 	 */
 	public Button(String caption, Object target, String methodName) {
 		this(caption);
 		addListener(ClickEvent.class, target, methodName);
 	}
 
-	/** Creates new switch button with initial value.
-	 * @param state Initial state of the switch-button.
+	/** 
+	 * Creates the new switch button with initial value.
+	 * @param state the Initial state of the switch-button.
+	 * @param initialState
 	 */
 	public Button(String caption, boolean initialState) {
 		setCaption(caption);
@@ -117,8 +121,10 @@ public class Button extends AbstractField implements Action.Container {
 		setSwitchMode(true);
 	}
 
-	/** Creates new switch button that is connected to a boolean property.
-	 * @param state Initial state of the switch-button.
+	/** 
+	 * Creates the new switch button that is connected to a boolean property.
+	 * @param state the Initial state of the switch-button.
+	 * @param dataSource
 	 */
 	public Button(String caption, Property dataSource) {
 		setCaption(caption);
@@ -126,17 +132,19 @@ public class Button extends AbstractField implements Action.Container {
 		setPropertyDataSource(dataSource);
 	}
 
-	/** Get component UIDL tag.
-	 * @return Component UIDL tag as string.
+	/** 
+	 * Gets component UIDL tag.
+	 * @return the Component UIDL tag as string.
 	 */
 	public String getTag() {
 		return "button";
 	}
 
-	/** Paint the content of this component.
-	 * @param event PaintEvent.
-	 * @throws IOException Passed from the UIDLStream.
-	 * @throws PaintException The paint operation failed.
+	/** 
+	 * Paints the content of this component.
+	 * @param event the PaintEvent.
+	 * @throws IOException if the writing failed due to input/output error.
+	 * @throws PaintException if the paint operation failed.
 	 */
 	public void paintContent(PaintTarget target) throws PaintException {
 		super.paintContent(target);
@@ -195,13 +203,15 @@ public class Button extends AbstractField implements Action.Container {
 		}
 	}
 
-	/** Invoked when the value of a variable has changed. Button
+	/** 
+	 * Invoked when the value of a variable has changed. Button
 	 * listeners are notified if the button is clicked.
-	 * @param event Variable change event.
+	 * @param source 
+	 * @param variables
 	 */
 	public void changeVariables(Object source, Map variables) {
 		if (variables.containsKey("state")) {
-			// Get the new and old button states
+			// Gets the new and old button states
 			Boolean newValue = (Boolean) variables.get("state");
 			Boolean oldValue = (Boolean) getValue();
 
@@ -249,8 +259,8 @@ public class Button extends AbstractField implements Action.Container {
 	}
 
 	/**
-	 * Returns the switchMode.
-	 * @return boolean
+	 * Checks if it is switchMode.
+	 * @return <code>true</code> if it is in Switch Mode, otherwise <code>false</code>.
 	 */
 	public boolean isSwitchMode() {
 		return switchMode;
@@ -258,7 +268,7 @@ public class Button extends AbstractField implements Action.Container {
 
 	/**
 	 * Sets the switchMode.
-	 * @param switchMode The switchMode to set
+	 * @param switchMode The switchMode to set.
 	 */
 	public void setSwitchMode(boolean switchMode) {
 		this.switchMode = switchMode;
@@ -268,19 +278,20 @@ public class Button extends AbstractField implements Action.Container {
 		}
 	}
 
-	/** Set immediate mode. 
-	* @see com.itmill.toolkit.ui.AbstractComponent#setImmediate(boolean)
-	* 
-	* Push buttons can not be set in non-immediate mode.
-	*/
+	/** 
+	 * Sets immediate mode.
+	 * Push buttons can not be set in non-immediate mode.
+	 * @see com.itmill.toolkit.ui.AbstractComponent#setImmediate(boolean)
+	 */
 	public void setImmediate(boolean immediate) {
 		// Push buttons are allways immediate
 		super.setImmediate(!isSwitchMode() || immediate);
 	}
 
-	/** The type of the button as a property.
-	* @see com.itmill.toolkit.data.Property#getType()
-	*/
+	/** 
+	 * The type of the button as a property.
+	 * @see com.itmill.toolkit.data.Property#getType()
+	 */
 	public Class getType() {
 		return Boolean.class;
 	}
@@ -300,10 +311,11 @@ public class Button extends AbstractField implements Action.Container {
 		}
 	}
 
-	/** Click event. This event is thrown, when the button is clicked. 
+	/** 
+	 * Click event. This event is thrown, when the button is clicked. 
 	 * @author IT Mill Ltd.
-		 * @version @VERSION@
-		 * @since 3.0
+	 * @version @VERSION@
+	 * @since 3.0
 	 */
 	public class ClickEvent extends Component.Event {
 
@@ -312,49 +324,57 @@ public class Button extends AbstractField implements Action.Container {
          */
         private static final long serialVersionUID = 3546647602931118393L;
 
-        /** New instance of text change event
-		* @param source Source of the event.
-		*/
+        /** 
+         * New instance of text change event.
+		 * @param source the Source of the event.
+		 */
 		public ClickEvent(Component source) {
 			super(source);
 		}
 
-		/** Button where the event occurred
-		 * @return Source of the event.
+		/** 
+		 * Gets the Button where the event occurred.
+		 * @return the Source of the event.
 		 */
 		public Button getButton() {
 			return (Button) getSource();
 		}
 	}
 
-	/** Button click listener
+	/** 
+	 * Button click listener
 	 * @author IT Mill Ltd.
-		 * @version @VERSION@
-		 * @since 3.0
+	 * @version @VERSION@
+	 * @since 3.0
 	 */
 	public interface ClickListener {
 
-		/** Button has been pressed.
+		/** 
+		 * Button has been pressed.
 		 * @param event Button click event.
 		 */
 		public void buttonClick(ClickEvent event);
 	}
 
-	/** Add button click listener
-	* @param listener Listener to be added.
-	*/
+	/** 
+	 * Adds the button click listener.
+	 * @param listener the Listener to be added.
+	 */
 	public void addListener(ClickListener listener) {
 		addListener(ClickEvent.class, listener, BUTTON_CLICK_METHOD);
 	}
 
-	/** Remove button click listener
-	* @param listener Listener to be removed.
-	*/
+	/** 
+	 * Removes the button click listener.
+	 * @param listener the Listener to be removed.
+	 */
 	public void removeListener(ClickListener listener) {
 		removeListener(ClickEvent.class, listener, BUTTON_CLICK_METHOD);
 	}
 
-	/** Emit options change event. */
+	/** 
+	 * Emits the options change event. 
+	 */
 	protected void fireClick() {
 		fireEvent(new Button.ClickEvent(this));
 	}

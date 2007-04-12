@@ -30,7 +30,8 @@ package com.itmill.toolkit.terminal;
 
 import java.util.EventObject;
 
-/** Interface implemented by all classes that can be painted. 
+/** 
+ * Interface implemented by all classes that can be painted. 
  * Classes implementing this interface know how to output themselves 
  * to a UIDL stream and that way describing to the terminal how it 
  * should be displayed in the UI.
@@ -41,28 +42,33 @@ import java.util.EventObject;
  */
 public interface Paintable extends java.util.EventListener {
     
-	/** <p>Paints the paintable into a UIDL stream. This method creates
+	/** 
+	 * <p>
+	 * Paints the paintable into a UIDL stream. This method creates
 	 * the UIDL sequence describing it and outputs it to the given UIDL
-	 * stream.</p>
+	 * stream.
+	 * </p>
 	 * 
-	 * <p>It's is called when the contents of the component should be
+	 * <p>
+	 * It is called when the contents of the component should be
 	 * painted in response to the component first being shown or having been
-	 * altered so that its visual representation is changed.</p>
+	 * altered so that its visual representation is changed.
+	 * </p>
 	 * 
-	 * @param target target UIDL stream where the component should paint
-	 * itself to
-	 * @throws PaintException if the paint operation failed
-	 * @throws InvalidUIDLException if incorrect UIDL is writted, and
-	 * the error can be dealt with inside this method call.
+	 * @param target the target UIDL stream where the component should paint
+	 * itself to.
+	 * @throws PaintException if the paint operation failed.
 	 */
     public void paint(PaintTarget target) throws PaintException;
     
-	/** Requests that the paintable should be repainted as soon as possible.
+	/** 
+	 * Requests that the paintable should be repainted as soon as possible.
 	 */
 	public void requestRepaint();
 	
-	/** Repaint request event is thrown when the paintable needs to be repainted. 
-	 * This is typically done when the paint() method would return dissimilar
+	/** 
+	 * Repaint request event is thrown when the paintable needs to be repainted. 
+	 * This is typically done when the <code>paint</code> method would return dissimilar
 	 * UIDL from the previous call of the method. 
 	 */
 	public class RepaintRequestEvent extends EventObject {
@@ -72,15 +78,17 @@ public interface Paintable extends java.util.EventListener {
          */
         private static final long serialVersionUID = 3256725095530442805L;
 
-        /** Construct new event.
-		 * @param source The paintable needing repaint
+        /** 
+         * Constructs new event.
+		 * @param source the paintable needing repaint.
 		 */
 		public RepaintRequestEvent(Paintable source) {
 			super(source);	
 		}
 		
-		/** Get the paintable needing repainting. 
-		 * @return Paintable for which the paint() method will return 
+		/** 
+		 * Gets the paintable needing repainting. 
+		 * @return Paintable for which the <code>paint</code> method will return 
 		 * dissimilar UIDL from the previous call of the method. 
 		 */
 		public Paintable getPaintable() {
@@ -88,41 +96,47 @@ public interface Paintable extends java.util.EventListener {
 		}
 	}
 	
-	/** Listen repaint requests. The repaintRequested() method is called when the 
+	/** 
+	 * Listens repaint requests. The <code>repaintRequested</code> method is called when the 
 	 * paintable needs to be repainted. 
-	 * This is typically done when the paint() method would return dissimilar
+	 * This is typically done when the <code>paint</code> method would return dissimilar
 	 * UIDL from the previous call of the method. 
 	 */
 	public interface RepaintRequestListener {
 
-		/** Receive repaint request events. 
-		 * @param event The repaint request event specifying the paintable source. 
+		/** 
+		 * Receives repaint request events. 
+		 * @param event the repaint request event specifying the paintable source. 
 		 */
 		public void repaintRequested(RepaintRequestEvent event);
 	}
 	
-	/** Add repaint request listener. In order to assure that no repaint requests are
+	/** 
+	 * Adds repaint request listener. In order to assure that no repaint requests are
 	 * missed, the new repaint listener should paint the paintable right after adding
 	 * itself as listener.
-	 * @param listener to be added
+	 * @param listener the listener to be added.
 	 */
 	public void addListener(RepaintRequestListener listener);
 
-	/** Remove repaint request listener. 
-	 * @param listener to be removed
+	/** 
+	 * Removes repaint request listener. 
+	 * @param listener the listener to be removed.
 	 */
 	public void removeListener(RepaintRequestListener listener);
 	
-	/** Request sending of repaint events on any further visible changes.
+	/** 
+	 * Request sending of repaint events on any further visible changes.
 	 * Normally the paintable only send up to one repaint request
 	 * for listeners after paint as the paintable as the paintable
 	 * assumes that the listeners already know about the repaint need.
 	 * This method resets the assumtion. Paint implicitly does the
 	 * assumtion reset functionality implemented by this method.
-	 * 
+	 * <p>
 	 * This method is normally used only by the terminals to note
 	 * paintables about implicit repaints (painting the component
 	 * without actually invoking paint method).
+	 * </p>
 	 */
 	public void requestRepaintRequests();
 }
