@@ -2,7 +2,6 @@ package com.itmill.toolkit.demo;
 
 import java.io.File;
 import com.itmill.toolkit.data.Item;
-import com.itmill.toolkit.data.util.FilesystemContainer;
 import com.itmill.toolkit.demo.util.SampleDirectory;
 import com.itmill.toolkit.ui.*;
 import com.itmill.toolkit.ui.Tree.ExpandEvent;
