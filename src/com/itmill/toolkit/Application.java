@@ -764,7 +764,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 		private Window window;
 
 		/**
-		 * Creates the event.
+		 * Creates a event.
 		 * 
 		 * @param window
 		 *            the Detached window.
@@ -804,7 +804,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 		private Window window;
 
 		/**
-		 * Creates the event.
+		 * Creates a event.
 		 * 
 		 * @param window
 		 *            the Attached window.
