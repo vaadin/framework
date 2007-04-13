@@ -72,7 +72,7 @@ public class TabSheet extends AbstractComponentContainer {
 	private boolean tabsHidden;
 
 	/** 
-	 * Constructs the new Tabsheet.
+	 * Constructs a new Tabsheet.
 	 * Tabsheet is immediate by default.
 	 */
 	public TabSheet() {
