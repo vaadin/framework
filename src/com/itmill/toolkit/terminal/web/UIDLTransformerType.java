@@ -48,7 +48,7 @@ public class UIDLTransformerType {
 	private Theme theme;
 
 	/** 
-	 * Creates the new instance of TransformerType.
+	 * Creates a new instance of TransformerType.
 	 * @param webBrowserType the web browser type.
 	 * @param theme the property theme.
 	 */

@@ -205,7 +205,7 @@ public class HttpVariableMap {
 		private HashMap nonVariables = new HashMap();
 
 		/** 
-		 * Creates the new parameter container and parse the parameters from the request using
+		 * Creates a new parameter container and parse the parameters from the request using
 		 * GET, POST and POST/MULTIPART parsing.
 		 * @param req the HTTP request.
 		 * @throws IOException if the writing failed due to input/output error.

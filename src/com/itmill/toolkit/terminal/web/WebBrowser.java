@@ -117,7 +117,7 @@ public class WebBrowser implements Terminal {
 
 	/**
 	 * Constructor WebBrowserType.
-	 * Creates default WebBrowserType instance.
+	 * Creates a default WebBrowserType instance.
 	 */
 	public WebBrowser() {
 	}

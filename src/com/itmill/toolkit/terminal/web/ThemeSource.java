@@ -106,7 +106,7 @@ public interface ThemeSource {
 		private static final long serialVersionUID = -7823850742197580285L;
 
 		/** 
-		 * Creates the new theme exception.
+		 * Creates a new theme exception.
 		 * @param message the Error message.
 		 */
 		public ThemeException(String message) {
@@ -114,7 +114,7 @@ public interface ThemeSource {
 		}
 
         /** 
-         * Creates the new theme exception.
+         * Creates a new theme exception.
          * 
          * @param message the error message.
          * @param cause the cause of the exception.

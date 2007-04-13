@@ -74,7 +74,7 @@ public class DebugWindow extends Window {
 	private Label applicationInfo = new Label("", Label.CONTENT_XHTML);
 
 	/**
-	 * Creates the new debug window for an application.
+	 * Creates a new debug window for an application.
 	 * @param debuggedApplication the Application to be debugged.
 	 * @param session the Session to be debugged.
 	 * @param servlet the Servlet to be debugged.

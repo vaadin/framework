@@ -675,7 +675,7 @@ public class Theme extends DefaultHandler {
 		private Requirement requirement;
 
 		/**
-		 * Create new NOT requirement based on another requirement.
+		 * Create a new NOT requirement based on another requirement.
 		 * 
 		 * @param requirement
 		 *            the requirement to be negated.
@@ -996,7 +996,7 @@ public class Theme extends DefaultHandler {
 		private String name;
 
 		/**
-		 * Creates the new file.
+		 * Creates a new file.
 		 * 
 		 * @param name
 		 *            the Name of the file.
@@ -1052,7 +1052,7 @@ public class Theme extends DefaultHandler {
 		private String mode;
 
 		/**
-		 * Creates the new empty fileset.
+		 * Creates a new empty fileset.
 		 * 
 		 * @param mode
 		 *            

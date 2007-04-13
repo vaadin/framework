@@ -207,7 +207,7 @@ public class AjaxVariableMap {
 		private HashMap nonVariables = new HashMap();
 
 		/** 
-		 * Creates new parameter container and parse the parameters from the request using
+		 * Creates a new parameter container and parse the parameters from the request using
 		 * GET, POST and POST/MULTIPART parsing
 		 * @param req the Http request to handle.
 		 * @throws IOException if the writing failed due to input/output error.
