@@ -316,20 +316,29 @@ public class JarThemeSource implements ThemeSource {
 
 		private Map data = new HashMap();
 		
-/**
- * 
- * @param key
- * @param value
- */
+		/**
+		 * Associates the specified value with the specified key in this map.
+		 * If the map previously contained a mapping for this key, the old value
+		 * is replaced by the specified value.
+		 * @param key the key with which the specified value is to be associated.
+		 * @param value the value to be associated with the specified key. 
+		 */
 		public void put(Object key, Object value) {
 			data.put(key, new SoftReference(new CacheItem(value)));
 		}
 		
-/**
- * 
- * @param key
- * @return
- */
+		/**
+		 * Returns the value to which this map maps the specified key. Returns null
+		 * if the map contains no mapping for this key. 
+		 * <p>
+		 * A return value of null does not necessarily indicate that the map contains
+		 * no mapping for the key; it's also possible that the map explicitly maps 
+		 * the key to null. The containsKey operation may be used to distinguish these two cases. 
+		 * </p>
+		 * @param key the key whose associated value is to be returned. 
+		 * @return the value to which this map maps the specified key, or null
+		 *  		if the map contains no mapping for this key.
+		 */
 		public Object get(Object key) {
 			SoftReference ref = (SoftReference) data.get(key);
 			if (ref != null)
@@ -356,18 +365,18 @@ public class JarThemeSource implements ThemeSource {
 
 		private Object data;
 		
-/**
- * 
- * @param data
- */
+		/**
+		 * 
+		 * @param data
+		 */
 		public CacheItem(Object data) {
 			this.data = data;
 		}
 		
-/**
- * 
- * @return
- */
+		/**
+		 * 
+		 * @return
+		 */
 		public Object getData() {
 			return this.data;
 		};
