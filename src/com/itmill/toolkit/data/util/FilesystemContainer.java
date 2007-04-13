@@ -707,7 +707,7 @@ public class FilesystemContainer implements Container.Hierarchical {
 		private String filter;
 
 		/** 
-		 * Constructs new FileExtensionFilter using given extension.
+		 * Constructs a new FileExtensionFilter using given extension.
 		 * @param fileExtension the File extension without the separator (dot).
 		 */
 		public FileExtensionFilter(String fileExtension) {
