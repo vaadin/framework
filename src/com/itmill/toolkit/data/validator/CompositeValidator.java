@@ -84,13 +84,13 @@ public class CompositeValidator implements Validator {
 	private String errorMessage;
 
 	/** 
-	 * Construct composite validator in <code>AND</code> mode without error message. 
+	 * Construct a composite validator in <code>AND</code> mode without error message. 
 	 */
 	public CompositeValidator() {
 	}
 
 	/** 
-	 * Constructs composite validator in given mode. 
+	 * Constructs a composite validator in given mode. 
 	 */
 	public CompositeValidator(int mode, String errorMessage) {
 		setMode(mode);

@@ -44,7 +44,7 @@ public class NullValidator implements Validator {
 	private String errorMessage;
 
 	/** 
-	 * Creates a new NullValidator
+	 * Creates a new NullValidator.
 	 * @param errorMessage the error message to display on invalidation.
 	 * @param allowNull Are nulls allowed?
 	 */
