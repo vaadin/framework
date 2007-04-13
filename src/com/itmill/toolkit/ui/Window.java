@@ -134,7 +134,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	/* ********************************************************************* */
 
 	/**
-	 * Creates the new empty unnamed window with default layout.
+	 * Creates a new empty unnamed window with default layout.
 	 * 
 	 * <p>
 	 * To show the window in application, it must be added to application with
@@ -153,7 +153,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	}
 
 	/**
-	 * Creates the new empty window with default layout.
+	 * Creates a new empty window with default layout.
 	 * 
 	 * <p>
 	 * To show the window in application, it must be added to application with
@@ -172,7 +172,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	}
 
 	/**
-	 * Creates the new window.
+	 * Creates a new window.
 	 * 
 	 * <p>
 	 * To show the window in application, it must be added to application with
@@ -662,7 +662,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 		private int border;
 
 		/** 
-		 * Creates the new open resource.
+		 * Creates a new open resource.
 		 * @param resource
 		 * @param name
 		 * @param width

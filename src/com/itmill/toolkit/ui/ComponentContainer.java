@@ -151,7 +151,7 @@ public interface ComponentContainer extends Component {
         private Component component;
 
 		/** 
-		 * Creates the new attach event.
+		 * Creates a new attach event.
 		 * @param container the component container the component has been detached to.
 		 * @param attachedComponent the component that has been attached.
 		 */
@@ -190,7 +190,7 @@ public interface ComponentContainer extends Component {
         private Component component;
 
 		/** 
-		 * Creates the new detach event.
+		 * Creates a new detach event.
 		 * @param container the component container the component has been detached from.
 		 * @param detachedComponent the component that has been detached.
 		 */

@@ -93,7 +93,7 @@ public class CustomComponent implements Component {
 	private boolean repaintRequestListenersNotified = false;
 
 	/** 
-	 * Constructs new custom component. 
+	 * Constructs a new custom component. 
 	 * 
 	 * <p>
 	 * The component is implemented by wrapping the methods of the 
@@ -105,7 +105,7 @@ public class CustomComponent implements Component {
 	}
 
 	/** 
-	 * Constructs the new custom component. 
+	 * Constructs a new custom component. 
 	 * 
 	 * <p>
 	 * The component is implemented by wrapping the methods of the 

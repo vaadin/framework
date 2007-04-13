@@ -106,13 +106,13 @@ public class Tree extends Select implements Container.Hierarchical, Action.Conta
 	/* Tree constructors ************************************************** */
 
 	/** 
-	 * Creates the new empty tree. 
+	 * Creates a new empty tree. 
 	 */
 	public Tree() {
 	}
 
 	/** 
-	 * Creates the new empty tree with caption.
+	 * Creates a new empty tree with caption.
 	 * @param caption  
 	 */
 	public Tree(String caption) {
@@ -120,7 +120,7 @@ public class Tree extends Select implements Container.Hierarchical, Action.Conta
 	}
 
 	/** 
-	 * Creates the new tree with caption and connect it to a Container. 
+	 * Creates a new tree with caption and connect it to a Container. 
 	 * @param caption 
 	 * @param dataSource
 	 */

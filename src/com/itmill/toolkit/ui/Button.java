@@ -64,7 +64,7 @@ public class Button extends AbstractField implements Action.Container {
 	private KeyMapper actionMapper = null;
 
 	/** 
-	 * Creates the new push button.
+	 * Creates a new push button.
 	 * The value of the push button is allways false and they are
 	 * immediate by default.
 	 *
@@ -74,7 +74,7 @@ public class Button extends AbstractField implements Action.Container {
 	}
 
 	/** 
-	 * Creates the new push button.
+	 * Creates a new push button.
 	 * 
 	 * The value of the push button is allways false and they are 
 	 * immediate by default.
@@ -87,7 +87,7 @@ public class Button extends AbstractField implements Action.Container {
 	}
 
 	/** 
-	 * Creates the new push button with click listener.
+	 * Creates a new push button with click listener.
 	 * @param caption the Button caption.
 	 * @param listener the Button click listener.
 	 */
@@ -97,7 +97,7 @@ public class Button extends AbstractField implements Action.Container {
 	}
 
 	/** 
-	 * Creates the new push button with a method listening button clicks.
+	 * Creates a new push button with a method listening button clicks.
 	 * The method must have either no parameters, or only one parameter of
 	 * Button.ClickEvent type.
 	 * @param caption the Button caption.
@@ -111,7 +111,7 @@ public class Button extends AbstractField implements Action.Container {
 	}
 
 	/** 
-	 * Creates the new switch button with initial value.
+	 * Creates a new switch button with initial value.
 	 * @param state the Initial state of the switch-button.
 	 * @param initialState
 	 */
@@ -122,7 +122,7 @@ public class Button extends AbstractField implements Action.Container {
 	}
 
 	/** 
-	 * Creates the new switch button that is connected to a boolean property.
+	 * Creates a new switch button that is connected to a boolean property.
 	 * @param state the Initial state of the switch-button.
 	 * @param dataSource
 	 */

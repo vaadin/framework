@@ -91,7 +91,7 @@ public class Panel
 	private boolean scrollable = false;
 
 	/** 
-	 * Creates the new empty panel.
+	 * Creates a new empty panel.
 	 * Ordered layout is used.
 	 */
 	public Panel() {
@@ -99,7 +99,7 @@ public class Panel
 	}
 
 	/** 
-	 * Creates the new empty panel with given layout.
+	 * Creates a new empty panel with given layout.
 	 * Layout must be non-null.
 	 *
 	 * @param layout the layout used in the panel.
@@ -109,7 +109,7 @@ public class Panel
 	}
 
 	/** 
-	 * Creates the new empty panel with caption.
+	 * Creates a new empty panel with caption.
 	 * Ordered layout is used.
 	 *
 	 * @param caption the caption used in the panel.
@@ -119,7 +119,7 @@ public class Panel
 	}
 
 	/** 
-	 * Creates the new empty panel with caption.
+	 * Creates a new empty panel with caption.
 	 *
 	 * @param caption the caption of the panel.
 	 * @param layout the layout used in the panel.

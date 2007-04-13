@@ -44,7 +44,7 @@ public interface FieldFactory {
 
 
 	/** 
-	 * Creates the field based on type of data.
+	 * Creates a field based on type of data.
 	 *
 	 * @param type the type of data presented in field.
 	 * @param uiContext the component where the field is presented.
@@ -54,7 +54,7 @@ public interface FieldFactory {
 	Field createField(Class type, Component uiContext);
 	
 	/** 
-	 * Creates the field based on the property datasource.
+	 * Creates a field based on the property datasource.
 	 *
 	 * @param property the property datasource.
 	 * @param uiContext the component where the field is presented.
@@ -63,7 +63,7 @@ public interface FieldFactory {
 	Field createField(Property property, Component uiContext);
 
 	/** 
-	 * Creates the field based on the item and property id.
+	 * Creates a field based on the item and property id.
 	 * 
 	 * @param item the item where the property belongs to.
 	 * @param propertyId the Id of the property.
@@ -73,7 +73,7 @@ public interface FieldFactory {
 	Field createField(Item item, Object propertyId, Component uiContext);
 
 	/** 
-	 * Creates the field based on the container item id and property id.
+	 * Creates a field based on the container item id and property id.
 	 *
 	 * @param container the Container where the property belongs to.
 	 * @param itemId the item Id.

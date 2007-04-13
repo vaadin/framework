@@ -321,14 +321,14 @@ public class Table extends Select implements Action.Container,
     /* Table constructors *************************************************** */
 
     /** 
-     * Creates new empty table. 
+     * Creates a new empty table. 
      */
     public Table() {
         setRowHeaderMode(ROW_HEADER_MODE_HIDDEN);
     }
 
     /** 
-     * Creates the new empty table with caption. 
+     * Creates a new empty table with caption. 
      * @param caption
      */
     public Table(String caption) {
@@ -337,7 +337,7 @@ public class Table extends Select implements Action.Container,
     }
 
     /** 
-     * Creates the new table with caption and connect it to a Container.
+     * Creates a new table with caption and connect it to a Container.
      * @param caption
      * @param dataSource  
      */
