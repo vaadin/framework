@@ -228,7 +228,7 @@ public interface Buffered {
 		}
 
 		/** 
-		 * Gets the source of the exception.
+		 * Gets a source of the exception.
 		 * 
 		 * @return the Buffered object which generated this exception.
 		 */
