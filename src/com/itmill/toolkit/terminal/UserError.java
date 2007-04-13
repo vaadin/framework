@@ -79,7 +79,7 @@ public class UserError implements ErrorMessage {
 	}
 
 	/** 
-	 * Creates error message with level and content mode.
+	 * Creates a error message with level and content mode.
 	 * @param message the error message.
 	 * @param contentMode the content Mode.
 	 * @param errorLevel the level of error.

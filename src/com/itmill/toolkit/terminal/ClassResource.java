@@ -69,7 +69,7 @@ public class ClassResource implements ApplicationResource {
 	private Application application;
 
 	/** 
-	 * Creates new application resource instance. 
+	 * Creates a new application resource instance. 
 	 * The resource id is relative to the location of the application class.
 	 * 
 	 * @param resourceName the Unique identifier of the resource within the application.
@@ -85,7 +85,7 @@ public class ClassResource implements ApplicationResource {
 	}
 
 	/** 
-	 * Creates new application resource instance. 
+	 * Creates a new application resource instance. 
 	 * 
 	 * @param associatedClass the class of the which the resource is associated.
 	 * @param resourceName the Unique identifier of the resource within the application.

@@ -68,7 +68,7 @@ public class FileResource implements ApplicationResource {
 	private long cacheTime = DownloadStream.DEFAULT_CACHETIME;		
 
 	/** 
-	 * Creates new file resource for providing given file for
+	 * Creates a new file resource for providing given file for
 	 * client terminals.
 	 */
 	public FileResource(File sourceFile, Application application) {

@@ -50,7 +50,7 @@ public class ExternalResource implements Resource {
 
 
 	/** 
-	 * Creates new download component for downloading directly from given URL.
+	 * Creates a new download component for downloading directly from given URL.
 	 * @param sourceURL the source URL. 
 	 */
 	public ExternalResource(URL sourceURL) {
@@ -61,7 +61,7 @@ public class ExternalResource implements Resource {
 	}
 
 	/** 
-	 * Creates new download component for downloading directly from given URL.
+	 * Creates a new download component for downloading directly from given URL.
 	 * @param  sourceURL the source URL.
 	 */
 	public ExternalResource(String sourceURL) {

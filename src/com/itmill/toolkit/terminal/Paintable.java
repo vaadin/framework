@@ -79,7 +79,7 @@ public interface Paintable extends java.util.EventListener {
         private static final long serialVersionUID = 3256725095530442805L;
 
         /** 
-         * Constructs new event.
+         * Constructs a new event.
 		 * @param source the paintable needing repaint.
 		 */
 		public RepaintRequestEvent(Paintable source) {

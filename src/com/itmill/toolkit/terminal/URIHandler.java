@@ -45,7 +45,7 @@ import java.net.URL;
 public interface URIHandler {
     
     /** 
-     * Handles the given relative URI. If the URI handling wants to emit
+     * Handles a given relative URI. If the URI handling wants to emit
      * a downloadable stream it can return download stream object. If no
      * emitting stream is necessary, null should be returned instead.
      * @param context  the URl.

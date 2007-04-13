@@ -76,7 +76,7 @@ public class StreamResource implements ApplicationResource {
 	private long cacheTime = DEFAULT_CACHETIME;	
 
 	/** 
-	 * Creates new stream resource for downloading from stream.
+	 * Creates a new stream resource for downloading from stream.
 	 * @param streamSource the source Stream.
 	 * @param filename the name of the file.
 	 * @param application the Application object.
