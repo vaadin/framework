@@ -56,6 +56,8 @@ import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
 import com.itmill.toolkit.terminal.Resource;
 import com.itmill.toolkit.terminal.URIHandler;
+import com.itmill.toolkit.ui.select.OptionFilter;
+import com.itmill.toolkit.ui.select.StartsWithFilter;
 
 /**
  * <p>
@@ -332,12 +334,14 @@ public class Select extends AbstractField implements Container,
 		} else {
 
 			// Lazy options loading
-			target.addAttribute("loadfrom", getApplication().getURL().toString()
-					+ optionsStream.uri);
-			target.addAttribute("total", (getItemIds() != null) ? getItemIds()
-					.size() : 0);
-			target.addAttribute("initial", optionsStream.getJSON(20,0,""));
-			target.addAttribute("selectedValue", toString() == null ? "" : toString());
+			if(getApplication() != null) {
+				target.addAttribute("loadfrom", getApplication().getURL().toString()
+						+ optionsStream.uri);
+				target.addAttribute("total", (getItemIds() != null) ? getItemIds()
+						.size() : 0);
+				target.addAttribute("initial", optionsStream.getJSON(20,0,""));
+				target.addAttribute("selectedValue", toString() == null ? "" : toString());
+			}
 		}
 		target.endTag("options");
 
@@ -1386,7 +1390,7 @@ public class Select extends AbstractField implements Container,
 	public void setLazyLoading(boolean useLazyLoading) {
 		if (useLazyLoading != isLazyLoading()) {
 			if (useLazyLoading) {
-				optionsStream = new OptionsStream();
+				optionsStream = new OptionsStream(this);
 				if (getApplication() != null)
 					getWindow().addURIHandler(optionsStream);
 			} else {
@@ -1418,16 +1422,46 @@ public class Select extends AbstractField implements Container,
 			getWindow().removeURIHandler(optionsStream);
 		super.detach();
 	}
+	
+	public void setOptionFilter(OptionFilter of) {
+		if(this.optionsStream != null) {
+			this.optionsStream.setOptionFilter(of);
+		}
+	}
+	
+	/**
+	 * @return
+	 */
+	public OptionFilter getOptionFilter() {
+		if(this.optionsStream != null) {
+			return this.optionsStream.getOptionFilter();
+		}
+		return null;
+	}
 
 	private class OptionsStream implements URIHandler {
 
 		private String currentFilter = "";
 
 		private ArrayList filteredItemsBuffer = null;
+		
+		private OptionFilter of = null;
 
 		private String uri = "selectOptionsStream"
 				+ (long) (Math.random() * 1000000000000000000L);
+
+		OptionsStream(Select s) {
+			of = new StartsWithFilter(s);
+		}
 		
+		public OptionFilter getOptionFilter() {
+			return of;
+		}
+
+		public void setOptionFilter(OptionFilter of2) {
+			of = of2;
+		}
+
 		/**
 		 * Handles the given relative URI.
 		 * @see com.itmill.toolkit.terminal.URIHandler#handleURI(java.net.URL, java.lang.String)
@@ -1495,42 +1529,14 @@ public class Select extends AbstractField implements Container,
 		}
 
 		/**
-		 * Updates the visible items by given prefix.
+		 * Updates the visible items by given key.
 		 * 
-		 * @param prefix
-		 *            the Filter prefix
-		 * @return All item ids filtered by given prefix.
+		 * @param key
+		 *            the key given to OptionFilter
+		 * @return All item ids filtered by given key.
 		 */
-		public ArrayList filterContent(String prefix) {
-			// prefix MUST be in lowercase
-			if ("".equals(prefix)) {
-				this.filteredItemsBuffer = new ArrayList(getItemIds());
-				return this.filteredItemsBuffer;
-
-			} else if (items != null) { 
-				// all items will be iterated and tested.
-				// SLOW when there are lot of items.
-				// TODO Should we add 
-				this.filteredItemsBuffer = new ArrayList();
-				for (Iterator iter = items.getItemIds().iterator(); iter
-						.hasNext();) {
-					Object id = iter.next();
-
-					Item item = getItem(id);
-					String test = "";
-					if (getItemCaptionMode() == ITEM_CAPTION_MODE_PROPERTY)
-						test = item.getItemProperty(getItemCaptionPropertyId())
-								.getValue().toString().trim();
-					else
-						test = String.valueOf(id);
-
-					if (test.toLowerCase().startsWith(prefix)) {
-						this.filteredItemsBuffer.add(id);
-					}
-				}
-			}
-
-			return this.filteredItemsBuffer;
+		public ArrayList filterContent(String key) {
+			return this.of.filter(key);
 		}
 
 		private void addToJSONArray(StringBuffer json, ArrayList values) {
@@ -1579,4 +1585,5 @@ public class Select extends AbstractField implements Container,
 			return json.toString();
 		}
 	}
+
 }
