@@ -92,7 +92,7 @@ public class IntroBasic extends Feature {
 	}
 
 	protected String getTitle() {
-		return "Introduction of basic UI components (TODO)";
+		return "Introduction of basic UI components";
 	}
 
 }

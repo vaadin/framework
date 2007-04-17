@@ -63,8 +63,6 @@ public class FeatureBrowser extends CustomComponent implements
 
 		// Configure tree
 		features = new Tree();
-		// TODO see #321
-		// features.setStyle("default");
 		features.addContainerProperty("name", String.class, "");
 		features.addContainerProperty("feature", Feature.class, null);
 		features.setItemCaptionPropertyId("name");
