@@ -72,7 +72,7 @@ public class TableDemo extends com.itmill.toolkit.Application implements
 
 	private Link tableDemoLink = new Link(
 			"See same application instance through TableDemo",
-			new ExternalResource("TableDemo"));
+			new ExternalResource("TableDemo?renderingMode=ajax"));
 
 	/**
 	 * Initialize Application. Demo components are added to main window.
