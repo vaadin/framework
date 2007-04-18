@@ -55,6 +55,19 @@
     </servlet-mapping>
     
     <servlet>
+        <servlet-name>FilterSelect</servlet-name>
+        <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
+        <init-param>
+            <param-name>application</param-name>
+            <param-value>com.itmill.toolkit.demo.FilterSelect</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>FilterSelect</servlet-name>
+        <url-pattern>/FilterSelect/*</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
         <servlet-name>features</servlet-name>
         <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
         <init-param>
