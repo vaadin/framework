@@ -56,7 +56,6 @@ import com.itmill.toolkit.terminal.DownloadStream;
 import com.itmill.toolkit.terminal.Paintable;
 import com.itmill.toolkit.terminal.URIHandler;
 import com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent;
-import com.itmill.toolkit.ui.AbstractComponent;
 import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.FrameWindow;
 import com.itmill.toolkit.ui.Window;
@@ -305,15 +304,21 @@ public class AjaxApplicationManager implements
 						}
 					}
 
-					// add meta instruction for client to set focus if it is set
-					Paintable f = (Paintable) application.consumeFocus();
-					if (f != null) {
-						paintTarget.startTag("meta");
-						paintTarget.startTag("focus");
-						paintTarget.addAttribute("pid", getPaintableId(f));
-						paintTarget.endTag("focus");
-						paintTarget.endTag("meta");
-					}
+                    // add meta instruction for client to set focus if it is set
+                    Paintable f = (Paintable) application.consumeFocus();
+                    // .. or initializion (first uidl-request)
+                    boolean init = application.ajaxInit();
+                    if(init || f != null) {
+                        paintTarget.startTag("meta");
+                        if(init)
+                        	paintTarget.addAttribute("appInit", true);
+                        if(f != null) {
+                        	paintTarget.startTag("focus");
+                        	paintTarget.addAttribute("pid", getPaintableId(f));
+                        	paintTarget.endTag("focus");
+                        }
+                        paintTarget.endTag("meta");
+                    }
 
 					paintTarget.close();
 					out.flush();

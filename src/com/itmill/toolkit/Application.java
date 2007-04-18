@@ -192,6 +192,28 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 	private String logoutURL = null;
 
 	private Focusable pendingFocus;
+	
+	/** 
+	 * Flag to indicate if first ajax request is sent 
+	 */
+	private boolean ajaxInitSent = false;
+	
+	/**
+	 * This function should anly be called in AjaxApplicationManager to
+	 * tell ajax engine (browser) that this is application restart. Returns 
+	 * true on first call, false on subsequent calls.
+	 * 
+	 * TODO consider moving this to WebApplicationContext
+	 * 
+	 * @return true if in ajax init state
+	 */
+	public boolean ajaxInit() {
+		if(this.ajaxInitSent) {
+			return false;
+		} else {
+			return this.ajaxInitSent = true;
+		}
+	}
 
 	/**
 	 * <p>
