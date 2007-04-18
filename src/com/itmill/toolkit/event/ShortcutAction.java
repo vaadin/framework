@@ -143,25 +143,25 @@ public class ShortcutAction extends Action {
 		public static final int Y = 89;
 
 		public static final int Z = 90;
-		
+
 		public static final int NUM0 = 48;
-		
+
 		public static final int NUM1 = 49;
-		
+
 		public static final int NUM2 = 50;
-		
+
 		public static final int NUM3 = 51;
-		
+
 		public static final int NUM4 = 52;
-		
+
 		public static final int NUM5 = 53;
-		
+
 		public static final int NUM6 = 54;
-		
+
 		public static final int NUM7 = 55;
-		
+
 		public static final int NUM8 = 56;
-		
+
 		public static final int NUM9 = 57;
 	}
 

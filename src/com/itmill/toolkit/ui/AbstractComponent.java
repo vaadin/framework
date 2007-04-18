@@ -1,30 +1,30 @@
 /* *************************************************************************
  
-                               IT Mill Toolkit 
+ IT Mill Toolkit 
 
-               Development of Browser User Interfaces Made Easy
+ Development of Browser User Interfaces Made Easy
 
-                    Copyright (C) 2000-2006 IT Mill Ltd
-                     
-   *************************************************************************
+ Copyright (C) 2000-2006 IT Mill Ltd
+ 
+ *************************************************************************
 
-   This product is distributed under commercial license that can be found
-   from the product package on license.pdf. Use of this product might 
-   require purchasing a commercial license from IT Mill Ltd. For guidelines 
-   on usage, see licensing-guidelines.html
+ This product is distributed under commercial license that can be found
+ from the product package on license.pdf. Use of this product might 
+ require purchasing a commercial license from IT Mill Ltd. For guidelines 
+ on usage, see licensing-guidelines.html
 
-   *************************************************************************
-   
-   For more information, contact:
-   
-   IT Mill Ltd                           phone: +358 2 4802 7180
-   Ruukinkatu 2-4                        fax:   +358 2 4802 7181
-   20540, Turku                          email:  info@itmill.com
-   Finland                               company www: www.itmill.com
-   
-   Primary source for information and releases: www.itmill.com
+ *************************************************************************
+ 
+ For more information, contact:
+ 
+ IT Mill Ltd                           phone: +358 2 4802 7180
+ Ruukinkatu 2-4                        fax:   +358 2 4802 7181
+ 20540, Turku                          email:  info@itmill.com
+ Finland                               company www: www.itmill.com
+ 
+ Primary source for information and releases: www.itmill.com
 
-   ********************************************************************** */
+ ********************************************************************** */
 
 package com.itmill.toolkit.ui;
 
@@ -41,159 +41,160 @@ import java.util.Set;
 import java.util.HashSet;
 import java.lang.reflect.Method;
 
-/** 
+/**
  * An abstract class that defines default implementation for the
- * {@link Component} interface. Basic UI components that are not derived
- * from an external component can inherit this class to easily qualify as a
- * IT Mill Toolkit component. Most components in the toolkit do
- * just that.
- *
+ * {@link Component} interface. Basic UI components that are not derived from an
+ * external component can inherit this class to easily qualify as a IT Mill
+ * Toolkit component. Most components in the toolkit do just that.
+ * 
  * @author IT Mill Ltd.
- * @version @VERSION@
+ * @version
+ * @VERSION@
  * @since 3.0
  */
-public abstract class AbstractComponent
-	implements Component, MethodEventSource {
+public abstract class AbstractComponent implements Component, MethodEventSource {
 
 	/* Private members ************************************************* */
 
-	/** 
-	 * Look-and-feel style of the component. 
+	/**
+	 * Look-and-feel style of the component.
 	 */
 	private String style;
 
-	/** 
-	 * Caption text. 
+	/**
+	 * Caption text.
 	 */
 	private String caption;
-    
-    /** 
-     * Application specific data object. 
-     */
-    private Object applicationData;
 
-	/** 
-	 * Icon to be shown together with caption. 
+	/**
+	 * Application specific data object.
+	 */
+	private Object applicationData;
+
+	/**
+	 * Icon to be shown together with caption.
 	 */
 	private Resource icon;
 
-	/** 
-	 * Is the component enable (its normal usage is allowed). 
+	/**
+	 * Is the component enable (its normal usage is allowed).
 	 */
 	private boolean enabled = true;
 
-	/** 
-	 * Is the component visible (it is rendered). 
+	/**
+	 * Is the component visible (it is rendered).
 	 */
 	private boolean visible = true;
 
-	/** 
-	 * Is the component read-only ? 
+	/**
+	 * Is the component read-only ?
 	 */
 	private boolean readOnly = false;
 
-	/** 
-	 * Description of the usage (XML). 
+	/**
+	 * Description of the usage (XML).
 	 */
 	private String description = null;
 
-	/** 
-	 * The container this component resides in. 
+	/**
+	 * The container this component resides in.
 	 */
 	private Component parent = null;
 
-	/** 
-	 * The EventRouter used for the event model. 
+	/**
+	 * The EventRouter used for the event model.
 	 */
 	private EventRouter eventRouter = null;
 
-	/** 
-	 * The internal error message of the component. 
+	/**
+	 * The internal error message of the component.
 	 */
 	private ErrorMessage componentError = null;
 
-	/** 
-	 * List of event variable change event handling dependencies. 
+	/**
+	 * List of event variable change event handling dependencies.
 	 */
 	private Set dependencies = null;
 
-	/** 
+	/**
 	 * Immediate mode: if true, all variable changes are required to be sent
 	 * from the terminal immediately.
 	 */
 	private boolean immediate = false;
 
-	/** 
-	 * Locale of this component. 
+	/**
+	 * Locale of this component.
 	 */
 	private Locale locale;
 
-	/** 
-	 * List of repaint request listeners or null if not listened at all. 
+	/**
+	 * List of repaint request listeners or null if not listened at all.
 	 */
 	private LinkedList repaintRequestListeners = null;
 
-	/** 
-	 * Are all the repaint listeners notified about recent changes ? 
+	/**
+	 * Are all the repaint listeners notified about recent changes ?
 	 */
 	private boolean repaintRequestListenersNotified = false;
 
 	/* Constructor ***************************************************** */
 
-	/** 
-	 * Constructs a new Component. 
+	/**
+	 * Constructs a new Component.
 	 */
 	public AbstractComponent() {
 	}
 
 	/* Get/Set component properties ************************************ */
 
-	/** 
+	/**
 	 * Gets the UIDL tag corresponding to the component.
 	 * 
 	 * @return the component's UIDL tag as <code>String</code>
 	 */
 	public abstract String getTag();
 
-	/* Gets the component's style.
-	 * Don't add a JavaDoc comment here, we use the default documentation
-	 * from implemented interface.
+	/*
+	 * Gets the component's style. Don't add a JavaDoc comment here, we use the
+	 * default documentation from implemented interface.
 	 */
 	public String getStyle() {
 		return this.style;
 	}
 
-	/* Sets the component's style.
-	 * Don't add a JavaDoc comment here, we use the default documentation
-	 * from implemented interface.
+	/*
+	 * Sets the component's style. Don't add a JavaDoc comment here, we use the
+	 * default documentation from implemented interface.
 	 */
 	public void setStyle(String style) {
 		this.style = style;
 		requestRepaint();
 	}
 
-	/* Get's the component's caption.
-	 * Don't add a JavaDoc comment here, we use the default documentation
-	 * from implemented interface.
+	/*
+	 * Get's the component's caption. Don't add a JavaDoc comment here, we use
+	 * the default documentation from implemented interface.
 	 */
 	public String getCaption() {
 		return this.caption;
 	}
 
-	/** 
+	/**
 	 * Sets the component's caption <code>String</code>. Caption is the
 	 * visible name of the component. This method will trigger a
 	 * {@link com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent RepaintRequestEvent}.
 	 * 
-	 * @param caption the new caption <code>String</code> for the component.
+	 * @param caption
+	 *            the new caption <code>String</code> for the component.
 	 */
 	public void setCaption(String caption) {
 		this.caption = caption;
 		requestRepaint();
 	}
 
-	/* Don't add a JavaDoc comment here, we use the default documentation
-	 * from implemented interface.
+	/*
+	 * Don't add a JavaDoc comment here, we use the default documentation from
+	 * implemented interface.
 	 */
 	public Locale getLocale() {
 		if (this.locale != null)
@@ -206,44 +207,47 @@ public abstract class AbstractComponent
 		return null;
 	}
 
-	/** 
+	/**
 	 * Sets the locale of this component.
-	 * @param locale the locale to become this component's locale.
+	 * 
+	 * @param locale
+	 *            the locale to become this component's locale.
 	 */
 	public void setLocale(Locale locale) {
 		this.locale = locale;
 	}
 
-	/* Gets the component's icon resource.
-	 * Don't add a JavaDoc comment here, we use the default documentation
-	 * from implemented interface.
+	/*
+	 * Gets the component's icon resource. Don't add a JavaDoc comment here, we
+	 * use the default documentation from implemented interface.
 	 */
 	public Resource getIcon() {
 		return this.icon;
 	}
 
-	/** 
-	 * Sets the component's icon.  This method will trigger a
-	 *{@link com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent RepaintRequestEvent}.
+	/**
+	 * Sets the component's icon. This method will trigger a
+	 * {@link com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent RepaintRequestEvent}.
 	 * 
-	 * @param icon the icon to be shown with the component's caption.
-     */
+	 * @param icon
+	 *            the icon to be shown with the component's caption.
+	 */
 	public void setIcon(Resource icon) {
 		this.icon = icon;
 		requestRepaint();
 	}
 
-	/* Tests if the component is enabled or not.
-	 * Don't add a JavaDoc comment here, we use the default documentation
-	 * from implemented interface.
+	/*
+	 * Tests if the component is enabled or not. Don't add a JavaDoc comment
+	 * here, we use the default documentation from implemented interface.
 	 */
 	public boolean isEnabled() {
 		return this.enabled && isVisible();
 	}
 
-	/* Enables or disables the component.
-	 * Don't add a JavaDoc comment here, we use the default documentation
-	 * from implemented interface.
+	/*
+	 * Enables or disables the component. Don't add a JavaDoc comment here, we
+	 * use the default documentation from implemented interface.
 	 */
 	public void setEnabled(boolean enabled) {
 		if (this.enabled != enabled) {
@@ -252,21 +256,23 @@ public abstract class AbstractComponent
 		}
 	}
 
-	/* Tests if the component is in the immediate mode.
-	 * Don't add a JavaDoc comment here, we use the default documentation
-	 * from implemented interface.
+	/*
+	 * Tests if the component is in the immediate mode. Don't add a JavaDoc
+	 * comment here, we use the default documentation from implemented
+	 * interface.
 	 */
 	public boolean isImmediate() {
 		return immediate;
 	}
 
-	/** 
-	 * Sets the component's immediate mode to the specified status. This
-	 * method will trigger a 
+	/**
+	 * Sets the component's immediate mode to the specified status. This method
+	 * will trigger a
 	 * {@link com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent RepaintRequestEvent}.
 	 * 
-	 * @param immediate the boolean value specifying if the component should
-	 * be in the immediate mode after the call.
+	 * @param immediate
+	 *            the boolean value specifying if the component should be in the
+	 *            immediate mode after the call.
 	 * @see Component#isImmediate()
 	 */
 	public void setImmediate(boolean immediate) {
@@ -274,65 +280,83 @@ public abstract class AbstractComponent
 		requestRepaint();
 	}
 
-	/* Tests if the component is visible.
-	 * Don't add a JavaDoc comment here, we use the default documentation
-	 * from implemented interface.
+	/*
+	 * Tests if the component is visible. Don't add a JavaDoc comment here, we
+	 * use the default documentation from implemented interface.
 	 */
 	public boolean isVisible() {
 		return this.visible;
 	}
 
-	/* Sets the components visibility.
-	 * Don't add a JavaDoc comment here, we use the default documentation
-	 * from implemented interface.
+	/*
+	 * Sets the components visibility. Don't add a JavaDoc comment here, we use
+	 * the default documentation from implemented interface.
 	 */
 	public void setVisible(boolean visible) {
 
 		if (this.visible != visible) {
 			this.visible = visible;
-			// Instead of requesting repaint normally we 
-			// fire the event directly to assure that the 
+			// Instead of requesting repaint normally we
+			// fire the event directly to assure that the
 			// event goes through event in the component might
 			// now be invisible
 			fireRequestRepaintEvent(null);
 		}
 	}
 
-	/** 
+	/**
 	 * <p>
-	 * Gets the component's description. The description can be used to
-	 * briefly describe the state of the component to the user. The
-	 * description string may contain certain XML tags:
+	 * Gets the component's description. The description can be used to briefly
+	 * describe the state of the component to the user. The description string
+	 * may contain certain XML tags:
 	 * </p>
 	 * 
-	 * <p><table border=1>
-	 * <tr><td width=120><b>Tag</b></td>
-	 *     <td width=120><b>Description</b></td>
-	 *     <td width=120><b>Example</b></td>
+	 * <p>
+	 * <table border=1>
+	 * <tr>
+	 * <td width=120><b>Tag</b></td>
+	 * <td width=120><b>Description</b></td>
+	 * <td width=120><b>Example</b></td>
 	 * </tr>
-	 * <tr><td>&lt;b></td>
-	 *     <td>bold</td>
-	 *     <td><b>bold text</b></td>
+	 * <tr>
+	 * <td>&lt;b></td>
+	 * <td>bold</td>
+	 * <td><b>bold text</b></td>
 	 * </tr>
-	 * <tr><td>&lt;i></td>
-	 *     <td>italic</td>
-	 *     <td><i>italic text</i></td>
+	 * <tr>
+	 * <td>&lt;i></td>
+	 * <td>italic</td>
+	 * <td><i>italic text</i></td>
 	 * </tr>
-	 * <tr><td>&lt;u></td>
-	 *     <td>underlined</td>
-	 *     <td><u>underlined text</u></td>
+	 * <tr>
+	 * <td>&lt;u></td>
+	 * <td>underlined</td>
+	 * <td><u>underlined text</u></td>
 	 * </tr>
-	 * <tr><td>&lt;br></td>
-	 *     <td>linebreak</td>
-	 *     <td>N/A</td>
+	 * <tr>
+	 * <td>&lt;br></td>
+	 * <td>linebreak</td>
+	 * <td>N/A</td>
 	 * </tr>
-	 * <tr><td>&lt;ul><br>&lt;li>item1<br>&lt;li>item1<br>&lt;/ul></td>
-	 *      <td>item list</td>
-	 *      <td><ul><li>item1 <li>item2</ul></td>
+	 * <tr>
+	 * <td>&lt;ul><br>
+	 * &lt;li>item1<br>
+	 * &lt;li>item1<br>
+	 * &lt;/ul></td>
+	 * <td>item list</td>
+	 * <td>
+	 * <ul>
+	 * <li>item1
+	 * <li>item2
+	 * </ul>
+	 * </td>
 	 * </tr>
-	 * </table></p>
+	 * </table>
+	 * </p>
 	 * 
-	 * <p>These tags may be nested.</p>
+	 * <p>
+	 * These tags may be nested.
+	 * </p>
 	 * 
 	 * @return component's description <code>String</code>
 	 */
@@ -340,29 +364,30 @@ public abstract class AbstractComponent
 		return this.description;
 	}
 
-	/** 
-	 * Sets the component's description. See {@link #getDescription()} for
-	 * more information on what the description is. This method will trigger
-	 * a {@link com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent RepaintRequestEvent}.
-	 *
-	 * @param description the new description string for the component.
+	/**
+	 * Sets the component's description. See {@link #getDescription()} for more
+	 * information on what the description is. This method will trigger a
+	 * {@link com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent RepaintRequestEvent}.
+	 * 
+	 * @param description
+	 *            the new description string for the component.
 	 */
 	public void setDescription(String description) {
 		this.description = description;
 		requestRepaint();
 	}
 
-	/* Gets the component's parent component.
-	 * Don't add a JavaDoc comment here, we use the default documentation
-	 * from implemented interface.
+	/*
+	 * Gets the component's parent component. Don't add a JavaDoc comment here,
+	 * we use the default documentation from implemented interface.
 	 */
 	public Component getParent() {
 		return this.parent;
 	}
 
-	/* Sets the parent component.
-	 * Don't add a JavaDoc comment here, we use the default documentation
-	 * from implemented interface.
+	/*
+	 * Sets the parent component. Don't add a JavaDoc comment here, we use the
+	 * default documentation from implemented interface.
 	 */
 	public void setParent(Component parent) {
 
@@ -384,35 +409,38 @@ public abstract class AbstractComponent
 			attach();
 	}
 
-	/** 
+	/**
 	 * Gets the error message for this component.
 	 * 
-	 * @return ErrorMessage containing the description of the error state
-	 * of the component or null, if the component contains no errors. Extending
-	 * classes should override this method if they support other error message
-	 * types such as validation errors or buffering errors. The returned error
-	 * message contains information about all the errors.
+	 * @return ErrorMessage containing the description of the error state of the
+	 *         component or null, if the component contains no errors. Extending
+	 *         classes should override this method if they support other error
+	 *         message types such as validation errors or buffering errors. The
+	 *         returned error message contains information about all the errors.
 	 */
 	public ErrorMessage getErrorMessage() {
 		return this.componentError;
 	}
 
-	/** 
-	 * Gets the component's error message. 
+	/**
+	 * Gets the component's error message.
+	 * 
 	 * @link Terminal.ErrorMessage#ErrorMessage(String, int)
-	 *
+	 * 
 	 * @return the component's error message.
 	 */
 	public ErrorMessage getComponentError() {
 		return this.componentError;
 	}
 
-	/** 
-	 * Sets the component's error message. The message may contain certain
-	 * XML tags, for more information see
+	/**
+	 * Sets the component's error message. The message may contain certain XML
+	 * tags, for more information see
+	 * 
 	 * @link Component.ErrorMessage#ErrorMessage(String, int)
 	 * 
-	 * @param componentError the new <code>ErrorMessage</code> of the component.
+	 * @param componentError
+	 *            the new <code>ErrorMessage</code> of the component.
 	 */
 	public void setComponentError(ErrorMessage componentError) {
 		this.componentError = componentError;
@@ -420,26 +448,26 @@ public abstract class AbstractComponent
 		requestRepaint();
 	}
 
-	/* Tests if the component is in read-only mode.
-	 * Don't add a JavaDoc comment here, we use the default documentation
-	 * from implemented interface.
+	/*
+	 * Tests if the component is in read-only mode. Don't add a JavaDoc comment
+	 * here, we use the default documentation from implemented interface.
 	 */
 	public boolean isReadOnly() {
 		return readOnly;
 	}
 
-	/* Sets the component's read-only mode.
-	 * Don't add a JavaDoc comment here, we use the default documentation
-	 * from implemented interface.
+	/*
+	 * Sets the component's read-only mode. Don't add a JavaDoc comment here, we
+	 * use the default documentation from implemented interface.
 	 */
 	public void setReadOnly(boolean readOnly) {
 		this.readOnly = readOnly;
 		requestRepaint();
 	}
 
-	/* Gets the parent window of the component.
-	 * Don't add a JavaDoc comment here, we use the default documentation
-	 * from implemented interface.
+	/*
+	 * Gets the parent window of the component. Don't add a JavaDoc comment
+	 * here, we use the default documentation from implemented interface.
 	 */
 	public Window getWindow() {
 		if (parent == null)
@@ -448,23 +476,24 @@ public abstract class AbstractComponent
 			return parent.getWindow();
 	}
 
-	/* Notify the component that it's attached to a window.
-	 * Don't add a JavaDoc comment here, we use the default documentation
-	 * from implemented interface.
+	/*
+	 * Notify the component that it's attached to a window. Don't add a JavaDoc
+	 * comment here, we use the default documentation from implemented
+	 * interface.
 	 */
 	public void attach() {
 	}
 
-	/* Detach the component from application. 
-	 * Don't add a JavaDoc comment here, we use the default documentation
-	 * from implemented interface.
+	/*
+	 * Detach the component from application. Don't add a JavaDoc comment here,
+	 * we use the default documentation from implemented interface.
 	 */
 	public void detach() {
 	}
 
-	/* Gets the parent application of the component.
-	 * Don't add a JavaDoc comment here, we use the default documentation
-	 * from implemented interface.
+	/*
+	 * Gets the parent application of the component. Don't add a JavaDoc comment
+	 * here, we use the default documentation from implemented interface.
 	 */
 	public Application getApplication() {
 		if (parent == null)
@@ -480,9 +509,9 @@ public abstract class AbstractComponent
 		repaintRequestListenersNotified = false;
 	}
 
-	/* Paints the component into a UIDL stream. 
-	 * Don't add a JavaDoc comment here, we use the default documentation
-	 * from implemented interface.
+	/*
+	 * Paints the component into a UIDL stream. Don't add a JavaDoc comment
+	 * here, we use the default documentation from implemented interface.
 	 */
 	public final void paint(PaintTarget target) throws PaintException {
 
@@ -523,15 +552,17 @@ public abstract class AbstractComponent
 		repaintRequestListenersNotified = false;
 	}
 
-	/** 
-	 * Paints any needed component-specific things to the given UIDL
-	 * stream. The more general {@link #paint(PaintTarget)} method handles
-	 * all general attributes common to all components, and it calls this
-	 * method to paint any component-specific attributes to the UIDL stream.
+	/**
+	 * Paints any needed component-specific things to the given UIDL stream. The
+	 * more general {@link #paint(PaintTarget)} method handles all general
+	 * attributes common to all components, and it calls this method to paint
+	 * any component-specific attributes to the UIDL stream.
 	 * 
-	 * @param target the target UIDL stream where the component should paint
-	 * itself to
-	 * @throws PaintException if the paint operation failed.
+	 * @param target
+	 *            the target UIDL stream where the component should paint itself
+	 *            to
+	 * @throws PaintException
+	 *             if the paint operation failed.
 	 */
 	public void paintContent(PaintTarget target) throws PaintException {
 
@@ -555,9 +586,10 @@ public abstract class AbstractComponent
 		fireRequestRepaintEvent(alreadyNotified);
 	}
 
-	/** 
+	/**
 	 * Fires the repaint request event.
-	 * @param alreadyNotified 
+	 * 
+	 * @param alreadyNotified
 	 */
 	private void fireRequestRepaintEvent(Collection alreadyNotified) {
 
@@ -566,18 +598,15 @@ public abstract class AbstractComponent
 
 			// Notify the listeners
 			if (repaintRequestListeners != null
-				&& !repaintRequestListeners.isEmpty()) {
+					&& !repaintRequestListeners.isEmpty()) {
 				Object[] listeners = repaintRequestListeners.toArray();
 				RepaintRequestEvent event = new RepaintRequestEvent(this);
 				for (int i = 0; i < listeners.length; i++) {
 					if (alreadyNotified == null)
 						alreadyNotified = new LinkedList();
 					if (!alreadyNotified.contains(listeners[i])) {
-						(
-							(
-								RepaintRequestListener) listeners[i])
-									.repaintRequested(
-							event);
+						((RepaintRequestListener) listeners[i])
+								.repaintRequested(event);
 						alreadyNotified.add(listeners[i]);
 						repaintRequestListenersNotified = true;
 					}
@@ -611,17 +640,19 @@ public abstract class AbstractComponent
 
 	/* Component variable changes ************************************** */
 
-	/* Invoked when the value of a variable has changed.
-	 * Don't add a JavaDoc comment here, we use the default documentation
-	 * from implemented interface.
+	/*
+	 * Invoked when the value of a variable has changed. Don't add a JavaDoc
+	 * comment here, we use the default documentation from implemented
+	 * interface.
 	 */
 	public void changeVariables(Object source, Map variables) {
 
 	}
 
-	/* Adds a variable-change dependency to this component.
-	 * Don't add a JavaDoc comment here, we use the default documentation
-	 * from implemented interface.
+	/*
+	 * Adds a variable-change dependency to this component. Don't add a JavaDoc
+	 * comment here, we use the default documentation from implemented
+	 * interface.
 	 */
 	public void dependsOn(VariableOwner depended) {
 
@@ -634,9 +665,9 @@ public abstract class AbstractComponent
 			dependencies.add(depended);
 	}
 
-	/* Removes a dependency from the component.
-	 * Don't add a JavaDoc comment here, we use the default documentation
-	 * from implemented interface.
+	/*
+	 * Removes a dependency from the component. Don't add a JavaDoc comment
+	 * here, we use the default documentation from implemented interface.
 	 */
 	public void removeDirectDependency(VariableOwner depended) {
 
@@ -645,9 +676,9 @@ public abstract class AbstractComponent
 			dependencies.remove(depended);
 	}
 
-	/* Gets the set of depended components.
-	 * Don't add a JavaDoc comment here, we use the default documentation
-	 * from implemented interface.
+	/*
+	 * Gets the set of depended components. Don't add a JavaDoc comment here, we
+	 * use the default documentation from implemented interface.
 	 */
 	public Set getDirectDependencies() {
 		return dependencies;
@@ -659,10 +690,9 @@ public abstract class AbstractComponent
 
 	static {
 		try {
-			COMPONENT_EVENT_METHOD =
-				Component.Listener.class.getDeclaredMethod(
-					"componentEvent",
-					new Class[] { Component.Event.class });
+			COMPONENT_EVENT_METHOD = Component.Listener.class
+					.getDeclaredMethod("componentEvent",
+							new Class[] { Component.Event.class });
 		} catch (java.lang.NoSuchMethodException e) {
 			// This should never happen
 			e.printStackTrace();
@@ -670,24 +700,26 @@ public abstract class AbstractComponent
 		}
 	}
 
-	/** 
+	/**
 	 * <p>
-	 * Registers a new listener with the specified activation method to
-	 * listen events generated by this component. If the activation method
-	 * does not have any arguments the event object will not be passed to it
-	 * when it's called.
+	 * Registers a new listener with the specified activation method to listen
+	 * events generated by this component. If the activation method does not
+	 * have any arguments the event object will not be passed to it when it's
+	 * called.
 	 * </p>
 	 * 
 	 * <p>
-	 * For more information on the inheritable event mechanism
-	 * see the 
+	 * For more information on the inheritable event mechanism see the
 	 * {@link com.itmill.toolkit.event com.itmill.toolkit.event package documentation}.
 	 * </p>
 	 * 
-	 * @param eventType the type of the listened event. Events of this type or
-	 * its subclasses activate the listener.
-	 * @param object the object instance who owns the activation method.
-	 * @param method the activation method.
+	 * @param eventType
+	 *            the type of the listened event. Events of this type or its
+	 *            subclasses activate the listener.
+	 * @param object
+	 *            the object instance who owns the activation method.
+	 * @param method
+	 *            the activation method.
 	 */
 	public void addListener(Class eventType, Object object, Method method) {
 		if (eventRouter == null)
@@ -695,12 +727,12 @@ public abstract class AbstractComponent
 		eventRouter.addListener(eventType, object, method);
 	}
 
-	/** 
+	/**
 	 * <p>
-	 * Registers a new listener with the specified activation method to
-	 * listen events generated by this component. If the activation method
-	 * does not have any arguments the event object will not be passed to it
-	 * when it's called.
+	 * Registers a new listener with the specified activation method to listen
+	 * events generated by this component. If the activation method does not
+	 * have any arguments the event object will not be passed to it when it's
+	 * called.
 	 * </p>
 	 * 
 	 * <p>
@@ -711,72 +743,76 @@ public abstract class AbstractComponent
 	 * </p>
 	 * 
 	 * <p>
-	 * For more information on the inheritable event mechanism
-	 * see the 
+	 * For more information on the inheritable event mechanism see the
 	 * {@link com.itmill.toolkit.event com.itmill.toolkit.event package documentation}.
 	 * </p>
 	 * 
-	 * @param eventType the type of the listened event. Events of this type or
-	 * its subclasses activate the listener.
-	 * @param object the object instance who owns the activation method.
-	 * @param methodName the name of the activation method.
+	 * @param eventType
+	 *            the type of the listened event. Events of this type or its
+	 *            subclasses activate the listener.
+	 * @param object
+	 *            the object instance who owns the activation method.
+	 * @param methodName
+	 *            the name of the activation method.
 	 */
-	public void addListener(
-		Class eventType,
-		Object object,
-		String methodName) {
+	public void addListener(Class eventType, Object object, String methodName) {
 		if (eventRouter == null)
 			eventRouter = new EventRouter();
 		eventRouter.addListener(eventType, object, methodName);
 	}
 
-	/** 
-	 * Removes all registered listeners matching the given parameters.
-	 * Since this method receives the event type and the listener object as
+	/**
+	 * Removes all registered listeners matching the given parameters. Since
+	 * this method receives the event type and the listener object as
 	 * parameters, it will unregister all <code>object</code>'s methods that
 	 * are registered to listen to events of type <code>eventType</code>
 	 * generated by this component.
 	 * 
 	 * <p>
-	 * For more information on the inheritable event mechanism
-	 * see the 
+	 * For more information on the inheritable event mechanism see the
 	 * {@link com.itmill.toolkit.event com.itmill.toolkit.event package documentation}.
 	 * </p>
 	 * 
-	 * @param eventType the exact event type the <code>object</code> listens to.
-	 * @param target the target object that has registered to listen to events
-	 * of type <code>eventType</code> with one or more methods.
+	 * @param eventType
+	 *            the exact event type the <code>object</code> listens to.
+	 * @param target
+	 *            the target object that has registered to listen to events of
+	 *            type <code>eventType</code> with one or more methods.
 	 */
 	public void removeListener(Class eventType, Object target) {
 		if (eventRouter != null)
 			eventRouter.removeListener(eventType, target);
 	}
 
-	/** 
-	 * Removes one registered listener method. The given method owned by
-	 * the given object will no longer be called when the specified events
-	 * are generated by this component.
+	/**
+	 * Removes one registered listener method. The given method owned by the
+	 * given object will no longer be called when the specified events are
+	 * generated by this component.
 	 * 
-	 * <p>For more information on the inheritable event mechanism
-	 * see the 
-	 * {@link com.itmill.toolkit.event com.itmill.toolkit.event package documentation}.</p>
+	 * <p>
+	 * For more information on the inheritable event mechanism see the
+	 * {@link com.itmill.toolkit.event com.itmill.toolkit.event package documentation}.
+	 * </p>
 	 * 
-	 * @param eventType the exact event type the <code>object</code> listens to.
-	 * @param target target object that has registered to listen to events
-	 * of type <code>eventType</code> with one or more methods.
-	 * @param method the method owned by <code>target</code> that's
-	 * registered to listen to events of type <code>eventType</code>.
+	 * @param eventType
+	 *            the exact event type the <code>object</code> listens to.
+	 * @param target
+	 *            target object that has registered to listen to events of type
+	 *            <code>eventType</code> with one or more methods.
+	 * @param method
+	 *            the method owned by <code>target</code> that's registered to
+	 *            listen to events of type <code>eventType</code>.
 	 */
 	public void removeListener(Class eventType, Object target, Method method) {
 		if (eventRouter != null)
 			eventRouter.removeListener(eventType, target, method);
 	}
 
-	/** 
+	/**
 	 * <p>
-	 * Removes one registered listener method. The given method owned by
-	 * the given object will no longer be called when the specified events
-	 * are generated by this component.
+	 * Removes one registered listener method. The given method owned by the
+	 * given object will no longer be called when the specified events are
+	 * generated by this component.
 	 * </p>
 	 * 
 	 * <p>
@@ -787,28 +823,29 @@ public abstract class AbstractComponent
 	 * </p>
 	 * 
 	 * <p>
-	 * For more information on the inheritable event mechanism
-	 * see the 
+	 * For more information on the inheritable event mechanism see the
 	 * {@link com.itmill.toolkit.event com.itmill.toolkit.event package documentation}.
 	 * </p>
 	 * 
-	 * @param eventType the exact event type the <code>object</code> listens to.
-	 * @param target the target object that has registered to listen to events
-	 * of type <code>eventType</code> with one or more methods.
-	 * @param methodName the name of the method owned by <code>target</code>
-	 * that's registered to listen to events of type <code>eventType</code>.
+	 * @param eventType
+	 *            the exact event type the <code>object</code> listens to.
+	 * @param target
+	 *            the target object that has registered to listen to events of
+	 *            type <code>eventType</code> with one or more methods.
+	 * @param methodName
+	 *            the name of the method owned by <code>target</code> that's
+	 *            registered to listen to events of type <code>eventType</code>.
 	 */
-	public void removeListener(
-		Class eventType,
-		Object target,
-		String methodName) {
+	public void removeListener(Class eventType, Object target, String methodName) {
 		if (eventRouter != null)
 			eventRouter.removeListener(eventType, target, methodName);
 	}
 
-	/** 
+	/**
 	 * Sends the event to all listeners.
-	 * @param event the Event to be sent to all listeners.
+	 * 
+	 * @param event
+	 *            the Event to be sent to all listeners.
 	 */
 	protected void fireEvent(Component.Event event) {
 
@@ -819,69 +856,67 @@ public abstract class AbstractComponent
 
 	/* Component event framework *************************************** */
 
-	/* Registers a new listener to listen events generated by this
-	 * component.
-	 * Don't add a JavaDoc comment here, we use the default documentation
-	 * from implemented interface.
+	/*
+	 * Registers a new listener to listen events generated by this component.
+	 * Don't add a JavaDoc comment here, we use the default documentation from
+	 * implemented interface.
 	 */
 	public void addListener(Component.Listener listener) {
 
 		if (eventRouter == null)
 			eventRouter = new EventRouter();
 
-		eventRouter.addListener(
-			Component.Event.class,
-			listener,
-			COMPONENT_EVENT_METHOD);
+		eventRouter.addListener(Component.Event.class, listener,
+				COMPONENT_EVENT_METHOD);
 	}
 
-	/* Removes a previously registered listener from this component.
-	 * Don't add a JavaDoc comment here, we use the default documentation
-	 * from implemented interface.
+	/*
+	 * Removes a previously registered listener from this component. Don't add a
+	 * JavaDoc comment here, we use the default documentation from implemented
+	 * interface.
 	 */
 	public void removeListener(Component.Listener listener) {
 
 		if (eventRouter != null) {
-			eventRouter.removeListener(
-				Component.Event.class,
-				listener,
-				COMPONENT_EVENT_METHOD);
+			eventRouter.removeListener(Component.Event.class, listener,
+					COMPONENT_EVENT_METHOD);
 		}
 	}
 
-	/** 
-	 * Emits the component event. It is transmitted to all registered
-	 * listeners interested in such events.
+	/**
+	 * Emits the component event. It is transmitted to all registered listeners
+	 * interested in such events.
 	 */
 	protected void fireComponentEvent() {
 		fireEvent(new Component.Event(this));
 	}
 
-	/** 
+	/**
 	 * Emits the component error event. It is transmitted to all registered
 	 * listeners interested in such events.
 	 */
 	protected void fireComponentErrorEvent() {
-		fireEvent(new Component.ErrorEvent(this.getComponentError(),this));
+		fireEvent(new Component.ErrorEvent(this.getComponentError(), this));
 	}
 
-	/** 
+	/**
 	 * Sets the application specific data object.
-     * 
-     * @param data the Application specific data.
-     * @since 3.1
+	 * 
+	 * @param data
+	 *            the Application specific data.
+	 * @since 3.1
 	 */
-    public void setData(Object data) {
-        this.applicationData = data;
-    }
-    
-    /** 
-     * Gets the application specific data.
-     * 
-     * @return the Application specific data set with setData function.
-     * @since 3.1
-     */
-    public Object getData() {
-        return this.applicationData;
-    }
+	public void setData(Object data) {
+		this.applicationData = data;
+	}
+
+	/**
+	 * Gets the application specific data.
+	 * 
+	 * @return the Application specific data set with setData function.
+	 * @since 3.1
+	 */
+	public Object getData() {
+		return this.applicationData;
+	}
 }

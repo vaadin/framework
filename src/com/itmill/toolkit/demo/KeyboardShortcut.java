@@ -5,20 +5,21 @@ import com.itmill.toolkit.event.ShortcutAction;
 import com.itmill.toolkit.event.Action.Handler;
 import com.itmill.toolkit.ui.*;
 
-public class KeyboardShortcut extends com.itmill.toolkit.Application implements Handler {
-	Window main;
+public class KeyboardShortcut extends com.itmill.toolkit.Application implements
+		Handler {
+	private Window main;
 
-	Button a;
+	private Button a;
 
-	Button b;
+	private Button b;
 
-	Button c;
+	private Button c;
 
-	Button close;
+	private Button close;
 
-	Button d;
+	private Button d;
 
-	Button e;
+	private Button e;
 
 	private AbstractField f;
 
@@ -101,8 +102,8 @@ public class KeyboardShortcut extends com.itmill.toolkit.Application implements 
 		} else if (sender == e) {
 			actions[0] = (Action) new ShortcutAction("Button E action 2",
 					ShortcutAction.KeyCode.X, new int[] {
-					ShortcutAction.ModifierKey.CTRL,
-					ShortcutAction.ModifierKey.SHIFT});
+							ShortcutAction.ModifierKey.CTRL,
+							ShortcutAction.ModifierKey.SHIFT });
 		} else if (sender == a) {
 			actions[0] = (Action) new ShortcutAction("Button a action",
 					ShortcutAction.KeyCode.A,
@@ -139,6 +140,7 @@ public class KeyboardShortcut extends com.itmill.toolkit.Application implements 
 	public void buttonCHandler() {
 		main.addComponent(new Label("Button C handler fired"));
 	}
+
 	public void buttonEHandler() {
 		main.addComponent(new Label("Button E handler fired"));
 	}

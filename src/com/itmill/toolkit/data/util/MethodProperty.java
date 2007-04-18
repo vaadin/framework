@@ -1,30 +1,30 @@
 /* *************************************************************************
  
-                               IT Mill Toolkit 
+ IT Mill Toolkit 
 
-               Development of Browser User Interfaces Made Easy
+ Development of Browser User Interfaces Made Easy
 
-                    Copyright (C) 2000-2006 IT Mill Ltd
-                     
-   *************************************************************************
+ Copyright (C) 2000-2006 IT Mill Ltd
+ 
+ *************************************************************************
 
-   This product is distributed under commercial license that can be found
-   from the product package on license.pdf. Use of this product might 
-   require purchasing a commercial license from IT Mill Ltd. For guidelines 
-   on usage, see licensing-guidelines.html
+ This product is distributed under commercial license that can be found
+ from the product package on license.pdf. Use of this product might 
+ require purchasing a commercial license from IT Mill Ltd. For guidelines 
+ on usage, see licensing-guidelines.html
 
-   *************************************************************************
-   
-   For more information, contact:
-   
-   IT Mill Ltd                           phone: +358 2 4802 7180
-   Ruukinkatu 2-4                        fax:   +358 2 4802 7181
-   20540, Turku                          email:  info@itmill.com
-   Finland                               company www: www.itmill.com
-   
-   Primary source for information and releases: www.itmill.com
+ *************************************************************************
+ 
+ For more information, contact:
+ 
+ IT Mill Ltd                           phone: +358 2 4802 7180
+ Ruukinkatu 2-4                        fax:   +358 2 4802 7181
+ 20540, Turku                          email:  info@itmill.com
+ Finland                               company www: www.itmill.com
+ 
+ Primary source for information and releases: www.itmill.com
 
-   ********************************************************************** */
+ ********************************************************************** */
 
 package com.itmill.toolkit.data.util;
 
@@ -35,97 +35,100 @@ import java.util.LinkedList;
 
 import com.itmill.toolkit.data.Property;
 
-/** 
+/**
  * <p>
- * Proxy class for creating Properties from pairs of getter and setter
- * methods of a Bean property. An instance of this class can be thought as
- * having been attached to a field of an object. Accessing the object
- * through the Property interface directly manipulates the underlying
- * field.
+ * Proxy class for creating Properties from pairs of getter and setter methods
+ * of a Bean property. An instance of this class can be thought as having been
+ * attached to a field of an object. Accessing the object through the Property
+ * interface directly manipulates the underlying field.
  * </p>
  * 
  * <p>
- * It's assumed that the return value returned by the getter method 
- * is assignable to the type of the property, and the setter method
- * parameter is assignable to that value.
+ * It's assumed that the return value returned by the getter method is
+ * assignable to the type of the property, and the setter method parameter is
+ * assignable to that value.
  * </p>
  * 
  * <p>
- * A valid getter method must always be available, but instance of this
- * class can be constructed with a <code>null</code> setter method in which
- * case the resulting MethodProperty is read-only.
+ * A valid getter method must always be available, but instance of this class
+ * can be constructed with a <code>null</code> setter method in which case the
+ * resulting MethodProperty is read-only.
  * </p>
- *
+ * 
  * @author IT Mill Ltd.
- * @version @VERSION@
+ * @version
+ * @VERSION@
  * @since 3.0
  */
 public class MethodProperty implements Property {
 
-	/** 
-	 * The object that includes the property the MethodProperty is bound to. 
+	/**
+	 * The object that includes the property the MethodProperty is bound to.
 	 */
 	private Object instance;
 
-	/** 
-	 * Argument arrays for the getter and setter methods. 
+	/**
+	 * Argument arrays for the getter and setter methods.
 	 */
 	private Object[] setArgs, getArgs;
 
 	/**
-	 * Is the MethodProperty read-only? 
+	 * Is the MethodProperty read-only?
 	 */
 	private boolean readOnly;
 
 	/**
-	 * The getter and setter methods. 
+	 * The getter and setter methods.
 	 */
 	private Method setMethod, getMethod;
 
-	/** 
-	 * Index of the new value in the argument list for the setter method.
-	 * If the setter method requires several parameters, this index tells
-	 * which one is the actual value to change.
+	/**
+	 * Index of the new value in the argument list for the setter method. If the
+	 * setter method requires several parameters, this index tells which one is
+	 * the actual value to change.
 	 */
 	private int setArgumentIndex;
 
-	/** 
-	 * Type of the property. 
+	/**
+	 * Type of the property.
 	 */
 	private Class type;
 
-	/** 
-	 * List of listeners who are interested in the read-only status changes
-	 * of the MethodProperty
+	/**
+	 * List of listeners who are interested in the read-only status changes of
+	 * the MethodProperty
 	 */
 	private LinkedList readOnlyStatusChangeListeners = null;
 
-	/** 
+	/**
 	 * <p>
 	 * Creates a new instance of <code>MethodProperty</code> from a named bean
 	 * property. This constructor takes an object and the name of a bean
 	 * property and initializes itself with the accessor methods for the
 	 * property.
-	 *</p> 
+	 * </p>
 	 * <p>
-	 * The getter method of a <code>MethodProperty</code> instantiated
-	 * with this constructor will be called with no arguments, and the
-	 * setter method with only the new value as the sole argument.
+	 * The getter method of a <code>MethodProperty</code> instantiated with
+	 * this constructor will be called with no arguments, and the setter method
+	 * with only the new value as the sole argument.
 	 * </p>
 	 * 
 	 * <p>
-	 * If the setter method is unavailable, the resulting <code>MethodProperty</code>
-	 * will be read-only, otherwise it will be read-write.
+	 * If the setter method is unavailable, the resulting
+	 * <code>MethodProperty</code> will be read-only, otherwise it will be
+	 * read-write.
 	 * </p>
 	 * 
 	 * <p>
 	 * Method names are constucted from the bean property by adding
-	 * get/is/are/set prefix and capitalising the first character in the 
-	 * name of the given bean property.
+	 * get/is/are/set prefix and capitalising the first character in the name of
+	 * the given bean property.
 	 * </p>
 	 * 
-	 * @param instance the object that includes the property.
-	 * @param beanPropertyName the name of the property to bind to.
+	 * @param instance
+	 *            the object that includes the property.
+	 * @param beanPropertyName
+	 *            the name of the property to bind to.
 	 */
 	public MethodProperty(Object instance, String beanPropertyName) {
 
@@ -142,25 +145,19 @@ public class MethodProperty implements Property {
 		// Find the get method
 		getMethod = null;
 		try {
-			getMethod =
-				beanClass.getMethod("get" + beanPropertyName, new Class[] {
-			});
+			getMethod = beanClass.getMethod("get" + beanPropertyName,
+					new Class[] {});
 		} catch (java.lang.NoSuchMethodException ignored) {
 			try {
-				getMethod =
-					beanClass.getMethod("is" + beanPropertyName, new Class[] {
-				});
+				getMethod = beanClass.getMethod("is" + beanPropertyName,
+						new Class[] {});
 			} catch (java.lang.NoSuchMethodException ignoredAsWell) {
 				try {
-					getMethod =
-						beanClass
-							.getMethod("are" + beanPropertyName, new Class[] {
-					});
+					getMethod = beanClass.getMethod("are" + beanPropertyName,
+							new Class[] {});
 				} catch (java.lang.NoSuchMethodException e) {
-					throw new MethodProperty.MethodException(
-						"Bean property "
-							+ beanPropertyName
-							+ " can not be found");
+					throw new MethodProperty.MethodException("Bean property "
+							+ beanPropertyName + " can not be found");
 				}
 			}
 		}
@@ -171,9 +168,7 @@ public class MethodProperty implements Property {
 		// Finds the set method
 		setMethod = null;
 		try {
-			setMethod =
-				beanClass.getMethod(
-					"set" + beanPropertyName,
+			setMethod = beanClass.getMethod("set" + beanPropertyName,
 					new Class[] { type });
 		} catch (java.lang.NoSuchMethodException skipped) {
 		}
@@ -198,117 +193,123 @@ public class MethodProperty implements Property {
 				type = Long.class;
 		}
 
-		setArguments(new Object[] {
-		}, new Object[] { null }, 0);
+		setArguments(new Object[] {}, new Object[] { null }, 0);
 		this.readOnly = (setMethod == null);
 		this.instance = instance;
 	}
 
-	/** 
+	/**
 	 * <p>
-	 * Creates a new instance of <code>MethodProperty</code> from named getter and
-	 * setter methods. The getter method of a <code>MethodProperty</code> instantiated
-	 * with this constructor will be called with no arguments, and the
-	 * setter method with only the new value as the sole argument.
+	 * Creates a new instance of <code>MethodProperty</code> from named getter
+	 * and setter methods. The getter method of a <code>MethodProperty</code>
+	 * instantiated with this constructor will be called with no arguments, and
+	 * the setter method with only the new value as the sole argument.
 	 * </p>
-	 *
+	 * 
 	 * <p>
 	 * If the setter method is <code>null</code>, the resulting
 	 * <code>MethodProperty</code> will be read-only, otherwise it will be
 	 * read-write.
 	 * </p>
 	 * 
-	 * @param type the type of the property.
-	 * @param instance the object that includes the property.
-	 * @param getMethodName the name of the getter method.
-	 * @param setMethodName the name of the setter method.
-	 *
+	 * @param type
+	 *            the type of the property.
+	 * @param instance
+	 *            the object that includes the property.
+	 * @param getMethodName
+	 *            the name of the getter method.
+	 * @param setMethodName
+	 *            the name of the setter method.
+	 * 
 	 */
-	public MethodProperty(
-		Class type,
-		Object instance,
-		String getMethodName,
-		String setMethodName) {
-		this(type, instance, getMethodName, setMethodName, new Object[] {
-		}, new Object[] { null }, 0);
+	public MethodProperty(Class type, Object instance, String getMethodName,
+			String setMethodName) {
+		this(type, instance, getMethodName, setMethodName, new Object[] {},
+				new Object[] { null }, 0);
 	}
 
-	/** 
+	/**
 	 * <p>
-	 * Creates a new instance of <code>MethodProperty</code> with the getter and
-	 * setter methods. The getter method of a <code>MethodProperty</code> instantiated
-	 * with this constructor will be called with no arguments, and the
-	 * setter method with only the new value as the sole argument.
+	 * Creates a new instance of <code>MethodProperty</code> with the getter
+	 * and setter methods. The getter method of a <code>MethodProperty</code>
+	 * instantiated with this constructor will be called with no arguments, and
+	 * the setter method with only the new value as the sole argument.
 	 * </p>
-	 *
+	 * 
 	 * <p>
 	 * If the setter method is <code>null</code>, the resulting
 	 * <code>MethodProperty</code> will be read-only, otherwise it will be
 	 * read-write.
 	 * </p>
-	 *
-	 * @param type the type of the property.
-	 * @param instance the object that includes the property.
-	 * @param getMethod the getter method.
-	 * @param setMethod the setter method.
+	 * 
+	 * @param type
+	 *            the type of the property.
+	 * @param instance
+	 *            the object that includes the property.
+	 * @param getMethod
+	 *            the getter method.
+	 * @param setMethod
+	 *            the setter method.
 	 */
-	public MethodProperty(
-		Class type,
-		Object instance,
-		Method getMethod,
-		Method setMethod) {
-		this(type, instance, getMethod, setMethod, new Object[] {
-		}, new Object[] { null }, 0);
+	public MethodProperty(Class type, Object instance, Method getMethod,
+			Method setMethod) {
+		this(type, instance, getMethod, setMethod, new Object[] {},
+				new Object[] { null }, 0);
 	}
 
-	/** 
+	/**
 	 * <p>
-	 * Creates a new instance of <code>MethodProperty</code> from named getter and
-	 * setter methods and argument lists. The getter method of a
-	 * <code>MethodProperty</code> instantiated with this constructor will be called with
-	 * the getArgs as arguments. The setArgs will be used
-	 * as the arguments for the setter method, though the argument indexed
-	 * by the setArgumentIndex will be replaced with the argument
-	 * passed to the {@link #setValue(Object newValue)} method.
+	 * Creates a new instance of <code>MethodProperty</code> from named getter
+	 * and setter methods and argument lists. The getter method of a
+	 * <code>MethodProperty</code> instantiated with this constructor will be
+	 * called with the getArgs as arguments. The setArgs will be used as the
+	 * arguments for the setter method, though the argument indexed by the
+	 * setArgumentIndex will be replaced with the argument passed to the
+	 * {@link #setValue(Object newValue)} method.
 	 * </p>
 	 * 
 	 * <p>
 	 * For example, if the <code>setArgs</code> contains <code>A</code>,
 	 * <code>B</code> and <code>C</code>, and <code>setArgumentIndex =
-	 * 1</code>, the call <code>methodProperty.setValue(X)</code> would
-	 * result in the setter method to be called with the parameter set of
+	 * 1</code>,
+	 * the call <code>methodProperty.setValue(X)</code> would result in the
+	 * setter method to be called with the parameter set of
 	 * <code>{A, X, C}</code>
 	 * </p>
-	 *
-	 * @param type the type of the property.
-	 * @param instance the object that includes the property.
-	 * @param getMethodName the name of the getter method.
-	 * @param setMethodName the name of the setter method.
-	 * @param getArgs the fixed argument list to be passed to the getter method.
-	 * @param setArgs the fixed argument list to be passed to the setter method.
-	 * @param setArgumentIndex the index of the argument in
-	 * <code>setArgs</code> to be replaced with <code>newValue</code> when
-	 * {@link #setValue(Object newValue)} is called.
+	 * 
+	 * @param type
+	 *            the type of the property.
+	 * @param instance
+	 *            the object that includes the property.
+	 * @param getMethodName
+	 *            the name of the getter method.
+	 * @param setMethodName
+	 *            the name of the setter method.
+	 * @param getArgs
+	 *            the fixed argument list to be passed to the getter method.
+	 * @param setArgs
+	 *            the fixed argument list to be passed to the setter method.
+	 * @param setArgumentIndex
+	 *            the index of the argument in <code>setArgs</code> to be
+	 *            replaced with <code>newValue</code> when
+	 *            {@link #setValue(Object newValue)} is called.
 	 */
-	public MethodProperty(
-		Class type,
-		Object instance,
-		String getMethodName,
-		String setMethodName,
-		Object[] getArgs,
-		Object[] setArgs,
-		int setArgumentIndex) {
+	public MethodProperty(Class type, Object instance, String getMethodName,
+			String setMethodName, Object[] getArgs, Object[] setArgs,
+			int setArgumentIndex) {
 
 		// Check the setargs and setargs index
 		if (setMethodName != null && setArgs == null)
 			throw new IndexOutOfBoundsException("The setArgs can not be null");
-		if (setMethodName != null && (setArgumentIndex < 0 || setArgumentIndex >= setArgs.length))
-			throw new IndexOutOfBoundsException("The setArgumentIndex must be >= 0 and < setArgs.length");
+		if (setMethodName != null
+				&& (setArgumentIndex < 0 || setArgumentIndex >= setArgs.length))
+			throw new IndexOutOfBoundsException(
+					"The setArgumentIndex must be >= 0 and < setArgs.length");
 
 		// Set type
 		this.type = type;
 
-		// Find set and get -methods    
+		// Find set and get -methods
 		Method[] m = instance.getClass().getMethods();
 
 		// Finds get method
@@ -336,7 +337,7 @@ public class MethodProperty implements Property {
 			int j = 0;
 			while (j < c.length) {
 				if (getArgs[j] != null
-					&& !c[j].isAssignableFrom(getArgs[j].getClass())) {
+						&& !c[j].isAssignableFrom(getArgs[j].getClass())) {
 
 					// parameter type does not match, try next method
 					break;
@@ -348,9 +349,8 @@ public class MethodProperty implements Property {
 				// all paramteters matched
 				if (found == true) {
 					throw new MethodProperty.MethodException(
-						"Could not uniquely identify "
-							+ getMethodName
-							+ "-method");
+							"Could not uniquely identify " + getMethodName
+									+ "-method");
 				} else {
 					found = true;
 					getMethod = m[i];
@@ -358,8 +358,8 @@ public class MethodProperty implements Property {
 			}
 		}
 		if (found != true) {
-			throw new MethodProperty.MethodException(
-				"Could not find " + getMethodName + "-method");
+			throw new MethodProperty.MethodException("Could not find "
+					+ getMethodName + "-method");
 		}
 
 		// Finds set method
@@ -386,7 +386,7 @@ public class MethodProperty implements Property {
 				int j = 0;
 				while (j < c.length) {
 					if (setArgs[j] != null
-						&& !c[j].isAssignableFrom(setArgs[j].getClass())) {
+							&& !c[j].isAssignableFrom(setArgs[j].getClass())) {
 
 						// parameter type does not match, try next method
 						break;
@@ -402,9 +402,8 @@ public class MethodProperty implements Property {
 					// all parameters match
 					if (found == true) {
 						throw new MethodProperty.MethodException(
-							"Could not identify unique "
-								+ setMethodName
-								+ "-method");
+								"Could not identify unique " + setMethodName
+										+ "-method");
 					} else {
 						found = true;
 						setMethod = m[i];
@@ -412,8 +411,8 @@ public class MethodProperty implements Property {
 				}
 			}
 			if (found != true) {
-				throw new MethodProperty.MethodException(
-					"Could not identify " + setMethodName + "-method");
+				throw new MethodProperty.MethodException("Could not identify "
+						+ setMethodName + "-method");
 			}
 		}
 
@@ -442,45 +441,49 @@ public class MethodProperty implements Property {
 		this.instance = instance;
 	}
 
-	/** 
+	/**
 	 * <p>
-	 * Creates a new instance of <code>MethodProperty</code> from the getter and
-	 * setter methods, and argument lists. 
+	 * Creates a new instance of <code>MethodProperty</code> from the getter
+	 * and setter methods, and argument lists.
 	 * </p>
 	 * <p>
-	 * This constructor behaves exactly like {@link #MethodProperty(Class type, Object instance, String
-	 * getMethodName, String setMethodName, Object [] getArgs, Object []
-	 * setArgs, int setArgumentIndex)} except that instead of names of
-	 * the getter and setter methods this constructor is given the actual
-	 * methods themselves.
+	 * This constructor behaves exactly like
+	 * {@link #MethodProperty(Class type, Object instance, String getMethodName,
+	 * String setMethodName, Object [] getArgs, Object [] setArgs, int
+	 * setArgumentIndex)} except that instead of names of the getter and setter
+	 * methods this constructor is given the actual methods themselves.
 	 * </p>
-	 *
-	 * @param type the type of the property.
-	 * @param instance the object that includes the property.
-	 * @param getMethod the getter method.
-	 * @param setMethod the setter method.
-	 * @param getArgs the fixed argument list to be passed to the getter method.
-	 * @param setArgs the fixed argument list to be passed to the setter method.
-	 * @param setArgumentIndex the index of the argument in
-	 * <code>setArgs</code> to be replaced with <code>newValue</code> when
-	 * {@link #setValue(Object newValue)} is called.
+	 * 
+	 * @param type
+	 *            the type of the property.
+	 * @param instance
+	 *            the object that includes the property.
+	 * @param getMethod
+	 *            the getter method.
+	 * @param setMethod
+	 *            the setter method.
+	 * @param getArgs
+	 *            the fixed argument list to be passed to the getter method.
+	 * @param setArgs
+	 *            the fixed argument list to be passed to the setter method.
+	 * @param setArgumentIndex
+	 *            the index of the argument in <code>setArgs</code> to be
+	 *            replaced with <code>newValue</code> when
+	 *            {@link #setValue(Object newValue)} is called.
 	 */
-	public MethodProperty(
-		Class type,
-		Object instance,
-		Method getMethod,
-		Method setMethod,
-		Object[] getArgs,
-		Object[] setArgs,
-		int setArgumentIndex) {
+	public MethodProperty(Class type, Object instance, Method getMethod,
+			Method setMethod, Object[] getArgs, Object[] setArgs,
+			int setArgumentIndex) {
 
 		if (getMethod == null) {
 			throw new MethodProperty.MethodException(
-				"Property GET-method cannot not be null: "+type);
+					"Property GET-method cannot not be null: " + type);
 		}
 
-		if (setMethod != null && ( setArgumentIndex < 0 || setArgumentIndex >= setArgs.length))
-			throw new IndexOutOfBoundsException("The setArgumentIndex must be >= 0 and < setArgs.length");
+		if (setMethod != null
+				&& (setArgumentIndex < 0 || setArgumentIndex >= setArgs.length))
+			throw new IndexOutOfBoundsException(
+					"The setArgumentIndex must be >= 0 and < setArgs.length");
 
 		// Gets the return type from get method
 		if (type.isPrimitive()) {
@@ -510,12 +513,12 @@ public class MethodProperty implements Property {
 		this.type = type;
 	}
 
-	/** 
-	 * Returns the type of the Property. The methods <code>getValue</code>
-	 * and <code>setValue</code> must be compatible with this type: one
-	 * must be able to safely cast the value returned from
-	 * <code>getValue</code> to the given type and pass any variable
-	 * assignable to this type as an argument to <code>setValue</code>.
+	/**
+	 * Returns the type of the Property. The methods <code>getValue</code> and
+	 * <code>setValue</code> must be compatible with this type: one must be
+	 * able to safely cast the value returned from <code>getValue</code> to
+	 * the given type and pass any variable assignable to this type as an
+	 * argument to <code>setValue</code>.
 	 * 
 	 * @return type of the Property
 	 */
@@ -523,23 +526,22 @@ public class MethodProperty implements Property {
 		return type;
 	}
 
-	/** 
-	 * Tests if the object is in read-only mode. In read-only mode calls
-	 * to <code>setValue</code> will throw <code>ReadOnlyException</code>
-	 * and will not modify the value of the Property.
-	 *
+	/**
+	 * Tests if the object is in read-only mode. In read-only mode calls to
+	 * <code>setValue</code> will throw <code>ReadOnlyException</code> and
+	 * will not modify the value of the Property.
+	 * 
 	 * @return <code>true</code> if the object is in read-only mode,
-	 * <code>false</code> if it's not
+	 *         <code>false</code> if it's not
 	 */
 	public boolean isReadOnly() {
 		return readOnly;
 	}
 
-	/** 
-	 * Gets the value stored in the Property. The value is resolved by
-	 * calling the specified getter method with the argument specified
-	 * at instantiation.
-	 *  
+	/**
+	 * Gets the value stored in the Property. The value is resolved by calling
+	 * the specified getter method with the argument specified at instantiation.
+	 * 
 	 * @return the value of the Property
 	 */
 	public Object getValue() {
@@ -550,11 +552,10 @@ public class MethodProperty implements Property {
 		}
 	}
 
-	/** 
-	 * Returns the value of the <code>MethodProperty</code> in human readable textual
-	 * format. The return value should be assignable to the
-	 * <code>setValue</code> method if the Property is not in read-only
-	 * mode.
+	/**
+	 * Returns the value of the <code>MethodProperty</code> in human readable
+	 * textual format. The return value should be assignable to the
+	 * <code>setValue</code> method if the Property is not in read-only mode.
 	 * 
 	 * @return String representation of the value stored in the Property
 	 */
@@ -565,21 +566,22 @@ public class MethodProperty implements Property {
 		return value.toString();
 	}
 
-	/** 
+	/**
 	 * <p>
 	 * Sets the setter method and getter method argument lists.
 	 * </p>
-	 *
-	 * @param getArgs the fixed argument list to be passed to the getter method.
-	 * @param setArgs the fixed argument list to be passed to the setter method.
-	 * @param setArgumentIndex the index of the argument in
-	 * <code>setArgs</code> to be replaced with <code>newValue</code> when
-	 * {@link #setValue(Object newValue)} is called.
+	 * 
+	 * @param getArgs
+	 *            the fixed argument list to be passed to the getter method.
+	 * @param setArgs
+	 *            the fixed argument list to be passed to the setter method.
+	 * @param setArgumentIndex
+	 *            the index of the argument in <code>setArgs</code> to be
+	 *            replaced with <code>newValue</code> when
+	 *            {@link #setValue(Object newValue)} is called.
 	 */
-	public void setArguments(
-		Object[] getArgs,
-		Object[] setArgs,
-		int setArgumentIndex) {
+	public void setArguments(Object[] getArgs, Object[] setArgs,
+			int setArgumentIndex) {
 		this.getArgs = new Object[getArgs.length];
 		for (int i = 0; i < getArgs.length; i++)
 			this.getArgs[i] = getArgs[i];
@@ -589,22 +591,23 @@ public class MethodProperty implements Property {
 		this.setArgumentIndex = setArgumentIndex;
 	}
 
-	/** 
+	/**
 	 * Sets the value of the property. This method supports setting from
 	 * <code>String</code>s if either <code>String</code> is directly
 	 * assignable to property type, or the type class contains a string
 	 * constructor.
-	 *
-	 * @param newValue the New value of the property.
+	 * 
+	 * @param newValue
+	 *            the New value of the property.
 	 * @throws <code>Property.ReadOnlyException</code> if the object is in
-	 * read-only mode.
-	 * @throws <code>Property.ConversionException</code> if
-	 * <code>newValue</code> can't be converted into the Property's native
-	 * type directly or through <code>String</code>.
+	 *             read-only mode.
+	 * @throws <code>Property.ConversionException</code> if <code>newValue</code>
+	 *             can't be converted into the Property's native type directly
+	 *             or through <code>String</code>.
 	 * @see #invokeSetMethod(Object)
 	 */
-	public void setValue(Object newValue)
-		throws Property.ReadOnlyException, Property.ConversionException {
+	public void setValue(Object newValue) throws Property.ReadOnlyException,
+			Property.ConversionException {
 
 		// Checks the mode
 		if (isReadOnly())
@@ -621,10 +624,11 @@ public class MethodProperty implements Property {
 			try {
 
 				// Gets the string constructor
-				Constructor constr =
-					getType().getConstructor(new Class[] { String.class });
+				Constructor constr = getType().getConstructor(
+						new Class[] { String.class });
 
-				value = constr.newInstance(new Object[] { newValue.toString()});
+				value = constr
+						.newInstance(new Object[] { newValue.toString() });
 
 			} catch (java.lang.Exception e) {
 				throw new Property.ConversionException(e);
@@ -635,10 +639,11 @@ public class MethodProperty implements Property {
 		}
 	}
 
-	/** 
+	/**
 	 * Internal method to actually call the setter method of the wrapped
 	 * property.
-	 * @param value 
+	 * 
+	 * @param value
 	 */
 	private void invokeSetMethod(Object value) {
 
@@ -662,10 +667,11 @@ public class MethodProperty implements Property {
 		}
 	}
 
-	/** 
+	/**
 	 * Sets the Property's read-only mode to the specified status.
 	 * 
-	 * @param newStatus the new read-only status of the Property.
+	 * @param newStatus
+	 *            the new read-only status of the Property.
 	 */
 	public void setReadOnly(boolean newStatus) {
 		boolean prevStatus = readOnly;
@@ -677,44 +683,50 @@ public class MethodProperty implements Property {
 			fireReadOnlyStatusChange();
 	}
 
-	/** 
-	 * <code>Exception</code> object that signals that there were
-	 * problems calling or finding the specified getter or setter methods
-	 * of the property.
+	/**
+	 * <code>Exception</code> object that signals that there were problems
+	 * calling or finding the specified getter or setter methods of the
+	 * property.
+	 * 
 	 * @author IT Mill Ltd.
-	 * @version @VERSION@
+	 * @version
+	 * @VERSION@
 	 * @since 3.0
 	 */
 	public class MethodException extends RuntimeException {
 
 		/**
-         * Serial generated by eclipse.
-         */
-        private static final long serialVersionUID = 3690473623827855153L;
-        /** 
-         * Cause of the method exception 
-         */
+		 * Serial generated by eclipse.
+		 */
+		private static final long serialVersionUID = 3690473623827855153L;
+
+		/**
+		 * Cause of the method exception
+		 */
 		private Throwable cause;
 
-		/** 
-		 * Constructs a new <code>MethodException</code> with the
-		 * specified detail message.
+		/**
+		 * Constructs a new <code>MethodException</code> with the specified
+		 * detail message.
 		 * 
-		 * @param msg the detail message.
+		 * @param msg
+		 *            the detail message.
 		 */
 		public MethodException(String msg) {
 			super(msg);
 		}
 
-		/** 
+		/**
 		 * Constructs a new <code>MethodException</code> from another
 		 * exception.
 		 * 
-		 * @param cause the cause of the exception.
+		 * @param cause
+		 *            the cause of the exception.
 		 */
 		public MethodException(Throwable cause) {
 			this.cause = cause;
 		}
+
 		/**
 		 * @see java.lang.Throwable#getCause()
 		 */
@@ -722,8 +734,8 @@ public class MethodProperty implements Property {
 			return cause;
 		}
 
-		/** 
-		 * Gets the method property this exception originates from. 
+		/**
+		 * Gets the method property this exception originates from.
 		 */
 		public MethodProperty getMethodProperty() {
 			return MethodProperty.this;
@@ -732,32 +744,34 @@ public class MethodProperty implements Property {
 
 	/* Events *************************************************************** */
 
-	/** 
+	/**
 	 * An <code>Event</code> object specifying the Property whose read-only
 	 * status has been changed.
+	 * 
 	 * @author IT Mill Ltd.
-	 * @version @VERSION@
+	 * @version
+	 * @VERSION@
 	 * @since 3.0
 	 */
-	private class ReadOnlyStatusChangeEvent
-		extends java.util.EventObject
-		implements Property.ReadOnlyStatusChangeEvent {
+	private class ReadOnlyStatusChangeEvent extends java.util.EventObject
+			implements Property.ReadOnlyStatusChangeEvent {
 
 		/**
-         * Serial generated by eclipse.
-         */
-        private static final long serialVersionUID = 3258129163305955896L;
+		 * Serial generated by eclipse.
+		 */
+		private static final long serialVersionUID = 3258129163305955896L;
 
-        /** 
-         * Constructs a new read-only status change event for this object.
+		/**
+		 * Constructs a new read-only status change event for this object.
 		 * 
-		 * @param source source object of the event.
+		 * @param source
+		 *            source object of the event.
 		 */
 		protected ReadOnlyStatusChangeEvent(MethodProperty source) {
 			super(source);
 		}
 
-		/** 
+		/**
 		 * Gets the Property whose read-only state has changed.
 		 * 
 		 * @return source Property of the event.
@@ -768,10 +782,11 @@ public class MethodProperty implements Property {
 
 	}
 
-	/** 
+	/**
 	 * Registers a new read-only status change listener for this Property.
 	 * 
-	 * @param listener the new Listener to be registered.
+	 * @param listener
+	 *            the new Listener to be registered.
 	 */
 	public void addListener(Property.ReadOnlyStatusChangeListener listener) {
 		if (readOnlyStatusChangeListeners == null)
@@ -779,32 +794,28 @@ public class MethodProperty implements Property {
 		readOnlyStatusChangeListeners.add(listener);
 	}
 
-	/** 
+	/**
 	 * Removes a previously registered read-only status change listener.
 	 * 
-	 * @param listener the listener to be removed.
+	 * @param listener
+	 *            the listener to be removed.
 	 */
-	public void removeListener(
-		Property.ReadOnlyStatusChangeListener listener) {
+	public void removeListener(Property.ReadOnlyStatusChangeListener listener) {
 		if (readOnlyStatusChangeListeners != null)
 			readOnlyStatusChangeListeners.remove(listener);
 	}
 
-	/** 
+	/**
 	 * Sends a read only status change event to all registered listeners.
 	 */
 	private void fireReadOnlyStatusChange() {
 		if (readOnlyStatusChangeListeners != null) {
 			Object[] l = readOnlyStatusChangeListeners.toArray();
-			Property.ReadOnlyStatusChangeEvent event =
-				new MethodProperty.ReadOnlyStatusChangeEvent(this);
+			Property.ReadOnlyStatusChangeEvent event = new MethodProperty.ReadOnlyStatusChangeEvent(
+					this);
 			for (int i = 0; i < l.length; i++)
-				(
-					(
-						Property
-							.ReadOnlyStatusChangeListener) l[i])
-							.readOnlyStatusChange(
-					event);
+				((Property.ReadOnlyStatusChangeListener) l[i])
+						.readOnlyStatusChange(event);
 		}
 	}
 

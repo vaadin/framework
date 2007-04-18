@@ -1,54 +1,56 @@
 /* *************************************************************************
  
-                               IT Mill Toolkit 
+ IT Mill Toolkit 
 
-               Development of Browser User Interfaces Made Easy
+ Development of Browser User Interfaces Made Easy
 
-                    Copyright (C) 2000-2006 IT Mill Ltd
-                     
-   *************************************************************************
+ Copyright (C) 2000-2006 IT Mill Ltd
+ 
+ *************************************************************************
 
-   This product is distributed under commercial license that can be found
-   from the product package on license.pdf. Use of this product might 
-   require purchasing a commercial license from IT Mill Ltd. For guidelines 
-   on usage, see licensing-guidelines.html
+ This product is distributed under commercial license that can be found
+ from the product package on license.pdf. Use of this product might 
+ require purchasing a commercial license from IT Mill Ltd. For guidelines 
+ on usage, see licensing-guidelines.html
 
-   *************************************************************************
-   
-   For more information, contact:
-   
-   IT Mill Ltd                           phone: +358 2 4802 7180
-   Ruukinkatu 2-4                        fax:   +358 2 4802 7181
-   20540, Turku                          email:  info@itmill.com
-   Finland                               company www: www.itmill.com
-   
-   Primary source for information and releases: www.itmill.com
+ *************************************************************************
+ 
+ For more information, contact:
+ 
+ IT Mill Ltd                           phone: +358 2 4802 7180
+ Ruukinkatu 2-4                        fax:   +358 2 4802 7181
+ 20540, Turku                          email:  info@itmill.com
+ Finland                               company www: www.itmill.com
+ 
+ Primary source for information and releases: www.itmill.com
 
-   ********************************************************************** */
+ ********************************************************************** */
 
 package com.itmill.toolkit.data;
 
 import java.util.Collection;
 
-/** 
+/**
  * <p>
- * Provides a mechanism for handling a set of Properties, each associated
- * to a locally unique identifier. The interface is split into subinterfaces
- * to enable a class to implement only the functionalities it needs.
+ * Provides a mechanism for handling a set of Properties, each associated to a
+ * locally unique identifier. The interface is split into subinterfaces to
+ * enable a class to implement only the functionalities it needs.
  * </p>
  * 
- * @author  IT Mill Ltd
- * @version @VERSION@
+ * @author IT Mill Ltd
+ * @version
+ * @VERSION@
  * @since 3.0
  */
 public interface Item {
 
-	/** 
-	 * Gets the Property corresponding to the given Property ID stored in
-	 * the Item. If the Item does not contain the Property, 
-	 * <code>null</code> is returned.
+	/**
+	 * Gets the Property corresponding to the given Property ID stored in the
+	 * Item. If the Item does not contain the Property, <code>null</code> is
+	 * returned.
 	 * 
-	 * @param id identifier of the Property to get
+	 * @param id
+	 *            identifier of the Property to get
 	 * @return the Property with the given ID or <code>null</code>
 	 */
 	public Property getItemProperty(Object id);
@@ -56,50 +58,58 @@ public interface Item {
 	/**
 	 * Gets the collection of IDs of all Properties stored in the Item.
 	 * 
-	 * @return unmodifiable collection containing IDs of the Properties
-	 * stored the Item
+	 * @return unmodifiable collection containing IDs of the Properties stored
+	 *         the Item
 	 */
 	public Collection getItemPropertyIds();
 
-	/** 
+	/**
 	 * Tries to add a new Property into the Item.
 	 * 
-	 * <p>This functionality is optional.</p>
-	 * 
-	 * @param id ID of the new Property
-	 * @param property the Property to be added and associated with the id	 
-	 * @return <code>true</code> if the operation succeeded,
-	 * <code>false</code> if not
-	 * @throws UnsupportedOperationException if the operation is not supported.
-	 */
-	public boolean addItemProperty(Object id, Property property)
-	throws UnsupportedOperationException;
-
-	/**
-	 * Removes the Property identified by ID from the Item. 
-	 *  
 	 * <p>
 	 * This functionality is optional.
 	 * </p>
-	 *
-	 * @param id ID of the Property to be removed
+	 * 
+	 * @param id
+	 *            ID of the new Property
+	 * @param property
+	 *            the Property to be added and associated with the id
+	 * @return <code>true</code> if the operation succeeded,
+	 *         <code>false</code> if not
+	 * @throws UnsupportedOperationException
+	 *             if the operation is not supported.
+	 */
+	public boolean addItemProperty(Object id, Property property)
+			throws UnsupportedOperationException;
+
+	/**
+	 * Removes the Property identified by ID from the Item.
+	 * 
+	 * <p>
+	 * This functionality is optional.
+	 * </p>
+	 * 
+	 * @param id
+	 *            ID of the Property to be removed
 	 * @return <code>true</code> if the operation succeeded
-	 * @throws UnsupportedOperationException if the operation is not supported.
-	 * <code>false</code> if not
+	 * @throws UnsupportedOperationException
+	 *             if the operation is not supported. <code>false</code> if
+	 *             not
 	 */
 	public boolean removeItemProperty(Object id)
-	throws UnsupportedOperationException;
+			throws UnsupportedOperationException;
 
-	/** 
-	 * Interface implemented by viewer classes capable of using an Item as
-	 * a data source.
+	/**
+	 * Interface implemented by viewer classes capable of using an Item as a
+	 * data source.
 	 */
 	public interface Viewer {
 
 		/**
 		 * Sets the Item that serves as the data source of the viewer.
 		 * 
-		 * @param newDataSource The new data source Item
+		 * @param newDataSource
+		 *            The new data source Item
 		 */
 		public void setItemDataSource(Item newDataSource);
 
@@ -112,10 +122,10 @@ public interface Item {
 	}
 
 	/**
-	 * Interface implemented by the <code>Editor</code> classes capable of editing the
-	 * Item. Implementing this interface means that the Item serving as the
-	 * data source of the editor can be modified through it.
-	 * <p> 
+	 * Interface implemented by the <code>Editor</code> classes capable of
+	 * editing the Item. Implementing this interface means that the Item serving
+	 * as the data source of the editor can be modified through it.
+	 * <p>
 	 * Note : Not implementing the <code>Item.Editor</code> interface does not
 	 * restrict the class from editing the contents of an internally.
 	 * </p>
@@ -127,8 +137,8 @@ public interface Item {
 	/* Property set change event ******************************************** */
 
 	/**
-	 * An <code>Event</code> object specifying the Item whose contents
-	 * has been changed through the <code>Property</code> interface.
+	 * An <code>Event</code> object specifying the Item whose contents has
+	 * been changed through the <code>Property</code> interface.
 	 * <p>
 	 * Note: The values stored in the Properties may change without triggering
 	 * this event.
@@ -136,7 +146,7 @@ public interface Item {
 	 */
 	public interface PropertySetChangeEvent {
 
-		/** 
+		/**
 		 * Retrieves the Item whose contents has been modified.
 		 * 
 		 * @return source Item of the event
@@ -144,47 +154,50 @@ public interface Item {
 		public Item getItem();
 	}
 
-	/** 
-	 * The listener interface for receiving
-	 * <code>PropertySetChangeEvent</code> objects.
+	/**
+	 * The listener interface for receiving <code>PropertySetChangeEvent</code>
+	 * objects.
 	 */
 	public interface PropertySetChangeListener {
 
 		/**
-		 *  Notifies this listener that the Item's property set has changed.
+		 * Notifies this listener that the Item's property set has changed.
 		 * 
-		 * @param event Property set change event object
+		 * @param event
+		 *            Property set change event object
 		 */
 		public void itemPropertySetChange(Item.PropertySetChangeEvent event);
 	}
 
-	/** 
-	 * The interface for adding and removing <code>PropertySetChangeEvent</code> 
-	 * listeners. By implementing this interface a class explicitly announces that
-	 * it will generate a <code>PropertySetChangeEvent</code> when its Property 
-	 * set is modified.
+	/**
+	 * The interface for adding and removing <code>PropertySetChangeEvent</code>
+	 * listeners. By implementing this interface a class explicitly announces
+	 * that it will generate a <code>PropertySetChangeEvent</code> when its
+	 * Property set is modified.
 	 * <p>
-	 * Note : The general Java convention is not to explicitly declare
-	 * that a class generates events, but to directly define the
+	 * Note : The general Java convention is not to explicitly declare that a
+	 * class generates events, but to directly define the
 	 * <code>addListener</code> and <code>removeListener</code> methods.
-	 * That way the caller of these methods has no real way of finding out
-	 * if the class really will send the events, or if it just defines the
-	 * methods to be able to implement an interface.
+	 * That way the caller of these methods has no real way of finding out if
+	 * the class really will send the events, or if it just defines the methods
+	 * to be able to implement an interface.
 	 * </p>
 	 */
 	public interface PropertySetChangeNotifier {
 
 		/**
-		 *  Registers a new property set change listener for this Item.
+		 * Registers a new property set change listener for this Item.
 		 * 
-		 * @param listener The new Listener to be registered.
+		 * @param listener
+		 *            The new Listener to be registered.
 		 */
 		public void addListener(Item.PropertySetChangeListener listener);
 
 		/**
-		 *  Removes a previously registered property set change listener.
+		 * Removes a previously registered property set change listener.
 		 * 
-		 * @param listener Listener to be removed.
+		 * @param listener
+		 *            Listener to be removed.
 		 */
 		public void removeListener(Item.PropertySetChangeListener listener);
 	}

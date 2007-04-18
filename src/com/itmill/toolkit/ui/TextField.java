@@ -1,30 +1,30 @@
 /* *************************************************************************
  
-                               IT Mill Toolkit 
+ IT Mill Toolkit 
 
-               Development of Browser User Interfaces Made Easy
+ Development of Browser User Interfaces Made Easy
 
-                    Copyright (C) 2000-2006 IT Mill Ltd
-                     
-   *************************************************************************
+ Copyright (C) 2000-2006 IT Mill Ltd
+ 
+ *************************************************************************
 
-   This product is distributed under commercial license that can be found
-   from the product package on license.pdf. Use of this product might 
-   require purchasing a commercial license from IT Mill Ltd. For guidelines 
-   on usage, see licensing-guidelines.html
+ This product is distributed under commercial license that can be found
+ from the product package on license.pdf. Use of this product might 
+ require purchasing a commercial license from IT Mill Ltd. For guidelines 
+ on usage, see licensing-guidelines.html
 
-   *************************************************************************
-   
-   For more information, contact:
-   
-   IT Mill Ltd                           phone: +358 2 4802 7180
-   Ruukinkatu 2-4                        fax:   +358 2 4802 7181
-   20540, Turku                          email:  info@itmill.com
-   Finland                               company www: www.itmill.com
-   
-   Primary source for information and releases: www.itmill.com
+ *************************************************************************
+ 
+ For more information, contact:
+ 
+ IT Mill Ltd                           phone: +358 2 4802 7180
+ Ruukinkatu 2-4                        fax:   +358 2 4802 7181
+ 20540, Turku                          email:  info@itmill.com
+ Finland                               company www: www.itmill.com
+ 
+ Primary source for information and releases: www.itmill.com
 
-   ********************************************************************** */
+ ********************************************************************** */
 
 package com.itmill.toolkit.ui;
 
@@ -35,117 +35,124 @@ import com.itmill.toolkit.data.Property;
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
 
-/** 
+/**
  * <p>
- * A text editor component that can be bound to any bindable Property.
- * The text editor supports both multiline and single line modes, default
- * is one-line mode.
+ * A text editor component that can be bound to any bindable Property. The text
+ * editor supports both multiline and single line modes, default is one-line
+ * mode.
  * </p>
- *
+ * 
  * <p>
  * Since <code>TextField</code> extends <code>AbstractField</code> it
  * implements the {@link com.itmill.toolkit.data.Buffered} interface. A
  * <code>TextField</code> is in write-through mode by default, so
- * {@link com.itmill.toolkit.ui.AbstractField#setWriteThrough(boolean)}
- * must be called to enable buffering.
+ * {@link com.itmill.toolkit.ui.AbstractField#setWriteThrough(boolean)} must be
+ * called to enable buffering.
  * </p>
- *
+ * 
  * @author IT Mill Ltd.
- * @version @VERSION@
+ * @version
+ * @VERSION@
  * @since 3.0
  */
 public class TextField extends AbstractField {
 
 	/* Private members ************************************************* */
 
-	/** 
+	/**
 	 * Value formatter used to format the string contents.
 	 */
 	private Format format;
 
-	/** 
-	 * Number of visible columns in the TextField. 
+	/**
+	 * Number of visible columns in the TextField.
 	 */
 	private int columns = 0;
 
-	/** 
+	/**
 	 * Number of visible rows in a multiline TextField. Value 0 implies a
 	 * single-line text-editor.
 	 */
 	private int rows = 0;
 
-	/** 
-	 * Tells if word-wrapping should be used in multiline mode. 
+	/**
+	 * Tells if word-wrapping should be used in multiline mode.
 	 */
 	private boolean wordwrap = true;
 
-	/** 
-	 * Tells if input is used to enter sensitive information that is
-	 * not echoed to display. Typically passwords. 
+	/**
+	 * Tells if input is used to enter sensitive information that is not echoed
+	 * to display. Typically passwords.
 	 */
 	private boolean secret = false;
 
-	/** 
-	 * Null representation. 
+	/**
+	 * Null representation.
 	 */
 	private String nullRepresentation = "null";
 
-	/** 
-	 * Is setting to null from non-null value allowed by setting with 
-	 * null representation .
+	/**
+	 * Is setting to null from non-null value allowed by setting with null
+	 * representation .
 	 */
 	private boolean nullSettingAllowed = false;
 
 	/* Constructors **************************************************** */
 
-	/** 
-	 * Constructs an empty <code>TextField</code> with no caption. 
+	/**
+	 * Constructs an empty <code>TextField</code> with no caption.
 	 */
 	public TextField() {
 		setValue("");
 	}
 
-	/** 
+	/**
 	 * Constructs an empty <code>TextField</code> with given caption.
-	 * @param caption the caption <code>String</code> for the editor. 
+	 * 
+	 * @param caption
+	 *            the caption <code>String</code> for the editor.
 	 */
 	public TextField(String caption) {
 		setValue("");
 		setCaption(caption);
 	}
 
-	/** 
-	 * Constructs a new <code>TextField</code> that's bound to the
-	 * specified <code>Property</code> and has no caption.
+	/**
+	 * Constructs a new <code>TextField</code> that's bound to the specified
+	 * <code>Property</code> and has no caption.
 	 * 
-	 * @param dataSource the Property to be edited with this editor.
+	 * @param dataSource
+	 *            the Property to be edited with this editor.
 	 */
 	public TextField(Property dataSource) {
 		setPropertyDataSource(dataSource);
 	}
 
-	/** 
-	 * Constructs a new <code>TextField</code> that's bound to the
-	 * specified <code>Property</code> and has the given caption
-	 * <code>String</code>.
+	/**
+	 * Constructs a new <code>TextField</code> that's bound to the specified
+	 * <code>Property</code> and has the given caption <code>String</code>.
 	 * 
-	 * @param caption the caption <code>String</code> for the editor.
-	 * @param dataSource the Property to be edited with this editor.
+	 * @param caption
+	 *            the caption <code>String</code> for the editor.
+	 * @param dataSource
+	 *            the Property to be edited with this editor.
 	 */
 	public TextField(String caption, Property dataSource) {
 		this(dataSource);
 		setCaption(caption);
 	}
 
-	/** 
+	/**
 	 * Constructs a new <code>TextField</code> with the given caption and
-	 * initial text contents. The editor constructed this way will not be
-	 * bound to a Property unless
+	 * initial text contents. The editor constructed this way will not be bound
+	 * to a Property unless
 	 * {@link com.itmill.toolkit.data.Property.Viewer#setPropertyDataSource(Property)}
 	 * is called to bind it.
 	 * 
-	 * @param caption the caption <code>String</code> for the editor.
-	 * @param text the initial text content of the editor.
+	 * @param caption
+	 *            the caption <code>String</code> for the editor.
+	 * @param text
+	 *            the initial text content of the editor.
 	 */
 	public TextField(String caption, String value) {
 		setValue(value);
@@ -154,9 +161,9 @@ public class TextField extends AbstractField {
 
 	/* Component basic features ********************************************* */
 
-	/* Paints this component.
-	 * Don't add a JavaDoc comment here, we use the default documentation
-	 * from implemented interface.
+	/*
+	 * Paints this component. Don't add a JavaDoc comment here, we use the
+	 * default documentation from implemented interface.
 	 */
 	public void paintContent(PaintTarget target) throws PaintException {
 		super.paintContent(target);
@@ -182,13 +189,14 @@ public class TextField extends AbstractField {
 		if (value == null)
 			value = getNullRepresentation();
 		if (value == null)
-			throw new IllegalStateException("Null values are not allowed if the null-representation is null");
+			throw new IllegalStateException(
+					"Null values are not allowed if the null-representation is null");
 		target.addVariable(this, "text", value);
 	}
 
-	/** 
-	 * Gets the formatted dtring value.
-	 * Sets the field value by using the assigned Format.
+	/**
+	 * Gets the formatted dtring value. Sets the field value by using the
+	 * assigned Format.
 	 * 
 	 * @return the Formatted value.
 	 * @see #setFormat(Format)
@@ -207,17 +215,18 @@ public class TextField extends AbstractField {
 		return null;
 	}
 
-	/* Gets the components UIDL tag string.
-	 * Don't add a JavaDoc comment here, we use the default documentation
-	 * from implemented interface.
+	/*
+	 * Gets the components UIDL tag string. Don't add a JavaDoc comment here, we
+	 * use the default documentation from implemented interface.
 	 */
 	public String getTag() {
 		return "textfield";
 	}
 
-	/* Invoked when a variable of the component changes.
-	 * Don't add a JavaDoc comment here, we use the default documentation
-	 * from implemented interface.
+	/*
+	 * Invoked when a variable of the component changes. Don't add a JavaDoc
+	 * comment here, we use the default documentation from implemented
+	 * interface.
 	 */
 	public void changeVariables(Object source, Map variables) {
 
@@ -229,11 +238,11 @@ public class TextField extends AbstractField {
 			String newValue = (String) variables.get("text");
 			String oldValue = getFormattedValue();
 			if (newValue != null
-				&& (oldValue == null || isNullSettingAllowed())
-				&& newValue.equals(getNullRepresentation()))
+					&& (oldValue == null || isNullSettingAllowed())
+					&& newValue.equals(getNullRepresentation()))
 				newValue = null;
 			if (newValue != oldValue
-				&& (newValue == null || !newValue.equals(oldValue)))
+					&& (newValue == null || !newValue.equals(oldValue)))
 				setValue(newValue);
 		}
 
@@ -241,10 +250,10 @@ public class TextField extends AbstractField {
 
 	/* Text field configuration ********************************************* */
 
-	/** 
-	 * Gets the number of columns in the editor. If the number of columns
-	 * is set 0, the actual number of displayed columns is determined
-	 * implicitly by the adapter.
+	/**
+	 * Gets the number of columns in the editor. If the number of columns is set
+	 * 0, the actual number of displayed columns is determined implicitly by the
+	 * adapter.
 	 * 
 	 * @return the number of columns in the editor.
 	 */
@@ -252,12 +261,13 @@ public class TextField extends AbstractField {
 		return this.columns;
 	}
 
-	/** 
-	 * Sets the number of columns in the editor. If the number of columns
-	 * is set 0, the actual number of displayed columns is determined
-	 * implicitly by the adapter.
+	/**
+	 * Sets the number of columns in the editor. If the number of columns is set
+	 * 0, the actual number of displayed columns is determined implicitly by the
+	 * adapter.
 	 * 
-	 * @param columns the number of columns to set.
+	 * @param columns
+	 *            the number of columns to set.
 	 */
 	public void setColumns(int columns) {
 		if (columns < 0)
@@ -266,10 +276,10 @@ public class TextField extends AbstractField {
 		requestRepaint();
 	}
 
-	/** 
-	 * Gets the number of rows in the editor. If the number of rows is set
-	 * to 0, the actual number of displayed rows is determined implicitly by
-	 * the adapter.
+	/**
+	 * Gets the number of rows in the editor. If the number of rows is set to 0,
+	 * the actual number of displayed rows is determined implicitly by the
+	 * adapter.
 	 * 
 	 * @return number of explicitly set rows.
 	 */
@@ -277,12 +287,13 @@ public class TextField extends AbstractField {
 		return this.rows;
 	}
 
-	/** 
-	 * Sets the number of rows in the editor. If the number of rows is set
-	 * to 0, the actual number of displayed rows is determined implicitly by
-	 * the adapter.
+	/**
+	 * Sets the number of rows in the editor. If the number of rows is set to 0,
+	 * the actual number of displayed rows is determined implicitly by the
+	 * adapter.
 	 * 
-	 * @param rows the number of rows for this editor.
+	 * @param rows
+	 *            the number of rows for this editor.
 	 */
 	public void setRows(int rows) {
 		if (rows < 0)
@@ -291,21 +302,22 @@ public class TextField extends AbstractField {
 		requestRepaint();
 	}
 
-	/** 
+	/**
 	 * Tests if the editor is in word-wrap mode.
 	 * 
 	 * @return <code>true</code> if the component is in the word-wrap mode,
-	 * <code>false</code> if not.
+	 *         <code>false</code> if not.
 	 */
 	public boolean isWordwrap() {
 		return this.wordwrap;
 	}
 
-	/** 
-	 * Sets the editor's word-wrap mode on or off. 
+	/**
+	 * Sets the editor's word-wrap mode on or off.
 	 * 
-	 * @param wordwrap the boolean value specifying if the editor should be in
-	 * word-wrap mode after the call or not.
+	 * @param wordwrap
+	 *            the boolean value specifying if the editor should be in
+	 *            word-wrap mode after the call or not.
 	 */
 	public void setWordwrap(boolean wordwrap) {
 		this.wordwrap = wordwrap;
@@ -313,41 +325,50 @@ public class TextField extends AbstractField {
 
 	/* Property features **************************************************** */
 
-	/* Gets the edited property's type.
-	 * Don't add a JavaDoc comment here, we use the default documentation
-	 * from implemented interface.
+	/*
+	 * Gets the edited property's type. Don't add a JavaDoc comment here, we use
+	 * the default documentation from implemented interface.
 	 */
 	public Class getType() {
 		return String.class;
 	}
-	/** 
-	 * Gets the secret property on and off.
-	 * If a field is used to enter secretinformation
-	 * the information is not echoed to display.
-	 * @return <code>true</code> if the field is used to enter secret information, <code>false</code> otherwise.
+
+	/**
+	 * Gets the secret property on and off. If a field is used to enter
+	 * secretinformation the information is not echoed to display.
+	 * 
+	 * @return <code>true</code> if the field is used to enter secret
+	 *         information, <code>false</code> otherwise.
 	 */
 	public boolean isSecret() {
 		return secret;
 	}
 
-	/** 
-	 * Sets the secret property on and off.
-	 * If a field is used to enter secretinformation
-	 * the information is not echoed to display.
-	 * @param secret the value specifying if the field is used to enter secret information.
+	/**
+	 * Sets the secret property on and off. If a field is used to enter
+	 * secretinformation the information is not echoed to display.
+	 * 
+	 * @param secret
+	 *            the value specifying if the field is used to enter secret
+	 *            information.
 	 */
 	public void setSecret(boolean secret) {
 		this.secret = secret;
 	}
 
-	/** 
+	/**
 	 * Gets the null-string representation.
 	 * 
-	 * <p>The null-valued strings are represented on the user interface by replacing the 
-	 * null value with this string. If the null representation is set null (not 'null' string),
-	 * painting null value throws exception.</p>
+	 * <p>
+	 * The null-valued strings are represented on the user interface by
+	 * replacing the null value with this string. If the null representation is
+	 * set null (not 'null' string), painting null value throws exception.
+	 * </p>
 	 * 
-	 * <p>The default value is string 'null'.</p>
+	 * <p>
+	 * The default value is string 'null'.
+	 * </p>
+	 * 
 	 * @return the String Textual representation for null strings.
 	 * @see TextField#isNullSettingAllowed()
 	 */
@@ -355,64 +376,77 @@ public class TextField extends AbstractField {
 		return nullRepresentation;
 	}
 
-	/** 
+	/**
 	 * Is setting nulls with null-string representation allowed.
 	 * 
 	 * <p>
-	 * If this property is true, writing null-representation string to text 
-	 * field allways sets the field value to real null. If this property is 
-	 * false, null setting is not made, but the null values are maintained. 
+	 * If this property is true, writing null-representation string to text
+	 * field allways sets the field value to real null. If this property is
+	 * false, null setting is not made, but the null values are maintained.
 	 * Maintenance of null-values is made by only converting the textfield
-	 * contents to real null, if the text field matches the null-string 
+	 * contents to real null, if the text field matches the null-string
 	 * representation and the current value of the field is null.
 	 * </p>
 	 * 
-	 * <p>By default this setting is false</p>
+	 * <p>
+	 * By default this setting is false
+	 * </p>
 	 * 
-	 * @return  boolean Should the null-string represenation be allways
-	 * converted to null-values.
+	 * @return boolean Should the null-string represenation be allways converted
+	 *         to null-values.
 	 * @see TextField#getNullRepresentation()
 	 */
 	public boolean isNullSettingAllowed() {
 		return nullSettingAllowed;
 	}
 
-	/** 
+	/**
 	 * Sets the null-string representation.
 	 * 
-	 * <p>The null-valued strings are represented on the user interface by replacing the 
-	 * null value with this string. If the null representation is set null (not 'null' string),
-	 * painting null value throws exception.</p>
+	 * <p>
+	 * The null-valued strings are represented on the user interface by
+	 * replacing the null value with this string. If the null representation is
+	 * set null (not 'null' string), painting null value throws exception.
+	 * </p>
 	 * 
-	 * <p>The default value is string 'null'</p>
-	 * @param nullRepresentation Textual representation for null strings.
+	 * <p>
+	 * The default value is string 'null'
+	 * </p>
+	 * 
+	 * @param nullRepresentation
+	 *            Textual representation for null strings.
 	 * @see TextField#setNullSettingAllowed(boolean)
 	 */
 	public void setNullRepresentation(String nullRepresentation) {
 		this.nullRepresentation = nullRepresentation;
 	}
 
-	/** 
+	/**
 	 * Sets the null conversion mode.
 	 * 
-	 * <p>If this property is true, writing null-representation string to text 
-	 * field allways sets the field value to real null. If this property is 
-	 * false, null setting is not made, but the null values are maintained. 
+	 * <p>
+	 * If this property is true, writing null-representation string to text
+	 * field allways sets the field value to real null. If this property is
+	 * false, null setting is not made, but the null values are maintained.
 	 * Maintenance of null-values is made by only converting the textfield
-	 * contents to real null, if the text field matches the null-string 
-	 * representation and the current value of the field is null.</p>
+	 * contents to real null, if the text field matches the null-string
+	 * representation and the current value of the field is null.
+	 * </p>
 	 * 
-	 * <p>By default this setting is false.</p>
+	 * <p>
+	 * By default this setting is false.
+	 * </p>
 	 * 
-	 * @param nullSettingAllowed Should the null-string represenation be allways
-	 * converted to null-values.
+	 * @param nullSettingAllowed
+	 *            Should the null-string represenation be allways converted to
+	 *            null-values.
 	 * @see TextField#getNullRepresentation()
 	 */
 	public void setNullSettingAllowed(boolean nullSettingAllowed) {
 		this.nullSettingAllowed = nullSettingAllowed;
 	}
 
-	/** 
+	/**
 	 * Gets the value formatter of TextField.
 	 * 
 	 * @return the Format used to format the value.
@@ -421,10 +455,12 @@ public class TextField extends AbstractField {
 		return format;
 	}
 
-	/** 
+	/**
 	 * Gets the value formatter of TextField.
 	 * 
-	 * @param format the Format used to format the value. Null disables the formatting.
+	 * @param format
+	 *            the Format used to format the value. Null disables the
+	 *            formatting.
 	 */
 	public void setFormat(Format format) {
 		this.format = format;

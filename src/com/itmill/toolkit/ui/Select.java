@@ -124,58 +124,58 @@ public class Select extends AbstractField implements Container,
 	 */
 	public static final int ITEM_CAPTION_MODE_PROPERTY = 6;
 
-	/** 
-	 * Is the select in multiselect mode? 
+	/**
+	 * Is the select in multiselect mode?
 	 */
 	private boolean multiSelect = false;
 
-	/** 
-	 * Select options. 
+	/**
+	 * Select options.
 	 */
 	protected Container items;
 
-	/** 
-	 * Is the user allowed to add new options? 
+	/**
+	 * Is the user allowed to add new options?
 	 */
 	private boolean allowNewOptions;
 
-	/** 
-	 * Keymapper used to map key values. 
+	/**
+	 * Keymapper used to map key values.
 	 */
 	protected KeyMapper itemIdMapper = new KeyMapper();
 
-	/** 
-	 * Item icons. 
+	/**
+	 * Item icons.
 	 */
 	private HashMap itemIcons = new HashMap();
 
-	/** 
-	 * Item captions. 
+	/**
+	 * Item captions.
 	 */
 	private HashMap itemCaptions = new HashMap();
 
-	/** 
-	 * Item caption mode. 
+	/**
+	 * Item caption mode.
 	 */
 	private int itemCaptionMode = ITEM_CAPTION_MODE_EXPLICIT_DEFAULTS_ID;
 
-	/** 
-	 * Item caption source property id. 
+	/**
+	 * Item caption source property id.
 	 */
 	private Object itemCaptionPropertyId = null;
 
-	/** 
-	 * Item icon source property id. 
+	/**
+	 * Item icon source property id.
 	 */
 	private Object itemIconPropertyId = null;
 
-	/** 
-	 * List of property set change event listeners. 
+	/**
+	 * List of property set change event listeners.
 	 */
 	private LinkedList propertySetEventListeners = null;
 
-	/** 
-	 * List of item set change event listeners. 
+	/**
+	 * List of item set change event listeners.
 	 */
 	private LinkedList itemSetEventListeners = null;
 
@@ -190,12 +190,12 @@ public class Select extends AbstractField implements Container,
 	 */
 	private Object nullSelectionItemId = null;
 
-	/** 
+	/**
 	 * Mechanism for streaming select options outside of the UIDL.
 	 * 
-	 * By default streaming is not enabled and this is null. Streaming can 
-	 * be enabled with setOptionsLoadingLazy(true). 
-	 *  
+	 * By default streaming is not enabled and this is null. Streaming can be
+	 * enabled with setOptionsLoadingLazy(true).
+	 * 
 	 */
 	private OptionsStream optionsStream = null;
 
@@ -218,6 +218,7 @@ public class Select extends AbstractField implements Container,
 
 	/**
 	 * Creates a new select wthat is connected to a data-source.
+	 * 
 	 * @param caption
 	 *            the Caption of the component.
 	 * @param dataSource
@@ -276,10 +277,11 @@ public class Select extends AbstractField implements Container,
 		else
 			selectedKeys = new String[(getValue() == null
 					&& getNullSelectionItemId() == null ? 0 : 1)];
-		
+
 		// Paints the options and create array of selected id keys
 		target.startTag("options");
-		// TODO Also use conventional rendering if lazy loading is not supported by terminal
+		// TODO Also use conventional rendering if lazy loading is not supported
+		// by terminal
 		if (!isLazyLoading()) {
 			int keyIndex = 0;
 
@@ -334,13 +336,17 @@ public class Select extends AbstractField implements Container,
 		} else {
 
 			// Lazy options loading
-			if(getApplication() != null) {
-				target.addAttribute("loadfrom", getApplication().getURL().toString()
+			if (getApplication() != null) {
+				target.addAttribute("loadfrom", getApplication().getURL()
+						.toString()
 						+ optionsStream.uri);
-				target.addAttribute("total", (getItemIds() != null) ? getItemIds()
-						.size() : 0);
-				target.addAttribute("initial", optionsStream.getJSON(20,0,""));
-				target.addAttribute("selectedValue", toString() == null ? "" : toString());
+				target.addAttribute("total",
+						(getItemIds() != null) ? getItemIds().size() : 0);
+				target
+						.addAttribute("initial", optionsStream.getJSON(20, 0,
+								""));
+				target.addAttribute("selectedValue", toString() == null ? ""
+						: toString());
 			}
 		}
 		target.endTag("options");
@@ -353,7 +359,9 @@ public class Select extends AbstractField implements Container,
 
 	/**
 	 * Invoked when the value of a variable has changed.
-	 * @see com.itmill.toolkit.ui.AbstractComponent#changeVariables(java.lang.Object, java.util.Map)
+	 * 
+	 * @see com.itmill.toolkit.ui.AbstractComponent#changeVariables(java.lang.Object,
+	 *      java.util.Map)
 	 */
 	public void changeVariables(Object source, Map variables) {
 
@@ -461,10 +469,10 @@ public class Select extends AbstractField implements Container,
 	/* Property methods ***************************************************** */
 
 	/**
-	 * Returns the type of the property. <code>getValue</code> and <code>setValue</code> methods must be
-	 * compatible with this type: one can safely cast <code>getValue</code> to given type
-	 * and pass any variable assignable to this type as a parameter to
-	 * <code>setValue</code>.
+	 * Returns the type of the property. <code>getValue</code> and
+	 * <code>setValue</code> methods must be compatible with this type: one
+	 * can safely cast <code>getValue</code> to given type and pass any
+	 * variable assignable to this type as a parameter to <code>setValue</code>.
 	 * 
 	 * @return the Type of the property.
 	 */
@@ -474,9 +482,10 @@ public class Select extends AbstractField implements Container,
 		else
 			return Object.class;
 	}
-	
+
 	/**
 	 * Gets the selected item id or in multiselect mode a set of selected ids.
+	 * 
 	 * @see com.itmill.toolkit.ui.AbstractField#getValue()
 	 */
 	public Object getValue() {
@@ -532,7 +541,9 @@ public class Select extends AbstractField implements Container,
 	/**
 	 * Gets the item from the container with given id. If the container does not
 	 * contain the requested item, null is returned.
-	 * @param itemId the item id.
+	 * 
+	 * @param itemId
+	 *            the item id.
 	 * @return the item from the container.
 	 */
 	public Item getItem(Object itemId) {
@@ -572,6 +583,7 @@ public class Select extends AbstractField implements Container,
 	 * Gets the number of items in the container.
 	 * 
 	 * @return the Number of items in the container.
+	 * 
 	 * @see com.itmill.toolkit.data.Container#size()
 	 */
 	public int size() {
@@ -593,7 +605,8 @@ public class Select extends AbstractField implements Container,
 
 	/**
 	 * Gets the Property identified by the given itemId and propertyId from the
-     * Container
+	 * Container
+	 * 
 	 * @see com.itmill.toolkit.data.Container#getContainerProperty(Object,
 	 *      Object)
 	 */
@@ -601,17 +614,18 @@ public class Select extends AbstractField implements Container,
 		return items.getContainerProperty(itemId, propertyId);
 	}
 
-	 /* Container.Managed methods ******************************************** */
+	/* Container.Managed methods ******************************************** */
 
 	/**
-	 * Adds the new property to all items. Adds a property with given id, type and
-	 * default value to all items in the container.
+	 * Adds the new property to all items. Adds a property with given id, type
+	 * and default value to all items in the container.
 	 * 
 	 * This functionality is optional. If the function is unsupported, it always
 	 * returns false.
 	 * 
 	 * @return True if the operation succeeded.
-	 * @see com.itmill.toolkit.data.Container#addContainerProperty(java.lang.Object, java.lang.Class, java.lang.Object)
+	 * @see com.itmill.toolkit.data.Container#addContainerProperty(java.lang.Object,
+	 *      java.lang.Class, java.lang.Object)
 	 */
 	public boolean addContainerProperty(Object propertyId, Class type,
 			Object defaultValue) throws UnsupportedOperationException {
@@ -646,8 +660,8 @@ public class Select extends AbstractField implements Container,
 	}
 
 	/**
-	 * Creates a new item into container with container managed id. The id of the
-	 * created new item is returned. The item can be fetched with getItem()
+	 * Creates a new item into container with container managed id. The id of
+	 * the created new item is returned. The item can be fetched with getItem()
 	 * method. if the creation fails, null is returned.
 	 * 
 	 * @return the Id of the created item or null in case of failure.
@@ -686,8 +700,8 @@ public class Select extends AbstractField implements Container,
 	}
 
 	/**
-	 * Removes the item identified by Id from the container. This functionality is
-	 * optional. If the function is not implemented, the functions allways
+	 * Removes the item identified by Id from the container. This functionality
+	 * is optional. If the function is not implemented, the functions allways
 	 * returns false.
 	 * 
 	 * @return True if the operation succeeded.
@@ -705,8 +719,8 @@ public class Select extends AbstractField implements Container,
 	}
 
 	/**
-	 * Removes the property from all items. Removes a property with given id from all
-	 * the items in the container.
+	 * Removes the property from all items. Removes a property with given id
+	 * from all the items in the container.
 	 * 
 	 * This functionality is optional. If the function is unsupported, it always
 	 * returns false.
@@ -725,9 +739,11 @@ public class Select extends AbstractField implements Container,
 
 	/* Container.Viewer methods ********************************************* */
 
-	/** 
-	 * Sets the container as data-source for viewing. 
-	 * @param newDataSource the new data source.
+	/**
+	 * Sets the container as data-source for viewing.
+	 * 
+	 * @param newDataSource
+	 *            the new data source.
 	 */
 	public void setContainerDataSource(Container newDataSource) {
 		if (newDataSource == null)
@@ -778,7 +794,8 @@ public class Select extends AbstractField implements Container,
 	}
 
 	/**
-	 * Gets the viewing data-source container. 
+	 * Gets the viewing data-source container.
+	 * 
 	 * @see com.itmill.toolkit.data.Container.Viewer#getContainerDataSource()
 	 */
 	public Container getContainerDataSource() {
@@ -989,8 +1006,8 @@ public class Select extends AbstractField implements Container,
 	 * The mode can be one of the following ones:
 	 * <ul>
 	 * <li><code>ITEM_CAPTION_MODE_EXPLICIT_DEFAULTS_ID</code> : Items
-	 * Id-objects <code>toString</code> is used as item caption. If caption
-	 * is explicitly specified, it overrides the id-caption.
+	 * Id-objects <code>toString</code> is used as item caption. If caption is
+	 * explicitly specified, it overrides the id-caption.
 	 * <li><code>ITEM_CAPTION_MODE_ID</code> : Items Id-objects
 	 * <code>toString</code> is used as item caption.</li>
 	 * <li><code>ITEM_CAPTION_MODE_ITEM</code> : Item-objects
@@ -1025,8 +1042,8 @@ public class Select extends AbstractField implements Container,
 	 * The mode can be one of the following ones:
 	 * <ul>
 	 * <li><code>ITEM_CAPTION_MODE_EXPLICIT_DEFAULTS_ID</code> : Items
-	 * Id-objects <code>toString</code> is used as item caption. If caption
-	 * is explicitly specified, it overrides the id-caption.
+	 * Id-objects <code>toString</code> is used as item caption. If caption is
+	 * explicitly specified, it overrides the id-caption.
 	 * <li><code>ITEM_CAPTION_MODE_ID</code> : Items Id-objects
 	 * <code>toString</code> is used as item caption.</li>
 	 * <li><code>ITEM_CAPTION_MODE_ITEM</code> : Item-objects
@@ -1065,7 +1082,9 @@ public class Select extends AbstractField implements Container,
 	 * Setting the property id to null disables this feature. The id is null by
 	 * default
 	 * </p>.
-	 * @param propertyId the id of the property.
+	 * 
+	 * @param propertyId
+	 *            the id of the property.
 	 * 
 	 */
 	public void setItemCaptionPropertyId(Object propertyId) {
@@ -1154,6 +1173,7 @@ public class Select extends AbstractField implements Container,
 	 * {@link #getNullSelectionItemId()} returns true if the value of the
 	 * property is null.
 	 * </p>
+	 * 
 	 * @param itemId
 	 *            the Id the of the item to be tested.
 	 * @see #getNullSelectionItemId()
@@ -1179,6 +1199,7 @@ public class Select extends AbstractField implements Container,
 	 * In single select mode selecting item identified by
 	 * {@link #getNullSelectionItemId()} sets the value of the property to null.
 	 * </p>
+	 * 
 	 * @param itemId
 	 *            the tem to be selected.
 	 * @see #getNullSelectionItemId()
@@ -1200,6 +1221,7 @@ public class Select extends AbstractField implements Container,
 
 	/**
 	 * Unselects an item.
+	 * 
 	 * @param itemId
 	 *            the Item to be unselected.
 	 * @see #getNullSelectionItemId()
@@ -1219,6 +1241,7 @@ public class Select extends AbstractField implements Container,
 
 	/**
 	 * Notifies this listener that the Containers contents has changed.
+	 * 
 	 * @see com.itmill.toolkit.data.Container.PropertySetChangeListener#containerPropertySetChange(com.itmill.toolkit.data.Container.PropertySetChangeEvent)
 	 */
 	public void containerPropertySetChange(
@@ -1228,6 +1251,7 @@ public class Select extends AbstractField implements Container,
 
 	/**
 	 * Adds a new Property set change listener for this Container.
+	 * 
 	 * @see com.itmill.toolkit.data.Container.PropertySetChangeNotifier#addListener(com.itmill.toolkit.data.Container.PropertySetChangeListener)
 	 */
 	public void addListener(Container.PropertySetChangeListener listener) {
@@ -1238,6 +1262,7 @@ public class Select extends AbstractField implements Container,
 
 	/**
 	 * Removes a previously registered Property set change listener.
+	 * 
 	 * @see com.itmill.toolkit.data.Container.PropertySetChangeNotifier#removeListener(com.itmill.toolkit.data.Container.PropertySetChangeListener)
 	 */
 	public void removeListener(Container.PropertySetChangeListener listener) {
@@ -1250,6 +1275,7 @@ public class Select extends AbstractField implements Container,
 
 	/**
 	 * Adds an Item set change listener for the object.
+	 * 
 	 * @see com.itmill.toolkit.data.Container.ItemSetChangeNotifier#addListener(com.itmill.toolkit.data.Container.ItemSetChangeListener)
 	 */
 	public void addListener(Container.ItemSetChangeListener listener) {
@@ -1260,6 +1286,7 @@ public class Select extends AbstractField implements Container,
 
 	/**
 	 * Removes the Item set change listener from the object.
+	 * 
 	 * @see com.itmill.toolkit.data.Container.ItemSetChangeNotifier#removeListener(com.itmill.toolkit.data.Container.ItemSetChangeListener)
 	 */
 	public void removeListener(Container.ItemSetChangeListener listener) {
@@ -1272,6 +1299,7 @@ public class Select extends AbstractField implements Container,
 
 	/**
 	 * Lets the listener know a Containers Item set has changed.
+	 * 
 	 * @see com.itmill.toolkit.data.Container.ItemSetChangeListener#containerItemSetChange(com.itmill.toolkit.data.Container.ItemSetChangeEvent)
 	 */
 	public void containerItemSetChange(Container.ItemSetChangeEvent event) {
@@ -1282,7 +1310,7 @@ public class Select extends AbstractField implements Container,
 		fireItemSetChange();
 	}
 
-	/** 
+	/**
 	 * Fires the property set change event.
 	 */
 	protected void firePropertySetChange() {
@@ -1297,8 +1325,8 @@ public class Select extends AbstractField implements Container,
 		requestRepaint();
 	}
 
-	/** 
-	 * Fires the item set change event. 
+	/**
+	 * Fires the item set change event.
 	 */
 	protected void fireItemSetChange() {
 		if (itemSetEventListeners != null && !itemSetEventListeners.isEmpty()) {
@@ -1311,13 +1339,14 @@ public class Select extends AbstractField implements Container,
 		requestRepaint();
 	}
 
-	/** 
-	 * Implementation of item set change event. 
+	/**
+	 * Implementation of item set change event.
 	 */
 	private class ItemSetChangeEvent implements Container.ItemSetChangeEvent {
 
 		/**
 		 * Gets the Property where the event occurred.
+		 * 
 		 * @see com.itmill.toolkit.data.Container.ItemSetChangeEvent#getContainer()
 		 */
 		public Container getContainer() {
@@ -1326,14 +1355,15 @@ public class Select extends AbstractField implements Container,
 
 	}
 
-	/** 
-	 * Implementation of property set change event. 
+	/**
+	 * Implementation of property set change event.
 	 */
 	private class PropertySetChangeEvent implements
 			Container.PropertySetChangeEvent {
 
 		/**
 		 * Retrieves the Container whose contents have been modified.
+		 * 
 		 * @see com.itmill.toolkit.data.Container.PropertySetChangeEvent#getContainer()
 		 */
 		public Container getContainer() {
@@ -1405,16 +1435,18 @@ public class Select extends AbstractField implements Container,
 
 	/**
 	 * Notifies the component that it is connected to an application.
+	 * 
 	 * @see com.itmill.toolkit.ui.AbstractField#attach()
 	 */
 	public void attach() {
 		super.attach();
-		if (optionsStream != null) 
+		if (optionsStream != null)
 			getWindow().addURIHandler(optionsStream);
 	}
 
 	/**
 	 * Detaches the component from application.
+	 * 
 	 * @see com.itmill.toolkit.ui.AbstractComponent#detach()
 	 */
 	public void detach() {
@@ -1422,18 +1454,18 @@ public class Select extends AbstractField implements Container,
 			getWindow().removeURIHandler(optionsStream);
 		super.detach();
 	}
-	
+
 	public void setOptionFilter(OptionFilter of) {
-		if(this.optionsStream != null) {
+		if (this.optionsStream != null) {
 			this.optionsStream.setOptionFilter(of);
 		}
 	}
-	
+
 	/**
 	 * @return
 	 */
 	public OptionFilter getOptionFilter() {
-		if(this.optionsStream != null) {
+		if (this.optionsStream != null) {
 			return this.optionsStream.getOptionFilter();
 		}
 		return null;
@@ -1444,7 +1476,7 @@ public class Select extends AbstractField implements Container,
 		private String currentFilter = "";
 
 		private ArrayList filteredItemsBuffer = null;
-		
+
 		private OptionFilter of = null;
 
 		private String uri = "selectOptionsStream"
@@ -1453,7 +1485,7 @@ public class Select extends AbstractField implements Container,
 		OptionsStream(Select s) {
 			of = new StartsWithFilter(s);
 		}
-		
+
 		public OptionFilter getOptionFilter() {
 			return of;
 		}
@@ -1464,7 +1496,9 @@ public class Select extends AbstractField implements Container,
 
 		/**
 		 * Handles the given relative URI.
-		 * @see com.itmill.toolkit.terminal.URIHandler#handleURI(java.net.URL, java.lang.String)
+		 * 
+		 * @see com.itmill.toolkit.terminal.URIHandler#handleURI(java.net.URL,
+		 *      java.lang.String)
 		 */
 		public DownloadStream handleURI(URL context, String relativeUri) {
 
@@ -1482,7 +1516,7 @@ public class Select extends AbstractField implements Container,
 						// ignore
 					}
 					// TODO Req size
-					ds = createDownloadStream(13,i,"");
+					ds = createDownloadStream(13, i, "");
 					return ds;
 
 				} else if (relativeUri.indexOf(uri) != -1) {
@@ -1492,7 +1526,7 @@ public class Select extends AbstractField implements Container,
 					String prefix = relativeUri.substring(relativeUri
 							.lastIndexOf("/") + 1);
 					// TODO Req size
-					ds = createDownloadStream(13,0,prefix.trim());
+					ds = createDownloadStream(13, 0, prefix.trim());
 					return ds;
 				}
 			}
@@ -1508,14 +1542,15 @@ public class Select extends AbstractField implements Container,
 		 * @param filter
 		 * @return the new DownloadStream.
 		 */
-		public DownloadStream createDownloadStream(int size, int first, String filter) {
+		public DownloadStream createDownloadStream(int size, int first,
+				String filter) {
 
 			ByteArrayOutputStream os = new ByteArrayOutputStream();
 			OutputStreamWriter osw = new OutputStreamWriter(os, Charset
 					.forName("utf-8"));
 
 			// JSONObject json = createJSONObject(visibleitems);
-			String json = getJSON( size,  first,  filter);
+			String json = getJSON(size, first, filter);
 			try {
 				osw.write(json);
 				osw.flush();
@@ -1544,20 +1579,21 @@ public class Select extends AbstractField implements Container,
 				json.append((i > 0 ? "," : "") + '"' + values.get(i).toString()
 						+ '"');
 		}
-		
+
 		private String getJSON(int size, int first, String filter) {
 
 			// Refilter options, if needed
 			if (!currentFilter.equals(filter) || filteredItemsBuffer == null) {
 				filteredItemsBuffer = filterContent(filter);
 				currentFilter = filter;
-			}	
+			}
 
 			// Creates list of shown options
 			ArrayList keys = new ArrayList();
 			ArrayList values = new ArrayList();
 
-			for (int i=first; i<first+size && i<filteredItemsBuffer.size(); i++) {
+			for (int i = first; i < first + size
+					&& i < filteredItemsBuffer.size(); i++) {
 				Object id = filteredItemsBuffer.get(i);
 				Item item = getItem(id);
 				keys.add(Select.this.itemIdMapper.key(id));

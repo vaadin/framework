@@ -60,7 +60,7 @@ import org.xml.sax.SAXException;
 public class License {
 
 	/**
-	 *  IT Mill License Manager certificate.
+	 * IT Mill License Manager certificate.
 	 */
 	private static String certificate = "-----BEGIN CERTIFICATE-----\n"
 			+ "MIIDJjCCAuQCBEVqxNwwCwYHKoZIzjgEAwUAMHkxCzAJBgNVBAYTAkZJMRAwDgYDVQQIEwdVbmtu\n"
@@ -79,13 +79,13 @@ public class License {
 			+ "LwAkKye6dzALBgcqhkjOOAQDBQADLwAwLAIUDgvWt7ItRyZfpWNEeJ0P9yaxOwoCFC21LRtwLi1t\n"
 			+ "c+yomHtX+mpxF7VO\n" + "-----END CERTIFICATE-----\n";
 
-	/** 
-	 * License XML Document. 
+	/**
+	 * License XML Document.
 	 */
 	private Document licenseXML = null;
 
-	/** 
-	 * The signature has already been checked and is valid. 
+	/**
+	 * The signature has already been checked and is valid.
 	 */
 	private boolean signatureIsValid = false;
 
@@ -145,17 +145,18 @@ public class License {
 
 		return "true".equalsIgnoreCase(print);
 	}
+
 	/**
 	 * Gets the description for this license.
-	 * @return
-	 * 			the description.
+	 * 
+	 * @return the description.
 	 * @throws LicenseFileHasNotBeenRead
-	 * 									if the license file has not been read.
+	 *             if the license file has not been read.
 	 * @throws InvalidLicenseFile
-	 * 							if the license file is not of correct XML format.
+	 *             if the license file is not of correct XML format.
 	 * @throws LicenseSignatureIsInvalid
-	 * 							if the license file has been changed or signature is
-	 *             				otherwise invalid.
+	 *             if the license file has been changed or signature is
+	 *             otherwise invalid.
 	 */
 	public String getDescription() throws LicenseFileHasNotBeenRead,
 			InvalidLicenseFile, LicenseSignatureIsInvalid {
@@ -512,9 +513,10 @@ public class License {
 			return null;
 		return name;
 	}
-	
+
 	/**
-	 * Gets the purpose for this license. 
+	 * Gets the purpose for this license.
+	 * 
 	 * @return the purpose.
 	 */
 	private String getPurpose() {
@@ -523,12 +525,14 @@ public class License {
 			return null;
 		return getTextContent(purposeL.item(0));
 	}
-	
+
 	/**
-	 * Gets the license number for this license. 
-	 * @return the license number of this license, or <code>null</code> if not set.
+	 * Gets the license number for this license.
+	 * 
+	 * @return the license number of this license, or <code>null</code> if not
+	 *         set.
 	 * @throws InvalidLicenseFile
-	 * 						if the license file is not of correct XML format.
+	 *             if the license file is not of correct XML format.
 	 */
 	private String getLicenseNumber() throws InvalidLicenseFile {
 		Element lic = (Element) licenseXML.getElementsByTagName("license")
@@ -627,17 +631,19 @@ public class License {
 		return base64_decode(base64);
 
 	}
-	
+
 	/**
 	 * Returns whether the signature is valid or not.
-	 * @return <code>true</code> if the signature is valid otherwise <code>false</code> .
-	 * @throws InvalidLicenseFile 
-	 * 						if the license file is not of correct XML format.
-	 * @throws LicenseFileHasNotBeenRead 
-	 * 						if the license file has not been read.
+	 * 
+	 * @return <code>true</code> if the signature is valid otherwise
+	 *         <code>false</code> .
+	 * @throws InvalidLicenseFile
+	 *             if the license file is not of correct XML format.
+	 * @throws LicenseFileHasNotBeenRead
+	 *             if the license file has not been read.
 	 * @throws LicenseSignatureIsInvalid
-	 * 						if the license file has been changed or signature is
-	 *             			otherwise invalid.
+	 *             if the license file has been changed or signature is
+	 *             otherwise invalid.
 	 */
 	private boolean isSignatureValid() throws InvalidLicenseFile,
 			LicenseFileHasNotBeenRead, LicenseSignatureIsInvalid {
@@ -750,13 +756,13 @@ public class License {
 	}
 
 	/* ****** BASE64 implementation created by Robert Harder ****** */
-	/** 
-	 * The equals sign (=) as a byte. 
+	/**
+	 * The equals sign (=) as a byte.
 	 */
 	private final static byte Base64_EQUALS_SIGN = (byte) '=';
 
-	/** 
-	 * Preferred encoding. 
+	/**
+	 * Preferred encoding.
 	 */
 	private final static String Base64_PREFERRED_ENCODING = "UTF-8";
 
@@ -807,23 +813,23 @@ public class License {
 	 * Decodes four bytes from array <var>source</var> and writes the resulting
 	 * bytes (up to three of them) to <var>destination</var>. The source and
 	 * destination arrays can be manipulated anywhere along their length by
-	 * specifying <var>srcOffset</var> and <var>destOffset</var>. 
+	 * specifying <var>srcOffset</var> and <var>destOffset</var>.
 	 * <p>
-	 * This method does not check to make sure your arrays are large enough
-	 * to accomodate <var>srcOffset</var> + 4 for the <var>source</var> array or
+	 * This method does not check to make sure your arrays are large enough to
+	 * accomodate <var>srcOffset</var> + 4 for the <var>source</var> array or
 	 * <var>destOffset</var> + 3 for the <var>destination</var> array. This
 	 * method returns the actual number of bytes that were converted from the
 	 * Base64 encoding.
 	 * </p>
 	 * 
 	 * @param source
-	 *            the array to convert. 
+	 *            the array to convert.
 	 * @param srcOffset
-	 *            the index where conversion begins. 
+	 *            the index where conversion begins.
 	 * @param destination
-	 *            the array to hold the conversion. 
+	 *            the array to hold the conversion.
 	 * @param destOffset
-	 *            the index where output will be put. 
+	 *            the index where output will be put.
 	 * @return the number of decoded bytes converted
 	 * @since 1.3
 	 */

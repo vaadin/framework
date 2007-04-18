@@ -1,30 +1,30 @@
 /* *************************************************************************
  
-                               IT Mill Toolkit 
+ IT Mill Toolkit 
 
-               Development of Browser User Interfaces Made Easy
+ Development of Browser User Interfaces Made Easy
 
-                    Copyright (C) 2000-2006 IT Mill Ltd
-                     
-   *************************************************************************
+ Copyright (C) 2000-2006 IT Mill Ltd
+ 
+ *************************************************************************
 
-   This product is distributed under commercial license that can be found
-   from the product package on license.pdf. Use of this product might 
-   require purchasing a commercial license from IT Mill Ltd. For guidelines 
-   on usage, see licensing-guidelines.html
+ This product is distributed under commercial license that can be found
+ from the product package on license.pdf. Use of this product might 
+ require purchasing a commercial license from IT Mill Ltd. For guidelines 
+ on usage, see licensing-guidelines.html
 
-   *************************************************************************
-   
-   For more information, contact:
-   
-   IT Mill Ltd                           phone: +358 2 4802 7180
-   Ruukinkatu 2-4                        fax:   +358 2 4802 7181
-   20540, Turku                          email:  info@itmill.com
-   Finland                               company www: www.itmill.com
-   
-   Primary source for information and releases: www.itmill.com
+ *************************************************************************
+ 
+ For more information, contact:
+ 
+ IT Mill Ltd                           phone: +358 2 4802 7180
+ Ruukinkatu 2-4                        fax:   +358 2 4802 7181
+ 20540, Turku                          email:  info@itmill.com
+ Finland                               company www: www.itmill.com
+ 
+ Primary source for information and releases: www.itmill.com
 
-   ********************************************************************** */
+ ********************************************************************** */
 
 package com.itmill.toolkit.data;
 
@@ -32,106 +32,118 @@ import com.itmill.toolkit.terminal.ErrorMessage;
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
 
-/** 
- * Object validator interface. Implementors of this class can be added to
- * any {@link com.itmill.toolkit.data.Validatable} object to verify
- * its value. The <code>Validatable#isValid(Object)</code> iterates all
- * registered <code>Validator</code>s, calling their {@link #validate(Object)}
- * methods. <code>validate(Object)</code> should throw the 
- * {@link Validator.InvalidValueException} if the given value is not valid
- * by its standards.
- *
+/**
+ * Object validator interface. Implementors of this class can be added to any
+ * {@link com.itmill.toolkit.data.Validatable} object to verify its value. The
+ * <code>Validatable#isValid(Object)</code> iterates all registered
+ * <code>Validator</code>s, calling their {@link #validate(Object)} methods.
+ * <code>validate(Object)</code> should throw the
+ * {@link Validator.InvalidValueException} if the given value is not valid by
+ * its standards.
+ * 
  * @author IT Mill Ltd.
- * @version @VERSION@
+ * @version
+ * @VERSION@
  * @since 3.0
  */
 public interface Validator {
 
-	/** 
-	 * Checks the given value against this validator. If the value is valid
-	 * this method should do nothing, and if it's not valid, it should throw
+	/**
+	 * Checks the given value against this validator. If the value is valid this
+	 * method should do nothing, and if it's not valid, it should throw
 	 * <code>Validator.InvalidValueException</code>
 	 * 
-	 * @param value the value to check
-	 * @throws Validator.InvalidValueException if the value is not valid
+	 * @param value
+	 *            the value to check
+	 * @throws Validator.InvalidValueException
+	 *             if the value is not valid
 	 */
 	public void validate(Object value) throws Validator.InvalidValueException;
 
-	/** 
+	/**
 	 * Tests if the given value is valid.
-	 * @param value the value to check
+	 * 
+	 * @param value
+	 *            the value to check
 	 * @return <code>true</code> for valid value, otherwise <code>false</code>.
 	 */
 	public boolean isValid(Object value);
 
-	/** 
+	/**
 	 * Adds the proposing functionality to a {@link Validator}. A
 	 * <code>Suggestive</code> validator can propose a valid value for the
 	 * object it is attached to validate. This way the {@link Validatable}
-	 * object may avoid situations where it contains a value that could
-	 * lead to a error.
+	 * object may avoid situations where it contains a value that could lead to
+	 * a error.
+	 * 
 	 * @author IT Mill Ltd.
-	 * @version @VERSION@
+	 * @version
+	 * @VERSION@
 	 * @since 3.0
 	 */
 	public interface Suggestive extends Validator {
 
-		/** 
-		 * Suggests another value that can be used instead of the
-		 * proposedValue if it is invalid. If it is valid
-		 * in the opinion of this validator, however, it is returned as is.
+		/**
+		 * Suggests another value that can be used instead of the proposedValue
+		 * if it is invalid. If it is valid in the opinion of this validator,
+		 * however, it is returned as is.
 		 * 
-		 * @param proposedValue Originally proposed value that could be
-		 * invalid.
+		 * @param proposedValue
+		 *            Originally proposed value that could be invalid.
 		 * @return Suggested value that's not invalid against this validator
 		 */
 		public Object suggestValidValue(Object proposedValue);
 	}
 
-	/** 
-	 * Invalid value exception can be thrown by {@link Validator} when a
-	 * given value is not valid.
+	/**
+	 * Invalid value exception can be thrown by {@link Validator} when a given
+	 * value is not valid.
+	 * 
 	 * @author IT Mill Ltd.
-	 * @version @VERSION@
+	 * @version
+	 * @VERSION@
 	 * @since 3.0
 	 */
-	public class InvalidValueException
-		extends RuntimeException
-		implements ErrorMessage {
+	public class InvalidValueException extends RuntimeException implements
+			ErrorMessage {
 
 		/**
-         * Serial generated by eclipse.
-         */
-        private static final long serialVersionUID = 3689073941163422257L;
-        /** Array of validation errors that are causing the problem. */
+		 * Serial generated by eclipse.
+		 */
+		private static final long serialVersionUID = 3689073941163422257L;
+
+		/** Array of validation errors that are causing the problem. */
 		private InvalidValueException[] causes = null;
 
-		/** 
+		/**
 		 * Constructs a new <code>InvalidValueException</code> with the
 		 * specified detail message.
 		 * 
-		 * @param message The detail message of the problem.
+		 * @param message
+		 *            The detail message of the problem.
 		 */
 		public InvalidValueException(String message) {
-			this(message, new InvalidValueException[] {
-			});
+			this(message, new InvalidValueException[] {});
 		}
 
-		/** 
-		 * Constructs a new <code>InvalidValueException</code> with a set 
-		 * of causing validation exceptions. The error message contains
-		 * first the given message and then a list of validation errors 
-		 * in the given validatables. 
+		/**
+		 * Constructs a new <code>InvalidValueException</code> with a set of
+		 * causing validation exceptions. The error message contains first the
+		 * given message and then a list of validation errors in the given
+		 * validatables.
 		 * 
-		 * @param message The detail message of the problem.
-		 * @param causes Array of validatables whos invalidities are possiblity causing the invalidity.
+		 * @param message
+		 *            The detail message of the problem.
+		 * @param causes
+		 *            Array of validatables whos invalidities are possiblity
+		 *            causing the invalidity.
 		 */
-		public InvalidValueException(
-			String message,
-			InvalidValueException[] causes) {
+		public InvalidValueException(String message,
+				InvalidValueException[] causes) {
 			super(message);
 			if (causes == null)
-				throw new NullPointerException("Possible causes array must not be null");
+				throw new NullPointerException(
+						"Possible causes array must not be null");
 			this.causes = causes;
 		}
 

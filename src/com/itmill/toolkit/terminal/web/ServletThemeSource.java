@@ -64,8 +64,8 @@ public class ServletThemeSource implements ThemeSource {
 
 	private Cache resourceCache = new Cache();
 
-	/** 
-	 * Collection of subdirectory entries. 
+	/**
+	 * Collection of subdirectory entries.
 	 */
 	private URL descFile;
 
@@ -79,8 +79,9 @@ public class ServletThemeSource implements ThemeSource {
 	 *            the Path inside the archive to be processed.
 	 * @throws IOException
 	 *             if the writing failed due to input/output error.
-	 * @throws ThemeException  If the resource is not found or there was
-	 * 			 some problem finding the resource.
+	 * @throws ThemeException
+	 *             If the resource is not found or there was some problem
+	 *             finding the resource.
 	 */
 	public ServletThemeSource(ServletContext context,
 			ApplicationServlet webAdapterServlet, String path)
@@ -131,6 +132,7 @@ public class ServletThemeSource implements ThemeSource {
 
 	/**
 	 * Gets the XSL stream for the specified theme and web-browser type.
+	 * 
 	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getXSLStreams(Theme,
 	 *      WebBrowser)
 	 */
@@ -198,6 +200,7 @@ public class ServletThemeSource implements ThemeSource {
 
 	/**
 	 * Gets the input stream for the resource with the specified resource id.
+	 * 
 	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getResource(String)
 	 */
 	public InputStream getResource(String resourceId)
@@ -247,7 +250,8 @@ public class ServletThemeSource implements ThemeSource {
 	}
 
 	/**
-	 * Gets the list of themes in the theme source. 
+	 * Gets the list of themes in the theme source.
+	 * 
 	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getThemes()
 	 */
 	public Collection getThemes() {
@@ -260,6 +264,7 @@ public class ServletThemeSource implements ThemeSource {
 
 	/**
 	 * Gets the name of the ThemeSource.
+	 * 
 	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getName()
 	 */
 	public String getName() {
@@ -268,6 +273,7 @@ public class ServletThemeSource implements ThemeSource {
 
 	/**
 	 * Gets the Theme instance by name.
+	 * 
 	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getThemeByName(String)
 	 */
 	public Theme getThemeByName(String name) {
@@ -289,29 +295,36 @@ public class ServletThemeSource implements ThemeSource {
 	private class Cache {
 
 		private Map data = new HashMap();
-		
+
 		/**
-		 * Associates the specified value with the specified key in this map.
-		 * If the map previously contained a mapping for this key, the old value
-		 * is replaced by the specified value.
-		 * @param key the key with which the specified value is to be associated.
-		 * @param value the value to be associated with the specified key. 
+		 * Associates the specified value with the specified key in this map. If
+		 * the map previously contained a mapping for this key, the old value is
+		 * replaced by the specified value.
+		 * 
+		 * @param key
+		 *            the key with which the specified value is to be
+		 *            associated.
+		 * @param value
+		 *            the value to be associated with the specified key.
 		 */
 		public void put(Object key, Object value) {
 			data.put(key, new SoftReference(new CacheItem(value)));
 		}
-		
+
 		/**
-		 * Returns the value to which this map maps the specified key. Returns null
-		 * if the map contains no mapping for this key. 
+		 * Returns the value to which this map maps the specified key. Returns
+		 * null if the map contains no mapping for this key.
 		 * <p>
-		 * A return value of null does not necessarily indicate that the map contains
-		 * no mapping for the key; it's also possible that the map explicitly maps 
-		 * the key to null. The containsKey operation may be used to distinguish these two cases. 
+		 * A return value of null does not necessarily indicate that the map
+		 * contains no mapping for the key; it's also possible that the map
+		 * explicitly maps the key to null. The containsKey operation may be
+		 * used to distinguish these two cases.
 		 * </p>
-		 * @param key the key whose associated value is to be returned. 
+		 * 
+		 * @param key
+		 *            the key whose associated value is to be returned.
 		 * @return the value to which this map maps the specified key, or null
-		 *  		if the map contains no mapping for this key.
+		 *         if the map contains no mapping for this key.
 		 */
 		public Object get(Object key) {
 			SoftReference ref = (SoftReference) data.get(key);
@@ -319,7 +332,7 @@ public class ServletThemeSource implements ThemeSource {
 				return ((CacheItem) ref.get()).getData();
 			return null;
 		}
-		
+
 		/**
 		 * Clears the data and removes all mappings from this map .
 		 */
@@ -337,7 +350,7 @@ public class ServletThemeSource implements ThemeSource {
 	private class CacheItem {
 
 		private Object data;
-		
+
 		/**
 		 * 
 		 * @param data
@@ -345,25 +358,28 @@ public class ServletThemeSource implements ThemeSource {
 		public CacheItem(Object data) {
 			this.data = data;
 		}
-		
+
 		/**
 		 * Gets the data.
+		 * 
 		 * @return the data.
 		 */
 		public Object getData() {
 			return this.data;
 		};
-		
+
 		/**
-		 * Called by the garbage collector on an object when garbage collection 
-		 * determines that there are no more references to the object. A subclass 
-		 * overrides the finalize method to dispose of system resources or to 
-		 * perform other cleanup.
+		 * Called by the garbage collector on an object when garbage collection
+		 * determines that there are no more references to the object. A
+		 * subclass overrides the finalize method to dispose of system resources
+		 * or to perform other cleanup.
 		 * <p>
 		 * The finalize method is never invoked more than once by a Java virtual
 		 * machine for any given object.
 		 * </p>
-		 * @throws Throwable the Exception raised by this method
+		 * 
+		 * @throws Throwable
+		 *             the Exception raised by this method
 		 * @see java.lang.Object#finalize()
 		 */
 		public void finalize() throws Throwable {

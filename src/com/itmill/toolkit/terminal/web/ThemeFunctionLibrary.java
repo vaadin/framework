@@ -71,16 +71,16 @@ public class ThemeFunctionLibrary {
 	static private final int THEME = 5;
 
 	static private ThreadLocal state = new ThreadLocal();
-	
-/**
- * 
- * @param application
- * @param window
- * @param webBrowser
- * @param session
- * @param webAdapterServlet
- * @param theme
- */
+
+	/**
+	 * 
+	 * @param application
+	 * @param window
+	 * @param webBrowser
+	 * @param session
+	 * @param webAdapterServlet
+	 * @param theme
+	 */
 	static protected void setState(Application application, Window window,
 			WebBrowser webBrowser, HttpSession session,
 			ApplicationServlet webAdapterServlet, String theme) {
@@ -154,6 +154,7 @@ public class ThemeFunctionLibrary {
 
 	/**
 	 * Returns an URI to the named resource from the named theme.
+	 * 
 	 * @param resource
 	 * @param theme
 	 */
@@ -168,6 +169,7 @@ public class ThemeFunctionLibrary {
 
 	/**
 	 * Returns an URI to the named resource.
+	 * 
 	 * @param resource
 	 */
 	static public String resource(String resource) {
@@ -180,7 +182,8 @@ public class ThemeFunctionLibrary {
 	}
 
 	/**
-	 * Generates the JavaScript for page that performs client-side combility checks.
+	 * Generates the JavaScript for page that performs client-side combility
+	 * checks.
 	 */
 	static public boolean probeClient() {
 		return (browser().performClientCheck() && !browser()
@@ -197,6 +200,7 @@ public class ThemeFunctionLibrary {
 	 * <li>Sets the window name</li>
 	 * <li>Closes window if it is set to be closed </li>
 	 * <ul>
+	 * 
 	 * @return
 	 */
 	static public String windowScript() {
@@ -206,15 +210,15 @@ public class ThemeFunctionLibrary {
 				(ApplicationServlet) ((Object[]) state.get())[WEBADAPTERSERVLET],
 				browser());
 	}
-	
-/**
- * 
- * @param window
- * @param app
- * @param wa
- * @param browser
- * @return
- */
+
+	/**
+	 * 
+	 * @param window
+	 * @param app
+	 * @param wa
+	 * @param browser
+	 * @return
+	 */
 	static protected String generateWindowScript(Window window,
 			Application app, ApplicationServlet wa, WebBrowser browser) {
 
@@ -288,10 +292,11 @@ public class ThemeFunctionLibrary {
 
 	/**
 	 * Returns an unique target name for a given window name.
+	 * 
 	 * @param application
 	 * @param window
 	 *            the Name of the window.
-	 * @return An unique ID for window target.        
+	 * @return An unique ID for window target.
 	 */
 	static public String getWindowTargetName(Application application,
 			Window window) {
@@ -313,7 +318,9 @@ public class ThemeFunctionLibrary {
 
 	/**
 	 * Returns an unique target name for current window.
-	 * @param name the name of the window.
+	 * 
+	 * @param name
+	 *            the name of the window.
 	 * @return An unique ID for window target.
 	 */
 	static public String getWindowTargetName(String name) {
@@ -361,7 +368,8 @@ public class ThemeFunctionLibrary {
 
 	/**
 	 * Gets the name of first day of the week.
-	 * @return 
+	 * 
+	 * @return
 	 */
 	static public int getFirstDayOfWeek() {
 		try {
@@ -382,7 +390,7 @@ public class ThemeFunctionLibrary {
 	 * Gets the name for week day.
 	 * 
 	 * @param dayOfWeek
-	 * 				the Number of week day. 0 sunday, 1 monday, ...
+	 *            the Number of week day. 0 sunday, 1 monday, ...
 	 * @return the Name of week day in applications current locale.
 	 */
 	static public String getShortWeekday(int dayOfWeek) {
@@ -399,7 +407,7 @@ public class ThemeFunctionLibrary {
 	 * Gets the short name for month.
 	 * 
 	 * @param month
-	 * 			the Number of month. 0 is January, 1 is February, and so on.
+	 *            the Number of month. 0 is January, 1 is February, and so on.
 	 * @return the Name of month in applications current locale.
 	 */
 	static public String getShortMonth(int month) {
@@ -416,8 +424,8 @@ public class ThemeFunctionLibrary {
 	/**
 	 * Gets the name for month.
 	 * 
-	 * @param month 
-	 *           the Number of month. 0 is January, 1 is February, and so on.
+	 * @param month
+	 *            the Number of month. 0 is January, 1 is February, and so on.
 	 * @return the Name of month in applications current locale.
 	 */
 	static public String getMonth(int month) {
@@ -450,9 +458,10 @@ public class ThemeFunctionLibrary {
 				.getWindowFormAction(win);
 	}
 
-	/** 
-	 * Generates the links for CSS files to be included in html head. 
-	 * @return 
+	/**
+	 * Generates the links for CSS files to be included in html head.
+	 * 
+	 * @return
 	 */
 	static public String getCssLinksForHead() {
 		ApplicationServlet as = (ApplicationServlet) ((Object[]) state.get())[WEBADAPTERSERVLET];
@@ -470,7 +479,8 @@ public class ThemeFunctionLibrary {
 		// Generates links
 		StringBuffer links = new StringBuffer();
 		for (int k = themes.size() - 1; k >= 0; k--) {
-			Collection allFiles = ((Theme)themes.get(k)).getFileNames(browser(), Theme.MODE_HTML);
+			Collection allFiles = ((Theme) themes.get(k)).getFileNames(
+					browser(), Theme.MODE_HTML);
 			for (Iterator i = allFiles.iterator(); i.hasNext();) {
 				String file = (String) i.next();
 				if (file.endsWith(".css")) {
@@ -484,9 +494,10 @@ public class ThemeFunctionLibrary {
 		return links.toString();
 	}
 
-	/** 
-	 * Generates the links for JavaScript files to be included in html head. 
-	 * @return 
+	/**
+	 * Generates the links for JavaScript files to be included in html head.
+	 * 
+	 * @return
 	 */
 	static public String getJavaScriptLinksForHead() {
 		ApplicationServlet as = (ApplicationServlet) ((Object[]) state.get())[WEBADAPTERSERVLET];
@@ -518,8 +529,9 @@ public class ThemeFunctionLibrary {
 		return links.toString();
 	}
 
-	/** 
-	 * Generates the JavaScript for updating given window. 
+	/**
+	 * Generates the JavaScript for updating given window.
+	 * 
 	 * @param application
 	 * @param window
 	 * @param browser

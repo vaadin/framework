@@ -32,6 +32,9 @@ public class QueryContainerDemo extends com.itmill.toolkit.Application
 			+ "actions menu.<br />Note: on Opera you use meta key "
 			+ "and left mouse button.";
 
+	private static final String TABLE_CAPTION = SampleDatabase.ROWCOUNT
+			+ " dynamically loaded rows from example SQL table";
+
 	// Table component where SQL rows are attached (using QueryContainer)
 	private Table table = new Table();
 
@@ -68,8 +71,12 @@ public class QueryContainerDemo extends com.itmill.toolkit.Application
 		setTheme("corporate");
 
 		// Main window contains heading, table, select and tree
-		main.addComponent(new Label("<h2>QueryContainer demo</h2>"
-				+ ACTION_DESCRIPTION, Label.CONTENT_XHTML));
+		main
+				.addComponent(new Label(
+						"<h2>QueryContainer demo</h2>"
+								+ "<b>Rows are loaded from the server as they are needed.<br />"
+								+ "Try scrolling the table to see it in action.</b><br />"
+								+ ACTION_DESCRIPTION, Label.CONTENT_XHTML));
 		main.addComponent(table);
 		main.addComponent(tableLastAction);
 		main.addComponent(new Label("<hr />", Label.CONTENT_XHTML));
@@ -93,7 +100,7 @@ public class QueryContainerDemo extends com.itmill.toolkit.Application
 	 */
 	private void initTable() {
 		// init table
-		table.setCaption("All rows from employee table");
+		table.setCaption(TABLE_CAPTION);
 		table.setPageLength(10);
 		table.setSelectable(true);
 		table.setRowHeaderMode(Table.ROW_HEADER_MODE_INDEX);

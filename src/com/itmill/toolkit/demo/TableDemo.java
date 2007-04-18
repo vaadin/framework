@@ -23,11 +23,12 @@ import com.itmill.toolkit.ui.Window;
 public class TableDemo extends com.itmill.toolkit.Application implements
 		Action.Handler {
 
-	private static final String ACTION_DESCRIPTION = "Try right mouse button to initiate "
-			+ "actions menu.<br />Note: on Opera you use meta key "
+	private static final String ACTION_DESCRIPTION = "Use right mouse button to initiate "
+			+ "actions menu.<br />Note: on Opera use meta key "
 			+ "and left mouse button.";
 
-	private static final String TABLE_CAPTION = "All rows from employee table";
+	private static final String TABLE_CAPTION = SampleDatabase.ROWCOUNT
+			+ " dynamically loaded rows from example SQL table";
 
 	private Link menuLink = new Link("Go back to menu", new ExternalResource(
 			"index.html"));
@@ -91,8 +92,12 @@ public class TableDemo extends com.itmill.toolkit.Application implements
 		sampleDatabase = new SampleDatabase();
 
 		// Main window contains heading, two buttons, table and label
-		main.addComponent(new Label("<h2>Table demo</h2>" + ACTION_DESCRIPTION,
-				Label.CONTENT_XHTML));
+		main
+				.addComponent(new Label(
+						"<h2>Table demo</h2>"
+								+ "<b>Rows are loaded from the server as they are needed.<br />"
+								+ "Try scrolling the table to see it in action.</b><br />"
+								+ ACTION_DESCRIPTION, Label.CONTENT_XHTML));
 		OrderedLayout layout = new OrderedLayout(
 				OrderedLayout.ORIENTATION_HORIZONTAL);
 		layout.addComponent(tableVisibility);

@@ -1,30 +1,30 @@
 /* *************************************************************************
  
-                               IT Mill Toolkit 
+ IT Mill Toolkit 
 
-               Development of Browser User Interfaces Made Easy
+ Development of Browser User Interfaces Made Easy
 
-                    Copyright (C) 2000-2006 IT Mill Ltd
-                     
-   *************************************************************************
+ Copyright (C) 2000-2006 IT Mill Ltd
+ 
+ *************************************************************************
 
-   This product is distributed under commercial license that can be found
-   from the product package on license.pdf. Use of this product might 
-   require purchasing a commercial license from IT Mill Ltd. For guidelines 
-   on usage, see licensing-guidelines.html
+ This product is distributed under commercial license that can be found
+ from the product package on license.pdf. Use of this product might 
+ require purchasing a commercial license from IT Mill Ltd. For guidelines 
+ on usage, see licensing-guidelines.html
 
-   *************************************************************************
-   
-   For more information, contact:
-   
-   IT Mill Ltd                           phone: +358 2 4802 7180
-   Ruukinkatu 2-4                        fax:   +358 2 4802 7181
-   20540, Turku                          email:  info@itmill.com
-   Finland                               company www: www.itmill.com
-   
-   Primary source for information and releases: www.itmill.com
+ *************************************************************************
+ 
+ For more information, contact:
+ 
+ IT Mill Ltd                           phone: +358 2 4802 7180
+ Ruukinkatu 2-4                        fax:   +358 2 4802 7181
+ 20540, Turku                          email:  info@itmill.com
+ Finland                               company www: www.itmill.com
+ 
+ Primary source for information and releases: www.itmill.com
 
-   ********************************************************************** */
+ ********************************************************************** */
 
 package com.itmill.toolkit.data.util;
 
@@ -39,28 +39,25 @@ import com.itmill.toolkit.data.Container;
 import com.itmill.toolkit.data.Item;
 import com.itmill.toolkit.data.Property;
 
-/** 
+/**
  * <p>
- * A wrapper class for adding external hierarchy to containers not
- * implementing the {@link com.itmill.toolkit.data.Container.Hierarchical}
- * interface.
+ * A wrapper class for adding external hierarchy to containers not implementing
+ * the {@link com.itmill.toolkit.data.Container.Hierarchical} interface.
  * </p>
  * 
  * <p>
- * If the wrapped container is changed directly (that is, not through
- * the wrapper), the hierarchy information must be updated with the
+ * If the wrapped container is changed directly (that is, not through the
+ * wrapper), the hierarchy information must be updated with the
  * {@link #updateHierarchicalWrapper()} method.
  * </p>
- *
+ * 
  * @author IT Mill Ltd.
- * @version @VERSION@
+ * @version
+ * @VERSION@
  * @since 3.0
  */
-public class ContainerHierarchicalWrapper
-	implements
-		Container.Hierarchical,
-		Container.ItemSetChangeNotifier,
-		Container.PropertySetChangeNotifier {
+public class ContainerHierarchicalWrapper implements Container.Hierarchical,
+		Container.ItemSetChangeNotifier, Container.PropertySetChangeNotifier {
 
 	/** The wrapped container */
 	private Container container;
@@ -80,13 +77,13 @@ public class ContainerHierarchicalWrapper
 	/** Is the wrapped container hierarchical by itself ? */
 	private boolean hierarchical;
 
-	/** 
-	 * Constructs a new hierarchical wrapper for an existing Container.
-	 * Works even if the to-be-wrapped container already implements the
+	/**
+	 * Constructs a new hierarchical wrapper for an existing Container. Works
+	 * even if the to-be-wrapped container already implements the
 	 * <code>Container.Hierarchical</code> interface.
 	 * 
-	 * @param toBeWrapped the container that needs to be accessed
-	 * hierarchically
+	 * @param toBeWrapped
+	 *            the container that needs to be accessed hierarchically
 	 * @see #updateHierarchicalWrapper()
 	 */
 	public ContainerHierarchicalWrapper(Container toBeWrapped) {
@@ -109,21 +106,19 @@ public class ContainerHierarchicalWrapper
 		updateHierarchicalWrapper();
 	}
 
-	/** 
-	 * Updates the wrapper's internal hierarchy data to include all Items
-	 * in the underlying container. If the contents of the wrapped container
-	 * change without the wrapper's knowledge, this method needs to be
-	 * called to update the hierarchy information of the Items.
+	/**
+	 * Updates the wrapper's internal hierarchy data to include all Items in the
+	 * underlying container. If the contents of the wrapped container change
+	 * without the wrapper's knowledge, this method needs to be called to update
+	 * the hierarchy information of the Items.
 	 */
 	public void updateHierarchicalWrapper() {
 
 		if (!hierarchical) {
 
 			// Recreate hierarchy and datasrtuctures if missing
-			if (noChildrenAllowed == null
-				|| parent == null
-				|| children == null
-				|| roots == null) {
+			if (noChildrenAllowed == null || parent == null || children == null
+					|| roots == null) {
 				noChildrenAllowed = new HashSet();
 				parent = new Hashtable();
 				children = new Hashtable();
@@ -162,11 +157,12 @@ public class ContainerHierarchicalWrapper
 	/**
 	 * Removes the specified Item from the wrapper's internal hierarchy
 	 * structure.
-	 * <p> 
-	 * Note : The Item is not removed from the underlying
-	 * Container.
+	 * <p>
+	 * Note : The Item is not removed from the underlying Container.
 	 * </p>
-	 * @param itemId the ID of the item to remove from the hierarchy. 
+	 * 
+	 * @param itemId
+	 *            the ID of the item to remove from the hierarchy.
 	 */
 	private void removeFromHierarchyWrapper(Object itemId) {
 
@@ -183,33 +179,35 @@ public class ContainerHierarchicalWrapper
 		noChildrenAllowed.remove(itemId);
 	}
 
-	/** 
-	 * Adds the specified Item specified to the internal hierarchy
-	 * structure. The new item is added as a root Item. The underlying
-	 * container is not modified.
+	/**
+	 * Adds the specified Item specified to the internal hierarchy structure.
+	 * The new item is added as a root Item. The underlying container is not
+	 * modified.
 	 * 
-	 * @param itemId the ID of the item to add to the hierarchy. 
+	 * @param itemId
+	 *            the ID of the item to add to the hierarchy.
 	 */
 	private void addToHierarchyWrapper(Object itemId) {
 		roots.add(itemId);
 	}
 
-	/* Can the specified Item have any children?
-	 * Don't add a JavaDoc comment here, we use the default documentation
-	 * from implemented interface.
+	/*
+	 * Can the specified Item have any children? Don't add a JavaDoc comment
+	 * here, we use the default documentation from implemented interface.
 	 */
 	public boolean areChildrenAllowed(Object itemId) {
 
 		// If the wrapped container implements the method directly, use it
 		if (hierarchical)
-			return ((Container.Hierarchical) container).areChildrenAllowed(
-				itemId);
+			return ((Container.Hierarchical) container)
+					.areChildrenAllowed(itemId);
 		return !noChildrenAllowed.contains(itemId);
 	}
 
-	/* Gets the IDs of the children of the specified Item.
-	 * Don't add a JavaDoc comment here, we use the default documentation
-	 * from implemented interface.
+	/*
+	 * Gets the IDs of the children of the specified Item. Don't add a JavaDoc
+	 * comment here, we use the default documentation from implemented
+	 * interface.
 	 */
 	public Collection getChildren(Object itemId) {
 
@@ -223,9 +221,10 @@ public class ContainerHierarchicalWrapper
 		return Collections.unmodifiableCollection(c);
 	}
 
-	/* Gets the ID of the parent of the specified Item.
-	 * Don't add a JavaDoc comment here, we use the default documentation
-	 * from implemented interface.
+	/*
+	 * Gets the ID of the parent of the specified Item. Don't add a JavaDoc
+	 * comment here, we use the default documentation from implemented
+	 * interface.
 	 */
 	public Object getParent(Object itemId) {
 
@@ -236,9 +235,10 @@ public class ContainerHierarchicalWrapper
 		return parent.get(itemId);
 	}
 
-	/* Is the Item corresponding to the given ID a leaf node?
-	 * Don't add a JavaDoc comment here, we use the default documentation
-	 * from implemented interface.
+	/*
+	 * Is the Item corresponding to the given ID a leaf node? Don't add a
+	 * JavaDoc comment here, we use the default documentation from implemented
+	 * interface.
 	 */
 	public boolean hasChildren(Object itemId) {
 
@@ -249,9 +249,10 @@ public class ContainerHierarchicalWrapper
 		return children.get(itemId) != null;
 	}
 
-	/* Is the Item corresponding to the given ID a root node?
-	 * Don't add a JavaDoc comment here, we use the default documentation
-	 * from implemented interface.
+	/*
+	 * Is the Item corresponding to the given ID a root node? Don't add a
+	 * JavaDoc comment here, we use the default documentation from implemented
+	 * interface.
 	 */
 	public boolean isRoot(Object itemId) {
 
@@ -262,9 +263,10 @@ public class ContainerHierarchicalWrapper
 		return parent.get(itemId) == null;
 	}
 
-	/* Gets the IDs of the root elements in the container.
-	 * Don't add a JavaDoc comment here, we use the default documentation
-	 * from implemented interface.
+	/*
+	 * Gets the IDs of the root elements in the container. Don't add a JavaDoc
+	 * comment here, we use the default documentation from implemented
+	 * interface.
 	 */
 	public Collection rootItemIds() {
 
@@ -275,30 +277,31 @@ public class ContainerHierarchicalWrapper
 		return Collections.unmodifiableCollection(roots);
 	}
 
-	/** 
+	/**
 	 * <p>
-	 * Sets the given Item's capability to have children. If the Item
-	 * identified with the itemId already has children and the 
-	 * areChildrenAllowed is false this method fails and
-	 * <code>false</code> is returned; the children must be first explicitly
-	 * removed with {@link #setParent(Object itemId, Object newParentId)} or
+	 * Sets the given Item's capability to have children. If the Item identified
+	 * with the itemId already has children and the areChildrenAllowed is false
+	 * this method fails and <code>false</code> is returned; the children must
+	 * be first explicitly removed with
+	 * {@link #setParent(Object itemId, Object newParentId)} or
 	 * {@link com.itmill.toolkit.data.Container#removeItem(Object itemId)}.
 	 * </p>
 	 * 
-	 * @param itemId the ID of the Item in the container whose child
-	 * capability is to be set. 
-	 * @param childrenAllowed the boolean value specifying if the Item
-	 * can have children or not. 
+	 * @param itemId
+	 *            the ID of the Item in the container whose child capability is
+	 *            to be set.
+	 * @param childrenAllowed
+	 *            the boolean value specifying if the Item can have children or
+	 *            not.
 	 * @return <code>true</code> if the operation succeeded,
-	 * <code>false</code> if not
+	 *         <code>false</code> if not
 	 */
 	public boolean setChildrenAllowed(Object itemId, boolean childrenAllowed) {
 
 		// If the wrapped container implements the method directly, use it
 		if (hierarchical)
 			return ((Container.Hierarchical) container).setChildrenAllowed(
-				itemId,
-				childrenAllowed);
+					itemId, childrenAllowed);
 
 		// Check that the item is in the container
 		if (!containsId(itemId))
@@ -313,29 +316,29 @@ public class ContainerHierarchicalWrapper
 		return true;
 	}
 
-	/** 
+	/**
 	 * <p>
-	 * Sets the parent of an Item. The new parent item must exist and be
-	 * able to have children.
-	 * (<code>canHaveChildren(newParentId) == true</code>). It is also 
-	 * possible to detach a node from the hierarchy (and thus make it root)
-	 * by setting the parent <code>null</code>.
+	 * Sets the parent of an Item. The new parent item must exist and be able to
+	 * have children. (<code>canHaveChildren(newParentId) == true</code>).
+	 * It is also possible to detach a node from the hierarchy (and thus make it
+	 * root) by setting the parent <code>null</code>.
 	 * </p>
 	 * 
-	 * @param itemId the ID of the item to be set as the child of the Item
-	 * identified with newParentId. 
-	 * @param newParentId the ID of the Item that's to be the new parent
-	 * of the Item identified with itemId. 
+	 * @param itemId
+	 *            the ID of the item to be set as the child of the Item
+	 *            identified with newParentId.
+	 * @param newParentId
+	 *            the ID of the Item that's to be the new parent of the Item
+	 *            identified with itemId.
 	 * @return <code>true</code> if the operation succeeded,
-	 * <code>false</code> if not
+	 *         <code>false</code> if not
 	 */
 	public boolean setParent(Object itemId, Object newParentId) {
 
 		// If the wrapped container implements the method directly, use it
 		if (hierarchical)
-			return ((Container.Hierarchical) container).setParent(
-				itemId,
-				newParentId);
+			return ((Container.Hierarchical) container).setParent(itemId,
+					newParentId);
 
 		// Check that the item is in the container
 		if (!containsId(itemId))
@@ -344,12 +347,12 @@ public class ContainerHierarchicalWrapper
 		// Get the old parent
 		Object oldParentId = parent.get(itemId);
 
-		// Check if no change is necessary		
+		// Check if no change is necessary
 		if ((newParentId == null && oldParentId == null)
-			|| newParentId.equals(oldParentId))
+				|| newParentId.equals(oldParentId))
 			return true;
 
-		// Making root		
+		// Making root
 		if (newParentId == null) {
 
 			// Remove from old parents children list
@@ -371,8 +374,7 @@ public class ContainerHierarchicalWrapper
 
 		// Check that the new parent exists in container and can have
 		// children
-		if (!containsId(newParentId)
-			|| noChildrenAllowed.contains(newParentId))
+		if (!containsId(newParentId) || noChildrenAllowed.contains(newParentId))
 			return false;
 
 		// Check that setting parent doesn't result to a loop
@@ -406,14 +408,14 @@ public class ContainerHierarchicalWrapper
 		return true;
 	}
 
-	/** 
-	 * Creates a new Item into the Container, assigns it an
-	 * automatic ID, and adds it to the hierarchy. 
+	/**
+	 * Creates a new Item into the Container, assigns it an automatic ID, and
+	 * adds it to the hierarchy.
 	 * 
-	 * @return the autogenerated ID of the new Item or <code>null</code>
-	 * if the operation failed
+	 * @return the autogenerated ID of the new Item or <code>null</code> if
+	 *         the operation failed
 	 * @throws UnsupportedOperationException
-	 * 								if the addItem is not supported.
+	 *             if the addItem is not supported.
 	 */
 	public Object addItem() throws UnsupportedOperationException {
 
@@ -423,14 +425,15 @@ public class ContainerHierarchicalWrapper
 		return id;
 	}
 
-	/** 
+	/**
 	 * Adds a new Item by its ID to the underlying container and to the
 	 * hierarchy.
+	 * 
 	 * @param itemId
-	 * 				the ID of the Item to be created.
+	 *            the ID of the Item to be created.
 	 * @return the added Item or <code>null</code> if the operation failed.
 	 * @throws UnsupportedOperationException
-	 * 									if the addItem is not supported.
+	 *             if the addItem is not supported.
 	 */
 	public Item addItem(Object itemId) throws UnsupportedOperationException {
 
@@ -440,14 +443,13 @@ public class ContainerHierarchicalWrapper
 		return item;
 	}
 
-	/** 
-	 * Removes all items from the underlying container and from the
-	 * hierarcy. 
+	/**
+	 * Removes all items from the underlying container and from the hierarcy.
 	 * 
 	 * @return <code>true</code> if the operation succeeded,
-	 * <code>false</code> if not
+	 *         <code>false</code> if not
 	 * @throws UnsupportedOperationException
-	 * 										if the removeAllItems is not supported.
+	 *             if the removeAllItems is not supported.
 	 */
 	public boolean removeAllItems() throws UnsupportedOperationException {
 
@@ -462,18 +464,19 @@ public class ContainerHierarchicalWrapper
 		return success;
 	}
 
-	/** 
-	 * Removes an Item specified by the itemId from the underlying
-	 * container and from the hierarcy.
+	/**
+	 * Removes an Item specified by the itemId from the underlying container and
+	 * from the hierarcy.
+	 * 
 	 * @param itemId
-	 * 				the ID of the Item to be removed.
+	 *            the ID of the Item to be removed.
 	 * @return <code>true</code> if the operation succeeded,
-	 * <code>false</code> if not
+	 *         <code>false</code> if not
 	 * @throws UnsupportedOperationException
-	 * 									if the removeItem is not supported.
+	 *             if the removeItem is not supported.
 	 */
 	public boolean removeItem(Object itemId)
-		throws UnsupportedOperationException {
+			throws UnsupportedOperationException {
 
 		boolean success = container.removeItem(itemId);
 
@@ -483,139 +486,146 @@ public class ContainerHierarchicalWrapper
 		return success;
 	}
 
-	/** 
+	/**
 	 * Adds a new Property to all Items in the Container.
-	 *
-	 * @param propertyId the ID of the new Property.
-	 * @param type the Data type of the new Property.
-	 * @param defaultValue the value all created Properties are
-	 * initialized to.
+	 * 
+	 * @param propertyId
+	 *            the ID of the new Property.
+	 * @param type
+	 *            the Data type of the new Property.
+	 * @param defaultValue
+	 *            the value all created Properties are initialized to.
 	 * @return <code>true</code> if the operation succeeded,
-	 * <code>false</code> if not
+	 *         <code>false</code> if not
 	 * @throws UnsupportedOperationException
-	 * 									if the addContainerProperty is not supported.
+	 *             if the addContainerProperty is not supported.
 	 */
-	public boolean addContainerProperty(
-		Object propertyId,
-		Class type,
-		Object defaultValue)
-		throws UnsupportedOperationException {
+	public boolean addContainerProperty(Object propertyId, Class type,
+			Object defaultValue) throws UnsupportedOperationException {
 
 		return container.addContainerProperty(propertyId, type, defaultValue);
 	}
 
-	/** 
-	 * Removes the specified Property from the underlying container and
-	 * from the hierarchy.
-	 * <p> 
-	 * Note : The Property will be removed from all
-	 * Items in the Container.
-	 *</p>
-	 * @param propertyId the ID of the Property to remove.
+	/**
+	 * Removes the specified Property from the underlying container and from the
+	 * hierarchy.
+	 * <p>
+	 * Note : The Property will be removed from all Items in the Container.
+	 * </p>
+	 * 
+	 * @param propertyId
+	 *            the ID of the Property to remove.
 	 * @return <code>true</code> if the operation succeeded,
-	 * <code>false</code> if not
+	 *         <code>false</code> if not
 	 * @throws UnsupportedOperationException
-	 * 									if the removeContainerProperty is not supported.
+	 *             if the removeContainerProperty is not supported.
 	 */
 	public boolean removeContainerProperty(Object propertyId)
-		throws UnsupportedOperationException {
+			throws UnsupportedOperationException {
 		return container.removeContainerProperty(propertyId);
 	}
 
-	/* Does the container contain the specified Item?
-	 * Don't add a JavaDoc comment here, we use the default documentation
-	 * from implemented interface.
+	/*
+	 * Does the container contain the specified Item? Don't add a JavaDoc
+	 * comment here, we use the default documentation from implemented
+	 * interface.
 	 */
 	public boolean containsId(Object itemId) {
 		return container.containsId(itemId);
 	}
 
-	/* Gets the specified Item from the container.
-	 * Don't add a JavaDoc comment here, we use the default documentation
-	 * from implemented interface.
+	/*
+	 * Gets the specified Item from the container. Don't add a JavaDoc comment
+	 * here, we use the default documentation from implemented interface.
 	 */
 	public Item getItem(Object itemId) {
 		return container.getItem(itemId);
 	}
 
-	/* Gets the ID's of all Items stored in the Container
-	 * Don't add a JavaDoc comment here, we use the default documentation
-	 * from implemented interface.
+	/*
+	 * Gets the ID's of all Items stored in the Container Don't add a JavaDoc
+	 * comment here, we use the default documentation from implemented
+	 * interface.
 	 */
 	public Collection getItemIds() {
 		return container.getItemIds();
 	}
 
-	/* Gets the Property identified by the given itemId and propertyId from
-	 * the Container
-	 * Don't add a JavaDoc comment here, we use the default documentation
-	 * from implemented interface.
+	/*
+	 * Gets the Property identified by the given itemId and propertyId from the
+	 * Container Don't add a JavaDoc comment here, we use the default
+	 * documentation from implemented interface.
 	 */
 	public Property getContainerProperty(Object itemId, Object propertyId) {
 		return container.getContainerProperty(itemId, propertyId);
 	}
 
-	/* Gets the ID's of all Properties stored in the Container
-	 * Don't add a JavaDoc comment here, we use the default documentation
-	 * from implemented interface.
+	/*
+	 * Gets the ID's of all Properties stored in the Container Don't add a
+	 * JavaDoc comment here, we use the default documentation from implemented
+	 * interface.
 	 */
 	public Collection getContainerPropertyIds() {
 		return container.getContainerPropertyIds();
 	}
 
-	/* Gets the data type of all Properties identified by the given Property
-	 * ID.
-	 * Don't add a JavaDoc comment here, we use the default documentation
-	 * from implemented interface.
+	/*
+	 * Gets the data type of all Properties identified by the given Property ID.
+	 * Don't add a JavaDoc comment here, we use the default documentation from
+	 * implemented interface.
 	 */
 	public Class getType(Object propertyId) {
 		return container.getType(propertyId);
 	}
 
-	/* Gets the number of Items in the Container.
-	 * Don't add a JavaDoc comment here, we use the default documentation
-	 * from implemented interface.
+	/*
+	 * Gets the number of Items in the Container. Don't add a JavaDoc comment
+	 * here, we use the default documentation from implemented interface.
 	 */
 	public int size() {
 		return container.size();
 	}
 
-	/* Registers a new Item set change listener for this Container. 
-	 * Don't add a JavaDoc comment here, we use the default documentation
-	 * from implemented interface.
+	/*
+	 * Registers a new Item set change listener for this Container. Don't add a
+	 * JavaDoc comment here, we use the default documentation from implemented
+	 * interface.
 	 */
 	public void addListener(Container.ItemSetChangeListener listener) {
 		if (container instanceof Container.ItemSetChangeNotifier)
 			((Container.ItemSetChangeNotifier) container).addListener(listener);
 	}
 
-	/* Removes a Item set change listener from the object. 
-	 * Don't add a JavaDoc comment here, we use the default documentation
-	 * from implemented interface.
+	/*
+	 * Removes a Item set change listener from the object. Don't add a JavaDoc
+	 * comment here, we use the default documentation from implemented
+	 * interface.
 	 */
 	public void removeListener(Container.ItemSetChangeListener listener) {
 		if (container instanceof Container.ItemSetChangeNotifier)
-			((Container.ItemSetChangeNotifier) container).removeListener(
-				listener);
+			((Container.ItemSetChangeNotifier) container)
+					.removeListener(listener);
 	}
 
-	/* Registers a new Property set change listener for this Container. 
-	 * Don't add a JavaDoc comment here, we use the default documentation
-	 * from implemented interface.
+	/*
+	 * Registers a new Property set change listener for this Container. Don't
+	 * add a JavaDoc comment here, we use the default documentation from
+	 * implemented interface.
 	 */
 	public void addListener(Container.PropertySetChangeListener listener) {
 		if (container instanceof Container.PropertySetChangeNotifier)
-			((Container.PropertySetChangeNotifier) container).addListener(
-				listener);
+			((Container.PropertySetChangeNotifier) container)
+					.addListener(listener);
 	}
 
-	/* Removes a Property set change listener from the object. 
-	 * Don't add a JavaDoc comment here, we use the default documentation
-	 * from implemented interface.
+	/*
+	 * Removes a Property set change listener from the object. Don't add a
+	 * JavaDoc comment here, we use the default documentation from implemented
+	 * interface.
 	 */
 	public void removeListener(Container.PropertySetChangeListener listener) {
 		if (container instanceof Container.PropertySetChangeNotifier)
-			((Container.PropertySetChangeNotifier) container).removeListener(
-				listener);
+			((Container.PropertySetChangeNotifier) container)
+					.removeListener(listener);
 	}
 }

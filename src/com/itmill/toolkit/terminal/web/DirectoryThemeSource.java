@@ -1,30 +1,30 @@
 /* *************************************************************************
  
-                               IT Mill Toolkit 
+ IT Mill Toolkit 
 
-               Development of Browser User Interfaces Made Easy
+ Development of Browser User Interfaces Made Easy
 
-                    Copyright (C) 2000-2006 IT Mill Ltd
-                     
-   *************************************************************************
+ Copyright (C) 2000-2006 IT Mill Ltd
+ 
+ *************************************************************************
 
-   This product is distributed under commercial license that can be found
-   from the product package on license.pdf. Use of this product might 
-   require purchasing a commercial license from IT Mill Ltd. For guidelines 
-   on usage, see licensing-guidelines.html
+ This product is distributed under commercial license that can be found
+ from the product package on license.pdf. Use of this product might 
+ require purchasing a commercial license from IT Mill Ltd. For guidelines 
+ on usage, see licensing-guidelines.html
 
-   *************************************************************************
-   
-   For more information, contact:
-   
-   IT Mill Ltd                           phone: +358 2 4802 7180
-   Ruukinkatu 2-4                        fax:   +358 2 4802 7181
-   20540, Turku                          email:  info@itmill.com
-   Finland                               company www: www.itmill.com
-   
-   Primary source for information and releases: www.itmill.com
+ *************************************************************************
+ 
+ For more information, contact:
+ 
+ IT Mill Ltd                           phone: +358 2 4802 7180
+ Ruukinkatu 2-4                        fax:   +358 2 4802 7181
+ 20540, Turku                          email:  info@itmill.com
+ Finland                               company www: www.itmill.com
+ 
+ Primary source for information and releases: www.itmill.com
 
-   ********************************************************************** */
+ ********************************************************************** */
 
 package com.itmill.toolkit.terminal.web;
 
@@ -39,33 +39,42 @@ import java.util.LinkedList;
 
 /**
  * Theme source for reading themes from a directory on the Filesystem.
+ * 
  * @author IT Mill Ltd.
- * @version @VERSION@
+ * @version
+ * @VERSION@
  * @since 3.0
  */
 public class DirectoryThemeSource implements ThemeSource {
 
 	private File path;
+
 	private Theme theme;
+
 	private ApplicationServlet webAdapterServlet;
 
-	/** 
-	 * Collection of subdirectory entries. 
+	/**
+	 * Collection of subdirectory entries.
 	 */
 	private Collection subdirs = new LinkedList();
 
-	/** 
-	 * Creates a new instance of ThemeRepository by reading the themes
-	 * from a local directory.
-	 * @param path the Path to the source directory .
-	 * @param webAdapterServlet 
-	 * @throws ThemeException If the resource is not found or there was
-	 * 			 			some problem finding the resource.
-	 * @throws FileNotFoundException if no theme files are found.
-	 * @throws IOException if the writing failed due to input/output error.
+	/**
+	 * Creates a new instance of ThemeRepository by reading the themes from a
+	 * local directory.
+	 * 
+	 * @param path
+	 *            the Path to the source directory .
+	 * @param webAdapterServlet
+	 * @throws ThemeException
+	 *             If the resource is not found or there was some problem
+	 *             finding the resource.
+	 * @throws FileNotFoundException
+	 *             if no theme files are found.
+	 * @throws IOException
+	 *             if the writing failed due to input/output error.
 	 */
 	public DirectoryThemeSource(File path, ApplicationServlet webAdapterServlet)
-		throws ThemeException, FileNotFoundException, IOException {
+			throws ThemeException, FileNotFoundException, IOException {
 
 		this.path = path;
 		this.theme = null;
@@ -73,7 +82,7 @@ public class DirectoryThemeSource implements ThemeSource {
 
 		if (!this.path.isDirectory())
 			throw new java.io.FileNotFoundException(
-				"Theme path must be a directory ('" + this.path + "')");
+					"Theme path must be a directory ('" + this.path + "')");
 
 		// Loads description file
 		File description = new File(path, Theme.DESCRIPTIONFILE);
@@ -81,8 +90,8 @@ public class DirectoryThemeSource implements ThemeSource {
 			try {
 				this.theme = new Theme(description);
 			} catch (Exception e) {
-				throw new ThemeException(
-					"ServletThemeSource: Failed to load '" + path,e);
+				throw new ThemeException("ServletThemeSource: Failed to load '"
+						+ path, e);
 			}
 
 			// Debug info
@@ -91,24 +100,24 @@ public class DirectoryThemeSource implements ThemeSource {
 			}
 
 		} else {
-			// There was no description file found. 
-			// Handle subdirectories recursively		
+			// There was no description file found.
+			// Handle subdirectories recursively
 			File[] files = this.path.listFiles();
 			for (int i = 0; i < files.length; i++) {
 				if (files[i].isDirectory()) {
-					this.subdirs.add(
-						new DirectoryThemeSource(files[i], webAdapterServlet));
+					this.subdirs.add(new DirectoryThemeSource(files[i],
+							webAdapterServlet));
 				} else if (files[i].getName().toLowerCase().endsWith(".jar")) {
-					this.subdirs.add(
-						new JarThemeSource(files[i], webAdapterServlet, ""));
+					this.subdirs.add(new JarThemeSource(files[i],
+							webAdapterServlet, ""));
 				}
 			}
 
 			if (this.subdirs.isEmpty()) {
 				if (webAdapterServlet.isDebugMode(null)) {
-					Log.debug(
-						"DirectoryThemeSource: Ignoring empty directory: "
-							+ path);
+					Log
+							.debug("DirectoryThemeSource: Ignoring empty directory: "
+									+ path);
 				}
 			}
 		}
@@ -116,14 +125,16 @@ public class DirectoryThemeSource implements ThemeSource {
 
 	/**
 	 * Gets the XSL stream for the specified theme and web-browser type.
-	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getXSLStreams(Theme, WebBrowser)
+	 * 
+	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getXSLStreams(Theme,
+	 *      WebBrowser)
 	 */
 	public Collection getXSLStreams(Theme theme, WebBrowser type)
-		throws ThemeException {
+			throws ThemeException {
 		Collection xslFiles = new LinkedList();
 
-		// If this directory contains a theme 
-		// return XSL from this theme	
+		// If this directory contains a theme
+		// return XSL from this theme
 		if (this.theme != null) {
 
 			if (webAdapterServlet.isDebugMode(null)) {
@@ -137,7 +148,7 @@ public class DirectoryThemeSource implements ThemeSource {
 					this.theme = new Theme(description);
 				} catch (IOException e) {
 					throw new ThemeException(
-						"Failed to reload theme description" + e);
+							"Failed to reload theme description" + e);
 				}
 			}
 
@@ -147,11 +158,12 @@ public class DirectoryThemeSource implements ThemeSource {
 			for (Iterator i = fileNames.iterator(); i.hasNext();) {
 				File f = new File(this.path, (String) i.next());
 				if (f.getName().endsWith(".xsl"))
-				try {
-					xslFiles.add(new XSLStream(f.getName(),new FileInputStream(f)));
-				} catch (FileNotFoundException e) {
-					throw new ThemeException("XSL File not found: " + f);
-				}
+					try {
+						xslFiles.add(new XSLStream(f.getName(),
+								new FileInputStream(f)));
+					} catch (FileNotFoundException e) {
+						throw new ThemeException("XSL File not found: " + f);
+					}
 			}
 
 		} else {
@@ -171,14 +183,15 @@ public class DirectoryThemeSource implements ThemeSource {
 
 	/**
 	 * Gets the last modification time, used to reload theme on changes.
+	 * 
 	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getModificationTime()
 	 */
 	public long getModificationTime() {
 
 		long modTime = 0;
 
-		// If this directory contains a theme 
-		// returns XSL from this theme	
+		// If this directory contains a theme
+		// returns XSL from this theme
 		if (this.theme != null) {
 
 			// Gets modification time of the description file
@@ -213,20 +226,21 @@ public class DirectoryThemeSource implements ThemeSource {
 
 	/**
 	 * Gets the input stream for the resource with the specified resource id.
+	 * 
 	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getResource(String)
 	 */
 	public InputStream getResource(String resourceId)
-		throws ThemeSource.ThemeException {
+			throws ThemeSource.ThemeException {
 
-		// If this directory contains a theme 
-		// return resource from this theme	
+		// If this directory contains a theme
+		// return resource from this theme
 		if (this.theme != null) {
 
 			try {
 				return new FileInputStream(new File(this.path, resourceId));
 			} catch (FileNotFoundException e) {
-				throw new ThemeSource.ThemeException(
-					"Resource " + resourceId + " not found.");
+				throw new ThemeSource.ThemeException("Resource " + resourceId
+						+ " not found.");
 			}
 
 		} else {
@@ -243,13 +257,14 @@ public class DirectoryThemeSource implements ThemeSource {
 			}
 		}
 
-		throw new ThemeSource.ThemeException(
-			"Resource " + resourceId + " not found.");
+		throw new ThemeSource.ThemeException("Resource " + resourceId
+				+ " not found.");
 
 	}
 
 	/**
 	 * Gets the list of themes in the theme source.
+	 * 
 	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getThemes()
 	 */
 	public Collection getThemes() {
@@ -268,6 +283,7 @@ public class DirectoryThemeSource implements ThemeSource {
 
 	/**
 	 * Gets the name of the ThemeSource.
+	 * 
 	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getName()
 	 */
 	public String getName() {
@@ -280,6 +296,7 @@ public class DirectoryThemeSource implements ThemeSource {
 
 	/**
 	 * Gets the Theme instance by name.
+	 * 
 	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getThemeByName(String)
 	 */
 	public Theme getThemeByName(String name) {

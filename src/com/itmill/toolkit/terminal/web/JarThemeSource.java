@@ -69,8 +69,8 @@ public class JarThemeSource implements ThemeSource {
 
 	private Cache resourceCache = new Cache();
 
-	/** 
-	 * Collection of subdirectory entries. 
+	/**
+	 * Collection of subdirectory entries.
 	 */
 	private Collection subdirs = new LinkedList();
 
@@ -83,14 +83,14 @@ public class JarThemeSource implements ThemeSource {
 	 * @param webAdapterServlet
 	 * @param path
 	 *            the Path inside the archive to be processed.
-	 * @throws ThemeException 
-	 * 					If the resource is not found or there was
-	 * 			 			  some problem finding the resource.
+	 * @throws ThemeException
+	 *             If the resource is not found or there was some problem
+	 *             finding the resource.
 	 * 
 	 * @throws FileNotFoundException
 	 *             if no theme files are found.
 	 * @throws IOException
-	 * 				if the writing failed due to input/output error.
+	 *             if the writing failed due to input/output error.
 	 */
 	public JarThemeSource(File file, ApplicationServlet webAdapterServlet,
 			String path) throws ThemeException, FileNotFoundException,
@@ -152,6 +152,7 @@ public class JarThemeSource implements ThemeSource {
 
 	/**
 	 * Gets the XSL stream for the specified theme and web-browser type.
+	 * 
 	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getXSLStreams(Theme,
 	 *      WebBrowser)
 	 */
@@ -219,6 +220,7 @@ public class JarThemeSource implements ThemeSource {
 
 	/**
 	 * Gets the input stream for the resource with the specified resource id.
+	 * 
 	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getResource(String)
 	 */
 	public InputStream getResource(String resourceId)
@@ -265,6 +267,7 @@ public class JarThemeSource implements ThemeSource {
 
 	/**
 	 * Gets the list of themes in the theme source.
+	 * 
 	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getThemes()
 	 */
 	public Collection getThemes() {
@@ -282,6 +285,7 @@ public class JarThemeSource implements ThemeSource {
 
 	/**
 	 * Gets the name of the ThemeSource.
+	 * 
 	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getName()
 	 */
 	public String getName() {
@@ -294,6 +298,7 @@ public class JarThemeSource implements ThemeSource {
 
 	/**
 	 * Gets the Theme instance by name.
+	 * 
 	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getThemeByName(String)
 	 */
 	public Theme getThemeByName(String name) {
@@ -315,29 +320,36 @@ public class JarThemeSource implements ThemeSource {
 	private class Cache {
 
 		private Map data = new HashMap();
-		
+
 		/**
-		 * Associates the specified value with the specified key in this map.
-		 * If the map previously contained a mapping for this key, the old value
-		 * is replaced by the specified value.
-		 * @param key the key with which the specified value is to be associated.
-		 * @param value the value to be associated with the specified key. 
+		 * Associates the specified value with the specified key in this map. If
+		 * the map previously contained a mapping for this key, the old value is
+		 * replaced by the specified value.
+		 * 
+		 * @param key
+		 *            the key with which the specified value is to be
+		 *            associated.
+		 * @param value
+		 *            the value to be associated with the specified key.
 		 */
 		public void put(Object key, Object value) {
 			data.put(key, new SoftReference(new CacheItem(value)));
 		}
-		
+
 		/**
-		 * Returns the value to which this map maps the specified key. Returns null
-		 * if the map contains no mapping for this key. 
+		 * Returns the value to which this map maps the specified key. Returns
+		 * null if the map contains no mapping for this key.
 		 * <p>
-		 * A return value of null does not necessarily indicate that the map contains
-		 * no mapping for the key; it's also possible that the map explicitly maps 
-		 * the key to null. The containsKey operation may be used to distinguish these two cases. 
+		 * A return value of null does not necessarily indicate that the map
+		 * contains no mapping for the key; it's also possible that the map
+		 * explicitly maps the key to null. The containsKey operation may be
+		 * used to distinguish these two cases.
 		 * </p>
-		 * @param key the key whose associated value is to be returned. 
+		 * 
+		 * @param key
+		 *            the key whose associated value is to be returned.
 		 * @return the value to which this map maps the specified key, or null
-		 *  		if the map contains no mapping for this key.
+		 *         if the map contains no mapping for this key.
 		 */
 		public Object get(Object key) {
 			SoftReference ref = (SoftReference) data.get(key);
@@ -345,10 +357,10 @@ public class JarThemeSource implements ThemeSource {
 				return ((CacheItem) ref.get()).getData();
 			return null;
 		}
-		
+
 		/**
 		 * Clears the data.
-		 *
+		 * 
 		 */
 		public void clear() {
 			data.clear();
@@ -364,7 +376,7 @@ public class JarThemeSource implements ThemeSource {
 	private class CacheItem {
 
 		private Object data;
-		
+
 		/**
 		 * 
 		 * @param data
@@ -372,7 +384,7 @@ public class JarThemeSource implements ThemeSource {
 		public CacheItem(Object data) {
 			this.data = data;
 		}
-		
+
 		/**
 		 * 
 		 * @return
@@ -380,7 +392,7 @@ public class JarThemeSource implements ThemeSource {
 		public Object getData() {
 			return this.data;
 		};
-		
+
 		/**
 		 * @see java.lang.Object#finalize()
 		 */

@@ -61,9 +61,11 @@ public class WebApplicationContext implements ApplicationContext {
 
 	private WeakHashMap formActions = new WeakHashMap();
 
-	/** 
+	/**
 	 * Creates a new Web Application Context.
-	 * @param session  the HTTP session.
+	 * 
+	 * @param session
+	 *            the HTTP session.
 	 */
 	WebApplicationContext(HttpSession session) {
 		this.session = session;
@@ -73,10 +75,11 @@ public class WebApplicationContext implements ApplicationContext {
 	 * Gets the form action for given window.
 	 * <p>
 	 * By default, this action is "", which preserves the current url. Commonly
-	 * this is wanted to be set to <code>application.getUrl.toString</code>
-	 * or <code>window.getUrl.toString</code> in order to clean any local
-	 * links or parameters set from the action.
+	 * this is wanted to be set to <code>application.getUrl.toString</code> or
+	 * <code>window.getUrl.toString</code> in order to clean any local links
+	 * or parameters set from the action.
 	 * </p>
+	 * 
 	 * @param window
 	 *            the Window for which the action is queried.
 	 * @return the Action to be set into Form action attribute.
@@ -90,10 +93,11 @@ public class WebApplicationContext implements ApplicationContext {
 	 * Sets the form action for given window.
 	 * <p>
 	 * By default, this action is "", which preserves the current url. Commonly
-	 * this is wanted to be set to <code>application.getUrl.toString</code>
-	 * or <code>window.getUrl.toString</code> in order to clean any local
-	 * links or parameters set from the action.
+	 * this is wanted to be set to <code>application.getUrl.toString</code> or
+	 * <code>window.getUrl.toString</code> in order to clean any local links
+	 * or parameters set from the action.
 	 * </p>
+	 * 
 	 * @param window
 	 *            the Window for which the action is set.
 	 * @param action
@@ -108,6 +112,7 @@ public class WebApplicationContext implements ApplicationContext {
 
 	/**
 	 * Gets the application context base directory.
+	 * 
 	 * @see com.itmill.toolkit.service.ApplicationContext#getBaseDirectory()
 	 */
 	public File getBaseDirectory() {
@@ -129,6 +134,7 @@ public class WebApplicationContext implements ApplicationContext {
 
 	/**
 	 * Gets the applications in this context.
+	 * 
 	 * @see com.itmill.toolkit.service.ApplicationContext#getApplications()
 	 */
 	public Collection getApplications() {
@@ -142,7 +148,9 @@ public class WebApplicationContext implements ApplicationContext {
 
 	/**
 	 * Gets the application context for HttpSession.
-	 * @param session the HTTP session.
+	 * 
+	 * @param session
+	 *            the HTTP session.
 	 * @return the application context for HttpSession.
 	 */
 	static public WebApplicationContext getApplicationContext(
@@ -151,9 +159,12 @@ public class WebApplicationContext implements ApplicationContext {
 	}
 
 	/**
-	 * Returns <code>true</code> if and only if the argument is not <code>null</code> and is a 
-	 * Boolean object that represents the same boolean value as this object.
-	 * @param obj the object to compare with.
+	 * Returns <code>true</code> if and only if the argument is not
+	 * <code>null</code> and is a Boolean object that represents the same
+	 * boolean value as this object.
+	 * 
+	 * @param obj
+	 *            the object to compare with.
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	public boolean equals(Object obj) {
@@ -162,6 +173,7 @@ public class WebApplicationContext implements ApplicationContext {
 
 	/**
 	 * Returns the hash code value .
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	public int hashCode() {
@@ -170,6 +182,7 @@ public class WebApplicationContext implements ApplicationContext {
 
 	/**
 	 * Adds the transaction listener to this context.
+	 * 
 	 * @see com.itmill.toolkit.service.ApplicationContext#addTransactionListener(com.itmill.toolkit.service.ApplicationContext.TransactionListener)
 	 */
 	public void addTransactionListener(TransactionListener listener) {
@@ -180,6 +193,7 @@ public class WebApplicationContext implements ApplicationContext {
 
 	/**
 	 * Removes the transaction listener from this context.
+	 * 
 	 * @see com.itmill.toolkit.service.ApplicationContext#removeTransactionListener(com.itmill.toolkit.service.ApplicationContext.TransactionListener)
 	 */
 	public void removeTransactionListener(TransactionListener listener) {
@@ -188,10 +202,12 @@ public class WebApplicationContext implements ApplicationContext {
 
 	}
 
-	/** 
+	/**
 	 * Notifies the transaction start.
-	 * @param application 
-	 * @param request the HTTP request. 
+	 * 
+	 * @param application
+	 * @param request
+	 *            the HTTP request.
 	 */
 	protected void startTransaction(Application application,
 			HttpServletRequest request) {
@@ -203,10 +219,12 @@ public class WebApplicationContext implements ApplicationContext {
 		}
 	}
 
-	/** 
+	/**
 	 * Notifies the transaction end.
-	 * @param application 
-	 * @param request the HTTP request. 
+	 * 
+	 * @param application
+	 * @param request
+	 *            the HTTP request.
 	 */
 	protected void endTransaction(Application application,
 			HttpServletRequest request) {

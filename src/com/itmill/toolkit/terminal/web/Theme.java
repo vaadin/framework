@@ -48,9 +48,9 @@ import org.xml.sax.Attributes;
 
 /**
  * This class provides an interface to the meta-information regarding a
- * particular theme. This entails for instanace the inheritance tree
- * of the various xsl-template files, the different requirments that the theme
- * imposes on the client browser, etc.
+ * particular theme. This entails for instanace the inheritance tree of the
+ * various xsl-template files, the different requirments that the theme imposes
+ * on the client browser, etc.
  * <p>
  * The WebAdapter uses themes to convert the UIDL description into client
  * representation, typically HTML or XHTML. A theme consists of set of XSL
@@ -87,8 +87,8 @@ import org.xml.sax.Attributes;
  */
 public class Theme extends DefaultHandler {
 
-	/** 
-	 * Default description file name. 
+	/**
+	 * Default description file name.
 	 */
 	public static final String DESCRIPTIONFILE = "description.xml";
 
@@ -138,63 +138,63 @@ public class Theme extends DefaultHandler {
 
 	public static final String MODE_FALLBACK = MODE_HTML;
 
-	/** 
-	 * Name of the theme. 
+	/**
+	 * Name of the theme.
 	 */
 	private String name;
 
-	/** 
-	 * Theme description. 
+	/**
+	 * Theme description.
 	 */
 	private String description;
 
-	/** 
-	 * Author of the theme. 
+	/**
+	 * Author of the theme.
 	 */
 	private Author author;
 
-	/** 
-	 * Name of the theme, which this theme extends. 
+	/**
+	 * Name of the theme, which this theme extends.
 	 */
 	private String parentTheme = null;
 
-	/** 
-	 * Fileset of included XSL files. 
+	/**
+	 * Fileset of included XSL files.
 	 */
 	private Fileset files = null;
 
-	/** 
-	 * Stack of fileset used while parsing XML. 
+	/**
+	 * Stack of fileset used while parsing XML.
 	 */
 	private Stack openFilesets = new Stack();
 
-	/** 
-	 * Stack of string buffers used while parsing XML. 
+	/**
+	 * Stack of string buffers used while parsing XML.
 	 */
 	private Stack openStrings = new Stack();
 
-	/** 
-	 * Supported modes name-to-requirements. 
+	/**
+	 * Supported modes name-to-requirements.
 	 */
 	private LinkedHashMap supportedModes = new LinkedHashMap();
 
-	/** 
-	 * Currently open mode. 
+	/**
+	 * Currently open mode.
 	 */
 	private String currentlyOpenMode = null;
 
-	/** 
-	 * Are we processing modes. 
+	/**
+	 * Are we processing modes.
 	 */
 	private boolean modesListCurrentlyOpen = false;
 
-	/** 
-	 * Is a NOT requirement element open. 
+	/**
+	 * Is a NOT requirement element open.
 	 */
 	private boolean isNOTRequirementOpen = false;
 
-	/** 
-	 * Currently open requirements while parsing. 
+	/**
+	 * Currently open requirements while parsing.
 	 */
 	private Stack openRequirements = new Stack();
 
@@ -232,43 +232,48 @@ public class Theme extends DefaultHandler {
 	/**
 	 * Gets the preferred operating mode supported by this theme for given
 	 * terminal.
-	 * @param terminal the type of the web browser.
+	 * 
+	 * @param terminal
+	 *            the type of the web browser.
 	 * @param themeSource
 	 */
 	public String getPreferredMode(WebBrowser terminal, ThemeSource themeSource) {
 
 		// If no supported modes are declared, then we use parents preferred
 		// mode
-		if (parentTheme != null
-				&& supportedModes.keySet().isEmpty()) {
+		if (parentTheme != null && supportedModes.keySet().isEmpty()) {
 			Theme parent = themeSource.getThemeByName(parentTheme);
 			if (parent == null)
-				throw new IllegalStateException("Parent theme '"+parentTheme+"' is not found for theme '"+getName()+"'.");
+				throw new IllegalStateException("Parent theme '" + parentTheme
+						+ "' is not found for theme '" + getName() + "'.");
 			return parent.getPreferredMode(terminal, themeSource);
 		}
-		
+
 		// Iterate and test the modes in order
 		for (Iterator i = supportedModes.keySet().iterator(); i.hasNext();) {
 			String mode = (String) i.next();
-			if (supportsMode(mode, terminal,themeSource))
+			if (supportsMode(mode, terminal, themeSource))
 				return mode;
 		}
 
 		return null;
 	}
 
-	/** 
-	 * Tests if this theme suppors given mode. 
+	/**
+	 * Tests if this theme suppors given mode.
+	 * 
 	 * @param mode
-	 * @param terminal the type of the web browser.
+	 * @param terminal
+	 *            the type of the web browser.
 	 * @param themeSource
 	 */
-	public boolean supportsMode(String mode, WebBrowser terminal, ThemeSource themeSource) {
+	public boolean supportsMode(String mode, WebBrowser terminal,
+			ThemeSource themeSource) {
 
 		// Theme must explicitly support the given mode
 		RequirementCollection rc = (RequirementCollection) supportedModes
 				.get(mode);
-		
+
 		if (rc == null || !rc.isMet(terminal))
 			return false;
 
@@ -276,9 +281,10 @@ public class Theme extends DefaultHandler {
 		if (parentTheme != null) {
 			Theme parent = themeSource.getThemeByName(parentTheme);
 			if (parent == null)
-				throw new IllegalStateException("Parent theme '"+parentTheme+"' is not found for theme '"+getName()+"'.");
-			if(!parent.supportsMode(mode, terminal, themeSource))
-			return false;
+				throw new IllegalStateException("Parent theme '" + parentTheme
+						+ "' is not found for theme '" + getName() + "'.");
+			if (!parent.supportsMode(mode, terminal, themeSource))
+				return false;
 		}
 
 		return true;
@@ -340,7 +346,8 @@ public class Theme extends DefaultHandler {
 				throw new IllegalArgumentException("Theme " + this.name
 						+ " extends itself.");
 			if (parentTheme != null)
-				throw new IllegalArgumentException("Only one extends statement is allowed");
+				throw new IllegalArgumentException(
+						"Only one extends statement is allowed");
 			this.parentTheme = themeName;
 		} else if (TAG_FILE.equals(qName)) {
 			File f = new File(atts.getValue(ATTR_NAME));
@@ -402,7 +409,10 @@ public class Theme extends DefaultHandler {
 				RequirementCollection rc = (RequirementCollection) supportedModes
 						.get(this.currentlyOpenMode);
 				if (rc == null)
-					throw new IllegalStateException("Tried to add requirements to mode '" + name + "', but requirements set was not properly created. (internal error)");
+					throw new IllegalStateException(
+							"Tried to add requirements to mode '"
+									+ name
+									+ "', but requirements set was not properly created. (internal error)");
 				this.openRequirements.push(rc);
 			} else {
 				if (this.openFilesets.isEmpty()) {
@@ -455,10 +465,11 @@ public class Theme extends DefaultHandler {
 		} else if (TAG_MODE.equals(qName)) {
 			this.currentlyOpenMode = null;
 		} else if (TAG_OR.equals(qName) || TAG_AND.equals(qName)) {
-			RequirementCollection r = (RequirementCollection) openRequirements.pop();
+			RequirementCollection r = (RequirementCollection) openRequirements
+					.pop();
 			if (openRequirements.size() < 1)
 				throw new IllegalStateException();
-			((RequirementCollection)openRequirements.peek()).addRequirement(r);
+			((RequirementCollection) openRequirements.peek()).addRequirement(r);
 		}
 	}
 
@@ -539,9 +550,12 @@ public class Theme extends DefaultHandler {
 
 	/**
 	 * Gets the list of file names matching WebBrowserType.
-	 * @param terminal the type of the web browser.
+	 * 
+	 * @param terminal
+	 *            the type of the web browser.
 	 * @param mode
-	 * @return the list of filenames in this theme supporting the given terminal.
+	 * @return the list of filenames in this theme supporting the given
+	 *         terminal.
 	 */
 	public List getFileNames(WebBrowser terminal, String mode) {
 		if (files == null)
@@ -555,9 +569,13 @@ public class Theme extends DefaultHandler {
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
-		return this.name + " author='" + this.author + "'" + (parentTheme != null ? " inherits='"
-				+ parentTheme + "'" : "" )+ " files={"
-				+ (files != null ? files.toString() : "null") + "}";
+		return this.name
+				+ " author='"
+				+ this.author
+				+ "'"
+				+ (parentTheme != null ? " inherits='" + parentTheme + "'" : "")
+				+ " files={" + (files != null ? files.toString() : "null")
+				+ "}";
 	}
 
 	/**
@@ -570,15 +588,19 @@ public class Theme extends DefaultHandler {
 	 * @since 3.0
 	 */
 	public class Author {
-		//name of the author.
+		// name of the author.
 		private String name;
-		//email address of the author.
+
+		// email address of the author.
 		private String email;
-		
+
 		/**
 		 * Constructor for Author Information Class.
-		 * @param name the name of the author.
-		 * @param email the email address of the author.
+		 * 
+		 * @param name
+		 *            the name of the author.
+		 * @param email
+		 *            the email address of the author.
 		 */
 		public Author(String name, String email) {
 			this.name = name;
@@ -627,8 +649,9 @@ public class Theme extends DefaultHandler {
 		 * 
 		 * @param terminal
 		 *            the type of the web browser.
-		 * @return <code>true</code> if terminal is compatible with this rule,otherwise <code>false</code>.
-		 *        
+		 * @return <code>true</code> if terminal is compatible with this
+		 *         rule,otherwise <code>false</code>.
+		 * 
 		 */
 		public boolean isMet(WebBrowser terminal);
 
@@ -689,8 +712,9 @@ public class Theme extends DefaultHandler {
 		 * 
 		 * @param terminal
 		 *            the type of the web browser.
-		 * @return <code>true</code> if terminal is compatible with this rule,otherwise <code>false</code>.
-		 *       
+		 * @return <code>true</code> if terminal is compatible with this
+		 *         rule,otherwise <code>false</code>.
+		 * 
 		 */
 		public boolean isMet(WebBrowser terminal) {
 			return !this.requirement.isMet(terminal);
@@ -720,7 +744,7 @@ public class Theme extends DefaultHandler {
 
 		public AndRequirement() {
 		}
-		
+
 		/**
 		 * 
 		 * @param requirements
@@ -728,7 +752,7 @@ public class Theme extends DefaultHandler {
 		public AndRequirement(Collection requirements) {
 			this.requirements.addAll(requirements);
 		}
-		
+
 		/**
 		 * 
 		 * @param req1
@@ -738,17 +762,19 @@ public class Theme extends DefaultHandler {
 			this.addRequirement(req1);
 			this.addRequirement(req2);
 		}
-		
+
 		/**
 		 * Adds the new requirement to this collection.
+		 * 
 		 * @see com.itmill.toolkit.terminal.web.Theme.RequirementCollection#addRequirement(com.itmill.toolkit.terminal.web.Theme.Requirement)
 		 */
 		public void addRequirement(Requirement requirement) {
 			this.requirements.add(requirement);
 		}
-		
+
 		/**
 		 * Removes the requirement from this collection.
+		 * 
 		 * @see com.itmill.toolkit.terminal.web.Theme.RequirementCollection#removeRequirement(com.itmill.toolkit.terminal.web.Theme.Requirement)
 		 */
 		public void removeRequirement(Requirement requirement) {
@@ -757,7 +783,9 @@ public class Theme extends DefaultHandler {
 
 		/**
 		 * Checks that all os the requirements in this collection are met.
-		 * @param terminal the type of the web browser.
+		 * 
+		 * @param terminal
+		 *            the type of the web browser.
 		 * @see Theme.Requirement#isMet(WebBrowser)
 		 */
 		public boolean isMet(WebBrowser terminal) {
@@ -768,7 +796,7 @@ public class Theme extends DefaultHandler {
 			}
 			return true;
 		}
-		
+
 		/**
 		 * @see java.lang.Object#toString()
 		 */
@@ -799,7 +827,7 @@ public class Theme extends DefaultHandler {
 
 		public OrRequirement() {
 		}
-		
+
 		/**
 		 * 
 		 * @param requirements
@@ -807,7 +835,7 @@ public class Theme extends DefaultHandler {
 		public OrRequirement(Collection requirements) {
 			this.requirements.addAll(requirements);
 		}
-		
+
 		/**
 		 * 
 		 * @param req1
@@ -817,17 +845,19 @@ public class Theme extends DefaultHandler {
 			this.addRequirement(req1);
 			this.addRequirement(req2);
 		}
-		
+
 		/**
 		 * Adds the new requirement to this collection.
+		 * 
 		 * @see com.itmill.toolkit.terminal.web.Theme.RequirementCollection#addRequirement(com.itmill.toolkit.terminal.web.Theme.Requirement)
 		 */
 		public void addRequirement(Requirement requirement) {
 			this.requirements.add(requirement);
 		}
-		
+
 		/**
 		 * Removes the requirement from this collection.
+		 * 
 		 * @see com.itmill.toolkit.terminal.web.Theme.RequirementCollection#removeRequirement(com.itmill.toolkit.terminal.web.Theme.Requirement)
 		 */
 		public void removeRequirement(Requirement requirement) {
@@ -836,7 +866,9 @@ public class Theme extends DefaultHandler {
 
 		/**
 		 * Checks that some of the requirements in this collection is met.
-		 * @param terminal the type of the web browser.
+		 * 
+		 * @param terminal
+		 *            the type of the web browser.
 		 * @see Theme.Requirement#isMet(WebBrowser)
 		 */
 		public boolean isMet(WebBrowser terminal) {
@@ -847,7 +879,7 @@ public class Theme extends DefaultHandler {
 			}
 			return false;
 		}
-		
+
 		/**
 		 * @see java.lang.Object#toString()
 		 */
@@ -875,7 +907,7 @@ public class Theme extends DefaultHandler {
 	public class AgentRequirement implements Requirement {
 
 		private String agentSubstring;
-		
+
 		/**
 		 * 
 		 * @param agentSubString
@@ -883,13 +915,15 @@ public class Theme extends DefaultHandler {
 		public AgentRequirement(String agentSubString) {
 			this.agentSubstring = agentSubString;
 		}
-		
+
 		/**
 		 * Checks that this requirement is met by given type of browser.
+		 * 
 		 * @see com.itmill.toolkit.terminal.web.Theme.Requirement#isMet(com.itmill.toolkit.terminal.web.WebBrowser)
 		 */
 		public boolean isMet(WebBrowser terminal) {
-			return terminal.getBrowserApplication().indexOf(this.agentSubstring) >= 0;
+			return terminal.getBrowserApplication()
+					.indexOf(this.agentSubstring) >= 0;
 		}
 
 		/**
@@ -912,7 +946,7 @@ public class Theme extends DefaultHandler {
 	public class JavaScriptRequirement implements Requirement {
 
 		private WebBrowser.JavaScriptVersion requiredVersion;
-		
+
 		/**
 		 * 
 		 * @param requiredVersion
@@ -921,9 +955,10 @@ public class Theme extends DefaultHandler {
 				WebBrowser.JavaScriptVersion requiredVersion) {
 			this.requiredVersion = requiredVersion;
 		}
-		
+
 		/**
 		 * Checks that this requirement is met by given type of browser.
+		 * 
 		 * @see com.itmill.toolkit.terminal.web.Theme.Requirement#isMet(com.itmill.toolkit.terminal.web.WebBrowser)
 		 */
 		public boolean isMet(WebBrowser terminal) {
@@ -952,7 +987,7 @@ public class Theme extends DefaultHandler {
 	public class MarkupLanguageRequirement implements Requirement {
 
 		private WebBrowser.MarkupVersion requiredVersion;
-		
+
 		/**
 		 * 
 		 * @param requiredVersion
@@ -961,9 +996,10 @@ public class Theme extends DefaultHandler {
 				WebBrowser.MarkupVersion requiredVersion) {
 			this.requiredVersion = requiredVersion;
 		}
-		
+
 		/**
 		 * Checks that this requirement is met by given type of browser.
+		 * 
 		 * @see com.itmill.toolkit.terminal.web.Theme.Requirement#isMet(com.itmill.toolkit.terminal.web.WebBrowser)
 		 */
 		public boolean isMet(WebBrowser terminal) {
@@ -1006,8 +1042,8 @@ public class Theme extends DefaultHandler {
 		}
 
 		/**
-		 * Gets the name of the file. The file name is relative and unique within a
-		 * theme.
+		 * Gets the name of the file. The file name is relative and unique
+		 * within a theme.
 		 * 
 		 * @return the Name of the file.
 		 */
@@ -1018,7 +1054,9 @@ public class Theme extends DefaultHandler {
 		/**
 		 * Does this file support the given terminal. Single file requirements
 		 * are not supported and therefore this always returns true.
-		 * @param terminal the type of the web browser.
+		 * 
+		 * @param terminal
+		 *            the type of the web browser.
 		 * @return Always returns true.
 		 * @see Theme.Fileset
 		 */
@@ -1055,24 +1093,27 @@ public class Theme extends DefaultHandler {
 		 * Creates a new empty fileset.
 		 * 
 		 * @param mode
-		 *            
+		 * 
 		 */
 		public Fileset(String mode) {
 			super(null);
 			this.mode = mode;
 		}
 
-		/** 
+		/**
 		 * Adds a file into fileset.
-		 * @param file the file to add. 
+		 * 
+		 * @param file
+		 *            the file to add.
 		 */
 		private void addFile(File file) {
 			this.files.add(file);
 		}
 
-		/** 
+		/**
 		 * Gets the requirements in this fileset.
-		 * @return the requirements. 
+		 * 
+		 * @return the requirements.
 		 */
 		private RequirementCollection getRequirements() {
 			return this.requirements;
@@ -1103,8 +1144,10 @@ public class Theme extends DefaultHandler {
 
 		/**
 		 * Gets the list of file names matching WebBrowserType.
-		 * @param terminal the type of the web browser.
-		 * @param mode 
+		 * 
+		 * @param terminal
+		 *            the type of the web browser.
+		 * @param mode
 		 * @return the list of filenames supporting the given terminal.
 		 */
 		public List getFileNames(WebBrowser terminal, String mode) {
@@ -1135,7 +1178,8 @@ public class Theme extends DefaultHandler {
 
 		/**
 		 * Does this file support the given terminal.
-		 * @terminal  the type of the web browser.
+		 * 
+		 * @terminal the type of the web browser.
 		 * @return True if fileset supports the given browser. False otherwise.
 		 */
 		public boolean supports(WebBrowser terminal) {
@@ -1173,15 +1217,17 @@ public class Theme extends DefaultHandler {
 
 	/**
 	 * Gets the name of the parent theme.
+	 * 
 	 * @return the name of the parent theme.
 	 */
 	public String getParent() {
 		return parentTheme;
 	}
 
-	/** 
+	/**
 	 * Gets the theme description.
-	 * @return the theme description. 
+	 * 
+	 * @return the theme description.
 	 */
 	public String getDescription() {
 		return description;

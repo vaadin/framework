@@ -8,7 +8,7 @@ import com.itmill.toolkit.ui.Select;
 
 public class StartsWithFilter implements OptionFilter {
 	private Select s;
-	
+
 	public StartsWithFilter(Select s) {
 		this.s = s;
 	}
@@ -21,12 +21,11 @@ public class StartsWithFilter implements OptionFilter {
 			this.filteredItemsBuffer = new ArrayList(s.getItemIds());
 			return this.filteredItemsBuffer;
 
-		} else if (s.getContainerDataSource() != null) { 
+		} else if (s.getContainerDataSource() != null) {
 			// all items will be iterated and tested.
 			// SLOW when there are lot of items.
 			this.filteredItemsBuffer = new ArrayList();
-			for (Iterator iter = s.getItemIds().iterator(); iter
-					.hasNext();) {
+			for (Iterator iter = s.getItemIds().iterator(); iter.hasNext();) {
 				Object id = iter.next();
 
 				Item item = s.getItem(id);
@@ -42,6 +41,6 @@ public class StartsWithFilter implements OptionFilter {
 				}
 			}
 		}
-		return this.filteredItemsBuffer;		
+		return this.filteredItemsBuffer;
 	}
 }

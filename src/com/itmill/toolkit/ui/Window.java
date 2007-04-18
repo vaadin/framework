@@ -57,38 +57,38 @@ import java.util.Iterator;
  */
 public class Window extends Panel implements URIHandler, ParameterHandler {
 
-	/** 
-	 * Window with no border. 
+	/**
+	 * Window with no border.
 	 */
 	public static final int BORDER_NONE = 0;
 
-	/** 
-	 * Window with only minimal border. 
+	/**
+	 * Window with only minimal border.
 	 */
 	public static final int BORDER_MINIMAL = 1;
 
-	/** 
-	 * Window with default borders. 
+	/**
+	 * Window with default borders.
 	 */
 	public static final int BORDER_DEFAULT = 2;
 
-	/** 
-	 * The terminal this window is attached to. 
+	/**
+	 * The terminal this window is attached to.
 	 */
 	private Terminal terminal = null;
 
-	/** 
-	 * The applicaiton this window is attached to. 
+	/**
+	 * The applicaiton this window is attached to.
 	 */
 	private Application application = null;
 
-	/** 
-	 * List of URI handlers for this window. 
+	/**
+	 * List of URI handlers for this window.
 	 */
 	private LinkedList uriHandlerList = null;
 
-	/** 
-	 * List of parameter handlers for this window. 
+	/**
+	 * List of parameter handlers for this window.
 	 */
 	private LinkedList parameterHandlerList = null;
 
@@ -98,38 +98,37 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	 */
 	private String theme = null;
 
-	/** 
-	 * Resources to be opened automatically on next repaint. 
+	/**
+	 * Resources to be opened automatically on next repaint.
 	 */
 	private LinkedList openList = new LinkedList();
 
-	/** 
-	 * The name of the window. 
+	/**
+	 * The name of the window.
 	 */
 	private String name = null;
 
-	/** 
-	 * Window border mode. 
+	/**
+	 * Window border mode.
 	 */
 	private int border = BORDER_DEFAULT;
 
-	/** 
-	 * Focused component. 
+	/**
+	 * Focused component.
 	 */
 	private Focusable focusedComponent;
-	
-	/** 
-	 * Distance of Window top border in pixels from top border of the 
-	 * containing (main window) or -1 if unspecified. 
+
+	/**
+	 * Distance of Window top border in pixels from top border of the containing
+	 * (main window) or -1 if unspecified.
 	 */
 	private int positionY = -1;
 
-	/** 
-	 * Distance of Window left border in pixels from left border of the 
+	/**
+	 * Distance of Window left border in pixels from left border of the
 	 * containing (main window) or -1 if unspecified .
 	 */
 	private int positionX = -1;
-
 
 	/* ********************************************************************* */
 
@@ -216,9 +215,9 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	}
 
 	/**
-	 * Gets the application instance of the component. Returns the application where
-	 * this component belongs to. If the component does not yet belong to a
-	 * application the returns null.
+	 * Gets the application instance of the component. Returns the application
+	 * where this component belongs to. If the component does not yet belong to
+	 * a application the returns null.
 	 * 
 	 * @return the parent application of the component.
 	 */
@@ -259,9 +258,11 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
 	/* ********************************************************************* */
 
-	/** 
+	/**
 	 * Adds the new URI handler to this window.
-	 * @param handler the URI handler to add. 
+	 * 
+	 * @param handler
+	 *            the URI handler to add.
 	 */
 	public void addURIHandler(URIHandler handler) {
 		if (uriHandlerList == null)
@@ -272,9 +273,11 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 		}
 	}
 
-	/** 
+	/**
 	 * Removes the given URI handler from this window.
-	 * @param handler the URI handler to remove. 
+	 * 
+	 * @param handler
+	 *            the URI handler to remove.
 	 */
 	public void removeURIHandler(URIHandler handler) {
 		if (handler == null || uriHandlerList == null)
@@ -288,6 +291,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
 	/**
 	 * Handles uri recursively.
+	 * 
 	 * @param context
 	 * @param relativeUri
 	 */
@@ -315,9 +319,11 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
 	/* ********************************************************************* */
 
-	/** 
+	/**
 	 * Adds the new parameter handler to this window.
-	 * @param handler the parameter handler to add. 
+	 * 
+	 * @param handler
+	 *            the parameter handler to add.
 	 */
 	public void addParameterHandler(ParameterHandler handler) {
 		if (parameterHandlerList == null)
@@ -328,9 +334,11 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 		}
 	}
 
-	/** 
+	/**
 	 * Removes the given URI handler from this window.
-	 * @param handler the parameter handler to remove. 
+	 * 
+	 * @param handler
+	 *            the parameter handler to remove.
 	 */
 	public void removeParameterHandler(ParameterHandler handler) {
 		if (handler == null || parameterHandlerList == null)
@@ -423,7 +431,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 		// Window position
 		target.addVariable(this, "positionx", getPositionX());
 		target.addVariable(this, "positiony", getPositionY());
-		
+
 		// Window closing
 		target.addVariable(this, "close", false);
 
@@ -440,7 +448,8 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
 	/**
 	 * Opens the given resource in this window.
-	 * @param resource 
+	 * 
+	 * @param resource
 	 */
 	public void open(Resource resource) {
 		synchronized (openList) {
@@ -457,8 +466,11 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	 * Opens the given resource in named terminal window. Empty or
 	 * <code>null</code> window name results the resource to be opened in this
 	 * window.
-	 * @param resource the resource.
-	 * @param windowName the name of the window.
+	 * 
+	 * @param resource
+	 *            the resource.
+	 * @param windowName
+	 *            the name of the window.
 	 */
 	public void open(Resource resource, String windowName) {
 		synchronized (openList) {
@@ -475,11 +487,12 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	 * Opens the given resource in named terminal window with given size and
 	 * border properties. Empty or <code>null</code> window name results the
 	 * resource to be opened in this window.
-	 * @param resource 
+	 * 
+	 * @param resource
 	 * @param windowName
 	 * @param width
 	 * @param height
-	 * @param border 
+	 * @param border
 	 */
 	public void open(Resource resource, String windowName, int width,
 			int height, int border) {
@@ -616,8 +629,8 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	}
 
 	/**
-	 * Sets the terminal type. The terminal type is set by the the terminal adapter
-	 * and may change from time to time.
+	 * Sets the terminal type. The terminal type is set by the the terminal
+	 * adapter and may change from time to time.
 	 * 
 	 * @param type
 	 *            the terminal type to set.
@@ -646,8 +659,8 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 			throw new IllegalArgumentException("Only pixels are supported");
 	}
 
-	/** 
-	 * Private data structure for storing opening window properties. 
+	/**
+	 * Private data structure for storing opening window properties.
 	 */
 	private class OpenResource {
 
@@ -661,13 +674,14 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
 		private int border;
 
-		/** 
+		/**
 		 * Creates a new open resource.
+		 * 
 		 * @param resource
 		 * @param name
 		 * @param width
 		 * @param height
-		 * @param border 
+		 * @param border
 		 */
 		private OpenResource(Resource resource, String name, int width,
 				int height, int border) {
@@ -678,10 +692,13 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 			this.border = border;
 		}
 
-		/** 
+		/**
 		 * Paints the open-tag inside the window.
-		 * @param target the Paint Event.
-		 * @throws PaintException if the Paint Operation fails. 
+		 * 
+		 * @param target
+		 *            the Paint Event.
+		 * @throws PaintException
+		 *             if the Paint Operation fails.
 		 */
 		private void paintContent(PaintTarget target) throws PaintException {
 			target.startTag("open");
@@ -706,8 +723,9 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	}
 
 	/**
-	 * Called when one or more variables handled by the implementing class
-     * are changed.
+	 * Called when one or more variables handled by the implementing class are
+	 * changed.
+	 * 
 	 * @see com.itmill.toolkit.terminal.VariableOwner#changeVariables(java.lang.Object,
 	 *      java.util.Map)
 	 */
@@ -724,19 +742,19 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 				// We ignore invalid focusable ids
 			}
 		}
-		
+
 		// Positioning
 		Integer positionx = (Integer) variables.get("positionx");
 		if (positionx != null) {
 			int x = positionx.intValue();
-			setPositionX(x<0?-1:x);
+			setPositionX(x < 0 ? -1 : x);
 		}
 		Integer positiony = (Integer) variables.get("positiony");
 		if (positiony != null) {
 			int y = positiony.intValue();
-			setPositionY(y<0?-1:y);
+			setPositionY(y < 0 ? -1 : y);
 		}
-			
+
 		// Closing
 		Boolean close = (Boolean) variables.get("close");
 		if (close != null && close.booleanValue()) {
@@ -771,9 +789,11 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
 	private static Map focusableComponents = new HashMap();
 
-	/** 
+	/**
 	 * Gets an id for focusable component.
-	 * @param focusable the focused component. 
+	 * 
+	 * @param focusable
+	 *            the focused component.
 	 */
 	public static long getNewFocusableId(Component.Focusable focusable) {
 		long newId = ++lastUsedFocusableId;
@@ -782,9 +802,11 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 		return newId;
 	}
 
-	/** 
+	/**
 	 * Maps the focusable id back to focusable component.
-	 * @param focusableId the Focused Id. 
+	 * 
+	 * @param focusableId
+	 *            the Focused Id.
 	 * @return the focusable Id.
 	 */
 	public static Component.Focusable getFocusableById(long focusableId) {
@@ -799,9 +821,11 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 		return null;
 	}
 
-	/** 
+	/**
 	 * Releases the focusable component id when not used anymore.
-	 * @param focusableId the focusable Id to remove. 
+	 * 
+	 * @param focusableId
+	 *            the focusable Id to remove.
 	 */
 	public static void removeFocusableId(long focusableId) {
 		Long id = new Long(focusableId);
@@ -810,33 +834,37 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 		focusableComponents.remove(id);
 	}
 
-	/** 
-	 * Gets the distance of Window left border in pixels from left 
-	 * border of the containing (main window).
-	 * @return the Distance of Window left border in pixels from left
-	 * border of the containing (main window). or -1 if unspecified.
- 	 * @since 4.0.0
+	/**
+	 * Gets the distance of Window left border in pixels from left border of the
+	 * containing (main window).
+	 * 
+	 * @return the Distance of Window left border in pixels from left border of
+	 *         the containing (main window). or -1 if unspecified.
+	 * @since 4.0.0
 	 */
 	public int getPositionX() {
 		return positionX;
 	}
 
-	/** 
-	 * Sets the distance of Window left border in pixels from left border 
-	 * of the containing (main window).
-	 * @param positionX the Distance of Window left border in pixels from left
-	 * border of the containing (main window). or -1 if unspecified. 
- 	 * @since 4.0.0
- 	 */
+	/**
+	 * Sets the distance of Window left border in pixels from left border of the
+	 * containing (main window).
+	 * 
+	 * @param positionX
+	 *            the Distance of Window left border in pixels from left border
+	 *            of the containing (main window). or -1 if unspecified.
+	 * @since 4.0.0
+	 */
 	public void setPositionX(int positionX) {
 		this.positionX = positionX;
 	}
 
-	/** 
-	 * Gets the distance of Window top border in pixels from top border of
-	 * the containing (main window).
+	/**
+	 * Gets the distance of Window top border in pixels from top border of the
+	 * containing (main window).
+	 * 
 	 * @return Distance of Window top border in pixels from top border of the
-	 * containing (main window). or -1 if unspecified .
+	 *         containing (main window). or -1 if unspecified .
 	 * 
 	 * @since 4.0.0
 	 */
@@ -844,37 +872,38 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 		return positionY;
 	}
 
-	/** 
-	 * Sets the distance of Window top border in pixels from top border of the containing (main window).
-	 * @param positionY the Distance of Window top border in pixels from top border of the containing (main window). or -1 if unspecified 
+	/**
+	 * Sets the distance of Window top border in pixels from top border of the
+	 * containing (main window).
+	 * 
+	 * @param positionY
+	 *            the Distance of Window top border in pixels from top border of
+	 *            the containing (main window). or -1 if unspecified
 	 * 
 	 * @since 4.0.0
 	 */
 	public void setPositionY(int positionY) {
 		this.positionY = positionY;
 	}
-	
+
 	private static final Method WINDOW_CLOSE_METHOD;
 	static {
 		try {
-			WINDOW_CLOSE_METHOD =
-				CloseListener.class.getDeclaredMethod(
-					"windowClose",
-					new Class[] { CloseEvent.class });
+			WINDOW_CLOSE_METHOD = CloseListener.class.getDeclaredMethod(
+					"windowClose", new Class[] { CloseEvent.class });
 		} catch (java.lang.NoSuchMethodException e) {
 			// This should never happen
 			throw new java.lang.RuntimeException();
 		}
 	}
 
-	
 	public class CloseEvent extends Component.Event {
-		
+
 		/**
-         * Serial generated by eclipse.
+		 * Serial generated by eclipse.
 		 */
 		private static final long serialVersionUID = -7235770057344367327L;
-		
+
 		/**
 		 * 
 		 * @param source
@@ -882,23 +911,26 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 		public CloseEvent(Component source) {
 			super(source);
 		}
-		
+
 		/**
 		 * Gets the Window.
+		 * 
 		 * @return the window.
 		 */
 		public Window getWindow() {
 			return (Window) getSource();
 		}
 	}
-	
+
 	public interface CloseListener {
 		public void windowClose(CloseEvent e);
 	}
-	
+
 	/**
 	 * Adds the listener.
-	 * @param listener the listener to add.
+	 * 
+	 * @param listener
+	 *            the listener to add.
 	 */
 	public void addListener(CloseListener listener) {
 		addListener(CloseEvent.class, listener, WINDOW_CLOSE_METHOD);
@@ -906,7 +938,9 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
 	/**
 	 * Removes the listener.
-	 * @param listener the listener to remove.
+	 * 
+	 * @param listener
+	 *            the listener to remove.
 	 */
 	public void removeListener(CloseListener listener) {
 		addListener(CloseEvent.class, listener, WINDOW_CLOSE_METHOD);

@@ -37,8 +37,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 /**
- * The <code>WebBrowserProbe</code> uses JavaScript to determine the capabilities of the
- * client browser.
+ * The <code>WebBrowserProbe</code> uses JavaScript to determine the
+ * capabilities of the client browser.
  * 
  * @author IT Mill Ltd.
  * @version
@@ -53,7 +53,9 @@ public class WebBrowserProbe {
 
 	/**
 	 * Returns the terminal type from the given session.
-	 * @param session the HTTP session.
+	 * 
+	 * @param session
+	 *            the HTTP session.
 	 * @return WebBrowser instance for the given session.
 	 */
 	public static WebBrowser getTerminalType(HttpSession session) {
@@ -64,8 +66,11 @@ public class WebBrowserProbe {
 
 	/**
 	 * Sets the terminal type for the given session.
-	 * @param session the HTTP session.
-	 * @param terminal the web browser. 
+	 * 
+	 * @param session
+	 *            the HTTP session.
+	 * @param terminal
+	 *            the web browser.
 	 * @return WebBrowser instance for the given session.
 	 */
 	public static void setTerminalType(HttpSession session, WebBrowser terminal) {
@@ -80,9 +85,11 @@ public class WebBrowserProbe {
 	 *            the HTTP request to process.
 	 * @param parameters
 	 *            the Parameters to be used as defaults.
-	 * @return <code>true</code> if response should include a probe script,otherwise <code>false</code>.
-	 * @throws ServletException if an exception has occurred that interferes with the
-	 *             				servlet's normal operation.
+	 * @return <code>true</code> if response should include a probe
+	 *         script,otherwise <code>false</code>.
+	 * @throws ServletException
+	 *             if an exception has occurred that interferes with the
+	 *             servlet's normal operation.
 	 */
 	public static boolean handleProbeRequest(HttpServletRequest request,
 			Map parameters) throws ServletException {

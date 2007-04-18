@@ -51,6 +51,7 @@ public class CollectionThemeSource implements ThemeSource {
 
 	/**
 	 * Gets the name of the ThemeSource.
+	 * 
 	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getName()
 	 */
 	public String getName() {
@@ -59,6 +60,7 @@ public class CollectionThemeSource implements ThemeSource {
 
 	/**
 	 * Gets the XSL stream for the specified theme and web-browser type.
+	 * 
 	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getXSLStreams(Theme,
 	 *      WebBrowser)
 	 */
@@ -78,15 +80,16 @@ public class CollectionThemeSource implements ThemeSource {
 
 		return xslFiles;
 	}
-	
-/**
- * 
- * @param theme
- * @param type
- * @return
- * @throws ThemeException If the resource is not found or there was
- * 			 some problem finding the resource.
- */
+
+	/**
+	 * 
+	 * @param theme
+	 * @param type
+	 * @return
+	 * @throws ThemeException
+	 *             If the resource is not found or there was some problem
+	 *             finding the resource.
+	 */
 	private Collection getParentXSLStreams(Theme theme, WebBrowser type)
 			throws ThemeException {
 		Collection xslFiles = new LinkedList();
@@ -105,6 +108,7 @@ public class CollectionThemeSource implements ThemeSource {
 
 	/**
 	 * Gets the last modification time, used to reload theme on changes.
+	 * 
 	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getModificationTime()
 	 */
 	public long getModificationTime() {
@@ -119,6 +123,7 @@ public class CollectionThemeSource implements ThemeSource {
 
 	/**
 	 * Gets the input stream for the resource with the specified resource id.
+	 * 
 	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getResource(String)
 	 */
 	public InputStream getResource(String resourceId) throws ThemeException {
@@ -136,7 +141,7 @@ public class CollectionThemeSource implements ThemeSource {
 		List themes = new LinkedList();
 		while (themeName != null && themeName.length() > 0) {
 			Theme t = this.getThemeByName(themeName);
-			if (t != null) 
+			if (t != null)
 				themes.add(themeName);
 			themeName = t.getParent();
 		}
@@ -164,6 +169,7 @@ public class CollectionThemeSource implements ThemeSource {
 
 	/**
 	 * Gets the list of themes in the theme source.
+	 * 
 	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getThemes()
 	 */
 	public Collection getThemes() {
@@ -177,7 +183,9 @@ public class CollectionThemeSource implements ThemeSource {
 
 	/**
 	 * Gets the theme instance by name.
-	 * @param name the theme name.
+	 * 
+	 * @param name
+	 *            the theme name.
 	 * @see com.itmill.toolkit.terminal.web.ThemeSource#getThemeByName(String)
 	 */
 	public Theme getThemeByName(String name) {

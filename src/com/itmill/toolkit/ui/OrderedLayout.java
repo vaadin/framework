@@ -1,30 +1,30 @@
 /* *************************************************************************
  
-                               IT Mill Toolkit 
+ IT Mill Toolkit 
 
-               Development of Browser User Interfaces Made Easy
+ Development of Browser User Interfaces Made Easy
 
-                    Copyright (C) 2000-2006 IT Mill Ltd
-                     
-   *************************************************************************
+ Copyright (C) 2000-2006 IT Mill Ltd
+ 
+ *************************************************************************
 
-   This product is distributed under commercial license that can be found
-   from the product package on license.pdf. Use of this product might 
-   require purchasing a commercial license from IT Mill Ltd. For guidelines 
-   on usage, see licensing-guidelines.html
+ This product is distributed under commercial license that can be found
+ from the product package on license.pdf. Use of this product might 
+ require purchasing a commercial license from IT Mill Ltd. For guidelines 
+ on usage, see licensing-guidelines.html
 
-   *************************************************************************
-   
-   For more information, contact:
-   
-   IT Mill Ltd                           phone: +358 2 4802 7180
-   Ruukinkatu 2-4                        fax:   +358 2 4802 7181
-   20540, Turku                          email:  info@itmill.com
-   Finland                               company www: www.itmill.com
-   
-   Primary source for information and releases: www.itmill.com
+ *************************************************************************
+ 
+ For more information, contact:
+ 
+ IT Mill Ltd                           phone: +358 2 4802 7180
+ Ruukinkatu 2-4                        fax:   +358 2 4802 7181
+ 20540, Turku                          email:  info@itmill.com
+ Finland                               company www: www.itmill.com
+ 
+ Primary source for information and releases: www.itmill.com
 
-   ********************************************************************** */
+ ********************************************************************** */
 
 package com.itmill.toolkit.ui;
 
@@ -34,70 +34,75 @@ import com.itmill.toolkit.terminal.PaintTarget;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-/** Ordered layout.
- *
- * <code>OrderedLayout</code> is a component container, which shows the subcomponents in the
- * order of their addition in specified orientation.
- *
+/**
+ * Ordered layout.
+ * 
+ * <code>OrderedLayout</code> is a component container, which shows the
+ * subcomponents in the order of their addition in specified orientation.
+ * 
  * @author IT Mill Ltd.
- * @version @VERSION@
+ * @version
+ * @VERSION@
  * @since 3.0
  */
-public class OrderedLayout
-	extends AbstractComponentContainer
-	implements Layout {
+public class OrderedLayout extends AbstractComponentContainer implements Layout {
 
 	/* Predefined orientations ***************************************** */
 
-	/** 
-	 * Components are to be layed out vertically. 
+	/**
+	 * Components are to be layed out vertically.
 	 */
 	public static int ORIENTATION_VERTICAL = 0;
-	/** 
-	 * Components are to be layed out horizontally. 
+
+	/**
+	 * Components are to be layed out horizontally.
 	 */
 	public static int ORIENTATION_HORIZONTAL = 1;
 
-	/** 
-	 * Custom layout slots containing the components. 
+	/**
+	 * Custom layout slots containing the components.
 	 */
 	private LinkedList components = new LinkedList();
 
-	/** 
-	 * Orientation of the layout. 
+	/**
+	 * Orientation of the layout.
 	 */
 	private int orientation;
 
-	/** 
-	 * Creates a new ordered layout.
-	 * The order of the layout is <code>ORIENTATION_VERTICAL</code>.
+	/**
+	 * Creates a new ordered layout. The order of the layout is
+	 * <code>ORIENTATION_VERTICAL</code>.
 	 */
 	public OrderedLayout() {
 		orientation = ORIENTATION_VERTICAL;
 	}
 
-	/** 
-	 * Create a new ordered layout.
-	 * The orientation of the layout is given as parameters.
-	 *
-	 * @param orientation the Orientation of the layout.
+	/**
+	 * Create a new ordered layout. The orientation of the layout is given as
+	 * parameters.
+	 * 
+	 * @param orientation
+	 *            the Orientation of the layout.
 	 */
 	public OrderedLayout(int orientation) {
 		this.orientation = orientation;
 	}
 
-	/** 
+	/**
 	 * Gets the component UIDL tag.
+	 * 
 	 * @return the Component UIDL tag as string.
 	 */
 	public String getTag() {
 		return "orderedlayout";
 	}
 
-	/** 
-	 * Add a component into this container. The component is added to the
-	 * right or under the previous component.
-	 * @param c the component to be added.
+	/**
+	 * Add a component into this container. The component is added to the right
+	 * or under the previous component.
+	 * 
+	 * @param c
+	 *            the component to be added.
 	 */
 	public void addComponent(Component c) {
 		components.add(c);
@@ -105,10 +110,12 @@ public class OrderedLayout
 		requestRepaint();
 	}
 
-	/** 
-	 * Adds a component into this container. The component is added to the
-	 * left or on top of the other components.
-	 * @param c the component to be added.
+	/**
+	 * Adds a component into this container. The component is added to the left
+	 * or on top of the other components.
+	 * 
+	 * @param c
+	 *            the component to be added.
 	 */
 	public void addComponentAsFirst(Component c) {
 		components.addFirst(c);
@@ -116,11 +123,14 @@ public class OrderedLayout
 		requestRepaint();
 	}
 
-	/** 
-	 * Adds a component into indexed position in this container. 
-	 * @param c the component to be added.
-	 * @param index the Index of the component position. 
-	 * The components currently in and after the position are shifted forwards.
+	/**
+	 * Adds a component into indexed position in this container.
+	 * 
+	 * @param c
+	 *            the component to be added.
+	 * @param index
+	 *            the Index of the component position. The components currently
+	 *            in and after the position are shifted forwards.
 	 */
 	public void addComponent(Component c, int index) {
 		components.add(index, c);
@@ -128,9 +138,11 @@ public class OrderedLayout
 		requestRepaint();
 	}
 
-	/** 
+	/**
 	 * Removes the component from this container.
-	 * @param c the component to be removed.
+	 * 
+	 * @param c
+	 *            the component to be removed.
 	 */
 	public void removeComponent(Component c) {
 		super.removeComponent(c);
@@ -138,23 +150,27 @@ public class OrderedLayout
 		requestRepaint();
 	}
 
-	/** 
-	 * Gets the component container iterator for going trough all the components in
-	 * the container.
+	/**
+	 * Gets the component container iterator for going trough all the components
+	 * in the container.
+	 * 
 	 * @return the Iterator of the components inside the container.
 	 */
 	public Iterator getComponentIterator() {
 		return components.iterator();
 	}
 
-	/** 
+	/**
 	 * Paints the content of this component.
-	 * @param target the Paint Event.
-	 * @throws PaintException if the paint operation failed.
+	 * 
+	 * @param target
+	 *            the Paint Event.
+	 * @throws PaintException
+	 *             if the paint operation failed.
 	 */
 	public void paintContent(PaintTarget target) throws PaintException {
 
-		// Adds the attributes: orientation 
+		// Adds the attributes: orientation
 		// note that the default values (b/vertival) are omitted
 		if (orientation == ORIENTATION_HORIZONTAL)
 			target.addAttribute("orientation", "horizontal");
@@ -168,34 +184,35 @@ public class OrderedLayout
 		}
 	}
 
-	/** 
+	/**
 	 * Gets the orientation of the container.
+	 * 
 	 * @return the Value of property orientation.
 	 */
 	public int getOrientation() {
 		return this.orientation;
 	}
 
-	/** 
+	/**
 	 * Set the orientation of the container.
-	 * @param orientation the New value of property orientation.
+	 * 
+	 * @param orientation
+	 *            the New value of property orientation.
 	 */
 	public void setOrientation(int orientation) {
 
 		// Checks the validity of the argument
 		if (orientation < ORIENTATION_VERTICAL
-			|| orientation > ORIENTATION_HORIZONTAL)
+				|| orientation > ORIENTATION_HORIZONTAL)
 			throw new IllegalArgumentException();
 
 		this.orientation = orientation;
 	}
 
 	/* Documented in superclass */
-	public void replaceComponent(
-		Component oldComponent,
-		Component newComponent) {
+	public void replaceComponent(Component oldComponent, Component newComponent) {
 
-		// Gets the locations			
+		// Gets the locations
 		int oldLocation = -1;
 		int newLocation = -1;
 		int location = 0;

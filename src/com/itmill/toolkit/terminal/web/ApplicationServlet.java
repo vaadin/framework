@@ -103,23 +103,23 @@ public class ApplicationServlet extends HttpServlet implements
 
 	private static final long serialVersionUID = -4937882979845826574L;
 
-	/** 
-	 * Version number of this release. For example "4.0.0". 
+	/**
+	 * Version number of this release. For example "4.0.0".
 	 */
 	public static final String VERSION;
 
-	/** 
-	 * Major version number. For example 4 in 4.1.0. 
+	/**
+	 * Major version number. For example 4 in 4.1.0.
 	 */
 	public static final int VERSION_MAJOR;
 
-	/** 
-	 * Minor version number. For example 1 in 4.1.0. 
+	/**
+	 * Minor version number. For example 1 in 4.1.0.
 	 */
 	public static final int VERSION_MINOR;
 
-	/** 
-	 * Builds number. For example 0-beta1 in 4.0.0-beta1. 
+	/**
+	 * Builds number. For example 0-beta1 in 4.0.0-beta1.
 	 */
 	public static final String VERSION_BUILD;
 
@@ -400,19 +400,20 @@ public class ApplicationServlet extends HttpServlet implements
 	/**
 	 * Gets ThemeSources from given path. Construct the list of avalable themes
 	 * in path using the following sources:
-	 * <p> 
-	 * 1. Content of <code>THEME_PATH</code> directory (if available). 
+	 * <p>
+	 * 1. Content of <code>THEME_PATH</code> directory (if available).
 	 * </p>
 	 * <p>
 	 * 2. The themes listed in <code>THEME_LIST_FILE</code>.
 	 * </p>
-	 * <p> 
+	 * <p>
 	 * 3. "themesource" application parameter - "ThemeSource" system property.
 	 * </p>
+	 * 
 	 * @return the List
 	 * @throws ServletException
-	 * 						if an exception has occurred that interferes with the
-	 *             			servlet's normal operation.
+	 *             if an exception has occurred that interferes with the
+	 *             servlet's normal operation.
 	 */
 	private List getThemeSources() throws ServletException {
 
@@ -510,8 +511,8 @@ public class ApplicationServlet extends HttpServlet implements
 	 *            the object that contains the request the client made of the
 	 *            servlet.
 	 * @param response
-	 *            the object that contains the response the servlet returns to the
-	 *            client.
+	 *            the object that contains the response the servlet returns to
+	 *            the client.
 	 * @throws ServletException
 	 *             if an input or output error occurs while the servlet is
 	 *             handling the TRACE request.
@@ -849,21 +850,24 @@ public class ApplicationServlet extends HttpServlet implements
 			ThemeFunctionLibrary.cleanState();
 		}
 	}
-/**
- * 
- * @param request the HTTP request.
- * @param response the HTTP response to write to.
- * @param out
- * @param unhandledParameters
- * @param window
- * @param terminalType
- * @param theme
- * @throws IOException 
- * 						if the writing failed due to input/output error.
- * @throws MalformedURLException 
- * 						if the application is denied access 
- * 								the persistent data store represented by the given URL.
- */
+
+	/**
+	 * 
+	 * @param request
+	 *            the HTTP request.
+	 * @param response
+	 *            the HTTP response to write to.
+	 * @param out
+	 * @param unhandledParameters
+	 * @param window
+	 * @param terminalType
+	 * @param theme
+	 * @throws IOException
+	 *             if the writing failed due to input/output error.
+	 * @throws MalformedURLException
+	 *             if the application is denied access the persistent data store
+	 *             represented by the given URL.
+	 */
 	private void writeAjaxPage(HttpServletRequest request,
 			HttpServletResponse response, OutputStream out,
 			Map unhandledParameters, Window window, WebBrowser terminalType,
@@ -972,8 +976,9 @@ public class ApplicationServlet extends HttpServlet implements
 	 *            the HTTP request instance.
 	 * @param response
 	 *            the HTTP response to write to.
-	 * @return boolean <code>true</code> if the request was handled and further processing
-	 *         should be suppressed, <code>false</code> otherwise.
+	 * @return boolean <code>true</code> if the request was handled and
+	 *         further processing should be suppressed, <code>false</code>
+	 *         otherwise.
 	 * @see com.itmill.toolkit.terminal.URIHandler
 	 */
 	private DownloadStream handleURI(Application application,
@@ -1006,8 +1011,9 @@ public class ApplicationServlet extends HttpServlet implements
 	 * before any windows URIs are processed and if a DownloadStream is returned
 	 * it is sent to the client.
 	 * 
-	 * @param stream the download stream.
-	 *            
+	 * @param stream
+	 *            the download stream.
+	 * 
 	 * @param request
 	 *            the HTTP request instance.
 	 * @param response
@@ -1075,6 +1081,7 @@ public class ApplicationServlet extends HttpServlet implements
 
 	/**
 	 * Looks for default theme JAR file.
+	 * 
 	 * @param fileList
 	 * @return Jar file or null if not found.
 	 */
@@ -1159,10 +1166,12 @@ public class ApplicationServlet extends HttpServlet implements
 	 *            the HTTP request.
 	 * @param response
 	 *            the HTTP response.
-	 * @return boolean <code>true</code> if the request was handled and further processing
-	 *         should be suppressed, <code>false</code> otherwise.
-	 * @throws ServletException if an exception has occurred that interferes with the
-	 *             				servlet's normal operation.
+	 * @return boolean <code>true</code> if the request was handled and
+	 *         further processing should be suppressed, <code>false</code>
+	 *         otherwise.
+	 * @throws ServletException
+	 *             if an exception has occurred that interferes with the
+	 *             servlet's normal operation.
 	 */
 	private boolean handleResourceRequest(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException {
@@ -1230,12 +1239,14 @@ public class ApplicationServlet extends HttpServlet implements
 		return true;
 	}
 
-	/** 
+	/**
 	 * Gets the variable map for the session.
+	 * 
 	 * @param application
-	 * @param request the HTTP request.
+	 * @param request
+	 *            the HTTP request.
 	 * @return the variable map.
-	 *  
+	 * 
 	 */
 	private static synchronized HttpVariableMap getVariableMap(
 			Application application, HttpServletRequest request) {
@@ -1260,11 +1271,14 @@ public class ApplicationServlet extends HttpServlet implements
 		return variableMap;
 	}
 
-	/** 
+	/**
 	 * Gets the current application URL from request.
-	 * @param request the HTTP request.
-	 * @throws MalformedURLException if the application is denied access to the
-	 * 								 persistent data store represented by the given URL.
+	 * 
+	 * @param request
+	 *            the HTTP request.
+	 * @throws MalformedURLException
+	 *             if the application is denied access to the persistent data
+	 *             store represented by the given URL.
 	 */
 	private URL getApplicationUrl(HttpServletRequest request)
 			throws MalformedURLException {
@@ -1302,8 +1316,9 @@ public class ApplicationServlet extends HttpServlet implements
 	 *            the HTTP request.
 	 * @return Application instance, or null if the URL does not map to valid
 	 *         application.
-	 * @throws MalformedURLException if the application is denied access to the
-	 * 								 persistent data store represented by the given URL.
+	 * @throws MalformedURLException
+	 *             if the application is denied access to the persistent data
+	 *             store represented by the given URL.
 	 */
 	private Application getApplication(HttpServletRequest request)
 			throws MalformedURLException {
@@ -1344,26 +1359,28 @@ public class ApplicationServlet extends HttpServlet implements
 
 	/**
 	 * Creates a new application.
-	 * @param request the HTTP request.
+	 * 
+	 * @param request
+	 *            the HTTP request.
 	 * @return the New application instance.
-	 * @throws MalformedURLException 
-	 * 								if the application is denied access to the persistent 
-	 * 								data store represented by the given URL.
+	 * @throws MalformedURLException
+	 *             if the application is denied access to the persistent data
+	 *             store represented by the given URL.
 	 * @throws InstantiationException
-	 * 								if a new instance of the class cannot be instantiated.
+	 *             if a new instance of the class cannot be instantiated.
 	 * @throws IllegalAccessException
-	 * 								if it does not have access to the property accessor method.
+	 *             if it does not have access to the property accessor method.
 	 * @throws LicenseFileHasNotBeenRead
-	 * 								  if the license file has not been read.
-	 * @throws LicenseSignatureIsInvalid 
-	 * 								  if the license file has been changed or signature is
-	 *             					  otherwise invalid.
+	 *             if the license file has not been read.
+	 * @throws LicenseSignatureIsInvalid
+	 *             if the license file has been changed or signature is
+	 *             otherwise invalid.
 	 * @throws InvalidLicenseFile
-	 * 							if the license file is not of correct XML format.
+	 *             if the license file is not of correct XML format.
 	 * @throws LicenseViolation
 	 * 
-	 * @throws SAXException 
-	 * 					the Error parsing the license file.
+	 * @throws SAXException
+	 *             the Error parsing the license file.
 	 */
 	private Application createApplication(HttpServletRequest request)
 			throws MalformedURLException, InstantiationException,
@@ -1429,11 +1446,11 @@ public class ApplicationServlet extends HttpServlet implements
 
 		return application;
 	}
-	
-/**
- * 
- * @param application
- */
+
+	/**
+	 * 
+	 * @param application
+	 */
 	private void initializeLicense(Application application) {
 
 		License license = (License) licenseForApplicationClass.get(application
@@ -1444,22 +1461,22 @@ public class ApplicationServlet extends HttpServlet implements
 		}
 		application.setToolkitLicense(license);
 	}
-	
-/**
- * 
- * @param application
- * @throws LicenseFileHasNotBeenRead
- * 									if the license file has not been read.						
- * @throws LicenseSignatureIsInvalid
- * 									if the license file has been changed or signature is
- *             					    otherwise invalid.
- * @throws InvalidLicenseFile
- * 							if the license file is not of correct XML format.
- * @throws LicenseViolation
- * 
- * @throws SAXException
- * 					the Error parsing the license file.
- */
+
+	/**
+	 * 
+	 * @param application
+	 * @throws LicenseFileHasNotBeenRead
+	 *             if the license file has not been read.
+	 * @throws LicenseSignatureIsInvalid
+	 *             if the license file has been changed or signature is
+	 *             otherwise invalid.
+	 * @throws InvalidLicenseFile
+	 *             if the license file is not of correct XML format.
+	 * @throws LicenseViolation
+	 * 
+	 * @throws SAXException
+	 *             the Error parsing the license file.
+	 */
 	private void checkLicense(Application application)
 			throws LicenseFileHasNotBeenRead, LicenseSignatureIsInvalid,
 			InvalidLicenseFile, LicenseViolation, SAXException {
@@ -1538,12 +1555,17 @@ public class ApplicationServlet extends HttpServlet implements
 		return active;
 	}
 
-	/** 
+	/**
 	 * Ends the application.
-	 * @param request the HTTP request.
-	 * @param response the HTTP response to write to.
-	 * @param application the application to end.
-	 * @throws IOException if the writing failed due to input/output error.
+	 * 
+	 * @param request
+	 *            the HTTP request.
+	 * @param response
+	 *            the HTTP response to write to.
+	 * @param application
+	 *            the application to end.
+	 * @throws IOException
+	 *             if the writing failed due to input/output error.
 	 */
 	private void endApplication(HttpServletRequest request,
 			HttpServletResponse response, Application application)
@@ -1571,10 +1593,11 @@ public class ApplicationServlet extends HttpServlet implements
 	 * @param request
 	 *            the HTTP Request.
 	 * @param application
-	 *           the Application to query for window.
+	 *            the Application to query for window.
 	 * @return Window mathing the given URI or null if not found.
-	 * @throws ServletException if an exception has occurred that interferes with the
-	 *             				servlet's normal operation.
+	 * @throws ServletException
+	 *             if an exception has occurred that interferes with the
+	 *             servlet's normal operation.
 	 */
 	private Window getApplicationWindow(HttpServletRequest request,
 			Application application, Map params) throws ServletException {
@@ -1667,8 +1690,10 @@ public class ApplicationServlet extends HttpServlet implements
 	/**
 	 * Checks if web adapter is in debug mode. Extra output is generated to log
 	 * when debug mode is enabled.
+	 * 
 	 * @param parameters
-	 * @return <code>true</code> if the web adapter is in debug mode. otherwise <code>false</code>.
+	 * @return <code>true</code> if the web adapter is in debug mode.
+	 *         otherwise <code>false</code>.
 	 */
 	public boolean isDebugMode(Map parameters) {
 		if (parameters != null) {
@@ -1688,12 +1713,12 @@ public class ApplicationServlet extends HttpServlet implements
 	public ThemeSource getThemeSource() {
 		return themeSource;
 	}
-	
-/**
- * 
- * @param application
- * @param window
- */
+
+	/**
+	 * 
+	 * @param application
+	 * @param window
+	 */
 	protected void addDirtyWindow(Application application, Window window) {
 		synchronized (applicationToDirtyWindowSetMap) {
 			HashSet dirtyWindows = (HashSet) applicationToDirtyWindowSetMap
@@ -1705,12 +1730,12 @@ public class ApplicationServlet extends HttpServlet implements
 			dirtyWindows.add(window);
 		}
 	}
-	
-/**
- * 
- * @param application
- * @param window
- */
+
+	/**
+	 * 
+	 * @param application
+	 * @param window
+	 */
 	protected void removeDirtyWindow(Application application, Window window) {
 		synchronized (applicationToDirtyWindowSetMap) {
 			HashSet dirtyWindows = (HashSet) applicationToDirtyWindowSetMap
@@ -1752,6 +1777,7 @@ public class ApplicationServlet extends HttpServlet implements
 
 	/**
 	 * Receives repaint request events.
+	 * 
 	 * @see com.itmill.toolkit.terminal.Paintable.RepaintRequestListener#repaintRequested(Paintable.RepaintRequestEvent)
 	 */
 	public void repaintRequested(RepaintRequestEvent event) {
@@ -1771,10 +1797,11 @@ public class ApplicationServlet extends HttpServlet implements
 			}
 	}
 
-	/** 
+	/**
 	 * Gets the list of dirty windows in application.
-	 * @param app 
-	 * @return 
+	 * 
+	 * @param app
+	 * @return
 	 */
 	protected Set getDirtyWindows(Application app) {
 		HashSet dirtyWindows;
@@ -1784,10 +1811,11 @@ public class ApplicationServlet extends HttpServlet implements
 		return dirtyWindows;
 	}
 
-	/** 
+	/**
 	 * Removes a window from the list of dirty windows.
+	 * 
 	 * @param app
-	 * @param window  
+	 * @param window
 	 */
 	private void windowPainted(Application app, Window window) {
 		removeDirtyWindow(app, window);
@@ -1796,8 +1824,11 @@ public class ApplicationServlet extends HttpServlet implements
 	/**
 	 * Generates server commands stream. If the server commands are not
 	 * requested, return false.
-	 * @param request the HTTP request instance.
-	 * @param response the HTTP response to write to.
+	 * 
+	 * @param request
+	 *            the HTTP request instance.
+	 * @param response
+	 *            the HTTP response to write to.
 	 */
 	private boolean handleServerCommands(HttpServletRequest request,
 			HttpServletResponse response) {
@@ -1913,10 +1944,11 @@ public class ApplicationServlet extends HttpServlet implements
 
 	private class SessionBindingListener implements HttpSessionBindingListener {
 		private LinkedList applications;
-/**
- * 
- * @param applications
- */
+
+		/**
+		 * 
+		 * @param applications
+		 */
 		protected SessionBindingListener(LinkedList applications) {
 			this.applications = applications;
 		}
@@ -1963,8 +1995,8 @@ public class ApplicationServlet extends HttpServlet implements
 
 	}
 
-	/** 
-	 * Implementation of ParameterHandler.ErrorEvent interface. 
+	/**
+	 * Implementation of ParameterHandler.ErrorEvent interface.
 	 */
 	public class ParameterHandlerErrorImpl implements
 			ParameterHandler.ErrorEvent {
@@ -1972,11 +2004,12 @@ public class ApplicationServlet extends HttpServlet implements
 		private ParameterHandler owner;
 
 		private Throwable throwable;
-/**
- * 
- * @param owner
- * @param throwable
- */
+
+		/**
+		 * 
+		 * @param owner
+		 * @param throwable
+		 */
 		private ParameterHandlerErrorImpl(ParameterHandler owner,
 				Throwable throwable) {
 			this.owner = owner;
@@ -1985,6 +2018,7 @@ public class ApplicationServlet extends HttpServlet implements
 
 		/**
 		 * Gets the contained throwable.
+		 * 
 		 * @see com.itmill.toolkit.terminal.Terminal.ErrorEvent#getThrowable()
 		 */
 		public Throwable getThrowable() {
@@ -1993,6 +2027,7 @@ public class ApplicationServlet extends HttpServlet implements
 
 		/**
 		 * Gets the source ParameterHandler.
+		 * 
 		 * @see com.itmill.toolkit.terminal.ParameterHandler.ErrorEvent#getParameterHandler()
 		 */
 		public ParameterHandler getParameterHandler() {
@@ -2001,19 +2036,20 @@ public class ApplicationServlet extends HttpServlet implements
 
 	}
 
-	/** 
-	 * Implementation of URIHandler.ErrorEvent interface. 
+	/**
+	 * Implementation of URIHandler.ErrorEvent interface.
 	 */
 	public class URIHandlerErrorImpl implements URIHandler.ErrorEvent {
 
 		private URIHandler owner;
 
 		private Throwable throwable;
-/**
- * 
- * @param owner
- * @param throwable
- */
+
+		/**
+		 * 
+		 * @param owner
+		 * @param throwable
+		 */
 		private URIHandlerErrorImpl(URIHandler owner, Throwable throwable) {
 			this.owner = owner;
 			this.throwable = throwable;
@@ -2021,6 +2057,7 @@ public class ApplicationServlet extends HttpServlet implements
 
 		/**
 		 * Gets the contained throwable.
+		 * 
 		 * @see com.itmill.toolkit.terminal.Terminal.ErrorEvent#getThrowable()
 		 */
 		public Throwable getThrowable() {
@@ -2029,6 +2066,7 @@ public class ApplicationServlet extends HttpServlet implements
 
 		/**
 		 * Gets the source URIHandler.
+		 * 
 		 * @see com.itmill.toolkit.terminal.URIHandler.ErrorEvent#getURIHandler()
 		 */
 		public URIHandler getURIHandler() {
@@ -2074,11 +2112,13 @@ public class ApplicationServlet extends HttpServlet implements
 	}
 
 	/**
-	 * Gets resource path using different implementations. Required fo supporting
-	 * different servlet container implementations (application servers).
+	 * Gets resource path using different implementations. Required fo
+	 * supporting different servlet container implementations (application
+	 * servers).
 	 * 
 	 * @param servletContext
-	 * @param path the resource path.
+	 * @param path
+	 *            the resource path.
 	 * @return the resource path.
 	 */
 	protected static String getResourcePath(ServletContext servletContext,

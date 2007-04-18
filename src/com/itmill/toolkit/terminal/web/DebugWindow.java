@@ -1,30 +1,30 @@
 /* *************************************************************************
  
-                               IT Mill Toolkit 
+ IT Mill Toolkit 
 
-               Development of Browser User Interfaces Made Easy
+ Development of Browser User Interfaces Made Easy
 
-                    Copyright (C) 2000-2006 IT Mill Ltd
-                     
-   *************************************************************************
+ Copyright (C) 2000-2006 IT Mill Ltd
+ 
+ *************************************************************************
 
-   This product is distributed under commercial license that can be found
-   from the product package on license.pdf. Use of this product might 
-   require purchasing a commercial license from IT Mill Ltd. For guidelines 
-   on usage, see licensing-guidelines.html
+ This product is distributed under commercial license that can be found
+ from the product package on license.pdf. Use of this product might 
+ require purchasing a commercial license from IT Mill Ltd. For guidelines 
+ on usage, see licensing-guidelines.html
 
-   *************************************************************************
-   
-   For more information, contact:
-   
-   IT Mill Ltd                           phone: +358 2 4802 7180
-   Ruukinkatu 2-4                        fax:   +358 2 4802 7181
-   20540, Turku                          email:  info@itmill.com
-   Finland                               company www: www.itmill.com
-   
-   Primary source for information and releases: www.itmill.com
+ *************************************************************************
+ 
+ For more information, contact:
+ 
+ IT Mill Ltd                           phone: +358 2 4802 7180
+ Ruukinkatu 2-4                        fax:   +358 2 4802 7181
+ 20540, Turku                          email:  info@itmill.com
+ Finland                               company www: www.itmill.com
+ 
+ Primary source for information and releases: www.itmill.com
 
-   ********************************************************************** */
+ ********************************************************************** */
 
 package com.itmill.toolkit.terminal.web;
 
@@ -51,13 +51,14 @@ import com.itmill.toolkit.terminal.FileResource;
 import com.itmill.toolkit.ui.*;
 
 /**
- * This class provides a debugging window where one may view the UIDL of
- * the current window, or in a tabset the UIDL of an active frameset.
+ * This class provides a debugging window where one may view the UIDL of the
+ * current window, or in a tabset the UIDL of an active frameset.
  * 
  * It is primarily intended for creating and debugging themes.
  * 
  * @author IT Mill Ltd.
- * @version @VERSION@
+ * @version
+ * @VERSION@
  * @since 3.0
  */
 public class DebugWindow extends Window {
@@ -65,39 +66,45 @@ public class DebugWindow extends Window {
 	protected static String WINDOW_NAME = "debug";
 
 	private Application debuggedApplication;
+
 	private HashMap rawUIDL = new HashMap();
+
 	private ApplicationServlet servlet;
+
 	private HttpSession session;
 
 	private TabSheet tabs = new TabSheet();
+
 	private Select themeSelector;
+
 	private Label applicationInfo = new Label("", Label.CONTENT_XHTML);
 
 	/**
 	 * Creates a new debug window for an application.
-	 * @param debuggedApplication the Application to be debugged.
-	 * @param session the Session to be debugged.
-	 * @param servlet the Servlet to be debugged.
+	 * 
+	 * @param debuggedApplication
+	 *            the Application to be debugged.
+	 * @param session
+	 *            the Session to be debugged.
+	 * @param servlet
+	 *            the Servlet to be debugged.
 	 */
-	protected DebugWindow(
-		Application debuggedApplication,
-		HttpSession session,
-		ApplicationServlet servlet) {
+	protected DebugWindow(Application debuggedApplication, HttpSession session,
+			ApplicationServlet servlet) {
 
 		super("Debug window");
 		setName(WINDOW_NAME);
 		setServlet(servlet);
 		setSession(session);
 		setBorder(Window.BORDER_NONE);
-		
 
 		// Creates control buttons
-		OrderedLayout controls =
-			new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
-		controls.addComponent(
-			new Button("Restart Application", this, "restartApplication"));
-		controls.addComponent(
-			new Button("Clear Session", this, "clearSession"));
+		OrderedLayout controls = new OrderedLayout(
+				OrderedLayout.ORIENTATION_HORIZONTAL);
+		controls.addComponent(new Button("Restart Application", this,
+				"restartApplication"));
+		controls
+				.addComponent(new Button("Clear Session", this, "clearSession"));
 		Collection themes = servlet.getThemeSource().getThemes();
 		Collection names = new LinkedList();
 		for (Iterator i = themes.iterator(); i.hasNext();) {
@@ -109,23 +116,19 @@ public class DebugWindow extends Window {
 		themeSelector.setWriteThrough(false);
 
 		// Terminal type editor
-		Label terminal =
-			new Label("<h2>Terminal Information</h2> ", Label.CONTENT_XHTML);
+		Label terminal = new Label("<h2>Terminal Information</h2> ",
+				Label.CONTENT_XHTML);
 		Form browser = new Form();
-		browser.setItemDataSource(
-			new BeanItem(WebBrowserProbe.getTerminalType(session)));
+		browser.setItemDataSource(new BeanItem(WebBrowserProbe
+				.getTerminalType(session)));
 		browser.removeItemProperty("class");
-		browser.replaceWithSelect(
-			"javaScriptVersion",
-			WebBrowser.JAVASCRIPT_VERSIONS,
-			WebBrowser.JAVASCRIPT_VERSIONS);
-		browser.replaceWithSelect(
-			"markupVersion",
-			WebBrowser.MARKUP_VERSIONS,
-			WebBrowser.MARKUP_VERSIONS);
+		browser.replaceWithSelect("javaScriptVersion",
+				WebBrowser.JAVASCRIPT_VERSIONS, WebBrowser.JAVASCRIPT_VERSIONS);
+		browser.replaceWithSelect("markupVersion", WebBrowser.MARKUP_VERSIONS,
+				WebBrowser.MARKUP_VERSIONS);
 		browser.setWriteThrough(false);
-		Button setbrowser =
-			new Button("Set terminal information", browser, "commit");
+		Button setbrowser = new Button("Set terminal information", browser,
+				"commit");
 		setbrowser.dependsOn(browser);
 
 		// Arrange the UI in tabsheet
@@ -133,20 +136,19 @@ public class DebugWindow extends Window {
 		addComponent(infoTabs);
 
 		OrderedLayout appInfo = new OrderedLayout();
-		infoTabs.addTab(appInfo, "Application",null);
+		infoTabs.addTab(appInfo, "Application", null);
 		appInfo.addComponent(applicationInfo);
 		appInfo.addComponent(controls);
 		appInfo.addComponent(themeSelector);
 		appInfo.addComponent(new Button("Change theme", this, "commitTheme"));
-		
 
 		OrderedLayout winInfo = new OrderedLayout();
-		infoTabs.addTab(winInfo, "Windows",null);
+		infoTabs.addTab(winInfo, "Windows", null);
 		winInfo.addComponent(tabs);
 		winInfo.addComponent(new Button("Save UIDL", this, "saveUIDL"));
 
 		OrderedLayout termInfo = new OrderedLayout();
-		infoTabs.addTab(termInfo, "Terminal",null);
+		infoTabs.addTab(termInfo, "Terminal", null);
 		termInfo.addComponent(terminal);
 		termInfo.addComponent(browser);
 		termInfo.addComponent(setbrowser);
@@ -155,18 +157,15 @@ public class DebugWindow extends Window {
 		setDebuggedApplication(debuggedApplication);
 
 	}
-	
-/**
- * 
- * @param caption
- * @param keys
- * @param names
- * @return
- */
-	protected Select createSelect(
-		String caption,
-		Object[] keys,
-		String[] names) {
+
+	/**
+	 * 
+	 * @param caption
+	 * @param keys
+	 * @param names
+	 * @return
+	 */
+	protected Select createSelect(String caption, Object[] keys, String[] names) {
 		Select s = new Select(caption);
 		s.addContainerProperty("name", String.class, "");
 		for (int i = 0; i < keys.length; i++) {
@@ -175,7 +174,7 @@ public class DebugWindow extends Window {
 		s.setItemCaptionPropertyId("name");
 		return s;
 	}
-	
+
 	/**
 	 * Saves the UIDL.
 	 */
@@ -189,19 +188,15 @@ public class DebugWindow extends Window {
 				return;
 
 			DateFormat df = new SimpleDateFormat("yyyyMMdd-HHmmss");
-			File file =
-				new File(
-					"/uidl-debug"
-						+ df.format(new Date(System.currentTimeMillis()))
-						+ ".xml");
+			File file = new File("/uidl-debug"
+					+ df.format(new Date(System.currentTimeMillis())) + ".xml");
 			try {
-				BufferedWriter out =
-					new BufferedWriter(
-						new OutputStreamWriter(new FileOutputStream(file)));
+				BufferedWriter out = new BufferedWriter(new OutputStreamWriter(
+						new FileOutputStream(file)));
 				out.write(currentUIDL);
 				out.close();
 
-				//Open the UIDL also
+				// Open the UIDL also
 				open(new FileResource(file, this.getApplication()));
 				Log.info("UIDL written to file " + file);
 			} catch (FileNotFoundException e) {
@@ -211,36 +206,36 @@ public class DebugWindow extends Window {
 			}
 		}
 	}
-	
+
 	/**
 	 * Commits the theme.
-	 *
+	 * 
 	 */
 	public void commitTheme() {
 		themeSelector.commit();
 	}
-	
+
 	/**
 	 * Clears the session.
 	 */
 	public void clearSession() {
 		session.invalidate();
 	}
-	
+
 	/**
 	 * Restarts the Application.
-	 *
+	 * 
 	 */
 	public void restartApplication() {
 		if (debuggedApplication != null)
 			debuggedApplication.close();
 	}
-	
-/**
- * 
- * @param window
- * @param uidl
- */
+
+	/**
+	 * 
+	 * @param window
+	 * @param uidl
+	 */
 	protected void setWindowUIDL(Window window, String uidl) {
 		String caption = "UIDL:" + window.getName();
 		synchronized (tabs) {
@@ -263,36 +258,33 @@ public class DebugWindow extends Window {
 			}
 		}
 	}
-	
-/**
- * 
- * @param caption
- * @param uidl
- * @return
- */
+
+	/**
+	 * 
+	 * @param caption
+	 * @param uidl
+	 * @return
+	 */
 	protected String getHTMLFormattedUIDL(String caption, String uidl) {
 		StringBuffer sb = new StringBuffer();
 
 		// Print formatted UIDL with errors embedded
-		//Perl5Util util = new Perl5Util();
+		// Perl5Util util = new Perl5Util();
 
 		int row = 0;
 		int prev = 0;
 		int index = 0;
 		boolean lastLineWasEmpty = false;
 
-		sb.append(
-			"<TABLE WIDTH=\"100%\" STYLE=\"border-left: 1px solid black; "
-				+ "border-right: 1px solid black; border-bottom: "
-				+ "1px solid black; border-top: 1px solid black\""
-				+ " cellpadding=\"0\" cellspacing=\"0\" BORDER=\"0\">");
+		sb
+				.append("<TABLE WIDTH=\"100%\" STYLE=\"border-left: 1px solid black; "
+						+ "border-right: 1px solid black; border-bottom: "
+						+ "1px solid black; border-top: 1px solid black\""
+						+ " cellpadding=\"0\" cellspacing=\"0\" BORDER=\"0\">");
 
 		if (caption != null)
-			sb.append(
-				"<TR><TH BGCOLOR=\"#ddddff\" COLSPAN=\"2\">"
-					+ "<FONT SIZE=\"+2\">"
-					+ caption
-					+ "</FONT></TH></TR>\n");
+			sb.append("<TR><TH BGCOLOR=\"#ddddff\" COLSPAN=\"2\">"
+					+ "<FONT SIZE=\"+2\">" + caption + "</FONT></TH></TR>\n");
 
 		boolean unfinished = true;
 		while (unfinished) {
@@ -313,10 +305,7 @@ public class DebugWindow extends Window {
 			line = WebPaintTarget.escapeXML(line);
 
 			// Code beautification : Comment lines
-			line =
-				replaceAll(
-					line,
-					"&lt;!--",
+			line = replaceAll(line, "&lt;!--",
 					"<SPAN STYLE = \"color: #00dd00\">&lt;!--");
 			line = replaceAll(line, "--&gt;", "--&gt;</SPAN>");
 
@@ -327,15 +316,13 @@ public class DebugWindow extends Window {
 			line = " " + line;
 
 			if (!(isEmpty && lastLineWasEmpty))
-				sb.append(
-					"<TR"
-						+ ((row % 10) > 4 ? " BGCOLOR=\"#eeeeff\"" : "")
-						+ ">"
-						+ "<TD VALIGN=\"top\" ALIGN=\"rigth\" STYLE=\"border-right: 1px solid gray\"> "
-						+ String.valueOf(row)
-						+ " </TD><TD>"
-						+ line
-						+ "</TD></TR>\n");
+				sb
+						.append("<TR"
+								+ ((row % 10) > 4 ? " BGCOLOR=\"#eeeeff\"" : "")
+								+ ">"
+								+ "<TD VALIGN=\"top\" ALIGN=\"rigth\" STYLE=\"border-right: 1px solid gray\"> "
+								+ String.valueOf(row) + " </TD><TD>" + line
+								+ "</TD></TR>\n");
 
 			lastLineWasEmpty = isEmpty;
 
@@ -347,11 +334,11 @@ public class DebugWindow extends Window {
 	}
 
 	/**
-	 * Replaces the characters in a substring of this <code>String</code>
-	 * with characters in the specified <code>String</code>. The substring
-	 * begins at the specified <code>start</code> and extends to the character
-	 * at index <code>end - 1</code> or to the end of the
-	 * <code>String</code> if no such character exists. 
+	 * Replaces the characters in a substring of this <code>String</code> with
+	 * characters in the specified <code>String</code>. The substring begins
+	 * at the specified <code>start</code> and extends to the character at
+	 * index <code>end - 1</code> or to the end of the <code>String</code>
+	 * if no such character exists.
 	 * <p>
 	 * First the characters in the substring are removed and then the specified
 	 * <code>String</code> is inserted at <code>start</code>. (The
@@ -361,31 +348,28 @@ public class DebugWindow extends Window {
 	 * <p>
 	 * NOTE: This operation is slow.
 	 * </p>
-	 * @param      text
-	 * @param      start    the beginning index, inclusive.
-	 * @param      end      the ending index, exclusive.
-	 * @param      str      the String that will replace previous contents.
-	 * @return     This string buffer.
+	 * 
+	 * @param text
+	 * @param start
+	 *            the beginning index, inclusive.
+	 * @param end
+	 *            the ending index, exclusive.
+	 * @param str
+	 *            the String that will replace previous contents.
+	 * @return This string buffer.
 	 */
-	protected static String replace(
-		String text,
-		int start,
-		int end,
-		String str) {
+	protected static String replace(String text, int start, int end, String str) {
 		return new StringBuffer(text).replace(start, end, str).toString();
 	}
-	
-/**
- * 
- * @param text
- * @param oldStr
- * @param newStr
- * @return
- */
-	protected static String replaceAll(
-		String text,
-		String oldStr,
-		String newStr) {
+
+	/**
+	 * 
+	 * @param text
+	 * @param oldStr
+	 * @param newStr
+	 * @return
+	 */
+	protected static String replaceAll(String text, String oldStr, String newStr) {
 		StringBuffer sb = new StringBuffer(text);
 
 		int newStrLen = newStr.length();
@@ -407,21 +391,23 @@ public class DebugWindow extends Window {
 
 	/**
 	 * Sets the application.
-	 * @param application the application to set.
+	 * 
+	 * @param application
+	 *            the application to set.
 	 */
 	protected void setDebuggedApplication(Application application) {
 		this.debuggedApplication = application;
 		if (application != null) {
-			applicationInfo.setValue(
-				"<h2>Application Class</h2> "
+			applicationInfo.setValue("<h2>Application Class</h2> "
 					+ application.getClass().getName());
-			themeSelector.setPropertyDataSource(
-				new MethodProperty(application, "theme"));
+			themeSelector.setPropertyDataSource(new MethodProperty(application,
+					"theme"));
 		}
 	}
 
 	/**
 	 * Returns the servlet.
+	 * 
 	 * @return the WebAdapterServlet.
 	 */
 	protected ApplicationServlet getServlet() {
@@ -430,6 +416,7 @@ public class DebugWindow extends Window {
 
 	/**
 	 * Returns the session.
+	 * 
 	 * @return the HttpSession.
 	 */
 	protected HttpSession getSession() {
@@ -438,7 +425,9 @@ public class DebugWindow extends Window {
 
 	/**
 	 * Sets the servlet.
-	 * @param servlet the servlet to set.
+	 * 
+	 * @param servlet
+	 *            the servlet to set.
 	 */
 	protected void setServlet(ApplicationServlet servlet) {
 		this.servlet = servlet;
@@ -446,7 +435,9 @@ public class DebugWindow extends Window {
 
 	/**
 	 * Sets the session.
-	 * @param session the session to set.
+	 * 
+	 * @param session
+	 *            the session to set.
 	 */
 	protected void setSession(HttpSession session) {
 		this.session = session;

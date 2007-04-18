@@ -1,30 +1,30 @@
 /* *************************************************************************
  
-                               IT Mill Toolkit 
+ IT Mill Toolkit 
 
-               Development of Browser User Interfaces Made Easy
+ Development of Browser User Interfaces Made Easy
 
-                    Copyright (C) 2000-2006 IT Mill Ltd
-                     
-   *************************************************************************
+ Copyright (C) 2000-2006 IT Mill Ltd
+ 
+ *************************************************************************
 
-   This product is distributed under commercial license that can be found
-   from the product package on license.pdf. Use of this product might 
-   require purchasing a commercial license from IT Mill Ltd. For guidelines 
-   on usage, see licensing-guidelines.html
+ This product is distributed under commercial license that can be found
+ from the product package on license.pdf. Use of this product might 
+ require purchasing a commercial license from IT Mill Ltd. For guidelines 
+ on usage, see licensing-guidelines.html
 
-   *************************************************************************
-   
-   For more information, contact:
-   
-   IT Mill Ltd                           phone: +358 2 4802 7180
-   Ruukinkatu 2-4                        fax:   +358 2 4802 7181
-   20540, Turku                          email:  info@itmill.com
-   Finland                               company www: www.itmill.com
-   
-   Primary source for information and releases: www.itmill.com
+ *************************************************************************
+ 
+ For more information, contact:
+ 
+ IT Mill Ltd                           phone: +358 2 4802 7180
+ Ruukinkatu 2-4                        fax:   +358 2 4802 7181
+ 20540, Turku                          email:  info@itmill.com
+ Finland                               company www: www.itmill.com
+ 
+ Primary source for information and releases: www.itmill.com
 
-   ********************************************************************** */
+ ********************************************************************** */
 
 package com.itmill.toolkit.terminal.web;
 
@@ -50,43 +50,49 @@ import com.itmill.toolkit.terminal.Terminal;
 import com.itmill.toolkit.terminal.UploadStream;
 import com.itmill.toolkit.terminal.VariableOwner;
 
-/** 
+/**
  * Variable map for ajax applications.
  * 
  * @author IT Mill Ltd.
- * @version @VERSION@
+ * @version
+ * @VERSION@
  * @since 3.1
  */
 public class AjaxVariableMap {
 
-
 	// Id <-> (Owner,Name) mapping
 	private Map idToNameMap = new HashMap();
+
 	private Map idToTypeMap = new HashMap();
+
 	private Map idToOwnerMap = new HashMap();
+
 	private Map idToValueMap = new HashMap();
+
 	private Map ownerToNameToIdMap = new WeakHashMap();
+
 	private Object mapLock = new Object();
-	
+
 	// Id generator
 	private long lastId = 0;
 
 	/**
-	 * Converts the string to a supported class. 
+	 * Converts the string to a supported class.
+	 * 
 	 * @param type
 	 * @param value
 	 * @return
-	 * @throws java.lang.ClassCastException if the code has 
-	 * 					attempted to cast an object to a subclass of which it is not an instance
+	 * @throws java.lang.ClassCastException
+	 *             if the code has attempted to cast an object to a subclass of
+	 *             which it is not an instance
 	 */
 	private static Object convert(Class type, String value)
-		throws java.lang.ClassCastException {
+			throws java.lang.ClassCastException {
 		try {
 
 			// Boolean typed variables
 			if (type.equals(Boolean.class))
-				return new Boolean(
-					!(value.equals("") || value.equals("false")));
+				return new Boolean(!(value.equals("") || value.equals("false")));
 
 			// Integer typed variables
 			if (type.equals(Integer.class))
@@ -102,28 +108,26 @@ public class AjaxVariableMap {
 		}
 	}
 
-	/** 
+	/**
 	 * Registers a new variable.
-	 * @param name the Variable name.
+	 * 
+	 * @param name
+	 *            the Variable name.
 	 * @param type
 	 * @param value
-	 * @param owner the Listener for variable changes.
+	 * @param owner
+	 *            the Listener for variable changes.
 	 * @return id to assigned for this variable.
 	 */
-	public String registerVariable(
-		String name,
-		Class type,
-		Object value,
-		VariableOwner owner) {
+	public String registerVariable(String name, Class type, Object value,
+			VariableOwner owner) {
 
 		// Checks that the type of the class is supported
-		if (!(type.equals(Boolean.class)
-			|| type.equals(Integer.class)
-			|| type.equals(String.class)
-			|| type.equals(String[].class)
-			|| type.equals(UploadStream.class)))
-			throw new SystemError(
-				"Unsupported variable type: " + type.getClass());
+		if (!(type.equals(Boolean.class) || type.equals(Integer.class)
+				|| type.equals(String.class) || type.equals(String[].class) || type
+				.equals(UploadStream.class)))
+			throw new SystemError("Unsupported variable type: "
+					+ type.getClass());
 
 		synchronized (mapLock) {
 
@@ -150,10 +154,13 @@ public class AjaxVariableMap {
 		}
 	}
 
-	/** 
+	/**
 	 * Unregisters the variable.
-	 * @param name the Variable name.
-	 * @param owner the Listener for variable changes.
+	 * 
+	 * @param name
+	 *            the Variable name.
+	 * @param owner
+	 *            the Listener for variable changes.
 	 */
 	public void unregisterVariable(String name, VariableOwner owner) {
 
@@ -181,42 +188,44 @@ public class AjaxVariableMap {
 
 	/**
 	 * @author IT Mill Ltd.
-	 * @version @VERSION@
+	 * @version
+	 * @VERSION@
 	 * @since 3.0
 	 */
 	private class ParameterContainer {
 
-		/** 
-		 * Constructs the mapping: listener to set of listened parameter names. 
+		/**
+		 * Constructs the mapping: listener to set of listened parameter names.
 		 */
 		private HashMap parameters = new HashMap();
 
 		/**
-		 * Parameter values. 
+		 * Parameter values.
 		 */
 		private HashMap values = new HashMap();
 
-		/** 
-		 * Multipart parser used for parsing the request. 
+		/**
+		 * Multipart parser used for parsing the request.
 		 */
 		private ServletMultipartRequest parser = null;
 
-		/** 
-		 * Name - Value mapping of parameters that are not variables. 
+		/**
+		 * Name - Value mapping of parameters that are not variables.
 		 */
 		private HashMap nonVariables = new HashMap();
 
-		/** 
-		 * Creates a new parameter container and parse the parameters from the request using
-		 * GET, POST and POST/MULTIPART parsing
-		 * @param req the Http request to handle.
-		 * @throws IOException if the writing failed due to input/output error.
+		/**
+		 * Creates a new parameter container and parse the parameters from the
+		 * request using GET, POST and POST/MULTIPART parsing
+		 * 
+		 * @param req
+		 *            the Http request to handle.
+		 * @throws IOException
+		 *             if the writing failed due to input/output error.
 		 */
 		public ParameterContainer(HttpServletRequest req) throws IOException {
 			// Parse GET / POST parameters
-			for (Enumeration e = req.getParameterNames();
-				e.hasMoreElements();
-				) {
+			for (Enumeration e = req.getParameterNames(); e.hasMoreElements();) {
 				String paramName = (String) e.nextElement();
 				String[] paramValues = req.getParameterValues(paramName);
 				addParam(paramName, paramValues);
@@ -224,28 +233,25 @@ public class AjaxVariableMap {
 
 			// Parse multipart variables
 			try {
-				parser =
-					new ServletMultipartRequest(
-						req,
+				parser = new ServletMultipartRequest(req,
 						MultipartRequest.MAX_READ_BYTES);
 			} catch (IllegalArgumentException ignored) {
 				parser = null;
 			}
 
 			if (parser != null) {
-				for (Enumeration e = parser.getFileParameterNames();
-					e.hasMoreElements();
-					) {
+				for (Enumeration e = parser.getFileParameterNames(); e
+						.hasMoreElements();) {
 					String paramName = (String) e.nextElement();
 					addParam(paramName, null);
 				}
-				for (Enumeration e = parser.getParameterNames();
-					e.hasMoreElements();
-					) {
+				for (Enumeration e = parser.getParameterNames(); e
+						.hasMoreElements();) {
 					String paramName = (String) e.nextElement();
 					Enumeration val = parser.getURLParameters(paramName);
 
-					// Create a linked list from enumeration to calculate elements
+					// Create a linked list from enumeration to calculate
+					// elements
 					LinkedList l = new LinkedList();
 					while (val.hasMoreElements())
 						l.addLast(val.nextElement());
@@ -262,10 +268,13 @@ public class AjaxVariableMap {
 
 		}
 
-		/** 
+		/**
 		 * Adds the parameter to container.
-		 * @param name the Parameter name.
-		 * @param value the Parameter value.
+		 * 
+		 * @param name
+		 *            the Parameter name.
+		 * @param value
+		 *            the Parameter value.
 		 */
 		private void addParam(String name, String[] value) {
 
@@ -282,50 +291,46 @@ public class AjaxVariableMap {
 						newVal[i] = curVal[i];
 					value = newVal;
 
-					// Special case - if the set:-method is used for 
-					// declaring array of length 2, where either of the  
+					// Special case - if the set:-method is used for
+					// declaring array of length 2, where either of the
 					// following conditions are true:
-					//    - the both items are the same 
-					//    - the both items have the same length and 
-					//      - the items only differ on last character
-					//      - second last character is '.'
-					//      - last char of one string is 'x' and other is 'y'
-					// Browser is unporposely modifying the name. 
+					// - the both items are the same
+					// - the both items have the same length and
+					// - the items only differ on last character
+					// - second last character is '.'
+					// - last char of one string is 'x' and other is 'y'
+					// Browser is unporposely modifying the name.
 					if (value.length == 2
-						&& value[0].length() == value[1].length()) {
+							&& value[0].length() == value[1].length()) {
 						boolean same = true;
 						for (int i = 0; i < value[0].length() - 1 && same; i++)
 							if (value[0].charAt(i) != value[1].charAt(i))
 								same = false;
 						if (same
-							&& ((value[0].charAt(value[0].length() - 1) == 'x'
-								&& value[1].charAt(value[1].length() - 1) == 'y')
-							|| (value[0].charAt(value[0].length() - 1) == 'y'
-								&& value[1].charAt(value[1].length() - 1)
-									== 'x'))) {
-							value =
-								new String[] {
-									 value[0].substring(
-										0,
-										value[1].length() - 2)};
-						} else
-						if (same && value[0].equals(value[1]))
+								&& ((value[0].charAt(value[0].length() - 1) == 'x' && value[1]
+										.charAt(value[1].length() - 1) == 'y') || (value[0]
+										.charAt(value[0].length() - 1) == 'y' && value[1]
+										.charAt(value[1].length() - 1) == 'x'))) {
+							value = new String[] { value[0].substring(0,
+									value[1].length() - 2) };
+						} else if (same && value[0].equals(value[1]))
 							value = new String[] { value[0] };
 					}
 
-					// Special case - if the set:-method is used for 
-					// declaring array of length 3, where all of the 
+					// Special case - if the set:-method is used for
+					// declaring array of length 3, where all of the
 					// following conditions are true:
-					//    - two last items  have the same length
-					//    - the first item is 2 chars shorter
-					//    - the longer items only differ on last character
-					//    - the shortest item is a prefix of the longer ones
-					//    - second last character of longer ones is '.'
-					//    - last char of one long string is 'x' and other is 'y'
-					// Browser is unporposely modifying the name. (Mozilla, Firefox, ..)
+					// - two last items have the same length
+					// - the first item is 2 chars shorter
+					// - the longer items only differ on last character
+					// - the shortest item is a prefix of the longer ones
+					// - second last character of longer ones is '.'
+					// - last char of one long string is 'x' and other is 'y'
+					// Browser is unporposely modifying the name. (Mozilla,
+					// Firefox, ..)
 					if (value.length == 3
-						&& value[1].length() == value[2].length() &&
-						value[0].length() +2 == value[1].length()) {
+							&& value[1].length() == value[2].length()
+							&& value[0].length() + 2 == value[1].length()) {
 						boolean same = true;
 						for (int i = 0; i < value[1].length() - 1 && same; i++)
 							if (value[2].charAt(i) != value[1].charAt(i))
@@ -334,14 +339,11 @@ public class AjaxVariableMap {
 							if (value[0].charAt(i) != value[1].charAt(i))
 								same = false;
 						if (same
-							&& (value[2].charAt(value[2].length() - 1) == 'x'
-								&& value[1].charAt(value[1].length() - 1) == 'y')
-							|| (value[2].charAt(value[2].length() - 1) == 'y'
-								&& value[1].charAt(value[1].length() - 1)
-									== 'x')) {
-							value =
-								new String[] {
-									 value[0]};
+								&& (value[2].charAt(value[2].length() - 1) == 'x' && value[1]
+										.charAt(value[1].length() - 1) == 'y')
+								|| (value[2].charAt(value[2].length() - 1) == 'y' && value[1]
+										.charAt(value[1].length() - 1) == 'x')) {
+							value = new String[] { value[0] };
 						}
 					}
 
@@ -355,8 +357,8 @@ public class AjaxVariableMap {
 				if (equalsIndex < 0)
 					return;
 
-				StringTokenizer commalist =
-					new StringTokenizer(name.substring(equalsIndex + 1), ",");
+				StringTokenizer commalist = new StringTokenizer(name
+						.substring(equalsIndex + 1), ",");
 				name = name.substring(10, equalsIndex);
 				String[] curVal = (String[]) values.get(name);
 				ArrayList elems = new ArrayList();
@@ -428,7 +430,8 @@ public class AjaxVariableMap {
 			// If the owner can not be found
 			else {
 
-				// If parameter has been mapped before, remove the old owner mapping
+				// If parameter has been mapped before, remove the old owner
+				// mapping
 				if (ref != null) {
 
 					// The owner has been destroyed, so we remove the mappings
@@ -444,10 +447,12 @@ public class AjaxVariableMap {
 
 		}
 
-		/** 
+		/**
 		 * Gets the set of all parameters connected to given variable owner.
-		 * @param owner the Listener for variable changes.
-		 * @return  the set of all the parameters.
+		 * 
+		 * @param owner
+		 *            the Listener for variable changes.
+		 * @return the set of all the parameters.
 		 */
 		public Set getParameters(VariableOwner owner) {
 			if (owner == null)
@@ -455,52 +460,60 @@ public class AjaxVariableMap {
 			return (Set) parameters.get(owner);
 		}
 
-		/** 
-		 * Gets the set of all variable owners owning parameters in this request.
-		 * @return  the set of all varaible owners.
+		/**
+		 * Gets the set of all variable owners owning parameters in this
+		 * request.
+		 * 
+		 * @return the set of all varaible owners.
 		 */
 		public Set getOwners() {
 			return parameters.keySet();
 		}
 
-		/** 
+		/**
 		 * Gets the value of a parameter.
-		 * @param parameterName the name of the parameter.
-		 * @return  the value of the parameter.
+		 * 
+		 * @param parameterName
+		 *            the name of the parameter.
+		 * @return the value of the parameter.
 		 */
 		public String[] getValue(String parameterName) {
 			return (String[]) values.get(parameterName);
 		}
 
-		/** 
+		/**
 		 * Gets the servlet multipart parser.
+		 * 
 		 * @return the parser.
 		 */
 		public ServletMultipartRequest getParser() {
 			return parser;
 		}
 
-		/** 
+		/**
 		 * Gets the name - value[] mapping of non variable parameters.
-		 * @return  the mapping of non variable parameters.
+		 * 
+		 * @return the mapping of non variable parameters.
 		 */
 		public Map getNonVariables() {
 			return nonVariables;
 		}
 	}
 
-	/** 
+	/**
 	 * Handles all variable changes in this request.
-	 * @param req the Http request to handle.
-	 * @param errorListener the listeners If the list is non null, only the listed listeners are
-	 * served. Otherwise all the listeners are served.
+	 * 
+	 * @param req
+	 *            the Http request to handle.
+	 * @param errorListener
+	 *            the listeners If the list is non null, only the listed
+	 *            listeners are served. Otherwise all the listeners are served.
 	 * @return Name to Value[] mapping of unhandled variables.
-	 * @throws IOException if the writing failed due to input/output error.
+	 * @throws IOException
+	 *             if the writing failed due to input/output error.
 	 */
-	public Map handleVariables(
-		HttpServletRequest req,
-		Terminal.ErrorListener errorListener)
-		throws IOException {
+	public Map handleVariables(HttpServletRequest req,
+			Terminal.ErrorListener errorListener) throws IOException {
 
 		// Gets the parameters
 		ParameterContainer parcon = new ParameterContainer(req);
@@ -511,7 +524,8 @@ public class AjaxVariableMap {
 		// Handles all parameters for all listeners
 		while (!listeners.isEmpty()) {
 			VariableOwner listener = (VariableOwner) listeners.remove(0);
-			boolean changed = false; // Has any of this owners variabes changed
+			boolean changed = false; // Has any of this owners variabes
+										// changed
 			// Handles all parameters for listener
 			Set params = parcon.getParameters(listener);
 			if (params != null) { // Name value mapping
@@ -525,14 +539,13 @@ public class AjaxVariableMap {
 					Object varOldValue = idToValueMap.get(param);
 					if (varName == null || varType == null)
 						// TODO Remove this?
-						System.err.println(
-							"VariableMap: No variable found for parameter "
-								+ param
-								+ " ("
-								+ varName
-								+ ","
-								+ listener
-								+ ")");
+						System.err
+								.println("VariableMap: No variable found for parameter "
+										+ param
+										+ " ("
+										+ varName
+										+ ","
+										+ listener + ")");
 					else {
 
 						ServletMultipartRequest parser = parcon.getParser();
@@ -540,24 +553,17 @@ public class AjaxVariableMap {
 						// Uploads events
 						if (varType.equals(UploadStream.class)) {
 							if (parser != null
-								&& parser.getFileParameter(
-									param,
-									MultipartRequest.FILENAME)
-									!= null) {
-								String filename =
-									(String) parser.getFileParameter(
-										param,
-										MultipartRequest.FILENAME);
-								String contentType =
-									(String) parser.getFileParameter(
-										param,
-										MultipartRequest.CONTENT_TYPE);
-								UploadStream upload =
-									new AjaxHttpUploadStream(
-										varName,
-										parser.getFileContents(param),
-										filename,
-										contentType);
+									&& parser.getFileParameter(param,
+											MultipartRequest.FILENAME) != null) {
+								String filename = (String) parser
+										.getFileParameter(param,
+												MultipartRequest.FILENAME);
+								String contentType = (String) parser
+										.getFileParameter(param,
+												MultipartRequest.CONTENT_TYPE);
+								UploadStream upload = new AjaxHttpUploadStream(
+										varName, parser.getFileContents(param),
+										filename, contentType);
 								variables.put(varName, upload);
 								changed = true;
 							}
@@ -571,47 +577,41 @@ public class AjaxVariableMap {
 
 								if (varType.equals(String[].class)) {
 									variables.put(varName, values);
-									changed
-										|= (!Arrays
-											.equals(
-												values,
-												(String[]) varOldValue));
+									changed |= (!Arrays.equals(values,
+											(String[]) varOldValue));
 								} else {
 									try {
 										if (values.length == 1) {
-											Object val =
-												convert(varType, values[0]);
+											Object val = convert(varType,
+													values[0]);
 											variables.put(varName, val);
-											changed
-												|= ((val == null
-													&& varOldValue != null)
-													|| (val != null
-														&& !val.equals(
-															varOldValue)));
-										} else if (
-											values.length == 0
-												&& varType.equals(
-													Boolean.class)) {
+											changed |= ((val == null && varOldValue != null) || (val != null && !val
+													.equals(varOldValue)));
+										} else if (values.length == 0
+												&& varType
+														.equals(Boolean.class)) {
 											Object val = new Boolean(false);
 											variables.put(varName, val);
-											changed
-												|= (!val.equals(varOldValue));
+											changed |= (!val
+													.equals(varOldValue));
 										} else {
 											// TODO Remove this?
-											System.err.println(
-												"Empty variable '"
-													+ varName
-													+ "' of type "
-													+ varType.toString());
+											System.err
+													.println("Empty variable '"
+															+ varName
+															+ "' of type "
+															+ varType
+																	.toString());
 										}
 
 									} catch (java.lang.ClassCastException e) {
 										// TODO Remove this?
-										System.err.println(
-											"WebVariableMap conversion exception");
-											e.printStackTrace(System.err);
-										errorListener.terminalError(
-											new TerminalErrorImpl(e));
+										System.err
+												.println("WebVariableMap conversion exception");
+										e.printStackTrace(System.err);
+										errorListener
+												.terminalError(new TerminalErrorImpl(
+														e));
 									}
 								}
 							}
@@ -625,8 +625,8 @@ public class AjaxVariableMap {
 						listener.changeVariables(req, variables);
 					} catch (Throwable t) {
 						// Notify the error listener
-						errorListener.terminalError(
-							new VariableOwnerErrorImpl(listener, t));
+						errorListener.terminalError(new VariableOwnerErrorImpl(
+								listener, t));
 					}
 				}
 			}
@@ -635,16 +635,16 @@ public class AjaxVariableMap {
 		return parcon.getNonVariables();
 	}
 
-	/** 
-	 * Implementation of VariableOwner.Error interface. 
+	/**
+	 * Implementation of VariableOwner.Error interface.
 	 */
 	public class TerminalErrorImpl implements Terminal.ErrorEvent {
 		private Throwable throwable;
-		
-/**
- * 
- * @param throwable
- */
+
+		/**
+		 * 
+		 * @param throwable
+		 */
 		private TerminalErrorImpl(Throwable throwable) {
 			this.throwable = throwable;
 		}
@@ -658,22 +658,21 @@ public class AjaxVariableMap {
 
 	}
 
-	/** 
-	 * Implementation of VariableOwner.Error interface. 
+	/**
+	 * Implementation of VariableOwner.Error interface.
 	 */
-	public class VariableOwnerErrorImpl
-		extends TerminalErrorImpl
-		implements VariableOwner.ErrorEvent {
+	public class VariableOwnerErrorImpl extends TerminalErrorImpl implements
+			VariableOwner.ErrorEvent {
 
 		private VariableOwner owner;
-/**
- * 
- * @param owner the Listener for variable changes.
- * @param throwable
- */
-		private VariableOwnerErrorImpl(
-			VariableOwner owner,
-			Throwable throwable) {
+
+		/**
+		 * 
+		 * @param owner
+		 *            the Listener for variable changes.
+		 * @param throwable
+		 */
+		private VariableOwnerErrorImpl(VariableOwner owner, Throwable throwable) {
 			super(throwable);
 			this.owner = owner;
 		}
@@ -687,13 +686,13 @@ public class AjaxVariableMap {
 
 	}
 
-	/** 
-	 * Resolves the VariableOwners needed from the request and sort
-	 * them to assure that the dependencies are met (as well as possible).
+	/**
+	 * Resolves the VariableOwners needed from the request and sort them to
+	 * assure that the dependencies are met (as well as possible).
 	 * 
-	 * @param listeners 
-	 * @return List of variable list changers, that are needed for handling
-	 * all the variables in the request
+	 * @param listeners
+	 * @return List of variable list changers, that are needed for handling all
+	 *         the variables in the request
 	 */
 	private List getDependencySortedListenerList(Set listeners) {
 
@@ -710,7 +709,8 @@ public class AjaxVariableMap {
 			if (listener != null) {
 				Set dependencies = listener.getDirectDependencies();
 
-				// The listeners with no dependencies are added to the front of the
+				// The listeners with no dependencies are added to the front of
+				// the
 				// list directly
 				if (dependencies == null || dependencies.isEmpty()) {
 					if (listener.isImmediate())
@@ -734,8 +734,8 @@ public class AjaxVariableMap {
 					HashSet tmpdeepdeps = new HashSet();
 					while (!unresolved.isEmpty()) {
 
-						VariableOwner l =
-							(VariableOwner) unresolved.removeFirst();
+						VariableOwner l = (VariableOwner) unresolved
+								.removeFirst();
 						if (!tmpdeepdeps.contains(l)) {
 							tmpdeepdeps.add(l);
 							if (deepdeps.containsKey(l)) {
@@ -743,12 +743,11 @@ public class AjaxVariableMap {
 							} else {
 								Set deps = l.getDirectDependencies();
 								if (deps != null && !deps.isEmpty())
-									for (Iterator di = deps.iterator();
-										di.hasNext();
-										) {
+									for (Iterator di = deps.iterator(); di
+											.hasNext();) {
 										Object d = di.next();
 										if (d != null
-											&& !tmpdeepdeps.contains(d))
+												&& !tmpdeepdeps.contains(d))
 											unresolved.addLast(d);
 									}
 							}
@@ -769,23 +768,21 @@ public class AjaxVariableMap {
 			// Adds each listener after the last depended listener already in
 			// the list
 			int index = -1;
-			for (Iterator di = ((Set) deepdeps.get(l)).iterator();
-				di.hasNext();
-				) {
+			for (Iterator di = ((Set) deepdeps.get(l)).iterator(); di.hasNext();) {
 				int k;
 				Object depended = di.next();
 				if (immediate) {
-					k = resultImmediate.lastIndexOf(depended);				
-				}else {
-					k = resultNormal.lastIndexOf(depended);								
-				}				
+					k = resultImmediate.lastIndexOf(depended);
+				} else {
+					k = resultNormal.lastIndexOf(depended);
+				}
 				if (k > index)
 					index = k;
 			}
 			if (immediate) {
 				resultImmediate.add(index + 1, l);
 			} else {
-				resultNormal.add(index + 1, l);			
+				resultNormal.add(index + 1, l);
 			}
 		}
 

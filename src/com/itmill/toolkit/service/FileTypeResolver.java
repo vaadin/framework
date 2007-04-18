@@ -1,30 +1,30 @@
 /* *************************************************************************
  
-                               IT Mill Toolkit 
+ IT Mill Toolkit 
 
-               Development of Browser User Interfaces Made Easy
+ Development of Browser User Interfaces Made Easy
 
-                    Copyright (C) 2000-2006 IT Mill Ltd
-                     
-   *************************************************************************
+ Copyright (C) 2000-2006 IT Mill Ltd
+ 
+ *************************************************************************
 
-   This product is distributed under commercial license that can be found
-   from the product package on license.pdf. Use of this product might 
-   require purchasing a commercial license from IT Mill Ltd. For guidelines 
-   on usage, see licensing-guidelines.html
+ This product is distributed under commercial license that can be found
+ from the product package on license.pdf. Use of this product might 
+ require purchasing a commercial license from IT Mill Ltd. For guidelines 
+ on usage, see licensing-guidelines.html
 
-   *************************************************************************
-   
-   For more information, contact:
-   
-   IT Mill Ltd                           phone: +358 2 4802 7180
-   Ruukinkatu 2-4                        fax:   +358 2 4802 7181
-   20540, Turku                          email:  info@itmill.com
-   Finland                               company www: www.itmill.com
-   
-   Primary source for information and releases: www.itmill.com
+ *************************************************************************
+ 
+ For more information, contact:
+ 
+ IT Mill Ltd                           phone: +358 2 4802 7180
+ Ruukinkatu 2-4                        fax:   +358 2 4802 7181
+ 20540, Turku                          email:  info@itmill.com
+ Finland                               company www: www.itmill.com
+ 
+ Primary source for information and releases: www.itmill.com
 
-   ********************************************************************** */
+ ********************************************************************** */
 
 package com.itmill.toolkit.service;
 
@@ -37,33 +37,35 @@ import java.util.StringTokenizer;
 import com.itmill.toolkit.terminal.Resource;
 import com.itmill.toolkit.terminal.ThemeResource;
 
-/** 
+/**
  * Utility class that can figure out mime-types and icons related to files.
  * <p>
- * Note : The icons are associated purely to mime-types, so a file
- * may not have a custom icon accessible with this class.
+ * Note : The icons are associated purely to mime-types, so a file may not have
+ * a custom icon accessible with this class.
  * </p>
+ * 
  * @author IT Mill Ltd.
- * @version @VERSION@
+ * @version
+ * @VERSION@
  * @since 3.0
  */
 public class FileTypeResolver {
 
-	/** 
-	 * Default icon given if no icon is specified for a mime-type. 
+	/**
+	 * Default icon given if no icon is specified for a mime-type.
 	 */
-	static public Resource DEFAULT_ICON = new ThemeResource("icon/files/file.gif");
-	
-	/** 
-	 * Default mime-type. 
-	 */
-	static public  String DEFAULT_MIME_TYPE = "application/octet-stream";
+	static public Resource DEFAULT_ICON = new ThemeResource(
+			"icon/files/file.gif");
 
-	/** 
-	 * Initial file extension to mime-type mapping. 
+	/**
+	 * Default mime-type.
 	 */
-	static private String initialExtToMIMEMap =
-		"application/cu-seeme                            csm cu,"
+	static public String DEFAULT_MIME_TYPE = "application/octet-stream";
+
+	/**
+	 * Initial file extension to mime-type mapping.
+	 */
+	static private String initialExtToMIMEMap = "application/cu-seeme                            csm cu,"
 			+ "application/dsptype                             tsp,"
 			+ "application/futuresplash                        spl,"
 			+ "application/mac-binhex40                        hqx,"
@@ -211,20 +213,20 @@ public class FileTypeResolver {
 			+ "video/x-sgi-movie                               movie,"
 			+ "x-world/x-vrml                                  vrm vrml wrl";
 
-	/** 
-	 * File extension to MIME type mapping. 
+	/**
+	 * File extension to MIME type mapping.
 	 */
 	static private Hashtable extToMIMEMap = new Hashtable();
 
-	/** 
-	 * MIME type to Icon mapping. 
+	/**
+	 * MIME type to Icon mapping.
 	 */
 	static private Hashtable MIMEToIconMap = new Hashtable();
 
 	static {
-		
+
 		// Initialize extension to MIME map
-		StringTokenizer lines = new StringTokenizer(initialExtToMIMEMap,",");
+		StringTokenizer lines = new StringTokenizer(initialExtToMIMEMap, ",");
 		while (lines.hasMoreTokens()) {
 			String line = lines.nextToken();
 			StringTokenizer exts = new StringTokenizer(line);
@@ -234,143 +236,155 @@ public class FileTypeResolver {
 				addExtension(ext, type);
 			}
 		}
-		
+
 		// Initialize Icons
 		addIcon("inode/drive", new ThemeResource("icon/files/drive.gif"));
 		addIcon("inode/directory", new ThemeResource("icon/files/folder.gif"));
 	}
 
-	/** 
-	 * Gets the mime-type of a file. Currently the mime-type is resolved
-	 * based only on the file name extension.
+	/**
+	 * Gets the mime-type of a file. Currently the mime-type is resolved based
+	 * only on the file name extension.
 	 * 
-	 * @param fileName the name of the file whose mime-type is requested.
+	 * @param fileName
+	 *            the name of the file whose mime-type is requested.
 	 * @return mime-type <code>String</code> for the given filename
 	 */
 	public static String getMIMEType(String fileName) {
 
 		// Checks for nulls
-		if (fileName == null) 
+		if (fileName == null)
 			throw new NullPointerException("Filename can not be null");
 
 		// Calculates the extension of the file
 		int dotIndex = fileName.indexOf(".");
-		while (dotIndex >= 0 && fileName.indexOf(".",dotIndex+1) >= 0) 
-			dotIndex = fileName.indexOf(".",dotIndex+1);
+		while (dotIndex >= 0 && fileName.indexOf(".", dotIndex + 1) >= 0)
+			dotIndex = fileName.indexOf(".", dotIndex + 1);
 		dotIndex++;
-	
+
 		if (fileName.length() > dotIndex) {
 			String ext = fileName.substring(dotIndex);
 
 			// Return type from extension map, if found
 			String type = (String) extToMIMEMap.get(ext);
-			if (type != null) return type;
+			if (type != null)
+				return type;
 		}
 
 		return DEFAULT_MIME_TYPE;
 	}
 
-	/** 
-	 * Gets the descriptive icon representing file, based on the filename.
-	 * First the mime-type for the given filename is resolved, and then the
-	 * corresponding icon is fetched from the internal icon storage. If it
-	 * is not found the default icon is returned.
+	/**
+	 * Gets the descriptive icon representing file, based on the filename. First
+	 * the mime-type for the given filename is resolved, and then the
+	 * corresponding icon is fetched from the internal icon storage. If it is
+	 * not found the default icon is returned.
 	 * 
-	 * @param fileName the name of the file whose icon is requested.
+	 * @param fileName
+	 *            the name of the file whose icon is requested.
 	 * @return the icon corresponding to the given file
 	 */
 	public static Resource getIcon(String fileName) {
 
 		String mimeType = getMIMEType(fileName);
 		Resource icon = (Resource) MIMEToIconMap.get(mimeType);
-		if (icon != null) return icon;
+		if (icon != null)
+			return icon;
 
 		// If nothing is known about the file-type, general file
-		// icon is used		
+		// icon is used
 		return DEFAULT_ICON;
 	}
 
-	/** 
-	 * Gets the descriptive icon representing a file. First the mime-type
-	 * for the given file name is resolved, and then the corresponding
-	 * icon is fetched from the internal icon storage. If it is not found
-	 * the default icon is returned.
+	/**
+	 * Gets the descriptive icon representing a file. First the mime-type for
+	 * the given file name is resolved, and then the corresponding icon is
+	 * fetched from the internal icon storage. If it is not found the default
+	 * icon is returned.
 	 * 
-	 * @param file the file whose icon is requested.
+	 * @param file
+	 *            the file whose icon is requested.
 	 * @return the icon corresponding to the given file
 	 */
 	public static Resource getIcon(File file) {
 
 		String mimeType = getMIMEType(file);
 		Resource icon = (Resource) MIMEToIconMap.get(mimeType);
-		if (icon != null) return icon;
+		if (icon != null)
+			return icon;
 
 		// If nothing is known about the file-type, general file
-		// icon is used		
+		// icon is used
 		return DEFAULT_ICON;
 	}
 
-	/** 
+	/**
 	 * Gets the mime-type for a file. Currently the returned file type is
 	 * resolved by the filename extension only.
 	 * 
-	 * @param file the file whose mime-type is requested.
+	 * @param file
+	 *            the file whose mime-type is requested.
 	 * @return the files mime-type <code>String</code>
 	 */
 	public static String getMIMEType(File file) {
 
 		// Checks for nulls
-		if (file == null) 
+		if (file == null)
 			throw new NullPointerException("File can not be null");
 
 		// Drives
-		if (file.getParentFile() == null) return "inode/drive";
+		if (file.getParentFile() == null)
+			return "inode/drive";
 
 		// Directories
-		if (file.isDirectory()) return "inode/directory";
+		if (file.isDirectory())
+			return "inode/directory";
 
 		// Return type from extension
 		return getMIMEType(file.getName());
 	}
 
-	/** 
-	 * Adds a mime-type mapping for the given filename extension. If
-	 * the extension is already in the internal mapping it is overwritten.
+	/**
+	 * Adds a mime-type mapping for the given filename extension. If the
+	 * extension is already in the internal mapping it is overwritten.
 	 * 
-	 * @param extension the filename extension to be associated with
-	 * <code>MIMEType</code>.
-	 * @param MIMEType the new mime-type for <code>extension</code>.
+	 * @param extension
+	 *            the filename extension to be associated with
+	 *            <code>MIMEType</code>.
+	 * @param MIMEType
+	 *            the new mime-type for <code>extension</code>.
 	 */
 	public static void addExtension(String extension, String MIMEType) {
 		extToMIMEMap.put(extension, MIMEType);
 	}
 
-	/** 
+	/**
 	 * Adds a icon for the given mime-type. If the mime-type also has a
 	 * corresponding icon, it is replaced with the new icon.
 	 * 
-	 * @param MIMEType the mime-type whose icon is to be changed.
-	 * @param icon the new icon to be associated with <code>MIMEType</code>.
+	 * @param MIMEType
+	 *            the mime-type whose icon is to be changed.
+	 * @param icon
+	 *            the new icon to be associated with <code>MIMEType</code>.
 	 */
 	public static void addIcon(String MIMEType, Resource icon) {
 		MIMEToIconMap.put(MIMEType, icon);
 	}
-	
-	/** 
+
+	/**
 	 * Gets the internal file extension to mime-type mapping.
 	 * 
 	 * @return unmodifiable map containing the current file extension to
-	 * mime-type mapping
+	 *         mime-type mapping
 	 */
 	public static Map getExtensionToMIMETypeMapping() {
 		return Collections.unmodifiableMap(extToMIMEMap);
 	}
 
-	/** 
+	/**
 	 * Gets the internal mime-type to icon mapping.
 	 * 
-	 * @return unmodifiable map containing the current mime-type to icon
-	 * mapping
+	 * @return unmodifiable map containing the current mime-type to icon mapping
 	 */
 	public static Map getMIMETypeToIconMapping() {
 		return Collections.unmodifiableMap(MIMEToIconMap);

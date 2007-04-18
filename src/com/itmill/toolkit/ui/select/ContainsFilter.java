@@ -8,13 +8,12 @@ import com.itmill.toolkit.ui.Select;
 
 public class ContainsFilter implements OptionFilter {
 	private Select s;
-	
+
 	private ArrayList filteredItemsBuffer;
 
 	public ContainsFilter(Select s) {
 		this.s = s;
 	}
-
 
 	public ArrayList filter(String filterstring) {
 		// prefix MUST be in lowercase
@@ -22,12 +21,11 @@ public class ContainsFilter implements OptionFilter {
 			this.filteredItemsBuffer = new ArrayList(s.getItemIds());
 			return this.filteredItemsBuffer;
 
-		} else if (s.getContainerDataSource() != null) { 
+		} else if (s.getContainerDataSource() != null) {
 			// all items will be iterated and tested.
 			// SLOW when there are lot of items.
 			this.filteredItemsBuffer = new ArrayList();
-			for (Iterator iter = s.getItemIds().iterator(); iter
-					.hasNext();) {
+			for (Iterator iter = s.getItemIds().iterator(); iter.hasNext();) {
 				Object id = iter.next();
 
 				Item item = s.getItem(id);
@@ -43,6 +41,6 @@ public class ContainsFilter implements OptionFilter {
 				}
 			}
 		}
-		return this.filteredItemsBuffer;		
+		return this.filteredItemsBuffer;
 	}
 }

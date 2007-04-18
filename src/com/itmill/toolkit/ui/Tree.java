@@ -1,30 +1,30 @@
 /* *************************************************************************
  
-                               IT Mill Toolkit 
+ IT Mill Toolkit 
 
-               Development of Browser User Interfaces Made Easy
+ Development of Browser User Interfaces Made Easy
 
-                    Copyright (C) 2000-2006 IT Mill Ltd
-                     
-   *************************************************************************
+ Copyright (C) 2000-2006 IT Mill Ltd
+ 
+ *************************************************************************
 
-   This product is distributed under commercial license that can be found
-   from the product package on license.pdf. Use of this product might 
-   require purchasing a commercial license from IT Mill Ltd. For guidelines 
-   on usage, see licensing-guidelines.html
+ This product is distributed under commercial license that can be found
+ from the product package on license.pdf. Use of this product might 
+ require purchasing a commercial license from IT Mill Ltd. For guidelines 
+ on usage, see licensing-guidelines.html
 
-   *************************************************************************
-   
-   For more information, contact:
-   
-   IT Mill Ltd                           phone: +358 2 4802 7180
-   Ruukinkatu 2-4                        fax:   +358 2 4802 7181
-   20540, Turku                          email:  info@itmill.com
-   Finland                               company www: www.itmill.com
-   
-   Primary source for information and releases: www.itmill.com
+ *************************************************************************
+ 
+ For more information, contact:
+ 
+ IT Mill Ltd                           phone: +358 2 4802 7180
+ Ruukinkatu 2-4                        fax:   +358 2 4802 7181
+ 20540, Turku                          email:  info@itmill.com
+ Finland                               company www: www.itmill.com
+ 
+ Primary source for information and releases: www.itmill.com
 
-   ********************************************************************** */
+ ********************************************************************** */
 
 package com.itmill.toolkit.ui;
 
@@ -47,81 +47,81 @@ import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
 import com.itmill.toolkit.terminal.Resource;
 
-/** 
- * MenuTree component.
- * MenuTree can be used to select an item (or multiple items)
- * from a hierarchical set of items.
- *
+/**
+ * MenuTree component. MenuTree can be used to select an item (or multiple
+ * items) from a hierarchical set of items.
+ * 
  * @author IT Mill Ltd.
- * @version @VERSION@
+ * @version
+ * @VERSION@
  * @since 3.0
  */
-public class Tree extends Select implements Container.Hierarchical, Action.Container {
+public class Tree extends Select implements Container.Hierarchical,
+		Action.Container {
 
 	/* Static members ***************************************************** */
 
 	private static final Method EXPAND_METHOD;
+
 	private static final Method COLLAPSE_METHOD;
 
 	static {
 		try {
-			EXPAND_METHOD =
-				ExpandListener.class.getDeclaredMethod(
-					"nodeExpand",
-					new Class[] { ExpandEvent.class });
-			COLLAPSE_METHOD =
-				CollapseListener.class.getDeclaredMethod(
-					"nodeCollapse",
-					new Class[] { CollapseEvent.class });
+			EXPAND_METHOD = ExpandListener.class.getDeclaredMethod(
+					"nodeExpand", new Class[] { ExpandEvent.class });
+			COLLAPSE_METHOD = CollapseListener.class.getDeclaredMethod(
+					"nodeCollapse", new Class[] { CollapseEvent.class });
 		} catch (java.lang.NoSuchMethodException e) {
 			// This should never happen
 			e.printStackTrace();
 			throw new java.lang.RuntimeException(
-				"Internal error, please report");
+					"Internal error, please report");
 		}
 	}
 
 	/* Private members **************************************************** */
 
-	/** 
-	 * Set of expanded nodes. 
+	/**
+	 * Set of expanded nodes.
 	 */
 	private HashSet expanded = new HashSet();
 
-	/** 
-	 * List of action handlers. 
+	/**
+	 * List of action handlers.
 	 */
 	private LinkedList actionHandlers = null;
 
-	/** 
-	 * Action mapper. 
+	/**
+	 * Action mapper.
 	 */
 	private KeyMapper actionMapper = null;
 
-	/** 
+	/**
 	 * Is the tree selectable .
 	 */
 	private boolean selectable = true;
 
 	/* Tree constructors ************************************************** */
 
-	/** 
-	 * Creates a new empty tree. 
+	/**
+	 * Creates a new empty tree.
 	 */
 	public Tree() {
 	}
 
-	/** 
+	/**
 	 * Creates a new empty tree with caption.
-	 * @param caption  
+	 * 
+	 * @param caption
 	 */
 	public Tree(String caption) {
 		setCaption(caption);
 	}
 
-	/** 
-	 * Creates a new tree with caption and connect it to a Container. 
-	 * @param caption 
+	/**
+	 * Creates a new tree with caption and connect it to a Container.
+	 * 
+	 * @param caption
 	 * @param dataSource
 	 */
 	public Tree(String caption, Container dataSource) {
@@ -131,18 +131,22 @@ public class Tree extends Select implements Container.Hierarchical, Action.Conta
 
 	/* Expanding and collapsing ******************************************* */
 
-	/** 
+	/**
 	 * Check is an item is expanded
-	 * @param itemId the item id.
+	 * 
+	 * @param itemId
+	 *            the item id.
 	 * @return true iff the item is expanded.
 	 */
 	public boolean isExpanded(Object itemId) {
 		return expanded.contains(itemId);
 	}
 
-	/** 
+	/**
 	 * Expands an item.
-	 * @param itemId the item id.
+	 * 
+	 * @param itemId
+	 *            the item id.
 	 * @return True iff the expand operation succeeded
 	 */
 	public boolean expandItem(Object itemId) {
@@ -163,11 +167,12 @@ public class Tree extends Select implements Container.Hierarchical, Action.Conta
 		return true;
 	}
 
-	/** 
+	/**
 	 * Expands the items recursively
 	 * 
-	 * Expands all the children recursively starting from an item.
-	 * Operation succeeds only if all expandable items are expanded.
+	 * Expands all the children recursively starting from an item. Operation
+	 * succeeds only if all expandable items are expanded.
+	 * 
 	 * @param startItemId
 	 * @return True iff the expand operation succeeded
 	 */
@@ -193,9 +198,11 @@ public class Tree extends Select implements Container.Hierarchical, Action.Conta
 		return result;
 	}
 
-	/** 
+	/**
 	 * Collapses an item.
-	 * @param itemId the item id.
+	 * 
+	 * @param itemId
+	 *            the item id.
 	 * @return True iff the collapse operation succeeded
 	 */
 	public boolean collapseItem(Object itemId) {
@@ -212,11 +219,12 @@ public class Tree extends Select implements Container.Hierarchical, Action.Conta
 		return true;
 	}
 
-	/** 
+	/**
 	 * Collapses the items recursively.
 	 * 
-	 * Collapse all the children recursively starting from an item.
-	 * Operation succeeds only if all expandable items are collapsed.
+	 * Collapse all the children recursively starting from an item. Operation
+	 * succeeds only if all expandable items are collapsed.
+	 * 
 	 * @param startItemId
 	 * @return True iff the collapse operation succeeded
 	 */
@@ -242,10 +250,12 @@ public class Tree extends Select implements Container.Hierarchical, Action.Conta
 		return result;
 	}
 
-	/** 
+	/**
 	 * Getter for property selectable.
 	 * 
-	 * <p>The tree is selectable by default.</p>
+	 * <p>
+	 * The tree is selectable by default.
+	 * </p>
 	 * 
 	 * @return the Value of property selectable.
 	 */
@@ -256,9 +266,12 @@ public class Tree extends Select implements Container.Hierarchical, Action.Conta
 	/**
 	 * Setter for property selectable.
 	 * 
-	 * <p>The tree is selectable by default.</p>
+	 * <p>
+	 * The tree is selectable by default.
+	 * </p>
 	 * 
-	 * @param selectable the New value of property selectable.
+	 * @param selectable
+	 *            the New value of property selectable.
 	 */
 	public void setSelectable(boolean selectable) {
 		if (this.selectable != selectable) {
@@ -271,6 +284,7 @@ public class Tree extends Select implements Container.Hierarchical, Action.Conta
 
 	/**
 	 * Gets the UIDL tag corresponding to the component.
+	 * 
 	 * @see com.itmill.toolkit.ui.AbstractComponent#getTag()
 	 */
 	public String getTag() {
@@ -278,60 +292,57 @@ public class Tree extends Select implements Container.Hierarchical, Action.Conta
 	}
 
 	/**
-	 * Called when one or more variables handled by the implementing class
-     * are changed.
-	 * @see com.itmill.toolkit.terminal.VariableOwner#changeVariables(Object source, Map variables)
+	 * Called when one or more variables handled by the implementing class are
+	 * changed.
+	 * 
+	 * @see com.itmill.toolkit.terminal.VariableOwner#changeVariables(Object
+	 *      source, Map variables)
 	 */
 	public void changeVariables(Object source, Map variables) {
 
-			// Collapses the nodes
-			if (variables.containsKey("collapse")) {
-				String[] keys = (String[]) variables.get("collapse");
-				for (int i = 0; i < keys.length; i++) {
-					Object id = itemIdMapper.get(keys[i]);
-					if (id != null)
-						collapseItem(id);
-				}
+		// Collapses the nodes
+		if (variables.containsKey("collapse")) {
+			String[] keys = (String[]) variables.get("collapse");
+			for (int i = 0; i < keys.length; i++) {
+				Object id = itemIdMapper.get(keys[i]);
+				if (id != null)
+					collapseItem(id);
 			}
+		}
 
-			// Expands the nodes
-			if (variables.containsKey("expand")) {
-				String[] keys = (String[]) variables.get("expand");
-				for (int i = 0; i < keys.length; i++) {
-					Object id = itemIdMapper.get(keys[i]);
-					if (id != null)
-						expandItem(id);
-				}
+		// Expands the nodes
+		if (variables.containsKey("expand")) {
+			String[] keys = (String[]) variables.get("expand");
+			for (int i = 0; i < keys.length; i++) {
+				Object id = itemIdMapper.get(keys[i]);
+				if (id != null)
+					expandItem(id);
 			}
+		}
 
-			// Selections are handled by the select component
-			super.changeVariables(source, variables);
+		// Selections are handled by the select component
+		super.changeVariables(source, variables);
 
-			// Actions
-			if (variables.containsKey("action")) {
+		// Actions
+		if (variables.containsKey("action")) {
 
-				StringTokenizer st =
-					new StringTokenizer((String) variables.get("action"), ",");
-				if (st.countTokens() == 2) {
-					Object itemId = itemIdMapper.get(st.nextToken());
-					Action action = (Action) actionMapper.get(st.nextToken());
-					if (action != null
-						&& containsId(itemId)
+			StringTokenizer st = new StringTokenizer((String) variables
+					.get("action"), ",");
+			if (st.countTokens() == 2) {
+				Object itemId = itemIdMapper.get(st.nextToken());
+				Action action = (Action) actionMapper.get(st.nextToken());
+				if (action != null && containsId(itemId)
 						&& actionHandlers != null)
-						for (Iterator i = actionHandlers.iterator();
-							i.hasNext();
-							)
-							((Action.Handler) i.next()).handleAction(
-								action,
-								this,
+					for (Iterator i = actionHandlers.iterator(); i.hasNext();)
+						((Action.Handler) i.next()).handleAction(action, this,
 								itemId);
-				}
 			}
+		}
 	}
 
 	/**
-	 * Paints any needed component-specific things to the given UIDL
-	 * stream.
+	 * Paints any needed component-specific things to the given UIDL stream.
+	 * 
 	 * @see com.itmill.toolkit.ui.AbstractComponent#paintContent(PaintTarget)
 	 */
 	public void paintContent(PaintTarget target) throws PaintException {
@@ -345,12 +356,10 @@ public class Tree extends Select implements Container.Hierarchical, Action.Conta
 		if (this.getTabIndex() > 0)
 			target.addAttribute("tabindex", this.getTabIndex());
 
-
 		// Paint tree attributes
 		if (isSelectable())
-			target.addAttribute(
-				"selectmode",
-				(isMultiSelect() ? "multi" : "single"));
+			target.addAttribute("selectmode", (isMultiSelect() ? "multi"
+					: "single"));
 		else
 			target.addAttribute("selectmode", "none");
 		if (isNewItemsAllowed())
@@ -417,13 +426,10 @@ public class Tree extends Select implements Container.Hierarchical, Action.Conta
 				// Actions
 				if (actionHandlers != null) {
 					target.startTag("al");
-					for (Iterator ahi = actionHandlers.iterator();
-						ahi.hasNext();
-						) {
-						Action[] aa =
-							((Action.Handler) ahi.next()).getActions(
-								itemId,
-								this);
+					for (Iterator ahi = actionHandlers.iterator(); ahi
+							.hasNext();) {
+						Action[] aa = ((Action.Handler) ahi.next()).getActions(
+								itemId, this);
 						if (aa != null)
 							for (int ai = 0; ai < aa.length; ai++) {
 								String akey = actionMapper.key(aa[ai]);
@@ -435,8 +441,8 @@ public class Tree extends Select implements Container.Hierarchical, Action.Conta
 				}
 
 				// Adds the children if expanded, or close the tag
-				if (isExpanded(itemId) && hasChildren(itemId) 
-					&& areChildrenAllowed(itemId)) {
+				if (isExpanded(itemId) && hasChildren(itemId)
+						&& areChildrenAllowed(itemId)) {
 					iteratorStack.push(getChildren(itemId).iterator());
 				} else {
 					if (isNode)
@@ -468,20 +474,18 @@ public class Tree extends Select implements Container.Hierarchical, Action.Conta
 		target.addVariable(this, "selected", selectedKeys);
 
 		// Expand and collapse
-		target.addVariable(this, "expand", new String[] {
-		});
-		target.addVariable(this, "collapse", new String[] {
-		});
+		target.addVariable(this, "expand", new String[] {});
+		target.addVariable(this, "collapse", new String[] {});
 
 		// New items
-		target.addVariable(this, "newitem", new String[] {
-		});
+		target.addVariable(this, "newitem", new String[] {});
 	}
 
 	/* Container.Hierarchical API ***************************************** */
 
 	/**
 	 * Tests if the Item with given ID can have any children.
+	 * 
 	 * @see com.itmill.toolkit.data.Container.Hierarchical#areChildrenAllowed(Object)
 	 */
 	public boolean areChildrenAllowed(Object itemId) {
@@ -490,6 +494,7 @@ public class Tree extends Select implements Container.Hierarchical, Action.Conta
 
 	/**
 	 * Gets the IDs of all Items that are children of the specified Item.
+	 * 
 	 * @see com.itmill.toolkit.data.Container.Hierarchical#getChildren(Object)
 	 */
 	public Collection getChildren(Object itemId) {
@@ -498,6 +503,7 @@ public class Tree extends Select implements Container.Hierarchical, Action.Conta
 
 	/**
 	 * Gets the ID of the parent Item of the specified Item.
+	 * 
 	 * @see com.itmill.toolkit.data.Container.Hierarchical#getParent(Object)
 	 */
 	public Object getParent(Object itemId) {
@@ -506,7 +512,8 @@ public class Tree extends Select implements Container.Hierarchical, Action.Conta
 
 	/**
 	 * Tests if the Item specified with <code>itemId</code> has any child
-     * Items, that is, is it a leaf Item.
+	 * Items, that is, is it a leaf Item.
+	 * 
 	 * @see com.itmill.toolkit.data.Container.Hierarchical#hasChildren(Object)
 	 */
 	public boolean hasChildren(Object itemId) {
@@ -514,8 +521,8 @@ public class Tree extends Select implements Container.Hierarchical, Action.Conta
 	}
 
 	/**
-	 * Tests if the Item specified with <code>itemId</code> is a root
-     * Item.
+	 * Tests if the Item specified with <code>itemId</code> is a root Item.
+	 * 
 	 * @see com.itmill.toolkit.data.Container.Hierarchical#isRoot(Object)
 	 */
 	public boolean isRoot(Object itemId) {
@@ -524,6 +531,7 @@ public class Tree extends Select implements Container.Hierarchical, Action.Conta
 
 	/**
 	 * Gets the IDs of all Items in the container that don't have a parent.
+	 * 
 	 * @see com.itmill.toolkit.data.Container.Hierarchical#rootItemIds()
 	 */
 	public Collection rootItemIds() {
@@ -532,15 +540,13 @@ public class Tree extends Select implements Container.Hierarchical, Action.Conta
 
 	/**
 	 * Sets the given Item's capability to have children.
-	 * @see com.itmill.toolkit.data.Container.Hierarchical#setChildrenAllowed(Object, boolean)
+	 * 
+	 * @see com.itmill.toolkit.data.Container.Hierarchical#setChildrenAllowed(Object,
+	 *      boolean)
 	 */
-	public boolean setChildrenAllowed(
-		Object itemId,
-		boolean areChildrenAllowed) {
-		boolean success =
-			((Container.Hierarchical) items).setChildrenAllowed(
-				itemId,
-				areChildrenAllowed);
+	public boolean setChildrenAllowed(Object itemId, boolean areChildrenAllowed) {
+		boolean success = ((Container.Hierarchical) items).setChildrenAllowed(
+				itemId, areChildrenAllowed);
 		if (success)
 			fireValueChange();
 		return success;
@@ -548,11 +554,13 @@ public class Tree extends Select implements Container.Hierarchical, Action.Conta
 
 	/**
 	 * Sets the parent of an Item.
-	 * @see com.itmill.toolkit.data.Container.Hierarchical#setParent(Object, Object)
+	 * 
+	 * @see com.itmill.toolkit.data.Container.Hierarchical#setParent(Object,
+	 *      Object)
 	 */
 	public boolean setParent(Object itemId, Object newParentId) {
-		boolean success =
-			((Container.Hierarchical) items).setParent(itemId, newParentId);
+		boolean success = ((Container.Hierarchical) items).setParent(itemId,
+				newParentId);
 		if (success)
 			requestRepaint();
 		return success;
@@ -562,45 +570,47 @@ public class Tree extends Select implements Container.Hierarchical, Action.Conta
 
 	/**
 	 * Sets the Container that serves as the data source of the viewer.
+	 * 
 	 * @see com.itmill.toolkit.data.Container.Viewer#setContainerDataSource(Container)
 	 */
 	public void setContainerDataSource(Container newDataSource) {
 
-		// Assure that the data source is ordered by making unordered 
+		// Assure that the data source is ordered by making unordered
 		// containers ordered by wrapping them
-		if (Container
-			.Hierarchical
-			.class
-			.isAssignableFrom(newDataSource.getClass()))
+		if (Container.Hierarchical.class.isAssignableFrom(newDataSource
+				.getClass()))
 			super.setContainerDataSource(newDataSource);
 		else
-			super.setContainerDataSource(
-				new ContainerHierarchicalWrapper(newDataSource));
+			super.setContainerDataSource(new ContainerHierarchicalWrapper(
+					newDataSource));
 	}
 
 	/* Expand event and listener ****************************************** */
 
 	/**
-	 * Event to fired when a node is expanded.
-	 * ExapandEvent is fired when a node is to be expanded.
-	 * it can me used to dynamically fill the sub-nodes of the
-	 * node.
+	 * Event to fired when a node is expanded. ExapandEvent is fired when a node
+	 * is to be expanded. it can me used to dynamically fill the sub-nodes of
+	 * the node.
 	 * 
 	 * @author IT Mill Ltd.
-	 * @version @VERSION@
+	 * @version
+	 * @VERSION@
 	 * @since 3.0
 	 */
 	public class ExpandEvent extends Component.Event {
 
 		/**
-         * Serial generated by eclipse.
-         */
-        private static final long serialVersionUID = 3832624001804481075L;
-        private Object expandedItemId;
-        
-		/** 
+		 * Serial generated by eclipse.
+		 */
+		private static final long serialVersionUID = 3832624001804481075L;
+
+		private Object expandedItemId;
+
+		/**
 		 * New instance of options change event
-		 * @param source the Source of the event.
+		 * 
+		 * @param source
+		 *            the Source of the event.
 		 * @param expandedItemId
 		 */
 		public ExpandEvent(Component source, Object expandedItemId) {
@@ -608,8 +618,9 @@ public class Tree extends Select implements Container.Hierarchical, Action.Conta
 			this.expandedItemId = expandedItemId;
 		}
 
-		/** 
+		/**
 		 * Node where the event occurred.
+		 * 
 		 * @return the Source of the event.
 		 */
 		public Object getItemId() {
@@ -617,67 +628,79 @@ public class Tree extends Select implements Container.Hierarchical, Action.Conta
 		}
 	}
 
-	/** 
+	/**
 	 * Expand event listener.
 	 * 
 	 * @author IT Mill Ltd.
-	 * @version @VERSION@
-	 * @since 3.0 
+	 * @version
+	 * @VERSION@
+	 * @since 3.0
 	 */
 	public interface ExpandListener {
 
-		/** 
+		/**
 		 * A node has been expanded.
-		 * @param event the Expand event.
+		 * 
+		 * @param event
+		 *            the Expand event.
 		 */
 		public void nodeExpand(ExpandEvent event);
 	}
 
-	/** 
+	/**
 	 * Adds the expand listener.
-	 * @param listener the Listener to be added.
+	 * 
+	 * @param listener
+	 *            the Listener to be added.
 	 */
 	public void addListener(ExpandListener listener) {
 		addListener(ExpandEvent.class, listener, EXPAND_METHOD);
 	}
 
-	/** 
+	/**
 	 * Removes the expand listener.
-	 * @param listener the Listener to be removed.
+	 * 
+	 * @param listener
+	 *            the Listener to be removed.
 	 */
 	public void removeListener(ExpandListener listener) {
 		removeListener(ExpandEvent.class, listener, EXPAND_METHOD);
 	}
 
-	/** 
-	 * Emits the expand  event.
-	 * @param itemId the item id. 
+	/**
+	 * Emits the expand event.
+	 * 
+	 * @param itemId
+	 *            the item id.
 	 */
 	protected void fireExpandEvent(Object itemId) {
 		fireEvent(new ExpandEvent(this, itemId));
 	}
 
-	/* Collapse  event ****************************************** */
+	/* Collapse event ****************************************** */
 
-	/** 
-	 * Collapse event 
+	/**
+	 * Collapse event
 	 * 
 	 * @author IT Mill Ltd.
-	 * @version @VERSION@
-     * @since 3.0
+	 * @version
+	 * @VERSION@
+	 * @since 3.0
 	 */
 	public class CollapseEvent extends Component.Event {
 
 		/**
-         * Serial generated by eclipse.
-         */
-        private static final long serialVersionUID = 3257009834783290160L;
-        
-        private Object collapsedItemId;
+		 * Serial generated by eclipse.
+		 */
+		private static final long serialVersionUID = 3257009834783290160L;
 
-		/** 
+		private Object collapsedItemId;
+
+		/**
 		 * New instance of options change event.
-		 * @param source the Source of the event.
+		 * 
+		 * @param source
+		 *            the Source of the event.
 		 * @param collapsedItemId
 		 */
 		public CollapseEvent(Component source, Object collapsedItemId) {
@@ -685,8 +708,9 @@ public class Tree extends Select implements Container.Hierarchical, Action.Conta
 			this.collapsedItemId = collapsedItemId;
 		}
 
-		/** 
+		/**
 		 * Gets tge Collapsed Item id.
+		 * 
 		 * @return the collapsed item id.
 		 */
 		public Object getItemId() {
@@ -694,41 +718,50 @@ public class Tree extends Select implements Container.Hierarchical, Action.Conta
 		}
 	}
 
-	/** 
+	/**
 	 * Collapse event listener.
 	 * 
 	 * @author IT Mill Ltd.
-	 * @version @VERSION@
+	 * @version
+	 * @VERSION@
 	 * @since 3.0
 	 */
 	public interface CollapseListener {
 
-		/** 
+		/**
 		 * A node has been collapsed.
-		 * @param event the Collapse event.
+		 * 
+		 * @param event
+		 *            the Collapse event.
 		 */
 		public void nodeCollapse(CollapseEvent event);
 	}
 
-	/** 
+	/**
 	 * Adds the collapse listener.
-	 * @param listener the Listener to be added.
+	 * 
+	 * @param listener
+	 *            the Listener to be added.
 	 */
 	public void addListener(CollapseListener listener) {
 		addListener(CollapseEvent.class, listener, COLLAPSE_METHOD);
 	}
 
-	/** 
+	/**
 	 * Removes the collapse listener.
-	 * @param listener the Listener to be removed.
+	 * 
+	 * @param listener
+	 *            the Listener to be removed.
 	 */
 	public void removeListener(CollapseListener listener) {
 		removeListener(CollapseEvent.class, listener, COLLAPSE_METHOD);
 	}
 
-	/** 
-	 * Emits collapse  event.
-	 * @param itemId the item id. 
+	/**
+	 * Emits collapse event.
+	 * 
+	 * @param itemId
+	 *            the item id.
 	 */
 	protected void fireCollapseEvent(Object itemId) {
 		fireEvent(new CollapseEvent(this, itemId));
@@ -736,8 +769,9 @@ public class Tree extends Select implements Container.Hierarchical, Action.Conta
 
 	/* Action container *************************************************** */
 
-	/** 
+	/**
 	 * Adds an action handler.
+	 * 
 	 * @see com.itmill.toolkit.event.Action.Container#addActionHandler(Action.Handler)
 	 */
 	public void addActionHandler(Action.Handler actionHandler) {
@@ -749,34 +783,36 @@ public class Tree extends Select implements Container.Hierarchical, Action.Conta
 				actionMapper = new KeyMapper();
 			}
 
-             if(!actionHandlers.contains(actionHandler)){ 
-                 actionHandlers.add(actionHandler); 
-                 requestRepaint(); 
-             }
+			if (!actionHandlers.contains(actionHandler)) {
+				actionHandlers.add(actionHandler);
+				requestRepaint();
+			}
 		}
 	}
 
-	/** 
+	/**
 	 * Removes an action handler.
+	 * 
 	 * @see com.itmill.toolkit.event.Action.Container#removeActionHandler(Action.Handler)
 	 */
 	public void removeActionHandler(Action.Handler actionHandler) {
 
 		if (actionHandlers != null && actionHandlers.contains(actionHandler)) {
-            
-            actionHandlers.remove(actionHandler);
-            
-            if (actionHandlers.isEmpty()) {
-                actionHandlers = null;
-                actionMapper = null;
-            }
 
-            requestRepaint();        
+			actionHandlers.remove(actionHandler);
+
+			if (actionHandlers.isEmpty()) {
+				actionHandlers = null;
+				actionMapper = null;
+			}
+
+			requestRepaint();
 		}
 	}
-    
+
 	/**
 	 * Gets the visible item ids.
+	 * 
 	 * @see com.itmill.toolkit.ui.Select#getVisibleItemIds()
 	 */
 	public Collection getVisibleItemIds() {
@@ -816,35 +852,40 @@ public class Tree extends Select implements Container.Hierarchical, Action.Conta
 		return visible;
 	}
 
-	/** 
-	 * Adding new items is not supported. 
-	 * @throws UnsupportedOperationException if set to true.
+	/**
+	 * Adding new items is not supported.
+	 * 
+	 * @throws UnsupportedOperationException
+	 *             if set to true.
 	 * @see com.itmill.toolkit.ui.Select#setNewItemsAllowed(boolean)
 	 */
 	public void setNewItemsAllowed(boolean allowNewOptions)
-		throws UnsupportedOperationException {
+			throws UnsupportedOperationException {
 		if (allowNewOptions)
 			throw new UnsupportedOperationException();
 	}
 
-	/** 
+	/**
 	 * Focusing to this component is not supported.
-	 * @throws UnsupportedOperationException if invoked.
+	 * 
+	 * @throws UnsupportedOperationException
+	 *             if invoked.
 	 * @see com.itmill.toolkit.ui.AbstractField#focus()
 	 */
 	public void focus() throws UnsupportedOperationException {
 		throw new UnsupportedOperationException();
 	}
-	
+
 	/**
-	 * Tree does not support lazy options loading mode. 
-	 * Setting this true will throw UnsupportedOperationException. 
+	 * Tree does not support lazy options loading mode. Setting this true will
+	 * throw UnsupportedOperationException.
+	 * 
 	 * @see com.itmill.toolkit.ui.Select#setLazyLoading(boolean)
 	 */
-    public void setLazyLoading(boolean useLazyLoading) {
-    	if (useLazyLoading)
-    		throw new UnsupportedOperationException("Lazy options loading is not supported by Tree.");
+	public void setLazyLoading(boolean useLazyLoading) {
+		if (useLazyLoading)
+			throw new UnsupportedOperationException(
+					"Lazy options loading is not supported by Tree.");
 	}
-
 
 }
