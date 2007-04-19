@@ -1293,20 +1293,22 @@ public class Table extends Select implements Action.Container,
 
 		// Sorting
 		boolean doSort = false;
-		if (variables.containsKey("sortcolumn")) {
-			String colId = (String) variables.get("sortcolumn");
-			if (colId != null && !"".equals(colId) && !"null".equals(colId)) {
-				Object id = this.columnIdMap.get(colId);
-				setSortContainerPropertyId(id);
-				doSort = true;
+		if(!this.sortDisabled) {
+			if (variables.containsKey("sortcolumn")) {
+				String colId = (String) variables.get("sortcolumn");
+				if (colId != null && !"".equals(colId) && !"null".equals(colId)) {
+					Object id = this.columnIdMap.get(colId);
+					setSortContainerPropertyId(id);
+					doSort = true;
+				}
 			}
-		}
-		if (variables.containsKey("sortascending")) {
-			boolean state = ((Boolean) variables.get("sortascending"))
-					.booleanValue();
-			if (state != this.sortAscending) {
-				setSortAscending(state);
-				doSort = true;
+			if (variables.containsKey("sortascending")) {
+				boolean state = ((Boolean) variables.get("sortascending"))
+						.booleanValue();
+				if (state != this.sortAscending) {
+					setSortAscending(state);
+					doSort = true;
+				}
 			}
 		}
 		if (doSort)
