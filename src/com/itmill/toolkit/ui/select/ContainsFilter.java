@@ -36,7 +36,7 @@ public class ContainsFilter implements OptionFilter {
 				else
 					test = String.valueOf(id);
 
-				if (test.toLowerCase().contains(filterstring)) {
+				if (test.toLowerCase().indexOf(filterstring) != -1) {
 					this.filteredItemsBuffer.add(id);
 				}
 			}

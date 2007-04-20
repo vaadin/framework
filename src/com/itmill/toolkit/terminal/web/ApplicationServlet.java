@@ -909,7 +909,7 @@ public class ApplicationServlet extends HttpServlet implements
 					// description.xml files
 					if (file.endsWith("firebug.js")
 							&& !isDebugMode(unhandledParameters)) {
-						file = file.replace("bug.js", "bugx.js");
+						file = file.replaceFirst("bug.js", "bugx.js");
 					}
 					page.write(getResourceLocation(t.getName(),
 							new ThemeResource(file)));
