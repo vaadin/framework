@@ -30,6 +30,7 @@ package com.itmill.toolkit.terminal.web;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -140,7 +141,8 @@ public class AjaxApplicationManager implements
 	 *             if the writing failed due to input/output error.
 	 */
 	public void handleUidlRequest(HttpServletRequest request,
-			HttpServletResponse response) throws IOException {
+			HttpServletResponse response, ThemeSource themeSource) 
+		throws IOException {
 
 		// repaint requested or sesssion has timed out and new one is created
 		boolean repaintAll = (request.getParameter(GET_PARAM_REPAINT_ALL) != null)
@@ -320,6 +322,39 @@ public class AjaxApplicationManager implements
                         paintTarget.endTag("meta");
                     }
 
+                    // Precache custom layouts
+                    // TODO Does not support theme-get param or different themes in different windows -> Allways preload layouts with the theme specified by the applications
+                    String themeName = application.getTheme() != null ? application.getTheme() : ApplicationServlet.DEFAULT_THEME;
+                    // TODO We should only precache the layouts that are not cached already
+                    for (Iterator i=paintTarget.preCachedResources.iterator(); i.hasNext();) {
+                    	String resource = (String) i.next();
+                    	InputStream is = null;
+                    	try {
+                			is = themeSource.getResource(themeName + "/" +  resource);
+                		} catch (ThemeSource.ThemeException e) {
+                			Log.info(e.getMessage());
+                		}
+                    	if (is != null) {
+                    		paintTarget.startTag("precache");
+                    		paintTarget.addAttribute("resource", resource);
+                    		StringBuffer layout = new StringBuffer();
+
+                    		try {
+                        		InputStreamReader r = new InputStreamReader(is);
+                    				char[] buffer = new char[20000];
+                    				int charsRead = 0;
+                    				while ((charsRead = r.read(buffer)) > 0)
+                    					layout.append(buffer, 0, charsRead);
+                    				r.close();
+                    		} catch (java.io.IOException e) {
+                    			Log.info("Resource transfer failed:  " + request.getRequestURI()
+                    					+ ". (" + e.getMessage() + ")");
+                    		}
+                    		paintTarget.addCharacterData(layout.toString());
+                    		paintTarget.endTag("precache");
+                    	}
+                    }
+                    
 					paintTarget.close();
 					out.flush();
 				} else {

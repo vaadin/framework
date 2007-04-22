@@ -44,6 +44,8 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Stack;
 
 /**
@@ -80,6 +82,9 @@ public class AjaxPaintTarget implements PaintTarget {
 	private boolean trackPaints = false;
 
 	private int numberOfPaints = 0;
+	
+	Set preCachedResources = new HashSet();
+	private boolean customLayoutArgumentsOpen = false;
 
 	/**
 	 * Creates a new XMLPrintWriter, without automatic line flushing.
@@ -128,6 +133,7 @@ public class AjaxPaintTarget implements PaintTarget {
 		if (mTagArgumentListOpen) {
 			append(">");
 			mTagArgumentListOpen = false;
+			customLayoutArgumentsOpen = false;
 		}
 	}
 
@@ -182,6 +188,9 @@ public class AjaxPaintTarget implements PaintTarget {
 		append("<" + tagName);
 
 		mTagArgumentListOpen = true;
+		
+		if ("customlayout".equals(tagName))
+			customLayoutArgumentsOpen = true;
 	}
 
 	/**
@@ -217,6 +226,7 @@ public class AjaxPaintTarget implements PaintTarget {
 		if (mTagArgumentListOpen) {
 			append(">");
 			mTagArgumentListOpen = false;
+			customLayoutArgumentsOpen = false;
 		}
 
 		// Writes the end (closing) tag
@@ -444,6 +454,9 @@ public class AjaxPaintTarget implements PaintTarget {
 			throw new PaintException("XML argument list not open.");
 
 		append(" " + name + "=\"" + escapeXML(value) + "\"");
+		
+		if (customLayoutArgumentsOpen && "style".equals(name))
+			preCachedResources.add("layout/" + value + ".html");
 	}
 
 	/**
@@ -701,9 +714,9 @@ public class AjaxPaintTarget implements PaintTarget {
 	 * @see com.itmill.toolkit.terminal.PaintTarget#addCharacterData(java.lang.String)
 	 */
 	public void addCharacterData(String text) throws PaintException {
-		// TODO: This should check the validity of characters
 		ensureClosedTag();
-		append(escapeXML(text));
+		if (text != null)
+			append("<![CDATA[" + text + "]]>");
 	}
 
 	/**

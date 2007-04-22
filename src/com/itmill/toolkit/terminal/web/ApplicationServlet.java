@@ -565,7 +565,7 @@ public class ApplicationServlet extends HttpServlet implements
 				if (resourceId != null && resourceId.startsWith(AJAX_UIDL_URI)) {
 
 					getApplicationManager(application).handleUidlRequest(
-							request, response);
+							request, response, themeSource);
 
 					return;
 				}
