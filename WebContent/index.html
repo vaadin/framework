@@ -1,17 +1,17 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
 <title>IT Mill Toolkit Demo</title>
 <link rel="stylesheet" type="text/css" href="styles/demos.css" />
 </head>
 <body>
-
 <div id="container">
 
 <div id="itmilllogo"><h1>IT Mill Toolkit</h1></div>
 
 <div id="toolkit"></div>
 
-  <div id="feature-browser">
+  <div class="feature-browser">
 	<h4>Feature Browser</h4>
 	<div class="option">
 	 <span class="link"><a href="features?renderingMode=detect">Autodetected mode</a></span>
@@ -25,11 +25,11 @@
 	 <span class="link"><a href="features?renderingMode=html">HTML mode</a></span>
 	 <span class="desc">Select page based request/response technology mode</span>
 	</div>
-	<br /><br />Source code:
+	<br />Source code:
 	<span class="link"><a href="src/com/itmill/toolkit/demo/features">browse features folder</a></span>
   </div>
   
-  <div id="sample-code">
+  <div class="sample-code">
 	<h3>Simple application demos</h3>
 	<div class="option">
 	 <span class="link"><a href="HelloWorld?renderingMode=ajax">HelloWorld</a></span>
@@ -39,19 +39,19 @@
 	 <span class="link"><a href="Calc?renderingMode=ajax">Calc</a></span>
 	 <span class="desc">Simple Toolkit application where events are used.</span>
 	</div>
-	<br /><br />Source code:
-	<span class="link"><a href="src/com/itmill/toolkit/demo/HelloWorld.java.html">HelloWorld.java</a></span>
+	<br />Source code:
+	<span class="link"><a href="src/com/itmill/toolkit/demo/HelloWorld.java.html">HelloWorld.java</a></span> and 
 	<span class="link"><a href="src/com/itmill/toolkit/demo/Calc.java.html">Calc.java</a></span>
 	<br />
   </div>
   
-  <div id="sample-code">
+  <div class="sample-code">
 	<h3><a href="UpgradingSample?renderingMode=ajax">Long lifecycle of Toolkit applications</a></h3>
 	<div class="option">
 	<p>
-	Demonstrates sample <a href="http://www.millstone.org">Millstone</a> application that was ajaxified (upgraded to Toolkit 4.0.0)
+	Demonstrates sample <a href="http://www.millstone.org/">Millstone</a> application that was ajaxified (upgraded to Toolkit 4.0.0)
 	simply by changing three import namespaces and adding Toolkit libraries to classpath.
-	Initial IT Mill Toolkit framework has existed since 2001 (see <a href="http://www.millstone.org">Millstone</a>) and is
+	Initial IT Mill Toolkit framework has existed since 2001 (see <a href="http://www.millstone.org/">Millstone</a>) and is
 	ready for production use today.
 	</p>
 	<b>Note:</b> This sample application was created on year 2002.
@@ -61,7 +61,7 @@
   </div>
   
   
-  <div id="feature-browser">
+  <div class="feature-browser">
 	<h3><a href="openajax/index.html">OpenAjax Hub Conformance tests</a></h3>
 	<div class="option">
 	<p>
@@ -69,25 +69,11 @@
 	 Also demonstrates how to integrate Toolkit applications into HTML pages.
 	 </p>
 	 <b>Note:</b> Embedded FeatureBrowser application is the same
-	 application instance that can be accessed as standalone application, see <code>FeatureBrowser</em>.
-	</div>	
+	 application instance that can be accessed as standalone application, see <code>FeatureBrowser.
+	</code></div>	
   </div>
   
-   <div id="feature-browser">
-	<h3><a href="ToolkitMashup.jsp">Toolkit application mashup demo</a></h3>
-	<div class="option">
-	 <p>
-	 Demonstrates how Toolkit application may be integrated into other frameworks. In this example we use JSP pages.
-	 See HTML source or respective jsp file what code blocks are required for integration.
-	 </p>
-	 <b>Note:</b> Integrated TableDemo application is the same
-	 application instance that can be accessed as standalone application, see <em>TableDemo</em>.
-	</div>	
-	<br />Source code:
-	<span class="link"><a href="ToolkitMashup.jsp.txt">ToolkitMashup.jsp</a></span>
-  </div>
-  
-  <div id="feature-browser">
+  <div class="feature-browser">
 	<h3><a href="LayoutDemo?renderingMode=ajax">Layout demo</a></h3>
 	<div class="option">
 	<p>
@@ -105,7 +91,7 @@
 	<span class="link"><a href="src/com/itmill/toolkit/demo/LayoutDemo.java.html">LayoutDemo.java</a></span>
   </div>
   
-  <div id="feature-browser">
+  <div class="feature-browser">
 	<h3><a href="CustomLayoutDemo?renderingMode=ajax">Custom layout and custom theme demo</a></h3>
 	<div class="option">
 	<p>
@@ -123,7 +109,7 @@
 	<span class="link"><a href="src/com/itmill/toolkit/demo/CustomLayoutDemo.java.html">CustomLayoutDemo.java</a></span>
   </div>
   
-  <div id="feature-browser">
+  <div class="feature-browser">
 	<h3><a href="QueryContainerDemo?renderingMode=ajax">Tree using QueryContainer demo</a></h3>
 	<div class="option">
 	<p>
@@ -142,7 +128,7 @@
 	<span class="link"><a href="src/com/itmill/toolkit/demo/QueryContainerDemo.java.html">QueryContainerDemo.java</a></span>
   </div>
   
-   <div id="feature-browser">
+   <div class="feature-browser">
 	<h3><a href="TableDemo?renderingMode=ajax">Table demo</a></h3>
 	<div class="option">
 	 <p>
@@ -160,7 +146,7 @@
 	<span class="link"><a href="src/com/itmill/toolkit/demo/TableDemo.java.html">TableDemo.java</a></span>
   </div>
   
-  <div id="feature-browser">
+  <div class="feature-browser">
 	<h3><a href="TreeFilesystemContainer?renderingMode=ajax">Tree using FilesystemContainer demo</a></h3>
 	<div class="option">
 	 <p>
@@ -177,7 +163,7 @@
 	<span class="link"><a href="src/com/itmill/toolkit/demo/TreeFilesystemContainer.java.html">TreeFilesystemContainer.java</a></span>
   </div>
   
-  <div id="feature-browser">
+  <div class="feature-browser">
 	<h3><a href="TreeFilesystem?renderingMode=ajax">Tree item handling demo</a></h3>
 	<div class="option">
 	 <p>
@@ -193,7 +179,7 @@
 	<span class="link"><a href="src/com/itmill/toolkit/demo/TreeFilesystem.java.html">TreeFilesystem.java</a></span>
   </div>
   
-  <div id="feature-browser">
+  <div class="feature-browser">
 	<h3><a href="SelectDemo?renderingMode=ajax">Select demo</a></h3>
 	<div class="option">
 	<p>
@@ -206,7 +192,7 @@
 	<span class="link"><a href="src/com/itmill/toolkit/demo/SelectDemo.java.html">SelectDemo.java</a></span>
   </div>
   
-  <div id="feature-browser">
+  <div class="feature-browser">
 	<h3><a href="FilterSelect?renderingMode=ajax">FilterSelect demo</a></h3>
 	<div class="option">
 	<p>
@@ -219,7 +205,7 @@
 	<span class="link"><a href="src/com/itmill/toolkit/demo/FilterSelect.java.html">FilterSelect.java</a></span>
   </div>
   
-  <div id="feature-browser">
+  <div class="feature-browser">
 	<h3><a href="ModalWindow?renderingMode=ajax">Modal window</a></h3>
 	<div class="option">
 	 Example of how Modal Windows may be created using Window component.
@@ -228,7 +214,7 @@
 	<span class="link"><a href="src/com/itmill/toolkit/demo/ModalWindow.java.html">ModalWindow.java</a></span>
   </div>
 
-  <div id="feature-browser">
+  <div class="feature-browser">
 	<h3><a href="KeyboardShortcut?renderingMode=ajax">Keyboard events demo</a></h3>
 	<div class="option">
 	 Contains few Toolkit UI components that can be interacted by pressing keys in keyboard.
@@ -237,7 +223,7 @@
 	<span class="link"><a href="src/com/itmill/toolkit/demo/KeyboardShortcut.java.html">KeyboardShortcut.java</a></span>
   </div>
   
-  <div id="feature-browser">
+  <div class="feature-browser">
 	<h3><a href="Parameters?renderingMode=ajax">URI and Parameter handling demo</a></h3>
 	<div class="option">
 	 This is a demonstration of how URL parameters can be recieved and handled.
@@ -248,7 +234,7 @@
 	<span class="link"><a href="src/com/itmill/toolkit/demo/Parameters.java.html">Parameters.java</a></span>
   </div>
 
-  <div id="feature-browser">
+  <div class="feature-browser">
 	<h3><a href="BufferedComponents?renderingMode=ajax">Buffered UI components demo</a></h3>
 	<div class="option">
 	 Explains how to use buffering with UI components, and how to perform commit and discard functions.
@@ -261,5 +247,4 @@
 
 </div><!-- // Container -->
 
-</body>
-</html>
+</body></html>

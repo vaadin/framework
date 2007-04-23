@@ -112,8 +112,8 @@ hr {
 	border: none;
 }
 
-#feature-browser,
-#sample-code {
+.feature-browser,
+.sample-code {
 	clear: both;
 	padding: 10px 10px 20px 50px;
 	background-color: #f7f7f7;
@@ -123,11 +123,11 @@ hr {
 	margin: 30px 0;
 }
 
-#feature-browser {
+.feature-browser {
 	background: #f7f7f7 url(feature_browser_bg.gif) no-repeat top right;
 }
 
-#sample-code {
+.sample-code {
 	background: #f7f7f7 url(sample_code_bg.gif) no-repeat top right;
 }
 
@@ -140,5 +140,4 @@ hr {
 	width: 15em;
 }
 .option .desc {
-	float: left;
 }
