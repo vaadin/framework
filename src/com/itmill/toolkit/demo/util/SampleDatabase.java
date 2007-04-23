@@ -135,7 +135,7 @@ public class SampleDatabase {
 				update(stmt);
 			}
 		} catch (SQLException e) {
-			if (e.toString().indexOf("Table already exists") != -1)
+			if (e.toString().indexOf("Table already exists") == -1)
 				throw new RuntimeException(e);
 		}
 	}
