@@ -198,6 +198,12 @@ public class Select extends AbstractField implements Container,
 	 * 
 	 */
 	private OptionsStream optionsStream = null;
+	
+	/**
+	 * Number of options to stream per request ('page size') when lazyLoading
+	 * options.
+	 */
+	private int lazyLoadingPageLength = 20;
 
 	/* Constructors ********************************************************* */
 
@@ -343,7 +349,7 @@ public class Select extends AbstractField implements Container,
 				target.addAttribute("total",
 						(getItemIds() != null) ? getItemIds().size() : 0);
 				target
-						.addAttribute("initial", optionsStream.getJSON(20, 0,
+						.addAttribute("initial", optionsStream.getJSON(this.lazyLoadingPageLength, 0,
 								""));
 				String caption = getItemCaption(getValue());
 				target.addAttribute("selectedValue", caption == null ? ""
@@ -1471,6 +1477,7 @@ public class Select extends AbstractField implements Container,
 		}
 		return null;
 	}
+	
 
 	private class OptionsStream implements URIHandler {
 
@@ -1483,8 +1490,8 @@ public class Select extends AbstractField implements Container,
 		private String uri = "selectOptionsStream"
 				+ (long) (Math.random() * 1000000000000000000L);
 
-		OptionsStream(Select s) {
-			of = new StartsWithFilter(s);
+		OptionsStream(Select select) {
+			of = new StartsWithFilter(select);
 		}
 
 		public OptionFilter getOptionFilter() {
@@ -1516,8 +1523,8 @@ public class Select extends AbstractField implements Container,
 					} catch (NumberFormatException e) {
 						// ignore
 					}
-					// TODO Req size
-					ds = createDownloadStream(13, i, "");
+					// TODO Req size from client?
+					ds = createDownloadStream(lazyLoadingPageLength, i, "");
 					return ds;
 
 				} else if (relativeUri.indexOf(uri) != -1) {
@@ -1526,8 +1533,8 @@ public class Select extends AbstractField implements Container,
 					// read prefix
 					String prefix = relativeUri.substring(relativeUri
 							.lastIndexOf("/") + 1);
-					// TODO Req size
-					ds = createDownloadStream(13, 0, prefix.trim());
+					// TODO Req size from client?
+					ds = createDownloadStream(lazyLoadingPageLength, 0, prefix.trim());
 					return ds;
 				}
 			}
