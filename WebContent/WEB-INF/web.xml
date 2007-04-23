@@ -41,19 +41,6 @@
         <url-pattern>/LayoutDemo/*</url-pattern>
     </servlet-mapping>
     
-	<servlet>
-        <servlet-name>SelectDemo</servlet-name>
-        <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
-        <init-param>
-            <param-name>application</param-name>
-            <param-value>com.itmill.toolkit.demo.SelectDemo</param-value>
-        </init-param>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>SelectDemo</servlet-name>
-        <url-pattern>/SelectDemo/*</url-pattern>
-    </servlet-mapping>
-    
     <servlet>
         <servlet-name>FilterSelect</servlet-name>
         <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
