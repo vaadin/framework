@@ -345,8 +345,9 @@ public class Select extends AbstractField implements Container,
 				target
 						.addAttribute("initial", optionsStream.getJSON(20, 0,
 								""));
-				target.addAttribute("selectedValue", toString() == null ? ""
-						: toString());
+				String caption = getItemCaption(getValue());
+				target.addAttribute("selectedValue", caption == null ? ""
+						: caption);
 			}
 		}
 		target.endTag("options");
