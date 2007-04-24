@@ -49,15 +49,14 @@ public class FeatureWindow extends Feature implements Window.CloseListener {
 		OrderedLayout layoutRoot = new OrderedLayout();
 		OrderedLayout layoutUpper = new OrderedLayout();
 		OrderedLayout layoutLower = new OrderedLayout();
-		demoWindow = new Window("Feature Test Window");
-		demoWindow.addListener(this);
 
 		layoutUpper.addComponent(addButton);
 		layoutUpper.addComponent(removeButton);
 
+		createDemoWindow();
 		updateWinStatus();
 
-		// Propertiesc
+		// Properties
 		propertyPanel = new PropertyPanel(demoWindow);
 		propertyPanel.dependsOn(addButton);
 		propertyPanel.dependsOn(removeButton);
@@ -100,22 +99,25 @@ public class FeatureWindow extends Feature implements Window.CloseListener {
 		return "Window";
 	}
 
-	public void addWin() {
-		getApplication().addWindow(demoWindow);
-
-		demoWindow.removeAllComponents();
+	private void createDemoWindow() {
+		demoWindow = new Window("Feature Test Window");
+		demoWindow.addListener(this);
+		// Set window default properties
 		demoWindow.setWidth(500);
 		demoWindow.setHeight(200);
+		demoWindow.setVisible(true);
+		demoWindow.setEnabled(true);
+		demoWindow.setBorder(Window.BORDER_DEFAULT);
+		demoWindow.setReadOnly(false);
+		demoWindow.setImmediate(false);
+		demoWindow.setIcon(null);
+		demoWindow.setComponentError(null);
+		demoWindow.setDescription("This is an example description.");
+	}
 
-		// Panel panel = new Panel("New window");
-		// panel.addComponent(new Label(
-		// "This is a new window created by selecting <em>Add to "
-		// + "application</em>.<br /><br />You can close"
-		// + " this window by selecting <em>Remove from"
-		// + " application</em> from the Feature Browser window.",
-		// Label.CONTENT_XHTML));
-		// demoWindow.addComponent(panel);
-
+	public void addWin() {
+		getApplication().addWindow(demoWindow);
+		demoWindow.removeAllComponents();
 		demoWindow
 				.addComponent(new Label(
 						"<br /><br />This is a new window created by <em>Add to "
@@ -123,15 +125,13 @@ public class FeatureWindow extends Feature implements Window.CloseListener {
 								+ " close this window or select <em>Remove from"
 								+ " application</em> from the Feature Browser window.",
 						Label.CONTENT_XHTML));
-
-		windowProperties.getField("name").setReadOnly(true);
 		demoWindow.setVisible(true);
 		updateWinStatus();
 	}
 
 	public void delWin() {
 		getApplication().removeWindow(demoWindow);
-		windowProperties.getField("name").setReadOnly(false);
+		createDemoWindow();
 		updateWinStatus();
 	}
 
