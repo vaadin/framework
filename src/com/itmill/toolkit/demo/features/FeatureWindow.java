@@ -32,13 +32,14 @@ import com.itmill.toolkit.ui.*;
 import com.itmill.toolkit.ui.Window.CloseEvent;
 
 public class FeatureWindow extends Feature implements Window.CloseListener {
-	Button addButton = new Button("Add to application", this, "addWin");
 
-	Button removeButton = new Button("Remove from application", this, "delWin");
+	private Button addButton = new Button("Add window", this, "addWin");
 
-	Window demoWindow;
+	private Button removeButton = new Button("Remove window", this, "delWin");
 
-	Form windowProperties;
+	private Window demoWindow;
+
+	private Form windowProperties;
 
 	public FeatureWindow() {
 		super();
@@ -120,10 +121,11 @@ public class FeatureWindow extends Feature implements Window.CloseListener {
 
 		demoWindow
 				.addComponent(new Label(
-						"<br /><br />This is a new window created by <em>Add to "
-								+ "application</em> button's event.<br /><br />You may simply"
-								+ " close this window or select <em>Remove from"
-								+ " application</em> from the Feature Browser window.",
+						"<br /><br />This is a new window created by "
+								+ "<em>Add window</em>"
+								+ " button's event.<br /><br />You may simply"
+								+ " close this window or select "
+								+ "<em>Remove window</em> from the Feature Browser window.",
 						Label.CONTENT_XHTML));
 		// prevent user to change window name tag (after window is created)
 		windowProperties.getField("name").setEnabled(false);
