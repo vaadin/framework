@@ -200,7 +200,7 @@
 
 	<target name="demo" depends="libs,compile-java,themes">
 		<echo>Building demo</echo>
-		<java2html srcdir="build/result/src/${toolkit-package}/demo" destdir="build/result/src/${toolkit-package}/demo" includes="**/*.java" style="eclipse" showLineNumbers="true" showFileName="true" showTableBorder="false" />
+		<java2html srcdir="build/result/src/${toolkit-package}/demo" destdir="build/result/src/${toolkit-package}/demo" includes="**/*.java" style="eclipse" showLineNumbers="false" showFileName="true" showTableBorder="false" />
 		<!-- have to use "temp" dir for some reason here. Overwrite does not work, at least on Linux Eclipse 3.2.2 -->
 		<copy todir="build/result/srcTemp" overwrite="true">
 			<filterchain>
