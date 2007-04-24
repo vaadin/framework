@@ -104,6 +104,7 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
 		allProperties.setColumnHeaderMode(Table.COLUMN_HEADER_MODE_ID);
 		allProperties.setPageLength(0);
 		updatePropertyList();
+
 	}
 
 	/** Add a formful of properties to property panel */
@@ -120,6 +121,8 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
 		setButton.dependsOn(properties);
 		discardButton.dependsOn(properties);
 		properties.setWriteThrough(false);
+		// TODO change this to false, and test it is suitable for FeatureBrowser
+		// demo
 		properties.setReadThrough(true);
 
 		// Maintain property lists
@@ -265,6 +268,15 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
 
 		// Add created fields to property panel
 		addProperties("Component Basics", set);
+
+		// Customization for Window component
+		if (objectToConfigure instanceof Window) {
+			disableField(set.getField("enabled"), new Boolean(true));
+			disableField(set.getField("visible"), new Boolean(true));
+			disableField(set.getField("componentError"));
+			disableField(set.getField("icon"));
+
+		}
 	}
 
 	/** Add properties for selecting */
@@ -299,7 +311,8 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
 
 	/** Field special properties */
 	private void addFieldProperties() {
-		// TODO verify that bug #211 is fixed
+		// TODO bug #211 states that setFocus works only for Button and
+		// Textfield UI components
 		Form set = new Form(new GridLayout(COLUMNS, 1));
 		set.addField("focus", new Button("Focus", objectToConfigure, "focus"));
 		set.getField("focus").setDescription(
@@ -423,8 +436,7 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
 		}
 		// Commit all changed on all forms
 		if (event.getButton() == setButton) {
-			for (Iterator i = forms.iterator(); i.hasNext();)
-				((Form) i.next()).commit();
+			commit();
 		}
 
 		// Discard all changed on all forms
@@ -476,4 +488,20 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
 	public Table getAllProperties() {
 		return allProperties;
 	}
+
+	protected void commit() {
+		for (Iterator i = forms.iterator(); i.hasNext();)
+			((Form) i.next()).commit();
+	}
+
+	private void disableField(Field field) {
+		field.setEnabled(false);
+		field.setReadOnly(true);
+	}
+
+	private void disableField(Field field, Object value) {
+		field.setValue(value);
+		disableField(field);
+	}
+
 }

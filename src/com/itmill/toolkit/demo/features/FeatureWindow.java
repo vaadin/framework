@@ -50,10 +50,15 @@ public class FeatureWindow extends Feature implements Window.CloseListener {
 		OrderedLayout layoutUpper = new OrderedLayout();
 		OrderedLayout layoutLower = new OrderedLayout();
 
+		demoWindow = new Window("Feature Test Window");
+		demoWindow.addListener(this);
+		demoWindow.setWidth(400);
+		demoWindow.setHeight(200);
+		demoWindow.setTheme("default");
+
 		layoutUpper.addComponent(addButton);
 		layoutUpper.addComponent(removeButton);
 
-		createDemoWindow();
 		updateWinStatus();
 
 		// Properties
@@ -61,14 +66,20 @@ public class FeatureWindow extends Feature implements Window.CloseListener {
 		propertyPanel.dependsOn(addButton);
 		propertyPanel.dependsOn(removeButton);
 		windowProperties = propertyPanel.createBeanPropertySet(new String[] {
-				"width", "height", "name", "border", "theme", "scrollable",
-				"scrollOffsetX", "scrollOffsetY" });
+				"width", "height", "name", "theme", "border", "scrollable", });
 		windowProperties.replaceWithSelect("border", new Object[] {
 				new Integer(Window.BORDER_DEFAULT),
 				new Integer(Window.BORDER_NONE),
 				new Integer(Window.BORDER_MINIMAL) }, new Object[] { "Default",
 				"None", "Minimal" });
+		// Disabled, not applicable for default theme
+		windowProperties.getField("border").setEnabled(false);
+
 		propertyPanel.addProperties("Window Properties", windowProperties);
+		windowProperties.getField("width").setDescription(
+				"Minimum width is 100");
+		windowProperties.getField("height").setDescription(
+				"Minimum height is 100");
 
 		setJavadocURL("ui/Window.html");
 
@@ -99,25 +110,14 @@ public class FeatureWindow extends Feature implements Window.CloseListener {
 		return "Window";
 	}
 
-	private void createDemoWindow() {
-		demoWindow = new Window("Feature Test Window");
-		demoWindow.addListener(this);
-		// Set window default properties
-		demoWindow.setWidth(500);
-		demoWindow.setHeight(200);
-		demoWindow.setVisible(true);
-		demoWindow.setEnabled(true);
-		demoWindow.setBorder(Window.BORDER_DEFAULT);
-		demoWindow.setReadOnly(false);
-		demoWindow.setImmediate(false);
-		demoWindow.setIcon(null);
-		demoWindow.setComponentError(null);
-		demoWindow.setDescription("This is an example description.");
-	}
-
 	public void addWin() {
+
+		propertyPanel.commit();
+
 		getApplication().addWindow(demoWindow);
+
 		demoWindow.removeAllComponents();
+
 		demoWindow
 				.addComponent(new Label(
 						"<br /><br />This is a new window created by <em>Add to "
@@ -125,13 +125,18 @@ public class FeatureWindow extends Feature implements Window.CloseListener {
 								+ " close this window or select <em>Remove from"
 								+ " application</em> from the Feature Browser window.",
 						Label.CONTENT_XHTML));
+		// prevent user to change window name tag (after window is created)
+		windowProperties.getField("name").setEnabled(false);
+		windowProperties.getField("name").setReadOnly(true);
 		demoWindow.setVisible(true);
 		updateWinStatus();
 	}
 
 	public void delWin() {
 		getApplication().removeWindow(demoWindow);
-		createDemoWindow();
+		// allow user to change window name tag (before window is created)
+		windowProperties.getField("name").setEnabled(true);
+		windowProperties.getField("name").setReadOnly(false);
 		updateWinStatus();
 	}
 
