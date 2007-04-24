@@ -74,7 +74,7 @@
 	<!-- Themes - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	<target name="themes" depends="init">
 
-		<copy todir="${output-dir}/lib/themes">
+		<copy todir="build/result/themes">
 			<fileset dir="WebContent/WEB-INF/lib/themes">
 				<exclude name="**/.svn" />
 				<include name="corporate/**/*" />
@@ -82,6 +82,13 @@
 				<include name="base/**/*" />
 				<include name="example/**/*" />
 			</fileset>
+		</copy>
+		
+		<fixcrlf srcdir="build/result/themes" includes="**/*.js **/*.css" eol="lf" eof="remove" />
+
+		<!-- Add unoptimized (not obfuscated) themes -->
+		<copy todir="${output-dir}/lib/themes">
+			<fileset dir="build/result/themes" />
 		</copy>
 
 		<!-- Brokes CSS, do not use
@@ -110,23 +117,23 @@
 		<echo>JavaScript syntax check, optimizing and obfuscation.</echo>
 		<for param="file">
 			<path>
-				<fileset dir="${output-dir}/lib/themes">
+				<fileset dir="build/result/themes">
 					<include name="**/*.js" />
 				</fileset>
 			</path>
 			<sequential>
 				<echo>@{file}</echo>
 				<!-- TODO: ERROR: for some reason this does not work on Windows platform, please fix! -->
-				<java dir="${output-dir}/lib/themes" jar="build/lib/custom_rhino.jar" fork="true" failonerror="true" maxmemory="64m" output="@{file}">
+				<java dir="build/result/themes" jar="build/lib/custom_rhino.jar" fork="true" failonerror="true" maxmemory="64m" output="@{file}">
 					<arg value="-c" />
 					<arg value="@{file}" />
 				</java>
 			</sequential>
 		</for>
-		<fixcrlf srcdir="${output-dir}/lib/themes" includes="**/*.js **/*.css" eol="lf" eof="remove" />
 
+		<!-- add optimized themes -->
 		<jar jarfile="${output-dir}/lib/${themes-jar-name}" compress="false">
-			<fileset dir="${output-dir}/lib/themes">
+			<fileset dir="build/result/themes">
 				<patternset>
 					<include name="corporate/**/*" />
 					<include name="base/**/*" />
@@ -152,7 +159,7 @@
 				</patternset>
 			</fileset>
 		</copy>
-		
+
 		<!-- Convert to CRLF's and tabs -->
 		<fixcrlf srcdir="build/result/src" eol="crlf" tablength="4" tab="remove" includes="**/*.java" />
 
@@ -221,14 +228,14 @@
 				</patternset>
 			</fileset>
 		</jar>
-		
+
 		<!-- Copy demo directory (Jetty) -->
 		<copy todir="${output-dir}/demo">
 			<fileset dir="build/demo">
 				<exclude name="**/.svn" />
 			</fileset>
 		</copy>
-		
+
 		<!-- Create demo WAR -->
 		<war warfile="${output-dir}/demo/${product-file}.war" webxml="WebContent/WEB-INF/web.xml">
 			<!-- WebContent: htmls, styles, license-->
