@@ -5,6 +5,12 @@ import com.itmill.toolkit.event.ShortcutAction;
 import com.itmill.toolkit.event.Action.Handler;
 import com.itmill.toolkit.ui.*;
 
+/**
+ * Note: This feature is under development and is considered as alpha
+ * 
+ * @author IT Mill Ltd.
+ * 
+ */
 public class KeyboardShortcut extends com.itmill.toolkit.Application implements
 		Handler {
 	private Window main;
@@ -41,8 +47,9 @@ public class KeyboardShortcut extends com.itmill.toolkit.Application implements
 		 */
 		main
 				.addComponent(new Label(
-						"This is a test program for shortcut actions<br />"
-								+ "<b>Note:</b> if events do not work, <b>set focus to Textfield first!</b>",
+						"<h3>Test application for shortcut actions</h3>"
+								+ "<b>Note: This feature is under development and is considered as alpha.</b><br />"
+								+ "<b>Note:</b> if events do not work, <b>set focus to Textfield first.</b>",
 						Label.CONTENT_XHTML));
 		main
 				.addComponent(new Label(
