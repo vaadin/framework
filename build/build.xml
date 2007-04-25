@@ -14,8 +14,8 @@
 		</zip>
 	</target>
 
-	<!-- As release, but no javadoc or docbook tasks -->
-	<target name="package-without-documentation" depends="clean-all,libs,themes,demo,package-docs,license" description="Build testing package without javadocs or manual">
+	<!-- As release, but no docbook tasks -->
+	<target name="package-without-manual" depends="clean-all,libs,themes,demo,package-docs,license" description="Build testing package without manual">
 		<zip zipfile="build/result/TESTING-${package-file-name}">
 			<fileset dir="build/result">
 				<patternset>
@@ -83,7 +83,7 @@
 				<include name="example/**/*" />
 			</fileset>
 		</copy>
-		
+
 		<fixcrlf srcdir="build/result/themes" includes="**/*.js **/*.css" eol="lf" eof="remove" />
 
 		<!-- Add unoptimized (not obfuscated) themes -->
@@ -198,7 +198,7 @@
 
 	<!-- Demo  - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-	<target name="demo" depends="libs,compile-java,themes">
+	<target name="demo" depends="libs,compile-java,themes,javadoc">
 		<echo>Building demo</echo>
 		<java2html srcdir="build/result/src/${toolkit-package}/demo" destdir="build/result/src/${toolkit-package}/demo" includes="**/*.java" style="eclipse" showLineNumbers="false" showFileName="true" showTableBorder="false" />
 		<!-- have to use "temp" dir for some reason here. Overwrite does not work, at least on Linux Eclipse 3.2.2 -->
@@ -263,6 +263,14 @@
 			<!-- All demo source and html source -->
 			<fileset dir="build/result">
 				<include name="src/${toolkit-package}/demo/**/*" />
+			</fileset>
+			<!-- All javadoc -->
+			<fileset dir="${output-dir}">
+				<include name="doc/api/**/*" />
+			</fileset>
+			<!-- Add theme (not optimized) -->
+			<fileset dir="${output-dir}/lib">
+				<include name="themes/**/*" />
 			</fileset>
 		</war>
 
