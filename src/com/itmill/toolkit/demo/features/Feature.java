@@ -86,7 +86,7 @@ public abstract class Feature extends CustomComponent {
 
 		// Javadoc
 		javadoc = new Label();
-		javadoc.setContentMode(Label.CONTENT_RAW);
+		javadoc.setContentMode(Label.CONTENT_XHTML);
 
 		// Demo
 		Component demo = getDemoComponent();
