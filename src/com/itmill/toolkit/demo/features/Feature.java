@@ -68,7 +68,7 @@ public abstract class Feature extends CustomComponent {
 	 */
 	public void setJavadocURL(String url) {
 		javadoc
-				.setValue("<iframe width=\"100%\" src=\"/doc/api/com/itmill/toolkit/"
+				.setValue("<iframe width=\"100%\" src=\"../doc/api/com/itmill/toolkit/"
 						+ url + "\"></iframe>");
 	}
 
