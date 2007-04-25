@@ -94,7 +94,6 @@ public class Parameters extends com.itmill.toolkit.Application implements
 	public void handleParameters(Map parameters) {
 		// TODO: disabled, see bug #550
 		// params.removeAllItems();
-		System.out.println("handleParameters()");
 		for (Iterator i = parameters.keySet().iterator(); i.hasNext();) {
 			String name = (String) i.next();
 			String[] values = (String[]) parameters.get(name);
