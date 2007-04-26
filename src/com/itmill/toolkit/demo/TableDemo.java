@@ -100,7 +100,8 @@ public class TableDemo extends com.itmill.toolkit.Application implements
 								+ ACTION_DESCRIPTION, Label.CONTENT_XHTML));
 		OrderedLayout layout = new OrderedLayout(
 				OrderedLayout.ORIENTATION_HORIZONTAL);
-		layout.addComponent(tableVisibility);
+		// TODO: disabled until #655 fixed
+		// layout.addComponent(tableVisibility);
 		layout.addComponent(tableEnabler);
 		layout.addComponent(tableCaption);
 		main.addComponent(layout);
