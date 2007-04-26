@@ -795,6 +795,7 @@ public class Select extends AbstractField implements Container,
 					// Ignored
 				}
 			}
+
 			// TODO: This should be conditional
 			fireValueChange();
 		}
@@ -1591,7 +1592,7 @@ public class Select extends AbstractField implements Container,
 		private String getJSON(int size, int first, String filter) {
 
 			// Refilter options, if needed
-			if (!currentFilter.equals(filter) || filteredItemsBuffer == null) {
+			if ("".equals(filter) || !currentFilter.equals(filter) || filteredItemsBuffer == null) {
 				filteredItemsBuffer = filterContent(filter);
 				currentFilter = filter;
 			}
