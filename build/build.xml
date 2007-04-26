@@ -81,6 +81,7 @@
 				<include name="demo/**/*" />
 				<include name="base/**/*" />
 				<include name="example/**/*" />
+				<include name="readme.txt" />
 			</fileset>
 		</copy>
 
@@ -264,11 +265,11 @@
 			<fileset dir="build/result">
 				<include name="src/${toolkit-package}/demo/**/*" />
 			</fileset>
-			<!-- All javadoc -->
+			<!-- All javadoc (demos link to these)-->
 			<fileset dir="${output-dir}">
 				<include name="doc/api/**/*" />
 			</fileset>
-			<!-- Add theme (not optimized) -->
+			<!-- Add themes (not optimized) (demos link to these) -->
 			<fileset dir="${output-dir}/lib">
 				<include name="themes/**/*" />
 			</fileset>
