@@ -27,7 +27,7 @@ public class Parameters extends com.itmill.toolkit.Application implements
 	private Table params = new Table();
 
 	public void init() {
-		Window main = new Window("Table demo");
+		Window main = new Window("Parameters demo");
 		setMainWindow(main);
 
 		// set the application to use Corporate -theme

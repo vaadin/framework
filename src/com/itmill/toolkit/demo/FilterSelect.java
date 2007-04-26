@@ -41,7 +41,7 @@ public class FilterSelect extends com.itmill.toolkit.Application {
 		 * - Create new window for the application - Give the window a visible
 		 * title - Set the window to be the main window of the application
 		 */
-		Window main = new Window("Filter select examples");
+		Window main = new Window("Filter select demo");
 		setMainWindow(main);
 
 		// default filter

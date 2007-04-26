@@ -25,7 +25,7 @@ public class TreeFilesystem extends com.itmill.toolkit.Application implements
 	private Tree tree = new Tree();
 
 	public void init() {
-		Window main = new Window("Tree demo");
+		Window main = new Window("Tree filesystem demo");
 		setMainWindow(main);
 
 		// set the application to use Corporate -theme

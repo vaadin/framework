@@ -35,7 +35,7 @@ public class KeyboardShortcut extends com.itmill.toolkit.Application implements
 		 * - Create new window for the application - Give the window a visible
 		 * title - Set the window to be the main window of the application
 		 */
-		main = new Window("Hello window");
+		main = new Window("Keyboard shortcuts demo");
 		setMainWindow(main);
 
 		// set the application to use Corporate -theme

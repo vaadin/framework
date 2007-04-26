@@ -34,7 +34,7 @@ public class TreeFilesystemContainer extends com.itmill.toolkit.Application
 	private Label fileProperties = new Label();
 
 	public void init() {
-		Window main = new Window("Tree demo");
+		Window main = new Window("Tree FilesystemContainer demo");
 		setMainWindow(main);
 
 		// set the application to use Corporate -theme
