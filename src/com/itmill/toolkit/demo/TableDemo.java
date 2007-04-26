@@ -107,8 +107,8 @@ public class TableDemo extends com.itmill.toolkit.Application implements
 		main.addComponent(layout);
 		main.addComponent(table);
 		main.addComponent(tableLastAction);
-		main.addComponent(embeddedToolkitLink);
-		main.addComponent(tableDemoLink);
+		// main.addComponent(embeddedToolkitLink);
+		// main.addComponent(tableDemoLink);
 
 		// initialize demo components
 		initTable();
