@@ -1,10 +1,10 @@
-
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
 <title>IT Mill Toolkit</title>
-<link href="doc/manual/html-style/local.css" rel="stylesheet" type="text/css">
-<link rel="start" href="index.html" title="IT Mill Toolkit">
+<link href="doc/manual/html-style/local.css" rel="stylesheet" type="text/css" />
+<link rel="start" href="index.html" title="IT Mill Toolkit" />
 <style type="text/css">
 table.issues {
 	border-width: 1px 1px 1px 1px;
@@ -36,19 +36,34 @@ table.issues td {
 <div id="header"><h1>IT Mill Toolkit</h1></div><div id="itmilllogo"></div><div id="page">
 <div class="navheader"><table width="100%"><tr><th align="center" colspan="3">IT Mill Toolkit</th></tr>
 <tr><td align="left" width="20%">&nbsp;</td><th align="center" width="60%">&nbsp;</th>
-<td align="right" width="20%"></td></tr></table><hr></div><div class="book" lang="en">
+<td align="right" width="20%"></td></tr></table><hr /></div><div class="book" lang="en">
 <div class="titlepage"><div><div><h1 class="title">
 <a name="N40001"></a>IT Mill Toolkit Release Notes</h1></div>
-<div><h2 class="subtitle">Version 4.0.0</h2></div><div>
+<div><h2 class="subtitle">Version 4.0.1</h2></div><div>
 <div class="author"><h3 class="author"></h3></div></div>
 <div><p class="copyright">Copyright &copy; 2007 Oy IT Mill Ltd. All rights reserved.</p></div>
 <div><div class="abstract"><p class="title"></p>
 
 <h3>General</h3>
 <p>
-Version 4.0.0 is the initial version of IT Mill Toolkit. Previously the
-library was called <a href="http://www.millstone.org">Millstone UI Library</a>. The last publicly available
-version of <a href="http://www.millstone.org">Millstone UI Library</a> is 3.1.1. This new generation 4.0.0
+Version 4.0.1 is an maintenance release for IT Mill Toolkit 4.0 branch. It contains bugfixes for various browsers including few critical fixes for mobile terminals. We have added multiple new demos, source code included. Client-side source code is also provided for those who wish to look further how new themes or custom UI components are created for Toolkit applications, see themes under lib directory. Note that client-side API regarding JavaScript and CSS files will be re-implemented within 2007. Contact support@itmill.com for more information about client-side API changes.
+</p>
+<p>
+Following changes may be considered as enhancements even though this is a maintenance release. See demos for more information.
+<ul>
+<li>Select component has server-side lazyloading functionality (large dataset scenarios)</li>
+<li>Select component has filter options (begins with, contains, ends with filters)</li>
+<li>UI components may be controlled with keyboard (Toolkit has support for receiving key events)</li>
+</ul>
+</p>
+<p>
+Note that executing demos locally may provide security warning from your firewall
+software. This is due to started Web service which is required to run demos.
+You have to ignore warnings or temporarily accept connections to port 8888 on your firewall software.
+</p>
+<p>
+Previously Toolkit library was called <a href="http://www.millstone.org">Millstone UI Library</a>. The last publicly available
+version of <a href="http://www.millstone.org">Millstone UI Library</a> is 3.1.1. This new generation 4.0.1
 version of the library is still API-level compatible with the previous
 version.
 </p>
@@ -77,13 +92,13 @@ Supported client-side environments are
 <ul>
  <li>Browsers on AJAX-mode
  <ul>
-  <li>Internet Explorer, version 6.0 and 7.0</li>
+  <li>Internet Explorer, version 6 and 7.0</li>
   <li>Firefox, version 1.5 and 2.0</li>
   <li>Safari, version 2.0</li>
-  <li>Opera, since version 9.0</li>
-  <li>Konqueror, since version 3.5</li>
-  <li>Camino since version 1.0</li>
-  <li>Series60 since version 3.1 fp1</li>
+  <li>Opera, version 9.0 and 9.1</li>
+  <li>Konqueror, version 3.5</li>
+  <li>Camino version 1.0</li>
+  <li>Series60 version 3.1 fp1</li>
   <li>WebKit since version 400</li>
  </ul>
  </li>
@@ -103,14 +118,14 @@ Supported client-side environments are
 See <a href="index.html">index.html</a> for more information or go to <i>Developers' Area</i> at <a href="http://www.itmill.com">www.itmill.com</a>.
 </p>
 
-<h3>Changes in this Release (4.0.0)</h3>
+<h3>Changes in this Release (4.0.1)</h3>
 
 <h4>Compatibility</h4>
 <p>
-IT Mill Toolkit version 4.0.0 is API level compatible with Millstone UI Library version 3.1.1.
+IT Mill Toolkit version 4.0.1 is API level compatible with Millstone UI Library version 3.1.1.
 </p>
 <p>
-Following steps are required to upgrade from version 3.1.1 into 4.0.0:
+Following steps are required to upgrade from version 3.1.1 into 4.0.1:
 </p>
 <ul><li>1. update your application's imports
 <ul><li>search for <em>import org.millstone.base.*</em>
@@ -119,169 +134,71 @@ Following steps are required to upgrade from version 3.1.1 into 4.0.0:
 <ul><li>search for <em>&lt;servlet-class&gt;org.millstone.webadapter.WebAdapterServlet&lt;/servlet-class&gt;</em>
 </li><li>and replace to <em>&lt;servlet-class&gt;com.itmill.toolkit.terminal.web.ApplicationServlet&lt;/servlet-class&gt;</em></li></ul></li></ul>
 
-<h4>Known issues</h4>
+<h4>Fixed issues in this Release (4.0.1)</h4>
+<table class="issues">
+<tbody>
+<tr><th>Since version</th><th>Issue</th><th>Description</th><th>Workaround</th></tr>
+<tr><td align="left">4.0.0</td><td align="left">Window with Button or Select limitations (Firefox)</td><td align="left">Using Select component with style "optiongroup" or Button component with "SwitchMode" inside Window component does not work reliably. Select or Button components. Affects Firefox browsers.</td><td align="left"></td></tr>
+<tr><td align="left">4.0.0</td><td align="left">Table column hiding issue</td><td align="left">If user hides columns from Table component and Table is rendered again (e.g. Web browser reload current page is executed), columns are garbled and table horizontal size is wrong.</td><td align="left"></td></tr>
+<tr><td align="left">4.0.0</td><td align="left">Themes are obfuscated</td><td align="left">Creating new and modifying existing Themes or UI components on Toolkit is impossible because only optimized (compressed and therefore obfuscated) version of Themes are offered in Toolkit release.</td><td align="left"></td></tr>
+<tr><td align="left">4.0.0</td><td align="left">Table context menus do not work (Safari / WebKit)</td><td align="left">Context menus activated by 2nd mouse button on Table component do not work. Affects Safari and WebKit browsers.</td><td align="left"></td></tr>
+<tr><td align="left">4.0.0</td><td align="left">Feature Browser properties table empty (Safari 2)</td><td align="left">You cannot edit properties of any component on Feature Browser demo. Affects Safari 2 browser.</td><td align="left">Test Feature Browser Properties panel demo using any other supported browser.</td></tr>
+<tr><td align="left">4.0.0</td><td align="left">Table sorts even if sort is disabled</td><td align="left">Table component sorts even if setSortDisabled(true) is set.</td><td align="left"></td></tr>
+<tr><td align="left">4.0.0</td><td align="left">Select visual issue with popup messages (IE 6)</td><td align="left">Select components widgets are seen through popup messages if component alignment is appropriate. Affects Internet Explorer 6 browser.</td><td align="left"></td></tr>
+<tr><td align="left">4.0.0</td><td align="left">Setting focus on Java side to any UI component does not work.</td><td align="left">AbstractField.setFocus() method is broken.</td><td align="left"></td></tr>
+<tr><td align="left">4.0.0</td><td align="left">Table scrollable even if it's disabled</td><td align="left">Table that is not enabled may still be scrolled but content is not updated from the server.</td><td align="left"></td></tr>
+<tr><td align="left">4.0.0</td><td align="left">Table does not work with mouse scroll wheel (Opera 9)</td><td align="left">Table components rows scroll, but new rows are not fetched. Affects Opera 9 browser.</td><td align="left">Use scroll bar in usual manner instead.</td></tr>
+<tr><td align="left">4.0.0</td><td align="left">Table with MultiSelect feature limitation.</td><td align="left">Table component that has MultiSelect feature enabled forgets selected rows if user scrolls table rows enough up or down.</td><td align="left"></td></tr>
+<tr><td align="left">4.0.0</td><td align="left">Mouse usability is not good with Feature Browser demo (Nokia S60)</td><td align="left">Mouse pointer usability is poor on Feature Browser demo. This might cause problems in selecting some items in Feature Browser demo. Affects Nokia S60 browsers.</td><td align="left"></td></tr>
+<tr><td align="left">4.0.0</td><td align="left">Table render anomalies when disabled and columns edited (IE 7)</td><td align="left">Table component may be rendered transparently if Table is disabled and columns are resized and one column is hidden. Affects Internet Explorer 7 browser.</td><td align="left"></td></tr>
+<tr><td align="left">4.0.0</td><td align="left">Table column widths not optimal with empty table</td><td align="left">Table component column widths are not optimal when content is first empty and then single item is added to Table.</td><td align="left"></td></tr>
+<tr><td align="left">4.0.0</td><td align="left">Windows and context menus suffers minor jitter when rendering</td><td align="left">Rendering suffers of jitter when using component Context menus  (Action class) and Windows with style "modal".</td><td align="left"></td></tr>
+<tr><td align="left">4.0.0</td><td align="left">Select rendering anomalies</td><td align="left">Select component with style "twincol" may render deformed if zero or only few items exists on Select component.</td><td align="left"></td></tr>
+<tr><td align="left">4.0.0</td><td align="left">Table may busyloop in rare ciscumstances (Safari)</td><td align="left">Table component may fall into eternal loop in some rare circumstances. Affects Safari browsers.</td><td align="left"></td></tr>
+<tr><td align="left">4.0.0</td><td align="left">Table with labels limitation</td><td align="left">Table component that contains Label components did not render all Labels properties such as icons.</td><td align="left"></td></tr>
+<tr><td align="left">4.0.0</td><td align="left">Table embedded objects do not work</td><td align="left">Setting embedded objects (e.g. icons) to table does not work.</td><td align="left"></td></tr>
+<tr><td align="left">4.0.0</td><td align="left">Table horizontal scroll reloads</td><td align="left">Horizontal scroll in Table component forces reloads of the component. These cause the bar to pop back to the beginning and sometimes resizes the entire table effectively preventing the user from viewing the information.</td><td align="left"></td></tr>
+<tr><td align="left">4.0.0</td><td align="left">Select visual anomalies</td><td align="left">1) Select component with style "lazyLoading" always renders options ("itemCaption") using toString(), without regard to current itemCaptionPropertyId. Therefore you cannot specify which property to use as caption.    2) Theme for Select component with style "lazyLoading" renders options without caption (empty string) as an empty div. Therefore option is only a few pixels high, and hard to select.</td><td align="left"></td></tr>
+</tbody></table>
 
-<TABLE CLASS="issues">
-	<TBODY>
-		<TR>
-			<TH>Since version</TH>
-			<TH>Issue</TH>
-			<TH ALIGN=LEFT>Description</TH>
-			<TH ALIGN=LEFT>Workaround</TH>
-		</TR>
-		<TR>
-			<TD ALIGN=LEFT>4.0.0</TD>
-			<TD ALIGN=LEFT>Datefield component format limitation</TD>
-			<TD ALIGN=LEFT>Datefield component renders dates in day.month.year format. </TD>
-			<TD ALIGN=LEFT><BR></TD>
-		</TR>
-		<TR>
-			<TD ALIGN=LEFT>4.0.0</TD>
-			<TD ALIGN=LEFT>Windows component limitation in HTML-mode</TD>
-			<TD ALIGN=LEFT>Multiple Window components are not supported in HTML-mode. </TD>
-			<TD ALIGN=LEFT><BR></TD>
-		</TR>
-		<TR>
-			<TD ALIGN=LEFT>4.0.0</TD>
-			<TD ALIGN=LEFT>Popups position calculation not optimal</TD>
-			<TD ALIGN=LEFT>Popups on various UI components are not displayed on best possible place. </TD>
-			<TD ALIGN=LEFT><BR></TD>
-		</TR>
-		<TR>
-			<TD ALIGN=LEFT>4.0.0</TD>
-			<TD ALIGN=LEFT>Closing Application session not possible.</TD>
-			<TD ALIGN=LEFT>AjaxApplicationContext class does not include any method for closing sessions. </TD>
-			<TD ALIGN=LEFT>Register TransactionListener where HttpServletRequest class is available. HttpServletRequest provides you access to session.</TD>
-		</TR>
-		<TR>
-			<TD ALIGN=LEFT>4.0.0</TD>
-			<TD ALIGN=LEFT>Setting focus on Java side to any UI component does not work.</TD>
-			<TD ALIGN=LEFT>AbstractField.setFocus() method is broken. </TD>
-			<TD ALIGN=LEFT><BR></TD>
-		</TR>
-		<TR>
-			<TD ALIGN=LEFT>4.0.0</TD>
-			<TD ALIGN=LEFT>Keyboard input feature not supported for AJAX-mode.</TD>
-			<TD ALIGN=LEFT>Keyboard input feature for UI components is not yet supported for AJAX-mode. </TD>
-			<TD ALIGN=LEFT><BR></TD>
-		</TR>
-		<TR>
-			<TD ALIGN=LEFT>4.0.0</TD>
-			<TD ALIGN=LEFT>Table component with certain configuration does not sort.</TD>
-			<TD ALIGN=LEFT>When &quot;List&quot; or &quot;Paging&quot; styles are used, Table component sorts only to one direction. </TD>
-			<TD ALIGN=LEFT>Use &quot;Default&quot; style.</TD>
-		</TR>
-		<TR>
-			<TD ALIGN=LEFT>4.0.0</TD>
-			<TD ALIGN=LEFT>Select component NullPointerException</TD>
-			<TD ALIGN=LEFT>It is not possible to select null item for Select component after some other item has been selected, doing this results in NullPointerException. </TD>
-			<TD ALIGN=LEFT><BR></TD>
-		</TR>
-		<TR>
-			<TD ALIGN=LEFT>4.0.0</TD>
-			<TD ALIGN=LEFT>Select component with &quot;Twincol&quot; style is hard to use</TD>
-			<TD ALIGN=LEFT>I cannot select multiple items in &quot;Twincol&quot; style Select component. </TD>
-			<TD ALIGN=LEFT>In &quot;Twincol&quot; style you most likely want to allow multiple selections also or only one selection is allowed on right side (selected). Check Table component API for more information.</TD>
-		</TR>
-		<TR>
-			<TD ALIGN=LEFT>4.0.0</TD>
-			<TD ALIGN=LEFT>Table component context menus do not work (Safari / WebKit)</TD>
-			<TD ALIGN=LEFT>Context menus activated by 2nd mouse button on Table component do not work with Safari or WebKit browsers. </TD>
-			<TD ALIGN=LEFT><BR></TD>
-		</TR>
-		<TR>
-			<TD ALIGN=LEFT>4.0.0</TD>
-			<TD ALIGN=LEFT>Feature Browser Upload component demo may not work (Konqueror 3.5)</TD>
-			<TD ALIGN=LEFT>On Feature Browser demo uploading new files using Upload component may open additional window or result in no visible change. Manual refresh from the browser updates UI again. </TD>
-			<TD ALIGN=LEFT>Test Feature Browser Upload component demo using some other supported browser.</TD>
-		</TR>
-		<TR>
-			<TD ALIGN=LEFT>4.0.0</TD>
-			<TD ALIGN=LEFT>Nokia S60 mouse pointer usability is not good with Feature Browser demo</TD>
-			<TD ALIGN=LEFT>Mouse pointer does not always work correctly in Nokia Series60 browsers. This might cause problems in selecting some items in Feature Browser demo. </TD>
-			<TD ALIGN=LEFT><BR></TD>
-		</TR>
-		<TR>
-			<TD ALIGN=LEFT>4.0.0</TD>
-			<TD ALIGN=LEFT>Select component visual issue with popup messages (IE 6)</TD>
-			<TD ALIGN=LEFT>Select components widgets are seen through popup messages with Internet Explorer 6 if component alignment is appropriate. </TD>
-			<TD ALIGN=LEFT><BR></TD>
-		</TR>
-		<TR>
-			<TD ALIGN=LEFT>4.0.0</TD>
-			<TD ALIGN=LEFT>DateField component does not support Locale on AJAX-mode</TD>
-			<TD ALIGN=LEFT>Changing locale for DateField component does not produce any visible changes when AJAX-mode is used. HTML mode is not affected by this bug. </TD>
-			<TD ALIGN=LEFT><BR></TD>
-		</TR>
-		<TR>
-			<TD ALIGN=LEFT>4.0.0</TD>
-			<TD ALIGN=LEFT>Calendar and Window component interoperability</TD>
-			<TD ALIGN=LEFT>Opening Calendar component in child windows in AJAX-mode is unsupported </TD>
-			<TD ALIGN=LEFT><BR></TD>
-		</TR>
-		<TR>
-			<TD ALIGN=LEFT>4.0.0</TD>
-			<TD ALIGN=LEFT>Table component does not work with mouse scroll wheel (Opera 9)</TD>
-			<TD ALIGN=LEFT>Table components rows scroll, but new rows are not fetched when Opera 9 is used. </TD>
-			<TD ALIGN=LEFT>Use scroll bar in usual manner instead.</TD>
-		</TR>
-		<TR>
-			<TD ALIGN=LEFT>4.0.0</TD>
-			<TD ALIGN=LEFT>Nokia Communicator 9300i may not work with Toolkit</TD>
-			<TD ALIGN=LEFT>Autodetection of Nokia Communicator 9300i may fail. This results to empty application screen. </TD>
-			<TD ALIGN=LEFT><BR></TD>
-		</TR>
-		<TR>
-			<TD ALIGN=LEFT>4.0.0</TD>
-			<TD ALIGN=LEFT>Select component may produce Javascript errors</TD>
-			<TD ALIGN=LEFT>If &quot;lazyloading&quot; feature is used for Select component, Javascript error is produced for each typed character that does not match. This mean cases where user is searching for values that do not exists. </TD>
-			<TD ALIGN=LEFT><BR></TD>
-		</TR>
-		<TR>
-			<TD ALIGN=LEFT>4.0.0</TD>
-			<TD ALIGN=LEFT>Embedded component limitation</TD>
-			<TD ALIGN=LEFT>Method setVisible() provides no changes on the component. </TD>
-			<TD ALIGN=LEFT><BR></TD>
-		</TR>
-		<TR>
-			<TD ALIGN=LEFT>4.0.0</TD>
-			<TD ALIGN=LEFT>Embedded component limitation</TD>
-			<TD ALIGN=LEFT>Method setEnable() provides no changes on the component. </TD>
-			<TD ALIGN=LEFT><BR></TD>
-		</TR>
-		<TR>
-			<TD ALIGN=LEFT>4.0.0</TD>
-			<TD ALIGN=LEFT>Table component with MultiSelect feature limitation.</TD>
-			<TD ALIGN=LEFT>Table component that has MultiSelect feature enabled forgets selected rows if user scrolls table rows enough up or down. </TD>
-			<TD ALIGN=LEFT><BR></TD>
-		</TR>
-		<TR>
-			<TD ALIGN=LEFT>4.0.0</TD>
-			<TD ALIGN=LEFT>Terminal class not usable until Application is initialized.</TD>
-			<TD ALIGN=LEFT>Terminal class is null until Application.init() has been completed. </TD>
-			<TD ALIGN=LEFT>Create CustomComponent and use it as your Application's first page. You can now override paint() method and access Terminal class before anything is rendered at client-side.</TD>
-		</TR>
-		<TR>
-			<TD ALIGN=LEFT>4.0.0</TD>
-			<TD ALIGN=LEFT>Table component sort provides minor jitter on HTML-mode (Opera 9)</TD>
-			<TD ALIGN=LEFT>Sorting Table component rows with HTML-mode may result in temporary relocation of component for small amount of time. This can be seen as minor jitter on client-side. </TD>
-			<TD ALIGN=LEFT><BR></TD>
-		</TR>
-		<TR>
-			<TD ALIGN=LEFT>4.0.0</TD>
-			<TD ALIGN=LEFT>Starting demo produces security warnings from firewall software</TD>
-			<TD ALIGN=LEFT>Demo starts Www server which listens on port 8888. Your firewall software may detect this and give you an security warning. </TD>
-			<TD ALIGN=LEFT>Ignore warning or accept connections to port 8888 on your firewall software.</TD>
-		</TR>
-		<TR>
-			<TD ALIGN=LEFT>4.0.0</TD>
-			<TD ALIGN=LEFT>Embedded component does not work on HTML-mode (IE 6,7)</TD>
-			<TD ALIGN=LEFT>Embedded objects may not be seen on HTML-mode when Internet Explorer versions 6 or 7 are used. </TD>
-			<TD ALIGN=LEFT><BR></TD>
-		</TR>
-	</TBODY>
-</TABLE>
+<br />
+<h4>Known issues in this Release (4.0.1)</h4>
+<table class="issues">
+<tbody>
+<tr><th>Since version</th><th>Issue</th><th>Description</th><th>Workaround</th></tr>
+<tr><td align="left">4.0.0</td><td align="left">Datefield format limitation</td><td align="left">Datefield component renders dates in day.month.year format.</td><td align="left"></td></tr>
+<tr><td align="left">4.0.0</td><td align="left">Popups position calculation not optimal</td><td align="left">Popups on various UI components are not displayed on best possible place.</td><td align="left"></td></tr>
+<tr><td align="left">4.0.0</td><td align="left">Closing Application session not possible.</td><td align="left">AjaxApplicationContext class does not include any method for closing sessions.</td><td align="left">Register TransactionListener where HttpServletRequest class is available. HttpServletRequest provides you access to session.</td></tr>
+<tr><td align="left">4.0.0</td><td align="left">Keyboard input feature in beta stage for AJAX-mode.</td><td align="left">Keyboard input feature for UI components is supported, but considered as beta for AJAX-mode. API may change.</td><td align="left"></td></tr>
+<tr><td align="left">4.0.0</td><td align="left">Table with certain configuration does not sort</td><td align="left">When "List" or "Paging" styles are used, Table component sorts only to one direction.</td><td align="left">Use "Default" style.</td></tr>
+<tr><td align="left">4.0.0</td><td align="left">Windows limitation in HTML-mode</td><td align="left">Multiple Window components are not supported in HTML-mode.</td><td align="left"></td></tr>
+<tr><td align="left">4.0.0</td><td align="left">Select NullPointerException</td><td align="left">It is not possible to select null item for Select component after some other item has been selected, doing this results in NullPointerException.</td><td align="left"></td></tr>
+<tr><td align="left">4.0.0</td><td align="left">Upload requires manual refresh (Safari / Konqueror)</td><td align="left">Upload component requires manual refresh from browser after file is sent from client to server. This issue is related to bug that exists in Safari and Konqueror browsers. Note, current WebKit has this issue resolved. Affects Safari and Konqueror browsers.</td><td align="left">Test Feature Browser Upload component demo using some other supported browser.</td></tr>
+<tr><td align="left">4.0.0</td><td align="left">Select with "Twincol" style is hard to use</td><td align="left">I cannot select multiple items in "Twincol" style Select component.</td><td align="left">In "Twincol" style you most likely want to allow multiple selections also or only one selection is allowed on right side (selected). Check Select components API for more information.</td></tr>
+<tr><td align="left">4.0.1</td><td align="left">Table column size modifications broken (Opera 9)</td><td align="left">Dragging table column size larger or smaller does not align headers correctly. Affects Opera 9 browser.</td><td align="left"></td></tr>
+<tr><td align="left">4.0.1</td><td align="left">Label CONTENT_RAW broken</td><td align="left">Label with content mode CONTENT_RAW does not work.</td><td align="left">Use CONTENT_XHTML as content mode instead.</td></tr>
+<tr><td align="left">4.0.1</td><td align="left">Table setVisible state issue</td><td align="left">Setting Table visibility to false and then back to true does not always bring Table back to UI.</td><td align="left">Put your Table into component container such as Panel and use Panel's setVisible methods instead.</td></tr>
+<tr><td align="left">4.0.0</td><td align="left">Table row header icon limitation</td><td align="left">Table does not properly support icons in row headers in AJAX rendering mode</td><td align="left"></td></tr>
+<tr><td align="left">4.0.0</td><td align="left">DateField does not support Locale on AJAX-mode</td><td align="left">Changing locale for DateField component does not produce any visible changes when AJAX-mode is used. HTML mode is not affected by this bug.</td><td align="left"></td></tr>
+<tr><td align="left">4.0.0</td><td align="left">Calendar and Window interoperability</td><td align="left">Opening Calendar component in child windows in AJAX-mode is unsupported</td><td align="left"></td></tr>
+<tr><td align="left">4.0.0</td><td align="left">Nokia Communicator 9300i may not work with Toolkit</td><td align="left">Autodetection of Nokia Communicator 9300i may fail. This results to empty application screen.</td><td align="left"></td></tr>
+<tr><td align="left">4.0.0</td><td align="left">Select may produce JavaScript errors</td><td align="left">If "lazyloading" feature is used for Select component, Javascript error is produced for each typed character that does not match. This mean cases where user is searching for values that do not exists.  </td><td align="left"></td></tr>
+<tr><td align="left">4.0.0</td><td align="left">Embedded limitation</td><td align="left">Method setVisible() provides no changes on the component.</td><td align="left"></td></tr>
+<tr><td align="left">4.0.0</td><td align="left">Embedded limitation</td><td align="left">Method setEnable() provides no changes on the component.</td><td align="left"></td></tr>
+<tr><td align="left">4.0.0</td><td align="left">Terminal class not usable until Application is initialized.</td><td align="left">Terminal class is null until Application.init() has been completed.</td><td align="left">Create CustomComponent and use it as your Application's first page. You can now override paint() method and access Terminal class before anything is rendered at client-side.</td></tr>
+<tr><td align="left">4.0.0</td><td align="left">Table sort provides minor jitter on HTML-mode (Opera 9)</td><td align="left">Sorting Table component rows with HTML-mode may result in temporary relocation of component for small amount of time. This can be seen as minor jitter on client-side. Affects Opera 9 browser.</td><td align="left"></td></tr>
+<tr><td align="left">4.0.0</td><td align="left">Demo package does not work fully with Oracle AS</td><td align="left">When demo package itmill-toolkit.war is deployed to Oracle Application Server, non-AJAX (HTML) demos fail and you cannot browse javadocs or theme code.</td><td align="left">Configure Oracle AS to allow directory listing for docs and themes directories. To get HTML demos work you have to specify the used XSLT processor with JVM parameter like:<br />
+-Djavax.xml.transform.TransformerFactory = <br />net.sf.saxon.TransformerFactoryImpl<br />
+-Dorg.xml.sax.driver = <br />org.apache.crimson.parser.XMLReaderImpl</td></tr>
+<tr><td align="left">4.0.1</td><td align="left">Setting focus to UI component limitations</td><td align="left">AbstractField.setFocus() method works only for Button and Textfield components.</td><td align="left"></td></tr>
+<tr><td align="left">4.0.0</td><td align="left">Embedded does not work on HTML-mode (IE 6, 7)</td><td align="left">Embedded objects may not be seen on HTML-mode. Affects Internet Explorer 6 and 7 browsers.</td><td align="left"></td></tr>
+<tr><td align="left">4.0.0</td><td align="left">Button usability (Safari)</td><td align="left">Selected Button component can only be clicked by pressing spacebar when using keyboard. Enter would be a more intuitive choice. Affects Safari browser.</td><td align="left"></td></tr>
+<tr><td align="left">4.0.1</td><td align="left">URIHandler, ParameterHandler broken (Safari)</td><td align="left">URIHandler and ParameterHandler does not work. Affects Safari browsers.</td><td align="left"></td></tr>
+</tbody></table>
+
 
 </div></div></div></div>
 
-</div><div class="navfooter"><hr><table width="100%"><tr><td align="left" width="40%">&nbsp;</td><td align="center" width="20%">&nbsp;</td><td align="right" width="40%"></td></tr><tr><td valign="top" align="left" width="40%">&nbsp;</td><td align="center" width="20%">&nbsp;</td><td valign="top" align="right" width="40%"></td></tr></table></div></div><div id="footer"><span>Version: 4.0.0</span>&copy; Oy IT Mill Ltd. 2000-2007</div></div></body></html>
+<br />
+
+</div><div class="navfooter"><hr><table width="100%"><tr><td align="left" width="40%">&nbsp;</td><td align="center" width="20%">&nbsp;</td><td align="right" width="40%"></td></tr><tr><td valign="top" align="left" width="40%">&nbsp;</td><td align="center" width="20%">&nbsp;</td><td valign="top" align="right" width="40%"></td></tr></table></div></div><div id="footer"><span>Version: 4.0.1</span>&copy; Oy IT Mill Ltd. 2000-2007</div></div></body></html>
