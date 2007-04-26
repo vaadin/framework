@@ -6,7 +6,7 @@ import com.itmill.toolkit.event.Action.Handler;
 import com.itmill.toolkit.ui.*;
 
 /**
- * Note: This feature is under development and is considered as alpha
+ * Note: This feature is under development and is considered as beta
  * 
  * @author IT Mill Ltd.
  * 
@@ -48,7 +48,7 @@ public class KeyboardShortcut extends com.itmill.toolkit.Application implements
 		main
 				.addComponent(new Label(
 						"<h3>Test application for shortcut actions</h3>"
-								+ "<b>Note: This feature is under development and is considered as alpha.</b><br />"
+								+ "<b>Note: This feature is under development and is considered as beta.</b><br />"
 								+ "<b>Note:</b> if events do not work, <b>set focus to Textfield first.</b>",
 						Label.CONTENT_XHTML));
 		main
