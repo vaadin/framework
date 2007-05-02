@@ -177,7 +177,7 @@ public abstract class AbstractComponentContainer extends AbstractComponent
 	 *            the component that has been removed from this container.
 	 */
 	protected void fireComponentDetachEvent(Component component) {
-		fireEvent(new ComponentAttachEvent(this, component));
+		fireEvent(new ComponentDetachEvent(this, component));
 	}
 
 	/**
