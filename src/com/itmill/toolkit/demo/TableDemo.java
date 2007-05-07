@@ -66,15 +66,6 @@ public class TableDemo extends com.itmill.toolkit.Application implements
 	private Button tableCaption = new Button("Hide caption", this,
 			"tableCaption");
 
-	// Links for switching between TableDemo and EmbeddedToolkit.jsp page
-	private Link embeddedToolkitLink = new Link(
-			"See same application instance through ToolkitMashup.jsp",
-			new ExternalResource("ToolkitMashup.jsp"));
-
-	private Link tableDemoLink = new Link(
-			"See same application instance through TableDemo",
-			new ExternalResource("TableDemo?renderingMode=ajax"));
-
 	/**
 	 * Initialize Application. Demo components are added to main window.
 	 */
@@ -107,8 +98,6 @@ public class TableDemo extends com.itmill.toolkit.Application implements
 		main.addComponent(layout);
 		main.addComponent(table);
 		main.addComponent(tableLastAction);
-		// main.addComponent(embeddedToolkitLink);
-		// main.addComponent(tableDemoLink);
 
 		// initialize demo components
 		initTable();
