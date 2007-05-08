@@ -5,15 +5,15 @@
 	  
 	  This license is for development and testing purposes only. It is
 	  not valid for any kind of production use. To obtain a license for
-	  production use, see http://license.itmill.com/
+	  production use, see http://www.itmill.com/
 	  
 	  The license file should either be placed in your applications
 	  WEB-INF directory as itmill-toolkit-license.xml or set in your
 	  Application class init -method using readLicenseFile -method in
 	  com.itmill.toolkit.service.License
 
-	  The legal text corresponding to this license can be found in 
-	  http://license.itmill.com/legal/itmill-toolkit-4-license.txt
+	  The legal text corresponding to this license can be found in
+	  http://www.itmill.com/
 -->
 
 <license number="1">
