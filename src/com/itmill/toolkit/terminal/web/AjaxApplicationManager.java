@@ -54,6 +54,7 @@ import com.itmill.toolkit.Application;
 import com.itmill.toolkit.Application.WindowAttachEvent;
 import com.itmill.toolkit.Application.WindowDetachEvent;
 import com.itmill.toolkit.terminal.DownloadStream;
+import com.itmill.toolkit.terminal.Identifiable;
 import com.itmill.toolkit.terminal.Paintable;
 import com.itmill.toolkit.terminal.URIHandler;
 import com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent;
@@ -141,8 +142,8 @@ public class AjaxApplicationManager implements
 	 *             if the writing failed due to input/output error.
 	 */
 	public void handleUidlRequest(HttpServletRequest request,
-			HttpServletResponse response, ThemeSource themeSource) 
-		throws IOException {
+			HttpServletResponse response, ThemeSource themeSource)
+			throws IOException {
 
 		// repaint requested or sesssion has timed out and new one is created
 		boolean repaintAll = (request.getParameter(GET_PARAM_REPAINT_ALL) != null)
@@ -306,55 +307,63 @@ public class AjaxApplicationManager implements
 						}
 					}
 
-                    // add meta instruction for client to set focus if it is set
-                    Paintable f = (Paintable) application.consumeFocus();
-                    // .. or initializion (first uidl-request)
-                    boolean init = application.ajaxInit();
-                    if(init || f != null) {
-                        paintTarget.startTag("meta");
-                        if(init)
-                        	paintTarget.addAttribute("appInit", true);
-                        if(f != null) {
-                        	paintTarget.startTag("focus");
-                        	paintTarget.addAttribute("pid", getPaintableId(f));
-                        	paintTarget.endTag("focus");
-                        }
-                        paintTarget.endTag("meta");
-                    }
+					// add meta instruction for client to set focus if it is set
+					Paintable f = (Paintable) application.consumeFocus();
+					// .. or initializion (first uidl-request)
+					boolean init = application.ajaxInit();
+					if (init || f != null) {
+						paintTarget.startTag("meta");
+						if (init)
+							paintTarget.addAttribute("appInit", true);
+						if (f != null) {
+							paintTarget.startTag("focus");
+							paintTarget.addAttribute("pid", getPaintableId(f));
+							paintTarget.endTag("focus");
+						}
+						paintTarget.endTag("meta");
+					}
 
-                    // Precache custom layouts
-                    // TODO Does not support theme-get param or different themes in different windows -> Allways preload layouts with the theme specified by the applications
-                    String themeName = application.getTheme() != null ? application.getTheme() : ApplicationServlet.DEFAULT_THEME;
-                    // TODO We should only precache the layouts that are not cached already
-                    for (Iterator i=paintTarget.preCachedResources.iterator(); i.hasNext();) {
-                    	String resource = (String) i.next();
-                    	InputStream is = null;
-                    	try {
-                			is = themeSource.getResource(themeName + "/" +  resource);
-                		} catch (ThemeSource.ThemeException e) {
-                			Log.info(e.getMessage());
-                		}
-                    	if (is != null) {
-                    		paintTarget.startTag("precache");
-                    		paintTarget.addAttribute("resource", resource);
-                    		StringBuffer layout = new StringBuffer();
+					// Precache custom layouts
+					// TODO Does not support theme-get param or different themes
+					// in different windows -> Allways preload layouts with the
+					// theme specified by the applications
+					String themeName = application.getTheme() != null ? application
+							.getTheme()
+							: ApplicationServlet.DEFAULT_THEME;
+					// TODO We should only precache the layouts that are not
+					// cached already
+					for (Iterator i = paintTarget.preCachedResources.iterator(); i
+							.hasNext();) {
+						String resource = (String) i.next();
+						InputStream is = null;
+						try {
+							is = themeSource.getResource(themeName + "/"
+									+ resource);
+						} catch (ThemeSource.ThemeException e) {
+							Log.info(e.getMessage());
+						}
+						if (is != null) {
+							paintTarget.startTag("precache");
+							paintTarget.addAttribute("resource", resource);
+							StringBuffer layout = new StringBuffer();
 
-                    		try {
-                        		InputStreamReader r = new InputStreamReader(is);
-                    				char[] buffer = new char[20000];
-                    				int charsRead = 0;
-                    				while ((charsRead = r.read(buffer)) > 0)
-                    					layout.append(buffer, 0, charsRead);
-                    				r.close();
-                    		} catch (java.io.IOException e) {
-                    			Log.info("Resource transfer failed:  " + request.getRequestURI()
-                    					+ ". (" + e.getMessage() + ")");
-                    		}
-                    		paintTarget.addCharacterData(layout.toString());
-                    		paintTarget.endTag("precache");
-                    	}
-                    }
-                    
+							try {
+								InputStreamReader r = new InputStreamReader(is);
+								char[] buffer = new char[20000];
+								int charsRead = 0;
+								while ((charsRead = r.read(buffer)) > 0)
+									layout.append(buffer, 0, charsRead);
+								r.close();
+							} catch (java.io.IOException e) {
+								Log.info("Resource transfer failed:  "
+										+ request.getRequestURI() + ". ("
+										+ e.getMessage() + ")");
+							}
+							paintTarget.addCharacterData(layout.toString());
+							paintTarget.endTag("precache");
+						}
+					}
+
 					paintTarget.close();
 					out.flush();
 				} else {
@@ -584,9 +593,18 @@ public class AjaxApplicationManager implements
 
 		String id = (String) paintableIdMap.get(paintable);
 		if (id == null) {
-			id = "PID" + Integer.toString(idSequence++);
-			paintableIdMap.put(paintable, id);
+			String UIID = null;
+			// try to get PID using unique user interface identity (UUID)
+			if (paintable instanceof Identifiable)
+				UIID = ((Identifiable) paintable).getUIID();
+			if (UIID != null)
+				id = "PID" + UIID;
+			else {
+				// UUID not set, get PID using growing sequence number
+				id = "PID" + Integer.toString(idSequence++);
+			}
 		}
+		paintableIdMap.put(paintable, id);
 
 		return id;
 	}

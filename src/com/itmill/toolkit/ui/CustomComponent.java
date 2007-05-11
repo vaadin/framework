@@ -36,6 +36,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.itmill.toolkit.Application;
+import com.itmill.toolkit.terminal.Identifiable;
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
 import com.itmill.toolkit.terminal.Resource;
@@ -55,7 +56,7 @@ import com.itmill.toolkit.terminal.VariableOwner;
  * @VERSION@
  * @since 3.0
  */
-public class CustomComponent implements Component {
+public class CustomComponent extends Identifiable implements Component {
 
 	/**
 	 * The root component implementing the custom component.
