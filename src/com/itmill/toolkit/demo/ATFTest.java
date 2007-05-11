@@ -46,14 +46,14 @@ public class ATFTest extends com.itmill.toolkit.Application implements
 
 	private long eventCounter = 0;
 
-	private Label staticDisplay = new Label();
+	private Label statusLabel = new Label();
 
 	// Store button object => real value map
 	// needed because button captions are randomized
 	private HashMap buttonValues;
 
 	public void init() {
-		addWindow(new Window("Calculator", create()));
+		addWindow(new Window("ATFTest", create()));
 		setTheme("corporate");
 		setUser(new Long(System.currentTimeMillis()).toString());
 	}
@@ -66,14 +66,26 @@ public class ATFTest extends com.itmill.toolkit.Application implements
 	 */
 	public Layout create() {
 
-		staticDisplay.setCaption("Status:");
-		staticDisplay.setUIID("Label_status");
+		statusLabel.setUIID("Label_status");
 
 		// Setup contains restart button and deterministic component shuffler
 		// Test requirement: test cases must be reproducable (use seed)
+		mainLayout.addComponent(new Label(
+				"<H3>ATFTest with randomized Calculator functionality</H3>"
+						+ "Buttons with X captions contain calculator number, "
+						+ "minus, add, multiply, divisor or clear "
+						+ "button functionalities.<br />Layouts, \"noise\" "
+						+ "components and component placing is randomized "
+						+ "after each application restart.<br />"
+						+ "Test cases should exercise calculator functions "
+						+ "through X buttons and ensure that Result label "
+						+ "contains correct value.", Label.CONTENT_XHTML));
 		OrderedLayout setupLayout = new OrderedLayout(
 				OrderedLayout.ORIENTATION_HORIZONTAL);
-		setupLayout.addComponent(staticDisplay);
+		Panel statusPanel = new Panel("Status");
+		statusPanel.setWidth(200);
+		setupLayout.addComponent(statusPanel);
+		statusPanel.addComponent(statusLabel);
 		setupLayout.addComponent(randomSeedValue);
 		setupLayout.addComponent(seedShuffle);
 		setupLayout.addComponent(randomShuffle);
@@ -111,8 +123,9 @@ public class ATFTest extends com.itmill.toolkit.Application implements
 		createComponents();
 		addComponents(testingLayout);
 		eventCounter = 0;
-		staticDisplay.setValue(eventCounter + ": [" + current + "] "
-				+ Double.toString(current));
+
+		statusLabel.setValue("#" + eventCounter + ": button <none>"
+				+ ", value " + Double.toString(current));
 	}
 
 	// initialize random with random seed and shuffle
@@ -230,13 +243,15 @@ public class ATFTest extends com.itmill.toolkit.Application implements
 
 	public void buttonClick(Button.ClickEvent event) {
 		String value = (String) buttonValues.get(event.getButton());
-		System.out.println("clicked [" + value + "]");
+		eventCounter++;
 		try {
 			// Number button pressed
 			current = current * 10 + Double.parseDouble(value);
 			display.setValue(Double.toString(current));
-			staticDisplay.setValue(eventCounter + ": [" + value + "] "
-					+ Double.toString(current));
+			statusLabel.setValue("#" + eventCounter + ": button " + value
+					+ ", value " + Double.toString(current));
+			System.out.println("#" + eventCounter + ": button " + value
+					+ ", value " + Double.toString(current));
 		} catch (java.lang.NumberFormatException e) {
 			// Operation button pressed
 			if (operation.equals("+"))
@@ -254,11 +269,11 @@ public class ATFTest extends com.itmill.toolkit.Application implements
 			operation = value;
 			current = 0.0;
 			display.setValue(Double.toString(stored));
-			staticDisplay.setValue(eventCounter + ": [" + value + "] "
-					+ Double.toString(stored));
-			System.out.println("value [" + stored + "]");
+			statusLabel.setValue("#" + eventCounter + ": button " + value
+					+ ", value " + Double.toString(stored));
+			System.out.println("#" + eventCounter + ": button " + value
+					+ ", value " + Double.toString(stored));
 		}
-		eventCounter++;
 	}
 
 	/**
@@ -395,8 +410,7 @@ public class ATFTest extends com.itmill.toolkit.Application implements
 	// for (int i = 0; i < numberOfComponents; i++) {
 	// layout.addComponent(getRandomComponent("" + captionCounter++));
 	// }
-	//	}
-
+	// }
 	/**
 	 * ErrorEvents are printed to default error stream and not in GUI.
 	 */
