@@ -216,8 +216,6 @@ public class ApplicationServlet extends HttpServlet implements
 
 	private static WeakHashMap applicationToLastRequestDate = new WeakHashMap();
 
-	private List allWindows = new LinkedList();
-
 	private WeakHashMap applicationToAjaxAppMgrMap = new WeakHashMap();
 
 	private WeakHashMap licenseForApplicationClass = new WeakHashMap();
@@ -1627,16 +1625,9 @@ public class ApplicationServlet extends HttpServlet implements
 			window = application.getWindow(windowName);
 
 			if (window == null) {
-
-				// If the window has existed, and is now removed
-				// send a blank page
-				if (allWindows.contains(windowName))
-					return null;
-
 				// By default, we use main window
 				window = application.getMainWindow();
 			} else if (!window.isVisible()) {
-
 				// Implicitly painting without actually invoking paint()
 				window.requestRepaintRequests();
 
@@ -1751,9 +1742,6 @@ public class ApplicationServlet extends HttpServlet implements
 	public void windowAttached(WindowAttachEvent event) {
 		Window win = event.getWindow();
 		win.addListener((Paintable.RepaintRequestListener) this);
-
-		// Add to window names
-		allWindows.add(win.getName());
 
 		// Add window to dirty window references if it is visible
 		// Or request the window to pass on the repaint requests
