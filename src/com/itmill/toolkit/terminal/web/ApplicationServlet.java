@@ -44,7 +44,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Enumeration;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -523,7 +522,7 @@ public class ApplicationServlet extends HttpServlet implements
 		UIDLTransformer transformer = null;
 		HttpVariableMap variableMap = null;
 		OutputStream out = response.getOutputStream();
-		HashSet currentlyDirtyWindowsForThisApplication = new HashSet();
+		WeakHashMap currentlyDirtyWindowsForThisApplication = new WeakHashMap();
 		Application application = null;
 		try {
 
@@ -755,15 +754,16 @@ public class ApplicationServlet extends HttpServlet implements
 					paintTarget.close();
 
 					// For exception handling, memorize the current dirty status
-					Collection dirtyWindows = (Collection) applicationToDirtyWindowSetMap
+					WeakHashMap dirtyWindows = (WeakHashMap) applicationToDirtyWindowSetMap
 							.get(application);
+
 					if (dirtyWindows == null) {
-						dirtyWindows = new HashSet();
+						dirtyWindows = new WeakHashMap();
 						applicationToDirtyWindowSetMap.put(application,
 								dirtyWindows);
 					}
 					currentlyDirtyWindowsForThisApplication
-							.addAll(dirtyWindows);
+							.putAll((Map) dirtyWindows);
 
 					// Window is now painted
 					windowPainted(application, window);
@@ -823,7 +823,7 @@ public class ApplicationServlet extends HttpServlet implements
 			// to make sure that eventually they are repainted
 			Application currentApplication = getApplication(request);
 			for (Iterator iter = currentlyDirtyWindowsForThisApplication
-					.iterator(); iter.hasNext();) {
+					.keySet().iterator(); iter.hasNext();) {
 				Window dirtyWindow = (Window) iter.next();
 				addDirtyWindow(currentApplication, dirtyWindow);
 			}
@@ -1712,13 +1712,13 @@ public class ApplicationServlet extends HttpServlet implements
 	 */
 	protected void addDirtyWindow(Application application, Window window) {
 		synchronized (applicationToDirtyWindowSetMap) {
-			HashSet dirtyWindows = (HashSet) applicationToDirtyWindowSetMap
+			WeakHashMap dirtyWindows = (WeakHashMap) applicationToDirtyWindowSetMap
 					.get(application);
 			if (dirtyWindows == null) {
-				dirtyWindows = new HashSet();
+				dirtyWindows = new WeakHashMap();
 				applicationToDirtyWindowSetMap.put(application, dirtyWindows);
 			}
-			dirtyWindows.add(window);
+			dirtyWindows.put(window, Boolean.TRUE);
 		}
 	}
 
@@ -1729,7 +1729,7 @@ public class ApplicationServlet extends HttpServlet implements
 	 */
 	protected void removeDirtyWindow(Application application, Window window) {
 		synchronized (applicationToDirtyWindowSetMap) {
-			HashSet dirtyWindows = (HashSet) applicationToDirtyWindowSetMap
+			WeakHashMap dirtyWindows = (WeakHashMap) applicationToDirtyWindowSetMap
 					.get(application);
 			if (dirtyWindows != null)
 				dirtyWindows.remove(window);
@@ -1791,12 +1791,13 @@ public class ApplicationServlet extends HttpServlet implements
 	 * @param app
 	 * @return
 	 */
-	protected Set getDirtyWindows(Application app) {
-		HashSet dirtyWindows;
+	protected Map getDirtyWindows(Application app) {
+		WeakHashMap dirtyWindows;
 		synchronized (applicationToDirtyWindowSetMap) {
-			dirtyWindows = (HashSet) applicationToDirtyWindowSetMap.get(app);
+			dirtyWindows = (WeakHashMap) applicationToDirtyWindowSetMap
+					.get(app);
 		}
-		return dirtyWindows;
+		return (Map) dirtyWindows;
 	}
 
 	/**
@@ -1875,13 +1876,14 @@ public class ApplicationServlet extends HttpServlet implements
 					} else {
 
 						// Application still alive - keep updating windows
-						Set dws = getDirtyWindows(application);
+						Map dws = getDirtyWindows(application);
 						if (dws != null && !dws.isEmpty()) {
 
 							// For one of the dirty windows (in each
 							// application)
 							// request redraw
-							Window win = (Window) dws.iterator().next();
+							Window win = (Window) dws.keySet().iterator()
+									.next();
 							w
 									.println("<script>\n"
 											+ ThemeFunctionLibrary
@@ -1906,6 +1908,7 @@ public class ApplicationServlet extends HttpServlet implements
 
 				// Sends the generated commands and newline immediately to
 				// browser
+				// TODO why space in here? why not plain ln?
 				w.println(" ");
 				w.flush();
 				response.flushBuffer();

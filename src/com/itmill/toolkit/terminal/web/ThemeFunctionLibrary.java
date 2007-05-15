@@ -39,7 +39,7 @@ import java.util.Collection;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Set;
+import java.util.Map;
 import java.util.Vector;
 
 import javax.servlet.http.HttpSession;
@@ -226,9 +226,9 @@ public class ThemeFunctionLibrary {
 		LinkedList update = new LinkedList();
 
 		// Adds all the windows needto update list
-		Set dirtyWindows = wa != null ? wa.getDirtyWindows(app) : null;
+		Map dirtyWindows = wa != null ? wa.getDirtyWindows(app) : null;
 		if (dirtyWindows != null)
-			for (Iterator i = dirtyWindows.iterator(); i.hasNext();) {
+			for (Iterator i = dirtyWindows.keySet().iterator(); i.hasNext();) {
 				Window w = (Window) i.next();
 				if (w != window) {
 					if (w instanceof FrameWindow)
