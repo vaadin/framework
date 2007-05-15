@@ -44,7 +44,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -221,9 +220,9 @@ public class ApplicationServlet extends HttpServlet implements
 
 	private WeakHashMap applicationToAjaxAppMgrMap = new WeakHashMap();
 
-	private HashMap licenseForApplicationClass = new HashMap();
+	private WeakHashMap licenseForApplicationClass = new WeakHashMap();
 
-	private static HashSet licensePrintedForApplicationClass = new HashSet();
+	private static WeakHashMap licensePrintedForApplicationClass = new WeakHashMap();
 
 	/**
 	 * Called by the servlet container to indicate to a servlet that the servlet
@@ -1507,8 +1506,9 @@ public class ApplicationServlet extends HttpServlet implements
 		}
 
 		// For each application class, print license description - once
-		if (!licensePrintedForApplicationClass.contains(applicationClass)) {
-			licensePrintedForApplicationClass.add(applicationClass);
+		if (!licensePrintedForApplicationClass.containsKey(applicationClass)) {
+			licensePrintedForApplicationClass.put(applicationClass,
+					Boolean.TRUE);
 			if (license.shouldLimitsBePrintedOnInit())
 				System.out.print(license.getDescription());
 		}
