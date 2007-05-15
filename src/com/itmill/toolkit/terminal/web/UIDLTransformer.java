@@ -268,6 +268,7 @@ public class UIDLTransformer {
 			 */
 			SAXSource source = new SAXSource(reader, uidl);
 
+			// TODO HTML mode provides net execptions under heavy load
 			uidlTransformer.transform(source, result);
 		} catch (Exception e) {
 			// XSL parsing failed. Pass the new XHTML coded error forwards
