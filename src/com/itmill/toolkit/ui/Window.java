@@ -78,7 +78,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	private Terminal terminal = null;
 
 	/**
-	 * The applicaiton this window is attached to.
+	 * The application this window is attached to.
 	 */
 	private Application application = null;
 
@@ -949,4 +949,5 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	protected void fireClose() {
 		fireEvent(new Window.CloseEvent(this));
 	}
+
 }
