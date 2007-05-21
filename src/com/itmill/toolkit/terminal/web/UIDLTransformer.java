@@ -263,12 +263,12 @@ public class UIDLTransformer {
 			 * (webAdapterServlet.isDebugMode()) { reader.setFeature(
 			 * "http://xml.org/sax/features/validation", true);
 			 * reader.parse(uidl); uidl = new InputSource(new
-			 * StringReader(paintTarget.getUIDL()));
-			 *  }
+			 * StringReader(paintTarget.getUIDL())); }
 			 */
 			SAXSource source = new SAXSource(reader, uidl);
 
-			// TODO HTML mode provides net execptions under heavy load
+			// TODO HTML mode under heavy load provides
+			// java.net.SocketException: broken pipe
 			uidlTransformer.transform(source, result);
 		} catch (Exception e) {
 			// XSL parsing failed. Pass the new XHTML coded error forwards
