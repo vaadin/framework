@@ -267,6 +267,7 @@ public class ApplicationServlet extends HttpServlet implements
 		// Gets the debug window parameter
 		String debug = getApplicationOrSystemProperty(PARAMETER_DEBUG, "")
 				.toLowerCase();
+
 		// Enables application specific debug
 		if (!"".equals(debug) && !"true".equals(debug)
 				&& !"false".equals(debug))
@@ -284,7 +285,8 @@ public class ApplicationServlet extends HttpServlet implements
 		// Gets cache time for transformers
 		this.transformerCacheTime = Integer
 				.parseInt(getApplicationOrSystemProperty(
-						PARAMETER_TRANSFORMER_CACHETIME, "-1")) * 1000;
+
+				PARAMETER_TRANSFORMER_CACHETIME, "-1")) * 1000;
 
 		// Gets cache time for theme resources
 		this.themeCacheTime = Integer.parseInt(getApplicationOrSystemProperty(
@@ -304,15 +306,13 @@ public class ApplicationServlet extends HttpServlet implements
 		String[] defaultThemeFiles = new String[] { getApplicationOrSystemProperty(
 				PARAMETER_DEFAULT_THEME_JAR, DEFAULT_THEME_JAR) };
 		File f = findDefaultThemeJar(defaultThemeFiles);
+		boolean defaultThemeFound = false;
 		try {
 			// Adds themes.jar if exists
-			if (f != null && f.exists())
+			if (f != null && f.exists()) {
 				this.themeSource.add(new JarThemeSource(f, this, ""));
-			else {
-				Log.warn("Default theme JAR not found in: "
-						+ Arrays.asList(defaultThemeFiles));
+				defaultThemeFound = true;
 			}
-
 		} catch (Exception e) {
 			throw new ServletException("Failed to load default theme from "
 					+ Arrays.asList(defaultThemeFiles), e);
@@ -320,6 +320,9 @@ public class ApplicationServlet extends HttpServlet implements
 
 		// Checks that at least one themesource was loaded
 		if (this.themeSource.getThemes().size() <= 0) {
+			if (!defaultThemeFound)
+				Log.warn("Default theme JAR not found in: "
+						+ Arrays.asList(defaultThemeFiles));
 			throw new ServletException(
 					"No themes found in specified themesources. "
 							+ "You can provide themes by e.g. adding "
@@ -329,7 +332,6 @@ public class ApplicationServlet extends HttpServlet implements
 
 		// Initializes the transformer factory, if not initialized
 		if (this.transformerFactory == null) {
-
 			this.transformerFactory = new UIDLTransformerFactory(
 					this.themeSource, this, this.maxConcurrentTransformers,
 					this.transformerCacheTime);
