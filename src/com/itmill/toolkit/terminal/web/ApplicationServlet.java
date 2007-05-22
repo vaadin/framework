@@ -44,6 +44,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -154,6 +155,8 @@ public class ApplicationServlet extends HttpServlet implements
 
 	private static final int MAX_BUFFER_SIZE = 64 * 1024;
 
+	// TODO: these should be moved to session object and stored directly into
+	// session
 	private static final String SESSION_ATTR_VARMAP = "itmill-toolkit-varmap";
 
 	private static final String SESSION_ATTR_CONTEXT = "itmill-toolkit-context";
@@ -161,6 +164,18 @@ public class ApplicationServlet extends HttpServlet implements
 	protected static final String SESSION_ATTR_APPS = "itmill-toolkit-apps";
 
 	private static final String SESSION_BINDING_LISTENER = "itmill-toolkit-bindinglistener";
+
+	private WeakHashMap applicationToDirtyWindowSetMap = new WeakHashMap();
+
+	private WeakHashMap applicationToServerCommandStreamLock = new WeakHashMap();
+
+	private static WeakHashMap applicationToLastRequestDate = new WeakHashMap();
+
+	private static WeakHashMap applicationToAjaxAppMgrMap = new WeakHashMap();
+
+	private WeakHashMap licenseForApplicationClass = new WeakHashMap();
+
+	private static WeakHashMap licensePrintedForApplicationClass = new WeakHashMap();
 
 	// TODO Should default or base theme be the default?
 	protected static final String DEFAULT_THEME = "base";
@@ -208,18 +223,6 @@ public class ApplicationServlet extends HttpServlet implements
 	private long transformerCacheTime;
 
 	private long themeCacheTime;
-
-	private WeakHashMap applicationToDirtyWindowSetMap = new WeakHashMap();
-
-	private WeakHashMap applicationToServerCommandStreamLock = new WeakHashMap();
-
-	private static WeakHashMap applicationToLastRequestDate = new WeakHashMap();
-
-	private WeakHashMap applicationToAjaxAppMgrMap = new WeakHashMap();
-
-	private WeakHashMap licenseForApplicationClass = new WeakHashMap();
-
-	private static WeakHashMap licensePrintedForApplicationClass = new WeakHashMap();
 
 	/**
 	 * Called by the servlet container to indicate to a servlet that the servlet
@@ -522,7 +525,7 @@ public class ApplicationServlet extends HttpServlet implements
 		UIDLTransformer transformer = null;
 		HttpVariableMap variableMap = null;
 		OutputStream out = response.getOutputStream();
-		WeakHashMap currentlyDirtyWindowsForThisApplication = new WeakHashMap();
+		HashMap currentlyDirtyWindowsForThisApplication = new HashMap();
 		Application application = null;
 		try {
 
@@ -556,13 +559,11 @@ public class ApplicationServlet extends HttpServlet implements
 			// made
 			synchronized (application) {
 
-				// Handles UIDL requests?
+				// Handles AJAX UIDL requests
 				String resourceId = request.getPathInfo();
 				if (resourceId != null && resourceId.startsWith(AJAX_UIDL_URI)) {
-
 					getApplicationManager(application).handleUidlRequest(
 							request, response, themeSource);
-
 					return;
 				}
 
@@ -1174,12 +1175,12 @@ public class ApplicationServlet extends HttpServlet implements
 			HttpServletResponse response) throws ServletException {
 
 		// If the resource path is unassigned, initialize it
-		if (resourcePath == null)
+		if (resourcePath == null) {
 			resourcePath = request.getContextPath() + request.getServletPath()
 					+ RESOURCE_URI;
-
-		// WebSphere Application Server related fix
-		resourcePath = resourcePath.replaceAll("//", "/");
+			// WebSphere Application Server related fix
+			resourcePath = resourcePath.replaceAll("//", "/");
+		}
 
 		String resourceId = request.getPathInfo();
 
@@ -1414,7 +1415,7 @@ public class ApplicationServlet extends HttpServlet implements
 			application.addListener((Application.WindowAttachListener) this);
 			application.addListener((Application.WindowDetachListener) this);
 
-			// Sets localte
+			// Sets locale
 			application.setLocale(request.getLocale());
 
 			// Gets application context for this session
@@ -1933,6 +1934,18 @@ public class ApplicationServlet extends HttpServlet implements
 		return true;
 	}
 
+	/**
+	 * 
+	 * SessionBindingListener performs Application cleanups after sessions are
+	 * expired. For each session exists one SessionBindingListener. It contains
+	 * references to all applications related to single session.
+	 * 
+	 * @author IT Mill Ltd.
+	 * @version
+	 * @VERSION@
+	 * @since 4.0
+	 */
+
 	private class SessionBindingListener implements HttpSessionBindingListener {
 		private LinkedList applications;
 
@@ -1955,17 +1968,14 @@ public class ApplicationServlet extends HttpServlet implements
 		 * @see javax.servlet.http.HttpSessionBindingListener#valueUnbound(HttpSessionBindingEvent)
 		 */
 		public void valueUnbound(HttpSessionBindingEvent event) {
-
 			// If the binding listener is unbound from the session, the
 			// session must be closing
 			if (event.getName().equals(SESSION_BINDING_LISTENER)) {
-
-				// Close all applications
+				// Close all applications related to given session
 				Object[] apps = applications.toArray();
 				for (int i = 0; i < apps.length; i++) {
 					if (apps[i] != null) {
-
-						// Close app
+						// Close application
 						((Application) apps[i]).close();
 
 						// Stops application server commands stream
@@ -1979,11 +1989,22 @@ public class ApplicationServlet extends HttpServlet implements
 
 						// Remove application from applications list
 						applications.remove(apps[i]);
+
+						// Remove application from hashmap
+						// TODO remove check
+						if (applicationToAjaxAppMgrMap
+								.get((Application) apps[i]) == null) {
+							System.out
+									.println("ERROR: tried to remove nonexistent application ("
+											+ (Application) apps[i] + ")");
+						} else {
+							applicationToAjaxAppMgrMap
+									.remove((Application) apps[i]);
+						}
 					}
 				}
 			}
 		}
-
 	}
 
 	/**
@@ -2080,7 +2101,6 @@ public class ApplicationServlet extends HttpServlet implements
 
 		// This application is going from Web to AJAX mode, create new manager
 		if (mgr == null) {
-
 			// Creates new manager
 			mgr = new AjaxApplicationManager(application);
 			applicationToAjaxAppMgrMap.put(application, mgr);
@@ -2099,6 +2119,7 @@ public class ApplicationServlet extends HttpServlet implements
 			// Manager takes control over the application
 			mgr.takeControl();
 		}
+
 		return mgr;
 	}
 
