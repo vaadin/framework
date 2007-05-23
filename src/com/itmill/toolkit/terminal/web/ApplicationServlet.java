@@ -928,11 +928,11 @@ public class ApplicationServlet extends HttpServlet implements
 		page.write("<script language=\"JavaScript\">\n");
 
 		String[] urlParts = getApplicationUrl(request).toString().split("\\/");
-		if (urlParts[2].endsWith(":80"))
-			urlParts[2] = urlParts[2].substring(0, urlParts[2].length() - 3);
 		String appUrl = "";
-		for (int i = 0; i < urlParts.length; i++)
-			appUrl += (i > 0 ? "/" : "") + urlParts[i];
+		// don't use server and port in uri. It may cause problems with some
+		// virtual server configurations which lose the server name
+		for (int i = 3; i < urlParts.length; i++)
+			appUrl += "/" + urlParts[i];
 		if (appUrl.endsWith("/"))
 			appUrl = appUrl.substring(0, appUrl.length() - 1);
 		page.write("itmill.tmp = new itmill.Client("
