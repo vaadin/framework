@@ -138,6 +138,12 @@ public class Theme extends DefaultHandler {
 
 	public static final String MODE_FALLBACK = MODE_HTML;
 
+	public static final String MESSAGE_CONFIGURE_HELP = "You can provide themes by adding "
+			+ "itmill-toolkit-x.y.z-themes.jar "
+			+ "to WEB-INF/lib directory or adding "
+			+ "theme files under WEB-INF/lib/themes directory."
+			+ " Check also theme's description.xml.";
+
 	/**
 	 * Name of the theme.
 	 */
@@ -282,7 +288,8 @@ public class Theme extends DefaultHandler {
 			Theme parent = themeSource.getThemeByName(parentTheme);
 			if (parent == null)
 				throw new IllegalStateException("Parent theme '" + parentTheme
-						+ "' is not found for theme '" + getName() + "'.");
+						+ "' is not found for theme '" + getName() + "'. "
+						+ MESSAGE_CONFIGURE_HELP);
 			if (!parent.supportsMode(mode, terminal, themeSource))
 				return false;
 		}

@@ -320,14 +320,16 @@ public class ApplicationServlet extends HttpServlet implements
 
 		// Checks that at least one themesource was loaded
 		if (this.themeSource.getThemes().size() <= 0) {
+			throw new ServletException(
+					"No themes found in specified themesources. "
+							+ Theme.MESSAGE_CONFIGURE_HELP);
+		}
+
+		// Warn if default theme not found
+		if (this.themeSource.getThemeByName(DEFAULT_THEME) == null) {
 			if (!defaultThemeFound)
 				Log.warn("Default theme JAR not found in: "
 						+ Arrays.asList(defaultThemeFiles));
-			throw new ServletException(
-					"No themes found in specified themesources. "
-							+ "You can provide themes by e.g. adding "
-							+ "itmill-toolkit-x.y.z-themes.jar "
-							+ "to WEB-INF/lib directory.");
 		}
 
 		// Initializes the transformer factory, if not initialized
@@ -605,10 +607,8 @@ public class ApplicationServlet extends HttpServlet implements
 					Theme theme = themeSource.getThemeByName(themeName);
 					if (theme == null)
 						throw new ServletException(
-								"Failed to load theme with name "
-										+ themeName
-										+ ". Check that theme's description.xml "
-										+ "contains correct theme name.");
+								"Failed to load theme with name " + themeName
+										+ ". " + Theme.MESSAGE_CONFIGURE_HELP);
 
 					String renderingMode = theme.getPreferredMode(wb,
 							themeSource);
