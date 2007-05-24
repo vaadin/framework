@@ -1628,10 +1628,12 @@ public class Table extends Select implements Action.Container,
 		// Detach old visible component from the table
 		if (visibleComponents == null)
 			visibleComponents = new LinkedList();
-		else
+		else {
 			for (Iterator i = visibleComponents.iterator(); i.hasNext();) {
 				((Component) i.next()).setParent(null);
 			}
+			visibleComponents.clear();
+		}
 
 		// Collects the basic facts about the table page
 		Object[] colids = getVisibleColumns();
