@@ -805,6 +805,8 @@ public class ApplicationServlet extends HttpServlet implements
 			}
 
 		} catch (UIDLTransformerException te) {
+			// Print stacktrace
+			te.printStackTrace();
 
 			try {
 				// Writes the error report to client
@@ -832,6 +834,8 @@ public class ApplicationServlet extends HttpServlet implements
 			}
 
 		} catch (Throwable e) {
+			// Print stacktrace
+			e.printStackTrace();
 			// Re-throw other exceptions
 			throw new ServletException(e);
 		} finally {
