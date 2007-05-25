@@ -481,18 +481,15 @@ public class ApplicationServlet extends HttpServlet implements
 			String source = (String) i.next();
 			File sourceFile = new File(source);
 			try {
-
 				// Relative files are treated as streams (to support
 				// resource inside WAR files)
 				if (!sourceFile.isAbsolute()) {
 					returnValue.add(new ServletThemeSource(this
 							.getServletContext(), this, source));
 				} else if (sourceFile.isDirectory()) {
-
 					// Absolute directories are read from filesystem
 					returnValue.add(new DirectoryThemeSource(sourceFile, this));
 				} else {
-
 					// Absolute JAR-files are read from filesystem
 					returnValue.add(new JarThemeSource(sourceFile, this, ""));
 				}
