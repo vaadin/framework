@@ -1,238 +1,265 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<web-app id="WebApp_ID" version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
-	<display-name>IT Mill Toolkit</display-name>
+<?xml version="1.0" encoding="ISO-8859-1"?>
 
-	<servlet>
-        <servlet-name>SelectDemo</servlet-name>
-        <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
-        <init-param>
-            <param-name>application</param-name>
-            <param-value>com.itmill.toolkit.demo.SelectDemo</param-value>
-        </init-param>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>SelectDemo</servlet-name>
-        <url-pattern>/SelectDemo/*</url-pattern>
-    </servlet-mapping>
-    
-	<servlet>
-        <servlet-name>BufferedComponents</servlet-name>
-        <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
-        <init-param>
-            <param-name>application</param-name>
-            <param-value>com.itmill.toolkit.demo.BufferedComponents</param-value>
-        </init-param>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>BufferedComponents</servlet-name>
-        <url-pattern>/BufferedComponents/*</url-pattern>
-    </servlet-mapping>
-    
-	<servlet>
-        <servlet-name>CustomLayoutDemo</servlet-name>
-        <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
-        <init-param>
-            <param-name>application</param-name>
-            <param-value>com.itmill.toolkit.demo.CustomLayoutDemo</param-value>
-        </init-param>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>CustomLayoutDemo</servlet-name>
-        <url-pattern>/CustomLayoutDemo/*</url-pattern>
-    </servlet-mapping>
-    
-	<servlet>
-        <servlet-name>LayoutDemo</servlet-name>
-        <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
-        <init-param>
-            <param-name>application</param-name>
-            <param-value>com.itmill.toolkit.demo.LayoutDemo</param-value>
-        </init-param>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>LayoutDemo</servlet-name>
-        <url-pattern>/LayoutDemo/*</url-pattern>
-    </servlet-mapping>
-    
-    <servlet>
-        <servlet-name>FilterSelect</servlet-name>
-        <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
-        <init-param>
-            <param-name>application</param-name>
-            <param-value>com.itmill.toolkit.demo.FilterSelect</param-value>
-        </init-param>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>FilterSelect</servlet-name>
-        <url-pattern>/FilterSelect/*</url-pattern>
-    </servlet-mapping>
-    
-    <servlet>
-        <servlet-name>features</servlet-name>
-        <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
-        <init-param>
-            <param-name>application</param-name>
-            <param-value>com.itmill.toolkit.demo.features.FeaturesApplication</param-value>
-        </init-param>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>features</servlet-name>
-        <url-pattern>/features/*</url-pattern>
-    </servlet-mapping>
+<!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
 
-	<servlet>
-        <servlet-name>Parameters</servlet-name>
-        <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
-        <init-param>
-            <param-name>application</param-name>
-            <param-value>com.itmill.toolkit.demo.Parameters</param-value>
-        </init-param>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>Parameters</servlet-name>
-        <url-pattern>/Parameters/*</url-pattern>
-    </servlet-mapping>
-    
- 	<servlet>
-        <servlet-name>UpgradingSample</servlet-name>
-        <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
-        <init-param>
-            <param-name>application</param-name>
-            <param-value>com.itmill.toolkit.demo.UpgradingSample</param-value>
-        </init-param>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>UpgradingSample</servlet-name>
-        <url-pattern>/UpgradingSample/*</url-pattern>
-    </servlet-mapping>
-    
-    <servlet>
-        <servlet-name>QueryContainerDemo</servlet-name>
-        <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
-        <init-param>
-            <param-name>application</param-name>
-            <param-value>com.itmill.toolkit.demo.QueryContainerDemo</param-value>
-        </init-param>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>QueryContainerDemo</servlet-name>
-        <url-pattern>/QueryContainerDemo/*</url-pattern>
-    </servlet-mapping>
-    
-     <servlet>
-        <servlet-name>TableDemo</servlet-name>
-        <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
-        <init-param>
-            <param-name>application</param-name>
-            <param-value>com.itmill.toolkit.demo.TableDemo</param-value>
-        </init-param>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>TableDemo</servlet-name>
-        <url-pattern>/TableDemo/*</url-pattern>
-    </servlet-mapping>
-    
-    <servlet>
-        <servlet-name>TreeFilesystemContainer</servlet-name>
-        <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
-        <init-param>
-            <param-name>application</param-name>
-            <param-value>com.itmill.toolkit.demo.TreeFilesystemContainer</param-value>
-        </init-param>
-        <!-- Set this property if demo cannot access context base directory
-         because of Application Server or Servlet Container security constraints-->
-        <!--
-        <init-param>
-        	<param-name>sampleDirectory</param-name>
-        	<param-value>/mySampleDirectory</param-value>
-        </init-param>
-        -->
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>TreeFilesystemContainer</servlet-name>
-        <url-pattern>/TreeFilesystemContainer/*</url-pattern>
-    </servlet-mapping>
-    
-    <servlet>
-        <servlet-name>TreeFilesystem</servlet-name>
-        <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
-        <init-param>
-            <param-name>application</param-name>
-            <param-value>com.itmill.toolkit.demo.TreeFilesystem</param-value>
-        </init-param>
-        <!-- Set this property if demo cannot access context base directory
-         because of Application Server or Servlet Container security constraints-->
-        <!--
-        <init-param>
-        	<param-name>sampleDirectory</param-name>
-        	<param-value>/mySampleDirectory</param-value>
-        </init-param>
-        -->
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>TreeFilesystem</servlet-name>
-        <url-pattern>/TreeFilesystem/*</url-pattern>
-    </servlet-mapping>
-    
-     <servlet>
-        <servlet-name>ModalWindow</servlet-name>
-        <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
-        <init-param>
-            <param-name>application</param-name>
-            <param-value>com.itmill.toolkit.demo.ModalWindow</param-value>
-        </init-param>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>ModalWindow</servlet-name>
-        <url-pattern>/ModalWindow/*</url-pattern>
-    </servlet-mapping>
-    
-    <servlet>
-        <servlet-name>HelloWorld</servlet-name>
-        <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
-        <init-param>
-            <param-name>application</param-name>
-            <param-value>com.itmill.toolkit.demo.HelloWorld</param-value>
-        </init-param>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>HelloWorld</servlet-name>
-        <url-pattern>/HelloWorld/*</url-pattern>
-    </servlet-mapping>
+<web-app>
 
-    <servlet>
-        <servlet-name>Calc</servlet-name>
-        <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
-        <init-param>
-            <param-name>application</param-name>
-            <param-value>com.itmill.toolkit.demo.Calc</param-value>
-        </init-param>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>Calc</servlet-name>
-        <url-pattern>/Calc/*</url-pattern>
-    </servlet-mapping>
+  <display-name>IT Mill Toolkit</display-name>
+  <description>
+     IT Mill Toolkit examples
+  </description>
 
-    <servlet>
-        <servlet-name>KeyboardShortcut</servlet-name>
-        <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
-        <init-param>
-            <param-name>application</param-name>
-            <param-value>com.itmill.toolkit.demo.KeyboardShortcut</param-value>
-        </init-param>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>KeyboardShortcut</servlet-name>
-        <url-pattern>/KeyboardShortcut/*</url-pattern>
-    </servlet-mapping>
-    
-	<welcome-file-list>
-		<welcome-file>index.html</welcome-file>
-		<welcome-file>index.htm</welcome-file>
-		<welcome-file>index.jsp</welcome-file>
-		<welcome-file>default.html</welcome-file>
-		<welcome-file>default.htm</welcome-file>
-		<welcome-file>default.jsp</welcome-file>
-	</welcome-file-list>
-	
+  <servlet>
+    <servlet-name>SelectDemo</servlet-name>
+    <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
+    <init-param>
+      <param-name>application</param-name>
+      <param-value>com.itmill.toolkit.demo.SelectDemo</param-value>
+    </init-param>
+  </servlet>
+
+  <servlet>
+    <servlet-name>BufferedComponents</servlet-name>
+    <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
+    <init-param>
+      <param-name>application</param-name>
+      <param-value>com.itmill.toolkit.demo.BufferedComponents</param-value>
+    </init-param>
+  </servlet>
+
+  <servlet>
+    <servlet-name>TableDemo</servlet-name>
+    <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
+    <init-param>
+      <param-name>application</param-name>
+      <param-value>com.itmill.toolkit.demo.TableDemo</param-value>
+    </init-param>
+  </servlet>
+
+  <servlet>
+    <servlet-name>CustomLayoutDemo</servlet-name>
+    <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
+    <init-param>
+      <param-name>application</param-name>
+      <param-value>com.itmill.toolkit.demo.CustomLayoutDemo</param-value>
+    </init-param>
+  </servlet>
+
+  <servlet>
+    <servlet-name>LayoutDemo</servlet-name>
+    <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
+    <init-param>
+      <param-name>application</param-name>
+      <param-value>com.itmill.toolkit.demo.LayoutDemo</param-value>
+    </init-param>
+  </servlet>
+
+  <servlet>
+    <servlet-name>FilterSelect</servlet-name>
+    <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
+    <init-param>
+      <param-name>application</param-name>
+      <param-value>com.itmill.toolkit.demo.FilterSelect</param-value>
+    </init-param>
+  </servlet>
+
+  <servlet>
+    <servlet-name>FeaturesApplication</servlet-name>
+    <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
+    <init-param>
+      <param-name>application</param-name>
+      <param-value>com.itmill.toolkit.demo.features.FeaturesApplication</param-value>
+    </init-param>
+  </servlet>
+
+  <servlet>
+    <servlet-name>Parameters</servlet-name>
+    <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
+    <init-param>
+      <param-name>application</param-name>
+      <param-value>com.itmill.toolkit.demo.Parameters</param-value>
+    </init-param>
+  </servlet>
+
+  <servlet>
+    <servlet-name>UpgradingSample</servlet-name>
+    <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
+    <init-param>
+      <param-name>application</param-name>
+      <param-value>com.itmill.toolkit.demo.UpgradingSample</param-value>
+    </init-param>
+  </servlet>
+
+  <servlet>
+    <servlet-name>QueryContainerDemo</servlet-name>
+    <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
+    <init-param>
+      <param-name>application</param-name>
+      <param-value>com.itmill.toolkit.demo.QueryContainerDemo</param-value>
+    </init-param>
+  </servlet>
+
+  <servlet>
+    <servlet-name>TreeFilesystemContainer</servlet-name>
+    <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
+    <init-param>
+      <param-name>application</param-name>
+      <param-value>com.itmill.toolkit.demo.TreeFilesystemContainer</param-value>
+    </init-param>
+    <!-- Set this property if demo cannot access context base directory
+      because of Application Server or Servlet Container security constraints-->
+    <!--
+    <init-param>
+      <param-name>sampleDirectory</param-name>
+      <param-value>/mySampleDirectory</param-value>
+    </init-param>
+    -->								
+  </servlet>
+
+  <servlet>
+    <servlet-name>TreeFilesystem</servlet-name>
+    <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
+    <init-param>
+      <param-name>application</param-name>
+      <param-value>com.itmill.toolkit.demo.TreeFilesystem</param-value>
+    </init-param>
+    <!-- Set this property if demo cannot access context base directory
+      because of Application Server or Servlet Container security constraints-->
+    <!--
+    <init-param>
+      <param-name>sampleDirectory</param-name>
+      <param-value>/mySampleDirectory</param-value>
+    </init-param>
+    -->
+  </servlet>
+
+  <servlet>
+    <servlet-name>ModalWindow</servlet-name>
+    <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
+    <init-param>
+      <param-name>application</param-name>
+      <param-value>com.itmill.toolkit.demo.ModalWindow</param-value>
+    </init-param>
+  </servlet>
+
+  <servlet>
+    <servlet-name>HelloWorld</servlet-name>
+    <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
+    <init-param>
+      <param-name>application</param-name>
+      <param-value>com.itmill.toolkit.demo.HelloWorld</param-value>
+    </init-param>
+  </servlet>
+
+  <servlet>
+    <servlet-name>Calc</servlet-name>
+    <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
+    <init-param>
+      <param-name>application</param-name>
+      <param-value>com.itmill.toolkit.demo.Calc</param-value>
+    </init-param>
+  </servlet>
+
+  <servlet>
+    <servlet-name>KeyboardShortcut</servlet-name>
+    <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
+    <init-param>
+      <param-name>application</param-name>
+      <param-value>com.itmill.toolkit.demo.KeyboardShortcut</param-value>
+    </init-param>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>SelectDemo</servlet-name>
+    <url-pattern>/SelectDemo/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>BufferedComponents</servlet-name>
+    <url-pattern>/BufferedComponents/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>TableDemo</servlet-name>
+    <url-pattern>/TableDemo/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>CustomLayoutDemo</servlet-name>
+    <url-pattern>/CustomLayoutDemo/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>LayoutDemo</servlet-name>
+    <url-pattern>/LayoutDemo/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>FilterSelect</servlet-name>
+    <url-pattern>/FilterSelect/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>FeaturesApplication</servlet-name>
+    <url-pattern>/FeaturesApplication/*</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>FeaturesApplication</servlet-name>
+    <url-pattern>/features/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>Parameters</servlet-name>
+    <url-pattern>/Parameters/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>UpgradingSample</servlet-name>
+    <url-pattern>/UpgradingSample/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>QueryContainerDemo</servlet-name>
+    <url-pattern>/QueryContainerDemo/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>TreeFilesystemContainer</servlet-name>
+    <url-pattern>/TreeFilesystemContainer/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>TreeFilesystem</servlet-name>
+    <url-pattern>/TreeFilesystem/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>ModalWindow</servlet-name>
+    <url-pattern>/ModalWindow/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>HelloWorld</servlet-name>
+    <url-pattern>/HelloWorld/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>Calc</servlet-name>
+    <url-pattern>/Calc/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>KeyboardShortcut</servlet-name>
+    <url-pattern>/KeyboardShortcut/*</url-pattern>
+  </servlet-mapping>
+
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+  </welcome-file-list>
+
 </web-app>
