@@ -100,15 +100,13 @@ public class License {
 	 *             Error parsing the license file
 	 * @throws IOException
 	 *             Error reading the license file
-	 * @throws LicenseFileHasAlreadyBeenRead
-	 *             License file has already been read.
 	 */
 	public void readLicenseFile(InputStream is) throws SAXException,
-			IOException, LicenseFileHasAlreadyBeenRead {
+			IOException {
 
 		// Once the license has been read, it stays
 		if (hasBeenRead())
-			throw new LicenseFileHasAlreadyBeenRead();
+			return;
 
 		// Parse XML
 		DocumentBuilder db;
@@ -645,7 +643,7 @@ public class License {
 	 *             if the license file has been changed or signature is
 	 *             otherwise invalid.
 	 */
-	private boolean isSignatureValid() throws InvalidLicenseFile,
+	private synchronized boolean isSignatureValid() throws InvalidLicenseFile,
 			LicenseFileHasNotBeenRead, LicenseSignatureIsInvalid {
 
 		if (signatureIsValid)
@@ -696,10 +694,6 @@ public class License {
 		public LicenseViolation(String msg) {
 			super(msg);
 		}
-	}
-
-	public class LicenseFileHasAlreadyBeenRead extends Exception {
-		private static final long serialVersionUID = 6531225916088537239L;
 	}
 
 	public class LicenseFileHasNotBeenRead extends Exception {
