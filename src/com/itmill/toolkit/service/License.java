@@ -573,7 +573,7 @@ public class License {
 		// Do not serialize whitespace text-nodes
 		if (node.getNodeType() == Node.TEXT_NODE) {
 			String value = node.getNodeValue();
-			if (value.matches("^\\s*$"))
+			if (value.matches("\\A\\s*\\z"))
 				return;
 		}
 
