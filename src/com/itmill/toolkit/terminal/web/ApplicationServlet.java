@@ -72,7 +72,6 @@ import com.itmill.toolkit.Application.WindowDetachEvent;
 import com.itmill.toolkit.service.FileTypeResolver;
 import com.itmill.toolkit.service.License;
 import com.itmill.toolkit.service.License.InvalidLicenseFile;
-import com.itmill.toolkit.service.License.LicenseFileHasAlreadyBeenRead;
 import com.itmill.toolkit.service.License.LicenseFileHasNotBeenRead;
 import com.itmill.toolkit.service.License.LicenseSignatureIsInvalid;
 import com.itmill.toolkit.service.License.LicenseViolation;
@@ -1499,9 +1498,6 @@ public class ApplicationServlet extends HttpServlet implements
 				// This should not happen
 				throw new RuntimeException(e);
 			} catch (IOException e) {
-				// This should not happen
-				throw new RuntimeException(e);
-			} catch (LicenseFileHasAlreadyBeenRead e) {
 				// This should not happen
 				throw new RuntimeException(e);
 			}
