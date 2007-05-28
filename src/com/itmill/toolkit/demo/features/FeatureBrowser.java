@@ -37,7 +37,7 @@ import com.itmill.toolkit.ui.Button.ClickEvent;
 import com.itmill.toolkit.ui.Button.ClickListener;
 
 public class FeatureBrowser extends CustomComponent implements
-		Property.ValueChangeListener, ClickListener {
+		Property.ValueChangeListener, ClickListener, Layout {
 
 	private Tree features;
 
@@ -251,5 +251,55 @@ public class FeatureBrowser extends CustomComponent implements
 		if (properties != null)
 			properties.setVisible(((Boolean) propertiesSelect.getValue())
 					.booleanValue());
+	}
+
+	public void addComponent(Component c) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void addListener(ComponentAttachListener listener) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void addListener(ComponentDetachListener listener) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public Iterator getComponentIterator() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void moveComponentsFrom(ComponentContainer source) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void removeAllComponents() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void removeComponent(Component c) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void removeListener(ComponentAttachListener listener) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void removeListener(ComponentDetachListener listener) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void replaceComponent(Component oldComponent, Component newComponent) {
+		// TODO Auto-generated method stub
+		
 	}
 }
