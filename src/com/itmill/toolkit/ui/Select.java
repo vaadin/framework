@@ -46,6 +46,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
+import com.itmill.toolkit.Application;
 import com.itmill.toolkit.data.Container;
 import com.itmill.toolkit.data.Item;
 import com.itmill.toolkit.data.Property;
@@ -1429,8 +1430,9 @@ public class Select extends AbstractField implements Container,
 		if (useLazyLoading != isLazyLoading()) {
 			if (useLazyLoading) {
 				optionsStream = new OptionsStream(this);
-				if (getApplication() != null)
-					getWindow().addURIHandler(optionsStream);
+				Application app = getApplication();
+				if (app != null)
+					app.getMainWindow().addURIHandler(optionsStream);
 			} else {
 				if (getApplication() != null)
 					getWindow().removeURIHandler(optionsStream);
@@ -1449,7 +1451,7 @@ public class Select extends AbstractField implements Container,
 	public void attach() {
 		super.attach();
 		if (optionsStream != null)
-			getWindow().addURIHandler(optionsStream);
+			getApplication().getMainWindow().addURIHandler(optionsStream);
 	}
 
 	/**
