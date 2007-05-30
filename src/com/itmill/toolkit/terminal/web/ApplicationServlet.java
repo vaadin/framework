@@ -78,6 +78,7 @@ import com.itmill.toolkit.service.License.LicenseViolation;
 import com.itmill.toolkit.terminal.DownloadStream;
 import com.itmill.toolkit.terminal.Paintable;
 import com.itmill.toolkit.terminal.ParameterHandler;
+import com.itmill.toolkit.terminal.StreamResource;
 import com.itmill.toolkit.terminal.ThemeResource;
 import com.itmill.toolkit.terminal.URIHandler;
 import com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent;
@@ -876,59 +877,28 @@ public class ApplicationServlet extends HttpServlet implements
 			Theme theme) throws IOException, MalformedURLException {
 		response.setContentType("text/html");
 		BufferedWriter page = new BufferedWriter(new OutputStreamWriter(out));
-
+	
 		page
 				.write("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" "
 						+ "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n");
-
+	
 		page
 				.write("<html><head>\n<title>" + window.getCaption()
 						+ "</title>\n");
 		page
 				.write("<NOSCRIPT><META http-equiv=\"refresh\" content=\"0; url=?WA_NOSCRIPT=1\" /></NOSCRIPT>\n");
-		Theme t = theme;
-		Vector themes = new Vector();
-		themes.add(t);
-		while (t.getParent() != null) {
-			String parentName = t.getParent();
-			t = themeSource.getThemeByName(parentName);
-			themes.add(t);
-		}
-		for (int k = themes.size() - 1; k >= 0; k--) {
-			t = (Theme) themes.get(k);
-			Collection files = t.getFileNames(terminalType, Theme.MODE_AJAX);
-			for (Iterator i = files.iterator(); i.hasNext();) {
-				String file = (String) i.next();
-				if (file.endsWith(".css"))
-					page.write("<link rel=\"stylesheet\" href=\""
-							+ getResourceLocation(t.getName(),
-									new ThemeResource(file))
-							+ "\" type=\"text/css\" />\n");
-				else if (file.endsWith(".js")) {
-					page.write("<script src=\"");
 
-					// TODO remove this and implement behaviour in themes
-					// description.xml files
-					if (file.endsWith("firebug.js")
-							&& !isDebugMode(unhandledParameters)) {
-						file = file.replaceFirst("bug.js", "bugx.js");
-					}
-					page.write(getResourceLocation(t.getName(),
-							new ThemeResource(file)));
-					page.write("\" type=\"text/javascript\"></script>\n");
-				}
-			}
-
-		}
+		page.write("<link rel=\"stylesheet\" href=\"" + resourcePath + theme.getName() + "/css/compiledstyle.css\" type=\"text/css\" />\n");
+		page.write("<script type=\"text/javascript\" src=\"" + resourcePath + theme.getName() + "/script/compiledjavascript.js\"></script>");
 
 		page.write("</head><body class=\"itmtk\">\n");
-
+	
 		page.write("<div id=\"ajax-wait\">Loading...</div>\n");
-
+	
 		page.write("<div id=\"ajax-window\"></div>\n");
-
+	
 		page.write("<script language=\"JavaScript\">\n");
-
+	
 		String[] urlParts = getApplicationUrl(request).toString().split("\\/");
 		String appUrl = "";
 		// don't use server and port in uri. It may cause problems with some
@@ -940,32 +910,106 @@ public class ApplicationServlet extends HttpServlet implements
 		page.write("itmill.tmp = new itmill.Client("
 				+ "document.getElementById('ajax-window')," + "\"" + appUrl
 				+ "/UIDL/" + "\",\"" + resourcePath
-				+ ((Theme) themes.get(themes.size() - 1)).getName() + "/"
-
+				+ theme.getName() + "/"
+	
 				+ "client/\",document.getElementById('ajax-wait'));\n");
-
-		// TODO Only current theme is registered to the client
-		// for (int k = themes.size() - 1; k >= 0; k--) {
-		// t = (Theme) themes.get(k);
-		t = theme;
+	
 		String themeObjName = "itmill.themes."
-				+ t.getName().substring(0, 1).toUpperCase()
-				+ t.getName().substring(1);
-		page.write(" (new " + themeObjName + "(\"" + resourcePath + t.getName()
+				+ theme.getName().substring(0, 1).toUpperCase()
+				+ theme.getName().substring(1);
+		page.write(" (new " + themeObjName + "(\"" + resourcePath + theme.getName()
 				+ "/\")).registerTo(itmill.tmp);\n");
 		// }
-
+	
 		if (isDebugMode(unhandledParameters))
 			page.write("itmill.tmp.debugEnabled =true;\n");
 		page.write("itmill.tmp.start();\n");
 		page.write("delete itmill.tmp;\n");
-
+	
 		page.write("</script>\n");
-
+	
 		page.write("</body></html>\n");
 		page.close();
 	}
 
+	/**
+	 * Writes javascript for this theme and terminal
+	 * 
+	 * @param response
+	 *            the HTTP response to write to.
+	 * @param terminalType
+	 * @param theme
+	 * @throws IOException
+	 *             if the writing failed due to input/output error.
+	 */
+	private void writeJavascript(HttpServletResponse response,
+			WebBrowser terminalType, Theme theme) throws IOException, MalformedURLException {
+		response.setContentType("text/javascript");
+		BufferedWriter page = new BufferedWriter(new OutputStreamWriter(response.getOutputStream()));
+		getThemeResourcesWithType(".js",terminalType, theme, page);
+		page.close();
+	}
+
+	/**
+	 * Writes javascript for this theme and terminal
+	 * 
+	 * @param response
+	 *            the HTTP response to write to.
+	 * @param terminalType
+	 * @param theme
+	 * @throws IOException
+	 *             if the writing failed due to input/output error.
+	 */
+	private void writeCss(HttpServletResponse response, WebBrowser terminalType, 
+			Theme theme) throws IOException, MalformedURLException {
+		response.setContentType("text/css");
+		BufferedWriter page = new BufferedWriter(new OutputStreamWriter(response.getOutputStream()));
+		getThemeResourcesWithType(".css",terminalType, theme, page);
+		page.close();
+	}
+
+	/**
+	 * Catenates all themes required files that which ends with type into a StringBuffer.
+	 * Used to serve browser only a single javascript or css file
+	 * 
+	 * @param terminalType
+	 * @param theme
+	 * @throws IOException
+	 *             if the writing failed due to input/output error.
+	 * @return StringBuffer containing all themes javascript 
+	 */
+	private void getThemeResourcesWithType(String type, WebBrowser terminalType,
+			Theme theme, BufferedWriter out) throws IOException {
+		Vector themes = new Vector();
+		themes.add(theme);
+		while (theme.getParent() != null) {
+			String parentName = theme.getParent();
+			theme = themeSource.getThemeByName(parentName);
+			themes.add(theme);
+		}
+		
+		for (int k = themes.size() - 1; k >= 0; k--) {
+			theme = (Theme) themes.get(k);
+			Collection files = theme.getFileNames(terminalType, Theme.MODE_AJAX);
+			for (Iterator i = files.iterator(); i.hasNext();) {
+				String file = (String) i.next();
+				if (file.endsWith(type)) {
+					try {
+						InputStreamReader in = new InputStreamReader(themeSource.getResource(theme.getName() + "/" + file));
+						
+						char[] b = new char[DEFAULT_BUFFER_SIZE];
+						int read = 0;
+						while((read = in.read(b, 0, DEFAULT_BUFFER_SIZE)) > 0)
+							out.write(b,0,read);
+					} catch (ThemeException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+	}
+	
+	
 	/**
 	 * Handles the requested URI. An application can add handlers to do special
 	 * processing, when a certain URI is requested. The handlers are invoked
@@ -1191,6 +1235,27 @@ public class ApplicationServlet extends HttpServlet implements
 		// Checks if this really is a resource request
 		if (resourceId == null || !resourceId.startsWith(RESOURCE_URI))
 			return false;
+		
+		if (resourceId.endsWith("compiledstyle.css") || resourceId.endsWith("compiledjavascript.js")) {
+			String[] parts = resourceId.split("/");
+			
+			Theme t = themeSource.getThemeByName(parts[2]);
+			try {
+				if(resourceId.endsWith("compiledstyle.css")) {
+					writeCss(response, WebBrowserProbe.getTerminalType(request
+							.getSession()), t);
+				} else {
+					writeJavascript(response, WebBrowserProbe.getTerminalType(request
+							.getSession()), t);
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return true;
+		}
+		if(resourceId.endsWith("compiledjavascript.js")) {
+			return true;
+		}
 
 		// Checks the resource type
 		resourceId = resourceId.substring(RESOURCE_URI.length());
