@@ -164,17 +164,18 @@ public class ApplicationServlet extends HttpServlet implements
 
 	private static final String SESSION_BINDING_LISTENER = "itmill-toolkit-bindinglistener";
 
-	private WeakHashMap applicationToDirtyWindowSetMap = new WeakHashMap();
+	private static HashMap applicationToDirtyWindowSetMap = new HashMap();
 
-	private WeakHashMap applicationToServerCommandStreamLock = new WeakHashMap();
+	private static HashMap applicationToServerCommandStreamLock = new HashMap();
 
-	private static WeakHashMap applicationToLastRequestDate = new WeakHashMap();
+	private static HashMap applicationToLastRequestDate = new HashMap();
 
-	private static WeakHashMap applicationToAjaxAppMgrMap = new WeakHashMap();
+	private static HashMap applicationToAjaxAppMgrMap = new HashMap();
 
-	private WeakHashMap licenseForApplicationClass = new WeakHashMap();
+	// License for ApplicationServlets
+	private static HashMap licenseForApplicationClass = new HashMap();
 
-	private static WeakHashMap licensePrintedForApplicationClass = new WeakHashMap();
+	private static HashMap licensePrintedForApplicationClass = new HashMap();
 
 	// TODO Should default or base theme be the default?
 	protected static final String DEFAULT_THEME = "base";
@@ -545,7 +546,9 @@ public class ApplicationServlet extends HttpServlet implements
 				application = createApplication(request);
 
 			// Sets the last application request date
-			applicationToLastRequestDate.put(application, new Date());
+			synchronized (applicationToLastRequestDate) {
+				applicationToLastRequestDate.put(application, new Date());
+			}
 
 			// Invokes context transaction listeners
 			((WebApplicationContext) application.getContext())
@@ -712,8 +715,7 @@ public class ApplicationServlet extends HttpServlet implements
 					// If other than html or ajax mode is requested
 					if (wb.getRenderingMode() == WebBrowser.RENDERING_MODE_UNDEFINED
 							&& !(window instanceof DebugWindow)) {
-						// TODO More informal message should be given is browser
-						// is not supported
+						// TODO More informal message should be given to browser
 						response.setContentType("text/html");
 						BufferedWriter page = new BufferedWriter(
 								new OutputStreamWriter(out));
@@ -753,11 +755,11 @@ public class ApplicationServlet extends HttpServlet implements
 					paintTarget.close();
 
 					// For exception handling, memorize the current dirty status
-					WeakHashMap dirtyWindows = (WeakHashMap) applicationToDirtyWindowSetMap
+					HashMap dirtyWindows = (HashMap) applicationToDirtyWindowSetMap
 							.get(application);
 
 					if (dirtyWindows == null) {
-						dirtyWindows = new WeakHashMap();
+						dirtyWindows = new HashMap();
 						applicationToDirtyWindowSetMap.put(application,
 								dirtyWindows);
 					}
@@ -1452,12 +1454,14 @@ public class ApplicationServlet extends HttpServlet implements
 	 * @param application
 	 */
 	private void initializeLicense(Application application) {
-
-		License license = (License) licenseForApplicationClass.get(application
-				.getClass());
-		if (license == null) {
-			license = new License();
-			licenseForApplicationClass.put(application.getClass(), license);
+		License license;
+		synchronized (licenseForApplicationClass) {
+			license = (License) licenseForApplicationClass.get(application
+					.getClass());
+			if (license == null) {
+				license = new License();
+				licenseForApplicationClass.put(application.getClass(), license);
+			}
 		}
 		application.setToolkitLicense(license);
 	}
@@ -1481,49 +1485,67 @@ public class ApplicationServlet extends HttpServlet implements
 			throws LicenseFileHasNotBeenRead, LicenseSignatureIsInvalid,
 			InvalidLicenseFile, LicenseViolation, SAXException {
 		License license = application.getToolkitLicense();
-		if (!license.hasBeenRead()) {
-			InputStream lis;
-			try {
-				URL url = getServletContext().getResource(
-						"/WEB-INF/itmill-toolkit-license.xml");
-				if (url == null) {
-					throw new RuntimeException(
-							"License file could not be read. "
-									+ "You can install it to "
-									+ "WEB-INF/itmill-toolkit-license.xml.");
+
+		if (!license.hasBeenRead())
+			// Lock threads that have not yet read license
+			synchronized (license) {
+				if (!license.hasBeenRead()) {
+					InputStream lis;
+					try {
+						URL url = getServletContext().getResource(
+								"/WEB-INF/itmill-toolkit-license.xml");
+						if (url == null) {
+							throw new RuntimeException(
+									"License file could not be read. "
+											+ "You can install it to "
+											+ "WEB-INF/itmill-toolkit-license.xml.");
+						}
+						lis = url.openStream();
+						license.readLicenseFile(lis);
+					} catch (MalformedURLException e) {
+						// This should not happen
+						throw new RuntimeException(e);
+					} catch (IOException e) {
+						// This should not happen
+						throw new RuntimeException(e);
+					}
+
+					// For each application class, print license description -
+					// once
+					if (!licensePrintedForApplicationClass
+							.containsKey(applicationClass)) {
+						licensePrintedForApplicationClass.put(applicationClass,
+								Boolean.TRUE);
+						if (license.shouldLimitsBePrintedOnInit()) {
+							System.out.println(license
+									.getDescription(application.getClass()
+											.toString()));
+						}
+					}
+
+					// Checks license validity
+					try {
+						license.check(applicationClass, VERSION_MAJOR,
+								VERSION_MINOR, "IT Mill Toolkit", null);
+					} catch (LicenseFileHasNotBeenRead e) {
+						application.close();
+						throw e;
+					} catch (LicenseSignatureIsInvalid e) {
+						application.close();
+						throw e;
+					} catch (InvalidLicenseFile e) {
+						application.close();
+						throw e;
+					} catch (LicenseViolation e) {
+						application.close();
+						throw e;
+					}
 				}
-				lis = url.openStream();
-				license.readLicenseFile(lis);
-			} catch (MalformedURLException e) {
-				// This should not happen
-				throw new RuntimeException(e);
-			} catch (IOException e) {
-				// This should not happen
-				throw new RuntimeException(e);
 			}
-		}
 
-		// For each application class, print license description - once
-		if (!licensePrintedForApplicationClass.containsKey(applicationClass)) {
-			licensePrintedForApplicationClass.put(applicationClass,
-					Boolean.TRUE);
-			if (license.shouldLimitsBePrintedOnInit())
-				System.out.print(license.getDescription());
-		}
-
-		// Checks license validity
+		// Checks concurrent user limit
 		try {
-			license.check(applicationClass, getNumberOfActiveUsers() + 1,
-					VERSION_MAJOR, VERSION_MINOR, "IT Mill Toolkit", null);
-		} catch (LicenseFileHasNotBeenRead e) {
-			application.close();
-			throw e;
-		} catch (LicenseSignatureIsInvalid e) {
-			application.close();
-			throw e;
-		} catch (InvalidLicenseFile e) {
-			application.close();
-			throw e;
+			license.checkConcurrentUsers(getNumberOfActiveUsers() + 1);
 		} catch (LicenseViolation e) {
 			application.close();
 			throw e;
@@ -1540,14 +1562,17 @@ public class ApplicationServlet extends HttpServlet implements
 	 * @return the Number of active application instances in the server.
 	 */
 	private int getNumberOfActiveUsers() {
-
-		Set apps = applicationToLastRequestDate.keySet();
 		int active = 0;
-		long now = System.currentTimeMillis();
-		for (Iterator i = apps.iterator(); i.hasNext();) {
-			Date lastReq = (Date) applicationToLastRequestDate.get(i.next());
-			if (now - lastReq.getTime() < ACTIVE_USER_REQUEST_INTERVAL)
-				active++;
+
+		synchronized (applicationToLastRequestDate) {
+			Set apps = applicationToLastRequestDate.keySet();
+			long now = System.currentTimeMillis();
+			for (Iterator i = apps.iterator(); i.hasNext();) {
+				Date lastReq = (Date) applicationToLastRequestDate
+						.get(i.next());
+				if (now - lastReq.getTime() < ACTIVE_USER_REQUEST_INTERVAL)
+					active++;
+			}
 		}
 
 		return active;
@@ -1712,10 +1737,10 @@ public class ApplicationServlet extends HttpServlet implements
 	 */
 	protected void addDirtyWindow(Application application, Window window) {
 		synchronized (applicationToDirtyWindowSetMap) {
-			WeakHashMap dirtyWindows = (WeakHashMap) applicationToDirtyWindowSetMap
+			HashMap dirtyWindows = (HashMap) applicationToDirtyWindowSetMap
 					.get(application);
 			if (dirtyWindows == null) {
-				dirtyWindows = new WeakHashMap();
+				dirtyWindows = new HashMap();
 				applicationToDirtyWindowSetMap.put(application, dirtyWindows);
 			}
 			dirtyWindows.put(window, Boolean.TRUE);
@@ -1729,7 +1754,7 @@ public class ApplicationServlet extends HttpServlet implements
 	 */
 	protected void removeDirtyWindow(Application application, Window window) {
 		synchronized (applicationToDirtyWindowSetMap) {
-			WeakHashMap dirtyWindows = (WeakHashMap) applicationToDirtyWindowSetMap
+			HashMap dirtyWindows = (HashMap) applicationToDirtyWindowSetMap
 					.get(application);
 			if (dirtyWindows != null)
 				dirtyWindows.remove(window);
@@ -1792,10 +1817,9 @@ public class ApplicationServlet extends HttpServlet implements
 	 * @return
 	 */
 	protected Map getDirtyWindows(Application app) {
-		WeakHashMap dirtyWindows;
+		HashMap dirtyWindows;
 		synchronized (applicationToDirtyWindowSetMap) {
-			dirtyWindows = (WeakHashMap) applicationToDirtyWindowSetMap
-					.get(app);
+			dirtyWindows = (HashMap) applicationToDirtyWindowSetMap.get(app);
 		}
 		return (Map) dirtyWindows;
 	}
@@ -1863,8 +1887,11 @@ public class ApplicationServlet extends HttpServlet implements
 				synchronized (application) {
 
 					// Session expiration
-					Date lastRequest = (Date) applicationToLastRequestDate
-							.get(application);
+					Date lastRequest;
+					synchronized (applicationToLastRequestDate) {
+						lastRequest = (Date) applicationToLastRequestDate
+								.get(application);
+					}
 					if (lastRequest != null
 							&& lastRequest.getTime()
 									+ request.getSession()
@@ -1984,22 +2011,23 @@ public class ApplicationServlet extends HttpServlet implements
 							synchronized (lock) {
 								lock.notifyAll();
 							}
-						applicationToServerCommandStreamLock.remove(apps[i]);
 
+						// Remove application from hashmaps
+						synchronized (applicationToServerCommandStreamLock) {
+							applicationToServerCommandStreamLock
+									.remove(apps[i]);
+						}
+						synchronized (applicationToDirtyWindowSetMap) {
+							applicationToDirtyWindowSetMap.remove(apps[i]);
+						}
+						synchronized (applicationToLastRequestDate) {
+							applicationToLastRequestDate.remove(apps[i]);
+						}
+						synchronized (applicationToAjaxAppMgrMap) {
+							applicationToAjaxAppMgrMap.remove(apps[i]);
+						}
 						// Remove application from applications list
 						applications.remove(apps[i]);
-
-						// Remove application from hashmap
-						// TODO remove check
-						if (applicationToAjaxAppMgrMap
-								.get((Application) apps[i]) == null) {
-							System.out
-									.println("ERROR: tried to remove nonexistent application ("
-											+ (Application) apps[i] + ")");
-						} else {
-							applicationToAjaxAppMgrMap
-									.remove((Application) apps[i]);
-						}
 					}
 				}
 			}
