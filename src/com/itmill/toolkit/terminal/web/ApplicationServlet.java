@@ -885,19 +885,20 @@ public class ApplicationServlet extends HttpServlet implements
 		page
 				.write("<html><head>\n<title>" + window.getCaption()
 						+ "</title>\n");
-		page
-				.write("<NOSCRIPT><META http-equiv=\"refresh\" content=\"0; url=?WA_NOSCRIPT=1\" /></NOSCRIPT>\n");
 
-		page.write("<link rel=\"stylesheet\" href=\"" + resourcePath + theme.getName() + "/css/compiledstyle.css\" type=\"text/css\" />\n");
-		page.write("<script type=\"text/javascript\" src=\"" + resourcePath + theme.getName() + "/script/compiledjavascript.js\"></script>");
+		page.write("<link rel=\"stylesheet\" href=\"" + resourcePath + theme.getName() +
+				"/css/compiledstyle.css\" type=\"text/css\" />\n");
+		page.write("<script type=\"text/javascript\" src=\"" + resourcePath + theme.getName() + 
+				"/script/compiledjavascript.js\"></script>");
 
 		page.write("</head><body class=\"itmtk\">\n");
-	
+		page.write("<noscript>Your browser claims to have a Javascript engine, but for some reason it is turned off. Eithter turn it on or use <a href=\"?renderingMode=detect&amp;WA_NOSCRIPT=1\">degraded mode</a>.</noscript>\n");
+
 		page.write("<div id=\"ajax-wait\">Loading...</div>\n");
 	
 		page.write("<div id=\"ajax-window\"></div>\n");
 	
-		page.write("<script language=\"JavaScript\">\n");
+		page.write("<script type=\"text/javascript\">\n");
 	
 		String[] urlParts = getApplicationUrl(request).toString().split("\\/");
 		String appUrl = "";
