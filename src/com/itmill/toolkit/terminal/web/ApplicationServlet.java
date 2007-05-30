@@ -78,12 +78,10 @@ import com.itmill.toolkit.service.License.LicenseViolation;
 import com.itmill.toolkit.terminal.DownloadStream;
 import com.itmill.toolkit.terminal.Paintable;
 import com.itmill.toolkit.terminal.ParameterHandler;
-import com.itmill.toolkit.terminal.StreamResource;
 import com.itmill.toolkit.terminal.ThemeResource;
 import com.itmill.toolkit.terminal.URIHandler;
 import com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent;
 import com.itmill.toolkit.terminal.web.ThemeSource.ThemeException;
-import com.itmill.toolkit.terminal.web.WebBrowser;
 import com.itmill.toolkit.ui.Window;
 
 /**
@@ -1247,9 +1245,15 @@ public class ApplicationServlet extends HttpServlet implements
 			
 			Theme t = themeSource.getThemeByName(parts[2]);
 			try {
+				WebBrowser wb = WebBrowserProbe.getTerminalType(request.getSession());
+				if(wb == null) {
+					// Request is propably coming from self made html file, run browser probe
+					WebBrowserProbe
+							.handleProbeRequest(request, new HashMap());
+					wb = WebBrowserProbe.getTerminalType(request.getSession());
+				}
 				if(resourceId.endsWith("compiledstyle.css")) {
-					writeCss(response, WebBrowserProbe.getTerminalType(request
-							.getSession()), t);
+					writeCss(response, wb, t);
 				} else {
 					writeJavascript(response, WebBrowserProbe.getTerminalType(request
 							.getSession()), t);
