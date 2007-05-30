@@ -897,6 +897,11 @@ public class ApplicationServlet extends HttpServlet implements
 		page.write("<div id=\"ajax-wait\">Loading...</div>\n");
 	
 		page.write("<div id=\"ajax-window\"></div>\n");
+		
+		if(isDebugMode(unhandledParameters))
+			page.write("<script language=\"javascript\" type=\"text/javascript\" " +
+					"src=\"" + resourcePath + theme.getName()
+				+ "/ext/firebug/firebug.js\"></script>");
 	
 		page.write("<script type=\"text/javascript\">\n");
 	
