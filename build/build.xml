@@ -120,6 +120,8 @@
 			<path>
 				<fileset dir="build/result/themes">
 					<include name="**/*.js" />
+					<!-- ignore these because rhino brakes character encodings -->
+					<exclude name="base/ext/jscalendar/lang/*.js" />
 				</fileset>
 			</path>
 			<sequential>
