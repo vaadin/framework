@@ -724,7 +724,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
 		if (this.validators == null) {
 			this.validators = new LinkedList();
 		}
-		return null;
+		return this.validators;
 	}
 
 	/**
