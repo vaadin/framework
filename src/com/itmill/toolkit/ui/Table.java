@@ -219,6 +219,11 @@ public class Table extends Select implements Action.Container,
 	private HashMap columnAlignments = new HashMap();
 
 	/**
+	 * Holds column widths in pixels for visible columns (by propertyId).
+	 */
+	private HashMap columnWidths = new HashMap();
+
+	/**
 	 * Holds value of property pageLength. 0 disables paging.
 	 */
 	private int pageLength = 15;
@@ -613,6 +618,31 @@ public class Table extends Select implements Action.Container,
 
 		// Assures the visual refresh
 		refreshCurrentPage();
+	}
+	
+	/**
+	 * Sets columns width (in pixels). Theme may not necessary respect very 
+	 * small or very big values. Setting width to -1 (default) means that theme
+	 * will make decision of width.
+	 * 
+	 * @param columnId colunmns property id
+	 * @param width width to be reserved for colunmns content
+	 * @since 4.0.3
+	 */
+	public void setColumnWidth(Object columnId, int width) {
+		columnWidths.put(columnId, new Integer(width));
+	}
+	
+	/**
+	 * Gets the width of column
+	 * @param propertyId
+	 * @return width of colun or -1 when value not set
+	 */
+	public int getColumnWidth(Object propertyId) {
+		Integer value = (Integer) columnWidths.get(propertyId);
+		if(value == null)
+			return -1;
+		return value.intValue();
 	}
 
 	/**
@@ -1433,6 +1463,8 @@ public class Table extends Select implements Action.Container,
 				if (!ALIGN_LEFT.equals(this.getColumnAlignment(columnId)))
 					target.addAttribute("align", this
 							.getColumnAlignment(columnId));
+				if(getColumnWidth(columnId) > -1)
+					target.addAttribute("width", String.valueOf(getColumnWidth(columnId)));
 				target.endTag("ch");
 			}
 		}
