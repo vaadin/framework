@@ -54,7 +54,6 @@ import com.itmill.toolkit.Application;
 import com.itmill.toolkit.Application.WindowAttachEvent;
 import com.itmill.toolkit.Application.WindowDetachEvent;
 import com.itmill.toolkit.terminal.DownloadStream;
-import com.itmill.toolkit.terminal.Identifiable;
 import com.itmill.toolkit.terminal.Paintable;
 import com.itmill.toolkit.terminal.URIHandler;
 import com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent;
@@ -592,18 +591,9 @@ public class AjaxApplicationManager implements
 	public synchronized String getPaintableId(Paintable paintable) {
 
 		String id = (String) paintableIdMap.get(paintable);
-		if (id == null) {
-			String UIID = null;
-			// try to get PID using unique user interface identity (UUID)
-			if (paintable instanceof Identifiable)
-				UIID = ((Identifiable) paintable).getUIID();
-			if (UIID != null)
-				id = "PID" + UIID;
-			else {
-				// UUID not set, get PID using growing sequence number
-				id = "PID" + Integer.toString(idSequence++);
-			}
-		}
+		if (id == null)
+			// get PID using growing sequence number
+			id = "PID" + Integer.toString(idSequence++);
 		paintableIdMap.put(paintable, id);
 
 		return id;

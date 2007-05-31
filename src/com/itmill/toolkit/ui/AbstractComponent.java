@@ -52,8 +52,7 @@ import java.lang.reflect.Method;
  * @VERSION@
  * @since 3.0
  */
-public abstract class AbstractComponent extends Identifiable implements
-		Component, MethodEventSource {
+public abstract class AbstractComponent implements Component, MethodEventSource {
 
 	/* Private members ************************************************* */
 
@@ -920,5 +919,4 @@ public abstract class AbstractComponent extends Identifiable implements
 	public Object getData() {
 		return this.applicationData;
 	}
-
 }
