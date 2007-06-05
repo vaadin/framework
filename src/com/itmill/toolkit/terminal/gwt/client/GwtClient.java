@@ -15,6 +15,7 @@ import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
 import com.google.gwt.xml.client.XMLParser;
+import com.itmill.toolkit.terminal.gwt.client.ui.RootWindow;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.

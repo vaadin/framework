@@ -1,4 +1,4 @@
-package com.itmill.toolkit.terminal.gwt.client;
+package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -6,6 +6,10 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
+import com.itmill.toolkit.terminal.gwt.client.BooleanVariable;
+import com.itmill.toolkit.terminal.gwt.client.Component;
+import com.itmill.toolkit.terminal.gwt.client.GwtClient;
+import com.itmill.toolkit.terminal.gwt.client.VariableFactory;
 
 public class TkButton extends Component {
 

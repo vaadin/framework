@@ -1,9 +1,11 @@
 	
-package com.itmill.toolkit.terminal.gwt.client;
+package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.xml.client.Node;
+import com.itmill.toolkit.terminal.gwt.client.Component;
+import com.itmill.toolkit.terminal.gwt.client.GwtClient;
 
 public class RootWindow extends ContainerComponent {
 

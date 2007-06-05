@@ -2,6 +2,13 @@ package com.itmill.toolkit.terminal.gwt.client;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.xml.client.Node;
+import com.itmill.toolkit.terminal.gwt.client.ui.ContainerComponent;
+import com.itmill.toolkit.terminal.gwt.client.ui.TkButton;
+import com.itmill.toolkit.terminal.gwt.client.ui.TkLabel;
+import com.itmill.toolkit.terminal.gwt.client.ui.TkLegacyComponent;
+import com.itmill.toolkit.terminal.gwt.client.ui.TkOrderedLayout;
+import com.itmill.toolkit.terminal.gwt.client.ui.TkTextField;
+import com.itmill.toolkit.terminal.gwt.client.ui.TkUnknown;
 
 public abstract class Component {
 	

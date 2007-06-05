@@ -1,7 +1,9 @@
-package com.itmill.toolkit.terminal.gwt.client;
+package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
+import com.itmill.toolkit.terminal.gwt.client.Component;
+import com.itmill.toolkit.terminal.gwt.client.GwtClient;
 
 abstract class ContainerComponent extends Component {
 
