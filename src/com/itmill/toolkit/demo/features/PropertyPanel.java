@@ -275,7 +275,6 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
 			disableField(set.getField("visible"), new Boolean(true));
 			disableField(set.getField("componentError"));
 			disableField(set.getField("icon"));
-
 		}
 	}
 
