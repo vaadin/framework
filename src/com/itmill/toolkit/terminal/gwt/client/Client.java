@@ -1,6 +1,8 @@
 package com.itmill.toolkit.terminal.gwt.client;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
 import java.util.Vector;
 
 import com.google.gwt.core.client.EntryPoint;
@@ -10,11 +12,12 @@ import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.Node;
-import com.google.gwt.xml.client.NodeList;
-import com.google.gwt.xml.client.XMLParser;
 import com.itmill.toolkit.terminal.gwt.client.ui.Component;
 import com.itmill.toolkit.terminal.gwt.client.ui.RootWindow;
 
@@ -82,9 +85,9 @@ public class Client implements EntryPoint {
 				}
 				public void onResponseReceived(Request request, Response response) {
 					console.log("Got response:");
-					Document doc = XMLParser.parse(response.getText());
-					console.log(doc.toString());
-					handleUIDL(doc);
+					JSONValue update = JSONParser.parse(response.getText());
+					console.log(update.toString());
+					handleUIDL(update.isObject());
 				}
 			});
 			console.log("Request sent");
@@ -94,24 +97,41 @@ public class Client implements EntryPoint {
 		}
 	}
 	
-	private void handleUIDL(Document doc) {
-		NodeList changes = doc.getElementsByTagName("change");
-		
-		for(int i = 0; i < changes.getLength(); i++) {
-			applyChange(changes.item(i).getFirstChild());
+	private void handleUIDL(JSONObject update) {
+		JSONObject changes;
+		if(update.containsKey("meta")) {
+			JSONObject meta = update.get("meta").isObject();
 		}
+		
+		if( ( changes = update.isObject() ) != null) {
+			Set keys = changes.keySet();
+			Iterator it = keys.iterator();
+			while(it.hasNext()) {
+				String key = (String) it.next();
+				if(key.startsWith("change")) {
+					JSONObject change = changes.get(key).isObject();
+					JSONArray children;
+					if( (children = change.isArray()) != null) {
+						for (int i = 0; i < children.size(); i++) {
+							applyChange(children.get(i).isObject());
+						}
+					}
+				}
+			}
+		}
+		
 	}
 	
-	private void applyChange(Node n) {
-		if(n.getNodeName().equals("window")) {
+	private void applyChange(JSONObject change) {
+		if(change.get("attr").isObject().get("id").isString().equals("PID0")) {
 			console.log("Rendering main window");
-			rw = new RootWindow(n, this);
+//			rw = new RootWindow(change, this);
 			rw.setClient(this);
 		} else {
-			int pid = Component.getIdFromUidl(n);
-			console.log("Updating node: " + n.getNodeName() + ", PID:"+pid);
-			Component c = getPaintable(pid);
-			c.updateFromUidl(n);
+//			int pid = Component.getIdFromUidl(change);
+//			console.log("Updating node: " + change.getNodeName() + ", PID:"+pid);
+//			Component c = getPaintable(pid);
+//			c.updateFromUidl(change);
 		}
 	}
 
