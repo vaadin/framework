@@ -62,11 +62,10 @@ my $SOURCE = shift(@ARGV) || 'trunk';
 my $t = "";
 
 if (
-  ($MERGE ne "nomerge" ) &&
   ($MERGE ne "merge" ) &&
   ($MERGE ne "continue" )
   ) {
-  &failure ("\nMERGE must be of value nomerge, merge or continue\n");
+  &failure ("\nMERGE must be of value merge or continue\n");
 }
 if (!$BRANCH =~ /([4-9]{1}\.[0-9]{1})/) {
   &failure ("\nBRANCH must be format {x}.{y} where {x}=major (4-9), ".
@@ -119,6 +118,9 @@ if ($MERGE eq "continue") {
 chdir($WORKDIR) || &failure("Could not chdir to $WORKDIR.\n");
 # delete old repo
 &execute("rm -rf $BRANCH");
+# ensure that target directory exists
+&execute("svn mkdir $SVN_ROOT/builds/$TARGET -m \"Added $TARGET directory\"");
+&execute("svn ci $SVN_ROOT/builds/$TARGET");
 # checkout (if missing) build repository
 &execute("svn co $SVN_ROOT/builds | grep \"Checked out\"");
 # it's safest to replace $BRANCH from $SOURCE (but you could use also merging)
