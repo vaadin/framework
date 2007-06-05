@@ -41,8 +41,6 @@ public abstract class Component {
 			c = new TkButton(uidl, cli);
 		} else if(nodeName.equals("textfield")) {
 			c = new TkTextField(uidl, cli);
-		} else if(nodeName.equals("select")) {
-			c = new TkLegacyComponent(uidl, cli);
 		} else {
 			c = new TkUnknown(uidl, cli);
 		}

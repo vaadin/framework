@@ -38,8 +38,6 @@ public class Client implements EntryPoint {
 	
 	private int requestCount = 0;
 
-	private LegacyClientWrapper lClient;
-
 	/**
 	 * This is the entry point method.
 	 */
@@ -170,10 +168,5 @@ public class Client implements EntryPoint {
 		return (Component) components.get(""+pid);
 	}
 	
-	public LegacyClientWrapper getLegacyClient() {
-		if(lClient == null)
-			lClient = new LegacyClientWrapper();
-		return lClient;
-	}
 }
 
