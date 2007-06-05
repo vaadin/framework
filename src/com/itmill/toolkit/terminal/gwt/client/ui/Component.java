@@ -1,22 +1,16 @@
-package com.itmill.toolkit.terminal.gwt.client;
+package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.xml.client.Node;
-import com.itmill.toolkit.terminal.gwt.client.ui.ContainerComponent;
-import com.itmill.toolkit.terminal.gwt.client.ui.TkButton;
-import com.itmill.toolkit.terminal.gwt.client.ui.TkLabel;
-import com.itmill.toolkit.terminal.gwt.client.ui.TkLegacyComponent;
-import com.itmill.toolkit.terminal.gwt.client.ui.TkOrderedLayout;
-import com.itmill.toolkit.terminal.gwt.client.ui.TkTextField;
-import com.itmill.toolkit.terminal.gwt.client.ui.TkUnknown;
+import com.itmill.toolkit.terminal.gwt.client.Client;
 
 public abstract class Component {
 	
 	private ContainerComponent parent;
-	protected GwtClient client;
+	protected Client client;
 	private final int id;
 	
-	public Component(int id, GwtClient c) {
+	public Component(int id, Client c) {
 		client = c;
 		this.id = id;
 	}
@@ -36,7 +30,7 @@ public abstract class Component {
 		return false;
 	}
 
-	public static Component createComponent(Node uidl, GwtClient cli) {
+	public static Component createComponent(Node uidl, Client cli) {
 		Component c = null;
 		String nodeName = uidl.getNodeName();
 		if(nodeName.equals("label")) {
@@ -65,7 +59,7 @@ public abstract class Component {
 		return parent;
 	}
 	
-	public GwtClient getClient() {
+	public Client getClient() {
 		if(client == null)
 			client = parent.getClient();
 		return client;

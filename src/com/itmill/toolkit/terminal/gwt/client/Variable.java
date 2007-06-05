@@ -1,5 +1,7 @@
 package com.itmill.toolkit.terminal.gwt.client;
 
+import com.itmill.toolkit.terminal.gwt.client.ui.Component;
+
 public abstract class Variable {
 
 	protected Component owner;

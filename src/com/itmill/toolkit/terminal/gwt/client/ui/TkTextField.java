@@ -5,15 +5,14 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
-import com.itmill.toolkit.terminal.gwt.client.Component;
-import com.itmill.toolkit.terminal.gwt.client.GwtClient;
+import com.itmill.toolkit.terminal.gwt.client.Client;
 
 public class TkTextField extends Component {
 
 
 	private TextBox tb;
 
-	public TkTextField(Node uidl, GwtClient cli) {
+	public TkTextField(Node uidl, Client cli) {
 		super(getIdFromUidl(uidl),cli);
 
 		tb = new TextBox();

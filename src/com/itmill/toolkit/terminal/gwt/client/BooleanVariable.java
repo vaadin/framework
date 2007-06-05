@@ -1,5 +1,7 @@
 package com.itmill.toolkit.terminal.gwt.client;
 
+import com.itmill.toolkit.terminal.gwt.client.ui.Component;
+
 public class BooleanVariable extends Variable {
 
 	private boolean value = true;
@@ -9,7 +11,7 @@ public class BooleanVariable extends Variable {
 	}
 	
 
-	void update() {
+	public void update() {
 		owner.getClient().updateVariable(this);
 		if(immediate)
 			owner.getClient().flushVariables();

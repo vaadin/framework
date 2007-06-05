@@ -7,8 +7,7 @@ import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
 import com.itmill.toolkit.terminal.gwt.client.BooleanVariable;
-import com.itmill.toolkit.terminal.gwt.client.Component;
-import com.itmill.toolkit.terminal.gwt.client.GwtClient;
+import com.itmill.toolkit.terminal.gwt.client.Client;
 import com.itmill.toolkit.terminal.gwt.client.VariableFactory;
 
 public class TkButton extends Component {
@@ -16,7 +15,7 @@ public class TkButton extends Component {
 	private Button b;
 	private BooleanVariable state;
 
-	public TkButton(Node uidl, GwtClient c) {
+	public TkButton(Node uidl, Client c) {
 		super(getIdFromUidl(uidl), c);
 		b = new Button();
 		updateFromUidl(uidl);

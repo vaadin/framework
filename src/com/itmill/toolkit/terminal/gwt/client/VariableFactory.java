@@ -5,6 +5,7 @@ import java.util.HashMap;
 import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
+import com.itmill.toolkit.terminal.gwt.client.ui.Component;
 
 public class VariableFactory {
 	

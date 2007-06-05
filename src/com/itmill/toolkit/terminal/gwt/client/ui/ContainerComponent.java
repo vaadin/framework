@@ -2,18 +2,17 @@ package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
-import com.itmill.toolkit.terminal.gwt.client.Component;
-import com.itmill.toolkit.terminal.gwt.client.GwtClient;
+import com.itmill.toolkit.terminal.gwt.client.Client;
 
 abstract class ContainerComponent extends Component {
 
-	public ContainerComponent(int id, GwtClient c) {
+	public ContainerComponent(int id, Client c) {
 		super(id, c);
 	}
 
 	abstract void appendChild(Component c);
 	
-	public void renderChildNodes(Node n, GwtClient cli) {
+	public void renderChildNodes(Node n, Client cli) {
 		NodeList children = n.getChildNodes();
 		for(int i = 0; i < children.getLength(); i++) {
 			Node child = children.item(i);

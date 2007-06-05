@@ -6,15 +6,14 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.xml.client.Node;
-import com.itmill.toolkit.terminal.gwt.client.Component;
-import com.itmill.toolkit.terminal.gwt.client.GwtClient;
+import com.itmill.toolkit.terminal.gwt.client.Client;
 import com.itmill.toolkit.terminal.gwt.client.LegacyClientWrapper;
 
 public class TkLegacyComponent extends Component {
 
 	private Label l;
 
-	public TkLegacyComponent(Node uidl, GwtClient cli) {
+	public TkLegacyComponent(Node uidl, Client cli) {
 		super(getIdFromUidl(uidl), cli);
 		
 		// TODO Check if client has legacy client instantiated

@@ -3,14 +3,13 @@ package com.itmill.toolkit.terminal.gwt.client.ui;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.xml.client.Node;
-import com.itmill.toolkit.terminal.gwt.client.Component;
-import com.itmill.toolkit.terminal.gwt.client.GwtClient;
+import com.itmill.toolkit.terminal.gwt.client.Client;
 
 public class TkOrderedLayout extends ContainerComponent {
 	
 	private FlowPanel p;
 
-	public TkOrderedLayout(Node uidl, GwtClient cli) {
+	public TkOrderedLayout(Node uidl, Client cli) {
 		super(getIdFromUidl(uidl), cli);
 
 		p = new FlowPanel();

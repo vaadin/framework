@@ -5,14 +5,13 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
-import com.itmill.toolkit.terminal.gwt.client.Component;
-import com.itmill.toolkit.terminal.gwt.client.GwtClient;
+import com.itmill.toolkit.terminal.gwt.client.Client;
 
 public class TkLabel extends Component {
 
 	private Label l;
 
-	public TkLabel(Node uidl, GwtClient cli) {
+	public TkLabel(Node uidl, Client cli) {
 		super(getIdFromUidl(uidl), cli);
 
 		l = new Label();
