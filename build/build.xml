@@ -85,7 +85,10 @@
 			</fileset>
 		</copy>
 
-		<fixcrlf srcdir="build/result/themes" includes="**/*.js **/*.css" eol="lf" eof="remove" />
+		<fixcrlf srcdir="build/result/themes" includes="**/*.js **/*.css" eol="lf" eof="remove">
+			<!-- ignore these because multiple character encodings are used -->
+			<exclude name="base/ext/jscalendar/lang/*.js" />
+		</fixcrlf>
 
 		<!-- Add unoptimized (not obfuscated) themes -->
 		<copy todir="${output-dir}/lib/themes">
@@ -120,14 +123,14 @@
 			<path>
 				<fileset dir="build/result/themes">
 					<include name="**/*.js" />
-					<!-- ignore these because rhino brakes character encodings -->
+					<!-- ignore these because multiple character encodings are used -->
 					<exclude name="base/ext/jscalendar/lang/*.js" />
 				</fileset>
 			</path>
 			<sequential>
 				<echo>@{file}</echo>
-				<!-- TODO: ERROR: for some reason this does not work on Windows platform, please fix! -->
 				<java dir="build/result/themes" jar="build/lib/custom_rhino.jar" fork="true" failonerror="true" maxmemory="64m" output="@{file}">
+					<!-- note: you could set rhino's encoding with <jvmarg value="-Dfile.encoding=UTF-8" /> -->
 					<arg value="-c" />
 					<arg value="@{file}" />
 				</java>
