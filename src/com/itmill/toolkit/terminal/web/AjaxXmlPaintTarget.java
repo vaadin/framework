@@ -56,7 +56,7 @@ import java.util.Stack;
  * @VERSION@
  * @since 3.1
  */
-public class AjaxPaintTarget implements PaintTarget {
+public class AjaxXmlPaintTarget implements PaintTarget, AjaxPaintTarget {
 
 	/* Document type declarations */
 	private final static String UIDL_XML_DECL = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
@@ -83,7 +83,7 @@ public class AjaxPaintTarget implements PaintTarget {
 
 	private int numberOfPaints = 0;
 	
-	Set preCachedResources = new HashSet();
+	private Set preCachedResources = new HashSet();
 	private boolean customLayoutArgumentsOpen = false;
 
 	/**
@@ -96,7 +96,7 @@ public class AjaxPaintTarget implements PaintTarget {
 	 * @throws PaintException
 	 *             if the paint operation failed.
 	 */
-	public AjaxPaintTarget(AjaxVariableMap variableMap,
+	public AjaxXmlPaintTarget(AjaxVariableMap variableMap,
 			AjaxApplicationManager manager, OutputStream output)
 			throws PaintException {
 
@@ -147,20 +147,8 @@ public class AjaxPaintTarget implements PaintTarget {
 		uidlBuffer.print(string);
 	}
 
-	/**
-	 * Prints the element start tag.
-	 * 
-	 * <pre>
-	 * Todo:
-	 *  Checking of input values
-	 *  
-	 * </pre>
-	 * 
-	 * @param tagName
-	 *            the name of the start tag.
-	 * @throws PaintException
-	 *             if the paint operation failed.
-	 * 
+	/* (non-Javadoc)
+	 * @see com.itmill.toolkit.terminal.web.AjaxPaintTarget#startTag(java.lang.String)
 	 */
 	public void startTag(String tagName) throws PaintException {
 		// In case of null data output nothing:
@@ -193,16 +181,8 @@ public class AjaxPaintTarget implements PaintTarget {
 			customLayoutArgumentsOpen = true;
 	}
 
-	/**
-	 * Prints the element end tag.
-	 * 
-	 * If the parent tag is closed before every child tag is closed an
-	 * PaintException is raised.
-	 * 
-	 * @param tag
-	 *            the name of the end tag.
-	 * @throws Paintexception
-	 *             if the paint operation failed.
+	/* (non-Javadoc)
+	 * @see com.itmill.toolkit.terminal.web.AjaxPaintTarget#endTag(java.lang.String)
 	 */
 	public void endTag(String tagName) throws PaintException {
 		// In case of null data output nothing:
@@ -327,44 +307,22 @@ public class AjaxPaintTarget implements PaintTarget {
 		append(str);
 	}
 
-	/**
-	 * Prints XML-escaped text.
-	 * 
-	 * @param str
-	 * @throws PaintException
-	 *             if the paint operation failed.
-	 * 
+	/* (non-Javadoc)
+	 * @see com.itmill.toolkit.terminal.web.AjaxPaintTarget#addText(java.lang.String)
 	 */
 	public void addText(String str) throws PaintException {
 		addUIDL(escapeXML(str));
 	}
 
-	/**
-	 * Adds a boolean attribute to component. Atributes must be added before any
-	 * content is written.
-	 * 
-	 * @param name
-	 *            the Attribute name.
-	 * @param value
-	 *            the Attribute value.
-	 * @throws PaintException
-	 *             if the paint operation failed.
+	/* (non-Javadoc)
+	 * @see com.itmill.toolkit.terminal.web.AjaxPaintTarget#addAttribute(java.lang.String, boolean)
 	 */
 	public void addAttribute(String name, boolean value) throws PaintException {
 		addAttribute(name, String.valueOf(value));
 	}
 
-	/**
-	 * Adds a resource attribute to component. Atributes must be added before
-	 * any content is written.
-	 * 
-	 * @param name
-	 *            the Attribute name.
-	 * @param value
-	 *            the Attribute value.
-	 * 
-	 * @throws PaintException
-	 *             if the paint operation failed.
+	/* (non-Javadoc)
+	 * @see com.itmill.toolkit.terminal.web.AjaxPaintTarget#addAttribute(java.lang.String, com.itmill.toolkit.terminal.Resource)
 	 */
 	public void addAttribute(String name, Resource value) throws PaintException {
 
@@ -394,49 +352,22 @@ public class AjaxPaintTarget implements PaintTarget {
 
 	}
 
-	/**
-	 * Adds a integer attribute to component. Atributes must be added before any
-	 * content is written.
-	 * 
-	 * @param name
-	 *            the Attribute name.
-	 * @param value
-	 *            the Attribute value.
-	 * 
-	 * @throws PaintException
-	 *             if the paint operation failed.
+	/* (non-Javadoc)
+	 * @see com.itmill.toolkit.terminal.web.AjaxPaintTarget#addAttribute(java.lang.String, int)
 	 */
 	public void addAttribute(String name, int value) throws PaintException {
 		addAttribute(name, String.valueOf(value));
 	}
 
-	/**
-	 * Adds a long attribute to component. Atributes must be added before any
-	 * content is written.
-	 * 
-	 * @param name
-	 *            the Attribute name.
-	 * @param value
-	 *            the Attribute value.
-	 * 
-	 * @throws PaintException
-	 *             if the paint operation failed.
+	/* (non-Javadoc)
+	 * @see com.itmill.toolkit.terminal.web.AjaxPaintTarget#addAttribute(java.lang.String, long)
 	 */
 	public void addAttribute(String name, long value) throws PaintException {
 		addAttribute(name, String.valueOf(value));
 	}
 
-	/**
-	 * Adds a string attribute to component. Atributes must be added before any
-	 * content is written.
-	 * 
-	 * @param name
-	 *            the Boolean attribute name.
-	 * @param value
-	 *            the Boolean attribute value.
-	 * 
-	 * @throws PaintException
-	 *             if the paint operation failed.
+	/* (non-Javadoc)
+	 * @see com.itmill.toolkit.terminal.web.AjaxPaintTarget#addAttribute(java.lang.String, java.lang.String)
 	 */
 	public void addAttribute(String name, String value) throws PaintException {
 		// In case of null data output nothing:
@@ -456,21 +387,11 @@ public class AjaxPaintTarget implements PaintTarget {
 		append(" " + name + "=\"" + escapeXML(value) + "\"");
 		
 		if (customLayoutArgumentsOpen && "style".equals(name))
-			preCachedResources.add("layout/" + value + ".html");
+			getPreCachedResources().add("layout/" + value + ".html");
 	}
 
-	/**
-	 * Adds a string type variable.
-	 * 
-	 * @param owner
-	 *            the Listener for variable changes.
-	 * @param name
-	 *            the Variable name.
-	 * @param value
-	 *            the Variable initial value.
-	 * 
-	 * @throws PaintException
-	 *             if the paint operation failed.
+	/* (non-Javadoc)
+	 * @see com.itmill.toolkit.terminal.web.AjaxPaintTarget#addVariable(com.itmill.toolkit.terminal.VariableOwner, java.lang.String, java.lang.String)
 	 */
 	public void addVariable(VariableOwner owner, String name, String value)
 			throws PaintException {
@@ -483,18 +404,8 @@ public class AjaxPaintTarget implements PaintTarget {
 		endTag("string");
 	}
 
-	/**
-	 * Adds a int type variable.
-	 * 
-	 * @param owner
-	 *            the Listener for variable changes.
-	 * @param name
-	 *            the Variable name.
-	 * @param value
-	 *            the Variable initial value.
-	 * 
-	 * @throws PaintException
-	 *             if the paint operation failed.
+	/* (non-Javadoc)
+	 * @see com.itmill.toolkit.terminal.web.AjaxPaintTarget#addVariable(com.itmill.toolkit.terminal.VariableOwner, java.lang.String, int)
 	 */
 	public void addVariable(VariableOwner owner, String name, int value)
 			throws PaintException {
@@ -507,18 +418,8 @@ public class AjaxPaintTarget implements PaintTarget {
 		endTag("integer");
 	}
 
-	/**
-	 * Adds a boolean type variable.
-	 * 
-	 * @param owner
-	 *            the Listener for variable changes.
-	 * @param name
-	 *            the Variable name.
-	 * @param value
-	 *            the Variable initial value.
-	 * 
-	 * @throws PaintException
-	 *             if the paint operation failed.
+	/* (non-Javadoc)
+	 * @see com.itmill.toolkit.terminal.web.AjaxPaintTarget#addVariable(com.itmill.toolkit.terminal.VariableOwner, java.lang.String, boolean)
 	 */
 	public void addVariable(VariableOwner owner, String name, boolean value)
 			throws PaintException {
@@ -531,18 +432,8 @@ public class AjaxPaintTarget implements PaintTarget {
 		endTag("boolean");
 	}
 
-	/**
-	 * Adds a string array type variable.
-	 * 
-	 * @param owner
-	 *            the Listener for variable changes.
-	 * @param name
-	 *            the Variable name.
-	 * @param value
-	 *            the Variable initial value.
-	 * 
-	 * @throws PaintException
-	 *             if the paint operation failed.
+	/* (non-Javadoc)
+	 * @see com.itmill.toolkit.terminal.web.AjaxPaintTarget#addVariable(com.itmill.toolkit.terminal.VariableOwner, java.lang.String, java.lang.String[])
 	 */
 	public void addVariable(VariableOwner owner, String name, String[] value)
 			throws PaintException {
@@ -556,16 +447,8 @@ public class AjaxPaintTarget implements PaintTarget {
 		endTag("array");
 	}
 
-	/**
-	 * Adds a upload stream type variable.
-	 * 
-	 * @param owner
-	 *            the Listener for variable changes.
-	 * @param name
-	 *            the Variable name.
-	 * 
-	 * @throws PaintException
-	 *             if the paint operation failed.
+	/* (non-Javadoc)
+	 * @see com.itmill.toolkit.terminal.web.AjaxPaintTarget#addUploadStreamVariable(com.itmill.toolkit.terminal.VariableOwner, java.lang.String)
 	 */
 	public void addUploadStreamVariable(VariableOwner owner, String name)
 			throws PaintException {
@@ -577,18 +460,8 @@ public class AjaxPaintTarget implements PaintTarget {
 		endTag("uploadstream");
 	}
 
-	/**
-	 * Prints the single text section.
-	 * 
-	 * Prints full text section. The section data is escaped from XML tags and
-	 * surrounded by XML start and end-tags.
-	 * 
-	 * @param sectionTagName
-	 *            the name of the tag.
-	 * @param sectionData
-	 *            the section data to be printed.
-	 * @throws PaintException
-	 *             if the paint operation failed.
+	/* (non-Javadoc)
+	 * @see com.itmill.toolkit.terminal.web.AjaxPaintTarget#addSection(java.lang.String, java.lang.String)
 	 */
 	public void addSection(String sectionTagName, String sectionData)
 			throws PaintException {
@@ -597,13 +470,8 @@ public class AjaxPaintTarget implements PaintTarget {
 		endTag(sectionTagName);
 	}
 
-	/**
-	 * Adds XML directly to UIDL.
-	 * 
-	 * @param xml
-	 *            the Xml to be added.
-	 * @throws PaintException
-	 *             if the paint operation failed.
+	/* (non-Javadoc)
+	 * @see com.itmill.toolkit.terminal.web.AjaxPaintTarget#addUIDL(java.lang.String)
 	 */
 	public void addUIDL(String xml) throws PaintException {
 
@@ -622,20 +490,8 @@ public class AjaxPaintTarget implements PaintTarget {
 
 	}
 
-	/**
-	 * Adds XML section with namespace.
-	 * 
-	 * @param sectionTagName
-	 *            the name of the tag.
-	 * @param sectionData
-	 *            the section data.
-	 * @param namespace
-	 *            the namespace to be added.
-	 * @throws PaintException
-	 *             if the paint operation failed.
-	 * 
-	 * @see com.itmill.toolkit.terminal.PaintTarget#addXMLSection(String,
-	 *      String, String)
+	/* (non-Javadoc)
+	 * @see com.itmill.toolkit.terminal.web.AjaxPaintTarget#addXMLSection(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	public void addXMLSection(String sectionTagName, String sectionData,
 			String namespace) throws PaintException {
@@ -656,11 +512,8 @@ public class AjaxPaintTarget implements PaintTarget {
 		endTag(sectionTagName);
 	}
 
-	/**
-	 * Gets the UIDL already printed to stream. Paint target must be closed
-	 * before the <code>getUIDL</code> can be called.
-	 * 
-	 * @return the UIDL.
+	/* (non-Javadoc)
+	 * @see com.itmill.toolkit.terminal.web.AjaxPaintTarget#getUIDL()
 	 */
 	public String getUIDL() {
 		if (this.closed) {
@@ -670,14 +523,8 @@ public class AjaxPaintTarget implements PaintTarget {
 				"Tried to read UIDL from open PaintTarget");
 	}
 
-	/**
-	 * Closes the paint target. Paint target must be closed before the
-	 * <code>getUIDL</code> can be called. Subsequent attempts to write to
-	 * paint target. If the target was already closed, call to this function is
-	 * ignored. will generate an exception.
-	 * 
-	 * @throws PaintException
-	 *             if the paint operation failed.
+	/* (non-Javadoc)
+	 * @see com.itmill.toolkit.terminal.web.AjaxPaintTarget#close()
 	 */
 	public void close() throws PaintException {
 		if (!this.closed) {
@@ -697,9 +544,8 @@ public class AjaxPaintTarget implements PaintTarget {
 		this.uidlBuffer.flush();
 	}
 
-	/**
-	 * @see com.itmill.toolkit.terminal.PaintTarget#startTag(com.itmill.toolkit.terminal.Paintable,
-	 *      java.lang.String)
+	/* (non-Javadoc)
+	 * @see com.itmill.toolkit.terminal.web.AjaxPaintTarget#startTag(com.itmill.toolkit.terminal.Paintable, java.lang.String)
 	 */
 	public boolean startTag(Paintable paintable, String tag)
 			throws PaintException {
@@ -710,8 +556,8 @@ public class AjaxPaintTarget implements PaintTarget {
 		return false;
 	}
 
-	/**
-	 * @see com.itmill.toolkit.terminal.PaintTarget#addCharacterData(java.lang.String)
+	/* (non-Javadoc)
+	 * @see com.itmill.toolkit.terminal.web.AjaxPaintTarget#addCharacterData(java.lang.String)
 	 */
 	public void addCharacterData(String text) throws PaintException {
 		ensureClosedTag();
@@ -719,35 +565,34 @@ public class AjaxPaintTarget implements PaintTarget {
 			append("<![CDATA[" + text + "]]>");
 	}
 
-	/**
-	 * 
-	 * @return
+	/* (non-Javadoc)
+	 * @see com.itmill.toolkit.terminal.web.AjaxPaintTarget#isTrackPaints()
 	 */
 	public boolean isTrackPaints() {
 		return trackPaints;
 	}
 
-	/**
-	 * Gets the number of paints.
-	 * 
-	 * @return the number of paints.
+	/* (non-Javadoc)
+	 * @see com.itmill.toolkit.terminal.web.AjaxPaintTarget#getNumberOfPaints()
 	 */
 	public int getNumberOfPaints() {
 		return numberOfPaints;
 	}
 
-	/**
-	 * Sets the tracking to true or false.
-	 * 
-	 * This also resets the number of paints.
-	 * 
-	 * @param enabled
-	 *            is the tracking is enabled or not.
-	 * @see #getNumberOfPaints()
+	/* (non-Javadoc)
+	 * @see com.itmill.toolkit.terminal.web.AjaxPaintTarget#setTrackPaints(boolean)
 	 */
 	public void setTrackPaints(boolean enabled) {
 		this.trackPaints = enabled;
 		this.numberOfPaints = 0;
+	}
+
+	public void setPreCachedResources(Set preCachedResources) {
+		this.preCachedResources = preCachedResources;
+	}
+
+	public Set getPreCachedResources() {
+		return preCachedResources;
 	}
 
 }

@@ -566,7 +566,7 @@ public class ApplicationServlet extends HttpServlet implements
 				String resourceId = request.getPathInfo();
 				if (resourceId != null && resourceId.startsWith(AJAX_UIDL_URI)) {
 					getApplicationManager(application).handleUidlRequest(
-							request, response, themeSource);
+							request, response, themeSource, true);
 					return;
 				}
 
