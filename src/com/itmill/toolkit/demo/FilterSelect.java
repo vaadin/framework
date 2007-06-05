@@ -43,6 +43,8 @@ public class FilterSelect extends com.itmill.toolkit.Application {
 		 */
 		Window main = new Window("Filter select demo");
 		setMainWindow(main);
+		
+		setTheme("corporate");
 
 		// default filter
 		Select s1 = new Select();
