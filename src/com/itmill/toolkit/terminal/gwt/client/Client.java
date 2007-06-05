@@ -17,7 +17,6 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.xml.client.Node;
 import com.itmill.toolkit.terminal.gwt.client.ui.Component;
 import com.itmill.toolkit.terminal.gwt.client.ui.RootWindow;
 
@@ -86,7 +85,15 @@ public class Client implements EntryPoint {
 				public void onResponseReceived(Request request, Response response) {
 					console.log("Got response:");
 					JSONValue update = JSONParser.parse("("+response.getText()+")");
+					
+					// TEST 
 					console.log(update.toString());
+					try {
+					UIDL u = new UIDL((JSONObject)update);
+					console.log("\nUIDL = " + u);
+					} catch (Throwable e) {
+						e.printStackTrace();
+					}
 					handleUIDL(update.isObject());
 				}
 			});
