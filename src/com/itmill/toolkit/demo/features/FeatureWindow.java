@@ -75,6 +75,7 @@ public class FeatureWindow extends Feature implements Window.CloseListener {
 				"None", "Minimal" });
 		// Disabled, not applicable for default theme
 		windowProperties.getField("border").setEnabled(false);
+		windowProperties.getField("scrollable").setEnabled(false);
 
 		propertyPanel.addProperties("Window Properties", windowProperties);
 		windowProperties.getField("width").setDescription(
