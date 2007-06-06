@@ -23,13 +23,11 @@ public class UIDL {
 	
 	public String getTag() {
 		Set keys = json.keySet();
-		if (keys.size() != 1) 
-			throw new IllegalStateException("Expected JSON Object to contain exactly one key, now contains "+ json.keySet());
 		return "" + keys.iterator().next();
 	}
 	
 	public String getAttribute(String name) {
-		JSONObject attrs = (JSONObject) json.get("attr");
+		JSONObject attrs = (JSONObject) json.get("a");
 		if (attrs == null) return null;
 		return ""+ attrs.get(name);
 	}
@@ -38,7 +36,7 @@ public class UIDL {
 		
 		return new Iterator() {
 			
-			JSONArray children = (JSONArray) ((JSONObject)json.get(getTag())).get("children");
+			JSONArray children = (JSONArray) ((JSONObject)json.get(getTag())).get("c");
 			int index=0;
 		
 			public void remove() {
