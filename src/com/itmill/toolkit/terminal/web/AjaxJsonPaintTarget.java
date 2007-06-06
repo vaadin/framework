@@ -130,23 +130,9 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 		// Adds document declaration
 
 		// Adds UIDL start tag and its attributes
-		tag = new JsonTag();
-		openJsonTags.push(tag);
-		append("{");
-
+		tag = new JsonTag("changes");
 	}
 
-	/**
-	 * Method append.This method is thread safe.
-	 * 
-	 * @param string
-	 *            the text to insert.
-	 */
-	private void append(String string) {
-		uidlBuffer.print(string);
-	}
-
-	
 	public void startTag(String tagName) throws PaintException {
 		startTag(tagName, false);
 	}
@@ -187,23 +173,8 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 		mOpenTags.push(tagName);
 		openJsonTags.push(tag);
 		
+		tag = new JsonTag(tagName);
 		
-		if(isChildNode && !tag.childrenArrayOpen) {
-			append(tag.startField());
-			tag.openChildrenArray();
-		}
-		if(!isChildNode && tag.childrenArrayOpen)
-			tag.closeChildrenArray();
-
-		append(tag.startField());
-		tag = new JsonTag();
-		if(isChildNode) {
-			append("{");
-			tag.setChildNode(true);
-		} else {
-			// Prints the tag with attributes
-			append("" + tagName +": {");
-		}
 
 		mTagArgumentListOpen = true;
 		
@@ -242,16 +213,10 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 		if (!tagName.equalsIgnoreCase(lastTag))
 			throw new PaintException("Invalid UIDL: wrong ending tag: '"
 					+ tagName + "' expected: '" + lastTag + "'.");
+		
+		parent.addData(tag.getJSON());
 
-		if(tag.childrenArrayOpen)
-			tag.closeChildrenArray();
-		append(tag.getData());
-		append(tag.attributesAsJsonObject());
-		append(tag.variablesAsJsonObject());
-		// Writes the end (closing) tag
-		append("}");
 		tag = parent;
-		flush();
 	}
 
 	/**
@@ -377,7 +342,7 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 	 * 
 	 */
 	public void addText(String str) throws PaintException {
-		tag.addData(escapeJSON(str));
+		tag.addData("\"" + escapeJSON(str) + "\"");
 	}
 
 	/**
@@ -392,7 +357,7 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 	 *             if the paint operation failed.
 	 */
 	public void addAttribute(String name, boolean value) throws PaintException {
-		tag.addAttribute( name + ":" + (value ? "true" : "false"));
+		tag.addAttribute("\"" + name + "\":" + (value ? "true" : "false"));
 	}
 
 	/**
@@ -486,7 +451,7 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 					"Parameters must be non-null strings");
 
 
-		tag.addAttribute( name + ": \"" + escapeJSON(value) + "\"");
+		tag.addAttribute("\"" + name + "\": \"" + escapeJSON(value) + "\"");
 		
 	}
 
@@ -599,8 +564,7 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 	 */
 	public void addSection(String sectionTagName, String sectionData)
 			throws PaintException {
-		tag.startField();
-		append(sectionTagName + ":\"" + escapeJSON(sectionData) + "\"");
+		tag.addData("{\"" + sectionTagName + "\":\"" + escapeJSON(sectionData) + "\"}");
 	}
 
 	/**
@@ -684,10 +648,9 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 	 *             if the paint operation failed.
 	 */
 	public void close() throws PaintException {
-		append("}");
 		if (!this.closed) {
+			uidlBuffer.append(tag.getJSON());
 			flush();
-
 			// Close all
 			this.uidlBuffer.close();
 			this.closed = true;
@@ -711,7 +674,6 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 		String id = manager.getPaintableId(paintable);
 		paintable.addListener(manager);
 		addAttribute("id", id);
-		addSection("t",tagName);
 		return false;
 	}
 
@@ -761,9 +723,11 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 	 *
 	 */
 	class JsonTag {
-		boolean firstField = true;
+		boolean firstField = false;
 		
 		Vector variables = new Vector();
+		
+		Vector children = new Vector();
 
 		Vector attr = new Vector();
 		
@@ -774,16 +738,35 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 		public boolean childrenArrayOpen = false;
 
 		private boolean childNode = false;
+
+		private boolean tagClosed = false;
 		
-		public JsonTag() {
-			
+		public JsonTag(String tagName) {
+			data.append("[\"" + tagName +"\"");
 		}
 		
+		private void closeTag() {
+			if(!tagClosed) {
+				data.append(attributesAsJsonObject());
+				data.append(getData());
+				// Writes the end (closing) tag
+				data.append("]");
+				this.tagClosed  = true;
+			}
+		}
+		
+		public String getJSON() {
+			if(!tagClosed) {
+				this.closeTag();
+			}
+			return data.toString();
+		}
+
 		public void openChildrenArray() {
 			if(!childrenArrayOpen) {
-				append("c : [");
+//				append("c : [");
 				childrenArrayOpen = true;
-				firstField = true;
+//				firstField = true;
 			}
 		}
 		
@@ -806,8 +789,8 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 		}
 
 		public void closeChildrenArray() {
-			append("]");
-			firstField = false;
+//			append("]");
+//			firstField = false;
 		}
 
 		public void setChildNode(boolean b) {
@@ -827,32 +810,39 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 			}
 		}
 		
+		/**
+		 * 
+		 * @param s json string, object or array
+		 */
 		public void addData(String s) {
-			data.append(s);
+			children.add(s);
 		}
 		
 		public String getData() {
-			if(data.length() == 0)
-				return "";
-			return startField() + "d:\"" + escapeJSON(data.toString()) +"\"";
+			StringBuffer buf = new StringBuffer();
+			Iterator it = children.iterator();
+			while(it.hasNext()) {
+				buf.append(startField());
+				buf.append(it.next());
+			}
+			return buf.toString();
 		}
 		
 		public void addAttribute(String jsonNode) {
 			attr.add(jsonNode);
 		}
 		
-		public String attributesAsJsonObject() {
-			if(attr.size() == 0)
-				return "";
+		private String attributesAsJsonObject() {
 			StringBuffer buf = new StringBuffer();
 			buf.append(startField());
-			buf.append("a:{");
+			buf.append("{");
 			for (Iterator iter = attr.iterator(); iter.hasNext();) {
 				String element = (String) iter.next();
 				buf.append(element);
 				if(iter.hasNext())
 					buf.append(",");
 			}
+			buf.append(tag.variablesAsJsonObject());
 			buf.append("}");
 			return buf.toString();
 		}
@@ -861,13 +851,14 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 			variables.add(v);
 		}
 		
-		public String variablesAsJsonObject() {
+		private String variablesAsJsonObject() {
 			if(variables.size() == 0)
 				return "";
 			StringBuffer buf = new StringBuffer();
 			buf.append(startField());
-			buf.append("v:{");
-			for (Iterator iter = variables.iterator(); iter.hasNext();) {
+			buf.append("\"v\":{");
+			Iterator iter = variables.iterator();
+			while (iter.hasNext()) {
 				Variable element = (Variable) iter.next();
 				buf.append(element.getJsonPresentation());
 				if(iter.hasNext())
@@ -911,9 +902,7 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 		}
 
 		public String getJsonPresentation() {
-			return name +":{name:\""+name+"\",id:\"" +
-					code+"\",type:\"boolean\", value : " 
-			+ (value == true ? "true}" : "false}");
+			return "\""+name +"\":" + (value == true ? "true" : "false");
 		}
 		
 	}
@@ -929,9 +918,7 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 		}
 
 		public String getJsonPresentation() {
-			return name +":{name:\""+name+"\",id:\"" +
-					code+"\",type:\"string\", value : \"" 
-					+ value + "\"}";
+			return "\""+name +"\":\""	+ value + "\"";
 		}
 		
 	}
@@ -947,9 +934,7 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 		}
 
 		public String getJsonPresentation() {
-			return name +":{name:\""+name+"\",id:\"" +
-					code+"\",type:\"int\", value : " 
-			+ value + "}";
+			return "\""+name +"\":"	+ value ;
 		}
 	}
 
@@ -964,16 +949,14 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 		}
 
 		public String getJsonPresentation() {
-			String pres =  name +":{name:\""+name+"\",id:\"" +
-					code+"\",type:\"array\", value : [";
+			String pres =  "\""+name +"\":[";
 			for (int i = 0; i < value.length;) {
 				pres += value[i];
 				i++;
 				if(i < value.length)
 					pres += ",";
 			}
-			pres += "]}";
-			
+			pres += "]";
 			return pres;
 		}
 	}
