@@ -100,13 +100,13 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 	 * 
 	 * @param variableMap
 	 * @param manager
-	 * @param output
+	 * @param outWriter
 	 *            A character-output stream.
 	 * @throws PaintException
 	 *             if the paint operation failed.
 	 */
 	public AjaxJsonPaintTarget(AjaxVariableMap variableMap,
-			AjaxApplicationManager manager, OutputStream output)
+			AjaxApplicationManager manager, PrintWriter outWriter)
 			throws PaintException {
 
 		this.manager = manager;
@@ -115,12 +115,7 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 
 
 		// Sets the target for UIDL writing
-		try {
-			this.uidlBuffer = new PrintWriter(new BufferedWriter(
-					new OutputStreamWriter(output, "UTF-8")));
-		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException("Internal error");
-		}
+		this.uidlBuffer = outWriter;
 
 		// Initialize tag-writing
 		mOpenTags = new Stack();
@@ -130,7 +125,6 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 		// Adds document declaration
 
 		// Adds UIDL start tag and its attributes
-		tag = new JsonTag("changes");
 	}
 
 	public void startTag(String tagName) throws PaintException {
@@ -166,15 +160,15 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 		if (this.closed)
 			throw new PaintException(
 					"Attempted to write to a closed PaintTarget.");
-
-		tagName = tag.postfixChildtag(tagName, true);
 		
+		if(tag != null) {
+			openJsonTags.push(tag);
+		}
+
 		// Checks tagName and attributes here
 		mOpenTags.push(tagName);
-		openJsonTags.push(tag);
 		
 		tag = new JsonTag(tagName);
-		
 
 		mTagArgumentListOpen = true;
 		
@@ -203,20 +197,25 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 			throw new PaintException(
 					"Attempted to write to a closed PaintTarget.");
 		
-		JsonTag parent = (JsonTag) openJsonTags.pop();
-		if(parent != null)
-			tagName = parent.postfixChildtag(tagName, false);
+		if(openJsonTags.size() > 0) {
+			JsonTag parent = (JsonTag) openJsonTags.pop();
+			if(parent != null)
+				tagName = parent.postfixChildtag(tagName, false);
 
-		String lastTag = "";
+			String lastTag = "";
 
-		lastTag = (String) mOpenTags.pop();
-		if (!tagName.equalsIgnoreCase(lastTag))
-			throw new PaintException("Invalid UIDL: wrong ending tag: '"
-					+ tagName + "' expected: '" + lastTag + "'.");
-		
-		parent.addData(tag.getJSON());
+			lastTag = (String) mOpenTags.pop();
+			if (!tagName.equalsIgnoreCase(lastTag))
+				throw new PaintException("Invalid UIDL: wrong ending tag: '"
+						+ tagName + "' expected: '" + lastTag + "'.");
+			
+			parent.addData(tag.getJSON());
 
-		tag = parent;
+			tag = parent;
+		} else {
+			this.uidlBuffer.print(tag.getJSON());
+			tag = null;
+		}
 	}
 
 	/**
@@ -648,13 +647,10 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 	 *             if the paint operation failed.
 	 */
 	public void close() throws PaintException {
-		if (!this.closed) {
+		if(tag != null)
 			uidlBuffer.append(tag.getJSON());
-			flush();
-			// Close all
-			this.uidlBuffer.close();
-			this.closed = true;
-		}
+		flush();
+		this.closed = true;
 	}
 
 	/**
@@ -949,12 +945,12 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 		}
 
 		public String getJsonPresentation() {
-			String pres =  "\""+name +"\":[";
+			String pres =  "\""+name +"\":[\"";
 			for (int i = 0; i < value.length;) {
 				pres += value[i];
 				i++;
 				if(i < value.length)
-					pres += ",";
+					pres += "\",";
 			}
 			pres += "]";
 			return pres;

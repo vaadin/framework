@@ -28,6 +28,7 @@
 
 package com.itmill.toolkit.terminal.web;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -159,6 +160,11 @@ public class AjaxApplicationManager implements
 				|| request.getSession().isNew();
 
 		OutputStream out = response.getOutputStream();
+		PrintWriter outWriter = new PrintWriter(new BufferedWriter(
+				new OutputStreamWriter(out, "UTF-8")));
+		
+		outWriter.print(")/*{"); // some dirt to prevent cross site scripting vulnerabilities
+
 		try {
 
 			// Is this a download request from application
@@ -201,33 +207,12 @@ public class AjaxApplicationManager implements
 					if (window == null)
 						return;
 
-					if(isJson) {
-						// Sets the response type
-						response.setContentType("application/json; charset=UTF-8");
-						paintTarget = new AjaxJsonPaintTarget(getVariableMap(), 
-								this, out);
-					} else {
-						response.setContentType("application/xml; charset=UTF-8");
-						paintTarget = new AjaxXmlPaintTarget(getVariableMap(), 
-								this, out);
-					}
-
-					// Render the removed windows
-					Set removed = new HashSet(getRemovedWindows());
-					if (removed.size() > 0) {
-						for (Iterator i = removed.iterator(); i.hasNext();) {
-							Window w = (Window) i.next();
-							paintTarget.startTag("change");
-							paintTarget.addAttribute("format", "uidl");
-							String pid = getPaintableId(w);
-							paintTarget.addAttribute("pid", pid);
-							paintTarget.addAttribute("windowname", w.getName());
-							paintTarget.addAttribute("visible", false);
-							paintTarget.endTag("change");
-							removedWindowNotified(w);
-
-						}
-					}
+					// Sets the response type
+					response.setContentType("application/json; charset=UTF-8");
+					outWriter.print("\"changes\":[");
+					
+					paintTarget = new AjaxJsonPaintTarget(getVariableMap(), 
+							this, outWriter);
 
 					// Paints components
 					Set paintables;
@@ -321,56 +306,82 @@ public class AjaxApplicationManager implements
 						}
 					}
 
+					((AjaxPaintTarget) paintTarget).close();
+					outWriter.print("]"); // close changes
+
+
+					// Render the removed windows
+					// TODO refactor commented area to send some meta instructions to close window
+//					Set removed = new HashSet(getRemovedWindows());
+//					if (removed.size() > 0) {
+//						for (Iterator i = removed.iterator(); i.hasNext();) {
+//							Window w = (Window) i.next();
+//							paintTarget.startTag("change");
+//							paintTarget.addAttribute("format", "uidl");
+//							String pid = getPaintableId(w);
+//							paintTarget.addAttribute("pid", pid);
+//							paintTarget.addAttribute("windowname", w.getName());
+//							paintTarget.addAttribute("visible", false);
+//							paintTarget.endTag("change");
+//							removedWindowNotified(w);
+//
+//						}
+//					}
+
+
+					
+                	outWriter.print(", meta : {");
+                	boolean metaOpen = false;
+
+					
+                    // .. or initializion (first uidl-request)
+                    if(application.ajaxInit()) {
+                    	outWriter.print("\"appInit\":true");
+                    }
                     // add meta instruction for client to set focus if it is set
                     Paintable f = (Paintable) application.consumeFocus();
-                    // .. or initializion (first uidl-request)
-                    boolean init = application.ajaxInit();
-                    if(init || f != null) {
-                        paintTarget.startTag("meta");
-                        if(init)
-                        	paintTarget.addAttribute("appInit", true);
-                        if(f != null) {
-                        	paintTarget.startTag("focus");
-                        	paintTarget.addAttribute("pid", getPaintableId(f));
-                        	paintTarget.endTag("focus");
-                        }
-                        paintTarget.endTag("meta");
+                    if(f != null) {
+                    	if(metaOpen)
+                    		outWriter.append(",");
+                    	outWriter.write("\"focus\":\""+ getPaintableId(f) +"\"");
                     }
+                	outWriter.print("}");
 
                     // Precache custom layouts
+                	// TODO Rewrite this to print to outWriter a custom json attribute. Don't use paintTarget !!
                     // TODO Does not support theme-get param or different themes in different windows -> Allways preload layouts with the theme specified by the applications
-                    String themeName = application.getTheme() != null ? application.getTheme() : ApplicationServlet.DEFAULT_THEME;
-                    // TODO We should only precache the layouts that are not cached already
-                    for (Iterator i=((AjaxPaintTarget) paintTarget).getPreCachedResources().iterator(); i.hasNext();) {
-                    	String resource = (String) i.next();
-                    	InputStream is = null;
-                    	try {
-                			is = themeSource.getResource(themeName + "/" +  resource);
-                		} catch (ThemeSource.ThemeException e) {
-                			Log.info(e.getMessage());
-                		}
-                    	if (is != null) {
-                    		paintTarget.startTag("precache");
-                    		paintTarget.addAttribute("resource", resource);
-                    		StringBuffer layout = new StringBuffer();
-
-                    		try {
-                        		InputStreamReader r = new InputStreamReader(is);
-                    				char[] buffer = new char[20000];
-                    				int charsRead = 0;
-                    				while ((charsRead = r.read(buffer)) > 0)
-                    					layout.append(buffer, 0, charsRead);
-                    				r.close();
-                    		} catch (java.io.IOException e) {
-                    			Log.info("Resource transfer failed:  " + request.getRequestURI()
-                    					+ ". (" + e.getMessage() + ")");
-                    		}
-                    		paintTarget.addCharacterData(layout.toString());
-                    		paintTarget.endTag("precache");
-                    	}
-                    }
-                    
-					((AjaxPaintTarget) paintTarget).close();
+//                    String themeName = application.getTheme() != null ? application.getTheme() : ApplicationServlet.DEFAULT_THEME;
+//                    // TODO We should only precache the layouts that are not cached already
+//                    for (Iterator i=((AjaxPaintTarget) paintTarget).getPreCachedResources().iterator(); i.hasNext();) {
+//                    	String resource = (String) i.next();
+//                    	InputStream is = null;
+//                    	try {
+//                			is = themeSource.getResource(themeName + "/" +  resource);
+//                		} catch (ThemeSource.ThemeException e) {
+//                			Log.info(e.getMessage());
+//                		}
+//                    	if (is != null) {
+//                    		paintTarget.startTag("precache");
+//                    		paintTarget.addAttribute("resource", resource);
+//                    		StringBuffer layout = new StringBuffer();
+//
+//                    		try {
+//                        		InputStreamReader r = new InputStreamReader(is);
+//                    				char[] buffer = new char[20000];
+//                    				int charsRead = 0;
+//                    				while ((charsRead = r.read(buffer)) > 0)
+//                    					layout.append(buffer, 0, charsRead);
+//                    				r.close();
+//                    		} catch (java.io.IOException e) {
+//                    			Log.info("Resource transfer failed:  " + request.getRequestURI()
+//                    					+ ". (" + e.getMessage() + ")");
+//                    		}
+//                    		paintTarget.addCharacterData(layout.toString());
+//                    		paintTarget.endTag("precache");
+//                    	}
+//                    }
+                	outWriter.flush();
+                    outWriter.close();
 					out.flush();
 				} else {
 
