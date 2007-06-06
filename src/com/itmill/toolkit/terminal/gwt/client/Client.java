@@ -1,8 +1,6 @@
 package com.itmill.toolkit.terminal.gwt.client;
 
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Set;
 import java.util.Vector;
 
 import com.google.gwt.core.client.EntryPoint;
@@ -11,17 +9,17 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
-import com.google.gwt.http.client.URL;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.itmill.toolkit.terminal.gwt.client.ui.Component;
-import com.itmill.toolkit.terminal.gwt.client.ui.RootWindow;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
+ * 
+ * TODO IDEA: Should be extend Widget here !?!?!
  */
 public class Client implements EntryPoint {
 
@@ -33,13 +31,13 @@ public class Client implements EntryPoint {
 
 	private Console console;
 
-	private RootWindow rw;
-
 	private Vector pendingVariables = new Vector();
 
-	private HashMap components = new HashMap();
+	private HashMap paintables = new HashMap();
 
 	private int requestCount = 0;
+
+	private WidgetFactory widgetFactory = new DefaultWidgetFactory();
 
 	/**
 	 * This is the entry point method.
@@ -47,10 +45,6 @@ public class Client implements EntryPoint {
 	public void onModuleLoad() {
 
 		console = new Console(RootPanel.get("itmtk-loki"));
-
-		console.log("muutos");
-
-		console.log("Starting app");
 
 		console.log("Makin fake UIDL Request to fool servlet of an app init");
 		RequestBuilder rb2 = new RequestBuilder(RequestBuilder.GET, appUri);
@@ -71,7 +65,6 @@ public class Client implements EntryPoint {
 
 			});
 		} catch (RequestException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 
@@ -89,29 +82,9 @@ public class Client implements EntryPoint {
 
 				public void onResponseReceived(Request request,
 						Response response) {
-					console.log("Got response:" + response.getText() + "\n");
-					JSONValue update = JSONParser.parse(response.getText()
-							.substring(3)
-							+ "}");
-
-					// TEST
-					console.log(update.toString());
-					JSONArray changes = (JSONArray) ((JSONObject) update)
-							.get("changes");
-
-					for (int i = 0; i < changes.size(); i++) {
-						try {
-							console.log("Change " + i);
-							UIDL u = new UIDL((JSONArray) changes.get(i));
-							console.log("\nUIDL = " + u);
-						} catch (Throwable e) {
-							e.printStackTrace();
-						}
-
-					}
-
-					// handleUIDL(update.isObject());
+					handleReceivedJSONMessage(response);
 				}
+
 			});
 			console.log("Request sent");
 
@@ -120,97 +93,111 @@ public class Client implements EntryPoint {
 		}
 	}
 
-	private void handleUIDL(JSONObject update) {
-		JSONObject changes;
-		if (update.containsKey("meta")) {
-			JSONObject meta = update.get("meta").isObject();
-		}
+	private void handleReceivedJSONMessage(Response response) {
+		JSONValue json = JSONParser
+				.parse(response.getText().substring(3) + "}");
 
-		if ((changes = update.isObject()) != null) {
-			Set keys = changes.keySet();
-			Iterator it = keys.iterator();
-			while (it.hasNext()) {
-				String key = (String) it.next();
-				if (key.startsWith("change")) {
-					JSONObject change = changes.get(key).isObject();
-					JSONArray children;
-					if ((children = change.isArray()) != null) {
-						for (int i = 0; i < children.size(); i++) {
-							applyChange(children.get(i).isObject());
-						}
-					}
+		// Process changes
+		JSONArray changes = (JSONArray) ((JSONObject) json).get("changes");
+		for (int i = 0; i < changes.size(); i++) {
+			try {
+				UIDL change = new UIDL((JSONArray) changes.get(i));
+				console.log("Received the following change: " + change);
+				UIDL uidl = change.getChildUIDL(0);
+				Paintable paintable = getPaintable(uidl.getId());
+				if (paintable != null)
+					paintable.updateFromUIDL(uidl, this);
+				else {
+					if (!uidl.getTag().equals("window"))
+						throw new IllegalStateException("Received update for "
+								+ uidl.getTag()
+								+ ", but there is no such paintable ("
+								+ uidl.getId() + ") registered yet.");
+					Widget window = createWidgetFromUIDL(uidl);
+					// We should also handle other windows 
+					RootPanel.get("itmtk-ajax-window").add(window);
 				}
+
+			} catch (Throwable e) {
+				e.printStackTrace();
 			}
-		}
 
-	}
-
-	private void applyChange(JSONObject change) {
-		if (change.get("attr").isObject().get("id").isString().equals("PID0")) {
-			console.log("Rendering main window");
-			// rw = new RootWindow(change, this);
-			rw.setClient(this);
-		} else {
-			// int pid = Component.getIdFromUidl(change);
-			// console.log("Updating node: " + change.getNodeName() + ",
-			// PID:"+pid);
-			// Component c = getPaintable(pid);
-			// c.updateFromUidl(change);
 		}
 	}
 
-	/**
-	 * Queues a changed variable to be sent to server
-	 * 
-	 * @param variable
-	 */
-	public void updateVariable(Variable variable) {
-		// remove variable first so we will maintain the correct order (in case
-		// of "double change")
-		pendingVariables.remove(variable);
-		pendingVariables.add(variable);
+	public void registerPaintable(String id, Paintable paintable) {
+		paintables.put(id, paintable);
 	}
 
-	/**
-	 * Sends queued variables to server
-	 * 
-	 */
-	public void flushVariables() {
+	public Paintable getPaintable(String id) {
+		return (Paintable) paintables.get(id);
+	}
 
-		StringBuffer sb = new StringBuffer();
+	public Widget createWidgetFromUIDL(UIDL uidlForChild) {
+		Widget w = widgetFactory.createWidget(uidlForChild.getTag(), null);
+		if (w instanceof Paintable) {
+			registerPaintable(uidlForChild.getId(), (Paintable) w);
+			((Paintable)w).updateFromUIDL(uidlForChild, this);
+		}
+		return w;
+	}
 
-		int i = 0;
-		while (!pendingVariables.isEmpty()) {
-			Variable v = (Variable) pendingVariables.lastElement();
-			pendingVariables.removeElement(v);
-
-			if (i > 0) {
-				sb.append("&");
+	private void addVariableToQueue(String paintableId, String variableName,
+			String encodedValue, boolean immediate) {
+		String id = paintableId + "_" + variableName;
+		for (int i = 0; i < pendingVariables.size(); i += 2)
+			if ((pendingVariables.get(i)).equals(id)) {
+				pendingVariables.remove(i);
+				pendingVariables.remove(i);
+				break;
 			}
-			// encode the characters in the name
-			String encodedName = URL.encodeComponent(v.getId());
-			sb.append(encodedName);
-			sb.append("=");
+		pendingVariables.add(id);
+		pendingVariables.add(encodedValue);
+		if (immediate)
+			sendPendingVariableChanges();
+	}
 
-			// encode the characters in the value
-			String encodedValue = URL.encodeComponent(v.getEncodedValue());
-			sb.append(encodedValue);
+	public void sendPendingVariableChanges() {
+		StringBuffer req = new StringBuffer();
+
+		for (int i = 0; i < pendingVariables.size(); i++) {
+			req.append(pendingVariables.get(i++));
+			req.append("=");
+			req.append(pendingVariables.get(i));
 		}
 
-		String buf = sb.toString();
-
-		console.log("Making following request to server:");
-		console.log(buf);
-
-		makeUidlRequest(buf);
+		pendingVariables.clear();
+		makeUidlRequest(req.toString());
 	}
 
-	public void registerComponent(Component component) {
-		components.put("" + component.getId(), component);
+	private String escapeString(String value) {
+		// TODO
+		return value;
 	}
 
-	public Component getPaintable(int pid) {
-		return (Component) components.get("" + pid);
+	public void updateVariable(String paintableId, String variableName,
+			String newValue, boolean immediate) {
+		addVariableToQueue(paintableId, variableName, escapeString(newValue),
+				immediate);
+	}
+
+	public void updateVariable(String paintableId, String variableName,
+			int newValue, boolean immediate) {
+		addVariableToQueue(paintableId, variableName, "" + newValue, immediate);
+	}
+
+	public void updateVariable(String paintableId, String variableName,
+			boolean newValue, boolean immediate) {
+		addVariableToQueue(paintableId, variableName, newValue ? "true"
+				: "false", immediate);
+	}
+
+	public WidgetFactory getWidgetFactory() {
+		return widgetFactory;
+	}
+
+	public void setWidgetFactory(WidgetFactory widgetFactory) {
+		this.widgetFactory = widgetFactory;
 	}
 
 }

@@ -20,23 +20,21 @@ public class UIDL {
 	}
 
 	public String getId() {
-		return getStringAttribute("id");
+		JSONValue val = ((JSONObject) json.get(1)).get("id");
+		if (val == null)
+			return null;
+		return ((JSONString) val).stringValue();
 	}
 
 	public String getTag() {
-		return json.get(0).toString();
+		return ((JSONString) json.get(0)).stringValue();
 	}
 
 	public String getStringAttribute(String name) {
 		JSONValue val = ((JSONObject) json.get(1)).get(name);
-		return ((JSONString) val).stringValue();
-	}
-
-	public String getAttribute(String name) {
-		JSONValue val = ((JSONObject) json.get(1)).get(name);
 		if (val == null)
-			return null;
-		return val.toString();
+			return "";
+		return ((JSONString) val).stringValue();
 	}
 
 	public Set getAttributeNames() {
@@ -47,19 +45,47 @@ public class UIDL {
 
 	public int getIntAttribute(String name) {
 		JSONValue val = ((JSONObject) json.get(1)).get(name);
+		if (val == null)
+			return 0;
 		double num = ((JSONNumber) val).getValue();
 		return (int) num;
 	}
 
 	public long getLongAttribute(String name) {
 		JSONValue val = ((JSONObject) json.get(1)).get(name);
+		if (val == null)
+			return 0;
 		double num = ((JSONNumber) val).getValue();
 		return (long) num;
 	}
 
 	public boolean getBooleanAttribute(String name) {
 		JSONValue val = ((JSONObject) json.get(1)).get(name);
+		if (val == null)
+			return false;
 		return ((JSONBoolean) val).booleanValue();
+	}
+
+	public boolean hasAttribute(String name) {
+		return ((JSONObject) json.get(1)).get(name) != null;
+	}
+	
+	public UIDL getChildUIDL(int i) {
+
+		JSONValue c = json.get(i + 2);
+		if (c.isArray() != null)
+			return new UIDL(c.isArray());
+		throw new IllegalStateException("Child node " + i
+				+ " is not of type UIDL");
+	}
+
+	public String getChildString(int i) {
+
+		JSONValue c = json.get(i + 2);
+		if (c.isString() != null)
+			return ((JSONString)c).stringValue();
+		throw new IllegalStateException("Child node " + i
+				+ " is not of type String");
 	}
 
 	public Iterator getChildIterator() {
@@ -83,10 +109,8 @@ public class UIDL {
 					else if (c.isObject() != null)
 						return new XML(c.isObject());
 					else
-						throw new IllegalStateException(
-								"Illegal child "
-										+ c + " in tag "
-										+ getTag() + " at index " + index);
+						throw new IllegalStateException("Illegal child " + c
+								+ " in tag " + getTag() + " at index " + index);
 				}
 				return null;
 			}
@@ -103,7 +127,7 @@ public class UIDL {
 
 		for (Iterator i = getAttributeNames().iterator(); i.hasNext();) {
 			String name = i.next().toString();
-			s += " " + name + "=\"" + getAttribute(name) + "\"";
+			s += " " + name + "=" + ((JSONObject) json.get(1)).get(name);
 		}
 
 		s += ">\n";

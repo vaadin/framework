@@ -22,26 +22,4 @@ public final class Console {
 	public void printObject(Object msg) {
 		rp.add((new Label(msg.toString())));
 	}
-
-	
-//	public native void log(String msg) 
-///*-{
-//	console.log(msg);
-//}-*/;
-//
-//	public native void warn(String msg) 
-//	/*-{
-//		console.warn(msg);
-//	}-*/;
-//
-//	public native void error(String msg) 
-//	/*-{
-//		console.error(msg);
-//	}-*/;
-//
-//	public native void printObject(Object msg) 
-//	/*-{
-//		console.dir(msg);
-//	}-*/;
-
 }

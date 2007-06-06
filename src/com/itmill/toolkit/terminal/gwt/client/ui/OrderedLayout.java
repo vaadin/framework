@@ -12,6 +12,7 @@ public class OrderedLayout extends FlowPanel implements Paintable {
 
 	public void updateFromUIDL(UIDL uidl, Client client) {
 		clear();
+		if (uidl.hasAttribute("caption")) setTitle(uidl.getStringAttribute("caption")); 
 		for (Iterator i = uidl.getChildIterator(); i.hasNext();) {
 			UIDL uidlForChild = (UIDL)i.next();
 			Widget child = client.createWidgetFromUIDL(uidlForChild);
