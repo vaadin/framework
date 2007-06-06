@@ -588,8 +588,7 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 	/**
 	 * Prints the single text section.
 	 * 
-	 * Prints full text section. The section data is escaped from XML tags and
-	 * surrounded by XML start and end-tags.
+	 * Prints full text section. The section data is escaped
 	 * 
 	 * @param sectionTagName
 	 *            the name of the tag.
@@ -600,9 +599,8 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 	 */
 	public void addSection(String sectionTagName, String sectionData)
 			throws PaintException {
-		startTag(sectionTagName);
-		addText(sectionData);
-		endTag(sectionTagName);
+		tag.startField();
+		append(sectionTagName + ":\"" + escapeJSON(sectionData) + "\"");
 	}
 
 	/**
@@ -713,7 +711,7 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 		String id = manager.getPaintableId(paintable);
 		paintable.addListener(manager);
 		addAttribute("id", id);
-		addAttribute("type", tagName);
+		addSection("t",tagName);
 		return false;
 	}
 
@@ -783,7 +781,7 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 		
 		public void openChildrenArray() {
 			if(!childrenArrayOpen) {
-				append("children : [");
+				append("c : [");
 				childrenArrayOpen = true;
 				firstField = true;
 			}
@@ -836,7 +834,7 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 		public String getData() {
 			if(data.length() == 0)
 				return "";
-			return startField() + "data:\"" + escapeJSON(data.toString()) +"\"";
+			return startField() + "d:\"" + escapeJSON(data.toString()) +"\"";
 		}
 		
 		public void addAttribute(String jsonNode) {
@@ -848,7 +846,7 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 				return "";
 			StringBuffer buf = new StringBuffer();
 			buf.append(startField());
-			buf.append("attr:{");
+			buf.append("a:{");
 			for (Iterator iter = attr.iterator(); iter.hasNext();) {
 				String element = (String) iter.next();
 				buf.append(element);
@@ -868,7 +866,7 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 				return "";
 			StringBuffer buf = new StringBuffer();
 			buf.append(startField());
-			buf.append("variables:{");
+			buf.append("v:{");
 			for (Iterator iter = variables.iterator(); iter.hasNext();) {
 				Variable element = (Variable) iter.next();
 				buf.append(element.getJsonPresentation());
