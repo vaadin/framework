@@ -764,24 +764,6 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 			}
 		}
 		
-		/**
-		 * This is used to prevent possible collapses on tag names
-		 * @param tagName
-		 * @param start
-		 * @return
-		 */
-		public String postfixChildtag(String tagName, boolean start) {
-			TagCounter i = (TagCounter) childTagCounters.get(tagName);
-			if(i == null) {
-				i = new TagCounter();
-				childTagCounters.put(tagName, i);
-			}
-			tagName = i.postfix(tagName);
-			if(!start)
-				i.increment();
-			return tagName;
-		}
-
 		public void closeChildrenArray() {
 //			append("]");
 //			firstField = false;
