@@ -2,6 +2,7 @@ package com.itmill.toolkit.terminal.gwt.client;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ui.Button;
+import com.itmill.toolkit.terminal.gwt.client.ui.GridLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.Label;
 import com.itmill.toolkit.terminal.gwt.client.ui.OrderedLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.Window;
@@ -18,6 +19,8 @@ public class DefaultWidgetFactory implements WidgetFactory {
 			return new OrderedLayout();
 		if ("label".equals(tag))
 			return new Label();
+		if ("gridlayout".equals(tag))
+			return new GridLayout();
 
 		return null;
 	}
