@@ -199,8 +199,6 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 		
 		if(openJsonTags.size() > 0) {
 			JsonTag parent = (JsonTag) openJsonTags.pop();
-			if(parent != null)
-				tagName = parent.postfixChildtag(tagName, false);
 
 			String lastTag = "";
 
