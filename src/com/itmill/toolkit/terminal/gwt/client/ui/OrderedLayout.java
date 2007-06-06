@@ -10,15 +10,12 @@ import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
 public class OrderedLayout extends FlowPanel implements Paintable {
 
-	String id;
-	
 	public void updateFromUIDL(UIDL uidl, Client client) {
 		clear();
-		id = uidl.getId();
 		for (Iterator i = uidl.getChildIterator(); i.hasNext();) {
 			UIDL uidlForChild = (UIDL)i.next();
-		//	Widget child = client.createWidgetsFromUIDL(uidlForChild);
-		//	add(child);
+			Widget child = client.createWidgetFromUIDL(uidlForChild);
+			add(child);
 		}
 	}
 	
