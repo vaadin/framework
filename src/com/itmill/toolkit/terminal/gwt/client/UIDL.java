@@ -84,8 +84,8 @@ public class UIDL {
 						return new XML(c.isObject());
 					else
 						throw new IllegalStateException(
-								"Illegal child of type "
-										+ c.getClass().toString() + " in tag "
+								"Illegal child "
+										+ c + " in tag "
 										+ getTag() + " at index " + index);
 				}
 				return null;
