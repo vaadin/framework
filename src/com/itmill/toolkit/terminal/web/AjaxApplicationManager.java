@@ -86,7 +86,8 @@ public class AjaxApplicationManager implements
 
 	private HashSet dirtyPaintabletSet = new HashSet();
 
-	private WeakHashMap paintableIdMap = new WeakHashMap();
+	// TODO THIS TEMPORARY HACK IS ONLY HERE TO MAKE GWT DEVEL EASIER
+    static WeakHashMap paintableIdMap = new WeakHashMap();
 
 	private int idSequence = 0;
 

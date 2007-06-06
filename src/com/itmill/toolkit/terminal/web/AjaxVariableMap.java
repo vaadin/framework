@@ -141,7 +141,15 @@ public class AjaxVariableMap {
 
 			if (id == null) {
 				// Generates new id and register it
-				id = "v" + String.valueOf(++lastId);
+
+// ----------
+// TODO This HACK is only included for testing GWT integration				
+//Original				id = "v" + String.valueOf(++lastId);
+				Object pid = AjaxApplicationManager.paintableIdMap.get(owner);
+				id = pid + "_"+name;
+// ----------
+				
+				
 				nameToIdMap.put(name, id);
 				idToOwnerMap.put(id, new WeakReference(owner));
 				idToNameMap.put(id, name);
