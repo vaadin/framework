@@ -1,5 +1,6 @@
 package com.itmill.toolkit.terminal.gwt.client;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Vector;
 
@@ -94,6 +95,7 @@ public class Client implements EntryPoint {
 	}
 
 	private void handleReceivedJSONMessage(Response response) {
+		Date start = new Date();
 		JSONValue json = JSONParser
 				.parse(response.getText().substring(3) + "}");
 
@@ -103,7 +105,12 @@ public class Client implements EntryPoint {
 			try {
 				UIDL change = new UIDL((JSONArray) changes.get(i));
 				console.log("Received the following change: ");
-				console.dirUIDL(change);
+				try {
+					console.dirUIDL(change);
+				} catch (Exception e) {
+					// TODO: dir doesn't work in any browser although it should work (works in hosted mode)
+					// it partially did at some part but now broken.
+				}
 				UIDL uidl = change.getChildUIDL(0);
 				Paintable paintable = getPaintable(uidl.getId());
 				if (paintable != null)
@@ -124,6 +131,8 @@ public class Client implements EntryPoint {
 			}
 
 		}
+		long prosessingTime = (new Date().getTime()) - start.getTime();
+		console.log(" Processing time was " + String.valueOf(prosessingTime));
 	}
 
 	public void registerPaintable(String id, Paintable paintable) {

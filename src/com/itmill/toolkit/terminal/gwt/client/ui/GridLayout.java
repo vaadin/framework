@@ -23,6 +23,10 @@ public class GridLayout extends FlexTable implements Paintable {
 					UIDL c = (UIDL) j.next();
 					if ("gc".equals(c.getTag())) {
 						column++;
+						if(c.hasAttribute("w")) {
+							int w = c.getIntAttribute("w");
+							((FlexCellFormatter)getCellFormatter()).setColSpan(row,column, w);
+						}
 						UIDL u = c.getChildUIDL(0);						
 						Widget child = client.createWidgetFromUIDL(u);
 						if (child != null)

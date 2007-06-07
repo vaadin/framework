@@ -179,12 +179,13 @@ public class UIDL {
 
 		Iterator i = getChildIterator();
 		while (i.hasNext()) {
+			Object child = i.next();
 			try{
-				UIDL c = (UIDL) i.next();
+				UIDL c = (UIDL) child;
 				tmp.addItem(c.dir());
 				
 			} catch (Exception e) {
-				tmp.addItem("bööh");
+				tmp.addItem(child.toString());
 			}
 		}
 		item.addItem(tmp);
