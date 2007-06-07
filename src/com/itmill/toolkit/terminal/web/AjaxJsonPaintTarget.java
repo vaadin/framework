@@ -925,12 +925,12 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 		}
 
 		public String getJsonPresentation() {
-			String pres =  "\""+name +"\":[\"";
+			String pres =  "\""+name +"\":[";
 			for (int i = 0; i < value.length;) {
-				pres += value[i];
+				pres += "\"" + value[i] + "\"" ;
 				i++;
 				if(i < value.length)
-					pres += "\",";
+					pres += ",";
 			}
 			pres += "]";
 			return pres;
