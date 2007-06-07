@@ -881,57 +881,14 @@ public class ApplicationServlet extends HttpServlet implements
 				.write("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" "
 						+ "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n");
 
-		page
-				.write("<html><head>\n<title>" + window.getCaption()
-						+ "</title>\n");
-		Theme t = theme;
-		Vector themes = new Vector();
-		themes.add(t);
-		while (t.getParent() != null) {
-			String parentName = t.getParent();
-			t = themeSource.getThemeByName(parentName);
-			themes.add(t);
-		}
-		for (int k = themes.size() - 1; k >= 0; k--) {
-			t = (Theme) themes.get(k);
-			Collection files = t.getFileNames(terminalType, Theme.MODE_AJAX);
-			for (Iterator i = files.iterator(); i.hasNext();) {
-				String file = (String) i.next();
-				if (file.endsWith(".css"))
-					page.write("<link rel=\"stylesheet\" href=\""
-							+ getResourceLocation(t.getName(),
-									new ThemeResource(file))
-							+ "\" type=\"text/css\" />\n");
-				else if (file.endsWith(".js")) {
-					page.write("<script src=\"");
-
-					// TODO remove this and implement behaviour in themes
-					// description.xml files
-					if (file.endsWith("firebug.js")
-							&& !isDebugMode(unhandledParameters)) {
-						file = file.replaceFirst("bug.js", "bugx.js");
-					}
-					page.write(getResourceLocation(t.getName(),
-							new ThemeResource(file)));
-					page.write("\" type=\"text/javascript\"></script>\n");
-				}
-			}
-
-		}
-
-		page.write("</head><body class=\"itmtk\">\n");
-
-		page.write("<noscript>Your browser claims to have a Javascript engine, " +
-				"but for some reason it is turned off. Eithter turn it on or use " +
-				"<a href=\"?renderingMode=detect&amp;WA_NOSCRIPT=1\">degraded mode</a>." + 
-				"</noscript>\n"); 
 		
-		page.write("<div id=\"ajax-wait\">Loading...</div>\n");
-
-		page.write("<div id=\"ajax-window\"></div>\n");
-
-		page.write("<script language=\"JavaScript\" type=\"text/javascript\">\n");
-
+		
+		page.write("<html>\n<head>\n<title>IT Mill Toolkit 5</title>\n" +
+				"<meta name='gwt:module' content='../com.itmill.toolkit.terminal.gwt.Client=com.itmill.toolkit.terminal.gwt.Client'>\n" +
+				"<script type=\"text/javascript\">\n" +
+				"	var itmtk = {\n" +
+				"		appUri:'");
+		
 		String[] urlParts = getApplicationUrl(request).toString().split("\\/");
 		String appUrl = "";
 		// don't use server and port in uri. It may cause problems with some
@@ -940,32 +897,76 @@ public class ApplicationServlet extends HttpServlet implements
 			appUrl += "/" + urlParts[i];
 		if (appUrl.endsWith("/"))
 			appUrl = appUrl.substring(0, appUrl.length() - 1);
-		page.write("itmill.tmp = new itmill.Client("
-				+ "document.getElementById('ajax-window')," + "\"" + appUrl
-				+ "/UIDL/" + "\",\"" + resourcePath
-				+ ((Theme) themes.get(themes.size() - 1)).getName() + "/"
+		
+		page.write(appUrl);
+		
+		page.write("'\n};\n" +
+				"</script>\n" +
+				"<body>\n<script language=\"javascript\" src=\"/tk/com.itmill.toolkit.terminal.gwt.Client/gwt.js\"></script>\n" +
+				"	<iframe id=\"__gwt_historyFrame\" style=\"width:0;height:0;border:0\"></iframe>\n" +
+				"	<div id=\"itmtk-ajax-window\"></div>" +
+				"	<div id=\"itmtk-loki\" style=\"position: absolute; width: 100%; margin: 0px; left: 0px; height: 200px; bottom: 0px; border-top: 1px solid gray; background-color: #f6f6f6; overflow: scroll; font-size: x-small;color:red !important;\"></div>\n" + 
+				"	<div style=\"position: absolute; right: 25px; height: 195px; bottom: 0px; color: gray; \"><strong>console</strong></div>\n" + 
+				"	<div style=\"position: absolute; right: 5px; top: 5px; color: gray;\"><strong>IT Mill Toolkit 5 Prototype</strong></div>\n" + 
+				"	</body>\n" + 
+				"</html>\n");
+		
+		
+		
+//		Theme t = theme;
+//		Vector themes = new Vector();
+//		themes.add(t);
+//		while (t.getParent() != null) {
+//			String parentName = t.getParent();
+//			t = themeSource.getThemeByName(parentName);
+//			themes.add(t);
+//		}
+//		for (int k = themes.size() - 1; k >= 0; k--) {
+//			t = (Theme) themes.get(k);
+//			Collection files = t.getFileNames(terminalType, Theme.MODE_AJAX);
+//			for (Iterator i = files.iterator(); i.hasNext();) {
+//				String file = (String) i.next();
+//				if (file.endsWith(".css"))
+//					page.write("<link rel=\"stylesheet\" href=\""
+//							+ getResourceLocation(t.getName(),
+//									new ThemeResource(file))
+//							+ "\" type=\"text/css\" />\n");
+//				else if (file.endsWith(".js")) {
+//					page.write("<script src=\"");
+//
+//					// TODO remove this and implement behaviour in themes
+//					// description.xml files
+//					if (file.endsWith("firebug.js")
+//							&& !isDebugMode(unhandledParameters)) {
+//						file = file.replaceFirst("bug.js", "bugx.js");
+//					}
+//					page.write(getResourceLocation(t.getName(),
+//							new ThemeResource(file)));
+//					page.write("\" type=\"text/javascript\"></script>\n");
+//				}
+//			}
+//
+//		}
 
-				+ "client/\",document.getElementById('ajax-wait'));\n");
+
+//		page.write("itmill.tmp = new itmill.Client("
+//				+ "document.getElementById('ajax-window')," + "\"" + appUrl
+//				+ "/UIDL/" + "\",\"" + resourcePath
+//				+ ((Theme) themes.get(themes.size() - 1)).getName() + "/"
+//
+//				+ "client/\",document.getElementById('ajax-wait'));\n");
 
 		// TODO Only current theme is registered to the client
 		// for (int k = themes.size() - 1; k >= 0; k--) {
 		// t = (Theme) themes.get(k);
-		t = theme;
-		String themeObjName = "itmill.themes."
-				+ t.getName().substring(0, 1).toUpperCase()
-				+ t.getName().substring(1);
-		page.write(" (new " + themeObjName + "(\"" + resourcePath + t.getName()
-				+ "/\")).registerTo(itmill.tmp);\n");
+//		t = theme;
+//		String themeObjName = "itmill.themes."
+//				+ t.getName().substring(0, 1).toUpperCase()
+//				+ t.getName().substring(1);
+//		page.write(" (new " + themeObjName + "(\"" + resourcePath + t.getName()
+//				+ "/\")).registerTo(itmill.tmp);\n");
 		// }
 
-		if (isDebugMode(unhandledParameters))
-			page.write("itmill.tmp.debugEnabled =true;\n");
-		page.write("itmill.tmp.start();\n");
-		page.write("delete itmill.tmp;\n");
-
-		page.write("</script>\n");
-
-		page.write("</body></html>\n");
 		page.close();
 	}
 
