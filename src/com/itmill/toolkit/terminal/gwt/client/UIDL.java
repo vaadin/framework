@@ -10,6 +10,8 @@ import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.user.client.ui.Tree;
+import com.google.gwt.user.client.ui.TreeItem;
 
 public class UIDL {
 
@@ -64,6 +66,15 @@ public class UIDL {
 		if (val == null)
 			return false;
 		return ((JSONBoolean) val).booleanValue();
+	}
+
+	/**
+	 * Get attributes value as string whateever the type is
+	 * @param name
+	 * @return string presentation of attribute
+	 */
+	private String getAttribute(String name) {
+		return json.get(1).isObject().get(name).toString();
 	}
 
 	public boolean hasAttribute(String name) {
@@ -143,45 +154,74 @@ public class UIDL {
 		return s;
 	}
 
-	public String getStringVariable(String name) {
+	public Tree print_r() {
+		Tree t = new Tree();
+		t.addItem(dir());
+		Iterator it = t.treeItemIterator();
+		while(it.hasNext())
+			((TreeItem) it.next()).setState(true);
+		return t;
+	}
+	
+	public TreeItem dir() {
+		
+		TreeItem item = new TreeItem(getTag());
+		TreeItem tmp = new TreeItem("attr");
+
+		for (Iterator i = getAttributeNames().iterator(); i.hasNext();) {
+			String name = i.next().toString();
+			String value = getAttribute(name);
+			tmp.addItem(name + "=" + value);
+		}
+		item.addItem(tmp);
+		
+		tmp = new TreeItem("child nodes");
+
+		Iterator i = getChildIterator();
+		while (i.hasNext()) {
+			try{
+				UIDL c = (UIDL) i.next();
+				tmp.addItem(c.dir());
+				
+			} catch (Exception e) {
+				tmp.addItem("bööh");
+			}
+		}
+		item.addItem(tmp);
+		return item;
+	}
+
+	private JSONObject getVariableHash() {
 		JSONObject v = (JSONObject) ((JSONObject) json.get(1)).get("v");
 		if (v == null)
 			throw new IllegalArgumentException(
-					"No variables defined in tag. (requested: " + name + ")");
-		JSONString t = (JSONString) v.get(name);
+					"No variables defined in tag.");
+		return v;
+	}
+
+	public String getStringVariable(String name) {
+		JSONString t = (JSONString) getVariableHash().get(name);
 		if (t == null)
 			throw new IllegalArgumentException("No such variable: " + name);
 		return t.stringValue();
 	}
 
 	public int getIntVariable(String name) {
-		JSONObject v = (JSONObject) ((JSONObject) json.get(1)).get("v");
-		if (v == null)
-			throw new IllegalArgumentException(
-					"No variables defined in tag. (requested: " + name + ")");
-		JSONNumber t = (JSONNumber) v.get(name);
+		JSONNumber t = (JSONNumber) getVariableHash().get(name);
 		if (t == null)
 			throw new IllegalArgumentException("No such variable: " + name);
 		return (int) t.getValue();
 	}
 
 	public boolean getBooleanVariable(String name) {
-		JSONObject v = (JSONObject) ((JSONObject) json.get(1)).get("v");
-		if (v == null)
-			throw new IllegalArgumentException(
-					"No variables defined in tag. (requested: " + name + ")");
-		JSONBoolean t = (JSONBoolean) v.get(name);
+		JSONBoolean t = (JSONBoolean) getVariableHash().get(name);
 		if (t == null)
 			throw new IllegalArgumentException("No such variable: " + name);
 		return t.booleanValue();
 	}
 
 	public JSONArray getArrayVariable(String name) {
-		JSONObject v = (JSONObject) ((JSONObject) json.get(1)).get("v");
-		if (v == null)
-			throw new IllegalArgumentException(
-					"No variables defined in tag. (requested: " + name + ")");
-		JSONArray t = (JSONArray) v.get(name);
+		JSONArray t = (JSONArray) getVariableHash().get(name);
 		if (t == null)
 			throw new IllegalArgumentException("No such variable: " + name);
 		return t;

@@ -22,4 +22,8 @@ public final class Console {
 	public void printObject(Object msg) {
 		rp.add((new Label(msg.toString())));
 	}
+	
+	public void dirUIDL(UIDL u) {
+		rp.add(u.print_r());
+	}
 }

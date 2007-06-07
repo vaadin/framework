@@ -25,7 +25,7 @@ public class Client implements EntryPoint {
 
 	private String appUri = "http://127.0.0.1:8080/tk/Calc";
 
-	// TODO remove repaintAll things start to pile up
+	// TODO remove repaintAll until things start to pile up
 	private RequestBuilder rb = new RequestBuilder(RequestBuilder.POST, appUri
 			+ "/UIDL/?repaintAll=1&");
 
@@ -102,7 +102,8 @@ public class Client implements EntryPoint {
 		for (int i = 0; i < changes.size(); i++) {
 			try {
 				UIDL change = new UIDL((JSONArray) changes.get(i));
-				console.log("Received the following change: " + change);
+				console.log("Received the following change: ");
+				console.dirUIDL(change);
 				UIDL uidl = change.getChildUIDL(0);
 				Paintable paintable = getPaintable(uidl.getId());
 				if (paintable != null)
