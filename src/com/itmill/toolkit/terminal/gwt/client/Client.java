@@ -24,7 +24,7 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class Client implements EntryPoint {
 
-	private String appUri = "http://127.0.0.1:8080/tk/Calc";
+	private String appUri;
 
 	// TODO remove repaintAll until things start to pile up
 	private RequestBuilder rb = new RequestBuilder(RequestBuilder.POST, appUri
@@ -44,6 +44,8 @@ public class Client implements EntryPoint {
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
+		
+		appUri = getAppUri();
 
 		console = new Console(RootPanel.get("itmtk-loki"));
 
@@ -70,6 +72,10 @@ public class Client implements EntryPoint {
 		}
 
 	}
+	
+	private native String getAppUri()/*-{
+		return $wnd.itmtk.appUri;
+	}-*/;
 
 	private void makeUidlRequest(String requestData) {
 		console.log("Making UIDL Request");

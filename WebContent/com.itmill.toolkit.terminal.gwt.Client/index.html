@@ -15,6 +15,9 @@
 			a:link,.w,.w a:link{color:#0000cc}
 			a:visited{color:#551a8b}
 			a:active{color:#ff0000}
+			
+			.itmtk-loki .gwt-Tree { 
+			}
 		</style>
 
 		<!--                                           -->
@@ -22,6 +25,12 @@
 		<!-- between html and your Web Toolkit module  -->		
 		<!--                                           -->
 		<meta name='gwt:module' content='com.itmill.toolkit.terminal.gwt.Client'>
+		
+		<script type="text/javascript">
+			var itmtk = {
+				appUri: "http://127.0.0.1:8080/tk/Calc"
+			};
+		</script>
 
 	<!--                                           -->
 	<!-- The body can have arbitrary html, or      -->
@@ -42,7 +51,7 @@
 
 		<div id="itmtk-ajax-window"></div>
 
-		<div id="itmtk-loki" style="position: absolute; width: 100%; margin: 0; left: 0; height: 150px; bottom: 0; border-top: 1px solid gray; background-color: #f6f6f6; overflow: scroll; font-size: x-small;color:red !important;"></div>
+		<div id="itmtk-loki" style="position: absolute; width: 100%; margin: 0; left: 0; height: 300px; bottom: 0; border-top: 1px solid gray; background-color: #f6f6f6; overflow: scroll; font-size: x-small;color:red !important;"></div>
 		<div style="position: absolute; right: 25px; height: 145px; bottom: 0; color: gray; "><b>console</b></div>
 		<div style="position: absolute; right: 5px; top: 5; color: gray;"><b>IT Mill Toolkit 5 Prototype</b></div>
 	</body>
