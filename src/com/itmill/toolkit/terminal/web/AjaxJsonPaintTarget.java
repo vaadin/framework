@@ -617,7 +617,7 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 		mTagArgumentListOpen = false;
 
 		if (sectionData != null)
-			tag.addData(sectionData);
+			tag.addData("\""+escapeJSON(sectionData) + "\"");
 		endTag(sectionTagName);
 	}
 
