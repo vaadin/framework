@@ -5,6 +5,7 @@ import com.itmill.toolkit.terminal.gwt.client.ui.Button;
 import com.itmill.toolkit.terminal.gwt.client.ui.GridLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.Label;
 import com.itmill.toolkit.terminal.gwt.client.ui.OrderedLayout;
+import com.itmill.toolkit.terminal.gwt.client.ui.UnknownComponent;
 import com.itmill.toolkit.terminal.gwt.client.ui.Window;
 
 public class DefaultWidgetFactory implements WidgetFactory {
@@ -22,7 +23,7 @@ public class DefaultWidgetFactory implements WidgetFactory {
 		if ("gridlayout".equals(tag))
 			return new GridLayout();
 
-		return null;
+		return new UnknownComponent();
 	}
 
 }
