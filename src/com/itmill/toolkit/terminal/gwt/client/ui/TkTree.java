@@ -26,18 +26,15 @@ public class TkTree extends Composite implements Paintable {
 	public void updateFromUIDL(UIDL uidl, Client client) {
 		
 		if (uidl.hasAttribute("caption")) caption.setText(uidl.getStringAttribute("caption")); 
-		
-		TreeItem rootNode = new TreeItem();
+		tree.clear();
 		for (Iterator i = uidl.getChildIterator(); i.hasNext();) {
 			UIDL childUidl = (UIDL)i.next();
 			if(childUidl.getTag().equals("leaf"))
-				rootNode.addItem(childUidl.getStringAttribute("caption"));
+				tree.addItem(childUidl.getStringAttribute("caption"));
 			if(childUidl.getTag().equals("node")) {
 				TreeNode childTree = new TreeNode();
 				childTree.updateFromUIDL(childUidl, client);
-				if(uidl.getBooleanAttribute("expanded"))
-					childTree.setState(true);
-				rootNode.addItem(childTree);
+				tree.addItem(childTree);
 			}
 		}
 	}
