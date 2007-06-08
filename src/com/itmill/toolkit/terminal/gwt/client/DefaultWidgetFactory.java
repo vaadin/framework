@@ -2,6 +2,7 @@ package com.itmill.toolkit.terminal.gwt.client;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ui.TkButton;
+import com.itmill.toolkit.terminal.gwt.client.ui.TkEmbedded;
 import com.itmill.toolkit.terminal.gwt.client.ui.TkGridLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.TkLabel;
 import com.itmill.toolkit.terminal.gwt.client.ui.TkOrderedLayout;
@@ -34,6 +35,8 @@ public class DefaultWidgetFactory implements WidgetFactory {
 			return new TkPanel();
 		if ("tabsheet".equals(tag))
 			return new TkTabsheet();
+		if ("embedded".equals(tag))
+			return new TkEmbedded();
 
 		return new TkUnknownComponent();
 	}
