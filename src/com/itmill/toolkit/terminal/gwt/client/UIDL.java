@@ -174,6 +174,34 @@ public class UIDL {
 			tmp.addItem(name + "=" + value);
 		}
 		item.addItem(tmp);
+
+		try {
+			tmp = new TreeItem("variables");
+			for (Iterator i = getVariableHash().keySet().iterator(); i.hasNext();) {
+				String name = i.next().toString();
+				String value = "";
+				try {
+					value = getStringVariable(name);
+				} catch (Exception e) {
+					try {
+						JSONArray a = 	getArrayVariable(name);
+						value = a.toString();
+					} catch (Exception e2) {
+						try{
+							int intVal = getIntVariable(name);
+							value = String.valueOf(intVal);
+						} catch (Exception e3) {
+							value = "unknown";
+						}
+					}
+				}
+				tmp.addItem(name + "=" + value);
+			}
+			item.addItem(tmp);
+		} catch (Exception e) {
+			// Ingonered, no variables
+		}
+
 		
 		tmp = new TreeItem("child nodes");
 
