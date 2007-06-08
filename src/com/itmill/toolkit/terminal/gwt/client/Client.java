@@ -104,6 +104,7 @@ public class Client implements EntryPoint {
 		Date start = new Date();
 		
 		try{
+			console.log(response.getText().substring(3) + "}");
 			JSONValue json = JSONParser
 			.parse(response.getText().substring(3) + "}");
 			// Process changes
@@ -187,6 +188,7 @@ public class Client implements EntryPoint {
 			req.append(pendingVariables.get(i++));
 			req.append("=");
 			req.append(pendingVariables.get(i));
+			req.append("&");
 		}
 
 		pendingVariables.clear();

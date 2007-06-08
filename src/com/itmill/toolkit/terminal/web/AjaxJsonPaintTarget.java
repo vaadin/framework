@@ -164,7 +164,6 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 		if(tag != null) {
 			openJsonTags.push(tag);
 		}
-
 		// Checks tagName and attributes here
 		mOpenTags.push(tagName);
 		
@@ -211,7 +210,10 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 
 			tag = parent;
 		} else {
-			this.uidlBuffer.print(tag.getJSON());
+			changes++;
+			this.uidlBuffer.print(
+					( (changes > 1) ? "," : "") +
+					tag.getJSON());
 			tag = null;
 		}
 	}
