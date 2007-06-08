@@ -9,6 +9,7 @@ import com.itmill.toolkit.terminal.gwt.client.ui.TkOrderedLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.TkPanel;
 import com.itmill.toolkit.terminal.gwt.client.ui.TkSelect;
 import com.itmill.toolkit.terminal.gwt.client.ui.TkTabsheet;
+import com.itmill.toolkit.terminal.gwt.client.ui.TkTextField;
 import com.itmill.toolkit.terminal.gwt.client.ui.TkTree;
 import com.itmill.toolkit.terminal.gwt.client.ui.TkUnknownComponent;
 import com.itmill.toolkit.terminal.gwt.client.ui.TkWindow;
@@ -31,12 +32,14 @@ public class DefaultWidgetFactory implements WidgetFactory {
 			return new TkTree();
 		if ("select".equals(tag))
 			return new TkSelect();
-		if ("panel".equals(tag))
+		if ("panel".equals(tag) || "component".equals(tag))
 			return new TkPanel();
 		if ("tabsheet".equals(tag))
 			return new TkTabsheet();
 		if ("embedded".equals(tag))
 			return new TkEmbedded();
+		if ("textfield".equals(tag))
+			return new TkTextField();
 
 		return new TkUnknownComponent();
 	}
