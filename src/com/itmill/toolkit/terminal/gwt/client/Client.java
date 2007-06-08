@@ -103,49 +103,44 @@ public class Client implements EntryPoint {
 	private void handleReceivedJSONMessage(Response response) {
 		Date start = new Date();
 		
-		try{
-			console.log(response.getText().substring(3) + "}");
-			JSONValue json = JSONParser
-			.parse(response.getText().substring(3) + "}");
-			// Process changes
-			JSONArray changes = (JSONArray) ((JSONObject) json).get("changes");
-			for (int i = 0; i < changes.size(); i++) {
+		console.log(response.getText().substring(3) + "}");
+		JSONValue json = JSONParser
+		.parse(response.getText().substring(3) + "}");
+		// Process changes
+		JSONArray changes = (JSONArray) ((JSONObject) json).get("changes");
+		for (int i = 0; i < changes.size(); i++) {
+			try {
+				UIDL change = new UIDL((JSONArray) changes.get(i));
+				console.log("Received the following change: ");
 				try {
-					UIDL change = new UIDL((JSONArray) changes.get(i));
-					console.log("Received the following change: ");
-					try {
-						console.dirUIDL(change);
-					} catch (Exception e) {
-						// TODO: dir doesn't work in any browser although it should work (works in hosted mode)
-						// it partially did at some part but now broken.
-					}
-					UIDL uidl = change.getChildUIDL(0);
-					Paintable paintable = getPaintable(uidl.getId());
-					if (paintable != null)
-						paintable.updateFromUIDL(uidl, this);
-					else {
-						if (!uidl.getTag().equals("window"))
-							throw new IllegalStateException("Received update for "
-									+ uidl.getTag()
-									+ ", but there is no such paintable ("
-									+ uidl.getId() + ") registered yet.");
-						Widget window = createWidgetFromUIDL(uidl);
-						// We should also handle other windows 
-						RootPanel.get("itmtk-ajax-window").add(window);
-					}
-	
-				} catch (Throwable e) {
-					e.printStackTrace();
+					console.dirUIDL(change);
+				} catch (Exception e) {
+					console.log(e.getMessage());
+					// TODO: dir doesn't work in any browser although it should work (works in hosted mode)
+					// it partially did at some part but now broken.
 				}
-	
+				UIDL uidl = change.getChildUIDL(0);
+				Paintable paintable = getPaintable(uidl.getId());
+				if (paintable != null)
+					paintable.updateFromUIDL(uidl, this);
+				else {
+					if (!uidl.getTag().equals("window"))
+						throw new IllegalStateException("Received update for "
+								+ uidl.getTag()
+								+ ", but there is no such paintable ("
+								+ uidl.getId() + ") registered yet.");
+					Widget window = createWidgetFromUIDL(uidl);
+					// We should also handle other windows 
+					RootPanel.get("itmtk-ajax-window").add(window);
+				}
+
+			} catch (Throwable e) {
+				e.printStackTrace();
 			}
-			long prosessingTime = (new Date().getTime()) - start.getTime();
-			console.log(" Processing time was " + String.valueOf(prosessingTime));
-		} catch (Exception e) {
-			// TODO: remove this try catch when uidl JSON stabilizes
-			console.log("Error parsing JSON:");
-			console.log(response.getText().substring(3) + "}");
+
 		}
+		long prosessingTime = (new Date().getTime()) - start.getTime();
+		console.log(" Processing time was " + String.valueOf(prosessingTime));
 
 	}
 
@@ -216,6 +211,16 @@ public class Client implements EntryPoint {
 		addVariableToQueue(paintableId, variableName, newValue ? "true"
 				: "false", immediate);
 	}
+	public void updateVariable(String paintableId, String variableName, Object[] values, boolean immediate) {
+		StringBuffer buf = new StringBuffer();
+		for (int i = 0; i < values.length; i++) {
+			if(i > 0)
+				buf.append(",");
+			buf.append(escapeString(values[i].toString()));
+		}
+		addVariableToQueue(paintableId, variableName, buf.toString(), immediate);
+	}
+
 
 	public WidgetFactory getWidgetFactory() {
 		return widgetFactory;
@@ -224,5 +229,6 @@ public class Client implements EntryPoint {
 	public void setWidgetFactory(WidgetFactory widgetFactory) {
 		this.widgetFactory = widgetFactory;
 	}
+
 
 }
