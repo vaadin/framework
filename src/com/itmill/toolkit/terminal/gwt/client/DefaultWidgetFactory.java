@@ -1,29 +1,32 @@
 package com.itmill.toolkit.terminal.gwt.client;
 
 import com.google.gwt.user.client.ui.Widget;
-import com.itmill.toolkit.terminal.gwt.client.ui.Button;
-import com.itmill.toolkit.terminal.gwt.client.ui.GridLayout;
-import com.itmill.toolkit.terminal.gwt.client.ui.Label;
-import com.itmill.toolkit.terminal.gwt.client.ui.OrderedLayout;
-import com.itmill.toolkit.terminal.gwt.client.ui.UnknownComponent;
-import com.itmill.toolkit.terminal.gwt.client.ui.Window;
+import com.itmill.toolkit.terminal.gwt.client.ui.TkButton;
+import com.itmill.toolkit.terminal.gwt.client.ui.TkGridLayout;
+import com.itmill.toolkit.terminal.gwt.client.ui.TkLabel;
+import com.itmill.toolkit.terminal.gwt.client.ui.TkOrderedLayout;
+import com.itmill.toolkit.terminal.gwt.client.ui.TkTree;
+import com.itmill.toolkit.terminal.gwt.client.ui.TkUnknownComponent;
+import com.itmill.toolkit.terminal.gwt.client.ui.TkWindow;
 
 public class DefaultWidgetFactory implements WidgetFactory {
 
 	public Widget createWidget(String tag, String theme) {
 
 		if ("button".equals(tag))
-			return new Button();
+			return new TkButton();
 		if ("window".equals(tag))
-			return new Window();
+			return new TkWindow();
 		if ("orderedlayout".equals(tag))
-			return new OrderedLayout();
+			return new TkOrderedLayout();
 		if ("label".equals(tag))
-			return new Label();
+			return new TkLabel();
 		if ("gridlayout".equals(tag))
-			return new GridLayout();
+			return new TkGridLayout();
+		if ("tree".equals(tag))
+			return new TkTree();
 
-		return new UnknownComponent();
+		return new TkUnknownComponent();
 	}
 
 }
