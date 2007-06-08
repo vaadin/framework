@@ -410,7 +410,7 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 	 *             if the paint operation failed.
 	 */
 	public void addAttribute(String name, int value) throws PaintException {
-		tag.addAttribute(name + ":" + String.valueOf(value));
+		tag.addAttribute("\"" + name + "\":" + String.valueOf(value));
 	}
 
 	/**
@@ -426,7 +426,7 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 	 *             if the paint operation failed.
 	 */
 	public void addAttribute(String name, long value) throws PaintException {
-		tag.addAttribute(name + ":" + String.valueOf(value));
+		tag.addAttribute("\"" + name + "\":" + String.valueOf(value));
 	}
 
 	/**
@@ -584,7 +584,7 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 
 		// Escape and write what was given
 		if (xml != null)
-			tag.addData(xml);
+			tag.addData("\""+escapeJSON(xml)+"\"");
 
 	}
 
