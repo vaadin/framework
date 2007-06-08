@@ -331,7 +331,7 @@ public class AjaxApplicationManager implements
 
 
 					
-                	outWriter.print(", meta : {");
+                	outWriter.print(", \"meta\" : {");
                 	boolean metaOpen = false;
 
 					
