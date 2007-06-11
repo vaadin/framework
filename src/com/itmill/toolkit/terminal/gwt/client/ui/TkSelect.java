@@ -55,15 +55,18 @@ public class TkSelect extends Composite implements Paintable, ChangeListener {
 
 	public void onChange(Widget sender) {
 		if(select.isMultipleSelect()) {
-			Vector selectedItemKeys = new Vector();
-			for(int i = 0; i < select.getItemCount();i++) {
-				if(select.isItemSelected(i))
-					selectedItemKeys.add(select.getValue(i));
-			}
-			Object[] values = selectedItemKeys.toArray();
-			client.updateVariable(id, "selected", values, immediate);
+			client.updateVariable(id, "selected", getSelectedKeys(), immediate);
 		} else {
 			client.updateVariable(id, "selected", new String[] { "" + select.getValue(select.getSelectedIndex())}, immediate);
 		}
+	}
+	
+	private Object[] getSelectedKeys() {
+		Vector selectedItemKeys = new Vector();
+		for(int i = 0; i < select.getItemCount();i++) {
+			if(select.isItemSelected(i))
+				selectedItemKeys.add(select.getValue(i));
+		}
+		return selectedItemKeys.toArray();
 	}
 }

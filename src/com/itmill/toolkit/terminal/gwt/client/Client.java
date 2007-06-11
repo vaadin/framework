@@ -78,7 +78,7 @@ public class Client implements EntryPoint {
 	}-*/;
 
 	private void makeUidlRequest(String requestData) {
-		console.log("Making UIDL Request");
+		console.log("Making UIDL Request with params: " + requestData);
 		rb = new RequestBuilder(RequestBuilder.GET, appUri
 				+ "/UIDL/?requestId=" + (++requestCount) + "&" + requestData);
 		try {
@@ -218,7 +218,7 @@ public class Client implements EntryPoint {
 				buf.append(",");
 			buf.append(escapeString(values[i].toString()));
 		}
-		addVariableToQueue(paintableId, variableName, buf.toString(), immediate);
+		addVariableToQueue("array:" + paintableId, variableName, buf.toString(), immediate);
 	}
 
 
