@@ -17,43 +17,33 @@ public class KeyboardShortcut extends com.itmill.toolkit.Application implements
 
 	private Button a;
 
-	private Button b;
+	private Button z;
 
-	private Button c;
+	private Button x;
 
 	private Button close;
-
-	private Button d;
-
-	private Button e;
 
 	private AbstractField f;
 
 	public void init() {
 
-		/*
-		 * - Create new window for the application - Give the window a visible
-		 * title - Set the window to be the main window of the application
-		 */
 		main = new Window("Keyboard shortcuts demo");
 		setMainWindow(main);
-
-		// set the application to use Corporate -theme
 		setTheme("corporate");
 
-		/*
-		 * - Create a label with the classic text - Add the label to the main
-		 * window
-		 */
 		main
 				.addComponent(new Label(
 						"<h3>Test application for shortcut actions</h3>"
-								+ "<b>Note: This feature is under development and is considered as beta.</b><br />"
-								+ "<b>Note:</b> if events do not work, <b>set focus to Textfield first.</b>",
-						Label.CONTENT_XHTML));
+								+ "<p><b>Notes:</b><br />"
+								+ "<b>This feature is under development and it's API may still change.</b><br />"
+								+ "<b>If events do not work, <b>set focus to Textfield first.</b><br />"
+								+ "<b>Browsers may have reserved the keyboard combinations used in "
+								+ "this demo for other purposes.</b><br /></p>",
+						Label.CONTENT_RAW));
 		main
 				.addComponent(new Label(
-						"ESC restarts program, alt-A hits A button, ctrl-B hits B button, ctrl-shift-C hits C"));
+						"ESC restarts program, ctrl-shift-a clicks A button, "
+								+ "ctrl-shift-z clicks Z button, ctrl-shift-x clicks X button"));
 
 		// Restart button
 		close = new Button("restart", this, "close");
@@ -63,58 +53,40 @@ public class KeyboardShortcut extends com.itmill.toolkit.Application implements
 		a = new Button("Button A", this, "buttonAHandler");
 		a.addActionHandler(this);
 
-		b = new Button("Button B", this, "buttonBHandler");
-		b.addActionHandler(this);
+		z = new Button("Button Z", this, "buttonZHandler");
+		z.addActionHandler(this);
 
-		c = new Button("Button C", this, "buttonCHandler");
-		c.addActionHandler(this);
+		x = new Button("Button X", this, "buttonXHandler");
+		x.addActionHandler(this);
 
 		f = new TextField("Textfield");
 
 		main.addComponent(a);
-		main.addComponent(b);
-		main.addComponent(c);
+		main.addComponent(z);
+		main.addComponent(x);
 		main.addComponent(f);
 
-		d = new Button("Click to focus button B", this, "setFocusB");
-		main.addComponent(d);
-		d = new Button("Click to focus Textfield", this, "setFocusF");
-		main.addComponent(d);
-		e = new Button("Test buton", this, "buttonEHandler");
-		e.addActionHandler(this);
-		main.addComponent(e);
-		f.focus();
-	}
-
-	public void setFocusB() {
-		b.focus();
-	}
-
-	public void setFocusF() {
 		f.focus();
 	}
 
 	public Action[] getActions(Object target, Object sender) {
 		Action[] actions = new Action[1];
-		if (sender == b) {
-			actions[0] = (Action) (new ShortcutAction("Button b action",
-					ShortcutAction.KeyCode.B,
-					new int[] { ShortcutAction.ModifierKey.CTRL }));
-
-		} else if (sender == c) {
-			actions[0] = (Action) new ShortcutAction("Button c action",
-					ShortcutAction.KeyCode.C, new int[] {
+		if (sender == a) {
+			actions[0] = (Action) new ShortcutAction("Button a action",
+					ShortcutAction.KeyCode.A, new int[] {
 							ShortcutAction.ModifierKey.CTRL,
 							ShortcutAction.ModifierKey.SHIFT });
-		} else if (sender == e) {
-			actions[0] = (Action) new ShortcutAction("Button E action 2",
+		} else if (sender == z) {
+			actions[0] = (Action) (new ShortcutAction("Button z action",
+					ShortcutAction.KeyCode.Z, new int[] {
+							ShortcutAction.ModifierKey.CTRL,
+							ShortcutAction.ModifierKey.SHIFT }));
+
+		} else if (sender == x) {
+			actions[0] = (Action) new ShortcutAction("Button x action",
 					ShortcutAction.KeyCode.X, new int[] {
 							ShortcutAction.ModifierKey.CTRL,
 							ShortcutAction.ModifierKey.SHIFT });
-		} else if (sender == a) {
-			actions[0] = (Action) new ShortcutAction("Button a action",
-					ShortcutAction.KeyCode.A,
-					new int[] { ShortcutAction.ModifierKey.ALT });
 		} else {
 			// restart button
 			actions[0] = new ShortcutAction("Restart ",
@@ -126,12 +98,10 @@ public class KeyboardShortcut extends com.itmill.toolkit.Application implements
 	public void handleAction(Action action, Object sender, Object target) {
 		if (target == a)
 			this.buttonAHandler();
-		if (target == b)
-			this.buttonBHandler();
-		if (target == c)
-			this.buttonCHandler();
-		if (target == e)
-			this.buttonEHandler();
+		if (target == z)
+			this.buttonZHandler();
+		if (target == x)
+			this.buttonXHandler();
 		if (target == close)
 			this.close();
 	}
@@ -140,15 +110,12 @@ public class KeyboardShortcut extends com.itmill.toolkit.Application implements
 		main.addComponent(new Label("Button A handler fired"));
 	}
 
-	public void buttonBHandler() {
-		main.addComponent(new Label("Button B handler fired"));
+	public void buttonZHandler() {
+		main.addComponent(new Label("Button Z handler fired"));
 	}
 
-	public void buttonCHandler() {
-		main.addComponent(new Label("Button C handler fired"));
+	public void buttonXHandler() {
+		main.addComponent(new Label("Button X handler fired"));
 	}
 
-	public void buttonEHandler() {
-		main.addComponent(new Label("Button E handler fired"));
-	}
 }

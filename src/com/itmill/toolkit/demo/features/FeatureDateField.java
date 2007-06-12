@@ -53,7 +53,10 @@ public class FeatureDateField extends Feature {
 
 		OrderedLayout l = new OrderedLayout();
 
-		// Example panel
+		l.addComponent(new Label("Your locale is: "
+				+ this.getApplication().getLocale().toString()
+						.replace('_', '-')));
+
 		DateField df = new DateField();
 		df.setValue(new java.util.Date());
 		l.addComponent(df);
