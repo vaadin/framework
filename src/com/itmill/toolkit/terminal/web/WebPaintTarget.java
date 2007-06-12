@@ -538,7 +538,7 @@ public class WebPaintTarget implements PaintTarget {
 	 * @throws PaintException
 	 *             if the paint operation failed.
 	 */
-	public void addVariable(VariableOwner owner, String name, String[] value)
+	public void addVariable(VariableOwner owner, String name, Object[] value)
 			throws PaintException {
 		String code = variableMap.registerVariable(name, String[].class, value,
 				owner);
@@ -546,7 +546,7 @@ public class WebPaintTarget implements PaintTarget {
 		addAttribute(UIDL_ARG_ID, code);
 		addAttribute(UIDL_ARG_NAME, name);
 		for (int i = 0; i < value.length; i++)
-			addSection("ai", value[i]);
+			addSection("ai", (String) value[i]);
 		endTag("array");
 	}
 
@@ -714,6 +714,21 @@ public class WebPaintTarget implements PaintTarget {
 	 */
 	public void addCharacterData(String text) throws PaintException {
 		addUIDL("<![CDATA[" + text + "]]>");
+	}
+
+	public void addAttribute(String string, String[] keys) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void addAttribute(String string, Object[] keys) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void addVariable(VariableOwner owner, String name, String[] value) throws PaintException {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

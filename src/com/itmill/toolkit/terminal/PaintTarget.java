@@ -305,4 +305,6 @@ public interface PaintTarget {
 	 * @since 3.1
 	 */
 	void addCharacterData(String text) throws PaintException;
+
+	public void addAttribute(String string, Object[] keys);
 }

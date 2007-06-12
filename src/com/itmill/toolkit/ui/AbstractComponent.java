@@ -533,14 +533,12 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
 
 			// Only paint content of visible components.
 			if (isVisible()) {
-				paintContent(target);
-
 				String desc = getDescription();
 				if (desc != null && description.length() > 0) {
-					target.startTag("description");
-					target.addUIDL(getDescription());
-					target.endTag("description");
+					target.addAttribute("description", getDescription());
 				}
+
+				paintContent(target);
 
 				ErrorMessage error = getErrorMessage();
 				if (error != null)

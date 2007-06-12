@@ -595,4 +595,14 @@ public class AjaxXmlPaintTarget implements PaintTarget, AjaxPaintTarget {
 		return preCachedResources;
 	}
 
+	public void addAttribute(String string, String[] keys) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void addAttribute(String string, Object[] keys) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

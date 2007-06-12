@@ -104,6 +104,7 @@ public class Client implements EntryPoint {
 		Date start = new Date();
 		
 		console.log(response.getText().substring(3) + "}");
+		System.out.println(response.getText().substring(3) + "}");
 		JSONValue json = JSONParser
 		.parse(response.getText().substring(3) + "}");
 		// Process changes
@@ -130,7 +131,7 @@ public class Client implements EntryPoint {
 								+ ", but there is no such paintable ("
 								+ uidl.getId() + ") registered yet.");
 					Widget window = createWidgetFromUIDL(uidl);
-					// We should also handle other windows 
+					// TODO We should also handle other windows 
 					RootPanel.get("itmtk-ajax-window").add(window);
 				}
 

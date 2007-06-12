@@ -28,6 +28,7 @@
 
 package com.itmill.toolkit.ui;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -1495,8 +1496,8 @@ public class Table extends Select implements Action.Container,
 					target.addAttribute("caption",
 							(String) cells[CELL_HEADER][i]);
 			}
+			target.addAttribute("key", Integer.parseInt(cells[CELL_KEY][i].toString()));
 			if (actionHandlers != null || isSelectable()) {
-				target.addAttribute("key", (String) cells[CELL_KEY][i]);
 				if (isSelected(itemId) && keyIndex < selectedKeys.length) {
 					target.addAttribute("selected", true);
 					selectedKeys[keyIndex++] = (String) cells[CELL_KEY][i];
@@ -1505,7 +1506,7 @@ public class Table extends Select implements Action.Container,
 
 			// Actions
 			if (actionHandlers != null) {
-				target.startTag("al");
+				ArrayList keys = new ArrayList();
 				for (Iterator ahi = actionHandlers.iterator(); ahi.hasNext();) {
 					Action[] aa = ((Action.Handler) ahi.next()).getActions(
 							itemId, this);
@@ -1513,10 +1514,10 @@ public class Table extends Select implements Action.Container,
 						for (int ai = 0; ai < aa.length; ai++) {
 							String key = actionMapper.key(aa[ai]);
 							actionSet.add(aa[ai]);
-							target.addSection("ak", key);
+							keys.add(key);
 						}
 				}
-				target.endTag("al");
+				target.addAttribute("al", keys.toArray());
 			}
 
 			// cells
@@ -1531,11 +1532,11 @@ public class Table extends Select implements Action.Container,
 					Component c = (Component) cells[CELL_FIRSTCOL
 							+ currentColumn][i];
 					if (c == null)
-						target.addSection("label", "");
+						target.addText("");
 					else
 						c.paint(target);
 				} else
-					target.addSection("label", (String) cells[CELL_FIRSTCOL
+					target.addText((String) cells[CELL_FIRSTCOL
 							+ currentColumn][i]);
 			}
 
@@ -1568,8 +1569,8 @@ public class Table extends Select implements Action.Container,
 
 		// Actions
 		if (!actionSet.isEmpty()) {
-			target.startTag("actions");
 			target.addVariable(this, "action", "");
+			target.startTag("actions");
 			for (Iterator it = actionSet.iterator(); it.hasNext();) {
 				Action a = (Action) it.next();
 				target.startTag("action");

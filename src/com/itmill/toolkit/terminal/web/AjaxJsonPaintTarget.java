@@ -454,6 +454,24 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 		
 	}
 
+	public void addAttribute(String name, Object[] values) {
+		// In case of null data output nothing:
+		if ((values == null) || (name == null))
+			throw new NullPointerException(
+					"Parameters must be non-null strings");
+		StringBuffer buf = new StringBuffer();
+		buf.append("\""+name+"\":[");
+		for (int i = 0; i < values.length; i++) {
+			if(i>0)
+				buf.append(",");
+			buf.append("\"");
+			buf.append(escapeJSON(values[i].toString()));
+			buf.append("\"");
+		}
+		buf.append("]");
+		tag.addAttribute(buf.toString());
+	}
+	
 	/**
 	 * Adds a string type variable.
 	 * 

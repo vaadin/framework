@@ -157,4 +157,9 @@ public class JSONPaintTarget implements PaintTarget {
 		}
 	}
 
+	public void addAttribute(String string, Object[] keys) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
