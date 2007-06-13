@@ -905,7 +905,8 @@ public class ApplicationServlet extends HttpServlet implements
 				"<body>\n<script language=\"javascript\" src=\"/tk/com.itmill.toolkit.terminal.gwt.Client/gwt.js\"></script>\n" +
 				"	<iframe id=\"__gwt_historyFrame\" style=\"width:0;height:0;border:0\"></iframe>\n" +
 				"	<div id=\"itmtk-ajax-window\"></div>" +
-				"	<div id=\"itmtk-loki\" style=\"width: 100%; margin-top: 50px; left: 0px; height: 200px; border-top: 1px solid gray; background-color: #f6f6f6; overflow: scroll; font-size: x-small;color:red !important;\"></div>\n" + 
+				"	<div id=\"itmtk-loki\" style=\"width: 100%; margin-top: 50px; position: absolute; left: 0px; bottom: 0; height: 400px; border-top: 1px solid gray; background-color: #f6f6f6; overflow: scroll; font-size: x-small;color:red !important;\"" +
+				"></div>\n" + 
 				"	<div style=\"position: absolute; right: 5px; top: 5px; color: gray;\"><strong>IT Mill Toolkit 5 Prototype</strong></div>\n" + 
 				"	</body>\n" + 
 				"</html>\n");
