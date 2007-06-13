@@ -18,6 +18,14 @@ public class TkButton extends com.google.gwt.user.client.ui.Button implements
 	}
 
 	public void updateFromUIDL(UIDL uidl, Client client) {
+		if (uidl.getStringAttribute("type") != null) {
+			if (this.client != null)
+				client.repaintComponent(this, uidl);
+			else
+				throw new IllegalStateException(
+						"Can not paint button of type: "
+								+ uidl.getStringAttribute("type"));
+		}
 		this.client = client;
 		id = uidl.getId();
 		setText(uidl.getStringAttribute("caption"));

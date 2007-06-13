@@ -36,7 +36,7 @@ public class UIDL {
 	public String getStringAttribute(String name) {
 		JSONValue val = ((JSONObject) json.get(1)).get(name);
 		if (val == null)
-			return "";
+			return null;
 		return ((JSONString) val).stringValue();
 	}
 
@@ -136,6 +136,10 @@ public class UIDL {
 
 		};
 	}
+	
+	public int getNumberOfChildren() {
+		return json.size() - 2;
+	}
 
 	public String toString() {
 		String s = "<" + getTag();
@@ -164,14 +168,12 @@ public class UIDL {
 
 	private class UIDLBrowser extends Tree {
 		public UIDLBrowser() {
-			final TreeItem root = new TreeItem("Click here to explore UIDL");
+			final TreeItem root = new TreeItem(getTag());
 			addItem(root);
+			root.addItem("");
 			addTreeListener(new TreeListener() {
 
 				public void onTreeItemStateChanged(TreeItem item) {
-				}
-
-				public void onTreeItemSelected(TreeItem item) {
 					if (item == root) {
 						removeItem(root);
 						UIDLBrowser.this.removeTreeListener(this);
@@ -180,6 +182,9 @@ public class UIDL {
 						while (it.hasNext())
 							((TreeItem) it.next()).setState(true);
 					}
+				}
+
+				public void onTreeItemSelected(TreeItem item) {
 				}
 
 			});

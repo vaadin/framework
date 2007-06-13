@@ -2,6 +2,7 @@ package com.itmill.toolkit.terminal.gwt.client;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ui.TkButton;
+import com.itmill.toolkit.terminal.gwt.client.ui.TkCheckBox;
 import com.itmill.toolkit.terminal.gwt.client.ui.TkEmbedded;
 import com.itmill.toolkit.terminal.gwt.client.ui.TkGridLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.TkLabel;
@@ -17,10 +18,15 @@ import com.itmill.toolkit.terminal.gwt.client.ui.TkWindow;
 
 public class DefaultWidgetFactory implements WidgetFactory {
 
-	public Widget createWidget(String tag, String theme) {
+	public Widget createWidget(UIDL uidl, String theme) {
 
-		if ("button".equals(tag))
+		String tag = uidl.getTag();
+		
+		if ("button".equals(tag)){
+			if ("switch".equals(uidl.getStringAttribute("type")))
+				return new TkCheckBox();
 			return new TkButton();
+		}
 		if ("window".equals(tag))
 			return new TkWindow();
 		if ("orderedlayout".equals(tag))

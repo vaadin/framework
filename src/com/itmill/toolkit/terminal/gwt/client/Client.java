@@ -16,6 +16,7 @@ import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.itmill.toolkit.terminal.gwt.client.ui.TkButton;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -101,10 +102,8 @@ public class Client implements EntryPoint {
 
 	private void handleReceivedJSONMessage(Response response) {
 		Date start = new Date();
-		
-		System.out.println(response.getText().substring(3) + "}");
-		JSONValue json = JSONParser
-		.parse(response.getText().substring(3) + "}");
+		String jsonText = response.getText().substring(3) + "}";
+		JSONValue json = JSONParser.parse(jsonText);
 		// Process changes
 		JSONArray changes = (JSONArray) ((JSONObject) json).get("changes");
 		for (int i = 0; i < changes.size(); i++) {
@@ -138,7 +137,7 @@ public class Client implements EntryPoint {
 
 		}
 		long prosessingTime = (new Date().getTime()) - start.getTime();
-		console.log(" Processing time was " + String.valueOf(prosessingTime));
+		console.log(" Processing time was " + String.valueOf(prosessingTime) + "ms for "+jsonText.length()+" characters of JSON");
 
 	}
 
@@ -151,7 +150,7 @@ public class Client implements EntryPoint {
 	}
 
 	public Widget createWidgetFromUIDL(UIDL uidlForChild) {
-		Widget w = widgetFactory.createWidget(uidlForChild.getTag(), null);
+		Widget w = widgetFactory.createWidget(uidlForChild, null);
 		if (w instanceof Paintable) {
 			registerPaintable(uidlForChild.getId(), (Paintable) w);
 			((Paintable)w).updateFromUIDL(uidlForChild, this);
@@ -226,6 +225,15 @@ public class Client implements EntryPoint {
 
 	public void setWidgetFactory(WidgetFactory widgetFactory) {
 		this.widgetFactory = widgetFactory;
+	}
+
+	public void repaintComponent(Widget component, UIDL uidl) {
+		Widget parent = component.getParent();
+		while (parent != null && !(parent instanceof Layout)) parent = parent.getParent();
+		if (parent != null && ((Layout)parent).hasChildComponent(component)) {
+			((Layout) parent).replaceChildComponent(component,createWidgetFromUIDL(uidl));
+		}
+		
 	}
 
 
