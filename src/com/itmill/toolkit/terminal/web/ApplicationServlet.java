@@ -905,8 +905,9 @@ public class ApplicationServlet extends HttpServlet implements
 				"<body>\n<script language=\"javascript\" src=\"/tk/com.itmill.toolkit.terminal.gwt.Client/gwt.js\"></script>\n" +
 				"	<iframe id=\"__gwt_historyFrame\" style=\"width:0;height:0;border:0\"></iframe>\n" +
 				"	<div id=\"itmtk-ajax-window\"></div>" +
-				"	<div id=\"itmtk-loki\" style=\"width: 100%; margin-top: 50px; position: absolute; left: 0px; bottom: 0; height: 400px; border-top: 1px solid gray; background-color: #f6f6f6; overflow: scroll; font-size: x-small;color:red !important;\"" +
-				"></div>\n" + 
+				"	<div id=\"itmtk-loki\" style=\"width: 100%; position: absolute; left: 0px; bottom: 0; height: 0px; border-top: 1px solid gray; background-color: #f6f6f6; overflow: scroll; font-size: x-small;color:red !important;\"" +
+				"></div>\n" +
+				"<div id='itm-loki-exp' style='right: 0; bottom: 0px; position: absolute; padding-left: 5px; padding-right: 5px; border-left: 1px solid gray; border-top: 1px solid gray; background-color: #f6f6f6;' onclick='itm_loki_exp()'>console</div><script language='JavaScript'>itm_loki_exp = function() {var l=document.getElementById('itmtk-loki'); var e=document.getElementById('itm-loki-exp'); if (e.style.bottom=='400px') {e.style.bottom='0px'; l.style.height='0px'; e.innerHTML='console';} else {e.style.bottom='400px'; l.style.height='400px'; e.innerHTML='-';}}</script>"+
 				"	<div style=\"position: absolute; right: 5px; top: 5px; color: gray;\"><strong>IT Mill Toolkit 5 Prototype</strong></div>\n" + 
 				"	</body>\n" + 
 				"</html>\n");
