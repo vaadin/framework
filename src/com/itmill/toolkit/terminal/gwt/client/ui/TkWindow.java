@@ -17,6 +17,7 @@ public class TkWindow extends FlowPanel implements Paintable {
 
 		id = uidl.getId();
 		com.google.gwt.user.client.Window.setTitle(uidl.getStringAttribute("caption"));
+		clear();
 		UIDL child = uidl.getChildUIDL(0);
 		add(client.createWidgetFromUIDL(child));
 	}
