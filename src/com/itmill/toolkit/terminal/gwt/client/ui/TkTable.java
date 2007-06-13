@@ -90,7 +90,7 @@ public class TkTable extends Composite implements Paintable {
 		updateBody(rowData);
 		
 		if(!colWidthsInitialized) {
-			DeferredCommand.addCommand(new Command() {
+			DeferredCommand.add(new Command() {
 				public void execute() {
 					initSize();
 					updateSpacers();
@@ -114,7 +114,7 @@ public class TkTable extends Composite implements Paintable {
 			int colIndex = getColIndexByKey(cid);
 			if(colIndex > -1)
 				setHeaderText(colIndex, col.getStringAttribute("caption"));
-			DOM.setElementProperty(tHead.getFlexCellFormatter().getElement(0, colIndex), "cid", cid);
+			DOM.setAttribute(tHead.getFlexCellFormatter().getElement(0, colIndex), "cid", cid);
 		}
 	}
 	
@@ -161,7 +161,7 @@ public class TkTable extends Composite implements Paintable {
 	}
 	
 	private String getColKeyByIndex(int index) {
-		return DOM.getElementProperty(tHead.getCellFormatter().getElement(0, index), "cid");
+		return DOM.getAttribute(tHead.getCellFormatter().getElement(0, index), "cid");
 	}
 
 	public void setHeaderText(int colIndex, String text) {
@@ -190,8 +190,8 @@ public class TkTable extends Composite implements Paintable {
 		for (int i = 0; i < cols; i++) {
 			Element hCell = hf.getElement(0, i);
 			Element bCell = bf.getElement(1, i);
-			int hw = DOM.getElementPropertyInt(hCell, "offsetWidth");
-			int cw = DOM.getElementPropertyInt(bCell, "offsetWidth");
+			int hw = DOM.getIntAttribute(hCell, "offsetWidth");
+			int cw = DOM.getIntAttribute(bCell, "offsetWidth");
 			setColWidth(i , hw > cw ? hw : cw);
 		}
 		
