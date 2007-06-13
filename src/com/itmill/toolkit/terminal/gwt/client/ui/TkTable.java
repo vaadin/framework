@@ -8,9 +8,11 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.ScrollListener;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -19,11 +21,22 @@ import com.itmill.toolkit.terminal.gwt.client.Client;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
-public class TkTable extends Composite implements Paintable {
+public class TkTable extends Composite implements Paintable, ScrollListener {
+	
+	/**
+	 *  multiple of pagelenght which component will 
+	 *  cache when requesting more rows 
+	 */
+	private static final double CACHE_RATE = 3;
+	/** 
+	 * fraction of pageLenght which can be scrolled without 
+	 * making new request 
+	 */
+	private static final double CACHE_REACT_RATE = 1;
 	
 	private int firstRendered = 0;
 	private int lastRendered = 0;
-	private int firstRowInViewPort = 0;
+	private int firstRowInViewPort = 1;
 	private int pageLength = 15;
 	
 	private int rowHeaders = 0;
@@ -49,6 +62,9 @@ public class TkTable extends Composite implements Paintable {
 	private int totalRows;
 	private HashMap columnWidths = new HashMap();
 	
+	private int rowHeight = 22;
+	private RowRequestHandler rowRequestHandler;
+	
 	public TkTable() {
 		headerContainer.add(tHead);
 		DOM.setStyleAttribute(headerContainer.getElement(), "overflow", "hidden");
@@ -57,12 +73,15 @@ public class TkTable extends Composite implements Paintable {
 		bodyContent.add(tBody);
 		bodyContent.add(postSpacer);
 		//TODO remove debug color
-		DOM.setStyleAttribute(postSpacer.getElement(), "background", "red");
+		DOM.setStyleAttribute(postSpacer.getElement(), "background", "gray");
 		bodyContainer.add(bodyContent);
+		bodyContainer.addScrollListener(this);
 		
 		VerticalPanel panel = new VerticalPanel();
 		panel.add(headerContainer);
 		panel.add(bodyContainer);
+		
+		rowRequestHandler = new RowRequestHandler();
 		
 		initWidget(panel);
 	}
@@ -87,6 +106,7 @@ public class TkTable extends Composite implements Paintable {
 				;
 		}
 		updateHeader(columnInfo);
+		
 		updateBody(rowData);
 		
 		if(!colWidthsInitialized) {
@@ -212,7 +232,7 @@ public class TkTable extends Composite implements Paintable {
 	}
 	
 	private void updateSpacers() {
-		int rowHeight = tBody.getOffsetHeight()/getRenderedRowCount();
+		rowHeight = tBody.getOffsetHeight()/getRenderedRowCount();
 		int preSpacerHeight = (firstRendered - 1)*rowHeight;
 		int postSpacerHeight = (totalRows - lastRendered)*rowHeight;
 		preSpacer.setHeight(preSpacerHeight+"px");
@@ -223,5 +243,78 @@ public class TkTable extends Composite implements Paintable {
 		return lastRendered-firstRendered;
 	}
 
+	/**
+	 * This method has logick which rows needs to be requested from
+	 * server when user scrolls
+	 *
+	 */
+	public void onScroll(Widget widget, int scrollLeft, int scrollTop) {
+		rowRequestHandler.cancel();
+		
+		firstRowInViewPort = scrollTop / rowHeight;
+		client.console.log("At scrolltop: " + scrollTop + " At row " + firstRowInViewPort);
+		
+		int postLimit = (int) (firstRowInViewPort + pageLength + pageLength*CACHE_REACT_RATE);
+		int preLimit = (int) (firstRowInViewPort - pageLength*CACHE_REACT_RATE);
+		if(
+				postLimit > lastRendered &&
+				( preLimit < 1 || preLimit < firstRendered )
+				) {
+			client.updateVariable(this.id, "firstvisible", firstRowInViewPort, false);
+			return; // scrolled withing "non-react area"
+		}
+		
+		if(firstRowInViewPort - pageLength*CACHE_RATE > lastRendered ||
+				firstRowInViewPort + pageLength + pageLength*CACHE_RATE < firstRendered ) {
+			// need a totally new set
+			client.console.log("Table: need a totally new set");
+			rowRequestHandler.setReqFirstRow((int) (firstRowInViewPort - pageLength*CACHE_RATE));
+			rowRequestHandler.setReqRows((int) (2*CACHE_RATE*pageLength + pageLength));
+			rowRequestHandler.deferRowFetch();
+			return;
+		}
+		if(preLimit < firstRendered ) {
+			// need some rows to the beginning of the rendered area
+			client.console.log("Table: need some rows to the beginning of the rendered area");
+			rowRequestHandler.setReqFirstRow((int) (firstRowInViewPort - pageLength*CACHE_RATE));
+			rowRequestHandler.setReqRows((int) (2*CACHE_RATE*pageLength + pageLength));
+			rowRequestHandler.deferRowFetch();
 
+			return;
+		}
+		if(postLimit > lastRendered) {
+			// need some rows to the end of the rendered area
+			client.console.log("need some rows to the end of the rendered area");
+			rowRequestHandler.setReqFirstRow(lastRendered + 1);
+			rowRequestHandler.setReqRows((int) ((firstRowInViewPort + pageLength + pageLength*CACHE_RATE) - lastRendered));
+			rowRequestHandler.deferRowFetch();
+		}
+	}
+	
+	private class RowRequestHandler extends Timer {
+		
+		private int reqFirstRow;
+		private int reqRows;
+		
+		public void deferRowFetch() {
+			schedule(250);
+		}
+
+		public void setReqFirstRow(int reqFirstRow) {
+			if(reqFirstRow < 1)
+				reqFirstRow = 1;
+			this.reqFirstRow = reqFirstRow;
+		}
+
+		public void setReqRows(int reqRows) {
+			this.reqRows = reqRows;
+		}
+
+		public void run() {
+//			client.updateVariable(id, "firstvisible", firstRowInViewPort, false);
+			client.updateVariable(id, "reqfirstrow", reqFirstRow, false);
+			client.updateVariable(id, "reqrows", reqRows, true);
+		}
+		
+	}
 }
