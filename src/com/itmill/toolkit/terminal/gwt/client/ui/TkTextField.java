@@ -60,6 +60,7 @@ public class TkTextField extends Composite implements
 			field.setHeight(uidl.getStringAttribute("height")+"em");
 		if(uidl.hasAttribute("cols"))
 			field.setWidth(uidl.getStringAttribute("cols")+"em");
+		 field.setText(uidl.getStringVariable("text"));
 			
 		field.addChangeListener(this);
 
