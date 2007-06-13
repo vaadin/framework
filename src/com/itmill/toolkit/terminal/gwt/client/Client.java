@@ -30,7 +30,7 @@ public class Client implements EntryPoint {
 	private RequestBuilder rb = new RequestBuilder(RequestBuilder.POST, appUri
 			+ "/UIDL/?repaintAll=1&");
 
-	private Console console;
+	public Console console;
 
 	private Vector pendingVariables = new Vector();
 
