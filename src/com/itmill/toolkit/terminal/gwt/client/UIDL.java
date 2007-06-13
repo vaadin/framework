@@ -12,6 +12,7 @@ import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
+import com.google.gwt.user.client.ui.TreeListener;
 
 public class UIDL {
 
@@ -70,6 +71,7 @@ public class UIDL {
 
 	/**
 	 * Get attributes value as string whateever the type is
+	 * 
 	 * @param name
 	 * @return string presentation of attribute
 	 */
@@ -80,11 +82,12 @@ public class UIDL {
 	public boolean hasAttribute(String name) {
 		return ((JSONObject) json.get(1)).get(name) != null;
 	}
-	
+
 	public UIDL getChildUIDL(int i) {
 
 		JSONValue c = json.get(i + 2);
-		if (c==null) return null;
+		if (c == null)
+			return null;
 		if (c.isArray() != null)
 			return new UIDL(c.isArray());
 		throw new IllegalStateException("Child node " + i
@@ -95,7 +98,7 @@ public class UIDL {
 
 		JSONValue c = json.get(i + 2);
 		if (c.isString() != null)
-			return ((JSONString)c).stringValue();
+			return ((JSONString) c).stringValue();
 		throw new IllegalStateException("Child node " + i
 				+ " is not of type String");
 	}
@@ -155,18 +158,36 @@ public class UIDL {
 		return s;
 	}
 
-	public Tree print_r() {
-		Tree t = new Tree();
-		t.addItem(dir());
-		Iterator it = t.treeItemIterator();
-		int c = 0;
-		while(it.hasNext())
-			((TreeItem) it.next()).setState(c++ > 0);
-		return t;
+	public UIDLBrowser print_r() {
+		return new UIDLBrowser();
 	}
-	
+
+	private class UIDLBrowser extends Tree {
+		public UIDLBrowser() {
+			final TreeItem root = new TreeItem("Click here to explore UIDL");
+			addItem(root);
+			addTreeListener(new TreeListener() {
+
+				public void onTreeItemStateChanged(TreeItem item) {
+				}
+
+				public void onTreeItemSelected(TreeItem item) {
+					if (item == root) {
+						removeItem(root);
+						UIDLBrowser.this.removeTreeListener(this);
+						addItem(dir());
+						Iterator it = treeItemIterator();
+						while (it.hasNext())
+							((TreeItem) it.next()).setState(true);
+					}
+				}
+
+			});
+		}
+	}
+
 	public TreeItem dir() {
-		
+
 		String nodeName = getTag();
 		for (Iterator i = getAttributeNames().iterator(); i.hasNext();) {
 			String name = i.next().toString();
@@ -176,18 +197,19 @@ public class UIDL {
 		TreeItem item = new TreeItem(nodeName);
 
 		try {
-			TreeItem tmp = null; 
-			for (Iterator i = getVariableHash().keySet().iterator(); i.hasNext();) {
+			TreeItem tmp = null;
+			for (Iterator i = getVariableHash().keySet().iterator(); i
+					.hasNext();) {
 				String name = i.next().toString();
 				String value = "";
 				try {
 					value = getStringVariable(name);
 				} catch (Exception e) {
 					try {
-						JSONArray a = 	getArrayVariable(name);
+						JSONArray a = getArrayVariable(name);
 						value = a.toString();
 					} catch (Exception e2) {
-						try{
+						try {
 							int intVal = getIntVariable(name);
 							value = String.valueOf(intVal);
 						} catch (Exception e3) {
@@ -195,22 +217,23 @@ public class UIDL {
 						}
 					}
 				}
-				if (tmp == null) tmp = new TreeItem("variables");
+				if (tmp == null)
+					tmp = new TreeItem("variables");
 				tmp.addItem(name + "=" + value);
 			}
-			if (tmp != null) item.addItem(tmp);
+			if (tmp != null)
+				item.addItem(tmp);
 		} catch (Exception e) {
 			// Ingonered, no variables
 		}
 
-		
 		Iterator i = getChildIterator();
 		while (i.hasNext()) {
 			Object child = i.next();
-			try{
+			try {
 				UIDL c = (UIDL) child;
 				item.addItem(c.dir());
-				
+
 			} catch (Exception e) {
 				item.addItem(child.toString());
 			}
@@ -221,8 +244,7 @@ public class UIDL {
 	private JSONObject getVariableHash() {
 		JSONObject v = (JSONObject) ((JSONObject) json.get(1)).get("v");
 		if (v == null)
-			throw new IllegalArgumentException(
-					"No variables defined in tag.");
+			throw new IllegalArgumentException("No variables defined in tag.");
 		return v;
 	}
 
