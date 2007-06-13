@@ -93,7 +93,6 @@ public class Client implements EntryPoint {
 				}
 
 			});
-			console.log("Request sent");
 
 		} catch (RequestException e) {
 			console.error(e.getMessage());
@@ -103,7 +102,6 @@ public class Client implements EntryPoint {
 	private void handleReceivedJSONMessage(Response response) {
 		Date start = new Date();
 		
-		console.log(response.getText().substring(3) + "}");
 		System.out.println(response.getText().substring(3) + "}");
 		JSONValue json = JSONParser
 		.parse(response.getText().substring(3) + "}");
@@ -112,7 +110,6 @@ public class Client implements EntryPoint {
 		for (int i = 0; i < changes.size(); i++) {
 			try {
 				UIDL change = new UIDL((JSONArray) changes.get(i));
-				console.log("Received the following change: ");
 				try {
 					console.dirUIDL(change);
 				} catch (Exception e) {

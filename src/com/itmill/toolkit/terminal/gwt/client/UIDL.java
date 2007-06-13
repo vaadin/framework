@@ -158,25 +158,24 @@ public class UIDL {
 		Tree t = new Tree();
 		t.addItem(dir());
 		Iterator it = t.treeItemIterator();
+		int c = 0;
 		while(it.hasNext())
-			((TreeItem) it.next()).setState(true);
+			((TreeItem) it.next()).setState(c++ > 0);
 		return t;
 	}
 	
 	public TreeItem dir() {
 		
-		TreeItem item = new TreeItem(getTag());
-		TreeItem tmp = new TreeItem("attr");
-
+		String nodeName = getTag();
 		for (Iterator i = getAttributeNames().iterator(); i.hasNext();) {
 			String name = i.next().toString();
 			String value = getAttribute(name);
-			tmp.addItem(name + "=" + value);
+			nodeName += " " + name + "=" + value;
 		}
-		item.addItem(tmp);
+		TreeItem item = new TreeItem(nodeName);
 
 		try {
-			tmp = new TreeItem("variables");
+			TreeItem tmp = null; 
 			for (Iterator i = getVariableHash().keySet().iterator(); i.hasNext();) {
 				String name = i.next().toString();
 				String value = "";
@@ -195,28 +194,26 @@ public class UIDL {
 						}
 					}
 				}
+				if (tmp == null) tmp = new TreeItem("variables");
 				tmp.addItem(name + "=" + value);
 			}
-			item.addItem(tmp);
+			if (tmp != null) item.addItem(tmp);
 		} catch (Exception e) {
 			// Ingonered, no variables
 		}
 
 		
-		tmp = new TreeItem("child nodes");
-
 		Iterator i = getChildIterator();
 		while (i.hasNext()) {
 			Object child = i.next();
 			try{
 				UIDL c = (UIDL) child;
-				tmp.addItem(c.dir());
+				item.addItem(c.dir());
 				
 			} catch (Exception e) {
-				tmp.addItem(child.toString());
+				item.addItem(child.toString());
 			}
 		}
-		item.addItem(tmp);
 		return item;
 	}
 
