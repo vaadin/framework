@@ -60,7 +60,7 @@ public class TkTree extends Composite implements Paintable {
 				item.setSelected(true);
 				String key = ((TreeNode)item).key;
 				if (key != null) {
-					if (multiselect) selectedIds.clear();
+					if (!multiselect) selectedIds.clear();
 					if (selectedIds.contains(key)) selectedIds.remove(key);
 					else selectedIds.add(key);
 					TkTree.this.client.updateVariable(TkTree.this.id, "selected", selectedIds.toArray(), true);
