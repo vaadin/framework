@@ -27,10 +27,13 @@ public class TkGridLayout extends FlexTable implements Paintable {
 							int w = c.getIntAttribute("w");
 							((FlexCellFormatter)getCellFormatter()).setColSpan(row,column, w);
 						}
-						UIDL u = c.getChildUIDL(0);						
+						UIDL u = c.getChildUIDL(0);				
+						if (u != null) {
 						Widget child = client.createWidgetFromUIDL(u);
 						if (child != null)
 							setWidget(row, column, child);
+						
+						}
 					}
 				}
 			}

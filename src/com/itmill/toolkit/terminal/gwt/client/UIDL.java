@@ -84,6 +84,7 @@ public class UIDL {
 	public UIDL getChildUIDL(int i) {
 
 		JSONValue c = json.get(i + 2);
+		if (c==null) return null;
 		if (c.isArray() != null)
 			return new UIDL(c.isArray());
 		throw new IllegalStateException("Child node " + i
@@ -246,18 +247,26 @@ public class UIDL {
 		return t.booleanValue();
 	}
 
-	public JSONArray getArrayVariable(String name) {
+	private JSONArray getArrayVariable(String name) {
 		JSONArray t = (JSONArray) getVariableHash().get(name);
 		if (t == null)
 			throw new IllegalArgumentException("No such variable: " + name);
 		return t;
 	}
 
-	public String[] getStingArrayVariable(String name) {
+	public String[] getStringArrayVariable(String name) {
 		JSONArray a = getArrayVariable(name);
 		String[] s = new String[a.size()];
 		for (int i = 0; i < a.size(); i++)
 			s[i] = ((JSONString) a.get(i)).stringValue();
+		return s;
+	}
+
+	public Set getStringArrayVariableAsSet(String name) {
+		JSONArray a = getArrayVariable(name);
+		HashSet s = new HashSet();
+		for (int i = 0; i < a.size(); i++)
+			s.add(((JSONString) a.get(i)).stringValue());
 		return s;
 	}
 
