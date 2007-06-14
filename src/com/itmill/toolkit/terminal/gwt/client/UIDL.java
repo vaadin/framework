@@ -146,7 +146,10 @@ public class UIDL {
 
 		for (Iterator i = getAttributeNames().iterator(); i.hasNext();) {
 			String name = i.next().toString();
-			s += " " + name + "=" + ((JSONObject) json.get(1)).get(name);
+			s += " " + name + "=";
+			JSONValue v = ((JSONObject) json.get(1)).get(name);
+			if (v.isString() != null) s += v;
+			else s += "\"" + v + "\"";
 		}
 
 		s += ">\n";
@@ -162,6 +165,16 @@ public class UIDL {
 		return s;
 	}
 
+	public String getChildrenAsXML() {
+		String s="";
+		Iterator i = getChildIterator();
+		while (i.hasNext()) {
+			Object c = i.next();
+			s += c.toString();
+		}
+		return s;
+	}
+	
 	public UIDLBrowser print_r() {
 		return new UIDLBrowser();
 	}
