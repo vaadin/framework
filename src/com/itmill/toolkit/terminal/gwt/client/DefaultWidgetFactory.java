@@ -2,6 +2,7 @@ package com.itmill.toolkit.terminal.gwt.client;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
+import com.itmill.toolkit.terminal.gwt.client.ui.TkPasswordField;
 import com.itmill.toolkit.terminal.gwt.client.ui.TkButton;
 import com.itmill.toolkit.terminal.gwt.client.ui.TkCheckBox;
 import com.itmill.toolkit.terminal.gwt.client.ui.TkEmbedded;
@@ -13,6 +14,7 @@ import com.itmill.toolkit.terminal.gwt.client.ui.TkPanel;
 import com.itmill.toolkit.terminal.gwt.client.ui.TkSelect;
 import com.itmill.toolkit.terminal.gwt.client.ui.TkTable;
 import com.itmill.toolkit.terminal.gwt.client.ui.TkTabsheet;
+import com.itmill.toolkit.terminal.gwt.client.ui.TkTextArea;
 import com.itmill.toolkit.terminal.gwt.client.ui.TkTextField;
 import com.itmill.toolkit.terminal.gwt.client.ui.TkTree;
 import com.itmill.toolkit.terminal.gwt.client.ui.TkUnknownComponent;
@@ -51,8 +53,13 @@ public class DefaultWidgetFactory implements WidgetFactory {
 			return new TkTabsheet();
 		if ("embedded".equals(tag))
 			return new TkEmbedded();
-		if ("textfield".equals(tag))
+		if ("textfield".equals(tag)) {
+			if(uidl.hasAttribute("multiline"))
+				return new TkTextArea();
+			else if(uidl.hasAttribute("secret") && uidl.getBooleanAttribute("secret"))
+				return new TkPasswordField();
 			return new TkTextField();
+		}
 		if ("table".equals(tag))
 			return new TkTable();
 
