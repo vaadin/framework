@@ -1,4 +1,4 @@
-.itk-textfield{
+.i-textfield{
 	font-family: helvetica, verdana, tahoma, arial, sans-serif; /* Copy from common.css */
 	font-size: 1.2em;
 	color: #444;
@@ -10,7 +10,7 @@
 	margin: 0;
 }
 
-.itk-textfield-focus {
+.i-textfield-focus {
 	color: #111;
 	border-color: #4376c3;
 	border-bottom-color: #6696dd;

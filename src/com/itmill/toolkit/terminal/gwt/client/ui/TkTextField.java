@@ -22,12 +22,12 @@ public class TkTextField extends TextBoxBase implements
 	/**
 	 * The input node CSS classname.
 	 */
-	private static final String CLASSNAME = "itk-textfield";
+	private static final String CLASSNAME = "i-textfield";
 	
 	/**
 	 * This CSS classname is added to the input node on hover.
 	 */
-	private static final String CLASSNAME_FOCUS = "itk-textfield-focus";
+	private static final String CLASSNAME_FOCUS = "i-textfield-focus";
 
 	private String id;
 
@@ -58,8 +58,15 @@ public class TkTextField extends TextBoxBase implements
 		if(uidl.hasAttribute("cols"))
 			setWidth(uidl.getStringAttribute("cols")+"em");
 		
-		setText(uidl.getStringVariable("text"));
+		// Disabled takes precedence over readonly
+		if(uidl.hasAttribute("disabled"))
+			setEnabled(!uidl.getBooleanAttribute("disabled"));
+		else
+			setEnabled(!uidl.getBooleanAttribute("readonly"));
 		
+		setVisible(!uidl.getBooleanAttribute("invisible"));
+		
+		setText(uidl.getStringVariable("text"));
 
 	}
 
