@@ -1,0 +1,18 @@
+.itk-textfield{
+	font-family: helvetica, verdana, tahoma, arial, sans-serif; /* Copy from common.css */
+	font-size: 1.2em;
+	color: #444;
+	background: #fff url(../img/bg.png) repeat-x;
+	padding: 2px;
+	border: 1px solid #b6b6b6;
+	border-bottom-color: #d6d6d6;
+	border-right-color: #d6d6d6;
+	margin: 0;
+}
+
+.itk-textfield-focus {
+	color: #111;
+	border-color: #4376c3;
+	border-bottom-color: #6696dd;
+	border-right-color: #6696dd;
+}
