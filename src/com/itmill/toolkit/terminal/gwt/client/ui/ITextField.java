@@ -22,12 +22,12 @@ public class ITextField extends TextBoxBase implements
 	/**
 	 * The input node CSS classname.
 	 */
-	private static final String CLASSNAME = "itk-textfield";
+	private static final String CLASSNAME = "i-textfield";
 	
 	/**
 	 * This CSS classname is added to the input node on hover.
 	 */
-	private static final String CLASSNAME_FOCUS = "itk-textfield-focus";
+	private static final String CLASSNAME_FOCUS = "i-textfield-focus";
 
 	private String id;
 
