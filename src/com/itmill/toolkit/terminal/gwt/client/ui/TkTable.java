@@ -191,8 +191,9 @@ public class TkTable extends Composite implements Paintable, ScrollListener {
 	public void setCellContent(int rowId, int colId, UIDL cell) {
 		if(cell == null)
 			return;
-	 	Widget cellContent = client.createWidgetFromUIDL(cell);
+	 	Widget cellContent = client.getWidget(cell);
 		tBody.setWidget(rowId, colId, cellContent);
+		((Paintable)cell).updateFromUIDL(cell, client);
 	}
 	
 	public void setCellContent(int rowId, int colId, String text) {

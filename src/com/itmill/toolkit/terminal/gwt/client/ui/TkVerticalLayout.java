@@ -17,7 +17,7 @@ public class TkVerticalLayout extends VerticalPanel implements Paintable, Layout
 	
 	public void updateFromUIDL(UIDL uidl, Client client) {
 		
-//		 Ensure correct implementation
+		// Ensure correct implementation
 		if (client.replaceComponentWithCorrectImplementation(this, uidl))
 			return;
 
@@ -26,8 +26,9 @@ public class TkVerticalLayout extends VerticalPanel implements Paintable, Layout
 		
 		for (Iterator i = uidl.getChildIterator(); i.hasNext();) {
 			UIDL uidlForChild = (UIDL) i.next();
-			Widget child = client.createWidgetFromUIDL(uidlForChild);
+			Widget child = client.getWidget(uidlForChild);
 			add(child);
+			((Paintable)child).updateFromUIDL(uidlForChild, client);
 		}
 	}
 
@@ -54,15 +55,16 @@ public class TkVerticalLayout extends VerticalPanel implements Paintable, Layout
 		if (CaptionWrapper.isNeeded(uidl)) {
 			if (wrapper == null) {
 				int index = getWidgetIndex(component);
+				remove(component);
 				wrapper = new CaptionWrapper(component);
-				insert(wrapper.getWidget(), index);
+				insert(wrapper, index);
 				componentToWrapper.put(component, wrapper);
 			}
 			wrapper.updateCaption(uidl);
 		} else {
 			if (wrapper != null) { 
 				int index = getWidgetIndex(wrapper);
-				remove(index);
+				remove(wrapper);
 				insert(wrapper.getWidget(), index);
 				componentToWrapper.remove(component);
 			}

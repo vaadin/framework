@@ -75,12 +75,14 @@ public class TkTabsheet extends TabPanel implements Paintable {
 				UIDL tab = (UIDL) it.next();
 				if (tab.getBooleanAttribute("selected")) {
 					activeTabIndex = index;
-					Widget content = client.createWidgetFromUIDL(tab
+					Widget content = client.getWidget(tab
 							.getChildUIDL(0));
 					getTabBar().selectTab(index);
 					DeckPanel dp = getDeckPanel();
 					dp.remove(index);
 					dp.insert(content, index);
+					((Paintable)content).updateFromUIDL(tab
+							.getChildUIDL(0), client);
 					dp.showWidget(index);
 				}
 				index++;
@@ -98,9 +100,11 @@ public class TkTabsheet extends TabPanel implements Paintable {
 				tabKeys.add(key);
 				if (tab.getBooleanAttribute("selected")) {
 					activeTabIndex = index;
-					Widget content = client.createWidgetFromUIDL(tab
+					Widget content = client.getWidget(tab
 							.getChildUIDL(0));
 					this.add(content, caption);
+					((Paintable)content).updateFromUIDL(tab
+							.getChildUIDL(0), client);
 					this.selectTab(this.getWidgetIndex(content));
 				} else {
 					this.add(new Label(), caption);

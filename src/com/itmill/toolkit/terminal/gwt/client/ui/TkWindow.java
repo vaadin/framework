@@ -5,21 +5,11 @@ import com.itmill.toolkit.terminal.gwt.client.Client;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
-public class TkWindow extends FlowPanel implements Paintable {
-
-	String id;
-
-	public TkWindow() {
-		super();
-	}
+public class TkWindow extends TkVerticalLayout implements Paintable {
 	
 	public void updateFromUIDL(UIDL uidl, Client client) {
-
-		id = uidl.getId();
+		super.updateFromUIDL( uidl,  client);
 		com.google.gwt.user.client.Window.setTitle(uidl.getStringAttribute("caption"));
-		clear();
-		UIDL child = uidl.getChildUIDL(0);
-		add(client.createWidgetFromUIDL(child));
 	}
 
 }

@@ -20,7 +20,4 @@ public class TkLabel extends Label implements Paintable {
 
 		}
 	}
-	
-	
-	
 }

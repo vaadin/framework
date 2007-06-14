@@ -12,7 +12,8 @@ public class TkGridLayout extends FlexTable implements Paintable {
 
 	public void updateFromUIDL(UIDL uidl, Client client) {
 		clear();
-		if (uidl.hasAttribute("caption")) setTitle(uidl.getStringAttribute("caption"));
+		if (uidl.hasAttribute("caption"))
+			setTitle(uidl.getStringAttribute("caption"));
 		int row = 0, column = 0;
 		for (Iterator i = uidl.getChildIterator(); i.hasNext();) {
 			UIDL r = (UIDL) i.next();
@@ -23,21 +24,21 @@ public class TkGridLayout extends FlexTable implements Paintable {
 					UIDL c = (UIDL) j.next();
 					if ("gc".equals(c.getTag())) {
 						column++;
-						if(c.hasAttribute("w")) {
+						if (c.hasAttribute("w")) {
 							int w = c.getIntAttribute("w");
-							((FlexCellFormatter)getCellFormatter()).setColSpan(row,column, w);
+							((FlexCellFormatter) getCellFormatter())
+									.setColSpan(row, column, w);
 						}
-						UIDL u = c.getChildUIDL(0);				
+						UIDL u = c.getChildUIDL(0);
 						if (u != null) {
-						Widget child = client.createWidgetFromUIDL(u);
-						if (child != null)
+							Widget child = client.getWidget(u);
 							setWidget(row, column, child);
-						
+							((Paintable) child).updateFromUIDL(u, client);
 						}
 					}
 				}
 			}
 		}
 	}
-	
+
 }

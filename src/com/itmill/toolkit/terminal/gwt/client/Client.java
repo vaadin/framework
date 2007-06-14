@@ -127,7 +127,11 @@ public class Client implements EntryPoint {
 								+ uidl.getTag()
 								+ ", but there is no such paintable ("
 								+ uidl.getId() + ") registered yet.");
-					Widget window = createWidgetFromUIDL(uidl);
+					Widget window = widgetFactory.createWidget(uidl);
+					registerPaintable(uidl.getId(), (Paintable) window);
+					((Paintable)window).updateFromUIDL(uidl, this);
+
+					
 					// TODO We should also handle other windows 
 					RootPanel.get("itmtk-ajax-window").add(window);
 				}
@@ -149,16 +153,14 @@ public class Client implements EntryPoint {
 	public Paintable getPaintable(String id) {
 		return (Paintable) paintables.get(id);
 	}
-
+/*
 	public Widget createWidgetFromUIDL(UIDL uidlForChild) {
 		Widget w = widgetFactory.createWidget(uidlForChild);
-		if (w instanceof Paintable) {
 			registerPaintable(uidlForChild.getId(), (Paintable) w);
 			((Paintable)w).updateFromUIDL(uidlForChild, this);
-		}
 		return w;
 	}
-
+*/
 
 	private void addVariableToQueue(String paintableId, String variableName,
 			String encodedValue, boolean immediate) {
@@ -241,7 +243,11 @@ public class Client implements EntryPoint {
 		if (widgetFactory.isCorrectImplementation(currentWidget, uidl)) return false;
 		Layout parent = getParentLayout(currentWidget);
 		if (parent == null) return false;
-		parent.replaceChildComponent(currentWidget, createWidgetFromUIDL(uidl));
+		Widget w = widgetFactory.createWidget(uidl);
+		registerPaintable(uidl.getId(), (Paintable) w);
+		parent.replaceChildComponent(currentWidget, w);
+		((Paintable)w).updateFromUIDL(uidl, this);
+
 		return true;
 	}
 
@@ -250,5 +256,13 @@ public class Client implements EntryPoint {
 		if (parent != null) parent.updateCaption(component, uidl);
 	}
 	
+	public Widget getWidget(UIDL uidl) {
+		String id = uidl.getId();
+		Widget w = (Widget) getPaintable(id);
+		if (w != null) return w;
+		w = widgetFactory.createWidget(uidl);
+		registerPaintable(id, (Paintable)w);
+		return w;
+	}
 
 }

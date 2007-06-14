@@ -17,7 +17,7 @@ public class TkHorizontalLayout extends HorizontalPanel implements Paintable, La
 
 	public void updateFromUIDL(UIDL uidl, Client client) {
 		
-//		 Ensure correct implementation
+		// Ensure correct implementation
 		if (client.replaceComponentWithCorrectImplementation(this, uidl))
 			return;
 
@@ -26,12 +26,12 @@ public class TkHorizontalLayout extends HorizontalPanel implements Paintable, La
 		
 		for (Iterator i = uidl.getChildIterator(); i.hasNext();) {
 			UIDL uidlForChild = (UIDL) i.next();
-			Widget child = client.createWidgetFromUIDL(uidlForChild);
+			Widget child = client.getWidget(uidlForChild);
 			add(child);
+			((Paintable)child).updateFromUIDL(uidlForChild, client);
 		}
 	}
-
-
+	
 	public void replaceChildComponent(Widget from, Widget to) {
 		CaptionWrapper wrapper = (CaptionWrapper) componentToWrapper.get(from);
 		if (wrapper != null) {
@@ -54,21 +54,21 @@ public class TkHorizontalLayout extends HorizontalPanel implements Paintable, La
 		CaptionWrapper wrapper = (CaptionWrapper) componentToWrapper.get(component);
 		if (CaptionWrapper.isNeeded(uidl)) {
 			if (wrapper == null) {
+				int index = getWidgetIndex(component);
+				remove(component);
 				wrapper = new CaptionWrapper(component);
+				insert(wrapper, index);
 				componentToWrapper.put(component, wrapper);
 			}
 			wrapper.updateCaption(uidl);
 		} else {
 			if (wrapper != null) { 
 				int index = getWidgetIndex(wrapper);
-				if (index >= 0) {
-					remove(index);
-					insert(wrapper.getWidget(), index);
-				}
+				remove(wrapper);
+				insert(wrapper.getWidget(), index);
 				componentToWrapper.remove(component);
 			}
 		}
 	}
-	
 	
 }
