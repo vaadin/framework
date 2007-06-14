@@ -354,6 +354,7 @@ public class TextField extends AbstractField {
 	 */
 	public void setSecret(boolean secret) {
 		this.secret = secret;
+		requestRepaint();
 	}
 
 	/**
