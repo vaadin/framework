@@ -52,18 +52,15 @@ public class TkTextField extends TextBoxBase implements
 		
 		if(client.replaceComponentWithCorrectImplementation(this, uidl))
 			return;
+		client.delegateCaptionToParent(this, uidl);
 		
-		if(uidl.hasAttribute("immediate") && uidl.getBooleanAttribute("immediate"))
-			immediate  = true;
+		immediate  = uidl.getBooleanAttribute("immediate");
 
 		if(uidl.hasAttribute("cols"))
 			setWidth(uidl.getStringAttribute("cols")+"em");
 		
 		setText(uidl.getStringVariable("text"));
 		
-		// TODO if either caption, description, icon or error is present,
-		// ask the parent to kindly add those to its list
-		// getParentLayout().updateComponentAdditionals(this);
 
 	}
 

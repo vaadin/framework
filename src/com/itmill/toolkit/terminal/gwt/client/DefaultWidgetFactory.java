@@ -56,7 +56,7 @@ public class DefaultWidgetFactory implements WidgetFactory {
 		if ("textfield".equals(tag)) {
 			if(uidl.hasAttribute("multiline"))
 				return new TkTextArea();
-			else if(uidl.hasAttribute("secret") && uidl.getBooleanAttribute("secret"))
+			else if(uidl.getBooleanAttribute("secret"))
 				return new TkPasswordField();
 			return new TkTextField();
 		}
