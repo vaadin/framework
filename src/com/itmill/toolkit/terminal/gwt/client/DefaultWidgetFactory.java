@@ -2,23 +2,23 @@ package com.itmill.toolkit.terminal.gwt.client;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
-import com.itmill.toolkit.terminal.gwt.client.ui.TkPasswordField;
-import com.itmill.toolkit.terminal.gwt.client.ui.TkButton;
-import com.itmill.toolkit.terminal.gwt.client.ui.TkCheckBox;
-import com.itmill.toolkit.terminal.gwt.client.ui.TkEmbedded;
-import com.itmill.toolkit.terminal.gwt.client.ui.TkGridLayout;
-import com.itmill.toolkit.terminal.gwt.client.ui.TkHorizontalLayout;
-import com.itmill.toolkit.terminal.gwt.client.ui.TkLabel;
-import com.itmill.toolkit.terminal.gwt.client.ui.TkVerticalLayout;
-import com.itmill.toolkit.terminal.gwt.client.ui.TkPanel;
-import com.itmill.toolkit.terminal.gwt.client.ui.TkSelect;
-import com.itmill.toolkit.terminal.gwt.client.ui.TkTable;
-import com.itmill.toolkit.terminal.gwt.client.ui.TkTabsheet;
-import com.itmill.toolkit.terminal.gwt.client.ui.TkTextArea;
-import com.itmill.toolkit.terminal.gwt.client.ui.TkTextField;
-import com.itmill.toolkit.terminal.gwt.client.ui.TkTree;
-import com.itmill.toolkit.terminal.gwt.client.ui.TkUnknownComponent;
-import com.itmill.toolkit.terminal.gwt.client.ui.TkWindow;
+import com.itmill.toolkit.terminal.gwt.client.ui.IPasswordField;
+import com.itmill.toolkit.terminal.gwt.client.ui.IButton;
+import com.itmill.toolkit.terminal.gwt.client.ui.ICheckBox;
+import com.itmill.toolkit.terminal.gwt.client.ui.IEmbedded;
+import com.itmill.toolkit.terminal.gwt.client.ui.IGridLayout;
+import com.itmill.toolkit.terminal.gwt.client.ui.IHorizontalLayout;
+import com.itmill.toolkit.terminal.gwt.client.ui.ILabel;
+import com.itmill.toolkit.terminal.gwt.client.ui.IVerticalLayout;
+import com.itmill.toolkit.terminal.gwt.client.ui.IPanel;
+import com.itmill.toolkit.terminal.gwt.client.ui.ISelect;
+import com.itmill.toolkit.terminal.gwt.client.ui.ITable;
+import com.itmill.toolkit.terminal.gwt.client.ui.ITabsheet;
+import com.itmill.toolkit.terminal.gwt.client.ui.ITextArea;
+import com.itmill.toolkit.terminal.gwt.client.ui.ITextField;
+import com.itmill.toolkit.terminal.gwt.client.ui.ITree;
+import com.itmill.toolkit.terminal.gwt.client.ui.IUnknownComponent;
+import com.itmill.toolkit.terminal.gwt.client.ui.IWindow;
 
 public class DefaultWidgetFactory implements WidgetFactory {
 
@@ -28,42 +28,42 @@ public class DefaultWidgetFactory implements WidgetFactory {
 
 		if ("button".equals(tag)) {
 			if ("switch".equals(uidl.getStringAttribute("type")))
-				return new TkCheckBox();
-			return new TkButton();
+				return new ICheckBox();
+			return new IButton();
 		}
 		if ("window".equals(tag))
-			return new TkWindow();
+			return new IWindow();
 		if ("orderedlayout".equals(tag)) {
 			if ("horizontal".equals(uidl.getStringAttribute("orientation")))
-				return new TkHorizontalLayout();
+				return new IHorizontalLayout();
 			else
-				return new TkVerticalLayout();
+				return new IVerticalLayout();
 		}
 		if ("label".equals(tag))
-			return new TkLabel();
+			return new ILabel();
 		if ("gridlayout".equals(tag))
-			return new TkGridLayout();
+			return new IGridLayout();
 		if ("tree".equals(tag))
-			return new TkTree();
+			return new ITree();
 		if ("select".equals(tag))
-			return new TkSelect();
+			return new ISelect();
 		if ("panel".equals(tag) || "component".equals(tag))
-			return new TkPanel();
+			return new IPanel();
 		if ("tabsheet".equals(tag))
-			return new TkTabsheet();
+			return new ITabsheet();
 		if ("embedded".equals(tag))
-			return new TkEmbedded();
+			return new IEmbedded();
 		if ("textfield".equals(tag)) {
 			if(uidl.hasAttribute("multiline"))
-				return new TkTextArea();
+				return new ITextArea();
 			else if(uidl.getBooleanAttribute("secret"))
-				return new TkPasswordField();
-			return new TkTextField();
+				return new IPasswordField();
+			return new ITextField();
 		}
 		if ("table".equals(tag))
-			return new TkTable();
+			return new ITable();
 
-		return new TkUnknownComponent();
+		return new IUnknownComponent();
 	}
 
 	public boolean isCorrectImplementation(Widget currentWidget, UIDL uidl) {

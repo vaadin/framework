@@ -16,8 +16,8 @@ import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.itmill.toolkit.terminal.gwt.client.ui.TkButton;
-import com.itmill.toolkit.terminal.gwt.client.ui.TkLabel;
+import com.itmill.toolkit.terminal.gwt.client.ui.IButton;
+import com.itmill.toolkit.terminal.gwt.client.ui.ILabel;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
