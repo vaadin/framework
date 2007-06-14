@@ -23,6 +23,7 @@ public class TkVerticalLayout extends VerticalPanel implements Paintable, Layout
 
 		// TODO Should update instead of just redraw
 		clear();
+		componentToWrapper.clear();
 		
 		for (Iterator i = uidl.getChildIterator(); i.hasNext();) {
 			UIDL uidlForChild = (UIDL) i.next();
