@@ -28,17 +28,16 @@ public class TkCheckBox extends com.google.gwt.user.client.ui.CheckBox
 	}
 
 	public void updateFromUIDL(UIDL uidl, Client client) {
-		if (!"switch".equals(uidl.getStringAttribute("type"))) {
-			if (this.client != null)
-				client.repaintComponent(this, uidl);
-			else
-				throw new IllegalStateException(
-						"Can not paint button of type: "
-								+ uidl.getStringAttribute("type"));
-		}
+		
+		// Ensure correct implementation
+		if (client.replaceComponentWithCorrectImplementation(this, uidl))
+			return;
 
+		// Save details
 		this.client = client;
 		id = uidl.getId();
+
+		// Set text
 		setText(uidl.getStringAttribute("caption"));
 		setChecked(uidl.getBooleanVariable("state"));
 		immediate = uidl.getBooleanAttribute("immediate");

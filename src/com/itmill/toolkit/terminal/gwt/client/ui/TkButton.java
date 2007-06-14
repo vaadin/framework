@@ -7,33 +7,37 @@ import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
 public class TkButton extends com.google.gwt.user.client.ui.Button implements
-		Paintable, ClickListener {
+		Paintable {
 
 	String id;
 
 	Client client;
 
 	public TkButton() {
-		addClickListener(this);
+		addClickListener(new ClickListener() {
+
+			public void onClick(Widget sender) {
+				if (id == null || client == null)
+					return;
+				client.updateVariable(id, "state", true, true);
+			}
+		});
 	}
 
 	public void updateFromUIDL(UIDL uidl, Client client) {
-		if (uidl.getStringAttribute("type") != null) {
-			if (this.client != null)
-				client.repaintComponent(this, uidl);
-			else
-				throw new IllegalStateException(
-						"Can not paint button of type: "
-								+ uidl.getStringAttribute("type"));
-		}
+
+		// Ensure correct implementation
+		if (client.replaceComponentWithCorrectImplementation(this, uidl))
+			return;
+
+		// Save details
 		this.client = client;
 		id = uidl.getId();
+
+		// Set text
 		setText(uidl.getStringAttribute("caption"));
+
+		// TODO Handle description and errormessages
 	}
 
-	public void onClick(Widget sender) {
-		if (id == null || client == null)
-			return;
-		client.updateVariable(id, "state", true, true);
-	}
 }

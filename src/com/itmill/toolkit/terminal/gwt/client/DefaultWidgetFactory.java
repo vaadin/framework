@@ -1,12 +1,14 @@
 package com.itmill.toolkit.terminal.gwt.client;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ui.TkButton;
 import com.itmill.toolkit.terminal.gwt.client.ui.TkCheckBox;
 import com.itmill.toolkit.terminal.gwt.client.ui.TkEmbedded;
 import com.itmill.toolkit.terminal.gwt.client.ui.TkGridLayout;
+import com.itmill.toolkit.terminal.gwt.client.ui.TkHorizontalLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.TkLabel;
-import com.itmill.toolkit.terminal.gwt.client.ui.TkOrderedLayout;
+import com.itmill.toolkit.terminal.gwt.client.ui.TkVerticalLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.TkPanel;
 import com.itmill.toolkit.terminal.gwt.client.ui.TkSelect;
 import com.itmill.toolkit.terminal.gwt.client.ui.TkTable;
@@ -18,19 +20,23 @@ import com.itmill.toolkit.terminal.gwt.client.ui.TkWindow;
 
 public class DefaultWidgetFactory implements WidgetFactory {
 
-	public Widget createWidget(UIDL uidl, String theme) {
+	public Widget createWidget(UIDL uidl) {
 
 		String tag = uidl.getTag();
-		
-		if ("button".equals(tag)){
+
+		if ("button".equals(tag)) {
 			if ("switch".equals(uidl.getStringAttribute("type")))
 				return new TkCheckBox();
 			return new TkButton();
 		}
 		if ("window".equals(tag))
 			return new TkWindow();
-		if ("orderedlayout".equals(tag))
-			return new TkOrderedLayout();
+		if ("orderedlayout".equals(tag)) {
+			if ("horizontal".equals(uidl.getStringAttribute("orientation")))
+				return new TkHorizontalLayout();
+			else
+				return new TkVerticalLayout();
+		}
 		if ("label".equals(tag))
 			return new TkLabel();
 		if ("gridlayout".equals(tag))
@@ -51,6 +57,12 @@ public class DefaultWidgetFactory implements WidgetFactory {
 			return new TkTable();
 
 		return new TkUnknownComponent();
+	}
+
+	public boolean isCorrectImplementation(Widget currentWidget, UIDL uidl) {
+
+		// TODO This implementation should be optimized
+		return GWT.getTypeName(currentWidget).equals(GWT.getTypeName(createWidget(uidl)));
 	}
 
 }

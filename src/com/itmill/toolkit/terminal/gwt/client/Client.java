@@ -81,7 +81,7 @@ public class Client implements EntryPoint {
 	private void makeUidlRequest(String requestData) {
 		console.log("Making UIDL Request with params: " + requestData);
 		rb = new RequestBuilder(RequestBuilder.GET, appUri
-				+ "/UIDL/?requestId=" + (++requestCount) + "&" + requestData);
+				+ "/UIDL/?requestId=" + (Math.random()) + "&" + requestData);
 		try {
 			rb.sendRequest(requestData, new RequestCallback() {
 				public void onError(Request request, Throwable exception) {
@@ -150,7 +150,7 @@ public class Client implements EntryPoint {
 	}
 
 	public Widget createWidgetFromUIDL(UIDL uidlForChild) {
-		Widget w = widgetFactory.createWidget(uidlForChild, null);
+		Widget w = widgetFactory.createWidget(uidlForChild);
 		if (w instanceof Paintable) {
 			registerPaintable(uidlForChild.getId(), (Paintable) w);
 			((Paintable)w).updateFromUIDL(uidlForChild, this);
@@ -226,15 +226,21 @@ public class Client implements EntryPoint {
 	public void setWidgetFactory(WidgetFactory widgetFactory) {
 		this.widgetFactory = widgetFactory;
 	}
-
-	public void repaintComponent(Widget component, UIDL uidl) {
+	
+	public static Layout getParentLayout(Widget component) {
 		Widget parent = component.getParent();
 		while (parent != null && !(parent instanceof Layout)) parent = parent.getParent();
-		if (parent != null && ((Layout)parent).hasChildComponent(component)) {
-			((Layout) parent).replaceChildComponent(component,createWidgetFromUIDL(uidl));
-		}
-		
+		if (parent != null && ((Layout)parent).hasChildComponent(component))
+			return (Layout) parent;
+		return null;
 	}
 
+	public boolean replaceComponentWithCorrectImplementation(Widget currentWidget, UIDL uidl) {
+		if (widgetFactory.isCorrectImplementation(currentWidget, uidl)) return false;
+		Layout parent = getParentLayout(currentWidget);
+		if (parent == null) return false;
+		parent.replaceChildComponent(currentWidget, createWidgetFromUIDL(uidl));
+		return true;
+	}
 
 }
