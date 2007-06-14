@@ -34,14 +34,13 @@ public interface Layout extends Paintable {
 	 * Each component is responsible for maintaining its caption, description
 	 * and error message. In most cases components doesn't want to do that and
 	 * those elements reside outside of the component. Because of this layouts
-	 * should provide service for it's childen to show those elements for them.
+	 * msut provide service for it's childen to show those elements for them.
 	 * </p>
 	 * 
 	 * @param component
 	 *            Child component that requests the service.
 	 * @param uidl
 	 *            UIDL of the child component.
-	 * @return true iff this layout updated caption succesfully.
 	 */
-	boolean updateCaption(Widget component, UIDL uidl);
+	void updateCaption(Widget component, UIDL uidl);
 }

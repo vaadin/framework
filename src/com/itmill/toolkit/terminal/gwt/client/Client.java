@@ -17,6 +17,7 @@ import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ui.TkButton;
+import com.itmill.toolkit.terminal.gwt.client.ui.TkLabel;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -158,6 +159,7 @@ public class Client implements EntryPoint {
 		return w;
 	}
 
+
 	private void addVariableToQueue(String paintableId, String variableName,
 			String encodedValue, boolean immediate) {
 		String id = paintableId + "_" + variableName;
@@ -242,5 +244,11 @@ public class Client implements EntryPoint {
 		parent.replaceChildComponent(currentWidget, createWidgetFromUIDL(uidl));
 		return true;
 	}
+
+	public void delegateCaptionToParent(Widget component, UIDL uidl) {
+		Layout parent = getParentLayout(component);
+		if (parent != null) parent.updateCaption(component, uidl);
+	}
+	
 
 }
