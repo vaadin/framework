@@ -14,6 +14,7 @@ import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ui.IButton;
@@ -234,46 +235,76 @@ public class Client implements EntryPoint {
 	}
 
 	/**
-	 * Ensure that correct implementation is used for the component.
+	 * Update generic component features.
 	 * 
+	 * <h2>Selecting correct implementation</h2>
+	 * 
+	 * <p>
 	 * The implementation of a component depends on many properties, including
 	 * styles, component features, etc. Sometimes the user changes those
 	 * properties after the component has been created. Calling this method in
 	 * the beginning of your updateFromUIDL -method automatically replaces your
 	 * component with more appropriate if the requested implementation changes.
+	 * </p>
+	 * 
+	 * <h2>Caption, icon, error messages and description</h2>
+	 * 
+	 * <p>
+	 * Component can delegate management of caption, icon, error messages and
+	 * description to parent layout. This is optional an should be decided by
+	 * component author
+	 * </p>
+	 * 
+	 * <h2>Component visibility and disabling</h2>
+	 * 
+	 * This method will manage component visibility automatically and if
+	 * component is an instanceof FocusWidget, also handle component disabling
+	 * when needed.
 	 * 
 	 * @param currentWidget
 	 *            Current widget that might need replacement
 	 * @param uidl
 	 *            UIDL to be painted
-	 * @return Returns true
+	 * @param manageCaption
+	 *            True if you want to delegate caption, icon, description and
+	 *            error message management to parent.
+	 * 
+	 * @return Returns true iff no further painting is needed by caller
 	 */
 	public boolean updateComponent(Widget component, UIDL uidl,
 			boolean manageCaption) {
 
+		// Switch to correct implementation if neede
+		if (!widgetFactory.isCorrectImplementation(component, uidl)) {
+			Layout parent = getParentLayout(component);
+			if (parent != null) {
+				Widget w = widgetFactory.createWidget(uidl);
+				registerPaintable(uidl.getId(), (Paintable) w);
+				parent.replaceChildComponent(component, w);
+				((Paintable) w).updateFromUIDL(uidl, this);
+				return true;
+			}
+		}
+
+		// Set captions
+		// TODO Manage Error messages
 		if (manageCaption) {
 			Layout parent = getParentLayout(component);
 			if (parent != null)
 				parent.updateCaption(component, uidl);
 		}
-		
+
+		// Visibility, Disabling and read-only status
+		if (component instanceof FocusWidget)
+			((FocusWidget) component).setEnabled(!uidl
+					.getBooleanAttribute("disabled"));
 		boolean visible = !uidl.getBooleanAttribute("invisible");
 		component.setVisible(visible);
-		if (!visible) return true;
-		
-		if (widgetFactory.isCorrectImplementation(component, uidl))
-			return false;
-		Layout parent = getParentLayout(component);
-		if (parent == null)
-			return false;
-		Widget w = widgetFactory.createWidget(uidl);
-		registerPaintable(uidl.getId(), (Paintable) w);
-		parent.replaceChildComponent(component, w);
-		((Paintable) w).updateFromUIDL(uidl, this);
+		if (!visible)
+			return true;
 
-		return true;
+		return false;
 	}
-
 
 	/**
 	 * Get either existing or new widget for given UIDL.

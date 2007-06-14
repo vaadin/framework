@@ -29,6 +29,7 @@ public class CaptionWrapper extends VerticalPanel {
 			else 
 				caption.setText(c);
 		}		
+		setVisible(!uidl.getBooleanAttribute("invisible"));
 	}
 	
 	public static boolean isNeeded(UIDL uidl) {
