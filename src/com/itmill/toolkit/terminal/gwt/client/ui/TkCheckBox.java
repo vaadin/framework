@@ -30,7 +30,7 @@ public class TkCheckBox extends com.google.gwt.user.client.ui.CheckBox
 	public void updateFromUIDL(UIDL uidl, Client client) {
 		
 		// Ensure correct implementation
-		if (client.replaceComponentWithCorrectImplementation(this, uidl))
+		if (client.updateComponent(this, uidl, false))
 			return;
 
 		// Save details

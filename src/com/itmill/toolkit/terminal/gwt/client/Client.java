@@ -38,15 +38,13 @@ public class Client implements EntryPoint {
 
 	private HashMap paintables = new HashMap();
 
-	private int requestCount = 0;
-
 	private WidgetFactory widgetFactory = new DefaultWidgetFactory();
 
 	/**
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
-		
+
 		appUri = getAppUri();
 
 		console = new Console(RootPanel.get("itmtk-loki"));
@@ -74,10 +72,10 @@ public class Client implements EntryPoint {
 		}
 
 	}
-	
+
 	private native String getAppUri()/*-{
-		return $wnd.itmtk.appUri;
-	}-*/;
+	 return $wnd.itmtk.appUri;
+	 }-*/;
 
 	private void makeUidlRequest(String requestData) {
 		console.log("Making UIDL Request with params: " + requestData);
@@ -114,7 +112,8 @@ public class Client implements EntryPoint {
 					console.dirUIDL(change);
 				} catch (Exception e) {
 					console.log(e.getMessage());
-					// TODO: dir doesn't work in any browser although it should work (works in hosted mode)
+					// TODO: dir doesn't work in any browser although it should
+					// work (works in hosted mode)
 					// it partially did at some part but now broken.
 				}
 				UIDL uidl = change.getChildUIDL(0);
@@ -129,10 +128,9 @@ public class Client implements EntryPoint {
 								+ uidl.getId() + ") registered yet.");
 					Widget window = widgetFactory.createWidget(uidl);
 					registerPaintable(uidl.getId(), (Paintable) window);
-					((Paintable)window).updateFromUIDL(uidl, this);
+					((Paintable) window).updateFromUIDL(uidl, this);
 
-					
-					// TODO We should also handle other windows 
+					// TODO We should also handle other windows
 					RootPanel.get("itmtk-ajax-window").add(window);
 				}
 
@@ -142,7 +140,8 @@ public class Client implements EntryPoint {
 
 		}
 		long prosessingTime = (new Date().getTime()) - start.getTime();
-		console.log(" Processing time was " + String.valueOf(prosessingTime) + "ms for "+jsonText.length()+" characters of JSON");
+		console.log(" Processing time was " + String.valueOf(prosessingTime)
+				+ "ms for " + jsonText.length() + " characters of JSON");
 
 	}
 
@@ -153,14 +152,6 @@ public class Client implements EntryPoint {
 	public Paintable getPaintable(String id) {
 		return (Paintable) paintables.get(id);
 	}
-/*
-	public Widget createWidgetFromUIDL(UIDL uidlForChild) {
-		Widget w = widgetFactory.createWidget(uidlForChild);
-			registerPaintable(uidlForChild.getId(), (Paintable) w);
-			((Paintable)w).updateFromUIDL(uidlForChild, this);
-		return w;
-	}
-*/
 
 	private void addVariableToQueue(String paintableId, String variableName,
 			String encodedValue, boolean immediate) {
@@ -212,16 +203,18 @@ public class Client implements EntryPoint {
 		addVariableToQueue(paintableId, variableName, newValue ? "true"
 				: "false", immediate);
 	}
-	public void updateVariable(String paintableId, String variableName, Object[] values, boolean immediate) {
+
+	public void updateVariable(String paintableId, String variableName,
+			Object[] values, boolean immediate) {
 		StringBuffer buf = new StringBuffer();
 		for (int i = 0; i < values.length; i++) {
-			if(i > 0)
+			if (i > 0)
 				buf.append(",");
 			buf.append(escapeString(values[i].toString()));
 		}
-		addVariableToQueue("array:" + paintableId, variableName, buf.toString(), immediate);
+		addVariableToQueue("array:" + paintableId, variableName,
+				buf.toString(), immediate);
 	}
-
 
 	public WidgetFactory getWidgetFactory() {
 		return widgetFactory;
@@ -230,38 +223,76 @@ public class Client implements EntryPoint {
 	public void setWidgetFactory(WidgetFactory widgetFactory) {
 		this.widgetFactory = widgetFactory;
 	}
-	
+
 	public static Layout getParentLayout(Widget component) {
 		Widget parent = component.getParent();
-		while (parent != null && !(parent instanceof Layout)) parent = parent.getParent();
-		if (parent != null && ((Layout)parent).hasChildComponent(component))
+		while (parent != null && !(parent instanceof Layout))
+			parent = parent.getParent();
+		if (parent != null && ((Layout) parent).hasChildComponent(component))
 			return (Layout) parent;
 		return null;
 	}
 
-	public boolean replaceComponentWithCorrectImplementation(Widget currentWidget, UIDL uidl) {
-		if (widgetFactory.isCorrectImplementation(currentWidget, uidl)) return false;
-		Layout parent = getParentLayout(currentWidget);
-		if (parent == null) return false;
+	/**
+	 * Ensure that correct implementation is used for the component.
+	 * 
+	 * The implementation of a component depends on many properties, including
+	 * styles, component features, etc. Sometimes the user changes those
+	 * properties after the component has been created. Calling this method in
+	 * the beginning of your updateFromUIDL -method automatically replaces your
+	 * component with more appropriate if the requested implementation changes.
+	 * 
+	 * @param currentWidget
+	 *            Current widget that might need replacement
+	 * @param uidl
+	 *            UIDL to be painted
+	 * @return Returns true
+	 */
+	public boolean updateComponent(Widget component, UIDL uidl,
+			boolean manageCaption) {
+
+		if (manageCaption) {
+			Layout parent = getParentLayout(component);
+			if (parent != null)
+				parent.updateCaption(component, uidl);
+		}
+		
+		boolean visible = !uidl.getBooleanAttribute("invisible");
+		component.setVisible(visible);
+		if (!visible) return true;
+		
+		if (widgetFactory.isCorrectImplementation(component, uidl))
+			return false;
+		Layout parent = getParentLayout(component);
+		if (parent == null)
+			return false;
 		Widget w = widgetFactory.createWidget(uidl);
 		registerPaintable(uidl.getId(), (Paintable) w);
-		parent.replaceChildComponent(currentWidget, w);
-		((Paintable)w).updateFromUIDL(uidl, this);
+		parent.replaceChildComponent(component, w);
+		((Paintable) w).updateFromUIDL(uidl, this);
 
 		return true;
 	}
 
-	public void delegateCaptionToParent(Widget component, UIDL uidl) {
-		Layout parent = getParentLayout(component);
-		if (parent != null) parent.updateCaption(component, uidl);
-	}
-	
+
+	/**
+	 * Get either existing or new widget for given UIDL.
+	 * 
+	 * If corresponding paintable has been previously painted, return it.
+	 * Otherwise create and register a new widget from UIDL. Caller must update
+	 * the returned widget from UIDL after it has been connected to parent.
+	 * 
+	 * @param uidl
+	 *            UIDL to create widget from.
+	 * @return Either existing or new widget corresponding to UIDL.
+	 */
 	public Widget getWidget(UIDL uidl) {
 		String id = uidl.getId();
 		Widget w = (Widget) getPaintable(id);
-		if (w != null) return w;
+		if (w != null)
+			return w;
 		w = widgetFactory.createWidget(uidl);
-		registerPaintable(id, (Paintable)w);
+		registerPaintable(id, (Paintable) w);
 		return w;
 	}
 

@@ -8,7 +8,6 @@ public class TkPanel extends TkVerticalLayout implements Paintable {
 
 	public void updateFromUIDL(UIDL uidl, Client client) {
 		super.updateFromUIDL(uidl, client);
-		client.delegateCaptionToParent(this, uidl);
 	}
 	
 }

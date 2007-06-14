@@ -18,7 +18,7 @@ public class TkVerticalLayout extends VerticalPanel implements Paintable, Layout
 	public void updateFromUIDL(UIDL uidl, Client client) {
 		
 		// Ensure correct implementation
-		if (client.replaceComponentWithCorrectImplementation(this, uidl))
+		if (client.updateComponent(this, uidl, false))
 			return;
 
 		// TODO Should update instead of just redraw

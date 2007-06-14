@@ -27,7 +27,7 @@ public class TkButton extends com.google.gwt.user.client.ui.Button implements
 	public void updateFromUIDL(UIDL uidl, Client client) {
 
 		// Ensure correct implementation
-		if (client.replaceComponentWithCorrectImplementation(this, uidl))
+		if (client.updateComponent(this, uidl, false))
 			return;
 
 		// Save details

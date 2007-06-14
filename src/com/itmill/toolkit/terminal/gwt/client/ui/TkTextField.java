@@ -50,9 +50,8 @@ public class TkTextField extends TextBoxBase implements
 		this.client = client;
 		id = uidl.getId();
 		
-		if(client.replaceComponentWithCorrectImplementation(this, uidl))
+		if(client.updateComponent(this, uidl, true))
 			return;
-		client.delegateCaptionToParent(this, uidl);
 		
 		immediate  = uidl.getBooleanAttribute("immediate");
 

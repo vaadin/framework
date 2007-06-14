@@ -10,9 +10,8 @@ public class TkLabel extends HTML implements Paintable {
 
 	public void updateFromUIDL(UIDL uidl, Client client) {
 
-		if (client.replaceComponentWithCorrectImplementation(this, uidl))
+		if (client.updateComponent(this, uidl, true))
 			return;
-		client.delegateCaptionToParent(this, uidl);
 
 		String mode = uidl.getStringAttribute("mode");
 		if (mode == null || "text".equals(mode))
