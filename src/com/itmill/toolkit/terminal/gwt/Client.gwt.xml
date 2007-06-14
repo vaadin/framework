@@ -7,8 +7,12 @@
 	<inherits name='com.google.gwt.xml.XML'/>
 
 	<inherits name='com.google.gwt.json.JSON'/>
+	
+	<!-- Component stylesheets                                -->
+	
+	<stylesheet src="component-themes/collection.css"/>
 
-'	<!-- Specify the app entry point class.                   -->
+	<!-- Specify the app entry point class.                   -->
 	<entry-point class='com.itmill.toolkit.terminal.gwt.client.Client'/>
   
 </module>
