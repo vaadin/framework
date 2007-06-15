@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--  THIS FILE WILL BE DELETED !!! -->
+
+<theme name="example">
+
+	<author name="IT Mill Ltd" email="info@itmill.com" />
+
+	<description>
+		IT Mill Toolkit Example theme.
+	</description>
+
+	<modes>
+		<mode name="ajax"/>
+		<mode name="html"/>
+	</modes>
+
+	<fileset>
+
+		<!-- UIDL Mode support files -->
+		<fileset mode="ajax">
+			<!-- JavaScripts to load in html head -->
+			<file name="script/example-ajax-components.js" />
+		</fileset>
+	</fileset>
+	
+</theme>

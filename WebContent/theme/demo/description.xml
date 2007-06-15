@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--  THIS FILE WILL BE DELETED !!! -->
+
+
+<theme name="demo">
+
+	<author name="IT Mill Ltd" email="info@itmill.com" />
+
+	<description>
+		IT Mill Toolkit Corporate theme.
+	</description>
+
+	<!--  Corporate theme only supports UIDL mode -->
+	<modes>
+		<mode name="ajax"/>
+		<mode name="html"/>
+	</modes>
+
+	<fileset>
+
+		<!-- UIDL Mode support files -->
+		<fileset mode="ajax">
+		 	<fileset>
+				<require><not><supports agent="SymbianOS"/></not></require>
+				<file name="featurebrowser/featurebrowser.css" />
+				<file name="featurebrowser/components.js" />
+			</fileset>
+			<!-- Use customized layout for SymbianOS phones -->
+			<fileset>
+	  		<require><supports agent="SymbianOS"/></require>
+				<file name="featurebrowser/symbian/featurebrowser.css" />
+				<file name="featurebrowser/symbian/components.js" />
+			</fileset>
+		</fileset>
+		<fileset mode="html">
+			<file name="featurebrowser/html-mode.xsl" />
+			<file name="featurebrowser/html-mode.css" />
+		</fileset>
+	</fileset>
+	
+</theme>

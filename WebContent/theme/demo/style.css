@@ -1,0 +1,38 @@
+.itmtk .tree-menu .content, 
+.itmtk .tree-menu .content .node, 
+.itmtk .tree-menu .content .nodes, 
+.itmtk .tree-menu .content .node IMG {
+	background: none;
+	border: 0;
+}
+
+#featurebrowser-properties {
+	width: 0px;
+	background: #f5f5f5;
+}
+
+#featurebrowser-divider {
+	background-image: url(layout/img/tab_handle.png);
+}
+
+#featurebrowser-mainlayout
+{
+	background-color: white;
+	background-image: url(layout/img/m_bg.png);
+	background-repeat: no-repeat;
+}
+
+#featurebrowser-tabs {
+	background: white;
+}
+
+#featurebrowser-properties-toggler {
+	position: absolute; 
+	top: 15px;
+}
+
+#featurebrowser-features {
+	position: absolute;
+	overflow: auto;
+	left: 0;
+}
