@@ -17,8 +17,6 @@ import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.itmill.toolkit.terminal.gwt.client.ui.IButton;
-import com.itmill.toolkit.terminal.gwt.client.ui.ILabel;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -295,9 +293,14 @@ public class Client implements EntryPoint {
 		}
 
 		// Visibility, Disabling and read-only status
-		if (component instanceof FocusWidget)
-			((FocusWidget) component).setEnabled(!uidl
-					.getBooleanAttribute("disabled"));
+		if (component instanceof FocusWidget) {
+			boolean enabled = true;
+			if(uidl.hasAttribute("disabled"))
+				enabled = !uidl.getBooleanAttribute("disabled");
+			else if(uidl.hasAttribute("readonly")) 
+				enabled = !uidl.getBooleanAttribute("readonly");
+			((FocusWidget) component).setEnabled(enabled);
+		}
 		boolean visible = !uidl.getBooleanAttribute("invisible");
 		component.setVisible(visible);
 		if (!visible)
