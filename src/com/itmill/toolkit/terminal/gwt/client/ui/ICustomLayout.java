@@ -65,6 +65,7 @@ public class ICustomLayout extends SimplePanel implements Paintable, Layout {
 			while (parent != null && !(parent instanceof IWindow)) parent = parent.getParent();
 			if (parent != null && ((IWindow)parent).getTheme() != null);
 			prefixImgSrcs(html.getElement(), "../theme/"+((IWindow)parent).getTheme()+"/layout/");
+			removeAndEvalScripts(html.getElement());
 	}
 
 	private native void addUniqueIdsForLocations(Element e, String idPrefix) /*-{
@@ -72,7 +73,10 @@ public class ICustomLayout extends SimplePanel implements Paintable, Layout {
 		for (var i = 0; i < divs.length; i++) {
 		 	var div = divs[i];
 		 	var location = div.getAttribute("location");
-			if (location != null) div.setAttribute("id",idPrefix + location);
+			if (location != null) {
+				div.setAttribute("id",idPrefix + location);
+				div.innerHTML="";
+			}
 		}			
 	}-*/;
 
@@ -84,6 +88,18 @@ public class ICustomLayout extends SimplePanel implements Paintable, Layout {
 		if (src.indexOf("http") != 0) div.setAttribute("src",srcPrefix + src);
 	}			
 }-*/;
+	
+	private native void removeAndEvalScripts(Element e) /*-{
+	var scripts = e.getElementsByTagName("script"); 
+	for (var i = 0; i < scripts.length; i++) {
+	 	var script = scripts[i].innerHTML;
+	 	scripts[i].innerHTML = "";
+	 	try {
+	 	eval(script);
+	 	} catch (e) {}
+	}			
+}-*/;
+
 
 	public void replaceChildComponent(Widget from, Widget to) {
 		CaptionWrapper wrapper = (CaptionWrapper) componentToWrapper.get(from);
