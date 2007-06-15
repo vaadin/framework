@@ -35,7 +35,11 @@ public class ICustomLayout extends SimplePanel implements Paintable, Layout {
 			if (uidlForChild.getTag().equals("location")) {
 				String location = uidlForChild.getStringAttribute("name");
 				Widget child = client.getWidget(uidlForChild.getChildUIDL(0));
+				try {
 				html.add(child,locationPrefix + location);
+				} catch(Exception e) {
+					// If no location is found, this component is not visible
+				}
 				((Paintable)child).updateFromUIDL(uidlForChild.getChildUIDL(0), client);
 				
 			}
@@ -56,6 +60,11 @@ public class ICustomLayout extends SimplePanel implements Paintable, Layout {
 			add(html);
 			
 			addUniqueIdsForLocations(html.getElement(), locationPrefix);
+			
+			Widget parent = getParent();
+			while (parent != null && !(parent instanceof IWindow)) parent = parent.getParent();
+			if (parent != null && ((IWindow)parent).getTheme() != null);
+			prefixImgSrcs(html.getElement(), "../theme/"+((IWindow)parent).getTheme()+"/layout/");
 	}
 
 	private native void addUniqueIdsForLocations(Element e, String idPrefix) /*-{
@@ -66,6 +75,15 @@ public class ICustomLayout extends SimplePanel implements Paintable, Layout {
 			if (location != null) div.setAttribute("id",idPrefix + location);
 		}			
 	}-*/;
+
+	private native void prefixImgSrcs(Element e, String srcPrefix) /*-{
+	var divs = e.getElementsByTagName("img"); 
+	for (var i = 0; i < divs.length; i++) {
+	 	var div = divs[i];
+	 	var src = div.getAttribute("src");
+		if (src.indexOf("http") != 0) div.setAttribute("src",srcPrefix + src);
+	}			
+}-*/;
 
 	public void replaceChildComponent(Widget from, Widget to) {
 		CaptionWrapper wrapper = (CaptionWrapper) componentToWrapper.get(from);
