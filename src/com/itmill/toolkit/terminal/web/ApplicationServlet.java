@@ -184,7 +184,7 @@ public class ApplicationServlet extends HttpServlet implements
 
 	private static final String AJAX_UIDL_URI = "/UIDL/";
 
-	private static final String THEME_DIRECTORY_PATH = "/WEB-INF/lib/themes/";
+	private static final String THEME_DIRECTORY_PATH = "/theme/";
 
 	private static final String THEME_LISTING_FILE = THEME_DIRECTORY_PATH
 			+ "themes.txt";
@@ -902,7 +902,8 @@ public class ApplicationServlet extends HttpServlet implements
 		
 		page.write("'\n};\n" +
 				"</script>\n" +
-				"<body>\n<script language=\"javascript\" src=\"/tk/com.itmill.toolkit.terminal.gwt.Client/gwt.js\"></script>\n" +
+				"<link REL=\"stylesheet\" TYPE=\"text/css\" HREF=\""+request.getContextPath() + "/theme/"+theme.getName()+"/style.css\">" + 
+				"</head>\n<body>\n<script language=\"javascript\" src=\"/tk/com.itmill.toolkit.terminal.gwt.Client/gwt.js\"></script>\n" +
 				"	<iframe id=\"__gwt_historyFrame\" style=\"width:0;height:0;border:0\"></iframe>\n" +
 				"	<div id=\"itmtk-ajax-window\"></div>" +
 				"	<div id=\"itmtk-loki\" style=\"width: 100%; position: absolute; left: 0px; bottom: 0; height: 0px; border-top: 1px solid gray; background-color: #f6f6f6; overflow: scroll; font-size: x-small;color:red !important;\"" +
