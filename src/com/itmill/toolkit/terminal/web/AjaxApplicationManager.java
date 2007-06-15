@@ -350,7 +350,6 @@ public class AjaxApplicationManager implements
                 	outWriter.print("}, \"resources\" : {");
 
                     // Precache custom layouts
-                	// TODO Rewrite this to print to outWriter a custom json attribute. Don't use paintTarget !!
                     // TODO Does not support theme-get param or different themes in different windows -> Allways preload layouts with the theme specified by the applications
                     String themeName = application.getTheme() != null ? application.getTheme() : ApplicationServlet.DEFAULT_THEME;
                     // TODO We should only precache the layouts that are not cached already
