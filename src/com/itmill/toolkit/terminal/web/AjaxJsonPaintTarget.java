@@ -71,7 +71,7 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 	private final static String UIDL_ARG_ID = "id";
 
 	private Stack mOpenTags;
-	
+
 	private Stack openJsonTags;
 
 	private boolean mTagArgumentListOpen;
@@ -87,10 +87,11 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 	private boolean trackPaints = false;
 
 	private int numberOfPaints = 0;
-	
+
 	private int changes = 0;
-	
+
 	Set preCachedResources = new HashSet();
+
 	private boolean customLayoutArgumentsOpen = false;
 
 	private JsonTag tag;
@@ -113,7 +114,6 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 		// Sets the variable map
 		this.variableMap = variableMap;
 
-
 		// Sets the target for UIDL writing
 		this.uidlBuffer = outWriter;
 
@@ -135,9 +135,9 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 	 * Prints the element start tag.
 	 * 
 	 * <pre>
-	 * Todo:
-	 *  Checking of input values
-	 *  
+	 *   Todo:
+	 *    Checking of input values
+	 *    
 	 * </pre>
 	 * 
 	 * @param tagName
@@ -146,7 +146,8 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 	 *             if the paint operation failed.
 	 * 
 	 */
-	public void startTag(String tagName, boolean isChildNode) throws PaintException {
+	public void startTag(String tagName, boolean isChildNode)
+			throws PaintException {
 		// In case of null data output nothing:
 		if (tagName == null)
 			throw new NullPointerException();
@@ -160,19 +161,18 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 		if (this.closed)
 			throw new PaintException(
 					"Attempted to write to a closed PaintTarget.");
-		
-		if(tag != null) {
+
+		if (tag != null) {
 			openJsonTags.push(tag);
 		}
 		// Checks tagName and attributes here
 		mOpenTags.push(tagName);
-		
+
 		tag = new JsonTag(tagName);
 
 		mTagArgumentListOpen = true;
-		
-		if ("customlayout".equals(tagName))
-			customLayoutArgumentsOpen = true;
+
+		customLayoutArgumentsOpen = "customlayout".equals(tagName);
 	}
 
 	/**
@@ -195,8 +195,8 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 		if (this.closed)
 			throw new PaintException(
 					"Attempted to write to a closed PaintTarget.");
-		
-		if(openJsonTags.size() > 0) {
+
+		if (openJsonTags.size() > 0) {
 			JsonTag parent = (JsonTag) openJsonTags.pop();
 
 			String lastTag = "";
@@ -205,15 +205,13 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 			if (!tagName.equalsIgnoreCase(lastTag))
 				throw new PaintException("Invalid UIDL: wrong ending tag: '"
 						+ tagName + "' expected: '" + lastTag + "'.");
-			
+
 			parent.addData(tag.getJSON());
 
 			tag = parent;
 		} else {
 			changes++;
-			this.uidlBuffer.print(
-					( (changes > 1) ? "," : "") +
-					tag.getJSON());
+			this.uidlBuffer.print(((changes > 1) ? "," : "") + tag.getJSON());
 			tag = null;
 		}
 	}
@@ -258,14 +256,14 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 		}
 		return result;
 	}
-	
+
 	static public String escapeJSON(String s) {
-		if(s==null)
+		if (s == null)
 			return "";
-		StringBuffer sb=new StringBuffer();
-		for(int i=0;i<s.length();i++){
-			char ch=s.charAt(i);
-			switch(ch){
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < s.length(); i++) {
+			char ch = s.charAt(i);
+			switch (ch) {
 			case '"':
 				sb.append("\\\"");
 				break;
@@ -291,15 +289,14 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 				sb.append("\\/");
 				break;
 			default:
-				if(ch>='\u0000' && ch<='\u001F'){
-					String ss=Integer.toHexString(ch);
+				if (ch >= '\u0000' && ch <= '\u001F') {
+					String ss = Integer.toHexString(ch);
 					sb.append("\\u");
-					for(int k=0;k<4-ss.length();k++){
+					for (int k = 0; k < 4 - ss.length(); k++) {
 						sb.append('0');
 					}
 					sb.append(ss.toUpperCase());
-				}
-				else{
+				} else {
 					sb.append(ch);
 				}
 			}
@@ -449,9 +446,11 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 			throw new NullPointerException(
 					"Parameters must be non-null strings");
 
-
 		tag.addAttribute("\"" + name + "\": \"" + escapeJSON(value) + "\"");
-		
+
+		if (customLayoutArgumentsOpen && "style".equals(name))
+			getPreCachedResources().add("layout/" + value + ".html");
+
 	}
 
 	public void addAttribute(String name, Object[] values) {
@@ -460,9 +459,9 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 			throw new NullPointerException(
 					"Parameters must be non-null strings");
 		StringBuffer buf = new StringBuffer();
-		buf.append("\""+name+"\":[");
+		buf.append("\"" + name + "\":[");
 		for (int i = 0; i < values.length; i++) {
-			if(i>0)
+			if (i > 0)
 				buf.append(",");
 			buf.append("\"");
 			buf.append(escapeJSON(values[i].toString()));
@@ -471,7 +470,7 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 		buf.append("]");
 		tag.addAttribute(buf.toString());
 	}
-	
+
 	/**
 	 * Adds a string type variable.
 	 * 
@@ -487,7 +486,7 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 	 */
 	public void addVariable(VariableOwner owner, String name, String value)
 			throws PaintException {
-		tag.addVariable(new StringVariable(owner,name,value));
+		tag.addVariable(new StringVariable(owner, name, value));
 	}
 
 	/**
@@ -505,7 +504,7 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 	 */
 	public void addVariable(VariableOwner owner, String name, int value)
 			throws PaintException {
-		tag.addVariable(new IntVariable(owner,name,value));
+		tag.addVariable(new IntVariable(owner, name, value));
 	}
 
 	/**
@@ -523,7 +522,7 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 	 */
 	public void addVariable(VariableOwner owner, String name, boolean value)
 			throws PaintException {
-		tag.addVariable(new BooleanVariable(owner,name,value));
+		tag.addVariable(new BooleanVariable(owner, name, value));
 	}
 
 	/**
@@ -541,7 +540,7 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 	 */
 	public void addVariable(VariableOwner owner, String name, String[] value)
 			throws PaintException {
-		tag.addVariable(new ArrayVariable(owner,name,value));
+		tag.addVariable(new ArrayVariable(owner, name, value));
 	}
 
 	/**
@@ -581,7 +580,8 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 	 */
 	public void addSection(String sectionTagName, String sectionData)
 			throws PaintException {
-		tag.addData("{\"" + sectionTagName + "\":\"" + escapeJSON(sectionData) + "\"}");
+		tag.addData("{\"" + sectionTagName + "\":\"" + escapeJSON(sectionData)
+				+ "\"}");
 	}
 
 	/**
@@ -604,7 +604,7 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 
 		// Escape and write what was given
 		if (xml != null)
-			tag.addData("\""+escapeJSON(xml)+"\"");
+			tag.addData("\"" + escapeJSON(xml) + "\"");
 
 	}
 
@@ -635,9 +635,10 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 		if (namespace != null)
 			addAttribute("xmlns", namespace);
 		mTagArgumentListOpen = false;
+		customLayoutArgumentsOpen = false;
 
 		if (sectionData != null)
-			tag.addData("\""+escapeJSON(sectionData) + "\"");
+			tag.addData("\"" + escapeJSON(sectionData) + "\"");
 		endTag(sectionTagName);
 	}
 
@@ -665,7 +666,7 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 	 *             if the paint operation failed.
 	 */
 	public void close() throws PaintException {
-		if(tag != null)
+		if (tag != null)
 			uidlBuffer.append(tag.getJSON());
 		flush();
 		this.closed = true;
@@ -729,105 +730,107 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 		this.trackPaints = enabled;
 		this.numberOfPaints = 0;
 	}
-	
+
 	/**
-	 * This is basically a container for UI components variables, that will be 
+	 * This is basically a container for UI components variables, that will be
 	 * added at the end of JSON object.
+	 * 
 	 * @author mattitahvonen
-	 *
+	 * 
 	 */
 	class JsonTag {
 		boolean firstField = false;
-		
+
 		Vector variables = new Vector();
-		
+
 		Vector children = new Vector();
 
 		Vector attr = new Vector();
-		
+
 		private HashMap childTagCounters = new HashMap();
 
 		StringBuffer data = new StringBuffer();
-		
+
 		public boolean childrenArrayOpen = false;
 
 		private boolean childNode = false;
 
 		private boolean tagClosed = false;
-		
+
 		public JsonTag(String tagName) {
-			data.append("[\"" + tagName +"\"");
+			data.append("[\"" + tagName + "\"");
 		}
-		
+
 		private void closeTag() {
-			if(!tagClosed) {
+			if (!tagClosed) {
 				data.append(attributesAsJsonObject());
 				data.append(getData());
 				// Writes the end (closing) tag
 				data.append("]");
-				this.tagClosed  = true;
+				this.tagClosed = true;
 			}
 		}
-		
+
 		public String getJSON() {
-			if(!tagClosed) {
+			if (!tagClosed) {
 				this.closeTag();
 			}
 			return data.toString();
 		}
 
 		public void openChildrenArray() {
-			if(!childrenArrayOpen) {
-//				append("c : [");
+			if (!childrenArrayOpen) {
+				// append("c : [");
 				childrenArrayOpen = true;
-//				firstField = true;
+				// firstField = true;
 			}
 		}
-		
+
 		public void closeChildrenArray() {
-//			append("]");
-//			firstField = false;
+			// append("]");
+			// firstField = false;
 		}
 
 		public void setChildNode(boolean b) {
 			this.childNode = b;
 		}
-		
-		public boolean isChildNode(){
+
+		public boolean isChildNode() {
 			return childNode;
 		}
 
 		public String startField() {
-			if(firstField) {
+			if (firstField) {
 				firstField = false;
 				return "";
 			} else {
 				return ",";
 			}
 		}
-		
+
 		/**
 		 * 
-		 * @param s json string, object or array
+		 * @param s
+		 *            json string, object or array
 		 */
 		public void addData(String s) {
 			children.add(s);
 		}
-		
+
 		public String getData() {
 			StringBuffer buf = new StringBuffer();
 			Iterator it = children.iterator();
-			while(it.hasNext()) {
+			while (it.hasNext()) {
 				buf.append(startField());
 				buf.append(it.next());
 			}
 			return buf.toString();
 		}
-		
+
 		public void addAttribute(String jsonNode) {
 			attr.add(jsonNode);
 		}
-		
+
 		private String attributesAsJsonObject() {
 			StringBuffer buf = new StringBuffer();
 			buf.append(startField());
@@ -835,20 +838,20 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 			for (Iterator iter = attr.iterator(); iter.hasNext();) {
 				String element = (String) iter.next();
 				buf.append(element);
-				if(iter.hasNext())
+				if (iter.hasNext())
 					buf.append(",");
 			}
 			buf.append(tag.variablesAsJsonObject());
 			buf.append("}");
 			return buf.toString();
 		}
-		
+
 		public void addVariable(Variable v) {
 			variables.add(v);
 		}
-		
+
 		private String variablesAsJsonObject() {
-			if(variables.size() == 0)
+			if (variables.size() == 0)
 				return "";
 			StringBuffer buf = new StringBuffer();
 			buf.append(startField());
@@ -857,23 +860,26 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 			while (iter.hasNext()) {
 				Variable element = (Variable) iter.next();
 				buf.append(element.getJsonPresentation());
-				if(iter.hasNext())
+				if (iter.hasNext())
 					buf.append(",");
 			}
 			buf.append("}");
 			return buf.toString();
 		}
-		
+
 		class TagCounter {
 			int count;
+
 			public TagCounter() {
 				count = 0;
 			}
+
 			public void increment() {
 				count++;
 			}
+
 			public String postfix(String s) {
-				if(count > 0) {
+				if (count > 0) {
 					return s + count;
 				}
 				return s;
@@ -883,10 +889,12 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 
 	abstract class Variable {
 		String code;
+
 		String name;
+
 		public abstract String getJsonPresentation();
 	}
-	
+
 	class BooleanVariable extends Variable {
 		boolean value;
 
@@ -898,25 +906,25 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 		}
 
 		public String getJsonPresentation() {
-			return "\""+name +"\":" + (value == true ? "true" : "false");
+			return "\"" + name + "\":" + (value == true ? "true" : "false");
 		}
-		
+
 	}
-	
+
 	class StringVariable extends Variable {
 		String value;
 
 		public StringVariable(VariableOwner owner, String name, String v) {
 			value = v;
 			this.name = name;
-			code = variableMap.registerVariable(name, String.class,
-					value, owner);
+			code = variableMap.registerVariable(name, String.class, value,
+					owner);
 		}
 
 		public String getJsonPresentation() {
-			return "\""+name +"\":\""	+ value + "\"";
+			return "\"" + name + "\":\"" + value + "\"";
 		}
-		
+
 	}
 
 	class IntVariable extends Variable {
@@ -930,7 +938,7 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 		}
 
 		public String getJsonPresentation() {
-			return "\""+name +"\":"	+ value ;
+			return "\"" + name + "\":" + value;
 		}
 	}
 
@@ -940,16 +948,16 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 		public ArrayVariable(VariableOwner owner, String name, String[] v) {
 			value = v;
 			this.name = name;
-			code = variableMap.registerVariable(name, String[].class,
-					value, owner);
+			code = variableMap.registerVariable(name, String[].class, value,
+					owner);
 		}
 
 		public String getJsonPresentation() {
-			String pres =  "\""+name +"\":[";
+			String pres = "\"" + name + "\":[";
 			for (int i = 0; i < value.length;) {
-				pres += "\"" + value[i] + "\"" ;
+				pres += "\"" + value[i] + "\"";
 				i++;
-				if(i < value.length)
+				if (i < value.length)
 					pres += ",";
 			}
 			pres += "]";
@@ -958,13 +966,12 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 	}
 
 	public Set getPreCachedResources() {
-		return new HashSet();
+		return preCachedResources;
 	}
 
 	public void setPreCachedResources(Set preCachedResources) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
-	
 }
