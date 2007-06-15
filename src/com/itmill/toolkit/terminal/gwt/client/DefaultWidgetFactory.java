@@ -2,6 +2,7 @@ package com.itmill.toolkit.terminal.gwt.client;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
+import com.itmill.toolkit.terminal.gwt.client.ui.ICustomLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.IPasswordField;
 import com.itmill.toolkit.terminal.gwt.client.ui.IButton;
 import com.itmill.toolkit.terminal.gwt.client.ui.ICheckBox;
@@ -53,6 +54,8 @@ public class DefaultWidgetFactory implements WidgetFactory {
 			return new ITabsheet();
 		if ("embedded".equals(tag))
 			return new IEmbedded();
+		if ("customlayout".equals(tag))
+			return new ICustomLayout();
 		if ("textfield".equals(tag)) {
 			if(uidl.hasAttribute("multiline"))
 				return new ITextArea();
