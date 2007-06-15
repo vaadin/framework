@@ -52,6 +52,7 @@ public class ICustomLayout extends SimplePanel implements Paintable, Layout {
 
 	}
 
+	/** Update implementing HTML-layout if needed. */
 	private void updateHTML(UIDL uidl, Client client) {
 		String newStyle = uidl.getStringAttribute("style");
 		if (currentStyle != null && currentStyle.equals(newStyle))
@@ -63,8 +64,8 @@ public class ICustomLayout extends SimplePanel implements Paintable, Layout {
 		} else {
 			currentStyle = newStyle;
 		}
+		template = extractBodyAndScriptsFromTemplate(template);
 		html = new HTMLPanel(template);
-		scripts = extractScripts(html.getElement());
 		addUniqueIdsForLocations(html.getElement(), locationPrefix);
 
 		Widget parent = getParent();
@@ -77,20 +78,23 @@ public class ICustomLayout extends SimplePanel implements Paintable, Layout {
 		add(html);
 	}
 
+	/** Scripts must be evaluated when the document has been rendered */
 	protected void onLoad() {
 		super.onLoad();
 		eval(scripts);
 	}
 
+	/** Evaluate given script in browser document */
 	private native void eval(String script) /*-{
 	 try {
 	 eval("{ var document = $doc; var window = $wnd; "+ script + "}");
 	 } catch (e) {
-	 alert("Error evaluting customlayout script-tags" + e + "\n" + script);
 	 }
 	 }-*/;
 
+	/** Scan for location divs and add unique ids for them */
 	private native void addUniqueIdsForLocations(Element e, String idPrefix) /*-{
+	try {
 	 var divs = e.getElementsByTagName("div"); 
 	 for (var i = 0; i < divs.length; i++) {
 	 var div = divs[i];
@@ -99,27 +103,68 @@ public class ICustomLayout extends SimplePanel implements Paintable, Layout {
 	 div.setAttribute("id",idPrefix + location);
 	 div.innerHTML="";
 	 }
-	 }			
+	 }	
+	 	 } catch (e) {}
+		
 	 }-*/;
 
+	/** Prefix all img tag srcs with given prefix. */
 	private native void prefixImgSrcs(Element e, String srcPrefix) /*-{
+	try {
 	 var divs = e.getElementsByTagName("img"); 
 	 for (var i = 0; i < divs.length; i++) {
 	 var div = divs[i];
 	 var src = div.getAttribute("src");
 	 if (src.indexOf("http") != 0) div.setAttribute("src",srcPrefix + src);
 	 }			
+	 } catch (e) {}
 	 }-*/;
 
-	private native String extractScripts(Element e) /*-{
-	 var scripts = e.getElementsByTagName("script"); 
-	 var retval = "";
-	 for (var i = 0; i < scripts.length; i++) {
-	 retval += scripts[i].innerHTML + ";";
-	 scripts[i].innerHTML = "";
-	 }			
-	 return retval;
-	 }-*/;
+	/** Exctract body part and script tags from raw html-template.
+	 * 
+	 * Saves contents of all script-tags to private property: scripts.
+	 * Returns contents of the body part for the html without script-tags.
+	 * 
+	 * @param html Original HTML-template received from server
+	 * @return html that is used to create the HTMLPanel.
+	 */
+	private String extractBodyAndScriptsFromTemplate(String html) {
+		
+		// Exctract script-tags
+		scripts ="";
+		int endOfPrevScript = 0;
+		int nextPosToCheck = 0;
+		String lc = html.toLowerCase();
+		String res = "";
+		int scriptStart = lc.indexOf("<script", nextPosToCheck);
+		while (scriptStart > 0) {
+			res += html.substring(endOfPrevScript, scriptStart);
+			scriptStart = lc.indexOf(">", scriptStart);
+			int j = lc.indexOf("</script>",scriptStart);
+			scripts += html.substring(scriptStart+1,j) + ";";
+			nextPosToCheck = endOfPrevScript = j + "</script>".length();
+			scriptStart = lc.indexOf("<script", nextPosToCheck);
+		}
+		res += html.substring(endOfPrevScript);
+		
+		// Extract body
+		html = res;
+		lc = html.toLowerCase();
+		int startOfBody = lc.indexOf("<body");
+		if (startOfBody < 0) {
+			res = html;
+		} else {
+			res = "";
+			startOfBody = lc.indexOf(">",startOfBody)+1;
+			int endOfBody = lc.indexOf("</body>",startOfBody);
+			if (endOfBody > startOfBody)
+				res = html.substring(startOfBody,endOfBody);
+			else 
+				res = html.substring(startOfBody);
+		}
+		
+		return res;
+	}
 
 	public void replaceChildComponent(Widget from, Widget to) {
 		CaptionWrapper wrapper = (CaptionWrapper) componentToWrapper.get(from);
