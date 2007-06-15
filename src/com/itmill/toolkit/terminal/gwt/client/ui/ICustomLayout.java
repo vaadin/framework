@@ -3,6 +3,8 @@ package com.itmill.toolkit.terminal.gwt.client.ui;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -17,35 +19,53 @@ public class ICustomLayout extends SimplePanel implements Paintable, Layout {
 
 	private HashMap componentToWrapper = new HashMap();
 	HTMLPanel html;
-	private static HashMap styleToTemplate = new HashMap();
 	String currentStyle;
+	String locationPrefix = HTMLPanel.createUniqueId() + "_";
 	
 	public void updateFromUIDL(UIDL uidl, Client client) {
 		
 		if (client.updateComponent(this, uidl, false)) return;
 		
-		// Initialize HTMLPanel when needed
-		String newStyle = uidl.getStringAttribute("style");
-		if (currentStyle == null || !currentStyle.equals(newStyle)) {
-			String template = (String) styleToTemplate.get(newStyle);
-			if (template == null) {
-				template = "custom layout of style " + newStyle + " <div location=\"one\"></div>foobar";
-				styleToTemplate.put(newStyle, template);
-			}
-			html = new HTMLPanel(template);
-			// TODO Map locations
-			add(html);
-		}
+		updateHTML(uidl, client);
 		
 		componentToWrapper.clear();
 		
 		for (Iterator i = uidl.getChildIterator(); i.hasNext();) {
 			UIDL uidlForChild = (UIDL) i.next();
-			Widget child = client.getWidget(uidlForChild);
-			//html.add(child);
-			((Paintable)child).updateFromUIDL(uidlForChild, client);
+			if (uidlForChild.getTag().equals("location")) {
+				String location = uidlForChild.getStringAttribute("name");
+				Widget child = client.getWidget(uidlForChild.getChildUIDL(0));
+				html.add(child,locationPrefix + location);
+				((Paintable)child).updateFromUIDL(uidlForChild.getChildUIDL(0), client);
+				
+			}
 		}
 	}
+
+	private void updateHTML(UIDL uidl, Client client) {
+		String newStyle = uidl.getStringAttribute("style");
+		if (currentStyle != null && currentStyle.equals(newStyle)) return;
+		
+			String template = client.getResource("layout/"+newStyle+".html");
+			if (template == null) {
+				template = "Layout " + newStyle + " is missing";
+			} else {
+				currentStyle = newStyle;
+			}
+			html = new HTMLPanel(template);
+			add(html);
+			
+			addUniqueIdsForLocations(html.getElement(), locationPrefix);
+	}
+
+	private native void addUniqueIdsForLocations(Element e, String idPrefix) /*-{
+		var divs = e.getElementsByTagName("div"); 
+		for (var i = 0; i < divs.length; i++) {
+		 	var div = divs[i];
+		 	var location = div.getAttribute("location");
+			if (location != null) div.setAttribute("id",idPrefix + location);
+		}			
+	}-*/;
 
 	public void replaceChildComponent(Widget from, Widget to) {
 		CaptionWrapper wrapper = (CaptionWrapper) componentToWrapper.get(from);

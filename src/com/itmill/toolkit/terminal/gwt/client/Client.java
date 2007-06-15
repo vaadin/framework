@@ -2,6 +2,7 @@ package com.itmill.toolkit.terminal.gwt.client;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Vector;
 
 import com.google.gwt.core.client.EntryPoint;
@@ -13,6 +14,7 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -26,6 +28,8 @@ import com.google.gwt.user.client.ui.Widget;
 public class Client implements EntryPoint {
 
 	private String appUri;
+
+	private HashMap resourcesMap = new HashMap();
 
 	// TODO remove repaintAll until things start to pile up
 	private RequestBuilder rb = new RequestBuilder(RequestBuilder.POST, appUri
@@ -109,6 +113,14 @@ public class Client implements EntryPoint {
 			console.log(jsonText);
 			return;
 		}
+		// Store resources
+		JSONObject resources = (JSONObject) ((JSONObject) json)
+				.get("resources");
+		for (Iterator i = resources.keySet().iterator(); i.hasNext();) {
+			String key = (String) i.next();
+			resourcesMap.put(key, ((JSONString)resources.get(key)).stringValue());
+		}
+
 		// Process changes
 		JSONArray changes = (JSONArray) ((JSONObject) json).get("changes");
 		for (int i = 0; i < changes.size(); i++) {
@@ -302,9 +314,9 @@ public class Client implements EntryPoint {
 		// Visibility, Disabling and read-only status
 		if (component instanceof FocusWidget) {
 			boolean enabled = true;
-			if(uidl.hasAttribute("disabled"))
+			if (uidl.hasAttribute("disabled"))
 				enabled = !uidl.getBooleanAttribute("disabled");
-			else if(uidl.hasAttribute("readonly")) 
+			else if (uidl.hasAttribute("readonly"))
 				enabled = !uidl.getBooleanAttribute("readonly");
 			((FocusWidget) component).setEnabled(enabled);
 		}
@@ -335,6 +347,10 @@ public class Client implements EntryPoint {
 		w = widgetFactory.createWidget(uidl);
 		registerPaintable(id, (Paintable) w);
 		return w;
+	}
+	
+	public String getResource(String name) {
+		return (String) resourcesMap.get(name);
 	}
 
 }
