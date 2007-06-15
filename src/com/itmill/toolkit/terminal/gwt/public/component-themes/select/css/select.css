@@ -1,0 +1,15 @@
+.i-select {
+
+}
+
+.i-select-option {
+
+}
+
+.i-select-optiongroup {
+
+}
+
+.i-select-optiongroup .i-select-option {
+	display: block;
+}

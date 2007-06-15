@@ -29,9 +29,9 @@ public class ITextField extends TextBoxBase implements
 	 */
 	private static final String CLASSNAME_FOCUS = "i-textfield-focus";
 
-	private String id;
+	protected String id;
 
-	private Client client;
+	protected Client client;
 
 	private boolean immediate = false;
 	
@@ -64,7 +64,8 @@ public class ITextField extends TextBoxBase implements
 	}
 
 	public void onChange(Widget sender) {
-		client.updateVariable(id, "text", getText() , immediate);
+		if(client != null && id != null)
+			client.updateVariable(id, "text", getText() , immediate);
 	}
 
 	public void onFocus(Widget sender) {

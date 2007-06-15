@@ -2,16 +2,16 @@ package com.itmill.toolkit.terminal.gwt.client;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
-import com.itmill.toolkit.terminal.gwt.client.ui.ICustomLayout;
-import com.itmill.toolkit.terminal.gwt.client.ui.IPasswordField;
 import com.itmill.toolkit.terminal.gwt.client.ui.IButton;
 import com.itmill.toolkit.terminal.gwt.client.ui.ICheckBox;
+import com.itmill.toolkit.terminal.gwt.client.ui.ICustomLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.IEmbedded;
 import com.itmill.toolkit.terminal.gwt.client.ui.IGridLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.IHorizontalLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.ILabel;
-import com.itmill.toolkit.terminal.gwt.client.ui.IVerticalLayout;
+import com.itmill.toolkit.terminal.gwt.client.ui.IOptionGroup;
 import com.itmill.toolkit.terminal.gwt.client.ui.IPanel;
+import com.itmill.toolkit.terminal.gwt.client.ui.IPasswordField;
 import com.itmill.toolkit.terminal.gwt.client.ui.ISelect;
 import com.itmill.toolkit.terminal.gwt.client.ui.ITable;
 import com.itmill.toolkit.terminal.gwt.client.ui.ITabsheet;
@@ -19,6 +19,7 @@ import com.itmill.toolkit.terminal.gwt.client.ui.ITextArea;
 import com.itmill.toolkit.terminal.gwt.client.ui.ITextField;
 import com.itmill.toolkit.terminal.gwt.client.ui.ITree;
 import com.itmill.toolkit.terminal.gwt.client.ui.IUnknownComponent;
+import com.itmill.toolkit.terminal.gwt.client.ui.IVerticalLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.IWindow;
 
 public class DefaultWidgetFactory implements WidgetFactory {
@@ -46,8 +47,11 @@ public class DefaultWidgetFactory implements WidgetFactory {
 			return new IGridLayout();
 		if ("tree".equals(tag))
 			return new ITree();
-		if ("select".equals(tag))
+		if ("select".equals(tag)) {
+			if("optiongroup".equals(uidl.getStringAttribute("style")))
+				return new IOptionGroup();
 			return new ISelect();
+		}
 		if ("panel".equals(tag) || "component".equals(tag))
 			return new IPanel();
 		if ("tabsheet".equals(tag))
