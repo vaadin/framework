@@ -101,7 +101,14 @@ public class Client implements EntryPoint {
 	private void handleReceivedJSONMessage(Response response) {
 		Date start = new Date();
 		String jsonText = response.getText().substring(3) + "}";
-		JSONValue json = JSONParser.parse(jsonText);
+		JSONValue json;
+		try {
+			json = JSONParser.parse(jsonText);
+		} catch (com.google.gwt.json.client.JSONException e) {
+			console.log(e.getMessage() + " - Original JSON-text:");
+			console.log(jsonText);
+			return;
+		}
 		// Process changes
 		JSONArray changes = (JSONArray) ((JSONObject) json).get("changes");
 		for (int i = 0; i < changes.size(); i++) {
