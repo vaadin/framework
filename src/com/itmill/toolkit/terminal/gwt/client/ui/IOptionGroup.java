@@ -1,6 +1,8 @@
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Panel;
@@ -14,9 +16,12 @@ public class IOptionGroup extends IOptionGroupBase {
 	
 	private Panel panel;
 	
+	private Map optionsToKeys;
+	
 	public IOptionGroup() {
 		super(CLASSNAME);
 		panel = (Panel) optionsContainer;
+		optionsToKeys = new HashMap();
 	}
 	
 	/*
@@ -40,13 +45,6 @@ public class IOptionGroup extends IOptionGroupBase {
 			optionsToKeys.put(op, opUidl.getStringAttribute("key"));
 			panel.add(op);
 		}
-	}
-
-	protected Object getSelectedItem() {
-		if(getSelectedItems().length > 0)
-			return getSelectedItems()[0];
-		else
-			return null;
 	}
 
 	protected Object[] getSelectedItems() {

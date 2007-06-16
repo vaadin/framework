@@ -11,16 +11,20 @@ public class ISelect extends IOptionGroupBase {
 	
 	private static final String CLASSNAME = "i-select";
 	
+	private static final int VISIBLE_COUNT = 10;
+	
 	private ListBox select;
 	
 	public ISelect() {
 		super(new ListBox(), CLASSNAME);
 		select = (ListBox) optionsContainer;
 		select.addChangeListener(this);
+		select.setStyleName(CLASSNAME+"-select");
 	}
 
 	protected void buildOptions(UIDL uidl) {
 		select.setMultipleSelect(multiselect);
+		if(multiselect) select.setVisibleItemCount(VISIBLE_COUNT);
 		select.setEnabled(!disabled && !readonly);
 		select.clear();
 		for (Iterator i = uidl.getChildIterator(); i.hasNext();) {
@@ -33,18 +37,11 @@ public class ISelect extends IOptionGroupBase {
 	
 	protected Object[] getSelectedItems() {
 		Vector selectedItemKeys = new Vector();
-		for(int i = 0; i < select.getItemCount();i++) {
+		for(int i = 0; i < select.getItemCount(); i++) {
 			if(select.isItemSelected(i))
 				selectedItemKeys.add(select.getValue(i));
 		}
 		return selectedItemKeys.toArray();
-	}
-
-	protected Object getSelectedItem() {
-		if(getSelectedItems().length > 0)
-			return getSelectedItems()[0];
-		else
-			return null;
 	}
 
 	public void onChange(Widget sender) {

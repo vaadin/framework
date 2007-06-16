@@ -8,12 +8,15 @@ import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
 public class IButton extends Button implements Paintable {
+	
+	private static final String CLASSNAME = "i-button";
 
 	String id;
 
 	Client client;
 
 	public IButton() {
+		setStyleName(CLASSNAME);
 		addClickListener(new ClickListener() {
 
 			public void onClick(Widget sender) {
@@ -26,7 +29,8 @@ public class IButton extends Button implements Paintable {
 
 	public void updateFromUIDL(UIDL uidl, Client client) {
 
-		// Ensure correct implementation
+		// Ensure correct implementation,
+		// but don't let container manage caption etc.
 		if (client.updateComponent(this, uidl, false))
 			return;
 

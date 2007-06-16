@@ -1,20 +1,19 @@
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.Client;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
-abstract class IOptionGroupBase extends Composite implements Paintable, ClickListener, ChangeListener {
+abstract class IOptionGroupBase extends Composite implements Paintable, ClickListener, ChangeListener, KeyboardListener {
 	
 	static final String CLASSNAME_OPTION = "i-select-option";
 
@@ -23,8 +22,6 @@ abstract class IOptionGroupBase extends Composite implements Paintable, ClickLis
 	String id;
 	
 	protected boolean immediate;
-	
-	protected Map optionsToKeys;
 	
 	protected Set selectedKeys;
 	
@@ -57,7 +54,6 @@ abstract class IOptionGroupBase extends Composite implements Paintable, ClickLis
 		container.setStyleName(classname);
 		immediate = false;
 		multiselect = false;
-		optionsToKeys = new HashMap();
 	}
 	
 	/* Call this if you wish to specify your own container 
@@ -92,6 +88,8 @@ abstract class IOptionGroupBase extends Composite implements Paintable, ClickLis
 				newItemButton.setText("+");
 				newItemButton.addClickListener(this);
 				newItemField = new ITextField();
+				newItemField.addKeyboardListener(this);
+				newItemField.setColumns(16);
 			}
 			newItemField.setEnabled(!disabled && !readonly);
 			newItemButton.setEnabled(!disabled && !readonly);
@@ -108,8 +106,10 @@ abstract class IOptionGroupBase extends Composite implements Paintable, ClickLis
 	}
 
 	public void onClick(Widget sender) {
-		if(sender == newItemButton && !newItemField.getText().equals(""))
+		if(sender == newItemButton && !newItemField.getText().equals("")) {
 			client.updateVariable(id, "newitem", newItemField.getText(), true);
+			newItemField.setText("");
+		}
 	}
 	
 	public void onChange(Widget sender) {
@@ -120,10 +120,28 @@ abstract class IOptionGroupBase extends Composite implements Paintable, ClickLis
 		}
 	}
 	
+	public void onKeyPress(Widget sender, char keyCode, int modifiers) {
+		if(sender == newItemField && keyCode==KeyboardListener.KEY_ENTER)
+			newItemButton.click();
+	}
+	
+	public void onKeyUp(Widget sender, char keyCode, int modifiers) {
+		// Ignore, subclasses may override
+	}
+	
+	public void onKeyDown(Widget sender, char keyCode, int modifiers) {
+		// Ignore, subclasses may override
+	}
+	
 	protected abstract void buildOptions(UIDL uidl);
 	
 	protected abstract Object[] getSelectedItems();
 	
-	protected abstract Object getSelectedItem();
+	protected Object getSelectedItem() {
+		if(getSelectedItems().length > 0)
+			return getSelectedItems()[0];
+		else
+			return null;
+	}
 
 }

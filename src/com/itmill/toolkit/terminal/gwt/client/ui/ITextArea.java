@@ -21,7 +21,7 @@ public class ITextArea extends ITextField {
 		super.updateFromUIDL(uidl, client);
 		
 		if(uidl.hasAttribute("rows"))
-			setHeight(uidl.getStringAttribute("rows")+"em");
+			setRows(new Integer(uidl.getStringAttribute("rows")).intValue());
 	}
 	
 }

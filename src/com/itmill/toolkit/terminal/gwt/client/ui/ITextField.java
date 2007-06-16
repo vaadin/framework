@@ -56,7 +56,7 @@ public class ITextField extends TextBoxBase implements
 		immediate  = uidl.getBooleanAttribute("immediate");
 
 		if(uidl.hasAttribute("cols"))
-			setWidth(uidl.getStringAttribute("cols")+"em");
+			setColumns(new Integer(uidl.getStringAttribute("cols")).intValue());
 		
 		setText(uidl.getStringVariable("text"));
 		
@@ -75,4 +75,33 @@ public class ITextField extends TextBoxBase implements
 	public void onLostFocus(Widget sender) {
 		removeStyleName(CLASSNAME_FOCUS);
 	}
+	
+	public void setColumns(int columns) {
+		setColumns(getElement(), columns);
+	}
+	
+	public void setRows(int rows) {
+		setRows(getElement(), rows);
+	}
+	
+	private native void setColumns(Element e, int c) /*-{
+	try {
+		switch(e.tagName.toLowerCase()) {
+			case "input":
+				e.size = c;
+				break;
+			case "textarea":
+				e.cols = c;
+				break;
+			default:;
+		}
+	} catch (e) {}
+	}-*/;
+	
+	private native void setRows(Element e, int r) /*-{
+	try {
+		if(e.tagName.toLowerCase() == "textarea")
+			e.rows = r;
+	} catch (e) {}
+}-*/;
 }

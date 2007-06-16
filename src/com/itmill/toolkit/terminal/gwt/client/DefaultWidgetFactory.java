@@ -18,6 +18,7 @@ import com.itmill.toolkit.terminal.gwt.client.ui.ITabsheet;
 import com.itmill.toolkit.terminal.gwt.client.ui.ITextArea;
 import com.itmill.toolkit.terminal.gwt.client.ui.ITextField;
 import com.itmill.toolkit.terminal.gwt.client.ui.ITree;
+import com.itmill.toolkit.terminal.gwt.client.ui.ITwinColSelect;
 import com.itmill.toolkit.terminal.gwt.client.ui.IUnknownComponent;
 import com.itmill.toolkit.terminal.gwt.client.ui.IVerticalLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.IWindow;
@@ -50,6 +51,8 @@ public class DefaultWidgetFactory implements WidgetFactory {
 		if ("select".equals(tag)) {
 			if("optiongroup".equals(uidl.getStringAttribute("style")))
 				return new IOptionGroup();
+			else if("twincol".equals(uidl.getStringAttribute("style")))
+				return new ITwinColSelect();
 			return new ISelect();
 		}
 		if ("panel".equals(tag) || "component".equals(tag))

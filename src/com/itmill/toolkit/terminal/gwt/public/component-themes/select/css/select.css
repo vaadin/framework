@@ -13,3 +13,42 @@
 .i-select-optiongroup .i-select-option {
 	display: block;
 }
+
+.i-select-select {
+	border: 1px solid #b6b6b6;
+	border-top-color: #9d9d9d;
+	border-bottom-color: #d6d6d6;
+	border-right-color: #d6d6d6;
+	display: block;
+}
+
+/* Twincol style */
+.i-select-twincol-options {
+	float: left;
+}
+
+.i-select-twincol-buttons {
+	float: left;
+	width: 40px;
+	text-align: center;
+}
+
+.i-select-twincol-buttons .i-select-twincol-deco {
+	display: inline; /* Needed to push the two buttons in stack */
+}
+
+.i-select-twincol .i-textfield {
+	display: block;
+	float: left;
+	clear: left;
+}
+
+.i-select-twincol .i-button {
+	display: block;
+	float: left;
+}
+
+.i-select-twincol-buttons .i-button {
+	display: inline;
+	float: none;
+}
