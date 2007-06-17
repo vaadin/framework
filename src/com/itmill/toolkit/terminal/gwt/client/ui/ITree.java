@@ -4,53 +4,48 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.TreeListener;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.itmill.toolkit.terminal.gwt.client.Client;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
-public class ITree extends Composite implements Paintable {
+public class ITree extends Tree implements Paintable {
 	
-	Label caption = new Label();
-	Tree tree = new Tree();
+	private static final String CLASSNAME = "i-tree";
+
 	Set selectedIds = new HashSet();
 	Client client;
 	String id;
-	boolean selectable;
-	boolean multiselect;
+	private boolean selectable;
+	private boolean multiselect;
 	
 	public ITree() {
-		VerticalPanel panel = new VerticalPanel();
-		panel.add(caption);
-		panel.add(tree);
-		initWidget(panel);
+		super();
+		setStyleName(CLASSNAME);
 	}
 
 	public void updateFromUIDL(UIDL uidl, Client client) {
+		// Ensure correct implementation and let container manage caption
+		if (client.updateComponent(this, uidl, true))
+			return;
+		
 		this.client = client;
-		id = uidl.getId();
-		if (uidl.hasAttribute("caption")) caption.setText(uidl.getStringAttribute("caption")); 
-		tree.clear();
+		this.id = uidl.getId();
+		
+		clear();
 		for (Iterator i = uidl.getChildIterator(); i.hasNext();) {
 			UIDL childUidl = (UIDL)i.next();
-			if(childUidl.getTag().equals("leaf"))
-				tree.addItem(childUidl.getStringAttribute("caption"));
-			if(childUidl.getTag().equals("node")) {
-				TreeNode childTree = new TreeNode();
-				tree.addItem(childTree);
-				childTree.updateFromUIDL(childUidl, client);
-			}
+			TreeNode childTree = new TreeNode();
+			addItem(childTree);
+			childTree.updateFromUIDL(childUidl, client);
 		}
 		String selectMode = uidl.getStringAttribute("selectmode");
 		selectable = selectMode != null;
 		multiselect = "multi".equals(selectMode);
 		
-		tree.addTreeListener(new TreeListener() {
+		addTreeListener(new TreeListener() {
 		
 			public void onTreeItemStateChanged(TreeItem item) {
 			}
@@ -72,6 +67,7 @@ public class ITree extends Composite implements Paintable {
 		selectedIds = uidl.getStringArrayVariableAsSet("selected");
 		
 	}
+	
 	private class TreeNode extends TreeItem {
 		
 		String key;

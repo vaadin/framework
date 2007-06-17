@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ui.IButton;
 import com.itmill.toolkit.terminal.gwt.client.ui.ICheckBox;
+import com.itmill.toolkit.terminal.gwt.client.ui.IComponent;
 import com.itmill.toolkit.terminal.gwt.client.ui.ICustomLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.IEmbedded;
 import com.itmill.toolkit.terminal.gwt.client.ui.IGridLayout;
@@ -55,8 +56,10 @@ public class DefaultWidgetFactory implements WidgetFactory {
 				return new ITwinColSelect();
 			return new ISelect();
 		}
-		if ("panel".equals(tag) || "component".equals(tag))
+		if ("panel".equals(tag))
 			return new IPanel();
+		if ("component".equals(tag))
+			return new IComponent();
 		if ("tabsheet".equals(tag))
 			return new ITabsheet();
 		if ("embedded".equals(tag))

@@ -1,0 +1,97 @@
+.i-panel {
+	border: 1px solid #29528a;
+	padding: 5px;
+	margin: 5px;
+	background: #fff url(../img/top-bg.png) repeat-x top left;
+}
+
+.i-panel:before {
+	display: block;
+	height: 7px;
+	overflow: hidden;
+	background: transparent url(../img/top-right.png) no-repeat right top;
+	content: url(../img/top-left.png);
+	margin: -6px -6px 0 -6px;
+}
+
+.i-panel:after {
+	display: block;
+	height: 2px;
+	overflow: hidden;
+	background: transparent url(../img/bottom-right.png) no-repeat right top;
+	content: url(../img/bottom-left.png);
+	margin: 5px -6px -6px -6px;
+}
+
+.i-panel-caption {
+	font-size: 1.2em;
+	font-weight: bold;
+	color: #1c3e6e;
+	margin: 3px 0 5px 0;
+}
+
+
+
+/* Strong style */
+.i-panel-strong {
+	background-image: url(../img/top-bg-strong.png);
+}
+
+.i-panel-strong:before {
+	height: 28px;
+	background-image: url(../img/top-right-strong.png);
+	content: url(../img/top-left-strong.png);
+}
+
+.i-panel-strong .i-panel-caption {
+	color: #fff;
+	margin: -22px 0 12px 0;
+}
+
+
+
+/* Light style */
+.i-panel-light {
+	background-image: url(../img/top-bg-light.png);
+	border-color: #b3c2d6;
+	border-top-color: #2667a2;
+	margin-top: 23px;
+}
+
+.i-panel-light:before {
+	height: 6px;
+	background-image: url(../img/top-right-light.png);
+	content: url(../img/top-left-light.png);
+}
+
+.i-panel-light:after {
+	background-image: url(../img/bottom-right-light.png);
+	content: url(../img/bottom-left-light.png);
+}
+
+.i-panel-light .i-panel-caption {
+	margin: -23px -5px 18px -5px;
+	font-size: 1.1em;
+}
+
+
+
+
+
+/* IE specific rules (different selectors for IE6 and IE7 */
+* html .i-panel,
+*+html .i-panel {
+	background-position: 0 1px;
+}
+
+* html .i-panel-strong .i-panel-caption,
+*+html .i-panel-strong .i-panel-caption {
+	margin: 1px 0 10px 0;
+	white-space: nowrap;
+}
+
+* html .i-panel-light .i-panel-caption,
+*+html .i-panel-light .i-panel-caption {
+	margin-bottom: 0;
+	padding-bottom: 23px; /* Must specify enough space because of wierd clipping bug */
+}
