@@ -46,6 +46,7 @@
 .i-panel-strong .i-panel-caption {
 	color: #fff;
 	margin: -22px 0 12px 0;
+	white-space: nowrap;
 }
 
 
@@ -72,6 +73,7 @@
 .i-panel-light .i-panel-caption {
 	margin: -23px -5px 18px -5px;
 	font-size: 1.1em;
+	white-space: nowrap;
 }
 
 
@@ -87,7 +89,6 @@
 * html .i-panel-strong .i-panel-caption,
 *+html .i-panel-strong .i-panel-caption {
 	margin: 1px 0 10px 0;
-	white-space: nowrap;
 }
 
 * html .i-panel-light .i-panel-caption,
