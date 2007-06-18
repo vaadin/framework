@@ -933,7 +933,7 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 		public IntVariable(VariableOwner owner, String name, int v) {
 			value = v;
 			this.name = name;
-			code = variableMap.registerVariable(name, Boolean.class,
+			code = variableMap.registerVariable(name, Integer.class,
 					new Integer(value), owner);
 		}
 
