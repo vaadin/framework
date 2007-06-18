@@ -32,18 +32,21 @@ public class IPanel extends FlowPanel implements Paintable {
 		this.client = client;
 		this.id = uidl.getId();
 		
-		if(uidl.hasAttribute("caption"))
-			caption.setText(uidl.getStringAttribute("caption"));
-		else
-			caption.setText("");
+		clear();
 		
 		if(uidl.hasAttribute("style"))
 			setStyleName(CLASSNAME + " " + CLASSNAME+"-"+uidl.getStringAttribute("style"));
 		else
 			setStyleName(CLASSNAME);
 		
-		clear();
-		add(caption);
+		// Handle caption displaying
+		if(uidl.hasAttribute("caption") && !uidl.getStringAttribute("caption").equals("")) {
+			caption.setText(uidl.getStringAttribute("caption"));
+			add(caption);
+		} else if(uidl.hasAttribute("style")) {
+				// Theme needs this to work around different paddings
+				addStyleName(CLASSNAME+"-nocaption");
+		}
 		
 		UIDL layoutUidl = uidl.getChildUIDL(0);
 		Widget layout = client.getWidget(layoutUidl);

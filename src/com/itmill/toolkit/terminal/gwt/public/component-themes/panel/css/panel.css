@@ -11,7 +11,7 @@
 	overflow: hidden;
 	background: transparent url(../img/top-right.png) no-repeat right top;
 	content: url(../img/top-left.png);
-	margin: -6px -6px 0 -6px;
+	margin: -6px -6px 3px -6px;
 }
 
 .i-panel:after {
@@ -24,10 +24,10 @@
 }
 
 .i-panel-caption {
-	font-size: 1.2em;
+	font-size: 1.1em;
 	font-weight: bold;
 	color: #1c3e6e;
-	margin: 3px 0 5px 0;
+	margin: 0 0 7px 0;
 }
 
 
@@ -45,10 +45,19 @@
 
 .i-panel-strong .i-panel-caption {
 	color: #fff;
-	margin: -22px 0 12px 0;
+	margin: -25px 0 12px 0;
 	white-space: nowrap;
 }
 
+/* Strong style without caption */
+.i-panel-strong.i-panel-nocaption {
+	background-image: url(../img/top-bg.png);
+}
+.i-panel-strong.i-panel-nocaption:before {
+	height: 7px;
+	background-image: url(../img/top-right.png);
+	content: url(../img/top-left.png);
+}
 
 
 /* Light style */
@@ -56,7 +65,7 @@
 	background-image: url(../img/top-bg-light.png);
 	border-color: #b3c2d6;
 	border-top-color: #2667a2;
-	margin-top: 23px;
+	margin-top: 20px;
 }
 
 .i-panel-light:before {
@@ -71,9 +80,14 @@
 }
 
 .i-panel-light .i-panel-caption {
-	margin: -23px -5px 18px -5px;
-	font-size: 1.1em;
+	margin: -26px -5px 18px -5px;
+	font-size: 1em;
 	white-space: nowrap;
+}
+
+/* Light style without caption */
+.i-panel-light.i-panel-nocaption {
+	margin-top: 5px;
 }
 
 
@@ -86,6 +100,11 @@
 	background-position: 0 1px;
 }
 
+* html .i-panel .i-panel-caption,
+*+html .i-panel .i-panel-caption {
+	margin-top: 3px;
+}
+
 * html .i-panel-strong .i-panel-caption,
 *+html .i-panel-strong .i-panel-caption {
 	margin: 1px 0 10px 0;
@@ -93,6 +112,7 @@
 
 * html .i-panel-light .i-panel-caption,
 *+html .i-panel-light .i-panel-caption {
+	margin-top: -23px;
 	margin-bottom: 0;
 	padding-bottom: 23px; /* Must specify enough space because of wierd clipping bug */
 }
