@@ -139,8 +139,6 @@ public abstract class Feature extends CustomComponent {
 			ts.addTab(l, "Code Sample", null);
 		}
 
-		layout.addComponent(ts);
-
 	}
 
 	/** Get the desctiption of the feature as XHTML fragment */
@@ -153,6 +151,10 @@ public abstract class Feature extends CustomComponent {
 		return this.getClass().getName();
 	}
 
+	public TabSheet getTabSheet() {
+		return ts;
+	}
+	
 	/** Get the name of the image file that will be put on description page */
 	protected String getImage() {
 		return null;

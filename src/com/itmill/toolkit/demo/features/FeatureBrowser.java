@@ -43,11 +43,7 @@ public class FeatureBrowser extends CustomComponent implements
 
 	private Feature currentFeature = null;
 
-	private OrderedLayout layout;
-
-	private Button propertiesSelect;
-
-	private OrderedLayout right;
+	private CustomLayout mainlayout;
 
 	private PropertyPanel properties;
 
@@ -71,16 +67,12 @@ public class FeatureBrowser extends CustomComponent implements
 		features.setStyle("menu");
 
 		// Configure component layout
-		layout = new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
-		layout.setStyle("featurebrowser-mainlayout");
-		setCompositionRoot(layout);
-		OrderedLayout left = new OrderedLayout(
-				OrderedLayout.ORIENTATION_VERTICAL);
-		left.addComponent(features);
-		layout.addComponent(left);
+		mainlayout = new CustomLayout("featurebrowser-mainlayout");
+		setCompositionRoot(mainlayout);
+		mainlayout.addComponent(features, "tree");
 
 		// Theme selector
-		left.addComponent(themeSelector);
+		mainlayout.addComponent(themeSelector, "themes");
 		themeSelector.addItem("demo");
 		themeSelector.addItem("corporate");
 		themeSelector.addItem("base");
@@ -91,7 +83,7 @@ public class FeatureBrowser extends CustomComponent implements
 		// Restart button
 		Button close = new Button("restart", getApplication(), "close");
 		close.setStyle("link");
-		left.addComponent(close);
+		mainlayout.addComponent(close,"restart");
 
 		// Test component
 		registerFeature("/Welcome", new IntroWelcome());
@@ -148,18 +140,12 @@ public class FeatureBrowser extends CustomComponent implements
 
 		// Add demo component and tabs
 		currentFeature = new IntroWelcome();
-		layout.addComponent(currentFeature);
+		mainlayout.addComponent(currentFeature, "demo");
+		mainlayout.addComponent(currentFeature.getTabSheet(), "tabsheet");
 
 		// Add properties
-		right = new OrderedLayout(OrderedLayout.ORIENTATION_VERTICAL);
-		layout.addComponent(right);
-
-		propertiesSelect = new Button("Show properties", this);
-		propertiesSelect.setSwitchMode(true);
-		right.addComponent(propertiesSelect);
 		properties = currentFeature.getPropertyPanel();
-		properties.setVisible(false);
-		right.addComponent(properties);
+		mainlayout.addComponent(properties, "properties");
 	}
 
 	public void registerFeature(String path, Feature feature) {
@@ -211,19 +197,14 @@ public class FeatureBrowser extends CustomComponent implements
 				Property p = features.getContainerProperty(id, "feature");
 				Feature feature = p != null ? ((Feature) p.getValue()) : null;
 				if (feature != null) {
-					layout.replaceComponent(currentFeature, feature);
+					mainlayout.removeComponent(currentFeature);
+					mainlayout.removeComponent(currentFeature.getTabSheet());
+					mainlayout.addComponent(feature,"demo");
+					mainlayout.addComponent(feature.getTabSheet(),"tabsheet");
 					currentFeature = feature;
 					properties = feature.getPropertyPanel();
 					if (properties != null) {
-						Iterator i = right.getComponentIterator();
-						i.next();
-						PropertyPanel oldProps = (PropertyPanel) i.next();
-						if (oldProps != null)
-							right.replaceComponent(oldProps, properties);
-						else
-							right.addComponent(properties);
-						properties.setVisible(((Boolean) propertiesSelect
-								.getValue()).booleanValue());
+						mainlayout.addComponent(properties,"properties");
 					}
 					getWindow()
 							.setCaption(
@@ -248,9 +229,6 @@ public class FeatureBrowser extends CustomComponent implements
 			// ignored, should never happen
 		}
 
-		if (properties != null)
-			properties.setVisible(((Boolean) propertiesSelect.getValue())
-					.booleanValue());
 	}
 
 	public void addComponent(Component c) {

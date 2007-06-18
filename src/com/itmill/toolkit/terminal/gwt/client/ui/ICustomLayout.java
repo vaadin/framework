@@ -33,7 +33,7 @@ public class ICustomLayout extends SimplePanel implements Paintable, Layout {
 		updateHTML(uidl, client);
 
 		componentToWrapper.clear();
-
+		html.clear();
 		for (Iterator i = uidl.getChildIterator(); i.hasNext();) {
 			UIDL uidlForChild = (UIDL) i.next();
 			if (uidlForChild.getTag().equals("location")) {
