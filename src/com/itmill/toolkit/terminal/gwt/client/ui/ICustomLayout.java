@@ -112,12 +112,17 @@ public class ICustomLayout extends SimplePanel implements Paintable, Layout {
 	private native void prefixImgSrcs(Element e, String srcPrefix) /*-{
 	try {
 	 var divs = e.getElementsByTagName("img"); 
+	 var base = "" + $doc.location;
+	 var l = base.length-1;
+	 while (l >= 0 && base.charAt(l) != "/") l--;
+	 base = base.substring(0,l+1);
 	 for (var i = 0; i < divs.length; i++) {
 	 var div = divs[i];
 	 var src = div.getAttribute("src");
-	 if (src.indexOf("http") != 0) div.setAttribute("src",srcPrefix + src);
+	 if (src.indexOf(base) == 0) div.setAttribute("src",base + srcPrefix + src.substring(base.length));
+	 else if (src.indexOf("http") != 0) div.setAttribute("src",srcPrefix + src);
 	 }			
-	 } catch (e) {}
+	 } catch (e) { alert(e + " " + srcPrefix);}
 	 }-*/;
 
 	/** Exctract body part and script tags from raw html-template.
@@ -161,7 +166,7 @@ public class ICustomLayout extends SimplePanel implements Paintable, Layout {
 				res = html.substring(startOfBody,endOfBody);
 			else 
 				res = html.substring(startOfBody);
-		}
+		}		
 		
 		return res;
 	}
