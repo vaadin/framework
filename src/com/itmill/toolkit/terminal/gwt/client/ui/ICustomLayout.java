@@ -81,12 +81,15 @@ public class ICustomLayout extends SimplePanel implements Paintable, Layout {
 	/** Scripts must be evaluated when the document has been rendered */
 	protected void onLoad() {
 		super.onLoad();
-		eval(scripts);
+		if (scripts != null) {
+			eval(scripts);
+			scripts = null;
+		}
 	}
 
 	/** Evaluate given script in browser document */
 	private native void eval(String script) /*-{
-	 try {
+	 try { 
 	 eval("{ var document = $doc; var window = $wnd; "+ script + "}");
 	 } catch (e) {
 	 }
@@ -94,7 +97,7 @@ public class ICustomLayout extends SimplePanel implements Paintable, Layout {
 
 	/** Scan for location divs and add unique ids for them */
 	private native void addUniqueIdsForLocations(Element e, String idPrefix) /*-{
-	try {
+	 try {
 	 var divs = e.getElementsByTagName("div"); 
 	 for (var i = 0; i < divs.length; i++) {
 	 var div = divs[i];
@@ -104,13 +107,13 @@ public class ICustomLayout extends SimplePanel implements Paintable, Layout {
 	 div.innerHTML="";
 	 }
 	 }	
-	 	 } catch (e) {}
-		
+	 } catch (e) {}
+	 
 	 }-*/;
 
 	/** Prefix all img tag srcs with given prefix. */
 	private native void prefixImgSrcs(Element e, String srcPrefix) /*-{
-	try {
+	 try {
 	 var divs = e.getElementsByTagName("img"); 
 	 var base = "" + $doc.location;
 	 var l = base.length-1;
@@ -125,18 +128,20 @@ public class ICustomLayout extends SimplePanel implements Paintable, Layout {
 	 } catch (e) { alert(e + " " + srcPrefix);}
 	 }-*/;
 
-	/** Exctract body part and script tags from raw html-template.
+	/**
+	 * Exctract body part and script tags from raw html-template.
 	 * 
-	 * Saves contents of all script-tags to private property: scripts.
-	 * Returns contents of the body part for the html without script-tags.
+	 * Saves contents of all script-tags to private property: scripts. Returns
+	 * contents of the body part for the html without script-tags.
 	 * 
-	 * @param html Original HTML-template received from server
+	 * @param html
+	 *            Original HTML-template received from server
 	 * @return html that is used to create the HTMLPanel.
 	 */
 	private String extractBodyAndScriptsFromTemplate(String html) {
-		
+
 		// Exctract script-tags
-		scripts ="";
+		scripts = "";
 		int endOfPrevScript = 0;
 		int nextPosToCheck = 0;
 		String lc = html.toLowerCase();
@@ -145,13 +150,13 @@ public class ICustomLayout extends SimplePanel implements Paintable, Layout {
 		while (scriptStart > 0) {
 			res += html.substring(endOfPrevScript, scriptStart);
 			scriptStart = lc.indexOf(">", scriptStart);
-			int j = lc.indexOf("</script>",scriptStart);
-			scripts += html.substring(scriptStart+1,j) + ";";
+			int j = lc.indexOf("</script>", scriptStart);
+			scripts += html.substring(scriptStart + 1, j) + ";";
 			nextPosToCheck = endOfPrevScript = j + "</script>".length();
 			scriptStart = lc.indexOf("<script", nextPosToCheck);
 		}
 		res += html.substring(endOfPrevScript);
-		
+
 		// Extract body
 		html = res;
 		lc = html.toLowerCase();
@@ -160,14 +165,14 @@ public class ICustomLayout extends SimplePanel implements Paintable, Layout {
 			res = html;
 		} else {
 			res = "";
-			startOfBody = lc.indexOf(">",startOfBody)+1;
-			int endOfBody = lc.indexOf("</body>",startOfBody);
+			startOfBody = lc.indexOf(">", startOfBody) + 1;
+			int endOfBody = lc.indexOf("</body>", startOfBody);
 			if (endOfBody > startOfBody)
-				res = html.substring(startOfBody,endOfBody);
-			else 
+				res = html.substring(startOfBody, endOfBody);
+			else
 				res = html.substring(startOfBody);
-		}		
-		
+		}
+
 		return res;
 	}
 

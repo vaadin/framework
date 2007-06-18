@@ -4,7 +4,7 @@
 </head>
 
 <body>
-<div id="featurebrowser-mainlayout" style="position: absolute; top: 0pt; left: 0pt;"><img src="img/header.png" />
+<div id="featurebrowser-mainlayout" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"><img src="img/header.png" />
 
 <div id="featurebrowser-features" style="top: 62px; width: 200px;">
 	<div location="tree">puu</div>
@@ -65,7 +65,7 @@
 </div>
 
 <div id="featurebrowser-divider"
-	style="overflow: hidden; position: absolute; width: 137px; height: 17px;" /></div>
+	style="overflow: hidden; position: absolute; width: 137px; height: 17px;" />
 </div>
 
 <script type="text/javascript">
@@ -92,13 +92,13 @@ recalcFeatureBrowserLayout = function() {
 	// Get whole window contents size
 	document.body.style.padding = 0;
 	document.body.style.margin = 0;	
-	mainDiv.style.width="100%";
-	mainDiv.style.height="100%";
-	
-	var width = mainDiv.offsetWidth;
-	var height = mainDiv.offsetHeight;
-	if (document.body.offsetWidth > mainDiv.offsetWidth) width = document.body.offsetWidth;
-	if (document.body.offsetHeight > mainDiv.offsetHeight) height = document.body.offsetHeight;
+	document.body.style.position = "absolute";
+	document.body.style.height = "100%";
+	document.body.style.width = "100%";
+	var width = document.body.offsetWidth;
+	var height = document.body.offsetHeight;
+	mainDiv.style.height = height + "px";
+	mainDiv.style.width = width + "px";
 
 	// Recalc features div dimensions
 	var featuresWidth = 200;
