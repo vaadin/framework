@@ -1,10 +1,10 @@
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 
 import com.google.gwt.user.client.ui.DeckPanel;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SourcesTabEvents;
 import com.google.gwt.user.client.ui.TabBar;
@@ -16,6 +16,8 @@ import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
 public class ITabsheet extends TabPanel implements Paintable {
+	
+	private static final String CLASSNAME = "i-tabsheet";
 
 	String id;
 
@@ -41,6 +43,8 @@ public class ITabsheet extends TabPanel implements Paintable {
 	};
 
 	public ITabsheet() {
+		setStyleName(CLASSNAME);
+		
 		addTabListener(new TabListener() {
 
 			public void onTabSelected(SourcesTabEvents sender, int tabIndex) {
@@ -61,6 +65,12 @@ public class ITabsheet extends TabPanel implements Paintable {
 	public void updateFromUIDL(UIDL uidl, Client client) {
 		this.client = client;
 		id = uidl.getId();
+		
+		DeckPanel dp = getDeckPanel();
+		dp.setStyleName(CLASSNAME+"-content");
+		
+		TabBar tb = getTabBar();
+		tb.setStyleName(CLASSNAME+"-tabs");
 
 		UIDL tabs = uidl.getChildUIDL(0);
 		boolean keepCurrentTabs = tabKeys.size() == tabs.getNumberOfChildren();
@@ -77,8 +87,7 @@ public class ITabsheet extends TabPanel implements Paintable {
 					activeTabIndex = index;
 					Widget content = client.getWidget(tab
 							.getChildUIDL(0));
-					getTabBar().selectTab(index);
-					DeckPanel dp = getDeckPanel();
+					tb.selectTab(index);
 					dp.remove(index);
 					dp.insert(content, index);
 					((Paintable)content).updateFromUIDL(tab

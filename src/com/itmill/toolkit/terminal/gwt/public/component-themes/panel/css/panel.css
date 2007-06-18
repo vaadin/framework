@@ -94,25 +94,40 @@
 
 
 
-/* IE specific rules (different selectors for IE6 and IE7 */
-* html .i-panel,
+/* IE specific rules (different selectors for IE6 and IE7.
+ * These selectors must be separate because IE6 won't 
+ * apply them if they are grouped together.
+ */
+ 
+* html .i-panel {
+	background-position: 0 1px;
+}
 *+html .i-panel {
 	background-position: 0 1px;
 }
 
-* html .i-panel .i-panel-caption,
+* html .i-panel .i-panel-caption {
+	margin-top: 3px;
+}
 *+html .i-panel .i-panel-caption {
 	margin-top: 3px;
 }
 
-* html .i-panel-strong .i-panel-caption,
+
+* html .i-panel-strong .i-panel-caption {
+	margin: 1px 0 10px 0;
+}
 *+html .i-panel-strong .i-panel-caption {
 	margin: 1px 0 10px 0;
 }
 
-* html .i-panel-light .i-panel-caption,
-*+html .i-panel-light .i-panel-caption {
+* html .i-panel-light .i-panel-caption {
 	margin-top: -23px;
 	margin-bottom: 0;
 	padding-bottom: 23px; /* Must specify enough space because of wierd clipping bug */
+}
+*+html .i-panel-light .i-panel-caption {
+	margin-top: -23px;
+	margin-bottom: 0;
+	padding-bottom: 23px;
 }

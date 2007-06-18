@@ -1,13 +1,13 @@
 body {
 	background: #fafafc url(../img/window-bg.png) repeat-x;
-	font-family: helvetica, verdana, tahoma, arial, sans-serif;
+	font-family: helvetica, arial, tahoma, verdana, sans-serif;
 	color: #222;
 	font-size: 68.75%;
 	line-height: 1.4em;
 }
 
 input, select, textarea, button {
-	font-family: helvetica, verdana, tahoma, arial, sans-serif;
+	font-family: helvetica, arial, tahoma, verdana, sans-serif;
 	font-size: 1em;
 }
 
