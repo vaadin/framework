@@ -6,6 +6,7 @@ import com.itmill.toolkit.terminal.gwt.client.ui.IButton;
 import com.itmill.toolkit.terminal.gwt.client.ui.ICheckBox;
 import com.itmill.toolkit.terminal.gwt.client.ui.IComponent;
 import com.itmill.toolkit.terminal.gwt.client.ui.ICustomLayout;
+import com.itmill.toolkit.terminal.gwt.client.ui.IDateField;
 import com.itmill.toolkit.terminal.gwt.client.ui.IEmbedded;
 import com.itmill.toolkit.terminal.gwt.client.ui.IGridLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.IHorizontalLayout;
@@ -75,6 +76,8 @@ public class DefaultWidgetFactory implements WidgetFactory {
 		}
 		if ("table".equals(tag))
 			return new ITable();
+		if("datefield".equals(tag))
+			return new IDateField();
 
 		return new IUnknownComponent();
 	}

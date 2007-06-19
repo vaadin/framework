@@ -9,7 +9,7 @@ import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
 public class ISelect extends IOptionGroupBase {
 	
-	private static final String CLASSNAME = "i-select";
+	public static final String CLASSNAME = "i-select";
 	
 	private static final int VISIBLE_COUNT = 10;
 	

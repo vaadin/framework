@@ -9,7 +9,7 @@ import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
 public class IButton extends Button implements Paintable {
 	
-	private static final String CLASSNAME = "i-button";
+	public static final String CLASSNAME = "i-button";
 
 	String id;
 

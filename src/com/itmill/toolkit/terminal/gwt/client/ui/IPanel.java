@@ -9,7 +9,7 @@ import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
 public class IPanel extends FlowPanel implements Paintable {
 	
-	private static final String CLASSNAME = "i-panel";
+	public static final String CLASSNAME = "i-panel";
 	
 	Client client;
 	

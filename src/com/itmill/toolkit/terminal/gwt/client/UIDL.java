@@ -265,6 +265,14 @@ public class UIDL {
 			throw new IllegalArgumentException("No variables defined in tag.");
 		return v;
 	}
+	
+	public boolean hasVariable(String name) {
+		Object v = null;
+		try {
+			v = getVariableHash().get(name);
+		} catch(IllegalArgumentException e) {}
+		return v != null;
+	}
 
 	public String getStringVariable(String name) {
 		JSONString t = (JSONString) getVariableHash().get(name);

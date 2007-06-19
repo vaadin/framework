@@ -82,7 +82,7 @@ public class Client implements EntryPoint {
 
 	private void makeUidlRequest(String requestData) {
 		console.log("Making UIDL Request with params: " + requestData);
-		rb = new RequestBuilder(RequestBuilder.GET, appUri
+		rb = new RequestBuilder(RequestBuilder.POST, appUri
 				+ "/UIDL/?requestId=" + (Math.random()) + "&" + requestData);
 		try {
 			rb.sendRequest(requestData, new RequestCallback() {
@@ -353,4 +353,30 @@ public class Client implements EntryPoint {
 		return (String) resourcesMap.get(name);
 	}
 
+	public JSONObject getLocale(String locale) {
+		// TODO should perform synchronous call to server to fetch 
+		// locale specific strings
+		// (GWT only supports synchrounous requests from v. 1.4)
+		console.log("Loading a new locale: " + locale);
+		rb = new RequestBuilder(RequestBuilder.POST, appUri
+				+ "/locale/?requestId=" + (Math.random()) + "&" + locale);
+		/*try {
+			rb.sendRequest(locale, new RequestCallback() {
+				public void onError(Request request, Throwable exception) {
+					console.error("Got error");
+				}
+
+				public void onResponseReceived(Request request,
+						Response response) {
+					handleReceivedJSONMessage(response);
+				}
+
+			});
+
+		} catch (RequestException e) {
+			console.error(e.getMessage());
+		}*/
+		// TODO
+		return null;
+	}
 }

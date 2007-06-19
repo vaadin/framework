@@ -12,7 +12,7 @@ import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
 public class IOptionGroup extends IOptionGroupBase {
 	
-	private static final String CLASSNAME = "i-select-optiongroup";
+	public static final String CLASSNAME = "i-select-optiongroup";
 	
 	private Panel panel;
 	

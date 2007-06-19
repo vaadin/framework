@@ -1,14 +1,17 @@
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Label;
 import com.itmill.toolkit.terminal.gwt.client.Client;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
 public class ILabel extends HTML implements Paintable {
+	
+	public static final String CLASSNAME = "i-label";
 
 	public void updateFromUIDL(UIDL uidl, Client client) {
+		
+		setStyleName(CLASSNAME);
 
 		if (client.updateComponent(this, uidl, true))
 			return;

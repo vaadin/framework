@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import com.google.gwt.user.client.ui.DeckPanel;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SourcesTabEvents;
 import com.google.gwt.user.client.ui.TabBar;
@@ -17,7 +16,7 @@ import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
 public class ITabsheet extends TabPanel implements Paintable {
 	
-	private static final String CLASSNAME = "i-tabsheet";
+	public static final String CLASSNAME = "i-tabsheet";
 
 	String id;
 

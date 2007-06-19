@@ -1,6 +1,5 @@
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.itmill.toolkit.terminal.gwt.client.Client;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;

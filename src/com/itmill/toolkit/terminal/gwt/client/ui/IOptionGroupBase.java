@@ -15,7 +15,7 @@ import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
 abstract class IOptionGroupBase extends Composite implements Paintable, ClickListener, ChangeListener, KeyboardListener {
 	
-	static final String CLASSNAME_OPTION = "i-select-option";
+	public static final String CLASSNAME_OPTION = "i-select-option";
 
 	Client client;
 	

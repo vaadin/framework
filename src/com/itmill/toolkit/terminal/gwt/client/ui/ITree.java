@@ -13,7 +13,7 @@ import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
 public class ITree extends Tree implements Paintable {
 	
-	private static final String CLASSNAME = "i-tree";
+	public static final String CLASSNAME = "i-tree";
 
 	Set selectedIds = new HashSet();
 	Client client;
