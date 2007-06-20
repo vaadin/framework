@@ -1,90 +1,80 @@
 <html>
 <head>
-<link REL="stylesheet" TYPE="text/css" HREF="../style.css">
+<link REL="stylesheet" TYPE="text/css">
 </head>
 
 <body>
-<div id="featurebrowser-mainlayout" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"><img src="img/header.png" />
-
-<div id="featurebrowser-features" style="top: 62px; width: 200px;">
-	<div location="tree">puu</div>
-</div>
-
-<div id="featurebrowser-demo"
-	style="overflow: auto; position: absolute; top: 62px; left: 215px; ">
-<table width="100%" height="100%" cellspacing="0" cellpadding="0"
-	border="0">
-	<tbody>
-		<tr>
-			<td valign="middle" align="center">
-			<table>
-				<tbody>
-					<tr>
-						<td id="featurebrowser-demo-td" style="text-align: left;">
-
-	<div location="demo">demo</div>
-
-						</td>
-					</tr>
-				</tbody>
-			</table>
-			</td>
-		</tr>
-	</tbody>
-</table>
-</div>
-
-<div id="featurebrowser-tabs" style="overflow: hidden; position: absolute; left: 215px;">	
-		<div location="tabsheet">tabs</div>
-</div>
+<div id="_UID_main" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"><img src="img/header.png" />
 	
-<img id="featurebrowser-properties-toggler" src="img/show_properties.png" style=" top: 23px; position: absolute;"/>
+	<div id="_UID_features" style="top: 62px; width: 200px; position: absolute; overflow: auto; left: 0;" location="tree">
+		<div style="width: 100%; height: 100%; border: 1px solid red;">tree</div>
+	</div>
 	
-<div id="featurebrowser-properties" style="overflow: hidden; position: absolute; top: 23px; width: 0px;">
-	<div location="properties">properties</div>
-</div>	
+	<div id="_UID_demo" style="overflow: auto; position: absolute; top: 62px; left: 215px; ">
+	<table width="100%" height="100%" cellspacing="0" cellpadding="0"
+		border="0">
+		<tbody>
+			<tr>
+				<td valign="middle" align="center">
+				<table>
+					<tbody>
+						<tr>
+							<td style="text-align: left;"  location="demo">
+								<div style="width: 100%; height: 100%; border: 1px solid red;">demo</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	</div>
 	
-<div id="featurebrowser-control"
-	style="overflow: hidden; position: absolute; bottom: 10px; left: 0pt; width: 200px; height: 50px;">
-<table width="100%" height="100%" border="0">
-	<tbody>
-		<tr>
-			<td width="50%" valign="middle" align="center"
-				id="featurebrowser-control-left">			
-<div location="themes">themes</div>
-			</td>
-			<td width="50%" valign="middle" align="center"
-				id="featurebrowser-control-right">
-<div location="restart">restart</div>
-			</td>
-		</tr>
-	</tbody>
-</table>
-</div>
+	<div id="_UID_tabs" style="overflow: hidden; position: absolute; left: 215px;" location="tabsheet">	
+		<div style="width: 100%; height: 100%; border: 1px solid red;">tabsheet</div>
+	</div>
+		
+	<img id="_UID_prop-toggle" src="img/show_properties.png" style=" top: 23px; position: absolute;"/>
+		
+	<div id="_UID_props" style="overflow: hidden; position: absolute; top: 23px; width: 0px;" location="properties">
+		<div style="width: 100%; height: 100%; border: 1px solid red;">properties</div>
+	</div>	
+		
+	<div id="_UID_cntr"
+		style="overflow: hidden; position: absolute; bottom: 10px; left: 0pt; width: 200px; height: 50px;">
+	<table width="100%" height="100%" border="0">
+		<tbody>
+			<tr>
+				<td width="50%" valign="middle" align="center" id="_UID_cntr-left" location="themes">themes</td>
+				<td width="50%" valign="middle" align="center" id="_UID_cntr-right" location="restart">restart</td>
+			</tr>
+		</tbody>
+	</table>
+	</div>
+	
+	<img id="_UID_divider" src="img/tab_handle.png" style="position: absolute;" />
 
 </div>
 
-<div id="featurebrowser-divider"
-	style="overflow: hidden; position: absolute; width: 137px; height: 17px;" />
-</div>
 
 <script type="text/javascript">
 
 /** Recalculate feature browser main layout dimensions for all components */
-recalcFeatureBrowserLayout = function() {
+_UID_layout = function() {
 
 	// Then animations are needed, this will be reset to true
 	var animationNeeded = false;
 
 	// References to all elements
-	var mainDiv = document.getElementById("featurebrowser-mainlayout"); 
+	var mainDiv = document.getElementById("_UID_main"); 
 	if (mainDiv == null) { alert("maindiv is null"); return;}
-	var featuresDiv = document.getElementById("featurebrowser-features");
-	var demoDiv = document.getElementById("featurebrowser-demo");
-	var tabsDiv = document.getElementById("featurebrowser-tabs");
-	var propertiesDiv = document.getElementById("featurebrowser-properties");
-	var controlDiv = document.getElementById("featurebrowser-control");
-	var dividerDiv = document.getElementById("featurebrowser-divider");
+	var featuresDiv = document.getElementById("_UID_features");
+	var demoDiv = document.getElementById("_UID_demo");
+	var tabsDiv = document.getElementById("_UID_tabs");
+	var propertiesDiv = document.getElementById("_UID_props");
+	var controlDiv = document.getElementById("_UID_cntr");
+	var dividerDiv = document.getElementById("_UID_divider");
 
 	// Logobar height
 	var logoBarHeight = 62;
@@ -121,16 +111,16 @@ recalcFeatureBrowserLayout = function() {
 	propertiesDiv.style.left="" + (centerWidth + featuresWidth + 40) + "px";
 	propertiesDiv.style.width=propWidth + "px";
 	propertiesDiv.style.height="" + (height - 23) + "px";	
-	var buttonDiv = document.getElementById("featurebrowser-properties-toggler");
+	var buttonDiv = document.getElementById("_UID_prop-toggle");
 	buttonDiv.style.left = "" + (centerWidth + featuresWidth - 20 + 40) + "px"
 	if (propWidth == 0) { //buttonDiv.src = buttonDiv.showPng; 
 	buttonDiv.style.height = "92px"; }
 	if (propWidth == propertiesDiv.maxWidth) { //buttonDiv.src = buttonDiv.hidePng;
 	 buttonDiv.style.height = "23px"; }
 	buttonDiv.onclick  = function() {
-		var propertiesDiv = document.getElementById("featurebrowser-properties");
+		var propertiesDiv = document.getElementById("_UID_props");
 		propertiesDiv.targetWidth = propertiesDiv.targetWidth == 0 ? 265 : 0;
-		recalcFeatureBrowserLayout();
+		_UID_layout();
 	};
 
 	// Recalc divider div dimensions
@@ -157,7 +147,7 @@ recalcFeatureBrowserLayout = function() {
 	tabsDiv.style.left="" + (featuresWidth + 15) + "px";
 	tabsDiv.style.width="" + centerWidth + "px";
 	tabsDiv.style.height="" + (height - dividerDiv.demoHeight - dividerHeight - logoBarHeight) + "px";	
-	updateTabsContentHeight();	
+	_UID_updateTabs();	
 
 	// Recalc demo div dimensions
 	demoDiv.style.position="absolute";
@@ -175,21 +165,21 @@ recalcFeatureBrowserLayout = function() {
 	controlDiv.style.left="0";
 	controlDiv.style.width="" + featuresWidth + "px";
 	controlDiv.style.height="" + controlHeight + "px";	
-	
+
 	if (animationNeeded) {
-		setTimeout("recalcFeatureBrowserLayout()",30);
+		setTimeout("_UID_layout()",30);
 	}
 };
 
 /** Recalculate tabs content width */
-updateTabsContentHeight = function() {
+_UID_updateTabs = function() {
 	try {
-		var tabsDiv = document.getElementById("featurebrowser-tabs");
-		var tabsComponent = itmill.themes.Demo.prototype.elementByIndex(tabsDiv.childNodes,0);
+		var tabsDiv = document.getElementById("_UID_tabs");
+		var tabsComponent = itmill.themes.Demo.prototype._UID_elemByIndex(tabsDiv.childNodes,0);
 		if (tabsComponent == null) return;
-		var tabs = itmill.themes.Demo.prototype.elementByIndex(tabsComponent.childNodes,0);
+		var tabs = itmill.themes.Demo.prototype._UID_elemByIndex(tabsComponent.childNodes,0);
 		if (tabs == null) return;
-		var content = itmill.themes.Demo.prototype.elementByIndex(tabsComponent.childNodes,1);
+		var content = itmill.themes.Demo.prototype._UID_elemByIndex(tabsComponent.childNodes,1);
 		if (content == null) return;
 		content.style.height="" + (tabsDiv.offsetHeight - tabs.offsetHeight-13) + "px";
 		content.style.borderBottom="0";
@@ -206,7 +196,7 @@ updateTabsContentHeight = function() {
 };
 
 /** Helper method. Get element from node array by index */
-elementByIndex = function(nodeArray, index) {
+_UID_elemByIndex = function(nodeArray, index) {
 	if (typeof nodeArray == 'undefined' || nodeArray == null) return null;
 	var i=0;
 	while (index>=0 && i < nodeArray.length) {
@@ -217,9 +207,9 @@ elementByIndex = function(nodeArray, index) {
 	return null;
 }
 
-dividerUpdate = function() {
-	var dividerDiv = document.getElementById("featurebrowser-divider");
-	var div = document.getElementById("featurebrowser-mainlayout");
+_UID_dividerUpdate = function() {
+	var dividerDiv = document.getElementById("_UID_divider");
+	var div = document.getElementById("_UID_main");
 	dividerDiv.isActive = true;
 	div.onmouseup = function() {
 		dividerDiv.isActive = false;
@@ -228,22 +218,22 @@ dividerUpdate = function() {
 	}
 	div.onmousemove = function(e) {
 		dividerDiv.mouseY = typeof e != 'undefined' ? e.clientY : window.event.clientY;
-		recalcFeatureBrowserLayout();
+		_UID_layout();
 	}
 	return false;
 };
 
-initFeatureBrowserLayout = function() {
-	var dividerDiv = document.getElementById("featurebrowser-divider");
+_UID_initFeatureBrowserLayout = function() {
+	var dividerDiv = document.getElementById("_UID_divider");
 	if (dividerDiv == null) alert("no divider div");
 	dividerDiv.isActive = false;
-	dividerDiv.onmousedown = dividerUpdate;
+	dividerDiv.onmousedown = _UID_dividerUpdate;
 	
-	window.onresize=recalcFeatureBrowserLayout; 
-	recalcFeatureBrowserLayout();
+	window.onresize=_UID_layout; 
+	_UID_layout();
 };
 
-initFeatureBrowserLayout();
+_UID_initFeatureBrowserLayout();
 
 </script>
 

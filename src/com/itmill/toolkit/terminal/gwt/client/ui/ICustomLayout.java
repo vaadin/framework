@@ -2,8 +2,11 @@ package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -13,34 +16,50 @@ import com.itmill.toolkit.terminal.gwt.client.Layout;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
-public class ICustomLayout extends SimplePanel implements Paintable, Layout {
+public class ICustomLayout extends ComplexPanel implements Paintable, Layout {
 
-	private HashMap componentToWrapper = new HashMap();
-
-	HTMLPanel html;
+	private HashMap locationToElement = new HashMap();
+	
+	private HashMap locationToWidget = new HashMap();
 
 	String currentStyle;
 
-	String locationPrefix = HTMLPanel.createUniqueId() + "_";
-
 	String scripts = "";
+	
+	String pid;
+
+	public ICustomLayout() {
+		setElement(DOM.createDiv());
+	}
+
+	public void add(Widget widget, String location) {
+		Element elem = (Element) locationToElement.get(location);
+		if (elem == null) {
+			throw new NoSuchElementException();
+		}
+		Widget previous = (Widget) locationToWidget.get(location);
+		if (widget.equals(previous)) return;
+		remove(previous);
+		super.add(widget, elem);
+		locationToWidget.put(location,widget);
+	}
 
 	public void updateFromUIDL(UIDL uidl, Client client) {
 
 		if (client.updateComponent(this, uidl, false))
 			return;
 
+		pid = uidl.getId();
+		
 		updateHTML(uidl, client);
 
-		componentToWrapper.clear();
-		html.clear();
 		for (Iterator i = uidl.getChildIterator(); i.hasNext();) {
 			UIDL uidlForChild = (UIDL) i.next();
 			if (uidlForChild.getTag().equals("location")) {
 				String location = uidlForChild.getStringAttribute("name");
 				Widget child = client.getWidget(uidlForChild.getChildUIDL(0));
 				try {
-					html.add(child, locationPrefix + location);
+					add(child, location);
 				} catch (Exception e) {
 					// If no location is found, this component is not visible
 				}
@@ -65,22 +84,45 @@ public class ICustomLayout extends SimplePanel implements Paintable, Layout {
 			currentStyle = newStyle;
 		}
 		template = extractBodyAndScriptsFromTemplate(template);
-		html = new HTMLPanel(template);
-		addUniqueIdsForLocations(html.getElement(), locationPrefix);
+		DOM.setInnerHTML(getElement(), template);
+
+		locationToElement.clear();
+		scanForLocations(getElement());
 
 		Widget parent = getParent();
 		while (parent != null && !(parent instanceof IWindow))
 			parent = parent.getParent();
 		if (parent != null && ((IWindow) parent).getTheme() != null)
 			;
-		prefixImgSrcs(html.getElement(), "../theme/"
+		prefixImgSrcs(getElement(), "../theme/"
 				+ ((IWindow) parent).getTheme() + "/layout/");
-		add(html);
 	}
+
+	private void scanForLocations(Element elem) {
+
+		String location = getLocation(elem);
+		if (location != null) {
+			locationToElement.put(location, elem);
+			DOM.setInnerHTML(elem, "");
+		} else {
+			int len = DOM.getChildCount(elem);
+			for (int i=0; i<len; i++) {
+				System.out.print(i);
+				scanForLocations(DOM.getChild(elem, i));
+			}
+			
+		}
+
+	}
+	
+	private static native String getLocation(Element elem) /*-{
+		return elem.getAttribute("location");
+	}-*/;
 
 	/** Scripts must be evaluated when the document has been rendered */
 	protected void onLoad() {
 		super.onLoad();
+		// Evaluate scripts only once
 		if (scripts != null) {
 			eval(scripts);
 			scripts = null;
@@ -88,27 +130,11 @@ public class ICustomLayout extends SimplePanel implements Paintable, Layout {
 	}
 
 	/** Evaluate given script in browser document */
-	private native void eval(String script) /*-{
+	private static native void eval(String script) /*-{
 	 try { 
 	 eval("{ var document = $doc; var window = $wnd; "+ script + "}");
 	 } catch (e) {
 	 }
-	 }-*/;
-
-	/** Scan for location divs and add unique ids for them */
-	private native void addUniqueIdsForLocations(Element e, String idPrefix) /*-{
-	 try {
-	 var divs = e.getElementsByTagName("div"); 
-	 for (var i = 0; i < divs.length; i++) {
-	 var div = divs[i];
-	 var location = div.getAttribute("location");
-	 if (location != null) {
-	 div.setAttribute("id",idPrefix + location);
-	 div.innerHTML="";
-	 }
-	 }	
-	 } catch (e) {}
-	 
 	 }-*/;
 
 	/** Prefix all img tag srcs with given prefix. */
@@ -132,13 +158,17 @@ public class ICustomLayout extends SimplePanel implements Paintable, Layout {
 	 * Exctract body part and script tags from raw html-template.
 	 * 
 	 * Saves contents of all script-tags to private property: scripts. Returns
-	 * contents of the body part for the html without script-tags.
+	 * contents of the body part for the html without script-tags. Also replaces
+	 * all _UID_ tags with an unique id-string.
 	 * 
 	 * @param html
 	 *            Original HTML-template received from server
 	 * @return html that is used to create the HTMLPanel.
 	 */
 	private String extractBodyAndScriptsFromTemplate(String html) {
+
+		// Replace UID:s
+		html = html.replaceAll("_UID_", pid + "__");
 
 		// Exctract script-tags
 		scripts = "";
@@ -177,35 +207,42 @@ public class ICustomLayout extends SimplePanel implements Paintable, Layout {
 	}
 
 	public void replaceChildComponent(Widget from, Widget to) {
-		CaptionWrapper wrapper = (CaptionWrapper) componentToWrapper.get(from);
-		if (wrapper != null) {
-			componentToWrapper.remove(from);
-			from = wrapper;
-		}
-		// TODO
-		html.remove(from);
-		html.add(to);
-
+		String location = getLocation(from);
+		if (location == null) throw new IllegalArgumentException();
+		add(to,location);
 	}
 
 	public boolean hasChildComponent(Widget component) {
-		// TODO
-		return componentToWrapper.get(component) != null;
+		return locationToWidget.containsValue(component);
 	}
 
 	public void updateCaption(Widget component, UIDL uidl) {
-		// TODO
-		/*
-		 * CaptionWrapper wrapper = (CaptionWrapper)
-		 * componentToWrapper.get(component); if (CaptionWrapper.isNeeded(uidl)) {
-		 * if (wrapper == null) { int index = getWidgetIndex(component);
-		 * remove(component); wrapper = new CaptionWrapper(component);
-		 * insert(wrapper, index); componentToWrapper.put(component, wrapper); }
-		 * wrapper.updateCaption(uidl); } else { if (wrapper != null) { int
-		 * index = getWidgetIndex(wrapper); remove(wrapper);
-		 * insert(wrapper.getWidget(), index);
-		 * componentToWrapper.remove(component); } }
-		 */
+		// TODO Currently not supported
+	}
+	
+	public String getLocation(Widget w) {
+		for (Iterator i = locationToWidget.keySet().iterator(); i.hasNext();) {
+			String location = (String) i.next();
+			if (locationToWidget.get(location) == w) 
+				return location;
+		}
+		return null;
+	}
+
+	public boolean remove(Widget w) {
+		String location = getLocation(w);
+		if (location != null)
+			locationToWidget.remove(location);
+		return super.remove(w);
+	}
+
+	public void add(Widget w) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void clear() {
+		super.clear();
+		locationToWidget.clear();
 	}
 
 }
