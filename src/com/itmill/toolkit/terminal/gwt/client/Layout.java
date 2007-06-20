@@ -34,7 +34,7 @@ public interface Layout extends Paintable {
 	 * Each component is responsible for maintaining its caption, description
 	 * and error message. In most cases components doesn't want to do that and
 	 * those elements reside outside of the component. Because of this layouts
-	 * msut provide service for it's childen to show those elements for them.
+	 * must provide service for it's childen to show those elements for them.
 	 * </p>
 	 * 
 	 * @param component
