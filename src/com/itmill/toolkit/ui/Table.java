@@ -1291,7 +1291,7 @@ public class Table extends Select implements Action.Container,
 		if (variables.containsKey("firstvisible")) {
 			Integer value = (Integer) variables.get("firstvisible");
 			if (value != null)
-				setCurrentPageFirstItemIndex(value.intValue() - 1);
+				setCurrentPageFirstItemIndex(value.intValue());
 		}
 
 		// Sets requested firstrow and rows for the next paint
@@ -1299,7 +1299,7 @@ public class Table extends Select implements Action.Container,
 				|| variables.containsKey("reqrows")) {
 			Integer value = (Integer) variables.get("reqfirstrow");
 			if (value != null)
-				reqFirstRowToPaint = value.intValue() - 1;
+				reqFirstRowToPaint = value.intValue();
 			value = (Integer) variables.get("reqrows");
 			if (value != null)
 				reqRowsToPaint = value.intValue();
@@ -1434,7 +1434,7 @@ public class Table extends Select implements Action.Container,
 		target.addAttribute("cols", cols);
 		target.addAttribute("rows", cells[0].length);
 		target.addAttribute("firstrow",
-				(reqFirstRowToPaint >= 0 ? reqFirstRowToPaint : first) + 1);
+				(reqFirstRowToPaint >= 0 ? reqFirstRowToPaint : first) );
 		target.addAttribute("totalrows", total);
 		if (pagelen != 0)
 			target.addAttribute("pagelength", pagelen);
