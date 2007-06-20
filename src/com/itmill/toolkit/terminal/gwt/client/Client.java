@@ -105,6 +105,7 @@ public class Client implements EntryPoint {
 	private void handleReceivedJSONMessage(Response response) {
 		Date start = new Date();
 		String jsonText = response.getText().substring(3) + "}";
+		System.out.println(jsonText);
 		JSONValue json;
 		try {
 			json = JSONParser.parse(jsonText);

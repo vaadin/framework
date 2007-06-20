@@ -13,10 +13,12 @@ public final class Console {
 	
 	public void log(String msg) {
 		rp.add(new Label(msg));
+		System.out.println(msg);
 	}
 
 	public void error(String msg) {
 		rp.add((new Label(msg)));
+		System.out.println(msg);
 	}
 
 	public void printObject(Object msg) {
