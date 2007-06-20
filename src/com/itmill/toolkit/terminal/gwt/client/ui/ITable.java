@@ -34,12 +34,12 @@ public class ITable extends Composite implements Paintable, ScrollListener {
 	 */
 	private static final double CACHE_REACT_RATE = 1;
 	
-	private int firstRendered = 0;
-	private int lastRendered = 0;
-	private int firstRowInViewPort = 1;
+	private int firstRendered = -1;
+	private int lastRendered = -1;
+	private int firstRowInViewPort = 0;
 	private int pageLength = 15;
 	
-	private int rowHeaders = 0;
+	private boolean rowHeaders = false;
 	
 	private Map columnOrder = new HashMap();
 	
@@ -62,7 +62,7 @@ public class ITable extends Composite implements Paintable, ScrollListener {
 	private int totalRows;
 	private HashMap columnWidths = new HashMap();
 	
-	private int rowHeight = 22;
+	private int rowHeight = 25;
 	private RowRequestHandler rowRequestHandler;
 	
 	public ITable() {
@@ -87,10 +87,16 @@ public class ITable extends Composite implements Paintable, ScrollListener {
 	}
 
 	public void updateFromUIDL(UIDL uidl, Client client) {
+		if (client.updateComponent(this, uidl, true))
+			return;
+
 		this.client = client;
 		this.id = uidl.getStringAttribute("id");
 		this.immediate = uidl.getBooleanAttribute("immediate");
 		this.totalRows = uidl.getIntAttribute("totalrows");
+		this.pageLength = uidl.getIntAttribute("pagelength");
+		if(uidl.hasAttribute("rowheaders"))
+			rowHeaders = true;
 		
 		UIDL columnInfo = null;
 		UIDL rowData = null;
@@ -107,17 +113,24 @@ public class ITable extends Composite implements Paintable, ScrollListener {
 		}
 		updateHeader(columnInfo);
 		
-		updateBody(rowData);
+		updateBody(rowData, uidl.getIntAttribute("firstrow"),uidl.getIntAttribute("rows"));
 		
 		if(!colWidthsInitialized) {
 			DeferredCommand.add(new Command() {
 				public void execute() {
 					initSize();
 					updateSpacers();
+					bodyContainer.setScrollPosition(getRowHeight()*(firstRowInViewPort -1));
+					colWidthsInitialized = true;
+					if(totalRows > lastRendered) {
+						// fetch cache rows
+						rowRequestHandler.setReqFirstRow(lastRendered+1);
+						rowRequestHandler.setReqRows((int) (pageLength*CACHE_RATE));
+						rowRequestHandler.deferRowFetch();
+					}
 				}
 			});
 		}
-		
 	}
 	
 	private void updateActionMap(UIDL c) {
@@ -138,17 +151,87 @@ public class ITable extends Composite implements Paintable, ScrollListener {
 		}
 	}
 	
-	private void updateBody(UIDL uidl) {
-		if(uidl == null)
+	/**
+	 * Updates row data from uidl. UpdateFromUIDL delegates updating 
+	 * tBody to this method.
+	 * 
+	 * Updates may be to different part of tBody, depending on update type.
+	 * It can be initial row data, scroll up, scroll down...
+	 * 
+	 * @param uidl which contains row data
+	 * @param firstRow first row in data set
+	 * @param reqRows amount of rows in data set
+	 */
+	private void updateBody(UIDL uidl, int firstRow, int reqRows) {
+ 		if(uidl == null || reqRows < 1)
 			return;
 		
 		Iterator it = uidl.getChildIterator();
-		UIDL row = (UIDL) it.next();
-		if(firstRendered == 0)
-			firstRendered = row.getIntAttribute("key");
-		if(row.getIntAttribute("key") == lastRendered + 1) {
-			while(it.hasNext())
+		
+		if(firstRendered == -1 || firstRow == lastRendered + 1) {
+			//initial data to body or appending rows to table
+			while(it.hasNext()) {
 				appendRow( (UIDL) it.next() );
+				if(colWidthsInitialized)
+					resizePostSpacer(-1);
+			}
+//			lastRendered = firstRow + reqRows - 1;
+			if(firstRendered == -1) {
+				firstRendered = firstRow;
+			}
+		} else if(firstRendered == firstRow + reqRows) {
+			// add received rows before old ones
+			int rowsAdded = 0;
+			while(it.hasNext()){
+				tBody.insertRow(rowsAdded);
+				resizePreSpacer(-1);
+				updateRow( (UIDL) it.next(), rowsAdded);
+			}
+			firstRendered = firstRow;
+		} else {
+			// complitely new set received, truncate body and recurse
+			tBody.clear();
+			firstRendered = -1;
+			lastRendered = -1;
+			updateBody(uidl, firstRow, reqRows);
+		}
+		trimBody();
+		if(colWidthsInitialized)
+			updateSpacers();
+	}
+	
+	/**
+	 * Returns calculated height of row.
+	 * @return height in pixels
+	 */
+	private int getRowHeight() {
+		return tBody.getOffsetHeight()/getRenderedRowCount();
+	}
+
+	/**
+	 * This method removes rows from body which are "out of
+	 * cache area" to keep amount of rendered rows sane.
+	 */
+	private void trimBody() {
+		int toBeRemovedFromTheBeginning = (int) (firstRowInViewPort - CACHE_RATE*pageLength) - firstRendered;
+		int toBeRemovedFromTheEnd = lastRendered - (int) (firstRowInViewPort + CACHE_RATE*pageLength + pageLength);
+		if(toBeRemovedFromTheBeginning > 0) {
+			// remove extra rows from the beginning of the table
+			firstRendered =+ toBeRemovedFromTheBeginning;
+			while(toBeRemovedFromTheBeginning > 0) {
+				tBody.removeRow(0);
+				toBeRemovedFromTheBeginning--;
+				resizePreSpacer(1);
+			}
+		}
+		if(toBeRemovedFromTheEnd > 0) {
+			// remove extra rows from the end of the table
+			lastRendered =- toBeRemovedFromTheEnd;
+			while(toBeRemovedFromTheEnd > 0) {
+				tBody.removeRow(tBody.getRowCount() - 1);
+				toBeRemovedFromTheEnd--;
+				resizePostSpacer(1);
+			}
 		}
 	}
 	
@@ -159,6 +242,11 @@ public class ITable extends Composite implements Paintable, ScrollListener {
 
 	private void updateRow(UIDL uidl, int rowIndex) {
 		int colIndex = 0;
+		if(rowHeaders) {
+			setCellContent(rowIndex, colIndex, uidl.getStringAttribute("caption"));
+			colIndex++;
+		}
+		
 		for(Iterator it = uidl.getChildIterator(); it.hasNext();) {
 			Object cell = it.next();
 			if (cell instanceof String) {
@@ -168,16 +256,12 @@ public class ITable extends Composite implements Paintable, ScrollListener {
 			}
 			colIndex++;
 		}
-		
-	}
-	
-	
-	private int getRowIndex(int rowKey) {
-		return rowKey - firstRendered;
+		Element row = tBody.getRowFormatter().getElement(rowIndex);
+		DOM.setIntAttribute(row, "key", uidl.getIntAttribute("key"));
 	}
 	
 	private int getColIndexByKey(String colKey) {
-		return Integer.parseInt(colKey) - 1;
+		return Integer.parseInt(colKey) - 1 + (rowHeaders ? 1 : 0);
 	}
 	
 	private String getColKeyByIndex(int index) {
@@ -194,10 +278,13 @@ public class ITable extends Composite implements Paintable, ScrollListener {
 	 	Widget cellContent = client.getWidget(cell);
 		tBody.setWidget(rowId, colId, cellContent);
 		((Paintable)cell).updateFromUIDL(cell, client);
+		tBody.getCellFormatter().setWordWrap(rowId, colId, false);
 	}
 	
 	public void setCellContent(int rowId, int colId, String text) {
-		tBody.setText(rowId, colId, text);
+		HTML cellContent = new HTML();
+		cellContent.setText(text);
+		tBody.setWidget(rowId, colId, cellContent);
 	}
 	
 	/**
@@ -217,7 +304,7 @@ public class ITable extends Composite implements Paintable, ScrollListener {
 		}
 		
 		bodyContainer.setHeight(tBody.getOffsetHeight() + "px");
-		bodyContainer.setWidth(tBody.getOffsetWidth() + "px");
+		bodyContainer.setWidth((tBody.getOffsetWidth() + 20) + "px");
 		
 	}
 
@@ -233,11 +320,20 @@ public class ITable extends Composite implements Paintable, ScrollListener {
 	}
 	
 	private void updateSpacers() {
-		rowHeight = tBody.getOffsetHeight()/getRenderedRowCount();
+		rowHeight = getRowHeight();
 		int preSpacerHeight = (firstRendered - 1)*rowHeight;
 		int postSpacerHeight = (totalRows - lastRendered)*rowHeight;
 		preSpacer.setHeight(preSpacerHeight+"px");
 		postSpacer.setHeight(postSpacerHeight + "px");
+		bodyContainer.setScrollPosition((firstRowInViewPort-1)*rowHeight);
+	}
+	
+	private void resizePreSpacer(int rows) {
+		preSpacer.setHeight((preSpacer.getOffsetHeight() + rows*rowHeight) + "px");
+	}
+
+	private void resizePostSpacer(int rows) {
+		postSpacer.setHeight((postSpacer.getOffsetHeight() + rows*rowHeight) + "px");
 	}
 
 	private int getRenderedRowCount() {
@@ -252,14 +348,17 @@ public class ITable extends Composite implements Paintable, ScrollListener {
 	public void onScroll(Widget widget, int scrollLeft, int scrollTop) {
 		rowRequestHandler.cancel();
 		
-		firstRowInViewPort = scrollTop / rowHeight;
+		firstRowInViewPort = (int) Math.ceil( scrollTop / rowHeight );
 		client.console.log("At scrolltop: " + scrollTop + " At row " + firstRowInViewPort);
 		
 		int postLimit = (int) (firstRowInViewPort + pageLength + pageLength*CACHE_REACT_RATE);
+		if(postLimit > totalRows)
+			postLimit = totalRows;
 		int preLimit = (int) (firstRowInViewPort - pageLength*CACHE_REACT_RATE);
+		if(preLimit < 0)
+			preLimit = 0;
 		if(
-				postLimit > lastRendered &&
-				( preLimit < 1 || preLimit < firstRendered )
+				(postLimit <= lastRendered && preLimit >= firstRendered )
 				) {
 			client.updateVariable(this.id, "firstvisible", firstRowInViewPort, false);
 			return; // scrolled withing "non-react area"
@@ -278,7 +377,7 @@ public class ITable extends Composite implements Paintable, ScrollListener {
 			// need some rows to the beginning of the rendered area
 			client.console.log("Table: need some rows to the beginning of the rendered area");
 			rowRequestHandler.setReqFirstRow((int) (firstRowInViewPort - pageLength*CACHE_RATE));
-			rowRequestHandler.setReqRows((int) (2*CACHE_RATE*pageLength + pageLength));
+			rowRequestHandler.setReqRows(firstRendered - rowRequestHandler.getReqFirstRow());
 			rowRequestHandler.deferRowFetch();
 
 			return;
@@ -294,16 +393,19 @@ public class ITable extends Composite implements Paintable, ScrollListener {
 	
 	private class RowRequestHandler extends Timer {
 		
-		private int reqFirstRow;
-		private int reqRows;
+		private int reqFirstRow = 0;
+		private int reqRows = 0;
 		
 		public void deferRowFetch() {
-			schedule(250);
+			if(reqRows > 0 && reqFirstRow < totalRows)
+				schedule(250);
 		}
 
 		public void setReqFirstRow(int reqFirstRow) {
-			if(reqFirstRow < 1)
-				reqFirstRow = 1;
+			if(reqFirstRow < 0)
+				reqFirstRow = 0;
+			else if(reqFirstRow >= totalRows)
+				reqFirstRow = totalRows - 1;
 			this.reqFirstRow = reqFirstRow;
 		}
 
@@ -312,9 +414,18 @@ public class ITable extends Composite implements Paintable, ScrollListener {
 		}
 
 		public void run() {
-//			client.updateVariable(id, "firstvisible", firstRowInViewPort, false);
+			client.console.log("Getting " + reqRows + " rows from " + reqFirstRow);
+			client.updateVariable(id, "firstvisible", firstRowInViewPort, false);
 			client.updateVariable(id, "reqfirstrow", reqFirstRow, false);
 			client.updateVariable(id, "reqrows", reqRows, true);
+		}
+
+		public int getReqFirstRow() {
+			return reqFirstRow;
+		}
+
+		public int getReqRows() {
+			return reqRows;
 		}
 		
 	}
