@@ -62,12 +62,14 @@ public class ITable extends Composite implements Paintable, ScrollListener {
 	private int totalRows;
 	private HashMap columnWidths = new HashMap();
 	
-	private int rowHeight = 25;
+	private int rowHeight = 0;
 	private RowRequestHandler rowRequestHandler;
 	
 	public ITable() {
 		headerContainer.add(tHead);
 		DOM.setStyleAttribute(headerContainer.getElement(), "overflow", "hidden");
+		
+		tBody.setStyleName("itable-tbody");
 		
 		bodyContent.add(preSpacer);
 		bodyContent.add(tBody);
@@ -122,7 +124,7 @@ public class ITable extends Composite implements Paintable, ScrollListener {
 					updateSpacers();
 					bodyContainer.setScrollPosition(getRowHeight()*(firstRowInViewPort -1));
 					colWidthsInitialized = true;
-					if(totalRows > lastRendered) {
+					if(totalRows - 1 > lastRendered) {
 						// fetch cache rows
 						rowRequestHandler.setReqFirstRow(lastRendered+1);
 						rowRequestHandler.setReqRows((int) (pageLength*CACHE_RATE));
@@ -173,7 +175,7 @@ public class ITable extends Composite implements Paintable, ScrollListener {
 			while(it.hasNext()) {
 				appendRow( (UIDL) it.next() );
 				if(colWidthsInitialized)
-					resizePostSpacer(-1);
+					updateSpacers();
 			}
 //			lastRendered = firstRow + reqRows - 1;
 			if(firstRendered == -1) {
@@ -184,7 +186,7 @@ public class ITable extends Composite implements Paintable, ScrollListener {
 			int rowsAdded = 0;
 			while(it.hasNext()){
 				tBody.insertRow(rowsAdded);
-				resizePreSpacer(-1);
+				updateSpacers();
 				updateRow( (UIDL) it.next(), rowsAdded);
 			}
 			firstRendered = firstRow;
@@ -196,8 +198,6 @@ public class ITable extends Composite implements Paintable, ScrollListener {
 			updateBody(uidl, firstRow, reqRows);
 		}
 		trimBody();
-		if(colWidthsInitialized)
-			updateSpacers();
 	}
 	
 	/**
@@ -205,7 +205,9 @@ public class ITable extends Composite implements Paintable, ScrollListener {
 	 * @return height in pixels
 	 */
 	private int getRowHeight() {
-		return tBody.getOffsetHeight()/getRenderedRowCount();
+		if(rowHeight == 0)
+			rowHeight = tBody.getOffsetHeight()/getRenderedRowCount();
+		return rowHeight;
 	}
 
 	/**
@@ -217,22 +219,23 @@ public class ITable extends Composite implements Paintable, ScrollListener {
 		int toBeRemovedFromTheEnd = lastRendered - (int) (firstRowInViewPort + CACHE_RATE*pageLength + pageLength);
 		if(toBeRemovedFromTheBeginning > 0) {
 			// remove extra rows from the beginning of the table
-			firstRendered =+ toBeRemovedFromTheBeginning;
 			while(toBeRemovedFromTheBeginning > 0) {
 				tBody.removeRow(0);
+				firstRendered++;
 				toBeRemovedFromTheBeginning--;
-				resizePreSpacer(1);
+				updateSpacers();
 			}
 		}
 		if(toBeRemovedFromTheEnd > 0) {
 			// remove extra rows from the end of the table
-			lastRendered =- toBeRemovedFromTheEnd;
 			while(toBeRemovedFromTheEnd > 0) {
 				tBody.removeRow(tBody.getRowCount() - 1);
 				toBeRemovedFromTheEnd--;
-				resizePostSpacer(1);
+				lastRendered--;
+				updateSpacers();
 			}
 		}
+//		bodyContainer.setScrollPosition(getRowHeight()*firstRowInViewPort);
 	}
 	
 	private void appendRow(UIDL uidl) {
@@ -320,22 +323,12 @@ public class ITable extends Composite implements Paintable, ScrollListener {
 	}
 	
 	private void updateSpacers() {
-		rowHeight = getRowHeight();
-		int preSpacerHeight = (firstRendered - 1)*rowHeight;
-		int postSpacerHeight = (totalRows - lastRendered)*rowHeight;
+		int preSpacerHeight = (firstRendered)*getRowHeight();
+		int postSpacerHeight = (totalRows - 1 - lastRendered)*getRowHeight();
 		preSpacer.setHeight(preSpacerHeight+"px");
 		postSpacer.setHeight(postSpacerHeight + "px");
-		bodyContainer.setScrollPosition((firstRowInViewPort-1)*rowHeight);
 	}
 	
-	private void resizePreSpacer(int rows) {
-		preSpacer.setHeight((preSpacer.getOffsetHeight() + rows*rowHeight) + "px");
-	}
-
-	private void resizePostSpacer(int rows) {
-		postSpacer.setHeight((postSpacer.getOffsetHeight() + rows*rowHeight) + "px");
-	}
-
 	private int getRenderedRowCount() {
 		return lastRendered-firstRendered;
 	}
