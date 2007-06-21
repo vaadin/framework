@@ -55,6 +55,7 @@ public class ITablePaging extends Composite implements Paintable, ClickListener 
 	private int rows;
 
 	private int firstRow;
+	private boolean sortAscending = true;
 	
 	public ITablePaging() {
 
@@ -89,6 +90,9 @@ public class ITablePaging extends Composite implements Paintable, ClickListener 
 		this.pageLength = uidl.getIntAttribute("pagelength");
 		this.firstRow = uidl.getIntAttribute("firstrow");
 		this.rows = uidl.getIntAttribute("rows");
+		
+		if(uidl.hasVariable("sortascending"))
+			this.sortAscending = uidl.getBooleanVariable("sortascending");
 
 		if(uidl.hasAttribute("rowheaders"))
 			rowHeaders = true;
@@ -139,8 +143,7 @@ public class ITablePaging extends Composite implements Paintable, ClickListener 
 		for(Iterator it = uidl.getChildIterator();it.hasNext();) {
 			UIDL col = (UIDL) it.next();
 			String cid = col.getStringAttribute("cid");
-			tBody.setText(0, colIndex, col.getStringAttribute("caption"));
-			DOM.setAttribute(tBody.getCellFormatter().getElement(0, colIndex), "cid", cid);
+			tBody.setWidget(0, colIndex, new HeaderCell(cid, col.getStringAttribute("caption")));
 			colIndex++;
 		}
 	}
@@ -213,18 +216,47 @@ public class ITablePaging extends Composite implements Paintable, ClickListener 
 	}
 
 	public void onClick(Widget sender) {
-		if(sender == firstPage)
-			client.updateVariable(this.id, "firstvisible", 0, true);
-		else if(sender == nextPage)
-			client.updateVariable(this.id, "firstvisible", firstRow + pageLength, true);
-		else if(sender == prevPage) {
-			int newFirst = firstRow - pageLength;
-			if(newFirst < 0)
-				newFirst = 0;
-			client.updateVariable(this.id, "firstvisible", newFirst, true);
-		} else if (sender == lastPage) {
-			client.updateVariable(this.id, "firstvisible", totalRows - pageLength, true);
+		if (sender instanceof Button) {
+			if(sender == firstPage)
+				client.updateVariable(this.id, "firstvisible", 0, true);
+			else if(sender == nextPage)
+				client.updateVariable(this.id, "firstvisible", firstRow + pageLength, true);
+			else if(sender == prevPage) {
+				int newFirst = firstRow - pageLength;
+				if(newFirst < 0)
+					newFirst = 0;
+				client.updateVariable(this.id, "firstvisible", newFirst, true);
+			} else if (sender == lastPage) {
+				client.updateVariable(this.id, "firstvisible", totalRows - pageLength, true);
+			}
+		}
+		if (sender instanceof HeaderCell) {
+			HeaderCell hCell = (HeaderCell) sender;
+			client.updateVariable(this.id, "sortcolumn", hCell.getCid(), false);
+			client.updateVariable(this.id, "sortascending", ( sortAscending ? false : true ), true);
 		}
 	}
 
+	private class HeaderCell extends HTML {
+		
+		private String cid;
+
+		public String getCid() {
+			return cid;
+		}
+
+		public void setCid(String pid) {
+			this.cid = pid;
+		}
+
+		HeaderCell(String pid, String caption) {
+			super();
+			this.cid = pid;
+			addClickListener(ITablePaging.this);
+			setText(caption);
+			// TODO remove debug color
+			DOM.setStyleAttribute(getElement(), "color", "brown");
+			DOM.setStyleAttribute(getElement(), "font-weight", "bold");
+		}
+	}
 }
