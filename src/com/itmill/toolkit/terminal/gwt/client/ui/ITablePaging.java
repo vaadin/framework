@@ -56,6 +56,7 @@ public class ITablePaging extends Composite implements Paintable, ClickListener 
 
 	private int firstRow;
 	private boolean sortAscending = true;
+	private HorizontalPanel pager;
 	
 	public ITablePaging() {
 
@@ -63,7 +64,7 @@ public class ITablePaging extends Composite implements Paintable, ClickListener 
 		
 		VerticalPanel panel = new VerticalPanel();
 		
-		HorizontalPanel pager = new HorizontalPanel();
+		pager = new HorizontalPanel();
 		pager.add(firstPage);
 		firstPage.addClickListener(this);
 		pager.add(prevPage);
@@ -110,7 +111,7 @@ public class ITablePaging extends Composite implements Paintable, ClickListener 
 			else if(c.getTag().equals("visiblecolumns"))
 				updateVisibleColumns(c);
 		}
-		tBody.resize(rows+1, visibleColumns.size() + (rowHeaders ? 1 : 0 ));
+		tBody.resize(rows+1, columnInfo.getChidlCount() + (rowHeaders ? 1 : 0 ));
 
 		updateHeader(columnInfo);
 		
@@ -186,6 +187,10 @@ public class ITablePaging extends Composite implements Paintable, ClickListener 
 	}
 	
 	private void updatePager() {
+		if(pageLength == 0) {
+			pager.setVisible(false);
+			return;
+		}
 		if(isFirstPage()) {
 			firstPage.setEnabled(false);
 			prevPage.setEnabled(false);
@@ -204,7 +209,7 @@ public class ITablePaging extends Composite implements Paintable, ClickListener 
 	}
 
 	private boolean hasNextPage() {
-		if(firstRow + pageLength + 1 > totalRows)
+		if(firstRow + rows + 1 > totalRows)
 			return false;
 		return true;
 	}
