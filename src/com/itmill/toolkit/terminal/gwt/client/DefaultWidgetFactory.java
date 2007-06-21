@@ -15,7 +15,8 @@ import com.itmill.toolkit.terminal.gwt.client.ui.IOptionGroup;
 import com.itmill.toolkit.terminal.gwt.client.ui.IPanel;
 import com.itmill.toolkit.terminal.gwt.client.ui.IPasswordField;
 import com.itmill.toolkit.terminal.gwt.client.ui.ISelect;
-import com.itmill.toolkit.terminal.gwt.client.ui.ITable;
+import com.itmill.toolkit.terminal.gwt.client.ui.ITablePaging;
+import com.itmill.toolkit.terminal.gwt.client.ui.ITableScrollingByComposition;
 import com.itmill.toolkit.terminal.gwt.client.ui.ITabsheet;
 import com.itmill.toolkit.terminal.gwt.client.ui.ITextArea;
 import com.itmill.toolkit.terminal.gwt.client.ui.ITextField;
@@ -75,7 +76,7 @@ public class DefaultWidgetFactory implements WidgetFactory {
 			return new ITextField();
 		}
 		if ("table".equals(tag))
-			return new ITable();
+			return new ITablePaging();
 		if("datefield".equals(tag))
 			return new IDateField();
 
