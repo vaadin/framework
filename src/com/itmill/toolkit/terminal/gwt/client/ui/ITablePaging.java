@@ -3,29 +3,27 @@ package com.itmill.toolkit.terminal.gwt.client.ui;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
+import java.util.Vector;
 
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.DeferredCommand;
-import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.ScrollListener;
-import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.client.ui.FlexTable.FlexCellFormatter;
 import com.itmill.toolkit.terminal.gwt.client.Client;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
-public class ITablePaging extends Composite implements Paintable, ClickListener {
+public class ITablePaging extends Composite implements ITable, Paintable, ClickListener {
 	
 	private Grid tBody = new Grid();
 	private Button nextPage = new Button("&gt;");
@@ -42,7 +40,12 @@ public class ITablePaging extends Composite implements Paintable, ClickListener 
 	
 	private Client client;
 	private String id;
-	private boolean immediate;
+	
+	private boolean immediate = false;
+	
+	private int selectMode = ITable.SELECT_MODE_NONE;
+	
+	private Vector selectedRowKeys = new Vector();
 	
 	private int totalRows;
 
@@ -50,13 +53,13 @@ public class ITablePaging extends Composite implements Paintable, ClickListener 
 	
 	private HashMap visibleColumns = new HashMap();
 	
-	private int rowHeight = 0;
-
 	private int rows;
 
 	private int firstRow;
 	private boolean sortAscending = true;
 	private HorizontalPanel pager;
+	
+	public HashMap rowKeysToTableRows = new HashMap();
 	
 	public ITablePaging() {
 
@@ -91,6 +94,18 @@ public class ITablePaging extends Composite implements Paintable, ClickListener 
 		this.pageLength = uidl.getIntAttribute("pagelength");
 		this.firstRow = uidl.getIntAttribute("firstrow");
 		this.rows = uidl.getIntAttribute("rows");
+		
+		Set selectedKeys = uidl.getStringArrayVariableAsSet("selected");
+		selectedRowKeys.clear();
+		for(Iterator it = selectedKeys.iterator();it.hasNext();)
+			selectedRowKeys.add((String) it.next());
+		
+		if(uidl.hasAttribute("selectmode")) {
+			if(uidl.getStringAttribute("selectmode").equals("multi"))
+				selectMode = ITable.SELECT_MODE_MULTI;
+			else
+				selectMode = ITable.SELECT_MODE_SINGLE;
+		}
 		
 		if(uidl.hasVariable("sortascending"))
 			this.sortAscending = uidl.getBooleanVariable("sortascending");
@@ -163,25 +178,31 @@ public class ITablePaging extends Composite implements Paintable, ClickListener 
 		
 		int curRowIndex = 1;
 		while(it.hasNext()){
-			UIDL row = (UIDL) it.next();
+			UIDL rowUidl = (UIDL) it.next();
+			TableRow row = new TableRow(
+					curRowIndex, 
+					String.valueOf(rowUidl.getIntAttribute("key")),
+					rowUidl.hasAttribute("selected"));
 			int colIndex = 0;
 			if(rowHeaders) {
-				tBody.setText(curRowIndex, colIndex, row.getStringAttribute("caption"));
+				tBody.setWidget(curRowIndex, colIndex, 
+						new BodyCell(row, rowUidl.getStringAttribute("caption")));
 				colIndex++;
 			}
-			Iterator cells = row.getChildIterator();
+			Iterator cells = rowUidl.getChildIterator();
 			while(cells.hasNext()) {
 				Object cell = cells.next();
 				if (cell instanceof String) {
-					tBody.setText(curRowIndex, colIndex, (String) cell);
+					tBody.setWidget(curRowIndex, colIndex, 
+							new BodyCell(row, (String) cell));
 				} else {
 				 	Widget cellContent = client.getWidget((UIDL) cell);
-					tBody.setWidget(curRowIndex, colIndex, cellContent);
+				 	BodyCell bodyCell = new BodyCell(row);
+				 	bodyCell.setWidget(cellContent);
+					tBody.setWidget(curRowIndex, colIndex, bodyCell);
 				}
 				colIndex++;
 			}
-			Element rowElement = tBody.getRowFormatter().getElement(curRowIndex);
-			DOM.setIntAttribute(rowElement, "key", uidl.getIntAttribute("key"));
 			curRowIndex++;
 		}
 	}
@@ -263,5 +284,121 @@ public class ITablePaging extends Composite implements Paintable, ClickListener 
 			DOM.setStyleAttribute(getElement(), "color", "brown");
 			DOM.setStyleAttribute(getElement(), "font-weight", "bold");
 		}
+	}
+	
+	/**
+	 * Abstraction of table cell content. In needs to know on which row it
+	 * is in case of context click.
+	 * 
+	 * @author mattitahvonen
+	 */
+	public class BodyCell extends SimplePanel {
+		private TableRow row;
+		
+		public BodyCell(TableRow row) {
+			super();
+			this.sinkEvents(Event.BUTTON_LEFT | Event.BUTTON_RIGHT);
+			this.row = row;
+		}
+		
+		public BodyCell(TableRow row2, String textContent) {
+			super();
+			this.sinkEvents(Event.BUTTON_LEFT | Event.BUTTON_RIGHT);
+			this.row = row2;
+			setWidget(new Label(textContent));
+		}
+
+		public void onBrowserEvent(Event event) {
+			System.out.println("CEll event: " + event.toString());
+			switch (DOM.eventGetType(event)) {
+			case Event.BUTTON_RIGHT:
+				row.showContextMenu(event);
+				Window.alert("context menu un-implemented");
+				DOM.eventCancelBubble(event, true);
+				break;
+			case Event.BUTTON_LEFT:
+				if(ITablePaging.this.selectMode > ITable.SELECT_MODE_NONE)
+					row.toggleSelected();
+				break;
+			default:
+				break;
+			}
+			super.onBrowserEvent(event);
+		}
+	}
+	
+	private class TableRow {
+		
+		private String key;
+		private int rowIndex;
+		private boolean selected = false;
+
+		public TableRow(int rowIndex, String rowKey, boolean selected) {
+			ITablePaging.this.rowKeysToTableRows.put(rowKey, this);
+			this.rowIndex = rowIndex;
+			this.key = rowKey;
+			setSelected(selected);
+		}
+
+		/**
+		 * This method is used to set row status. Does not change value on server.
+		 * @param selected
+		 */
+		public void setSelected(boolean sel) {
+			this.selected = sel;
+			if(selected) {
+				selectedRowKeys.add(key);
+				DOM.setStyleAttribute(
+						ITablePaging.this.tBody.getRowFormatter().getElement(rowIndex),
+						"background", "yellow");
+				
+			} else {
+				selectedRowKeys.remove(key);
+				DOM.setStyleAttribute(
+						ITablePaging.this.tBody.getRowFormatter().getElement(rowIndex),
+						"background", "transparent");
+			}
+		}
+
+		
+		public void setContextMenuOptions(HashMap options) {
+			
+		}
+		
+		/**
+		 * Toggles rows select state. Also updates state to server according to tables immediate flag.
+		 *
+		 */
+		public void toggleSelected() {
+			if(selected) {
+				setSelected(false);
+			} else {
+				if(ITablePaging.this.selectMode == ITable.SELECT_MODE_SINGLE) {
+					ITablePaging.this.deselectAll();
+				}
+				setSelected(true);
+			}
+			client.updateVariable(id, "selected", selectedRowKeys.toArray(), immediate);
+		}
+		
+		/**
+		 * Shows context menu for this row.
+		 * 
+		 * @param event Event which triggered context menu. Correct place for context menu can be determined with it.
+		 */
+		public void showContextMenu(Event event) {
+			System.out.println("TODO: Show context menu");
+		}
+	}
+
+	public void deselectAll() {
+		Object[] keys = selectedRowKeys.toArray();
+		for (int i = 0; i < keys.length; i++) {
+			TableRow tableRow = (TableRow) rowKeysToTableRows.get(keys[i]);
+			if(tableRow != null)
+				tableRow.setSelected(false);
+		}
+		// still ensure all selects are removed from 
+		selectedRowKeys.clear();
 	}
 }
