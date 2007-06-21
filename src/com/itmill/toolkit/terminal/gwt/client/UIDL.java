@@ -340,4 +340,8 @@ public class UIDL {
 			return x.get("x").toString();
 		}
 	}
+
+	public int getChidlCount() {
+		return json.size()-2;
+	}
 }
