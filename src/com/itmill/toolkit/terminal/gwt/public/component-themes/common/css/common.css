@@ -24,7 +24,6 @@ select {
 	padding:0;
 	border:0;
 	background: yellow;
-	table-layout: fixed;
 }
 
 .iscrolltable-header table td {
@@ -41,7 +40,6 @@ select {
 	padding:0;
 	border:0;
 	background: yellow;
-	table-layout: fixed;
 }
 
 .iscrolltable-table td {
@@ -59,7 +57,8 @@ iscrolltable-table tr {
 
 .iscrolltable-rowspacer {
 	height: 10px;
-	background: brown;	
+	background: brown;
+	overflow:hidden; /* IE hack to allow < one line height divs */
 }
 
 .iscrolltable-table .iscrolltable-cellContent {
