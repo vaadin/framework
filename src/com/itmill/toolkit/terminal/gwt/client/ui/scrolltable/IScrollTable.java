@@ -1,4 +1,4 @@
-package com.itmill.toolkit.terminal.gwt.client.ui;
+package com.itmill.toolkit.terminal.gwt.client.ui.scrolltable;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -11,7 +11,6 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.ScrollListener;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -20,8 +19,9 @@ import com.google.gwt.user.client.ui.FlexTable.FlexCellFormatter;
 import com.itmill.toolkit.terminal.gwt.client.Client;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
+import com.itmill.toolkit.terminal.gwt.client.ui.ITable;
 
-public class ITableScrollingByComposition extends Composite implements Paintable, ScrollListener {
+public class IScrollTable extends Composite implements Paintable, ITable, ScrollListener {
 	
 	/**
 	 *  multiple of pagelenght which component will 
@@ -34,8 +34,6 @@ public class ITableScrollingByComposition extends Composite implements Paintable
 	 */
 	private static final double CACHE_REACT_RATE = 1;
 	
-	private int firstRendered = -1;
-	private int lastRendered = -1;
 	private int firstRowInViewPort = 0;
 	private int pageLength = 15;
 	
@@ -47,36 +45,29 @@ public class ITableScrollingByComposition extends Composite implements Paintable
 	private String id;
 	private boolean immediate;
 	
-	private FlexTable tHead = new FlexTable();
-	private FlexTable tBody = new FlexTable();
+	private boolean initializedAndAttached = false;
 	
+	private FlexTable tHead = new FlexTable();
+
 	private ScrollPanel bodyContainer = new ScrollPanel();
-	private VerticalPanel bodyContent = new VerticalPanel();
 	
 	private ScrollPanel headerContainer = new ScrollPanel();
-	
-	private HTML preSpacer = new HTML();
-	private HTML postSpacer = new HTML();
 	
 	private boolean colWidthsInitialized = false;
 	private int totalRows;
 	private HashMap columnWidths = new HashMap();
 	
-	private int rowHeight = 0;
 	private RowRequestHandler rowRequestHandler;
+	private IScrollTableBody tBody;
+	private int width = -1;
+	private int height = -1;
+	private int firstvisible;
 	
-	public ITableScrollingByComposition() {
+	public IScrollTable() {
+		headerContainer.setStyleName("iscrolltable-header");
 		headerContainer.add(tHead);
 		DOM.setStyleAttribute(headerContainer.getElement(), "overflow", "hidden");
 		
-		tBody.setStyleName("itable-tbody");
-		
-		bodyContent.add(preSpacer);
-		bodyContent.add(tBody);
-		bodyContent.add(postSpacer);
-		//TODO remove debug color
-		DOM.setStyleAttribute(postSpacer.getElement(), "background", "gray");
-		bodyContainer.add(bodyContent);
 		bodyContainer.addScrollListener(this);
 		
 		VerticalPanel panel = new VerticalPanel();
@@ -97,8 +88,13 @@ public class ITableScrollingByComposition extends Composite implements Paintable
 		this.immediate = uidl.getBooleanAttribute("immediate");
 		this.totalRows = uidl.getIntAttribute("totalrows");
 		this.pageLength = uidl.getIntAttribute("pagelength");
+		this.firstvisible = uidl.getIntVariable("firstvisible");
 		if(uidl.hasAttribute("rowheaders"))
 			rowHeaders = true;
+		if(uidl.hasAttribute("width"))
+			width = uidl.getIntAttribute("width");
+		if(uidl.hasAttribute("height"))
+			width = uidl.getIntAttribute("height");
 		
 		UIDL columnInfo = null;
 		UIDL rowData = null;
@@ -115,26 +111,27 @@ public class ITableScrollingByComposition extends Composite implements Paintable
 		}
 		updateHeader(columnInfo);
 		
-		updateBody(rowData, uidl.getIntAttribute("firstrow"),uidl.getIntAttribute("rows"));
-		
-		if(!colWidthsInitialized) {
-			DeferredCommand.add(new Command() {
-				public void execute() {
-					initSize();
-					updateSpacers();
-					bodyContainer.setScrollPosition(getRowHeight()*(firstRowInViewPort -1));
-					colWidthsInitialized = true;
-					if(totalRows - 1 > lastRendered) {
-						// fetch cache rows
-						rowRequestHandler.setReqFirstRow(lastRendered+1);
-						rowRequestHandler.setReqRows((int) (pageLength*CACHE_RATE));
-						rowRequestHandler.deferRowFetch();
-					}
-				}
-			});
+		if(initializedAndAttached) {
+			updateBody(rowData, uidl.getIntAttribute("firstrow"),uidl.getIntAttribute("rows"));
+		} else {
+			getTBody().renderInitialRows(rowData, 
+					uidl.getIntAttribute("firstrow"), 
+					uidl.getIntAttribute("rows"), 
+					totalRows);
+			bodyContainer.add(tBody);
+			initializedAndAttached = true;
 		}
 	}
 	
+	private IScrollTableBody getTBody() {
+		if(tBody == null || totalRows != tBody.getTotalRows()) {
+			if(tBody != null)
+				tBody.removeFromParent();
+			tBody = new IScrollTableBody(client);
+		}
+		return tBody;
+	}
+
 	private void updateActionMap(UIDL c) {
 		// TODO Auto-generated method stub
 		
@@ -154,12 +151,6 @@ public class ITableScrollingByComposition extends Composite implements Paintable
 	}
 	
 	/**
-	 * Updates row data from uidl. UpdateFromUIDL delegates updating 
-	 * tBody to this method.
-	 * 
-	 * Updates may be to different part of tBody, depending on update type.
-	 * It can be initial row data, scroll up, scroll down...
-	 * 
 	 * @param uidl which contains row data
 	 * @param firstRow first row in data set
 	 * @param reqRows amount of rows in data set
@@ -167,101 +158,22 @@ public class ITableScrollingByComposition extends Composite implements Paintable
 	private void updateBody(UIDL uidl, int firstRow, int reqRows) {
  		if(uidl == null || reqRows < 1)
 			return;
+ 		
+ 		tBody.renderRows(uidl, firstRow, reqRows);
+ 		
+ 		int optimalFirstRow = (int) (firstRowInViewPort - pageLength*CACHE_RATE);
+ 		while(tBody.getFirstRendered() < optimalFirstRow) {
+// 			client.console.log("removing row from start");
+ 			tBody.unlinkRow(true);
+ 		}
+ 		int optimalLastRow = (int) (firstRowInViewPort + pageLength + pageLength*CACHE_RATE);
+ 		while(tBody.getLastRendered() > optimalLastRow) {
+// 			client.console.log("removing row from the end");
+ 			tBody.unlinkRow(false);
+ 		}
 		
-		Iterator it = uidl.getChildIterator();
-		
-		if(firstRendered == -1 || firstRow == lastRendered + 1) {
-			//initial data to body or appending rows to table
-			while(it.hasNext()) {
-				appendRow( (UIDL) it.next() );
-				if(colWidthsInitialized)
-					updateSpacers();
-			}
-//			lastRendered = firstRow + reqRows - 1;
-			if(firstRendered == -1) {
-				firstRendered = firstRow;
-			}
-		} else if(firstRendered == firstRow + reqRows) {
-			// add received rows before old ones
-			int rowsAdded = 0;
-			while(it.hasNext()){
-				tBody.insertRow(rowsAdded);
-				updateSpacers();
-				updateRow( (UIDL) it.next(), rowsAdded);
-			}
-			firstRendered = firstRow;
-		} else {
-			// complitely new set received, truncate body and recurse
-			tBody.clear();
-			firstRendered = -1;
-			lastRendered = -1;
-			updateBody(uidl, firstRow, reqRows);
-		}
-		trimBody();
 	}
 	
-	/**
-	 * Returns calculated height of row.
-	 * @return height in pixels
-	 */
-	private int getRowHeight() {
-		if(rowHeight == 0)
-			rowHeight = tBody.getOffsetHeight()/getRenderedRowCount();
-		return rowHeight;
-	}
-
-	/**
-	 * This method removes rows from body which are "out of
-	 * cache area" to keep amount of rendered rows sane.
-	 */
-	private void trimBody() {
-		int toBeRemovedFromTheBeginning = (int) (firstRowInViewPort - CACHE_RATE*pageLength) - firstRendered;
-		int toBeRemovedFromTheEnd = lastRendered - (int) (firstRowInViewPort + CACHE_RATE*pageLength + pageLength);
-		if(toBeRemovedFromTheBeginning > 0) {
-			// remove extra rows from the beginning of the table
-			while(toBeRemovedFromTheBeginning > 0) {
-				tBody.removeRow(0);
-				firstRendered++;
-				toBeRemovedFromTheBeginning--;
-				updateSpacers();
-			}
-		}
-		if(toBeRemovedFromTheEnd > 0) {
-			// remove extra rows from the end of the table
-			while(toBeRemovedFromTheEnd > 0) {
-				tBody.removeRow(tBody.getRowCount() - 1);
-				toBeRemovedFromTheEnd--;
-				lastRendered--;
-				updateSpacers();
-			}
-		}
-//		bodyContainer.setScrollPosition(getRowHeight()*firstRowInViewPort);
-	}
-	
-	private void appendRow(UIDL uidl) {
-		lastRendered++;
-		updateRow(uidl, lastRendered);
-	}
-
-	private void updateRow(UIDL uidl, int rowIndex) {
-		int colIndex = 0;
-		if(rowHeaders) {
-			setCellContent(rowIndex, colIndex, uidl.getStringAttribute("caption"));
-			colIndex++;
-		}
-		
-		for(Iterator it = uidl.getChildIterator(); it.hasNext();) {
-			Object cell = it.next();
-			if (cell instanceof String) {
-				setCellContent(rowIndex, colIndex, (String) cell);
-			} else {
-				setCellContent(rowIndex, colIndex, (UIDL) cell);
-			}
-			colIndex++;
-		}
-		Element row = tBody.getRowFormatter().getElement(rowIndex);
-		DOM.setIntAttribute(row, "key", uidl.getIntAttribute("key"));
-	}
 	
 	private int getColIndexByKey(String colKey) {
 		return Integer.parseInt(colKey) - 1 + (rowHeaders ? 1 : 0);
@@ -275,46 +187,10 @@ public class ITableScrollingByComposition extends Composite implements Paintable
 		tHead.setText(0, colIndex, text);
 	}
 	
-	public void setCellContent(int rowId, int colId, UIDL cell) {
-		if(cell == null)
-			return;
-	 	Widget cellContent = client.getWidget(cell);
-		tBody.setWidget(rowId, colId, cellContent);
-		((Paintable)cell).updateFromUIDL(cell, client);
-		tBody.getCellFormatter().setWordWrap(rowId, colId, false);
-	}
-	
-	public void setCellContent(int rowId, int colId, String text) {
-		HTML cellContent = new HTML();
-		cellContent.setText(text);
-		tBody.setWidget(rowId, colId, cellContent);
-	}
-	
-	/**
-	 * Run when receices its initial content. Syncs headers and bodys
-	 * "natural widths and saves the values.
-	 */
-	private void initSize() {
-		int cols = tHead.getCellCount(0);
-		FlexCellFormatter hf = tHead.getFlexCellFormatter();
-		FlexCellFormatter bf = tBody.getFlexCellFormatter();
-		for (int i = 0; i < cols; i++) {
-			Element hCell = hf.getElement(0, i);
-			Element bCell = bf.getElement(1, i);
-			int hw = DOM.getIntAttribute(hCell, "offsetWidth");
-			int cw = DOM.getIntAttribute(bCell, "offsetWidth");
-			setColWidth(i , hw > cw ? hw : cw);
-		}
-		
-		bodyContainer.setHeight(tBody.getOffsetHeight() + "px");
-		bodyContainer.setWidth((tBody.getOffsetWidth() + 20) + "px");
-		
-	}
-
 	private void setColWidth(int colIndex, int w) {
 		String cid = getColKeyByIndex(colIndex);
 		tHead.getCellFormatter().setWidth(0, colIndex, w + "px");
-		tBody.getCellFormatter().setWidth(0, colIndex, w + "px");
+		tBody.setColWidth(colIndex, w);
 		columnWidths.put(cid,new Integer(w));
 	}
 	
@@ -322,15 +198,8 @@ public class ITableScrollingByComposition extends Composite implements Paintable
 		return ( (Integer) this.columnWidths.get(colKey)).intValue();
 	}
 	
-	private void updateSpacers() {
-		int preSpacerHeight = (firstRendered)*getRowHeight();
-		int postSpacerHeight = (totalRows - 1 - lastRendered)*getRowHeight();
-		preSpacer.setHeight(preSpacerHeight+"px");
-		postSpacer.setHeight(postSpacerHeight + "px");
-	}
-	
 	private int getRenderedRowCount() {
-		return lastRendered-firstRendered;
+		return tBody.getLastRendered()-tBody.getFirstRendered();
 	}
 
 	/**
@@ -339,9 +208,12 @@ public class ITableScrollingByComposition extends Composite implements Paintable
 	 *
 	 */
 	public void onScroll(Widget widget, int scrollLeft, int scrollTop) {
+		if(!initializedAndAttached)
+			return;
+		
 		rowRequestHandler.cancel();
 		
-		firstRowInViewPort = (int) Math.ceil( scrollTop / rowHeight );
+		firstRowInViewPort = (int) Math.ceil( scrollTop / tBody.getRowHeight() );
 		client.console.log("At scrolltop: " + scrollTop + " At row " + firstRowInViewPort);
 		
 		int postLimit = (int) (firstRowInViewPort + pageLength + pageLength*CACHE_REACT_RATE);
@@ -350,6 +222,8 @@ public class ITableScrollingByComposition extends Composite implements Paintable
 		int preLimit = (int) (firstRowInViewPort - pageLength*CACHE_REACT_RATE);
 		if(preLimit < 0)
 			preLimit = 0;
+		int lastRendered = tBody.getLastRendered();
+		int firstRendered = tBody.getFirstRendered();
 		if(
 				(postLimit <= lastRendered && preLimit >= firstRendered )
 				) {
@@ -384,6 +258,65 @@ public class ITableScrollingByComposition extends Composite implements Paintable
 		}
 	}
 	
+	
+	
+	protected void onAttach() {
+		
+		super.onAttach();
+		
+		// sync column widths
+		initColumnWidths();
+
+		if(height  < 0) {
+			bodyContainer.setHeight((tBody.getRowHeight()*pageLength) + "px");
+		} else {
+			bodyContainer.setHeight(height + "px");
+		}
+
+		if(width  < 0) {
+			bodyContainer.setWidth((tBody.getOffsetWidth() + getScrollBarWidth() ) + "px");
+		} else {
+			bodyContainer.setWidth(width + "px");
+		}
+		
+		if(firstvisible > 0)
+			bodyContainer.setScrollPosition(firstvisible*tBody.getRowHeight());
+		
+		DeferredCommand.add(new Command() {
+			public void execute() {
+				if(totalRows - 1 > tBody.getLastRendered()) {
+					// fetch cache rows
+					rowRequestHandler.setReqFirstRow(tBody.getLastRendered()+1);
+					rowRequestHandler.setReqRows((int) (pageLength*CACHE_RATE));
+					rowRequestHandler.deferRowFetch();
+				}
+			}
+		});
+
+		
+	}
+
+	/**
+	 * Run when receices its initial content. Syncs headers and bodys
+	 * "natural widths and saves the values.
+	*/
+	private void initColumnWidths() {
+		int cols = tHead.getCellCount(0);
+		FlexCellFormatter hf = tHead.getFlexCellFormatter();
+			for (int i = 0; i < cols; i++) {
+				Element hCell = hf.getElement(0, i);
+				int hw = DOM.getIntAttribute(hCell, "offsetWidth");
+				int cw = tBody.getColWidth(i);
+				int w = (hw > cw ? hw : cw) + IScrollTableBody.CELL_EXTRA_WIDTH;
+				setColWidth(i , w);
+			}
+	}
+
+	private int getScrollBarWidth() {
+		// TODO Auto-generated method stub
+		return 30;
+	}
+
 	private class RowRequestHandler extends Timer {
 		
 		private int reqFirstRow = 0;

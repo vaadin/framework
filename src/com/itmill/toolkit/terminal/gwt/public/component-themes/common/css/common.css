@@ -15,3 +15,54 @@ select {
 	padding: 0;
 	margin: 0;
 }
+
+/* TODO move table styles to separate file */
+
+.iscrolltable-header table {
+	border-collapse:collapse;
+	margin:0;
+	padding:0;
+	border:0;
+	background: yellow;
+	table-layout: fixed;
+}
+
+.iscrolltable-header table td {
+	margin:0;
+	padding:0;
+	border:0;
+}
+
+
+
+.iscrolltable-table {
+	border-collapse:collapse;
+	margin:0;
+	padding:0;
+	border:0;
+	background: yellow;
+	table-layout: fixed;
+}
+
+.iscrolltable-table td {
+	border:0;
+	margin:0;
+	padding:0;
+	background: green;
+}
+iscrolltable-table tr {
+	background: blue;	
+	border:0;
+	margin:0;
+	padding:0;
+}
+
+.iscrolltable-rowspacer {
+	height: 10px;
+	background: brown;	
+}
+
+.iscrolltable-table .iscrolltable-cellContent {
+	white-space: nowrap;
+	overflow: hidden;
+}

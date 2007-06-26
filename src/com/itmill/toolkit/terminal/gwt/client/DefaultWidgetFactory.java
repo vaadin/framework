@@ -16,7 +16,6 @@ import com.itmill.toolkit.terminal.gwt.client.ui.IPanel;
 import com.itmill.toolkit.terminal.gwt.client.ui.IPasswordField;
 import com.itmill.toolkit.terminal.gwt.client.ui.ISelect;
 import com.itmill.toolkit.terminal.gwt.client.ui.ITablePaging;
-import com.itmill.toolkit.terminal.gwt.client.ui.ITableScrollingByComposition;
 import com.itmill.toolkit.terminal.gwt.client.ui.ITabsheet;
 import com.itmill.toolkit.terminal.gwt.client.ui.ITextArea;
 import com.itmill.toolkit.terminal.gwt.client.ui.ITextField;
@@ -25,6 +24,7 @@ import com.itmill.toolkit.terminal.gwt.client.ui.ITwinColSelect;
 import com.itmill.toolkit.terminal.gwt.client.ui.IUnknownComponent;
 import com.itmill.toolkit.terminal.gwt.client.ui.IVerticalLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.IWindow;
+import com.itmill.toolkit.terminal.gwt.client.ui.scrolltable.IScrollTable;
 
 public class DefaultWidgetFactory implements WidgetFactory {
 
@@ -75,8 +75,13 @@ public class DefaultWidgetFactory implements WidgetFactory {
 				return new IPasswordField();
 			return new ITextField();
 		}
-		if ("table".equals(tag))
+		if ("table".equals(tag)) {
+			if(uidl.hasAttribute("style")) {
+				if("scrolling".equals(uidl.getStringAttribute("style")))
+						return new IScrollTable();
+			}
 			return new ITablePaging();
+		}
 		if("datefield".equals(tag))
 			return new IDateField();
 
