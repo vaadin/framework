@@ -16,43 +16,79 @@ import com.itmill.toolkit.terminal.gwt.client.Layout;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
+/**
+ * Custom Layout implements complext layouting defined with HTML template.
+ * 
+ * @author IT Mill
+ * 
+ */
 public class ICustomLayout extends ComplexPanel implements Paintable, Layout {
 
+	/** Location-name to containing element in DOM map */
 	private HashMap locationToElement = new HashMap();
-	
+
+	/** Location-name to contained widget map */
 	private HashMap locationToWidget = new HashMap();
 
+	/** Widget to captionwrapper map */
+	private HashMap widgetToCaptionWrapper = new HashMap();
+
+	/** Currently rendered style */
 	String currentStyle;
 
-	String scripts = "";
-	
-	String pid;
+	/** Unexecuted scripts loaded from the template */
+	private String scripts = "";
+
+	/** Paintable ID of this paintable */
+	private String pid;
 
 	public ICustomLayout() {
 		setElement(DOM.createDiv());
 	}
 
+	/**
+	 * Add new widget to the map with location name.
+	 * 
+	 * @throws IllegalArgumentException
+	 *             if no such location is found in the layout.
+	 */
 	public void add(Widget widget, String location) {
+
+		if (widget == null)
+			return;
+
+		// If no given location is found in the layout, and exception is throws
 		Element elem = (Element) locationToElement.get(location);
 		if (elem == null) {
-			throw new NoSuchElementException();
+			throw new IllegalArgumentException("No location " + location
+					+ " found");
 		}
+
+		// Remove previous widget if there is one
 		Widget previous = (Widget) locationToWidget.get(location);
-		if (widget.equals(previous)) return;
+		if (previous == widget)
+			return;
 		remove(previous);
+
+		// Add widget to location
 		super.add(widget, elem);
-		locationToWidget.put(location,widget);
+		locationToWidget.put(location, widget);
 	}
 
+	/** Update the layout from UIDL */
 	public void updateFromUIDL(UIDL uidl, Client client) {
 
+		// Client manages general cases
 		if (client.updateComponent(this, uidl, false))
 			return;
 
+		// Update PID
 		pid = uidl.getId();
-		
+
+		// Update HTML template if needed
 		updateHTML(uidl, client);
 
+		// For all contained widgets
 		for (Iterator i = uidl.getChildIterator(); i.hasNext();) {
 			UIDL uidlForChild = (UIDL) i.next();
 			if (uidlForChild.getTag().equals("location")) {
@@ -60,44 +96,50 @@ public class ICustomLayout extends ComplexPanel implements Paintable, Layout {
 				Widget child = client.getWidget(uidlForChild.getChildUIDL(0));
 				try {
 					add(child, location);
-				} catch (Exception e) {
+					((Paintable) child).updateFromUIDL(uidlForChild
+							.getChildUIDL(0), client);
+				} catch (IllegalArgumentException e) {
 					// If no location is found, this component is not visible
 				}
-				((Paintable) child).updateFromUIDL(
-						uidlForChild.getChildUIDL(0), client);
-
 			}
 		}
-
 	}
 
 	/** Update implementing HTML-layout if needed. */
 	private void updateHTML(UIDL uidl, Client client) {
+
+		// Update only if style has changed
 		String newStyle = uidl.getStringAttribute("style");
 		if (currentStyle != null && currentStyle.equals(newStyle))
 			return;
 
+		// Get the HTML-template from client
 		String template = client.getResource("layout/" + newStyle + ".html");
 		if (template == null) {
-			template = "Layout " + newStyle + " is missing";
+			template = "Layout file layout/" + newStyle + ".html is missing.";
 		} else {
 			currentStyle = newStyle;
 		}
+
+		// Connect body of the template to DOM
 		template = extractBodyAndScriptsFromTemplate(template);
 		DOM.setInnerHTML(getElement(), template);
 
+		// Remap locations to elements
 		locationToElement.clear();
 		scanForLocations(getElement());
 
+		// Remap image srcs in layout
 		Widget parent = getParent();
 		while (parent != null && !(parent instanceof IWindow))
 			parent = parent.getParent();
 		if (parent != null && ((IWindow) parent).getTheme() != null)
 			;
-		prefixImgSrcs(getElement(), "../theme/"
-				+ ((IWindow) parent).getTheme() + "/layout/");
+		prefixImgSrcs(getElement(), "../theme/" + ((IWindow) parent).getTheme()
+				+ "/layout/");
 	}
 
+	/** Collect locations from template */
 	private void scanForLocations(Element elem) {
 
 		String location = getLocation(elem);
@@ -106,20 +148,19 @@ public class ICustomLayout extends ComplexPanel implements Paintable, Layout {
 			DOM.setInnerHTML(elem, "");
 		} else {
 			int len = DOM.getChildCount(elem);
-			for (int i=0; i<len; i++) {
+			for (int i = 0; i < len; i++) {
 				System.out.print(i);
 				scanForLocations(DOM.getChild(elem, i));
 			}
-			
 		}
-
 	}
-	
-	private static native String getLocation(Element elem) /*-{
-		return elem.getAttribute("location");
-	}-*/;
 
-	/** Scripts must be evaluated when the document has been rendered */
+	/** Get the location attribute for given element */
+	private static native String getLocation(Element elem) /*-{
+	 return elem.getAttribute("location");
+	 }-*/;
+
+	/** Scripts are evaluated when the document has been rendered */
 	protected void onLoad() {
 		super.onLoad();
 		// Evaluate scripts only once
@@ -138,7 +179,7 @@ public class ICustomLayout extends ComplexPanel implements Paintable, Layout {
 	 }-*/;
 
 	/** Prefix all img tag srcs with given prefix. */
-	private native void prefixImgSrcs(Element e, String srcPrefix) /*-{
+	private static native void prefixImgSrcs(Element e, String srcPrefix) /*-{
 	 try {
 	 var divs = e.getElementsByTagName("img"); 
 	 var base = "" + $doc.location;
@@ -206,43 +247,74 @@ public class ICustomLayout extends ComplexPanel implements Paintable, Layout {
 		return res;
 	}
 
+	/** Replace child components */
 	public void replaceChildComponent(Widget from, Widget to) {
 		String location = getLocation(from);
-		if (location == null) throw new IllegalArgumentException();
-		add(to,location);
+		if (location == null)
+			throw new IllegalArgumentException();
+		add(to, location);
 	}
 
+	/** Does this layout contain given child*/
 	public boolean hasChildComponent(Widget component) {
 		return locationToWidget.containsValue(component);
 	}
 
+	/** Update caption for given widget */
 	public void updateCaption(Widget component, UIDL uidl) {
-		// TODO Currently not supported
+		CaptionWrapper wrapper = (CaptionWrapper) widgetToCaptionWrapper.get(component);
+		if (CaptionWrapper.isNeeded(uidl)) {
+			if (wrapper == null) {
+				String loc = getLocation(component);
+				super.remove(component);
+				wrapper = new CaptionWrapper(component);
+				super.add(wrapper, (Element) locationToElement.get(loc));
+				widgetToCaptionWrapper.put(component, wrapper);
+			}
+			wrapper.updateCaption(uidl);
+		} else {
+			if (wrapper != null) { 
+				String loc = getLocation(component);
+				super.remove(wrapper);
+				super.add(wrapper.getWidget(), (Element) locationToElement.get(loc));
+				widgetToCaptionWrapper.remove(component);
+			}
+		}
 	}
-	
+
+	/** Get the location of an widget */
 	public String getLocation(Widget w) {
 		for (Iterator i = locationToWidget.keySet().iterator(); i.hasNext();) {
 			String location = (String) i.next();
-			if (locationToWidget.get(location) == w) 
+			if (locationToWidget.get(location) == w)
 				return location;
 		}
 		return null;
 	}
 
+	/** Removes given widget from the layout */
 	public boolean remove(Widget w) {
 		String location = getLocation(w);
 		if (location != null)
 			locationToWidget.remove(location);
-		return super.remove(w);
+		CaptionWrapper cw = (CaptionWrapper) widgetToCaptionWrapper.get(w);
+		if (cw != null) {
+			widgetToCaptionWrapper.remove(w);
+			return super.remove(cw);
+		} else 
+			return super.remove(w);
 	}
 
+	/** Adding widget without specifying location is not supported */
 	public void add(Widget w) {
 		throw new UnsupportedOperationException();
 	}
 
+	/** Clear all widgets from the layout */
 	public void clear() {
 		super.clear();
 		locationToWidget.clear();
+		widgetToCaptionWrapper.clear();
 	}
 
 }
