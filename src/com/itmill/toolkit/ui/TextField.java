@@ -243,7 +243,7 @@ public class TextField extends AbstractField {
 				newValue = null;
 			if (newValue != oldValue
 					&& (newValue == null || !newValue.equals(oldValue)))
-				setValue(newValue);
+				setValue(newValue,true);
 		}
 
 	}

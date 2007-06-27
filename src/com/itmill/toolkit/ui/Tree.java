@@ -305,8 +305,10 @@ public class Tree extends Select implements Container.Hierarchical,
 			String[] keys = (String[]) variables.get("collapse");
 			for (int i = 0; i < keys.length; i++) {
 				Object id = itemIdMapper.get(keys[i]);
-				if (id != null)
-					collapseItem(id);
+				if (id != null && isExpanded(id)) {
+					expanded.remove(id);
+					fireCollapseEvent(id);
+				}
 			}
 		}
 
@@ -548,7 +550,7 @@ public class Tree extends Select implements Container.Hierarchical,
 		boolean success = ((Container.Hierarchical) items).setChildrenAllowed(
 				itemId, areChildrenAllowed);
 		if (success)
-			fireValueChange();
+			fireValueChange(false);
 		return success;
 	}
 

@@ -406,6 +406,8 @@ public class Select extends AbstractField implements Container,
 			// Multiselect mode
 			if (isMultiSelect()) {
 
+				// TODO Optimize by adding repaintNotNeeded whan applicaple
+				
 				// Converts the key-array to id-set
 				LinkedList s = new LinkedList();
 				for (int i = 0; i < ka.length; i++) {
@@ -440,15 +442,15 @@ public class Select extends AbstractField implements Container,
 					Object current = getValue();
 					Collection visible = getVisibleItemIds();
 					if (visible != null && visible.contains(current))
-						setValue(null);
+						setValue(null, true);
 				} else {
 					Object id = itemIdMapper.get(ka[0]);
 					if (id != null && id.equals(getNullSelectionItemId()))
-						setValue(null);
+						setValue(null, true);
 					else if (itemIdMapper.isNewIdKey(ka[0]))
 						setValue(newitem);
 					else
-						setValue(id);
+						setValue(id, true);
 				}
 			}
 		}
@@ -534,14 +536,33 @@ public class Select extends AbstractField implements Container,
 	 */
 	public void setValue(Object newValue) throws Property.ReadOnlyException,
 			Property.ConversionException {
+		setValue(newValue, false);
+	}
+
+	/**
+	 * Sets the visible value of the property.
+	 * 
+	 * <p>
+	 * The value of the select is the selected item id. If the select is in
+	 * multiselect-mode, the value is a set of selected item keys. In
+	 * multiselect mode all collections of id:s can be assigned.
+	 * </p>
+	 * 
+	 * @param newValue
+	 *            the New selected item or collection of selected items.
+	 * @param repaintIsNotNeeded True iff caller is sure that repaint is not needed. 
+	 * @see com.itmill.toolkit.ui.AbstractField#setValue(java.lang.Object, java.lang.Boolean)
+	 */
+	protected void setValue(Object newValue, boolean repaintIsNotNeeded) throws Property.ReadOnlyException,
+			Property.ConversionException {
 
 		if (isMultiSelect()) {
 			if (newValue == null)
-				super.setValue(new HashSet());
+				super.setValue(new HashSet(), repaintIsNotNeeded);
 			else if (Collection.class.isAssignableFrom(newValue.getClass()))
-				super.setValue(new HashSet((Collection) newValue));
+				super.setValue(new HashSet((Collection) newValue), repaintIsNotNeeded);
 		} else if (newValue == null || items.containsId(newValue))
-			super.setValue(newValue);
+			super.setValue(newValue, repaintIsNotNeeded);
 	}
 
 	/* Container methods **************************************************** */
@@ -798,7 +819,7 @@ public class Select extends AbstractField implements Container,
 			}
 
 			// TODO: This should be conditional
-			fireValueChange();
+			fireValueChange(false);
 		}
 	}
 

@@ -290,7 +290,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
 			if ((newValue == null && value != null)
 					|| (newValue != null && !newValue.equals(value))) {
 				setInternalValue(newValue);
-				fireValueChange();
+				fireValueChange(false);
 			}
 
 			// If the value did not change, but the modification status did
@@ -351,7 +351,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
 		readTroughMode = readTrough;
 		if (!isModified() && readTroughMode && dataSource != null) {
 			setInternalValue(dataSource.getValue());
-			fireValueChange();
+			fireValueChange(false);
 		}
 	}
 
@@ -387,7 +387,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
 		if ((newValue == null && value != null)
 				|| (newValue != null && !newValue.equals(value))) {
 			setInternalValue(newValue);
-			fireValueChange();
+			fireValueChange(false);
 		}
 
 		return newValue;
@@ -403,6 +403,20 @@ public abstract class AbstractField extends AbstractComponent implements Field,
 	 */
 	public void setValue(Object newValue) throws Property.ReadOnlyException,
 			Property.ConversionException {
+		setValue(newValue, false);
+	}
+		
+	/**
+	 * Sets the value of the field.
+	 * 
+	 * @param newValue
+	 *            the New value of the field.
+	 * @param repaintIsNotNeeded True iff caller is sure that repaint is not needed. 
+	 * @throws Property.ReadOnlyException
+	 * @throws Property.ConversionException
+	 */
+	protected void setValue(Object newValue, boolean repaintIsNotNeeded) throws Property.ReadOnlyException,
+		Property.ConversionException {
 
 		if ((newValue == null && value != null)
 				|| (newValue != null && !newValue.equals(value))) {
@@ -453,7 +467,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
 			}
 
 			// Fires the value change
-			fireValueChange();
+			fireValueChange(repaintIsNotNeeded);
 		}
 	}
 
@@ -534,7 +548,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
 		// Fires value change if the value has changed
 		if ((value != oldValue)
 				&& ((value != null && !value.equals(oldValue)) || value == null))
-			fireValueChange();
+			fireValueChange(false);
 	}
 
 	/* Validation ****************************************************** */
@@ -735,9 +749,10 @@ public abstract class AbstractField extends AbstractComponent implements Field,
 	 * Emits the value change event. The value contained in the field is
 	 * validated before the event is created.
 	 */
-	protected void fireValueChange() {
+	protected void fireValueChange(boolean repaintIsNotNeeded) {
 		fireEvent(new AbstractField.ValueChangeEvent(this));
-		requestRepaint();
+		if (!repaintIsNotNeeded)
+			requestRepaint();
 	}
 
 	/* Read-only status change events *************************************** */
@@ -831,7 +846,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
 	 */
 	public void valueChange(Property.ValueChangeEvent event) {
 		if (isReadThrough() || !isModified())
-			fireValueChange();
+			fireValueChange(false);
 	}
 
 	/**
