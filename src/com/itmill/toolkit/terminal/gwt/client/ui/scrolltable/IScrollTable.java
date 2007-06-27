@@ -11,16 +11,14 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.MouseListener;
 import com.google.gwt.user.client.ui.ScrollListener;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.client.ui.FlexTable.FlexCellFormatter;
+import com.google.gwt.user.client.ui.HTMLTable.CellFormatter;
 import com.itmill.toolkit.terminal.gwt.client.Client;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
@@ -52,7 +50,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 	
 	private boolean initializedAndAttached = false;
 	
-	private FlexTable tHead = new FlexTable();
+	private Grid tHead = new Grid(1,1);
 
 	private ScrollPanel bodyContainer = new ScrollPanel();
 	
@@ -145,16 +143,31 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 	private void updateHeader(UIDL uidl) {
 		if(uidl == null)
 			return;
+		int columnCount = uidl.getChidlCount();
+		if(rowHeaders)
+			columnCount++;
+		tHead.resizeColumns(columnCount);
+			
 		for(Iterator it = uidl.getChildIterator();it.hasNext();) {
 			UIDL col = (UIDL) it.next();
 			String cid = col.getStringAttribute("cid");
 			int colIndex = getColIndexByKey(cid);
-			if(colIndex > -1)
-				tHead.setWidget(0, colIndex, 
-						new HeaderCell(cid, col.getStringAttribute("caption")));
+			if(colIndex > -1) {
+				HeaderCell c = (HeaderCell) tHead.getWidget(0, colIndex);
+				if(c != null && c.getColKey().equals(cid)) {
+					c.setText(col.getStringAttribute("caption"));
+				} else {
+					tHead.setWidget(0, colIndex, 
+							new HeaderCell(cid, col.getStringAttribute("caption")));
+				}
+			}
 		}
-		if(rowHeaders)
-			tHead.setWidget(0, 0, new HeaderCell("0",""));
+		if(rowHeaders) {
+			HeaderCell c = (HeaderCell) tHead.getWidget(0, 0);
+			if(c == null) {
+				tHead.setWidget(0, 0, new HeaderCell("0", ""));
+			}
+		}
 	}
 	
 	/**
@@ -191,10 +204,10 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 	}
 
 	private void setColWidth(int colIndex, int w) {
-		String cid = getColKeyByIndex(colIndex);
-		((HeaderCell) tHead.getWidget(0, colIndex)).setWidth(w);
-		tHead.getCellFormatter().setWidth(0, colIndex, w + "px");
+		HeaderCell cell = (HeaderCell) tHead.getWidget(0, colIndex);
+		cell.setWidth(w);
 		tBody.setColWidth(colIndex, w);
+		String cid = cell.getColKey();;
 		columnWidths.put(cid,new Integer(w));
 	}
 	
@@ -306,7 +319,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 	*/
 	private void initColumnWidths() {
 		int cols = tHead.getCellCount(0);
-		FlexCellFormatter hf = tHead.getFlexCellFormatter();
+		CellFormatter hf = tHead.getCellFormatter();
 			for (int i = 0; i < cols; i++) {
 				Element hCell = hf.getElement(0, i);
 				int hw = DOM.getIntAttribute(hCell, "offsetWidth");
@@ -368,7 +381,6 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		private String cid;
 		private boolean dragging;
 		private int dragStartX;
-		private int dragStartY;
 		private int colIndex;
 		private int originalWidth;
 		
@@ -379,11 +391,13 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 			this.cid = colid;
 			// TODO move these to stylesheet
 			Element el = DOM.createDiv();
+			DOM.setStyleAttribute(el,"display", "block");
 			DOM.setStyleAttribute(el, "width",  DRAG_WIDGET_WIDTH +"px");
 			DOM.setStyleAttribute(el,"height", "20px");
+			DOM.setStyleAttribute(el,"cssFloat", "right");
+			DOM.setStyleAttribute(el, "styleFloat", "right");
 			DOM.setStyleAttribute(el,"background", "brown");
-			DOM.setStyleAttribute(el,"float", "right");
-			DOM.setStyleAttribute(el,"cursoor", "e-resize");
+			DOM.setStyleAttribute(el,"cursor", "e-resize");
 			DOM.sinkEvents(el,Event.MOUSEEVENTS);
 			setElement(el);
 		}
@@ -420,28 +434,46 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		    }
 			
 		}
+
+		public String getColKey() {
+			return cid;
+		}
 	}
 	
-	class HeaderCell extends Composite {
+	public class HeaderCell extends Composite {
 		
 		private DragWidget dragWidget;
 		private Label text;
 
 		private HeaderCell(){};
+		public void setText(String stringAttribute) {
+			text.setText(stringAttribute);
+		}
+		public String getColKey() {
+			return dragWidget.getColKey();
+		}
 		public HeaderCell(String colId, String headerText) {
-			this.dragWidget = new DragWidget(colId);
 			FlowPanel fp = new FlowPanel();
 			DOM.setStyleAttribute(fp.getElement(), "white-space", "nowrap");
-			DOM.setStyleAttribute(fp.getElement(), "overflow", "hidden");
+
+			this.dragWidget = new DragWidget(colId);
 			fp.add(dragWidget);
+
 			text = new Label(headerText);
+			DOM.setStyleAttribute(text.getElement(), "cssFloat", "right");
+			DOM.setStyleAttribute(text.getElement(), "styleFloat", "right");
+			DOM.setStyleAttribute(text.getElement(), "overflow", "hidden");
+			DOM.setStyleAttribute(text.getElement(), "display", "inline");
+			text.setWordWrap(false);
+
 			fp.add(text);
+			
 			initWidget(fp);
 		}
 		
 		public void setWidth(int w) {
-			text.setWidth((w - DragWidget.DRAG_WIDGET_WIDTH ) + "px");
-			super.setWidth(w + "px");
+			text.setWidth((w - DragWidget.DRAG_WIDGET_WIDTH - 4) + "px");
+			setWidth(w + "px");
 		}
 	}
 	
