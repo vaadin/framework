@@ -8,9 +8,14 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.MouseListener;
 import com.google.gwt.user.client.ui.ScrollListener;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -145,9 +150,11 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 			String cid = col.getStringAttribute("cid");
 			int colIndex = getColIndexByKey(cid);
 			if(colIndex > -1)
-				setHeaderText(colIndex, col.getStringAttribute("caption"));
-			DOM.setAttribute(tHead.getFlexCellFormatter().getElement(0, colIndex), "cid", cid);
+				tHead.setWidget(0, colIndex, 
+						new HeaderCell(cid, col.getStringAttribute("caption")));
 		}
+		if(rowHeaders)
+			tHead.setWidget(0, 0, new HeaderCell("0",""));
 	}
 	
 	/**
@@ -183,12 +190,9 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		return DOM.getAttribute(tHead.getCellFormatter().getElement(0, index), "cid");
 	}
 
-	public void setHeaderText(int colIndex, String text) {
-		tHead.setText(0, colIndex, text);
-	}
-	
 	private void setColWidth(int colIndex, int w) {
 		String cid = getColKeyByIndex(colIndex);
+		((HeaderCell) tHead.getWidget(0, colIndex)).setWidth(w);
 		tHead.getCellFormatter().setWidth(0, colIndex, w + "px");
 		tBody.setColWidth(colIndex, w);
 		columnWidths.put(cid,new Integer(w));
@@ -355,4 +359,90 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		}
 		
 	}
+	
+	class DragWidget extends Widget {
+		
+		public static final int DRAG_WIDGET_WIDTH = 2;
+		
+		private static final int MINIMUM_COL_WIDTH = 20;
+		private String cid;
+		private boolean dragging;
+		private int dragStartX;
+		private int dragStartY;
+		private int colIndex;
+		private int originalWidth;
+		
+		private DragWidget(){};
+		
+		public DragWidget(String colid) {
+			super();
+			this.cid = colid;
+			// TODO move these to stylesheet
+			Element el = DOM.createDiv();
+			DOM.setStyleAttribute(el, "width",  DRAG_WIDGET_WIDTH +"px");
+			DOM.setStyleAttribute(el,"height", "20px");
+			DOM.setStyleAttribute(el,"background", "brown");
+			DOM.setStyleAttribute(el,"float", "right");
+			DOM.setStyleAttribute(el,"cursoor", "e-resize");
+			DOM.sinkEvents(el,Event.MOUSEEVENTS);
+			setElement(el);
+		}
+		
+		public void onBrowserEvent(Event event) {
+			super.onBrowserEvent(event);
+		    switch (DOM.eventGetType(event)) {
+		      	case Event.ONMOUSEDOWN:
+				    dragging = true;
+				    DOM.setCapture(getElement());
+				    dragStartX = DOM.eventGetClientX(event);
+			        colIndex = getColIndexByKey(cid);
+			        originalWidth = IScrollTable.this.tBody.getColWidth(colIndex);
+			        DOM.eventPreventDefault(event);
+		      		break;
+		      	case Event.ONMOUSEUP:
+				    dragging = false;
+				    DOM.releaseCapture(getElement());
+		      		break;
+		      	case Event.ONMOUSEMOVE:
+				    if (dragging) {
+				        int deltaX = DOM.eventGetClientX(event) - dragStartX ;
+				        if(deltaX == 0)
+				        	return;
+				        
+				        int newWidth = originalWidth + deltaX;
+				        if(newWidth < MINIMUM_COL_WIDTH)
+				        	newWidth = MINIMUM_COL_WIDTH;
+				        setColWidth(colIndex, newWidth);
+				      }
+		      		break;
+		      	default:
+		      		break;
+		    }
+			
+		}
+	}
+	
+	class HeaderCell extends Composite {
+		
+		private DragWidget dragWidget;
+		private Label text;
+
+		private HeaderCell(){};
+		public HeaderCell(String colId, String headerText) {
+			this.dragWidget = new DragWidget(colId);
+			FlowPanel fp = new FlowPanel();
+			DOM.setStyleAttribute(fp.getElement(), "white-space", "nowrap");
+			DOM.setStyleAttribute(fp.getElement(), "overflow", "hidden");
+			fp.add(dragWidget);
+			text = new Label(headerText);
+			fp.add(text);
+			initWidget(fp);
+		}
+		
+		public void setWidth(int w) {
+			text.setWidth((w - DragWidget.DRAG_WIDGET_WIDTH ) + "px");
+			super.setWidth(w + "px");
+		}
+	}
+	
 }

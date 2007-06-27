@@ -188,7 +188,6 @@ public class IScrollTableBody extends Panel {
 	}
 	
 	private void fixSpacers() {
-		int tBodyHeight = DOM.getIntAttribute(table, "offsetHeight");
 		DOM.setStyleAttribute(preSpacer, "height", getRowHeight()*firstRendered + "px");
 		DOM.setStyleAttribute(postSpacer, "height", getRowHeight()*(totalRows - 1  - lastRendered) + "px");
 	}
