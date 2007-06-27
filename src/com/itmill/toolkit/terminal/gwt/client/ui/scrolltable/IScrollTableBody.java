@@ -1,4 +1,4 @@
-package com.itmill.toolkit.terminal.gwt.client.ui.scrolltable;
+	package com.itmill.toolkit.terminal.gwt.client.ui.scrolltable;
 
 import java.util.Iterator;
 import java.util.List;
@@ -183,13 +183,14 @@ public class IScrollTableBody extends Panel {
 	protected void onAttach() {
 		super.onAttach();
 		fixSpacers();
+		// fix container blocks height to avoid "bouncing" when scrolling
+		DOM.setStyleAttribute(container, "height", totalRows*getRowHeight() + "px");
 	}
 	
 	private void fixSpacers() {
 		int tBodyHeight = DOM.getIntAttribute(table, "offsetHeight");
 		DOM.setStyleAttribute(preSpacer, "height", getRowHeight()*firstRendered + "px");
 		DOM.setStyleAttribute(postSpacer, "height", getRowHeight()*(totalRows - 1  - lastRendered) + "px");
-		
 	}
 
 	public int getTotalRows() {
