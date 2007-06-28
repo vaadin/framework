@@ -103,13 +103,14 @@ public class IScrollTableBody extends Panel {
 				addRowBeforeFirstRendered(rowArray[i]);
 				firstRendered--;
 			}
-		} else if (firstIndex > lastRendered || firstIndex + rows < firstRendered) {
+//		} else if (firstIndex > lastRendered || firstIndex + rows < firstRendered) {
+		} else if (true) {
 			// complitely new set of rows
 			// create one row before truncating row
 			IScrollTableRow row = createRow((UIDL) it.next());
 			while(lastRendered + 1 > firstRendered)
 				unlinkRow(false);
-
+			fixSpacers();
 			addRow(row);
 			firstRendered = firstIndex;
 			this.lastRendered = firstIndex + rows - 1 ;
@@ -117,6 +118,7 @@ public class IScrollTableBody extends Panel {
 				addRow(createRow((UIDL) it.next()));
 			fixSpacers();
 		} else {
+			// sorted or column reordering changed
 			client.console.log("Bad update" + firstIndex + "/"+ rows);
 		}
 	}

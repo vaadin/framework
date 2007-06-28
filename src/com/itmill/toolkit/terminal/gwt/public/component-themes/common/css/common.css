@@ -23,15 +23,25 @@ select {
 	margin:0;
 	padding:0;
 	border:0;
-	background: yellow;
 }
 
 .iscrolltable-header table td {
 	margin:0;
 	padding:0;
 	border:0;
+	background:yellow;
 }
 
+.iscrolltable-header .headerCell {
+}
+.iscrolltable-header .headerCellAsc {
+	height:2px;
+	background: blue;
+}
+.iscrolltable-header .headerCellDesc {
+	height:2px;
+	background: cyan;
+}
 
 
 .iscrolltable-table {

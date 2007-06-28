@@ -1550,7 +1550,7 @@ public class Table extends Select implements Action.Container,
 
 		// The cursors are only shown on pageable table
 		if (first != 0 || getPageLength() > 0)
-			target.addVariable(this, "firstvisible", first + 1);
+			target.addVariable(this, "firstvisible", first);
 
 		// Sorting
 		if (getContainerDataSource() instanceof Container.Sortable) {

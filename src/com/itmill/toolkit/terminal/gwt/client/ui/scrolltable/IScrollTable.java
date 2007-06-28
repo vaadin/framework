@@ -10,6 +10,7 @@ import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Grid;
@@ -64,7 +65,9 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 	private IScrollTableBody tBody;
 	private int width = -1;
 	private int height = -1;
-	private int firstvisible;
+	private int firstvisible = 0;
+	private boolean sortAscending;
+	private String sortColumn;
 	
 	public IScrollTable() {
 		headerContainer.setStyleName("iscrolltable-header");
@@ -91,13 +94,20 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		this.immediate = uidl.getBooleanAttribute("immediate");
 		this.totalRows = uidl.getIntAttribute("totalrows");
 		this.pageLength = uidl.getIntAttribute("pagelength");
-		this.firstvisible = uidl.getIntVariable("firstvisible");
+		if(pageLength == 0)
+			pageLength = totalRows;
+		this.firstvisible = uidl.hasVariable("firstvisible") ? uidl.getIntVariable("firstvisible") : 0;
 		if(uidl.hasAttribute("rowheaders"))
 			rowHeaders = true;
 		if(uidl.hasAttribute("width"))
 			width = uidl.getIntAttribute("width");
 		if(uidl.hasAttribute("height"))
 			width = uidl.getIntAttribute("height");
+		
+		if(uidl.hasVariable("sortascending")) {
+			this.sortAscending = uidl.getBooleanVariable("sortascending");
+			this.sortColumn = uidl.getStringVariable("sortcolumn");
+		}
 		
 		UIDL columnInfo = null;
 		UIDL rowData = null;
@@ -157,8 +167,15 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 				if(c != null && c.getColKey().equals(cid)) {
 					c.setText(col.getStringAttribute("caption"));
 				} else {
-					tHead.setWidget(0, colIndex, 
-							new HeaderCell(cid, col.getStringAttribute("caption")));
+					c = new HeaderCell(cid, col.getStringAttribute("caption"));
+					tHead.setWidget(0, colIndex, c );
+				}
+				if(col.hasAttribute("sortable")) {
+					c.setSortable(true);
+					if(cid.equals(sortColumn))
+						c.setSorted(true);
+					else
+						c.setSorted(false);
 				}
 			}
 		}
@@ -231,11 +248,9 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		rowRequestHandler.cancel();
 		
 		// fix headers horizontal scrolling
-		System.out.println("scrolling header to " + scrollLeft);
 		headerContainer.setHorizontalScrollPosition(scrollLeft);
 
-		
-		firstRowInViewPort = (int) Math.ceil( scrollTop / tBody.getRowHeight() );
+		firstRowInViewPort = (int) Math.ceil( scrollTop / (double) tBody.getRowHeight() );
 		client.console.log("At scrolltop: " + scrollTop + " At row " + firstRowInViewPort);
 		
 		int postLimit = (int) (firstRowInViewPort + pageLength + pageLength*CACHE_REACT_RATE);
@@ -448,19 +463,28 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		}
 	}
 	
-	public class HeaderCell extends Composite {
+	public class HeaderCell extends Composite implements ClickListener {
 		
 		private DragWidget dragWidget;
 		private Label text;
+		
+		private boolean sortable = false;
+		private String cid;
 
 		private HeaderCell(){};
-		public void setText(String stringAttribute) {
-			text.setText(stringAttribute);
+		
+		public void setSortable(boolean b) {
+			if(b == sortable)
+				return;
+			sortable = b;
+			if(sortable)
+				text.addClickListener(this);
+			else
+				text.removeClickListener(this);
 		}
-		public String getColKey() {
-			return dragWidget.getColKey();
-		}
+		
 		public HeaderCell(String colId, String headerText) {
+			this.cid = colId;
 			FlowPanel fp = new FlowPanel();
 			DOM.setStyleAttribute(fp.getElement(), "white-space", "nowrap");
 
@@ -483,6 +507,44 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 			text.setWidth((w - DragWidget.DRAG_WIDGET_WIDTH - 4) + "px");
 			setWidth(w + "px");
 		}
+		public void setText(String stringAttribute) {
+			text.setText(stringAttribute);
+		}
+		public String getColKey() {
+			return dragWidget.getColKey();
+		}
+		
+		/**
+		 * Listens clicks to headers text. This changes sorting.
+		 */
+		public void onClick(Widget sender) {
+			if(sortColumn.equals(cid)) {
+				// just toggle order
+				client.updateVariable(id, "sortascending", !sortAscending, false);
+			} else {
+				// set table scrolled by this column
+				client.updateVariable(id, "sortcolumn", cid, false);
+			}
+			// get also cache columns at the same request
+			bodyContainer.setScrollPosition(0);
+			firstvisible = 0;
+			rowRequestHandler.setReqFirstRow(0);
+			rowRequestHandler.setReqRows((int) (2*pageLength*CACHE_RATE + pageLength));
+			rowRequestHandler.deferRowFetch();
+		}
+		
+		private void setSorted(boolean sorted) {
+			if(sorted) {
+				if(sortAscending)
+					this.setStyleName("headerCellAsc");
+				else
+					this.setStyleName("headerCellDesc");
+			} else {
+				this.setStyleName("headerCell");
+			}
+		}
+
+
 	}
 	
 }
