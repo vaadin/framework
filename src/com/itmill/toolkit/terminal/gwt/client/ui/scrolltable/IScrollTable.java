@@ -230,6 +230,11 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		
 		rowRequestHandler.cancel();
 		
+		// fix headers horizontal scrolling
+		System.out.println("scrolling header to " + scrollLeft);
+		headerContainer.setHorizontalScrollPosition(scrollLeft);
+
+		
 		firstRowInViewPort = (int) Math.ceil( scrollTop / tBody.getRowHeight() );
 		client.console.log("At scrolltop: " + scrollTop + " At row " + firstRowInViewPort);
 		
@@ -273,6 +278,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 			rowRequestHandler.setReqRows((int) ((firstRowInViewPort + pageLength + pageLength*CACHE_RATE) - lastRendered));
 			rowRequestHandler.deferRowFetch();
 		}
+		
 	}
 	
 	
@@ -292,8 +298,10 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 
 		if(width  < 0) {
 			bodyContainer.setWidth((tBody.getOffsetWidth() + getScrollBarWidth() ) + "px");
+			headerContainer.setWidth((tBody.getOffsetWidth()) + "px");
 		} else {
 			bodyContainer.setWidth(width + "px");
+			headerContainer.setWidth(width + "px");
 		}
 		
 		if(firstvisible > 0)
