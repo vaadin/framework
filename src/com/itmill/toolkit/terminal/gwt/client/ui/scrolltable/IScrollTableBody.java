@@ -110,12 +110,15 @@ public class IScrollTableBody extends Panel {
 			IScrollTableRow row = createRow((UIDL) it.next());
 			while(lastRendered + 1 > firstRendered)
 				unlinkRow(false);
+			firstRendered = firstIndex;
+			lastRendered = firstIndex - 1 ;
 			fixSpacers();
 			addRow(row);
-			firstRendered = firstIndex;
-			this.lastRendered = firstIndex + rows - 1 ;
-			while(it.hasNext())
+			lastRendered++;
+			while(it.hasNext()) {
 				addRow(createRow((UIDL) it.next()));
+				lastRendered++;
+			}
 			fixSpacers();
 		} else {
 			// sorted or column reordering changed

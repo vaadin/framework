@@ -31,7 +31,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 	 *  multiple of pagelenght which component will 
 	 *  cache when requesting more rows 
 	 */
-	private static final double CACHE_RATE = 3;
+	private static final double CACHE_RATE = 2;
 	/** 
 	 * fraction of pageLenght which can be scrolled without 
 	 * making new request 
@@ -43,7 +43,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 	
 	private boolean rowHeaders = false;
 	
-	private Map columnOrder = new HashMap();
+	private String[] columnOrder;
 	
 	private Client client;
 	private String id;
@@ -68,6 +68,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 	private int firstvisible = 0;
 	private boolean sortAscending;
 	private String sortColumn;
+	private boolean columnReordering;
 	
 	public IScrollTable() {
 		headerContainer.setStyleName("iscrolltable-header");
@@ -107,6 +108,11 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		if(uidl.hasVariable("sortascending")) {
 			this.sortAscending = uidl.getBooleanVariable("sortascending");
 			this.sortColumn = uidl.getStringVariable("sortcolumn");
+		}
+		
+		if(uidl.hasVariable("columnorder")) {
+			this.columnReordering = true;
+			this.columnOrder = uidl.getStringArrayVariable("columnorder");
 		}
 		
 		UIDL columnInfo = null;
@@ -217,7 +223,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 	}
 	
 	private String getColKeyByIndex(int index) {
-		return DOM.getAttribute(tHead.getCellFormatter().getElement(0, index), "cid");
+		return ((HeaderCell) tHead.getWidget(0, index)).getColKey();
 	}
 
 	private void setColWidth(int colIndex, int w) {
@@ -254,16 +260,14 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		client.console.log("At scrolltop: " + scrollTop + " At row " + firstRowInViewPort);
 		
 		int postLimit = (int) (firstRowInViewPort + pageLength + pageLength*CACHE_REACT_RATE);
-		if(postLimit > totalRows)
-			postLimit = totalRows;
+		if(postLimit > totalRows -1 )
+			postLimit = totalRows - 1;
 		int preLimit = (int) (firstRowInViewPort - pageLength*CACHE_REACT_RATE);
 		if(preLimit < 0)
 			preLimit = 0;
 		int lastRendered = tBody.getLastRendered();
 		int firstRendered = tBody.getFirstRendered();
-		if(
-				(postLimit <= lastRendered && preLimit >= firstRendered )
-				) {
+		if( postLimit <= lastRendered && preLimit >= firstRendered ) {
 			client.updateVariable(this.id, "firstvisible", firstRowInViewPort, false);
 			return; // scrolled withing "non-react area"
 		}
@@ -396,80 +400,35 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		
 	}
 	
-	class DragWidget extends Widget {
+	public class HeaderCell extends Widget implements ClickListener {
 		
-		public static final int DRAG_WIDGET_WIDTH = 2;
+		private static final int DRAG_WIDGET_WIDTH = 2;
 		
 		private static final int MINIMUM_COL_WIDTH = 20;
-		private String cid;
-		private boolean dragging;
-		private int dragStartX;
-		private int colIndex;
-		private int originalWidth;
-		
-		private DragWidget(){};
-		
-		public DragWidget(String colid) {
-			super();
-			this.cid = colid;
-			// TODO move these to stylesheet
-			Element el = DOM.createDiv();
-			DOM.setStyleAttribute(el,"display", "block");
-			DOM.setStyleAttribute(el, "width",  DRAG_WIDGET_WIDTH +"px");
-			DOM.setStyleAttribute(el,"height", "20px");
-			DOM.setStyleAttribute(el,"cssFloat", "right");
-			DOM.setStyleAttribute(el, "styleFloat", "right");
-			DOM.setStyleAttribute(el,"background", "brown");
-			DOM.setStyleAttribute(el,"cursor", "e-resize");
-			DOM.sinkEvents(el,Event.MOUSEEVENTS);
-			setElement(el);
-		}
-		
-		public void onBrowserEvent(Event event) {
-			super.onBrowserEvent(event);
-		    switch (DOM.eventGetType(event)) {
-		      	case Event.ONMOUSEDOWN:
-				    dragging = true;
-				    DOM.setCapture(getElement());
-				    dragStartX = DOM.eventGetClientX(event);
-			        colIndex = getColIndexByKey(cid);
-			        originalWidth = IScrollTable.this.tBody.getColWidth(colIndex);
-			        DOM.eventPreventDefault(event);
-		      		break;
-		      	case Event.ONMOUSEUP:
-				    dragging = false;
-				    DOM.releaseCapture(getElement());
-		      		break;
-		      	case Event.ONMOUSEMOVE:
-				    if (dragging) {
-				        int deltaX = DOM.eventGetClientX(event) - dragStartX ;
-				        if(deltaX == 0)
-				        	return;
-				        
-				        int newWidth = originalWidth + deltaX;
-				        if(newWidth < MINIMUM_COL_WIDTH)
-				        	newWidth = MINIMUM_COL_WIDTH;
-				        setColWidth(colIndex, newWidth);
-				      }
-		      		break;
-		      	default:
-		      		break;
-		    }
-			
-		}
 
-		public String getColKey() {
-			return cid;
-		}
-	}
-	
-	public class HeaderCell extends Composite implements ClickListener {
+		// TODO create a simple single row table widget that has these widgets as cells
+		// and change next line to  ...DOM.createTD();
+		// Grid is way too overkill for this and it removes on extra div from document structure
+		Element td = DOM.createDiv();
+
+		Element captionContainer = DOM.createDiv();
 		
-		private DragWidget dragWidget;
-		private Label text;
+		Element dragWidget = DOM.createDiv();
 		
 		private boolean sortable = false;
 		private String cid;
+		private boolean dragging;
+		
+		private int dragStartX;
+		private int colIndex;
+		private int originalWidth;
+
+		private boolean isResizing;
+
+		private int headerX;
+
+		private boolean moved;
+
 
 		private HeaderCell(){};
 		
@@ -477,41 +436,47 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 			if(b == sortable)
 				return;
 			sortable = b;
-			if(sortable)
-				text.addClickListener(this);
-			else
-				text.removeClickListener(this);
 		}
 		
 		public HeaderCell(String colId, String headerText) {
 			this.cid = colId;
-			FlowPanel fp = new FlowPanel();
-			DOM.setStyleAttribute(fp.getElement(), "white-space", "nowrap");
 
-			this.dragWidget = new DragWidget(colId);
-			fp.add(dragWidget);
-
-			text = new Label(headerText);
-			DOM.setStyleAttribute(text.getElement(), "cssFloat", "right");
-			DOM.setStyleAttribute(text.getElement(), "styleFloat", "right");
-			DOM.setStyleAttribute(text.getElement(), "overflow", "hidden");
-			DOM.setStyleAttribute(text.getElement(), "display", "inline");
-			text.setWordWrap(false);
-
-			fp.add(text);
+			DOM.setStyleAttribute(dragWidget,"display", "block");
+			DOM.setStyleAttribute(dragWidget, "width",  DRAG_WIDGET_WIDTH +"px");
+			DOM.setStyleAttribute(dragWidget,"height", "20px");
+			DOM.setStyleAttribute(dragWidget,"cssFloat", "right");
+			DOM.setStyleAttribute(dragWidget, "styleFloat", "right");
+			DOM.setStyleAttribute(dragWidget,"background", "brown");
+			DOM.setStyleAttribute(dragWidget,"cursor", "e-resize");
+			DOM.sinkEvents(dragWidget,Event.MOUSEEVENTS);
 			
-			initWidget(fp);
+			setText(headerText);
+			
+			DOM.appendChild(td, dragWidget);
+
+			
+			DOM.setStyleAttribute(captionContainer, "cssFloat", "right");
+			DOM.setStyleAttribute(captionContainer, "styleFloat", "right");
+			DOM.setStyleAttribute(captionContainer, "overflow", "hidden");
+			DOM.setStyleAttribute(captionContainer, "white-space", "nowrap");
+			DOM.setStyleAttribute(captionContainer, "display", "inline");
+			DOM.sinkEvents(captionContainer, Event.MOUSEEVENTS);
+
+			DOM.appendChild(td, captionContainer);
+			
+			setElement(td);
 		}
 		
 		public void setWidth(int w) {
-			text.setWidth((w - DragWidget.DRAG_WIDGET_WIDTH - 4) + "px");
+			DOM.setStyleAttribute(captionContainer, "width", (w - DRAG_WIDGET_WIDTH - 4) + "px");
 			setWidth(w + "px");
 		}
-		public void setText(String stringAttribute) {
-			text.setText(stringAttribute);
+		
+		public void setText(String headerText) {
+			DOM.setInnerHTML(captionContainer, headerText);
 		}
 		public String getColKey() {
-			return dragWidget.getColKey();
+			return cid;
 		}
 		
 		/**
@@ -542,6 +507,117 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 			} else {
 				this.setStyleName("headerCell");
 			}
+		}
+
+		/**
+		 * Handle column reordering.
+		 */
+		public void onBrowserEvent(Event event) {
+			
+			Element target = DOM.eventGetTarget(event);
+			
+			if(isResizing || DOM.compare(target, dragWidget)) {
+				onResizeEvent(event);
+			} else {
+				handleCaptionEvent(event);
+			}
+			
+
+			super.onBrowserEvent(event);
+		}
+
+		private void handleCaptionEvent(Event event) {
+			switch (DOM.eventGetType(event)) {
+			case Event.ONMOUSEDOWN:
+				dragging = true;
+				moved = false;
+				DOM.setCapture(getElement());
+				System.out.println("Started column reordering");
+				this.headerX = tHead.getAbsoluteLeft();
+				
+				DOM.eventPreventDefault(event);
+				break;
+			case Event.ONMOUSEUP:
+				dragging = false;
+				System.out.println("Stopped column reordering");
+				DOM.releaseCapture(getElement());
+				break;
+			case Event.ONMOUSEMOVE:
+				if (dragging) {
+					moved = true;
+					System.out.print("Dragging column, optimal index...");
+					int x = DOM.eventGetClientX(event);
+					int slotX = headerX;
+					int closestIndex = 0;
+					int closestDistance = -1;
+					int start = 0;
+					if(rowHeaders) {
+						start++;
+						slotX += getColWidth(getColKeyByIndex(0));
+					}
+					for(int i = start ; i < columnWidths.size(); i++ ) {
+						String colKey = getColKeyByIndex(i);
+						int dist = Math.abs(x - slotX);
+						if(closestDistance == -1 || dist < closestDistance) {
+							closestDistance = dist;
+							closestIndex = i;
+						}
+						slotX += getColWidth(colKey);
+					}
+					focusSlot(closestIndex);
+					System.out.println(closestIndex);
+
+				}
+				break;
+			default:
+				break;
+			}
+		}
+		
+		private void focusSlot(int slot) {
+			// TODO consider some workaround for this
+			removeSlotFocus();
+			DOM.setStyleAttribute(tHead.getCellFormatter().getElement(0, slot), "borderLeft", "2px solid black");
+		}
+
+		private void removeSlotFocus() {
+			for(int i = 0; i < tHead.getColumnCount();i++)
+				DOM.setStyleAttribute(tHead.getCellFormatter().getElement(0, i), "borderLeft", "none");
+		}
+
+		private int getClosestColumnIndex(int x) {
+			return 1;
+		}
+
+		private void onResizeEvent(Event event) {
+		    switch (DOM.eventGetType(event)) {
+		      	case Event.ONMOUSEDOWN:
+				    isResizing = true;
+				    DOM.setCapture(getElement());
+				    dragStartX = DOM.eventGetClientX(event);
+			        colIndex = getColIndexByKey(cid);
+			        originalWidth = IScrollTable.this.tBody.getColWidth(colIndex);
+			        DOM.eventPreventDefault(event);
+		      		break;
+		      	case Event.ONMOUSEUP:
+		      		isResizing = false;
+				    DOM.releaseCapture(getElement());
+		      		break;
+		      	case Event.ONMOUSEMOVE:
+				    if (isResizing) {
+				        int deltaX = DOM.eventGetClientX(event) - dragStartX ;
+				        if(deltaX == 0)
+				        	return;
+				        
+				        int newWidth = originalWidth + deltaX;
+				        if(newWidth < MINIMUM_COL_WIDTH)
+				        	newWidth = MINIMUM_COL_WIDTH;
+				        setColWidth(colIndex, newWidth);
+				      }
+		      		break;
+		      	default:
+		      		break;
+		    }
 		}
 
 
