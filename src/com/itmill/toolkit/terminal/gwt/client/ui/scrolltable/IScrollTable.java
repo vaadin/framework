@@ -439,7 +439,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		
 	}
 	
-	public class HeaderCell extends Widget implements ClickListener {
+	public class HeaderCell extends Widget {
 		
 		private static final int DRAG_WIDGET_WIDTH = 2;
 		
@@ -517,25 +517,6 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 			return cid;
 		}
 		
-		/**
-		 * Listens clicks to headers text. This changes sorting.
-		 */
-		public void onClick(Widget sender) {
-			if(sortColumn.equals(cid)) {
-				// just toggle order
-				client.updateVariable(id, "sortascending", !sortAscending, false);
-			} else {
-				// set table scrolled by this column
-				client.updateVariable(id, "sortcolumn", cid, false);
-			}
-			// get also cache columns at the same request
-			bodyContainer.setScrollPosition(0);
-			firstvisible = 0;
-			rowRequestHandler.setReqFirstRow(0);
-			rowRequestHandler.setReqRows((int) (2*pageLength*CACHE_RATE + pageLength));
-			rowRequestHandler.deferRowFetch();
-		}
-		
 		private void setSorted(boolean sorted) {
 			if(sorted) {
 				if(sortAscending)
@@ -578,8 +559,24 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 				break;
 			case Event.ONMOUSEUP:
 				dragging = false;
+				DOM.releaseCapture(getElement());
+
 				if(!moved) {
-					// sort
+					if(sortable) {
+						if(sortColumn.equals(cid)) {
+							// just toggle order
+							client.updateVariable(id, "sortascending", !sortAscending, false);
+						} else {
+							// set table scrolled by this column
+							client.updateVariable(id, "sortcolumn", cid, false);
+						}
+						// get also cache columns at the same request
+						bodyContainer.setScrollPosition(0);
+						firstvisible = 0;
+						rowRequestHandler.setReqFirstRow(0);
+						rowRequestHandler.setReqRows((int) (2*pageLength*CACHE_RATE + pageLength));
+						rowRequestHandler.deferRowFetch();
+					}
 					break;
 				}
 				System.out.println("Stopped column reordering");
@@ -590,7 +587,6 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 					else
 						reOrderColumn(cid, closestSlot);
 				}
-				DOM.releaseCapture(getElement());
 				break;
 			case Event.ONMOUSEMOVE:
 				if (dragging) {
