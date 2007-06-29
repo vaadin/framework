@@ -2,7 +2,7 @@ package com.itmill.toolkit.terminal.gwt.client.ui.scrolltable;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
+import java.util.Vector;
 
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
@@ -12,14 +12,11 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Grid;
-import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.ScrollListener;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.client.ui.HTMLTable.CellFormatter;
 import com.itmill.toolkit.terminal.gwt.client.Client;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
@@ -51,7 +48,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 	
 	private boolean initializedAndAttached = false;
 	
-	private Grid tHead = new Grid(1,1);
+	private TableHead tHead = new TableHead();
 
 	private ScrollPanel bodyContainer = new ScrollPanel();
 	
@@ -160,36 +157,34 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		if(uidl == null)
 			return;
 		int columnCount = uidl.getChidlCount();
-		if(rowHeaders)
+		int colIndex = 0;
+		if(rowHeaders) {
 			columnCount++;
-		tHead.resizeColumns(columnCount);
+			HeaderCell c = (HeaderCell) tHead.getHeaderCell(0);
+			if(c == null) {
+				tHead.setHeaderCell(0, new HeaderCell("0", ""));
+			}
+			colIndex++;
+		}
 			
 		for(Iterator it = uidl.getChildIterator();it.hasNext();) {
 			UIDL col = (UIDL) it.next();
 			String cid = col.getStringAttribute("cid");
-			int colIndex = getColIndexByKey(cid);
-			if(colIndex > -1) {
-				HeaderCell c = (HeaderCell) tHead.getWidget(0, colIndex);
-				if(c != null && c.getColKey().equals(cid)) {
-					c.setText(col.getStringAttribute("caption"));
-				} else {
-					c = new HeaderCell(cid, col.getStringAttribute("caption"));
-					tHead.setWidget(0, colIndex, c );
-				}
-				if(col.hasAttribute("sortable")) {
-					c.setSortable(true);
-					if(cid.equals(sortColumn))
-						c.setSorted(true);
-					else
-						c.setSorted(false);
-				}
+			HeaderCell c = (HeaderCell) tHead.getHeaderCell(colIndex);
+			if(c != null && c.getColKey().equals(cid)) {
+				c.setText(col.getStringAttribute("caption"));
+			} else {
+				c = new HeaderCell(cid, col.getStringAttribute("caption"));
+				tHead.setHeaderCell(colIndex, c);
 			}
-		}
-		if(rowHeaders) {
-			HeaderCell c = (HeaderCell) tHead.getWidget(0, 0);
-			if(c == null) {
-				tHead.setWidget(0, 0, new HeaderCell("0", ""));
+			if(col.hasAttribute("sortable")) {
+				c.setSortable(true);
+				if(cid.equals(sortColumn))
+					c.setSorted(true);
+				else
+					c.setSorted(false);
 			}
+			colIndex++;
 		}
 	}
 	
@@ -219,15 +214,27 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 	
 	
 	private int getColIndexByKey(String colKey) {
-		return Integer.parseInt(colKey) - 1 + (rowHeaders ? 1 : 0);
+		// return 0 if asked for rowHeaders
+		if("0".equals(colKey))
+			return 0;
+		int index = -1;
+		for (int i = 0; i < columnOrder.length; i++) {
+			if(columnOrder[i].equals(colKey)) {
+				index = i;
+				break;
+			}
+		}
+		if(rowHeaders)
+			index++;
+		return index;
 	}
 	
 	private String getColKeyByIndex(int index) {
-		return ((HeaderCell) tHead.getWidget(0, index)).getColKey();
+		return tHead.getHeaderCell(index).getColKey();
 	}
 
 	private void setColWidth(int colIndex, int w) {
-		HeaderCell cell = (HeaderCell) tHead.getWidget(0, colIndex);
+		HeaderCell cell = tHead.getHeaderCell(colIndex);
 		cell.setWidth(w);
 		tBody.setColWidth(colIndex, w);
 		String cid = cell.getColKey();;
@@ -240,6 +247,33 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 	
 	private int getRenderedRowCount() {
 		return tBody.getLastRendered()-tBody.getFirstRendered();
+	}
+	
+	private void reOrderColumn(String columnKey, int newIndex) {
+		
+		int oldIndex = getColIndexByKey(columnKey);
+		
+		// Change header order
+		tHead.moveCell(oldIndex, newIndex);
+
+		// Change body order
+		tBody.moveCol(oldIndex, newIndex);
+		
+		// build new columnOrder and update it to server
+		
+		String[] newOrder = new String[columnOrder.length];
+		
+		Iterator hCells = tHead.iterator();
+
+		if(rowHeaders)
+			hCells.next();
+		int index = 0;
+		while(hCells.hasNext()) {
+			newOrder[index++] = ((HeaderCell) hCells.next()).getColKey();
+		}
+		columnOrder = newOrder;
+		client.updateVariable(id, "columnorder", newOrder, false);
+		
 	}
 
 	/**
@@ -305,6 +339,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 	protected void onAttach() {
 		
 		super.onAttach();
+		int bodyWidth = tBody.getOffsetWidth();
 		
 		// sync column widths
 		initColumnWidths();
@@ -316,12 +351,15 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		}
 
 		if(width  < 0) {
+			bodyWidth = tBody.getOffsetWidth();
 			bodyContainer.setWidth((tBody.getOffsetWidth() + getScrollBarWidth() ) + "px");
 			headerContainer.setWidth((tBody.getOffsetWidth()) + "px");
 		} else {
 			bodyContainer.setWidth(width + "px");
 			headerContainer.setWidth(width + "px");
 		}
+		
+		tHead.disableBrowserIntelligence();
 		
 		if(firstvisible > 0)
 			bodyContainer.setScrollPosition(firstvisible*tBody.getRowHeight());
@@ -345,15 +383,16 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 	 * "natural widths and saves the values.
 	*/
 	private void initColumnWidths() {
-		int cols = tHead.getCellCount(0);
-		CellFormatter hf = tHead.getCellFormatter();
-			for (int i = 0; i < cols; i++) {
-				Element hCell = hf.getElement(0, i);
-				int hw = DOM.getIntAttribute(hCell, "offsetWidth");
-				int cw = tBody.getColWidth(i);
-				int w = (hw > cw ? hw : cw) + IScrollTableBody.CELL_EXTRA_WIDTH;
-				setColWidth(i , w);
-			}
+		Iterator headCells = tHead.iterator();
+		int i = 0;
+		while(headCells.hasNext()) {
+			Element hCell = ((HeaderCell) headCells.next()).getElement();
+			int hw = DOM.getIntAttribute(hCell, "offsetWidth");
+			int cw = tBody.getColWidth(i);
+			int w = (hw > cw ? hw : cw) + IScrollTableBody.CELL_EXTRA_WIDTH;
+			setColWidth(i , w);
+			i++;
+		}
 	}
 
 	private int getScrollBarWidth() {
@@ -406,10 +445,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		
 		private static final int MINIMUM_COL_WIDTH = 20;
 
-		// TODO create a simple single row table widget that has these widgets as cells
-		// and change next line to  ...DOM.createTD();
-		// Grid is way too overkill for this and it removes on extra div from document structure
-		Element td = DOM.createDiv();
+		Element td = DOM.createTD();
 
 		Element captionContainer = DOM.createDiv();
 		
@@ -428,6 +464,8 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		private int headerX;
 
 		private boolean moved;
+
+		private int closestSlot;
 
 
 		private HeaderCell(){};
@@ -531,6 +569,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 			case Event.ONMOUSEDOWN:
 				dragging = true;
 				moved = false;
+		        colIndex = getColIndexByKey(cid);
 				DOM.setCapture(getElement());
 				System.out.println("Started column reordering");
 				this.headerX = tHead.getAbsoluteLeft();
@@ -539,7 +578,18 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 				break;
 			case Event.ONMOUSEUP:
 				dragging = false;
+				if(!moved) {
+					// sort
+					break;
+				}
 				System.out.println("Stopped column reordering");
+				tHead.removeSlotFocus();
+				if(closestSlot != colIndex &&  closestSlot != (colIndex + 1) ) {
+					if(closestSlot > colIndex)
+						reOrderColumn(cid, closestSlot - 1);
+					else
+						reOrderColumn(cid, closestSlot);
+				}
 				DOM.releaseCapture(getElement());
 				break;
 			case Event.ONMOUSEMOVE:
@@ -548,25 +598,25 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 					System.out.print("Dragging column, optimal index...");
 					int x = DOM.eventGetClientX(event);
 					int slotX = headerX;
-					int closestIndex = 0;
+					closestSlot = colIndex;
 					int closestDistance = -1;
 					int start = 0;
 					if(rowHeaders) {
 						start++;
-						slotX += getColWidth(getColKeyByIndex(0));
 					}
-					for(int i = start ; i < columnWidths.size(); i++ ) {
-						String colKey = getColKeyByIndex(i);
+					for(int i = start; i <= columnWidths.size() ; i++ ) {
+						if(i > 0) {
+							String colKey = getColKeyByIndex(i-1);
+							slotX += getColWidth(colKey);
+						}
 						int dist = Math.abs(x - slotX);
 						if(closestDistance == -1 || dist < closestDistance) {
 							closestDistance = dist;
-							closestIndex = i;
+							closestSlot = i;
 						}
-						slotX += getColWidth(colKey);
 					}
-					focusSlot(closestIndex);
-					System.out.println(closestIndex);
-
+					tHead.focusSlot(closestSlot);
+					System.out.println(closestSlot);
 				}
 				break;
 			default:
@@ -574,17 +624,6 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 			}
 		}
 		
-		private void focusSlot(int slot) {
-			// TODO consider some workaround for this
-			removeSlotFocus();
-			DOM.setStyleAttribute(tHead.getCellFormatter().getElement(0, slot), "borderLeft", "2px solid black");
-		}
-
-		private void removeSlotFocus() {
-			for(int i = 0; i < tHead.getColumnCount();i++)
-				DOM.setStyleAttribute(tHead.getCellFormatter().getElement(0, i), "borderLeft", "none");
-		}
-
 		private int getClosestColumnIndex(int x) {
 			return 1;
 		}
@@ -621,6 +660,93 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		}
 
 
+	}
+	
+	public class TableHead extends Panel {
+
+		private static final int WRAPPER_WIDTH = 9000;
+		
+		Vector cells = new Vector();
+		
+		Element div = DOM.createDiv();
+		Element table = DOM.createTable();
+		Element tBody = DOM.createTBody();
+		Element tr = DOM.createTR();
+
+		private int focusedSlot = -1;
+		
+		public TableHead() {
+			DOM.appendChild(table, tBody);
+			DOM.appendChild(tBody, tr);
+			DOM.appendChild(div, table);
+			setElement(div);
+		}
+		
+		public void disableBrowserIntelligence() {
+			DOM.setStyleAttribute(div, "width", WRAPPER_WIDTH +"px");
+		}
+		
+		public void setHeaderCell(int index, HeaderCell cell) {
+			if(index < cells.size()) {
+				// replace
+				// TODO remove old correctly
+				// insert to right slot
+			} else if( index == cells.size()) {
+				//append
+				adopt(cell, tr);
+				cells.add(cell);
+			} else {
+				throw new RuntimeException("Header cells must be appended in order");
+			}
+		}
+		
+		public HeaderCell getHeaderCell(int index) {
+			if(index < cells.size())
+				return (HeaderCell) cells.get(index);
+			else 
+				return null;
+		}
+		
+		public void moveCell(int oldIndex, int newIndex) {
+			HeaderCell hCell = getHeaderCell(oldIndex);
+			Element cell = hCell.getElement();
+
+			cells.remove(oldIndex);
+			DOM.removeChild(tr, cell);
+
+			DOM.insertChild(tr, cell, newIndex);
+			cells.insertElementAt(hCell, newIndex);
+		}
+		
+		public Iterator iterator() {
+			return cells.iterator();
+		}
+
+		public boolean remove(Widget w) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+		
+		private void focusSlot(int index) {
+			removeSlotFocus();
+			if(index > 0)
+				DOM.setStyleAttribute(DOM.getChild(tr, index - 1), "borderRight", "2px solid black");
+			else
+				DOM.setStyleAttribute(DOM.getChild(tr, index), "borderLeft", "2px solid black");
+			focusedSlot = index;
+		}
+
+		private void removeSlotFocus() {
+			if(focusedSlot < 0)
+				return;
+			if(focusedSlot == 0)
+				DOM.setStyleAttribute(DOM.getChild(tr, focusedSlot), "borderLeft", "none");
+			else if( focusedSlot > 0)
+				DOM.setStyleAttribute(DOM.getChild(tr, focusedSlot - 1), "borderRight", "none");
+			focusedSlot = -1;
+		}
+
+		
 	}
 	
 }

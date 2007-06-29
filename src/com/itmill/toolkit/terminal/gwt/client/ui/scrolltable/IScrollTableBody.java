@@ -236,5 +236,22 @@ public class IScrollTableBody extends Panel {
 	public int getFirstRendered() {
 		return firstRendered;
 	}
+	
+	public void moveCol(int oldIndex, int newIndex) {
+		
+		// loop all rows and move given index to its new place
+		Iterator rows = iterator();
+		while(rows.hasNext()) {
+			IScrollTableRow row = (IScrollTableRow) rows.next();
+			
+			Element td = DOM.getChild(row.getElement(), oldIndex);
+			DOM.removeChild(row.getElement(), td);
+
+			DOM.insertChild(row.getElement(), td, newIndex);
+			
+		}
+
+	}
+
 
 }
