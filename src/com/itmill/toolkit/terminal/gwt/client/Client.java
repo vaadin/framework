@@ -42,6 +42,8 @@ public class Client implements EntryPoint {
 	private HashMap paintables = new HashMap();
 
 	private WidgetFactory widgetFactory = new DefaultWidgetFactory();
+	
+	private LocaleService locale;
 
 	/**
 	 * This is the entry point method.
@@ -120,6 +122,13 @@ public class Client implements EntryPoint {
 		for (Iterator i = resources.keySet().iterator(); i.hasNext();) {
 			String key = (String) i.next();
 			resourcesMap.put(key, ((JSONString)resources.get(key)).stringValue());
+		}
+		
+		// Store locale data
+		if(((JSONObject)json).containsKey("locales")) {
+			JSONArray l = (JSONArray) ((JSONObject) json).get("locales");
+			for(int i=0; i < l.size(); i++)
+				LocaleService.addLocale((JSONObject) l.get(i));
 		}
 
 		// Process changes
@@ -352,32 +361,5 @@ public class Client implements EntryPoint {
 	
 	public String getResource(String name) {
 		return (String) resourcesMap.get(name);
-	}
-
-	public JSONObject getLocale(String locale) {
-		// TODO should perform synchronous call to server to fetch 
-		// locale specific strings
-		// (GWT only supports synchrounous requests from v. 1.4)
-		console.log("Loading a new locale: " + locale);
-		rb = new RequestBuilder(RequestBuilder.POST, appUri
-				+ "/locale/?requestId=" + (Math.random()) + "&" + locale);
-		/*try {
-			rb.sendRequest(locale, new RequestCallback() {
-				public void onError(Request request, Throwable exception) {
-					console.error("Got error");
-				}
-
-				public void onResponseReceived(Request request,
-						Response response) {
-					handleReceivedJSONMessage(response);
-				}
-
-			});
-
-		} catch (RequestException e) {
-			console.error(e.getMessage());
-		}*/
-		// TODO
-		return null;
 	}
 }

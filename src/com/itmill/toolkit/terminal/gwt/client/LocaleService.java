@@ -2,80 +2,151 @@ package com.itmill.toolkit.terminal.gwt.client;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONBoolean;
+import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONString;
 
 /**
  * Date / time etc. localisation service for all widgets.
  * Should cache all loaded locales as JSON strings.
  * 
- * @author Jouni Koivuviita
+ * @author IT Mill Ltd.
  *
  */
 public class LocaleService {
 	
-	private Client client;
-	
-	private Map cache = new HashMap();
-	
-	public LocaleService(Client client){
-		this.client = client;
+	private static Map cache = new HashMap();
+	private static String defaultLocale;
+
+	public static void addLocale(JSONObject json) {
+		String key = ((JSONString)json.get("name")).stringValue();
+		if(cache.containsKey(key))
+			cache.remove(key);
+		cache.put(key, json);
+		if(cache.size()==1)
+			setDefaultLocale(key);
+	}
+
+	public static void setDefaultLocale(String locale) {
+		defaultLocale = locale;
 	}
 	
-	private void loadLocale(String locale) {
-		JSONObject resp = client.getLocale(locale);
-		cache.put(locale, resp);
+	public static String getDefaultLocale() {
+		return defaultLocale;
 	}
 	
-	public String[] getMonthNames(String locale) {
-		// TODO
-		//if(cache.containsKey(locale))
-		//else loadLocale(locale);
-		String[] temp = new String[12];
-		temp[0] = "tammi"; temp[1] = "helmi"; temp[2] = "maalis"; temp[3] = "huhti";
-		temp[4] = "touko"; temp[5] = "kesä"; temp[6] = "heinä"; temp[7] = "elo";
-		temp[8] = "syys"; temp[9] = "loka"; temp[10] = "marras"; temp[11] = "joulu";
-		return temp;
+	public static Set getAvailableLocales() {
+		return cache.keySet();
 	}
 	
-	public String[] getShortMonthNames(String locale) {
-		// TODO
-		//if(cache.containsKey(locale))
-		//else loadLocale(locale);
-		String[] temp = new String[12];
-		temp[0] = "tam"; temp[1] = "hel"; temp[2] = "maa"; temp[3] = "huh";
-		temp[4] = "tou"; temp[5] = "kes"; temp[6] = "hei"; temp[7] = "elo";
-		temp[8] = "syy"; temp[9] = "lok"; temp[10] = "mar"; temp[11] = "jou";
-		return temp;
+	public static String[] getMonthNames(String locale) throws LocaleNotLoadedException {
+		if(cache.containsKey(locale)) {
+			JSONObject l = (JSONObject) cache.get(locale);
+			JSONArray mn = (JSONArray) l.get("mn");
+			String[] temp = new String[12];
+			temp[0] = ((JSONString)mn.get(0)).stringValue();
+			temp[1] = ((JSONString)mn.get(1)).stringValue();
+			temp[2] = ((JSONString)mn.get(2)).stringValue();
+			temp[3] = ((JSONString)mn.get(3)).stringValue();
+			temp[4] = ((JSONString)mn.get(4)).stringValue();
+			temp[5] = ((JSONString)mn.get(5)).stringValue();
+			temp[6] = ((JSONString)mn.get(6)).stringValue();
+			temp[7] = ((JSONString)mn.get(7)).stringValue();
+			temp[8] = ((JSONString)mn.get(8)).stringValue();
+			temp[9] = ((JSONString)mn.get(9)).stringValue();
+			temp[10] = ((JSONString)mn.get(10)).stringValue();
+			temp[11] = ((JSONString)mn.get(11)).stringValue();			
+			return temp;
+		} else throw new LocaleNotLoadedException(locale);
 	}
 	
-	public String[] getDayNames(String locale) {
-		// TODO
-		//if(cache.containsKey(locale))
-		//else loadLocale(locale);
-		String[] temp = new String[7];
-		temp[1] = "maanatai"; temp[2] = "tiistai"; temp[3] = "keskiviikko";
-		temp[4] = "torstai"; temp[5] = "perjantai"; temp[6] = "lauantai";
-		temp[0] = "sunnuntai";
-		return temp;
+	public static String[] getShortMonthNames(String locale) throws LocaleNotLoadedException {
+		if(cache.containsKey(locale)) {
+			JSONObject l = (JSONObject) cache.get(locale);
+			JSONArray smn = (JSONArray) l.get("smn");
+			String[] temp = new String[12];
+			temp[0] = ((JSONString)smn.get(0)).stringValue();
+			temp[1] = ((JSONString)smn.get(1)).stringValue();
+			temp[2] = ((JSONString)smn.get(2)).stringValue();
+			temp[3] = ((JSONString)smn.get(3)).stringValue();
+			temp[4] = ((JSONString)smn.get(4)).stringValue();
+			temp[5] = ((JSONString)smn.get(5)).stringValue();
+			temp[6] = ((JSONString)smn.get(6)).stringValue();
+			temp[7] = ((JSONString)smn.get(7)).stringValue();
+			temp[8] = ((JSONString)smn.get(8)).stringValue();
+			temp[9] = ((JSONString)smn.get(9)).stringValue();
+			temp[10] = ((JSONString)smn.get(10)).stringValue();
+			temp[11] = ((JSONString)smn.get(11)).stringValue();	
+			return temp;
+		} else throw new LocaleNotLoadedException(locale);
 	}
 	
-	public String[] getShortDayNames(String locale) {
-		// TODO
-		//if(cache.containsKey(locale))
-		//else loadLocale(locale);
-		String[] temp = new String[7];
-		temp[1] = "ma"; temp[2] = "ti"; temp[3] = "ke";
-		temp[4] = "to"; temp[5] = "pe"; temp[6] = "la";
-		temp[0] = "su";
-		return temp;
+	public static String[] getDayNames(String locale) throws LocaleNotLoadedException{
+		if(cache.containsKey(locale)) {
+			JSONObject l = (JSONObject) cache.get(locale);
+			JSONArray dn = (JSONArray) l.get("dn");
+			String[] temp = new String[7];
+			temp[0] = ((JSONString)dn.get(0)).stringValue();
+			temp[1] = ((JSONString)dn.get(1)).stringValue();
+			temp[2] = ((JSONString)dn.get(2)).stringValue();
+			temp[3] = ((JSONString)dn.get(3)).stringValue();
+			temp[4] = ((JSONString)dn.get(4)).stringValue();
+			temp[5] = ((JSONString)dn.get(5)).stringValue();
+			temp[6] = ((JSONString)dn.get(6)).stringValue();	
+			return temp;
+		} else throw new LocaleNotLoadedException(locale);
 	}
 	
-	public int getFirstDayOfWeek(String locale) {
-		// TODO
-		//if(cache.containsKey(locale))
-		//else loadLocale(locale);
-		return 1;
+	public static String[] getShortDayNames(String locale) throws LocaleNotLoadedException {
+		if(cache.containsKey(locale)) {
+			JSONObject l = (JSONObject) cache.get(locale);
+			JSONArray sdn = (JSONArray) l.get("sdn");
+			String[] temp = new String[7];
+			temp[0] = ((JSONString)sdn.get(0)).stringValue();
+			temp[1] = ((JSONString)sdn.get(1)).stringValue();
+			temp[2] = ((JSONString)sdn.get(2)).stringValue();
+			temp[3] = ((JSONString)sdn.get(3)).stringValue();
+			temp[4] = ((JSONString)sdn.get(4)).stringValue();
+			temp[5] = ((JSONString)sdn.get(5)).stringValue();
+			temp[6] = ((JSONString)sdn.get(6)).stringValue();
+			return temp;
+		} else throw new LocaleNotLoadedException(locale);
+	}
+	
+	public static int getFirstDayOfWeek(String locale) throws LocaleNotLoadedException {
+		if(cache.containsKey(locale)) {
+			JSONObject l = (JSONObject) cache.get(locale);
+			JSONNumber fdow = (JSONNumber) l.get("fdow");
+			return (int) fdow.getValue();
+		} else throw new LocaleNotLoadedException(locale);
+	}
+	
+	public static String getDateFormat(String locale) throws LocaleNotLoadedException {
+		if(cache.containsKey(locale)) {
+			JSONObject l = (JSONObject) cache.get(locale);
+			JSONString df = (JSONString) l.get("df");
+			return df.stringValue();
+		} else throw new LocaleNotLoadedException(locale);
+	}
+	
+	public static boolean isTwelveHourClock(String locale) throws LocaleNotLoadedException {
+		if(cache.containsKey(locale)) {
+			JSONObject l = (JSONObject) cache.get(locale);
+			JSONBoolean thc = (JSONBoolean) l.get("thc");
+			return thc.booleanValue();
+		} else throw new LocaleNotLoadedException(locale);
+	}
+	
+	public static String getClockDelimiter(String locale) throws LocaleNotLoadedException {
+		if(cache.containsKey(locale)) {
+			JSONObject l = (JSONObject) cache.get(locale);
+			JSONString hmd = (JSONString) l.get("hmd");
+			return hmd.stringValue();
+		} else throw new LocaleNotLoadedException(locale);
 	}
 
 }

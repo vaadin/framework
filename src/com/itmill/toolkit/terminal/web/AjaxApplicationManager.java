@@ -35,13 +35,18 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.text.DateFormatSymbols;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
@@ -96,9 +101,14 @@ public class AjaxApplicationManager implements
 	private Set removedWindows = new HashSet();
 
 	private PaintTarget paintTarget;
+	
+	private List locales;
+	
+	private int pendingLocalesIndex;
 
 	public AjaxApplicationManager(Application application) {
 		this.application = application;
+		requireLocale(application.getLocale().getLanguage());
 	}
 
 	/**
@@ -220,6 +230,10 @@ public class AjaxApplicationManager implements
 					if (repaintAll) {
 						paintables = new LinkedHashSet();
 						paintables.add(window);
+						
+						// Reset sent locales
+						locales = null;
+						requireLocale(application.getLocale().getLanguage());
 
 						// Adds all non-native windows
 						for (Iterator i = window.getApplication().getWindows()
@@ -382,7 +396,115 @@ public class AjaxApplicationManager implements
                     	}
                     }
                 	outWriter.print("}");
-
+                	
+                	// Store JVM default locale for later restoration
+                	// (we'll have to change the default locale for a while)
+            		Locale jvmDefault = Locale.getDefault();
+                	
+                    // Send locale informations to client
+            		outWriter.print(", \"locales\":[");
+                	for(;pendingLocalesIndex < locales.size(); pendingLocalesIndex++) {
+                		
+                		Locale l = new Locale((String) locales.get(pendingLocalesIndex));
+	                	// Locale name
+	                	outWriter.print("{\"name\":\"" + l.toString() + "\",");
+	                	
+	                	/*
+	                	 * Month names (both short and full)
+	                	 */
+	                	DateFormatSymbols dfs = new DateFormatSymbols(l);
+	                	String[] short_months = dfs.getShortMonths();
+	                	String[] months = dfs.getMonths();
+	                  	outWriter.print("\"smn\":[\"" + // ShortMonthNames
+	                  			short_months[0] + "\",\"" +
+	                  			short_months[1] + "\",\"" +
+	                  			short_months[2] + "\",\"" +
+	                  			short_months[3] + "\",\"" +
+	                  			short_months[4] + "\",\"" +
+	                  			short_months[5] + "\",\"" +
+	                  			short_months[6] + "\",\"" +
+	                  			short_months[7] + "\",\"" +
+	                  			short_months[8] + "\",\"" +
+	                  			short_months[9] + "\",\"" +
+	                  			short_months[10] + "\",\"" +
+	                  			short_months[11] + "\"" +
+	                  			"],");
+	                  	outWriter.print("\"mn\":[\"" + // MonthNames
+	                  			months[0] + "\",\"" +
+	                  			months[1] + "\",\"" +
+	                  			months[2] + "\",\"" +
+	                  			months[3] + "\",\"" +
+	                  			months[4] + "\",\"" +
+	                  			months[5] + "\",\"" +
+	                  			months[6] + "\",\"" +
+	                  			months[7] + "\",\"" +
+	                  			months[8] + "\",\"" +
+	                  			months[9] + "\",\"" +
+	                  			months[10] + "\",\"" +
+	                  			months[11] + "\"" +
+	                  			"],");
+	
+	                    /*
+	                     * Weekday names (both short and full)
+	                     */
+	                  	String[] short_days = dfs.getShortWeekdays();
+	                 	String[] days = dfs.getWeekdays();
+	                    outWriter.print("\"sdn\":[\"" + // ShortDayNames
+	                  			short_days[1] + "\",\"" +
+	                  			short_days[2] + "\",\"" +
+	                  			short_days[3] + "\",\"" +
+	                  			short_days[4] + "\",\"" +
+	                  			short_days[5] + "\",\"" +
+	                  			short_days[6] + "\",\"" +
+	                  			short_days[7] + "\"" +
+	                  			"],");
+	                  	outWriter.print("\"dn\":[\"" + // DayNames
+	                  			days[1] + "\",\"" +
+	                  			days[2] + "\",\"" +
+	                  			days[3] + "\",\"" +
+	                  			days[4] + "\",\"" +
+	                  			days[5] + "\",\"" +
+	                  			days[6] + "\",\"" +
+	                  			days[7] + "\"" +
+	                  			"],");
+	                  	
+	                  	/*
+	                  	 * First day of week (0 = sunday, 1 = monday)
+	                  	 */
+	                  	Calendar cal = new GregorianCalendar(l);
+	                  	outWriter.print("\"fdow\":" + (cal.getFirstDayOfWeek() - 1) + ",");
+	                  	
+	                  	/*
+	                  	 * Date formatting (MM/DD/YYYY etc.)
+	                  	 */
+	                  	// Force our locale as JVM default for a while (SimpleDateFormat uses JVM default)
+	                  	Locale.setDefault(l);
+	                   	String df = new SimpleDateFormat().toPattern();
+	                   	// TODO we suppose all formats separate date and time with a whitespace
+	                   	String dateformat = df.substring(0,df.indexOf(" "));
+	                  	outWriter.print("\"df\":\"" + dateformat + "\",");
+	                  	
+	                  	/*
+	                  	 * Time formatting (24 or 12 hour clock and AM/PM suffixes)
+	                  	 */
+	                  	String timeformat = df.substring(df.indexOf(" ")+1, df.length()); // Doesn't return second or milliseconds
+	                  	// We use timeformat to determine 12/24-hour clock
+	                  	boolean twelve_hour_clock = timeformat.contains("a");
+	                  	// TODO there are other possibilities as well, like 'h' in french (ignore them, too complicated)
+	                  	String hour_min_delimiter = timeformat.contains(".")? "." : ":";
+	                  	//outWriter.print("\"tf\":\"" + timeformat + "\",");
+	                  	outWriter.print("\"thc\":" + twelve_hour_clock + ",");
+	                  	outWriter.print("\"hmd\":\"" + hour_min_delimiter + "\"");
+	                  	
+	                  	outWriter.print("}");
+	                  	if(pendingLocalesIndex < locales.size()-1)
+	                  		outWriter.print(",");
+                	}
+                	outWriter.print("]"); // Close locales
+                	
+                  	// Restore JVM default locale
+                  	Locale.setDefault(jvmDefault);
+                
                 	outWriter.flush();
                     outWriter.close();
 					out.flush();
@@ -777,5 +899,15 @@ public class AjaxApplicationManager implements
 		public URIHandler getURIHandler() {
 			return this.owner;
 		}
+	}
+
+	public void requireLocale(String value) {
+		if(locales == null) {
+			locales = new ArrayList();
+			locales.add(application.getLocale().getLanguage());
+			pendingLocalesIndex = 0;
+		}
+		if(!locales.contains(value))
+				locales.add(value);
 	}
 }

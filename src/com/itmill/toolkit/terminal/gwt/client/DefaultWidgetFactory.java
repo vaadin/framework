@@ -3,10 +3,10 @@ package com.itmill.toolkit.terminal.gwt.client;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ui.IButton;
+import com.itmill.toolkit.terminal.gwt.client.ui.ICalendar;
 import com.itmill.toolkit.terminal.gwt.client.ui.ICheckBox;
 import com.itmill.toolkit.terminal.gwt.client.ui.IComponent;
 import com.itmill.toolkit.terminal.gwt.client.ui.ICustomLayout;
-import com.itmill.toolkit.terminal.gwt.client.ui.IDateField;
 import com.itmill.toolkit.terminal.gwt.client.ui.IEmbedded;
 import com.itmill.toolkit.terminal.gwt.client.ui.IGridLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.IHorizontalLayout;
@@ -14,11 +14,13 @@ import com.itmill.toolkit.terminal.gwt.client.ui.ILabel;
 import com.itmill.toolkit.terminal.gwt.client.ui.IOptionGroup;
 import com.itmill.toolkit.terminal.gwt.client.ui.IPanel;
 import com.itmill.toolkit.terminal.gwt.client.ui.IPasswordField;
+import com.itmill.toolkit.terminal.gwt.client.ui.IPopupCalendar;
 import com.itmill.toolkit.terminal.gwt.client.ui.ISelect;
 import com.itmill.toolkit.terminal.gwt.client.ui.ITablePaging;
 import com.itmill.toolkit.terminal.gwt.client.ui.ITabsheet;
 import com.itmill.toolkit.terminal.gwt.client.ui.ITextArea;
 import com.itmill.toolkit.terminal.gwt.client.ui.ITextField;
+import com.itmill.toolkit.terminal.gwt.client.ui.ITextualDate;
 import com.itmill.toolkit.terminal.gwt.client.ui.ITree;
 import com.itmill.toolkit.terminal.gwt.client.ui.ITwinColSelect;
 import com.itmill.toolkit.terminal.gwt.client.ui.IUnknownComponent;
@@ -82,8 +84,14 @@ public class DefaultWidgetFactory implements WidgetFactory {
 			}
 			return new ITablePaging();
 		}
-		if("datefield".equals(tag))
-			return new IDateField();
+		if("datefield".equals(tag)) {
+			if(uidl.hasAttribute("style"))
+				if("calendar".equals(uidl.getStringAttribute("style")))
+					return new ICalendar();
+				else if("text".equals(uidl.getStringAttribute("style")))
+					return new ITextualDate();
+			return new IPopupCalendar();
+		}
 
 		return new IUnknownComponent();
 	}

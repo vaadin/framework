@@ -450,6 +450,9 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 
 		if (customLayoutArgumentsOpen && "style".equals(name))
 			getPreCachedResources().add("layout/" + value + ".html");
+		
+		if(name.equals("locale"))
+			manager.requireLocale(value);
 
 	}
 
