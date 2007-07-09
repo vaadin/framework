@@ -267,7 +267,11 @@ public class ICalendarPanel extends FlexTable implements MouseListener, ClickLis
 			if(sender != cal || row < 2 || row > 7 || !cal.datefield.enabled || cal.datefield.readonly)
 				return;
 			
-			Integer day = new Integer(cal.getText(row, col));
+			String text = cal.getText(row, col);
+			if(text.equals(" "))
+				return;
+				
+			Integer day = new Integer(text);
 			cal.datefield.date.setDate(day.intValue());
 			cal.datefield.client.updateVariable(cal.datefield.id, "day", cal.datefield.date.getDate(), cal.datefield.immediate);
 			
