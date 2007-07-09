@@ -15,6 +15,7 @@ import com.itmill.toolkit.terminal.gwt.client.ui.IOptionGroup;
 import com.itmill.toolkit.terminal.gwt.client.ui.IPanel;
 import com.itmill.toolkit.terminal.gwt.client.ui.IPasswordField;
 import com.itmill.toolkit.terminal.gwt.client.ui.IPopupCalendar;
+import com.itmill.toolkit.terminal.gwt.client.ui.IScrollTable;
 import com.itmill.toolkit.terminal.gwt.client.ui.ISelect;
 import com.itmill.toolkit.terminal.gwt.client.ui.ITablePaging;
 import com.itmill.toolkit.terminal.gwt.client.ui.ITabsheet;
@@ -26,7 +27,6 @@ import com.itmill.toolkit.terminal.gwt.client.ui.ITwinColSelect;
 import com.itmill.toolkit.terminal.gwt.client.ui.IUnknownComponent;
 import com.itmill.toolkit.terminal.gwt.client.ui.IVerticalLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.IWindow;
-import com.itmill.toolkit.terminal.gwt.client.ui.scrolltable.IScrollTable;
 
 public class DefaultWidgetFactory implements WidgetFactory {
 

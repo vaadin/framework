@@ -1,4 +1,4 @@
-package com.itmill.toolkit.terminal.gwt.client.ui.scrolltable;
+package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -22,8 +22,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.Client;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
-import com.itmill.toolkit.terminal.gwt.client.ui.ITable;
-import com.itmill.toolkit.terminal.gwt.client.ui.scrolltable.IScrollTable.IScrollTableBody.IScrollTableRow;
+import com.itmill.toolkit.terminal.gwt.client.ui.IScrollTable.IScrollTableBody.IScrollTableRow;
 
 public class IScrollTable extends Composite implements Paintable, ITable, ScrollListener {
 	
