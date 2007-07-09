@@ -564,9 +564,10 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		}
 		
 		private void updateFloatingCopysPosition(int x, int y) {
+			x -= DOM.getIntAttribute(floatingCopyOfHeaderCell, "offsetWidth")/2;
 			DOM.setStyleAttribute(floatingCopyOfHeaderCell, "left", x + "px");
 			if(y > 0)
-				DOM.setStyleAttribute(floatingCopyOfHeaderCell, "top", y + "px");
+				DOM.setStyleAttribute(floatingCopyOfHeaderCell, "top", (y + 7) + "px");
 		}
 		
 		private void hideFloatingCopy() {
