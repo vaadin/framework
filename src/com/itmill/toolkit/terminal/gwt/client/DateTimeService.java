@@ -92,6 +92,39 @@ public class DateTimeService {
 		return 0;
 	}
 	
+	public boolean isTwelveHourClock() {
+		try {
+			return LocaleService.isTwelveHourClock(currentLocale);
+		} catch (LocaleNotLoadedException e) {
+			// TODO redirect to console
+			System.out.println(e + ":" + e.getMessage());
+		}
+		return false;
+	}
+	
+	public String getClockDelimeter() {
+		try {
+			return LocaleService.getClockDelimiter(currentLocale);
+		} catch (LocaleNotLoadedException e) {
+			// TODO redirect to console
+			System.out.println(e + ":" + e.getMessage());
+		}
+		return ":";
+	}
+	
+	public String[] getAmPmStrings() {
+		try {
+			return LocaleService.getAmPmStrings(currentLocale);
+		} catch (LocaleNotLoadedException e) {
+			// TODO redirect to console
+			System.out.println(e + ":" + e.getMessage());
+		}
+		String[] temp = new String[2];
+		temp[0] = "AM";
+		temp[1] = "PM";
+		return temp;
+	}
+	
 	public int getStartWeekDay(Date date){
 		Date dateForFirstOfThisMonth = new Date(date.getYear(), date.getMonth(), 1);
 		int firstDay;

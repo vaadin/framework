@@ -433,9 +433,9 @@ public class AjaxJsonPaintTarget implements PaintTarget, AjaxPaintTarget {
 	 * content is written.
 	 * 
 	 * @param name
-	 *            the Boolean attribute name.
+	 *            the String attribute name.
 	 * @param value
-	 *            the Boolean attribute value.
+	 *            the String attribute value.
 	 * 
 	 * @throws PaintException
 	 *             if the paint operation failed.

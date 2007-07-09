@@ -1,0 +1,71 @@
+.i-datefield-calendarpanel {
+	width: 22em;
+}
+.i-datefield-calendarpanel table {
+	width: 100%;
+}
+.i-datefield-calendarpanel td {
+	width: 14.2%;
+	text-align: center;
+	padding: 0;
+}
+.i-datefield-calendarpanel .i-button {
+	width: 22px;
+	height: 22px;
+	font-size: 1.1em;
+	padding: 0;
+	line-height: 1em;
+}
+.i-datefield-calendarpanel-month {
+	font-size: 1.1em;
+}
+.i-datefield-calendarpanel-day {
+	cursor: pointer;
+	padding: 0 3px;
+}
+.i-datefield-calendarpanel-day-today {
+	font-weight: bold;
+	border: 1px solid #aaa;
+	padding: 0 3px;
+	cursor: pointer;
+}
+.i-disabled .i-datefield-calendarpanel-day,
+.i-disabled .i-datefield-calendarpanel-day-today {
+	cursor: default;
+}
+.i-datefield-calendarpanel-day-selected {
+	font-weight: bold;
+	color: #fff;
+	padding: 0 3px;
+	background-color: #1C3E6E;
+	cursor: default;
+}
+.i-datefield-time {
+	white-space: nowrap;
+}
+.i-datefield-time .i-label {
+	display: inline;
+}
+
+
+.i-datefield-calendar {
+	border: 1px solid #29528a;
+	padding: 5px;
+	background: #fff;
+}
+.i-datefield-calendar:before {
+	display: block;
+	height: 2px;
+	overflow: hidden;
+	background: transparent url(../../panel/img/top-right-small.png) no-repeat right top;
+	content: url(../../panel/img/top-left-small.png);
+	margin: -6px -6px 3px -6px;
+}
+.i-datefield-calendar:after {
+	display: block;
+	height: 2px;
+	overflow: hidden;
+	background: transparent url(../../panel/img/bottom-right.png) no-repeat right top;
+	content: url(../../panel/img/bottom-left.png);
+	margin: 5px -6px -6px -6px;
+}

@@ -5,21 +5,18 @@ import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
 public class ICalendar extends IDateField {
 	
-	private ICalendarPanel body;
-	
-	private String locale;
+	private ICalendarPanel date;
 	
 	public ICalendar() {
 		super();
-		body = new ICalendarPanel(this);
-		container.add(body);
+		setStyleName(CLASSNAME+"-calendar");
+		date = new ICalendarPanel(this);
+		add(date);
 	}
 	
 	public void updateFromUIDL(UIDL uidl, Client client) {
 		super.updateFromUIDL(uidl, client);
-		boolean needsRedraw = (locale == null || !locale.equals(currentLocale));
-		body.updateCalendar(needsRedraw);
-		locale = currentLocale;
+		date.updateCalendar();
 	}
 
 }

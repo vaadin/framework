@@ -12,7 +12,7 @@ import com.google.gwt.json.client.JSONString;
 
 /**
  * Date / time etc. localisation service for all widgets.
- * Should cache all loaded locales as JSON strings.
+ * Caches all loaded locales as JSONObjects.
  * 
  * @author IT Mill Ltd.
  *
@@ -146,6 +146,17 @@ public class LocaleService {
 			JSONObject l = (JSONObject) cache.get(locale);
 			JSONString hmd = (JSONString) l.get("hmd");
 			return hmd.stringValue();
+		} else throw new LocaleNotLoadedException(locale);
+	}
+	
+	public static String[] getAmPmStrings(String locale) throws LocaleNotLoadedException {
+		if(cache.containsKey(locale)) {
+			JSONObject l = (JSONObject) cache.get(locale);
+			JSONArray ampm = (JSONArray) l.get("ampm");
+			String[] temp = new String[2];
+			temp[0] = ((JSONString)ampm.get(0)).stringValue();
+			temp[1] = ((JSONString)ampm.get(1)).stringValue();
+			return temp;
 		} else throw new LocaleNotLoadedException(locale);
 	}
 

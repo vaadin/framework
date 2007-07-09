@@ -26,9 +26,9 @@ public class ITextualDate extends IDateField implements Paintable, ChangeListene
 		
 		if(uidl.hasVariable("year")) {
 			int selectedYear = uidl.getIntVariable("year");
-			int y = container.getWidgetIndex(year);
+			int y = getWidgetIndex(year);
 			if(y > -1 || !currentLocale.equals(uidl.getStringAttribute("locale"))) {
-				year = (ListBox) container.getWidget(y);
+				year = (ListBox) getWidget(y);
 				// Deselect old value
 				year.setItemSelected(year.getSelectedIndex(), false);
 				// and select new
@@ -47,14 +47,14 @@ public class ITextualDate extends IDateField implements Paintable, ChangeListene
 						year.setSelectedIndex(year.getItemCount()-1);
 				}
 				year.addChangeListener(this);
-				container.add(year);
+				add(year);
 			}
 		}
 		if(uidl.hasVariable("month")) {
 			int selectedMonth = uidl.getIntVariable("month");
-			int y = container.getWidgetIndex(month);
+			int y = getWidgetIndex(month);
 			if(y > -1) {
-				month = (ListBox) container.getWidget(y);
+				month = (ListBox) getWidget(y);
 				// Deselect old value
 				month.setItemSelected(month.getSelectedIndex(), false);
 				// and select new
@@ -73,14 +73,14 @@ public class ITextualDate extends IDateField implements Paintable, ChangeListene
 						month.setSelectedIndex(month.getItemCount()-1);
 				}
 				month.addChangeListener(this);
-				container.add(month);
+				add(month);
 			}
 		}
 		if(uidl.hasVariable("day")) {
 			int selectedMonth = uidl.getIntVariable("day");
-			int y = container.getWidgetIndex(day);
+			int y = getWidgetIndex(day);
 			if(y > -1) {
-				day = (ListBox) container.getWidget(y);
+				day = (ListBox) getWidget(y);
 				// Deselect old value
 				day.setItemSelected(day.getSelectedIndex(), false);
 				// and select new
@@ -99,7 +99,7 @@ public class ITextualDate extends IDateField implements Paintable, ChangeListene
 						day.setSelectedIndex(day.getItemCount()-1);
 				}
 				day.addChangeListener(this);
-				container.add(day);
+				add(day);
 			}
 		}
 	}

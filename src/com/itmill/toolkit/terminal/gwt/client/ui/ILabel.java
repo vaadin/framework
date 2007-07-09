@@ -8,10 +8,17 @@ import com.itmill.toolkit.terminal.gwt.client.UIDL;
 public class ILabel extends HTML implements Paintable {
 	
 	public static final String CLASSNAME = "i-label";
+	
+	public ILabel() {
+		super();
+	}
+	
+	public ILabel(String text) {
+		super(text);
+		setStyleName(CLASSNAME);
+	}
 
 	public void updateFromUIDL(UIDL uidl, Client client) {
-		
-		setStyleName(CLASSNAME);
 
 		if (client.updateComponent(this, uidl, true))
 			return;

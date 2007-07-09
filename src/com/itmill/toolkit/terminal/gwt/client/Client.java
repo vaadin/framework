@@ -329,6 +329,14 @@ public class Client implements EntryPoint {
 			else if (uidl.hasAttribute("readonly"))
 				enabled = !uidl.getBooleanAttribute("readonly");
 			((FocusWidget) component).setEnabled(enabled);
+		} else {
+			boolean enabled = true;
+			if (uidl.hasAttribute("disabled"))
+				enabled = !uidl.getBooleanAttribute("disabled");
+			if(!enabled)
+				component.addStyleName("i-disabled");
+			else
+				component.removeStyleName("i-disabled");
 		}
 		boolean visible = !uidl.getBooleanAttribute("invisible");
 		component.setVisible(visible);

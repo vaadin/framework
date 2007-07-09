@@ -108,7 +108,7 @@ public class AjaxApplicationManager implements
 
 	public AjaxApplicationManager(Application application) {
 		this.application = application;
-		requireLocale(application.getLocale().getLanguage());
+		requireLocale(application.getLocale().toString());
 	}
 
 	/**
@@ -233,7 +233,7 @@ public class AjaxApplicationManager implements
 						
 						// Reset sent locales
 						locales = null;
-						requireLocale(application.getLocale().getLanguage());
+						requireLocale(application.getLocale().toString());
 
 						// Adds all non-native windows
 						for (Iterator i = window.getApplication().getWindows()
@@ -397,6 +397,12 @@ public class AjaxApplicationManager implements
                     }
                 	outWriter.print("}");
                 	
+                	
+                	/* -----------------------------
+                	 * Sending Locale sensitive date
+                	 * -----------------------------
+                	 */
+                	
                 	// Store JVM default locale for later restoration
                 	// (we'll have to change the default locale for a while)
             		Locale jvmDefault = Locale.getDefault();
@@ -405,7 +411,7 @@ public class AjaxApplicationManager implements
             		outWriter.print(", \"locales\":[");
                 	for(;pendingLocalesIndex < locales.size(); pendingLocalesIndex++) {
                 		
-                		Locale l = new Locale((String) locales.get(pendingLocalesIndex));
+                		Locale l = generateLocale((String) locales.get(pendingLocalesIndex));
 	                	// Locale name
 	                	outWriter.print("{\"name\":\"" + l.toString() + "\",");
 	                	
@@ -495,7 +501,10 @@ public class AjaxApplicationManager implements
 	                  	//outWriter.print("\"tf\":\"" + timeformat + "\",");
 	                  	outWriter.print("\"thc\":" + twelve_hour_clock + ",");
 	                  	outWriter.print("\"hmd\":\"" + hour_min_delimiter + "\"");
-	                  	
+	                  	if(twelve_hour_clock) {
+	                  		String[] ampm = dfs.getAmPmStrings();
+	                  		outWriter.print(",\"ampm\":[\""+ampm[0]+"\",\""+ampm[1]+"\"]");
+	                  	}
 	                  	outWriter.print("}");
 	                  	if(pendingLocalesIndex < locales.size()-1)
 	                  		outWriter.print(",");
@@ -904,10 +913,20 @@ public class AjaxApplicationManager implements
 	public void requireLocale(String value) {
 		if(locales == null) {
 			locales = new ArrayList();
-			locales.add(application.getLocale().getLanguage());
+			locales.add(application.getLocale().toString());
 			pendingLocalesIndex = 0;
 		}
 		if(!locales.contains(value))
 				locales.add(value);
+	}
+	
+	private Locale generateLocale(String value) {
+		String[] temp = value.split("_");
+		if(temp.length == 1)
+			return new Locale(temp[0]);
+		else if(temp.length == 2)
+			return new Locale(temp[0], temp[1]);
+		else
+			return new Locale(temp[0], temp[1], temp[2]);
 	}
 }

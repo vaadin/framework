@@ -316,7 +316,7 @@ public class DateField extends AbstractField {
 
 			if (newDate != oldDate
 					&& (newDate == null || !newDate.equals(oldDate)))
-				setValue(newDate);
+				setValue(newDate, true); // Don't require a repaint, client updates itself
 		}
 	}
 
@@ -348,17 +348,22 @@ public class DateField extends AbstractField {
 	 */
 	public void setValue(Object newValue) throws Property.ReadOnlyException,
 			Property.ConversionException {
+		setValue(newValue, false);
+	}
+	
+	public void setValue(Object newValue, boolean repaintIsNotNeeded) throws Property.ReadOnlyException,
+			Property.ConversionException {
 
 		// Allows setting dates directly
 		if (newValue == null || newValue instanceof Date)
-			super.setValue(newValue);
+			super.setValue(newValue, repaintIsNotNeeded);
 		else {
-
+		
 			// Try to parse as string
 			try {
 				SimpleDateFormat parser = new SimpleDateFormat();
 				Date val = parser.parse(newValue.toString());
-				super.setValue(val);
+				super.setValue(val, repaintIsNotNeeded);
 			} catch (ParseException e) {
 				throw new Property.ConversionException(e.getMessage());
 			}
