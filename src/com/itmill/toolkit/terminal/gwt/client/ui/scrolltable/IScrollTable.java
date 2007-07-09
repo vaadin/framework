@@ -449,7 +449,9 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 
 		Element captionContainer = DOM.createDiv();
 		
-		Element dragWidget = DOM.createDiv();
+		Element colResizeWidget = DOM.createDiv();
+		
+		Element floatingCopyOfHeaderCell;
 		
 		private boolean sortable = false;
 		private String cid;
@@ -479,18 +481,18 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		public HeaderCell(String colId, String headerText) {
 			this.cid = colId;
 
-			DOM.setStyleAttribute(dragWidget,"display", "block");
-			DOM.setStyleAttribute(dragWidget, "width",  DRAG_WIDGET_WIDTH +"px");
-			DOM.setStyleAttribute(dragWidget,"height", "20px");
-			DOM.setStyleAttribute(dragWidget,"cssFloat", "right");
-			DOM.setStyleAttribute(dragWidget, "styleFloat", "right");
-			DOM.setStyleAttribute(dragWidget,"background", "brown");
-			DOM.setStyleAttribute(dragWidget,"cursor", "e-resize");
-			DOM.sinkEvents(dragWidget,Event.MOUSEEVENTS);
+			DOM.setStyleAttribute(colResizeWidget,"display", "block");
+			DOM.setStyleAttribute(colResizeWidget, "width",  DRAG_WIDGET_WIDTH +"px");
+			DOM.setStyleAttribute(colResizeWidget,"height", "20px");
+			DOM.setStyleAttribute(colResizeWidget,"cssFloat", "right");
+			DOM.setStyleAttribute(colResizeWidget, "styleFloat", "right");
+			DOM.setStyleAttribute(colResizeWidget,"background", "brown");
+			DOM.setStyleAttribute(colResizeWidget,"cursor", "e-resize");
+			DOM.sinkEvents(colResizeWidget,Event.MOUSEEVENTS);
 			
 			setText(headerText);
 			
-			DOM.appendChild(td, dragWidget);
+			DOM.appendChild(td, colResizeWidget);
 
 			
 			DOM.setStyleAttribute(captionContainer, "cssFloat", "right");
@@ -535,7 +537,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 			
 			Element target = DOM.eventGetTarget(event);
 			
-			if(isResizing || DOM.compare(target, dragWidget)) {
+			if(isResizing || DOM.compare(target, colResizeWidget)) {
 				onResizeEvent(event);
 			} else {
 				handleCaptionEvent(event);
@@ -545,6 +547,33 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 			super.onBrowserEvent(event);
 		}
 
+		
+		private void createFloatingCopy() {
+			floatingCopyOfHeaderCell = DOM.createDiv();
+			DOM.setInnerHTML(floatingCopyOfHeaderCell, DOM.getInnerHTML(td));
+			floatingCopyOfHeaderCell = DOM.getChild(floatingCopyOfHeaderCell, 1);
+			// TODO isolate non-standard css attribute (filter)
+			// TODO move styles to css file
+			DOM.setStyleAttribute(floatingCopyOfHeaderCell, "position", "absolute");
+			DOM.setStyleAttribute(floatingCopyOfHeaderCell, "background", "#000000");
+			DOM.setStyleAttribute(floatingCopyOfHeaderCell, "color", "#ffffff");
+			DOM.setStyleAttribute(floatingCopyOfHeaderCell, "opacity", "0.5");
+			DOM.setStyleAttribute(floatingCopyOfHeaderCell, "filter", "alpha(opacity=100)");
+			updateFloatingCopysPosition(DOM.getAbsoluteLeft(td), DOM.getAbsoluteTop(td));
+			DOM.appendChild(IScrollTable.this.getElement(), floatingCopyOfHeaderCell);
+		}
+		
+		private void updateFloatingCopysPosition(int x, int y) {
+			DOM.setStyleAttribute(floatingCopyOfHeaderCell, "left", x + "px");
+			if(y > 0)
+				DOM.setStyleAttribute(floatingCopyOfHeaderCell, "top", y + "px");
+		}
+		
+		private void hideFloatingCopy() {
+			DOM.removeChild(IScrollTable.this.getElement(), floatingCopyOfHeaderCell);
+			floatingCopyOfHeaderCell = null;
+		}
+		
 		private void handleCaptionEvent(Event event) {
 			switch (DOM.eventGetType(event)) {
 			case Event.ONMOUSEDOWN:
@@ -552,7 +581,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 				moved = false;
 		        colIndex = getColIndexByKey(cid);
 				DOM.setCapture(getElement());
-				System.out.println("Started column reordering");
+				
 				this.headerX = tHead.getAbsoluteLeft();
 				
 				DOM.eventPreventDefault(event);
@@ -562,6 +591,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 				DOM.releaseCapture(getElement());
 
 				if(!moved) {
+					// mouse event was a click to header -> sort column
 					if(sortable) {
 						if(sortColumn.equals(cid)) {
 							// just toggle order
@@ -580,6 +610,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 					break;
 				}
 				System.out.println("Stopped column reordering");
+				hideFloatingCopy();
 				tHead.removeSlotFocus();
 				if(closestSlot != colIndex &&  closestSlot != (colIndex + 1) ) {
 					if(closestSlot > colIndex)
@@ -590,8 +621,11 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 				break;
 			case Event.ONMOUSEMOVE:
 				if (dragging) {
-					moved = true;
 					System.out.print("Dragging column, optimal index...");
+					if(!moved) {
+						createFloatingCopy();
+						moved = true;
+					}
 					int x = DOM.eventGetClientX(event);
 					int slotX = headerX;
 					closestSlot = colIndex;
@@ -612,6 +646,8 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 						}
 					}
 					tHead.focusSlot(closestSlot);
+					
+					updateFloatingCopysPosition(x, -1);
 					System.out.println(closestSlot);
 				}
 				break;
@@ -620,10 +656,6 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 			}
 		}
 		
-		private int getClosestColumnIndex(int x) {
-			return 1;
-		}
-
 		private void onResizeEvent(Event event) {
 		    switch (DOM.eventGetType(event)) {
 		      	case Event.ONMOUSEDOWN:
