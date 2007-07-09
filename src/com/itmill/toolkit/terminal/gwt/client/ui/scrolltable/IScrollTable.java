@@ -2,6 +2,8 @@ package com.itmill.toolkit.terminal.gwt.client.ui.scrolltable;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 import com.google.gwt.user.client.Command;
@@ -21,6 +23,7 @@ import com.itmill.toolkit.terminal.gwt.client.Client;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.ui.ITable;
+import com.itmill.toolkit.terminal.gwt.client.ui.scrolltable.IScrollTable.IScrollTableBody.IScrollTableRow;
 
 public class IScrollTable extends Composite implements Paintable, ITable, ScrollListener {
 	
@@ -44,7 +47,12 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 	
 	private Client client;
 	private String id;
+	
 	private boolean immediate;
+
+	private int selectMode = ITable.SELECT_MODE_NONE;
+
+	private Vector selectedRowKeys = new Vector();
 	
 	private boolean initializedAndAttached = false;
 	
@@ -107,6 +115,19 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 			this.sortColumn = uidl.getStringVariable("sortcolumn");
 		}
 		
+		Set selectedKeys = uidl.getStringArrayVariableAsSet("selected");
+		selectedRowKeys.clear();
+		for(Iterator it = selectedKeys.iterator();it.hasNext();)
+			selectedRowKeys.add((String) it.next());
+
+		
+		if(uidl.hasAttribute("selectmode")) {
+			if(uidl.getStringAttribute("selectmode").equals("multi"))
+				selectMode = ITable.SELECT_MODE_MULTI;
+			else
+				selectMode = ITable.SELECT_MODE_SINGLE;
+		}
+		
 		if(uidl.hasVariable("columnorder")) {
 			this.columnReordering = true;
 			this.columnOrder = uidl.getStringArrayVariable("columnorder");
@@ -143,7 +164,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		if(tBody == null || totalRows != tBody.getTotalRows()) {
 			if(tBody != null)
 				tBody.removeFromParent();
-			tBody = new IScrollTableBody(client);
+			tBody = new IScrollTableBody();
 		}
 		return tBody;
 	}
@@ -243,6 +264,17 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 	
 	private int getColWidth(String colKey) {
 		return ( (Integer) this.columnWidths.get(colKey)).intValue();
+	}
+	
+	private IScrollTableRow getRenderedRowByKey(String key) {
+		Iterator it = tBody.iterator();
+		IScrollTableRow r = null;
+		while(it.hasNext()) {
+			r = (IScrollTableRow) it.next();
+			if(r.getKey().equals(key))
+				return r;
+		}
+		return null;
 	}
 	
 	private int getRenderedRowCount() {
@@ -778,4 +810,361 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		
 	}
 	
+	/**
+	 * This Panel can only contain IScrollTAbleRow type of 
+	 * widgets. This "simulates" very large table, keeping 
+	 * spacers which take room of unrendered rows.
+	 * 
+	 * @author mattitahvonen
+	 *
+	 */
+	public class IScrollTableBody extends Panel {
+
+		public static final int CELL_EXTRA_WIDTH = 20;
+
+		public static final int DEFAULT_ROW_HEIGHT = 25;
+		
+		private int rowHeight = -1;
+		
+		private List renderedRows = new Vector();
+		
+		private boolean initDone = false;
+		
+		private int totalRows;
+
+		Element preSpacer = DOM.createDiv();
+		Element postSpacer = DOM.createDiv();
+		
+		Element container = DOM.createDiv();
+		
+		Element tBody  = DOM.createTBody();
+		Element table = DOM.createTable();
+
+		private int firstRendered;
+
+		private int lastRendered;
+
+		IScrollTableBody() {
+			
+			constructDOM();
+			
+			setElement(container);
+			
+		}
+		
+		private void constructDOM() {
+			DOM.setAttribute(table, "className", "iscrolltable-table");
+			DOM.setAttribute(preSpacer, "className", "iscrolltable-rowspacer");
+			DOM.setAttribute(postSpacer, "className", "iscrolltable-rowspacer");
+
+			DOM.appendChild(table, tBody);
+			DOM.appendChild(container, preSpacer);
+			DOM.appendChild(container, table);
+			DOM.appendChild(container, postSpacer);
+			
+		}
+		
+		
+		public void renderInitialRows(UIDL rowData, int firstIndex, int rows, int totalRows) {
+			this.totalRows = totalRows;
+			this.firstRendered = firstIndex;
+			this.lastRendered = firstIndex + rows - 1 ;
+			Iterator it = rowData.getChildIterator();
+			while(it.hasNext()) {
+				IScrollTableRow row = new IScrollTableRow((UIDL) it.next());
+				addRow(row);
+			}
+			if(isAttached())
+				fixSpacers();
+		}
+		
+		public void renderRows(UIDL rowData, int firstIndex, int rows) {
+			Iterator it = rowData.getChildIterator();
+			if(firstIndex == lastRendered + 1) {
+				while(it.hasNext()) {
+					IScrollTableRow row = createRow((UIDL) it.next());
+					addRow(row);
+					lastRendered++;
+				}
+				fixSpacers();
+			} else if(firstIndex + rows == firstRendered) {
+				IScrollTableRow[] rowArray = new IScrollTableRow[rows];
+				int i = rows;
+				while(it.hasNext()) {
+					i--;
+					rowArray[i] = createRow((UIDL) it.next());
+				}
+				for(i = 0 ; i < rows; i++) {
+					addRowBeforeFirstRendered(rowArray[i]);
+					firstRendered--;
+				}
+//			} else if (firstIndex > lastRendered || firstIndex + rows < firstRendered) {
+			} else if (true) {
+				// complitely new set of rows
+				// create one row before truncating row
+				IScrollTableRow row = createRow((UIDL) it.next());
+				while(lastRendered + 1 > firstRendered)
+					unlinkRow(false);
+				firstRendered = firstIndex;
+				lastRendered = firstIndex - 1 ;
+				fixSpacers();
+				addRow(row);
+				lastRendered++;
+				while(it.hasNext()) {
+					addRow(createRow((UIDL) it.next()));
+					lastRendered++;
+				}
+				fixSpacers();
+			} else {
+				// sorted or column reordering changed
+				client.console.log("Bad update" + firstIndex + "/"+ rows);
+			}
+		}
+		
+		/**
+		 * This mehtod is used to instantiate new rows for this table.
+		 * It automatically sets correct widths to rows cells and assigns 
+		 * correct client reference for child widgets.
+		 * 
+		 * This method can be called only after table has been initialized
+		 * 
+		 * @param uidl
+		 * @param client2
+		 */
+		private IScrollTableRow createRow(UIDL uidl) {
+			IScrollTableRow row = new IScrollTableRow(uidl);
+			int cells = DOM.getChildCount(row.getElement());
+			for(int i = 0; i < cells; i++) {
+				Element cell = DOM.getChild(row.getElement(), i);
+				int w = getColWidth(i);
+				DOM.setStyleAttribute(cell, "width", w + "px");
+				DOM.setStyleAttribute(DOM.getFirstChild(cell), "width", w + "px");
+			}
+			return row;
+		}
+
+		private void addRowBeforeFirstRendered(IScrollTableRow row) {
+			DOM.insertChild(tBody, row.getElement(), 0);
+			adopt(row, null);
+			renderedRows.add(0, row);
+		}
+		
+		private void addRow(IScrollTableRow row) {
+			DOM.appendChild(tBody, row.getElement());
+			adopt(row, null);
+			renderedRows.add(row);
+		}
+		
+		public Iterator iterator() {
+			return renderedRows.iterator();
+		}
+		
+		public void unlinkRow(boolean fromBeginning) {
+			if(lastRendered - firstRendered < 0)
+				return;
+			int index;
+			if(fromBeginning) {
+				index = 0;
+				firstRendered++;
+			} else {
+				index = renderedRows.size() - 1;
+				lastRendered--;
+			}
+			IScrollTableRow toBeRemoved = (IScrollTableRow) renderedRows.get(index);
+			this.disown(toBeRemoved);
+			renderedRows.remove(index);
+			fixSpacers();
+		}
+
+		public boolean remove(Widget w) {
+			throw new UnsupportedOperationException();
+		}
+		
+		protected void onAttach() {
+			super.onAttach();
+			fixSpacers();
+			// fix container blocks height to avoid "bouncing" when scrolling
+			DOM.setStyleAttribute(container, "height", totalRows*getRowHeight() + "px");
+		}
+		
+		private void fixSpacers() {
+			DOM.setStyleAttribute(preSpacer, "height", getRowHeight()*firstRendered + "px");
+			DOM.setStyleAttribute(postSpacer, "height", getRowHeight()*(totalRows - 1  - lastRendered) + "px");
+		}
+
+		public int getTotalRows() {
+			return totalRows;
+		}
+		
+		public int getRowHeight() {
+			if(initDone)
+				return rowHeight;
+			else {
+				if(DOM.getChildCount(tBody) > 0) {
+					rowHeight = DOM.getIntAttribute(tBody, "offsetHeight")/DOM.getChildCount(tBody);
+				} else {
+					return DEFAULT_ROW_HEIGHT;
+				}
+				initDone = true;
+				return rowHeight;
+			}
+		}
+
+		public int getColWidth(int i) {
+			Element e = DOM.getChild(DOM.getChild(tBody, 0), i);
+			return DOM.getIntAttribute(e, "offsetWidth");
+		}
+
+		public void setColWidth(int colIndex, int w) {
+			int rows = DOM.getChildCount(tBody);
+			for(int i = 0; i < rows; i++) {
+				Element cell = DOM.getChild(DOM.getChild(tBody, i), colIndex);
+				DOM.setStyleAttribute(cell, "width", w + "px");
+				DOM.setStyleAttribute(DOM.getFirstChild(cell), "width", w + "px");
+			}
+		}
+		
+		public int getLastRendered() {
+			return lastRendered;
+		}
+
+		public int getFirstRendered() {
+			return firstRendered;
+		}
+		
+		public void moveCol(int oldIndex, int newIndex) {
+			
+			// loop all rows and move given index to its new place
+			Iterator rows = iterator();
+			while(rows.hasNext()) {
+				IScrollTableRow row = (IScrollTableRow) rows.next();
+				
+				Element td = DOM.getChild(row.getElement(), oldIndex);
+				DOM.removeChild(row.getElement(), td);
+
+				DOM.insertChild(row.getElement(), td, newIndex);
+				
+			}
+
+		}
+
+		public class IScrollTableRow extends Panel {
+			
+			Vector childWidgets = new Vector();
+			private boolean selected = false;
+			private int rowKey;
+			
+			private IScrollTableRow(int rowKey) {
+				this.rowKey = rowKey;
+				this.selected = selected;
+				setElement(DOM.createElement("tr"));
+				DOM.sinkEvents(getElement(), Event.BUTTON_RIGHT | Event.ONCLICK);
+				setStyleName("iscrolltable-row");
+			}
+			
+			public String getKey() {
+				return String.valueOf(rowKey);
+			}
+
+			public IScrollTableRow(UIDL uidl) {
+				this(uidl.getIntAttribute("key"));
+				if(uidl.hasAttribute("caption"))
+					addCell(uidl.getStringAttribute("caption"));
+				Iterator cells = uidl.getChildIterator();
+				while(cells.hasNext()) {
+					Object cell = cells.next();
+					if (cell instanceof String) {
+						addCell(cell.toString());
+					} else {
+					 	Widget cellContent = client.getWidget((UIDL) cell);
+					 	(( Paintable) cellContent).updateFromUIDL((UIDL) cell, client);
+					}
+				}
+				if(uidl.hasAttribute("selected"))
+					toggleSelection();
+			}
+			
+			public void addCell(String text) {
+				// String only content is optimized by not using Label widget
+				Element td = DOM.createTD();
+				Element container = DOM.createDiv();
+				DOM.setAttribute(container, "className", "iscrolltable-cellContent");
+				DOM.setInnerHTML(container, text);
+				DOM.appendChild(td, container);
+				DOM.appendChild(getElement(), td);
+			}
+			
+			public void addCell(Widget w) {
+				Element td = DOM.createTD();
+				Element container = DOM.createDiv();
+				DOM.setAttribute(container, "className", "iscrolltable-cellContent");
+				DOM.appendChild(td, container);
+				DOM.appendChild(getElement(), td);
+				adopt(w, container);
+				childWidgets.add(w);
+			}
+
+			public Iterator iterator() {
+				return childWidgets.iterator();
+			}
+
+			public boolean remove(Widget w) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			public void onBrowserEvent(Event event) {
+				switch (DOM.eventGetType(event)) {
+				case Event.BUTTON_RIGHT:
+					// TODO
+					System.out.println("Context menu");
+					break;
+					
+				case Event.ONCLICK:
+					System.out.println("Row click");
+					if(selectMode > ITable.SELECT_MODE_NONE) {
+						toggleSelection();
+						client.updateVariable(id, "selected", selectedRowKeys.toArray(), immediate);
+					}
+					break;
+
+				default:
+					break;
+				}
+				super.onBrowserEvent(event);
+			}
+
+			public boolean isSelected() {
+				return selected;
+			}
+
+			private void toggleSelection() {
+				selected = !selected;
+				if(selected) {
+					if(selectMode == ITable.SELECT_MODE_SINGLE)
+						IScrollTable.this.deselectAll();
+					selectedRowKeys.add(String.valueOf(rowKey));
+					
+					setStyleName("iscrolltable-selRow");
+				} else {
+					selectedRowKeys.remove(String.valueOf(rowKey));
+					setStyleName("iscrolltable-row");
+				}
+			}
+			
+		}
+
+	}
+
+	public void deselectAll() {
+		Object[] keys = selectedRowKeys.toArray();
+		for (int i = 0; i < keys.length; i++) {
+			IScrollTableRow row = getRenderedRowByKey((String) keys[i]);
+			if(row != null && row.isSelected())
+				row.toggleSelection();
+		}
+		// still ensure all selects are removed from (not necessary rendered)
+		selectedRowKeys.clear();
+		
+	}
 }

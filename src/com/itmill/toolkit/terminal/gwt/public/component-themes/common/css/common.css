@@ -35,11 +35,9 @@ select {
 .iscrolltable-header .headerCell {
 }
 .iscrolltable-header .headerCellAsc {
-	height:2px;
 	background: blue;
 }
 .iscrolltable-header .headerCellDesc {
-	height:2px;
 	background: cyan;
 }
 
@@ -49,20 +47,23 @@ select {
 	margin:0;
 	padding:0;
 	border:0;
-	background: yellow;
 }
 
 .iscrolltable-table td {
 	border:0;
 	margin:0;
 	padding:0;
-	background: green;
 }
-iscrolltable-table tr {
-	background: blue;	
+
+.iscrolltable-selRow,
+.iscrolltable-row {
 	border:0;
 	margin:0;
 	padding:0;
+}
+
+.iscrolltable-selRow {
+	background: yellow;
 }
 
 .iscrolltable-rowspacer {
