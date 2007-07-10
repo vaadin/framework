@@ -16,3 +16,7 @@
 	border-bottom-color: #6696dd;
 	border-right-color: #6696dd;
 }
+
+.i-textfield-error {
+	background: #ff9999;
+}
