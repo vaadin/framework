@@ -19,6 +19,7 @@ import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.itmill.toolkit.terminal.gwt.client.ui.IContextMenu;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -44,6 +45,8 @@ public class Client implements EntryPoint {
 	private WidgetFactory widgetFactory = new DefaultWidgetFactory();
 	
 	private LocaleService locale;
+
+	private IContextMenu contextMenu = null;
 
 	/**
 	 * This is the entry point method.
@@ -369,5 +372,17 @@ public class Client implements EntryPoint {
 	
 	public String getResource(String name) {
 		return (String) resourcesMap.get(name);
+	}
+	
+	/**
+	 * Singleton method to get instance of app's context menu.
+	 * 
+	 * @return IContextMenu object
+	 */
+	public IContextMenu getContextMenu() {
+		if(contextMenu  == null) {
+			contextMenu = new IContextMenu();
+		}
+		return contextMenu;
 	}
 }

@@ -12,7 +12,6 @@ import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.ScrollListener;
@@ -45,7 +44,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 	private String[] columnOrder;
 	
 	private Client client;
-	private String id;
+	private String paintableId;
 	
 	private boolean immediate;
 
@@ -74,6 +73,14 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 	private String sortColumn;
 	private boolean columnReordering;
 	
+	/**
+	 * This map contains captions and icon urls for 
+	 * actions like:
+	 *   * "33_c" -> "Edit"
+	 *   * "33_i" -> "http://dom.com/edit.png"
+	 */
+	private HashMap actionMap = new HashMap();
+	
 	public IScrollTable() {
 		headerContainer.setStyleName("iscrolltable-header");
 		headerContainer.add(tHead);
@@ -95,7 +102,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 			return;
 
 		this.client = client;
-		this.id = uidl.getStringAttribute("id");
+		this.paintableId = uidl.getStringAttribute("id");
 		this.immediate = uidl.getBooleanAttribute("immediate");
 		this.totalRows = uidl.getIntAttribute("totalrows");
 		this.pageLength = uidl.getIntAttribute("pagelength");
@@ -169,9 +176,28 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 	}
 
 	private void updateActionMap(UIDL c) {
-		// TODO Auto-generated method stub
+		Iterator it = c.getChildIterator();
+		while(it.hasNext()) {
+			UIDL action = (UIDL) it.next();
+			String key = action.getStringAttribute("key");
+			String caption = action.getStringAttribute("caption");
+			actionMap.put(key + "_c", caption);
+			if(action.hasAttribute("icon")) {
+				// TODO need some uri handling ??
+				actionMap.put(key + "_i", action.getStringAttribute("icon"));
+			}
+		}
 		
 	}
+	
+	public String getActionCaption(String actionKey) {
+		return (String) actionMap.get(actionKey + "_c");
+	}
+	
+	public String getActionIcon(String actionKey) {
+		return (String) actionMap.get(actionKey + "_i");
+	}
+	
 
 	private void updateHeader(UIDL uidl) {
 		if(uidl == null)
@@ -303,7 +329,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 			newOrder[index++] = ((HeaderCell) hCells.next()).getColKey();
 		}
 		columnOrder = newOrder;
-		client.updateVariable(id, "columnorder", newOrder, false);
+		client.updateVariable(paintableId, "columnorder", newOrder, false);
 		
 	}
 
@@ -333,7 +359,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		int lastRendered = tBody.getLastRendered();
 		int firstRendered = tBody.getFirstRendered();
 		if( postLimit <= lastRendered && preLimit >= firstRendered ) {
-			client.updateVariable(this.id, "firstvisible", firstRowInViewPort, false);
+			client.updateVariable(this.paintableId, "firstvisible", firstRowInViewPort, false);
 			return; // scrolled withing "non-react area"
 		}
 		
@@ -455,9 +481,9 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 
 		public void run() {
 			client.console.log("Getting " + reqRows + " rows from " + reqFirstRow);
-			client.updateVariable(id, "firstvisible", firstRowInViewPort, false);
-			client.updateVariable(id, "reqfirstrow", reqFirstRow, false);
-			client.updateVariable(id, "reqrows", reqRows, true);
+			client.updateVariable(paintableId, "firstvisible", firstRowInViewPort, false);
+			client.updateVariable(paintableId, "reqfirstrow", reqFirstRow, false);
+			client.updateVariable(paintableId, "reqrows", reqRows, true);
 		}
 
 		public int getReqFirstRow() {
@@ -627,10 +653,10 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 					if(sortable) {
 						if(sortColumn.equals(cid)) {
 							// just toggle order
-							client.updateVariable(id, "sortascending", !sortAscending, false);
+							client.updateVariable(paintableId, "sortascending", !sortAscending, false);
 						} else {
 							// set table scrolled by this column
-							client.updateVariable(id, "sortcolumn", cid, false);
+							client.updateVariable(paintableId, "sortcolumn", cid, false);
 						}
 						// get also cache columns at the same request
 						bodyContainer.setScrollPosition(0);
@@ -1047,19 +1073,31 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 
 		}
 
-		public class IScrollTableRow extends Panel {
+		public class IScrollTableRow extends Panel  implements IActionOwner {
 			
 			Vector childWidgets = new Vector();
 			private boolean selected = false;
 			private int rowKey;
 			
+			private String[] actionKeys = null;
+			
 			private IScrollTableRow(int rowKey) {
 				this.rowKey = rowKey;
-				this.selected = selected;
 				setElement(DOM.createElement("tr"));
-				DOM.sinkEvents(getElement(), Event.BUTTON_RIGHT | Event.ONCLICK);
+				DOM.sinkEvents(getElement(), Event.ONCLICK);
+				disableContextMenu(getElement());
 				setStyleName("iscrolltable-row");
 			}
+			
+			private native void disableContextMenu(Element el) /*-{
+				var row = this;
+				el.oncontextmenu = function(e) {
+					if(!e)
+						e = window.event;
+					row.@com.itmill.toolkit.terminal.gwt.client.ui.IScrollTable.IScrollTableBody.IScrollTableRow::showContextMenu(Lcom/google/gwt/user/client/Event;)(e);
+					return false;
+				};
+			}-*/;
 			
 			public String getKey() {
 				return String.valueOf(rowKey);
@@ -1067,8 +1105,14 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 
 			public IScrollTableRow(UIDL uidl) {
 				this(uidl.getIntAttribute("key"));
+				
+				// row header
 				if(uidl.hasAttribute("caption"))
 					addCell(uidl.getStringAttribute("caption"));
+				
+				if(uidl.hasAttribute("al"))
+					actionKeys = uidl.getStringArrayAttribute("al");
+				
 				Iterator cells = uidl.getChildIterator();
 				while(cells.hasNext()) {
 					Object cell = cells.next();
@@ -1079,7 +1123,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 					 	(( Paintable) cellContent).updateFromUIDL((UIDL) cell, client);
 					}
 				}
-				if(uidl.hasAttribute("selected"))
+				if(uidl.hasAttribute("selected") && !isSelected())
 					toggleSelection();
 			}
 			
@@ -1114,16 +1158,11 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 
 			public void onBrowserEvent(Event event) {
 				switch (DOM.eventGetType(event)) {
-				case Event.BUTTON_RIGHT:
-					// TODO
-					System.out.println("Context menu");
-					break;
-					
 				case Event.ONCLICK:
-					System.out.println("Row click");
+					client.console.log("Row click");
 					if(selectMode > ITable.SELECT_MODE_NONE) {
 						toggleSelection();
-						client.updateVariable(id, "selected", selectedRowKeys.toArray(), immediate);
+						client.updateVariable(paintableId, "selected", selectedRowKeys.toArray(), immediate);
 					}
 					break;
 
@@ -1131,6 +1170,15 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 					break;
 				}
 				super.onBrowserEvent(event);
+			}
+			
+			public void showContextMenu(Event event) {
+				client.console.log("Context menu");
+				if(actionKeys != null) {
+					int left = DOM.eventGetClientX(event);
+					int top = DOM.eventGetClientY(event);
+					client.getContextMenu().showAt(this, left, top);
+				}
 			}
 
 			public boolean isSelected() {
@@ -1150,9 +1198,28 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 					setStyleName("iscrolltable-row");
 				}
 			}
-			
-		}
 
+			public IAction[] getActions() {
+				if(actionKeys == null)
+					return new IAction[] {};
+				IAction[] actions = new IAction[actionKeys.length];
+				for (int i = 0; i < actions.length; i++) {
+					String actionKey = actionKeys[i];
+					IAction a = new IAction(this, String.valueOf(rowKey), actionKey);
+					a.setCaption(getActionCaption(actionKey));
+					actions[i] = a;
+				}
+				return actions;
+			}
+
+			public Client getClient() {
+				return client;
+			}
+
+			public String getPaintableId() {
+				return paintableId;
+			}
+		}
 	}
 
 	public void deselectAll() {

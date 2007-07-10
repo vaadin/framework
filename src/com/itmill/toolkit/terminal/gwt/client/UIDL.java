@@ -68,6 +68,14 @@ public class UIDL {
 			return false;
 		return ((JSONBoolean) val).booleanValue();
 	}
+	
+	public String[] getStringArrayAttribute(String name) {
+		JSONArray a = (JSONArray) ((JSONObject) json.get(1)).get(name);
+		String[] s = new String[a.size()];
+		for (int i = 0; i < a.size(); i++)
+			s[i] = ((JSONString) a.get(i)).stringValue();
+		return s;
+	}
 
 	/**
 	 * Get attributes value as string whateever the type is
