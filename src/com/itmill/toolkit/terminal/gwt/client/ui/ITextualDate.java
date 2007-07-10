@@ -30,7 +30,7 @@ public class ITextualDate extends IDateField implements Paintable, ChangeListene
 		buildTime();
 	}
 
-	private void buildTime() {
+	protected void buildTime() {
 		dl = new DateLocale();
 		DateLocale.setLocale(currentLocale);
 		
@@ -64,7 +64,7 @@ public class ITextualDate extends IDateField implements Paintable, ChangeListene
 			else if(ms<100) text = "0"+text;
 			dateText += "." + text;
 		}
-		if(dts.isTwelveHourClock())
+		if(currentResolution >= IDateField.RESOLUTION_HOUR && dts.isTwelveHourClock())
 			dateText += " " + (date.getHours()<12? dts.getAmPmStrings()[0] : dts.getAmPmStrings()[1]);
 		
 		text.setText(dateText);
