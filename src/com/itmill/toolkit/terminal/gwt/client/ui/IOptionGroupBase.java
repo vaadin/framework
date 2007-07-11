@@ -77,6 +77,7 @@ abstract class IOptionGroupBase extends Composite implements Paintable, ClickLis
 		readonly = uidl.getBooleanAttribute("readonly");
 		disabled = uidl.getBooleanAttribute("disabled");
 		multiselect = "multi".equals(uidl.getStringAttribute("selectmode"));
+		immediate = uidl.getBooleanAttribute("immediate");
 		
 		UIDL ops = uidl.getChildUIDL(0);
 		
@@ -138,8 +139,9 @@ abstract class IOptionGroupBase extends Composite implements Paintable, ClickLis
 	protected abstract Object[] getSelectedItems();
 	
 	protected Object getSelectedItem() {
-		if(getSelectedItems().length > 0)
-			return getSelectedItems()[0];
+		Object[] sel = getSelectedItems();
+		if(sel.length > 0)
+			return sel[0];
 		else
 			return null;
 	}

@@ -1,4 +1,4 @@
-.i-textfield{
+.i-textfield {
 	font-size: 1.1em;
 	color: #444;
 	background: #fff url(../img/bg.png) repeat-x;
@@ -19,4 +19,10 @@
 
 .i-textfield-error {
 	background: #ff9999;
+}
+
+.i-textfield.i-readonly {
+	background: transparent;
+	color: #222;
+	border: none;
 }

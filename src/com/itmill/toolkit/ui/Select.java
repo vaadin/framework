@@ -430,7 +430,7 @@ public class Select extends AbstractField implements Container,
 						newsel = new HashSet(newsel);
 					newsel.removeAll(visible);
 					newsel.addAll(s);
-					super.setValue(newsel);
+					setValue(newsel, true);
 				}
 			}
 
@@ -550,7 +550,7 @@ public class Select extends AbstractField implements Container,
 	 * 
 	 * @param newValue
 	 *            the New selected item or collection of selected items.
-	 * @param repaintIsNotNeeded True iff caller is sure that repaint is not needed. 
+	 * @param repaintIsNotNeeded True if caller is sure that repaint is not needed. 
 	 * @see com.itmill.toolkit.ui.AbstractField#setValue(java.lang.Object, java.lang.Boolean)
 	 */
 	protected void setValue(Object newValue, boolean repaintIsNotNeeded) throws Property.ReadOnlyException,

@@ -2,7 +2,6 @@ package com.itmill.toolkit.terminal.gwt.gwtwidgets.util;
 
 import java.util.Date;
 
-import com.itmill.toolkit.terminal.gwt.client.DateTimeService;
 import com.itmill.toolkit.terminal.gwt.gwtwidgets.util.regex.Pattern;
 
 /**
@@ -112,7 +111,7 @@ public class SimpleDateParser {
 			int h = Integer.parseInt(text);
 			String token = com.itmill.toolkit.terminal.gwt.client.DateLocale.getPM();
 			String which = input.substring(input.length() - token.length()); // Assumes both AM and PM tokens have same length
-			if(which.equals(token))
+			if(which.equalsIgnoreCase(token))
 				h += 12;
 			date.setHours(h);
 		}

@@ -24,7 +24,10 @@ public class ISelect extends IOptionGroupBase {
 
 	protected void buildOptions(UIDL uidl) {
 		select.setMultipleSelect(multiselect);
-		if(multiselect) select.setVisibleItemCount(VISIBLE_COUNT);
+		if(multiselect) 
+			select.setVisibleItemCount(VISIBLE_COUNT);
+		else 
+			select.setVisibleItemCount(1);
 		select.setEnabled(!disabled && !readonly);
 		select.clear();
 		for (Iterator i = uidl.getChildIterator(); i.hasNext();) {

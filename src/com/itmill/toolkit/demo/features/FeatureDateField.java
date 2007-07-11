@@ -31,18 +31,22 @@ package com.itmill.toolkit.demo.features;
 import java.util.Locale;
 
 import com.itmill.toolkit.data.util.IndexedContainer;
-import com.itmill.toolkit.ui.*;
+import com.itmill.toolkit.data.util.MethodProperty;
+import com.itmill.toolkit.ui.Component;
+import com.itmill.toolkit.ui.DateField;
+import com.itmill.toolkit.ui.Form;
+import com.itmill.toolkit.ui.Label;
+import com.itmill.toolkit.ui.OrderedLayout;
+import com.itmill.toolkit.ui.Select;
 
 public class FeatureDateField extends Feature {
 
-	static private IndexedContainer localeContainer;
+	static private String[] localeNames;
 	static {
-		localeContainer = new IndexedContainer();
-		localeContainer.addContainerProperty("name", String.class, "");
 		Locale[] locales = Locale.getAvailableLocales();
-		for (int i = 0; i < locales.length; i++)
-			localeContainer.addItem(locales[i]).getItemProperty("name")
-					.setValue(locales[i].getDisplayName());
+		localeNames = new String[locales.length];
+		for (int i = 0; i < locales.length; i++) 
+			localeNames[i] = locales[i].getDisplayName();
 	}
 
 	public FeatureDateField() {
@@ -53,28 +57,18 @@ public class FeatureDateField extends Feature {
 
 		OrderedLayout l = new OrderedLayout();
 
-		l.addComponent(new Label("Your locale is: "
+		l.addComponent(new Label("Your default locale is: "
 				+ this.getApplication().getLocale().toString()
 						.replace('_', '-')));
 
 		DateField df = new DateField();
 		df.setValue(new java.util.Date());
 		l.addComponent(df);
-
-		// Create locale selector
-		// TODO: see #244 (broken for AJAX mode), known issue exists
-		/*
-		 * DISABLE UNTIL WORKS Select selector = new Select("Application
-		 * Locale", localeContainer); selector.setItemCaptionPropertyId("name");
-		 * selector.setImmediate(true); selector.setPropertyDataSource(new
-		 * MethodProperty( this.getApplication(), "locale"));
-		 * l.addComponent(selector);
-		 */
-
+		
 		// Properties
 		propertyPanel = new PropertyPanel(df);
 		Form ap = propertyPanel
-				.createBeanPropertySet(new String[] { "resolution" });
+				.createBeanPropertySet(new String[] { "resolution", "locale" });
 		ap.replaceWithSelect("resolution", new Object[] {
 				new Integer(DateField.RESOLUTION_YEAR),
 				new Integer(DateField.RESOLUTION_MONTH),
@@ -85,8 +79,10 @@ public class FeatureDateField extends Feature {
 				new Integer(DateField.RESOLUTION_MSEC) }, new Object[] {
 				"Year", "Month", "Day", "Hour", "Minute", "Second",
 				"Millisecond" });
+		ap.replaceWithSelect("locale", Locale.getAvailableLocales(), localeNames);
 		ap.getField("resolution").setValue(
 				new Integer(DateField.RESOLUTION_DAY));
+		ap.getField("locale").setValue(Locale.getDefault());
 		Select themes = (Select) propertyPanel.getField("style");
 		themes.addItem("text").getItemProperty(
 				themes.getItemCaptionPropertyId()).setValue("text");

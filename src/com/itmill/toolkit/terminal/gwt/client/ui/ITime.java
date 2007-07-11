@@ -75,24 +75,6 @@ public class ITime extends FlowPanel implements ChangeListener {
 				msec.addChangeListener(this);
 			}
 			
-			// Update times
-			if(thc) {
-				int h = datefield.date.getHours();
-				ampm.setSelectedIndex(h<12? 0 : 1);
-				h -= ampm.getSelectedIndex()*12;
-				hours.setSelectedIndex(h);
-			} else
-				hours.setSelectedIndex(datefield.date.getHours());
-			if(datefield.currentResolution >= IDateField.RESOLUTION_MIN)
-				mins.setSelectedIndex(datefield.date.getMinutes());
-			if(datefield.currentResolution >= IDateField.RESOLUTION_SEC)
-				sec.setSelectedIndex(datefield.date.getSeconds());
-			if(datefield.currentResolution == IDateField.RESOLUTION_MSEC)
-				msec.setSelectedIndex(datefield.getMilliseconds());
-			if(thc)
-				ampm.setSelectedIndex(datefield.date.getHours()<12?0:1);
-
-			
 			String delimiter = datefield.dts.getClockDelimeter();
 			boolean ro = datefield.readonly;
 			
@@ -137,6 +119,57 @@ public class ITime extends FlowPanel implements ChangeListener {
 			}
 			
 			if(ro) return;
+		}
+		
+		// Update times
+		if(thc) {
+			int h = datefield.date.getHours();
+			ampm.setSelectedIndex(h<12? 0 : 1);
+			h -= ampm.getSelectedIndex()*12;
+			hours.setSelectedIndex(h);
+		} else
+			hours.setSelectedIndex(datefield.date.getHours());
+		if(datefield.currentResolution >= IDateField.RESOLUTION_MIN)
+			mins.setSelectedIndex(datefield.date.getMinutes());
+		if(datefield.currentResolution >= IDateField.RESOLUTION_SEC)
+			sec.setSelectedIndex(datefield.date.getSeconds());
+		if(datefield.currentResolution == IDateField.RESOLUTION_MSEC)
+			msec.setSelectedIndex(datefield.getMilliseconds());
+		if(thc)
+			ampm.setSelectedIndex(datefield.date.getHours()<12?0:1);
+		
+		if(datefield.readonly && !redraw) {
+			// Do complete redraw when in read-only status
+			clear();
+			String delimiter = datefield.dts.getClockDelimeter();
+			
+			int h = datefield.date.getHours();
+			if(thc) h -= h<12? 0 : 12;
+			add(new ILabel(h<10? "0"+h : ""+h));
+			
+			if(datefield.currentResolution >= IDateField.RESOLUTION_MIN) {
+				add(new ILabel(delimiter));
+				int m = mins.getSelectedIndex();
+				add(new ILabel(m<10? "0"+m : ""+m));
+			}
+			if(datefield.currentResolution >= IDateField.RESOLUTION_SEC) {
+				add(new ILabel(delimiter));
+				int s = sec.getSelectedIndex();
+				add(new ILabel(s<10? "0"+s : ""+s));
+			}
+			if(datefield.currentResolution == IDateField.RESOLUTION_MSEC) {
+				add(new ILabel("."));
+				int m = datefield.getMilliseconds();
+				String ms = m<100? "0"+m : ""+m;
+				add(new ILabel(m<10? "0"+ms : ms));
+			}
+			if(datefield.currentResolution == IDateField.RESOLUTION_HOUR) {
+				add(new ILabel(delimiter+"00")); // o'clock
+			}
+			if(thc) {
+				add(new ILabel("&nbsp;"));
+				add(new ILabel(ampm.getItemText(datefield.date.getHours()<12? 0 : 1)));
+			}
 		}
 		
 		boolean enabled = datefield.enabled;

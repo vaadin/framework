@@ -486,14 +486,22 @@ public class AjaxApplicationManager implements
 	                  	// Force our locale as JVM default for a while (SimpleDateFormat uses JVM default)
 	                  	Locale.setDefault(l);
 	                   	String df = new SimpleDateFormat().toPattern();
-	                   	// TODO we suppose all formats separate date and time with a whitespace
-	                   	String dateformat = df.substring(0,df.indexOf(" "));
-	                  	outWriter.print("\"df\":\"" + dateformat + "\",");
+	                   	int timeStart = df.indexOf("H");
+	                   	if(timeStart < 0)
+	                   		timeStart = df.indexOf("h");
+	                   	int ampm_first = df.indexOf("a");
+	                   	// E.g. in Korean locale AM/PM is before h:mm
+	                   	// TODO should take that into consideration on client-side as well, now always h:mm a
+	                   	if(ampm_first > 0 && ampm_first < timeStart)
+	                   		timeStart = ampm_first;
+	                   	String dateformat = df.substring(0, timeStart-1);
+	                   	
+	                  	outWriter.print("\"df\":\"" + dateformat.trim() + "\",");
 	                  	
 	                  	/*
 	                  	 * Time formatting (24 or 12 hour clock and AM/PM suffixes)
 	                  	 */
-	                  	String timeformat = df.substring(df.indexOf(" ")+1, df.length()); // Doesn't return second or milliseconds
+	                  	String timeformat = df.substring(timeStart, df.length()); // Doesn't return second or milliseconds
 	                  	// We use timeformat to determine 12/24-hour clock
 	                  	boolean twelve_hour_clock = timeformat.contains("a");
 	                  	// TODO there are other possibilities as well, like 'h' in french (ignore them, too complicated)

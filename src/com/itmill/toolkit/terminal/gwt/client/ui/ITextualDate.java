@@ -40,7 +40,7 @@ public class ITextualDate extends IDateField implements Paintable, ChangeListene
 		else if(currentResolution >= IDateField.RESOLUTION_DAY)
 			DateLocale.SUPPORTED_DF_TOKENS = DateLocale.TOKENS_RESOLUTION_DAY;
 			
-		format = new SimpleDateFormat(dts.getDateFormat());
+		format = new SimpleDateFormat(verifyFormat(dts.getDateFormat()));
 		format.setLocale(dl);
 		
 		String dateText = format.format(date);
@@ -68,6 +68,12 @@ public class ITextualDate extends IDateField implements Paintable, ChangeListene
 			dateText += " " + (date.getHours()<12? dts.getAmPmStrings()[0] : dts.getAmPmStrings()[1]);
 		
 		text.setText(dateText);
+		text.setEnabled(enabled&&!readonly);
+		
+		if(readonly)
+			text.addStyleName("i-readonly");
+		else
+			text.removeStyleName("i-readonly");
 	}
 
 	public void onChange(Widget sender) {
@@ -80,7 +86,7 @@ public class ITextualDate extends IDateField implements Paintable, ChangeListene
 			else if(currentResolution == IDateField.RESOLUTION_DAY)
 				DateLocale.SUPPORTED_DF_TOKENS = DateLocale.TOKENS_RESOLUTION_DAY;
 			
-			String f = dts.getDateFormat();
+			String f = verifyFormat(dts.getDateFormat());
 			
 			if(currentResolution >= IDateField.RESOLUTION_HOUR)
 				f += " " + (dts.isTwelveHourClock()?
@@ -132,5 +138,29 @@ public class ITextualDate extends IDateField implements Paintable, ChangeListene
 			buildTime();
 		}
 	}
-
+	
+	private String verifyFormat(String format) {
+		// Remove unnecessary d & M if resolution is too low
+		if(currentResolution < IDateField.RESOLUTION_DAY)
+			format = format.replaceAll("d", "");
+		if(currentResolution < IDateField.RESOLUTION_MONTH)
+			format = format.replaceAll("M", "");
+		
+		// Remove unsupported patterns
+		// TODO support for 'G', era designator (used at least in Japan)
+		format = format.replaceAll("[GzZwWkK]", "");
+		
+		// Remove extra delimiters ('/' and '.')
+		while(format.startsWith("/") || format.startsWith(".") || format.startsWith("-"))
+			format = format.substring(1);
+		while(format.endsWith("/") || format.endsWith(".") || format.endsWith("-"))
+			format = format.substring(0, format.length()-1);
+		
+		// Remove duplicate delimiters
+		format = format.replaceAll("//", "/");
+		format = format.replaceAll("\\.\\.", ".");
+		format = format.replaceAll("--", "-");
+			
+		return format.trim();
+	}
 }

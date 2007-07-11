@@ -34,6 +34,7 @@ public class IPopupCalendar extends ITextualDate implements Paintable, ClickList
 	public void updateFromUIDL(UIDL uidl, Client client) {
 		super.updateFromUIDL(uidl, client);
 		calendar.updateCalendar();
+		calendarToggle.setEnabled(enabled);
 	}
 
 	public void onClick(Widget sender) {
