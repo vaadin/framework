@@ -1,6 +1,6 @@
 .i-panel {
 	border: 1px solid #29528a;
-	padding: 5px;
+	padding: 5px 3px 2px 2px;
 	margin: 5px;
 	background: #fff url(../img/top-bg.png) repeat-x top left;
 }
@@ -11,7 +11,7 @@
 	overflow: hidden;
 	background: transparent url(../img/top-right.png) no-repeat right top;
 	content: url(../img/top-left.png);
-	margin: -6px -6px 3px -6px;
+	margin: -6px -4px 3px -3px;
 }
 
 .i-panel:after {
@@ -20,14 +20,20 @@
 	overflow: hidden;
 	background: transparent url(../img/bottom-right.png) no-repeat right top;
 	content: url(../img/bottom-left.png);
-	margin: 5px -6px -6px -6px;
+	margin: 2px -4px -3px -3px;
 }
 
 .i-panel-caption {
 	font-size: 1.1em;
 	font-weight: bold;
 	color: #1c3e6e;
-	margin: 0 0 7px 0;
+	margin: 0 0 7px 4px;
+	overflow: hidden;
+}
+
+.i-panel-content {
+	overflow: auto;
+	padding: 3px;
 }
 
 
@@ -45,7 +51,7 @@
 
 .i-panel-strong .i-panel-caption {
 	color: #fff;
-	margin: -25px 0 12px 0;
+	margin: -25px 0 12px 4px;
 	white-space: nowrap;
 }
 
@@ -80,14 +86,14 @@
 }
 
 .i-panel-light .i-panel-caption {
-	margin: -26px -5px 18px -5px;
+	margin: -26px -2px 10px -2px;
 	font-size: 1em;
 	white-space: nowrap;
 }
 
 /* Light style without caption */
 .i-panel-light.i-panel-nocaption {
-	margin-top: 5px;
+	margin-top: 7px;
 }
 
 
@@ -97,15 +103,13 @@
 /* IE specific rules (different selectors for IE6 and IE7.
  * These selectors must be separate because IE6 won't 
  * apply them if they are grouped together.
- */
- 
+*/
 * html .i-panel {
-	background-position: 0 1px;
+	zoom: 1;
 }
 *+html .i-panel {
-	background-position: 0 1px;
+	zoom: 1;
 }
-
 * html .i-panel .i-panel-caption {
 	margin-top: 3px;
 }
@@ -115,19 +119,26 @@
 
 
 * html .i-panel-strong .i-panel-caption {
-	margin: 1px 0 10px 0;
+	margin: 0 0 10px 4px;
 }
 *+html .i-panel-strong .i-panel-caption {
-	margin: 1px 0 10px 0;
+	margin: 1px 0 10px 4px;
 }
 
+* html .i-panel-light {
+	margin-top: 5px;
+}
+*+html .i-panel-light {
+	margin-top: 23px;
+}
 * html .i-panel-light .i-panel-caption {
-	margin-top: -23px;
-	margin-bottom: 0;
-	padding-bottom: 23px; /* Must specify enough space because of wierd clipping bug */
+	margin-left: 4px;
+	margin-bottom: 5px;
+	padding-bottom: 0;
 }
 *+html .i-panel-light .i-panel-caption {
+	/*margin-left: 4px;
+	margin-bottom: 5px;
+	padding-bottom: 0;*/
 	margin-top: -23px;
-	margin-bottom: 0;
-	padding-bottom: 23px;
 }
