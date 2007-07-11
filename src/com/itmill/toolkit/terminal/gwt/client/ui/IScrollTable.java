@@ -11,8 +11,15 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.ScrollListener;
 import com.google.gwt.user.client.ui.ScrollPanel;
@@ -58,11 +65,11 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 
 	private ScrollPanel bodyContainer = new ScrollPanel();
 	
-	private ScrollPanel headerContainer = new ScrollPanel();
-	
 	private boolean colWidthsInitialized = false;
 	private int totalRows;
 	private HashMap columnWidths = new HashMap();
+	private HashMap columnCaptions = new HashMap();
+	private Set collapsedColumns;
 	
 	private RowRequestHandler rowRequestHandler;
 	private IScrollTableBody tBody;
@@ -82,14 +89,14 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 	private HashMap actionMap = new HashMap();
 	
 	public IScrollTable() {
-		headerContainer.setStyleName("iscrolltable-header");
-		headerContainer.add(tHead);
-		DOM.setStyleAttribute(headerContainer.getElement(), "overflow", "hidden");
+		// TODO move headerContainer and column selector into TableHead
 		
 		bodyContainer.addScrollListener(this);
 		
 		VerticalPanel panel = new VerticalPanel();
-		panel.add(headerContainer);
+		
+		
+		panel.add(tHead);
 		panel.add(bodyContainer);
 		
 		rowRequestHandler = new RowRequestHandler();
@@ -139,6 +146,13 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 			this.columnOrder = uidl.getStringArrayVariable("columnorder");
 		}
 		
+		if(uidl.hasVariable("collapsedcolumns")) {
+			tHead.setColumnCollapsingAllowed(true);
+			this.collapsedColumns = uidl.getStringArrayVariableAsSet("collapsedcolumns");
+		} else {
+			tHead.setColumnCollapsingAllowed(false);
+		}
+		
 		UIDL columnInfo = null;
 		UIDL rowData = null;
 		for(Iterator it = uidl.getChildIterator(); it.hasNext();) {
@@ -150,7 +164,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 			else if(c.getTag().equals("actions"))
 				updateActionMap(c);
 			else if(c.getTag().equals("visiblecolumns"))
-				;
+				updateVisibleColumns(c);
 		}
 		updateHeader(columnInfo);
 		
@@ -163,6 +177,17 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 					totalRows);
 			bodyContainer.add(tBody);
 			initializedAndAttached = true;
+		}
+	}
+	
+	private void updateVisibleColumns(UIDL c) {
+		columnCaptions.clear();
+		Iterator it = c.getChildIterator();
+		while(it.hasNext()) {
+			UIDL col = (UIDL) it.next();
+			columnCaptions.put(
+					col.getStringAttribute("cid"), 
+					col.getStringAttribute("caption"));
 		}
 	}
 	
@@ -345,7 +370,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		rowRequestHandler.cancel();
 		
 		// fix headers horizontal scrolling
-		headerContainer.setHorizontalScrollPosition(scrollLeft);
+		tHead.setHorizontalScrollPosition(scrollLeft);
 
 		firstRowInViewPort = (int) Math.ceil( scrollTop / (double) tBody.getRowHeight() );
 		client.console.log("At scrolltop: " + scrollTop + " At row " + firstRowInViewPort);
@@ -396,7 +421,6 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 	protected void onAttach() {
 		
 		super.onAttach();
-		int bodyWidth = tBody.getOffsetWidth();
 		
 		// sync column widths
 		initColumnWidths();
@@ -408,12 +432,11 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		}
 
 		if(width  < 0) {
-			bodyWidth = tBody.getOffsetWidth();
 			bodyContainer.setWidth((tBody.getOffsetWidth() + getScrollBarWidth() ) + "px");
-			headerContainer.setWidth((tBody.getOffsetWidth()) + "px");
+			tHead.setWidth(bodyContainer.getOffsetWidth());
 		} else {
 			bodyContainer.setWidth(width + "px");
-			headerContainer.setWidth(width + "px");
+			tHead.setWidth(width);
 		}
 		
 		tHead.disableBrowserIntelligence();
@@ -454,7 +477,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 
 	private int getScrollBarWidth() {
 		// TODO Auto-generated method stub
-		return 30;
+		return 20;
 	}
 
 	private class RowRequestHandler extends Timer {
@@ -592,9 +615,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		 */
 		public void onBrowserEvent(Event event) {
 			
-			Element target = DOM.eventGetTarget(event);
-			
-			if(isResizing || DOM.compare(target, colResizeWidget)) {
+			if(isResizing || DOM.compare(DOM.eventGetTarget(event), colResizeWidget)) {
 				onResizeEvent(event);
 			} else {
 				handleCaptionEvent(event);
@@ -748,28 +769,70 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 
 	}
 	
-	public class TableHead extends Panel {
+	public class TableHead extends Panel implements IActionOwner {
+		
+		private static final int COLUMN_SELECTOR_WIDTH = 10;
+		private static final int COLUMN_SELECTOR_HEIGHT = 10;
 
 		private static final int WRAPPER_WIDTH = 9000;
 		
 		Vector cells = new Vector();
 		
 		Element div = DOM.createDiv();
+		Element hTableWrapper = DOM.createDiv();
+		Element hTableContainer = DOM.createDiv();
 		Element table = DOM.createTable();
 		Element tBody = DOM.createTBody();
 		Element tr = DOM.createTR();
 
+		private Element columnSelector = DOM.createDiv();
+
 		private int focusedSlot = -1;
 		
+		private boolean columnCollapsing = false;
+		
 		public TableHead() {
+			DOM.setStyleAttribute(hTableWrapper, "overflow", "hidden");
+			DOM.setAttribute(hTableWrapper, "className", "iscrolltable-header");
+
+			// TODO move styles to CSS
+			DOM.setStyleAttribute(columnSelector, "width", COLUMN_SELECTOR_WIDTH +"px");
+			DOM.setStyleAttribute(columnSelector, "float", "right");
+			DOM.setStyleAttribute(columnSelector, "height", COLUMN_SELECTOR_HEIGHT + "px");
+			DOM.setStyleAttribute(columnSelector, "background", "brown");
+			DOM.setStyleAttribute(columnSelector, "display", "none");
+			
 			DOM.appendChild(table, tBody);
 			DOM.appendChild(tBody, tr);
-			DOM.appendChild(div, table);
+			DOM.appendChild(hTableContainer, table);
+			DOM.appendChild(hTableWrapper, hTableContainer);
+			DOM.appendChild(div, columnSelector);
+			DOM.appendChild(div, hTableWrapper);
 			setElement(div);
+			
+			DOM.sinkEvents(columnSelector, Event.ONCLICK);
 		}
 		
+		public void setHorizontalScrollPosition(int scrollLeft) {
+			DOM.setIntAttribute(hTableWrapper, "scrollLeft", scrollLeft);
+		}
+		
+		public void setWidth(int width) {
+			DOM.setStyleAttribute(hTableWrapper, "width", (width - getScrollBarWidth()) + "px");
+			super.setWidth(width + "px");
+		}
+
+		public void setColumnCollapsingAllowed(boolean cc) {
+			columnCollapsing = cc;
+			if(cc) {
+				DOM.setStyleAttribute(columnSelector, "display", "block");
+			} else {
+				DOM.setStyleAttribute(columnSelector, "display", "none");
+			}
+		}
+
 		public void disableBrowserIntelligence() {
-			DOM.setStyleAttribute(div, "width", WRAPPER_WIDTH +"px");
+			DOM.setStyleAttribute(hTableContainer, "width", WRAPPER_WIDTH +"px");
 		}
 		
 		public void setHeaderCell(int index, HeaderCell cell) {
@@ -831,7 +894,62 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 				DOM.setStyleAttribute(DOM.getChild(tr, focusedSlot - 1), "borderRight", "none");
 			focusedSlot = -1;
 		}
+		
+		public void onBrowserEvent(Event event) {
+			super.onBrowserEvent(event);
+			if(DOM.compare(DOM.eventGetTarget(event), columnSelector)) {
+				int left = DOM.getAbsoluteLeft(columnSelector);
+				int top = DOM.getAbsoluteTop(columnSelector) + COLUMN_SELECTOR_WIDTH;
+				client.getContextMenu().showAt(this, left, top);
+			}
+		}
 
+		class VisibleColumnAction extends IAction {
+			
+			String colKey;
+			
+			public VisibleColumnAction(String colKey) {
+				super(IScrollTable.TableHead.this);
+				this.colKey = colKey;
+				caption = (String) columnCaptions.get(colKey);
+			}
+
+			public void execute() {
+				client.getContextMenu().hide();
+				// toggle selected column
+				if(collapsedColumns.contains(colKey))
+					collapsedColumns.remove(colKey);
+				else
+					collapsedColumns.add(colKey);
+				
+				// update  variable to server
+				client.updateVariable(paintableId, "collapsedcolumns", 
+						collapsedColumns.toArray(), true);
+			}
+			
+		}
+
+		public IAction[] getActions() {
+			IAction[] actions= new IAction[columnCaptions.size()];
+			Iterator it = columnCaptions.keySet().iterator();
+			int i = 0;
+			while(it.hasNext()) {
+				String cid = (String) it.next();
+				VisibleColumnAction a = new VisibleColumnAction(cid);
+				a.setCaption((String) columnCaptions.get(cid));
+				actions[i] = a;
+				i++;
+			}
+			return actions;
+		}
+
+		public Client getClient() {
+			return client;
+		}
+
+		public String getPaintableId() {
+			return paintableId;
+		}
 		
 	}
 	
@@ -1199,13 +1317,16 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 				}
 			}
 
+			/* (non-Javadoc)
+			 * @see com.itmill.toolkit.terminal.gwt.client.ui.IActionOwner#getActions()
+			 */
 			public IAction[] getActions() {
 				if(actionKeys == null)
 					return new IAction[] {};
 				IAction[] actions = new IAction[actionKeys.length];
 				for (int i = 0; i < actions.length; i++) {
 					String actionKey = actionKeys[i];
-					IAction a = new IAction(this, String.valueOf(rowKey), actionKey);
+					ITreeAction a = new ITreeAction(this, String.valueOf(rowKey), actionKey);
 					a.setCaption(getActionCaption(actionKey));
 					actions[i] = a;
 				}

@@ -1,6 +1,5 @@
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.PopupPanel;
@@ -43,7 +42,7 @@ public class IContextMenu extends PopupPanel {
 		IAction[] actions = actionOwner.getActions();
 		for (int i = 0; i < actions.length; i++) {
 			IAction a = actions[i];
-			menu.addItem(new MenuItem(a.getHTMLRepresentation(), true, a));
+			menu.addItem(new MenuItem(a.getHTML(), true, a));
 		}
 		
 		setPopupPosition(left, top);

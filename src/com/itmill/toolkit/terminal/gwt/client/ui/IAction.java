@@ -6,68 +6,29 @@ import com.itmill.toolkit.terminal.gwt.client.Client;
 /**
  *
  */
-public class IAction implements Command {
+public abstract class IAction implements Command {
 	
-	IActionOwner owner;
+	protected IActionOwner owner;
 	
-	String targetKey = "";
-	String actionKey = "";
+	protected String iconUrl = null;
 	
-	String iconUrl = null;
-	
-	String caption = "";
+	protected String caption = "";
 	
 	public IAction(IActionOwner owner) {
 		this.owner = owner;
 	}
 	
-	public IAction(IActionOwner owner, String target, String action) {
-		this(owner);
-		this.targetKey = target;
-		this.actionKey = action;
-	}
-	
-	
 	/**
-	 * Sends message to server that this action has been fired.
-	 * Messages are "standard" Toolkit messages whose value is comma
-	 * separated pair of targetKey (row, treeNod ...) and actions id.
-	 * 
-	 * Variablename is always "action".
-	 * 
-	 * Actions are always sent immediatedly to server.
+	 * Executed when action fired
 	 */
-	public void execute() {
-		owner.getClient().updateVariable(
-				owner.getPaintableId(), 
-				"action", 
-				targetKey + "," + actionKey, 
-				true);
-		owner.getClient().getContextMenu().hide();
-	}
-
-	public String getActionKey() {
-		return actionKey;
-	}
-
-	public void setActionKey(String actionKey) {
-		this.actionKey = actionKey;
-	}
-
-	public String getTargetKey() {
-		return targetKey;
-	}
-
-	public void setTargetKey(String targetKey) {
-		this.targetKey = targetKey;
-	}
-
-	public String getHTMLRepresentation() {
+	public abstract void execute();
+	
+	public String getHTML() {
 		StringBuffer sb = new StringBuffer();
-		if(iconUrl != null) {
-			sb.append("<img src=\""+iconUrl+"\" alt=\"icon\" />");
+		if(getIconUrl() != null) {
+			sb.append("<img src=\""+getIconUrl()+"\" alt=\"icon\" />");
 		}
-		sb.append(caption);
+		sb.append(getCaption());
 		return sb.toString();
 	}
 
@@ -77,6 +38,10 @@ public class IAction implements Command {
 
 	public void setCaption(String caption) {
 		this.caption = caption;
+	}
+	
+	public String getIconUrl() {
+		return iconUrl;
 	}
 }
 

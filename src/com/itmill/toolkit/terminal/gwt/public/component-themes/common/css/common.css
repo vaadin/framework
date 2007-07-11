@@ -21,7 +21,15 @@ select {
 	filter: alpha(opacity:30);
 }
 
+i-contextmenu {
+	background: #fff;	
+	border: #000;
+}
+
 /* TODO move table styles to separate file */
+.iscrolltable-header {
+	
+}
 
 .iscrolltable-header table {
 	border-collapse:collapse;
