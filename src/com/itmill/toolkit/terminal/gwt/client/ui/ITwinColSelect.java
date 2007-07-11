@@ -78,20 +78,24 @@ public class ITwinColSelect extends IOptionGroupBase {
 		return selectedItemKeys.toArray();
 	}
 	
-	private String[] getItemsToAdd() {
-		String[] selectedIndexes = new String[options.getItemCount()];
+	private boolean[] getItemsToAdd() {
+		boolean[] selectedIndexes = new boolean[options.getItemCount()];
 		for(int i = 0; i < options.getItemCount(); i++) {
 			if(options.isItemSelected(i))
-				selectedIndexes[i] = options.getValue(i);
+				selectedIndexes[i] = true;
+			else
+				selectedIndexes[i] = false;
 		}
 		return selectedIndexes;
 	}
 	
-	private String[] getItemsToRemove() {
-		String[] selectedIndexes = new String[selections.getItemCount()];
+	private boolean[] getItemsToRemove() {
+		boolean[] selectedIndexes = new boolean[selections.getItemCount()];
 		for(int i = 0; i < selections.getItemCount(); i++) {
 			if(selections.isItemSelected(i))
-				selectedIndexes[i] = selections.getValue(i);
+				selectedIndexes[i] = true;
+			else
+				selectedIndexes[i] = false;
 		}
 		return selectedIndexes;
 	}
@@ -99,17 +103,36 @@ public class ITwinColSelect extends IOptionGroupBase {
 	public void onClick(Widget sender) {
 		super.onClick(sender);
 		if(sender == add) {
-			String[] sel = getItemsToAdd();
+			boolean[] sel = getItemsToAdd();
 			for(int i=0; i < sel.length; i++) {
-				if(sel[i]!=null) selectedKeys.add(sel[i]);
+				if(sel[i]) {
+					int optionIndex = i-(sel.length-options.getItemCount());
+					selectedKeys.add(options.getValue(optionIndex));
+					
+					// Move selection to another column
+					String text = options.getItemText(optionIndex);
+					String value = options.getValue(optionIndex);
+					selections.addItem(text, value);
+					options.removeItem(optionIndex);
+				}
 			}
-			client.updateVariable(id, "selected", selectedKeys.toArray(), true); // Immediate
+			client.updateVariable(id, "selected", selectedKeys.toArray(), immediate);
+			
 		} else if(sender == remove) {
-			String[] sel = getItemsToRemove();
+			boolean[] sel = getItemsToRemove();
 			for(int i=0; i < sel.length; i++) {
-				if(sel[i]!=null) selectedKeys.remove(sel[i]);
+				if(sel[i]) {
+					int selectionIndex = i-(sel.length-selections.getItemCount());
+					selectedKeys.remove(selections.getValue(selectionIndex));
+					
+					// Move selection to another column
+					String text = selections.getItemText(selectionIndex);
+					String value = selections.getValue(selectionIndex);
+					options.addItem(text, value);
+					selections.removeItem(selectionIndex);
+				}
 			}
-			client.updateVariable(id, "selected", selectedKeys.toArray(), true); // Immediate
+			client.updateVariable(id, "selected", selectedKeys.toArray(), immediate);
 		}
 	}
 
