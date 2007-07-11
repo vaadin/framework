@@ -81,12 +81,20 @@
 
 
 
-
-
-
 .i-tabsheet-content {
 	background-color: #fff;
 	border: solid 1px #29528a;
 	border-top: none;
 	padding: 5px;
+}
+
+/* Fix Safari bug (one pixel table offset) */
+.i-tabsheet-content {
+	margin-left: 1px;
+}
+.i-tabsheet-tabs .gwt-TabBarFirst {
+	display: block;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
 }
