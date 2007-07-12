@@ -635,6 +635,8 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 
 			DOM.appendChild(td, captionContainer);
 			
+			DOM.sinkEvents(td, Event.MOUSEEVENTS);
+			
 			setElement(td);
 		}
 		
@@ -670,14 +672,11 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		 * Handle column reordering.
 		 */
 		public void onBrowserEvent(Event event) {
-			
 			if(isResizing || DOM.compare(DOM.eventGetTarget(event), colResizeWidget)) {
 				onResizeEvent(event);
 			} else {
 				handleCaptionEvent(event);
 			}
-			
-
 			super.onBrowserEvent(event);
 		}
 
@@ -712,16 +711,17 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		private void handleCaptionEvent(Event event) {
 			switch (DOM.eventGetType(event)) {
 			case Event.ONMOUSEDOWN:
+				client.console.log("HeaderCaption: mouse down");
 				dragging = true;
 				moved = false;
 		        colIndex = getColIndexByKey(cid);
 				DOM.setCapture(getElement());
-				
 				this.headerX = tHead.getAbsoluteLeft();
-				
+				client.console.log("HeaderCaption: Caption set to capture mouse events");
 				DOM.eventPreventDefault(event);
 				break;
 			case Event.ONMOUSEUP:
+				client.console.log("HeaderCaption: mouseUP");
 				dragging = false;
 				DOM.releaseCapture(getElement());
 
@@ -744,7 +744,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 					}
 					break;
 				}
-				System.out.println("Stopped column reordering");
+				client.console.log("HeaderCaption: Stopped column reordering");
 				hideFloatingCopy();
 				tHead.removeSlotFocus();
 				if(closestSlot != colIndex &&  closestSlot != (colIndex + 1) ) {
@@ -756,7 +756,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 				break;
 			case Event.ONMOUSEMOVE:
 				if (dragging) {
-					System.out.print("Dragging column, optimal index...");
+					client.console.log("HeaderCaption: Dragging column, optimal index...");
 					if(!moved) {
 						createFloatingCopy();
 						moved = true;
@@ -784,7 +784,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 					tHead.focusSlot(closestSlot);
 					
 					updateFloatingCopysPosition(x, -1);
-					System.out.println(closestSlot);
+					client.console.log(""+closestSlot);
 				}
 				break;
 			default:
