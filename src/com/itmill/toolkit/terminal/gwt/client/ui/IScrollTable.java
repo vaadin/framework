@@ -379,13 +379,15 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		}
 		// finally we can build the new columnOrder for server
 		String[] newOrder = new String[columnOrder.length];
-		for(int i = 0, j = 0; i < newOrder.length; i++) {
-			if(columnOrder[i].equals(columnKey))
-				continue;
+		for(int i = 0, j = 0; j < newOrder.length; i++) {
 			if(j == newIndex) {
 				newOrder[j] = columnKey;
 				j++;
 			}
+			if(i == columnOrder.length)
+				break;
+			if(columnOrder[i].equals(columnKey))
+				continue;
 			newOrder[j] = columnOrder[i];
 			j++;
 		}
