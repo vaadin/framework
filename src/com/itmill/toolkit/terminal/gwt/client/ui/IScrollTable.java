@@ -67,8 +67,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 	
 	private boolean colWidthsInitialized = false;
 	private int totalRows;
-	private HashMap columnWidths = new HashMap();
-	private HashMap columnCaptions = new HashMap();
+	
 	private Set collapsedColumns;
 	
 	private RowRequestHandler rowRequestHandler;
@@ -87,6 +86,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 	 *   * "33_i" -> "http://dom.com/edit.png"
 	 */
 	private HashMap actionMap = new HashMap();
+	private String[] visibleColOrder;
 	
 	public IScrollTable() {
 		// TODO move headerContainer and column selector into TableHead
@@ -181,14 +181,26 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 	}
 	
 	private void updateVisibleColumns(UIDL c) {
-		columnCaptions.clear();
-		Iterator it = c.getChildIterator();
-		while(it.hasNext()) {
-			UIDL col = (UIDL) it.next();
-			columnCaptions.put(
-					col.getStringAttribute("cid"), 
-					col.getStringAttribute("caption"));
+		if(!initializedAndAttached) {
+			// add empty cell for col headers
+			tHead.addAvailableCell(new HeaderCell(
+					"0",
+					""));
+			Iterator it = c.getChildIterator();
+			while(it.hasNext()) {
+				UIDL col = (UIDL) it.next();
+					tHead.addAvailableCell(
+						new HeaderCell(
+								col.getStringAttribute("cid"),
+								col.getStringAttribute("caption")
+							)
+						);
+			}
+		} else {
+			// update existing cells
+			
 		}
+					
 	}
 	
 	private IScrollTableBody getTBody() {
@@ -227,28 +239,28 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 	private void updateHeader(UIDL uidl) {
 		if(uidl == null)
 			return;
-		int columnCount = uidl.getChidlCount();
+
 		int colIndex = 0;
+		int visibleCols = uidl.getChidlCount();
 		if(rowHeaders) {
-			columnCount++;
-			HeaderCell c = (HeaderCell) tHead.getHeaderCell(0);
-			if(c == null) {
-				tHead.setHeaderCell(0, new HeaderCell("0", ""));
-			}
+			tHead.enableColumn("0",colIndex);
+			visibleCols++;
+			visibleColOrder = new String[visibleCols];
+			visibleColOrder[colIndex] = "0";
 			colIndex++;
+		} else {
+			visibleColOrder = new String[visibleCols];
 		}
 			
 		for(Iterator it = uidl.getChildIterator();it.hasNext();) {
 			UIDL col = (UIDL) it.next();
 			String cid = col.getStringAttribute("cid");
-			HeaderCell c = (HeaderCell) tHead.getHeaderCell(colIndex);
-			if(c != null && c.getColKey().equals(cid)) {
-				c.setText(col.getStringAttribute("caption"));
-			} else {
-				c = new HeaderCell(cid, col.getStringAttribute("caption"));
-				tHead.setHeaderCell(colIndex, c);
-			}
+			visibleColOrder[colIndex] = cid;
+			
+			tHead.enableColumn(cid, colIndex);
+			
 			if(col.hasAttribute("sortable")) {
+				HeaderCell c = tHead.getHeaderCell(cid);
 				c.setSortable(true);
 				if(cid.equals(sortColumn))
 					c.setSorted(true);
@@ -283,23 +295,31 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		
 	}
 	
-	
+	/**
+	 * Gives correct column index for given column key ("cid" in UIDL).
+	 * 
+	 * @param colKey
+	 * @return column index of visible columns, -1 if column not visible
+	 */
 	private int getColIndexByKey(String colKey) {
 		// return 0 if asked for rowHeaders
 		if("0".equals(colKey))
 			return 0;
-		int index = -1;
-		for (int i = 0; i < columnOrder.length; i++) {
-			if(columnOrder[i].equals(colKey)) {
-				index = i;
-				break;
-			}
+		for (int i = 0; i < visibleColOrder.length; i++) {
+			if(visibleColOrder[i].equals(colKey))
+				return i;
 		}
-		if(rowHeaders)
-			index++;
-		return index;
+		return -1;
 	}
 	
+	private boolean isCollapsedColumn(String colKey) {
+		if(collapsedColumns == null)
+			return false;
+		if(collapsedColumns.contains(colKey))
+			return true;
+		return false;
+	}
+
 	private String getColKeyByIndex(int index) {
 		return tHead.getHeaderCell(index).getColKey();
 	}
@@ -309,11 +329,10 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		cell.setWidth(w);
 		tBody.setColWidth(colIndex, w);
 		String cid = cell.getColKey();;
-		columnWidths.put(cid,new Integer(w));
 	}
 	
 	private int getColWidth(String colKey) {
-		return ( (Integer) this.columnWidths.get(colKey)).intValue();
+		return tHead.getHeaderCell(colKey).getWidth();
 	}
 	
 	private IScrollTableRow getRenderedRowByKey(String key) {
@@ -341,21 +360,44 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		// Change body order
 		tBody.moveCol(oldIndex, newIndex);
 		
-		// build new columnOrder and update it to server
-		
-		String[] newOrder = new String[columnOrder.length];
-		
-		Iterator hCells = tHead.iterator();
-
+		/* Build new columnOrder and update it to server
+		 * Note that columnOrder also contains collapsed columns
+		 * so we cannot directly build it from cells vector
+		 * Loop the old columnOrder and append in order to new array 
+		 * unless on moved columnKey. On new index also put the moved key
+		 * i == index on columnOrder, j == index on newOrder
+		 */
+		String oldKeyOnNewIndex = visibleColOrder[newIndex];
 		if(rowHeaders)
-			hCells.next();
-		int index = 0;
-		while(hCells.hasNext()) {
-			newOrder[index++] = ((HeaderCell) hCells.next()).getColKey();
+			newIndex--; // columnOrder don't have rowHeader
+		// add back hidden rows, 
+		for (int i = 0; i < columnOrder.length; i++) {
+			if(columnOrder[i].equals(oldKeyOnNewIndex))
+				break; // break loop at target
+			if(isCollapsedColumn(columnOrder[i]))
+				newIndex++;
+		}
+		// finally we can build the new columnOrder for server
+		String[] newOrder = new String[columnOrder.length];
+		for(int i = 0, j = 0; i < newOrder.length; i++) {
+			if(columnOrder[i].equals(columnKey))
+				continue;
+			if(j == newIndex) {
+				newOrder[j] = columnKey;
+				j++;
+			}
+			newOrder[j] = columnOrder[i];
+			j++;
 		}
 		columnOrder = newOrder;
-		client.updateVariable(paintableId, "columnorder", newOrder, false);
-		
+		// also update visibleColumnOrder
+		int i = rowHeaders ? 1 : 0;
+		for (int j = 0; j < newOrder.length; j++) {
+			String cid = newOrder[j];
+			if(!isCollapsedColumn(cid))
+				visibleColOrder[i++] = cid;
+		}
+		client.updateVariable(paintableId, "columnorder", columnOrder, false);
 	}
 
 	/**
@@ -549,6 +591,8 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 
 		private int closestSlot;
 
+		private int width;
+
 
 		private HeaderCell(){};
 		
@@ -588,8 +632,13 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		}
 		
 		public void setWidth(int w) {
+			this.width = w;
 			DOM.setStyleAttribute(captionContainer, "width", (w - DRAG_WIDGET_WIDTH - 4) + "px");
 			setWidth(w + "px");
+		}
+		
+		public int getWidth() {
+			return width;
 		}
 		
 		public void setText(String headerText) {
@@ -713,7 +762,8 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 					if(rowHeaders) {
 						start++;
 					}
-					for(int i = start; i <= columnWidths.size() ; i++ ) {
+					int visibleCellCount = tHead.getVisibleCellCount();
+					for(int i = start; i <= visibleCellCount ; i++ ) {
 						if(i > 0) {
 							String colKey = getColKeyByIndex(i-1);
 							slotX += getColWidth(colKey);
@@ -742,7 +792,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 				    DOM.setCapture(getElement());
 				    dragStartX = DOM.eventGetClientX(event);
 			        colIndex = getColIndexByKey(cid);
-			        originalWidth = IScrollTable.this.tBody.getColWidth(colIndex);
+			        originalWidth = getWidth();
 			        DOM.eventPreventDefault(event);
 		      		break;
 		      	case Event.ONMOUSEUP:
@@ -766,6 +816,14 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		    }
 		}
 
+		public String getCaption() {
+			return DOM.getInnerText(captionContainer);
+		}
+
+		public boolean isEnabled() {
+			return getParent() != null;
+		}
+
 
 	}
 	
@@ -776,7 +834,9 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 
 		private static final int WRAPPER_WIDTH = 9000;
 		
-		Vector cells = new Vector();
+		Vector visibleCells = new Vector();
+		
+		HashMap availableCells = new HashMap();
 		
 		Element div = DOM.createDiv();
 		Element hTableWrapper = DOM.createDiv();
@@ -813,6 +873,21 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 			DOM.sinkEvents(columnSelector, Event.ONCLICK);
 		}
 		
+		public void enableColumn(String cid, int index) {
+			HeaderCell c = getHeaderCell(cid);
+			if(!c.isEnabled()) {
+				setHeaderCell(index, c);
+			}
+		}
+
+		public int getVisibleCellCount() {
+			return visibleCells.size();
+		}
+
+		public void addAvailableCell(HeaderCell cell) {
+			availableCells.put(cell.getColKey(), cell);
+		}
+
 		public void setHorizontalScrollPosition(int scrollLeft) {
 			DOM.setIntAttribute(hTableWrapper, "scrollLeft", scrollLeft);
 		}
@@ -836,46 +911,70 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		}
 		
 		public void setHeaderCell(int index, HeaderCell cell) {
-			if(index < cells.size()) {
-				// replace
-				// TODO remove old correctly
+			if(index < visibleCells.size()) {
 				// insert to right slot
-			} else if( index == cells.size()) {
-				//append
+				DOM.insertChild(tr, cell.getElement(), index);
+				adopt(cell, null);
+				visibleCells.insertElementAt(cell, index);
+				
+			} else if( index == visibleCells.size()) {
+				//simply append
 				adopt(cell, tr);
-				cells.add(cell);
+				visibleCells.add(cell);
 			} else {
 				throw new RuntimeException("Header cells must be appended in order");
 			}
 		}
 		
 		public HeaderCell getHeaderCell(int index) {
-			if(index < cells.size())
-				return (HeaderCell) cells.get(index);
+			if(index < visibleCells.size())
+				return (HeaderCell) visibleCells.get(index);
 			else 
 				return null;
+		}
+		
+		/**
+		 * Get's HeaderCell by it's column Key.
+		 * 
+		 * Note that this returns HeaderCell even if it is currently
+		 * collapsed.
+		 * 
+		 * @param cid Column key of accessed HeaderCell
+		 * @return HeaderCell
+		 */
+		public HeaderCell getHeaderCell(String cid) {
+			return (HeaderCell) availableCells.get(cid);
 		}
 		
 		public void moveCell(int oldIndex, int newIndex) {
 			HeaderCell hCell = getHeaderCell(oldIndex);
 			Element cell = hCell.getElement();
 
-			cells.remove(oldIndex);
+			visibleCells.remove(oldIndex);
 			DOM.removeChild(tr, cell);
 
 			DOM.insertChild(tr, cell, newIndex);
-			cells.insertElementAt(hCell, newIndex);
+			visibleCells.insertElementAt(hCell, newIndex);
 		}
 		
 		public Iterator iterator() {
-			return cells.iterator();
+			return visibleCells.iterator();
 		}
 
 		public boolean remove(Widget w) {
-			// TODO Auto-generated method stub
+			disown(w);
+			if(visibleCells.contains(w)) {
+				visibleCells.remove(w);
+				return true;
+			}
 			return false;
 		}
 		
+		public void removeCell(String colKey) {
+			HeaderCell c = getHeaderCell(colKey);
+			remove(c);
+		}
+
 		private void focusSlot(int index) {
 			removeSlotFocus();
 			if(index > 0)
@@ -907,40 +1006,70 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		class VisibleColumnAction extends IAction {
 			
 			String colKey;
+			private boolean collapsed;
 			
 			public VisibleColumnAction(String colKey) {
 				super(IScrollTable.TableHead.this);
 				this.colKey = colKey;
-				caption = (String) columnCaptions.get(colKey);
+				caption = tHead.getHeaderCell(colKey).getCaption();
 			}
 
 			public void execute() {
 				client.getContextMenu().hide();
 				// toggle selected column
-				if(collapsedColumns.contains(colKey))
+				if(collapsedColumns.contains(colKey)) {
 					collapsedColumns.remove(colKey);
-				else
+				} else {
+					tHead.removeCell(colKey);
 					collapsedColumns.add(colKey);
+				}
 				
 				// update  variable to server
 				client.updateVariable(paintableId, "collapsedcolumns", 
 						collapsedColumns.toArray(), true);
 			}
+
+			public void setCollapsed(boolean b) {
+				collapsed = b;
+			}
+
+			/**
+			 * Override default method to distinguish on/off columns
+			 */
+			public String getHTML() {
+				StringBuffer buf = new StringBuffer();
+				if(collapsed)
+					buf.append("<span class=\"off\">");
+				buf.append(super.getHTML());
+				if(collapsed)
+					buf.append("</span>");
+				return buf.toString();
+			}
+			
 			
 		}
 
 		public IAction[] getActions() {
-			IAction[] actions= new IAction[columnCaptions.size()];
-			Iterator it = columnCaptions.keySet().iterator();
-			int i = 0;
-			while(it.hasNext()) {
-				String cid = (String) it.next();
-				VisibleColumnAction a = new VisibleColumnAction(cid);
-				a.setCaption((String) columnCaptions.get(cid));
+			IAction[] actions= new IAction[columnOrder.length];
+			
+			for (int i = 0; i < columnOrder.length; i++) {
+				String cid = columnOrder[i];
+				HeaderCell c = getHeaderCell(cid);
+				VisibleColumnAction a = new VisibleColumnAction(c.getColKey());
+				a.setCaption(c.getCaption());
+				if(!c.isEnabled())
+					a.setCollapsed(true);
 				actions[i] = a;
-				i++;
-			}
+			}			
 			return actions;
+		}
+
+		private Iterator getAvailableColumnKeyIterator() {
+			return availableCells.keySet().iterator();
+		}
+
+		private int getAvailableColumnCount() {
+			return availableCells.size();
 		}
 
 		public Client getClient() {
@@ -1079,7 +1208,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 			int cells = DOM.getChildCount(row.getElement());
 			for(int i = 0; i < cells; i++) {
 				Element cell = DOM.getChild(row.getElement(), i);
-				int w = getColWidth(i);
+				int w = IScrollTable.this.getColWidth(getColKeyByIndex(i));
 				DOM.setStyleAttribute(cell, "width", w + "px");
 				DOM.setStyleAttribute(DOM.getFirstChild(cell), "width", w + "px");
 			}
