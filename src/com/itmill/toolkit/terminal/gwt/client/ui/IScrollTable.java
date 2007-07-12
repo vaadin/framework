@@ -1342,15 +1342,15 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 				this.rowKey = rowKey;
 				setElement(DOM.createElement("tr"));
 				DOM.sinkEvents(getElement(), Event.ONCLICK);
-				disableContextMenu(getElement());
+				attachContextMenuEvent(getElement());
 				setStyleName("iscrolltable-row");
 			}
 			
-			private native void disableContextMenu(Element el) /*-{
+			private native void attachContextMenuEvent(Element el) /*-{
 				var row = this;
 				el.oncontextmenu = function(e) {
 					if(!e)
-						e = window.event;
+						e = $wnd.event;
 					row.@com.itmill.toolkit.terminal.gwt.client.ui.IScrollTable.IScrollTableBody.IScrollTableRow::showContextMenu(Lcom/google/gwt/user/client/Event;)(e);
 					return false;
 				};
