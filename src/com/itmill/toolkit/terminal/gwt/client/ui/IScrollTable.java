@@ -11,15 +11,8 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Grid;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.ScrollListener;
 import com.google.gwt.user.client.ui.ScrollPanel;
@@ -402,66 +395,6 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		client.updateVariable(paintableId, "columnorder", columnOrder, false);
 	}
 
-	/**
-	 * This method has logick which rows needs to be requested from
-	 * server when user scrolls
-	 *
-	 */
-	public void onScroll(Widget widget, int scrollLeft, int scrollTop) {
-		if(!initializedAndAttached)
-			return;
-		
-		rowRequestHandler.cancel();
-		
-		// fix headers horizontal scrolling
-		tHead.setHorizontalScrollPosition(scrollLeft);
-
-		firstRowInViewPort = (int) Math.ceil( scrollTop / (double) tBody.getRowHeight() );
-		client.console.log("At scrolltop: " + scrollTop + " At row " + firstRowInViewPort);
-		
-		int postLimit = (int) (firstRowInViewPort + pageLength + pageLength*CACHE_REACT_RATE);
-		if(postLimit > totalRows -1 )
-			postLimit = totalRows - 1;
-		int preLimit = (int) (firstRowInViewPort - pageLength*CACHE_REACT_RATE);
-		if(preLimit < 0)
-			preLimit = 0;
-		int lastRendered = tBody.getLastRendered();
-		int firstRendered = tBody.getFirstRendered();
-		if( postLimit <= lastRendered && preLimit >= firstRendered ) {
-			client.updateVariable(this.paintableId, "firstvisible", firstRowInViewPort, false);
-			return; // scrolled withing "non-react area"
-		}
-		
-		if(firstRowInViewPort - pageLength*CACHE_RATE > lastRendered ||
-				firstRowInViewPort + pageLength + pageLength*CACHE_RATE < firstRendered ) {
-			// need a totally new set
-			client.console.log("Table: need a totally new set");
-			rowRequestHandler.setReqFirstRow((int) (firstRowInViewPort - pageLength*CACHE_RATE));
-			rowRequestHandler.setReqRows((int) (2*CACHE_RATE*pageLength + pageLength));
-			rowRequestHandler.deferRowFetch();
-			return;
-		}
-		if(preLimit < firstRendered ) {
-			// need some rows to the beginning of the rendered area
-			client.console.log("Table: need some rows to the beginning of the rendered area");
-			rowRequestHandler.setReqFirstRow((int) (firstRowInViewPort - pageLength*CACHE_RATE));
-			rowRequestHandler.setReqRows(firstRendered - rowRequestHandler.getReqFirstRow());
-			rowRequestHandler.deferRowFetch();
-
-			return;
-		}
-		if(postLimit > lastRendered) {
-			// need some rows to the end of the rendered area
-			client.console.log("need some rows to the end of the rendered area");
-			rowRequestHandler.setReqFirstRow(lastRendered + 1);
-			rowRequestHandler.setReqRows((int) ((firstRowInViewPort + pageLength + pageLength*CACHE_RATE) - lastRendered));
-			rowRequestHandler.deferRowFetch();
-		}
-		
-	}
-	
-	
-	
 	protected void onAttach() {
 		
 		super.onAttach();
@@ -524,6 +457,64 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		return 20;
 	}
 
+	/**
+	 * This method has logick which rows needs to be requested from
+	 * server when user scrolls
+	 *
+	 */
+	public void onScroll(Widget widget, int scrollLeft, int scrollTop) {
+		if(!initializedAndAttached)
+			return;
+		
+		rowRequestHandler.cancel();
+		
+		// fix headers horizontal scrolling
+		tHead.setHorizontalScrollPosition(scrollLeft);
+	
+		firstRowInViewPort = (int) Math.ceil( scrollTop / (double) tBody.getRowHeight() );
+		client.console.log("At scrolltop: " + scrollTop + " At row " + firstRowInViewPort);
+		
+		int postLimit = (int) (firstRowInViewPort + pageLength + pageLength*CACHE_REACT_RATE);
+		if(postLimit > totalRows -1 )
+			postLimit = totalRows - 1;
+		int preLimit = (int) (firstRowInViewPort - pageLength*CACHE_REACT_RATE);
+		if(preLimit < 0)
+			preLimit = 0;
+		int lastRendered = tBody.getLastRendered();
+		int firstRendered = tBody.getFirstRendered();
+		if( postLimit <= lastRendered && preLimit >= firstRendered ) {
+			client.updateVariable(this.paintableId, "firstvisible", firstRowInViewPort, false);
+			return; // scrolled withing "non-react area"
+		}
+		
+		if(firstRowInViewPort - pageLength*CACHE_RATE > lastRendered ||
+				firstRowInViewPort + pageLength + pageLength*CACHE_RATE < firstRendered ) {
+			// need a totally new set
+			client.console.log("Table: need a totally new set");
+			rowRequestHandler.setReqFirstRow((int) (firstRowInViewPort - pageLength*CACHE_RATE));
+			rowRequestHandler.setReqRows((int) (2*CACHE_RATE*pageLength + pageLength));
+			rowRequestHandler.deferRowFetch();
+			return;
+		}
+		if(preLimit < firstRendered ) {
+			// need some rows to the beginning of the rendered area
+			client.console.log("Table: need some rows to the beginning of the rendered area");
+			rowRequestHandler.setReqFirstRow((int) (firstRowInViewPort - pageLength*CACHE_RATE));
+			rowRequestHandler.setReqRows(firstRendered - rowRequestHandler.getReqFirstRow());
+			rowRequestHandler.deferRowFetch();
+	
+			return;
+		}
+		if(postLimit > lastRendered) {
+			// need some rows to the end of the rendered area
+			client.console.log("need some rows to the end of the rendered area");
+			rowRequestHandler.setReqFirstRow(lastRendered + 1);
+			rowRequestHandler.setReqRows((int) ((firstRowInViewPort + pageLength + pageLength*CACHE_RATE) - lastRendered));
+			rowRequestHandler.deferRowFetch();
+		}
+		
+	}
+
 	private class RowRequestHandler extends Timer {
 		
 		private int reqFirstRow = 0;
@@ -560,7 +551,21 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		public int getReqRows() {
 			return reqRows;
 		}
-		
+
+		/**
+		 * Sends request to refresh content at this position.
+		 */
+		public void refreshContent() {
+			int first = (int) (firstRowInViewPort - pageLength*CACHE_RATE);
+			int reqRows = (int) (2*pageLength*CACHE_RATE + pageLength);
+			if(first < 0) {
+				reqRows = reqRows + first;
+				first = 0;
+			}
+			this.setReqFirstRow(first);
+			this.setReqRows(reqRows);
+			run();
+		}
 	}
 	
 	public class HeaderCell extends Widget {
@@ -844,7 +849,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		Element hTableWrapper = DOM.createDiv();
 		Element hTableContainer = DOM.createDiv();
 		Element table = DOM.createTable();
-		Element tBody = DOM.createTBody();
+		Element headerTableBody = DOM.createTBody();
 		Element tr = DOM.createTR();
 
 		private Element columnSelector = DOM.createDiv();
@@ -859,13 +864,14 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 
 			// TODO move styles to CSS
 			DOM.setStyleAttribute(columnSelector, "width", COLUMN_SELECTOR_WIDTH +"px");
-			DOM.setStyleAttribute(columnSelector, "float", "right");
+			DOM.setStyleAttribute(columnSelector, "cssFloat", "right");
+			DOM.setStyleAttribute(columnSelector, "styleFloat", "right");
 			DOM.setStyleAttribute(columnSelector, "height", COLUMN_SELECTOR_HEIGHT + "px");
 			DOM.setStyleAttribute(columnSelector, "background", "brown");
 			DOM.setStyleAttribute(columnSelector, "display", "none");
 			
-			DOM.appendChild(table, tBody);
-			DOM.appendChild(tBody, tr);
+			DOM.appendChild(table, headerTableBody);
+			DOM.appendChild(headerTableBody, tr);
 			DOM.appendChild(hTableContainer, table);
 			DOM.appendChild(hTableWrapper, hTableContainer);
 			DOM.appendChild(div, columnSelector);
@@ -1028,7 +1034,9 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 				
 				// update  variable to server
 				client.updateVariable(paintableId, "collapsedcolumns", 
-						collapsedColumns.toArray(), true);
+						collapsedColumns.toArray(), false);
+				// let rowRequestHandler determine proper rows
+				rowRequestHandler.refreshContent();
 			}
 
 			public void setCollapsed(boolean b) {
