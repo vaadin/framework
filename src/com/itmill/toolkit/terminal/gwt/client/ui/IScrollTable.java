@@ -1413,7 +1413,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 
 		}
 
-		public class IScrollTableRow extends Panel  implements IActionOwner {
+		public class IScrollTableRow extends Panel implements IActionOwner {
 			
 			Vector childWidgets = new Vector();
 			private boolean selected = false;
@@ -1512,13 +1512,19 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 				return false;
 			}
 
+			/*
+			 * React on click that occur on content cells only
+			 */
 			public void onBrowserEvent(Event event) {
+				String s = DOM.getAttribute(DOM.eventGetTarget(event), "className");
 				switch (DOM.eventGetType(event)) {
 				case Event.ONCLICK:
-					client.console.log("Row click");
-					if(selectMode > ITable.SELECT_MODE_NONE) {
-						toggleSelection();
-						client.updateVariable(paintableId, "selected", selectedRowKeys.toArray(), immediate);
+					if("iscrolltable-cellContent".equals(s)) {
+						client.console.log("Row click");
+						if(selectMode > ITable.SELECT_MODE_NONE) {
+							toggleSelection();
+							client.updateVariable(paintableId, "selected", selectedRowKeys.toArray(), immediate);
+						}
 					}
 					break;
 
