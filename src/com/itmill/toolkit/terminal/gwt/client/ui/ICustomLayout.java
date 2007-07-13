@@ -149,7 +149,6 @@ public class ICustomLayout extends ComplexPanel implements Paintable, Layout {
 		} else {
 			int len = DOM.getChildCount(elem);
 			for (int i = 0; i < len; i++) {
-				System.out.print(i);
 				scanForLocations(DOM.getChild(elem, i));
 			}
 		}
