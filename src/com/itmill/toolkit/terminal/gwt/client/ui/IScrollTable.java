@@ -37,6 +37,10 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 	 */
 	private static final double CACHE_REACT_RATE = 1;
 	
+	public static final char ALIGN_CENTER = 'c';
+	public static final char ALIGN_LEFT = 'b';
+	public static final char ALIGN_RIGHT = 'e';
+	
 	private int firstRowInViewPort = 0;
 	private int pageLength = 15;
 	
@@ -148,7 +152,6 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 			tHead.setColumnCollapsingAllowed(false);
 		}
 		
-		UIDL columnInfo = null;
 		UIDL rowData = null;
 		for(Iterator it = uidl.getChildIterator(); it.hasNext();) {
 			UIDL c = (UIDL) it.next();
@@ -177,31 +180,11 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 	}
 	
 	private void updateVisibleColumns(UIDL uidl) {
-		if(!initializedAndAttached) {
-			// add empty cell for col headers
-			tHead.addAvailableCell(new RowHeadersHeaderCell());
-			Iterator it = uidl.getChildIterator();
-			while(it.hasNext()) {
-				UIDL col = (UIDL) it.next();
-				String cid = col.getStringAttribute("cid");
-				HeaderCell c = new HeaderCell(
-						cid,
-						col.getStringAttribute("caption")
-					);
-				tHead.addAvailableCell(c);
-				if(col.hasAttribute("sortable")) {
-					c.setSortable(true);
-					if(cid.equals(sortColumn))
-						c.setSorted(true);
-					else
-						c.setSorted(false);
-				}
-				// TODO icon, align, width
-			}
-		} else {
-			// TODO update existing cells (matters if server changes captions)
+		Iterator it = uidl.getChildIterator();
+		while(it.hasNext()) {
+			UIDL col = (UIDL) it.next();
+			tHead.updateCellFromUIDL(col);
 		}
-					
 	}
 	
 	private IScrollTableBody getTBody() {
@@ -412,10 +395,16 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		Iterator headCells = tHead.iterator();
 		int i = 0;
 		while(headCells.hasNext()) {
-			Element hCell = ((HeaderCell) headCells.next()).getElement();
-			int hw = DOM.getIntAttribute(hCell, "offsetWidth");
-			int cw = tBody.getColWidth(i);
-			int w = (hw > cw ? hw : cw) + IScrollTableBody.CELL_EXTRA_WIDTH;
+			HeaderCell hCell = (HeaderCell) headCells.next();
+			int w;
+			if(hCell.getWidth() > 0) {
+				// server has defined column width explicitly
+				w = hCell.getWidth();
+			} else {
+				int hw = DOM.getIntAttribute(hCell.getElement(), "offsetWidth");
+				int cw = tBody.getColWidth(i);
+				w = (hw > cw ? hw : cw) + IScrollTableBody.CELL_EXTRA_WIDTH;
+			}
 			setColWidth(i , w);
 			i++;
 		}
@@ -597,14 +586,13 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 
 		private int closestSlot;
 
-		private int width;
+		private int width = -1;
 
+		private char align = ALIGN_LEFT;
 
 		private HeaderCell(){};
 		
 		public void setSortable(boolean b) {
-			if(b == sortable)
-				return;
 			sortable = b;
 		}
 		
@@ -711,18 +699,33 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 			switch (DOM.eventGetType(event)) {
 			case Event.ONMOUSEDOWN:
 				client.console.log("HeaderCaption: mouse down");
-				dragging = true;
-				moved = false;
-		        colIndex = getColIndexByKey(cid);
-				DOM.setCapture(getElement());
-				this.headerX = tHead.getAbsoluteLeft();
-				client.console.log("HeaderCaption: Caption set to capture mouse events");
-				DOM.eventPreventDefault(event);
+				if(columnReordering) {
+					dragging = true;
+					moved = false;
+			        colIndex = getColIndexByKey(cid);
+					DOM.setCapture(getElement());
+					this.headerX = tHead.getAbsoluteLeft();
+					client.console.log("HeaderCaption: Caption set to capture mouse events");
+					DOM.eventPreventDefault(event); // prevent selecting text
+				}
 				break;
 			case Event.ONMOUSEUP:
 				client.console.log("HeaderCaption: mouseUP");
-				dragging = false;
-				DOM.releaseCapture(getElement());
+				if(columnReordering) {
+					dragging = false;
+					DOM.releaseCapture(getElement());
+					client.console.log("HeaderCaption: Stopped column reordering");
+					if(moved) {
+						hideFloatingCopy();
+						tHead.removeSlotFocus();
+						if(closestSlot != colIndex &&  closestSlot != (colIndex + 1) ) {
+							if(closestSlot > colIndex)
+								reOrderColumn(cid, closestSlot - 1);
+							else
+								reOrderColumn(cid, closestSlot);
+						}
+					}
+				}
 
 				if(!moved) {
 					// mouse event was a click to header -> sort column
@@ -742,15 +745,6 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 						rowRequestHandler.deferRowFetch();
 					}
 					break;
-				}
-				client.console.log("HeaderCaption: Stopped column reordering");
-				hideFloatingCopy();
-				tHead.removeSlotFocus();
-				if(closestSlot != colIndex &&  closestSlot != (colIndex + 1) ) {
-					if(closestSlot > colIndex)
-						reOrderColumn(cid, closestSlot - 1);
-					else
-						reOrderColumn(cid, closestSlot);
 				}
 				break;
 			case Event.ONMOUSEMOVE:
@@ -830,6 +824,27 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 			return getParent() != null;
 		}
 
+		public void setAlign(char c) {
+			if(align  != c) {
+				switch(c) {
+				case ALIGN_CENTER:
+					DOM.setStyleAttribute(captionContainer, "text-align", "center");
+					break;
+				case ALIGN_RIGHT:
+					DOM.setStyleAttribute(captionContainer, "text-align", "right");
+					break;
+				default:
+					DOM.setStyleAttribute(captionContainer, "text-align", "");
+					break;
+				}
+			}
+			align = c;
+		}
+
+		public char getAlign() {
+			return align;
+		}
+
 
 	}
 	
@@ -895,8 +910,40 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 			setElement(div);
 			
 			DOM.sinkEvents(columnSelector, Event.ONCLICK);
+			
+			availableCells.put("0", new RowHeadersHeaderCell());
 		}
 		
+		public void updateCellFromUIDL(UIDL col) {
+			String cid = col.getStringAttribute("cid");
+			HeaderCell c = getHeaderCell(cid);
+			if(c == null) {
+				c = new HeaderCell(
+						cid,
+						col.getStringAttribute("caption")
+					);
+				availableCells.put(cid, c);
+			} else {
+				c.setText(col.getStringAttribute("caption"));
+			}
+
+			if(col.hasAttribute("sortable")) {
+				c.setSortable(true);
+				if(cid.equals(sortColumn))
+					c.setSorted(true);
+				else
+					c.setSorted(false);
+			}
+			if(col.hasAttribute("align")) {
+				c.setAlign(col.getStringAttribute("align").charAt(0));
+			}
+			if(col.hasAttribute("width")) {
+				String width = col.getStringAttribute("width"); 
+				c.setWidth(Integer.parseInt(width));
+			}
+			// TODO icon
+		}
+
 		public void enableColumn(String cid, int index) {
 			HeaderCell c = getHeaderCell(cid);
 			if(!c.isEnabled()) {
@@ -906,10 +953,6 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 
 		public int getVisibleCellCount() {
 			return visibleCells.size();
-		}
-
-		public void addAvailableCell(HeaderCell cell) {
-			availableCells.put(cell.getColKey(), cell);
 		}
 
 		public void setHorizontalScrollPosition(int scrollLeft) {
@@ -1113,6 +1156,19 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		public String getPaintableId() {
 			return paintableId;
 		}
+
+		/**
+		 * Returns column alignments for visible columns
+		 */
+		public char[] getColumnAlignments() {
+			Iterator it = visibleCells.iterator();
+			char[] aligns = new char[visibleCells.size()];
+			int colIndex = 0;
+			while(it.hasNext()) {
+				aligns[colIndex++] = ((HeaderCell) it.next()).getAlign();
+			}
+			return aligns;
+		}
 		
 	}
 	
@@ -1150,6 +1206,8 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 
 		private int lastRendered;
 
+		private char[] aligns;
+
 		IScrollTableBody() {
 			
 			constructDOM();
@@ -1176,8 +1234,9 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 			this.firstRendered = firstIndex;
 			this.lastRendered = firstIndex + rows - 1 ;
 			Iterator it = rowData.getChildIterator();
+			aligns = tHead.getColumnAlignments();
 			while(it.hasNext()) {
-				IScrollTableRow row = new IScrollTableRow((UIDL) it.next());
+				IScrollTableRow row = new IScrollTableRow((UIDL) it.next(), aligns);
 				addRow(row);
 			}
 			if(isAttached())
@@ -1185,6 +1244,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		}
 		
 		public void renderRows(UIDL rowData, int firstIndex, int rows) {
+			aligns = tHead.getColumnAlignments();
 			Iterator it = rowData.getChildIterator();
 			if(firstIndex == lastRendered + 1) {
 				while(it.hasNext()) {
@@ -1235,10 +1295,9 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		 * This method can be called only after table has been initialized
 		 * 
 		 * @param uidl
-		 * @param client2
 		 */
 		private IScrollTableRow createRow(UIDL uidl) {
-			IScrollTableRow row = new IScrollTableRow(uidl);
+			IScrollTableRow row = new IScrollTableRow(uidl, aligns);
 			int cells = DOM.getChildCount(row.getElement());
 			for(int i = 0; i < cells; i++) {
 				Element cell = DOM.getChild(row.getElement(), i);
@@ -1384,12 +1443,15 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 				return String.valueOf(rowKey);
 			}
 
-			public IScrollTableRow(UIDL uidl) {
+			public IScrollTableRow(UIDL uidl, char[] aligns) {
 				this(uidl.getIntAttribute("key"));
 				
+				tHead.getColumnAlignments();
+				int col = 0;
 				// row header
-				if(uidl.hasAttribute("caption"))
-					addCell(uidl.getStringAttribute("caption"));
+				if(rowHeaders) {
+					addCell(uidl.getStringAttribute("caption"), aligns[col++]);
+				}
 				
 				if(uidl.hasAttribute("al"))
 					actionKeys = uidl.getStringArrayAttribute("al");
@@ -1398,30 +1460,43 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 				while(cells.hasNext()) {
 					Object cell = cells.next();
 					if (cell instanceof String) {
-						addCell(cell.toString());
+						addCell(cell.toString(), aligns[col++]);
 					} else {
 					 	Widget cellContent = client.getWidget((UIDL) cell);
 					 	(( Paintable) cellContent).updateFromUIDL((UIDL) cell, client);
+					 	addCell(cellContent, aligns[col++]);
 					}
 				}
 				if(uidl.hasAttribute("selected") && !isSelected())
 					toggleSelection();
 			}
 			
-			public void addCell(String text) {
+			public void addCell(String text, char align) {
 				// String only content is optimized by not using Label widget
 				Element td = DOM.createTD();
 				Element container = DOM.createDiv();
 				DOM.setAttribute(container, "className", "iscrolltable-cellContent");
 				DOM.setInnerHTML(container, text);
+				if(align != ALIGN_LEFT) {
+					switch (align) {
+					case ALIGN_CENTER:
+						DOM.setStyleAttribute(container, "text-align", "center");
+						break;
+					case ALIGN_RIGHT:
+					default:
+						DOM.setStyleAttribute(container, "text-align", "right");
+						break;
+					}
+				}
 				DOM.appendChild(td, container);
 				DOM.appendChild(getElement(), td);
 			}
 			
-			public void addCell(Widget w) {
+			public void addCell(Widget w, char align) {
 				Element td = DOM.createTD();
 				Element container = DOM.createDiv();
 				DOM.setAttribute(container, "className", "iscrolltable-cellContent");
+				// TODO make widget cells respect align. text-align:center for IE, margin: auto for others
 				DOM.appendChild(td, container);
 				DOM.appendChild(getElement(), td);
 				adopt(w, container);
