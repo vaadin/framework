@@ -21,7 +21,7 @@ select {
 	filter: alpha(opacity:30);
 }
 
-i-contextmenu {
+.i-contextmenu {
 	background: #fff;	
 	border: #000;
 }
@@ -29,6 +29,11 @@ i-contextmenu {
 /* TODO move table styles to separate file */
 .iscrolltable-header {
 	
+}
+
+/* disabled row in column selector */
+.off {
+	font-style: italic;
 }
 
 .iscrolltable-header table {

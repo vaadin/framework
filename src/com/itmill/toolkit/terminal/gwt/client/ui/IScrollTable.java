@@ -176,9 +176,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 	private void updateVisibleColumns(UIDL c) {
 		if(!initializedAndAttached) {
 			// add empty cell for col headers
-			tHead.addAvailableCell(new HeaderCell(
-					"0",
-					""));
+			tHead.addAvailableCell(new RowHeadersHeaderCell());
 			Iterator it = c.getChildIterator();
 			while(it.hasNext()) {
 				UIDL col = (UIDL) it.next();
@@ -708,7 +706,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 			floatingCopyOfHeaderCell = null;
 		}
 		
-		private void handleCaptionEvent(Event event) {
+		protected void handleCaptionEvent(Event event) {
 			switch (DOM.eventGetType(event)) {
 			case Event.ONMOUSEDOWN:
 				client.console.log("HeaderCaption: mouse down");
@@ -832,6 +830,23 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		}
 
 
+	}
+	
+	/**
+	 * HeaderCell that is header cell for row headers.
+	 * 
+	 * Reordering disabled and clicking on it resets sorting.
+	 */
+	public class RowHeadersHeaderCell extends HeaderCell {
+		
+		RowHeadersHeaderCell() {
+			super("0", "");
+		}
+
+		protected void handleCaptionEvent(Event event) {
+			// NOP: RowHeaders cannot be reordered
+			// TODO It'd be nice to reset sorting here
+		}
 	}
 	
 	public class TableHead extends Panel implements IActionOwner {
@@ -986,9 +1001,13 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		private void focusSlot(int index) {
 			removeSlotFocus();
 			if(index > 0)
-				DOM.setStyleAttribute(DOM.getChild(tr, index - 1), "borderRight", "2px solid black");
+				DOM.setStyleAttribute(
+						DOM.getFirstChild(DOM.getChild(tr, index - 1)), 
+						"borderRight", "2px solid black");
 			else
-				DOM.setStyleAttribute(DOM.getChild(tr, index), "borderLeft", "2px solid black");
+				DOM.setStyleAttribute(
+						DOM.getFirstChild(DOM.getChild(tr, index)), 
+						"borderLeft", "2px solid black");
 			focusedSlot = index;
 		}
 
@@ -996,9 +1015,13 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 			if(focusedSlot < 0)
 				return;
 			if(focusedSlot == 0)
-				DOM.setStyleAttribute(DOM.getChild(tr, focusedSlot), "borderLeft", "none");
+				DOM.setStyleAttribute(
+						DOM.getFirstChild(DOM.getChild(tr, focusedSlot)), 
+						"borderLeft", "none");
 			else if( focusedSlot > 0)
-				DOM.setStyleAttribute(DOM.getChild(tr, focusedSlot - 1), "borderRight", "none");
+				DOM.setStyleAttribute(
+						DOM.getFirstChild(DOM.getChild(tr, focusedSlot - 1)), 
+						"borderRight", "none");
 			focusedSlot = -1;
 		}
 		
