@@ -828,13 +828,13 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 			if(align  != c) {
 				switch(c) {
 				case ALIGN_CENTER:
-					DOM.setStyleAttribute(captionContainer, "text-align", "center");
+					DOM.setStyleAttribute(captionContainer, "textAlign", "center");
 					break;
 				case ALIGN_RIGHT:
-					DOM.setStyleAttribute(captionContainer, "text-align", "right");
+					DOM.setStyleAttribute(captionContainer, "textAlign", "right");
 					break;
 				default:
-					DOM.setStyleAttribute(captionContainer, "text-align", "");
+					DOM.setStyleAttribute(captionContainer, "textAlign", "");
 					break;
 				}
 			}
@@ -1480,11 +1480,11 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 				if(align != ALIGN_LEFT) {
 					switch (align) {
 					case ALIGN_CENTER:
-						DOM.setStyleAttribute(container, "text-align", "center");
+						DOM.setStyleAttribute(container, "textAlign", "center");
 						break;
 					case ALIGN_RIGHT:
 					default:
-						DOM.setStyleAttribute(container, "text-align", "right");
+						DOM.setStyleAttribute(container, "textAlign", "right");
 						break;
 					}
 				}
