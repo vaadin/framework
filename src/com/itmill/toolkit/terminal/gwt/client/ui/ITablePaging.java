@@ -95,16 +95,18 @@ public class ITablePaging extends Composite implements ITable, Paintable, ClickL
 		this.firstRow = uidl.getIntAttribute("firstrow");
 		this.rows = uidl.getIntAttribute("rows");
 		
-		Set selectedKeys = uidl.getStringArrayVariableAsSet("selected");
-		selectedRowKeys.clear();
-		for(Iterator it = selectedKeys.iterator();it.hasNext();)
-			selectedRowKeys.add((String) it.next());
-		
 		if(uidl.hasAttribute("selectmode")) {
 			if(uidl.getStringAttribute("selectmode").equals("multi"))
 				selectMode = ITable.SELECT_MODE_MULTI;
 			else
 				selectMode = ITable.SELECT_MODE_SINGLE;
+			
+			if(uidl.hasAttribute("selected")) {
+				Set selectedKeys = uidl.getStringArrayVariableAsSet("selected");
+				selectedRowKeys.clear();
+				for(Iterator it = selectedKeys.iterator();it.hasNext();)
+					selectedRowKeys.add((String) it.next());
+			}
 		}
 		
 		if(uidl.hasVariable("sortascending"))
