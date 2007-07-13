@@ -115,36 +115,38 @@ public class ITablePaging extends Composite implements ITable, Paintable, ClickL
 		if(uidl.hasAttribute("rowheaders"))
 			rowHeaders = true;
 		
-		UIDL columnInfo = null;
 		UIDL rowData = null;
+		UIDL visibleColumns = null;
 		for(Iterator it = uidl.getChildIterator(); it.hasNext();) {
 			UIDL c = (UIDL) it.next();
-			if(c.getTag().equals("cols"))
-				columnInfo = c;
-			else if(c.getTag().equals("rows"))
+			if(c.getTag().equals("rows"))
 				rowData = c;
 			else if(c.getTag().equals("actions"))
 				updateActionMap(c);
 			else if(c.getTag().equals("visiblecolumns"))
-				updateVisibleColumns(c);
+				visibleColumns = c;
 		}
-		tBody.resize(rows+1, columnInfo.getChidlCount() + (rowHeaders ? 1 : 0 ));
-
-		updateHeader(columnInfo);
-		
+		tBody.resize(rows+1, uidl.getIntAttribute("cols") + (rowHeaders ? 1 : 0 ));
+		updateHeader(visibleColumns);
 		updateBody(rowData);
 		
 		updatePager();
 	}
 	
-	private void updateVisibleColumns(UIDL c) {
+	private void updateHeader(UIDL c) {
 		Iterator it = c.getChildIterator();
-		int count = 0;
 		visibleColumns.clear();
+		int colIndex = (rowHeaders ? 1 : 0);
 		while(it.hasNext()) {
-			count++;
 			UIDL col = (UIDL) it.next();
-			visibleColumns.put(col.getStringAttribute("cid"), col.getStringAttribute("caption"));
+			String cid = col.getStringAttribute("cid");
+			if(!col.hasAttribute("collapsed")) {
+				tBody.setWidget(0, colIndex, 
+						new HeaderCell(cid, 
+								col.getStringAttribute("caption")));
+
+			}
+			colIndex++;
 		}
 	}
 
@@ -153,19 +155,6 @@ public class ITablePaging extends Composite implements ITable, Paintable, ClickL
 		
 	}
 
-	private void updateHeader(UIDL uidl) {
-		if(uidl == null)
-			return;
-		int colIndex = (rowHeaders ? 1 : 0);
-
-		for(Iterator it = uidl.getChildIterator();it.hasNext();) {
-			UIDL col = (UIDL) it.next();
-			String cid = col.getStringAttribute("cid");
-			tBody.setWidget(0, colIndex, new HeaderCell(cid, col.getStringAttribute("caption")));
-			colIndex++;
-		}
-	}
-	
 	/**
 	 * Updates row data from uidl. UpdateFromUIDL delegates updating 
 	 * tBody to this method.

@@ -1443,33 +1443,16 @@ public class Table extends Select implements Action.Container,
 		if (rowheads)
 			target.addAttribute("rowheaders", true);
 
-		// Columns
-		target.startTag("cols");
+		// Visible column order
 		Collection sortables = getSortableContainerPropertyIds();
+		ArrayList visibleColOrder = new ArrayList();
 		for (Iterator it = this.visibleColumns.iterator(); it.hasNext();) {
 			Object columnId = it.next();
 			if (!isColumnCollapsed(columnId)) {
-				target.startTag("ch");
-				if (colheads) {
-					if (this.getColumnIcon(columnId) != null)
-						target.addAttribute("icon", this
-								.getColumnIcon(columnId));
-					if (sortables.contains(columnId))
-						target.addAttribute("sortable", true);
-					String header = (String) this.getColumnHeader(columnId);
-					target.addAttribute("caption", (header != null ? header
-							: ""));
-				}
-				target.addAttribute("cid", this.columnIdMap.key(columnId));
-				if (!ALIGN_LEFT.equals(this.getColumnAlignment(columnId)))
-					target.addAttribute("align", this
-							.getColumnAlignment(columnId));
-				if(getColumnWidth(columnId) > -1)
-					target.addAttribute("width", String.valueOf(getColumnWidth(columnId)));
-				target.endTag("ch");
+				visibleColOrder.add(this.columnIdMap.key(columnId));
 			}
 		}
-		target.endTag("cols");
+		target.addAttribute("vcolorder", visibleColOrder.toArray());
 
 		// Rows
 		Set actionSet = new LinkedHashSet();
@@ -1611,23 +1594,36 @@ public class Table extends Select implements Action.Container,
 				}
 			}
 			target.addVariable(this, "collapsedcolumns", collapsedkeys);
-			target.startTag("visiblecolumns");
-			int i = 0;
-			for (Iterator it = this.visibleColumns.iterator(); it.hasNext(); i++) {
-				Object columnId = it.next();
-				if (columnId != null) {
-					target.startTag("column");
-					target.addAttribute("cid", this.columnIdMap.key(columnId));
-					String head = getColumnHeader(columnId);
-					target.addAttribute("caption", (head != null ? head : ""));
-					if (this.isColumnCollapsed(columnId)) {
-						target.addAttribute("collapsed", true);
-					}
-					target.endTag("column");
-				}
-			}
-			target.endTag("visiblecolumns");
 		}
+		target.startTag("visiblecolumns");
+		int i = 0;
+		for (Iterator it = this.visibleColumns.iterator(); it.hasNext(); i++) {
+			Object columnId = it.next();
+			if (columnId != null) {
+				target.startTag("column");
+				target.addAttribute("cid", this.columnIdMap.key(columnId));
+				String head = getColumnHeader(columnId);
+				target.addAttribute("caption", (head != null ? head : ""));
+				if (this.isColumnCollapsed(columnId)) {
+					target.addAttribute("collapsed", true);
+				}
+				if (colheads) {
+					if (this.getColumnIcon(columnId) != null)
+						target.addAttribute("icon", this
+								.getColumnIcon(columnId));
+					if (sortables.contains(columnId))
+						target.addAttribute("sortable", true);
+				}
+				if (!ALIGN_LEFT.equals(this.getColumnAlignment(columnId)))
+					target.addAttribute("align", this
+							.getColumnAlignment(columnId));
+				if(getColumnWidth(columnId) > -1)
+					target.addAttribute("width", String.valueOf(getColumnWidth(columnId)));
+			
+				target.endTag("column");
+			}
+		}
+		target.endTag("visiblecolumns");
 	}
 
 	/**

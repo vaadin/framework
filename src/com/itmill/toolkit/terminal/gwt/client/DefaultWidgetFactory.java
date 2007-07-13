@@ -79,10 +79,10 @@ public class DefaultWidgetFactory implements WidgetFactory {
 		}
 		if ("table".equals(tag)) {
 			if(uidl.hasAttribute("style")) {
-				if("scrolling".equals(uidl.getStringAttribute("style")))
-						return new IScrollTable();
+				if("paging".equals(uidl.getStringAttribute("style")))
+						return new ITablePaging();
 			}
-			return new ITablePaging();
+			return new IScrollTable();
 		}
 		if("datefield".equals(tag)) {
 			if(uidl.hasAttribute("style"))

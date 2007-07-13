@@ -14,6 +14,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ScrollListener;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -80,6 +81,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 	 */
 	private HashMap actionMap = new HashMap();
 	private String[] visibleColOrder;
+	private boolean initialContentReceived = false;
 	
 	public IScrollTable() {
 		// TODO move headerContainer and column selector into TableHead
@@ -87,7 +89,6 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		bodyContainer.addScrollListener(this);
 		
 		VerticalPanel panel = new VerticalPanel();
-		
 		
 		panel.add(tHead);
 		panel.add(bodyContainer);
@@ -121,11 +122,12 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 			this.sortColumn = uidl.getStringVariable("sortcolumn");
 		}
 		
-		Set selectedKeys = uidl.getStringArrayVariableAsSet("selected");
-		selectedRowKeys.clear();
-		for(Iterator it = selectedKeys.iterator();it.hasNext();)
-			selectedRowKeys.add((String) it.next());
-
+		if(uidl.hasVariable("selected")) {
+			Set selectedKeys = uidl.getStringArrayVariableAsSet("selected");
+			selectedRowKeys.clear();
+			for(Iterator it = selectedKeys.iterator();it.hasNext();)
+				selectedRowKeys.add((String) it.next());
+		}
 		
 		if(uidl.hasAttribute("selectmode")) {
 			if(uidl.getStringAttribute("selectmode").equals("multi"))
@@ -150,16 +152,14 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		UIDL rowData = null;
 		for(Iterator it = uidl.getChildIterator(); it.hasNext();) {
 			UIDL c = (UIDL) it.next();
-			if(c.getTag().equals("cols"))
-				columnInfo = c;
-			else if(c.getTag().equals("rows"))
+			if(c.getTag().equals("rows"))
 				rowData = c;
 			else if(c.getTag().equals("actions"))
 				updateActionMap(c);
 			else if(c.getTag().equals("visiblecolumns"))
 				updateVisibleColumns(c);
 		}
-		updateHeader(columnInfo);
+		updateHeader(uidl.getStringArrayAttribute("vcolorder"));
 		
 		if(initializedAndAttached) {
 			updateBody(rowData, uidl.getIntAttribute("firstrow"),uidl.getIntAttribute("rows"));
@@ -169,27 +169,37 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 					uidl.getIntAttribute("rows"), 
 					totalRows);
 			bodyContainer.add(tBody);
-			initializedAndAttached = true;
+			initialContentReceived  = true;
+			if(isAttached()) {
+				sizeInit();
+			}
 		}
 	}
 	
-	private void updateVisibleColumns(UIDL c) {
+	private void updateVisibleColumns(UIDL uidl) {
 		if(!initializedAndAttached) {
 			// add empty cell for col headers
 			tHead.addAvailableCell(new RowHeadersHeaderCell());
-			Iterator it = c.getChildIterator();
+			Iterator it = uidl.getChildIterator();
 			while(it.hasNext()) {
 				UIDL col = (UIDL) it.next();
-					tHead.addAvailableCell(
-						new HeaderCell(
-								col.getStringAttribute("cid"),
-								col.getStringAttribute("caption")
-							)
-						);
+				String cid = col.getStringAttribute("cid");
+				HeaderCell c = new HeaderCell(
+						cid,
+						col.getStringAttribute("caption")
+					);
+				tHead.addAvailableCell(c);
+				if(col.hasAttribute("sortable")) {
+					c.setSortable(true);
+					if(cid.equals(sortColumn))
+						c.setSorted(true);
+					else
+						c.setSorted(false);
+				}
+				// TODO icon, align, width
 			}
 		} else {
-			// update existing cells
-			
+			// TODO update existing cells (matters if server changes captions)
 		}
 					
 	}
@@ -227,12 +237,12 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 	}
 	
 
-	private void updateHeader(UIDL uidl) {
-		if(uidl == null)
+	private void updateHeader(String[] strings) {
+		if(strings == null)
 			return;
 
+		int visibleCols = strings.length;
 		int colIndex = 0;
-		int visibleCols = uidl.getChidlCount();
 		if(rowHeaders) {
 			tHead.enableColumn("0",colIndex);
 			visibleCols++;
@@ -242,24 +252,15 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		} else {
 			visibleColOrder = new String[visibleCols];
 		}
-			
-		for(Iterator it = uidl.getChildIterator();it.hasNext();) {
-			UIDL col = (UIDL) it.next();
-			String cid = col.getStringAttribute("cid");
+
+		for (int i = 0; i < strings.length; i++) {
+			String cid = strings[i];
 			visibleColOrder[colIndex] = cid;
-			
 			tHead.enableColumn(cid, colIndex);
-			
-			if(col.hasAttribute("sortable")) {
-				HeaderCell c = tHead.getHeaderCell(cid);
-				c.setSortable(true);
-				if(cid.equals(sortColumn))
-					c.setSorted(true);
-				else
-					c.setSorted(false);
-			}
 			colIndex++;
+			
 		}
+
 	}
 	
 	/**
@@ -394,12 +395,30 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 	}
 
 	protected void onAttach() {
-		
 		super.onAttach();
-		
-		// sync column widths
-		initColumnWidths();
+		if(initialContentReceived) {
+			sizeInit();
+		}
+	}
 
+	/**
+	 * Run only once when component is attached and received its initial
+	 * content. This function :
+	 *  * Syncs headers and bodys "natural widths and saves the values.
+	 *  * Sets proper width and height
+	 *  * Makes deferred request to get some cache rows
+	*/
+	private void sizeInit() {
+		Iterator headCells = tHead.iterator();
+		int i = 0;
+		while(headCells.hasNext()) {
+			Element hCell = ((HeaderCell) headCells.next()).getElement();
+			int hw = DOM.getIntAttribute(hCell, "offsetWidth");
+			int cw = tBody.getColWidth(i);
+			int w = (hw > cw ? hw : cw) + IScrollTableBody.CELL_EXTRA_WIDTH;
+			setColWidth(i , w);
+			i++;
+		}
 		if(height  < 0) {
 			bodyContainer.setHeight((tBody.getRowHeight()*pageLength) + "px");
 		} else {
@@ -429,25 +448,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 				}
 			}
 		});
-
-		
-	}
-
-	/**
-	 * Run when receices its initial content. Syncs headers and bodys
-	 * "natural widths and saves the values.
-	*/
-	private void initColumnWidths() {
-		Iterator headCells = tHead.iterator();
-		int i = 0;
-		while(headCells.hasNext()) {
-			Element hCell = ((HeaderCell) headCells.next()).getElement();
-			int hw = DOM.getIntAttribute(hCell, "offsetWidth");
-			int cw = tBody.getColWidth(i);
-			int w = (hw > cw ? hw : cw) + IScrollTableBody.CELL_EXTRA_WIDTH;
-			setColWidth(i , w);
-			i++;
-		}
+		initializedAndAttached = true;
 	}
 
 	private int getScrollBarWidth() {
@@ -691,7 +692,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 			DOM.setStyleAttribute(floatingCopyOfHeaderCell, "opacity", "0.5");
 			DOM.setStyleAttribute(floatingCopyOfHeaderCell, "filter", "alpha(opacity=100)");
 			updateFloatingCopysPosition(DOM.getAbsoluteLeft(td), DOM.getAbsoluteTop(td));
-			DOM.appendChild(IScrollTable.this.getElement(), floatingCopyOfHeaderCell);
+			DOM.appendChild(RootPanel.get().getElement(), floatingCopyOfHeaderCell);
 		}
 		
 		private void updateFloatingCopysPosition(int x, int y) {
@@ -702,7 +703,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		}
 		
 		private void hideFloatingCopy() {
-			DOM.removeChild(IScrollTable.this.getElement(), floatingCopyOfHeaderCell);
+			DOM.removeChild(RootPanel.get().getElement(), floatingCopyOfHeaderCell);
 			floatingCopyOfHeaderCell = null;
 		}
 		
