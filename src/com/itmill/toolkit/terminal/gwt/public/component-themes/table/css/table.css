@@ -1,0 +1,144 @@
+.i-table {
+	border: 1px solid #29528a;
+	background: #fff;
+}
+.i-table:before {
+	display: block;
+	height: 2px;
+	overflow: hidden;
+	background: transparent url(../../panel/img/top-right-small.png) no-repeat right top;
+	content: url(../../panel/img/top-left-small.png);
+	margin: -1px -1px 0 -1px;
+}
+.i-table:after {
+	display: block;
+	height: 2px;
+	overflow: hidden;
+	background: transparent url(../../panel/img/bottom-right.png) no-repeat right top;
+	content: url(../../panel/img/bottom-left.png);
+	margin: 0 -1px -1px -1px;
+}
+
+.i-table-header-wrap {
+	height: 26px;
+	background: #e7edf3 url(../img/header-bg.png) repeat-x;
+	border-bottom: 1px solid #6082b0;
+	margin-top: -1px;
+}
+
+.i-table-header {
+}
+
+.i-table-header table,
+.i-table-table {
+	border-collapse: collapse;
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+.i-table-header table td,
+.i-table-table td {
+	margin:0;
+	padding:0;
+	border:0;
+}
+
+.i-table-resizer {
+	display: block;
+	height: 26px;
+	float: right;
+	background: #aabdda url(../img/resizer-bg.png);
+	cursor: e-resize;
+}
+
+.i-table-caption-container {
+	float: right;
+	overflow: hidden;
+	white-space: nowrap;
+	font-weight: bold;
+	color: #1c3e6e;
+	padding-top: 5px;
+}
+
+/* disabled row in column selector */
+.i-off {
+	font-style: italic;
+}
+
+
+
+.i-table-header-cell {
+}
+.i-table-header-cell-asc {
+	background: blue;
+}
+.i-table-header-cell-desc {
+	background: cyan;
+}
+
+.i-table-body {
+	/*margin: 0 1px;*/
+}
+
+.i-table-row {
+	border: 0;
+	margin: 0;
+	padding: 0;
+}
+.i-table .i-odd {
+	background-color: #f1f5f9;
+}
+.i-table .i-selected {
+	background: #466fa7;
+	color: #fff;
+}
+
+.i-table-row-spacer {
+	height: 10px;
+	overflow: hidden; /* IE hack to allow < one line height divs */
+}
+
+.i-table-cell-content {
+	white-space: nowrap;
+	overflow: hidden;
+	/*border-right: 1px solid #e4e8ef;
+	padding-left: 2px;
+	width: 98%;*/
+}
+
+
+
+.i-table-column-selector {
+	float: right;
+	background: transparent url(../img/colsel.png) no-repeat;
+	margin: 4px 0 0 0;
+}
+
+.i-table-focus-slot-left {
+	border-left: 2px solid blue;
+	margin-right: -2px;
+}
+.i-table-focus-slot-right {
+	border-right: 2px solid blue;
+	margin-left: -2px;
+}
+
+.i-table-header-drag {
+	position: absolute;
+	background: #000;
+	color: #fff;
+	opacity: 0.5;
+	filter: alpha(opacity=50);
+}
+
+
+
+
+/* IE specific styles */
+* html .i-table-header-wrap {
+	margin-top: 0;
+}
+*+html .i-table-header-wrap {
+	margin-top: 1px;
+}
