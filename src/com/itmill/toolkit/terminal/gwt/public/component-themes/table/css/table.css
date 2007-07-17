@@ -85,12 +85,13 @@
 	border: 0;
 	margin: 0;
 	padding: 0;
+	height: 20px;
 }
 .i-table .i-odd {
 	background-color: #f1f5f9;
 }
 .i-table .i-selected {
-	background: #466fa7;
+	background: #375f98 url(../img/selected-bg.png) repeat-x;
 	color: #fff;
 }
 
@@ -116,18 +117,21 @@
 }
 
 .i-table-focus-slot-left {
-	border-left: 2px solid blue;
+	border-left: 2px solid #375f98;
 	margin-right: -2px;
 }
 .i-table-focus-slot-right {
-	border-right: 2px solid blue;
+	border-right: 2px solid #375f98;
 	margin-left: -2px;
 }
 
 .i-table-header-drag {
 	position: absolute;
-	background: #000;
-	color: #fff;
+	background: #e7edf3 url(../img/header-bg.png) repeat-x;
+	border: 1px solid #375f98;
+	padding: 4px;
+	color: #1c3e6e;
+	font-weight: bold;
 	opacity: 0.5;
 	filter: alpha(opacity=50);
 }
