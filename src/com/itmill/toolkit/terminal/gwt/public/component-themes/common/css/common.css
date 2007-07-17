@@ -1,17 +1,15 @@
 body {
-	background: #fafafc url(../img/window-bg.png) repeat-x;
+	background: #fafafc url(../img/window-bottom-bg.gif) no-repeat right bottom fixed;
 	font-family: helvetica, arial, tahoma, verdana, sans-serif;
 	color: #222;
 	font-size: 68.75%;
 	line-height: 1.4em;
-	padding: 0;
+	padding: 8px;
 	margin: 0;
 }
 
 #itmtk-ajax-window {
-	background: transparent url(../img/window-bottom-bg.png) no-repeat right bottom;
-	height: 100%;
-	padding: 0 8px;
+	
 }
 
 input, select, textarea, button {

@@ -37,11 +37,15 @@
 	border: 0;
 }
 
-.i-table-header table td,
+.i-table-header td,
 .i-table-table td {
 	margin:0;
 	padding:0;
 	border:0;
+}
+
+.i-table-header td {
+	cursor: pointer;
 }
 
 .i-table-resizer {
@@ -86,6 +90,11 @@
 	margin: 0;
 	padding: 0;
 	height: 20px;
+	cursor: pointer;
+}
+.i-table-row:hover,
+.i-table .i-odd:hover {
+	background-color: #d3dfee;
 }
 .i-table .i-odd {
 	background-color: #f1f5f9;
