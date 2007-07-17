@@ -26,19 +26,19 @@
 
  ********************************************************************** */
 
-package com.itmill.toolkit.terminal.web;
+package com.itmill.toolkit.terminal.gwt.server;
 
 import java.io.InputStream;
 
 /**
- * AjaxAdapter implementation of the UploadStream interface.
+ * WebAdapter implementation of the UploadStream interface.
  * 
  * @author IT Mill Ltd.
  * @version
  * @VERSION@
- * @since 3.1
+ * @since 3.0
  */
-public class AjaxHttpUploadStream implements
+public class HttpUploadStream implements
 		com.itmill.toolkit.terminal.UploadStream {
 
 	/**
@@ -56,7 +56,7 @@ public class AjaxHttpUploadStream implements
 	private InputStream stream;
 
 	/**
-	 * Creates a new instance of UploadStreamImpl.
+	 * Creates a new instance of UploadStreamImpl
 	 * 
 	 * @param name
 	 *            the name of the stream.
@@ -67,7 +67,7 @@ public class AjaxHttpUploadStream implements
 	 * @param contentType
 	 *            the type of the content.
 	 */
-	public AjaxHttpUploadStream(String name, InputStream stream,
+	public HttpUploadStream(String name, InputStream stream,
 			String contentName, String contentType) {
 		this.streamName = name;
 		this.stream = stream;

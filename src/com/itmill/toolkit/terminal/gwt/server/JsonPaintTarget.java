@@ -26,7 +26,7 @@
 
  ********************************************************************** */
 
-package com.itmill.toolkit.terminal.web;
+package com.itmill.toolkit.terminal.gwt.server;
 
 import com.itmill.toolkit.Application;
 import com.itmill.toolkit.terminal.ApplicationResource;
@@ -39,7 +39,18 @@ import com.itmill.toolkit.terminal.ThemeResource;
 import com.itmill.toolkit.terminal.UploadStream;
 import com.itmill.toolkit.terminal.VariableOwner;
 
+import java.io.BufferedWriter;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Set;
 import java.util.Stack;
+import java.util.Vector;
 
 /**
  * User Interface Description Language Target.
@@ -47,14 +58,12 @@ import java.util.Stack;
  * @author IT Mill Ltd.
  * @version
  * @VERSION@
- * @since 3.0
+ * @since 5.0
  */
-public class WebPaintTarget implements PaintTarget {
+public class JsonPaintTarget implements PaintTarget {
 
 	/* Document type declarations */
-	private final static String UIDL_XML_DECL = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 
-	/* commonly used tags and argument names */
 	private final static String UIDL_ARG_NAME = "name";
 
 	private final static String UIDL_ARG_VALUE = "value";
@@ -63,81 +72,72 @@ public class WebPaintTarget implements PaintTarget {
 
 	private Stack mOpenTags;
 
+	private Stack openJsonTags;
+
 	private boolean mTagArgumentListOpen;
 
-	private StringBuffer uidlBuffer;
+	private PrintWriter uidlBuffer;
 
-	private StringBuffer tagBuffer;
-
-	private HttpVariableMap variableMap;
+	private AjaxVariableMap variableMap;
 
 	private boolean closed = false;
 
-	private ApplicationServlet webAdapterServlet;
+	private ApplicationManager manager;
 
-	private Theme theme;
+	private boolean trackPaints = false;
 
-	private static final int TAG_BUFFER_DEFAULT_SIZE = 20;
+	private int numberOfPaints = 0;
 
-	private boolean mSuppressOutput = false;
+	private int changes = 0;
+
+	Set preCachedResources = new HashSet();
+
+	private boolean customLayoutArgumentsOpen = false;
+
+	private JsonTag tag;
 
 	/**
 	 * Creates a new XMLPrintWriter, without automatic line flushing.
 	 * 
-	 * @param out
+	 * @param variableMap
+	 * @param manager
+	 * @param outWriter
 	 *            A character-output stream.
+	 * @throws PaintException
+	 *             if the paint operation failed.
 	 */
-	public WebPaintTarget(HttpVariableMap variableMap,
-			UIDLTransformerType type, ApplicationServlet webAdapterServlet,
-			Theme theme) throws PaintException {
+	public JsonPaintTarget(AjaxVariableMap variableMap,
+			ApplicationManager manager, PrintWriter outWriter)
+			throws PaintException {
 
-		// Host servlet
-		this.webAdapterServlet = webAdapterServlet;
-
-		// Target theme
-		this.theme = theme;
-
+		this.manager = manager;
 		// Sets the variable map
 		this.variableMap = variableMap;
 
 		// Sets the target for UIDL writing
-		this.uidlBuffer = new StringBuffer();
-
-		// Sets the target for TAG data
-		this.tagBuffer = new StringBuffer();
+		this.uidlBuffer = outWriter;
 
 		// Initialize tag-writing
 		mOpenTags = new Stack();
+		openJsonTags = new Stack();
 		mTagArgumentListOpen = false;
 
 		// Adds document declaration
-		this.print(UIDL_XML_DECL + "\n\n");
 
 		// Adds UIDL start tag and its attributes
-		this.startTag("uidl");
+	}
 
-		// Name of the active theme
-		this.addAttribute("theme", type.getTheme().getName());
-
+	public void startTag(String tagName) throws PaintException {
+		startTag(tagName, false);
 	}
 
 	/**
-	 * Ensures that the currently open element tag is closed.
-	 */
-	private void ensureClosedTag() {
-		if (mTagArgumentListOpen) {
-			tagBuffer.append(">");
-			mTagArgumentListOpen = false;
-			append(tagBuffer);
-		}
-	}
-
-	/**
-	 * Prints element start tag.
+	 * Prints the element start tag.
 	 * 
 	 * <pre>
-	 * Todo:
-	 * Checking of input values
+	 *   Todo:
+	 *    Checking of input values
+	 *    
 	 * </pre>
 	 * 
 	 * @param tagName
@@ -146,7 +146,47 @@ public class WebPaintTarget implements PaintTarget {
 	 *             if the paint operation failed.
 	 * 
 	 */
-	public void startTag(String tagName) throws PaintException {
+	public void startTag(String tagName, boolean isChildNode)
+			throws PaintException {
+		// In case of null data output nothing:
+		if (tagName == null)
+			throw new NullPointerException();
+
+		// Increments paint tracker
+		if (this.isTrackPaints()) {
+			this.numberOfPaints++;
+		}
+
+		// Ensures that the target is open
+		if (this.closed)
+			throw new PaintException(
+					"Attempted to write to a closed PaintTarget.");
+
+		if (tag != null) {
+			openJsonTags.push(tag);
+		}
+		// Checks tagName and attributes here
+		mOpenTags.push(tagName);
+
+		tag = new JsonTag(tagName);
+
+		mTagArgumentListOpen = true;
+
+		customLayoutArgumentsOpen = "customlayout".equals(tagName);
+	}
+
+	/**
+	 * Prints the element end tag.
+	 * 
+	 * If the parent tag is closed before every child tag is closed an
+	 * PaintException is raised.
+	 * 
+	 * @param tag
+	 *            the name of the end tag.
+	 * @throws Paintexception
+	 *             if the paint operation failed.
+	 */
+	public void endTag(String tagName) throws PaintException {
 		// In case of null data output nothing:
 		if (tagName == null)
 			throw new NullPointerException();
@@ -156,82 +196,23 @@ public class WebPaintTarget implements PaintTarget {
 			throw new PaintException(
 					"Attempted to write to a closed PaintTarget.");
 
-		// Make sure that the open start tag is closed before
-		// anything is written.
-		ensureClosedTag();
+		if (openJsonTags.size() > 0) {
+			JsonTag parent = (JsonTag) openJsonTags.pop();
 
-		// Check tagName and attributes here
-		mOpenTags.push(tagName);
-		tagBuffer = new StringBuffer(TAG_BUFFER_DEFAULT_SIZE);
+			String lastTag = "";
 
-		// Print the tag with attributes
-		tagBuffer.append("<" + tagName);
+			lastTag = (String) mOpenTags.pop();
+			if (!tagName.equalsIgnoreCase(lastTag))
+				throw new PaintException("Invalid UIDL: wrong ending tag: '"
+						+ tagName + "' expected: '" + lastTag + "'.");
 
-		mTagArgumentListOpen = true;
-	}
+			parent.addData(tag.getJSON());
 
-	/**
-	 * Prints element end tag.
-	 * 
-	 * If the parent tag is closed before every child tag is closed a
-	 * PaintException is raised.
-	 * 
-	 * @param tagName
-	 *            the name of the end tag.
-	 * @throws PaintException
-	 *             if the paint operation failed.
-	 */
-	public void endTag(String tagName) throws PaintException {
-		// In case of null data output nothing:
-		if (tagName == null)
-			throw new NullPointerException();
-
-		// Ensures that the target is open
-		if (this.closed)
-			throw new PaintException(
-					"Attempted to write to a closed PaintTarget.");
-
-		String lastTag = "";
-
-		lastTag = (String) mOpenTags.pop();
-		if (!tagName.equalsIgnoreCase(lastTag))
-			throw new PaintException("Invalid UIDL: wrong ending tag: '"
-					+ tagName + "' expected: '" + lastTag + "'.");
-
-		// Makes sure that the open start tag is closed before
-		// anything is written.
-		ensureClosedTag();
-
-		// Writes the end (closing) tag
-		append("</" + lastTag + "\n>");
-
-		// NOTE: We re-enable the output (if it has been disabled)
-		// for subsequent tags. The output is suppressed if tag
-		// contains attribute "invisible" with value true.
-		mSuppressOutput = false;
-	}
-
-	/**
-	 * Appends data into UIDL output buffer.
-	 * 
-	 * @param data
-	 *            the String to be appended.
-	 */
-	private void append(String data) {
-		if (!mSuppressOutput) {
-			uidlBuffer.append(data);
-		}
-	}
-
-	/**
-	 * Appends data into UIDL output buffer.
-	 * 
-	 * @param data
-	 *            the StringBuffer to be appended.
-	 */
-	private void append(StringBuffer data) {
-		if (!mSuppressOutput) {
-			uidlBuffer.append(data);
+			tag = parent;
+		} else {
+			changes++;
+			this.uidlBuffer.print(((changes > 1) ? "," : "") + tag.getJSON());
+			tag = null;
 		}
 	}
 
@@ -239,6 +220,7 @@ public class WebPaintTarget implements PaintTarget {
 	 * Substitutes the XML sensitive characters with predefined XML entities.
 	 * 
 	 * @param xml
+	 *            the String to be substituted.
 	 * @return A new string instance where all occurrences of XML sensitive
 	 *         characters are substituted with entities.
 	 */
@@ -275,6 +257,53 @@ public class WebPaintTarget implements PaintTarget {
 		return result;
 	}
 
+	static public String escapeJSON(String s) {
+		if (s == null)
+			return "";
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < s.length(); i++) {
+			char ch = s.charAt(i);
+			switch (ch) {
+			case '"':
+				sb.append("\\\"");
+				break;
+			case '\\':
+				sb.append("\\\\");
+				break;
+			case '\b':
+				sb.append("\\b");
+				break;
+			case '\f':
+				sb.append("\\f");
+				break;
+			case '\n':
+				sb.append("\\n");
+				break;
+			case '\r':
+				sb.append("\\r");
+				break;
+			case '\t':
+				sb.append("\\t");
+				break;
+			case '/':
+				sb.append("\\/");
+				break;
+			default:
+				if (ch >= '\u0000' && ch <= '\u001F') {
+					String ss = Integer.toHexString(ch);
+					sb.append("\\u");
+					for (int k = 0; k < 4 - ss.length(); k++) {
+						sb.append('0');
+					}
+					sb.append(ss.toUpperCase());
+				} else {
+					sb.append(ch);
+				}
+			}
+		}
+		return sb.toString();
+	}
+
 	/**
 	 * Substitutes a XML sensitive character with predefined XML entity.
 	 * 
@@ -301,30 +330,6 @@ public class WebPaintTarget implements PaintTarget {
 	}
 
 	/**
-	 * Prints XML.
-	 * 
-	 * Writes pre-formatted XML to stream. Well-formness of XML is checked.
-	 * 
-	 * <pre>
-	 * TODO: XML checking should be made
-	 * </pre>
-	 * 
-	 * @param str
-	 */
-	private void print(String str) {
-		// In case of null data output nothing:
-		if (str == null)
-			return;
-
-		// Make sure that the open start tag is closed before
-		// anything is written.
-		ensureClosedTag();
-
-		// Write what was given
-		append(str);
-	}
-
-	/**
 	 * Prints XML-escaped text.
 	 * 
 	 * @param str
@@ -333,7 +338,7 @@ public class WebPaintTarget implements PaintTarget {
 	 * 
 	 */
 	public void addText(String str) throws PaintException {
-		addUIDL(escapeXML(str));
+		tag.addData("\"" + escapeJSON(str) + "\"");
 	}
 
 	/**
@@ -348,14 +353,7 @@ public class WebPaintTarget implements PaintTarget {
 	 *             if the paint operation failed.
 	 */
 	public void addAttribute(String name, boolean value) throws PaintException {
-		if ("invisible".equals(name) && value) {
-			// NOTE: If we receive the "invisible attribute
-			// we filter these tags (and ceontent) from
-			// them out from the output.
-			this.mSuppressOutput = true;
-		} else {
-			addAttribute(name, String.valueOf(value));
-		}
+		tag.addAttribute("\"" + name + "\":" + (value ? "true" : "false"));
 	}
 
 	/**
@@ -366,6 +364,7 @@ public class WebPaintTarget implements PaintTarget {
 	 *            the Attribute name.
 	 * @param value
 	 *            the Attribute value.
+	 * 
 	 * @throws PaintException
 	 *             if the paint operation failed.
 	 */
@@ -388,10 +387,10 @@ public class WebPaintTarget implements PaintTarget {
 			addAttribute(name, uri);
 
 		} else if (value instanceof ThemeResource) {
-			addAttribute(name, webAdapterServlet.getResourceLocation(theme
-					.getName(), (ThemeResource) value));
+			String uri = "theme://" + ((ThemeResource) value).getResourceId();
+			addAttribute(name, uri);
 		} else
-			throw new PaintException("Web adapter does not "
+			throw new PaintException("Ajax adapter does not "
 					+ "support resources of type: "
 					+ value.getClass().getName());
 
@@ -405,11 +404,12 @@ public class WebPaintTarget implements PaintTarget {
 	 *            the Attribute name.
 	 * @param value
 	 *            the Attribute value.
+	 * 
 	 * @throws PaintException
 	 *             if the paint operation failed.
 	 */
 	public void addAttribute(String name, int value) throws PaintException {
-		addAttribute(name, String.valueOf(value));
+		tag.addAttribute("\"" + name + "\":" + String.valueOf(value));
 	}
 
 	/**
@@ -420,11 +420,12 @@ public class WebPaintTarget implements PaintTarget {
 	 *            the Attribute name.
 	 * @param value
 	 *            the Attribute value.
+	 * 
 	 * @throws PaintException
 	 *             if the paint operation failed.
 	 */
 	public void addAttribute(String name, long value) throws PaintException {
-		addAttribute(name, String.valueOf(value));
+		tag.addAttribute("\"" + name + "\":" + String.valueOf(value));
 	}
 
 	/**
@@ -432,9 +433,10 @@ public class WebPaintTarget implements PaintTarget {
 	 * content is written.
 	 * 
 	 * @param name
-	 *            the Boolean attribute name.
+	 *            the String attribute name.
 	 * @param value
-	 *            the Boolean attribute value.
+	 *            the String attribute value.
+	 * 
 	 * @throws PaintException
 	 *             if the paint operation failed.
 	 */
@@ -442,19 +444,34 @@ public class WebPaintTarget implements PaintTarget {
 		// In case of null data output nothing:
 		if ((value == null) || (name == null))
 			throw new NullPointerException(
-					"Parameters must be non-null strings (" + name + "="
-							+ value + ")");
+					"Parameters must be non-null strings");
 
-		// Ensure that the target is open
-		if (this.closed)
-			throw new PaintException(
-					"Attempted to write to a closed PaintTarget.");
+		tag.addAttribute("\"" + name + "\": \"" + escapeJSON(value) + "\"");
 
-		// Check that argument list is writable.
-		if (!mTagArgumentListOpen)
-			throw new PaintException("XML argument list not open.");
+		if (customLayoutArgumentsOpen && "style".equals(name))
+			getPreCachedResources().add("layout/" + value + ".html");
+		
+		if(name.equals("locale"))
+			manager.requireLocale(value);
 
-		tagBuffer.append(" " + name + "=\"" + escapeXML(value) + "\"");
+	}
+
+	public void addAttribute(String name, Object[] values) {
+		// In case of null data output nothing:
+		if ((values == null) || (name == null))
+			throw new NullPointerException(
+					"Parameters must be non-null strings");
+		StringBuffer buf = new StringBuffer();
+		buf.append("\"" + name + "\":[");
+		for (int i = 0; i < values.length; i++) {
+			if (i > 0)
+				buf.append(",");
+			buf.append("\"");
+			buf.append(escapeJSON(values[i].toString()));
+			buf.append("\"");
+		}
+		buf.append("]");
+		tag.addAttribute(buf.toString());
 	}
 
 	/**
@@ -466,18 +483,13 @@ public class WebPaintTarget implements PaintTarget {
 	 *            the Variable name.
 	 * @param value
 	 *            the Variable initial value.
+	 * 
 	 * @throws PaintException
 	 *             if the paint operation failed.
 	 */
 	public void addVariable(VariableOwner owner, String name, String value)
 			throws PaintException {
-		String code = variableMap.registerVariable(name, String.class, value,
-				owner);
-		startTag("string");
-		addAttribute(UIDL_ARG_ID, code);
-		addAttribute(UIDL_ARG_NAME, name);
-		addText(value);
-		endTag("string");
+		tag.addVariable(new StringVariable(owner, name, value));
 	}
 
 	/**
@@ -489,18 +501,13 @@ public class WebPaintTarget implements PaintTarget {
 	 *            the Variable name.
 	 * @param value
 	 *            the Variable initial value.
+	 * 
 	 * @throws PaintException
 	 *             if the paint operation failed.
 	 */
 	public void addVariable(VariableOwner owner, String name, int value)
 			throws PaintException {
-		String code = variableMap.registerVariable(name, Integer.class,
-				new Integer(value), owner);
-		startTag("integer");
-		addAttribute(UIDL_ARG_ID, code);
-		addAttribute(UIDL_ARG_NAME, name);
-		addAttribute(UIDL_ARG_VALUE, String.valueOf(value));
-		endTag("integer");
+		tag.addVariable(new IntVariable(owner, name, value));
 	}
 
 	/**
@@ -512,18 +519,13 @@ public class WebPaintTarget implements PaintTarget {
 	 *            the Variable name.
 	 * @param value
 	 *            the Variable initial value.
+	 * 
 	 * @throws PaintException
 	 *             if the paint operation failed.
 	 */
 	public void addVariable(VariableOwner owner, String name, boolean value)
 			throws PaintException {
-		String code = variableMap.registerVariable(name, Boolean.class,
-				new Boolean(value), owner);
-		startTag("boolean");
-		addAttribute(UIDL_ARG_ID, code);
-		addAttribute(UIDL_ARG_NAME, name);
-		addAttribute(UIDL_ARG_VALUE, String.valueOf(value));
-		endTag("boolean");
+		tag.addVariable(new BooleanVariable(owner, name, value));
 	}
 
 	/**
@@ -535,23 +537,19 @@ public class WebPaintTarget implements PaintTarget {
 	 *            the Variable name.
 	 * @param value
 	 *            the Variable initial value.
+	 * 
 	 * @throws PaintException
 	 *             if the paint operation failed.
 	 */
-	public void addVariable(VariableOwner owner, String name, Object[] value)
+	public void addVariable(VariableOwner owner, String name, String[] value)
 			throws PaintException {
-		String code = variableMap.registerVariable(name, String[].class, value,
-				owner);
-		startTag("array");
-		addAttribute(UIDL_ARG_ID, code);
-		addAttribute(UIDL_ARG_NAME, name);
-		for (int i = 0; i < value.length; i++)
-			addSection("ai", (String) value[i]);
-		endTag("array");
+		tag.addVariable(new ArrayVariable(owner, name, value));
 	}
 
 	/**
 	 * Adds a upload stream type variable.
+	 * 
+	 * TODO not converted for JSON
 	 * 
 	 * @param owner
 	 *            the Listener for variable changes.
@@ -573,30 +571,27 @@ public class WebPaintTarget implements PaintTarget {
 
 	/**
 	 * Prints the single text section.
-	 * <p>
-	 * Prints full text section. The section data is escaped from XML tags and
-	 * surrounded by XML start and end-tags.
-	 * </p>
+	 * 
+	 * Prints full text section. The section data is escaped
 	 * 
 	 * @param sectionTagName
 	 *            the name of the tag.
 	 * @param sectionData
-	 *            the section data.
+	 *            the section data to be printed.
 	 * @throws PaintException
 	 *             if the paint operation failed.
 	 */
 	public void addSection(String sectionTagName, String sectionData)
 			throws PaintException {
-		startTag(sectionTagName);
-		addText(sectionData);
-		endTag(sectionTagName);
+		tag.addData("{\"" + sectionTagName + "\":\"" + escapeJSON(sectionData)
+				+ "\"}");
 	}
 
 	/**
 	 * Adds XML directly to UIDL.
 	 * 
 	 * @param xml
-	 *            the XML to be added.
+	 *            the Xml to be added.
 	 * @throws PaintException
 	 *             if the paint operation failed.
 	 */
@@ -609,16 +604,24 @@ public class WebPaintTarget implements PaintTarget {
 
 		// Make sure that the open start tag is closed before
 		// anything is written.
-		ensureClosedTag();
 
 		// Escape and write what was given
 		if (xml != null)
-			append(xml);
+			tag.addData("\"" + escapeJSON(xml) + "\"");
 
 	}
 
 	/**
 	 * Adds XML section with namespace.
+	 * 
+	 * @param sectionTagName
+	 *            the name of the tag.
+	 * @param sectionData
+	 *            the section data.
+	 * @param namespace
+	 *            the namespace to be added.
+	 * @throws PaintException
+	 *             if the paint operation failed.
 	 * 
 	 * @see com.itmill.toolkit.terminal.PaintTarget#addXMLSection(String,
 	 *      String, String)
@@ -626,7 +629,7 @@ public class WebPaintTarget implements PaintTarget {
 	public void addXMLSection(String sectionTagName, String sectionData,
 			String namespace) throws PaintException {
 
-		// Ensures that the target is open
+		// Ensure that the target is open
 		if (this.closed)
 			throw new PaintException(
 					"Attempted to write to a closed PaintTarget.");
@@ -634,12 +637,11 @@ public class WebPaintTarget implements PaintTarget {
 		startTag(sectionTagName);
 		if (namespace != null)
 			addAttribute("xmlns", namespace);
-
-		// Closes that starting tag
-		ensureClosedTag();
+		mTagArgumentListOpen = false;
+		customLayoutArgumentsOpen = false;
 
 		if (sectionData != null)
-			append(sectionData);
+			tag.addData("\"" + escapeJSON(sectionData) + "\"");
 		endTag(sectionTagName);
 	}
 
@@ -667,68 +669,312 @@ public class WebPaintTarget implements PaintTarget {
 	 *             if the paint operation failed.
 	 */
 	public void close() throws PaintException {
-		if (!this.closed) {
-			this.endTag("uidl");
-			this.closed = true;
-		}
+		if (tag != null)
+			uidlBuffer.append(tag.getJSON());
+		flush();
+		this.closed = true;
 	}
 
 	/**
-	 * Prints element start tag of a paintable section. Starts a paintable
-	 * section using the given tag. The PaintTarget may implement a caching
-	 * scheme, that checks the paintable has actually changed or can a cached
-	 * version be used instead. This method should call the startTag method.
-	 * <p>
-	 * If the Paintable is found in cache and this function returns true it may
-	 * omit the content and close the tag, in which case cached content should
-	 * be used.
-	 * </p>
-	 * <b>Note:</b> Web adapter does not currently implement caching and this
-	 * function always returns false.
-	 * 
-	 * @param paintable
-	 *            the paintable to start.
-	 * @param tag
-	 *            the name of the start tag.
-	 * @return false
-	 * @throws PaintException
-	 *             if the paint operation failed.
-	 * @see com.itmill.toolkit.terminal.PaintTarget#startTag(Paintable, String),
-	 *      #startTag(String)
-	 * @since 3.1
+	 * Method flush.
 	 */
-	public boolean startTag(Paintable paintable, String tag)
+	private void flush() {
+		this.uidlBuffer.flush();
+	}
+
+	/**
+	 * @see com.itmill.toolkit.terminal.PaintTarget#startTag(com.itmill.toolkit.terminal.Paintable,
+	 *      java.lang.String)
+	 */
+	public boolean startTag(Paintable paintable, String tagName)
 			throws PaintException {
-		startTag(tag);
+		startTag(tagName, true);
+		String id = manager.getPaintableId(paintable);
+		paintable.addListener(manager);
+		addAttribute("id", id);
 		return false;
 	}
 
 	/**
-	 * Adds CDATA node to target UIDL-tree.
-	 * 
-	 * @param text
-	 *            the Character data to add.
-	 * @throws PaintException
-	 *             if the paint operation failed.
-	 * @since 3.1
+	 * @see com.itmill.toolkit.terminal.PaintTarget#addCharacterData(java.lang.String)
 	 */
 	public void addCharacterData(String text) throws PaintException {
-		addUIDL("<![CDATA[" + text + "]]>");
+		if (text != null)
+			tag.addData(text);
 	}
 
-	public void addAttribute(String string, String[] keys) {
-		// TODO Auto-generated method stub
-		
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean isTrackPaints() {
+		return trackPaints;
 	}
 
-	public void addAttribute(String string, Object[] keys) {
-		// TODO Auto-generated method stub
-		
+	/**
+	 * Gets the number of paints.
+	 * 
+	 * @return the number of paints.
+	 */
+	public int getNumberOfPaints() {
+		return numberOfPaints;
 	}
 
-	public void addVariable(VariableOwner owner, String name, String[] value) throws PaintException {
+	/**
+	 * Sets the tracking to true or false.
+	 * 
+	 * This also resets the number of paints.
+	 * 
+	 * @param enabled
+	 *            is the tracking is enabled or not.
+	 * @see #getNumberOfPaints()
+	 */
+	public void setTrackPaints(boolean enabled) {
+		this.trackPaints = enabled;
+		this.numberOfPaints = 0;
+	}
+
+	/**
+	 * This is basically a container for UI components variables, that will be
+	 * added at the end of JSON object.
+	 * 
+	 * @author mattitahvonen
+	 * 
+	 */
+	class JsonTag {
+		boolean firstField = false;
+
+		Vector variables = new Vector();
+
+		Vector children = new Vector();
+
+		Vector attr = new Vector();
+
+		private HashMap childTagCounters = new HashMap();
+
+		StringBuffer data = new StringBuffer();
+
+		public boolean childrenArrayOpen = false;
+
+		private boolean childNode = false;
+
+		private boolean tagClosed = false;
+
+		public JsonTag(String tagName) {
+			data.append("[\"" + tagName + "\"");
+		}
+
+		private void closeTag() {
+			if (!tagClosed) {
+				data.append(attributesAsJsonObject());
+				data.append(getData());
+				// Writes the end (closing) tag
+				data.append("]");
+				this.tagClosed = true;
+			}
+		}
+
+		public String getJSON() {
+			if (!tagClosed) {
+				this.closeTag();
+			}
+			return data.toString();
+		}
+
+		public void openChildrenArray() {
+			if (!childrenArrayOpen) {
+				// append("c : [");
+				childrenArrayOpen = true;
+				// firstField = true;
+			}
+		}
+
+		public void closeChildrenArray() {
+			// append("]");
+			// firstField = false;
+		}
+
+		public void setChildNode(boolean b) {
+			this.childNode = b;
+		}
+
+		public boolean isChildNode() {
+			return childNode;
+		}
+
+		public String startField() {
+			if (firstField) {
+				firstField = false;
+				return "";
+			} else {
+				return ",";
+			}
+		}
+
+		/**
+		 * 
+		 * @param s
+		 *            json string, object or array
+		 */
+		public void addData(String s) {
+			children.add(s);
+		}
+
+		public String getData() {
+			StringBuffer buf = new StringBuffer();
+			Iterator it = children.iterator();
+			while (it.hasNext()) {
+				buf.append(startField());
+				buf.append(it.next());
+			}
+			return buf.toString();
+		}
+
+		public void addAttribute(String jsonNode) {
+			attr.add(jsonNode);
+		}
+
+		private String attributesAsJsonObject() {
+			StringBuffer buf = new StringBuffer();
+			buf.append(startField());
+			buf.append("{");
+			for (Iterator iter = attr.iterator(); iter.hasNext();) {
+				String element = (String) iter.next();
+				buf.append(element);
+				if (iter.hasNext())
+					buf.append(",");
+			}
+			buf.append(tag.variablesAsJsonObject());
+			buf.append("}");
+			return buf.toString();
+		}
+
+		public void addVariable(Variable v) {
+			variables.add(v);
+		}
+
+		private String variablesAsJsonObject() {
+			if (variables.size() == 0)
+				return "";
+			StringBuffer buf = new StringBuffer();
+			buf.append(startField());
+			buf.append("\"v\":{");
+			Iterator iter = variables.iterator();
+			while (iter.hasNext()) {
+				Variable element = (Variable) iter.next();
+				buf.append(element.getJsonPresentation());
+				if (iter.hasNext())
+					buf.append(",");
+			}
+			buf.append("}");
+			return buf.toString();
+		}
+
+		class TagCounter {
+			int count;
+
+			public TagCounter() {
+				count = 0;
+			}
+
+			public void increment() {
+				count++;
+			}
+
+			public String postfix(String s) {
+				if (count > 0) {
+					return s + count;
+				}
+				return s;
+			}
+		}
+	}
+
+	abstract class Variable {
+		String code;
+
+		String name;
+
+		public abstract String getJsonPresentation();
+	}
+
+	class BooleanVariable extends Variable {
+		boolean value;
+
+		public BooleanVariable(VariableOwner owner, String name, boolean v) {
+			value = v;
+			this.name = name;
+			code = variableMap.registerVariable(name, Boolean.class,
+					new Boolean(value), owner);
+		}
+
+		public String getJsonPresentation() {
+			return "\"" + name + "\":" + (value == true ? "true" : "false");
+		}
+
+	}
+
+	class StringVariable extends Variable {
+		String value;
+
+		public StringVariable(VariableOwner owner, String name, String v) {
+			value = v;
+			this.name = name;
+			code = variableMap.registerVariable(name, String.class, value,
+					owner);
+		}
+
+		public String getJsonPresentation() {
+			return "\"" + name + "\":\"" + value + "\"";
+		}
+
+	}
+
+	class IntVariable extends Variable {
+		int value;
+
+		public IntVariable(VariableOwner owner, String name, int v) {
+			value = v;
+			this.name = name;
+			code = variableMap.registerVariable(name, Integer.class,
+					new Integer(value), owner);
+		}
+
+		public String getJsonPresentation() {
+			return "\"" + name + "\":" + value;
+		}
+	}
+
+	class ArrayVariable extends Variable {
+		String[] value;
+
+		public ArrayVariable(VariableOwner owner, String name, String[] v) {
+			value = v;
+			this.name = name;
+			code = variableMap.registerVariable(name, String[].class, value,
+					owner);
+		}
+
+		public String getJsonPresentation() {
+			String pres = "\"" + name + "\":[";
+			for (int i = 0; i < value.length;) {
+				pres += "\"" + value[i] + "\"";
+				i++;
+				if (i < value.length)
+					pres += ",";
+			}
+			pres += "]";
+			return pres;
+		}
+	}
+
+	public Set getPreCachedResources() {
+		return preCachedResources;
+	}
+
+	public void setPreCachedResources(Set preCachedResources) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

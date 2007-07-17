@@ -26,7 +26,7 @@
 
  ********************************************************************** */
 
-package com.itmill.toolkit.terminal.web;
+package com.itmill.toolkit.terminal.gwt.server;
 
 import com.itmill.toolkit.terminal.SystemError;
 import com.itmill.toolkit.terminal.Terminal;

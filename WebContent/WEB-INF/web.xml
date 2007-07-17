@@ -13,7 +13,7 @@
 
   <servlet>
     <servlet-name>SelectDemo</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
+    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
     <init-param>
       <param-name>application</param-name>
       <param-value>com.itmill.toolkit.demo.SelectDemo</param-value>
@@ -22,7 +22,7 @@
 
   <servlet>
     <servlet-name>BufferedComponents</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
+    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
     <init-param>
       <param-name>application</param-name>
       <param-value>com.itmill.toolkit.demo.BufferedComponents</param-value>
@@ -31,7 +31,7 @@
 
   <servlet>
     <servlet-name>TableDemo</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
+    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
     <init-param>
       <param-name>application</param-name>
       <param-value>com.itmill.toolkit.demo.TableDemo</param-value>
@@ -40,7 +40,7 @@
 
   <servlet>
     <servlet-name>CustomLayoutDemo</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
+    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
     <init-param>
       <param-name>application</param-name>
       <param-value>com.itmill.toolkit.demo.CustomLayoutDemo</param-value>
@@ -49,7 +49,7 @@
 
   <servlet>
     <servlet-name>LayoutDemo</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
+    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
     <init-param>
       <param-name>application</param-name>
       <param-value>com.itmill.toolkit.demo.LayoutDemo</param-value>
@@ -58,7 +58,7 @@
 
   <servlet>
     <servlet-name>FilterSelect</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
+    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
     <init-param>
       <param-name>application</param-name>
       <param-value>com.itmill.toolkit.demo.FilterSelect</param-value>
@@ -67,7 +67,7 @@
 
   <servlet>
     <servlet-name>FeaturesApplication</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
+    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
     <init-param>
       <param-name>application</param-name>
       <param-value>com.itmill.toolkit.demo.features.FeaturesApplication</param-value>
@@ -76,7 +76,7 @@
 
   <servlet>
     <servlet-name>Parameters</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
+    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
     <init-param>
       <param-name>application</param-name>
       <param-value>com.itmill.toolkit.demo.Parameters</param-value>
@@ -85,7 +85,7 @@
 
   <servlet>
     <servlet-name>UpgradingSample</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
+    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
     <init-param>
       <param-name>application</param-name>
       <param-value>com.itmill.toolkit.demo.UpgradingSample</param-value>
@@ -94,7 +94,7 @@
 
   <servlet>
     <servlet-name>QueryContainerDemo</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
+    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
     <init-param>
       <param-name>application</param-name>
       <param-value>com.itmill.toolkit.demo.QueryContainerDemo</param-value>
@@ -103,7 +103,7 @@
 
   <servlet>
     <servlet-name>TreeFilesystemContainer</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
+    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
     <init-param>
       <param-name>application</param-name>
       <param-value>com.itmill.toolkit.demo.TreeFilesystemContainer</param-value>
@@ -120,7 +120,7 @@
 
   <servlet>
     <servlet-name>TreeFilesystem</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
+    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
     <init-param>
       <param-name>application</param-name>
       <param-value>com.itmill.toolkit.demo.TreeFilesystem</param-value>
@@ -137,7 +137,7 @@
 
   <servlet>
     <servlet-name>ModalWindow</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
+    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
     <init-param>
       <param-name>application</param-name>
       <param-value>com.itmill.toolkit.demo.ModalWindow</param-value>
@@ -146,7 +146,7 @@
 
   <servlet>
     <servlet-name>HelloWorld</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
+    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
     <init-param>
       <param-name>application</param-name>
       <param-value>com.itmill.toolkit.demo.HelloWorld</param-value>
@@ -155,7 +155,7 @@
 
   <servlet>
     <servlet-name>Calc</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
+    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
     <init-param>
       <param-name>application</param-name>
       <param-value>com.itmill.toolkit.demo.Calc</param-value>
@@ -164,7 +164,7 @@
 
   <servlet>
     <servlet-name>KeyboardShortcut</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
+    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
     <init-param>
       <param-name>application</param-name>
       <param-value>com.itmill.toolkit.demo.KeyboardShortcut</param-value>

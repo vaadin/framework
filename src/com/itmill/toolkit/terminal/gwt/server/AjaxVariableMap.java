@@ -26,7 +26,7 @@
 
  ********************************************************************** */
 
-package com.itmill.toolkit.terminal.web;
+package com.itmill.toolkit.terminal.gwt.server;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -56,7 +56,7 @@ import com.itmill.toolkit.terminal.VariableOwner;
  * @author IT Mill Ltd.
  * @version
  * @VERSION@
- * @since 3.1
+ * @since 5.0
  */
 public class AjaxVariableMap {
 
@@ -145,7 +145,7 @@ public class AjaxVariableMap {
 // ----------
 // TODO This HACK is only included for testing GWT integration				
 //Original				id = "v" + String.valueOf(++lastId);
-				Object pid = AjaxApplicationManager.paintableIdMap.get(owner);
+				Object pid = ApplicationManager.paintableIdMap.get(owner);
 				id = pid + "_"+name;
 // ----------
 				

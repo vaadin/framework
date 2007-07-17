@@ -1,5 +1,0 @@
-
-We'll selectively copy resources from "web/ajax-adapter" to gwt and deprecate web from 4.0
-
-Although this directory will probably be deleted in future, please DO NOT YET delete resource from 
-this directory

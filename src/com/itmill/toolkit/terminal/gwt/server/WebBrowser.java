@@ -26,7 +26,7 @@
 
  ********************************************************************** */
 
-package com.itmill.toolkit.terminal.web;
+package com.itmill.toolkit.terminal.gwt.server;
 
 import com.itmill.toolkit.terminal.Terminal;
 
@@ -104,8 +104,6 @@ public class WebBrowser implements Terminal {
 	 * Pixel height of the terminal screen.
 	 */
 	private int screenHeight = -1;
-
-	private RenderingMode renderingMode = RENDERING_MODE_UNDEFINED;
 
 	/**
 	 * Constuctor with some autorecognition capabilities Retrieves all
@@ -701,42 +699,5 @@ public class WebBrowser implements Terminal {
 			JAVASCRIPT_1_1, JAVASCRIPT_1_2, JAVASCRIPT_1_3, JAVASCRIPT_1_4,
 			JAVASCRIPT_1_5, JSCRIPT_1_0, JSCRIPT_3_0, JSCRIPT_4_0, JSCRIPT_5_0,
 			JSCRIPT_5_1, JSCRIPT_5_5, JSCRIPT_5_6, JSCRIPT_5_7, ECMA_262 };
-
-	/*
-	 * Consts defining the rendering mode @author IT Mill Ltd.
-	 * 
-	 * @version @VERSION@
-	 * @since 4.0
-	 */
-	public class RenderingMode {
-		RenderingMode() {
-
-		}
-	}
-
-	public static final RenderingMode RENDERING_MODE_UNDEFINED = DEFAULT.new RenderingMode();
-
-	public static final RenderingMode RENDERING_MODE_HTML = DEFAULT.new RenderingMode();
-
-	public static final RenderingMode RENDERING_MODE_AJAX = DEFAULT.new RenderingMode();
-
-	/**
-	 * Gets the current rendering mode.
-	 * 
-	 * @return the current rendering mode.
-	 */
-	public RenderingMode getRenderingMode() {
-		return renderingMode;
-	}
-
-	/**
-	 * Sets the current rendering mode.
-	 * 
-	 * @param renderingMode
-	 *            the rendering mode.
-	 */
-	public void setRenderingMode(RenderingMode renderingMode) {
-		this.renderingMode = renderingMode;
-	}
 
 }

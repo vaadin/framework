@@ -26,7 +26,7 @@
 
  ********************************************************************** */
 
-package com.itmill.toolkit.terminal.web;
+package com.itmill.toolkit.terminal.gwt.server;
 
 import java.util.Hashtable;
 import java.io.BufferedOutputStream;

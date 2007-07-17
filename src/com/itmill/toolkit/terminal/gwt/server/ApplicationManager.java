@@ -26,9 +26,10 @@
 
  ********************************************************************** */
 
-package com.itmill.toolkit.terminal.web;
+package com.itmill.toolkit.terminal.gwt.server;
 
 import java.io.BufferedWriter;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -53,6 +54,7 @@ import java.util.WeakHashMap;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -75,9 +77,9 @@ import com.itmill.toolkit.ui.Window;
  * @author IT Mill Ltd.
  * @version
  * @VERSION@
- * @since 3.1
+ * @since 5.0
  */
-public class AjaxApplicationManager implements
+public class ApplicationManager implements
 		Paintable.RepaintRequestListener, Application.WindowAttachListener,
 		Application.WindowDetachListener {
 
@@ -91,6 +93,7 @@ public class AjaxApplicationManager implements
 
 	private HashSet dirtyPaintabletSet = new HashSet();
 
+
 	// TODO THIS TEMPORARY HACK IS ONLY HERE TO MAKE GWT DEVEL EASIER
     static WeakHashMap paintableIdMap = new WeakHashMap();
 
@@ -100,14 +103,17 @@ public class AjaxApplicationManager implements
 
 	private Set removedWindows = new HashSet();
 
-	private PaintTarget paintTarget;
+	private JsonPaintTarget paintTarget;
 	
 	private List locales;
 	
 	private int pendingLocalesIndex;
+	
+	private ApplicationServlet applicationServlet;
 
-	public AjaxApplicationManager(Application application) {
+	public ApplicationManager(Application application, ApplicationServlet applicationServlet) {
 		this.application = application;
+		this.applicationServlet = applicationServlet;
 		requireLocale(application.getLocale().toString());
 	}
 
@@ -146,25 +152,7 @@ public class AjaxApplicationManager implements
 
 	
 	public void handleUidlRequest(HttpServletRequest request,
-			HttpServletResponse response, ThemeSource themeSource) throws IOException {
-		handleUidlRequest(request,
-				response, themeSource, false); 
-		
-	}
-
-	
-	/**
-	 * 
-	 * @param request
-	 *            the HTTP Request.
-	 * @param response
-	 *            the HTTP Response.
-	 * @throws IOException
-	 *             if the writing failed due to input/output error.
-	 */
-	public void handleUidlRequest(HttpServletRequest request,
-			HttpServletResponse response, ThemeSource themeSource, boolean isJson) 
-		throws IOException {
+			HttpServletResponse response) throws IOException {
 
 		// repaint requested or sesssion has timed out and new one is created
 		boolean repaintAll = (request.getParameter(GET_PARAM_REPAINT_ALL) != null)
@@ -222,7 +210,7 @@ public class AjaxApplicationManager implements
 					response.setContentType("application/json; charset=UTF-8");
 					outWriter.print("\"changes\":[");
 					
-					paintTarget = new AjaxJsonPaintTarget(getVariableMap(), 
+					paintTarget = new JsonPaintTarget(getVariableMap(), 
 							this, outWriter);
 
 					// Paints components
@@ -309,11 +297,11 @@ public class AjaxApplicationManager implements
 							paintTarget.addAttribute("pid", pid);
 
 							// Track paints to identify empty paints
-							((AjaxPaintTarget) paintTarget).setTrackPaints(true);
+							paintTarget.setTrackPaints(true);
 							p.paint(paintTarget);
 
 							// If no paints add attribute empty
-							if (((AjaxPaintTarget) paintTarget).getNumberOfPaints() <= 0) {
+							if (paintTarget.getNumberOfPaints() <= 0) {
 								paintTarget.addAttribute("visible", false);
 							}
 							paintTarget.endTag("change");
@@ -321,7 +309,8 @@ public class AjaxApplicationManager implements
 						}
 					}
 
-					((AjaxPaintTarget) paintTarget).close();
+					
+							paintTarget.close();
 					outWriter.print("]"); // close changes
 
 
@@ -368,12 +357,12 @@ public class AjaxApplicationManager implements
                     String themeName = application.getTheme() != null ? application.getTheme() : ApplicationServlet.DEFAULT_THEME;
                     // TODO We should only precache the layouts that are not cached already
                 	int resourceIndex = 0;
-                    for (Iterator i=((AjaxPaintTarget) paintTarget).getPreCachedResources().iterator(); i.hasNext();) {
+                    for (Iterator i=paintTarget.getPreCachedResources().iterator(); i.hasNext();) {
                     	String resource = (String) i.next();
                     	InputStream is = null;
                     	try {
-                			is = themeSource.getResource(themeName + "/" +  resource);
-                		} catch (ThemeSource.ThemeException e) {
+                    		is = applicationServlet.getServletContext().getResourceAsStream(ApplicationServlet.THEME_DIRECTORY_PATH + themeName + "/" +  resource);
+                		} catch (Exception e) {
                 			Log.info(e.getMessage());
                 		}
                     	if (is != null) {
@@ -392,7 +381,7 @@ public class AjaxApplicationManager implements
                     			Log.info("Resource transfer failed:  " + request.getRequestURI()
                     					+ ". (" + e.getMessage() + ")");
                     		}
-                    		outWriter.print("\"" + AjaxJsonPaintTarget.escapeJSON(layout.toString()) + "\"");
+                    		outWriter.print("\"" + JsonPaintTarget.escapeJSON(layout.toString()) + "\"");
                     	}
                     }
                 	outWriter.print("}");
