@@ -4,7 +4,7 @@ import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.PopupListener;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.itmill.toolkit.terminal.gwt.client.Client;
+import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
@@ -31,7 +31,7 @@ public class IPopupCalendar extends ITextualDate implements Paintable, ClickList
 		popup.addPopupListener(this);
 	}
 	
-	public void updateFromUIDL(UIDL uidl, Client client) {
+	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 		super.updateFromUIDL(uidl, client);
 		calendar.updateCalendar();
 		calendarToggle.setEnabled(enabled);

@@ -19,7 +19,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ScrollListener;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.itmill.toolkit.terminal.gwt.client.Client;
+import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.ui.IScrollTable.IScrollTableBody.IScrollTableRow;
@@ -49,7 +49,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 	
 	private String[] columnOrder;
 	
-	private Client client;
+	private ApplicationConnection client;
 	private String paintableId;
 	
 	private boolean immediate;
@@ -106,7 +106,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		initWidget(panel);
 	}
 
-	public void updateFromUIDL(UIDL uidl, Client client) {
+	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 		if (client.updateComponent(this, uidl, true))
 			return;
 
@@ -1142,7 +1142,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 			return availableCells.size();
 		}
 
-		public Client getClient() {
+		public ApplicationConnection getClient() {
 			return client;
 		}
 
@@ -1579,7 +1579,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 				return actions;
 			}
 
-			public Client getClient() {
+			public ApplicationConnection getClient() {
 				return client;
 			}
 

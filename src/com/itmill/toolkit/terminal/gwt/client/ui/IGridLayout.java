@@ -4,13 +4,13 @@ import java.util.Iterator;
 
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Widget;
-import com.itmill.toolkit.terminal.gwt.client.Client;
+import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
 public class IGridLayout extends FlexTable implements Paintable {
 
-	public void updateFromUIDL(UIDL uidl, Client client) {
+	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 		clear();
 		if (uidl.hasAttribute("caption"))
 			setTitle(uidl.getStringAttribute("caption"));

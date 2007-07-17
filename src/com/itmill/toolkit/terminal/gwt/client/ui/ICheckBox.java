@@ -2,7 +2,7 @@ package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Widget;
-import com.itmill.toolkit.terminal.gwt.client.Client;
+import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
@@ -13,7 +13,7 @@ public class ICheckBox extends com.google.gwt.user.client.ui.CheckBox
 
 	boolean immediate;
 
-	Client client;
+	ApplicationConnection client;
 
 	public ICheckBox() {
 		addClickListener(new ClickListener() {
@@ -27,7 +27,7 @@ public class ICheckBox extends com.google.gwt.user.client.ui.CheckBox
 		});
 	}
 
-	public void updateFromUIDL(UIDL uidl, Client client) {
+	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 		
 		// Ensure correct implementation
 		if (client.updateComponent(this, uidl, false))

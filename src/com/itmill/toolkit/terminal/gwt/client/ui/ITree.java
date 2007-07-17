@@ -7,7 +7,7 @@ import java.util.Set;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.TreeListener;
-import com.itmill.toolkit.terminal.gwt.client.Client;
+import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
@@ -16,7 +16,7 @@ public class ITree extends Tree implements Paintable {
 	public static final String CLASSNAME = "i-tree";
 
 	Set selectedIds = new HashSet();
-	Client client;
+	ApplicationConnection client;
 	String id;
 	private boolean selectable;
 	private boolean multiselect;
@@ -26,7 +26,7 @@ public class ITree extends Tree implements Paintable {
 		setStyleName(CLASSNAME);
 	}
 
-	public void updateFromUIDL(UIDL uidl, Client client) {
+	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 		// Ensure correct implementation and let container manage caption
 		if (client.updateComponent(this, uidl, true))
 			return;
@@ -72,7 +72,7 @@ public class ITree extends Tree implements Paintable {
 		
 		String key;
 		
-		public void updateFromUIDL(UIDL uidl, Client client) {
+		public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 			this.setText(uidl.getStringAttribute("caption"));
 			key = uidl.getStringAttribute("key");
 			for (Iterator i = uidl.getChildIterator(); i.hasNext();) {

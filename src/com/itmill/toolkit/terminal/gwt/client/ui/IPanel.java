@@ -4,7 +4,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.itmill.toolkit.terminal.gwt.client.Client;
+import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
@@ -12,7 +12,7 @@ public class IPanel extends FlowPanel implements Paintable {
 	
 	public static final String CLASSNAME = "i-panel";
 	
-	Client client;
+	ApplicationConnection client;
 	
 	String id;
 	
@@ -29,7 +29,7 @@ public class IPanel extends FlowPanel implements Paintable {
 		content.setStyleName(CLASSNAME+"-content");
 	}
 
-	public void updateFromUIDL(UIDL uidl, Client client) {
+	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 		// Ensure correct implementation
 		if (client.updateComponent(this, uidl, false))
 			return;

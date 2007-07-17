@@ -6,7 +6,7 @@ import java.util.Iterator;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.CaptionWrapper;
-import com.itmill.toolkit.terminal.gwt.client.Client;
+import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Layout;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
@@ -15,7 +15,7 @@ public class IHorizontalLayout extends HorizontalPanel implements Paintable, Lay
 
 	private HashMap componentToWrapper = new HashMap();
 
-	public void updateFromUIDL(UIDL uidl, Client client) {
+	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 		
 		// Ensure correct implementation
 		if (client.updateComponent(this, uidl, false))

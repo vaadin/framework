@@ -3,7 +3,7 @@ package com.itmill.toolkit.terminal.gwt.client.ui;
 import java.util.Date;
 
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.itmill.toolkit.terminal.gwt.client.Client;
+import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.DateTimeService;
 import com.itmill.toolkit.terminal.gwt.client.LocaleNotLoadedException;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
@@ -15,7 +15,7 @@ public class IDateField extends FlowPanel implements Paintable {
 	
 	String id;
 	
-	Client client;
+	ApplicationConnection client;
 	
 	protected boolean immediate;
 	
@@ -47,7 +47,7 @@ public class IDateField extends FlowPanel implements Paintable {
 		dts = new DateTimeService();
 	}
 	
-	public void updateFromUIDL(UIDL uidl, Client client) {
+	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 		// Ensure correct implementation and let layout manage caption
 		if (client.updateComponent(this, uidl, true))
 			return;

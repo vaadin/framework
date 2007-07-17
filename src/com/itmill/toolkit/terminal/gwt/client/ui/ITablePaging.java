@@ -19,7 +19,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.itmill.toolkit.terminal.gwt.client.Client;
+import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
@@ -38,7 +38,7 @@ public class ITablePaging extends Composite implements ITable, Paintable, ClickL
 	
 	private Map columnOrder = new HashMap();
 	
-	private Client client;
+	private ApplicationConnection client;
 	private String id;
 	
 	private boolean immediate = false;
@@ -83,7 +83,7 @@ public class ITablePaging extends Composite implements ITable, Paintable, ClickL
 		initWidget(panel);
 	}
 
-	public void updateFromUIDL(UIDL uidl, Client client) {
+	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 		if (client.updateComponent(this, uidl, true))
 			return;
 

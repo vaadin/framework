@@ -1,7 +1,7 @@
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import com.google.gwt.user.client.Command;
-import com.itmill.toolkit.terminal.gwt.client.Client;
+import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 
 /**
  *
@@ -56,7 +56,7 @@ interface IActionOwner {
 	 */
 	public IAction[] getActions();
 
-	public Client getClient();
+	public ApplicationConnection getClient();
 	
 	public String getPaintableId();
 }

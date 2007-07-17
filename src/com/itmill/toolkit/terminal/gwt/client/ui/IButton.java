@@ -3,7 +3,7 @@ package com.itmill.toolkit.terminal.gwt.client.ui;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.Button;
-import com.itmill.toolkit.terminal.gwt.client.Client;
+import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
@@ -13,7 +13,7 @@ public class IButton extends Button implements Paintable {
 
 	String id;
 
-	Client client;
+	ApplicationConnection client;
 
 	public IButton() {
 		setStyleName(CLASSNAME);
@@ -27,7 +27,7 @@ public class IButton extends Button implements Paintable {
 		});
 	}
 
-	public void updateFromUIDL(UIDL uidl, Client client) {
+	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 
 		// Ensure correct implementation,
 		// but don't let container manage caption etc.

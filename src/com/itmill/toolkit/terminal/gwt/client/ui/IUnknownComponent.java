@@ -3,7 +3,7 @@ package com.itmill.toolkit.terminal.gwt.client.ui;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.itmill.toolkit.terminal.gwt.client.Client;
+import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
@@ -21,7 +21,7 @@ public class IUnknownComponent extends Composite implements Paintable{
 		caption.setStyleName("itmtk-unknown-caption");
 	}
 	
-	public void updateFromUIDL(UIDL uidl, Client client) {
+	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 		setCaption("Client faced an unknown component type. Unrendered UIDL:");
 		uidlTree.addItem(uidl.dir());
 	}

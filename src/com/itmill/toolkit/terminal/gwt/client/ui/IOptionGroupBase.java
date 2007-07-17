@@ -9,7 +9,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
-import com.itmill.toolkit.terminal.gwt.client.Client;
+import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
@@ -17,7 +17,7 @@ abstract class IOptionGroupBase extends Composite implements Paintable, ClickLis
 	
 	public static final String CLASSNAME_OPTION = "i-select-option";
 
-	Client client;
+	ApplicationConnection client;
 	
 	String id;
 	
@@ -65,7 +65,7 @@ abstract class IOptionGroupBase extends Composite implements Paintable, ClickLis
 		container.add(optionsContainer);
 	}
 	
-	public void updateFromUIDL(UIDL uidl, Client client) {
+	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 		this.client = client;
 		this.id = uidl.getId();
 		

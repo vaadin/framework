@@ -296,7 +296,6 @@ public class ApplicationServlet extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 
 		// Transformer and output stream for the result
-		HttpVariableMap variableMap = null;
 		OutputStream out = response.getOutputStream();
 		Application application = null;
 		try {
@@ -333,39 +332,7 @@ public class ApplicationServlet extends HttpServlet {
 					return;
 				}
 
-				// Gets the variable map
-				variableMap = getVariableMap(application, request);
-				if (variableMap == null)
-					return;
-
-				// Change all variables based on request parameters
-				Map unhandledParameters = variableMap.handleVariables(request,
-						application);
-
-				// Check/handle client side feature checks
-				WebBrowserProbe
-						.handleProbeRequest(request, unhandledParameters);
-
-				// If rendering mode is not defined or detecting requested
-				// try to detect it
-				WebBrowser wb = WebBrowserProbe.getTerminalType(request
-						.getSession());
-
-				boolean detect = false;
-				if (unhandledParameters.get("renderingMode") != null) {
-					detect = ((String) ((Object[]) unhandledParameters
-							.get("renderingMode"))[0]).equals("detect");
-				}
-				if (detect) {
-					String themeName = application.getTheme();
-					if (themeName == null)
-						themeName = DEFAULT_THEME;
-					if (unhandledParameters.get("theme") != null) {
-						themeName = (String) ((Object[]) unhandledParameters
-								.get("theme"))[0];
-					}
-				}
-			
+				
 				// Handles the URI if the application is still running
 				if (application.isRunning())
 					download = handleURI(application, request, response);
@@ -381,21 +348,7 @@ public class ApplicationServlet extends HttpServlet {
 					// Finds the window within the application
 					Window window = null;
 					if (application.isRunning())
-						window = getApplicationWindow(request, application,
-								unhandledParameters);
-
-					// Handles the unhandled parameters if the application is
-					// still running
-					if (window != null && unhandledParameters != null
-							&& !unhandledParameters.isEmpty()) {
-						try {
-							window.handleParameters(unhandledParameters);
-						} catch (Throwable t) {
-							application
-									.terminalError(new ParameterHandlerErrorImpl(
-											window, t));
-						}
-					}
+						window = getApplicationWindow(request, application);
 
 					// Removes application if it has stopped
 					if (!application.isRunning()) {
@@ -421,24 +374,23 @@ public class ApplicationServlet extends HttpServlet {
 
 					// Sets terminal type for the window, if not already set
 					if (window.getTerminal() == null) {
-						window.setTerminal(wb);
+						// TODO !!!!
+						window.setTerminal(new WebBrowser());
 					}
 
 					// Finds theme
 					String themeName = window.getTheme() != null ? window
 							.getTheme() : DEFAULT_THEME;
-					if (unhandledParameters.get("theme") != null) {
-						themeName = (String) ((Object[]) unhandledParameters
-								.get("theme"))[0];
+					if (request.getParameter("theme") != null) {
+						themeName = request.getParameter("theme");
 					}
 					
-										// Handles resource requests
+					// Handles resource requests
 					if (handleResourceRequest(request, response, themeName))
 						return;
 
-					
 						writeAjaxPage(request, response, out,
-								unhandledParameters, window, wb, themeName);
+								window, themeName);
 				}
 			}
 
@@ -482,7 +434,7 @@ public class ApplicationServlet extends HttpServlet {
 	 */
 	private void writeAjaxPage(HttpServletRequest request,
 			HttpServletResponse response, OutputStream out,
-			Map unhandledParameters, Window window, WebBrowser terminalType, String themeName) throws IOException, MalformedURLException {
+			 Window window, String themeName) throws IOException, MalformedURLException {
 		response.setContentType("text/html");
 		BufferedWriter page = new BufferedWriter(new OutputStreamWriter(out));
 
@@ -521,62 +473,7 @@ public class ApplicationServlet extends HttpServlet {
 				"	<div style=\"position: absolute; right: 5px; top: 5px; color: gray;\"><strong>IT Mill Toolkit 5 Prototype</strong></div>\n" + 
 				"	</body>\n" + 
 				"</html>\n");
-		
-		
-		
-//		Theme t = theme;
-//		Vector themes = new Vector();
-//		themes.add(t);
-//		while (t.getParent() != null) {
-//			String parentName = t.getParent();
-//			t = themeSource.getThemeByName(parentName);
-//			themes.add(t);
-//		}
-//		for (int k = themes.size() - 1; k >= 0; k--) {
-//			t = (Theme) themes.get(k);
-//			Collection files = t.getFileNames(terminalType, Theme.MODE_AJAX);
-//			for (Iterator i = files.iterator(); i.hasNext();) {
-//				String file = (String) i.next();
-//				if (file.endsWith(".css"))
-//					page.write("<link rel=\"stylesheet\" href=\""
-//							+ getResourceLocation(t.getName(),
-//									new ThemeResource(file))
-//							+ "\" type=\"text/css\" />\n");
-//				else if (file.endsWith(".js")) {
-//					page.write("<script src=\"");
-//
-//					// TODO remove this and implement behaviour in themes
-//					// description.xml files
-//					if (file.endsWith("firebug.js")
-//							&& !isDebugMode(unhandledParameters)) {
-//						file = file.replaceFirst("bug.js", "bugx.js");
-//					}
-//					page.write(getResourceLocation(t.getName(),
-//							new ThemeResource(file)));
-//					page.write("\" type=\"text/javascript\"></script>\n");
-//				}
-//			}
-//
-//		}
-
-
-//		page.write("itmill.tmp = new itmill.Client("
-//				+ "document.getElementById('ajax-window')," + "\"" + appUrl
-//				+ "/UIDL/" + "\",\"" + resourcePath
-//				+ ((Theme) themes.get(themes.size() - 1)).getName() + "/"
-//
-//				+ "client/\",document.getElementById('ajax-wait'));\n");
-
-		// TODO Only current theme is registered to the client
-		// for (int k = themes.size() - 1; k >= 0; k--) {
-		// t = (Theme) themes.get(k);
-//		t = theme;
-//		String themeObjName = "itmill.themes."
-//				+ t.getName().substring(0, 1).toUpperCase()
-//				+ t.getName().substring(1);
-//		page.write(" (new " + themeObjName + "(\"" + resourcePath + t.getName()
-//				+ "/\")).registerTo(itmill.tmp);\n");
-		// }
+	
 
 		page.close();
 	}
@@ -777,37 +674,6 @@ public class ApplicationServlet extends HttpServlet {
 		return true;
 	}
 
-	/**
-	 * Gets the variable map for the session.
-	 * 
-	 * @param application
-	 * @param request
-	 *            the HTTP request.
-	 * @return the variable map.
-	 * 
-	 */
-	private static synchronized HttpVariableMap getVariableMap(
-			Application application, HttpServletRequest request) {
-
-		HttpSession session = request.getSession();
-
-		// Gets the application to variablemap map
-		Map varMapMap = (Map) session.getAttribute(SESSION_ATTR_VARMAP);
-		if (varMapMap == null) {
-			varMapMap = new WeakHashMap();
-			session.setAttribute(SESSION_ATTR_VARMAP, varMapMap);
-		}
-
-		// Creates a variable map, if it does not exists.
-		HttpVariableMap variableMap = (HttpVariableMap) varMapMap
-				.get(application);
-		if (variableMap == null) {
-			variableMap = new HttpVariableMap();
-			varMapMap.put(application, variableMap);
-		}
-
-		return variableMap;
-	}
 
 	/**
 	 * Gets the current application URL from request.
@@ -1155,7 +1021,7 @@ public class ApplicationServlet extends HttpServlet {
 	 *             servlet's normal operation.
 	 */
 	private Window getApplicationWindow(HttpServletRequest request,
-			Application application, Map params) throws ServletException {
+			Application application) throws ServletException {
 
 		Window window = null;
 

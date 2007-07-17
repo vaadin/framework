@@ -10,7 +10,7 @@ import com.google.gwt.user.client.ui.TabBar;
 import com.google.gwt.user.client.ui.TabListener;
 import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.itmill.toolkit.terminal.gwt.client.Client;
+import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
@@ -20,7 +20,7 @@ public class ITabsheet extends TabPanel implements Paintable {
 
 	String id;
 
-	Client client;
+	ApplicationConnection client;
 
 	ArrayList tabKeys = new ArrayList();
 
@@ -61,7 +61,7 @@ public class ITabsheet extends TabPanel implements Paintable {
 
 	}
 
-	public void updateFromUIDL(UIDL uidl, Client client) {
+	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 		this.client = client;
 		id = uidl.getId();
 		

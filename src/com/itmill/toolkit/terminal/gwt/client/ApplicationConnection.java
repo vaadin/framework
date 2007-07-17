@@ -26,7 +26,7 @@ import com.itmill.toolkit.terminal.gwt.client.ui.IContextMenu;
  * 
  * TODO IDEA: Should be extend Widget here !?!?!
  */
-public class Client implements EntryPoint {
+public class ApplicationConnection implements EntryPoint {
 
 	private String appUri;
 

@@ -11,7 +11,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.CaptionWrapper;
-import com.itmill.toolkit.terminal.gwt.client.Client;
+import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Layout;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
@@ -76,7 +76,7 @@ public class ICustomLayout extends ComplexPanel implements Paintable, Layout {
 	}
 
 	/** Update the layout from UIDL */
-	public void updateFromUIDL(UIDL uidl, Client client) {
+	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 
 		// Client manages general cases
 		if (client.updateComponent(this, uidl, false))
@@ -106,7 +106,7 @@ public class ICustomLayout extends ComplexPanel implements Paintable, Layout {
 	}
 
 	/** Update implementing HTML-layout if needed. */
-	private void updateHTML(UIDL uidl, Client client) {
+	private void updateHTML(UIDL uidl, ApplicationConnection client) {
 
 		// Update only if style has changed
 		String newStyle = uidl.getStringAttribute("style");

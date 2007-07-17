@@ -6,7 +6,7 @@ import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.FocusListener;
 import com.google.gwt.user.client.ui.TextBoxBase;
 import com.google.gwt.user.client.ui.Widget;
-import com.itmill.toolkit.terminal.gwt.client.Client;
+import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
@@ -31,7 +31,7 @@ public class ITextField extends TextBoxBase implements
 
 	protected String id;
 
-	protected Client client;
+	protected ApplicationConnection client;
 
 	private boolean immediate = false;
 	
@@ -46,7 +46,7 @@ public class ITextField extends TextBoxBase implements
 		addFocusListener(this);
 	}
 
-	public void updateFromUIDL(UIDL uidl, Client client) {
+	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 		this.client = client;
 		id = uidl.getId();
 		

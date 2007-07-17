@@ -1,7 +1,7 @@
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import com.google.gwt.user.client.DOM;
-import com.itmill.toolkit.terminal.gwt.client.Client;
+import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
 /**
@@ -16,7 +16,7 @@ public class ITextArea extends ITextField {
 		super(DOM.createTextArea());
 	}
 	
-	public void updateFromUIDL(UIDL uidl, Client client) {
+	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 		// Call parent renderer explicitly
 		super.updateFromUIDL(uidl, client);
 		
