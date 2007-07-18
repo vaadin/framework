@@ -1242,14 +1242,14 @@ public class ApplicationServlet extends HttpServlet {
 	 * @param application
 	 * @return AJAX Application Manager
 	 */
-	private ApplicationManager getApplicationManager(Application application) {
-		ApplicationManager mgr = (ApplicationManager) applicationToAjaxAppMgrMap
+	private CommunicationManager getApplicationManager(Application application) {
+		CommunicationManager mgr = (CommunicationManager) applicationToAjaxAppMgrMap
 				.get(application);
 
 		// This application is going from Web to AJAX mode, create new manager
 		if (mgr == null) {
 			// Creates new manager
-			mgr = new ApplicationManager(application, this);
+			mgr = new CommunicationManager(application, this);
 			applicationToAjaxAppMgrMap.put(application, mgr);
 
 			// Manager takes control over the application

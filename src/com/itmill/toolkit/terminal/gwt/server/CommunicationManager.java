@@ -40,12 +40,15 @@ import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -65,6 +68,7 @@ import com.itmill.toolkit.terminal.DownloadStream;
 import com.itmill.toolkit.terminal.PaintTarget;
 import com.itmill.toolkit.terminal.Paintable;
 import com.itmill.toolkit.terminal.URIHandler;
+import com.itmill.toolkit.terminal.VariableOwner;
 import com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent;
 import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.FrameWindow;
@@ -79,9 +83,8 @@ import com.itmill.toolkit.ui.Window;
  * @VERSION@
  * @since 5.0
  */
-public class ApplicationManager implements
-		Paintable.RepaintRequestListener, Application.WindowAttachListener,
-		Application.WindowDetachListener {
+public class CommunicationManager implements Paintable.RepaintRequestListener,
+		Application.WindowAttachListener, Application.WindowDetachListener {
 
 	private static String GET_PARAM_REPAINT_ALL = "repaintAll";
 
@@ -93,9 +96,9 @@ public class ApplicationManager implements
 
 	private HashSet dirtyPaintabletSet = new HashSet();
 
+	private WeakHashMap paintableIdMap = new WeakHashMap();
 
-	// TODO THIS TEMPORARY HACK IS ONLY HERE TO MAKE GWT DEVEL EASIER
-    static WeakHashMap paintableIdMap = new WeakHashMap();
+	private WeakHashMap idPaintableMap = new WeakHashMap();
 
 	private int idSequence = 0;
 
@@ -104,31 +107,18 @@ public class ApplicationManager implements
 	private Set removedWindows = new HashSet();
 
 	private JsonPaintTarget paintTarget;
-	
+
 	private List locales;
-	
+
 	private int pendingLocalesIndex;
-	
+
 	private ApplicationServlet applicationServlet;
 
-	public ApplicationManager(Application application, ApplicationServlet applicationServlet) {
+	public CommunicationManager(Application application,
+			ApplicationServlet applicationServlet) {
 		this.application = application;
 		this.applicationServlet = applicationServlet;
 		requireLocale(application.getLocale().toString());
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	private AjaxVariableMap getVariableMap() {
-		AjaxVariableMap vm = (AjaxVariableMap) applicationToVariableMapMap
-				.get(application);
-		if (vm == null) {
-			vm = new AjaxVariableMap();
-			applicationToVariableMapMap.put(application, vm);
-		}
-		return vm;
 	}
 
 	/**
@@ -150,7 +140,6 @@ public class ApplicationManager implements
 		application.removeListener((Application.WindowDetachListener) this);
 	}
 
-	
 	public void handleUidlRequest(HttpServletRequest request,
 			HttpServletResponse response) throws IOException {
 
@@ -161,8 +150,10 @@ public class ApplicationManager implements
 		OutputStream out = response.getOutputStream();
 		PrintWriter outWriter = new PrintWriter(new BufferedWriter(
 				new OutputStreamWriter(out, "UTF-8")));
-		
-		outWriter.print(")/*{"); // some dirt to prevent cross site scripting vulnerabilities
+
+		// TODO Move dirt elsewhere
+		outWriter.print(")/*{"); // some dirt to prevent cross site scripting
+		// vulnerabilities
 
 		try {
 
@@ -175,8 +166,7 @@ public class ApplicationManager implements
 			synchronized (application) {
 
 				// Change all variables based on request parameters
-				Map unhandledParameters = getVariableMap().handleVariables(
-						request, application);
+				Map unhandledParameters = handleVariables(request, application);
 
 				// Handles the URI if the application is still running
 				if (application.isRunning())
@@ -209,16 +199,15 @@ public class ApplicationManager implements
 					// Sets the response type
 					response.setContentType("application/json; charset=UTF-8");
 					outWriter.print("\"changes\":[");
-					
-					paintTarget = new JsonPaintTarget(getVariableMap(), 
-							this, outWriter);
+
+					paintTarget = new JsonPaintTarget(this, outWriter);
 
 					// Paints components
 					Set paintables;
 					if (repaintAll) {
 						paintables = new LinkedHashSet();
 						paintables.add(window);
-						
+
 						// Reset sent locales
 						locales = null;
 						requireLocale(application.getLocale().toString());
@@ -309,210 +298,81 @@ public class ApplicationManager implements
 						}
 					}
 
-					
-							paintTarget.close();
+					paintTarget.close();
 					outWriter.print("]"); // close changes
 
+					outWriter.print(", \"meta\" : {");
+					boolean metaOpen = false;
 
-					// Render the removed windows
-					// TODO refactor commented area to send some meta instructions to close window
-//					Set removed = new HashSet(getRemovedWindows());
-//					if (removed.size() > 0) {
-//						for (Iterator i = removed.iterator(); i.hasNext();) {
-//							Window w = (Window) i.next();
-//							paintTarget.startTag("change");
-//							paintTarget.addAttribute("format", "uidl");
-//							String pid = getPaintableId(w);
-//							paintTarget.addAttribute("pid", pid);
-//							paintTarget.addAttribute("windowname", w.getName());
-//							paintTarget.addAttribute("visible", false);
-//							paintTarget.endTag("change");
-//							removedWindowNotified(w);
-//
-//						}
-//					}
+					// .. or initializion (first uidl-request)
+					if (application.ajaxInit()) {
+						outWriter.print("\"appInit\":true");
+					}
+					// add meta instruction for client to set focus if it is set
+					Paintable f = (Paintable) application.consumeFocus();
+					if (f != null) {
+						if (metaOpen)
+							outWriter.append(",");
+						outWriter.write("\"focus\":\"" + getPaintableId(f)
+								+ "\"");
+					}
 
+					outWriter.print("}, \"resources\" : {");
 
-					
-                	outWriter.print(", \"meta\" : {");
-                	boolean metaOpen = false;
+					// Precache custom layouts
+					// TODO Does not support theme-get param or different themes
+					// in different windows -> Allways preload layouts with the
+					// theme specified by the applications
+					String themeName = application.getTheme() != null ? application
+							.getTheme()
+							: ApplicationServlet.DEFAULT_THEME;
+					// TODO We should only precache the layouts that are not
+					// cached already
+					int resourceIndex = 0;
+					for (Iterator i = paintTarget.getPreCachedResources()
+							.iterator(); i.hasNext();) {
+						String resource = (String) i.next();
+						InputStream is = null;
+						try {
+							is = applicationServlet
+									.getServletContext()
+									.getResourceAsStream(
+											ApplicationServlet.THEME_DIRECTORY_PATH
+													+ themeName
+													+ "/"
+													+ resource);
+						} catch (Exception e) {
+							Log.info(e.getMessage());
+						}
+						if (is != null) {
 
-					
-                    // .. or initializion (first uidl-request)
-                    if(application.ajaxInit()) {
-                    	outWriter.print("\"appInit\":true");
-                    }
-                    // add meta instruction for client to set focus if it is set
-                    Paintable f = (Paintable) application.consumeFocus();
-                    if(f != null) {
-                    	if(metaOpen)
-                    		outWriter.append(",");
-                    	outWriter.write("\"focus\":\""+ getPaintableId(f) +"\"");
-                    }
+							outWriter.print((resourceIndex++ > 0 ? ", " : "")
+									+ "\"" + resource + "\" : ");
+							StringBuffer layout = new StringBuffer();
 
-                	outWriter.print("}, \"resources\" : {");
+							try {
+								InputStreamReader r = new InputStreamReader(is);
+								char[] buffer = new char[20000];
+								int charsRead = 0;
+								while ((charsRead = r.read(buffer)) > 0)
+									layout.append(buffer, 0, charsRead);
+								r.close();
+							} catch (java.io.IOException e) {
+								Log.info("Resource transfer failed:  "
+										+ request.getRequestURI() + ". ("
+										+ e.getMessage() + ")");
+							}
+							outWriter.print("\""
+									+ JsonPaintTarget.escapeJSON(layout
+											.toString()) + "\"");
+						}
+					}
+					outWriter.print("}");
 
-                    // Precache custom layouts
-                    // TODO Does not support theme-get param or different themes in different windows -> Allways preload layouts with the theme specified by the applications
-                    String themeName = application.getTheme() != null ? application.getTheme() : ApplicationServlet.DEFAULT_THEME;
-                    // TODO We should only precache the layouts that are not cached already
-                	int resourceIndex = 0;
-                    for (Iterator i=paintTarget.getPreCachedResources().iterator(); i.hasNext();) {
-                    	String resource = (String) i.next();
-                    	InputStream is = null;
-                    	try {
-                    		is = applicationServlet.getServletContext().getResourceAsStream(ApplicationServlet.THEME_DIRECTORY_PATH + themeName + "/" +  resource);
-                		} catch (Exception e) {
-                			Log.info(e.getMessage());
-                		}
-                    	if (is != null) {
-                    		
-                        	outWriter.print((resourceIndex++ > 0 ? ", " : "") + "\""+resource + "\" : ");
-                    		StringBuffer layout = new StringBuffer();
+					printLocaleDeclarations(outWriter);
 
-                    		try {
-                        		InputStreamReader r = new InputStreamReader(is);
-                    				char[] buffer = new char[20000];
-                    				int charsRead = 0;
-                    				while ((charsRead = r.read(buffer)) > 0)
-                    					layout.append(buffer, 0, charsRead);
-                    				r.close();
-                    		} catch (java.io.IOException e) {
-                    			Log.info("Resource transfer failed:  " + request.getRequestURI()
-                    					+ ". (" + e.getMessage() + ")");
-                    		}
-                    		outWriter.print("\"" + JsonPaintTarget.escapeJSON(layout.toString()) + "\"");
-                    	}
-                    }
-                	outWriter.print("}");
-                	
-                	
-                	/* -----------------------------
-                	 * Sending Locale sensitive date
-                	 * -----------------------------
-                	 */
-                	
-                	// Store JVM default locale for later restoration
-                	// (we'll have to change the default locale for a while)
-            		Locale jvmDefault = Locale.getDefault();
-                	
-                    // Send locale informations to client
-            		outWriter.print(", \"locales\":[");
-                	for(;pendingLocalesIndex < locales.size(); pendingLocalesIndex++) {
-                		
-                		Locale l = generateLocale((String) locales.get(pendingLocalesIndex));
-	                	// Locale name
-	                	outWriter.print("{\"name\":\"" + l.toString() + "\",");
-	                	
-	                	/*
-	                	 * Month names (both short and full)
-	                	 */
-	                	DateFormatSymbols dfs = new DateFormatSymbols(l);
-	                	String[] short_months = dfs.getShortMonths();
-	                	String[] months = dfs.getMonths();
-	                  	outWriter.print("\"smn\":[\"" + // ShortMonthNames
-	                  			short_months[0] + "\",\"" +
-	                  			short_months[1] + "\",\"" +
-	                  			short_months[2] + "\",\"" +
-	                  			short_months[3] + "\",\"" +
-	                  			short_months[4] + "\",\"" +
-	                  			short_months[5] + "\",\"" +
-	                  			short_months[6] + "\",\"" +
-	                  			short_months[7] + "\",\"" +
-	                  			short_months[8] + "\",\"" +
-	                  			short_months[9] + "\",\"" +
-	                  			short_months[10] + "\",\"" +
-	                  			short_months[11] + "\"" +
-	                  			"],");
-	                  	outWriter.print("\"mn\":[\"" + // MonthNames
-	                  			months[0] + "\",\"" +
-	                  			months[1] + "\",\"" +
-	                  			months[2] + "\",\"" +
-	                  			months[3] + "\",\"" +
-	                  			months[4] + "\",\"" +
-	                  			months[5] + "\",\"" +
-	                  			months[6] + "\",\"" +
-	                  			months[7] + "\",\"" +
-	                  			months[8] + "\",\"" +
-	                  			months[9] + "\",\"" +
-	                  			months[10] + "\",\"" +
-	                  			months[11] + "\"" +
-	                  			"],");
-	
-	                    /*
-	                     * Weekday names (both short and full)
-	                     */
-	                  	String[] short_days = dfs.getShortWeekdays();
-	                 	String[] days = dfs.getWeekdays();
-	                    outWriter.print("\"sdn\":[\"" + // ShortDayNames
-	                  			short_days[1] + "\",\"" +
-	                  			short_days[2] + "\",\"" +
-	                  			short_days[3] + "\",\"" +
-	                  			short_days[4] + "\",\"" +
-	                  			short_days[5] + "\",\"" +
-	                  			short_days[6] + "\",\"" +
-	                  			short_days[7] + "\"" +
-	                  			"],");
-	                  	outWriter.print("\"dn\":[\"" + // DayNames
-	                  			days[1] + "\",\"" +
-	                  			days[2] + "\",\"" +
-	                  			days[3] + "\",\"" +
-	                  			days[4] + "\",\"" +
-	                  			days[5] + "\",\"" +
-	                  			days[6] + "\",\"" +
-	                  			days[7] + "\"" +
-	                  			"],");
-	                  	
-	                  	/*
-	                  	 * First day of week (0 = sunday, 1 = monday)
-	                  	 */
-	                  	Calendar cal = new GregorianCalendar(l);
-	                  	outWriter.print("\"fdow\":" + (cal.getFirstDayOfWeek() - 1) + ",");
-	                  	
-	                  	/*
-	                  	 * Date formatting (MM/DD/YYYY etc.)
-	                  	 */
-	                  	// Force our locale as JVM default for a while (SimpleDateFormat uses JVM default)
-	                  	Locale.setDefault(l);
-	                   	String df = new SimpleDateFormat().toPattern();
-	                   	int timeStart = df.indexOf("H");
-	                   	if(timeStart < 0)
-	                   		timeStart = df.indexOf("h");
-	                   	int ampm_first = df.indexOf("a");
-	                   	// E.g. in Korean locale AM/PM is before h:mm
-	                   	// TODO should take that into consideration on client-side as well, now always h:mm a
-	                   	if(ampm_first > 0 && ampm_first < timeStart)
-	                   		timeStart = ampm_first;
-	                   	String dateformat = df.substring(0, timeStart-1);
-	                   	
-	                  	outWriter.print("\"df\":\"" + dateformat.trim() + "\",");
-	                  	
-	                  	/*
-	                  	 * Time formatting (24 or 12 hour clock and AM/PM suffixes)
-	                  	 */
-	                  	String timeformat = df.substring(timeStart, df.length()); // Doesn't return second or milliseconds
-	                  	// We use timeformat to determine 12/24-hour clock
-	                  	boolean twelve_hour_clock = timeformat.contains("a");
-	                  	// TODO there are other possibilities as well, like 'h' in french (ignore them, too complicated)
-	                  	String hour_min_delimiter = timeformat.contains(".")? "." : ":";
-	                  	//outWriter.print("\"tf\":\"" + timeformat + "\",");
-	                  	outWriter.print("\"thc\":" + twelve_hour_clock + ",");
-	                  	outWriter.print("\"hmd\":\"" + hour_min_delimiter + "\"");
-	                  	if(twelve_hour_clock) {
-	                  		String[] ampm = dfs.getAmPmStrings();
-	                  		outWriter.print(",\"ampm\":[\""+ampm[0]+"\",\""+ampm[1]+"\"]");
-	                  	}
-	                  	outWriter.print("}");
-	                  	if(pendingLocalesIndex < locales.size()-1)
-	                  		outWriter.print(",");
-                	}
-                	outWriter.print("]"); // Close locales
-                	
-                  	// Restore JVM default locale
-                  	Locale.setDefault(jvmDefault);
-                
-                	outWriter.flush();
-                    outWriter.close();
+					outWriter.flush();
+					outWriter.close();
 					out.flush();
 				} else {
 
@@ -538,6 +398,184 @@ public class ApplicationManager implements
 
 		}
 
+	}
+
+	private Map handleVariables(HttpServletRequest request,
+			Application application2) {
+
+		Map params = new HashMap(request.getParameterMap());
+		String changes = (String) ((params.get("changes") instanceof String[]) ? ((String[]) params
+				.get("changes"))[0]
+				: params.get("changes"));
+		params.remove("changes");
+		if (changes != null) {
+			String[] ca = changes.split("\u0001");
+			System.out.println("Changes = " + changes);
+			for (int i = 0; i < ca.length; i++) {
+				String[] vid = ca[i].split("_");
+				VariableOwner owner = (VariableOwner) idPaintableMap
+						.get(vid[0]);
+				if (owner != null) {
+					Map m;
+					if (i + 2 >= ca.length
+							|| !vid[0].equals(ca[i + 2].split("_")[0]))
+						m = new SingleValueMap(vid[1], convertVariableValue(
+								vid[2].charAt(0), ca[++i]));
+					else {
+						m = new HashMap();
+						m.put(vid[1], convertVariableValue(vid[2].charAt(0),
+								ca[++i]));
+					}
+					while (i + 1 < ca.length
+							&& vid[0].equals(ca[i + 1].split("_")[0])) {
+						vid = ca[++i].split("_");
+						m.put(vid[1], convertVariableValue(vid[2].charAt(0),
+								ca[++i]));
+					}
+					owner.changeVariables(request, m);
+				}
+			}
+		}
+
+		return params;
+	}
+
+	private Object convertVariableValue(char variableType, String strValue) {
+		Object val = null;
+		System.out.println("converting " + strValue + " of type "
+				+ variableType);
+		switch (variableType) {
+		case 'a':
+			val = strValue.split(",");
+			break;
+		case 's':
+			val = strValue;
+			break;
+		case 'i':
+			val = Integer.valueOf(strValue);
+			break;
+		case 'b':
+			val = Boolean.valueOf(strValue);
+			break;
+		}
+		
+		System.out.println("result: " + val + " of type " + (val == null ? "-" : val.getClass()));
+		return val;
+	}
+
+	private void printLocaleDeclarations(PrintWriter outWriter) {
+		/*
+		 * ----------------------------- Sending Locale sensitive date
+		 * -----------------------------
+		 */
+
+		// Store JVM default locale for later restoration
+		// (we'll have to change the default locale for a while)
+		Locale jvmDefault = Locale.getDefault();
+
+		// Send locale informations to client
+		outWriter.print(", \"locales\":[");
+		for (; pendingLocalesIndex < locales.size(); pendingLocalesIndex++) {
+
+			Locale l = generateLocale((String) locales.get(pendingLocalesIndex));
+			// Locale name
+			outWriter.print("{\"name\":\"" + l.toString() + "\",");
+
+			/*
+			 * Month names (both short and full)
+			 */
+			DateFormatSymbols dfs = new DateFormatSymbols(l);
+			String[] short_months = dfs.getShortMonths();
+			String[] months = dfs.getMonths();
+			outWriter.print("\"smn\":[\""
+					+ // ShortMonthNames
+					short_months[0] + "\",\"" + short_months[1] + "\",\""
+					+ short_months[2] + "\",\"" + short_months[3] + "\",\""
+					+ short_months[4] + "\",\"" + short_months[5] + "\",\""
+					+ short_months[6] + "\",\"" + short_months[7] + "\",\""
+					+ short_months[8] + "\",\"" + short_months[9] + "\",\""
+					+ short_months[10] + "\",\"" + short_months[11] + "\""
+					+ "],");
+			outWriter.print("\"mn\":[\""
+					+ // MonthNames
+					months[0] + "\",\"" + months[1] + "\",\"" + months[2]
+					+ "\",\"" + months[3] + "\",\"" + months[4] + "\",\""
+					+ months[5] + "\",\"" + months[6] + "\",\"" + months[7]
+					+ "\",\"" + months[8] + "\",\"" + months[9] + "\",\""
+					+ months[10] + "\",\"" + months[11] + "\"" + "],");
+
+			/*
+			 * Weekday names (both short and full)
+			 */
+			String[] short_days = dfs.getShortWeekdays();
+			String[] days = dfs.getWeekdays();
+			outWriter.print("\"sdn\":[\""
+					+ // ShortDayNames
+					short_days[1] + "\",\"" + short_days[2] + "\",\""
+					+ short_days[3] + "\",\"" + short_days[4] + "\",\""
+					+ short_days[5] + "\",\"" + short_days[6] + "\",\""
+					+ short_days[7] + "\"" + "],");
+			outWriter.print("\"dn\":[\""
+					+ // DayNames
+					days[1] + "\",\"" + days[2] + "\",\"" + days[3] + "\",\""
+					+ days[4] + "\",\"" + days[5] + "\",\"" + days[6] + "\",\""
+					+ days[7] + "\"" + "],");
+
+			/*
+			 * First day of week (0 = sunday, 1 = monday)
+			 */
+			Calendar cal = new GregorianCalendar(l);
+			outWriter.print("\"fdow\":" + (cal.getFirstDayOfWeek() - 1) + ",");
+
+			/*
+			 * Date formatting (MM/DD/YYYY etc.)
+			 */
+			// Force our locale as JVM default for a while (SimpleDateFormat
+			// uses JVM default)
+			Locale.setDefault(l);
+			String df = new SimpleDateFormat().toPattern();
+			int timeStart = df.indexOf("H");
+			if (timeStart < 0)
+				timeStart = df.indexOf("h");
+			int ampm_first = df.indexOf("a");
+			// E.g. in Korean locale AM/PM is before h:mm
+			// TODO should take that into consideration on client-side as well,
+			// now always h:mm a
+			if (ampm_first > 0 && ampm_first < timeStart)
+				timeStart = ampm_first;
+			String dateformat = df.substring(0, timeStart - 1);
+
+			outWriter.print("\"df\":\"" + dateformat.trim() + "\",");
+
+			/*
+			 * Time formatting (24 or 12 hour clock and AM/PM suffixes)
+			 */
+			String timeformat = df.substring(timeStart, df.length()); // Doesn't
+			// return
+			// second
+			// or
+			// milliseconds
+			// We use timeformat to determine 12/24-hour clock
+			boolean twelve_hour_clock = timeformat.contains("a");
+			// TODO there are other possibilities as well, like 'h' in french
+			// (ignore them, too complicated)
+			String hour_min_delimiter = timeformat.contains(".") ? "." : ":";
+			// outWriter.print("\"tf\":\"" + timeformat + "\",");
+			outWriter.print("\"thc\":" + twelve_hour_clock + ",");
+			outWriter.print("\"hmd\":\"" + hour_min_delimiter + "\"");
+			if (twelve_hour_clock) {
+				String[] ampm = dfs.getAmPmStrings();
+				outWriter.print(",\"ampm\":[\"" + ampm[0] + "\",\"" + ampm[1]
+						+ "\"]");
+			}
+			outWriter.print("}");
+			if (pendingLocalesIndex < locales.size() - 1)
+				outWriter.print(",");
+		}
+		outWriter.print("]"); // Close locales
+
+		// Restore JVM default locale
+		Locale.setDefault(jvmDefault);
 	}
 
 	/**
@@ -743,6 +781,7 @@ public class ApplicationManager implements
 		if (id == null) {
 			id = "PID" + Integer.toString(idSequence++);
 			paintableIdMap.put(paintable, id);
+			idPaintableMap.put(id, paintable);
 		}
 
 		return id;
@@ -873,6 +912,91 @@ public class ApplicationManager implements
 		this.removedWindows.remove(w);
 	}
 
+	private final class SingleValueMap implements Map {
+		private final String name;
+
+		private final Object value;
+
+		private SingleValueMap(String name, Object value) {
+			this.name = name;
+			this.value = value;
+		}
+
+		public void clear() {
+			throw new UnsupportedOperationException();
+		}
+
+		public boolean containsKey(Object key) {
+			if (name == null)
+				return key == null;
+			return name.equals(key);
+		}
+
+		public boolean containsValue(Object v) {
+			if (value == null)
+				return v == null;
+			return value.equals(v);
+		}
+
+		public Set entrySet() {
+			Set s = new HashSet();
+			s.add(new Map.Entry() {
+
+				public Object getKey() {
+					return name;
+				}
+
+				public Object getValue() {
+					return value;
+				}
+
+				public Object setValue(Object value) {
+					throw new UnsupportedOperationException();
+				}
+			});
+			return s;
+		}
+
+		public Object get(Object key) {
+			if (!name.equals(key))
+				return null;
+			return value;
+		}
+
+		public boolean isEmpty() {
+			return false;
+		}
+
+		public Set keySet() {
+			Set s = new HashSet();
+			s.add(name);
+			return s;
+		}
+
+		public Object put(Object key, Object value) {
+			throw new UnsupportedOperationException();
+		}
+
+		public void putAll(Map t) {
+			throw new UnsupportedOperationException();
+		}
+
+		public Object remove(Object key) {
+			throw new UnsupportedOperationException();
+		}
+
+		public int size() {
+			return 1;
+		}
+
+		public Collection values() {
+			LinkedList s = new LinkedList();
+			s.add(value);
+			return s;
+
+		}
+	}
+
 	/**
 	 * Implementation of URIHandler.ErrorEvent interface.
 	 */
@@ -908,20 +1032,20 @@ public class ApplicationManager implements
 	}
 
 	public void requireLocale(String value) {
-		if(locales == null) {
+		if (locales == null) {
 			locales = new ArrayList();
 			locales.add(application.getLocale().toString());
 			pendingLocalesIndex = 0;
 		}
-		if(!locales.contains(value))
-				locales.add(value);
+		if (!locales.contains(value))
+			locales.add(value);
 	}
-	
+
 	private Locale generateLocale(String value) {
 		String[] temp = value.split("_");
-		if(temp.length == 1)
+		if (temp.length == 1)
 			return new Locale(temp[0]);
-		else if(temp.length == 2)
+		else if (temp.length == 2)
 			return new Locale(temp[0], temp[1]);
 		else
 			return new Locale(temp[0], temp[1], temp[2]);

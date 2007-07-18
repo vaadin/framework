@@ -78,11 +78,9 @@ public class JsonPaintTarget implements PaintTarget {
 
 	private PrintWriter uidlBuffer;
 
-	private AjaxVariableMap variableMap;
-
 	private boolean closed = false;
 
-	private ApplicationManager manager;
+	private CommunicationManager manager;
 
 	private boolean trackPaints = false;
 
@@ -106,13 +104,11 @@ public class JsonPaintTarget implements PaintTarget {
 	 * @throws PaintException
 	 *             if the paint operation failed.
 	 */
-	public JsonPaintTarget(AjaxVariableMap variableMap,
-			ApplicationManager manager, PrintWriter outWriter)
+	public JsonPaintTarget(
+			CommunicationManager manager, PrintWriter outWriter)
 			throws PaintException {
 
 		this.manager = manager;
-		// Sets the variable map
-		this.variableMap = variableMap;
 
 		// Sets the target for UIDL writing
 		this.uidlBuffer = outWriter;
@@ -561,10 +557,7 @@ public class JsonPaintTarget implements PaintTarget {
 	 */
 	public void addUploadStreamVariable(VariableOwner owner, String name)
 			throws PaintException {
-		String code = variableMap.registerVariable(name, UploadStream.class,
-				null, owner);
 		startTag("uploadstream");
-		addAttribute(UIDL_ARG_ID, code);
 		addAttribute(UIDL_ARG_NAME, name);
 		endTag("uploadstream");
 	}
@@ -750,8 +743,6 @@ public class JsonPaintTarget implements PaintTarget {
 
 		Vector attr = new Vector();
 
-		private HashMap childTagCounters = new HashMap();
-
 		StringBuffer data = new StringBuffer();
 
 		public boolean childrenArrayOpen = false;
@@ -891,21 +882,18 @@ public class JsonPaintTarget implements PaintTarget {
 	}
 
 	abstract class Variable {
-		String code;
 
 		String name;
 
 		public abstract String getJsonPresentation();
 	}
-
+	
 	class BooleanVariable extends Variable {
 		boolean value;
 
 		public BooleanVariable(VariableOwner owner, String name, boolean v) {
 			value = v;
 			this.name = name;
-			code = variableMap.registerVariable(name, Boolean.class,
-					new Boolean(value), owner);
 		}
 
 		public String getJsonPresentation() {
@@ -920,8 +908,6 @@ public class JsonPaintTarget implements PaintTarget {
 		public StringVariable(VariableOwner owner, String name, String v) {
 			value = v;
 			this.name = name;
-			code = variableMap.registerVariable(name, String.class, value,
-					owner);
 		}
 
 		public String getJsonPresentation() {
@@ -936,8 +922,6 @@ public class JsonPaintTarget implements PaintTarget {
 		public IntVariable(VariableOwner owner, String name, int v) {
 			value = v;
 			this.name = name;
-			code = variableMap.registerVariable(name, Integer.class,
-					new Integer(value), owner);
 		}
 
 		public String getJsonPresentation() {
@@ -951,8 +935,6 @@ public class JsonPaintTarget implements PaintTarget {
 		public ArrayVariable(VariableOwner owner, String name, String[] v) {
 			value = v;
 			this.name = name;
-			code = variableMap.registerVariable(name, String[].class, value,
-					owner);
 		}
 
 		public String getJsonPresentation() {

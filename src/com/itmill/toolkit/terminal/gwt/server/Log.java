@@ -55,9 +55,9 @@ package com.itmill.toolkit.terminal.gwt.server;
  * @author IT Mill Ltd.
  * @version
  * @VERSION@
- * @since 3.0
+ * @since 5.0
  */
-public class Log {
+class Log {
 
 	private static boolean useStdOut = true;
 

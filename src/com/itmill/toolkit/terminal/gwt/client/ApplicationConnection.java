@@ -185,8 +185,8 @@ public class ApplicationConnection implements EntryPoint {
 	}
 
 	private void addVariableToQueue(String paintableId, String variableName,
-			String encodedValue, boolean immediate) {
-		String id = paintableId + "_" + variableName;
+			String encodedValue, boolean immediate, char type) {
+		String id = paintableId + "_" + variableName + "_" + type;
 		for (int i = 0; i < pendingVariables.size(); i += 2)
 			if ((pendingVariables.get(i)).equals(id)) {
 				pendingVariables.remove(i);
@@ -202,37 +202,35 @@ public class ApplicationConnection implements EntryPoint {
 	public void sendPendingVariableChanges() {
 		StringBuffer req = new StringBuffer();
 
+		req.append("changes=");
 		for (int i = 0; i < pendingVariables.size(); i++) {
-			req.append(pendingVariables.get(i++));
-			req.append("=");
+			if (i>0) req.append("\u0001");
 			req.append(pendingVariables.get(i));
-			req.append("&");
 		}
 
 		pendingVariables.clear();
 		makeUidlRequest(req.toString());
 	}
 
-	private String escapeString(String value) {
-		// TODO
-		return value;
-	}
+	private static native String escapeString(String value) /*-{
+		return encodeURIComponent(value);
+	}-*/;
 
 	public void updateVariable(String paintableId, String variableName,
 			String newValue, boolean immediate) {
 		addVariableToQueue(paintableId, variableName, escapeString(newValue),
-				immediate);
+				immediate, 's');
 	}
 
 	public void updateVariable(String paintableId, String variableName,
 			int newValue, boolean immediate) {
-		addVariableToQueue(paintableId, variableName, "" + newValue, immediate);
+		addVariableToQueue(paintableId, variableName, "" + newValue, immediate, 'i');
 	}
 
 	public void updateVariable(String paintableId, String variableName,
 			boolean newValue, boolean immediate) {
 		addVariableToQueue(paintableId, variableName, newValue ? "true"
-				: "false", immediate);
+				: "false", immediate, 'b');
 	}
 
 	public void updateVariable(String paintableId, String variableName,
@@ -243,8 +241,8 @@ public class ApplicationConnection implements EntryPoint {
 				buf.append(",");
 			buf.append(escapeString(values[i].toString()));
 		}
-		addVariableToQueue("array:" + paintableId, variableName,
-				buf.toString(), immediate);
+		addVariableToQueue(paintableId, variableName,
+				buf.toString(), immediate, 'a');
 	}
 
 	public WidgetFactory getWidgetFactory() {

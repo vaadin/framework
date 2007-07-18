@@ -38,7 +38,7 @@ import java.io.InputStream;
  * @VERSION@
  * @since 5.0
  */
-public class AjaxHttpUploadStream implements
+public class HttpUploadStream implements
 		com.itmill.toolkit.terminal.UploadStream {
 
 	/**
@@ -67,7 +67,7 @@ public class AjaxHttpUploadStream implements
 	 * @param contentType
 	 *            the type of the content.
 	 */
-	public AjaxHttpUploadStream(String name, InputStream stream,
+	public HttpUploadStream(String name, InputStream stream,
 			String contentName, String contentType) {
 		this.streamName = name;
 		this.stream = stream;
