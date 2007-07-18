@@ -35,6 +35,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -64,7 +65,6 @@ import com.itmill.toolkit.service.License.LicenseFileHasNotBeenRead;
 import com.itmill.toolkit.service.License.LicenseSignatureIsInvalid;
 import com.itmill.toolkit.service.License.LicenseViolation;
 import com.itmill.toolkit.terminal.DownloadStream;
-import com.itmill.toolkit.terminal.Paintable;
 import com.itmill.toolkit.terminal.ParameterHandler;
 import com.itmill.toolkit.terminal.ThemeResource;
 import com.itmill.toolkit.terminal.URIHandler;
@@ -123,24 +123,14 @@ public class ApplicationServlet extends HttpServlet {
 
 	private static final int MAX_BUFFER_SIZE = 64 * 1024;
 
-	// TODO: these should be moved to session object and stored directly into
-	// session
-	private static final String SESSION_ATTR_VARMAP = "itmill-toolkit-varmap";
+	private static WeakHashMap applicationToLastRequestDate = new WeakHashMap();
 
-	private static final String SESSION_ATTR_CONTEXT = "itmill-toolkit-context";
-
-	protected static final String SESSION_ATTR_APPS = "itmill-toolkit-apps";
-
-	private static final String SESSION_BINDING_LISTENER = "itmill-toolkit-bindinglistener";
-
-	private static HashMap applicationToLastRequestDate = new HashMap();
-
-	private static HashMap applicationToAjaxAppMgrMap = new HashMap();
+	private static WeakHashMap applicationToAjaxAppMgrMap = new WeakHashMap();
 
 	// License for ApplicationServlets
-	private static HashMap licenseForApplicationClass = new HashMap();
+	private static WeakHashMap licenseForApplicationClass = new WeakHashMap();
 
-	private static HashMap licensePrintedForApplicationClass = new HashMap();
+	private static WeakHashMap licensePrintedForApplicationClass = new WeakHashMap();
 
 	// TODO Should default or base theme be the default?
 	protected static final String DEFAULT_THEME = "base";
@@ -155,6 +145,7 @@ public class ApplicationServlet extends HttpServlet {
 	private static final long ACTIVE_USER_REQUEST_INTERVAL = 1000 * 45;
 	
 	private static final int DEFAULT_THEME_CACHETIME = 1000 * 60 * 60 * 24;
+
 	// Private fields
 	private Class applicationClass;
 
@@ -733,10 +724,7 @@ public class ApplicationServlet extends HttpServlet {
 			return null;
 
 		// Gets application list for the session.
-		LinkedList applications = (LinkedList) session
-				.getAttribute(SESSION_ATTR_APPS);
-		if (applications == null)
-			return null;
+		Collection applications = WebApplicationContext.getApplicationContext(session).getApplications();
 
 		// Search for the application (using the application URI) from the list
 		Application application = null;
@@ -754,7 +742,7 @@ public class ApplicationServlet extends HttpServlet {
 
 		// Removes stopped applications from the list
 		if (application != null && !application.isRunning()) {
-			applications.remove(application);
+			WebApplicationContext.getApplicationContext(session).removeApplication(application);
 			application = null;
 		}
 
@@ -792,47 +780,24 @@ public class ApplicationServlet extends HttpServlet {
 			LicenseSignatureIsInvalid, InvalidLicenseFile, LicenseViolation,
 			SAXException {
 
-		Application application = null;
-
-		// Gets the application url
+		WebApplicationContext context = WebApplicationContext.getApplicationContext(request.getSession());
 		URL applicationUrl = getApplicationUrl(request);
-
-		// Gets application list.
-		HttpSession session = request.getSession();
-		if (session == null)
-			return null;
-		LinkedList applications = (LinkedList) session
-				.getAttribute(SESSION_ATTR_APPS);
-		if (applications == null) {
-			applications = new LinkedList();
-			session.setAttribute(SESSION_ATTR_APPS, applications);
-			HttpSessionBindingListener sessionBindingListener = new SessionBindingListener(
-					applications);
-			session.setAttribute(SESSION_BINDING_LISTENER,
-					sessionBindingListener);
-		}
 
 		// Creates new application and start it
 		try {
-			application = (Application) this.applicationClass.newInstance();
-			applications.add(application);
+			Application application = (Application) this.applicationClass.newInstance();
+			context.addApplication(application);
 
-			// Sets locale
+			// Sets initial locale from the request
 			application.setLocale(request.getLocale());
-
-			// Gets application context for this session
-			WebApplicationContext context = (WebApplicationContext) session
-					.getAttribute(SESSION_ATTR_CONTEXT);
-			if (context == null) {
-				context = new WebApplicationContext(session);
-				session.setAttribute(SESSION_ATTR_CONTEXT, context);
-			}
 
 			// Starts application and check license
 			initializeLicense(application);
 			application.start(applicationUrl, this.applicationProperties,
 					context);
 			checkLicense(application);
+
+			return application;
 
 		} catch (IllegalAccessException e) {
 			Log.error("Illegal access to application class "
@@ -843,8 +808,6 @@ public class ApplicationServlet extends HttpServlet {
 					+ this.applicationClass.getName());
 			throw e;
 		}
-
-		return application;
 	}
 
 	/**
@@ -998,10 +961,7 @@ public class ApplicationServlet extends HttpServlet {
 
 		HttpSession session = request.getSession();
 		if (session != null) {
-			LinkedList applications = (LinkedList) session
-					.getAttribute(SESSION_ATTR_APPS);
-			if (applications != null)
-				applications.remove(application);
+			WebApplicationContext.getApplicationContext(session).removeApplication(application);
 		}
 
 		response.sendRedirect(response.encodeRedirectURL(logoutUrl));
@@ -1096,63 +1056,6 @@ public class ApplicationServlet extends HttpServlet {
 		return "true".equals(debugMode);
 	}
 
-	/**
-	 * 
-	 * SessionBindingListener performs Application cleanups after sessions are
-	 * expired. For each session exists one SessionBindingListener. It contains
-	 * references to all applications related to single session.
-	 * 
-	 * @author IT Mill Ltd.
-	 * @version
-	 * @VERSION@
-	 * @since 4.0
-	 */
-
-	private class SessionBindingListener implements HttpSessionBindingListener {
-		private LinkedList applications;
-
-		/**
-		 * 
-		 * @param applications
-		 */
-		protected SessionBindingListener(LinkedList applications) {
-			this.applications = applications;
-		}
-
-		/**
-		 * @see javax.servlet.http.HttpSessionBindingListener#valueBound(HttpSessionBindingEvent)
-		 */
-		public void valueBound(HttpSessionBindingEvent arg0) {
-			// We are not interested in bindings
-		}
-
-		/**
-		 * @see javax.servlet.http.HttpSessionBindingListener#valueUnbound(HttpSessionBindingEvent)
-		 */
-		public void valueUnbound(HttpSessionBindingEvent event) {
-			// If the binding listener is unbound from the session, the
-			// session must be closing
-			if (event.getName().equals(SESSION_BINDING_LISTENER)) {
-				// Close all applications related to given session
-				Object[] apps = applications.toArray();
-				for (int i = 0; i < apps.length; i++) {
-					if (apps[i] != null) {
-						// Close application
-						((Application) apps[i]).close();
-
-						synchronized (applicationToLastRequestDate) {
-							applicationToLastRequestDate.remove(apps[i]);
-						}
-						synchronized (applicationToAjaxAppMgrMap) {
-							applicationToAjaxAppMgrMap.remove(apps[i]);
-						}
-						// Remove application from applications list
-						applications.remove(apps[i]);
-					}
-				}
-			}
-		}
-	}
 
 	/**
 	 * Implementation of ParameterHandler.ErrorEvent interface.

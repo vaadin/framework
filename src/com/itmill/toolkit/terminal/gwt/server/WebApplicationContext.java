@@ -33,6 +33,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -40,6 +41,8 @@ import java.util.WeakHashMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpSessionBindingEvent;
+import javax.servlet.http.HttpSessionBindingListener;
 
 import com.itmill.toolkit.Application;
 import com.itmill.toolkit.service.ApplicationContext;
@@ -53,13 +56,15 @@ import com.itmill.toolkit.ui.Window;
  * @VERSION@
  * @since 3.1
  */
-public class WebApplicationContext implements ApplicationContext {
+public class WebApplicationContext implements ApplicationContext, HttpSessionBindingListener {
 
 	private List listeners;
 
 	private HttpSession session;
 
 	private WeakHashMap formActions = new WeakHashMap();
+
+	private HashSet applications = new HashSet();
 
 	/**
 	 * Creates a new Web Application Context.
@@ -138,12 +143,8 @@ public class WebApplicationContext implements ApplicationContext {
 	 * @see com.itmill.toolkit.service.ApplicationContext#getApplications()
 	 */
 	public Collection getApplications() {
-		LinkedList applications = (LinkedList) session
-				.getAttribute(ApplicationServlet.SESSION_ATTR_APPS);
 
-		return Collections
-				.unmodifiableCollection(applications == null ? (new LinkedList())
-						: applications);
+		return Collections.unmodifiableCollection(applications);
 	}
 
 	/**
@@ -155,7 +156,13 @@ public class WebApplicationContext implements ApplicationContext {
 	 */
 	static public WebApplicationContext getApplicationContext(
 			HttpSession session) {
-		return new WebApplicationContext(session);
+		WebApplicationContext cx = (WebApplicationContext) session
+				.getAttribute(WebApplicationContext.class.getName());
+		if (cx == null) {
+			cx = new WebApplicationContext(session);
+			session.setAttribute(WebApplicationContext.class.getName(), cx);
+		}
+		return cx;
 	}
 
 	/**
@@ -258,4 +265,32 @@ public class WebApplicationContext implements ApplicationContext {
 		}
 	}
 
+	protected void removeApplication(Application application) {
+		applications.remove(application);
+	}
+
+	protected void addApplication(Application application) {
+		applications.add(application);
+	}
+
+	
+	/**
+	 * @see javax.servlet.http.HttpSessionBindingListener#valueBound(HttpSessionBindingEvent)
+	 */
+	public void valueBound(HttpSessionBindingEvent arg0) {
+		// We are not interested in bindings
+	}
+
+	/**
+	 * @see javax.servlet.http.HttpSessionBindingListener#valueUnbound(HttpSessionBindingEvent)
+	 */
+	public void valueUnbound(HttpSessionBindingEvent event) {
+		// If we are going to be unbound from the session, the session must be closing
+		
+		while (!applications.isEmpty()) {
+			Application app = (Application) applications.iterator().next();
+			app.close();
+			removeApplication(app);
+		}
+	}
 }
