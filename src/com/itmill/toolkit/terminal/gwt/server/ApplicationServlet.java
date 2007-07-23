@@ -299,6 +299,11 @@ public class ApplicationServlet extends HttpServlet {
 		Application application = null;
 		try {
 
+			// Update browser details
+			WebBrowser browser = WebApplicationContext.getApplicationContext(request.getSession()).getBrowser();
+			browser.updateBrowserProperties(request);
+			// TODO Add screen height and width to the GWT client
+			
 			// Gets the application
 			application = getApplication(request);
 
@@ -336,6 +341,8 @@ public class ApplicationServlet extends HttpServlet {
 				// If this is not a download request
 				if (download == null) {
 
+					// TODO Clean this branch
+					
 					// Window renders are not cacheable
 					response.setHeader("Cache-Control", "no-cache");
 					response.setHeader("Pragma", "no-cache");
@@ -354,8 +361,7 @@ public class ApplicationServlet extends HttpServlet {
 
 					// Sets terminal type for the window, if not already set
 					if (window.getTerminal() == null) {
-						// TODO !!!!
-						window.setTerminal(new WebBrowser());
+						window.setTerminal(browser);
 					}
 
 					// Finds theme name

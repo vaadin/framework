@@ -65,6 +65,8 @@ public class WebApplicationContext implements ApplicationContext, HttpSessionBin
 	private WeakHashMap formActions = new WeakHashMap();
 
 	private HashSet applications = new HashSet();
+	
+	private WebBrowser browser = new WebBrowser();
 
 	/**
 	 * Creates a new Web Application Context.
@@ -292,5 +294,16 @@ public class WebApplicationContext implements ApplicationContext, HttpSessionBin
 			app.close();
 			removeApplication(app);
 		}
+	}
+
+	/** Get the web browser associated with this application context. 
+	 * 
+	 * Because application context is related to the http session and server maintains one session per 
+	 * browser-instance, each context has exactly one web browser associated with it. 
+	 * 
+	 * @return
+	 */
+	public WebBrowser getBrowser() {
+		return browser;
 	}
 }
