@@ -92,8 +92,6 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 
 	private static int MAX_BUFFER_SIZE = 64 * 1024;
 
-	private WeakHashMap applicationToVariableMapMap = new WeakHashMap();
-
 	private HashSet dirtyPaintabletSet = new HashSet();
 
 	private WeakHashMap paintableIdMap = new WeakHashMap();
@@ -320,12 +318,12 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 					outWriter.print("}, \"resources\" : {");
 
 					// Precache custom layouts
-					// TODO Does not support theme-get param or different themes
-					// in different windows -> Allways preload layouts with the
-					// theme specified by the applications
-					String themeName = application.getTheme() != null ? application
-							.getTheme()
-							: ApplicationServlet.DEFAULT_THEME;
+					String themeName = window.getTheme();
+					if (request.getParameter("theme") != null) {
+						themeName = request.getParameter("theme");
+					}
+					if (themeName == null) themeName = "default";
+							
 					// TODO We should only precache the layouts that are not
 					// cached already
 					int resourceIndex = 0;

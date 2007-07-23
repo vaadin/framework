@@ -33,14 +33,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Constructor;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -52,8 +51,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpSessionBindingEvent;
-import javax.servlet.http.HttpSessionBindingListener;
 
 import org.xml.sax.SAXException;
 
@@ -71,13 +68,12 @@ import com.itmill.toolkit.terminal.URIHandler;
 import com.itmill.toolkit.ui.Window;
 
 /**
- * This servlet connects IT Mill Toolkit Application to Web. This servlet
- * replaces both WebAdapterServlet and AjaxAdapterServlet.
+ * This servlet connects IT Mill Toolkit Application to Web. 
  * 
  * @author IT Mill Ltd.
  * @version
  * @VERSION@
- * @since 4.0
+ * @since 5.0
  */
 
 public class ApplicationServlet extends HttpServlet {
@@ -131,9 +127,6 @@ public class ApplicationServlet extends HttpServlet {
 	private static WeakHashMap licenseForApplicationClass = new WeakHashMap();
 
 	private static WeakHashMap licensePrintedForApplicationClass = new WeakHashMap();
-
-	// TODO Should default or base theme be the default?
-	protected static final String DEFAULT_THEME = "base";
 
 	private static final String RESOURCE_URI = "/RES/";
 
@@ -206,15 +199,32 @@ public class ApplicationServlet extends HttpServlet {
 					"If debug parameter is given for an application, it must be 'true' or 'false'");
 		this.debugMode = debug;
 
+		// Gets custom class loader
+		String classLoaderName = getApplicationOrSystemProperty(
+				"ClassLoader", null);
+		ClassLoader classLoader;
+		if (classLoaderName == null) 
+			classLoader = getClass().getClassLoader();
+		else {
+			try {
+				Class classLoaderClass = getClass().getClassLoader().loadClass(classLoaderName);
+				Constructor c = classLoaderClass.getConstructor(new Class[] {ClassLoader.class});
+				classLoader = (ClassLoader) c.newInstance(new Object[] {getClass().getClassLoader()});
+			} catch (Exception e) {
+				Log.error("Could not find specified class loader: " + classLoaderName);
+				throw new ServletException(e);
+			} 
+		}
+
 		// Loads the application class using the same class loader
 		// as the servlet itself
-		ClassLoader loader = this.getClass().getClassLoader();
 		try {
-			this.applicationClass = loader.loadClass(applicationClassName);
+			this.applicationClass = classLoader.loadClass(applicationClassName);
 		} catch (ClassNotFoundException e) {
 			throw new ServletException("Failed to load application class: "
 					+ applicationClassName);
 		}
+
 	}
 
 	/**
@@ -286,18 +296,13 @@ public class ApplicationServlet extends HttpServlet {
 	protected void service(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 
-		// Transformer and output stream for the result
-		OutputStream out = response.getOutputStream();
 		Application application = null;
 		try {
 
 			// Gets the application
 			application = getApplication(request);
 
-			// Creates application if it doesn't exist
-			if (application == null)
-				application = createApplication(request);
-
+			
 			// Sets the last application request date
 			synchronized (applicationToLastRequestDate) {
 				applicationToLastRequestDate.put(application, new Date());
@@ -347,31 +352,14 @@ public class ApplicationServlet extends HttpServlet {
 						return;
 					}
 
-					// Returns blank page, if no window found
-					if (window == null) {
-						response.setContentType("text/html");
-						BufferedWriter page = new BufferedWriter(
-								new OutputStreamWriter(out));
-						page.write("<html><head><script>");
-						// WAS GENERATE WINDOW SCRIPT
-						page.write("</script></head><body>");
-						page
-								.write("The requested window has been removed from application.");
-						page.write("</body></html>");
-						page.close();
-
-						return;
-					}
-
 					// Sets terminal type for the window, if not already set
 					if (window.getTerminal() == null) {
 						// TODO !!!!
 						window.setTerminal(new WebBrowser());
 					}
 
-					// Finds theme
-					String themeName = window.getTheme() != null ? window
-							.getTheme() : DEFAULT_THEME;
+					// Finds theme name
+					String themeName = window.getTheme();
 					if (request.getParameter("theme") != null) {
 						themeName = request.getParameter("theme");
 					}
@@ -380,7 +368,7 @@ public class ApplicationServlet extends HttpServlet {
 					if (handleResourceRequest(request, response, themeName))
 						return;
 
-						writeAjaxPage(request, response, out,
+						writeAjaxPage(request, response,
 								window, themeName);
 				}
 			}
@@ -424,10 +412,10 @@ public class ApplicationServlet extends HttpServlet {
 	 *             represented by the given URL.
 	 */
 	private void writeAjaxPage(HttpServletRequest request,
-			HttpServletResponse response, OutputStream out,
+			HttpServletResponse response, 
 			 Window window, String themeName) throws IOException, MalformedURLException {
 		response.setContentType("text/html");
-		BufferedWriter page = new BufferedWriter(new OutputStreamWriter(out));
+		BufferedWriter page = new BufferedWriter(new OutputStreamWriter(response.getOutputStream()));
 
 		page
 				.write("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" "
@@ -714,101 +702,75 @@ public class ApplicationServlet extends HttpServlet {
 	 * @throws MalformedURLException
 	 *             if the application is denied access to the persistent data
 	 *             store represented by the given URL.
+	 * @throws SAXException 
+	 * @throws LicenseViolation 
+	 * @throws InvalidLicenseFile 
+	 * @throws LicenseSignatureIsInvalid 
+	 * @throws LicenseFileHasNotBeenRead 
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
 	 */
 	private Application getApplication(HttpServletRequest request)
-			throws MalformedURLException {
+			throws MalformedURLException, LicenseFileHasNotBeenRead,
+			LicenseSignatureIsInvalid, InvalidLicenseFile, LicenseViolation,
+			SAXException, IllegalAccessException, InstantiationException {
 
 		// Ensures that the session is still valid
-		HttpSession session = request.getSession(false);
-		if (session == null)
-			return null;
+		HttpSession session = request.getSession(true);
 
 		// Gets application list for the session.
 		Collection applications = WebApplicationContext.getApplicationContext(session).getApplications();
 
 		// Search for the application (using the application URI) from the list
-		Application application = null;
-		for (Iterator i = applications.iterator(); i.hasNext()
-				&& application == null;) {
+		for (Iterator i = applications.iterator(); i.hasNext();) {
 			Application a = (Application) i.next();
 			String aPath = a.getURL().getPath();
 			String servletPath = request.getContextPath()
 					+ request.getServletPath();
 			if (servletPath.length() < aPath.length())
 				servletPath += "/";
-			if (servletPath.equals(aPath))
-				application = a;
-		}
+			if (servletPath.equals(aPath)) {
 
-		// Removes stopped applications from the list
-		if (application != null && !application.isRunning()) {
-			WebApplicationContext.getApplicationContext(session).removeApplication(application);
-			application = null;
+				// Found a running application
+				if (a.isRunning())
+					return a;
+				
+				// Application has stopped, so remove it before creating a new application
+				WebApplicationContext.getApplicationContext(session).removeApplication(a);
+			}
 		}
+		
+		// Creates application, because a running one was not found
+			WebApplicationContext context = WebApplicationContext.getApplicationContext(request.getSession());
+			URL applicationUrl = getApplicationUrl(request);
 
-		return application;
+			// Creates new application and start it
+			try {
+				Application application = (Application) this.applicationClass.newInstance();
+				context.addApplication(application);
+
+				// Sets initial locale from the request
+				application.setLocale(request.getLocale());				
+
+				// Starts application and check license
+				initializeLicense(application);
+				application.start(applicationUrl, this.applicationProperties,
+						context);
+				checkLicense(application);
+
+				return application;
+
+			} catch (IllegalAccessException e) {
+				Log.error("Illegal access to application class "
+						+ this.applicationClass.getName());
+				throw e;
+			} catch (InstantiationException e) {
+				Log.error("Failed to instantiate application class: "
+						+ this.applicationClass.getName());
+				throw e;
+			}	
 	}
 
-	/**
-	 * Creates a new application.
-	 * 
-	 * @param request
-	 *            the HTTP request.
-	 * @return the New application instance.
-	 * @throws MalformedURLException
-	 *             if the application is denied access to the persistent data
-	 *             store represented by the given URL.
-	 * @throws InstantiationException
-	 *             if a new instance of the class cannot be instantiated.
-	 * @throws IllegalAccessException
-	 *             if it does not have access to the property accessor method.
-	 * @throws LicenseFileHasNotBeenRead
-	 *             if the license file has not been read.
-	 * @throws LicenseSignatureIsInvalid
-	 *             if the license file has been changed or signature is
-	 *             otherwise invalid.
-	 * @throws InvalidLicenseFile
-	 *             if the license file is not of correct XML format.
-	 * @throws LicenseViolation
-	 * 
-	 * @throws SAXException
-	 *             the Error parsing the license file.
-	 */
-	private Application createApplication(HttpServletRequest request)
-			throws MalformedURLException, InstantiationException,
-			IllegalAccessException, LicenseFileHasNotBeenRead,
-			LicenseSignatureIsInvalid, InvalidLicenseFile, LicenseViolation,
-			SAXException {
-
-		WebApplicationContext context = WebApplicationContext.getApplicationContext(request.getSession());
-		URL applicationUrl = getApplicationUrl(request);
-
-		// Creates new application and start it
-		try {
-			Application application = (Application) this.applicationClass.newInstance();
-			context.addApplication(application);
-
-			// Sets initial locale from the request
-			application.setLocale(request.getLocale());
-
-			// Starts application and check license
-			initializeLicense(application);
-			application.start(applicationUrl, this.applicationProperties,
-					context);
-			checkLicense(application);
-
-			return application;
-
-		} catch (IllegalAccessException e) {
-			Log.error("Illegal access to application class "
-					+ this.applicationClass.getName());
-			throw e;
-		} catch (InstantiationException e) {
-			Log.error("Failed to instantiate application class: "
-					+ this.applicationClass.getName());
-			throw e;
-		}
-	}
 
 	/**
 	 * 
@@ -1067,16 +1029,6 @@ public class ApplicationServlet extends HttpServlet {
 
 		private Throwable throwable;
 
-		/**
-		 * 
-		 * @param owner
-		 * @param throwable
-		 */
-		private ParameterHandlerErrorImpl(ParameterHandler owner,
-				Throwable throwable) {
-			this.owner = owner;
-			this.throwable = throwable;
-		}
 
 		/**
 		 * Gets the contained throwable.
