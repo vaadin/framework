@@ -23,8 +23,6 @@ import com.itmill.toolkit.terminal.gwt.client.ui.IContextMenu;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
- * 
- * TODO IDEA: Should be extend Widget here !?!?!
  */
 public class ApplicationConnection implements EntryPoint {
 
@@ -43,8 +41,6 @@ public class ApplicationConnection implements EntryPoint {
 	private HashMap paintables = new HashMap();
 
 	private WidgetFactory widgetFactory = new DefaultWidgetFactory();
-	
-	private LocaleService locale;
 
 	private IContextMenu contextMenu = null;
 
@@ -83,7 +79,7 @@ public class ApplicationConnection implements EntryPoint {
 
 	private native String getAppUri()/*-{
 	 return $wnd.itmtk.appUri;
-	 }-*/;
+	}-*/;
 
 	private void makeUidlRequest(String requestData) {
 		console.log("Making UIDL Request with params: " + requestData);
