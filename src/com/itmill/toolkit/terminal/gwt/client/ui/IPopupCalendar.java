@@ -33,7 +33,8 @@ public class IPopupCalendar extends ITextualDate implements Paintable, ClickList
 	
 	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 		super.updateFromUIDL(uidl, client);
-		calendar.updateCalendar();
+		if(date != null)
+			calendar.updateCalendar();
 		calendarToggle.setEnabled(enabled);
 	}
 
@@ -49,7 +50,7 @@ public class IPopupCalendar extends ITextualDate implements Paintable, ClickList
 
 	public void onPopupClosed(PopupPanel sender, boolean autoClosed) {
 		if(sender == popup)
-			buildTime();
+			buildDate();
 	}
 
 }

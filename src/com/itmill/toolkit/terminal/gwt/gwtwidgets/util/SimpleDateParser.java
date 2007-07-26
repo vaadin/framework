@@ -92,7 +92,7 @@ public class SimpleDateParser {
 
 	private static void load(Date date, String text, String component, String input, Pattern regex) {
 		if (component.equals(DateLocale.TOKEN_MILLISECOND)) {
-			// TODO implement setMilliseconds to date object
+			date.setTime(date.getTime() / 1000 * 1000 + Integer.parseInt(text));
 		}
 
 		if (component.equals(DateLocale.TOKEN_SECOND)) {

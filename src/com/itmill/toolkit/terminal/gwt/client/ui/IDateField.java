@@ -34,16 +34,12 @@ public class IDateField extends FlowPanel implements Paintable {
 	
 	protected boolean enabled;
 	
-	protected Date date;
-	
-	/* For easy access, because java.util.Date doesn't have getMilliseconds method */
-	private int milliseconds = 0;
+	protected Date date = null;
 	
 	protected DateTimeService dts;
 	
 	public IDateField() {
 		setStyleName(CLASSNAME);
-		date = new Date();
 		dts = new DateTimeService();
 	}
 	
@@ -98,9 +94,9 @@ public class IDateField extends FlowPanel implements Paintable {
 		int sec = (currentResolution >= RESOLUTION_SEC)? uidl.getIntVariable("sec") : -1;
 		int msec = (currentResolution >= RESOLUTION_MSEC)? uidl.getIntVariable("msec") : -1;
 		
-		// Construct new date for this datefield
-		date = new Date((long) buildTime(year, month, day, hour, min, sec, msec));
-		milliseconds = msec<0? 0 : msec;
+		// Construct new date for this datefield (only if not null)
+		if(year > -1)
+			date = new Date((long) getTime(year, month, day, hour, min, sec, msec));
 		
 	}
 	
@@ -108,7 +104,7 @@ public class IDateField extends FlowPanel implements Paintable {
 	 * We need this redundant native function because 
 	 * Java's Date object doesn't have a setMilliseconds method.
 	 */
-	private static native double buildTime(int y, int m, int d, int h, int mi, int s, int ms) /*-{
+	private static native double getTime(int y, int m, int d, int h, int mi, int s, int ms) /*-{
 	try {
 		var date = new Date();
 		if(y && y >= 0) date.setFullYear(y);
@@ -127,13 +123,11 @@ public class IDateField extends FlowPanel implements Paintable {
 	}-*/;
 	
 	public int getMilliseconds() {
-		return milliseconds;
+		return (int) (date.getTime() - date.getTime() / 1000 * 1000);
 	}
 
 	public void setMilliseconds(int ms) {
-		long time = (long) buildTime(date.getYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), ms);
-		date = new Date(time);
-		milliseconds = ms;
+		date.setTime(date.getTime() / 1000 * 1000 + ms);
 	}
 
 }

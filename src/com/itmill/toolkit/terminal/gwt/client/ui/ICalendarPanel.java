@@ -70,6 +70,10 @@ public class ICalendarPanel extends FlexTable implements MouseListener, ClickLis
 	}
 	
 	private void buildCalendarHeader(boolean forceRedraw, boolean needsMonth) {
+		// Can't draw a calendar without a date :)
+		if(datefield.date == null)
+			datefield.date = new Date();
+		
 		if(forceRedraw) {
 			if(prevMonth == null) { // Only do once
 				prevYear = new IEventButton(); prevYear.setHTML("&laquo;");
@@ -119,6 +123,8 @@ public class ICalendarPanel extends FlexTable implements MouseListener, ClickLis
 	
 	private void buildCalendarBody() {
 		Date date = datefield.date;
+		if(date == null)
+			date = new Date();
 		int startWeekDay = datefield.dts.getStartWeekDay(date);
 		int numDays = DateTimeService.getNumberOfDaysInMonth(date);
 		int dayCount = 0;
@@ -160,6 +166,8 @@ public class ICalendarPanel extends FlexTable implements MouseListener, ClickLis
 	public void updateCalendar() {
 		// Locale and resolution changes force a complete redraw
 		buildCalendar(locale != datefield.currentLocale || resolution != datefield.currentResolution);
+		if(datefield instanceof ITextualDate)
+			((ITextualDate) datefield).buildDate();
 		locale = datefield.currentLocale;
 		resolution = datefield.currentResolution;
 	}
@@ -275,9 +283,7 @@ public class ICalendarPanel extends FlexTable implements MouseListener, ClickLis
 			cal.datefield.date.setDate(day.intValue());
 			cal.datefield.client.updateVariable(cal.datefield.id, "day", cal.datefield.date.getDate(), cal.datefield.immediate);
 			
-			// No need to update calendar header
-			cal.clearCalendarBody(false);
-			cal.buildCalendarBody();
+			updateCalendar();
 		}
 		
 	}

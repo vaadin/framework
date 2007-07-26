@@ -27,10 +27,10 @@ public class ITextualDate extends IDateField implements Paintable, ChangeListene
 	
 	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 		super.updateFromUIDL(uidl, client);
-		buildTime();
+		buildDate();
 	}
 
-	protected void buildTime() {
+	protected void buildDate() {
 		dl = new DateLocale();
 		DateLocale.setLocale(currentLocale);
 		
@@ -43,29 +43,32 @@ public class ITextualDate extends IDateField implements Paintable, ChangeListene
 		format = new SimpleDateFormat(verifyFormat(dts.getDateFormat()));
 		format.setLocale(dl);
 		
-		String dateText = format.format(date);
+		String dateText = "";
+		if(date != null) {
+			dateText = format.format(date);
 		
-		if(currentResolution >= IDateField.RESOLUTION_HOUR) {
-			DateLocale.SUPPORTED_DF_TOKENS = DateLocale.TOKENS_RESOLUTION_ALL;
-			int h = date.getHours();
-			if(h > 11 && dts.isTwelveHourClock())
-				h -= 12;
-			int m = currentResolution > IDateField.RESOLUTION_HOUR? date.getMinutes() : 0;
-			dateText += " " + (h<10?"0"+h:""+h) + dts.getClockDelimeter() + (m<10?"0"+m:""+m);
+			if(currentResolution >= IDateField.RESOLUTION_HOUR) {
+				DateLocale.SUPPORTED_DF_TOKENS = DateLocale.TOKENS_RESOLUTION_ALL;
+				int h = date.getHours();
+				if(h > 11 && dts.isTwelveHourClock())
+					h -= 12;
+				int m = currentResolution > IDateField.RESOLUTION_HOUR? date.getMinutes() : 0;
+				dateText += " " + (h<10?"0"+h:""+h) + dts.getClockDelimeter() + (m<10?"0"+m:""+m);
+			}
+			if(currentResolution >= IDateField.RESOLUTION_SEC) {
+				int s = date.getSeconds();
+				dateText += dts.getClockDelimeter() + (s<10?"0"+s:""+s);
+			}
+			if(currentResolution == IDateField.RESOLUTION_MSEC) {
+				int ms = getMilliseconds();
+				String text = ""+ms;
+				if(ms<10) text = "00"+text;
+				else if(ms<100) text = "0"+text;
+				dateText += "." + text;
+			}
+			if(currentResolution >= IDateField.RESOLUTION_HOUR && dts.isTwelveHourClock())
+				dateText += " " + (date.getHours()<12? dts.getAmPmStrings()[0] : dts.getAmPmStrings()[1]);
 		}
-		if(currentResolution >= IDateField.RESOLUTION_SEC) {
-			int s = date.getSeconds();
-			dateText += dts.getClockDelimeter() + (s<10?"0"+s:""+s);
-		}
-		if(currentResolution == IDateField.RESOLUTION_MSEC) {
-			int ms = getMilliseconds();
-			String text = ""+ms;
-			if(ms<10) text = "00"+text;
-			else if(ms<100) text = "0"+text;
-			dateText += "." + text;
-		}
-		if(currentResolution >= IDateField.RESOLUTION_HOUR && dts.isTwelveHourClock())
-			dateText += " " + (date.getHours()<12? dts.getAmPmStrings()[0] : dts.getAmPmStrings()[1]);
 		
 		text.setText(dateText);
 		text.setEnabled(enabled&&!readonly);
@@ -78,64 +81,67 @@ public class ITextualDate extends IDateField implements Paintable, ChangeListene
 
 	public void onChange(Widget sender) {
 		if(sender == text) {
-			DateLocale.SUPPORTED_DF_TOKENS = DateLocale.TOKENS_RESOLUTION_ALL;
-			if(currentResolution == IDateField.RESOLUTION_YEAR)
-				DateLocale.SUPPORTED_DF_TOKENS = DateLocale.TOKENS_RESOLUTION_YEAR;
-			else if(currentResolution == IDateField.RESOLUTION_MONTH)
-				DateLocale.SUPPORTED_DF_TOKENS = DateLocale.TOKENS_RESOLUTION_MONTH;
-			else if(currentResolution == IDateField.RESOLUTION_DAY)
-				DateLocale.SUPPORTED_DF_TOKENS = DateLocale.TOKENS_RESOLUTION_DAY;
+			if(!text.getText().equals("")) {
+				DateLocale.SUPPORTED_DF_TOKENS = DateLocale.TOKENS_RESOLUTION_ALL;
+				if(currentResolution == IDateField.RESOLUTION_YEAR)
+					DateLocale.SUPPORTED_DF_TOKENS = DateLocale.TOKENS_RESOLUTION_YEAR;
+				else if(currentResolution == IDateField.RESOLUTION_MONTH)
+					DateLocale.SUPPORTED_DF_TOKENS = DateLocale.TOKENS_RESOLUTION_MONTH;
+				else if(currentResolution == IDateField.RESOLUTION_DAY)
+					DateLocale.SUPPORTED_DF_TOKENS = DateLocale.TOKENS_RESOLUTION_DAY;
+				
+				String f = verifyFormat(dts.getDateFormat());
+				
+				if(currentResolution >= IDateField.RESOLUTION_HOUR)
+					f += " " + (dts.isTwelveHourClock()?
+							DateLocale.TOKEN_HOUR_12 + DateLocale.TOKEN_HOUR_12
+						  : DateLocale.TOKEN_HOUR_24 + DateLocale.TOKEN_HOUR_24)
+							+ dts.getClockDelimeter() + DateLocale.TOKEN_MINUTE + DateLocale.TOKEN_MINUTE;
+				if(currentResolution >= IDateField.RESOLUTION_SEC)
+					f += dts.getClockDelimeter() + DateLocale.TOKEN_SECOND + DateLocale.TOKEN_SECOND;
+				if(currentResolution == IDateField.RESOLUTION_MSEC)
+					f += "." + DateLocale.TOKEN_MILLISECOND + DateLocale.TOKEN_MILLISECOND + DateLocale.TOKEN_MILLISECOND;
+				if(currentResolution >= IDateField.RESOLUTION_HOUR && dts.isTwelveHourClock())
+					f += " " + DateLocale.TOKEN_AM_PM;
+				
+				format = new SimpleDateFormat(f);
+				DateLocale.setLocale(currentLocale);
+				format.setLocale(dl);
+				
+				try {
+					date = format.parse(text.getText());
+				} catch (Exception e) {
+					client.console.log(e.getMessage());
+					text.addStyleName(ITextField.CLASSNAME+"-error");
+					Timer t = new Timer() {
+						public void run() {
+							text.removeStyleName(ITextField.CLASSNAME+"-error");
+						}
+					};
+					t.schedule(2000);
+					return;
+				}
 			
-			String f = verifyFormat(dts.getDateFormat());
-			
-			if(currentResolution >= IDateField.RESOLUTION_HOUR)
-				f += " " + (dts.isTwelveHourClock()?
-						DateLocale.TOKEN_HOUR_12 + DateLocale.TOKEN_HOUR_12
-					  : DateLocale.TOKEN_HOUR_24 + DateLocale.TOKEN_HOUR_24)
-						+ dts.getClockDelimeter() + DateLocale.TOKEN_MINUTE + DateLocale.TOKEN_MINUTE;
-			if(currentResolution >= IDateField.RESOLUTION_SEC)
-				f += dts.getClockDelimeter() + DateLocale.TOKEN_SECOND + DateLocale.TOKEN_SECOND;
-			if(currentResolution == IDateField.RESOLUTION_MSEC)
-				f += "." + DateLocale.TOKEN_MILLISECOND + DateLocale.TOKEN_MILLISECOND + DateLocale.TOKEN_MILLISECOND;
-			if(currentResolution >= IDateField.RESOLUTION_HOUR && dts.isTwelveHourClock())
-				f += " " + DateLocale.TOKEN_AM_PM;
-			
-			format = new SimpleDateFormat(f);
-			DateLocale.setLocale(currentLocale);
-			format.setLocale(dl);
-			
-			try {
-				date = format.parse(text.getText());
-			} catch (Exception e) {
-				// TODO redirect to console
-				System.out.println(e);
-				text.addStyleName(ITextField.CLASSNAME+"-error");
-				Timer t = new Timer() {
-					public void run() {
-						text.removeStyleName(ITextField.CLASSNAME+"-error");
-					}
-				};
-				t.schedule(2000);
-				return;
-			}
+			} else
+				date = null;
 			
 			// Update variables
 			// (only the smallest defining resolution needs to be immediate)
-			client.updateVariable(id, "year", date.getYear()+1900, currentResolution==IDateField.RESOLUTION_YEAR);
+			client.updateVariable(id, "year", date!=null?date.getYear()+1900:-1, currentResolution==IDateField.RESOLUTION_YEAR);
 			if(currentResolution >= IDateField.RESOLUTION_MONTH)
-				client.updateVariable(id, "month", date.getMonth()+1, currentResolution==IDateField.RESOLUTION_MONTH&&immediate);
+				client.updateVariable(id, "month", date!=null?date.getMonth()+1:-1, currentResolution==IDateField.RESOLUTION_MONTH&&immediate);
 			if(currentResolution >= IDateField.RESOLUTION_DAY)
-				client.updateVariable(id, "day", date.getDate(), currentResolution==IDateField.RESOLUTION_DAY&&immediate);
+				client.updateVariable(id, "day", date!=null?date.getDate():-1, currentResolution==IDateField.RESOLUTION_DAY&&immediate);
 			if(currentResolution >= IDateField.RESOLUTION_HOUR)
-				client.updateVariable(id, "hour", date.getHours(), currentResolution==IDateField.RESOLUTION_HOUR&&immediate);
+				client.updateVariable(id, "hour", date!=null?date.getHours():-1, currentResolution==IDateField.RESOLUTION_HOUR&&immediate);
 			if(currentResolution >= IDateField.RESOLUTION_MIN)
-				client.updateVariable(id, "min", date.getMinutes(), currentResolution==IDateField.RESOLUTION_MIN&&immediate);
+				client.updateVariable(id, "min", date!=null?date.getMinutes():-1, currentResolution==IDateField.RESOLUTION_MIN&&immediate);
 			if(currentResolution >= IDateField.RESOLUTION_SEC)
-				client.updateVariable(id, "sec", date.getSeconds(), currentResolution==IDateField.RESOLUTION_SEC&&immediate);
+				client.updateVariable(id, "sec", date!=null?date.getSeconds():-1, currentResolution==IDateField.RESOLUTION_SEC&&immediate);
 			if(currentResolution == IDateField.RESOLUTION_MSEC)
-				client.updateVariable(id, "msec", getMilliseconds(), immediate);
+				client.updateVariable(id, "msec", date!=null?getMilliseconds():-1, immediate);
 			
-			buildTime();
+			buildDate();
 		}
 	}
 	

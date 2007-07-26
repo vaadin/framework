@@ -79,7 +79,9 @@ public class ITime extends FlowPanel implements ChangeListener {
 			boolean ro = datefield.readonly;
 			
 			if(ro) {
-				int h = datefield.date.getHours();
+				int h = 0;
+				if(datefield.date != null)
+					h = datefield.date.getHours();
 				if(thc) h -= h<12? 0 : 12;
 				add(new ILabel(h<10? "0"+h : ""+h));
 			} else add(hours);
@@ -184,6 +186,8 @@ public class ITime extends FlowPanel implements ChangeListener {
 	public void updateTime(boolean redraw) {
 		buildTime(redraw || resolution != datefield.currentResolution 
 						|| readonly != datefield.readonly);
+		if(datefield instanceof ITextualDate)
+			((ITextualDate) datefield).buildDate();
 		resolution = datefield.currentResolution;
 		readonly = datefield.readonly;
 	}
@@ -195,31 +199,31 @@ public class ITime extends FlowPanel implements ChangeListener {
 				h = h + ampm.getSelectedIndex()*12;
 			datefield.date.setHours(h);
 			datefield.client.updateVariable(datefield.id, "hour", h, datefield.immediate);
-			//updateTime(false);
+			updateTime(false);
 		}
 		else if(sender == mins) {
 			int m = mins.getSelectedIndex();
 			datefield.date.setMinutes(m);
 			datefield.client.updateVariable(datefield.id, "min", m, datefield.immediate);
-			//updateTime(false);
+			updateTime(false);
 		}
 		else if(sender == sec) {
 			int s = sec.getSelectedIndex();
 			datefield.date.setSeconds(s);
 			datefield.client.updateVariable(datefield.id, "sec", s, datefield.immediate);
-			//updateTime(false);
+			updateTime(false);
 		}
 		else if(sender == msec) {
 			int ms = msec.getSelectedIndex();
 			datefield.setMilliseconds(ms);
 			datefield.client.updateVariable(datefield.id, "msec", ms, datefield.immediate);
-			//updateTime(false);
+			updateTime(false);
 		}
 		else if(sender == ampm) {
 			int h = hours.getSelectedIndex() + ampm.getSelectedIndex()*12;
 			datefield.date.setHours(h);
 			datefield.client.updateVariable(datefield.id, "hour", h, datefield.immediate);
-			//updateTime(false);
+			updateTime(false);
 		}
 	}
 
