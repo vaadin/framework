@@ -17,6 +17,7 @@ import com.itmill.toolkit.terminal.gwt.client.ui.IPasswordField;
 import com.itmill.toolkit.terminal.gwt.client.ui.IPopupCalendar;
 import com.itmill.toolkit.terminal.gwt.client.ui.IScrollTable;
 import com.itmill.toolkit.terminal.gwt.client.ui.ISelect;
+import com.itmill.toolkit.terminal.gwt.client.ui.ISlider;
 import com.itmill.toolkit.terminal.gwt.client.ui.ITablePaging;
 import com.itmill.toolkit.terminal.gwt.client.ui.ITabsheet;
 import com.itmill.toolkit.terminal.gwt.client.ui.ITextArea;
@@ -39,52 +40,52 @@ public class DefaultWidgetFactory implements WidgetFactory {
 				return new ICheckBox();
 			return new IButton();
 		}
-		if ("window".equals(tag))
+		else if ("window".equals(tag))
 			return new IWindow();
-		if ("orderedlayout".equals(tag)) {
+		else if ("orderedlayout".equals(tag)) {
 			if ("horizontal".equals(uidl.getStringAttribute("orientation")))
 				return new IHorizontalLayout();
 			else
 				return new IVerticalLayout();
 		}
-		if ("label".equals(tag))
+		else if ("label".equals(tag))
 			return new ILabel();
-		if ("gridlayout".equals(tag))
+		else if ("gridlayout".equals(tag))
 			return new IGridLayout();
-		if ("tree".equals(tag))
+		else if ("tree".equals(tag))
 			return new ITree();
-		if ("select".equals(tag)) {
+		else if ("select".equals(tag)) {
 			if("optiongroup".equals(uidl.getStringAttribute("style")))
 				return new IOptionGroup();
 			else if("twincol".equals(uidl.getStringAttribute("style")))
 				return new ITwinColSelect();
 			return new ISelect();
 		}
-		if ("panel".equals(tag))
+		else if ("panel".equals(tag))
 			return new IPanel();
-		if ("component".equals(tag))
+		else if ("component".equals(tag))
 			return new IComponent();
-		if ("tabsheet".equals(tag))
+		else if ("tabsheet".equals(tag))
 			return new ITabsheet();
-		if ("embedded".equals(tag))
+		else if ("embedded".equals(tag))
 			return new IEmbedded();
-		if ("customlayout".equals(tag))
+		else if ("customlayout".equals(tag))
 			return new ICustomLayout();
-		if ("textfield".equals(tag)) {
+		else if ("textfield".equals(tag)) {
 			if(uidl.hasAttribute("multiline"))
 				return new ITextArea();
 			else if(uidl.getBooleanAttribute("secret"))
 				return new IPasswordField();
 			return new ITextField();
 		}
-		if ("table".equals(tag)) {
+		else if ("table".equals(tag)) {
 			if(uidl.hasAttribute("style")) {
 				if("paging".equals(uidl.getStringAttribute("style")))
 						return new ITablePaging();
 			}
 			return new IScrollTable();
 		}
-		if("datefield".equals(tag)) {
+		else if("datefield".equals(tag)) {
 			if(uidl.hasAttribute("style"))
 				if("calendar".equals(uidl.getStringAttribute("style")))
 					return new ICalendar();
@@ -92,6 +93,8 @@ public class DefaultWidgetFactory implements WidgetFactory {
 					return new ITextualDate();
 			return new IPopupCalendar();
 		}
+		else if("slider".equals(tag))
+			return new ISlider();
 
 		return new IUnknownComponent();
 	}

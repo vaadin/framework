@@ -28,6 +28,13 @@
 
 package com.itmill.toolkit.terminal.gwt.server;
 
+import java.io.PrintWriter;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.Stack;
+import java.util.Vector;
+
 import com.itmill.toolkit.Application;
 import com.itmill.toolkit.terminal.ApplicationResource;
 import com.itmill.toolkit.terminal.ExternalResource;
@@ -36,21 +43,7 @@ import com.itmill.toolkit.terminal.PaintTarget;
 import com.itmill.toolkit.terminal.Paintable;
 import com.itmill.toolkit.terminal.Resource;
 import com.itmill.toolkit.terminal.ThemeResource;
-import com.itmill.toolkit.terminal.UploadStream;
 import com.itmill.toolkit.terminal.VariableOwner;
-
-import java.io.BufferedWriter;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.Stack;
-import java.util.Vector;
 
 /**
  * User Interface Description Language Target.
@@ -423,6 +416,22 @@ public class JsonPaintTarget implements PaintTarget {
 	public void addAttribute(String name, long value) throws PaintException {
 		tag.addAttribute("\"" + name + "\":" + String.valueOf(value));
 	}
+	
+	/**
+	 * Adds a float attribute to component. Atributes must be added before any
+	 * content is written.
+	 * 
+	 * @param name
+	 *            the Attribute name.
+	 * @param value
+	 *            the Attribute value.
+	 * 
+	 * @throws PaintException
+	 *             if the paint operation failed.
+	 */
+	public void addAttribute(String name, float value) throws PaintException {
+		tag.addAttribute("\"" + name + "\":" + String.valueOf(value));
+	}
 
 	/**
 	 * Adds a string attribute to component. Atributes must be added before any
@@ -504,6 +513,40 @@ public class JsonPaintTarget implements PaintTarget {
 	public void addVariable(VariableOwner owner, String name, int value)
 			throws PaintException {
 		tag.addVariable(new IntVariable(owner, name, value));
+	}
+	
+	/**
+	 * Adds a long type variable.
+	 * 
+	 * @param owner
+	 *            the Listener for variable changes.
+	 * @param name
+	 *            the Variable name.
+	 * @param value
+	 *            the Variable initial value.
+	 * 
+	 * @throws PaintException
+	 *             if the paint operation failed.
+	 */
+	public void addVariable(VariableOwner owner, String name, long value) throws PaintException {
+		tag.addVariable(new LongVariable(owner, name, value));
+	}
+	
+	/**
+	 * Adds a float type variable.
+	 * 
+	 * @param owner
+	 *            the Listener for variable changes.
+	 * @param name
+	 *            the Variable name.
+	 * @param value
+	 *            the Variable initial value.
+	 * 
+	 * @throws PaintException
+	 *             if the paint operation failed.
+	 */
+	public void addVariable(VariableOwner owner, String name, float value) throws PaintException {
+		tag.addVariable(new FloatVariable(owner, name, value));
 	}
 
 	/**
@@ -920,6 +963,32 @@ public class JsonPaintTarget implements PaintTarget {
 		int value;
 
 		public IntVariable(VariableOwner owner, String name, int v) {
+			value = v;
+			this.name = name;
+		}
+
+		public String getJsonPresentation() {
+			return "\"" + name + "\":" + value;
+		}
+	}
+	
+	class LongVariable extends Variable {
+		long value;
+
+		public LongVariable(VariableOwner owner, String name, long v) {
+			value = v;
+			this.name = name;
+		}
+
+		public String getJsonPresentation() {
+			return "\"" + name + "\":" + value;
+		}
+	}
+	
+	class FloatVariable extends Variable {
+		float value;
+
+		public FloatVariable(VariableOwner owner, String name, float v) {
 			value = v;
 			this.name = name;
 		}

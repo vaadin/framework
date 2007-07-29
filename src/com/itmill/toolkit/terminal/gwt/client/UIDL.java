@@ -77,6 +77,14 @@ public class UIDL {
 		return s;
 	}
 
+	public HashSet getStringArrayAttributeAsSet(String string) {
+		JSONArray a = getArrayVariable(string);
+		HashSet s = new HashSet();
+		for (int i = 0; i < a.size(); i++)
+			s.add(((JSONString) a.get(i)).stringValue());
+		return s;
+	}
+
 	/**
 	 * Get attributes value as string whateever the type is
 	 * 
@@ -294,6 +302,20 @@ public class UIDL {
 		if (t == null)
 			throw new IllegalArgumentException("No such variable: " + name);
 		return (int) t.getValue();
+	}
+
+	public long getLongVariable(String name) {
+		JSONNumber t = (JSONNumber) getVariableHash().get(name);
+		if (t == null)
+			throw new IllegalArgumentException("No such variable: " + name);
+		return (long) t.getValue();
+	}
+	
+	public float getFloatVariable(String name) {
+		JSONNumber t = (JSONNumber) getVariableHash().get(name);
+		if (t == null)
+			throw new IllegalArgumentException("No such variable: " + name);
+		return (float) t.getValue();
 	}
 
 	public boolean getBooleanVariable(String name) {
