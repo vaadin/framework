@@ -160,12 +160,10 @@ public class ISlider extends Widget implements Paintable {
 	}
 
 	public void onBrowserEvent(Event event) {
-		if(DOM.compare(DOM.eventGetTarget(event), handle))
+		if(dragging || DOM.compare(DOM.eventGetTarget(event), handle))
 			processHandleEvent(event);
 		else
 			processBaseEvent(event);
-		
-		super.onBrowserEvent(event);
 	}
 	
 	private void processHandleEvent(Event event) {
@@ -180,13 +178,13 @@ public class ISlider extends Widget implements Paintable {
 			break;
 		case Event.ONMOUSEMOVE:
 			if (dragging) {
-				client.console.log("Slider handle: dragging...");
 				int x = DOM.eventGetClientX(event);
 				int y = DOM.eventGetClientY(event);
 				if(vertical) {
 					// TODO
 				} else {
 					if(values == null) {
+						client.console.log("Slider handle: dragging..." + x);
 						float handleW = Integer.parseInt(DOM.getAttribute(handle, "offsetWidth"));
 						float baseX = DOM.getAbsoluteLeft(base);
 						float baseW = Integer.parseInt(DOM.getAttribute(base, "offsetWidth"));
