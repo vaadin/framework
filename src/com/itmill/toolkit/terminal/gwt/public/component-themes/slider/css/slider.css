@@ -4,8 +4,11 @@
 
 .i-slider-base {
 	background: #eee;
+	height: 10px;
 }
 
 .i-slider-handle {
 	background: #ccc;
+	height: 10px;
+	overflow: hidden;
 }
