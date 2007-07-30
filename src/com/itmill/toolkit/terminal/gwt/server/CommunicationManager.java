@@ -457,7 +457,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 			break;
 		}
 		
-		System.out.println("result: " + val + " of type " + (val == null ? "-" : val.getClass()));
+		System.out.println("result: " + val + " of type " + (val == null ? "-" : val.getClass().toString()));
 		return val;
 	}
 
