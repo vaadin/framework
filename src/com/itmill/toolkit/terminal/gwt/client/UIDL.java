@@ -61,6 +61,22 @@ public class UIDL {
 		double num = ((JSONNumber) val).getValue();
 		return (long) num;
 	}
+	
+	public float getFloatAttribute(String name) {
+		JSONValue val = ((JSONObject) json.get(1)).get(name);
+		if (val == null)
+			return 0;
+		double num = ((JSONNumber) val).getValue();
+		return (float) num;
+	}
+	
+	public double getDoubleAttribute(String name) {
+		JSONValue val = ((JSONObject) json.get(1)).get(name);
+		if (val == null)
+			return 0;
+		double num = ((JSONNumber) val).getValue();
+		return (double) num;
+	}
 
 	public boolean getBooleanAttribute(String name) {
 		JSONValue val = ((JSONObject) json.get(1)).get(name);
@@ -316,6 +332,13 @@ public class UIDL {
 		if (t == null)
 			throw new IllegalArgumentException("No such variable: " + name);
 		return (float) t.getValue();
+	}
+	
+	public double getDoubleVariable(String name) {
+		JSONNumber t = (JSONNumber) getVariableHash().get(name);
+		if (t == null)
+			throw new IllegalArgumentException("No such variable: " + name);
+		return (double) t.getValue();
 	}
 
 	public boolean getBooleanVariable(String name) {

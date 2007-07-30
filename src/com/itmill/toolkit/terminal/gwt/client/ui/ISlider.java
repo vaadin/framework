@@ -1,13 +1,9 @@
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
-import java.util.HashSet;
-
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.MouseListener;
-import com.google.gwt.user.client.ui.SourcesMouseEvents;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
@@ -26,13 +22,13 @@ public class ISlider extends Widget implements Paintable {
 	private boolean readonly;
 	
 	private int handleSize;
-	private float min;
-	private float max;
+	private double min;
+	private double max;
 	private int resolution;
-	private Object value;
-	private HashSet values;
+	private Double value;
 	private boolean vertical;
 	private int size = -1;
+	private boolean arrows;
 	
 	/* DOM element for slider's base */
 	private Element base;
@@ -40,21 +36,44 @@ public class ISlider extends Widget implements Paintable {
 	/* DOM element for slider's handle */
 	private Element handle;
 	
-	private boolean dragging;
+	/* DOM element for decrement arrow */
+	private Element smaller;
+	
+	/* DOM element for increment arrow */
+	private Element bigger;
+	
+	/* Temporary dragging/animation variables */
+	private boolean dragging = false;
+	private Timer anim;
 	
 	public ISlider() {
 		super();
-		setElement(DOM.createElement("div"));
-		base = DOM.createElement("div");
-		DOM.appendChild(getElement(), base);
-		handle = DOM.createElement("div");
-		DOM.appendChild(base, handle);
+		
+		setElement(DOM.createDiv());
+		base = DOM.createDiv();
+		handle = DOM.createDiv();
+		smaller = DOM.createDiv();
+		bigger = DOM.createDiv();
+		
 		setStyleName(CLASSNAME);
 		DOM.setAttribute(base, "className", CLASSNAME+"-base");
 		DOM.setAttribute(handle, "className", CLASSNAME+"-handle");
+		DOM.setAttribute(smaller, "className", CLASSNAME+"-smaller");
+		DOM.setAttribute(bigger, "className", CLASSNAME+"-bigger");
 		
-		DOM.sinkEvents(base, Event.MOUSEEVENTS);
+		DOM.appendChild(getElement(), bigger);
+		DOM.appendChild(getElement(), smaller);
+		DOM.appendChild(getElement(), base);
+		DOM.appendChild(base, handle);
+		
+		// Hide initially
+		DOM.setStyleAttribute(smaller, "display", "none");
+		DOM.setStyleAttribute(bigger, "display", "none");
+		
+		DOM.sinkEvents(base, Event.ONMOUSEDOWN);
 		DOM.sinkEvents(handle, Event.MOUSEEVENTS);
+		DOM.sinkEvents(smaller, Event.ONMOUSEDOWN);
+		DOM.sinkEvents(bigger, Event.ONMOUSEDOWN);
 	}
 
 	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -70,22 +89,27 @@ public class ISlider extends Widget implements Paintable {
 		readonly = uidl.getBooleanAttribute("readonly");
 		
 		vertical = uidl.hasAttribute("vertical");
+		arrows = uidl.hasAttribute("arrows");
+		
+		if(arrows) {
+			DOM.setStyleAttribute(smaller, "display", "block");
+			DOM.setStyleAttribute(bigger, "display", "block");
+			if(vertical) {
+				int arrowSize = Integer.parseInt(DOM.getAttribute(smaller, "offsetWidth"));
+				DOM.setStyleAttribute(bigger, "marginLeft", arrowSize+"px");
+				DOM.setStyleAttribute(bigger, "marginRight", arrowSize+"px");
+			}
+		}
 		
 		if(vertical)
 			addStyleName(CLASSNAME+"-vertical");
 		else
 			removeStyleName(CLASSNAME+"-vertical");
 		
-		if(uidl.hasAttribute("values")) {
-			values = uidl.getStringArrayAttributeAsSet("values");
-			value = uidl.getStringVariable("value");
-		} else {
-			min = uidl.getLongAttribute("min");
-			max = uidl.getLongAttribute("max");
-			resolution = uidl.getIntAttribute("resolution");
-			value = new Float(uidl.getFloatVariable("value"));
-			values = null;
-		}
+		min = uidl.getDoubleAttribute("min");
+		max = uidl.getDoubleAttribute("max");
+		resolution = uidl.getIntAttribute("resolution");
+		value = new Double(uidl.getDoubleVariable("value"));
 		
 		handleSize = uidl.getIntAttribute("hsize");
 		
@@ -99,13 +123,13 @@ public class ISlider extends Widget implements Paintable {
 			Timer delay = new Timer() {
 				public void run() {
 					buildHandle();
-					setHandlePosition(value);
+					setValue(value, true);
 				}
 			};
 			delay.schedule(100);
 		} else {
 			buildHandle();
-			setHandlePosition(value);
+			setValue(value, true);
 		}
 	}
 
@@ -117,7 +141,24 @@ public class ISlider extends Widget implements Paintable {
 		} else {
 			if(size > -1)
 				DOM.setStyleAttribute(base, "width", size + "px");
-			else DOM.setStyleAttribute(base, "width", "100%");
+			else {
+				Element p = DOM.getParent(getElement());
+				if(Integer.parseInt(DOM.getAttribute(p, "offsetWidth")) > 50)
+					DOM.setStyleAttribute(base, "width", "auto");
+				else {
+					// Set minimum of 50px width and adjust after all 
+					// components have (supposedly) been drawn completely.
+					DOM.setStyleAttribute(base, "width", "50px");
+					Timer adjust = new Timer() {
+						public void run() {
+							Element p = DOM.getParent(getElement());
+							if(Integer.parseInt(DOM.getAttribute(p, "offsetWidth")) > 50)
+								DOM.setStyleAttribute(base, "width", "auto");
+						}
+					};
+					adjust.schedule(100);
+				}
+			}
 		}
 		// Allow absolute positioning of handle
 		DOM.setStyleAttribute(base, "position", "relative");
@@ -135,68 +176,86 @@ public class ISlider extends Widget implements Paintable {
 			int t = Integer.parseInt(DOM.getAttribute(base, "offsetHeight")) - Integer.parseInt(DOM.getAttribute(handle, "offsetHeight"));
 			DOM.setStyleAttribute(handle, "top", (t/2)+"px");
 			DOM.setStyleAttribute(handle, "left", "0px");
-			int w = (int) (Float.parseFloat(DOM.getAttribute(base, "offsetWidth")) / 100 * handleSize);
+			int w = (int) (Double.parseDouble(DOM.getAttribute(base, "offsetWidth")) / 100 * handleSize);
 			DOM.setStyleAttribute(handle, "width", w+"px");
 		}
 		
 	}
 	
-	private void setHandlePosition(Object value) {
+	private void setValue(Double value, boolean animate) {
 		if(vertical) {
 			// TODO
 		} else {
-			if(values == null) {
-				int handleWidth = Integer.parseInt(DOM.getAttribute(handle, "offsetWidth"));
-				int baseWidth = Integer.parseInt(DOM.getAttribute(base, "offsetWidth"));
-				int range = baseWidth - handleWidth;
-				float v = ((Float)value).floatValue();
-				float valueRange = max - min;
-				float pos = range * ((v - min) / valueRange);
-				DOM.setStyleAttribute(handle, "left", pos+"px");
-				DOM.setAttribute(handle, "title", ""+v);
-			}
+			int handleWidth = Integer.parseInt(DOM.getAttribute(handle, "offsetWidth"));
+			int baseWidth = Integer.parseInt(DOM.getAttribute(base, "offsetWidth"));
+			int range = baseWidth - handleWidth;
+			double v = value.doubleValue();
+			double valueRange = max - min;
+			final double pos = range * ((v - min) / valueRange);
+			
+			String styleLeft = DOM.getStyleAttribute(handle, "left");
+			int left = Integer.parseInt(styleLeft.substring(0, styleLeft.length()-2));
+
+			if((int)pos != left && animate) {
+				if(anim != null)
+					anim.cancel();
+				anim = new Timer() {
+					private int left;
+					private int goal = (int)pos;
+					private int dir = 0;
+					public void run() {
+						String styleLeft = DOM.getStyleAttribute(handle, "left");
+						left = Integer.parseInt(styleLeft.substring(0, styleLeft.length()-2));
+						
+						// Determine direction
+						if(dir == 0)
+							dir = (goal-left)/Math.abs(goal-left);
+						
+						if((dir > 0 && left >= goal) || (dir < 0 && left <= goal)) {
+							this.cancel();
+							return;
+						}
+						int increment = (goal - left) / 2;
+						DOM.setStyleAttribute(handle, "left", (left+increment)+"px");
+					}
+				};
+				anim.scheduleRepeating(50);
+			} else DOM.setStyleAttribute(handle, "left", pos+"px");
+			DOM.setAttribute(handle, "title", ""+v);
 		}
+		
 		this.value = value;
 	}
 
 	public void onBrowserEvent(Event event) {
-		if(dragging || DOM.compare(DOM.eventGetTarget(event), handle))
+		Element targ = DOM.eventGetTarget(event);
+		if(dragging || DOM.compare(targ, handle)) {
 			processHandleEvent(event);
-		else
+		} else if(DOM.compare(targ, smaller)) {
+			if(DOM.eventGetType(event) == Event.ONMOUSEDOWN)
+				decrease();
+		} else if(DOM.compare(targ, bigger)) {
+			if(DOM.eventGetType(event) == Event.ONMOUSEDOWN)
+				increase();
+		} else {
 			processBaseEvent(event);
+		}
 	}
 	
 	private void processHandleEvent(Event event) {
 		switch (DOM.eventGetType(event)) {
 		case Event.ONMOUSEDOWN:
-			client.console.log("Slider handle: mousedown");
 			if(!disabled && !readonly) {
+				anim.cancel();
 				dragging = true;
 				DOM.setCapture(handle);
 				DOM.eventPreventDefault(event); // prevent selecting text
+				DOM.eventCancelBubble(event, true);
 			}
 			break;
 		case Event.ONMOUSEMOVE:
 			if (dragging) {
-				int x = DOM.eventGetClientX(event);
-				int y = DOM.eventGetClientY(event);
-				if(vertical) {
-					// TODO
-				} else {
-					if(values == null) {
-						client.console.log("Slider handle: dragging..." + x);
-						float handleW = Integer.parseInt(DOM.getAttribute(handle, "offsetWidth"));
-						float baseX = DOM.getAbsoluteLeft(base);
-						float baseW = Integer.parseInt(DOM.getAttribute(base, "offsetWidth"));
-						float v = ((x-baseX)/(baseW-baseX)) * (max-min) + min;
-						if(resolution > 0) {
-							setHandlePosition(new Float(v));
-						} else
-							setHandlePosition(new Float((int)v));
-					} else {
-						// TODO
-					}
-				}
+				setValueByEvent(event, false);
 			}
 			break;
 		case Event.ONMOUSEUP:
@@ -209,8 +268,63 @@ public class ISlider extends Widget implements Paintable {
 	}
 		
 	private void processBaseEvent(Event event) {
-		// TODO
-		super.onBrowserEvent(event);
+		if(DOM.eventGetType(event) == Event.ONMOUSEDOWN) {
+			if(!disabled && !readonly && !dragging) {
+				setValueByEvent(event, true);
+				DOM.eventCancelBubble(event, true);
+			}
+		}
+	}
+	
+	private void setValueByEvent(Event event, boolean animate) {
+		int x = DOM.eventGetClientX(event);
+		int y = DOM.eventGetClientY(event);
+		double v = min; // Fallback to min
+		if(vertical) {
+			// TODO
+		} else {
+			double handleW = Integer.parseInt(DOM.getAttribute(handle, "offsetWidth"));
+			double baseX = DOM.getAbsoluteLeft(base) + handleW/2;
+			double baseW = Integer.parseInt(DOM.getAttribute(base, "offsetWidth"));
+			v = ((x-baseX)/(baseW-handleW)) * (max-min) + min;
+		}
+		
+		if(v < min)
+			v = min;
+		else if(v > max)
+			v = max;
+		
+		if(resolution > 0) {
+			v = (int)(v * (double)Math.pow(10, resolution));
+			v = v / (double)Math.pow(10, resolution);
+			setValue(new Double(v), animate);
+		} else
+			setValue(new Double((int)v), animate);
+		
+	}
+	
+	private void decrease() {
+		double diff = (max-min)/max*10 + (max-min)/10;
+		double v = value.doubleValue()-diff;
+		if(resolution > 0) {
+			v = (int)(v * (double)Math.pow(10, resolution));
+			v = v / (double)Math.pow(10, resolution);
+		} else v = (int)v;
+		if(v < min)
+			v = min;
+		setValue(new Double(v), true);
+	}
+	
+	private void increase() {
+		double diff = (max-min)/max*10 + (max-min)/10;
+		double v = value.doubleValue()+diff;
+		if(resolution > 0) {
+			v = (int)(v * (double)Math.pow(10, resolution));
+			v = v / (double)Math.pow(10, resolution);
+		} else v = (int)v;
+		if(v > max)
+			v = max;
+		setValue(new Double(v), true);
 	}
 
 }
