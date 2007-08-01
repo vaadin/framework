@@ -1,7 +1,6 @@
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HTML;
@@ -20,8 +19,6 @@ public class ILink extends HTML implements Paintable, ClickListener {
 	
 	private String src;
 	
-	private String text;
-	
 	private String target;
 	
 	private int borderStyle = BORDER_STYLE_DEFAULT;
@@ -37,15 +34,13 @@ public class ILink extends HTML implements Paintable, ClickListener {
 	public ILink() {
 		super();
 		addClickListener(this);
+		setStyleName(CLASSNAME);
 	}
 	
 	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 
-//		if (client.updateComponent(this, uidl, true))
-//			return;
-		
 		enabled = uidl.hasAttribute("disabled") ? false : true;
-		readonly = uidl.hasAttribute("disabled") ? true : false;
+		readonly = uidl.hasAttribute("readonly") ? true : false;
 		
 		if(uidl.hasAttribute("target"))
 			target = uidl.getStringAttribute(target);
@@ -54,14 +49,32 @@ public class ILink extends HTML implements Paintable, ClickListener {
 			src = uidl.getStringAttribute("src");
 		}
 		
+		if(uidl.hasAttribute("border")) {
+			if("none".equals(uidl.getStringAttribute("border")))
+				borderStyle = BORDER_STYLE_NONE;
+			else
+				borderStyle = BORDER_STYLE_MINIMAL;
+		} else {
+			borderStyle = BORDER_STYLE_DEFAULT;
+		}
+		
 		height = uidl.hasAttribute("height") ? uidl.getIntAttribute("height") : -1;
 		width = uidl.hasAttribute("width") ? uidl.getIntAttribute("width") : -1;
 		
 		DOM.setInnerHTML(getElement(), uidl.getStringAttribute("caption"));
+		
+		if(readonly)
+			addStyleName("readonly");
+		else
+			removeStyleName("readonly");
+		if(enabled)
+			addStyleName("enabled");
+		else
+			removeStyleName("enabled");
 	}
 
 	public void onClick(Widget sender) {
-		if(enabled) {
+		if(enabled && !readonly) {
 			if(target == null)
 				target = "_blank";
 			String features;
