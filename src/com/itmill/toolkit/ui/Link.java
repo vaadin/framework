@@ -35,10 +35,6 @@ import com.itmill.toolkit.terminal.Resource;
 /**
  * Link is used to create external or internal URL links.
  * 
- * Internal links can be used to create action items, which change the state to
- * application to one of the predefined states. For example, a link can be
- * created for existing MenuTree items.
- * 
  * @author IT Mill Ltd.
  * @version
  * @VERSION@
@@ -149,9 +145,7 @@ public class Link extends AbstractComponent {
 	 */
 	public void paintContent(PaintTarget target) throws PaintException {
 
-		if (window != null)
-			target.addAttribute("src", window.getURL().toString());
-		else if (resource != null)
+		if (resource != null)
 			target.addAttribute("src", resource);
 		else
 			return;
@@ -294,19 +288,4 @@ public class Link extends AbstractComponent {
 		}
 		requestRepaint();
 	}
-
-	/**
-	 * Sets the window this link opens.
-	 * 
-	 * @param window
-	 *            the window to set.
-	 */
-	public void setWindow(Window window) {
-		this.window = window;
-		if (window != null) {
-			this.resource = null;
-		}
-		requestRepaint();
-	}
-
 }
