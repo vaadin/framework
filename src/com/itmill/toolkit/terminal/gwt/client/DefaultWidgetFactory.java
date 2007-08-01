@@ -11,6 +11,7 @@ import com.itmill.toolkit.terminal.gwt.client.ui.IEmbedded;
 import com.itmill.toolkit.terminal.gwt.client.ui.IGridLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.IHorizontalLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.ILabel;
+import com.itmill.toolkit.terminal.gwt.client.ui.ILink;
 import com.itmill.toolkit.terminal.gwt.client.ui.IOptionGroup;
 import com.itmill.toolkit.terminal.gwt.client.ui.IPanel;
 import com.itmill.toolkit.terminal.gwt.client.ui.IPasswordField;
@@ -50,6 +51,8 @@ public class DefaultWidgetFactory implements WidgetFactory {
 		}
 		else if ("label".equals(tag))
 			return new ILabel();
+		else if ("link".equals(tag))
+			return new ILink();
 		else if ("gridlayout".equals(tag))
 			return new IGridLayout();
 		else if ("tree".equals(tag))
