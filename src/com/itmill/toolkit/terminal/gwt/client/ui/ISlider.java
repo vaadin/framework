@@ -69,16 +69,18 @@ public class ISlider extends Widget implements Paintable {
 		// Hide initially
 		DOM.setStyleAttribute(smaller, "display", "none");
 		DOM.setStyleAttribute(bigger, "display", "none");
+		DOM.setStyleAttribute(handle, "visibility", "hidden");
 		
 		DOM.sinkEvents(base, Event.ONMOUSEDOWN);
 		DOM.sinkEvents(handle, Event.MOUSEEVENTS);
-		DOM.sinkEvents(smaller, Event.ONMOUSEDOWN);
-		DOM.sinkEvents(bigger, Event.ONMOUSEDOWN);
+		DOM.sinkEvents(smaller, Event.ONMOUSEDOWN | Event.ONMOUSEUP);
+		DOM.sinkEvents(bigger, Event.ONMOUSEDOWN | Event.ONMOUSEUP);
 	}
 
 	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 		
 		this.client = client;
+		this.id = uidl.getId();
 		
 		// Ensure correct implementation (handle own caption)
 		if (client.updateComponent(this, uidl, false))
@@ -123,37 +125,35 @@ public class ISlider extends Widget implements Paintable {
 			Timer delay = new Timer() {
 				public void run() {
 					buildHandle();
-					setValue(value, true);
+					setValue(value, false, false);
 				}
 			};
 			delay.schedule(100);
 		} else {
 			buildHandle();
-			setValue(value, true);
+			setValue(value, false, false);
 		}
 	}
 
 	private void buildBase() {
 		if(vertical) {
-			if(size > -1)
-				DOM.setStyleAttribute(base, "height", size + "px");
-			else DOM.setStyleAttribute(base, "height", "120px");
+			// TODO
 		} else {
 			if(size > -1)
-				DOM.setStyleAttribute(base, "width", size + "px");
+				DOM.setStyleAttribute(getElement(), "width", size + "px");
 			else {
 				Element p = DOM.getParent(getElement());
 				if(Integer.parseInt(DOM.getAttribute(p, "offsetWidth")) > 50)
-					DOM.setStyleAttribute(base, "width", "auto");
+					DOM.setStyleAttribute(getElement(), "width", "auto");
 				else {
 					// Set minimum of 50px width and adjust after all 
 					// components have (supposedly) been drawn completely.
-					DOM.setStyleAttribute(base, "width", "50px");
+					DOM.setStyleAttribute(getElement(), "width", "50px");
 					Timer adjust = new Timer() {
 						public void run() {
 							Element p = DOM.getParent(getElement());
 							if(Integer.parseInt(DOM.getAttribute(p, "offsetWidth")) > 50)
-								DOM.setStyleAttribute(base, "width", "auto");
+								DOM.setStyleAttribute(getElement(), "width", "auto");
 						}
 					};
 					adjust.schedule(100);
@@ -163,7 +163,7 @@ public class ISlider extends Widget implements Paintable {
 		// Allow absolute positioning of handle
 		DOM.setStyleAttribute(base, "position", "relative");
 		
-		// TODO attach listeners for clicking on base, focusing and arrow keys
+		// TODO attach listeners for focusing and arrow keys
 	}
 	
 	private void buildHandle() {
@@ -177,12 +177,21 @@ public class ISlider extends Widget implements Paintable {
 			DOM.setStyleAttribute(handle, "top", (t/2)+"px");
 			DOM.setStyleAttribute(handle, "left", "0px");
 			int w = (int) (Double.parseDouble(DOM.getAttribute(base, "offsetWidth")) / 100 * handleSize);
+			if(handleSize == -1) {
+				int baseW = Integer.parseInt(DOM.getAttribute(base, "offsetWidth"));
+				double range = (max - min) * (resolution+1) * 1.5;
+				w = (int) (baseW - range);
+			}
+			if(w < 3)
+				w = 3;
 			DOM.setStyleAttribute(handle, "width", w+"px");
 		}
 		
+		DOM.setStyleAttribute(handle, "visibility", "visible");
+		
 	}
 	
-	private void setValue(Double value, boolean animate) {
+	private void setValue(Double value, boolean animate, boolean updateToServer) {
 		if(vertical) {
 			// TODO
 		} else {
@@ -191,17 +200,21 @@ public class ISlider extends Widget implements Paintable {
 			int range = baseWidth - handleWidth;
 			double v = value.doubleValue();
 			double valueRange = max - min;
-			final double pos = range * ((v - min) / valueRange);
+			double p = 0;
+			if(valueRange != 0)
+				p = range * ((v - min) / valueRange);
+			final double pos = p;
+				
 			
 			String styleLeft = DOM.getStyleAttribute(handle, "left");
 			int left = Integer.parseInt(styleLeft.substring(0, styleLeft.length()-2));
 
-			if((int)pos != left && animate) {
+			if((int)(Math.round(pos)) != left && animate) {
 				if(anim != null)
 					anim.cancel();
 				anim = new Timer() {
 					private int left;
-					private int goal = (int)pos;
+					private int goal = (int) Math.round(pos);
 					private int dir = 0;
 					public void run() {
 						String styleLeft = DOM.getStyleAttribute(handle, "left");
@@ -221,32 +234,68 @@ public class ISlider extends Widget implements Paintable {
 				};
 				anim.scheduleRepeating(50);
 			} else DOM.setStyleAttribute(handle, "left", pos+"px");
-			DOM.setAttribute(handle, "title", ""+v);
+			//DOM.setAttribute(handle, "title", ""+v);
 		}
 		
 		this.value = value;
+		
+		if(updateToServer)
+			client.updateVariable(id, "value", value.doubleValue(), immediate);
 	}
 
 	public void onBrowserEvent(Event event) {
+		if(disabled || readonly)
+			return;
 		Element targ = DOM.eventGetTarget(event);
 		if(dragging || DOM.compare(targ, handle)) {
 			processHandleEvent(event);
+			
 		} else if(DOM.compare(targ, smaller)) {
-			if(DOM.eventGetType(event) == Event.ONMOUSEDOWN)
-				decrease();
+			// Decrease value by resolution
+			if(DOM.eventGetType(event) == Event.ONMOUSEDOWN) {
+				setValue(new Double(value.doubleValue()-Math.pow(10, -resolution)), false, true);
+				if(anim != null)
+					anim.cancel();
+				anim = new Timer() {
+					public void run() {
+						if(value.doubleValue()-Math.pow(10, -resolution) > min)
+							setValue(new Double(value.doubleValue()-Math.pow(10, -resolution)), false, true);
+					}
+				};
+				anim.scheduleRepeating(100);
+				DOM.eventCancelBubble(event, true);
+			} else if(DOM.eventGetType(event) == Event.ONMOUSEUP) {
+				anim.cancel();
+			}
+			
 		} else if(DOM.compare(targ, bigger)) {
-			if(DOM.eventGetType(event) == Event.ONMOUSEDOWN)
-				increase();
-		} else {
+			// Increase value by resolution
+			if(DOM.eventGetType(event) == Event.ONMOUSEDOWN) {
+				setValue(new Double(value.doubleValue()+Math.pow(10, -resolution)), false, true);
+				if(anim != null)
+					anim.cancel();
+				anim = new Timer() {
+					public void run() {
+						if(value.doubleValue()-Math.pow(10, -resolution) < max)
+							setValue(new Double(value.doubleValue()+Math.pow(10, -resolution)), false, true);
+					}
+				};
+				anim.scheduleRepeating(100);
+				DOM.eventCancelBubble(event, true);
+			} else if(DOM.eventGetType(event) == Event.ONMOUSEUP) {
+				anim.cancel();
+			}
+			
+		} else
 			processBaseEvent(event);
-		}
 	}
 	
 	private void processHandleEvent(Event event) {
 		switch (DOM.eventGetType(event)) {
 		case Event.ONMOUSEDOWN:
 			if(!disabled && !readonly) {
-				anim.cancel();
+				if(anim != null)
+					anim.cancel();
 				dragging = true;
 				DOM.setCapture(handle);
 				DOM.eventPreventDefault(event); // prevent selecting text
@@ -255,12 +304,14 @@ public class ISlider extends Widget implements Paintable {
 			break;
 		case Event.ONMOUSEMOVE:
 			if (dragging) {
-				setValueByEvent(event, false);
+				DOM.setCapture(handle);
+				setValueByEvent(event, false, false);
 			}
 			break;
 		case Event.ONMOUSEUP:
 			dragging = false;
 			DOM.releaseCapture(handle);
+			setValueByEvent(event, true, true);
 			break;
 		default:
 			break;
@@ -270,15 +321,15 @@ public class ISlider extends Widget implements Paintable {
 	private void processBaseEvent(Event event) {
 		if(DOM.eventGetType(event) == Event.ONMOUSEDOWN) {
 			if(!disabled && !readonly && !dragging) {
-				setValueByEvent(event, true);
+				setValueByEvent(event, true, true);
 				DOM.eventCancelBubble(event, true);
 			}
 		}
 	}
 	
-	private void setValueByEvent(Event event, boolean animate) {
+	private void setValueByEvent(Event event, boolean animate, boolean roundup) {
 		int x = DOM.eventGetClientX(event);
-		int y = DOM.eventGetClientY(event);
+		//int y = DOM.eventGetClientY(event);
 		double v = min; // Fallback to min
 		if(vertical) {
 			// TODO
@@ -294,37 +345,15 @@ public class ISlider extends Widget implements Paintable {
 		else if(v > max)
 			v = max;
 		
-		if(resolution > 0) {
-			v = (int)(v * (double)Math.pow(10, resolution));
-			v = v / (double)Math.pow(10, resolution);
-			setValue(new Double(v), animate);
-		} else
-			setValue(new Double((int)v), animate);
+		if(roundup) {
+			if(resolution > 0) {
+				v = (int)(v * (double)Math.pow(10, resolution));
+				v = v / (double)Math.pow(10, resolution);
+			} else
+				v = Math.round(v);
+		}
 		
-	}
-	
-	private void decrease() {
-		double diff = (max-min)/max*10 + (max-min)/10;
-		double v = value.doubleValue()-diff;
-		if(resolution > 0) {
-			v = (int)(v * (double)Math.pow(10, resolution));
-			v = v / (double)Math.pow(10, resolution);
-		} else v = (int)v;
-		if(v < min)
-			v = min;
-		setValue(new Double(v), true);
-	}
-	
-	private void increase() {
-		double diff = (max-min)/max*10 + (max-min)/10;
-		double v = value.doubleValue()+diff;
-		if(resolution > 0) {
-			v = (int)(v * (double)Math.pow(10, resolution));
-			v = v / (double)Math.pow(10, resolution);
-		} else v = (int)v;
-		if(v > max)
-			v = max;
-		setValue(new Double(v), true);
+		setValue(new Double(v), animate, roundup);
 	}
 
 }

@@ -1,14 +1,93 @@
 .i-slider {
-
+	background: #c3d0dd url(../img/bg.png) repeat-x;
+	border: 1px solid #29528a;
+	border-left: none;
+	border-right: none;
+	height: 14px;
 }
-
+.i-slider:before {
+	display: block;
+	width: 1px;
+	height: 14px;
+	background-color: #29528a;
+	border-top: 1px solid #b9c8dc;
+	border-bottom: 1px solid #b9c8dc;
+	margin: -1px 0 -15px -1px;
+	content: "";
+}
+.i-slider:after {
+	display: block;
+	width: 1px;
+	height: 14px;
+	background-color: #29528a;
+	border-top: 1px solid #b9c8dc;
+	border-bottom: 1px solid #b9c8dc;
+	margin: -15px 0 0 100%;
+	content: "";
+}
 .i-slider-base {
-	background: #eee;
-	height: 10px;
+	background: #c3d0dd url(../img/bg.png) repeat-x;
+	height: 14px;
+	margin: 0 1px;
+	overflow: hidden;
 }
-
 .i-slider-handle {
-	background: #ccc;
+	background: #fff url(../img/handle-bg.png) repeat-x;
+	border: 1px solid #29528a;
 	height: 10px;
 	overflow: hidden;
+}
+.i-slider-bigger {
+	background: #dde4ef url(../img/arrow-right.png);
+	float: right;
+	width: 14px;
+	height: 14px;
+	overflow: hidden;
+	margin: 0 0 0 1px;
+}
+.i-slider-bigger:hover {
+	background-image: url(../img/arrow-right-over.png);
+}
+.i-slider-smaller {
+	background: #dde4ef url(../img/arrow-left.png);
+	float: left;
+	width: 14px;
+	height: 14px;
+	overflow: hidden;
+	margin: 0 1px 0 0;
+}
+.i-slider-smaller:hover {
+	background-image: url(../img/arrow-left-over.png);
+}
+
+
+
+/*-----------------
+  Vertical styles 
+  -----------------*/
+
+.i-slider-vertical {
+
+}
+.i-slider-vertical .i-slider-base {
+	
+}
+.i-slider-vertical .i-slider-handle {
+
+}
+.i-slider-vertical .i-slider-bigger {
+
+}
+
+
+
+/*--------------------
+  IE specific styles
+  -------------------*/
+
+* html .i-slider {
+	border: 1px solid #29528a;
+}
+*+html .i-slider {
+	border: 1px solid #29528a;
 }

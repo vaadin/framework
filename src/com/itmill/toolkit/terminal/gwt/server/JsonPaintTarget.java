@@ -434,7 +434,7 @@ public class JsonPaintTarget implements PaintTarget {
 	}
 	
 	/**
-	 * Adds a float attribute to component. Atributes must be added before any
+	 * Adds a double attribute to component. Atributes must be added before any
 	 * content is written.
 	 * 
 	 * @param name
@@ -561,12 +561,12 @@ public class JsonPaintTarget implements PaintTarget {
 	 * @throws PaintException
 	 *             if the paint operation failed.
 	 */
-	public void addVariable(VariableOwner owner, String name, double value) throws PaintException {
-		tag.addVariable(new DoubleVariable(owner, name, value));
+	public void addVariable(VariableOwner owner, String name, float value) throws PaintException {
+		tag.addVariable(new FloatVariable(owner, name, value));
 	}
 	
 	/**
-	 * Adds a float type variable.
+	 * Adds a double type variable.
 	 * 
 	 * @param owner
 	 *            the Listener for variable changes.
@@ -578,8 +578,8 @@ public class JsonPaintTarget implements PaintTarget {
 	 * @throws PaintException
 	 *             if the paint operation failed.
 	 */
-	public void addVariable(VariableOwner owner, String name, float value) throws PaintException {
-		tag.addVariable(new FloatVariable(owner, name, value));
+	public void addVariable(VariableOwner owner, String name, double value) throws PaintException {
+		tag.addVariable(new DoubleVariable(owner, name, value));
 	}
 
 	/**

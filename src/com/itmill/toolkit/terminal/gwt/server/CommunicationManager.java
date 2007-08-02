@@ -29,7 +29,6 @@
 package com.itmill.toolkit.terminal.gwt.server;
 
 import java.io.BufferedWriter;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -57,7 +56,6 @@ import java.util.WeakHashMap;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -65,7 +63,6 @@ import com.itmill.toolkit.Application;
 import com.itmill.toolkit.Application.WindowAttachEvent;
 import com.itmill.toolkit.Application.WindowDetachEvent;
 import com.itmill.toolkit.terminal.DownloadStream;
-import com.itmill.toolkit.terminal.PaintTarget;
 import com.itmill.toolkit.terminal.Paintable;
 import com.itmill.toolkit.terminal.URIHandler;
 import com.itmill.toolkit.terminal.VariableOwner;
@@ -451,6 +448,14 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 			break;
 		case 'i':
 			val = Integer.valueOf(strValue);
+			break;
+		case 'l':
+			val = Long.valueOf(strValue);
+		case 'f':
+			val = Float.valueOf(strValue);
+			break;
+		case 'd':
+			val = Double.valueOf(strValue);
 			break;
 		case 'b':
 			val = Boolean.valueOf(strValue);

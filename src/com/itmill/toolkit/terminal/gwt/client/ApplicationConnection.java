@@ -222,6 +222,21 @@ public class ApplicationConnection implements EntryPoint {
 			int newValue, boolean immediate) {
 		addVariableToQueue(paintableId, variableName, "" + newValue, immediate, 'i');
 	}
+	
+	public void updateVariable(String paintableId, String variableName,
+			long newValue, boolean immediate) {
+		addVariableToQueue(paintableId, variableName, "" + newValue, immediate, 'l');
+	}
+	
+	public void updateVariable(String paintableId, String variableName,
+			float newValue, boolean immediate) {
+		addVariableToQueue(paintableId, variableName, "" + newValue, immediate, 'f');
+	}
+	
+	public void updateVariable(String paintableId, String variableName,
+			double newValue, boolean immediate) {
+		addVariableToQueue(paintableId, variableName, "" + newValue, immediate, 'd');
+	}
 
 	public void updateVariable(String paintableId, String variableName,
 			boolean newValue, boolean immediate) {

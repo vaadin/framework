@@ -35,7 +35,8 @@ public class Slider extends AbstractField {
 	
 	/**
 	 * Handle size in percents related to base size.
-	 * Must be a value between 1-100.
+	 * Must be a value between 1-99. Other values are converted to nearest bound.
+	 * A negative value sets the width to auto (client calculates).
 	 */
 	private int handleSize = -1;
 	
@@ -86,13 +87,11 @@ public class Slider extends AbstractField {
 	public void setMax(double max) {
 		this.max = max;
 		try {
-			if((new Float(getValue().toString())).floatValue() > max)
-				super.setValue(new Float(min));
+			if((new Double(getValue().toString())).doubleValue() > max)
+				super.setValue(new Double(min));
 		} catch(ClassCastException e) {
-			super.setValue(new Float(max));
+			super.setValue(new Double(max));
 		}
-		if(handleSize == -1)
-			handleSize = (int) ((max-min)/max*10 + (max-min)/10);
 		requestRepaint();
 	}
 
@@ -112,8 +111,6 @@ public class Slider extends AbstractField {
 		} catch(ClassCastException e) {
 			super.setValue(new Double(min));
 		}
-		if(handleSize == -1)
-			handleSize = (int) ((max-min)/max*10 + (max-min)/10);
 		requestRepaint();
 	}
 
@@ -172,9 +169,13 @@ public class Slider extends AbstractField {
 	}
 
 	public void setHandleSize(int handleSize) {
-		if(handleSize > 100 || handleSize < 1)
-			return;
-		this.handleSize = handleSize;
+		if(handleSize < 0)
+			this.handleSize = -1;
+		else if(handleSize > 99)
+			this.handleSize = 99;
+		else if(handleSize < 1)
+			this.handleSize = 1;
+		else this.handleSize = handleSize;
 		requestRepaint();
 	}
 	
@@ -195,7 +196,10 @@ public class Slider extends AbstractField {
 		super.paintContent(target);
 		
 		target.addAttribute("min", min);
-		target.addAttribute("max", max);
+		if(max > min)
+			target.addAttribute("max", max);
+		else
+			target.addAttribute("max", min);
 		target.addAttribute("resolution", resolution);
 		
 		if(resolution > 0)
@@ -212,7 +216,10 @@ public class Slider extends AbstractField {
 		if(size > -1)
 			target.addAttribute("size", size);
 		
-		target.addAttribute("hsize", handleSize);
+		if(min != max && min < max)
+			target.addAttribute("hsize", handleSize);
+		else
+			target.addAttribute("hsize", 100);
 		
 	}
 
@@ -225,13 +232,20 @@ public class Slider extends AbstractField {
 	 */
 	public void changeVariables(Object source, Map variables) {
 		if (variables.containsKey("value")) {
-			Object newValue = variables.get("value");
-			if(resolution > 0)
-				newValue = new Double(newValue.toString());
-			else 
-				newValue = new Integer(newValue.toString());
+			Object value = variables.get("value");
+			Double newValue = new Double(value.toString());
 			if(newValue != null && newValue != getValue() && !newValue.equals(getValue())) {
-				setValue(newValue, true);
+				try {
+					setValue(newValue, true);
+				} catch(ValueOutOfBoundsException e) {
+					// Convert to nearest bound
+					double out = e.getValue().doubleValue();
+					if(out < min)
+						out = min;
+					if(out > max)
+						out = max;
+					super.setValue(new Double(out), false);
+				}
 			}
 		}
 	}
