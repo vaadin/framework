@@ -87,6 +87,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 	private HashMap actionMap = new HashMap();
 	private String[] visibleColOrder;
 	private boolean initialContentReceived = false;
+	private Element scrollPositionElement;
 	
 	public IScrollTable() {
 		// TODO move headerContainer and column selector into TableHead
@@ -181,6 +182,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 				sizeInit();
 			}
 		}
+		hideScrollPositionAnnotation();
 	}
 	
 	private void updateVisibleColumns(UIDL uidl) {
@@ -474,6 +476,14 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 			preLimit = 0;
 		int lastRendered = tBody.getLastRendered();
 		int firstRendered = tBody.getFirstRendered();
+		
+		// tell scroll position to user if currently "visible"  rows are not rendered
+		if( (lastRendered < firstRowInViewPort + pageLength) ||
+				(firstRowInViewPort <  firstRendered)) {
+			announceScrollPosition();
+		}
+		
+		
 		if( postLimit <= lastRendered && preLimit >= firstRendered ) {
 			client.updateVariable(this.paintableId, "firstvisible", firstRowInViewPort, false);
 			return; // scrolled withing "non-react area"
@@ -505,6 +515,35 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 			rowRequestHandler.deferRowFetch();
 		}
 		
+	}
+
+	private void announceScrollPosition() {
+		client.console.log(""+firstRowInViewPort);
+		if(scrollPositionElement == null) {
+			scrollPositionElement = DOM.createDiv();
+			DOM.setAttribute(scrollPositionElement, "className", "i-table-scrollposition");
+			DOM.appendChild(getElement(), scrollPositionElement);
+		}
+		DOM.setStyleAttribute(scrollPositionElement, "left",
+				(
+						DOM.getAbsoluteLeft(getElement()) + 
+						DOM.getIntAttribute(getElement(), "offsetWidth")/2 
+						- 75
+				)  + "px");
+		DOM.setStyleAttribute(scrollPositionElement, "top",
+				(
+						DOM.getAbsoluteTop(getElement()) + 
+						DOM.getIntAttribute(getElement(), "offsetHeight")/2 
+						- 20
+				)  + "px");
+		DOM.setInnerHTML(scrollPositionElement, 
+				firstRowInViewPort + " - " + (firstRowInViewPort + pageLength) + "...");
+		DOM.setStyleAttribute(scrollPositionElement, "display", "block");
+	}
+	
+	private void hideScrollPositionAnnotation() {
+		if(scrollPositionElement != null)
+			DOM.setStyleAttribute(scrollPositionElement, "display", "none");
 	}
 
 	private class RowRequestHandler extends Timer {

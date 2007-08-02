@@ -145,8 +145,14 @@
 	filter: alpha(opacity=50);
 }
 
-
-
+.i-table-scrollposition {
+	display: none;
+	position: absolute;
+	width: 150px;
+	padding: 4px;
+	border: 1px solid black;
+	background: yellow;
+}
 
 /* IE specific styles */
 * html .i-table-header-wrap {
