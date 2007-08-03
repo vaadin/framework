@@ -16,6 +16,7 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.user.client.ui.FocusListener;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -24,7 +25,7 @@ import com.itmill.toolkit.terminal.gwt.client.ui.IContextMenu;
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class ApplicationConnection implements EntryPoint {
+public class ApplicationConnection implements EntryPoint, FocusListener {
 
 	private String appUri;
 
@@ -38,7 +39,9 @@ public class ApplicationConnection implements EntryPoint {
 
 	private Vector pendingVariables = new Vector();
 
-	private HashMap paintables = new HashMap();
+	private HashMap idToPaintable = new HashMap();
+
+	private HashMap paintableToId = new HashMap();
 
 	private WidgetFactory widgetFactory = new DefaultWidgetFactory();
 
@@ -173,11 +176,21 @@ public class ApplicationConnection implements EntryPoint {
 	}
 
 	public void registerPaintable(String id, Paintable paintable) {
-		paintables.put(id, paintable);
+		idToPaintable.put(id, paintable);
+		paintableToId.put(paintable, id);
+	}
+	
+	public void unregisterPaintable(Paintable p) {
+		idToPaintable.remove(paintableToId.get(p));
+		paintableToId.remove(p);
 	}
 
+	/**
+	 * Returns Paintable element by its id
+	 * @param id Paintable ID
+	 */
 	public Paintable getPaintable(String id) {
-		return (Paintable) paintables.get(id);
+		return (Paintable) idToPaintable.get(id);
 	}
 
 	private void addVariableToQueue(String paintableId, String variableName,
@@ -393,5 +406,15 @@ public class ApplicationConnection implements EntryPoint {
 			contextMenu = new IContextMenu();
 		}
 		return contextMenu;
+	}
+
+	public void onFocus(Widget sender) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void onLostFocus(Widget sender) {
+		// TODO Auto-generated method stub
+		
 	}
 }

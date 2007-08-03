@@ -39,6 +39,8 @@ public class ICustomLayout extends ComplexPanel implements Paintable, Layout {
 	/** Paintable ID of this paintable */
 	private String pid;
 
+	private ApplicationConnection client;
+
 	public ICustomLayout() {
 		setElement(DOM.createDiv());
 	}
@@ -80,7 +82,7 @@ public class ICustomLayout extends ComplexPanel implements Paintable, Layout {
 
 	/** Update the layout from UIDL */
 	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-
+		this.client = client;
 		// Client manages general cases
 		if (client.updateComponent(this, uidl, false))
 			return;
@@ -296,6 +298,7 @@ public class ICustomLayout extends ComplexPanel implements Paintable, Layout {
 
 	/** Removes given widget from the layout */
 	public boolean remove(Widget w) {
+		client.unregisterPaintable((Paintable) w);
 		String location = getLocation(w);
 		if (location != null)
 			locationToWidget.remove(location);
@@ -318,5 +321,4 @@ public class ICustomLayout extends ComplexPanel implements Paintable, Layout {
 		locationToWidget.clear();
 		widgetToCaptionWrapper.clear();
 	}
-
 }
