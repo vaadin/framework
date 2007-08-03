@@ -2,16 +2,13 @@ package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.ComplexPanel;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.itmill.toolkit.terminal.gwt.client.CaptionWrapper;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
+import com.itmill.toolkit.terminal.gwt.client.CaptionWrapper;
 import com.itmill.toolkit.terminal.gwt.client.Layout;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
@@ -47,12 +44,17 @@ public class ICustomLayout extends ComplexPanel implements Paintable, Layout {
 	}
 
 	/**
-	 * Add new widget to the map with location name.
+	 * Sets widget to given location. 
+	 * 
+	 * If location already contains a widget it will be removed.
+	 * 
+	 * @param widget Widget to be set into location.
+	 * @param location location name where widget will be added
 	 * 
 	 * @throws IllegalArgumentException
 	 *             if no such location is found in the layout.
 	 */
-	public void add(Widget widget, String location) {
+	public void setWidget(Widget widget, String location) {
 
 		if (widget == null)
 			return;
@@ -64,8 +66,9 @@ public class ICustomLayout extends ComplexPanel implements Paintable, Layout {
 					+ " found");
 		}
 
-		// Remove previous widget if there is one
+		// Get previous widget
 		Widget previous = (Widget) locationToWidget.get(location);
+		// NOP if given widget already exists in this location
 		if (previous == widget)
 			return;
 		remove(previous);
@@ -95,7 +98,7 @@ public class ICustomLayout extends ComplexPanel implements Paintable, Layout {
 				String location = uidlForChild.getStringAttribute("name");
 				Widget child = client.getWidget(uidlForChild.getChildUIDL(0));
 				try {
-					add(child, location);
+					setWidget(child, location);
 					((Paintable) child).updateFromUIDL(uidlForChild
 							.getChildUIDL(0), client);
 				} catch (IllegalArgumentException e) {
@@ -251,7 +254,7 @@ public class ICustomLayout extends ComplexPanel implements Paintable, Layout {
 		String location = getLocation(from);
 		if (location == null)
 			throw new IllegalArgumentException();
-		add(to, location);
+		setWidget(to, location);
 	}
 
 	/** Does this layout contain given child*/
