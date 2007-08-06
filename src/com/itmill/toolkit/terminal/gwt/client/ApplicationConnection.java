@@ -18,6 +18,7 @@ import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.ui.FocusListener;
 import com.google.gwt.user.client.ui.FocusWidget;
+import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ui.IContextMenu;
@@ -56,28 +57,8 @@ public class ApplicationConnection implements EntryPoint, FocusListener {
 
 		console = new Console(RootPanel.get("itmtk-loki"));
 
-		console.log("Makin fake UIDL Request to fool servlet of an app init");
-		RequestBuilder rb2 = new RequestBuilder(RequestBuilder.GET, appUri);
-		try {
-			rb2.sendRequest("", new RequestCallback() {
-
-				public void onResponseReceived(Request request,
-						Response response) {
-					console
-							.log("Got fake response... sending initial UIDL request");
-					makeUidlRequest("repaintAll=1");
-				}
-
-				public void onError(Request request, Throwable exception) {
-					// TODO Auto-generated method stub
-
-				}
-
-			});
-		} catch (RequestException e1) {
-			e1.printStackTrace();
-		}
-
+		makeUidlRequest("repaintAll=1");
+		
 	}
 
 	private native String getAppUri()/*-{
@@ -183,6 +164,17 @@ public class ApplicationConnection implements EntryPoint, FocusListener {
 	public void unregisterPaintable(Paintable p) {
 		idToPaintable.remove(paintableToId.get(p));
 		paintableToId.remove(p);
+		
+		if (p instanceof HasWidgets) {
+			 HasWidgets container = (HasWidgets) p;
+			 Iterator it = container.iterator();
+			 while(it.hasNext()) {
+				 Widget w = (Widget) it.next();
+				 if (w instanceof Paintable) {
+					this.unregisterPaintable((Paintable) w);
+				}
+			 }
+		}
 	}
 
 	/**
