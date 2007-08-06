@@ -5,6 +5,7 @@ import java.util.Iterator;
 
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.itmill.toolkit.terminal.gwt.client.Caption;
 import com.itmill.toolkit.terminal.gwt.client.CaptionWrapper;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Layout;
@@ -53,7 +54,7 @@ public class IHorizontalLayout extends HorizontalPanel implements Paintable, Lay
 	public void updateCaption(Widget component, UIDL uidl) {
 		
 		CaptionWrapper wrapper = (CaptionWrapper) componentToWrapper.get(component);
-		if (CaptionWrapper.isNeeded(uidl)) {
+		if (Caption.isNeeded(uidl)) {
 			if (wrapper == null) {
 				int index = getWidgetIndex(component);
 				remove(component);
