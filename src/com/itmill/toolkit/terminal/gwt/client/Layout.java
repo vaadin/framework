@@ -9,7 +9,8 @@ public interface Layout extends Paintable {
 	 * 
 	 * Each layout must be able to switch children. To to this, one must just
 	 * give references to a current and new child. Note that the Layout is not
-	 * responsible for registering paintable into client.
+	 * responsible for registering paintable into ApplicationConnection, but it is responsible
+	 * is for unregistering it.
 	 * 
 	 * @param oldComponent
 	 *            Child to be replaced
@@ -38,9 +39,10 @@ public interface Layout extends Paintable {
 	 * </p>
 	 * 
 	 * @param component
-	 *            Child component that requests the service.
+	 *            Child component for which service is requested.
 	 * @param uidl
 	 *            UIDL of the child component.
 	 */
 	void updateCaption(Widget component, UIDL uidl);
+	
 }
