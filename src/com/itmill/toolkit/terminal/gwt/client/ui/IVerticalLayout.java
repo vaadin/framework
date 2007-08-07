@@ -3,6 +3,7 @@ package com.itmill.toolkit.terminal.gwt.client.ui;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Vector;
 
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -34,7 +35,7 @@ public class IVerticalLayout extends VerticalPanel implements Paintable, Layout 
 			uidlWidgets.add(child);
 		}
 		
-		ArrayList oldWidgets = getPaintables();
+		Vector oldWidgets = getPaintables();
 		
 		Iterator oldIt = oldWidgets.iterator();
 		Iterator newIt = uidlWidgets.iterator();
@@ -47,16 +48,11 @@ public class IVerticalLayout extends VerticalPanel implements Paintable, Layout 
 				// and delete others
 				while(oldIt.hasNext()) {
 					oldChild = (Widget) oldIt.next();
-					// if faced a caption, bypass it
-					if (oldChild instanceof Caption) {
-						oldChild = (Widget) oldIt.next();
-					}
 					// now oldChild is an instance of Paintable
 					if(uidlWidgets.contains(oldChild))
 						break;
 					else {
-						client.unregisterPaintable((Paintable) oldChild);
-						remove(oldChild);
+						removePaintable((Paintable) oldChild);
 						oldChild = null;
 					}
 				}
@@ -68,28 +64,26 @@ public class IVerticalLayout extends VerticalPanel implements Paintable, Layout 
 			}
 			if(child == oldChild) {
 				// child already attached and updated
-				if(oldIt.hasNext())
+				if(oldIt.hasNext()) {
 					oldChild = (Widget) oldIt.next();
+				}
 				continue;
 			}
 			if(hasChildComponent(child)) {
-				// some components have been moved or removed
-				// detach them temporarely
-				while(oldChild != child) {
-					remove(oldChild);
-					oldChild = (Widget) oldIt.next();
-				}
-			} else {
-				this.insert(child, this.getWidgetIndex(oldChild));
+				// current child has been moved
+				this.insert(child, getWidgetIndex(oldChild));
 			}
 		}
-		// remove possibly remaining old children which were not updated ~ removed
-		while(oldIt.hasNext())
-			remove((Widget) oldIt.next());
+		// remove possibly remaining old Paintable object which were not updated 
+		while(oldIt.hasNext()) {
+			Paintable p = (Paintable) oldIt.next();
+			if(!uidlWidgets.contains(p))
+				removePaintable(p);
+		}
 	}
 	
-	private ArrayList getPaintables() {
-		ArrayList al = new ArrayList();
+	private Vector getPaintables() {
+		Vector al = new Vector();
 		Iterator it = iterator();
 		while (it.hasNext()) {
 			Widget w = (Widget) it.next();
@@ -99,16 +93,17 @@ public class IVerticalLayout extends VerticalPanel implements Paintable, Layout 
 		return al;
 	}
 	
-	public boolean remove(Widget w) {
-		if (w instanceof Paintable) {
-			Caption c = (Caption) componentToCaption.get(w);
-			if(c != null) {
-				componentToCaption.remove(c);
-				remove(c);
-			}
-			client.unregisterPaintable((Paintable) w);
+	/**
+	 * Removes Paintable from DOM and its reference from ApplicationConnection
+	 */
+	public boolean removePaintable(Paintable p) {
+		Caption c = (Caption) componentToCaption.get(p);
+		if(c != null) {
+			componentToCaption.remove(c);
+			remove(c);
 		}
-		return super.remove(w);
+		client.unregisterPaintable(p);
+		return remove((Widget) p);
 	}
 
 	/* (non-Javadoc)
