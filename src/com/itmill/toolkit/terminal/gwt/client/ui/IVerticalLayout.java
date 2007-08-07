@@ -31,7 +31,6 @@ public class IVerticalLayout extends VerticalPanel implements Paintable, Layout 
 		for (Iterator it = uidl.getChildIterator(); it.hasNext();) {
 			UIDL uidlForChild = (UIDL) it.next();
 			Widget child = client.getWidget(uidlForChild);
-			((Paintable)child).updateFromUIDL(uidlForChild, client);
 			uidlWidgets.add(child);
 		}
 		
@@ -39,10 +38,12 @@ public class IVerticalLayout extends VerticalPanel implements Paintable, Layout 
 		
 		Iterator oldIt = oldWidgets.iterator();
 		Iterator newIt = uidlWidgets.iterator();
+		Iterator newUidl = uidl.getChildIterator();
 		
 		Widget oldChild = null;
 		while(newIt.hasNext()) {
 			Widget child = (Widget) newIt.next();
+			UIDL childUidl = (UIDL) newUidl.next();
 			if(oldChild == null && oldIt.hasNext()) {
 				// search for next old Paintable which still exists in layout
 				// and delete others
@@ -60,17 +61,19 @@ public class IVerticalLayout extends VerticalPanel implements Paintable, Layout 
 			if(oldChild == null) {
 				// we are adding components to layout
 				add(child);
-				continue;
-			}
-			if(child == oldChild) {
+			} else if(child == oldChild) {
 				// child already attached and updated
 				oldChild = null;
-				continue;
+			} else if(hasChildComponent(child)) {
+				// current child has been moved, re-insert before current oldChild
+				removeCaption(child);
+				int index = getWidgetIndex(oldChild);
+				if(componentToCaption.containsKey(oldChild))
+					index--;
+				this.insert(child, index);
 			}
-			if(hasChildComponent(child)) {
-				// current child has been moved
-				this.insert(child, getWidgetIndex(oldChild));
-			}
+			((Paintable)child).updateFromUIDL(childUidl, client);
+
 		}
 		// remove possibly remaining old Paintable object which were not updated 
 		while(oldIt.hasNext()) {
@@ -146,6 +149,12 @@ public class IVerticalLayout extends VerticalPanel implements Paintable, Layout 
 		}
 	}
 	
+	public void removeCaption(Widget w) {
+		Caption c = (Caption) componentToCaption.get(w);
+		if(c != null) {
+			this.remove(c);
+			componentToCaption.remove(w);
+		}
+	}
 	
-
 }
