@@ -64,9 +64,7 @@ public class IVerticalLayout extends VerticalPanel implements Paintable, Layout 
 			}
 			if(child == oldChild) {
 				// child already attached and updated
-				if(oldIt.hasNext()) {
-					oldChild = (Widget) oldIt.next();
-				}
+				oldChild = null;
 				continue;
 			}
 			if(hasChildComponent(child)) {
@@ -76,7 +74,8 @@ public class IVerticalLayout extends VerticalPanel implements Paintable, Layout 
 		}
 		// remove possibly remaining old Paintable object which were not updated 
 		while(oldIt.hasNext()) {
-			Paintable p = (Paintable) oldIt.next();
+			oldChild = (Widget) oldIt.next();
+			Paintable p = (Paintable) oldChild;
 			if(!uidlWidgets.contains(p))
 				removePaintable(p);
 		}
