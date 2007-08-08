@@ -30,4 +30,13 @@ public class Caption extends HTML {
 		return false;
 	}
 	
+	/**
+	 * Returns Widget (most likely Paintable) for which this Caption
+	 * belongs to.
+	 * 
+	 * @return owner Widget
+	 */
+	public Widget getOwner() {
+		return owner;
+	}
 }

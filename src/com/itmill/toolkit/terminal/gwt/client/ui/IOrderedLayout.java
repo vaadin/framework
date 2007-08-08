@@ -17,6 +17,14 @@ import com.itmill.toolkit.terminal.gwt.client.Layout;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
+/**
+ * @author mattitahvonen
+ *
+ */
+/**
+ * @author mattitahvonen
+ *
+ */
 public class IOrderedLayout extends ComplexPanel implements Paintable, Layout {
 	
 	public static final String CLASSNAME = "i-orderedlayout";
@@ -29,6 +37,11 @@ public class IOrderedLayout extends ComplexPanel implements Paintable, Layout {
 	private HashMap componentToCaption = new HashMap();
 
 	private ApplicationConnection client;
+
+	/**
+	 * Contains reference to Element where Paintables are wrapped. For  horizontal
+	 * layout this is TR and for vertical DIV.
+	 */
 	private Element childContainer;
 	
 	public IOrderedLayout() {
@@ -41,6 +54,7 @@ public class IOrderedLayout extends ComplexPanel implements Paintable, Layout {
 		orientationMode = orientation;
 		constructDOM();
 	}
+	
 	private void constructDOM() {
 		switch (orientationMode) {
 		case ORIENTATION_HORIZONTAL:
@@ -74,7 +88,7 @@ public class IOrderedLayout extends ComplexPanel implements Paintable, Layout {
 			uidlWidgets.add(child);
 		}
 		
-		Vector oldWidgets = getPaintables();
+		ArrayList oldWidgets = getPaintables();
 		
 		Iterator oldIt = oldWidgets.iterator();
 		Iterator newIt = uidlWidgets.iterator();
@@ -106,6 +120,8 @@ public class IOrderedLayout extends ComplexPanel implements Paintable, Layout {
 				oldChild = null;
 			} else if(hasChildComponent(child)) {
 				// current child has been moved, re-insert before current oldChild
+				// TODO this might be optimized by movin only container element
+				// to correct position
 				removeCaption(child);
 				int index = getWidgetIndex(oldChild);
 				if(componentToCaption.containsKey(oldChild))
@@ -114,7 +130,6 @@ public class IOrderedLayout extends ComplexPanel implements Paintable, Layout {
 				this.insert(child, index);
 			}
 			((Paintable)child).updateFromUIDL(childUidl, client);
-
 		}
 		// remove possibly remaining old Paintable object which were not updated 
 		while(oldIt.hasNext()) {
@@ -125,8 +140,13 @@ public class IOrderedLayout extends ComplexPanel implements Paintable, Layout {
 		}
 	}
 	
-	private Vector getPaintables() {
-		Vector al = new Vector();
+	/**
+	 * Retuns a list of Paintables currently rendered in layout
+	 * 
+	 * @return list of Paintable objects
+	 */
+	private ArrayList getPaintables() {
+		ArrayList al = new ArrayList();
 		Iterator it = iterator();
 		while (it.hasNext()) {
 			Widget w = (Widget) it.next();
@@ -137,7 +157,11 @@ public class IOrderedLayout extends ComplexPanel implements Paintable, Layout {
 	}
 	
 	/**
-	 * Removes Paintable from DOM and its reference from ApplicationConnection
+	 * Removes Paintable from DOM and its reference from ApplicationConnection.
+	 * 
+	 * Also removes Paintable's Caption if one exists
+	 * 
+	 * @param p Paintable to be removed
 	 */
 	public boolean removePaintable(Paintable p) {
 		Caption c = (Caption) componentToCaption.get(p);
@@ -167,26 +191,18 @@ public class IOrderedLayout extends ComplexPanel implements Paintable, Layout {
 	}
 
 	private void insert(Widget w, int beforeIndex) {
-		Element container;
 		if (w instanceof Caption) {
+			Caption c = (Caption) w;
 			// captions go into same container element as their
 			// owners
-			container = DOM.getParent(getWidget(beforeIndex).getElement());
+			Element container = DOM.getParent(c.getOwner().getElement());
 			DOM.insertChild(container, w.getElement(), 0);
 			insert(w, null, beforeIndex);
 		} else {
-			container = createWidgetWrappper();
-			DOM.insertChild(getChildContainer(), container, beforeIndex);
+			Element container = createWidgetWrappper();
+			DOM.insertChild(childContainer, container, beforeIndex);
 			insert(w, container, beforeIndex);
 		}
-	}
-	
-	/**
-	 * @return Element 
-	 * 				where widgets (and their wrappers) are contained 
-	 */
-	private Element getChildContainer() {
-		return childContainer;
 	}
 	
 	/**
@@ -201,6 +217,7 @@ public class IOrderedLayout extends ComplexPanel implements Paintable, Layout {
 		}
 	}
 
+	
 	public boolean hasChildComponent(Widget component) {
 		return getWidgetIndex(component) >= 0;
 	}
@@ -235,7 +252,7 @@ public class IOrderedLayout extends ComplexPanel implements Paintable, Layout {
 
 	public void add(Widget w) {
 		Element wrapper = createWidgetWrappper();
-		DOM.appendChild(getChildContainer(), wrapper);
+		DOM.appendChild(childContainer, wrapper);
 		super.add(w,wrapper);
 	}
 
@@ -248,7 +265,7 @@ public class IOrderedLayout extends ComplexPanel implements Paintable, Layout {
 		boolean removed = super.remove(w);
 		if(removed) {
 			if (! (w instanceof Caption)) {
-				DOM.removeChild(getChildContainer(), wrapper);
+				DOM.removeChild(childContainer, wrapper);
 			}
 			return true;
 		}
