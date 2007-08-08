@@ -7,7 +7,10 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class Caption extends HTML {
 	
-	public Caption()  {
+	private Widget owner;
+
+	public Caption(Widget component)  {
+		owner = component;
 		setStyleName("i-caption");
 	}
 	

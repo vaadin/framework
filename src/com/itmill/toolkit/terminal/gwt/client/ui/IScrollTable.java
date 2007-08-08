@@ -36,7 +36,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 	 * fraction of pageLenght which can be scrolled without 
 	 * making new request 
 	 */
-	private static final double CACHE_REACT_RATE = 1;
+	private static final double CACHE_REACT_RATE = 1.5;
 	
 	public static final char ALIGN_CENTER = 'c';
 	public static final char ALIGN_LEFT = 'b';
@@ -1205,7 +1205,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 	}
 	
 	/**
-	 * This Panel can only contain IScrollTAbleRow type of 
+	 * This Panel can only contain IScrollTableRow type of 
 	 * widgets. This "simulates" very large table, keeping 
 	 * spacers which take room of unrendered rows.
 	 * 

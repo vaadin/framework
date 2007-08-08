@@ -5,6 +5,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.ui.ComplexPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
@@ -13,11 +17,47 @@ import com.itmill.toolkit.terminal.gwt.client.Layout;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
-public class IVerticalLayout extends VerticalPanel implements Paintable, Layout {
+public class IOrderedLayout extends ComplexPanel implements Paintable, Layout {
+	
+	public static final String CLASSNAME = "i-orderedlayout";
+
+	public static final int ORIENTATION_VERTICAL = 0;
+	public static final int ORIENTATION_HORIZONTAL = 1;
+	
+	int orientationMode = ORIENTATION_VERTICAL;
 
 	private HashMap componentToCaption = new HashMap();
 
 	private ApplicationConnection client;
+	private Element childContainer;
+	
+	public IOrderedLayout() {
+		orientationMode = ORIENTATION_VERTICAL;
+		constructDOM();
+		setStyleName(CLASSNAME);
+	}
+
+	public IOrderedLayout(int orientation) {
+		orientationMode = orientation;
+		constructDOM();
+	}
+	private void constructDOM() {
+		switch (orientationMode) {
+		case ORIENTATION_HORIZONTAL:
+			Element table = DOM.createTable();
+			Element tBody = DOM.createTBody();
+			childContainer = DOM.createTR();
+			DOM.appendChild(table, tBody);
+			DOM.appendChild(tBody, childContainer);
+			setElement(table);
+			break;
+		default:
+			childContainer = DOM.createDiv();
+			setElement(childContainer);
+			break;
+		}
+	}
+
 	
 	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 		
@@ -70,6 +110,7 @@ public class IVerticalLayout extends VerticalPanel implements Paintable, Layout 
 				int index = getWidgetIndex(oldChild);
 				if(componentToCaption.containsKey(oldChild))
 					index--;
+				remove(child);
 				this.insert(child, index);
 			}
 			((Paintable)child).updateFromUIDL(childUidl, client);
@@ -125,6 +166,41 @@ public class IVerticalLayout extends VerticalPanel implements Paintable, Layout 
 		}
 	}
 
+	private void insert(Widget w, int beforeIndex) {
+		Element container;
+		if (w instanceof Caption) {
+			// captions go into same container element as their
+			// owners
+			container = DOM.getParent(getWidget(beforeIndex).getElement());
+			DOM.insertChild(container, w.getElement(), 0);
+			insert(w, null, beforeIndex);
+		} else {
+			container = createWidgetWrappper();
+			DOM.insertChild(getChildContainer(), container, beforeIndex);
+			insert(w, container, beforeIndex);
+		}
+	}
+	
+	/**
+	 * @return Element 
+	 * 				where widgets (and their wrappers) are contained 
+	 */
+	private Element getChildContainer() {
+		return childContainer;
+	}
+	
+	/**
+	 * creates an Element which will contain child widget
+	 */
+	private Element createWidgetWrappper() {
+		switch (orientationMode) {
+		case ORIENTATION_HORIZONTAL:
+			return DOM.createTD();
+		default:
+			return DOM.createDiv();
+		}
+	}
+
 	public boolean hasChildComponent(Widget component) {
 		return getWidgetIndex(component) >= 0;
 	}
@@ -136,7 +212,7 @@ public class IVerticalLayout extends VerticalPanel implements Paintable, Layout 
 		if (Caption.isNeeded(uidl)) {
 			if (c == null) {
 				int index = getWidgetIndex(component);
-				c = new Caption();
+				c = new Caption(component);
 				insert(c, index);
 				componentToCaption.put(component, c);
 			}
@@ -156,5 +232,39 @@ public class IVerticalLayout extends VerticalPanel implements Paintable, Layout 
 			componentToCaption.remove(w);
 		}
 	}
+
+	public void add(Widget w) {
+		Element wrapper = createWidgetWrappper();
+		DOM.appendChild(getChildContainer(), wrapper);
+		super.add(w,wrapper);
+	}
+
+	public boolean remove(int index) {
+	    return remove(getWidget(index));
+	}
 	
+	public boolean remove(Widget w) {
+		Element wrapper = DOM.getParent(w.getElement());
+		boolean removed = super.remove(w);
+		if(removed) {
+			if (! (w instanceof Caption)) {
+				DOM.removeChild(getChildContainer(), wrapper);
+			}
+			return true;
+		}
+		return false;
+	}
+
+	public Widget getWidget(int index) {
+		return getChildren().get(index);
+	}
+
+	public int getWidgetCount() {
+		return getChildren().size();
+	}
+
+	public int getWidgetIndex(Widget child) {
+		return getChildren().indexOf(child);
+	}
+
 }

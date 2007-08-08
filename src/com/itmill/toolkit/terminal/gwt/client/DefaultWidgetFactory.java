@@ -9,7 +9,6 @@ import com.itmill.toolkit.terminal.gwt.client.ui.IComponent;
 import com.itmill.toolkit.terminal.gwt.client.ui.ICustomLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.IEmbedded;
 import com.itmill.toolkit.terminal.gwt.client.ui.IGridLayout;
-import com.itmill.toolkit.terminal.gwt.client.ui.IHorizontalLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.ILabel;
 import com.itmill.toolkit.terminal.gwt.client.ui.ILink;
 import com.itmill.toolkit.terminal.gwt.client.ui.IOptionGroup;
@@ -27,7 +26,7 @@ import com.itmill.toolkit.terminal.gwt.client.ui.ITextualDate;
 import com.itmill.toolkit.terminal.gwt.client.ui.ITree;
 import com.itmill.toolkit.terminal.gwt.client.ui.ITwinColSelect;
 import com.itmill.toolkit.terminal.gwt.client.ui.IUnknownComponent;
-import com.itmill.toolkit.terminal.gwt.client.ui.IVerticalLayout;
+import com.itmill.toolkit.terminal.gwt.client.ui.IOrderedLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.IWindow;
 
 public class DefaultWidgetFactory implements WidgetFactory {
@@ -45,9 +44,9 @@ public class DefaultWidgetFactory implements WidgetFactory {
 			return new IWindow();
 		else if ("orderedlayout".equals(tag)) {
 			if ("horizontal".equals(uidl.getStringAttribute("orientation")))
-				return new IHorizontalLayout();
+				return new IOrderedLayout(IOrderedLayout.ORIENTATION_HORIZONTAL);
 			else
-				return new IVerticalLayout();
+				return new IOrderedLayout();
 		}
 		else if ("label".equals(tag))
 			return new ILabel();
