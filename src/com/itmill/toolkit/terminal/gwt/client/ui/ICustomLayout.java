@@ -137,11 +137,11 @@ public class ICustomLayout extends ComplexPanel implements Paintable, Layout {
 
 		// Remap image srcs in layout
 		Widget parent = getParent();
-		while (parent != null && !(parent instanceof IWindow))
+		while (parent != null && !(parent instanceof IView))
 			parent = parent.getParent();
-		if (parent != null && ((IWindow) parent).getTheme() != null)
+		if (parent != null && ((IView) parent).getTheme() != null)
 			;
-		prefixImgSrcs(getElement(), "../theme/" + ((IWindow) parent).getTheme()
+		prefixImgSrcs(getElement(), "../theme/" + ((IView) parent).getTheme()
 				+ "/layout/");
 	}
 
