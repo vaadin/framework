@@ -7,9 +7,9 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class Caption extends HTML {
 	
-	private Widget owner;
+	private Paintable owner;
 
-	public Caption(Widget component)  {
+	public Caption(Paintable component)  {
 		owner = component;
 		setStyleName("i-caption");
 	}
@@ -31,12 +31,12 @@ public class Caption extends HTML {
 	}
 	
 	/**
-	 * Returns Widget (most likely Paintable) for which this Caption
+	 * Returns Paintable for which this Caption
 	 * belongs to.
 	 * 
 	 * @return owner Widget
 	 */
-	public Widget getOwner() {
+	public Paintable getOwner() {
 		return owner;
 	}
 }

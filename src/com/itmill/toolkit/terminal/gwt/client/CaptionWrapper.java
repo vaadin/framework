@@ -1,38 +1,30 @@
 package com.itmill.toolkit.terminal.gwt.client;
 
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class CaptionWrapper extends VerticalPanel {
+public class CaptionWrapper extends FlowPanel {
 
-	Label caption;
-	Widget widget; 
+	Label caption = new Label();
+	Paintable widget; 
 	
-	public CaptionWrapper(Widget toBeWrapped) {
+	public CaptionWrapper(Paintable toBeWrapped) {
+		add(caption);
 		widget = toBeWrapped;
-		add(widget);
+		add((Widget) widget);
 	}
 	
 	public void updateCaption(UIDL uidl) {
 		String c = uidl.getStringAttribute("caption");
 		// TODO Description and error messages
-		if (c == null) {
-			if (caption == null) return;
-			remove(caption);
-			caption = null;
-		} else {
-			if (caption == null) {
-				caption = new Label(c);
-				insert(caption, 0);
-			}
-			else 
-				caption.setText(c);
-		}		
+		if (c != null) {
+			caption.setText(c);
+		}
 		setVisible(!uidl.getBooleanAttribute("invisible"));
 	}
 	
-	public Widget getWidget() {
+	public Paintable getPaintable() {
 		return widget;
 	}
 }

@@ -7,6 +7,7 @@ import java.util.Iterator;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.ComplexPanel;
+import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Caption;
@@ -15,8 +16,7 @@ import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
 /**
- * @author mattitahvonen
- *
+ * @author IT Mill Ltd
  */
 public class IOrderedLayout extends ComplexPanel implements Paintable, Layout {
 	
@@ -188,7 +188,7 @@ public class IOrderedLayout extends ComplexPanel implements Paintable, Layout {
 			Caption c = (Caption) w;
 			// captions go into same container element as their
 			// owners
-			Element container = DOM.getParent(c.getOwner().getElement());
+			Element container = DOM.getParent(((UIObject) c.getOwner()).getElement());
 			DOM.insertChild(container, w.getElement(), 0);
 			insert(w, null, beforeIndex);
 		} else {
@@ -215,13 +215,13 @@ public class IOrderedLayout extends ComplexPanel implements Paintable, Layout {
 		return getWidgetIndex(component) >= 0;
 	}
 
-	public void updateCaption(Widget component, UIDL uidl) {
+	public void updateCaption(Paintable component, UIDL uidl) {
 		
 		Caption c  = (Caption) componentToCaption.get(component);
 		
 		if (Caption.isNeeded(uidl)) {
 			if (c == null) {
-				int index = getWidgetIndex(component);
+				int index = getWidgetIndex((Widget) component);
 				c = new Caption(component);
 				insert(c, index);
 				componentToCaption.put(component, c);

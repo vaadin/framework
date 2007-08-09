@@ -335,7 +335,7 @@ public class ApplicationConnection implements EntryPoint, FocusListener {
 		if (manageCaption) {
 			Layout parent = getParentLayout(component);
 			if (parent != null)
-				parent.updateCaption(component, uidl);
+				parent.updateCaption((Paintable) component, uidl);
 		}
 
 		// Visibility, Disabling and read-only status

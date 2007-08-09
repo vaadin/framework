@@ -266,12 +266,12 @@ public class ICustomLayout extends ComplexPanel implements Paintable, Layout {
 	}
 
 	/** Update caption for given widget */
-	public void updateCaption(Widget component, UIDL uidl) {
+	public void updateCaption(Paintable component, UIDL uidl) {
 		CaptionWrapper wrapper = (CaptionWrapper) widgetToCaptionWrapper.get(component);
 		if (Caption.isNeeded(uidl)) {
 			if (wrapper == null) {
-				String loc = getLocation(component);
-				super.remove(component);
+				String loc = getLocation((Widget) component);
+				super.remove((Widget) component);
 				wrapper = new CaptionWrapper(component);
 				super.add(wrapper, (Element) locationToElement.get(loc));
 				widgetToCaptionWrapper.put(component, wrapper);
@@ -279,9 +279,9 @@ public class ICustomLayout extends ComplexPanel implements Paintable, Layout {
 			wrapper.updateCaption(uidl);
 		} else {
 			if (wrapper != null) { 
-				String loc = getLocation(component);
+				String loc = getLocation((Widget) component);
 				super.remove(wrapper);
-				super.add(wrapper.getWidget(), (Element) locationToElement.get(loc));
+				super.add((Widget) wrapper.getPaintable(), (Element) locationToElement.get(loc));
 				widgetToCaptionWrapper.remove(component);
 			}
 		}

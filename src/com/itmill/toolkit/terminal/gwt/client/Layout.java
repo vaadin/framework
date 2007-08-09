@@ -43,6 +43,6 @@ public interface Layout extends Paintable {
 	 * @param uidl
 	 *            UIDL of the child component.
 	 */
-	void updateCaption(Widget component, UIDL uidl);
+	void updateCaption(Paintable component, UIDL uidl);
 	
 }
