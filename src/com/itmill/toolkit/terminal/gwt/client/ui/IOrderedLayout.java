@@ -38,14 +38,13 @@ public class IOrderedLayout extends ComplexPanel implements Paintable, Layout {
 	private Element childContainer;
 	
 	public IOrderedLayout() {
-		orientationMode = ORIENTATION_VERTICAL;
-		constructDOM();
-		setStyleName(CLASSNAME);
+		this(ORIENTATION_VERTICAL);
 	}
 
 	public IOrderedLayout(int orientation) {
 		orientationMode = orientation;
 		constructDOM();
+		setStyleName(CLASSNAME);
 	}
 	
 	private void constructDOM() {
