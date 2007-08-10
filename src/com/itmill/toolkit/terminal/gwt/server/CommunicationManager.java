@@ -763,13 +763,20 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 		String logoutUrl = application.getLogoutURL();
 		if (logoutUrl == null)
 			logoutUrl = application.getURL().toString();
-		// clients JS app is still running, send a special xml file to
-		// tell client that application is quit and where to point browser now
+		// clients JS app is still running, send a special json file to
+		// tell client that application has quit and where to point browser now
 		// Set the response type
-		response.setContentType("application/xml; charset=UTF-8");
+		response.setContentType("application/json; charset=UTF-8");
 		ServletOutputStream out = response.getOutputStream();
-		out.println("<redirect url=\"" + logoutUrl + "\">");
-		out.println("</redirect>");
+		PrintWriter outWriter = new PrintWriter(new BufferedWriter(
+				new OutputStreamWriter(out, "UTF-8")));
+		outWriter.print(")/*{");
+		outWriter.print("\"redirect\":{");
+		outWriter.write("\"url\":\"" + logoutUrl
+				+ "\"}");
+		outWriter.flush();
+		outWriter.close();
+		out.flush();
 	}
 
 	/**
