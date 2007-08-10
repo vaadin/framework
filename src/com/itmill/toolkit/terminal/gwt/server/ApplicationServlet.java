@@ -449,7 +449,7 @@ public class ApplicationServlet extends HttpServlet {
 		page.write("'\n};\n" +
 				"</script>\n" +
 				"<link REL=\"stylesheet\" TYPE=\"text/css\" HREF=\""+request.getContextPath() + THEME_DIRECTORY_PATH+themeName+"/style.css\">" + 
-				"</head>\n<body>\n<script language=\"javascript\" src=\"/tk/com.itmill.toolkit.terminal.gwt.Client/gwt.js\"></script>\n" +
+				"</head>\n<body>\n<script language=\"javascript\" src=\"../com.itmill.toolkit.terminal.gwt.Client/gwt.js\"></script>\n" +
 				"	<iframe id=\"__gwt_historyFrame\" style=\"width:0;height:0;border:0\"></iframe>\n" +
 				"	<div id=\"itmtk-ajax-window\"></div>" +
 				"	<div id=\"itmtk-loki\" style=\"width: 100%; position: absolute; left: 0px; bottom: 0; height: 0px; border-top: 1px solid gray; background-color: #f6f6f6; overflow: scroll; font-size: x-small;color:red !important;\"" +
@@ -743,6 +743,7 @@ public class ApplicationServlet extends HttpServlet {
 				
 				// Application has stopped, so remove it before creating a new application
 				WebApplicationContext.getApplicationContext(session).removeApplication(a);
+				break;
 			}
 		}
 		
@@ -943,7 +944,7 @@ public class ApplicationServlet extends HttpServlet {
 	 *            the HTTP Request.
 	 * @param application
 	 *            the Application to query for window.
-	 * @return Window mathing the given URI or null if not found.
+	 * @return Window matching the given URI or null if not found.
 	 * @throws ServletException
 	 *             if an exception has occurred that interferes with the
 	 *             servlet's normal operation.
