@@ -55,6 +55,7 @@ public class ApplicationConnection implements EntryPoint, FocusListener {
 
 		appUri = getAppUri();
 
+		// TODO Hardcoded (finnish) id -> change 
 		console = new Console(RootPanel.get("itmtk-loki"));
 
 		makeUidlRequest("repaintAll=1");
@@ -72,6 +73,7 @@ public class ApplicationConnection implements EntryPoint, FocusListener {
 		try {
 			rb.sendRequest(requestData, new RequestCallback() {
 				public void onError(Request request, Throwable exception) {
+					// TODO Better reporting to user
 					console.error("Got error");
 				}
 
@@ -83,6 +85,7 @@ public class ApplicationConnection implements EntryPoint, FocusListener {
 			});
 
 		} catch (RequestException e) {
+			// TODO Better reporting to user
 			console.error(e.getMessage());
 		}
 	}
@@ -90,6 +93,7 @@ public class ApplicationConnection implements EntryPoint, FocusListener {
 	private void handleReceivedJSONMessage(Response response) {
 		Date start = new Date();
 		String jsonText = response.getText().substring(3) + "}";
+		// TODO This should be a console message, right?
 		System.out.println(jsonText);
 		JSONValue json;
 		try {
@@ -99,6 +103,18 @@ public class ApplicationConnection implements EntryPoint, FocusListener {
 			console.log(jsonText);
 			return;
 		}
+		// Handle redirect
+		JSONObject redirect = (JSONObject) ((JSONObject) json)
+				.get("redirect");
+		if (redirect != null) {
+			JSONString url = (JSONString)redirect.get("url");
+			if (url!=null) {
+				console.log("redirecting to " + url.stringValue());
+				redirect(url.stringValue());
+				return;
+			}
+		}
+		
 		// Store resources
 		JSONObject resources = (JSONObject) ((JSONObject) json)
 				.get("resources");
@@ -155,6 +171,12 @@ public class ApplicationConnection implements EntryPoint, FocusListener {
 				+ "ms for " + jsonText.length() + " characters of JSON");
 
 	}
+	
+	// Redirect browser 
+	private static native void redirect(String url)/*-{
+		$wnd.location = url;
+	}-*/;
+
 
 	public void registerPaintable(String id, Paintable paintable) {
 		idToPaintable.put(id, paintable);
@@ -318,7 +340,7 @@ public class ApplicationConnection implements EntryPoint, FocusListener {
 	public boolean updateComponent(Widget component, UIDL uidl,
 			boolean manageCaption) {
 
-		// Switch to correct implementation if neede
+		// Switch to correct implementation if needed
 		if (!widgetFactory.isCorrectImplementation(component, uidl)) {
 			Layout parent = getParentLayout(component);
 			if (parent != null) {
