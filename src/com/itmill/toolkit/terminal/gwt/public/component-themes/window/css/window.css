@@ -8,7 +8,12 @@
 
 .i-window-footer {
 	background: #0f0;
-	height:10px;
+	height:0px;
+}
+
+.i-window-contents {
+	background: #fff;
+	overflow:auto;
 }
 
 .i-window-resizeBox {
@@ -16,7 +21,7 @@
 	bottom:0;
 	right:0;
 	background: black;
-	width: 10px;
-	height: 10px;
+	width: 5px;
+	height: 5px;
 	float:right;
 }
