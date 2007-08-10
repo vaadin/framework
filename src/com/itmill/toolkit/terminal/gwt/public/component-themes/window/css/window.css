@@ -1,0 +1,22 @@
+.i-window {
+	border: 1px solid #999;
+}
+.i-window-header {
+	background: yellow;
+	height:20px;
+}
+
+.i-window-footer {
+	background: #0f0;
+	height:10px;
+}
+
+.i-window-resizeBox {
+	position:absolute;
+	bottom:0;
+	right:0;
+	background: black;
+	width: 10px;
+	height: 10px;
+	float:right;
+}

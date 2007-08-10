@@ -28,6 +28,7 @@ import com.itmill.toolkit.terminal.gwt.client.ui.ITwinColSelect;
 import com.itmill.toolkit.terminal.gwt.client.ui.IUnknownComponent;
 import com.itmill.toolkit.terminal.gwt.client.ui.IOrderedLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.IView;
+import com.itmill.toolkit.terminal.gwt.client.ui.IWindow;
 
 public class DefaultWidgetFactory implements WidgetFactory {
 
@@ -41,7 +42,7 @@ public class DefaultWidgetFactory implements WidgetFactory {
 			return new IButton();
 		}
 		else if ("window".equals(tag))
-			return new IView();
+			return new IWindow();
 		else if ("orderedlayout".equals(tag)) {
 			if ("horizontal".equals(uidl.getStringAttribute("orientation")))
 				return new IOrderedLayout(IOrderedLayout.ORIENTATION_HORIZONTAL);

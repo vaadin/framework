@@ -22,6 +22,7 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ui.IContextMenu;
+import com.itmill.toolkit.terminal.gwt.client.ui.IView;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -153,14 +154,19 @@ public class ApplicationConnection implements EntryPoint, FocusListener {
 								+ uidl.getTag()
 								+ ", but there is no such paintable ("
 								+ uidl.getId() + ") registered yet.");
-					Widget window = widgetFactory.createWidget(uidl);
-					registerPaintable(uidl.getId(), (Paintable) window);
-					((Paintable) window).updateFromUIDL(uidl, this);
-
-					// TODO We should also handle other windows
-					RootPanel.get("itmtk-ajax-window").add(window);
+					if(uidl.getId().equals("PID0")) {
+						// view
+						IView view = new IView();
+						view.updateFromUIDL(uidl, this);
+						// TODO remove hardcoded id name
+						RootPanel.get("itmtk-ajax-window").add(view);
+					} else {
+						Widget window = widgetFactory.createWidget(uidl);
+						registerPaintable(uidl.getId(), (Paintable) window);
+						RootPanel.get().add(window);
+						((Paintable) window).updateFromUIDL(uidl, this);
+					}
 				}
-
 			} catch (Throwable e) {
 				e.printStackTrace();
 			}
