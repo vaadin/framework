@@ -29,6 +29,7 @@
 package com.itmill.toolkit.ui;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -425,9 +426,10 @@ public class Tree extends Select implements Container.Hierarchical,
 					expandedKeys.add(key);
 				}
 
+				
 				// Actions
 				if (actionHandlers != null) {
-					target.startTag("al");
+					ArrayList keys = new ArrayList();
 					for (Iterator ahi = actionHandlers.iterator(); ahi
 							.hasNext();) {
 						Action[] aa = ((Action.Handler) ahi.next()).getActions(
@@ -436,10 +438,10 @@ public class Tree extends Select implements Container.Hierarchical,
 							for (int ai = 0; ai < aa.length; ai++) {
 								String akey = actionMapper.key(aa[ai]);
 								actionSet.add(aa[ai]);
-								target.addSection("ak", akey);
+								keys.add(akey);
 							}
 					}
-					target.endTag("al");
+					target.addAttribute("al", keys.toArray());
 				}
 
 				// Adds the children if expanded, or close the tag
@@ -455,10 +457,11 @@ public class Tree extends Select implements Container.Hierarchical,
 			}
 		}
 
+
 		// Actions
 		if (!actionSet.isEmpty()) {
-			target.startTag("actions");
 			target.addVariable(this, "action", "");
+			target.startTag("actions");
 			for (Iterator i = actionSet.iterator(); i.hasNext();) {
 				Action a = (Action) i.next();
 				target.startTag("action");
