@@ -230,6 +230,7 @@ public class ITree extends Tree implements Paintable {
 				int top = DOM.eventGetClientY(event);
 				client.getContextMenu().showAt(this, left, top);
 			}
+			DOM.eventCancelBubble(event, true);
 		}
 		
 		private native void attachContextMenuEvent(Element el) /*-{
