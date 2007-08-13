@@ -199,7 +199,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 	private boolean ajaxInitSent = false;
 	
 	/**
-	 * This function should anly be called in AjaxApplicationManager to
+	 * This function should only be called in AjaxApplicationManager to
 	 * tell ajax engine (browser) that this is application restart. Returns 
 	 * true on first call, false on subsequent calls.
 	 * 
@@ -706,7 +706,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 		private Object prevUser;
 
 		/**
-		 * Contructor for user change event.
+		 * Constructor for user change event.
 		 * 
 		 * @param source
 		 *            the application source.
@@ -966,7 +966,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 	 * <code>null</code>, the application is closed normally as defined by
 	 * the application running environment.
 	 * <p>
-	 * Desctop application just closes the application window and
+	 * Desktop application just closes the application window and
 	 * web-application redirects the browser to application main URL.
 	 * </p>
 	 * 
@@ -979,7 +979,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 	/**
 	 * Sets the URL user is redirected to on application close. If the URL is
 	 * <code>null</code>, the application is closed normally as defined by
-	 * the application running environment: Desctop application just closes the
+	 * the application running environment: Desktop application just closes the
 	 * application window and web-application redirects the browser to
 	 * application main URL.
 	 * 
