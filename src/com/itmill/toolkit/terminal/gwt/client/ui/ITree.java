@@ -25,6 +25,8 @@ public class ITree extends Tree implements Paintable {
 	private boolean selectable;
 	private boolean multiselect;
 	
+	private HashMap keyToNode = new HashMap();
+	
 	/**
 	 * This map contains captions and icon urls for 
 	 * actions like:
@@ -69,6 +71,12 @@ public class ITree extends Tree implements Paintable {
 			return;
 		
 		this.client = client;
+		
+		if(uidl.hasAttribute("partialUpdate")) {
+			handleUpdate(uidl);
+			return;
+		}
+		
 		this.paintableId = uidl.getId();
 		
 		clear();
@@ -89,6 +97,17 @@ public class ITree extends Tree implements Paintable {
 		addTreeListener(new TreeListener() {
 		
 			public void onTreeItemStateChanged(TreeItem item) {
+				if (item instanceof TreeNode) {
+					TreeNode tn = (TreeNode) item;
+					if(item.getState()) {
+						if(!tn.isChildrenLoaded()) {
+							String key = tn.key;
+							ITree.this.client.updateVariable(paintableId, "expand", new String[] {key}, true);
+						}
+					} else {
+						// TODO collapse
+					}
+				}
 			}
 		
 			public void onTreeItemSelected(TreeItem item) {
@@ -109,11 +128,23 @@ public class ITree extends Tree implements Paintable {
 		
 	}
 	
+	private void handleUpdate(UIDL uidl) {
+		TreeNode rootNode = (TreeNode) keyToNode.get(uidl.getStringAttribute("rootKey"));
+		if(rootNode != null) {
+			rootNode.renderChildNodes(uidl.getChildIterator());
+		}
+		
+	}
+
 	private class TreeNode extends TreeItem implements IActionOwner {
 		
 		String key;
 		
+		boolean isLeaf = false;
+		
 		private String[] actionKeys = null;
+
+		private boolean childrenLoaded;
 		
 		public TreeNode() {
 			super();
@@ -125,17 +156,50 @@ public class ITree extends Tree implements Paintable {
 			this.setText(uidl.getStringAttribute("caption"));
 			key = uidl.getStringAttribute("key");
 			
+			keyToNode.put(key, this);
+			
 			if(uidl.hasAttribute("al"))
 				actionKeys = uidl.getStringArrayAttribute("al");
 			
-			for (Iterator i = uidl.getChildIterator(); i.hasNext();) {
+			if(uidl.getTag().equals("node")) {
+				isLeaf = false;
+				if(uidl.getChidlCount() == 0) {
+					TreeNode childTree = new TreeNode();
+					childTree.setText("Loading...");
+					childrenLoaded = false;
+					this.addItem(childTree);
+				} else {
+					renderChildNodes(uidl.getChildIterator());
+				}
+			} else {
+				isLeaf = true;
+			}
+			
+			if(uidl.getBooleanAttribute("expanded") && !getState()) {
+				setState(true);
+			}
+			
+			setSelected(uidl.getBooleanAttribute("selected"));
+			
+		}
+		
+		private void renderChildNodes(Iterator i) {
+			removeItems();
+			while (i.hasNext()) {
 				UIDL childUidl = (UIDL)i.next();
+				if("actions".equals(childUidl.getTag())) {
+					updateActionMap(childUidl);
+					continue;
+				}
 				TreeNode childTree = new TreeNode();
 				this.addItem(childTree);
 				childTree.updateFromUIDL(childUidl, client);
 			}
-			setState(uidl.getBooleanAttribute("expanded"));
-			setSelected(uidl.getBooleanAttribute("selected"));
+			childrenLoaded = true;
+		}
+		
+		public boolean isChildrenLoaded() {
+			return childrenLoaded;
 		}
 
 		public IAction[] getActions() {
@@ -177,7 +241,6 @@ public class ITree extends Tree implements Paintable {
 				return false;
 			};
 		}-*/;
-
 		
 	}
 }
