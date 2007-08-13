@@ -88,8 +88,7 @@
 .i-table-row {
 	border: 0;
 	margin: 0;
-	padding: 0;
-	height: 20px;
+	padding: 3px 0 3px 0;
 	cursor: pointer;
 }
 .i-table-row:hover,
@@ -123,6 +122,8 @@
 	float: right;
 	background: transparent url(../img/colsel.png) no-repeat;
 	margin: 4px 0 0 0;
+	height:15px;
+	width:15px;
 }
 
 .i-table-focus-slot-left {

@@ -902,12 +902,6 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 	
 	public class TableHead extends Panel implements IActionOwner {
 		
-		/**
-		 * Apply these in CSS also.
-		 */
-		private static final int COLUMN_SELECTOR_WIDTH = 10;
-		private static final int COLUMN_SELECTOR_HEIGHT = 10;
-
 		private static final int WRAPPER_WIDTH = 9000;
 		
 		Vector visibleCells = new Vector();
@@ -933,8 +927,6 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 
 			// TODO move styles to CSS
 			DOM.setAttribute(columnSelector, "className", CLASSNAME+"-column-selector");
-			DOM.setStyleAttribute(columnSelector, "width", COLUMN_SELECTOR_WIDTH +"px");
-			DOM.setStyleAttribute(columnSelector, "height", COLUMN_SELECTOR_HEIGHT + "px");
 			DOM.setStyleAttribute(columnSelector, "display", "none");
 			
 			DOM.appendChild(table, headerTableBody);
@@ -1111,7 +1103,8 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 			super.onBrowserEvent(event);
 			if(DOM.compare(DOM.eventGetTarget(event), columnSelector)) {
 				int left = DOM.getAbsoluteLeft(columnSelector);
-				int top = DOM.getAbsoluteTop(columnSelector) + COLUMN_SELECTOR_WIDTH;
+				int top = DOM.getAbsoluteTop(columnSelector) +
+					DOM.getIntAttribute(columnSelector, "offsetHeight");
 				client.getContextMenu().showAt(this, left, top);
 			}
 		}
