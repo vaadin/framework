@@ -207,6 +207,7 @@ public class OrderedLayout extends AbstractComponentContainer implements Layout 
 			throw new IllegalArgumentException();
 
 		this.orientation = orientation;
+		requestRepaint();
 	}
 
 	/* Documented in superclass */
