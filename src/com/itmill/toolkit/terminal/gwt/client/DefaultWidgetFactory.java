@@ -12,6 +12,8 @@ import com.itmill.toolkit.terminal.gwt.client.ui.IGridLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.ILabel;
 import com.itmill.toolkit.terminal.gwt.client.ui.ILink;
 import com.itmill.toolkit.terminal.gwt.client.ui.IOptionGroup;
+import com.itmill.toolkit.terminal.gwt.client.ui.IOrderedLayoutHorizontal;
+import com.itmill.toolkit.terminal.gwt.client.ui.IOrderedLayoutVertical;
 import com.itmill.toolkit.terminal.gwt.client.ui.IPanel;
 import com.itmill.toolkit.terminal.gwt.client.ui.IPasswordField;
 import com.itmill.toolkit.terminal.gwt.client.ui.IPopupCalendar;
@@ -26,86 +28,226 @@ import com.itmill.toolkit.terminal.gwt.client.ui.ITextualDate;
 import com.itmill.toolkit.terminal.gwt.client.ui.ITree;
 import com.itmill.toolkit.terminal.gwt.client.ui.ITwinColSelect;
 import com.itmill.toolkit.terminal.gwt.client.ui.IUnknownComponent;
-import com.itmill.toolkit.terminal.gwt.client.ui.IOrderedLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.IView;
 import com.itmill.toolkit.terminal.gwt.client.ui.IWindow;
 
 public class DefaultWidgetFactory implements WidgetFactory {
 
-	public Widget createWidget(UIDL uidl) {
+    public Widget createWidget(UIDL uidl) {
 
-		String tag = uidl.getTag();
+	String className = resolveWidgetTypeName(uidl);
+	
+	if ("com.itmill.toolkit.terminal.gwt.client.ui.ICheckBox".equals(className)) {
+	    return new ICheckBox();
+	} else if ("com.itmill.toolkit.terminal.gwt.client.ui.IButton".equals(className)) {
+	    return new IButton();
+	} else if ("com.itmill.toolkit.terminal.gwt.client.ui.IView".equals(className)) {
+	    // TODO remove IView?
+	    return new IView();
+	} else if ("com.itmill.toolkit.terminal.gwt.client.ui.IWindow".equals(className)) {
+	    return new IWindow();
+	} else if ("com.itmill.toolkit.terminal.gwt.client.ui.IOrderedLayoutVertical".equals(className)) {
+	    return new IOrderedLayoutVertical();
+	} else if ("com.itmill.toolkit.terminal.gwt.client.ui.IOrderedLayoutHorizontal".equals(className)) {
+	    return new IOrderedLayoutHorizontal();
+	} else if ("com.itmill.toolkit.terminal.gwt.client.ui.ILabel".equals(className)) {
+	    return new ILabel();
+	} else if ("com.itmill.toolkit.terminal.gwt.client.ui.ILink".equals(className)) {
+	    return new ILink();
+	} else if ("com.itmill.toolkit.terminal.gwt.client.ui.IGridLayout".equals(className)) {
+	    return new IGridLayout();
+	} else if ("com.itmill.toolkit.terminal.gwt.client.ui.ITree".equals(className)) {
+	    return new ITree();
+	} else if ("com.itmill.toolkit.terminal.gwt.client.ui.IOptionGroup".equals(className)) {
+	    return new IOptionGroup();
+	} else if ("com.itmill.toolkit.terminal.gwt.client.ui.ITwinColSelect".equals(className)) {
+	    return new ITwinColSelect();
+	} else if ("com.itmill.toolkit.terminal.gwt.client.ui.ISelect".equals(className)) {
+	    return new ISelect();
+	} else if ("com.itmill.toolkit.terminal.gwt.client.ui.IPanel".equals(className)) {
+	    return new IPanel();
+	} else if ("com.itmill.toolkit.terminal.gwt.client.ui.IComponent".equals(className)) {
+	    return new IComponent();
+	} else if ("com.itmill.toolkit.terminal.gwt.client.ui.ITabsheet".equals(className)) {
+	    return new ITabsheet();
+	} else if ("com.itmill.toolkit.terminal.gwt.client.ui.IEmbedded".equals(className)) {
+	    return new IEmbedded();
+	} else if ("com.itmill.toolkit.terminal.gwt.client.ui.ICustomLayout".equals(className)) {
+	    return new ICustomLayout();
+	} else if ("com.itmill.toolkit.terminal.gwt.client.ui.ITextArea".equals(className)) {
+	    return new ITextArea();
+	} else if ("com.itmill.toolkit.terminal.gwt.client.ui.IPasswordField".equals(className)) {
+	    return new IPasswordField();
+	} else if ("com.itmill.toolkit.terminal.gwt.client.ui.ITextField".equals(className)) {
+	    return new ITextField();
+	} else if ("com.itmill.toolkit.terminal.gwt.client.ui.ITablePaging".equals(className)) {
+	    return new ITablePaging();
+	} else if ("com.itmill.toolkit.terminal.gwt.client.ui.IScrollTable".equals(className)) {
+	    return new IScrollTable();
+	} else if ("com.itmill.toolkit.terminal.gwt.client.ui.ICalendar".equals(className)) {
+	    return new ICalendar();
+	} else if ("com.itmill.toolkit.terminal.gwt.client.ui.ITextualDate".equals(className)) {
+	    return new ITextualDate();
+	} else if ("com.itmill.toolkit.terminal.gwt.client.ui.IPopupCalendar".equals(className)) {
+	    return new IPopupCalendar();
+	} else if ("com.itmill.toolkit.terminal.gwt.client.ui.ISlider".equals(className)) {
+	    return new ISlider();
+	}
+	return new IUnknownComponent();
+	
+	/* TODO: Class based impl, use when GWT supports
+	return (Widget)GWT.create(resolveWidgetClass(uidl));
+	*/
+    }
 
-		if ("button".equals(tag)) {
-			if ("switch".equals(uidl.getStringAttribute("type")))
-				return new ICheckBox();
-			return new IButton();
-		}
-		else if ("window".equals(tag))
-			return new IWindow();
-		else if ("orderedlayout".equals(tag)) {
-			if ("horizontal".equals(uidl.getStringAttribute("orientation")))
-				return new IOrderedLayout(IOrderedLayout.ORIENTATION_HORIZONTAL);
-			else
-				return new IOrderedLayout();
-		}
-		else if ("label".equals(tag))
-			return new ILabel();
-		else if ("link".equals(tag))
-			return new ILink();
-		else if ("gridlayout".equals(tag))
-			return new IGridLayout();
-		else if ("tree".equals(tag))
-			return new ITree();
-		else if ("select".equals(tag)) {
-			if("optiongroup".equals(uidl.getStringAttribute("style")))
-				return new IOptionGroup();
-			else if("twincol".equals(uidl.getStringAttribute("style")))
-				return new ITwinColSelect();
-			return new ISelect();
-		}
-		else if ("panel".equals(tag))
-			return new IPanel();
-		else if ("component".equals(tag))
-			return new IComponent();
-		else if ("tabsheet".equals(tag))
-			return new ITabsheet();
-		else if ("embedded".equals(tag))
-			return new IEmbedded();
-		else if ("customlayout".equals(tag))
-			return new ICustomLayout();
-		else if ("textfield".equals(tag)) {
-			if(uidl.hasAttribute("multiline"))
-				return new ITextArea();
-			else if(uidl.getBooleanAttribute("secret"))
-				return new IPasswordField();
-			return new ITextField();
-		}
-		else if ("table".equals(tag)) {
-			if(uidl.hasAttribute("style")) {
-				if("paging".equals(uidl.getStringAttribute("style")))
-						return new ITablePaging();
-			}
-			return new IScrollTable();
-		}
-		else if("datefield".equals(tag)) {
-			if(uidl.hasAttribute("style"))
-				if("calendar".equals(uidl.getStringAttribute("style")))
-					return new ICalendar();
-				else if("text".equals(uidl.getStringAttribute("style")))
-					return new ITextualDate();
-			return new IPopupCalendar();
-		}
-		else if("slider".equals(tag))
-			return new ISlider();
+    private String resolveWidgetTypeName(UIDL uidl) {
 
-		return new IUnknownComponent();
+	String tag = uidl.getTag();
+	if ("button".equals(tag)) {
+	    if ("switch".equals(uidl.getStringAttribute("type"))) {
+		return "com.itmill.toolkit.terminal.gwt.client.ui.ICheckBox";
+	    } else {
+		return "com.itmill.toolkit.terminal.gwt.client.ui.IButton";
+	    }
+	} else if ("window".equals(tag)) {
+	    return "com.itmill.toolkit.terminal.gwt.client.ui.IWindow";
+	} else if ("orderedlayout".equals(tag)) {
+	    if ("horizontal".equals(uidl.getStringAttribute("orientation"))) {
+		return "com.itmill.toolkit.terminal.gwt.client.ui.IOrderedLayoutHorizontal";
+	    } else {
+		return "com.itmill.toolkit.terminal.gwt.client.ui.IOrderedLayoutVertical";
+	    }
+	} else if ("label".equals(tag)) {
+	    return "com.itmill.toolkit.terminal.gwt.client.ui.ILabel";
+	} else if ("link".equals(tag)) {
+	    return "com.itmill.toolkit.terminal.gwt.client.ui.ILink";
+	} else if ("gridlayout".equals(tag)) {
+	    return "com.itmill.toolkit.terminal.gwt.client.ui.IGridLayout";
+	} else if ("tree".equals(tag)) {
+	    return "com.itmill.toolkit.terminal.gwt.client.ui.ITree";
+	} else if ("select".equals(tag)) {
+	    if ("optiongroup".equals(uidl.getStringAttribute("style"))) {
+		return "com.itmill.toolkit.terminal.gwt.client.ui.IOptionGroup";
+	    } else if ("twincol".equals(uidl.getStringAttribute("style"))) {
+		return "com.itmill.toolkit.terminal.gwt.client.ui.ITwinColSelect";
+	    } else {
+		return "com.itmill.toolkit.terminal.gwt.client.ui.ISelect";
+	    }
+	} else if ("panel".equals(tag)) {
+	    return "com.itmill.toolkit.terminal.gwt.client.ui.IPanel";
+	} else if ("component".equals(tag)) {
+	    return "com.itmill.toolkit.terminal.gwt.client.ui.IComponent";
+	} else if ("tabsheet".equals(tag)) {
+	    return "com.itmill.toolkit.terminal.gwt.client.ui.ITabsheet";
+	} else if ("embedded".equals(tag)) {
+	    return "com.itmill.toolkit.terminal.gwt.client.ui.IEmbedded";
+	} else if ("customlayout".equals(tag)) {
+	    return "com.itmill.toolkit.terminal.gwt.client.ui.ICustomLayout";
+	} else if ("textfield".equals(tag)) {
+	    if (uidl.hasAttribute("multiline")) {
+		return "com.itmill.toolkit.terminal.gwt.client.ui.ITextArea";
+	    } else if (uidl.getBooleanAttribute("secret")) {
+		return "com.itmill.toolkit.terminal.gwt.client.ui.IPasswordField";
+	    } else {
+		return "com.itmill.toolkit.terminal.gwt.client.ui.ITextField";
+	    }
+	} else if ("table".equals(tag)) {
+	    if (uidl.hasAttribute("style")) {
+		if ("paging".equals(uidl.getStringAttribute("style"))) {
+		    return "com.itmill.toolkit.terminal.gwt.client.ui.ITablePaging";
+		}
+	    } else {
+		return "com.itmill.toolkit.terminal.gwt.client.ui.IScrollTable";
+	    }
+	} else if ("datefield".equals(tag)) {
+	    if (uidl.hasAttribute("style")) {
+		if ("calendar".equals(uidl.getStringAttribute("style"))) {
+		    return "com.itmill.toolkit.terminal.gwt.client.ui.ICalendar";
+		} else if ("text".equals(uidl.getStringAttribute("style"))) {
+		    return "com.itmill.toolkit.terminal.gwt.client.ui.ITextualDate";
+		}
+	    } else {
+		return "com.itmill.toolkit.terminal.gwt.client.ui.IPopupCalendar";
+	    }
+	} else if ("slider".equals(tag)) {
+	    return "com.itmill.toolkit.terminal.gwt.client.ui.ISlider";
+	}
+	
+	return "com.itmill.toolkit.terminal.gwt.client.ui.IUnknownComponent";
+	
+	/* TODO: Class based impl, use when GWT supports
+	if ("button".equals(tag)) {
+	    return IButton.class;
+	} else if ("window".equals(tag)) {
+	    return IView.class;
+	} else if ("orderedlayout".equals(tag)) {
+	    if ("horizontal".equals(uidl.getStringAttribute("orientation"))) {
+		return IOrderedLayoutHorizontal.class;
+	    } else {
+		return IOrderedLayoutVertical.class;
+	    }
+	} else if ("label".equals(tag)) {
+	    return ILabel.class;
+	} else if ("link".equals(tag)) {
+	    return ILink.class;
+	} else if ("gridlayout".equals(tag)) {
+	    return IGridLayout.class;
+	} else if ("tree".equals(tag)) {
+	    return ITree.class;
+	} else if ("select".equals(tag)) {
+	    if ("optiongroup".equals(uidl.getStringAttribute("style"))) {
+		return IOptionGroup.class;
+	    } else if ("twincol".equals(uidl.getStringAttribute("style"))) {
+		return ITwinColSelect.class;
+	    } else {
+		return ISelect.class;
+	    }
+	} else if ("panel".equals(tag)) {
+	    return IPanel.class;
+	} else if ("component".equals(tag)) {
+	    return IComponent.class;
+	} else if ("tabsheet".equals(tag)) {
+	    return ITabsheet.class;
+	} else if ("embedded".equals(tag)) {
+	    return IEmbedded.class;
+	} else if ("customlayout".equals(tag)) {
+	    return ICustomLayout.class;
+	} else if ("textfield".equals(tag)) {
+	    if (uidl.hasAttribute("multiline")) {
+		return ITextArea.class;
+	    } else if (uidl.getBooleanAttribute("secret")) {
+		return IPasswordField.class;
+	    } else {
+		return ITextField.class;
+	    }
+	} else if ("table".equals(tag)) {
+	    if (uidl.hasAttribute("style")) {
+		if ("paging".equals(uidl.getStringAttribute("style"))) {
+		    return ITablePaging.class;
+		}
+	    } else {
+		return IScrollTable.class;
+	    }
+	} else if ("datefield".equals(tag)) {
+	    if (uidl.hasAttribute("style")) {
+		if ("calendar".equals(uidl.getStringAttribute("style"))) {
+		    return ICalendar.class;
+		} else if ("text".equals(uidl.getStringAttribute("style"))) {
+		    return ITextualDate.class;
+		}
+	    } else {
+		return IPopupCalendar.class;
+	    }
+	} else if ("slider".equals(tag)) {
+	    return ISlider.class;
 	}
 
-	public boolean isCorrectImplementation(Widget currentWidget, UIDL uidl) {
+	return IUnknownComponent.class;
+	*/
+    }
 
-		// TODO This implementation should be optimized
-		return GWT.getTypeName(currentWidget).equals(GWT.getTypeName(createWidget(uidl)));
-	}
+    public boolean isCorrectImplementation(Widget currentWidget, UIDL uidl) {
+	return GWT.getTypeName(currentWidget).equals(resolveWidgetTypeName(uidl));
+    }
 
 }

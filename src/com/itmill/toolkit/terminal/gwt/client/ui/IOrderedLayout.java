@@ -16,9 +16,11 @@ import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
 /**
+ * Abstract base class for ordered layouts.
+ * Use either vertical or horizontal subclass.
  * @author IT Mill Ltd
  */
-public class IOrderedLayout extends ComplexPanel implements Paintable, Layout {
+public abstract class IOrderedLayout extends ComplexPanel implements Paintable, Layout {
 	
 	public static final String CLASSNAME = "i-orderedlayout";
 
@@ -36,10 +38,6 @@ public class IOrderedLayout extends ComplexPanel implements Paintable, Layout {
 	 * layout this is TR and for vertical DIV.
 	 */
 	private Element childContainer;
-	
-	public IOrderedLayout() {
-		this(ORIENTATION_VERTICAL);
-	}
 
 	public IOrderedLayout(int orientation) {
 		orientationMode = orientation;
