@@ -1,5 +1,7 @@
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.PopupPanel;
@@ -46,14 +48,17 @@ public class IContextMenu extends PopupPanel {
 		}
 		
 		setPopupPosition(left, top);
-		
 		show();
+		// fix position if "outside" screen
+		if(DOM.getIntAttribute(getElement(),"offsetWidth") + left > Window.getClientWidth()) {
+			left = Window.getClientWidth() - DOM.getIntAttribute(getElement(),"offsetWidth");
+			setPopupPosition(left, top);
+		}
 	}
 
 	public void showAt(IActionOwner ao, int left, int top) {
 		setActionOwner(ao);
 		showAt(left, top);
-		
 	}
 
 	/**
