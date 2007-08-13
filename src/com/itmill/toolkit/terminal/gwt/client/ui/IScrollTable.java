@@ -477,13 +477,6 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		int lastRendered = tBody.getLastRendered();
 		int firstRendered = tBody.getFirstRendered();
 		
-		// tell scroll position to user if currently "visible"  rows are not rendered
-		if( (lastRendered < firstRowInViewPort + pageLength) ||
-				(firstRowInViewPort <  firstRendered)) {
-			announceScrollPosition();
-		}
-		
-		
 		if( postLimit <= lastRendered && preLimit >= firstRendered ) {
 			client.updateVariable(this.paintableId, "firstvisible", firstRowInViewPort, false);
 			return; // scrolled withing "non-react area"
@@ -536,8 +529,12 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 						DOM.getIntAttribute(getElement(), "offsetHeight")/2 
 						- 20
 				)  + "px");
+		
+		int last = (firstRowInViewPort + pageLength);
+		if(last > totalRows)
+			last = totalRows;
 		DOM.setInnerHTML(scrollPositionElement, 
-				firstRowInViewPort + " - " + (firstRowInViewPort + pageLength) + "...");
+				firstRowInViewPort + " - " + last + "...");
 		DOM.setStyleAttribute(scrollPositionElement, "display", "block");
 	}
 	
@@ -552,8 +549,17 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		private int reqRows = 0;
 		
 		public void deferRowFetch() {
-			if(reqRows > 0 && reqFirstRow < totalRows)
+			if(reqRows > 0 && reqFirstRow < totalRows) {
 				schedule(250);
+				
+				// tell scroll position to user if currently "visible"  rows are not rendered
+				if( (firstRowInViewPort + pageLength > tBody.getLastRendered()) ||
+						(firstRowInViewPort <  tBody.getFirstRendered())) {
+					announceScrollPosition();
+				} else {
+					hideScrollPositionAnnotation();
+				}
+			}
 		}
 
 		public void setReqFirstRow(int reqFirstRow) {
