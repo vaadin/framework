@@ -351,8 +351,8 @@ public class ApplicationConnection implements EntryPoint, FocusListener {
 			Layout parent = getParentLayout(component);
 			if (parent != null) {
 				Widget w = widgetFactory.createWidget(uidl);
-				registerPaintable(uidl.getId(), (Paintable) w);
 				parent.replaceChildComponent(component, w);
+				registerPaintable(uidl.getId(), (Paintable) w);
 				((Paintable) w).updateFromUIDL(uidl, this);
 				return true;
 			}
