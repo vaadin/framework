@@ -390,6 +390,13 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		}
 	}
 
+	protected void onDetach() {
+		super.onDetach();
+		if(scrollPositionElement != null)
+			DOM.removeChild(DOM.getParent(scrollPositionElement),
+					scrollPositionElement);
+	}
+
 	/**
 	 * Run only once when component is attached and received its initial
 	 * content. This function :
@@ -515,19 +522,19 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		if(scrollPositionElement == null) {
 			scrollPositionElement = DOM.createDiv();
 			DOM.setAttribute(scrollPositionElement, "className", "i-table-scrollposition");
-			DOM.appendChild(getElement(), scrollPositionElement);
+			DOM.appendChild(RootPanel.get().getElement(), scrollPositionElement);
 		}
+		
+		
 		DOM.setStyleAttribute(scrollPositionElement, "left",
 				(
-						DOM.getAbsoluteLeft(getElement()) + 
+						DOM.getAbsoluteLeft(getElement()) +
 						DOM.getIntAttribute(getElement(), "offsetWidth")/2 
 						- 75
 				)  + "px");
 		DOM.setStyleAttribute(scrollPositionElement, "top",
 				(
-						DOM.getAbsoluteTop(getElement()) + 
-						DOM.getIntAttribute(getElement(), "offsetHeight")/2 
-						- 20
+						DOM.getAbsoluteTop(getElement())
 				)  + "px");
 		
 		int last = (firstRowInViewPort + pageLength);
@@ -542,7 +549,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		if(scrollPositionElement != null)
 			DOM.setStyleAttribute(scrollPositionElement, "display", "none");
 	}
-
+	
 	private class RowRequestHandler extends Timer {
 		
 		private int reqFirstRow = 0;
