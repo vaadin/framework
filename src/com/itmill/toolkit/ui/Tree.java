@@ -438,7 +438,7 @@ public class Tree extends Select implements Container.Hierarchical,
 				Object itemId = i.next();
 
 				// Starts the item / node
-				boolean isNode = areChildrenAllowed(itemId);
+				boolean isNode = areChildrenAllowed(itemId) && hasChildren(itemId);
 				if (isNode)
 					target.startTag("node");
 				else
