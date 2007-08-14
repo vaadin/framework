@@ -163,8 +163,11 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
 	public String getStyle() {
 		String s = "";
 		if(styles != null) {
-			for(Iterator it = styles.iterator();it.hasNext();)
-				s += " " + (String) it.next();
+			for(Iterator it = styles.iterator();it.hasNext();) {
+				s += (String) it.next();
+				if(it.hasNext())
+					s += " ";
+			}
 		}
 		return s;
 	}
