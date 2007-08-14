@@ -111,6 +111,12 @@ public class Tree extends Select implements Container.Hierarchical,
 	 * Holds a itemId which was recently expanded
 	 */
 	private Object expandedItemId;
+	
+	/**
+	 * a flag which indicates initial paint. After this flag set true
+	 * partial updates are allowed.
+	 */
+	private boolean initialPaint = true;
 
 	/* Tree constructors ************************************************** */
 
@@ -174,7 +180,10 @@ public class Tree extends Select implements Container.Hierarchical,
 		expanded.add(itemId);
 		
 		expandedItemId = itemId;
-		requestPartialRepaint();
+		if(initialPaint)
+			requestRepaint();
+		else
+			requestPartialRepaint();
 		fireExpandEvent(itemId);
 
 		return true;
@@ -370,6 +379,7 @@ public class Tree extends Select implements Container.Hierarchical,
 	 * @see com.itmill.toolkit.ui.AbstractComponent#paintContent(PaintTarget)
 	 */
 	public void paintContent(PaintTarget target) throws PaintException {
+		initialPaint = false;
 		
 		if(partialUpdate) {
 			target.addAttribute("partialUpdate", true);
