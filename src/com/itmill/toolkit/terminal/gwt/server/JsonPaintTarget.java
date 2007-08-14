@@ -469,7 +469,7 @@ public class JsonPaintTarget implements PaintTarget {
 
 		tag.addAttribute("\"" + name + "\": \"" + escapeJSON(value) + "\"");
 
-		if (customLayoutArgumentsOpen && "style".equals(name))
+		if (customLayoutArgumentsOpen && "template".equals(name))
 			getPreCachedResources().add("layout/" + value + ".html");
 		
 		if(name.equals("locale"))

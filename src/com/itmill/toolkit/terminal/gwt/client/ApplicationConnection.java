@@ -387,6 +387,10 @@ public class ApplicationConnection implements EntryPoint, FocusListener {
 		component.setVisible(visible);
 		if (!visible)
 			return true;
+		
+		// add additional styles as css classes
+		if(uidl.hasAttribute("style"))
+			component.addStyleName(uidl.getStringAttribute("style"));
 
 		return false;
 	}

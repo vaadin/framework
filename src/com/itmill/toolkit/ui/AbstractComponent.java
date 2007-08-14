@@ -33,7 +33,9 @@ import com.itmill.toolkit.event.EventRouter;
 import com.itmill.toolkit.event.MethodEventSource;
 import com.itmill.toolkit.terminal.*;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Map;
@@ -55,11 +57,11 @@ import java.lang.reflect.Method;
 public abstract class AbstractComponent implements Component, MethodEventSource {
 
 	/* Private members ************************************************* */
-
+	
 	/**
-	 * Look-and-feel style of the component.
+	 * Style names.
 	 */
-	private String style;
+	private ArrayList styles;
 
 	/**
 	 * Caption text.
@@ -159,7 +161,12 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
 	 * default documentation from implemented interface.
 	 */
 	public String getStyle() {
-		return this.style;
+		String s = "";
+		if(styles != null) {
+			for(Iterator it = styles.iterator();it.hasNext();)
+				s += " " + (String) it.next();
+		}
+		return s;
 	}
 
 	/*
@@ -167,10 +174,27 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
 	 * default documentation from implemented interface.
 	 */
 	public void setStyle(String style) {
-		this.style = style;
+		if(this.styles == null) {
+			styles = new ArrayList();
+		}
+		styles.clear();
+		styles.add(style);
 		requestRepaint();
 	}
-
+	
+	public void addStyleName(String style) {
+		if(this.styles == null) {
+			styles = new ArrayList();
+		}
+		if(! styles.contains(style))
+			this.styles.add(style);
+		requestRepaint();
+	}
+	
+	public void removeStyleName(String style) {
+		styles.remove(style);
+	}
+	
 	/*
 	 * Get's the component's caption. Don't add a JavaDoc comment here, we use
 	 * the default documentation from implemented interface.
@@ -516,7 +540,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
 	public final void paint(PaintTarget target) throws PaintException {
 
 		if (!target.startTag(this, this.getTag())) {
-			if (getStyle() != null && getStyle().length() > 0)
+			if (styles != null && styles.size() > 0)
 				target.addAttribute("style", getStyle());
 			if (isReadOnly())
 				target.addAttribute("readonly", true);

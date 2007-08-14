@@ -32,7 +32,7 @@ public class ICustomLayout extends ComplexPanel implements Paintable, Layout {
 	private HashMap widgetToCaptionWrapper = new HashMap();
 
 	/** Currently rendered style */
-	String currentStyle;
+	String currentTemplate;
 
 	/** Unexecuted scripts loaded from the template */
 	private String scripts = "";
@@ -115,16 +115,16 @@ public class ICustomLayout extends ComplexPanel implements Paintable, Layout {
 	private void updateHTML(UIDL uidl, ApplicationConnection client) {
 
 		// Update only if style has changed
-		String newStyle = uidl.getStringAttribute("style");
-		if (currentStyle != null && currentStyle.equals(newStyle))
+		String newTemplate = uidl.getStringAttribute("template");
+		if (currentTemplate != null && currentTemplate.equals(newTemplate))
 			return;
 
 		// Get the HTML-template from client
-		String template = client.getResource("layout/" + newStyle + ".html");
+		String template = client.getResource("layout/" + newTemplate + ".html");
 		if (template == null) {
-			template = "Layout file layout/" + newStyle + ".html is missing.";
+			template = "Layout file layout/" + newTemplate + ".html is missing.";
 		} else {
-			currentStyle = newStyle;
+			currentTemplate = newTemplate;
 		}
 
 		// Connect body of the template to DOM

@@ -67,12 +67,14 @@ public class CustomLayout extends AbstractComponentContainer implements Layout {
 	 * Custom layout slots containing the components.
 	 */
 	private HashMap slots = new HashMap();
+	
+	private String templateName;
 
 	/**
-	 * Constructor for custom layout with given style.
+	 * Constructor for custom layout with given template name.
 	 */
-	public CustomLayout(String style) {
-		setStyle(style);
+	public CustomLayout(String template) {
+		templateName = template;
 	}
 
 	/**
@@ -172,6 +174,7 @@ public class CustomLayout extends AbstractComponentContainer implements Layout {
 	 */
 	public void paintContent(PaintTarget target) throws PaintException {
 
+		target.addAttribute("template", templateName);
 		// Adds all items in all the locations
 		for (Iterator i = slots.keySet().iterator(); i.hasNext();) {
 

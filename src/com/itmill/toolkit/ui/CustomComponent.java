@@ -519,4 +519,21 @@ public class CustomComponent implements Component {
 		this.componentType = componentType;
 	}
 
+	/**
+	 * Custom component does not implement custom styles by default.
+	 * 
+	 * @see com.itmill.toolkit.ui.Component#getStyle()
+	 */
+	public void addStyleName(String style) {
+	}
+
+	/**
+	 * Custom component does not implement custom styles by default.
+	 * 
+	 * @see com.itmill.toolkit.ui.Component#getStyle()
+	 */
+	public void removeStyleName(String style) {
+		
+	}
+
 }
