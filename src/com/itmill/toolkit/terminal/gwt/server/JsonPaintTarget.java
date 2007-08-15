@@ -87,6 +87,8 @@ public class JsonPaintTarget implements PaintTarget {
 
 	private JsonTag tag;
 
+	private int errorsOpen;
+
 	/**
 	 * Creates a new XMLPrintWriter, without automatic line flushing.
 	 * 
@@ -162,6 +164,10 @@ public class JsonPaintTarget implements PaintTarget {
 		mTagArgumentListOpen = true;
 
 		customLayoutArgumentsOpen = "customlayout".equals(tagName);
+		
+		if("error".equals(tagName)) {
+			errorsOpen++;
+		}
 	}
 
 	/**
@@ -195,7 +201,17 @@ public class JsonPaintTarget implements PaintTarget {
 				throw new PaintException("Invalid UIDL: wrong ending tag: '"
 						+ tagName + "' expected: '" + lastTag + "'.");
 
-			parent.addData(tag.getJSON());
+			// simple hack which writes error uidl structure into attribute
+			if("error".equals(lastTag)) {
+				if(errorsOpen == 1) // ending error section
+					parent.addAttribute("\"error\":[\"error\",{}"+tag.getData() + "]");
+				else // sub error
+					parent.addData(tag.getJSON());
+				errorsOpen--;
+			} else {
+				parent.addData(tag.getJSON());
+			}
+			
 
 			tag = parent;
 		} else {

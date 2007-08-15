@@ -397,4 +397,10 @@ public class UIDL {
 	public int getChidlCount() {
 		return json.size()-2;
 	}
+
+	public UIDL getErrors() {
+		JSONArray a = (JSONArray) ((JSONObject) json.get(1)).get("error");
+		return new UIDL(a);
+	}
+
 }

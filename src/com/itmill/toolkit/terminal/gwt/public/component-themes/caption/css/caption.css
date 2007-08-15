@@ -1,0 +1,13 @@
+.i-errorindicator {
+	width: 10px;
+	height: 10px;
+	display: block;
+	float:left;
+	background: #f00;
+}
+
+.i-error {
+	padding-left: 15px;
+	background: #fff;
+	border: 1px solid red;
+}
