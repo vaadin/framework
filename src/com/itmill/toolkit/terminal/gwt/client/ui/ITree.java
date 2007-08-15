@@ -15,6 +15,11 @@ import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
+/**
+ * TODO todo dump GWT's Tree implementation and use Toolkit 4 style
+ * DOM structure
+ *
+ */
 public class ITree extends Tree implements Paintable {
 	
 	public static final String CLASSNAME = "i-tree";
@@ -111,13 +116,19 @@ public class ITree extends Tree implements Paintable {
 			}
 		
 			public void onTreeItemSelected(TreeItem item) {
+				TreeNode n = ((TreeNode) item);
 				if (!selectable) return;
-				item.setSelected(true);
-				String key = ((TreeNode)item).key;
+				String key = n.key;
 				if (key != null) {
-					if (!multiselect) selectedIds.clear();
-					if (selectedIds.contains(key)) selectedIds.remove(key);
-					else selectedIds.add(key);
+					if(selectedIds.contains(key)) {
+						selectedIds.remove(key);
+						n.setISelected(false);
+					} else {
+						if (!multiselect) 
+							selectedIds.clear();
+						selectedIds.add(key);
+						n.setISelected(true);
+					}
 					ITree.this.client.updateVariable(ITree.this.paintableId, "selected", selectedIds.toArray(), true);
 				}
 			}
@@ -221,6 +232,16 @@ public class ITree extends Tree implements Paintable {
 
 		public String getPaintableId() {
 			return paintableId;
+		}
+		
+		/**
+		 * Adds/removes IT Mill Toolkit spesific style name.
+		 * (GWT treenode does not support multiselects)
+		 * 
+		 * @param selected
+		 */
+		public void setISelected(boolean selected) {
+			setStyleName(getElement(), "i-tree-node-selected", selected);
 		}
 		
 		public void showContextMenu(Event event) {
