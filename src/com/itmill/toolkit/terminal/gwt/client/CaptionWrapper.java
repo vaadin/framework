@@ -6,21 +6,18 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class CaptionWrapper extends FlowPanel {
 
-	Label caption = new Label();
+	Caption caption;
 	Paintable widget; 
 	
 	public CaptionWrapper(Paintable toBeWrapped) {
+		caption = new Caption(toBeWrapped);
 		add(caption);
 		widget = toBeWrapped;
 		add((Widget) widget);
 	}
 	
 	public void updateCaption(UIDL uidl) {
-		String c = uidl.getStringAttribute("caption");
-		// TODO Description and error messages
-		if (c != null) {
-			caption.setText(c);
-		}
+		caption.updateCaption(uidl);
 		setVisible(!uidl.getBooleanAttribute("invisible"));
 	}
 	

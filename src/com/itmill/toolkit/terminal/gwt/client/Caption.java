@@ -15,13 +15,21 @@ public class Caption extends HTML {
 	}
 	
 	public void updateCaption(UIDL uidl) {
+		setVisible(!uidl.getBooleanAttribute("invisible"));
+		
 		String c = uidl.getStringAttribute("caption");
-		// TODO Description and error messages
 		if (c == null) {
 		} else {
 			setText(c);
-		}		
-		setVisible(!uidl.getBooleanAttribute("invisible"));
+		}
+		
+		if(uidl.hasAttribute("description")) {
+			setTitle(uidl.getStringAttribute("description"));
+		}
+		
+		if(uidl.hasAttribute("error")) {
+			// TODO error messages
+		}
 	}
 	
 	public static boolean isNeeded(UIDL uidl) {
