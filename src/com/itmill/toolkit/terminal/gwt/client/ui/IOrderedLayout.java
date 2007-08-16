@@ -20,7 +20,7 @@ import com.itmill.toolkit.terminal.gwt.client.UIDL;
  * Use either vertical or horizontal subclass.
  * @author IT Mill Ltd
  */
-public abstract class IOrderedLayout extends ComplexPanel implements Paintable, Layout {
+public abstract class IOrderedLayout extends ComplexPanel implements Layout {
 	
 	public static final String CLASSNAME = "i-orderedlayout";
 
