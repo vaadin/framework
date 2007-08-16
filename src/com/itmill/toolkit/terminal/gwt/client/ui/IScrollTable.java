@@ -392,9 +392,12 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 
 	protected void onDetach() {
 		super.onDetach();
-		if(scrollPositionElement != null)
-			DOM.removeChild(DOM.getParent(scrollPositionElement),
-					scrollPositionElement);
+		//ensure that scrollPosElement will be detached
+		if(scrollPositionElement != null) {
+			Element parent = DOM.getParent(scrollPositionElement);
+			if(parent != null)
+				DOM.removeChild(parent, scrollPositionElement);
+		}
 	}
 
 	/**
