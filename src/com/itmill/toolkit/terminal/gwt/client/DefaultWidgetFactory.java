@@ -8,6 +8,7 @@ import com.itmill.toolkit.terminal.gwt.client.ui.ICheckBox;
 import com.itmill.toolkit.terminal.gwt.client.ui.IComponent;
 import com.itmill.toolkit.terminal.gwt.client.ui.ICustomLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.IEmbedded;
+import com.itmill.toolkit.terminal.gwt.client.ui.IForm;
 import com.itmill.toolkit.terminal.gwt.client.ui.IGridLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.ILabel;
 import com.itmill.toolkit.terminal.gwt.client.ui.ILink;
@@ -92,6 +93,8 @@ public class DefaultWidgetFactory implements WidgetFactory {
 			return new IPopupCalendar();
 		} else if ("com.itmill.toolkit.terminal.gwt.client.ui.ISlider".equals(className)) {
 			return new ISlider();
+		} else if ("com.itmill.toolkit.terminal.gwt.client.ui.IForm".equals(className)) {
+			return new IForm();
 		}
 		return new IUnknownComponent();
 
@@ -171,6 +174,8 @@ public class DefaultWidgetFactory implements WidgetFactory {
 			}
 		} else if ("slider".equals(tag)) {
 			return "com.itmill.toolkit.terminal.gwt.client.ui.ISlider";
+		} else if ("form".equals(tag)) {
+			return "com.itmill.toolkit.terminal.gwt.client.ui.IForm";
 		}
 
 		return "com.itmill.toolkit.terminal.gwt.client.ui.IUnknownComponent";
