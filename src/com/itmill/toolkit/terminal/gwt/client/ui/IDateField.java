@@ -19,13 +19,14 @@ public class IDateField extends FlowPanel implements Paintable {
 	
 	protected boolean immediate;
 	
-	static int RESOLUTION_YEAR = 0;
-	static int RESOLUTION_MONTH = 1;
-	static int RESOLUTION_DAY = 2;
-	static int RESOLUTION_HOUR = 3;
-	static int RESOLUTION_MIN = 4;
-	static int RESOLUTION_SEC = 5;
-	static int RESOLUTION_MSEC = 6;
+	public static int RESOLUTION_YEAR = 0;
+	public static int RESOLUTION_MONTH = 1;
+	public static int RESOLUTION_DAY = 2;
+	public static int RESOLUTION_HOUR = 3;
+	public static int RESOLUTION_MIN = 4;
+	public static int RESOLUTION_SEC = 5;
+	public static int RESOLUTION_MSEC = 6;
+	
 	protected int currentResolution = RESOLUTION_YEAR;
 	
 	protected String currentLocale;
@@ -130,4 +131,51 @@ public class IDateField extends FlowPanel implements Paintable {
 		date.setTime(date.getTime() / 1000 * 1000 + ms);
 	}
 
+	public int getCurrentResolution() {
+	    return currentResolution;
+	}
+
+	public void setCurrentResolution(int currentResolution) {
+	    this.currentResolution = currentResolution;
+	}
+
+	public String getCurrentLocale() {
+	    return currentLocale;
+	}
+
+	public void setCurrentLocale(String currentLocale) {
+	    this.currentLocale = currentLocale;
+	}
+
+	public Date getCurrentDate() {
+	    return date;
+	}
+
+	public void setCurrentDate(Date date) {
+	    this.date = date;
+	}
+
+	public boolean isImmediate() {
+	    return immediate;
+	}
+
+	public boolean isReadonly() {
+	    return readonly;
+	}
+
+	public boolean isEnabled() {
+	    return enabled;
+	}
+
+	public DateTimeService getDateTimeService() {
+	    return dts;
+	}
+
+	public String getId() {
+	    return id;
+	}
+
+	public ApplicationConnection getClient() {
+	    return client;
+	}
 }

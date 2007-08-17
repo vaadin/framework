@@ -13,8 +13,9 @@ import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.DateTimeService;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.ui.calendar.ICalendarEntry;
+import com.itmill.toolkit.terminal.gwt.client.ui.datefield.ICalendarPanel;
 
-public class IEntryCalendar extends IDateField {
+public class ICalendar extends IDateField {
 
     private ICalendarPanel calPanel;
 
@@ -26,7 +27,7 @@ public class IEntryCalendar extends IDateField {
 
     private int realResolution = RESOLUTION_DAY;
 
-    public IEntryCalendar() {
+    public ICalendar() {
 	super();
 	setStyleName(CLASSNAME + "-entrycalendar");
 	calPanel = new ICalendarPanel(this);

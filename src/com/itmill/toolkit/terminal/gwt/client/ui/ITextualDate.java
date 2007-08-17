@@ -30,7 +30,7 @@ public class ITextualDate extends IDateField implements Paintable, ChangeListene
 		buildDate();
 	}
 
-	protected void buildDate() {
+	public void buildDate() {
 		dl = new DateLocale();
 		DateLocale.setLocale(currentLocale);
 		

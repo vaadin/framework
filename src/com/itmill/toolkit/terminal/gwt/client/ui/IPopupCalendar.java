@@ -7,6 +7,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
+import com.itmill.toolkit.terminal.gwt.client.ui.datefield.ICalendarPanel;
 
 public class IPopupCalendar extends ITextualDate implements Paintable, ClickListener, PopupListener {
 	

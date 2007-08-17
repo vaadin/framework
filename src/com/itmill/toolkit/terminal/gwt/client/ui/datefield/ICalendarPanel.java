@@ -1,4 +1,4 @@
-package com.itmill.toolkit.terminal.gwt.client.ui;
+package com.itmill.toolkit.terminal.gwt.client.ui.datefield;
 
 import java.util.Date;
 import java.util.Iterator;
@@ -17,6 +17,9 @@ import com.google.gwt.user.client.ui.TableListener;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.DateTimeService;
 import com.itmill.toolkit.terminal.gwt.client.LocaleService;
+import com.itmill.toolkit.terminal.gwt.client.ui.IButton;
+import com.itmill.toolkit.terminal.gwt.client.ui.IDateField;
+import com.itmill.toolkit.terminal.gwt.client.ui.ITextualDate;
 import com.itmill.toolkit.terminal.gwt.client.ui.calendar.ICalendarEntry;
 
 public class ICalendarPanel extends FlexTable implements MouseListener,
@@ -57,9 +60,9 @@ public class ICalendarPanel extends FlexTable implements MouseListener,
     }
 
     private void buildCalendar(boolean forceRedraw) {
-	boolean needsMonth = datefield.currentResolution > IDateField.RESOLUTION_YEAR;
-	boolean needsBody = datefield.currentResolution >= IDateField.RESOLUTION_DAY;
-	boolean needsTime = datefield.currentResolution >= IDateField.RESOLUTION_HOUR;
+	boolean needsMonth = datefield.getCurrentResolution() > IDateField.RESOLUTION_YEAR;
+	boolean needsBody = datefield.getCurrentResolution() >= IDateField.RESOLUTION_DAY;
+	boolean needsTime = datefield.getCurrentResolution() >= IDateField.RESOLUTION_HOUR;
 	buildCalendarHeader(forceRedraw, needsMonth);
 	clearCalendarBody(!needsBody);
 	if (needsBody)
@@ -87,8 +90,8 @@ public class ICalendarPanel extends FlexTable implements MouseListener,
 
     private void buildCalendarHeader(boolean forceRedraw, boolean needsMonth) {
 	// Can't draw a calendar without a date :)
-	if (datefield.date == null)
-	    datefield.date = new Date();
+	if (datefield.getCurrentDate() == null)
+	    datefield.setCurrentDate(new Date());
 
 	if (forceRedraw) {
 	    if (prevMonth == null) { // Only do once
@@ -130,32 +133,33 @@ public class ICalendarPanel extends FlexTable implements MouseListener,
 	    }
 
 	    // Print weekday names
-	    int firstDay = datefield.dts.getFirstDayOfWeek();
+	    int firstDay = datefield.getDateTimeService().getFirstDayOfWeek();
 	    for (int i = 0; i < 7; i++) {
 		int day = i + firstDay;
 		if (day > 6)
 		    day = 0;
-		if (datefield.currentResolution > IDateField.RESOLUTION_MONTH)
-		    setHTML(1, i, "<strong>" + datefield.dts.getShortDay(day)
+		if (datefield.getCurrentResolution() > IDateField.RESOLUTION_MONTH)
+		    setHTML(1, i, "<strong>"
+			    + datefield.getDateTimeService().getShortDay(day)
 			    + "</strong>");
 		else
 		    setHTML(1, i, "");
 	    }
 	}
 
-	String monthName = needsMonth ? datefield.dts.getMonth(datefield.date
-		.getMonth()) : "";
-	int year = datefield.date.getYear() + 1900;
+	String monthName = needsMonth ? datefield.getDateTimeService()
+		.getMonth(datefield.getCurrentDate().getMonth()) : "";
+	int year = datefield.getCurrentDate().getYear() + 1900;
 	setHTML(0, 2, "<span class=\"" + datefield.CLASSNAME
 		+ "-calendarpanel-month\">" + monthName + " " + year
 		+ "</span>");
     }
 
     private void buildCalendarBody() {
-	Date date = datefield.date;
+	Date date = datefield.getCurrentDate();
 	if (date == null)
 	    date = new Date();
-	int startWeekDay = datefield.dts.getStartWeekDay(date);
+	int startWeekDay = datefield.getDateTimeService().getStartWeekDay(date);
 	int numDays = DateTimeService.getNumberOfDaysInMonth(date);
 	int dayCount = 0;
 	Date today = new Date();
@@ -168,12 +172,15 @@ public class ICalendarPanel extends FlexTable implements MouseListener,
 			String title = "";
 			if (this.entrySource != null) {
 			    curr.setDate(dayCount);
-			    List entries = this.entrySource
-				    .getEntries(curr,IDateField.RESOLUTION_DAY);
+			    List entries = this.entrySource.getEntries(curr,
+				    IDateField.RESOLUTION_DAY);
 			    if (entries != null) {
-				for (Iterator it = entries.iterator(); it.hasNext();) {
-				    ICalendarEntry entry = (ICalendarEntry)it.next();
-				    title += (title.length() > 0 ? "\n" : "") + entry.getStringForDate(curr);
+				for (Iterator it = entries.iterator(); it
+					.hasNext();) {
+				    ICalendarEntry entry = (ICalendarEntry) it
+					    .next();
+				    title += (title.length() > 0 ? "\n" : "")
+					    + entry.getStringForDate(curr);
 				}
 			    }
 			}
@@ -199,7 +206,7 @@ public class ICalendarPanel extends FlexTable implements MouseListener,
 		    } else {
 			break;
 		    }
-		    
+
 		}
 	    }
 	}
@@ -222,49 +229,49 @@ public class ICalendarPanel extends FlexTable implements MouseListener,
      */
     public void updateCalendar() {
 	// Locale and resolution changes force a complete redraw
-	buildCalendar(locale != datefield.currentLocale
-		|| resolution != datefield.currentResolution);
+	buildCalendar(locale != datefield.getCurrentLocale()
+		|| resolution != datefield.getCurrentResolution());
 	if (datefield instanceof ITextualDate)
 	    ((ITextualDate) datefield).buildDate();
-	locale = datefield.currentLocale;
-	resolution = datefield.currentResolution;
+	locale = datefield.getCurrentLocale();
+	resolution = datefield.getCurrentResolution();
     }
 
     public void onClick(Widget sender) {
 	processClickEvent(sender);
     }
-    
+
     private boolean isEnabledDate(Date date) {
 	if ((this.minDate != null && date.before(this.minDate))
 		|| (this.maxDate != null && date.after(this.maxDate))) {
-	   return false;
+	    return false;
 	}
 	return true;
     }
 
     private void processClickEvent(Widget sender) {
-	if (!datefield.enabled || datefield.readonly)
+	if (!datefield.isEnabled() || datefield.isReadonly())
 	    return;
-	
+
 	if (sender == prevYear) {
-	    datefield.date.setYear(datefield.date.getYear() - 1);
-	    datefield.client.updateVariable(datefield.id, "year",
-		    datefield.date.getYear() + 1900, datefield.immediate);
+	    datefield.getCurrentDate().setYear(datefield.getCurrentDate().getYear() - 1);
+	    datefield.getClient().updateVariable(datefield.getId(), "year",
+		    datefield.getCurrentDate().getYear() + 1900, datefield.isImmediate());
 	    updateCalendar();
 	} else if (sender == nextYear) {
-	    datefield.date.setYear(datefield.date.getYear() + 1);
-	    datefield.client.updateVariable(datefield.id, "year",
-		    datefield.date.getYear() + 1900, datefield.immediate);
+	    datefield.getCurrentDate().setYear(datefield.getCurrentDate().getYear() + 1);
+	    datefield.getClient().updateVariable(datefield.getId(), "year",
+		    datefield.getCurrentDate().getYear() + 1900, datefield.isImmediate());
 	    updateCalendar();
 	} else if (sender == prevMonth) {
-	    datefield.date.setMonth(datefield.date.getMonth() - 1);
-	    datefield.client.updateVariable(datefield.id, "month",
-		    datefield.date.getMonth() + 1, datefield.immediate);
+	    datefield.getCurrentDate().setMonth(datefield.getCurrentDate().getMonth() - 1);
+	    datefield.getClient().updateVariable(datefield.getId(), "month",
+		    datefield.getCurrentDate().getMonth() + 1, datefield.isImmediate());
 	    updateCalendar();
 	} else if (sender == nextMonth) {
-	    datefield.date.setMonth(datefield.date.getMonth() + 1);
-	    datefield.client.updateVariable(datefield.id, "month",
-		    datefield.date.getMonth() + 1, datefield.immediate);
+	    datefield.getCurrentDate().setMonth(datefield.getCurrentDate().getMonth() + 1);
+	    datefield.getClient().updateVariable(datefield.getId(), "month",
+		    datefield.getCurrentDate().getMonth() + 1, datefield.isImmediate());
 	    updateCalendar();
 	}
     }
@@ -345,8 +352,8 @@ public class ICalendarPanel extends FlexTable implements MouseListener,
 	}
 
 	public void onCellClicked(SourcesTableEvents sender, int row, int col) {
-	    if (sender != cal || row < 2 || row > 7 || !cal.datefield.enabled
-		    || cal.datefield.readonly)
+	    if (sender != cal || row < 2 || row > 7 || !cal.datefield.isEnabled()
+		    || cal.datefield.isReadonly())
 		return;
 
 	    String text = cal.getText(row, col);
@@ -354,15 +361,15 @@ public class ICalendarPanel extends FlexTable implements MouseListener,
 		return;
 
 	    Integer day = new Integer(text);
-	    
-	    Date newDate = new Date(cal.datefield.date.getTime());
+
+	    Date newDate = new Date(cal.datefield.getCurrentDate().getTime());
 	    newDate.setDate(day.intValue());
 	    if (!isEnabledDate(newDate)) {
 		return;
 	    }
-	    cal.datefield.date.setTime(newDate.getTime());
-	    cal.datefield.client.updateVariable(cal.datefield.id, "day",
-		    cal.datefield.date.getDate(), cal.datefield.immediate);
+	    cal.datefield.getCurrentDate().setTime(newDate.getTime());
+	    cal.datefield.getClient().updateVariable(cal.datefield.getId(), "day",
+		    cal.datefield.getCurrentDate().getDate(), cal.datefield.isImmediate());
 
 	    updateCalendar();
 	}
@@ -370,22 +377,22 @@ public class ICalendarPanel extends FlexTable implements MouseListener,
     }
 
     public void setLimits(Date min, Date max) {
-	if (min != null ) {
-        	Date d = new Date(min.getTime());
-        	d.setHours(0);
-        	d.setMinutes(0);
-        	d.setSeconds(1);
-        	this.minDate = d;
+	if (min != null) {
+	    Date d = new Date(min.getTime());
+	    d.setHours(0);
+	    d.setMinutes(0);
+	    d.setSeconds(1);
+	    this.minDate = d;
 	} else {
 	    this.minDate = null;
 	}
 	if (max != null) {
-        	Date d = new Date(max.getTime());
-        	d.setHours(24);
-        	d.setMinutes(59);
-        	d.setSeconds(59);
-        	this.maxDate = d;
-	}else {
+	    Date d = new Date(max.getTime());
+	    d.setHours(24);
+	    d.setMinutes(59);
+	    d.setSeconds(59);
+	    this.maxDate = d;
+	} else {
 	    this.maxDate = null;
 	}
     }

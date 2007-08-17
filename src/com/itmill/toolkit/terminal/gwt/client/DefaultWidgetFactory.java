@@ -8,7 +8,7 @@ import com.itmill.toolkit.terminal.gwt.client.ui.IComponent;
 import com.itmill.toolkit.terminal.gwt.client.ui.ICustomLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.IDateFieldCalendar;
 import com.itmill.toolkit.terminal.gwt.client.ui.IEmbedded;
-import com.itmill.toolkit.terminal.gwt.client.ui.IEntryCalendar;
+import com.itmill.toolkit.terminal.gwt.client.ui.ICalendar;
 import com.itmill.toolkit.terminal.gwt.client.ui.IForm;
 import com.itmill.toolkit.terminal.gwt.client.ui.IGridLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.ILabel;
@@ -113,9 +113,9 @@ public class DefaultWidgetFactory implements WidgetFactory {
 	} else if ("com.itmill.toolkit.terminal.gwt.client.ui.IDateFieldCalendar"
 		.equals(className)) {
 	    return new IDateFieldCalendar();
-	} else if ("com.itmill.toolkit.terminal.gwt.client.ui.IEntryCalendar"
+	} else if ("com.itmill.toolkit.terminal.gwt.client.ui.ICalendar"
 		.equals(className)) {
-	    return new IEntryCalendar();
+	    return new ICalendar();
 	} else if ("com.itmill.toolkit.terminal.gwt.client.ui.ITextualDate"
 		.equals(className)) {
 	    return new ITextualDate();
@@ -210,7 +210,7 @@ public class DefaultWidgetFactory implements WidgetFactory {
 		return "com.itmill.toolkit.terminal.gwt.client.ui.IPopupCalendar";
 	    }
 	} else if ("calendarfield".equals(tag)) {
-	    return "com.itmill.toolkit.terminal.gwt.client.ui.IEntryCalendar";
+	    return "com.itmill.toolkit.terminal.gwt.client.ui.ICalendar";
 	} else if ("slider".equals(tag)) {
 	    return "com.itmill.toolkit.terminal.gwt.client.ui.ISlider";
 	} else if ("form".equals(tag)) {
