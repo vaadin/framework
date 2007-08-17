@@ -179,7 +179,7 @@ public class ICalendarPanel extends FlexTable implements MouseListener,
 					.hasNext();) {
 				    ICalendarEntry entry = (ICalendarEntry) it
 					    .next();
-				    title += (title.length() > 0 ? "\n" : "")
+				    title += (title.length() > 0 ? ", " : "")
 					    + entry.getStringForDate(curr);
 				}
 			    }

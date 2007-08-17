@@ -7,6 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.HTMLTable;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.SourcesTableEvents;
 import com.google.gwt.user.client.ui.TableListener;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
@@ -19,7 +21,7 @@ public class ICalendar extends IDateField {
 
     private ICalendarPanel calPanel;
 
-    private FlexTable hourTable;
+    private HTMLTable hourTable;
 
     private EntrySource entrySource;
 
@@ -76,6 +78,11 @@ public class ICalendar extends IDateField {
 	    hourTable = new FlexTable();
 	    firstRender = true;
 	    hourTable.addTableListener(this.ftListener);
+	    SimplePanel p = new SimplePanel();
+	    p.add(hourTable);
+	    p.setStyleName(getStyleName() + "-hours");
+	    this.calPanel.getFlexCellFormatter().setColSpan(8, 0, 7);
+	    this.calPanel.setWidget(8, 0, p);
 	}
 	Date curr = new Date(date.getTime());
 	for (int i = 0; i < 24; i++) {
@@ -94,8 +101,9 @@ public class ICalendar extends IDateField {
 		    String ampm = (i < 12 ? "am" : "pm");
 		    hstr = (i <= 12 ? i : i - 12) + ":00 " + ampm;
 		}
-		hourTable.setHTML(i, 0, "<span class=\"" + getStyleName()
-			+ "-time\" >" + hstr + "</span>");
+		hourTable.setHTML(i, 0, "<span>" + hstr + "</span>");
+		hourTable.getCellFormatter().setStyleName(i, 0,
+			getStyleName() + "-time");
 	    }
 	    List entries = this.entrySource.getEntries(curr,
 		    DateTimeService.RESOLUTION_HOUR);
@@ -106,13 +114,12 @@ public class ICalendar extends IDateField {
 		    text += (text == "" ? "" : ", ")
 			    + (title != null ? title : "?");
 		}
-		hourTable.setHTML(i, 1, "<span class=\"" + getStyleName()
-			+ "-title\" >" + text + "</span>");
+		hourTable.setHTML(i, 1, "<span>" + text + "</span>");
+		hourTable.getCellFormatter().setStyleName(i, 1,
+			getStyleName() + "-title");
 	    }
 	}
 
-	this.calPanel.getFlexCellFormatter().setColSpan(8, 0, 7);
-	this.calPanel.setWidget(8, 0, hourTable);
     }
 
     private class HourTableListener implements TableListener {
@@ -143,7 +150,9 @@ public class ICalendar extends IDateField {
 	    if (items.containsKey(id)) {
 		items.remove(id);
 	    }
-	    items.put(id, new ICalendarEntry(startDate, endDate, title, notime));
+	    items
+		    .put(id, new ICalendarEntry(startDate, endDate, title,
+			    notime));
 	}
 
 	public List getEntries(Date date, int resolution) {

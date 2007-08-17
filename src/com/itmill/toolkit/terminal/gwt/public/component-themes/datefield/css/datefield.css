@@ -40,13 +40,25 @@
 	background-color: #1C3E6E;
 	cursor: default;
 }
+.i-datefield-calendarpanel-day-entry {
+	color: #0074D9;
+}
+.i-datefield-calendarpanel-day-disabled {
+	font-weight: normal;
+	color: #dddddd;
+	cursor: default;
+	opacity: 0.5;
+}
+.i-datefield-calendarpanel-day-entry.i-datefield-calendarpanel-day-disabled {
+	color: #ABC8E2;
+}
+
 .i-datefield-time {
 	white-space: nowrap;
 }
 .i-datefield-time .i-label {
 	display: inline;
 }
-
 
 .i-datefield-calendar {
 	border: 1px solid #29528a;
@@ -68,4 +80,39 @@
 	background: transparent url(../../panel/img/bottom-right.png) no-repeat right top;
 	content: url(../../panel/img/bottom-left.png);
 	margin: 5px -6px -6px -6px;
+}
+
+.i-datefield-entrycalendar-hours {
+	height: 150px;
+	overflow: auto;
+}
+.i-datefield-entrycalendar-hours table {
+	width: 92%;
+}
+
+.i-datefield-entrycalendar-row-even {
+	cursor: pointer;
+	background-color: #fefefe;
+}
+.i-datefield-entrycalendar-row-odd {
+	cursor: pointer;
+	background-color: #eeeeee;
+}
+.i-datefield-entrycalendar-row-selected {
+	color: #fff;
+	background-color: #1C3E6E;
+}
+td.i-datefield-entrycalendar-time {
+	padding-right: 2px;
+	text-align: right;
+	white-space: nowrap;
+}
+td.i-datefield-entrycalendar-title {
+	padding-left: 2px;
+	text-align: left;
+	width: 80%;
+	color: #0074D9;
+}
+.i-datefield-entrycalendar-row-selected td span {
+	color: #fff;
 }
