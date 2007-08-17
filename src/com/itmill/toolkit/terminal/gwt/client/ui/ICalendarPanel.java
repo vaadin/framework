@@ -1,6 +1,8 @@
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
@@ -15,276 +17,389 @@ import com.google.gwt.user.client.ui.TableListener;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.DateTimeService;
 import com.itmill.toolkit.terminal.gwt.client.LocaleService;
+import com.itmill.toolkit.terminal.gwt.client.ui.calendar.ICalendarEntry;
 
-public class ICalendarPanel extends FlexTable implements MouseListener, ClickListener {
-	
-	private IDateField datefield;
-	
-	private IEventButton prevYear;
-	private IEventButton nextYear;
-	private IEventButton prevMonth;
-	private IEventButton nextMonth;
-	
-	private ITime time;
-	
-	/* Needed to identify resolution changes */
-	private int resolution = IDateField.RESOLUTION_YEAR;
-	
-	/* Needed to identify locale changes */
-	private String locale = LocaleService.getDefaultLocale();
-	
-	public ICalendarPanel(IDateField parent) {
-		datefield = parent;
-		setStyleName(datefield.CLASSNAME+"-calendarpanel");
-		//buildCalendar(true);
-		addTableListener(new DateClickListener(this));
+public class ICalendarPanel extends FlexTable implements MouseListener,
+	ClickListener {
+
+    private IDateField datefield;
+
+    private IEventButton prevYear;
+    private IEventButton nextYear;
+    private IEventButton prevMonth;
+    private IEventButton nextMonth;
+
+    private ITime time;
+
+    private Date minDate = null;
+    private Date maxDate = null;
+
+    private CalendarEntrySource entrySource;
+
+    /* Needed to identify resolution changes */
+    private int resolution = IDateField.RESOLUTION_YEAR;
+
+    /* Needed to identify locale changes */
+    private String locale = LocaleService.getDefaultLocale();
+
+    public ICalendarPanel(IDateField parent) {
+	datefield = parent;
+	setStyleName(datefield.CLASSNAME + "-calendarpanel");
+	// buildCalendar(true);
+	addTableListener(new DateClickListener(this));
+    }
+
+    public ICalendarPanel(IDateField parent, Date min, Date max) {
+	datefield = parent;
+	setStyleName(datefield.CLASSNAME + "-calendarpanel");
+	// buildCalendar(true);
+	addTableListener(new DateClickListener(this));
+    }
+
+    private void buildCalendar(boolean forceRedraw) {
+	boolean needsMonth = datefield.currentResolution > IDateField.RESOLUTION_YEAR;
+	boolean needsBody = datefield.currentResolution >= IDateField.RESOLUTION_DAY;
+	boolean needsTime = datefield.currentResolution >= IDateField.RESOLUTION_HOUR;
+	buildCalendarHeader(forceRedraw, needsMonth);
+	clearCalendarBody(!needsBody);
+	if (needsBody)
+	    buildCalendarBody();
+	if (needsTime)
+	    buildTime(forceRedraw);
+	else if (time != null) {
+	    remove(time);
+	    time = null;
 	}
-	
-	private void buildCalendar(boolean forceRedraw) {
-		boolean needsMonth = datefield.currentResolution > IDateField.RESOLUTION_YEAR;
-		boolean needsBody = datefield.currentResolution >= IDateField.RESOLUTION_DAY;
-		boolean needsTime = datefield.currentResolution >= IDateField.RESOLUTION_HOUR;
-		buildCalendarHeader(forceRedraw, needsMonth);
-		clearCalendarBody(!needsBody);
-		if(needsBody)
-			buildCalendarBody();
-		if(needsTime)
-			buildTime(forceRedraw);
-		else if(time != null) {
-			remove(time);
-			time = null;
+    }
+
+    private void clearCalendarBody(boolean remove) {
+	if (!remove) {
+	    for (int row = 2; row < 8; row++) {
+		for (int col = 0; col < 7; col++) {
+		    setHTML(row, col, "&nbsp;");
 		}
+	    }
+	} else if (getRowCount() > 2) {
+	    while (getRowCount() > 2)
+		removeRow(2);
+	}
+    }
+
+    private void buildCalendarHeader(boolean forceRedraw, boolean needsMonth) {
+	// Can't draw a calendar without a date :)
+	if (datefield.date == null)
+	    datefield.date = new Date();
+
+	if (forceRedraw) {
+	    if (prevMonth == null) { // Only do once
+		prevYear = new IEventButton();
+		prevYear.setHTML("&laquo;");
+		nextYear = new IEventButton();
+		nextYear.setHTML("&raquo;");
+		prevYear.addMouseListener(this);
+		nextYear.addMouseListener(this);
+		prevYear.addClickListener(this);
+		nextYear.addClickListener(this);
+		setWidget(0, 0, prevYear);
+		setWidget(0, 4, nextYear);
+
+		if (needsMonth) {
+		    prevMonth = new IEventButton();
+		    prevMonth.setHTML("&lsaquo;");
+		    nextMonth = new IEventButton();
+		    nextMonth.setHTML("&rsaquo;");
+		    prevMonth.addMouseListener(this);
+		    nextMonth.addMouseListener(this);
+		    prevMonth.addClickListener(this);
+		    nextMonth.addClickListener(this);
+		    setWidget(0, 3, nextMonth);
+		    setWidget(0, 1, prevMonth);
+		}
+
+		getFlexCellFormatter().setColSpan(0, 2, 3);
+	    } else if (!needsMonth) {
+		// Remove month traverse buttons
+		prevMonth.removeClickListener(this);
+		prevMonth.removeMouseListener(this);
+		nextMonth.removeClickListener(this);
+		nextMonth.removeMouseListener(this);
+		remove(prevMonth);
+		remove(nextMonth);
+		prevMonth = null;
+		nextMonth = null;
+	    }
+
+	    // Print weekday names
+	    int firstDay = datefield.dts.getFirstDayOfWeek();
+	    for (int i = 0; i < 7; i++) {
+		int day = i + firstDay;
+		if (day > 6)
+		    day = 0;
+		if (datefield.currentResolution > IDateField.RESOLUTION_MONTH)
+		    setHTML(1, i, "<strong>" + datefield.dts.getShortDay(day)
+			    + "</strong>");
+		else
+		    setHTML(1, i, "");
+	    }
 	}
 
-	private void clearCalendarBody(boolean remove) {
-		if(!remove) {
-			for (int row = 2; row < 8; row++) {
-				for (int col = 0; col < 7; col++) {
-					setHTML(row, col, "&nbsp;");
+	String monthName = needsMonth ? datefield.dts.getMonth(datefield.date
+		.getMonth()) : "";
+	int year = datefield.date.getYear() + 1900;
+	setHTML(0, 2, "<span class=\"" + datefield.CLASSNAME
+		+ "-calendarpanel-month\">" + monthName + " " + year
+		+ "</span>");
+    }
+
+    private void buildCalendarBody() {
+	Date date = datefield.date;
+	if (date == null)
+	    date = new Date();
+	int startWeekDay = datefield.dts.getStartWeekDay(date);
+	int numDays = DateTimeService.getNumberOfDaysInMonth(date);
+	int dayCount = 0;
+	Date today = new Date();
+	Date curr = new Date(date.getTime());
+	for (int row = 2; row < 8; row++) {
+	    for (int col = 0; col < 7; col++) {
+		if (!(row == 2 && col < startWeekDay)) {
+		    if (dayCount < numDays) {
+			int selectedDate = ++dayCount;
+			String title = "";
+			if (this.entrySource != null) {
+			    curr.setDate(dayCount);
+			    List entries = this.entrySource
+				    .getEntries(curr,IDateField.RESOLUTION_DAY);
+			    if (entries != null) {
+				for (Iterator it = entries.iterator(); it.hasNext();) {
+				    ICalendarEntry entry = (ICalendarEntry)it.next();
+				    title += (title.length() > 0 ? "\n" : "") + entry.getStringForDate(curr);
 				}
+			    }
 			}
-		} else if(getRowCount() > 2) {
-			while(getRowCount() > 2)
-				removeRow(2);
-		}
-	}
-	
-	private void buildCalendarHeader(boolean forceRedraw, boolean needsMonth) {
-		// Can't draw a calendar without a date :)
-		if(datefield.date == null)
-			datefield.date = new Date();
-		
-		if(forceRedraw) {
-			if(prevMonth == null) { // Only do once
-				prevYear = new IEventButton(); prevYear.setHTML("&laquo;");
-				nextYear = new IEventButton(); nextYear.setHTML("&raquo;");
-				prevYear.addMouseListener(this); nextYear.addMouseListener(this);
-				prevYear.addClickListener(this); nextYear.addClickListener(this);
-				setWidget(0, 0, prevYear);
-				setWidget(0, 4, nextYear);
-				
-				if(needsMonth) {
-					prevMonth = new IEventButton(); prevMonth.setHTML("&lsaquo;");
-					nextMonth = new IEventButton(); nextMonth.setHTML("&rsaquo;");
-					prevMonth.addMouseListener(this); nextMonth.addMouseListener(this);
-					prevMonth.addClickListener(this); nextMonth.addClickListener(this);
-					setWidget(0, 3, nextMonth);
-					setWidget(0, 1, prevMonth);
-				}
-				
-				getFlexCellFormatter().setColSpan(0, 2, 3);
-			} else if(!needsMonth){
-				// Remove month traverse buttons
-				prevMonth.removeClickListener(this);
-				prevMonth.removeMouseListener(this);
-				nextMonth.removeClickListener(this);
-				nextMonth.removeMouseListener(this);
-				remove(prevMonth);
-				remove(nextMonth);
-				prevMonth = null; nextMonth = null;
+			String baseclass = datefield.CLASSNAME
+				+ "-calendarpanel-day";
+			String cssClass = baseclass;
+			if (!isEnabledDate(curr)) {
+			    cssClass += " " + baseclass + "-disabled";
 			}
-			
-			// Print weekday names
-			int firstDay = datefield.dts.getFirstDayOfWeek();
-			for(int i = 0; i < 7; i++) {
-				int day = i + firstDay;
-				if(day > 6) day = 0;
-				if(datefield.currentResolution > IDateField.RESOLUTION_MONTH)
-					setHTML(1,i, "<strong>" + datefield.dts.getShortDay(day) + "</strong>");
-				else
-					setHTML(1,i, "");
+			if (date.getDate() == dayCount) {
+			    cssClass += " " + baseclass + "-selected";
 			}
-		}
-		
-		String monthName = needsMonth? datefield.dts.getMonth(datefield.date.getMonth()) : "";
-		int year = datefield.date.getYear()+1900;
-		setHTML(0, 2, "<span class=\""+datefield.CLASSNAME+"-calendarpanel-month\">" + monthName + " " + year + "</span>");
-	}
-	
-	private void buildCalendarBody() {
-		Date date = datefield.date;
-		if(date == null)
-			date = new Date();
-		int startWeekDay = datefield.dts.getStartWeekDay(date);
-		int numDays = DateTimeService.getNumberOfDaysInMonth(date);
-		int dayCount = 0;
-		Date today = new Date();
-		for (int row = 2; row < 8; row++){
-			for (int col = 0; col < 7; col++){
-				if(!(row == 2 && col < startWeekDay)) {
-					if(dayCount < numDays){
-						int selectedDate = ++dayCount;
-						if(date.getDate() == dayCount){
-							setHTML(row, col, "<span class=\""+datefield.CLASSNAME+"-calendarpanel-day-selected\">" + selectedDate + "</span>");
-						} else if(today.getDate() == dayCount && today.getMonth() == date.getMonth() && today.getYear() == date.getYear()){
-							setHTML(row, col, "<span class=\""+datefield.CLASSNAME+"-calendarpanel-day-today\">" + selectedDate + "</span>");
-						} else {
-							setHTML(row, col, "<span class=\""+datefield.CLASSNAME+"-calendarpanel-day\">" + selectedDate + "</span>");
-						}
-					} else {
-						break;
-					}
-				}
+			if (today.getDate() == dayCount
+				&& today.getMonth() == date.getMonth()
+				&& today.getYear() == date.getYear()) {
+			    cssClass += " " + baseclass + "-today";
 			}
-		}
-	}
-	
-	private void buildTime(boolean forceRedraw) {
-		if(time == null) {
-			time = new ITime(datefield);
-			setText(8,0,""); // Add new row
-			getFlexCellFormatter().setColSpan(8, 0, 7);
-			setWidget(8, 0, time);
-		}
-		time.updateTime(forceRedraw);
-	}
-	
-	/**
-	 * 
-	 * @param forceRedraw Build all from scratch, in case of e.g. locale changes
-	 */
-	public void updateCalendar() {
-		// Locale and resolution changes force a complete redraw
-		buildCalendar(locale != datefield.currentLocale || resolution != datefield.currentResolution);
-		if(datefield instanceof ITextualDate)
-			((ITextualDate) datefield).buildDate();
-		locale = datefield.currentLocale;
-		resolution = datefield.currentResolution;
-	}
-	
-	public void onClick(Widget sender) {
-		processClickEvent(sender);
-	}
-
-	private void processClickEvent(Widget sender) {
-		if(!datefield.enabled || datefield.readonly)
-			return;
-		if(sender == prevYear) {
-			datefield.date.setYear(datefield.date.getYear()-1);
-			datefield.client.updateVariable(datefield.id, "year", datefield.date.getYear()+1900, datefield.immediate);
-			updateCalendar();
-		} else if(sender == nextYear) {
-			datefield.date.setYear(datefield.date.getYear()+1);
-			datefield.client.updateVariable(datefield.id, "year", datefield.date.getYear()+1900, datefield.immediate);
-			updateCalendar();
-		} else if(sender == prevMonth) {
-			datefield.date.setMonth(datefield.date.getMonth()-1);
-			datefield.client.updateVariable(datefield.id, "month", datefield.date.getMonth()+1, datefield.immediate);
-			updateCalendar();
-		} else if(sender == nextMonth) {
-			datefield.date.setMonth(datefield.date.getMonth()+1);
-			datefield.client.updateVariable(datefield.id, "month", datefield.date.getMonth()+1, datefield.immediate);
-			updateCalendar();
-		}
-	}
-	
-	private Timer timer;
-
-	public void onMouseDown(final Widget sender, int x, int y) {
-		if(sender instanceof IEventButton) {
-			timer = new Timer() {
-				public void run() {
-					processClickEvent(sender);
-				}
-			};
-			timer.scheduleRepeating(100);
-		}
-	}
-
-	public void onMouseEnter(Widget sender) {}
-
-	public void onMouseLeave(Widget sender) {
-		if(timer != null)
-			timer.cancel();
-	}
-
-	public void onMouseMove(Widget sender, int x, int y) {}
-
-	public void onMouseUp(Widget sender, int x, int y) {
-		if(timer != null)
-			timer.cancel();
-	}
-	
-	private class IEventButton extends IButton implements SourcesMouseEvents {
-
-		private MouseListenerCollection mouseListeners;
-		
-		public IEventButton() {
-			super();
-			sinkEvents(Event.FOCUSEVENTS | Event.KEYEVENTS | Event.ONCLICK
-				      | Event.MOUSEEVENTS);
-		}
-		
-		public void addMouseListener(MouseListener listener) {
-		    if (mouseListeners == null) {
-		    	mouseListeners = new MouseListenerCollection();
+			if (title.length() > 0)
+			    cssClass += " " + baseclass + "-entry";
+			setHTML(row, col, "<span title=\"" + title
+				+ "\" class=\"" + cssClass + "\">"
+				+ selectedDate + "</span>");
+		    } else {
+			break;
 		    }
-		    mouseListeners.add(listener);
+		    
 		}
-
-		public void removeMouseListener(MouseListener listener) {
-			if (mouseListeners != null)
-				mouseListeners.remove(listener);
-		}
-			
-		public void onBrowserEvent(Event event) {
-			super.onBrowserEvent(event);
-			switch (DOM.eventGetType(event)) {
-				case Event.ONMOUSEDOWN:
-				case Event.ONMOUSEUP:
-				case Event.ONMOUSEMOVE:
-				case Event.ONMOUSEOVER:
-				case Event.ONMOUSEOUT:
-					if (mouseListeners != null) {
-						mouseListeners.fireMouseEvent(this, event);
-					}
-					break;
-			}
-		}	
+	    }
 	}
+    }
+
+    private void buildTime(boolean forceRedraw) {
+	if (time == null) {
+	    time = new ITime(datefield);
+	    setText(8, 0, ""); // Add new row
+	    getFlexCellFormatter().setColSpan(8, 0, 7);
+	    setWidget(8, 0, time);
+	}
+	time.updateTime(forceRedraw);
+    }
+
+    /**
+     * 
+     * @param forceRedraw
+     *                Build all from scratch, in case of e.g. locale changes
+     */
+    public void updateCalendar() {
+	// Locale and resolution changes force a complete redraw
+	buildCalendar(locale != datefield.currentLocale
+		|| resolution != datefield.currentResolution);
+	if (datefield instanceof ITextualDate)
+	    ((ITextualDate) datefield).buildDate();
+	locale = datefield.currentLocale;
+	resolution = datefield.currentResolution;
+    }
+
+    public void onClick(Widget sender) {
+	processClickEvent(sender);
+    }
+    
+    private boolean isEnabledDate(Date date) {
+	if ((this.minDate != null && date.before(this.minDate))
+		|| (this.maxDate != null && date.after(this.maxDate))) {
+	   return false;
+	}
+	return true;
+    }
+
+    private void processClickEvent(Widget sender) {
+	if (!datefield.enabled || datefield.readonly)
+	    return;
 	
-	private class DateClickListener implements TableListener {
-		
-		private ICalendarPanel cal;
-		
-		public DateClickListener(ICalendarPanel panel) {
-			cal = panel;
-		}
-
-		public void onCellClicked(SourcesTableEvents sender, int row, int col) {
-			if(sender != cal || row < 2 || row > 7 || !cal.datefield.enabled || cal.datefield.readonly)
-				return;
-			
-			String text = cal.getText(row, col);
-			if(text.equals(" "))
-				return;
-				
-			Integer day = new Integer(text);
-			cal.datefield.date.setDate(day.intValue());
-			cal.datefield.client.updateVariable(cal.datefield.id, "day", cal.datefield.date.getDate(), cal.datefield.immediate);
-			
-			updateCalendar();
-		}
-		
+	if (sender == prevYear) {
+	    datefield.date.setYear(datefield.date.getYear() - 1);
+	    datefield.client.updateVariable(datefield.id, "year",
+		    datefield.date.getYear() + 1900, datefield.immediate);
+	    updateCalendar();
+	} else if (sender == nextYear) {
+	    datefield.date.setYear(datefield.date.getYear() + 1);
+	    datefield.client.updateVariable(datefield.id, "year",
+		    datefield.date.getYear() + 1900, datefield.immediate);
+	    updateCalendar();
+	} else if (sender == prevMonth) {
+	    datefield.date.setMonth(datefield.date.getMonth() - 1);
+	    datefield.client.updateVariable(datefield.id, "month",
+		    datefield.date.getMonth() + 1, datefield.immediate);
+	    updateCalendar();
+	} else if (sender == nextMonth) {
+	    datefield.date.setMonth(datefield.date.getMonth() + 1);
+	    datefield.client.updateVariable(datefield.id, "month",
+		    datefield.date.getMonth() + 1, datefield.immediate);
+	    updateCalendar();
 	}
+    }
+
+    private Timer timer;
+
+    public void onMouseDown(final Widget sender, int x, int y) {
+	if (sender instanceof IEventButton) {
+	    timer = new Timer() {
+		public void run() {
+		    processClickEvent(sender);
+		}
+	    };
+	    timer.scheduleRepeating(100);
+	}
+    }
+
+    public void onMouseEnter(Widget sender) {
+    }
+
+    public void onMouseLeave(Widget sender) {
+	if (timer != null)
+	    timer.cancel();
+    }
+
+    public void onMouseMove(Widget sender, int x, int y) {
+    }
+
+    public void onMouseUp(Widget sender, int x, int y) {
+	if (timer != null)
+	    timer.cancel();
+    }
+
+    private class IEventButton extends IButton implements SourcesMouseEvents {
+
+	private MouseListenerCollection mouseListeners;
+
+	public IEventButton() {
+	    super();
+	    sinkEvents(Event.FOCUSEVENTS | Event.KEYEVENTS | Event.ONCLICK
+		    | Event.MOUSEEVENTS);
+	}
+
+	public void addMouseListener(MouseListener listener) {
+	    if (mouseListeners == null) {
+		mouseListeners = new MouseListenerCollection();
+	    }
+	    mouseListeners.add(listener);
+	}
+
+	public void removeMouseListener(MouseListener listener) {
+	    if (mouseListeners != null)
+		mouseListeners.remove(listener);
+	}
+
+	public void onBrowserEvent(Event event) {
+	    super.onBrowserEvent(event);
+	    switch (DOM.eventGetType(event)) {
+	    case Event.ONMOUSEDOWN:
+	    case Event.ONMOUSEUP:
+	    case Event.ONMOUSEMOVE:
+	    case Event.ONMOUSEOVER:
+	    case Event.ONMOUSEOUT:
+		if (mouseListeners != null) {
+		    mouseListeners.fireMouseEvent(this, event);
+		}
+		break;
+	    }
+	}
+    }
+
+    private class DateClickListener implements TableListener {
+
+	private ICalendarPanel cal;
+
+	public DateClickListener(ICalendarPanel panel) {
+	    cal = panel;
+	}
+
+	public void onCellClicked(SourcesTableEvents sender, int row, int col) {
+	    if (sender != cal || row < 2 || row > 7 || !cal.datefield.enabled
+		    || cal.datefield.readonly)
+		return;
+
+	    String text = cal.getText(row, col);
+	    if (text.equals(" "))
+		return;
+
+	    Integer day = new Integer(text);
+	    
+	    Date newDate = new Date(cal.datefield.date.getTime());
+	    newDate.setDate(day.intValue());
+	    if (!isEnabledDate(newDate)) {
+		return;
+	    }
+	    cal.datefield.date.setTime(newDate.getTime());
+	    cal.datefield.client.updateVariable(cal.datefield.id, "day",
+		    cal.datefield.date.getDate(), cal.datefield.immediate);
+
+	    updateCalendar();
+	}
+
+    }
+
+    public void setLimits(Date min, Date max) {
+	if (min != null ) {
+        	Date d = new Date(min.getTime());
+        	d.setHours(0);
+        	d.setMinutes(0);
+        	d.setSeconds(1);
+        	this.minDate = d;
+	} else {
+	    this.minDate = null;
+	}
+	if (max != null) {
+        	Date d = new Date(max.getTime());
+        	d.setHours(24);
+        	d.setMinutes(59);
+        	d.setSeconds(59);
+        	this.maxDate = d;
+	}else {
+	    this.maxDate = null;
+	}
+    }
+
+    public void setCalendarEntrySource(CalendarEntrySource entrySource) {
+	this.entrySource = entrySource;
+    }
+
+    public CalendarEntrySource getCalendarEntrySource() {
+	return this.entrySource;
+    }
+
+    public interface CalendarEntrySource {
+	public List getEntries(Date date, int resolution);
+    }
+
 }

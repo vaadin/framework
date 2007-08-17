@@ -19,13 +19,13 @@ public class IDateField extends FlowPanel implements Paintable {
 	
 	protected boolean immediate;
 	
-	protected static int RESOLUTION_YEAR = 0;
-	protected static int RESOLUTION_MONTH = 1;
-	protected static int RESOLUTION_DAY = 2;
-	protected static int RESOLUTION_HOUR = 3;
-	protected static int RESOLUTION_MIN = 4;
-	protected static int RESOLUTION_SEC = 5;
-	protected static int RESOLUTION_MSEC = 6;
+	static int RESOLUTION_YEAR = 0;
+	static int RESOLUTION_MONTH = 1;
+	static int RESOLUTION_DAY = 2;
+	static int RESOLUTION_HOUR = 3;
+	static int RESOLUTION_MIN = 4;
+	static int RESOLUTION_SEC = 5;
+	static int RESOLUTION_MSEC = 6;
 	protected int currentResolution = RESOLUTION_YEAR;
 	
 	protected String currentLocale;

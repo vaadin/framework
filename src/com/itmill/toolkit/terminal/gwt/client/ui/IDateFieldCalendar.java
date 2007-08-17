@@ -3,11 +3,11 @@ package com.itmill.toolkit.terminal.gwt.client.ui;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
-public class ICalendar extends IDateField {
+public class IDateFieldCalendar extends IDateField {
 	
 	private ICalendarPanel date;
 	
-	public ICalendar() {
+	public IDateFieldCalendar() {
 		super();
 		setStyleName(CLASSNAME+"-calendar");
 		date = new ICalendarPanel(this);
