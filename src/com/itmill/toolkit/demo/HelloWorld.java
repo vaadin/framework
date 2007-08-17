@@ -28,6 +28,7 @@ public class HelloWorld extends com.itmill.toolkit.Application {
 		Window main = new Window("Hello window");
 		setMainWindow(main);
 
+		setTheme("example");
 		/*
 		 * - Create a label with the classic text - Add the label to the main
 		 * window
