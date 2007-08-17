@@ -29,6 +29,7 @@ import com.itmill.toolkit.terminal.gwt.client.ui.ITextualDate;
 import com.itmill.toolkit.terminal.gwt.client.ui.ITree;
 import com.itmill.toolkit.terminal.gwt.client.ui.ITwinColSelect;
 import com.itmill.toolkit.terminal.gwt.client.ui.IUnknownComponent;
+import com.itmill.toolkit.terminal.gwt.client.ui.IUpload;
 import com.itmill.toolkit.terminal.gwt.client.ui.IView;
 import com.itmill.toolkit.terminal.gwt.client.ui.IWindow;
 
@@ -95,6 +96,8 @@ public class DefaultWidgetFactory implements WidgetFactory {
 			return new ISlider();
 		} else if ("com.itmill.toolkit.terminal.gwt.client.ui.IForm".equals(className)) {
 			return new IForm();
+		} else if ("com.itmill.toolkit.terminal.gwt.client.ui.IUpload".equals(className)) {
+			return new IUpload();
 		}
 		return new IUnknownComponent();
 
@@ -176,6 +179,8 @@ public class DefaultWidgetFactory implements WidgetFactory {
 			return "com.itmill.toolkit.terminal.gwt.client.ui.ISlider";
 		} else if ("form".equals(tag)) {
 			return "com.itmill.toolkit.terminal.gwt.client.ui.IForm";
+		} else if ("upload".equals(tag)) {
+			return "com.itmill.toolkit.terminal.gwt.client.ui.IUpload";
 		}
 
 		return "com.itmill.toolkit.terminal.gwt.client.ui.IUnknownComponent";
