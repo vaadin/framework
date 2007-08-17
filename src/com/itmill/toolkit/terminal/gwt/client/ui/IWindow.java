@@ -185,7 +185,8 @@ public class IWindow extends PopupPanel implements Paintable {
 			onResizeEvent(event);
 			return false;
 		}
-		return super.onEventPreview(event);
+		//TODO return false when modal
+		return true;
 	}
 
 }
