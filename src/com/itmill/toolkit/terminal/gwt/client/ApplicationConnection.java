@@ -16,6 +16,7 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FocusListener;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HasWidgets;
@@ -23,6 +24,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ui.IContextMenu;
 import com.itmill.toolkit.terminal.gwt.client.ui.IView;
+import com.itmill.toolkit.terminal.gwt.client.ui.IWindow;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -55,13 +57,22 @@ public class ApplicationConnection implements EntryPoint, FocusListener {
 	public void onModuleLoad() {
 
 		appUri = getAppUri();
-
-		// TODO Hardcoded (finnish) id -> change 
-		console = new Console(RootPanel.get("itmtk-loki"));
+		
+		if(isDebugMode()) {
+			console = new DebugConsole();
+		} else {
+			console = new NullConsole();
+		}
 
 		makeUidlRequest("repaintAll=1");
 		
 	}
+
+	private native boolean isDebugMode() /*-{
+		var uri = $wnd.location;
+		var re = /debug[^\/]*$/;
+		return re.test(uri);
+	}-*/;
 
 	private native String getAppUri()/*-{
 	 return $wnd.itmtk.appUri;

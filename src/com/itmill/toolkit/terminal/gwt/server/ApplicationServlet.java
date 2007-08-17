@@ -422,7 +422,10 @@ public class ApplicationServlet extends HttpServlet {
 			 Window window, String themeName) throws IOException, MalformedURLException {
 		response.setContentType("text/html");
 		BufferedWriter page = new BufferedWriter(new OutputStreamWriter(response.getOutputStream()));
-
+		
+		String uri = request.getRequestURL().toString();
+		boolean hasSlash = (uri.charAt(uri.length()-1) == '/') ? true : false;
+		
 		page
 				.write("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" "
 						+ "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n");
@@ -430,7 +433,7 @@ public class ApplicationServlet extends HttpServlet {
 		
 		
 		page.write("<html>\n<head>\n<title>IT Mill Toolkit 5</title>\n" +
-				"<meta name='gwt:module' content='../com.itmill.toolkit.terminal.gwt.Client=com.itmill.toolkit.terminal.gwt.Client'>\n" +
+				"<meta name='gwt:module' content='"+ (hasSlash ? "../" : "") +"com.itmill.toolkit.terminal.gwt.Client=com.itmill.toolkit.terminal.gwt.Client'>\n" +
 				"<script type=\"text/javascript\">\n" +
 				"	var itmtk = {\n" +
 				"		appUri:'");
@@ -441,20 +444,19 @@ public class ApplicationServlet extends HttpServlet {
 		// virtual server configurations which lose the server name
 		for (int i = 3; i < urlParts.length; i++)
 			appUrl += "/" + urlParts[i];
-		if (appUrl.endsWith("/"))
+		if (appUrl.endsWith("/")) {
 			appUrl = appUrl.substring(0, appUrl.length() - 1);
+		}
+		
 		
 		page.write(appUrl);
 		
 		page.write("'\n};\n" +
 				"</script>\n" +
 				"<link REL=\"stylesheet\" TYPE=\"text/css\" HREF=\""+request.getContextPath() + THEME_DIRECTORY_PATH+themeName+"/style.css\">" + 
-				"</head>\n<body>\n<script language=\"javascript\" src=\"../com.itmill.toolkit.terminal.gwt.Client/gwt.js\"></script>\n" +
+				"</head>\n<body>\n<script language=\"javascript\" src=\""+ (hasSlash ? "../" : "") +"com.itmill.toolkit.terminal.gwt.Client/gwt.js\"></script>\n" +
 				"	<iframe id=\"__gwt_historyFrame\" style=\"width:0;height:0;border:0\"></iframe>\n" +
 				"	<div id=\"itmtk-ajax-window\"></div>" +
-				"	<div id=\"itmtk-loki\" style=\"width: 100%; position: absolute; left: 0px; bottom: 0; height: 0px; border-top: 1px solid gray; background-color: #f6f6f6; overflow: scroll; font-size: x-small;color:red !important;\"" +
-				"></div>\n" +
-				"<div id='itm-loki-exp' style='right: 0; bottom: 0px; position: absolute; padding-left: 5px; padding-right: 5px; border-left: 1px solid gray; border-top: 1px solid gray; background-color: #f6f6f6;' onclick='itm_loki_exp()'>console</div><script language='JavaScript'>itm_loki_exp = function() {var l=document.getElementById('itmtk-loki'); var e=document.getElementById('itm-loki-exp'); if (e.style.bottom=='400px') {e.style.bottom='0px'; l.style.height='0px'; e.innerHTML='console';} else {e.style.bottom='400px'; l.style.height='400px'; e.innerHTML='-';}}</script>"+
 				"	<div style=\"position: absolute; right: 5px; top: 5px; color: gray;\"><strong>IT Mill Toolkit 5 Prototype</strong></div>\n" + 
 				"	</body>\n" + 
 				"</html>\n");
