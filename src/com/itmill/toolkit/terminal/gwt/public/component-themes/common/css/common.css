@@ -24,7 +24,7 @@ select {
 
 .i-disabled {
 	opacity: 0.3;
-	filter: alpha(opacity:30);
+	filter: Alpha(opacity=30);
 }
 
 .i-contextmenu {

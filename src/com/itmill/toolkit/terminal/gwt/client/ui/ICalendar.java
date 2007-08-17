@@ -29,9 +29,11 @@ public class ICalendar extends IDateField {
 
     private int realResolution = RESOLUTION_DAY;
 
+    private static final String CLASSNAME = IDateField.CLASSNAME + "-entrycalendar";
+    
     public ICalendar() {
 	super();
-	setStyleName(CLASSNAME + "-entrycalendar");
+	setStyleName(CLASSNAME);
 	calPanel = new ICalendarPanel(this);
 	add(calPanel);
 	this.entrySource = new EntrySource();
@@ -80,7 +82,7 @@ public class ICalendar extends IDateField {
 	    hourTable.addTableListener(this.ftListener);
 	    SimplePanel p = new SimplePanel();
 	    p.add(hourTable);
-	    p.setStyleName(getStyleName() + "-hours");
+	    p.setStyleName(CLASSNAME + "-hours");
 	    this.calPanel.getFlexCellFormatter().setColSpan(8, 0, 7);
 	    this.calPanel.setWidget(8, 0, p);
 	}
@@ -94,7 +96,7 @@ public class ICalendar extends IDateField {
 		}
 	    }
 	    hourTable.getRowFormatter().setStyleName(i,
-		    getStyleName() + "-row-" + style);
+		    CLASSNAME + "-row-" + style);
 	    if (firstRender) {
 		String hstr = (i < 10 ? "0" : "") + i + ":00";
 		if (this.dts.isTwelveHourClock()) {
@@ -103,21 +105,21 @@ public class ICalendar extends IDateField {
 		}
 		hourTable.setHTML(i, 0, "<span>" + hstr + "</span>");
 		hourTable.getCellFormatter().setStyleName(i, 0,
-			getStyleName() + "-time");
+			CLASSNAME + "-time");
 	    }
 	    List entries = this.entrySource.getEntries(curr,
 		    DateTimeService.RESOLUTION_HOUR);
+	    String text = "";
 	    if (entries != null) {
-		String text = "";
 		for (Iterator it = entries.iterator(); it.hasNext();) {
 		    String title = ((ICalendarEntry) it.next()).getTitle();
 		    text += (text == "" ? "" : ", ")
 			    + (title != null ? title : "?");
 		}
-		hourTable.setHTML(i, 1, "<span>" + text + "</span>");
-		hourTable.getCellFormatter().setStyleName(i, 1,
-			getStyleName() + "-title");
 	    }
+	    hourTable.setHTML(i, 1, "<span>" + text + "</span>");
+	    hourTable.getCellFormatter().setStyleName(i, 1,
+		    CLASSNAME + "-title");
 	}
 
     }
