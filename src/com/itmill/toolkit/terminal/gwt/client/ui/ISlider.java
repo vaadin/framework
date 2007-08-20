@@ -179,7 +179,7 @@ public class ISlider extends Widget implements Paintable {
 			int w = (int) (Double.parseDouble(DOM.getAttribute(base, "offsetWidth")) / 100 * handleSize);
 			if(handleSize == -1) {
 				int baseW = Integer.parseInt(DOM.getAttribute(base, "offsetWidth"));
-				double range = (max - min) * (resolution+1) * 1.5;
+				double range = (max - min) * (resolution+1) * 3;
 				w = (int) (baseW - range);
 			}
 			if(w < 3)
@@ -203,6 +203,8 @@ public class ISlider extends Widget implements Paintable {
 			double p = 0;
 			if(valueRange != 0)
 				p = range * ((v - min) / valueRange);
+			if(p < 0)
+				p = 0;
 			final double pos = p;
 				
 			
@@ -236,6 +238,11 @@ public class ISlider extends Widget implements Paintable {
 			} else DOM.setStyleAttribute(handle, "left", pos+"px");
 			//DOM.setAttribute(handle, "title", ""+v);
 		}
+		
+		if(value.doubleValue() < min)
+			value = new Double(min);
+		else if(value.doubleValue() > max)
+			value = new Double(max);
 		
 		this.value = value;
 		
