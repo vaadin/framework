@@ -120,7 +120,7 @@ public class ITree extends Tree implements Paintable {
 				if (!selectable) return;
 				String key = n.key;
 				if (key != null) {
-					if(selectedIds.contains(key)) {
+					if(selectedIds.contains(key) && multiselect) {
 						selectedIds.remove(key);
 						n.setISelected(false);
 					} else {

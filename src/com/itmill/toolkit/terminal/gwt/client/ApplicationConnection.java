@@ -16,7 +16,6 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FocusListener;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HasWidgets;
@@ -24,7 +23,6 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ui.IContextMenu;
 import com.itmill.toolkit.terminal.gwt.client.ui.IView;
-import com.itmill.toolkit.terminal.gwt.client.ui.IWindow;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.

@@ -87,11 +87,11 @@ public class ITabsheet extends TabPanel implements Paintable {
 					Widget content = client.getWidget(tab
 							.getChildUIDL(0));
 					tb.selectTab(index);
-					dp.remove(index);
-					dp.insert(content, index);
+					remove(index);
+					insert(content, (String) captions.get(index), index);
 					((Paintable)content).updateFromUIDL(tab
 							.getChildUIDL(0), client);
-					dp.showWidget(index);
+					this.selectTab(index);
 				}
 				index++;
 			}

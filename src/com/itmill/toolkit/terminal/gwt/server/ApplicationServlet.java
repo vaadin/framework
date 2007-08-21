@@ -429,11 +429,8 @@ public class ApplicationServlet extends HttpServlet {
 		page
 				.write("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" "
 						+ "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n");
-
-		
 		
 		page.write("<html>\n<head>\n<title>IT Mill Toolkit 5</title>\n" +
-				"<meta name='gwt:module' content='"+ (hasSlash ? "../" : "") +"com.itmill.toolkit.terminal.gwt.Client=com.itmill.toolkit.terminal.gwt.Client'>\n" +
 				"<script type=\"text/javascript\">\n" +
 				"	var itmtk = {\n" +
 				"		appUri:'");
@@ -453,16 +450,19 @@ public class ApplicationServlet extends HttpServlet {
 		
 		page.write("'\n};\n" +
 				"</script>\n" +
+				
+				"<script language='javascript' src='"+ (hasSlash ? "../" : "") + "com.itmill.toolkit.terminal.gwt.Client/com.itmill.toolkit.terminal.gwt.Client.nocache.js'></script>" +
+
 				"<link REL=\"stylesheet\" TYPE=\"text/css\" HREF=\""+request.getContextPath() + THEME_DIRECTORY_PATH+themeName+"/style.css\">" + 
-				"</head>\n<body>\n<script language=\"javascript\" src=\""+ (hasSlash ? "../" : "") +"com.itmill.toolkit.terminal.gwt.Client/gwt.js\"></script>\n" +
+				"</head>\n<body>\n" +
 				"	<iframe id=\"__gwt_historyFrame\" style=\"width:0;height:0;border:0\"></iframe>\n" +
 				"	<div id=\"itmtk-ajax-window\"></div>" +
-				"	<div style=\"position: absolute; right: 5px; top: 5px; color: gray;\"><strong>IT Mill Toolkit 5 Prototype</strong></div>\n" + 
 				"	</body>\n" + 
 				"</html>\n");
 	
 
 		page.close();
+
 	}
 
 	/**

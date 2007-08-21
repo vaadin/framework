@@ -186,12 +186,13 @@ public abstract class IOrderedLayout extends ComplexPanel implements Layout {
 			// captions go into same container element as their
 			// owners
 			Element container = DOM.getParent(((UIObject) c.getOwner()).getElement());
-			DOM.insertChild(container, w.getElement(), 0);
-			insert(w, null, beforeIndex);
+			Element captionContainer = DOM.createDiv();
+			DOM.insertChild(container, captionContainer, 0);
+			insert(w, captionContainer, beforeIndex, false);
 		} else {
 			Element container = createWidgetWrappper();
 			DOM.insertChild(childContainer, container, beforeIndex);
-			insert(w, container, beforeIndex);
+			insert(w, container, beforeIndex, false);
 		}
 	}
 	

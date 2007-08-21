@@ -307,8 +307,9 @@ public class ICustomLayout extends ComplexPanel implements Paintable, Layout {
 		if (cw != null) {
 			widgetToCaptionWrapper.remove(w);
 			return super.remove(cw);
-		} else 
+		} else if(w != null)
 			return super.remove(w);
+		return false;
 	}
 
 	/** Adding widget without specifying location is not supported */
