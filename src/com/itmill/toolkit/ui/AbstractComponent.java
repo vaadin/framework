@@ -177,8 +177,10 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
 	 * default documentation from implemented interface.
 	 */
 	public void setStyle(String style) {
-		if(style == null)
+		if(style == null || "".equals(style)) {
+			styles = null;
 			return;
+		}
 		if(this.styles == null) {
 			styles = new ArrayList();
 		}
@@ -188,7 +190,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
 	}
 	
 	public void addStyleName(String style) {
-		if(style == null)
+		if(style == null || "".equals(style))
 			return;
 		if(this.styles == null) {
 			styles = new ArrayList();
