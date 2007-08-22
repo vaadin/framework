@@ -1,3 +1,6 @@
 .i-tree-node-selected > table > tbody > tr > td > span.gwt-TreeItem {
 	background: #ff0;
 }
+span.gwt-TreeItem {
+	cursor: pointer;
+}
