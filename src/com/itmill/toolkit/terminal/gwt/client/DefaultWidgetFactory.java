@@ -22,6 +22,9 @@ import com.itmill.toolkit.terminal.gwt.client.ui.IPopupCalendar;
 import com.itmill.toolkit.terminal.gwt.client.ui.IScrollTable;
 import com.itmill.toolkit.terminal.gwt.client.ui.ISelect;
 import com.itmill.toolkit.terminal.gwt.client.ui.ISlider;
+import com.itmill.toolkit.terminal.gwt.client.ui.ISplitPanel;
+import com.itmill.toolkit.terminal.gwt.client.ui.ISplitPanelHorizontal;
+import com.itmill.toolkit.terminal.gwt.client.ui.ISplitPanelVertical;
 import com.itmill.toolkit.terminal.gwt.client.ui.ITablePaging;
 import com.itmill.toolkit.terminal.gwt.client.ui.ITabsheet;
 import com.itmill.toolkit.terminal.gwt.client.ui.ITextArea;
@@ -131,6 +134,12 @@ public class DefaultWidgetFactory implements WidgetFactory {
 	} else if ("com.itmill.toolkit.terminal.gwt.client.ui.IUpload"
 		.equals(className)) {
 	    return new IUpload();
+	} else if ("com.itmill.toolkit.terminal.gwt.client.ui.ISplitPanelHorizontal"
+			.equals(className)) {
+		    return new ISplitPanelHorizontal();
+	} else if ("com.itmill.toolkit.terminal.gwt.client.ui.ISplitPanelVertical"
+			.equals(className)) {
+		    return new ISplitPanelVertical();
 	}
 	return new IUnknownComponent();
 
@@ -217,6 +226,10 @@ public class DefaultWidgetFactory implements WidgetFactory {
 	    return "com.itmill.toolkit.terminal.gwt.client.ui.IForm";
 	} else if ("upload".equals(tag)) {
 	    return "com.itmill.toolkit.terminal.gwt.client.ui.IUpload";
+	} else if ("hsplitpanel".equals(tag)) {
+	    return "com.itmill.toolkit.terminal.gwt.client.ui.ISplitPanelHorizontal";
+	} else if ("vsplitpanel".equals(tag)) {
+	    return "com.itmill.toolkit.terminal.gwt.client.ui.ISplitPanelVertical";
 	}
 
 	return "com.itmill.toolkit.terminal.gwt.client.ui.IUnknownComponent";
