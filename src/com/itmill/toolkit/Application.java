@@ -192,34 +192,24 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 	private String logoutURL = null;
 
 	private Focusable pendingFocus;
-	
-	/** 
-	 * Flag to indicate if first ajax request is sent 
-	 */
-	private boolean ajaxInitSent = false;
-	
-	/**
-	 * This function should only be called in AjaxApplicationManager to
-	 * tell ajax engine (browser) that this is application restart. Returns 
-	 * true on first call, false on subsequent calls.
-	 * 
-	 * TODO consider moving this to WebApplicationContext
-	 * 
-	 * @return true if in ajax init state
-	 */
-	public boolean ajaxInit() {
-		if(this.ajaxInitSent) {
-			return false;
-		} else {
-			return this.ajaxInitSent = true;
-		}
-	}
 
 	/**
 	 * <p>
 	 * Gets a window by name. Returns <code>null</code> if the application is
 	 * not running or it does not contain a window corresponding to the name.
 	 * </p>
+	 * 
+	 * <p>Since version 5.0 all windows can be referenced by their names in 
+	 * url <code>http://host:port/foo/bar/</code> where <code>http://host:port/foo/</code>
+	 * is the application url as returned by getURL() and <code>bar</code> is the name 
+	 * of the window.</p>
+	 * 
+	 * <p>One should note that this method can, as a side effect create new windows
+	 * if needed by the application. This can be achieved by overriding the default 
+	 * implementation.</p>
+	 * 
+	 * <p>The method should return null if the window does not exists (and is not 
+	 * created as a side-effect) or if the application is not running anymore</p>.
 	 * 
 	 * @param name
 	 *            the name of the window.
@@ -245,14 +235,25 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 	 * {@link com.itmill.toolkit.ui.Window#setApplication(Application)} method.
 	 * </p>
 	 * 
+	 * <p>
+	 * Note that all application-level windows can be accessed by their names in
+	 * url <code>http://host:port/foo/bar/</code> where
+	 * <code>http://host:port/foo/</code> is the application url as returned
+	 * by getURL() and <code>bar</code> is the name of the window. Also note
+	 * that not all windows should be added to application - one can also add
+	 * windows inside other windows - these windows show as smaller windows
+	 * inside those windows.
+	 * </p>
+	 * 
 	 * @param window
-	 *            the new <code>Window</code> to add.
+	 *            the new <code>Window</code> to add. If the name of the
+	 *            window is <code>null</code>, an unique name is
+	 *            automatically given for the window.
 	 * @throws IllegalArgumentException
 	 *             if a window with the same name as the new window already
 	 *             exists in the application.
 	 * @throws NullPointerException
-	 *             if the given <code>Window</code> or its name is
-	 *             <code>null</code>.
+	 *             if the given <code>Window</code> is <code>null</code>.
 	 */
 	public void addWindow(Window window) throws IllegalArgumentException,
 			NullPointerException {
@@ -295,6 +296,18 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 		windows.put(name, window);
 		window.setApplication(this);
 
+		fireWindowAttachEvent(window);
+
+		// If no main window is set, declare the window to be main window
+		if (getMainWindow() == null)
+			setMainWindow(window);
+	}
+
+	/** Send information to all listeners about new Windows associated with this application.
+	 * 
+	 * @param window
+	 */
+	private void fireWindowAttachEvent(Window window) {
 		// Fires the window attach event
 		if (windowAttachListeners != null) {
 			Object[] listeners = windowAttachListeners.toArray();
@@ -303,10 +316,6 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 				((WindowAttachListener) listeners[i]).windowAttached(event);
 			}
 		}
-
-		// If no main window is set, declare the window to be main window
-		if (getMainWindow() == null)
-			setMainWindow(window);
 	}
 
 	/**
@@ -329,13 +338,17 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 			if (window.getApplication() == this)
 				window.setApplication(null);
 
-			// Fires the window detach event
-			if (windowDetachListeners != null) {
-				Object[] listeners = windowDetachListeners.toArray();
-				WindowDetachEvent event = new WindowDetachEvent(window);
-				for (int i = 0; i < listeners.length; i++) {
-					((WindowDetachListener) listeners[i]).windowDetached(event);
-				}
+			fireWindowDetachEvent(window);
+		}
+	}
+
+	private void fireWindowDetachEvent(Window window) {
+		// Fires the window detach event
+		if (windowDetachListeners != null) {
+			Object[] listeners = windowDetachListeners.toArray();
+			WindowDetachEvent event = new WindowDetachEvent(window);
+			for (int i = 0; i < listeners.length; i++) {
+				((WindowDetachListener) listeners[i]).windowDetached(event);
 			}
 		}
 	}

@@ -29,6 +29,8 @@
 package com.itmill.toolkit.ui;
 
 import com.itmill.toolkit.Application;
+import com.itmill.toolkit.Application.WindowAttachEvent;
+import com.itmill.toolkit.Application.WindowAttachListener;
 import com.itmill.toolkit.terminal.DownloadStream;
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
@@ -42,10 +44,13 @@ import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Iterator;
+import java.util.Set;
 
 /**
  * Application window component.
@@ -91,6 +96,9 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	 * List of parameter handlers for this window.
 	 */
 	private LinkedList parameterHandlerList = null;
+	
+	/** Set of subwindows */
+	private HashSet subwindows = new HashSet();
 
 	/**
 	 * Explicitly specified theme of this window. If null, application theme is
@@ -222,12 +230,24 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	 * @return the parent application of the component.
 	 */
 	public final Application getApplication() {
+		if (getParent() == null)
 		return this.application;
+		return ((Window)getParent()).getApplication();
 	}
 
 	/**
-	 * Getter for property parent. Parent is the visual parent of a component.
-	 * Each component can belong to only one ComponentContainer at time.
+	 * Getter for property parent.
+	 * 
+	 * <p>
+	 * Parent is the visual parent of a component. Each component can belong to
+	 * only one ComponentContainer at time.
+	 * </p>
+	 * 
+	 * <p>
+	 * For windows attached directly to the application, parent is
+	 * <code>null</code>. For windows inside other windows, parent is the
+	 * window containing this window.
+	 * </p>
 	 * 
 	 * @return the Value of property parent.
 	 */
@@ -236,15 +256,18 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	}
 
 	/**
-	 * Setter for property parent. Parent is the visual parent of a component.
-	 * This is mostly called by containers add method. Setting parent is not
-	 * allowed for the window, and thus this call should newer be called.
+	 * Setter for property parent.
+	 * 
+	 * <p>
+	 * Parent is the visual parent of a component. This is mostly called by
+	 * containers add method and should not be called directly
+	 * </p>
 	 * 
 	 * @param parent
 	 *            the New value of property parent.
 	 */
 	public void setParent(Component parent) {
-		throw new RuntimeException("Setting parent for Window is not allowed");
+		super.setParent(parent);
 	}
 
 	/**
@@ -265,6 +288,8 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	 *            the URI handler to add.
 	 */
 	public void addURIHandler(URIHandler handler) {
+		// TODO Subwindow support
+
 		if (uriHandlerList == null)
 			uriHandlerList = new LinkedList();
 		synchronized (uriHandlerList) {
@@ -280,6 +305,8 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	 *            the URI handler to remove.
 	 */
 	public void removeURIHandler(URIHandler handler) {
+		// TODO Subwindow support
+
 		if (handler == null || uriHandlerList == null)
 			return;
 		synchronized (uriHandlerList) {
@@ -296,6 +323,8 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	 * @param relativeUri
 	 */
 	public DownloadStream handleURI(URL context, String relativeUri) {
+		// TODO Subwindow support
+
 		DownloadStream result = null;
 		if (uriHandlerList != null) {
 			Object[] handlers;
@@ -326,6 +355,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	 *            the parameter handler to add.
 	 */
 	public void addParameterHandler(ParameterHandler handler) {
+		// TODO Subwindow support
 		if (parameterHandlerList == null)
 			parameterHandlerList = new LinkedList();
 		synchronized (parameterHandlerList) {
@@ -341,6 +371,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	 *            the parameter handler to remove.
 	 */
 	public void removeParameterHandler(ParameterHandler handler) {
+		// TODO Subwindow support
 		if (handler == null || parameterHandlerList == null)
 			return;
 		synchronized (parameterHandlerList) {
@@ -367,6 +398,8 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	/**
 	 * Gets the theme for this window.
 	 * 
+	 * <p>Subwindows do not support themes and thus return theme used by the parent</p>
+	 * 
 	 * @return the Name of the theme used in window. If the theme for this
 	 *         individual window is not explicitly set, the application theme is
 	 *         used instead. If application is not assigned the
@@ -374,6 +407,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	 *         returned
 	 */
 	public String getTheme() {
+		if (getParent() != null) return ((Window) getParent()).getTheme();
 		if (theme != null)
 			return theme;
 		if ((application != null) && (application.getTheme() != null))
@@ -386,10 +420,12 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	/**
 	 * Sets the theme for this window.
 	 * 
+	 * 	 Setting theme for subwindows is not supported.
 	 * @param theme
 	 *            the New theme for this window. Null implies the default theme.
 	 */
 	public void setTheme(String theme) {
+		if (getParent() != null) throw new UnsupportedOperationException("Setting theme for sub-windws is not supported.");
 		this.theme = theme;
 		requestRepaint();
 	}
@@ -406,10 +442,12 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 			throws PaintException {
 
 		// Sets the window name
-		target.addAttribute("name", getName());
+		String name = getName();
+		target.addAttribute("name", name == null ? "" : name);
 
 		// Sets the window theme
-		target.addAttribute("theme", getTheme());
+		String theme = getTheme();
+		target.addAttribute("theme", theme == null ? "" : theme);
 
 		// Marks the main window
 		if (getApplication() != null
@@ -441,6 +479,12 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 					+ this.focusedComponent.getFocusableId());
 		else
 			target.addVariable(this, "focused", "");
+		
+		// Paint subwindows
+		for (Iterator i=subwindows.iterator(); i.hasNext();) {
+			Window w = (Window) i.next();
+			w.paint(target);
+		}
 
 	}
 
@@ -526,6 +570,18 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
 	/**
 	 * Gets the unique name of the window that indentifies it on the terminal.
+	 * 
+	 * <p>
+	 * Name identifies the URL used to access application-level windows, but is
+	 * not used for windows inside other windows. all application-level windows
+	 * can be accessed by their names in url
+	 * <code>http://host:port/foo/bar/</code> where
+	 * <code>http://host:port/foo/</code> is the application url as returned
+	 * by getURL() and <code>bar</code> is the name of the window. Also note
+	 * that not all windows should be added to application - one can also add
+	 * windows inside other windows - these windows show as smaller windows
+	 * inside those windows.
+	 * </p>
 	 * 
 	 * @return the Name of the Window.
 	 */
@@ -948,6 +1004,59 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
 	protected void fireClose() {
 		fireEvent(new Window.CloseEvent(this));
+	}
+
+	/**
+	 * Adds a new window inside another window.
+	 * 
+	 * <p>
+	 * Adding windows inside another window creates "subwindows". These windows
+	 * should not be added to application directly and are not accessible
+	 * directly with any url. Addding windows implicitly sets their parents.
+	 * </p>
+	 * 
+	 * <p>
+	 * Only one level of subwindows are supported. Thus you can add windows
+	 * inside such windows whose parent is <code>null</code>.
+	 * </p>
+	 * 
+	 * @param window
+	 * @throws IllegalArgumentException
+	 *             if a window is added inside non-application level window.
+	 * @throws NullPointerException
+	 *             if the given <code>Window</code> is <code>null</code>.
+	 */
+	public void addWindow(Window window) throws IllegalArgumentException,
+			NullPointerException {
+
+		if (getParent() != null)
+			throw new IllegalArgumentException(
+					"You can only add windows inside application-level windows");
+		
+		if (window == null) throw new NullPointerException("Argument must not be null");
+
+		subwindows.add(window);
+		window.setParent(this);
+		requestRepaint();
+	}
+	
+	/** Remove the given subwindow from this window.
+	 * 
+	 * @param window Window to be removed.
+	 */
+	public void removeWindow(Window window) {
+		subwindows.remove(window);
+		window.setParent(null);
+		requestRepaint();
+		
+	}
+
+	/** Get the set of all child windows.
+	 * 
+	 * @return Set of child windows.
+	 */
+	public Set getChildWindows() {
+		return Collections.unmodifiableSet(subwindows);
 	}
 
 }
