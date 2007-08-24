@@ -28,14 +28,11 @@
 
 package com.itmill.toolkit.ui;
 
+import java.util.Iterator;
+
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
 import com.itmill.toolkit.terminal.Sizeable;
-
-import java.util.Iterator;
-import java.util.LinkedList;
-
-import org.apache.tools.ant.taskdefs.Tstamp.Unit;
 
 /**
  * SplitPanel.
