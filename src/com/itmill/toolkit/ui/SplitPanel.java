@@ -81,7 +81,7 @@ public class SplitPanel extends AbstractComponentContainer implements Layout, Si
 
 	private int pos = 50;
 
-	private int posUnit = Sizeable.UNITS_PERCENTAGE;
+	private int posUnit = UNITS_PERCENTAGE;
 
 	/**
 	 * Creates a new split panel. The orientation of the panels is
@@ -212,26 +212,17 @@ public class SplitPanel extends AbstractComponentContainer implements Layout, Si
 		
 		// TODO refine size attributes
 		if(width > 0) {
-			target.addAttribute("width", width + (widthUnit == Sizeable.UNITS_PIXELS ? "px" : "%"));
+			target.addAttribute("width", width + UNIT_SYMBOLS[widthUnit]);
 		} else {
 			target.addAttribute("width", "100%");
 		}
 		if(height > 0) {
-			target.addAttribute("height", height + (heightUnit == Sizeable.UNITS_PIXELS ? "px" : "%"));
+			target.addAttribute("height", height + UNIT_SYMBOLS[widthUnit]);
 		} else {
 			target.addAttribute("height", "100%");
 		}
 		
-		String position = pos + "";
-		switch (posUnit) {
-		case Sizeable.UNITS_PIXELS:
-			position += "px";
-			break;
-		case Sizeable.UNITS_PERCENTAGE:
-		default:
-			position += "%";
-			break;
-		}
+		String position = pos + UNIT_SYMBOLS[posUnit];
 		
 		target.addAttribute("position", position);
 
@@ -287,7 +278,7 @@ public class SplitPanel extends AbstractComponentContainer implements Layout, Si
 	 * @param pos the new size of the first region in persentage
 	 */
 	public void setSplitPosition(int pos) {
-		setSplitPosition(pos, Sizeable.UNITS_PERCENTAGE);
+		setSplitPosition(pos, UNITS_PERCENTAGE);
 	}
 
 	/**
