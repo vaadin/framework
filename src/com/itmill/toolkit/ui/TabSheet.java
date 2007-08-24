@@ -44,7 +44,7 @@ import com.itmill.toolkit.terminal.*;
  * @VERSION@
  * @since 3.0
  */
-public class TabSheet extends AbstractComponentContainer {
+public class TabSheet extends AbstractComponentContainer implements Sizeable {
 
 	/**
 	 * Linked list of component tabs.
@@ -72,6 +72,15 @@ public class TabSheet extends AbstractComponentContainer {
 	 * Holds the value of property tabsHIdden.
 	 */
 	private boolean tabsHidden;
+	
+	private int height;
+
+	private int heightUnit;
+
+	private int width;
+
+	private int widthUnit;
+
 
 	/**
 	 * Constructs a new Tabsheet. Tabsheet is immediate by default.
@@ -194,6 +203,15 @@ public class TabSheet extends AbstractComponentContainer {
 
 		if (areTabsHidden())
 			target.addAttribute("hidetabs", true);
+		
+		if(width > 0) {
+			target.addAttribute("width", width + UNIT_SYMBOLS[widthUnit]);
+		} else {
+			target.addAttribute("width", "100%");
+		}
+		if(height > 0) {
+			target.addAttribute("height", height + UNIT_SYMBOLS[widthUnit]);
+		}
 
 		target.startTag("tabs");
 
@@ -482,5 +500,37 @@ public class TabSheet extends AbstractComponentContainer {
 	 */
 	protected void fireSelectedTabChange() {
 		fireEvent(new SelectedTabChangeEvent(this));
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public int getHeightUnits() {
+		return heightUnit;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	public int getWidthUnits() {
+		return widthUnit;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
+	}
+
+	public void setHeightUnits(int units) {
+		this.heightUnit = units;
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+	public void setWidthUnits(int units) {
+		this.widthUnit = units;
 	}
 }

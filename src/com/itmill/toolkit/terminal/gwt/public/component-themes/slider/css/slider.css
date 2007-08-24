@@ -28,14 +28,20 @@
 .i-slider-base {
 	background: #c3d0dd url(../img/bg.png) repeat-x;
 	height: 14px;
-	margin: 0 1px;
 	overflow: hidden;
 }
 .i-slider-handle {
 	background: #fff url(../img/handle-bg.png) repeat-x;
 	border: 1px solid #29528a;
 	height: 10px;
-	overflow: hidden;
+	font-size: 1px;
+}
+.i-slider-handle:before {
+	display: block;
+	height: 12px;
+	background: transparent url(../img/handle-right.png) no-repeat right top;
+	margin: -1px -1px 0 -1px;
+	content: url(../img/handle-left.png);
 }
 .i-slider-bigger {
 	background: #dde4ef url(../img/arrow-right.png);

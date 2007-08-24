@@ -1,5 +1,5 @@
 .i-tabsheet {
-	margin: 5px;
+	
 }
 
 .i-tabsheet-tabs {
@@ -12,80 +12,75 @@
 }
 
 .i-tabsheet-tabs .gwt-TabBarRest {
-	border-bottom: solid 1px #29528a;
+	border-bottom: solid 1px #c1c6cc;
 }
 
 .i-tabsheet-tabs .gwt-TabBarItem {
-	border: solid 1px #6082b0;
-	border-bottom-color: #29528a;
-	height: 17px;
-	padding: 4px 8px;
-	color: #1c3e6e;
-	background: #e6ebf0 url(../img/tab-bg.png) repeat-x;
+	border: solid 1px #9cacb9;
+	border-bottom-color: #c1c6cc;
+	height: 18px;
+	padding: 4px 25px;
+	color: #2c3c49;
+	font-size: 12px;
+	background: #ecf0f4 url(../img/tab-bg.png) repeat-x;
 	margin-right: 1px;
 	cursor: pointer;
 }
 
 .i-tabsheet-tabs .gwt-TabBarItem-selected {
-	border-color: #29528a;
+	border-color: #c1c6cc;
 	border-bottom-color: #fff;
 	background: #fff url(../img/tab-selected-bg.png) repeat-x;
 	padding-top: 7px;
 	padding-bottom: 5px;
 	margin-bottom: -1px;
-	font-weight: bold;
 	cursor: default;
 }
 
 .i-tabsheet-tabs .gwt-TabBarItem:hover {
-	border-color: #29528a;
-	background: #3a639b url(../img/tab-hover-bg.png) repeat-x;
-	color: #fff;
+	color: #62788a;
 }
 
 .i-tabsheet-tabs .gwt-TabBarItem-selected:hover {
-	background: #fff url(../img/tab-selected-bg.png) repeat-x;
-	color: #1c3e6e;
+	color: #2c3c49;
 }
 
-/* Rounded corners effects */
 .i-tabsheet-tabs .gwt-TabBarItem:before {
 	display: block;
 	height: 2px;
 	overflow: hidden;
 	background: transparent url(../img/tab-right.png) no-repeat right top;
 	content: url(../img/tab-left.png);
-	margin: -5px -9px 3px -9px;
+	margin: -5px -26px 3px -26px;
 }
 
 .i-tabsheet-tabs .gwt-TabBarItem-selected:before {
-	height: 7px;
+	height: 27px;
 	background-image: url(../img/tab-selected-right.png);
 	content: url(../img/tab-selected-left.png);
-	margin: -8px -9px 0 -9px;
+	margin: -8px -26px -20px -26px;
 }
 
-.i-tabsheet-tabs .gwt-TabBarItem:hover:before {
-	background-image: url(../img/tab-hover-right.png);
-	content: url(../img/tab-hover-left.png);
+.i-tabsheet-content {
+	background-color: #fff;
+	border: solid 1px #c1c6cc;
+	border-top: none;
+	padding: 8px;
 }
 
-.i-tabsheet-content:after {
+.i-tabsheet-deco {
+	height: 9px;
+	background: transparent url(../../common/img/shadow.png) repeat-x left bottom;
+	margin: -2px 0 0 1px;
+	position: relative;
+}
+
+.i-tabsheet-deco:before {
 	display: block;
 	height: 2px;
 	overflow: hidden;
 	background: transparent url(../../panel/img/bottom-right.png) no-repeat right top;
 	content: url(../../panel/img/bottom-left.png);
-	margin: 5px -6px -6px -6px;
-}
-
-
-
-.i-tabsheet-content {
-	background-color: #fff;
-	border: solid 1px #29528a;
-	border-top: none;
-	padding: 5px;
 }
 
 /* Fix Safari bug (one pixel table offset) */
@@ -97,4 +92,19 @@
 	width: 1px;
 	height: 1px;
 	overflow: hidden;
+}
+
+
+
+
+/* IE specific styles */
+* html .i-tabsheet-deco {
+	position: static;
+	background: transparent;
+	margin-top: 0;
+	font-size: 1;
+	height: 7px;
+	overflow: hidden;
+	/* TODO change url when packaging is complete */
+	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../com.itmill.toolkit.terminal.gwt.Client/component-themes/common/img/shadow.png", sizingMethod="scale");
 }

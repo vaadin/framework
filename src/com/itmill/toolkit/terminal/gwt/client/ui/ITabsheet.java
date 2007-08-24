@@ -3,6 +3,8 @@ package com.itmill.toolkit.terminal.gwt.client.ui;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SourcesTabEvents;
@@ -27,6 +29,8 @@ public class ITabsheet extends TabPanel implements Paintable {
 	ArrayList captions = new ArrayList();
 
 	int activeTabIndex = 0;
+	
+	private Element deco;
 
 	TabListener tl = new TabListener() {
 
@@ -58,7 +62,7 @@ public class ITabsheet extends TabPanel implements Paintable {
 			}
 
 		});
-
+		
 	}
 
 	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -70,6 +74,23 @@ public class ITabsheet extends TabPanel implements Paintable {
 		
 		TabBar tb = getTabBar();
 		tb.setStyleName(CLASSNAME+"-tabs");
+
+		// Add a decoration element for shadow
+		// TODO refactor tabsheet with plain DIV-implementation
+		/*if(!DOM.compare(deco, null)) {
+			DOM.removeChild(DOM.getParent(getElement()), deco);
+			deco = null;
+		}
+		deco = DOM.createDiv();
+		DOM.setElementProperty(deco, "className", CLASSNAME+"-deco");
+		DOM.appendChild(DOM.getParent(getElement()), deco);
+		*/
+		// Adjust width and height
+		String h = uidl.hasAttribute("height")? uidl.getStringAttribute("height") : "";
+		String w = uidl.hasAttribute("width")? uidl.getStringAttribute("width") : "";
+		setWidth(w!=""?w:"auto");
+		//DOM.setStyleAttribute(deco, "width", w!=""?w:"auto");
+		dp.setHeight(h!=""?h:"auto");
 
 		UIDL tabs = uidl.getChildUIDL(0);
 		boolean keepCurrentTabs = tabKeys.size() == tabs.getNumberOfChildren();

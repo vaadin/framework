@@ -1,100 +1,213 @@
 .i-panel {
-	border: 1px solid #29528a;
-	padding: 5px 3px 2px 2px;
-	margin: 5px;
+	margin: 8px 0 1px 0;
+}
+
+.i-panel-caption {
+	font-size: 12px;
+	line-height: 12px;
+	font-weight: normal;
+	color: #2c3c49;
+	white-space: nowrap;
+	height: 27px;
+	padding: 0 5px 0 5px;
+	border: 1px solid #c1c6cc;
+	border-bottom: none;
 	background: #fff url(../img/top-bg.png) repeat-x top left;
 }
 
-.i-panel:before {
+.i-panel-caption:before {
 	display: block;
-	height: 7px;
+	height: 28px;
 	overflow: hidden;
 	background: transparent url(../img/top-right.png) no-repeat right top;
 	content: url(../img/top-left.png);
-	margin: -6px -4px 3px -3px;
+	margin: -1px -6px -20px -6px;
 }
 
-.i-panel:after {
+.i-panel-content {
+	border: 1px solid #c1c6cc;
+	border-top: none;
+	background-color: #fff;
+	overflow: auto;
+	padding: 8px;
+}
+
+.i-panel-deco {
+	height: 9px;
+	background: transparent url(../../common/img/shadow.png) repeat-x left bottom;
+	margin-top: -2px;
+	position: relative;
+}
+
+.i-panel-deco:before {
 	display: block;
 	height: 2px;
 	overflow: hidden;
 	background: transparent url(../img/bottom-right.png) no-repeat right top;
 	content: url(../img/bottom-left.png);
-	margin: 2px -4px -3px -3px;
 }
 
-.i-panel-caption {
-	font-size: 1.1em;
-	font-weight: bold;
-	color: #1c3e6e;
-	margin: 0 0 7px 4px;
+.i-panel-nocaption {
+	border-top: 1px solid #c1c6cc;
+	background-color: #fff;
+}
+
+.i-panel-nocaption:before {
+	display: block;
+	height: 2px;
 	overflow: hidden;
-}
-
-.i-panel-content {
-	overflow: auto;
-	padding: 3px;
+	background: transparent url(../img/top-right-small.png) no-repeat right top;
+	content: url(../img/top-left-small.png);
+	margin-top: -1px;
 }
 
 
 
 /* Strong style */
-.i-panel-strong {
+
+.i-panel-strong .i-panel-caption {
 	background-image: url(../img/top-bg-strong.png);
+	border-color: #6c9ad8;
+	color: #fff;
+	font-weight: bold;
 }
 
-.i-panel-strong:before {
-	height: 28px;
+.i-panel-strong .i-panel-caption:before {
 	background-image: url(../img/top-right-strong.png);
 	content: url(../img/top-left-strong.png);
 }
 
-.i-panel-strong .i-panel-caption {
-	color: #fff;
-	margin: -25px 0 12px 4px;
-	white-space: nowrap;
-}
-
-/* Strong style without caption */
-.i-panel-strong.i-panel-nocaption {
-	background-image: url(../img/top-bg.png);
-}
-.i-panel-strong.i-panel-nocaption:before {
-	height: 7px;
-	background-image: url(../img/top-right.png);
-	content: url(../img/top-left.png);
-}
 
 
 /* Light style */
-.i-panel-light {
-	background-image: url(../img/top-bg-light.png);
-	border-color: #b3c2d6;
-	border-top-color: #2667a2;
-	margin-top: 20px;
+
+.i-panel-light .i-panel-caption {
+	background: transparent;
+	font-weight: bold;
+	border: none;
+	padding: 3px 0 0 2px;
+	height: 16px;
+	margin-bottom: 1px;
+	border-bottom: 1px solid #e7e7e8;
 }
 
-.i-panel-light:before {
-	height: 6px;
+.i-panel-light .i-panel-caption:before {
+	display: none;
+}
+
+.i-panel-light .i-panel-caption:after {
+	display: block;
+	height: 2px;
+	overflow: hidden;
+	background: transparent url(../img/top-right-light.png) no-repeat top right;
+	content: url(../img/top-left-light.png);
+	margin: 4px 0 0 -2px;
+}
+
+.i-panel-light .i-panel-content {
+	border: 1px solid #e7e7e8;
+	border-top: none;
+	background: #fff url(../img/bg-light.png) repeat-x 0 1px;
+}
+
+.i-panel-light .i-panel-deco {
+	background: transparent;
+	height: 2px;
+}
+
+.i-panel-light .i-panel-deco:before {
+	background: transparent url(../img/bottom-right-light.png) no-repeat top right;
+	content: url(../img/bottom-left-light.png);
+}
+
+/* Light style without caption */
+.i-panel-light .i-panel-nocaption {
+	border-color: #e7e7e8;
+}
+
+.i-panel-light .i-panel-nocaption:before {
 	background-image: url(../img/top-right-light.png);
 	content: url(../img/top-left-light.png);
 }
 
-.i-panel-light:after {
-	background-image: url(../img/bottom-right-light.png);
-	content: url(../img/bottom-left-light.png);
+
+
+/* Highlight style */
+
+.i-panel-highlight .i-panel-caption {
+	background-image: url(../img/top-bg-highlight.png);
+	background-color: #fffdec;
+	border-color: #c0baae;
+	color: #4e4640;
 }
 
-.i-panel-light .i-panel-caption {
-	margin: -26px -2px 10px -2px;
-	font-size: 1em;
-	white-space: nowrap;
+.i-panel-highlight .i-panel-caption:before {
+	background-image: url(../img/top-right-highlight.png);
+	content: url(../img/top-left-highlight.png);
 }
 
-/* Light style without caption */
-.i-panel-light.i-panel-nocaption {
-	margin-top: 7px;
+.i-panel-highlight .i-panel-content {
+	background-color: #fffdec;
+	border-color: #c0baae;
+	color: #605b52;
 }
+
+/* Highlight style without caption */
+.i-panel-highlight .i-panel-nocaption {
+	border-color: #c0baae;
+	background-color: #fffdec;
+}
+
+
+
+/* Emphasized style */
+
+.i-panel-emphasize .i-panel-caption {
+	background: #6899d9 url(../img/top-bg-em.gif) repeat-x;
+	border-color: #78a2db;
+	color: #fff;
+	font-weight: bold;
+	height: 22px;
+}
+
+.i-panel-emphasize .i-panel-caption:before {
+	background-image: url(../img/top-right-em.gif);
+	content: url(../img/top-left-em.gif);
+}
+
+.i-panel-emphasize .i-panel-content {
+	background: #3a6bab url(../img/bg-em.gif) repeat-x;
+	color: #dee6f2;
+	border-color: #78a2db;
+}
+
+.i-panel-emphasize .i-panel-deco {
+	margin-top: -4px;
+	height: 11px;
+	background-image: url(../../common/img/shadow-em.png);
+}
+
+.i-panel-emphasize .i-panel-deco:before {
+	background-image: url(../img/bottom-right-em.gif);
+	content: url(../img/bottom-left-em.gif);
+	height: 4px;
+}
+
+/* Emphasized style without caption */
+.i-panel-emphasize .i-panel-nocaption {
+	background: #6899d9 url(../img/top-bg-em.gif) repeat-x;
+	border: 1px solid #78a2db;
+	border-bottom: none;
+	height: 3px;
+}
+
+.i-panel-emphasize .i-panel-nocaption:before {
+	background-image: url(../img/top-right-em.gif);
+	content: url(../img/top-left-em.gif);
+	margin: -1px;
+}
+
+
 
 
 
@@ -104,41 +217,90 @@
  * These selectors must be separate because IE6 won't 
  * apply them if they are grouped together.
 */
-* html .i-panel {
-	zoom: 1;
+* html .i-panel-caption {
+	padding-top: 7px;
+	height: 19px;
 }
-*+html .i-panel {
-	zoom: 1;
+*+html .i-panel-caption {
+	padding-top: 7px;
+	height: 19px;
 }
-* html .i-panel .i-panel-caption {
-	margin-top: 3px;
+
+* html .i-panel-deco {
+	position: static;
+	background: transparent;
+	margin: 0;
+	font-size: 1;
+	height: 7px;
+	overflow: hidden;
+	/* TODO change url when packaging is complete */
+	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../com.itmill.toolkit.terminal.gwt.Client/component-themes/common/img/shadow.png", sizingMethod="scale");
 }
-*+html .i-panel .i-panel-caption {
-	margin-top: 3px;
+
+/* Without caption */
+* html .i-panel-nocaption {
+	height: 1px;
+	overflow: hidden;
+	background: #c1c6cc;
+	border: none;
 }
 
 
-* html .i-panel-strong .i-panel-caption {
-	margin: 0 0 10px 4px;
-}
-*+html .i-panel-strong .i-panel-caption {
-	margin: 1px 0 10px 4px;
-}
+/* Light style */
 
-* html .i-panel-light {
-	margin-top: 5px;
-}
-*+html .i-panel-light {
-	margin-top: 23px;
-}
 * html .i-panel-light .i-panel-caption {
-	margin-left: 4px;
-	margin-bottom: 5px;
-	padding-bottom: 0;
+	background: transparent;
+	font-weight: bold;
+	border: none;
+	padding: 3px 0 0 2px;
+	height: 16px;
 }
 *+html .i-panel-light .i-panel-caption {
-	/*margin-left: 4px;
-	margin-bottom: 5px;
-	padding-bottom: 0;*/
-	margin-top: -23px;
+	background: transparent;
+	font-weight: bold;
+	border: none;
+	padding: 3px 0 0 2px;
+	height: 16px;
+}
+
+* html .i-panel-light .i-panel-content {
+	border: 1px solid #e7e7e8;
+	background-position: 0 2px;
+}
+*+html .i-panel-light .i-panel-content {
+	border: 1px solid #e7e7e8;
+	background-position: 0 2px;
+}
+
+* html .i-panel-light .i-panel-deco {
+	display: none;
+}
+
+/* Without caption */
+* html .i-panel-light .i-panel-nocaption {
+	display: none;
+}
+*+html .i-panel-light .i-panel-nocaption {
+	display: none;
+}
+
+
+/* Emphasized style */
+* html .i-panel-emphasize .i-panel-caption {
+	height: 15px;
+}
+*+html .i-panel-emphasize .i-panel-caption {
+	height: 15px;
+}
+
+* html .i-panel-emphasize .i-panel-content {
+	background-attachment: fixed;
+}
+
+* html .i-panel-emphasize .i-panel-deco {
+	height: 7px;
+	margin-top: 0;
+	background: transparent;
+	/* TODO change url when packaging is complete */
+	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../com.itmill.toolkit.terminal.gwt.Client/component-themes/common/img/shadow-em.png", sizingMethod="scale");
 }

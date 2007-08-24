@@ -1,9 +1,9 @@
 body {
-	background: #fafafc url(../img/window-bottom-bg.gif) no-repeat right bottom fixed;
+	background: #f5f6f7 url(../img/window-bottom-bg.gif) no-repeat right bottom fixed;
 	font-family: helvetica, arial, tahoma, verdana, sans-serif;
-	color: #222;
-	font-size: 68.75%;
-	line-height: 1.4em;
+	color: #454a51;
+	font-size: 13px;
+	line-height: 19px;
 	padding: 8px;
 	margin: 0;
 }

@@ -56,10 +56,10 @@ public class ISlider extends Widget implements Paintable {
 		bigger = DOM.createDiv();
 		
 		setStyleName(CLASSNAME);
-		DOM.setAttribute(base, "className", CLASSNAME+"-base");
-		DOM.setAttribute(handle, "className", CLASSNAME+"-handle");
-		DOM.setAttribute(smaller, "className", CLASSNAME+"-smaller");
-		DOM.setAttribute(bigger, "className", CLASSNAME+"-bigger");
+		DOM.setElementProperty(base, "className", CLASSNAME+"-base");
+		DOM.setElementProperty(handle, "className", CLASSNAME+"-handle");
+		DOM.setElementProperty(smaller, "className", CLASSNAME+"-smaller");
+		DOM.setElementProperty(bigger, "className", CLASSNAME+"-bigger");
 		
 		DOM.appendChild(getElement(), bigger);
 		DOM.appendChild(getElement(), smaller);
@@ -97,7 +97,7 @@ public class ISlider extends Widget implements Paintable {
 			DOM.setStyleAttribute(smaller, "display", "block");
 			DOM.setStyleAttribute(bigger, "display", "block");
 			if(vertical) {
-				int arrowSize = Integer.parseInt(DOM.getAttribute(smaller, "offsetWidth"));
+				int arrowSize = Integer.parseInt(DOM.getElementProperty(smaller, "offsetWidth"));
 				DOM.setStyleAttribute(bigger, "marginLeft", arrowSize+"px");
 				DOM.setStyleAttribute(bigger, "marginRight", arrowSize+"px");
 			}
@@ -143,7 +143,7 @@ public class ISlider extends Widget implements Paintable {
 				DOM.setStyleAttribute(getElement(), "width", size + "px");
 			else {
 				Element p = DOM.getParent(getElement());
-				if(Integer.parseInt(DOM.getAttribute(p, "offsetWidth")) > 50)
+				if(Integer.parseInt(DOM.getElementProperty(p, "offsetWidth")) > 50)
 					DOM.setStyleAttribute(getElement(), "width", "auto");
 				else {
 					// Set minimum of 50px width and adjust after all 
@@ -152,7 +152,7 @@ public class ISlider extends Widget implements Paintable {
 					Timer adjust = new Timer() {
 						public void run() {
 							Element p = DOM.getParent(getElement());
-							if(Integer.parseInt(DOM.getAttribute(p, "offsetWidth")) > 50)
+							if(Integer.parseInt(DOM.getElementProperty(p, "offsetWidth")) > 50)
 								DOM.setStyleAttribute(getElement(), "width", "auto");
 						}
 					};
@@ -173,12 +173,12 @@ public class ISlider extends Widget implements Paintable {
 		if(vertical) {
 			// TODO
 		} else {
-			int t = Integer.parseInt(DOM.getAttribute(base, "offsetHeight")) - Integer.parseInt(DOM.getAttribute(handle, "offsetHeight"));
+			int t = Integer.parseInt(DOM.getElementProperty(base, "offsetHeight")) - Integer.parseInt(DOM.getElementProperty(handle, "offsetHeight"));
 			DOM.setStyleAttribute(handle, "top", (t/2)+"px");
 			DOM.setStyleAttribute(handle, "left", "0px");
-			int w = (int) (Double.parseDouble(DOM.getAttribute(base, "offsetWidth")) / 100 * handleSize);
+			int w = (int) (Double.parseDouble(DOM.getElementProperty(base, "offsetWidth")) / 100 * handleSize);
 			if(handleSize == -1) {
-				int baseW = Integer.parseInt(DOM.getAttribute(base, "offsetWidth"));
+				int baseW = Integer.parseInt(DOM.getElementProperty(base, "offsetWidth"));
 				double range = (max - min) * (resolution+1) * 3;
 				w = (int) (baseW - range);
 			}
@@ -195,8 +195,8 @@ public class ISlider extends Widget implements Paintable {
 		if(vertical) {
 			// TODO
 		} else {
-			int handleWidth = Integer.parseInt(DOM.getAttribute(handle, "offsetWidth"));
-			int baseWidth = Integer.parseInt(DOM.getAttribute(base, "offsetWidth"));
+			int handleWidth = Integer.parseInt(DOM.getElementProperty(handle, "offsetWidth"));
+			int baseWidth = Integer.parseInt(DOM.getElementProperty(base, "offsetWidth"));
 			int range = baseWidth - handleWidth;
 			double v = value.doubleValue();
 			double valueRange = max - min;
@@ -341,9 +341,9 @@ public class ISlider extends Widget implements Paintable {
 		if(vertical) {
 			// TODO
 		} else {
-			double handleW = Integer.parseInt(DOM.getAttribute(handle, "offsetWidth"));
+			double handleW = Integer.parseInt(DOM.getElementProperty(handle, "offsetWidth"));
 			double baseX = DOM.getAbsoluteLeft(base) + handleW/2;
-			double baseW = Integer.parseInt(DOM.getAttribute(base, "offsetWidth"));
+			double baseW = Integer.parseInt(DOM.getElementProperty(base, "offsetWidth"));
 			v = ((x-baseX)/(baseW-handleW)) * (max-min) + min;
 		}
 		

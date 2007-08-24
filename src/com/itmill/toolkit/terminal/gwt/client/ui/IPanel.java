@@ -1,5 +1,7 @@
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -39,6 +41,10 @@ public class IPanel extends FlowPanel implements Paintable {
 		
 		// TODO optimize: if only the caption has changed, don't re-render whole content
 		clear();
+		// Remove shadow
+		Element deco = DOM.getChild(getElement(), 0);
+		if(deco != null)
+			DOM.removeChild(getElement(), deco);
 		
 		if(uidl.hasAttribute("style"))
 			setStyleName(CLASSNAME + " " + CLASSNAME+"-"+uidl.getStringAttribute("style"));
@@ -48,10 +54,13 @@ public class IPanel extends FlowPanel implements Paintable {
 		// Handle caption displaying
 		if(uidl.hasAttribute("caption") && !uidl.getStringAttribute("caption").equals("")) {
 			caption.setText(uidl.getStringAttribute("caption"));
+			caption.setStyleName(CLASSNAME+"-caption");
 			add(caption);
-		} else if(uidl.hasAttribute("style")) {
-				// Theme needs this to work around different paddings
-				addStyleName(CLASSNAME+"-nocaption");
+		} else {
+			// Theme needs this to work around different paddings
+			caption.setStyleName(CLASSNAME+"-nocaption");
+			caption.setText("");
+			add(caption);
 		}
 		
 		// Size panel
@@ -67,12 +76,18 @@ public class IPanel extends FlowPanel implements Paintable {
 		setWidth(w>=0?w+widthUnit:"auto");
 		content.setHeight(h>=0?h+heightUnit:"auto");
 		
+		// Render content
 		UIDL layoutUidl = uidl.getChildUIDL(0);
 		Widget layout = client.getWidget(layoutUidl);
 		((Paintable)layout).updateFromUIDL(layoutUidl, client);
 		content.setWidget(layout);
 		
 		add(content);
+		
+		// Add a decoration element for shadow
+		deco = DOM.createDiv();
+		DOM.setElementProperty(deco, "className", CLASSNAME+"-deco");
+		DOM.appendChild(getElement(), deco);
 		
 	}
 	
