@@ -1,2 +1,3 @@
 #!/bin/sh
-java -XstartOnFirstThread -cp "../../src:$APPDIR/bin:../gwt/gwt-mac-1.4.59/gwt-user.jar:../gwt/gwt-mac-1.4.59/gwt-dev-mac.jar" com.google.gwt.dev.GWTCompiler -out "../../WebContent" "$@" com.itmill.toolkit.terminal.gwt.Client;
+rm -r ../../WebContent/com.itmill.toolkit.terminal.gwt.Client/*
+java -XstartOnFirstThread -cp "../../src:../gwt/gwt-mac-1.4.59/gwt-user.jar:../gwt/gwt-mac-1.4.59/gwt-dev-mac.jar" com.google.gwt.dev.GWTCompiler -out "../../WebContent" "$@" com.itmill.toolkit.terminal.gwt.Client;
