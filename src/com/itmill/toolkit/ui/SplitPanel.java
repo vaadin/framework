@@ -209,11 +209,6 @@ public class SplitPanel extends AbstractComponentContainer implements Layout, Si
 	 *             if the paint operation failed.
 	 */
 	public void paintContent(PaintTarget target) throws PaintException {
-
-		// Adds the attributes: orientation
-		// note that the default values (b/vertival) are omitted
-		if (orientation == ORIENTATION_HORIZONTAL)
-			target.addAttribute("orientation", "horizontal");
 		
 		// TODO refine size attributes
 		if(width > 0) {
