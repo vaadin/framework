@@ -96,7 +96,7 @@ public interface Sizeable {
 	 * Textual representations of units symbols. Supported units and their
 	 * symbols are:
 	 * <ul>
-	 * <li><code>UNITS_PIXELS</code>: "" (unit is omitted for pixels)</li>
+	 * <li><code>UNITS_PIXELS</code>: "px"</li>
 	 * <li><code>UNITS_POINTS</code>: "pt"</li>
 	 * <li><code>UNITS_PICAS</code>: "pc"</li>
 	 * <li><code>UNITS_EM</code>: "em"</li>
@@ -109,7 +109,7 @@ public interface Sizeable {
 	 * </ul>
 	 * These can be used like <code>Sizeable.UNIT_SYMBOLS[UNITS_PIXELS]</code>.
 	 */
-	public static final String[] UNIT_SYMBOLS = { "", "pt", "pc", "em", "ex",
+	public static final String[] UNIT_SYMBOLS = { "px", "pt", "pc", "em", "ex",
 			"mm", "cm", "in", "%", "rows" };
 
 	/**
