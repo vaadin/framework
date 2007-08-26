@@ -426,6 +426,14 @@ public class ApplicationServlet extends HttpServlet {
 		String uri = request.getRequestURL().toString();
 		boolean hasSlash = (uri.charAt(uri.length()-1) == '/') ? true : false;
 		
+		String relative = "";
+		String t = request.getPathInfo().substring(1);
+		while (t.indexOf('/')>=0) {
+			t = t.substring(t.indexOf('/')+1);
+			relative += "../";
+		}
+		
+		
 		page
 				.write("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" "
 						+ "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n");
@@ -448,10 +456,10 @@ public class ApplicationServlet extends HttpServlet {
 		
 		page.write(appUrl);
 		
-		page.write("'\n};\n" +
+		page.write("', pathInfo: '"+request.getPathInfo()+"'\n};\n" +
 				"</script>\n" +
 				
-				"<script language='javascript' src='"+ (hasSlash ? "../" : "") + "com.itmill.toolkit.terminal.gwt.Client/com.itmill.toolkit.terminal.gwt.Client.nocache.js'></script>" +
+				"<script language='javascript' src='"+ (hasSlash ? "../" : "") + relative + "com.itmill.toolkit.terminal.gwt.Client/com.itmill.toolkit.terminal.gwt.Client.nocache.js'></script>" +
 
 				"<link REL=\"stylesheet\" TYPE=\"text/css\" HREF=\""+request.getContextPath() + THEME_DIRECTORY_PATH+themeName+"/style.css\">" + 
 				"</head>\n<body>\n" +

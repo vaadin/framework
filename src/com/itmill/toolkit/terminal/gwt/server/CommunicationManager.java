@@ -206,14 +206,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 						// Reset sent locales
 						locales = null;
 						requireLocale(application.getLocale().toString());
-
-						// Adds all non-native windows
-						for (Iterator i = window.getApplication().getWindows()
-								.iterator(); i.hasNext();) {
-							Window w = (Window) i.next();
-							if (!"native".equals(w.getStyle()) && w != window)
-								paintables.add(w);
-						}
+						
 					} else
 						paintables = getDirtyComponents();
 					if (paintables != null) {
@@ -299,10 +292,6 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 					outWriter.print(", \"meta\" : {");
 					boolean metaOpen = false;
 
-					// .. or initializion (first uidl-request)
-					if (application.ajaxInit()) {
-						outWriter.print("\"appInit\":true");
-					}
 					// add meta instruction for client to set focus if it is set
 					Paintable f = (Paintable) application.consumeFocus();
 					if (f != null) {
@@ -601,6 +590,9 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 
 		// Find the window where the request is handled
 		String path = request.getPathInfo();
+		
+		// Remove UIDL from the path
+		path = path.substring("/UIDL".length());
 
 		// Main window as the URI is empty
 		if (path == null || path.length() == 0 || path.equals("/"))

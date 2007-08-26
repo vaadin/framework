@@ -81,10 +81,14 @@ public class ApplicationConnection implements EntryPoint, FocusListener {
 	 return $wnd.itmtk.appUri;
 	}-*/;
 
+	private native String getPathInfo()/*-{
+	 return $wnd.itmtk.pathInfo;
+	}-*/;
+
 	private void makeUidlRequest(String requestData) {
 		console.log("Making UIDL Request with params: " + requestData);
 		rb = new RequestBuilder(RequestBuilder.POST, appUri
-				+ "/UIDL/?requestId=" + (Math.random()) + "&" + requestData);
+				+ "/UIDL" + getPathInfo() + "?requestId=" + (Math.random()) + "&" + requestData);
 		try {
 			rb.sendRequest(requestData, new RequestCallback() {
 				public void onError(Request request, Throwable exception) {
@@ -168,16 +172,8 @@ public class ApplicationConnection implements EntryPoint, FocusListener {
 								+ uidl.getTag()
 								+ ", but there is no such paintable ("
 								+ uidl.getId() + ") registered yet.");
-					if(uidl.getId().equals("PID0")) {
-						// view
 						view.updateFromUIDL(uidl, this);
-					} else {
-						Widget window = widgetFactory.createWidget(uidl);
-						registerPaintable(uidl.getId(), (Paintable) window);
-						RootPanel.get().add(window);
-						((Paintable) window).updateFromUIDL(uidl, this);
-					}
-				}
+						}
 			} catch (Throwable e) {
 				e.printStackTrace();
 			}

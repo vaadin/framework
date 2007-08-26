@@ -650,8 +650,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	/**
 	 * Sets the name.
 	 * <p>
-	 * The name of the window must be unique inside the application. Also the
-	 * name may only contain the following characters: a-z, A-Z and 0-9.
+	 * The name of the window must be unique inside the application.
 	 * </p>
 	 * 
 	 * <p>
@@ -669,17 +668,6 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 			throw new IllegalStateException(
 					"Window name can not be changed while "
 							+ "the window is in application");
-
-		// Checks the name format
-		if (name != null)
-			for (int i = 0; i < name.length(); i++) {
-				char c = name.charAt(i);
-				if (!(('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z') || ('0' <= c && c <= '9')))
-					throw new IllegalArgumentException(
-							"Window name can contain "
-									+ "only a-z, A-Z and 0-9 characters: '"
-									+ name + "' given.");
-			}
 
 		this.name = name;
 	}

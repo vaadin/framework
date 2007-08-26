@@ -56,6 +56,7 @@ import com.itmill.toolkit.terminal.Resource;
  * @author IT Mill Ltd.
  * @version
  * @VERSION@
+ * @deprecated
  * @since 3.0
  */
 public class FrameWindow extends Window {

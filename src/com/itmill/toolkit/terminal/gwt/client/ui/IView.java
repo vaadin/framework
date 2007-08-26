@@ -3,6 +3,7 @@ package com.itmill.toolkit.terminal.gwt.client.ui;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -25,10 +26,29 @@ public class IView extends SimplePanel implements Paintable {
 	}
 	
 	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+		
+		// Start drawing from scratch
 		clear();
+		
+		// Some attributes to note
 		theme = uidl.getStringAttribute("theme");
 		com.google.gwt.user.client.Window.setTitle(uidl.getStringAttribute("caption"));
-		UIDL childUidl = uidl.getChildUIDL(0);
+		
+		// Process children
+		int childIndex = 0;
+		
+		// Open URL:s
+		while (childIndex < uidl.getChidlCount() && 
+				"open".equals(uidl.getChildUIDL(childIndex).getTag())) {
+			UIDL open = uidl.getChildUIDL(childIndex);
+			String url = open.getStringAttribute("src");
+			String target = open.getStringAttribute("target");
+			Window.open(url, target != null ? target : null, "");
+			childIndex++;
+		}
+		
+		// Draw this application level window
+		UIDL childUidl = uidl.getChildUIDL(childIndex);
 		Paintable lo = (Paintable) client.getWidget(childUidl);
 		if(layout != null) {
 			if(layout != lo) {
@@ -43,9 +63,11 @@ public class IView extends SimplePanel implements Paintable {
 		}
 		lo.updateFromUIDL(childUidl, client);
 		
-		int i=1;
+		// Update subwindows
 		HashSet removedSubWindows = new HashSet(subWindows);
-		while ((childUidl = uidl.getChildUIDL(i++)) != null) {
+		
+		// Open new windows
+		while ((childUidl = uidl.getChildUIDL(childIndex++)) != null) {
 			if ("window".equals(childUidl.getTag())) {
 				Widget w = client.getWidget(childUidl);
 				if (subWindows.contains(w)) {
@@ -58,6 +80,8 @@ public class IView extends SimplePanel implements Paintable {
 				((Paintable)w).updateFromUIDL(childUidl, client);
 			}
 		}
+		
+		// Close old windows
 		for (Iterator rem=removedSubWindows.iterator(); rem.hasNext();) {
 			IWindow w = (IWindow) rem.next();
 			client.unregisterPaintable(w);
