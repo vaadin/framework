@@ -1,5 +1,7 @@
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
+import java.util.HashSet;
+
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
@@ -49,7 +51,7 @@ public class IWindow extends PopupPanel implements Paintable {
 	private int origW;
 
 	private int origH;
-
+	
 	public IWindow() {
 		super();
 		setStyleName(CLASSNAME);
@@ -94,6 +96,7 @@ public class IWindow extends PopupPanel implements Paintable {
 			setCaption(uidl.getStringAttribute("caption"));
 		}
 		lo.updateFromUIDL(childUidl, client);
+	
 	}
 	
 	public void setCaption(String c) {

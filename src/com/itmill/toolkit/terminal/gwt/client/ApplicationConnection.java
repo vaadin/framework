@@ -48,6 +48,8 @@ public class ApplicationConnection implements EntryPoint, FocusListener {
 	private WidgetFactory widgetFactory = new DefaultWidgetFactory();
 
 	private IContextMenu contextMenu = null;
+	
+	private IView view = new IView();
 
 	/**
 	 * This is the entry point method.
@@ -63,6 +65,9 @@ public class ApplicationConnection implements EntryPoint, FocusListener {
 		}
 
 		makeUidlRequest("repaintAll=1");
+		
+		// TODO remove hardcoded id name
+		RootPanel.get("itmtk-ajax-window").add(view);
 		
 	}
 
@@ -165,10 +170,7 @@ public class ApplicationConnection implements EntryPoint, FocusListener {
 								+ uidl.getId() + ") registered yet.");
 					if(uidl.getId().equals("PID0")) {
 						// view
-						IView view = new IView();
 						view.updateFromUIDL(uidl, this);
-						// TODO remove hardcoded id name
-						RootPanel.get("itmtk-ajax-window").add(view);
 					} else {
 						Widget window = widgetFactory.createWidget(uidl);
 						registerPaintable(uidl.getId(), (Paintable) window);
