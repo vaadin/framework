@@ -417,7 +417,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 				// server has defined column width explicitly
 				w = hCell.getWidth();
 			} else {
-				int hw = DOM.getIntAttribute(hCell.getElement(), "offsetWidth");
+				int hw = DOM.getElementPropertyInt(hCell.getElement(), "offsetWidth");
 				int cw = tBody.getColWidth(i);
 				w = (hw > cw ? hw : cw) + IScrollTableBody.CELL_EXTRA_WIDTH;
 			}
@@ -440,10 +440,12 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		
 		tHead.disableBrowserIntelligence();
 		
-		if(firstvisible > 0)
+		if(firstvisible > 0) {
 			bodyContainer.setScrollPosition(firstvisible*tBody.getRowHeight());
+			firstRowInViewPort = firstvisible;
+		}
 		
-		DeferredCommand.add(new Command() {
+		DeferredCommand.addCommand(new Command() {
 			public void execute() {
 				if(totalRows - 1 > tBody.getLastRendered()) {
 					// fetch cache rows
@@ -524,7 +526,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		client.console.log(""+firstRowInViewPort);
 		if(scrollPositionElement == null) {
 			scrollPositionElement = DOM.createDiv();
-			DOM.setAttribute(scrollPositionElement, "className", "i-table-scrollposition");
+			DOM.setElementProperty(scrollPositionElement, "className", "i-table-scrollposition");
 			DOM.appendChild(RootPanel.get().getElement(), scrollPositionElement);
 		}
 		
@@ -532,7 +534,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		DOM.setStyleAttribute(scrollPositionElement, "left",
 				(
 						DOM.getAbsoluteLeft(getElement()) +
-						DOM.getIntAttribute(getElement(), "offsetWidth")/2 
+						DOM.getElementPropertyInt(getElement(), "offsetWidth")/2 
 						- 75
 				)  + "px");
 		DOM.setStyleAttribute(scrollPositionElement, "top",
@@ -658,7 +660,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		public HeaderCell(String colId, String headerText) {
 			this.cid = colId;
 			
-			DOM.setAttribute(colResizeWidget, "className", CLASSNAME+"-resizer");
+			DOM.setElementProperty(colResizeWidget, "className", CLASSNAME+"-resizer");
 			DOM.setStyleAttribute(colResizeWidget, "width",  DRAG_WIDGET_WIDTH +"px");
 			DOM.sinkEvents(colResizeWidget, Event.MOUSEEVENTS);
 			
@@ -666,7 +668,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 			
 			DOM.appendChild(td, colResizeWidget);
 			
-			DOM.setAttribute(captionContainer, "className", CLASSNAME+"-caption-container");
+			DOM.setElementProperty(captionContainer, "className", CLASSNAME+"-caption-container");
 			DOM.sinkEvents(captionContainer, Event.MOUSEEVENTS);
 
 			DOM.appendChild(td, captionContainer);
@@ -723,13 +725,13 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 			floatingCopyOfHeaderCell = DOM.getChild(floatingCopyOfHeaderCell, 1);
 			// TODO isolate non-standard css attribute (filter)
 			// TODO move styles to css file
-			DOM.setAttribute(floatingCopyOfHeaderCell, "className", CLASSNAME+"-header-drag");
+			DOM.setElementProperty(floatingCopyOfHeaderCell, "className", CLASSNAME+"-header-drag");
 			updateFloatingCopysPosition(DOM.getAbsoluteLeft(td), DOM.getAbsoluteTop(td));
 			DOM.appendChild(RootPanel.get().getElement(), floatingCopyOfHeaderCell);
 		}
 		
 		private void updateFloatingCopysPosition(int x, int y) {
-			x -= DOM.getIntAttribute(floatingCopyOfHeaderCell, "offsetWidth")/2;
+			x -= DOM.getElementPropertyInt(floatingCopyOfHeaderCell, "offsetWidth")/2;
 			DOM.setStyleAttribute(floatingCopyOfHeaderCell, "left", x + "px");
 			if(y > 0)
 				DOM.setStyleAttribute(floatingCopyOfHeaderCell, "top", (y + 7) + "px");
@@ -933,10 +935,10 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		
 		public TableHead() {
 			DOM.setStyleAttribute(hTableWrapper, "overflow", "hidden");
-			DOM.setAttribute(hTableWrapper, "className", CLASSNAME+"-header");
+			DOM.setElementProperty(hTableWrapper, "className", CLASSNAME+"-header");
 
 			// TODO move styles to CSS
-			DOM.setAttribute(columnSelector, "className", CLASSNAME+"-column-selector");
+			DOM.setElementProperty(columnSelector, "className", CLASSNAME+"-column-selector");
 			DOM.setStyleAttribute(columnSelector, "display", "none");
 			
 			DOM.appendChild(table, headerTableBody);
@@ -996,7 +998,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		}
 
 		public void setHorizontalScrollPosition(int scrollLeft) {
-			DOM.setIntAttribute(hTableWrapper, "scrollLeft", scrollLeft);
+			DOM.setElementPropertyInt(hTableWrapper, "scrollLeft", scrollLeft);
 		}
 		
 		public void setWidth(int width) {
@@ -1021,12 +1023,13 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 			if(index < visibleCells.size()) {
 				// insert to right slot
 				DOM.insertChild(tr, cell.getElement(), index);
-				adopt(cell, null);
+				adopt(cell);
 				visibleCells.insertElementAt(cell, index);
 				
 			} else if( index == visibleCells.size()) {
 				//simply append
-				adopt(cell, tr);
+				DOM.appendChild(tr, cell.getElement());
+				adopt(cell);
 				visibleCells.add(cell);
 			} else {
 				throw new RuntimeException("Header cells must be appended in order");
@@ -1069,11 +1072,12 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		}
 
 		public boolean remove(Widget w) {
-			disown(w);
 			if(visibleCells.contains(w)) {
 				visibleCells.remove(w);
 				return true;
 			}
+			orphan(w);
+			DOM.removeChild(DOM.getParent(w.getElement()), w.getElement());
 			return false;
 		}
 		
@@ -1085,11 +1089,11 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		private void focusSlot(int index) {
 			removeSlotFocus();
 			if(index > 0)
-				DOM.setAttribute(
+				DOM.setElementProperty(
 						DOM.getFirstChild(DOM.getChild(tr, index - 1)), 
 						"className", CLASSNAME+"-resizer "+CLASSNAME+"-focus-slot-right");
 			else
-				DOM.setAttribute(
+				DOM.setElementProperty(
 						DOM.getFirstChild(DOM.getChild(tr, index)), 
 						"className", CLASSNAME+"-resizer "+CLASSNAME+"-focus-slot-left");
 			focusedSlot = index;
@@ -1099,11 +1103,11 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 			if(focusedSlot < 0)
 				return;
 			if(focusedSlot == 0)
-				DOM.setAttribute(
+				DOM.setElementProperty(
 						DOM.getFirstChild(DOM.getChild(tr, focusedSlot)), 
 						"className", CLASSNAME+"-resizer");
 			else if( focusedSlot > 0)
-				DOM.setAttribute(
+				DOM.setElementProperty(
 						DOM.getFirstChild(DOM.getChild(tr, focusedSlot - 1)), 
 						"className", CLASSNAME+"-resizer");
 			focusedSlot = -1;
@@ -1114,7 +1118,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 			if(DOM.compare(DOM.eventGetTarget(event), columnSelector)) {
 				int left = DOM.getAbsoluteLeft(columnSelector);
 				int top = DOM.getAbsoluteTop(columnSelector) +
-					DOM.getIntAttribute(columnSelector, "offsetHeight");
+					DOM.getElementPropertyInt(columnSelector, "offsetHeight");
 				client.getContextMenu().showAt(this, left, top);
 			}
 		}
@@ -1258,9 +1262,9 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		}
 		
 		private void constructDOM() {
-			DOM.setAttribute(table, "className", CLASSNAME+"-table");
-			DOM.setAttribute(preSpacer, "className", CLASSNAME+"-row-spacer");
-			DOM.setAttribute(postSpacer, "className", CLASSNAME+"-row-spacer");
+			DOM.setElementProperty(table, "className", CLASSNAME+"-table");
+			DOM.setElementProperty(preSpacer, "className", CLASSNAME+"-row-spacer");
+			DOM.setElementProperty(postSpacer, "className", CLASSNAME+"-row-spacer");
 
 			DOM.appendChild(table, tBody);
 			DOM.appendChild(container, preSpacer);
@@ -1356,7 +1360,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 			if(first != null && first.getStyleName().indexOf("i-odd") == -1)
 				row.addStyleName("i-odd");
 			DOM.insertChild(tBody, row.getElement(), 0);
-			adopt(row, null);
+			adopt(row);
 			renderedRows.add(0, row);
 		}
 		
@@ -1367,7 +1371,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 			if(last != null && last.getStyleName().indexOf("i-odd") == -1)
 				row.addStyleName("i-odd");
 			DOM.appendChild(tBody, row.getElement());
-			adopt(row, null);
+			adopt(row);
 			renderedRows.add(row);
 		}
 		
@@ -1387,7 +1391,8 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 				lastRendered--;
 			}
 			IScrollTableRow toBeRemoved = (IScrollTableRow) renderedRows.get(index);
-			this.disown(toBeRemoved);
+			DOM.removeChild(tBody, toBeRemoved.getElement());
+			this.orphan(toBeRemoved);
 			renderedRows.remove(index);
 			fixSpacers();
 		}
@@ -1417,7 +1422,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 				return rowHeight;
 			else {
 				if(DOM.getChildCount(tBody) > 0) {
-					rowHeight = DOM.getIntAttribute(tBody, "offsetHeight")/DOM.getChildCount(tBody);
+					rowHeight = DOM.getElementPropertyInt(tBody, "offsetHeight")/DOM.getChildCount(tBody);
 				} else {
 					return DEFAULT_ROW_HEIGHT;
 				}
@@ -1428,7 +1433,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 
 		public int getColWidth(int i) {
 			Element e = DOM.getChild(DOM.getChild(tBody, 0), i);
-			return DOM.getIntAttribute(e, "offsetWidth");
+			return DOM.getElementPropertyInt(e, "offsetWidth");
 		}
 
 		public void setColWidth(int colIndex, int w) {
@@ -1526,7 +1531,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 				// String only content is optimized by not using Label widget
 				Element td = DOM.createTD();
 				Element container = DOM.createDiv();
-				DOM.setAttribute(container, "className", CLASSNAME+"-cell-content");
+				DOM.setElementProperty(container, "className", CLASSNAME+"-cell-content");
 				DOM.setInnerHTML(container, text);
 				if(align != ALIGN_LEFT) {
 					switch (align) {
@@ -1546,11 +1551,12 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 			public void addCell(Widget w, char align) {
 				Element td = DOM.createTD();
 				Element container = DOM.createDiv();
-				DOM.setAttribute(container, "className", CLASSNAME+"-cell-content");
+				DOM.setElementProperty(container, "className", CLASSNAME+"-cell-content");
 				// TODO make widget cells respect align. text-align:center for IE, margin: auto for others
 				DOM.appendChild(td, container);
 				DOM.appendChild(getElement(), td);
-				adopt(w, container);
+				DOM.appendChild(container, w.getElement());
+				adopt(w);
 				childWidgets.add(w);
 			}
 
@@ -1567,7 +1573,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 			 * React on click that occur on content cells only
 			 */
 			public void onBrowserEvent(Event event) {
-				String s = DOM.getAttribute(DOM.eventGetTarget(event), "className");
+				String s = DOM.getElementProperty(DOM.eventGetTarget(event), "className");
 				switch (DOM.eventGetType(event)) {
 				case Event.ONCLICK:
 					if((CLASSNAME+"-cell-content").equals(s)) {
