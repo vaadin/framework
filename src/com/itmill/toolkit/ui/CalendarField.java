@@ -101,7 +101,7 @@ public class CalendarField extends DateField implements Container.Viewer {
     }
 
     public void setContainerDataSource(Container newDataSource) {
-	if (checkDataSource(newDataSource)) {
+	if (newDataSource==null||checkDataSource(newDataSource)) {
 	    this.dataSource = newDataSource;
 	} else {
 	    // TODO error message
