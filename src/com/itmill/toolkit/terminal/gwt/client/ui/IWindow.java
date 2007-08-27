@@ -1,11 +1,8 @@
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
-import java.util.HashSet;
-
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.EventPreview;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
@@ -51,6 +48,12 @@ public class IWindow extends PopupPanel implements Paintable {
 	private int origW;
 
 	private int origH;
+
+	private Element closeBox;
+
+	private ApplicationConnection client;
+
+	private String id;
 	
 	public IWindow() {
 		super();
@@ -60,17 +63,23 @@ public class IWindow extends PopupPanel implements Paintable {
 	
 	protected void constructDOM() {
 		header = DOM.createDiv();
-		DOM.setAttribute(header, "className", CLASSNAME + "-header");
-		DOM.sinkEvents(header, Event.MOUSEEVENTS);
+		DOM.setElementProperty(header, "className", CLASSNAME + "-header");
 		contents = DOM.createDiv();
-		DOM.setAttribute(contents, "className", CLASSNAME + "-contents");
+		DOM.setElementProperty(contents, "className", CLASSNAME + "-contents");
 		footer = DOM.createDiv();
-		DOM.setAttribute(footer, "className", CLASSNAME + "-footer");
+		DOM.setElementProperty(footer, "className", CLASSNAME + "-footer");
 		resizeBox = DOM.createDiv();
-		DOM.setAttribute(resizeBox, "className", CLASSNAME + "-resizeBox");
+		DOM.setElementProperty(resizeBox, "className", CLASSNAME + "-resizebox");
+		closeBox = DOM.createDiv();
+		DOM.setElementProperty(closeBox, "className", CLASSNAME + "-closebox");
 		DOM.appendChild(footer, resizeBox);
+
+		DOM.sinkEvents(header, Event.MOUSEEVENTS);
 		DOM.sinkEvents(resizeBox, Event.MOUSEEVENTS);
+		DOM.sinkEvents(closeBox, Event.ONCLICK);
+		
 		Element wrapper = getElement();
+		DOM.appendChild(wrapper, closeBox);
 		DOM.appendChild(wrapper, header);
 		DOM.appendChild(wrapper, contents);
 		DOM.appendChild(wrapper, footer);
@@ -78,6 +87,16 @@ public class IWindow extends PopupPanel implements Paintable {
 	}
 
 	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+		this.id = uidl.getId();
+		this.client = client;
+		if(uidl.hasAttribute("invisible")) {
+			this.hide();
+			return;
+		} else {
+			if(!isAttached()) {
+				show();
+			}
+		}
 		UIDL childUidl = uidl.getChildUIDL(0);
 		Paintable lo = (Paintable) client.getWidget(childUidl);
 		if (layout != null) {
@@ -107,7 +126,8 @@ public class IWindow extends PopupPanel implements Paintable {
 		// set contents size also due IE's bugs
 		DOM.setStyleAttribute(contents, "width", (width - BORDER_WIDTH_HORIZONTAL) + "px");
 		DOM.setStyleAttribute(contents, "height", (height - BORDER_WIDTH_VERTICAL) + "px");
-		super.setPixelSize(width, height);
+		DOM.setStyleAttribute(header, "width", (width - BORDER_WIDTH_HORIZONTAL) + "px");
+		super.setPixelSize(width - BORDER_WIDTH_HORIZONTAL, height - BORDER_WIDTH_VERTICAL);
 	}
 
 	protected Element getContainerElement() {
@@ -120,6 +140,14 @@ public class IWindow extends PopupPanel implements Paintable {
 			onHeaderEvent(event);
 		else if (resizing || DOM.compare(resizeBox, target))
 			onResizeEvent(event);
+		else if (DOM.compare(target, closeBox) && 
+				DOM.eventGetType(event) == Event.ONCLICK) {
+			onCloseClick();
+		}
+	}
+
+	private void onCloseClick() {
+		client.updateVariable(id, "close", true, true);
 	}
 
 	private void onResizeEvent(Event event) {
@@ -191,5 +219,4 @@ public class IWindow extends PopupPanel implements Paintable {
 		//TODO return false when modal
 		return true;
 	}
-
 }

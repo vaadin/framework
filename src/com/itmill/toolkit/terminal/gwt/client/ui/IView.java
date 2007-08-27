@@ -72,10 +72,8 @@ public class IView extends SimplePanel implements Paintable {
 				Widget w = client.getWidget(childUidl);
 				if (subWindows.contains(w)) {
 					removedSubWindows.remove(w);
-					client.registerPaintable(childUidl.getId(), (Paintable)w);
 				} else {
 					subWindows.add(w);
-					RootPanel.get().add(w);
 				}
 				((Paintable)w).updateFromUIDL(childUidl, client);
 			}
