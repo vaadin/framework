@@ -224,7 +224,7 @@ public class Select extends AbstractField implements Container,
 	}
 
 	/**
-	 * Creates a new select wthat is connected to a data-source.
+	 * Creates a new select that is connected to a data-source.
 	 * 
 	 * @param caption
 	 *            the Caption of the component.
