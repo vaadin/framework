@@ -13,6 +13,7 @@ public final class DebugConsole extends IWindow implements Console {
 		super();
 		panel = new FlowPanel();
 		this.setWidget(panel);
+		this.setCaption("Debug window");
 		minimize();
 		show();
 	}
