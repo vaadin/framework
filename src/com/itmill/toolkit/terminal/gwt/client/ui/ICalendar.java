@@ -60,6 +60,7 @@ public class ICalendar extends IDateField {
 	    Date maxDate = (max > 0 ? new Date(max) : null);
 	    calPanel.setLimits(minDate, maxDate);
 	}
+	this.entrySource.clear();
 	for (Iterator cit = uidl.getChildIterator(); cit.hasNext();) {
 	    UIDL child = (UIDL) cit.next();
 	    if (child.getTag().equals("items")) {
@@ -116,7 +117,7 @@ public class ICalendar extends IDateField {
 		    text += (text == "" ? "" : ", ")
 			    + (title != null ? title : "?");
 		}
-	    }
+	    } 
 	    hourTable.setHTML(i, 1, "<span>" + text + "</span>");
 	    hourTable.getCellFormatter().setStyleName(i, 1,
 		    CLASSNAME + "-title");
@@ -168,6 +169,10 @@ public class ICalendar extends IDateField {
 	    }
 
 	    return res;
+	}
+	
+	public void clear() {
+	    items.clear();
 	}
 
     }
