@@ -1,5 +1,7 @@
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
+import java.util.Vector;
+
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
@@ -10,18 +12,27 @@ import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
 /**
+ * "Sub window" component.
+ * 
+ * TODO update position / scrollposition / size to client
  * 
  * @author IT Mill Ltd
  */
 public class IWindow extends PopupPanel implements Paintable {
-
+	
+	private static Vector windowOrder = new Vector();
+	
 	public static final String CLASSNAME = "i-window";
 
-	/** pixels used by borders and paddings horizontally */
-	protected static final int BORDER_WIDTH_HORIZONTAL = 2;
+	/** pixels used by inner borders and paddings horizontally */
+	protected static final int BORDER_WIDTH_HORIZONTAL = 0;
 
-	/** pixels used by headers, footers, borders and paddings vertically */
+	/** pixels used by headers, footers, inner borders and paddings vertically */
 	protected static final int BORDER_WIDTH_VERTICAL = 22;
+
+	private static final int STACKING_OFFSET_PIXELS = 15;
+	
+	private static final int Z_INDEX_BASE = 10000;
 
 	private Paintable layout;
 
@@ -57,8 +68,36 @@ public class IWindow extends PopupPanel implements Paintable {
 	
 	public IWindow() {
 		super();
+		int order = windowOrder.size();
+		setWindowOrder(order);
+		windowOrder.add(this);
 		setStyleName(CLASSNAME);
 		constructDOM();
+		setPopupPosition(order*STACKING_OFFSET_PIXELS, order*STACKING_OFFSET_PIXELS);
+	}
+	
+	private void bringToFront() {
+		int curIndex = windowOrder.indexOf(this);
+		if(curIndex + 1 < windowOrder.size()) {
+			windowOrder.remove(this);
+			windowOrder.add(this);
+			for(;curIndex < windowOrder.size();curIndex++) {
+				((IWindow) windowOrder.get(curIndex)).setWindowOrder(curIndex);
+			}
+		}
+	}
+	
+	/**
+	 * Returns true if window is the topmost window 
+	 * 
+	 * @return
+	 */
+	private boolean isActive() {
+		return windowOrder.lastElement().equals(this);
+	}
+	
+	public void setWindowOrder(int order) {
+		DOM.setStyleAttribute(getElement(), "zIndex", "" + (order + Z_INDEX_BASE));
 	}
 	
 	protected void constructDOM() {
@@ -77,6 +116,7 @@ public class IWindow extends PopupPanel implements Paintable {
 		DOM.sinkEvents(header, Event.MOUSEEVENTS);
 		DOM.sinkEvents(resizeBox, Event.MOUSEEVENTS);
 		DOM.sinkEvents(closeBox, Event.ONCLICK);
+		DOM.sinkEvents(contents, Event.ONCLICK);
 		
 		Element wrapper = getElement();
 		DOM.appendChild(wrapper, closeBox);
@@ -89,10 +129,18 @@ public class IWindow extends PopupPanel implements Paintable {
 	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 		this.id = uidl.getId();
 		this.client = client;
+		
 		if(uidl.hasAttribute("invisible")) {
 			this.hide();
 			return;
 		} else {
+			if(uidl.getIntVariable("width") > 0) {
+				setPixelWidth(uidl.getIntVariable("width"));
+			}
+			if(uidl.getIntVariable("height") > 0) {
+				setPixelHeight(uidl.getIntVariable("width"));
+			}
+			
 			if(!isAttached()) {
 				show();
 			}
@@ -123,11 +171,21 @@ public class IWindow extends PopupPanel implements Paintable {
 	}
 	
 	public void setPixelSize(int width, int height) {
-		// set contents size also due IE's bugs
+		setPixelHeight(height);
+		setPixelWidth(width);
+	}
+	
+	public void setPixelWidth(int width) {
 		DOM.setStyleAttribute(contents, "width", (width - BORDER_WIDTH_HORIZONTAL) + "px");
-		DOM.setStyleAttribute(contents, "height", (height - BORDER_WIDTH_VERTICAL) + "px");
 		DOM.setStyleAttribute(header, "width", (width - BORDER_WIDTH_HORIZONTAL) + "px");
-		super.setPixelSize(width - BORDER_WIDTH_HORIZONTAL, height - BORDER_WIDTH_VERTICAL);
+		DOM.setStyleAttribute(footer, "width", (width - BORDER_WIDTH_HORIZONTAL) + "px");
+		DOM.setStyleAttribute(getElement(), "width", width + "px");
+		
+	}
+	
+	public void setPixelHeight(int height) {
+		DOM.setStyleAttribute(contents, "height", (height - BORDER_WIDTH_VERTICAL) + "px");
+		DOM.setStyleAttribute(getElement(), "height", height + "px");
 	}
 
 	protected Element getContainerElement() {
@@ -135,6 +193,9 @@ public class IWindow extends PopupPanel implements Paintable {
 	}
 
 	public void onBrowserEvent(Event event) {
+		if( !isActive()) {
+			bringToFront();
+		}
 		Element target = DOM.eventGetTarget(event);
 		if (dragging || DOM.compare(header, target))
 			onHeaderEvent(event);

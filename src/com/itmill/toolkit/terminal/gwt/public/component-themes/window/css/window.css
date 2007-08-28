@@ -1,27 +1,42 @@
 .i-window {
 	border: 1px solid #999;
+	/* mac FF fix for scrollbar see thru */
+	position: absolute;
 }
 .i-window-header {
 	background: yellow;
 	height:20px;
+	overflow: hidden;
 }
 
 .i-window-footer {
 	background: #0f0;
-	height:0px;
+	height:2px;
 }
 
 .i-window-contents {
-	background: #fff;
 	overflow:auto;
+	background: #fff;
 }
 
-.i-window-resizeBox {
+.i-window-resizebox {
 	position:absolute;
 	bottom:0;
 	right:0;
 	background: black;
 	width: 5px;
 	height: 5px;
+	float:right;
+	/* IE 6 hack */
+	overflow: auto;
+}
+
+.i-window-closebox {
+	position:absolute;
+	top:0;
+	right:0;
+	background: red;
+	width: 15px;
+	height: 15px;
 	float:right;
 }
