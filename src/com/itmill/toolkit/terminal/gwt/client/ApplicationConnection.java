@@ -18,6 +18,7 @@ import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.ui.FocusListener;
 import com.google.gwt.user.client.ui.FocusWidget;
+import com.google.gwt.user.client.ui.HasFocus;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -172,13 +173,25 @@ public class ApplicationConnection implements EntryPoint, FocusListener {
 								+ uidl.getTag()
 								+ ", but there is no such paintable ("
 								+ uidl.getId() + ") registered yet.");
-						view.updateFromUIDL(uidl, this);
-						}
+					view.updateFromUIDL(uidl, this);
+				}
 			} catch (Throwable e) {
 				e.printStackTrace();
 			}
-
 		}
+		
+		if(((JSONObject) json).containsKey("meta")) {
+			JSONObject meta = ((JSONObject) json).get("meta").isObject();
+			if(meta.containsKey("focus")) {
+				String focusPid = meta.get("focus").isString().stringValue();
+				Paintable toBeFocused = this.getPaintable(focusPid);
+				if (toBeFocused instanceof HasFocus) {
+					HasFocus toBeFocusedWidget = (HasFocus) toBeFocused;
+					toBeFocusedWidget.setFocus(true);
+				}
+			}
+		}
+		
 		long prosessingTime = (new Date().getTime()) - start.getTime();
 		console.log(" Processing time was " + String.valueOf(prosessingTime)
 				+ "ms for " + jsonText.length() + " characters of JSON");
