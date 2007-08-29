@@ -29,8 +29,16 @@
 package com.itmill.toolkit.ui;
 
 import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
+import java.util.StringTokenizer;
 
+import com.itmill.toolkit.event.Action;
+import com.itmill.toolkit.event.ShortcutAction;
+import com.itmill.toolkit.event.Action.Handler;
+import com.itmill.toolkit.terminal.KeyMapper;
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
 import com.itmill.toolkit.terminal.Scrollable;
@@ -46,7 +54,7 @@ import com.itmill.toolkit.terminal.Sizeable;
  */
 public class Panel extends AbstractComponentContainer implements Sizeable,
 		Scrollable, ComponentContainer.ComponentAttachListener,
-		ComponentContainer.ComponentDetachListener {
+		ComponentContainer.ComponentDetachListener, Action.Container {
 
 	/**
 	 * Layout of the panel.
@@ -87,6 +95,12 @@ public class Panel extends AbstractComponentContainer implements Sizeable,
 	 * Scrolling mode.
 	 */
 	private boolean scrollable = false;
+	
+	/** List of action handlers */
+	private LinkedList actionHandlers = null;
+
+	/** Action mapper */
+	private KeyMapper actionMapper = null;
 
 	/**
 	 * Creates a new empty panel. Ordered layout is used.
@@ -192,6 +206,41 @@ public class Panel extends AbstractComponentContainer implements Sizeable,
 		if (isScrollable()) {
 			target.addVariable(this, "scrollleft", getScrollOffsetX());
 			target.addVariable(this, "scrolldown", getScrollOffsetY());
+		}
+		
+
+		if (actionHandlers != null && !actionHandlers.isEmpty()) {
+			target.addVariable(this, "action", "");
+			target.startTag("actions");
+
+			for (Iterator ahi = actionHandlers.iterator(); ahi.hasNext();) {
+				Action[] aa = ((Action.Handler) ahi.next()).getActions(null, this);
+				if (aa != null) {
+					for (int ai = 0; ai < aa.length; ai++) {
+						Action a = aa[ai];
+						target.startTag("action");
+						String akey = actionMapper.key(aa[ai]);
+						target.addAttribute("key", akey);
+						if (a.getCaption() != null)
+							target.addAttribute("caption", a.getCaption());
+						if (a.getIcon() != null)
+							target.addAttribute("icon", a.getIcon());
+						if (a instanceof ShortcutAction) {
+							ShortcutAction sa = (ShortcutAction) a;
+							target.addAttribute("kc", sa.getKeyCode());
+							int[] modifiers = sa.getModifiers();
+							if(modifiers != null) {
+								String[] smodifiers = new String[modifiers.length];
+								for (int i = 0; i < modifiers.length; i++)
+									smodifiers[i] = String.valueOf(modifiers[i]);
+								target.addAttribute("mk", smodifiers);
+							}
+						}
+						target.endTag("action");
+					}
+				}
+			}
+			target.endTag("actions");
 		}
 	}
 
@@ -312,6 +361,17 @@ public class Panel extends AbstractComponentContainer implements Sizeable,
 			setScrollOffsetX(newScrollX.intValue());
 		if (newScrollY != null && newScrollY.intValue() != getScrollOffsetY())
 			setScrollOffsetY(newScrollY.intValue());
+		
+		// Actions
+		if (variables.containsKey("action")) {
+			String key = (String) variables.get("action");
+			Action action = (Action) actionMapper.get(key);
+			if (action != null && actionHandlers != null)
+				for (Iterator i = actionHandlers.iterator(); i.hasNext();)
+					((Action.Handler) i.next()).handleAction(action, this,
+							this);
+		}
+
 	}
 
 	/**
@@ -452,6 +512,42 @@ public class Panel extends AbstractComponentContainer implements Sizeable,
 	 */
 	public void removeAllComponents() {
 		layout.removeAllComponents();
+	}
+
+	public void addActionHandler(Handler actionHandler) {
+		if (actionHandler != null) {
+
+			if (actionHandlers == null) {
+				actionHandlers = new LinkedList();
+				actionMapper = new KeyMapper();
+			}
+
+			if (!actionHandlers.contains(actionHandler)) {
+				actionHandlers.add(actionHandler);
+				requestRepaint();
+			}
+		}
+		
+	}
+
+	/**
+	 * Removes an action handler.
+	 * 
+	 * @see com.itmill.toolkit.event.Action.Container#removeActionHandler(Action.Handler)
+	 */
+	public void removeActionHandler(Action.Handler actionHandler) {
+
+		if (actionHandlers != null && actionHandlers.contains(actionHandler)) {
+
+			actionHandlers.remove(actionHandler);
+
+			if (actionHandlers.isEmpty()) {
+				actionHandlers = null;
+				actionMapper = null;
+			}
+
+			requestRepaint();
+		}
 	}
 
 }

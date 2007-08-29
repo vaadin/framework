@@ -93,6 +93,14 @@ public class UIDL {
 		return s;
 	}
 
+	public int[] getIntArrayAttribute(String name) {
+		JSONArray a = (JSONArray) ((JSONObject) json.get(1)).get(name);
+		int[] s = new int[a.size()];
+		for (int i = 0; i < a.size(); i++)
+			s[i] = Integer.parseInt(((JSONString) a.get(i)).stringValue());
+		return s;
+	}
+
 	public HashSet getStringArrayAttributeAsSet(String string) {
 		JSONArray a = getArrayVariable(string);
 		HashSet s = new HashSet();

@@ -1,8 +1,11 @@
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -19,13 +22,25 @@ public class IView extends SimplePanel implements Paintable {
 	
 	private HashSet subWindows = new HashSet();
 
+	private ArrayList actions = new ArrayList();
 
+	private ApplicationConnection client;
+
+	private String id;
+	
+	public IView() {
+		super();
+		sinkEvents(Event.KEYEVENTS);
+	}
 	
 	public String getTheme() {
 		return theme;
 	}
 	
 	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+		this.client = client;
+		
+		this.id = uidl.getId();
 		
 		// Start drawing from scratch
 		clear();
@@ -76,6 +91,8 @@ public class IView extends SimplePanel implements Paintable {
 					subWindows.add(w);
 				}
 				((Paintable)w).updateFromUIDL(childUidl, client);
+			} else if ("actions".equals(childUidl.getTag())) {
+				updateActionMap(childUidl);
 			}
 		}
 		
@@ -88,4 +105,49 @@ public class IView extends SimplePanel implements Paintable {
 		}
 	}
 
+	private void updateActionMap(UIDL c) {
+		actions.clear();
+		Iterator it = c.getChildIterator();
+		while(it.hasNext()) {
+			UIDL action = (UIDL) it.next();
+			
+			int[] modifiers = null;
+			if(action.hasAttribute("mk"))
+				modifiers = action.getIntArrayAttribute("mk");
+			
+			ShortcutKeyCombination kc = new ShortcutKeyCombination(
+					action.getIntAttribute("kc"),
+					modifiers);
+			String key = action.getStringAttribute("key");
+			String caption = action.getStringAttribute("caption");
+			actions.add(new IShortcutAction(key,kc, caption));
+		}
+	}
+
+	public void onBrowserEvent(Event event) {
+		if(DOM.eventGetType(event) == Event.ONKEYDOWN) {
+			handleKeyEvent(event);
+		}
+		super.onBrowserEvent(event);
+	}
+
+	private void handleKeyEvent(Event event) {
+		client.console.log("keyEvent");
+		
+		ShortcutKeyCombination kc = new ShortcutKeyCombination();
+		kc.altKey = DOM.eventGetAltKey(event);
+		kc.ctrlKey = DOM.eventGetCtrlKey(event);
+		kc.shiftKey = DOM.eventGetShiftKey(event);
+		kc.keyCode = DOM.eventGetKeyCode(event);
+		Iterator it = actions.iterator();
+		while(it.hasNext()) {
+			IShortcutAction a = (IShortcutAction) it.next();
+			if(a.getShortcutCombination().equals(kc)) {
+				client.updateVariable(id, "action", a.getKey(), true);
+			}
+		}
+	}
+	
 }
+
+

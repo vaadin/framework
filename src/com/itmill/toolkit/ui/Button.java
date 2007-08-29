@@ -52,17 +52,12 @@ import com.itmill.toolkit.terminal.PaintTarget;
  * @VERSION@
  * @since 3.0
  */
-public class Button extends AbstractField implements Action.Container {
+public class Button extends AbstractField {
 
 	/* Private members ************************************************* */
 
 	boolean switchMode = false;
 
-	/** List of action handlers */
-	private LinkedList actionHandlers = null;
-
-	/** Action mapper */
-	private KeyMapper actionMapper = null;
 
 	/**
 	 * Creates a new push button. The value of the push button is allways false
@@ -176,44 +171,6 @@ public class Button extends AbstractField implements Action.Container {
 		}
 		target.addVariable(this, "state", state);
 
-		// Actions
-		if (actionHandlers != null) {
-			Set actionSet = new LinkedHashSet();
-			for (Iterator ahi = actionHandlers.iterator(); ahi.hasNext();) {
-				Action[] aa = ((Action.Handler) ahi.next()).getActions(this,
-						this);
-				if (aa != null)
-					for (int ai = 0; ai < aa.length; ai++) {
-						actionSet.add(aa[ai]);
-					}
-			}
-
-			target.startTag("actions");
-			target.addVariable(this, "action", "");
-			for (Iterator i = actionSet.iterator(); i.hasNext();) {
-				try {
-					ShortcutAction a = (ShortcutAction) i.next();
-					target.startTag("action");
-					if (a.getCaption() != null)
-						target.addAttribute("caption", a.getCaption());
-					if (a.getIcon() != null)
-						target.addAttribute("icon", a.getIcon());
-					target.addAttribute("key", actionMapper.key(a));
-					target.addAttribute("keycode", a.getKeyCode());
-					if (a.getModifiers() != null) {
-						int[] modifiers = a.getModifiers();
-						target.addAttribute("modifiers", modifiers.length);
-						for (int j = 0; j < modifiers.length; j++) {
-							target.addAttribute("modifier" + j, modifiers[j]);
-						}
-					}
-					target.endTag("action");
-				} catch (Exception e) {
-					// ignore non-shorcut actions for button
-				}
-			}
-			target.endTag("actions");
-		}
 	}
 
 	/**
@@ -249,21 +206,6 @@ public class Button extends AbstractField implements Action.Container {
 					setValue(new Boolean(false));
 			}
 		}
-		// Actions
-		// TODO this is pretty much copy-pasted from tree, may be simplified
-		if (variables.containsKey("action")) {
-
-			StringTokenizer st = new StringTokenizer((String) variables
-					.get("action"), ",");
-			if (st.countTokens() == 2) {
-				Action action = (Action) actionMapper.get(st.nextToken());
-				if (action != null && actionHandlers != null)
-					for (Iterator i = actionHandlers.iterator(); i.hasNext();)
-						((Action.Handler) i.next()).handleAction(action, this,
-								this);
-			}
-		}
-
 	}
 
 	/**
@@ -403,44 +345,4 @@ public class Button extends AbstractField implements Action.Container {
 		fireEvent(new Button.ClickEvent(this));
 	}
 
-	/**
-	 * Adds an action handler.
-	 * 
-	 * @see com.itmill.toolkit.event.Action.Container#addActionHandler(Action.Handler)
-	 */
-	public void addActionHandler(Action.Handler actionHandler) {
-
-		if (actionHandler != null) {
-
-			if (actionHandlers == null) {
-				actionHandlers = new LinkedList();
-				actionMapper = new KeyMapper();
-			}
-
-			if (!actionHandlers.contains(actionHandler)) {
-				actionHandlers.add(actionHandler);
-				requestRepaint();
-			}
-		}
-	}
-
-	/**
-	 * Removes an action handler.
-	 * 
-	 * @see com.itmill.toolkit.event.Action.Container#removeActionHandler(Action.Handler)
-	 */
-	public void removeActionHandler(Action.Handler actionHandler) {
-
-		if (actionHandlers != null && actionHandlers.contains(actionHandler)) {
-
-			actionHandlers.remove(actionHandler);
-
-			if (actionHandlers.isEmpty()) {
-				actionHandlers = null;
-				actionMapper = null;
-			}
-
-			requestRepaint();
-		}
-	}
 }
