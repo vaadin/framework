@@ -1,1 +1,1 @@
-@java -cp "%~dp0\../../src;%~dp0\bin;%~dp0\../gwt/gwt-windows-1.4.59/gwt-user.jar;%~dp0\../gwt/gwt-windows-1.4.59/gwt-dev-windows.jar" com.google.gwt.dev.GWTCompiler -out "%~dp0\../../WebContent" %* com.itmill.toolkit.terminal.gwt.Client
+@java -cp "%~dp0\../../src;%~dp0\bin;%~dp0\../gwt/gwt/gwt-user.jar;%~dp0\../gwt/gwt/gwt-dev-windows.jar" com.google.gwt.dev.GWTCompiler -out "%~dp0\../../WebContent" %* com.itmill.toolkit.terminal.gwt.Client
