@@ -110,9 +110,9 @@ public class ITabsheet extends TabPanel implements Paintable {
 					tb.selectTab(index);
 					remove(index);
 					insert(content, (String) captions.get(index), index);
+					this.selectTab(index);
 					((Paintable)content).updateFromUIDL(tab
 							.getChildUIDL(0), client);
-					this.selectTab(index);
 				}
 				index++;
 			}
@@ -132,9 +132,9 @@ public class ITabsheet extends TabPanel implements Paintable {
 					Widget content = client.getWidget(tab
 							.getChildUIDL(0));
 					this.add(content, caption);
+					this.selectTab(this.getWidgetIndex(content));
 					((Paintable)content).updateFromUIDL(tab
 							.getChildUIDL(0), client);
-					this.selectTab(this.getWidgetIndex(content));
 				} else {
 					this.add(new Label(), caption);
 				}
