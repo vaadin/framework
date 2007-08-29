@@ -7,8 +7,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 import com.itmill.toolkit.data.Container;
+import com.itmill.toolkit.data.Item;
 import com.itmill.toolkit.data.util.QueryContainer;
 
 public class SampleDB {
@@ -41,7 +44,7 @@ public class SampleDB {
 	public static final String PROPERTY_ID_RESERVED_FROM = "RESERVED_FROM";
 	public static final String PROPERTY_ID_RESERVED_TO = "RESERVED_TO";
     }
-
+    
     // TODO -> param
     private static final String DB_URL = "jdbc:hsqldb:file:reservation.db";
 
@@ -206,6 +209,7 @@ public class SampleDB {
     }
 
     public Container getCategories() {
+	// TODO where deleted=?
 	String q = "SELECT DISTINCT(" + Resource.PROPERTY_ID_CATEGORY
 		+ ") FROM " + Resource.TABLE + " ORDER BY "
 		+ Resource.PROPERTY_ID_CATEGORY;
@@ -220,6 +224,7 @@ public class SampleDB {
     }
 
     public Container getResources(String category) {
+	// TODO where deleted=?
 	String q = "SELECT * FROM " + Resource.TABLE;
 	if (category != null) {
 	    q += " WHERE " + Resource.PROPERTY_ID_CATEGORY + "='" + category
@@ -237,15 +242,20 @@ public class SampleDB {
 
     }
 
-    public Container getReservations(int[] resourceIds) {
-	String q = "SELECT * FROM " + Reservation.TABLE ;
-	if (resourceIds != null && resourceIds.length > 0) {
+    public Container getReservations(List resources) {
+	// TODO where reserved_by=?
+	// TODO where from=?
+	// TODO where to=?
+	// TODO where deleted=?
+	String q = "SELECT * FROM " + Reservation.TABLE;
+	if (resources != null && resources.size() > 0) {
 	    StringBuilder s = new StringBuilder();
-	    for (int i = 0; i < resourceIds.length; i++) {
-		if (i > 0) {
+	    for (Iterator it = resources.iterator(); it.hasNext();) {
+		if (s.length() > 0) {
 		    s.append(",");
 		}
-		s.append(resourceIds[i]);
+		s.append(((Item) it.next())
+			.getItemProperty(Resource.PROPERTY_ID_ID));
 	    }
 	    q += " HAVING " + Reservation.PROPERTY_ID_RESOURCE_ID + " IN (" + s
 		    + ")";
@@ -265,20 +275,15 @@ public class SampleDB {
 	}
     }
 
-
-    public void addReservation(int resourceId, int reservedById,
+    public void addReservation(Item resource, int reservedById,
 	    Date reservedFrom, Date reservedTo, String description) {
-	// TODO swap dates if from>to
-	String checkQ = "SELECT count(*) FROM " + Reservation.TABLE + " WHERE "
-		+ Reservation.PROPERTY_ID_RESOURCE_ID + "=? AND (("
-		+ Reservation.PROPERTY_ID_RESERVED_FROM + ">=? AND "
-		+ Reservation.PROPERTY_ID_RESERVED_FROM + "<=?) OR ("
-		+ Reservation.PROPERTY_ID_RESERVED_TO + ">=? AND "
-		+ Reservation.PROPERTY_ID_RESERVED_TO + "<=?) OR ("
-		+ Reservation.PROPERTY_ID_RESERVED_FROM + "<=? AND "
-		+ Reservation.PROPERTY_ID_RESERVED_TO + ">=?)"
-		+")";
-	System.err.println(checkQ);
+	if (reservedFrom.after(reservedTo)) {
+	    Date tmp = reservedTo;
+	    reservedTo = reservedFrom;
+	    reservedFrom = tmp;
+	}
+	int resourceId = ((Integer) resource.getItemProperty(
+		Resource.PROPERTY_ID_ID).getValue()).intValue();
 	String q = "INSERT INTO " + Reservation.TABLE + " ("
 		+ Reservation.PROPERTY_ID_RESOURCE_ID + ","
 		+ Reservation.PROPERTY_ID_RESERVED_BY_ID + ","
@@ -288,21 +293,10 @@ public class SampleDB {
 		+ "VALUES (?,?,?,?,?)";
 	synchronized (DB_URL) {
 	    try {
-		PreparedStatement p = connection.prepareStatement(checkQ);
-		p.setInt(1, resourceId);
-		p.setTimestamp(2, new java.sql.Timestamp(reservedFrom.getTime()));
-		p.setTimestamp(3, new java.sql.Timestamp(reservedTo.getTime()));
-		p.setTimestamp(4, new java.sql.Timestamp(reservedFrom.getTime()));
-		p.setTimestamp(5, new java.sql.Timestamp(reservedTo.getTime()));
-		p.setTimestamp(6, new java.sql.Timestamp(reservedFrom.getTime()));
-		p.setTimestamp(7, new java.sql.Timestamp(reservedTo.getTime()));
-		p.execute();
-		ResultSet rs = p.getResultSet();
-		if (rs.next() && rs.getInt(1) > 0) {
-		    // TODO custom exception
-		    throw new RuntimeException("Not free!");
+		if (!isAvailableResource(resourceId, reservedFrom, reservedTo)) {
+		    throw new ResourceNotAvailableException("The resource is not available at that time.");
 		}
-		p = connection.prepareStatement(q);
+		PreparedStatement p = connection.prepareStatement(q);
 		p.setInt(1, resourceId);
 		p.setInt(2, reservedById);
 		p.setTimestamp(3,
@@ -311,14 +305,49 @@ public class SampleDB {
 		p.setString(5, description);
 		p.execute();
 	    } catch (Exception e) {
-		// TODO
-		System.err.println(e);
-		e.printStackTrace(System.err);
+		throw new RuntimeException(e);
 	    }
 	}
     }
 
+    public boolean isAvailableResource(int resourceId, Date reservedFrom,
+	    Date reservedTo) {
+	// TODO where deleted=?
+	if (reservedFrom.after(reservedTo)) {
+	    Date tmp = reservedTo;
+	    reservedTo = reservedFrom;
+	    reservedFrom = tmp;
+	}
+	String checkQ = "SELECT count(*) FROM " + Reservation.TABLE + " WHERE "
+		+ Reservation.PROPERTY_ID_RESOURCE_ID + "=? AND (("
+		+ Reservation.PROPERTY_ID_RESERVED_FROM + ">=? AND "
+		+ Reservation.PROPERTY_ID_RESERVED_FROM + "<=?) OR ("
+		+ Reservation.PROPERTY_ID_RESERVED_TO + ">=? AND "
+		+ Reservation.PROPERTY_ID_RESERVED_TO + "<=?) OR ("
+		+ Reservation.PROPERTY_ID_RESERVED_FROM + "<=? AND "
+		+ Reservation.PROPERTY_ID_RESERVED_TO + ">=?)" + ")";
+	try {
+	    PreparedStatement p = connection.prepareStatement(checkQ);
+	    p.setInt(1, resourceId);
+	    p.setTimestamp(2, new java.sql.Timestamp(reservedFrom.getTime()));
+	    p.setTimestamp(3, new java.sql.Timestamp(reservedTo.getTime()));
+	    p.setTimestamp(4, new java.sql.Timestamp(reservedFrom.getTime()));
+	    p.setTimestamp(5, new java.sql.Timestamp(reservedTo.getTime()));
+	    p.setTimestamp(6, new java.sql.Timestamp(reservedFrom.getTime()));
+	    p.setTimestamp(7, new java.sql.Timestamp(reservedTo.getTime()));
+	    p.execute();
+	    ResultSet rs = p.getResultSet();
+	    if (rs.next() && rs.getInt(1) > 0) {
+		return false;
+	    }
+	} catch (Exception e) {
+	    throw new RuntimeException(e);
+	}
+	return true;
+    }
+
     public Container getUsers() {
+	// TODO where deleted=?
 	String q = "SELECT * FROM " + User.TABLE + " ORDER BY "
 		+ User.PROPERTY_ID_FULLNAME;
 	try {
@@ -330,18 +359,19 @@ public class SampleDB {
 	    throw new RuntimeException(e);
 	}
     }
-    
+
     public void generateResources() {
 	String[][] resources = {
 		{ "IT Mill Toolkit Manual", "the manual", "Books" },
-		{ "IT Mill Toolkit for Dummies", "the hardcover version", "Books" },
+		{ "IT Mill Toolkit for Dummies", "the hardcover version",
+			"Books" },
 		{ "Sony", "Old Sony video projector", "AV equipment" },
 		{ "Sanyo", "Brand new hd-ready video projector", "AV equipment" },
 		{ "Room 7", "Converence room in the lobby", "Conference rooms" },
-		{ "Luokkahuone", "Classroom right next to IT Mill", "Conference rooms" },
-		{ "Nintendo Wii", "Teh uber fun", "Entertainment" }, 
-		{ "Playstation", "We don't actually have one", "Entertainment" } 
-		};
+		{ "Luokkahuone", "Classroom right next to IT Mill",
+			"Conference rooms" },
+		{ "Nintendo Wii", "Teh uber fun", "Entertainment" },
+		{ "Playstation", "We don't actually have one", "Entertainment" } };
 
 	String q = "INSERT INTO " + Resource.TABLE + "("
 		+ Resource.PROPERTY_ID_NAME + ","
