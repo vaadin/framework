@@ -130,6 +130,9 @@ public class ReservationApplication extends Application {
 		db.addReservation(resource, 0, (Date) reservedFrom.getValue(),
 			(Date) reservedTo.getValue(), (String) description
 				.getValue());
+		statusLabel.setCaption("Success!");
+		statusLabel
+			.setValue("You have reserved the resource for the selected period.");
 	    }
 	} catch (ResourceNotAvailableException e) {
 	    statusLabel.setCaption("Reservation failed");
@@ -183,7 +186,7 @@ public class ReservationApplication extends Application {
 		    SampleDB.Resource.PROPERTY_ID_NAME).getValue());
 	    reservationButton.setEnabled(true);
 	}
-	
+
     }
 
     private void initCalendarFieldPropertyIds(CalendarField cal) {
@@ -193,7 +196,7 @@ public class ReservationApplication extends Application {
 	cal
 		.setItemTitlePropertyId(SampleDB.Reservation.PROPERTY_ID_DESCRIPTION);
     }
-    
+
     private void resetStatus() {
 	statusLabel.setCaption(null);
 	statusLabel.setValue(null);
@@ -204,6 +207,5 @@ public class ReservationApplication extends Application {
 	refreshReservations();
 	resetStatus();
     }
-    
 
 }
