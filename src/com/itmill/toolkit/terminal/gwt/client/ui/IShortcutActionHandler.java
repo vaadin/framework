@@ -63,8 +63,6 @@ public class IShortcutActionHandler {
 	 * @param modifiers modifier keys (bitmask like in {@link KeyboardListener})
 	 */
 	public void handleKeyboardEvent(char keyCode, int modifiers) {
-		client.console.log("keyDownEvent");
-		
 		ShortcutKeyCombination kc = 
 			new ShortcutKeyCombination(keyCode, modifiers);
 		Iterator it = actions.iterator();
