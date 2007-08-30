@@ -201,43 +201,42 @@ public class DateTimeService {
 	    e = rangeEnd;
 	    s = rangeStart;
 	}
-	if (date.getYear() < s.getYear() || date.getYear() > e.getYear()) {
-	    return false;
-	} else if (resolution == RESOLUTION_YEAR) {
-	    return true;
+	long start = s.getYear()*10000000000l;
+	long end = e.getYear()*10000000000l;
+	long target = date.getYear()*10000000000l;
+	
+	if (resolution == RESOLUTION_YEAR) {
+	    return (start<=target&&end>=target);
 	}
-	if (date.getMonth() < s.getMonth() || date.getMonth() > e.getMonth()) {
-	    return false;
-	} else if (resolution == RESOLUTION_MONTH) {
-	    return true;
+	start += s.getMonth() * 100000000;
+	end += e.getMonth() * 100000000;
+	target += date.getMonth() * 100000000;
+	if (resolution == RESOLUTION_MONTH) {
+	    return (start<=target&&end>=target);
 	}
-	if (date.getDate() < s.getDate() || date.getDate() > e.getDate()) {
-	    return false;
-	} else if (resolution == RESOLUTION_DAY) {
-	    return true;
+	start += s.getDate() * 1000000;
+	end += e.getDate() * 1000000;
+	target += date.getDate() * 1000000;
+	if (resolution == RESOLUTION_DAY) {
+	    return (start<=target&&end>=target);
 	}
-	if (date.getHours() < s.getHours() || date.getHours() > e.getHours()) {
-	    return false;
-	} else if (resolution == RESOLUTION_HOUR) {
-	    return true;
+	start += s.getHours() * 10000;
+	end += e.getHours() * 10000;
+	target += date.getHours() * 10000;
+	if (resolution == RESOLUTION_HOUR) {
+	    return (start<=target&&end>=target);
 	}
-	if (date.getMinutes() < s.getMinutes()
-		|| date.getMinutes() > e.getMinutes()) {
-	    return false;
-	} else if (resolution == RESOLUTION_MIN) {
-	    return true;
+	start += s.getMinutes() * 100;
+	end += e.getMinutes() * 100;
+	target += date.getMinutes() * 100;
+	if (resolution == RESOLUTION_MIN) {
+	    return (start<=target&&end>=target);
 	}
-	if (date.getSeconds() < s.getSeconds()
-		|| date.getSeconds() > e.getSeconds()) {
-	    return false;
-	} else if (resolution == RESOLUTION_SEC) {
-	    return true;
-	}
-	if (date.getTime() < s.getTime() || date.getTime() > e.getTime()) {
-	    return false;
-	} else {
-	    return true;
-	}
+	start += s.getSeconds();
+	end += e.getSeconds();
+	target += date.getSeconds();
+	return (start<=target&&end>=target);
+
     }
 
     private static int getDayInt(Date date) {
