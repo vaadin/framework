@@ -364,8 +364,37 @@
 		</javadoc>
 	</target>
 
+	<target name="manual-fo" depends="init">
+		<path id="docbook-xsl.classpath">
+			<pathelement path="build/lib/fserializer.jar" />
+			<pathelement path="build/lib/xalan.jar" />
+			<pathelement path="build/lib/xercesImpl.jar" />
+			<pathelement path="build/lib/xml-apis.jar" />
+		</path>
+		<java classname="org.apache.xalan.xslt.Process" failonerror="yes" fork="yes" maxmemory="1300m">
+			<arg value="-in" />
+			<arg value="doc/manual/book.xml" />
+			<arg value="-xsl" />
+			<arg value="build/docbook/conf/custom-fo-docbook.xsl" />
+			<arg value="-out" />
+			<arg value="${output-dir}/doc/manual/book.fo" />
+			<arg value="-param" />
+			<arg value="section.autolabel" />
+			<arg value="1" />
+			<arg value="-param" />
+			<arg value="section.label.includes.component.label" />
+			<arg value="1" />
+			<arg value="-param" />
+			<arg value="section.autolabel.max.depth" />
+			<arg value="2" />
+			<classpath refid="docbook-xsl.classpath" />
+		</java>
+	</target>
+
 	<target name="manual-pdf" depends="init">
-		<!-- TODO Include XEP-based FO building in future -->
+		<!-- property name="xep" location="/opt/RenderX/XEP/xep"/ -->
+		<exec executable="/opt/RenderX/XEP/xep" input="${output-dir}/doc/manual/book.fo" output="${output-dir}/doc/manual/book.pdf" error="xep.err">
+		</exec>
 	</target>
 
 	<target name="manual-html" depends="init">
