@@ -16,33 +16,33 @@ import com.itmill.toolkit.data.util.QueryContainer;
 
 public class SampleDB {
     public class User {
-	public static final String TABLE = "user";
-	public static final String PROPERTY_ID_ID = "ID";
-	public static final String PROPERTY_ID_FULLNAME = "FULLNAME";
-	public static final String PROPERTY_ID_EMAIL = "EMAIL";
-	public static final String PROPERTY_ID_PASSWORD = "PASSWORD";
-	public static final String PROPERTY_ID_DELETED = "DELETED";
+	public static final String TABLE = "USER";
+	public static final String PROPERTY_ID_ID = TABLE+"_ID";
+	public static final String PROPERTY_ID_FULLNAME = TABLE+"_FULLNAME";
+	public static final String PROPERTY_ID_EMAIL = TABLE+"_EMAIL";
+	public static final String PROPERTY_ID_PASSWORD = TABLE+"_PASSWORD";
+	public static final String PROPERTY_ID_DELETED = TABLE+"_DELETED";
     }
 
     public class Resource {
-	public static final String TABLE = "resource";
-	public static final String PROPERTY_ID_ID = "ID";
-	public static final String PROPERTY_ID_NAME = "NAME";
-	public static final String PROPERTY_ID_DESCRIPTION = "DESCRIPTION";
-	public static final String PROPERTY_ID_LOCATIONX = "LOCATION_X";
-	public static final String PROPERTY_ID_LOCATIONY = "LOCATION_Y";
-	public static final String PROPERTY_ID_CATEGORY = "CATEGORY";
-	public static final String PROPERTY_ID_DELETED = "DELETED";
+	public static final String TABLE = "RESOURCE";
+	public static final String PROPERTY_ID_ID = TABLE+"_ID";
+	public static final String PROPERTY_ID_NAME = TABLE+"_NAME";
+	public static final String PROPERTY_ID_DESCRIPTION = TABLE+"_DESCRIPTION";
+	public static final String PROPERTY_ID_LOCATIONX = TABLE+"_LOCATION_X";
+	public static final String PROPERTY_ID_LOCATIONY = TABLE+"_LOCATION_Y";
+	public static final String PROPERTY_ID_CATEGORY = TABLE+"_CATEGORY";
+	public static final String PROPERTY_ID_DELETED = TABLE+"_DELETED";
     }
 
     public class Reservation {
-	public static final String TABLE = "reservation";
-	public static final String PROPERTY_ID_ID = "ID";
-	public static final String PROPERTY_ID_DESCRIPTION = "DESCRIPTION";
-	public static final String PROPERTY_ID_RESOURCE_ID = "RESOURCE_ID";
-	public static final String PROPERTY_ID_RESERVED_BY_ID = "RESERVED_BY_USER_ID";
-	public static final String PROPERTY_ID_RESERVED_FROM = "RESERVED_FROM";
-	public static final String PROPERTY_ID_RESERVED_TO = "RESERVED_TO";
+	public static final String TABLE = "RESERVATION";
+	public static final String PROPERTY_ID_ID = TABLE+"_ID";
+	public static final String PROPERTY_ID_DESCRIPTION = TABLE+"_DESCRIPTION";
+	public static final String PROPERTY_ID_RESOURCE_ID = TABLE+"_RESOURCE_ID";
+	public static final String PROPERTY_ID_RESERVED_BY_ID = TABLE+"_RESERVED_BY_USER_ID";
+	public static final String PROPERTY_ID_RESERVED_FROM = TABLE+"_RESERVED_FROM";
+	public static final String PROPERTY_ID_RESERVED_TO = TABLE+"_RESERVED_TO";
     }
     
     // TODO -> param
@@ -247,7 +247,8 @@ public class SampleDB {
 	// TODO where from=?
 	// TODO where to=?
 	// TODO where deleted=?
-	String q = "SELECT * FROM " + Reservation.TABLE;
+	String q = "SELECT * FROM " + Reservation.TABLE + "," +Resource.TABLE;
+	q += " WHERE " + Reservation.PROPERTY_ID_RESOURCE_ID+"="+Resource.PROPERTY_ID_ID;
 	if (resources != null && resources.size() > 0) {
 	    StringBuilder s = new StringBuilder();
 	    for (Iterator it = resources.iterator(); it.hasNext();) {

@@ -194,7 +194,9 @@ public class ReservationApplication extends Application {
 		.setItemStartPropertyId(SampleDB.Reservation.PROPERTY_ID_RESERVED_FROM);
 	cal.setItemEndPropertyId(SampleDB.Reservation.PROPERTY_ID_RESERVED_TO);
 	cal
-		.setItemTitlePropertyId(SampleDB.Reservation.PROPERTY_ID_DESCRIPTION);
+		.setItemTitlePropertyId(SampleDB.Resource.PROPERTY_ID_NAME);
+	cal
+		.setItemDescriptionPropertyId(SampleDB.Reservation.PROPERTY_ID_DESCRIPTION);
     }
 
     private void resetStatus() {

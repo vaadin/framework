@@ -29,8 +29,9 @@ public class ICalendar extends IDateField {
 
     private int realResolution = RESOLUTION_DAY;
 
-    private static final String CLASSNAME = IDateField.CLASSNAME + "-entrycalendar";
-    
+    private static final String CLASSNAME = IDateField.CLASSNAME
+	    + "-entrycalendar";
+
     public ICalendar() {
 	super();
 	setStyleName(CLASSNAME);
@@ -113,12 +114,19 @@ public class ICalendar extends IDateField {
 	    String text = "";
 	    if (entries != null) {
 		for (Iterator it = entries.iterator(); it.hasNext();) {
-		    String title = ((ICalendarEntry) it.next()).getTitle();
-		    text += (text == "" ? "" : ", ")
-			    + (title != null ? title : "?");
+		    ICalendarEntry entry = (ICalendarEntry) it.next();
+		    String title = entry.getTitle();
+		    String desc = entry.getDescription();
+		    text += (text == "" ? "" : ", ");
+		    String e = "<span"
+			    + (desc != null ? " title=\"" + desc + "\"" : "")
+			    + ">";
+		    e += (title != null ? title : "?");
+		    e += "</span>";
+		    text += e;
 		}
-	    } 
-	    hourTable.setHTML(i, 1, "<span>" + text + "</span>");
+	    }
+	    hourTable.setHTML(i, 1, text);
 	    hourTable.getCellFormatter().setStyleName(i, 1,
 		    CLASSNAME + "-title");
 	}
@@ -149,13 +157,13 @@ public class ICalendar extends IDateField {
 	    Date endDate = (end > 0 && end != start ? new Date(end) : new Date(
 		    start));
 	    String title = item.getStringAttribute("title");
+	    String desc = item.getStringAttribute("description");
 	    boolean notime = item.getBooleanAttribute("notime");
 	    if (items.containsKey(id)) {
 		items.remove(id);
 	    }
-	    items
-		    .put(id, new ICalendarEntry(startDate, endDate, title,
-			    notime));
+	    items.put(id, new ICalendarEntry(startDate, endDate, title, desc,
+		    notime));
 	}
 
 	public List getEntries(Date date, int resolution) {
@@ -170,7 +178,7 @@ public class ICalendar extends IDateField {
 
 	    return res;
 	}
-	
+
 	public void clear() {
 	    items.clear();
 	}

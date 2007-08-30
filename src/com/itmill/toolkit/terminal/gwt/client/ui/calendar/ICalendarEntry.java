@@ -8,9 +8,10 @@ public class ICalendarEntry {
     private Date start;
     private Date end;
     private String title;
+    private String description;
     private boolean notime;
 
-    public ICalendarEntry(Date start, Date end, String title, boolean notime) {
+    public ICalendarEntry(Date start, Date end, String title, String description, boolean notime) {
 	if (notime) {
 	    Date d = new Date(start.getTime());
 	    d.setSeconds(0);
@@ -29,11 +30,12 @@ public class ICalendarEntry {
 	    this.end = end;
 	}
 	this.title = title;
+	this.description = description;
 	this.notime = notime;
     }
 
-    public ICalendarEntry(Date start, Date end, String title) {
-	this(start, end, title, false);
+    public ICalendarEntry(Date start, Date end, String title, String description) {
+	this(start, end, title, description, false);
     }
 
     public Date getStart() {
@@ -58,6 +60,14 @@ public class ICalendarEntry {
 
     public void setTitle(String title) {
 	this.title = title;
+    }
+
+    public String getDescription() {
+	return description;
+    }
+
+    public void setDescription(String description) {
+	this.description = description;
     }
 
     public boolean isNotime() {

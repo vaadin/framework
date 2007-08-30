@@ -23,6 +23,7 @@ public class CalendarField extends DateField implements Container.Viewer {
     private Object itemStartPropertyId;
     private Object itemEndPropertyId;
     private Object itemTitlePropertyId;
+    private Object itemDescriptionPropertyId;
     private Object itemNotimePropertyId;
 
     public CalendarField() {
@@ -187,6 +188,14 @@ public class CalendarField extends DateField implements Container.Viewer {
 	this.itemTitlePropertyId = propertyId;
     }
 
+    public Object getItemDescriptionPropertyId() {
+	return itemDescriptionPropertyId;
+    }
+
+    public void setItemDescriptionPropertyId(Object propertyId) {
+	this.itemDescriptionPropertyId = propertyId;
+    }
+
     public Object getitemNotimePropertyId() {
 	return itemNotimePropertyId;
     }
@@ -262,6 +271,13 @@ public class CalendarField extends DateField implements Container.Viewer {
 			    Object val = p.getValue();
 			    if (val != null) {
 				target.addAttribute("title", val.toString());
+			    }
+			}
+			if (this.itemDescriptionPropertyId != null) {
+			    p = item.getItemProperty(this.itemDescriptionPropertyId);
+			    Object val = p.getValue();
+			    if (val != null) {
+				target.addAttribute("description", val.toString());
 			    }
 			}
 			if (this.itemNotimePropertyId != null) {
