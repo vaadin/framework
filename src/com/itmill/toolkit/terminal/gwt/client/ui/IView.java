@@ -3,16 +3,21 @@ package com.itmill.toolkit.terminal.gwt.client.ui;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.FocusPanel;
-import com.google.gwt.user.client.ui.KeyboardListener;
+import com.google.gwt.user.client.ui.KeyboardListenerCollection;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
-public class IView extends FocusPanel implements Paintable, KeyboardListener {
+/**
+ * 
+ */
+public class IView extends SimplePanel implements Paintable {
 	
 	private String theme;
 	
@@ -26,7 +31,7 @@ public class IView extends FocusPanel implements Paintable, KeyboardListener {
 	
 	public IView() {
 		super();
-		addKeyboardListener(this);
+		DOM.sinkEvents(getElement(), Event.ONKEYDOWN);
 	}
 	
 	public String getTheme() {
@@ -102,19 +107,16 @@ public class IView extends FocusPanel implements Paintable, KeyboardListener {
 			RootPanel.get().remove(w);
 		}
 	}
-
-	public void onKeyDown(Widget sender, char keyCode, int modifiers) {
-		if(actionHandler != null)
-			actionHandler.handleKeyboardEvent(keyCode, modifiers);
-	}
-
-	public void onKeyPress(Widget sender, char keyCode, int modifiers) {
-		
-	}
-
-	public void onKeyUp(Widget sender, char keyCode, int modifiers) {
-		
-	}
 	
+	public void onBrowserEvent(Event event) {
+		super.onBrowserEvent(event);
+		if (DOM.eventGetType(event) == Event.ONKEYDOWN && actionHandler != null) {
+			int modifiers = KeyboardListenerCollection.getKeyboardModifiers(event);
+			actionHandler.handleKeyboardEvent(
+					(char) DOM.eventGetKeyCode(event), modifiers);
+			return;
+		}
+	}
+
 }
 
