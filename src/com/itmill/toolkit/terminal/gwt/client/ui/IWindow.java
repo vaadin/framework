@@ -5,6 +5,7 @@ import java.util.Vector;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.ui.KeyboardListenerCollection;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
@@ -66,6 +67,8 @@ public class IWindow extends PopupPanel implements Paintable {
 
 	private String id;
 	
+	IShortcutActionHandler shortcutHandler;
+	
 	public IWindow() {
 		super();
 		int order = windowOrder.size();
@@ -119,6 +122,9 @@ public class IWindow extends PopupPanel implements Paintable {
 		DOM.sinkEvents(contents, Event.ONCLICK);
 		
 		Element wrapper = getElement();
+		
+		DOM.sinkEvents(wrapper, Event.ONKEYDOWN);
+		
 		DOM.appendChild(wrapper, closeBox);
 		DOM.appendChild(wrapper, header);
 		DOM.appendChild(wrapper, contents);
@@ -163,6 +169,17 @@ public class IWindow extends PopupPanel implements Paintable {
 			setCaption(uidl.getStringAttribute("caption"));
 		}
 		lo.updateFromUIDL(childUidl, client);
+
+		// we may have actions
+		if(uidl.getChidlCount() > 1 ) {
+			childUidl = uidl.getChildUIDL(1);
+			if(childUidl.getTag().equals("actions")) {
+				if(shortcutHandler == null)
+					shortcutHandler = new IShortcutActionHandler(id, client);
+				shortcutHandler.updateActionMap(childUidl);
+			}
+			
+		}
 	
 	}
 	
@@ -193,7 +210,15 @@ public class IWindow extends PopupPanel implements Paintable {
 	}
 
 	public void onBrowserEvent(Event event) {
-		if( !isActive()) {
+		int type = DOM.eventGetType(event);
+		if (type == Event.ONKEYDOWN && shortcutHandler != null) {
+			int modifiers = KeyboardListenerCollection.getKeyboardModifiers(event);
+			shortcutHandler.handleKeyboardEvent(
+					(char) DOM.eventGetKeyCode(event), modifiers);
+			return;
+		}
+		
+		if (!isActive()) {
 			bringToFront();
 		}
 		Element target = DOM.eventGetTarget(event);
@@ -202,7 +227,7 @@ public class IWindow extends PopupPanel implements Paintable {
 		else if (resizing || DOM.compare(resizeBox, target))
 			onResizeEvent(event);
 		else if (DOM.compare(target, closeBox) && 
-				DOM.eventGetType(event) == Event.ONCLICK) {
+				type == Event.ONCLICK) {
 			onCloseClick();
 		}
 	}
@@ -280,4 +305,5 @@ public class IWindow extends PopupPanel implements Paintable {
 		//TODO return false when modal
 		return true;
 	}
+	
 }
