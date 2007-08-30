@@ -252,7 +252,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	 * @return the Value of property parent.
 	 */
 	public final Component getParent() {
-		return null;
+		return super.getParent();
 	}
 
 	/**
@@ -823,8 +823,11 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	 *            the Focused component or null if none is focused.
 	 */
 	public void setFocusedComponent(Component.Focusable focusable) {
-		this.application.setFocusedComponent(focusable);
-		this.focusedComponent = focusable;
+		Application app = getApplication();
+		if(app != null) {
+			app.setFocusedComponent(focusable);
+			this.focusedComponent = focusable;
+		}
 	}
 
 	/* Focusable id generator ****************************************** */
