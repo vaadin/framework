@@ -198,13 +198,21 @@ public class Select extends AbstractField implements Container,
 	 * enabled with setOptionsLoadingLazy(true).
 	 * 
 	 */
-	private OptionsStream optionsStream = null;
+//	private OptionsStream optionsStream = null;
 	
 	/**
 	 * Number of options to stream per request ('page size') when lazyLoading
 	 * options.
 	 */
 	private int lazyLoadingPageLength = 20;
+
+	private OptionFilter optionFilter;
+
+	private boolean isLazyLoading;
+
+	private int page;
+
+	private String filterstring;
 
 	/* Constructors ********************************************************* */
 
@@ -270,7 +278,7 @@ public class Select extends AbstractField implements Container,
 
 		// Paints field properties
 		super.paintContent(target);
-
+		
 		// Paints select attributes
 		if (isMultiSelect())
 			target.addAttribute("selectmode", "multi");
@@ -289,9 +297,9 @@ public class Select extends AbstractField implements Container,
 		target.startTag("options");
 		// TODO Also use conventional rendering if lazy loading is not supported
 		// by terminal
-		if (!isLazyLoading()) {
-			int keyIndex = 0;
+		int keyIndex = 0;
 
+		if (!isLazyLoading()) {
 			// Support for external null selection item id
 			Collection ids = getItemIds();
 			if (getNullSelectionItemId() != null
@@ -316,46 +324,38 @@ public class Select extends AbstractField implements Container,
 				}
 				target.endTag("so");
 			}
-
-			// Paints the available selection options from data source
-			for (Iterator i = getItemIds().iterator(); i.hasNext();) {
-
-				// Gets the option attribute values
-				Object id = i.next();
-				String key = itemIdMapper.key(id);
-				String caption = getItemCaption(id);
-				Resource icon = getItemIcon(id);
-
-				// Paints the option
-				target.startTag("so");
-				if (icon != null)
-					target.addAttribute("icon", icon);
-				target.addAttribute("caption", caption);
-				if (id != null && id.equals(getNullSelectionItemId()))
-					target.addAttribute("nullselection", true);
-				target.addAttribute("key", key);
-				if (isSelected(id) && keyIndex < selectedKeys.length) {
-					target.addAttribute("selected", true);
-					selectedKeys[keyIndex++] = key;
-				}
-				target.endTag("so");
-			}
+		}
+			
+		Iterator i;
+		if(isLazyLoading()) {
+			i = optionFilter.filter(filterstring, lazyLoadingPageLength, page).iterator();
+			target.addAttribute("totalMatches", optionFilter.getMatchCount());
 		} else {
+			i = getItemIds().iterator();
+		}
 
-			// Lazy options loading
-			if (getApplication() != null) {
-				target.addAttribute("loadfrom", getApplication().getURL()
-						.toString()
-						+ optionsStream.uri);
-				target.addAttribute("total",
-						(getItemIds() != null) ? getItemIds().size() : 0);
-				target
-						.addAttribute("initial", optionsStream.getJSON(this.lazyLoadingPageLength, 0,
-								""));
-				String caption = getItemCaption(getValue());
-				target.addAttribute("selectedValue", caption == null ? ""
-						: caption);
+		// Paints the available selection options from data source
+		while (i.hasNext()) {
+
+			// Gets the option attribute values
+			Object id = i.next();
+			String key = itemIdMapper.key(id);
+			String caption = getItemCaption(id);
+			Resource icon = getItemIcon(id);
+
+			// Paints the option
+			target.startTag("so");
+			if (icon != null)
+				target.addAttribute("icon", icon);
+			target.addAttribute("caption", caption);
+			if (id != null && id.equals(getNullSelectionItemId()))
+				target.addAttribute("nullselection", true);
+			target.addAttribute("key", key);
+			if (isSelected(id) && keyIndex < selectedKeys.length) {
+				target.addAttribute("selected", true);
+				selectedKeys[keyIndex++] = key;
 			}
+			target.endTag("so");
 		}
 		target.endTag("options");
 
@@ -363,6 +363,10 @@ public class Select extends AbstractField implements Container,
 		target.addVariable(this, "selected", selectedKeys);
 		if (isNewItemsAllowed())
 			target.addVariable(this, "newitem", "");
+		if(isLazyLoading()) {
+			target.addVariable(this, "filter", filterstring);
+			target.addVariable(this, "page", page);
+		}
 	}
 
 	/**
@@ -372,6 +376,14 @@ public class Select extends AbstractField implements Container,
 	 *      java.util.Map)
 	 */
 	public void changeVariables(Object source, Map variables) {
+		String newFilter;
+		if( (newFilter = (String) variables.get("filter")) != null) {
+			// this is a filter request
+			page = ((Integer) variables.get("page")).intValue();
+			filterstring = newFilter;
+			requestRepaint();
+			return;
+		}
 
 		// Try to set the property value
 
@@ -1442,24 +1454,16 @@ public class Select extends AbstractField implements Container,
 
 	// TODO javadoc
 	public boolean isLazyLoading() {
-		return optionsStream != null;
+		return isLazyLoading;
 	}
 
 	// TODO javadoc
 	// TODO What to do when terminal does not support lazy loading?
 	public void setLazyLoading(boolean useLazyLoading) {
-		if (useLazyLoading != isLazyLoading()) {
-			if (useLazyLoading) {
-				optionsStream = new OptionsStream(this);
-				Application app = getApplication();
-				if (app != null)
-					app.getMainWindow().addURIHandler(optionsStream);
-			} else {
-				if (getApplication() != null)
-					getWindow().removeURIHandler(optionsStream);
-				optionsStream = null;
-			}
-
+		if (useLazyLoading != isLazyLoading) {
+			isLazyLoading = useLazyLoading;
+			if(getOptionFilter() == null)
+				setOptionFilter(new StartsWithFilter(this));
 			requestRepaint();
 		}
 	}
@@ -1471,8 +1475,6 @@ public class Select extends AbstractField implements Container,
 	 */
 	public void attach() {
 		super.attach();
-		if (optionsStream != null)
-			getApplication().getMainWindow().addURIHandler(optionsStream);
 	}
 
 	/**
@@ -1481,177 +1483,25 @@ public class Select extends AbstractField implements Container,
 	 * @see com.itmill.toolkit.ui.AbstractComponent#detach()
 	 */
 	public void detach() {
-		if (optionsStream != null)
-			getWindow().removeURIHandler(optionsStream);
 		super.detach();
 	}
 
+	/**
+	 * Sets OptionFilter which will do filtering base on query string
+	 * if Select is in lazy loading mode.
+	 * 
+	 * @param of 
+	 * 			OptionFilter to be used in filtering
+	 */
 	public void setOptionFilter(OptionFilter of) {
-		if (this.optionsStream != null) {
-			this.optionsStream.setOptionFilter(of);
-		}
+		optionFilter = of;
 	}
 
 	/**
-	 * @return
+	 * @return reference to option filter
 	 */
 	public OptionFilter getOptionFilter() {
-		if (this.optionsStream != null) {
-			return this.optionsStream.getOptionFilter();
-		}
-		return null;
+		return optionFilter;
 	}
 	
-
-	private class OptionsStream implements URIHandler {
-
-		private String currentFilter = "";
-
-		private ArrayList filteredItemsBuffer = null;
-
-		private OptionFilter of = null;
-
-		private String uri = "selectOptionsStream"
-				+ (long) (Math.random() * 1000000000000000000L);
-
-		OptionsStream(Select select) {
-			of = new StartsWithFilter(select);
-		}
-
-		public OptionFilter getOptionFilter() {
-			return of;
-		}
-
-		public void setOptionFilter(OptionFilter of2) {
-			of = of2;
-		}
-
-		/**
-		 * Handles the given relative URI.
-		 * 
-		 * @see com.itmill.toolkit.terminal.URIHandler#handleURI(java.net.URL,
-		 *      java.lang.String)
-		 */
-		public DownloadStream handleURI(URL context, String relativeUri) {
-
-			if (!"".equals(uri)) {
-				DownloadStream ds = null;
-
-				if (relativeUri.indexOf(uri + "/feedMoreItems/") != -1) { // this
-					// feed visible items
-					int i = 0;
-					String index = relativeUri.substring(relativeUri
-							.lastIndexOf("/") + 1);
-					try {
-						i = Integer.parseInt(index);
-					} catch (NumberFormatException e) {
-						// ignore
-					}
-					// TODO Req size from client?
-					ds = createDownloadStream(lazyLoadingPageLength, i, "");
-					return ds;
-
-				} else if (relativeUri.indexOf(uri) != -1) {
-
-					// TODO support '/' character in prefix.
-					// read prefix
-					String prefix = relativeUri.substring(relativeUri
-							.lastIndexOf("/") + 1);
-					// TODO Req size from client?
-					ds = createDownloadStream(lazyLoadingPageLength, 0, prefix.trim());
-					return ds;
-				}
-			}
-			return null;
-		}
-
-		/**
-		 * Creates the DownloadStream for response.
-		 * 
-		 * @param size
-		 *            the Items to be return.
-		 * @param first
-		 * @param filter
-		 * @return the new DownloadStream.
-		 */
-		public DownloadStream createDownloadStream(int size, int first,
-				String filter) {
-
-			ByteArrayOutputStream os = new ByteArrayOutputStream();
-			OutputStreamWriter osw = new OutputStreamWriter(os, Charset
-					.forName("utf-8"));
-
-			// JSONObject json = createJSONObject(visibleitems);
-			String json = getJSON(size, first, filter);
-			try {
-				osw.write(json);
-				osw.flush();
-				os.flush();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			DownloadStream ds = new DownloadStream(new ByteArrayInputStream(os
-					.toByteArray()), "text/plain;charset=utf-8", "options.js");
-			return ds;
-		}
-
-		/**
-		 * Updates the visible items by given key.
-		 * 
-		 * @param key
-		 *            the key given to OptionFilter
-		 * @return All item ids filtered by given key.
-		 */
-		public ArrayList filterContent(String key) {
-			return this.of.filter(key);
-		}
-
-		private void addToJSONArray(StringBuffer json, ArrayList values) {
-			for (int i = 0; i < values.size(); i++)
-				json.append((i > 0 ? "," : "") + '"' + values.get(i).toString()
-						+ '"');
-		}
-
-		private String getJSON(int size, int first, String filter) {
-
-			// Refilter options, if needed
-			if ("".equals(filter) || !currentFilter.equals(filter) || filteredItemsBuffer == null) {
-				filteredItemsBuffer = filterContent(filter);
-				currentFilter = filter;
-			}
-
-			// Creates list of shown options
-			ArrayList keys = new ArrayList();
-			ArrayList values = new ArrayList();
-
-			for (int i = first; i < first + size
-					&& i < filteredItemsBuffer.size(); i++) {
-				Object id = filteredItemsBuffer.get(i);
-				Item item = getItem(id);
-				keys.add(Select.this.itemIdMapper.key(id));
-				if (getItemCaptionMode() == ITEM_CAPTION_MODE_PROPERTY)
-					try {
-						values.add(URLEncoder.encode(item.getItemProperty(
-								getItemCaptionPropertyId()).getValue()
-								.toString(), "ISO-8859-1"));
-					} catch (UnsupportedEncodingException e) {
-						e.printStackTrace();
-					}
-				else
-					values.add(String.valueOf(id));
-			}
-
-			// Constructs JSON format for response
-			StringBuffer json = new StringBuffer();
-			json.append("{\"keys\":[");
-			addToJSONArray(json, keys);
-			json.append("],\"total\":" + this.filteredItemsBuffer.size());
-			json.append(",\"values\":[");
-			addToJSONArray(json, values);
-			json.append("]}");
-
-			return json.toString();
-		}
-	}
-
 }

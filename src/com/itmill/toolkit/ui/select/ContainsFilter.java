@@ -2,6 +2,7 @@ package com.itmill.toolkit.ui.select;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import com.itmill.toolkit.data.Item;
 import com.itmill.toolkit.ui.Select;
@@ -15,9 +16,9 @@ public class ContainsFilter implements OptionFilter {
 		this.s = s;
 	}
 
-	public ArrayList filter(String filterstring) {
+	public List filter(String filterstring, int pageLength, int page) {
 		// prefix MUST be in lowercase
-		if ("".equals(filterstring)) {
+		if (filterstring == null || "".equals(filterstring)) {
 			this.filteredItemsBuffer = new ArrayList(s.getItemIds());
 			return this.filteredItemsBuffer;
 
@@ -42,5 +43,9 @@ public class ContainsFilter implements OptionFilter {
 			}
 		}
 		return this.filteredItemsBuffer;
+	}
+
+	public int getMatchCount() {
+		return filteredItemsBuffer.size();
 	}
 }

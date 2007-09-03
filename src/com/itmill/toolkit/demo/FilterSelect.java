@@ -2,9 +2,13 @@ package com.itmill.toolkit.demo;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import com.itmill.toolkit.data.Item;
-import com.itmill.toolkit.ui.*;
+import com.itmill.toolkit.ui.OrderedLayout;
+import com.itmill.toolkit.ui.Panel;
+import com.itmill.toolkit.ui.Select;
+import com.itmill.toolkit.ui.Window;
 import com.itmill.toolkit.ui.select.ContainsFilter;
 import com.itmill.toolkit.ui.select.OptionFilter;
 
@@ -48,12 +52,13 @@ public class FilterSelect extends com.itmill.toolkit.Application {
 
 		// default filter
 		Select s1 = new Select();
-		for (int i = 0; i < 500; i++)
+		for (int i = 0; i < 105; i++)
 			s1
 					.addItem(firstnames[(int) (Math.random() * (firstnames.length - 1))]
 							+ " "
 							+ lastnames[(int) (Math.random() * (lastnames.length - 1))]);
 		s1.setLazyLoading(true);
+		s1.setImmediate(true);
 
 		// contains filter
 		Select s2 = new Select();
@@ -84,12 +89,12 @@ public class FilterSelect extends com.itmill.toolkit.Application {
 		Panel panel3 = new Panel("Select with custom 'EndsWith' filter");
 
 		panel1.addComponent(s1);
-		panel2.addComponent(s2);
-		panel3.addComponent(s3);
+//		panel2.addComponent(s2);
+//		panel3.addComponent(s3);
 
 		orderedLayout.addComponent(panel1);
-		orderedLayout.addComponent(panel2);
-		orderedLayout.addComponent(panel3);
+//		orderedLayout.addComponent(panel2);
+//		orderedLayout.addComponent(panel3);
 		main.addComponent(orderedLayout);
 
 	}
@@ -109,9 +114,9 @@ public class FilterSelect extends com.itmill.toolkit.Application {
 			this.s = s;
 		}
 
-		public ArrayList filter(String filterstring) {
+		public List filter(String filterstring, int pagelength, int page) {
 			// prefix MUST be in lowercase
-			if ("".equals(filterstring)) {
+			if (filterstring == null || "".equals(filterstring)) {
 				this.filteredItemsBuffer = new ArrayList(s.getItemIds());
 				return this.filteredItemsBuffer;
 
@@ -137,6 +142,11 @@ public class FilterSelect extends com.itmill.toolkit.Application {
 				}
 			}
 			return this.filteredItemsBuffer;
+		}
+
+		public int getMatchCount() {
+			// TODO Auto-generated method stub
+			return 0;
 		}
 	}
 
