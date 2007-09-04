@@ -1074,10 +1074,10 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		public boolean remove(Widget w) {
 			if(visibleCells.contains(w)) {
 				visibleCells.remove(w);
+				orphan(w);
+				DOM.removeChild(DOM.getParent(w.getElement()), w.getElement());
 				return true;
 			}
-			orphan(w);
-			DOM.removeChild(DOM.getParent(w.getElement()), w.getElement());
 			return false;
 		}
 		
