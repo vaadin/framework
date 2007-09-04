@@ -267,7 +267,17 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 									w.setTerminal(application.getMainWindow()
 											.getTerminal());
 							}
-
+							/* This does not seem to happen in tk5, but remember this case:
+						    	else if (p instanceof Component) {
+        							if (((Component) p).getParent() == null
+        								|| ((Component) p).getApplication() == null) {
+        							    // Component requested repaint, but is no
+        							    // longer attached: skip
+        							    paintablePainted(p);
+        							    continue;
+        							}
+						    	}
+							*/
 							paintTarget.startTag("change");
 							paintTarget.addAttribute("format", "uidl");
 							String pid = getPaintableId(p);
