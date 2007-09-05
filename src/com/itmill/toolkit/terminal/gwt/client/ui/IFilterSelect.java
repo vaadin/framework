@@ -137,9 +137,9 @@ public class IFilterSelect extends Composite implements Paintable, KeyboardListe
 		public void onBrowserEvent(Event event) {
 			Element target = DOM.eventGetTarget(event);
 			if(DOM.compare(target, up)) {
-				filterOptions(currentPage - 1);
+				filterOptions(currentPage - 1, lastFilter);
 			} else if (DOM.compare(target, down)) {
-				filterOptions(currentPage + 1);
+				filterOptions(currentPage + 1, lastFilter);
 			}
 			tb.setFocus(true);
 		}
@@ -219,10 +219,14 @@ public class IFilterSelect extends Composite implements Paintable, KeyboardListe
 		popupOpener.setStyleName(CLASSNAME + "-popupopener");
 		popupOpener.addClickListener(this);
 	}
-
+	
 	public void filterOptions(int page) {
-		String filter = tb.getText();
+		filterOptions(page, tb.getText());
+	}
+
+	public void filterOptions(int page, String filter) {
 		if (filter.equals(lastFilter) && currentPage == page) {
+			suggestionPopup.showSuggestions(currentSuggestions, currentPage, totalSuggestions);
 			return;
 		}
 		if(!filter.equals(lastFilter)) {
@@ -293,11 +297,11 @@ public class IFilterSelect extends Composite implements Paintable, KeyboardListe
             	  break;
               case KeyboardListener.KEY_PAGEDOWN:
             	  if(totalSuggestions > currentPage*(PAGELENTH+1))
-            		  filterOptions(currentPage + 1);
+            		  filterOptions(currentPage + 1, lastFilter);
             	  break;
               case KeyboardListener.KEY_PAGEUP:
             	  if(currentPage > 0)
-            		  filterOptions(currentPage - 1);
+            		  filterOptions(currentPage - 1, lastFilter);
             	  break;
               case KeyboardListener.KEY_ENTER:
               case KeyboardListener.KEY_TAB:
@@ -320,8 +324,7 @@ public class IFilterSelect extends Composite implements Paintable, KeyboardListe
 	 * Listener for popupopener
 	 */
 	public void onClick(Widget sender) {
-		filterOptions(0);
-		this.suggestionPopup.showSuggestions(currentSuggestions, currentPage, totalSuggestions);
+		filterOptions(0, "");
 		tb.setFocus(true);
 		tb.selectAll();
 	}
