@@ -431,7 +431,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		}
 
 		if(width  < 0) {
-			bodyContainer.setWidth((tBody.getOffsetWidth() + getScrollBarWidth() ) + "px");
+			bodyContainer.setWidth((tBody.getOffsetWidth()) + "px");
 			tHead.setWidth(bodyContainer.getOffsetWidth());
 		} else {
 			bodyContainer.setWidth(width + "px");
@@ -1002,8 +1002,12 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		}
 		
 		public void setWidth(int width) {
-			DOM.setStyleAttribute(hTableWrapper, "width", (width - getScrollBarWidth()) + "px");
-			super.setWidth(width + "px");
+			DOM.setStyleAttribute(hTableWrapper, "width", (width - getColumnSelectorWidth()) + "px");
+		}
+
+		private int getColumnSelectorWidth() {
+			int w = DOM.getElementPropertyInt(columnSelector, "offsetWidth") + 4; // some extra to survive with IE6
+			return w > 0 ? w : 15;
 		}
 
 		public void setColumnCollapsingAllowed(boolean cc) {
@@ -1172,10 +1176,16 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		}
 
 		public IAction[] getActions() {
-			IAction[] actions= new IAction[columnOrder.length];
+			String[] cols;
+			if(IScrollTable.this.columnReordering) {
+				cols = columnOrder;
+			} else {
+				cols = visibleColOrder;
+			}
+			IAction[] actions= new IAction[cols.length];
 			
-			for (int i = 0; i < columnOrder.length; i++) {
-				String cid = columnOrder[i];
+			for (int i = 0; i < cols.length; i++) {
+				String cid = cols[i];
 				HeaderCell c = getHeaderCell(cid);
 				VisibleColumnAction a = new VisibleColumnAction(c.getColKey());
 				a.setCaption(c.getCaption());
@@ -1432,8 +1442,12 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		}
 
 		public int getColWidth(int i) {
-			Element e = DOM.getChild(DOM.getChild(tBody, 0), i);
-			return DOM.getElementPropertyInt(e, "offsetWidth");
+			if(initDone) {
+				Element e = DOM.getChild(DOM.getChild(tBody, 0), i);
+				return DOM.getElementPropertyInt(e, "offsetWidth");
+			} else {
+				return 0;
+			}
 		}
 
 		public void setColWidth(int colIndex, int w) {
