@@ -1176,16 +1176,24 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		}
 
 		public IAction[] getActions() {
-			String[] cols;
+			Object[] cols;
 			if(IScrollTable.this.columnReordering) {
 				cols = columnOrder;
 			} else {
+				// if columnReordering is disabled, we need different way to get all available columns
 				cols = visibleColOrder;
+				cols = new Object[visibleColOrder.length + collapsedColumns.size()];
+				int i;
+				for (i = 0; i < visibleColOrder.length; i++) {
+					cols[i] = visibleColOrder[i];
+				}
+				for(Iterator it = collapsedColumns.iterator();it.hasNext();)
+					cols[i++] = it.next();
 			}
 			IAction[] actions= new IAction[cols.length];
 			
 			for (int i = 0; i < cols.length; i++) {
-				String cid = cols[i];
+				String cid = (String) cols[i];
 				HeaderCell c = getHeaderCell(cid);
 				VisibleColumnAction a = new VisibleColumnAction(c.getColKey());
 				a.setCaption(c.getCaption());
@@ -1194,14 +1202,6 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 				actions[i] = a;
 			}			
 			return actions;
-		}
-
-		private Iterator getAvailableColumnKeyIterator() {
-			return availableCells.keySet().iterator();
-		}
-
-		private int getAvailableColumnCount() {
-			return availableCells.size();
 		}
 
 		public ApplicationConnection getClient() {
