@@ -1,0 +1,36 @@
+.i-filterselect-suggestpopup {
+	background: #fff;
+	font-size:small;
+}
+
+.i-filterselect-suggestmenu .gwt-MenuItem {
+	border: 1px solid black;
+	border-width: 0 1px 1px 1px;
+}
+
+.i-filterselect-suggestmenu .gwt-MenuItem-selected {
+	background: yellow;
+}
+
+.i-filterselect {
+	white-space: nowrap;
+}
+
+.i-filterselect-popupopener {
+	display:inline;
+	background:red;
+}
+
+.i-filterselect-nextpage-on,
+.i-filterselect-nextpage-off,
+.i-filterselect-prevpage-off,
+.i-filterselect-prevpage-on,
+.i-filterselect-status {
+	text-align: center;
+}
+
+.i-filterselect-nextpage-off,
+.i-filterselect-prevpage-off {
+	color: #666;
+}
+
