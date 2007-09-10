@@ -24,6 +24,30 @@ import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.ui.IScrollTable.IScrollTableBody.IScrollTableRow;
 
+/**
+ * Constructor for IScrollTable
+ * 
+ * IScrollTable is a FlowPanel having two widgets in it:
+ *  * TableHead component
+ *  * ScrollPanel
+ *  
+ * TableHead contains table's header and widgets + logic for resizing, 
+ * reordering and hiding columns.
+ *  
+ * ScrollPanel contains IScrollTableBody object which handles content.
+ * To save some bandwidth and to improve clients responsiviness with
+ * loads of data, in IScrollTableBody all rows are not necessarely rendered.
+ * There are "spacer" in IScrollTableBody to use the exact same space as
+ * unrendered rows would use. This way we can use seamlessly traditional 
+ * scrollbars and scrolling to fetch more rows instead of "paging".
+ *  
+ * In IScrollTable we listen to scroll events. On horizontal scrolling
+ * we also update TableHeads scroll position which has its scrollbars 
+ * hidden. On vertical scroll events we will check if we are reaching
+ * the end of area where we have rows rendered and 
+ * 
+ * TODO implement unregistering for child componts in Cells
+ */
 public class IScrollTable extends Composite implements Paintable, ITable, ScrollListener {
 	
 	public static final String CLASSNAME = "i-table";
@@ -41,7 +65,6 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 	public static final char ALIGN_CENTER = 'c';
 	public static final char ALIGN_LEFT = 'b';
 	public static final char ALIGN_RIGHT = 'e';
-	
 	private int firstRowInViewPort = 0;
 	private int pageLength = 15;
 	
@@ -64,15 +87,14 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 
 	private ScrollPanel bodyContainer = new ScrollPanel();
 	
-	private boolean colWidthsInitialized = false;
 	private int totalRows;
 	
 	private Set collapsedColumns;
 	
 	private RowRequestHandler rowRequestHandler;
 	private IScrollTableBody tBody;
-	private int width = -1;
-	private int height = -1;
+	private String width;
+	private String height;
 	private int firstvisible = 0;
 	private boolean sortAscending;
 	private String sortColumn;
@@ -90,15 +112,12 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 	private Element scrollPositionElement;
 	
 	public IScrollTable() {
-		// TODO move headerContainer and column selector into TableHead
 		
 		bodyContainer.addScrollListener(this);
-		
 		bodyContainer.setStyleName(CLASSNAME+"-body");
 		
 		FlowPanel panel = new FlowPanel();
 		panel.setStyleName(CLASSNAME);
-		
 		panel.add(tHead);
 		panel.add(bodyContainer);
 		
@@ -121,10 +140,11 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		this.firstvisible = uidl.hasVariable("firstvisible") ? uidl.getIntVariable("firstvisible") : 0;
 		if(uidl.hasAttribute("rowheaders"))
 			rowHeaders = true;
-		if(uidl.hasAttribute("width"))
-			width = uidl.getIntAttribute("width");
+		if(uidl.hasAttribute("width")) {
+			width = uidl.getStringAttribute("width");
+		}
 		if(uidl.hasAttribute("height"))
-			width = uidl.getIntAttribute("height");
+			height = uidl.getStringAttribute("height");
 		
 		if(uidl.hasVariable("sortascending")) {
 			this.sortAscending = uidl.getBooleanVariable("sortascending");
@@ -408,38 +428,106 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 	 *  * Makes deferred request to get some cache rows
 	*/
 	private void sizeInit() {
+		/*
+		 * We will use browsers table rendering algorithm to find proper column
+		 * widths. If content and header take less space than available, we will
+		 * divide extra space relatively to each column which has not width set.
+		 * 
+		 * Overflow pixels are added to last column.
+		 * 
+		 */
+
 		Iterator headCells = tHead.iterator();
 		int i = 0;
+		int totalExplicitColumnsWidths = 0;
+		int total = 0;
+		
+		int[] widths = new int[tHead.visibleCells.size()];
+		
+		// first loop: collect natural widths
 		while(headCells.hasNext()) {
 			HeaderCell hCell = (HeaderCell) headCells.next();
 			int w;
 			if(hCell.getWidth() > 0) {
 				// server has defined column width explicitly
 				w = hCell.getWidth();
+				totalExplicitColumnsWidths += w;
 			} else {
 				int hw = DOM.getElementPropertyInt(hCell.getElement(), "offsetWidth");
 				int cw = tBody.getColWidth(i);
 				w = (hw > cw ? hw : cw) + IScrollTableBody.CELL_EXTRA_WIDTH;
 			}
-			setColWidth(i , w);
+			widths[i] = w;
+			total += w;
 			i++;
 		}
-		if(height  < 0) {
+
+		tHead.disableBrowserIntelligence();
+
+		if(height == null) {
 			bodyContainer.setHeight((tBody.getRowHeight()*pageLength) + "px");
 		} else {
-			bodyContainer.setHeight(height + "px");
+			bodyContainer.setHeight(height);
 		}
 
-		if(width  < 0) {
-			bodyContainer.setWidth((tBody.getOffsetWidth()) + "px");
-			tHead.setWidth(bodyContainer.getOffsetWidth());
+		if(width == null) {
+			int w = total;
+			w += getScrollbarWidth();
+			bodyContainer.setWidth(w + "px");
+			tHead.setWidth(w + "px");
+			this.setWidth(w + "px");
 		} else {
-			bodyContainer.setWidth(width + "px");
-			tHead.setWidth(width);
+			if(width.indexOf("px") > 0) {
+				bodyContainer.setWidth(width);
+				tHead.setWidth(width);
+				this.setWidth(width);
+			} else if(width.indexOf("%") > 0) {
+				this.setWidth(width);
+				// contained blocks are relative to parents
+				bodyContainer.setWidth("100%");
+				tHead.setWidth("100%");
+				
+			}
 		}
 		
-		tHead.disableBrowserIntelligence();
-		
+		int availW = tBody.getAvailableWidth();
+
+		if(availW > total) {
+			// natural size is smaller than available space
+			int extraSpace = availW -total;
+			int totalWidthR = total - totalExplicitColumnsWidths;
+			if(totalWidthR > 0) {
+				// now we will share this sum relatively to those without explicit width
+				headCells = tHead.iterator();
+				i = 0;
+				HeaderCell hCell;
+				while(headCells.hasNext()) {
+					hCell = (HeaderCell) headCells.next();
+					if(hCell.getWidth() == -1) {
+						int w = widths[i];
+						int newSpace = extraSpace*w/totalWidthR;
+						w += newSpace;
+						widths[i] = w;
+					}
+					i++;
+				}
+			}
+		} else {
+			// bodys size will be more than available and scrollbar will appear
+		}
+
+		// last loop: set possibly modified values
+		i = 0;
+		headCells = tHead.iterator();
+		while(headCells.hasNext()) {
+			HeaderCell hCell = (HeaderCell) headCells.next();
+			if(hCell.getWidth() == -1) {
+				int w = widths[i];
+				setColWidth(i , w);
+			}
+			i++;
+		}
+
 		if(firstvisible > 0) {
 			bodyContainer.setScrollPosition(firstvisible*tBody.getRowHeight());
 			firstRowInViewPort = firstvisible;
@@ -458,9 +546,9 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		initializedAndAttached = true;
 	}
 
-	private int getScrollBarWidth() {
-		// TODO Auto-generated method stub
-		return 20;
+	private int getScrollbarWidth() {
+		return bodyContainer.getOffsetWidth() - 
+			DOM.getElementPropertyInt(bodyContainer.getElement(), "clientWidth");
 	}
 
 	/**
@@ -1003,6 +1091,24 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		
 		public void setWidth(int width) {
 			DOM.setStyleAttribute(hTableWrapper, "width", (width - getColumnSelectorWidth()) + "px");
+			super.setWidth(width + "px");
+		}
+		
+		public void setWidth(String width) {
+			if(width.indexOf("px") > 0) {
+				int w = Integer.parseInt(width.substring(0, width.indexOf("px")));
+				setWidth(w);
+			} else {
+				// this is an IE6 hack, would need a generator to isolate from others
+				if(isIE6()) {
+					DOM.setStyleAttribute(hTableWrapper, "width", (0) + "px");
+					super.setWidth(width);
+					int hTableWrappersWidth = this.getOffsetWidth() - getColumnSelectorWidth();
+					DOM.setStyleAttribute(hTableWrapper, "width", hTableWrappersWidth + "px");
+				} else {
+					super.setWidth(width);
+				}
+			}
 		}
 
 		private int getColumnSelectorWidth() {
@@ -1175,6 +1281,9 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 			
 		}
 
+		/* 
+		 * Returns columns as Action array for column select popup
+		 */
 		public IAction[] getActions() {
 			Object[] cols;
 			if(IScrollTable.this.columnReordering) {
@@ -1264,11 +1373,8 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		private char[] aligns;
 
 		IScrollTableBody() {
-			
 			constructDOM();
-			
 			setElement(container);
-			
 		}
 		
 		private void constructDOM() {
@@ -1283,6 +1389,9 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 			
 		}
 		
+		public int getAvailableWidth() {
+			return DOM.getElementPropertyInt(preSpacer, "offsetWidth");
+		}
 		
 		public void renderInitialRows(UIDL rowData, int firstIndex, int rows, int totalRows) {
 			this.totalRows = totalRows;
@@ -1668,4 +1777,13 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		selectedRowKeys.clear();
 		
 	}
+
+	public static native boolean isIE6() /*-{
+		var browser=$wnd.navigator.appName;
+		var version=parseFloat($wnd.navigator.appVersion);
+		if (browser=="Microsoft Internet Explorer" && (version < 7) ) {
+			return true;
+		}
+		return false;
+	}-*/;
 }
