@@ -38,8 +38,8 @@ public class Caption extends HTML {
 				DOM.setElementProperty(errorIndicatorElement, "className", "i-errorindicator");
 				DOM.insertChild(getElement(), errorIndicatorElement, 0);
 			}
-			
-			errorMessage = new ErrorMessage();
+			if(errorMessage == null)
+				errorMessage = new ErrorMessage();
 			errorMessage.updateFromUIDL(errorUidl);
 			
 		} else if( errorIndicatorElement != null) {
