@@ -370,10 +370,6 @@ public class IFilterSelect extends Composite implements Paintable, KeyboardListe
 		}
 	}
 
-	public void onBrowserEvent(Event event) {
-		client.console.log("pöö");
-	}
-
 	public void onKeyDown(Widget sender, char keyCode, int modifiers) {
         if (suggestionPopup.isAttached()) {
             switch (keyCode) {
