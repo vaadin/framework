@@ -309,6 +309,10 @@ public class IFilterSelect extends Composite implements Paintable, KeyboardListe
 			if(clientSideFiltering) {
 				allSuggestions.add(suggestion);
 			}
+			if(optionUidl.hasAttribute("selected")) {
+				tb.setText(suggestion.getReplacementString());
+				currentSuggestion = suggestion;
+			}
 		}
 		
 		if(filtering && lastFilter.equals(uidl.getStringVariable("filter"))) {
