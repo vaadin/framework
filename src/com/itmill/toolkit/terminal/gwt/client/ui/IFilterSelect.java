@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TextBox;
@@ -31,14 +32,25 @@ public class IFilterSelect extends Composite implements Paintable, KeyboardListe
 		
 		private String key;
 		private String caption;
+		private String iconUri;
 
 		public FilterSelectSuggestion(UIDL uidl) {
 			this.key = uidl.getStringAttribute("key");
 			this.caption = uidl.getStringAttribute("caption");
+			if(uidl.hasAttribute("icon")) {
+				this.iconUri = uidl.getStringAttribute("icon");
+			}
 		}
 
 		public String getDisplayString() {
-			return caption;
+			StringBuffer sb = new StringBuffer();
+			if(iconUri != null) {
+				sb.append("<img src=\"");
+				sb.append(iconUri);
+				sb.append("\" alt=\"icon\" class=\"i-icon\" />");
+			}
+			sb.append(caption);
+			return sb.toString();
 		}
 
 		public String getReplacementString() {
@@ -47,6 +59,10 @@ public class IFilterSelect extends Composite implements Paintable, KeyboardListe
 
 		public int getOptionKey() {
 			return Integer.parseInt(key);
+		}
+		
+		public String getIconUri() {
+			return iconUri;
 		}
 		
 		public void execute() {
@@ -207,6 +223,8 @@ public class IFilterSelect extends Composite implements Paintable, KeyboardListe
 	
 	private final HTML popupOpener = new HTML("v");
 	
+	private final Image selectedItemIcon  = new Image();
+	
 	private ApplicationConnection client;
 
 	private String paintableId;
@@ -232,6 +250,8 @@ public class IFilterSelect extends Composite implements Paintable, KeyboardListe
 	private ArrayList allSuggestions;
 	
 	public IFilterSelect() {
+		selectedItemIcon.setVisible(false);
+		panel.add(selectedItemIcon);
 		panel.add(tb);
 		panel.add(popupOpener);
 		initWidget(panel);
@@ -328,18 +348,28 @@ public class IFilterSelect extends Composite implements Paintable, KeyboardListe
 			currentSuggestion = suggestion;
 			String newKey = String.valueOf(suggestion.getOptionKey());
 			tb.setText(suggestion.getReplacementString());
-			if(newKey.equals(selectedOptionKey))
-				return;
-			selectedOptionKey = newKey;
-			client.updateVariable(
-					paintableId, 
-					"selected", 
-					new String[] {selectedOptionKey} , 
-					immediate);
-			lastFilter = tb.getText();
+			setSelectedItemIcon(suggestion.getIconUri());
+			if(!newKey.equals(selectedOptionKey)) {
+				selectedOptionKey = newKey;
+				client.updateVariable(
+						paintableId, 
+						"selected", 
+						new String[] {selectedOptionKey} , 
+						immediate);
+				lastFilter = tb.getText();
+			}
 			suggestionPopup.hide();
 		}
 	
+	private void setSelectedItemIcon(String iconUri) {
+		if(iconUri == null) {
+			selectedItemIcon.setVisible(false);
+		} else {
+			selectedItemIcon.setUrl(iconUri);
+			selectedItemIcon.setVisible(true);
+		}
+	}
+
 	public void onBrowserEvent(Event event) {
 		client.console.log("pöö");
 	}
