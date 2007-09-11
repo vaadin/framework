@@ -105,7 +105,11 @@ public class Caption extends HTML {
 
 	public static boolean isNeeded(UIDL uidl) {
 		if (uidl.getStringAttribute("caption") != null) return true;
-		// TODO Description and error messages
+		if (uidl.hasAttribute("error"))
+			return true;
+		
+		// TODO Description ??
+		
 		return false;
 	}
 	
