@@ -89,12 +89,12 @@ public class FilterSelect extends com.itmill.toolkit.Application {
 		Panel panel3 = new Panel("Select with custom 'EndsWith' filter");
 
 		panel1.addComponent(s1);
-//		panel2.addComponent(s2);
-//		panel3.addComponent(s3);
+		panel2.addComponent(s2);
+		panel3.addComponent(s3);
 
 		orderedLayout.addComponent(panel1);
-//		orderedLayout.addComponent(panel2);
-//		orderedLayout.addComponent(panel3);
+		orderedLayout.addComponent(panel2);
+		orderedLayout.addComponent(panel3);
 		main.addComponent(orderedLayout);
 
 	}
@@ -145,8 +145,7 @@ public class FilterSelect extends com.itmill.toolkit.Application {
 		}
 
 		public int getMatchCount() {
-			// TODO Auto-generated method stub
-			return 0;
+			return filteredItemsBuffer.size();
 		}
 	}
 
