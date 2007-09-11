@@ -14,7 +14,6 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.PopupPanel;
-import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.SuggestOracle.Suggestion;
@@ -22,6 +21,10 @@ import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
+/**
+ * 
+ * TODO needs major refactoring to be easily expandable
+ */
 public class IFilterSelect extends Composite implements Paintable, KeyboardListener, ClickListener {
 	
 	public class FilterSelectSuggestion implements Suggestion, Command {
@@ -57,6 +60,8 @@ public class IFilterSelect extends Composite implements Paintable, KeyboardListe
 		private Element up = DOM.createDiv();
 		private Element down = DOM.createDiv();
 		private Element status = DOM.createDiv();
+
+		private boolean isPagingEnabled = true;
 
 		SuggestionPopup() {
 			super(true);
@@ -143,9 +148,24 @@ public class IFilterSelect extends Composite implements Paintable, KeyboardListe
 			}
 			tb.setFocus(true);
 		}
+
+		public void setPagingEnabled(boolean paging) {
+			if(isPagingEnabled  == paging)
+				return;
+			if(paging) {
+				DOM.setStyleAttribute(this.down, "display", "block");
+				DOM.setStyleAttribute(this.up, "display", "block");
+				DOM.setStyleAttribute(this.status, "display", "block");
+			} else {
+				DOM.setStyleAttribute(this.down, "display", "none");
+				DOM.setStyleAttribute(this.up, "display", "none");
+				DOM.setStyleAttribute(this.status, "display", "none");
+			}
+		}
 	}
 
 	public class SuggestionMenu extends MenuBar {
+		
 		SuggestionMenu() {
 			super(true);
 			setStyleName(CLASSNAME + "-suggestmenu");
@@ -171,11 +191,8 @@ public class IFilterSelect extends Composite implements Paintable, KeyboardListe
 			if(item != null) {
 				doItemAction(item, true);
 			}
-			else {
-				suggestionPopup.hide();
-			}
+			suggestionPopup.hide();
 		}
-		
 	}
 
 	private static final String CLASSNAME = "i-filterselect";
@@ -209,6 +226,10 @@ public class IFilterSelect extends Composite implements Paintable, KeyboardListe
 	private int totalSuggestions;
 
 	private FilterSelectSuggestion currentSuggestion;
+
+	private boolean clientSideFiltering;
+
+	private ArrayList allSuggestions;
 	
 	public IFilterSelect() {
 		panel.add(tb);
@@ -226,37 +247,70 @@ public class IFilterSelect extends Composite implements Paintable, KeyboardListe
 
 	public void filterOptions(int page, String filter) {
 		if (filter.equals(lastFilter) && currentPage == page) {
-			suggestionPopup.showSuggestions(currentSuggestions, currentPage, totalSuggestions);
+			if(!suggestionPopup.isAttached())
+				suggestionPopup.showSuggestions(currentSuggestions, currentPage, totalSuggestions);
 			return;
 		}
 		if(!filter.equals(lastFilter)) {
 			// we are on subsequant page and text has changed -> reset page
 			page = 0;
 		}
-		filtering  = true;
-		client.updateVariable(paintableId, "filter", filter, false);
-		client.updateVariable(paintableId, "page", page, true);
-		lastFilter = filter;
-		currentPage = page;
+		if(clientSideFiltering) {
+			currentSuggestions.clear();
+			for(Iterator it = allSuggestions.iterator();it.hasNext();) {
+				FilterSelectSuggestion s = (FilterSelectSuggestion) it.next();
+				String string = s.getDisplayString().toLowerCase();
+				if(string.startsWith(filter.toLowerCase())) {
+					currentSuggestions.add(s);
+				}
+			}
+			lastFilter = filter;
+			currentPage = page;
+			suggestionPopup.showSuggestions(currentSuggestions, page, currentSuggestions.size());
+		} else {
+			filtering  = true;
+			client.updateVariable(paintableId, "filter", filter, false);
+			client.updateVariable(paintableId, "page", page, true);
+			lastFilter = filter;
+			currentPage = page;
+		}
 	}
 
 	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 		this.paintableId = uidl.getId();
 		this.client = client;
 		
+		if(client.updateComponent(this, uidl, true))
+			return;
+		
 		if(uidl.hasAttribute("immediate"))
 			immediate = true;
 		else 
 			immediate = false;
 		
+		if(uidl.hasVariable("page")) {
+			this.suggestionPopup.setPagingEnabled(true);
+			clientSideFiltering = false;
+		} else {
+			this.suggestionPopup.setPagingEnabled(false);
+			clientSideFiltering = true;
+		}
+		
 		currentSuggestions.clear();
 		UIDL options = uidl.getChildUIDL(0);
 		totalSuggestions = options.getIntAttribute("totalMatches");
+		if(clientSideFiltering) {
+			allSuggestions = new ArrayList();
+		}
 		for(Iterator i = options.getChildIterator(); i.hasNext();) {
 			UIDL optionUidl = (UIDL) i.next();
 			FilterSelectSuggestion suggestion = new FilterSelectSuggestion(optionUidl);
 			currentSuggestions.add(suggestion);
+			if(clientSideFiltering) {
+				allSuggestions.add(suggestion);
+			}
 		}
+		
 		if(filtering && lastFilter.equals(uidl.getStringVariable("filter"))) {
 			suggestionPopup.showSuggestions(
 					currentSuggestions, 
@@ -317,7 +371,27 @@ public class IFilterSelect extends Composite implements Paintable, KeyboardListe
 	}
 
 	public void onKeyUp(Widget sender, char keyCode, int modifiers) {
-		filterOptions(currentPage);
+        switch (keyCode) {
+		    case KeyboardListener.KEY_ENTER:
+		    case KeyboardListener.KEY_TAB:
+		    	; //NOP
+		    	break;
+		    case KeyboardListener.KEY_DOWN:
+		    case KeyboardListener.KEY_UP:
+		    case KeyboardListener.KEY_PAGEDOWN:
+		    case KeyboardListener.KEY_PAGEUP:
+		    	if(suggestionPopup.isAttached()) {
+		    		break;
+		    	} else {
+		    		// open popup as from gadget
+		    		filterOptions(0, "");
+		    		tb.selectAll();
+		    		break;
+		    	}
+		    default:
+				filterOptions(currentPage);
+		    	break;
+        }
 	}
 
 	/**

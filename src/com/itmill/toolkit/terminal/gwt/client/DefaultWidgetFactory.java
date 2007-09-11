@@ -3,12 +3,12 @@ package com.itmill.toolkit.terminal.gwt.client;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ui.IButton;
+import com.itmill.toolkit.terminal.gwt.client.ui.ICalendar;
 import com.itmill.toolkit.terminal.gwt.client.ui.ICheckBox;
 import com.itmill.toolkit.terminal.gwt.client.ui.IComponent;
 import com.itmill.toolkit.terminal.gwt.client.ui.ICustomLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.IDateFieldCalendar;
 import com.itmill.toolkit.terminal.gwt.client.ui.IEmbedded;
-import com.itmill.toolkit.terminal.gwt.client.ui.ICalendar;
 import com.itmill.toolkit.terminal.gwt.client.ui.IFilterSelect;
 import com.itmill.toolkit.terminal.gwt.client.ui.IForm;
 import com.itmill.toolkit.terminal.gwt.client.ui.IGridLayout;
@@ -23,7 +23,6 @@ import com.itmill.toolkit.terminal.gwt.client.ui.IPopupCalendar;
 import com.itmill.toolkit.terminal.gwt.client.ui.IScrollTable;
 import com.itmill.toolkit.terminal.gwt.client.ui.ISelect;
 import com.itmill.toolkit.terminal.gwt.client.ui.ISlider;
-import com.itmill.toolkit.terminal.gwt.client.ui.ISplitPanel;
 import com.itmill.toolkit.terminal.gwt.client.ui.ISplitPanelHorizontal;
 import com.itmill.toolkit.terminal.gwt.client.ui.ISplitPanelVertical;
 import com.itmill.toolkit.terminal.gwt.client.ui.ITablePaging;
@@ -183,10 +182,8 @@ public class DefaultWidgetFactory implements WidgetFactory {
 				return "com.itmill.toolkit.terminal.gwt.client.ui.IOptionGroup";
 			} else if ("twincol".equals(uidl.getStringAttribute("style"))) {
 				return "com.itmill.toolkit.terminal.gwt.client.ui.ITwinColSelect";
-			} else if (uidl.hasVariable("page")) {
-				return "com.itmill.toolkit.terminal.gwt.client.ui.IFilterSelect";
 			} else {
-				return "com.itmill.toolkit.terminal.gwt.client.ui.ISelect";
+				return "com.itmill.toolkit.terminal.gwt.client.ui.IFilterSelect";
 			}
 		} else if ("panel".equals(tag)) {
 			return "com.itmill.toolkit.terminal.gwt.client.ui.IPanel";
