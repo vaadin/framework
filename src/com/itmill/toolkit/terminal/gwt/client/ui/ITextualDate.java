@@ -111,7 +111,7 @@ public class ITextualDate extends IDateField implements Paintable, ChangeListene
 				try {
 					date = format.parse(text.getText());
 				} catch (Exception e) {
-					client.console.log(e.getMessage());
+					ApplicationConnection.getConsole().log(e.getMessage());
 					text.addStyleName(ITextField.CLASSNAME+"-error");
 					Timer t = new Timer() {
 						public void run() {

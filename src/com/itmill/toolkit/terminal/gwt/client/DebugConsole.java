@@ -2,6 +2,7 @@ package com.itmill.toolkit.terminal.gwt.client;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.itmill.toolkit.terminal.gwt.client.ui.IWindow;
 
@@ -21,14 +22,14 @@ public final class DebugConsole extends IWindow implements Console {
 	private void minimize() {
 		// TODO stack to bottom (create window manager of some sort) 
 		setPixelSize(60, 60);
-		setPopupPosition(Window.getClientWidth() - 66, Window.getClientHeight() - 66);
+		setPopupPosition(Window.getClientWidth() - 80, Window.getClientHeight() - 80);
 	}
 
 	/* (non-Javadoc)
 	 * @see com.itmill.toolkit.terminal.gwt.client.Console#log(java.lang.String)
 	 */
 	public void log(String msg) {
-		panel.add(new Label(msg));
+		panel.add(new HTML(msg));
 		System.out.println(msg);
 	}
 
@@ -36,7 +37,7 @@ public final class DebugConsole extends IWindow implements Console {
 	 * @see com.itmill.toolkit.terminal.gwt.client.Console#error(java.lang.String)
 	 */
 	public void error(String msg) {
-		panel.add((new Label(msg)));
+		panel.add((new HTML(msg)));
 		System.out.println(msg);
 	}
 

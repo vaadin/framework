@@ -5,7 +5,6 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.PopupPanel;
-import com.google.gwt.user.client.ui.SimplePanel;
 
 public class Caption extends HTML {
 	
@@ -36,7 +35,7 @@ public class Caption extends HTML {
 			
 			if(errorIndicatorElement == null) {
 				errorIndicatorElement = DOM.createDiv();
-				DOM.setAttribute(errorIndicatorElement, "className", "i-errorindicator");
+				DOM.setElementProperty(errorIndicatorElement, "className", "i-errorindicator");
 				DOM.insertChild(getElement(), errorIndicatorElement, 0);
 			}
 			
@@ -58,7 +57,7 @@ public class Caption extends HTML {
 		
 		if(uidl.hasAttribute("description")) {
 			if(captionText != null) {
-				DOM.setAttribute(captionText, "title", uidl.getStringAttribute("description"));
+				DOM.setElementProperty(captionText, "title", uidl.getStringAttribute("description"));
 			} else {
 				setTitle(uidl.getStringAttribute("description"));
 			}
@@ -76,6 +75,9 @@ public class Caption extends HTML {
 			case Event.ONMOUSEOUT:
 				hideErrorMessage();
 				break;
+			case Event.ONCLICK:
+				ApplicationConnection.getConsole().
+					log(DOM.getInnerHTML(errorMessage.getElement()));
 			default:
 				break;
 			}
@@ -96,9 +98,9 @@ public class Caption extends HTML {
 			}
 			errorContainer.setPopupPosition(
 					DOM.getAbsoluteLeft(errorIndicatorElement) +
-						2*DOM.getIntAttribute(errorIndicatorElement, "offsetHeight"),
+						2*DOM.getElementPropertyInt(errorIndicatorElement, "offsetHeight"),
 					DOM.getAbsoluteTop(errorIndicatorElement) + 
-						2*DOM.getIntAttribute(errorIndicatorElement, "offsetHeight"));
+						2*DOM.getElementPropertyInt(errorIndicatorElement, "offsetHeight"));
 			errorContainer.show();
 		}
 	}

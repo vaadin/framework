@@ -398,7 +398,18 @@ public class UIDL {
 		}
 
 		public String getXMLAsString() {
-			return x.get("x").toString();
+			StringBuffer sb = new StringBuffer();
+			for(Iterator it = x.keySet().iterator(); it.hasNext();) {
+				String tag = (String) it.next();
+				sb.append("<");
+				sb.append(tag);
+				sb.append(">");
+				sb.append(x.get(tag).isString().stringValue());
+				sb.append("</");
+				sb.append(tag);
+				sb.append(">");
+			}
+			return sb.toString();
 		}
 	}
 

@@ -245,7 +245,6 @@ public class ITree extends Tree implements Paintable {
 		}
 		
 		public void showContextMenu(Event event) {
-			client.console.log("Context menu");
 			if(actionKeys != null) {
 				int left = DOM.eventGetClientX(event);
 				int top = DOM.eventGetClientY(event);

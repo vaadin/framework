@@ -19,6 +19,9 @@ public class ErrorMessage extends FlowPanel {
 			if (child instanceof String) {
 				String errorMessage = (String) child;
 				add(new HTML(errorMessage));
+			} else if (child instanceof UIDL.XML) {
+				UIDL.XML xml = (UIDL.XML) child;
+				add(new HTML(xml.getXMLAsString()));
 			} else {
 				ErrorMessage childError = new ErrorMessage();
 				add(childError);

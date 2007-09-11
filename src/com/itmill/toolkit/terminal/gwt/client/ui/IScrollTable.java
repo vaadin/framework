@@ -566,7 +566,8 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		tHead.setHorizontalScrollPosition(scrollLeft);
 	
 		firstRowInViewPort = (int) Math.ceil( scrollTop / (double) tBody.getRowHeight() );
-		client.console.log("At scrolltop: " + scrollTop + " At row " + firstRowInViewPort);
+		ApplicationConnection.getConsole()
+			.log("At scrolltop: " + scrollTop + " At row " + firstRowInViewPort);
 		
 		int postLimit = (int) (firstRowInViewPort + pageLength + pageLength*CACHE_REACT_RATE);
 		if(postLimit > totalRows -1 )
@@ -585,7 +586,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		if(firstRowInViewPort - pageLength*CACHE_RATE > lastRendered ||
 				firstRowInViewPort + pageLength + pageLength*CACHE_RATE < firstRendered ) {
 			// need a totally new set
-			client.console.log("Table: need a totally new set");
+			ApplicationConnection.getConsole().log("Table: need a totally new set");
 			rowRequestHandler.setReqFirstRow((int) (firstRowInViewPort - pageLength*CACHE_RATE));
 			rowRequestHandler.setReqRows((int) (2*CACHE_RATE*pageLength + pageLength));
 			rowRequestHandler.deferRowFetch();
@@ -593,7 +594,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		}
 		if(preLimit < firstRendered ) {
 			// need some rows to the beginning of the rendered area
-			client.console.log("Table: need some rows to the beginning of the rendered area");
+			ApplicationConnection.getConsole().log("Table: need some rows to the beginning of the rendered area");
 			rowRequestHandler.setReqFirstRow((int) (firstRowInViewPort - pageLength*CACHE_RATE));
 			rowRequestHandler.setReqRows(firstRendered - rowRequestHandler.getReqFirstRow());
 			rowRequestHandler.deferRowFetch();
@@ -602,7 +603,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		}
 		if(postLimit > lastRendered) {
 			// need some rows to the end of the rendered area
-			client.console.log("need some rows to the end of the rendered area");
+			ApplicationConnection.getConsole().log("need some rows to the end of the rendered area");
 			rowRequestHandler.setReqFirstRow(lastRendered + 1);
 			rowRequestHandler.setReqRows((int) ((firstRowInViewPort + pageLength + pageLength*CACHE_RATE) - lastRendered));
 			rowRequestHandler.deferRowFetch();
@@ -611,7 +612,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 	}
 
 	private void announceScrollPosition() {
-		client.console.log(""+firstRowInViewPort);
+		ApplicationConnection.getConsole().log(""+firstRowInViewPort);
 		if(scrollPositionElement == null) {
 			scrollPositionElement = DOM.createDiv();
 			DOM.setElementProperty(scrollPositionElement, "className", "i-table-scrollposition");
@@ -675,7 +676,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		}
 
 		public void run() {
-			client.console.log("Getting " + reqRows + " rows from " + reqFirstRow);
+			ApplicationConnection.getConsole().log("Getting " + reqRows + " rows from " + reqFirstRow);
 			client.updateVariable(paintableId, "firstvisible", firstRowInViewPort, false);
 			client.updateVariable(paintableId, "reqfirstrow", reqFirstRow, false);
 			client.updateVariable(paintableId, "reqrows", reqRows, true);
@@ -833,23 +834,23 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 		protected void handleCaptionEvent(Event event) {
 			switch (DOM.eventGetType(event)) {
 			case Event.ONMOUSEDOWN:
-				client.console.log("HeaderCaption: mouse down");
+				ApplicationConnection.getConsole().log("HeaderCaption: mouse down");
 				if(columnReordering) {
 					dragging = true;
 					moved = false;
 			        colIndex = getColIndexByKey(cid);
 					DOM.setCapture(getElement());
 					this.headerX = tHead.getAbsoluteLeft();
-					client.console.log("HeaderCaption: Caption set to capture mouse events");
+					ApplicationConnection.getConsole().log("HeaderCaption: Caption set to capture mouse events");
 					DOM.eventPreventDefault(event); // prevent selecting text
 				}
 				break;
 			case Event.ONMOUSEUP:
-				client.console.log("HeaderCaption: mouseUP");
+				ApplicationConnection.getConsole().log("HeaderCaption: mouseUP");
 				if(columnReordering) {
 					dragging = false;
 					DOM.releaseCapture(getElement());
-					client.console.log("HeaderCaption: Stopped column reordering");
+					ApplicationConnection.getConsole().log("HeaderCaption: Stopped column reordering");
 					if(moved) {
 						hideFloatingCopy();
 						tHead.removeSlotFocus();
@@ -884,7 +885,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 				break;
 			case Event.ONMOUSEMOVE:
 				if (dragging) {
-					client.console.log("HeaderCaption: Dragging column, optimal index...");
+					ApplicationConnection.getConsole().log("HeaderCaption: Dragging column, optimal index...");
 					if(!moved) {
 						createFloatingCopy();
 						moved = true;
@@ -912,7 +913,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 					tHead.focusSlot(closestSlot);
 					
 					updateFloatingCopysPosition(x, -1);
-					client.console.log(""+closestSlot);
+					ApplicationConnection.getConsole().log(""+closestSlot);
 				}
 				break;
 			default:
@@ -1447,7 +1448,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 				fixSpacers();
 			} else {
 				// sorted or column reordering changed
-				client.console.log("Bad update" + firstIndex + "/"+ rows);
+				ApplicationConnection.getConsole().log("Bad update" + firstIndex + "/"+ rows);
 			}
 		}
 		
@@ -1700,7 +1701,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 				switch (DOM.eventGetType(event)) {
 				case Event.ONCLICK:
 					if((CLASSNAME+"-cell-content").equals(s)) {
-						client.console.log("Row click");
+						ApplicationConnection.getConsole().log("Row click");
 						if(selectMode > ITable.SELECT_MODE_NONE) {
 							toggleSelection();
 							client.updateVariable(paintableId, "selected", selectedRowKeys.toArray(), immediate);
@@ -1715,7 +1716,7 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 			}
 			
 			public void showContextMenu(Event event) {
-				client.console.log("Context menu");
+				ApplicationConnection.getConsole().log("Context menu");
 				if(actionKeys != null) {
 					int left = DOM.eventGetClientX(event);
 					int top = DOM.eventGetClientY(event);

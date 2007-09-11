@@ -38,7 +38,7 @@ public class ApplicationConnection implements EntryPoint, FocusListener {
 	private RequestBuilder rb = new RequestBuilder(RequestBuilder.POST, appUri
 			+ "/UIDL/?repaintAll=1&");
 
-	public Console console;
+	private static Console console;
 
 	private Vector pendingVariables = new Vector();
 
@@ -71,8 +71,12 @@ public class ApplicationConnection implements EntryPoint, FocusListener {
 		RootPanel.get("itmtk-ajax-window").add(view);
 		
 	}
+	
+	public static Console getConsole() {
+		return console;
+	}
 
-	private native boolean isDebugMode() /*-{
+	private native static boolean isDebugMode() /*-{
 		var uri = $wnd.location;
 		var re = /debug[^\/]*$/;
 		return re.test(uri);
