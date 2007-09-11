@@ -106,15 +106,12 @@ public class SystemError extends RuntimeException implements ErrorMessage {
 		// Paint the error message
 		String message = getLocalizedMessage();
 		if (message != null) {
-			target.addSection("b", message);
+			target.addSection("h2", message);
 		}
 
 		// Paint the exception
 		if (cause != null) {
-			if (message != null)
-				target.addUIDL("<br/><br/>");
-			target.addSection("b", "Exception");
-			target.addUIDL("<br/><br/>");
+			target.addSection("h3", "Exception");
 			StringWriter buffer = new StringWriter();
 			cause.printStackTrace(new PrintWriter(buffer));
 			target.addSection("pre", buffer.toString());
