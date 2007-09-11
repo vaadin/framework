@@ -11,6 +11,7 @@ import com.itmill.toolkit.terminal.gwt.client.ui.IDateFieldCalendar;
 import com.itmill.toolkit.terminal.gwt.client.ui.IEmbedded;
 import com.itmill.toolkit.terminal.gwt.client.ui.IFilterSelect;
 import com.itmill.toolkit.terminal.gwt.client.ui.IForm;
+import com.itmill.toolkit.terminal.gwt.client.ui.IFormLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.IGridLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.ILabel;
 import com.itmill.toolkit.terminal.gwt.client.ui.ILink;
@@ -131,6 +132,9 @@ public class DefaultWidgetFactory implements WidgetFactory {
 		} else if ("com.itmill.toolkit.terminal.gwt.client.ui.IForm"
 				.equals(className)) {
 			return new IForm();
+		} else if ("com.itmill.toolkit.terminal.gwt.client.ui.IFormLayout"
+				.equals(className)) {
+			return new IFormLayout();
 		} else if ("com.itmill.toolkit.terminal.gwt.client.ui.IUpload"
 				.equals(className)) {
 			return new IUpload();
@@ -227,6 +231,8 @@ public class DefaultWidgetFactory implements WidgetFactory {
 			return "com.itmill.toolkit.terminal.gwt.client.ui.ISlider";
 		} else if ("form".equals(tag)) {
 			return "com.itmill.toolkit.terminal.gwt.client.ui.IForm";
+		} else if ("formlayout".equals(tag)) {
+			return "com.itmill.toolkit.terminal.gwt.client.ui.IFormLayout";
 		} else if ("upload".equals(tag)) {
 			return "com.itmill.toolkit.terminal.gwt.client.ui.IUpload";
 		} else if ("hsplitpanel".equals(tag)) {

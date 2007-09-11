@@ -74,10 +74,6 @@ import com.itmill.toolkit.terminal.PaintTarget;
 public class Form extends AbstractField implements Item.Editor, Buffered, Item,
 		Validatable {
 
-	private static final int FORM_LAYOUT_DEFAULT = 0;
-
-	private static final int FORM_LAYOUT_USER_DEFINED = 10;
-
 	private Object propertyValue;
 
 	/**
@@ -130,8 +126,6 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
 	 */
 	private Collection visibleItemProperties;
 
-	private int layoutStyle = FORM_LAYOUT_DEFAULT;
-
 	/**
 	 * Contructs a new form with default layout.
 	 * 
@@ -179,9 +173,6 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
 	/* Documented in interface */
 	public void paintContent(PaintTarget target) throws PaintException {
 		super.paintContent(target);
-		if(layoutStyle == FORM_LAYOUT_USER_DEFINED) {
-			target.addAttribute("layoutStyle", "userdefined");
-		}
 		layout.paint(target);
 	}
 
@@ -560,10 +551,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
 
 		// Use orderedlayout by default
 		if (newLayout == null) {
-			newLayout = new OrderedLayout();
-			layoutStyle = FORM_LAYOUT_DEFAULT;
-		} else {
-			layoutStyle = FORM_LAYOUT_USER_DEFINED;
+			newLayout = new FormLayout();
 		}
 
 		// Move components from previous layout
