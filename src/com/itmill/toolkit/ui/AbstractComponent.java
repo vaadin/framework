@@ -179,6 +179,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
 	public void setStyle(String style) {
 		if(style == null || "".equals(style)) {
 			styles = null;
+			requestRepaint();
 			return;
 		}
 		if(this.styles == null) {
@@ -195,13 +196,15 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
 		if(this.styles == null) {
 			styles = new ArrayList();
 		}
-		if(! styles.contains(style))
+		if(! styles.contains(style)) {
 			this.styles.add(style);
-		requestRepaint();
+			requestRepaint();
+		}
 	}
 	
 	public void removeStyleName(String style) {
 		styles.remove(style);
+		requestRepaint();
 	}
 	
 	/*
