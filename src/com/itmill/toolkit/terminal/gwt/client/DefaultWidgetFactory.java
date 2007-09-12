@@ -154,9 +154,11 @@ public class DefaultWidgetFactory implements WidgetFactory {
 		 * TODO: Class based impl, use when GWT supports return
 		 * (Widget)GWT.create(resolveWidgetClass(uidl));
 		 */
+		
+		
 	}
 
-	private String resolveWidgetTypeName(UIDL uidl) {
+	protected String resolveWidgetTypeName(UIDL uidl) {
 
 		String tag = uidl.getTag();
 		if ("button".equals(tag)) {

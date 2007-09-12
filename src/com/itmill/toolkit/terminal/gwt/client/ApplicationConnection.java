@@ -46,11 +46,15 @@ public class ApplicationConnection implements EntryPoint, FocusListener {
 
 	private HashMap paintableToId = new HashMap();
 
-	private WidgetFactory widgetFactory = new DefaultWidgetFactory();
+	private final WidgetFactory widgetFactory;
 
 	private IContextMenu contextMenu = null;
 	
 	private IView view = new IView();
+	
+	public ApplicationConnection() {
+		widgetFactory = createWidgetFactory();
+	}
 
 	/**
 	 * This is the entry point method.
@@ -72,6 +76,10 @@ public class ApplicationConnection implements EntryPoint, FocusListener {
 		
 	}
 	
+	protected static WidgetFactory createWidgetFactory() {
+		return new DefaultWidgetFactory();
+	}
+
 	public static Console getConsole() {
 		return console;
 	}
@@ -311,14 +319,6 @@ public class ApplicationConnection implements EntryPoint, FocusListener {
 		}
 		addVariableToQueue(paintableId, variableName,
 				buf.toString(), immediate, 'a');
-	}
-
-	public WidgetFactory getWidgetFactory() {
-		return widgetFactory;
-	}
-
-	public void setWidgetFactory(WidgetFactory widgetFactory) {
-		this.widgetFactory = widgetFactory;
 	}
 
 	public static Layout getParentLayout(Widget component) {
