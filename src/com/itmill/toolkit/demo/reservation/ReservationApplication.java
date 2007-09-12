@@ -34,7 +34,8 @@ public class ReservationApplication extends Application {
     private TextField description;
     private Button reservationButton;
 
-    Table allReservations;
+    private Table allTable;
+    private CalendarField allCalendar;
 
     public void init() {
 	db = new SampleDB(true);
@@ -67,10 +68,10 @@ public class ReservationApplication extends Application {
 	OrderedLayout infoLayout = new OrderedLayout();
 	reservationPanel.addComponent(infoLayout);
 	resourceName = new Label("Choose resource");
-	resourceName.setCaption("Selected resource");
+	resourceName.setCaption("Reserving resource");
 	infoLayout.addComponent(resourceName);
 	description = new TextField();
-	description.setColumns(30);
+	description.setColumns(40);
 	description.setRows(5);
 	infoLayout.addComponent(description);
 	reservationButton = new Button("Make reservation", this,
@@ -111,9 +112,22 @@ public class ReservationApplication extends Application {
 	});
 	reservedFrom.setImmediate(true);
 	reservedFrom.setValue(now);
+	reservedTo.addListener(new ValueChangeListener() {
+	    public void valueChange(ValueChangeEvent event) {
+		refreshSelectedResources();
+		resetStatus();
+	    }
+	});
+	reservedTo.setImmediate(true);
+	reservedTo.setValue(now);
 
-	allReservations = new Table();
-	mainTabs.addTab(allReservations, "All reservations", null);
+	OrderedLayout allLayout = new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
+	allCalendar = new CalendarField();
+	initCalendarFieldPropertyIds(allCalendar);
+	allLayout.addComponent(allCalendar);
+	allTable = new Table();
+	allLayout.addComponent(allTable);
+	mainTabs.addTab(allLayout, "All reservations", null);
 	mainTabs.addListener(new TabSheet.SelectedTabChangeListener() {
 	    public void selectedTabChange(SelectedTabChangeEvent event) {
 		refreshReservations();
@@ -166,7 +180,10 @@ public class ReservationApplication extends Application {
 	reservedFrom.setContainerDataSource(reservations);
 	reservedTo.setContainerDataSource(reservations);
 	refreshSelectedResources();
-	allReservations.setContainerDataSource(db.getReservations(null));
+	Container allReservations = db.getReservations(null);
+	allTable.setContainerDataSource(allReservations);
+	allCalendar.setContainerDataSource(allReservations);
+	
     }
 
     private void refreshSelectedResources() {

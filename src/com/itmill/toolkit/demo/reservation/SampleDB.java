@@ -17,34 +17,42 @@ import com.itmill.toolkit.data.util.QueryContainer;
 public class SampleDB {
     public class User {
 	public static final String TABLE = "USER";
-	public static final String PROPERTY_ID_ID = TABLE+"_ID";
-	public static final String PROPERTY_ID_FULLNAME = TABLE+"_FULLNAME";
-	public static final String PROPERTY_ID_EMAIL = TABLE+"_EMAIL";
-	public static final String PROPERTY_ID_PASSWORD = TABLE+"_PASSWORD";
-	public static final String PROPERTY_ID_DELETED = TABLE+"_DELETED";
+	public static final String PROPERTY_ID_ID = TABLE + "_ID";
+	public static final String PROPERTY_ID_FULLNAME = TABLE + "_FULLNAME";
+	public static final String PROPERTY_ID_EMAIL = TABLE + "_EMAIL";
+	public static final String PROPERTY_ID_PASSWORD = TABLE + "_PASSWORD";
+	public static final String PROPERTY_ID_DELETED = TABLE + "_DELETED";
     }
 
     public class Resource {
 	public static final String TABLE = "RESOURCE";
-	public static final String PROPERTY_ID_ID = TABLE+"_ID";
-	public static final String PROPERTY_ID_NAME = TABLE+"_NAME";
-	public static final String PROPERTY_ID_DESCRIPTION = TABLE+"_DESCRIPTION";
-	public static final String PROPERTY_ID_LOCATIONX = TABLE+"_LOCATION_X";
-	public static final String PROPERTY_ID_LOCATIONY = TABLE+"_LOCATION_Y";
-	public static final String PROPERTY_ID_CATEGORY = TABLE+"_CATEGORY";
-	public static final String PROPERTY_ID_DELETED = TABLE+"_DELETED";
+	public static final String PROPERTY_ID_ID = TABLE + "_ID";
+	public static final String PROPERTY_ID_NAME = TABLE + "_NAME";
+	public static final String PROPERTY_ID_DESCRIPTION = TABLE
+		+ "_DESCRIPTION";
+	public static final String PROPERTY_ID_LOCATIONX = TABLE
+		+ "_LOCATION_X";
+	public static final String PROPERTY_ID_LOCATIONY = TABLE
+		+ "_LOCATION_Y";
+	public static final String PROPERTY_ID_CATEGORY = TABLE + "_CATEGORY";
+	public static final String PROPERTY_ID_DELETED = TABLE + "_DELETED";
     }
 
     public class Reservation {
 	public static final String TABLE = "RESERVATION";
-	public static final String PROPERTY_ID_ID = TABLE+"_ID";
-	public static final String PROPERTY_ID_DESCRIPTION = TABLE+"_DESCRIPTION";
-	public static final String PROPERTY_ID_RESOURCE_ID = TABLE+"_RESOURCE_ID";
-	public static final String PROPERTY_ID_RESERVED_BY_ID = TABLE+"_RESERVED_BY_USER_ID";
-	public static final String PROPERTY_ID_RESERVED_FROM = TABLE+"_RESERVED_FROM";
-	public static final String PROPERTY_ID_RESERVED_TO = TABLE+"_RESERVED_TO";
+	public static final String PROPERTY_ID_ID = TABLE + "_ID";
+	public static final String PROPERTY_ID_DESCRIPTION = TABLE
+		+ "_DESCRIPTION";
+	public static final String PROPERTY_ID_RESOURCE_ID = TABLE
+		+ "_RESOURCE_ID";
+	public static final String PROPERTY_ID_RESERVED_BY_ID = TABLE
+		+ "_RESERVED_BY_USER_ID";
+	public static final String PROPERTY_ID_RESERVED_FROM = TABLE
+		+ "_RESERVED_FROM";
+	public static final String PROPERTY_ID_RESERVED_TO = TABLE
+		+ "_RESERVED_TO";
     }
-    
+
     // TODO -> param
     private static final String DB_URL = "jdbc:hsqldb:file:reservation.db";
 
@@ -247,8 +255,9 @@ public class SampleDB {
 	// TODO where from=?
 	// TODO where to=?
 	// TODO where deleted=?
-	String q = "SELECT * FROM " + Reservation.TABLE + "," +Resource.TABLE;
-	q += " WHERE " + Reservation.PROPERTY_ID_RESOURCE_ID+"="+Resource.PROPERTY_ID_ID;
+	String q = "SELECT * FROM " + Reservation.TABLE + "," + Resource.TABLE;
+	q += " WHERE " + Reservation.PROPERTY_ID_RESOURCE_ID + "="
+		+ Resource.PROPERTY_ID_ID;
 	if (resources != null && resources.size() > 0) {
 	    StringBuilder s = new StringBuilder();
 	    for (Iterator it = resources.iterator(); it.hasNext();) {
@@ -295,7 +304,8 @@ public class SampleDB {
 	synchronized (DB_URL) {
 	    try {
 		if (!isAvailableResource(resourceId, reservedFrom, reservedTo)) {
-		    throw new ResourceNotAvailableException("The resource is not available at that time.");
+		    throw new ResourceNotAvailableException(
+			    "The resource is not available at that time.");
 		}
 		PreparedStatement p = connection.prepareStatement(q);
 		p.setInt(1, resourceId);

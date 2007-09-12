@@ -53,7 +53,7 @@ public class ResourceSelectorPanel extends Panel implements
 		    resourceList = new LinkedList();
 		    categoryResources.put(category, resourceList);
 		    Button cButton = new Button(category + " (any)", this);
-		    cButton.setStyle("link");
+		    cButton.setStyle("important-link");
 		    cButton.setData(category);
 		    resourceLayout.addComponent(cButton);
 		}
@@ -77,6 +77,7 @@ public class ResourceSelectorPanel extends Panel implements
 	if (source instanceof Button) {
 	    Object data = ((Button) source).getData();
 	    String name = ((Button) source).getCaption();
+	    resetStyles();
 	    if (data instanceof Item) {
 		LinkedList rlist = new LinkedList();
 		rlist.add(data);
@@ -87,8 +88,24 @@ public class ResourceSelectorPanel extends Panel implements
 			.get(category);
 		setSelectedResources(resources);
 	    }
+	    ((Button)source).setStyle("selected-link");
 	}
 
+    }
+    
+    private void resetStyles() {
+	for (Iterator it = categoryLayouts.values().iterator();it.hasNext();) {
+	    Layout lo = (Layout)it.next();
+	    for (Iterator bit = lo.getComponentIterator();bit.hasNext();) {
+		Button b = (Button)bit.next();
+		if (b.getData() instanceof Item) {
+		    b.setStyle("link");
+		} else {
+		    b.setStyle("important-link");
+		}
+	    }
+	}
+	
     }
 
     public class SelectedResourcesChangedEvent extends Event {
