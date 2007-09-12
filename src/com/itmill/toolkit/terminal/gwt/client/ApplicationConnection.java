@@ -34,10 +34,6 @@ public class ApplicationConnection implements EntryPoint, FocusListener {
 
 	private HashMap resourcesMap = new HashMap();
 
-	// TODO remove repaintAll until things start to pile up
-	private RequestBuilder rb = new RequestBuilder(RequestBuilder.POST, appUri
-			+ "/UIDL/?repaintAll=1&");
-
 	private static Console console;
 
 	private Vector pendingVariables = new Vector();
@@ -100,7 +96,7 @@ public class ApplicationConnection implements EntryPoint, FocusListener {
 
 	private void makeUidlRequest(String requestData) {
 		console.log("Making UIDL Request with params: " + requestData);
-		rb = new RequestBuilder(RequestBuilder.POST, appUri
+		RequestBuilder rb = new RequestBuilder(RequestBuilder.POST, appUri
 				+ "/UIDL" + getPathInfo() + "?requestId=" + (Math.random()) + "&" + requestData);
 		try {
 			rb.sendRequest(requestData, new RequestCallback() {
