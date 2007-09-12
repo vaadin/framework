@@ -73,6 +73,10 @@ public class IFilterSelect extends Composite implements Paintable,
 		}
 	}
 
+	/**
+	 * @author mattitahvonen
+	 *
+	 */
 	public class SuggestionPopup extends PopupPanel implements PositionCallback {
 		private SuggestionMenu menu;
 
@@ -186,11 +190,16 @@ public class IFilterSelect extends Composite implements Paintable,
 				DOM.setStyleAttribute(this.up, "display", "none");
 				DOM.setStyleAttribute(this.status, "display", "none");
 			}
+			isPagingEnabled = paging;
 		}
 
+		
+		/* (non-Javadoc)
+		 * @see com.google.gwt.user.client.ui.PopupPanel$PositionCallback#setPosition(int, int)
+		 */
 		public void setPosition(int offsetWidth, int offsetHeight) {
 			ApplicationConnection.getConsole().log("callback");
-			if (offsetHeight > Window.getClientHeight()) {
+			if (!isPagingEnabled && offsetHeight > Window.getClientHeight()) {
 				offsetHeight = Window.getClientHeight();
 				menu.setHeight(offsetHeight + "px");
 				DOM.setStyleAttribute(menu.getElement(), "overflow", "auto");
