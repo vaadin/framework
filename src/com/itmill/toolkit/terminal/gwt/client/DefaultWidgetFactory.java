@@ -5,7 +5,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ui.IButton;
 import com.itmill.toolkit.terminal.gwt.client.ui.ICalendar;
 import com.itmill.toolkit.terminal.gwt.client.ui.ICheckBox;
-import com.itmill.toolkit.terminal.gwt.client.ui.IComponent;
 import com.itmill.toolkit.terminal.gwt.client.ui.ICustomLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.IDateFieldCalendar;
 import com.itmill.toolkit.terminal.gwt.client.ui.IEmbedded;
@@ -87,9 +86,6 @@ public class DefaultWidgetFactory implements WidgetFactory {
 		} else if ("com.itmill.toolkit.terminal.gwt.client.ui.IPanel"
 				.equals(className)) {
 			return new IPanel();
-		} else if ("com.itmill.toolkit.terminal.gwt.client.ui.IComponent"
-				.equals(className)) {
-			return new IComponent();
 		} else if ("com.itmill.toolkit.terminal.gwt.client.ui.ITabsheet"
 				.equals(className)) {
 			return new ITabsheet();
@@ -194,7 +190,7 @@ public class DefaultWidgetFactory implements WidgetFactory {
 		} else if ("panel".equals(tag)) {
 			return "com.itmill.toolkit.terminal.gwt.client.ui.IPanel";
 		} else if ("component".equals(tag)) {
-			return "com.itmill.toolkit.terminal.gwt.client.ui.IComponent";
+			return "com.itmill.toolkit.terminal.gwt.client.ui.IUnknownComponent";
 		} else if ("tabsheet".equals(tag)) {
 			return "com.itmill.toolkit.terminal.gwt.client.ui.ITabsheet";
 		} else if ("embedded".equals(tag)) {
