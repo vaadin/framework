@@ -50,8 +50,8 @@ public class IContextMenu extends PopupPanel {
 		setPopupPosition(left, top);
 		show();
 		// fix position if "outside" screen
-		if(DOM.getIntAttribute(getElement(),"offsetWidth") + left > Window.getClientWidth()) {
-			left = Window.getClientWidth() - DOM.getIntAttribute(getElement(),"offsetWidth");
+		if(DOM.getElementPropertyInt(getElement(),"offsetWidth") + left > Window.getClientWidth()) {
+			left = Window.getClientWidth() - DOM.getElementPropertyInt(getElement(),"offsetWidth");
 			setPopupPosition(left, top);
 		}
 	}
