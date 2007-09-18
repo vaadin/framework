@@ -1,6 +1,6 @@
 <module>
 
-	<inherits name="com.itmill.toolkit.terminal.gwt.WidgetSetNoEntry" /> 
+	<inherits name="com.itmill.toolkit.terminal.gwt.DefaultWidgetSetNoEntry" /> 
 	
 	<inherits name='com.mapitz.gwt.googleMaps.GoogleMaps' /> 
 	

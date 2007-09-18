@@ -1,5 +1,6 @@
 package com.itmill.toolkit.demo.reservation;
 
+import java.awt.Point;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -44,7 +45,7 @@ public class ReservationApplication extends Application {
 
 	Window mainWindow = new Window("Reservr");
 	setMainWindow(mainWindow);
-	setTheme("example");
+	setTheme("reservr");
 
 	TabSheet mainTabs = new TabSheet();
 	mainWindow.addComponent(mainTabs);
@@ -79,7 +80,18 @@ public class ReservationApplication extends Application {
 	infoLayout.addComponent(reservationButton);
 	statusLabel = new Label();
 	infoLayout.addComponent(statusLabel);
-
+	
+	// TODO map
+	GoogleMap map = new GoogleMap();
+	map.setWidth(290);
+	map.setHeight(150);
+	map.setZoomLevel(2);
+	//map.setMapCenter(new Point.Float(60.453380f, 22.301850f));
+	infoLayout.addComponent(map);
+	
+	map.addMarker("IT Mill", new Point.Float(60.453380f, 22.301850f));
+	map.addMarker("Romson a.k.a Rodskar", new Point.Float(63.509433f,22.276711f));
+	
 	// TODO Use calendar, set following hour
 	Date now = new Date();
 	reservedFrom = new CalendarField();
