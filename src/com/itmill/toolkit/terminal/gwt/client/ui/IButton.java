@@ -1,9 +1,14 @@
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.Button;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
+import com.itmill.toolkit.terminal.gwt.client.ErrorMessage;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
@@ -14,6 +19,13 @@ public class IButton extends Button implements Paintable {
 	String id;
 
 	ApplicationConnection client;
+
+	private Element errorIndicatorElement;
+
+	private ErrorMessage errorMessage;
+	
+	private PopupPanel errorContainer;
+
 
 	public IButton() {
 		setStyleName(CLASSNAME);
@@ -40,8 +52,70 @@ public class IButton extends Button implements Paintable {
 
 		// Set text
 		setText(uidl.getStringAttribute("caption"));
+		
+		if(uidl.hasAttribute("error")) {
+			UIDL errorUidl = uidl.getErrors();
+			if(errorIndicatorElement == null) {
+				errorIndicatorElement = DOM.createDiv();
+				DOM.setElementProperty(errorIndicatorElement, "className", "i-errorindicator");
+				DOM.sinkEvents(errorIndicatorElement, Event.MOUSEEVENTS);
+			}
+			DOM.insertChild(getElement(), errorIndicatorElement, 0);
+			if(errorMessage == null)
+				errorMessage = new ErrorMessage();
+			errorMessage.updateFromUIDL(errorUidl);
+			
+		} else if( errorIndicatorElement != null) {
+			DOM.setStyleAttribute(errorIndicatorElement, "display", "none");
+		}
+		
+		if(uidl.hasAttribute("description")) {
+			setTitle(uidl.getStringAttribute("description"));
+		}
 
-		// TODO Handle description and errormessages
 	}
+	
+	public void onBrowserEvent(Event event) {
+		Element target= DOM.eventGetTarget(event);
+		if(errorIndicatorElement != null && DOM.compare(target, errorIndicatorElement)) {
+			switch (DOM.eventGetType(event)) {
+			case Event.ONMOUSEOVER:
+				showErrorMessage();
+				break;
+			case Event.ONMOUSEOUT:
+				hideErrorMessage();
+				break;
+			case Event.ONCLICK:
+				ApplicationConnection.getConsole().
+					log(DOM.getInnerHTML(errorMessage.getElement()));
+				return;
+			default:
+				break;
+			}
+		}
+		super.onBrowserEvent(event);
+	}
+
+	private void hideErrorMessage() {
+		if(errorContainer != null) {
+			errorContainer.hide();
+		}
+	}
+
+	private void showErrorMessage() {
+		if(errorMessage != null) {
+			if(errorContainer == null) {
+				errorContainer = new PopupPanel();
+				errorContainer.setWidget(errorMessage);
+			}
+			errorContainer.setPopupPosition(
+					DOM.getAbsoluteLeft(errorIndicatorElement) +
+						2*DOM.getElementPropertyInt(errorIndicatorElement, "offsetHeight"),
+					DOM.getAbsoluteTop(errorIndicatorElement) + 
+						2*DOM.getElementPropertyInt(errorIndicatorElement, "offsetHeight"));
+			errorContainer.show();
+		}
+	}
+
 
 }
