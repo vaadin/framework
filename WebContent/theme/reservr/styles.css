@@ -1,0 +1,15 @@
+button.important-link {
+	border: 0px;
+	text-align: left;
+	text-decoration: underline;
+	background: none;
+	font-weight: bold;
+}
+button.selected-link {
+	border: 0px;
+	text-align: left;
+	text-decoration: underline;
+	background: #183C6B;
+	font-weight: bold;
+	color: white;
+}

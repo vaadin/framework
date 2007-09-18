@@ -18,6 +18,10 @@
       <param-name>application</param-name>
       <param-value>com.itmill.toolkit.demo.reservation.ReservationApplication</param-value>
     </init-param>
+    <init-param>
+      <param-name>widgetset</param-name>
+      <param-value>com.itmill.toolkit.demo.reservation.gwt.WidgetSet</param-value>
+    </init-param>
   </servlet>
   
   <servlet>
