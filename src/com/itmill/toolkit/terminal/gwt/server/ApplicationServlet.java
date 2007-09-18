@@ -132,7 +132,7 @@ public class ApplicationServlet extends HttpServlet {
 
     private static final String AJAX_UIDL_URI = "/UIDL/";
 
-    static final String THEME_DIRECTORY_PATH = "ITK-INF/theme/";
+    static final String THEME_DIRECTORY_PATH = "ITK-INF/themes/";
 
     // Maximum delay between request for an user to be considered active (in ms)
     private static final long ACTIVE_USER_REQUEST_INTERVAL = 1000 * 45;
