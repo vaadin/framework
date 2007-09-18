@@ -1,0 +1,14 @@
+<module>
+
+	<inherits name="com.itmill.toolkit.terminal.gwt.WidgetSetNoEntry" /> 
+	
+	<inherits name='com.mapitz.gwt.googleMaps.GoogleMaps' /> 
+	
+	<!-- Component stylesheets                                -->
+	
+	<stylesheet src="component-themes/collection.css"/>
+
+	<!-- Specify the app entry point class.                   -->
+	<entry-point class="com.itmill.toolkit.demo.reservation.gwt.client.WidgetSet"/>
+  
+</module>

@@ -28,7 +28,7 @@ import com.itmill.toolkit.terminal.gwt.client.ui.IView;
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class ApplicationConnection implements EntryPoint, FocusListener {
+public class ApplicationConnection implements FocusListener {
 
 	private String appUri;
 
@@ -42,38 +42,26 @@ public class ApplicationConnection implements EntryPoint, FocusListener {
 
 	private HashMap paintableToId = new HashMap();
 
-	private final WidgetFactory widgetFactory;
+	private final WidgetSet widgetSet;
 
 	private IContextMenu contextMenu = null;
 	
 	private IView view = new IView();
 	
-	public ApplicationConnection() {
-		widgetFactory = createWidgetFactory();
-	}
-
-	/**
-	 * This is the entry point method.
-	 */
-	public void onModuleLoad() {
-
+	public ApplicationConnection(WidgetSet widgetSet) {
+		this.widgetSet = widgetSet;
 		appUri = getAppUri();
-		
-		if(isDebugMode()) {
-			console = new DebugConsole();
+
+		if (isDebugMode()) {
+		    console = new DebugConsole();
 		} else {
-			console = new NullConsole();
+		    console = new NullConsole();
 		}
 
 		makeUidlRequest("repaintAll=1");
-		
+
 		// TODO remove hardcoded id name
 		RootPanel.get("itmtk-ajax-window").add(view);
-		
-	}
-	
-	protected static WidgetFactory createWidgetFactory() {
-		return new DefaultWidgetFactory();
 	}
 
 	public static Console getConsole() {
@@ -367,10 +355,10 @@ public class ApplicationConnection implements EntryPoint, FocusListener {
 			boolean manageCaption) {
 
 		// Switch to correct implementation if needed
-		if (!widgetFactory.isCorrectImplementation(component, uidl)) {
+		if (!widgetSet.isCorrectImplementation(component, uidl)) {
 			Layout parent = getParentLayout(component);
 			if (parent != null) {
-				Widget w = widgetFactory.createWidget(uidl);
+				Widget w = widgetSet.createWidget(uidl);
 				parent.replaceChildComponent(component, w);
 				registerPaintable(uidl.getId(), (Paintable) w);
 				((Paintable) w).updateFromUIDL(uidl, this);
@@ -431,7 +419,7 @@ public class ApplicationConnection implements EntryPoint, FocusListener {
 		Widget w = (Widget) getPaintable(id);
 		if (w != null)
 			return w;
-		w = widgetFactory.createWidget(uidl);
+		w = widgetSet.createWidget(uidl);
 		registerPaintable(id, (Paintable) w);
 		return w;
 	}

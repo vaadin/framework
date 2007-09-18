@@ -438,7 +438,7 @@ public class ApplicationServlet extends HttpServlet {
 				.write("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" "
 						+ "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n");
 		
-		page.write("<html>\n<head>\n<title>IT Mill Toolkit 5</title>\n" +
+		page.write("<html xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:v=\"urn:schemas-microsoft-com:vml\">\n<head>\n<title>IT Mill Toolkit 5</title>\n" +
 				"<script type=\"text/javascript\">\n" +
 				"	var itmtk = {\n" +
 				"		appUri:'");
@@ -459,7 +459,9 @@ public class ApplicationServlet extends HttpServlet {
 		page.write("', pathInfo: '"+request.getPathInfo()+"'\n};\n" +
 				"</script>\n" +
 				
-				"<script language='javascript' src='"+ (hasSlash ? "../" : "") + relative + "com.itmill.toolkit.terminal.gwt.Client/com.itmill.toolkit.terminal.gwt.Client.nocache.js'></script>" +
+				"<script src=\"http://maps.google.com/maps?file=api&amp;v=2\" type=\"text/javascript\"></script>"+
+				
+				"<script language='javascript' src='"+ (hasSlash ? "../" : "") + relative + "com.itmill.toolkit.demo.reservation.gwt.WidgetSet/com.itmill.toolkit.demo.reservation.gwt.WidgetSet.nocache.js'></script>" +
 
 				"<link REL=\"stylesheet\" TYPE=\"text/css\" HREF=\""+request.getContextPath() + THEME_DIRECTORY_PATH+themeName+"/style.css\">" + 
 				"</head>\n<body>\n" +

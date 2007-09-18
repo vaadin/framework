@@ -7,7 +7,7 @@
 	<inherits name="com.google.gwt.xml.XML"/>
 
 	<inherits name="com.google.gwt.json.JSON"/>
-	
+
 	<source path="client"/>
 	
 	<source path="gwtwidgets"/>
@@ -16,7 +16,5 @@
 	
 	<stylesheet src="component-themes/collection.css"/>
 
-	<!-- Specify the app entry point class.                   -->
-	<entry-point class="com.itmill.toolkit.terminal.gwt.client.ApplicationConnection"/>
-  
+
 </module>

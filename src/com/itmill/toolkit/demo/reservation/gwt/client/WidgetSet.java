@@ -1,0 +1,34 @@
+package com.itmill.toolkit.demo.reservation.gwt.client;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.ui.Widget;
+import com.itmill.toolkit.demo.reservation.gwt.client.ui.IGoogleMap;
+import com.itmill.toolkit.terminal.gwt.client.DefaultWidgetSet;
+import com.itmill.toolkit.terminal.gwt.client.UIDL;
+
+public class WidgetSet extends DefaultWidgetSet {
+    public Widget createWidget(UIDL uidl) {
+	String className = resolveWidgetTypeName(uidl);
+	if ("com.itmill.toolkit.terminal.gwt.client.ui.IGoogleMap"
+		.equals(className)) {
+	    return new IGoogleMap();
+	}
+
+	return super.createWidget(uidl);
+    }
+
+    protected String resolveWidgetTypeName(UIDL uidl) {
+
+	String tag = uidl.getTag();
+	if ("googlemap".equals(tag)) {
+	    return "com.itmill.toolkit.terminal.gwt.client.ui.IGoogleMap";
+	}
+
+	return super.resolveWidgetTypeName(uidl);
+    }
+    
+    public boolean isCorrectImplementation(Widget currentWidget, UIDL uidl) {
+	return GWT.getTypeName(currentWidget).equals(
+		resolveWidgetTypeName(uidl));
+    }
+}
