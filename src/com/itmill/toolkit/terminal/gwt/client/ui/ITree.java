@@ -17,7 +17,9 @@ import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
 /**
- * TODO todo dump GWT's Tree implementation and use Toolkit 4 style
+ * TODO dump GWT's Tree implementation and use Toolkit 4 style
+ * TODO update node close/opens to server (even if no content fetch is needed)
+ * 
  * DOM structure
  *
  */
