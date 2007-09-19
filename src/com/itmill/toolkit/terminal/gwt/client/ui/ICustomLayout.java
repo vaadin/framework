@@ -141,7 +141,7 @@ public class ICustomLayout extends ComplexPanel implements Paintable, Layout {
 			parent = parent.getParent();
 		if (parent != null && ((IView) parent).getTheme() != null)
 			;
-		prefixImgSrcs(getElement(), "../theme/" + ((IView) parent).getTheme()
+		prefixImgSrcs(getElement(), "../ITK-INF/themes/" + ((IView) parent).getTheme()
 				+ "/layout/");
 	}
 
