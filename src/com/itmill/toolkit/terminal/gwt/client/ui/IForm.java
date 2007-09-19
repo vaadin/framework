@@ -17,7 +17,7 @@ public class IForm extends SimplePanel implements Paintable {
 	
 	public IForm() {
 		super();
-		setStyleName("CLASSNAME");
+		setStyleName(CLASSNAME);
 	}
 	
 	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
