@@ -16,9 +16,7 @@ import com.itmill.toolkit.ui.Button.ClickEvent;
 import com.itmill.toolkit.ui.Button.ClickListener;
 
 /**
- * 
- * This Component contains some simple test to see that component updates its
- * contents propertly.
+ * Some test cases for trees. Events panel logs events that happen server side.
  * 
  * @author IT Mill Ltd.
  */
