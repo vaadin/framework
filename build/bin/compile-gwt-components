@@ -13,5 +13,5 @@ else
 	PLATFORM="linux"
 fi
 
-rm -r ../../WebContent/com.itmill.toolkit.terminal.gwt.Client/*
-java $JVMVARS -cp "../../src:../gwt/gwt/gwt-user.jar:../gwt/gwt/gwt-dev-$PLATFORM.jar" com.google.gwt.dev.GWTCompiler -out "../../WebContent" "$@" com.itmill.toolkit.terminal.gwt.Client;
+rm -r ../../WebContent/ITK-INF/widgetsets/com.itmill.toolkit.terminal.gwt.WidgetSet/*
+java $JVMVARS -cp "../../src:../gwt/gwt/gwt-user.jar:../gwt/gwt/gwt-dev-$PLATFORM.jar" com.google.gwt.dev.GWTCompiler -out "../../WebContent/ITK-INF/widgetsets" "$@" com.itmill.toolkit.terminal.gwt.DefaultWidgetSet -style DETAILED;
