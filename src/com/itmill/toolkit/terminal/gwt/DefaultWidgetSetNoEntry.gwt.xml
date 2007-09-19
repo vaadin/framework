@@ -1,4 +1,9 @@
 <module>
+	<!-- 
+		This is the NoEntry version of DefaultWidgetSet.
+		This is the module you want to extend when creating an extended
+		widget set.
+	-->
 
 	<inherits name="com.google.gwt.user.User"/>
 
@@ -12,8 +17,11 @@
 	
 	<source path="gwtwidgets"/>
 	
-	<!-- Component stylesheets                                -->
-	
-	<stylesheet src="component-themes/collection.css"/>
+	<!-- 
+		Default theme for this widgetset. 
+		Please name the subdirectory differently when creating a extended widgetset
+		(e.g. src="mywidgets/collection.css") to avoid naming conflicts.
+	 -->
+	<stylesheet src="default/styles.css"/>
 
 </module>

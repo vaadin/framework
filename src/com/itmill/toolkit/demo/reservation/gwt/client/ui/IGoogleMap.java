@@ -15,11 +15,14 @@ import com.mapitz.gwt.googleMaps.client.GMarkerEventManager;
 
 public class IGoogleMap extends GMap2Widget implements Paintable {
 
+    public static final String CLASSNAME = "i-googlemap";
+    
     GMap2EventManager mapEventManager;
     GMarkerEventManager markerEventManager;
     GMap2 map;
 
     public IGoogleMap() {
+	setStyleName(CLASSNAME);
 	mapEventManager = GMap2EventManager.getInstance();
 	map = this.getGmap();
     }
