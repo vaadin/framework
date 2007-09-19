@@ -120,9 +120,9 @@ public class ICustomLayout extends ComplexPanel implements Paintable, Layout {
 			return;
 
 		// Get the HTML-template from client
-		String template = client.getResource("layout/" + newTemplate + ".html");
+		String template = client.getResource("layouts/" + newTemplate + ".html");
 		if (template == null) {
-			template = "Layout file layout/" + newTemplate + ".html is missing.";
+			template = "Layout file layouts/" + newTemplate + ".html is missing.";
 		} else {
 			currentTemplate = newTemplate;
 		}
@@ -142,7 +142,7 @@ public class ICustomLayout extends ComplexPanel implements Paintable, Layout {
 		if (parent != null && ((IView) parent).getTheme() != null)
 			;
 		prefixImgSrcs(getElement(), "../ITK-INF/themes/" + ((IView) parent).getTheme()
-				+ "/layout/");
+				+ "/layouts/");
 	}
 
 	/** Collect locations from template */
