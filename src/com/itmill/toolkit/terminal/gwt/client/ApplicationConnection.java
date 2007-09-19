@@ -45,17 +45,17 @@ public class ApplicationConnection implements FocusListener {
 	private final WidgetSet widgetSet;
 
 	private IContextMenu contextMenu = null;
-	
+
 	private IView view = new IView();
-	
+
 	public ApplicationConnection(WidgetSet widgetSet) {
 		this.widgetSet = widgetSet;
 		appUri = getAppUri();
 
 		if (isDebugMode()) {
-		    console = new DebugConsole();
+			console = new DebugConsole();
 		} else {
-		    console = new NullConsole();
+			console = new NullConsole();
 		}
 
 		makeUidlRequest("repaintAll=1");
@@ -75,17 +75,18 @@ public class ApplicationConnection implements FocusListener {
 	}-*/;
 
 	private native String getAppUri()/*-{
-	 return $wnd.itmtk.appUri;
-	}-*/;
+				 return $wnd.itmtk.appUri;
+				}-*/;
 
 	private native String getPathInfo()/*-{
-	 return $wnd.itmtk.pathInfo;
-	}-*/;
+				 return $wnd.itmtk.pathInfo;
+				}-*/;
 
 	private void makeUidlRequest(String requestData) {
 		console.log("Making UIDL Request with params: " + requestData);
 		RequestBuilder rb = new RequestBuilder(RequestBuilder.POST, appUri
-				+ "/UIDL" + getPathInfo() + "?requestId=" + (Math.random()) + "&" + requestData);
+				+ "/UIDL" + getPathInfo() + "?requestId=" + (Math.random())
+				+ "&" + requestData);
 		try {
 			rb.sendRequest(requestData, new RequestCallback() {
 				public void onError(Request request, Throwable exception) {
@@ -120,29 +121,29 @@ public class ApplicationConnection implements FocusListener {
 			return;
 		}
 		// Handle redirect
-		JSONObject redirect = (JSONObject) ((JSONObject) json)
-				.get("redirect");
+		JSONObject redirect = (JSONObject) ((JSONObject) json).get("redirect");
 		if (redirect != null) {
-			JSONString url = (JSONString)redirect.get("url");
-			if (url!=null) {
+			JSONString url = (JSONString) redirect.get("url");
+			if (url != null) {
 				console.log("redirecting to " + url.stringValue());
 				redirect(url.stringValue());
 				return;
 			}
 		}
-		
+
 		// Store resources
 		JSONObject resources = (JSONObject) ((JSONObject) json)
 				.get("resources");
 		for (Iterator i = resources.keySet().iterator(); i.hasNext();) {
 			String key = (String) i.next();
-			resourcesMap.put(key, ((JSONString)resources.get(key)).stringValue());
+			resourcesMap.put(key, ((JSONString) resources.get(key))
+					.stringValue());
 		}
-		
+
 		// Store locale data
-		if(((JSONObject)json).containsKey("locales")) {
+		if (((JSONObject) json).containsKey("locales")) {
 			JSONArray l = (JSONArray) ((JSONObject) json).get("locales");
-			for(int i=0; i < l.size(); i++)
+			for (int i = 0; i < l.size(); i++)
 				LocaleService.addLocale((JSONObject) l.get(i));
 		}
 
@@ -175,10 +176,10 @@ public class ApplicationConnection implements FocusListener {
 				e.printStackTrace();
 			}
 		}
-		
-		if(((JSONObject) json).containsKey("meta")) {
+
+		if (((JSONObject) json).containsKey("meta")) {
 			JSONObject meta = ((JSONObject) json).get("meta").isObject();
-			if(meta.containsKey("focus")) {
+			if (meta.containsKey("focus")) {
 				String focusPid = meta.get("focus").isString().stringValue();
 				Paintable toBeFocused = this.getPaintable(focusPid);
 				if (toBeFocused instanceof HasFocus) {
@@ -187,43 +188,51 @@ public class ApplicationConnection implements FocusListener {
 				}
 			}
 		}
-		
+
 		long prosessingTime = (new Date().getTime()) - start.getTime();
 		console.log(" Processing time was " + String.valueOf(prosessingTime)
 				+ "ms for " + jsonText.length() + " characters of JSON");
+		console.log("Referenced paintables: " + idToPaintable.size());
 
 	}
-	
-	// Redirect browser 
-	private static native void redirect(String url)/*-{
-		$wnd.location = url;
-	}-*/;
 
+	// Redirect browser
+	private static native void redirect(String url)/*-{
+					$wnd.location = url;
+				}-*/;
 
 	public void registerPaintable(String id, Paintable paintable) {
 		idToPaintable.put(id, paintable);
 		paintableToId.put(paintable, id);
 	}
-	
+
 	public void unregisterPaintable(Paintable p) {
 		idToPaintable.remove(paintableToId.get(p));
 		paintableToId.remove(p);
-		
+
 		if (p instanceof HasWidgets) {
-			 HasWidgets container = (HasWidgets) p;
-			 Iterator it = container.iterator();
-			 while(it.hasNext()) {
-				 Widget w = (Widget) it.next();
-				 if (w instanceof Paintable) {
-					this.unregisterPaintable((Paintable) w);
-				}
-			 }
+			unregisterChildPaintables((HasWidgets) p);
 		}
+	}
+
+	public void unregisterChildPaintables(HasWidgets container) {
+		 Iterator it = container.iterator();
+		 while(it.hasNext()) {
+			 Widget w = (Widget) it.next();
+			 if (w instanceof Paintable) {
+				this.unregisterPaintable((Paintable) w);
+			 }
+			 if (w instanceof HasWidgets) {
+				 unregisterChildPaintables((HasWidgets) w);
+			 }
+		 }
 	}
 
 	/**
 	 * Returns Paintable element by its id
-	 * @param id Paintable ID
+	 * 
+	 * @param id
+	 *            Paintable ID
 	 */
 	public Paintable getPaintable(String id) {
 		return (Paintable) idToPaintable.get(id);
@@ -249,7 +258,8 @@ public class ApplicationConnection implements FocusListener {
 
 		req.append("changes=");
 		for (int i = 0; i < pendingVariables.size(); i++) {
-			if (i>0) req.append("\u0001");
+			if (i > 0)
+				req.append("\u0001");
 			req.append(pendingVariables.get(i));
 		}
 
@@ -269,22 +279,26 @@ public class ApplicationConnection implements FocusListener {
 
 	public void updateVariable(String paintableId, String variableName,
 			int newValue, boolean immediate) {
-		addVariableToQueue(paintableId, variableName, "" + newValue, immediate, 'i');
+		addVariableToQueue(paintableId, variableName, "" + newValue, immediate,
+				'i');
 	}
-	
+
 	public void updateVariable(String paintableId, String variableName,
 			long newValue, boolean immediate) {
-		addVariableToQueue(paintableId, variableName, "" + newValue, immediate, 'l');
+		addVariableToQueue(paintableId, variableName, "" + newValue, immediate,
+				'l');
 	}
-	
+
 	public void updateVariable(String paintableId, String variableName,
 			float newValue, boolean immediate) {
-		addVariableToQueue(paintableId, variableName, "" + newValue, immediate, 'f');
+		addVariableToQueue(paintableId, variableName, "" + newValue, immediate,
+				'f');
 	}
-	
+
 	public void updateVariable(String paintableId, String variableName,
 			double newValue, boolean immediate) {
-		addVariableToQueue(paintableId, variableName, "" + newValue, immediate, 'd');
+		addVariableToQueue(paintableId, variableName, "" + newValue, immediate,
+				'd');
 	}
 
 	public void updateVariable(String paintableId, String variableName,
@@ -301,16 +315,16 @@ public class ApplicationConnection implements FocusListener {
 				buf.append(",");
 			buf.append(escapeString(values[i].toString()));
 		}
-		addVariableToQueue(paintableId, variableName,
-				buf.toString(), immediate, 'a');
+		addVariableToQueue(paintableId, variableName, buf.toString(),
+				immediate, 'a');
 	}
 
-	public static Layout getParentLayout(Widget component) {
+	public static Container getParentLayout(Widget component) {
 		Widget parent = component.getParent();
-		while (parent != null && !(parent instanceof Layout))
+		while (parent != null && !(parent instanceof Container))
 			parent = parent.getParent();
-		if (parent != null && ((Layout) parent).hasChildComponent(component))
-			return (Layout) parent;
+		if (parent != null && ((Container) parent).hasChildComponent(component))
+			return (Container) parent;
 		return null;
 	}
 
@@ -356,7 +370,7 @@ public class ApplicationConnection implements FocusListener {
 
 		// Switch to correct implementation if needed
 		if (!widgetSet.isCorrectImplementation(component, uidl)) {
-			Layout parent = getParentLayout(component);
+			Container parent = getParentLayout(component);
 			if (parent != null) {
 				Widget w = widgetSet.createWidget(uidl);
 				parent.replaceChildComponent(component, w);
@@ -369,7 +383,7 @@ public class ApplicationConnection implements FocusListener {
 		// Set captions
 		// TODO Manage Error messages
 		if (manageCaption) {
-			Layout parent = getParentLayout(component);
+			Container parent = getParentLayout(component);
 			if (parent != null)
 				parent.updateCaption((Paintable) component, uidl);
 		}
@@ -386,7 +400,7 @@ public class ApplicationConnection implements FocusListener {
 			boolean enabled = true;
 			if (uidl.hasAttribute("disabled"))
 				enabled = !uidl.getBooleanAttribute("disabled");
-			if(!enabled)
+			if (!enabled)
 				component.addStyleName("i-disabled");
 			else
 				component.removeStyleName("i-disabled");
@@ -395,9 +409,9 @@ public class ApplicationConnection implements FocusListener {
 		component.setVisible(visible);
 		if (!visible)
 			return true;
-		
+
 		// add additional styles as css classes
-		if(uidl.hasAttribute("style"))
+		if (uidl.hasAttribute("style"))
 			component.addStyleName(uidl.getStringAttribute("style"));
 
 		return false;
@@ -423,18 +437,18 @@ public class ApplicationConnection implements FocusListener {
 		registerPaintable(id, (Paintable) w);
 		return w;
 	}
-	
+
 	public String getResource(String name) {
 		return (String) resourcesMap.get(name);
 	}
-	
+
 	/**
 	 * Singleton method to get instance of app's context menu.
 	 * 
 	 * @return IContextMenu object
 	 */
 	public IContextMenu getContextMenu() {
-		if(contextMenu  == null) {
+		if (contextMenu == null) {
 			contextMenu = new IContextMenu();
 		}
 		return contextMenu;
@@ -442,11 +456,11 @@ public class ApplicationConnection implements FocusListener {
 
 	public void onFocus(Widget sender) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void onLostFocus(Widget sender) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

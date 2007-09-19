@@ -7,14 +7,14 @@ import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Caption;
-import com.itmill.toolkit.terminal.gwt.client.Layout;
+import com.itmill.toolkit.terminal.gwt.client.Container;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
 /**
  * Two col Layout that places caption on left col and field on right col
  */
-public class IFormLayout extends FlexTable implements Layout {
+public class IFormLayout extends FlexTable implements Container {
 	
 	HashMap componentToCaption = new HashMap();
 	private ApplicationConnection client;

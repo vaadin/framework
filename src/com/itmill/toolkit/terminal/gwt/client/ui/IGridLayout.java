@@ -8,11 +8,11 @@ import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.CaptionWrapper;
-import com.itmill.toolkit.terminal.gwt.client.Layout;
+import com.itmill.toolkit.terminal.gwt.client.Container;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
-public class IGridLayout extends FlexTable implements Paintable, Layout {
+public class IGridLayout extends FlexTable implements Paintable, Container {
 	
 	/** Widget to captionwrapper map */
 	private HashMap widgetToCaptionWrapper = new HashMap();

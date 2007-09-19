@@ -2,15 +2,15 @@ package com.itmill.toolkit.terminal.gwt.client;
 
 import com.google.gwt.user.client.ui.Widget;
 
-public interface Layout extends Paintable {
+public interface Container extends Paintable {
 
 	/**
 	 * Replace child of this layout with another component.
 	 * 
 	 * Each layout must be able to switch children. To to this, one must just
 	 * give references to a current and new child. Note that the Layout is not
-	 * responsible for registering paintable into ApplicationConnection, but it is responsible
-	 * is for unregistering it.
+	 * responsible for registering Paintable into ApplicationConnection, but it
+	 * is responsible is for unregistering it.
 	 * 
 	 * @param oldComponent
 	 *            Child to be replaced
@@ -44,5 +44,5 @@ public interface Layout extends Paintable {
 	 *            UIDL of the child component.
 	 */
 	void updateCaption(Paintable component, UIDL uidl);
-	
+
 }

@@ -36,9 +36,9 @@ import com.itmill.toolkit.terminal.gwt.client.ui.IScrollTable.IScrollTableBody.I
  * reordering and hiding columns.
  * 
  * ScrollPanel contains IScrollTableBody object which handles content. To save
- * some bandwidth and to improve clients responsiviness with loads of data, in
- * IScrollTableBody all rows are not necessarely rendered. There are "spacer" in
- * IScrollTableBody to use the exact same space as unrendered rows would use.
+ * some bandwidth and to improve clients responsiveness with loads of data, in
+ * IScrollTableBody all rows are not necessary rendered. There are "spacer" in
+ * IScrollTableBody to use the exact same space as non-rendered rows would use.
  * This way we can use seamlessly traditional scrollbars and scrolling to fetch
  * more rows instead of "paging".
  * 
@@ -49,7 +49,7 @@ import com.itmill.toolkit.terminal.gwt.client.ui.IScrollTable.IScrollTableBody.I
  * 
  * TODO implement unregistering for child componts in Cells
  */
-public class IScrollTable extends Composite implements Paintable, ITable,
+public class IScrollTable extends Composite implements ITable,
 		ScrollListener {
 
 	public static final String CLASSNAME = "i-table";
@@ -109,13 +109,14 @@ public class IScrollTable extends Composite implements Paintable, ITable,
 	private String[] visibleColOrder;
 	private boolean initialContentReceived = false;
 	private Element scrollPositionElement;
+	private FlowPanel panel;
 
 	public IScrollTable() {
 
 		bodyContainer.addScrollListener(this);
 		bodyContainer.setStyleName(CLASSNAME + "-body");
 
-		FlowPanel panel = new FlowPanel();
+		panel = new FlowPanel();
 		panel.setStyleName(CLASSNAME);
 		panel.add(tHead);
 		panel.add(bodyContainer);
@@ -1589,6 +1590,7 @@ public class IScrollTable extends Composite implements Paintable, ITable,
 			}
 			IScrollTableRow toBeRemoved = (IScrollTableRow) renderedRows
 					.get(index);
+			client.unregisterChildPaintables(toBeRemoved);
 			DOM.removeChild(tBody, toBeRemoved.getElement());
 			this.orphan(toBeRemoved);
 			renderedRows.remove(index);
@@ -1884,5 +1886,21 @@ public class IScrollTable extends Composite implements Paintable, ITable,
 		// still ensure all selects are removed from (not necessary rendered)
 		selectedRowKeys.clear();
 
+	}
+
+	public void add(Widget w) {
+		throw new UnsupportedOperationException("ITable can contain only rows created by itself.");
+	}
+
+	public void clear() {
+		panel.clear();
+	}
+
+	public Iterator iterator() {
+		return panel.iterator();
+	}
+
+	public boolean remove(Widget w) {
+		return panel.remove(w);
 	}
 }

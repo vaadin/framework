@@ -11,7 +11,7 @@ import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Caption;
-import com.itmill.toolkit.terminal.gwt.client.Layout;
+import com.itmill.toolkit.terminal.gwt.client.Container;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
@@ -20,7 +20,7 @@ import com.itmill.toolkit.terminal.gwt.client.UIDL;
  * Use either vertical or horizontal subclass.
  * @author IT Mill Ltd
  */
-public abstract class IOrderedLayout extends ComplexPanel implements Layout {
+public abstract class IOrderedLayout extends ComplexPanel implements Container {
 	
 	public static final String CLASSNAME = "i-orderedlayout";
 

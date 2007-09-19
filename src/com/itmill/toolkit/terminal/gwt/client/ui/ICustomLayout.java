@@ -10,7 +10,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Caption;
 import com.itmill.toolkit.terminal.gwt.client.CaptionWrapper;
-import com.itmill.toolkit.terminal.gwt.client.Layout;
+import com.itmill.toolkit.terminal.gwt.client.Container;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
@@ -20,7 +20,7 @@ import com.itmill.toolkit.terminal.gwt.client.UIDL;
  * @author IT Mill
  * 
  */
-public class ICustomLayout extends ComplexPanel implements Paintable, Layout {
+public class ICustomLayout extends ComplexPanel implements Paintable, Container {
 
 	/** Location-name to containing element in DOM map */
 	private HashMap locationToElement = new HashMap();
