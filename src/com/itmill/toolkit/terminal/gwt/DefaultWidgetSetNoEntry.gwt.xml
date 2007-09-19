@@ -18,9 +18,9 @@
 	<source path="gwtwidgets"/>
 	
 	<!-- 
-		Default theme for this widgetset. 
-		Please name the subdirectory differently when creating a extended widgetset
-		(e.g. src="mywidgets/collection.css") to avoid naming conflicts.
+		Default theme for this widget set. 
+		Please name the sub directory differently when creating a extended widget set
+		(e.g. src="mywidgets/styles.css") to avoid naming conflicts.
 	 -->
 	<stylesheet src="default/styles.css"/>
 
