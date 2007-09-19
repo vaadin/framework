@@ -412,9 +412,14 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 				if (owner != null) {
 					Map m;
 					if (i + 2 >= ca.length
-							|| !vid[0].equals(ca[i + 2].split("_")[0]))
-						m = new SingleValueMap(vid[1], convertVariableValue(
-								vid[2].charAt(0), ca[++i]));
+							|| !vid[0].equals(ca[i + 2].split("_")[0])) {
+						if(ca.length > i + 1) {
+							m = new SingleValueMap(vid[1], convertVariableValue(
+									vid[2].charAt(0), ca[++i]));
+						} else {
+							m = new SingleValueMap(vid[1], convertVariableValue(vid[2].charAt(0), ""));
+						}
+					}
 					else {
 						m = new HashMap();
 						m.put(vid[1], convertVariableValue(vid[2].charAt(0),
