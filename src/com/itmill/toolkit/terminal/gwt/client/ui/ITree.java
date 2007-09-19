@@ -40,6 +40,8 @@ public class ITree extends Tree implements Paintable {
 	 */
 	private HashMap actionMap = new HashMap();
 
+	private boolean immediate;
+
 	
 	public ITree() {
 		super();
@@ -84,6 +86,8 @@ public class ITree extends Tree implements Paintable {
 		
 		this.paintableId = uidl.getId();
 		
+		this.immediate = uidl.hasAttribute("immediate");
+		
 		clear();
 		for (Iterator i = uidl.getChildIterator(); i.hasNext();) {
 			UIDL childUidl = (UIDL)i.next();
@@ -124,12 +128,13 @@ public class ITree extends Tree implements Paintable {
 						selectedIds.remove(key);
 						n.setISelected(false);
 					} else {
-						if (!multiselect) 
+						if (!multiselect) {
 							selectedIds.clear();
+						}
 						selectedIds.add(key);
 						n.setISelected(true);
 					}
-					ITree.this.client.updateVariable(ITree.this.paintableId, "selected", selectedIds.toArray(), true);
+					ITree.this.client.updateVariable(ITree.this.paintableId, "selected", selectedIds.toArray(), immediate);
 				}
 			}
 		
@@ -161,8 +166,14 @@ public class ITree extends Tree implements Paintable {
 			super();
 			attachContextMenuEvent(getElement());
 		}
-
 		
+		public void setSelected(boolean selected) {
+			if(!selected && !ITree.this.multiselect) {
+				this.setISelected(false);
+			}
+			super.setSelected(selected);
+		}
+
 		public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 			this.setText(uidl.getStringAttribute("caption"));
 			key = uidl.getStringAttribute("key");
