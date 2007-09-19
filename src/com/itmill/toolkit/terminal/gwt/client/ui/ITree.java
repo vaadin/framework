@@ -15,6 +15,7 @@ import com.google.gwt.user.client.ui.TreeListener;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
+import com.itmill.toolkit.terminal.gwt.client.Util;
 
 /**
  * TODO dump GWT's Tree implementation and use Toolkit 4 style
@@ -170,6 +171,11 @@ public class ITree extends Tree implements Paintable {
 			attachContextMenuEvent(getElement());
 		}
 		
+		public void remove() {
+			Util.removeContextMenuEvent(getElement());
+			super.remove();
+		}
+
 		public void setSelected(boolean selected) {
 			if(!selected && !ITree.this.multiselect) {
 				this.setISelected(false);
