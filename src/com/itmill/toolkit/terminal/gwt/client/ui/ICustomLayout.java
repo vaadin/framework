@@ -15,7 +15,7 @@ import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
 /**
- * Custom Layout implements complext layouting defined with HTML template.
+ * Custom Layout implements complex layout defined with HTML template.
  * 
  * @author IT Mill
  * 
@@ -201,7 +201,7 @@ public class ICustomLayout extends ComplexPanel implements Paintable, Layout {
 	 }-*/;
 
 	/**
-	 * Exctract body part and script tags from raw html-template.
+	 * Extract body part and script tags from raw html-template.
 	 * 
 	 * Saves contents of all script-tags to private property: scripts. Returns
 	 * contents of the body part for the html without script-tags. Also replaces
