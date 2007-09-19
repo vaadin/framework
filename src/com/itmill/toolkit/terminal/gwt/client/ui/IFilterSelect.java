@@ -75,7 +75,7 @@ public class IFilterSelect extends Composite implements Paintable,
 
 	/**
 	 * @author mattitahvonen
-	 *
+	 * 
 	 */
 	public class SuggestionPopup extends PopupPanel implements PositionCallback {
 		private SuggestionMenu menu;
@@ -151,7 +151,7 @@ public class IFilterSelect extends Composite implements Paintable,
 			int index = 1 + menu.getItems().indexOf(cur);
 			if (menu.getItems().size() > index)
 				menu.selectItem((MenuItem) menu.getItems().get(index));
-			else
+			else if (!clientSideFiltering && hasNextPage())
 				filterOptions(currentPage + 1);
 		}
 
@@ -161,7 +161,8 @@ public class IFilterSelect extends Composite implements Paintable,
 			if (index > -1)
 				menu.selectItem((MenuItem) menu.getItems().get(index));
 			else if (index == -1) {
-				filterOptions(currentPage - 1);
+				if(currentPage > 0)
+					filterOptions(currentPage - 1);
 			} else {
 				menu.selectItem((MenuItem) menu.getItems().get(
 						menu.getItems().size() - 1));
@@ -193,9 +194,11 @@ public class IFilterSelect extends Composite implements Paintable,
 			isPagingEnabled = paging;
 		}
 
-		
-		/* (non-Javadoc)
-		 * @see com.google.gwt.user.client.ui.PopupPanel$PositionCallback#setPosition(int, int)
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see com.google.gwt.user.client.ui.PopupPanel$PositionCallback#setPosition(int,
+		 *      int)
 		 */
 		public void setPosition(int offsetWidth, int offsetHeight) {
 			ApplicationConnection.getConsole().log("callback");
@@ -293,6 +296,13 @@ public class IFilterSelect extends Composite implements Paintable,
 		tb.addKeyboardListener(this);
 		popupOpener.setStyleName(CLASSNAME + "-popupopener");
 		popupOpener.addClickListener(this);
+	}
+
+	public boolean hasNextPage() {
+		if (totalSuggestions > (this.currentPage + 1) * PAGELENTH)
+			return true;
+		else
+			return false;
 	}
 
 	public void filterOptions(int page) {
@@ -412,7 +422,7 @@ public class IFilterSelect extends Composite implements Paintable,
 				suggestionPopup.selectPrevItem();
 				break;
 			case KeyboardListener.KEY_PAGEDOWN:
-				if (totalSuggestions > currentPage * (PAGELENTH + 1))
+				if (hasNextPage())
 					filterOptions(currentPage + 1, lastFilter);
 				break;
 			case KeyboardListener.KEY_PAGEUP:
