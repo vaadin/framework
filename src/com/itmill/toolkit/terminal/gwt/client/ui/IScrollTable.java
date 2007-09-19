@@ -12,6 +12,7 @@ import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Panel;
@@ -1720,6 +1721,8 @@ public class IScrollTable extends Composite implements Paintable, ITable, Scroll
 				if(actionKeys != null) {
 					int left = DOM.eventGetClientX(event);
 					int top = DOM.eventGetClientY(event);
+					top += Window.getScrollTop();
+					left += Window.getScrollLeft();
 					client.getContextMenu().showAt(this, left, top);
 				}
 			}

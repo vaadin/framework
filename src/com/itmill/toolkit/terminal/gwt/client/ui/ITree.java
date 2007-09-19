@@ -8,6 +8,7 @@ import java.util.Set;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.TreeListener;
@@ -259,6 +260,8 @@ public class ITree extends Tree implements Paintable {
 			if(actionKeys != null) {
 				int left = DOM.eventGetClientX(event);
 				int top = DOM.eventGetClientY(event);
+				top += Window.getScrollTop();
+				left += Window.getScrollLeft();
 				client.getContextMenu().showAt(this, left, top);
 			}
 			DOM.eventCancelBubble(event, true);
