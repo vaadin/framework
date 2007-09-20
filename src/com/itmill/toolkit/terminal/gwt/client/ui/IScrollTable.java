@@ -49,7 +49,7 @@ import com.itmill.toolkit.terminal.gwt.client.ui.IScrollTable.IScrollTableBody.I
  * 
  * TODO implement unregistering for child componts in Cells
  */
-public class IScrollTable extends Composite implements ITable, ScrollListener {
+public class IScrollTable extends Composite implements Table, ScrollListener {
 
 	public static final String CLASSNAME = "i-table";
 	/**
@@ -77,7 +77,7 @@ public class IScrollTable extends Composite implements ITable, ScrollListener {
 
 	private boolean immediate;
 
-	private int selectMode = ITable.SELECT_MODE_NONE;
+	private int selectMode = Table.SELECT_MODE_NONE;
 
 	private Vector selectedRowKeys = new Vector();
 
@@ -160,9 +160,9 @@ public class IScrollTable extends Composite implements ITable, ScrollListener {
 
 		if (uidl.hasAttribute("selectmode")) {
 			if (uidl.getStringAttribute("selectmode").equals("multi"))
-				selectMode = ITable.SELECT_MODE_MULTI;
+				selectMode = Table.SELECT_MODE_MULTI;
 			else
-				selectMode = ITable.SELECT_MODE_SINGLE;
+				selectMode = Table.SELECT_MODE_SINGLE;
 		}
 
 		if (uidl.hasVariable("columnorder")) {
@@ -1804,7 +1804,7 @@ public class IScrollTable extends Composite implements ITable, ScrollListener {
 				case Event.ONCLICK:
 					if ((CLASSNAME + "-cell-content").equals(s)) {
 						ApplicationConnection.getConsole().log("Row click");
-						if (selectMode > ITable.SELECT_MODE_NONE) {
+						if (selectMode > Table.SELECT_MODE_NONE) {
 							toggleSelection();
 							client.updateVariable(paintableId, "selected",
 									selectedRowKeys.toArray(), immediate);
@@ -1836,7 +1836,7 @@ public class IScrollTable extends Composite implements ITable, ScrollListener {
 			private void toggleSelection() {
 				selected = !selected;
 				if (selected) {
-					if (selectMode == ITable.SELECT_MODE_SINGLE)
+					if (selectMode == Table.SELECT_MODE_SINGLE)
 						IScrollTable.this.deselectAll();
 					selectedRowKeys.add(String.valueOf(rowKey));
 					addStyleName("i-selected");

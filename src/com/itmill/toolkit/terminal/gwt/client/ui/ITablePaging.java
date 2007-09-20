@@ -27,7 +27,7 @@ import com.itmill.toolkit.terminal.gwt.client.UIDL;
  * TODO make this work (just an early prototype). We may want to have paging
  * style table which will be much lighter than IScrollTable is.
  */
-public class ITablePaging extends Composite implements ITable, Paintable,
+public class ITablePaging extends Composite implements Table, Paintable,
 		ClickListener {
 
 	private Grid tBody = new Grid();
@@ -47,7 +47,7 @@ public class ITablePaging extends Composite implements ITable, Paintable,
 
 	private boolean immediate = false;
 
-	private int selectMode = ITable.SELECT_MODE_NONE;
+	private int selectMode = Table.SELECT_MODE_NONE;
 
 	private Vector selectedRowKeys = new Vector();
 
@@ -101,9 +101,9 @@ public class ITablePaging extends Composite implements ITable, Paintable,
 
 		if (uidl.hasAttribute("selectmode")) {
 			if (uidl.getStringAttribute("selectmode").equals("multi"))
-				selectMode = ITable.SELECT_MODE_MULTI;
+				selectMode = Table.SELECT_MODE_MULTI;
 			else
-				selectMode = ITable.SELECT_MODE_SINGLE;
+				selectMode = Table.SELECT_MODE_SINGLE;
 
 			if (uidl.hasAttribute("selected")) {
 				Set selectedKeys = uidl.getStringArrayVariableAsSet("selected");
@@ -314,7 +314,7 @@ public class ITablePaging extends Composite implements ITable, Paintable,
 				DOM.eventCancelBubble(event, true);
 				break;
 			case Event.BUTTON_LEFT:
-				if (ITablePaging.this.selectMode > ITable.SELECT_MODE_NONE)
+				if (ITablePaging.this.selectMode > Table.SELECT_MODE_NONE)
 					row.toggleSelected();
 				break;
 			default:
@@ -370,7 +370,7 @@ public class ITablePaging extends Composite implements ITable, Paintable,
 			if (selected) {
 				setSelected(false);
 			} else {
-				if (ITablePaging.this.selectMode == ITable.SELECT_MODE_SINGLE) {
+				if (ITablePaging.this.selectMode == Table.SELECT_MODE_SINGLE) {
 					ITablePaging.this.deselectAll();
 				}
 				setSelected(true);
