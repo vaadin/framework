@@ -1,6 +1,6 @@
 package com.itmill.toolkit.terminal.gwt.client;
 
-public class DateLocale extends com.itmill.toolkit.terminal.gwt.gwtwidgets.util.DateLocale {
+public class DateLocale extends com.itmill.toolkit.terminal.gwt.client.util.DateLocale {
 
 	private static String locale;
 	
