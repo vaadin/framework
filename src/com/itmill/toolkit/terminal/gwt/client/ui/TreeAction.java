@@ -4,16 +4,16 @@ package com.itmill.toolkit.terminal.gwt.client.ui;
 /**
  * This class is used for "row actions" in ITree and ITable
  */
-public class ITreeAction extends IAction {
+public class TreeAction extends Action {
 	
 	String targetKey = "";
 	String actionKey = "";
 	
-	public ITreeAction(IActionOwner owner) {
+	public TreeAction(IActionOwner owner) {
 		super(owner);
 	}
 	
-	public ITreeAction(IActionOwner owner, String target, String action) {
+	public TreeAction(IActionOwner owner, String target, String action) {
 		this(owner);
 		this.targetKey = target;
 		this.actionKey = action;

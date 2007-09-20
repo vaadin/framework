@@ -6,7 +6,7 @@ import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 /**
  *
  */
-public abstract class IAction implements Command {
+public abstract class Action implements Command {
 	
 	protected IActionOwner owner;
 	
@@ -14,7 +14,7 @@ public abstract class IAction implements Command {
 	
 	protected String caption = "";
 	
-	public IAction(IActionOwner owner) {
+	public Action(IActionOwner owner) {
 		this.owner = owner;
 	}
 	
@@ -28,6 +28,7 @@ public abstract class IAction implements Command {
 		if(getIconUrl() != null) {
 			sb.append("<img src=\""+getIconUrl()+"\" alt=\"icon\" />");
 		}
+
 		sb.append(getCaption());
 		return sb.toString();
 	}
@@ -54,7 +55,7 @@ interface IActionOwner {
 	/**
 	 * @return Array of IActions
 	 */
-	public IAction[] getActions();
+	public Action[] getActions();
 
 	public ApplicationConnection getClient();
 	

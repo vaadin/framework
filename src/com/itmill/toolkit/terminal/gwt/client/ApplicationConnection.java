@@ -22,7 +22,7 @@ import com.google.gwt.user.client.ui.HasFocus;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.itmill.toolkit.terminal.gwt.client.ui.IContextMenu;
+import com.itmill.toolkit.terminal.gwt.client.ui.ContextMenu;
 import com.itmill.toolkit.terminal.gwt.client.ui.IView;
 
 /**
@@ -44,7 +44,7 @@ public class ApplicationConnection implements FocusListener {
 
 	private final WidgetSet widgetSet;
 
-	private IContextMenu contextMenu = null;
+	private ContextMenu contextMenu = null;
 
 	private IView view = new IView();
 
@@ -447,9 +447,9 @@ public class ApplicationConnection implements FocusListener {
 	 * 
 	 * @return IContextMenu object
 	 */
-	public IContextMenu getContextMenu() {
+	public ContextMenu getContextMenu() {
 		if (contextMenu == null) {
-			contextMenu = new IContextMenu();
+			contextMenu = new ContextMenu();
 		}
 		return contextMenu;
 	}

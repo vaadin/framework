@@ -27,7 +27,7 @@ public class IView extends SimplePanel implements Paintable {
 
 	private String id;
 
-	private IShortcutActionHandler actionHandler;
+	private ShortcutActionHandler actionHandler;
 	
 	public IView() {
 		super();
@@ -93,7 +93,7 @@ public class IView extends SimplePanel implements Paintable {
 				((Paintable)w).updateFromUIDL(childUidl, client);
 			} else if ("actions".equals(childUidl.getTag())) {
 				if(actionHandler == null) {
-					actionHandler = new IShortcutActionHandler(id, client);
+					actionHandler = new ShortcutActionHandler(id, client);
 				}
 				actionHandler.updateActionMap(childUidl);
 			}

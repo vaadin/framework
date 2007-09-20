@@ -233,13 +233,13 @@ public class ITree extends Tree implements Paintable {
 			return childrenLoaded;
 		}
 
-		public IAction[] getActions() {
+		public Action[] getActions() {
 			if(actionKeys == null)
-				return new IAction[] {};
-			IAction[] actions = new IAction[actionKeys.length];
+				return new Action[] {};
+			Action[] actions = new Action[actionKeys.length];
 			for (int i = 0; i < actions.length; i++) {
 				String actionKey = actionKeys[i];
-				ITreeAction a = new ITreeAction(this, String.valueOf(key), actionKey);
+				TreeAction a = new TreeAction(this, String.valueOf(key), actionKey);
 				a.setCaption(getActionCaption(actionKey));
 				actions[i] = a;
 			}

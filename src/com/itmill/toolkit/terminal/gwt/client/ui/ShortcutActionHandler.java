@@ -14,18 +14,18 @@ import com.itmill.toolkit.terminal.gwt.client.UIDL;
  * 
  * @author IT Mill ltd
  */
-public class IShortcutActionHandler {
+public class ShortcutActionHandler {
 	private ArrayList actions = new ArrayList();
 	private ApplicationConnection client;
 	private String paintableId;
 	
-	private IShortcutActionHandler() {}
+	private ShortcutActionHandler() {}
 	/**
 	 * 
 	 * @param pid Paintable id
 	 * @param c reference to application connections
 	 */
-	public IShortcutActionHandler(String pid, ApplicationConnection c) {
+	public ShortcutActionHandler(String pid, ApplicationConnection c) {
 		paintableId = pid;
 		client = c;
 	}

@@ -6,7 +6,7 @@ import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.PopupPanel;
 
-public class IContextMenu extends PopupPanel {
+public class ContextMenu extends PopupPanel {
 	
 	private IActionOwner actionOwner;
 	
@@ -19,7 +19,7 @@ public class IContextMenu extends PopupPanel {
 	 * 
 	 * @param cli to be set as an owner of menu
 	 */
-	public IContextMenu() {
+	public ContextMenu() {
 		super(true);
 		setWidget(menu);
 		setStyleName("i-contextmenu");
@@ -41,9 +41,9 @@ public class IContextMenu extends PopupPanel {
 	 */
 	public void showAt(int left, int top) {
 		menu.clearItems();
-		IAction[] actions = actionOwner.getActions();
+		Action[] actions = actionOwner.getActions();
 		for (int i = 0; i < actions.length; i++) {
-			IAction a = actions[i];
+			Action a = actions[i];
 			menu.addItem(new MenuItem(a.getHTML(), true, a));
 		}
 		
@@ -73,7 +73,7 @@ public class IContextMenu extends PopupPanel {
 
 		public void onPopupClosed(PopupPanel sender, boolean autoClosed) {
 			super.onPopupClosed(sender, autoClosed);
-			IContextMenu.this.hide();
+			ContextMenu.this.hide();
 		}
 	}
 }

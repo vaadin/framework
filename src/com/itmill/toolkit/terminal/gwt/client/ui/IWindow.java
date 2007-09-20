@@ -67,7 +67,7 @@ public class IWindow extends PopupPanel implements Paintable {
 
 	private String id;
 	
-	IShortcutActionHandler shortcutHandler;
+	ShortcutActionHandler shortcutHandler;
 	
 	public IWindow() {
 		super();
@@ -175,7 +175,7 @@ public class IWindow extends PopupPanel implements Paintable {
 			childUidl = uidl.getChildUIDL(1);
 			if(childUidl.getTag().equals("actions")) {
 				if(shortcutHandler == null)
-					shortcutHandler = new IShortcutActionHandler(id, client);
+					shortcutHandler = new ShortcutActionHandler(id, client);
 				shortcutHandler.updateActionMap(childUidl);
 			}
 			

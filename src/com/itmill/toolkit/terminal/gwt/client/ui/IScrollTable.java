@@ -49,8 +49,7 @@ import com.itmill.toolkit.terminal.gwt.client.ui.IScrollTable.IScrollTableBody.I
  * 
  * TODO implement unregistering for child componts in Cells
  */
-public class IScrollTable extends Composite implements ITable,
-		ScrollListener {
+public class IScrollTable extends Composite implements ITable, ScrollListener {
 
 	public static final String CLASSNAME = "i-table";
 	/**
@@ -1303,7 +1302,7 @@ public class IScrollTable extends Composite implements ITable,
 			}
 		}
 
-		class VisibleColumnAction extends IAction {
+		class VisibleColumnAction extends Action {
 
 			String colKey;
 			private boolean collapsed;
@@ -1353,7 +1352,7 @@ public class IScrollTable extends Composite implements ITable,
 		/*
 		 * Returns columns as Action array for column select popup
 		 */
-		public IAction[] getActions() {
+		public Action[] getActions() {
 			Object[] cols;
 			if (IScrollTable.this.columnReordering) {
 				cols = columnOrder;
@@ -1370,7 +1369,7 @@ public class IScrollTable extends Composite implements ITable,
 				for (Iterator it = collapsedColumns.iterator(); it.hasNext();)
 					cols[i++] = it.next();
 			}
-			IAction[] actions = new IAction[cols.length];
+			Action[] actions = new Action[cols.length];
 
 			for (int i = 0; i < cols.length; i++) {
 				String cid = (String) cols[i];
@@ -1708,14 +1707,14 @@ public class IScrollTable extends Composite implements ITable,
 			 *            element where to attach contenxt menu event
 			 */
 			private native void attachContextMenuEvent(Element el) /*-{
-				var row = this;
-				el.oncontextmenu = function(e) {
-					if(!e)
-						e = $wnd.event;
-					row.@com.itmill.toolkit.terminal.gwt.client.ui.IScrollTable.IScrollTableBody.IScrollTableRow::showContextMenu(Lcom/google/gwt/user/client/Event;)(e);
-					return false;
-				};
-			}-*/;
+						var row = this;
+						el.oncontextmenu = function(e) {
+							if(!e)
+								e = $wnd.event;
+							row.@com.itmill.toolkit.terminal.gwt.client.ui.IScrollTable.IScrollTableBody.IScrollTableRow::showContextMenu(Lcom/google/gwt/user/client/Event;)(e);
+							return false;
+						};
+					}-*/;
 
 			public String getKey() {
 				return String.valueOf(rowKey);
@@ -1852,14 +1851,14 @@ public class IScrollTable extends Composite implements ITable,
 			 * 
 			 * @see com.itmill.toolkit.terminal.gwt.client.ui.IActionOwner#getActions()
 			 */
-			public IAction[] getActions() {
+			public Action[] getActions() {
 				if (actionKeys == null)
-					return new IAction[] {};
-				IAction[] actions = new IAction[actionKeys.length];
+					return new Action[] {};
+				Action[] actions = new Action[actionKeys.length];
 				for (int i = 0; i < actions.length; i++) {
 					String actionKey = actionKeys[i];
-					ITreeAction a = new ITreeAction(this, String
-							.valueOf(rowKey), actionKey);
+					TreeAction a = new TreeAction(this, String.valueOf(rowKey),
+							actionKey);
 					a.setCaption(getActionCaption(actionKey));
 					actions[i] = a;
 				}
@@ -1889,7 +1888,8 @@ public class IScrollTable extends Composite implements ITable,
 	}
 
 	public void add(Widget w) {
-		throw new UnsupportedOperationException("ITable can contain only rows created by itself.");
+		throw new UnsupportedOperationException(
+				"ITable can contain only rows created by itself.");
 	}
 
 	public void clear() {
