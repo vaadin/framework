@@ -64,7 +64,7 @@ public class ICustomLayout extends ComplexPanel implements Paintable, Container 
 
 		// If no given location is found in the layout, and exception is throws
 		Element elem = (Element) locationToElement.get(location);
-		if (elem == null) {
+		if (elem == null && hasTemplate()) {
 			throw new IllegalArgumentException("No location " + location
 					+ " found");
 		}
@@ -75,6 +75,10 @@ public class ICustomLayout extends ComplexPanel implements Paintable, Container 
 		if (previous == widget)
 			return;
 		remove(previous);
+		
+		// if template is missing add element in order
+		if(!hasTemplate())
+			elem = getElement();
 
 		// Add widget to location
 		super.add(widget, elem);
@@ -91,8 +95,10 @@ public class ICustomLayout extends ComplexPanel implements Paintable, Container 
 		// Update PID
 		pid = uidl.getId();
 
-		// Update HTML template if needed
-		updateHTML(uidl, client);
+		if(!hasTemplate()) {
+			// Update HTML template only once
+			initializeHTML(uidl, client);
+		}
 
 		// For all contained widgets
 		for (Iterator i = uidl.getChildIterator(); i.hasNext();) {
@@ -111,18 +117,15 @@ public class ICustomLayout extends ComplexPanel implements Paintable, Container 
 		}
 	}
 
-	/** Update implementing HTML-layout if needed. */
-	private void updateHTML(UIDL uidl, ApplicationConnection client) {
+	/** Initialize HTML-layout. */
+	private void initializeHTML(UIDL uidl, ApplicationConnection client) {
 
-		// Update only if style has changed
 		String newTemplate = uidl.getStringAttribute("template");
-		if (currentTemplate != null && currentTemplate.equals(newTemplate))
-			return;
 
 		// Get the HTML-template from client
 		String template = client.getResource("layouts/" + newTemplate + ".html");
 		if (template == null) {
-			template = "Layout file layouts/" + newTemplate + ".html is missing.";
+			template = "<em>Layout file layouts/" + newTemplate + ".html is missing. Components will be drawn for debug purposes.</em>";
 		} else {
 			currentTemplate = newTemplate;
 		}
@@ -143,6 +146,13 @@ public class ICustomLayout extends ComplexPanel implements Paintable, Container 
 			;
 		prefixImgSrcs(getElement(), "../ITK-INF/themes/" + ((IView) parent).getTheme()
 				+ "/layouts/");
+	}
+	
+	private boolean hasTemplate() {
+		if(currentTemplate == null)
+			return false;
+		else
+			return true;
 	}
 
 	/** Collect locations from template */
