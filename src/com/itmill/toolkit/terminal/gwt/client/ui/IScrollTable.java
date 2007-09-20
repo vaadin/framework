@@ -1059,7 +1059,7 @@ public class IScrollTable extends Composite implements ITable, ScrollListener {
 		}
 	}
 
-	public class TableHead extends Panel implements IActionOwner {
+	public class TableHead extends Panel implements ActionOwner {
 
 		private static final int WRAPPER_WIDTH = 9000;
 
@@ -1678,7 +1678,7 @@ public class IScrollTable extends Composite implements ITable, ScrollListener {
 
 		}
 
-		public class IScrollTableRow extends Panel implements IActionOwner {
+		public class IScrollTableRow extends Panel implements ActionOwner {
 
 			Vector childWidgets = new Vector();
 			private boolean selected = false;

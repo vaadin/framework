@@ -8,7 +8,7 @@ import com.google.gwt.user.client.ui.PopupPanel;
 
 public class ContextMenu extends PopupPanel {
 	
-	private IActionOwner actionOwner;
+	private ActionOwner actionOwner;
 	
 	private CMenuBar menu = new CMenuBar();
 	
@@ -29,7 +29,7 @@ public class ContextMenu extends PopupPanel {
 	 * Sets the element from which to build menu
 	 * @param ao
 	 */
-	public void setActionOwner(IActionOwner ao) {
+	public void setActionOwner(ActionOwner ao) {
 		this.actionOwner = ao;
 	}
 	
@@ -56,7 +56,7 @@ public class ContextMenu extends PopupPanel {
 		}
 	}
 
-	public void showAt(IActionOwner ao, int left, int top) {
+	public void showAt(ActionOwner ao, int left, int top) {
 		setActionOwner(ao);
 		showAt(left, top);
 	}

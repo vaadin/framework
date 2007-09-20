@@ -156,7 +156,7 @@ public class ITree extends Tree implements Paintable {
 		
 	}
 
-	private class TreeNode extends TreeItem implements IActionOwner {
+	private class TreeNode extends TreeItem implements ActionOwner {
 		
 		String key;
 		

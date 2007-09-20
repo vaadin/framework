@@ -9,11 +9,11 @@ public class TreeAction extends Action {
 	String targetKey = "";
 	String actionKey = "";
 	
-	public TreeAction(IActionOwner owner) {
+	public TreeAction(ActionOwner owner) {
 		super(owner);
 	}
 	
-	public TreeAction(IActionOwner owner, String target, String action) {
+	public TreeAction(ActionOwner owner, String target, String action) {
 		this(owner);
 		this.targetKey = target;
 		this.actionKey = action;
