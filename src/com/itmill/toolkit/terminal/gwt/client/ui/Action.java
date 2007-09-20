@@ -4,29 +4,29 @@ import com.google.gwt.user.client.Command;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 
 /**
- *
+ * 
  */
 public abstract class Action implements Command {
-	
-	protected IActionOwner owner;
-	
+
+	protected ActionOwner owner;
+
 	protected String iconUrl = null;
-	
+
 	protected String caption = "";
-	
-	public Action(IActionOwner owner) {
+
+	public Action(ActionOwner owner) {
 		this.owner = owner;
 	}
-	
+
 	/**
 	 * Executed when action fired
 	 */
 	public abstract void execute();
-	
+
 	public String getHTML() {
 		StringBuffer sb = new StringBuffer();
-		if(getIconUrl() != null) {
-			sb.append("<img src=\""+getIconUrl()+"\" alt=\"icon\" />");
+		if (getIconUrl() != null) {
+			sb.append("<img src=\"" + getIconUrl() + "\" alt=\"icon\" />");
 		}
 
 		sb.append(getCaption());
@@ -40,24 +40,24 @@ public abstract class Action implements Command {
 	public void setCaption(String caption) {
 		this.caption = caption;
 	}
-	
+
 	public String getIconUrl() {
 		return iconUrl;
 	}
 }
 
 /**
- * Action owner must provide a set of actions for context menu
- * and IAction objects.
+ * Action owner must provide a set of actions for context menu and IAction
+ * objects.
  */
-interface IActionOwner {
-	
+interface ActionOwner {
+
 	/**
 	 * @return Array of IActions
 	 */
 	public Action[] getActions();
 
 	public ApplicationConnection getClient();
-	
+
 	public String getPaintableId();
 }
