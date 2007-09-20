@@ -49,7 +49,7 @@ import com.itmill.toolkit.terminal.gwt.client.ui.IScrollTable.IScrollTableBody.I
  * 
  * TODO implement unregistering for child componts in Cells
  */
-public class IScrollTable extends Composite implements Table, ScrollListener {
+public class IScrollTable extends Composite implements Table, ScrollListener, Paintable {
 
 	public static final String CLASSNAME = "i-table";
 	/**
