@@ -63,31 +63,36 @@ public class IPanel extends FlowPanel implements Paintable {
 			add(caption);
 		}
 		
-		// Size panel
-		// TODO support for different units
-		String widthUnit = "px";
-		String heightUnit = "px";
-		int captionHeight = caption.getOffsetHeight();
-		int height = uidl.hasVariable("height")? uidl.getIntVariable("height") : -1;
-		int w = uidl.hasVariable("width")? uidl.getIntVariable("width") : -1;
-		int h = -1;
-		if(height != -1) 
-			h = height < captionHeight? 0 : height - captionHeight;
-		setWidth(w>=0?w+widthUnit:"auto");
-		content.setHeight(h>=0?h+heightUnit:"auto");
-		
 		// Render content
 		UIDL layoutUidl = uidl.getChildUIDL(0);
 		Widget layout = client.getWidget(layoutUidl);
-		((Paintable)layout).updateFromUIDL(layoutUidl, client);
 		content.setWidget(layout);
-		
 		add(content);
+		((Paintable)layout).updateFromUIDL(layoutUidl, client);
 		
-		// Add a decoration element for shadow
+		// Add a decoration element for additional styling
 		deco = DOM.createDiv();
 		DOM.setElementProperty(deco, "className", CLASSNAME+"-deco");
 		DOM.appendChild(getElement(), deco);
+		
+		// Size panel
+		String h = uidl.hasVariable("height")? uidl.getStringVariable("height") : null;
+		String w = uidl.hasVariable("width")? uidl.getStringVariable("width") : null;
+		
+		setWidth(w!=null? w : "");
+		
+		// Try to approximate the height as close as possible
+		if(h!=null) {
+			// First, calculate needed pixel height
+			setHeight(h);
+			int neededHeight = getOffsetHeight();
+			setHeight("auto");
+			// Then calculate the size the content area needs to be
+			content.setHeight("0");
+			int height = getOffsetHeight();
+			content.setHeight(neededHeight-height + "px");
+		} else
+			content.setHeight("");
 		
 	}
 	
