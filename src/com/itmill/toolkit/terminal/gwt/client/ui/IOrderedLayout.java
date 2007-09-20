@@ -110,7 +110,7 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
 				oldChild = null;
 			} else if(hasChildComponent(child)) {
 				// current child has been moved, re-insert before current oldChild
-				// TODO this might be optimized by movin only container element
+				// TODO this might be optimized by moving only container element
 				// to correct position
 				removeCaption(child);
 				int index = getWidgetIndex(oldChild);
@@ -118,6 +118,10 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
 					index--;
 				remove(child);
 				this.insert(child, index);
+			} else {
+				// insert new child before old one
+				int index = getWidgetIndex(oldChild);
+				insert(child,index);
 			}
 			((Paintable)child).updateFromUIDL(childUidl, client);
 		}
