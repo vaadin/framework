@@ -142,10 +142,10 @@ public class ICustomLayout extends ComplexPanel implements Paintable, Container 
 		Widget parent = getParent();
 		while (parent != null && !(parent instanceof IView))
 			parent = parent.getParent();
-		if (parent != null && ((IView) parent).getTheme() != null)
-			;
-		prefixImgSrcs(getElement(), "../ITK-INF/themes/" + ((IView) parent).getTheme()
+		if (parent != null && ((IView) parent).getTheme() != null) {
+		    prefixImgSrcs(getElement(), "../ITK-INF/themes/" + ((IView) parent).getTheme()
 				+ "/layouts/");
+		}
 	}
 	
 	private boolean hasTemplate() {
