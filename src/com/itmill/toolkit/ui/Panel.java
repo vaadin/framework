@@ -198,8 +198,12 @@ public class Panel extends AbstractComponentContainer implements Sizeable,
 	 */
 	public void paintContent(PaintTarget target) throws PaintException {
 		layout.paint(target);
-		target.addVariable(this, "height", getHeight());
-		target.addVariable(this, "width", getWidth());
+		
+		if(height > -1)
+			target.addVariable(this, "height", getHeight() + UNIT_SYMBOLS[getHeightUnits()]);
+		if(width > -1)
+			target.addVariable(this, "width", getWidth() + UNIT_SYMBOLS[getWidthUnits()]);
+		
 		if (isScrollable()) {
 			target.addVariable(this, "scrollleft", getScrollOffsetX());
 			target.addVariable(this, "scrolldown", getScrollOffsetY());
@@ -396,7 +400,7 @@ public class Panel extends AbstractComponentContainer implements Sizeable,
 	 * @see com.itmill.toolkit.terminal.Sizeable#setHeightUnits(int)
 	 */
 	public void setHeightUnits(int units) {
-		// Ignored
+		heightUnit = units;
 	}
 
 	/**
@@ -406,7 +410,7 @@ public class Panel extends AbstractComponentContainer implements Sizeable,
 	 * @see com.itmill.toolkit.terminal.Sizeable#setWidthUnits(int)
 	 */
 	public void setWidthUnits(int units) {
-		// Ignored
+		widthUnit = units;
 	}
 
 	/* Scrolling functionality */
