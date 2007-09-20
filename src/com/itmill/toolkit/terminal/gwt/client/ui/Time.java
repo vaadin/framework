@@ -1,15 +1,11 @@
-package com.itmill.toolkit.terminal.gwt.client.ui.datefield;
+package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
-import com.itmill.toolkit.terminal.gwt.client.ui.IDateField;
-import com.itmill.toolkit.terminal.gwt.client.ui.ILabel;
-import com.itmill.toolkit.terminal.gwt.client.ui.ISelect;
-import com.itmill.toolkit.terminal.gwt.client.ui.ITextualDate;
 
-public class ITime extends FlowPanel implements ChangeListener {
+public class Time extends FlowPanel implements ChangeListener {
 	
 	private IDateField datefield;
 	
@@ -27,7 +23,7 @@ public class ITime extends FlowPanel implements ChangeListener {
 	
 	private boolean readonly;
 	
-	public ITime(IDateField parent) {
+	public Time(IDateField parent) {
 		super();
 		datefield = parent;
 		setStyleName(IDateField.CLASSNAME+"-time");

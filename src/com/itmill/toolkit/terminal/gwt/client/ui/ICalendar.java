@@ -14,12 +14,10 @@ import com.google.gwt.user.client.ui.TableListener;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.DateTimeService;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
-import com.itmill.toolkit.terminal.gwt.client.ui.calendar.ICalendarEntry;
-import com.itmill.toolkit.terminal.gwt.client.ui.datefield.ICalendarPanel;
 
 public class ICalendar extends IDateField {
 
-    private ICalendarPanel calPanel;
+    private CalendarPanel calPanel;
 
     private HTMLTable hourTable;
 
@@ -35,7 +33,7 @@ public class ICalendar extends IDateField {
     public ICalendar() {
 	super();
 	setStyleName(CLASSNAME);
-	calPanel = new ICalendarPanel(this);
+	calPanel = new CalendarPanel(this);
 	add(calPanel);
 	this.entrySource = new EntrySource();
 	calPanel.setCalendarEntrySource(this.entrySource);
@@ -114,7 +112,7 @@ public class ICalendar extends IDateField {
 	    String text = "";
 	    if (entries != null) {
 		for (Iterator it = entries.iterator(); it.hasNext();) {
-		    ICalendarEntry entry = (ICalendarEntry) it.next();
+		    CalendarEntry entry = (CalendarEntry) it.next();
 		    String title = entry.getTitle();
 		    String desc = entry.getDescription();
 		    text += (text == "" ? "" : ", ");
@@ -145,7 +143,7 @@ public class ICalendar extends IDateField {
 
     }
 
-    private class EntrySource implements ICalendarPanel.CalendarEntrySource {
+    private class EntrySource implements CalendarPanel.CalendarEntrySource {
 
 	private HashMap items = new HashMap();
 
@@ -162,14 +160,14 @@ public class ICalendar extends IDateField {
 	    if (items.containsKey(id)) {
 		items.remove(id);
 	    }
-	    items.put(id, new ICalendarEntry(startDate, endDate, title, desc,
+	    items.put(id, new CalendarEntry(startDate, endDate, title, desc,
 		    notime));
 	}
 
 	public List getEntries(Date date, int resolution) {
 	    ArrayList res = new ArrayList();
 	    for (Iterator it = this.items.values().iterator(); it.hasNext();) {
-		ICalendarEntry item = (ICalendarEntry) it.next();
+		CalendarEntry item = (CalendarEntry) it.next();
 		if (DateTimeService.isInRange(date, item.getStart(), item
 			.getEnd(), resolution)) {
 		    res.add(item);

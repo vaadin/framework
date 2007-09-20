@@ -1,17 +1,17 @@
-package com.itmill.toolkit.terminal.gwt.client.ui.calendar;
+package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import java.util.Date;
 
 import com.itmill.toolkit.terminal.gwt.client.DateTimeService;
 
-public class ICalendarEntry {
+public class CalendarEntry {
     private Date start;
     private Date end;
     private String title;
     private String description;
     private boolean notime;
 
-    public ICalendarEntry(Date start, Date end, String title, String description, boolean notime) {
+    public CalendarEntry(Date start, Date end, String title, String description, boolean notime) {
 	if (notime) {
 	    Date d = new Date(start.getTime());
 	    d.setSeconds(0);
@@ -34,7 +34,7 @@ public class ICalendarEntry {
 	this.notime = notime;
     }
 
-    public ICalendarEntry(Date start, Date end, String title, String description) {
+    public CalendarEntry(Date start, Date end, String title, String description) {
 	this(start, end, title, description, false);
     }
 

@@ -1,8 +1,7 @@
-package com.itmill.toolkit.terminal.gwt.gwtwidgets.util;
+package com.itmill.toolkit.terminal.gwt.client.util;
 
 import java.util.Date;
 
-import com.itmill.toolkit.terminal.gwt.gwtwidgets.util.regex.Pattern;
 
 /**
  * This is a simple regular expression based parser for date notations.

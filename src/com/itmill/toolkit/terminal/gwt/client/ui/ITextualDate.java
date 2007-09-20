@@ -8,7 +8,7 @@ import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.DateLocale;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
-import com.itmill.toolkit.terminal.gwt.gwtwidgets.util.SimpleDateFormat;
+import com.itmill.toolkit.terminal.gwt.client.util.SimpleDateFormat;
 
 public class ITextualDate extends IDateField implements Paintable, ChangeListener {
 	

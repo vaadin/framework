@@ -1,4 +1,4 @@
-package com.itmill.toolkit.terminal.gwt.gwtwidgets.util;
+package com.itmill.toolkit.terminal.gwt.client.util;
 
 import java.util.Arrays;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.itmill.toolkit.terminal.gwt.client.ui.datefield;
+package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import java.util.Date;
 import java.util.Iterator;
@@ -17,12 +17,8 @@ import com.google.gwt.user.client.ui.TableListener;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.DateTimeService;
 import com.itmill.toolkit.terminal.gwt.client.LocaleService;
-import com.itmill.toolkit.terminal.gwt.client.ui.IButton;
-import com.itmill.toolkit.terminal.gwt.client.ui.IDateField;
-import com.itmill.toolkit.terminal.gwt.client.ui.ITextualDate;
-import com.itmill.toolkit.terminal.gwt.client.ui.calendar.ICalendarEntry;
 
-public class ICalendarPanel extends FlexTable implements MouseListener,
+public class CalendarPanel extends FlexTable implements MouseListener,
 	ClickListener {
 
     private IDateField datefield;
@@ -32,7 +28,7 @@ public class ICalendarPanel extends FlexTable implements MouseListener,
     private IEventButton prevMonth;
     private IEventButton nextMonth;
 
-    private ITime time;
+    private Time time;
 
     private Date minDate = null;
     private Date maxDate = null;
@@ -45,14 +41,14 @@ public class ICalendarPanel extends FlexTable implements MouseListener,
     /* Needed to identify locale changes */
     private String locale = LocaleService.getDefaultLocale();
 
-    public ICalendarPanel(IDateField parent) {
+    public CalendarPanel(IDateField parent) {
 	datefield = parent;
 	setStyleName(datefield.CLASSNAME + "-calendarpanel");
 	// buildCalendar(true);
 	addTableListener(new DateClickListener(this));
     }
 
-    public ICalendarPanel(IDateField parent, Date min, Date max) {
+    public CalendarPanel(IDateField parent, Date min, Date max) {
 	datefield = parent;
 	setStyleName(datefield.CLASSNAME + "-calendarpanel");
 	// buildCalendar(true);
@@ -177,7 +173,7 @@ public class ICalendarPanel extends FlexTable implements MouseListener,
 			    if (entries != null) {
 				for (Iterator it = entries.iterator(); it
 					.hasNext();) {
-				    ICalendarEntry entry = (ICalendarEntry) it
+				    CalendarEntry entry = (CalendarEntry) it
 					    .next();
 				    title += (title.length() > 0 ? ", " : "")
 					    + entry.getStringForDate(curr);
@@ -214,7 +210,7 @@ public class ICalendarPanel extends FlexTable implements MouseListener,
 
     private void buildTime(boolean forceRedraw) {
 	if (time == null) {
-	    time = new ITime(datefield);
+	    time = new Time(datefield);
 	    setText(8, 0, ""); // Add new row
 	    getFlexCellFormatter().setColSpan(8, 0, 7);
 	    setWidget(8, 0, time);
@@ -345,9 +341,9 @@ public class ICalendarPanel extends FlexTable implements MouseListener,
 
     private class DateClickListener implements TableListener {
 
-	private ICalendarPanel cal;
+	private CalendarPanel cal;
 
-	public DateClickListener(ICalendarPanel panel) {
+	public DateClickListener(CalendarPanel panel) {
 	    cal = panel;
 	}
 
