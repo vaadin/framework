@@ -1,6 +1,7 @@
 package com.itmill.toolkit.demo.reservation;
 
 import java.awt.Point;
+import java.awt.geom.Point2D;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -37,6 +38,8 @@ public class ReservationApplication extends Application {
 
     private Table allTable;
     private CalendarField allCalendar;
+
+    private GoogleMap map;
 
     public void init() {
 	db = new SampleDB(true);
@@ -80,18 +83,18 @@ public class ReservationApplication extends Application {
 	infoLayout.addComponent(reservationButton);
 	statusLabel = new Label();
 	infoLayout.addComponent(statusLabel);
-	
+
 	// TODO map
-	GoogleMap map = new GoogleMap();
+	map = new GoogleMap();
 	map.setWidth(290);
 	map.setHeight(150);
-	map.setZoomLevel(2);
-	//map.setMapCenter(new Point.Float(60.453380f, 22.301850f));
+	map.setZoomLevel(12);
+	map.setItemMarkerHtmlPropertyId(SampleDB.Resource.PROPERTY_ID_NAME);
+	map.setItemMarkerXPropertyId(SampleDB.Resource.PROPERTY_ID_LOCATIONX);
+	map.setItemMarkerYPropertyId(SampleDB.Resource.PROPERTY_ID_LOCATIONY);
+	map.setContainerDataSource(db.getResources(null));
 	infoLayout.addComponent(map);
-	
-	map.addMarker("IT Mill", new Point.Float(60.453380f, 22.301850f));
-	map.addMarker("Romson a.k.a Rodskar", new Point.Float(63.509433f,22.276711f));
-	
+
 	// TODO Use calendar, set following hour
 	Date now = new Date();
 	reservedFrom = new CalendarField();
@@ -133,7 +136,8 @@ public class ReservationApplication extends Application {
 	reservedTo.setImmediate(true);
 	reservedTo.setValue(now);
 
-	OrderedLayout allLayout = new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
+	OrderedLayout allLayout = new OrderedLayout(
+		OrderedLayout.ORIENTATION_HORIZONTAL);
 	allCalendar = new CalendarField();
 	initCalendarFieldPropertyIds(allCalendar);
 	allLayout.addComponent(allCalendar);
@@ -195,7 +199,7 @@ public class ReservationApplication extends Application {
 	Container allReservations = db.getReservations(null);
 	allTable.setContainerDataSource(allReservations);
 	allCalendar.setContainerDataSource(allReservations);
-	
+
     }
 
     private void refreshSelectedResources() {
@@ -207,12 +211,28 @@ public class ReservationApplication extends Application {
 	    reservationButton.setEnabled(false);
 	    return;
 	}
+	map.clear();
 	if (resource == null) {
 	    resourceName.setValue("Choose resource");
 	    reservationButton.setEnabled(false);
+	    map.setContainerDataSource(db.getResources(null));
+	    map.setZoomLevel(12);
 	} else {
-	    resourceName.setValue((String) resource.getItemProperty(
-		    SampleDB.Resource.PROPERTY_ID_NAME).getValue());
+	    String name = (String) resource.getItemProperty(
+		    SampleDB.Resource.PROPERTY_ID_NAME).getValue();
+	    String desc = (String) resource.getItemProperty(
+		    SampleDB.Resource.PROPERTY_ID_DESCRIPTION).getValue();
+	    resourceName.setValue(name);
+	    Double x = (Double) resource.getItemProperty(
+		    SampleDB.Resource.PROPERTY_ID_LOCATIONX).getValue();
+	    Double y = (Double) resource.getItemProperty(
+		    SampleDB.Resource.PROPERTY_ID_LOCATIONY).getValue();
+	    if (x != null && y != null) {
+		map.addMarker(name + "<br/>" + desc, new Point2D.Double(x
+			.doubleValue(), y.doubleValue()));
+		map.setZoomLevel(14);
+	    }
+
 	    reservationButton.setEnabled(true);
 	}
 
@@ -222,8 +242,7 @@ public class ReservationApplication extends Application {
 	cal
 		.setItemStartPropertyId(SampleDB.Reservation.PROPERTY_ID_RESERVED_FROM);
 	cal.setItemEndPropertyId(SampleDB.Reservation.PROPERTY_ID_RESERVED_TO);
-	cal
-		.setItemTitlePropertyId(SampleDB.Resource.PROPERTY_ID_NAME);
+	cal.setItemTitlePropertyId(SampleDB.Resource.PROPERTY_ID_NAME);
 	cal
 		.setItemDescriptionPropertyId(SampleDB.Reservation.PROPERTY_ID_DESCRIPTION);
     }

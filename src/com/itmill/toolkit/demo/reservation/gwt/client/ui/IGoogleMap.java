@@ -28,6 +28,7 @@ public class IGoogleMap extends GMap2Widget implements Paintable {
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+	map.clearOverlays();
 	GLatLng pos = null;
 	for (Iterator it = uidl.getChildIterator(); it.hasNext();) {
 	    UIDL u = (UIDL) it.next();
@@ -36,8 +37,8 @@ public class IGoogleMap extends GMap2Widget implements Paintable {
 		for (Iterator m = u.getChildIterator(); m.hasNext();) {
 		    UIDL umarker = (UIDL) m.next();
 		    String html = umarker.getStringAttribute("html");
-		    float x = umarker.getFloatAttribute("x");
-		    float y = umarker.getFloatAttribute("y");
+		    double x = umarker.getDoubleAttribute("x");
+		    double y = umarker.getDoubleAttribute("y");
 		    pos = new GLatLng(x, y);
 		    GMarker marker = new GMarker(pos);
 		    map.addOverlay(marker);
@@ -57,8 +58,8 @@ public class IGoogleMap extends GMap2Widget implements Paintable {
 	    map.setZoom(uidl.getIntAttribute("zoom"));
 	}
 	if (uidl.hasAttribute("centerX") && uidl.hasAttribute("centerY")) {
-	    GLatLng center = new GLatLng(uidl.getFloatAttribute("centerX"),
-		    uidl.getFloatAttribute("centerY"));
+	    GLatLng center = new GLatLng(uidl.getDoubleAttribute("centerX"),
+		    uidl.getDoubleAttribute("centerY"));
 	    map.setCenter(center);
 	} else if (pos!=null) {
 	    // use last marker position

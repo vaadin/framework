@@ -20,7 +20,7 @@ public class GoogleMap extends AbstractComponent implements Sizeable,
     private int width = 400;
     private int height = 300;
     private int zoomLevel = 15;
-    private Point2D.Float mapCenter;
+    private Point2D.Double mapCenter;
 
     private Container dataSource;
     private Object itemMarkerHtmlPropertyId = new Object();
@@ -48,15 +48,15 @@ public class GoogleMap extends AbstractComponent implements Sizeable,
 		Object itemId = it.next();
 		Item item = this.dataSource.getItem(itemId);
 		Property p = item.getItemProperty(getItemMarkerXPropertyId());
-		Float x = (Float) (p != null ? p.getValue() : null);
+		Double x = (Double) (p != null ? p.getValue() : null);
 		p = item.getItemProperty(getItemMarkerYPropertyId());
-		Float y = (Float) (p != null ? p.getValue() : null);
+		Double y = (Double) (p != null ? p.getValue() : null);
 		if (x == null || y == null) {
 		    continue;
 		}
 		target.startTag(TAG_MARKER);
-		target.addAttribute("x", x.floatValue());
-		target.addAttribute("y", y.floatValue());
+		target.addAttribute("x", x.doubleValue());
+		target.addAttribute("y", y.doubleValue());
 		p = item.getItemProperty(getItemMarkerHtmlPropertyId());
 		String h = (String) (p != null ? p.getValue() : null);
 		target.addAttribute("html", h);
@@ -111,11 +111,11 @@ public class GoogleMap extends AbstractComponent implements Sizeable,
 	throw new UnsupportedOperationException();
     }
 
-    public void setMapCenter(Point2D.Float center) {
+    public void setMapCenter(Point2D.Double center) {
 	this.mapCenter = center;
     }
     
-    public Point2D.Float getMapCenter() {
+    public Point2D.Double getMapCenter() {
 	return this.mapCenter;
     }
     
@@ -163,7 +163,7 @@ public class GoogleMap extends AbstractComponent implements Sizeable,
 
     // Marker add
 
-    public Object addMarker(String html, Point2D.Float location) {
+    public Object addMarker(String html, Point2D.Double location) {
 	if (location == null) {
 	    throw new IllegalArgumentException("Location must be non-null");
 	}
@@ -176,9 +176,9 @@ public class GoogleMap extends AbstractComponent implements Sizeable,
 	}
 	Item marker = this.dataSource.getItem(markerId);
 	Property p = marker.getItemProperty(getItemMarkerXPropertyId());
-	p.setValue(new Float(location.x));
+	p.setValue(new Double(location.x));
 	p = marker.getItemProperty(getItemMarkerYPropertyId());
-	p.setValue(new Float(location.y));
+	p.setValue(new Double(location.y));
 	p = marker.getItemProperty(getItemMarkerHtmlPropertyId());
 	p.setValue(html);
 
@@ -208,8 +208,12 @@ public class GoogleMap extends AbstractComponent implements Sizeable,
 	this.dataSource.addContainerProperty(this.itemMarkerHtmlPropertyId,
 		String.class, null);
 	this.dataSource.addContainerProperty(this.itemMarkerXPropertyId,
-		Float.class, new Float(0));
+		Double.class, new Double(0));
 	this.dataSource.addContainerProperty(this.itemMarkerYPropertyId,
-		Float.class, new Float(0));
+		Double.class, new Double(0));
+    }
+    
+    public void clear() {
+	setContainerDataSource(null);
     }
 }

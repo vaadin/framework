@@ -372,28 +372,47 @@ public class SampleDB {
     }
 
     public void generateResources() {
-	String[][] resources = {
-		{ "IT Mill Toolkit Manual", "the manual", "Books" },
+	/*
+	 * map.addMarker("Old Mill", new Point.Double(60.452224f,22.299929f));
+	 * map.addMarker("ICT", new Point.Double(60.449007f,22.295508f));
+	 * map.addMarker("DataCity", new Point.Double(60.448329f,22.295165f));
+	 * map.addMarker("BioCity", new Point.Double(60.449451f,22.293105f));
+	 * map.addMarker("PharmaCity", new Point.Double(60.44888f,22.292032f));
+	 * map.addMarker("Intelligate", new Point.Double(60.450403f,22.29495f));
+	 * map.addMarker("Paviljonki", new Point.Double(60.445408f,22.290831f));
+	 * map.addMarker("Trivium", new Point.Double(60.44641962165445f,
+	 * 22.301753170493f)); map.addMarker("Linja-auto asema", new
+	 * Point.Double(60.457049f,22.267957f));
+	 */
+
+	Object[][] resources = {
+		{ "IT Mill Toolkit Manual", "the manual", "Books", new Double(60.452224),new Double(22.299929)},
 		{ "IT Mill Toolkit for Dummies", "the hardcover version",
-			"Books" },
-		{ "Sony", "Old Sony video projector", "AV equipment" },
-		{ "Sanyo", "Brand new hd-ready video projector", "AV equipment" },
-		{ "Room 7", "Converence room in the lobby", "Conference rooms" },
+			"Books", new Double(60.452224),new Double(22.299929) },
+		{ "Sony", "Old Sony video projector", "AV equipment", new Double(60.449007),new Double(22.295508) },
+		{ "Sanyo", "Brand new hd-ready video projector", "AV equipment", new Double(60.452224),new Double(22.299929) },
+		{ "Room 7", "Conference room in the lobby", "Conference rooms", new Double(60.449451),new Double(22.292032) },
 		{ "Luokkahuone", "Classroom right next to IT Mill",
-			"Conference rooms" },
-		{ "Nintendo Wii", "Teh uber fun", "Entertainment" },
-		{ "Playstation", "We don't actually have one", "Entertainment" } };
+			"Conference rooms", new Double(60.44888),new Double(22.292032) },
+		{ "Nintendo Wii", "Teh uber fun", "Entertainment", new Double(60.445408),new Double(22.290831) },
+		{ "Playstation", "We don't actually have one", "Entertainment", new Double(60.44641962165445),new Double(22.301753170493) } };
 
 	String q = "INSERT INTO " + Resource.TABLE + "("
 		+ Resource.PROPERTY_ID_NAME + ","
 		+ Resource.PROPERTY_ID_DESCRIPTION + ","
-		+ Resource.PROPERTY_ID_CATEGORY + ")" + " VALUES (?,?,?)";
+		+ Resource.PROPERTY_ID_CATEGORY + ","
+		+ Resource.PROPERTY_ID_LOCATIONX + ","
+		+ Resource.PROPERTY_ID_LOCATIONY
+		+ ")" + " VALUES (?,?,?,?,?)";
 	try {
 	    PreparedStatement stmt = connection.prepareStatement(q);
 	    for (int i = 0; i < resources.length; i++) {
-		stmt.setString(1, resources[i][0]);
-		stmt.setString(2, resources[i][1]);
-		stmt.setString(3, resources[i][2]);
+		int j=0;
+		stmt.setString(j+1, (String)resources[i][j++]);
+		stmt.setString(j+1, (String)resources[i][j++]);
+		stmt.setString(j+1, (String)resources[i][j++]);
+		stmt.setDouble(j+1, ((Double)resources[i][j++]).doubleValue());
+		stmt.setDouble(j+1, ((Double)resources[i][j++]).doubleValue());
 		stmt.execute();
 	    }
 	} catch (SQLException e) {
