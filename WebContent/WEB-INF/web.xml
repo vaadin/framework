@@ -193,6 +193,28 @@
     </init-param>
   </servlet>
 
+  <servlet>
+    <servlet-name>CustomGwtComponentDemo</servlet-name>
+    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+    <init-param>
+      <param-name>application</param-name>
+      <param-value>com.itmill.toolkit.demo.CustomGwtComponentDemo</param-value>
+    </init-param>
+  </servlet>
+
+  <servlet>
+    <servlet-name>ColorPickerApplication</servlet-name>
+    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+    <init-param>
+      <param-name>application</param-name>
+      <param-value>com.itmill.toolkit.demo.colorpicker.ColorPickerApplication</param-value>
+    </init-param>
+    <init-param>
+      <param-name>widgetset</param-name>
+      <param-value>com.itmill.toolkit.demo.colorpicker.gwt.WidgetSet</param-value>
+    </init-param>
+  </servlet>
+
   <servlet-mapping>
     <servlet-name>Reservr</servlet-name>
     <url-pattern>/Reservr/*</url-pattern>
@@ -286,6 +308,16 @@
   <servlet-mapping>
     <servlet-name>KeyboardShortcut</servlet-name>
     <url-pattern>/KeyboardShortcut/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>CustomGwtComponentDemo</servlet-name>
+    <url-pattern>/customgwt/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>ColorPickerApplication</servlet-name>
+    <url-pattern>/colorpicker/*</url-pattern>
   </servlet-mapping>
 
   <welcome-file-list>

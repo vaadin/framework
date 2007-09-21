@@ -14,4 +14,6 @@ else
 fi
 
 rm -r ../../WebContent/ITK-INF/widgetsets/com.itmill.toolkit.terminal.gwt.DefaultWidgetSet/*
-java $JVMVARS -cp "../../src:../gwt/gwt/gwt-user.jar:../gwt/gwt/gwt-dev-$PLATFORM.jar" com.google.gwt.dev.GWTCompiler -out "../../WebContent/ITK-INF/widgetsets" "$@" com.itmill.toolkit.terminal.gwt.DefaultWidgetSet -style DETAILED;
+#java $JVMVARS -cp "../../src:../gwt/gwt/gwt-user.jar:../gwt/gwt/gwt-dev-$PLATFORM.jar" com.google.gwt.dev.GWTCompiler -out "../../WebContent/ITK-INF/widgetsets" "$@" com.itmill.toolkit.terminal.gwt.DefaultWidgetSet -style DETAILED;
+java $JVMVARS -cp "../../src:../gwt/gwt/gwt-user.jar:../gwt/gwt/gwt-dev-$PLATFORM.jar" com.google.gwt.dev.GWTCompiler -out "../../WebContent/ITK-INF/widgetsets" "$@" com.itmill.toolkit.demo.colorpicker.gwt.WidgetSet -style DETAILED;
+#java $JVMVARS -cp "../../src:../gwt/gwt/gwt-user.jar:../../lib/reservr/googlemaps_gwt.jar:../gwt/gwt/gwt-dev-$PLATFORM.jar" com.google.gwt.dev.GWTCompiler -out "../../WebContent/ITK-INF/widgetsets" "$@" com.itmill.toolkit.demo.reservation.gwt.WidgetSet -style DETAILED;

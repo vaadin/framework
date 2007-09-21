@@ -1,0 +1,11 @@
+<module>
+	<!-- Inherit the NoEntry version to avoid multiple entrypoints -->
+	<inherits name="com.itmill.toolkit.terminal.gwt.DefaultWidgetSetNoEntry" /> 
+	
+	<!-- WidgetSet default theme -->	
+	<stylesheet src="colorpicker/styles.css"/>
+
+	<!-- Entry point -->
+	<entry-point class="com.itmill.toolkit.demo.colorpicker.gwt.client.WidgetSet"/>
+  
+</module>
