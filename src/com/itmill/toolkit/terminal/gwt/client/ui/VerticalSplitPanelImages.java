@@ -8,7 +8,7 @@ public interface VerticalSplitPanelImages extends
 	/**
 	   * An image representing the drag thumb.
 	   * 
-	   * @gwt.resource com/itmill/toolkit/terminal/gwt/public/default/common/img/blank.png
+	   * @gwt.resource com/itmill/toolkit/terminal/gwt/public/default/common/img/blank.gif
 	   */
 	AbstractImagePrototype verticalSplitPanelThumb();
 
