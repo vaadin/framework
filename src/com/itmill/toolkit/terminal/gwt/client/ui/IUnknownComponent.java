@@ -23,6 +23,7 @@ public class IUnknownComponent extends Composite implements Paintable{
 	
 	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 		setCaption("Client faced an unknown component type. Unrendered UIDL:");
+		uidlTree.clear();
 		uidlTree.addItem(uidl.dir());
 	}
 	
