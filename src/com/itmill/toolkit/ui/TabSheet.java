@@ -73,11 +73,11 @@ public class TabSheet extends AbstractComponentContainer implements Sizeable {
 	 */
 	private boolean tabsHidden;
 	
-	private int height;
+	private int height = -1;
 
 	private int heightUnit;
 
-	private int width;
+	private int width = -1;
 
 	private int widthUnit;
 
@@ -204,13 +204,11 @@ public class TabSheet extends AbstractComponentContainer implements Sizeable {
 		if (areTabsHidden())
 			target.addAttribute("hidetabs", true);
 		
-		if(width > 0) {
-			target.addAttribute("width", width + UNIT_SYMBOLS[widthUnit]);
-		} else {
-			target.addAttribute("width", "100%");
+		if(width > -1) {
+			target.addAttribute("width", getWidth() + UNIT_SYMBOLS[widthUnit]);
 		}
-		if(height > 0) {
-			target.addAttribute("height", height + UNIT_SYMBOLS[widthUnit]);
+		if(height > -1) {
+			target.addAttribute("height", getHeight() + UNIT_SYMBOLS[heightUnit]);
 		}
 
 		target.startTag("tabs");
@@ -520,17 +518,21 @@ public class TabSheet extends AbstractComponentContainer implements Sizeable {
 
 	public void setHeight(int height) {
 		this.height = height;
+		requestRepaint();
 	}
 
 	public void setHeightUnits(int units) {
 		this.heightUnit = units;
+		requestRepaint();
 	}
 
 	public void setWidth(int width) {
 		this.width = width;
+		requestRepaint();
 	}
 
 	public void setWidthUnits(int units) {
 		this.widthUnit = units;
+		requestRepaint();
 	}
 }

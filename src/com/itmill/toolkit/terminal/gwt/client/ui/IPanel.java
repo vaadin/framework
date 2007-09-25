@@ -91,8 +91,13 @@ public class IPanel extends FlowPanel implements Paintable {
 			content.setHeight("0");
 			int height = getOffsetHeight();
 			content.setHeight(neededHeight-height + "px");
-		} else
+		} else {
 			content.setHeight("");
+			// We don't need overflow:auto when panel height is not set
+			// (overflow:auto causes rendering errors at least in Firefox when a
+			// a panel is inside a tabsheet with overflow:auto set)
+			DOM.setStyleAttribute(content.getElement(), "overflow", "hidden");
+		}
 		
 	}
 	

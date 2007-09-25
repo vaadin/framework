@@ -1,0 +1,166 @@
+.i-panel,
+.i-panel-caption,
+.i-panel-content,
+.i-panel-deco {
+	outline: none; /* Prevent selection outline which might break layouts or cause scrollbars */
+}
+
+.i-panel:before {
+	display: block;
+	content: "";
+	background: transparent url(img/top-right.png) repeat-x right top;
+	height: 9px;
+	margin-left: 9px;
+}
+
+.i-panel-caption {
+	font-size: 18px;
+	line-height: 18px;
+	font-weight: normal;
+	letter-spacing: -0.03em;
+	color: #f14c1a;
+	white-space: nowrap;
+	height: 18px;
+	padding: 6px 18px 14px 18px;
+	border: 1px solid #babfc0;
+	border-top: none;
+	background: #fff;
+}
+
+.i-panel-nocaption {
+	height: 9px;
+}
+
+.i-panel-caption:before,
+.i-panel-nocaption:before {
+	display: block;
+	content: "";
+	position: relative;
+	width: 9px;
+	height: 9px;
+	background: transparent url(img/top-left.png) no-repeat;
+	margin: -15px 0 5px -19px;
+}
+
+.i-panel-nocaption:before {
+	margin: -9px 0 0 0;
+}
+
+.i-panel-content {
+	border: 1px solid #babfc0;
+	border-top: none;
+	border-bottom: none;
+	background-color: #fff;
+	overflow: auto;
+	padding: 15px 18px 6px 18px;
+}
+
+.i-panel-deco {
+	height: 9px;
+	background: transparent url(img/bottom-right.png) repeat-x right top;
+	margin-left: 9px;
+}
+
+.i-panel-deco:before {
+	display: block;
+	content: "";
+	width: 9px;
+	height: 9px;
+	margin-left: -9px;
+	background: transparent url(img/bottom-left.png) no-repeat;
+}
+
+
+
+
+
+
+/* Light panel style */
+
+.i-panel-light:before {
+	display: none;
+}
+
+.i-panel-light .i-panel-caption {
+	border-left: none;
+	border-right: none;
+	background: transparent;
+}
+
+.i-panel-light .i-panel-caption:before,
+.i-panel-light .i-panel-nocaption:before {
+	display: none;
+}
+
+.i-panel-light .i-panel-content {
+	border: none;
+	background: transparent;
+}
+
+.i-panel-light .i-panel-deco {
+	display: none;
+}
+
+.i-panel-light .i-panel-deco:before {
+	display: none;
+}
+
+
+
+
+/* Light panel contained within another panel or a tabsheet */
+/* Use more precise selector to override IE specific rules automatically */
+
+.i-panel .i-panel-light .i-panel-caption,
+.i-tabsheet .i-panel-light .i-panel-caption {
+	border-left: none;
+	border-right: none;
+	margin: -16px -18px 0 -18px;
+	padding-top: 14px;
+	border-top: 1px solid #babfc0;
+}
+.i-panel .i-panel-light .i-panel-content,
+.i-tabsheet .i-panel-light .i-panel-content {
+	margin: 0 -18px 16px -18px;
+}
+
+
+
+
+
+/* IE specific rules (different selectors for IE6 and IE7.
+ * These selectors must be separate because IE6 won't 
+ * apply them if they are grouped together.
+*/
+* html .i-panel-caption {
+	border: 1px solid #babfc0;
+	padding-top: 14px;
+}
+*+html .i-panel-caption {
+	border: 1px solid #babfc0;
+	padding-top: 14px;
+}
+
+* html .i-panel-content {
+	border-bottom: 1px solid #babfc0;
+	padding: 15px 18px;
+}
+*+html .i-panel-content {
+	border-bottom: 1px solid #babfc0;
+	padding: 15px 18px;
+}
+
+* html .i-panel-deco {
+	display: none;
+}
+*+html .i-panel-deco {
+	display: none;
+}
+
+/* Without caption */
+* html .i-panel-nocaption {
+	height: 1px;
+	overflow: hidden;
+	background: #c1c6cc;
+	border: none;
+}

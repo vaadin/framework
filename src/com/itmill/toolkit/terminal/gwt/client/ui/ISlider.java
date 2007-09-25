@@ -156,7 +156,7 @@ public class ISlider extends Widget implements Paintable {
 								DOM.setStyleAttribute(getElement(), "width", "auto");
 						}
 					};
-					adjust.schedule(100);
+					adjust.schedule(0); // Defer execution
 				}
 			}
 		}

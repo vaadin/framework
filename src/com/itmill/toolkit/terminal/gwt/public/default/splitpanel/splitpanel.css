@@ -1,0 +1,13 @@
+.i-splitpanel-horizontal .hsplitter {
+	width: 8px;
+	background: #ccd2d0 url(img/bg_hor.png);
+	border: 1px solid #b6bbbc;
+	cursor: e-resize;
+}
+
+.i-splitpanel-vertical .vsplitter {
+	height: 8px;
+	background: #ccd2d0 url(img/bg_ver.png);
+	border: 1px solid #b6bbbc;
+	cursor: n-resize;
+}

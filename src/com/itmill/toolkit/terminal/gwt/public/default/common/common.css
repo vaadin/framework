@@ -1,0 +1,34 @@
+#itmtk-ajax-window {
+	background: #e9eced;
+	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
+	color: #464f52;
+	font-size: 12px;
+	line-height: 18px;
+}
+
+input, select, textarea, button {
+	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
+	color: #464f52;
+}
+
+select {
+	padding: 0;
+	margin: 0;
+}
+
+.i-disabled {
+	opacity: 0.3;
+	filter: Alpha(opacity=30);
+}
+
+.i-contextmenu {
+	background: #fff;	
+	border: #000;
+}
+
+/* Provide some extra whitespace for wrapped elements
+   (these elements usuallly need the extra space, since 
+   they aren't even handling their own caption) */
+.i-captionwrapper {
+	margin: 0.3em 0 0 0;
+}

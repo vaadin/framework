@@ -294,7 +294,8 @@ public class IFilterSelect extends Composite implements Paintable,
 		initWidget(panel);
 		setStyleName(CLASSNAME);
 		tb.addKeyboardListener(this);
-		popupOpener.setStyleName(CLASSNAME + "-popupopener");
+		tb.setStyleName(CLASSNAME + "-input");
+		popupOpener.setStyleName(CLASSNAME + "-button");
 		popupOpener.addClickListener(this);
 	}
 

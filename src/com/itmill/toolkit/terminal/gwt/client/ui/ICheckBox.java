@@ -8,6 +8,8 @@ import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
 public class ICheckBox extends com.google.gwt.user.client.ui.CheckBox
 		implements Paintable {
+	
+	public static final String CLASSNAME = "i-checkbox";
 
 	String id;
 
@@ -16,6 +18,7 @@ public class ICheckBox extends com.google.gwt.user.client.ui.CheckBox
 	ApplicationConnection client;
 
 	public ICheckBox() {
+		setStyleName(CLASSNAME);
 		addClickListener(new ClickListener() {
 
 			public void onClick(Widget sender) {

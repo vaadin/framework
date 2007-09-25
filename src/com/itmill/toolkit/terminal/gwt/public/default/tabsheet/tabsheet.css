@@ -1,0 +1,157 @@
+.i-tabsheet,
+.i-tabsheet-content,
+.i-tabsheet-deco {
+	outline: none; /* Prevent selection outline which might break layouts or cause scrollbars */
+}
+
+
+.i-tabsheet-tabs {
+	empty-cells: hide;
+	border-collapse: collapse;
+	height: 48px;
+	background: transparent url(img/tabs-bg.png) repeat-x bottom left;
+}
+
+.i-tabsheet-tabs .gwt-TabBarFirst {
+	display: none;
+}
+
+.i-tabsheet-tabs .gwt-TabBarRest {
+	border: 1px solid #b6bbbc;
+	background: #f8f9f9 url(img/tab-bg.png);
+	height: 37px;
+}
+
+.i-tabsheet-tabs .gwt-TabBarItem {
+	border: 1px solid #b6bbbc;
+	border-right: none;
+	height: 20px;
+	padding: 9px 15px 8px 15px;
+	margin-top: 9px;
+	color: #777f85;
+	font-size: 15px;
+	line-height: 15px;
+	background: #f8f9f9 url(img/tab-bg.png);
+	cursor: pointer;
+}
+
+.i-tabsheet-tabs .gwt-TabBarItem-selected {
+	border: none;
+	background: transparent url(../panel/img/top-left.png) no-repeat;
+	margin-top: -9px;
+	padding-left: 16px;
+	height: 30px;
+	cursor: default;
+	color: #ee5311;
+}
+
+.i-tabsheet-tabs .gwt-TabBarItem:hover {
+	color: #4b5257;
+}
+
+.i-tabsheet-tabs .gwt-TabBarItem-selected:hover {
+	color: #ee5311;
+}
+
+.i-tabsheet-tabs .gwt-TabBarItem-selected:before {
+	display: block;
+	height: 9px;
+	background: transparent url(../panel/img/top-right.png) repeat-x right top;
+	content: "";
+	margin: -9px -16px 9px -6px;
+}
+
+.i-tabsheet-content {
+	border: 1px solid #babfc0;
+	border-top: none;
+	border-bottom: none;
+	background-color: #fff;
+	overflow: auto;
+	padding: 15px 18px 6px 18px;
+}
+
+.i-tabsheet-deco {
+	height: 9px;
+	background: transparent url(../panel/img/bottom-right.png) repeat-x right top;
+	margin-left: 9px;
+}
+
+.i-tabsheet-deco:before {
+	display: block;
+	content: "";
+	width: 9px;
+	height: 9px;
+	margin-left: -9px;
+	background: transparent url(../panel/img/bottom-left.png) no-repeat;
+}
+
+
+
+
+/* Fix Safari bug (one pixel table offset) by 
+   adding one extra pixel in every browser */
+/* Actually, let Safari be a little different, it's a bug */
+/*
+.i-tabsheet-content {
+	margin-left: 1px;
+}
+.i-tabsheet-tabs .gwt-TabBarFirst {
+	display: block;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+}
+.i-tabsheet {
+	margin-left: -1px;
+}
+*/
+
+
+
+
+
+
+
+
+/* IE specific styles */
+* html .i-tabsheet-content {
+	border-bottom: 1px solid #babfc0;
+}
+*+html .i-tabsheet-content {
+	border-bottom: 1px solid #babfc0;
+}
+
+* html .i-tabsheet-tabs {
+	height: 46px;
+}
+*+html .i-tabsheet-tabs {
+	height: 46px;
+}
+
+* html .i-tabsheet-tabs .gwt-TabBarItem-selected {
+	border: 1px solid #babfc0;
+	border-bottom: none;
+	background: #fff;
+	margin-top: 0;
+	height: 23px;
+	padding: 18px 14px 6px 15px;
+	cursor: default;
+	color: #ee5311;
+}
+*+html .i-tabsheet-tabs .gwt-TabBarItem-selected {
+	border: 1px solid #babfc0;
+	border-bottom: none;
+	background: #fff;
+	margin-top: 0;
+	height: 23px;
+	padding: 18px 14px 6px 15px;
+	cursor: default;
+	color: #ee5311;
+}
+
+* html .i-tabsheet-deco {
+	display: none;
+}
+*+html .i-tabsheet-deco {
+	display: none;
+}

@@ -37,8 +37,9 @@ public class IOptionGroup extends IOptionGroupBase {
 				op.setText(opUidl.getStringAttribute("caption"));
 			} else {
 				op = new RadioButton(id, opUidl.getStringAttribute("caption"));
+				op.setStyleName("i-radiobutton");
 			}
-			op.setStyleName(CLASSNAME_OPTION);
+			op.addStyleName(CLASSNAME_OPTION);
 			op.setChecked(opUidl.getBooleanAttribute("selected"));
 			op.setEnabled(!opUidl.getBooleanAttribute("disabled") && !readonly && !disabled);
 			op.addClickListener(this);

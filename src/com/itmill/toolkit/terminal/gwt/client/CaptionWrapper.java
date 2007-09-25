@@ -1,11 +1,11 @@
 package com.itmill.toolkit.terminal.gwt.client;
 
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 public class CaptionWrapper extends FlowPanel {
 
+	public static final String CLASSNAME = "i-captionwrapper";
 	Caption caption;
 	Paintable widget; 
 	
@@ -14,6 +14,7 @@ public class CaptionWrapper extends FlowPanel {
 		add(caption);
 		widget = toBeWrapped;
 		add((Widget) widget);
+		setStyleName(CLASSNAME);
 	}
 	
 	public void updateCaption(UIDL uidl) {

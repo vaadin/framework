@@ -8,6 +8,8 @@ import com.google.gwt.user.client.ui.PopupPanel;
 
 public class Caption extends HTML {
 	
+	public static final String CLASSNAME = "i-caption";
+
 	private Paintable owner;
 
 	private Element errorIndicatorElement;
@@ -24,7 +26,7 @@ public class Caption extends HTML {
 	public Caption(Paintable component)  {
 		super();
 		owner = component;
-		setStyleName("i-caption");
+		setStyleName(CLASSNAME);
 	}
 	
 	public void updateCaption(UIDL uidl) {

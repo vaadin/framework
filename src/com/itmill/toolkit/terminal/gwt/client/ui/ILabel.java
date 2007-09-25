@@ -11,6 +11,7 @@ public class ILabel extends HTML implements Paintable {
 	
 	public ILabel() {
 		super();
+		setStyleName(CLASSNAME);
 	}
 	
 	public ILabel(String text) {

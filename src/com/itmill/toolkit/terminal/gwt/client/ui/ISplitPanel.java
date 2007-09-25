@@ -1,14 +1,20 @@
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.HorizontalSplitPanel;
+import com.google.gwt.user.client.ui.HorizontalSplitPanelImages;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalSplitPanel;
+import com.google.gwt.user.client.ui.VerticalSplitPanelImages;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
 public class ISplitPanel extends SimplePanel implements Paintable {
+	public static final String CLASSNAME = "i-splitpanel";
 	public static final int ORIENTATION_HORIZONTAL = 0;
 	public static final int ORIENTATION_VERTICAL = 1;
 	
@@ -24,20 +30,28 @@ public class ISplitPanel extends SimplePanel implements Paintable {
 	
 	public ISplitPanel(int orientation) {
 		super();
-		setOrientetion(orientation);
+		setOrientation(orientation);
 	}
 	
-	private void setOrientetion(int orientation) {
+	private void setOrientation(int orientation) {
 		this.orientation = orientation;
 		if(orientation == ORIENTATION_HORIZONTAL) {
-			this.sph = new HorizontalSplitPanel();
+			this.sph = new HorizontalSplitPanel((HorizontalSplitPanelImages) GWT.create(com.itmill.toolkit.terminal.gwt.client.ui.HorizontalSplitPanelImages.class));
+			this.sph.setStyleName(CLASSNAME+"-horizontal");
+			// Ugly work-around to allow more advanced styling (GWT's heavy use of TABLE-elements is restricting)
+			Element handle = DOM.getChild(DOM.getChild(this.sph.getElement(), 0), 1);
+			DOM.setElementAttribute(handle, "className", CLASSNAME+"-handle");
 			this.setWidget(sph);
 			if(spv != null) {
 				// TODO cleanup contained widgets
 				this.spv = null;
 			}
 		} else {
-			this.spv = new VerticalSplitPanel();
+			this.spv = new VerticalSplitPanel((VerticalSplitPanelImages) GWT.create(com.itmill.toolkit.terminal.gwt.client.ui.VerticalSplitPanelImages.class));
+			this.spv.setStyleName(CLASSNAME+"-vertical");
+			// Ugly work-around to allow more advanced styling (GWT's heavy use of TABLE-elements is restricting)
+			Element handle = DOM.getChild(DOM.getChild(this.spv.getElement(), 0), 1);
+			DOM.setElementAttribute(handle, "className", CLASSNAME+"-handle");
 			this.setWidget(spv);
 			if(sph != null) {
 				// TODO cleanup contained widgets
