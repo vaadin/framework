@@ -8,8 +8,6 @@ import com.itmill.toolkit.ui.Button.ClickEvent;
 /**
  * Demonstration application that shows how to use a simple
  * custom client-side GWT component, the ColorPicker.
- * 
- * @author magi
  */
 public class ColorPickerApplication extends com.itmill.toolkit.Application {
 	Window main = new Window("Color Picker Demo");

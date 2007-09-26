@@ -1,13 +1,20 @@
-td.example-colorpicker {
-	height: 100px;
-	width: 100px;
+/* Set style for the color picker table. */
+table.example-colorpicker {
+	border-collapse: collapse;
+	border: 0px;
+}
+
+/* Set color picker button style. */
+.example-colorpicker button {
+	height: 60px;
+	width: 60px;
 	border: none;
 	padding: 0px;
 }
 
-table.example-colorpicker {
-	height: 100px;
-	width: 100px;
-	border: none;
-	padding: 0px;
+/* Set style for the right-hand sample box that shows the currently selected color. */
+td.colorpicker-currentcolorbox {
+	width: 240px;
+	text-align: center;
+	vertical-align: middle !important;
 }

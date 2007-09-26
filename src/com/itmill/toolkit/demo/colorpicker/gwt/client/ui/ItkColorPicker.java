@@ -4,7 +4,7 @@ import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
-public class ClientColorPicker extends OriginalColorPicker implements Paintable {
+public class ItkColorPicker extends GwtColorPicker implements Paintable {
 
 	/** Set the CSS class name to allow styling. */
 	public static final String CLASSNAME = "example-colorpicker";
@@ -19,7 +19,7 @@ public class ClientColorPicker extends OriginalColorPicker implements Paintable 
 	 * The constructor should first call super() to initialize the component
 	 * and then handle any initialization relevant to IT Mill Toolkit. 
 	 **/
-	public ClientColorPicker() {
+	public ItkColorPicker() {
 		// The superclass has a lot of relevant initialization
 		super();
 		

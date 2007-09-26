@@ -7,12 +7,12 @@ import com.google.gwt.user.client.ui.*;
 /**
  * A regular GWT component without integration with IT Mill Toolkit.
  **/
-public class OriginalColorPicker extends Composite implements ClickListener {
+public class GwtColorPicker extends Composite implements ClickListener {
 
 	/** Currently selected color name to give client-side feedback to the user. */
 	protected Label currentcolor = new Label();
 
-	public OriginalColorPicker() {
+	public GwtColorPicker() {
 		// Create a 4x4 grid of buttons with names for 16 colors
 		Grid grid = new Grid(4,4);
 		String[] colors = new String[] {"aqua", "black", "blue", "fuchsia",
@@ -25,19 +25,15 @@ public class OriginalColorPicker extends Composite implements ClickListener {
 				Button button = new Button(colors[colornum]);
 				button.addClickListener(this);
 				
-				// Set the button colors
-				if ("black navy maroon blue purple".indexOf(colors[colornum]) != -1)
-					DOM.setStyleAttribute(button.getElement(), "color", "white");
-				DOM.setStyleAttribute(button.getElement(), "background", colors[colornum]);
-				
-				// These style settings could be left for CSS
-				DOM.setStyleAttribute(button.getElement(), "width", "60px");
-				DOM.setStyleAttribute(button.getElement(), "height", "60px");
-				DOM.setStyleAttribute(button.getElement(), "border", "none");
-				DOM.setStyleAttribute(button.getElement(), "padding", "0px");
-				
 				// Put the button in the Grid layout
 				grid.setWidget(i, j, button);
+
+				// Set the button background colors.
+				DOM.setStyleAttribute(button.getElement(), "background", colors[colornum]);
+				
+				// For dark colors, the button label must be in white.
+				if ("black navy maroon blue purple".indexOf(colors[colornum]) != -1)
+					DOM.setStyleAttribute(button.getElement(), "color", "white");
 			}
 
 		// Create a panel with the color grid and currently selected color indicator
@@ -45,16 +41,15 @@ public class OriginalColorPicker extends Composite implements ClickListener {
 		panel.add(grid);
 		panel.add(currentcolor);
 
-        // Format the current color feedback box. These could be set in the CSS
-		// as well. We need to obtain the DOM element for the current color
-		// label. This assumes that the <td> element of the HorizontalPanel is
-		// the parent of the label element.
-        Element cell = DOM.getParent(currentcolor.getElement());
-        DOM.setStyleAttribute(cell, "width",         "240px");
-        DOM.setStyleAttribute(cell, "textAlign",     "center");
-        DOM.setStyleAttribute(cell, "verticalAlign", "middle");
+        // Set the class of the color selection feedback box to allow CSS styling.
+		// We need to obtain the DOM element for the current color label.
+		// This assumes that the <td> element of the HorizontalPanel is
+		// the parent of the label element. Notice that the element has no parent
+		// before the widget has been added to the horizontal panel.
+        Element panelcell = DOM.getParent(currentcolor.getElement());
+        DOM.setElementProperty(panelcell, "className", "colorpicker-currentcolorbox");
 
-		// Set initial color. This will be overridden with the value read from server.
+        // Set initial color. This will be overridden with the value read from server.
 		setColor("white");
 		
 		// Composite GWT widgets must call initWidget().
