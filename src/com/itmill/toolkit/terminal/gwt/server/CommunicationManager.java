@@ -59,16 +59,25 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.fileupload.FileItemIterator;
+import org.apache.commons.fileupload.FileItemStream;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.ProgressListener;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.fileupload.util.Streams;
+
 import com.itmill.toolkit.Application;
 import com.itmill.toolkit.Application.WindowAttachEvent;
 import com.itmill.toolkit.Application.WindowDetachEvent;
 import com.itmill.toolkit.terminal.DownloadStream;
 import com.itmill.toolkit.terminal.Paintable;
 import com.itmill.toolkit.terminal.URIHandler;
+import com.itmill.toolkit.terminal.UploadStream;
 import com.itmill.toolkit.terminal.VariableOwner;
 import com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent;
 import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.FrameWindow;
+import com.itmill.toolkit.ui.Upload;
 import com.itmill.toolkit.ui.Window;
 
 /**
@@ -135,20 +144,99 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 		application.removeListener((Application.WindowDetachListener) this);
 	}
 
+	/**
+	 * Handles file upload request submitted via Upload component.
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	public void handleFileUpload(HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
+		// Create a new file upload handler
+		ServletFileUpload upload = new ServletFileUpload();
+
+		UploadProgressListener pl = new UploadProgressListener();
+
+		upload.setProgressListener(pl);
+
+		// Parse the request
+		FileItemIterator iter;
+
+		try {
+			iter = upload.getItemIterator(request);
+			/* ATM this  loop is run only once as we are uploading one file per
+			 * request. 
+			 */
+			while (iter.hasNext()) {
+				FileItemStream item = iter.next();
+				String name = item.getFieldName();
+				final String filename = item.getName();
+				final String mimeType = item.getContentType();
+				final InputStream stream = item.openStream();
+				if (item.isFormField()) {
+					// ignored, upload requests contian only files
+				} else {
+					String pid = name.split("_")[0];
+					Upload uploadComponent = (Upload) idPaintableMap.get(pid);
+					if (uploadComponent == null) {
+						throw new FileUploadException(
+								"Upload component not found");
+					}
+					synchronized (application) {
+						// put upload component into receiving state
+						uploadComponent.startUpload();
+					}
+					UploadStream upstream = new UploadStream() {
+
+						public String getContentName() {
+							return filename;
+						}
+
+						public String getContentType() {
+							return mimeType;
+						}
+
+						public InputStream getStream() {
+							return stream;
+						}
+
+						public String getStreamName() {
+							return "stream";
+						}
+
+					};
+
+					// tell UploadProgressListener which component is receiving file
+					pl.setUpload(uploadComponent);
+					
+					uploadComponent.receiveUpload(upstream);
+				}
+			}
+		} catch (FileUploadException e) {
+			e.printStackTrace();
+		}
+
+		// Send short response to acknowledge client that request was done
+		response.setContentType("text/html");
+		OutputStream out = response.getOutputStream();
+		PrintWriter outWriter = new PrintWriter(new BufferedWriter(
+				new OutputStreamWriter(out, "UTF-8")));
+		outWriter.print("<html><body>download handled</body></html>");
+		outWriter.flush();
+		out.close();
+	}
+
 	public void handleUidlRequest(HttpServletRequest request,
 			HttpServletResponse response) throws IOException {
 
-		// repaint requested or sesssion has timed out and new one is created
+		// repaint requested or session has timed out and new one is created
 		boolean repaintAll = (request.getParameter(GET_PARAM_REPAINT_ALL) != null)
 				|| request.getSession().isNew();
 
 		OutputStream out = response.getOutputStream();
 		PrintWriter outWriter = new PrintWriter(new BufferedWriter(
 				new OutputStreamWriter(out, "UTF-8")));
-
-		// TODO Move dirt elsewhere
-		outWriter.print(")/*{"); // some dirt to prevent cross site scripting
-		// vulnerabilities
 
 		try {
 
@@ -193,6 +281,9 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 
 					// Sets the response type
 					response.setContentType("application/json; charset=UTF-8");
+					// some dirt to prevent cross site scripting
+					outWriter.print(")/*{");
+
 					outWriter.print("\"changes\":[");
 
 					paintTarget = new JsonPaintTarget(this, outWriter);
@@ -206,7 +297,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 						// Reset sent locales
 						locales = null;
 						requireLocale(application.getLocale().toString());
-						
+
 					} else
 						paintables = getDirtyComponents();
 					if (paintables != null) {
@@ -267,17 +358,14 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 									w.setTerminal(application.getMainWindow()
 											.getTerminal());
 							}
-							/* This does not seem to happen in tk5, but remember this case:
-						    	else if (p instanceof Component) {
-        							if (((Component) p).getParent() == null
-        								|| ((Component) p).getApplication() == null) {
-        							    // Component requested repaint, but is no
-        							    // longer attached: skip
-        							    paintablePainted(p);
-        							    continue;
-        							}
-						    	}
-							*/
+							/*
+							 * This does not seem to happen in tk5, but remember
+							 * this case: else if (p instanceof Component) { if
+							 * (((Component) p).getParent() == null ||
+							 * ((Component) p).getApplication() == null) { //
+							 * Component requested repaint, but is no // longer
+							 * attached: skip paintablePainted(p); continue; } }
+							 */
 							paintTarget.startTag("change");
 							paintTarget.addAttribute("format", "uidl");
 							String pid = getPaintableId(p);
@@ -318,8 +406,9 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 					if (request.getParameter("theme") != null) {
 						themeName = request.getParameter("theme");
 					}
-					if (themeName == null) themeName = "default";
-							
+					if (themeName == null)
+						themeName = "default";
+
 					// TODO We should only precache the layouts that are not
 					// cached already
 					int resourceIndex = 0;
@@ -413,14 +502,15 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 					Map m;
 					if (i + 2 >= ca.length
 							|| !vid[0].equals(ca[i + 2].split("_")[0])) {
-						if(ca.length > i + 1) {
-							m = new SingleValueMap(vid[1], convertVariableValue(
-									vid[2].charAt(0), ca[++i]));
+						if (ca.length > i + 1) {
+							m = new SingleValueMap(vid[1],
+									convertVariableValue(vid[2].charAt(0),
+											ca[++i]));
 						} else {
-							m = new SingleValueMap(vid[1], convertVariableValue(vid[2].charAt(0), ""));
+							m = new SingleValueMap(vid[1],
+									convertVariableValue(vid[2].charAt(0), ""));
 						}
-					}
-					else {
+					} else {
 						m = new HashMap();
 						m.put(vid[1], convertVariableValue(vid[2].charAt(0),
 								ca[++i]));
@@ -465,8 +555,9 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 			val = Boolean.valueOf(strValue);
 			break;
 		}
-		
-		System.out.println("result: " + val + " of type " + (val == null ? "-" : val.getClass().toString()));
+
+		System.out.println("result: " + val + " of type "
+				+ (val == null ? "-" : val.getClass().toString()));
 		return val;
 	}
 
@@ -605,7 +696,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 
 		// Find the window where the request is handled
 		String path = request.getPathInfo();
-		
+
 		// Remove UIDL from the path
 		path = path.substring("/UIDL".length());
 
@@ -779,8 +870,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 				new OutputStreamWriter(out, "UTF-8")));
 		outWriter.print(")/*{");
 		outWriter.print("\"redirect\":{");
-		outWriter.write("\"url\":\"" + logoutUrl
-				+ "\"}");
+		outWriter.write("\"url\":\"" + logoutUrl + "\"}");
 		outWriter.flush();
 		outWriter.close();
 		out.flush();
@@ -1067,4 +1157,26 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 		else
 			return new Locale(temp[0], temp[1], temp[2]);
 	}
+
+	/*
+	 * Upload progress listener notifies upload component once when Jakarta
+	 * FileUpload can determine content length. Used to detect files total size,
+	 * uploads progress can be tracked inside upload.
+	 */
+	private class UploadProgressListener implements ProgressListener {
+		Upload uploadComponent;
+		boolean updated = false;
+
+		public void setUpload(Upload u) {
+			uploadComponent = u;
+		}
+
+		public void update(long bytesRead, long contentLength, int items) {
+			if (!updated && uploadComponent != null) {
+				uploadComponent.setUploadSize(contentLength);
+				updated = true;
+			}
+		}
+	}
+
 }

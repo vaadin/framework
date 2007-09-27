@@ -20,6 +20,7 @@ import com.itmill.toolkit.terminal.gwt.client.ui.IOrderedLayoutVertical;
 import com.itmill.toolkit.terminal.gwt.client.ui.IPanel;
 import com.itmill.toolkit.terminal.gwt.client.ui.IPasswordField;
 import com.itmill.toolkit.terminal.gwt.client.ui.IPopupCalendar;
+import com.itmill.toolkit.terminal.gwt.client.ui.IProgressIndicator;
 import com.itmill.toolkit.terminal.gwt.client.ui.IScrollTable;
 import com.itmill.toolkit.terminal.gwt.client.ui.ISelect;
 import com.itmill.toolkit.terminal.gwt.client.ui.ISlider;
@@ -151,7 +152,11 @@ public class DefaultWidgetSet implements WidgetSet {
 	} else if ("com.itmill.toolkit.terminal.gwt.client.ui.IFilterSelect"
 		.equals(className)) {
 	    return new IFilterSelect();
+	} else if ("com.itmill.toolkit.terminal.gwt.client.ui.IProgressIndicator"
+		.equals(className)) {
+	    return new IProgressIndicator();
 	}
+	
 	return new IUnknownComponent();
 
 	/*
@@ -241,6 +246,8 @@ public class DefaultWidgetSet implements WidgetSet {
 	    return "com.itmill.toolkit.terminal.gwt.client.ui.ISplitPanelHorizontal";
 	} else if ("vsplitpanel".equals(tag)) {
 	    return "com.itmill.toolkit.terminal.gwt.client.ui.ISplitPanelVertical";
+	} else if ("progressindicator".equals(tag)) {
+	    return "com.itmill.toolkit.terminal.gwt.client.ui.IProgressIndicator";
 	}
 
 	return "com.itmill.toolkit.terminal.gwt.client.ui.IUnknownComponent";

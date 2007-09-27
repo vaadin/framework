@@ -52,6 +52,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.xml.sax.SAXException;
 
 import com.itmill.toolkit.Application;
@@ -309,6 +310,13 @@ public class ApplicationServlet extends HttpServlet {
 	Application application = null;
 	try {
 
+	    // handle file upload if multipart request
+		if(ServletFileUpload.isMultipartContent(request)) {
+		    application = getApplication(request);
+		    getApplicationManager(application).handleFileUpload(request, response);
+			return;
+		}
+
 	    // Update browser details
 	    WebBrowser browser = WebApplicationContext.getApplicationContext(
 		    request.getSession()).getBrowser();
@@ -330,11 +338,7 @@ public class ApplicationServlet extends HttpServlet {
 	    // Is this a download request from application
 	    DownloadStream download = null;
 
-	    // The rest of the process is synchronized with the application
-	    // in order to guarantee that no parallel variable handling is
-	    // made
-	    synchronized (application) {
-
+	    
 		// Handles AJAX UIDL requests
 		String resourceId = request.getPathInfo();
 		if (resourceId != null && resourceId.startsWith(AJAX_UIDL_URI)) {
@@ -385,7 +389,6 @@ public class ApplicationServlet extends HttpServlet {
 
 		    writeAjaxPage(request, response, window, themeName);
 		}
-	    }
 
 	    // For normal requests, transform the window
 	    if (download != null)

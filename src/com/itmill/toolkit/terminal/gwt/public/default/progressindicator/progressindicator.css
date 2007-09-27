@@ -1,0 +1,8 @@
+.i-progressindicator {
+	background: red;
+	height: 20px;
+}
+.i-progressindicator div {
+	background: green;
+	height:100%;
+}

@@ -74,7 +74,7 @@ public class ApplicationConnection implements FocusListener {
 		return re.test(uri);
 	}-*/;
 
-	private native String getAppUri()/*-{
+	public native String getAppUri()/*-{
 				 return $wnd.itmtk.appUri;
 				}-*/;
 
