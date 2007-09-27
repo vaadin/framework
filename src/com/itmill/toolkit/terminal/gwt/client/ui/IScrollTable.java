@@ -488,7 +488,8 @@ public class IScrollTable extends Composite implements Table, ScrollListener {
 				tHead.setWidth(width);
 				this.setWidth(width);
 			} else if (width.indexOf("%") > 0) {
-				this.setWidth(width);
+				if(!width.equals("100%"))
+					this.setWidth(width);
 				// contained blocks are relative to parents
 				bodyContainer.setWidth("100%");
 				tHead.setWidth("100%");
@@ -497,7 +498,10 @@ public class IScrollTable extends Composite implements Table, ScrollListener {
 		}
 
 		int availW = tBody.getAvailableWidth();
+		// Hey IE, are you really sure about this?
+		availW = tBody.getAvailableWidth();
 
+		
 		if (availW > total) {
 			// natural size is smaller than available space
 			int extraSpace = availW - total;
@@ -1094,8 +1098,8 @@ public class IScrollTable extends Composite implements Table, ScrollListener {
 			DOM.appendChild(headerTableBody, tr);
 			DOM.appendChild(hTableContainer, table);
 			DOM.appendChild(hTableWrapper, hTableContainer);
-			DOM.appendChild(div, columnSelector);
 			DOM.appendChild(div, hTableWrapper);
+			DOM.appendChild(div, columnSelector);
 			setElement(div);
 
 			setStyleName(CLASSNAME + "-header-wrap");
@@ -1145,43 +1149,6 @@ public class IScrollTable extends Composite implements Table, ScrollListener {
 
 		public void setHorizontalScrollPosition(int scrollLeft) {
 			DOM.setElementPropertyInt(hTableWrapper, "scrollLeft", scrollLeft);
-		}
-
-		public void setWidth(int width) {
-			DOM.setStyleAttribute(hTableWrapper, "width",
-					(width - getColumnSelectorWidth()) + "px");
-			super.setWidth(width + "px");
-		}
-
-		public void setWidth(String width) {
-			if (width.indexOf("px") > 0) {
-				int w = Integer.parseInt(width
-						.substring(0, width.indexOf("px")));
-				setWidth(w);
-			} else {
-				// this is an IE6 hack, would need a generator to isolate from
-				// others
-				if (Util.isIE6()) {
-					DOM.setStyleAttribute(hTableWrapper, "width", (0) + "px");
-					super.setWidth(width);
-					int hTableWrappersWidth = this.getOffsetWidth()
-							- getColumnSelectorWidth();
-					DOM.setStyleAttribute(hTableWrapper, "width",
-							hTableWrappersWidth + "px");
-				} else {
-					super.setWidth(width);
-				}
-			}
-		}
-
-		private int getColumnSelectorWidth() {
-			int w = DOM.getElementPropertyInt(columnSelector, "offsetWidth") + 4; // some
-			// extra
-			// to
-			// survive
-			// with
-			// IE6
-			return w > 0 ? w : 15;
 		}
 
 		public void setColumnCollapsingAllowed(boolean cc) {

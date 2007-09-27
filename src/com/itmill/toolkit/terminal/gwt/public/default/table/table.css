@@ -1,5 +1,5 @@
 .i-table {
-	border: 1px solid #29528a;
+	border: 1px solid green;
 	background: #fff;
 }
 .i-table:before {
@@ -27,6 +27,7 @@
 }
 
 .i-table-header {
+	width: 100%;
 }
 
 .i-table-header table,
@@ -124,6 +125,8 @@
 	margin: 4px 0 0 0;
 	height:15px;
 	width:15px;
+	margin-top: -20px;
+	position:relative;
 }
 
 .i-table-focus-slot-left {
