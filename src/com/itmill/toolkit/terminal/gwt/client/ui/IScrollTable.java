@@ -500,7 +500,6 @@ public class IScrollTable extends Composite implements Table, ScrollListener {
 		int availW = tBody.getAvailableWidth();
 		// Hey IE, are you really sure about this?
 		availW = tBody.getAvailableWidth();
-
 		
 		if (availW > total) {
 			// natural size is smaller than available space
@@ -648,26 +647,20 @@ public class IScrollTable extends Composite implements Table, ScrollListener {
 			scrollPositionElement = DOM.createDiv();
 			DOM.setElementProperty(scrollPositionElement, "className",
 					"i-table-scrollposition");
-			DOM
-					.appendChild(RootPanel.get().getElement(),
-							scrollPositionElement);
+			DOM.appendChild(getElement(), scrollPositionElement);
 		}
-
-		DOM.setStyleAttribute(scrollPositionElement, "left",
-				(DOM.getAbsoluteLeft(getElement())
-						+ DOM
-								.getElementPropertyInt(getElement(),
-										"offsetWidth") / 2 - 75)
-						+ "px");
-		DOM.setStyleAttribute(scrollPositionElement, "top", (DOM
-				.getAbsoluteTop(getElement()))
-				+ "px");
+		
+		DOM.setStyleAttribute(scrollPositionElement, "position", "absolute");
+		DOM.setStyleAttribute(scrollPositionElement, "marginLeft",
+				(DOM.getElementPropertyInt(getElement(), "offsetWidth") / 2 - 80) + "px");
+		DOM.setStyleAttribute(scrollPositionElement, "marginTop", 
+				-(DOM.getElementPropertyInt(getElement(), "offsetHeight") / 2) + "px");
 
 		int last = (firstRowInViewPort + pageLength);
 		if (last > totalRows)
 			last = totalRows;
-		DOM.setInnerHTML(scrollPositionElement, firstRowInViewPort + " - "
-				+ last + "...");
+		DOM.setInnerHTML(scrollPositionElement, "<span>" + firstRowInViewPort + " &ndash; "
+				+ last + "..." + "</span>");
 		DOM.setStyleAttribute(scrollPositionElement, "display", "block");
 	}
 
@@ -744,7 +737,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener {
 
 	public class HeaderCell extends Widget {
 
-		private static final int DRAG_WIDGET_WIDTH = 2;
+		private static final int DRAG_WIDGET_WIDTH = 4;
 
 		private static final int MINIMUM_COL_WIDTH = 20;
 
@@ -830,11 +823,11 @@ public class IScrollTable extends Composite implements Table, ScrollListener {
 		private void setSorted(boolean sorted) {
 			if (sorted) {
 				if (sortAscending)
-					this.setStyleName("header-cell-asc");
+					this.setStyleName(CLASSNAME + "-header-cell-asc");
 				else
-					this.setStyleName("header-cell-desc");
+					this.setStyleName(CLASSNAME + "-header-cell-desc");
 			} else {
-				this.setStyleName("header-cell");
+				this.setStyleName(CLASSNAME + "-header-cell");
 			}
 		}
 
@@ -1386,6 +1379,8 @@ public class IScrollTable extends Composite implements Table, ScrollListener {
 		public static final int CELL_EXTRA_WIDTH = 20;
 
 		public static final int DEFAULT_ROW_HEIGHT = 25;
+		
+		public static final int CELL_CONTENT_PADDING = 3;
 
 		private int rowHeight = -1;
 
@@ -1509,9 +1504,8 @@ public class IScrollTable extends Composite implements Table, ScrollListener {
 			for (int i = 0; i < cells; i++) {
 				Element cell = DOM.getChild(row.getElement(), i);
 				int w = IScrollTable.this.getColWidth(getColKeyByIndex(i));
+				DOM.setStyleAttribute(DOM.getFirstChild(cell), "width", (w - CELL_CONTENT_PADDING) + "px");
 				DOM.setStyleAttribute(cell, "width", w + "px");
-				DOM.setStyleAttribute(DOM.getFirstChild(cell), "width", w
-						+ "px");
 			}
 			return row;
 		}
@@ -1520,8 +1514,10 @@ public class IScrollTable extends Composite implements Table, ScrollListener {
 			IScrollTableRow first = null;
 			if (renderedRows.size() > 0)
 				first = (IScrollTableRow) renderedRows.get(0);
-			if (first != null && first.getStyleName().indexOf("i-odd") == -1)
-				row.addStyleName("i-odd");
+			if (first != null && first.getStyleName().indexOf("-odd") == -1)
+				row.setStyleName(CLASSNAME + "-row-odd");
+			if (row.isSelected())
+				row.addStyleName("i-selected");
 			DOM.insertChild(tBody, row.getElement(), 0);
 			adopt(row);
 			renderedRows.add(0, row);
@@ -1532,8 +1528,10 @@ public class IScrollTable extends Composite implements Table, ScrollListener {
 			if (renderedRows.size() > 0)
 				last = (IScrollTableRow) renderedRows
 						.get(renderedRows.size() - 1);
-			if (last != null && last.getStyleName().indexOf("i-odd") == -1)
-				row.addStyleName("i-odd");
+			if (last != null && last.getStyleName().indexOf("-odd") == -1)
+				row.setStyleName(CLASSNAME + "-row-odd");
+			if (row.isSelected())
+				row.addStyleName("i-selected");
 			DOM.appendChild(tBody, row.getElement());
 			adopt(row);
 			renderedRows.add(row);
@@ -1615,9 +1613,8 @@ public class IScrollTable extends Composite implements Table, ScrollListener {
 			int rows = DOM.getChildCount(tBody);
 			for (int i = 0; i < rows; i++) {
 				Element cell = DOM.getChild(DOM.getChild(tBody, i), colIndex);
+				DOM.setStyleAttribute(DOM.getFirstChild(cell), "width", (w - CELL_CONTENT_PADDING) + "px");
 				DOM.setStyleAttribute(cell, "width", w + "px");
-				DOM.setStyleAttribute(DOM.getFirstChild(cell), "width", w
-						+ "px");
 			}
 		}
 
