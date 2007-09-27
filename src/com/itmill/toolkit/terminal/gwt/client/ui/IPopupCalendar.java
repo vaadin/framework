@@ -1,5 +1,6 @@
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.PopupListener;
 import com.google.gwt.user.client.ui.PopupPanel;
@@ -41,10 +42,18 @@ public class IPopupCalendar extends ITextualDate implements Paintable, ClickList
 	public void onClick(Widget sender) {
 		if(sender == calendarToggle) {
 				calendar.updateCalendar();
-				popup.setPopupPosition(calendarToggle.getAbsoluteLeft(), calendarToggle.getAbsoluteTop() + calendarToggle.getOffsetHeight() + 2);
 				popup.show();
-				popup.setWidth(calendar.getOffsetWidth() + "px");
-				popup.setHeight(calendar.getOffsetHeight() + "px");
+				int w = calendar.getOffsetWidth();
+				int h = calendar.getOffsetHeight();
+				int t = calendarToggle.getAbsoluteTop();
+				int l = calendarToggle.getAbsoluteLeft();
+				if(l+w > Window.getClientWidth())
+					l = Window.getClientWidth() - w;
+				if(t+h > Window.getClientHeight())
+					t = Window.getClientHeight() - h - calendarToggle.getOffsetHeight() - 2;
+				popup.setPopupPosition(l, t + calendarToggle.getOffsetHeight() + 2);
+				popup.setWidth(w + "px");
+				popup.setHeight(h + "px");
 		}
 	}
 

@@ -39,10 +39,15 @@ public class ITextualDate extends IDateField implements Paintable, ChangeListene
 			DateLocale.SUPPORTED_DF_TOKENS = DateLocale.TOKENS_RESOLUTION_MONTH;
 		else if(currentResolution >= IDateField.RESOLUTION_DAY)
 			DateLocale.SUPPORTED_DF_TOKENS = DateLocale.TOKENS_RESOLUTION_DAY;
-			
-		format = new SimpleDateFormat(verifyFormat(dts.getDateFormat()));
+		
+		format = new SimpleDateFormat(cleanFormat(dts.getDateFormat()));
 		format.setLocale(dl);
 		
+		// Size the textfield a bit smaller if no clock time is needed
+		if(currentResolution <= IDateField.RESOLUTION_DAY)
+			text.setColumns(12);
+		
+		// Create the initial text for the textfield
 		String dateText = "";
 		if(date != null) {
 			dateText = format.format(date);
@@ -90,7 +95,7 @@ public class ITextualDate extends IDateField implements Paintable, ChangeListene
 				else if(currentResolution == IDateField.RESOLUTION_DAY)
 					DateLocale.SUPPORTED_DF_TOKENS = DateLocale.TOKENS_RESOLUTION_DAY;
 				
-				String f = verifyFormat(dts.getDateFormat());
+				String f = cleanFormat(dts.getDateFormat());
 				
 				if(currentResolution >= IDateField.RESOLUTION_HOUR)
 					f += " " + (dts.isTwelveHourClock()?
@@ -127,7 +132,7 @@ public class ITextualDate extends IDateField implements Paintable, ChangeListene
 			
 			// Update variables
 			// (only the smallest defining resolution needs to be immediate)
-			client.updateVariable(id, "year", date!=null?date.getYear()+1900:-1, currentResolution==IDateField.RESOLUTION_YEAR);
+			client.updateVariable(id, "year", date!=null?date.getYear()+1900:-1, currentResolution==IDateField.RESOLUTION_YEAR&&immediate);
 			if(currentResolution >= IDateField.RESOLUTION_MONTH)
 				client.updateVariable(id, "month", date!=null?date.getMonth()+1:-1, currentResolution==IDateField.RESOLUTION_MONTH&&immediate);
 			if(currentResolution >= IDateField.RESOLUTION_DAY)
@@ -145,7 +150,7 @@ public class ITextualDate extends IDateField implements Paintable, ChangeListene
 		}
 	}
 	
-	private String verifyFormat(String format) {
+	private String cleanFormat(String format) {
 		// Remove unnecessary d & M if resolution is too low
 		if(currentResolution < IDateField.RESOLUTION_DAY)
 			format = format.replaceAll("d", "");
