@@ -227,6 +227,13 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 		out.close();
 	}
 
+	/**
+	 * Handles UIDL request
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
 	public void handleUidlRequest(HttpServletRequest request,
 			HttpServletResponse response) throws IOException {
 
