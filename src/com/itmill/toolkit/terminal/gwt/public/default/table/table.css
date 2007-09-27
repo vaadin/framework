@@ -1,33 +1,17 @@
 .i-table {
-	border: 1px solid green;
-	background: #fff;
-}
-.i-table:before {
-	display: block;
-	height: 2px;
+	border: 1px solid #b6bbbc;
 	overflow: hidden;
-	background: transparent url(../../panel/img/top-right-small.png) no-repeat right top;
-	content: url(../../panel/img/top-left-small.png);
-	margin: -1px -1px 0 -1px;
-}
-.i-table:after {
-	display: block;
-	height: 2px;
-	overflow: hidden;
-	background: transparent url(../../panel/img/bottom-right.png) no-repeat right top;
-	content: url(../../panel/img/bottom-left.png);
-	margin: 0 -1px -1px -1px;
 }
 
 .i-table-header-wrap {
-	height: 26px;
-	background: #e7edf3 url(../img/header-bg.png) repeat-x;
-	border-bottom: 1px solid #6082b0;
-	margin-top: -1px;
+	height: 36px;
+	background: #e7edf3 url(img/header-bg.png) repeat-x;
+	border-bottom: 1px solid #b6bbbc;
+	overflow: hidden;
 }
 
 .i-table-header {
-	width: 100%;
+	height: 36px;
 }
 
 .i-table-header table,
@@ -40,9 +24,9 @@
 
 .i-table-header td,
 .i-table-table td {
-	margin:0;
-	padding:0;
-	border:0;
+	margin: 0;
+	padding: 0;
+	border: 0;
 }
 
 .i-table-header td {
@@ -51,57 +35,37 @@
 
 .i-table-resizer {
 	display: block;
-	height: 26px;
+	height: 36px;
 	float: right;
-	background: #aabdda url(../img/resizer-bg.png);
-	cursor: e-resize;
+	background: transparent url(img/resizer-bg.png) repeat-y 50% 50%;
+	cursor: col-resize;
 }
 
 .i-table-caption-container {
 	float: right;
 	overflow: hidden;
 	white-space: nowrap;
-	font-weight: bold;
-	color: #1c3e6e;
-	padding-top: 5px;
+	color: #393a3c;
+	font-size: 15px;
+	padding-top: 9px;
+	text-shadow: #ffffff 2px 2px 0;
 }
 
-/* disabled row in column selector */
-.i-off {
-	font-style: italic;
+.i-table-header-cell-asc .i-table-caption-container {
+	background: transparent url(img/sort-asc.png) no-repeat right 80%;
+}
+.i-table-header-cell-desc .i-table-caption-container {
+	background: transparent url(img/sort-desc.png) no-repeat right 80%;
+}
+.i-table-header-cell:hover,
+.i-table-header-cell-asc:hover,
+.i-table-header-cell-desc:hover {
+	background: transparent url(img/header-bg-over.png) repeat-x;
 }
 
-
-
-.i-table-header-cell {
-}
-.i-table-header-cell-asc {
-	background: blue;
-}
-.i-table-header-cell-desc {
-	background: cyan;
-}
 
 .i-table-body {
-	/*margin: 0 1px;*/
-}
-
-.i-table-row {
-	border: 0;
-	margin: 0;
-	padding: 3px 0 3px 0;
-	cursor: pointer;
-}
-.i-table-row:hover,
-.i-table .i-odd:hover {
-	background-color: #d3dfee;
-}
-.i-table .i-odd {
-	background-color: #f1f5f9;
-}
-.i-table .i-selected {
-	background: #375f98 url(../img/selected-bg.png) repeat-x;
-	color: #fff;
+	background: #fff;
 }
 
 .i-table-row-spacer {
@@ -109,59 +73,93 @@
 	overflow: hidden; /* IE hack to allow < one line height divs */
 }
 
+.i-table-row,
+.i-table-row-odd {
+	border: 0;
+	margin: 0;
+	padding: 0;
+	background-color: #fff;
+	cursor: default;
+}
+.i-table-row-odd {
+	background-color: #f6f7f7;
+}
+.i-table-row:hover,
+.i-table-row-odd:hover {
+	background-color: #edeeee;
+}
+.i-table .i-selected {
+	background: #d5dde0;
+	color: #456572;
+}
+.i-table-row td,
+.i-table-row-odd td {
+	padding: 3px 0;
+}
 .i-table-cell-content {
 	white-space: nowrap;
 	overflow: hidden;
-	/*border-right: 1px solid #e4e8ef;
-	padding-left: 2px;
-	width: 98%;*/
+	padding-left: 3px;
 }
 
 
 
 .i-table-column-selector {
 	float: right;
-	background: transparent url(../img/colsel.png) no-repeat;
-	margin: 4px 0 0 0;
-	height:15px;
-	width:15px;
-	margin-top: -20px;
-	position:relative;
+	background: transparent url(img/colsel.png) no-repeat;
+	margin: -36px 0 0 0;
+	height: 36px;
+	width: 15px;
+	position: relative; /* hide this from IE, it works without it */
 }
 
 .i-table-focus-slot-left {
-	border-left: 2px solid #375f98;
+	border-left: 2px solid #b6bbbc;
 	margin-right: -2px;
 }
 .i-table-focus-slot-right {
-	border-right: 2px solid #375f98;
+	border-right: 2px solid #b6bbbc;
 	margin-left: -2px;
 }
 
 .i-table-header-drag {
 	position: absolute;
-	background: #e7edf3 url(../img/header-bg.png) repeat-x;
-	border: 1px solid #375f98;
+	background: #e7edf3 url(img/header-bg.png) repeat-x;
+	border: 1px solid #b6bbbc;
 	padding: 4px;
-	color: #1c3e6e;
-	font-weight: bold;
+	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
+	color: #464f52;
+	font-size: 15px;
 	opacity: 0.5;
 	filter: alpha(opacity=50);
+	margin-top: 20px;
 }
 
 .i-table-scrollposition {
-	display: none;
-	position: absolute;
-	width: 150px;
-	padding: 4px;
-	border: 1px solid black;
-	background: yellow;
+	width: 160px;
+	height: 39px;
+	background: transparent url(img/scroll-position-bg.png);
 }
 
-/* IE specific styles */
-* html .i-table-header-wrap {
-	margin-top: 0;
+.i-table-scrollposition span {
+	display: block;
+	margin-top: 8px;
+	text-align: center;
+	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
+	color: #464f52;
+	font-size: 15px;
+	text-shadow: #ffffff 2px 2px 0;
 }
-*+html .i-table-header-wrap {
-	margin-top: 1px;
+
+
+/* disabled row in column selector */
+.i-off {
+	font-style: italic;
+}
+
+
+/* IE specific styles */
+* html .i-table-scrollposition {
+	background: transparent;
+	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../ITK-INF/widgetsets/com.itmill.toolkit.terminal.gwt.DefaultWidgetSet/default/table/img/scroll-position-bg.png", sizingMethod="scale");
 }
