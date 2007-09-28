@@ -774,6 +774,15 @@ public class Upload extends AbstractComponent implements Component.Focusable {
 	}
 
 	/**
+	 * Gets listener that tracks progress of upload.
+	 * @return listener
+	 * 
+	 */
+	public ProgressListener getProgressListener() {
+		return this.progressListener;
+	}
+
+	/**
 	 * ProgressListener receives events to track progress of upload.
 	 */
 	public interface ProgressListener {
