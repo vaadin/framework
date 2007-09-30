@@ -69,24 +69,25 @@ public class ApplicationConnection implements FocusListener {
 	}
 
 	private native static boolean isDebugMode() /*-{
-		var uri = $wnd.location;
-		var re = /debug[^\/]*$/;
-		return re.test(uri);
-	}-*/;
+	 var uri = $wnd.location;
+	 var re = /debug[^\/]*$/;
+	 return re.test(uri);
+	 }-*/;
 
 	public native String getAppUri()/*-{
-				 return $wnd.itmtk.appUri;
-				}-*/;
+	 return $wnd.itmtk.appUri;
+	 }-*/;
 
 	private native String getPathInfo()/*-{
-				 return $wnd.itmtk.pathInfo;
-				}-*/;
+	 return $wnd.itmtk.pathInfo;
+	 }-*/;
 
 	private void makeUidlRequest(String requestData) {
 		console.log("Making UIDL Request with params: " + requestData);
 		RequestBuilder rb = new RequestBuilder(RequestBuilder.POST, appUri
-				+ "/UIDL" + getPathInfo() + "?requestId=" + (Math.random())
-				+ "&" + requestData);
+				+ "/UIDL" + getPathInfo());
+		rb.setHeader("Content-Type",
+				"application/x-www-form-urlencoded; charset=utf-8");
 		try {
 			rb.sendRequest(requestData, new RequestCallback() {
 				public void onError(Request request, Throwable exception) {
@@ -198,8 +199,8 @@ public class ApplicationConnection implements FocusListener {
 
 	// Redirect browser
 	private static native void redirect(String url)/*-{
-					$wnd.location = url;
-				}-*/;
+	 $wnd.location = url;
+	 }-*/;
 
 	public void registerPaintable(String id, Paintable paintable) {
 		idToPaintable.put(id, paintable);
@@ -216,16 +217,16 @@ public class ApplicationConnection implements FocusListener {
 	}
 
 	public void unregisterChildPaintables(HasWidgets container) {
-		 Iterator it = container.iterator();
-		 while(it.hasNext()) {
-			 Widget w = (Widget) it.next();
-			 if (w instanceof Paintable) {
+		Iterator it = container.iterator();
+		while (it.hasNext()) {
+			Widget w = (Widget) it.next();
+			if (w instanceof Paintable) {
 				this.unregisterPaintable((Paintable) w);
-			 }
-			 if (w instanceof HasWidgets) {
-				 unregisterChildPaintables((HasWidgets) w);
-			 }
-		 }
+			}
+			if (w instanceof HasWidgets) {
+				unregisterChildPaintables((HasWidgets) w);
+			}
+		}
 	}
 
 	/**
@@ -268,8 +269,8 @@ public class ApplicationConnection implements FocusListener {
 	}
 
 	private static native String escapeString(String value) /*-{
-		return encodeURIComponent(value);
-	}-*/;
+	 return encodeURIComponent(value);
+	 }-*/;
 
 	public void updateVariable(String paintableId, String variableName,
 			String newValue, boolean immediate) {
@@ -368,10 +369,11 @@ public class ApplicationConnection implements FocusListener {
 	public boolean updateComponent(Widget component, UIDL uidl,
 			boolean manageCaption) {
 
-		// If the server request that a cached instance should be used, do nothing
+		// If the server request that a cached instance should be used, do
+		// nothing
 		if (uidl.getBooleanAttribute("cached"))
 			return true;
-		
+
 		// Switch to correct implementation if needed
 		if (!widgetSet.isCorrectImplementation(component, uidl)) {
 			Container parent = getParentLayout(component);
