@@ -20,9 +20,9 @@ import com.itmill.toolkit.terminal.gwt.client.UIDL;
  * @author IT Mill Ltd
  */
 public class IWindow extends PopupPanel implements Paintable {
-	
+
 	private static Vector windowOrder = new Vector();
-	
+
 	public static final String CLASSNAME = "i-window";
 
 	/** pixels used by inner borders and paddings horizontally */
@@ -32,7 +32,7 @@ public class IWindow extends PopupPanel implements Paintable {
 	protected static final int BORDER_WIDTH_VERTICAL = 22;
 
 	private static final int STACKING_OFFSET_PIXELS = 15;
-	
+
 	private static final int Z_INDEX_BASE = 10000;
 
 	private Paintable layout;
@@ -66,9 +66,9 @@ public class IWindow extends PopupPanel implements Paintable {
 	private ApplicationConnection client;
 
 	private String id;
-	
+
 	ShortcutActionHandler shortcutHandler;
-	
+
 	public IWindow() {
 		super();
 		int order = windowOrder.size();
@@ -76,33 +76,35 @@ public class IWindow extends PopupPanel implements Paintable {
 		windowOrder.add(this);
 		setStyleName(CLASSNAME);
 		constructDOM();
-		setPopupPosition(order*STACKING_OFFSET_PIXELS, order*STACKING_OFFSET_PIXELS);
+		setPopupPosition(order * STACKING_OFFSET_PIXELS, order
+				* STACKING_OFFSET_PIXELS);
 	}
-	
+
 	private void bringToFront() {
 		int curIndex = windowOrder.indexOf(this);
-		if(curIndex + 1 < windowOrder.size()) {
+		if (curIndex + 1 < windowOrder.size()) {
 			windowOrder.remove(this);
 			windowOrder.add(this);
-			for(;curIndex < windowOrder.size();curIndex++) {
+			for (; curIndex < windowOrder.size(); curIndex++) {
 				((IWindow) windowOrder.get(curIndex)).setWindowOrder(curIndex);
 			}
 		}
 	}
-	
+
 	/**
-	 * Returns true if window is the topmost window 
+	 * Returns true if window is the topmost window
 	 * 
 	 * @return
 	 */
 	private boolean isActive() {
 		return windowOrder.lastElement().equals(this);
 	}
-	
+
 	public void setWindowOrder(int order) {
-		DOM.setStyleAttribute(getElement(), "zIndex", "" + (order + Z_INDEX_BASE));
+		DOM.setStyleAttribute(getElement(), "zIndex", ""
+				+ (order + Z_INDEX_BASE));
 	}
-	
+
 	protected void constructDOM() {
 		header = DOM.createDiv();
 		DOM.setElementProperty(header, "className", CLASSNAME + "-header");
@@ -111,7 +113,9 @@ public class IWindow extends PopupPanel implements Paintable {
 		footer = DOM.createDiv();
 		DOM.setElementProperty(footer, "className", CLASSNAME + "-footer");
 		resizeBox = DOM.createDiv();
-		DOM.setElementProperty(resizeBox, "className", CLASSNAME + "-resizebox");
+		DOM
+				.setElementProperty(resizeBox, "className", CLASSNAME
+						+ "-resizebox");
 		closeBox = DOM.createDiv();
 		DOM.setElementProperty(closeBox, "className", CLASSNAME + "-closebox");
 		DOM.appendChild(footer, resizeBox);
@@ -120,11 +124,11 @@ public class IWindow extends PopupPanel implements Paintable {
 		DOM.sinkEvents(resizeBox, Event.MOUSEEVENTS);
 		DOM.sinkEvents(closeBox, Event.ONCLICK);
 		DOM.sinkEvents(contents, Event.ONCLICK);
-		
+
 		Element wrapper = getElement();
-		
+
 		DOM.sinkEvents(wrapper, Event.ONKEYDOWN);
-		
+
 		DOM.appendChild(wrapper, closeBox);
 		DOM.appendChild(wrapper, header);
 		DOM.appendChild(wrapper, contents);
@@ -135,19 +139,29 @@ public class IWindow extends PopupPanel implements Paintable {
 	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 		this.id = uidl.getId();
 		this.client = client;
-		
-		if(uidl.hasAttribute("invisible")) {
+
+		if (uidl.hasAttribute("invisible")) {
 			this.hide();
 			return;
 		} else {
-			if(uidl.getIntVariable("width") > 0) {
-				setPixelWidth(uidl.getIntVariable("width"));
+			try {
+				if (uidl.getIntVariable("width") > 0) {
+					setPixelWidth(uidl.getIntVariable("width"));
+				}
+			} catch (IllegalArgumentException e) {
+				// Silently ignored as width and height are not required
+				// parameters
 			}
-			if(uidl.getIntVariable("height") > 0) {
-				setPixelHeight(uidl.getIntVariable("width"));
+			try {
+				if (uidl.getIntVariable("height") > 0) {
+					setPixelHeight(uidl.getIntVariable("width"));
+				}
+			} catch (IllegalArgumentException e) {
+				// Silently ignored as width and height are not required
+				// parameters
 			}
-			
-			if(!isAttached()) {
+
+			if (!isAttached()) {
 				show();
 			}
 		}
@@ -165,43 +179,47 @@ public class IWindow extends PopupPanel implements Paintable {
 		} else {
 			setWidget((Widget) lo);
 		}
-		if(uidl.hasAttribute("caption")) {
+		if (uidl.hasAttribute("caption")) {
 			setCaption(uidl.getStringAttribute("caption"));
 		}
 		lo.updateFromUIDL(childUidl, client);
 
 		// we may have actions
-		if(uidl.getChidlCount() > 1 ) {
+		if (uidl.getChidlCount() > 1) {
 			childUidl = uidl.getChildUIDL(1);
-			if(childUidl.getTag().equals("actions")) {
-				if(shortcutHandler == null)
+			if (childUidl.getTag().equals("actions")) {
+				if (shortcutHandler == null)
 					shortcutHandler = new ShortcutActionHandler(id, client);
 				shortcutHandler.updateActionMap(childUidl);
 			}
-			
+
 		}
-	
+
 	}
-	
+
 	public void setCaption(String c) {
 		DOM.setInnerHTML(header, c);
 	}
-	
+
 	public void setPixelSize(int width, int height) {
 		setPixelHeight(height);
 		setPixelWidth(width);
 	}
-	
+
 	public void setPixelWidth(int width) {
-		DOM.setStyleAttribute(contents, "width", (width - BORDER_WIDTH_HORIZONTAL) + "px");
-		DOM.setStyleAttribute(header, "width", (width - BORDER_WIDTH_HORIZONTAL) + "px");
-		DOM.setStyleAttribute(footer, "width", (width - BORDER_WIDTH_HORIZONTAL) + "px");
+		DOM.setStyleAttribute(contents, "width",
+				(width - BORDER_WIDTH_HORIZONTAL) + "px");
+		DOM.setStyleAttribute(header, "width",
+				(width - BORDER_WIDTH_HORIZONTAL) + "px");
+		DOM.setStyleAttribute(footer, "width",
+				(width - BORDER_WIDTH_HORIZONTAL) + "px");
 		DOM.setStyleAttribute(getElement(), "width", width + "px");
-		
+
 	}
-	
+
 	public void setPixelHeight(int height) {
-		DOM.setStyleAttribute(contents, "height", (height - BORDER_WIDTH_VERTICAL) + "px");
+		DOM.setStyleAttribute(contents, "height",
+				(height - BORDER_WIDTH_VERTICAL) + "px");
 		DOM.setStyleAttribute(getElement(), "height", height + "px");
 	}
 
@@ -212,12 +230,13 @@ public class IWindow extends PopupPanel implements Paintable {
 	public void onBrowserEvent(Event event) {
 		int type = DOM.eventGetType(event);
 		if (type == Event.ONKEYDOWN && shortcutHandler != null) {
-			int modifiers = KeyboardListenerCollection.getKeyboardModifiers(event);
-			shortcutHandler.handleKeyboardEvent(
-					(char) DOM.eventGetKeyCode(event), modifiers);
+			int modifiers = KeyboardListenerCollection
+					.getKeyboardModifiers(event);
+			shortcutHandler.handleKeyboardEvent((char) DOM
+					.eventGetKeyCode(event), modifiers);
 			return;
 		}
-		
+
 		if (!isActive()) {
 			bringToFront();
 		}
@@ -226,8 +245,7 @@ public class IWindow extends PopupPanel implements Paintable {
 			onHeaderEvent(event);
 		else if (resizing || DOM.compare(resizeBox, target))
 			onResizeEvent(event);
-		else if (DOM.compare(target, closeBox) && 
-				type == Event.ONCLICK) {
+		else if (DOM.compare(target, closeBox) && type == Event.ONCLICK) {
 			onCloseClick();
 		}
 	}
@@ -302,8 +320,8 @@ public class IWindow extends PopupPanel implements Paintable {
 			onResizeEvent(event);
 			return false;
 		}
-		//TODO return false when modal
+		// TODO return false when modal
 		return true;
 	}
-	
+
 }
