@@ -368,6 +368,10 @@ public class ApplicationConnection implements FocusListener {
 	public boolean updateComponent(Widget component, UIDL uidl,
 			boolean manageCaption) {
 
+		// If the server request that a cached instance should be used, do nothing
+		if (uidl.getBooleanAttribute("cached"))
+			return true;
+		
 		// Switch to correct implementation if needed
 		if (!widgetSet.isCorrectImplementation(component, uidl)) {
 			Container parent = getParentLayout(component);

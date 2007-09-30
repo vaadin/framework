@@ -518,6 +518,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
 	 * interface.
 	 */
 	public void attach() {
+		requestRepaint();
 	}
 
 	/*
@@ -551,7 +552,10 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
 	 */
 	public final void paint(PaintTarget target) throws PaintException {
 
-		if (!target.startTag(this, this.getTag())) {
+		if (!target.startTag(this, this.getTag()) || repaintRequestListenersNotified) {
+			
+			// Paint the contents of the component
+			
 			if (styles != null && styles.size() > 0)
 				target.addAttribute("style", getStyle());
 			if (isReadOnly())
@@ -580,6 +584,10 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
 				if (error != null)
 					error.paint(target);
 			}
+		} else {
+			
+			// Contents have not changed, only cached presentation can be used
+			target.addAttribute("cached", true);
 		}
 		target.endTag(this.getTag());
 

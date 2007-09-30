@@ -88,6 +88,8 @@ public class JsonPaintTarget implements PaintTarget {
 	private JsonTag tag;
 
 	private int errorsOpen;
+	
+	private boolean cacheEnabled = false;
 
 	/**
 	 * Creates a new XMLPrintWriter, without automatic line flushing.
@@ -100,7 +102,7 @@ public class JsonPaintTarget implements PaintTarget {
 	 *             if the paint operation failed.
 	 */
 	public JsonPaintTarget(
-			CommunicationManager manager, PrintWriter outWriter)
+			CommunicationManager manager, PrintWriter outWriter, boolean cachingRequired)
 			throws PaintException {
 
 		this.manager = manager;
@@ -116,6 +118,8 @@ public class JsonPaintTarget implements PaintTarget {
 		// Adds document declaration
 
 		// Adds UIDL start tag and its attributes
+		
+		this.cacheEnabled = cachingRequired;
 	}
 
 	public void startTag(String tagName) throws PaintException {
@@ -774,10 +778,11 @@ public class JsonPaintTarget implements PaintTarget {
 	public boolean startTag(Paintable paintable, String tagName)
 			throws PaintException {
 		startTag(tagName, true);
+		boolean isPreviouslyPainted = manager.hasPaintableId(paintable);
 		String id = manager.getPaintableId(paintable);
 		paintable.addListener(manager);
 		addAttribute("id", id);
-		return false;
+		return cacheEnabled && isPreviouslyPainted;
 	}
 
 	/**
@@ -1086,8 +1091,6 @@ public class JsonPaintTarget implements PaintTarget {
 	}
 
 	public void setPreCachedResources(Set preCachedResources) {
-		// TODO Auto-generated method stub
-
+		throw new UnsupportedOperationException();
 	}
-
 }

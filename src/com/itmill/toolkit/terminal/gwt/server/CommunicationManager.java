@@ -293,7 +293,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 
 					outWriter.print("\"changes\":[");
 
-					paintTarget = new JsonPaintTarget(this, outWriter);
+					paintTarget = new JsonPaintTarget(this, outWriter, !repaintAll);
 
 					// Paints components
 					Set paintables;
@@ -901,6 +901,11 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 		return id;
 	}
 
+	public synchronized boolean hasPaintableId(Paintable paintable) {
+
+		return paintableIdMap.containsKey(paintable);
+	}
+	
 	/**
 	 * 
 	 * @return
