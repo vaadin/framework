@@ -1,6 +1,6 @@
 #!/bin/sh
 
-JVMVARS=""
+JVMVARS="-Xmx512M"
 
 PLATFORM=""
 
