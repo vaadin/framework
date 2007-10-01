@@ -94,7 +94,6 @@ public class ICustomLayout extends ComplexPanel implements Paintable, Container 
 
 		// Update PID
 		pid = uidl.getId();
-
 		if(!hasTemplate()) {
 			// Update HTML template only once
 			initializeHTML(uidl, client);
@@ -114,6 +113,12 @@ public class ICustomLayout extends ComplexPanel implements Paintable, Container 
 					// If no location is found, this component is not visible
 				}
 			}
+		}
+		
+		// Evaluate scripts only once
+		if (scripts != null) {
+			eval(scripts);
+			scripts = null;
 		}
 	}
 
@@ -176,16 +181,6 @@ public class ICustomLayout extends ComplexPanel implements Paintable, Container 
 	private static native String getLocation(Element elem) /*-{
 	 return elem.getAttribute("location");
 	 }-*/;
-
-	/** Scripts are evaluated when the document has been rendered */
-	protected void onLoad() {
-		super.onLoad();
-		// Evaluate scripts only once
-		if (scripts != null) {
-			eval(scripts);
-			scripts = null;
-		}
-	}
 
 	/** Evaluate given script in browser document */
 	private static native void eval(String script) /*-{
