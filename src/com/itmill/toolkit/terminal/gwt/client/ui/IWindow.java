@@ -140,6 +140,8 @@ public class IWindow extends PopupPanel implements Paintable {
 		this.id = uidl.getId();
 		this.client = client;
 
+		if (uidl.getBooleanAttribute("cached")) return;
+		
 		if (uidl.hasAttribute("invisible")) {
 			this.hide();
 			return;
