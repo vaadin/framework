@@ -70,6 +70,10 @@ public class ITabsheet extends FlowPanel implements Paintable {
 	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 		this.client = client;
 		id = uidl.getId();
+		
+		// Use cached sub-tree if available
+		if(uidl.getBooleanAttribute("cached"))
+			return;
 
 		UIDL tabs = uidl.getChildUIDL(0);
 		boolean keepCurrentTabs = tabKeys.size() == tabs.getNumberOfChildren();
@@ -84,8 +88,11 @@ public class ITabsheet extends FlowPanel implements Paintable {
 				UIDL tab = (UIDL) it.next();
 				if (tab.getBooleanAttribute("selected")) {
 					activeTabIndex = index;
-					Widget content = client.getWidget(tab.getChildUIDL(0));
-					((Paintable)content).updateFromUIDL(tab.getChildUIDL(0), client);
+					UIDL contentUIDL = tab.getChildUIDL(0);
+				
+					// Otherwise render new content
+					Widget content = client.getWidget(contentUIDL);
+					((Paintable)content).updateFromUIDL(contentUIDL, client);
 					tp.remove(index);
 					tp.insert(content, index);
 				}
