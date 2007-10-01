@@ -492,6 +492,7 @@ public class Panel extends AbstractComponentContainer implements Sizeable,
 	 * @see com.itmill.toolkit.ui.Component#attach()
 	 */
 	public void attach() {
+		super.attach();
 		if (layout != null)
 			layout.attach();
 	}

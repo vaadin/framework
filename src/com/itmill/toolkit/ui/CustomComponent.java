@@ -155,8 +155,10 @@ public class CustomComponent implements Component {
 	 * @see com.itmill.toolkit.ui.Component#attach()
 	 */
 	public void attach() {
-		if (root != null)
+		if (root != null) {
 			root.attach();
+			requestRepaint();
+		}
 	}
 
 	/**
