@@ -1824,6 +1824,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener {
 					TreeAction a = new TreeAction(this, String.valueOf(rowKey),
 							actionKey);
 					a.setCaption(getActionCaption(actionKey));
+					a.setIconUrl(getActionIcon(actionKey));
 					actions[i] = a;
 				}
 				return actions;

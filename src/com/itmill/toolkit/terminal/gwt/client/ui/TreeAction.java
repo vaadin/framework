@@ -53,13 +53,4 @@ public class TreeAction extends Action {
 	public void setTargetKey(String targetKey) {
 		this.targetKey = targetKey;
 	}
-
-	public String getHTML() {
-		StringBuffer sb = new StringBuffer();
-		if(iconUrl != null) {
-			sb.append("<img src=\""+iconUrl+"\" alt=\"icon\" />");
-		}
-		sb.append(caption);
-		return sb.toString();
-	}
 }

@@ -241,6 +241,7 @@ public class ITree extends Tree implements Paintable {
 				String actionKey = actionKeys[i];
 				TreeAction a = new TreeAction(this, String.valueOf(key), actionKey);
 				a.setCaption(getActionCaption(actionKey));
+				a.setIconUrl(getActionIcon(actionKey));
 				actions[i] = a;
 			}
 			return actions;

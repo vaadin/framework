@@ -25,11 +25,12 @@ public abstract class Action implements Command {
 
 	public String getHTML() {
 		StringBuffer sb = new StringBuffer();
+		sb.append("<div>");
 		if (getIconUrl() != null) {
 			sb.append("<img src=\"" + getIconUrl() + "\" alt=\"icon\" />");
 		}
-
 		sb.append(getCaption());
+		sb.append("</div>");
 		return sb.toString();
 	}
 
@@ -43,6 +44,10 @@ public abstract class Action implements Command {
 
 	public String getIconUrl() {
 		return iconUrl;
+	}
+
+	public void setIconUrl(String url) {
+		iconUrl = url;
 	}
 }
 

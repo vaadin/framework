@@ -22,8 +22,50 @@ select {
 }
 
 .i-contextmenu {
-	background: #fff;	
-	border: #000;
+	background: #e9eced;
+	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
+	background-color: #f6f7f7;
+	color: #464f52;
+	font-size: 12px;
+	line-height: 18px;
+}
+
+.i-contextmenu .gwt-MenuBar {
+	border-right: 1px solid #d0d4d5;
+	border-bottom: 2px solid #d0d4d5;
+	border-top: 1px solid #d0d4d5;
+	border-left: 2px solid #d0d4d5;
+}
+
+.i-contextmenu .gwt-MenuItem {
+	border-bottom: 1px solid #e6e9e9; 
+	padding:1px;
+	cursor: pointer;
+	vertical-align: middle;
+}
+
+.i-contextmenu .gwt-MenuItem div {
+	border: 1px solid #f6f7f7;
+	padding: 2px 10px 2px 5px;
+	cursor: pointer;
+	vertical-align: middle;
+}
+
+.i-contextmenu .gwt-MenuItem-selected {
+	background: #e6e9e9;
+}
+.i-contextmenu .gwt-MenuItem-selected div {
+	border: 1px solid #b6bbbc;
+}
+
+.i-contextmenu, table {
+	border-collapse:collapse;
+	margin:0;
+	padding:0;
+}
+.i-contextmenu .gwt-MenuItem img {
+	margin-right: 10px;
+	vertical-align: middle;
 }
 
 /* Provide some extra whitespace for wrapped elements
@@ -32,3 +74,4 @@ select {
 .i-captionwrapper {
 	margin: 0.3em 0 0 0;
 }
+
