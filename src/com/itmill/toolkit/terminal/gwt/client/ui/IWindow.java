@@ -69,6 +69,18 @@ public class IWindow extends PopupPanel implements Paintable {
 
 	ShortcutActionHandler shortcutHandler;
 
+	/** Last known width read from UIDL or updated to application connection */
+	private int uidlWidth = -1;
+
+	/** Last known height read from UIDL or updated to application connection */
+	private int uidlHeight = -1;
+
+	/** Last known positionx read from UIDL or updated to application connection */
+	private int uidlPositionX = -1;
+
+	/** Last known positiony read from UIDL or updated to application connection */
+	private int uidlPositionY = -1;
+
 	public IWindow() {
 		super();
 		int order = windowOrder.size();
@@ -140,26 +152,42 @@ public class IWindow extends PopupPanel implements Paintable {
 		this.id = uidl.getId();
 		this.client = client;
 
-		if (uidl.getBooleanAttribute("cached")) return;
-		
+		if (uidl.getBooleanAttribute("cached"))
+			return;
+
 		if (uidl.hasAttribute("invisible")) {
 			this.hide();
 			return;
 		} else {
+
+			// Initialize the width from UIDL
 			try {
-				if (uidl.getIntVariable("width") > 0) {
-					setPixelWidth(uidl.getIntVariable("width"));
+				String width = uidl.getStringVariable("width");
+				String height = uidl.getStringVariable("width");
+				if (width != null && width.endsWith("px")) {
+					uidlWidth = Integer.parseInt(width.substring(0, width
+							.length() - 2));
+					setPixelWidth(uidlWidth);
+				}
+				if (height != null && height.endsWith("px")) {
+					uidlHeight = Integer.parseInt(height.substring(0, height
+							.length() - 2));
+					setPixelHeight(uidlHeight);
 				}
 			} catch (IllegalArgumentException e) {
 				// Silently ignored as width and height are not required
 				// parameters
 			}
+
+			// Initialize the position form UIDL
 			try {
-				if (uidl.getIntVariable("height") > 0) {
-					setPixelHeight(uidl.getIntVariable("width"));
+				int positionx = uidl.getIntVariable("positionx");
+				int positiony = uidl.getIntVariable("positiony");
+				if (positionx >= 0 && positiony >= 0) {
+					setPopupPosition(positionx, positiony);
 				}
 			} catch (IllegalArgumentException e) {
-				// Silently ignored as width and height are not required
+				// Silently ignored as positionx and positiony are not required
 				// parameters
 			}
 
@@ -199,6 +227,18 @@ public class IWindow extends PopupPanel implements Paintable {
 
 	}
 
+	public void setPopupPosition(int left, int top) {
+		super.setPopupPosition(left, top);
+		if (left != uidlPositionX && client != null) {
+			client.updateVariable(id, "positionx", left, false);
+			uidlPositionX = left;
+		}
+		if (top != uidlPositionY && client != null) {
+			client.updateVariable(id, "positiony", top, false);
+			uidlPositionY = top;
+		}
+	}
+
 	public void setCaption(String c) {
 		DOM.setInnerHTML(header, c);
 	}
@@ -216,13 +256,21 @@ public class IWindow extends PopupPanel implements Paintable {
 		DOM.setStyleAttribute(footer, "width",
 				(width - BORDER_WIDTH_HORIZONTAL) + "px");
 		DOM.setStyleAttribute(getElement(), "width", width + "px");
-
+		if (width != uidlWidth && client != null) {
+			client.updateVariable(id, "width", width, false);
+			uidlWidth = width;
+		}
 	}
 
 	public void setPixelHeight(int height) {
 		DOM.setStyleAttribute(contents, "height",
 				(height - BORDER_WIDTH_VERTICAL) + "px");
 		DOM.setStyleAttribute(getElement(), "height", height + "px");
+		if (height != uidlHeight && client != null) {
+			client.updateVariable(id, "height", height, false);
+			uidlHeight = height;
+		}
+
 	}
 
 	protected Element getContainerElement() {
@@ -307,6 +355,7 @@ public class IWindow extends PopupPanel implements Paintable {
 				int y = DOM.eventGetScreenY(event) - startY + origY;
 				this.setPopupPosition(x, y);
 				DOM.eventPreventDefault(event);
+
 			}
 			break;
 		default:
