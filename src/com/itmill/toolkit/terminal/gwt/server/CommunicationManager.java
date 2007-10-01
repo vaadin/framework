@@ -165,8 +165,9 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 
 		try {
 			iter = upload.getItemIterator(request);
-			/* ATM this  loop is run only once as we are uploading one file per
-			 * request. 
+			/*
+			 * ATM this loop is run only once as we are uploading one file per
+			 * request.
 			 */
 			while (iter.hasNext()) {
 				FileItemStream item = iter.next();
@@ -207,9 +208,10 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 
 					};
 
-					// tell UploadProgressListener which component is receiving file
+					// tell UploadProgressListener which component is receiving
+					// file
 					pl.setUpload(uploadComponent);
-					
+
 					uploadComponent.receiveUpload(upstream);
 				}
 			}
@@ -240,6 +242,12 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 		// repaint requested or session has timed out and new one is created
 		boolean repaintAll = (request.getParameter(GET_PARAM_REPAINT_ALL) != null)
 				|| request.getSession().isNew();
+
+		// If repaint is requested, clean all ids
+		if (repaintAll) {
+			idPaintableMap.clear();
+			paintableIdMap.clear();
+		}
 
 		OutputStream out = response.getOutputStream();
 		PrintWriter outWriter = new PrintWriter(new BufferedWriter(
@@ -293,7 +301,8 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 
 					outWriter.print("\"changes\":[");
 
-					paintTarget = new JsonPaintTarget(this, outWriter, !repaintAll);
+					paintTarget = new JsonPaintTarget(this, outWriter,
+							!repaintAll);
 
 					// Paints components
 					Set paintables;
@@ -905,7 +914,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 
 		return paintableIdMap.containsKey(paintable);
 	}
-	
+
 	/**
 	 * 
 	 * @return
@@ -1177,6 +1186,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 	 */
 	private class UploadProgressListener implements ProgressListener {
 		Upload uploadComponent;
+
 		boolean updated = false;
 
 		public void setUpload(Upload u) {
