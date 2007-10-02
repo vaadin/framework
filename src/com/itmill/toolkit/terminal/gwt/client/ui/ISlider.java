@@ -253,7 +253,7 @@ public class ISlider extends Widget implements Paintable {
 				};
 				anim.scheduleRepeating(50);
 			} else
-				DOM.setStyleAttribute(handle, "left", pos + "px");
+				DOM.setStyleAttribute(handle, "left", ((int) pos) + "px");
 			// DOM.setAttribute(handle, "title", ""+v);
 		}
 
@@ -326,20 +326,20 @@ public class ISlider extends Widget implements Paintable {
 				if (anim != null)
 					anim.cancel();
 				dragging = true;
-				DOM.setCapture(handle);
+				DOM.setCapture(getElement());
 				DOM.eventPreventDefault(event); // prevent selecting text
 				DOM.eventCancelBubble(event, true);
 			}
 			break;
 		case Event.ONMOUSEMOVE:
 			if (dragging) {
-				DOM.setCapture(handle);
+				DOM.setCapture(getElement());
 				setValueByEvent(event, false, false);
 			}
 			break;
 		case Event.ONMOUSEUP:
 			dragging = false;
-			DOM.releaseCapture(handle);
+			DOM.releaseCapture(getElement());
 			setValueByEvent(event, true, true);
 			break;
 		default:
