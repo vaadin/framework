@@ -21,6 +21,10 @@ public class TestForWindowing extends Application {
 			public void buttonClick(ClickEvent event) {
 				final Window w = new Window("sw " + System.currentTimeMillis());
 				main.addWindow(w);
+				w.setPositionX(100);
+				w.setPositionY(100);
+				w.setWidth(200);
+				w.setHeight(200);
 				
 				w.setWidth(100);
 				w.setHeight(400);
