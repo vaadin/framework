@@ -5,6 +5,41 @@ import java.util.Map;
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
 
+/**
+ * TODO comment
+ *
+ * Example code:
+ * <code>
+ * 	class MyPlayer extends CustomComponent implements ValueChangeListener {
+ *		
+ *		Label volumeIndicator = new Label();
+ *		Slider slider;
+ *		
+ *		public MyPlayer() {
+ *			OrderedLayout ol = new OrderedLayout();
+ *			setCompositionRoot(ol);
+ *			slider = new Slider("Volume", 0, 100);
+ *			slider.setImmediate(true);
+ *			ol.addComponent(slider);
+ *			ol.addComponent(volumeIndicator);
+ *			volumeIndicator.setValue(new Double(50));
+ *			slider.addListener(this);
+ *			
+ *		}
+ *		
+ *		public void setVolume(double d) {
+ *			volumeIndicator.setValue("Current volume : " + d);
+ *		}
+ *
+ *		public void valueChange(ValueChangeEvent event) {
+ *			Double d = (Double) event.getProperty().getValue();
+ *			setVolume(d.doubleValue());
+ *		}
+ *	}
+ *
+ * </code>
+ *
+ */
 public class Slider extends AbstractField {
 
 	public static final int ORIENTATION_HORIZONTAL = 0;
@@ -86,6 +121,12 @@ public class Slider extends AbstractField {
 		setResolution(resolution);
 	}
 
+	/**
+	 * Create a new slider with given range
+	 * 
+	 * @param min
+	 * @param max
+	 */
 	public Slider(int min, int max) {
 		this();
 		setMin(min);
@@ -93,11 +134,23 @@ public class Slider extends AbstractField {
 		setResolution(0);
 	}
 
+	/**
+	 * Create a new slider with given caption and range
+	 * 
+	 * @param caption
+	 * @param min
+	 * @param max
+	 */
 	public Slider(String caption, int min, int max) {
 		this(min, max);
 		setCaption(caption);
 	}
 
+	/**
+	 * Gets the biggest possible value in Sliders range.
+	 * 
+	 * @return the biggest value slider can have
+	 */
 	public double getMax() {
 		return max;
 	}
@@ -120,6 +173,11 @@ public class Slider extends AbstractField {
 		requestRepaint();
 	}
 
+	/**
+	 * Gets the minimum value in Sliders range.
+	 * 
+	 * @return the smalles value slider can have
+	 */
 	public double getMin() {
 		return min;
 	}
