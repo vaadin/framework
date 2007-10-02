@@ -103,6 +103,11 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
 				Table.ALIGN_LEFT, Table.ALIGN_CENTER, Table.ALIGN_CENTER });
 		allProperties.setColumnHeaderMode(Table.COLUMN_HEADER_MODE_ID);
 		allProperties.setPageLength(0);
+		allProperties.setWidth(100);
+		allProperties.setWidthUnits(Table.UNITS_PERCENTAGE);
+		// TODO Add as soon as supported
+		//allProperties.setHeight(100);
+		//allProperties.setHeightUnits(Table.UNITS_PERCENTAGE);
 		updatePropertyList();
 
 	}
