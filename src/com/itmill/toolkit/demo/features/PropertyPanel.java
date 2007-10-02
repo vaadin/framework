@@ -72,6 +72,11 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
 		setCaption("Properties");
 		addComponent(formsLayout);
 
+		setWidth(100);
+		setWidthUnits(Table.UNITS_PERCENTAGE);
+		setHeight(100);
+		setHeightUnits(Table.UNITS_PERCENTAGE);
+		
 		// Target object
 		this.objectToConfigure = objectToConfigure;
 		config = new BeanItem(objectToConfigure);
