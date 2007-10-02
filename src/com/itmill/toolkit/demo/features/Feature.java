@@ -94,6 +94,11 @@ public abstract class Feature extends CustomComponent {
 			layout.addComponent(demo);
 
 		ts = new TabSheet();
+		
+		ts.setWidth(100);
+		ts.setWidthUnits(TabSheet.UNITS_PERCENTAGE);
+		ts.setHeight(100);
+		ts.setHeightUnits(TabSheet.UNITS_PERCENTAGE);
 
 		// Description tab
 		String title = getTitle();
