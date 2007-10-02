@@ -350,10 +350,17 @@ public class Panel extends AbstractComponentContainer implements Sizeable,
 		// Get new size
 		Integer newWidth = (Integer) variables.get("width");
 		Integer newHeight = (Integer) variables.get("height");
-		if (newWidth != null && newWidth.intValue() != getWidth())
+		if (newWidth != null && newWidth.intValue() != getWidth()) {
 			setWidth(newWidth.intValue());
-		if (newHeight != null && newHeight.intValue() != getHeight())
+			// ensure units as we are reading pixels
+			setWidthUnits(UNITS_PIXELS);
+			
+		}
+		if (newHeight != null && newHeight.intValue() != getHeight()) {
 			setHeight(newHeight.intValue());
+			// ensure units as we are reading pixels
+			setHeightUnits(UNITS_PIXELS);
+		}
 
 		// Scrolling
 		Integer newScrollX = (Integer) variables.get("scrollleft");

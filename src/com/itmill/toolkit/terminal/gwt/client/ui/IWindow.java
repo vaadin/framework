@@ -7,6 +7,8 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.KeyboardListenerCollection;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.ScrollListener;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
@@ -19,7 +21,7 @@ import com.itmill.toolkit.terminal.gwt.client.UIDL;
  * 
  * @author IT Mill Ltd
  */
-public class IWindow extends PopupPanel implements Paintable {
+public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 
 	private static Vector windowOrder = new Vector();
 
@@ -44,6 +46,8 @@ public class IWindow extends PopupPanel implements Paintable {
 	private Element footer;
 
 	private Element resizeBox;
+	
+	private ScrollPanel contentPanel = new ScrollPanel();
 
 	private boolean dragging;
 
@@ -90,6 +94,7 @@ public class IWindow extends PopupPanel implements Paintable {
 		constructDOM();
 		setPopupPosition(order * STACKING_OFFSET_PIXELS, order
 				* STACKING_OFFSET_PIXELS);
+		contentPanel.addScrollListener(this);
 	}
 
 	private void bringToFront() {
@@ -145,7 +150,11 @@ public class IWindow extends PopupPanel implements Paintable {
 		DOM.appendChild(wrapper, header);
 		DOM.appendChild(wrapper, contents);
 		DOM.appendChild(wrapper, footer);
-		setPixelSize(400, 200);
+		setWidget(contentPanel);
+		
+		// set default size
+		setWidth(400 + "px");
+		setHeight(300 + "px");
 	}
 
 	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -161,23 +170,19 @@ public class IWindow extends PopupPanel implements Paintable {
 		} else {
 
 			// Initialize the width from UIDL
-			try {
+			if(uidl.hasVariable("width")) {
 				String width = uidl.getStringVariable("width");
-				String height = uidl.getStringVariable("width");
-				if (width != null && width.endsWith("px")) {
-					uidlWidth = Integer.parseInt(width.substring(0, width
-							.length() - 2));
-					setPixelWidth(uidlWidth);
-				}
-				if (height != null && height.endsWith("px")) {
-					uidlHeight = Integer.parseInt(height.substring(0, height
-							.length() - 2));
-					setPixelHeight(uidlHeight);
-				}
-			} catch (IllegalArgumentException e) {
-				// Silently ignored as width and height are not required
-				// parameters
+				setWidth(width);
 			}
+			if(uidl.hasVariable("height")) {
+				String height = uidl.getStringVariable("height");
+				setHeight(height);
+			}
+			
+			contentPanel.setScrollPosition(
+					uidl.getIntVariable("scrolltop"));
+			contentPanel.setHorizontalScrollPosition(
+					uidl.getIntVariable("scrollleft"));
 
 			// Initialize the position form UIDL
 			try {
@@ -201,13 +206,13 @@ public class IWindow extends PopupPanel implements Paintable {
 			if (layout != lo) {
 				// remove old
 				client.unregisterPaintable(layout);
-				this.remove((Widget) layout);
+				contentPanel.remove((Widget) layout);
 				// add new
-				setWidget((Widget) lo);
+				contentPanel.setWidget((Widget) lo);
 				layout = lo;
 			}
 		} else {
-			setWidget((Widget) lo);
+			contentPanel.setWidget((Widget) lo);
 		}
 		if (uidl.hasAttribute("caption")) {
 			setCaption(uidl.getStringAttribute("caption"));
@@ -242,37 +247,7 @@ public class IWindow extends PopupPanel implements Paintable {
 	public void setCaption(String c) {
 		DOM.setInnerHTML(header, c);
 	}
-
-	public void setPixelSize(int width, int height) {
-		setPixelHeight(height);
-		setPixelWidth(width);
-	}
-
-	public void setPixelWidth(int width) {
-		DOM.setStyleAttribute(contents, "width",
-				(width - BORDER_WIDTH_HORIZONTAL) + "px");
-		DOM.setStyleAttribute(header, "width",
-				(width - BORDER_WIDTH_HORIZONTAL) + "px");
-		DOM.setStyleAttribute(footer, "width",
-				(width - BORDER_WIDTH_HORIZONTAL) + "px");
-		DOM.setStyleAttribute(getElement(), "width", width + "px");
-		if (width != uidlWidth && client != null) {
-			client.updateVariable(id, "width", width, false);
-			uidlWidth = width;
-		}
-	}
-
-	public void setPixelHeight(int height) {
-		DOM.setStyleAttribute(contents, "height",
-				(height - BORDER_WIDTH_VERTICAL) + "px");
-		DOM.setStyleAttribute(getElement(), "height", height + "px");
-		if (height != uidlHeight && client != null) {
-			client.updateVariable(id, "height", height, false);
-			uidlHeight = height;
-		}
-
-	}
-
+	
 	protected Element getContainerElement() {
 		return contents;
 	}
@@ -317,22 +292,38 @@ public class IWindow extends PopupPanel implements Paintable {
 		case Event.ONMOUSEUP:
 			resizing = false;
 			DOM.removeEventPreview(this);
+			setSize(event, true);
 			break;
 		case Event.ONMOUSEMOVE:
 			if (resizing) {
-				int w = DOM.eventGetScreenX(event) - startX + origW;
-				if (w < 60)
-					w = 60;
-				int h = DOM.eventGetScreenY(event) - startY + origH;
-				if (h < 60)
-					h = 60;
-				setPixelSize(w, h);
+				setSize(event, false);
 				DOM.eventPreventDefault(event);
 			}
 			break;
 		default:
 			break;
 		}
+	}
+	
+	public void setSize(Event event, boolean updateVariables) {
+		int w = DOM.eventGetScreenX(event) - startX + origW;
+		if (w < 60)
+			w = 60;
+		int h = DOM.eventGetScreenY(event) - startY + origH;
+		if (h < 60)
+			h = 60;
+		setWidth(w + "px");
+		setHeight(h + "px");
+		if(updateVariables) {
+			// sending width back always as pixels, no need for unit
+			client.updateVariable(id, "width", w, false);
+			client.updateVariable(id, "height", h, false);
+		}
+	}
+	
+	public void setWidth(String width) {
+		super.setWidth(width);
+		DOM.setStyleAttribute(header, "width", width);
 	}
 
 	private void onHeaderEvent(Event event) {
@@ -373,6 +364,11 @@ public class IWindow extends PopupPanel implements Paintable {
 		}
 		// TODO return false when modal
 		return true;
+	}
+
+	public void onScroll(Widget widget, int scrollLeft, int scrollTop) {
+		client.updateVariable(id, "scrolltop", scrollTop, false);
+		client.updateVariable(id, "scrollleft", scrollLeft, false);
 	}
 
 }

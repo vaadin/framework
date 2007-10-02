@@ -137,6 +137,16 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	 * containing (main window) or -1 if unspecified .
 	 */
 	private int positionX = -1;
+	
+	/**
+	 * Distance scrolled from top in pixels.
+	 */
+	private int scrollTop = 0;
+	
+	/**
+	 * Distance scrolled from left in pixels.
+	 */
+	private int scrollLeft = 0;
 
 	/* ********************************************************************* */
 
@@ -470,6 +480,10 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 		target.addVariable(this, "positionx", getPositionX());
 		target.addVariable(this, "positiony", getPositionY());
 
+		// Window position
+		target.addVariable(this, "scrolltop", getScrollTop());
+		target.addVariable(this, "scrollleft", getScrollLeft());
+		
 		// Window closing
 		target.addVariable(this, "close", false);
 
@@ -799,6 +813,18 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 			setPositionY(y < 0 ? -1 : y);
 		}
 
+		// Scroll position
+		Integer scrolltop = (Integer) variables.get("scrolltop");
+		if (scrolltop != null) {
+			int top = scrolltop.intValue();
+			setScrollTop(top < 0 ? 0 : top);
+		}
+		Integer scrollleft = (Integer) variables.get("scrollleft");
+		if (positiony != null) {
+			int left = scrollleft.intValue();
+			setScrollLeft(left < 0 ? 0 : left);
+		}
+
 		// Closing
 		Boolean close = (Boolean) variables.get("close");
 		if (close != null && close.booleanValue()) {
@@ -1048,6 +1074,42 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	 */
 	public Set getChildWindows() {
 		return Collections.unmodifiableSet(subwindows);
+	}
+	
+	/**
+	 * Gets the current vertical scroll position of window.
+	 * 
+	 * @return pixels scrolled from top
+	 */
+	public int getScrollTop() {
+		return scrollTop;
+	}
+
+	/**
+	 * Scrolls window to given position.
+	 * 
+	 * @param scrollTop pixels to be scrolled from top
+	 */
+	public void setScrollTop(int scrollTop) {
+		this.scrollTop = scrollTop;
+	}
+
+	/**
+	 * Gets the current horizontal scroll position of window.
+	 * 
+	 * @return pixels scrolled from left
+	 */
+	public int getScrollLeft() {
+		return scrollLeft;
+	}
+
+	/**
+	 * Scrolls window to given position.
+	 * 
+	 * @param scrollLeft pixels to be scrolled from left
+	 */
+	public void setScrollLeft(int scrollLeft) {
+		this.scrollLeft = scrollLeft;
 	}
 
 }

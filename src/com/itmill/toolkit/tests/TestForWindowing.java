@@ -19,8 +19,12 @@ public class TestForWindowing extends Application {
 		
 		main.addComponent(new Button("Add new subwindow", new Button.ClickListener() {
 			public void buttonClick(ClickEvent event) {
-				final Window w = new Window("Subwindow " + System.currentTimeMillis());
+				final Window w = new Window("sw " + System.currentTimeMillis());
 				main.addWindow(w);
+				
+				w.setWidth(100);
+				w.setHeight(400);
+				
 				
 				Button closebutton = new Button("Close " + w.getCaption(), new Button.ClickListener() {
 					public void buttonClick(ClickEvent event) {
@@ -29,6 +33,31 @@ public class TestForWindowing extends Application {
 				
 				});
 				w.addComponent(closebutton);
+				
+				w.addComponent(new Label("<p>Lorem ipsum dolor sit amet.</p>" +
+						"<p>Lorem ipsum dolor sit amet.</p>" +
+						"<p>Lorem ipsum dolor sit amet.</p>" +
+						"<p>Lorem ipsum dolor sit amet.</p>" +
+						"<p>Lorem ipsum dolor sit amet.</p>" +
+						"<p>Lorem ipsum dolor sit amet.</p>" +
+						"<p>Lorem ipsum dolor sit amet.</p>" +
+						"<p>Lorem ipsum dolor sit amet.</p>" +
+						"<p>Lorem ipsum dolor sit amet.</p>" +
+						"<p>Lorem ipsum dolor sit amet.</p>" +
+						"<p>Lorem ipsum dolor sit amet.</p>" +
+						"<p>Lorem ipsum dolor sit amet.</p>" +
+						"<p>Lorem ipsum dolor sit amet.</p>" +
+						"<p>Lorem ipsum dolor sit amet.</p>" +
+						"<p>Lorem ipsum dolor sit amet.</p>" +
+						"<p>Lorem ipsum dolor sit amet.</p>" +
+						"<p>Lorem ipsum dolor sit amet.</p>" +
+						"<p>Lorem ipsum dolor sit amet.</p>" +
+						"<p>Lorem ipsum dolor sit amet.</p>" +
+						"<p>Lorem ipsum dolor sit amet.</p>" +
+						"<p>Lorem ipsum dolor sit amet.</p>" +
+						"<p>Lorem ipsum dolor sit amet.</p>", 
+						Label.CONTENT_XHTML));
+
 			}
 		}));
 		
@@ -43,6 +72,7 @@ public class TestForWindowing extends Application {
 			}
 		}));
 	
+		main.addComponent(new Button("Commit (saves window state: size, place, scrollpos)"));
 	}
 
 	public Window getWindow(String name) {
