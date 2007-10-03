@@ -27,6 +27,8 @@ import com.itmill.toolkit.terminal.gwt.client.UIDL;
 /**
  * 
  * TODO needs major refactoring to be easily expandable
+ * TODO add new items
+ * TODO null selections
  */
 public class IFilterSelect extends Composite implements Paintable,
 		KeyboardListener, ClickListener {
