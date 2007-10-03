@@ -920,9 +920,11 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 	 * @return
 	 */
 	public synchronized Set getDirtyComponents() {
-
+		// TODO not compatible w/ subtree caching
+	    
 		// Remove unnecessary repaints from the list
 		Object[] paintables = dirtyPaintabletSet.toArray();
+/*
 		for (int i = 0; i < paintables.length; i++) {
 			if (paintables[i] instanceof Component) {
 				Component c = (Component) paintables[i];
@@ -941,7 +943,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 				}
 			}
 		}
-
+*/
 		return Collections.unmodifiableSet(dirtyPaintabletSet);
 	}
 
