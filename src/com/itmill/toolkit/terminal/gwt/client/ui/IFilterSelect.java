@@ -202,6 +202,10 @@ public class IFilterSelect extends Composite implements Paintable,
 		 */
 		public void setPosition(int offsetWidth, int offsetHeight) {
 			ApplicationConnection.getConsole().log("callback");
+			// reset menu size and retrieve its "natural"; size
+			menu.setHeight("");
+			menu.setWidth("");
+			offsetHeight = menu.getOffsetHeight();
 			if (!isPagingEnabled && offsetHeight > Window.getClientHeight()) {
 				offsetHeight = Window.getClientHeight();
 				menu.setHeight(offsetHeight + "px");
