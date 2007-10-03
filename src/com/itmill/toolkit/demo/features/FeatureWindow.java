@@ -116,7 +116,7 @@ public class FeatureWindow extends Feature implements Window.CloseListener {
 
 		propertyPanel.commit();
 
-		getApplication().addWindow(demoWindow);
+		getApplication().getMainWindow().addWindow(demoWindow);
 
 		demoWindow.removeAllComponents();
 
@@ -136,7 +136,7 @@ public class FeatureWindow extends Feature implements Window.CloseListener {
 	}
 
 	public void delWin() {
-		getApplication().removeWindow(demoWindow);
+		getApplication().getMainWindow().removeWindow(demoWindow);
 		// allow user to change window name tag (before window is created)
 		windowProperties.getField("name").setEnabled(true);
 		windowProperties.getField("name").setReadOnly(false);
