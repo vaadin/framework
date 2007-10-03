@@ -11,10 +11,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
-import java.lang.management.MemoryManagerMXBean;
-import java.util.jar.JarEntry;
-
-import sun.management.snmp.jvmmib.JVM_MANAGEMENT_MIB;
 
 import com.itmill.toolkit.data.Property.ValueChangeEvent;
 import com.itmill.toolkit.terminal.StreamResource;
@@ -38,7 +34,6 @@ import com.itmill.toolkit.ui.Upload.StartedEvent;
 import com.itmill.toolkit.ui.Upload.StartedListener;
 import com.itmill.toolkit.ui.Upload.SucceededEvent;
 import com.itmill.toolkit.ui.Upload.SucceededListener;
-import com.sun.jdi.VirtualMachine;
 
 public class TestForUpload extends CustomComponent implements
 		Upload.FinishedListener, FailedListener,SucceededListener, Upload.ProgressListener, StartedListener {
