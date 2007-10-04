@@ -11,6 +11,15 @@
      IT Mill Toolkit examples
   </description>
 
+ <servlet>
+    <servlet-name>TestBench</servlet-name>
+    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+    <init-param>
+      <param-name>application</param-name>
+      <param-value>com.itmill.toolkit.tests.TestBench</param-value>
+    </init-param>
+  </servlet>
+  
   <servlet>
     <servlet-name>Reservr</servlet-name>
     <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
@@ -214,6 +223,11 @@
       <param-value>com.itmill.toolkit.demo.colorpicker.gwt.WidgetSet</param-value>
     </init-param>
   </servlet>
+  
+   <servlet-mapping>
+    <servlet-name>TestBench</servlet-name>
+    <url-pattern>/TestBench/*</url-pattern>
+  </servlet-mapping>
 
   <servlet-mapping>
     <servlet-name>Reservr</servlet-name>
