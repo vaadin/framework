@@ -16,6 +16,13 @@ public class RandomLayoutStress extends com.itmill.toolkit.Application {
 
 	private Random seededRandom = new Random(1);
 
+	// FIXME increasing these settings brings out interesting client-side issues (DOM errors)
+	// TODO increasing values "even more" crashes Hosted Mode, pumping Xmx/Xms helps to some extent
+	private static final int componentCountA = 5;
+	private static final int componentCountB = 5;
+	private static final int componentCountC = 10;
+	private static final int componentCountD = 5;
+
 	/**
 	 * Initialize Application. Demo components are added to main window.
 	 */
@@ -31,7 +38,7 @@ public class RandomLayoutStress extends com.itmill.toolkit.Application {
 		OrderedLayout layoutA = new OrderedLayout(
 				OrderedLayout.ORIENTATION_HORIZONTAL);
 		// Add 4 random components
-		fillLayout(layoutA, 50);
+		fillLayout(layoutA, componentCountA);
 		// Add layout to panel
 		panelA.addComponent(layoutA);
 
@@ -40,15 +47,17 @@ public class RandomLayoutStress extends com.itmill.toolkit.Application {
 		OrderedLayout layoutB = new OrderedLayout(
 				OrderedLayout.ORIENTATION_VERTICAL);
 		// Add 4 random components
-		fillLayout(layoutB, 50);
+		fillLayout(layoutB, componentCountB);
 		// Add layout to panel
 		panelB.addComponent(layoutB);
 
 		// Create grid layout
-		Panel panelG = new Panel("Panel containing grid layout (20 x 20)");
-		GridLayout layoutG = new GridLayout(20, 20);
+		int gridSize = (int) java.lang.Math.sqrt(componentCountC);
+		Panel panelG = new Panel("Panel containing grid layout (" + gridSize
+				+ " x " + gridSize + ")");
+		GridLayout layoutG = new GridLayout(gridSize, gridSize);
 		// Add 12 random components
-		fillLayout(layoutG, 200);
+		fillLayout(layoutG, componentCountC);
 		// Add layout to panel
 		panelG.addComponent(layoutG);
 
@@ -64,7 +73,7 @@ public class RandomLayoutStress extends com.itmill.toolkit.Application {
 		Panel panelC = new Panel("Custom layout with style exampleStyle");
 		CustomLayout layoutC = new CustomLayout("exampleStyle");
 		// Add 4 random components
-		fillLayout(layoutC, 50);
+		fillLayout(layoutC, componentCountD);
 		// Add layout to panel
 		panelC.addComponent(layoutC);
 
