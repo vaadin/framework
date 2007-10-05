@@ -6,6 +6,7 @@ import java.util.Iterator;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.WindowResizeListener;
 import com.google.gwt.user.client.ui.KeyboardListenerCollection;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -13,12 +14,15 @@ import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
+import com.itmill.toolkit.terminal.gwt.client.Util;
 
 /**
  * 
  */
-public class IView extends SimplePanel implements Paintable {
+public class IView extends SimplePanel implements Paintable, WindowResizeListener {
 	
+	private static final String CLASSNAME = "i-view";
+
 	private String theme;
 	
 	private Paintable layout;
@@ -29,9 +33,14 @@ public class IView extends SimplePanel implements Paintable {
 
 	private ShortcutActionHandler actionHandler;
 	
-	public IView() {
+	public IView(String elementId) {
 		super();
+		setStyleName(CLASSNAME);
 		DOM.sinkEvents(getElement(), Event.ONKEYDOWN);
+		
+		RootPanel.get(elementId).add(this);
+		
+		Window.addWindowResizeListener(this);
 	}
 	
 	public String getTheme() {
@@ -116,6 +125,10 @@ public class IView extends SimplePanel implements Paintable {
 					(char) DOM.eventGetKeyCode(event), modifiers);
 			return;
 		}
+	}
+
+	public void onWindowResized(int width, int height) {
+		Util.runAnchestorsLayout(this);
 	}
 
 }

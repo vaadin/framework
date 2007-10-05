@@ -1,6 +1,10 @@
 package com.itmill.toolkit.terminal.gwt.client;
 
+import java.util.Iterator;
+
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.ui.HasWidgets;
+import com.google.gwt.user.client.ui.Widget;
 
 public class Util {
 
@@ -40,4 +44,21 @@ public class Util {
 		el.oncontextmenu = null;
 	}-*/;
 
+	/**
+	 * Traverses recursively ancestors until ContainerResizedListener child widget is found.
+	 * They will delegate it futher if needed.
+	 * @param container
+	 */
+	public static void runAnchestorsLayout(HasWidgets container) {
+		Iterator childWidgets = container.iterator();
+		while (childWidgets.hasNext()) {
+			Widget child = (Widget) childWidgets.next();
+			if (child instanceof ContainerResizedListener) {
+				((ContainerResizedListener) child).iLayout();
+			} else if (child instanceof HasWidgets) {
+				HasWidgets childContainer = (HasWidgets) child;
+				runAnchestorsLayout(childContainer);
+			}
+		}
+	}
 }

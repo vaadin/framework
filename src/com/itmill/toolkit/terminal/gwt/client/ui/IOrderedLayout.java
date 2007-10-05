@@ -29,15 +29,15 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
 	
 	int orientationMode = ORIENTATION_VERTICAL;
 
-	private HashMap componentToCaption = new HashMap();
+	protected HashMap componentToCaption = new HashMap();
 
-	private ApplicationConnection client;
+	protected ApplicationConnection client;
 
 	/**
 	 * Contains reference to Element where Paintables are wrapped. For  horizontal
 	 * layout this is TR and for vertical DIV.
 	 */
-	private Element childContainer;
+	protected Element childContainer;
 
 	public IOrderedLayout(int orientation) {
 		orientationMode = orientation;
@@ -45,7 +45,7 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
 		setStyleName(CLASSNAME);
 	}
 	
-	private void constructDOM() {
+	protected void constructDOM() {
 		switch (orientationMode) {
 		case ORIENTATION_HORIZONTAL:
 			Element table = DOM.createTable();
@@ -139,7 +139,7 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
 	 * 
 	 * @return list of Paintable objects
 	 */
-	private ArrayList getPaintables() {
+	protected ArrayList getPaintables() {
 		ArrayList al = new ArrayList();
 		Iterator it = iterator();
 		while (it.hasNext()) {
@@ -184,7 +184,7 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
 		}
 	}
 
-	private void insert(Widget w, int beforeIndex) {
+	protected void insert(Widget w, int beforeIndex) {
 		if (w instanceof Caption) {
 			Caption c = (Caption) w;
 			// captions go into same container element as their
@@ -203,7 +203,7 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
 	/**
 	 * creates an Element which will contain child widget
 	 */
-	private Element createWidgetWrappper() {
+	protected Element createWidgetWrappper() {
 		switch (orientationMode) {
 		case ORIENTATION_HORIZONTAL:
 			return DOM.createTD();

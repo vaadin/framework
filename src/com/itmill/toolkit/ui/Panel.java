@@ -401,8 +401,7 @@ public class Panel extends AbstractComponentContainer implements Sizeable,
 	}
 
 	/**
-	 * Sets the height units. Panel supports only Sizeable.UNITS_PIXELS and this
-	 * is ignored.
+	 * Sets the height units.
 	 * 
 	 * @see com.itmill.toolkit.terminal.Sizeable#setHeightUnits(int)
 	 */
@@ -411,8 +410,7 @@ public class Panel extends AbstractComponentContainer implements Sizeable,
 	}
 
 	/**
-	 * Sets the width units. Panel supports only Sizeable.UNITS_PIXELS, and this
-	 * is ignored.
+	 * Sets the width units.
 	 * 
 	 * @see com.itmill.toolkit.terminal.Sizeable#setWidthUnits(int)
 	 */

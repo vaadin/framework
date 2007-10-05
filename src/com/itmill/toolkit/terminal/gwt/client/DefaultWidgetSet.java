@@ -8,6 +8,7 @@ import com.itmill.toolkit.terminal.gwt.client.ui.ICheckBox;
 import com.itmill.toolkit.terminal.gwt.client.ui.ICustomLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.IDateFieldCalendar;
 import com.itmill.toolkit.terminal.gwt.client.ui.IEmbedded;
+import com.itmill.toolkit.terminal.gwt.client.ui.IExpandLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.IFilterSelect;
 import com.itmill.toolkit.terminal.gwt.client.ui.IForm;
 import com.itmill.toolkit.terminal.gwt.client.ui.IFormLayout;
@@ -35,7 +36,6 @@ import com.itmill.toolkit.terminal.gwt.client.ui.ITree;
 import com.itmill.toolkit.terminal.gwt.client.ui.ITwinColSelect;
 import com.itmill.toolkit.terminal.gwt.client.ui.IUnknownComponent;
 import com.itmill.toolkit.terminal.gwt.client.ui.IUpload;
-import com.itmill.toolkit.terminal.gwt.client.ui.IView;
 import com.itmill.toolkit.terminal.gwt.client.ui.IWindow;
 
 public class DefaultWidgetSet implements WidgetSet {
@@ -58,10 +58,6 @@ public class DefaultWidgetSet implements WidgetSet {
 	} else if ("com.itmill.toolkit.terminal.gwt.client.ui.IButton"
 		.equals(className)) {
 	    return new IButton();
-	} else if ("com.itmill.toolkit.terminal.gwt.client.ui.IView"
-		.equals(className)) {
-	    // TODO remove IView?
-	    return new IView();
 	} else if ("com.itmill.toolkit.terminal.gwt.client.ui.IWindow"
 		.equals(className)) {
 	    return new IWindow();
@@ -155,6 +151,9 @@ public class DefaultWidgetSet implements WidgetSet {
 	} else if ("com.itmill.toolkit.terminal.gwt.client.ui.IProgressIndicator"
 		.equals(className)) {
 	    return new IProgressIndicator();
+	} else if ("com.itmill.toolkit.terminal.gwt.client.ui.IExpandLayout"
+		.equals(className)) {
+	    return new IExpandLayout();
 	}
 	
 	return new IUnknownComponent();
@@ -248,6 +247,8 @@ public class DefaultWidgetSet implements WidgetSet {
 	    return "com.itmill.toolkit.terminal.gwt.client.ui.ISplitPanelVertical";
 	} else if ("progressindicator".equals(tag)) {
 	    return "com.itmill.toolkit.terminal.gwt.client.ui.IProgressIndicator";
+	} else if ("expandlayout".equals(tag)) {
+	    return "com.itmill.toolkit.terminal.gwt.client.ui.IExpandLayout";
 	}
 
 	return "com.itmill.toolkit.terminal.gwt.client.ui.IUnknownComponent";

@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 
-import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -20,7 +19,6 @@ import com.google.gwt.user.client.ui.FocusListener;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HasFocus;
 import com.google.gwt.user.client.ui.HasWidgets;
-import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ui.ContextMenu;
 import com.itmill.toolkit.terminal.gwt.client.ui.IView;
@@ -46,7 +44,7 @@ public class ApplicationConnection implements FocusListener {
 
 	private ContextMenu contextMenu = null;
 
-	private IView view = new IView();
+	private IView view;
 
 	public ApplicationConnection(WidgetSet widgetSet) {
 		this.widgetSet = widgetSet;
@@ -59,9 +57,10 @@ public class ApplicationConnection implements FocusListener {
 		}
 
 		makeUidlRequest("repaintAll=1");
-
+		
 		// TODO remove hardcoded id name
-		RootPanel.get("itmtk-ajax-window").add(view);
+		view = new IView("itmtk-ajax-window");
+
 	}
 
 	public static Console getConsole() {

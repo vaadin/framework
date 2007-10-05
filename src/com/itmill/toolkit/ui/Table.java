@@ -2372,14 +2372,11 @@ public class Table extends Select implements Action.Container,
 	}
 
 	/**
-	 * Sets the height units. Table supports only Sizeable.UNITS_PIXELS. Setting
-	 * to any other throws IllegalArgumentException.
-	 * 
+	 * Sets the height units.
+	 *  
 	 * @see com.itmill.toolkit.terminal.Sizeable#setHeightUnits(int)
 	 */
 	public void setHeightUnits(int units) {
-		if (units != Sizeable.UNITS_PIXELS)
-			throw new IllegalArgumentException();
 		this.heightUnit = units;
 	}
 

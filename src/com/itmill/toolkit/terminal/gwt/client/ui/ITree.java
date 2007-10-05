@@ -18,14 +18,14 @@ import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.Util;
 
 /**
- * TODO dump GWT's Tree implementation and use Toolkit 4 style
- * TODO update node close/opens to server (even if no content fetch is needed)
+ * TODO dump GWT's Tree implementation and use Toolkit 4 style TODO update node
+ * close/opens to server (even if no content fetch is needed)
  * 
  * DOM structure
- *
+ * 
  */
 public class ITree extends Tree implements Paintable {
-	
+
 	public static final String CLASSNAME = "i-tree";
 
 	Set selectedIds = new HashSet();
@@ -33,69 +33,65 @@ public class ITree extends Tree implements Paintable {
 	String paintableId;
 	private boolean selectable;
 	private boolean multiselect;
-	
+
 	private HashMap keyToNode = new HashMap();
-	
+
 	/**
-	 * This map contains captions and icon urls for 
-	 * actions like:
-	 *   * "33_c" -> "Edit"
-	 *   * "33_i" -> "http://dom.com/edit.png"
+	 * This map contains captions and icon urls for actions like: * "33_c" ->
+	 * "Edit" * "33_i" -> "http://dom.com/edit.png"
 	 */
 	private HashMap actionMap = new HashMap();
 
 	private boolean immediate;
 
-	
 	public ITree() {
 		super();
 		setStyleName(CLASSNAME);
 	}
-	
+
 	private void updateActionMap(UIDL c) {
 		Iterator it = c.getChildIterator();
-		while(it.hasNext()) {
+		while (it.hasNext()) {
 			UIDL action = (UIDL) it.next();
 			String key = action.getStringAttribute("key");
 			String caption = action.getStringAttribute("caption");
 			actionMap.put(key + "_c", caption);
-			if(action.hasAttribute("icon")) {
+			if (action.hasAttribute("icon")) {
 				// TODO need some uri handling ??
 				actionMap.put(key + "_i", action.getStringAttribute("icon"));
 			}
 		}
-		
+
 	}
-	
+
 	public String getActionCaption(String actionKey) {
 		return (String) actionMap.get(actionKey + "_c");
 	}
-	
+
 	public String getActionIcon(String actionKey) {
 		return (String) actionMap.get(actionKey + "_i");
 	}
-
 
 	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 		// Ensure correct implementation and let container manage caption
 		if (client.updateComponent(this, uidl, true))
 			return;
-		
+
 		this.client = client;
-		
-		if(uidl.hasAttribute("partialUpdate")) {
+
+		if (uidl.hasAttribute("partialUpdate")) {
 			handleUpdate(uidl);
 			return;
 		}
-		
+
 		this.paintableId = uidl.getId();
-		
+
 		this.immediate = uidl.hasAttribute("immediate");
-		
+
 		clear();
 		for (Iterator i = uidl.getChildIterator(); i.hasNext();) {
-			UIDL childUidl = (UIDL)i.next();
-			if("actions".equals(childUidl.getTag())){
+			UIDL childUidl = (UIDL) i.next();
+			if ("actions".equals(childUidl.getTag())) {
 				updateActionMap(childUidl);
 				continue;
 			}
@@ -106,29 +102,31 @@ public class ITree extends Tree implements Paintable {
 		String selectMode = uidl.getStringAttribute("selectmode");
 		selectable = selectMode != null;
 		multiselect = "multi".equals(selectMode);
-		
+
 		addTreeListener(new TreeListener() {
-		
+
 			public void onTreeItemStateChanged(TreeItem item) {
 				if (item instanceof TreeNode) {
 					TreeNode tn = (TreeNode) item;
-					if(item.getState()) {
-						if(!tn.isChildrenLoaded()) {
+					if (item.getState()) {
+						if (!tn.isChildrenLoaded()) {
 							String key = tn.key;
-							ITree.this.client.updateVariable(paintableId, "expand", new String[] {key}, true);
+							ITree.this.client.updateVariable(paintableId,
+									"expand", new String[] { key }, true);
 						}
 					} else {
 						// TODO collapse
 					}
 				}
 			}
-		
+
 			public void onTreeItemSelected(TreeItem item) {
 				TreeNode n = ((TreeNode) item);
-				if (!selectable) return;
+				if (!selectable)
+					return;
 				String key = n.key;
 				if (key != null) {
-					if(selectedIds.contains(key) && multiselect) {
+					if (selectedIds.contains(key) && multiselect) {
 						selectedIds.remove(key);
 						n.setISelected(false);
 					} else {
@@ -138,46 +136,48 @@ public class ITree extends Tree implements Paintable {
 						selectedIds.add(key);
 						n.setISelected(true);
 					}
-					ITree.this.client.updateVariable(ITree.this.paintableId, "selected", selectedIds.toArray(), immediate);
+					ITree.this.client.updateVariable(ITree.this.paintableId,
+							"selected", selectedIds.toArray(), immediate);
 				}
 			}
-		
+
 		});
-		
+
 		selectedIds = uidl.getStringArrayVariableAsSet("selected");
-		
+
 	}
-	
+
 	private void handleUpdate(UIDL uidl) {
-		TreeNode rootNode = (TreeNode) keyToNode.get(uidl.getStringAttribute("rootKey"));
-		if(rootNode != null) {
+		TreeNode rootNode = (TreeNode) keyToNode.get(uidl
+				.getStringAttribute("rootKey"));
+		if (rootNode != null) {
 			rootNode.renderChildNodes(uidl.getChildIterator());
 		}
-		
+
 	}
 
 	private class TreeNode extends TreeItem implements ActionOwner {
-		
+
 		String key;
-		
+
 		boolean isLeaf = false;
-		
+
 		private String[] actionKeys = null;
 
 		private boolean childrenLoaded;
-		
+
 		public TreeNode() {
 			super();
 			attachContextMenuEvent(getElement());
 		}
-		
+
 		public void remove() {
 			Util.removeContextMenuEvent(getElement());
 			super.remove();
 		}
 
 		public void setSelected(boolean selected) {
-			if(!selected && !ITree.this.multiselect) {
+			if (!selected && !ITree.this.multiselect) {
 				this.setISelected(false);
 			}
 			super.setSelected(selected);
@@ -186,15 +186,15 @@ public class ITree extends Tree implements Paintable {
 		public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 			this.setText(uidl.getStringAttribute("caption"));
 			key = uidl.getStringAttribute("key");
-			
+
 			keyToNode.put(key, this);
-			
-			if(uidl.hasAttribute("al"))
+
+			if (uidl.hasAttribute("al"))
 				actionKeys = uidl.getStringArrayAttribute("al");
-			
-			if(uidl.getTag().equals("node")) {
+
+			if (uidl.getTag().equals("node")) {
 				isLeaf = false;
-				if(uidl.getChidlCount() == 0) {
+				if (uidl.getChidlCount() == 0) {
 					TreeNode childTree = new TreeNode();
 					childTree.setText("Loading...");
 					childrenLoaded = false;
@@ -205,20 +205,20 @@ public class ITree extends Tree implements Paintable {
 			} else {
 				isLeaf = true;
 			}
-			
-			if(uidl.getBooleanAttribute("expanded") && !getState()) {
+
+			if (uidl.getBooleanAttribute("expanded") && !getState()) {
 				setState(true);
 			}
-			
+
 			setSelected(uidl.getBooleanAttribute("selected"));
-			
+
 		}
-		
+
 		private void renderChildNodes(Iterator i) {
 			removeItems();
 			while (i.hasNext()) {
-				UIDL childUidl = (UIDL)i.next();
-				if("actions".equals(childUidl.getTag())) {
+				UIDL childUidl = (UIDL) i.next();
+				if ("actions".equals(childUidl.getTag())) {
 					updateActionMap(childUidl);
 					continue;
 				}
@@ -228,18 +228,19 @@ public class ITree extends Tree implements Paintable {
 			}
 			childrenLoaded = true;
 		}
-		
+
 		public boolean isChildrenLoaded() {
 			return childrenLoaded;
 		}
 
 		public Action[] getActions() {
-			if(actionKeys == null)
+			if (actionKeys == null)
 				return new Action[] {};
 			Action[] actions = new Action[actionKeys.length];
 			for (int i = 0; i < actions.length; i++) {
 				String actionKey = actionKeys[i];
-				TreeAction a = new TreeAction(this, String.valueOf(key), actionKey);
+				TreeAction a = new TreeAction(this, String.valueOf(key),
+						actionKey);
 				a.setCaption(getActionCaption(actionKey));
 				a.setIconUrl(getActionIcon(actionKey));
 				actions[i] = a;
@@ -254,19 +255,19 @@ public class ITree extends Tree implements Paintable {
 		public String getPaintableId() {
 			return paintableId;
 		}
-		
+
 		/**
-		 * Adds/removes IT Mill Toolkit spesific style name.
-		 * (GWT treenode does not support multiselects)
+		 * Adds/removes IT Mill Toolkit spesific style name. (GWT treenode does
+		 * not support multiselects)
 		 * 
 		 * @param selected
 		 */
 		public void setISelected(boolean selected) {
 			setStyleName(getElement(), "i-tree-node-selected", selected);
 		}
-		
+
 		public void showContextMenu(Event event) {
-			if(actionKeys != null) {
+			if (actionKeys != null) {
 				int left = DOM.eventGetClientX(event);
 				int top = DOM.eventGetClientY(event);
 				top += Window.getScrollTop();
@@ -275,8 +276,9 @@ public class ITree extends Tree implements Paintable {
 			}
 			DOM.eventCancelBubble(event, true);
 		}
-		
-		private native void attachContextMenuEvent(Element el) /*-{
+
+		private native void attachContextMenuEvent(Element el)
+		/*-{
 			var node = this;
 			el.oncontextmenu = function(e) {
 				if(!e)
@@ -285,6 +287,6 @@ public class ITree extends Tree implements Paintable {
 				return false;
 			};
 		}-*/;
-		
+
 	}
 }

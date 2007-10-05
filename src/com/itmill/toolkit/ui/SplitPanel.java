@@ -214,7 +214,7 @@ public class SplitPanel extends AbstractComponentContainer implements Layout, Si
 			target.addAttribute("width", "100%");
 		}
 		if(height > 0) {
-			target.addAttribute("height", height + UNIT_SYMBOLS[widthUnit]);
+			target.addAttribute("height", height + UNIT_SYMBOLS[heightUnit]);
 		} else {
 			target.addAttribute("height", "100%");
 		}

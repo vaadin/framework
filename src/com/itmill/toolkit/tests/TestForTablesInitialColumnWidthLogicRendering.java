@@ -83,7 +83,7 @@ public class TestForTablesInitialColumnWidthLogicRendering extends CustomCompone
 
 	}
 	
-	public Table getTestTable(int cols, int rows) {
+	public static Table getTestTable(int cols, int rows) {
 		Table t = new Table();
 		t.setColumnCollapsingAllowed(true);
 		for(int i = 0; i < cols; i++) {
