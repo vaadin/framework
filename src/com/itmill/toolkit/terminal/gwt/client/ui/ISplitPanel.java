@@ -64,6 +64,7 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
 		setOrientation(orientation);
 		setSplitPosition("50%");
 		DOM.sinkEvents(splitter, (Event.MOUSEEVENTS));
+		DOM.sinkEvents(getElement(), (Event.MOUSEEVENTS));
 	}
 
 	protected void constructDom() {
@@ -208,15 +209,17 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
 	public void setHeight(String height) {
 		super.setHeight(height);
 		// give sane height
+		getOffsetHeight(); // shake IE
 		if (getOffsetHeight() < SPLITTER_SIZE)
-			setHeight((SPLITTER_SIZE * 3) + "px");
+			super.setHeight((SPLITTER_SIZE * 3) + "px");
 	}
 
 	public void setWidth(String width) {
 		super.setWidth(width);
 		// give sane width
+		getOffsetWidth(); // shake IE
 		if (getOffsetWidth() < SPLITTER_SIZE)
-			setWidth((SPLITTER_SIZE * 3) + "px");
+			super.setWidth((SPLITTER_SIZE * 3) + "px");
 	}
 
 	public void onBrowserEvent(Event event) {
