@@ -7,98 +7,138 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
+import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
+import com.itmill.toolkit.terminal.gwt.client.Util;
 
-public class IPanel extends FlowPanel implements Paintable {
-	
+public class IPanel extends SimplePanel implements Paintable,
+		ContainerResizedListener {
+
 	public static final String CLASSNAME = "i-panel";
-	
+
 	ApplicationConnection client;
-	
+
 	String id;
-	
-	private Label caption;
-	
-	private SimplePanel content;
-	
+
+	private Element captionNode = DOM.createDiv();
+	private Element bottomDecoration = DOM.createDiv();
+
+	private Element contentNode = DOM.createDiv();
+
 	public IPanel() {
 		super();
 		setStyleName(CLASSNAME);
-		caption = new Label();
-		caption.setStyleName(CLASSNAME+"-caption");
-		content = new SimplePanel();
-		content.setStyleName(CLASSNAME+"-content");
+
+		DOM.appendChild(getElement(), captionNode);
+		DOM
+				.setElementProperty(captionNode, "className", CLASSNAME
+						+ "-caption");
+		DOM.appendChild(getElement(), contentNode);
+		DOM
+				.setElementProperty(contentNode, "className", CLASSNAME
+						+ "-content");
+		DOM.appendChild(getElement(), bottomDecoration);
+		DOM.setElementProperty(bottomDecoration, "className", CLASSNAME
+				+ "-deco");
+	}
+
+	protected Element getContainerElement() {
+		return contentNode;
 	}
 
 	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 		// Ensure correct implementation
 		if (client.updateComponent(this, uidl, false))
 			return;
-		
+
 		this.client = client;
 		this.id = uidl.getId();
-		
-		// TODO optimize: if only the caption has changed, don't re-render whole content
-		clear();
-		// Remove shadow
-		Element deco = DOM.getChild(getElement(), 0);
-		if(deco != null)
-			DOM.removeChild(getElement(), deco);
-		
-		if(uidl.hasAttribute("style"))
-			setStyleName(CLASSNAME + " " + CLASSNAME+"-"+uidl.getStringAttribute("style"));
-		else
-			setStyleName(CLASSNAME);
-		
-		// Handle caption displaying
-		if(uidl.hasAttribute("caption") && !uidl.getStringAttribute("caption").equals("")) {
-			caption.setText(uidl.getStringAttribute("caption"));
-			caption.setStyleName(CLASSNAME+"-caption");
-			add(caption);
-		} else {
-			// Theme needs this to work around different paddings
-			caption.setStyleName(CLASSNAME+"-nocaption");
-			caption.setText("");
-			add(caption);
-		}
-		
-		// Render content
-		UIDL layoutUidl = uidl.getChildUIDL(0);
-		Widget layout = client.getWidget(layoutUidl);
-		content.setWidget(layout);
-		add(content);
-		((Paintable)layout).updateFromUIDL(layoutUidl, client);
-		
-		// Add a decoration element for additional styling
-		deco = DOM.createDiv();
-		DOM.setElementProperty(deco, "className", CLASSNAME+"-deco");
-		DOM.appendChild(getElement(), deco);
-		
+
 		// Size panel
-		String h = uidl.hasVariable("height")? uidl.getStringVariable("height") : null;
-		String w = uidl.hasVariable("width")? uidl.getStringVariable("width") : null;
-		
-		setWidth(w!=null? w : "");
-		
-		// Try to approximate the height as close as possible
-		if(h!=null) {
-			// First, calculate needed pixel height
+		String h = uidl.hasVariable("height") ? uidl
+				.getStringVariable("height") : null;
+		String w = uidl.hasVariable("width") ? uidl.getStringVariable("width")
+				: null;
+
+		setWidth(w != null ? w : "");
+
+		if (h != null) {
 			setHeight(h);
-			int neededHeight = getOffsetHeight();
-			setHeight("auto");
-			// Then calculate the size the content area needs to be
-			content.setHeight("0");
-			int height = getOffsetHeight();
-			content.setHeight(neededHeight-height + "px");
 		} else {
-			content.setHeight("");
+			DOM.setStyleAttribute(contentNode, "height", "");
 			// We don't need overflow:auto when panel height is not set
 			// (overflow:auto causes rendering errors at least in Firefox when a
 			// a panel is inside a tabsheet with overflow:auto set)
-			DOM.setStyleAttribute(content.getElement(), "overflow", "hidden");
+			DOM.setStyleAttribute(contentNode, "overflow", "hidden");
+		}
+
+		// TODO optimize: if only the caption has changed, don't re-render whole
+		// content
+		if(getWidget() != null) {
+			clear();
+		}
+
+		if (uidl.hasAttribute("style"))
+			setStyleName(CLASSNAME + " " + CLASSNAME + "-"
+					+ uidl.getStringAttribute("style"));
+		else
+			setStyleName(CLASSNAME);
+
+		// Handle caption displaying
+		if (uidl.hasAttribute("caption")
+				&& !uidl.getStringAttribute("caption").equals("")) {
+			DOM.setInnerHTML(captionNode, uidl.getStringAttribute("caption"));
+			DOM.setElementProperty(captionNode, "className", CLASSNAME
+					+ "-caption");
+		} else {
+			// Theme needs this to work around different paddings
+			DOM.setElementProperty(captionNode, "className", CLASSNAME
+					+ "-nocaption");
+			DOM.setInnerHTML(captionNode, "");
 		}
 		
+		iLayout();
+
+		// Render content
+		UIDL layoutUidl = uidl.getChildUIDL(0);
+		Widget layout = client.getWidget(layoutUidl);
+		setWidget(layout);
+		((Paintable) layout).updateFromUIDL(layoutUidl, client);
+
 	}
-	
+
+	public void iLayout() {
+		String h = DOM.getStyleAttribute(getElement(), "height");
+		if (h != null && h != "") {
+			// need to fix containers height properly
+
+			boolean hasChildren = getWidget() != null;
+			Element contentEl = null;
+			String  origPositioning = null;
+			if(hasChildren) {
+				// remove children temporary form normal flow to detect proper size
+				contentEl = getWidget().getElement();
+				origPositioning = DOM.getStyleAttribute(contentEl, "position");
+				DOM.setStyleAttribute(contentEl, "position", "absolute");
+			}
+			DOM.setStyleAttribute(contentNode, "height", "");
+			int availableH = DOM.getElementPropertyInt(getElement(),
+			"clientHeight");
+
+			int usedH = DOM
+					.getElementPropertyInt(bottomDecoration, "offsetTop")
+					+ DOM.getElementPropertyInt(bottomDecoration,
+							"offsetHeight");
+			int contentH = availableH - usedH;
+			if(contentH < 0)
+				contentH = 0;
+			DOM.setStyleAttribute(contentNode, "height", contentH + "px");
+			if(hasChildren) {
+				DOM.setStyleAttribute(contentEl, "position", origPositioning);
+			}
+		}
+		Util.runAnchestorsLayout(this);
+	}
+
 }

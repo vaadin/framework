@@ -94,12 +94,15 @@ public class TestBench extends com.itmill.toolkit.Application implements
 		menu.addListener(this);
 		menu.setImmediate(true);
 
-		mainLayout.setHeight(700);
-		mainLayout.setHeightUnits(SplitPanel.UNITS_PIXELS);
 		mainLayout.addComponent(menu);
+		
+		bodyLayout.setHeight(100);
+		bodyLayout.setHeightUnits(Panel.UNITS_PERCENTAGE);
+		bodyLayout.setLayout(new ExpandLayout());
+		
 		mainLayout.addComponent(bodyLayout);
 
-		mainWindow.addComponent(mainLayout);
+		mainWindow.setLayout(mainLayout);
 
 		setMainWindow(mainWindow);
 	}

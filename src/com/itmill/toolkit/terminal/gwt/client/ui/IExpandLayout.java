@@ -17,22 +17,25 @@ import com.itmill.toolkit.terminal.gwt.client.Util;
  * 
  * @author IT Mill Ltd
  */
-public class IExpandLayout extends IOrderedLayout implements ContainerResizedListener {
+public class IExpandLayout extends IOrderedLayout implements
+		ContainerResizedListener {
+	public static final String CLASSNAME = "i-expandlayout";
 
 	private Widget expandedWidget;
 	private UIDL expandedWidgetUidl;
 
 	public IExpandLayout() {
 		super(IOrderedLayout.ORIENTATION_VERTICAL);
+		setStyleName(CLASSNAME);
 	}
 
 	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 		this.client = client;
-		
+
 		// Ensure correct implementation
 		if (client.updateComponent(this, uidl, false))
 			return;
-		
+
 		String h = uidl.getStringAttribute("height");
 		setHeight(h);
 		String w = uidl.getStringAttribute("width");
@@ -106,6 +109,9 @@ public class IExpandLayout extends IOrderedLayout implements ContainerResizedLis
 				removePaintable(p);
 		}
 
+		if (uidlWidgets.size() == 0)
+			return;
+
 		iLayout();
 
 		/*
@@ -117,32 +123,37 @@ public class IExpandLayout extends IOrderedLayout implements ContainerResizedLis
 	}
 
 	public void iLayout() {
-//		ApplicationConnection.getConsole().log("EL layouting...");
+		if (expandedWidget == null) {
+			return;
+		}
+		// ApplicationConnection.getConsole().log("EL layouting...");
 		Element expandedElement = DOM.getParent(expandedWidget.getElement());
-		String origDisplay = DOM.getStyleAttribute(expandedElement, "display");
-		DOM.setStyleAttribute(expandedElement, "display", "none");
+		// take expanded element temporarely out of flow to make container
+		// minimum sized
+		String origiginalPositioning = DOM.getStyleAttribute(expandedWidget.getElement(), "position");
+		DOM.setStyleAttribute(expandedWidget.getElement(), "position", "absolute");
+		DOM.setStyleAttribute(expandedElement, "height", "");
 
 		// add temp element to make some measurements
 		Element meter = createWidgetWrappper();
 		DOM.setStyleAttribute(meter, "overflow", "hidden");
-		DOM.setStyleAttribute(meter, "height", "1px");
+		DOM.setStyleAttribute(meter, "height", "0px");
 		DOM.appendChild(childContainer, meter);
 		int usedSpace = DOM.getElementPropertyInt(meter, "offsetTop")
 				- DOM.getElementPropertyInt(DOM.getFirstChild(childContainer),
 						"offsetTop");
-//		ApplicationConnection.getConsole().log("EL h" + getOffsetHeight());
-//		ApplicationConnection.getConsole().log("EL h" + getOffsetHeight());
+		// ApplicationConnection.getConsole().log("EL h" + getOffsetHeight());
+		// ApplicationConnection.getConsole().log("EL h" + getOffsetHeight());
 		int freeSpace = getOffsetHeight() - usedSpace;
 
-		DOM.setStyleAttribute(expandedElement,
-				"height", freeSpace + "px");
-		
-		DOM.setStyleAttribute(expandedElement, "display", origDisplay);
-		
+		DOM.setStyleAttribute(expandedElement, "height", freeSpace + "px");
+
+		DOM.setStyleAttribute(expandedWidget.getElement(), "position", origiginalPositioning);
+
 		DOM.removeChild(childContainer, meter);
-		
+
 		// TODO save previous size and only propagate if really changed
 		Util.runAnchestorsLayout(this);
 	}
-	
+
 }

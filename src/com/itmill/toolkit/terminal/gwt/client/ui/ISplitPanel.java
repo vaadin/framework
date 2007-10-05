@@ -11,13 +11,14 @@ import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.Util;
 
-public class ISplitPanel extends ComplexPanel implements Paintable, ContainerResizedListener {
+public class ISplitPanel extends ComplexPanel implements Paintable,
+		ContainerResizedListener {
 	public static final String CLASSNAME = "i-splitpanel";
 
 	public static final int ORIENTATION_HORIZONTAL = 0;
 	public static final int ORIENTATION_VERTICAL = 1;
 
-	private static final int SPLITTER_SIZE = 8;
+	private static final int SPLITTER_SIZE = 10;
 
 	private int orientation;
 	private Widget firstChild;
@@ -44,11 +45,19 @@ public class ISplitPanel extends ComplexPanel implements Paintable, ContainerRes
 
 	public ISplitPanel(int orientation) {
 		setElement(DOM.createDiv());
-		setStyleName(CLASSNAME);
+		switch (orientation) {
+		case ORIENTATION_HORIZONTAL:
+			setStyleName(CLASSNAME + "-horizontal");
+			break;
+		case ORIENTATION_VERTICAL:
+		default:
+			setStyleName(CLASSNAME + "-vertical");
+			break;
+		}
 		constructDom();
 		setOrientation(orientation);
 		setSplitPosition("50%");
-		DOM.sinkEvents(splitter, Event.MOUSEEVENTS);
+		DOM.sinkEvents(splitter, (Event.MOUSEEVENTS));
 	}
 
 	protected void constructDom() {
@@ -64,7 +73,6 @@ public class ISplitPanel extends ComplexPanel implements Paintable, ContainerRes
 		DOM.setStyleAttribute(splitter, "position", "absolute");
 		DOM.setStyleAttribute(secondContainer, "position", "absolute");
 		DOM.setElementProperty(splitter, "className", "splitter");
-		DOM.setStyleAttribute(splitter, "background", "cyan");
 
 		DOM.setStyleAttribute(firstContainer, "overflow", "hidden");
 		DOM.setStyleAttribute(secondContainer, "overflow", "hidden");
@@ -199,26 +207,26 @@ public class ISplitPanel extends ComplexPanel implements Paintable, ContainerRes
 			onMouseDown(event);
 			break;
 		case Event.ONMOUSEUP:
-			onMouseUp(event);
+			if(resizing)
+				onMouseUp(event);
+			break;
+		case Event.ONCLICK:
+			resizing = false;
 			break;
 		}
 	}
 
 	public void onMouseDown(Event event) {
-		resizing = true;
-		DOM.setCapture(getElement());
-		origX = DOM.getAbsoluteLeft(splitter);
-		origY = DOM.getAbsoluteTop(splitter);
-		origMouseX = DOM.eventGetClientX(event);
-		origMouseY = DOM.eventGetClientY(event);
-		DOM.eventCancelBubble(event, true);
-		DOM.eventPreventDefault(event);
-	}
-
-	public void onMouseEnter(Widget sender) {
-	}
-
-	public void onMouseLeave(Widget sender) {
+		if (DOM.compare(DOM.eventGetTarget(event), splitter)) {
+			resizing = true;
+			DOM.setCapture(getElement());
+			origX = DOM.getElementPropertyInt(splitter, "offsetLeft");
+			origY = DOM.getElementPropertyInt(splitter, "offsetTop");
+			origMouseX = DOM.eventGetClientX(event);
+			origMouseY = DOM.eventGetClientY(event);
+			DOM.eventCancelBubble(event, true);
+			DOM.eventPreventDefault(event);
+		}
 	}
 
 	public void onMouseMove(Event event) {
@@ -256,9 +264,9 @@ public class ISplitPanel extends ComplexPanel implements Paintable, ContainerRes
 	}
 
 	public void onMouseUp(Event event) {
-		onMouseMove(event);
-		resizing = false;
 		DOM.releaseCapture(getElement());
+		resizing = false;
+		onMouseMove(event);
 	}
 
 }
