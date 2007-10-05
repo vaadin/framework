@@ -384,7 +384,7 @@ public class SampleDB {
 	 * 22.301753170493f)); map.addMarker("Linja-auto asema", new
 	 * Point.Double(60.457049f,22.267957f));
 	 */
-
+	/*
 	Object[][] resources = {
 		{ "IT Mill Toolkit Manual", "the manual", "Books", new Double(60.452224),new Double(22.299929)},
 		{ "IT Mill Toolkit for Dummies", "the hardcover version",
@@ -392,11 +392,50 @@ public class SampleDB {
 		{ "Sony", "Old Sony video projector", "AV equipment", new Double(60.449007),new Double(22.295508) },
 		{ "Sanyo", "Brand new hd-ready video projector", "AV equipment", new Double(60.452224),new Double(22.299929) },
 		{ "Room 7", "Conference room in the lobby", "Conference rooms", new Double(60.449451),new Double(22.292032) },
-		{ "Luokkahuone", "Classroom right next to IT Mill",
-			"Conference rooms", new Double(60.44888),new Double(22.292032) },
 		{ "Nintendo Wii", "Teh uber fun", "Entertainment", new Double(60.445408),new Double(22.290831) },
-		{ "Playstation", "We don't actually have one", "Entertainment", new Double(60.44641962165445),new Double(22.301753170493) } };
+		{ "Playstation", "We don't actually have one", "Entertainment", new Double(60.44641962165445),new Double(22.301753170493) },
+		{ "Luokkahuone", "Classroom right next to IT Mill",
+			"Conference rooms", new Double(60.44888),new Double(22.292032) }
+	};
+	*/
+	Object[][] resources = {
+		// Turku
+		{ "01 Ford Mondeo", "w/ company logo", "Turku", new Double(60.510857),new Double(22.275424)},
+		{ "02 Citroen Jumper", "w/ company logo. 12m3 storage space.", "Turku", new Double(60.452171),new Double(22.2995)},
+		{ "03 Saab 93", "Cabriolet<br/>Keys from the rental desk.", "Turku", new Double(60.4507),new Double(22.295551)},
+		{ "04 Volvo S60", "Key from the rental desk.", "Turku", new Double(60.434722),new Double(22.224398)},
+		{ "05 Smart fourtwo", "Cabrio. Keys from infodesk.", "Turku", new Double(60.508970),new Double(22.264790)},
+		// Helsinki
+		{ "06 Smart fourtwo", "Cabrio. Keys from infodesk.", "Helsinki", new Double(60.17175),new Double(24.939029)},
+		{ "07 Smart fourtwo", "Cabrio. Keys from infodesk.", "Helsinki", new Double(60.17175),new Double(24.939029)},
+		{ "08 Smart fourtwo", "Cabrio. Keys from infodesk.", "Helsinki", new Double(60.166579),new Double(24.953899)},
+		{ "09 Volvo S60", "Keys from infodesk.", "Helsinki", new Double(60.317832),new Double(24.967289)},
+		{ "10 Saab 93", "Keys from infodesk.", "Helsinki", new Double(60.249193),new Double(25.045921)},
+		// Silicon Valley
+		{ "11 Ford Mustang", "Keys from Acme clerk.", "Silicon Valley", new Double(37.615853),new Double(-122.386384)},
+		{ "12 Ford Mondeo", "Keys from infodesk.", "Silicon Valley", new Double(37.365028),new Double(-121.922654)},
+		{ "13 Ford Mustang", "GT Cal Special. Keys from guard.", "Silicon Valley", new Double(37.403812),new Double(-121.977425)},
+		{ "14 Ford Mustang", "GT Cal Special. Keys from guard.", "Silicon Valley", new Double(37.403812),new Double(-121.977425)},
+		{ "15 Land Rover", "Keys from infodesk.", "Silicon Valley", new Double(37.365028),new Double(-121.922654)},
+		// Paris
+		{ "17 Peugeot 308", "Keys from infodesk.", "Paris", new Double(48.844756),new Double(2.372784)},
+		{ "18 Citroën C6", "Keys from rental desk.", "Paris", new Double(49.007253),new Double(2.545025)},
+		{ "19 Citroën C6", "Keys from infodesk.", "Paris", new Double(48.729061),new Double(2.368087)},
+		{ "20 Peugeot 308", "Keys from ticket sales.", "Paris", new Double(48.880931),new Double(2.356988)},
+		{ "21 Peugeot 308", "Keys from ticket sales.", "Paris", new Double(48.876479),new Double(2.358161)},
+		// STHLM
+		{ "22 Volvo S60", "Keys from infodesk.", "Stockholm", new Double(59.350414),new Double(18.106574)},
+		{ "23 Saab 93", "Keys from infodesk.", "Stockholm", new Double(59.355905),new Double(17.946784)},
+		{ "24 Smart fourtwo", "Keys from infodesk.", "Stockholm", new Double(59.315939),new Double(18.095904)},
+		{ "25 Smart fourtwo", "Keys from infodesk.", "Stockholm", new Double(59.330716),new Double(18.058702)},
+		// Boston
+		{ "26 Ford Mustang", "Keys from infodesk.", "Boston", new Double(42.366588),new Double(-71.020955)},
+		{ "27 Smart fourtwo", "Keys from infodesk.", "Boston", new Double(42.365419),new Double(-71.061748)},
+		{ "28 Volvo S60", "Keys from Seaport Hotel reception.", "Boston", new Double(42.34811),new Double(-71.041127)},
+		{ "29 Smart fourtwo", "Keys from Seaport Hotel reception.", "Boston", new Double(42.348072),new Double(-71.041315)},
 
+	};
+	
 	String q = "INSERT INTO " + Resource.TABLE + "("
 		+ Resource.PROPERTY_ID_NAME + ","
 		+ Resource.PROPERTY_ID_DESCRIPTION + ","

@@ -1,9 +1,10 @@
 package com.itmill.toolkit.demo.reservation;
 
-import java.awt.Point;
 import java.awt.geom.Point2D;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.itmill.toolkit.Application;
@@ -29,6 +30,8 @@ public class ReservationApplication extends Application {
     ResourceSelectorPanel resourcePanel;
 
     private CalendarField reservedFrom;
+    private static final long DEFAULT_GAP_MILLIS = 3600000; // one hour
+    private long currentGapMillis = DEFAULT_GAP_MILLIS;
     private CalendarField reservedTo;
 
     private Label resourceName;
@@ -65,17 +68,17 @@ public class ReservationApplication extends Application {
 		this, "selectedResourcesChanged");
 	reservationTab.addComponent(resourcePanel);
 
-	Panel reservationPanel = new Panel(new OrderedLayout(
+	Panel reservationPanel = new Panel("Reservation", new OrderedLayout(
 		OrderedLayout.ORIENTATION_HORIZONTAL));
 	reservationTab.addComponent(reservationPanel);
 
 	OrderedLayout infoLayout = new OrderedLayout();
 	reservationPanel.addComponent(infoLayout);
-	resourceName = new Label("Choose resource");
-	resourceName.setCaption("Reserving resource");
+	resourceName = new Label("From the list above");
+	resourceName.setCaption("Choose resource");
 	infoLayout.addComponent(resourceName);
 	description = new TextField();
-	description.setColumns(40);
+	description.setColumns(55);
 	description.setRows(5);
 	infoLayout.addComponent(description);
 	reservationButton = new Button("Make reservation", this,
@@ -84,31 +87,35 @@ public class ReservationApplication extends Application {
 	statusLabel = new Label();
 	infoLayout.addComponent(statusLabel);
 
-	// TODO map
 	map = new GoogleMap();
-	map.setWidth(290);
-	map.setHeight(150);
-	map.setZoomLevel(12);
+	map.setWidth(360);
+	map.setHeight(270);
 	map.setItemMarkerHtmlPropertyId(SampleDB.Resource.PROPERTY_ID_NAME);
 	map.setItemMarkerXPropertyId(SampleDB.Resource.PROPERTY_ID_LOCATIONX);
 	map.setItemMarkerYPropertyId(SampleDB.Resource.PROPERTY_ID_LOCATIONY);
 	map.setContainerDataSource(db.getResources(null));
 	infoLayout.addComponent(map);
 
-	// TODO Use calendar, set following hour
-	Date now = new Date();
+	Calendar from = Calendar.getInstance();
 	reservedFrom = new CalendarField();
-	reservedFrom.setMinimumDate(now);
+	reservedFrom.setMinimumDate(from.getTime());
+	reservedFrom.setValue(from.getTime());
+	reservedFrom.setImmediate(true);
 	initCalendarFieldPropertyIds(reservedFrom);
-	reservationPanel.addComponent(reservedFrom);
+	reservationPanel.addComponent(reservedFrom);	
+	
+	Calendar to = Calendar.getInstance();
+	to.add(Calendar.MILLISECOND, (int)currentGapMillis);
 	reservedTo = new CalendarField();
-	reservedTo.setMinimumDate(now);
+	reservedTo.setMinimumDate(from.getTime());
+	reservedTo.setValue(to.getTime());
+	reservedTo.setImmediate(true);
 	initCalendarFieldPropertyIds(reservedTo);
 	reservationPanel.addComponent(reservedTo);
+	
 	reservedFrom.addListener(new ValueChangeListener() {
 	    public void valueChange(ValueChangeEvent event) {
 		Date fd = (Date) reservedFrom.getValue();
-		Date td = (Date) reservedTo.getValue();
 		if (fd == null) {
 		    reservedTo.setValue(null);
 		    reservedTo.setEnabled(false);
@@ -118,23 +125,29 @@ public class ReservationApplication extends Application {
 		    reservedTo.setEnabled(true);
 		}
 		reservedTo.setMinimumDate(fd);
-		if (td == null || td.before(fd)) {
-		    reservedTo.setValue(fd);
+		Calendar to = Calendar.getInstance();
+		to.setTime(fd);
+		to.add(Calendar.MILLISECOND, (int)currentGapMillis);
+		reservedTo.setValue(to.getTime());
+		refreshSelectedResources();
+		resetStatus();
+	    }
+	});
+	reservedTo.addListener(new ValueChangeListener() {
+	    public void valueChange(ValueChangeEvent event) {
+		Date from = (Date) reservedFrom.getValue();
+		Date to = (Date) reservedTo.getValue();
+		currentGapMillis = to.getTime() - from.getTime();
+		if (currentGapMillis <= 0 ) {
+		    Calendar t = Calendar.getInstance();
+		    t.setTime(from);
+		    t.add(Calendar.MILLISECOND, (int)DEFAULT_GAP_MILLIS);
+		    reservedTo.setValue(t.getTime());
 		}
 		refreshSelectedResources();
 		resetStatus();
 	    }
 	});
-	reservedFrom.setImmediate(true);
-	reservedFrom.setValue(now);
-	reservedTo.addListener(new ValueChangeListener() {
-	    public void valueChange(ValueChangeEvent event) {
-		refreshSelectedResources();
-		resetStatus();
-	    }
-	});
-	reservedTo.setImmediate(true);
-	reservedTo.setValue(now);
 
 	OrderedLayout allLayout = new OrderedLayout(
 		OrderedLayout.ORIENTATION_HORIZONTAL);
@@ -207,32 +220,41 @@ public class ReservationApplication extends Application {
 	try {
 	    resource = getActiveResource();
 	} catch (ResourceNotAvailableException e) {
-	    resourceName.setValue("Not available");
+	    resourceName.setCaption("Not available");
+	    resourceName.setValue("Please choose another time period or resource");
 	    reservationButton.setEnabled(false);
 	    return;
 	}
 	map.clear();
 	if (resource == null) {
-	    resourceName.setValue("Choose resource");
+	    resourceName.setCaption("Choose resource");
+	    resourceName.setValue("from the list above");
 	    reservationButton.setEnabled(false);
 	    map.setContainerDataSource(db.getResources(null));
-	    map.setZoomLevel(12);
-	} else {
-	    String name = (String) resource.getItemProperty(
-		    SampleDB.Resource.PROPERTY_ID_NAME).getValue();
-	    String desc = (String) resource.getItemProperty(
-		    SampleDB.Resource.PROPERTY_ID_DESCRIPTION).getValue();
-	    resourceName.setValue(name);
-	    Double x = (Double) resource.getItemProperty(
-		    SampleDB.Resource.PROPERTY_ID_LOCATIONX).getValue();
-	    Double y = (Double) resource.getItemProperty(
-		    SampleDB.Resource.PROPERTY_ID_LOCATIONY).getValue();
-	    if (x != null && y != null) {
-		map.addMarker(name + "<br/>" + desc, new Point2D.Double(x
-			.doubleValue(), y.doubleValue()));
-		map.setZoomLevel(14);
-	    }
+	    map.setZoomLevel(1);
 
+	} else {
+	    LinkedList srs = resourcePanel.getSelectedResources();
+	    for (Iterator it = srs.iterator(); it.hasNext();) {
+		resource = (Item)it.next();
+		String name = (String) resource.getItemProperty(
+			SampleDB.Resource.PROPERTY_ID_NAME).getValue();
+		String desc = (String) resource.getItemProperty(
+			SampleDB.Resource.PROPERTY_ID_DESCRIPTION).getValue();
+		resourceName.setCaption(name);
+		resourceName.setValue(desc);
+		Double x = (Double) resource.getItemProperty(
+			SampleDB.Resource.PROPERTY_ID_LOCATIONX).getValue();
+		Double y = (Double) resource.getItemProperty(
+			SampleDB.Resource.PROPERTY_ID_LOCATIONY).getValue();
+		if (x != null && y != null) {
+		    map.addMarker(name + "<br/>" + desc, new Point2D.Double(x
+			    .doubleValue(), y.doubleValue()));
+		    
+		}
+		
+	    }
+	    map.setZoomLevel((srs.size()==1?16:9));
 	    reservationButton.setEnabled(true);
 	}
 

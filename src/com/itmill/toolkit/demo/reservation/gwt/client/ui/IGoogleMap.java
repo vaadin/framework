@@ -36,7 +36,7 @@ public class IGoogleMap extends GMap2Widget implements Paintable {
 
 		for (Iterator m = u.getChildIterator(); m.hasNext();) {
 		    UIDL umarker = (UIDL) m.next();
-		    String html = umarker.getStringAttribute("html");
+		    String html = "<span>"+umarker.getStringAttribute("html")+"</span>";
 		    double x = umarker.getDoubleAttribute("x");
 		    double y = umarker.getDoubleAttribute("y");
 		    pos = new GLatLng(x, y);
