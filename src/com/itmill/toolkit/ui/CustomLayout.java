@@ -38,7 +38,7 @@ import java.util.HashMap;
  * <p>
  * A container component with freely designed layout and style. The container
  * consists of items with textually represented locations. Each item contains
- * one sub-component. The adapter and theme are resposible for rendering the
+ * one sub-component. The adapter and theme are responsible for rendering the
  * layout with given style by placing the items on the screen in defined
  * locations.
  * </p>
@@ -46,14 +46,14 @@ import java.util.HashMap;
  * <p>
  * The definition of locations is not fixed - the each style can define its
  * locations in a way that is suitable for it. One typical example would be to
- * create visual design for a website as a custom layout: the visual design
+ * create visual design for a web site as a custom layout: the visual design
  * could define locations for "menu", "body" and "title" for example. The layout
  * would then be implemented as XLS-template with for given style.
  * </p>
  * 
  * <p>
  * The default theme handles the styles that are not defined by just drawing the
- * subcomponents with flowlayout.
+ * subcomponents as in OrderedLayout.
  * </p>
  * 
  * @author IT Mill Ltd.
