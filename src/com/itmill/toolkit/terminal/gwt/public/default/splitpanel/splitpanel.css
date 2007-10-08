@@ -1,13 +1,19 @@
-.i-splitpanel-horizontal .hsplitter {
+.i-splitpanel-horizontal .splitter,
+.i-splitpanel-vertical .i-splitpanel-horizontal .splitter {
 	width: 8px;
 	background: #ccd2d0 url(img/bg_hor.png);
 	border: 1px solid #b6bbbc;
+	border-top:0;
+	border-bottom:0;
 	cursor: e-resize;
 }
 
-.i-splitpanel-vertical .vsplitter {
+.i-splitpanel-vertical .splitter {
 	height: 8px;
 	background: #ccd2d0 url(img/bg_ver.png);
 	border: 1px solid #b6bbbc;
+	border-left:0;
+	border-right:0;
 	cursor: n-resize;
 }
+

@@ -148,11 +148,15 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
 		
 		switch (orientation) {
 		case ORIENTATION_HORIZONTAL:
-			wholeSize = DOM.getElementPropertyInt(wrapper, "offsetWidth");
+			wholeSize = DOM.getElementPropertyInt(wrapper, "clientWidth");
 			pixelPosition = DOM.getElementPropertyInt(splitter, "offsetLeft");
 
-			ApplicationConnection.getConsole().log(wholeSize+"");
-			ApplicationConnection.getConsole().log(pixelPosition+"");
+			// reposition splitter in case it is out of box
+			if(pixelPosition + SPLITTER_SIZE > wholeSize) {
+				pixelPosition = wholeSize - SPLITTER_SIZE;
+				setSplitPosition(pixelPosition + "px");
+				return;
+			}
 
 			DOM
 					.setStyleAttribute(firstContainer, "width", pixelPosition
@@ -169,9 +173,13 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
 		case ORIENTATION_VERTICAL:
 			wholeSize = DOM.getElementPropertyInt(wrapper, "clientHeight");
 			pixelPosition = DOM.getElementPropertyInt(splitter, "offsetTop");
-
-			ApplicationConnection.getConsole().log(wholeSize+"");
-			ApplicationConnection.getConsole().log(pixelPosition+"");
+			
+			// reposition splitter in case it is out of box
+			if(pixelPosition + SPLITTER_SIZE > wholeSize) {
+				pixelPosition = wholeSize - SPLITTER_SIZE;
+				setSplitPosition(pixelPosition + "px");
+				return;
+			}
 
 			DOM.setStyleAttribute(firstContainer, "height", pixelPosition
 					+ "px");
@@ -183,6 +191,8 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
 			DOM.setStyleAttribute(secondContainer, "top",
 					(pixelPosition + SPLITTER_SIZE) + "px");
 		default:
+			ApplicationConnection.getConsole().log("???");
+
 
 			break;
 		}
