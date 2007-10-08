@@ -74,7 +74,9 @@ public class ApplicationConnection implements FocusListener {
 	 }-*/;
 
 	public native String getAppUri()/*-{
-	 return $wnd.itmtk.appUri;
+	var u = $wnd.itmtk.appUri;
+	if (u.indexOf("/") != 0 && u.indexOf("http") != 0) u = "../../../" +u;
+	 return u;
 	 }-*/;
 
 	private native String getPathInfo()/*-{
