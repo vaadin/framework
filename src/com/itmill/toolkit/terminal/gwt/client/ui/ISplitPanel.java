@@ -142,6 +142,9 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
 	 * @see com.itmill.toolkit.terminal.gwt.client.NeedsLayout#layout()
 	 */
 	public void iLayout() {
+		if(!isAttached()) {
+			return;
+		}
 		int wholeSize;
 		int pixelPosition;
 		ApplicationConnection.getConsole().log("splitterpaneeeli");
