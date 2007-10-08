@@ -98,7 +98,9 @@
 }
 
 .i-panel-light .i-panel-deco {
-	display: none;
+	/*display: none;*/
+	height: 0;
+	overflow: hidden;
 }
 
 .i-panel-light .i-panel-deco:before {
