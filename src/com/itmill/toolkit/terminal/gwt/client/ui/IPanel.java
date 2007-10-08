@@ -2,8 +2,6 @@ package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
@@ -22,6 +20,7 @@ public class IPanel extends SimplePanel implements Paintable,
 	String id;
 
 	private Element captionNode = DOM.createDiv();
+
 	private Element bottomDecoration = DOM.createDiv();
 
 	private Element contentNode = DOM.createDiv();
@@ -75,7 +74,7 @@ public class IPanel extends SimplePanel implements Paintable,
 
 		// TODO optimize: if only the caption has changed, don't re-render whole
 		// content
-		if(getWidget() != null) {
+		if (getWidget() != null) {
 			clear();
 		}
 
@@ -97,7 +96,7 @@ public class IPanel extends SimplePanel implements Paintable,
 					+ "-nocaption");
 			DOM.setInnerHTML(captionNode, "");
 		}
-		
+
 		iLayout();
 
 		// Render content
@@ -115,26 +114,28 @@ public class IPanel extends SimplePanel implements Paintable,
 
 			boolean hasChildren = getWidget() != null;
 			Element contentEl = null;
-			String  origPositioning = null;
-			if(hasChildren) {
-				// remove children temporary form normal flow to detect proper size
+			String origPositioning = null;
+			if (hasChildren) {
+				// remove children temporary form normal flow to detect proper
+				// size
 				contentEl = getWidget().getElement();
 				origPositioning = DOM.getStyleAttribute(contentEl, "position");
 				DOM.setStyleAttribute(contentEl, "position", "absolute");
 			}
 			DOM.setStyleAttribute(contentNode, "height", "");
 			int availableH = DOM.getElementPropertyInt(getElement(),
-			"clientHeight");
+					"clientHeight");
 
 			int usedH = DOM
 					.getElementPropertyInt(bottomDecoration, "offsetTop")
+					- DOM.getElementPropertyInt(getElement(), "offsetTop")
 					+ DOM.getElementPropertyInt(bottomDecoration,
 							"offsetHeight");
 			int contentH = availableH - usedH;
-			if(contentH < 0)
+			if (contentH < 0)
 				contentH = 0;
 			DOM.setStyleAttribute(contentNode, "height", contentH + "px");
-			if(hasChildren) {
+			if (hasChildren) {
 				DOM.setStyleAttribute(contentEl, "position", origPositioning);
 			}
 		}
