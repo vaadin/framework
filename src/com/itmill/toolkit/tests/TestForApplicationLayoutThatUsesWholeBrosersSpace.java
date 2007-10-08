@@ -33,7 +33,7 @@ public class TestForApplicationLayoutThatUsesWholeBrosersSpace extends
 		t.setWidth(100);
 		t.setWidthUnits(Table.UNITS_PERCENTAGE);
 		t.setHeight(100);
-		t.setHeightUnits(Table.UNITS_PIXELS);
+		t.setHeightUnits(Table.UNITS_PERCENTAGE);
 		topRight.addComponent(t);
 		topRight.expand(t);
 

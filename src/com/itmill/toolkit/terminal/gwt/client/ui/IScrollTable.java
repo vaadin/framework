@@ -21,6 +21,7 @@ import com.google.gwt.user.client.ui.ScrollListener;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
+import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.Util;
@@ -49,7 +50,7 @@ import com.itmill.toolkit.terminal.gwt.client.ui.IScrollTable.IScrollTableBody.I
  * 
  * TODO implement unregistering for child componts in Cells
  */
-public class IScrollTable extends Composite implements Table, ScrollListener {
+public class IScrollTable extends Composite implements Table, ScrollListener, ContainerResizedListener {
 
 	public static final String CLASSNAME = "i-table";
 	/**
@@ -473,7 +474,8 @@ public class IScrollTable extends Composite implements Table, ScrollListener {
 		if (height == null) {
 			bodyContainer.setHeight((tBody.getRowHeight() * pageLength) + "px");
 		} else {
-			bodyContainer.setHeight(height);
+			setHeight(height);
+			iLayout();
 		}
 
 		if (width == null) {
@@ -558,6 +560,16 @@ public class IScrollTable extends Composite implements Table, ScrollListener {
 		});
 		initializedAndAttached = true;
 	}
+	
+	public void iLayout() {
+		if(height != null && height.indexOf("%") > 0) {
+			int contentH = (DOM.getElementPropertyInt(getElement(), "clientHeight") - tHead.getOffsetHeight());
+			if(contentH < 0)
+				contentH = 0;
+			bodyContainer.setHeight( contentH + "px");
+		}
+	}
+
 
 	private int getScrollbarWidth() {
 		return bodyContainer.getOffsetWidth()
@@ -1868,4 +1880,5 @@ public class IScrollTable extends Composite implements Table, ScrollListener {
 	public boolean remove(Widget w) {
 		return panel.remove(w);
 	}
+
 }
