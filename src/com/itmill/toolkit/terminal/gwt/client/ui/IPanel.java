@@ -24,6 +24,8 @@ public class IPanel extends SimplePanel implements Paintable,
 	private Element bottomDecoration = DOM.createDiv();
 
 	private Element contentNode = DOM.createDiv();
+	
+	private String height;
 
 	public IPanel() {
 		super();
@@ -54,23 +56,12 @@ public class IPanel extends SimplePanel implements Paintable,
 		this.client = client;
 		this.id = uidl.getId();
 
-		// Size panel
-		String h = uidl.hasVariable("height") ? uidl
-				.getStringVariable("height") : null;
+		// Panel size. Height needs to be saved for later use
 		String w = uidl.hasVariable("width") ? uidl.getStringVariable("width")
 				: null;
-
+		height = uidl.hasVariable("height") ? uidl.getStringVariable("height")
+				: null;
 		setWidth(w != null ? w : "");
-
-		if (h != null) {
-			setHeight(h);
-		} else {
-			DOM.setStyleAttribute(contentNode, "height", "");
-			// We don't need overflow:auto when panel height is not set
-			// (overflow:auto causes rendering errors at least in Firefox when a
-			// a panel is inside a tabsheet with overflow:auto set)
-			DOM.setStyleAttribute(contentNode, "overflow", "hidden");
-		}
 
 		// TODO optimize: if only the caption has changed, don't re-render whole
 		// content
@@ -78,6 +69,8 @@ public class IPanel extends SimplePanel implements Paintable,
 			clear();
 		}
 
+		// Add proper style name for root element
+		// TODO refactor to support additional styles set from server-side
 		if (uidl.hasAttribute("style"))
 			setStyleName(CLASSNAME + " " + CLASSNAME + "-"
 					+ uidl.getStringAttribute("style"));
@@ -91,14 +84,15 @@ public class IPanel extends SimplePanel implements Paintable,
 			DOM.setElementProperty(captionNode, "className", CLASSNAME
 					+ "-caption");
 		} else {
-			// Theme needs this to work around different paddings
+			// Theme needs this to work around different styling
 			DOM.setElementProperty(captionNode, "className", CLASSNAME
 					+ "-nocaption");
 			DOM.setInnerHTML(captionNode, "");
 		}
-
+		
+		// Height adjustment
 		iLayout();
-
+		
 		// Render content
 		UIDL layoutUidl = uidl.getChildUIDL(0);
 		Widget layout = client.getWidget(layoutUidl);
@@ -108,36 +102,25 @@ public class IPanel extends SimplePanel implements Paintable,
 	}
 
 	public void iLayout() {
-		String h = DOM.getStyleAttribute(getElement(), "height");
-		if (h != null && h != "") {
-			// need to fix containers height properly
-
-			boolean hasChildren = getWidget() != null;
-			Element contentEl = null;
-			String origPositioning = null;
-			if (hasChildren) {
-				// remove children temporary form normal flow to detect proper
-				// size
-				contentEl = getWidget().getElement();
-				origPositioning = DOM.getStyleAttribute(contentEl, "position");
-				DOM.setStyleAttribute(contentEl, "position", "absolute");
-			}
+		// In this case we need to fix containers height properly
+		if (height != null && height != "") {
+			// First, calculate needed pixel height
+			setHeight(height);
+			int neededHeight = getOffsetHeight();
+			setHeight("");
+			// Then calculate the size the content area needs to be
+			DOM.setStyleAttribute(contentNode, "height", "0");
+			DOM.setStyleAttribute(contentNode, "overflow", "hidden");
+			int h = getOffsetHeight();
+			int total = neededHeight-h;
+			if(total < 0)
+				total = 0;
+			DOM.setStyleAttribute(contentNode, "height", total + "px");
+			DOM.setStyleAttribute(contentNode, "overflow", "");
+		} else {
 			DOM.setStyleAttribute(contentNode, "height", "");
-			int availableH = DOM.getElementPropertyInt(getElement(),
-					"clientHeight");
-
-			int usedH = DOM
-					.getElementPropertyInt(bottomDecoration, "offsetTop")
-					- DOM.getElementPropertyInt(getElement(), "offsetTop")
-					+ DOM.getElementPropertyInt(bottomDecoration,
-							"offsetHeight");
-			int contentH = availableH - usedH;
-			if (contentH < 0)
-				contentH = 0;
-			DOM.setStyleAttribute(contentNode, "height", contentH + "px");
-			if (hasChildren) {
-				DOM.setStyleAttribute(contentEl, "position", origPositioning);
-			}
+			// We don't need overflow:auto when height is not set
+			DOM.setStyleAttribute(contentNode, "overflow", "hidden");
 		}
 		Util.runAnchestorsLayout(this);
 	}

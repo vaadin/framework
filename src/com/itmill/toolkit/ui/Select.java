@@ -28,35 +28,23 @@
 
 package com.itmill.toolkit.ui;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
-import com.itmill.toolkit.Application;
 import com.itmill.toolkit.data.Container;
 import com.itmill.toolkit.data.Item;
 import com.itmill.toolkit.data.Property;
 import com.itmill.toolkit.data.util.IndexedContainer;
-import com.itmill.toolkit.terminal.DownloadStream;
 import com.itmill.toolkit.terminal.KeyMapper;
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
 import com.itmill.toolkit.terminal.Resource;
-import com.itmill.toolkit.terminal.URIHandler;
 import com.itmill.toolkit.ui.select.OptionFilter;
 import com.itmill.toolkit.ui.select.StartsWithFilter;
 
@@ -214,6 +202,12 @@ public class Select extends AbstractField implements Container,
 
 	private String filterstring;
 
+	/**
+	 * How many visible columns (~characters) does select occupy visually.
+	 * Used to size select appropriately. Minus one sets to 100% width.
+	 */
+	private int columns = -1;
+
 	/* Constructors ********************************************************* */
 
 	/**
@@ -284,6 +278,8 @@ public class Select extends AbstractField implements Container,
 			target.addAttribute("selectmode", "multi");
 		if (isNewItemsAllowed())
 			target.addAttribute("allownewitem", true);
+		if (getColumns() > -1)
+			target.addAttribute("cols", getColumns());
 
 		// Constructs selected keys array
 		String[] selectedKeys;
@@ -1502,6 +1498,20 @@ public class Select extends AbstractField implements Container,
 	 */
 	public OptionFilter getOptionFilter() {
 		return optionFilter;
+	}
+	
+	/**
+	 * Set visible columns.
+	 */
+	public void setColumns(int cols) {
+		this.columns = cols;
+	}
+	
+	/**
+	 * Get visible columns.
+	 */
+	public int getColumns() {
+		return this.columns;
 	}
 	
 }

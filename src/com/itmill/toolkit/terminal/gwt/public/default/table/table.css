@@ -3,6 +3,12 @@
 	overflow: hidden;
 }
 
+.i-table.table-inline {
+	border-left: none;
+	border-right: none;
+	/*margin: -16px -18px 0 -18px;*/
+}
+
 .i-table-header-wrap {
 	height: 36px;
 	background: #e7edf3 url(img/header-bg.png) repeat-x;

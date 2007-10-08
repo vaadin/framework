@@ -137,7 +137,7 @@ public class IExpandLayout extends IOrderedLayout implements
 		// add temp element to make some measurements
 		Element meter = createWidgetWrappper();
 		DOM.setStyleAttribute(meter, "overflow", "hidden");
-		DOM.setStyleAttribute(meter, "height", "0px");
+		DOM.setStyleAttribute(meter, "height", "0");
 		DOM.appendChild(childContainer, meter);
 		int usedSpace = DOM.getElementPropertyInt(meter, "offsetTop")
 				- DOM.getElementPropertyInt(DOM.getFirstChild(childContainer),
@@ -147,6 +147,8 @@ public class IExpandLayout extends IOrderedLayout implements
 		int freeSpace = getOffsetHeight() - usedSpace;
 
 		DOM.setStyleAttribute(expandedElement, "height", freeSpace + "px");
+		// Component margins will bleed if overflow is not hidden
+		DOM.setStyleAttribute(expandedElement, "overflow", "hidden");
 
 		DOM.setStyleAttribute(expandedWidget.getElement(), "position", origiginalPositioning);
 

@@ -74,6 +74,29 @@ public class ITabsheet extends FlowPanel implements Paintable {
 		// Use cached sub-tree if available
 		if(uidl.getBooleanAttribute("cached"))
 			return;
+		
+		// Adjust width and height
+		String h = uidl.hasAttribute("height")? uidl.getStringAttribute("height") : null;
+		String w = uidl.hasAttribute("width")? uidl.getStringAttribute("width") : null;
+		setWidth(w!=null?w:"auto");
+		
+		// Try to calculate the height as close as possible
+		if(h!=null) {
+			// First, calculate needed pixel height
+			setHeight(h);
+			int neededHeight = getOffsetHeight();
+			setHeight("");
+			// Then calculate the size the content area needs to be
+			tp.setHeight("0");
+			DOM.setStyleAttribute(tp.getElement(), "overflow", "hidden");
+			int height = getOffsetHeight();
+			tp.setHeight(neededHeight-height + "px");
+			DOM.setStyleAttribute(tp.getElement(), "overflow", "");
+		} else {
+			tp.setHeight("auto");
+			// We don't need overflow:auto when tabsheet height is not set
+			DOM.setStyleAttribute(tp.getElement(), "overflow", "hidden");
+		}
 
 		UIDL tabs = uidl.getChildUIDL(0);
 		boolean keepCurrentTabs = tabKeys.size() == tabs.getNumberOfChildren();
@@ -89,8 +112,6 @@ public class ITabsheet extends FlowPanel implements Paintable {
 				if (tab.getBooleanAttribute("selected")) {
 					activeTabIndex = index;
 					UIDL contentUIDL = tab.getChildUIDL(0);
-				
-					// Otherwise render new content
 					Widget content = client.getWidget(contentUIDL);
 					((Paintable)content).updateFromUIDL(contentUIDL, client);
 					tp.remove(index);
@@ -129,27 +150,6 @@ public class ITabsheet extends FlowPanel implements Paintable {
 		// Open selected tab
 		tb.selectTab(activeTabIndex);
 		tp.showWidget(activeTabIndex);
-		
-		// Adjust width and height
-		String h = uidl.hasAttribute("height")? uidl.getStringAttribute("height") : null;
-		String w = uidl.hasAttribute("width")? uidl.getStringAttribute("width") : null;
-		setWidth(w!=null?w:"auto");
-		
-		// Try to approximate the height as close as possible
-		if(h!=null) {
-			// First, calculate needed pixel height
-			setHeight(h);
-			int neededHeight = getOffsetHeight();
-			setHeight("auto");
-			// Then calculate the size the content area needs to be
-			tp.setHeight("0");
-			int height = getOffsetHeight();
-			tp.setHeight(neededHeight-height + "px");
-		} else {
-			tp.setHeight("auto");
-			// We don't need overflow:auto when tabsheet height is not set
-			DOM.setStyleAttribute(tp.getElement(), "overflow", "hidden");
-		}
 
 	}
 	

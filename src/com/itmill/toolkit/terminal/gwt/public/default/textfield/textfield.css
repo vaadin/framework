@@ -1,7 +1,5 @@
 .i-textfield {
-	font-size: 1.1em;
-	color: #444;
-	background: #fff url(../img/bg.png) repeat-x;
+	background: #fff url(img/bg.png) repeat-x;
 	padding: 2px;
 	border: 1px solid #b6b6b6;
 	border-top-color: #9d9d9d;
@@ -11,7 +9,6 @@
 }
 
 .i-textfield-focus {
-	color: #111;
 	border-color: #4376c3;
 	border-bottom-color: #6696dd;
 	border-right-color: #6696dd;

@@ -20,14 +20,13 @@ public class Util {
 	}-*/;
 
 	/**
-	 * Detects if current browser is IE6. Use to isola
+	 * Detects if current browser is IE.
 	 * 
-	 * @return true if IE6
+	 * @return true if IE
 	 */
-	public static native boolean isIE6() /*-{
+	public static native boolean isIE() /*-{
 		var browser=$wnd.navigator.appName;
-		var version=parseFloat($wnd.navigator.appVersion);
-		if (browser=="Microsoft Internet Explorer" && (version < 7) ) {
+		if (browser=="Microsoft Internet Explorer") {
 			return true;
 		}
 		return false;

@@ -1,3 +1,12 @@
+.i-datefield .i-button {
+	width: 22px;
+	height: 20px;
+	padding: 0;
+	overflow: hidden;
+	border: none;
+	background: transparent url(../icons/16/calendar.png) no-repeat 50% 50%;
+	text-indent: -90000px;
+}
 .i-datefield-calendarpanel {
 	width: 22em;
 }
@@ -12,12 +21,12 @@
 .i-datefield-calendarpanel .i-button {
 	width: 22px;
 	height: 22px;
-	font-size: 1.1em;
+	font-size: 0.9em;
 	padding: 0;
-	line-height: 1em;
+	line-height: 0.9em;
 }
 .i-datefield-calendarpanel-month {
-	font-size: 1.1em;
+	font-size: 1em;
 }
 .i-datefield-calendarpanel-day {
 	cursor: pointer;
@@ -65,22 +74,8 @@
 	padding: 5px;
 	background: #fff;
 }
-.i-datefield-calendar:before {
-	display: block;
-	height: 2px;
-	overflow: hidden;
-	background: transparent url(../../panel/img/top-right-small.png) no-repeat right top;
-	content: url(../../panel/img/top-left-small.png);
-	margin: -6px -6px 3px -6px;
-}
-.i-datefield-calendar:after {
-	display: block;
-	height: 2px;
-	overflow: hidden;
-	background: transparent url(../../panel/img/bottom-right.png) no-repeat right top;
-	content: url(../../panel/img/bottom-left.png);
-	margin: 5px -6px -6px -6px;
-}
+
+
 
 .i-datefield-entrycalendar-hours {
 	height: 150px;

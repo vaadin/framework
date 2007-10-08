@@ -1,24 +1,50 @@
-.i-filterselect-suggestpopup {
-	background: #fff;
-	font-size:small;
-}
-
-.i-filterselect-suggestmenu .gwt-MenuItem {
-	border: 1px solid black;
-	border-width: 0 1px 1px 1px;
-}
-
-.i-filterselect-suggestmenu .gwt-MenuItem-selected {
-	background: yellow;
-}
-
 .i-filterselect {
+	height: 23px;
+	background: transparent url(img/bg-left-filter.png) no-repeat;
+	margin-right: 1px;
 	white-space: nowrap;
 }
 
+.i-filterselect-input {
+	border: none;
+	background: transparent;
+	width: 97%;
+	height: 20px;
+	margin: 3px 0 0 4px;
+	padding: 0;
+	font-size: 13px;
+}
+
 .i-filterselect-button {
-	display:inline;
-	background:red;
+	float: right;
+	margin: -23px -1px 0 0;
+	width: 25px;
+	height: 23px;
+	cursor: pointer;
+	background: transparent url(img/bg-right-filter.png);
+	position: relative;
+}
+.i-filterselect-button:hover {
+	background-position: bottom left;
+}
+
+.i-filterselect-suggestpopup {
+	background: #f6f7f7;
+	border: 1px solid #b6bbbc;
+	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
+	color: #464f52;
+	font-size: 12px;
+	line-height: 18px;
+}
+
+.i-filterselect-suggestmenu .gwt-MenuItem {
+	padding: 1px 5px;
+	cursor: pointer;
+}
+
+.i-filterselect-suggestmenu .gwt-MenuItem-selected {
+	background: #c6cccd;
+	color: #444d4e;
 }
 
 .i-filterselect-nextpage-on,
@@ -32,5 +58,34 @@
 .i-filterselect-nextpage-off,
 .i-filterselect-prevpage-off {
 	color: #666;
+}
+
+
+
+
+/* IE specific styles */
+
+* html .i-filterselect {
+
+}
+* html .i-filterselect-input {
+	margin-top: 2px;
+}
+
+/* For some silly reason IE6 leaks some negative margins to the text input */
+* html .i-panel .i-panel-light .i-panel-content .i-filterselect-input,
+* html .i-tabsheet .i-panel-light .i-panel-content .i-filterselect-input {
+	margin-left: 22px;
+}
+*+html .i-filterselect-input {
+	margin-top: 1px;
+}
+* html .i-filterselect-button {
+	position: static;
+	display: inline;
+	margin-top: -24px;
+}
+*+html .i-filterselect-button {
+	position: static;
 }
 

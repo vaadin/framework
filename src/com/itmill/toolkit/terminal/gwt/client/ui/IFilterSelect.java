@@ -23,6 +23,7 @@ import com.google.gwt.user.client.ui.SuggestOracle.Suggestion;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
+import com.itmill.toolkit.terminal.gwt.client.Util;
 
 /**
  * 
@@ -264,7 +265,7 @@ public class IFilterSelect extends Composite implements Paintable,
 
 	private final SuggestionPopup suggestionPopup = new SuggestionPopup();
 
-	private final HTML popupOpener = new HTML("v");
+	private final HTML popupOpener = new HTML("");
 
 	private final Image selectedItemIcon = new Image();
 
@@ -372,6 +373,7 @@ public class IFilterSelect extends Composite implements Paintable,
 		currentSuggestions.clear();
 		UIDL options = uidl.getChildUIDL(0);
 		totalSuggestions = options.getIntAttribute("totalMatches");
+		String captions = "";
 		if (clientSideFiltering) {
 			allSuggestions = new ArrayList();
 		}
@@ -387,6 +389,11 @@ public class IFilterSelect extends Composite implements Paintable,
 				tb.setText(suggestion.getReplacementString());
 				currentSuggestion = suggestion;
 			}
+			
+			// Collect captions so we can calculate minimum width for textarea
+			if(captions.length() > 0)
+				captions += "|";
+			captions += suggestion.getReplacementString();
 		}
 
 		if (filtering && lastFilter.equals(uidl.getStringVariable("filter"))) {
@@ -394,6 +401,23 @@ public class IFilterSelect extends Composite implements Paintable,
 					totalSuggestions);
 			filtering = false;
 		}
+		
+		// Calculate minumum textarea width
+		int minw = minWidth(captions);
+		if(Util.isIE()) {
+			Element spacer = DOM.createDiv();
+			DOM.setStyleAttribute(spacer, "width", minw+"px");
+			DOM.setStyleAttribute(spacer, "height", "0");
+			DOM.setStyleAttribute(spacer, "overflow", "hidden");
+			DOM.appendChild(panel.getElement(), spacer);
+		} else {
+			DOM.setStyleAttribute(tb.getElement(), "minWidth", minw+"px");
+		}
+		
+		// Set columns (width) is given
+		if(uidl.hasAttribute("cols"))
+			DOM.setStyleAttribute(getElement(), "width", uidl.getIntAttribute("cols")+"em");
+		
 	}
 
 	public void onSuggestionSelected(FilterSelectSuggestion suggestion) {
@@ -480,4 +504,28 @@ public class IFilterSelect extends Composite implements Paintable,
 		tb.setFocus(true);
 		tb.selectAll();
 	}
+	
+	/*
+	 * Calculate minumum width for FilterSelect textarea
+	 */
+	private native int minWidth(String captions) /*-{
+		if(!captions || captions.length <= 0)
+			return 0;
+		captions = captions.split("|");
+		var d = $wnd.document.createElement("div");
+		var html = "";
+		for(var i=0; i < captions.length; i++) {
+			html += "<div>" + captions[i] + "</div>";
+			// TODO apply same CSS classname as in suggestionmenu
+		}
+		d.style.position = "absolute";
+		d.style.top = "0";
+		d.style.left = "0";
+		d.style.visibility = "hidden";
+		d.innerHTML = html;
+		$wnd.document.body.appendChild(d);
+		var w = d.offsetWidth;
+		$wnd.document.body.removeChild(d);
+		return w;
+	}-*/;
 }

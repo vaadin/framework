@@ -36,6 +36,11 @@ public class ExpandLayout extends OrderedLayout implements Sizeable {
 	public ExpandLayout() {
 
 	}
+	
+	public ExpandLayout(int orientation) {
+		this();
+		setOrientation(orientation);
+	}
 
 	/**
 	 * @param c

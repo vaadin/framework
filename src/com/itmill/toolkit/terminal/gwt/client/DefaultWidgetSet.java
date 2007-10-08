@@ -214,13 +214,9 @@ public class DefaultWidgetSet implements WidgetSet {
 		return "com.itmill.toolkit.terminal.gwt.client.ui.ITextField";
 	    }
 	} else if ("table".equals(tag)) {
-	    if (uidl.hasAttribute("style")) {
-		if ("paging".equals(uidl.getStringAttribute("style"))) {
-		    return "com.itmill.toolkit.terminal.gwt.client.ui.ITablePaging";
-		}
-	    } else {
 		return "com.itmill.toolkit.terminal.gwt.client.ui.IScrollTable";
-	    }
+	} else if("pagingtable".equals(tag)) {
+		return "com.itmill.toolkit.terminal.gwt.client.ui.ITablePaging";
 	} else if ("datefield".equals(tag)) {
 	    if (uidl.hasAttribute("style")) {
 		if ("calendar".equals(uidl.getStringAttribute("style"))) {

@@ -8,9 +8,8 @@ html, body {
 	background: #e9eced;
 	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
 	color: #464f52;
-	font-size: 12px;
-	line-height: 18px;
-	height:100%;	
+	font-size: 13px;
+	line-height: 18px;	
 }
 
 .i-view {
@@ -31,6 +30,18 @@ select {
 	opacity: 0.3;
 	filter: Alpha(opacity=30);
 }
+
+/**
+ * Layout styles
+ */
+
+.i-orderedlayout {
+	margin: 15px 18px;
+}
+
+/**
+ * Context menu styles 
+ */
 
 .i-contextmenu {
 	background: #e9eced;
@@ -80,7 +91,7 @@ select {
 }
 
 /* Provide some extra whitespace for wrapped elements
-   (these elements usuallly need the extra space, since 
+   (these elements usually need the extra space, since 
    they aren't even handling their own caption) */
 .i-captionwrapper {
 	margin: 0.3em 0 0 0;

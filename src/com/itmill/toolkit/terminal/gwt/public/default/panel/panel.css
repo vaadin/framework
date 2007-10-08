@@ -52,7 +52,7 @@
 	border-bottom: none;
 	background-color: #fff;
 	overflow: auto;
-	padding: 15px 18px 6px 18px;
+	/*padding: 15px 18px 6px 18px;*/
 }
 
 .i-panel-deco {
@@ -117,13 +117,14 @@
 .i-tabsheet .i-panel-light .i-panel-caption {
 	border-left: none;
 	border-right: none;
-	margin: -16px -18px 0 -18px;
+	/*margin: -16px -18px 0 -18px;*/
+	margin-top: -1px;
 	padding-top: 14px;
 	border-top: 1px solid #babfc0;
 }
 .i-panel .i-panel-light .i-panel-content,
 .i-tabsheet .i-panel-light .i-panel-content {
-	margin: 0 -18px 16px -18px;
+	/*margin: 0 -18px 16px -18px;*/
 }
 
 
