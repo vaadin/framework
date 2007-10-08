@@ -50,7 +50,8 @@ import com.itmill.toolkit.terminal.gwt.client.ui.IScrollTable.IScrollTableBody.I
  * 
  * TODO implement unregistering for child componts in Cells
  */
-public class IScrollTable extends Composite implements Table, ScrollListener, ContainerResizedListener {
+public class IScrollTable extends Composite implements Table, ScrollListener,
+		ContainerResizedListener {
 
 	public static final String CLASSNAME = "i-table";
 	/**
@@ -490,7 +491,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener, Co
 				tHead.setWidth(width);
 				this.setWidth(width);
 			} else if (width.indexOf("%") > 0) {
-				if(!width.equals("100%"))
+				if (!width.equals("100%"))
 					this.setWidth(width);
 				// contained blocks are relative to parents
 				bodyContainer.setWidth("100%");
@@ -502,7 +503,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener, Co
 		int availW = tBody.getAvailableWidth();
 		// Hey IE, are you really sure about this?
 		availW = tBody.getAvailableWidth();
-		
+
 		if (availW > total) {
 			// natural size is smaller than available space
 			int extraSpace = availW - total;
@@ -560,16 +561,16 @@ public class IScrollTable extends Composite implements Table, ScrollListener, Co
 		});
 		initializedAndAttached = true;
 	}
-	
+
 	public void iLayout() {
-		if(height != null && height.indexOf("%") > 0) {
-			int contentH = (DOM.getElementPropertyInt(getElement(), "clientHeight") - tHead.getOffsetHeight());
-			if(contentH < 0)
+		if (height != null) {
+			int contentH = (DOM.getElementPropertyInt(getElement(),
+					"clientHeight") - tHead.getOffsetHeight());
+			if (contentH < 0)
 				contentH = 0;
-			bodyContainer.setHeight( contentH + "px");
+			bodyContainer.setHeight(contentH + "px");
 		}
 	}
-
 
 	private int getScrollbarWidth() {
 		return bodyContainer.getOffsetWidth()
@@ -661,18 +662,20 @@ public class IScrollTable extends Composite implements Table, ScrollListener, Co
 					"i-table-scrollposition");
 			DOM.appendChild(getElement(), scrollPositionElement);
 		}
-		
+
 		DOM.setStyleAttribute(scrollPositionElement, "position", "absolute");
-		DOM.setStyleAttribute(scrollPositionElement, "marginLeft",
-				(DOM.getElementPropertyInt(getElement(), "offsetWidth") / 2 - 80) + "px");
-		DOM.setStyleAttribute(scrollPositionElement, "marginTop", 
-				-(DOM.getElementPropertyInt(getElement(), "offsetHeight") / 2) + "px");
+		DOM.setStyleAttribute(scrollPositionElement, "marginLeft", (DOM
+				.getElementPropertyInt(getElement(), "offsetWidth") / 2 - 80)
+				+ "px");
+		DOM.setStyleAttribute(scrollPositionElement, "marginTop", -(DOM
+				.getElementPropertyInt(getElement(), "offsetHeight") / 2)
+				+ "px");
 
 		int last = (firstRowInViewPort + pageLength);
 		if (last > totalRows)
 			last = totalRows;
-		DOM.setInnerHTML(scrollPositionElement, "<span>" + firstRowInViewPort + " &ndash; "
-				+ last + "..." + "</span>");
+		DOM.setInnerHTML(scrollPositionElement, "<span>" + firstRowInViewPort
+				+ " &ndash; " + last + "..." + "</span>");
 		DOM.setStyleAttribute(scrollPositionElement, "display", "block");
 	}
 
@@ -1391,7 +1394,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener, Co
 		public static final int CELL_EXTRA_WIDTH = 20;
 
 		public static final int DEFAULT_ROW_HEIGHT = 25;
-		
+
 		public static final int CELL_CONTENT_PADDING = 3;
 
 		private int rowHeight = -1;
@@ -1516,7 +1519,8 @@ public class IScrollTable extends Composite implements Table, ScrollListener, Co
 			for (int i = 0; i < cells; i++) {
 				Element cell = DOM.getChild(row.getElement(), i);
 				int w = IScrollTable.this.getColWidth(getColKeyByIndex(i));
-				DOM.setStyleAttribute(DOM.getFirstChild(cell), "width", (w - CELL_CONTENT_PADDING) + "px");
+				DOM.setStyleAttribute(DOM.getFirstChild(cell), "width",
+						(w - CELL_CONTENT_PADDING) + "px");
 				DOM.setStyleAttribute(cell, "width", w + "px");
 			}
 			return row;
@@ -1625,7 +1629,8 @@ public class IScrollTable extends Composite implements Table, ScrollListener, Co
 			int rows = DOM.getChildCount(tBody);
 			for (int i = 0; i < rows; i++) {
 				Element cell = DOM.getChild(DOM.getChild(tBody, i), colIndex);
-				DOM.setStyleAttribute(DOM.getFirstChild(cell), "width", (w - CELL_CONTENT_PADDING) + "px");
+				DOM.setStyleAttribute(DOM.getFirstChild(cell), "width",
+						(w - CELL_CONTENT_PADDING) + "px");
 				DOM.setStyleAttribute(cell, "width", w + "px");
 			}
 		}
@@ -1683,14 +1688,14 @@ public class IScrollTable extends Composite implements Table, ScrollListener, Co
 			 *            element where to attach contenxt menu event
 			 */
 			private native void attachContextMenuEvent(Element el) /*-{
-						var row = this;
-						el.oncontextmenu = function(e) {
-							if(!e)
-								e = $wnd.event;
-							row.@com.itmill.toolkit.terminal.gwt.client.ui.IScrollTable.IScrollTableBody.IScrollTableRow::showContextMenu(Lcom/google/gwt/user/client/Event;)(e);
-							return false;
-						};
-					}-*/;
+								var row = this;
+								el.oncontextmenu = function(e) {
+									if(!e)
+										e = $wnd.event;
+									row.@com.itmill.toolkit.terminal.gwt.client.ui.IScrollTable.IScrollTableBody.IScrollTableRow::showContextMenu(Lcom/google/gwt/user/client/Event;)(e);
+									return false;
+								};
+							}-*/;
 
 			public String getKey() {
 				return String.valueOf(rowKey);
