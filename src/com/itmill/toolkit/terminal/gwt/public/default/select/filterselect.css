@@ -35,6 +35,7 @@
 	color: #464f52;
 	font-size: 12px;
 	line-height: 18px;
+	margin-top: -1px;
 }
 
 .i-filterselect-suggestmenu .gwt-MenuItem {
@@ -43,21 +44,66 @@
 }
 
 .i-filterselect-suggestmenu .gwt-MenuItem-selected {
-	background: #c6cccd;
-	color: #444d4e;
+	background: #5daee8;
+	color: #fff;
 }
 
-.i-filterselect-nextpage-on,
+.i-filterselect-nextpage,
 .i-filterselect-nextpage-off,
 .i-filterselect-prevpage-off,
-.i-filterselect-prevpage-on,
-.i-filterselect-status {
+.i-filterselect-prevpage {
+	height: 11px;
+	background: transparent url(img/button-bg.png) no-repeat 50% 0;
 	text-align: center;
+	margin: 2px 0 0 0;
 }
+.i-filterselect-prevpage {
+	background-position: 50% -1px;
+	margin: 0 0 2px 0;
+}
+.i-filterselect-prevpage:hover {
+	background-position: 50% bottom;
+}
+.i-filterselect-nextpage:hover {
+	background-position: 50% -12px;
+}
+.i-filterselect-nextpage span,
+.i-filterselect-prevpage span {
+	display: block;
+	height: 12px;
+	background: transparent url(img/arrow-up.png) no-repeat 50% 40%;
+	text-indent: -90000px;
+	cursor: pointer;
+}
+.i-filterselect-nextpage span {
+	background: transparent url(img/arrow-down.png) no-repeat 50% 60%;
+}
+.i-filterselect-nextpage-off,
+.i-filterselect-prevpage-off {
+	background: transparent;
+}
+.i-filterselect-nextpage-off span,
+.i-filterselect-prevpage-off span {
+	display: none;
+}
+
 
 .i-filterselect-nextpage-off,
 .i-filterselect-prevpage-off {
 	color: #666;
+}
+
+.i-filterselect-status {
+	position: absolute;
+	margin-left: 100%;
+	margin-top: -18px;
+	background: #b6bbbc;
+	color: #fff;
+	font-size: 11px;
+	line-height: 11px;
+	padding: 4px 6px;
+	height: 11px;
+	white-space: nowrap;
 }
 
 

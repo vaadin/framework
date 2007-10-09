@@ -109,7 +109,7 @@ public class IFilterSelect extends Composite implements Paintable,
 		public void showSuggestions(Collection currentSuggestions,
 				int currentPage, int totalSuggestions) {
 			menu.setSuggestions(currentSuggestions);
-			int x = IFilterSelect.this.tb.getAbsoluteLeft();
+			int x = IFilterSelect.this.getAbsoluteLeft();
 			int y = IFilterSelect.this.tb.getAbsoluteTop();
 			y += IFilterSelect.this.tb.getOffsetHeight();
 			this.setPopupPosition(x, y);
@@ -127,7 +127,7 @@ public class IFilterSelect extends Composite implements Paintable,
 			if (b) {
 				DOM.sinkEvents(down, Event.ONCLICK);
 				DOM.setElementProperty(down, "className", CLASSNAME
-						+ "-nextpage-on");
+						+ "-nextpage");
 			} else {
 				DOM.sinkEvents(down, 0);
 				DOM.setElementProperty(down, "className", CLASSNAME
@@ -139,7 +139,7 @@ public class IFilterSelect extends Composite implements Paintable,
 			if (b) {
 				DOM.sinkEvents(up, Event.ONCLICK);
 				DOM.setElementProperty(up, "className", CLASSNAME
-						+ "-prevpage-on");
+						+ "-prevpage");
 			} else {
 				DOM.sinkEvents(up, 0);
 				DOM.setElementProperty(up, "className", CLASSNAME
