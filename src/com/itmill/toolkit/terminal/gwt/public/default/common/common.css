@@ -75,7 +75,7 @@ select {
 	border: 1px solid #b6bbbc;
 }
 
-.i-contextmenu, table {
+.i-contextmenu table {
 	border-collapse:collapse;
 	margin:0;
 	padding:0;
