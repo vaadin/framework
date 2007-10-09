@@ -92,17 +92,19 @@ public class TestBench extends com.itmill.toolkit.Application implements
 			Class testable = (Class) i.next();
 			menu.setItemCaption(testable, testable.getSimpleName());
 		}
-		menu.setStyle("menu");
 		menu.addListener(this);
 		menu.setImmediate(true);
 
 		mainLayout.addComponent(menu);
 
+		bodyLayout.setStyle("light");
 		bodyLayout.setHeight(100);
 		bodyLayout.setHeightUnits(Panel.UNITS_PERCENTAGE);
 		bodyLayout.setLayout(new ExpandLayout());
 
 		mainLayout.addComponent(bodyLayout);
+		
+		mainLayout.setSplitPosition(30);
 
 		mainWindow.setLayout(mainLayout);
 

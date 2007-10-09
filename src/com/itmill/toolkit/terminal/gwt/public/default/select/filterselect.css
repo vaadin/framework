@@ -72,11 +72,6 @@
 	margin-top: 2px;
 }
 
-/* For some silly reason IE6 leaks some negative margins to the text input */
-* html .i-panel .i-panel-light .i-panel-content .i-filterselect-input,
-* html .i-tabsheet .i-panel-light .i-panel-content .i-filterselect-input {
-	margin-left: 22px;
-}
 *+html .i-filterselect-input {
 	margin-top: 1px;
 }

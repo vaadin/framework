@@ -23,8 +23,6 @@ public class TestForBasicApplicationLayout extends CustomComponent {
 	private TabSheet tab;
 
 	public TestForBasicApplicationLayout() {
-		OrderedLayout main = new OrderedLayout();
-		setCompositionRoot(main);
 
 		click = new Button("Set height -1", new ClickListener() {
 
@@ -44,12 +42,10 @@ public class TestForBasicApplicationLayout extends CustomComponent {
 		});
 
 		SplitPanel sp = new SplitPanel(SplitPanel.ORIENTATION_HORIZONTAL);
-		sp.setSplitPosition(290, Sizeable.UNITS_PIXELS); // Width of left
-															// side area
+		sp.setSplitPosition(290, Sizeable.UNITS_PIXELS);
 
 		SplitPanel sp2 = new SplitPanel(SplitPanel.ORIENTATION_VERTICAL);
-		sp2.setSplitPosition(255, Sizeable.UNITS_PIXELS); // Height of
-															// right-top area
+		sp2.setSplitPosition(255, Sizeable.UNITS_PIXELS);
 
 		Panel p = new Panel("Accordion Panel");
 		p.setHeight(100);
@@ -102,7 +98,7 @@ public class TestForBasicApplicationLayout extends CustomComponent {
 		sp.setFirstComponent(p);
 		sp.setSecondComponent(tab);
 
-		main.addComponent(sp);
+		setCompositionRoot(sp);
 	}
 
 }

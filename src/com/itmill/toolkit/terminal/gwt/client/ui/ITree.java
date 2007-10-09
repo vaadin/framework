@@ -5,11 +5,13 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Tree;
+import com.google.gwt.user.client.ui.TreeImages;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.TreeListener;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
@@ -45,7 +47,7 @@ public class ITree extends Tree implements Paintable {
 	private boolean immediate;
 
 	public ITree() {
-		super();
+		super((TreeImages)GWT.create(com.itmill.toolkit.terminal.gwt.client.ui.TreeImages.class));
 		setStyleName(CLASSNAME);
 	}
 

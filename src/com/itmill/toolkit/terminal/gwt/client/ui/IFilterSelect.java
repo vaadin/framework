@@ -96,10 +96,10 @@ public class IFilterSelect extends Composite implements Paintable,
 
 			Element root = getElement();
 
-			DOM.setInnerText(up, "prev");
-			DOM.sinkEvents(up, Event.ONCLICK);
-			DOM.setInnerText(down, "next");
-			DOM.sinkEvents(down, Event.ONCLICK);
+			DOM.setInnerHTML(up, "<span>Prev</span>");
+			DOM.sinkEvents(DOM.getChild(up, 0), Event.ONCLICK);
+			DOM.setInnerHTML(down, "<span>Next</span>");
+			DOM.sinkEvents(DOM.getChild(down, 0), Event.ONCLICK);
 			DOM.insertChild(root, up, 0);
 			DOM.appendChild(root, down);
 			DOM.appendChild(root, status);
@@ -173,9 +173,9 @@ public class IFilterSelect extends Composite implements Paintable,
 
 		public void onBrowserEvent(Event event) {
 			Element target = DOM.eventGetTarget(event);
-			if (DOM.compare(target, up)) {
+			if (DOM.compare(target, up) || DOM.compare(target, DOM.getChild(up, 0))) {
 				filterOptions(currentPage - 1, lastFilter);
-			} else if (DOM.compare(target, down)) {
+			} else if (DOM.compare(target, down) || DOM.compare(target, DOM.getChild(down, 0))) {
 				filterOptions(currentPage + 1, lastFilter);
 			}
 			tb.setFocus(true);

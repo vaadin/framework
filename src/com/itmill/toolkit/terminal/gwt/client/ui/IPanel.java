@@ -29,19 +29,9 @@ public class IPanel extends SimplePanel implements Paintable,
 
 	public IPanel() {
 		super();
-		setStyleName(CLASSNAME);
-
 		DOM.appendChild(getElement(), captionNode);
-		DOM
-				.setElementProperty(captionNode, "className", CLASSNAME
-						+ "-caption");
 		DOM.appendChild(getElement(), contentNode);
-		DOM
-				.setElementProperty(contentNode, "className", CLASSNAME
-						+ "-content");
 		DOM.appendChild(getElement(), bottomDecoration);
-		DOM.setElementProperty(bottomDecoration, "className", CLASSNAME
-				+ "-deco");
 	}
 
 	protected Element getContainerElement() {
@@ -72,23 +62,25 @@ public class IPanel extends SimplePanel implements Paintable,
 
 		// Add proper style name for root element
 		// TODO refactor to support additional styles set from server-side
+		String className = CLASSNAME;
 		if (uidl.hasAttribute("style"))
-			setStyleName(CLASSNAME + " " + CLASSNAME + "-"
-					+ uidl.getStringAttribute("style"));
-		else
-			setStyleName(CLASSNAME);
+			className += "-" + uidl.getStringAttribute("style");
+		setStyleName(className);
+		DOM.setElementProperty(contentNode, "className", className + "-content");
+		DOM.setElementProperty(bottomDecoration, "className", className
+				+ "-deco");
 
 		// Handle caption displaying
 		if (uidl.hasAttribute("caption")
 				&& !uidl.getStringAttribute("caption").equals("")) {
-			DOM.setInnerHTML(captionNode, uidl.getStringAttribute("caption"));
-			DOM.setElementProperty(captionNode, "className", CLASSNAME
+			DOM.setInnerText(captionNode, uidl.getStringAttribute("caption"));
+			DOM.setElementProperty(captionNode, "className", className
 					+ "-caption");
 		} else {
 			// Theme needs this to work around different styling
-			DOM.setElementProperty(captionNode, "className", CLASSNAME
+			DOM.setElementProperty(captionNode, "className", className
 					+ "-nocaption");
-			DOM.setInnerHTML(captionNode, "");
+			DOM.setInnerText(captionNode, "");
 		}
 
 		// Height adjustment
