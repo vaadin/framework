@@ -5,14 +5,16 @@ import java.util.Date;
 import com.itmill.toolkit.terminal.gwt.client.DateTimeService;
 
 public class CalendarEntry {
+	private String styleName;
 	private Date start;
 	private Date end;
 	private String title;
 	private String description;
 	private boolean notime;
 
-	public CalendarEntry(Date start, Date end, String title,
+	public CalendarEntry(String styleName, Date start, Date end, String title,
 			String description, boolean notime) {
+		this.styleName = styleName;
 		if (notime) {
 			Date d = new Date(start.getTime());
 			d.setSeconds(0);
@@ -35,8 +37,13 @@ public class CalendarEntry {
 		this.notime = notime;
 	}
 
-	public CalendarEntry(Date start, Date end, String title, String description) {
-		this(start, end, title, description, false);
+	public CalendarEntry(String styleName, Date start, Date end, String title,
+			String description) {
+		this(styleName, start, end, title, description, false);
+	}
+
+	public String getStyleName() {
+		return styleName;
 	}
 
 	public Date getStart() {

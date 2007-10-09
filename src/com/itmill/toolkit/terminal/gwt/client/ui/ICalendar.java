@@ -6,8 +6,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.HTMLTable;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.SourcesTableEvents;
 import com.google.gwt.user.client.ui.TableListener;
@@ -19,7 +20,9 @@ public class ICalendar extends IDateField {
 
 	private CalendarPanel calPanel;
 
-	private HTMLTable hourTable;
+	private SimplePanel hourPanel;
+
+	private FlexTable hourTable;
 
 	private EntrySource entrySource;
 
@@ -75,20 +78,20 @@ public class ICalendar extends IDateField {
 	}
 
 	protected void buildDayView(Date date) {
-		boolean firstRender = false;
-		if (this.hourTable == null) {
-			hourTable = new FlexTable();
-			firstRender = true;
-			hourTable.addTableListener(this.ftListener);
-			SimplePanel p = new SimplePanel();
-			p.add(hourTable);
-			p.setStyleName(CLASSNAME + "-hours");
+		if (this.hourPanel == null) {
+			this.hourPanel = new SimplePanel();
+			this.hourPanel.setStyleName(CLASSNAME + "-hours");
 			this.calPanel.getFlexCellFormatter().setColSpan(8, 0, 7);
-			this.calPanel.setWidget(8, 0, p);
+			this.calPanel.setWidget(8, 0, this.hourPanel);
+		} else {
+			this.hourPanel.clear();
 		}
-		Date curr = new Date(date.getTime());
+		this.hourTable = new FlexTable();
+		this.hourTable.addTableListener(this.ftListener);
+		this.hourPanel.add(this.hourTable);
+		this.hourTable.setCellSpacing(1);
+
 		for (int i = 0; i < 24; i++) {
-			curr.setHours(i);
 			String style = (i % 2 == 0 ? "even" : "odd");
 			if (realResolution >= RESOLUTION_HOUR) {
 				if (this.date != null && this.date.getHours() == i) {
@@ -97,36 +100,52 @@ public class ICalendar extends IDateField {
 			}
 			hourTable.getRowFormatter().setStyleName(i,
 					CLASSNAME + "-row-" + style);
-			if (firstRender) {
-				String hstr = (i < 10 ? "0" : "") + i + ":00";
-				if (this.dts.isTwelveHourClock()) {
-					String ampm = (i < 12 ? "am" : "pm");
-					hstr = (i <= 12 ? i : i - 12) + ":00 " + ampm;
-				}
-				hourTable.setHTML(i, 0, "<span>" + hstr + "</span>");
-				hourTable.getCellFormatter().setStyleName(i, 0,
-						CLASSNAME + "-time");
+			String hstr = (i < 10 ? "0" : "") + i + ":00";
+			if (this.dts.isTwelveHourClock()) {
+				String ampm = (i < 12 ? "am" : "pm");
+				hstr = (i <= 12 ? i : i - 12) + ":00 " + ampm;
 			}
-			List entries = this.entrySource.getEntries(curr,
-					DateTimeService.RESOLUTION_HOUR);
-			String text = "";
-			if (entries != null) {
-				for (Iterator it = entries.iterator(); it.hasNext();) {
-					CalendarEntry entry = (CalendarEntry) it.next();
-					String title = entry.getTitle();
-					String desc = entry.getDescription();
-					text += (text == "" ? "" : ", ");
-					String e = "<span"
-							+ (desc != null ? " title=\"" + desc + "\"" : "")
-							+ ">";
-					e += (title != null ? title : "?");
-					e += "</span>";
-					text += e;
-				}
+			hourTable.setHTML(i, 0, "<span>" + hstr + "</span>");
+			hourTable.getCellFormatter()
+					.setStyleName(i, 0, CLASSNAME + "-time");
+			hourTable.getCellFormatter().setWidth(i, 0, "55");
+
+		}
+
+		List entries = this.entrySource.getEntries(date,
+				DateTimeService.RESOLUTION_DAY);
+		int currentCol = 1;
+		for (Iterator it = entries.iterator(); it.hasNext();) {
+			CalendarEntry entry = (CalendarEntry) it.next();
+			int start = 0;
+			int hours = 24;
+			if (!entry.isNotime()) {
+				Date d = entry.getStart();
+				start = (d.getDate() < date.getDate() ? 0 : d.getHours());
+				d = entry.getEnd();
+				hours = (d.getDate() > date.getDate() ? 24 : d.getHours())
+						- start;
 			}
-			hourTable.setHTML(i, 1, text);
-			hourTable.getCellFormatter().setStyleName(i, 1,
-					CLASSNAME + "-title");
+			int col = currentCol;
+			if (col > 1) {
+				while (!this.hourTable.isCellPresent(start, col - 1))
+					col--;
+			}
+			this.hourTable.setHTML(start, col, "<span>" + entry.getTitle()
+					+ "</span>");
+			this.hourTable.getFlexCellFormatter().setRowSpan(start, col, hours);
+			this.hourTable.getFlexCellFormatter().setStyleName(start, col,
+					CLASSNAME + "-entry");
+			String sn = entry.getStyleName();
+			if (sn != null && !sn.equals("")) {
+				this.hourTable.getFlexCellFormatter().addStyleName(start, col,
+						CLASSNAME + "-" + entry.getStyleName());
+			}
+			Element el = this.hourTable.getFlexCellFormatter().getElement(
+					start, col);
+			DOM.setElementProperty(el, "title", entry.getDescription());
+
+			currentCol++;
 		}
 
 	}
@@ -148,6 +167,7 @@ public class ICalendar extends IDateField {
 		private HashMap items = new HashMap();
 
 		public void addItem(UIDL item) {
+			String styleName = item.getStringAttribute("styleName");
 			Integer id = new Integer(item.getIntAttribute("id"));
 			long start = Long.parseLong(item.getStringAttribute("start"));
 			Date startDate = new Date(start);
@@ -160,8 +180,8 @@ public class ICalendar extends IDateField {
 			if (items.containsKey(id)) {
 				items.remove(id);
 			}
-			items.put(id, new CalendarEntry(startDate, endDate, title, desc,
-					notime));
+			items.put(id, new CalendarEntry(styleName, startDate, endDate,
+					title, desc, notime));
 		}
 
 		public List getEntries(Date date, int resolution) {

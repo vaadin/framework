@@ -31,7 +31,8 @@ public class ReservationApplication extends Application {
 
 	private CalendarField reservedFrom;
 	private static final long DEFAULT_GAP_MILLIS = 3600000; // one hour
-	private long currentGapMillis = DEFAULT_GAP_MILLIS;
+	private long currentGapMillis = DEFAULT_GAP_MILLIS; // current length of
+	// reservation
 	private CalendarField reservedTo;
 
 	private Label resourceName;
@@ -262,6 +263,7 @@ public class ReservationApplication extends Application {
 	}
 
 	private void initCalendarFieldPropertyIds(CalendarField cal) {
+		cal.setItemStyleNamePropertyId(SampleDB.Resource.PROPERTY_ID_STYLENAME);
 		cal
 				.setItemStartPropertyId(SampleDB.Reservation.PROPERTY_ID_RESERVED_FROM);
 		cal.setItemEndPropertyId(SampleDB.Reservation.PROPERTY_ID_RESERVED_TO);
