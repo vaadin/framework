@@ -78,7 +78,7 @@
 
 
 .i-datefield-entrycalendar-hours {
-	height: 150px;
+	height: 300px;
 	overflow: auto;
 }
 .i-datefield-entrycalendar-hours table {
@@ -102,12 +102,15 @@ td.i-datefield-entrycalendar-time {
 	text-align: right;
 	white-space: nowrap;
 }
-td.i-datefield-entrycalendar-title {
-	padding-left: 2px;
-	text-align: left;
-	width: 80%;
-	color: #0074D9;
-}
 .i-datefield-entrycalendar-row-selected td span {
 	color: #fff;
+}
+.i-datefield-entrycalendar-entry {
+	background-color: #0074D9;
+	color: #fff;
+}
+.i-datefield-entrycalendar-entry span {
+	display: block;
+	overflow: hidden;
+	padding: 2px;
 }
