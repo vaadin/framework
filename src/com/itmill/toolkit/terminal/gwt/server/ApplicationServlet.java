@@ -133,14 +133,14 @@ public class ApplicationServlet extends HttpServlet {
 
 	private static final String AJAX_UIDL_URI = "/UIDL/";
 
-	static final String THEME_DIRECTORY_PATH = "ITK-INF/themes/";
+	static final String THEME_DIRECTORY_PATH = "ITMILL/themes/";
 
 	// Maximum delay between request for an user to be considered active (in ms)
 	private static final long ACTIVE_USER_REQUEST_INTERVAL = 1000 * 45;
 
 	private static final int DEFAULT_THEME_CACHETIME = 1000 * 60 * 60 * 24;
 
-	static final String WIDGETSET_DIRECTORY_PATH = "ITK-INF/widgetsets/";
+	static final String WIDGETSET_DIRECTORY_PATH = "ITMILL/widgetsets/";
 	// Name of the default widget set, used if not specified in web.xml
 	private static final String DEFAULT_WIDGETSET = "com.itmill.toolkit.terminal.gwt.DefaultWidgetSet";
 	// Widget set narameter name

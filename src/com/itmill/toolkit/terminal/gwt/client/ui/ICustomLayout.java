@@ -153,7 +153,7 @@ public class ICustomLayout extends ComplexPanel implements Paintable, Container 
 		while (parent != null && !(parent instanceof IView))
 			parent = parent.getParent();
 		if (parent != null && ((IView) parent).getTheme() != null) {
-			prefixImgSrcs(getElement(), "../ITK-INF/themes/"
+			prefixImgSrcs(getElement(), "../ITMILL/themes/"
 					+ ((IView) parent).getTheme() + "/layouts/");
 		} else {
 			throw (new IllegalStateException(
