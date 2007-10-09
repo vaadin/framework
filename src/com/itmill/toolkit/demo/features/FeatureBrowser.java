@@ -83,7 +83,7 @@ public class FeatureBrowser extends CustomComponent implements
 		// Restart button
 		Button close = new Button("restart", getApplication(), "close");
 		close.setStyle("link");
-		mainlayout.addComponent(close,"restart");
+		mainlayout.addComponent(close, "restart");
 
 		// Test component
 		registerFeature("/Welcome", new IntroWelcome());
@@ -199,12 +199,12 @@ public class FeatureBrowser extends CustomComponent implements
 				if (feature != null) {
 					mainlayout.removeComponent(currentFeature);
 					mainlayout.removeComponent(currentFeature.getTabSheet());
-					mainlayout.addComponent(feature,"demo");
-					mainlayout.addComponent(feature.getTabSheet(),"tabsheet");
+					mainlayout.addComponent(feature, "demo");
+					mainlayout.addComponent(feature.getTabSheet(), "tabsheet");
 					currentFeature = feature;
 					properties = feature.getPropertyPanel();
 					if (properties != null) {
-						mainlayout.addComponent(properties,"properties");
+						mainlayout.addComponent(properties, "properties");
 					}
 					getWindow()
 							.setCaption(
@@ -233,17 +233,17 @@ public class FeatureBrowser extends CustomComponent implements
 
 	public void addComponent(Component c) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void addListener(ComponentAttachListener listener) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void addListener(ComponentDetachListener listener) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public Iterator getComponentIterator() {
@@ -253,31 +253,31 @@ public class FeatureBrowser extends CustomComponent implements
 
 	public void moveComponentsFrom(ComponentContainer source) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void removeAllComponents() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void removeComponent(Component c) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void removeListener(ComponentAttachListener listener) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void removeListener(ComponentDetachListener listener) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void replaceComponent(Component oldComponent, Component newComponent) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

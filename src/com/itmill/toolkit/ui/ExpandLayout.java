@@ -36,7 +36,7 @@ public class ExpandLayout extends OrderedLayout implements Sizeable {
 	public ExpandLayout() {
 
 	}
-	
+
 	public ExpandLayout(int orientation) {
 		this();
 		setOrientation(orientation);
@@ -113,7 +113,7 @@ public class ExpandLayout extends OrderedLayout implements Sizeable {
 
 	public void replaceComponent(Component oldComponent, Component newComponent) {
 		super.replaceComponent(oldComponent, newComponent);
-		if(oldComponent == expanded)
+		if (oldComponent == expanded)
 			expanded = newComponent;
 	}
 

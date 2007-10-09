@@ -12,7 +12,7 @@ import com.itmill.toolkit.ui.*;
  * 
  */
 public class KeyboardShortcut extends com.itmill.toolkit.Application implements
-Handler {
+		Handler {
 	private Window main;
 
 	private Button a;
@@ -26,21 +26,16 @@ Handler {
 	private AbstractField f;
 
 	Action[] actions = new Action[] {
-			new ShortcutAction("Button a action",
-					ShortcutAction.KeyCode.A, new int[] {
-					ShortcutAction.ModifierKey.CTRL,
-					ShortcutAction.ModifierKey.SHIFT }),
-			new ShortcutAction("Button z action",
-					ShortcutAction.KeyCode.Z, new int[] {
-					ShortcutAction.ModifierKey.CTRL,
-					ShortcutAction.ModifierKey.SHIFT }),
-			new ShortcutAction("Button x action",
-					ShortcutAction.KeyCode.X, new int[] {
-					ShortcutAction.ModifierKey.CTRL,
-					ShortcutAction.ModifierKey.SHIFT }),
-			new ShortcutAction("Restart ",
-				ShortcutAction.KeyCode.ESCAPE, null)
-	};
+			new ShortcutAction("Button a action", ShortcutAction.KeyCode.A,
+					new int[] { ShortcutAction.ModifierKey.CTRL,
+							ShortcutAction.ModifierKey.SHIFT }),
+			new ShortcutAction("Button z action", ShortcutAction.KeyCode.Z,
+					new int[] { ShortcutAction.ModifierKey.CTRL,
+							ShortcutAction.ModifierKey.SHIFT }),
+			new ShortcutAction("Button x action", ShortcutAction.KeyCode.X,
+					new int[] { ShortcutAction.ModifierKey.CTRL,
+							ShortcutAction.ModifierKey.SHIFT }),
+			new ShortcutAction("Restart ", ShortcutAction.KeyCode.ESCAPE, null) };
 
 	public void init() {
 
@@ -49,18 +44,18 @@ Handler {
 		setTheme("corporate");
 
 		main
-		.addComponent(new Label(
-				"<h3>Test application for shortcut actions</h3>"
-				+ "<p><b>Notes:</b><br />"
-				+ "<b>This feature is under development and it's API may still change.</b><br />"
-				+ "<b>If events do not work, <b>set focus to Textfield first.</b><br />"
-				+ "<b>Browsers may have reserved the keyboard combinations used in "
-				+ "this demo for other purposes.</b><br /></p>",
-				Label.CONTENT_XHTML));
+				.addComponent(new Label(
+						"<h3>Test application for shortcut actions</h3>"
+								+ "<p><b>Notes:</b><br />"
+								+ "<b>This feature is under development and it's API may still change.</b><br />"
+								+ "<b>If events do not work, <b>set focus to Textfield first.</b><br />"
+								+ "<b>Browsers may have reserved the keyboard combinations used in "
+								+ "this demo for other purposes.</b><br /></p>",
+						Label.CONTENT_XHTML));
 		main
-		.addComponent(new Label(
-				"ESC restarts program, ctrl-shift-a clicks A button, "
-				+ "ctrl-shift-z clicks Z button, ctrl-shift-x clicks X button"));
+				.addComponent(new Label(
+						"ESC restarts program, ctrl-shift-a clicks A button, "
+								+ "ctrl-shift-z clicks Z button, ctrl-shift-x clicks X button"));
 
 		// Restart button
 		close = new Button("restart", this, "close");

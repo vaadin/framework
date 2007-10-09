@@ -24,7 +24,7 @@ public class IPanel extends SimplePanel implements Paintable,
 	private Element bottomDecoration = DOM.createDiv();
 
 	private Element contentNode = DOM.createDiv();
-	
+
 	private String height;
 
 	public IPanel() {
@@ -89,10 +89,10 @@ public class IPanel extends SimplePanel implements Paintable,
 					+ "-nocaption");
 			DOM.setInnerHTML(captionNode, "");
 		}
-		
+
 		// Height adjustment
 		iLayout();
-		
+
 		// Render content
 		UIDL layoutUidl = uidl.getChildUIDL(0);
 		Widget layout = client.getWidget(layoutUidl);
@@ -112,8 +112,8 @@ public class IPanel extends SimplePanel implements Paintable,
 			DOM.setStyleAttribute(contentNode, "height", "0");
 			DOM.setStyleAttribute(contentNode, "overflow", "hidden");
 			int h = getOffsetHeight();
-			int total = neededHeight-h;
-			if(total < 0)
+			int total = neededHeight - h;
+			if (total < 0)
 				total = 0;
 			DOM.setStyleAttribute(contentNode, "height", total + "px");
 			DOM.setStyleAttribute(contentNode, "overflow", "");

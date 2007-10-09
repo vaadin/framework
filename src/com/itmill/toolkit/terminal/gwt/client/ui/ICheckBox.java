@@ -6,9 +6,9 @@ import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
-public class ICheckBox extends com.google.gwt.user.client.ui.CheckBox
-		implements Paintable {
-	
+public class ICheckBox extends com.google.gwt.user.client.ui.CheckBox implements
+		Paintable {
+
 	public static final String CLASSNAME = "i-checkbox";
 
 	String id;
@@ -31,7 +31,7 @@ public class ICheckBox extends com.google.gwt.user.client.ui.CheckBox
 	}
 
 	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-		
+
 		// Ensure correct implementation
 		if (client.updateComponent(this, uidl, false))
 			return;

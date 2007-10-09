@@ -19,10 +19,10 @@ public class ContainsFilter implements OptionFilter {
 	}
 
 	public List filter(String filterstring, int pageLength, int page) {
-		if(filterstring == null) {
+		if (filterstring == null) {
 			filterstring = "";
 		}
-		if(this.prevFilter != filterstring || filteredItemsBuffer == null) {
+		if (this.prevFilter != filterstring || filteredItemsBuffer == null) {
 			if ("".equals(filterstring)) {
 				this.filteredItemsBuffer = new ArrayList(s.getItemIds());
 			} else if (s.getContainerDataSource() != null) {
@@ -38,8 +38,9 @@ public class ContainsFilter implements OptionFilter {
 					Item item = s.getItem(id);
 					String test = "";
 					if (s.getItemCaptionMode() == Select.ITEM_CAPTION_MODE_PROPERTY)
-						test = item.getItemProperty(s.getItemCaptionPropertyId())
-								.getValue().toString().trim();
+						test = item.getItemProperty(
+								s.getItemCaptionPropertyId()).getValue()
+								.toString().trim();
 					else
 						test = String.valueOf(id);
 
@@ -49,13 +50,13 @@ public class ContainsFilter implements OptionFilter {
 				}
 			}
 		}
-		
+
 		prevFilter = filterstring;
-		
-		if(filteredItemsBuffer.size() > pageLength) {
-			int first = page*pageLength;
+
+		if (filteredItemsBuffer.size() > pageLength) {
+			int first = page * pageLength;
 			int last = first + pageLength;
-			if(filteredItemsBuffer.size() < last) {
+			if (filteredItemsBuffer.size() < last) {
 				last = filteredItemsBuffer.size();
 			}
 			return filteredItemsBuffer.subList(first, last);

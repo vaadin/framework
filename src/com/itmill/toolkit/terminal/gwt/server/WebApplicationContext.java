@@ -56,7 +56,8 @@ import com.itmill.toolkit.ui.Window;
  * @VERSION@
  * @since 3.1
  */
-public class WebApplicationContext implements ApplicationContext, HttpSessionBindingListener {
+public class WebApplicationContext implements ApplicationContext,
+		HttpSessionBindingListener {
 
 	private List listeners;
 
@@ -65,7 +66,7 @@ public class WebApplicationContext implements ApplicationContext, HttpSessionBin
 	private WeakHashMap formActions = new WeakHashMap();
 
 	private HashSet applications = new HashSet();
-	
+
 	private WebBrowser browser = new WebBrowser();
 
 	/**
@@ -275,7 +276,6 @@ public class WebApplicationContext implements ApplicationContext, HttpSessionBin
 		applications.add(application);
 	}
 
-	
 	/**
 	 * @see javax.servlet.http.HttpSessionBindingListener#valueBound(HttpSessionBindingEvent)
 	 */
@@ -287,8 +287,9 @@ public class WebApplicationContext implements ApplicationContext, HttpSessionBin
 	 * @see javax.servlet.http.HttpSessionBindingListener#valueUnbound(HttpSessionBindingEvent)
 	 */
 	public void valueUnbound(HttpSessionBindingEvent event) {
-		// If we are going to be unbound from the session, the session must be closing
-		
+		// If we are going to be unbound from the session, the session must be
+		// closing
+
 		while (!applications.isEmpty()) {
 			Application app = (Application) applications.iterator().next();
 			app.close();
@@ -296,10 +297,12 @@ public class WebApplicationContext implements ApplicationContext, HttpSessionBin
 		}
 	}
 
-	/** Get the web browser associated with this application context. 
+	/**
+	 * Get the web browser associated with this application context.
 	 * 
-	 * Because application context is related to the http session and server maintains one session per 
-	 * browser-instance, each context has exactly one web browser associated with it. 
+	 * Because application context is related to the http session and server
+	 * maintains one session per browser-instance, each context has exactly one
+	 * web browser associated with it.
 	 * 
 	 * @return
 	 */

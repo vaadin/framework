@@ -421,7 +421,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
 			this.filename = filename;
 			this.type = MIMEType;
 		}
-		
+
 		/**
 		 * Uploads where the event occurred.
 		 * 
@@ -448,7 +448,6 @@ public class Upload extends AbstractComponent implements Component.Focusable {
 		public String getMIMEType() {
 			return type;
 		}
-
 
 	}
 
@@ -775,6 +774,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
 
 	/**
 	 * Gets listener that tracks progress of upload.
+	 * 
 	 * @return listener
 	 * 
 	 */
@@ -790,7 +790,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
 		 * Updates progress to listener
 		 * 
 		 * @param readBytes
-		 *            bytes transferred 
+		 *            bytes transferred
 		 * @param contentLength
 		 *            total size of file currently being uploaded, -1 if unknown
 		 */

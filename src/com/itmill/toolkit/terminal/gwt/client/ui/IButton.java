@@ -13,7 +13,7 @@ import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
 public class IButton extends Button implements Paintable {
-	
+
 	public static final String CLASSNAME = "i-button";
 
 	String id;
@@ -23,9 +23,8 @@ public class IButton extends Button implements Paintable {
 	private Element errorIndicatorElement;
 
 	private ErrorMessage errorMessage;
-	
-	private PopupPanel errorContainer;
 
+	private PopupPanel errorContainer;
 
 	public IButton() {
 		setStyleName(CLASSNAME);
@@ -52,32 +51,34 @@ public class IButton extends Button implements Paintable {
 
 		// Set text
 		setText(uidl.getStringAttribute("caption"));
-		
-		if(uidl.hasAttribute("error")) {
+
+		if (uidl.hasAttribute("error")) {
 			UIDL errorUidl = uidl.getErrors();
-			if(errorIndicatorElement == null) {
+			if (errorIndicatorElement == null) {
 				errorIndicatorElement = DOM.createDiv();
-				DOM.setElementProperty(errorIndicatorElement, "className", "i-errorindicator");
+				DOM.setElementProperty(errorIndicatorElement, "className",
+						"i-errorindicator");
 				DOM.sinkEvents(errorIndicatorElement, Event.MOUSEEVENTS);
 			}
 			DOM.insertChild(getElement(), errorIndicatorElement, 0);
-			if(errorMessage == null)
+			if (errorMessage == null)
 				errorMessage = new ErrorMessage();
 			errorMessage.updateFromUIDL(errorUidl);
-			
-		} else if( errorIndicatorElement != null) {
+
+		} else if (errorIndicatorElement != null) {
 			DOM.setStyleAttribute(errorIndicatorElement, "display", "none");
 		}
-		
-		if(uidl.hasAttribute("description")) {
+
+		if (uidl.hasAttribute("description")) {
 			setTitle(uidl.getStringAttribute("description"));
 		}
 
 	}
-	
+
 	public void onBrowserEvent(Event event) {
-		Element target= DOM.eventGetTarget(event);
-		if(errorIndicatorElement != null && DOM.compare(target, errorIndicatorElement)) {
+		Element target = DOM.eventGetTarget(event);
+		if (errorIndicatorElement != null
+				&& DOM.compare(target, errorIndicatorElement)) {
 			switch (DOM.eventGetType(event)) {
 			case Event.ONMOUSEOVER:
 				showErrorMessage();
@@ -86,8 +87,8 @@ public class IButton extends Button implements Paintable {
 				hideErrorMessage();
 				break;
 			case Event.ONCLICK:
-				ApplicationConnection.getConsole().
-					log(DOM.getInnerHTML(errorMessage.getElement()));
+				ApplicationConnection.getConsole().log(
+						DOM.getInnerHTML(errorMessage.getElement()));
 				return;
 			default:
 				break;
@@ -97,25 +98,28 @@ public class IButton extends Button implements Paintable {
 	}
 
 	private void hideErrorMessage() {
-		if(errorContainer != null) {
+		if (errorContainer != null) {
 			errorContainer.hide();
 		}
 	}
 
 	private void showErrorMessage() {
-		if(errorMessage != null) {
-			if(errorContainer == null) {
+		if (errorMessage != null) {
+			if (errorContainer == null) {
 				errorContainer = new PopupPanel();
 				errorContainer.setWidget(errorMessage);
 			}
-			errorContainer.setPopupPosition(
-					DOM.getAbsoluteLeft(errorIndicatorElement) +
-						2*DOM.getElementPropertyInt(errorIndicatorElement, "offsetHeight"),
-					DOM.getAbsoluteTop(errorIndicatorElement) + 
-						2*DOM.getElementPropertyInt(errorIndicatorElement, "offsetHeight"));
+			errorContainer.setPopupPosition(DOM
+					.getAbsoluteLeft(errorIndicatorElement)
+					+ 2
+					* DOM.getElementPropertyInt(errorIndicatorElement,
+							"offsetHeight"), DOM
+					.getAbsoluteTop(errorIndicatorElement)
+					+ 2
+					* DOM.getElementPropertyInt(errorIndicatorElement,
+							"offsetHeight"));
 			errorContainer.show();
 		}
 	}
-
 
 }

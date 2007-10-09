@@ -72,7 +72,7 @@ public class TabSheet extends AbstractComponentContainer implements Sizeable {
 	 * Holds the value of property tabsHIdden.
 	 */
 	private boolean tabsHidden;
-	
+
 	private int height = -1;
 
 	private int heightUnit;
@@ -80,7 +80,6 @@ public class TabSheet extends AbstractComponentContainer implements Sizeable {
 	private int width = -1;
 
 	private int widthUnit;
-
 
 	/**
 	 * Constructs a new Tabsheet. Tabsheet is immediate by default.
@@ -203,12 +202,13 @@ public class TabSheet extends AbstractComponentContainer implements Sizeable {
 
 		if (areTabsHidden())
 			target.addAttribute("hidetabs", true);
-		
-		if(width > -1) {
+
+		if (width > -1) {
 			target.addAttribute("width", getWidth() + UNIT_SYMBOLS[widthUnit]);
 		}
-		if(height > -1) {
-			target.addAttribute("height", getHeight() + UNIT_SYMBOLS[heightUnit]);
+		if (height > -1) {
+			target.addAttribute("height", getHeight()
+					+ UNIT_SYMBOLS[heightUnit]);
 		}
 
 		target.startTag("tabs");

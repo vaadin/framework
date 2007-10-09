@@ -19,63 +19,65 @@ import com.itmill.toolkit.terminal.gwt.client.Util;
 /**
  * 
  */
-public class IView extends SimplePanel implements Paintable, WindowResizeListener {
-	
+public class IView extends SimplePanel implements Paintable,
+		WindowResizeListener {
+
 	private static final String CLASSNAME = "i-view";
 
 	private String theme;
-	
+
 	private Paintable layout;
-	
+
 	private HashSet subWindows = new HashSet();
 
 	private String id;
 
 	private ShortcutActionHandler actionHandler;
-	
+
 	public IView(String elementId) {
 		super();
 		setStyleName(CLASSNAME);
 		DOM.sinkEvents(getElement(), Event.ONKEYDOWN);
-		
+
 		RootPanel.get(elementId).add(this);
-		
+
 		Window.addWindowResizeListener(this);
 	}
-	
+
 	public String getTheme() {
 		return theme;
 	}
-	
+
 	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-		
+
 		this.id = uidl.getId();
-		
+
 		// Start drawing from scratch
 		clear();
-		
+
 		// Some attributes to note
 		theme = uidl.getStringAttribute("theme");
-		com.google.gwt.user.client.Window.setTitle(uidl.getStringAttribute("caption"));
-		
+		com.google.gwt.user.client.Window.setTitle(uidl
+				.getStringAttribute("caption"));
+
 		// Process children
 		int childIndex = 0;
-		
+
 		// Open URL:s
-		while (childIndex < uidl.getChidlCount() && 
-				"open".equals(uidl.getChildUIDL(childIndex).getTag())) {
+		while (childIndex < uidl.getChidlCount()
+				&& "open".equals(uidl.getChildUIDL(childIndex).getTag())) {
 			UIDL open = uidl.getChildUIDL(childIndex);
 			String url = open.getStringAttribute("src");
 			String target = open.getStringAttribute("target");
 			Window.open(url, target != null ? target : null, "");
 			childIndex++;
 		}
-		
+
 		// Draw this application level window
 		UIDL childUidl = uidl.getChildUIDL(childIndex);
 		Paintable lo = (Paintable) client.getWidget(childUidl);
-		if(layout != null) {
-			if(layout != lo) {
+		if (layout != null) {
+			if (layout != lo) {
 				// remove old
 				client.unregisterPaintable(layout);
 				// add new
@@ -86,10 +88,10 @@ public class IView extends SimplePanel implements Paintable, WindowResizeListene
 			setWidget((Widget) lo);
 		}
 		lo.updateFromUIDL(childUidl, client);
-		
+
 		// Update subwindows
 		HashSet removedSubWindows = new HashSet(subWindows);
-		
+
 		// Open new windows
 		while ((childUidl = uidl.getChildUIDL(childIndex++)) != null) {
 			if ("window".equals(childUidl.getTag())) {
@@ -99,28 +101,29 @@ public class IView extends SimplePanel implements Paintable, WindowResizeListene
 				} else {
 					subWindows.add(w);
 				}
-				((Paintable)w).updateFromUIDL(childUidl, client);
+				((Paintable) w).updateFromUIDL(childUidl, client);
 			} else if ("actions".equals(childUidl.getTag())) {
-				if(actionHandler == null) {
+				if (actionHandler == null) {
 					actionHandler = new ShortcutActionHandler(id, client);
 				}
 				actionHandler.updateActionMap(childUidl);
 			}
 		}
-		
+
 		// Close old windows
-		for (Iterator rem=removedSubWindows.iterator(); rem.hasNext();) {
+		for (Iterator rem = removedSubWindows.iterator(); rem.hasNext();) {
 			IWindow w = (IWindow) rem.next();
 			client.unregisterPaintable(w);
 			subWindows.remove(w);
 			RootPanel.get().remove(w);
 		}
 	}
-	
+
 	public void onBrowserEvent(Event event) {
 		super.onBrowserEvent(event);
 		if (DOM.eventGetType(event) == Event.ONKEYDOWN && actionHandler != null) {
-			int modifiers = KeyboardListenerCollection.getKeyboardModifiers(event);
+			int modifiers = KeyboardListenerCollection
+					.getKeyboardModifiers(event);
 			actionHandler.handleKeyboardEvent(
 					(char) DOM.eventGetKeyCode(event), modifiers);
 			return;
@@ -132,4 +135,3 @@ public class IView extends SimplePanel implements Paintable, WindowResizeListene
 	}
 
 }
-

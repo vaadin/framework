@@ -96,7 +96,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	 * List of parameter handlers for this window.
 	 */
 	private LinkedList parameterHandlerList = null;
-	
+
 	/** Set of subwindows */
 	private HashSet subwindows = new HashSet();
 
@@ -137,12 +137,12 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	 * containing (main window) or -1 if unspecified .
 	 */
 	private int positionX = -1;
-	
+
 	/**
 	 * Distance scrolled from top in pixels.
 	 */
 	private int scrollTop = 0;
-	
+
 	/**
 	 * Distance scrolled from left in pixels.
 	 */
@@ -241,8 +241,8 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	 */
 	public final Application getApplication() {
 		if (getParent() == null)
-		return this.application;
-		return ((Window)getParent()).getApplication();
+			return this.application;
+		return ((Window) getParent()).getApplication();
 	}
 
 	/**
@@ -408,7 +408,9 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	/**
 	 * Gets the theme for this window.
 	 * 
-	 * <p>Subwindows do not support themes and thus return theme used by the parent</p>
+	 * <p>
+	 * Subwindows do not support themes and thus return theme used by the parent
+	 * </p>
 	 * 
 	 * @return the Name of the theme used in window. If the theme for this
 	 *         individual window is not explicitly set, the application theme is
@@ -417,7 +419,8 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	 *         returned
 	 */
 	public String getTheme() {
-		if (getParent() != null) return ((Window) getParent()).getTheme();
+		if (getParent() != null)
+			return ((Window) getParent()).getTheme();
 		if (theme != null)
 			return theme;
 		if ((application != null) && (application.getTheme() != null))
@@ -430,12 +433,15 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	/**
 	 * Sets the theme for this window.
 	 * 
-	 * 	 Setting theme for subwindows is not supported.
+	 * Setting theme for subwindows is not supported.
+	 * 
 	 * @param theme
 	 *            the New theme for this window. Null implies the default theme.
 	 */
 	public void setTheme(String theme) {
-		if (getParent() != null) throw new UnsupportedOperationException("Setting theme for sub-windws is not supported.");
+		if (getParent() != null)
+			throw new UnsupportedOperationException(
+					"Setting theme for sub-windws is not supported.");
 		this.theme = theme;
 		requestRepaint();
 	}
@@ -483,7 +489,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 		// Window position
 		target.addVariable(this, "scrolltop", getScrollTop());
 		target.addVariable(this, "scrollleft", getScrollLeft());
-		
+
 		// Window closing
 		target.addVariable(this, "close", false);
 
@@ -493,9 +499,9 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 					+ this.focusedComponent.getFocusableId());
 		else
 			target.addVariable(this, "focused", "");
-		
+
 		// Paint subwindows
-		for (Iterator i=subwindows.iterator(); i.hasNext();) {
+		for (Iterator i = subwindows.iterator(); i.hasNext();) {
 			Window w = (Window) i.next();
 			w.paint(target);
 		}
@@ -850,7 +856,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	 */
 	public void setFocusedComponent(Component.Focusable focusable) {
 		Application app = getApplication();
-		if(app != null) {
+		if (app != null) {
 			app.setFocusedComponent(focusable);
 			this.focusedComponent = focusable;
 		}
@@ -1049,33 +1055,37 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 		if (getParent() != null)
 			throw new IllegalArgumentException(
 					"You can only add windows inside application-level windows");
-		
-		if (window == null) throw new NullPointerException("Argument must not be null");
+
+		if (window == null)
+			throw new NullPointerException("Argument must not be null");
 
 		subwindows.add(window);
 		window.setParent(this);
 		requestRepaint();
 	}
-	
-	/** Remove the given subwindow from this window.
+
+	/**
+	 * Remove the given subwindow from this window.
 	 * 
-	 * @param window Window to be removed.
+	 * @param window
+	 *            Window to be removed.
 	 */
 	public void removeWindow(Window window) {
 		subwindows.remove(window);
 		window.setParent(null);
 		requestRepaint();
-		
+
 	}
 
-	/** Get the set of all child windows.
+	/**
+	 * Get the set of all child windows.
 	 * 
 	 * @return Set of child windows.
 	 */
 	public Set getChildWindows() {
 		return Collections.unmodifiableSet(subwindows);
 	}
-	
+
 	/**
 	 * Gets the current vertical scroll position of window.
 	 * 
@@ -1088,7 +1098,8 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	/**
 	 * Scrolls window to given position.
 	 * 
-	 * @param scrollTop pixels to be scrolled from top
+	 * @param scrollTop
+	 *            pixels to be scrolled from top
 	 */
 	public void setScrollTop(int scrollTop) {
 		this.scrollTop = scrollTop;
@@ -1106,7 +1117,8 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	/**
 	 * Scrolls window to given position.
 	 * 
-	 * @param scrollLeft pixels to be scrolled from left
+	 * @param scrollLeft
+	 *            pixels to be scrolled from left
 	 */
 	public void setScrollLeft(int scrollLeft) {
 		this.scrollLeft = scrollLeft;

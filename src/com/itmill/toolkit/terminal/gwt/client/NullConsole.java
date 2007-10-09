@@ -1,9 +1,9 @@
 package com.itmill.toolkit.terminal.gwt.client;
 
 /**
- * Client side console implementation for non-debug mode
- * that discards all messages.
- *
+ * Client side console implementation for non-debug mode that discards all
+ * messages.
+ * 
  */
 public class NullConsole implements Console {
 

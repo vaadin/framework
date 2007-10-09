@@ -16,13 +16,13 @@ public class ItkColorPicker extends GwtColorPicker implements Paintable {
 	ApplicationConnection client;
 
 	/**
-	 * The constructor should first call super() to initialize the component
-	 * and then handle any initialization relevant to IT Mill Toolkit. 
-	 **/
+	 * The constructor should first call super() to initialize the component and
+	 * then handle any initialization relevant to IT Mill Toolkit.
+	 */
 	public ItkColorPicker() {
 		// The superclass has a lot of relevant initialization
 		super();
-		
+
 		// This method call of the Paintable interface sets the component
 		// style name in DOM tree
 		setStyleName(CLASSNAME);
@@ -40,11 +40,11 @@ public class ItkColorPicker extends GwtColorPicker implements Paintable {
 		// but don't let container manage caption etc.
 		if (client.updateComponent(this, uidl, false))
 			return;
- 
+
 		// Save reference to server connection object to be able to send
 		// user interaction later
 		this.client = client;
-		
+
 		// Save the UIDL identifier for the component
 		uidl_id = uidl.getId();
 
@@ -57,18 +57,18 @@ public class ItkColorPicker extends GwtColorPicker implements Paintable {
 		// Ignore if no change
 		if (newcolor.equals(currentcolor.getText()))
 			return;
-		
+
 		// Let the original implementation to do whatever it needs to do
 		super.setColor(newcolor);
 
-        // Updating the state to the server can not be done before
+		// Updating the state to the server can not be done before
 		// the server connection is known, i.e., before updateFromUIDL()
 		// has been called.
 		if (uidl_id == null || client == null)
-	  		  return;
+			return;
 
 		// Communicate the user interaction parameters to server. This call will
 		// initiate an AJAX request to the server.
-	  	client.updateVariable(uidl_id, "colorname", newcolor, true);
+		client.updateVariable(uidl_id, "colorname", newcolor, true);
 	}
 }

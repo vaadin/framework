@@ -7,9 +7,8 @@ import com.itmill.toolkit.terminal.PaintTarget;
 
 /**
  * TODO comment
- *
- * Example code:
- * <code>
+ * 
+ * Example code: <code>
  * 	class MyPlayer extends CustomComponent implements ValueChangeListener {
  *		
  *		Label volumeIndicator = new Label();
@@ -38,7 +37,7 @@ import com.itmill.toolkit.terminal.PaintTarget;
  *	}
  *
  * </code>
- *
+ * 
  */
 public class Slider extends AbstractField {
 
@@ -427,7 +426,7 @@ public class Slider extends AbstractField {
 	 * ValueOutOfBoundsException
 	 * 
 	 * @author IT Mill Ltd.
-	 *
+	 * 
 	 */
 	public class ValueOutOfBoundsException extends Exception {
 

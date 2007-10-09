@@ -9,56 +9,58 @@ import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
-public class IPopupCalendar extends ITextualDate implements Paintable, ClickListener, PopupListener {
-	
+public class IPopupCalendar extends ITextualDate implements Paintable,
+		ClickListener, PopupListener {
+
 	private IButton calendarToggle;
-	
+
 	private CalendarPanel calendar;
-	
+
 	private PopupPanel popup;
-	
+
 	public IPopupCalendar() {
 		super();
-		
+
 		calendarToggle = new IButton();
 		calendarToggle.setText("...");
 		calendarToggle.addClickListener(this);
 		add(calendarToggle);
-		
+
 		calendar = new CalendarPanel(this);
 		popup = new PopupPanel(true);
-		popup.setStyleName(IDateField.CLASSNAME+"-calendar");
+		popup.setStyleName(IDateField.CLASSNAME + "-calendar");
 		popup.setWidget(calendar);
 		popup.addPopupListener(this);
 	}
-	
+
 	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 		super.updateFromUIDL(uidl, client);
-		if(date != null)
+		if (date != null)
 			calendar.updateCalendar();
 		calendarToggle.setEnabled(enabled);
 	}
 
 	public void onClick(Widget sender) {
-		if(sender == calendarToggle) {
-				calendar.updateCalendar();
-				popup.show();
-				int w = calendar.getOffsetWidth();
-				int h = calendar.getOffsetHeight();
-				int t = calendarToggle.getAbsoluteTop();
-				int l = calendarToggle.getAbsoluteLeft();
-				if(l+w > Window.getClientWidth())
-					l = Window.getClientWidth() - w;
-				if(t+h > Window.getClientHeight())
-					t = Window.getClientHeight() - h - calendarToggle.getOffsetHeight() - 2;
-				popup.setPopupPosition(l, t + calendarToggle.getOffsetHeight() + 2);
-				popup.setWidth(w + "px");
-				popup.setHeight(h + "px");
+		if (sender == calendarToggle) {
+			calendar.updateCalendar();
+			popup.show();
+			int w = calendar.getOffsetWidth();
+			int h = calendar.getOffsetHeight();
+			int t = calendarToggle.getAbsoluteTop();
+			int l = calendarToggle.getAbsoluteLeft();
+			if (l + w > Window.getClientWidth())
+				l = Window.getClientWidth() - w;
+			if (t + h > Window.getClientHeight())
+				t = Window.getClientHeight() - h
+						- calendarToggle.getOffsetHeight() - 2;
+			popup.setPopupPosition(l, t + calendarToggle.getOffsetHeight() + 2);
+			popup.setWidth(w + "px");
+			popup.setHeight(h + "px");
 		}
 	}
 
 	public void onPopupClosed(PopupPanel sender, boolean autoClosed) {
-		if(sender == popup)
+		if (sender == popup)
 			buildDate();
 	}
 

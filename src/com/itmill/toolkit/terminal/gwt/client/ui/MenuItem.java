@@ -1,4 +1,5 @@
 package com.itmill.toolkit.terminal.gwt.client.ui;
+
 /*
  * Copyright 2007 Google Inc.
  * 
@@ -17,7 +18,6 @@ package com.itmill.toolkit.terminal.gwt.client.ui;
 
 //COPIED HERE DUE package privates in GWT
 
-
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.HasHTML;
@@ -31,139 +31,153 @@ import com.google.gwt.user.client.ui.UIObject;
  */
 public class MenuItem extends UIObject implements HasHTML {
 
-  private static final String DEPENDENT_STYLENAME_SELECTED_ITEM = "selected";
+	private static final String DEPENDENT_STYLENAME_SELECTED_ITEM = "selected";
 
-  private Command command;
-  private MenuBar parentMenu, subMenu;
+	private Command command;
+	private MenuBar parentMenu, subMenu;
 
-  /**
-   * Constructs a new menu item that fires a command when it is selected.
-   * 
-   * @param text the item's text
-   * @param cmd the command to be fired when it is selected
-   */
-  public MenuItem(String text, Command cmd) {
-    this(text, false);
-    setCommand(cmd);
-  }
+	/**
+	 * Constructs a new menu item that fires a command when it is selected.
+	 * 
+	 * @param text
+	 *            the item's text
+	 * @param cmd
+	 *            the command to be fired when it is selected
+	 */
+	public MenuItem(String text, Command cmd) {
+		this(text, false);
+		setCommand(cmd);
+	}
 
-  /**
-   * Constructs a new menu item that fires a command when it is selected.
-   * 
-   * @param text the item's text
-   * @param asHTML <code>true</code> to treat the specified text as html
-   * @param cmd the command to be fired when it is selected
-   */
-  public MenuItem(String text, boolean asHTML, Command cmd) {
-    this(text, asHTML);
-    setCommand(cmd);
-  }
+	/**
+	 * Constructs a new menu item that fires a command when it is selected.
+	 * 
+	 * @param text
+	 *            the item's text
+	 * @param asHTML
+	 *            <code>true</code> to treat the specified text as html
+	 * @param cmd
+	 *            the command to be fired when it is selected
+	 */
+	public MenuItem(String text, boolean asHTML, Command cmd) {
+		this(text, asHTML);
+		setCommand(cmd);
+	}
 
-  /**
-   * Constructs a new menu item that cascades to a sub-menu when it is selected.
-   * 
-   * @param text the item's text
-   * @param subMenu the sub-menu to be displayed when it is selected
-   */
-  public MenuItem(String text, MenuBar subMenu) {
-    this(text, false);
-    setSubMenu(subMenu);
-  }
+	/**
+	 * Constructs a new menu item that cascades to a sub-menu when it is
+	 * selected.
+	 * 
+	 * @param text
+	 *            the item's text
+	 * @param subMenu
+	 *            the sub-menu to be displayed when it is selected
+	 */
+	public MenuItem(String text, MenuBar subMenu) {
+		this(text, false);
+		setSubMenu(subMenu);
+	}
 
-  /**
-   * Constructs a new menu item that cascades to a sub-menu when it is selected.
-   * 
-   * @param text the item's text
-   * @param asHTML <code>true</code> to treat the specified text as html
-   * @param subMenu the sub-menu to be displayed when it is selected
-   */
-  public MenuItem(String text, boolean asHTML, MenuBar subMenu) {
-    this(text, asHTML);
-    setSubMenu(subMenu);
-  }
+	/**
+	 * Constructs a new menu item that cascades to a sub-menu when it is
+	 * selected.
+	 * 
+	 * @param text
+	 *            the item's text
+	 * @param asHTML
+	 *            <code>true</code> to treat the specified text as html
+	 * @param subMenu
+	 *            the sub-menu to be displayed when it is selected
+	 */
+	public MenuItem(String text, boolean asHTML, MenuBar subMenu) {
+		this(text, asHTML);
+		setSubMenu(subMenu);
+	}
 
-  MenuItem(String text, boolean asHTML) {
-    setElement(DOM.createTD());
-    setSelectionStyle(false);
+	MenuItem(String text, boolean asHTML) {
+		setElement(DOM.createTD());
+		setSelectionStyle(false);
 
-    if (asHTML) {
-      setHTML(text);
-    } else {
-      setText(text);
-    }
-    setStyleName("gwt-MenuItem");
-  }
+		if (asHTML) {
+			setHTML(text);
+		} else {
+			setText(text);
+		}
+		setStyleName("gwt-MenuItem");
+	}
 
-  /**
-   * Gets the command associated with this item.
-   * 
-   * @return this item's command, or <code>null</code> if none exists
-   */
-  public Command getCommand() {
-    return command;
-  }
+	/**
+	 * Gets the command associated with this item.
+	 * 
+	 * @return this item's command, or <code>null</code> if none exists
+	 */
+	public Command getCommand() {
+		return command;
+	}
 
-  public String getHTML() {
-    return DOM.getInnerHTML(getElement());
-  }
+	public String getHTML() {
+		return DOM.getInnerHTML(getElement());
+	}
 
-  /**
-   * Gets the menu that contains this item.
-   * 
-   * @return the parent menu, or <code>null</code> if none exists.
-   */
-  public MenuBar getParentMenu() {
-    return parentMenu;
-  }
+	/**
+	 * Gets the menu that contains this item.
+	 * 
+	 * @return the parent menu, or <code>null</code> if none exists.
+	 */
+	public MenuBar getParentMenu() {
+		return parentMenu;
+	}
 
-  /**
-   * Gets the sub-menu associated with this item.
-   * 
-   * @return this item's sub-menu, or <code>null</code> if none exists
-   */
-  public MenuBar getSubMenu() {
-    return subMenu;
-  }
+	/**
+	 * Gets the sub-menu associated with this item.
+	 * 
+	 * @return this item's sub-menu, or <code>null</code> if none exists
+	 */
+	public MenuBar getSubMenu() {
+		return subMenu;
+	}
 
-  public String getText() {
-    return DOM.getInnerText(getElement());
-  }
+	public String getText() {
+		return DOM.getInnerText(getElement());
+	}
 
-  /**
-   * Sets the command associated with this item.
-   * 
-   * @param cmd the command to be associated with this item
-   */
-  public void setCommand(Command cmd) {
-    command = cmd;
-  }
+	/**
+	 * Sets the command associated with this item.
+	 * 
+	 * @param cmd
+	 *            the command to be associated with this item
+	 */
+	public void setCommand(Command cmd) {
+		command = cmd;
+	}
 
-  public void setHTML(String html) {
-    DOM.setInnerHTML(getElement(), html);
-  }
+	public void setHTML(String html) {
+		DOM.setInnerHTML(getElement(), html);
+	}
 
-  /**
-   * Sets the sub-menu associated with this item.
-   * 
-   * @param subMenu this item's new sub-menu
-   */
-  public void setSubMenu(MenuBar subMenu) {
-    this.subMenu = subMenu;
-  }
+	/**
+	 * Sets the sub-menu associated with this item.
+	 * 
+	 * @param subMenu
+	 *            this item's new sub-menu
+	 */
+	public void setSubMenu(MenuBar subMenu) {
+		this.subMenu = subMenu;
+	}
 
-  public void setText(String text) {
-    DOM.setInnerText(getElement(), text);
-  }
+	public void setText(String text) {
+		DOM.setInnerText(getElement(), text);
+	}
 
-  void setParentMenu(MenuBar parentMenu) {
-    this.parentMenu = parentMenu;
-  }
+	void setParentMenu(MenuBar parentMenu) {
+		this.parentMenu = parentMenu;
+	}
 
-  void setSelectionStyle(boolean selected) {
-    if (selected) {
-      addStyleDependentName(DEPENDENT_STYLENAME_SELECTED_ITEM);
-    } else {
-      removeStyleDependentName(DEPENDENT_STYLENAME_SELECTED_ITEM);
-    }
-  }
+	void setSelectionStyle(boolean selected) {
+		if (selected) {
+			addStyleDependentName(DEPENDENT_STYLENAME_SELECTED_ITEM);
+		} else {
+			removeStyleDependentName(DEPENDENT_STYLENAME_SELECTED_ITEM);
+		}
+	}
 }

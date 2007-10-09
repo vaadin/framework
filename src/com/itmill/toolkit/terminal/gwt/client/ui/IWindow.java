@@ -46,7 +46,7 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 	private Element footer;
 
 	private Element resizeBox;
-	
+
 	private ScrollPanel contentPanel = new ScrollPanel();
 
 	private boolean dragging;
@@ -151,7 +151,7 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 		DOM.appendChild(wrapper, contents);
 		DOM.appendChild(wrapper, footer);
 		setWidget(contentPanel);
-		
+
 		// set default size
 		setWidth(400 + "px");
 		setHeight(300 + "px");
@@ -170,19 +170,18 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 		} else {
 
 			// Initialize the width from UIDL
-			if(uidl.hasVariable("width")) {
+			if (uidl.hasVariable("width")) {
 				String width = uidl.getStringVariable("width");
 				setWidth(width);
 			}
-			if(uidl.hasVariable("height")) {
+			if (uidl.hasVariable("height")) {
 				String height = uidl.getStringVariable("height");
 				setHeight(height);
 			}
-			
-			contentPanel.setScrollPosition(
-					uidl.getIntVariable("scrolltop"));
-			contentPanel.setHorizontalScrollPosition(
-					uidl.getIntVariable("scrollleft"));
+
+			contentPanel.setScrollPosition(uidl.getIntVariable("scrolltop"));
+			contentPanel.setHorizontalScrollPosition(uidl
+					.getIntVariable("scrollleft"));
 
 			// Initialize the position form UIDL
 			try {
@@ -247,7 +246,7 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 	public void setCaption(String c) {
 		DOM.setInnerHTML(header, c);
 	}
-	
+
 	protected Element getContainerElement() {
 		return contents;
 	}
@@ -304,7 +303,7 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 			break;
 		}
 	}
-	
+
 	public void setSize(Event event, boolean updateVariables) {
 		int w = DOM.eventGetScreenX(event) - startX + origW;
 		if (w < 60)
@@ -314,13 +313,13 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 			h = 60;
 		setWidth(w + "px");
 		setHeight(h + "px");
-		if(updateVariables) {
+		if (updateVariables) {
 			// sending width back always as pixels, no need for unit
 			client.updateVariable(id, "width", w, false);
 			client.updateVariable(id, "height", h, false);
 		}
 	}
-	
+
 	public void setWidth(String width) {
 		super.setWidth(width);
 		DOM.setStyleAttribute(header, "width", width);

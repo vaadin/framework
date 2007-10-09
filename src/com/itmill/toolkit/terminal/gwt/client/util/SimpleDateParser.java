@@ -2,19 +2,19 @@ package com.itmill.toolkit.terminal.gwt.client.util;
 
 import java.util.Date;
 
-
 /**
- * This is a simple regular expression based parser for date notations.
- * While our aim is to fully support in the future the JDK date parser, currently
- * only numeric notations and literals are supported such as <code>dd/MM/yyyy HH:mm:ss.SSSS</code>.
- * Each entity is parsed with the same number of digits, i.e. for <code>dd</code> two digits will be
- * parsed while for <code>d</code> only one will be parsed.
+ * This is a simple regular expression based parser for date notations. While
+ * our aim is to fully support in the future the JDK date parser, currently only
+ * numeric notations and literals are supported such as
+ * <code>dd/MM/yyyy HH:mm:ss.SSSS</code>. Each entity is parsed with the same
+ * number of digits, i.e. for <code>dd</code> two digits will be parsed while
+ * for <code>d</code> only one will be parsed.
+ * 
  * @author <a href="mailto:g.georgovassilis@gmail.com">George Georgovassilis</a>
- *
+ * 
  */
 
 public class SimpleDateParser {
-
 
 	private final static String DAY_IN_MONTH = "d";
 
@@ -35,28 +35,27 @@ public class SimpleDateParser {
 	private final static int INSTRUCTION = 1;
 
 	private final static String[] TOKENS[] = {
-	{ "SSSS", "(\\d\\d\\d\\d)",DateLocale.TOKEN_MILLISECOND }, 
-	{ "SSS", "(\\d\\d\\d)", DateLocale.TOKEN_MILLISECOND },
-	{ "SS", "(\\d\\d)", DateLocale.TOKEN_MILLISECOND }, 
-	{ "S", "(\\d)", DateLocale.TOKEN_MILLISECOND },
-	{ "ss", "(\\d\\d)", DateLocale.TOKEN_SECOND }, 
-	{ "s", "(\\d\\d)", DateLocale.TOKEN_SECOND },
-	{ "mm", "(\\d\\d)", DateLocale.TOKEN_MINUTE }, 
-	{ "m", "(\\d\\d)", DateLocale.TOKEN_MINUTE},
-	{ "HH", "(\\d\\d)", DateLocale.TOKEN_HOUR_24},
-	{ "H", "(\\d{1,2})", DateLocale.TOKEN_HOUR_24 },
-	{ "hh", "(\\d\\d)", DateLocale.TOKEN_HOUR_12},
-	{ "h", "(\\d{1,2})", DateLocale.TOKEN_HOUR_12 },
-	{ "dd", "(\\d\\d)", DateLocale.TOKEN_DAY_OF_MONTH }, 
-	{ "d", "(\\d{1,2})", DateLocale.TOKEN_DAY_OF_MONTH },
-	{ "MM", "(\\d\\d)", DateLocale.TOKEN_MONTH }, 
-	{ "M", "(\\d{1,2})", DateLocale.TOKEN_MONTH },
-	{ "yyyy", "(\\d\\d\\d\\d)", DateLocale.TOKEN_YEAR }, 
-	{ "yyy", "(\\d\\d\\d\\d)", DateLocale.TOKEN_YEAR },
-	{ "yy", "(\\d\\d\\d\\d)", DateLocale.TOKEN_YEAR }, 
-	{ "y", "(\\d{1,2})", DateLocale.TOKEN_YEAR },
-	{ "a", "(\\S{1,4})", DateLocale.TOKEN_AM_PM }
-	};
+			{ "SSSS", "(\\d\\d\\d\\d)", DateLocale.TOKEN_MILLISECOND },
+			{ "SSS", "(\\d\\d\\d)", DateLocale.TOKEN_MILLISECOND },
+			{ "SS", "(\\d\\d)", DateLocale.TOKEN_MILLISECOND },
+			{ "S", "(\\d)", DateLocale.TOKEN_MILLISECOND },
+			{ "ss", "(\\d\\d)", DateLocale.TOKEN_SECOND },
+			{ "s", "(\\d\\d)", DateLocale.TOKEN_SECOND },
+			{ "mm", "(\\d\\d)", DateLocale.TOKEN_MINUTE },
+			{ "m", "(\\d\\d)", DateLocale.TOKEN_MINUTE },
+			{ "HH", "(\\d\\d)", DateLocale.TOKEN_HOUR_24 },
+			{ "H", "(\\d{1,2})", DateLocale.TOKEN_HOUR_24 },
+			{ "hh", "(\\d\\d)", DateLocale.TOKEN_HOUR_12 },
+			{ "h", "(\\d{1,2})", DateLocale.TOKEN_HOUR_12 },
+			{ "dd", "(\\d\\d)", DateLocale.TOKEN_DAY_OF_MONTH },
+			{ "d", "(\\d{1,2})", DateLocale.TOKEN_DAY_OF_MONTH },
+			{ "MM", "(\\d\\d)", DateLocale.TOKEN_MONTH },
+			{ "M", "(\\d{1,2})", DateLocale.TOKEN_MONTH },
+			{ "yyyy", "(\\d\\d\\d\\d)", DateLocale.TOKEN_YEAR },
+			{ "yyy", "(\\d\\d\\d\\d)", DateLocale.TOKEN_YEAR },
+			{ "yy", "(\\d\\d\\d\\d)", DateLocale.TOKEN_YEAR },
+			{ "y", "(\\d{1,2})", DateLocale.TOKEN_YEAR },
+			{ "a", "(\\S{1,4})", DateLocale.TOKEN_AM_PM } };
 
 	private Pattern regularExpression;
 
@@ -65,13 +64,13 @@ public class SimpleDateParser {
 	private static void _parse(String format, String[] args) {
 		if (format.length() == 0)
 			return;
-		if (format.startsWith("'")){
+		if (format.startsWith("'")) {
 			format = format.substring(1);
 			int end = format.indexOf("'");
 			if (end == -1)
 				throw new IllegalArgumentException("Unmatched single quotes.");
-			args[REGEX]+=Pattern.quote(format.substring(0,end));
-			format = format.substring(end+1);
+			args[REGEX] += Pattern.quote(format.substring(0, end));
+			format = format.substring(end + 1);
 		}
 		for (int i = 0; i < TOKENS.length; i++) {
 			String[] row = TOKENS[i];
@@ -84,12 +83,13 @@ public class SimpleDateParser {
 			_parse(format, args);
 			return;
 		}
-		args[REGEX] += Pattern.quote(""+format.charAt(0));
+		args[REGEX] += Pattern.quote("" + format.charAt(0));
 		format = format.substring(1);
 		_parse(format, args);
 	}
 
-	private static void load(Date date, String text, String component, String input, Pattern regex) {
+	private static void load(Date date, String text, String component,
+			String input, Pattern regex) {
 		if (component.equals(DateLocale.TOKEN_MILLISECOND)) {
 			date.setTime(date.getTime() / 1000 * 1000 + Integer.parseInt(text));
 		}
@@ -105,12 +105,21 @@ public class SimpleDateParser {
 		if (component.equals(DateLocale.TOKEN_HOUR_24)) {
 			date.setHours(Integer.parseInt(text));
 		}
-		
+
 		if (component.equals(DateLocale.TOKEN_HOUR_12)) {
 			int h = Integer.parseInt(text);
-			String token = com.itmill.toolkit.terminal.gwt.client.DateLocale.getPM();
-			String which = input.substring(input.length() - token.length()); // Assumes both AM and PM tokens have same length
-			if(which.equalsIgnoreCase(token))
+			String token = com.itmill.toolkit.terminal.gwt.client.DateLocale
+					.getPM();
+			String which = input.substring(input.length() - token.length()); // Assumes
+																				// both
+																				// AM
+																				// and
+																				// PM
+																				// tokens
+																				// have
+																				// same
+																				// length
+			if (which.equalsIgnoreCase(token))
 				h += 12;
 			date.setHours(h);
 		}
@@ -119,11 +128,11 @@ public class SimpleDateParser {
 			date.setDate(Integer.parseInt(text));
 		}
 		if (component.equals(DateLocale.TOKEN_MONTH)) {
-			date.setMonth(Integer.parseInt(text)-1);
+			date.setMonth(Integer.parseInt(text) - 1);
 		}
 		if (component.equals(DateLocale.TOKEN_YEAR)) {
-			//TODO: fix for short patterns
-			date.setYear(Integer.parseInt(text)-1900);
+			// TODO: fix for short patterns
+			date.setYear(Integer.parseInt(text) - 1900);
 		}
 
 	}
@@ -139,17 +148,20 @@ public class SimpleDateParser {
 		Date date = new Date(0, 0, 0, 0, 0, 0);
 		String matches[] = regularExpression.match(input);
 		if (matches == null)
-			throw new IllegalArgumentException(input+" does not match "+regularExpression.pattern());
-		if (matches.length-1!=instructions.length())
-			throw new IllegalArgumentException("Different group count - "+input+" does not match "+regularExpression.pattern());
+			throw new IllegalArgumentException(input + " does not match "
+					+ regularExpression.pattern());
+		if (matches.length - 1 != instructions.length())
+			throw new IllegalArgumentException("Different group count - "
+					+ input + " does not match " + regularExpression.pattern());
 		for (int group = 0; group < instructions.length(); group++) {
 			String match = matches[group + 1];
-			load(date, match, ""+instructions.charAt(group), input, regularExpression);
+			load(date, match, "" + instructions.charAt(group), input,
+					regularExpression);
 		}
 		return date;
 	}
-	
-	public static Date parse(String input, String pattern){
+
+	public static Date parse(String input, String pattern) {
 		return new SimpleDateParser(pattern).parse(input);
 	}
 }

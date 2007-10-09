@@ -36,7 +36,8 @@ import com.itmill.toolkit.ui.Upload.SucceededEvent;
 import com.itmill.toolkit.ui.Upload.SucceededListener;
 
 public class TestForUpload extends CustomComponent implements
-		Upload.FinishedListener, FailedListener,SucceededListener, Upload.ProgressListener, StartedListener {
+		Upload.FinishedListener, FailedListener, SucceededListener,
+		Upload.ProgressListener, StartedListener {
 
 	Layout main = new OrderedLayout();
 
@@ -47,7 +48,7 @@ public class TestForUpload extends CustomComponent implements
 	private Upload up;
 
 	private Label l;
-	
+
 	private ProgressIndicator pi = new ProgressIndicator();
 
 	private Label memoryStatus;
@@ -56,25 +57,27 @@ public class TestForUpload extends CustomComponent implements
 
 	public TestForUpload() {
 		setCompositionRoot(main);
-		main.addComponent( new Label(
-						"This is a simple test for upload application. "
-								+ "Upload should work with big files and concurrent "
-								+ "requests should not be blocked. Button 'b' reads "
-								+ "current state into label below it. Memory receiver "
-								+ "streams upload contents into memory. You may track"
-								+ "consumption."
-								+ "tempfile receiver writes upload to file and "
-								+ "should have low memory consumption."));
-		
-		main.addComponent(new Label("Clicking on button b updates information about upload components status or same with garbage collector."));
+		main.addComponent(new Label(
+				"This is a simple test for upload application. "
+						+ "Upload should work with big files and concurrent "
+						+ "requests should not be blocked. Button 'b' reads "
+						+ "current state into label below it. Memory receiver "
+						+ "streams upload contents into memory. You may track"
+						+ "consumption."
+						+ "tempfile receiver writes upload to file and "
+						+ "should have low memory consumption."));
+
+		main
+				.addComponent(new Label(
+						"Clicking on button b updates information about upload components status or same with garbage collector."));
 
 		up = new Upload("Upload", buffer);
 		up.setImmediate(true);
-		up.addListener((FinishedListener)this);
+		up.addListener((FinishedListener) this);
 		up.addListener((FailedListener) this);
 		up.addListener((SucceededListener) this);
 		up.addListener((StartedListener) this);
-	
+
 		up.setProgressListener(this);
 
 		Button b = new Button("b", this, "readState");
@@ -89,27 +92,27 @@ public class TestForUpload extends CustomComponent implements
 		uploadBufferSelector.addItem("memory");
 		uploadBufferSelector.setValue("memory");
 		uploadBufferSelector.addItem("tempfile");
-		uploadBufferSelector.addListener(new AbstractField.ValueChangeListener() {
-			public void valueChange(ValueChangeEvent event) {
-				setBuffer();
-			}
-		});
+		uploadBufferSelector
+				.addListener(new AbstractField.ValueChangeListener() {
+					public void valueChange(ValueChangeEvent event) {
+						setBuffer();
+					}
+				});
 		main.addComponent(uploadBufferSelector);
 
 		main.addComponent(up);
 		l = new Label("Idle");
 		main.addComponent(l);
-		
+
 		pi.setVisible(false);
 		pi.setPollingInterval(1000);
 		main.addComponent(pi);
-		
+
 		memoryStatus = new Label();
 		main.addComponent(memoryStatus);
 
 		status.setVisible(false);
 		main.addComponent(status);
-
 
 		Button restart = new Button("R");
 		restart.addListener(new Button.ClickListener() {
@@ -119,21 +122,19 @@ public class TestForUpload extends CustomComponent implements
 			}
 		});
 		main.addComponent(restart);
-		
 
 	}
-	
+
 	private void setBuffer() {
 		String id = (String) uploadBufferSelector.getValue();
-		if("memory".equals(id)) {
+		if ("memory".equals(id)) {
 			buffer = new MemooryBuffer();
-		} else if("tempfile".equals(id)) {
+		} else if ("tempfile".equals(id)) {
 			buffer = new TmpFileBuffer();
 		}
 		up.setReceiver(buffer);
 	}
 
-	
 	public void gc() {
 		Runtime.getRuntime().gc();
 		readState();
@@ -180,8 +181,9 @@ public class TestForUpload extends CustomComponent implements
 			status.setVisible(true);
 		}
 	}
-	
-	public interface Buffer extends StreamResource.StreamSource, Upload.Receiver {
+
+	public interface Buffer extends StreamResource.StreamSource,
+			Upload.Receiver {
 
 		String getFileName();
 	}
@@ -233,7 +235,7 @@ public class TestForUpload extends CustomComponent implements
 		}
 
 	}
-	
+
 	public class TmpFileBuffer implements Buffer {
 		String mimeType;
 
@@ -244,9 +246,10 @@ public class TestForUpload extends CustomComponent implements
 		private FileInputStream stream;
 
 		public TmpFileBuffer() {
-			String tempFileName = "upload_tmpfile_" + System.currentTimeMillis();
+			String tempFileName = "upload_tmpfile_"
+					+ System.currentTimeMillis();
 			try {
-				file = File.createTempFile(tempFileName,null);
+				file = File.createTempFile(tempFileName, null);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -304,9 +307,9 @@ public class TestForUpload extends CustomComponent implements
 
 	public void uploadFailed(FailedEvent event) {
 		System.out.println(event);
-		
+
 		System.out.println(event.getSource());
-		
+
 	}
 
 	public void uploadSucceeded(SucceededEvent event) {
@@ -315,10 +318,10 @@ public class TestForUpload extends CustomComponent implements
 		System.out.println(event);
 		setBuffer();
 	}
-	
+
 	public void updateProgress(long readBytes, long contentLenght) {
-		pi.setValue(new Float(readBytes/(float)contentLenght));
-		
+		pi.setValue(new Float(readBytes / (float) contentLenght));
+
 		refreshMemUsage();
 	}
 
@@ -326,9 +329,9 @@ public class TestForUpload extends CustomComponent implements
 		StringBuffer mem = new StringBuffer();
 		MemoryMXBean mmBean = ManagementFactory.getMemoryMXBean();
 		mem.append("Heap (M):");
-		mem.append(mmBean.getHeapMemoryUsage().getUsed()/1048576);
+		mem.append(mmBean.getHeapMemoryUsage().getUsed() / 1048576);
 		mem.append(" |ÊNon-Heap (M):");
-		mem.append(mmBean.getNonHeapMemoryUsage().getUsed()/1048576);
+		mem.append(mmBean.getNonHeapMemoryUsage().getUsed() / 1048576);
 		memoryStatus.setValue(mem.toString());
 	}
 

@@ -87,7 +87,7 @@ public class IUpload extends FormPanel implements Paintable, ClickListener,
 		}
 		submitted = true;
 		ApplicationConnection.getConsole().log("Submitted form");
-		
+
 		disableUpload();
 
 		/*
@@ -106,7 +106,7 @@ public class IUpload extends FormPanel implements Paintable, ClickListener,
 		b.setEnabled(false);
 		fu.setVisible(false);
 	}
-	
+
 	protected void enableUploaod() {
 		b.setEnabled(true);
 		fu.setVisible(true);

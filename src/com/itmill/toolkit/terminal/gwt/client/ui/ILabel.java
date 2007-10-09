@@ -6,14 +6,14 @@ import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
 public class ILabel extends HTML implements Paintable {
-	
+
 	public static final String CLASSNAME = "i-label";
-	
+
 	public ILabel() {
 		super();
 		setStyleName(CLASSNAME);
 	}
-	
+
 	public ILabel(String text) {
 		super(text);
 		setStyleName(CLASSNAME);

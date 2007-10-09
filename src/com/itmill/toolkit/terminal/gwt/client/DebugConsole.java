@@ -10,7 +10,7 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.itmill.toolkit.terminal.gwt.client.ui.IWindow;
 
 public final class DebugConsole extends IWindow implements Console {
-	
+
 	private Panel panel;
 
 	public DebugConsole() {
@@ -23,14 +23,17 @@ public final class DebugConsole extends IWindow implements Console {
 		minimize();
 		show();
 	}
-	
+
 	private void minimize() {
-		// TODO stack to bottom (create window manager of some sort) 
+		// TODO stack to bottom (create window manager of some sort)
 		setPixelSize(60, 60);
-		setPopupPosition(Window.getClientWidth() - 80, Window.getClientHeight() - 80);
+		setPopupPosition(Window.getClientWidth() - 80,
+				Window.getClientHeight() - 80);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.itmill.toolkit.terminal.gwt.client.Console#log(java.lang.String)
 	 */
 	public void log(String msg) {
@@ -38,7 +41,9 @@ public final class DebugConsole extends IWindow implements Console {
 		System.out.println(msg);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.itmill.toolkit.terminal.gwt.client.Console#error(java.lang.String)
 	 */
 	public void error(String msg) {
@@ -46,14 +51,18 @@ public final class DebugConsole extends IWindow implements Console {
 		System.out.println(msg);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.itmill.toolkit.terminal.gwt.client.Console#printObject(java.lang.Object)
 	 */
 	public void printObject(Object msg) {
 		panel.add((new Label(msg.toString())));
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.itmill.toolkit.terminal.gwt.client.Console#dirUIDL(com.itmill.toolkit.terminal.gwt.client.UIDL)
 	 */
 	public void dirUIDL(UIDL u) {
@@ -63,6 +72,5 @@ public final class DebugConsole extends IWindow implements Console {
 	public void setSize(Event event, boolean updateVariables) {
 		super.setSize(event, false);
 	}
-	
-	
+
 }

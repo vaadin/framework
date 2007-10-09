@@ -57,7 +57,7 @@ public class ApplicationConnection implements FocusListener {
 		}
 
 		makeUidlRequest("repaintAll=1");
-		
+
 		// TODO remove hardcoded id name
 		view = new IView("itmtk-ajax-window");
 
@@ -74,14 +74,14 @@ public class ApplicationConnection implements FocusListener {
 	 }-*/;
 
 	public native String getAppUri()/*-{
-	var u = $wnd.itmtk.appUri;
-	if (u.indexOf("/") != 0 && u.indexOf("http") != 0) u = "../../../" +u;
-	 return u;
-	 }-*/;
+		var u = $wnd.itmtk.appUri;
+		if (u.indexOf("/") != 0 && u.indexOf("http") != 0) u = "../../../" +u;
+		 return u;
+		 }-*/;
 
 	private native String getPathInfo()/*-{
-	 return $wnd.itmtk.pathInfo;
-	 }-*/;
+		 return $wnd.itmtk.pathInfo;
+		 }-*/;
 
 	private void makeUidlRequest(String requestData) {
 		console.log("Making UIDL Request with params: " + requestData);
@@ -198,8 +198,8 @@ public class ApplicationConnection implements FocusListener {
 
 	// Redirect browser
 	private static native void redirect(String url)/*-{
-	 $wnd.location = url;
-	 }-*/;
+		 $wnd.location = url;
+		 }-*/;
 
 	public void registerPaintable(String id, Paintable paintable) {
 		idToPaintable.put(id, paintable);

@@ -30,11 +30,9 @@ public class TestForTrees extends CustomComponent implements Handler {
 			"Einstein" };
 
 	private OrderedLayout main = new OrderedLayout();
-	
-	private Action[] actions = new Action[] {
-			new Action("edit"),
-			new Action("delete")
-	};
+
+	private Action[] actions = new Action[] { new Action("edit"),
+			new Action("delete") };
 
 	private Panel al;
 
@@ -51,7 +49,7 @@ public class TestForTrees extends CustomComponent implements Handler {
 		main
 				.addComponent(new Label(
 						"Some test cases for trees. Events panel logs events that happen server side."));
-		
+
 		main.addComponent(new Button("commit"));
 
 		Tree t;
@@ -71,13 +69,11 @@ public class TestForTrees extends CustomComponent implements Handler {
 		t.setMultiSelect(true);
 		main.addComponent(createTestBench(t));
 
-		
 		t = createTestTree();
 		t.setCaption("immediate");
 		t.setImmediate(true);
 		main.addComponent(createTestBench(t));
 
-		
 		t = createTestTree();
 		t.setCaption("with actions");
 		t.setImmediate(true);
@@ -156,10 +152,10 @@ public class TestForTrees extends CustomComponent implements Handler {
 	}
 
 	public void handleAction(Action action, Object sender, Object target) {
-		if(action == actions[1]) {
+		if (action == actions[1]) {
 			al.addComponent(new Label("Delete selected on " + target));
 			contextTree.removeItem(target);
-			
+
 		} else {
 			al.addComponent(new Label("Edit selected on " + target));
 		}

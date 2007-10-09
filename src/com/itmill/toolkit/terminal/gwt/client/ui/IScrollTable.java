@@ -1688,14 +1688,14 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 			 *            element where to attach contenxt menu event
 			 */
 			private native void attachContextMenuEvent(Element el) /*-{
-								var row = this;
-								el.oncontextmenu = function(e) {
-									if(!e)
-										e = $wnd.event;
-									row.@com.itmill.toolkit.terminal.gwt.client.ui.IScrollTable.IScrollTableBody.IScrollTableRow::showContextMenu(Lcom/google/gwt/user/client/Event;)(e);
-									return false;
-								};
-							}-*/;
+										var row = this;
+										el.oncontextmenu = function(e) {
+											if(!e)
+												e = $wnd.event;
+											row.@com.itmill.toolkit.terminal.gwt.client.ui.IScrollTable.IScrollTableBody.IScrollTableRow::showContextMenu(Lcom/google/gwt/user/client/Event;)(e);
+											return false;
+										};
+									}-*/;
 
 			public String getKey() {
 				return String.valueOf(rowKey);

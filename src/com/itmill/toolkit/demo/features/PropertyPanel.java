@@ -76,7 +76,7 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
 		setWidthUnits(Table.UNITS_PERCENTAGE);
 		setHeight(100);
 		setHeightUnits(Table.UNITS_PERCENTAGE);
-		
+
 		// Target object
 		this.objectToConfigure = objectToConfigure;
 		config = new BeanItem(objectToConfigure);
@@ -111,8 +111,8 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
 		allProperties.setWidth(100);
 		allProperties.setWidthUnits(Table.UNITS_PERCENTAGE);
 		// TODO Add as soon as supported
-		//allProperties.setHeight(100);
-		//allProperties.setHeightUnits(Table.UNITS_PERCENTAGE);
+		// allProperties.setHeight(100);
+		// allProperties.setHeightUnits(Table.UNITS_PERCENTAGE);
 		updatePropertyList();
 
 	}

@@ -38,7 +38,7 @@ public class FeaturesApplication extends com.itmill.toolkit.Application {
 		setUser(new Long(System.currentTimeMillis()).toString());
 		Window main = new Window("IT Mill Toolkit Features Tour");
 		setMainWindow(main);
-		
+
 		main.setLayout(new FeatureBrowser());
 	}
 

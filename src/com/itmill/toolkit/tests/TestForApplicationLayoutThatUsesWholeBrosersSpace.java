@@ -25,11 +25,12 @@ public class TestForApplicationLayoutThatUsesWholeBrosersSpace extends
 		SplitPanel secondSplitPanel = new SplitPanel(
 				SplitPanel.ORIENTATION_HORIZONTAL);
 		secondSplitPanel.setFirstComponent(new Label("left"));
-		
+
 		ExpandLayout topRight = new ExpandLayout();
 		topRight.addComponent(new Label("topright header"));
-		
-		Table t = TestForTablesInitialColumnWidthLogicRendering.getTestTable(4, 100);
+
+		Table t = TestForTablesInitialColumnWidthLogicRendering.getTestTable(4,
+				100);
 		t.setWidth(100);
 		t.setWidthUnits(Table.UNITS_PERCENTAGE);
 		t.setHeight(100);
@@ -40,7 +41,6 @@ public class TestForApplicationLayoutThatUsesWholeBrosersSpace extends
 		topRight.addComponent(new Label("topright footer"));
 
 		secondSplitPanel.setSecondComponent(topRight);
-
 
 		ExpandLayout el = new ExpandLayout();
 		el.addComponent(new Label("Bšš"));

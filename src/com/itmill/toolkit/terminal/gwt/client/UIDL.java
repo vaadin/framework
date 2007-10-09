@@ -61,7 +61,7 @@ public class UIDL {
 		double num = ((JSONNumber) val).getValue();
 		return (long) num;
 	}
-	
+
 	public float getFloatAttribute(String name) {
 		JSONValue val = ((JSONObject) json.get(1)).get(name);
 		if (val == null)
@@ -69,7 +69,7 @@ public class UIDL {
 		double num = ((JSONNumber) val).getValue();
 		return (float) num;
 	}
-	
+
 	public double getDoubleAttribute(String name) {
 		JSONValue val = ((JSONObject) json.get(1)).get(name);
 		if (val == null)
@@ -84,7 +84,7 @@ public class UIDL {
 			return false;
 		return ((JSONBoolean) val).booleanValue();
 	}
-	
+
 	public String[] getStringArrayAttribute(String name) {
 		JSONArray a = (JSONArray) ((JSONObject) json.get(1)).get(name);
 		String[] s = new String[a.size()];
@@ -176,7 +176,7 @@ public class UIDL {
 
 		};
 	}
-	
+
 	public int getNumberOfChildren() {
 		return json.size() - 2;
 	}
@@ -188,8 +188,10 @@ public class UIDL {
 			String name = i.next().toString();
 			s += " " + name + "=";
 			JSONValue v = ((JSONObject) json.get(1)).get(name);
-			if (v.isString() != null) s += v;
-			else s += "\"" + v + "\"";
+			if (v.isString() != null)
+				s += v;
+			else
+				s += "\"" + v + "\"";
 		}
 
 		s += ">\n";
@@ -206,7 +208,7 @@ public class UIDL {
 	}
 
 	public String getChildrenAsXML() {
-		String s="";
+		String s = "";
 		Iterator i = getChildIterator();
 		while (i.hasNext()) {
 			Object c = i.next();
@@ -214,7 +216,7 @@ public class UIDL {
 		}
 		return s;
 	}
-	
+
 	public UIDLBrowser print_r() {
 		return new UIDLBrowser();
 	}
@@ -305,12 +307,13 @@ public class UIDL {
 			throw new IllegalArgumentException("No variables defined in tag.");
 		return v;
 	}
-	
+
 	public boolean hasVariable(String name) {
 		Object v = null;
 		try {
 			v = getVariableHash().get(name);
-		} catch(IllegalArgumentException e) {}
+		} catch (IllegalArgumentException e) {
+		}
 		return v != null;
 	}
 
@@ -334,14 +337,14 @@ public class UIDL {
 			throw new IllegalArgumentException("No such variable: " + name);
 		return (long) t.getValue();
 	}
-	
+
 	public float getFloatVariable(String name) {
 		JSONNumber t = (JSONNumber) getVariableHash().get(name);
 		if (t == null)
 			throw new IllegalArgumentException("No such variable: " + name);
 		return (float) t.getValue();
 	}
-	
+
 	public double getDoubleVariable(String name) {
 		JSONNumber t = (JSONNumber) getVariableHash().get(name);
 		if (t == null)
@@ -399,7 +402,7 @@ public class UIDL {
 
 		public String getXMLAsString() {
 			StringBuffer sb = new StringBuffer();
-			for(Iterator it = x.keySet().iterator(); it.hasNext();) {
+			for (Iterator it = x.keySet().iterator(); it.hasNext();) {
 				String tag = (String) it.next();
 				sb.append("<");
 				sb.append(tag);
@@ -414,7 +417,7 @@ public class UIDL {
 	}
 
 	public int getChidlCount() {
-		return json.size()-2;
+		return json.size() - 2;
 	}
 
 	public UIDL getErrors() {

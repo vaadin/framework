@@ -88,7 +88,7 @@ public class JsonPaintTarget implements PaintTarget {
 	private JsonTag tag;
 
 	private int errorsOpen;
-	
+
 	private boolean cacheEnabled = false;
 
 	/**
@@ -101,9 +101,8 @@ public class JsonPaintTarget implements PaintTarget {
 	 * @throws PaintException
 	 *             if the paint operation failed.
 	 */
-	public JsonPaintTarget(
-			CommunicationManager manager, PrintWriter outWriter, boolean cachingRequired)
-			throws PaintException {
+	public JsonPaintTarget(CommunicationManager manager, PrintWriter outWriter,
+			boolean cachingRequired) throws PaintException {
 
 		this.manager = manager;
 
@@ -118,7 +117,7 @@ public class JsonPaintTarget implements PaintTarget {
 		// Adds document declaration
 
 		// Adds UIDL start tag and its attributes
-		
+
 		this.cacheEnabled = cachingRequired;
 	}
 
@@ -168,8 +167,8 @@ public class JsonPaintTarget implements PaintTarget {
 		mTagArgumentListOpen = true;
 
 		customLayoutArgumentsOpen = "customlayout".equals(tagName);
-		
-		if("error".equals(tagName)) {
+
+		if ("error".equals(tagName)) {
 			errorsOpen++;
 		}
 	}
@@ -206,16 +205,17 @@ public class JsonPaintTarget implements PaintTarget {
 						+ tagName + "' expected: '" + lastTag + "'.");
 
 			// simple hack which writes error uidl structure into attribute
-			if("error".equals(lastTag)) {
-				if(errorsOpen == 1) // ending error section
-					parent.addAttribute("\"error\":[\"error\",{}"+tag.getData() + "]");
-				else // sub error
+			if ("error".equals(lastTag)) {
+				if (errorsOpen == 1) // ending error section
+					parent.addAttribute("\"error\":[\"error\",{}"
+							+ tag.getData() + "]");
+				else
+					// sub error
 					parent.addData(tag.getJSON());
 				errorsOpen--;
 			} else {
 				parent.addData(tag.getJSON());
 			}
-			
 
 			tag = parent;
 		} else {
@@ -436,7 +436,7 @@ public class JsonPaintTarget implements PaintTarget {
 	public void addAttribute(String name, long value) throws PaintException {
 		tag.addAttribute("\"" + name + "\":" + String.valueOf(value));
 	}
-	
+
 	/**
 	 * Adds a float attribute to component. Atributes must be added before any
 	 * content is written.
@@ -452,7 +452,7 @@ public class JsonPaintTarget implements PaintTarget {
 	public void addAttribute(String name, float value) throws PaintException {
 		tag.addAttribute("\"" + name + "\":" + String.valueOf(value));
 	}
-	
+
 	/**
 	 * Adds a double attribute to component. Atributes must be added before any
 	 * content is written.
@@ -491,8 +491,8 @@ public class JsonPaintTarget implements PaintTarget {
 
 		if (customLayoutArgumentsOpen && "template".equals(name))
 			getPreCachedResources().add("layouts/" + value + ".html");
-		
-		if(name.equals("locale"))
+
+		if (name.equals("locale"))
 			manager.requireLocale(value);
 
 	}
@@ -550,7 +550,7 @@ public class JsonPaintTarget implements PaintTarget {
 			throws PaintException {
 		tag.addVariable(new IntVariable(owner, name, value));
 	}
-	
+
 	/**
 	 * Adds a long type variable.
 	 * 
@@ -564,10 +564,11 @@ public class JsonPaintTarget implements PaintTarget {
 	 * @throws PaintException
 	 *             if the paint operation failed.
 	 */
-	public void addVariable(VariableOwner owner, String name, long value) throws PaintException {
+	public void addVariable(VariableOwner owner, String name, long value)
+			throws PaintException {
 		tag.addVariable(new LongVariable(owner, name, value));
 	}
-	
+
 	/**
 	 * Adds a float type variable.
 	 * 
@@ -581,10 +582,11 @@ public class JsonPaintTarget implements PaintTarget {
 	 * @throws PaintException
 	 *             if the paint operation failed.
 	 */
-	public void addVariable(VariableOwner owner, String name, float value) throws PaintException {
+	public void addVariable(VariableOwner owner, String name, float value)
+			throws PaintException {
 		tag.addVariable(new FloatVariable(owner, name, value));
 	}
-	
+
 	/**
 	 * Adds a double type variable.
 	 * 
@@ -598,7 +600,8 @@ public class JsonPaintTarget implements PaintTarget {
 	 * @throws PaintException
 	 *             if the paint operation failed.
 	 */
-	public void addVariable(VariableOwner owner, String name, double value) throws PaintException {
+	public void addVariable(VariableOwner owner, String name, double value)
+			throws PaintException {
 		tag.addVariable(new DoubleVariable(owner, name, value));
 	}
 
@@ -984,7 +987,7 @@ public class JsonPaintTarget implements PaintTarget {
 
 		public abstract String getJsonPresentation();
 	}
-	
+
 	class BooleanVariable extends Variable {
 		boolean value;
 
@@ -1025,7 +1028,7 @@ public class JsonPaintTarget implements PaintTarget {
 			return "\"" + name + "\":" + value;
 		}
 	}
-	
+
 	class LongVariable extends Variable {
 		long value;
 
@@ -1038,7 +1041,7 @@ public class JsonPaintTarget implements PaintTarget {
 			return "\"" + name + "\":" + value;
 		}
 	}
-	
+
 	class FloatVariable extends Variable {
 		float value;
 
@@ -1051,7 +1054,7 @@ public class JsonPaintTarget implements PaintTarget {
 			return "\"" + name + "\":" + value;
 		}
 	}
-	
+
 	class DoubleVariable extends Variable {
 		double value;
 

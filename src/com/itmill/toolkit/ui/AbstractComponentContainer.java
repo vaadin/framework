@@ -200,7 +200,7 @@ public abstract class AbstractComponentContainer extends AbstractComponent
 	 * @see com.itmill.toolkit.ui.ComponentContainer#removeComponent(Component)
 	 */
 	public void removeComponent(Component c) {
-		if(c.getParent() == this) {
+		if (c.getParent() == this) {
 			c.setParent(null);
 			fireComponentDetachEvent(c);
 		}

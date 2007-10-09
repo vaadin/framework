@@ -94,7 +94,7 @@ public abstract class Feature extends CustomComponent {
 			layout.addComponent(demo);
 
 		ts = new TabSheet();
-		
+
 		ts.setWidth(100);
 		ts.setWidthUnits(TabSheet.UNITS_PERCENTAGE);
 		ts.setHeight(100);
@@ -159,7 +159,7 @@ public abstract class Feature extends CustomComponent {
 	public TabSheet getTabSheet() {
 		return ts;
 	}
-	
+
 	/** Get the name of the image file that will be put on description page */
 	protected String getImage() {
 		return null;

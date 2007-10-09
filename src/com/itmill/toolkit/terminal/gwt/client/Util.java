@@ -31,7 +31,7 @@ public class Util {
 		}
 		return false;
 	}-*/;
-	
+
 	/**
 	 * Nulls oncontextmenu function on given element. We need to manually clear
 	 * context menu events due bad browsers memory leaks, since we GWT don't
@@ -44,8 +44,9 @@ public class Util {
 	}-*/;
 
 	/**
-	 * Traverses recursively ancestors until ContainerResizedListener child widget is found.
-	 * They will delegate it futher if needed.
+	 * Traverses recursively ancestors until ContainerResizedListener child
+	 * widget is found. They will delegate it futher if needed.
+	 * 
 	 * @param container
 	 */
 	public static void runAnchestorsLayout(HasWidgets container) {

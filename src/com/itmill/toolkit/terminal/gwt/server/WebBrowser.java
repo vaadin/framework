@@ -15,7 +15,8 @@ public class WebBrowser implements Terminal {
 	private String address;
 	private boolean secureConnection;
 
-	/** There is no default-theme for this terminal type.
+	/**
+	 * There is no default-theme for this terminal type.
 	 * 
 	 * @return Allways returns null.
 	 */
@@ -23,49 +24,54 @@ public class WebBrowser implements Terminal {
 		return null;
 	}
 
-	/** Get the height of the users display in pixels.
+	/**
+	 * Get the height of the users display in pixels.
 	 * 
 	 */
 	public int getScreenHeight() {
 		return screenHeight;
 	}
 
-	/** Get the width of the users display in pixels.
+	/**
+	 * Get the width of the users display in pixels.
 	 * 
 	 */
 	public int getScreenWidth() {
 		return screenWidth;
 	}
-	
-	/** Get the browser user-agent string.
+
+	/**
+	 * Get the browser user-agent string.
 	 * 
 	 * @return
 	 */
 	public String getBrowserApplication() {
 		return browserApplication;
 	}
-	
+
 	void updateBrowserProperties(HttpServletRequest request) {
 		locale = request.getLocale();
 		address = request.getRemoteAddr();
 		secureConnection = request.isSecure();
-		
+
 		String agent = request.getHeader("user-agent");
-		if (agent != null) browserApplication = agent;
+		if (agent != null)
+			browserApplication = agent;
 
 		String sw = request.getParameter("screenWidth");
 		String sh = request.getParameter("screenHeight");
 		if (sw != null && sh != null) {
 			try {
-			screenHeight = Integer.parseInt(sh);
-			screenWidth = Integer.parseInt(sw);
+				screenHeight = Integer.parseInt(sh);
+				screenWidth = Integer.parseInt(sw);
 			} catch (NumberFormatException e) {
 				screenHeight = screenWidth = 0;
 			}
 		}
 	}
 
-	/** Get the IP-address of the web browser.
+	/**
+	 * Get the IP-address of the web browser.
 	 * 
 	 * @return IP-address in 1.12.123.123 -format
 	 */

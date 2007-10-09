@@ -58,7 +58,6 @@ public class Button extends AbstractField {
 
 	boolean switchMode = false;
 
-
 	/**
 	 * Creates a new push button. The value of the push button is allways false
 	 * and they are immediate by default.

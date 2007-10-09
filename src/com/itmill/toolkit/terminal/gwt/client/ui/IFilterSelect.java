@@ -27,9 +27,8 @@ import com.itmill.toolkit.terminal.gwt.client.Util;
 
 /**
  * 
- * TODO needs major refactoring to be easily expandable
- * TODO add new items
- * TODO null selections
+ * TODO needs major refactoring to be easily expandable TODO add new items TODO
+ * null selections
  */
 public class IFilterSelect extends Composite implements Paintable,
 		KeyboardListener, ClickListener {
@@ -164,7 +163,7 @@ public class IFilterSelect extends Composite implements Paintable,
 			if (index > -1)
 				menu.selectItem((MenuItem) menu.getItems().get(index));
 			else if (index == -1) {
-				if(currentPage > 0)
+				if (currentPage > 0)
 					filterOptions(currentPage - 1);
 			} else {
 				menu.selectItem((MenuItem) menu.getItems().get(
@@ -389,9 +388,9 @@ public class IFilterSelect extends Composite implements Paintable,
 				tb.setText(suggestion.getReplacementString());
 				currentSuggestion = suggestion;
 			}
-			
+
 			// Collect captions so we can calculate minimum width for textarea
-			if(captions.length() > 0)
+			if (captions.length() > 0)
 				captions += "|";
 			captions += suggestion.getReplacementString();
 		}
@@ -401,23 +400,25 @@ public class IFilterSelect extends Composite implements Paintable,
 					totalSuggestions);
 			filtering = false;
 		}
-		
+
 		// Calculate minumum textarea width
 		int minw = minWidth(captions);
-		if(Util.isIE()) {
+		if (Util.isIE()) {
 			Element spacer = DOM.createDiv();
-			DOM.setStyleAttribute(spacer, "width", minw+"px");
+			DOM.setStyleAttribute(spacer, "width", minw + "px");
 			DOM.setStyleAttribute(spacer, "height", "0");
 			DOM.setStyleAttribute(spacer, "overflow", "hidden");
 			DOM.appendChild(panel.getElement(), spacer);
 		} else {
-			DOM.setStyleAttribute(tb.getElement(), "minWidth", minw+"px");
+			DOM.setStyleAttribute(tb.getElement(), "minWidth", minw + "px");
 		}
-		
+
 		// Set columns (width) is given
-		if(uidl.hasAttribute("cols"))
-			DOM.setStyleAttribute(getElement(), "width", uidl.getIntAttribute("cols")+"em");
-		
+		if (uidl.hasAttribute("cols"))
+			DOM.setStyleAttribute(getElement(), "width", uidl
+					.getIntAttribute("cols")
+					+ "em");
+
 	}
 
 	public void onSuggestionSelected(FilterSelectSuggestion suggestion) {
@@ -504,7 +505,7 @@ public class IFilterSelect extends Composite implements Paintable,
 		tb.setFocus(true);
 		tb.selectAll();
 	}
-	
+
 	/*
 	 * Calculate minumum width for FilterSelect textarea
 	 */

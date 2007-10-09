@@ -23,96 +23,91 @@ import com.itmill.toolkit.ui.Window;
  */
 public class CalendarDemo extends com.itmill.toolkit.Application {
 
-    // Database provided with sample data
-    private SampleCalendarDatabase sampleDatabase;
+	// Database provided with sample data
+	private SampleCalendarDatabase sampleDatabase;
 
-    // The calendar UI component
-    private CalendarField from;
-    private CalendarField to;
+	// The calendar UI component
+	private CalendarField from;
+	private CalendarField to;
 
-    /**
-     * Initialize Application. Demo components are added to main window.
-     */
-    public void init() {
-	Window main = new Window("Calendar demo");
-	setMainWindow(main);
-	
-	main.setLayout(new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL));
+	/**
+	 * Initialize Application. Demo components are added to main window.
+	 */
+	public void init() {
+		Window main = new Window("Calendar demo");
+		setMainWindow(main);
 
-	// set the application to use Corporate -theme
-	setTheme("corporate");
+		main.setLayout(new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL));
 
-	// create the calendar component and add to layout
-	from = new CalendarField();
-	main.addComponent(from);
-	from.setResolution(CalendarField.RESOLUTION_HOUR);
-	from.setImmediate(true);
-	
-	to = new CalendarField();
-	main.addComponent(to);
-	to.setResolution(CalendarField.RESOLUTION_HOUR);
-	to.setEnabled(false);
-	to.setImmediate(true);
+		// set the application to use Corporate -theme
+		setTheme("corporate");
 
-	from.addListener(new ValueChangeListener() {
-	    public void valueChange(ValueChangeEvent event) {
-		Date fd = (Date)from.getValue();
-		Date td = (Date)to.getValue();
-		if (fd == null) {
-		    to.setValue(null);
-		    to.setEnabled(false);
-		    return;
-		} else {
-		    to.setEnabled(true);
-		}
-		to.setMinimumDate(fd);
-		if (td == null||td.before(fd)) {
-		    to.setValue(fd);
-		}
-	    }	    
-	});
+		// create the calendar component and add to layout
+		from = new CalendarField();
+		main.addComponent(from);
+		from.setResolution(CalendarField.RESOLUTION_HOUR);
+		from.setImmediate(true);
 
+		to = new CalendarField();
+		main.addComponent(to);
+		to.setResolution(CalendarField.RESOLUTION_HOUR);
+		to.setEnabled(false);
+		to.setImmediate(true);
 
-	// initialize the sample database and set as calendar datasource
-	sampleDatabase = new SampleCalendarDatabase();
-	initCalendars();
-	
-	// Don't allow dates before today
-	from.setMinimumDate(new Date());
-	
-    }
+		from.addListener(new ValueChangeListener() {
+			public void valueChange(ValueChangeEvent event) {
+				Date fd = (Date) from.getValue();
+				Date td = (Date) to.getValue();
+				if (fd == null) {
+					to.setValue(null);
+					to.setEnabled(false);
+					return;
+				} else {
+					to.setEnabled(true);
+				}
+				to.setMinimumDate(fd);
+				if (td == null || td.before(fd)) {
+					to.setValue(fd);
+				}
+			}
+		});
 
-    /**
-     * Populates table component with all rows from calendar table.
-     */
-    private void initCalendars() {
-	try {
-	    QueryContainer qc = new QueryContainer("SELECT * FROM "
-		    + SampleCalendarDatabase.DB_TABLE_NAME, sampleDatabase
-		    .getConnection());
-	    from.setContainerDataSource(qc);
-	    to.setContainerDataSource(qc);
-	} catch (SQLException e) {
-	    e.printStackTrace();
+		// initialize the sample database and set as calendar datasource
+		sampleDatabase = new SampleCalendarDatabase();
+		initCalendars();
+
+		// Don't allow dates before today
+		from.setMinimumDate(new Date());
+
 	}
 
-	// Calendar will use the first date property as start if you do not
-	// explicitly specify the property id. Our start -property will be the
-	// first one, so it's intentionally left out.
-	// Start is the only mandatory property, but you'll probably want to
-	// specify title as well.
-	from.setItemEndPropertyId(SampleCalendarDatabase.PROPERTY_ID_END);
-	from
-		.setItemTitlePropertyId(SampleCalendarDatabase.PROPERTY_ID_TITLE);
-	from
-		.setItemNotimePropertyId(SampleCalendarDatabase.PROPERTY_ID_NOTIME);
- 
-	to.setItemEndPropertyId(SampleCalendarDatabase.PROPERTY_ID_END);
-	to
-		.setItemTitlePropertyId(SampleCalendarDatabase.PROPERTY_ID_TITLE);
-	to
-		.setItemNotimePropertyId(SampleCalendarDatabase.PROPERTY_ID_NOTIME);
-     
-    }
+	/**
+	 * Populates table component with all rows from calendar table.
+	 */
+	private void initCalendars() {
+		try {
+			QueryContainer qc = new QueryContainer("SELECT * FROM "
+					+ SampleCalendarDatabase.DB_TABLE_NAME, sampleDatabase
+					.getConnection());
+			from.setContainerDataSource(qc);
+			to.setContainerDataSource(qc);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		// Calendar will use the first date property as start if you do not
+		// explicitly specify the property id. Our start -property will be the
+		// first one, so it's intentionally left out.
+		// Start is the only mandatory property, but you'll probably want to
+		// specify title as well.
+		from.setItemEndPropertyId(SampleCalendarDatabase.PROPERTY_ID_END);
+		from.setItemTitlePropertyId(SampleCalendarDatabase.PROPERTY_ID_TITLE);
+		from.setItemNotimePropertyId(SampleCalendarDatabase.PROPERTY_ID_NOTIME);
+
+		to.setItemEndPropertyId(SampleCalendarDatabase.PROPERTY_ID_END);
+		to.setItemTitlePropertyId(SampleCalendarDatabase.PROPERTY_ID_TITLE);
+		to.setItemNotimePropertyId(SampleCalendarDatabase.PROPERTY_ID_NOTIME);
+
+	}
 
 }

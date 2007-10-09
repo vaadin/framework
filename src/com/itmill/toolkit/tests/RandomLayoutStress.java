@@ -16,12 +16,14 @@ public class RandomLayoutStress extends com.itmill.toolkit.Application {
 
 	private Random seededRandom = new Random(1);
 
-	// FIXME increasing these settings brings out interesting client-side issues (DOM errors)
-	// TODO increasing values "even more" crashes Hosted Mode, pumping Xmx/Xms helps to some extent
-	private static final int componentCountA = 5;
-	private static final int componentCountB = 5;
-	private static final int componentCountC = 10;
-	private static final int componentCountD = 5;
+	// FIXME increasing these settings brings out interesting client-side issues
+	// (DOM errors)
+	// TODO increasing values "even more" crashes Hosted Mode, pumping Xmx/Xms
+	// helps to some extent
+	private static final int componentCountA = 50;
+	private static final int componentCountB = 50;
+	private static final int componentCountC = 200;
+	private static final int componentCountD = 50;
 
 	/**
 	 * Initialize Application. Demo components are added to main window.

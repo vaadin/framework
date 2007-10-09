@@ -92,7 +92,7 @@ public class Panel extends AbstractComponentContainer implements Sizeable,
 	 * Scrolling mode.
 	 */
 	private boolean scrollable = false;
-	
+
 	/** List of action handlers */
 	private LinkedList actionHandlers = null;
 
@@ -198,24 +198,26 @@ public class Panel extends AbstractComponentContainer implements Sizeable,
 	 */
 	public void paintContent(PaintTarget target) throws PaintException {
 		layout.paint(target);
-		
-		if(height > -1)
-			target.addVariable(this, "height", getHeight() + UNIT_SYMBOLS[getHeightUnits()]);
-		if(width > -1)
-			target.addVariable(this, "width", getWidth() + UNIT_SYMBOLS[getWidthUnits()]);
-		
+
+		if (height > -1)
+			target.addVariable(this, "height", getHeight()
+					+ UNIT_SYMBOLS[getHeightUnits()]);
+		if (width > -1)
+			target.addVariable(this, "width", getWidth()
+					+ UNIT_SYMBOLS[getWidthUnits()]);
+
 		if (isScrollable()) {
 			target.addVariable(this, "scrollleft", getScrollOffsetX());
 			target.addVariable(this, "scrolldown", getScrollOffsetY());
 		}
-		
 
 		if (actionHandlers != null && !actionHandlers.isEmpty()) {
 			target.addVariable(this, "action", "");
 			target.startTag("actions");
 
 			for (Iterator ahi = actionHandlers.iterator(); ahi.hasNext();) {
-				Action[] aa = ((Action.Handler) ahi.next()).getActions(null, this);
+				Action[] aa = ((Action.Handler) ahi.next()).getActions(null,
+						this);
 				if (aa != null) {
 					for (int ai = 0; ai < aa.length; ai++) {
 						Action a = aa[ai];
@@ -230,10 +232,11 @@ public class Panel extends AbstractComponentContainer implements Sizeable,
 							ShortcutAction sa = (ShortcutAction) a;
 							target.addAttribute("kc", sa.getKeyCode());
 							int[] modifiers = sa.getModifiers();
-							if(modifiers != null) {
+							if (modifiers != null) {
 								String[] smodifiers = new String[modifiers.length];
 								for (int i = 0; i < modifiers.length; i++)
-									smodifiers[i] = String.valueOf(modifiers[i]);
+									smodifiers[i] = String
+											.valueOf(modifiers[i]);
 								target.addAttribute("mk", smodifiers);
 							}
 						}
@@ -354,7 +357,7 @@ public class Panel extends AbstractComponentContainer implements Sizeable,
 			setWidth(newWidth.intValue());
 			// ensure units as we are reading pixels
 			setWidthUnits(UNITS_PIXELS);
-			
+
 		}
 		if (newHeight != null && newHeight.intValue() != getHeight()) {
 			setHeight(newHeight.intValue());
@@ -369,15 +372,15 @@ public class Panel extends AbstractComponentContainer implements Sizeable,
 			setScrollOffsetX(newScrollX.intValue());
 		if (newScrollY != null && newScrollY.intValue() != getScrollOffsetY())
 			setScrollOffsetY(newScrollY.intValue());
-		
+
 		// Actions
 		if (variables.containsKey("action")) {
 			String key = (String) variables.get("action");
 			Action action = (Action) actionMapper.get(key);
 			if (action != null && actionHandlers != null)
 				for (Iterator i = actionHandlers.iterator(); i.hasNext();)
-					((Action.Handler) i.next()).handleAction(action, this,
-							this);
+					((Action.Handler) i.next())
+							.handleAction(action, this, this);
 		}
 
 	}
@@ -534,7 +537,7 @@ public class Panel extends AbstractComponentContainer implements Sizeable,
 				requestRepaint();
 			}
 		}
-		
+
 	}
 
 	/**

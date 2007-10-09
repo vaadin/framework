@@ -921,29 +921,19 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 	 */
 	public synchronized Set getDirtyComponents() {
 		// TODO not compatible w/ subtree caching
-	    
+
 		// Remove unnecessary repaints from the list
 		Object[] paintables = dirtyPaintabletSet.toArray();
-/*
-		for (int i = 0; i < paintables.length; i++) {
-			if (paintables[i] instanceof Component) {
-				Component c = (Component) paintables[i];
-
-				// Check if any of the parents of c already exist in the list
-				Component p = c.getParent();
-				while (p != null) {
-					if (dirtyPaintabletSet.contains(p)) {
-
-						// Remove component c from the dirty paintables as its
-						// parent is also dirty
-						dirtyPaintabletSet.remove(c);
-						p = null;
-					} else
-						p = p.getParent();
-				}
-			}
-		}
-*/
+		/*
+		 * for (int i = 0; i < paintables.length; i++) { if (paintables[i]
+		 * instanceof Component) { Component c = (Component) paintables[i];
+		 *  // Check if any of the parents of c already exist in the list
+		 * Component p = c.getParent(); while (p != null) { if
+		 * (dirtyPaintabletSet.contains(p)) {
+		 *  // Remove component c from the dirty paintables as its // parent is
+		 * also dirty dirtyPaintabletSet.remove(c); p = null; } else p =
+		 * p.getParent(); } } }
+		 */
 		return Collections.unmodifiableSet(dirtyPaintabletSet);
 	}
 

@@ -142,20 +142,20 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
 	 * @see com.itmill.toolkit.terminal.gwt.client.NeedsLayout#layout()
 	 */
 	public void iLayout() {
-		if(!isAttached()) {
+		if (!isAttached()) {
 			return;
 		}
 		int wholeSize;
 		int pixelPosition;
 		ApplicationConnection.getConsole().log("splitterpaneeeli");
-		
+
 		switch (orientation) {
 		case ORIENTATION_HORIZONTAL:
 			wholeSize = DOM.getElementPropertyInt(wrapper, "clientWidth");
 			pixelPosition = DOM.getElementPropertyInt(splitter, "offsetLeft");
 
 			// reposition splitter in case it is out of box
-			if(pixelPosition + SPLITTER_SIZE > wholeSize) {
+			if (pixelPosition + SPLITTER_SIZE > wholeSize) {
 				pixelPosition = wholeSize - SPLITTER_SIZE;
 				setSplitPosition(pixelPosition + "px");
 				return;
@@ -176,9 +176,9 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
 		case ORIENTATION_VERTICAL:
 			wholeSize = DOM.getElementPropertyInt(wrapper, "clientHeight");
 			pixelPosition = DOM.getElementPropertyInt(splitter, "offsetTop");
-			
+
 			// reposition splitter in case it is out of box
-			if(pixelPosition + SPLITTER_SIZE > wholeSize) {
+			if (pixelPosition + SPLITTER_SIZE > wholeSize) {
 				pixelPosition = wholeSize - SPLITTER_SIZE;
 				setSplitPosition(pixelPosition + "px");
 				return;
@@ -195,7 +195,6 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
 					(pixelPosition + SPLITTER_SIZE) + "px");
 		default:
 			ApplicationConnection.getConsole().log("???");
-
 
 			break;
 		}

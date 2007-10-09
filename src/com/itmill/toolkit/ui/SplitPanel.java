@@ -37,7 +37,7 @@ import com.itmill.toolkit.terminal.Sizeable;
 /**
  * SplitPanel.
  * 
- * <code>SplitPanel</code> is a component container, that can contain two 
+ * <code>SplitPanel</code> is a component container, that can contain two
  * components (possibly containers) which are split by divider element.
  * 
  * @author IT Mill Ltd.
@@ -45,7 +45,8 @@ import com.itmill.toolkit.terminal.Sizeable;
  * @VERSION@
  * @since 5.0
  */
-public class SplitPanel extends AbstractComponentContainer implements Layout, Sizeable {
+public class SplitPanel extends AbstractComponentContainer implements Layout,
+		Sizeable {
 
 	/* Predefined orientations ***************************************** */
 
@@ -60,7 +61,7 @@ public class SplitPanel extends AbstractComponentContainer implements Layout, Si
 	public static int ORIENTATION_HORIZONTAL = 1;
 
 	private Component firstComponent;
-	
+
 	private Component secondComponent;
 
 	/**
@@ -120,28 +121,29 @@ public class SplitPanel extends AbstractComponentContainer implements Layout, Si
 	 *            the component to be added.
 	 */
 	public void addComponent(Component c) {
-		if(firstComponent == null) {
+		if (firstComponent == null) {
 			firstComponent = c;
 		} else if (secondComponent == null) {
 			secondComponent = c;
 		} else {
-			throw new UnsupportedOperationException("Split panel can contain only two components");
+			throw new UnsupportedOperationException(
+					"Split panel can contain only two components");
 		}
 		super.addComponent(c);
 		requestRepaint();
 	}
 
 	public void setFirstComponent(Component c) {
-		if(firstComponent != null) {
+		if (firstComponent != null) {
 			// detach old
 			removeComponent(firstComponent);
 		}
 		firstComponent = c;
 		super.addComponent(c);
 	}
-	
+
 	public void setSecondComponent(Component c) {
-		if(secondComponent != null) {
+		if (secondComponent != null) {
 			// detach old
 			removeComponent(c);
 		}
@@ -157,9 +159,9 @@ public class SplitPanel extends AbstractComponentContainer implements Layout, Si
 	 */
 	public void removeComponent(Component c) {
 		super.removeComponent(c);
-		if(c == firstComponent)
+		if (c == firstComponent)
 			firstComponent = null;
-		else 
+		else
 			secondComponent = null;
 		requestRepaint();
 	}
@@ -173,23 +175,24 @@ public class SplitPanel extends AbstractComponentContainer implements Layout, Si
 	public Iterator getComponentIterator() {
 		return new Iterator() {
 			int i = 0;
+
 			public boolean hasNext() {
-				if(i < 2)
+				if (i < 2)
 					return true;
 				return false;
 			}
 
 			public Object next() {
 				i++;
-				if(i == 1) 
+				if (i == 1)
 					return firstComponent;
-				else if(i == 2)
+				else if (i == 2)
 					return secondComponent;
 				return null;
 			}
 
 			public void remove() {
-				if(i == 1)
+				if (i == 1)
 					setFirstComponent(null);
 				else if (i == 2)
 					setSecondComponent(null);
@@ -206,28 +209,28 @@ public class SplitPanel extends AbstractComponentContainer implements Layout, Si
 	 *             if the paint operation failed.
 	 */
 	public void paintContent(PaintTarget target) throws PaintException {
-		
+
 		// TODO refine size attributes
-		if(width > 0) {
+		if (width > 0) {
 			target.addAttribute("width", width + UNIT_SYMBOLS[widthUnit]);
 		} else {
 			target.addAttribute("width", "100%");
 		}
-		if(height > 0) {
+		if (height > 0) {
 			target.addAttribute("height", height + UNIT_SYMBOLS[heightUnit]);
 		} else {
 			target.addAttribute("height", "100%");
 		}
-		
+
 		String position = pos + UNIT_SYMBOLS[posUnit];
-		
+
 		target.addAttribute("position", position);
 
-		if(firstComponent != null)
+		if (firstComponent != null)
 			firstComponent.paint(target);
 		else
 			(new OrderedLayout()).paint(target);
-		if(secondComponent != null)
+		if (secondComponent != null)
 			secondComponent.paint(target);
 		else
 			(new OrderedLayout()).paint(target);
@@ -261,39 +264,38 @@ public class SplitPanel extends AbstractComponentContainer implements Layout, Si
 
 	/* Documented in superclass */
 	public void replaceComponent(Component oldComponent, Component newComponent) {
-		if(oldComponent == firstComponent) {
+		if (oldComponent == firstComponent) {
 			setFirstComponent(newComponent);
 		} else if (oldComponent == secondComponent) {
 			setSecondComponent(secondComponent);
 		}
 		requestRepaint();
 	}
-	
+
 	/**
 	 * Moves the position of the splitter.
 	 * 
-	 * @param pos the new size of the first region in persentage
+	 * @param pos
+	 *            the new size of the first region in persentage
 	 */
 	public void setSplitPosition(int pos) {
 		setSplitPosition(pos, UNITS_PERCENTAGE);
 	}
 
 	/**
-	 * Moves the position of the splitter with given position
-	 * and unit.
+	 * Moves the position of the splitter with given position and unit.
 	 * 
-	 * Supported Units are {@link Sizeable}.UNITS_PERSENTAGE and 
+	 * Supported Units are {@link Sizeable}.UNITS_PERSENTAGE and
 	 * Sizeable.UNITS_PIXELS
 	 * 
-	 * @param pos size of the first region
-	 * @oaran unit 
-	 * 			the unit (from {@link Sizeable}) in which the size is given.
+	 * @param pos
+	 *            size of the first region
+	 * @oaran unit the unit (from {@link Sizeable}) in which the size is given.
 	 */
 	public void setSplitPosition(int pos, int unit) {
 		this.pos = pos;
 		this.posUnit = unit;
 	}
-
 
 	public int getHeight() {
 		return height;

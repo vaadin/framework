@@ -7,8 +7,8 @@ public class CaptionWrapper extends FlowPanel {
 
 	public static final String CLASSNAME = "i-captionwrapper";
 	Caption caption;
-	Paintable widget; 
-	
+	Paintable widget;
+
 	public CaptionWrapper(Paintable toBeWrapped) {
 		caption = new Caption(toBeWrapped);
 		add(caption);
@@ -16,12 +16,12 @@ public class CaptionWrapper extends FlowPanel {
 		add((Widget) widget);
 		setStyleName(CLASSNAME);
 	}
-	
+
 	public void updateCaption(UIDL uidl) {
 		caption.updateCaption(uidl);
 		setVisible(!uidl.getBooleanAttribute("invisible"));
 	}
-	
+
 	public Paintable getPaintable() {
 		return widget;
 	}

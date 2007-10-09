@@ -68,15 +68,16 @@ public class SimpleDateFormat {
 
 	/**
 	 * Gets the support locale for formatting and parsing dates
+	 * 
 	 * @return
 	 */
 	public DateLocale getLocale() {
-    	return locale;
-    }
+		return locale;
+	}
 
 	public void setLocale(DateLocale locale) {
-    	this.locale = locale;
-    }
+		this.locale = locale;
+	}
 
 	public SimpleDateFormat(String pattern) {
 		format = pattern;
@@ -90,7 +91,7 @@ public class SimpleDateFormat {
 			for (int i = 0; i < format.length(); i++) {
 				String thisChar = format.substring(i, i + 1);
 				String currentTokenType = DateLocale.SUPPORTED_DF_TOKENS
-				        .contains(thisChar) ? thisChar : "";
+						.contains(thisChar) ? thisChar : "";
 				if (currentTokenType.equals(lastTokenType) || i == 0) {
 					currentToken += thisChar;
 					lastTokenType = currentTokenType;
@@ -160,25 +161,25 @@ public class SimpleDateFormat {
 				h = 12;
 			else if (h > 12)
 				h -= 12;
-			//if (token.length() > 1)
-				response = twoCharDateField(h);
-			//else
-				//response = Integer.toString(h);
+			// if (token.length() > 1)
+			response = twoCharDateField(h);
+			// else
+			// response = Integer.toString(h);
 		} else if (DateLocale.TOKEN_HOUR_24.equals(tc)) {
-			//if (token.length() > 1)
-				response = twoCharDateField(date.getHours());
-			//else
-				//response = Integer.toString(date.getHours());
+			// if (token.length() > 1)
+			response = twoCharDateField(date.getHours());
+			// else
+			// response = Integer.toString(date.getHours());
 		} else if (DateLocale.TOKEN_MINUTE.equals(tc)) {
-			//if (token.length() > 1)
-				response = twoCharDateField(date.getMinutes());
-			//else
-				//response = Integer.toString(date.getMinutes());
+			// if (token.length() > 1)
+			response = twoCharDateField(date.getMinutes());
+			// else
+			// response = Integer.toString(date.getMinutes());
 		} else if (DateLocale.TOKEN_SECOND.equals(tc)) {
-			//if (token.length() > 1)
-				response = twoCharDateField(date.getSeconds());
-			//else
-				//response = Integer.toString(date.getSeconds());
+			// if (token.length() > 1)
+			response = twoCharDateField(date.getSeconds());
+			// else
+			// response = Integer.toString(date.getSeconds());
 		} else if (DateLocale.TOKEN_AM_PM.equals(tc)) {
 			int hour = date.getHours();
 			if (hour > 11)
@@ -209,12 +210,12 @@ public class SimpleDateFormat {
 	}
 
 	/**
-	 * Parses text and returns the corresponding date object. 
+	 * Parses text and returns the corresponding date object.
 	 * 
 	 * @param source
 	 * @return java.util.Date
 	 */
-	public Date parse(String source){
+	public Date parse(String source) {
 		return SimpleDateParser.parse(source, format);
 	};
 

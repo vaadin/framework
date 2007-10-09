@@ -130,8 +130,10 @@ public class IExpandLayout extends IOrderedLayout implements
 		Element expandedElement = DOM.getParent(expandedWidget.getElement());
 		// take expanded element temporarely out of flow to make container
 		// minimum sized
-		String origiginalPositioning = DOM.getStyleAttribute(expandedWidget.getElement(), "position");
-		DOM.setStyleAttribute(expandedWidget.getElement(), "position", "absolute");
+		String origiginalPositioning = DOM.getStyleAttribute(expandedWidget
+				.getElement(), "position");
+		DOM.setStyleAttribute(expandedWidget.getElement(), "position",
+				"absolute");
 		DOM.setStyleAttribute(expandedElement, "height", "");
 
 		// add temp element to make some measurements
@@ -150,7 +152,8 @@ public class IExpandLayout extends IOrderedLayout implements
 		// Component margins will bleed if overflow is not hidden
 		DOM.setStyleAttribute(expandedElement, "overflow", "hidden");
 
-		DOM.setStyleAttribute(expandedWidget.getElement(), "position", origiginalPositioning);
+		DOM.setStyleAttribute(expandedWidget.getElement(), "position",
+				origiginalPositioning);
 
 		DOM.removeChild(childContainer, meter);
 

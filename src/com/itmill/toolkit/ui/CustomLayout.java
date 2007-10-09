@@ -67,7 +67,7 @@ public class CustomLayout extends AbstractComponentContainer implements Layout {
 	 * Custom layout slots containing the components.
 	 */
 	private HashMap slots = new HashMap();
-	
+
 	private String templateName;
 
 	/**

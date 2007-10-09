@@ -620,28 +620,31 @@ public class Table extends Select implements Action.Container,
 		// Assures the visual refresh
 		refreshCurrentPage();
 	}
-	
+
 	/**
-	 * Sets columns width (in pixels). Theme may not necessary respect very 
+	 * Sets columns width (in pixels). Theme may not necessary respect very
 	 * small or very big values. Setting width to -1 (default) means that theme
 	 * will make decision of width.
 	 * 
-	 * @param columnId colunmns property id
-	 * @param width width to be reserved for colunmns content
+	 * @param columnId
+	 *            colunmns property id
+	 * @param width
+	 *            width to be reserved for colunmns content
 	 * @since 4.0.3
 	 */
 	public void setColumnWidth(Object columnId, int width) {
 		columnWidths.put(columnId, new Integer(width));
 	}
-	
+
 	/**
 	 * Gets the width of column
+	 * 
 	 * @param propertyId
 	 * @return width of colun or -1 when value not set
 	 */
 	public int getColumnWidth(Object propertyId) {
 		Integer value = (Integer) columnWidths.get(propertyId);
-		if(value == null)
+		if (value == null)
 			return -1;
 		return value.intValue();
 	}
@@ -1324,7 +1327,7 @@ public class Table extends Select implements Action.Container,
 
 		// Sorting
 		boolean doSort = false;
-		if(!this.sortDisabled) {
+		if (!this.sortDisabled) {
 			if (variables.containsKey("sortcolumn")) {
 				String colId = (String) variables.get("sortcolumn");
 				if (colId != null && !"".equals(colId) && !"null".equals(colId)) {
@@ -1434,7 +1437,7 @@ public class Table extends Select implements Action.Container,
 		target.addAttribute("cols", cols);
 		target.addAttribute("rows", cells[0].length);
 		target.addAttribute("firstrow",
-				(reqFirstRowToPaint >= 0 ? reqFirstRowToPaint : first) );
+				(reqFirstRowToPaint >= 0 ? reqFirstRowToPaint : first));
 		target.addAttribute("totalrows", total);
 		if (pagelen != 0)
 			target.addAttribute("pagelength", pagelen);
@@ -1479,7 +1482,8 @@ public class Table extends Select implements Action.Container,
 					target.addAttribute("caption",
 							(String) cells[CELL_HEADER][i]);
 			}
-			target.addAttribute("key", Integer.parseInt(cells[CELL_KEY][i].toString()));
+			target.addAttribute("key", Integer.parseInt(cells[CELL_KEY][i]
+					.toString()));
 			if (actionHandlers != null || isSelectable()) {
 				if (isSelected(itemId) && keyIndex < selectedKeys.length) {
 					target.addAttribute("selected", true);
@@ -1519,8 +1523,9 @@ public class Table extends Select implements Action.Container,
 					else
 						c.paint(target);
 				} else
-					target.addText((String) cells[CELL_FIRSTCOL
-							+ currentColumn][i]);
+					target
+							.addText((String) cells[CELL_FIRSTCOL
+									+ currentColumn][i]);
 			}
 
 			target.endTag("tr");
@@ -1617,9 +1622,10 @@ public class Table extends Select implements Action.Container,
 				if (!ALIGN_LEFT.equals(this.getColumnAlignment(columnId)))
 					target.addAttribute("align", this
 							.getColumnAlignment(columnId));
-				if(getColumnWidth(columnId) > -1)
-					target.addAttribute("width", String.valueOf(getColumnWidth(columnId)));
-			
+				if (getColumnWidth(columnId) > -1)
+					target.addAttribute("width", String
+							.valueOf(getColumnWidth(columnId)));
+
 				target.endTag("column");
 			}
 		}
@@ -2373,7 +2379,7 @@ public class Table extends Select implements Action.Container,
 
 	/**
 	 * Sets the height units.
-	 *  
+	 * 
 	 * @see com.itmill.toolkit.terminal.Sizeable#setHeightUnits(int)
 	 */
 	public void setHeightUnits(int units) {

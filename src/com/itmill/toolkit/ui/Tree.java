@@ -101,7 +101,7 @@ public class Tree extends Select implements Container.Hierarchical,
 	 * Is the tree selectable .
 	 */
 	private boolean selectable = true;
-	
+
 	/**
 	 * Flag to indicate sub-tree loading
 	 */
@@ -111,10 +111,10 @@ public class Tree extends Select implements Container.Hierarchical,
 	 * Holds a itemId which was recently expanded
 	 */
 	private Object expandedItemId;
-	
+
 	/**
-	 * a flag which indicates initial paint. After this flag set true
-	 * partial updates are allowed.
+	 * a flag which indicates initial paint. After this flag set true partial
+	 * updates are allowed.
 	 */
 	private boolean initialPaint = true;
 
@@ -178,9 +178,9 @@ public class Tree extends Select implements Container.Hierarchical,
 
 		// Expands
 		expanded.add(itemId);
-		
+
 		expandedItemId = itemId;
-		if(initialPaint)
+		if (initialPaint)
 			requestRepaint();
 		else
 			requestPartialRepaint();
@@ -188,11 +188,12 @@ public class Tree extends Select implements Container.Hierarchical,
 
 		return true;
 	}
-	
+
 	public void requestRepaint() {
 		super.requestRepaint();
 		partialUpdate = false;
 	}
+
 	private void requestPartialRepaint() {
 		super.requestRepaint();
 		partialUpdate = true;
@@ -380,21 +381,21 @@ public class Tree extends Select implements Container.Hierarchical,
 	 */
 	public void paintContent(PaintTarget target) throws PaintException {
 		initialPaint = false;
-		
-		if(partialUpdate) {
+
+		if (partialUpdate) {
 			target.addAttribute("partialUpdate", true);
 			target.addAttribute("rootKey", itemIdMapper.key(expandedItemId));
 		} else {
-			
+
 			// Focus control id
 			if (this.getFocusableId() > 0) {
 				target.addAttribute("focusid", this.getFocusableId());
 			}
-	
+
 			// The tab ordering number
 			if (this.getTabIndex() > 0)
 				target.addAttribute("tabindex", this.getTabIndex());
-	
+
 			// Paint tree attributes
 			if (isSelectable())
 				target.addAttribute("selectmode", (isMultiSelect() ? "multi"
@@ -403,7 +404,7 @@ public class Tree extends Select implements Container.Hierarchical,
 				target.addAttribute("selectmode", "none");
 			if (isNewItemsAllowed())
 				target.addAttribute("allownewitem", true);
-	
+
 		}
 
 		// Initialize variables
@@ -419,14 +420,14 @@ public class Tree extends Select implements Container.Hierarchical,
 		// Iterates through hierarchical tree using a stack of iterators
 		Stack iteratorStack = new Stack();
 		Collection ids;
-		if(partialUpdate)
+		if (partialUpdate)
 			ids = getChildren(expandedItemId);
 		else
 			ids = rootItemIds();
-		
+
 		if (ids != null)
 			iteratorStack.push(ids.iterator());
-		
+
 		while (!iteratorStack.isEmpty()) {
 
 			// Gets the iterator for current tree level
@@ -448,7 +449,8 @@ public class Tree extends Select implements Container.Hierarchical,
 				Object itemId = i.next();
 
 				// Starts the item / node
-				boolean isNode = areChildrenAllowed(itemId) && hasChildren(itemId);
+				boolean isNode = areChildrenAllowed(itemId)
+						&& hasChildren(itemId);
 				if (isNode)
 					target.startTag("node");
 				else
@@ -470,7 +472,6 @@ public class Tree extends Select implements Container.Hierarchical,
 					expandedKeys.add(key);
 				}
 
-				
 				// Actions
 				if (actionHandlers != null) {
 					ArrayList keys = new ArrayList();
@@ -501,7 +502,6 @@ public class Tree extends Select implements Container.Hierarchical,
 			}
 		}
 
-
 		// Actions
 		if (!actionSet.isEmpty()) {
 			target.addVariable(this, "action", "");
@@ -519,7 +519,7 @@ public class Tree extends Select implements Container.Hierarchical,
 			target.endTag("actions");
 		}
 
-		if(partialUpdate) {
+		if (partialUpdate) {
 			partialUpdate = false;
 		} else {
 			// Selected

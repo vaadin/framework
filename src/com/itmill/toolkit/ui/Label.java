@@ -109,8 +109,9 @@ public class Label extends AbstractComponent implements Property,
 	public static final int CONTENT_DEFAULT = CONTENT_TEXT;
 
 	/** Array of content mode names that are rendered in UIDL as mode attribute. */
-	private static final String[] CONTENT_MODE_NAME = {"text","pre","uidl","xhtml","xml","raw"};
-	
+	private static final String[] CONTENT_MODE_NAME = { "text", "pre", "uidl",
+			"xhtml", "xml", "raw" };
+
 	private Property dataSource;
 
 	private int contentMode = CONTENT_DEFAULT;

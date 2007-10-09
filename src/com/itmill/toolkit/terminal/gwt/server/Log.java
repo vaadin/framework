@@ -77,7 +77,7 @@ class Log {
 	 * @param message
 	 *            the Message String to be logged.
 	 */
-	 static synchronized void warn(java.lang.String message) {
+	static synchronized void warn(java.lang.String message) {
 		if (Log.useStdOut)
 			System.out.println(LOG_MSG_WARN + " " + message);
 	}
@@ -88,7 +88,7 @@ class Log {
 	 * @param message
 	 *            the Message String to be logged.
 	 */
-	 static synchronized void debug(java.lang.String message) {
+	static synchronized void debug(java.lang.String message) {
 		if (Log.useStdOut)
 			System.out.println(LOG_MSG_DEBUG + " " + message);
 	}
@@ -99,7 +99,7 @@ class Log {
 	 * @param message
 	 *            the Message String to be logged.
 	 */
-	 static synchronized void info(java.lang.String message) {
+	static synchronized void info(java.lang.String message) {
 		if (Log.useStdOut)
 			System.out.println(LOG_MSG_INFO + " " + message);
 	}
@@ -112,7 +112,7 @@ class Log {
 	 * @param e
 	 *            the Exception to be logged.
 	 */
-	 static synchronized void except(java.lang.String message, Exception e) {
+	static synchronized void except(java.lang.String message, Exception e) {
 		if (Log.useStdOut) {
 			System.out.println(LOG_MSG_EXCEPT + " " + message);
 			e.printStackTrace();
@@ -125,7 +125,7 @@ class Log {
 	 * @param message
 	 *            the Message String to be logged.
 	 */
-	 static synchronized void error(java.lang.String message) {
+	static synchronized void error(java.lang.String message) {
 		if (Log.useStdOut)
 			System.out.println(LOG_MSG_ERROR + " " + message);
 	}

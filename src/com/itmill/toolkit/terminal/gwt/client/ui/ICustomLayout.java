@@ -47,12 +47,14 @@ public class ICustomLayout extends ComplexPanel implements Paintable, Container 
 	}
 
 	/**
-	 * Sets widget to given location. 
+	 * Sets widget to given location.
 	 * 
 	 * If location already contains a widget it will be removed.
 	 * 
-	 * @param widget Widget to be set into location.
-	 * @param location location name where widget will be added
+	 * @param widget
+	 *            Widget to be set into location.
+	 * @param location
+	 *            location name where widget will be added
 	 * 
 	 * @throws IllegalArgumentException
 	 *             if no such location is found in the layout.
@@ -75,9 +77,9 @@ public class ICustomLayout extends ComplexPanel implements Paintable, Container 
 		if (previous == widget)
 			return;
 		remove(previous);
-		
+
 		// if template is missing add element in order
-		if(!hasTemplate())
+		if (!hasTemplate())
 			elem = getElement();
 
 		// Add widget to location
@@ -94,7 +96,7 @@ public class ICustomLayout extends ComplexPanel implements Paintable, Container 
 
 		// Update PID
 		pid = uidl.getId();
-		if(!hasTemplate()) {
+		if (!hasTemplate()) {
 			// Update HTML template only once
 			initializeHTML(uidl, client);
 		}
@@ -114,7 +116,7 @@ public class ICustomLayout extends ComplexPanel implements Paintable, Container 
 				}
 			}
 		}
-		
+
 		// Evaluate scripts only once
 		if (scripts != null) {
 			eval(scripts);
@@ -128,9 +130,12 @@ public class ICustomLayout extends ComplexPanel implements Paintable, Container 
 		String newTemplate = uidl.getStringAttribute("template");
 
 		// Get the HTML-template from client
-		String template = client.getResource("layouts/" + newTemplate + ".html");
+		String template = client
+				.getResource("layouts/" + newTemplate + ".html");
 		if (template == null) {
-			template = "<em>Layout file layouts/" + newTemplate + ".html is missing. Components will be drawn for debug purposes.</em>";
+			template = "<em>Layout file layouts/"
+					+ newTemplate
+					+ ".html is missing. Components will be drawn for debug purposes.</em>";
 		} else {
 			currentTemplate = newTemplate;
 		}
@@ -148,15 +153,16 @@ public class ICustomLayout extends ComplexPanel implements Paintable, Container 
 		while (parent != null && !(parent instanceof IView))
 			parent = parent.getParent();
 		if (parent != null && ((IView) parent).getTheme() != null) {
-		    prefixImgSrcs(getElement(), "../ITK-INF/themes/" + ((IView) parent).getTheme()
-				+ "/layouts/");
+			prefixImgSrcs(getElement(), "../ITK-INF/themes/"
+					+ ((IView) parent).getTheme() + "/layouts/");
 		} else {
-		    throw(new IllegalStateException("Could not find IView; maybe updateFromUIDL() was called before attaching the widget?"));
+			throw (new IllegalStateException(
+					"Could not find IView; maybe updateFromUIDL() was called before attaching the widget?"));
 		}
 	}
-	
+
 	private boolean hasTemplate() {
-		if(currentTemplate == null)
+		if (currentTemplate == null)
 			return false;
 		else
 			return true;
@@ -267,14 +273,15 @@ public class ICustomLayout extends ComplexPanel implements Paintable, Container 
 		setWidget(to, location);
 	}
 
-	/** Does this layout contain given child*/
+	/** Does this layout contain given child */
 	public boolean hasChildComponent(Widget component) {
 		return locationToWidget.containsValue(component);
 	}
 
 	/** Update caption for given widget */
 	public void updateCaption(Paintable component, UIDL uidl) {
-		CaptionWrapper wrapper = (CaptionWrapper) widgetToCaptionWrapper.get(component);
+		CaptionWrapper wrapper = (CaptionWrapper) widgetToCaptionWrapper
+				.get(component);
 		if (Caption.isNeeded(uidl)) {
 			if (wrapper == null) {
 				String loc = getLocation((Widget) component);
@@ -285,10 +292,11 @@ public class ICustomLayout extends ComplexPanel implements Paintable, Container 
 			}
 			wrapper.updateCaption(uidl);
 		} else {
-			if (wrapper != null) { 
+			if (wrapper != null) {
 				String loc = getLocation((Widget) component);
 				super.remove(wrapper);
-				super.add((Widget) wrapper.getPaintable(), (Element) locationToElement.get(loc));
+				super.add((Widget) wrapper.getPaintable(),
+						(Element) locationToElement.get(loc));
 				widgetToCaptionWrapper.remove(component);
 			}
 		}
@@ -314,7 +322,7 @@ public class ICustomLayout extends ComplexPanel implements Paintable, Container 
 		if (cw != null) {
 			widgetToCaptionWrapper.remove(w);
 			return super.remove(cw);
-		} else if(w != null)
+		} else if (w != null)
 			return super.remove(w);
 		return false;
 	}

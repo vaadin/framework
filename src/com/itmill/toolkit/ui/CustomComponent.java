@@ -535,7 +535,7 @@ public class CustomComponent implements Component {
 	 * @see com.itmill.toolkit.ui.Component#getStyle()
 	 */
 	public void removeStyleName(String style) {
-		
+
 	}
 
 }

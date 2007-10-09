@@ -57,7 +57,7 @@ import java.lang.reflect.Method;
 public abstract class AbstractComponent implements Component, MethodEventSource {
 
 	/* Private members ************************************************* */
-	
+
 	/**
 	 * Style names.
 	 */
@@ -162,10 +162,10 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
 	 */
 	public String getStyle() {
 		String s = "";
-		if(styles != null) {
-			for(Iterator it = styles.iterator();it.hasNext();) {
+		if (styles != null) {
+			for (Iterator it = styles.iterator(); it.hasNext();) {
 				s += (String) it.next();
-				if(it.hasNext())
+				if (it.hasNext())
 					s += " ";
 			}
 		}
@@ -177,36 +177,36 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
 	 * default documentation from implemented interface.
 	 */
 	public void setStyle(String style) {
-		if(style == null || "".equals(style)) {
+		if (style == null || "".equals(style)) {
 			styles = null;
 			requestRepaint();
 			return;
 		}
-		if(this.styles == null) {
+		if (this.styles == null) {
 			styles = new ArrayList();
 		}
 		styles.clear();
 		styles.add(style);
 		requestRepaint();
 	}
-	
+
 	public void addStyleName(String style) {
-		if(style == null || "".equals(style))
+		if (style == null || "".equals(style))
 			return;
-		if(this.styles == null) {
+		if (this.styles == null) {
 			styles = new ArrayList();
 		}
-		if(! styles.contains(style)) {
+		if (!styles.contains(style)) {
 			this.styles.add(style);
 			requestRepaint();
 		}
 	}
-	
+
 	public void removeStyleName(String style) {
 		styles.remove(style);
 		requestRepaint();
 	}
-	
+
 	/*
 	 * Get's the component's caption. Don't add a JavaDoc comment here, we use
 	 * the default documentation from implemented interface.
@@ -552,10 +552,11 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
 	 */
 	public final void paint(PaintTarget target) throws PaintException {
 
-		if (!target.startTag(this, this.getTag()) || repaintRequestListenersNotified) {
-			
+		if (!target.startTag(this, this.getTag())
+				|| repaintRequestListenersNotified) {
+
 			// Paint the contents of the component
-			
+
 			if (styles != null && styles.size() > 0)
 				target.addAttribute("style", getStyle());
 			if (isReadOnly())
@@ -585,7 +586,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
 					error.paint(target);
 			}
 		} else {
-			
+
 			// Contents have not changed, only cached presentation can be used
 			target.addAttribute("cached", true);
 		}

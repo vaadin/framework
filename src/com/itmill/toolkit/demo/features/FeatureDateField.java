@@ -45,7 +45,7 @@ public class FeatureDateField extends Feature {
 	static {
 		Locale[] locales = Locale.getAvailableLocales();
 		localeNames = new String[locales.length];
-		for (int i = 0; i < locales.length; i++) 
+		for (int i = 0; i < locales.length; i++)
 			localeNames[i] = locales[i].getDisplayName();
 	}
 
@@ -64,11 +64,11 @@ public class FeatureDateField extends Feature {
 		DateField df = new DateField();
 		df.setValue(new java.util.Date());
 		l.addComponent(df);
-		
+
 		// Properties
 		propertyPanel = new PropertyPanel(df);
-		Form ap = propertyPanel
-				.createBeanPropertySet(new String[] { "resolution", "locale" });
+		Form ap = propertyPanel.createBeanPropertySet(new String[] {
+				"resolution", "locale" });
 		ap.replaceWithSelect("resolution", new Object[] {
 				new Integer(DateField.RESOLUTION_YEAR),
 				new Integer(DateField.RESOLUTION_MONTH),
@@ -79,7 +79,8 @@ public class FeatureDateField extends Feature {
 				new Integer(DateField.RESOLUTION_MSEC) }, new Object[] {
 				"Year", "Month", "Day", "Hour", "Minute", "Second",
 				"Millisecond" });
-		ap.replaceWithSelect("locale", Locale.getAvailableLocales(), localeNames);
+		ap.replaceWithSelect("locale", Locale.getAvailableLocales(),
+				localeNames);
 		ap.getField("resolution").setValue(
 				new Integer(DateField.RESOLUTION_DAY));
 		ap.getField("locale").setValue(Locale.getDefault());

@@ -199,17 +199,23 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 	 * not running or it does not contain a window corresponding to the name.
 	 * </p>
 	 * 
-	 * <p>Since version 5.0 all windows can be referenced by their names in 
-	 * url <code>http://host:port/foo/bar/</code> where <code>http://host:port/foo/</code>
-	 * is the application url as returned by getURL() and <code>bar</code> is the name 
-	 * of the window.</p>
+	 * <p>
+	 * Since version 5.0 all windows can be referenced by their names in url
+	 * <code>http://host:port/foo/bar/</code> where
+	 * <code>http://host:port/foo/</code> is the application url as returned
+	 * by getURL() and <code>bar</code> is the name of the window.
+	 * </p>
 	 * 
-	 * <p>One should note that this method can, as a side effect create new windows
-	 * if needed by the application. This can be achieved by overriding the default 
-	 * implementation.</p>
+	 * <p>
+	 * One should note that this method can, as a side effect create new windows
+	 * if needed by the application. This can be achieved by overriding the
+	 * default implementation.
+	 * </p>
 	 * 
-	 * <p>The method should return null if the window does not exists (and is not 
-	 * created as a side-effect) or if the application is not running anymore</p>.
+	 * <p>
+	 * The method should return null if the window does not exists (and is not
+	 * created as a side-effect) or if the application is not running anymore
+	 * </p>.
 	 * 
 	 * @param name
 	 *            the name of the window.
@@ -303,7 +309,9 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 			setMainWindow(window);
 	}
 
-	/** Send information to all listeners about new Windows associated with this application.
+	/**
+	 * Send information to all listeners about new Windows associated with this
+	 * application.
 	 * 
 	 * @param window
 	 */

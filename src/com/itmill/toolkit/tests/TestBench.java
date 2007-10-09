@@ -49,7 +49,7 @@ public class TestBench extends com.itmill.toolkit.Application implements
 	HashMap itemCaptions = new HashMap();
 
 	public void init() {
-		
+
 		setTheme("demo");
 
 		// Add testable classes to hierarchical container
@@ -97,11 +97,11 @@ public class TestBench extends com.itmill.toolkit.Application implements
 		menu.setImmediate(true);
 
 		mainLayout.addComponent(menu);
-		
+
 		bodyLayout.setHeight(100);
 		bodyLayout.setHeightUnits(Panel.UNITS_PERCENTAGE);
 		bodyLayout.setLayout(new ExpandLayout());
-		
+
 		mainLayout.addComponent(bodyLayout);
 
 		mainWindow.setLayout(mainLayout);

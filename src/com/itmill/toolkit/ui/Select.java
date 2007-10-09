@@ -186,8 +186,7 @@ public class Select extends AbstractField implements Container,
 	 * enabled with setOptionsLoadingLazy(true).
 	 * 
 	 */
-//	private OptionsStream optionsStream = null;
-	
+	// private OptionsStream optionsStream = null;
 	/**
 	 * Number of options to stream per request ('page size') when lazyLoading
 	 * options.
@@ -203,8 +202,8 @@ public class Select extends AbstractField implements Container,
 	private String filterstring;
 
 	/**
-	 * How many visible columns (~characters) does select occupy visually.
-	 * Used to size select appropriately. Minus one sets to 100% width.
+	 * How many visible columns (~characters) does select occupy visually. Used
+	 * to size select appropriately. Minus one sets to 100% width.
 	 */
 	private int columns = -1;
 
@@ -272,7 +271,7 @@ public class Select extends AbstractField implements Container,
 
 		// Paints field properties
 		super.paintContent(target);
-		
+
 		// Paints select attributes
 		if (isMultiSelect())
 			target.addAttribute("selectmode", "multi");
@@ -321,10 +320,11 @@ public class Select extends AbstractField implements Container,
 				target.endTag("so");
 			}
 		}
-			
+
 		Iterator i;
-		if(isLazyLoading()) {
-			i = optionFilter.filter(filterstring, lazyLoadingPageLength, page).iterator();
+		if (isLazyLoading()) {
+			i = optionFilter.filter(filterstring, lazyLoadingPageLength, page)
+					.iterator();
 			target.addAttribute("totalMatches", optionFilter.getMatchCount());
 		} else {
 			i = getItemIds().iterator();
@@ -359,7 +359,7 @@ public class Select extends AbstractField implements Container,
 		target.addVariable(this, "selected", selectedKeys);
 		if (isNewItemsAllowed())
 			target.addVariable(this, "newitem", "");
-		if(isLazyLoading()) {
+		if (isLazyLoading()) {
 			target.addVariable(this, "filter", filterstring);
 			target.addVariable(this, "page", page);
 		}
@@ -373,7 +373,7 @@ public class Select extends AbstractField implements Container,
 	 */
 	public void changeVariables(Object source, Map variables) {
 		String newFilter;
-		if( (newFilter = (String) variables.get("filter")) != null) {
+		if ((newFilter = (String) variables.get("filter")) != null) {
 			// this is a filter request
 			page = ((Integer) variables.get("page")).intValue();
 			filterstring = newFilter;
@@ -415,7 +415,7 @@ public class Select extends AbstractField implements Container,
 			if (isMultiSelect()) {
 
 				// TODO Optimize by adding repaintNotNeeded whan applicaple
-				
+
 				// Converts the key-array to id-set
 				LinkedList s = new LinkedList();
 				for (int i = 0; i < ka.length; i++) {
@@ -558,17 +558,20 @@ public class Select extends AbstractField implements Container,
 	 * 
 	 * @param newValue
 	 *            the New selected item or collection of selected items.
-	 * @param repaintIsNotNeeded True if caller is sure that repaint is not needed. 
-	 * @see com.itmill.toolkit.ui.AbstractField#setValue(java.lang.Object, java.lang.Boolean)
+	 * @param repaintIsNotNeeded
+	 *            True if caller is sure that repaint is not needed.
+	 * @see com.itmill.toolkit.ui.AbstractField#setValue(java.lang.Object,
+	 *      java.lang.Boolean)
 	 */
-	protected void setValue(Object newValue, boolean repaintIsNotNeeded) throws Property.ReadOnlyException,
-			Property.ConversionException {
+	protected void setValue(Object newValue, boolean repaintIsNotNeeded)
+			throws Property.ReadOnlyException, Property.ConversionException {
 
 		if (isMultiSelect()) {
 			if (newValue == null)
 				super.setValue(new HashSet(), repaintIsNotNeeded);
 			else if (Collection.class.isAssignableFrom(newValue.getClass()))
-				super.setValue(new HashSet((Collection) newValue), repaintIsNotNeeded);
+				super.setValue(new HashSet((Collection) newValue),
+						repaintIsNotNeeded);
 		} else if (newValue == null || items.containsId(newValue))
 			super.setValue(newValue, repaintIsNotNeeded);
 	}
@@ -1458,7 +1461,7 @@ public class Select extends AbstractField implements Container,
 	public void setLazyLoading(boolean useLazyLoading) {
 		if (useLazyLoading != isLazyLoading) {
 			isLazyLoading = useLazyLoading;
-			if(getOptionFilter() == null)
+			if (getOptionFilter() == null)
 				setOptionFilter(new StartsWithFilter(this));
 			requestRepaint();
 		}
@@ -1483,11 +1486,11 @@ public class Select extends AbstractField implements Container,
 	}
 
 	/**
-	 * Sets OptionFilter which will do filtering base on query string
-	 * if Select is in lazy loading mode.
+	 * Sets OptionFilter which will do filtering base on query string if Select
+	 * is in lazy loading mode.
 	 * 
-	 * @param of 
-	 * 			OptionFilter to be used in filtering
+	 * @param of
+	 *            OptionFilter to be used in filtering
 	 */
 	public void setOptionFilter(OptionFilter of) {
 		optionFilter = of;
@@ -1499,19 +1502,19 @@ public class Select extends AbstractField implements Container,
 	public OptionFilter getOptionFilter() {
 		return optionFilter;
 	}
-	
+
 	/**
 	 * Set visible columns.
 	 */
 	public void setColumns(int cols) {
 		this.columns = cols;
 	}
-	
+
 	/**
 	 * Get visible columns.
 	 */
 	public int getColumns() {
 		return this.columns;
 	}
-	
+
 }

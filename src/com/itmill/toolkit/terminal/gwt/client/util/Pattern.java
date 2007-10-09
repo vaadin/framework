@@ -22,18 +22,21 @@ import com.google.gwt.core.client.JavaScriptObject;
 
 /**
  * <p>
- * Implementation of the {@link java.util.regex.Pattern} class with a
- * wrapper aroung the Javascript <a href="http://developer.mozilla.org/en/docs/Core_JavaScript_1.5_Guide:Regular_Expressions">RegExp</a> object.
- * As most of the methods delegate to the JavaScript RegExp object, certain differences in the 
- * declaration and behaviour of regular expressions must be expected.
+ * Implementation of the {@link java.util.regex.Pattern} class with a wrapper
+ * aroung the Javascript <a
+ * href="http://developer.mozilla.org/en/docs/Core_JavaScript_1.5_Guide:Regular_Expressions">RegExp</a>
+ * object. As most of the methods delegate to the JavaScript RegExp object,
+ * certain differences in the declaration and behaviour of regular expressions
+ * must be expected.
  * </p>
  * <p>
- * Please note that neither the {@link java.util.regex.Pattern#compile(String)} method nor
- * {@link Matcher} instances are supported. For the later, consider using {@link Pattern#match(String)}.
+ * Please note that neither the {@link java.util.regex.Pattern#compile(String)}
+ * method nor {@link Matcher} instances are supported. For the later, consider
+ * using {@link Pattern#match(String)}.
  * </p>
  * 
  * @author George Georgovassilis
- *
+ * 
  */
 public class Pattern {
 
@@ -60,22 +63,25 @@ public class Pattern {
 
 	private static native JavaScriptObject _createExpression(String pattern,
 			String flags)/*-{
-	 return new RegExp(pattern, flags);
-	 }-*/;
+		 return new RegExp(pattern, flags);
+		 }-*/;
 
 	private native void _match(String text, List matches)/*-{
-	 var regExp = this.@com.itmill.toolkit.terminal.gwt.client.util.Pattern::regExp;
-	 var result = text.match(regExp);
-	 if (result == null) return;
-	 for (var i=0;i<result.length;i++)
-	 matches.@java.util.ArrayList::add(Ljava/lang/Object;)(result[i]);
-	 }-*/;
+		 var regExp = this.@com.itmill.toolkit.terminal.gwt.client.util.Pattern::regExp;
+		 var result = text.match(regExp);
+		 if (result == null) return;
+		 for (var i=0;i<result.length;i++)
+		 matches.@java.util.ArrayList::add(Ljava/lang/Object;)(result[i]);
+		 }-*/;
 
 	/**
-	 * Determines wether the specified regular expression is validated by the 
+	 * Determines wether the specified regular expression is validated by the
 	 * provided input.
-	 * @param regex Regular expression
-	 * @param input String to validate
+	 * 
+	 * @param regex
+	 *            Regular expression
+	 * @param input
+	 *            String to validate
 	 * @return <code>true</code> if matched.
 	 */
 	public static boolean matches(String regex, String input) {
@@ -83,10 +89,10 @@ public class Pattern {
 	}
 
 	/**
-	 * Escape a provided string so that it will be interpreted as a literal
-	 * in regular expressions.
-	 * The current implementation does escape each character even if not neccessary,
-	 * generating verbose literals.
+	 * Escape a provided string so that it will be interpreted as a literal in
+	 * regular expressions. The current implementation does escape each
+	 * character even if not neccessary, generating verbose literals.
+	 * 
 	 * @param input
 	 * @return
 	 */
@@ -100,7 +106,9 @@ public class Pattern {
 
 	/**
 	 * Class constructor
-	 * @param pattern Regular expression
+	 * 
+	 * @param pattern
+	 *            Regular expression
 	 */
 	public Pattern(String pattern) {
 		this(pattern, 0);
@@ -108,21 +116,25 @@ public class Pattern {
 
 	/**
 	 * Class constructor
-	 * @param pattern Regular expression
-	 * @param flags 
+	 * 
+	 * @param pattern
+	 *            Regular expression
+	 * @param flags
 	 */
 	public Pattern(String pattern, int flags) {
 		regExp = createExpression(pattern, flags);
 	}
 
 	/**
-	 * This method is borrowed from the JavaScript RegExp object.
-	 * It parses a string and returns as an array any assignments to parenthesis groups
-	 * in the pattern's regular expression
+	 * This method is borrowed from the JavaScript RegExp object. It parses a
+	 * string and returns as an array any assignments to parenthesis groups in
+	 * the pattern's regular expression
+	 * 
 	 * @param text
 	 * @return Array of strings following java's Pattern convention for groups:
-	 * Group 0 is the entire input string and the remaining groups are the matched parenthesis.
-	 * In case nothing was matched an empty array is returned.
+	 *         Group 0 is the entire input string and the remaining groups are
+	 *         the matched parenthesis. In case nothing was matched an empty
+	 *         array is returned.
 	 */
 	public String[] match(String text) {
 		List matches = new ArrayList();
@@ -135,41 +147,44 @@ public class Pattern {
 
 	/**
 	 * Determines wether a provided text matches the regular expression
+	 * 
 	 * @param text
 	 * @return
 	 */
 	public native boolean matches(String text)/*-{
-	 var regExp = this.@com.itmill.toolkit.terminal.gwt.client.util.Pattern::regExp;
-	 return regExp.test(text);
-	 }-*/;
+		 var regExp = this.@com.itmill.toolkit.terminal.gwt.client.util.Pattern::regExp;
+		 return regExp.test(text);
+		 }-*/;
 
 	/**
 	 * Returns the regular expression for this pattern
+	 * 
 	 * @return
 	 */
 	public native String pattern()/*-{
-	 var regExp = this.@com.itmill.toolkit.terminal.gwt.client.util.Pattern::regExp;
-	 return regExp.source;
-	 }-*/;
+		 var regExp = this.@com.itmill.toolkit.terminal.gwt.client.util.Pattern::regExp;
+		 return regExp.source;
+		 }-*/;
 
 	private native void _split(String input, List results)/*-{
-	 var regExp = this.@com.itmill.toolkit.terminal.gwt.client.util.Pattern::regExp;
-	 var parts = input.split(regExp);
-	 for (var i=0;i<parts.length;i++)
-	 results.@java.util.ArrayList::add(Ljava/lang/Object;)(parts[i]	);
-	 }-*/;
-	
+		 var regExp = this.@com.itmill.toolkit.terminal.gwt.client.util.Pattern::regExp;
+		 var parts = input.split(regExp);
+		 for (var i=0;i<parts.length;i++)
+		 results.@java.util.ArrayList::add(Ljava/lang/Object;)(parts[i]	);
+		 }-*/;
+
 	/**
 	 * Split an input string by the pattern's regular expression
+	 * 
 	 * @param input
 	 * @return Array of strings
 	 */
-	public String[] split(String input){
-		List results = new ArrayList(); 
+	public String[] split(String input) {
+		List results = new ArrayList();
 		_split(input, results);
 		String[] parts = new String[results.size()];
-		for (int i=0;i<results.size();i++)
-			parts[i] = (String)results.get(i);
+		for (int i = 0; i < results.size(); i++)
+			parts[i] = (String) results.get(i);
 		return parts;
 	}
 

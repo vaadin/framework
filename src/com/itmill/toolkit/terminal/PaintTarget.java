@@ -162,7 +162,7 @@ public interface PaintTarget {
 	 *             if the paint operation failed.
 	 */
 	public void addAttribute(String name, long value) throws PaintException;
-	
+
 	/**
 	 * Adds a float attribute to component. Atributes must be added before any
 	 * content is written.
@@ -176,7 +176,7 @@ public interface PaintTarget {
 	 *             if the paint operation failed.
 	 */
 	public void addAttribute(String name, float value) throws PaintException;
-	
+
 	/**
 	 * Adds a double attribute to component. Atributes must be added before any
 	 * content is written.
@@ -236,7 +236,7 @@ public interface PaintTarget {
 	 */
 	public void addVariable(VariableOwner owner, String name, int value)
 			throws PaintException;
-	
+
 	/**
 	 * Adds a long type variable.
 	 * 
@@ -252,7 +252,7 @@ public interface PaintTarget {
 	 */
 	public void addVariable(VariableOwner owner, String name, long value)
 			throws PaintException;
-	
+
 	/**
 	 * Adds a float type variable.
 	 * 
@@ -268,7 +268,7 @@ public interface PaintTarget {
 	 */
 	public void addVariable(VariableOwner owner, String name, float value)
 			throws PaintException;
-	
+
 	/**
 	 * Adds a double type variable.
 	 * 

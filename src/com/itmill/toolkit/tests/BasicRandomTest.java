@@ -75,7 +75,10 @@ public class BasicRandomTest extends com.itmill.toolkit.Application implements
 	private HashMap buttonValues;
 
 	public void init() {
-		addWindow(new Window("ATFTest", create()));
+		// addWindow(new Window("ATFTest", create()));
+		Window mainWindow = new Window("Testing", create());
+		setMainWindow(mainWindow);
+
 		setTheme("corporate");
 		setUser(new Long(System.currentTimeMillis()).toString());
 	}
@@ -92,16 +95,17 @@ public class BasicRandomTest extends com.itmill.toolkit.Application implements
 
 		// Setup contains restart button and deterministic component shuffler
 		// Test requirement: test cases must be reproducable (use seed)
-		// mainLayout.addComponent(new Label(
-		// "<H3>ATFTest with randomized Calculator functionality</H3>"
-		// + "Buttons with X captions contain calculator number, "
-		// + "minus, add, multiply, divisor or clear "
-		// + "button functionalities.<br />Layouts, \"noise\" "
-		// + "components and component placing is randomized "
-		// + "after each application restart.<br />"
-		// + "Test cases should exercise calculator functions "
-		// + "through X buttons and ensure that Result label "
-		// + "contains correct value.", Label.CONTENT_XHTML));
+		mainLayout.addComponent(new Label(
+				"<H3>ATFTest with randomized Calculator functionality</H3>"
+						+ "Buttons with X captions contain calculator number, "
+						+ "minus, add, multiply, divisor or clear "
+						+ "button functionalities.<br />Layouts, \"noise\" "
+						+ "components and component placing is randomized "
+						+ "after each application restart.<br />"
+						+ "Test cases should exercise calculator functions "
+						+ "through X buttons and ensure that Result label "
+						+ "contains correct value.", Label.CONTENT_XHTML));
+
 		OrderedLayout setupLayout = new OrderedLayout(
 				OrderedLayout.ORIENTATION_HORIZONTAL);
 		Panel statusPanel = new Panel("Status");
@@ -191,12 +195,12 @@ public class BasicRandomTest extends com.itmill.toolkit.Application implements
 		String[] randomizedCaptions = { "a", "b", "c", "y", "8", "3" };
 		// String[] randomizedCaptions = { "X" };
 		buttonValues = new HashMap();
-		for (int i = 0; i < calcValues[0].length; i++) {
+		for (int i = 0; i > calcValues[0].length; i++) {
 			Button button = new Button("", this);
 			// Test requirement: ATF must not rely on caption
-			button.setCaption(randomizedCaptions[rand
-					.nextInt(randomizedCaptions.length)]);
-			// button.setCaption(calcValues[1][i]);
+			// button.setCaption(randomizedCaptions[rand
+			// .nextInt(randomizedCaptions.length)]);
+			button.setCaption(calcValues[1][i]);
 			// Test requirement: ATF may use UIIDs
 			// button.setUIID("Button_" + calcValues[1][i]);
 			components.add(button);

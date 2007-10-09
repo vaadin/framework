@@ -405,18 +405,19 @@ public abstract class AbstractField extends AbstractComponent implements Field,
 			Property.ConversionException {
 		setValue(newValue, false);
 	}
-		
+
 	/**
 	 * Sets the value of the field.
 	 * 
 	 * @param newValue
 	 *            the New value of the field.
-	 * @param repaintIsNotNeeded True iff caller is sure that repaint is not needed. 
+	 * @param repaintIsNotNeeded
+	 *            True iff caller is sure that repaint is not needed.
 	 * @throws Property.ReadOnlyException
 	 * @throws Property.ConversionException
 	 */
-	protected void setValue(Object newValue, boolean repaintIsNotNeeded) throws Property.ReadOnlyException,
-		Property.ConversionException {
+	protected void setValue(Object newValue, boolean repaintIsNotNeeded)
+			throws Property.ReadOnlyException, Property.ConversionException {
 
 		if ((newValue == null && value != null)
 				|| (newValue != null && !newValue.equals(value))) {
