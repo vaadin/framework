@@ -144,13 +144,15 @@ public class IExpandLayout extends IOrderedLayout implements
 		int usedSpace = DOM.getElementPropertyInt(meter, "offsetTop")
 				- DOM.getElementPropertyInt(DOM.getFirstChild(childContainer),
 						"offsetTop");
-		// ApplicationConnection.getConsole().log("EL h" + getOffsetHeight());
-		// ApplicationConnection.getConsole().log("EL h" + getOffsetHeight());
+
 		int freeSpace = getOffsetHeight() - usedSpace;
+
+		if (freeSpace < 0)
+			freeSpace = 0;
 
 		DOM.setStyleAttribute(expandedElement, "height", freeSpace + "px");
 		// Component margins will bleed if overflow is not hidden
-		DOM.setStyleAttribute(expandedElement, "overflow", "hidden");
+		DOM.setStyleAttribute(expandedElement, "overflow", "auto");
 
 		DOM.setStyleAttribute(expandedWidget.getElement(), "position",
 				origiginalPositioning);

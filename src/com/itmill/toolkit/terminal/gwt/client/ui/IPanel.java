@@ -62,6 +62,7 @@ public class IPanel extends SimplePanel implements Paintable,
 		height = uidl.hasVariable("height") ? uidl.getStringVariable("height")
 				: null;
 		setWidth(w != null ? w : "");
+		setHeight(height != null ? height : "");
 
 		// TODO optimize: if only the caption has changed, don't re-render whole
 		// content
@@ -104,22 +105,35 @@ public class IPanel extends SimplePanel implements Paintable,
 	public void iLayout() {
 		// In this case we need to fix containers height properly
 		if (height != null && height != "") {
-			// First, calculate needed pixel height
-			setHeight(height);
-			int neededHeight = getOffsetHeight();
-			setHeight("");
-			// Then calculate the size the content area needs to be
-			DOM.setStyleAttribute(contentNode, "height", "0");
-			DOM.setStyleAttribute(contentNode, "overflow", "hidden");
-			int h = getOffsetHeight();
-			int total = neededHeight - h;
-			if (total < 0)
-				total = 0;
-			DOM.setStyleAttribute(contentNode, "height", total + "px");
-			DOM.setStyleAttribute(contentNode, "overflow", "");
-		} else {
+			// need to fix containers height properly
+
+			boolean hasChildren = getWidget() != null;
+			Element contentEl = null;
+			String origPositioning = null;
+			if (hasChildren) {
+				// remove children temporary form normal flow to detect proper
+				// size
+				contentEl = getWidget().getElement();
+				origPositioning = DOM.getStyleAttribute(contentEl, "position");
+				DOM.setStyleAttribute(contentEl, "position", "absolute");
+			}
 			DOM.setStyleAttribute(contentNode, "height", "");
-			// We don't need overflow:auto when height is not set
+			int availableH = DOM.getElementPropertyInt(getElement(),
+					"clientHeight");
+
+			int usedH = DOM
+					.getElementPropertyInt(bottomDecoration, "offsetTop")
+					+ DOM.getElementPropertyInt(bottomDecoration,
+							"offsetHeight");
+			int contentH = availableH - usedH;
+			if (contentH < 0)
+				contentH = 0;
+			DOM.setStyleAttribute(contentNode, "height", contentH + "px");
+			if (hasChildren) {
+				DOM.setStyleAttribute(contentEl, "position", origPositioning);
+			}
+			DOM.setStyleAttribute(contentNode, "overflow", "auto");
+		} else {
 			DOM.setStyleAttribute(contentNode, "overflow", "hidden");
 		}
 		Util.runAnchestorsLayout(this);

@@ -18,11 +18,9 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
 	public static final int ORIENTATION_HORIZONTAL = 0;
 	public static final int ORIENTATION_VERTICAL = 1;
 
-	private static final int SPLITTER_SIZE = 10;
+	private static final int MIN_SIZE = 30;
 
-	private static final String MIN_SIZE = (3 * SPLITTER_SIZE) + "px";
-
-	private int orientation;
+	private int orientation = ORIENTATION_HORIZONTAL;
 	private Widget firstChild;
 	private Widget secondChild;
 
@@ -58,16 +56,16 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
 		}
 		// size below will be overridden in update from uidl, initial size
 		// needed to keep IE alive
-		setWidth(MIN_SIZE);
-		setHeight(MIN_SIZE);
+		setWidth(MIN_SIZE + "px");
+		setHeight(MIN_SIZE + "px");
 		constructDom();
 		setOrientation(orientation);
-		setSplitPosition("50%");
 		DOM.sinkEvents(splitter, (Event.MOUSEEVENTS));
 		DOM.sinkEvents(getElement(), (Event.MOUSEEVENTS));
 	}
 
 	protected void constructDom() {
+		DOM.appendChild(splitter, DOM.createDiv()); // for styling
 		DOM.appendChild(getElement(), wrapper);
 		DOM.setStyleAttribute(wrapper, "position", "relative");
 		DOM.setStyleAttribute(wrapper, "width", "100%");
@@ -90,12 +88,10 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
 		this.orientation = orientation;
 		if (orientation == ORIENTATION_HORIZONTAL) {
 			DOM.setStyleAttribute(splitter, "height", "100%");
-			DOM.setStyleAttribute(splitter, "width", SPLITTER_SIZE + "px");
 			DOM.setStyleAttribute(firstContainer, "height", "100%");
 			DOM.setStyleAttribute(secondContainer, "height", "100%");
 		} else {
 			DOM.setStyleAttribute(splitter, "width", "100%");
-			DOM.setStyleAttribute(splitter, "height", SPLITTER_SIZE + "px");
 			DOM.setStyleAttribute(firstContainer, "width", "100%");
 			DOM.setStyleAttribute(secondContainer, "width", "100%");
 		}
@@ -147,7 +143,6 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
 		}
 		int wholeSize;
 		int pixelPosition;
-		ApplicationConnection.getConsole().log("splitterpaneeeli");
 
 		switch (orientation) {
 		case ORIENTATION_HORIZONTAL:
@@ -155,8 +150,10 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
 			pixelPosition = DOM.getElementPropertyInt(splitter, "offsetLeft");
 
 			// reposition splitter in case it is out of box
-			if (pixelPosition + SPLITTER_SIZE > wholeSize) {
-				pixelPosition = wholeSize - SPLITTER_SIZE;
+			if (pixelPosition > 0 && pixelPosition + getSplitterSize() > wholeSize) {
+				pixelPosition = wholeSize - getSplitterSize();
+				if (pixelPosition < 0)
+					pixelPosition = 0;
 				setSplitPosition(pixelPosition + "px");
 				return;
 			}
@@ -164,13 +161,13 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
 			DOM
 					.setStyleAttribute(firstContainer, "width", pixelPosition
 							+ "px");
-			int secondContainerWidth = (wholeSize - pixelPosition - SPLITTER_SIZE);
+			int secondContainerWidth = (wholeSize - pixelPosition - getSplitterSize());
 			if (secondContainerWidth < 0)
 				secondContainerWidth = 0;
 			DOM.setStyleAttribute(secondContainer, "width",
 					secondContainerWidth + "px");
 			DOM.setStyleAttribute(secondContainer, "left",
-					(pixelPosition + SPLITTER_SIZE) + "px");
+					(pixelPosition + getSplitterSize()) + "px");
 
 			break;
 		case ORIENTATION_VERTICAL:
@@ -178,21 +175,24 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
 			pixelPosition = DOM.getElementPropertyInt(splitter, "offsetTop");
 
 			// reposition splitter in case it is out of box
-			if (pixelPosition + SPLITTER_SIZE > wholeSize) {
-				pixelPosition = wholeSize - SPLITTER_SIZE;
+			if (pixelPosition > 0 && pixelPosition + getSplitterSize() > wholeSize) {
+				pixelPosition = wholeSize - getSplitterSize();
+				if (pixelPosition < 0)
+					pixelPosition = 0;
 				setSplitPosition(pixelPosition + "px");
 				return;
 			}
 
 			DOM.setStyleAttribute(firstContainer, "height", pixelPosition
 					+ "px");
-			int secondContainerHeight = (wholeSize - pixelPosition - SPLITTER_SIZE);
+			int secondContainerHeight = (wholeSize - pixelPosition - getSplitterSize());
 			if (secondContainerHeight < 0)
 				secondContainerHeight = 0;
 			DOM.setStyleAttribute(secondContainer, "height",
 					secondContainerHeight + "px");
 			DOM.setStyleAttribute(secondContainer, "top",
-					(pixelPosition + SPLITTER_SIZE) + "px");
+					(pixelPosition + getSplitterSize()) + "px");
+			break;
 		default:
 			ApplicationConnection.getConsole().log("???");
 
@@ -222,16 +222,16 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
 		super.setHeight(height);
 		// give sane height
 		getOffsetHeight(); // shake IE
-		if (getOffsetHeight() < SPLITTER_SIZE)
-			super.setHeight((SPLITTER_SIZE * 3) + "px");
+		if (getOffsetHeight() < MIN_SIZE)
+			super.setHeight(MIN_SIZE + "px");
 	}
 
 	public void setWidth(String width) {
 		super.setWidth(width);
 		// give sane width
 		getOffsetWidth(); // shake IE
-		if (getOffsetWidth() < SPLITTER_SIZE)
-			super.setWidth((SPLITTER_SIZE * 3) + "px");
+		if (getOffsetWidth() < MIN_SIZE)
+			super.setWidth(MIN_SIZE + "px");
 	}
 
 	public void onBrowserEvent(Event event) {
@@ -286,8 +286,8 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
 		int newX = origX + x - origMouseX;
 		if (newX < 0)
 			newX = 0;
-		if (newX + SPLITTER_SIZE > getOffsetWidth())
-			newX = getOffsetWidth() - SPLITTER_SIZE;
+		if (newX + getSplitterSize() > getOffsetWidth())
+			newX = getOffsetWidth() - getSplitterSize();
 		DOM.setStyleAttribute(splitter, "left", newX + "px");
 	}
 
@@ -296,8 +296,8 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
 		if (newY < 0)
 			newY = 0;
 
-		if (newY + SPLITTER_SIZE > getOffsetHeight())
-			newY = getOffsetHeight() - SPLITTER_SIZE;
+		if (newY + getSplitterSize() > getOffsetHeight())
+			newY = getOffsetHeight() - getSplitterSize();
 		DOM.setStyleAttribute(splitter, "top", newY + "px");
 	}
 
@@ -305,6 +305,17 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
 		DOM.releaseCapture(getElement());
 		resizing = false;
 		onMouseMove(event);
+	}
+
+	private static int splitterSize = -1;
+
+	private int getSplitterSize() {
+		if (splitterSize < 0) {
+			if (isAttached()) {
+				splitterSize = DOM.getElementPropertyInt(splitter, "offsetWidth");
+			}
+		}
+		return splitterSize;
 	}
 
 }

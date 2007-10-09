@@ -336,8 +336,6 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 		HeaderCell cell = tHead.getHeaderCell(colIndex);
 		cell.setWidth(w);
 		tBody.setColWidth(colIndex, w);
-		String cid = cell.getColKey();
-		;
 	}
 
 	private int getColWidth(String colKey) {
@@ -353,10 +351,6 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 				return r;
 		}
 		return null;
-	}
-
-	private int getRenderedRowCount() {
-		return tBody.getLastRendered() - tBody.getFirstRendered();
 	}
 
 	private void reOrderColumn(String columnKey, int newIndex) {
@@ -564,6 +558,12 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 
 	public void iLayout() {
 		if (height != null) {
+			
+			if(height.equals("100%")) {
+				// we define height in pixels with 100% not to include borders
+				setHeight(height);
+			}
+			
 			int contentH = (DOM.getElementPropertyInt(getElement(),
 					"clientHeight") - tHead.getOffsetHeight());
 			if (contentH < 0)
@@ -1884,6 +1884,32 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 
 	public boolean remove(Widget w) {
 		return panel.remove(w);
+	}
+
+	public void setHeight(String height) {
+		// workaround very common 100% height problem - extract borders
+		if(height.equals("100%")) {
+			final int borders = getBorderSpace();
+			Element elem = getElement();
+			Element parentElem = DOM.getParent(elem);
+
+			// put table away from flow for a moment
+			DOM.setStyleAttribute(getElement(), "position", "absolute");
+			// get containers natural space for table
+			int availPixels = DOM.getElementPropertyInt(parentElem, "clientHeight");
+			// put table back to flow
+			DOM.setStyleAttribute(getElement(), "position", "static");
+			// set 100% height with borders
+			super.setHeight((availPixels - borders) + "px");
+		} else {
+			// normally height don't include borders
+			super.setHeight(height);
+		}
+	}
+
+	private int getBorderSpace() {
+		Element el = getElement();
+		return DOM.getElementPropertyInt(el, "offsetHeight") - DOM.getElementPropertyInt(el, "clientHeight");
 	}
 
 }
