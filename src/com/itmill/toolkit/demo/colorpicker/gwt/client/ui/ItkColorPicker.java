@@ -10,7 +10,7 @@ public class ItkColorPicker extends GwtColorPicker implements Paintable {
 	public static final String CLASSNAME = "example-colorpicker";
 
 	/** Component identifier in UIDL communications. */
-	String uidl_id;
+	String uidlId;
 
 	/** Reference to the server connection object. */
 	ApplicationConnection client;
@@ -37,8 +37,8 @@ public class ItkColorPicker extends GwtColorPicker implements Paintable {
 	 */
 	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 		// This call should be made first. Ensure correct implementation,
-		// but don't let container manage caption etc.
-		if (client.updateComponent(this, uidl, false))
+		// and let the containing layout manage caption, etc.
+		if (client.updateComponent(this, uidl, true))
 			return;
 
 		// Save reference to server connection object to be able to send
@@ -46,7 +46,7 @@ public class ItkColorPicker extends GwtColorPicker implements Paintable {
 		this.client = client;
 
 		// Save the UIDL identifier for the component
-		uidl_id = uidl.getId();
+		uidlId = uidl.getId();
 
 		// Get value received from server and actualize it in the GWT component
 		setColor(uidl.getStringVariable("colorname"));
@@ -64,11 +64,11 @@ public class ItkColorPicker extends GwtColorPicker implements Paintable {
 		// Updating the state to the server can not be done before
 		// the server connection is known, i.e., before updateFromUIDL()
 		// has been called.
-		if (uidl_id == null || client == null)
+		if (uidlId == null || client == null)
 			return;
 
 		// Communicate the user interaction parameters to server. This call will
 		// initiate an AJAX request to the server.
-		client.updateVariable(uidl_id, "colorname", newcolor, true);
+	  	client.updateVariable(uidlId, "colorname", newcolor, true);
 	}
 }
