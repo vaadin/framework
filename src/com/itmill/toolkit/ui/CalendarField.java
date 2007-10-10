@@ -20,6 +20,7 @@ public class CalendarField extends DateField implements Container.Viewer {
 	private Date maxDate;
 
 	private Container dataSource;
+	private Object itemStyleNamePropertyId;
 	private Object itemStartPropertyId;
 	private Object itemEndPropertyId;
 	private Object itemTitlePropertyId;
@@ -152,6 +153,14 @@ public class CalendarField extends DateField implements Container.Viewer {
 		return false;
 	}
 
+	public Object getItemStyleNamePropertyId() {
+		return itemStyleNamePropertyId;
+	}
+
+	public void setItemStyleNamePropertyId(Object propertyId) {
+		this.itemStyleNamePropertyId = propertyId;
+	}
+
 	public Object getItemStartPropertyId() {
 		return itemStartPropertyId;
 	}
@@ -261,8 +270,11 @@ public class CalendarField extends DateField implements Container.Viewer {
 				if (start != null) {
 					if ((start.getMonth() <= month || end.getMonth() >= month)) {
 						target.startTag("item");
-						// TODO different id!
+						// TODO different id?
 						target.addAttribute("id", itemId.hashCode());
+						p = item.getItemProperty(this.itemStyleNamePropertyId);
+						String styleName = (String) p.getValue();
+						target.addAttribute("styleName", styleName);
 						target.addAttribute("start", "" + start.getTime());
 						if (end != start) {
 							target.addAttribute("end", "" + end.getTime());
