@@ -413,6 +413,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 	}
 
 	protected void onDetach() {
+		rowRequestHandler.cancel();
 		super.onDetach();
 		// ensure that scrollPosElement will be detached
 		if (scrollPositionElement != null) {
@@ -549,7 +550,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 							.setReqFirstRow(tBody.getLastRendered() + 1);
 					rowRequestHandler
 							.setReqRows((int) (pageLength * CACHE_RATE));
-					rowRequestHandler.deferRowFetch();
+					rowRequestHandler.deferRowFetch(0);
 				}
 			}
 		});
@@ -689,9 +690,14 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 		private int reqFirstRow = 0;
 		private int reqRows = 0;
 
+		
 		public void deferRowFetch() {
+			deferRowFetch(250);
+		}
+		
+		public void deferRowFetch(int msec) {
 			if (reqRows > 0 && reqFirstRow < totalRows) {
-				schedule(250);
+				schedule(msec);
 
 				// tell scroll position to user if currently "visible" rows are
 				// not rendered
