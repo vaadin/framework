@@ -11,10 +11,12 @@ import com.google.gwt.user.client.ui.TabBar;
 import com.google.gwt.user.client.ui.TabListener;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
+import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
+import com.itmill.toolkit.terminal.gwt.client.Util;
 
-public class ITabsheet extends FlowPanel implements Paintable {
+public class ITabsheet extends FlowPanel implements Paintable, ContainerResizedListener {
 
 	public static final String CLASSNAME = "i-tabsheet";
 
@@ -46,6 +48,8 @@ public class ITabsheet extends FlowPanel implements Paintable {
 		}
 
 	};
+
+	private String height;
 
 	public ITabsheet() {
 		setStyleName(CLASSNAME);
@@ -84,17 +88,9 @@ public class ITabsheet extends FlowPanel implements Paintable {
 
 		// Try to calculate the height as close as possible
 		if (h != null) {
-			// First, calculate needed pixel height
 			setHeight(h);
-			int neededHeight = getOffsetHeight();
-			setHeight("");
-			// Then calculate the size the content area needs to be
-			tp.setHeight("0");
-			DOM.setStyleAttribute(tp.getElement(), "overflow", "hidden");
-			int height = getOffsetHeight();
-			tp.setHeight(neededHeight - height + "px");
-			DOM.setStyleAttribute(tp.getElement(), "overflow", "");
 		} else {
+			this.height = null;
 			tp.setHeight("auto");
 			// We don't need overflow:auto when tabsheet height is not set
 			DOM.setStyleAttribute(tp.getElement(), "overflow", "hidden");
@@ -167,5 +163,26 @@ public class ITabsheet extends FlowPanel implements Paintable {
 		Element rest = DOM.getChild(
 				DOM.getChild(tr, DOM.getChildCount(tr) - 1), 0);
 		DOM.removeElementAttribute(rest, "style");
+	}
+	
+	public void setHeight(String height) {
+		this.height = height;
+		iLayout();
+	}
+
+	public void iLayout() {
+		if(height != null) {
+			// First, calculate needed pixel height
+			super.setHeight(height);
+			int neededHeight = getOffsetHeight();
+			super.setHeight("");
+			// Then calculate the size the content area needs to be
+			tp.setHeight("0");
+			DOM.setStyleAttribute(tp.getElement(), "overflow", "hidden");
+			int pixelHeight = getOffsetHeight();
+			tp.setHeight(neededHeight - pixelHeight + "px");
+			DOM.setStyleAttribute(tp.getElement(), "overflow", "");			
+		}
+		Util.runAnchestorsLayout(this);
 	}
 }
