@@ -27,6 +27,7 @@ public class SampleDB {
 	public class Resource {
 		public static final String TABLE = "RESOURCE";
 		public static final String PROPERTY_ID_ID = TABLE + "_ID";
+		public static final String PROPERTY_ID_STYLENAME = TABLE + "_STYLENAME";
 		public static final String PROPERTY_ID_NAME = TABLE + "_NAME";
 		public static final String PROPERTY_ID_DESCRIPTION = TABLE
 				+ "_DESCRIPTION";
@@ -67,7 +68,8 @@ public class SampleDB {
 			+ ") )";
 	private static final String CREATE_TABLE_RESOURCE = "CREATE TABLE "
 			+ Resource.TABLE + " (" + " " + Resource.PROPERTY_ID_ID
-			+ " INTEGER IDENTITY" + ", " + Resource.PROPERTY_ID_NAME
+			+ " INTEGER IDENTITY" + ", " + Resource.PROPERTY_ID_STYLENAME
+			+ " VARCHAR(20) NOT NULL" + ", " + Resource.PROPERTY_ID_NAME
 			+ " VARCHAR(30) NOT NULL" + ", " + Resource.PROPERTY_ID_DESCRIPTION
 			+ " VARCHAR(100)" + ", " + Resource.PROPERTY_ID_LOCATIONX
 			+ " DOUBLE" + ", " + Resource.PROPERTY_ID_LOCATIONY + " DOUBLE"
@@ -403,83 +405,95 @@ public class SampleDB {
 		 */
 		Object[][] resources = {
 				// Turku
-				{ "01 Ford Mondeo", "w/ company logo", "Turku",
+				{ "01", "01 Ford Mondeo", "w/ company logo", "Turku",
 						new Double(60.510857), new Double(22.275424) },
-				{ "02 Citroen Jumper", "w/ company logo. 12m3 storage space.",
-						"Turku", new Double(60.452171), new Double(22.2995) },
-				{ "03 Saab 93", "Cabriolet<br/>Keys from the rental desk.",
-						"Turku", new Double(60.4507), new Double(22.295551) },
-				{ "04 Volvo S60", "Key from the rental desk.", "Turku",
+				{ "02", "02 Citroen Jumper",
+						"w/ company logo. 12m3 storage space.", "Turku",
+						new Double(60.452171), new Double(22.2995) },
+				{ "03", "03 Saab 93",
+						"Cabriolet<br/>Keys from the rental desk.", "Turku",
+						new Double(60.4507), new Double(22.295551) },
+				{ "04", "04 Volvo S60", "Key from the rental desk.", "Turku",
 						new Double(60.434722), new Double(22.224398) },
-				{ "05 Smart fourtwo", "Cabrio. Keys from infodesk.", "Turku",
-						new Double(60.508970), new Double(22.264790) },
+				{ "05", "05 Smart fourtwo", "Cabrio. Keys from infodesk.",
+						"Turku", new Double(60.508970), new Double(22.264790) },
 				// Helsinki
-				{ "06 Smart fourtwo", "Cabrio. Keys from infodesk.",
+				{ "06", "06 Smart fourtwo", "Cabrio. Keys from infodesk.",
 						"Helsinki", new Double(60.17175), new Double(24.939029) },
-				{ "07 Smart fourtwo", "Cabrio. Keys from infodesk.",
+				{ "07", "07 Smart fourtwo", "Cabrio. Keys from infodesk.",
 						"Helsinki", new Double(60.17175), new Double(24.939029) },
-				{ "08 Smart fourtwo", "Cabrio. Keys from infodesk.",
+				{ "08", "08 Smart fourtwo", "Cabrio. Keys from infodesk.",
 						"Helsinki", new Double(60.166579),
 						new Double(24.953899) },
-				{ "09 Volvo S60", "Keys from infodesk.", "Helsinki",
+				{ "09", "09 Volvo S60", "Keys from infodesk.", "Helsinki",
 						new Double(60.317832), new Double(24.967289) },
-				{ "10 Saab 93", "Keys from infodesk.", "Helsinki",
+				{ "10", "10 Saab 93", "Keys from infodesk.", "Helsinki",
 						new Double(60.249193), new Double(25.045921) },
 				// Silicon Valley
-				{ "11 Ford Mustang", "Keys from Acme clerk.", "Silicon Valley",
-						new Double(37.615853), new Double(-122.386384) },
-				{ "12 Ford Mondeo", "Keys from infodesk.", "Silicon Valley",
-						new Double(37.365028), new Double(-121.922654) },
-				{ "13 Ford Mustang", "GT Cal Special. Keys from guard.",
+				{ "11", "11 Ford Mustang", "Keys from Acme clerk.",
+						"Silicon Valley", new Double(37.615853),
+						new Double(-122.386384) },
+				{ "12", "12 Ford Mondeo", "Keys from infodesk.",
+						"Silicon Valley", new Double(37.365028),
+						new Double(-121.922654) },
+				{ "13", "13 Ford Mustang", "GT Cal Special. Keys from guard.",
 						"Silicon Valley", new Double(37.403812),
 						new Double(-121.977425) },
-				{ "14 Ford Mustang", "GT Cal Special. Keys from guard.",
+				{ "14", "14 Ford Mustang", "GT Cal Special. Keys from guard.",
 						"Silicon Valley", new Double(37.403812),
 						new Double(-121.977425) },
-				{ "15 Land Rover", "Keys from infodesk.", "Silicon Valley",
-						new Double(37.365028), new Double(-121.922654) },
+				{ "15", "15 Land Rover", "Keys from infodesk.",
+						"Silicon Valley", new Double(37.365028),
+						new Double(-121.922654) },
+				{ "16", "16 Land Rover", "Keys from infodesk.",
+						"Silicon Valley", new Double(37.365028),
+						new Double(-121.922654) },
 				// Paris
-				{ "17 Peugeot 308", "Keys from infodesk.", "Paris",
+				{ "17", "17 Peugeot 308", "Keys from infodesk.", "Paris",
 						new Double(48.844756), new Double(2.372784) },
-				{ "18 Citroën C6", "Keys from rental desk.", "Paris",
+				{ "18", "18 Citroën C6", "Keys from rental desk.", "Paris",
 						new Double(49.007253), new Double(2.545025) },
-				{ "19 Citroën C6", "Keys from infodesk.", "Paris",
+				{ "19", "19 Citroën C6", "Keys from infodesk.", "Paris",
 						new Double(48.729061), new Double(2.368087) },
-				{ "20 Peugeot 308", "Keys from ticket sales.", "Paris",
+				{ "20", "20 Peugeot 308", "Keys from ticket sales.", "Paris",
 						new Double(48.880931), new Double(2.356988) },
-				{ "21 Peugeot 308", "Keys from ticket sales.", "Paris",
+				{ "21", "21 Peugeot 308", "Keys from ticket sales.", "Paris",
 						new Double(48.876479), new Double(2.358161) },
 				// STHLM
-				{ "22 Volvo S60", "Keys from infodesk.", "Stockholm",
+				{ "22", "22 Volvo S60", "Keys from infodesk.", "Stockholm",
 						new Double(59.350414), new Double(18.106574) },
-				{ "23 Saab 93", "Keys from infodesk.", "Stockholm",
+				{ "23", "23 Saab 93", "Keys from infodesk.", "Stockholm",
 						new Double(59.355905), new Double(17.946784) },
-				{ "24 Smart fourtwo", "Keys from infodesk.", "Stockholm",
+				{ "24", "24 Smart fourtwo", "Keys from infodesk.", "Stockholm",
 						new Double(59.315939), new Double(18.095904) },
-				{ "25 Smart fourtwo", "Keys from infodesk.", "Stockholm",
+				{ "25", "25 Smart fourtwo", "Keys from infodesk.", "Stockholm",
 						new Double(59.330716), new Double(18.058702) },
 				// Boston
-				{ "26 Ford Mustang", "Keys from infodesk.", "Boston",
+				{ "26", "26 Ford Mustang", "Keys from infodesk.", "Boston",
 						new Double(42.366588), new Double(-71.020955) },
-				{ "27 Smart fourtwo", "Keys from infodesk.", "Boston",
+				{ "27", "27 Smart fourtwo", "Keys from infodesk.", "Boston",
 						new Double(42.365419), new Double(-71.061748) },
-				{ "28 Volvo S60", "Keys from Seaport Hotel reception.",
+				{ "28", "28 Volvo S60", "Keys from Seaport Hotel reception.",
 						"Boston", new Double(42.34811), new Double(-71.041127) },
-				{ "29 Smart fourtwo", "Keys from Seaport Hotel reception.",
-						"Boston", new Double(42.348072), new Double(-71.041315) },
+				{ "29", "29 Smart fourtwo",
+						"Keys from Seaport Hotel reception.", "Boston",
+						new Double(42.348072), new Double(-71.041315) },
 
 		};
 
 		String q = "INSERT INTO " + Resource.TABLE + "("
+				+ Resource.PROPERTY_ID_STYLENAME + ","
 				+ Resource.PROPERTY_ID_NAME + ","
 				+ Resource.PROPERTY_ID_DESCRIPTION + ","
 				+ Resource.PROPERTY_ID_CATEGORY + ","
 				+ Resource.PROPERTY_ID_LOCATIONX + ","
-				+ Resource.PROPERTY_ID_LOCATIONY + ")" + " VALUES (?,?,?,?,?)";
+				+ Resource.PROPERTY_ID_LOCATIONY + ")"
+				+ " VALUES (?,?,?,?,?,?)";
 		try {
 			PreparedStatement stmt = connection.prepareStatement(q);
 			for (int i = 0; i < resources.length; i++) {
 				int j = 0;
+				stmt.setString(j + 1, (String) resources[i][j++]);
 				stmt.setString(j + 1, (String) resources[i][j++]);
 				stmt.setString(j + 1, (String) resources[i][j++]);
 				stmt.setString(j + 1, (String) resources[i][j++]);
