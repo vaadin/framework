@@ -3,8 +3,7 @@
 <link REL="stylesheet" TYPE="text/css">
 </head>
 
-<body>
-<div id="_UID_main" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"><img src="img/header.png" />
+<body><div id="_UID_main" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"><img src="img/header.png" />
 	
 	<div id="_UID_features" style="top: 62px; width: 200px; position: absolute; overflow: auto; left: 0;" location="tree">
 		<div style="width: 100%; height: 100%; border: 1px solid red;">tree</div>
@@ -67,7 +66,7 @@ _UID_layout = function() {
 	var animationNeeded = false;
 
 	// References to all elements
-	var mainDiv = document.getElementById("_UID_main"); 
+	var mainDiv = document.getElementById("_UID_main");
 	if (mainDiv == null) { alert("maindiv is null"); return;}
 	var featuresDiv = document.getElementById("_UID_features");
 	var demoDiv = document.getElementById("_UID_demo");
@@ -169,6 +168,10 @@ _UID_layout = function() {
 	if (animationNeeded) {
 		setTimeout("_UID_layout()",30);
 	}
+	
+	/* call custom layouts bridge to notify sub components */
+	mainDiv.notifyChildrenOfSizeChange();
+	
 };
 
 /** Recalculate tabs content width */
@@ -229,7 +232,14 @@ _UID_initFeatureBrowserLayout = function() {
 	dividerDiv.isActive = false;
 	dividerDiv.onmousedown = _UID_dividerUpdate;
 	
-	window.onresize=_UID_layout; 
+	var mainDiv = document.getElementById("_UID_main");
+	
+	/* this will be called by custom layout when its containers size has changed */
+	mainDiv.iLayoutJS = function() {
+		_UID_layout();
+	};
+	
+	
 	_UID_layout();
 };
 

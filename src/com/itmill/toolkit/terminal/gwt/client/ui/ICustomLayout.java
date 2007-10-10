@@ -11,8 +11,10 @@ import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Caption;
 import com.itmill.toolkit.terminal.gwt.client.CaptionWrapper;
 import com.itmill.toolkit.terminal.gwt.client.Container;
+import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
+import com.itmill.toolkit.terminal.gwt.client.Util;
 
 /**
  * Custom Layout implements complex layout defined with HTML template.
@@ -20,7 +22,8 @@ import com.itmill.toolkit.terminal.gwt.client.UIDL;
  * @author IT Mill
  * 
  */
-public class ICustomLayout extends ComplexPanel implements Paintable, Container {
+public class ICustomLayout extends ComplexPanel implements Paintable,
+		Container, ContainerResizedListener {
 
 	/** Location-name to containing element in DOM map */
 	private HashMap locationToElement = new HashMap();
@@ -159,6 +162,8 @@ public class ICustomLayout extends ComplexPanel implements Paintable, Container 
 			throw (new IllegalStateException(
 					"Could not find IView; maybe updateFromUIDL() was called before attaching the widget?"));
 		}
+
+		publishResizedFunction(DOM.getFirstChild(getElement()));
 	}
 
 	private boolean hasTemplate() {
@@ -338,4 +343,60 @@ public class ICustomLayout extends ComplexPanel implements Paintable, Container 
 		locationToWidget.clear();
 		widgetToCaptionWrapper.clear();
 	}
+
+	public void iLayout() {
+		if (!iLayoutJS(DOM.getFirstChild(getElement()))) {
+			Util.runAnchestorsLayout(this);
+		}
+	}
+
+	/**
+	 * This method is published to JS side with the same name into first DOM
+	 * node of custom layout. This way if one implements some resizeable
+	 * containers in custom layout he/she can notify children after resize.
+	 */
+	public void notifyChildrenOfSizeChange() {
+		Util.runAnchestorsLayout(this);
+	}
+
+	public void onDetach() {
+		detachResizedFunction(DOM.getFirstChild(getElement()));
+	}
+
+	private native void detachResizedFunction(Element element)
+	/*-{
+		element.notifyChildrenOfSizeChange = null;
+	}-*/;
+
+	private native void publishResizedFunction(Element element)
+	/*-{
+		var self = this;
+		element.notifyChildrenOfSizeChange = function() {
+			self.@com.itmill.toolkit.terminal.gwt.client.ui.ICustomLayout::notifyChildrenOfSizeChange()();
+		};
+	}-*/;
+
+	/**
+	 * In custom layout one may want to run layout functions made with
+	 * JavaScript. This function tests if one exists (with name "iLayoutJS" in
+	 * layouts first DOM node) and runs if it. Return value is used to determine
+	 * is children needs to be notified of size changes.
+	 * 
+	 * @param el
+	 * @return true if layout function was run and it returned true.
+	 */
+	private native boolean iLayoutJS(Element el)
+	/*-{
+		if(el && el.iLayoutJS) {
+			try {
+				return el.iLayoutJS();
+			} catch (e) {
+				alert("bar");
+				return false;
+			}
+		} else {
+			alert("boo");
+			return false;
+		}
+	}-*/;
 }
