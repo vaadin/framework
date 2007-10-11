@@ -37,6 +37,7 @@ import com.itmill.toolkit.terminal.gwt.client.ui.ITwinColSelect;
 import com.itmill.toolkit.terminal.gwt.client.ui.IUnknownComponent;
 import com.itmill.toolkit.terminal.gwt.client.ui.IUpload;
 import com.itmill.toolkit.terminal.gwt.client.ui.IWindow;
+import com.itmill.toolkit.terminal.gwt.client.ui.richtextarea.IRichTextArea;
 
 public class DefaultWidgetSet implements WidgetSet {
 
@@ -154,6 +155,9 @@ public class DefaultWidgetSet implements WidgetSet {
 		} else if ("com.itmill.toolkit.terminal.gwt.client.ui.IExpandLayout"
 				.equals(className)) {
 			return new IExpandLayout();
+		} else if ("com.itmill.toolkit.terminal.gwt.client.ui.richtextarea.IRichTextArea"
+				.equals(className)) {
+			return new IRichTextArea();
 		}
 
 		return new IUnknownComponent();
@@ -190,13 +194,13 @@ public class DefaultWidgetSet implements WidgetSet {
 		} else if ("tree".equals(tag)) {
 			return "com.itmill.toolkit.terminal.gwt.client.ui.ITree";
 		} else if ("select".equals(tag)) {
-			if(uidl.hasAttribute("type")) {
+			if (uidl.hasAttribute("type")) {
 				String type = uidl.getStringAttribute("type");
-				if(type.equals("twincol"))
+				if (type.equals("twincol"))
 					return "com.itmill.toolkit.terminal.gwt.client.ui.ITwinColSelect";
-				if(type.equals("optiongroup"))
+				if (type.equals("optiongroup"))
 					return "com.itmill.toolkit.terminal.gwt.client.ui.IOptionGroup";
-				if(type.equals("native"))
+				if (type.equals("native"))
 					return "com.itmill.toolkit.terminal.gwt.client.ui.ISelect";
 			} else {
 				return "com.itmill.toolkit.terminal.gwt.client.ui.IFilterSelect";
@@ -210,7 +214,9 @@ public class DefaultWidgetSet implements WidgetSet {
 		} else if ("customlayout".equals(tag)) {
 			return "com.itmill.toolkit.terminal.gwt.client.ui.ICustomLayout";
 		} else if ("textfield".equals(tag)) {
-			if (uidl.hasAttribute("multiline")) {
+			if (uidl.getBooleanAttribute("richtext")) {
+				return "com.itmill.toolkit.terminal.gwt.client.ui.richtextarea.IRichTextArea";
+			} else if (uidl.hasAttribute("multiline")) {
 				return "com.itmill.toolkit.terminal.gwt.client.ui.ITextArea";
 			} else if (uidl.getBooleanAttribute("secret")) {
 				return "com.itmill.toolkit.terminal.gwt.client.ui.IPasswordField";
