@@ -29,10 +29,14 @@ public class IButton extends Button implements Paintable {
 	public IButton() {
 		setStyleName(CLASSNAME);
 		addClickListener(new ClickListener() {
-
 			public void onClick(Widget sender) {
 				if (id == null || client == null)
 					return;
+				/*
+				 * TODO isolata workaround. Safari don't always seem to fire
+				 * onblur previously focused component before button is clicked.
+				 */
+				IButton.this.setFocus(true);
 				client.updateVariable(id, "state", true, true);
 			}
 		});
