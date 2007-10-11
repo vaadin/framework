@@ -23,3 +23,11 @@
 	color: #222;
 	border: none;
 }
+
+.i-richtextarea {
+	border: 1px solid #b6b6b6;
+	overflow: hidden;
+}
+.i-richtextarea iframe {
+	border: 0;
+}
