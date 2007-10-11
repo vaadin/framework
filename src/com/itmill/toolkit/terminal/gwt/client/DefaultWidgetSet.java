@@ -190,10 +190,14 @@ public class DefaultWidgetSet implements WidgetSet {
 		} else if ("tree".equals(tag)) {
 			return "com.itmill.toolkit.terminal.gwt.client.ui.ITree";
 		} else if ("select".equals(tag)) {
-			if ("optiongroup".equals(uidl.getStringAttribute("style"))) {
-				return "com.itmill.toolkit.terminal.gwt.client.ui.IOptionGroup";
-			} else if ("twincol".equals(uidl.getStringAttribute("style"))) {
-				return "com.itmill.toolkit.terminal.gwt.client.ui.ITwinColSelect";
+			if(uidl.hasAttribute("type")) {
+				String type = uidl.getStringAttribute("type");
+				if(type.equals("twincol"))
+					return "com.itmill.toolkit.terminal.gwt.client.ui.ITwinColSelect";
+				if(type.equals("optiongroup"))
+					return "com.itmill.toolkit.terminal.gwt.client.ui.IOptionGroup";
+				if(type.equals("native"))
+					return "com.itmill.toolki.terminal.gwt.client.ui.ISelect";
 			} else {
 				return "com.itmill.toolkit.terminal.gwt.client.ui.IFilterSelect";
 			}
