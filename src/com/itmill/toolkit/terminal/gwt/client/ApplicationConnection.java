@@ -67,21 +67,24 @@ public class ApplicationConnection implements FocusListener {
 		return console;
 	}
 
-	private native static boolean isDebugMode() /*-{
-	 var uri = $wnd.location;
-	 var re = /debug[^\/]*$/;
-	 return re.test(uri);
-	 }-*/;
+	private native static boolean isDebugMode()
+	/*-{
+		var uri = $wnd.location;
+		var re = /debug[^\/]*$/;
+		return re.test(uri);
+	}-*/;
 
-	public native String getAppUri()/*-{
+	public native String getAppUri()
+	/*-{
 		var u = $wnd.itmtk.appUri;
 		if (u.indexOf("/") != 0 && u.indexOf("http") != 0) u = "../../../" +u;
 		 return u;
-		 }-*/;
+	}-*/;
 
-	private native String getPathInfo()/*-{
+	private native String getPathInfo()
+	/*-{
 		 return $wnd.itmtk.pathInfo;
-		 }-*/;
+	 }-*/;
 
 	private void makeUidlRequest(String requestData) {
 		console.log("Making UIDL Request with params: " + requestData);
@@ -197,9 +200,10 @@ public class ApplicationConnection implements FocusListener {
 	}
 
 	// Redirect browser
-	private static native void redirect(String url)/*-{
+	private static native void redirect(String url)
+	/*-{
 		 $wnd.location = url;
-		 }-*/;
+	 }-*/;
 
 	public void registerPaintable(String id, Paintable paintable) {
 		idToPaintable.put(id, paintable);
@@ -267,9 +271,10 @@ public class ApplicationConnection implements FocusListener {
 		makeUidlRequest(req.toString());
 	}
 
-	private static native String escapeString(String value) /*-{
-	 return encodeURIComponent(value);
-	 }-*/;
+	private static native String escapeString(String value) 
+	/*-{
+		return encodeURIComponent(value);
+	}-*/;
 
 	public void updateVariable(String paintableId, String variableName,
 			String newValue, boolean immediate) {
