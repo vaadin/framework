@@ -1,8 +1,10 @@
 .i-progressindicator {
-	background: red;
-	height: 20px;
+	background: #dfe2e4 url(img/base.gif);
+	height: 9px;
+	border: 1px solid #b6bbbc;
 }
+
 .i-progressindicator div {
-	background: green;
-	height:100%;
+	background: #f7f9f9 url(img/progress.png);
+	height: 9px;
 }
