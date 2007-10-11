@@ -32,7 +32,7 @@ import com.itmill.toolkit.data.*;
 
 /**
  * This validator is used for validating properties that do or do not allow null
- * values.
+ * values. By default, nulls are not allowed.
  * 
  * @author IT Mill Ltd.
  * @version
@@ -92,9 +92,9 @@ public class NullValidator implements Validator {
 	}
 
 	/**
-	 * Sets if nulls are to be allowed.
+	 * Sets if nulls are to be allowed. 
 	 * 
-	 * @param allowNull
+	 * @param allowNull If true, only nulls are allowed. If false only non-nulls are allowed.
 	 *            Do we allow nulls?
 	 */
 	public void setNullAllowed(boolean allowNull) {
