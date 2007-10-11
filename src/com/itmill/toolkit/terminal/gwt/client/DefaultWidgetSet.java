@@ -197,7 +197,7 @@ public class DefaultWidgetSet implements WidgetSet {
 				if(type.equals("optiongroup"))
 					return "com.itmill.toolkit.terminal.gwt.client.ui.IOptionGroup";
 				if(type.equals("native"))
-					return "com.itmill.toolki.terminal.gwt.client.ui.ISelect";
+					return "com.itmill.toolkit.terminal.gwt.client.ui.ISelect";
 			} else {
 				return "com.itmill.toolkit.terminal.gwt.client.ui.IFilterSelect";
 			}
