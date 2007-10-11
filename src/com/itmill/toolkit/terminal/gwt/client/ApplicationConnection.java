@@ -420,9 +420,11 @@ public class ApplicationConnection implements FocusListener {
 		if (!visible)
 			return true;
 
+		component.setStyleName(component.getStylePrimaryName());
 		// add additional styles as css classes
-		if (uidl.hasAttribute("style"))
+		if (uidl.hasAttribute("style")) {
 			component.addStyleName(uidl.getStringAttribute("style"));
+		}
 
 		return false;
 	}
