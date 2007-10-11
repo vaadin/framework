@@ -1,7 +1,5 @@
 package com.itmill.toolkit.tests;
 
-import sun.tools.jconsole.CreateMBeanDialog;
-
 import com.itmill.toolkit.event.Action;
 import com.itmill.toolkit.event.Action.Handler;
 import com.itmill.toolkit.ui.Button;
