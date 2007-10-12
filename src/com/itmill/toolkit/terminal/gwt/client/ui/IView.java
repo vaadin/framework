@@ -52,9 +52,6 @@ public class IView extends SimplePanel implements Paintable,
 
 		this.id = uidl.getId();
 
-		// Start drawing from scratch
-		clear();
-
 		// Some attributes to note
 		theme = uidl.getStringAttribute("theme");
 		com.google.gwt.user.client.Window.setTitle(uidl
@@ -76,6 +73,7 @@ public class IView extends SimplePanel implements Paintable,
 		// Draw this application level window
 		UIDL childUidl = uidl.getChildUIDL(childIndex);
 		Paintable lo = (Paintable) client.getWidget(childUidl);
+		
 		if (layout != null) {
 			if (layout != lo) {
 				// remove old
@@ -86,8 +84,9 @@ public class IView extends SimplePanel implements Paintable,
 			}
 		} else {
 			setWidget((Widget) lo);
+			layout = lo;
 		}
-		lo.updateFromUIDL(childUidl, client);
+		layout.updateFromUIDL(childUidl, client);
 
 		// Update subwindows
 		HashSet removedSubWindows = new HashSet(subWindows);

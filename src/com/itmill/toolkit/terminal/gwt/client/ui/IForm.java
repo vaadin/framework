@@ -22,6 +22,10 @@ public class IForm extends SimplePanel implements Paintable {
 
 	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 		this.client = client;
+		
+		if(client.updateComponent(this, uidl, true))
+			return;
+		
 		UIDL layoutUidl = uidl.getChildUIDL(0);
 		if (lo == null) {
 			lo = (Container) client.getWidget(layoutUidl);

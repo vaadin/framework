@@ -39,6 +39,9 @@ public class ILink extends HTML implements Paintable, ClickListener {
 
 	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 
+		if (client.updateComponent(this, uidl, false))
+			return;
+
 		enabled = uidl.hasAttribute("disabled") ? false : true;
 		readonly = uidl.hasAttribute("readonly") ? true : false;
 
