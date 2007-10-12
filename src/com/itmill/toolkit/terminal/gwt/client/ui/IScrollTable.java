@@ -550,7 +550,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 							.setReqFirstRow(tBody.getLastRendered() + 1);
 					rowRequestHandler
 							.setReqRows((int) (pageLength * CACHE_RATE));
-					rowRequestHandler.deferRowFetch(0);
+					rowRequestHandler.deferRowFetch(1);
 				}
 			}
 		});
