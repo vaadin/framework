@@ -1,15 +1,48 @@
+/* Reservr styles */
+html, body {
+	background-color: #E9ECED;
+}
+#header {
+	font-family:"Trebuchet MS",geneva,helvetica,arial,tahoma,verdana,sans-serif;
+	padding: 10px;
+}
+#logo {
+	line-height: 33px;
+	color:#F14C1A;
+	font-size:22px;
+	letter-spacing:-0.03em;
+}
+#slogan {
+	color: #464F52;
+}
+
+/* Default widgetset overrides */
+textarea.i-textfield {
+	font-size: 13px;
+	width: 326px;
+	height: 110px;
+}
+button.link {
+	text-decoration: none;
+}
 button.important-link {
 	border: 0px;
 	text-align: left;
-	text-decoration: underline;
+	text-decoration: none;
 	background: none;
 	font-weight: bold;
 }
 button.selected-link {
 	border: 0px;
 	text-align: left;
-	text-decoration: underline;
+	text-decoration: none;
 	background: #183C6B;
 	font-weight: bold;
 	color: white;
+}
+.i-orderedlayout {
+	margin:5px 5px;
+}
+.i-orderedlayout TD {
+	vertical-align: top;
 }

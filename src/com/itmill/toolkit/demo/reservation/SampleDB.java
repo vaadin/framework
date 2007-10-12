@@ -374,35 +374,7 @@ public class SampleDB {
 	}
 
 	public void generateResources() {
-		/*
-		 * map.addMarker("Old Mill", new Point.Double(60.452224f,22.299929f));
-		 * map.addMarker("ICT", new Point.Double(60.449007f,22.295508f));
-		 * map.addMarker("DataCity", new Point.Double(60.448329f,22.295165f));
-		 * map.addMarker("BioCity", new Point.Double(60.449451f,22.293105f));
-		 * map.addMarker("PharmaCity", new Point.Double(60.44888f,22.292032f));
-		 * map.addMarker("Intelligate", new Point.Double(60.450403f,22.29495f));
-		 * map.addMarker("Paviljonki", new Point.Double(60.445408f,22.290831f));
-		 * map.addMarker("Trivium", new Point.Double(60.44641962165445f,
-		 * 22.301753170493f)); map.addMarker("Linja-auto asema", new
-		 * Point.Double(60.457049f,22.267957f));
-		 */
-		/*
-		 * Object[][] resources = { { "IT Mill Toolkit Manual", "the manual",
-		 * "Books", new Double(60.452224),new Double(22.299929)}, { "IT Mill
-		 * Toolkit for Dummies", "the hardcover version", "Books", new
-		 * Double(60.452224),new Double(22.299929) }, { "Sony", "Old Sony video
-		 * projector", "AV equipment", new Double(60.449007),new
-		 * Double(22.295508) }, { "Sanyo", "Brand new hd-ready video projector",
-		 * "AV equipment", new Double(60.452224),new Double(22.299929) }, {
-		 * "Room 7", "Conference room in the lobby", "Conference rooms", new
-		 * Double(60.449451),new Double(22.292032) }, { "Nintendo Wii", "Teh
-		 * uber fun", "Entertainment", new Double(60.445408),new
-		 * Double(22.290831) }, { "Playstation", "We don't actually have one",
-		 * "Entertainment", new Double(60.44641962165445),new
-		 * Double(22.301753170493) }, { "Luokkahuone", "Classroom right next to
-		 * IT Mill", "Conference rooms", new Double(60.44888),new
-		 * Double(22.292032) } };
-		 */
+
 		Object[][] resources = {
 				// Turku
 				{ "01", "01 Ford Mondeo", "w/ company logo", "Turku",
@@ -433,13 +405,13 @@ public class SampleDB {
 				{ "11", "11 Ford Mustang", "Keys from Acme clerk.",
 						"Silicon Valley", new Double(37.615853),
 						new Double(-122.386384) },
-				{ "12", "12 Ford Mondeo", "Keys from infodesk.",
+				{ "12", "12 Ford Fusion", "Keys from infodesk.",
 						"Silicon Valley", new Double(37.365028),
 						new Double(-121.922654) },
 				{ "13", "13 Ford Mustang", "GT Cal Special. Keys from guard.",
 						"Silicon Valley", new Double(37.403812),
 						new Double(-121.977425) },
-				{ "14", "14 Ford Mustang", "GT Cal Special. Keys from guard.",
+				{ "14", "14 Ford Focus", "Keys from guard.",
 						"Silicon Valley", new Double(37.403812),
 						new Double(-121.977425) },
 				{ "15", "15 Land Rover", "Keys from infodesk.",

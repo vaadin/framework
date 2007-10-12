@@ -108,8 +108,6 @@ public class ICalendar extends IDateField {
 			hourTable.setHTML(i, 0, "<span>" + hstr + "</span>");
 			hourTable.getCellFormatter()
 					.setStyleName(i, 0, CLASSNAME + "-time");
-			hourTable.getCellFormatter().setWidth(i, 0, "55");
-
 		}
 
 		List entries = this.entrySource.getEntries(date,
@@ -121,6 +119,7 @@ public class ICalendar extends IDateField {
 			int hours = 24;
 			if (!entry.isNotime()) {
 				Date d = entry.getStart();
+				// TODO consider month&year as well
 				start = (d.getDate() < date.getDate() ? 0 : d.getHours());
 				d = entry.getEnd();
 				hours = (d.getDate() > date.getDate() ? 24 : d.getHours())
@@ -143,7 +142,22 @@ public class ICalendar extends IDateField {
 			}
 			Element el = this.hourTable.getFlexCellFormatter().getElement(
 					start, col);
-			DOM.setElementProperty(el, "title", entry.getDescription());
+			
+			String tooltip;
+			if (DateTimeService.isSameDay(entry.getStart(), entry.getEnd())) {
+				tooltip = (start < 10 ? "0" : "") + start + ":00";
+				if (this.dts.isTwelveHourClock()) {
+					String ampm = (start < 12 ? "am" : "pm");
+					tooltip = (start <= 12 ? start : start - 12) + ":00 " + ampm;
+					
+				}
+				tooltip += " (" + hours + "h) ";
+				tooltip += entry.getTitle() + "\n ";
+			} else {
+				tooltip = entry.getStringForDate(entry.getEnd()) + "\n ";
+			}
+			tooltip += "\"" + entry.getDescription() + "\"";
+			DOM.setElementProperty(el, "title", tooltip);
 
 			currentCol++;
 		}

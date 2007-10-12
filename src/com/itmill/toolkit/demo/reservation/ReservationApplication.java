@@ -30,7 +30,8 @@ public class ReservationApplication extends Application {
 	ResourceSelectorPanel resourcePanel;
 
 	private CalendarField reservedFrom;
-	private static final long DEFAULT_GAP_MILLIS = 3600000; // one hour
+	private static final long DEFAULT_GAP_MILLIS = 3600000; // (almost) one
+	// hour
 	private long currentGapMillis = DEFAULT_GAP_MILLIS; // current length of
 	// reservation
 	private CalendarField reservedTo;
@@ -57,8 +58,6 @@ public class ReservationApplication extends Application {
 		TabSheet mainTabs = new TabSheet();
 		mainWindow.addComponent(mainTabs);
 
-		mainWindow.addComponent(new Button("close", this, "close"));
-
 		OrderedLayout reservationTab = new OrderedLayout();
 		mainTabs.addTab(reservationTab, "Make reservation", null);
 
@@ -79,7 +78,7 @@ public class ReservationApplication extends Application {
 		resourceName.setCaption("Choose resource");
 		infoLayout.addComponent(resourceName);
 		description = new TextField();
-		description.setColumns(55);
+		description.setColumns(47);
 		description.setRows(5);
 		infoLayout.addComponent(description);
 		reservationButton = new Button("Make reservation", this,
@@ -89,7 +88,7 @@ public class ReservationApplication extends Application {
 		infoLayout.addComponent(statusLabel);
 
 		map = new GoogleMap();
-		map.setWidth(360);
+		map.setWidth(330);
 		map.setHeight(270);
 		map.setItemMarkerHtmlPropertyId(SampleDB.Resource.PROPERTY_ID_NAME);
 		map.setItemMarkerXPropertyId(SampleDB.Resource.PROPERTY_ID_LOCATIONX);
@@ -98,7 +97,11 @@ public class ReservationApplication extends Application {
 		infoLayout.addComponent(map);
 
 		Calendar from = Calendar.getInstance();
-		reservedFrom = new CalendarField();
+		from.add(Calendar.HOUR, 1);
+		from.set(Calendar.MINUTE, 0);
+		from.set(Calendar.SECOND, 0);
+		from.set(Calendar.MILLISECOND, 0);
+		reservedFrom = new CalendarField("From »");
 		reservedFrom.setMinimumDate(from.getTime());
 		reservedFrom.setValue(from.getTime());
 		reservedFrom.setImmediate(true);
@@ -106,9 +109,10 @@ public class ReservationApplication extends Application {
 		reservationPanel.addComponent(reservedFrom);
 
 		Calendar to = Calendar.getInstance();
-		to.add(Calendar.MILLISECOND, (int) currentGapMillis);
-		reservedTo = new CalendarField();
-		reservedTo.setMinimumDate(from.getTime());
+		to.setTime(from.getTime());
+		to.add(Calendar.MILLISECOND, (int) DEFAULT_GAP_MILLIS);
+		reservedTo = new CalendarField("» To");
+		reservedTo.setMinimumDate(to.getTime());
 		reservedTo.setValue(to.getTime());
 		reservedTo.setImmediate(true);
 		initCalendarFieldPropertyIds(reservedTo);
@@ -125,7 +129,8 @@ public class ReservationApplication extends Application {
 				} else {
 					reservedTo.setEnabled(true);
 				}
-				reservedTo.setMinimumDate(fd);
+				reservedTo.setMinimumDate(new Date(fd.getTime()
+						+ DEFAULT_GAP_MILLIS));
 				Calendar to = Calendar.getInstance();
 				to.setTime(fd);
 				to.add(Calendar.MILLISECOND, (int) currentGapMillis);
@@ -156,6 +161,8 @@ public class ReservationApplication extends Application {
 		initCalendarFieldPropertyIds(allCalendar);
 		allLayout.addComponent(allCalendar);
 		allTable = new Table();
+		allTable.setColumnCollapsingAllowed(true);
+		allTable.setColumnReorderingAllowed(true);
 		allLayout.addComponent(allTable);
 		mainTabs.addTab(allLayout, "All reservations", null);
 		mainTabs.addListener(new TabSheet.SelectedTabChangeListener() {
@@ -212,8 +219,16 @@ public class ReservationApplication extends Application {
 		refreshSelectedResources();
 		Container allReservations = db.getReservations(null);
 		allTable.setContainerDataSource(allReservations);
+		if (allReservations != null && allReservations.size() > 0) {
+			allTable.setVisibleColumns(new Object[] {
+					SampleDB.Reservation.PROPERTY_ID_RESERVED_FROM,
+					SampleDB.Reservation.PROPERTY_ID_RESERVED_TO,
+					SampleDB.Resource.PROPERTY_ID_NAME,
+					SampleDB.Resource.PROPERTY_ID_DESCRIPTION,
+					SampleDB.Reservation.PROPERTY_ID_DESCRIPTION});
+			allTable.setColumnHeaders(new String[] {"From","To","Resource","Description","Message"});
+			}
 		allCalendar.setContainerDataSource(allReservations);
-
 	}
 
 	private void refreshSelectedResources() {
@@ -236,15 +251,21 @@ public class ReservationApplication extends Application {
 			map.setZoomLevel(1);
 
 		} else {
+			// Display active resource name + desc
+			String name = (String) resource.getItemProperty(
+					SampleDB.Resource.PROPERTY_ID_NAME).getValue();
+			String desc = (String) resource.getItemProperty(
+					SampleDB.Resource.PROPERTY_ID_DESCRIPTION).getValue();
+			resourceName.setCaption(name);
+			resourceName.setValue(desc);
+			// Put all resources on map (may be many if category was selected)
 			LinkedList srs = resourcePanel.getSelectedResources();
 			for (Iterator it = srs.iterator(); it.hasNext();) {
 				resource = (Item) it.next();
-				String name = (String) resource.getItemProperty(
+				name = (String) resource.getItemProperty(
 						SampleDB.Resource.PROPERTY_ID_NAME).getValue();
-				String desc = (String) resource.getItemProperty(
+				desc = (String) resource.getItemProperty(
 						SampleDB.Resource.PROPERTY_ID_DESCRIPTION).getValue();
-				resourceName.setCaption(name);
-				resourceName.setValue(desc);
 				Double x = (Double) resource.getItemProperty(
 						SampleDB.Resource.PROPERTY_ID_LOCATIONX).getValue();
 				Double y = (Double) resource.getItemProperty(
@@ -256,7 +277,7 @@ public class ReservationApplication extends Application {
 				}
 
 			}
-			map.setZoomLevel((srs.size() == 1 ? 16 : 9));
+			map.setZoomLevel((srs.size() == 1 ? 14 : 9));
 			reservationButton.setEnabled(true);
 		}
 

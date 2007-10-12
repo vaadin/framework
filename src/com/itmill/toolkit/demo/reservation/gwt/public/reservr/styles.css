@@ -1,90 +1,144 @@
 @import "googlemap/css/googlemap.css";
 
+/* Entrycalendar styles */
+.i-datefield-entrycalendar-hours {
+	height: auto;
+	xoverflow: auto;
+}
+.i-datefield-entrycalendar-hours table {
+	width: auto;
+}
+.i-datefield-entrycalendar-hours table tr {
+	height: 1em;
+}
+.i-datefield-entrycalendar-row-even {
+	cursor: pointer;
+	background-color: #fefefe;
+	height: 1em;
+}
+.i-datefield-entrycalendar-row-odd {
+	cursor: pointer;
+	background-color: #eeeeee;
+	height: 1em;
+}
+.i-datefield-entrycalendar-row-selected {
+	color: #fff;
+	background-color: #1C3E6E;
+}
+td.i-datefield-entrycalendar-time {
+	padding-right: 2px;
+	white-space: nowrap;
+	float: left;
+}
+td.i-datefield-entrycalendar-time span {
+	width: 55px;
+	text-align: right;
+	display: block;
+}
+td.i-datefield-entrycalendar-entry span {
+	display: block;
+	overflow: hidden;
+	padding: 2px;
+	color: #fff;
+	background-image: url('img/entry-topleft.jpg');
+	background-repeat: no-repeat;
+	background-position: 0px 0px;
+}
+.i-datefield-calendarpanel td.i-datefield-entrycalendar-entry {
+	background-color: #F24C1A;
+	color: #fff;
+	background-image: url('img/entry-bg.jpg');
+	background-repeat: repeat-x;
+	vertical-align: top;
+	width: auto;
+}
+
+/* Reservr styles */
 .i-datefield-entrycalendar-01 {
-	background-color: red;
+	
 }
 .i-datefield-entrycalendar-02 {
-	background-color: red;
+	
 }
 .i-datefield-entrycalendar-03 {
-	background-color: red;
+	
 }
 .i-datefield-entrycalendar-04 {
-	background-color: red;
+	
 }
 .i-datefield-entrycalendar-05 {
-	background-color: red;
+	
 }
 .i-datefield-entrycalendar-06 {
-	background-color: red;
+	
 }
 .i-datefield-entrycalendar-07 {
-	background-color: red;
+	
 }
 .i-datefield-entrycalendar-08 {
-	background-color: red;
+	
 }
 .i-datefield-entrycalendar-09 {
-	background-color: red;
+	
 }
 .i-datefield-entrycalendar-10 {
-	background-color: red;
+	
 }
 .i-datefield-entrycalendar-11 {
-	background-color: red;
+	
 }
 .i-datefield-entrycalendar-12 {
-	background-color: red;
+	
 }
 .i-datefield-entrycalendar-13 {
-	background-color: red;
+	
 }
 .i-datefield-entrycalendar-14 {
-	background-color: red;
+	
 }
 .i-datefield-entrycalendar-15 {
-	background-color: red;
+	
 }
 .i-datefield-entrycalendar-16 {
-	background-color: red;
+	
 }
 .i-datefield-entrycalendar-17 {
-	background-color: red;
+	
 }
 .i-datefield-entrycalendar-18 {
-	background-color: red;
+	
 }
 .i-datefield-entrycalendar-19 {
-	background-color: red;
+	
 }
 .i-datefield-entrycalendar-20 {
-	background-color: red;
+	
 }
 .i-datefield-entrycalendar-21 {
-	background-color: red;
+	
 }
 .i-datefield-entrycalendar-22 {
-	background-color: red;
+	
 }
 .i-datefield-entrycalendar-23 {
-	background-color: red;
+	
 }
 .i-datefield-entrycalendar-24 {
-	background-color: red;
+	
 }
 .i-datefield-entrycalendar-25 {
-	background-color: red;
+	
 }
 .i-datefield-entrycalendar-26 {
-	background-color: red;
+	
 }
 .i-datefield-entrycalendar-27 {
-	background-color: red;
+	
 }
 .i-datefield-entrycalendar-28 {
-	background-color: red;
+	
 }
 .i-datefield-entrycalendar-29 {
-	background-color: red;
+	
 }
 
