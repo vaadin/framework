@@ -64,6 +64,8 @@ public class IUpload extends FormPanel implements Paintable, ClickListener,
 	}
 
 	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+		if (client.updateComponent(this, uidl, false))
+			return;
 		this.client = client;
 		this.paintableId = uidl.getId();
 		setAction(client.getAppUri());

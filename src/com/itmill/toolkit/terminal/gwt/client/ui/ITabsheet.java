@@ -16,7 +16,8 @@ import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.Util;
 
-public class ITabsheet extends FlowPanel implements Paintable, ContainerResizedListener {
+public class ITabsheet extends FlowPanel implements Paintable,
+		ContainerResizedListener {
 
 	public static final String CLASSNAME = "i-tabsheet";
 
@@ -75,8 +76,7 @@ public class ITabsheet extends FlowPanel implements Paintable, ContainerResizedL
 		this.client = client;
 		id = uidl.getId();
 
-		// Use cached sub-tree if available
-		if (uidl.getBooleanAttribute("cached"))
+		if (client.updateComponent(this, uidl, false))
 			return;
 
 		// Adjust width and height
@@ -164,14 +164,14 @@ public class ITabsheet extends FlowPanel implements Paintable, ContainerResizedL
 				DOM.getChild(tr, DOM.getChildCount(tr) - 1), 0);
 		DOM.removeElementAttribute(rest, "style");
 	}
-	
+
 	public void setHeight(String height) {
 		this.height = height;
 		iLayout();
 	}
 
 	public void iLayout() {
-		if(height != null) {
+		if (height != null) {
 			// First, calculate needed pixel height
 			super.setHeight(height);
 			int neededHeight = getOffsetHeight();
@@ -181,7 +181,7 @@ public class ITabsheet extends FlowPanel implements Paintable, ContainerResizedL
 			DOM.setStyleAttribute(tp.getElement(), "overflow", "hidden");
 			int pixelHeight = getOffsetHeight();
 			tp.setHeight(neededHeight - pixelHeight + "px");
-			DOM.setStyleAttribute(tp.getElement(), "overflow", "");			
+			DOM.setStyleAttribute(tp.getElement(), "overflow", "");
 		}
 		Util.runAnchestorsLayout(this);
 	}

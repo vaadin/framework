@@ -18,6 +18,10 @@ public class IGridLayout extends FlexTable implements Paintable, Container {
 	private HashMap widgetToCaptionWrapper = new HashMap();
 
 	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+
+		if (client.updateComponent(this, uidl, false))
+			return;
+
 		clear();
 		if (uidl.hasAttribute("caption"))
 			setTitle(uidl.getStringAttribute("caption"));

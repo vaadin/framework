@@ -21,6 +21,10 @@ public class IFormLayout extends FlexTable implements Container {
 
 	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 		this.client = client;
+
+		if (client.updateComponent(this, uidl, false))
+			return;
+
 		int i = 0;
 		for (Iterator it = uidl.getChildIterator(); it.hasNext(); i++) {
 			prepareCell(i, 1);

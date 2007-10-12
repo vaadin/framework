@@ -24,6 +24,9 @@ public class IProgressIndicator extends Widget implements Paintable {
 	}
 
 	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+		if (client.updateComponent(this, uidl, true))
+			return;
+
 		poller.cancel();
 		this.client = client;
 		if (client.updateComponent(this, uidl, true))

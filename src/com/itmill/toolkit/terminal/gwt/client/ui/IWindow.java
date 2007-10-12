@@ -160,8 +160,8 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 		this.id = uidl.getId();
 		this.client = client;
-
-		if (uidl.getBooleanAttribute("cached"))
+		
+		if(client.updateComponent(this, uidl, false))
 			return;
 
 		if (uidl.hasAttribute("invisible")) {

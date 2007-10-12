@@ -98,7 +98,8 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
 	}
 
 	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-		client.updateComponent(this, uidl, true);
+		if (client.updateComponent(this, uidl, true))
+			return;
 
 		setWidth(uidl.getStringAttribute("width"));
 		setHeight(uidl.getStringAttribute("height"));
@@ -150,7 +151,8 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
 			pixelPosition = DOM.getElementPropertyInt(splitter, "offsetLeft");
 
 			// reposition splitter in case it is out of box
-			if (pixelPosition > 0 && pixelPosition + getSplitterSize() > wholeSize) {
+			if (pixelPosition > 0
+					&& pixelPosition + getSplitterSize() > wholeSize) {
 				pixelPosition = wholeSize - getSplitterSize();
 				if (pixelPosition < 0)
 					pixelPosition = 0;
@@ -175,7 +177,8 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
 			pixelPosition = DOM.getElementPropertyInt(splitter, "offsetTop");
 
 			// reposition splitter in case it is out of box
-			if (pixelPosition > 0 && pixelPosition + getSplitterSize() > wholeSize) {
+			if (pixelPosition > 0
+					&& pixelPosition + getSplitterSize() > wholeSize) {
 				pixelPosition = wholeSize - getSplitterSize();
 				if (pixelPosition < 0)
 					pixelPosition = 0;
@@ -312,7 +315,8 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
 	private int getSplitterSize() {
 		if (splitterSize < 0) {
 			if (isAttached()) {
-				splitterSize = DOM.getElementPropertyInt(splitter, "offsetWidth");
+				splitterSize = DOM.getElementPropertyInt(splitter,
+						"offsetWidth");
 			}
 		}
 		return splitterSize;
