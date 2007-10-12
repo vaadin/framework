@@ -3,6 +3,9 @@
  */
 package com.itmill.toolkit.ui;
 
+import java.util.Collection;
+
+import com.itmill.toolkit.data.Container;
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
 
@@ -13,6 +16,22 @@ import com.itmill.toolkit.terminal.PaintTarget;
  * widget.
  */
 public class NativeSelect extends Select {
+
+	public NativeSelect() {
+		super();
+	}
+	
+	public NativeSelect(String caption, Collection options) {
+		super(caption, options);
+	}
+
+	public NativeSelect(String caption, Container dataSource) {
+		super(caption, dataSource);
+	}
+
+	public NativeSelect(String caption) {
+		super(caption);
+	}
 
 	public void paintContent(PaintTarget target) throws PaintException {
 		target.addAttribute("type", "native");
