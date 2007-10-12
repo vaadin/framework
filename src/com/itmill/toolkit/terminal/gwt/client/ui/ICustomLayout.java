@@ -391,11 +391,9 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
 			try {
 				return el.iLayoutJS();
 			} catch (e) {
-				alert("bar");
 				return false;
 			}
 		} else {
-			alert("boo");
 			return false;
 		}
 	}-*/;
