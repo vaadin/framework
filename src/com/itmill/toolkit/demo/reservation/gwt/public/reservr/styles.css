@@ -3,7 +3,6 @@
 /* Entrycalendar styles */
 .i-datefield-entrycalendar-hours {
 	height: auto;
-	xoverflow: auto;
 }
 .i-datefield-entrycalendar-hours table {
 	width: auto;

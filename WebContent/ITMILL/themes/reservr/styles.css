@@ -14,12 +14,35 @@ html, body {
 }
 #slogan {
 	color: #464F52;
+	font-style: italic;
+	font-size: 12px;
 }
 
 /* Default widgetset overrides */
+.i-label, 
+.i-caption {
+	min-height: 1em;
+}
+.i-datefield-entrycalendar-hours {
+	height: 250px;
+	overflow: auto;
+}
+.i-panel {
+	margin-bottom: 5px;
+}
+.i-caption {
+	color: #F14C1A;
+	font-size: 16px;
+}
+.i-label.arrow {
+	line-height: 160px;
+	font-family: Times New Roman;
+	color: #F14C1A;
+	font-size: 65px;
+}
 textarea.i-textfield {
 	font-size: 13px;
-	width: 326px;
+	width: 320px;
 	height: 110px;
 }
 button.link {

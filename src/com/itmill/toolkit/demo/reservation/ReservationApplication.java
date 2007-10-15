@@ -78,18 +78,19 @@ public class ReservationApplication extends Application {
 		resourceName.setCaption("Choose resource");
 		infoLayout.addComponent(resourceName);
 		description = new TextField();
-		description.setColumns(47);
+		description.setColumns(45);
 		description.setRows(5);
 		infoLayout.addComponent(description);
 		reservationButton = new Button("Make reservation", this,
 				"makeReservation");
 		infoLayout.addComponent(reservationButton);
-		statusLabel = new Label();
+		statusLabel = new Label("");
+		statusLabel.setCaption("");
 		infoLayout.addComponent(statusLabel);
 
 		map = new GoogleMap();
-		map.setWidth(330);
-		map.setHeight(270);
+		map.setWidth(325);
+		map.setHeight(210);
 		map.setItemMarkerHtmlPropertyId(SampleDB.Resource.PROPERTY_ID_NAME);
 		map.setItemMarkerXPropertyId(SampleDB.Resource.PROPERTY_ID_LOCATIONX);
 		map.setItemMarkerYPropertyId(SampleDB.Resource.PROPERTY_ID_LOCATIONY);
@@ -101,17 +102,21 @@ public class ReservationApplication extends Application {
 		from.set(Calendar.MINUTE, 0);
 		from.set(Calendar.SECOND, 0);
 		from.set(Calendar.MILLISECOND, 0);
-		reservedFrom = new CalendarField("From »");
+		reservedFrom = new CalendarField("From");
 		reservedFrom.setMinimumDate(from.getTime());
 		reservedFrom.setValue(from.getTime());
 		reservedFrom.setImmediate(true);
 		initCalendarFieldPropertyIds(reservedFrom);
 		reservationPanel.addComponent(reservedFrom);
 
+		Label arrowLabel = new Label("»");
+		arrowLabel.setStyle("arrow");
+		reservationPanel.addComponent(arrowLabel);
+		
 		Calendar to = Calendar.getInstance();
 		to.setTime(from.getTime());
 		to.add(Calendar.MILLISECOND, (int) DEFAULT_GAP_MILLIS);
-		reservedTo = new CalendarField("» To");
+		reservedTo = new CalendarField("To");
 		reservedTo.setMinimumDate(to.getTime());
 		reservedTo.setValue(to.getTime());
 		reservedTo.setImmediate(true);
@@ -294,8 +299,8 @@ public class ReservationApplication extends Application {
 	}
 
 	private void resetStatus() {
-		statusLabel.setCaption(null);
-		statusLabel.setValue(null);
+		statusLabel.setCaption("");
+		statusLabel.setValue("");
 	}
 
 	public void selectedResourcesChanged(

@@ -78,12 +78,14 @@ public class ICalendar extends IDateField {
 	}
 
 	protected void buildDayView(Date date) {
+		boolean firstRender = true;
 		if (this.hourPanel == null) {
 			this.hourPanel = new SimplePanel();
 			this.hourPanel.setStyleName(CLASSNAME + "-hours");
 			this.calPanel.getFlexCellFormatter().setColSpan(8, 0, 7);
 			this.calPanel.setWidget(8, 0, this.hourPanel);
 		} else {
+			firstRender = false;
 			this.hourPanel.clear();
 		}
 		this.hourTable = new FlexTable();
@@ -142,14 +144,15 @@ public class ICalendar extends IDateField {
 			}
 			Element el = this.hourTable.getFlexCellFormatter().getElement(
 					start, col);
-			
+
 			String tooltip;
 			if (DateTimeService.isSameDay(entry.getStart(), entry.getEnd())) {
 				tooltip = (start < 10 ? "0" : "") + start + ":00";
 				if (this.dts.isTwelveHourClock()) {
 					String ampm = (start < 12 ? "am" : "pm");
-					tooltip = (start <= 12 ? start : start - 12) + ":00 " + ampm;
-					
+					tooltip = (start <= 12 ? start : start - 12) + ":00 "
+							+ ampm;
+
 				}
 				tooltip += " (" + hours + "h) ";
 				tooltip += entry.getTitle() + "\n ";
@@ -162,7 +165,20 @@ public class ICalendar extends IDateField {
 			currentCol++;
 		}
 
+		// int hour = new Date().getHours()+1; // scroll to current hour
+		int hour = this.date.getHours() + 1; // scroll to selected hour
+		int h1 = (int) this.hourPanel.getOffsetHeight() / 2;
+		int oh = this.hourTable.getOffsetHeight();
+		int h2 = (int) (hour / 24.0 * oh);
+		int scrollTop = (int) h2 - h1;
+		Element el = this.hourPanel.getElement();
+		setScrollTop(el, scrollTop);
+
 	}
+
+	private native void setScrollTop(Element el, int scrollTop) /*-{
+	    el.scrollTop = scrollTop;
+	  }-*/;
 
 	private class HourTableListener implements TableListener {
 
