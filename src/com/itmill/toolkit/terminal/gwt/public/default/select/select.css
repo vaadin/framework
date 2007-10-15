@@ -12,6 +12,7 @@
 
 .i-select-optiongroup .i-select-option {
 	display: block;
+	white-space: nowrap;
 }
 
 .i-select-select {

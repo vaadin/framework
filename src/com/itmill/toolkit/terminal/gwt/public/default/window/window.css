@@ -1,42 +1,136 @@
 .i-window {
-	border: 1px solid #999;
 	/* mac FF fix for scrollbar see thru */
 	position: absolute;
-}
-.i-window-header {
-	background: yellow;
-	height:20px;
-	overflow: hidden;
-	white-space: nowrap;
+	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
+	color: #464f52;
+	font-size: 13px;
+	line-height: 18px;
 }
 
-.i-window-footer {
-	background: #0f0;
-	height:2px;
+.i-window:before {
+	display: block;
+	content: "";
+	background: transparent url(img/top-right.png) repeat-x right top;
+	height: 21px;
+	margin-left: 21px;
+}
+
+.i-window-wrap {
+	padding-left: 20px;
+	background: transparent url(img/left-bg.png) repeat-y;
+}
+
+.i-window-wrap2 {
+	padding-right: 20px;
+	background: transparent url(img/right-bg.png) repeat-y top right;
+}
+
+.i-window-header {
+	font-size: 18px;
+	line-height: 18px;
+	font-weight: normal;
+	letter-spacing: -0.03em;
+	color: #f14c1a;
+	white-space: nowrap;
+	height: 18px;
+	padding: 6px 18px 14px 18px;
+	background: #fff;
+	cursor: move;
+}
+
+.i-window-header:before {
+	display: block;
+	content: "";
+	width: 21px;
+	height: 21px;
+	margin: -27px 0 6px -38px;
+	background: transparent url(img/top-left.png);
 }
 
 .i-window-contents {
 	background: #fff;
+	border: 1px solid #babfc0;
+}
+
+.i-window-footer {
+	height: 0;
+	font-size: 0px;
+}
+
+.i-window-footer:before {
+	display: block;
+	content: "";
+	width: 21px;
+	height: 46px;
+	background: transparent url(img/bottom-left.png);
+	margin-left: -20px;
+}
+
+.i-window-footer:after {
+	display: block;
+	content: "";
+	height: 46px;
+	background: transparent url(img/bottom-right.png) no-repeat top right;
+	margin: -46px -20px 0 1px;
 }
 
 .i-window-resizebox {
 	position:absolute;
-	bottom:0;
-	right:0;
-	background: black;
-	width: 5px;
-	height: 5px;
-	float:right;
-	/* IE 6 hack */
-	overflow: auto;
+	bottom: -21px;
+	right: 0;
+	width: 25px;
+	height: 21px;
+	cursor: se-resize;
+	background: transparent url(img/resize.png);
 }
 
 .i-window-closebox {
 	position:absolute;
-	top:0;
-	right:0;
-	background: red;
-	width: 15px;
-	height: 15px;
-	float:right;
+	top: 33px;
+	right: 36px;
+	width: 12px;
+	height: 11px;
+	background: transparent url(img/close.png);
+	cursor: pointer;
+	overflow: hidden;
+}
+.i-window-closebox:hover {
+	background-position: 0 -11px;
+}
+
+
+
+/* IE specific styles */
+
+* html .i-window-wrap {
+	padding: 12px;
+	border: 1px solid #e8e9e9;
+	background: transparent;
+	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../ITMILL/widgetsets/com.itmill.toolkit.terminal.gwt.DefaultWidgetSet/default/window/img/bg-color.png", sizingMethod="scale");
+	zoom: 1; /* to gain hasLayout, IE won't apply filter otherwise */
+}
+*+html .i-window-wrap {
+	padding: 12px;
+	border: 1px solid #e8e9e9;
+	background: transparent url(img/bg-color.png) repeat;
+}
+
+* html .i-window-wrap2 {
+	padding: 6px;
+	border: 1px solid #babfc0;
+	background: #fff;
+}
+*+html .i-window-wrap2 {
+	padding: 6px;
+	border: 1px solid #babfc0;
+	background: #fff;
+}
+
+* html .i-window-resizebox {
+	bottom: 0;
+	background-position: 3px 3px;
+}
+*+html .i-window-resizebox {
+	bottom: 0;
+	background-position: 3px 3px;
 }

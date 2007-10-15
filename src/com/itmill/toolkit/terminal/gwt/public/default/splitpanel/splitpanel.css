@@ -1,19 +1,49 @@
-.i-splitpanel-horizontal .splitter,
-.i-splitpanel-vertical .i-splitpanel-horizontal .splitter {
-	width: 8px;
-	background: #ccd2d0 url(img/bg_hor.png);
-	border: 1px solid #b6bbbc;
-	border-top:0;
-	border-bottom:0;
-	cursor: e-resize;
+.i-splitpanel-horizontal .i-splitpanel-hsplitter {
+	width: 6px;
+	font-size: 1px; /* for IE6 */
 }
 
-.i-splitpanel-vertical .splitter {
-	height: 8px;
+.i-splitpanel-horizontal .i-splitpanel-hsplitter div {
+	width: 6px;
+	font-size: 1px; /* for IE6 */
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	background: #ccd2d0 url(img/bg_hor.png);
+	border: 1px solid #b6bbbc;
+	cursor: e-resize;
+	margin: 0 -1px;
+}
+
+.i-splitpanel-vertical .i-splitpanel-vsplitter {
+	height: 6px;
+	font-size: 1px; /* for IE6 */
+}
+
+.i-splitpanel-vertical .i-splitpanel-vsplitter div {
+	height: 6px;
+	font-size: 1px; /* for IE6 */
 	background: #ccd2d0 url(img/bg_ver.png);
 	border: 1px solid #b6bbbc;
-	border-left:0;
-	border-right:0;
 	cursor: n-resize;
+	margin: -1px 0;
+}
+
+
+
+
+
+/* IE specific styles */
+
+* html .i-splitpanel-horizontal .i-splitpanel-hsplitter div {
+	height: 99%;
+}
+
+* html .i-splitpanel-vertical .i-splitpanel-vsplitter {
+	height: 8px;
+}
+
+* html .i-splitpanel-vertical .i-splitpanel-vsplitter div {
+	margin: 0;
 }
 

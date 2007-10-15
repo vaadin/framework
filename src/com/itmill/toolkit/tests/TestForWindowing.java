@@ -1,123 +1,71 @@
 package com.itmill.toolkit.tests;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import com.itmill.toolkit.Application;
+import com.itmill.toolkit.data.Property.ValueChangeEvent;
+import com.itmill.toolkit.data.Property.ValueChangeListener;
 import com.itmill.toolkit.ui.Button;
+import com.itmill.toolkit.ui.CustomComponent;
 import com.itmill.toolkit.ui.Label;
+import com.itmill.toolkit.ui.OptionGroup;
+import com.itmill.toolkit.ui.OrderedLayout;
+import com.itmill.toolkit.ui.Select;
 import com.itmill.toolkit.ui.Window;
 import com.itmill.toolkit.ui.Button.ClickEvent;
+import com.itmill.toolkit.ui.Button.ClickListener;
 
-public class TestForWindowing extends Application {
+public class TestForWindowing extends CustomComponent {	
+	
+	private Select s2;
 
-	Window main = new Window("Windowing test");
+	public TestForWindowing() {
+		
+		OrderedLayout main = new OrderedLayout();
+		
+		main.addComponent(new Label("Click the button to create a new inline window."));
+		
+		Button create = new Button("Create a new window", new ClickListener() {
 
-	public void init() {
+			public void buttonClick(ClickEvent event) {
+				Window w = new Window("Testing Window");
+				
+				Select s1 = new OptionGroup();
+				s1.setCaption("1. Select output format");
+				s1.addItem("Excel sheet");
+				s1.addItem("CSV plain text");
+				s1.setValue("Excel sheet");
+				
+				s2 = new Select();
+				s2.addItem("Separate by comma (,)");
+				s2.addItem("Separate by colon (:)");
+				s2.addItem("Separate by semicolon (;)");
+				s2.setColumns(14);
+				s2.setEnabled(false);
+				
+				s1.addListener(new ValueChangeListener() {
 
-		setMainWindow(main);
-
-		main.addComponent(new Button("Add new subwindow",
-				new Button.ClickListener() {
-					public void buttonClick(ClickEvent event) {
-						final Window w = new Window("sw "
-								+ System.currentTimeMillis());
-						main.addWindow(w);
-						w.setPositionX(100);
-						w.setPositionY(100);
-						w.setWidth(200);
-						w.setHeight(200);
-
-						w.setWidth(100);
-						w.setHeight(400);
-
-						Button closebutton = new Button("Close "
-								+ w.getCaption(), new Button.ClickListener() {
-							public void buttonClick(ClickEvent event) {
-								main.removeWindow(w);
-							}
-
-						});
-						w.addComponent(closebutton);
-
-						w.addComponent(new Label(
-								"<p>Lorem ipsum dolor sit amet.</p>"
-										+ "<p>Lorem ipsum dolor sit amet.</p>"
-										+ "<p>Lorem ipsum dolor sit amet.</p>"
-										+ "<p>Lorem ipsum dolor sit amet.</p>"
-										+ "<p>Lorem ipsum dolor sit amet.</p>"
-										+ "<p>Lorem ipsum dolor sit amet.</p>"
-										+ "<p>Lorem ipsum dolor sit amet.</p>"
-										+ "<p>Lorem ipsum dolor sit amet.</p>"
-										+ "<p>Lorem ipsum dolor sit amet.</p>"
-										+ "<p>Lorem ipsum dolor sit amet.</p>"
-										+ "<p>Lorem ipsum dolor sit amet.</p>"
-										+ "<p>Lorem ipsum dolor sit amet.</p>"
-										+ "<p>Lorem ipsum dolor sit amet.</p>"
-										+ "<p>Lorem ipsum dolor sit amet.</p>"
-										+ "<p>Lorem ipsum dolor sit amet.</p>"
-										+ "<p>Lorem ipsum dolor sit amet.</p>"
-										+ "<p>Lorem ipsum dolor sit amet.</p>"
-										+ "<p>Lorem ipsum dolor sit amet.</p>"
-										+ "<p>Lorem ipsum dolor sit amet.</p>"
-										+ "<p>Lorem ipsum dolor sit amet.</p>"
-										+ "<p>Lorem ipsum dolor sit amet.</p>"
-										+ "<p>Lorem ipsum dolor sit amet.</p>",
-								Label.CONTENT_XHTML));
-
+					public void valueChange(ValueChangeEvent event) {
+						String v = (String) event.getProperty().getValue();	
+						if(v.equals("CSV plain text"))
+							s2.setEnabled(true);
+						else
+							s2.setEnabled(false);
 					}
-				}));
-
-		main.addComponent(new Button(
-				"Open a currently uncreated application level window",
-				new Button.ClickListener() {
-					public void buttonClick(ClickEvent event) {
-						try {
-							main
-									.open(
-											new com.itmill.toolkit.terminal.ExternalResource(
-													new URL(
-															getURL(),
-															"mainwin-"
-																	+ System
-																			.currentTimeMillis()
-																	+ "/")),
-											null);
-						} catch (MalformedURLException e) {
-						}
-					}
-				}));
-
-		main.addComponent(new Button(
-				"Commit (saves window state: size, place, scrollpos)"));
+					
+				});
+				
+				w.addComponent(s1);
+				w.addComponent(s2);
+				
+				getApplication().getMainWindow().addWindow(w);
+				
+			}
+			
+		});
+		
+		main.addComponent(create);
+		
+		setCompositionRoot(main);
+		
 	}
 
-	public Window getWindow(String name) {
-
-		Window w = super.getWindow(name);
-		if (w != null)
-			return w;
-
-		if (name != null && name.startsWith("mainwin-")) {
-			String postfix = name.substring("mainwin-".length());
-			final Window ww = new Window("Window: " + postfix);
-			ww.setName(name);
-			ww.addComponent(new Label(
-					"This is a application-level window opened with name: "
-							+ name));
-			ww.addComponent(new Button("Click me", new Button.ClickListener() {
-				int state = 0;
-
-				public void buttonClick(ClickEvent event) {
-					ww.addComponent(new Label("Button clicked " + (++state)
-							+ " times"));
-				}
-			}));
-			addWindow(ww);
-			return ww;
-		}
-
-		return null;
-	}
 
 }

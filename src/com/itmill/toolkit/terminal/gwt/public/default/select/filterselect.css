@@ -6,12 +6,12 @@
 }
 
 .i-filterselect-input {
+	width: 99%;
 	border: none;
 	background: transparent;
-	width: 97%;
 	height: 20px;
-	margin: 3px 0 0 4px;
-	padding: 0;
+	margin: 0;
+	padding: 3px 0 0 4px;
 	font-size: 13px;
 }
 
@@ -115,18 +115,18 @@
 
 }
 * html .i-filterselect-input {
-	margin-top: 2px;
+	margin-top: -1px;
 }
 
 *+html .i-filterselect-input {
-	margin-top: 1px;
+	margin-top: -1px;
 }
 * html .i-filterselect-button {
 	position: static;
-	display: inline;
 	margin-top: -24px;
 }
 *+html .i-filterselect-button {
 	position: static;
+	margin-top: -24px;
 }
 

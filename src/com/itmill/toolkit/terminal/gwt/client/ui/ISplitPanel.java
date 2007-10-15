@@ -16,17 +16,23 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
 	public static final String CLASSNAME = "i-splitpanel";
 
 	public static final int ORIENTATION_HORIZONTAL = 0;
+
 	public static final int ORIENTATION_VERTICAL = 1;
 
 	private static final int MIN_SIZE = 30;
 
 	private int orientation = ORIENTATION_HORIZONTAL;
+
 	private Widget firstChild;
+
 	private Widget secondChild;
 
 	private Element wrapper = DOM.createDiv();
+
 	private Element firstContainer = DOM.createDiv();
+
 	private Element secondContainer = DOM.createDiv();
+
 	private Element splitter = DOM.createDiv();
 
 	private boolean resizing;
@@ -77,7 +83,6 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
 
 		DOM.setStyleAttribute(splitter, "position", "absolute");
 		DOM.setStyleAttribute(secondContainer, "position", "absolute");
-		DOM.setElementProperty(splitter, "className", "splitter");
 
 		DOM.setStyleAttribute(firstContainer, "overflow", "hidden");
 		DOM.setStyleAttribute(secondContainer, "overflow", "hidden");
@@ -90,10 +95,14 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
 			DOM.setStyleAttribute(splitter, "height", "100%");
 			DOM.setStyleAttribute(firstContainer, "height", "100%");
 			DOM.setStyleAttribute(secondContainer, "height", "100%");
+			DOM.setElementProperty(splitter, "className", CLASSNAME
+					+ "-hsplitter");
 		} else {
 			DOM.setStyleAttribute(splitter, "width", "100%");
 			DOM.setStyleAttribute(firstContainer, "width", "100%");
 			DOM.setStyleAttribute(secondContainer, "width", "100%");
+			DOM.setElementProperty(splitter, "className", CLASSNAME
+					+ "-vsplitter");
 		}
 	}
 
@@ -258,7 +267,9 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
 	}
 
 	public void onMouseDown(Event event) {
-		if (DOM.compare(DOM.eventGetTarget(event), splitter)) {
+		Element trg = DOM.eventGetTarget(event);
+		if (DOM.compare(trg, splitter)
+				|| DOM.compare(trg, DOM.getChild(splitter, 0))) {
 			resizing = true;
 			DOM.setCapture(getElement());
 			origX = DOM.getElementPropertyInt(splitter, "offsetLeft");

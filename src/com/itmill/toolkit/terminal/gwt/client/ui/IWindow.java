@@ -23,15 +23,19 @@ import com.itmill.toolkit.terminal.gwt.client.UIDL;
  */
 public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 
+	private static final int DEFAULT_HEIGHT = 300;
+
+	private static final int DEFAULT_WIDTH = 400;
+
 	private static Vector windowOrder = new Vector();
 
 	public static final String CLASSNAME = "i-window";
 
 	/** pixels used by inner borders and paddings horizontally */
-	protected static final int BORDER_WIDTH_HORIZONTAL = 0;
+	protected static final int BORDER_WIDTH_HORIZONTAL = 41;
 
 	/** pixels used by headers, footers, inner borders and paddings vertically */
-	protected static final int BORDER_WIDTH_VERTICAL = 22;
+	protected static final int BORDER_WIDTH_VERTICAL = 58;
 
 	private static final int STACKING_OFFSET_PIXELS = 15;
 
@@ -142,19 +146,24 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 		DOM.sinkEvents(closeBox, Event.ONCLICK);
 		DOM.sinkEvents(contents, Event.ONCLICK);
 
-		Element wrapper = getElement();
+		Element wrapper = DOM.createDiv();
+		DOM.setElementProperty(wrapper, "className", CLASSNAME + "-wrap");
+		Element wrapper2 = DOM.createDiv();
+		DOM.setElementProperty(wrapper2, "className", CLASSNAME + "-wrap2");
 
 		DOM.sinkEvents(wrapper, Event.ONKEYDOWN);
 
-		DOM.appendChild(wrapper, closeBox);
-		DOM.appendChild(wrapper, header);
-		DOM.appendChild(wrapper, contents);
-		DOM.appendChild(wrapper, footer);
+		DOM.appendChild(wrapper2, closeBox);
+		DOM.appendChild(wrapper2, header);
+		DOM.appendChild(wrapper2, contents);
+		DOM.appendChild(wrapper2, footer);
+		DOM.appendChild(wrapper, wrapper2);
+		DOM.appendChild(getElement(), wrapper);
 		setWidget(contentPanel);
 
 		// set default size
-		setWidth(400 + "px");
-		setHeight(300 + "px");
+		setWidth(DEFAULT_WIDTH + "px");
+		setHeight(DEFAULT_HEIGHT + "px");
 	}
 
 	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -167,38 +176,38 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 		if (uidl.hasAttribute("invisible")) {
 			this.hide();
 			return;
-		} else {
-
-			// Initialize the width from UIDL
-			if (uidl.hasVariable("width")) {
-				String width = uidl.getStringVariable("width");
-				setWidth(width);
-			}
-			if (uidl.hasVariable("height")) {
-				String height = uidl.getStringVariable("height");
-				setHeight(height);
-			}
-
-			contentPanel.setScrollPosition(uidl.getIntVariable("scrolltop"));
-			contentPanel.setHorizontalScrollPosition(uidl
-					.getIntVariable("scrollleft"));
-
-			// Initialize the position form UIDL
-			try {
-				int positionx = uidl.getIntVariable("positionx");
-				int positiony = uidl.getIntVariable("positiony");
-				if (positionx >= 0 && positiony >= 0) {
-					setPopupPosition(positionx, positiony);
-				}
-			} catch (IllegalArgumentException e) {
-				// Silently ignored as positionx and positiony are not required
-				// parameters
-			}
-
-			if (!isAttached()) {
-				show();
-			}
 		}
+
+		// Initialize the width from UIDL
+		if (uidl.hasVariable("width")) {
+			String width = uidl.getStringVariable("width");
+			setWidth(width);
+		}
+		if (uidl.hasVariable("height")) {
+			String height = uidl.getStringVariable("height");
+			setHeight(height);
+		}
+
+		contentPanel.setScrollPosition(uidl.getIntVariable("scrolltop"));
+		contentPanel.setHorizontalScrollPosition(uidl
+				.getIntVariable("scrollleft"));
+
+		// Initialize the position form UIDL
+		try {
+			int positionx = uidl.getIntVariable("positionx");
+			int positiony = uidl.getIntVariable("positiony");
+			if (positionx >= 0 && positiony >= 0) {
+				setPopupPosition(positionx, positiony);
+			}
+		} catch (IllegalArgumentException e) {
+			// Silently ignored as positionx and positiony are not required
+			// parameters
+		}
+
+		if (!isAttached()) {
+			show();
+		}
+
 		UIDL childUidl = uidl.getChildUIDL(0);
 		Paintable lo = (Paintable) client.getWidget(childUidl);
 		if (layout != null) {
@@ -284,8 +293,9 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 			resizing = true;
 			startX = DOM.eventGetScreenX(event);
 			startY = DOM.eventGetScreenY(event);
-			origW = getOffsetWidth();
-			origH = getOffsetHeight();
+			origW = DOM.getIntStyleAttribute(getElement(), "width")
+					- BORDER_WIDTH_HORIZONTAL;
+			origH = getWidget().getOffsetHeight();
 			DOM.addEventPreview(this);
 			break;
 		case Event.ONMOUSEUP:
@@ -321,8 +331,9 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 	}
 
 	public void setWidth(String width) {
-		super.setWidth(width);
-		DOM.setStyleAttribute(header, "width", width);
+		DOM.setStyleAttribute(getElement(), "width", (Integer.parseInt(width
+				.substring(0, width.length() - 2)) + BORDER_WIDTH_HORIZONTAL)
+				+ "px");
 	}
 
 	private void onHeaderEvent(Event event) {
