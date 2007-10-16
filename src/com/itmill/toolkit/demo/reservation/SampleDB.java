@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -373,6 +375,47 @@ public class SampleDB {
 		}
 	}
 
+	public void generateReservations() {
+		int days = 10;
+		String descriptions[] = {
+				"Picking up guests from airport",
+				"Sightseeing with the guests",
+				"Moving new servers from A to B",
+				"Shopping",
+				"Customer meeting",
+				"Guests arriving at harbour",
+				"Moving furniture",
+				"Taking guests to see town"	
+		};
+		Container cat = getCategories();
+		Collection cIds = cat.getItemIds();
+		for (Iterator it = cIds.iterator(); it.hasNext();) {
+			Object id = it.next();
+			Item ci = cat.getItem(id);
+			String c = (String)ci.getItemProperty(Resource.PROPERTY_ID_CATEGORY).getValue();
+			Container resources = getResources(c);
+			Collection rIds = resources.getItemIds();
+			Calendar cal = Calendar.getInstance();
+			//cal.add(Calendar.DAY_OF_MONTH, -days);
+			for (int i = 0;i<days;i++) {
+				for (Iterator rit = rIds.iterator();rit.hasNext();) {
+					Object rid = rit.next();
+					Item resource = resources.getItem(rid);
+					int s = 6+(int)Math.round(Math.random() * 10.0);
+					int e = s + (int)Math.round(Math.random() * 4.0);
+					Date start = new Date(cal.getTimeInMillis());
+					start.setHours(s);
+					Date end = new Date(cal.getTimeInMillis());
+					start.setHours(e);
+					addReservation(resource, 0, start, end, descriptions[(int)Math.floor(Math.random()*descriptions.length)]);
+					break;
+				}
+				cal.add(Calendar.DAY_OF_MONTH, 1);
+			}
+		}
+		
+	}
+	
 	public void generateResources() {
 
 		Object[][] resources = {

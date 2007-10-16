@@ -50,12 +50,14 @@ public class ReservationApplication extends Application {
 		db = new SampleDB(true);
 		db.generateResources();
 		db.generateDemoUser();
+		db.generateReservations();
 
 		Window mainWindow = new Window("Reservr");
 		setMainWindow(mainWindow);
 		setTheme("reservr");
 
 		TabSheet mainTabs = new TabSheet();
+		mainTabs.addStyleName(TabSheet.STYLE_NO_PADDING);
 		mainWindow.addComponent(mainTabs);
 
 		OrderedLayout reservationTab = new OrderedLayout();
@@ -70,6 +72,7 @@ public class ReservationApplication extends Application {
 
 		Panel reservationPanel = new Panel("Reservation", new OrderedLayout(
 				OrderedLayout.ORIENTATION_HORIZONTAL));
+		reservationPanel.setStyle("light");
 		reservationTab.addComponent(reservationPanel);
 
 		OrderedLayout infoLayout = new OrderedLayout();
@@ -109,7 +112,8 @@ public class ReservationApplication extends Application {
 		initCalendarFieldPropertyIds(reservedFrom);
 		reservationPanel.addComponent(reservedFrom);
 
-		Label arrowLabel = new Label("»");
+		Label arrowLabel = new Label("&raquo;");
+		arrowLabel.setContentMode(Label.CONTENT_XHTML);
 		arrowLabel.setStyle("arrow");
 		reservationPanel.addComponent(arrowLabel);
 		
@@ -166,6 +170,7 @@ public class ReservationApplication extends Application {
 		initCalendarFieldPropertyIds(allCalendar);
 		allLayout.addComponent(allCalendar);
 		allTable = new Table();
+		allTable.setWidth(700);
 		allTable.setColumnCollapsingAllowed(true);
 		allTable.setColumnReorderingAllowed(true);
 		allLayout.addComponent(allTable);

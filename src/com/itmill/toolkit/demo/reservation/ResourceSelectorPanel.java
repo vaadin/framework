@@ -22,6 +22,7 @@ public class ResourceSelectorPanel extends Panel implements
 
 	public ResourceSelectorPanel(String caption) {
 		super(caption, new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL));
+		setStyle("light");
 	}
 
 	public void setResourceContainer(Container resources) {

@@ -64,7 +64,7 @@ textarea.i-textfield {
 	background: none;
 	font-weight: bold;
 }
-.i-button-selected-link {
+#itmtk-ajax-window .i-button-selected-link {
 	border: 0px;
 	text-align: left;
 	text-decoration: none;
