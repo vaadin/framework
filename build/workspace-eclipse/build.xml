@@ -1,0 +1,80 @@
+<!--
+
+Creates two packages:
+
+1. WAR package that can be deployed to application server or servlet container.
+
+2. JAR package which requires JRE only, includes embedded web server.
+
+-->
+<project name="itmill-toolkit-examples" basedir="." default="package">
+
+	<target name="init">
+		<echo message="Creating two packages:" />
+		<echo message="1. WAR package that can be deployed to application server or servlet container." />
+		<echo message="2. JAR package which requires JRE only, includes embedded web server." />
+		<property name="server.main.class" value="com.itmill.toolkit.demo.DesktopServer" />
+		<property name="webserver.jar" value="WebServer/winstone-0.9.9.jar" />
+		<property file="build.properties" />
+		<mkdir dir="build" />
+	</target>
+
+	<target name="clean">
+		<delete dir="build" />
+	</target>
+
+	<!-- Compiles your Toolkit application -->
+	<target name="compile" depends="init">
+		<echo message="Compiling Toolkit application sources." />
+		<path id="compile.class.path">
+			<fileset dir="WebContent">
+				<include name="WEB-INF/lib/*.jar" />
+			</fileset>
+			<fileset dir="WebServer">
+				<include name="*.jar" />
+			</fileset>
+		</path>
+
+		<javac srcdir="WebContent/src" destdir="WebContent/WEB-INF/classes" classpathref="compile.class.path">
+		</javac>
+		<javac srcdir="WebServer/src" destdir="WebServer/classes" classpathref="compile.class.path">
+		</javac>
+	</target>
+
+	<!-- Creates Toolkit WAR package (requires Application Server / Servlet Container)-->
+	<target name="war-package" depends="compile">
+		<echo message="Creating WAR package." />
+		<war warfile="build/${ant.project.name}.war" webxml="WebContent/WEB-INF/web.xml">
+			<fileset dir="WebContent">
+				<include name="**/*" />
+				<exclude name="WEB-INF/web.xml" />
+			</fileset>
+		</war>
+	</target>
+
+	<!-- Creates Toolkit JAR package that contains embedded WebServer -->
+	<target name="jar-package" depends="war-package">
+		<echo message="Creating JAR package." />
+		<copy tofile="build/WebServer-temp/embedded.war" file="build/${ant.project.name}.war" />
+		<unjar src="${webserver.jar}" dest="build/WebServer-temp" />
+		<manifest file="build/WebServer-temp/META-INF/MANIFEST.MF">
+			<attribute name="Main-Class" value="${server.main.class}" />
+		</manifest>
+		<copy todir="build/WebServer-temp">
+			<fileset dir="WebServer/classes">
+				<include name="**/*" />
+			</fileset>
+		</copy>
+	</target>
+
+	<!-- Creates both Toolkit WAR and JAR packages -->
+	<target name="package" depends="jar-package">
+		<jar destfile="build/${ant.project.name}.jar" basedir="build/WebServer-temp" manifest="build/WebServer-temp/META-INF/MANIFEST.MF" />
+		<echo message="Created WAR-file to build/${ant.project.name}.war." />
+		<echo message="Deploy this file to your application server or servlet container." />
+		<echo message=" " />
+		<echo message="Created JAR-file to build/${ant.project.name}.jar" />
+		<echo message="Run your application using command like: java -jar build/${ant.project.name}.jar" />
+	</target>
+
+</project>
