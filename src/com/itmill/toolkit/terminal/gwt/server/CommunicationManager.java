@@ -435,12 +435,13 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 						try {
 							is = applicationServlet
 									.getServletContext()
-									.getResourceAsStream(
+									.getResourceAsStream("/"+
 											ApplicationServlet.THEME_DIRECTORY_PATH
 													+ themeName
 													+ "/"
 													+ resource);
 						} catch (Exception e) {
+							e.printStackTrace();
 							Log.info(e.getMessage());
 						}
 						if (is != null) {
