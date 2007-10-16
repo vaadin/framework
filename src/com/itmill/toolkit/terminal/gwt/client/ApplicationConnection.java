@@ -69,27 +69,33 @@ public class ApplicationConnection implements FocusListener {
 
 	private native static boolean isDebugMode()
 	/*-{
-		var uri = $wnd.location;
-		var re = /debug[^\/]*$/;
-		return re.test(uri);
-	}-*/;
+	 var uri = $wnd.location;
+	 var re = /debug[^\/]*$/;
+	 return re.test(uri);
+	 }-*/;
 
 	public native String getAppUri()
 	/*-{
-		var u = $wnd.itmtk.appUri;
-		if (u.indexOf("/") != 0 && u.indexOf("http") != 0) u = "../../../" +u;
-		 return u;
-	}-*/;
+	 var u = $wnd.itmtk.appUri;
+	 if (u.indexOf("/") != 0 && u.indexOf("http") != 0) {
+	 var b = $wnd.location.href;
+	 var i = b.length-1;
+	 while (b.charAt(i) != "/" && i>0) i--;
+	 b = b.substring(0,i+1);
+	 u = b + u;
+	 }
+	 return u;
+	 }-*/;
 
 	private native String getPathInfo()
 	/*-{
-		 return $wnd.itmtk.pathInfo;
+	 return $wnd.itmtk.pathInfo;
 	 }-*/;
 
 	private void makeUidlRequest(String requestData) {
 		console.log("Making UIDL Request with params: " + requestData);
-		RequestBuilder rb = new RequestBuilder(RequestBuilder.POST, appUri
-				+ "/UIDL" + getPathInfo());
+		String uri = appUri + "/UIDL" + getPathInfo();
+		RequestBuilder rb = new RequestBuilder(RequestBuilder.POST, uri);
 		rb.setHeader("Content-Type",
 				"application/x-www-form-urlencoded; charset=utf-8");
 		try {
@@ -202,7 +208,7 @@ public class ApplicationConnection implements FocusListener {
 	// Redirect browser
 	private static native void redirect(String url)
 	/*-{
-		 $wnd.location = url;
+	 $wnd.location = url;
 	 }-*/;
 
 	public void registerPaintable(String id, Paintable paintable) {
@@ -271,10 +277,10 @@ public class ApplicationConnection implements FocusListener {
 		makeUidlRequest(req.toString());
 	}
 
-	private static native String escapeString(String value) 
+	private static native String escapeString(String value)
 	/*-{
-		return encodeURIComponent(value);
-	}-*/;
+	 return encodeURIComponent(value);
+	 }-*/;
 
 	public void updateVariable(String paintableId, String variableName,
 			String newValue, boolean immediate) {
