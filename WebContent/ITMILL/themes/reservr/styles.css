@@ -1,6 +1,12 @@
 /* Reservr styles */
-html, body {
+body {
 	background-color: #E9ECED;
+	background-image: url(bmw.jpg);
+	background-repeat: no-repeat;
+	background-position: top right;
+}
+#itmtk-ajax-window {
+	background-color: transparent;	
 }
 #header {
 	font-family:"Trebuchet MS",geneva,helvetica,arial,tahoma,verdana,sans-serif;
