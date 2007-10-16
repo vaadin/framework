@@ -42,7 +42,6 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 import java.util.WeakHashMap;
 
 import javax.servlet.ServletContext;
@@ -57,11 +56,6 @@ import org.xml.sax.SAXException;
 
 import com.itmill.toolkit.Application;
 import com.itmill.toolkit.service.FileTypeResolver;
-import com.itmill.toolkit.service.License;
-import com.itmill.toolkit.service.License.InvalidLicenseFile;
-import com.itmill.toolkit.service.License.LicenseFileHasNotBeenRead;
-import com.itmill.toolkit.service.License.LicenseSignatureIsInvalid;
-import com.itmill.toolkit.service.License.LicenseViolation;
 import com.itmill.toolkit.terminal.DownloadStream;
 import com.itmill.toolkit.terminal.ParameterHandler;
 import com.itmill.toolkit.terminal.ThemeResource;
@@ -124,25 +118,19 @@ public class ApplicationServlet extends HttpServlet {
 
 	private static WeakHashMap applicationToAjaxAppMgrMap = new WeakHashMap();
 
-	// License for ApplicationServlets
-	private static WeakHashMap licenseForApplicationClass = new WeakHashMap();
-
-	private static WeakHashMap licensePrintedForApplicationClass = new WeakHashMap();
-
 	private static final String RESOURCE_URI = "/RES/";
 
 	private static final String AJAX_UIDL_URI = "/UIDL/";
 
 	static final String THEME_DIRECTORY_PATH = "ITMILL/themes/";
 
-	// Maximum delay between request for an user to be considered active (in ms)
-	private static final long ACTIVE_USER_REQUEST_INTERVAL = 1000 * 45;
-
 	private static final int DEFAULT_THEME_CACHETIME = 1000 * 60 * 60 * 24;
 
 	static final String WIDGETSET_DIRECTORY_PATH = "ITMILL/widgetsets/";
+
 	// Name of the default widget set, used if not specified in web.xml
 	private static final String DEFAULT_WIDGETSET = "com.itmill.toolkit.terminal.gwt.DefaultWidgetSet";
+
 	// Widget set narameter name
 	private static final String PARAMETER_WIDGETSET = "widgetset";
 
@@ -754,9 +742,8 @@ public class ApplicationServlet extends HttpServlet {
 	 * @throws InstantiationException
 	 */
 	private Application getApplication(HttpServletRequest request)
-			throws MalformedURLException, LicenseFileHasNotBeenRead,
-			LicenseSignatureIsInvalid, InvalidLicenseFile, LicenseViolation,
-			SAXException, IllegalAccessException, InstantiationException {
+			throws MalformedURLException, SAXException, IllegalAccessException,
+			InstantiationException {
 
 		// Ensures that the session is still valid
 		HttpSession session = request.getSession(true);
@@ -802,10 +789,8 @@ public class ApplicationServlet extends HttpServlet {
 			application.setLocale(request.getLocale());
 
 			// Starts application and check license
-			initializeLicense(application);
 			application.start(applicationUrl, this.applicationProperties,
 					context);
-			checkLicense(application);
 
 			return application;
 
@@ -818,135 +803,6 @@ public class ApplicationServlet extends HttpServlet {
 					+ this.applicationClass.getName());
 			throw e;
 		}
-	}
-
-	/**
-	 * 
-	 * @param application
-	 */
-	private void initializeLicense(Application application) {
-		License license;
-		synchronized (licenseForApplicationClass) {
-			license = (License) licenseForApplicationClass.get(application
-					.getClass());
-			if (license == null) {
-				license = new License();
-				licenseForApplicationClass.put(application.getClass(), license);
-			}
-		}
-		application.setToolkitLicense(license);
-	}
-
-	/**
-	 * 
-	 * @param application
-	 * @throws LicenseFileHasNotBeenRead
-	 *             if the license file has not been read.
-	 * @throws LicenseSignatureIsInvalid
-	 *             if the license file has been changed or signature is
-	 *             otherwise invalid.
-	 * @throws InvalidLicenseFile
-	 *             if the license file is not of correct XML format.
-	 * @throws LicenseViolation
-	 * 
-	 * @throws SAXException
-	 *             the Error parsing the license file.
-	 */
-	private void checkLicense(Application application)
-			throws LicenseFileHasNotBeenRead, LicenseSignatureIsInvalid,
-			InvalidLicenseFile, LicenseViolation, SAXException {
-		License license = application.getToolkitLicense();
-
-		if (!license.hasBeenRead())
-			// Lock threads that have not yet read license
-			synchronized (license) {
-				if (!license.hasBeenRead()) {
-					InputStream lis;
-					try {
-						URL url = getServletContext().getResource(
-								"/WEB-INF/itmill-toolkit-license.xml");
-						if (url == null) {
-							throw new RuntimeException(
-									"License file could not be read. "
-											+ "You can install it to "
-											+ "WEB-INF/itmill-toolkit-license.xml.");
-						}
-						lis = url.openStream();
-						license.readLicenseFile(lis);
-					} catch (MalformedURLException e) {
-						// This should not happen
-						throw new RuntimeException(e);
-					} catch (IOException e) {
-						// This should not happen
-						throw new RuntimeException(e);
-					}
-
-					// For each application class, print license description -
-					// once
-					if (!licensePrintedForApplicationClass
-							.containsKey(applicationClass)) {
-						licensePrintedForApplicationClass.put(applicationClass,
-								Boolean.TRUE);
-						if (license.shouldLimitsBePrintedOnInit()) {
-							System.out.println(license
-									.getDescription(application.getClass()
-											.toString()));
-						}
-					}
-
-					// Checks license validity
-					try {
-						license.check(applicationClass, VERSION_MAJOR,
-								VERSION_MINOR, "IT Mill Toolkit", null);
-					} catch (LicenseFileHasNotBeenRead e) {
-						application.close();
-						throw e;
-					} catch (LicenseSignatureIsInvalid e) {
-						application.close();
-						throw e;
-					} catch (InvalidLicenseFile e) {
-						application.close();
-						throw e;
-					} catch (LicenseViolation e) {
-						application.close();
-						throw e;
-					}
-				}
-			}
-
-		// Checks concurrent user limit
-		try {
-			license.checkConcurrentUsers(getNumberOfActiveUsers() + 1);
-		} catch (LicenseViolation e) {
-			application.close();
-			throw e;
-		}
-	}
-
-	/**
-	 * Gets the number of active application-user pairs.
-	 * 
-	 * This returns total number of all applications in the server that are
-	 * considered to be active. For an application to be active, it must have
-	 * been accessed less than ACTIVE_USER_REQUEST_INTERVAL ms.
-	 * 
-	 * @return the Number of active application instances in the server.
-	 */
-	private int getNumberOfActiveUsers() {
-		int active = 0;
-
-		synchronized (applicationToLastRequestDate) {
-			Set apps = applicationToLastRequestDate.keySet();
-			long now = System.currentTimeMillis();
-			for (Iterator i = apps.iterator(); i.hasNext();) {
-				Date lastReq = (Date) applicationToLastRequestDate
-						.get(i.next());
-				if (now - lastReq.getTime() < ACTIVE_USER_REQUEST_INTERVAL)
-					active++;
-			}
-		}
-
-		return active;
 	}
 
 	/**
