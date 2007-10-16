@@ -230,7 +230,7 @@ public class DefaultWidgetSet implements WidgetSet {
 		} else if ("datefield".equals(tag)) {
 			if (uidl.hasAttribute("style")) {
 				if ("calendar".equals(uidl.getStringAttribute("style"))) {
-					return "com.itmill.toolkit.terminal.gwt.client.ui.ICalendar";
+					return "com.itmill.toolkit.terminal.gwt.client.ui.IDateFieldCalendar";
 				} else if ("text".equals(uidl.getStringAttribute("style"))) {
 					return "com.itmill.toolkit.terminal.gwt.client.ui.ITextualDate";
 				}
