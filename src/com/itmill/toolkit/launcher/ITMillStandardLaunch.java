@@ -65,27 +65,32 @@ public class ITMillStandardLaunch {
 
 			Server server = new Server();
 
-			String threadPoolName = System.getProperty("jetty.threadpool.name",
-					"Jetty thread");
-			int maxIdleTimeMs = Integer.getInteger(
-					"jetty.threadpool.maxIdleTimeMs", 60000);
-			int maxThreads = Integer.getInteger("jetty.threadpool.maxThreads",
-					100);
-			int minThreads = Integer.getInteger("jetty.threadpool.minThreads",
-					1);
-			int lowThreads = Integer.getInteger(
-					"jetty.threadpool.maxIdleTimeMs", 25);
-			BoundedThreadPool threadPool = new BoundedThreadPool();
-			threadPool.setName(threadPoolName);
-			threadPool.setMaxIdleTimeMs(maxIdleTimeMs);
-			threadPool.setMaxThreads(maxThreads);
-			threadPool.setMinThreads(minThreads);
-			threadPool.setLowThreads(lowThreads);
-			server.setThreadPool(threadPool);
+			// String threadPoolName =
+			// System.getProperty("jetty.threadpool.name",
+			// "Jetty thread");
+			// int maxIdleTimeMs = Integer.getInteger(
+			// "jetty.threadpool.maxIdleTimeMs", 60000);
+			// int maxThreads =
+			// Integer.getInteger("jetty.threadpool.maxThreads",
+			// 100);
+			// int minThreads =
+			// Integer.getInteger("jetty.threadpool.minThreads",
+			// 1);
+			// int lowThreads = Integer.getInteger(
+			// "jetty.threadpool.maxIdleTimeMs", 25);
+			// BoundedThreadPool threadPool = new BoundedThreadPool();
+			// threadPool.setName(threadPoolName);
+			// threadPool.setMaxIdleTimeMs(maxIdleTimeMs);
+			// threadPool.setMaxThreads(maxThreads);
+			// threadPool.setMinThreads(minThreads);
+			// threadPool.setLowThreads(lowThreads);
+			// server.setThreadPool(threadPool);
 
 			Connector connector = new SelectChannelConnector();
-			connector.setPort(Integer.valueOf(serverArgs.get("httpPort")
-					.toString()));
+			// FIXME httpPort hardcoded to 8080
+			// connector.setPort(Integer.valueOf(serverArgs.get("httpPort")
+			// .toString()));
+			connector.setPort(8080);
 			server.setConnectors(new Connector[] { connector });
 
 			WebAppContext webappcontext = new WebAppContext();
