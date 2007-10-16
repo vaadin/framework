@@ -510,7 +510,6 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 		params.remove("changes");
 		if (changes != null) {
 			String[] ca = changes.split("\u0001");
-			System.out.println("Changes = " + changes);
 			for (int i = 0; i < ca.length; i++) {
 				String[] vid = ca[i].split("_");
 				VariableOwner owner = (VariableOwner) idPaintableMap
@@ -548,8 +547,6 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 
 	private Object convertVariableValue(char variableType, String strValue) {
 		Object val = null;
-		System.out.println("converting " + strValue + " of type "
-				+ variableType);
 		switch (variableType) {
 		case 'a':
 			val = strValue.split(",");
@@ -573,8 +570,6 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 			break;
 		}
 
-		System.out.println("result: " + val + " of type "
-				+ (val == null ? "-" : val.getClass().toString()));
 		return val;
 	}
 
@@ -921,21 +916,22 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 	 * @return
 	 */
 	public synchronized Set getDirtyComponents() {
-		// TODO not compatible w/ subtree caching
+		HashSet resultset = new HashSet(dirtyPaintabletSet);
 
-		// Remove unnecessary repaints from the list
-		Object[] paintables = dirtyPaintabletSet.toArray();
-		/*
-		 * for (int i = 0; i < paintables.length; i++) { if (paintables[i]
-		 * instanceof Component) { Component c = (Component) paintables[i];
-		 *  // Check if any of the parents of c already exist in the list
-		 * Component p = c.getParent(); while (p != null) { if
-		 * (dirtyPaintabletSet.contains(p)) {
-		 *  // Remove component c from the dirty paintables as its // parent is
-		 * also dirty dirtyPaintabletSet.remove(c); p = null; } else p =
-		 * p.getParent(); } } }
-		 */
-		return Collections.unmodifiableSet(dirtyPaintabletSet);
+		// The following algorithm removes any components that would be painted as 
+		// a direct descendant of other components from the dirty components list.
+		// The result is that each component should be painted exactly once and
+		// any unmodified components will be painted as "cached=true".
+		
+		for (Iterator i = dirtyPaintabletSet.iterator(); i.hasNext();) {
+			Paintable p = (Paintable) i.next();
+			if (p instanceof Component) {
+				if (dirtyPaintabletSet.contains(((Component) p).getParent()))
+					resultset.remove(p);
+			}
+		}
+
+		return resultset;
 	}
 
 	/**
