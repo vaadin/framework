@@ -51,7 +51,7 @@ public class ApplicationConnection implements FocusListener {
 		appUri = getAppUri();
 
 		if (isDebugMode()) {
-			console = new DebugConsole();
+			console = new DebugConsole(this);
 		} else {
 			console = new NullConsole();
 		}
@@ -427,9 +427,12 @@ public class ApplicationConnection implements FocusListener {
 			return true;
 
 		component.setStyleName(component.getStylePrimaryName());
-		// add additional styles as css classes
+		// add additional styles as css classes, prefixed with component default
+		// stylename
 		if (uidl.hasAttribute("style")) {
-			component.addStyleName(uidl.getStringAttribute("style"));
+			String[] styles = uidl.getStringAttribute("style").split(" ");
+			for (int i = 0; i < styles.length; i++)
+				component.addStyleDependentName(styles[i]);
 		}
 
 		return false;

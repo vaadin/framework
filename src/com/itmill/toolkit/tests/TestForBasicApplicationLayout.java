@@ -50,12 +50,14 @@ public class TestForBasicApplicationLayout extends CustomComponent {
 		Panel p = new Panel("Accordion Panel");
 		p.setHeight(100);
 		p.setHeightUnits(Panel.UNITS_PERCENTAGE);
+		p.addStyleName(Panel.STYLE_NO_PADDING);
 
 		tab = new TabSheet();
 		tab.setWidth(100);
 		tab.setWidthUnits(Sizeable.UNITS_PERCENTAGE);
 		tab.setHeight(740);
 		tab.setHeightUnits(Sizeable.UNITS_PIXELS);
+		tab.addStyleName(TabSheet.STYLE_NO_PADDING);
 
 		Panel report = new Panel("Monthly Program Runs", new ExpandLayout());
 		OrderedLayout controls = new OrderedLayout();

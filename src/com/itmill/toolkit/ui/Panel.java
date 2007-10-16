@@ -53,6 +53,17 @@ public class Panel extends AbstractComponentContainer implements Sizeable,
 		Scrollable, ComponentContainer.ComponentAttachListener,
 		ComponentContainer.ComponentDetachListener, Action.Container {
 
+	public static final String STYLE_LIGHT = "light";
+
+	public static final String STYLE_EMPHASIZE = "emphasize";
+
+	/**
+	 * Use this stylename with {@link #addStyleName(String)} to remove padding
+	 * between Panel borders and content. The actual client-side implementation
+	 * will determine which stylenames it implements.
+	 */
+	public static final String STYLE_NO_PADDING = "nopad";
+
 	/**
 	 * Layout of the panel.
 	 */

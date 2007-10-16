@@ -8,15 +8,18 @@
 }
 
 .i-view {
-	height:100%;	
+	height: 100%;	
 }
 
-input, select, textarea, button {
+#itmtk-ajax-window input, 
+#itmtk-ajax-window select, 
+#itmtk-ajax-window textarea, 
+#itmtk-ajax-window button {
 	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
 	color: #464f52;
 }
 
-select {
+#itmtk-ajax-window select {
 	padding: 0;
 	margin: 0;
 }
@@ -26,13 +29,7 @@ select {
 	filter: Alpha(opacity=30);
 }
 
-/**
- * Layout styles
- */
 
-.i-orderedlayout {
-	padding: 15px 18px;
-}
 
 /**
  * Context menu styles 

@@ -78,6 +78,25 @@ public class ITabsheet extends FlowPanel implements Paintable,
 
 		if (client.updateComponent(this, uidl, false))
 			return;
+		
+		// Add proper stylenames for all elements
+		if (uidl.hasAttribute("style")) {
+			String[] styles = uidl.getStringAttribute("style").split(" ");
+			String tabsBaseClass = CLASSNAME + "-tabs";
+			String contentBaseClass = CLASSNAME + "-content";
+			String decoBaseClass = CLASSNAME + "-deco";
+			String tabsClass = tabsBaseClass;
+			String contentClass = contentBaseClass;
+			String decoClass = decoBaseClass;
+			for (int i = 0; i < styles.length; i++) {
+				tabsClass += " " + tabsBaseClass + "-" + styles[i];
+				contentClass += " " + contentBaseClass + "-" + styles[i];
+				decoClass += " " + decoBaseClass + "-" + styles[i];
+			}
+			tp.setStyleName(contentClass);
+			tb.setStyleName(tabsClass);
+			DOM.setElementProperty(deco, "className", decoClass);
+		}
 
 		// Adjust width and height
 		String h = uidl.hasAttribute("height") ? uidl
@@ -86,7 +105,7 @@ public class ITabsheet extends FlowPanel implements Paintable,
 				.getStringAttribute("width") : null;
 		setWidth(w != null ? w : "auto");
 
-		// Try to calculate the height as close as possible
+		// Height calculations
 		if (h != null) {
 			setHeight(h);
 		} else {
@@ -96,6 +115,7 @@ public class ITabsheet extends FlowPanel implements Paintable,
 			DOM.setStyleAttribute(tp.getElement(), "overflow", "hidden");
 		}
 
+		// Render content
 		UIDL tabs = uidl.getChildUIDL(0);
 		boolean keepCurrentTabs = tabKeys.size() == tabs.getNumberOfChildren();
 		for (int i = 0; keepCurrentTabs && i < tabKeys.size(); i++)
@@ -183,6 +203,6 @@ public class ITabsheet extends FlowPanel implements Paintable,
 			tp.setHeight(neededHeight - pixelHeight + "px");
 			DOM.setStyleAttribute(tp.getElement(), "overflow", "");
 		}
-		Util.runAnchestorsLayout(this);
+		Util.runAncestorsLayout(this);
 	}
 }

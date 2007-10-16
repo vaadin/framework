@@ -57,7 +57,7 @@
 	border-bottom: none;
 	background-color: #fff;
 	overflow: auto;
-	/*padding: 15px 18px 6px 18px;*/
+	padding: 15px 18px 6px 18px;
 }
 
 .i-panel-deco {
@@ -82,22 +82,40 @@
 
 /* Light panel style */
 
-.i-panel-light-caption {
+.i-panel-light:before {
+	display: none;
+}
+
+.i-panel-caption-light {
 	border-left: none;
 	border-right: none;
 	background: transparent;
 	padding-top: 14px;
 }
 
-.i-panel-light-content {
-	border: none;
-	background: transparent;
+.i-panel-caption-light:before {
+	display: none;
 }
 
-.i-panel-light-deco {
+.i-panel-content-light {
+	border: none;
+	background: transparent;
+	padding: 15px 18px;
+}
+
+.i-panel-deco-light {
 	height: 0;
 	overflow: hidden;
 }
+
+
+
+/* Panel without padding (NO_PADDING style) */
+
+.i-panel-content-nopad {
+	padding: 0;
+}
+
 
 
 
@@ -105,8 +123,8 @@
 /* Light panel contained within another panel or a tabsheet */
 /* Use more precise selector to override IE specific rules automatically */
 
-.i-panel .i-panel-light-caption,
-.i-tabsheet .i-panel-light-caption {
+.i-panel .i-panel-caption-light,
+.i-tabsheet .i-panel-caption-light {
 	margin-top: -1px;
 	padding-top: 14px;
 	border-top: 1px solid #babfc0;
@@ -129,13 +147,22 @@
 	padding-top: 14px;
 }
 
+* html .i-panel-caption-light {
+	border-left: none;
+	border-right: none;
+}
+*+html .i-panel-caption-light {
+	border-left: none;
+	border-right: none;
+}
+
 * html .i-panel-content {
 	border-bottom: 1px solid #babfc0;
-	/*padding: 15px 18px;*/
+	padding: 15px 18px;
 }
 *+html .i-panel-content {
 	border-bottom: 1px solid #babfc0;
-	/*padding: 15px 18px;*/
+	padding: 15px 18px;
 }
 
 * html .i-panel-deco {
@@ -151,4 +178,12 @@
 	overflow: hidden;
 	background: #c1c6cc;
 	border: none;
+}
+
+/* Without padding */
+* html .i-panel-content-nopad {
+	padding: 0;
+}
+*+html .i-panel-content-nopad {
+	padding: 0;
 }

@@ -71,7 +71,7 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 
 	private Element closeBox;
 
-	private ApplicationConnection client;
+	protected ApplicationConnection client;
 
 	private String id;
 
@@ -169,8 +169,8 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 		this.id = uidl.getId();
 		this.client = client;
-		
-		if(client.updateComponent(this, uidl, false))
+
+		if (client.updateComponent(this, uidl, false))
 			return;
 
 		if (uidl.hasAttribute("invisible")) {
@@ -253,7 +253,7 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 	}
 
 	public void setCaption(String c) {
-		DOM.setInnerHTML(header, c);
+		DOM.setInnerText(header, c);
 	}
 
 	protected Element getContainerElement() {

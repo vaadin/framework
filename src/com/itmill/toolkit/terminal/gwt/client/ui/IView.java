@@ -130,7 +130,7 @@ public class IView extends SimplePanel implements Paintable,
 	}
 
 	public void onWindowResized(int width, int height) {
-		Util.runAnchestorsLayout(this);
+		Util.runAncestorsLayout(this);
 	}
 
 }

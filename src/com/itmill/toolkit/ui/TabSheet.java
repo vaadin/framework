@@ -47,6 +47,13 @@ import com.itmill.toolkit.terminal.*;
 public class TabSheet extends AbstractComponentContainer implements Sizeable {
 
 	/**
+	 * Use this stylename with {@link #addStyleName(String)} to remove padding
+	 * between TabSheet borders and content. The actual client-side implementation
+	 * will determine which stylenames it implements.
+	 */
+	public static final String STYLE_NO_PADDING = "nopad";
+
+	/**
 	 * Linked list of component tabs.
 	 */
 	private LinkedList tabs = new LinkedList();

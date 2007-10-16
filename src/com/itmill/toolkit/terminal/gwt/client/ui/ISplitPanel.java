@@ -211,7 +211,7 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
 			break;
 		}
 
-		Util.runAnchestorsLayout(this);
+		Util.runAncestorsLayout(this);
 	}
 
 	private void setFirstWidget(Widget w) {

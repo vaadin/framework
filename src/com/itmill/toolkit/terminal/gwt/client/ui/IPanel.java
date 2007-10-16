@@ -32,6 +32,11 @@ public class IPanel extends SimplePanel implements Paintable,
 		DOM.appendChild(getElement(), captionNode);
 		DOM.appendChild(getElement(), contentNode);
 		DOM.appendChild(getElement(), bottomDecoration);
+		setStyleName(CLASSNAME);
+		DOM.setElementProperty(captionNode, "className", CLASSNAME + "-caption");
+		DOM.setElementProperty(contentNode, "className", CLASSNAME + "-content");
+		DOM.setElementProperty(bottomDecoration, "className", CLASSNAME
+				+ "-deco");
 	}
 
 	protected Element getContainerElement() {
@@ -59,28 +64,33 @@ public class IPanel extends SimplePanel implements Paintable,
 		if (getWidget() != null) {
 			clear();
 		}
-
-		// Add proper style name for root element
-		// TODO refactor to support additional styles set from server-side
-		String className = CLASSNAME;
-		if (uidl.hasAttribute("style"))
-			className += "-" + uidl.getStringAttribute("style");
-		setStyleName(className);
-		DOM.setElementProperty(contentNode, "className", className + "-content");
-		DOM.setElementProperty(bottomDecoration, "className", className
-				+ "-deco");
-
 		// Handle caption displaying
+		boolean hasCaption = false;
 		if (uidl.hasAttribute("caption")
 				&& !uidl.getStringAttribute("caption").equals("")) {
 			DOM.setInnerText(captionNode, uidl.getStringAttribute("caption"));
-			DOM.setElementProperty(captionNode, "className", className
-					+ "-caption");
-		} else {
-			// Theme needs this to work around different styling
-			DOM.setElementProperty(captionNode, "className", className
-					+ "-nocaption");
+			hasCaption = true;
+		} else
 			DOM.setInnerText(captionNode, "");
+
+		// Add proper stylenames for all elements
+		if (uidl.hasAttribute("style")) {
+			String[] styles = uidl.getStringAttribute("style").split(" ");
+			String captionBaseClass = CLASSNAME
+					+ (hasCaption ? "-caption" : "-nocaption");
+			String contentBaseClass = CLASSNAME + "-content";
+			String decoBaseClass = CLASSNAME + "-deco";
+			String captionClass = captionBaseClass;
+			String contentClass = contentBaseClass;
+			String decoClass = decoBaseClass;
+			for (int i = 0; i < styles.length; i++) {
+				captionClass += " " + captionBaseClass + "-" + styles[i];
+				contentClass += " " + contentBaseClass + "-" + styles[i];
+				decoClass += " " + decoBaseClass + "-" + styles[i];
+			}
+			DOM.setElementProperty(captionNode, "className", captionClass);
+			DOM.setElementProperty(contentNode, "className", contentClass);
+			DOM.setElementProperty(bottomDecoration, "className", decoClass);
 		}
 
 		// Height adjustment
@@ -128,7 +138,7 @@ public class IPanel extends SimplePanel implements Paintable,
 		} else {
 			DOM.setStyleAttribute(contentNode, "overflow", "hidden");
 		}
-		Util.runAnchestorsLayout(this);
+		Util.runAncestorsLayout(this);
 	}
 
 }

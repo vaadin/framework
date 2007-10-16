@@ -33,7 +33,7 @@
 	color: #f14c1a;
 	white-space: nowrap;
 	height: 18px;
-	padding: 6px 18px 14px 18px;
+	padding: 6px 18px 14px 12px;
 	background: #fff;
 	cursor: move;
 }
@@ -43,7 +43,7 @@
 	content: "";
 	width: 21px;
 	height: 21px;
-	margin: -27px 0 6px -38px;
+	margin: -27px 0 6px -32px;
 	background: transparent url(img/top-left.png);
 }
 
@@ -105,9 +105,9 @@
 * html .i-window-wrap {
 	padding: 12px;
 	border: 1px solid #e8e9e9;
-	background: transparent;
-	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../ITMILL/widgetsets/com.itmill.toolkit.terminal.gwt.DefaultWidgetSet/default/window/img/bg-color.png", sizingMethod="scale");
-	zoom: 1; /* to gain hasLayout, IE won't apply filter otherwise */
+	background: #d8dee0;
+	/*filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../ITMILL/widgetsets/com.itmill.toolkit.terminal.gwt.DefaultWidgetSet/default/window/img/bg-color.png", sizingMethod="scale");*/
+	/*zoom: 1;  to gain hasLayout, IE won't apply filter otherwise */
 }
 *+html .i-window-wrap {
 	padding: 12px;
@@ -128,7 +128,10 @@
 
 * html .i-window-resizebox {
 	bottom: 0;
-	background-position: 3px 3px;
+	width: 22px;
+	height: 18px;
+	background: transparent;
+	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../ITMILL/widgetsets/com.itmill.toolkit.terminal.gwt.DefaultWidgetSet/default/window/img/resize.png", sizingMethod="crop");
 }
 *+html .i-window-resizebox {
 	bottom: 0;

@@ -160,7 +160,7 @@ public class IExpandLayout extends IOrderedLayout implements
 		DOM.removeChild(childContainer, meter);
 
 		// TODO save previous size and only propagate if really changed
-		Util.runAnchestorsLayout(this);
+		Util.runAncestorsLayout(this);
 	}
 
 }

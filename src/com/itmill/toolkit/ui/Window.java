@@ -826,7 +826,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 			setScrollTop(top < 0 ? 0 : top);
 		}
 		Integer scrollleft = (Integer) variables.get("scrollleft");
-		if (positiony != null) {
+		if (scrollleft != null) {
 			int left = scrollleft.intValue();
 			setScrollLeft(left < 0 ? 0 : left);
 		}
