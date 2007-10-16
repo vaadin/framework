@@ -34,13 +34,13 @@ body {
 	overflow: auto;
 }
 .i-panel {
-	margin-bottom: 5px;
+	xmargin: 5px;
 }
 .i-caption {
 	color: #F14C1A;
 	font-size: 16px;
 }
-.i-label.arrow {
+.i-label-arrow {
 	line-height: 160px;
 	font-family: Times New Roman;
 	color: #F14C1A;
@@ -51,17 +51,20 @@ textarea.i-textfield {
 	width: 320px;
 	height: 110px;
 }
-button.link {
+.i-button-link {
+	border: 0px;
+	text-align: left;
 	text-decoration: none;
+	background: none;
 }
-button.important-link {
+.i-button-important-link {
 	border: 0px;
 	text-align: left;
 	text-decoration: none;
 	background: none;
 	font-weight: bold;
 }
-button.selected-link {
+.i-button-selected-link {
 	border: 0px;
 	text-align: left;
 	text-decoration: none;
@@ -70,8 +73,10 @@ button.selected-link {
 	color: white;
 }
 .i-orderedlayout {
-	margin:5px 5px;
+	margin:0px;
+	padding: 0px;
 }
+
 .i-orderedlayout TD {
 	vertical-align: top;
 }
