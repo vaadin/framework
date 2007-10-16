@@ -29,7 +29,6 @@
 package com.itmill.toolkit;
 
 import com.itmill.toolkit.service.ApplicationContext;
-import com.itmill.toolkit.service.License;
 import com.itmill.toolkit.terminal.*;
 import com.itmill.toolkit.ui.AbstractComponent;
 import com.itmill.toolkit.ui.Component;
@@ -171,10 +170,6 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 	 */
 	private LinkedList windowDetachListeners = null;
 
-	/**
-	 * License for running this application.
-	 */
-	private License license = null;
 
 	/**
 	 * Application resource mapping: key <-> resource.
@@ -1061,36 +1056,6 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 	 */
 	public ApplicationContext getContext() {
 		return context;
-	}
-
-	/**
-	 * Gets the license this application is running on.
-	 * <p>
-	 * The license is initialized by the <code>ApplicationServlet</code> class
-	 * before application is started. The license-file can not be found in
-	 * <code>WEB-INF/itmill-toolkit-license.xml</code>, you can set its
-	 * source in application <code>init</code> method.
-	 * </p>
-	 * 
-	 * @return the License this application is currently using.
-	 */
-	public License getToolkitLicense() {
-		return license;
-	}
-
-	/**
-	 * Sets the license this application is currently using.
-	 * <p>
-	 * The license is initialized by the <code>ApplicationServlet</code>
-	 * before application is started. Changing the license after application
-	 * <code>init</code> method has no effect.
-	 * </p>
-	 * 
-	 * @param license
-	 *            the New license for this application.
-	 */
-	public void setToolkitLicense(License license) {
-		this.license = license;
 	}
 
 	public void setFocusedComponent(Focusable focusable) {
