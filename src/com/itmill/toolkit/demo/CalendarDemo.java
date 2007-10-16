@@ -39,9 +39,6 @@ public class CalendarDemo extends com.itmill.toolkit.Application {
 
 		main.setLayout(new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL));
 
-		// set the application to use Corporate -theme
-		setTheme("corporate");
-
 		// create the calendar component and add to layout
 		from = new CalendarField();
 		main.addComponent(from);

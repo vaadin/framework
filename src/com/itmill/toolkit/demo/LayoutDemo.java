@@ -20,9 +20,6 @@ public class LayoutDemo extends com.itmill.toolkit.Application {
 		Window mainWindow = new Window("Layout demo");
 		setMainWindow(mainWindow);
 
-		// set the application to use Corporate -theme
-		setTheme("corporate");
-
 		//
 		// Create horizontal ordered layout
 		//

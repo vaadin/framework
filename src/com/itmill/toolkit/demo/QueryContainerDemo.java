@@ -67,9 +67,6 @@ public class QueryContainerDemo extends com.itmill.toolkit.Application
 		Window main = new Window("QueryContainer demo");
 		setMainWindow(main);
 
-		// set the application to use Corporate -theme
-		setTheme("corporate");
-
 		// Main window contains heading, table, select and tree
 		main
 				.addComponent(new Label(

@@ -41,9 +41,6 @@ public class UpgradingSample extends Application implements
 	/* Initialize the application */
 	public void init() {
 
-		// set the application to use Corporate -theme
-		setTheme("corporate");
-
 		// Create the main window of the application
 		Window main = new Window("Login example", layout);
 		setMainWindow(main);

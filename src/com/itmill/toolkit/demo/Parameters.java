@@ -30,9 +30,6 @@ public class Parameters extends com.itmill.toolkit.Application implements
 		Window main = new Window("Parameters demo");
 		setMainWindow(main);
 
-		// set the application to use Corporate -theme
-		setTheme("corporate");
-
 		// This class acts both as URI handler and parameter handler
 		main.addURIHandler(this);
 		main.addParameterHandler(this);

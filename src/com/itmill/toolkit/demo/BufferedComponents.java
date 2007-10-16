@@ -19,7 +19,6 @@ public class BufferedComponents extends Application {
 
 		Window w = new Window("Buffered UI components demo");
 		addWindow(w);
-		setTheme("corporate");
 
 		// Create property
 		Float floatValue = new Float(1.0f);

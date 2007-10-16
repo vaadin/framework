@@ -37,9 +37,6 @@ public class TreeFilesystemContainer extends com.itmill.toolkit.Application
 		Window main = new Window("Tree FilesystemContainer demo");
 		setMainWindow(main);
 
-		// set the application to use Corporate -theme
-		setTheme("corporate");
-
 		// Main window contains heading and two panels
 		main.addComponent(new Label("<h3>TreeFilesystemContainer demo</h3>",
 				Label.CONTENT_XHTML));

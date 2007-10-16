@@ -30,9 +30,6 @@ public class SelectDemo extends com.itmill.toolkit.Application {
 		Window main = new Window("Select demo");
 		setMainWindow(main);
 
-		// set the application to use Corporate -theme
-		setTheme("corporate");
-
 		// Main window contains heading, table, select and tree
 		Panel panel = new Panel("Select demo (a.k.a Google Suggests)");
 		panel.addComponent(lazySelect);

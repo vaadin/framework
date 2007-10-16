@@ -21,10 +21,7 @@ public class ModalWindow extends com.itmill.toolkit.Application implements
 	private Window test;
 
 	public void init() {
-
-		// set the application to use Corporate -theme
-		setTheme("corporate");
-
+	
 		// Create main window
 		Window main = new Window("ModalWindow demo");
 		setMainWindow(main);

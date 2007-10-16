@@ -41,7 +41,6 @@ public class KeyboardShortcut extends com.itmill.toolkit.Application implements
 
 		main = new Window("Keyboard shortcuts demo");
 		setMainWindow(main);
-		setTheme("corporate");
 
 		main
 				.addComponent(new Label(

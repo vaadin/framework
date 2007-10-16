@@ -74,8 +74,7 @@ public class FeatureBrowser extends CustomComponent implements
 		// Theme selector
 		mainlayout.addComponent(themeSelector, "themes");
 		themeSelector.addItem("demo");
-		themeSelector.addItem("corporate");
-		themeSelector.addItem("base");
+
 		themeSelector.addListener(this);
 		themeSelector.select("demo");
 		themeSelector.setImmediate(true);

@@ -72,9 +72,6 @@ public class Calc extends com.itmill.toolkit.Application implements
 		// Create the main window with a caption and add it to the application.
 		addWindow(new Window("Calculator", layout));
 
-		// Set the application to use Corporate -theme
-		setTheme("corporate");
-
 	}
 
 	/**

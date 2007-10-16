@@ -32,9 +32,6 @@ public class RandomLayoutStress extends com.itmill.toolkit.Application {
 		Window mainWindow = new Window("Layout demo");
 		setMainWindow(mainWindow);
 
-		// set the application to use Corporate -theme
-		setTheme("corporate");
-
 		// Create horizontal ordered layout
 		Panel panelA = new Panel("Panel containing horizontal ordered layout");
 		OrderedLayout layoutA = new OrderedLayout(

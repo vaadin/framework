@@ -79,7 +79,6 @@ public class BasicRandomTest extends com.itmill.toolkit.Application implements
 		Window mainWindow = new Window("Testing", create());
 		setMainWindow(mainWindow);
 
-		setTheme("corporate");
 		setUser(new Long(System.currentTimeMillis()).toString());
 	}
 

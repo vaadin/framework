@@ -73,9 +73,6 @@ public class TableDemo extends com.itmill.toolkit.Application implements
 		Window main = new Window("Table demo");
 		setMainWindow(main);
 
-		// set the application to use Corporate -theme
-		setTheme("corporate");
-
 		// Add link back to index.html
 		main.addComponent(menuLink);
 
