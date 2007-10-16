@@ -1,3 +1,3 @@
 #!/bin/sh
 
-java -cp WebServer/winstone-0.9.9.jar:WebServer/classes:WebContent/WEB-INF/classes com.itmill.toolkit.demo.DesktopServer --webroot=WebContent
+java -cp lib/jetty/jetty-6.1.5.jar:lib/jetty/jetty-util-6.1.5.jar:lib/jetty/servlet-api-2.5-6.1.5.jar:WebContent/WEB-INF/classes com.itmill.toolkit.launcher.ITMillDesktopLaunch
