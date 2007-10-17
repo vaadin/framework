@@ -376,7 +376,7 @@ public class SampleDB {
 	}
 
 	public void generateReservations() {
-		int days = 10;
+		int days = 30;
 		String descriptions[] = {
 				"Picking up guests from airport",
 				"Sightseeing with the guests",
@@ -396,6 +396,9 @@ public class SampleDB {
 			Container resources = getResources(c);
 			Collection rIds = resources.getItemIds();
 			Calendar cal = Calendar.getInstance();
+			cal.set(Calendar.MINUTE, 0);
+			cal.set(Calendar.SECOND, 0);
+			cal.set(Calendar.MILLISECOND, 0);
 			//cal.add(Calendar.DAY_OF_MONTH, -days);
 			for (int i = 0;i<days;i++) {
 				for (Iterator rit = rIds.iterator();rit.hasNext();) {
@@ -406,9 +409,8 @@ public class SampleDB {
 					Date start = new Date(cal.getTimeInMillis());
 					start.setHours(s);
 					Date end = new Date(cal.getTimeInMillis());
-					start.setHours(e);
+					end.setHours(e);
 					addReservation(resource, 0, start, end, descriptions[(int)Math.floor(Math.random()*descriptions.length)]);
-					break;
 				}
 				cal.add(Calendar.DAY_OF_MONTH, 1);
 			}
@@ -426,7 +428,7 @@ public class SampleDB {
 						"w/ company logo. 12m3 storage space.", "Turku",
 						new Double(60.452171), new Double(22.2995) },
 				{ "03", "03 Saab 93",
-						"Cabriolet<br/>Keys from the rental desk.", "Turku",
+						"Cabriolet. Keys from the rental desk.", "Turku",
 						new Double(60.4507), new Double(22.295551) },
 				{ "04", "04 Volvo S60", "Key from the rental desk.", "Turku",
 						new Double(60.434722), new Double(22.224398) },

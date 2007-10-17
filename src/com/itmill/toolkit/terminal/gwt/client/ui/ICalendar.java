@@ -194,7 +194,7 @@ public class ICalendar extends IDateField {
 
 	private class EntrySource implements CalendarPanel.CalendarEntrySource {
 
-		private HashMap items = new HashMap();
+		private HashMap dates = new HashMap();
 
 		public void addItem(UIDL item) {
 			String styleName = item.getStringAttribute("styleName");
@@ -207,16 +207,34 @@ public class ICalendar extends IDateField {
 			String title = item.getStringAttribute("title");
 			String desc = item.getStringAttribute("description");
 			boolean notime = item.getBooleanAttribute("notime");
-			if (items.containsKey(id)) {
-				items.remove(id);
+			CalendarEntry entry = new CalendarEntry(styleName, startDate,
+					endDate, title, desc, notime);
+
+			// TODO should remove+readd if the same entry (id) is added again
+			
+			for (Date d = entry.getStart(); d.getYear() <= entry.getEnd()
+					.getYear()
+					&& d.getMonth() <= entry.getEnd().getYear()
+					&& d.getDate() <= entry.getEnd().getDate(); d.setTime(d
+					.getTime() + 86400000)) {
+				String key = d.getYear() + "" + d.getMonth() + "" + d.getDate();
+				ArrayList l = (ArrayList) dates.get(key);
+				if (l == null) {
+					l = new ArrayList();
+					dates.put(key, l);
+				}
+				l.add(entry);
 			}
-			items.put(id, new CalendarEntry(styleName, startDate, endDate,
-					title, desc, notime));
 		}
 
 		public List getEntries(Date date, int resolution) {
+			List entries = (List) dates.get(date.getYear() + "" + date.getMonth() + ""
+					+ date.getDate());
 			ArrayList res = new ArrayList();
-			for (Iterator it = this.items.values().iterator(); it.hasNext();) {
+			if (entries == null) {
+				return res;
+			}
+			for (Iterator it = entries.iterator(); it.hasNext();) {
 				CalendarEntry item = (CalendarEntry) it.next();
 				if (DateTimeService.isInRange(date, item.getStart(), item
 						.getEnd(), resolution)) {
@@ -228,7 +246,7 @@ public class ICalendar extends IDateField {
 		}
 
 		public void clear() {
-			items.clear();
+			dates.clear();
 		}
 
 	}
