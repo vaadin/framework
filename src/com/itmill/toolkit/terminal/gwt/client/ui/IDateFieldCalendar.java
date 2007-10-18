@@ -9,7 +9,6 @@ public class IDateFieldCalendar extends IDateField {
 
 	public IDateFieldCalendar() {
 		super();
-		setStyleName(CLASSNAME + "-calendar");
 		date = new CalendarPanel(this);
 		add(date);
 	}

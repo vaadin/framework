@@ -93,7 +93,8 @@
 	padding-top: 14px;
 }
 
-.i-panel-caption-light:before {
+.i-panel-caption-light:before,
+.i-panel-nocaption-light:before {
 	display: none;
 }
 

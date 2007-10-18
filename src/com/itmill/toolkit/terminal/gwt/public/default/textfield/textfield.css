@@ -6,12 +6,12 @@
 	border-bottom-color: #d6d6d6;
 	border-right-color: #d6d6d6;
 	margin: 0;
+	font-size: 13px;
+	height: 18px;
 }
 
 .i-textfield-focus {
-	border-color: #4376c3;
-	border-bottom-color: #6696dd;
-	border-right-color: #6696dd;
+	border-color: #5daee8;
 }
 
 .i-textfield-error {

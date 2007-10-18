@@ -70,8 +70,10 @@ public class IPanel extends SimplePanel implements Paintable,
 				&& !uidl.getStringAttribute("caption").equals("")) {
 			DOM.setInnerText(captionNode, uidl.getStringAttribute("caption"));
 			hasCaption = true;
-		} else
+		} else {
 			DOM.setInnerText(captionNode, "");
+			DOM.setElementProperty(captionNode, "className", CLASSNAME + "-nocaption");
+		}
 
 		// Add proper stylenames for all elements
 		if (uidl.hasAttribute("style")) {

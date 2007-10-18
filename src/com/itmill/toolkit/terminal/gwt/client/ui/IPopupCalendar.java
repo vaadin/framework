@@ -28,7 +28,7 @@ public class IPopupCalendar extends ITextualDate implements Paintable,
 
 		calendar = new CalendarPanel(this);
 		popup = new PopupPanel(true);
-		popup.setStyleName(IDateField.CLASSNAME + "-calendar");
+		popup.setStyleName(IDateField.CLASSNAME + "-popup");
 		popup.setWidget(calendar);
 		popup.addPopupListener(this);
 	}
@@ -44,6 +44,9 @@ public class IPopupCalendar extends ITextualDate implements Paintable,
 		if (sender == calendarToggle) {
 			calendar.updateCalendar();
 			popup.show();
+			// clear previous values
+			popup.setWidth("");
+			popup.setHeight("");
 			int w = calendar.getOffsetWidth();
 			int h = calendar.getOffsetHeight();
 			int t = calendarToggle.getAbsoluteTop();

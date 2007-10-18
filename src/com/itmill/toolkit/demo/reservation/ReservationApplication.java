@@ -30,18 +30,25 @@ public class ReservationApplication extends Application {
 	ResourceSelectorPanel resourcePanel;
 
 	private CalendarField reservedFrom;
+
 	private static final long DEFAULT_GAP_MILLIS = 3600000; // (almost) one
+
 	// hour
 	private long currentGapMillis = DEFAULT_GAP_MILLIS; // current length of
+
 	// reservation
 	private CalendarField reservedTo;
 
 	private Label resourceName;
+
 	private Label statusLabel;
+
 	private TextField description;
+
 	private Button reservationButton;
 
 	private Table allTable;
+
 	private CalendarField allCalendar;
 
 	private GoogleMap map;
@@ -116,7 +123,7 @@ public class ReservationApplication extends Application {
 		arrowLabel.setContentMode(Label.CONTENT_XHTML);
 		arrowLabel.setStyle("arrow");
 		reservationPanel.addComponent(arrowLabel);
-		
+
 		Calendar to = Calendar.getInstance();
 		to.setTime(from.getTime());
 		to.add(Calendar.MILLISECOND, (int) DEFAULT_GAP_MILLIS);
@@ -164,8 +171,9 @@ public class ReservationApplication extends Application {
 			}
 		});
 
-		OrderedLayout allLayout = new OrderedLayout(
-				OrderedLayout.ORIENTATION_HORIZONTAL);
+		Panel allLayout = new Panel(new OrderedLayout(
+				OrderedLayout.ORIENTATION_HORIZONTAL));
+		allLayout.addStyleName(Panel.STYLE_LIGHT);
 		allCalendar = new CalendarField();
 		initCalendarFieldPropertyIds(allCalendar);
 		allLayout.addComponent(allCalendar);
@@ -235,9 +243,10 @@ public class ReservationApplication extends Application {
 					SampleDB.Reservation.PROPERTY_ID_RESERVED_TO,
 					SampleDB.Resource.PROPERTY_ID_NAME,
 					SampleDB.Resource.PROPERTY_ID_DESCRIPTION,
-					SampleDB.Reservation.PROPERTY_ID_DESCRIPTION});
-			allTable.setColumnHeaders(new String[] {"From","To","Resource","Description","Message"});
-			}
+					SampleDB.Reservation.PROPERTY_ID_DESCRIPTION });
+			allTable.setColumnHeaders(new String[] { "From", "To", "Resource",
+					"Description", "Message" });
+		}
 		allCalendar.setContainerDataSource(allReservations);
 	}
 

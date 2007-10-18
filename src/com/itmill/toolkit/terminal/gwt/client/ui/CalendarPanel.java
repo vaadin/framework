@@ -24,13 +24,17 @@ public class CalendarPanel extends FlexTable implements MouseListener,
 	private IDateField datefield;
 
 	private IEventButton prevYear;
+
 	private IEventButton nextYear;
+
 	private IEventButton prevMonth;
+
 	private IEventButton nextMonth;
 
 	private Time time;
 
 	private Date minDate = null;
+
 	private Date maxDate = null;
 
 	private CalendarEntrySource entrySource;
@@ -85,7 +89,7 @@ public class CalendarPanel extends FlexTable implements MouseListener,
 	}
 
 	private void buildCalendarHeader(boolean forceRedraw, boolean needsMonth) {
-		// Can't draw a calendar without a date :)
+		// Can't draw a calendar without a date
 		if (datefield.getCurrentDate() == null)
 			datefield.setCurrentDate(new Date());
 
@@ -93,8 +97,10 @@ public class CalendarPanel extends FlexTable implements MouseListener,
 			if (prevMonth == null) { // Only do once
 				prevYear = new IEventButton();
 				prevYear.setHTML("&laquo;");
+				prevYear.setStyleName("i-button-prevyear");
 				nextYear = new IEventButton();
 				nextYear.setHTML("&raquo;");
+				nextYear.setStyleName("i-button-nextyear");
 				prevYear.addMouseListener(this);
 				nextYear.addMouseListener(this);
 				prevYear.addClickListener(this);
@@ -105,8 +111,10 @@ public class CalendarPanel extends FlexTable implements MouseListener,
 				if (needsMonth) {
 					prevMonth = new IEventButton();
 					prevMonth.setHTML("&lsaquo;");
+					prevMonth.setStyleName("i-button-prevmonth");
 					nextMonth = new IEventButton();
 					nextMonth.setHTML("&rsaquo;");
+					nextMonth.setStyleName("i-button-nextmonth");
 					prevMonth.addMouseListener(this);
 					nextMonth.addMouseListener(this);
 					prevMonth.addClickListener(this);
@@ -116,6 +124,8 @@ public class CalendarPanel extends FlexTable implements MouseListener,
 				}
 
 				getFlexCellFormatter().setColSpan(0, 2, 3);
+				getRowFormatter().addStyleName(0,
+						datefield.CLASSNAME + "-calendarpanel-header");
 			} else if (!needsMonth) {
 				// Remove month traverse buttons
 				prevMonth.removeClickListener(this);
@@ -364,19 +374,23 @@ public class CalendarPanel extends FlexTable implements MouseListener,
 			if (text.equals(" "))
 				return;
 
-			Integer day = new Integer(text);
+			try {
+				Integer day = new Integer(text);
+				Date newDate = new Date(cal.datefield.getCurrentDate().getTime());
+				newDate.setDate(day.intValue());
+				if (!isEnabledDate(newDate)) {
+					return;
+				}
+				cal.datefield.getCurrentDate().setTime(newDate.getTime());
+				cal.datefield.getClient().updateVariable(cal.datefield.getId(),
+						"day", cal.datefield.getCurrentDate().getDate(),
+						cal.datefield.isImmediate());
 
-			Date newDate = new Date(cal.datefield.getCurrentDate().getTime());
-			newDate.setDate(day.intValue());
-			if (!isEnabledDate(newDate)) {
+				updateCalendar();
+			} catch(NumberFormatException e) {
+				// Not a number, ignore and stop here
 				return;
 			}
-			cal.datefield.getCurrentDate().setTime(newDate.getTime());
-			cal.datefield.getClient().updateVariable(cal.datefield.getId(),
-					"day", cal.datefield.getCurrentDate().getDate(),
-					cal.datefield.isImmediate());
-
-			updateCalendar();
 		}
 
 	}
