@@ -7,119 +7,38 @@
 	When creating release use only "package-*" targets:
 	package-all-platforms, package-windows, package-linux or package-mac.
 
-	NOTE: This build script requires directories named build/gwt/(gwt|linux|windows|mac) .
-	It's best that you unpack platform specific binaries under linux, windows and mac directories and
-	then depending on your platform link build/gwt/gwt -> build/gwt/<my_platform>
-	build/gwt/gwt is used to compile WebContent/ITMILL/widgetsets (depends on your platform, hence we use "gwt") and
-	build/gwt/(linux|windows|mac) are used when creating platform specific release ZIP/TGZ packages.
+	NOTE: This build script requires directories named build/gwt/(linux|windows|mac) .
+	You must unpack platform specific binaries under linux, windows and mac directories.
+	build/gwt/(linux|windows|mac) are used for
+  	a) compile WebContent/ITMILL/widgetsets
+	b) creating platform specific release ZIP/TGZ packages.
 	-->
-	<target name="package-all-platforms" depends="clean-all, init" description="Build public packages for Windows, Linux and Mac platforms.">
-		<antcall target="build" />
-		<antcall target="package-windows" />
-		<antcall target="package-linux" />
-		<antcall target="package-osx" />
-	</target>
-
-	<target name="package-windows" description="Create ZIP package for Windows.">
-		<echo>Building package for Windows platform.</echo>
-		<!-- required when compiling WebContent/ITMILL/widgetsets (and also Java server-side classes) -->
-		<property name="lib-gwt-dev" value="gwt-dev-windows.jar" />
-		<property name="package-file-name" value="${product-file}-windows-${version}" />
-		<!-- TODO add platform specific files / other tweaks to package -->
-		<zip zipfile="build/result/${package-file-name}">
-			<fileset dir="build/result">
-				<patternset>
-					<include name="${product-file}-${version}/**" />
-				</patternset>
-			</fileset>
-			<fileset dir="build/gwt/windows">
-				<patternset>
-					<include name="**/*" />
-				</patternset>
-			</fileset>
-		</zip>
-		<!-- TODO remove platform specific files / other tweaks to package -->
-	</target>
-
-	<target name="package-linux" description="Create tar.gz package for Linux.">
-		<echo>Building package for Linux platform.</echo>
-		<!-- required when compiling WebContent/ITMILL/widgetsets (and also Java server-side classes) -->
-		<property name="lib-gwt-dev" value="gwt-dev-linux.jar" />
-		<property name="package-file-name" value="${product-file}-linux-${version}" />
-		<antcall target="add-unix-files" />
-		<tar dest="build/result/${package-file-name}" compress="gzip">
-			<fileset dir="build/result">
-				<patternset>
-					<include name="${product-file}-${version}/**" />
-				</patternset>
-			</fileset>
-			<fileset dir="build/gwt/linux">
-				<patternset>
-					<include name="**/*" />
-				</patternset>
-			</fileset>
-		</tar>
-		<antcall target="remove-unix-files" />
-	</target>
-
-	<target name="package-mac" description="Create tar.gz package for Mac.">
-		<echo>Building package for Mac platform.</echo>
-		<!-- required when compiling WebContent/ITMILL/widgetsets (and also Java server-side classes) -->
-		<property name="lib-gwt-dev" value="gwt-dev-max.jar" />
-		<property name="package-file-name" value="${product-file}-mac-${version}" />
-		<antcall target="add-unix-files" />
-		<tar dest="build/result/${package-file-name}" compress="gzip">
-			<fileset dir="build/result">
-				<patternset>
-					<include name="${product-file}-${version}/**" />
-				</patternset>
-			</fileset>
-			<fileset dir="build/gwt/mac">
-				<patternset>
-					<include name="**/*" />
-				</patternset>
-			</fileset>
-		</tar>
-		<antcall target="remove-unix-files" />
-	</target>
-
-	<target name="add-unix-files" depends="init">
-		<copy todir="${output-dir}">
-			<filterchain>
-				<expandproperties />
-				<replacetokens begintoken="&lt;" endtoken=">">
-					<token key="body" value="${html.body.tag}${html.body.start1}${product-name}${html.body.start2}" />
-					<token key="/body" value="${html.body.end}${html.body.endtag}" />
-					<token key="version" value="${version}" />
-					<token key="/version" value="" />
-				</replacetokens>
-			</filterchain>
-			<fileset dir="">
-				<include name="*.sh" />
-			</fileset>
-		</copy>
-		<chmod file="${output-dir}/start-demo.sh" perm="ugo+x" />
-	</target>
-
-	<target name="remove-unix-files" depends="init">
-		<delete includeemptydirs="true" defaultexcludes="false">
-			<fileset dir="${output-dir}">
-				<include name="start-demo.sh" />
-			</fileset>
-		</delete>
-	</target>
-
-	<!-- do not use these directly, use targets named package-* -->
-	<target name="build" depends="clean-all, root, demo, docs" description="Build package required files, without packing them.">
-	</target>
-
-	<!-- do not use these directly, use targets named package-*, retained for build.xml debug purposes only -->
-	<target name="build-no-manual" depends="clean-all, root, demo" description="Same as build, but without manual.">
-	</target>
 
 	<!-- Initialization - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 	<target name="init">
+		<!-- Find out which platform we are in -->
+		<if>
+			<equals arg1="${os.name}" arg2="Windows 2000, Windows XP" />
+			<then>
+				<property name="platform" value="windows" />
+			</then>
+		</if>
+		<if>
+			<equals arg1="${os.name}" arg2="Linux" />
+			<then>
+				<property name="platform" value="linux" />
+			</then>
+		</if>
+		<if>
+			<equals arg1="${os.name}" arg2="Mac OS X" />
+			<then>
+				<property name="platform" value="mac" />
+			</then>
+		</if>
+		<property name="lib-gwt-dev" value="gwt-dev-${platform}.jar" />
+		<echo>We are on ${platform} platform, using build/gwt/${platform}/${lib-gwt-dev}.</echo>
+
 		<!-- Create result dir unless already exists -->
 		<mkdir dir="build/result" />
 
@@ -150,6 +69,114 @@
 		<mkdir dir="${output-dir}/WebContent" />
 		<mkdir dir="${output-dir}/WebContent/WEB-INF" />
 		<mkdir dir="${output-dir}/WebContent/WEB-INF/classes" />
+	</target>
+
+
+	<target name="package-all-platforms" depends="init, clean-all" description="Build public packages for Windows, Linux and Mac platforms.">
+		<antcall target="build" />
+		<antcall target="package-windows" />
+		<antcall target="package-linux" />
+		<antcall target="package-osx" />
+	</target>
+
+	<target name="package-windows" depends="init, clean-all" description="Create ZIP package for Windows.">
+		<echo>Building package for Windows platform.</echo>
+		<!-- required when compiling WebContent/ITMILL/widgetsets (and also Java server-side classes) -->
+		<property name="package-file-name" value="${product-file}-windows-${version}" />
+		<antcall target="add-windows-files" />
+		<zip zipfile="build/result/${package-file-name}">
+			<fileset prefix="${product-file}-${version}" dir="build/result/${product-file}-${version}">
+				<patternset>
+					<include name="**/*" />
+				</patternset>
+			</fileset>
+			<fileset prefix="${product-file}-${version}/gwt" dir="build/gwt/windows">
+				<patternset>
+					<include name="**/*" />
+				</patternset>
+			</fileset>
+		</zip>
+	</target>
+
+	<target name="package-linux" depends="init, clean-all" description="Create tar.gz package for Linux.">
+		<echo>Building package for Linux platform.</echo>
+		<!-- required when compiling WebContent/ITMILL/widgetsets (and also Java server-side classes) -->
+		<property name="package-file-name" value="${product-file}-linux-${version}" />
+		<antcall target="add-linux-files" />
+		<tar destfile="build/result/${package-file-name}.tar.bz2" compression="bzip2" longfile="gnu">
+			<tarfileset prefix="${product-file}-${version}" dir="build/result/${product-file}-${version}">
+				<patternset>
+					<include name="**/*" />
+				</patternset>
+			</tarfileset>
+			<tarfileset prefix="${product-file}-${version}/gwt" dir="build/gwt/linux">
+				<patternset>
+					<include name="**/*" />
+				</patternset>
+			</tarfileset>
+		</tar>
+	</target>
+
+	<target name="package-mac" depends="init, clean-all" description="Create tar.gz package for Mac.">
+		<echo>Building package for Mac platform.</echo>
+		<!-- required when compiling WebContent/ITMILL/widgetsets (and also Java server-side classes) -->
+		<property name="package-file-name" value="${product-file}-mac-${version}" />
+		<antcall target="add-mac-files" />
+		<tar destfile="build/result/${package-file-name}.tar.gz" compression="gzip" longfile="gnu">
+			<tarfileset prefix="${product-file}-${version}" dir="build/result/${product-file}-${version}">
+				<patternset>
+					<include name="**/*" />
+				</patternset>
+			</tarfileset>
+			<tarfileset prefix="${product-file}-${version}/gwt" dir="build/gwt/mac">
+				<patternset>
+					<include name="**/*" />
+				</patternset>
+			</tarfileset>
+		</tar>
+	</target>
+
+	<target name="add-mac-files" depends="init">
+		<antcall target="remove-platform-specific-files" />
+		<copy todir="${output-dir}">
+			<filterchain>
+				<expandproperties />
+				<replacetokens begintoken="&lt;" endtoken=">">
+					<token key="version" value="${version}" />
+					<token key="/version" value="" />
+				</replacetokens>
+				<replacetokens begintoken="&lt;" endtoken=">">
+					<token key="platform-specific-entries" value="&lt;classpathentry kind=&quot;lib&quot; path=&quot;gwt/gwt-dev-mac.jar&quot; /&gt;" />
+					<token key="/platform-specific-entries" value="" />
+				</replacetokens>
+			</filterchain>
+			<fileset dir="build/package">
+				<include name="*.sh" />
+			</fileset>
+			<fileset dir="build/package">
+				<include name=".classpath" />
+				<include name=".project" />
+			</fileset>
+		</copy>
+		<chmod file="${output-dir}/start-demo.sh" perm="ugo+x" />
+	</target>
+
+	<target name="remove-platform-specific-files" depends="init">
+		<delete includeemptydirs="true" defaultexcludes="false">
+			<fileset dir="${output-dir}">
+				<include name="start-demo.*" />
+				<include name=".project" />
+				<include name=".classpath" />
+			</fileset>
+		</delete>
+	</target>
+
+	<!-- do not use these directly, use targets named package-* -->
+	<target name="build" depends="clean-all, root, demo, docs" description="Build package required files, without packing them.">
+	</target>
+
+	<!-- do not use these directly, use targets named package-*, retained for build.xml debug purposes only -->
+	<target name="build-no-manual" depends="clean-all, root, demo" description="Same as build, but without manual.">
 	</target>
 
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -286,8 +313,8 @@
 		<mkdir dir="build/result/classes" />
 		<javac source="1.4" target="1.4" srcdir="build/result/src" destdir="build/result/classes" includes="${toolkit-package}/**" debug="true">
 			<classpath>
-				<pathelement path="build/gwt/gwt/gwt-user.jar" />
-				<pathelement path="build/gwt/gwt/${lib-gwt-dev}" />
+				<pathelement path="build/gwt/${platform}/gwt-user.jar" />
+				<pathelement path="build/gwt/${platform}/${lib-gwt-dev}" />
 				<pathelement path="WebContent/WEB-INF/lib/commons-fileupload-1.2.jar" />
 				<pathelement path="lib/reservr/googlemaps_gwt.jar" />
 				<pathelement path="lib/jetty/jetty-6.1.5.jar" />
@@ -339,8 +366,8 @@
 			<arg value="${output-dir}/WebContent/ITMILL/widgetsets" />
 			<arg value="com.itmill.toolkit.terminal.gwt.DefaultWidgetSet" />
 			<classpath>
-				<pathelement location="build/gwt/gwt/gwt-user.jar" />
-				<pathelement location="build/gwt/gwt/${lib-gwt-dev}" />
+				<pathelement location="build/gwt/${platform}/gwt-user.jar" />
+				<pathelement location="build/gwt/${platform}/${lib-gwt-dev}" />
 				<pathelement location="${output-dir}/lib/itmill-toolkit-src-5.0.0-alpha.jar" />
 			</classpath>
 		</java>
@@ -351,8 +378,8 @@
 			<arg value="${output-dir}/WebContent/ITMILL/widgetsets" />
 			<arg value="com.itmill.toolkit.demo.reservation.gwt.WidgetSet" />
 			<classpath>
-				<pathelement location="build/gwt/gwt/gwt-user.jar" />
-				<pathelement location="build/gwt/gwt/${lib-gwt-dev}" />
+				<pathelement location="build/gwt/${platform}/gwt-user.jar" />
+				<pathelement location="build/gwt/${platform}/${lib-gwt-dev}" />
 				<pathelement location="${output-dir}/lib/itmill-toolkit-src-5.0.0-alpha.jar" />
 				<!-- demo jars -->
 				<pathelement location="${output-dir}/lib/demo/reservr/googlemaps_gwt.jar" />
@@ -367,8 +394,8 @@
 			<arg value="${output-dir}/WebContent/ITMILL/widgetsets" />
 			<arg value="com.itmill.toolkit.demo.colorpicker.gwt.WidgetSet" />
 			<classpath>
-				<pathelement location="build/gwt/gwt/gwt-user.jar" />
-				<pathelement location="build/gwt/gwt/${lib-gwt-dev}" />
+				<pathelement location="build/gwt/${platform}/gwt-user.jar" />
+				<pathelement location="build/gwt/${platform}/${lib-gwt-dev}" />
 				<pathelement location="${output-dir}/lib/itmill-toolkit-src-5.0.0-alpha.jar" />
 				<!-- demo widgetset sources -->
 				<pathelement path="${output-dir}/WebContent/src" />

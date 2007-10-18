@@ -6,10 +6,10 @@
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/commons-fileupload-1.2.jar" />
 	<classpathentry kind="lib" path="gwt/gwt-servlet.jar" />
 	<classpathentry kind="lib" path="gwt/gwt-user.jar" />
-	<classpathentry kind="lib" path="gwt/gwt-dev-linux.jar"/>
 	<classpathentry kind="lib" path="lib/demo/reservr/googlemaps_gwt.jar" />
 	<classpathentry kind="lib" path="lib/jetty/jetty-6.1.5.jar"/>
 	<classpathentry kind="lib" path="lib/jetty/jetty-util-6.1.5.jar"/>
 	<classpathentry kind="lib" path="lib/jetty/servlet-api-2.5-6.1.5.jar"/>
 	<classpathentry kind="output" path="WebContent/WEB-INF/classes"/>
+	<platform-specific-entries></platform-specific-entries>
 </classpath>
