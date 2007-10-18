@@ -405,7 +405,7 @@ public class SampleDB {
 					Object rid = rit.next();
 					Item resource = resources.getItem(rid);
 					int s = 6+(int)Math.round(Math.random() * 10.0);
-					int e = s + (int)Math.round(Math.random() * 4.0);
+					int e = s + 1 + (int)Math.round(Math.random() * 4.0);
 					Date start = new Date(cal.getTimeInMillis());
 					start.setHours(s);
 					Date end = new Date(cal.getTimeInMillis());
