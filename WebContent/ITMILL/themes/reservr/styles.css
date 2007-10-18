@@ -7,19 +7,24 @@ body {
 	margin: 0;
 	padding: 20px 25px 55px 25px;
 }
+
 #itmill-ajax-window {
-	background-color: transparent;	
+	background-color: transparent;
 }
+
 #header {
-	font-family:"Trebuchet MS",geneva,helvetica,arial,tahoma,verdana,sans-serif;
+	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana,
+		sans-serif;
 	padding: 10px;
 }
+
 #logo {
 	line-height: 33px;
-	color:#F14C1A;
-	font-size:22px;
-	letter-spacing:-0.03em;
+	color: #F14C1A;
+	font-size: 22px;
+	letter-spacing: -0.03em;
 }
+
 #slogan {
 	color: #464F52;
 	font-style: italic;
@@ -27,21 +32,24 @@ body {
 }
 
 /* Default widgetset overrides */
-.i-label, 
-.i-caption {
+.i-label,.i-caption {
 	min-height: 1em;
 }
+
 .i-datefield-entrycalendar-hours {
 	height: 250px;
 	overflow: auto;
 }
+
 .i-datefield-calendarpanel {
 	width: 20em;
 }
+
 .i-caption {
 	color: #F14C1A;
 	font-size: 16px;
 }
+
 .i-label-arrow {
 	line-height: 160px;
 	font-family: Times New Roman;
@@ -49,18 +57,21 @@ body {
 	font-size: 65px;
 	margin: 0 20px 0 12px;
 }
+
 textarea.i-textfield {
 	font-size: 13px;
 	width: 320px;
 	height: 110px;
 	margin-right: 30px;
 }
+
 .i-button-link {
 	border: 0px;
 	text-align: left;
 	text-decoration: none;
 	background: none;
 }
+
 .i-button-important-link {
 	border: 0px;
 	text-align: left;
@@ -68,6 +79,7 @@ textarea.i-textfield {
 	background: none;
 	font-weight: bold;
 }
+
 #itmill-ajax-window .i-button-selected-link {
 	border: 0px;
 	text-align: left;
@@ -76,8 +88,9 @@ textarea.i-textfield {
 	font-weight: bold;
 	color: #fff;
 }
+
 .i-orderedlayout {
-	margin:0px;
+	margin: 0px;
 	padding: 0px;
 }
 
