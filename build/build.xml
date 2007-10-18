@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="IT Mill Toolkit" basedir="../" default="package-all-platforms">
+<project name="IT Mill Toolkit" basedir="../" default="package-all">
 
 	<!-- Package creation - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -14,8 +14,24 @@
 	b) creating platform specific release ZIP/TGZ packages.
 	-->
 
-	<!-- Initialization - - - - - - - - - - - - - - - - - - - - - - - - -->
+	<!-- Call one of package-* targets unless you understand what you are doing -->
+	<target name="package-all" depends="clean-all, init, build, internal-package-windows, internal-package-linux, internal-package-mac " description="Build public packages for Windows, Linux and Mac platforms.">
+		<!--<antcall target="internal-package-windows" />
+		<antcall target="internal-package-linux" />
+		<antcall target="internal-package-mac" />-->
+	</target>
 
+	<target name="package-windows" depends="clean-all, init, build, internal-package-windows" description="Create public ZIP package for Windows.">
+	</target>
+
+	<target name="package-linux" depends="clean-all, init, build, internal-package-linux" description="Create public tar.bz2 package for Linux.">
+	</target>
+
+	<target name="package-mac" depends="clean-all, init, build, internal-package-mac" description="Create public tar.gz package for Mac.">
+	</target>
+
+
+	<!-- Initialization - - - - - - - - - - - - - - - - - - - - - - - - -->
 	<target name="init">
 		<!-- Find out which platform we are in -->
 		<if>
@@ -36,7 +52,9 @@
 				<property name="platform" value="mac" />
 			</then>
 		</if>
+		<!-- required when compiling WebContent/ITMILL/widgetsets (and also Java server-side classes) -->
 		<property name="lib-gwt-dev" value="gwt-dev-${platform}.jar" />
+
 		<echo>We are on ${platform} platform, using build/gwt/${platform}/${lib-gwt-dev}.</echo>
 
 		<!-- Create result dir unless already exists -->
@@ -69,41 +87,43 @@
 		<mkdir dir="${output-dir}/WebContent" />
 		<mkdir dir="${output-dir}/WebContent/WEB-INF" />
 		<mkdir dir="${output-dir}/WebContent/WEB-INF/classes" />
+
+		<!-- Construct classpath used by java and javadoc compilation -->
+		<path id="compile.classpath">
+			<pathelement path="build/gwt/${platform}/gwt-user.jar" />
+			<pathelement path="build/gwt/${platform}/${lib-gwt-dev}" />
+			<pathelement path="WebContent/WEB-INF/lib/commons-fileupload-1.2.jar" />
+			<pathelement path="lib/reservr/googlemaps_gwt.jar" />
+			<pathelement path="lib/jetty/jetty-6.1.5.jar" />
+			<pathelement path="lib/jetty/jetty-util-6.1.5.jar" />
+			<pathelement path="lib/jetty/servlet-api-2.5-6.1.5.jar" />
+		</path>
+
 	</target>
 
-
-	<target name="package-all-platforms" depends="init, clean-all" description="Build public packages for Windows, Linux and Mac platforms.">
-		<antcall target="build" />
-		<antcall target="package-windows" />
-		<antcall target="package-linux" />
-		<antcall target="package-osx" />
-	</target>
-
-	<target name="package-windows" depends="init, clean-all" description="Create ZIP package for Windows.">
-		<echo>Building package for Windows platform.</echo>
-		<!-- required when compiling WebContent/ITMILL/widgetsets (and also Java server-side classes) -->
-		<property name="package-file-name" value="${product-file}-windows-${version}" />
-		<antcall target="add-windows-files" />
-		<zip zipfile="build/result/${package-file-name}">
-			<fileset prefix="${product-file}-${version}" dir="build/result/${product-file}-${version}">
+	<target name="internal-package-windows">
+		<echo>Creating package for Windows platform.</echo>
+		<property name="package-platform" value="windows" />
+		<antcall target="add-platform-specific-files" inheritAll="true" inheritRefs="true" />
+		<zip zipfile="build/result/${product-file}-${package-platform}-${version}.zip">
+			<zipfileset dir="build/result">
+				<patternset>
+					<include name="${product-file}-${version}/**/*" />
+				</patternset>
+			</zipfileset>
+			<zipfileset prefix="${product-file}-${version}/gwt" dir="build/gwt/windows">
 				<patternset>
 					<include name="**/*" />
 				</patternset>
-			</fileset>
-			<fileset prefix="${product-file}-${version}/gwt" dir="build/gwt/windows">
-				<patternset>
-					<include name="**/*" />
-				</patternset>
-			</fileset>
+			</zipfileset>
 		</zip>
 	</target>
 
-	<target name="package-linux" depends="init, clean-all" description="Create tar.gz package for Linux.">
-		<echo>Building package for Linux platform.</echo>
-		<!-- required when compiling WebContent/ITMILL/widgetsets (and also Java server-side classes) -->
-		<property name="package-file-name" value="${product-file}-linux-${version}" />
-		<antcall target="add-linux-files" />
-		<tar destfile="build/result/${package-file-name}.tar.bz2" compression="bzip2" longfile="gnu">
+	<target name="internal-package-linux">
+		<echo>Creating package for Linux platform.</echo>
+		<property name="package-platform" value="linux" />
+		<antcall target="add-platform-specific-files" inheritAll="true" inheritRefs="true" />
+		<tar destfile="build/result/${product-file}-${package-platform}-${version}.tar.bz2" compression="bzip2" longfile="gnu">
 			<tarfileset prefix="${product-file}-${version}" dir="build/result/${product-file}-${version}">
 				<patternset>
 					<include name="**/*" />
@@ -117,12 +137,11 @@
 		</tar>
 	</target>
 
-	<target name="package-mac" depends="init, clean-all" description="Create tar.gz package for Mac.">
-		<echo>Building package for Mac platform.</echo>
-		<!-- required when compiling WebContent/ITMILL/widgetsets (and also Java server-side classes) -->
-		<property name="package-file-name" value="${product-file}-mac-${version}" />
-		<antcall target="add-mac-files" />
-		<tar destfile="build/result/${package-file-name}.tar.gz" compression="gzip" longfile="gnu">
+	<target name="internal-package-mac">
+		<echo>Creating package for Mac platform.</echo>
+		<property name="package-platform" value="mac" />
+		<antcall target="add-platform-specific-files" inheritAll="true" inheritRefs="true" />
+		<tar destfile="build/result/${product-file}-${package-platform}-${version}.tar.gz" compression="gzip" longfile="gnu">
 			<tarfileset prefix="${product-file}-${version}" dir="build/result/${product-file}-${version}">
 				<patternset>
 					<include name="**/*" />
@@ -134,10 +153,22 @@
 				</patternset>
 			</tarfileset>
 		</tar>
+		<!-- 
+			TODO: how about creating dmg ? 
+			<exec executable="hdiutil">
+				<arg line="create -srcfolder build/result/${product-file}-${version} build/result/${product-file}-${package-platform}-${version}.dmg"/>
+			</exec>
+		-->
 	</target>
 
-	<target name="add-mac-files" depends="init">
-		<antcall target="remove-platform-specific-files" />
+	<target name="add-platform-specific-files">
+		<delete includeemptydirs="true" defaultexcludes="false">
+			<fileset dir="${output-dir}">
+				<include name="start-demo.*" />
+				<include name=".project" />
+				<include name=".classpath" />
+			</fileset>
+		</delete>
 		<copy todir="${output-dir}">
 			<filterchain>
 				<expandproperties />
@@ -146,44 +177,63 @@
 					<token key="/version" value="" />
 				</replacetokens>
 				<replacetokens begintoken="&lt;" endtoken=">">
-					<token key="platform-specific-entries" value="&lt;classpathentry kind=&quot;lib&quot; path=&quot;gwt/gwt-dev-mac.jar&quot; /&gt;" />
+					<token key="platform-specific-entries" value="&lt;classpathentry kind=&quot;lib&quot; path=&quot;gwt/gwt-dev-${package-platform}.jar&quot; /&gt;" />
 					<token key="/platform-specific-entries" value="" />
 				</replacetokens>
 			</filterchain>
-			<fileset dir="build/package">
-				<include name="*.sh" />
-			</fileset>
 			<fileset dir="build/package">
 				<include name=".classpath" />
 				<include name=".project" />
 			</fileset>
 		</copy>
-		<chmod file="${output-dir}/start-demo.sh" perm="ugo+x" />
+		<if>
+			<equals arg1="${package-platform}" arg2="windows" />
+			<then>
+				<copy todir="${output-dir}">
+					<fileset dir="build/package">
+						<filename name="*.bat" />
+					</fileset>
+				</copy>
+			</then>
+		</if>
+		<if>
+			<equals arg1="${package-platform}" arg2="linux" />
+			<then>
+				<copy todir="${output-dir}">
+					<fileset dir="build/package">
+						<filename name="*.sh" />
+					</fileset>
+				</copy>
+				<chmod file="${output-dir}/start-demo.sh" perm="ugo+x" />
+			</then>
+		</if>
+		<if>
+			<equals arg1="${package-platform}" arg2="mac" />
+			<then>
+				<copy todir="${output-dir}">
+					<fileset dir="build/package">
+						<filename name="*.sh" />
+					</fileset>
+				</copy>
+				<chmod file="${output-dir}/start-demo.sh" perm="ugo+x" />
+			</then>
+		</if>
 	</target>
 
-	<target name="remove-platform-specific-files" depends="init">
-		<delete includeemptydirs="true" defaultexcludes="false">
-			<fileset dir="${output-dir}">
-				<include name="start-demo.*" />
-				<include name=".project" />
-				<include name=".classpath" />
-			</fileset>
-		</delete>
-	</target>
-
+	<!-- TODO: add docs -->
 	<!-- do not use these directly, use targets named package-* -->
-	<target name="build" depends="clean-all, root, demo, docs" description="Build package required files, without packing them.">
-	</target>
-
-	<!-- do not use these directly, use targets named package-*, retained for build.xml debug purposes only -->
-	<target name="build-no-manual" depends="clean-all, root, demo" description="Same as build, but without manual.">
+	<target name="build" depends="root, demo" description="Build package required files, without packing them.">
 	</target>
 
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   Add and filter root files
    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	<target name="root" depends="init">
-		<!-- TODO: add license directory and files -->
+	<target name="root">
+		<copy todir="${output-dir}/license">
+			<fileset dir="license">
+				<filename name="*.pdf" />
+			</fileset>
+		</copy>
 		<copy todir="${output-dir}">
 			<filterchain>
 				<expandproperties />
@@ -211,6 +261,7 @@
 				<exclude name="release-notes.html" />
 				<include name="*.html" />
 				<include name="*.txt" />
+				<include name="license/*.html" />
 			</fileset>
 		</copy>
 	</target>
@@ -219,7 +270,7 @@
 	<!-- Copy and preprocess sources for packaging 
 	NOTE: Replaces <version></version> tags with build version tag for some "textual" files
 	-->
-	<target name="preprocess-src" depends="init">
+	<target name="preprocess-src">
 		<mkdir dir="build/result/src" />
 		<echo>Copying src directory and processing copied files.</echo>
 		<echo>Replacing &lt;version&gt; tag with build version for java/html/css/xml files.</echo>
@@ -264,23 +315,6 @@
   WebContent
    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	<target name="webcontent" depends="preprocess-src">
-		<!-- 
-    Copy Eclipse workspace related hidden files (.classpath, .project)
-    Allows project import from Eclipse
-     -->
-		<echo>Adding Eclipse workspace files, replacing &lt;version&gt; tag with build version</echo>
-		<copy todir="${output-dir}">
-			<filterchain>
-				<expandproperties />
-				<replacetokens begintoken="&lt;" endtoken=">">
-					<token key="version" value="${version}" />
-					<token key="/version" value="" />
-				</replacetokens>
-			</filterchain>
-			<fileset dir="build/workspace-eclipse">
-				<exclude name="**/.svn" />
-			</fileset>
-		</copy>
 
 		<!-- Add demo sources -->
 		<echo>Adding demo sources to WebContent/src</echo>
@@ -311,16 +345,7 @@
 		<echo>Compiling src (server-side)</echo>
 		<!-- Compile -->
 		<mkdir dir="build/result/classes" />
-		<javac source="1.4" target="1.4" srcdir="build/result/src" destdir="build/result/classes" includes="${toolkit-package}/**" debug="true">
-			<classpath>
-				<pathelement path="build/gwt/${platform}/gwt-user.jar" />
-				<pathelement path="build/gwt/${platform}/${lib-gwt-dev}" />
-				<pathelement path="WebContent/WEB-INF/lib/commons-fileupload-1.2.jar" />
-				<pathelement path="lib/reservr/googlemaps_gwt.jar" />
-				<pathelement path="lib/jetty/jetty-6.1.5.jar" />
-				<pathelement path="lib/jetty/jetty-util-6.1.5.jar" />
-				<pathelement path="lib/jetty/servlet-api-2.5-6.1.5.jar" />
-			</classpath>
+		<javac source="1.4" target="1.4" classpathref="compile.classpath" srcdir="build/result/src" destdir="build/result/classes" includes="${toolkit-package}/**" debug="true">
 		</javac>
 	</target>
 
@@ -358,7 +383,11 @@
 		</jar>
 	</target>
 
+	<!-- TODO: remove -->
 	<target name="compile-client-side" depends="libs">
+	</target>
+
+	<target name="compile-client-side2" depends="libs">
 		<echo>Compiling src (client-side)</echo>
 		<echo>com.itmill.toolkit.terminal.gwt.DefaultWidgetSet</echo>
 		<java classname="com.google.gwt.dev.GWTCompiler" failonerror="yes" fork="yes" maxmemory="512m">
@@ -404,7 +433,7 @@
 	</target>
 
 	<!-- Demo  - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	<target name="demo" depends="root, libs, compile-java, compile-client-side, javadoc">
+	<target name="demo" depends="libs, compile-java, compile-client-side, javadoc">
 		<echo>Building demo</echo>
 		<echo>Adding demo class files.</echo>
 		<copy todir="${output-dir}/WebContent/WEB-INF/classes">
@@ -468,7 +497,7 @@
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   Documentation: Add documentation including style files
    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	<target name="package-docs" depends="init">
+	<target name="package-docs">
 		<copy todir="${output-dir}/doc/manual/html-style">
 			<fileset dir="doc/manual/html-style">
 				<exclude name="**/.svn" />
@@ -488,7 +517,7 @@
   Documentation: Add Javadoc to doc
    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	<target name="javadoc" depends="preprocess-src">
-		<javadoc destdir="${output-dir}/doc/api" author="true" version="true" use="true" windowtitle="${product-name}" classpath="build/lib/servlet-api.jar">
+		<javadoc destdir="${output-dir}/doc/api" author="true" version="true" use="true" windowtitle="${product-name}" classpathref="compile.classpath">
 			<packageset dir="build/result/src">
 				<include name="${toolkit-package}/**" />
 				<exclude name="${toolkit-package}/demo/**" />
@@ -527,11 +556,11 @@
 		</javadoc>
 	</target>
 
-	<target name="manual-pdf" depends="init">
+	<target name="manual-pdf">
 		<!-- TODO Include XEP-based FO building in future -->
 	</target>
 
-	<target name="manual-html" depends="init">
+	<target name="manual-html">
 		<delete file="build/docbook/conf/temp.xsl" />
 		<copy file="build/docbook/conf/custom-html-docbook.xsl" tofile="build/docbook/conf/temp.xsl">
 			<filterchain>

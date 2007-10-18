@@ -73,10 +73,10 @@ public class FeatureBrowser extends CustomComponent implements
 
 		// Theme selector
 		mainlayout.addComponent(themeSelector, "themes");
-		themeSelector.addItem("demo");
+		themeSelector.addItem("tests-featurebrowser");
 
 		themeSelector.addListener(this);
-		themeSelector.select("demo");
+		themeSelector.select("tests-featurebrowser");
 		themeSelector.setImmediate(true);
 
 		// Restart button
