@@ -5,7 +5,18 @@
 	<!-- Package creation - - - - - - - - - - - - - - - - - - - - - - - - -
 
 	When creating release use only "package-*" targets:
-	package-all-platforms, package-windows, package-linux or package-mac.
+	package-all-platforms
+	 * creates four release packages for three three platforms (below)
+	 
+	package-windows
+     * itmill-toolkit-windows-<version>.zip
+	
+	package-linux
+	 * itmill-toolkit-linux-<version>.tar.bz2
+	 
+	package-mac
+	 * itmill-toolkit-mac-<version>.tar.gz
+	 * itmill-toolkit-mac-<version>.dmg
 
 	NOTE: This build script requires directories named build/gwt/(linux|windows|mac) .
 	You must unpack platform specific binaries under linux, windows and mac directories.
@@ -14,20 +25,19 @@
 	b) creating platform specific release ZIP/TGZ packages.
 	-->
 
-	<!-- Call one of package-* targets unless you understand what you are doing -->
-	<target name="package-all" depends="clean-all, init, build, internal-package-windows, internal-package-linux, internal-package-mac " description="Build public packages for Windows, Linux and Mac platforms.">
-		<!--<antcall target="internal-package-windows" />
-		<antcall target="internal-package-linux" />
-		<antcall target="internal-package-mac" />-->
+	<!-- 
+	Call one of package-* targets unless you understand what you are doing 
+	-->
+	<target name="package-all" depends="clean-all, init, build, internal-package-mac, internal-package-windows, internal-package-linux" description="Build public packages for Windows, Linux and Mac platforms.">
+	</target>
+
+	<target name="package-mac" depends="clean-all, init, build, internal-package-mac" description="Create public tar.gz package for Mac.">
 	</target>
 
 	<target name="package-windows" depends="clean-all, init, build, internal-package-windows" description="Create public ZIP package for Windows.">
 	</target>
 
 	<target name="package-linux" depends="clean-all, init, build, internal-package-linux" description="Create public tar.bz2 package for Linux.">
-	</target>
-
-	<target name="package-mac" depends="clean-all, init, build, internal-package-mac" description="Create public tar.gz package for Mac.">
 	</target>
 
 
@@ -103,15 +113,17 @@
 
 	<target name="internal-package-windows">
 		<echo>Creating package for Windows platform.</echo>
-		<property name="package-platform" value="windows" />
+		<echo>1: ${package-platform}</echo>
+		<var name="package-platform" value="windows" />
+		<echo>2: ${package-platform}</echo>
 		<antcall target="add-platform-specific-files" inheritAll="true" inheritRefs="true" />
 		<zip zipfile="build/result/${product-file}-${package-platform}-${version}.zip">
-			<zipfileset dir="build/result">
+			<zipfileset prefix="${product-file}-${package-platform}-${version}" dir="build/result/${product-file}-${version}">
 				<patternset>
-					<include name="${product-file}-${version}/**/*" />
+					<include name="**/*" />
 				</patternset>
 			</zipfileset>
-			<zipfileset prefix="${product-file}-${version}/gwt" dir="build/gwt/windows">
+			<zipfileset prefix="${product-file}-${package-platform}-${version}/gwt" dir="build/gwt/windows">
 				<patternset>
 					<include name="**/*" />
 				</patternset>
@@ -121,15 +133,15 @@
 
 	<target name="internal-package-linux">
 		<echo>Creating package for Linux platform.</echo>
-		<property name="package-platform" value="linux" />
+		<var name="package-platform" value="linux" />
 		<antcall target="add-platform-specific-files" inheritAll="true" inheritRefs="true" />
 		<tar destfile="build/result/${product-file}-${package-platform}-${version}.tar.bz2" compression="bzip2" longfile="gnu">
-			<tarfileset prefix="${product-file}-${version}" dir="build/result/${product-file}-${version}">
+			<tarfileset prefix="${product-file}-${package-platform}-${version}" dir="build/result/${product-file}-${version}">
 				<patternset>
 					<include name="**/*" />
 				</patternset>
 			</tarfileset>
-			<tarfileset prefix="${product-file}-${version}/gwt" dir="build/gwt/linux">
+			<tarfileset prefix="${product-file}-${package-platform}-${version}/gwt" dir="build/gwt/linux">
 				<patternset>
 					<include name="**/*" />
 				</patternset>
@@ -137,28 +149,28 @@
 		</tar>
 	</target>
 
-	<target name="internal-package-mac">
+	<target name="internal-package-mac" depends="init">
 		<echo>Creating package for Mac platform.</echo>
-		<property name="package-platform" value="mac" />
+		<var name="package-platform" value="mac" />
 		<antcall target="add-platform-specific-files" inheritAll="true" inheritRefs="true" />
 		<tar destfile="build/result/${product-file}-${package-platform}-${version}.tar.gz" compression="gzip" longfile="gnu">
-			<tarfileset prefix="${product-file}-${version}" dir="build/result/${product-file}-${version}">
+			<tarfileset prefix="${product-file}-${package-platform}-${version}" dir="build/result/${product-file}-${version}">
 				<patternset>
 					<include name="**/*" />
 				</patternset>
 			</tarfileset>
-			<tarfileset prefix="${product-file}-${version}/gwt" dir="build/gwt/mac">
+			<tarfileset prefix="${product-file}-${package-platform}-${version}/gwt" dir="build/gwt/mac">
 				<patternset>
 					<include name="**/*" />
 				</patternset>
 			</tarfileset>
 		</tar>
-		<!-- 
-			TODO: how about creating dmg ? 
-			<exec executable="hdiutil">
-				<arg line="create -srcfolder build/result/${product-file}-${version} build/result/${product-file}-${package-platform}-${version}.dmg"/>
-			</exec>
-		-->
+		<!-- create Mac disk image (dmg) also -->
+		<untar src="build/result/${product-file}-${package-platform}-${version}.tar.gz" dest="build/result/" compression="gzip" />
+		<echo>Creating Mac disk image (dmg)</echo>
+		<exec executable="hdiutil">
+			<arg line="create -srcfolder build/result/${product-file}-${package-platform}-${version} -format UDZO -imagekey zlib-level=9 build/result/${product-file}-${package-platform}-${version}.dmg" />
+		</exec>
 	</target>
 
 	<target name="add-platform-specific-files">
