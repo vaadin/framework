@@ -59,7 +59,7 @@ public class ApplicationConnection implements FocusListener {
 		makeUidlRequest("repaintAll=1");
 
 		// TODO remove hardcoded id name
-		view = new IView("itmtk-ajax-window");
+		view = new IView("itmill-ajax-window");
 
 	}
 
@@ -76,7 +76,7 @@ public class ApplicationConnection implements FocusListener {
 
 	public native String getAppUri()
 	/*-{
-	 var u = $wnd.itmtk.appUri;
+	 var u = $wnd.itmill.appUri;
 	 if (u.indexOf("/") != 0 && u.indexOf("http") != 0) {
 	 var b = $wnd.location.href;
 	 var i = b.length-1;
@@ -89,7 +89,7 @@ public class ApplicationConnection implements FocusListener {
 
 	private native String getPathInfo()
 	/*-{
-	 return $wnd.itmtk.pathInfo;
+	 return $wnd.itmill.pathInfo;
 	 }-*/;
 
 	private void makeUidlRequest(String requestData) {

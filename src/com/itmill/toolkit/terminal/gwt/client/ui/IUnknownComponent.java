@@ -17,8 +17,8 @@ public class IUnknownComponent extends Composite implements Paintable {
 		panel.add(caption);
 		panel.add(uidlTree);
 		initWidget(panel);
-		setStyleName("itmtk-unknown");
-		caption.setStyleName("itmtk-unknown-caption");
+		setStyleName("itmill-unknown");
+		caption.setStyleName("itmill-unknown-caption");
 	}
 
 	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {

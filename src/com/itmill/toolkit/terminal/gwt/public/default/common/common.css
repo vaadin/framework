@@ -1,4 +1,4 @@
-#itmtk-ajax-window {
+#itmill-ajax-window {
 	background: #e9eced;
 	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
 	color: #464f52;
@@ -11,15 +11,15 @@
 	height: 100%;	
 }
 
-#itmtk-ajax-window input, 
-#itmtk-ajax-window select, 
-#itmtk-ajax-window textarea, 
-#itmtk-ajax-window button {
+#itmill-ajax-window input, 
+#itmill-ajax-window select, 
+#itmill-ajax-window textarea, 
+#itmill-ajax-window button {
 	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
 	color: #464f52;
 }
 
-#itmtk-ajax-window select {
+#itmill-ajax-window select {
 	padding: 0;
 	margin: 0;
 }

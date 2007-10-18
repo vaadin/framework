@@ -5,7 +5,7 @@ body {
 	background-repeat: no-repeat;
 	background-position: top right;
 }
-#itmtk-ajax-window {
+#itmill-ajax-window {
 	background-color: transparent;	
 }
 #header {
@@ -64,7 +64,7 @@ textarea.i-textfield {
 	background: none;
 	font-weight: bold;
 }
-#itmtk-ajax-window .i-button-selected-link {
+#itmill-ajax-window .i-button-selected-link {
 	border: 0px;
 	text-align: left;
 	text-decoration: none;

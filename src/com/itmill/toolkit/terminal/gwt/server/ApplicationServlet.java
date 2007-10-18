@@ -440,7 +440,7 @@ public class ApplicationServlet extends HttpServlet {
 		page
 				.write("<html xmlns=\"http://www.w3.org/1999/xhtml\">\n<head>\n<title>IT Mill Toolkit 5</title>\n"
 						+ "<script type=\"text/javascript\">\n"
-						+ "	var itmtk = {\n" + "		appUri:'");
+						+ "	var itmill = {\n" + "		appUri:'");
 
 		String[] urlParts = getApplicationUrl(request).toString().split("\\/");
 		String appUrl = "";
@@ -481,7 +481,7 @@ public class ApplicationServlet extends HttpServlet {
 						+ "/styles.css\">"
 						+ "</head>\n<body>\n"
 						+ "	<iframe id=\"__gwt_historyFrame\" style=\"width:0;height:0;border:0\"></iframe>\n"
-						+ "	<div id=\"itmtk-ajax-window\"></div>"
+						+ "	<div id=\"itmill-ajax-window\"></div>"
 						+ "	</body>\n" + "</html>\n");
 
 		page.close();
