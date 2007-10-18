@@ -336,8 +336,8 @@ public class SampleDB {
 		String checkQ = "SELECT count(*) FROM " + Reservation.TABLE + " WHERE "
 				+ Reservation.PROPERTY_ID_RESOURCE_ID + "=? AND (("
 				+ Reservation.PROPERTY_ID_RESERVED_FROM + ">=? AND "
-				+ Reservation.PROPERTY_ID_RESERVED_FROM + "<=?) OR ("
-				+ Reservation.PROPERTY_ID_RESERVED_TO + ">=? AND "
+				+ Reservation.PROPERTY_ID_RESERVED_FROM + "<?) OR ("
+				+ Reservation.PROPERTY_ID_RESERVED_TO + ">? AND "
 				+ Reservation.PROPERTY_ID_RESERVED_TO + "<=?) OR ("
 				+ Reservation.PROPERTY_ID_RESERVED_FROM + "<=? AND "
 				+ Reservation.PROPERTY_ID_RESERVED_TO + ">=?)" + ")";
@@ -399,12 +399,14 @@ public class SampleDB {
 			cal.set(Calendar.MINUTE, 0);
 			cal.set(Calendar.SECOND, 0);
 			cal.set(Calendar.MILLISECOND, 0);
+			int hourNow = new Date().getHours();
 			//cal.add(Calendar.DAY_OF_MONTH, -days);
 			for (int i = 0;i<days;i++) {
-				for (Iterator rit = rIds.iterator();rit.hasNext();) {
+				int r = 3;
+				for (Iterator rit = rIds.iterator();rit.hasNext()&&r>0;r--) {
 					Object rid = rit.next();
 					Item resource = resources.getItem(rid);
-					int s = 6+(int)Math.round(Math.random() * 10.0);
+					int s = hourNow-6+(int)Math.round(Math.random() * 6.0);
 					int e = s + 1 + (int)Math.round(Math.random() * 4.0);
 					Date start = new Date(cal.getTimeInMillis());
 					start.setHours(s);
@@ -412,7 +414,7 @@ public class SampleDB {
 					end.setHours(e);
 					addReservation(resource, 0, start, end, descriptions[(int)Math.floor(Math.random()*descriptions.length)]);
 				}
-				cal.add(Calendar.DAY_OF_MONTH, 1);
+				cal.add(Calendar.DATE, 1);
 			}
 		}
 		
