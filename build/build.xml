@@ -149,7 +149,7 @@
 		</tar>
 	</target>
 
-	<target name="internal-package-mac" depends="init">
+	<target name="internal-package-mac">
 		<echo>Creating package for Mac platform.</echo>
 		<var name="package-platform" value="mac" />
 		<antcall target="add-platform-specific-files" inheritAll="true" inheritRefs="true" />
@@ -165,12 +165,73 @@
 				</patternset>
 			</tarfileset>
 		</tar>
+		<antcall target="create-mac-diskimage" inheritAll="true" inheritRefs="true" />
+	</target>
+
+	<target name="create-mac-diskimage">
 		<!-- create Mac disk image (dmg) also -->
-		<untar src="build/result/${product-file}-${package-platform}-${version}.tar.gz" dest="build/result/" compression="gzip" />
-		<echo>Creating Mac disk image (dmg)</echo>
-		<exec executable="hdiutil">
-			<arg line="create -srcfolder build/result/${product-file}-${package-platform}-${version} -format UDZO -imagekey zlib-level=9 build/result/${product-file}-${package-platform}-${version}.dmg" />
-		</exec>
+		<property name="mount.dir" value="build/result/mac-mounted-image" />
+		<mkdir dir="${mount.dir}" />
+		<delete file="build/result/*.dmg" />
+		<if>
+			<equals arg1="${platform}" arg2="mac" />
+			<then>
+				<untar src="build/result/${product-file}-${package-platform}-${version}.tar.gz" dest="build/result/" compression="gzip" />
+				<echo>Creating Mac disk image (dmg)</echo>
+				<!-- create image -->
+				<echo>hdiutil create -format UDRW -volname ${product-file}-${version} -srcfolder build/result/${product-file}-${package-platform}-${version} build/result/disk-image.dmg</echo>
+				<exec executable="hdiutil" failonerror="true">
+					<arg line="create -format UDRW -volname ${product-file}-${version} -srcfolder build/result/${product-file}-${package-platform}-${version} build/result/disk-image.dmg" />
+				</exec>
+				<!-- open image -->
+				<exec executable="hdiutil" failonerror="true">
+					<arg line='attach' />
+					<arg line='-readwrite' />
+					<arg line='-noverify' />
+					<arg line='-noautoopen' />
+					<arg line='-mountpoint ${mount.dir}' />
+					<arg line='build/result/disk-image.dmg' />
+				</exec>
+				<!-- make sure root folder is opened when image is -->
+				<exec executable="bless" failonerror="true">
+					<arg line='--folder ${mount.dir}' />
+					<arg line='--openfolder ${mount.dir}' />
+				</exec>
+				<!-- hack: wait for completion -->
+				<exec executable="sleep" failonerror="true">
+					<arg line='2' />
+				</exec>
+				<!-- here we could position items -->
+				<!--
+				<exec executable="osascript" failonerror="true">
+					<arg line='package/positionItems.scpt ${mount.dir}' />
+				</exec>
+				-->
+				<!-- turn on volume icon -->
+				<exec executable="/Developer/Tools/SetFile" failonerror="true">
+					<arg line='-a C' />
+					<arg line='${mount.dir}' />
+				</exec>
+				<!-- set executable bit -->
+				<chmod file="${mount.dir}/start-demo.sh" perm="ugo+x" />
+				<!-- close image -->
+				<exec executable="hdiutil" failonerror="true">
+					<arg line='detach ${mount.dir}/' />
+				</exec>
+				<!-- make read-only -->
+				<exec executable="hdiutil" failonerror="true">
+					<arg line='convert build/result/disk-image.dmg' />
+					<arg line='-format UDZO' />
+					<arg line='-imagekey zlib-level=9' />
+					<arg line='-o build/result/${product-file}-${package-platform}-${version}.dmg' />
+				</exec>
+				<delete file="build/result/disk-image.dmg" />
+				<!-- internet-enable -->
+				<exec executable="hdiutil" failonerror="true">
+					<arg line='internet-enable build/result/${product-file}-${package-platform}-${version}.dmg' />
+				</exec>
+			</then>
+		</if>
 	</target>
 
 	<target name="add-platform-specific-files">
@@ -179,6 +240,8 @@
 				<include name="start-demo.*" />
 				<include name=".project" />
 				<include name=".classpath" />
+				<include name=".VolumeIcon.icns" />
+				<include name=".DS_Store" />
 			</fileset>
 		</delete>
 		<copy todir="${output-dir}">
@@ -203,7 +266,7 @@
 			<then>
 				<copy todir="${output-dir}">
 					<fileset dir="build/package">
-						<filename name="*.bat" />
+						<include name="start-demo.bat" />
 					</fileset>
 				</copy>
 			</then>
@@ -213,7 +276,7 @@
 			<then>
 				<copy todir="${output-dir}">
 					<fileset dir="build/package">
-						<filename name="*.sh" />
+						<include name="start-demo.sh" />
 					</fileset>
 				</copy>
 				<chmod file="${output-dir}/start-demo.sh" perm="ugo+x" />
@@ -224,9 +287,12 @@
 			<then>
 				<copy todir="${output-dir}">
 					<fileset dir="build/package">
-						<filename name="*.sh" />
+						<include name="start-demo.sh" />
+						<include name=".VolumeIcon.icns" />
+						<include name=".DS_Store" />
 					</fileset>
 				</copy>
+				<!-- TODO: this does not work, why? -->
 				<chmod file="${output-dir}/start-demo.sh" perm="ugo+x" />
 			</then>
 		</if>
@@ -234,7 +300,7 @@
 
 	<!-- TODO: add docs -->
 	<!-- do not use these directly, use targets named package-* -->
-	<target name="build" depends="root, demo" description="Build package required files, without packing them.">
+	<target name="build" depends="root, demo, docs" description="Build package required files, without packing them.">
 	</target>
 
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
