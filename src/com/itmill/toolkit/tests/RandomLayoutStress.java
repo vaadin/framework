@@ -64,8 +64,19 @@ public class RandomLayoutStress extends com.itmill.toolkit.Application {
 		TabSheet tabsheet = new TabSheet();
 		tabsheet
 				.setCaption("Tabsheet, above layouts are added to this component");
+		layoutA = new OrderedLayout(
+				OrderedLayout.ORIENTATION_HORIZONTAL);
+		// Add 4 random components
+		fillLayout(layoutA, componentCountA);
 		tabsheet.addTab(layoutA, "Horizontal ordered layout", null);
+		layoutB = new OrderedLayout(
+				OrderedLayout.ORIENTATION_VERTICAL);
+		// Add 4 random components
+		fillLayout(layoutB, componentCountB);
 		tabsheet.addTab(layoutB, "Vertical ordered layout", null);
+		layoutG = new GridLayout(gridSize, gridSize);
+		// Add 12 random components
+		fillLayout(layoutG, componentCountC);
 		tabsheet.addTab(layoutG, "Grid layout (4 x 2)", null);
 
 		// Create custom layout
