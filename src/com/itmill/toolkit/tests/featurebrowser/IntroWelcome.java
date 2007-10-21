@@ -80,10 +80,11 @@ public class IntroWelcome extends Feature implements URIHandler,
 			+ " on the left and remember to experiment with the <b>Properties panel</b>"
 			+ " located at the top right corner area.";
 
+	// TODO Add browser agent string
 	private String description = WELCOME_TEXT_LOWER
 			+ "<br /><br />IT Mill Toolkit version: "
 			+ ApplicationServlet.VERSION;
-
+	
 	public IntroWelcome() {
 		super();
 	}
@@ -133,27 +134,6 @@ public class IntroWelcome extends Feature implements URIHandler,
 	// not ready yet to give description, see paint instead
 	protected String getDescriptionXHTML() {
 		return description;
-	}
-
-	// Hack for #512: set description right (WebBrowser now exists)
-	public void paint(PaintTarget target) throws PaintException {
-		if (webBrowser == null) {
-			webBrowser = (WebBrowser) getWindow().getTerminal();
-			if (webBrowser != null) {
-				super.getDescription().setValue(
-						description + "<br />Browser: "
-								+ webBrowser.getBrowserApplication());
-				try {
-					FeatureUtil.debug(getApplication().getUser().toString(),
-							"timestamp=[" + FeatureUtil.getTimestamp()
-									+ "] userAgent=["
-									+ webBrowser.getBrowserApplication() + "]");
-				} catch (Exception e) {
-					// ignored, should never happen
-				}
-			}
-		}
-		super.paint(target);
 	}
 
 	protected String getImage() {
