@@ -177,24 +177,32 @@ public class SplitPanel extends AbstractComponentContainer implements Layout,
 			int i = 0;
 
 			public boolean hasNext() {
-				if (i < 2)
+				if (i < (firstComponent == null ? 0 : 1)
+						+ (secondComponent == null ? 0 : 1))
 					return true;
 				return false;
 			}
 
 			public Object next() {
+				if (!hasNext())
+					return null;
 				i++;
 				if (i == 1)
-					return firstComponent;
+					return firstComponent == null ? secondComponent
+							: firstComponent;
 				else if (i == 2)
 					return secondComponent;
 				return null;
 			}
 
 			public void remove() {
-				if (i == 1)
-					setFirstComponent(null);
-				else if (i == 2)
+				if (i == 1) {
+					if (firstComponent != null) {
+						setFirstComponent(null);
+						i = 0;
+					} else
+						setSecondComponent(null);
+				} else if (i == 2)
 					setSecondComponent(null);
 			}
 		};
