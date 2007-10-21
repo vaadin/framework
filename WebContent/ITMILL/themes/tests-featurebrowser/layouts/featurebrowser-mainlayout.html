@@ -3,7 +3,7 @@
 <link REL="stylesheet" TYPE="text/css">
 </head>
 
-<body><div id="_UID_main" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"><img src="img/header.png" />
+<body><div id="_UID_main" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%;"><img src="img/header.png" />
 	
 	<div id="_UID_features" style="top: 62px; width: 200px; position: absolute; overflow: auto; left: 0;" location="tree">
 		<div style="width: 100%; height: 100%; border: 1px solid red;">tree</div>
@@ -59,6 +59,58 @@
 
 <script type="text/javascript">
 
+/** Recalculate tabs content width */
+_UID_updateTabs = function() {
+	try {
+		var tabsDiv = document.getElementById("_UID_tabs");
+		var tabsComponent = itmill.themes.Demo.prototype._UID_elemByIndex(tabsDiv.childNodes,0);
+		if (tabsComponent == null) return;
+		var tabs = itmill.themes.Demo.prototype._UID_elemByIndex(tabsComponent.childNodes,0);
+		if (tabs == null) return;
+		var content = itmill.themes.Demo.prototype._UID_elemByIndex(tabsComponent.childNodes,1);
+		if (content == null) return;
+		content.style.height="" + (tabsDiv.offsetHeight - tabs.offsetHeight-13) + "px";
+		content.style.borderBottom="0";
+		content.style.overflow='auto';
+		var iframe = content.getElementsByTagName("iframe").item(0);
+		if (iframe != null) { 
+			content.style.overflow='hidden';
+			content.style.padding='0';	
+			content.style.height="" + (tabsDiv.offsetHeight - tabs.offsetHeight) + "px";
+			iframe.height=content.style.height;
+			iframe.style.border='0';
+		}
+	} catch (e) {}
+};
+
+/** Helper method. Get element from node array by index */
+_UID_elemByIndex = function(nodeArray, index) {
+	if (typeof nodeArray == 'undefined' || nodeArray == null) return null;
+	var i=0;
+	while (index>=0 && i < nodeArray.length) {
+		while(i < nodeArray.length && nodeArray[i].nodeType != Node.ELEMENT_NODE) i++;
+		if (index == 0) return nodeArray[i];
+		index--; i++;
+	}
+	return null;
+}
+
+_UID_dividerUpdate = function() {
+	var dividerDiv = document.getElementById("_UID_divider");
+	var div = document.getElementById("_UID_main");
+	dividerDiv.isActive = true;
+	div.onmouseup = function() {
+		dividerDiv.isActive = false;
+		div.onmouseup = null;
+		div.onmousemove = null;
+	}
+	div.onmousemove = function(e) {
+		dividerDiv.mouseY = typeof e != 'undefined' ? e.clientY : window.event.clientY;
+		_UID_layout();
+	}
+	return false;
+};
+
 /** Recalculate feature browser main layout dimensions for all components */
 _UID_layout = function() {
 
@@ -88,6 +140,7 @@ _UID_layout = function() {
 	var height = document.body.offsetHeight;
 	mainDiv.style.height = height + "px";
 	mainDiv.style.width = width + "px";
+	mainDiv.style.display = "";
 
 	// Recalc features div dimensions
 	var featuresWidth = 200;
@@ -170,61 +223,9 @@ _UID_layout = function() {
 	}
 	
 	/* call custom layouts bridge to notify sub components */
-	mainDiv.notifyChildrenOfSizeChange();
-	
+	mainDiv.notifyChildrenOfSizeChange();	
 };
 
-/** Recalculate tabs content width */
-_UID_updateTabs = function() {
-	try {
-		var tabsDiv = document.getElementById("_UID_tabs");
-		var tabsComponent = itmill.themes.Demo.prototype._UID_elemByIndex(tabsDiv.childNodes,0);
-		if (tabsComponent == null) return;
-		var tabs = itmill.themes.Demo.prototype._UID_elemByIndex(tabsComponent.childNodes,0);
-		if (tabs == null) return;
-		var content = itmill.themes.Demo.prototype._UID_elemByIndex(tabsComponent.childNodes,1);
-		if (content == null) return;
-		content.style.height="" + (tabsDiv.offsetHeight - tabs.offsetHeight-13) + "px";
-		content.style.borderBottom="0";
-		content.style.overflow='auto';
-		var iframe = content.getElementsByTagName("iframe").item(0);
-		if (iframe != null) { 
-			content.style.overflow='hidden';
-			content.style.padding='0';	
-			content.style.height="" + (tabsDiv.offsetHeight - tabs.offsetHeight) + "px";
-			iframe.height=content.style.height;
-			iframe.style.border='0';
-		}
-	} catch (e) {}
-};
-
-/** Helper method. Get element from node array by index */
-_UID_elemByIndex = function(nodeArray, index) {
-	if (typeof nodeArray == 'undefined' || nodeArray == null) return null;
-	var i=0;
-	while (index>=0 && i < nodeArray.length) {
-		while(i < nodeArray.length && nodeArray[i].nodeType != Node.ELEMENT_NODE) i++;
-		if (index == 0) return nodeArray[i];
-		index--; i++;
-	}
-	return null;
-}
-
-_UID_dividerUpdate = function() {
-	var dividerDiv = document.getElementById("_UID_divider");
-	var div = document.getElementById("_UID_main");
-	dividerDiv.isActive = true;
-	div.onmouseup = function() {
-		dividerDiv.isActive = false;
-		div.onmouseup = null;
-		div.onmousemove = null;
-	}
-	div.onmousemove = function(e) {
-		dividerDiv.mouseY = typeof e != 'undefined' ? e.clientY : window.event.clientY;
-		_UID_layout();
-	}
-	return false;
-};
 
 _UID_initFeatureBrowserLayout = function() {
 	var dividerDiv = document.getElementById("_UID_divider");
@@ -239,8 +240,7 @@ _UID_initFeatureBrowserLayout = function() {
 		_UID_layout();
 	};
 	
-	
-	_UID_layout();
+//	_UID_layout();
 };
 
 _UID_initFeatureBrowserLayout();

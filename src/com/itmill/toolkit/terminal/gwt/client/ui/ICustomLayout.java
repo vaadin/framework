@@ -104,6 +104,10 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
 			initializeHTML(uidl, client);
 		}
 
+		// Evaluate scripts
+		eval(scripts);
+		scripts = null;
+		
 		// For all contained widgets
 		for (Iterator i = uidl.getChildIterator(); i.hasNext();) {
 			UIDL uidlForChild = (UIDL) i.next();
@@ -120,11 +124,7 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
 			}
 		}
 
-		// Evaluate scripts only once
-		if (scripts != null) {
-			eval(scripts);
-			scripts = null;
-		}
+		iLayout();
 	}
 
 	/** Initialize HTML-layout. */
@@ -162,8 +162,9 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
 			throw (new IllegalStateException(
 					"Could not find IView; maybe updateFromUIDL() was called before attaching the widget?"));
 		}
-
+		
 		publishResizedFunction(DOM.getFirstChild(getElement()));
+		
 	}
 
 	private boolean hasTemplate() {
@@ -195,7 +196,8 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
 
 	/** Evaluate given script in browser document */
 	private static native void eval(String script) /*-{
-	 try { 
+	 try {
+ 	 if (script != null) 
 	 eval("{ var document = $doc; var window = $wnd; "+ script + "}");
 	 } catch (e) {
 	 }
@@ -268,6 +270,10 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
 		}
 
 		return res;
+	}
+
+	protected void onAttach() {
+		super.onAttach();
 	}
 
 	/** Replace child components */
@@ -389,7 +395,8 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
 	/*-{
 		if(el && el.iLayoutJS) {
 			try {
-				return el.iLayoutJS();
+				el.iLayoutJS();
+				return true;
 			} catch (e) {
 				return false;
 			}
