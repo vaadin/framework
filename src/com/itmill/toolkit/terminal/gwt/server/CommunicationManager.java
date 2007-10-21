@@ -949,32 +949,6 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 		Paintable p = event.getPaintable();
 		dirtyPaintabletSet.add(p);
 
-		// For FrameWindows we mark all frames (windows) dirty
-		if (p instanceof FrameWindow) {
-			FrameWindow fw = (FrameWindow) p;
-			repaintFrameset(fw.getFrameset());
-		}
-	}
-
-	/**
-	 * Recursively request repaint for all frames in frameset.
-	 * 
-	 * @param fs
-	 *            the Framewindow.Frameset.
-	 */
-	private void repaintFrameset(FrameWindow.Frameset fs) {
-		List frames = fs.getFrames();
-		for (Iterator i = frames.iterator(); i.hasNext();) {
-			FrameWindow.Frame f = (FrameWindow.Frame) i.next();
-			if (f instanceof FrameWindow.Frameset) {
-				repaintFrameset((FrameWindow.Frameset) f);
-			} else {
-				Window w = f.getWindow();
-				if (w != null) {
-					w.requestRepaint();
-				}
-			}
-		}
 	}
 
 	/**
