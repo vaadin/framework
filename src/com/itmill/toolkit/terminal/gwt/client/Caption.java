@@ -14,6 +14,8 @@ public class Caption extends HTML {
 
 	private Element errorIndicatorElement;
 
+	private Element icon;
+
 	private Element captionText;
 
 	private ErrorMessage errorMessage;
@@ -50,12 +52,26 @@ public class Caption extends HTML {
 			DOM.setStyleAttribute(errorIndicatorElement, "display", "none");
 		}
 
+		if (uidl.hasAttribute("icon")) {
+			if (icon == null) {
+				icon = DOM.createImg();
+				DOM.appendChild(getElement(), icon);
+			}
+			DOM.setElementAttribute(icon, "src", uidl
+					.getStringAttribute("icon"));
+		} else {
+			if (icon != null)
+				DOM.removeChild(getElement(), icon);
+		}
+
 		if (uidl.hasAttribute("caption")) {
 			if (captionText == null) {
 				captionText = DOM.createSpan();
 				DOM.appendChild(getElement(), captionText);
 			}
 			DOM.setInnerText(captionText, uidl.getStringAttribute("caption"));
+		} else {
+			// TODO should span also be removed
 		}
 
 		if (uidl.hasAttribute("description")) {
