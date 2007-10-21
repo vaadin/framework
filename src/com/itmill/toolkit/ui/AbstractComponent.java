@@ -114,11 +114,6 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
 	private ErrorMessage componentError = null;
 
 	/**
-	 * List of event variable change event handling dependencies.
-	 */
-	private Set dependencies = null;
-
-	/**
 	 * Immediate mode: if true, all variable changes are required to be sent
 	 * from the terminal immediately.
 	 */
@@ -692,39 +687,11 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
 
 	}
 
-	/*
-	 * Adds a variable-change dependency to this component. Don't add a JavaDoc
-	 * comment here, we use the default documentation from implemented
-	 * interface.
-	 */
-	public void dependsOn(VariableOwner depended) {
-
-		// Assure that the list exists
-		if (dependencies == null)
-			dependencies = new HashSet();
-
-		// Add to the list of dependencies
-		if (depended != null)
-			dependencies.add(depended);
-	}
-
-	/*
-	 * Removes a dependency from the component. Don't add a JavaDoc comment
-	 * here, we use the default documentation from implemented interface.
-	 */
-	public void removeDirectDependency(VariableOwner depended) {
-
-		// Removes the listener if necessary
-		if (dependencies != null && depended != null)
-			dependencies.remove(depended);
-	}
-
-	/*
-	 * Gets the set of depended components. Don't add a JavaDoc comment here, we
-	 * use the default documentation from implemented interface.
-	 */
+	/* Dependency -framework is deprecated */
+	public void dependsOn(VariableOwner depended) {}
+	public void removeDirectDependency(VariableOwner depended) {}
 	public Set getDirectDependencies() {
-		return dependencies;
+		return null;
 	}
 
 	/* General event framework *************************************** */

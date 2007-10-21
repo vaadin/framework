@@ -73,11 +73,6 @@ public class CustomComponent implements Component {
 	private Component parent = null;
 
 	/**
-	 * Dependencies of the component, or null.
-	 */
-	private HashSet dependencies = null;
-
-	/**
 	 * Type of the component.
 	 */
 	private String componentType = null;
@@ -437,42 +432,13 @@ public class CustomComponent implements Component {
 	public void changeVariables(Object source, Map variables) {
 	}
 
-	/**
-	 * Makes this <code>VariableOwner</code> depend on the given
-	 * <code>VariableOwner</code>.
-	 * 
-	 * @see com.itmill.toolkit.terminal.VariableOwner#dependsOn(com.itmill.toolkit.terminal.VariableOwner)
-	 */
-	public void dependsOn(VariableOwner depended) {
-		if (depended == null)
-			return;
-		if (dependencies == null)
-			dependencies = new HashSet();
-		dependencies.add(depended);
-	}
-
-	/**
-	 * Gets the variable change listeners this <code>VariableOwner</code>
-	 * directly depends on.
-	 * 
-	 * @see com.itmill.toolkit.terminal.VariableOwner#getDirectDependencies()
-	 */
+	/* Dependency -framework is deprecated */
+	public void dependsOn(VariableOwner depended) {}
+	public void removeDirectDependency(VariableOwner depended) {}
 	public Set getDirectDependencies() {
-		return dependencies;
+		return null;
 	}
 
-	/**
-	 * Removes the given component from this component's dependency list.
-	 * 
-	 * @see com.itmill.toolkit.terminal.VariableOwner#removeDirectDependency(com.itmill.toolkit.terminal.VariableOwner)
-	 */
-	public void removeDirectDependency(VariableOwner depended) {
-		if (dependencies == null)
-			return;
-		dependencies.remove(depended);
-		if (dependencies.isEmpty())
-			dependencies = null;
-	}
 
 	/* Event functions are not implemented by default -------------------- */
 

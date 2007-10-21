@@ -62,14 +62,12 @@ import java.util.Set;
 public interface VariableOwner {
 
 	/**
-	 * Gets the variable change listeners this <code>VariableOwner</code>
-	 * directly depends on. This list does not contain any indirect
-	 * dependencies, for example, if A depends on B and B depends on C, the
-	 * dependency list of A does not include C.
-	 * 
+	 * Dependencies are not needed anymore as HTML-mode is deprecated in Toolkit 5.
+	 * 	 * 
 	 * @return Set of <code>VariableOwners</code> this component directly
 	 *         depend on, <code>null</code> if this component does not depend
 	 *         on anybody.
+	 * @deprecated
 	 */
 	public Set getDirectDependencies();
 
@@ -86,26 +84,22 @@ public interface VariableOwner {
 	public void changeVariables(Object source, Map variables);
 
 	/**
-	 * Makes this <code>VariableOwner</code> depend on the given
-	 * <code>VariableOwner</code>. This means that any variable change events
-	 * relating to <code>depended</code> must be sent before any such events
-	 * that relate to this object.
+	 * Dependencies are not needed anymore as HTML-mode is deprecated in Toolkit 5.
 	 * 
 	 * @param depended
 	 *            the <code>VariableOwner</code> component who this component
 	 *            depends on.
+	 * @deprecated
 	 */
 	public void dependsOn(VariableOwner depended);
 
 	/**
-	 * Removes the given component from this component's dependency list. After
-	 * the call this component will no longer depend on <code>depended</code>
-	 * wdepende direct dependency from the component. Indirect dependencies are
-	 * not removed.
+	 * Dependencies are not needed anymore as HTML-mode is deprecated in Toolkit 5.
 	 * 
 	 * @param depended
 	 *            the component to be removed from this component's dependency
 	 *            list.
+	 * @deprecated
 	 */
 	public void removeDirectDependency(VariableOwner depended);
 
