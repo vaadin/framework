@@ -11,6 +11,25 @@
      IT Mill Toolkit examples
   </description>
 
+
+<servlet>
+    <servlet-name>TestSplitPanel</servlet-name>
+    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+    <init-param>
+      <param-name>application</param-name>
+      <param-value>com.itmill.toolkit.tests.TestSplitPanel</param-value>
+    </init-param>
+  </servlet>
+  
+<servlet>
+    <servlet-name>FeatureBrowser</servlet-name>
+    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+    <init-param>
+      <param-name>application</param-name>
+      <param-value>com.itmill.toolkit.demo.featurebrowser.FeatureBrowser</param-value>
+    </init-param>
+  </servlet>
+  
  <servlet>
     <servlet-name>TestBench</servlet-name>
     <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
@@ -233,6 +252,12 @@
     </init-param>
   </servlet>
   
+  
+     <servlet-mapping>
+    <servlet-name>TestSplitPanel</servlet-name>
+    <url-pattern>/TestSplitPanel/*</url-pattern>
+  </servlet-mapping>
+  
      <servlet-mapping>
     <servlet-name>RandomLayoutStress</servlet-name>
     <url-pattern>/RandomLayoutStress/*</url-pattern>
@@ -278,16 +303,16 @@
     <url-pattern>/FilterSelect/*</url-pattern>
   </servlet-mapping>
 
+ <servlet-mapping>
+    <servlet-name>FeatureBrowser</servlet-name>
+    <url-pattern>/FeatureBrowser/*</url-pattern>
+  </servlet-mapping>
+
   <servlet-mapping>
     <servlet-name>FeaturesApplication</servlet-name>
     <url-pattern>/FeaturesApplication/*</url-pattern>
   </servlet-mapping>
   
-  <servlet-mapping>
-    <servlet-name>FeaturesApplication</servlet-name>
-    <url-pattern>/features/*</url-pattern>
-  </servlet-mapping>
-
   <servlet-mapping>
     <servlet-name>Parameters</servlet-name>
     <url-pattern>/Parameters/*</url-pattern>
