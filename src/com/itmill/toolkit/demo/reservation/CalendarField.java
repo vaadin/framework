@@ -242,7 +242,7 @@ public class CalendarField extends DateField implements Container.Viewer {
 		if (this.dataSource != null) {
 			target.startTag("items");
 
-			// send one month now, the rest via lazyloading
+			// TODO send one month now, the rest via lazyloading
 			int month = new Date().getMonth();
 			Object value = getValue();
 			if (value != null && value instanceof Date) {
@@ -268,14 +268,19 @@ public class CalendarField extends DateField implements Container.Viewer {
 					}
 				}
 
+				// TODO half-done lazyloading logic (hence broken)
+
 				if (start != null) {
 					if ((start.getMonth() <= month || end.getMonth() >= month)) {
 						target.startTag("item");
 						// TODO different id?
 						target.addAttribute("id", itemId.hashCode());
-						p = item.getItemProperty(this.itemStyleNamePropertyId);
-						String styleName = (String) p.getValue();
-						target.addAttribute("styleName", styleName);
+						if (this.itemStyleNamePropertyId != null) {
+							p = item
+									.getItemProperty(this.itemStyleNamePropertyId);
+							String styleName = (String) p.getValue();
+							target.addAttribute("styleName", styleName);
+						}
 						target.addAttribute("start", "" + start.getTime());
 						if (end != start) {
 							target.addAttribute("end", "" + end.getTime());

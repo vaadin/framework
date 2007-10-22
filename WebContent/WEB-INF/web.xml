@@ -62,6 +62,19 @@
   </servlet>
   
   <servlet>
+    <servlet-name>CalendarDemo</servlet-name>
+    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+    <init-param>
+      <param-name>application</param-name>
+      <param-value>com.itmill.toolkit.demo.reservation.CalendarDemo</param-value>
+    </init-param>
+    <init-param>
+      <param-name>widgetset</param-name>
+      <param-value>com.itmill.toolkit.demo.reservation.gwt.WidgetSet</param-value>
+    </init-param>
+  </servlet>
+  
+  <servlet>
     <servlet-name>SelectDemo</servlet-name>
     <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
     <init-param>
@@ -151,15 +164,6 @@
     </init-param>
   </servlet>
   
-  <servlet>
-    <servlet-name>CalendarDemo</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
-    <init-param>
-      <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.demo.CalendarDemo</param-value>
-    </init-param>
-  </servlet>
-
   <servlet>
     <servlet-name>TreeFilesystemContainer</servlet-name>
     <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
@@ -274,6 +278,11 @@
   </servlet-mapping>
   
   <servlet-mapping>
+    <servlet-name>CalendarDemo</servlet-name>
+    <url-pattern>/CalendarDemo/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
     <servlet-name>SelectDemo</servlet-name>
     <url-pattern>/SelectDemo/*</url-pattern>
   </servlet-mapping>
@@ -328,11 +337,6 @@
     <url-pattern>/QueryContainerDemo/*</url-pattern>
   </servlet-mapping>
   
-  <servlet-mapping>
-    <servlet-name>CalendarDemo</servlet-name>
-    <url-pattern>/CalendarDemo/*</url-pattern>
-  </servlet-mapping>
-
   <servlet-mapping>
     <servlet-name>TreeFilesystemContainer</servlet-name>
     <url-pattern>/TreeFilesystemContainer/*</url-pattern>

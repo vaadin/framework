@@ -126,13 +126,18 @@ public class ICalendar extends IDateField {
 				d = entry.getEnd();
 				hours = (d.getDate() > date.getDate() ? 24 : d.getHours())
 						- start;
+				if (hours == 0) {
+					// We can't draw entries smaller than one
+					hours = 1;
+				}
 			}
 			int col = currentCol;
 			if (col > 1) {
 				while (!this.hourTable.isCellPresent(start, col - 1))
 					col--;
 			}
-			this.hourTable.setHTML(start, col, "<span>" + entry.getTitle()
+			this.hourTable.setHTML(start, col, "<span>"
+					+ (entry.getTitle() != null ? entry.getTitle() : "&nbsp")
 					+ "</span>");
 			this.hourTable.getFlexCellFormatter().setRowSpan(start, col, hours);
 			this.hourTable.getFlexCellFormatter().setStyleName(start, col,
@@ -155,11 +160,15 @@ public class ICalendar extends IDateField {
 
 				}
 				tooltip += " (" + hours + "h) ";
-				tooltip += entry.getTitle() + "\n ";
+				if (entry.getTitle()!=null) {
+					tooltip += entry.getTitle() + "\n ";
+				}
 			} else {
 				tooltip = entry.getStringForDate(entry.getEnd()) + "\n ";
 			}
-			tooltip += "\"" + entry.getDescription() + "\"";
+			if (entry.getDescription()!=null) {
+				tooltip += "\"" + entry.getDescription() + "\"";
+			}
 			DOM.setElementProperty(el, "title", tooltip);
 
 			currentCol++;
@@ -201,7 +210,12 @@ public class ICalendar extends IDateField {
 			Integer id = new Integer(item.getIntAttribute("id"));
 			long start = Long.parseLong(item.getStringAttribute("start"));
 			Date startDate = new Date(start);
-			long end = Long.parseLong(item.getStringAttribute("end"));
+			long end = -1;
+			try {
+				end = Long.parseLong(item.getStringAttribute("end"));
+			} catch (Exception IGNORED) {
+				// IGNORED attribute not required
+			}
 			Date endDate = (end > 0 && end != start ? new Date(end) : new Date(
 					start));
 			String title = item.getStringAttribute("title");
@@ -211,7 +225,7 @@ public class ICalendar extends IDateField {
 					endDate, title, desc, notime);
 
 			// TODO should remove+readd if the same entry (id) is added again
-			
+
 			for (Date d = entry.getStart(); d.getYear() <= entry.getEnd()
 					.getYear()
 					&& d.getMonth() <= entry.getEnd().getYear()
@@ -228,8 +242,8 @@ public class ICalendar extends IDateField {
 		}
 
 		public List getEntries(Date date, int resolution) {
-			List entries = (List) dates.get(date.getYear() + "" + date.getMonth() + ""
-					+ date.getDate());
+			List entries = (List) dates.get(date.getYear() + ""
+					+ date.getMonth() + "" + date.getDate());
 			ArrayList res = new ArrayList();
 			if (entries == null) {
 				return res;

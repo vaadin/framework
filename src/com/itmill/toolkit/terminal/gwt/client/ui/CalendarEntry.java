@@ -113,7 +113,9 @@ public class CalendarEntry {
 			}
 			s += " ";
 		}
-		s += title;
+		if (title!=null) {
+			s += title;
+		}
 		return s;
 	}
 

@@ -1,12 +1,12 @@
-package com.itmill.toolkit.demo;
+package com.itmill.toolkit.demo.reservation;
 
 import java.sql.SQLException;
+import java.util.Calendar;
 import java.util.Date;
 
 import com.itmill.toolkit.data.Property.ValueChangeEvent;
 import com.itmill.toolkit.data.Property.ValueChangeListener;
 import com.itmill.toolkit.data.util.QueryContainer;
-import com.itmill.toolkit.demo.reservation.CalendarField;
 import com.itmill.toolkit.demo.util.SampleCalendarDatabase;
 import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Window;
@@ -45,12 +45,13 @@ public class CalendarDemo extends com.itmill.toolkit.Application {
 		from.setResolution(CalendarField.RESOLUTION_HOUR);
 		from.setImmediate(true);
 
+		
 		to = new CalendarField();
 		main.addComponent(to);
 		to.setResolution(CalendarField.RESOLUTION_HOUR);
 		to.setEnabled(false);
 		to.setImmediate(true);
-
+		
 		from.addListener(new ValueChangeListener() {
 			public void valueChange(ValueChangeEvent event) {
 				Date fd = (Date) from.getValue();
@@ -68,13 +69,14 @@ public class CalendarDemo extends com.itmill.toolkit.Application {
 				}
 			}
 		});
-
+		
 		// initialize the sample database and set as calendar datasource
 		sampleDatabase = new SampleCalendarDatabase();
+		
 		initCalendars();
-
+		
 		// Don't allow dates before today
-		from.setMinimumDate(new Date());
+		from.setMinimumDate(Calendar.getInstance().getTime());
 
 	}
 
@@ -91,7 +93,7 @@ public class CalendarDemo extends com.itmill.toolkit.Application {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
+/*
 		// Calendar will use the first date property as start if you do not
 		// explicitly specify the property id. Our start -property will be the
 		// first one, so it's intentionally left out.
@@ -104,7 +106,7 @@ public class CalendarDemo extends com.itmill.toolkit.Application {
 		to.setItemEndPropertyId(SampleCalendarDatabase.PROPERTY_ID_END);
 		to.setItemTitlePropertyId(SampleCalendarDatabase.PROPERTY_ID_TITLE);
 		to.setItemNotimePropertyId(SampleCalendarDatabase.PROPERTY_ID_NOTIME);
-
+*/
 	}
 
 }
