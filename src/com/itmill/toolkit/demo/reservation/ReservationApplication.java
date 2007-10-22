@@ -21,6 +21,7 @@ import com.itmill.toolkit.ui.TabSheet;
 import com.itmill.toolkit.ui.Table;
 import com.itmill.toolkit.ui.TextField;
 import com.itmill.toolkit.ui.Window;
+import com.itmill.toolkit.ui.Button.ClickEvent;
 import com.itmill.toolkit.ui.TabSheet.SelectedTabChangeEvent;
 
 public class ReservationApplication extends Application {
@@ -53,7 +54,11 @@ public class ReservationApplication extends Application {
 
 	private GoogleMap map;
 
+	private Window popupWindow;
+	private Label popupMessage;
+	
 	public void init() {
+		
 		db = new SampleDB(true);
 		db.generateResources();
 		db.generateDemoUser();
@@ -202,15 +207,37 @@ public class ReservationApplication extends Application {
 				statusLabel.setCaption("Success!");
 				statusLabel
 						.setValue("You have reserved the resource for the selected period.");
+			} else {
+				showMessage("No resource selected","Please select a resource (or category) to reserve.");
 			}
 		} catch (ResourceNotAvailableException e) {
-			statusLabel.setCaption("Reservation failed");
-			statusLabel
-					.setValue("The selected resource was not available for the selected period.");
+			showMessage("Reservation failed", "The selected resource was not available for the selected period.");
 		}
 		refreshReservations();
 	}
 
+	public void showMessage(String caption, String message) {
+		if (this.popupWindow == null) {
+			this.popupWindow = new Window("No resource selected");
+			this.popupWindow.setHeight(50);
+			this.popupWindow.setPositionX(70);
+			this.popupWindow.setPositionY(400);
+			this.popupMessage = new Label("Please select a resource (or category) to reserve.");
+			this.popupWindow.addComponent(this.popupMessage);
+			Button b = new Button("Ok", new Button.ClickListener() {
+				public void buttonClick(ClickEvent event) {
+					getMainWindow().removeWindow(popupWindow);						
+				}					
+			});
+			this.popupWindow.addComponent(b);
+		} else {
+			this.popupMessage.setValue(message);
+			this.popupWindow.setCaption(caption);
+		}
+		getMainWindow().addWindow(this.popupWindow);
+	}
+	
+	
 	private Item getActiveResource() throws ResourceNotAvailableException {
 		List rids = resourcePanel.getSelectedResources();
 		if (rids != null && rids.size() > 0) {
@@ -258,14 +285,14 @@ public class ReservationApplication extends Application {
 			resourceName.setCaption("Not available");
 			resourceName
 					.setValue("Please choose another time period or resource");
-			reservationButton.setEnabled(false);
+			//reservationButton.setEnabled(false);
 			return;
 		}
 		map.clear();
 		if (resource == null) {
 			resourceName.setCaption("Choose resource");
 			resourceName.setValue("from the list above");
-			reservationButton.setEnabled(false);
+			//reservationButton.setEnabled(false);
 			map.setContainerDataSource(db.getResources(null));
 			map.setZoomLevel(1);
 
@@ -297,7 +324,7 @@ public class ReservationApplication extends Application {
 
 			}
 			map.setZoomLevel((srs.size() == 1 ? 14 : 9));
-			reservationButton.setEnabled(true);
+			//reservationButton.setEnabled(true);
 		}
 
 	}
