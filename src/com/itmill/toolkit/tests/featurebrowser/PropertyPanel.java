@@ -207,7 +207,7 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
 								"Sample Formatted error", "Sample System Error" });
 
 		// Style
-		String currentStyle = ((Component) objectToConfigure).getStyle();
+		String currentStyle = ((Component) objectToConfigure).getStyleName();
 		if (currentStyle == null)
 			set.replaceWithSelect("style", new Object[] { null },
 					new Object[] { "Default" }).setNewItemsAllowed(true);

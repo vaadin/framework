@@ -151,11 +151,38 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
 	 */
 	public abstract String getTag();
 
+	/**
+	 * Gets style for component. Multiple styles are joined with spaces.
+	 * 
+	 * @return the component's styleValue of property style.
+	 * @deprecated Use getStyleName() instead; renamed for consistency and to
+	 *             indicate that "style" should not be used to switch client
+	 *             side implementation, only to style the component.
+	 */
+	public String getStyle() {
+		return getStyleName();
+	}
+	
+	/**
+	 * Sets and replaces all previous style names of the component. This method
+	 * will trigger a
+	 * {@link com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent RepaintRequestEvent}.
+	 * 
+	 * @param style
+	 *            the new style of the component.
+	 * @deprecated Use setStyleName() instead; renamed for consistency and to
+	 *             indicate that "style" should not be used to switch client
+	 *             side implementation, only to style the component.
+	 */
+	public void setStyle(String style) {
+		setStyleName(style);
+	}
+	
 	/*
 	 * Gets the component's style. Don't add a JavaDoc comment here, we use the
 	 * default documentation from implemented interface.
 	 */
-	public String getStyle() {
+	public String getStyleName() {
 		String s = "";
 		if (styles != null) {
 			for (Iterator it = styles.iterator(); it.hasNext();) {
@@ -171,7 +198,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
 	 * Sets the component's style. Don't add a JavaDoc comment here, we use the
 	 * default documentation from implemented interface.
 	 */
-	public void setStyle(String style) {
+	public void setStyleName(String style) {
 		if (style == null || "".equals(style)) {
 			styles = null;
 			requestRepaint();

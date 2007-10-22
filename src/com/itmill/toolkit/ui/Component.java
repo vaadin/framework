@@ -55,7 +55,7 @@ public interface Component extends Paintable, VariableOwner {
 	 * 
 	 * @return the component's styleValue of property style.
 	 */
-	public String getStyle();
+	public String getStyleName();
 
 	/**
 	 * Sets and replaces all previous style names of the component. This method
@@ -65,12 +65,12 @@ public interface Component extends Paintable, VariableOwner {
 	 * @param style
 	 *            the new style of the component.
 	 */
-	public void setStyle(String style);
-
+	public void setStyleName(String style);
+	
 	/**
-	 * Adds style name to component. Handeling additional style names is
-	 * terminal spesicif, but in web browser enviroment they will most likely
-	 * become CSS classes as given on server side.
+	 * Adds style name to component. Handling additional style names is terminal
+	 * specific, but in web browser environment they will most likely become CSS
+	 * classes as given on server side.
 	 * 
 	 * This method will trigger a
 	 * {@link com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent RepaintRequestEvent}.

@@ -228,7 +228,7 @@ public class CustomComponent implements Component {
 	 * 
 	 * @see com.itmill.toolkit.ui.Component#getStyle()
 	 */
-	public String getStyle() {
+	public String getStyleName() {
 		return null;
 	}
 
@@ -244,7 +244,7 @@ public class CustomComponent implements Component {
 	}
 
 	/**
-	 * Custom component is allways enabled by default.
+	 * Custom component is always enabled by default.
 	 * 
 	 * @see com.itmill.toolkit.ui.Component#isEnabled()
 	 */
@@ -380,11 +380,11 @@ public class CustomComponent implements Component {
 	}
 
 	/**
-	 * Sets the look-and-feel style of the component.
+	 * Custom component does not implement custom styles by default.
 	 * 
 	 * @see com.itmill.toolkit.ui.Component#setStyle(java.lang.String)
 	 */
-	public void setStyle(String style) {
+	public void setStyleName(String style) {
 	}
 
 	/**
@@ -433,12 +433,15 @@ public class CustomComponent implements Component {
 	}
 
 	/* Dependency -framework is deprecated */
-	public void dependsOn(VariableOwner depended) {}
-	public void removeDirectDependency(VariableOwner depended) {}
+	public void dependsOn(VariableOwner depended) {
+	}
+
+	public void removeDirectDependency(VariableOwner depended) {
+	}
+
 	public Set getDirectDependencies() {
 		return null;
 	}
-
 
 	/* Event functions are not implemented by default -------------------- */
 
