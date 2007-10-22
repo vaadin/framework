@@ -13,7 +13,6 @@ import com.itmill.toolkit.data.Item;
 import com.itmill.toolkit.data.Property.ValueChangeEvent;
 import com.itmill.toolkit.data.Property.ValueChangeListener;
 import com.itmill.toolkit.ui.Button;
-import com.itmill.toolkit.ui.CalendarField;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Panel;

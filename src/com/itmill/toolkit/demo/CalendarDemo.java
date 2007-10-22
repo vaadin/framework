@@ -6,8 +6,8 @@ import java.util.Date;
 import com.itmill.toolkit.data.Property.ValueChangeEvent;
 import com.itmill.toolkit.data.Property.ValueChangeListener;
 import com.itmill.toolkit.data.util.QueryContainer;
+import com.itmill.toolkit.demo.reservation.CalendarField;
 import com.itmill.toolkit.demo.util.SampleCalendarDatabase;
-import com.itmill.toolkit.ui.CalendarField;
 import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Window;
 
