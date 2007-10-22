@@ -381,8 +381,16 @@ public class ApplicationConnection implements FocusListener {
 
 		// If the server request that a cached instance should be used, do
 		// nothing
-		if (uidl.getBooleanAttribute("cached"))
+		if (uidl.getBooleanAttribute("cached")) {
 			return true;
+		}
+
+		// Visibility
+		boolean visible = !uidl.getBooleanAttribute("invisible");
+		component.setVisible(visible);
+		if (!visible) {
+			return true;
+		}
 
 		// Switch to correct implementation if needed
 		if (!widgetSet.isCorrectImplementation(component, uidl)) {
@@ -404,29 +412,25 @@ public class ApplicationConnection implements FocusListener {
 				parent.updateCaption((Paintable) component, uidl);
 		}
 
-		// Visibility, Disabling and read-only status
-		if (component instanceof FocusWidget) {
-			boolean enabled = true;
-			if (uidl.hasAttribute("disabled"))
-				enabled = !uidl.getBooleanAttribute("disabled");
-			else if (uidl.hasAttribute("readonly"))
-				enabled = !uidl.getBooleanAttribute("readonly");
-			((FocusWidget) component).setEnabled(enabled);
-		} else {
-			boolean enabled = true;
-			if (uidl.hasAttribute("disabled"))
-				enabled = !uidl.getBooleanAttribute("disabled");
-			if (!enabled)
-				component.addStyleName("i-disabled");
-			else
-				component.removeStyleName("i-disabled");
-		}
-		boolean visible = !uidl.getBooleanAttribute("invisible");
-		component.setVisible(visible);
-		if (!visible)
-			return true;
-
+		// Styles + disabled & readonly
 		component.setStyleName(component.getStylePrimaryName());
+
+		// first disabling and read-only status
+		boolean enabled = true;
+		if (uidl.hasAttribute("disabled")) {
+			enabled = !uidl.getBooleanAttribute("disabled");
+		} else if (uidl.hasAttribute("readonly")) {
+			enabled = !uidl.getBooleanAttribute("readonly");
+		}
+		if (component instanceof FocusWidget) {
+			((FocusWidget) component).setEnabled(enabled);
+		}
+		if (!enabled) {
+			component.addStyleName("i-disabled");
+		} else {
+			component.removeStyleName("i-disabled");
+		}
+
 		// add additional styles as css classes, prefixed with component default
 		// stylename
 		if (uidl.hasAttribute("style")) {
