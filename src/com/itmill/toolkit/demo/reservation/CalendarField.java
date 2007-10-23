@@ -11,12 +11,13 @@ import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
 import com.itmill.toolkit.ui.DateField;
 
-// TODO use Calendar
-// TODO lazyLoading
+// TODO send one month at a time, do lazyLoading
 // TODO check date limit when updating variables
 // TODO Allow item selection
 public class CalendarField extends DateField implements Container.Viewer {
 
+	private static final String TAGNAME = "calendarfield";
+	
 	private Date minDate;
 	private Date maxDate;
 
@@ -58,7 +59,7 @@ public class CalendarField extends DateField implements Container.Viewer {
 	 * use the default documentation from implemented interface.
 	 */
 	public String getTag() {
-		return "calendarfield";
+		return TAGNAME;
 	}
 
 	public void init() {
@@ -114,10 +115,7 @@ public class CalendarField extends DateField implements Container.Viewer {
 	}
 
 	private boolean checkDataSource(Container dataSource) {
-		/*
-		 * if (!(dataSource instanceof Container.Sortable)) { // we really want
-		 * the data source to be sortable return false; }
-		 */
+
 		// Check old propertyIds
 		if (this.itemEndPropertyId != null) {
 			Class c = dataSource.getType(this.itemEndPropertyId);

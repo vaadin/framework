@@ -20,7 +20,7 @@ import com.itmill.toolkit.terminal.gwt.client.ui.CalendarPanel;
 import com.itmill.toolkit.terminal.gwt.client.ui.IDateField;
 import com.itmill.toolkit.terminal.gwt.client.ui.CalendarPanel.CalendarEntrySource;
 
-public class ICalendar extends IDateField {
+public class ICalendarField extends IDateField {
 
 	private CalendarPanel calPanel;
 
@@ -37,7 +37,7 @@ public class ICalendar extends IDateField {
 	private static final String CLASSNAME = IDateField.CLASSNAME
 			+ "-entrycalendar";
 
-	public ICalendar() {
+	public ICalendarField() {
 		super();
 		setStyleName(CLASSNAME);
 		calPanel = new CalendarPanel(this);

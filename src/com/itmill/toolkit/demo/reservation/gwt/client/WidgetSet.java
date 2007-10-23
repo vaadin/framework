@@ -2,7 +2,7 @@ package com.itmill.toolkit.demo.reservation.gwt.client;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
-import com.itmill.toolkit.demo.reservation.gwt.client.ui.ICalendar;
+import com.itmill.toolkit.demo.reservation.gwt.client.ui.ICalendarField;
 import com.itmill.toolkit.demo.reservation.gwt.client.ui.IGoogleMap;
 import com.itmill.toolkit.terminal.gwt.client.DefaultWidgetSet;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
@@ -13,9 +13,9 @@ public class WidgetSet extends DefaultWidgetSet {
 		if ("com.itmill.toolkit.terminal.gwt.client.ui.IGoogleMap"
 				.equals(className)) {
 			return new IGoogleMap();
-		} else if ("com.itmill.toolkit.terminal.gwt.client.ui.ICalendar"
+		} else if ("com.itmill.toolkit.terminal.gwt.client.ui.ICalendarField"
 				.equals(className)) {
-			return new ICalendar();
+			return new ICalendarField();
 		}
 
 		return super.createWidget(uidl);
@@ -27,7 +27,7 @@ public class WidgetSet extends DefaultWidgetSet {
 		if ("googlemap".equals(tag)) {
 			return "com.itmill.toolkit.terminal.gwt.client.ui.IGoogleMap";
 		} else if ("calendarfield".equals(tag)) {
-			return "com.itmill.toolkit.terminal.gwt.client.ui.ICalendar";
+			return "com.itmill.toolkit.terminal.gwt.client.ui.ICalendarField";
 		}
 
 		return super.resolveWidgetTypeName(uidl);
