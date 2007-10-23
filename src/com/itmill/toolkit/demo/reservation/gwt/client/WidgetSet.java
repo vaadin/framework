@@ -13,7 +13,7 @@ public class WidgetSet extends DefaultWidgetSet {
 		if ("com.itmill.toolkit.terminal.gwt.client.ui.IGoogleMap"
 				.equals(className)) {
 			return new IGoogleMap();
-		} else if ("com.itmill.toolkit.terminal.gwt.client.ui.ICalendarField"
+		} else if ("com.itmill.toolkit.demo.reservation.gwt.client.ui.ICalendarField"
 				.equals(className)) {
 			return new ICalendarField();
 		}
@@ -27,7 +27,7 @@ public class WidgetSet extends DefaultWidgetSet {
 		if ("googlemap".equals(tag)) {
 			return "com.itmill.toolkit.terminal.gwt.client.ui.IGoogleMap";
 		} else if ("calendarfield".equals(tag)) {
-			return "com.itmill.toolkit.terminal.gwt.client.ui.ICalendarField";
+			return "com.itmill.toolkit.demo.reservation.gwt.client.ui.ICalendarField";
 		}
 
 		return super.resolveWidgetTypeName(uidl);
