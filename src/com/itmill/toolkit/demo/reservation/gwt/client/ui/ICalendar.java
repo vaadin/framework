@@ -1,4 +1,4 @@
-package com.itmill.toolkit.terminal.gwt.client.ui;
+package com.itmill.toolkit.demo.reservation.gwt.client.ui;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,6 +15,9 @@ import com.google.gwt.user.client.ui.TableListener;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.DateTimeService;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
+import com.itmill.toolkit.terminal.gwt.client.ui.CalendarPanel;
+import com.itmill.toolkit.terminal.gwt.client.ui.IDateField;
+import com.itmill.toolkit.terminal.gwt.client.ui.CalendarPanel.CalendarEntrySource;
 
 public class ICalendar extends IDateField {
 

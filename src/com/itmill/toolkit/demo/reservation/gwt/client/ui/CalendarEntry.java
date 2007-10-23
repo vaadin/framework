@@ -1,4 +1,4 @@
-package com.itmill.toolkit.terminal.gwt.client.ui;
+package com.itmill.toolkit.demo.reservation.gwt.client.ui;
 
 import java.util.Date;
 

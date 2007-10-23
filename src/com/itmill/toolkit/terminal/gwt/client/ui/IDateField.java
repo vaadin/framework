@@ -13,9 +13,9 @@ public class IDateField extends FlowPanel implements Paintable {
 
 	public static final String CLASSNAME = "i-datefield";
 
-	String id;
+	protected String id;
 
-	ApplicationConnection client;
+	protected ApplicationConnection client;
 
 	protected boolean immediate;
 

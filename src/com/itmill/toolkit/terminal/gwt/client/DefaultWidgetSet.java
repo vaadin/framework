@@ -3,7 +3,6 @@ package com.itmill.toolkit.terminal.gwt.client;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ui.IButton;
-import com.itmill.toolkit.terminal.gwt.client.ui.ICalendar;
 import com.itmill.toolkit.terminal.gwt.client.ui.ICheckBox;
 import com.itmill.toolkit.terminal.gwt.client.ui.ICustomLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.IDateFieldCalendar;
@@ -119,9 +118,6 @@ public class DefaultWidgetSet implements WidgetSet {
 		} else if ("com.itmill.toolkit.terminal.gwt.client.ui.IDateFieldCalendar"
 				.equals(className)) {
 			return new IDateFieldCalendar();
-		} else if ("com.itmill.toolkit.terminal.gwt.client.ui.ICalendar"
-				.equals(className)) {
-			return new ICalendar();
 		} else if ("com.itmill.toolkit.terminal.gwt.client.ui.ITextualDate"
 				.equals(className)) {
 			return new ITextualDate();
@@ -237,8 +233,6 @@ public class DefaultWidgetSet implements WidgetSet {
 			} else {
 				return "com.itmill.toolkit.terminal.gwt.client.ui.IPopupCalendar";
 			}
-		} else if ("calendarfield".equals(tag)) {
-			return "com.itmill.toolkit.terminal.gwt.client.ui.ICalendar";
 		} else if ("slider".equals(tag)) {
 			return "com.itmill.toolkit.terminal.gwt.client.ui.ISlider";
 		} else if ("form".equals(tag)) {
