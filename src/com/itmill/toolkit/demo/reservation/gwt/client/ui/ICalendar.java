@@ -15,6 +15,7 @@ import com.google.gwt.user.client.ui.TableListener;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.DateTimeService;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
+import com.itmill.toolkit.terminal.gwt.client.ui.CalendarEntry;
 import com.itmill.toolkit.terminal.gwt.client.ui.CalendarPanel;
 import com.itmill.toolkit.terminal.gwt.client.ui.IDateField;
 import com.itmill.toolkit.terminal.gwt.client.ui.CalendarPanel.CalendarEntrySource;
