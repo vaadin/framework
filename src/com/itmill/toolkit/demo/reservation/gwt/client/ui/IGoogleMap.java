@@ -5,6 +5,7 @@ import java.util.Iterator;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
+import com.mapitz.gwt.googleMaps.client.GControl;
 import com.mapitz.gwt.googleMaps.client.GLatLng;
 import com.mapitz.gwt.googleMaps.client.GMap2;
 import com.mapitz.gwt.googleMaps.client.GMap2EventManager;
@@ -25,6 +26,7 @@ public class IGoogleMap extends GMap2Widget implements Paintable {
 		setStyleName(CLASSNAME);
 		mapEventManager = GMap2EventManager.getInstance();
 		map = this.getGmap();
+		map.addControl(GControl.GSmallZoomControl());
 	}
 
 	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
