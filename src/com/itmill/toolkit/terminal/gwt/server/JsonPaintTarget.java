@@ -762,7 +762,7 @@ public class JsonPaintTarget implements PaintTarget {
 	 */
 	public void close() throws PaintException {
 		if (tag != null)
-			uidlBuffer.append(tag.getJSON());
+			uidlBuffer.write(tag.getJSON());
 		flush();
 		this.closed = true;
 	}
