@@ -263,7 +263,7 @@ public class SampleDB {
 		q += " WHERE " + Reservation.PROPERTY_ID_RESOURCE_ID + "="
 				+ Resource.PROPERTY_ID_ID;
 		if (resources != null && resources.size() > 0) {
-			StringBuilder s = new StringBuilder();
+			StringBuffer s = new StringBuffer();
 			for (Iterator it = resources.iterator(); it.hasNext();) {
 				if (s.length() > 0) {
 					s.append(",");
