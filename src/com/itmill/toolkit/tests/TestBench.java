@@ -66,13 +66,13 @@ public class TestBench extends com.itmill.toolkit.Application implements
 						continue;
 					try {
 						testables.addItem(t);
-						itemCaptions.put(t, t.getSimpleName());
+						itemCaptions.put(t, t.getName());
 						testables.setParent(t, testablePackages[p]);
 						continue;
 					} catch (Exception e) {
 						try {
 							testables.addItem(t);
-							itemCaptions.put(t, t.getSimpleName());
+							itemCaptions.put(t, t.getName());
 							testables.setParent(t, testablePackages[p]);
 							continue;
 						} catch (Exception e1) {
@@ -90,7 +90,7 @@ public class TestBench extends com.itmill.toolkit.Application implements
 		// simplify captions
 		for (Iterator i = itemCaptions.keySet().iterator(); i.hasNext();) {
 			Class testable = (Class) i.next();
-			menu.setItemCaption(testable, testable.getSimpleName());
+			menu.setItemCaption(testable, testable.getName());
 		}
 		menu.addListener(this);
 		menu.setImmediate(true);
@@ -136,7 +136,7 @@ public class TestBench extends com.itmill.toolkit.Application implements
 		bodyLayout.removeAllComponents();
 		bodyLayout.setCaption(null);
 
-		String title = ((Class) menu.getValue()).getSimpleName();
+		String title = ((Class) menu.getValue()).getName();
 		bodyLayout.setCaption(title);
 		bodyLayout.addComponent(createTestable((Class) menu.getValue()));
 	}

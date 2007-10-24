@@ -167,7 +167,7 @@ public class TestForPreconfiguredComponents extends CustomComponent implements
 			public void componentEvent(Event event) {
 				status
 						.addComponent(new Label(event.getClass()
-								.getSimpleName()));
+								.getName()));
 				status.addComponent(new Label("selected: "
 						+ event.getSource().toString()));
 			}
