@@ -64,7 +64,6 @@ import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.ProgressListener;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.apache.commons.fileupload.util.Streams;
 
 import com.itmill.toolkit.Application;
 import com.itmill.toolkit.Application.WindowAttachEvent;
@@ -410,7 +409,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 					Paintable f = (Paintable) application.consumeFocus();
 					if (f != null) {
 						if (metaOpen)
-							outWriter.append(",");
+							outWriter.write(",");
 						outWriter.write("\"focus\":\"" + getPaintableId(f)
 								+ "\"");
 					}
@@ -435,10 +434,10 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 						try {
 							is = applicationServlet
 									.getServletContext()
-									.getResourceAsStream("/"+
-											ApplicationServlet.THEME_DIRECTORY_PATH
-													+ themeName
-													+ "/"
+									.getResourceAsStream(
+											"/"
+													+ ApplicationServlet.THEME_DIRECTORY_PATH
+													+ themeName + "/"
 													+ resource);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -666,10 +665,11 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 			// or
 			// milliseconds
 			// We use timeformat to determine 12/24-hour clock
-			boolean twelve_hour_clock = timeformat.contains("a");
+			boolean twelve_hour_clock = timeformat.indexOf("a") > -1;
 			// TODO there are other possibilities as well, like 'h' in french
 			// (ignore them, too complicated)
-			String hour_min_delimiter = timeformat.contains(".") ? "." : ":";
+			String hour_min_delimiter = timeformat.indexOf(".") > -1 ? "."
+					: ":";
 			// outWriter.print("\"tf\":\"" + timeformat + "\",");
 			outWriter.print("\"thc\":" + twelve_hour_clock + ",");
 			outWriter.print("\"hmd\":\"" + hour_min_delimiter + "\"");
@@ -918,11 +918,13 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 	public synchronized Set getDirtyComponents() {
 		HashSet resultset = new HashSet(dirtyPaintabletSet);
 
-		// The following algorithm removes any components that would be painted as 
-		// a direct descendant of other components from the dirty components list.
+		// The following algorithm removes any components that would be painted
+		// as
+		// a direct descendant of other components from the dirty components
+		// list.
 		// The result is that each component should be painted exactly once and
 		// any unmodified components will be painted as "cached=true".
-		
+
 		for (Iterator i = dirtyPaintabletSet.iterator(); i.hasNext();) {
 			Paintable p = (Paintable) i.next();
 			if (p instanceof Component) {
