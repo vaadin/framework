@@ -138,7 +138,7 @@ public class TestForTrees extends CustomComponent implements Handler {
 			public void componentEvent(Event event) {
 				status
 						.addComponent(new Label(event.getClass()
-								.getSimpleName()));
+								.getName()));
 				status.addComponent(new Label("selected: "
 						+ event.getSource().toString()));
 			}

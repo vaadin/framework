@@ -9,8 +9,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.management.ManagementFactory;
-import java.lang.management.MemoryMXBean;
 
 import com.itmill.toolkit.data.Property.ValueChangeEvent;
 import com.itmill.toolkit.terminal.StreamResource;
@@ -45,19 +43,19 @@ public class TestForUpload extends CustomComponent implements
 
 	Panel status = new Panel("Uploaded file:");
 
-	private Upload up;
+	private final Upload up;
 
-	private Label l;
+	private final Label l;
 
-	private ProgressIndicator pi = new ProgressIndicator();
+	private final ProgressIndicator pi = new ProgressIndicator();
 
-	private Label memoryStatus;
+	private final Label memoryStatus;
 
-	private Select uploadBufferSelector;
+	private final Select uploadBufferSelector;
 
 	public TestForUpload() {
-		setCompositionRoot(main);
-		main.addComponent(new Label(
+		setCompositionRoot(this.main);
+		this.main.addComponent(new Label(
 				"This is a simple test for upload application. "
 						+ "Upload should work with big files and concurrent "
 						+ "requests should not be blocked. Button 'b' reads "
@@ -67,53 +65,53 @@ public class TestForUpload extends CustomComponent implements
 						+ "tempfile receiver writes upload to file and "
 						+ "should have low memory consumption."));
 
-		main
+		this.main
 				.addComponent(new Label(
 						"Clicking on button b updates information about upload components status or same with garbage collector."));
 
-		up = new Upload("Upload", buffer);
-		up.setImmediate(true);
-		up.addListener((FinishedListener) this);
-		up.addListener((FailedListener) this);
-		up.addListener((SucceededListener) this);
-		up.addListener((StartedListener) this);
+		this.up = new Upload("Upload", this.buffer);
+		this.up.setImmediate(true);
+		this.up.addListener((FinishedListener) this);
+		this.up.addListener((FailedListener) this);
+		this.up.addListener((SucceededListener) this);
+		this.up.addListener((StartedListener) this);
 
-		up.setProgressListener(this);
+		this.up.setProgressListener(this);
 
 		Button b = new Button("b", this, "readState");
 
 		Button c = new Button("b with gc", this, "gc");
 
-		main.addComponent(b);
-		main.addComponent(c);
+		this.main.addComponent(b);
+		this.main.addComponent(c);
 
-		uploadBufferSelector = new Select("Receiver type");
-		uploadBufferSelector.setColumns(6);
-		uploadBufferSelector.setImmediate(true);
-		uploadBufferSelector.addItem("memory");
-		uploadBufferSelector.setValue("memory");
-		uploadBufferSelector.addItem("tempfile");
-		uploadBufferSelector
+		this.uploadBufferSelector = new Select("Receiver type");
+		this.uploadBufferSelector.setColumns(6);
+		this.uploadBufferSelector.setImmediate(true);
+		this.uploadBufferSelector.addItem("memory");
+		this.uploadBufferSelector.setValue("memory");
+		this.uploadBufferSelector.addItem("tempfile");
+		this.uploadBufferSelector
 				.addListener(new AbstractField.ValueChangeListener() {
 					public void valueChange(ValueChangeEvent event) {
 						setBuffer();
 					}
 				});
-		main.addComponent(uploadBufferSelector);
+		this.main.addComponent(this.uploadBufferSelector);
 
-		main.addComponent(up);
-		l = new Label("Idle");
-		main.addComponent(l);
+		this.main.addComponent(this.up);
+		this.l = new Label("Idle");
+		this.main.addComponent(this.l);
 
-		pi.setVisible(false);
-		pi.setPollingInterval(1000);
-		main.addComponent(pi);
+		this.pi.setVisible(false);
+		this.pi.setPollingInterval(1000);
+		this.main.addComponent(this.pi);
 
-		memoryStatus = new Label();
-		main.addComponent(memoryStatus);
+		this.memoryStatus = new Label();
+		this.main.addComponent(this.memoryStatus);
 
-		status.setVisible(false);
-		main.addComponent(status);
+		this.status.setVisible(false);
+		this.main.addComponent(this.status);
 
 		Button restart = new Button("R");
 		restart.addListener(new Button.ClickListener() {
@@ -122,18 +120,18 @@ public class TestForUpload extends CustomComponent implements
 				getApplication().close();
 			}
 		});
-		main.addComponent(restart);
+		this.main.addComponent(restart);
 
 	}
 
 	private void setBuffer() {
-		String id = (String) uploadBufferSelector.getValue();
+		String id = (String) this.uploadBufferSelector.getValue();
 		if ("memory".equals(id)) {
-			buffer = new MemooryBuffer();
+			this.buffer = new MemooryBuffer();
 		} else if ("tempfile".equals(id)) {
-			buffer = new TmpFileBuffer();
+			this.buffer = new TmpFileBuffer();
 		}
-		up.setReceiver(buffer);
+		this.up.setReceiver(this.buffer);
 	}
 
 	public void gc() {
@@ -144,42 +142,41 @@ public class TestForUpload extends CustomComponent implements
 	public void readState() {
 		StringBuffer sb = new StringBuffer();
 
-		if (up.isUploading()) {
+		if (this.up.isUploading()) {
 			sb.append("Uploading...");
-			sb.append(up.getBytesRead());
+			sb.append(this.up.getBytesRead());
 			sb.append("/");
-			sb.append(up.getUploadSize());
+			sb.append(this.up.getUploadSize());
 			sb.append(" ");
-			sb.append(Math.round(100 * up.getBytesRead()
-					/ (double) up.getUploadSize()));
+			sb.append(Math.round(100 * this.up.getBytesRead()
+					/ (double) this.up.getUploadSize()));
 			sb.append("%");
 		} else {
 			sb.append("Idle");
 		}
-		l.setValue(sb.toString());
+		this.l.setValue(sb.toString());
 		refreshMemUsage();
 	}
 
 	public void uploadFinished(FinishedEvent event) {
-		status.removeAllComponents();
-		InputStream stream = buffer.getStream();
-		if (stream == null)
-			status.addComponent(new Label(
+		this.status.removeAllComponents();
+		InputStream stream = this.buffer.getStream();
+		if (stream == null) {
+			this.status.addComponent(new Label(
 					"Upload finished, but output buffer is null!!"));
-		else {
-			status
-					.addComponent(new Label("<b>Name:</b> "
-							+ event.getFilename(), Label.CONTENT_XHTML));
-			status.addComponent(new Label("<b>Mimetype:</b> "
+		} else {
+			this.status.addComponent(new Label("<b>Name:</b> "
+					+ event.getFilename(), Label.CONTENT_XHTML));
+			this.status.addComponent(new Label("<b>Mimetype:</b> "
 					+ event.getMIMEType(), Label.CONTENT_XHTML));
-			status.addComponent(new Label("<b>Size:</b> " + event.getLength()
-					+ " bytes.", Label.CONTENT_XHTML));
+			this.status.addComponent(new Label("<b>Size:</b> "
+					+ event.getLength() + " bytes.", Label.CONTENT_XHTML));
 
-			status.addComponent(new Link("Download " + buffer.getFileName(),
-					new StreamResource(buffer, buffer.getFileName(),
-							getApplication())));
+			this.status.addComponent(new Link("Download "
+					+ this.buffer.getFileName(), new StreamResource(
+					this.buffer, this.buffer.getFileName(), getApplication())));
 
-			status.setVisible(true);
+			this.status.setVisible(true);
 		}
 	}
 
@@ -201,9 +198,10 @@ public class TestForUpload extends CustomComponent implements
 		}
 
 		public InputStream getStream() {
-			if (outputBuffer == null)
+			if (this.outputBuffer == null) {
 				return null;
-			return new ByteArrayInputStream(outputBuffer.toByteArray());
+			}
+			return new ByteArrayInputStream(this.outputBuffer.toByteArray());
 		}
 
 		/**
@@ -211,10 +209,10 @@ public class TestForUpload extends CustomComponent implements
 		 *      String)
 		 */
 		public OutputStream receiveUpload(String filename, String MIMEType) {
-			fileName = filename;
-			mimeType = MIMEType;
-			outputBuffer = new ByteArrayOutputStream();
-			return outputBuffer;
+			this.fileName = filename;
+			this.mimeType = MIMEType;
+			this.outputBuffer = new ByteArrayOutputStream();
+			return this.outputBuffer;
 		}
 
 		/**
@@ -223,7 +221,7 @@ public class TestForUpload extends CustomComponent implements
 		 * @return String
 		 */
 		public String getFileName() {
-			return fileName;
+			return this.fileName;
 		}
 
 		/**
@@ -232,7 +230,7 @@ public class TestForUpload extends CustomComponent implements
 		 * @return String
 		 */
 		public String getMimeType() {
-			return mimeType;
+			return this.mimeType;
 		}
 
 	}
@@ -250,7 +248,7 @@ public class TestForUpload extends CustomComponent implements
 			String tempFileName = "upload_tmpfile_"
 					+ System.currentTimeMillis();
 			try {
-				file = File.createTempFile(tempFileName, null);
+				this.file = File.createTempFile(tempFileName, null);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -259,10 +257,11 @@ public class TestForUpload extends CustomComponent implements
 		}
 
 		public InputStream getStream() {
-			if (file == null)
+			if (this.file == null) {
 				return null;
+			}
 			try {
-				return new FileInputStream(file);
+				return new FileInputStream(this.file);
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -275,10 +274,10 @@ public class TestForUpload extends CustomComponent implements
 		 *      String)
 		 */
 		public OutputStream receiveUpload(String filename, String MIMEType) {
-			fileName = filename;
-			mimeType = MIMEType;
+			this.fileName = filename;
+			this.mimeType = MIMEType;
 			try {
-				return new FileOutputStream(file);
+				return new FileOutputStream(this.file);
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -292,7 +291,7 @@ public class TestForUpload extends CustomComponent implements
 		 * @return String
 		 */
 		public String getFileName() {
-			return fileName;
+			return this.fileName;
 		}
 
 		/**
@@ -301,7 +300,7 @@ public class TestForUpload extends CustomComponent implements
 		 * @return String
 		 */
 		public String getMimeType() {
-			return mimeType;
+			return this.mimeType;
 		}
 
 	}
@@ -314,31 +313,33 @@ public class TestForUpload extends CustomComponent implements
 	}
 
 	public void uploadSucceeded(SucceededEvent event) {
-		pi.setVisible(false);
-		l.setValue("Finished upload, idle");
+		this.pi.setVisible(false);
+		this.l.setValue("Finished upload, idle");
 		System.out.println(event);
 		setBuffer();
 	}
 
 	public void updateProgress(long readBytes, long contentLenght) {
-		pi.setValue(new Float(readBytes / (float) contentLenght));
+		this.pi.setValue(new Float(readBytes / (float) contentLenght));
 
 		refreshMemUsage();
 	}
 
 	private void refreshMemUsage() {
-		StringBuffer mem = new StringBuffer();
-		MemoryMXBean mmBean = ManagementFactory.getMemoryMXBean();
-		mem.append("Heap (M):");
-		mem.append(mmBean.getHeapMemoryUsage().getUsed() / 1048576);
-		mem.append(" |ÊNon-Heap (M):");
-		mem.append(mmBean.getNonHeapMemoryUsage().getUsed() / 1048576);
-		memoryStatus.setValue(mem.toString());
+		this.memoryStatus.setValue("Not available in Java 1.4");
+		/*
+		 * StringBuffer mem = new StringBuffer(); MemoryMXBean mmBean =
+		 * ManagementFactory.getMemoryMXBean(); mem.append("Heap (M):");
+		 * mem.append(mmBean.getHeapMemoryUsage().getUsed() / 1048576);
+		 * mem.append(" |ï¿½Non-Heap (M):");
+		 * mem.append(mmBean.getNonHeapMemoryUsage().getUsed() / 1048576);
+		 * memoryStatus.setValue(mem.toString());
+		 */
 	}
 
 	public void uploadStarted(StartedEvent event) {
-		pi.setVisible(true);
-		l.setValue("Started uploading file " + event.getFilename());
+		this.pi.setVisible(true);
+		this.l.setValue("Started uploading file " + event.getFilename());
 	}
 
 }
