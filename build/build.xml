@@ -636,6 +636,7 @@
 
 	<!-- XEP-based FO building -->
 	<target name="manual-pdf">
+		<echo>PDF Manual: converting xml to fo</echo>
 		<java classname="org.apache.xalan.xslt.Process" failonerror="yes" fork="yes" maxmemory="512m">
 			<arg value="-xsl" />
 			<arg value="build/docbook/conf/custom-fo-docbook.xsl" />
@@ -658,13 +659,10 @@
 				<pathelement location="build/lib/xml-apis.jar" />
 			</classpath>
 		</java>
+		<echo>PDF Manual: converting fo to pdf</echo>
 		<!-- Run XEP FO processor to convert FO to PDF -->
-		<java classname="com.renderx.xep.XSLDriver" failonerror="yes" fork="yes" maxmemory="512m">
+		<java classname="com.renderx.xep.XSLDriver" failonerror="yes" fork="yes" maxmemory="512m" input="build/result/book.fo" output="${output-dir}/doc/manual.pdf">
 			<arg value="-Dcom.renderx.xep.CONFIG=build/lib/XEP/xep.xml" />
-			<arg value="build/docbook/conf/custom-fo-docbook.xsl" />
-			<arg value="&lt;build/result/book.fo" />
-			<arg value="&gt;build/result/manual.pdf" />
-			<!-- <arg value="&gt;${output-dir}/doc/manual.pdf" /> -->
 			<classpath>
 				<pathelement location="build/lib/XEP/lib/tools.jar" />
 				<pathelement location="build/lib/XEP/lib/xep.jar" />
