@@ -634,8 +634,44 @@
 		</javadoc>
 	</target>
 
+	<!-- XEP-based FO building -->
 	<target name="manual-pdf">
-		<!-- TODO Include XEP-based FO building in future -->
+		<java classname="org.apache.xalan.xslt.Process" failonerror="yes" fork="yes" maxmemory="512m">
+			<arg value="-xsl" />
+			<arg value="build/docbook/conf/custom-fo-docbook.xsl" />
+			<arg value="-in" />
+			<arg value="doc/manual/book.xml" />
+			<arg value="-out" />
+			<arg value="build/result/book.fo" />
+			<arg value="-param" />
+			<arg value="section.autolabel" />
+			<arg value="1" />
+			<arg value="-param" />
+			<arg value="section.label.includes.component.label" />
+			<arg value="1" />
+			<arg value="-param" />
+			<arg value="section.autolabel.max.depth" />
+			<arg value="2" />
+			<classpath>
+				<pathelement location="build/lib/xalan.jar" />
+				<pathelement location="build/lib/xercesImpl.jar" />
+				<pathelement location="build/lib/xml-apis.jar" />
+			</classpath>
+		</java>
+		<!-- Run XEP FO processor to convert FO to PDF -->
+		<java classname="com.renderx.xep.XSLDriver" failonerror="yes" fork="yes" maxmemory="512m">
+			<arg value="-Dcom.renderx.xep.CONFIG=build/lib/XEP/xep.xml" />
+			<arg value="build/docbook/conf/custom-fo-docbook.xsl" />
+			<arg value="&lt;build/result/book.fo" />
+			<arg value="&gt;build/result/manual.pdf" />
+			<!-- <arg value="&gt;${output-dir}/doc/manual.pdf" /> -->
+			<classpath>
+				<pathelement location="build/lib/XEP/lib/tools.jar" />
+				<pathelement location="build/lib/XEP/lib/xep.jar" />
+				<pathelement location="build/lib/XEP/lib/saxon.jar" />
+				<pathelement location="build/lib/XEP/lib/xt.jar" />
+			</classpath>
+		</java>
 	</target>
 
 	<target name="manual-html">
