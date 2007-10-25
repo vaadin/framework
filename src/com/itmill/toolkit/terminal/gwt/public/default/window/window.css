@@ -1,7 +1,4 @@
 .i-window {
-	/* mac FF fix for scrollbar see thru */
-	position: absolute;
-	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
 	color: #464f52;
 	font-size: 13px;
 	line-height: 18px;
@@ -18,6 +15,8 @@
 .i-window-wrap {
 	padding-left: 20px;
 	background: transparent url(img/left-bg.png) repeat-y;
+	/* somehow this won't inherit from .i-window */
+	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
 }
 
 .i-window-wrap2 {
@@ -50,11 +49,15 @@
 .i-window-contents {
 	background: #fff;
 	border: 1px solid #babfc0;
+	font-size: 13px;
+	line-height: 18px;
 }
 
 .i-window-footer {
 	height: 0;
 	font-size: 0px;
+	/* Occupy more height to prevent scrollbars in Mac FF */
+	margin-bottom: 46px;
 }
 
 .i-window-footer:before {
@@ -76,7 +79,7 @@
 
 .i-window-resizebox {
 	position:absolute;
-	bottom: -21px;
+	bottom: 24px;
 	right: 0;
 	width: 25px;
 	height: 21px;
