@@ -45,6 +45,14 @@ public class Slider extends AbstractField {
 
 	public static final int ORIENTATION_VERTICAL = 1;
 
+	/**
+	 * Style constant representing a scrollbar styled slider. Use this with
+	 * {@link #addStyleName(String)}. Default styling usually represents a
+	 * common slider found e.g. in Adobe Photoshop. The client side
+	 * implementation dictates how different styles will look.
+	 */
+	public static final String STYLE_SCROLLBAR = "scrollbar";
+
 	/** Minimum value of slider */
 	private double min = 0;
 
@@ -82,7 +90,7 @@ public class Slider extends AbstractField {
 	 * (client-side implementation decides the increment, usually somewhere
 	 * between 5-10% of slide range).
 	 */
-	private boolean arrows = true;
+	private boolean arrows = false;
 
 	/**
 	 * Default Slider constructor. Sets all values to defaults and the slide
@@ -295,7 +303,7 @@ public class Slider extends AbstractField {
 	/**
 	 * Get the current Slider size.
 	 * 
-	 * @return size in pixels or -1.
+	 * @return size in pixels or -1 for auto sizing.
 	 */
 	public int getSize() {
 		return size;
@@ -391,6 +399,9 @@ public class Slider extends AbstractField {
 			target.addAttribute("hsize", handleSize);
 		else
 			target.addAttribute("hsize", 100);
+		
+		if(!getStyleName().equals(""))
+			target.addAttribute("style", getStyleName());
 
 	}
 
