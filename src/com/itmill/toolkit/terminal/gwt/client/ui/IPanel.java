@@ -57,7 +57,6 @@ public class IPanel extends SimplePanel implements Paintable,
 		height = uidl.hasVariable("height") ? uidl.getStringVariable("height")
 				: null;
 		setWidth(w != null ? w : "");
-		setHeight(height != null ? height : "");
 
 		// TODO optimize: if only the caption has changed, don't re-render whole
 		// content
@@ -107,10 +106,9 @@ public class IPanel extends SimplePanel implements Paintable,
 	}
 
 	public void iLayout() {
-		// In this case we need to fix containers height properly
 		if (height != null && height != "") {
 			// need to fix containers height properly
-
+			DOM.setStyleAttribute(getElement(), "height", height);
 			boolean hasChildren = getWidget() != null;
 			Element contentEl = null;
 			String origPositioning = null;
@@ -137,8 +135,9 @@ public class IPanel extends SimplePanel implements Paintable,
 				DOM.setStyleAttribute(contentEl, "position", origPositioning);
 			}
 			DOM.setStyleAttribute(contentNode, "overflow", "auto");
+			DOM.setStyleAttribute(getElement(), "height", "");
 		} else {
-			DOM.setStyleAttribute(contentNode, "overflow", "hidden");
+			DOM.setStyleAttribute(contentNode, "height", "");
 		}
 		Util.runAncestorsLayout(this);
 	}

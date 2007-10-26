@@ -180,6 +180,12 @@
 	background: #c1c6cc;
 	border: none;
 }
+*+html .i-panel-nocaption {
+	height: 1px;
+	overflow: hidden;
+	background: #c1c6cc;
+	border: none;
+}
 
 /* Without padding */
 * html .i-panel-content-nopad {

@@ -129,6 +129,13 @@
 	background: #fff;
 }
 
+* html .i-window-footer {
+	margin-bottom: 0;
+}
+*+html .i-window-footer {
+	margin-bottom: 0;
+}
+
 * html .i-window-resizebox {
 	bottom: 0;
 	width: 22px;
