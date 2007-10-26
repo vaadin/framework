@@ -937,14 +937,6 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 	}
 
 	/**
-	 * Clears the Dirty Components.
-	 * 
-	 */
-	public synchronized void clearDirtyComponents() {
-		dirtyPaintabletSet.clear();
-	}
-
-	/**
 	 * @see com.itmill.toolkit.terminal.Paintable.RepaintRequestListener#repaintRequested(com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent)
 	 */
 	public void repaintRequested(RepaintRequestEvent event) {
@@ -960,15 +952,6 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 	public void paintablePainted(Paintable p) {
 		dirtyPaintabletSet.remove(p);
 		p.requestRepaintRequests();
-	}
-
-	/**
-	 * 
-	 * @param paintable
-	 * @return
-	 */
-	public boolean isDirty(Paintable paintable) {
-		return (dirtyPaintabletSet.contains(paintable));
 	}
 
 	/**
