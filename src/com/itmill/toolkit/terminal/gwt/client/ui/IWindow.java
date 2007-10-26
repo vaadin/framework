@@ -13,6 +13,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
+import com.itmill.toolkit.terminal.gwt.client.Util;
 
 /**
  * "Sub window" component.
@@ -169,14 +170,14 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 		this.id = uidl.getId();
 		this.client = client;
-
-		if (client.updateComponent(this, uidl, false))
-			return;
-
+		
 		if (uidl.hasAttribute("invisible")) {
 			this.hide();
 			return;
 		}
+		
+		if (client.updateComponent(this, uidl, false))
+			return;
 
 		// Initialize the width from UIDL
 		if (uidl.hasVariable("width")) {
@@ -274,12 +275,15 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 			bringToFront();
 		}
 		Element target = DOM.eventGetTarget(event);
-		if (dragging || DOM.compare(header, target))
+		if (dragging || DOM.compare(header, target)) {
 			onHeaderEvent(event);
-		else if (resizing || DOM.compare(resizeBox, target))
+			DOM.eventCancelBubble(event, true);
+		} else if (resizing || DOM.compare(resizeBox, target)) {
 			onResizeEvent(event);
-		else if (DOM.compare(target, closeBox) && type == Event.ONCLICK) {
+			DOM.eventCancelBubble(event, true);
+		} else if (DOM.compare(target, closeBox) && type == Event.ONCLICK) {
 			onCloseClick();
+			DOM.eventCancelBubble(event, true);
 		}
 	}
 
@@ -310,6 +314,7 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 			}
 			break;
 		default:
+			DOM.eventPreventDefault(event);
 			break;
 		}
 	}
@@ -328,6 +333,8 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 			client.updateVariable(id, "width", w, false);
 			client.updateVariable(id, "height", h, false);
 		}
+		// Update child widget dimensions
+		Util.runAncestorsLayout(this);
 	}
 
 	public void setWidth(String width) {
