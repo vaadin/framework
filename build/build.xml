@@ -410,6 +410,10 @@
 				<include name="${toolkit-package}/demo/**/*" />
 			</fileset>
 		</copy>
+		
+		<!-- TODO We MUST rebuild all the widgetsets explicitly in the build.xml. If not, whatever happents (or doesn't
+			 happent) to be built in WebContents dir gets included in the distribution package. So please do include
+			 dependency on build-widgetsets to this target and move compile-gwt-components to build-widgetsets -->
 
 		<!-- Add WebContent -->
 		<echo>Adding WebContent files, excluding ITMILL/widgetsets and few internal development libraries.</echo>
@@ -650,8 +654,8 @@
 			
 			Another alternative would be to commit official license key to svn - and allow everyone to build 
 			working manuals. I think that we would not harsly disobey the license as only one person builds the
-			official buils.
-   -->
+			official buils. 
+	-->
 	<target name="manual-pdf">
 		<echo>PDF Manual: converting xml to fo</echo>
 		<java classname="org.apache.xalan.xslt.Process" failonerror="yes" fork="yes" maxmemory="512m">
