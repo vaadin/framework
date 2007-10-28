@@ -28,6 +28,7 @@
 	<!-- 
 	Call one of package-* targets unless you understand what you are doing 
 	-->
+	<!-- TODO Should we remove depencencies: clean-all, init, build -->
 	<target name="package-all" depends="clean-all, init, build, internal-package-mac, internal-package-windows, internal-package-linux" description="Build public packages for Windows, Linux and Mac platforms.">
 	</target>
 
