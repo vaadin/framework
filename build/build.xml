@@ -5,7 +5,7 @@
 	<!-- Package creation - - - - - - - - - - - - - - - - - - - - - - - - -
 
 	When creating release use only "package-*" targets:
-	package-all-platforms
+	package-all
 	 * creates four release packages for three three platforms (below)
 	 
 	package-windows
