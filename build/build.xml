@@ -644,6 +644,14 @@
 	</target>
 
 	<!-- XEP-based FO building -->
+	<!-- TODO When building without license, we should use demo-license to get a working manual with watermarks
+			instead of a manual with 50% of the pages left blank. Also a big warning should be given with message
+			that Jani is the only one who can build official packages.
+			
+			Another alternative would be to commit official license key to svn - and allow everyone to build 
+			working manuals. I think that we would not harsly disobey the license as only one person builds the
+			official buils.
+   -->
 	<target name="manual-pdf">
 		<echo>PDF Manual: converting xml to fo</echo>
 		<java classname="org.apache.xalan.xslt.Process" failonerror="yes" fork="yes" maxmemory="512m">
