@@ -44,6 +44,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.WeakHashMap;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -54,6 +55,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.xml.sax.SAXException;
 
+import com.google.gwt.http.client.Request;
 import com.itmill.toolkit.Application;
 import com.itmill.toolkit.service.FileTypeResolver;
 import com.itmill.toolkit.terminal.DownloadStream;
@@ -295,6 +297,11 @@ public class ApplicationServlet extends HttpServlet {
 	protected void service(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 
+		if (request.getPathInfo().startsWith("/ITMILL/")) {
+			serveStaticResourcesInITMILL(request, response);
+			return;
+		}
+		
 		Application application = null;
 		try {
 
@@ -397,6 +404,30 @@ public class ApplicationServlet extends HttpServlet {
 		}
 	}
 
+	/** Serve resources in ITMILL directory if requested.
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	private void serveStaticResourcesInITMILL(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String filename = request.getPathInfo();
+		ServletContext sc = getServletContext();
+		InputStream is = sc.getResourceAsStream(filename);
+		if (is == null) {
+			response.setStatus(404);
+			return;
+		}
+		String mimetype = sc.getMimeType(filename);
+		if (mimetype != null) response.setContentType(mimetype);
+		OutputStream os = response.getOutputStream();
+		byte buffer[] = new byte[20000];
+		int bytes;
+		while ((bytes = is.read(buffer)) >= 0) {
+			os.write(buffer, 0, bytes);
+		}
+	}
+
 	/**
 	 * 
 	 * @param request
@@ -464,19 +495,18 @@ public class ApplicationServlet extends HttpServlet {
 						+ "'\n};\n"
 						+ "</script>\n"
 						+ "<script language='javascript' src='"
-						+ (hasSlash ? "../" : "")
-						+ relative
+						+ appUrl + "/"
 						+ WIDGETSET_DIRECTORY_PATH
 						+ widgetset
 						+ "/"
 						+ widgetset
-						+ ".nocache.js'></script>"
+						+ ".nocache.js'></script>\n"
 						+ "<link REL=\"stylesheet\" TYPE=\"text/css\" HREF=\""
-						+ request.getContextPath()
+						+ appUrl
 						+ "/" // TODO relative url as above?
 						+ THEME_DIRECTORY_PATH
 						+ themeName
-						+ "/styles.css\">"
+						+ "/styles.css\">\n"
 						+ "</head>\n<body style=\"width:100%;height:100%;border:0;margin:0\">\n"
 						+ "	<iframe id=\"__gwt_historyFrame\" style=\"width:0;height:0;border:0;overflow:hidden\"></iframe>\n"
 						+ "	<div id=\"itmill-ajax-window\"></div>"
