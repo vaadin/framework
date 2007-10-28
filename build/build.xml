@@ -44,6 +44,9 @@
 
 	<!-- Initialization - - - - - - - - - - - - - - - - - - - - - - - - -->
 	<target name="init">
+		
+		<!-- TODO The following selects mac platform even when we are building (on mac) for windows ??? -->
+		
 		<!-- Find out which platform we are in -->
 		<if>
 			<equals arg1="${os.name}" arg2="Windows 2000, Windows XP" />
@@ -99,6 +102,11 @@
 		<mkdir dir="${output-dir}/WebContent/WEB-INF" />
 		<mkdir dir="${output-dir}/WebContent/WEB-INF/classes" />
 
+		<!-- TODO Selection of classpath conflicts with bin/compile-gwt-components. build.xml expects gwt/mac/...
+		and bin/compile-gwt-components expects gwt/gwt/... We should use constistent naming everywhere. I propose
+		that we use gwt/mac/... everywhere. Still this init target should use the platform we are targeting, not the
+		platform we are building on. -->
+		
 		<!-- Construct classpath used by java and javadoc compilation -->
 		<path id="compile.classpath">
 			<pathelement path="build/gwt/${platform}/gwt-user.jar" />
