@@ -1,19 +1,32 @@
-#!/bin/sh
+#!/bin/bash
 
-JVMVARS="-Xmx512M"
+# Check that the script is only run in build/bin
+if [ ! -e compile-gwt-components ]; then
+echo compile-gwt-components must only be run from build/bin directory
+exit
+fi
 
+# Detect platform
 PLATFORM=""
-
 if [ -d "/Users" ]
 then
     echo "MAC OS"
-    JVMVARS="$JVMVARS -XstartOnFirstThread"
     PLATFORM="mac"
 else
 	PLATFORM="linux"
 fi
 
-rm -r ../../WebContent/ITMILL/widgetsets/*
-java $JVMVARS -cp "../../src:../gwt/gwt/gwt-user.jar:../gwt/gwt/gwt-dev-$PLATFORM.jar" com.google.gwt.dev.GWTCompiler -out "../../WebContent/ITMILL/widgetsets" "$@" com.itmill.toolkit.terminal.gwt.DefaultWidgetSet -style DETAILED;
-java $JVMVARS -cp "../../src:../gwt/gwt/gwt-user.jar:../gwt/gwt/gwt-dev-$PLATFORM.jar" com.google.gwt.dev.GWTCompiler -out "../../WebContent/ITMILL/widgetsets" "$@" com.itmill.toolkit.demo.colorpicker.gwt.WidgetSet -style DETAILED;
-java $JVMVARS -cp "../../src:../gwt/gwt/gwt-user.jar:../../lib/reservr/googlemaps_gwt.jar:../gwt/gwt/gwt-dev-$PLATFORM.jar" com.google.gwt.dev.GWTCompiler -out "../../WebContent/ITMILL/widgetsets" "$@" com.itmill.toolkit.demo.reservation.gwt.WidgetSet -style DETAILED;
+# Parameters
+JVMVARS="-Xmx512M"
+OUTDIR=../../WebContent/ITMILL/widgetsets
+GWTDIR=../gwt/$PLATFORM
+SRCDIR=../../src
+
+# Clean anything that could be wrong
+rm -r $OUTDIR/*
+rm -r .gwt-cache
+
+# Build the widgetsets
+java $JVMVARS -cp "$SRCDIR:$GWTDIR/gwt-user.jar:$GWTDIR/gwt-dev-$PLATFORM.jar" com.google.gwt.dev.GWTCompiler -out $OUTDIR com.itmill.toolkit.terminal.gwt.DefaultWidgetSet -style DETAILED
+java $JVMVARS -cp "$SRCDIR:$GWTDIR/gwt-user.jar:$GWTDIR/gwt-dev-$PLATFORM.jar" com.google.gwt.dev.GWTCompiler -out "../../WebContent/ITMILL/widgetsets" com.itmill.toolkit.demo.colorpicker.gwt.WidgetSet -style DETAILED;
+java $JVMVARS -cp "$SRCDIR:$GWTDIR/gwt-user.jar:../../lib/reservr/googlemaps_gwt.jar:$GWTDIR/gwt-dev-$PLATFORM.jar" com.google.gwt.dev.GWTCompiler -out "../../WebContent/ITMILL/widgetsets" com.itmill.toolkit.demo.reservation.gwt.WidgetSet -style DETAILED;
