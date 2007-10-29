@@ -217,4 +217,20 @@ public class CustomLayout extends AbstractComponentContainer implements Layout {
 		}
 	}
 
+	@Override
+	public void setStyle(String name) {
+		setTemplateName(name);
+	}
+
+	public String getTemplateName() {
+		return templateName;
+	}
+
+	public void setTemplateName(String templateName) {
+		this.templateName = templateName;
+		requestRepaint();
+	}
+	
+	
+
 }
