@@ -167,10 +167,12 @@
 }
 
 * html .i-panel-deco {
-	display: none;
+	height: 0;
+	overflow: hidden;
 }
 *+html .i-panel-deco {
-	display: none;
+	height: 0;
+	overflow: hidden;
 }
 
 /* Without caption */

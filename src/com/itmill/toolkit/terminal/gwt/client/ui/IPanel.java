@@ -33,8 +33,12 @@ public class IPanel extends SimplePanel implements Paintable,
 		DOM.appendChild(getElement(), contentNode);
 		DOM.appendChild(getElement(), bottomDecoration);
 		setStyleName(CLASSNAME);
-		DOM.setElementProperty(captionNode, "className", CLASSNAME + "-caption");
-		DOM.setElementProperty(contentNode, "className", CLASSNAME + "-content");
+		DOM
+				.setElementProperty(captionNode, "className", CLASSNAME
+						+ "-caption");
+		DOM
+				.setElementProperty(contentNode, "className", CLASSNAME
+						+ "-content");
 		DOM.setElementProperty(bottomDecoration, "className", CLASSNAME
 				+ "-deco");
 	}
@@ -71,7 +75,8 @@ public class IPanel extends SimplePanel implements Paintable,
 			hasCaption = true;
 		} else {
 			DOM.setInnerText(captionNode, "");
-			DOM.setElementProperty(captionNode, "className", CLASSNAME + "-nocaption");
+			DOM.setElementProperty(captionNode, "className", CLASSNAME
+					+ "-nocaption");
 		}
 
 		// Add proper stylenames for all elements
@@ -109,33 +114,34 @@ public class IPanel extends SimplePanel implements Paintable,
 		if (height != null && height != "") {
 			// need to fix containers height properly
 			DOM.setStyleAttribute(getElement(), "height", height);
-			boolean hasChildren = getWidget() != null;
-			Element contentEl = null;
-			String origPositioning = null;
-			if (hasChildren) {
-				// remove children temporary form normal flow to detect proper
-				// size
-				contentEl = getWidget().getElement();
-				origPositioning = DOM.getStyleAttribute(contentEl, "position");
-				DOM.setStyleAttribute(contentEl, "position", "absolute");
-			}
-			DOM.setStyleAttribute(contentNode, "height", "");
+			//boolean hasChildren = getWidget() != null;
+			//Element contentEl = null;
+			//String origPositioning = null; if (hasChildren) { // remove
+			//children temporary form normal flow to detect proper // size
+			//contentEl = getWidget().getElement(); origPositioning =
+			//DOM.getStyleAttribute(contentEl, "position");
+			//DOM.setStyleAttribute(contentEl, "position", "absolute"); }
+			//DOM.setStyleAttribute(contentNode, "height", ""); int availableH =
+			//DOM.getElementPropertyInt(getElement(), "clientHeight");
+			// 
+			//int usedH = DOM .getElementPropertyInt(bottomDecoration,
+			//"offsetTop") + DOM.getElementPropertyInt(bottomDecoration,
+			//"offsetHeight");
+			
+			DOM.setStyleAttribute(contentNode, "height", "1px");
+			DOM.setStyleAttribute(contentNode, "overflow", "hidden");
 			int availableH = DOM.getElementPropertyInt(getElement(),
-					"clientHeight");
-
-			int usedH = DOM
-					.getElementPropertyInt(bottomDecoration, "offsetTop")
-					+ DOM.getElementPropertyInt(bottomDecoration,
-							"offsetHeight");
-			int contentH = availableH - usedH;
+					"offsetHeight");
+			DOM.setStyleAttribute(getElement(), "height", "");
+			int usedH = DOM.getElementPropertyInt(getElement(), "offsetHeight");
+			int contentH = availableH - usedH - 1;
 			if (contentH < 0)
 				contentH = 0;
 			DOM.setStyleAttribute(contentNode, "height", contentH + "px");
-			if (hasChildren) {
+			/*if (hasChildren) {
 				DOM.setStyleAttribute(contentEl, "position", origPositioning);
-			}
+			}*/
 			DOM.setStyleAttribute(contentNode, "overflow", "auto");
-			DOM.setStyleAttribute(getElement(), "height", "");
 		} else {
 			DOM.setStyleAttribute(contentNode, "height", "");
 		}
