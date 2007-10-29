@@ -107,6 +107,16 @@
 */
 
 
+/* Progress indication */
+
+.i-tabsheet-loading .i-tabsheet-tabs .gwt-TabBarItem-selected span{
+	background: transparent url(../common/img/ajax-loader.gif) no-repeat;
+	display: block;
+	padding-left: 20px;
+	margin-left: -20px;
+}
+
+
 
 
 /* Tabsheet without padding (NO_PADDING style) */
