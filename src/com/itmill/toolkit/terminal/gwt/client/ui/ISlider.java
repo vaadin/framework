@@ -83,7 +83,7 @@ public class ISlider extends Widget implements Paintable,
 		DOM.setStyleAttribute(bigger, "display", "none");
 		DOM.setStyleAttribute(handle, "visibility", "hidden");
 
-		DOM.sinkEvents(getElement(), Event.MOUSEEVENTS);
+		DOM.sinkEvents(getElement(), Event.MOUSEEVENTS | Event.ONMOUSEWHEEL);
 		DOM.sinkEvents(base, Event.ONCLICK);
 		DOM.sinkEvents(handle, Event.MOUSEEVENTS);
 		DOM.sinkEvents(smaller, Event.ONMOUSEDOWN | Event.ONMOUSEUP
@@ -168,18 +168,21 @@ public class ISlider extends Widget implements Paintable,
 				DeferredCommand.addCommand(new Command() {
 					public void execute() {
 						Element p = DOM.getParent(getElement());
-						if (DOM.getElementPropertyInt(p, domProperty) > 50)
+						if (DOM.getElementPropertyInt(p, domProperty) > (MIN_SIZE + 5)) {
 							if (vertical) {
 								setHeight();
 							} else
 								DOM.setStyleAttribute(base, styleAttribute, "");
+							// Ensure correct position
+							setValue(value, false, false);
+						}
 					}
 				});
 			}
 		} else
 			DOM.setStyleAttribute(base, styleAttribute, size + "px");
 
-		// TODO attach listeners for focusing and arrow keys + scroll wheel
+		// TODO attach listeners for focusing and arrow keys
 	}
 
 	private void buildHandle() {
@@ -211,6 +214,12 @@ public class ISlider extends Widget implements Paintable,
 	}
 
 	private void setValue(Double value, boolean animate, boolean updateToServer) {
+		if (value.doubleValue() < min)
+			value = new Double(min);
+		else if (value.doubleValue() > max)
+			value = new Double(max);
+
+		// Update handle position
 		final String styleAttribute = vertical ? "marginTop" : "marginLeft";
 		String domProperty = vertical ? "offsetHeight" : "offsetWidth";
 		int handleSize = Integer.parseInt(DOM.getElementProperty(handle,
@@ -226,6 +235,8 @@ public class ISlider extends Widget implements Paintable,
 		if (p < 0)
 			p = 0;
 		if (vertical)
+			// IE6 rounding behaves a little unstable, reduce one pixel so the
+			// containing element (base) won't expand without limits
 			p = range - p - (Util.isIE6() ? 1 : 0);
 		final double pos = p;
 
@@ -260,12 +271,8 @@ public class ISlider extends Widget implements Paintable,
 		} else
 			DOM.setStyleAttribute(handle, styleAttribute, ((int) pos) + "px");
 
+		// TODO give more detailed info when dragging and do roundup
 		DOM.setElementAttribute(handle, "title", "" + v);
-
-		if (value.doubleValue() < min)
-			value = new Double(min);
-		else if (value.doubleValue() > max)
-			value = new Double(max);
 
 		this.value = value;
 
@@ -277,14 +284,27 @@ public class ISlider extends Widget implements Paintable,
 		if (disabled || readonly)
 			return;
 		Element targ = DOM.eventGetTarget(event);
-		if (dragging || DOM.compare(targ, handle)) {
+
+		if (DOM.eventGetType(event) == Event.ONMOUSEWHEEL) {
+			processMouseWheelEvent(event);
+		} else if (dragging || DOM.compare(targ, handle))
 			processHandleEvent(event);
-		} else if (DOM.compare(targ, smaller)) {
-			decreaseValue(event);
-		} else if (DOM.compare(targ, bigger)) {
-			increaseValue(event);
-		} else
+		else if (DOM.compare(targ, smaller))
+			decreaseValue(event, true);
+		else if (DOM.compare(targ, bigger))
+			increaseValue(event, true);
+		else
 			processBaseEvent(event);
+	}
+
+	private void processMouseWheelEvent(Event event) {
+		int dir = DOM.eventGetMouseWheelVelocityY(event);
+		if (dir < 0)
+			increaseValue(event, false);
+		else
+			decreaseValue(event, false);
+		DOM.eventPreventDefault(event);
+		DOM.eventCancelBubble(event, true);
 	}
 
 	private void processHandleEvent(Event event) {
@@ -328,11 +348,10 @@ public class ISlider extends Widget implements Paintable,
 		}
 	}
 
-	private void decreaseValue(Event event) {
-		if (DOM.eventGetType(event) == Event.ONMOUSEDOWN) {
-			setValue(
-					new Double(value.doubleValue() - Math.pow(10, -resolution)),
-					false, true);
+	private void decreaseValue(Event event, boolean animate) {
+		setValue(new Double(value.doubleValue() - Math.pow(10, -resolution)),
+				false, true);
+		if (DOM.eventGetType(event) == Event.ONMOUSEDOWN && animate) {
 			if (anim != null)
 				anim.cancel();
 			anim = new Timer() {
@@ -344,15 +363,14 @@ public class ISlider extends Widget implements Paintable,
 			};
 			anim.scheduleRepeating(100);
 			DOM.eventCancelBubble(event, true);
-		} else
+		} else if (anim != null)
 			anim.cancel();
 	}
 
-	private void increaseValue(Event event) {
-		if (DOM.eventGetType(event) == Event.ONMOUSEDOWN) {
-			setValue(
-					new Double(value.doubleValue() + Math.pow(10, -resolution)),
-					false, true);
+	private void increaseValue(Event event, boolean animate) {
+		setValue(new Double(value.doubleValue() + Math.pow(10, -resolution)),
+				false, true);
+		if (DOM.eventGetType(event) == Event.ONMOUSEDOWN && animate) {
 			if (anim != null)
 				anim.cancel();
 			anim = new Timer() {
@@ -364,7 +382,7 @@ public class ISlider extends Widget implements Paintable,
 			};
 			anim.scheduleRepeating(100);
 			DOM.eventCancelBubble(event, true);
-		} else
+		} else if (anim != null)
 			anim.cancel();
 	}
 

@@ -347,24 +347,24 @@ public class Slider extends AbstractField {
 		requestRepaint();
 	}
 
-	/**
+	/*
 	 * Show or hide slider arrows.
 	 * 
 	 * @param visible
-	 */
+	 *//*
 	public void setArrows(boolean visible) {
 		arrows = visible;
 		requestRepaint();
-	}
+	}*/
 
-	/**
+	/*
 	 * Does the slider have arrows?
 	 * 
 	 * @return arrows visible
-	 */
+	 *//*
 	public boolean isArrowsVisible() {
 		return arrows;
-	}
+	}*/
 
 	public String getTag() {
 		return "slider";
@@ -399,9 +399,6 @@ public class Slider extends AbstractField {
 			target.addAttribute("hsize", handleSize);
 		else
 			target.addAttribute("hsize", 100);
-		
-		if(!getStyleName().equals(""))
-			target.addAttribute("style", getStyleName());
 
 	}
 
