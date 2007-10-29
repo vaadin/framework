@@ -351,6 +351,7 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 			startY = DOM.eventGetScreenY(event);
 			origX = DOM.getAbsoluteLeft(getElement());
 			origY = DOM.getAbsoluteTop(getElement());
+			DOM.eventPreventDefault(event);
 			DOM.addEventPreview(this);
 			break;
 		case Event.ONMOUSEUP:
@@ -363,7 +364,6 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 				int y = DOM.eventGetScreenY(event) - startY + origY;
 				this.setPopupPosition(x, y);
 				DOM.eventPreventDefault(event);
-
 			}
 			break;
 		default:
