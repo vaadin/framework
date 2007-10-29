@@ -6,26 +6,30 @@ echo compile-gwt-components must only be run from build/bin directory
 exit
 fi
 
+# Parameters
+JVMVARS="-Xmx512M"
+
 # Detect platform
 PLATFORM=""
 if [ -d "/Users" ]
 then
     echo "MAC OS"
     PLATFORM="mac"
+    # TODO isolate next command on macos10.5
+    JVMVARS="$JVMVARS -XstartOnFirstThread"
 else
 	PLATFORM="linux"
 fi
 
-# Parameters
-JVMVARS="-Xmx512M"
+
 OUTDIR=../../WebContent/ITMILL/widgetsets
-GWTDIR=../gwt/$PLATFORM
+GWTDIR=../gwt/gwt
 SRCDIR=../../src
 STYLE=OBF
 
 # Clean anything that could be wrong
-rm -r $OUTDIR/*
-rm -r .gwt-cache
+#rm -r $OUTDIR/*
+#rm -r .gwt-cache
 
 # Build the widgetsets
 java $JVMVARS -cp "$SRCDIR:$GWTDIR/gwt-user.jar:$GWTDIR/gwt-dev-$PLATFORM.jar" com.google.gwt.dev.GWTCompiler -out $OUTDIR com.itmill.toolkit.terminal.gwt.DefaultWidgetSet -style $STYLE
