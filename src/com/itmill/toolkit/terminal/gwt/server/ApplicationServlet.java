@@ -297,11 +297,12 @@ public class ApplicationServlet extends HttpServlet {
 	protected void service(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 
-		if (request.getPathInfo().startsWith("/ITMILL/")) {
+		if (request.getPathInfo() != null
+				&& request.getPathInfo().startsWith("/ITMILL/")) {
 			serveStaticResourcesInITMILL(request, response);
 			return;
 		}
-		
+
 		Application application = null;
 		try {
 
@@ -404,13 +405,15 @@ public class ApplicationServlet extends HttpServlet {
 		}
 	}
 
-	/** Serve resources in ITMILL directory if requested.
+	/**
+	 * Serve resources in ITMILL directory if requested.
 	 * 
 	 * @param request
 	 * @param response
 	 * @throws IOException
 	 */
-	private void serveStaticResourcesInITMILL(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	private void serveStaticResourcesInITMILL(HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
 		String filename = request.getPathInfo();
 		ServletContext sc = getServletContext();
 		InputStream is = sc.getResourceAsStream(filename);
@@ -419,7 +422,8 @@ public class ApplicationServlet extends HttpServlet {
 			return;
 		}
 		String mimetype = sc.getMimeType(filename);
-		if (mimetype != null) response.setContentType(mimetype);
+		if (mimetype != null)
+			response.setContentType(mimetype);
 		OutputStream os = response.getOutputStream();
 		byte buffer[] = new byte[20000];
 		int bytes;
@@ -452,11 +456,10 @@ public class ApplicationServlet extends HttpServlet {
 		BufferedWriter page = new BufferedWriter(new OutputStreamWriter(
 				response.getOutputStream()));
 
-		String uri = request.getRequestURL().toString();
-		boolean hasSlash = (uri.charAt(uri.length() - 1) == '/') ? true : false;
-
 		String relative = "";
-		String t = request.getPathInfo().substring(1);
+		
+		String pathInfo = request.getPathInfo() == null ? "/" : request.getPathInfo();
+		String t =  pathInfo.substring(1);
 		while (t.indexOf('/') >= 0) {
 			t = t.substring(t.indexOf('/') + 1);
 			relative += "../";
@@ -491,11 +494,12 @@ public class ApplicationServlet extends HttpServlet {
 
 		page
 				.write("', pathInfo: '"
-						+ request.getPathInfo()
+						+ pathInfo
 						+ "'\n};\n"
 						+ "</script>\n"
 						+ "<script language='javascript' src='"
-						+ appUrl + "/"
+						+ appUrl
+						+ "/"
 						+ WIDGETSET_DIRECTORY_PATH
 						+ widgetset
 						+ "/"
