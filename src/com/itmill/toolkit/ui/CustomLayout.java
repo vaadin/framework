@@ -227,10 +227,21 @@ public class CustomLayout extends AbstractComponentContainer implements Layout {
 		setTemplateName(name);
 	}
 
+	
+	/** Get the name of the template */
 	public String getTemplateName() {
 		return templateName;
 	}
 
+	/** Set the name of the template used to draw custom layout.
+	 * 
+	 * With GWT-adapter, the template with name 'templatename' is 
+	 * loaded from ITMILL/themes/themename/layouts/templatename.html.
+	 * If the theme has not been set (with Application.setTheme()), 
+	 * themename is 'default'.
+	 * 
+	 * @param templateName
+	 */
 	public void setTemplateName(String templateName) {
 		this.templateName = templateName;
 		requestRepaint();
