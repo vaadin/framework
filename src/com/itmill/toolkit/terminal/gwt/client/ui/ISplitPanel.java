@@ -84,8 +84,8 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
 		DOM.setStyleAttribute(splitter, "position", "absolute");
 		DOM.setStyleAttribute(secondContainer, "position", "absolute");
 
-		DOM.setStyleAttribute(firstContainer, "overflow", "hidden");
-		DOM.setStyleAttribute(secondContainer, "overflow", "hidden");
+		DOM.setStyleAttribute(firstContainer, "overflow", "auto");
+		DOM.setStyleAttribute(secondContainer, "overflow", "auto");
 
 	}
 
