@@ -10,6 +10,7 @@ import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.TreeListener;
@@ -223,6 +224,9 @@ public class UIDL {
 
 	private class UIDLBrowser extends Tree {
 		public UIDLBrowser() {
+			
+			DOM.setStyleAttribute(getElement(), "position", "");
+			
 			final TreeItem root = new TreeItem(getTag());
 			addItem(root);
 			root.addItem("");
@@ -243,7 +247,13 @@ public class UIDL {
 				}
 
 			});
+			
 		}
+
+		protected boolean isKeyboardNavigationEnabled(TreeItem currentItem) {
+			return false;
+		}
+		
 	}
 
 	public TreeItem dir() {
