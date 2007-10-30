@@ -217,7 +217,12 @@ public class CustomLayout extends AbstractComponentContainer implements Layout {
 		}
 	}
 
-	@Override
+	/**
+	 * CustomLayout's template selecting was previously implemented with
+	 * setStyle. Overriding to improve backwards compatibility.
+	 * 
+	 * @param name template name
+	 */
 	public void setStyle(String name) {
 		setTemplateName(name);
 	}
@@ -230,7 +235,5 @@ public class CustomLayout extends AbstractComponentContainer implements Layout {
 		this.templateName = templateName;
 		requestRepaint();
 	}
-	
-	
 
 }
