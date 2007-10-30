@@ -49,6 +49,17 @@ public class ITree extends Tree implements Paintable {
 	public ITree() {
 		super((TreeImages)GWT.create(com.itmill.toolkit.terminal.gwt.client.ui.TreeImages.class));
 		setStyleName(CLASSNAME);
+
+		// we can't live with absolutely positioned tree, we will lose keyboard navigation thought
+		DOM.setStyleAttribute(getElement(), "position", "");
+		DOM.setStyleAttribute(DOM.getFirstChild(getElement()), "display", "none");
+	}
+
+	/*
+	 * We can't live live with absolutely positioned tree.
+	 */ 
+	protected boolean isKeyboardNavigationEnabled(TreeItem currentItem) {
+		return false;
 	}
 
 	private void updateActionMap(UIDL c) {
