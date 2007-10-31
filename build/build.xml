@@ -428,7 +428,12 @@
 
 	</target>
 
-	<target name="compile-java" depends="webcontent">
+	<target name="compile-fileupload">
+		<echo>Compiling custom fileupload classes.</echo>
+		<ant dir="build/external/fileupload" antfile="build.xml" target="compile" />
+	</target>
+
+	<target name="compile-java" depends="compile-fileupload, webcontent">
 		<echo>Compiling src (server-side)</echo>
 		<!-- Compile -->
 		<mkdir dir="build/result/classes" />
