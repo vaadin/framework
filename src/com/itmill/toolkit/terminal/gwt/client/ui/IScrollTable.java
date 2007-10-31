@@ -1412,7 +1412,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 
 		public static final int CELL_EXTRA_WIDTH = 20;
 
-		public static final int DEFAULT_ROW_HEIGHT = 25;
+		public static final int DEFAULT_ROW_HEIGHT = 24;
 
 		public static final int CELL_CONTENT_PADDING = 3;
 
