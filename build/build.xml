@@ -43,7 +43,7 @@
 
 	<!-- Initialization - - - - - - - - - - - - - - - - - - - - - - - - -->
 	<target name="init">
-		
+
 		<!-- Find out which platform we are in -->
 		<if>
 			<equals arg1="${os.name}" arg2="Windows 2000, Windows XP" />
@@ -79,10 +79,10 @@
 		<property file="build/html-style.properties" />
 
 		<!-- Destination files -->
-		<property name="lib-bin-jar-name" value="${product-file}-${version}.jar" />
-		<property name="lib-dev-jar-name" value="${product-file}-dev-${version}.jar" />
+		<property name="lib-jar-name" value="${product-file}-${version}.jar" />
+		<!-- <property name="lib-dev-jar-name" value="${product-file}-dev-${version}.jar" />
 		<property name="demo-lib-jar-name" value="${product-file}-demo-${version}.jar" />
-		<property name="lib-src-jar-name" value="${product-file}-src-${version}.jar" />
+		<property name="lib-src-jar-name" value="${product-file}-src-${version}.jar" /> -->
 		<property name="demo-war-name" value="${product-file}-demo-${version}.war" />
 
 		<echo message="Prepared to build ${product-file} version ${version} packages" />
@@ -98,12 +98,12 @@
 		<mkdir dir="${output-dir}/WebContent" />
 		<mkdir dir="${output-dir}/WebContent/WEB-INF" />
 		<mkdir dir="${output-dir}/WebContent/WEB-INF/classes" />
-		
+
 		<!-- Construct classpath used by java and javadoc compilation -->
 		<path id="compile.classpath">
 			<pathelement path="build/gwt/${platform}/gwt-user.jar" />
 			<pathelement path="build/gwt/${platform}/${lib-gwt-dev}" />
-			<pathelement path="WebContent/WEB-INF/lib/commons-fileupload-1.2.jar" />
+			<pathelement path="build/external/fileupload/classes" />
 			<pathelement path="lib/reservr/googlemaps_gwt.jar" />
 			<pathelement path="lib/jetty/jetty-6.1.5.jar" />
 			<pathelement path="lib/jetty/jetty-util-6.1.5.jar" />
@@ -166,7 +166,9 @@
 				</patternset>
 			</tarfileset>
 		</tar>
+		<!-- TODO: remove me: DISABLED for speed
 		<antcall target="create-mac-diskimage" inheritAll="true" inheritRefs="true" />
+		-->
 	</target>
 
 	<target name="create-mac-diskimage">
@@ -341,6 +343,17 @@
 				<include name="license/*.html" />
 			</fileset>
 		</copy>
+		<!-- copy 3rd part libraries used by demo -->
+		<copy todir="${output-dir}/lib/demo">
+			<fileset dir="lib">
+				<include name="reservr/**/*" />
+			</fileset>
+		</copy>
+		<copy todir="${output-dir}/lib">
+			<fileset dir="lib">
+				<include name="jetty/**/*" />
+			</fileset>
+		</copy>
 	</target>
 
 
@@ -400,7 +413,7 @@
 				<include name="${toolkit-package}/demo/**/*" />
 			</fileset>
 		</copy>
-		
+
 		<!-- Add WebContent -->
 		<echo>Adding WebContent files, excluding ITMILL/widgetsets and few internal development libraries.</echo>
 		<copy todir="${output-dir}/WebContent">
@@ -410,9 +423,6 @@
 				<exclude name="ITMILL/widgetsets/**" />
 				<exclude name="ITMILL/themes/tests-*" />
 				<exclude name="WEB-INF/classes/**" />
-				<exclude name="WEB-INF/lib/commons-fileupload-1.2-javadoc.jar" />
-				<exclude name="WEB-INF/lib/commons-fileupload-1.2-sources.jar" />
-				<exclude name="WEB-INF/lib/jakarta/**" />
 			</fileset>
 		</copy>
 
@@ -426,41 +436,7 @@
 		</javac>
 	</target>
 
-	<target name="libs" depends="compile-java">
-		<echo>Creating libs (server-side)</echo>
-		<copy todir="${output-dir}/lib/demo">
-			<fileset dir="lib">
-				<include name="reservr/**/*" />
-			</fileset>
-		</copy>
-		<copy todir="${output-dir}/lib">
-			<fileset dir="lib">
-				<include name="jetty/**/*" />
-			</fileset>
-		</copy>
-		<!-- Create Toolkit deployment / server-side only development JAR -->
-		<jar jarfile="${output-dir}/lib/${lib-bin-jar-name}" compress="true">
-			<fileset dir="build/result/classes">
-				<patternset>
-					<exclude name="${toolkit-package}/demo/**" />
-					<exclude name="${toolkit-package}/launcher/**" />
-					<exclude name="${toolkit-package}/tests/**" />
-				</patternset>
-			</fileset>
-		</jar>
-		<!-- Create Toolkit source JAR -->
-		<jar jarfile="${output-dir}/lib/${lib-src-jar-name}" compress="true">
-			<fileset dir="build/result/src">
-				<patternset>
-					<exclude name="${toolkit-package}/demo/**" />
-					<exclude name="${toolkit-package}/tests/**" />
-					<exclude name="${toolkit-package}/launcher/**" />
-				</patternset>
-			</fileset>
-		</jar>
-	</target>
-
-	<target name="compile-client-side" depends="libs">
+	<target name="compile-client-side" depends="webcontent">
 		<echo>Compiling src (client-side)</echo>
 		<echo>com.itmill.toolkit.terminal.gwt.DefaultWidgetSet</echo>
 		<java classname="com.google.gwt.dev.GWTCompiler" failonerror="yes" fork="yes" maxmemory="512m">
@@ -470,7 +446,7 @@
 			<classpath>
 				<pathelement location="build/gwt/${platform}/gwt-user.jar" />
 				<pathelement location="build/gwt/${platform}/${lib-gwt-dev}" />
-				<pathelement location="${output-dir}/lib/itmill-toolkit-src-5.0.0-alpha.jar" />
+				<pathelement location="build/result/src" />
 			</classpath>
 		</java>
 
@@ -482,7 +458,7 @@
 			<classpath>
 				<pathelement location="build/gwt/${platform}/gwt-user.jar" />
 				<pathelement location="build/gwt/${platform}/${lib-gwt-dev}" />
-				<pathelement location="${output-dir}/lib/itmill-toolkit-src-5.0.0-alpha.jar" />
+				<pathelement location="build/result/src" />
 				<!-- demo jars -->
 				<pathelement location="${output-dir}/lib/demo/reservr/googlemaps_gwt.jar" />
 				<!-- demo widgetset sources -->
@@ -498,15 +474,58 @@
 			<classpath>
 				<pathelement location="build/gwt/${platform}/gwt-user.jar" />
 				<pathelement location="build/gwt/${platform}/${lib-gwt-dev}" />
-				<pathelement location="${output-dir}/lib/itmill-toolkit-src-5.0.0-alpha.jar" />
+				<pathelement location="build/result/src" />
 				<!-- demo widgetset sources -->
 				<pathelement path="${output-dir}/WebContent/src" />
 			</classpath>
 		</java>
 	</target>
 
+	<target name="libs" depends="compile-java, compile-client-side">
+		<echo>Creating libs (server-side)</echo>
+		<!-- Create Toolkit JAR -->
+		<jar jarfile="${output-dir}/lib/${lib-jar-name}" compress="true">
+			<fileset dir="build/result/classes">
+				<patternset>
+					<exclude name="${toolkit-package}/demo/**" />
+					<exclude name="${toolkit-package}/launcher/**" />
+					<exclude name="${toolkit-package}/tests/**" />
+				</patternset>
+			</fileset>
+			<!-- fileupload, see build/external/fileupload/build.xml -->
+			<fileset dir="build/external/fileupload/classes">
+				<include name="**/*" />
+			</fileset>
+			<!-- add sources -->
+			<fileset dir="build/result/src">
+				<patternset>
+					<exclude name="${toolkit-package}/demo/**" />
+					<exclude name="${toolkit-package}/tests/**" />
+					<exclude name="${toolkit-package}/launcher/**" />
+				</patternset>
+			</fileset>
+			<fileset dir="${output-dir}/WebContent">
+				<patternset>
+					<include name="ITMILL/widgetsets/com.itmill.toolkit.terminal.gwt.DefaultWidgetSet/**/*" />
+				</patternset>
+			</fileset>
+		</jar>
+		<!-- Create Toolkit source JAR -->
+		<!-- Now included within lib-jar-name
+		<jar jarfile="${output-dir}/lib/${lib-src-jar-name}" compress="true">
+			<fileset dir="build/result/src">
+				<patternset>
+					<exclude name="${toolkit-package}/demo/**" />
+					<exclude name="${toolkit-package}/tests/**" />
+					<exclude name="${toolkit-package}/launcher/**" />
+				</patternset>
+			</fileset>
+		</jar>
+		-->
+	</target>
+
 	<!-- Demo  - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	<target name="demo" depends="libs, compile-java, compile-client-side, javadoc">
+	<target name="demo" depends="libs, javadoc">
 		<echo>Building demo</echo>
 		<echo>Adding demo class files.</echo>
 		<copy todir="${output-dir}/WebContent/WEB-INF/classes">
@@ -520,7 +539,7 @@
 		<echo>Adding (duplicating) Toolkit JAR to WebContent/WEB-INF/lib</echo>
 		<copy todir="${output-dir}/WebContent/WEB-INF/lib">
 			<fileset dir="${output-dir}/lib">
-				<include name="${lib-bin-jar-name}" />
+				<include name="${lib-jar-name}" />
 			</fileset>
 		</copy>
 
@@ -547,7 +566,7 @@
 				<include name="**/*" />
 			</fileset>
 			<lib dir="${output-dir}/lib">
-				<include name="${lib-bin-jar-name}" />
+				<include name="${lib-jar-name}" />
 			</lib>
 			<!-- All javadoc (demos link to these)-->
 			<fileset dir="${output-dir}">
