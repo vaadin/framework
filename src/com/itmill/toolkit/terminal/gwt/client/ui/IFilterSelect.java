@@ -80,6 +80,10 @@ public class IFilterSelect extends Composite implements Paintable,
 	 * 
 	 */
 	public class SuggestionPopup extends PopupPanel implements PositionCallback {
+		private static final int EXTRASPACE = 8;
+
+		private static final String Z_INDEX = "30000";
+
 		private SuggestionMenu menu;
 
 		private Element up = DOM.createDiv();
@@ -93,6 +97,7 @@ public class IFilterSelect extends Composite implements Paintable,
 			this.menu = new SuggestionMenu();
 			setWidget(menu);
 			setStyleName(CLASSNAME + "-suggestpopup");
+			DOM.setStyleAttribute(getElement(), "zIndex", Z_INDEX);
 
 			Element root = getElement();
 
@@ -207,10 +212,10 @@ public class IFilterSelect extends Composite implements Paintable,
 			// reset menu size and retrieve its "natural"; size
 			menu.setHeight("");
 			menu.setWidth("");
-			offsetHeight = menu.getOffsetHeight();
+			offsetHeight = getOffsetHeight();
 			if (!isPagingEnabled && offsetHeight > Window.getClientHeight()) {
 				offsetHeight = Window.getClientHeight();
-				menu.setHeight(offsetHeight + "px");
+				menu.setHeight((offsetHeight - EXTRASPACE) + "px");
 				DOM.setStyleAttribute(menu.getElement(), "overflow", "auto");
 				// add scrollbar width
 				menu
@@ -220,7 +225,7 @@ public class IFilterSelect extends Composite implements Paintable,
 								+ "px");
 			}
 			if (offsetHeight + getPopupTop() > Window.getClientHeight()) {
-				int top = Window.getClientHeight() - offsetHeight;
+				int top = Window.getClientHeight() - offsetHeight - EXTRASPACE/2;
 				setPopupPosition(getPopupLeft(), top);
 			}
 		}
