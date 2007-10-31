@@ -70,7 +70,7 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
 	// current page when the user is 'paging' trough options
 	private int currentPage;
 
-	private int filteringMode = FILTERINGMODE_OFF;
+	private int filteringMode = FILTERINGMODE_STARTSWITH;
 
 	private String filterstring;
 	private String prevfilterstring;
