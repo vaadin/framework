@@ -12,41 +12,43 @@
 }
 .i-datefield-entrycalendar-row-even {
 	cursor: pointer;
-	background-color: #fefefe;
+	background: #fff;
 	height: 1em;
 }
 .i-datefield-entrycalendar-row-odd {
 	cursor: pointer;
-	background-color: #eeeeee;
+	background: #f6f7f7;
 	height: 1em;
 }
 .i-datefield-entrycalendar-row-selected {
 	color: #fff;
-	background-color: #1C3E6E;
+	background: #5daee8 url(img/calendar-time-selected.gif) no-repeat;
 }
 td.i-datefield-entrycalendar-time {
-	padding-right: 2px;
+	padding: 2px 4px;
 	white-space: nowrap;
 	float: left;
 }
 td.i-datefield-entrycalendar-time span {
-	width: 55px;
+	width: 45px;
 	text-align: right;
 	display: block;
 }
 td.i-datefield-entrycalendar-entry span {
 	display: block;
+	width: 98%;
 	overflow: hidden;
 	padding: 2px;
 	color: #fff;
-	background-image: url('img/entry-topleft.jpg');
+	background-image: url(img/entry-topleft.jpg);
 	background-repeat: no-repeat;
 	background-position: 0px 0px;
+	text-align: left;
 }
 .i-datefield-calendarpanel td.i-datefield-entrycalendar-entry {
 	background-color: #F24C1A;
 	color: #fff;
-	background-image: url('img/entry-bg.jpg');
+	background-image: url(img/entry-bg.jpg);
 	background-repeat: repeat-x;
 	vertical-align: top;
 	width: auto;
