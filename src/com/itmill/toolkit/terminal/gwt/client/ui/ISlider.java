@@ -271,13 +271,21 @@ public class ISlider extends Widget implements Paintable,
 		} else
 			DOM.setStyleAttribute(handle, styleAttribute, ((int) pos) + "px");
 
+		// Round value to resolution
+		if (resolution > 0) {
+			v = (int) (v * (double) Math.pow(10, resolution));
+			v = v / (double) Math.pow(10, resolution);
+		} else
+			v = Math.round(v);
+		
 		// TODO give more detailed info when dragging and do roundup
 		DOM.setElementAttribute(handle, "title", "" + v);
-
-		this.value = value;
+		
+		// Update value
+		this.value = new Double(v);
 
 		if (updateToServer)
-			client.updateVariable(id, "value", value.doubleValue(), immediate);
+			client.updateVariable(id, "value", this.value.doubleValue(), immediate);
 	}
 
 	public void onBrowserEvent(Event event) {
@@ -411,14 +419,6 @@ public class ISlider extends Widget implements Paintable,
 			v = min;
 		else if (v > max)
 			v = max;
-
-		if (roundup) {
-			if (resolution > 0) {
-				v = (int) (v * (double) Math.pow(10, resolution));
-				v = v / (double) Math.pow(10, resolution);
-			} else
-				v = Math.round(v);
-		}
 
 		setValue(new Double(v), animate, roundup);
 	}
