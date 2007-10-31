@@ -29,7 +29,6 @@
 package com.itmill.toolkit.terminal.gwt.server;
 
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -55,6 +54,7 @@ import javax.servlet.http.HttpSession;
 import org.xml.sax.SAXException;
 
 import com.itmill.toolkit.Application;
+import com.itmill.toolkit.Log;
 import com.itmill.toolkit.external.org.apache.commons.fileupload.servlet.ServletFileUpload;
 import com.itmill.toolkit.service.FileTypeResolver;
 import com.itmill.toolkit.terminal.DownloadStream;

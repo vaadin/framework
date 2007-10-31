@@ -26,7 +26,7 @@
 
  ********************************************************************** */
 
-package com.itmill.toolkit.terminal.gwt.server;
+package com.itmill.toolkit;
 
 /**
  * <p>
@@ -57,7 +57,7 @@ package com.itmill.toolkit.terminal.gwt.server;
  * @VERSION@
  * @since 5.0
  */
-class Log {
+public class Log {
 
 	private static boolean useStdOut = true;
 
@@ -77,7 +77,7 @@ class Log {
 	 * @param message
 	 *            the Message String to be logged.
 	 */
-	static synchronized void warn(java.lang.String message) {
+	public static synchronized void warn(java.lang.String message) {
 		if (Log.useStdOut)
 			System.out.println(LOG_MSG_WARN + " " + message);
 	}
@@ -88,7 +88,7 @@ class Log {
 	 * @param message
 	 *            the Message String to be logged.
 	 */
-	static synchronized void debug(java.lang.String message) {
+	public static synchronized void debug(java.lang.String message) {
 		if (Log.useStdOut)
 			System.out.println(LOG_MSG_DEBUG + " " + message);
 	}
@@ -99,7 +99,7 @@ class Log {
 	 * @param message
 	 *            the Message String to be logged.
 	 */
-	static synchronized void info(java.lang.String message) {
+	public static synchronized void info(java.lang.String message) {
 		if (Log.useStdOut)
 			System.out.println(LOG_MSG_INFO + " " + message);
 	}
@@ -112,7 +112,7 @@ class Log {
 	 * @param e
 	 *            the Exception to be logged.
 	 */
-	static synchronized void except(java.lang.String message, Exception e) {
+	public static synchronized void except(java.lang.String message, Exception e) {
 		if (Log.useStdOut) {
 			System.out.println(LOG_MSG_EXCEPT + " " + message);
 			e.printStackTrace();
@@ -125,7 +125,7 @@ class Log {
 	 * @param message
 	 *            the Message String to be logged.
 	 */
-	static synchronized void error(java.lang.String message) {
+	public static synchronized void error(java.lang.String message) {
 		if (Log.useStdOut)
 			System.out.println(LOG_MSG_ERROR + " " + message);
 	}

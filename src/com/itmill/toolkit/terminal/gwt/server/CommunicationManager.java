@@ -67,6 +67,7 @@ import com.itmill.toolkit.external.org.apache.commons.fileupload.ProgressListene
 import com.itmill.toolkit.external.org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import com.itmill.toolkit.Application;
+import com.itmill.toolkit.Log;
 import com.itmill.toolkit.Application.WindowAttachEvent;
 import com.itmill.toolkit.Application.WindowDetachEvent;
 import com.itmill.toolkit.terminal.DownloadStream;
