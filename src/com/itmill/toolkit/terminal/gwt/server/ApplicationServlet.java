@@ -424,6 +424,9 @@ public class ApplicationServlet extends HttpServlet {
 			try {
 				is = this.classLoader.getResourceAsStream(filename);
 			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			if (is == null) {
 				// cannot serve requested file
 				Log
 						.warn("Requested resource ["
