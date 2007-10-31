@@ -29,6 +29,7 @@
 package com.itmill.toolkit.terminal.gwt.server;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -44,7 +45,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.WeakHashMap;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -52,11 +52,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.xml.sax.SAXException;
 
-import com.google.gwt.http.client.Request;
 import com.itmill.toolkit.Application;
+import com.itmill.toolkit.external.org.apache.commons.fileupload.servlet.ServletFileUpload;
 import com.itmill.toolkit.service.FileTypeResolver;
 import com.itmill.toolkit.terminal.DownloadStream;
 import com.itmill.toolkit.terminal.ParameterHandler;
@@ -145,6 +144,8 @@ public class ApplicationServlet extends HttpServlet {
 
 	private String debugMode = "";
 
+	private ClassLoader classLoader;
+
 	/**
 	 * Called by the servlet container to indicate to a servlet that the servlet
 	 * is being placed into service.
@@ -216,6 +217,7 @@ public class ApplicationServlet extends HttpServlet {
 				throw new ServletException(e);
 			}
 		}
+		this.classLoader = classLoader;
 
 		// Loads the application class using the same class loader
 		// as the servlet itself
@@ -418,8 +420,24 @@ public class ApplicationServlet extends HttpServlet {
 		ServletContext sc = getServletContext();
 		InputStream is = sc.getResourceAsStream(filename);
 		if (is == null) {
-			response.setStatus(404);
-			return;
+			// try if requested file is found from classloader
+			try {
+				// ClassLoader cld = Thread.currentThread()
+				// .getContextClassLoader();
+				// if (cld == null)
+				// throw new ClassNotFoundException(
+				// "Could not create ClassLoader.");
+				// is = cld.getResourceAsStream(filename);
+				is = this.classLoader.getResourceAsStream(filename);
+			} catch (Exception e) {
+				System.err
+						.println("Requested resource ["
+								+ filename
+								+ "] not found from filesystem or through class loader.");
+				// cannot serve requested file
+				response.setStatus(404);
+				return;
+			}
 		}
 		String mimetype = sc.getMimeType(filename);
 		if (mimetype != null)
@@ -457,9 +475,10 @@ public class ApplicationServlet extends HttpServlet {
 				response.getOutputStream()));
 
 		String relative = "";
-		
-		String pathInfo = request.getPathInfo() == null ? "/" : request.getPathInfo();
-		String t =  pathInfo.substring(1);
+
+		String pathInfo = request.getPathInfo() == null ? "/" : request
+				.getPathInfo();
+		String t = pathInfo.substring(1);
 		while (t.indexOf('/') >= 0) {
 			t = t.substring(t.indexOf('/') + 1);
 			relative += "../";

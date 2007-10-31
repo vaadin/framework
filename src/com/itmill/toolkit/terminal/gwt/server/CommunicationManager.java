@@ -59,11 +59,12 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.fileupload.FileItemIterator;
-import org.apache.commons.fileupload.FileItemStream;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.ProgressListener;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
+// wrapped to prevent conflicts with possible developer required Apache JARs
+import com.itmill.toolkit.external.org.apache.commons.fileupload.FileItemIterator;
+import com.itmill.toolkit.external.org.apache.commons.fileupload.FileItemStream;
+import com.itmill.toolkit.external.org.apache.commons.fileupload.FileUploadException;
+import com.itmill.toolkit.external.org.apache.commons.fileupload.ProgressListener;
+import com.itmill.toolkit.external.org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import com.itmill.toolkit.Application;
 import com.itmill.toolkit.Application.WindowAttachEvent;
