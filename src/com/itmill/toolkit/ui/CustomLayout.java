@@ -177,16 +177,16 @@ public class CustomLayout extends AbstractComponentContainer implements Layout {
 		target.addAttribute("template", templateName);
 		// Adds all items in all the locations
 		for (Iterator i = slots.keySet().iterator(); i.hasNext();) {
-
 			// Gets the (location,component)
 			String location = (String) i.next();
 			Component c = (Component) slots.get(location);
-
-			// Writes the item
-			target.startTag("location");
-			target.addAttribute("name", location);
-			c.paint(target);
-			target.endTag("location");
+			if (c != null) {
+				// Writes the item
+				target.startTag("location");
+				target.addAttribute("name", location);
+				c.paint(target);
+				target.endTag("location");
+			}
 		}
 	}
 
@@ -221,24 +221,24 @@ public class CustomLayout extends AbstractComponentContainer implements Layout {
 	 * CustomLayout's template selecting was previously implemented with
 	 * setStyle. Overriding to improve backwards compatibility.
 	 * 
-	 * @param name template name
+	 * @param name
+	 *            template name
 	 */
 	public void setStyle(String name) {
 		setTemplateName(name);
 	}
 
-	
 	/** Get the name of the template */
 	public String getTemplateName() {
 		return templateName;
 	}
 
-	/** Set the name of the template used to draw custom layout.
+	/**
+	 * Set the name of the template used to draw custom layout.
 	 * 
-	 * With GWT-adapter, the template with name 'templatename' is 
-	 * loaded from ITMILL/themes/themename/layouts/templatename.html.
-	 * If the theme has not been set (with Application.setTheme()), 
-	 * themename is 'default'.
+	 * With GWT-adapter, the template with name 'templatename' is loaded from
+	 * ITMILL/themes/themename/layouts/templatename.html. If the theme has not
+	 * been set (with Application.setTheme()), themename is 'default'.
 	 * 
 	 * @param templateName
 	 */

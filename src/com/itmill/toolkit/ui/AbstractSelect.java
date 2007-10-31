@@ -278,8 +278,8 @@ public abstract class AbstractSelect extends AbstractField implements
 		if (isNewItemsAllowed()) {
 			target.addAttribute("allownewitem", true);
 		}
-		if (!isNullSelectionAllowed()) {
-			target.addAttribute("nullselect", false);
+		if (isNullSelectionAllowed()) {
+			target.addAttribute("nullselect", true);
 		}
 
 		// Constructs selected keys array
