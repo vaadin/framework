@@ -86,7 +86,6 @@ public class TestForUpload extends CustomComponent implements
 		this.main.addComponent(c);
 
 		this.uploadBufferSelector = new Select("Receiver type");
-		this.uploadBufferSelector.setColumns(6);
 		this.uploadBufferSelector.setImmediate(true);
 		this.uploadBufferSelector.addItem("memory");
 		this.uploadBufferSelector.setValue("memory");

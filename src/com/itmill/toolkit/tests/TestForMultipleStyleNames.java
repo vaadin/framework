@@ -7,81 +7,78 @@ import java.util.Iterator;
 import com.itmill.toolkit.data.Property.ValueChangeEvent;
 import com.itmill.toolkit.data.Property.ValueChangeListener;
 import com.itmill.toolkit.data.util.IndexedContainer;
-import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.CustomComponent;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.OrderedLayout;
-import com.itmill.toolkit.ui.RichTextArea;
-import com.itmill.toolkit.ui.Select;
 import com.itmill.toolkit.ui.TwinColSelect;
 
 /**
  * 
  * @author IT Mill Ltd.
  */
-public class TestForMultipleStyleNames extends CustomComponent implements ValueChangeListener {
+public class TestForMultipleStyleNames extends CustomComponent implements
+		ValueChangeListener {
 
-	private OrderedLayout main = new OrderedLayout();
-	
+	private final OrderedLayout main = new OrderedLayout();
+
 	private Label l;
-	
-	private Select s = new TwinColSelect();
+
+	private final TwinColSelect s = new TwinColSelect();
 
 	private ArrayList styleNames2;
 
 	public TestForMultipleStyleNames() {
-		setCompositionRoot(main);
+		setCompositionRoot(this.main);
 		createNewView();
 	}
 
 	public void createNewView() {
-		main.removeAllComponents();
-		main
-				.addComponent(new Label(
-						"TK5 supports multiple stylenames for components."));
+		this.main.removeAllComponents();
+		this.main.addComponent(new Label(
+				"TK5 supports multiple stylenames for components."));
 
-		
-		styleNames2 = new ArrayList();
-		
-		styleNames2.add("red");
-		styleNames2.add("bold");
-		styleNames2.add("italic");
-		
-		s.setContainerDataSource(new IndexedContainer(styleNames2));
-		s.addListener(this);
-		s.setImmediate(true);
-		main.addComponent(s);
-		
-		l = new Label("Test labele");
-		main.addComponent(l);
+		this.styleNames2 = new ArrayList();
+
+		this.styleNames2.add("red");
+		this.styleNames2.add("bold");
+		this.styleNames2.add("italic");
+
+		this.s.setContainerDataSource(new IndexedContainer(this.styleNames2));
+		this.s.addListener(this);
+		this.s.setImmediate(true);
+		this.main.addComponent(this.s);
+
+		this.l = new Label("Test labele");
+		this.main.addComponent(this.l);
 
 	}
 
 	public void valueChange(ValueChangeEvent event) {
-		
-		String currentStyle = l.getStyle();
+
+		String currentStyle = this.l.getStyle();
 		String[] tmp = currentStyle.split(" ");
 		ArrayList curStyles = new ArrayList();
 		for (int i = 0; i < tmp.length; i++) {
-			if(tmp[i] != "")
+			if (tmp[i] != "") {
 				curStyles.add(tmp[i]);
+			}
 		}
-		
-		Collection styles = (Collection) s.getValue();
-		
+
+		Collection styles = (Collection) this.s.getValue();
+
 		for (Iterator iterator = styles.iterator(); iterator.hasNext();) {
 			String styleName = (String) iterator.next();
-			if(curStyles.contains(styleName)) {
+			if (curStyles.contains(styleName)) {
 				// already added
 				curStyles.remove(styleName);
 			} else {
-				l.addStyleName(styleName);
+				this.l.addStyleName(styleName);
 			}
 		}
 		for (Iterator iterator2 = curStyles.iterator(); iterator2.hasNext();) {
 			String object = (String) iterator2.next();
-			l.removeStyleName(object);
+			this.l.removeStyleName(object);
 		}
 	}
-	
+
 }

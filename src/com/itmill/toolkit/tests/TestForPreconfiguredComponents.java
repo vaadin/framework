@@ -2,6 +2,7 @@ package com.itmill.toolkit.tests;
 
 import com.itmill.toolkit.event.Action;
 import com.itmill.toolkit.event.Action.Handler;
+import com.itmill.toolkit.ui.AbstractSelect;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.CheckBox;
 import com.itmill.toolkit.ui.Component;
@@ -11,7 +12,6 @@ import com.itmill.toolkit.ui.NativeSelect;
 import com.itmill.toolkit.ui.OptionGroup;
 import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Panel;
-import com.itmill.toolkit.ui.Select;
 import com.itmill.toolkit.ui.Tree;
 import com.itmill.toolkit.ui.TwinColSelect;
 import com.itmill.toolkit.ui.Button.ClickEvent;
@@ -32,9 +32,9 @@ public class TestForPreconfiguredComponents extends CustomComponent implements
 			"Smith", "Jones", "Beck", "Sheridan", "Picard", "Hill", "Fielding",
 			"Einstein" };
 
-	private OrderedLayout main = new OrderedLayout();
+	private final OrderedLayout main = new OrderedLayout();
 
-	private Action[] actions = new Action[] { new Action("edit"),
+	private final Action[] actions = new Action[] { new Action("edit"),
 			new Action("delete") };
 
 	private Panel al;
@@ -43,73 +43,73 @@ public class TestForPreconfiguredComponents extends CustomComponent implements
 
 	public TestForPreconfiguredComponents() {
 
-		setCompositionRoot(main);
+		setCompositionRoot(this.main);
 		createNewView();
 	}
 
 	public void createNewView() {
-		main.removeAllComponents();
-		main
+		this.main.removeAllComponents();
+		this.main
 				.addComponent(new Label(
-						"In TK5 we introduce some \"new\" componens. Earlier one" +
-						" usually used setStyle or some other methods on possibly " +
-						"multiple steps to configure component for ones needs. These new " +
-						"server side components are mostly just classes that in constructor " +
-						"set base class to state that programmer wants. This ought to help " +
-						"newcomers and make code more readable."));
+						"In TK5 we introduce some \"new\" componens. Earlier one"
+								+ " usually used setStyle or some other methods on possibly "
+								+ "multiple steps to configure component for ones needs. These new "
+								+ "server side components are mostly just classes that in constructor "
+								+ "set base class to state that programmer wants. This ought to help "
+								+ "newcomers and make code more readable."));
 
-		main.addComponent(new Button("commit"));
+		this.main.addComponent(new Button("commit"));
 
 		Panel test = createTestBench(new CheckBox());
 		test.setCaption("CheckBox (configured from button)");
-		main.addComponent(test);
+		this.main.addComponent(test);
 
-		Select s = new TwinColSelect();
+		AbstractSelect s = new TwinColSelect();
 		fillSelect(s, 20);
 		test = createTestBench(s);
 		test.setCaption("TwinColSelect (configured from select)");
-		main.addComponent(test);
+		this.main.addComponent(test);
 
 		s = new NativeSelect();
 		fillSelect(s, 20);
 		test = createTestBench(s);
 		test.setCaption("Native (configured from select)");
-		main.addComponent(test);
+		this.main.addComponent(test);
 
 		s = new OptionGroup();
 		fillSelect(s, 20);
 		test = createTestBench(s);
 		test.setCaption("OptionGroup (configured from select)");
-		main.addComponent(test);
+		this.main.addComponent(test);
 
 		s = new OptionGroup();
 		fillSelect(s, 20);
 		s.setMultiSelect(true);
 		test = createTestBench(s);
-		test.setCaption("OptionGroup + multiselect manually (configured from select)");
-		main.addComponent(test);
+		test
+				.setCaption("OptionGroup + multiselect manually (configured from select)");
+		this.main.addComponent(test);
 
-		
-//		Tree t = createTestTree();
-//		t.setCaption("with actions");
-//		t.setImmediate(true);
-//		t.addActionHandler(this);
-//		Panel ol = (Panel) createTestBench(t);
-//		al = new Panel("action log");
-//		ol.addComponent(al);
-//		main.addComponent(ol);
-//		contextTree = t;
+		// Tree t = createTestTree();
+		// t.setCaption("with actions");
+		// t.setImmediate(true);
+		// t.addActionHandler(this);
+		// Panel ol = (Panel) createTestBench(t);
+		// al = new Panel("action log");
+		// ol.addComponent(al);
+		// main.addComponent(ol);
+		// contextTree = t;
 
 		Button b = new Button("refresh view", this, "createNewView");
-		main.addComponent(b);
+		this.main.addComponent(b);
 
 	}
-	
-	public static void fillSelect(Select s, int items) {
+
+	public static void fillSelect(AbstractSelect s, int items) {
 		for (int i = 0; i < items; i++) {
 			String name = firstnames[(int) (Math.random() * (firstnames.length - 1))]
-			  					+ " "
-			  					+ lastnames[(int) (Math.random() * (lastnames.length - 1))];
+					+ " "
+					+ lastnames[(int) (Math.random() * (lastnames.length - 1))];
 			s.addItem(name);
 		}
 	}
@@ -117,24 +117,28 @@ public class TestForPreconfiguredComponents extends CustomComponent implements
 	public Tree createTestTree() {
 		Tree t = new Tree("Tree");
 		String[] names = new String[100];
-		for (int i = 0; i < names.length; i++)
+		for (int i = 0; i < names.length; i++) {
 			names[i] = firstnames[(int) (Math.random() * (firstnames.length - 1))]
 					+ " "
 					+ lastnames[(int) (Math.random() * (lastnames.length - 1))];
+		}
 
 		// Create tree
 		t = new Tree("Organization Structure");
 		for (int i = 0; i < 100; i++) {
 			t.addItem(names[i]);
 			String parent = names[(int) (Math.random() * (names.length - 1))];
-			if (t.containsId(parent))
+			if (t.containsId(parent)) {
 				t.setParent(names[i], parent);
+			}
 		}
 
 		// Forbid childless people to have children (makes them leaves)
-		for (int i = 0; i < 100; i++)
-			if (!t.hasChildren(names[i]))
+		for (int i = 0; i < 100; i++) {
+			if (!t.hasChildren(names[i])) {
 				t.setChildrenAllowed(names[i], false);
+			}
+		}
 		return t;
 	}
 
@@ -144,7 +148,8 @@ public class TestForPreconfiguredComponents extends CustomComponent implements
 
 		ol.addComponent(t);
 
-		final OrderedLayout ol2 = new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
+		final OrderedLayout ol2 = new OrderedLayout(
+				OrderedLayout.ORIENTATION_HORIZONTAL);
 		final Panel status = new Panel("Events");
 		final Button clear = new Button("clear event log");
 		clear.addListener(new ClickListener() {
@@ -165,9 +170,7 @@ public class TestForPreconfiguredComponents extends CustomComponent implements
 
 		t.addListener(new Listener() {
 			public void componentEvent(Event event) {
-				status
-						.addComponent(new Label(event.getClass()
-								.getName()));
+				status.addComponent(new Label(event.getClass().getName()));
 				status.addComponent(new Label("selected: "
 						+ event.getSource().toString()));
 			}
@@ -177,16 +180,16 @@ public class TestForPreconfiguredComponents extends CustomComponent implements
 	}
 
 	public Action[] getActions(Object target, Object sender) {
-		return actions;
+		return this.actions;
 	}
 
 	public void handleAction(Action action, Object sender, Object target) {
-		if (action == actions[1]) {
-			al.addComponent(new Label("Delete selected on " + target));
-			contextTree.removeItem(target);
+		if (action == this.actions[1]) {
+			this.al.addComponent(new Label("Delete selected on " + target));
+			this.contextTree.removeItem(target);
 
 		} else {
-			al.addComponent(new Label("Edit selected on " + target));
+			this.al.addComponent(new Label("Edit selected on " + target));
 		}
 	}
 }

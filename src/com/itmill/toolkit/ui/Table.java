@@ -60,7 +60,7 @@ import com.itmill.toolkit.terminal.Sizeable;
  * @VERSION@
  * @since 3.0
  */
-public class Table extends Select implements Action.Container,
+public class Table extends AbstractSelect implements Action.Container,
 		Container.Ordered, Container.Sortable, Sizeable {
 
 	private static final int CELL_KEY = 0;
@@ -192,7 +192,7 @@ public class Table extends Select implements Action.Container,
 	/**
 	 * Keymapper for column ids.
 	 */
-	private KeyMapper columnIdMap = new KeyMapper();
+	private final KeyMapper columnIdMap = new KeyMapper();
 
 	/**
 	 * Holds visible column propertyIds - in order.
@@ -202,17 +202,17 @@ public class Table extends Select implements Action.Container,
 	/**
 	 * Holds propertyIds of currently collapsed columns.
 	 */
-	private HashSet collapsedColumns = new HashSet();
+	private final HashSet collapsedColumns = new HashSet();
 
 	/**
 	 * Holds headers for visible columns (by propertyId).
 	 */
-	private HashMap columnHeaders = new HashMap();
+	private final HashMap columnHeaders = new HashMap();
 
 	/**
 	 * Holds icons for visible columns (by propertyId).
 	 */
-	private HashMap columnIcons = new HashMap();
+	private final HashMap columnIcons = new HashMap();
 
 	/**
 	 * Holds alignments for visible columns (by propertyId).
@@ -222,7 +222,7 @@ public class Table extends Select implements Action.Container,
 	/**
 	 * Holds column widths in pixels for visible columns (by propertyId).
 	 */
-	private HashMap columnWidths = new HashMap();
+	private final HashMap columnWidths = new HashMap();
 
 	/**
 	 * Holds value of property pageLength. 0 disables paging.
@@ -387,20 +387,22 @@ public class Table extends Select implements Action.Container,
 	public void setVisibleColumns(Object[] visibleColumns) {
 
 		// Visible columns must exist
-		if (visibleColumns == null)
+		if (visibleColumns == null) {
 			throw new NullPointerException(
 					"Can not set visible columns to null value");
+		}
 
 		// Checks that the new visible columns contains no nulls and properties
 		// exist
 		Collection properties = getContainerPropertyIds();
 		for (int i = 0; i < visibleColumns.length; i++) {
-			if (visibleColumns[i] == null)
+			if (visibleColumns[i] == null) {
 				throw new NullPointerException("Properties must be non-nulls");
-			else if (!properties.contains(visibleColumns[i]))
+			} else if (!properties.contains(visibleColumns[i])) {
 				throw new IllegalArgumentException(
 						"Properties must exist in the Container, missing property: "
 								+ visibleColumns[i]);
+			}
 		}
 
 		// If this is called befor the constructor is finished, it might be
@@ -411,7 +413,7 @@ public class Table extends Select implements Action.Container,
 		}
 
 		// Removes alignments, icons and headers from hidden columns
-		if (this.visibleColumns != null)
+		if (this.visibleColumns != null) {
 			for (Iterator i = this.visibleColumns.iterator(); i.hasNext();) {
 				Object col = i.next();
 				if (!newVC.contains(col)) {
@@ -420,6 +422,7 @@ public class Table extends Select implements Action.Container,
 					setColumnIcon(col, null);
 				}
 			}
+		}
 
 		this.visibleColumns = newVC;
 
@@ -471,9 +474,10 @@ public class Table extends Select implements Action.Container,
 	 */
 	public void setColumnHeaders(String[] columnHeaders) {
 
-		if (columnHeaders.length != this.visibleColumns.size())
+		if (columnHeaders.length != this.visibleColumns.size()) {
 			throw new IllegalArgumentException(
 					"The length of the headers array must match the number of visible columns");
+		}
 
 		this.columnHeaders.clear();
 		int i = 0;
@@ -529,9 +533,10 @@ public class Table extends Select implements Action.Container,
 	 */
 	public void setColumnIcons(Resource[] columnIcons) {
 
-		if (columnIcons.length != this.visibleColumns.size())
+		if (columnIcons.length != this.visibleColumns.size()) {
 			throw new IllegalArgumentException(
 					"The length of the icons array must match the number of visible columns");
+		}
 
 		this.columnIcons.clear();
 		int i = 0;
@@ -595,17 +600,19 @@ public class Table extends Select implements Action.Container,
 	 */
 	public void setColumnAlignments(String[] columnAlignments) {
 
-		if (columnAlignments.length != this.visibleColumns.size())
+		if (columnAlignments.length != this.visibleColumns.size()) {
 			throw new IllegalArgumentException(
 					"The length of the alignments array must match the number of visible columns");
+		}
 
 		// Checks all alignments
 		for (int i = 0; i < columnAlignments.length; i++) {
 			String a = columnAlignments[i];
 			if (a != null && !a.equals(ALIGN_LEFT) && !a.equals(ALIGN_CENTER)
-					&& !a.equals(ALIGN_RIGHT))
+					&& !a.equals(ALIGN_RIGHT)) {
 				throw new IllegalArgumentException("Column " + i
 						+ " aligment '" + a + "' is invalid");
+			}
 		}
 
 		// Resets the alignments
@@ -633,7 +640,7 @@ public class Table extends Select implements Action.Container,
 	 * @since 4.0.3
 	 */
 	public void setColumnWidth(Object columnId, int width) {
-		columnWidths.put(columnId, new Integer(width));
+		this.columnWidths.put(columnId, new Integer(width));
 	}
 
 	/**
@@ -643,9 +650,10 @@ public class Table extends Select implements Action.Container,
 	 * @return width of colun or -1 when value not set
 	 */
 	public int getColumnWidth(Object propertyId) {
-		Integer value = (Integer) columnWidths.get(propertyId);
-		if (value == null)
+		Integer value = (Integer) this.columnWidths.get(propertyId);
+		if (value == null) {
 			return -1;
+		}
 		return value.intValue();
 	}
 
@@ -676,7 +684,7 @@ public class Table extends Select implements Action.Container,
 		if (pageLength >= 0 && this.pageLength != pageLength) {
 			this.pageLength = pageLength;
 			// "scroll" to first row
-			this.setCurrentPageFirstItemIndex(0);
+			setCurrentPageFirstItemIndex(0);
 			// Assures the visual refresh
 			refreshCurrentPage();
 		}
@@ -690,20 +698,24 @@ public class Table extends Select implements Action.Container,
 	public Object getCurrentPageFirstItemId() {
 
 		// Priorise index over id if indexes are supported
-		if (items instanceof Container.Indexed) {
+		if (this.items instanceof Container.Indexed) {
 			int index = getCurrentPageFirstItemIndex();
 			Object id = null;
-			if (index >= 0 && index < size())
-				id = ((Container.Indexed) items).getIdByIndex(index);
-			if (id != null && !id.equals(currentPageFirstItemId))
-				currentPageFirstItemId = id;
+			if (index >= 0 && index < size()) {
+				id = ((Container.Indexed) this.items).getIdByIndex(index);
+			}
+			if (id != null && !id.equals(this.currentPageFirstItemId)) {
+				this.currentPageFirstItemId = id;
+			}
 		}
 
 		// If there is no item id at all, use the first one
-		if (currentPageFirstItemId == null)
-			currentPageFirstItemId = ((Container.Ordered) items).firstItemId();
+		if (this.currentPageFirstItemId == null) {
+			this.currentPageFirstItemId = ((Container.Ordered) this.items)
+					.firstItemId();
+		}
 
-		return currentPageFirstItemId;
+		return this.currentPageFirstItemId;
 	}
 
 	/**
@@ -717,19 +729,20 @@ public class Table extends Select implements Action.Container,
 		// Gets the corresponding index
 		int index = -1;
 		try {
-			index = ((Container.Indexed) items)
+			index = ((Container.Indexed) this.items)
 					.indexOfId(currentPageFirstItemId);
 		} catch (ClassCastException e) {
 
 			// If the table item container does not have index, we have to
 			// calculates the index by hand
-			Object id = ((Container.Ordered) items).firstItemId();
+			Object id = ((Container.Ordered) this.items).firstItemId();
 			while (id != null && !id.equals(currentPageFirstItemId)) {
 				index++;
-				id = ((Container.Ordered) items).nextItemId(id);
+				id = ((Container.Ordered) this.items).nextItemId(id);
 			}
-			if (id == null)
+			if (id == null) {
 				index = -1;
+			}
 		}
 
 		// If the search for item index was successfull
@@ -768,10 +781,11 @@ public class Table extends Select implements Action.Container,
 	 */
 	public void setColumnIcon(Object propertyId, Resource icon) {
 
-		if (icon == null)
+		if (icon == null) {
 			this.columnIcons.remove(propertyId);
-		else
+		} else {
 			this.columnIcons.put(propertyId, icon);
+		}
 
 		// Assures the visual refresh
 		refreshCurrentPage();
@@ -785,12 +799,13 @@ public class Table extends Select implements Action.Container,
 	 * @return the header for the specifed column if it has one.
 	 */
 	public String getColumnHeader(Object propertyId) {
-		if (getColumnHeaderMode() == COLUMN_HEADER_MODE_HIDDEN)
+		if (getColumnHeaderMode() == COLUMN_HEADER_MODE_HIDDEN) {
 			return null;
+		}
 
 		String header = (String) this.columnHeaders.get(propertyId);
-		if ((header == null && this.getColumnHeaderMode() == COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID)
-				|| this.getColumnHeaderMode() == COLUMN_HEADER_MODE_ID) {
+		if ((header == null && getColumnHeaderMode() == COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID)
+				|| getColumnHeaderMode() == COLUMN_HEADER_MODE_ID) {
 			header = propertyId.toString();
 		}
 
@@ -847,9 +862,10 @@ public class Table extends Select implements Action.Container,
 		// Checks for valid alignments
 		if (alignment != null && !alignment.equals(ALIGN_LEFT)
 				&& !alignment.equals(ALIGN_CENTER)
-				&& !alignment.equals(ALIGN_RIGHT))
+				&& !alignment.equals(ALIGN_RIGHT)) {
 			throw new IllegalArgumentException("Column alignment '" + alignment
 					+ "' is not supported.");
+		}
 
 		if (alignment == null || alignment.equals(ALIGN_LEFT)) {
 			this.columnAlignments.remove(propertyId);
@@ -870,8 +886,8 @@ public class Table extends Select implements Action.Container,
 	 * @return true if the column is collapsed; false otherwise;
 	 */
 	public boolean isColumnCollapsed(Object propertyId) {
-		return collapsedColumns != null
-				&& collapsedColumns.contains(propertyId);
+		return this.collapsedColumns != null
+				&& this.collapsedColumns.contains(propertyId);
 	}
 
 	/**
@@ -886,14 +902,15 @@ public class Table extends Select implements Action.Container,
 	 */
 	public void setColumnCollapsed(Object propertyId, boolean collapsed)
 			throws IllegalAccessException {
-		if (!this.isColumnCollapsingAllowed()) {
+		if (!isColumnCollapsingAllowed()) {
 			throw new IllegalAccessException("Column collapsing not allowed!");
 		}
 
-		if (collapsed)
+		if (collapsed) {
 			this.collapsedColumns.add(propertyId);
-		else
+		} else {
 			this.collapsedColumns.remove(propertyId);
+		}
 
 		// Assures the visual refresh
 		refreshCurrentPage();
@@ -917,8 +934,9 @@ public class Table extends Select implements Action.Container,
 	public void setColumnCollapsingAllowed(boolean collapsingAllowed) {
 		this.columnCollapsingAllowed = collapsingAllowed;
 
-		if (!collapsingAllowed)
-			collapsedColumns.clear();
+		if (!collapsingAllowed) {
+			this.collapsedColumns.clear();
+		}
 
 		// Assures the visual refresh
 		refreshCurrentPage();
@@ -953,7 +971,7 @@ public class Table extends Select implements Action.Container,
 	 * nothing if columnReordering is not allowed.
 	 */
 	private void setColumnOrder(Object[] columnOrder) {
-		if (columnOrder == null || !this.isColumnReorderingAllowed()) {
+		if (columnOrder == null || !isColumnReorderingAllowed()) {
 			return;
 		}
 		LinkedList newOrder = new LinkedList();
@@ -966,8 +984,9 @@ public class Table extends Select implements Action.Container,
 		}
 		for (Iterator it = this.visibleColumns.iterator(); it.hasNext();) {
 			Object columnId = it.next();
-			if (!newOrder.contains(columnId))
+			if (!newOrder.contains(columnId)) {
 				newOrder.add(columnId);
+			}
 		}
 		this.visibleColumns = newOrder;
 
@@ -993,18 +1012,20 @@ public class Table extends Select implements Action.Container,
 	public void setCurrentPageFirstItemIndex(int newIndex) {
 
 		// Ensures that the new value is valid
-		if (newIndex < 0)
+		if (newIndex < 0) {
 			newIndex = 0;
-		if (newIndex >= size())
+		}
+		if (newIndex >= size()) {
 			newIndex = size() - 1;
+		}
 
 		// Refresh first item id
-		if (items instanceof Container.Indexed) {
+		if (this.items instanceof Container.Indexed) {
 			try {
-				currentPageFirstItemId = ((Container.Indexed) items)
+				this.currentPageFirstItemId = ((Container.Indexed) this.items)
 						.getIdByIndex(newIndex);
 			} catch (IndexOutOfBoundsException e) {
-				currentPageFirstItemId = null;
+				this.currentPageFirstItemId = null;
 			}
 			this.currentPageFirstItemIndex = newIndex;
 		} else {
@@ -1013,49 +1034,52 @@ public class Table extends Select implements Action.Container,
 			// container forwards / backwards
 			// next available item forward or backward
 
-			this.currentPageFirstItemId = ((Container.Ordered) items)
+			this.currentPageFirstItemId = ((Container.Ordered) this.items)
 					.firstItemId();
 
 			// Go forwards in the middle of the list (respect borders)
 			while (this.currentPageFirstItemIndex < newIndex
-					&& !((Container.Ordered) items)
-							.isLastId(currentPageFirstItemId)) {
+					&& !((Container.Ordered) this.items)
+							.isLastId(this.currentPageFirstItemId)) {
 				this.currentPageFirstItemIndex++;
-				currentPageFirstItemId = ((Container.Ordered) items)
-						.nextItemId(currentPageFirstItemId);
+				this.currentPageFirstItemId = ((Container.Ordered) this.items)
+						.nextItemId(this.currentPageFirstItemId);
 			}
 
 			// If we did hit the border
-			if (((Container.Ordered) items).isLastId(currentPageFirstItemId)) {
+			if (((Container.Ordered) this.items)
+					.isLastId(this.currentPageFirstItemId)) {
 				this.currentPageFirstItemIndex = size() - 1;
 			}
 
 			// Go backwards in the middle of the list (respect borders)
 			while (this.currentPageFirstItemIndex > newIndex
-					&& !((Container.Ordered) items)
-							.isFirstId(currentPageFirstItemId)) {
+					&& !((Container.Ordered) this.items)
+							.isFirstId(this.currentPageFirstItemId)) {
 				this.currentPageFirstItemIndex--;
-				currentPageFirstItemId = ((Container.Ordered) items)
-						.prevItemId(currentPageFirstItemId);
+				this.currentPageFirstItemId = ((Container.Ordered) this.items)
+						.prevItemId(this.currentPageFirstItemId);
 			}
 
 			// If we did hit the border
-			if (((Container.Ordered) items).isFirstId(currentPageFirstItemId)) {
+			if (((Container.Ordered) this.items)
+					.isFirstId(this.currentPageFirstItemId)) {
 				this.currentPageFirstItemIndex = 0;
 			}
 
 			// Go forwards once more
 			while (this.currentPageFirstItemIndex < newIndex
-					&& !((Container.Ordered) items)
-							.isLastId(currentPageFirstItemId)) {
+					&& !((Container.Ordered) this.items)
+							.isLastId(this.currentPageFirstItemId)) {
 				this.currentPageFirstItemIndex++;
-				currentPageFirstItemId = ((Container.Ordered) items)
-						.nextItemId(currentPageFirstItemId);
+				this.currentPageFirstItemId = ((Container.Ordered) this.items)
+						.nextItemId(this.currentPageFirstItemId);
 			}
 
 			// If for some reason we do hit border again, override
 			// the user index request
-			if (((Container.Ordered) items).isLastId(currentPageFirstItemId)) {
+			if (((Container.Ordered) this.items)
+					.isLastId(this.currentPageFirstItemId)) {
 				newIndex = this.currentPageFirstItemIndex = size() - 1;
 			}
 		}
@@ -1084,8 +1108,9 @@ public class Table extends Select implements Action.Container,
 		this.pageBuffering = pageBuffering;
 
 		// If page buffering is disabled, clear the buffer
-		if (!pageBuffering)
-			pageBuffer = null;
+		if (!pageBuffering) {
+			this.pageBuffer = null;
+		}
 	}
 
 	/**
@@ -1135,8 +1160,9 @@ public class Table extends Select implements Action.Container,
 	 */
 	public void setColumnHeaderMode(int columnHeaderMode) {
 		if (columnHeaderMode >= COLUMN_HEADER_MODE_HIDDEN
-				&& columnHeaderMode <= COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID)
+				&& columnHeaderMode <= COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID) {
 			this.columnHeaderMode = columnHeaderMode;
+		}
 
 		// Assures the visual refresh
 		refreshCurrentPage();
@@ -1149,7 +1175,7 @@ public class Table extends Select implements Action.Container,
 	public void refreshCurrentPage() {
 
 		// Clear page buffer and notify about the change
-		pageBuffer = null;
+		this.pageBuffer = null;
 		requestRepaint();
 	}
 
@@ -1182,10 +1208,10 @@ public class Table extends Select implements Action.Container,
 	 *            the One of the modes listed above.
 	 */
 	public void setRowHeaderMode(int mode) {
-		if (ROW_HEADER_MODE_HIDDEN == mode)
-			rowCaptionsAreHidden = true;
-		else {
-			rowCaptionsAreHidden = false;
+		if (ROW_HEADER_MODE_HIDDEN == mode) {
+			this.rowCaptionsAreHidden = true;
+		} else {
+			this.rowCaptionsAreHidden = false;
 			setItemCaptionMode(mode);
 		}
 
@@ -1200,7 +1226,7 @@ public class Table extends Select implements Action.Container,
 	 * @see #setRowHeaderMode(int)
 	 */
 	public int getRowHeaderMode() {
-		return rowCaptionsAreHidden ? ROW_HEADER_MODE_HIDDEN
+		return this.rowCaptionsAreHidden ? ROW_HEADER_MODE_HIDDEN
 				: getItemCaptionMode();
 	}
 
@@ -1223,24 +1249,29 @@ public class Table extends Select implements Action.Container,
 		Object[] cols = getVisibleColumns();
 
 		// Checks that a correct number of cells are given
-		if (cells.length != cols.length)
+		if (cells.length != cols.length) {
 			return null;
+		}
 
 		// Creates new item
 		Item item;
 		if (itemId == null) {
-			itemId = items.addItem();
-			if (itemId == null)
+			itemId = this.items.addItem();
+			if (itemId == null) {
 				return null;
-			item = items.getItem(itemId);
-		} else
-			item = items.addItem(itemId);
-		if (item == null)
+			}
+			item = this.items.getItem(itemId);
+		} else {
+			item = this.items.addItem(itemId);
+		}
+		if (item == null) {
 			return null;
+		}
 
 		// Fills the item properties
-		for (int i = 0; i < cols.length; i++)
+		for (int i = 0; i < cols.length; i++) {
 			item.getItemProperty(cols[i]).setValue(cells[i]);
+		}
 
 		return itemId;
 	}
@@ -1254,24 +1285,27 @@ public class Table extends Select implements Action.Container,
 	 */
 	public void setContainerDataSource(Container newDataSource) {
 
-		if (newDataSource == null)
+		if (newDataSource == null) {
 			newDataSource = new IndexedContainer();
+		}
 
 		// Assures that the data source is ordered by making unordered
 		// containers ordered by wrapping them
-		if (newDataSource instanceof Container.Ordered)
+		if (newDataSource instanceof Container.Ordered) {
 			super.setContainerDataSource(newDataSource);
-		else
+		} else {
 			super.setContainerDataSource(new ContainerOrderedWrapper(
 					newDataSource));
+		}
 
 		// Resets page position
-		currentPageFirstItemId = null;
-		currentPageFirstItemIndex = 0;
+		this.currentPageFirstItemId = null;
+		this.currentPageFirstItemIndex = 0;
 
 		// Resets column properties
-		if (this.collapsedColumns != null)
+		if (this.collapsedColumns != null) {
 			this.collapsedColumns.clear();
+		}
 		setVisibleColumns(getContainerPropertyIds().toArray());
 
 		// Assure visual refresh
@@ -1293,20 +1327,23 @@ public class Table extends Select implements Action.Container,
 		// Page start index
 		if (variables.containsKey("firstvisible")) {
 			Integer value = (Integer) variables.get("firstvisible");
-			if (value != null)
+			if (value != null) {
 				setCurrentPageFirstItemIndex(value.intValue());
+			}
 		}
 
 		// Sets requested firstrow and rows for the next paint
 		if (variables.containsKey("reqfirstrow")
 				|| variables.containsKey("reqrows")) {
 			Integer value = (Integer) variables.get("reqfirstrow");
-			if (value != null)
-				reqFirstRowToPaint = value.intValue();
+			if (value != null) {
+				this.reqFirstRowToPaint = value.intValue();
+			}
 			value = (Integer) variables.get("reqrows");
-			if (value != null)
-				reqRowsToPaint = value.intValue();
-			pageBuffer = null;
+			if (value != null) {
+				this.reqRowsToPaint = value.intValue();
+			}
+			this.pageBuffer = null;
 			requestRepaint();
 		}
 
@@ -1315,13 +1352,16 @@ public class Table extends Select implements Action.Container,
 			StringTokenizer st = new StringTokenizer((String) variables
 					.get("action"), ",");
 			if (st.countTokens() == 2) {
-				Object itemId = itemIdMapper.get(st.nextToken());
-				Action action = (Action) actionMapper.get(st.nextToken());
+				Object itemId = this.itemIdMapper.get(st.nextToken());
+				Action action = (Action) this.actionMapper.get(st.nextToken());
 				if (action != null && containsId(itemId)
-						&& actionHandlers != null)
-					for (Iterator i = actionHandlers.iterator(); i.hasNext();)
+						&& this.actionHandlers != null) {
+					for (Iterator i = this.actionHandlers.iterator(); i
+							.hasNext();) {
 						((Action.Handler) i.next()).handleAction(action, this,
 								itemId);
+					}
+				}
 			}
 		}
 
@@ -1345,35 +1385,36 @@ public class Table extends Select implements Action.Container,
 				}
 			}
 		}
-		if (doSort)
+		if (doSort) {
 			this.sort();
+		}
 
 		// Dynamic column hide/show and order
 		// Update visible columns
-		if (this.isColumnCollapsingAllowed()) {
+		if (isColumnCollapsingAllowed()) {
 			if (variables.containsKey("collapsedcolumns")) {
 				try {
 					Object[] ids = (Object[]) variables.get("collapsedcolumns");
 					for (Iterator it = this.visibleColumns.iterator(); it
 							.hasNext();) {
-						this.setColumnCollapsed(it.next(), false);
+						setColumnCollapsed(it.next(), false);
 					}
 					for (int i = 0; i < ids.length; i++) {
-						this.setColumnCollapsed(columnIdMap.get(ids[i]
+						setColumnCollapsed(this.columnIdMap.get(ids[i]
 								.toString()), true);
 					}
 				} catch (Exception ignored) {
 				}
 			}
 		}
-		if (this.isColumnReorderingAllowed()) {
+		if (isColumnReorderingAllowed()) {
 			if (variables.containsKey("columnorder")) {
 				try {
 					Object[] ids = (Object[]) variables.get("columnorder");
 					for (int i = 0; i < ids.length; i++) {
-						ids[i] = columnIdMap.get(ids[i].toString());
+						ids[i] = this.columnIdMap.get(ids[i].toString());
 					}
-					this.setColumnOrder(ids);
+					setColumnOrder(ids);
 				} catch (Exception ignored) {
 				}
 			}
@@ -1391,21 +1432,24 @@ public class Table extends Select implements Action.Container,
 	public void paintContent(PaintTarget target) throws PaintException {
 
 		// Focus control id
-		if (this.getFocusableId() > 0) {
-			target.addAttribute("focusid", this.getFocusableId());
+		if (getFocusableId() > 0) {
+			target.addAttribute("focusid", getFocusableId());
 		}
 
 		// The tab ordering number
-		if (this.getTabIndex() > 0)
-			target.addAttribute("tabindex", this.getTabIndex());
+		if (getTabIndex() > 0) {
+			target.addAttribute("tabindex", getTabIndex());
+		}
 
 		// Size
-		if (getHeight() >= 0)
+		if (getHeight() >= 0) {
 			target.addAttribute("height", "" + getHeight()
 					+ Sizeable.UNIT_SYMBOLS[getHeightUnits()]);
-		if (getWidth() >= 0)
+		}
+		if (getWidth() >= 0) {
 			target.addAttribute("width", "" + getWidth()
 					+ Sizeable.UNIT_SYMBOLS[getWidthUnits()]);
+		}
 
 		// Initialize temps
 		Object[] colids = getVisibleColumns();
@@ -1417,34 +1461,41 @@ public class Table extends Select implements Action.Container,
 		boolean colheads = colHeadMode != COLUMN_HEADER_MODE_HIDDEN;
 		boolean rowheads = getRowHeaderMode() != ROW_HEADER_MODE_HIDDEN;
 		Object[][] cells = getVisibleCells();
-		boolean iseditable = this.isEditable();
+		boolean iseditable = isEditable();
 
 		// selection support
 		String[] selectedKeys;
-		if (isMultiSelect())
+		if (isMultiSelect()) {
 			selectedKeys = new String[((Set) getValue()).size()];
-		else
+		} else {
 			selectedKeys = new String[(getValue() == null
 					&& getNullSelectionItemId() == null ? 0 : 1)];
+		}
 		int keyIndex = 0;
 
 		// Table attributes
-		if (isSelectable())
+		if (isSelectable()) {
 			target.addAttribute("selectmode", (isMultiSelect() ? "multi"
 					: "single"));
-		else
+		} else {
 			target.addAttribute("selectmode", "none");
+		}
 		target.addAttribute("cols", cols);
 		target.addAttribute("rows", cells[0].length);
-		target.addAttribute("firstrow",
-				(reqFirstRowToPaint >= 0 ? reqFirstRowToPaint : first));
+		target
+				.addAttribute("firstrow",
+						(this.reqFirstRowToPaint >= 0 ? this.reqFirstRowToPaint
+								: first));
 		target.addAttribute("totalrows", total);
-		if (pagelen != 0)
+		if (pagelen != 0) {
 			target.addAttribute("pagelength", pagelen);
-		if (colheads)
+		}
+		if (colheads) {
 			target.addAttribute("colheaders", true);
-		if (rowheads)
+		}
+		if (rowheads) {
 			target.addAttribute("rowheaders", true);
+		}
 
 		// Visible column order
 		Collection sortables = getSortableContainerPropertyIds();
@@ -1476,15 +1527,17 @@ public class Table extends Select implements Action.Container,
 
 			// tr attributes
 			if (rowheads) {
-				if (cells[CELL_ICON][i] != null)
+				if (cells[CELL_ICON][i] != null) {
 					target.addAttribute("icon", (Resource) cells[CELL_ICON][i]);
-				if (cells[CELL_HEADER][i] != null)
+				}
+				if (cells[CELL_HEADER][i] != null) {
 					target.addAttribute("caption",
 							(String) cells[CELL_HEADER][i]);
+				}
 			}
 			target.addAttribute("key", Integer.parseInt(cells[CELL_KEY][i]
 					.toString()));
-			if (actionHandlers != null || isSelectable()) {
+			if (this.actionHandlers != null || isSelectable()) {
 				if (isSelected(itemId) && keyIndex < selectedKeys.length) {
 					target.addAttribute("selected", true);
 					selectedKeys[keyIndex++] = (String) cells[CELL_KEY][i];
@@ -1492,17 +1545,19 @@ public class Table extends Select implements Action.Container,
 			}
 
 			// Actions
-			if (actionHandlers != null) {
+			if (this.actionHandlers != null) {
 				ArrayList keys = new ArrayList();
-				for (Iterator ahi = actionHandlers.iterator(); ahi.hasNext();) {
+				for (Iterator ahi = this.actionHandlers.iterator(); ahi
+						.hasNext();) {
 					Action[] aa = ((Action.Handler) ahi.next()).getActions(
 							itemId, this);
-					if (aa != null)
+					if (aa != null) {
 						for (int ai = 0; ai < aa.length; ai++) {
-							String key = actionMapper.key(aa[ai]);
+							String key = this.actionMapper.key(aa[ai]);
 							actionSet.add(aa[ai]);
 							keys.add(key);
 						}
+					}
 				}
 				target.addAttribute("al", keys.toArray());
 			}
@@ -1511,21 +1566,24 @@ public class Table extends Select implements Action.Container,
 			int currentColumn = 0;
 			for (Iterator it = this.visibleColumns.iterator(); it.hasNext(); currentColumn++) {
 				Object columnId = it.next();
-				if (columnId == null || this.isColumnCollapsed(columnId))
+				if (columnId == null || isColumnCollapsed(columnId)) {
 					continue;
+				}
 				if ((iscomponent[currentColumn] || iseditable)
 						&& Component.class.isInstance(cells[CELL_FIRSTCOL
 								+ currentColumn][i])) {
 					Component c = (Component) cells[CELL_FIRSTCOL
 							+ currentColumn][i];
-					if (c == null)
+					if (c == null) {
 						target.addText("");
-					else
+					} else {
 						c.paint(target);
-				} else
+					}
+				} else {
 					target
 							.addText((String) cells[CELL_FIRSTCOL
 									+ currentColumn][i]);
+				}
 			}
 
 			target.endTag("tr");
@@ -1533,12 +1591,14 @@ public class Table extends Select implements Action.Container,
 		target.endTag("rows");
 
 		// The select variable is only enabled if selectable
-		if (selectable)
+		if (selectable) {
 			target.addVariable(this, "selected", selectedKeys);
+		}
 
 		// The cursors are only shown on pageable table
-		if (first != 0 || getPageLength() > 0)
+		if (first != 0 || getPageLength() > 0) {
 			target.addVariable(this, "firstvisible", first);
+		}
 
 		// Sorting
 		if (getContainerDataSource() instanceof Container.Sortable) {
@@ -1549,11 +1609,11 @@ public class Table extends Select implements Action.Container,
 
 		// Resets and paints "to be painted next" variables. Also reset
 		// pageBuffer
-		reqFirstRowToPaint = -1;
-		reqRowsToPaint = -1;
-		pageBuffer = null;
-		target.addVariable(this, "reqrows", reqRowsToPaint);
-		target.addVariable(this, "reqfirstrow", reqFirstRowToPaint);
+		this.reqFirstRowToPaint = -1;
+		this.reqRowsToPaint = -1;
+		this.pageBuffer = null;
+		target.addVariable(this, "reqrows", this.reqRowsToPaint);
+		target.addVariable(this, "reqfirstrow", this.reqFirstRowToPaint);
 
 		// Actions
 		if (!actionSet.isEmpty()) {
@@ -1562,11 +1622,13 @@ public class Table extends Select implements Action.Container,
 			for (Iterator it = actionSet.iterator(); it.hasNext();) {
 				Action a = (Action) it.next();
 				target.startTag("action");
-				if (a.getCaption() != null)
+				if (a.getCaption() != null) {
 					target.addAttribute("caption", a.getCaption());
-				if (a.getIcon() != null)
+				}
+				if (a.getIcon() != null) {
 					target.addAttribute("icon", a.getIcon());
-				target.addAttribute("key", actionMapper.key(a));
+				}
+				target.addAttribute("key", this.actionMapper.key(a));
 				target.endTag("action");
 			}
 			target.endTag("actions");
@@ -1583,17 +1645,18 @@ public class Table extends Select implements Action.Container,
 		// Available columns
 		if (this.columnCollapsingAllowed) {
 			HashSet ccs = new HashSet();
-			for (Iterator i = visibleColumns.iterator(); i.hasNext();) {
+			for (Iterator i = this.visibleColumns.iterator(); i.hasNext();) {
 				Object o = i.next();
-				if (isColumnCollapsed(o))
+				if (isColumnCollapsed(o)) {
 					ccs.add(o);
+				}
 			}
 			String[] collapsedkeys = new String[ccs.size()];
 			int nextColumn = 0;
 			for (Iterator it = this.visibleColumns.iterator(); it.hasNext()
 					&& nextColumn < collapsedkeys.length;) {
 				Object columnId = it.next();
-				if (this.isColumnCollapsed(columnId)) {
+				if (isColumnCollapsed(columnId)) {
 					collapsedkeys[nextColumn++] = this.columnIdMap
 							.key(columnId);
 				}
@@ -1609,22 +1672,24 @@ public class Table extends Select implements Action.Container,
 				target.addAttribute("cid", this.columnIdMap.key(columnId));
 				String head = getColumnHeader(columnId);
 				target.addAttribute("caption", (head != null ? head : ""));
-				if (this.isColumnCollapsed(columnId)) {
+				if (isColumnCollapsed(columnId)) {
 					target.addAttribute("collapsed", true);
 				}
 				if (colheads) {
-					if (this.getColumnIcon(columnId) != null)
-						target.addAttribute("icon", this
-								.getColumnIcon(columnId));
-					if (sortables.contains(columnId))
+					if (getColumnIcon(columnId) != null) {
+						target.addAttribute("icon", getColumnIcon(columnId));
+					}
+					if (sortables.contains(columnId)) {
 						target.addAttribute("sortable", true);
+					}
 				}
-				if (!ALIGN_LEFT.equals(this.getColumnAlignment(columnId)))
-					target.addAttribute("align", this
-							.getColumnAlignment(columnId));
-				if (getColumnWidth(columnId) > -1)
+				if (!ALIGN_LEFT.equals(getColumnAlignment(columnId))) {
+					target.addAttribute("align", getColumnAlignment(columnId));
+				}
+				if (getColumnWidth(columnId) > -1) {
 					target.addAttribute("width", String
 							.valueOf(getColumnWidth(columnId)));
+				}
 
 				target.endTag("column");
 			}
@@ -1649,25 +1714,27 @@ public class Table extends Select implements Action.Container,
 	private Object[][] getVisibleCells() {
 
 		// Returns a buffered value if possible
-		if (pageBuffer != null && isPageBufferingEnabled())
-			return pageBuffer;
+		if (this.pageBuffer != null && isPageBufferingEnabled()) {
+			return this.pageBuffer;
+		}
 
 		// Stops listening the old properties and initialise the list
-		if (listenedProperties == null)
-			listenedProperties = new LinkedList();
-		else
-			for (Iterator i = listenedProperties.iterator(); i.hasNext();) {
+		if (this.listenedProperties == null) {
+			this.listenedProperties = new LinkedList();
+		} else {
+			for (Iterator i = this.listenedProperties.iterator(); i.hasNext();) {
 				((Property.ValueChangeNotifier) i.next()).removeListener(this);
 			}
+		}
 
 		// Detach old visible component from the table
-		if (visibleComponents == null)
-			visibleComponents = new LinkedList();
-		else {
-			for (Iterator i = visibleComponents.iterator(); i.hasNext();) {
+		if (this.visibleComponents == null) {
+			this.visibleComponents = new LinkedList();
+		} else {
+			for (Iterator i = this.visibleComponents.iterator(); i.hasNext();) {
 				((Component) i.next()).setParent(null);
 			}
-			visibleComponents.clear();
+			this.visibleComponents.clear();
 		}
 
 		// Collects the basic facts about the table page
@@ -1676,48 +1743,56 @@ public class Table extends Select implements Action.Container,
 		int pagelen = getPageLength();
 		int firstIndex = getCurrentPageFirstItemIndex();
 		int rows = size();
-		if (rows > 0 && firstIndex >= 0)
+		if (rows > 0 && firstIndex >= 0) {
 			rows -= firstIndex;
-		if (pagelen > 0 && pagelen < rows)
+		}
+		if (pagelen > 0 && pagelen < rows) {
 			rows = pagelen;
+		}
 
 		// If "to be painted next" variables are set, use them
-		if (reqRowsToPaint >= 0)
-			rows = reqRowsToPaint;
+		if (this.reqRowsToPaint >= 0) {
+			rows = this.reqRowsToPaint;
+		}
 		Object id;
-		if (reqFirstRowToPaint >= 0 && reqFirstRowToPaint < size())
-			firstIndex = reqFirstRowToPaint;
+		if (this.reqFirstRowToPaint >= 0 && this.reqFirstRowToPaint < size()) {
+			firstIndex = this.reqFirstRowToPaint;
+		}
 		if (size() > 0) {
-			if (rows + firstIndex > size())
+			if (rows + firstIndex > size()) {
 				rows = size() - firstIndex;
+			}
 		} else {
 			rows = 0;
 		}
 
 		Object[][] cells = new Object[cols + CELL_FIRSTCOL][rows];
-		if (rows == 0)
+		if (rows == 0) {
 			return cells;
+		}
 
 		// Gets the first item id
-		if (items instanceof Container.Indexed)
-			id = ((Container.Indexed) items).getIdByIndex(firstIndex);
-		else {
-			id = ((Container.Ordered) items).firstItemId();
-			for (int i = 0; i < firstIndex; i++)
-				id = ((Container.Ordered) items).nextItemId(id);
+		if (this.items instanceof Container.Indexed) {
+			id = ((Container.Indexed) this.items).getIdByIndex(firstIndex);
+		} else {
+			id = ((Container.Ordered) this.items).firstItemId();
+			for (int i = 0; i < firstIndex; i++) {
+				id = ((Container.Ordered) this.items).nextItemId(id);
+			}
 		}
 
 		int headmode = getRowHeaderMode();
 		boolean[] iscomponent = new boolean[cols];
-		for (int i = 0; i < cols; i++)
+		for (int i = 0; i < cols; i++) {
 			iscomponent[i] = Component.class
 					.isAssignableFrom(getType(colids[i]));
+		}
 
 		// Creates the page contents
 		int filledRows = 0;
 		for (int i = 0; i < rows && id != null; i++) {
 			cells[CELL_ITEMID][i] = id;
-			cells[CELL_KEY][i] = itemIdMapper.key(id);
+			cells[CELL_KEY][i] = this.itemIdMapper.key(id);
 			if (headmode != ROW_HEADER_MODE_HIDDEN) {
 				switch (headmode) {
 				case ROW_HEADER_MODE_INDEX:
@@ -1736,7 +1811,7 @@ public class Table extends Select implements Action.Container,
 						if (p instanceof Property.ValueChangeNotifier) {
 							((Property.ValueChangeNotifier) p)
 									.addListener(this);
-							listenedProperties.add(p);
+							this.listenedProperties.add(p);
 						}
 						if (iscomponent[j]) {
 							value = p.getValue();
@@ -1751,13 +1826,13 @@ public class Table extends Select implements Action.Container,
 
 					if (value instanceof Component) {
 						((Component) value).setParent(this);
-						visibleComponents.add((Component) value);
+						this.visibleComponents.add(value);
 					}
 					cells[CELL_FIRSTCOL + j][i] = value;
 
 				}
 			}
-			id = ((Container.Ordered) items).nextItemId(id);
+			id = ((Container.Ordered) this.items).nextItemId(id);
 
 			filledRows++;
 		}
@@ -1765,16 +1840,19 @@ public class Table extends Select implements Action.Container,
 		// Assures that all the rows of the cell-buffer are valid
 		if (filledRows != cells[0].length) {
 			Object[][] temp = new Object[cells.length][filledRows];
-			for (int i = 0; i < cells.length; i++)
-				for (int j = 0; j < filledRows; j++)
+			for (int i = 0; i < cells.length; i++) {
+				for (int j = 0; j < filledRows; j++) {
 					temp[i][j] = cells[i][j];
+				}
+			}
 			cells = temp;
 		}
 
 		// Saves the results to internal buffer iff in buffering mode
 		// to possible conserve memory from large non-buffered pages
-		if (isPageBufferingEnabled())
-			pageBuffer = cells;
+		if (isPageBufferingEnabled()) {
+			this.pageBuffer = cells;
+		}
 
 		return cells;
 	}
@@ -1797,7 +1875,7 @@ public class Table extends Select implements Action.Container,
 	 */
 	protected Object getPropertyValue(Object rowId, Object colId,
 			Property property) {
-		if (this.isEditable() && this.fieldFactory != null) {
+		if (isEditable() && this.fieldFactory != null) {
 			Field f = this.fieldFactory.createField(getContainerDataSource(),
 					rowId, colId, this);
 			if (f != null) {
@@ -1841,13 +1919,13 @@ public class Table extends Select implements Action.Container,
 
 		if (actionHandler != null) {
 
-			if (actionHandlers == null) {
-				actionHandlers = new LinkedList();
-				actionMapper = new KeyMapper();
+			if (this.actionHandlers == null) {
+				this.actionHandlers = new LinkedList();
+				this.actionMapper = new KeyMapper();
 			}
 
-			if (!actionHandlers.contains(actionHandler)) {
-				actionHandlers.add(actionHandler);
+			if (!this.actionHandlers.contains(actionHandler)) {
+				this.actionHandlers.add(actionHandler);
 				requestRepaint();
 			}
 
@@ -1862,13 +1940,14 @@ public class Table extends Select implements Action.Container,
 	 */
 	public void removeActionHandler(Action.Handler actionHandler) {
 
-		if (actionHandlers != null && actionHandlers.contains(actionHandler)) {
+		if (this.actionHandlers != null
+				&& this.actionHandlers.contains(actionHandler)) {
 
-			actionHandlers.remove(actionHandler);
+			this.actionHandlers.remove(actionHandler);
 
-			if (actionHandlers.isEmpty()) {
-				actionHandlers = null;
-				actionMapper = null;
+			if (this.actionHandlers.isEmpty()) {
+				this.actionHandlers = null;
+				this.actionMapper = null;
 			}
 
 			requestRepaint();
@@ -1895,9 +1974,11 @@ public class Table extends Select implements Action.Container,
 	public void attach() {
 		super.attach();
 
-		if (visibleComponents != null)
-			for (Iterator i = visibleComponents.iterator(); i.hasNext();)
+		if (this.visibleComponents != null) {
+			for (Iterator i = this.visibleComponents.iterator(); i.hasNext();) {
 				((Component) i.next()).attach();
+			}
+		}
 	}
 
 	/**
@@ -1908,9 +1989,11 @@ public class Table extends Select implements Action.Container,
 	public void detach() {
 		super.detach();
 
-		if (visibleComponents != null)
-			for (Iterator i = visibleComponents.iterator(); i.hasNext();)
+		if (this.visibleComponents != null) {
+			for (Iterator i = this.visibleComponents.iterator(); i.hasNext();) {
 				((Component) i.next()).detach();
+			}
+		}
 	}
 
 	/**
@@ -1930,7 +2013,7 @@ public class Table extends Select implements Action.Container,
 	 * @see com.itmill.toolkit.data.Container#removeItem(Object)
 	 */
 	public boolean removeItem(Object itemId) {
-		Object nextItemId = ((Container.Ordered) items).nextItemId(itemId);
+		Object nextItemId = ((Container.Ordered) this.items).nextItemId(itemId);
 		boolean ret = super.removeItem(itemId);
 		if (ret && (itemId != null)
 				&& (itemId.equals(this.currentPageFirstItemId))) {
@@ -1970,10 +2053,12 @@ public class Table extends Select implements Action.Container,
 	 */
 	public boolean addContainerProperty(Object propertyId, Class type,
 			Object defaultValue) throws UnsupportedOperationException {
-		if (!super.addContainerProperty(propertyId, type, defaultValue))
+		if (!super.addContainerProperty(propertyId, type, defaultValue)) {
 			return false;
-		if (!this.visibleColumns.contains(propertyId))
+		}
+		if (!this.visibleColumns.contains(propertyId)) {
 			this.visibleColumns.add(propertyId);
+		}
 		return true;
 	}
 
@@ -2002,11 +2087,12 @@ public class Table extends Select implements Action.Container,
 	public boolean addContainerProperty(Object propertyId, Class type,
 			Object defaultValue, String columnHeader, Resource columnIcon,
 			String columnAlignment) throws UnsupportedOperationException {
-		if (!this.addContainerProperty(propertyId, type, defaultValue))
+		if (!this.addContainerProperty(propertyId, type, defaultValue)) {
 			return false;
-		this.setColumnAlignment(propertyId, columnAlignment);
-		this.setColumnHeader(propertyId, columnHeader);
-		this.setColumnIcon(propertyId, columnIcon);
+		}
+		setColumnAlignment(propertyId, columnAlignment);
+		setColumnHeader(propertyId, columnHeader);
+		setColumnIcon(propertyId, columnIcon);
 		return true;
 	}
 
@@ -2020,8 +2106,9 @@ public class Table extends Select implements Action.Container,
 		LinkedList visible = new LinkedList();
 
 		Object[][] cells = getVisibleCells();
-		for (int i = 0; i < cells[CELL_ITEMID].length; i++)
+		for (int i = 0; i < cells[CELL_ITEMID].length; i++) {
 			visible.add(cells[CELL_ITEMID][i]);
+		}
 
 		return visible;
 	}
@@ -2033,9 +2120,9 @@ public class Table extends Select implements Action.Container,
 	 * @see com.itmill.toolkit.data.Container.ItemSetChangeListener#containerItemSetChange(com.itmill.toolkit.data.Container.ItemSetChangeEvent)
 	 */
 	public void containerItemSetChange(Container.ItemSetChangeEvent event) {
-		pageBuffer = null;
+		this.pageBuffer = null;
 		super.containerItemSetChange(event);
-		setCurrentPageFirstItemIndex(this.getCurrentPageFirstItemIndex());
+		setCurrentPageFirstItemIndex(getCurrentPageFirstItemIndex());
 	}
 
 	/**
@@ -2046,7 +2133,7 @@ public class Table extends Select implements Action.Container,
 	 */
 	public void containerPropertySetChange(
 			Container.PropertySetChangeEvent event) {
-		pageBuffer = null;
+		this.pageBuffer = null;
 		super.containerPropertySetChange(event);
 	}
 
@@ -2059,8 +2146,9 @@ public class Table extends Select implements Action.Container,
 	 */
 	public void setNewItemsAllowed(boolean allowNewOptions)
 			throws UnsupportedOperationException {
-		if (allowNewOptions)
+		if (allowNewOptions) {
 			throw new UnsupportedOperationException();
+		}
 	}
 
 	/**
@@ -2080,7 +2168,7 @@ public class Table extends Select implements Action.Container,
 	 * @see com.itmill.toolkit.data.Container.Ordered#nextItemId(java.lang.Object)
 	 */
 	public Object nextItemId(Object itemId) {
-		return ((Container.Ordered) items).nextItemId(itemId);
+		return ((Container.Ordered) this.items).nextItemId(itemId);
 	}
 
 	/**
@@ -2090,7 +2178,7 @@ public class Table extends Select implements Action.Container,
 	 * @see com.itmill.toolkit.data.Container.Ordered#prevItemId(java.lang.Object)
 	 */
 	public Object prevItemId(Object itemId) {
-		return ((Container.Ordered) items).prevItemId(itemId);
+		return ((Container.Ordered) this.items).prevItemId(itemId);
 	}
 
 	/**
@@ -2099,7 +2187,7 @@ public class Table extends Select implements Action.Container,
 	 * @see com.itmill.toolkit.data.Container.Ordered#firstItemId()
 	 */
 	public Object firstItemId() {
-		return ((Container.Ordered) items).firstItemId();
+		return ((Container.Ordered) this.items).firstItemId();
 	}
 
 	/**
@@ -2108,7 +2196,7 @@ public class Table extends Select implements Action.Container,
 	 * @see com.itmill.toolkit.data.Container.Ordered#lastItemId()
 	 */
 	public Object lastItemId() {
-		return ((Container.Ordered) items).lastItemId();
+		return ((Container.Ordered) this.items).lastItemId();
 	}
 
 	/**
@@ -2118,7 +2206,7 @@ public class Table extends Select implements Action.Container,
 	 * @see com.itmill.toolkit.data.Container.Ordered#isFirstId(java.lang.Object)
 	 */
 	public boolean isFirstId(Object itemId) {
-		return ((Container.Ordered) items).isFirstId(itemId);
+		return ((Container.Ordered) this.items).isFirstId(itemId);
 	}
 
 	/**
@@ -2128,7 +2216,7 @@ public class Table extends Select implements Action.Container,
 	 * @see com.itmill.toolkit.data.Container.Ordered#isLastId(java.lang.Object)
 	 */
 	public boolean isLastId(Object itemId) {
-		return ((Container.Ordered) items).isLastId(itemId);
+		return ((Container.Ordered) this.items).isLastId(itemId);
 	}
 
 	/**
@@ -2138,7 +2226,7 @@ public class Table extends Select implements Action.Container,
 	 */
 	public Object addItemAfter(Object previousItemId)
 			throws UnsupportedOperationException {
-		return ((Container.Ordered) items).addItemAfter(previousItemId);
+		return ((Container.Ordered) this.items).addItemAfter(previousItemId);
 	}
 
 	/**
@@ -2149,7 +2237,7 @@ public class Table extends Select implements Action.Container,
 	 */
 	public Item addItemAfter(Object previousItemId, Object newItemId)
 			throws UnsupportedOperationException {
-		return ((Container.Ordered) items).addItemAfter(previousItemId,
+		return ((Container.Ordered) this.items).addItemAfter(previousItemId,
 				newItemId);
 	}
 
@@ -2162,7 +2250,7 @@ public class Table extends Select implements Action.Container,
 	 * @see #isEditable
 	 */
 	public FieldFactory getFieldFactory() {
-		return fieldFactory;
+		return this.fieldFactory;
 	}
 
 	/**
@@ -2200,7 +2288,7 @@ public class Table extends Select implements Action.Container,
 	 * 
 	 */
 	public boolean isEditable() {
-		return editable;
+		return this.editable;
 	}
 
 	/**
@@ -2240,7 +2328,7 @@ public class Table extends Select implements Action.Container,
 			throws UnsupportedOperationException {
 		Container c = getContainerDataSource();
 		if (c instanceof Container.Sortable) {
-			int pageIndex = this.getCurrentPageFirstItemIndex();
+			int pageIndex = getCurrentPageFirstItemIndex();
 			((Container.Sortable) c).sort(propertyId, ascending);
 			setCurrentPageFirstItemIndex(pageIndex);
 		} else if (c != null) {
@@ -2257,8 +2345,9 @@ public class Table extends Select implements Action.Container,
 	 *             Container.Sortable
 	 */
 	public void sort() {
-		if (getSortContainerPropertyId() == null)
+		if (getSortContainerPropertyId() == null) {
 			return;
+		}
 		sort(new Object[] { this.sortContainerPropertyId },
 				new boolean[] { this.sortAscending });
 	}
@@ -2340,7 +2429,7 @@ public class Table extends Select implements Action.Container,
 	 * @return True iff sorting is disabled.
 	 */
 	public boolean isSortDisabled() {
-		return sortDisabled;
+		return this.sortDisabled;
 	}
 
 	/**
@@ -2365,7 +2454,7 @@ public class Table extends Select implements Action.Container,
 	 * @see com.itmill.toolkit.terminal.Sizeable#getHeightUnits()
 	 */
 	public int getHeightUnits() {
-		return heightUnit;
+		return this.heightUnit;
 	}
 
 	/**
@@ -2374,7 +2463,7 @@ public class Table extends Select implements Action.Container,
 	 * @see com.itmill.toolkit.terminal.Sizeable#getWidthUnits()
 	 */
 	public int getWidthUnits() {
-		return widthUnit;
+		return this.widthUnit;
 	}
 
 	/**
@@ -2395,8 +2484,9 @@ public class Table extends Select implements Action.Container,
 	 */
 	public void setWidthUnits(int units) {
 		if (units != Sizeable.UNITS_PIXELS
-				&& units != Sizeable.UNITS_PERCENTAGE)
+				&& units != Sizeable.UNITS_PERCENTAGE) {
 			throw new IllegalArgumentException();
+		}
 		this.widthUnit = units;
 	}
 
@@ -2407,7 +2497,7 @@ public class Table extends Select implements Action.Container,
 	 * @see com.itmill.toolkit.terminal.Sizeable#getHeight()
 	 */
 	public int getHeight() {
-		return height;
+		return this.height;
 	}
 
 	/**
@@ -2417,7 +2507,7 @@ public class Table extends Select implements Action.Container,
 	 * @see com.itmill.toolkit.terminal.Sizeable#getWidth()
 	 */
 	public int getWidth() {
-		return width;
+		return this.width;
 	}
 
 	/**
@@ -2451,9 +2541,10 @@ public class Table extends Select implements Action.Container,
 	 * @see com.itmill.toolkit.ui.Select#setLazyLoading(boolean)
 	 */
 	public void setLazyLoading(boolean useLazyLoading) {
-		if (useLazyLoading)
+		if (useLazyLoading) {
 			throw new UnsupportedOperationException(
 					"Lazy options loading is not supported by Table.");
+		}
 	}
 
 }

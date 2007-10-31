@@ -10,10 +10,10 @@ import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
 
 /**
- * Multiselect component with two lists: left side for available items and right side for
- * selected items.
+ * Multiselect component with two lists: left side for available items and right
+ * side for selected items.
  */
-public class TwinColSelect extends Select {
+public class TwinColSelect extends AbstractSelect {
 
 	/**
 	 * 

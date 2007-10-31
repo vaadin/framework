@@ -57,7 +57,7 @@ import com.itmill.toolkit.terminal.Resource;
  * @VERSION@
  * @since 3.0
  */
-public class Tree extends Select implements Container.Hierarchical,
+public class Tree extends AbstractSelect implements Container.Hierarchical,
 		Action.Container {
 
 	/* Static members ***************************************************** */
@@ -85,7 +85,7 @@ public class Tree extends Select implements Container.Hierarchical,
 	/**
 	 * Set of expanded nodes.
 	 */
-	private HashSet expanded = new HashSet();
+	private final HashSet expanded = new HashSet();
 
 	/**
 	 * List of action handlers.
@@ -156,7 +156,7 @@ public class Tree extends Select implements Container.Hierarchical,
 	 * @return true iff the item is expanded.
 	 */
 	public boolean isExpanded(Object itemId) {
-		return expanded.contains(itemId);
+		return this.expanded.contains(itemId);
 	}
 
 	/**
@@ -169,21 +169,24 @@ public class Tree extends Select implements Container.Hierarchical,
 	public boolean expandItem(Object itemId) {
 
 		// Succeeds if the node is already expanded
-		if (isExpanded(itemId))
+		if (isExpanded(itemId)) {
 			return true;
+		}
 
 		// Nodes that can not have children are not expandable
-		if (!areChildrenAllowed(itemId))
+		if (!areChildrenAllowed(itemId)) {
 			return false;
+		}
 
 		// Expands
-		expanded.add(itemId);
+		this.expanded.add(itemId);
 
-		expandedItemId = itemId;
-		if (initialPaint)
+		this.expandedItemId = itemId;
+		if (this.initialPaint) {
 			requestRepaint();
-		else
+		} else {
 			requestPartialRepaint();
+		}
 		fireExpandEvent(itemId);
 
 		return true;
@@ -191,12 +194,12 @@ public class Tree extends Select implements Container.Hierarchical,
 
 	public void requestRepaint() {
 		super.requestRepaint();
-		partialUpdate = false;
+		this.partialUpdate = false;
 	}
 
 	private void requestPartialRepaint() {
 		super.requestRepaint();
-		partialUpdate = true;
+		this.partialUpdate = true;
 	}
 
 	/**
@@ -240,11 +243,12 @@ public class Tree extends Select implements Container.Hierarchical,
 	public boolean collapseItem(Object itemId) {
 
 		// Succeeds if the node is already collapsed
-		if (!isExpanded(itemId))
+		if (!isExpanded(itemId)) {
 			return true;
+		}
 
 		// Collapse
-		expanded.remove(itemId);
+		this.expanded.remove(itemId);
 		requestRepaint();
 		fireCollapseEvent(itemId);
 
@@ -336,9 +340,9 @@ public class Tree extends Select implements Container.Hierarchical,
 		if (variables.containsKey("collapse")) {
 			String[] keys = (String[]) variables.get("collapse");
 			for (int i = 0; i < keys.length; i++) {
-				Object id = itemIdMapper.get(keys[i]);
+				Object id = this.itemIdMapper.get(keys[i]);
 				if (id != null && isExpanded(id)) {
-					expanded.remove(id);
+					this.expanded.remove(id);
 					fireCollapseEvent(id);
 				}
 			}
@@ -348,9 +352,10 @@ public class Tree extends Select implements Container.Hierarchical,
 		if (variables.containsKey("expand")) {
 			String[] keys = (String[]) variables.get("expand");
 			for (int i = 0; i < keys.length; i++) {
-				Object id = itemIdMapper.get(keys[i]);
-				if (id != null)
+				Object id = this.itemIdMapper.get(keys[i]);
+				if (id != null) {
 					expandItem(id);
+				}
 			}
 		}
 
@@ -363,13 +368,16 @@ public class Tree extends Select implements Container.Hierarchical,
 			StringTokenizer st = new StringTokenizer((String) variables
 					.get("action"), ",");
 			if (st.countTokens() == 2) {
-				Object itemId = itemIdMapper.get(st.nextToken());
-				Action action = (Action) actionMapper.get(st.nextToken());
+				Object itemId = this.itemIdMapper.get(st.nextToken());
+				Action action = (Action) this.actionMapper.get(st.nextToken());
 				if (action != null && containsId(itemId)
-						&& actionHandlers != null)
-					for (Iterator i = actionHandlers.iterator(); i.hasNext();)
+						&& this.actionHandlers != null) {
+					for (Iterator i = this.actionHandlers.iterator(); i
+							.hasNext();) {
 						((Action.Handler) i.next()).handleAction(action, this,
 								itemId);
+					}
+				}
 			}
 		}
 	}
@@ -380,53 +388,60 @@ public class Tree extends Select implements Container.Hierarchical,
 	 * @see com.itmill.toolkit.ui.AbstractComponent#paintContent(PaintTarget)
 	 */
 	public void paintContent(PaintTarget target) throws PaintException {
-		initialPaint = false;
+		this.initialPaint = false;
 
-		if (partialUpdate) {
+		if (this.partialUpdate) {
 			target.addAttribute("partialUpdate", true);
-			target.addAttribute("rootKey", itemIdMapper.key(expandedItemId));
+			target.addAttribute("rootKey", this.itemIdMapper
+					.key(this.expandedItemId));
 		} else {
 
 			// Focus control id
-			if (this.getFocusableId() > 0) {
-				target.addAttribute("focusid", this.getFocusableId());
+			if (getFocusableId() > 0) {
+				target.addAttribute("focusid", getFocusableId());
 			}
 
 			// The tab ordering number
-			if (this.getTabIndex() > 0)
-				target.addAttribute("tabindex", this.getTabIndex());
+			if (getTabIndex() > 0) {
+				target.addAttribute("tabindex", getTabIndex());
+			}
 
 			// Paint tree attributes
-			if (isSelectable())
+			if (isSelectable()) {
 				target.addAttribute("selectmode", (isMultiSelect() ? "multi"
 						: "single"));
-			else
+			} else {
 				target.addAttribute("selectmode", "none");
-			if (isNewItemsAllowed())
+			}
+			if (isNewItemsAllowed()) {
 				target.addAttribute("allownewitem", true);
+			}
 
 		}
 
 		// Initialize variables
 		Set actionSet = new LinkedHashSet();
 		String[] selectedKeys;
-		if (isMultiSelect())
+		if (isMultiSelect()) {
 			selectedKeys = new String[((Set) getValue()).size()];
-		else
+		} else {
 			selectedKeys = new String[(getValue() == null ? 0 : 1)];
+		}
 		int keyIndex = 0;
 		LinkedList expandedKeys = new LinkedList();
 
 		// Iterates through hierarchical tree using a stack of iterators
 		Stack iteratorStack = new Stack();
 		Collection ids;
-		if (partialUpdate)
-			ids = getChildren(expandedItemId);
-		else
+		if (this.partialUpdate) {
+			ids = getChildren(this.expandedItemId);
+		} else {
 			ids = rootItemIds();
+		}
 
-		if (ids != null)
+		if (ids != null) {
 			iteratorStack.push(ids.iterator());
+		}
 
 		while (!iteratorStack.isEmpty()) {
 
@@ -440,8 +455,9 @@ public class Tree extends Select implements Container.Hierarchical,
 				iteratorStack.pop();
 
 				// Closes node
-				if (!iteratorStack.isEmpty())
+				if (!iteratorStack.isEmpty()) {
 					target.endTag("node");
+				}
 			}
 
 			// Adds the item on current level
@@ -451,17 +467,19 @@ public class Tree extends Select implements Container.Hierarchical,
 				// Starts the item / node
 				boolean isNode = areChildrenAllowed(itemId)
 						&& hasChildren(itemId);
-				if (isNode)
+				if (isNode) {
 					target.startTag("node");
-				else
+				} else {
 					target.startTag("leaf");
+				}
 
 				// Adds the attributes
 				target.addAttribute("caption", getItemCaption(itemId));
 				Resource icon = getItemIcon(itemId);
-				if (icon != null)
+				if (icon != null) {
 					target.addAttribute("icon", getItemIcon(itemId));
-				String key = itemIdMapper.key(itemId);
+				}
+				String key = this.itemIdMapper.key(itemId);
 				target.addAttribute("key", key);
 				if (isSelected(itemId)) {
 					target.addAttribute("selected", true);
@@ -473,18 +491,19 @@ public class Tree extends Select implements Container.Hierarchical,
 				}
 
 				// Actions
-				if (actionHandlers != null) {
+				if (this.actionHandlers != null) {
 					ArrayList keys = new ArrayList();
-					for (Iterator ahi = actionHandlers.iterator(); ahi
+					for (Iterator ahi = this.actionHandlers.iterator(); ahi
 							.hasNext();) {
 						Action[] aa = ((Action.Handler) ahi.next()).getActions(
 								itemId, this);
-						if (aa != null)
+						if (aa != null) {
 							for (int ai = 0; ai < aa.length; ai++) {
-								String akey = actionMapper.key(aa[ai]);
+								String akey = this.actionMapper.key(aa[ai]);
 								actionSet.add(aa[ai]);
 								keys.add(akey);
 							}
+						}
 					}
 					target.addAttribute("al", keys.toArray());
 				}
@@ -494,10 +513,11 @@ public class Tree extends Select implements Container.Hierarchical,
 						&& areChildrenAllowed(itemId)) {
 					iteratorStack.push(getChildren(itemId).iterator());
 				} else {
-					if (isNode)
+					if (isNode) {
 						target.endTag("node");
-					else
+					} else {
 						target.endTag("leaf");
+					}
 				}
 			}
 		}
@@ -509,18 +529,20 @@ public class Tree extends Select implements Container.Hierarchical,
 			for (Iterator i = actionSet.iterator(); i.hasNext();) {
 				Action a = (Action) i.next();
 				target.startTag("action");
-				if (a.getCaption() != null)
+				if (a.getCaption() != null) {
 					target.addAttribute("caption", a.getCaption());
-				if (a.getIcon() != null)
+				}
+				if (a.getIcon() != null) {
 					target.addAttribute("icon", a.getIcon());
-				target.addAttribute("key", actionMapper.key(a));
+				}
+				target.addAttribute("key", this.actionMapper.key(a));
 				target.endTag("action");
 			}
 			target.endTag("actions");
 		}
 
-		if (partialUpdate) {
-			partialUpdate = false;
+		if (this.partialUpdate) {
+			this.partialUpdate = false;
 		} else {
 			// Selected
 			target.addVariable(this, "selected", selectedKeys);
@@ -542,7 +564,7 @@ public class Tree extends Select implements Container.Hierarchical,
 	 * @see com.itmill.toolkit.data.Container.Hierarchical#areChildrenAllowed(Object)
 	 */
 	public boolean areChildrenAllowed(Object itemId) {
-		return ((Container.Hierarchical) items).areChildrenAllowed(itemId);
+		return ((Container.Hierarchical) this.items).areChildrenAllowed(itemId);
 	}
 
 	/**
@@ -551,7 +573,7 @@ public class Tree extends Select implements Container.Hierarchical,
 	 * @see com.itmill.toolkit.data.Container.Hierarchical#getChildren(Object)
 	 */
 	public Collection getChildren(Object itemId) {
-		return ((Container.Hierarchical) items).getChildren(itemId);
+		return ((Container.Hierarchical) this.items).getChildren(itemId);
 	}
 
 	/**
@@ -560,7 +582,7 @@ public class Tree extends Select implements Container.Hierarchical,
 	 * @see com.itmill.toolkit.data.Container.Hierarchical#getParent(Object)
 	 */
 	public Object getParent(Object itemId) {
-		return ((Container.Hierarchical) items).getParent(itemId);
+		return ((Container.Hierarchical) this.items).getParent(itemId);
 	}
 
 	/**
@@ -570,7 +592,7 @@ public class Tree extends Select implements Container.Hierarchical,
 	 * @see com.itmill.toolkit.data.Container.Hierarchical#hasChildren(Object)
 	 */
 	public boolean hasChildren(Object itemId) {
-		return ((Container.Hierarchical) items).hasChildren(itemId);
+		return ((Container.Hierarchical) this.items).hasChildren(itemId);
 	}
 
 	/**
@@ -579,7 +601,7 @@ public class Tree extends Select implements Container.Hierarchical,
 	 * @see com.itmill.toolkit.data.Container.Hierarchical#isRoot(Object)
 	 */
 	public boolean isRoot(Object itemId) {
-		return ((Container.Hierarchical) items).isRoot(itemId);
+		return ((Container.Hierarchical) this.items).isRoot(itemId);
 	}
 
 	/**
@@ -588,7 +610,7 @@ public class Tree extends Select implements Container.Hierarchical,
 	 * @see com.itmill.toolkit.data.Container.Hierarchical#rootItemIds()
 	 */
 	public Collection rootItemIds() {
-		return ((Container.Hierarchical) items).rootItemIds();
+		return ((Container.Hierarchical) this.items).rootItemIds();
 	}
 
 	/**
@@ -598,10 +620,11 @@ public class Tree extends Select implements Container.Hierarchical,
 	 *      boolean)
 	 */
 	public boolean setChildrenAllowed(Object itemId, boolean areChildrenAllowed) {
-		boolean success = ((Container.Hierarchical) items).setChildrenAllowed(
-				itemId, areChildrenAllowed);
-		if (success)
+		boolean success = ((Container.Hierarchical) this.items)
+				.setChildrenAllowed(itemId, areChildrenAllowed);
+		if (success) {
 			fireValueChange(false);
+		}
 		return success;
 	}
 
@@ -612,10 +635,11 @@ public class Tree extends Select implements Container.Hierarchical,
 	 *      Object)
 	 */
 	public boolean setParent(Object itemId, Object newParentId) {
-		boolean success = ((Container.Hierarchical) items).setParent(itemId,
-				newParentId);
-		if (success)
+		boolean success = ((Container.Hierarchical) this.items).setParent(
+				itemId, newParentId);
+		if (success) {
 			requestRepaint();
+		}
 		return success;
 	}
 
@@ -631,11 +655,12 @@ public class Tree extends Select implements Container.Hierarchical,
 		// Assure that the data source is ordered by making unordered
 		// containers ordered by wrapping them
 		if (Container.Hierarchical.class.isAssignableFrom(newDataSource
-				.getClass()))
+				.getClass())) {
 			super.setContainerDataSource(newDataSource);
-		else
+		} else {
 			super.setContainerDataSource(new ContainerHierarchicalWrapper(
 					newDataSource));
+		}
 	}
 
 	/* Expand event and listener ****************************************** */
@@ -657,7 +682,7 @@ public class Tree extends Select implements Container.Hierarchical,
 		 */
 		private static final long serialVersionUID = 3832624001804481075L;
 
-		private Object expandedItemId;
+		private final Object expandedItemId;
 
 		/**
 		 * New instance of options change event
@@ -747,7 +772,7 @@ public class Tree extends Select implements Container.Hierarchical,
 		 */
 		private static final long serialVersionUID = 3257009834783290160L;
 
-		private Object collapsedItemId;
+		private final Object collapsedItemId;
 
 		/**
 		 * New instance of options change event.
@@ -767,7 +792,7 @@ public class Tree extends Select implements Container.Hierarchical,
 		 * @return the collapsed item id.
 		 */
 		public Object getItemId() {
-			return collapsedItemId;
+			return this.collapsedItemId;
 		}
 	}
 
@@ -831,13 +856,13 @@ public class Tree extends Select implements Container.Hierarchical,
 
 		if (actionHandler != null) {
 
-			if (actionHandlers == null) {
-				actionHandlers = new LinkedList();
-				actionMapper = new KeyMapper();
+			if (this.actionHandlers == null) {
+				this.actionHandlers = new LinkedList();
+				this.actionMapper = new KeyMapper();
 			}
 
-			if (!actionHandlers.contains(actionHandler)) {
-				actionHandlers.add(actionHandler);
+			if (!this.actionHandlers.contains(actionHandler)) {
+				this.actionHandlers.add(actionHandler);
 				requestRepaint();
 			}
 		}
@@ -850,13 +875,14 @@ public class Tree extends Select implements Container.Hierarchical,
 	 */
 	public void removeActionHandler(Action.Handler actionHandler) {
 
-		if (actionHandlers != null && actionHandlers.contains(actionHandler)) {
+		if (this.actionHandlers != null
+				&& this.actionHandlers.contains(actionHandler)) {
 
-			actionHandlers.remove(actionHandler);
+			this.actionHandlers.remove(actionHandler);
 
-			if (actionHandlers.isEmpty()) {
-				actionHandlers = null;
-				actionMapper = null;
+			if (this.actionHandlers.isEmpty()) {
+				this.actionHandlers = null;
+				this.actionMapper = null;
 			}
 
 			requestRepaint();
@@ -875,8 +901,9 @@ public class Tree extends Select implements Container.Hierarchical,
 		// Iterates trough hierarchical tree using a stack of iterators
 		Stack iteratorStack = new Stack();
 		Collection ids = rootItemIds();
-		if (ids != null)
+		if (ids != null) {
 			iteratorStack.push(ids.iterator());
+		}
 		while (!iteratorStack.isEmpty()) {
 
 			// Gets the iterator for current tree level
@@ -914,8 +941,9 @@ public class Tree extends Select implements Container.Hierarchical,
 	 */
 	public void setNewItemsAllowed(boolean allowNewOptions)
 			throws UnsupportedOperationException {
-		if (allowNewOptions)
+		if (allowNewOptions) {
 			throw new UnsupportedOperationException();
+		}
 	}
 
 	/**
@@ -936,9 +964,10 @@ public class Tree extends Select implements Container.Hierarchical,
 	 * @see com.itmill.toolkit.ui.Select#setLazyLoading(boolean)
 	 */
 	public void setLazyLoading(boolean useLazyLoading) {
-		if (useLazyLoading)
+		if (useLazyLoading) {
 			throw new UnsupportedOperationException(
 					"Lazy options loading is not supported by Tree.");
+		}
 	}
 
 }
