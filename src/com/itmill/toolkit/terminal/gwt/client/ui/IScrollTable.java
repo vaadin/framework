@@ -111,6 +111,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 	private boolean initialContentReceived = false;
 	private Element scrollPositionElement;
 	private FlowPanel panel;
+	private boolean enabled;
 
 	public IScrollTable() {
 
@@ -130,6 +131,8 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 		if (client.updateComponent(this, uidl, true))
 			return;
+
+		this.enabled = !uidl.hasAttribute("disabled");
 
 		this.client = client;
 		this.paintableId = uidl.getStringAttribute("id");
@@ -559,12 +562,15 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 
 	public void iLayout() {
 		if (height != null) {
-			
-			if(height.equals("100%")) {
-				// we define height in pixels with 100% not to include borders
+			if (height.equals("100%")) {
+				/*
+				 * We define height in pixels with 100% not to include borders
+				 * which is what users usually want. So recalculate pixels via
+				 * setHeight.
+				 */
 				setHeight(height);
 			}
-			
+
 			int contentH = (DOM.getElementPropertyInt(getElement(),
 					"clientHeight") - tHead.getOffsetHeight());
 			if (contentH < 0)
@@ -587,6 +593,10 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 	public void onScroll(Widget widget, int scrollLeft, int scrollTop) {
 		if (!initializedAndAttached)
 			return;
+		if (!enabled) {
+			// TODO cancel scroll (scrorll back or something)
+			return;
+		}
 
 		rowRequestHandler.cancel();
 
@@ -690,11 +700,10 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 		private int reqFirstRow = 0;
 		private int reqRows = 0;
 
-		
 		public void deferRowFetch() {
 			deferRowFetch(250);
 		}
-		
+
 		public void deferRowFetch(int msec) {
 			if (reqRows > 0 && reqFirstRow < totalRows) {
 				schedule(msec);
@@ -856,13 +865,15 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 		 * Handle column reordering.
 		 */
 		public void onBrowserEvent(Event event) {
-			if (isResizing
-					|| DOM.compare(DOM.eventGetTarget(event), colResizeWidget)) {
-				onResizeEvent(event);
-			} else {
-				handleCaptionEvent(event);
+			if (enabled) {
+				if (isResizing
+						|| DOM.compare(DOM.eventGetTarget(event),
+								colResizeWidget)) {
+					onResizeEvent(event);
+				} else {
+					handleCaptionEvent(event);
+				}
 			}
-			super.onBrowserEvent(event);
 		}
 
 		private void createFloatingCopy() {
@@ -965,7 +976,9 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 						createFloatingCopy();
 						moved = true;
 					}
-					int x = DOM.eventGetClientX(event);
+					int x = DOM.eventGetClientX(event)
+							+ DOM.getElementPropertyInt(tHead.hTableWrapper,
+									"scrollLeft");
 					int slotX = headerX;
 					closestSlot = colIndex;
 					int closestDistance = -1;
@@ -987,7 +1000,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 					}
 					tHead.focusSlot(closestSlot);
 
-					updateFloatingCopysPosition(x, -1);
+					updateFloatingCopysPosition(DOM.eventGetClientX(event), -1);
 					ApplicationConnection.getConsole().log("" + closestSlot);
 				}
 				break;
@@ -1273,13 +1286,14 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 		}
 
 		public void onBrowserEvent(Event event) {
-			super.onBrowserEvent(event);
-			if (DOM.compare(DOM.eventGetTarget(event), columnSelector)) {
-				int left = DOM.getAbsoluteLeft(columnSelector);
-				int top = DOM.getAbsoluteTop(columnSelector)
-						+ DOM.getElementPropertyInt(columnSelector,
-								"offsetHeight");
-				client.getContextMenu().showAt(this, left, top);
+			if (enabled) {
+				if (DOM.compare(DOM.eventGetTarget(event), columnSelector)) {
+					int left = DOM.getAbsoluteLeft(columnSelector);
+					int top = DOM.getAbsoluteTop(columnSelector)
+							+ DOM.getElementPropertyInt(columnSelector,
+									"offsetHeight");
+					client.getContextMenu().showAt(this, left, top);
+				}
 			}
 		}
 
@@ -1693,7 +1707,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 			 * @param el
 			 *            element where to attach contenxt menu event
 			 */
-			private native void attachContextMenuEvent(Element el) 
+			private native void attachContextMenuEvent(Element el)
 			/*-{
 				var row = this;
 				el.oncontextmenu = function(e) {
@@ -1895,7 +1909,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 
 	public void setHeight(String height) {
 		// workaround very common 100% height problem - extract borders
-		if(height.equals("100%")) {
+		if (height.equals("100%")) {
 			final int borders = getBorderSpace();
 			Element elem = getElement();
 			Element parentElem = DOM.getParent(elem);
@@ -1903,7 +1917,8 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 			// put table away from flow for a moment
 			DOM.setStyleAttribute(getElement(), "position", "absolute");
 			// get containers natural space for table
-			int availPixels = DOM.getElementPropertyInt(parentElem, "clientHeight");
+			int availPixels = DOM.getElementPropertyInt(parentElem,
+					"clientHeight");
 			// put table back to flow
 			DOM.setStyleAttribute(getElement(), "position", "static");
 			// set 100% height with borders
@@ -1916,7 +1931,8 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 
 	private int getBorderSpace() {
 		Element el = getElement();
-		return DOM.getElementPropertyInt(el, "offsetHeight") - DOM.getElementPropertyInt(el, "clientHeight");
+		return DOM.getElementPropertyInt(el, "offsetHeight")
+				- DOM.getElementPropertyInt(el, "clientHeight");
 	}
 
 }
