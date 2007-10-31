@@ -102,9 +102,9 @@ public class IFilterSelect extends Composite implements Paintable,
 			Element root = getElement();
 
 			DOM.setInnerHTML(up, "<span>Prev</span>");
-			DOM.sinkEvents(DOM.getChild(up, 0), Event.ONCLICK);
+			DOM.sinkEvents(up, Event.ONCLICK);
 			DOM.setInnerHTML(down, "<span>Next</span>");
-			DOM.sinkEvents(DOM.getChild(down, 0), Event.ONCLICK);
+			DOM.sinkEvents(down, Event.ONCLICK);
 			DOM.insertChild(root, up, 0);
 			DOM.appendChild(root, down);
 			DOM.appendChild(root, status);
@@ -259,9 +259,14 @@ public class IFilterSelect extends Composite implements Paintable,
 		}
 	}
 
+	public static final int FILTERINGMODE_OFF = 0;
+	public static final int FILTERINGMODE_STARTSWITH = 1;
+	public static final int FILTERINGMODE_CONTAINS = 2;
+
+	
 	private static final String CLASSNAME = "i-filterselect";
 
-	public static final int PAGELENTH = 20;
+	public static final int PAGELENTH = 15;
 
 	private final FlowPanel panel = new FlowPanel();
 
@@ -296,6 +301,7 @@ public class IFilterSelect extends Composite implements Paintable,
 	private boolean clientSideFiltering;
 
 	private ArrayList allSuggestions;
+	private int totalMatches;
 
 	public IFilterSelect() {
 		selectedItemIcon.setVisible(false);
@@ -366,7 +372,7 @@ public class IFilterSelect extends Composite implements Paintable,
 		else
 			immediate = false;
 
-		if (uidl.hasVariable("page")) {
+		if (true) {
 			this.suggestionPopup.setPagingEnabled(true);
 			clientSideFiltering = false;
 		} else {
@@ -376,7 +382,9 @@ public class IFilterSelect extends Composite implements Paintable,
 
 		currentSuggestions.clear();
 		UIDL options = uidl.getChildUIDL(0);
-		totalSuggestions = options.getIntAttribute("totalMatches");
+		totalSuggestions = uidl.getIntAttribute("totalitems");
+		totalMatches = uidl.getIntAttribute("totalMatches");
+		
 		String captions = "";
 		if (clientSideFiltering) {
 			allSuggestions = new ArrayList();
