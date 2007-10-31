@@ -422,6 +422,8 @@ public class ApplicationServlet extends HttpServlet {
 		if (is == null) {
 			// try if requested file is found from classloader
 			try {
+				// strip leading "/" otherwise stream from JAR wont work
+				filename = filename.substring(1);
 				is = this.classLoader.getResourceAsStream(filename);
 			} catch (Exception e) {
 				e.printStackTrace();
