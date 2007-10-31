@@ -586,9 +586,8 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 	}
 
 	/**
-	 * This method has logick which rows needs to be requested from server when
+	 * This method has logic which rows needs to be requested from server when
 	 * user scrolls
-	 * 
 	 */
 	public void onScroll(Widget widget, int scrollLeft, int scrollTop) {
 		if (!initializedAndAttached)
