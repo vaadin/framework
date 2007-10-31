@@ -422,19 +422,13 @@ public class ApplicationServlet extends HttpServlet {
 		if (is == null) {
 			// try if requested file is found from classloader
 			try {
-				// ClassLoader cld = Thread.currentThread()
-				// .getContextClassLoader();
-				// if (cld == null)
-				// throw new ClassNotFoundException(
-				// "Could not create ClassLoader.");
-				// is = cld.getResourceAsStream(filename);
 				is = this.classLoader.getResourceAsStream(filename);
 			} catch (Exception e) {
-				System.err
-						.println("Requested resource ["
+				// cannot serve requested file
+				Log
+						.warn("Requested resource ["
 								+ filename
 								+ "] not found from filesystem or through class loader.");
-				// cannot serve requested file
 				response.setStatus(404);
 				return;
 			}
