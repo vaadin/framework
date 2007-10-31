@@ -186,6 +186,7 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
 			pixelPosition = DOM.getElementPropertyInt(splitter, "offsetTop");
 
 			// reposition splitter in case it is out of box
+			int pixelSize = getSplitterSize();
 			if (pixelPosition > 0
 					&& pixelPosition + getSplitterSize() > wholeSize) {
 				pixelPosition = wholeSize - getSplitterSize();
@@ -326,8 +327,17 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
 	private int getSplitterSize() {
 		if (splitterSize < 0) {
 			if (isAttached()) {
-				splitterSize = DOM.getElementPropertyInt(splitter,
-						"offsetWidth");
+				switch (orientation) {
+				case ORIENTATION_HORIZONTAL:
+					splitterSize = DOM.getElementPropertyInt(splitter,
+							"offsetWidth");
+					break;
+
+				default:
+					splitterSize = DOM.getElementPropertyInt(splitter,
+							"offsetHeight");
+					break;
+				}
 			}
 		}
 		return splitterSize;
