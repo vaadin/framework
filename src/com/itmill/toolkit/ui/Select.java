@@ -234,22 +234,25 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
 			this.filteredOptions = new LinkedList(getItemIds());
 			return this.filteredOptions;
 		}
+
 		if (this.filterstring.equals(this.prevfilterstring)) {
 			return this.filteredOptions;
 		}
 
 		Collection items;
-		if (this.filterstring.startsWith(this.prevfilterstring)) {
-			items = this.filteredOptions;
+		if (prevfilterstring != null
+				&& filterstring.startsWith(this.prevfilterstring)) {
+			items = filteredOptions;
 		} else {
 			items = getItemIds();
 		}
+		prevfilterstring = filterstring;
 
 		this.filteredOptions = new LinkedList();
 		for (Iterator it = items.iterator(); it.hasNext();) {
 			Object itemId = it.next();
-			String caption = getItemCaption(it);
-			if (caption != null || caption.equals("")) {
+			String caption = getItemCaption(itemId);
+			if (caption == null || caption.equals("")) {
 				continue;
 			}
 			switch (this.filteringMode) {
