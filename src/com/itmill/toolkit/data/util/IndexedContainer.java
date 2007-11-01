@@ -54,7 +54,7 @@ import com.itmill.toolkit.data.Property;
 
 public class IndexedContainer implements Container, Container.Indexed,
 		Container.ItemSetChangeNotifier, Container.PropertySetChangeNotifier,
-		Property.ValueChangeNotifier, Container.Sortable, Comparator, Cloneable {
+		Property.ValueChangeNotifier, Container.Sortable, Comparator, Cloneable, Container.Filterable {
 
 	/* Internal structure *************************************************** */
 
@@ -62,6 +62,9 @@ public class IndexedContainer implements Container, Container.Indexed,
 	 * Linked list of ordered Item IDs.
 	 */
 	private ArrayList itemIds = new ArrayList();
+	
+	/** List of item ids that passes the filtering */
+	private LinkedHashSet filteredItemIds = null;
 
 	/**
 	 * Linked list of ordered Property IDs.
@@ -117,6 +120,9 @@ public class IndexedContainer implements Container, Container.Indexed,
 	 * Temporary store for sorting direction.
 	 */
 	private boolean[] sortDirection;
+	
+	/** Filters that are applied to the container to limit the items visible in it */
+	private HashSet filters;	
 
 	/* Container constructors *********************************************** */
 
@@ -135,7 +141,8 @@ public class IndexedContainer implements Container, Container.Indexed,
 
 	/**
 	 * Gets the Item with the given Item ID from the list. If the list does not
-	 * contain the requested Item, <code>null</code> is returned.
+	 * contain the requested Item (or it is filtered to be invisible), 
+	 * <code>null</code> is returned.
 	 * 
 	 * @param itemId
 	 *            the ID of the Item to retrieve.
@@ -143,7 +150,7 @@ public class IndexedContainer implements Container, Container.Indexed,
 	 *         not found in the list
 	 */
 	public Item getItem(Object itemId) {
-		if (items.containsKey(itemId))
+		if (items.containsKey(itemId) && (filteredItemIds == null || filteredItemIds.contains(itemId)))
 			return new IndexedContainerItem(itemId);
 		return null;
 	}
@@ -155,6 +162,7 @@ public class IndexedContainer implements Container, Container.Indexed,
 	 * @return unmodifiable collection of Item IDs
 	 */
 	public Collection getItemIds() {
+		if (filteredItemIds != null) return Collections.unmodifiableCollection(filteredItemIds);
 		return Collections.unmodifiableCollection(itemIds);
 	}
 
@@ -194,8 +202,10 @@ public class IndexedContainer implements Container, Container.Indexed,
 	 *      Object)
 	 */
 	public Property getContainerProperty(Object itemId, Object propertyId) {
-		if (!items.containsKey(itemId))
-			return null;
+		if (filteredItemIds == null) {
+			if (!items.containsKey(itemId)) return null;
+		} else if (!filteredItemIds.contains(itemId)) return null;
+			
 		return new IndexedContainerProperty(itemId, propertyId);
 	}
 
@@ -205,7 +215,8 @@ public class IndexedContainer implements Container, Container.Indexed,
 	 * @return number of Items in the list
 	 */
 	public int size() {
-		return itemIds.size();
+		if (filteredItemIds == null) return itemIds.size();
+		return filteredItemIds.size();
 	}
 
 	/**
@@ -217,6 +228,7 @@ public class IndexedContainer implements Container, Container.Indexed,
 	 *         <code>false</code> if not
 	 */
 	public boolean containsId(Object itemId) {
+		if (filteredItemIds != null) return filteredItemIds.contains(itemId);
 		return items.containsKey(itemId);
 	}
 
@@ -274,6 +286,7 @@ public class IndexedContainer implements Container, Container.Indexed,
 		// Removes all Items
 		itemIds.clear();
 		items.clear();
+		if (filteredItemIds != null) filteredItemIds.clear();
 
 		// Sends a change event
 		fireContentsChange();
@@ -321,11 +334,15 @@ public class IndexedContainer implements Container, Container.Indexed,
 		// Adds the Item to container
 		itemIds.add(itemId);
 		items.put(itemId, new Hashtable());
+		Item item = getItem(itemId);
+		if (filteredItemIds != null)
+			if (passesFilters(item))
+				filteredItemIds.add(itemId);
 
 		// Sends the event
 		fireContentsChange();
 
-		return getItem(itemId);
+		return item;
 	}
 
 	/**
@@ -341,6 +358,7 @@ public class IndexedContainer implements Container, Container.Indexed,
 		if (items.remove(itemId) == null)
 			return false;
 		itemIds.remove(itemId);
+		if (filteredItemIds != null) filteredItemIds.remove(itemId);
 
 		fireContentsChange();
 
@@ -385,8 +403,10 @@ public class IndexedContainer implements Container, Container.Indexed,
 	 */
 	public Object firstItemId() {
 		try {
+			if (filteredItemIds != null) return filteredItemIds.iterator().next();
 			return itemIds.get(0);
 		} catch (IndexOutOfBoundsException e) {
+		} catch (NoSuchElementException e) {
 		}
 		return null;
 	}
@@ -398,6 +418,12 @@ public class IndexedContainer implements Container, Container.Indexed,
 	 */
 	public Object lastItemId() {
 		try {
+			if (filteredItemIds != null) {
+				Iterator i=filteredItemIds.iterator();
+				Object last = null;
+				while (i.hasNext()) last = i.next();
+				return last;
+			}
 			return itemIds.get(itemIds.size() - 1);
 		} catch (IndexOutOfBoundsException e) {
 		}
@@ -414,6 +440,14 @@ public class IndexedContainer implements Container, Container.Indexed,
 	 * @return ID of the next Item or <code>null</code>
 	 */
 	public Object nextItemId(Object itemId) {
+		if (filteredItemIds != null) {
+			if (!filteredItemIds.contains(itemId)) return null;
+			Iterator i=filteredItemIds.iterator();
+			if (itemId == null) return null;
+			while (i.hasNext() && !itemId.equals(i.next()));
+			if (i.hasNext()) return i.next();
+			return null;
+		}
 		try {
 			return itemIds.get(itemIds.indexOf(itemId) + 1);
 		} catch (IndexOutOfBoundsException e) {
@@ -431,6 +465,15 @@ public class IndexedContainer implements Container, Container.Indexed,
 	 * @return ID of the previous Item or <code>null</code>
 	 */
 	public Object prevItemId(Object itemId) {
+		if (filteredItemIds != null) {
+			if (!filteredItemIds.contains(itemId)) return null;
+			Iterator i=filteredItemIds.iterator();
+			if (itemId == null) return null;
+			Object prev = null;
+			Object current;
+			while (i.hasNext() && !itemId.equals(current = i.next())) prev = current;
+			return prev;
+		}
 		try {
 			return itemIds.get(itemIds.indexOf(itemId) - 1);
 		} catch (IndexOutOfBoundsException e) {
@@ -448,6 +491,14 @@ public class IndexedContainer implements Container, Container.Indexed,
 	 *         <code>false</code> if not
 	 */
 	public boolean isFirstId(Object itemId) {
+		if (filteredItemIds != null) {
+			try {
+			Object first = filteredItemIds.iterator().next();
+			return (itemId != null && itemId.equals(first));
+			} catch (NoSuchElementException e) {
+				return false;
+			}
+		}
 		return (size() >= 1 && itemIds.get(0).equals(itemId));
 	}
 
@@ -461,6 +512,15 @@ public class IndexedContainer implements Container, Container.Indexed,
 	 *         <code>false</code> if not
 	 */
 	public boolean isLastId(Object itemId) {
+		if (filteredItemIds != null) {
+			try {
+				Object last = null;
+				for (Iterator i=filteredItemIds.iterator(); i.hasNext();) last = i.next();
+				return (itemId != null && itemId.equals(last));
+			} catch (NoSuchElementException e) {
+				return false;
+			}
+		}
 		int s = size();
 		return (s >= 1 && itemIds.get(s - 1).equals(itemId));
 	}
@@ -507,6 +567,18 @@ public class IndexedContainer implements Container, Container.Indexed,
 	 *            Index of the requested ID in the container.
 	 */
 	public Object getIdByIndex(int index) {
+		
+		if (filteredItemIds != null) {
+			if (index<0) throw new IndexOutOfBoundsException();
+			try {
+				Iterator i = filteredItemIds.iterator();
+				while (index-- > 0) i.next();
+				return i.next();
+			} catch (NoSuchElementException e) { 
+				throw new IndexOutOfBoundsException();
+			}
+		}
+		
 		return itemIds.get(index);
 	}
 
@@ -519,6 +591,16 @@ public class IndexedContainer implements Container, Container.Indexed,
 	 *            ID of an Item in the collection
 	 */
 	public int indexOfId(Object itemId) {
+		if (filteredItemIds != null) {
+			int index=0;
+			if (itemId == null) return -1;
+			try {
+				for (Iterator i=filteredItemIds.iterator(); itemId.equals(i.next());) index++;
+				return index;
+			} catch (NoSuchElementException e) { 
+				return -1;
+			}
+		}
 		return itemIds.indexOf(itemId);
 	}
 
@@ -535,8 +617,10 @@ public class IndexedContainer implements Container, Container.Indexed,
 		itemIds.add(index, newItemId);
 		items.put(newItemId, new Hashtable());
 
-		// Sends the event
-		fireContentsChange();
+		if (filteredItemIds != null)
+			updateContainerFiltering();
+		else
+			fireContentsChange();
 
 		return getItem(newItemId);
 	}
@@ -1233,7 +1317,8 @@ public class IndexedContainer implements Container, Container.Indexed,
 
 		// Sort
 		Collections.sort(this.itemIds, this);
-		fireContentsChange();
+		if (filteredItemIds != null) updateContainerFiltering();
+		else fireContentsChange();
 
 		// Remove temporary references
 		sortPropertyId = null;
@@ -1345,6 +1430,10 @@ public class IndexedContainer implements Container, Container.Indexed,
 				.clone()
 				: null;
 		nc.types = this.types != null ? (Hashtable) this.types.clone() : null;
+		
+		nc.filters = this.filters == null ? null : (HashSet) this.filters.clone();
+		
+		nc.filteredItemIds = this.filteredItemIds == null ? null : (LinkedHashSet) this.filteredItemIds.clone();
 
 		// Clone property-values
 		if (this.items == null)
@@ -1374,6 +1463,9 @@ public class IndexedContainer implements Container, Container.Indexed,
 		// Checks the properties one by one
 		if (itemIds != o.itemIds && o.itemIds != null
 				&& !o.itemIds.equals(this.itemIds))
+			return false;
+		if (filters != o.filters && o.filters != null
+				&& !o.filters.equals(this.filters))
 			return false;
 		if (items != o.items && o.items != null && !o.items.equals(this.items))
 			return false;
@@ -1424,6 +1516,7 @@ public class IndexedContainer implements Container, Container.Indexed,
 		// The hash-code is calculated as combination hash of the members
 		return (this.itemIds != null ? this.itemIds.hashCode() : 0)
 				^ (this.items != null ? this.items.hashCode() : 0)
+				^ (this.filters != null ? this.filters.hashCode() : 0)
 				^ (this.itemSetChangeListeners != null ? this.itemSetChangeListeners
 						.hashCode()
 						: 0)
@@ -1444,6 +1537,106 @@ public class IndexedContainer implements Container, Container.Indexed,
 				^ (this.types != null ? this.types.hashCode() : 0)
 				^ (this.sortDirection != null ? this.sortDirection.hashCode()
 						: 0);
+	}
+
+	private class Filter {
+		Object propertyId;
+		String filterString;
+		boolean ignoreCase;
+		boolean onlyMatchPrefix;
+		Filter(Object propertyId, String filterString, boolean ignoreCase, boolean onlyMatchPrefix) {
+			this.propertyId = propertyId;;
+			this.filterString = filterString;
+			this.ignoreCase = ignoreCase;
+			this.onlyMatchPrefix = onlyMatchPrefix;
+		}
+		public boolean equals(Object obj) {
+			
+			// Only ones of the objects of the same class can be equal
+			if (!(obj instanceof Filter))
+				return false;
+			Filter o = (Filter) obj;
+
+			// Checks the properties one by one
+			if (propertyId != o.propertyId && o.propertyId != null
+					&& !o.propertyId.equals(this.propertyId))
+				return false;
+			if (filterString != o.filterString && o.filterString != null
+					&& !o.filterString.equals(this.filterString))
+				return false;
+			if (ignoreCase!=o.ignoreCase)
+				return false;
+			if (onlyMatchPrefix!=o.onlyMatchPrefix)
+				return false;
+
+			return true;
+		}
+		public int hashCode() {
+			return (this.propertyId != null ? this.propertyId.hashCode() : 0)
+			^ (this.filterString != null ? this.filterString.hashCode() : 0);
+		}
+		
+	}
+	
+	public void addContainerFilter(Object propertyId, String filterString, boolean ignoreCase, boolean onlyMatchPrefix) {
+		if (filters == null) filters = new HashSet();
+		filters.add(new Filter(propertyId,  filterString,  ignoreCase,  onlyMatchPrefix));
+		updateContainerFiltering();
+	}
+
+	public void removeAllContainerFilters() {
+		if (filters == null) return;
+		filters.clear();
+		updateContainerFiltering();
+	}
+
+	public void removeContainerFilters(Object propertyId) {
+		if (filters == null || propertyId == null) return;
+		for (Iterator i=filters.iterator(); i.hasNext();) {
+			Filter f = (Filter) i.next();
+			if (propertyId.equals(f.propertyId)) i.remove();
+		}
+		updateContainerFiltering();
+	}
+	
+	private void updateContainerFiltering() {
+		
+		// Clearing filters?
+		if (filters == null || filters.isEmpty()) {
+			filters = null;
+			filteredItemIds = null;
+			return;
+		}
+		
+		// Reset filteres list
+		if (filteredItemIds == null) filteredItemIds =  new LinkedHashSet(); 
+		else filteredItemIds.clear();
+		
+		// Filter
+		for (Iterator i=itemIds.iterator(); i.hasNext();) {
+			Object id = i.next();
+			if (passesFilters(new IndexedContainerItem(id))) filteredItemIds.add(id);
+		}
+		
+		fireContentsChange();
+	}
+	
+	private boolean passesFilters(Item item) {
+		if (filters == null) return true;
+		if (item == null) return false;
+		for (Iterator i=filters.iterator(); i.hasNext();) {
+			Filter f = (Filter) i.next();
+			String s1 = f.ignoreCase ? f.filterString.toLowerCase() : f.filterString;
+			Property p = item.getItemProperty(f.propertyId);
+			if (p==null) return false;
+			String s2 = f.ignoreCase ? p.toString().toLowerCase() : p.toString();
+			if (f.onlyMatchPrefix) {
+				if (s2.indexOf(s1) != 0) return false;
+			} else {
+				if (s2.indexOf(s1) < 0) return false;
+			}
+		}
+		return true;
 	}
 
 }
