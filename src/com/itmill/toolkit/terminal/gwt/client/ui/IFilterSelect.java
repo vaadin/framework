@@ -27,8 +27,7 @@ import com.itmill.toolkit.terminal.gwt.client.Util;
 
 /**
  * 
- * TODO needs major refactoring to be easily expandable TODO add new items TODO
- * null selections
+ * TODO needs major refactoring (to be extensible etc)
  */
 public class IFilterSelect extends Composite implements Paintable,
 		KeyboardListener, ClickListener {
@@ -215,10 +214,18 @@ public class IFilterSelect extends Composite implements Paintable,
 			menu.setHeight("");
 			menu.setWidth("");
 			offsetHeight = getOffsetHeight();
+			
+			offsetWidth = getOffsetWidth();
+			int desiredWidth = IFilterSelect.this.getOffsetWidth() - popupOpener.getOffsetWidth();
+			if(offsetWidth < desiredWidth) {
+				menu.setWidth(desiredWidth + "px");
+			}
+			
 			if (!isPagingEnabled && offsetHeight > Window.getClientHeight()) {
 				offsetHeight = Window.getClientHeight();
 				menu.setHeight((offsetHeight - EXTRASPACE) + "px");
 				DOM.setStyleAttribute(menu.getElement(), "overflow", "auto");
+
 				// add scrollbar width
 				menu
 						.setWidth((menu.getOffsetWidth() * 2 - DOM
@@ -264,6 +271,15 @@ public class IFilterSelect extends Composite implements Paintable,
 				}
 			}
 			suggestionPopup.hide();
+		}
+		
+		public void setWidth(String width) {
+			super.setWidth(width);
+			if(!width.equals("") || width != null) {
+				DOM.setStyleAttribute(DOM.getFirstChild(getElement()), "width", "100%");
+			} else {
+				DOM.setStyleAttribute(DOM.getFirstChild(getElement()), "width", "");
+			}
 		}
 	}
 
