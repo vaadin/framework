@@ -21,7 +21,6 @@ public class ApplicationServlet extends
 
 	private static final long serialVersionUID = -1471357707917217303L;
 
-	@Override
 	public void init(ServletConfig servletConfig) throws ServletException {
 		Log
 				.warn("Compatiblity class in use. Please use com.itmill.toolkit.terminal.gwt.server.ApplicationServlet instead. You probably need to update your web.xml.");
