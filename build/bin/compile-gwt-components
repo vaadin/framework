@@ -15,8 +15,10 @@ if [ -d "/Users" ]
 then
     echo "MAC OS"
     PLATFORM="mac"
-    # TODO isolate next command on macos10.5
-    JVMVARS="$JVMVARS -XstartOnFirstThread"
+    # Do not add this command for 10.5
+	 if (uname -v | grep -v -q 9.0); then 
+	    JVMVARS="$JVMVARS -XstartOnFirstThread"
+     fi
 else
 	PLATFORM="linux"
 fi
@@ -33,5 +35,5 @@ STYLE=OBF
 
 # Build the widgetsets
 java $JVMVARS -cp "$SRCDIR:$GWTDIR/gwt-user.jar:$GWTDIR/gwt-dev-$PLATFORM.jar" com.google.gwt.dev.GWTCompiler -out $OUTDIR com.itmill.toolkit.terminal.gwt.DefaultWidgetSet -style $STYLE
-java $JVMVARS -cp "$SRCDIR:$GWTDIR/gwt-user.jar:$GWTDIR/gwt-dev-$PLATFORM.jar" com.google.gwt.dev.GWTCompiler -out "../../WebContent/ITMILL/widgetsets" com.itmill.toolkit.demo.colorpicker.gwt.WidgetSet -style $STYLE
-java $JVMVARS -cp "$SRCDIR:$GWTDIR/gwt-user.jar:../../lib/reservr/googlemaps_gwt.jar:$GWTDIR/gwt-dev-$PLATFORM.jar" com.google.gwt.dev.GWTCompiler -out "../../WebContent/ITMILL/widgetsets" com.itmill.toolkit.demo.reservation.gwt.WidgetSet -style $STYLE
+#java $JVMVARS -cp "$SRCDIR:$GWTDIR/gwt-user.jar:$GWTDIR/gwt-dev-$PLATFORM.jar" com.google.gwt.dev.GWTCompiler -out "../../WebContent/ITMILL/widgetsets" com.itmill.toolkit.demo.colorpicker.gwt.WidgetSet -style $STYLE
+#java $JVMVARS -cp "$SRCDIR:$GWTDIR/gwt-user.jar:../../lib/reservr/googlemaps_gwt.jar:$GWTDIR/gwt-dev-$PLATFORM.jar" com.google.gwt.dev.GWTCompiler -out "../../WebContent/ITMILL/widgetsets" com.itmill.toolkit.demo.reservation.gwt.WidgetSet -style $STYLE
