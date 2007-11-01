@@ -27,8 +27,6 @@ import com.itmill.toolkit.ui.*;
 public class TestBench extends com.itmill.toolkit.Application implements
 		Property.ValueChangeListener {
 
-	private Random seededRandom = new Random(1);
-
 	// Add here packages which are used for finding testable classes
 	String[] testablePackages = { "com.itmill.toolkit.tests",
 			"com.itmill.toolkit.demo", "com.itmill.toolkit.demo.colorpicker",
@@ -97,10 +95,10 @@ public class TestBench extends com.itmill.toolkit.Application implements
 
 		mainLayout.addComponent(menu);
 
-		bodyLayout.setStyle("light");
+		bodyLayout.addStyleName("light");
 		bodyLayout.setHeight(100);
 		bodyLayout.setHeightUnits(Panel.UNITS_PERCENTAGE);
-		bodyLayout.setLayout(new ExpandLayout());
+		bodyLayout.setLayout(new OrderedLayout());
 
 		mainLayout.addComponent(bodyLayout);
 		
