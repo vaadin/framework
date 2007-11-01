@@ -528,4 +528,26 @@ public class Embedded extends AbstractComponent implements Sizeable {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.itmill.toolkit.terminal.Sizeable#setSizeFull()
+	 */
+	public void setSizeFull() {
+		setWidth(100);
+		setHeight(100);
+		setWidthUnits(UNITS_PERCENTAGE);
+		setHeightUnits(UNITS_PERCENTAGE);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.itmill.toolkit.terminal.Sizeable#setSizeUndefined()
+	 */
+	public void setSizeUndefined() {
+		setWidth(-1);
+		setHeight(-1);
+		setWidthUnits(UNITS_PIXELS);
+		setHeightUnits(UNITS_PIXELS);
+	}
+
 }

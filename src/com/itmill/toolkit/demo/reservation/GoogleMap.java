@@ -216,4 +216,14 @@ public class GoogleMap extends AbstractComponent implements Sizeable,
 	public void clear() {
 		setContainerDataSource(null);
 	}
+
+	public void setSizeFull() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void setSizeUndefined() {
+		// TODO Auto-generated method stub
+		
+	}
 }

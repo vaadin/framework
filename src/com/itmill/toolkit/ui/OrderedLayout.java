@@ -28,11 +28,13 @@
 
 package com.itmill.toolkit.ui;
 
-import com.itmill.toolkit.terminal.PaintException;
-import com.itmill.toolkit.terminal.PaintTarget;
-
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
+
+import com.itmill.toolkit.terminal.PaintException;
+import com.itmill.toolkit.terminal.PaintTarget;
 
 /**
  * Ordered layout.
@@ -45,17 +47,17 @@ import java.util.LinkedList;
  * @VERSION@
  * @since 3.0
  */
-public class OrderedLayout extends AbstractComponentContainer implements Layout {
+public class OrderedLayout extends AbstractLayout {
 
 	/* Predefined orientations ***************************************** */
 
 	/**
-	 * Components are to be layed out vertically.
+	 * Components are to be laid out vertically.
 	 */
 	public static int ORIENTATION_VERTICAL = 0;
 
 	/**
-	 * Components are to be layed out horizontally.
+	 * Components are to be laid out horizontally.
 	 */
 	public static int ORIENTATION_HORIZONTAL = 1;
 
@@ -65,9 +67,49 @@ public class OrderedLayout extends AbstractComponentContainer implements Layout 
 	private LinkedList components = new LinkedList();
 
 	/**
+	 * Mapping from components to alignments (horizontal + vertical).
+	 */
+	private Map componentToAlignment = new HashMap();
+
+	/**
+	 * Contained component should be aligned horizontally to the left.
+	 */
+	private int ALIGNMENT_LEFT = 1;
+
+	/**
+	 * Contained component should be aligned horizontally to the right.
+	 */
+	private int ALIGNMENT_RIGHT = 2;
+
+	/**
+	 * Contained component should be aligned vertically to the top.
+	 */
+	private int ALIGNMENT_TOP = 4;
+
+	/**
+	 * Contained component should be aligned vertically to the bottom.
+	 */
+	private int ALIGNMENT_BOTTOM = 8;
+
+	/**
+	 * Contained component should be horizontally aligned to center.
+	 */
+	private int HORIZONTAL_ALIGNMENT_CENTER = 16;
+	
+	/**
+	 * Contained component should be vertically aligned to center.
+	 */
+	private int VERTICAL_ALIGNMENT_CENTER = 32;
+
+	/**
 	 * Orientation of the layout.
 	 */
 	private int orientation;
+
+	/**
+	 * Is spacing between contained components enabled. Defaults to false.
+	 */
+	private boolean spacing = false;
 
 	/**
 	 * Creates a new ordered layout. The order of the layout is
@@ -147,6 +189,7 @@ public class OrderedLayout extends AbstractComponentContainer implements Layout 
 	public void removeComponent(Component c) {
 		super.removeComponent(c);
 		components.remove(c);
+		componentToAlignment.remove(c);
 		requestRepaint();
 	}
 
@@ -169,19 +212,40 @@ public class OrderedLayout extends AbstractComponentContainer implements Layout 
 	 *             if the paint operation failed.
 	 */
 	public void paintContent(PaintTarget target) throws PaintException {
+		super.paintContent(target);
 
 		// Adds the attributes: orientation
 		// note that the default values (b/vertival) are omitted
 		if (orientation == ORIENTATION_HORIZONTAL)
 			target.addAttribute("orientation", "horizontal");
 
+		if (this.spacing)
+			target.addAttribute("spacing", this.spacing);
+
+		// Store alignment info in this String
+		String alignments = "";
+
 		// Adds all items in all the locations
 		for (Iterator i = components.iterator(); i.hasNext();) {
 			Component c = (Component) i.next();
 			if (c != null) {
+				// Paint child component UIDL
 				c.paint(target);
+
+				// Get alignment info for component
+				if (componentToAlignment.containsKey(c))
+					alignments += ((Integer) componentToAlignment.get(c))
+							.intValue();
+				else
+					// Default alignment is top-left
+					alignments += ALIGNMENT_TOP + ALIGNMENT_LEFT;
+				if (i.hasNext())
+					alignments += ",";
 			}
 		}
+
+		// Add child component alignment info to layout tag
+		target.addAttribute("alignments", alignments);
 	}
 
 	/**
@@ -238,15 +302,51 @@ public class OrderedLayout extends AbstractComponentContainer implements Layout 
 				components.remove(oldComponent);
 				components.add(newLocation, oldComponent);
 				components.remove(newComponent);
+				componentToAlignment.remove(newComponent);
 				components.add(oldLocation, newComponent);
 			} else {
 				components.remove(newComponent);
 				components.add(oldLocation, newComponent);
 				components.remove(oldComponent);
+				componentToAlignment.remove(oldComponent);
 				components.add(newLocation, oldComponent);
 			}
 
 			requestRepaint();
 		}
+	}
+
+	/**
+	 * Set alignment for one contained component in this layout.
+	 * 
+	 * @param childComponent
+	 *            the component to align within it's layout cell.
+	 * @param horizontalAlignment
+	 *            the horizontal alignment for the child component (left,
+	 *            center, right).
+	 * @param verticalAlignment
+	 *            the vertical alignment for the child component (top, center,
+	 *            bottom).
+	 */
+	public void setComponentAlignment(Component childComponent,
+			int horizontalAlignment, int verticalAlignment) {
+		componentToAlignment.put(childComponent, new Integer(
+				horizontalAlignment + verticalAlignment));
+	}
+
+	/**
+	 * Enable spacing between child components within this layout.
+	 * 
+	 * <p>
+	 * <strong>NOTE:</strong> This will only affect spaces between components,
+	 * not also all around spacing of the layout (i.e. do not mix this with HTML
+	 * Table elements cellspacing-attribute). Use {@link #setMargin(boolean)} to
+	 * add extra space around the layout.
+	 * </p>
+	 * 
+	 * @param enabled
+	 */
+	public void setSpacing(boolean enabled) {
+		this.spacing = enabled;
 	}
 }

@@ -4,7 +4,7 @@
 
  Development of Browser User Interfaces Made Easy
 
- Copyright (C) 2000-2006 IT Mill Ltd
+ Copyright (C) 2000-2007 IT Mill Ltd
  
  *************************************************************************
 
@@ -29,26 +29,28 @@
 package com.itmill.toolkit.ui;
 
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
 
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
+import com.itmill.toolkit.terminal.Sizeable;
 
 /**
  * <p>
- * A container that consists of components with certain coordinates on a grid.
- * It also maintains cursor for adding component in left to right, top to bottom
- * order.
+ * A container that consists of components with certain coordinates (cell
+ * position) on a grid. It also maintains cursor for adding component in left to
+ * right, top to bottom order.
  * </p>
  * 
  * <p>
  * Each component in a <code>GridLayout</code> uses a certain
- * {@link GridLayout.Area area} (x1,y1,x2,y2) from the grid. One should not add
- * components that would overlap with the existing components because in such
- * case an {@link OverlapsException} is thrown. Adding component with cursor
- * automatically extends the grid by increasing the grid height.
+ * {@link GridLayout.Area area} (column1,row1,column2,row2) from the grid. One
+ * should not add components that would overlap with the existing components
+ * because in such case an {@link OverlapsException} is thrown. Adding component
+ * with cursor automatically extends the grid by increasing the grid height.
  * </p>
  * 
  * @author IT Mill Ltd.
@@ -56,17 +58,17 @@ import com.itmill.toolkit.terminal.PaintTarget;
  * @VERSION@
  * @since 3.0
  */
-public class GridLayout extends AbstractComponentContainer implements Layout {
+public class GridLayout extends AbstractLayout {
 
 	/**
-	 * Initial grid x size.
+	 * Initial grid columns.
 	 */
-	private int width = 0;
+	private int cols = 0;
 
 	/**
-	 * Initial grid y size.
+	 * Initial grid rows.
 	 */
-	private int height = 0;
+	private int rows = 0;
 
 	/**
 	 * Cursor X position: this is where the next component with unspecified x,y
@@ -87,23 +89,63 @@ public class GridLayout extends AbstractComponentContainer implements Layout {
 	private LinkedList areas = new LinkedList();
 
 	/**
-	 * Mapping from components to threir respective areas.
+	 * Mapping from components to their respective areas.
 	 */
 	private LinkedList components = new LinkedList();
 
 	/**
-	 * Constructor for grid of given size. Note that grid's final size depends
-	 * on the items that are added into the grid. Grid grows if you add
-	 * components outside the grid's area.
-	 * 
-	 * @param width
-	 *            the Width of the grid.
-	 * @param height
-	 *            the Height of the grid.
+	 * Mapping from components to alignments (horizontal + vertical).
 	 */
-	public GridLayout(int width, int height) {
-		setWidth(width);
-		setHeight(height);
+	private Map componentToAlignment = new HashMap();
+
+	/**
+	 * Contained component should be aligned horizontally to the left.
+	 */
+	private int ALIGNMENT_LEFT = 1;
+
+	/**
+	 * Contained component should be aligned horizontally to the right.
+	 */
+	private int ALIGNMENT_RIGHT = 2;
+
+	/**
+	 * Contained component should be aligned vertically to the top.
+	 */
+	private int ALIGNMENT_TOP = 4;
+
+	/**
+	 * Contained component should be aligned vertically to the bottom.
+	 */
+	private int ALIGNMENT_BOTTOM = 8;
+
+	/**
+	 * Contained component should be horizontally aligned to center.
+	 */
+	private int HORIZONTAL_ALIGNMENT_CENTER = 16;
+	
+	/**
+	 * Contained component should be vertically aligned to center.
+	 */
+	private int VERTICAL_ALIGNMENT_CENTER = 32;
+	
+	/**
+	 * Is spacing between contained components enabled. Defaults to false.
+	 */
+	private boolean spacing = false;
+
+	/**
+	 * Constructor for grid of given size (number of cells). Note that grid's
+	 * final size depends on the items that are added into the grid. Grid grows
+	 * if you add components outside the grid's area.
+	 * 
+	 * @param columns
+	 *            Number of columns in the grid.
+	 * @param rows
+	 *            Number of rows in the grid.
+	 */
+	public GridLayout(int columns, int rows) {
+		setColumns(columns);
+		setRows(rows);
 	}
 
 	/**
@@ -116,8 +158,8 @@ public class GridLayout extends AbstractComponentContainer implements Layout {
 	/**
 	 * <p>
 	 * Adds a component with a specified area to the grid. The area the new
-	 * component should take is defined by specifying the upper left corner (x1,
-	 * y1) and the lower right corner (x2, y2) of the area.
+	 * component should take is defined by specifying the upper left corner
+	 * (column1, row1) and the lower right corner (column2, row2) of the area.
 	 * </p>
 	 * 
 	 * <p>
@@ -128,26 +170,27 @@ public class GridLayout extends AbstractComponentContainer implements Layout {
 	 * 
 	 * @param c
 	 *            the component to be added.
-	 * @param x1
-	 *            the X-coordinate of the upper left corner of the area
+	 * @param column1
+	 *            the column of the upper left corner of the area <code>c</code>
+	 *            is supposed to occupy.
+	 * @param row1
+	 *            the row of the upper left corner of the area <code>c</code>
+	 *            is supposed to occupy.
+	 * @param column2
+	 *            the column of the lower right corner of the area
 	 *            <code>c</code> is supposed to occupy.
-	 * @param y1
-	 *            the Y-coordinate of the upper left corner of the area
-	 *            <code>c</code> is supposed to occupy.
-	 * @param x2
-	 *            the X-coordinate of the lower right corner of the area
-	 *            <code>c</code> is supposed to occupy.
-	 * @param y2
-	 *            the Y-coordinate of the lower right corner of the area
-	 *            <code>c</code> is supposed to occupy.
+	 * @param row2
+	 *            the row of the lower right corner of the area <code>c</code>
+	 *            is supposed to occupy.
 	 * @throws OverlapsException
 	 *             if the new component overlaps with any of the components
 	 *             already in the grid.
 	 * @throws OutOfBoundsException
-	 *             if the coordinates are outside of the grid area.
+	 *             if the cells are outside of the grid area.
 	 */
-	public void addComponent(Component component, int x1, int y1, int x2, int y2)
-			throws OverlapsException, OutOfBoundsException {
+	public void addComponent(Component component, int column1, int row1,
+			int column2, int row2) throws OverlapsException,
+			OutOfBoundsException {
 
 		if (component == null)
 			throw new NullPointerException("Component must not be null");
@@ -158,13 +201,13 @@ public class GridLayout extends AbstractComponentContainer implements Layout {
 					"Component is already in the container");
 
 		// Creates the area
-		Area area = new Area(component, x1, y1, x2, y2);
+		Area area = new Area(component, column1, row1, column2, row2);
 
 		// Checks the validity of the coordinates
-		if (x2 < x1 || y2 < y2)
+		if (column2 < column1 || row2 < row1)
 			throw new IllegalArgumentException(
 					"Illegal coordinates for the component");
-		if (x1 < 0 || y1 < 0 || x2 >= width || y2 >= height)
+		if (column1 < 0 || row1 < 0 || column2 >= cols || row2 >= rows)
 			throw new OutOfBoundsException(area);
 
 		// Checks that newItem does not overlap with existing items
@@ -178,8 +221,8 @@ public class GridLayout extends AbstractComponentContainer implements Layout {
 		boolean done = false;
 		while (!done && i.hasNext()) {
 			Area existingArea = (Area) i.next();
-			if ((existingArea.y1 >= y1 && existingArea.x1 > x1)
-					|| existingArea.y1 > y1) {
+			if ((existingArea.row1 >= row1 && existingArea.column1 > column1)
+					|| existingArea.row1 > row1) {
 				areas.add(index, area);
 				components.add(index, component);
 				done = true;
@@ -215,19 +258,19 @@ public class GridLayout extends AbstractComponentContainer implements Layout {
 	}
 
 	/**
-	 * Adds the component into this container to coordinates x1,y1 (NortWest
+	 * Adds the component into this container to cells column1,row1 (NortWest
 	 * corner of the area.) End coordinates (SouthEast corner of the area) are
-	 * the same as x1,y1. Component width and height is 1.
+	 * the same as column1,row1. Component width and height is 1.
 	 * 
 	 * @param c
 	 *            the component to be added.
-	 * @param x
-	 *            the X-coordinate.
-	 * @param y
-	 *            the Y-coordinate.
+	 * @param column
+	 *            the column index.
+	 * @param row
+	 *            the row index.
 	 */
-	public void addComponent(Component c, int x, int y) {
-		this.addComponent(c, x, y, x, y);
+	public void addComponent(Component c, int column, int row) {
+		this.addComponent(c, column, row, column, row);
 	}
 
 	/**
@@ -250,7 +293,7 @@ public class GridLayout extends AbstractComponentContainer implements Layout {
 	 */
 	public void space() {
 		cursorX++;
-		if (cursorX >= width) {
+		if (cursorX >= cols) {
 			cursorX = 0;
 			cursorY++;
 		}
@@ -260,7 +303,7 @@ public class GridLayout extends AbstractComponentContainer implements Layout {
 	 * Adds the component into this container to the cursor position. If the
 	 * cursor position is already occupied, the cursor is moved forwards to find
 	 * free position. If the cursor goes out from the bottom of the grid, the
-	 * grid is automaticly extended.
+	 * grid is automatically extended.
 	 * 
 	 * @param c
 	 *            the component to be added.
@@ -280,8 +323,8 @@ public class GridLayout extends AbstractComponentContainer implements Layout {
 			}
 
 		// Extends the grid if needed
-		width = cursorX >= width ? cursorX + 1 : width;
-		height = cursorY >= height ? cursorY + 1 : height;
+		cols = cursorX >= cols ? cursorX + 1 : cols;
+		rows = cursorY >= rows ? cursorY + 1 : rows;
 
 		addComponent(component, cursorX, cursorY);
 	}
@@ -310,25 +353,26 @@ public class GridLayout extends AbstractComponentContainer implements Layout {
 		components.remove(component);
 		if (area != null)
 			areas.remove(area);
+		
+		componentToAlignment.remove(component);
 
 		requestRepaint();
 	}
 
 	/**
-	 * Removes the component specified with it's top-left corner coordinates
-	 * from this grid.
+	 * Removes the component specified with it's cell index.
 	 * 
-	 * @param x
-	 *            the Component's top-left corner's X-coordinate.
-	 * @param y
-	 *            the Component's top-left corner's Y-coordinate.
+	 * @param column
+	 *            the Component's column.
+	 * @param row
+	 *            the Component's row.
 	 */
-	public void removeComponent(int x, int y) {
+	public void removeComponent(int column, int row) {
 
 		// Finds the area
 		for (Iterator i = areas.iterator(); i.hasNext();) {
 			Area area = (Area) i.next();
-			if (area.getX1() == x && area.getY1() == y) {
+			if (area.getColumn1() == column && area.getRow1() == row) {
 				removeComponent(area.getComponent());
 				return;
 			}
@@ -355,8 +399,14 @@ public class GridLayout extends AbstractComponentContainer implements Layout {
 	 */
 	public void paintContent(PaintTarget target) throws PaintException {
 
-		target.addAttribute("h", height);
-		target.addAttribute("w", width);
+		super.paintContent(target);
+
+		// TODO refactor attribute names in future release.
+		target.addAttribute("rows", rows);
+		target.addAttribute("cols", cols);
+		
+		if (this.spacing)
+			target.addAttribute("spacing", this.spacing);
 
 		// Area iterator
 		Iterator areaiterator = areas.iterator();
@@ -371,14 +421,15 @@ public class GridLayout extends AbstractComponentContainer implements Layout {
 		int emptyCells = 0;
 
 		// Iterates every applicable row
-		for (int cury = 0; cury < height; cury++) {
+		for (int cury = 0; cury < rows; cury++) {
 			target.startTag("gr");
 
 			// Iterates every applicable column
-			for (int curx = 0; curx < width; curx++) {
+			for (int curx = 0; curx < cols; curx++) {
 
 				// Checks if current item is located at curx,cury
-				if (area != null && (area.y1 == cury) && (area.x1 == curx)) {
+				if (area != null && (area.row1 == cury)
+						&& (area.column1 == curx)) {
 
 					// First check if empty cell needs to be rendered
 					if (emptyCells > 0) {
@@ -393,8 +444,8 @@ public class GridLayout extends AbstractComponentContainer implements Layout {
 					}
 
 					// Now proceed rendering current item
-					int cols = (area.x2 - area.x1) + 1;
-					int rows = (area.y2 - area.y1) + 1;
+					int cols = (area.column2 - area.column1) + 1;
+					int rows = (area.row2 - area.row1) + 1;
 					target.startTag("gc");
 
 					target.addAttribute("x", curx);
@@ -480,7 +531,7 @@ public class GridLayout extends AbstractComponentContainer implements Layout {
 			// Checks if empty cell needs to be rendered
 			if (emptyCells > 0) {
 				target.startTag("gc");
-				target.addAttribute("x", width - emptyCells);
+				target.addAttribute("x", cols - emptyCells);
 				target.addAttribute("y", cury);
 				if (emptyCells > 1) {
 					target.addAttribute("w", emptyCells);
@@ -507,9 +558,9 @@ public class GridLayout extends AbstractComponentContainer implements Layout {
 	}
 
 	/**
-	 * This class defines an area on a grid. An Area is defined by the
-	 * coordinates of its upper left corner (x1,y1) and lower right corner
-	 * (x2,y2).
+	 * This class defines an area on a grid. An Area is defined by the cells of
+	 * its upper left corner (column1,row1) and lower right corner
+	 * (column2,row2).
 	 * 
 	 * @author IT Mill Ltd.
 	 * @version
@@ -519,24 +570,24 @@ public class GridLayout extends AbstractComponentContainer implements Layout {
 	public class Area {
 
 		/**
-		 * X-coordinate of the upper left corner of the area.
+		 * The column of the upper left corner cell of the area.
 		 */
-		private int x1;
+		private int column1;
 
 		/**
-		 * Y-coordinate of the upper left corner of the area.
+		 * The row of the upper left corner cell of the area.
 		 */
-		private int y1;
+		private int row1;
 
 		/**
-		 * X-coordinate of the lower right corner of the area.
+		 * The column of the lower right corner cell of the area.
 		 */
-		private int x2;
+		private int column2;
 
 		/**
-		 * Y-coordinate of the lower right corner of the area.
+		 * The row of the lower right corner cell of the area.
 		 */
-		private int y2;
+		private int row2;
 
 		/**
 		 * Component painted on the area.
@@ -550,27 +601,28 @@ public class GridLayout extends AbstractComponentContainer implements Layout {
 		 * 
 		 * @param component
 		 *            the component connected to the area.
-		 * @param x1
-		 *            the X-coordinate of the upper left corner of the area
+		 * @param column1
+		 *            The column of the upper left corner cell of the area
 		 *            <code>c</code> is supposed to occupy.
-		 * @param y1
-		 *            the Y-coordinate of the upper left corner of the area
+		 * @param row1
+		 *            The row of the upper left corner cell of the area
 		 *            <code>c</code> is supposed to occupy.
-		 * @param x2
-		 *            the X-coordinate of the lower right corner of the area
+		 * @param column2
+		 *            The column of the lower right corner cell of the area
 		 *            <code>c</code> is supposed to occupy.
-		 * @param y2
-		 *            the Y-coordinate of the lower right corner of the area
+		 * @param row2
+		 *            The row of the lower right corner cell of the area
 		 *            <code>c</code> is supposed to occupy.
 		 * @throws OverlapsException
 		 *             if the new component overlaps with any of the components
 		 *             already in the grid
 		 */
-		public Area(Component component, int x1, int y1, int x2, int y2) {
-			this.x1 = x1;
-			this.y1 = y1;
-			this.x2 = x2;
-			this.y2 = y2;
+		public Area(Component component, int column1, int row1, int column2,
+				int row2) {
+			this.column1 = column1;
+			this.row1 = row1;
+			this.column2 = column2;
+			this.row2 = row2;
 			this.component = component;
 		}
 
@@ -584,8 +636,8 @@ public class GridLayout extends AbstractComponentContainer implements Layout {
 		 *         this area, <code>false</code> if it doesn't.
 		 */
 		public boolean overlaps(Area other) {
-			return x1 <= other.getX2() && y1 <= other.getY2()
-					&& x2 >= other.getX1() && y2 >= other.getY1();
+			return column1 <= other.getColumn2() && row1 <= other.getRow2()
+					&& column2 >= other.getColumn1() && row2 >= other.getRow1();
 
 		}
 
@@ -614,39 +666,75 @@ public class GridLayout extends AbstractComponentContainer implements Layout {
 		}
 
 		/**
-		 * Gets the top-left corner x-coordinate.
+		 * @deprecated Use getColumn1() instead.
 		 * 
-		 * @return the top-left corner of x-coordinate.
+		 * @see com.itmill.toolkit.ui.GridLayout#getColumn1()
 		 */
 		public int getX1() {
-			return x1;
+			return getColumn1();
 		}
 
 		/**
-		 * Gets the bottom-right corner x-coordinate.
+		 * Gets the column of the top-left corner cell.
 		 * 
-		 * @return the x-coordinate.
+		 * @return the column of the top-left corner cell.
+		 */
+		public int getColumn1() {
+			return column1;
+		}
+
+		/**
+		 * @deprecated Use getColumn2() instead.
+		 * 
+		 * @see com.itmill.toolkit.ui.GridLayout#getColumn2()
 		 */
 		public int getX2() {
-			return x2;
+			return getColumn2();
 		}
 
 		/**
-		 * Gets the top-left corner y-coordinate.
+		 * Gets the column of the bottom-right corner cell.
 		 * 
-		 * @return the y-coordinate.
+		 * @return the column of the bottom-right corner cell.
+		 */
+		public int getColumn2() {
+			return column2;
+		}
+
+		/**
+		 * @deprecated Use getRow1() instead.
+		 * 
+		 * @see com.itmill.toolkit.ui.GridLayout#getRow1()
 		 */
 		public int getY1() {
-			return y1;
+			return getRow1();
 		}
 
 		/**
-		 * Returns the bottom-right corner y-coordinate.
+		 * Gets the row of the top-left corner cell.
 		 * 
-		 * @return the y-coordinate.
+		 * @return the row of the top-left corner cell.
+		 */
+		public int getRow1() {
+			return row1;
+		}
+
+		/**
+		 * @deprecated Use getRow2() instead.
+		 * 
+		 * @see com.itmill.toolkit.ui.GridLayout#getRow2()
 		 */
 		public int getY2() {
-			return y2;
+			return getRow2();
+		}
+
+		/**
+		 * Gets the row of the bottom-right corner cell.
+		 * 
+		 * @return the row of the bottom-right corner cell.
+		 */
+		public int getRow2() {
+			return row2;
 		}
 
 	}
@@ -727,92 +815,148 @@ public class GridLayout extends AbstractComponentContainer implements Layout {
 	}
 
 	/**
-	 * Sets the width of the grid. The width can not be reduced if there are any
-	 * areas that would be outside of the shrunk grid.
-	 * 
-	 * @param width
-	 *            the New width of the grid.
+	 * Sets the width of the layout.
+	 * <p>
+	 * <strong>NOTE:</strong> The behaviour of this methdod has changed in
+	 * version 5.0. Now this method won't set the number of columns in the grid
+	 * like it used to (use {@link #setColumns()} for that). Instead, it sets
+	 * the actual visual width of the layout in pixels or in another unit
+	 * specified in {@link Sizeable}.UNIT_SYMBOLS.
+	 * </p>
 	 */
 	public void setWidth(int width) {
+		super.setWidth(width);
+	}
+
+	/**
+	 * Gets the width of the layout.
+	 * <p>
+	 * <strong>NOTE:</strong> The behaviour of this methdod has changed in
+	 * version 5.0. Now this method won't return the number of columns in the
+	 * grid like it used to (use {@link #getColumns()} for that). Instead, it
+	 * returns the actual visual width of the layout in pixels or in another
+	 * unit specified in {@link Sizeable}.UNIT_SYMBOLS.
+	 * </p>
+	 */
+	public int getWidth() {
+		return super.getWidth();
+	}
+
+	/**
+	 * Sets the number of columns in the grid. The column count can not be
+	 * reduced if there are any areas that would be outside of the shrunk grid.
+	 * 
+	 * @param columns
+	 *            the new number of columns in the grid.
+	 */
+	public void setColumns(int columns) {
 
 		// The the param
-		if (width < 1)
+		if (columns < 1)
 			throw new IllegalArgumentException(
-					"The grid width and height must be at least 1");
+					"The number of columns and rows in the grid must be at least 1");
 
 		// In case of no change
-		if (this.width == width)
+		if (this.cols == columns)
 			return;
 
 		// Checks for overlaps
-		if (this.width > width)
+		if (this.cols > columns)
 			for (Iterator i = areas.iterator(); i.hasNext();) {
 				Area area = (Area) i.next();
-				if (area.x2 >= width)
+				if (area.column2 >= columns)
 					throw new OutOfBoundsException(area);
 			}
 
-		this.width = width;
+		this.cols = columns;
 
 		requestRepaint();
 	}
 
 	/**
-	 * Get the width of the grids.
+	 * Get the number of columns in the grid.
 	 * 
-	 * @return the width of the grid.
+	 * @return the number of columns in the grid.
 	 */
-	public final int getWidth() {
-		return this.width;
+	public final int getColumns() {
+		return this.cols;
 	}
 
 	/**
-	 * Sets the height of the grid. The width can not be reduced if there are
-	 * any areas that would be outside of the shrunk grid.
-	 * 
-	 * @param height
-	 *            the height of the grid.
+	 * Set the height of the layout.
+	 * <p>
+	 * <strong>NOTE:</strong> The behaviour of this methdod has changed in
+	 * version 5.0. Now this method won't set the number of rows in the grid
+	 * like it used to (use {@link #setRows()} for that). Instead, it sets the
+	 * actual visual height of the layout in pixels or in another unit specified
+	 * in {@link Sizeable}.UNIT_SYMBOLS.
+	 * </p>
 	 */
 	public void setHeight(int height) {
+		super.setHeight(height);
+	}
+
+	/**
+	 * Gets the height of the layout.
+	 * <p>
+	 * <strong>NOTE:</strong> The behaviour of this methdod has changed in
+	 * version 5.0. Now this method won't return the number of rows in the grid
+	 * like it used to (use {@link #getRows()} for that). Instead, it returns
+	 * the actual visual height of the layout in pixels or in another unit
+	 * specified in {@link Sizeable}.UNIT_SYMBOLS.
+	 * </p>
+	 */
+	public int getHeight() {
+		return super.getHeight();
+	}
+
+	/**
+	 * Sets the number of rows in the grid. The number of rows can not be
+	 * reduced if there are any areas that would be outside of the shrunk grid.
+	 * 
+	 * @param rows
+	 *            the new number of rows in the grid.
+	 */
+	public void setRows(int rows) {
 
 		// The the param
-		if (height < 1)
+		if (rows < 1)
 			throw new IllegalArgumentException(
-					"The grid width and height must be at least 1");
+					"The number of columns and rows in the grid must be at least 1");
 
 		// In case of no change
-		if (this.height == height)
+		if (this.rows == rows)
 			return;
 
 		// Checks for overlaps
-		if (this.height > height)
+		if (this.rows > rows)
 			for (Iterator i = areas.iterator(); i.hasNext();) {
 				Area area = (Area) i.next();
-				if (area.y2 >= height)
+				if (area.row2 >= rows)
 					throw new OutOfBoundsException(area);
 			}
 
-		this.height = height;
+		this.rows = rows;
 
 		requestRepaint();
 	}
 
 	/**
-	 * Gets the height of the grid.
+	 * Get the number of rows in the grid.
 	 * 
-	 * @return int - how many cells high the grid is.
+	 * @return the number of rows in the grid.
 	 */
-	public final int getHeight() {
-		return this.height;
+	public final int getRows() {
+		return this.rows;
 	}
 
 	/**
 	 * Gets the current cursor x-position. The cursor position points the
 	 * position for the next component that is added without specifying its
-	 * coordinates. When the cursor position is occupied, the next component
-	 * will be added to first free position after the cursor.
+	 * coordinates (grid cell). When the cursor position is occupied, the next
+	 * component will be added to first free position after the cursor.
 	 * 
-	 * @return the Cursor x-coordinate.
+	 * @return the grid column the Cursor is on.
 	 */
 	public int getCursorX() {
 		return cursorX;
@@ -821,10 +965,10 @@ public class GridLayout extends AbstractComponentContainer implements Layout {
 	/**
 	 * Gets the current cursor y-position. The cursor position points the
 	 * position for the next component that is added without specifying its
-	 * coordinates. When the cursor position is occupied, the next component
-	 * will be added to first free position after the cursor.
+	 * coordinates (grid cell). When the cursor position is occupied, the next
+	 * component will be added to first free position after the cursor.
 	 * 
-	 * @return the Cursor y-coordinate.
+	 * @return the grid row the Cursor is on.
 	 */
 	public int getCursorY() {
 		return cursorY;
@@ -849,9 +993,8 @@ public class GridLayout extends AbstractComponentContainer implements Layout {
 			addComponent(newComponent);
 		else if (newLocation == null) {
 			removeComponent(oldComponent);
-			addComponent(newComponent, oldLocation.getX1(),
-					oldLocation.getY1(), oldLocation.getX2(), oldLocation
-							.getY2());
+			addComponent(newComponent, oldLocation.getColumn1(), oldLocation
+					.getRow1(), oldLocation.getColumn2(), oldLocation.getRow2());
 		} else {
 			oldLocation.setComponent(newComponent);
 			newLocation.setComponent(oldComponent);
@@ -866,8 +1009,43 @@ public class GridLayout extends AbstractComponentContainer implements Layout {
 	 */
 	public void removeAllComponents() {
 		super.removeAllComponents();
+		this.componentToAlignment = new HashMap();
 		this.cursorX = 0;
 		this.cursorY = 0;
+	}
+
+	/**
+	 * Set alignment for one contained component in this layout.
+	 * 
+	 * @param childComponent
+	 *            the component to align within it's layout cell.
+	 * @param horizontalAlignment
+	 *            the horizontal alignment for the child component (left,
+	 *            center, right).
+	 * @param verticalAlignment
+	 *            the vertical alignment for the child component (top, center,
+	 *            bottom).
+	 */
+	public void setComponentAlignment(Component childComponent,
+			int horizontalAlignment, int verticalAlignment) {
+		componentToAlignment.put(childComponent, new Integer(
+				horizontalAlignment + verticalAlignment));
+	}
+
+	/**
+	 * Enable spacing between child components within this layout.
+	 * 
+	 * <p>
+	 * <strong>NOTE:</strong> This will only affect spaces between components,
+	 * not also all around spacing of the layout (i.e. do not mix this with HTML
+	 * Table elements cellspacing-attribute). Use {@link #setMargin(boolean)} to
+	 * add extra space around the layout.
+	 * </p>
+	 * 
+	 * @param enabled
+	 */
+	public void setSpacing(boolean enabled) {
+		this.spacing = enabled;
 	}
 
 }

@@ -71,7 +71,6 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
 		// Layout
 		setCaption("Properties");
 		addComponent(formsLayout);
-		addStyleName(Panel.STYLE_NO_PADDING);
 
 		setWidth(100);
 		setWidthUnits(Table.UNITS_PERCENTAGE);

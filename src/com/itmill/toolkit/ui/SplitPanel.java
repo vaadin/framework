@@ -45,8 +45,7 @@ import com.itmill.toolkit.terminal.Sizeable;
  * @VERSION@
  * @since 5.0
  */
-public class SplitPanel extends AbstractComponentContainer implements Layout,
-		Sizeable {
+public class SplitPanel extends AbstractLayout {
 
 	/* Predefined orientations ***************************************** */
 
@@ -69,14 +68,6 @@ public class SplitPanel extends AbstractComponentContainer implements Layout,
 	 */
 	private int orientation;
 
-	private int height;
-
-	private int heightUnit;
-
-	private int width;
-
-	private int widthUnit;
-
 	private int pos = 50;
 
 	private int posUnit = UNITS_PERCENTAGE;
@@ -87,6 +78,7 @@ public class SplitPanel extends AbstractComponentContainer implements Layout,
 	 */
 	public SplitPanel() {
 		orientation = ORIENTATION_VERTICAL;
+		setSizeFull();
 	}
 
 	/**
@@ -98,6 +90,7 @@ public class SplitPanel extends AbstractComponentContainer implements Layout,
 	 */
 	public SplitPanel(int orientation) {
 		this.orientation = orientation;
+		setSizeFull();
 	}
 
 	/**
@@ -217,18 +210,8 @@ public class SplitPanel extends AbstractComponentContainer implements Layout,
 	 *             if the paint operation failed.
 	 */
 	public void paintContent(PaintTarget target) throws PaintException {
-
-		// TODO refine size attributes
-		if (width > 0) {
-			target.addAttribute("width", width + UNIT_SYMBOLS[widthUnit]);
-		} else {
-			target.addAttribute("width", "100%");
-		}
-		if (height > 0) {
-			target.addAttribute("height", height + UNIT_SYMBOLS[heightUnit]);
-		} else {
-			target.addAttribute("height", "100%");
-		}
+		
+		super.paintContent(target);
 
 		String position = pos + UNIT_SYMBOLS[posUnit];
 
@@ -293,47 +276,13 @@ public class SplitPanel extends AbstractComponentContainer implements Layout,
 	/**
 	 * Moves the position of the splitter with given position and unit.
 	 * 
-	 * Supported Units are {@link Sizeable}.UNITS_PERSENTAGE and
-	 * Sizeable.UNITS_PIXELS
-	 * 
 	 * @param pos
 	 *            size of the first region
-	 * @oaran unit the unit (from {@link Sizeable}) in which the size is given.
+	 * @param unit the unit (from {@link Sizeable}) in which the size is given.
 	 */
 	public void setSplitPosition(int pos, int unit) {
 		this.pos = pos;
 		this.posUnit = unit;
 	}
 
-	public int getHeight() {
-		return height;
-	}
-
-	public int getHeightUnits() {
-		return heightUnit;
-	}
-
-	public int getWidth() {
-		return width;
-	}
-
-	public int getWidthUnits() {
-		return widthUnit;
-	}
-
-	public void setHeight(int height) {
-		this.height = height;
-	}
-
-	public void setHeightUnits(int units) {
-		this.heightUnit = units;
-	}
-
-	public void setWidth(int width) {
-		this.width = width;
-	}
-
-	public void setWidthUnits(int units) {
-		this.widthUnit = units;
-	}
 }

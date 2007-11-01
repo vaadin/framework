@@ -2421,9 +2421,9 @@ public class Table extends AbstractSelect implements Action.Container,
 	}
 
 	/**
-	 * Is sorting disabled alltogether.
+	 * Is sorting disabled altogether.
 	 * 
-	 * True iff no sortable columns are given even in the case where datasource
+	 * True iff no sortable columns are given even in the case where data source
 	 * would support this.
 	 * 
 	 * @return True iff sorting is disabled.
@@ -2433,9 +2433,9 @@ public class Table extends AbstractSelect implements Action.Container,
 	}
 
 	/**
-	 * Disables the sorting alltogether.
+	 * Disables the sorting altogether.
 	 * 
-	 * To disable sorting alltogether, set to true. In this case no sortable
+	 * To disable sorting altogether, set to true. In this case no sortable
 	 * columns are given even in the case where datasource would support this.
 	 * 
 	 * @param sortDisabled
@@ -2449,7 +2449,7 @@ public class Table extends AbstractSelect implements Action.Container,
 	}
 
 	/**
-	 * Gets the height property units.
+	 * Gets height property unit.
 	 * 
 	 * @see com.itmill.toolkit.terminal.Sizeable#getHeightUnits()
 	 */
@@ -2458,7 +2458,7 @@ public class Table extends AbstractSelect implements Action.Container,
 	}
 
 	/**
-	 * Gets the width property units.
+	 * Gets width property unit.
 	 * 
 	 * @see com.itmill.toolkit.terminal.Sizeable#getWidthUnits()
 	 */
@@ -2467,7 +2467,7 @@ public class Table extends AbstractSelect implements Action.Container,
 	}
 
 	/**
-	 * Sets the height units.
+	 * Sets height units.
 	 * 
 	 * @see com.itmill.toolkit.terminal.Sizeable#setHeightUnits(int)
 	 */
@@ -2476,7 +2476,7 @@ public class Table extends AbstractSelect implements Action.Container,
 	}
 
 	/**
-	 * Sets the width units. Tabel supports only Sizeable.UNITS_PIXELS and
+	 * Sets width units. Table supports only Sizeable.UNITS_PIXELS and
 	 * Sizeable.UNITS_PERCENTAGE. Setting to any other throws
 	 * IllegalArgumentException.
 	 * 
@@ -2491,9 +2491,10 @@ public class Table extends AbstractSelect implements Action.Container,
 	}
 
 	/**
-	 * Gets the height in pixels.
+	 * Gets height.
 	 * 
-	 * @return the height in pixels or negative value if not assigned.
+	 * @return height value as a positive integer or negative value if not
+	 *         assigned.
 	 * @see com.itmill.toolkit.terminal.Sizeable#getHeight()
 	 */
 	public int getHeight() {
@@ -2501,9 +2502,10 @@ public class Table extends AbstractSelect implements Action.Container,
 	}
 
 	/**
-	 * Gets the width in pixels.
+	 * Gets width.
 	 * 
-	 * @return the width in pixels or negative value if not assigned.
+	 * @return width value as positive integer or negative value if not
+	 *         assigned.
 	 * @see com.itmill.toolkit.terminal.Sizeable#getWidth()
 	 */
 	public int getWidth() {
@@ -2511,8 +2513,7 @@ public class Table extends AbstractSelect implements Action.Container,
 	}
 
 	/**
-	 * Sets the height in pixels. Use negative value to let the client decide
-	 * the height.
+	 * Sets height. Use negative value to let the client decide the height.
 	 * 
 	 * @param height
 	 *            the height to set.
@@ -2523,8 +2524,7 @@ public class Table extends AbstractSelect implements Action.Container,
 	}
 
 	/**
-	 * Sets the width in pixels. Use negative value to allow the client decide
-	 * the width.
+	 * Sets width. Use negative value to allow the client decide the width.
 	 * 
 	 * @param width
 	 *            the width to set.
@@ -2545,6 +2545,30 @@ public class Table extends AbstractSelect implements Action.Container,
 			throw new UnsupportedOperationException(
 					"Lazy options loading is not supported by Table.");
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.itmill.toolkit.terminal.Sizeable#setSizeFull()
+	 */
+	public void setSizeFull() {
+		setWidth(100);
+		setHeight(100);
+		setWidthUnits(UNITS_PERCENTAGE);
+		setHeightUnits(UNITS_PERCENTAGE);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.itmill.toolkit.terminal.Sizeable#setSizeUndefined()
+	 */
+	public void setSizeUndefined() {
+		setWidth(-1);
+		setHeight(-1);
+		setWidthUnits(UNITS_PIXELS);
+		setHeightUnits(UNITS_PIXELS);
 	}
 
 }

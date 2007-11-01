@@ -39,7 +39,6 @@ import com.itmill.toolkit.terminal.KeyMapper;
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
 import com.itmill.toolkit.terminal.Scrollable;
-import com.itmill.toolkit.terminal.Sizeable;
 
 /**
  * Panel - a simple single component container.
@@ -49,8 +48,8 @@ import com.itmill.toolkit.terminal.Sizeable;
  * @VERSION@
  * @since 3.0
  */
-public class Panel extends AbstractComponentContainer implements Sizeable,
-		Scrollable, ComponentContainer.ComponentAttachListener,
+public class Panel extends AbstractLayout implements Scrollable,
+		ComponentContainer.ComponentAttachListener,
 		ComponentContainer.ComponentDetachListener, Action.Container {
 
 	public static final String STYLE_LIGHT = "light";
@@ -58,36 +57,9 @@ public class Panel extends AbstractComponentContainer implements Sizeable,
 	public static final String STYLE_EMPHASIZE = "emphasize";
 
 	/**
-	 * Use this stylename with {@link #addStyleName(String)} to remove padding
-	 * between Panel borders and content. The actual client-side implementation
-	 * will determine which stylenames it implements.
-	 */
-	public static final String STYLE_NO_PADDING = "nopad";
-
-	/**
 	 * Layout of the panel.
 	 */
 	private Layout layout;
-
-	/**
-	 * Width of the panel or -1 if unspecified.
-	 */
-	private int width = -1;
-
-	/**
-	 * Height of the panel or -1 if unspecified.
-	 */
-	private int height = -1;
-
-	/**
-	 * Width unit.
-	 */
-	private int widthUnit = Sizeable.UNITS_PIXELS;
-
-	/**
-	 * Height unit.
-	 */
-	private int heightUnit = Sizeable.UNITS_PIXELS;
 
 	/**
 	 * Scroll X position.
@@ -210,12 +182,7 @@ public class Panel extends AbstractComponentContainer implements Sizeable,
 	public void paintContent(PaintTarget target) throws PaintException {
 		layout.paint(target);
 
-		if (height > -1)
-			target.addVariable(this, "height", getHeight()
-					+ UNIT_SYMBOLS[getHeightUnits()]);
-		if (width > -1)
-			target.addVariable(this, "width", getWidth()
-					+ UNIT_SYMBOLS[getWidthUnits()]);
+		super.paintContent(target);
 
 		if (isScrollable()) {
 			target.addVariable(this, "scrollleft", getScrollOffsetX());
@@ -306,52 +273,6 @@ public class Panel extends AbstractComponentContainer implements Sizeable,
 	}
 
 	/**
-	 * Gets the height in pixels.
-	 * 
-	 * @return The height in pixels or negative value if not assigned.
-	 * @see com.itmill.toolkit.terminal.Sizeable#getHeight()
-	 */
-	public int getHeight() {
-		return height;
-	}
-
-	/**
-	 * Gets the Width in pixel.
-	 * 
-	 * @return The width in pixels or negative value if not assigned.
-	 * @see com.itmill.toolkit.terminal.Sizeable#getWidth()
-	 */
-	public int getWidth() {
-		return width;
-	}
-
-	/**
-	 * Sets the height in pixels. Use negative value to let the client decide
-	 * the height.
-	 * 
-	 * @param height
-	 *            the height to set.
-	 * @see com.itmill.toolkit.terminal.Sizeable#setHeight(int)
-	 */
-	public void setHeight(int height) {
-		this.height = height;
-		requestRepaint();
-	}
-
-	/**
-	 * Sets the width in pixels. Use negative value to allow the client decide
-	 * the width.
-	 * 
-	 * @param width
-	 *            the width to set.
-	 * @see com.itmill.toolkit.terminal.Sizeable#setWidth(int)
-	 */
-	public void setWidth(int width) {
-		this.width = width;
-		requestRepaint();
-	}
-
-	/**
 	 * Called when one or more variables handled by the implementing class are
 	 * changed.
 	 * 
@@ -394,42 +315,6 @@ public class Panel extends AbstractComponentContainer implements Sizeable,
 							.handleAction(action, this, this);
 		}
 
-	}
-
-	/**
-	 * Gets the height property units.
-	 * 
-	 * @see com.itmill.toolkit.terminal.Sizeable#getHeightUnits()
-	 */
-	public int getHeightUnits() {
-		return heightUnit;
-	}
-
-	/**
-	 * Gets the width property units.
-	 * 
-	 * @see com.itmill.toolkit.terminal.Sizeable#getWidthUnits()
-	 */
-	public int getWidthUnits() {
-		return widthUnit;
-	}
-
-	/**
-	 * Sets the height units.
-	 * 
-	 * @see com.itmill.toolkit.terminal.Sizeable#setHeightUnits(int)
-	 */
-	public void setHeightUnits(int units) {
-		heightUnit = units;
-	}
-
-	/**
-	 * Sets the width units.
-	 * 
-	 * @see com.itmill.toolkit.terminal.Sizeable#setWidthUnits(int)
-	 */
-	public void setWidthUnits(int units) {
-		widthUnit = units;
 	}
 
 	/* Scrolling functionality */

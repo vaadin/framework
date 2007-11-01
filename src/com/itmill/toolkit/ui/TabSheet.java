@@ -44,12 +44,12 @@ import com.itmill.toolkit.terminal.*;
  * @VERSION@
  * @since 3.0
  */
-public class TabSheet extends AbstractComponentContainer implements Sizeable {
+public class TabSheet extends AbstractLayout {
 
 	/**
 	 * Use this stylename with {@link #addStyleName(String)} to remove padding
-	 * between TabSheet borders and content. The actual client-side implementation
-	 * will determine which stylenames it implements.
+	 * between TabSheet borders and content. The actual client-side
+	 * implementation will determine which stylenames it implements.
 	 */
 	public static final String STYLE_NO_PADDING = "nopad";
 
@@ -79,14 +79,6 @@ public class TabSheet extends AbstractComponentContainer implements Sizeable {
 	 * Holds the value of property tabsHIdden.
 	 */
 	private boolean tabsHidden;
-
-	private int height = -1;
-
-	private int heightUnit;
-
-	private int width = -1;
-
-	private int widthUnit;
 
 	/**
 	 * Constructs a new Tabsheet. Tabsheet is immediate by default.
@@ -206,17 +198,10 @@ public class TabSheet extends AbstractComponentContainer implements Sizeable {
 	 *             if the paint operation failed.
 	 */
 	public void paintContent(PaintTarget target) throws PaintException {
-
+		super.paintContent(target);
+		
 		if (areTabsHidden())
 			target.addAttribute("hidetabs", true);
-
-		if (width > -1) {
-			target.addAttribute("width", getWidth() + UNIT_SYMBOLS[widthUnit]);
-		}
-		if (height > -1) {
-			target.addAttribute("height", getHeight()
-					+ UNIT_SYMBOLS[heightUnit]);
-		}
 
 		target.startTag("tabs");
 
@@ -507,39 +492,4 @@ public class TabSheet extends AbstractComponentContainer implements Sizeable {
 		fireEvent(new SelectedTabChangeEvent(this));
 	}
 
-	public int getHeight() {
-		return height;
-	}
-
-	public int getHeightUnits() {
-		return heightUnit;
-	}
-
-	public int getWidth() {
-		return width;
-	}
-
-	public int getWidthUnits() {
-		return widthUnit;
-	}
-
-	public void setHeight(int height) {
-		this.height = height;
-		requestRepaint();
-	}
-
-	public void setHeightUnits(int units) {
-		this.heightUnit = units;
-		requestRepaint();
-	}
-
-	public void setWidth(int width) {
-		this.width = width;
-		requestRepaint();
-	}
-
-	public void setWidthUnits(int units) {
-		this.widthUnit = units;
-		requestRepaint();
-	}
 }

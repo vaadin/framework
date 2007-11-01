@@ -4,7 +4,7 @@
 
  Development of Browser User Interfaces Made Easy
 
- Copyright (C) 2000-2006 IT Mill Ltd
+ Copyright (C) 2000-2007 IT Mill Ltd
  
  *************************************************************************
 
@@ -177,5 +177,15 @@ public interface Sizeable {
 	 *            the units used in height property.
 	 */
 	public void setHeightUnits(int units);
+	
+	/**
+	 * Sets the size to 100% x 100%.
+	 */
+	public void setSizeFull();
+	
+	/**
+	 * Clears any size settings.
+	 */
+	public void setSizeUndefined();
 
 }

@@ -61,7 +61,7 @@ import java.util.HashMap;
  * @VERSION@
  * @since 3.0
  */
-public class CustomLayout extends AbstractComponentContainer implements Layout {
+public class CustomLayout extends AbstractLayout {
 
 	/**
 	 * Custom layout slots containing the components.
@@ -173,6 +173,7 @@ public class CustomLayout extends AbstractComponentContainer implements Layout {
 	 *             if the paint operation failed.
 	 */
 	public void paintContent(PaintTarget target) throws PaintException {
+		super.paintContent(target);
 
 		target.addAttribute("template", templateName);
 		// Adds all items in all the locations

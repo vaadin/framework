@@ -9,6 +9,7 @@ import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.OptionGroup;
 import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Select;
+import com.itmill.toolkit.ui.Slider;
 import com.itmill.toolkit.ui.Window;
 import com.itmill.toolkit.ui.Button.ClickEvent;
 import com.itmill.toolkit.ui.Button.ClickListener;
@@ -57,6 +58,17 @@ public class TestForWindowing extends CustomComponent {
 				w.addComponent(s1);
 				w.addComponent(TestForWindowing.this.s2);
 
+				Slider s = new Slider();
+				s.setCaption("Volume");
+				s.setMax(13);
+				s.setMin(12);
+				s.setResolution(2);
+				s.setImmediate(true);
+				//s.setOrientation(Slider.ORIENTATION_VERTICAL);
+				//s.setArrows(false);
+				
+				w.addComponent(s);
+				
 				getApplication().getMainWindow().addWindow(w);
 
 			}

@@ -50,7 +50,6 @@ public class TestForBasicApplicationLayout extends CustomComponent {
 		Panel p = new Panel("Accordion Panel");
 		p.setHeight(100);
 		p.setHeightUnits(Panel.UNITS_PERCENTAGE);
-		p.addStyleName(Panel.STYLE_NO_PADDING);
 
 		tab = new TabSheet();
 		tab.setWidth(100);
@@ -70,7 +69,7 @@ public class TestForBasicApplicationLayout extends CustomComponent {
 		cal.setLocale(new Locale("en", "US"));
 		report.addComponent(cal);
 		((ExpandLayout) report.getLayout()).expand(controls);
-		report.setStyle("light");
+		report.addStyleName(Panel.STYLE_LIGHT);
 		report.setHeight(100);
 		report.setHeightUnits(Sizeable.UNITS_PERCENTAGE);
 

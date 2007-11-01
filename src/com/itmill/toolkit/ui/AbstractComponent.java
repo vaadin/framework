@@ -28,11 +28,7 @@
 
 package com.itmill.toolkit.ui;
 
-import com.itmill.toolkit.Application;
-import com.itmill.toolkit.event.EventRouter;
-import com.itmill.toolkit.event.MethodEventSource;
-import com.itmill.toolkit.terminal.*;
-
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -40,8 +36,15 @@ import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.HashSet;
-import java.lang.reflect.Method;
+
+import com.itmill.toolkit.Application;
+import com.itmill.toolkit.event.EventRouter;
+import com.itmill.toolkit.event.MethodEventSource;
+import com.itmill.toolkit.terminal.ErrorMessage;
+import com.itmill.toolkit.terminal.PaintException;
+import com.itmill.toolkit.terminal.PaintTarget;
+import com.itmill.toolkit.terminal.Resource;
+import com.itmill.toolkit.terminal.VariableOwner;
 
 /**
  * An abstract class that defines default implementation for the
