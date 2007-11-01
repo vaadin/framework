@@ -472,17 +472,8 @@ public class ApplicationServlet extends HttpServlet {
 		response.setContentType("text/html");
 		BufferedWriter page = new BufferedWriter(new OutputStreamWriter(
 				response.getOutputStream()));
-
-		String relative = "";
-
 		String pathInfo = request.getPathInfo() == null ? "/" : request
 				.getPathInfo();
-		String t = pathInfo.substring(1);
-		while (t.indexOf('/') >= 0) {
-			t = t.substring(t.indexOf('/') + 1);
-			relative += "../";
-		}
-
 		page
 				.write("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" "
 						+ "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n");
@@ -509,6 +500,8 @@ public class ApplicationServlet extends HttpServlet {
 		if (widgetset == null) {
 			widgetset = DEFAULT_WIDGETSET;
 		}
+		
+		if (themeName == null) themeName = "default";
 
 		page
 				.write("', pathInfo: '"
@@ -531,7 +524,7 @@ public class ApplicationServlet extends HttpServlet {
 						+ "/styles.css\">\n"
 						+ "</head>\n<body style=\"width:100%;height:100%;border:0;margin:0\">\n"
 						+ "	<iframe id=\"__gwt_historyFrame\" style=\"width:0;height:0;border:0;overflow:hidden\"></iframe>\n"
-						+ "	<div id=\"itmill-ajax-window\"></div>"
+						+ "	<div id=\"itmill-ajax-window\" style=\"position: absolute;top:0;left:0;width:100%;height:100%;border:0;margin:0\"></div>"
 						+ "	</body>\n" + "</html>\n");
 
 		page.close();
