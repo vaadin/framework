@@ -682,7 +682,8 @@
 		</java>
 		<echo>PDF Manual: converting fo to pdf</echo>
 		<!-- Run XEP FO processor to convert FO to PDF -->
-		<java classname="com.renderx.xep.XSLDriver" failonerror="yes" fork="yes" maxmemory="512m" input="build/result/book.fo" output="${output-dir}/doc/manual.pdf">
+		<java classname="com.renderx.xep.XSLDriver" error="build/result/xep-error.log" failonerror="yes" fork="yes" maxmemory="512m" 
+		input="build/result/book.fo" output="${output-dir}/doc/manual.pdf">
 			<arg value="-Dcom.renderx.xep.CONFIG=build/lib/XEP/xep.xml" />
 			<classpath>
 				<pathelement location="build/lib/XEP/lib/tools.jar" />
