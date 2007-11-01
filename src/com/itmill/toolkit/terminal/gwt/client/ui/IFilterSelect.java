@@ -125,7 +125,6 @@ public class IFilterSelect extends Composite implements Paintable,
 			setPrevButtonActive(first > 1);
 			setNextButtonActive(last < totalSuggestions);
 			setPopupPositionAndShow(this);
-
 		}
 
 		private void setNextButtonActive(boolean b) {
@@ -274,7 +273,7 @@ public class IFilterSelect extends Composite implements Paintable,
 
 	private static final String CLASSNAME = "i-filterselect";
 
-	public static final int PAGELENTH = 15;
+	public static final int PAGELENTH = 10;
 
 	private final FlowPanel panel = new FlowPanel();
 
@@ -311,6 +310,7 @@ public class IFilterSelect extends Composite implements Paintable,
 	private ArrayList allSuggestions;
 	private int totalMatches;
 	private boolean allowNewItem;
+	private boolean nullSelectionAllowed;
 
 	public IFilterSelect() {
 		selectedItemIcon.setVisible(false);
@@ -376,10 +376,9 @@ public class IFilterSelect extends Composite implements Paintable,
 		if (client.updateComponent(this, uidl, true))
 			return;
 
-		if (uidl.hasAttribute("immediate"))
-			immediate = true;
-		else
-			immediate = false;
+		immediate = uidl.hasAttribute("immediate");
+		
+		nullSelectionAllowed = uidl.hasAttribute("nullselect");
 
 		if (true) {
 			this.suggestionPopup.setPagingEnabled(true);
@@ -447,7 +446,14 @@ public class IFilterSelect extends Composite implements Paintable,
 
 	public void onSuggestionSelected(FilterSelectSuggestion suggestion) {
 		currentSuggestion = suggestion;
-		String newKey = String.valueOf(suggestion.getOptionKey());
+		String newKey;
+		if(suggestion.key.equals("")) {
+			// "nullselection"
+			newKey = "";
+		} else {
+			// normal selection
+			newKey = String.valueOf(suggestion.getOptionKey());
+		}
 		tb.setText(suggestion.getReplacementString());
 		setSelectedItemIcon(suggestion.getIconUri());
 		if (!newKey.equals(selectedOptionKey)) {

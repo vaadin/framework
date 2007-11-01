@@ -65,7 +65,7 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
 	/**
 	 * Holds value of property pageLength. 0 disables paging.
 	 */
-	protected int pageLength = 15;
+	protected int pageLength = 10;
 
 	// current page when the user is 'paging' trough options
 	private int currentPage;
@@ -132,8 +132,11 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
 		if (isNewItemsAllowed()) {
 			target.addAttribute("allownewitem", true);
 		}
+
+		boolean needNullSelectOption = false;
 		if (isNullSelectionAllowed()) {
 			target.addAttribute("nullselect", true);
+			needNullSelectOption = getNullSelectionItemId() == null;
 		}
 
 		// Constructs selected keys array
@@ -173,10 +176,29 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
 		 * target.addAttribute("totalMatches", this.optionFilter
 		 * .getMatchCount()); } else { i = getItemIds().iterator(); }
 		 */
+		target.startTag("options");
+
+		boolean paintNullSelection = needNullSelectOption
+				&& (currentPage == 0 && (filterstring == null
+						|| filterstring.equals("") || filterstring.equals("-")));
+
+		if (paintNullSelection) {
+			target.startTag("so");
+			target.addAttribute("caption", "-");
+			target.addAttribute("key", "");
+			target.endTag("so");
+		}
+
 		List options = getFilteredOptions();
 		if (options.size() > this.pageLength) {
 			int first = this.currentPage * this.pageLength;
 			int last = first + this.pageLength;
+			if(needNullSelectOption) {
+				if(currentPage > 0) {
+					first--;
+				}
+				last--;
+			}
 			if (options.size() < last) {
 				last = options.size();
 			}
@@ -185,7 +207,6 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
 		Iterator i = options.iterator();
 		// Paints the available selection options from data source
 
-		target.startTag("options");
 		while (i.hasNext()) {
 
 			// Gets the option attribute values
@@ -212,9 +233,11 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
 		}
 		target.endTag("options");
 
-		target.addAttribute("totalitems", size());
+		target.addAttribute("totalitems", size()
+				+ (needNullSelectOption ? 1 : 0));
 		if (this.filteredOptions != null) {
-			target.addAttribute("totalMatches", this.filteredOptions.size());
+			target.addAttribute("totalMatches", this.filteredOptions.size()
+					+ (needNullSelectOption ? 1 : 0));
 		}
 
 		// Paint variables
