@@ -571,6 +571,39 @@ public interface Container {
 		public boolean hasChildren(Object itemId);
 	}
 
+	/** Interface is implemented by containers that allow reducing their visiblecontents with
+	 * set of filters. 
+	 * 
+	 * When a set of filters are set, only items that match the filters are included in the
+	 * visible contents of the container. Still new items that do not match filters can be 
+	 * added to the container. Multiple filters can be added and the container remembers the 
+	 * state of the filters. When multiple filters are added, all filters must match for
+	 * an item to be visible in the container.
+	 * 
+	 * @since 5.0
+	 */
+	public interface Filterable extends Container {	
+		
+		/** Add a filter for given property.
+		 * 
+		 * Only items where given property for which toString() contains or starts 
+		 * with given filterString are visible in the container.
+		 * 
+		 * @param propertyId Property for which the filter is applied to.
+		 * @param filterString String that must match contents of the property
+		 * @param ignoreCase Determine if the casing can be ignored when comparing strings.
+		 * @param onlyMatchPrefix Only match prefixes; no other matches are included.
+		 */
+		public void addContainerFilter(Object propertyId, String filterString, boolean ignoreCase, boolean onlyMatchPrefix);
+		
+		/** Remove all filters from all properties. */
+		public void removeAllContainerFilters();
+
+		/** Remove all filters from given property. */
+		public void removeContainerFilters(Object propertyId);
+	}
+	
+	
 	/**
 	 * Interface implemented by viewer classes capable of using a Container as a
 	 * data source.
