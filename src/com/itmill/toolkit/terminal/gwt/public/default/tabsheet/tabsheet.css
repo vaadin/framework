@@ -112,8 +112,10 @@
 .i-tabsheet-loading .i-tabsheet-tabs .gwt-TabBarItem-selected span{
 	background: transparent url(../common/img/ajax-loader.gif) no-repeat;
 	display: block;
-	padding-left: 20px;
-	margin-left: -20px;
+	margin-left:-10px;
+	padding-left:10px;
+	margin-top:-12px;
+	padding-top:12px;
 }
 
 

@@ -45,7 +45,8 @@ public class ITabsheet extends FlowPanel implements Paintable,
 			if (ITabsheet.this.client != null
 					&& ITabsheet.this.activeTabIndex != tabIndex) {
 				addStyleDependentName("loading");
-				ITabsheet.this.tp.clear();
+				ITabsheet.this.tp.getWidget(
+						ITabsheet.this.tp.getVisibleWidget()).setVisible(false);
 				DeferredCommand.addCommand(new Command() {
 					public void execute() {
 						ITabsheet.this.client.updateVariable(ITabsheet.this.id,
@@ -157,7 +158,7 @@ public class ITabsheet extends FlowPanel implements Paintable,
 				String key = tab.getStringAttribute("key");
 				String caption = tab.getStringAttribute("caption");
 				if (caption == null) {
-					caption = "";
+					caption = "&nbsp;";
 				}
 
 				this.captions.add(caption);
