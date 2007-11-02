@@ -301,7 +301,7 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
 						"Select component (but not Tree or Table) can allow the user to directly "
 								+ "add new items to set of options. The new items are constrained to be "
 								+ "strings and thus feature only applies to simple lists.");
-		Button ll = (Button) set.getField("lazyLoading");
+		/*Button ll = (Button) set.getField("lazyLoading");
 		ll
 				.setDescription("In Ajax rendering mode select supports lazy loading and filtering of options.");
 		ll.addListener((ValueChangeListener) this);
@@ -309,7 +309,7 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
 		if (((Boolean) ll.getValue()).booleanValue()) {
 			set.getField("multiSelect").setVisible(false);
 			set.getField("newItemsAllowed").setVisible(false);
-		}
+		}*/
 		if (objectToConfigure instanceof Tree
 				|| objectToConfigure instanceof Table) {
 			set.removeItemProperty("newItemsAllowed");
