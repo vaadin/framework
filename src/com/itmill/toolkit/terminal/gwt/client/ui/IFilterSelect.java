@@ -2,6 +2,7 @@ package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 
 import com.google.gwt.user.client.Command;
@@ -15,6 +16,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.KeyboardListener;
+import com.google.gwt.user.client.ui.PopupListener;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -78,7 +80,7 @@ public class IFilterSelect extends Composite implements Paintable,
 	 * @author mattitahvonen
 	 * 
 	 */
-	public class SuggestionPopup extends PopupPanel implements PositionCallback {
+	public class SuggestionPopup extends PopupPanel implements PositionCallback, PopupListener {
 		private static final int EXTRASPACE = 8;
 
 		private static final String Z_INDEX = "30000";
@@ -91,6 +93,8 @@ public class IFilterSelect extends Composite implements Paintable,
 
 		private boolean isPagingEnabled = true;
 
+		private long lastAutoClosed;
+
 		SuggestionPopup() {
 			super(true);
 			this.menu = new SuggestionMenu();
@@ -98,7 +102,7 @@ public class IFilterSelect extends Composite implements Paintable,
 			setStyleName(CLASSNAME + "-suggestpopup");
 			DOM.setStyleAttribute(getElement(), "zIndex", Z_INDEX);
 
-			Element root = getElement();
+			Element root = getContainerElement();
 
 			DOM.setInnerHTML(up, "<span>Prev</span>");
 			DOM.sinkEvents(up, Event.ONCLICK);
@@ -108,6 +112,8 @@ public class IFilterSelect extends Composite implements Paintable,
 			DOM.appendChild(root, down);
 			DOM.appendChild(root, status);
 			DOM.setElementProperty(status, "className", CLASSNAME + "-status");
+			
+			this.addPopupListener(this);
 		}
 
 		public void showSuggestions(Collection currentSuggestions,
@@ -123,6 +129,11 @@ public class IFilterSelect extends Composite implements Paintable,
 					+ totalSuggestions);
 			setPrevButtonActive(first > 1);
 			setNextButtonActive(last < totalSuggestions);
+
+			// clear previously fixed width
+			menu.setWidth("");
+			DOM.setStyleAttribute(DOM.getFirstChild(menu.getElement()), "width", "");
+
 			setPopupPositionAndShow(this);
 		}
 
@@ -209,16 +220,20 @@ public class IFilterSelect extends Composite implements Paintable,
 		 *      int)
 		 */
 		public void setPosition(int offsetWidth, int offsetHeight) {
-			ApplicationConnection.getConsole().log("callback");
 			// reset menu size and retrieve its "natural"; size
 			menu.setHeight("");
-			menu.setWidth("");
 			offsetHeight = getOffsetHeight();
 			
-			offsetWidth = getOffsetWidth();
 			int desiredWidth = IFilterSelect.this.getOffsetWidth() - popupOpener.getOffsetWidth();
-			if(offsetWidth < desiredWidth) {
+			int w2 = DOM.getElementPropertyInt(DOM.getFirstChild(menu.getElement()), "offsetWidth");
+			if(w2 < desiredWidth) {
 				menu.setWidth(desiredWidth + "px");
+				DOM.setStyleAttribute(DOM.getFirstChild(menu.getElement()), "width", "100%");
+				w2 = desiredWidth;
+			}
+			if(Util.isIE()) {
+				ApplicationConnection.getConsole().log("perseensuti");
+				DOM.setStyleAttribute(getElement(), "width", w2 + "px");
 			}
 			
 			if (!isPagingEnabled && offsetHeight > Window.getClientHeight()) {
@@ -239,6 +254,21 @@ public class IFilterSelect extends Composite implements Paintable,
 				setPopupPosition(getPopupLeft(), top);
 			}
 		}
+
+		/**
+		 * @return true if popup was just closed
+		 */
+		public boolean isJustClosed() {
+			long now = (new Date()).getTime();
+			return (lastAutoClosed > 0 && (now - lastAutoClosed) < 200);
+		}
+
+		public void onPopupClosed(PopupPanel sender, boolean autoClosed) {
+			if(autoClosed) {
+				lastAutoClosed = (new Date()).getTime();
+			}
+		}
+		
 	}
 
 	public class SuggestionMenu extends MenuBar {
@@ -275,11 +305,11 @@ public class IFilterSelect extends Composite implements Paintable,
 		
 		public void setWidth(String width) {
 			super.setWidth(width);
-			if(!width.equals("") || width != null) {
-				DOM.setStyleAttribute(DOM.getFirstChild(getElement()), "width", "100%");
-			} else {
-				DOM.setStyleAttribute(DOM.getFirstChild(getElement()), "width", "");
-			}
+//			if(width != null && !width.equals("")) {
+//				DOM.setStyleAttribute(DOM.getFirstChild(getElement()), "width", "100%");
+//			} else {
+//				DOM.setStyleAttribute(DOM.getFirstChild(getElement()), "width", "");
+//			}
 		}
 	}
 
@@ -547,7 +577,11 @@ public class IFilterSelect extends Composite implements Paintable,
 	 * Listener for popupopener
 	 */
 	public void onClick(Widget sender) {
-		filterOptions(0, "");
+		// ask suggestionPopup if it was just closed, we are using GWT Popup's 
+		// auto close feature
+		if(!suggestionPopup.isJustClosed()) {
+			filterOptions(0, "");
+		}
 		tb.setFocus(true);
 		tb.selectAll();
 	}
