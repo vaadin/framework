@@ -28,7 +28,7 @@ public class ITMillDesktopLaunch {
 
 	public static void main(String[] args) {
 
-		Map serverArgs = ITMillStandardLaunch.parseArguments(args);
+		Map serverArgs = ITMillWebModeLaunch.parseArguments(args);
 		boolean deployed = false;
 		try {
 			// Default deployment: embedded.war
@@ -52,7 +52,7 @@ public class ITMillDesktopLaunch {
 		}
 
 		// Start the Winstone servlet container
-		String url = ITMillStandardLaunch.runServer(serverArgs);
+		String url = ITMillWebModeLaunch.runServer(serverArgs);
 
 		// Open browser into application URL
 		if (url != null) {
