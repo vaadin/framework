@@ -1603,8 +1603,11 @@ public class IndexedContainer implements Container, Container.Indexed,
 		
 		// Clearing filters?
 		if (filters == null || filters.isEmpty()) {
-			filters = null;
 			filteredItemIds = null;
+			if(filters != null) {
+				filters = null;
+				fireContentsChange();
+			}
 			return;
 		}
 		
