@@ -297,8 +297,8 @@ public abstract class AbstractSelect extends AbstractField implements
 		int keyIndex = 0;
 		// Support for external null selection item id
 		Collection ids = getItemIds();
-		if (getNullSelectionItemId() != null
-				&& (!ids.contains(getNullSelectionItemId()))) {
+		if (isNullSelectionAllowed() && getNullSelectionItemId() != null
+				&& !ids.contains(getNullSelectionItemId())) {
 			// Gets the option attribute values
 			Object id = getNullSelectionItemId();
 			String key = this.itemIdMapper.key(id);
@@ -324,6 +324,12 @@ public abstract class AbstractSelect extends AbstractField implements
 		while (i.hasNext()) {
 			// Gets the option attribute values
 			Object id = i.next();
+			if (!isNullSelectionAllowed() && id != null
+					&& id.equals(getNullSelectionItemId())) {
+				// Remove item if it's the null selection item but null
+				// selection is not allowed
+				continue;
+			}
 			String key = this.itemIdMapper.key(id);
 			String caption = getItemCaption(id);
 			Resource icon = getItemIcon(id); // Paints the option
@@ -862,7 +868,8 @@ public abstract class AbstractSelect extends AbstractField implements
 	 */
 	public void setMultiSelect(boolean multiSelect) {
 		if (multiSelect && getNullSelectionItemId() != null) {
-			throw new IllegalStateException();
+			throw new IllegalStateException(
+					"Multiselect and NullSelectionItemId can not be set at the same time.");
 		}
 		if (multiSelect != this.multiSelect) {
 
@@ -1496,7 +1503,8 @@ public abstract class AbstractSelect extends AbstractField implements
 	 */
 	public void setNullSelectionItemId(Object nullSelectionItemId) {
 		if (nullSelectionItemId != null && isMultiSelect()) {
-			throw new IllegalStateException();
+			throw new IllegalStateException(
+					"Multiselect and NullSelectionItemId can not be set at the same time.");
 		}
 		this.nullSelectionItemId = nullSelectionItemId;
 	}
