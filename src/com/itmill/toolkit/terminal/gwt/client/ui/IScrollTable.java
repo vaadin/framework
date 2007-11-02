@@ -285,8 +285,15 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 	 *            amount of rows in data set
 	 */
 	private void updateBody(UIDL uidl, int firstRow, int reqRows) {
-		if (uidl == null || reqRows < 1)
+		if (uidl == null || reqRows < 1) {
+			// container is empty, remove possibly existing rows
+			if(firstRow < 0) {
+				while(tBody.getLastRendered() > tBody.firstRendered)
+					tBody.unlinkRow(false);
+				tBody.unlinkRow(false);
+			}
 			return;
+		}
 
 		tBody.renderRows(uidl, firstRow, reqRows);
 
@@ -1517,7 +1524,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 		}
 
 		/**
-		 * This mehtod is used to instantiate new rows for this table. It
+		 * This method is used to instantiate new rows for this table. It
 		 * automatically sets correct widths to rows cells and assigns correct
 		 * client reference for child widgets.
 		 * 
