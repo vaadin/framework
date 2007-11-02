@@ -500,29 +500,20 @@ public class ApplicationServlet extends HttpServlet {
 		if (widgetset == null) {
 			widgetset = DEFAULT_WIDGETSET;
 		}
-		
-		if (themeName == null) themeName = "default";
 
+		if (themeName == null)
+			themeName = "default";
+
+		page.write("', pathInfo: '" + pathInfo + "'\n};\n" + "</script>\n"
+				+ "<script language='javascript' src='" + appUrl + "/"
+				+ WIDGETSET_DIRECTORY_PATH + widgetset + "/" + widgetset
+				+ ".nocache.js'></script>\n");
+		if (!themeName.equals("default"))
+			page.write("<link REL=\"stylesheet\" TYPE=\"text/css\" HREF=\""
+					+ appUrl + "/" // TODO relative url as above?
+					+ THEME_DIRECTORY_PATH + themeName + "/styles.css\">\n");
 		page
-				.write("', pathInfo: '"
-						+ pathInfo
-						+ "'\n};\n"
-						+ "</script>\n"
-						+ "<script language='javascript' src='"
-						+ appUrl
-						+ "/"
-						+ WIDGETSET_DIRECTORY_PATH
-						+ widgetset
-						+ "/"
-						+ widgetset
-						+ ".nocache.js'></script>\n"
-						+ "<link REL=\"stylesheet\" TYPE=\"text/css\" HREF=\""
-						+ appUrl
-						+ "/" // TODO relative url as above?
-						+ THEME_DIRECTORY_PATH
-						+ themeName
-						+ "/styles.css\">\n"
-						+ "</head>\n<body style=\"width:100%;height:100%;border:0;margin:0\">\n"
+				.write("</head>\n<body style=\"width:100%;height:100%;border:0;margin:0\">\n"
 						+ "	<iframe id=\"__gwt_historyFrame\" style=\"width:0;height:0;border:0;overflow:hidden\"></iframe>\n"
 						+ "	<div id=\"itmill-ajax-window\" style=\"position: absolute;top:0;left:0;width:100%;height:100%;border:0;margin:0\"></div>"
 						+ "	</body>\n" + "</html>\n");
