@@ -31,6 +31,7 @@ package com.itmill.toolkit.ui;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -335,6 +336,13 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 	 *      source, Map variables)
 	 */
 	public void changeVariables(Object source, Map variables) {
+
+		if (!isSelectable() && variables.containsKey("selected")) {
+			// Not-selectable is a special case, AbstractSelect does not support
+			// TODO could be optimized.
+			variables = new HashMap(variables);
+			variables.remove("selected");
+		}
 
 		// Collapses the nodes
 		if (variables.containsKey("collapse")) {

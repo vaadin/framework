@@ -407,12 +407,22 @@ public abstract class AbstractSelect extends AbstractField implements
 				LinkedList s = new LinkedList();
 				for (int i = 0; i < ka.length; i++) {
 					Object id = this.itemIdMapper.get(ka[i]);
-					if (id != null && containsId(id)) {
+					if (!isNullSelectionAllowed()
+							&& (id == null || id == getNullSelectionItemId())) {
+						// skip empty selection if nullselection is not allowed
+						requestRepaint();
+					} else if (id != null && containsId(id)) {
 						s.add(id);
 					} else if (this.itemIdMapper.isNewIdKey(ka[i])
 							&& newitem != null && newitem.length() > 0) {
 						s.add(newitem);
 					}
+				}
+
+				if (!isNullSelectionAllowed() && s.size() < 1) {
+					// empty selection not allowed, keep old value
+					requestRepaint();
+					return;
 				}
 
 				// Limits the deselection to the set of visible items
@@ -431,8 +441,14 @@ public abstract class AbstractSelect extends AbstractField implements
 				}
 			} else {
 				// Single select mode
+				if (!isNullSelectionAllowed()
+						&& (ka.length == 0 || ka[0] == null || ka[0] == getNullSelectionItemId())) {
+					requestRepaint();
+					return;
+				}
 				if (ka.length == 0) {
-					// Allows deselection only if the deselected item is visible
+					// Allows deselection only if the deselected item is
+					// visible
 					Object current = getValue();
 					Collection visible = getVisibleItemIds();
 					if (visible != null && visible.contains(current)) {
@@ -440,7 +456,10 @@ public abstract class AbstractSelect extends AbstractField implements
 					}
 				} else {
 					Object id = this.itemIdMapper.get(ka[0]);
-					if (id != null && id.equals(getNullSelectionItemId())) {
+					if (!isNullSelectionAllowed() && id == null) {
+						requestRepaint();
+					} else if (id != null
+							&& id.equals(getNullSelectionItemId())) {
 						setValue(null, true);
 					} else if (this.itemIdMapper.isNewIdKey(ka[0])) {
 						setValue(newitem);

@@ -1322,6 +1322,13 @@ public class Table extends AbstractSelect implements Action.Container,
 	 */
 	public void changeVariables(Object source, Map variables) {
 
+		if (!isSelectable() && variables.containsKey("selected")) {
+			// Not-selectable is a special case, AbstractSelect does not support
+			// TODO could be optimized.
+			variables = new HashMap(variables);
+			variables.remove("selected");
+		}
+
 		super.changeVariables(source, variables);
 
 		// Page start index
@@ -1522,8 +1529,15 @@ public class Table extends AbstractSelect implements Action.Container,
 		}
 		target.startTag("rows");
 		for (int i = 0; i < cells[0].length; i++) {
-			target.startTag("tr");
 			Object itemId = cells[CELL_ITEMID][i];
+
+			if (!isNullSelectionAllowed() && getNullSelectionItemId() != null
+					&& itemId == getNullSelectionItemId()) {
+				// Remove null selection item if null selection is not allowed
+				continue;
+			}
+
+			target.startTag("tr");
 
 			// tr attributes
 			if (rowheads) {
