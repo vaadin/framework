@@ -232,7 +232,6 @@ public class IFilterSelect extends Composite implements Paintable,
 				w2 = desiredWidth;
 			}
 			if(Util.isIE()) {
-				ApplicationConnection.getConsole().log("perseensuti");
 				DOM.setStyleAttribute(getElement(), "width", w2 + "px");
 			}
 			
