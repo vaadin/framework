@@ -75,8 +75,6 @@ import java.util.Collection;
  */
 public interface Container {
 
-	public final static Object NULL_ITEM_ID = new Object();
-
 	/**
 	 * Gets the Item with the given Item ID from the Container. If the Container
 	 * does not contain the requested Item, <code>null</code> is returned.
