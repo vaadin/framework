@@ -86,9 +86,11 @@ public class BeanItem extends PropertysetItem {
 				Class type = pd[i].getPropertyType();
 				String name = pd[i].getName();
 
-				Property p = new MethodProperty(type, bean, getMethod,
-						setMethod);
-				addItemProperty(name, p);
+				if ((getMethod != null) && (setMethod != null)) {
+					Property p = new MethodProperty(type, bean, getMethod,
+							setMethod);
+					addItemProperty(name, p);
+				}
 			}
 		} catch (java.beans.IntrospectionException ignored) {
 		}
