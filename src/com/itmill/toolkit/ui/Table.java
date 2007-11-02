@@ -1469,6 +1469,13 @@ public class Table extends AbstractSelect implements Action.Container,
 		boolean rowheads = getRowHeaderMode() != ROW_HEADER_MODE_HIDDEN;
 		Object[][] cells = getVisibleCells();
 		boolean iseditable = isEditable();
+		int rows = cells[0].length;
+
+		if (!isNullSelectionAllowed() && getNullSelectionItemId() != null
+				&& containsId(getNullSelectionItemId())) {
+			total--;
+			rows--;
+		}
 
 		// selection support
 		String[] selectedKeys;
@@ -1488,7 +1495,7 @@ public class Table extends AbstractSelect implements Action.Container,
 			target.addAttribute("selectmode", "none");
 		}
 		target.addAttribute("cols", cols);
-		target.addAttribute("rows", cells[0].length);
+		target.addAttribute("rows", rows);
 		target
 				.addAttribute("firstrow",
 						(this.reqFirstRowToPaint >= 0 ? this.reqFirstRowToPaint
