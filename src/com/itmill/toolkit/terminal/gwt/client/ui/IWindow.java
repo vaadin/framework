@@ -27,6 +27,10 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 	private static final int DEFAULT_HEIGHT = 300;
 
 	private static final int DEFAULT_WIDTH = 400;
+	
+	private static final int MIN_HEIGHT = 60;
+
+	private static final int MIN_WIDTH = 80;
 
 	private static Vector windowOrder = new Vector();
 
@@ -128,6 +132,8 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 	}
 
 	protected void constructDOM() {
+		Element outerHeader = DOM.createDiv();
+		DOM.setElementProperty(outerHeader, "className", CLASSNAME + "-outerheader");
 		header = DOM.createDiv();
 		DOM.setElementProperty(header, "className", CLASSNAME + "-header");
 		contents = DOM.createDiv();
@@ -155,7 +161,8 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 		DOM.sinkEvents(wrapper, Event.ONKEYDOWN);
 
 		DOM.appendChild(wrapper2, closeBox);
-		DOM.appendChild(wrapper2, header);
+		DOM.appendChild(wrapper2, outerHeader);
+		DOM.appendChild(outerHeader, header);
 		DOM.appendChild(wrapper2, contents);
 		DOM.appendChild(wrapper2, footer);
 		DOM.appendChild(wrapper, wrapper2);
@@ -322,11 +329,11 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 
 	public void setSize(Event event, boolean updateVariables) {
 		int w = DOM.eventGetScreenX(event) - startX + origW;
-		if (w < 60)
-			w = 60;
+		if (w < MIN_WIDTH)
+			w = MIN_WIDTH;
 		int h = DOM.eventGetScreenY(event) - startY + origH;
-		if (h < 60)
-			h = 60;
+		if (h < MIN_HEIGHT)
+			h = MIN_HEIGHT;
 		setWidth(w + "px");
 		setHeight(h + "px");
 		if (updateVariables) {

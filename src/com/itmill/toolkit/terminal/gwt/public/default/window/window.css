@@ -24,6 +24,12 @@
 	background: transparent url(img/right-bg.png) repeat-y top right;
 }
 
+.i-window-outerheader {
+	height: 18px;
+	padding: 8px 34px 14px 12px;
+	background: #fff;
+}
+
 .i-window-header {
 	font-size: 18px;
 	line-height: 18px;
@@ -31,18 +37,17 @@
 	letter-spacing: -0.03em;
 	color: #f14c1a;
 	white-space: nowrap;
-	height: 18px;
-	padding: 6px 18px 14px 12px;
-	background: #fff;
 	cursor: move;
+	text-overflow:ellipsis;
+	overflow:hidden;
 }
 
-.i-window-header:before {
+.i-window-outerheader:before {
 	display: block;
 	content: "";
 	width: 21px;
 	height: 21px;
-	margin: -27px 0 6px -32px;
+	margin: -29px 0 6px -32px;
 	background: transparent url(img/top-left.png);
 }
 
