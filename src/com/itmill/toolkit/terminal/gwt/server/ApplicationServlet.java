@@ -513,7 +513,7 @@ public class ApplicationServlet extends HttpServlet {
 					+ appUrl + "/" // TODO relative url as above?
 					+ THEME_DIRECTORY_PATH + themeName + "/styles.css\">\n");
 		page
-				.write("</head>\n<body style=\"width:100%;height:100%;border:0;margin:0\">\n"
+				.write("</head>\n<body style=\"width:100%;height:100%;border:0;margin:0;overflow:auto;\">\n"
 						+ "	<iframe id=\"__gwt_historyFrame\" style=\"width:0;height:0;border:0;overflow:hidden\"></iframe>\n"
 						+ "	<div id=\"itmill-ajax-window\" style=\"position: absolute;top:0;left:0;width:100%;height:100%;border:0;margin:0\"></div>"
 						+ "	</body>\n" + "</html>\n");
