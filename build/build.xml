@@ -421,7 +421,7 @@
 				<exclude name="**/.svn" />
 				<exclude name="openajax/**" />
 				<exclude name="ITMILL/widgetsets/**" />
-				<exclude name="ITMILL/themes/tests-*" />
+				<!-- <exclude name="ITMILL/themes/tests-*" /> -->
 				<exclude name="WEB-INF/classes/**" />
 			</fileset>
 		</copy>
@@ -494,7 +494,7 @@
 				<patternset>
 					<exclude name="${toolkit-package}/demo/**" />
 					<exclude name="${toolkit-package}/launcher/**" />
-					<exclude name="${toolkit-package}/tests/**" />
+					<!-- <exclude name="${toolkit-package}/tests/**" /> -->
 				</patternset>
 			</fileset>
 			<!-- fileupload, see build/external/fileupload/build.xml -->
@@ -505,7 +505,7 @@
 			<fileset dir="build/result/src">
 				<patternset>
 					<exclude name="${toolkit-package}/demo/**" />
-					<exclude name="${toolkit-package}/tests/**" />
+					<!-- <exclude name="${toolkit-package}/tests/**" /> -->
 					<exclude name="${toolkit-package}/launcher/**" />
 				</patternset>
 			</fileset>
