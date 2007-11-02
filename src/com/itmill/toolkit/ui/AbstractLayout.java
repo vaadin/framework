@@ -20,7 +20,7 @@ public abstract class AbstractLayout extends AbstractComponentContainer
 	 * is set to true, if the client-side implementation should leave extra
 	 * space at that edge.
 	 */
-	private boolean[] margins;
+	protected boolean[] margins;
 
 	/**
 	 * Height of the layout. Set to -1 for undefined height.
@@ -197,7 +197,7 @@ public abstract class AbstractLayout extends AbstractComponentContainer
 			target.addAttribute("height", getHeight()
 					+ UNIT_SYMBOLS[getHeightUnits()]);
 		if (getWidth() > -1)
-			target.addAttribute("height", getWidth()
+			target.addAttribute("width", getWidth()
 					+ UNIT_SYMBOLS[getWidthUnits()]);
 	}
 
