@@ -61,24 +61,26 @@ public class TableSelectTest extends CustomComponent implements
 		t.setNullSelectionAllowed(false);
 		t.addListener(this);
 
-		t = new Table("multi nullsel nullselid");
+		t = new Table("multi(fails) nullsel nullselid");
 		main.addComponent(t);
 		id = t(t);
 		t.setNullSelectionItemId(id);
 		try {
 			t.setMultiSelect(true);
+			t.setCaption("multi(SHOLD FAIL BUT DID NOT) nullsel nullselid");
 		} catch (Exception e) {
 			System.err.println("failed ok");
 		}
 		t.setNullSelectionAllowed(true);
 		t.addListener(this);
 
-		t = new Table("multi NO-nullsel nullselid");
+		t = new Table("multi(fails) NO-nullsel nullselid");
 		main.addComponent(t);
 		id = t(t);
 		t.setNullSelectionItemId(id);
 		try {
 			t.setMultiSelect(true);
+			t.setCaption("multi(SHOLD FAIL BUT DID NOT) NO-nullsel nullselid");
 		} catch (Exception e) {
 			System.err.println("failed ok");
 		}
