@@ -74,32 +74,32 @@ public class OrderedLayout extends AbstractLayout {
 	/**
 	 * Contained component should be aligned horizontally to the left.
 	 */
-	private int ALIGNMENT_LEFT = 1;
+	public static final int ALIGNMENT_LEFT = 1;
 
 	/**
 	 * Contained component should be aligned horizontally to the right.
 	 */
-	private int ALIGNMENT_RIGHT = 2;
+	public static final int ALIGNMENT_RIGHT = 2;
 
 	/**
 	 * Contained component should be aligned vertically to the top.
 	 */
-	private int ALIGNMENT_TOP = 4;
+	public static final int ALIGNMENT_TOP = 4;
 
 	/**
 	 * Contained component should be aligned vertically to the bottom.
 	 */
-	private int ALIGNMENT_BOTTOM = 8;
+	public static final int ALIGNMENT_BOTTOM = 8;
 
 	/**
 	 * Contained component should be horizontally aligned to center.
 	 */
-	private int HORIZONTAL_ALIGNMENT_CENTER = 16;
-	
+	public static final int HORIZONTAL_ALIGNMENT_CENTER = 16;
+
 	/**
 	 * Contained component should be vertically aligned to center.
 	 */
-	private int VERTICAL_ALIGNMENT_CENTER = 32;
+	public static final int VERTICAL_ALIGNMENT_CENTER = 32;
 
 	/**
 	 * Orientation of the layout.
@@ -215,7 +215,7 @@ public class OrderedLayout extends AbstractLayout {
 		super.paintContent(target);
 
 		// Adds the attributes: orientation
-		// note that the default values (b/vertival) are omitted
+		// note that the default values (b/vertical) are omitted
 		if (orientation == ORIENTATION_HORIZONTAL)
 			target.addAttribute("orientation", "horizontal");
 
@@ -238,7 +238,7 @@ public class OrderedLayout extends AbstractLayout {
 							.intValue();
 				else
 					// Default alignment is top-left
-					alignments += ALIGNMENT_TOP + ALIGNMENT_LEFT;
+					alignments += (ALIGNMENT_TOP + ALIGNMENT_LEFT);
 				if (i.hasNext())
 					alignments += ",";
 			}
@@ -317,7 +317,8 @@ public class OrderedLayout extends AbstractLayout {
 	}
 
 	/**
-	 * Set alignment for one contained component in this layout.
+	 * Set alignment for one contained component in this layout. Alignment is
+	 * calculated as a bit mask of the two passed values.
 	 * 
 	 * @param childComponent
 	 *            the component to align within it's layout cell.

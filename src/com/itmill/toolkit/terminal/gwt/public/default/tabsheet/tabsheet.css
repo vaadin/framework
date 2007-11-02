@@ -67,7 +67,6 @@
 	border-bottom: none;
 	background-color: #fff;
 	overflow: auto;
-	padding: 15px 18px 6px 18px;
 }
 
 .i-tabsheet-deco {
@@ -112,20 +111,12 @@
 .i-tabsheet-loading .i-tabsheet-tabs .gwt-TabBarItem-selected span{
 	background: transparent url(../common/img/ajax-loader.gif) no-repeat;
 	display: block;
-	margin-left:-10px;
-	padding-left:10px;
-	margin-top:-12px;
-	padding-top:12px;
+	margin-left: -10px;
+	padding-left: 10px;
+	margin-top: -12px;
+	padding-top: 12px;
 }
 
-
-
-
-/* Tabsheet without padding (NO_PADDING style) */
-
-.i-tabsheet-content-nopad {
-	padding: 0;
-}
 
 
 
@@ -133,11 +124,9 @@
 /* IE specific styles */
 * html .i-tabsheet-content {
 	border-bottom: 1px solid #babfc0;
-	padding: 15px 18px;
 }
 *+html .i-tabsheet-content {
 	border-bottom: 1px solid #babfc0;
-	padding: 15px 18px;
 }
 
 * html .i-tabsheet-tabs {
@@ -175,13 +164,4 @@
 *+html .i-tabsheet-deco {
 	height: 0;
 	overflow: hidden;
-}
-
-/* Without padding */
-
-* html .i-tabsheet-content-nopad {
-	padding: 0;
-}
-*+html .i-tabsheet-content-nopad {
-	padding: 0;
 }

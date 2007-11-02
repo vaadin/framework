@@ -23,18 +23,10 @@ import com.itmill.toolkit.terminal.Sizeable;
  */
 public class ExpandLayout extends OrderedLayout implements Sizeable {
 
-	private int height = 100;
-
-	private int width = 100;
-
-	private int widthUnit = UNITS_PERCENTAGE;
-
-	private int heightUnit = UNITS_PERCENTAGE;
-
 	private Component expanded;
 
 	public ExpandLayout() {
-
+		setSizeFull();
 	}
 
 	public ExpandLayout(int orientation) {
@@ -117,36 +109,4 @@ public class ExpandLayout extends OrderedLayout implements Sizeable {
 			expanded = newComponent;
 	}
 
-	public int getHeight() {
-		return height;
-	}
-
-	public int getHeightUnits() {
-		return heightUnit;
-	}
-
-	public int getWidth() {
-		return width;
-	}
-
-	public int getWidthUnits() {
-		return widthUnit;
-	}
-
-	public void setHeight(int height) {
-		this.height = height;
-
-	}
-
-	public void setHeightUnits(int units) {
-		this.heightUnit = units;
-	}
-
-	public void setWidth(int width) {
-		this.width = width;
-	}
-
-	public void setWidthUnits(int units) {
-		this.widthUnit = units;
-	}
 }

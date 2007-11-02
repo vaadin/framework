@@ -21,7 +21,7 @@ public abstract class AbstractLayout extends AbstractComponentContainer
 	 * space at that edge.
 	 */
 	protected boolean[] margins;
-
+	
 	/**
 	 * Height of the layout. Set to -1 for undefined height.
 	 */
@@ -73,7 +73,7 @@ public abstract class AbstractLayout extends AbstractComponentContainer
 		margins = new boolean[] { topEnabled, rightEnabled, bottomEnabled,
 				leftEnabled };
 	}
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -182,15 +182,18 @@ public abstract class AbstractLayout extends AbstractComponentContainer
 	 * @see com.itmill.toolkit.ui.AbstractComponent#paintContent(com.itmill.toolkit.terminal.PaintTarget)
 	 */
 	public void paintContent(PaintTarget target) throws PaintException {
-		super.paintContent(target);
 
 		// Add margin info. Defaults to false.
 		if (margins == null)
 			setMargin(false);
-		target.addAttribute("marginTop", margins[0]);
-		target.addAttribute("marginRight", margins[1]);
-		target.addAttribute("marginBottom", margins[2]);
-		target.addAttribute("marginLeft", margins[3]);
+		if (margins[0])
+			target.addAttribute("marginTop", margins[0]);
+		if (margins[1])
+			target.addAttribute("marginRight", margins[1]);
+		if (margins[2])
+			target.addAttribute("marginBottom", margins[2]);
+		if (margins[3])
+			target.addAttribute("marginLeft", margins[3]);
 
 		// Add size info
 		if (getHeight() > -1)

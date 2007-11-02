@@ -13,6 +13,7 @@ import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Caption;
 import com.itmill.toolkit.terminal.gwt.client.Container;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
+import com.itmill.toolkit.terminal.gwt.client.StyleConstants;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
 /**
@@ -28,6 +29,13 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
 	public static final int ORIENTATION_VERTICAL = 0;
 	public static final int ORIENTATION_HORIZONTAL = 1;
 
+	public static final int ALIGNMENT_LEFT = 1;
+	public static final int ALIGNMENT_RIGHT = 2;
+	public static final int ALIGNMENT_TOP = 4;
+	public static final int ALIGNMENT_BOTTOM = 8;
+	public static final int HORIZONTAL_ALIGNMENT_CENTER = 16;
+	public static final int VERTICAL_ALIGNMENT_CENTER = 32;
+
 	int orientationMode = ORIENTATION_VERTICAL;
 
 	protected HashMap componentToCaption = new HashMap();
@@ -39,6 +47,11 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
 	 * horizontal layout this is TR and for vertical DIV.
 	 */
 	protected Element childContainer;
+	
+	/*
+	 * Margin element that provides marginals.
+	 */
+	private Element margin;
 
 	public IOrderedLayout(int orientation) {
 		orientationMode = orientation;
@@ -47,20 +60,18 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
 	}
 
 	protected void constructDOM() {
-		switch (orientationMode) {
-		case ORIENTATION_HORIZONTAL:
-			Element table = DOM.createTable();
-			Element tBody = DOM.createTBody();
-			childContainer = DOM.createTR();
-			DOM.appendChild(table, tBody);
+		margin = DOM.createDiv();
+		Element table = DOM.createTable();
+		Element tBody = DOM.createTBody();
+		childContainer = orientationMode == ORIENTATION_HORIZONTAL ? DOM
+				.createTR() : tBody;
+		DOM.appendChild(table, tBody);
+		if (orientationMode == ORIENTATION_HORIZONTAL)
 			DOM.appendChild(tBody, childContainer);
-			setElement(table);
-			break;
-		default:
-			childContainer = DOM.createDiv();
-			setElement(childContainer);
-			break;
-		}
+		setElement(table);
+		// prevent unwanted spacing
+		DOM.setElementAttribute(table, "cellSpacing", "0");
+		DOM.setElementAttribute(table, "cellPadding", "0");
 	}
 
 	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -88,6 +99,7 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
 		while (newIt.hasNext()) {
 			Widget child = (Widget) newIt.next();
 			UIDL childUidl = (UIDL) newUidl.next();
+
 			if (oldChild == null && oldIt.hasNext()) {
 				// search for next old Paintable which still exists in layout
 				// and delete others
@@ -133,6 +145,60 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
 			if (!uidlWidgets.contains(p))
 				removePaintable(p);
 		}
+
+		// Component alignments as a comma separated list.
+		// See com.itmill.toolkit.ui.OrderedLayout.java for possible values.
+		String[] alignments = uidl.getStringAttribute("alignments").split(",");
+		int alignmentIndex = 0;
+
+		// Insert alignment attributes
+		Iterator it = getPaintables().iterator();
+		while (it.hasNext()) {
+
+			// Calculate alignment info
+			int alignment = Integer.parseInt((alignments[alignmentIndex++]));
+			// Vertical alignment
+			String vAlign = "";
+			if ((alignment & ALIGNMENT_TOP) == ALIGNMENT_TOP)
+				vAlign = "top";
+			else if ((alignment & ALIGNMENT_BOTTOM) == ALIGNMENT_BOTTOM)
+				vAlign = "bottom";
+			else if ((alignment & VERTICAL_ALIGNMENT_CENTER) == VERTICAL_ALIGNMENT_CENTER)
+				vAlign = "middle";
+			// Horizontal alignment
+			String hAlign = "";
+			if ((alignment & ALIGNMENT_LEFT) == ALIGNMENT_LEFT)
+				hAlign = "left";
+			else if ((alignment & ALIGNMENT_RIGHT) == ALIGNMENT_RIGHT)
+				hAlign = "right";
+			else if ((alignment & HORIZONTAL_ALIGNMENT_CENTER) == HORIZONTAL_ALIGNMENT_CENTER)
+				hAlign = "center";
+
+			Element td = DOM.getParent(((Widget) it.next()).getElement());
+			DOM.setStyleAttribute(td, "vertical-align", vAlign);
+			DOM.setStyleAttribute(td, "text-align", hAlign);
+		}
+
+		// Modify layout marginals
+		String marginClasses = "";
+		if (uidl.hasAttribute("marginTop"))
+			marginClasses = StyleConstants.LAYOUT_MARGIN_TOP;
+		if (uidl.hasAttribute("marginRight"))
+			marginClasses = StyleConstants.LAYOUT_MARGIN_RIGHT;
+		if (uidl.hasAttribute("marginBottom"))
+			marginClasses = StyleConstants.LAYOUT_MARGIN_BOTTOM;
+		if (uidl.hasAttribute("marginLeft"))
+			marginClasses = StyleConstants.LAYOUT_MARGIN_LEFT;
+		
+		DOM.setElementProperty(margin, "className", marginClasses);
+		
+		// Adjust size
+		if(uidl.hasAttribute("width"))
+			setWidth(uidl.getStringAttribute("width"));
+		else setWidth("100%");
+		if(uidl.hasAttribute("height"))
+			setHeight(uidl.getStringAttribute("height"));
+		else setHeight("");
 	}
 
 	/**
@@ -202,7 +268,8 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
 		} else {
 			Element container = createWidgetWrappper();
 			DOM.insertChild(childContainer, container, beforeIndex);
-			insert(w, container, beforeIndex, false);
+			insert(w, orientationMode == ORIENTATION_HORIZONTAL ? container
+					: DOM.getFirstChild(container), beforeIndex, false);
 		}
 	}
 
@@ -214,7 +281,9 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
 		case ORIENTATION_HORIZONTAL:
 			return DOM.createTD();
 		default:
-			return DOM.createDiv();
+			Element tr = DOM.createTR();
+			DOM.appendChild(tr, DOM.createTD());
+			return tr;
 		}
 	}
 
@@ -253,7 +322,8 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
 	public void add(Widget w) {
 		Element wrapper = createWidgetWrappper();
 		DOM.appendChild(childContainer, wrapper);
-		super.add(w, wrapper);
+		super.add(w, orientationMode == ORIENTATION_HORIZONTAL ? wrapper : DOM
+				.getFirstChild(wrapper));
 	}
 
 	public boolean remove(int index) {
@@ -265,7 +335,9 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
 		boolean removed = super.remove(w);
 		if (removed) {
 			if (!(w instanceof Caption)) {
-				DOM.removeChild(childContainer, wrapper);
+				DOM.removeChild(childContainer,
+						orientationMode == ORIENTATION_HORIZONTAL ? wrapper
+								: DOM.getParent(wrapper));
 			}
 			return true;
 		}

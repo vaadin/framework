@@ -29,8 +29,10 @@
 package com.itmill.toolkit.ui;
 
 import java.lang.reflect.Method;
-import java.util.LinkedList;
 import java.util.Iterator;
+import java.util.LinkedList;
+
+import com.itmill.toolkit.terminal.Sizeable;
 
 /**
  * Extension to {@link AbstractComponent} that defines the default
@@ -44,8 +46,8 @@ import java.util.Iterator;
  * @since 3.0
  */
 public abstract class AbstractComponentContainer extends AbstractComponent
-		implements ComponentContainer {
-
+		implements ComponentContainer, Sizeable {
+	
 	/**
 	 * Constructs a new component container.
 	 */
@@ -205,4 +207,5 @@ public abstract class AbstractComponentContainer extends AbstractComponent
 			fireComponentDetachEvent(c);
 		}
 	}
+	
 }

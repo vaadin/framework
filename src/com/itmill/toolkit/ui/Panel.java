@@ -100,13 +100,13 @@ public class Panel extends AbstractLayout implements Scrollable,
 	}
 
 	/**
-	 * Creates a new empty panel with caption. Ordered layout is used.
+	 * Creates a new empty panel with caption. Default layout is used.
 	 * 
 	 * @param caption
 	 *            the caption used in the panel.
 	 */
 	public Panel(String caption) {
-		this(caption, new OrderedLayout());
+		this(caption, null);
 	}
 
 	/**
@@ -140,8 +140,11 @@ public class Panel extends AbstractLayout implements Scrollable,
 	public void setLayout(Layout layout) {
 
 		// Only allow non-null layouts
-		if (layout == null)
+		if (layout == null) {
 			layout = new OrderedLayout();
+			// Force margins by default
+			layout.setMargin(true);
+		}
 
 		// Sets the panel to be parent for the layout
 		layout.setParent(this);
@@ -182,18 +185,22 @@ public class Panel extends AbstractLayout implements Scrollable,
 	public void paintContent(PaintTarget target) throws PaintException {
 		layout.paint(target);
 
-		// We need to add these variables here ourselves, because Panel needs
-		// width and height as variables, not attributes
-		
-		// Add margin info. Defaults to false.
+		// We need to add these attributes here (and not in super.paintContent),
+		// because Panel needs to have size information as variables.
+
+		// Add margin info
 		if (margins == null)
 			setMargin(false);
-		target.addAttribute("marginTop", margins[0]);
-		target.addAttribute("marginRight", margins[1]);
-		target.addAttribute("marginBottom", margins[2]);
-		target.addAttribute("marginLeft", margins[3]);
+		if (margins[0])
+			target.addAttribute("marginTop", margins[0]);
+		if (margins[1])
+			target.addAttribute("marginRight", margins[1]);
+		if (margins[2])
+			target.addAttribute("marginBottom", margins[2]);
+		if (margins[3])
+			target.addAttribute("marginLeft", margins[3]);
 
-		// Add size info
+		// Add size info as variables
 		if (getHeight() > -1)
 			target.addVariable(this, "height", getHeight()
 					+ UNIT_SYMBOLS[getHeightUnits()]);
@@ -261,7 +268,7 @@ public class Panel extends AbstractLayout implements Scrollable,
 	 */
 	public void addComponent(Component c) {
 		layout.addComponent(c);
-		// No repaint request is made as we except the underlaying container to
+		// No repaint request is made as we except the underlying container to
 		// request repaints
 	}
 
@@ -274,7 +281,7 @@ public class Panel extends AbstractLayout implements Scrollable,
 	 */
 	public void removeComponent(Component c) {
 		layout.removeComponent(c);
-		// No repaint request is made as we except the underlaying container to
+		// No repaint request is made as we except the underlying container to
 		// request repaints
 	}
 

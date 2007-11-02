@@ -57,7 +57,6 @@
 	border-bottom: none;
 	background-color: #fff;
 	overflow: auto;
-	padding: 15px 18px 6px 18px;
 }
 
 .i-panel-deco {
@@ -101,7 +100,6 @@
 .i-panel-content-light {
 	border: none;
 	background: transparent;
-	padding: 15px 18px;
 }
 
 .i-panel-deco-light {
@@ -111,18 +109,9 @@
 
 
 
-/* Panel without padding (NO_PADDING style) */
-
-.i-panel-content-nopad {
-	padding: 0;
-}
-
-
-
 
 
 /* Light panel contained within another panel or a tabsheet */
-/* Use more precise selector to override IE specific rules automatically */
 
 .i-panel .i-panel-caption-light,
 .i-tabsheet .i-panel-caption-light {
@@ -159,11 +148,9 @@
 
 * html .i-panel-content {
 	border-bottom: 1px solid #babfc0;
-	padding: 15px 18px;
 }
 *+html .i-panel-content {
 	border-bottom: 1px solid #babfc0;
-	padding: 15px 18px;
 }
 
 * html .i-panel-deco {
@@ -187,12 +174,4 @@
 	overflow: hidden;
 	background: #c1c6cc;
 	border: none;
-}
-
-/* Without padding */
-* html .i-panel-content-nopad {
-	padding: 0;
-}
-*+html .i-panel-content-nopad {
-	padding: 0;
 }
