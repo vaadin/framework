@@ -479,7 +479,7 @@ public class ApplicationServlet extends HttpServlet {
 						+ "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n");
 
 		page
-				.write("<html xmlns=\"http://www.w3.org/1999/xhtml\" style=\"width:100%;height:100%;border:0;margin:0;overflow:hidden\">\n<head>\n<title>IT Mill Toolkit 5</title>\n"
+				.write("<html xmlns=\"http://www.w3.org/1999/xhtml\" style=\"width:100%;height:100%;border:0;margin:0;\">\n<head>\n<title>IT Mill Toolkit 5</title>\n"
 						+ "<script type=\"text/javascript\">\n"
 						+ "	var itmill = {\n" + "		appUri:'");
 
