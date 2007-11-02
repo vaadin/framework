@@ -14,6 +14,7 @@ import com.itmill.toolkit.terminal.gwt.client.ui.IFormLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.IGridLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.ILabel;
 import com.itmill.toolkit.terminal.gwt.client.ui.ILink;
+import com.itmill.toolkit.terminal.gwt.client.ui.IListSelect;
 import com.itmill.toolkit.terminal.gwt.client.ui.IOptionGroup;
 import com.itmill.toolkit.terminal.gwt.client.ui.IOrderedLayoutHorizontal;
 import com.itmill.toolkit.terminal.gwt.client.ui.IOrderedLayoutVertical;
@@ -88,6 +89,9 @@ public class DefaultWidgetSet implements WidgetSet {
 		} else if ("com.itmill.toolkit.terminal.gwt.client.ui.ISelect"
 				.equals(className)) {
 			return new ISelect();
+		} else if ("com.itmill.toolkit.terminal.gwt.client.ui.IListSelect"
+				.equals(className)) {
+			return new IListSelect();
 		} else if ("com.itmill.toolkit.terminal.gwt.client.ui.IPanel"
 				.equals(className)) {
 			return new IPanel();
@@ -199,7 +203,10 @@ public class DefaultWidgetSet implements WidgetSet {
 				if (type.equals("native"))
 					return "com.itmill.toolkit.terminal.gwt.client.ui.ISelect";
 			} else {
-				return "com.itmill.toolkit.terminal.gwt.client.ui.IFilterSelect";
+				if(uidl.hasAttribute("selectmode") && uidl.getStringAttribute("selectmode").equals("multi"))
+					return "com.itmill.toolkit.terminal.gwt.client.ui.IListSelect";
+				else
+					return "com.itmill.toolkit.terminal.gwt.client.ui.IFilterSelect";
 			}
 		} else if ("panel".equals(tag)) {
 			return "com.itmill.toolkit.terminal.gwt.client.ui.IPanel";
