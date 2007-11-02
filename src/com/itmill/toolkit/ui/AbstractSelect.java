@@ -195,7 +195,7 @@ public abstract class AbstractSelect extends AbstractField implements
 	 * 
 	 * <p>
 	 * Data interface does not support nulls as item ids. Selecting the item
-	 * idetified by this id is the same as selecting no items at all. This
+	 * identified by this id is the same as selecting no items at all. This
 	 * setting only affects the single select mode.
 	 * </p>
 	 */
@@ -861,7 +861,9 @@ public abstract class AbstractSelect extends AbstractField implements
 	 *            the New value of property multiSelect.
 	 */
 	public void setMultiSelect(boolean multiSelect) {
-
+		if (multiSelect && getNullSelectionItemId() != null) {
+			throw new IllegalStateException();
+		}
 		if (multiSelect != this.multiSelect) {
 
 			// Selection before mode change
@@ -1433,12 +1435,27 @@ public abstract class AbstractSelect extends AbstractField implements
 
 	}
 
-	// TODO javadoc
+	/**
+	 * Allow of disallow empty selection. If the select is in single-select
+	 * mode, you can make an item represent the empty selection by calling
+	 * <code>setNullSelectionItemId()</code>. This way you can for instance
+	 * set an icon and caption for the null selection item.
+	 * 
+	 * @param nullSelectionAllowed
+	 *            whether or not to allow empty selection
+	 * @see #setNullSelectionItemId(Object)
+	 * @see #isNullSelectionAllowed()
+	 */
 	public void setNullSelectionAllowed(boolean nullSelectionAllowed) {
 		this.nullSelectionAllowed = nullSelectionAllowed;
 	}
 
-	// TODO javadoc
+	/**
+	 * Checks if null empty selection is allowed.
+	 * 
+	 * @return whether or not empty selection is allowed
+	 * @see #setNullSelectionAllowed(boolean)
+	 */
 	public boolean isNullSelectionAllowed() {
 		return this.nullSelectionAllowed;
 	}
@@ -1449,7 +1466,7 @@ public abstract class AbstractSelect extends AbstractField implements
 	 * 
 	 * <p>
 	 * Data interface does not support nulls as item ids. Selecting the item
-	 * idetified by this id is the same as selecting no items at all. This
+	 * identified by this id is the same as selecting no items at all. This
 	 * setting only affects the single select mode.
 	 * </p>
 	 * 
@@ -1478,6 +1495,9 @@ public abstract class AbstractSelect extends AbstractField implements
 	 * @see #select(Object)
 	 */
 	public void setNullSelectionItemId(Object nullSelectionItemId) {
+		if (nullSelectionItemId != null && isMultiSelect()) {
+			throw new IllegalStateException();
+		}
 		this.nullSelectionItemId = nullSelectionItemId;
 	}
 
