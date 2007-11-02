@@ -137,7 +137,13 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 		this.client = client;
 		this.paintableId = uidl.getStringAttribute("id");
 		this.immediate = uidl.getBooleanAttribute("immediate");
-		this.totalRows = uidl.getIntAttribute("totalrows");
+		int newTotalRows = uidl.getIntAttribute("totalrows");
+		if(newTotalRows != totalRows) {
+			this.totalRows = newTotalRows;
+			if(initializedAndAttached)
+				tBody.setContainerHeight();
+		}
+		
 		this.pageLength = uidl.getIntAttribute("pagelength");
 		if (pageLength == 0)
 			pageLength = totalRows;
@@ -199,9 +205,11 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 			updateBody(rowData, uidl.getIntAttribute("firstrow"), uidl
 					.getIntAttribute("rows"));
 		} else {
-			getTBody().renderInitialRows(rowData,
+			tBody = new IScrollTableBody();
+
+			tBody.renderInitialRows(rowData,
 					uidl.getIntAttribute("firstrow"),
-					uidl.getIntAttribute("rows"), totalRows);
+					uidl.getIntAttribute("rows"));
 			bodyContainer.add(tBody);
 			initialContentReceived = true;
 			if (isAttached()) {
@@ -217,15 +225,6 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 			UIDL col = (UIDL) it.next();
 			tHead.updateCellFromUIDL(col);
 		}
-	}
-
-	private IScrollTableBody getTBody() {
-		if (tBody == null || totalRows != tBody.getTotalRows()) {
-			if (tBody != null)
-				tBody.removeFromParent();
-			tBody = new IScrollTableBody();
-		}
-		return tBody;
 	}
 
 	private void updateActionMap(UIDL c) {
@@ -1405,8 +1404,6 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 	 * "simulates" very large table, keeping spacers which take room of
 	 * unrendered rows.
 	 * 
-	 * @author mattitahvonen
-	 * 
 	 */
 	public class IScrollTableBody extends Panel {
 
@@ -1421,8 +1418,6 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 		private List renderedRows = new Vector();
 
 		private boolean initDone = false;
-
-		private int totalRows;
 
 		Element preSpacer = DOM.createDiv();
 		Element postSpacer = DOM.createDiv();
@@ -1461,9 +1456,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 			return DOM.getElementPropertyInt(preSpacer, "offsetWidth");
 		}
 
-		public void renderInitialRows(UIDL rowData, int firstIndex, int rows,
-				int totalRows) {
-			this.totalRows = totalRows;
+		public void renderInitialRows(UIDL rowData, int firstIndex, int rows) {
 			this.firstRendered = firstIndex;
 			this.lastRendered = firstIndex + rows - 1;
 			Iterator it = rowData.getChildIterator();
@@ -1602,8 +1595,14 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 
 		protected void onAttach() {
 			super.onAttach();
+			setContainerHeight();
+		}
+		
+		/**
+		 * Fix container blocks height according to totalRows to avoid "bouncing" when scrolling
+		 */
+		private void setContainerHeight() {
 			fixSpacers();
-			// fix container blocks height to avoid "bouncing" when scrolling
 			DOM.setStyleAttribute(container, "height", totalRows
 					* getRowHeight() + "px");
 		}
@@ -1613,10 +1612,6 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 					* firstRendered + "px");
 			DOM.setStyleAttribute(postSpacer, "height", getRowHeight()
 					* (totalRows - 1 - lastRendered) + "px");
-		}
-
-		public int getTotalRows() {
-			return totalRows;
 		}
 
 		public int getRowHeight() {
