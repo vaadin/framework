@@ -182,7 +182,24 @@ public class Panel extends AbstractLayout implements Scrollable,
 	public void paintContent(PaintTarget target) throws PaintException {
 		layout.paint(target);
 
-		super.paintContent(target);
+		// We need to add these variables here ourselves, because Panel needs
+		// width and height as variables, not attributes
+		
+		// Add margin info. Defaults to false.
+		if (margins == null)
+			setMargin(false);
+		target.addAttribute("marginTop", margins[0]);
+		target.addAttribute("marginRight", margins[1]);
+		target.addAttribute("marginBottom", margins[2]);
+		target.addAttribute("marginLeft", margins[3]);
+
+		// Add size info
+		if (getHeight() > -1)
+			target.addVariable(this, "height", getHeight()
+					+ UNIT_SYMBOLS[getHeightUnits()]);
+		if (getWidth() > -1)
+			target.addVariable(this, "width", getWidth()
+					+ UNIT_SYMBOLS[getWidthUnits()]);
 
 		if (isScrollable()) {
 			target.addVariable(this, "scrollleft", getScrollOffsetX());
