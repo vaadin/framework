@@ -7,12 +7,18 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
 
 import com.itmill.toolkit.Application;
 import com.itmill.toolkit.data.Property;
 import com.itmill.toolkit.data.util.HierarchicalContainer;
-import com.itmill.toolkit.ui.*;
+import com.itmill.toolkit.ui.Component;
+import com.itmill.toolkit.ui.CustomComponent;
+import com.itmill.toolkit.ui.ExpandLayout;
+import com.itmill.toolkit.ui.Label;
+import com.itmill.toolkit.ui.Panel;
+import com.itmill.toolkit.ui.SplitPanel;
+import com.itmill.toolkit.ui.Tree;
+import com.itmill.toolkit.ui.Window;
 
 /**
  * TestBench finds out testable classes within given java packages and adds them
@@ -56,7 +62,6 @@ public class TestBench extends com.itmill.toolkit.Application implements
 						.getTestableClassesForPackage(testablePackages[p]);
 				for (Iterator it = testableClasses.iterator(); it.hasNext();) {
 					Class t = (Class) it.next();
-					System.out.println(t);
 					// ignore TestBench itself
 					if (t.equals(TestBench.class))
 						continue;
@@ -75,7 +80,6 @@ public class TestBench extends com.itmill.toolkit.Application implements
 							e1.printStackTrace();
 						}
 					}
-					System.out.println(" Skipped " + t);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -99,7 +103,7 @@ public class TestBench extends com.itmill.toolkit.Application implements
 		bodyLayout.setLayout(new ExpandLayout());
 
 		mainLayout.addComponent(bodyLayout);
-		
+
 		mainLayout.setSplitPosition(30);
 
 		mainWindow.setLayout(mainLayout);
@@ -110,13 +114,11 @@ public class TestBench extends com.itmill.toolkit.Application implements
 	private Component createTestable(Class c) {
 		try {
 			Application app = (Application) c.newInstance();
-			System.out.println("Creating application " + c);
 			app.init();
 			return app.getMainWindow().getLayout();
 		} catch (Exception e) {
 			try {
 				CustomComponent cc = (CustomComponent) c.newInstance();
-				System.out.println("Creating component " + c);
 				return cc;
 			} catch (Exception e1) {
 				e1.printStackTrace();
