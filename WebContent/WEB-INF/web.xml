@@ -11,6 +11,29 @@
      IT Mill Toolkit examples
   </description>
 
+ <servlet>
+    <servlet-name>TestForNativeWindowing</servlet-name>
+    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+    <init-param>
+      <param-name>application</param-name>
+      <param-value>com.itmill.toolkit.tests.TestForNativeWindowing</param-value>
+    </init-param>
+  </servlet>
+  
+<servlet>
+        <servlet-name>iWork</servlet-name>
+        <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
+        <init-param>
+            <param-name>application</param-name>
+            <param-value>com.itmill.iwork.IWork</param-value>
+        </init-param>
+        <init-param>
+      <param-name>widgetset</param-name>
+      <param-value>com.itmill.iwork.gwt.WidgetSet</param-value>
+    </init-param>	    	
+    </servlet>
+    
+    <!--
 <servlet>
     <servlet-name>iWork</servlet-name>
     <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
@@ -19,7 +42,7 @@
       <param-value>com.itmill.iwork.IWork</param-value>
     </init-param>
   </servlet>
-  
+  -->
   
 <servlet>
     <servlet-name>TestSplitPanel</servlet-name>
@@ -273,6 +296,12 @@
       <param-value>com.itmill.toolkit.demo.CachingDemo</param-value>
     </init-param>
   </servlet>
+  
+  
+        <servlet-mapping>
+    <servlet-name>TestForNativeWindowing</servlet-name>
+    <url-pattern>/TestForNativeWindowing/*</url-pattern>
+  </servlet-mapping>
   
   
        <servlet-mapping>
