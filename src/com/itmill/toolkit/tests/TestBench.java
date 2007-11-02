@@ -48,8 +48,6 @@ public class TestBench extends com.itmill.toolkit.Application implements
 
 	public void init() {
 
-		setTheme("demo");
-
 		// Add testable classes to hierarchical container
 		for (int p = 0; p < testablePackages.length; p++) {
 			testables.addItem(testablePackages[p]);
