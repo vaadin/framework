@@ -41,6 +41,7 @@
 .i-filterselect-suggestmenu .gwt-MenuItem {
 	padding: 1px 5px;
 	cursor: pointer;
+	height: 18px;
 }
 
 .i-filterselect-suggestmenu .gwt-MenuItem-selected {
@@ -53,9 +54,11 @@
 .i-filterselect-prevpage-off,
 .i-filterselect-prevpage {
 	height: 11px;
+	width:100%;
 	background: transparent url(img/button-bg.png) no-repeat 50% 0;
 	text-align: center;
 	margin: 2px 0 0 0;
+	overflow:hidden;
 }
 .i-filterselect-prevpage {
 	background-position: 50% -1px;
@@ -71,9 +74,11 @@
 .i-filterselect-prevpage span {
 	display: block;
 	height: 12px;
+	width:100%;
 	background: transparent url(img/arrow-up.png) no-repeat 50% 40%;
 	text-indent: -90000px;
 	cursor: pointer;
+	overflow: hidden;
 }
 .i-filterselect-nextpage span {
 	background: transparent url(img/arrow-down.png) no-repeat 50% 60%;
@@ -94,20 +99,16 @@
 }
 
 .i-filterselect-status {
-	position: absolute;
-	margin-left: 100%;
-	margin-top: -18px;
-	background: #b6bbbc;
-	color: #fff;
 	font-size: 11px;
 	line-height: 11px;
-	padding: 4px 6px;
+	width:100%;
+	padding: 4px 0px;
 	height: 11px;
 	white-space: nowrap;
+	text-align: center;
+	margin-top: 2px;
+	border-top: 1px solid #b6bbbc;
 }
-
-
-
 
 /* IE specific styles */
 
