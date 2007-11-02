@@ -486,6 +486,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 			out.close();
 
 		} catch (Throwable e) {
+			e.printStackTrace();
 			// Writes the error report to client
 			OutputStreamWriter w = new OutputStreamWriter(out);
 			PrintWriter err = new PrintWriter(w);
