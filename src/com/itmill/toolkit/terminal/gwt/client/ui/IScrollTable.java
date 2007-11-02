@@ -1,6 +1,7 @@
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -81,7 +82,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 
 	private int selectMode = Table.SELECT_MODE_NONE;
 
-	private Vector selectedRowKeys = new Vector();
+	private HashSet selectedRowKeys = new HashSet();
 
 	private boolean initializedAndAttached = false;
 
@@ -138,12 +139,12 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 		this.paintableId = uidl.getStringAttribute("id");
 		this.immediate = uidl.getBooleanAttribute("immediate");
 		int newTotalRows = uidl.getIntAttribute("totalrows");
-		if(newTotalRows != totalRows) {
+		if (newTotalRows != totalRows) {
 			this.totalRows = newTotalRows;
-			if(initializedAndAttached)
+			if (initializedAndAttached)
 				tBody.setContainerHeight();
 		}
-		
+
 		this.pageLength = uidl.getIntAttribute("pagelength");
 		if (pageLength == 0)
 			pageLength = totalRows;
@@ -207,8 +208,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 		} else {
 			tBody = new IScrollTableBody();
 
-			tBody.renderInitialRows(rowData,
-					uidl.getIntAttribute("firstrow"),
+			tBody.renderInitialRows(rowData, uidl.getIntAttribute("firstrow"),
 					uidl.getIntAttribute("rows"));
 			bodyContainer.add(tBody);
 			initialContentReceived = true;
@@ -287,8 +287,8 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 	private void updateBody(UIDL uidl, int firstRow, int reqRows) {
 		if (uidl == null || reqRows < 1) {
 			// container is empty, remove possibly existing rows
-			if(firstRow < 0) {
-				while(tBody.getLastRendered() > tBody.firstRendered)
+			if (firstRow < 0) {
+				while (tBody.getLastRendered() > tBody.firstRendered)
 					tBody.unlinkRow(false);
 				tBody.unlinkRow(false);
 			}
@@ -1604,9 +1604,10 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 			super.onAttach();
 			setContainerHeight();
 		}
-		
+
 		/**
-		 * Fix container blocks height according to totalRows to avoid "bouncing" when scrolling
+		 * Fix container blocks height according to totalRows to avoid
+		 * "bouncing" when scrolling
 		 */
 		private void setContainerHeight() {
 			fixSpacers();
