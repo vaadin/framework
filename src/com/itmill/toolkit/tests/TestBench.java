@@ -98,7 +98,7 @@ public class TestBench extends com.itmill.toolkit.Application implements
 		bodyLayout.addStyleName("light");
 		bodyLayout.setHeight(100);
 		bodyLayout.setHeightUnits(Panel.UNITS_PERCENTAGE);
-		bodyLayout.setLayout(new OrderedLayout());
+		bodyLayout.setLayout(new ExpandLayout());
 
 		mainLayout.addComponent(bodyLayout);
 		
