@@ -402,8 +402,8 @@ public class GridLayout extends AbstractLayout {
 		super.paintContent(target);
 
 		// TODO refactor attribute names in future release.
-		target.addAttribute("rows", rows);
-		target.addAttribute("cols", cols);
+		target.addAttribute("h", rows);
+		target.addAttribute("w", cols);
 		
 		if (this.spacing)
 			target.addAttribute("spacing", this.spacing);
