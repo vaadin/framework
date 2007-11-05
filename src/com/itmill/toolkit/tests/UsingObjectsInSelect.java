@@ -22,8 +22,6 @@ public class UsingObjectsInSelect extends com.itmill.toolkit.Application
 		Window main = new Window("Select demo");
 		setMainWindow(main);
 
-		setTheme("corporate");
-
 		Panel panel = new Panel("Select demo");
 		panel.addComponent(select);
 		Panel panel2 = new Panel("Selection");
