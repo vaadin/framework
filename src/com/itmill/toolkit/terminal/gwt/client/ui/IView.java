@@ -28,7 +28,7 @@ public class IView extends SimplePanel implements Paintable,
 
 	private Paintable layout;
 
-	private HashSet subWindows = new HashSet();
+	private final HashSet subWindows = new HashSet();
 
 	private String id;
 
@@ -73,7 +73,7 @@ public class IView extends SimplePanel implements Paintable,
 		// Draw this application level window
 		UIDL childUidl = uidl.getChildUIDL(childIndex);
 		Paintable lo = (Paintable) client.getWidget(childUidl);
-		
+
 		if (layout != null) {
 			if (layout != lo) {
 				// remove old
@@ -106,6 +106,28 @@ public class IView extends SimplePanel implements Paintable,
 					actionHandler = new ShortcutActionHandler(id, client);
 				}
 				actionHandler.updateActionMap(childUidl);
+			} else if (childUidl.getTag().equals("notifications")) {
+				for (Iterator it = childUidl.getChildIterator(); it.hasNext();) {
+					UIDL notification = (UIDL) it.next();
+					String html = "";
+					if (notification.hasAttribute("caption")) {
+						html += "<H1>"
+								+ notification.getStringAttribute("caption")
+								+ "</H1>";
+					}
+					if (notification.hasAttribute("message")) {
+						html += "<p>"
+								+ notification.getStringAttribute("message")
+								+ "</p>";
+					}
+
+					String style = notification.hasAttribute("style") ? notification
+							.getStringAttribute("style")
+							: null;
+					int position = notification.getIntAttribute("position");
+					int delay = notification.getIntAttribute("delay");
+					new Notification(delay).show(html, position, style);
+				}
 			}
 		}
 
