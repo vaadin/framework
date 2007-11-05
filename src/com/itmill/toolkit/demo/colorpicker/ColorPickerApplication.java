@@ -20,7 +20,6 @@ public class ColorPickerApplication extends com.itmill.toolkit.Application {
 
 	public void init() {
 		setMainWindow(main);
-		setTheme("demo");
 
 		// Listen for value change events in the custom component,
 		// triggered when user clicks a button to select another color.
