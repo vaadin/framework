@@ -39,8 +39,8 @@ public class IGridLayout extends FlexTable implements Paintable, Container {
 					if ("gc".equals(c.getTag())) {
 						column++;
 						int w;
-						if (c.hasAttribute("cols")) {
-							w = c.getIntAttribute("cols");
+						if (c.hasAttribute("w")) {
+							w = c.getIntAttribute("w");
 						} else
 							w = 1;
 						((FlexCellFormatter) getCellFormatter()).setColSpan(
