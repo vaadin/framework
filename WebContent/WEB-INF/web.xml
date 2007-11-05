@@ -297,6 +297,15 @@
     </init-param>
   </servlet>
   
+  <servlet>
+    <servlet-name>NotificationDemo</servlet-name>
+    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+    <init-param>
+      <param-name>application</param-name>
+      <param-value>com.itmill.toolkit.demo.NotificationDemo</param-value>
+    </init-param>
+  </servlet>
+  
   
         <servlet-mapping>
     <servlet-name>TestForNativeWindowing</servlet-name>
@@ -432,6 +441,11 @@
   <servlet-mapping>
     <servlet-name>CachingDemo</servlet-name>
     <url-pattern>/CachingDemo/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>NotificationDemo</servlet-name>
+    <url-pattern>/NotificationDemo/*</url-pattern>
   </servlet-mapping>
 
   <welcome-file-list>

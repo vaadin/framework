@@ -29,18 +29,18 @@ public class IRichTextArea extends Composite implements Paintable,
 	protected ApplicationConnection client;
 
 	private boolean immediate = false;
-	
+
 	RichTextArea rta = new RichTextArea();
-	
+
 	RichTextToolbar formatter = new RichTextToolbar(rta);
 
 	public IRichTextArea() {
 		FlowPanel fp = new FlowPanel();
 		fp.add(formatter);
-		
+
 		rta.setWidth("100%");
 		rta.addFocusListener(this);
-		
+
 		fp.add(rta);
 
 		initWidget(fp);
@@ -51,28 +51,30 @@ public class IRichTextArea extends Composite implements Paintable,
 		this.client = client;
 		id = uidl.getId();
 
-		if (client.updateComponent(this, uidl, true))
+		if (client.updateComponent(this, uidl, true)) {
 			return;
+		}
 
 		immediate = uidl.getBooleanAttribute("immediate");
-		
-		rta.setText(uidl.getStringAttribute("text"));
+
+		rta.setHTML(uidl.getStringVariable("text"));
 
 	}
 
 	public void onChange(Widget sender) {
-		if (client != null && id != null)
+		if (client != null && id != null) {
 			client.updateVariable(id, "text", rta.getText(), immediate);
+		}
 	}
 
 	public void onFocus(Widget sender) {
-		
+
 	}
 
 	public void onLostFocus(Widget sender) {
 		String html = rta.getHTML();
 		client.updateVariable(id, "text", html, immediate);
-		
+
 	}
 
 }

@@ -8,6 +8,7 @@
 @import "table/table.css";
 @import "slider/slider.css";
 @import "window/window.css";
+@import "window/notification.css";
 @import "caption/caption.css";
 @import "tree/tree.css";
 @import "splitpanel/splitpanel.css";

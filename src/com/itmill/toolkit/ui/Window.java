@@ -28,9 +28,19 @@
 
 package com.itmill.toolkit.ui;
 
+import java.lang.ref.WeakReference;
+import java.lang.reflect.Method;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Set;
+
 import com.itmill.toolkit.Application;
-import com.itmill.toolkit.Application.WindowAttachEvent;
-import com.itmill.toolkit.Application.WindowAttachListener;
 import com.itmill.toolkit.terminal.DownloadStream;
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
@@ -39,18 +49,6 @@ import com.itmill.toolkit.terminal.Resource;
 import com.itmill.toolkit.terminal.Sizeable;
 import com.itmill.toolkit.terminal.Terminal;
 import com.itmill.toolkit.terminal.URIHandler;
-
-import java.lang.ref.WeakReference;
-import java.lang.reflect.Method;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Iterator;
-import java.util.Set;
 
 /**
  * Application window component.
@@ -98,7 +96,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	private LinkedList parameterHandlerList = null;
 
 	/** Set of subwindows */
-	private HashSet subwindows = new HashSet();
+	private final HashSet subwindows = new HashSet();
 
 	/**
 	 * Explicitly specified theme of this window. If null, application theme is
@@ -109,7 +107,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	/**
 	 * Resources to be opened automatically on next repaint.
 	 */
-	private LinkedList openList = new LinkedList();
+	private final LinkedList openList = new LinkedList();
 
 	/**
 	 * The name of the window.
@@ -147,6 +145,8 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	 * Distance scrolled from left in pixels.
 	 */
 	private int scrollLeft = 0;
+
+	private LinkedList notifications;
 
 	/* ********************************************************************* */
 
@@ -240,8 +240,9 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	 * @return the parent application of the component.
 	 */
 	public final Application getApplication() {
-		if (getParent() == null)
+		if (getParent() == null) {
 			return this.application;
+		}
 		return ((Window) getParent()).getApplication();
 	}
 
@@ -300,11 +301,13 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	public void addURIHandler(URIHandler handler) {
 		// TODO Subwindow support
 
-		if (uriHandlerList == null)
+		if (uriHandlerList == null) {
 			uriHandlerList = new LinkedList();
+		}
 		synchronized (uriHandlerList) {
-			if (!uriHandlerList.contains(handler))
+			if (!uriHandlerList.contains(handler)) {
 				uriHandlerList.addLast(handler);
+			}
 		}
 	}
 
@@ -317,12 +320,14 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	public void removeURIHandler(URIHandler handler) {
 		// TODO Subwindow support
 
-		if (handler == null || uriHandlerList == null)
+		if (handler == null || uriHandlerList == null) {
 			return;
+		}
 		synchronized (uriHandlerList) {
 			uriHandlerList.remove(handler);
-			if (uriHandlerList.isEmpty())
+			if (uriHandlerList.isEmpty()) {
 				uriHandlerList = null;
+			}
 		}
 	}
 
@@ -345,10 +350,11 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 				DownloadStream ds = ((URIHandler) handlers[i]).handleURI(
 						context, relativeUri);
 				if (ds != null) {
-					if (result != null)
+					if (result != null) {
 						throw new RuntimeException("handleURI for " + context
 								+ " uri: '" + relativeUri
 								+ "' returns ambigious result.");
+					}
 					result = ds;
 				}
 			}
@@ -366,11 +372,13 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	 */
 	public void addParameterHandler(ParameterHandler handler) {
 		// TODO Subwindow support
-		if (parameterHandlerList == null)
+		if (parameterHandlerList == null) {
 			parameterHandlerList = new LinkedList();
+		}
 		synchronized (parameterHandlerList) {
-			if (!parameterHandlerList.contains(handler))
+			if (!parameterHandlerList.contains(handler)) {
 				parameterHandlerList.addLast(handler);
+			}
 		}
 	}
 
@@ -382,12 +390,14 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	 */
 	public void removeParameterHandler(ParameterHandler handler) {
 		// TODO Subwindow support
-		if (handler == null || parameterHandlerList == null)
+		if (handler == null || parameterHandlerList == null) {
 			return;
+		}
 		synchronized (parameterHandlerList) {
 			parameterHandlerList.remove(handler);
-			if (parameterHandlerList.isEmpty())
+			if (parameterHandlerList.isEmpty()) {
 				parameterHandlerList = null;
+			}
 		}
 	}
 
@@ -398,8 +408,9 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 			synchronized (parameterHandlerList) {
 				handlers = parameterHandlerList.toArray();
 			}
-			for (int i = 0; i < handlers.length; i++)
+			for (int i = 0; i < handlers.length; i++) {
 				((ParameterHandler) handlers[i]).handleParameters(parameters);
+			}
 		}
 	}
 
@@ -419,14 +430,18 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	 *         returned
 	 */
 	public String getTheme() {
-		if (getParent() != null)
+		if (getParent() != null) {
 			return ((Window) getParent()).getTheme();
-		if (theme != null)
+		}
+		if (theme != null) {
 			return theme;
-		if ((application != null) && (application.getTheme() != null))
+		}
+		if ((application != null) && (application.getTheme() != null)) {
 			return application.getTheme();
-		if (terminal != null)
+		}
+		if (terminal != null) {
 			return terminal.getDefaultTheme();
+		}
 		return null;
 	}
 
@@ -439,9 +454,10 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	 *            the New theme for this window. Null implies the default theme.
 	 */
 	public void setTheme(String theme) {
-		if (getParent() != null)
+		if (getParent() != null) {
 			throw new UnsupportedOperationException(
 					"Setting theme for sub-windws is not supported.");
+		}
 		this.theme = theme;
 		requestRepaint();
 	}
@@ -467,14 +483,16 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
 		// Marks the main window
 		if (getApplication() != null
-				&& this == getApplication().getMainWindow())
+				&& this == getApplication().getMainWindow()) {
 			target.addAttribute("main", true);
+		}
 
 		// Open requested resource
 		synchronized (openList) {
 			if (!openList.isEmpty()) {
-				for (Iterator i = openList.iterator(); i.hasNext();)
+				for (Iterator i = openList.iterator(); i.hasNext();) {
 					((OpenResource) i.next()).paintContent(target);
+				}
 				openList.clear();
 			}
 		}
@@ -494,16 +512,40 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 		target.addVariable(this, "close", false);
 
 		// Sets the focused component
-		if (this.focusedComponent != null)
+		if (this.focusedComponent != null) {
 			target.addVariable(this, "focused", ""
 					+ this.focusedComponent.getFocusableId());
-		else
+		} else {
 			target.addVariable(this, "focused", "");
+		}
 
 		// Paint subwindows
 		for (Iterator i = subwindows.iterator(); i.hasNext();) {
 			Window w = (Window) i.next();
 			w.paint(target);
+		}
+
+		// Paint notifications
+		if (this.notifications != null) {
+			target.startTag("notifications");
+			for (Iterator it = this.notifications.iterator(); it.hasNext();) {
+				Notification n = (Notification) it.next();
+				target.startTag("notification");
+				if (n.getCaption() != null) {
+					target.addAttribute("caption", n.getCaption());
+				}
+				if (n.getMessage() != null) {
+					target.addAttribute("message", n.getMessage());
+				}
+				target.addAttribute("position", n.getPosition());
+				target.addAttribute("delay", n.getDelayMsec());
+				if (n.getStyleName() != null) {
+					target.addAttribute("style", n.getStyleName());
+				}
+				target.endTag("notification");
+			}
+			target.endTag("notifications");
+			this.notifications = null;
 		}
 
 	}
@@ -517,9 +559,10 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	 */
 	public void open(Resource resource) {
 		synchronized (openList) {
-			if (!openList.contains(resource))
+			if (!openList.contains(resource)) {
 				openList.add(new OpenResource(resource, null, -1, -1,
 						BORDER_DEFAULT));
+			}
 		}
 		requestRepaint();
 	}
@@ -538,9 +581,10 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	 */
 	public void open(Resource resource, String windowName) {
 		synchronized (openList) {
-			if (!openList.contains(resource))
+			if (!openList.contains(resource)) {
 				openList.add(new OpenResource(resource, windowName, -1, -1,
 						BORDER_DEFAULT));
+			}
 		}
 		requestRepaint();
 	}
@@ -561,9 +605,10 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	public void open(Resource resource, String windowName, int width,
 			int height, int border) {
 		synchronized (openList) {
-			if (!openList.contains(resource))
+			if (!openList.contains(resource)) {
 				openList.add(new OpenResource(resource, windowName, width,
 						height, border));
+			}
 		}
 		requestRepaint();
 	}
@@ -578,8 +623,9 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	 */
 	public URL getURL() {
 
-		if (application == null)
+		if (application == null) {
 			return null;
+		}
 
 		try {
 			return new URL(application.getURL(), getName() + "/");
@@ -651,8 +697,9 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	public void setApplication(Application application) {
 
 		// If the application is not changed, dont do nothing
-		if (application == this.application)
+		if (application == this.application) {
 			return;
+		}
 
 		// Sends detach event if the window is connected to application
 		if (this.application != null) {
@@ -663,8 +710,9 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 		this.application = application;
 
 		// Sends the attach event if connected to a window
-		if (application != null)
+		if (application != null) {
 			attach();
+		}
 	}
 
 	/**
@@ -684,10 +732,11 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	public void setName(String name) {
 
 		// The name can not be changed in application
-		if (getApplication() != null)
+		if (getApplication() != null) {
 			throw new IllegalStateException(
 					"Window name can not be changed while "
 							+ "the window is in application");
+		}
 
 		this.name = name;
 	}
@@ -709,8 +758,9 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	 * @see com.itmill.toolkit.terminal.Sizeable#getHeightUnits()
 	 */
 	public void setHeightUnits(int units) {
-		if (units != Sizeable.UNITS_PIXELS)
+		if (units != Sizeable.UNITS_PIXELS) {
 			throw new IllegalArgumentException("Only pixels are supported");
+		}
 	}
 
 	/**
@@ -719,8 +769,9 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	 * @see com.itmill.toolkit.terminal.Sizeable#getWidthUnits()
 	 */
 	public void setWidthUnits(int units) {
-		if (units != Sizeable.UNITS_PIXELS)
+		if (units != Sizeable.UNITS_PIXELS) {
 			throw new IllegalArgumentException("Only pixels are supported");
+		}
 	}
 
 	/**
@@ -728,15 +779,15 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	 */
 	private class OpenResource {
 
-		private Resource resource;
+		private final Resource resource;
 
-		private String name;
+		private final String name;
 
-		private int width;
+		private final int width;
 
-		private int height;
+		private final int height;
 
-		private int border;
+		private final int border;
 
 		/**
 		 * Creates a new open resource.
@@ -767,12 +818,15 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 		private void paintContent(PaintTarget target) throws PaintException {
 			target.startTag("open");
 			target.addAttribute("src", resource);
-			if (name != null && name.length() > 0)
+			if (name != null && name.length() > 0) {
 				target.addAttribute("name", name);
-			if (width >= 0)
+			}
+			if (width >= 0) {
 				target.addAttribute("width", width);
-			if (height >= 0)
+			}
+			if (height >= 0) {
 				target.addAttribute("height", height);
+			}
 			switch (border) {
 			case Window.BORDER_MINIMAL:
 				target.addAttribute("border", "minimal");
@@ -1052,12 +1106,14 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 	public void addWindow(Window window) throws IllegalArgumentException,
 			NullPointerException {
 
-		if (getParent() != null)
+		if (getParent() != null) {
 			throw new IllegalArgumentException(
 					"You can only add windows inside application-level windows");
+		}
 
-		if (window == null)
+		if (window == null) {
 			throw new NullPointerException("Argument must not be null");
+		}
 
 		subwindows.add(window);
 		window.setParent(this);
@@ -1124,4 +1180,136 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 		this.scrollLeft = scrollLeft;
 	}
 
+	public void showNotification(String message) {
+		addNotification(new Notification(message));
+	}
+
+	public void showNotification(String message, int type) {
+		addNotification(new Notification(message, type));
+	}
+
+	public void showNotification(String caption, String message, int type) {
+		addNotification(new Notification(caption, message, type));
+	}
+
+	public void showNotification(Notification notification) {
+		addNotification(notification);
+	}
+
+	private void addNotification(Notification notification) {
+		if (this.notifications == null) {
+			this.notifications = new LinkedList();
+		}
+		this.notifications.add(notification);
+		requestRepaint();
+	}
+
+	public class Notification {
+		public static final int TYPE_HUMANIZED_MESSAGE = 1;
+		public static final int TYPE_WARNING_MESSAGE = 2;
+		public static final int TYPE_ERROR_MESSAGE = 3;
+		public static final int TYPE_TRAY_NOTIFICATION = 4;
+
+		public static final int POSITION_CENTERED = 1;
+		public static final int POSITION_CENTERED_TOP = 2;
+		public static final int POSITION_CENTERED_BOTTOM = 3;
+		public static final int POSITION_TOP_LEFT = 4;
+		public static final int POSITION_TOP_RIGHT = 5;
+		public static final int POSITION_BOTTOM_LEFT = 6;
+		public static final int POSITION_BOTTOM_RIGHT = 7;
+
+		public static final int DELAY_FOREVER = -1;
+		public static final int DELAY_NONE = 0;
+
+		private String caption;
+		private String message;
+		private Resource icon;
+		private int position = POSITION_CENTERED;
+		private int delayMsec = 0;
+		private String styleName;
+
+		public Notification(String message) {
+			this(null, message, TYPE_HUMANIZED_MESSAGE);
+		}
+
+		public Notification(String message, int type) {
+			this(null, message, type);
+		}
+
+		public Notification(String caption, String message, int type) {
+			this.caption = caption;
+			this.message = message;
+			setType(type);
+		}
+
+		private void setType(int type) {
+			switch (type) {
+			case TYPE_WARNING_MESSAGE:
+				delayMsec = 1500;
+				styleName = "warning";
+				break;
+			case TYPE_ERROR_MESSAGE:
+				delayMsec = -1;
+				styleName = "error";
+				break;
+			case TYPE_TRAY_NOTIFICATION:
+				delayMsec = 3000;
+				position = POSITION_BOTTOM_RIGHT;
+				styleName = "tray";
+
+			case TYPE_HUMANIZED_MESSAGE:
+			default:
+				break;
+			}
+
+		}
+
+		public String getCaption() {
+			return caption;
+		}
+
+		public void setCaption(String caption) {
+			this.caption = caption;
+		}
+
+		public String getMessage() {
+			return message;
+		}
+
+		public void setMessage(String message) {
+			this.message = message;
+		}
+
+		public int getPosition() {
+			return position;
+		}
+
+		public void setPosition(int position) {
+			this.position = position;
+		}
+
+		public Resource getIcon() {
+			return icon;
+		}
+
+		public void setIcon(Resource icon) {
+			this.icon = icon;
+		}
+
+		public int getDelayMsec() {
+			return delayMsec;
+		}
+
+		public void setDelayMsec(int delayMsec) {
+			this.delayMsec = delayMsec;
+		}
+
+		public void setStyleName(String styleName) {
+			this.styleName = styleName;
+		}
+
+		public String getStyleName() {
+			return this.styleName;
+		}
+	}
 }
