@@ -1,4 +1,4 @@
-package com.itmill.toolkit.launcher;
+package com.itmill.toolkit.launcher.util;
 
 import java.io.IOException;
 

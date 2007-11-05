@@ -7,15 +7,16 @@ import org.mortbay.jetty.Connector;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.nio.SelectChannelConnector;
 import org.mortbay.jetty.webapp.WebAppContext;
-import org.mortbay.thread.BoundedThreadPool;
+
+import com.google.gwt.dev.GWTShell;
 
 /**
  * Class for running Jetty servlet container within Eclipse project.
  * 
  */
-public class ITMillWebModeLaunch {
+public class ITMillToolkitHostedMode {
 
-	private final static String serverPort = "8080";
+	private final static String serverPort = "8888";
 
 	/**
 	 * Main function for running Jetty.
@@ -27,15 +28,13 @@ public class ITMillWebModeLaunch {
 	 */
 	public static void main(String[] args) {
 
-		// Pass-through of arguments for Jetty
-		Map serverArgs = parseArguments(args);
+		// Start Jetty
+		System.out.println("Starting Jetty servlet container.");
+		String url = runServer(new HashMap());
 
-		String url = runServer(serverArgs);
-
-		// Open browser into application URL
-		if (url != null) {
-			BrowserLauncher.openBrowser(url);
-		}
+		// Start GWT
+		System.out.println("Starting GWT Hosted Mode browser.");
+		GWTShell.main(args);
 
 	}
 
@@ -50,10 +49,9 @@ public class ITMillWebModeLaunch {
 		// Add help for System.out
 		System.out
 				.println("-------------------------------------------------\n"
-						+ "Starting IT Mill Toolkit examples.\n"
-						+ "Please go to http://localhost:"
+						+ "Starting IT Mill Toolkit in GWT Hosted Mode.\n"
+						+ "Running in  http://localhost:"
 						+ serverPort
-						+ "\nif your web browser is not automatically started."
 						+ "\n-------------------------------------------------\n");
 
 		// Assign default values for some arguments
@@ -87,10 +85,10 @@ public class ITMillWebModeLaunch {
 			// server.setThreadPool(threadPool);
 
 			Connector connector = new SelectChannelConnector();
-			// FIXME httpPort hardcoded to 8080
+			// FIXME httpPort hardcoded to 8888
 			// connector.setPort(Integer.valueOf(serverArgs.get("httpPort")
 			// .toString()));
-			connector.setPort(8080);
+			connector.setPort(8888);
 			server.setConnectors(new Connector[] { connector });
 
 			WebAppContext webappcontext = new WebAppContext();
@@ -100,8 +98,6 @@ public class ITMillWebModeLaunch {
 			server.setHandler(webappcontext);
 
 			server.start();
-			System.err.println("Started Jetty in "
-					+ (System.currentTimeMillis() - started) + "ms.");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;

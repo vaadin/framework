@@ -7,15 +7,16 @@ import org.mortbay.jetty.Connector;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.nio.SelectChannelConnector;
 import org.mortbay.jetty.webapp.WebAppContext;
-import org.mortbay.thread.BoundedThreadPool;
+
+import com.itmill.toolkit.launcher.util.BrowserLauncher;
 
 /**
  * Class for running Jetty servlet container within Eclipse project.
  * 
  */
-public class ITMillStandardLaunch {
+public class ITMillToolkitWebMode {
 
-	private final static String serverPort = "8080";
+	private final static String serverPort = "8888";
 
 	/**
 	 * Main function for running Jetty.
@@ -30,9 +31,12 @@ public class ITMillStandardLaunch {
 		// Pass-through of arguments for Jetty
 		Map serverArgs = parseArguments(args);
 
+		// Start Jetty
+		System.out.println("Starting Jetty servlet container.");
 		String url = runServer(serverArgs);
 
-		// Open browser into application URL
+		// Start Browser
+		System.out.println("Starting Web Browser.");
 		if (url != null) {
 			BrowserLauncher.openBrowser(url);
 		}
@@ -50,10 +54,9 @@ public class ITMillStandardLaunch {
 		// Add help for System.out
 		System.out
 				.println("-------------------------------------------------\n"
-						+ "Starting IT Mill Toolkit examples.\n"
-						+ "Please go to http://localhost:"
+						+ "Starting IT Mill Toolkit in Web Mode.\n"
+						+ "Running in http://localhost:"
 						+ serverPort
-						+ "\nif your web browser is not automatically started."
 						+ "\n-------------------------------------------------\n");
 
 		// Assign default values for some arguments
@@ -87,10 +90,10 @@ public class ITMillStandardLaunch {
 			// server.setThreadPool(threadPool);
 
 			Connector connector = new SelectChannelConnector();
-			// FIXME httpPort hardcoded to 8080
+			// FIXME httpPort hardcoded to 8888
 			// connector.setPort(Integer.valueOf(serverArgs.get("httpPort")
 			// .toString()));
-			connector.setPort(8080);
+			connector.setPort(8888);
 			server.setConnectors(new Connector[] { connector });
 
 			WebAppContext webappcontext = new WebAppContext();
@@ -100,8 +103,8 @@ public class ITMillStandardLaunch {
 			server.setHandler(webappcontext);
 
 			server.start();
-			System.err.println("Started Jetty in "
-					+ (System.currentTimeMillis() - started) + "ms.");
+			// System.err.println("Started Jetty in "
+			// + (System.currentTimeMillis() - started) + "ms.");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
