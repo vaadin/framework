@@ -945,6 +945,19 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 	}
 
 	/**
+	 * Tree does not support <code>setNullSelectionItemId</code>.
+	 * 
+	 * @see com.itmill.toolkit.ui.AbstractSelect#setNullSelectionItemId(java.lang.Object)
+	 */
+	public void setNullSelectionItemId(Object nullSelectionItemId)
+			throws UnsupportedOperationException {
+		if (nullSelectionItemId != null) {
+			throw new UnsupportedOperationException();
+		}
+
+	}
+
+	/**
 	 * Adding new items is not supported.
 	 * 
 	 * @throws UnsupportedOperationException
