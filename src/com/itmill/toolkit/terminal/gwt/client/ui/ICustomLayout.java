@@ -352,7 +352,7 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
 
 	public void iLayout() {
 		if (!iLayoutJS(DOM.getFirstChild(getElement()))) {
-			Util.runAncestorsLayout(this);
+			Util.runDescendentsLayout(this);
 		}
 	}
 
@@ -362,7 +362,7 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
 	 * containers in custom layout he/she can notify children after resize.
 	 */
 	public void notifyChildrenOfSizeChange() {
-		Util.runAncestorsLayout(this);
+		Util.runDescendentsLayout(this);
 	}
 
 	public void onDetach() {
