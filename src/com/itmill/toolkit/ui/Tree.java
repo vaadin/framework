@@ -425,6 +425,10 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 				target.addAttribute("allownewitem", true);
 			}
 
+			if (isNullSelectionAllowed()) {
+				target.addAttribute("nullselect", true);
+			}
+
 		}
 
 		// Initialize variables
