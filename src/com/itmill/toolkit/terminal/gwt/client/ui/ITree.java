@@ -26,7 +26,7 @@ import com.itmill.toolkit.terminal.gwt.client.Util;
  * DOM structure
  * 
  */
-public class ITree extends Tree implements Paintable {
+public class ITree extends Tree implements Paintable, TreeListener {
 
 	public static final String CLASSNAME = "i-tree";
 
@@ -34,7 +34,7 @@ public class ITree extends Tree implements Paintable {
 	ApplicationConnection client;
 	String paintableId;
 	private boolean selectable;
-	private boolean multiselect;
+	private boolean isMultiselect;
 
 	private HashMap keyToNode = new HashMap();
 
@@ -46,18 +46,24 @@ public class ITree extends Tree implements Paintable {
 
 	private boolean immediate;
 
+	private boolean isNullSelectionAllowed = true;
+
 	public ITree() {
-		super((TreeImages)GWT.create(com.itmill.toolkit.terminal.gwt.client.ui.TreeImages.class));
+		super(
+				(TreeImages) GWT
+						.create(com.itmill.toolkit.terminal.gwt.client.ui.TreeImages.class));
 		setStyleName(CLASSNAME);
 
-		// we can't live with absolutely positioned tree, we will lose keyboard navigation thought
+		// we can't live with absolutely positioned tree, we will lose keyboard
+		// navigation thought
 		DOM.setStyleAttribute(getElement(), "position", "");
-		DOM.setStyleAttribute(DOM.getFirstChild(getElement()), "display", "none");
+		DOM.setStyleAttribute(DOM.getFirstChild(getElement()), "display",
+				"none");
 	}
 
 	/*
 	 * We can't live live with absolutely positioned tree.
-	 */ 
+	 */
 	protected boolean isKeyboardNavigationEnabled(TreeItem currentItem) {
 		return false;
 	}
@@ -96,10 +102,13 @@ public class ITree extends Tree implements Paintable {
 			handleUpdate(uidl);
 			return;
 		}
-
+		
 		this.paintableId = uidl.getId();
 
 		this.immediate = uidl.hasAttribute("immediate");
+		
+		isNullSelectionAllowed = uidl.getBooleanAttribute("nullselect");
+		
 
 		clear();
 		for (Iterator i = uidl.getChildIterator(); i.hasNext();) {
@@ -114,47 +123,9 @@ public class ITree extends Tree implements Paintable {
 		}
 		String selectMode = uidl.getStringAttribute("selectmode");
 		selectable = selectMode != null;
-		multiselect = "multi".equals(selectMode);
+		isMultiselect = "multi".equals(selectMode);
 
-		addTreeListener(new TreeListener() {
-
-			public void onTreeItemStateChanged(TreeItem item) {
-				if (item instanceof TreeNode) {
-					TreeNode tn = (TreeNode) item;
-					if (item.getState()) {
-						if (!tn.isChildrenLoaded()) {
-							String key = tn.key;
-							ITree.this.client.updateVariable(paintableId,
-									"expand", new String[] { key }, true);
-						}
-					} else {
-						// TODO collapse
-					}
-				}
-			}
-
-			public void onTreeItemSelected(TreeItem item) {
-				TreeNode n = ((TreeNode) item);
-				if (!selectable)
-					return;
-				String key = n.key;
-				if (key != null) {
-					if (selectedIds.contains(key) && multiselect) {
-						selectedIds.remove(key);
-						n.setISelected(false);
-					} else {
-						if (!multiselect) {
-							selectedIds.clear();
-						}
-						selectedIds.add(key);
-						n.setISelected(true);
-					}
-					ITree.this.client.updateVariable(ITree.this.paintableId,
-							"selected", selectedIds.toArray(), immediate);
-				}
-			}
-
-		});
+		addTreeListener(this);
 
 		selectedIds = uidl.getStringArrayVariableAsSet("selected");
 
@@ -167,6 +138,42 @@ public class ITree extends Tree implements Paintable {
 			rootNode.renderChildNodes(uidl.getChildIterator());
 		}
 
+	}
+	
+	public void onTreeItemStateChanged(TreeItem item) {
+		if (item instanceof TreeNode) {
+			TreeNode tn = (TreeNode) item;
+			if (item.getState()) {
+				if (!tn.isChildrenLoaded()) {
+					String key = tn.key;
+					ITree.this.client.updateVariable(paintableId,
+							"expand", new String[] { key }, true);
+				}
+			} else {
+				// TODO collapse
+			}
+		}
+	}
+
+	public void onTreeItemSelected(TreeItem item) {
+		TreeNode n = ((TreeNode) item);
+		if (!selectable)
+			return;
+		String key = n.key;
+		if (key != null) {
+			if (selectedIds.contains(key) && isNullSelectionAllowed ) {
+				selectedIds.remove(key);
+				n.setISelected(false);
+			} else {
+				if (!isMultiselect) {
+					selectedIds.clear();
+				}
+				selectedIds.add(key);
+				n.setISelected(true);
+			}
+			ITree.this.client.updateVariable(ITree.this.paintableId,
+					"selected", selectedIds.toArray(), immediate);
+		}
 	}
 
 	private class TreeNode extends TreeItem implements ActionOwner {
@@ -190,7 +197,7 @@ public class ITree extends Tree implements Paintable {
 		}
 
 		public void setSelected(boolean selected) {
-			if (!selected && !ITree.this.multiselect) {
+			if (!selected && !ITree.this.isMultiselect) {
 				this.setISelected(false);
 			}
 			super.setSelected(selected);
@@ -223,8 +230,9 @@ public class ITree extends Tree implements Paintable {
 				setState(true);
 			}
 
-			setSelected(uidl.getBooleanAttribute("selected"));
-
+			if (uidl.getBooleanAttribute("selected")) {
+				setISelected(true);
+			}
 		}
 
 		private void renderChildNodes(Iterator i) {
