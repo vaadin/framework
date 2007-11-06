@@ -65,6 +65,7 @@
 	padding: 2px 20px 2px 5px;
 	cursor: pointer;
 	vertical-align: middle;
+	white-space: nowrap;
 }
 
 .i-contextmenu .gwt-MenuItem-selected {

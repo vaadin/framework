@@ -1,6 +1,5 @@
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
@@ -11,6 +10,10 @@ public class ContextMenu extends PopupPanel {
 	private ActionOwner actionOwner;
 
 	private CMenuBar menu = new CMenuBar();
+
+	private int left;
+
+	private int top;
 
 	/**
 	 * This method should be used only by Client object as only one per client
@@ -41,6 +44,8 @@ public class ContextMenu extends PopupPanel {
 	 * @param top
 	 */
 	public void showAt(int left, int top) {
+		this.left = left;
+		this.top = top;
 		menu.clearItems();
 		Action[] actions = actionOwner.getActions();
 		for (int i = 0; i < actions.length; i++) {
@@ -48,15 +53,26 @@ public class ContextMenu extends PopupPanel {
 			menu.addItem(new MenuItem(a.getHTML(), true, a));
 		}
 
-		setPopupPosition(left, top);
-		show();
-		// fix position if "outside" screen
-		if (DOM.getElementPropertyInt(getElement(), "offsetWidth") + left > Window
-				.getClientWidth()) {
-			left = Window.getClientWidth()
-					- DOM.getElementPropertyInt(getElement(), "offsetWidth");
-			setPopupPosition(left, top);
-		}
+		this.setPopupPositionAndShow(new PositionCallback() {
+			public void setPosition(int offsetWidth, int offsetHeight) {
+				// mac FF gets bad width due GWT popups overflow hacks,
+				// re-determine width
+				offsetWidth = menu.getOffsetWidth();
+				int left = ContextMenu.this.left;
+				int top = ContextMenu.this.top;
+				if (offsetWidth + left > Window.getClientWidth()) {
+					left = left - offsetWidth;
+					if (left < 0)
+						left = 0;
+				}
+				if (offsetHeight + top > Window.getClientHeight()) {
+					top = top - offsetHeight;
+					if (top < 0)
+						top = 0;
+				}
+				setPopupPosition(left, top);
+			}
+		});
 	}
 
 	public void showAt(ActionOwner ao, int left, int top) {
