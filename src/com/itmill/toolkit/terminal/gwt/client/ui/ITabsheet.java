@@ -45,10 +45,13 @@ public class ITabsheet extends FlowPanel implements Paintable,
 			if (ITabsheet.this.client != null
 					&& ITabsheet.this.activeTabIndex != tabIndex) {
 				addStyleDependentName("loading");
-				ITabsheet.this.tp.getWidget(
-						ITabsheet.this.tp.getVisibleWidget()).setVisible(false);
+				// run updating variables in deferred command to bypass some FF
+				// optimization issues
 				DeferredCommand.addCommand(new Command() {
 					public void execute() {
+						ITabsheet.this.tp.getWidget(
+								ITabsheet.this.tp.getVisibleWidget())
+								.setVisible(false);
 						ITabsheet.this.client.updateVariable(ITabsheet.this.id,
 								"selected", ""
 										+ ITabsheet.this.tabKeys.get(tabIndex),
@@ -117,14 +120,11 @@ public class ITabsheet extends FlowPanel implements Paintable,
 
 		// Height calculations
 		if (h != null) {
-			setHeight(h);
+			if (!h.equals(height))
+				setHeight(h);
 		} else {
 			this.height = null;
-			this.tp.setHeight("auto");
-			// We don't need overflow:auto when tabsheet height is not set
-			// TODO reconsider, we might sometimes have wide, non-breaking
-			// content
-			DOM.setStyleAttribute(this.tp.getElement(), "overflow", "hidden");
+			this.tp.setHeight("");
 		}
 
 		// Render content
@@ -181,14 +181,12 @@ public class ITabsheet extends FlowPanel implements Paintable,
 
 		// Open selected tab
 		this.tb.selectTab(this.activeTabIndex);
-		// tp.showWidget(activeTabIndex);
 
 	}
 
 	private void renderContent(final UIDL contentUIDL) {
 		DeferredCommand.addCommand(new Command() {
 			public void execute() {
-				// Loading done, start drawing
 				Widget content = ITabsheet.this.client.getWidget(contentUIDL);
 				ITabsheet.this.tp.remove(ITabsheet.this.activeTabIndex);
 				ITabsheet.this.tp
@@ -197,8 +195,10 @@ public class ITabsheet extends FlowPanel implements Paintable,
 				((Paintable) content).updateFromUIDL(contentUIDL,
 						ITabsheet.this.client);
 				removeStyleDependentName("loading");
+				ITabsheet.this.iLayout();
 			}
 		});
+
 	}
 
 	private void clearTabs() {
@@ -234,6 +234,6 @@ public class ITabsheet extends FlowPanel implements Paintable,
 			this.tp.setHeight(neededHeight - pixelHeight + "px");
 			DOM.setStyleAttribute(this.tp.getElement(), "overflow", "");
 		}
-		Util.runAncestorsLayout(this);
+		Util.runDescendentsLayout(this);
 	}
 }

@@ -342,7 +342,7 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 			client.updateVariable(id, "height", h, false);
 		}
 		// Update child widget dimensions
-		Util.runAncestorsLayout(this);
+		Util.runDescendentsLayout(this);
 	}
 
 	public void setWidth(String width) {

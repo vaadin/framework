@@ -145,7 +145,7 @@ public class IPanel extends SimplePanel implements Paintable,
 		} else {
 			DOM.setStyleAttribute(contentNode, "height", "");
 		}
-		Util.runAncestorsLayout(this);
+		Util.runDescendentsLayout(this);
 	}
 
 }

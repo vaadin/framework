@@ -186,7 +186,6 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
 			pixelPosition = DOM.getElementPropertyInt(splitter, "offsetTop");
 
 			// reposition splitter in case it is out of box
-			int pixelSize = getSplitterSize();
 			if (pixelPosition > 0
 					&& pixelPosition + getSplitterSize() > wholeSize) {
 				pixelPosition = wholeSize - getSplitterSize();
@@ -212,7 +211,7 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
 			break;
 		}
 
-		Util.runAncestorsLayout(this);
+		Util.runDescendentsLayout(this);
 	}
 
 	private void setFirstWidget(Widget w) {

@@ -66,7 +66,7 @@ public class Util {
 	 * 
 	 * @param container
 	 */
-	public static void runAncestorsLayout(HasWidgets container) {
+	public static void runDescendentsLayout(HasWidgets container) {
 		Iterator childWidgets = container.iterator();
 		while (childWidgets.hasNext()) {
 			Widget child = (Widget) childWidgets.next();
@@ -74,7 +74,7 @@ public class Util {
 				((ContainerResizedListener) child).iLayout();
 			} else if (child instanceof HasWidgets) {
 				HasWidgets childContainer = (HasWidgets) child;
-				runAncestorsLayout(childContainer);
+				runDescendentsLayout(childContainer);
 			}
 		}
 	}
