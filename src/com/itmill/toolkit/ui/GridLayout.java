@@ -101,33 +101,33 @@ public class GridLayout extends AbstractLayout {
 	/**
 	 * Contained component should be aligned horizontally to the left.
 	 */
-	private int ALIGNMENT_LEFT = 1;
+	public static final int ALIGNMENT_LEFT = 1;
 
 	/**
 	 * Contained component should be aligned horizontally to the right.
 	 */
-	private int ALIGNMENT_RIGHT = 2;
+	public static final int ALIGNMENT_RIGHT = 2;
 
 	/**
 	 * Contained component should be aligned vertically to the top.
 	 */
-	private int ALIGNMENT_TOP = 4;
+	public static final int ALIGNMENT_TOP = 4;
 
 	/**
 	 * Contained component should be aligned vertically to the bottom.
 	 */
-	private int ALIGNMENT_BOTTOM = 8;
+	public static final int ALIGNMENT_BOTTOM = 8;
 
 	/**
 	 * Contained component should be horizontally aligned to center.
 	 */
-	private int HORIZONTAL_ALIGNMENT_CENTER = 16;
-	
+	public static final int HORIZONTAL_ALIGNMENT_CENTER = 16;
+
 	/**
 	 * Contained component should be vertically aligned to center.
 	 */
-	private int VERTICAL_ALIGNMENT_CENTER = 32;
-	
+	public static final int VERTICAL_ALIGNMENT_CENTER = 32;
+
 	/**
 	 * Is spacing between contained components enabled. Defaults to false.
 	 */
@@ -353,7 +353,7 @@ public class GridLayout extends AbstractLayout {
 		components.remove(component);
 		if (area != null)
 			areas.remove(area);
-		
+
 		componentToAlignment.remove(component);
 
 		requestRepaint();
@@ -404,7 +404,7 @@ public class GridLayout extends AbstractLayout {
 		// TODO refactor attribute names in future release.
 		target.addAttribute("h", rows);
 		target.addAttribute("w", cols);
-		
+
 		if (this.spacing)
 			target.addAttribute("spacing", this.spacing);
 
@@ -825,7 +825,7 @@ public class GridLayout extends AbstractLayout {
 	 * </p>
 	 */
 	public void setWidth(int width) {
-		super.setWidth(width);
+		// super.setWidth(width);
 	}
 
 	/**
@@ -839,7 +839,8 @@ public class GridLayout extends AbstractLayout {
 	 * </p>
 	 */
 	public int getWidth() {
-		return super.getWidth();
+		// return super.getWidth();
+		return -1;
 	}
 
 	/**
@@ -893,7 +894,7 @@ public class GridLayout extends AbstractLayout {
 	 * </p>
 	 */
 	public void setHeight(int height) {
-		super.setHeight(height);
+		// super.setHeight(height);
 	}
 
 	/**
@@ -907,7 +908,8 @@ public class GridLayout extends AbstractLayout {
 	 * </p>
 	 */
 	public int getHeight() {
-		return super.getHeight();
+		// return super.getHeight();
+		return -1;
 	}
 
 	/**

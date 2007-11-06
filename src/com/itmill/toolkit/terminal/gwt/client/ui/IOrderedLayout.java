@@ -33,8 +33,8 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
 	public static final int ALIGNMENT_RIGHT = 2;
 	public static final int ALIGNMENT_TOP = 4;
 	public static final int ALIGNMENT_BOTTOM = 8;
-	public static final int HORIZONTAL_ALIGNMENT_CENTER = 16;
-	public static final int VERTICAL_ALIGNMENT_CENTER = 32;
+	public static final int ALIGNMENT_HORIZONTAL_CENTER = 16;
+	public static final int ALIGNMENT_VERTICAL_CENTER = 32;
 
 	int orientationMode = ORIENTATION_VERTICAL;
 
@@ -49,7 +49,7 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
 	protected Element childContainer;
 	
 	/*
-	 * Margin element that provides marginals.
+	 * Element that provides margins.
 	 */
 	private Element margin;
 
@@ -60,18 +60,25 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
 	}
 
 	protected void constructDOM() {
-		margin = DOM.createDiv();
-		Element table = DOM.createTable();
-		Element tBody = DOM.createTBody();
-		childContainer = orientationMode == ORIENTATION_HORIZONTAL ? DOM
-				.createTR() : tBody;
-		DOM.appendChild(table, tBody);
-		if (orientationMode == ORIENTATION_HORIZONTAL)
+		switch (orientationMode) {
+		case ORIENTATION_HORIZONTAL:
+			Element table = DOM.createTable();
+			Element tBody = DOM.createTBody();
+			childContainer = DOM.createTR();
+			DOM.appendChild(table, tBody);
 			DOM.appendChild(tBody, childContainer);
-		setElement(table);
-		// prevent unwanted spacing
-		DOM.setElementAttribute(table, "cellSpacing", "0");
-		DOM.setElementAttribute(table, "cellPadding", "0");
+			setElement(table);
+			// prevent unwanted spacing
+			DOM.setElementAttribute(table, "cellSpacing", "0");
+			DOM.setElementAttribute(table, "cellPadding", "0");
+			margin = table;
+			break;
+		default:
+			childContainer = DOM.createDiv();
+			setElement(childContainer);
+			margin = childContainer;
+			break;
+		}
 	}
 
 	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -163,7 +170,7 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
 				vAlign = "top";
 			else if ((alignment & ALIGNMENT_BOTTOM) == ALIGNMENT_BOTTOM)
 				vAlign = "bottom";
-			else if ((alignment & VERTICAL_ALIGNMENT_CENTER) == VERTICAL_ALIGNMENT_CENTER)
+			else if ((alignment & ALIGNMENT_VERTICAL_CENTER) == ALIGNMENT_VERTICAL_CENTER)
 				vAlign = "middle";
 			// Horizontal alignment
 			String hAlign = "";
@@ -171,7 +178,7 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
 				hAlign = "left";
 			else if ((alignment & ALIGNMENT_RIGHT) == ALIGNMENT_RIGHT)
 				hAlign = "right";
-			else if ((alignment & HORIZONTAL_ALIGNMENT_CENTER) == HORIZONTAL_ALIGNMENT_CENTER)
+			else if ((alignment & ALIGNMENT_HORIZONTAL_CENTER) == ALIGNMENT_HORIZONTAL_CENTER)
 				hAlign = "center";
 
 			Element td = DOM.getParent(((Widget) it.next()).getElement());
@@ -182,23 +189,19 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
 		// Modify layout marginals
 		String marginClasses = "";
 		if (uidl.hasAttribute("marginTop"))
-			marginClasses = StyleConstants.LAYOUT_MARGIN_TOP;
+			marginClasses += " " + StyleConstants.LAYOUT_MARGIN_TOP;
 		if (uidl.hasAttribute("marginRight"))
-			marginClasses = StyleConstants.LAYOUT_MARGIN_RIGHT;
+			marginClasses += " " + StyleConstants.LAYOUT_MARGIN_RIGHT;
 		if (uidl.hasAttribute("marginBottom"))
-			marginClasses = StyleConstants.LAYOUT_MARGIN_BOTTOM;
+			marginClasses += " " + StyleConstants.LAYOUT_MARGIN_BOTTOM;
 		if (uidl.hasAttribute("marginLeft"))
-			marginClasses = StyleConstants.LAYOUT_MARGIN_LEFT;
+			marginClasses += " " + StyleConstants.LAYOUT_MARGIN_LEFT;
 		
-		DOM.setElementProperty(margin, "className", marginClasses);
-		
-		// Adjust size
-		if(uidl.hasAttribute("width"))
-			setWidth(uidl.getStringAttribute("width"));
-		else setWidth("100%");
-		if(uidl.hasAttribute("height"))
-			setHeight(uidl.getStringAttribute("height"));
-		else setHeight("");
+		if(marginClasses.equals(""))
+			DOM.setElementProperty(margin, "className", CLASSNAME);
+		else
+			DOM.setElementProperty(margin, "className", CLASSNAME + marginClasses);
+
 	}
 
 	/**
@@ -268,11 +271,10 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
 		} else {
 			Element container = createWidgetWrappper();
 			DOM.insertChild(childContainer, container, beforeIndex);
-			insert(w, orientationMode == ORIENTATION_HORIZONTAL ? container
-					: DOM.getFirstChild(container), beforeIndex, false);
+			insert(w, container, beforeIndex, false);
 		}
 	}
-
+	
 	/**
 	 * creates an Element which will contain child widget
 	 */
@@ -281,9 +283,7 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
 		case ORIENTATION_HORIZONTAL:
 			return DOM.createTD();
 		default:
-			Element tr = DOM.createTR();
-			DOM.appendChild(tr, DOM.createTD());
-			return tr;
+			return DOM.createDiv();
 		}
 	}
 
@@ -322,8 +322,7 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
 	public void add(Widget w) {
 		Element wrapper = createWidgetWrappper();
 		DOM.appendChild(childContainer, wrapper);
-		super.add(w, orientationMode == ORIENTATION_HORIZONTAL ? wrapper : DOM
-				.getFirstChild(wrapper));
+		super.add(w, wrapper);
 	}
 
 	public boolean remove(int index) {
@@ -335,9 +334,7 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
 		boolean removed = super.remove(w);
 		if (removed) {
 			if (!(w instanceof Caption)) {
-				DOM.removeChild(childContainer,
-						orientationMode == ORIENTATION_HORIZONTAL ? wrapper
-								: DOM.getParent(wrapper));
+				DOM.removeChild(childContainer, wrapper);
 			}
 			return true;
 		}

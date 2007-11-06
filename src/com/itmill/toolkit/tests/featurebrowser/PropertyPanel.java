@@ -67,6 +67,7 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
 	/** Contruct new property panel for configuring given object. */
 	public PropertyPanel(Object objectToConfigure) {
 		super();
+		getLayout().setMargin(false);
 
 		// Layout
 		setCaption("Properties");
@@ -84,6 +85,7 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
 		// Control buttons
 		OrderedLayout buttons = new OrderedLayout(
 				OrderedLayout.ORIENTATION_HORIZONTAL);
+		buttons.setMargin(false, true, true, true);
 		buttons.addComponent(setButton);
 		buttons.addComponent(discardButton);
 		addComponent(buttons);

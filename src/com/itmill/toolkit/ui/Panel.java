@@ -39,6 +39,7 @@ import com.itmill.toolkit.terminal.KeyMapper;
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
 import com.itmill.toolkit.terminal.Scrollable;
+import com.itmill.toolkit.terminal.Sizeable;
 
 /**
  * Panel - a simple single component container.
@@ -48,13 +49,37 @@ import com.itmill.toolkit.terminal.Scrollable;
  * @VERSION@
  * @since 3.0
  */
-public class Panel extends AbstractLayout implements Scrollable,
+public class Panel extends AbstractLayout implements Sizeable, Scrollable,
 		ComponentContainer.ComponentAttachListener,
 		ComponentContainer.ComponentDetachListener, Action.Container {
 
 	public static final String STYLE_LIGHT = "light";
 
 	public static final String STYLE_EMPHASIZE = "emphasize";
+	
+	/**
+	 * Height of the layout. Set to -1 for undefined height.
+	 */
+	private int height = -1;
+
+	/**
+	 * Height unit.
+	 * 
+	 * @see com.itmill.toolkit.terminal.Sizeable.UNIT_SYMBOLS;
+	 */
+	private int heightUnit = UNITS_PIXELS;
+
+	/**
+	 * Width of the layout. Set to -1 for undefined width.
+	 */
+	private int width = -1;
+
+	/**
+	 * Width unit.
+	 * 
+	 * @see com.itmill.toolkit.terminal.Sizeable.UNIT_SYMBOLS;
+	 */
+	private int widthUnit = UNITS_PIXELS;
 
 	/**
 	 * Layout of the panel.
@@ -86,7 +111,7 @@ public class Panel extends AbstractLayout implements Scrollable,
 	 * Creates a new empty panel. Ordered layout is used.
 	 */
 	public Panel() {
-		this(new OrderedLayout());
+		setLayout(null);
 	}
 
 	/**
@@ -185,20 +210,7 @@ public class Panel extends AbstractLayout implements Scrollable,
 	public void paintContent(PaintTarget target) throws PaintException {
 		layout.paint(target);
 
-		// We need to add these attributes here (and not in super.paintContent),
-		// because Panel needs to have size information as variables.
-
-		// Add margin info
-		if (margins == null)
-			setMargin(false);
-		if (margins[0])
-			target.addAttribute("marginTop", margins[0]);
-		if (margins[1])
-			target.addAttribute("marginRight", margins[1]);
-		if (margins[2])
-			target.addAttribute("marginBottom", margins[2]);
-		if (margins[3])
-			target.addAttribute("marginLeft", margins[3]);
+		super.paintContent(target);
 
 		// Add size info as variables
 		if (getHeight() > -1)
@@ -478,6 +490,108 @@ public class Panel extends AbstractLayout implements Scrollable,
 
 			requestRepaint();
 		}
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.itmill.toolkit.terminal.Sizeable#getHeight()
+	 */
+	public int getHeight() {
+		return height;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.itmill.toolkit.terminal.Sizeable#getHeightUnits()
+	 */
+	public int getHeightUnits() {
+		return heightUnit;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.itmill.toolkit.terminal.Sizeable#getWidth()
+	 */
+	public int getWidth() {
+		return width;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.itmill.toolkit.terminal.Sizeable#getWidthUnits()
+	 */
+	public int getWidthUnits() {
+		return widthUnit;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.itmill.toolkit.terminal.Sizeable#setHeight(int)
+	 */
+	public void setHeight(int height) {
+		this.height = height;
+		requestRepaint();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.itmill.toolkit.terminal.Sizeable#setHeightUnits(int)
+	 */
+	public void setHeightUnits(int units) {
+		this.heightUnit = units;
+		requestRepaint();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.itmill.toolkit.terminal.Sizeable#setSizeFull()
+	 */
+	public void setSizeFull() {
+		height = 100;
+		width = 100;
+		heightUnit = UNITS_PERCENTAGE;
+		widthUnit = UNITS_PERCENTAGE;
+		requestRepaint();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.itmill.toolkit.terminal.Sizeable#setSizeUndefined()
+	 */
+	public void setSizeUndefined() {
+		height = -1;
+		width = -1;
+		heightUnit = UNITS_PIXELS;
+		widthUnit = UNITS_PIXELS;
+		requestRepaint();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.itmill.toolkit.terminal.Sizeable#setWidth(int)
+	 */
+	public void setWidth(int width) {
+		this.width = width;
+		requestRepaint();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.itmill.toolkit.terminal.Sizeable#setWidthUnits(int)
+	 */
+	public void setWidthUnits(int units) {
+		this.widthUnit = units;
+		requestRepaint();
 	}
 
 }

@@ -32,8 +32,6 @@ import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import com.itmill.toolkit.terminal.Sizeable;
-
 /**
  * Extension to {@link AbstractComponent} that defines the default
  * implementation for the methods in {@link ComponentContainer}. Basic UI
@@ -46,8 +44,8 @@ import com.itmill.toolkit.terminal.Sizeable;
  * @since 3.0
  */
 public abstract class AbstractComponentContainer extends AbstractComponent
-		implements ComponentContainer, Sizeable {
-	
+		implements ComponentContainer {
+
 	/**
 	 * Constructs a new component container.
 	 */
@@ -207,5 +205,5 @@ public abstract class AbstractComponentContainer extends AbstractComponent
 			fireComponentDetachEvent(c);
 		}
 	}
-	
+
 }

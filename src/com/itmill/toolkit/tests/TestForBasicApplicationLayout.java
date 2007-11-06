@@ -56,10 +56,10 @@ public class TestForBasicApplicationLayout extends CustomComponent {
 		tab.setWidthUnits(Sizeable.UNITS_PERCENTAGE);
 		tab.setHeight(740);
 		tab.setHeightUnits(Sizeable.UNITS_PIXELS);
-		tab.addStyleName(TabSheet.STYLE_NO_PADDING);
 
 		Panel report = new Panel("Monthly Program Runs", new ExpandLayout());
 		OrderedLayout controls = new OrderedLayout();
+		controls.setMargin(true);
 		controls.addComponent(new Label("Report tab"));
 		controls.addComponent(click);
 		controls.addComponent(click2);

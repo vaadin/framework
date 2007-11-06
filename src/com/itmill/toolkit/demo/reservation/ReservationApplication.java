@@ -68,7 +68,6 @@ public class ReservationApplication extends Application {
 		setTheme("reservr");
 
 		TabSheet mainTabs = new TabSheet();
-		mainTabs.addStyleName(TabSheet.STYLE_NO_PADDING);
 		mainWindow.addComponent(mainTabs);
 
 		OrderedLayout reservationTab = new OrderedLayout();
@@ -83,7 +82,8 @@ public class ReservationApplication extends Application {
 
 		Panel reservationPanel = new Panel("Reservation", new OrderedLayout(
 				OrderedLayout.ORIENTATION_HORIZONTAL));
-		reservationPanel.setStyle("light");
+		reservationPanel.addStyleName(Panel.STYLE_LIGHT);
+		reservationPanel.getLayout().setMargin(true);
 		reservationTab.addComponent(reservationPanel);
 
 		OrderedLayout infoLayout = new OrderedLayout();
@@ -125,7 +125,7 @@ public class ReservationApplication extends Application {
 
 		Label arrowLabel = new Label("&raquo;");
 		arrowLabel.setContentMode(Label.CONTENT_XHTML);
-		arrowLabel.setStyle("arrow");
+		arrowLabel.setStyleName("arrow");
 		reservationPanel.addComponent(arrowLabel);
 
 		Calendar to = Calendar.getInstance();
@@ -178,6 +178,7 @@ public class ReservationApplication extends Application {
 		Panel allLayout = new Panel(new OrderedLayout(
 				OrderedLayout.ORIENTATION_HORIZONTAL));
 		allLayout.addStyleName(Panel.STYLE_LIGHT);
+		allLayout.getLayout().setMargin(true);
 		allCalendar = new CalendarField();
 		initCalendarFieldPropertyIds(allCalendar);
 		allLayout.addComponent(allCalendar);

@@ -22,7 +22,7 @@ public class ResourceSelectorPanel extends Panel implements
 
 	public ResourceSelectorPanel(String caption) {
 		super(caption, new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL));
-		setStyle("light");
+		addStyleName(Panel.STYLE_LIGHT);
 	}
 
 	public void setResourceContainer(Container resources) {
@@ -41,7 +41,7 @@ public class ResourceSelectorPanel extends Panel implements
 				String description = (String) resource.getItemProperty(
 						SampleDB.Resource.PROPERTY_ID_DESCRIPTION).getValue();
 				Button rButton = new Button(name, this);
-				rButton.setStyle("link");
+				rButton.setStyleName("link");
 				rButton.setDescription(description);
 				rButton.setData(resource);
 				Layout resourceLayout = (Layout) categoryLayouts.get(category);
@@ -49,12 +49,13 @@ public class ResourceSelectorPanel extends Panel implements
 						.get(category);
 				if (resourceLayout == null) {
 					resourceLayout = new OrderedLayout();
+					resourceLayout.setMargin(true);
 					this.addComponent(resourceLayout);
 					categoryLayouts.put(category, resourceLayout);
 					resourceList = new LinkedList();
 					categoryResources.put(category, resourceList);
 					Button cButton = new Button(category + " (any)", this);
-					cButton.setStyle("important-link");
+					cButton.setStyleName("important-link");
 					cButton.setData(category);
 					resourceLayout.addComponent(cButton);
 				}
@@ -89,7 +90,7 @@ public class ResourceSelectorPanel extends Panel implements
 						.get(category);
 				setSelectedResources(resources);
 			}
-			((Button) source).setStyle("selected-link");
+			((Button) source).setStyleName("selected-link");
 		}
 
 	}
@@ -100,9 +101,9 @@ public class ResourceSelectorPanel extends Panel implements
 			for (Iterator bit = lo.getComponentIterator(); bit.hasNext();) {
 				Button b = (Button) bit.next();
 				if (b.getData() instanceof Item) {
-					b.setStyle("link");
+					b.setStyleName("link");
 				} else {
-					b.setStyle("important-link");
+					b.setStyleName("important-link");
 				}
 			}
 		}

@@ -66,6 +66,8 @@ public class OrderedLayout extends AbstractLayout {
 	 */
 	private LinkedList components = new LinkedList();
 
+	/* Child component alignments ************************************** */
+
 	/**
 	 * Mapping from components to alignments (horizontal + vertical).
 	 */
@@ -94,12 +96,12 @@ public class OrderedLayout extends AbstractLayout {
 	/**
 	 * Contained component should be horizontally aligned to center.
 	 */
-	public static final int HORIZONTAL_ALIGNMENT_CENTER = 16;
+	public static final int ALIGNMENT_HORIZONTAL_CENTER = 16;
 
 	/**
 	 * Contained component should be vertically aligned to center.
 	 */
-	public static final int VERTICAL_ALIGNMENT_CENTER = 32;
+	public static final int ALIGNMENT_VERTICAL_CENTER = 32;
 
 	/**
 	 * Orientation of the layout.
@@ -219,6 +221,7 @@ public class OrderedLayout extends AbstractLayout {
 		if (orientation == ORIENTATION_HORIZONTAL)
 			target.addAttribute("orientation", "horizontal");
 
+		// Add spacing attribute (omitted if false)
 		if (this.spacing)
 			target.addAttribute("spacing", this.spacing);
 
