@@ -224,7 +224,7 @@ public class IFilterSelect extends Composite implements Paintable,
 			menu.setHeight("");
 			offsetHeight = getOffsetHeight();
 			
-			int desiredWidth = IFilterSelect.this.getOffsetWidth() - popupOpener.getOffsetWidth();
+			int desiredWidth = IFilterSelect.this.getOffsetWidth();
 			int naturalMenuWidth = DOM.getElementPropertyInt(DOM.getFirstChild(menu.getElement()), "offsetWidth");
 			if(naturalMenuWidth < desiredWidth) {
 				menu.setWidth(desiredWidth + "px");
