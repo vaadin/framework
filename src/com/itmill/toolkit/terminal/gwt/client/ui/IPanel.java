@@ -114,33 +114,32 @@ public class IPanel extends SimplePanel implements Paintable,
 		if (height != null && height != "") {
 			// need to fix containers height properly
 			DOM.setStyleAttribute(getElement(), "height", height);
-			//boolean hasChildren = getWidget() != null;
-			//Element contentEl = null;
-			//String origPositioning = null; if (hasChildren) { // remove
-			//children temporary form normal flow to detect proper // size
-			//contentEl = getWidget().getElement(); origPositioning =
-			//DOM.getStyleAttribute(contentEl, "position");
-			//DOM.setStyleAttribute(contentEl, "position", "absolute"); }
-			//DOM.setStyleAttribute(contentNode, "height", ""); int availableH =
-			//DOM.getElementPropertyInt(getElement(), "clientHeight");
-			// 
-			//int usedH = DOM .getElementPropertyInt(bottomDecoration,
-			//"offsetTop") + DOM.getElementPropertyInt(bottomDecoration,
-			//"offsetHeight");
-			
-			DOM.setStyleAttribute(contentNode, "height", "1px");
 			DOM.setStyleAttribute(contentNode, "overflow", "hidden");
-			int availableH = DOM.getElementPropertyInt(getElement(),
-					"offsetHeight");
-			DOM.setStyleAttribute(getElement(), "height", "");
-			int usedH = DOM.getElementPropertyInt(getElement(), "offsetHeight");
+			boolean hasChildren = getWidget() != null;
+			Element contentEl = null;
+			String origPositioning = null; 
+			if (hasChildren) { 
+				// remove children temporary form normal flow to detect proper 
+				// size
+				contentEl = getWidget().getElement(); 
+				origPositioning = DOM.getStyleAttribute(contentEl, "position");
+				DOM.setStyleAttribute(contentEl, "position", "absolute"); 
+			}
+			DOM.setStyleAttribute(contentNode, "height", ""); 
+			int availableH = DOM.getElementPropertyInt(getElement(), "clientHeight");
+			 
+			int usedH = DOM .getElementPropertyInt(bottomDecoration,
+			"offsetTop") + DOM.getElementPropertyInt(bottomDecoration,
+			"offsetHeight");
+
 			int contentH = availableH - usedH - 1;
 			if (contentH < 0)
 				contentH = 0;
 			DOM.setStyleAttribute(contentNode, "height", contentH + "px");
-			/*if (hasChildren) {
+			if (hasChildren) {
+				ApplicationConnection.getConsole().log("positioning:" + origPositioning);
 				DOM.setStyleAttribute(contentEl, "position", origPositioning);
-			}*/
+			}
 			DOM.setStyleAttribute(contentNode, "overflow", "auto");
 		} else {
 			DOM.setStyleAttribute(contentNode, "height", "");
