@@ -57,15 +57,22 @@ public class TestComponentsAndLayouts extends Application implements Listener,
 								+ "All components are in immmediate mode."));
 		main.addComponent(eventListenerFeedback);
 
+		main.addComponent(new Label("<hr /><h1>OrderedLayout</h3>",
+				Label.CONTENT_XHTML));
 		main.addComponent(new Label("OrderedLayout"));
 		test(main);
 		populateLayout(main);
 
+		main
+				.addComponent(new Label("<hr /><h1>Panel</h3>",
+						Label.CONTENT_XHTML));
 		Panel panel = new Panel("Panel");
 		test(panel);
 		populateLayout(panel);
 		main.addComponent(panel);
 
+		main.addComponent(new Label("<hr /><h1>TabSheet</h3>",
+				Label.CONTENT_XHTML));
 		TabSheet tabsheet = new TabSheet();
 		test(tabsheet);
 		OrderedLayout tab1 = new OrderedLayout();
@@ -79,12 +86,16 @@ public class TestComponentsAndLayouts extends Application implements Listener,
 				.addTab(tab2, "TabSheet tab2", new ClassResource("m.gif", this));
 		main.addComponent(tabsheet);
 
+		main.addComponent(new Label("<hr /><h1>ExpandLayout</h3>",
+				Label.CONTENT_XHTML));
 		ExpandLayout expandLayout = new ExpandLayout();
 		test(expandLayout);
 		populateLayout(expandLayout);
 		main.addComponent(expandLayout);
 
-		GridLayout gridLayout = new GridLayout();
+		main.addComponent(new Label("<hr /><h1>GridLayout</h3>",
+				Label.CONTENT_XHTML));
+		GridLayout gridLayout = new GridLayout(4, 100);
 		test(gridLayout);
 		populateLayout(gridLayout);
 		main.addComponent(gridLayout);
@@ -128,10 +139,12 @@ public class TestComponentsAndLayouts extends Application implements Listener,
 		nativeSelect.setContainerDataSource(getContainer());
 
 		OptionGroup optionGroup = new OptionGroup("OptionGroup " + count++);
-		optionGroup.setContainerDataSource(getSmallContainer());
 		test(layout, optionGroup);
+		optionGroup.setContainerDataSource(getSmallContainer());
+		optionGroup.setItemCaptionPropertyId("UNIT");
 
 		ProgressIndicator pi = new ProgressIndicator(50.0f);
+		pi.setCaption("ProgressIndicator");
 		test(layout, pi);
 
 		RichTextArea rta = new RichTextArea();
@@ -140,6 +153,7 @@ public class TestComponentsAndLayouts extends Application implements Listener,
 		Select select = new Select("Select " + count++);
 		test(layout, select);
 		select.setContainerDataSource(getSmallContainer());
+		select.setItemCaptionPropertyId("UNIT");
 
 		Slider slider = new Slider("Slider " + count++);
 		test(layout, slider);
@@ -181,6 +195,7 @@ public class TestComponentsAndLayouts extends Application implements Listener,
 				+ count++);
 		test(layout, twinColSelect);
 		twinColSelect.setContainerDataSource(getSmallContainer());
+		twinColSelect.setItemCaptionPropertyId("UNIT");
 
 		Upload upload = new Upload("Upload (non-functional)", null);
 		test(layout, upload);
@@ -190,6 +205,12 @@ public class TestComponentsAndLayouts extends Application implements Listener,
 				Label.CONTENT_XHTML));
 		TestForUpload tfu = new TestForUpload();
 		layout.addComponent(tfu);
+		layout.addComponent(new Label("<HR />", Label.CONTENT_XHTML));
+
+		// DISABLED
+		// TableSelectTest tst = new TableSelectTest();
+		// layout.addComponent(tst);
+		// layout.addComponent(new Label("<HR />", Label.CONTENT_XHTML));
 
 	}
 
@@ -207,8 +228,9 @@ public class TestComponentsAndLayouts extends Application implements Listener,
 	Container getSmallContainer() {
 		// populate container with test SQL table rows
 		try {
-			return new QueryContainer("SELECT * FROM unit ", sampleDatabase
-					.getConnection());
+			return new QueryContainer(
+					"SELECT DISTINCT UNIT AS UNIT FROM employee",
+					sampleDatabase.getConnection());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -253,7 +275,9 @@ public class TestComponentsAndLayouts extends Application implements Listener,
 	void test(Layout layout, AbstractComponent c) {
 		test(c);
 		layout.addComponent(c);
-		layout.addComponent(new Label("<HR />", Label.CONTENT_XHTML));
+		// add separator
+		if (!(layout instanceof GridLayout))
+			layout.addComponent(new Label("<HR />", Label.CONTENT_XHTML));
 	}
 
 	public void componentEvent(Event event) {
