@@ -39,7 +39,7 @@ import com.itmill.toolkit.terminal.gwt.client.ui.IScrollTable.IScrollTableBody.I
  * 
  * ScrollPanel contains IScrollTableBody object which handles content. To save
  * some bandwidth and to improve clients responsiveness with loads of data, in
- * IScrollTableBody all rows are not necessary rendered. There are "spacer" in
+ * IScrollTableBody all rows are not necessary rendered. There are "spacers" in
  * IScrollTableBody to use the exact same space as non-rendered rows would use.
  * This way we can use seamlessly traditional scrollbars and scrolling to fetch
  * more rows instead of "paging".
@@ -49,7 +49,7 @@ import com.itmill.toolkit.terminal.gwt.client.ui.IScrollTable.IScrollTableBody.I
  * vertical scroll events we will check if we are reaching the end of area where
  * we have rows rendered and
  * 
- * TODO implement unregistering for child componts in Cells
+ * TODO implement unregistering for child components in Cells
  */
 public class IScrollTable extends Composite implements Table, ScrollListener,
 		ContainerResizedListener {
@@ -1924,7 +1924,10 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 			// put table back to flow
 			DOM.setStyleAttribute(getElement(), "position", "static");
 			// set 100% height with borders
-			super.setHeight((availPixels - borders) + "px");
+			int pixelSize = (availPixels - borders);
+			if (pixelSize < 0)
+				pixelSize = 0;
+			super.setHeight(pixelSize + "px");
 		} else {
 			// normally height don't include borders
 			super.setHeight(height);
