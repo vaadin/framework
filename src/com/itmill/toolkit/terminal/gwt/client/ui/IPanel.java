@@ -128,8 +128,8 @@ public class IPanel extends SimplePanel implements Paintable,
 			DOM.setStyleAttribute(contentNode, "height", ""); 
 			int availableH = DOM.getElementPropertyInt(getElement(), "clientHeight");
 			 
-			int usedH = DOM .getElementPropertyInt(bottomDecoration,
-			"offsetTop") + DOM.getElementPropertyInt(bottomDecoration,
+			int usedH = DOM.getElementPropertyInt(bottomDecoration,
+			"offsetTop") - DOM.getElementPropertyInt(getElement(), "offsetTop") + DOM.getElementPropertyInt(bottomDecoration,
 			"offsetHeight");
 
 			int contentH = availableH - usedH - 1;
