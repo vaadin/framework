@@ -39,7 +39,7 @@ public class TestForUpload extends CustomComponent implements
 
 	Layout main = new OrderedLayout();
 
-	Buffer buffer = new MemooryBuffer();
+	Buffer buffer = new MemoryBuffer();
 
 	Panel status = new Panel("Uploaded file:");
 
@@ -126,7 +126,7 @@ public class TestForUpload extends CustomComponent implements
 	private void setBuffer() {
 		String id = (String) this.uploadBufferSelector.getValue();
 		if ("memory".equals(id)) {
-			this.buffer = new MemooryBuffer();
+			this.buffer = new MemoryBuffer();
 		} else if ("tempfile".equals(id)) {
 			this.buffer = new TmpFileBuffer();
 		}
@@ -185,14 +185,14 @@ public class TestForUpload extends CustomComponent implements
 		String getFileName();
 	}
 
-	public class MemooryBuffer implements Buffer {
+	public class MemoryBuffer implements Buffer {
 		ByteArrayOutputStream outputBuffer = null;
 
 		String mimeType;
 
 		String fileName;
 
-		public MemooryBuffer() {
+		public MemoryBuffer() {
 
 		}
 
