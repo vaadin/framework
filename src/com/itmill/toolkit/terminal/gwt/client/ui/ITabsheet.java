@@ -49,9 +49,6 @@ public class ITabsheet extends FlowPanel implements Paintable,
 				// optimization issues
 				DeferredCommand.addCommand(new Command() {
 					public void execute() {
-						ITabsheet.this.tp.getWidget(
-								ITabsheet.this.tp.getVisibleWidget())
-								.setVisible(false);
 						ITabsheet.this.client.updateVariable(ITabsheet.this.id,
 								"selected", ""
 										+ ITabsheet.this.tabKeys.get(tabIndex),
@@ -120,8 +117,9 @@ public class ITabsheet extends FlowPanel implements Paintable,
 
 		// Height calculations
 		if (h != null) {
-			if (!h.equals(height))
+			if (!h.equals(height)) {
 				setHeight(h);
+			}
 		} else {
 			this.height = null;
 			this.tp.setHeight("");

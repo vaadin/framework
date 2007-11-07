@@ -117,7 +117,10 @@
 	padding-top: 12px;
 }
 
-
+.i-tabsheet-loading .i-tabsheet-content * {
+	opacity: 0;
+	filter: Alpha(opacity=0);
+}
 
 
 
