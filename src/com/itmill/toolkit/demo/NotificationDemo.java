@@ -40,7 +40,7 @@ public class NotificationDemo extends com.itmill.toolkit.Application {
 		 * Create a 'inline' window within the main window, and set its size.
 		 */
 		Window conf = new Window("Show Notification");
-		conf.setWidth(460);
+		conf.setWidth(470);
 		conf.setHeight(360);
 		main.addWindow(conf);
 
