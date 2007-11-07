@@ -1,9 +1,16 @@
+/* Provide some extra whitespace for wrapped elements
+   (these elements usually need the extra space, since 
+   they aren't even handling their own caption) */
+.i-captionwrapper {
+	margin: 0.3em 0 0 0;
+}
+
 .i-errorindicator {
-	width: 10px;
-	height: 10px;
+	width: 16px;
+	height: 16px;
 	display: block;
 	float:left;
-	background: #f00;
+	background: transparent url(../icons/16/error.png) no-repeat;
 }
 
 .i-error {
