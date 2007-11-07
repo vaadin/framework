@@ -118,8 +118,8 @@
 }
 
 .i-tabsheet-loading .i-tabsheet-content * {
-	opacity: 0;
-	filter: Alpha(opacity=0);
+	visibility: hidden;
+	oveflow: hidden;
 }
 
 
