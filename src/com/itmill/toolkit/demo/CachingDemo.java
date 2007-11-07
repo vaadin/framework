@@ -3,6 +3,8 @@ package com.itmill.toolkit.demo;
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
 import com.itmill.toolkit.ui.Label;
+import com.itmill.toolkit.ui.Layout;
+import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.TabSheet;
 import com.itmill.toolkit.ui.Window;
 
@@ -25,14 +27,22 @@ public class CachingDemo extends com.itmill.toolkit.Application {
 		setTheme("example");
 
 		TabSheet ts = new TabSheet();
-		ts.setCaption("setHeigth(300)");
 		main.addComponent(ts);
-		ts.setHeight(300);
+
+		Layout layout = new OrderedLayout();
+		layout.setMargin(true);
 		Label l = new Label(
-				"A normal label, quick to render. The second tab will be slow to render the first time, after that it will be as quick as this one.");
-		ts.addTab(l, "Normal", null);
+				"This is a normal label, quick to render.<br/>The second tab will be slow to render the first time, after that it will be as quick as this one.");
+		l.setCaption("A normal label");
+		l.setContentMode(Label.CONTENT_XHTML);
+		layout.addComponent(l);
+
+		ts.addTab(layout, "Normal", null);
+
+		layout = new OrderedLayout();
+		layout.setMargin(true);
 		l = new Label(
-				"The first time you change to this tab, this label is very slow to produce (server-side). However, it will seem fast the second time you change to this tab, because it has not changed and is cached client-side.") {
+				"The first time you change to this tab, this label is very slow to produce (server-side).<br/> However, it will seem fast the second time you change to this tab, because it has not changed and is cached client-side.") {
 			public void paintContent(PaintTarget target) throws PaintException {
 				try {
 					Thread.sleep(3000);
@@ -43,7 +53,10 @@ public class CachingDemo extends com.itmill.toolkit.Application {
 			}
 
 		};
-		ts.addTab(l, "Slow", null);
+		l.setCaption("A slow label");
+		l.setContentMode(Label.CONTENT_XHTML);
+		layout.addComponent(l);
+		ts.addTab(layout, "Slow", null);
 
 	}
 
