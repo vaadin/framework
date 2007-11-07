@@ -2,14 +2,14 @@
 	cursor: pointer;
 }
 
-.i-tree-node-selected > table > tbody > tr > td > .gwt-TreeItem {
+.i-tree-node-selected .gwt-TreeItem {
 	background: #5daee8;
 	color: #fff;
 	display: block;
 	padding: 1px;
 	margin: -1px -1px;
 }
-.i-tree-node-selected > table > tbody > tr > td > .gwt-TreeItem:before {
+.i-tree-node-selected .gwt-TreeItem:before {
 	display: block;
 	float: left;
 	content: url(../common/img/blank.gif);
@@ -17,7 +17,7 @@
 	background: #5daee8;
 	margin: 0 1px 0 -2px;
 }
-.i-tree-node-selected > table > tbody > tr > td > .gwt-TreeItem:after {
+.i-tree-node-selected .gwt-TreeItem:after {
 	display: block;
 	float: right;
 	content: url(../common/img/blank.gif);

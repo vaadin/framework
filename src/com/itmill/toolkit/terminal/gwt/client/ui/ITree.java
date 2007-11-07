@@ -284,7 +284,9 @@ public class ITree extends Tree implements Paintable, TreeListener {
 		 * @param selected
 		 */
 		public void setISelected(boolean selected) {
-			setStyleName(getElement(), "i-tree-node-selected", selected);
+			// add style name to caption dom structure only, not to subtree
+			Element styleElement = DOM.getFirstChild(getElement());
+			setStyleName(styleElement, "i-tree-node-selected", selected);
 		}
 
 		public void showContextMenu(Event event) {
