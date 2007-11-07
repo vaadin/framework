@@ -80,7 +80,8 @@ public class IFilterSelect extends Composite implements Paintable,
 	 * @author mattitahvonen
 	 * 
 	 */
-	public class SuggestionPopup extends PopupPanel implements PositionCallback, PopupListener {
+	public class SuggestionPopup extends PopupPanel implements
+			PositionCallback, PopupListener {
 		private static final int EXTRASPACE = 8;
 
 		private static final String Z_INDEX = "30000";
@@ -112,7 +113,7 @@ public class IFilterSelect extends Composite implements Paintable,
 			DOM.appendChild(root, down);
 			DOM.appendChild(root, status);
 			DOM.setElementProperty(status, "className", CLASSNAME + "-status");
-			
+
 			this.addPopupListener(this);
 		}
 
@@ -132,7 +133,8 @@ public class IFilterSelect extends Composite implements Paintable,
 
 			// clear previously fixed width
 			menu.setWidth("");
-			DOM.setStyleAttribute(DOM.getFirstChild(menu.getElement()), "width", "");
+			DOM.setStyleAttribute(DOM.getFirstChild(menu.getElement()),
+					"width", "");
 
 			setPopupPositionAndShow(this);
 		}
@@ -220,38 +222,49 @@ public class IFilterSelect extends Composite implements Paintable,
 		 *      int)
 		 */
 		public void setPosition(int offsetWidth, int offsetHeight) {
-			// reset menu size and retrieve its "natural"; size
+
+			int top = -1;
+			int left = -1;
+
+			// reset menu size and retrieve its "natural" size
 			menu.setHeight("");
 			offsetHeight = getOffsetHeight();
-			
+
 			int desiredWidth = IFilterSelect.this.getOffsetWidth();
-			int naturalMenuWidth = DOM.getElementPropertyInt(DOM.getFirstChild(menu.getElement()), "offsetWidth");
-			if(naturalMenuWidth < desiredWidth) {
+			int naturalMenuWidth = DOM.getElementPropertyInt(DOM
+					.getFirstChild(menu.getElement()), "offsetWidth");
+			if (naturalMenuWidth < desiredWidth) {
 				menu.setWidth(desiredWidth + "px");
-				DOM.setStyleAttribute(DOM.getFirstChild(menu.getElement()), "width", "100%");
+				DOM.setStyleAttribute(DOM.getFirstChild(menu.getElement()),
+						"width", "100%");
 				naturalMenuWidth = desiredWidth;
 			}
-			if(Util.isIE()) {
-				DOM.setStyleAttribute(getElement(), "width", naturalMenuWidth + "px");
+			if (Util.isIE()) {
+				DOM.setStyleAttribute(getElement(), "width", naturalMenuWidth
+						+ "px");
 			}
-			
-			if (!isPagingEnabled && offsetHeight > Window.getClientHeight()) {
-				offsetHeight = Window.getClientHeight();
-				menu.setHeight((offsetHeight - EXTRASPACE) + "px");
-				DOM.setStyleAttribute(menu.getElement(), "overflow", "auto");
 
-				// add scrollbar width
-				menu
-						.setWidth((menu.getOffsetWidth() * 2 - DOM
-								.getElementPropertyInt(menu.getElement(),
-										"clientWidth"))
-								+ "px");
-			}
 			if (offsetHeight + getPopupTop() > Window.getClientHeight()) {
-				int top = Window.getClientHeight() - offsetHeight - EXTRASPACE
-						/ 2;
-				setPopupPosition(getPopupLeft(), top);
+				top = Window.getClientHeight() - offsetHeight - EXTRASPACE / 2;
+				if (top < 0)
+					top = 0;
+			} else {
+				top = getPopupTop();
 			}
+
+			// fetch real width (mac FF bugs here due GWT popups overflow:auto )
+			offsetWidth = DOM.getElementPropertyInt(DOM.getFirstChild(menu
+					.getElement()), "offsetWidth");
+			if (offsetWidth + getPopupLeft() > Window.getClientWidth()) {
+				left = IFilterSelect.this.getAbsoluteLeft()
+						+ IFilterSelect.this.getOffsetWidth() - offsetWidth;
+				if (left < 0)
+					left = 0;
+			} else {
+				left = getPopupLeft();
+			}
+			setPopupPosition(left, top);
+
 		}
 
 		/**
@@ -263,11 +276,11 @@ public class IFilterSelect extends Composite implements Paintable,
 		}
 
 		public void onPopupClosed(PopupPanel sender, boolean autoClosed) {
-			if(autoClosed) {
+			if (autoClosed) {
 				lastAutoClosed = (new Date()).getTime();
 			}
 		}
-		
+
 	}
 
 	public class SuggestionMenu extends MenuBar {
@@ -295,20 +308,23 @@ public class IFilterSelect extends Composite implements Paintable,
 				doItemAction(item, true);
 			} else if (allowNewItem) {
 				String newItemValue = tb.getText();
-				if(!newItemValue.equals("")) {
-					client.updateVariable(paintableId, "newitem", newItemValue, true);
+				if (!newItemValue.equals("")) {
+					client.updateVariable(paintableId, "newitem", newItemValue,
+							true);
 				}
 			}
 			suggestionPopup.hide();
 		}
-		
+
 		public void setWidth(String width) {
 			super.setWidth(width);
-//			if(width != null && !width.equals("")) {
-//				DOM.setStyleAttribute(DOM.getFirstChild(getElement()), "width", "100%");
-//			} else {
-//				DOM.setStyleAttribute(DOM.getFirstChild(getElement()), "width", "");
-//			}
+			// if(width != null && !width.equals("")) {
+			// DOM.setStyleAttribute(DOM.getFirstChild(getElement()), "width",
+			// "100%");
+			// } else {
+			// DOM.setStyleAttribute(DOM.getFirstChild(getElement()), "width",
+			// "");
+			// }
 		}
 	}
 
@@ -422,7 +438,7 @@ public class IFilterSelect extends Composite implements Paintable,
 			return;
 
 		immediate = uidl.hasAttribute("immediate");
-		
+
 		nullSelectionAllowed = uidl.hasAttribute("nullselect");
 
 		if (true) {
@@ -471,15 +487,11 @@ public class IFilterSelect extends Composite implements Paintable,
 
 		// Calculate minumum textarea width
 		int minw = minWidth(captions);
-		if (Util.isIE()) {
-			Element spacer = DOM.createDiv();
-			DOM.setStyleAttribute(spacer, "width", minw + "px");
-			DOM.setStyleAttribute(spacer, "height", "0");
-			DOM.setStyleAttribute(spacer, "overflow", "hidden");
-			DOM.appendChild(panel.getElement(), spacer);
-		} else {
-			DOM.setStyleAttribute(tb.getElement(), "minWidth", minw + "px");
-		}
+		Element spacer = DOM.createDiv();
+		DOM.setStyleAttribute(spacer, "width", minw + "px");
+		DOM.setStyleAttribute(spacer, "height", "0");
+		DOM.setStyleAttribute(spacer, "overflow", "hidden");
+		DOM.appendChild(panel.getElement(), spacer);
 
 		// Set columns (width) is given
 		if (uidl.hasAttribute("cols"))
@@ -492,7 +504,7 @@ public class IFilterSelect extends Composite implements Paintable,
 	public void onSuggestionSelected(FilterSelectSuggestion suggestion) {
 		currentSuggestion = suggestion;
 		String newKey;
-		if(suggestion.key.equals("")) {
+		if (suggestion.key.equals("")) {
 			// "nullselection"
 			newKey = "";
 		} else {
@@ -576,9 +588,9 @@ public class IFilterSelect extends Composite implements Paintable,
 	 * Listener for popupopener
 	 */
 	public void onClick(Widget sender) {
-		// ask suggestionPopup if it was just closed, we are using GWT Popup's 
+		// ask suggestionPopup if it was just closed, we are using GWT Popup's
 		// auto close feature
-		if(!suggestionPopup.isJustClosed()) {
+		if (!suggestionPopup.isJustClosed()) {
 			filterOptions(0, "");
 		}
 		tb.setFocus(true);

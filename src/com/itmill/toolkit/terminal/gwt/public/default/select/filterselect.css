@@ -1,7 +1,7 @@
 .i-filterselect {
 	height: 23px;
 	background: transparent url(img/bg-left-filter.png) no-repeat;
-	margin-right: 1px;
+	margin-right: 0px;
 	white-space: nowrap;
 }
 
@@ -42,6 +42,7 @@
 	padding: 1px 5px;
 	cursor: pointer;
 	height: 18px;
+	white-space: nowrap;
 }
 
 .i-filterselect-suggestmenu .gwt-MenuItem-selected {
