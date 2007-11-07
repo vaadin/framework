@@ -36,11 +36,15 @@ public class NotificationDemo extends com.itmill.toolkit.Application {
 		Window main = new Window("Notification demo");
 		setMainWindow(main);
 
+		/*
+		 * Create a 'inline' window within the main window, and set its size.
+		 */
 		Window conf = new Window("Show Notification");
-		conf.setWidth(450);
-		conf.setHeight(340);
+		conf.setWidth(460);
+		conf.setHeight(360);
 		main.addWindow(conf);
 
+		// Dropdown select for notification type.
 		type = new NativeSelect("Notification type");
 		type.addContainerProperty("caption", String.class, null);
 		type.setNullSelectionAllowed(false);
@@ -59,23 +63,23 @@ public class NotificationDemo extends com.itmill.toolkit.Application {
 		type.setValue(new Integer(Window.Notification.TYPE_HUMANIZED_MESSAGE));
 		conf.addComponent(type);
 
+		// Notification caption
 		caption = new TextField("Caption");
-		caption.setValue("Saved!");
+		caption.setValue("Brown Fox!");
 		caption.setColumns(20);
 		conf.addComponent(caption);
-
+		// Notification message
 		message = new RichTextArea();
 		message.setCaption("Message");
-		message.setValue("Your stuff has been saved in <b>MyDocuments</b>.");
+		message.setValue("A quick one jumped over the lazy dog.");
 		conf.addComponent(message);
-
+		// Button to show the notification
 		Button b = new Button("Show notification", new ClickListener() {
 			public void buttonClick(ClickEvent event) {
 				getMainWindow().showNotification((String) caption.getValue(),
 						(String) message.getValue(),
 						((Integer) type.getValue()).intValue());
 			}
-
 		});
 		conf.addComponent(b);
 	}
