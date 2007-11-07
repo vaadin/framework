@@ -35,5 +35,5 @@ rm -r .gwt-cache
 
 # Build the widgetsets
 java $JVMVARS -cp "$SRCDIR:$GWTDIR/gwt-user.jar:$GWTDIR/gwt-dev-$PLATFORM.jar" com.google.gwt.dev.GWTCompiler -out $OUTDIR com.itmill.toolkit.terminal.gwt.DefaultWidgetSet -style $STYLE
-java $JVMVARS -cp "$SRCDIR:$GWTDIR/gwt-user.jar:$GWTDIR/gwt-dev-$PLATFORM.jar" com.google.gwt.dev.GWTCompiler -out "../../WebContent/ITMILL/widgetsets" com.itmill.toolkit.demo.colorpicker.gwt.WidgetSet -style $STYLE
-java $JVMVARS -cp "$SRCDIR:$GWTDIR/gwt-user.jar:../../lib/reservr/googlemaps_gwt.jar:$GWTDIR/gwt-dev-$PLATFORM.jar" com.google.gwt.dev.GWTCompiler -out "../../WebContent/ITMILL/widgetsets" com.itmill.toolkit.demo.reservation.gwt.WidgetSet -style $STYLE
+java $JVMVARS -cp "$SRCDIR:$GWTDIR/gwt-user.jar:$GWTDIR/gwt-dev-$PLATFORM.jar" com.google.gwt.dev.GWTCompiler -out "../../WebContent/ITMILL/widgetsets" com.itmill.toolkit.demo.colorpicker.gwt.ColorPickerWidgetSet -style $STYLE
+java $JVMVARS -cp "$SRCDIR:$GWTDIR/gwt-user.jar:../../lib/reservr/googlemaps_gwt.jar:$GWTDIR/gwt-dev-$PLATFORM.jar" com.google.gwt.dev.GWTCompiler -out "../../WebContent/ITMILL/widgetsets" com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet -style $STYLE

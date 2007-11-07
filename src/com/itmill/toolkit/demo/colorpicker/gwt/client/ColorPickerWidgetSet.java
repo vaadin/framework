@@ -5,7 +5,7 @@ import com.itmill.toolkit.demo.colorpicker.gwt.client.ui.IColorPicker;
 import com.itmill.toolkit.terminal.gwt.client.DefaultWidgetSet;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
-public class WidgetSet extends DefaultWidgetSet {
+public class ColorPickerWidgetSet extends DefaultWidgetSet {
 	/** Creates a widget according to its class name. */
     public Widget createWidget(UIDL uidl) {
     	String className = resolveWidgetTypeName(uidl);

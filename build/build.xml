@@ -455,11 +455,11 @@
 			</classpath>
 		</java>
 
-		<echo>com.itmill.toolkit.demo.reservation.gwt.WidgetSet</echo>
+		<echo>com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet</echo>
 		<java classname="com.google.gwt.dev.GWTCompiler" failonerror="yes" fork="yes" maxmemory="512m">
 			<arg value="-out" />
 			<arg value="${output-dir}/WebContent/ITMILL/widgetsets" />
-			<arg value="com.itmill.toolkit.demo.reservation.gwt.WidgetSet" />
+			<arg value="com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet" />
 			<classpath>
 				<pathelement location="build/gwt/${platform}/gwt-user.jar" />
 				<pathelement location="build/gwt/${platform}/${lib-gwt-dev}" />
@@ -471,11 +471,11 @@
 			</classpath>
 		</java>
 
-		<echo>com.itmill.toolkit.demo.colorpicker.gwt.WidgetSet</echo>
+		<echo>com.itmill.toolkit.demo.colorpicker.gwt.ColorPickerWidgetSet</echo>
 		<java classname="com.google.gwt.dev.GWTCompiler" failonerror="yes" fork="yes" maxmemory="512m">
 			<arg value="-out" />
 			<arg value="${output-dir}/WebContent/ITMILL/widgetsets" />
-			<arg value="com.itmill.toolkit.demo.colorpicker.gwt.WidgetSet" />
+			<arg value="com.itmill.toolkit.demo.colorpicker.gwt.ColorPickerWidgetSet" />
 			<classpath>
 				<pathelement location="build/gwt/${platform}/gwt-user.jar" />
 				<pathelement location="build/gwt/${platform}/${lib-gwt-dev}" />

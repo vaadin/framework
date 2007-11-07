@@ -7,7 +7,7 @@ import com.itmill.toolkit.demo.reservation.gwt.client.ui.IGoogleMap;
 import com.itmill.toolkit.terminal.gwt.client.DefaultWidgetSet;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
-public class WidgetSet extends DefaultWidgetSet {
+public class ReservationWidgetSet extends DefaultWidgetSet {
 	public Widget createWidget(UIDL uidl) {
 		String className = resolveWidgetTypeName(uidl);
 		if ("com.itmill.toolkit.terminal.gwt.client.ui.IGoogleMap"

@@ -6,6 +6,6 @@
 	<stylesheet src="colorpicker/styles.css"/>
 
 	<!-- Entry point -->
-	<entry-point class="com.itmill.toolkit.demo.colorpicker.gwt.client.WidgetSet"/>
+	<entry-point class="com.itmill.toolkit.demo.colorpicker.gwt.client.ColorPickerWidgetSet"/>
   
 </module>

@@ -9,6 +9,6 @@
 	<stylesheet src="reservr/styles.css"/>
 
 	<!-- Entry point -->
-	<entry-point class="com.itmill.toolkit.demo.reservation.gwt.client.WidgetSet"/>
+	<entry-point class="com.itmill.toolkit.demo.reservation.gwt.client.ReservationWidgetSet"/>
   
 </module>
