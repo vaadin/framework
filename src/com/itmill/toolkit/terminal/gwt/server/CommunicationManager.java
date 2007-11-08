@@ -265,11 +265,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 			synchronized (application) {
 
 				// Change all variables based on request parameters
-				Map unhandledParameters = handleVariables(request, application);
-
-				// Handles the URI if the application is still running
-				if (application.isRunning())
-					download = handleURI(application, request, response);
+				handleVariables(request, application);
 
 				// If this is not a download request
 				if (download == null) {
@@ -278,12 +274,6 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 					Window window = null;
 					if (application.isRunning())
 						window = getApplicationWindow(request, application);
-
-					// Handles the unhandled parameters if the application is
-					// still running
-					if (window != null && unhandledParameters != null
-							&& !unhandledParameters.isEmpty())
-						window.handleParameters(unhandledParameters);
 
 					// Removes application if it has stopped
 					if (!application.isRunning()) {

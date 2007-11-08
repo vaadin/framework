@@ -385,6 +385,12 @@ public class ApplicationServlet extends HttpServlet {
 				if (handleResourceRequest(request, response, themeName))
 					return;
 
+				// Handle parameters
+				Map parameters = request.getParameterMap();
+				if (window != null && parameters != null
+						&& !parameters.isEmpty())
+					window.handleParameters(parameters);
+
 				writeAjaxPage(request, response, window, themeName);
 			}
 
