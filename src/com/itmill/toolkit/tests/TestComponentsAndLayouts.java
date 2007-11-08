@@ -85,27 +85,29 @@ public class TestComponentsAndLayouts extends Application implements Listener,
 						"Each Layout and their contained components should "
 								+ "have icon, caption, description, user error defined. "
 								+ "Eeach layout should contain similar components. "
-								+ "All components are in immmediate mode."));
+								+ "All components are in immmediate mode. See source how to tweak this test."));
 		main.addComponent(eventListenerFeedback);
 
-		// test layouts
+		// //////////////////////////////////////////////////////////////////////////
 		main.addComponent(new Label(
 				"<hr /><h1>Components inside horizontal OrderedLayout</h3>",
 				Label.CONTENT_XHTML));
-		OrderedLayout ol = new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
+		OrderedLayout ol = new OrderedLayout(
+				OrderedLayout.ORIENTATION_HORIZONTAL);
 		populateLayout(ol);
 		main.addComponent(ol);
-		// test(ol);
-		
-		main.addComponent(new Label(
-				"<br/><br/><br/><hr /><h1>Components inside vertical OrderedLayout</h3>",
-				Label.CONTENT_XHTML));
-		OrderedLayout ol2 = new OrderedLayout(OrderedLayout.ORIENTATION_VERTICAL);
+
+		// //////////////////////////////////////////////////////////////////////////
+		main
+				.addComponent(new Label(
+						"<br/><br/><br/><hr /><h1>Components inside vertical OrderedLayout</h3>",
+						Label.CONTENT_XHTML));
+		OrderedLayout ol2 = new OrderedLayout(
+				OrderedLayout.ORIENTATION_VERTICAL);
 		populateLayout(ol2);
 		main.addComponent(ol2);
-		// test(ol);
 
-		// test layouts
+		// //////////////////////////////////////////////////////////////////////////
 		main.addComponent(new Label(
 				"<hr /><h1>Components inside ExpandLayout (height 250px)</h3>",
 				Label.CONTENT_XHTML));
@@ -114,15 +116,15 @@ public class TestComponentsAndLayouts extends Application implements Listener,
 		el.setHeightUnits(ExpandLayout.UNITS_PIXELS);
 		populateLayout(el);
 		main.addComponent(el);
-		// test(el);
 
+		// //////////////////////////////////////////////////////////////////////////
 		main.addComponent(new Label("<hr /><h1>Components inside Panel</h3>",
 				Label.CONTENT_XHTML));
 		Panel panel = new Panel("Panel");
 		populateLayout(panel);
 		main.addComponent(panel);
-		// test(panel);
 
+		// //////////////////////////////////////////////////////////////////////////
 		main
 				.addComponent(new Label(
 						"<hr /><h1>Components inside vertical SplitPanel (splitpanel is under 250height ExpandLayout)</h3>",
@@ -140,6 +142,7 @@ public class TestComponentsAndLayouts extends Application implements Listener,
 		sp1.setSecondComponent(sp1second);
 		main.addComponent(sp1l);
 
+		// //////////////////////////////////////////////////////////////////////////
 		main
 				.addComponent(new Label(
 						"<hr /><h1>Components inside horizontal SplitPanel (splitpanel is under 250px height ExpandLayout)</h3>",
@@ -157,6 +160,7 @@ public class TestComponentsAndLayouts extends Application implements Listener,
 		sp2.setSecondComponent(sp2second);
 		main.addComponent(sp2l);
 
+		// //////////////////////////////////////////////////////////////////////////
 		main.addComponent(new Label(
 				"<hr /><h1>Components inside TabSheet</h3>",
 				Label.CONTENT_XHTML));
@@ -175,6 +179,7 @@ public class TestComponentsAndLayouts extends Application implements Listener,
 		// test(tab2);
 		// test(expandLayout);
 
+		// //////////////////////////////////////////////////////////////////////////
 		main.addComponent(new Label(
 				"<hr /><h1>Components inside GridLayout</h3>",
 				Label.CONTENT_XHTML));
@@ -183,6 +188,7 @@ public class TestComponentsAndLayouts extends Application implements Listener,
 		main.addComponent(gridLayout);
 		// test(gridLayout);
 
+		// //////////////////////////////////////////////////////////////////////////
 		Window window = new Window("Components inside Window (TEST: Window)");
 		populateLayout(window);
 		getMainWindow().addWindow(window);
