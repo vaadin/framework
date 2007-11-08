@@ -156,7 +156,13 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
 		while (parent != null && !(parent instanceof IView))
 			parent = parent.getParent();
 		if (parent != null && ((IView) parent).getTheme() != null) {
-			prefixImgSrcs(getElement(), "../ITMILL/themes/"
+			String prefix;
+			if(uriEndsWithSlash()) {
+				prefix = "../ITMILL/themes/";
+			} else {
+				prefix = "ITMILL/themes/";
+			}
+			prefixImgSrcs(getElement(), prefix
 					+ ((IView) parent).getTheme() + "/layouts/");
 		} else {
 			throw (new IllegalStateException(
@@ -166,6 +172,13 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
 		publishResizedFunction(DOM.getFirstChild(getElement()));
 		
 	}
+
+	private native boolean uriEndsWithSlash() /*-{
+		var path =  $wnd.location.pathname;
+		if(path.charAt(path.length - 1) == "/")
+			return true;
+		return false;
+	}-*/;
 
 	private boolean hasTemplate() {
 		if (currentTemplate == null)
