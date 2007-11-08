@@ -21,6 +21,7 @@ import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.CustomComponent;
 import com.itmill.toolkit.ui.DateField;
 import com.itmill.toolkit.ui.Embedded;
+import com.itmill.toolkit.ui.ExpandLayout;
 import com.itmill.toolkit.ui.GridLayout;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.Layout;
@@ -33,6 +34,7 @@ import com.itmill.toolkit.ui.ProgressIndicator;
 import com.itmill.toolkit.ui.RichTextArea;
 import com.itmill.toolkit.ui.Select;
 import com.itmill.toolkit.ui.Slider;
+import com.itmill.toolkit.ui.SplitPanel;
 import com.itmill.toolkit.ui.TabSheet;
 import com.itmill.toolkit.ui.Table;
 import com.itmill.toolkit.ui.TextField;
@@ -86,23 +88,77 @@ public class TestComponentsAndLayouts extends Application implements Listener,
 								+ "All components are in immmediate mode."));
 		main.addComponent(eventListenerFeedback);
 
-		main.addComponent(new Label("<hr /><h1>OrderedLayout</h3>",
-				Label.CONTENT_XHTML));
-
 		// test layouts
-		OrderedLayout ol = new OrderedLayout();
-		ol.addComponent(new Label("OrderedLayout"));
+		main.addComponent(new Label(
+				"<hr /><h1>Components inside horizontal OrderedLayout</h3>",
+				Label.CONTENT_XHTML));
+		OrderedLayout ol = new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
 		populateLayout(ol);
 		main.addComponent(ol);
 		// test(ol);
+		
+		main.addComponent(new Label(
+				"<br/><br/><br/><hr /><h1>Components inside vertical OrderedLayout</h3>",
+				Label.CONTENT_XHTML));
+		OrderedLayout ol2 = new OrderedLayout(OrderedLayout.ORIENTATION_VERTICAL);
+		populateLayout(ol2);
+		main.addComponent(ol2);
+		// test(ol);
 
-		ol.addComponent(new Label("<hr /><h1>Panel</h3>", Label.CONTENT_XHTML));
+		// test layouts
+		main.addComponent(new Label(
+				"<hr /><h1>Components inside ExpandLayout (height 250px)</h3>",
+				Label.CONTENT_XHTML));
+		ExpandLayout el = new ExpandLayout();
+		el.setHeight(250);
+		el.setHeightUnits(ExpandLayout.UNITS_PIXELS);
+		populateLayout(el);
+		main.addComponent(el);
+		// test(el);
+
+		main.addComponent(new Label("<hr /><h1>Components inside Panel</h3>",
+				Label.CONTENT_XHTML));
 		Panel panel = new Panel("Panel");
 		populateLayout(panel);
-		ol.addComponent(panel);
+		main.addComponent(panel);
 		// test(panel);
 
-		ol.addComponent(new Label("<hr /><h1>TabSheet</h3>",
+		main
+				.addComponent(new Label(
+						"<hr /><h1>Components inside vertical SplitPanel (splitpanel is under 250height ExpandLayout)</h3>",
+						Label.CONTENT_XHTML));
+		ExpandLayout sp1l = new ExpandLayout();
+		sp1l.setHeight(250);
+		sp1l.setHeightUnits(ExpandLayout.UNITS_PIXELS);
+		SplitPanel sp1 = new SplitPanel(SplitPanel.ORIENTATION_VERTICAL);
+		sp1l.addComponent(sp1);
+		OrderedLayout sp1first = new OrderedLayout();
+		OrderedLayout sp1second = new OrderedLayout();
+		sp1.setFirstComponent(sp1first);
+		populateLayout(sp1first);
+		populateLayout(sp1second);
+		sp1.setSecondComponent(sp1second);
+		main.addComponent(sp1l);
+
+		main
+				.addComponent(new Label(
+						"<hr /><h1>Components inside horizontal SplitPanel (splitpanel is under 250px height ExpandLayout)</h3>",
+						Label.CONTENT_XHTML));
+		ExpandLayout sp2l = new ExpandLayout();
+		sp2l.setHeight(250);
+		sp2l.setHeightUnits(ExpandLayout.UNITS_PIXELS);
+		SplitPanel sp2 = new SplitPanel(SplitPanel.ORIENTATION_HORIZONTAL);
+		sp2l.addComponent(sp2);
+		OrderedLayout sp2first = new OrderedLayout();
+		OrderedLayout sp2second = new OrderedLayout();
+		sp2.setFirstComponent(sp2first);
+		populateLayout(sp2first);
+		populateLayout(sp2second);
+		sp2.setSecondComponent(sp2second);
+		main.addComponent(sp2l);
+
+		main.addComponent(new Label(
+				"<hr /><h1>Components inside TabSheet</h3>",
 				Label.CONTENT_XHTML));
 		TabSheet tabsheet = new TabSheet();
 		OrderedLayout tab1 = new OrderedLayout();
@@ -113,20 +169,21 @@ public class TestComponentsAndLayouts extends Application implements Listener,
 				.addTab(tab1, "TabSheet tab1", new ClassResource("m.gif", this));
 		tabsheet
 				.addTab(tab2, "TabSheet tab2", new ClassResource("m.gif", this));
-		ol.addComponent(tabsheet);
+		main.addComponent(tabsheet);
 		// test(tabsheet);
 		// test(tab1);
 		// test(tab2);
 		// test(expandLayout);
 
-		ol.addComponent(new Label("<hr /><h1>GridLayout</h3>",
+		main.addComponent(new Label(
+				"<hr /><h1>Components inside GridLayout</h3>",
 				Label.CONTENT_XHTML));
 		GridLayout gridLayout = new GridLayout(4, 100);
 		populateLayout(gridLayout);
-		ol.addComponent(gridLayout);
+		main.addComponent(gridLayout);
 		// test(gridLayout);
 
-		Window window = new Window("TEST: Window");
+		Window window = new Window("Components inside Window (TEST: Window)");
 		populateLayout(window);
 		getMainWindow().addWindow(window);
 		// test(window);
@@ -202,7 +259,7 @@ public class TestComponentsAndLayouts extends Application implements Listener,
 		OrderedLayout tab1 = new OrderedLayout();
 		tab1.addComponent(new Label("tab1 " + count++));
 		OrderedLayout tab2 = new OrderedLayout();
-		tab2.addComponent(new Label("tab2"));
+		tab2.addComponent(new Label("tab2 " + count++));
 		tabsheet.addTab(tab1, "Default (not configured) TabSheet tab1",
 				new ClassResource("m.gif", this));
 		tabsheet.addTab(tab2, "Configured TabSheet tab2", new ClassResource(
@@ -332,7 +389,7 @@ public class TestComponentsAndLayouts extends Application implements Listener,
 		layout.addComponent(c);
 		// add separator
 		if (!(layout instanceof GridLayout)) {
-			layout.addComponent(new Label("<br/><b>----------<br/></p>",
+			layout.addComponent(new Label("<br/><b>NEXT<br/></p>",
 					Label.CONTENT_XHTML));
 		}
 	}
