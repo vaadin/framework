@@ -387,8 +387,7 @@ public class ApplicationServlet extends HttpServlet {
 
 				// Handle parameters
 				Map parameters = request.getParameterMap();
-				if (window != null && parameters != null
-						&& !parameters.isEmpty())
+				if (window != null && parameters != null )
 					window.handleParameters(parameters);
 
 				writeAjaxPage(request, response, window, themeName);
@@ -552,8 +551,8 @@ public class ApplicationServlet extends HttpServlet {
 		String uri = request.getPathInfo();
 
 		// If no URI is available
-		if (uri == null || uri.length() == 0 || uri.equals("/"))
-			return null;
+		if (uri == null)
+			uri = "";
 
 		// Removes the leading /
 		while (uri.startsWith("/") && uri.length() > 0)
