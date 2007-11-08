@@ -97,8 +97,7 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
 		if (objectToConfigure instanceof AbstractField
 				&& !(objectToConfigure instanceof Table || objectToConfigure instanceof Tree))
 			addFieldProperties();
-		if ((objectToConfigure instanceof AbstractComponentContainer)
-				&& !(objectToConfigure instanceof FrameWindow))
+		if ((objectToConfigure instanceof AbstractComponentContainer))
 			addComponentContainerProperties();
 
 		// The list of all properties
