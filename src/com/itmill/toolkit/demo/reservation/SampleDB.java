@@ -174,24 +174,27 @@ public class SampleDB {
 			stmt = CREATE_TABLE_RESOURCE;
 			update(stmt);
 		} catch (SQLException e) {
-			if (e.toString().indexOf("Table already exists") == -1)
+			if (e.toString().indexOf("Table already exists") == -1) {
 				throw new RuntimeException(e);
+			}
 		}
 		try {
 			String stmt = null;
 			stmt = CREATE_TABLE_USER;
 			update(stmt);
 		} catch (SQLException e) {
-			if (e.toString().indexOf("Table already exists") == -1)
+			if (e.toString().indexOf("Table already exists") == -1) {
 				throw new RuntimeException(e);
+			}
 		}
 		try {
 			String stmt = null;
 			stmt = CREATE_TABLE_RESERVATION;
 			update(stmt);
 		} catch (SQLException e) {
-			if (e.toString().indexOf("Table already exists") == -1)
+			if (e.toString().indexOf("Table already exists") == -1) {
 				throw new RuntimeException(e);
+			}
 		}
 	}
 
@@ -377,22 +380,18 @@ public class SampleDB {
 
 	public void generateReservations() {
 		int days = 30;
-		String descriptions[] = {
-				"Picking up guests from airport",
+		String descriptions[] = { "Picking up guests from airport",
 				"Sightseeing with the guests",
-				"Moving new servers from A to B",
-				"Shopping",
-				"Customer meeting",
-				"Guests arriving at harbour",
-				"Moving furniture",
-				"Taking guests to see town"	
-		};
+				"Moving new servers from A to B", "Shopping",
+				"Customer meeting", "Guests arriving at harbour",
+				"Moving furniture", "Taking guests to see town" };
 		Container cat = getCategories();
 		Collection cIds = cat.getItemIds();
 		for (Iterator it = cIds.iterator(); it.hasNext();) {
 			Object id = it.next();
 			Item ci = cat.getItem(id);
-			String c = (String)ci.getItemProperty(Resource.PROPERTY_ID_CATEGORY).getValue();
+			String c = (String) ci.getItemProperty(
+					Resource.PROPERTY_ID_CATEGORY).getValue();
 			Container resources = getResources(c);
 			Collection rIds = resources.getItemIds();
 			Calendar cal = Calendar.getInstance();
@@ -400,26 +399,28 @@ public class SampleDB {
 			cal.set(Calendar.SECOND, 0);
 			cal.set(Calendar.MILLISECOND, 0);
 			int hourNow = new Date().getHours();
-			//cal.add(Calendar.DAY_OF_MONTH, -days);
-			for (int i = 0;i<days;i++) {
+			// cal.add(Calendar.DAY_OF_MONTH, -days);
+			for (int i = 0; i < days; i++) {
 				int r = 3;
-				for (Iterator rit = rIds.iterator();rit.hasNext()&&r>0;r--) {
+				for (Iterator rit = rIds.iterator(); rit.hasNext() && r > 0; r--) {
 					Object rid = rit.next();
 					Item resource = resources.getItem(rid);
-					int s = hourNow-6+(int)Math.round(Math.random() * 6.0);
-					int e = s + 1 + (int)Math.round(Math.random() * 4.0);
+					int s = hourNow - 6 + (int) Math.round(Math.random() * 6.0);
+					int e = s + 1 + (int) Math.round(Math.random() * 4.0);
 					Date start = new Date(cal.getTimeInMillis());
 					start.setHours(s);
 					Date end = new Date(cal.getTimeInMillis());
 					end.setHours(e);
-					addReservation(resource, 0, start, end, descriptions[(int)Math.floor(Math.random()*descriptions.length)]);
+					addReservation(resource, 0, start, end,
+							descriptions[(int) Math.floor(Math.random()
+									* descriptions.length)]);
 				}
 				cal.add(Calendar.DATE, 1);
 			}
 		}
-		
+
 	}
-	
+
 	public void generateResources() {
 
 		Object[][] resources = {
@@ -429,9 +430,8 @@ public class SampleDB {
 				{ "02", "02 Citroen Jumper",
 						"w/ company logo. 12m3 storage space.", "Turku",
 						new Double(60.452171), new Double(22.2995) },
-				{ "03", "03 Saab 93",
-						"Cabriolet. Keys from the rental desk.", "Turku",
-						new Double(60.4507), new Double(22.295551) },
+				{ "03", "03 Saab 93", "Cabriolet. Keys from the rental desk.",
+						"Turku", new Double(60.4507), new Double(22.295551) },
 				{ "04", "04 Volvo S60", "Key from the rental desk.", "Turku",
 						new Double(60.434722), new Double(22.224398) },
 				{ "05", "05 Smart fourtwo", "Cabrio. Keys from infodesk.",
@@ -462,17 +462,16 @@ public class SampleDB {
 						"Silicon Valley", new Double(37.365028),
 						new Double(-121.922654) },
 				{ "15", "15 Ford Mustang", "GT Cal Special. Keys from guard.",
-							"Silicon Valley", new Double(37.403812),
-							new Double(-121.977425) },
-				{ "16", "16 Ford Focus", "Keys from guard.",
-							"Silicon Valley", new Double(37.403812),
-							new Double(-121.977425) },
+						"Silicon Valley", new Double(37.403812),
+						new Double(-121.977425) },
+				{ "16", "16 Ford Focus", "Keys from guard.", "Silicon Valley",
+						new Double(37.403812), new Double(-121.977425) },
 				// Paris
 				{ "17", "17 Peugeot 308", "Keys from infodesk.", "Paris",
 						new Double(48.844756), new Double(2.372784) },
-				{ "18", "18 Citroën C6", "Keys from rental desk.", "Paris",
+				{ "18", "18 Citroen C6", "Keys from rental desk.", "Paris",
 						new Double(49.007253), new Double(2.545025) },
-				{ "19", "19 Citroën C6", "Keys from infodesk.", "Paris",
+				{ "19", "19 Citroen C6", "Keys from infodesk.", "Paris",
 						new Double(48.729061), new Double(2.368087) },
 				{ "20", "20 Peugeot 308", "Keys from ticket sales.", "Paris",
 						new Double(48.880931), new Double(2.356988) },
