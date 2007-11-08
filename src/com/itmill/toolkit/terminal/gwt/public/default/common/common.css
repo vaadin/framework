@@ -110,3 +110,8 @@
 .i-layoutmargin-right {
 	margin-right: 18px;
 }
+
+.i-link {
+	text-decoration: underline;
+	cursor:pointer;
+}
