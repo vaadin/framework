@@ -17,9 +17,10 @@ import com.itmill.toolkit.terminal.UserError;
 import com.itmill.toolkit.ui.AbstractComponent;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.CheckBox;
+import com.itmill.toolkit.ui.Component;
+import com.itmill.toolkit.ui.CustomComponent;
 import com.itmill.toolkit.ui.DateField;
 import com.itmill.toolkit.ui.Embedded;
-import com.itmill.toolkit.ui.ExpandLayout;
 import com.itmill.toolkit.ui.GridLayout;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.Layout;
@@ -42,6 +43,11 @@ import com.itmill.toolkit.ui.Window;
 import com.itmill.toolkit.ui.Component.Event;
 import com.itmill.toolkit.ui.Component.Listener;
 
+/**
+ * Search for "TWEAK these" keyword and configure Custom/AbstractComponents to
+ * various states and see how they work inside different Layouts.
+ * 
+ */
 public class TestComponentsAndLayouts extends Application implements Listener,
 		Action.Handler {
 
@@ -82,51 +88,48 @@ public class TestComponentsAndLayouts extends Application implements Listener,
 
 		main.addComponent(new Label("<hr /><h1>OrderedLayout</h3>",
 				Label.CONTENT_XHTML));
-		main.addComponent(new Label("OrderedLayout"));
-		test(main);
-		populateLayout(main);
 
-		main
-				.addComponent(new Label("<hr /><h1>Panel</h3>",
-						Label.CONTENT_XHTML));
+		// test layouts
+		OrderedLayout ol = new OrderedLayout();
+		ol.addComponent(new Label("OrderedLayout"));
+		populateLayout(ol);
+		main.addComponent(ol);
+		// test(ol);
+
+		ol.addComponent(new Label("<hr /><h1>Panel</h3>", Label.CONTENT_XHTML));
 		Panel panel = new Panel("Panel");
-		test(panel);
 		populateLayout(panel);
-		main.addComponent(panel);
+		ol.addComponent(panel);
+		// test(panel);
 
-		main.addComponent(new Label("<hr /><h1>TabSheet</h3>",
+		ol.addComponent(new Label("<hr /><h1>TabSheet</h3>",
 				Label.CONTENT_XHTML));
 		TabSheet tabsheet = new TabSheet();
-		test(tabsheet);
 		OrderedLayout tab1 = new OrderedLayout();
 		tab1.addComponent(new Label("try tab2"));
 		OrderedLayout tab2 = new OrderedLayout();
-		test(tab2);
 		populateLayout(tab2);
 		tabsheet
 				.addTab(tab1, "TabSheet tab1", new ClassResource("m.gif", this));
 		tabsheet
 				.addTab(tab2, "TabSheet tab2", new ClassResource("m.gif", this));
-		main.addComponent(tabsheet);
+		ol.addComponent(tabsheet);
+		// test(tabsheet);
+		// test(tab1);
+		// test(tab2);
+		// test(expandLayout);
 
-		main.addComponent(new Label("<hr /><h1>ExpandLayout</h3>",
-				Label.CONTENT_XHTML));
-		ExpandLayout expandLayout = new ExpandLayout();
-		test(expandLayout);
-		populateLayout(expandLayout);
-		main.addComponent(expandLayout);
-
-		main.addComponent(new Label("<hr /><h1>GridLayout</h3>",
+		ol.addComponent(new Label("<hr /><h1>GridLayout</h3>",
 				Label.CONTENT_XHTML));
 		GridLayout gridLayout = new GridLayout(4, 100);
-		test(gridLayout);
 		populateLayout(gridLayout);
-		main.addComponent(gridLayout);
+		ol.addComponent(gridLayout);
+		// test(gridLayout);
 
 		Window window = new Window("TEST: Window");
-		test(window);
 		populateLayout(window);
 		getMainWindow().addWindow(window);
+		// test(window);
 	}
 
 	void populateLayout(Layout layout) {
@@ -141,11 +144,11 @@ public class TestComponentsAndLayouts extends Application implements Listener,
 
 		ClassResource flashResource = new ClassResource("itmill_spin.swf", this);
 		Embedded emb = new Embedded("Embedded " + count++, flashResource);
-		test(layout, emb);
 		emb.setType(Embedded.TYPE_OBJECT);
 		emb.setMimeType("application/x-shockwave-flash");
 		emb.setWidth(250);
 		emb.setHeight(100);
+		test(layout, emb);
 
 		Panel panel = new Panel("Panel " + count++);
 		test(layout, panel);
@@ -158,15 +161,15 @@ public class TestComponentsAndLayouts extends Application implements Listener,
 		test(layout, link);
 
 		NativeSelect nativeSelect = new NativeSelect("NativeSelect " + count++);
-		test(layout, nativeSelect);
 		nativeSelect.setContainerDataSource(getContainer());
+		test(layout, nativeSelect);
 
 		OptionGroup optionGroup = new OptionGroup("OptionGroup " + count++);
-		test(layout, optionGroup);
 		optionGroup.setContainerDataSource(getSmallContainer());
 		optionGroup.setItemCaptionPropertyId("UNIT");
+		test(layout, optionGroup);
 
-		ProgressIndicator pi = new ProgressIndicator(new Float(50));
+		ProgressIndicator pi = new ProgressIndicator();
 		pi.setCaption("ProgressIndicator");
 		test(layout, pi);
 
@@ -174,15 +177,14 @@ public class TestComponentsAndLayouts extends Application implements Listener,
 		test(layout, rta);
 
 		Select select = new Select("Select " + count++);
-		test(layout, select);
 		select.setContainerDataSource(getSmallContainer());
 		select.setItemCaptionPropertyId("UNIT");
+		test(layout, select);
 
 		Slider slider = new Slider("Slider " + count++);
 		test(layout, slider);
 
 		Table table = new Table("Table " + count++);
-		test(layout, table);
 		table.setPageLength(10);
 		table.setSelectable(true);
 		table.setRowHeaderMode(Table.ROW_HEADER_MODE_INDEX);
@@ -194,31 +196,36 @@ public class TestComponentsAndLayouts extends Application implements Listener,
 		table.setVisibleColumns(new Object[] { "FIRSTNAME", "LASTNAME",
 				"TITLE", "UNIT" });
 		table.setItemCaptionPropertyId("ID");
+		test(layout, table);
 
 		TabSheet tabsheet = new TabSheet();
 		OrderedLayout tab1 = new OrderedLayout();
 		tab1.addComponent(new Label("tab1 " + count++));
 		OrderedLayout tab2 = new OrderedLayout();
 		tab2.addComponent(new Label("tab2"));
-		tabsheet
-				.addTab(tab1, "TabSheet tab1", new ClassResource("m.gif", this));
-		tabsheet
-				.addTab(tab2, "TabSheet tab2", new ClassResource("m.gif", this));
+		tabsheet.addTab(tab1, "Default (not configured) TabSheet tab1",
+				new ClassResource("m.gif", this));
+		tabsheet.addTab(tab2, "Configured TabSheet tab2", new ClassResource(
+				"m.gif", this));
+		test(layout, tabsheet);
 
 		TextField tf = new TextField("Textfield " + count++);
 		test(layout, tf);
+		// do not configure tab1
+		// test(tab1);
+		test(tab2);
 
 		Tree tree = new Tree("Tree " + count++);
-		test(layout, tree);
 		File sampleDir = SampleDirectory.getDirectory(this);
 		FilesystemContainer fsc = new FilesystemContainer(sampleDir, true);
 		tree.setContainerDataSource(fsc);
+		test(layout, tree);
 
 		TwinColSelect twinColSelect = new TwinColSelect("TwinColSelect "
 				+ count++);
-		test(layout, twinColSelect);
 		twinColSelect.setContainerDataSource(getSmallContainer());
 		twinColSelect.setItemCaptionPropertyId("UNIT");
+		test(layout, twinColSelect);
 
 		Upload upload = new Upload("Upload (non-functional)", null);
 		test(layout, upload);
@@ -228,11 +235,14 @@ public class TestComponentsAndLayouts extends Application implements Listener,
 				Label.CONTENT_XHTML));
 		TestForUpload tfu = new TestForUpload();
 		layout.addComponent(tfu);
-		layout.addComponent(new Label("<HR />", Label.CONTENT_XHTML));
+		layout.addComponent(new Label("<br/><b>----------<br/></p>",
+				Label.CONTENT_XHTML));
+		test(tfu);
 
 		// DISABLED
 		// TableSelectTest tst = new TableSelectTest();
 		// layout.addComponent(tst);
+		// test(tst);
 		// layout.addComponent(new Label("<HR />", Label.CONTENT_XHTML));
 
 	}
@@ -260,25 +270,11 @@ public class TestComponentsAndLayouts extends Application implements Listener,
 		return null;
 	}
 
-	/**
-	 * Stresses component by configuring it
-	 * 
-	 * @param c
-	 */
-	void test(AbstractComponent c) {
-		ClassResource res = new ClassResource("m.gif", this);
-		ErrorMessage errorMsg = new UserError("User error " + c);
-
-		if ((c.getCaption() == null) || (c.getCaption().length() <= 0)) {
-			c.setCaption("Caption " + c);
-		}
-		c.setDescription("Description " + c);
-		c.setComponentError(errorMsg);
-		c.setIcon(res);
-		c.setImmediate(true);
+	// common component configuration
+	void setComponentProperties(Component c) {
+		// TWEAK these
 		// c.setEnabled(false);
 		// c.setVisible(false);
-		// c.setStyle("testStyle");
 		// c.setStyleName("testStyleName");
 		// c.setReadOnly(true);
 
@@ -292,6 +288,41 @@ public class TestComponentsAndLayouts extends Application implements Listener,
 	}
 
 	/**
+	 * Stresses component by configuring it
+	 * 
+	 * @param c
+	 */
+	void test(AbstractComponent c) {
+		// configure common component properties
+		setComponentProperties(c);
+
+		// AbstractComponent specific configuration
+		ClassResource res = new ClassResource("m.gif", this);
+		ErrorMessage errorMsg = new UserError("User error " + c);
+		if ((c.getCaption() == null) || (c.getCaption().length() <= 0)) {
+			c.setCaption("Caption " + c);
+		}
+
+		// TWEAK these
+		c.setDescription("Description " + c);
+		c.setComponentError(errorMsg);
+		c.setIcon(res);
+		c.setImmediate(true);
+		// c.addStyleName("addedTestStyleName");
+		// c.setStyleName("singleTestStyleName");
+	}
+
+	void test(CustomComponent c) {
+		// configure common component properties
+		setComponentProperties(c);
+
+		// CustomComponent specific configuration
+		// TWEAK these
+		// c.setComponentType("foo");
+		c.addStyleName("addedTestStyleName");
+	}
+
+	/**
 	 * Stresses component by configuring it in a given layout
 	 * 
 	 * @param c
@@ -301,7 +332,8 @@ public class TestComponentsAndLayouts extends Application implements Listener,
 		layout.addComponent(c);
 		// add separator
 		if (!(layout instanceof GridLayout)) {
-			layout.addComponent(new Label("<HR />", Label.CONTENT_XHTML));
+			layout.addComponent(new Label("<br/><b>----------<br/></p>",
+					Label.CONTENT_XHTML));
 		}
 	}
 
