@@ -1,12 +1,20 @@
 package com.itmill.toolkit.tests.magi;
-import com.itmill.toolkit.ui.*;
-import com.itmill.toolkit.data.*;
+
+import java.text.MessageFormat;
+
+import com.itmill.toolkit.data.Property;
+import com.itmill.toolkit.data.Validator;
 import com.itmill.toolkit.data.Property.ValueChangeEvent;
-import java.text.*;
+import com.itmill.toolkit.ui.CustomComponent;
+import com.itmill.toolkit.ui.Label;
+import com.itmill.toolkit.ui.OrderedLayout;
+import com.itmill.toolkit.ui.TextField;
 
 /* Finnish Social Security Number input field that validates the value. */
-public class SSNField extends CustomComponent implements Property.ValueChangeListener {
-	OrderedLayout layout = new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
+public class SSNField extends CustomComponent implements
+		Property.ValueChangeListener {
+	OrderedLayout layout = new OrderedLayout(
+			OrderedLayout.ORIENTATION_HORIZONTAL);
 	TextField myfield;
 	Label myerror;
 
@@ -26,16 +34,20 @@ public class SSNField extends CustomComponent implements Property.ValueChangeLis
 		/** Validate the given SSN. */
 		public void validate(Object value) throws InvalidValueException {
 			String ssn = (String) value;
-			if (ssn.length() != 11)
+			if (ssn.length() != 11) {
 				throw new InvalidValueException("Invalid SSN length");
-			
-			String numbers = ssn.substring(0,6) + ssn.substring(7,10);
-			int checksum = new Integer(numbers) % 31;
-			if (!ssn.substring(10).equals("0123456789ABCDEFHJKLMNPRSTUVWXY".substring(checksum,checksum+1)))
+			}
+
+			String numbers = ssn.substring(0, 6) + ssn.substring(7, 10);
+			int checksum = new Integer(numbers).intValue() % 31;
+			if (!ssn.substring(10).equals(
+					"0123456789ABCDEFHJKLMNPRSTUVWXY".substring(checksum,
+							checksum + 1))) {
 				throw new InvalidValueException("Invalid SSN checksum");
+			}
 		}
 	}
-	
+
 	SSNField() {
 		setCompositionRoot(layout);
 		layout.setStyle("form");
@@ -44,14 +56,17 @@ public class SSNField extends CustomComponent implements Property.ValueChangeLis
 		myfield = new TextField("Social Security Number");
 		myfield.setColumns(11);
 		myfield.setFormat(new MessageFormat("{0,number,##}"));
-		
+
 		/* Create and set the validator object for the field. */
-		SSNValidator ssnvalidator = new SSNValidator ();
+		SSNValidator ssnvalidator = new SSNValidator();
 		myfield.addValidator(ssnvalidator);
-		
-		/* ValueChageEvent will be generated immediately when the component loses focus. */
+
+		/*
+		 * ValueChageEvent will be generated immediately when the component
+		 * loses focus.
+		 */
 		myfield.setImmediate(true);
-		
+
 		/* Listen for ValueChangeEvent events. */
 		myfield.addListener(this);
 
@@ -66,16 +81,19 @@ public class SSNField extends CustomComponent implements Property.ValueChangeLis
 		try {
 			/* Validate the field value. */
 			myfield.validate();
-			
+
 			/* The value was correct. */
 			myerror.setValue("Ok");
 			myfield.setStyle("");
 		} catch (Validator.InvalidValueException e) {
 			/* Report the error message to the user. */
 			myerror.setValue(e.getMessage());
-			
-			/* The CSS defines that text field with the "error" class will be colored red. */
+
+			/*
+			 * The CSS defines that text field with the "error" class will be
+			 * colored red.
+			 */
 			myfield.setStyle("error");
-		}		
+		}
 	}
 }
