@@ -119,12 +119,14 @@
 
 .i-tabsheet-loading .i-tabsheet-content * {
 	visibility: hidden;
-	oveflow: hidden;
+	overflow: hidden;
 }
 
-
-
 /* IE specific styles */
+.i-tabsheet-loading .i-tabsheet-content * {
+	visibility: hidden;
+	oveflow: hidden;
+}
 * html .i-tabsheet-content {
 	border-bottom: 1px solid #babfc0;
 }
