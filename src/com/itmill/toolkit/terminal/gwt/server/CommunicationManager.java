@@ -77,7 +77,6 @@ import com.itmill.toolkit.terminal.UploadStream;
 import com.itmill.toolkit.terminal.VariableOwner;
 import com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent;
 import com.itmill.toolkit.ui.Component;
-import com.itmill.toolkit.ui.FrameWindow;
 import com.itmill.toolkit.ui.Upload;
 import com.itmill.toolkit.ui.Window;
 
@@ -328,26 +327,6 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 								// first is smaller.
 								if (!(o2 instanceof Window)) {
 									return -1;
-								}
-
-								// Both are windows.
-								String n1 = ((Window) o1).getName();
-								String n2 = ((Window) o2).getName();
-								if (o1 instanceof FrameWindow) {
-									if (((FrameWindow) o1).getFrameset()
-											.getFrame(n2) != null) {
-										return -1;
-									} else if (!(o2 instanceof FrameWindow)) {
-										return -1;
-									}
-								}
-								if (o2 instanceof FrameWindow) {
-									if (((FrameWindow) o2).getFrameset()
-											.getFrame(n1) != null) {
-										return 1;
-									} else if (!(o1 instanceof FrameWindow)) {
-										return 1;
-									}
 								}
 
 								return 0;
