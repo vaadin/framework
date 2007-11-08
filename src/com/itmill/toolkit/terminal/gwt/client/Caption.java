@@ -20,8 +20,6 @@ public class Caption extends HTML {
 
 	private ErrorMessage errorMessage;
 
-	private PopupPanel errorContainer;
-
 	/* Caption must be attached to a Paintable */
 	private Caption() {
 	};
@@ -106,27 +104,14 @@ public class Caption extends HTML {
 	}
 
 	private void hideErrorMessage() {
-		if (errorContainer != null) {
-			errorContainer.hide();
+		if (errorMessage != null) {
+			errorMessage.hide();
 		}
 	}
 
 	private void showErrorMessage() {
 		if (errorMessage != null) {
-			if (errorContainer == null) {
-				errorContainer = new PopupPanel();
-				errorContainer.setWidget(errorMessage);
-			}
-			errorContainer.setPopupPosition(DOM
-					.getAbsoluteLeft(errorIndicatorElement)
-					+ 2
-					* DOM.getElementPropertyInt(errorIndicatorElement,
-							"offsetHeight"), DOM
-					.getAbsoluteTop(errorIndicatorElement)
-					+ 2
-					* DOM.getElementPropertyInt(errorIndicatorElement,
-							"offsetHeight"));
-			errorContainer.show();
+			errorMessage.showAt(errorIndicatorElement);
 		}
 	}
 
