@@ -389,8 +389,12 @@ public class JsonPaintTarget implements PaintTarget {
 				throw new PaintException(
 						"Application not specified for resorce "
 								+ value.getClass().getName());
-			String uri = a.getURL().getPath();
-			if (uri.charAt(uri.length() - 1) != '/')
+			String uri;
+			if(a.getURL() != null)
+				uri = a.getURL().getPath();
+			else
+				uri = "";
+			if (uri.length() > 0 && uri.charAt(uri.length() - 1) != '/')
 				uri += "/";
 			uri += a.getRelativeLocation(r);
 			addAttribute(name, uri);
