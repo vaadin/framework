@@ -57,9 +57,9 @@ public class Embedded extends AbstractComponent implements Sizeable {
 	public static final int TYPE_IMAGE = 1;
 
 	/**
-	 * HTML types.
+	 * Browser ("iframe") type.
 	 */
-	public static final int TYPE_HTML = 2;
+	public static final int TYPE_BROWSER = 2;
 
 	/**
 	 * Type of the object.
@@ -152,8 +152,8 @@ public class Embedded extends AbstractComponent implements Sizeable {
 		case TYPE_IMAGE:
 			target.addAttribute("type", "image");
 			break;
-		case TYPE_HTML:
-			target.addAttribute("type", "html");
+		case TYPE_BROWSER:
+			target.addAttribute("type", "browser");
 			break;
 		default:
 			break;
@@ -472,7 +472,7 @@ public class Embedded extends AbstractComponent implements Sizeable {
 	 *            the type to set.
 	 */
 	public void setType(int type) {
-		if (type != TYPE_OBJECT && type != TYPE_IMAGE && type != TYPE_HTML) {
+		if (type != TYPE_OBJECT && type != TYPE_IMAGE && type != TYPE_BROWSER) {
 			throw new IllegalArgumentException("Unsupported type");
 		}
 		if (type != this.type) {
