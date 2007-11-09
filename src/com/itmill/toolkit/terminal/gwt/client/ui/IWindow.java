@@ -5,6 +5,8 @@ import java.util.Vector;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.KeyboardListenerCollection;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.ScrollListener;
@@ -27,7 +29,7 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 	private static final int DEFAULT_HEIGHT = 300;
 
 	private static final int DEFAULT_WIDTH = 400;
-	
+
 	private static final int MIN_HEIGHT = 60;
 
 	private static final int MIN_WIDTH = 80;
@@ -56,7 +58,7 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 
 	private Element resizeBox;
 
-	private ScrollPanel contentPanel = new ScrollPanel();
+	private final ScrollPanel contentPanel = new ScrollPanel();
 
 	private boolean dragging;
 
@@ -133,7 +135,8 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 
 	protected void constructDOM() {
 		Element outerHeader = DOM.createDiv();
-		DOM.setElementProperty(outerHeader, "className", CLASSNAME + "-outerheader");
+		DOM.setElementProperty(outerHeader, "className", CLASSNAME
+				+ "-outerheader");
 		header = DOM.createDiv();
 		DOM.setElementProperty(header, "className", CLASSNAME + "-header");
 		contents = DOM.createDiv();
@@ -177,14 +180,15 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 		this.id = uidl.getId();
 		this.client = client;
-		
+
 		if (uidl.hasAttribute("invisible")) {
 			this.hide();
 			return;
 		}
-		
-		if (client.updateComponent(this, uidl, false))
+
+		if (client.updateComponent(this, uidl, false)) {
 			return;
+		}
 
 		// Initialize the width from UIDL
 		if (uidl.hasVariable("width")) {
@@ -216,31 +220,50 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 			show();
 		}
 
-		UIDL childUidl = uidl.getChildUIDL(0);
-		Paintable lo = (Paintable) client.getWidget(childUidl);
-		if (layout != null) {
-			if (layout != lo) {
-				// remove old
-				client.unregisterPaintable(layout);
-				contentPanel.remove((Widget) layout);
-				// add new
-				contentPanel.setWidget((Widget) lo);
-				layout = lo;
-			}
-		} else {
-			contentPanel.setWidget((Widget) lo);
-		}
 		if (uidl.hasAttribute("caption")) {
 			setCaption(uidl.getStringAttribute("caption"));
 		}
-		lo.updateFromUIDL(childUidl, client);
+
+		UIDL childUidl = uidl.getChildUIDL(0);
+		if ("open".equals(childUidl.getTag())) {
+			// TODO render different resources (theme:// etc?)
+			if (!childUidl.hasAttribute("name")) {
+				Frame frame = new Frame();
+				DOM.setStyleAttribute(frame.getElement(), "width", "100%");
+				DOM.setStyleAttribute(frame.getElement(), "height", "100%");
+				DOM.setStyleAttribute(frame.getElement(), "border", "0px");
+				frame.setUrl(childUidl.getStringAttribute("src"));
+				contentPanel.setWidget(frame);
+			} else {
+				// TODO test
+				String target = childUidl.getStringAttribute("name");
+				Window.open(childUidl.getStringAttribute("src"),
+						target != null ? target : null, "");
+			}
+		} else {
+			Paintable lo = (Paintable) client.getWidget(childUidl);
+			if (layout != null) {
+				if (layout != lo) {
+					// remove old
+					client.unregisterPaintable(layout);
+					contentPanel.remove((Widget) layout);
+					// add new
+					contentPanel.setWidget((Widget) lo);
+					layout = lo;
+				}
+			} else {
+				contentPanel.setWidget((Widget) lo);
+			}
+			lo.updateFromUIDL(childUidl, client);
+		}
 
 		// we may have actions
 		if (uidl.getChidlCount() > 1) {
 			childUidl = uidl.getChildUIDL(1);
 			if (childUidl.getTag().equals("actions")) {
-				if (shortcutHandler == null)
+				if (shortcutHandler == null) {
 					shortcutHandler = new ShortcutActionHandler(id, client);
+				}
 				shortcutHandler.updateActionMap(childUidl);
 			}
 
@@ -329,11 +352,13 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 
 	public void setSize(Event event, boolean updateVariables) {
 		int w = DOM.eventGetScreenX(event) - startX + origW;
-		if (w < MIN_WIDTH)
+		if (w < MIN_WIDTH) {
 			w = MIN_WIDTH;
+		}
 		int h = DOM.eventGetScreenY(event) - startY + origH;
-		if (h < MIN_HEIGHT)
+		if (h < MIN_HEIGHT) {
 			h = MIN_HEIGHT;
+		}
 		setWidth(w + "px");
 		setHeight(h + "px");
 		if (updateVariables) {
