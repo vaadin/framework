@@ -57,6 +57,11 @@ public class Embedded extends AbstractComponent implements Sizeable {
 	public static final int TYPE_IMAGE = 1;
 
 	/**
+	 * HTML types.
+	 */
+	public static final int TYPE_HTML = 2;
+
+	/**
 	 * Type of the object.
 	 */
 	private int type = TYPE_OBJECT;
@@ -87,7 +92,7 @@ public class Embedded extends AbstractComponent implements Sizeable {
 	/**
 	 * Hash of object parameteres.
 	 */
-	private Hashtable parameters = new Hashtable();
+	private final Hashtable parameters = new Hashtable();
 
 	/**
 	 * Applet or other client side runnable properties.
@@ -143,39 +148,55 @@ public class Embedded extends AbstractComponent implements Sizeable {
 	 */
 	public void paintContent(PaintTarget target) throws PaintException {
 
-		if (type == TYPE_IMAGE) {
+		switch (type) {
+		case TYPE_IMAGE:
 			target.addAttribute("type", "image");
+			break;
+		case TYPE_HTML:
+			target.addAttribute("type", "html");
+			break;
+		default:
+			break;
 		}
 
-		if (source != null)
+		if (source != null) {
 			target.addAttribute("src", source);
+		}
 
 		// Dimensions
-		if (width > 0)
+		if (width > 0) {
 			target.addAttribute("width", "" + width
 					+ Sizeable.UNIT_SYMBOLS[this.widthUnits]);
-		if (height > 0)
+		}
+		if (height > 0) {
 			target.addAttribute("height", "" + height
 					+ Sizeable.UNIT_SYMBOLS[this.heightUnits]);
-		if (mimeType != null && !"".equals(mimeType))
+		}
+		if (mimeType != null && !"".equals(mimeType)) {
 			target.addAttribute("mimetype", mimeType);
-		if (classId != null && !"".equals(classId))
+		}
+		if (classId != null && !"".equals(classId)) {
 			target.addAttribute("classid", classId);
-		if (codebase != null && !"".equals(codebase))
+		}
+		if (codebase != null && !"".equals(codebase)) {
 			target.addAttribute("codebase", codebase);
-		if (codetype != null && !"".equals(codetype))
+		}
+		if (codetype != null && !"".equals(codetype)) {
 			target.addAttribute("codetype", codetype);
-		if (standby != null && !"".equals(standby))
+		}
+		if (standby != null && !"".equals(standby)) {
 			target.addAttribute("standby", standby);
-		if (archive != null && !"".equals(archive))
+		}
+		if (archive != null && !"".equals(archive)) {
 			target.addAttribute("archive", archive);
+		}
 
 		// Params
 		for (Iterator i = this.getParameterNames(); i.hasNext();) {
 			target.startTag("embeddedparam");
 			String key = (String) i.next();
 			target.addAttribute("name", key);
-			target.addAttribute("value", (String) getParameter(key));
+			target.addAttribute("value", getParameter(key));
 			target.endTag("embeddedparam");
 		}
 	}
@@ -431,7 +452,7 @@ public class Embedded extends AbstractComponent implements Sizeable {
 			if ((mt.substring(0, mt.indexOf("/")).equalsIgnoreCase("image"))) {
 				type = TYPE_IMAGE;
 			} else {
-				type = TYPE_OBJECT;
+				// Keep previous type
 			}
 			requestRepaint();
 		}
@@ -451,8 +472,9 @@ public class Embedded extends AbstractComponent implements Sizeable {
 	 *            the type to set.
 	 */
 	public void setType(int type) {
-		if (type != TYPE_OBJECT && type != TYPE_IMAGE)
+		if (type != TYPE_OBJECT && type != TYPE_IMAGE && type != TYPE_HTML) {
 			throw new IllegalArgumentException("Unsupported type");
+		}
 		if (type != this.type) {
 			this.type = type;
 			requestRepaint();
@@ -530,6 +552,7 @@ public class Embedded extends AbstractComponent implements Sizeable {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see com.itmill.toolkit.terminal.Sizeable#setSizeFull()
 	 */
 	public void setSizeFull() {
@@ -541,6 +564,7 @@ public class Embedded extends AbstractComponent implements Sizeable {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see com.itmill.toolkit.terminal.Sizeable#setSizeUndefined()
 	 */
 	public void setSizeUndefined() {
