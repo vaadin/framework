@@ -166,7 +166,13 @@ public class ITree extends Tree implements Paintable, TreeListener {
 				n.setISelected(false);
 			} else {
 				if (!isMultiselect) {
-					selectedIds.clear();
+					try {
+						TreeNode tn = (TreeNode) keyToNode.get(selectedIds.iterator().next());
+						tn.setISelected(false);
+						selectedIds.clear();
+					} catch (Exception e) {
+						// nop no previous selection
+					}
 				}
 				selectedIds.add(key);
 				n.setISelected(true);
@@ -232,6 +238,8 @@ public class ITree extends Tree implements Paintable, TreeListener {
 
 			if (uidl.getBooleanAttribute("selected")) {
 				setISelected(true);
+				if(!isMultiselect)
+					setSelected(true);
 			}
 		}
 
