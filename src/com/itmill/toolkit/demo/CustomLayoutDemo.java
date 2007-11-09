@@ -56,7 +56,6 @@ public class CustomLayoutDemo extends com.itmill.toolkit.Application implements
 		mainLayout.addComponent(loginButton, "loginButton");
 
 		// Menu component, when clicked bodyPanel is updated
-		menu.setStyle("menu");
 		menu.addItem("Welcome");
 		menu.addItem("Products");
 		menu.addItem("Support");
@@ -67,6 +66,7 @@ public class CustomLayoutDemo extends com.itmill.toolkit.Application implements
 		menu.addListener((Listener) this);
 		// Value changes are immediate
 		menu.setImmediate(true);
+		menu.setNullSelectionAllowed(false);
 		mainLayout.addComponent(menu, "menu");
 
 		// Body component
