@@ -65,8 +65,13 @@ public class IView extends SimplePanel implements Paintable,
 				&& "open".equals(uidl.getChildUIDL(childIndex).getTag())) {
 			UIDL open = uidl.getChildUIDL(childIndex);
 			String url = open.getStringAttribute("src");
-			String target = open.getStringAttribute("target");
-			Window.open(url, target != null ? target : null, "");
+			String target = open.getStringAttribute("name");
+			if (target == null) {
+				goTo(url);
+			} else {
+				// TODO width & height
+				Window.open(url, target != null ? target : null, "");
+			}
 			childIndex++;
 		}
 
@@ -154,5 +159,10 @@ public class IView extends SimplePanel implements Paintable,
 	public void onWindowResized(int width, int height) {
 		Util.runDescendentsLayout(this);
 	}
+
+	public native static void goTo(String url)
+	/*-{
+	   $wnd.location = url;
+	 }-*/;
 
 }
