@@ -27,6 +27,8 @@ public class IPanel extends SimplePanel implements Paintable,
 
 	private String height;
 
+	private Widget layout;
+
 	public IPanel() {
 		super();
 		DOM.appendChild(getElement(), captionNode);
@@ -62,11 +64,6 @@ public class IPanel extends SimplePanel implements Paintable,
 				: null;
 		setWidth(w != null ? w : "");
 
-		// TODO optimize: if only the caption has changed, don't re-render whole
-		// content
-		if (getWidget() != null) {
-			clear();
-		}
 		// Handle caption displaying
 		boolean hasCaption = false;
 		if (uidl.hasAttribute("caption")
@@ -104,8 +101,13 @@ public class IPanel extends SimplePanel implements Paintable,
 
 		// Render content
 		UIDL layoutUidl = uidl.getChildUIDL(0);
-		Widget layout = client.getWidget(layoutUidl);
-		setWidget(layout);
+		Widget newLayout = client.getWidget(layoutUidl);
+		if(newLayout != layout) {
+			if(layout != null)
+				client.unregisterPaintable((Paintable) layout);
+			setWidget(newLayout);
+			layout = newLayout;
+		}
 		((Paintable) layout).updateFromUIDL(layoutUidl, client);
 
 	}
