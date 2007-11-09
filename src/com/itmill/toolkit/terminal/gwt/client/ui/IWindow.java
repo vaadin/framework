@@ -236,10 +236,8 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 				frame.setUrl(childUidl.getStringAttribute("src"));
 				contentPanel.setWidget(frame);
 			} else {
-				// TODO test
 				String target = childUidl.getStringAttribute("name");
-				Window.open(childUidl.getStringAttribute("src"),
-						target != null ? target : null, "");
+				Window.open(childUidl.getStringAttribute("src"), target, "");
 			}
 		} else {
 			Paintable lo = (Paintable) client.getWidget(childUidl);
