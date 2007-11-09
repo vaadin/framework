@@ -1,5 +1,7 @@
 package com.itmill.toolkit.tests;
 
+import java.util.Locale;
+
 import com.itmill.toolkit.terminal.ClassResource;
 import com.itmill.toolkit.terminal.ErrorMessage;
 import com.itmill.toolkit.terminal.UserError;
@@ -37,6 +39,19 @@ public class TestDateField extends CustomComponent {
 		df.setImmediate(true);
 		// FIXME: bug #1138 this makes datefield to render with unknown component (UIDL tree debug)
 		df.addStyleName("thisShouldBeHarmless");
+		
+		// Another test: locale
+		DateField df1 = new DateField();
+		main.addComponent(df1);
+		df1.setLocale(new Locale("en","US"));
+		
+		DateField df2 = new DateField();
+		main.addComponent(df2);
+		df2.setLocale(new Locale("de","DE"));
+		
+		DateField df3 = new DateField();
+		main.addComponent(df3);
+		df3.setLocale(new Locale("ru","RU"));
 	}
 
 	public void attach() {
