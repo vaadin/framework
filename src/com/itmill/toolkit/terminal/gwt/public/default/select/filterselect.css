@@ -37,7 +37,9 @@
 	line-height: 18px;
 	margin-top: -1px;
 }
-
+.i-filterselect-suggestmenu {
+	margin-left: -2px;
+}
 .i-filterselect-suggestmenu .gwt-MenuItem {
 	padding: 1px 5px;
 	cursor: pointer;
