@@ -28,6 +28,9 @@
 	border: 1px solid #b6b6b6;
 	overflow: hidden;
 }
+.i-richtextarea .gwt-RichTextArea {
+	background: #fff url(img/bg.png) repeat-x;
+}
 .i-richtextarea iframe {
 	border: 0;
 }
