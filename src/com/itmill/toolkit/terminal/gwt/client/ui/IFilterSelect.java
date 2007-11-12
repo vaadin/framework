@@ -13,6 +13,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.FocusListener;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.KeyboardListener;
@@ -32,7 +33,7 @@ import com.itmill.toolkit.terminal.gwt.client.Util;
  * TODO needs major refactoring (to be extensible etc)
  */
 public class IFilterSelect extends Composite implements Paintable,
-		KeyboardListener, ClickListener {
+		KeyboardListener, ClickListener, FocusListener {
 
 	public class FilterSelectSuggestion implements Suggestion, Command {
 
@@ -168,23 +169,41 @@ public class IFilterSelect extends Composite implements Paintable,
 		public void selectNextItem() {
 			MenuItem cur = menu.getSelectedItem();
 			int index = 1 + menu.getItems().indexOf(cur);
-			if (menu.getItems().size() > index)
-				menu.selectItem((MenuItem) menu.getItems().get(index));
-			else if (!clientSideFiltering && hasNextPage())
+			if (menu.getItems().size() > index) {
+				MenuItem newSelectedItem = (MenuItem) menu.getItems()
+						.get(index);
+				menu.selectItem(newSelectedItem);
+				tb.setText(newSelectedItem.getText());
+				tb.setSelectionRange(lastFilter.length(), newSelectedItem
+						.getText().length()
+						- lastFilter.length());
+
+			} else if (!clientSideFiltering && hasNextPage())
 				filterOptions(currentPage + 1);
 		}
 
 		public void selectPrevItem() {
 			MenuItem cur = menu.getSelectedItem();
 			int index = -1 + menu.getItems().indexOf(cur);
-			if (index > -1)
-				menu.selectItem((MenuItem) menu.getItems().get(index));
-			else if (index == -1) {
+			if (index > -1) {
+				MenuItem newSelectedItem = (MenuItem) menu.getItems()
+						.get(index);
+				menu.selectItem(newSelectedItem);
+				tb.setText(newSelectedItem.getText());
+				tb.setSelectionRange(lastFilter.length(), newSelectedItem
+						.getText().length()
+						- lastFilter.length());
+			} else if (index == -1) {
 				if (currentPage > 0)
 					filterOptions(currentPage - 1);
 			} else {
-				menu.selectItem((MenuItem) menu.getItems().get(
-						menu.getItems().size() - 1));
+				MenuItem newSelectedItem = (MenuItem) menu.getItems().get(
+						menu.getItems().size() - 1);
+				menu.selectItem(newSelectedItem);
+				tb.setText(newSelectedItem.getText());
+				tb.setSelectionRange(lastFilter.length(), newSelectedItem
+						.getText().length()
+						- lastFilter.length());
 			}
 		}
 
@@ -304,13 +323,25 @@ public class IFilterSelect extends Composite implements Paintable,
 
 		public void doSelectedItemAction() {
 			MenuItem item = this.getSelectedItem();
-			if (item != null) {
+			if (item != null
+					&& item.getText().toLowerCase().startsWith(
+							lastFilter.toLowerCase())) {
 				doItemAction(item, true);
 			} else if (allowNewItem) {
 				String newItemValue = tb.getText();
-				if (!newItemValue.equals("")) {
-					client.updateVariable(paintableId, "newitem", newItemValue,
-							true);
+				// check for exact match in menu
+				if(this.getItems().size() == 1 ) {
+					MenuItem potentialExactMatch = (MenuItem) getItems().get(0);
+					if(potentialExactMatch.getText().equals(newItemValue)) {
+						this.selectItem(potentialExactMatch);
+						this.doSelectedItemAction();
+						return;
+					}
+				} else {
+					if (!newItemValue.equals("")) {
+						client.updateVariable(paintableId, "newitem", newItemValue,
+								true);
+					}
 				}
 			}
 			suggestionPopup.hide();
@@ -360,7 +391,7 @@ public class IFilterSelect extends Composite implements Paintable,
 
 	private boolean filtering = false;
 
-	private String lastFilter;
+	private String lastFilter = "";
 
 	private int totalSuggestions;
 
@@ -382,6 +413,7 @@ public class IFilterSelect extends Composite implements Paintable,
 		setStyleName(CLASSNAME);
 		tb.addKeyboardListener(this);
 		tb.setStyleName(CLASSNAME + "-input");
+		tb.addFocusListener(this);
 		popupOpener.setStyleName(CLASSNAME + "-button");
 		popupOpener.addClickListener(this);
 	}
@@ -468,7 +500,7 @@ public class IFilterSelect extends Composite implements Paintable,
 			if (clientSideFiltering) {
 				allSuggestions.add(suggestion);
 			}
-			if (optionUidl.hasAttribute("selected")) {
+			if (!filtering && optionUidl.hasAttribute("selected")) {
 				tb.setText(suggestion.getReplacementString());
 				currentSuggestion = suggestion;
 			}
@@ -536,9 +568,11 @@ public class IFilterSelect extends Composite implements Paintable,
 			switch (keyCode) {
 			case KeyboardListener.KEY_DOWN:
 				suggestionPopup.selectNextItem();
+				DOM.eventPreventDefault(DOM.eventGetCurrentEvent());
 				break;
 			case KeyboardListener.KEY_UP:
 				suggestionPopup.selectPrevItem();
+				DOM.eventPreventDefault(DOM.eventGetCurrentEvent());
 				break;
 			case KeyboardListener.KEY_PAGEDOWN:
 				if (hasNextPage())
@@ -593,8 +627,9 @@ public class IFilterSelect extends Composite implements Paintable,
 		if (!suggestionPopup.isJustClosed()) {
 			filterOptions(0, "");
 		}
-		tb.setFocus(true);
+		DOM.eventPreventDefault(DOM.eventGetCurrentEvent());
 		tb.selectAll();
+		tb.setFocus(true);
 	}
 
 	/*
@@ -620,4 +655,18 @@ public class IFilterSelect extends Composite implements Paintable,
 		$wnd.document.body.removeChild(d);
 		return w;
 	}-*/;
+
+	public void onFocus(Widget sender) {
+		// NOP
+	}
+
+	public void onLostFocus(Widget sender) {
+		if(currentSuggestion == null || !tb.getText().equals(currentSuggestion.getReplacementString())) {
+			if(currentSuggestion != null) {
+				tb.setText(currentSuggestion.getDisplayString());
+			} else {
+				tb.setText("-");
+			}
+		}
+	}
 }
