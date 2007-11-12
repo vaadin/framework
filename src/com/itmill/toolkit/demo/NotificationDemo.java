@@ -18,8 +18,11 @@ import com.itmill.toolkit.ui.Button.ClickListener;
  */
 public class NotificationDemo extends com.itmill.toolkit.Application {
 
+	// Dropdown select for notification type, using the native dropdown
 	NativeSelect type;
+	// Textfield for the notification caption
 	TextField caption;
+	// Textfield for the notification content
 	TextField message;
 
 	/**
@@ -29,27 +32,20 @@ public class NotificationDemo extends com.itmill.toolkit.Application {
 	 */
 	public void init() {
 
-		/*
-		 * - Create new window for the application - Give the window a visible
-		 * title - Set the window to be the main window of the application
-		 */
+		// Create new window for the application and give the window a visible.
 		Window main = new Window("Notification demo");
+		// set as main window
 		setMainWindow(main);
 
-		/*
-		 * Create a 'inline' window within the main window, and set its size.
-		 */
-		Window conf = new Window("Show Notification");
-		conf.setWidth(470);
-		conf.setHeight(360);
-		main.addWindow(conf);
-
-		// Dropdown select for notification type.
+		// Create the 'type' dropdown select.
 		type = new NativeSelect("Notification type");
-		type.addContainerProperty("caption", String.class, null);
+		// no empty selection allowed
 		type.setNullSelectionAllowed(false);
+		// we want a different caption than the value
+		type.addContainerProperty("caption", String.class, null);
 		type.setItemCaptionMode(Select.ITEM_CAPTION_MODE_PROPERTY);
 		type.setItemCaptionPropertyId("caption");
+		// add some content (items) using the Container API
 		Item i = type.addItem(new Integer(
 				Window.Notification.TYPE_HUMANIZED_MESSAGE));
 		i.getItemProperty("caption").setValue("Humanized message");
@@ -60,27 +56,32 @@ public class NotificationDemo extends com.itmill.toolkit.Application {
 		i = type
 				.addItem(new Integer(Window.Notification.TYPE_TRAY_NOTIFICATION));
 		i.getItemProperty("caption").setValue("Tray notification");
+		// set the initially selected item
 		type.setValue(new Integer(Window.Notification.TYPE_HUMANIZED_MESSAGE));
-		conf.addComponent(type);
+		main.addComponent(type); // add to layout
 
 		// Notification caption
 		caption = new TextField("Caption");
-		caption.setValue("Brown Fox!");
 		caption.setColumns(20);
-		conf.addComponent(caption);
+		caption.setValue("Brown Fox!");
+		main.addComponent(caption);
+
 		// Notification message
 		message = new RichTextArea();
 		message.setCaption("Message");
 		message.setValue("A quick one jumped over the lazy dog.");
-		conf.addComponent(message);
+		main.addComponent(message); // add to layout
+
 		// Button to show the notification
 		Button b = new Button("Show notification", new ClickListener() {
+			// this is an inline ClickListener
 			public void buttonClick(ClickEvent event) {
+				// show the notification
 				getMainWindow().showNotification((String) caption.getValue(),
 						(String) message.getValue(),
 						((Integer) type.getValue()).intValue());
 			}
 		});
-		conf.addComponent(b);
+		main.addComponent(b); // add button to layout
 	}
 }
