@@ -337,6 +337,7 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
 						// just missing
 					}
 				}
+				setValue(newitem);
 			}
 		}
 
