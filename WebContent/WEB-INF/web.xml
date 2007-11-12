@@ -314,6 +314,24 @@
       <param-value>com.itmill.toolkit.tests.magi.MagiTestApplication</param-value>
     </init-param>
   </servlet>
+
+  <servlet>
+    <servlet-name>BrowserDemo</servlet-name>
+    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+    <init-param>
+      <param-name>application</param-name>
+      <param-value>com.itmill.toolkit.demo.BrowserDemo</param-value>
+    </init-param>
+  </servlet>
+
+  <servlet>
+    <servlet-name>WindowedDemos</servlet-name>
+    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+    <init-param>
+      <param-name>application</param-name>
+      <param-value>com.itmill.toolkit.demo.WindowedDemos</param-value>
+    </init-param>
+  </servlet>
   
   
         <servlet-mapping>
@@ -460,6 +478,16 @@
   <servlet-mapping>
     <servlet-name>MagiTestServlet</servlet-name>
     <url-pattern>/testbench2/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>BrowserDemo</servlet-name>
+    <url-pattern>/BrowserDemo/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>WindowedDemos</servlet-name>
+    <url-pattern>/WindowedDemos/*</url-pattern>
   </servlet-mapping>
 
   <welcome-file-list>
