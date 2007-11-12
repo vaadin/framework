@@ -1,7 +1,7 @@
 .i-filterselect {
 	height: 23px;
 	background: transparent url(img/bg-left-filter.png) no-repeat;
-	margin-right: 0px;
+	margin-right: 1px;
 	white-space: nowrap;
 }
 
