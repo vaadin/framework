@@ -5,15 +5,12 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Tree;
-import com.google.gwt.user.client.ui.TreeImages;
-import com.google.gwt.user.client.ui.TreeItem;
-import com.google.gwt.user.client.ui.TreeListener;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
@@ -26,13 +23,13 @@ import com.itmill.toolkit.terminal.gwt.client.Util;
  * DOM structure
  * 
  */
-public class ITree extends Tree implements Paintable, TreeListener {
+public class ITree extends FlowPanel implements Paintable {
 
 	public static final String CLASSNAME = "i-tree";
 
-	Set selectedIds = new HashSet();
-	ApplicationConnection client;
-	String paintableId;
+	private Set selectedIds = new HashSet();
+	private ApplicationConnection client;
+	private String paintableId;
 	private boolean selectable;
 	private boolean isMultiselect;
 
@@ -49,23 +46,8 @@ public class ITree extends Tree implements Paintable, TreeListener {
 	private boolean isNullSelectionAllowed = true;
 
 	public ITree() {
-		super(
-				(TreeImages) GWT
-						.create(com.itmill.toolkit.terminal.gwt.client.ui.TreeImages.class));
+		super();
 		setStyleName(CLASSNAME);
-
-		// we can't live with absolutely positioned tree, we will lose keyboard
-		// navigation thought
-		DOM.setStyleAttribute(getElement(), "position", "");
-		DOM.setStyleAttribute(DOM.getFirstChild(getElement()), "display",
-				"none");
-	}
-
-	/*
-	 * We can't live live with absolutely positioned tree.
-	 */
-	protected boolean isKeyboardNavigationEnabled(TreeItem currentItem) {
-		return false;
 	}
 
 	private void updateActionMap(UIDL c) {
@@ -102,13 +84,12 @@ public class ITree extends Tree implements Paintable, TreeListener {
 			handleUpdate(uidl);
 			return;
 		}
-		
+
 		this.paintableId = uidl.getId();
 
 		this.immediate = uidl.hasAttribute("immediate");
-		
+
 		isNullSelectionAllowed = uidl.getBooleanAttribute("nullselect");
-		
 
 		clear();
 		for (Iterator i = uidl.getChildIterator(); i.hasNext();) {
@@ -118,14 +99,12 @@ public class ITree extends Tree implements Paintable, TreeListener {
 				continue;
 			}
 			TreeNode childTree = new TreeNode();
-			addItem(childTree);
+			this.add(childTree);
 			childTree.updateFromUIDL(childUidl, client);
 		}
 		String selectMode = uidl.getStringAttribute("selectmode");
 		selectable = selectMode != null;
 		isMultiselect = "multi".equals(selectMode);
-
-		addTreeListener(this);
 
 		selectedIds = uidl.getStringArrayVariableAsSet("selected");
 
@@ -139,74 +118,103 @@ public class ITree extends Tree implements Paintable, TreeListener {
 		}
 
 	}
-	
-	public void onTreeItemStateChanged(TreeItem item) {
-		if (item instanceof TreeNode) {
-			TreeNode tn = (TreeNode) item;
-			if (item.getState()) {
-				if (!tn.isChildrenLoaded()) {
-					String key = tn.key;
-					ITree.this.client.updateVariable(paintableId,
-							"expand", new String[] { key }, true);
+
+	public void setSelected(TreeNode treeNode, boolean selected) {
+		if (selected) {
+			if (!isMultiselect) {
+				while (selectedIds.size() > 0) {
+					String id = (String) selectedIds.iterator().next();
+					TreeNode oldSelection = (TreeNode) keyToNode.get(id);
+					oldSelection.setSelected(false);
+					selectedIds.remove(id);
 				}
-			} else {
-				// TODO collapse
 			}
+			treeNode.setSelected(true);
+			selectedIds.add(treeNode.key);
+		} else {
+			if (!isNullSelectionAllowed) {
+				if (!isMultiselect || selectedIds.size() == 1)
+					return;
+			}
+			selectedIds.remove(treeNode.key);
+			treeNode.setSelected(false);
 		}
+		client.updateVariable(ITree.this.paintableId, "selected", selectedIds
+				.toArray(), immediate);
 	}
 
-	public void onTreeItemSelected(TreeItem item) {
-		TreeNode n = ((TreeNode) item);
-		if (!selectable)
-			return;
-		String key = n.key;
-		if (key != null) {
-			if (selectedIds.contains(key) && isNullSelectionAllowed ) {
-				selectedIds.remove(key);
-				n.setISelected(false);
-			} else {
-				if (!isMultiselect) {
-					try {
-						TreeNode tn = (TreeNode) keyToNode.get(selectedIds.iterator().next());
-						tn.setISelected(false);
-						selectedIds.clear();
-					} catch (Exception e) {
-						// nop no previous selection
-					}
-				}
-				selectedIds.add(key);
-				n.setISelected(true);
-			}
-			ITree.this.client.updateVariable(ITree.this.paintableId,
-					"selected", selectedIds.toArray(), immediate);
-		}
+	public boolean isSelected(TreeNode treeNode) {
+		return selectedIds.contains(treeNode.key);
 	}
 
-	private class TreeNode extends TreeItem implements ActionOwner {
+	protected class TreeNode extends SimplePanel implements ActionOwner {
+
+		public static final String CLASSNAME = "i-tree-node";
 
 		String key;
-
-		boolean isLeaf = false;
 
 		private String[] actionKeys = null;
 
 		private boolean childrenLoaded;
 
+		private Element nodeCaptionDiv;
+
+		protected Element nodeCaptionSpan;
+
+		private FlowPanel childNodeContainer;
+
+		private boolean open;
+
 		public TreeNode() {
-			super();
-			attachContextMenuEvent(getElement());
+			constructDom();
+			sinkEvents(Event.ONCLICK);
+			setStyleName(CLASSNAME);
 		}
 
-		public void remove() {
-			Util.removeContextMenuEvent(getElement());
-			super.remove();
-		}
-
-		public void setSelected(boolean selected) {
-			if (!selected && !ITree.this.isMultiselect) {
-				this.setISelected(false);
+		public void onBrowserEvent(Event event) {
+			super.onBrowserEvent(event);
+			Element target = DOM.eventGetTarget(event);
+			if (DOM.compare(target, nodeCaptionSpan)) {
+				// caption click = selection change
+				toggleSelection();
+			} else if (DOM.compare(getElement(), target)) {
+				// state change
+				toggleState();
 			}
-			super.setSelected(selected);
+		}
+
+		private void toggleSelection() {
+			if (selectable)
+				ITree.this.setSelected(this, !isSelected());
+		}
+
+		private void toggleState() {
+			this.setState(!getState());
+		}
+
+		protected void constructDom() {
+			Element root = DOM.createDiv();
+			nodeCaptionDiv = DOM.createDiv();
+			DOM.setElementProperty(nodeCaptionDiv, "className", CLASSNAME
+					+ "-caption");
+			nodeCaptionSpan = DOM.createSpan();
+			DOM.appendChild(root, nodeCaptionDiv);
+			DOM.appendChild(nodeCaptionDiv, nodeCaptionSpan);
+			setElement(root);
+
+			childNodeContainer = new FlowPanel();
+			childNodeContainer.setStylePrimaryName(CLASSNAME + "-children");
+			setWidget(childNodeContainer);
+		}
+
+		public void onDetach() {
+			Util.removeContextMenuEvent(nodeCaptionSpan);
+			super.onDetach();
+		}
+
+		public void onAttach() {
+			attachContextMenuEvent(nodeCaptionSpan);
+			super.onAttach();
 		}
 
 		public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -219,40 +227,64 @@ public class ITree extends Tree implements Paintable, TreeListener {
 				actionKeys = uidl.getStringArrayAttribute("al");
 
 			if (uidl.getTag().equals("node")) {
-				isLeaf = false;
 				if (uidl.getChidlCount() == 0) {
-					TreeNode childTree = new TreeNode();
-					childTree.setText("Loading...");
-					childrenLoaded = false;
-					this.addItem(childTree);
+					// TODO "loading indicator"
 				} else {
 					renderChildNodes(uidl.getChildIterator());
+					childrenLoaded = true;
 				}
 			} else {
-				isLeaf = true;
+				addStyleName(CLASSNAME + "-leaf");
 			}
 
 			if (uidl.getBooleanAttribute("expanded") && !getState()) {
-				setState(true);
+				open = true;
 			}
 
 			if (uidl.getBooleanAttribute("selected")) {
-				setISelected(true);
-				if(!isMultiselect)
-					setSelected(true);
+				setSelected(true);
 			}
 		}
 
+		private void setState(boolean b) {
+			if (open == b)
+				return;
+			if (b) {
+				if (!childrenLoaded) {
+					ITree.this.client.updateVariable(paintableId, "expand",
+							new String[] { key }, true);
+				}
+				addStyleName(CLASSNAME + "-expanded");
+				childNodeContainer.setVisible(true);
+			} else {
+				removeStyleName(CLASSNAME + "-expanded");
+				childNodeContainer.setVisible(false);
+				// TODO notify server
+			}
+
+			open = b;
+		}
+
+		private boolean getState() {
+			return open;
+		}
+
+		private void setText(String text) {
+			DOM.setInnerText(nodeCaptionSpan, text);
+		}
+
 		private void renderChildNodes(Iterator i) {
-			removeItems();
+			childNodeContainer.clear();
 			while (i.hasNext()) {
 				UIDL childUidl = (UIDL) i.next();
+				// actions are in bit weird place, don't mix them with children,
+				// but current node's actions
 				if ("actions".equals(childUidl.getTag())) {
 					updateActionMap(childUidl);
 					continue;
 				}
 				TreeNode childTree = new TreeNode();
-				this.addItem(childTree);
+				childNodeContainer.add(childTree);
 				childTree.updateFromUIDL(childUidl, client);
 			}
 			childrenLoaded = true;
@@ -286,15 +318,18 @@ public class ITree extends Tree implements Paintable, TreeListener {
 		}
 
 		/**
-		 * Adds/removes IT Mill Toolkit spesific style name. (GWT treenode does
-		 * not support multiselects)
+		 * Adds/removes IT Mill Toolkit spesific style name. This method ought
+		 * to be called only from Tree.
 		 * 
 		 * @param selected
 		 */
-		public void setISelected(boolean selected) {
+		public void setSelected(boolean selected) {
 			// add style name to caption dom structure only, not to subtree
-			Element styleElement = DOM.getFirstChild(getElement());
-			setStyleName(styleElement, "i-tree-node-selected", selected);
+			setStyleName(nodeCaptionDiv, "i-tree-node-selected", selected);
+		}
+
+		public boolean isSelected() {
+			return ITree.this.isSelected(this);
 		}
 
 		public void showContextMenu(Event event) {
