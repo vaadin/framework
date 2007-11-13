@@ -90,7 +90,7 @@ public class ITree extends FlowPanel implements Paintable {
 		this.paintableId = uidl.getId();
 
 		this.immediate = uidl.hasAttribute("immediate");
-		
+
 		disabled = uidl.getBooleanAttribute("disabled");
 
 		isNullSelectionAllowed = uidl.getBooleanAttribute("nullselect");
@@ -118,6 +118,10 @@ public class ITree extends FlowPanel implements Paintable {
 		TreeNode rootNode = (TreeNode) keyToNode.get(uidl
 				.getStringAttribute("rootKey"));
 		if (rootNode != null) {
+			if (!rootNode.getState()) {
+				// expanding node happened server side
+				rootNode.setState(true, false);
+			}
 			rootNode.renderChildNodes(uidl.getChildIterator());
 		}
 
@@ -177,7 +181,7 @@ public class ITree extends FlowPanel implements Paintable {
 
 		public void onBrowserEvent(Event event) {
 			super.onBrowserEvent(event);
-			if(disabled)
+			if (disabled)
 				return;
 			Element target = DOM.eventGetTarget(event);
 			if (DOM.compare(target, nodeCaptionSpan)) {
@@ -195,7 +199,7 @@ public class ITree extends FlowPanel implements Paintable {
 		}
 
 		private void toggleState() {
-			this.setState(!getState());
+			this.setState(!getState(), true);
 		}
 
 		protected void constructDom() {
@@ -234,7 +238,7 @@ public class ITree extends FlowPanel implements Paintable {
 
 			if (uidl.getTag().equals("node")) {
 				if (uidl.getChidlCount() == 0) {
-					// TODO "loading indicator"
+					childNodeContainer.setVisible(false);
 				} else {
 					renderChildNodes(uidl.getChildIterator());
 					childrenLoaded = true;
@@ -244,7 +248,7 @@ public class ITree extends FlowPanel implements Paintable {
 			}
 
 			if (uidl.getBooleanAttribute("expanded") && !getState()) {
-				open = true;
+				setState(true, false);
 			}
 
 			if (uidl.getBooleanAttribute("selected")) {
@@ -252,23 +256,28 @@ public class ITree extends FlowPanel implements Paintable {
 			}
 		}
 
-		private void setState(boolean b) {
-			if (open == b)
+		private void setState(boolean state, boolean notifyServer) {
+			if (open == state)
 				return;
-			if (b) {
-				if (!childrenLoaded) {
-					ITree.this.client.updateVariable(paintableId, "expand",
-							new String[] { key }, true);
+			if (state) {
+				if (!childrenLoaded && notifyServer) {
+					client.updateVariable(paintableId, "requestChildTree",
+							true, false);
 				}
+				if (notifyServer)
+					client.updateVariable(paintableId, "expand",
+							new String[] { key }, true);
 				addStyleName(CLASSNAME + "-expanded");
 				childNodeContainer.setVisible(true);
 			} else {
 				removeStyleName(CLASSNAME + "-expanded");
 				childNodeContainer.setVisible(false);
-				// TODO notify server
+				if (notifyServer)
+					client.updateVariable(paintableId, "collapse",
+							new String[] { key }, true);
 			}
 
-			open = b;
+			open = state;
 		}
 
 		private boolean getState() {
@@ -281,6 +290,7 @@ public class ITree extends FlowPanel implements Paintable {
 
 		private void renderChildNodes(Iterator i) {
 			childNodeContainer.clear();
+			childNodeContainer.setVisible(true);
 			while (i.hasNext()) {
 				UIDL childUidl = (UIDL) i.next();
 				// actions are in bit weird place, don't mix them with children,

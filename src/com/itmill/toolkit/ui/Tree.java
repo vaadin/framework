@@ -168,6 +168,19 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 	 * @return True iff the expand operation succeeded
 	 */
 	public boolean expandItem(Object itemId) {
+		return expandItem(itemId, true);
+	}
+
+	/**
+	 * Expands an item.
+	 * 
+	 * @param itemId
+	 *            the item id.
+	 * @param sendChildTree
+	 * 		flag to indicate if client needs subtree or not (may be cached)
+	 * @return True iff the expand operation succeeded
+	 */
+	private boolean expandItem(Object itemId, boolean sendChildTree) {
 
 		// Succeeds if the node is already expanded
 		if (isExpanded(itemId)) {
@@ -185,7 +198,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 		this.expandedItemId = itemId;
 		if (this.initialPaint) {
 			requestRepaint();
-		} else {
+		} else if(sendChildTree) {
 			requestPartialRepaint();
 		}
 		fireExpandEvent(itemId);
@@ -223,14 +236,14 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 		// Expands recursively
 		while (!todo.isEmpty()) {
 			Object id = todo.pop();
-			if (areChildrenAllowed(id) && !expandItem(id)) {
+			if (areChildrenAllowed(id) && !expandItem(id, false)) {
 				result = false;
 			}
 			if (hasChildren(id)) {
 				todo.addAll(getChildren(id));
 			}
 		}
-
+		requestRepaint();
 		return result;
 	}
 
@@ -358,11 +371,15 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 
 		// Expands the nodes
 		if (variables.containsKey("expand")) {
+			boolean sendChildTree = false;
+			if(variables.containsKey("requestChildTree")) {
+				sendChildTree = true;
+			}
 			String[] keys = (String[]) variables.get("expand");
 			for (int i = 0; i < keys.length; i++) {
 				Object id = this.itemIdMapper.get(keys[i]);
 				if (id != null) {
-					expandItem(id);
+					expandItem(id, sendChildTree);
 				}
 			}
 		}
