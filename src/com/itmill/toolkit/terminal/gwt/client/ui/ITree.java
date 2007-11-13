@@ -45,6 +45,8 @@ public class ITree extends FlowPanel implements Paintable {
 
 	private boolean isNullSelectionAllowed = true;
 
+	private boolean disabled = false;
+
 	public ITree() {
 		super();
 		setStyleName(CLASSNAME);
@@ -88,6 +90,8 @@ public class ITree extends FlowPanel implements Paintable {
 		this.paintableId = uidl.getId();
 
 		this.immediate = uidl.hasAttribute("immediate");
+		
+		disabled = uidl.getBooleanAttribute("disabled");
 
 		isNullSelectionAllowed = uidl.getBooleanAttribute("nullselect");
 
@@ -173,6 +177,8 @@ public class ITree extends FlowPanel implements Paintable {
 
 		public void onBrowserEvent(Event event) {
 			super.onBrowserEvent(event);
+			if(disabled)
+				return;
 			Element target = DOM.eventGetTarget(event);
 			if (DOM.compare(target, nodeCaptionSpan)) {
 				// caption click = selection change
