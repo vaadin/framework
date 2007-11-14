@@ -7,13 +7,13 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
-public class ISelect extends IOptionGroupBase {
+public class INativeSelect extends IOptionGroupBase {
 
     public static final String CLASSNAME = "i-select";
 
     protected ListBox select;
 
-    public ISelect() {
+    public INativeSelect() {
         super(new ListBox(false), CLASSNAME);
         select = (ListBox) optionsContainer;
         select.setVisibleItemCount(1);

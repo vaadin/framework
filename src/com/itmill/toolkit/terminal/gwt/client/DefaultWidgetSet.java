@@ -15,6 +15,7 @@ import com.itmill.toolkit.terminal.gwt.client.ui.IGridLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.ILabel;
 import com.itmill.toolkit.terminal.gwt.client.ui.ILink;
 import com.itmill.toolkit.terminal.gwt.client.ui.IListSelect;
+import com.itmill.toolkit.terminal.gwt.client.ui.INativeSelect;
 import com.itmill.toolkit.terminal.gwt.client.ui.IOptionGroup;
 import com.itmill.toolkit.terminal.gwt.client.ui.IOrderedLayoutHorizontal;
 import com.itmill.toolkit.terminal.gwt.client.ui.IOrderedLayoutVertical;
@@ -23,7 +24,6 @@ import com.itmill.toolkit.terminal.gwt.client.ui.IPasswordField;
 import com.itmill.toolkit.terminal.gwt.client.ui.IPopupCalendar;
 import com.itmill.toolkit.terminal.gwt.client.ui.IProgressIndicator;
 import com.itmill.toolkit.terminal.gwt.client.ui.IScrollTable;
-import com.itmill.toolkit.terminal.gwt.client.ui.ISelect;
 import com.itmill.toolkit.terminal.gwt.client.ui.ISlider;
 import com.itmill.toolkit.terminal.gwt.client.ui.ISplitPanelHorizontal;
 import com.itmill.toolkit.terminal.gwt.client.ui.ISplitPanelVertical;
@@ -86,9 +86,9 @@ public class DefaultWidgetSet implements WidgetSet {
         } else if ("com.itmill.toolkit.terminal.gwt.client.ui.ITwinColSelect"
                 .equals(className)) {
             return new ITwinColSelect();
-        } else if ("com.itmill.toolkit.terminal.gwt.client.ui.ISelect"
+        } else if ("com.itmill.toolkit.terminal.gwt.client.ui.INativeSelect"
                 .equals(className)) {
-            return new ISelect();
+            return new INativeSelect();
         } else if ("com.itmill.toolkit.terminal.gwt.client.ui.IListSelect"
                 .equals(className)) {
             return new IListSelect();
@@ -203,7 +203,7 @@ public class DefaultWidgetSet implements WidgetSet {
                     return "com.itmill.toolkit.terminal.gwt.client.ui.IOptionGroup";
                 }
                 if (type.equals("native")) {
-                    return "com.itmill.toolkit.terminal.gwt.client.ui.ISelect";
+                    return "com.itmill.toolkit.terminal.gwt.client.ui.INativeSelect";
                 }
                 if (type.equals("list")) {
                     return "com.itmill.toolkit.terminal.gwt.client.ui.IListSelect";
