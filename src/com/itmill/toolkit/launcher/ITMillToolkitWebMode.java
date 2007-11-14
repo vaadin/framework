@@ -99,7 +99,9 @@ public class ITMillToolkitWebMode {
 			WebAppContext webappcontext = new WebAppContext();
 			webappcontext.setContextPath("");
 			webappcontext.setWar(serverArgs.get("webroot").toString());
-
+			// enable hot code replace
+			webappcontext.setCopyWebDir(true);
+			
 			server.setHandler(webappcontext);
 
 			server.start();
