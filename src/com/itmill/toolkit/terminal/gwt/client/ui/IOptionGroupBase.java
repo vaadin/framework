@@ -34,6 +34,8 @@ abstract class IOptionGroupBase extends Composite implements Paintable,
 
     private boolean nullSelectionAllowed = true;
 
+    private boolean nullSelectionItemAvailable = false;
+
     /**
      * Widget holding the different options (e.g. ListBox or Panel for radio
      * buttons) (optional, fallbacks to container Panel)
@@ -72,40 +74,24 @@ abstract class IOptionGroupBase extends Composite implements Paintable,
         return immediate;
     }
 
-    protected void setImmediate(boolean immediate) {
-        this.immediate = immediate;
-    }
-
     protected boolean isMultiselect() {
         return multiselect;
-    }
-
-    protected void setMultiselect(boolean multiselect) {
-        this.multiselect = multiselect;
     }
 
     protected boolean isDisabled() {
         return disabled;
     }
 
-    protected void setDisabled(boolean disabled) {
-        this.disabled = disabled;
-    }
-
     protected boolean isReadonly() {
         return readonly;
     }
 
-    protected void setReadonly(boolean readonly) {
-        this.readonly = readonly;
-    }
-
-    protected void setNullSelectionAllowed(boolean nullSelectionAllowed) {
-        this.nullSelectionAllowed = nullSelectionAllowed;
-    }
-
     protected boolean isNullSelectionAllowed() {
         return nullSelectionAllowed;
+    }
+
+    protected boolean isNullSelectionItemAvailable() {
+        return nullSelectionItemAvailable;
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -123,6 +109,7 @@ abstract class IOptionGroupBase extends Composite implements Paintable,
         multiselect = "multi".equals(uidl.getStringAttribute("selectmode"));
         immediate = uidl.getBooleanAttribute("immediate");
         nullSelectionAllowed = uidl.getBooleanAttribute("nullselect");
+        nullSelectionItemAvailable = uidl.getBooleanAttribute("nullselectitem");
 
         UIDL ops = uidl.getChildUIDL(0);
 

@@ -30,7 +30,8 @@ public class IListSelect extends IOptionGroupBase {
         select.setMultipleSelect(isMultiselect());
         select.setEnabled(!isDisabled() && !isReadonly());
         select.clear();
-        if (!isMultiselect() && isNullSelectionAllowed()) {
+        if (!isMultiselect() && isNullSelectionAllowed()
+                && !isNullSelectionItemAvailable()) {
             // can't unselect last item in singleselect mode
             select.addItem("", null);
         }

@@ -11,26 +11,24 @@ public class ISelect extends IOptionGroupBase {
 
     public static final String CLASSNAME = "i-select";
 
-    private static final int VISIBLE_COUNT = 10;
-
     protected ListBox select;
 
     public ISelect() {
-        super(new ListBox(), CLASSNAME);
+        super(new ListBox(false), CLASSNAME);
         select = (ListBox) optionsContainer;
+        select.setVisibleItemCount(1);
         select.addChangeListener(this);
         select.setStyleName(CLASSNAME + "-select");
+
     }
 
     protected void buildOptions(UIDL uidl) {
-        select.setMultipleSelect(isMultiselect());
-        if (isMultiselect()) {
-            select.setVisibleItemCount(VISIBLE_COUNT);
-        } else {
-            select.setVisibleItemCount(1);
-        }
         select.setEnabled(!isDisabled() && !isReadonly());
         select.clear();
+        if (isNullSelectionAllowed() && !isNullSelectionItemAvailable()) {
+            // can't unselect last item in singleselect mode
+            select.addItem("", null);
+        }
         for (Iterator i = uidl.getChildIterator(); i.hasNext();) {
             UIDL optionUidl = (UIDL) i.next();
             select.addItem(optionUidl.getStringAttribute("caption"), optionUidl
