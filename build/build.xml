@@ -243,8 +243,7 @@
 				<include name="start-demo.*" />
 				<include name=".project" />
 				<include name=".classpath" />
-				<include name=".VolumeIcon.icns" />
-				<include name=".DS_Store" />
+				<include name="*.launch" />
 			</fileset>
 		</delete>
 		<copy todir="${output-dir}">
@@ -258,10 +257,15 @@
 					<token key="platform-specific-entries" value="&lt;classpathentry kind=&quot;lib&quot; path=&quot;gwt/gwt-dev-${package-platform}.jar&quot; /&gt;" />
 					<token key="/platform-specific-entries" value="" />
 				</replacetokens>
+				<replacetokens begintoken="&lt;" endtoken=">">
+					<token key="platform" value="${package-platform}" />
+					<token key="/platform" value="" />
+				</replacetokens>
 			</filterchain>
 			<fileset dir="build/package">
 				<include name=".classpath" />
 				<include name=".project" />
+				<include name="build-widgetsets.xml" />
 			</fileset>
 		</copy>
 		<if>
@@ -308,6 +312,7 @@
   Add and filter root files
    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	<target name="root">
+
 		<copy todir="${output-dir}/license">
 			<fileset dir="license">
 				<filename name="*.pdf" />
@@ -421,6 +426,7 @@
 				<exclude name="**/.svn" />
 				<exclude name="openajax/**" />
 				<exclude name="ITMILL/widgetsets/**" />
+				<exclude name="WEB-INF/lib/commons-fileupload-custom.jar" />
 				<!-- <exclude name="ITMILL/themes/tests-*" /> -->
 				<exclude name="WEB-INF/classes/**" />
 			</fileset>
@@ -587,7 +593,7 @@
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   Documentation 
    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	<target name="docs" depends="javadoc,manual-pdf,manual-html,package-docs">
+	<target name="docs"> <!-- TODO depends="javadoc,manual-pdf,manual-html,package-docs"> -->
 	</target>
 
 

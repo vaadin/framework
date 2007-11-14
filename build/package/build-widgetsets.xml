@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+
+<!-- 
+
+Client-side code is compiled by using GWTCompiler which compiles client-side Java code into
+JavaScript. Generated files are located under WebContent/ITMILL/widgetsets/*.
+
+Client-side compilation is required if you create new or modify existing widgets.
+
+By default IT Mill Toolkit first tries to serve widgetset resources from the file system, if that
+fails then files are streamed from itmill-toolkit-<version>.jar. 
+
+See configure target to adjust this buildfile.
+
+-->
+
+<project name="IT Mill Toolkit Widgetset" basedir="." default="compile-demo-widgetsets">
+
+	<!-- 
+		Update based on your project structure, by default this buildfile assumes that you 
+		1. use WebContent under your project's root directory
+		2. WebContent/WEB-INF/lib/itmill-toolkit-<version>.jar exists
+		3. WebContent/WEB-INF/src contains your project source files
+		4. gwt directory contains extracted GWT distribution for your platform (windows, linux or mac)
+	-->
+	<target name="configure">
+		<!-- which platform we are in, possible values are windows, linux and mac -->
+		<property name="platform" value="<platform></platform>" />
+		
+		<!-- where platform specific GWT distribution is located -->
+		<property name="gwt-location" value="gwt" />
+		
+		<!-- where Toolkit jar is located -->
+		<property name="toolkit-jar-location" value="WebContent/WEB-INF/lib/itmill-toolkit-<version></version>.jar" />
+		
+		<!-- where project client-side widgetset source files are located -->
+		<property name="client-side-src-location" value="WebContent/src" />
+			
+		<!-- where to generate compiled javascript and theme files -->
+		<property name="client-side-destination" value="WebContent/ITMILL/widgetsets" />
+	</target>
+
+	
+	<target name="init" depends="configure">
+
+		<echo>Configured for ${platform} platform.</echo>
+		<echo>Requirements for classpath:</echo>
+		<echo>  ${gwt-location}/gwt-dev-${platform}.jar</echo>
+		<echo>  ${gwt-location}/gwt-user.jar</echo>
+		<echo>  ${toolkit-jar-location}</echo>
+		<echo>  ${client-side-src-location}</echo>
+		<echo>Output will be written into ${client-side-destination}</echo>
+		<echo>Note, if you have created your own widgetset, please modify target compile-my-widgetset first.</echo>
+
+		<!-- Construct classpath -->
+		<path id="compile.classpath">
+			<pathelement path="${client-side-src-location}" />
+			<pathelement path="${toolkit-jar-location}" />
+			<pathelement path="${gwt-location}/gwt-user.jar" />
+			<pathelement path="${gwt-location}/gwt-dev-${platform}.jar" />
+		</path>
+
+	</target>
+	
+	
+	<!-- NOTE: use this template to compile your own widgetset -->
+	<target name="compile-my-widgetset" depends="init">
+		<fail message="Please open build-widgetset.xml and update your widgetset's package name to enable this target" />
+		<!-- remove upper fail message -->
+		<java classname="com.google.gwt.dev.GWTCompiler" failonerror="yes" fork="yes" maxmemory="128m">
+			<arg value="-out" />
+			<arg value="${client-side-destination}" />
+			<echo>NOTE: Update line below and tell package name to your own widgetset</echo>
+			<arg value="com.itmill.toolkit.terminal.gwt.DefaultWidgetSet" />
+			<classpath>
+				<path refid="compile.classpath"/>
+			</classpath>
+		</java>
+	</target>
+	
+	<!-- NOTE: used only in demos, execute after changes to colorpicker demo's client-side source code  -->
+	<target name="compile-colorpicker_demo-widgetset" depends="init">
+		<echo>com.itmill.toolkit.demo.colorpicker.gwt.ColorPickerWidgetSet</echo>
+		<java classname="com.google.gwt.dev.GWTCompiler" failonerror="yes" fork="yes" maxmemory="128m">
+			<arg value="-out" />
+			<arg value="${client-side-destination}" />
+			<arg value="com.itmill.toolkit.demo.colorpicker.gwt.ColorPickerWidgetSet" />
+			<classpath>
+				<path refid="compile.classpath"/>
+			</classpath>
+		</java>
+	</target>
+	
+	<!-- NOTE: used only in demos, execute changes to reservation demo's client-side source code -->
+	<target name="compile-reservation_demo-widgetset" depends="init">
+		<echo>com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet</echo>
+		<java classname="com.google.gwt.dev.GWTCompiler" failonerror="yes" fork="yes" maxmemory="128m">
+			<arg value="-out" />
+			<arg value="${client-side-destination}" />
+			<arg value="com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet" />
+			<classpath>
+				<path refid="compile.classpath"/>
+				<pathelement location="lib/demo/reservr/googlemaps_gwt.jar" />
+			</classpath>
+		</java>
+	</target>
+	
+	<!-- NOTE: only required if you extract Toolkit sources and change default widgetset -->
+	<target name="compile-default-widgetset" depends="init">
+		<echo>com.itmill.toolkit.terminal.gwt.DefaultWidgetSet</echo>
+		<java classname="com.google.gwt.dev.GWTCompiler" failonerror="yes" fork="yes" maxmemory="128m">
+			<arg value="-out" />
+			<arg value="${client-side-destination}" />
+			<arg value="com.itmill.toolkit.terminal.gwt.DefaultWidgetSet" />
+			<classpath>
+				<path refid="compile.classpath"/>
+			</classpath>
+		</java>
+	</target>
+	
+	<target name="compile-demo-widgetsets" depends="compile-colorpicker_demo-widgetset, compile-reservation_demo-widgetset" />
+	
+</project>
