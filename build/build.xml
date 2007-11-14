@@ -427,6 +427,7 @@
 				<exclude name="openajax/**" />
 				<exclude name="ITMILL/widgetsets/**" />
 				<exclude name="WEB-INF/lib/commons-fileupload-custom.jar" />
+				<!-- TODO: enable -->
 				<!-- <exclude name="ITMILL/themes/tests-*" /> -->
 				<exclude name="WEB-INF/classes/**" />
 			</fileset>
@@ -500,7 +501,8 @@
 				<patternset>
 					<exclude name="${toolkit-package}/demo/**" />
 					<exclude name="${toolkit-package}/launcher/**" />
-					<!-- <exclude name="${toolkit-package}/tests/**" /> -->
+					<!-- TODO remove -->
+					<exclude name="${toolkit-package}/tests/**" />
 				</patternset>
 			</fileset>
 			<!-- fileupload, see build/external/fileupload/build.xml -->
@@ -511,7 +513,6 @@
 			<fileset dir="build/result/src">
 				<patternset>
 					<exclude name="${toolkit-package}/demo/**" />
-					<!-- <exclude name="${toolkit-package}/tests/**" /> -->
 					<exclude name="${toolkit-package}/launcher/**" />
 				</patternset>
 			</fileset>
