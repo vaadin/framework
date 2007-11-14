@@ -14,140 +14,155 @@ import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
 abstract class IOptionGroupBase extends Composite implements Paintable,
-		ClickListener, ChangeListener, KeyboardListener {
+        ClickListener, ChangeListener, KeyboardListener {
 
-	public static final String CLASSNAME_OPTION = "i-select-option";
+    public static final String CLASSNAME_OPTION = "i-select-option";
 
-	ApplicationConnection client;
+    ApplicationConnection client;
 
-	String id;
+    String id;
 
-	protected boolean immediate;
+    protected boolean immediate;
 
-	protected Set selectedKeys;
+    protected Set selectedKeys;
 
-	protected boolean multiselect;
+    protected boolean multiselect;
 
-	protected boolean disabled;
+    protected boolean disabled;
 
-	protected boolean readonly;
+    protected boolean readonly;
 
-	/**
-	 * Widget holding the different options (e.g. ListBox or Panel for radio
-	 * buttons) (optional, fallbacks to container Panel)
-	 */
-	protected Widget optionsContainer;
+    protected boolean nullSelectionAllowed = true;
 
-	/**
-	 * Panel containing the component
-	 */
-	private Panel container;
+    /**
+     * Widget holding the different options (e.g. ListBox or Panel for radio
+     * buttons) (optional, fallbacks to container Panel)
+     */
+    protected Widget optionsContainer;
 
-	private ITextField newItemField;
+    /**
+     * Panel containing the component
+     */
+    private Panel container;
 
-	private IButton newItemButton;
+    private ITextField newItemField;
 
-	public IOptionGroupBase(String classname) {
-		container = new FlowPanel();
-		initWidget(container);
-		optionsContainer = container;
-		container.setStyleName(classname);
-		immediate = false;
-		multiselect = false;
-	}
+    private IButton newItemButton;
 
-	/*
-	 * Call this if you wish to specify your own container for the option
-	 * elements (e.g. SELECT)
-	 */
-	public IOptionGroupBase(Widget w, String classname) {
-		this(classname);
-		optionsContainer = w;
-		container.add(optionsContainer);
-	}
+    public IOptionGroupBase(String classname) {
+        container = new FlowPanel();
+        initWidget(container);
+        optionsContainer = container;
+        container.setStyleName(classname);
+        immediate = false;
+        multiselect = false;
+    }
 
-	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-		this.client = client;
-		this.id = uidl.getId();
+    /*
+     * Call this if you wish to specify your own container for the option
+     * elements (e.g. SELECT)
+     */
+    public IOptionGroupBase(Widget w, String classname) {
+        this(classname);
+        optionsContainer = w;
+        container.add(optionsContainer);
+    }
 
-		if (client.updateComponent(this, uidl, true))
-			return;
+    protected void setNullSelectionAllowed(boolean nullSelectionAllowed) {
+        this.nullSelectionAllowed = nullSelectionAllowed;
+    }
 
-		selectedKeys = uidl.getStringArrayVariableAsSet("selected");
+    protected boolean isNullSelectionAllowed() {
+        return nullSelectionAllowed;
+    }
 
-		readonly = uidl.getBooleanAttribute("readonly");
-		disabled = uidl.getBooleanAttribute("disabled");
-		multiselect = "multi".equals(uidl.getStringAttribute("selectmode"));
-		immediate = uidl.getBooleanAttribute("immediate");
+    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+        this.client = client;
+        id = uidl.getId();
 
-		UIDL ops = uidl.getChildUIDL(0);
+        if (client.updateComponent(this, uidl, true)) {
+            return;
+        }
 
-		buildOptions(ops);
+        selectedKeys = uidl.getStringArrayVariableAsSet("selected");
 
-		if (uidl.getBooleanAttribute("allownewitem")) {
-			if (newItemField == null) {
-				newItemButton = new IButton();
-				newItemButton.setText("+");
-				newItemButton.addClickListener(this);
-				newItemField = new ITextField();
-				newItemField.addKeyboardListener(this);
-				newItemField.setColumns(16);
-			}
-			newItemField.setEnabled(!disabled && !readonly);
-			newItemButton.setEnabled(!disabled && !readonly);
+        readonly = uidl.getBooleanAttribute("readonly");
+        disabled = uidl.getBooleanAttribute("disabled");
+        multiselect = "multi".equals(uidl.getStringAttribute("selectmode"));
+        immediate = uidl.getBooleanAttribute("immediate");
+        nullSelectionAllowed = uidl.getBooleanAttribute("nullselect");
 
-			if (newItemField != null && newItemField.getParent() == container)
-				return;
-			container.add(newItemField);
-			container.add(newItemButton);
-		} else if (newItemField != null) {
-			container.remove(newItemField);
-			container.remove(newItemButton);
-		}
+        UIDL ops = uidl.getChildUIDL(0);
 
-	}
+        buildOptions(ops);
 
-	public void onClick(Widget sender) {
-		if (sender == newItemButton && !newItemField.getText().equals("")) {
-			client.updateVariable(id, "newitem", newItemField.getText(), true);
-			newItemField.setText("");
-		}
-	}
+        if (uidl.getBooleanAttribute("allownewitem")) {
+            if (newItemField == null) {
+                newItemButton = new IButton();
+                newItemButton.setText("+");
+                newItemButton.addClickListener(this);
+                newItemField = new ITextField();
+                newItemField.addKeyboardListener(this);
+                newItemField.setColumns(16);
+            }
+            newItemField.setEnabled(!disabled && !readonly);
+            newItemButton.setEnabled(!disabled && !readonly);
 
-	public void onChange(Widget sender) {
-		if (multiselect) {
-			client
-					.updateVariable(id, "selected", getSelectedItems(),
-							immediate);
-		} else {
-			client.updateVariable(id, "selected", new String[] { ""
-					+ getSelectedItem() }, immediate);
-		}
-	}
+            if (newItemField != null && newItemField.getParent() == container) {
+                return;
+            }
+            container.add(newItemField);
+            container.add(newItemButton);
+        } else if (newItemField != null) {
+            container.remove(newItemField);
+            container.remove(newItemButton);
+        }
 
-	public void onKeyPress(Widget sender, char keyCode, int modifiers) {
-		if (sender == newItemField && keyCode == KeyboardListener.KEY_ENTER)
-			newItemButton.click();
-	}
+    }
 
-	public void onKeyUp(Widget sender, char keyCode, int modifiers) {
-		// Ignore, subclasses may override
-	}
+    public void onClick(Widget sender) {
+        if (sender == newItemButton && !newItemField.getText().equals("")) {
+            client.updateVariable(id, "newitem", newItemField.getText(), true);
+            newItemField.setText("");
+        }
+    }
 
-	public void onKeyDown(Widget sender, char keyCode, int modifiers) {
-		// Ignore, subclasses may override
-	}
+    public void onChange(Widget sender) {
+        if (multiselect) {
+            client
+                    .updateVariable(id, "selected", getSelectedItems(),
+                            immediate);
+        } else {
+            client.updateVariable(id, "selected", new String[] { ""
+                    + getSelectedItem() }, immediate);
+        }
+    }
 
-	protected abstract void buildOptions(UIDL uidl);
+    public void onKeyPress(Widget sender, char keyCode, int modifiers) {
+        if (sender == newItemField && keyCode == KeyboardListener.KEY_ENTER) {
+            newItemButton.click();
+        }
+    }
 
-	protected abstract Object[] getSelectedItems();
+    public void onKeyUp(Widget sender, char keyCode, int modifiers) {
+        // Ignore, subclasses may override
+    }
 
-	protected Object getSelectedItem() {
-		Object[] sel = getSelectedItems();
-		if (sel.length > 0)
-			return sel[0];
-		else
-			return null;
-	}
+    public void onKeyDown(Widget sender, char keyCode, int modifiers) {
+        // Ignore, subclasses may override
+    }
+
+    protected abstract void buildOptions(UIDL uidl);
+
+    protected abstract Object[] getSelectedItems();
+
+    protected Object getSelectedItem() {
+        Object[] sel = getSelectedItems();
+        if (sel.length > 0) {
+            return sel[0];
+        } else {
+            return null;
+        }
+    }
 
 }
