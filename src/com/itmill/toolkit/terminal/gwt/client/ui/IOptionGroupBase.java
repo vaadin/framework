@@ -22,17 +22,17 @@ abstract class IOptionGroupBase extends Composite implements Paintable,
 
     String id;
 
-    protected boolean immediate;
-
     protected Set selectedKeys;
 
-    protected boolean multiselect;
+    private boolean immediate;
 
-    protected boolean disabled;
+    private boolean multiselect;
 
-    protected boolean readonly;
+    private boolean disabled;
 
-    protected boolean nullSelectionAllowed = true;
+    private boolean readonly;
+
+    private boolean nullSelectionAllowed = true;
 
     /**
      * Widget holding the different options (e.g. ListBox or Panel for radio
@@ -66,6 +66,38 @@ abstract class IOptionGroupBase extends Composite implements Paintable,
         this(classname);
         optionsContainer = w;
         container.add(optionsContainer);
+    }
+
+    protected boolean isImmediate() {
+        return immediate;
+    }
+
+    protected void setImmediate(boolean immediate) {
+        this.immediate = immediate;
+    }
+
+    protected boolean isMultiselect() {
+        return multiselect;
+    }
+
+    protected void setMultiselect(boolean multiselect) {
+        this.multiselect = multiselect;
+    }
+
+    protected boolean isDisabled() {
+        return disabled;
+    }
+
+    protected void setDisabled(boolean disabled) {
+        this.disabled = disabled;
+    }
+
+    protected boolean isReadonly() {
+        return readonly;
+    }
+
+    protected void setReadonly(boolean readonly) {
+        this.readonly = readonly;
     }
 
     protected void setNullSelectionAllowed(boolean nullSelectionAllowed) {

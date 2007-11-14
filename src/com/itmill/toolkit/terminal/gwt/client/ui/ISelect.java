@@ -23,13 +23,13 @@ public class ISelect extends IOptionGroupBase {
     }
 
     protected void buildOptions(UIDL uidl) {
-        select.setMultipleSelect(multiselect);
-        if (multiselect) {
+        select.setMultipleSelect(isMultiselect());
+        if (isMultiselect()) {
             select.setVisibleItemCount(VISIBLE_COUNT);
         } else {
             select.setVisibleItemCount(1);
         }
-        select.setEnabled(!disabled && !readonly);
+        select.setEnabled(!isDisabled() && !isReadonly());
         select.clear();
         for (Iterator i = uidl.getChildIterator(); i.hasNext();) {
             UIDL optionUidl = (UIDL) i.next();
@@ -53,12 +53,11 @@ public class ISelect extends IOptionGroupBase {
 
     public void onChange(Widget sender) {
         if (select.isMultipleSelect()) {
-            client
-                    .updateVariable(id, "selected", getSelectedItems(),
-                            immediate);
+            client.updateVariable(id, "selected", getSelectedItems(),
+                    isImmediate());
         } else {
             client.updateVariable(id, "selected", new String[] { ""
-                    + getSelectedItem() }, immediate);
+                    + getSelectedItem() }, isImmediate());
         }
     }
 }

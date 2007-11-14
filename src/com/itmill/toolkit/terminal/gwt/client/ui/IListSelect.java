@@ -27,10 +27,10 @@ public class IListSelect extends IOptionGroupBase {
     }
 
     protected void buildOptions(UIDL uidl) {
-        select.setMultipleSelect(multiselect);
-        select.setEnabled(!disabled && !readonly);
+        select.setMultipleSelect(isMultiselect());
+        select.setEnabled(!isDisabled() && !isReadonly());
         select.clear();
-        if (!multiselect && isNullSelectionAllowed()) {
+        if (!isMultiselect() && isNullSelectionAllowed()) {
             // can't unselect last item in singleselect mode
             select.addItem("", null);
         }
@@ -60,12 +60,12 @@ public class IListSelect extends IOptionGroupBase {
             select.setSelectedIndex(lastSelectedIndex);
         } else {
             lastSelectedIndex = si;
-            if (select.isMultipleSelect()) {
+            if (isMultiselect()) {
                 client.updateVariable(id, "selected", getSelectedItems(),
-                        immediate);
+                        isImmediate());
             } else {
                 client.updateVariable(id, "selected", new String[] { ""
-                        + getSelectedItem() }, immediate);
+                        + getSelectedItem() }, isImmediate());
             }
         }
     }
