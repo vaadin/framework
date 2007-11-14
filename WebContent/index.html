@@ -17,33 +17,23 @@
 	<h4><a href="reservr.html">Reservr</a></h4>
 	<div class="option">
 	 <span class="link"><a href="reservr.html">Reservr</a></span>
-	 <span class="desc">Business demo.</span>
+	 <span class="desc">Example car reservation application. Uses Google Maps widget.</span>
 	</div>
 	<br />Source code:
 	<span class="link"><a href="src/com/itmill/toolkit/demo/reservation">browse source</a></span>
   </div>
   
   <div class="feature-browser">
-	<h4><a href="colorpicker/">Colorpicker widget</a></h4>
-	<div class="option">
-	 <span class="link"><a href="colorpicker/">Colorpicker widget</a></span>
-	 <span class="desc">Demonstrates how to make new widget easily with Toolkit.</span>
-	</div>
-	<br />Source code:
-	<span class="link"><a href="src/com/itmill/toolkit/demo/colorpicker">browse source</a></span>
-  </div>
-  
-<div class="feature-browser">
-	<h4><a href="TestBench/">TestBench</a></h4>
+	<h4><a href="TestBench/">Test Bench</a></h4>
 	<div class="option">
 	 <span class="link"><a href="TestBench/">TestBench</a></span>
-	 <span class="desc">Contains most new components. FIXME: will be removed from public release.</span>
+	 <span class="desc">Internal test bench application for trying out different components and features of the IT Mill Toolkit</span>
 	</div>
 	<br />Source code:
-	<span class="link"><a href="src/com/itmill/toolkit/tests">browse tests folder</a></span>
+	<span class="link"><a href="src/com/itmill/toolkit/tests/">browse TestBench folder</a></span>
   </div>
-  
-  <div class="feature-browser">
+ 
+   <div class="feature-browser">
 	<h4><a href="FeaturesApplication/">Feature Browser</a></h4>
 	<div class="option">
 	 <span class="link"><a href="FeaturesApplication/">FeatureBrowser</a></span>
@@ -53,11 +43,34 @@
 	<span class="link"><a href="src/com/itmill/toolkit/demo/features">browse features folder</a></span>
   </div>
   
+    <div class="feature-browser">
+	<h3><a href="NotificationDemo/">Notification Demo</a></h3>
+	<div class="option">
+	<p>
+	 Smaller application which demonstrates Rich Text Area widget and Window notification functionality.
+	</p>
+	</div>
+	Source code:
+	<span class="link"><a href="src/com/itmill/toolkit/demo/NotificationDemo.java.html">NotificationDemo.java</a></span>
+  </div>
+  
+   
+  <div class="feature-browser">
+	<h4><a href="colorpicker/">Colorpicker widget</a></h4>
+	<div class="option">
+	 <span class="link"><a href="colorpicker/">Colorpicker widget</a></span>
+	 <span class="desc">Demonstrates how to make new widgets easily with Toolkit.
+	 See also documentation which is located <a href="/doc/manual/ch08s02.html">here</a>.</span>
+	</div>
+	<br />Source code:
+	<span class="link"><a href="src/com/itmill/toolkit/demo/colorpicker">browse source</a></span>
+  </div>
+  
   <div class="sample-code">
 	<h3>Simple application demos</h3>
 	<div class="option">
 	 <span class="link"><a href="HelloWorld/">HelloWorld</a></span>
-	 <span class="desc">Simple Toolkit application.</span>
+	 <span class="desc">Classic Hello World example.</span>
 	</div>
 	<div class="option">
 	 <span class="link"><a href="Calc/">Calc</a></span>
@@ -67,17 +80,20 @@
 	<span class="link"><a href="src/com/itmill/toolkit/demo/HelloWorld.java.html">HelloWorld.java</a></span> and 
 	<span class="link"><a href="src/com/itmill/toolkit/demo/Calc.java.html">Calc.java</a></span>
   </div>
-
+  
   <div class="sample-code">
 	<h3>Client-side caching demo</h3>
 	<div class="option">
 	 <span class="link"><a href="CachingDemo/">CachingDemo</a></span>
-	 <span class="desc">Simple demo of client-side caching.</span>
+	 <span class="desc">
+	 Simple demo of Toolkit cache feature. An Tabsheet contains two tabs where second tab contains heavy server-side content processing. 
+	 For the first time you load tab2 it takes long time. Following request are lightning fast because 
+	 Toolkit server instruct client-side to use already cached version (components within tab2 have not changed). </span>
 	</div>
 	<br />Source code:
 	<span class="link"><a href="src/com/itmill/toolkit/demo/CachingDemo.java.html">CachingDemo.java</a></span> 
   </div>
-
+  
   
   <div class="sample-code">
 	<h3><a href="UpgradingSample/">Long lifecycle of Toolkit applications</a></h3>
@@ -94,59 +110,7 @@
 	<span class="link"><a href="src/com/itmill/toolkit/demo/UpgradingSample.java.html">UpgradingSample.java</a></span>
   </div>
   
-  
-  <div class="feature-browser">
-	<h3><a href="openajax/index.html">OpenAjax Hub Conformance tests</a></h3>
-	<div class="option">
-	<p>
-	 Performs basic OpenAjax hub conformance tests against IT Mill Toolkit.
-	 Also demonstrates how to integrate Toolkit applications into HTML pages.
-	 </p>
-	 <b>Note:</b> Embedded FeatureBrowser application is the same
-	 application instance that can be accessed as standalone application, see <em>FeatureBrowser</em>.
-	</div>	
-  </div>
-  
-  <div class="feature-browser">
-	<h3><a href="LayoutDemo/">Layout demo</a></h3>
-	<div class="option">
-	<p>
-	 This example demonstrates layouts for Tookit application.
-	</p>
-	<p>
-	 Demonstrates how to use
-	 <em>com.itmill.toolkit.ui.OrderedLayout</em>,
-	 <em>com.itmill.toolkit.ui.GridLayout</em>,
-	 <em>com.itmill.toolkit.ui.Panel</em> and
-	 <em>com.itmill.toolkit.ui.TabSheet</em>.
-    </p>
-	</div>	
-	Source code:
-	<span class="link"><a href="src/com/itmill/toolkit/demo/LayoutDemo.java.html">LayoutDemo.java</a></span>
-  </div>
-  
-  <div class="feature-browser">
-	<h3><a href="CustomLayoutDemo/">Custom layout and custom theme demo</a></h3>
-	<div class="option">
-	<p>
-	 This example demonstrates how Toolkit interacts with HTML pages
-	 that web designer usually creates. Shows how Toolkit UI components
-	 are placed to HTML pages and how HTML pages are rendered within Toolkit
-	 framework. Uses custom Example theme that extends Corporate theme.
-	 See theme code and browse to layout directory which contains custom layout's HTML code.
-	</p>
-	<p>
-	 Demonstrates how to create
-	 <em>com.itmill.toolkit.ui.CustomLayout</em>.
-    </p>
-	</div>	
-	Source code:
-	<span class="link"><a href="src/com/itmill/toolkit/demo/CustomLayoutDemo.java.html">CustomLayoutDemo.java</a></span>
-	<br /> 
-	Theme code: 
-	<span class="link"><a href="themes/example">Example theme with custom HTML layouts</a></span> 
-  </div>
-  
+ 
   <div class="feature-browser">
 	<h3><a href="QueryContainerDemo/">Tree using QueryContainer demo</a></h3>
 	<div class="option">
@@ -239,15 +203,6 @@
 	</div>
 	Source code:
 	<span class="link"><a href="src/com/itmill/toolkit/demo/FilterSelect.java.html">FilterSelect.java</a></span>
-  </div>
-  
-  <div class="feature-browser">
-	<h3><a href="ModalWindow/">Modal window</a></h3>
-	<div class="option">
-	 Example of how Modal Windows may be created using Window component.
-	</div>
-	<br />Source code:
-	<span class="link"><a href="src/com/itmill/toolkit/demo/ModalWindow.java.html">ModalWindow.java</a></span>
   </div>
 
   <div class="feature-browser">
