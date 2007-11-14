@@ -35,13 +35,13 @@ public class Time extends FlowPanel implements ChangeListener {
 			clear();
 			int numHours = thc ? 12 : 24;
 			hours = new ListBox();
-			hours.setStyleName(ISelect.CLASSNAME);
+			hours.setStyleName(INativeSelect.CLASSNAME);
 			for (int i = 0; i < numHours; i++)
 				hours.addItem((i < 10) ? "0" + i : "" + i);
 			hours.addChangeListener(this);
 			if (thc) {
 				ampm = new ListBox();
-				ampm.setStyleName(ISelect.CLASSNAME);
+				ampm.setStyleName(INativeSelect.CLASSNAME);
 				String[] ampmText = datefield.getDateTimeService()
 						.getAmPmStrings();
 				ampm.addItem(ampmText[0]);
@@ -51,21 +51,21 @@ public class Time extends FlowPanel implements ChangeListener {
 
 			if (datefield.getCurrentResolution() >= IDateField.RESOLUTION_MIN) {
 				mins = new ListBox();
-				mins.setStyleName(ISelect.CLASSNAME);
+				mins.setStyleName(INativeSelect.CLASSNAME);
 				for (int i = 0; i < 60; i++)
 					mins.addItem((i < 10) ? "0" + i : "" + i);
 				mins.addChangeListener(this);
 			}
 			if (datefield.getCurrentResolution() >= IDateField.RESOLUTION_SEC) {
 				sec = new ListBox();
-				sec.setStyleName(ISelect.CLASSNAME);
+				sec.setStyleName(INativeSelect.CLASSNAME);
 				for (int i = 0; i < 60; i++)
 					sec.addItem((i < 10) ? "0" + i : "" + i);
 				sec.addChangeListener(this);
 			}
 			if (datefield.getCurrentResolution() == IDateField.RESOLUTION_MSEC) {
 				msec = new ListBox();
-				msec.setStyleName(ISelect.CLASSNAME);
+				msec.setStyleName(INativeSelect.CLASSNAME);
 				for (int i = 0; i < 1000; i++) {
 					if (i < 10)
 						msec.addItem("00" + i);
