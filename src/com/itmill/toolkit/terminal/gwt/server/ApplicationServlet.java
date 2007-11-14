@@ -387,7 +387,7 @@ public class ApplicationServlet extends HttpServlet {
 
 				// Handle parameters
 				Map parameters = request.getParameterMap();
-				if (window != null && parameters != null )
+				if (window != null && parameters != null)
 					window.handleParameters(parameters);
 
 				writeAjaxPage(request, response, window, themeName);
@@ -515,9 +515,10 @@ public class ApplicationServlet extends HttpServlet {
 				+ "<script language='javascript' src='" + contextPath + "/"
 				+ WIDGETSET_DIRECTORY_PATH + widgetset + "/" + widgetset
 				+ ".nocache.js'></script>\n");
-		page.write("<link REL=\"stylesheet\" TYPE=\"text/css\" HREF=\""
-				+ contextPath + "/" + THEME_DIRECTORY_PATH + themeName
-				+ "/styles.css\">\n");
+		if (!themeName.equals("default"))
+			page.write("<link REL=\"stylesheet\" TYPE=\"text/css\" HREF=\""
+					+ contextPath + "/" + THEME_DIRECTORY_PATH + themeName
+					+ "/styles.css\">\n");
 		page
 				.write("</head>\n<body style=\"width:100%;height:100%;border:0;margin:0;overflow:auto;\">\n"
 						+ "	<iframe id=\"__gwt_historyFrame\" style=\"width:0;height:0;border:0;overflow:hidden\"></iframe>\n"
