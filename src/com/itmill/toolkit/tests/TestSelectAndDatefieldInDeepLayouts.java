@@ -64,7 +64,7 @@ public class TestSelectAndDatefieldInDeepLayouts extends CustomComponent {
 		return l;
 	}
 
-	AbstractLayout getPanel() {
+	Panel getPanel() {
 		Panel panel = new Panel();
 		panel.setCaption(getCaption("panel"));
 		return panel;
