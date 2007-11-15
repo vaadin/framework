@@ -11,17 +11,20 @@ import com.itmill.toolkit.terminal.gwt.client.UIDL;
  * 
  */
 public class ITextArea extends ITextField {
+    public static final String CLASSNAME = "i-textarea";
 
-	public ITextArea() {
-		super(DOM.createTextArea());
-	}
+    public ITextArea() {
+        super(DOM.createTextArea());
+        setStyleName(CLASSNAME);
+    }
 
-	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-		// Call parent renderer explicitly
-		super.updateFromUIDL(uidl, client);
+    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+        // Call parent renderer explicitly
+        super.updateFromUIDL(uidl, client);
 
-		if (uidl.hasAttribute("rows"))
-			setRows(new Integer(uidl.getStringAttribute("rows")).intValue());
-	}
+        if (uidl.hasAttribute("rows")) {
+            setRows(new Integer(uidl.getStringAttribute("rows")).intValue());
+        }
+    }
 
 }
