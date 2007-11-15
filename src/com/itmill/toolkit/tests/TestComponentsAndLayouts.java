@@ -130,7 +130,7 @@ public class TestComponentsAndLayouts extends Application implements Listener,
 		}
 
 		// //////////////////////////////////////////////////////////////////////////
-		if (true) {
+		if (false) {
 			target
 					.addComponent(new Label(
 							"<hr /><h1>Components inside ExpandLayout (height 250px)</h3>",
@@ -143,7 +143,7 @@ public class TestComponentsAndLayouts extends Application implements Listener,
 		}
 
 		// //////////////////////////////////////////////////////////////////////////
-		if (true) {
+		if (false) {
 			target.addComponent(new Label(
 					"<hr /><h1>Components inside Panel</h3>",
 					Label.CONTENT_XHTML));
@@ -153,7 +153,7 @@ public class TestComponentsAndLayouts extends Application implements Listener,
 		}
 
 		// //////////////////////////////////////////////////////////////////////////
-		if (true) {
+		if (false) {
 			target
 					.addComponent(new Label(
 							"<hr /><h1>Components inside vertical SplitPanel (splitpanel is under 250height ExpandLayout)</h3>",
@@ -173,7 +173,7 @@ public class TestComponentsAndLayouts extends Application implements Listener,
 		}
 
 		// //////////////////////////////////////////////////////////////////////////
-		if (true) {
+		if (false) {
 			target
 					.addComponent(new Label(
 							"<hr /><h1>Components inside horizontal SplitPanel (splitpanel is under 250px height ExpandLayout)</h3>",
@@ -193,7 +193,7 @@ public class TestComponentsAndLayouts extends Application implements Listener,
 		}
 
 		// //////////////////////////////////////////////////////////////////////////
-		if (true) {
+		if (false) {
 			target.addComponent(new Label(
 					"<hr /><h1>Components inside TabSheet</h3>",
 					Label.CONTENT_XHTML));
@@ -214,7 +214,7 @@ public class TestComponentsAndLayouts extends Application implements Listener,
 		}
 
 		// //////////////////////////////////////////////////////////////////////////
-		if (true) {
+		if (false) {
 			target.addComponent(new Label(
 					"<hr /><h1>Components inside GridLayout</h3>",
 					Label.CONTENT_XHTML));
