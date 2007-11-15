@@ -246,9 +246,8 @@ public class DefaultWidgetSet implements WidgetSet {
                 } else if ("text".equals(uidl.getStringAttribute("style"))) {
                     return "com.itmill.toolkit.terminal.gwt.client.ui.ITextualDate";
                 }
-            } else {
-                return "com.itmill.toolkit.terminal.gwt.client.ui.IPopupCalendar";
             }
+            return "com.itmill.toolkit.terminal.gwt.client.ui.IPopupCalendar";
         } else if ("slider".equals(tag)) {
             return "com.itmill.toolkit.terminal.gwt.client.ui.ISlider";
         } else if ("form".equals(tag)) {
