@@ -42,7 +42,7 @@ import com.itmill.toolkit.terminal.Sizeable;
  * @VERSION@
  * @since 3.0
  */
-public interface Layout extends ComponentContainer {
+public interface Layout extends ComponentContainer, Sizeable {
 
 	/**
 	 * Enable layout margins. Affects all four sides of the layout. This will

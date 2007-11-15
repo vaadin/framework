@@ -48,7 +48,7 @@ import com.itmill.toolkit.terminal.Sizeable;
  * @VERSION@
  * @since 3.0
  */
-public class TabSheet extends AbstractLayout implements Sizeable {
+public class TabSheet extends AbstractComponentContainer implements Sizeable {
 
 	/**
 	 * Linked list of component tabs.
@@ -219,7 +219,6 @@ public class TabSheet extends AbstractLayout implements Sizeable {
 	 *             if the paint operation failed.
 	 */
 	public void paintContent(PaintTarget target) throws PaintException {
-		super.paintContent(target);
 
 		// Add size info
 		if (getHeight() > -1)

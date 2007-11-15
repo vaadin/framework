@@ -47,6 +47,7 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
 
 	public ICustomLayout() {
 		setElement(DOM.createDiv());
+		DOM.setStyleAttribute(getElement(), "height", "100%");
 	}
 
 	/**

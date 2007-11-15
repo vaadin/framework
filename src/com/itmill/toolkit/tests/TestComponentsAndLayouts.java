@@ -81,7 +81,7 @@ public class TestComponentsAndLayouts extends Application implements Listener,
 		setMainWindow(main);
 
 		// By default push all containers inside main window
-		Layout target = main;
+		Layout target = main.getLayout();
 
 		main
 				.addComponent(new Label(
@@ -97,10 +97,10 @@ public class TestComponentsAndLayouts extends Application implements Listener,
 
 			if (false) {
 				// push every container and their components inside window
-				target = window;
+				target = window.getLayout();
 			} else {
 				// window is just one container to be tested
-				populateLayout(window);
+				populateLayout(window.getLayout());
 			}
 			getMainWindow().addWindow(window);
 		}
@@ -148,7 +148,7 @@ public class TestComponentsAndLayouts extends Application implements Listener,
 					"<hr /><h1>Components inside Panel</h3>",
 					Label.CONTENT_XHTML));
 			Panel panel = new Panel("Panel");
-			populateLayout(panel);
+			populateLayout(panel.getLayout());
 			target.addComponent(panel);
 		}
 

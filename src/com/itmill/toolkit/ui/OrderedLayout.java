@@ -103,6 +103,8 @@ public class OrderedLayout extends AbstractLayout {
 	 */
 	public static final int ALIGNMENT_VERTICAL_CENTER = 32;
 
+	private static final int ALIGNMENT_DEFAULT = ALIGNMENT_TOP + ALIGNMENT_LEFT;
+
 	/**
 	 * Orientation of the layout.
 	 */
@@ -225,30 +227,20 @@ public class OrderedLayout extends AbstractLayout {
 		if (this.spacing)
 			target.addAttribute("spacing", this.spacing);
 
-		// Store alignment info in this String
-		String alignments = "";
-
+		String[] alignmentsArray = new String[components.size()];
 		// Adds all items in all the locations
+		int index = 0;
 		for (Iterator i = components.iterator(); i.hasNext();) {
 			Component c = (Component) i.next();
 			if (c != null) {
 				// Paint child component UIDL
 				c.paint(target);
-
-				// Get alignment info for component
-				if (componentToAlignment.containsKey(c))
-					alignments += ((Integer) componentToAlignment.get(c))
-							.intValue();
-				else
-					// Default alignment is top-left
-					alignments += (ALIGNMENT_TOP + ALIGNMENT_LEFT);
-				if (i.hasNext())
-					alignments += ",";
+				alignmentsArray[index++] = String.valueOf(getComponentAlignment(c));
 			}
 		}
 
 		// Add child component alignment info to layout tag
-		target.addAttribute("alignments", alignments);
+		target.addAttribute("alignments", alignmentsArray);
 	}
 
 	/**
@@ -274,7 +266,16 @@ public class OrderedLayout extends AbstractLayout {
 			throw new IllegalArgumentException();
 
 		this.orientation = orientation;
-		requestRepaint();
+
+		// requestRepaint()
+		// FIXME remove lines below and uncomment above
+		// Workaround to bypass IOrderedLayouts limitations (separate classes
+		// for different orientation + subtreecacing)
+		Iterator it = getComponentIterator();
+		while (it.hasNext()) {
+			Component c = (Component) it.next();
+			c.requestRepaint();
+		}
 	}
 
 	/* Documented in superclass */
@@ -336,6 +337,14 @@ public class OrderedLayout extends AbstractLayout {
 			int horizontalAlignment, int verticalAlignment) {
 		componentToAlignment.put(childComponent, new Integer(
 				horizontalAlignment + verticalAlignment));
+	}
+	
+	public int getComponentAlignment(Component childComponent) {
+		Integer bitMask = (Integer) componentToAlignment.get(childComponent);
+		if(bitMask != null)
+			return bitMask.intValue();
+		else
+			return ALIGNMENT_DEFAULT;
 	}
 
 	/**

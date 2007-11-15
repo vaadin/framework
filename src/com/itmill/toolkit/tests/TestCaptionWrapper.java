@@ -4,8 +4,32 @@ import com.itmill.toolkit.terminal.ClassResource;
 import com.itmill.toolkit.terminal.ErrorMessage;
 import com.itmill.toolkit.terminal.ExternalResource;
 import com.itmill.toolkit.terminal.UserError;
-
-import com.itmill.toolkit.ui.*;
+import com.itmill.toolkit.ui.AbstractComponent;
+import com.itmill.toolkit.ui.Button;
+import com.itmill.toolkit.ui.CheckBox;
+import com.itmill.toolkit.ui.CustomComponent;
+import com.itmill.toolkit.ui.DateField;
+import com.itmill.toolkit.ui.Embedded;
+import com.itmill.toolkit.ui.ExpandLayout;
+import com.itmill.toolkit.ui.GridLayout;
+import com.itmill.toolkit.ui.Label;
+import com.itmill.toolkit.ui.Layout;
+import com.itmill.toolkit.ui.Link;
+import com.itmill.toolkit.ui.NativeSelect;
+import com.itmill.toolkit.ui.OptionGroup;
+import com.itmill.toolkit.ui.OrderedLayout;
+import com.itmill.toolkit.ui.Panel;
+import com.itmill.toolkit.ui.ProgressIndicator;
+import com.itmill.toolkit.ui.RichTextArea;
+import com.itmill.toolkit.ui.Select;
+import com.itmill.toolkit.ui.Slider;
+import com.itmill.toolkit.ui.TabSheet;
+import com.itmill.toolkit.ui.Table;
+import com.itmill.toolkit.ui.TextField;
+import com.itmill.toolkit.ui.Tree;
+import com.itmill.toolkit.ui.TwinColSelect;
+import com.itmill.toolkit.ui.Upload;
+import com.itmill.toolkit.ui.Window;
 import com.itmill.toolkit.ui.Component.Listener;
 
 public class TestCaptionWrapper extends CustomComponent implements Listener {
@@ -43,7 +67,7 @@ public class TestCaptionWrapper extends CustomComponent implements Listener {
 
 		Panel panel = new Panel("Panel");
 		test(panel);
-		populateLayout(panel);
+		populateLayout(panel.getLayout());
 
 		TabSheet tabsheet = new TabSheet();
 		test(tabsheet);
@@ -67,7 +91,7 @@ public class TestCaptionWrapper extends CustomComponent implements Listener {
 
 		Window window = new Window("TEST: Window");
 		test(window);
-		populateLayout(window);
+		populateLayout(window.getLayout());
 
 	}
 

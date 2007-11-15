@@ -1982,7 +1982,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
             DOM.setStyleAttribute(getElement(), "position", "absolute");
             // get containers natural space for table
             int availPixels = DOM.getElementPropertyInt(parentElem,
-                    "clientHeight");
+                    "offsetHeight");
             // put table back to flow
             DOM.setStyleAttribute(getElement(), "position", "static");
             // set 100% height with borders

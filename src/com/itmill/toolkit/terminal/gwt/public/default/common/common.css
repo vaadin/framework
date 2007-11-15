@@ -88,27 +88,28 @@
 	vertical-align: middle;
 }
 
-/* Provide some extra whitespace for wrapped elements
-   (these elements usually need the extra space, since 
-   they aren't even handling their own caption) */
-.i-captionwrapper {
-	margin: 0.3em 0 0 0;
-}
 
 
+/* TODO move to layout.css */
 /* Layout margin values */
 
-.i-layoutmargin-top {
-	margin-top: 15px;
-}
-.i-layoutmargin-bottom {
-	margin-bottom: 15px;
+
+.i-layoutmargin-top .i-orderedlayout-toppad div, 
+.i-layoutmargin-bottom .i-orderedlayout-bottompad div,
+.i-layoutmargin-top .i-expandlayout-toppad div,
+.i-layoutmargin-bottom .i-expandlayout-bottompad div,
+.i-layoutmargin-top .i-orderedlayout-toppad td, 
+.i-layoutmargin-bottom .i-orderedlayout-bottompad td,
+.i-layoutmargin-top .i-expandlayout-toppad td,
+.i-layoutmargin-bottom .i-expandlayout-bottompad td {
+	height: 15px;
+	overflow: hidden;
 }
 .i-layoutmargin-left {
-	margin-left: 18px;
+	padding-left: 18px;
 }
 .i-layoutmargin-right {
-	margin-right: 18px;
+	padding-right: 18px;
 }
 
 .i-link {

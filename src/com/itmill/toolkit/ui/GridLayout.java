@@ -825,7 +825,7 @@ public class GridLayout extends AbstractLayout {
 	 * </p>
 	 */
 	public void setWidth(int width) {
-		// super.setWidth(width);
+		super.setWidth(width);
 	}
 
 	/**
@@ -839,8 +839,7 @@ public class GridLayout extends AbstractLayout {
 	 * </p>
 	 */
 	public int getWidth() {
-		// return super.getWidth();
-		return -1;
+		return super.getWidth();
 	}
 
 	/**
@@ -894,7 +893,7 @@ public class GridLayout extends AbstractLayout {
 	 * </p>
 	 */
 	public void setHeight(int height) {
-		// super.setHeight(height);
+		super.setHeight(height);
 	}
 
 	/**
@@ -908,8 +907,7 @@ public class GridLayout extends AbstractLayout {
 	 * </p>
 	 */
 	public int getHeight() {
-		// return super.getHeight();
-		return -1;
+		return super.getHeight();
 	}
 
 	/**

@@ -49,8 +49,8 @@ import com.itmill.toolkit.terminal.Sizeable;
  * @VERSION@
  * @since 3.0
  */
-public class Panel extends AbstractLayout implements Sizeable, Scrollable,
-		ComponentContainer.ComponentAttachListener,
+public class Panel extends AbstractComponentContainer implements Sizeable,
+		Scrollable, ComponentContainer.ComponentAttachListener,
 		ComponentContainer.ComponentDetachListener, Action.Container {
 
 	public static final String STYLE_LIGHT = "light";
@@ -209,8 +209,6 @@ public class Panel extends AbstractLayout implements Sizeable, Scrollable,
 	 */
 	public void paintContent(PaintTarget target) throws PaintException {
 		layout.paint(target);
-
-		super.paintContent(target);
 
 		// Add size info as variables
 		if (getHeight() > -1)

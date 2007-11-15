@@ -366,7 +366,7 @@ public class JsonPaintTarget implements PaintTarget {
 	}
 
 	/**
-	 * Adds a resource attribute to component. Atributes must be added before
+	 * Adds a resource attribute to component. Attributes must be added before
 	 * any content is written.
 	 * 
 	 * @param name
