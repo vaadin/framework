@@ -54,7 +54,6 @@ import javax.servlet.http.HttpSession;
 import org.xml.sax.SAXException;
 
 import com.itmill.toolkit.Application;
-import com.itmill.toolkit.Log;
 import com.itmill.toolkit.external.org.apache.commons.fileupload.servlet.ServletFileUpload;
 import com.itmill.toolkit.service.FileTypeResolver;
 import com.itmill.toolkit.terminal.DownloadStream;
@@ -165,7 +164,8 @@ public class ApplicationServlet extends HttpServlet {
 		String applicationClassName = servletConfig
 				.getInitParameter("application");
 		if (applicationClassName == null) {
-			Log.error("Application not specified in servlet parameters");
+			System.err
+					.println("Application not specified in servlet parameters");
 		}
 
 		// Stores the application parameters into Properties object
@@ -212,7 +212,7 @@ public class ApplicationServlet extends HttpServlet {
 				classLoader = (ClassLoader) c
 						.newInstance(new Object[] { getClass().getClassLoader() });
 			} catch (Exception e) {
-				Log.error("Could not find specified class loader: "
+				System.err.println("Could not find specified class loader: "
 						+ classLoaderName);
 				throw new ServletException(e);
 			}
@@ -435,8 +435,8 @@ public class ApplicationServlet extends HttpServlet {
 			}
 			if (is == null) {
 				// cannot serve requested file
-				Log
-						.warn("Requested resource ["
+				System.err
+						.println("Requested resource ["
 								+ filename
 								+ "] not found from filesystem or through class loader.");
 				response.setStatus(404);
@@ -686,7 +686,7 @@ public class ApplicationServlet extends HttpServlet {
 			data = getServletContext().getResourceAsStream(
 					THEME_DIRECTORY_PATH + themeName + "/" + resourceId);
 		} catch (Exception e) {
-			Log.info(e.getMessage());
+			e.printStackTrace();
 			data = null;
 		}
 
@@ -719,8 +719,8 @@ public class ApplicationServlet extends HttpServlet {
 			}
 
 		} catch (java.io.IOException e) {
-			Log.info("Resource transfer failed:  " + request.getRequestURI()
-					+ ". (" + e.getMessage() + ")");
+			System.err.println("Resource transfer failed:  "
+					+ request.getRequestURI() + ". (" + e.getMessage() + ")");
 		}
 
 		return true;
@@ -755,7 +755,7 @@ public class ApplicationServlet extends HttpServlet {
 				servletPath = servletPath + "/";
 			applicationUrl = new URL(reqURL, servletPath);
 		} catch (MalformedURLException e) {
-			Log.error("Error constructing application url "
+			System.err.println("Error constructing application url "
 					+ request.getRequestURI() + " (" + e + ")");
 			throw e;
 		}
@@ -836,11 +836,11 @@ public class ApplicationServlet extends HttpServlet {
 			return application;
 
 		} catch (IllegalAccessException e) {
-			Log.error("Illegal access to application class "
+			System.err.println("Illegal access to application class "
 					+ this.applicationClass.getName());
 			throw e;
 		} catch (InstantiationException e) {
-			Log.error("Failed to instantiate application class: "
+			System.err.println("Failed to instantiate application class: "
 					+ this.applicationClass.getName());
 			throw e;
 		}

@@ -67,7 +67,6 @@ import com.itmill.toolkit.external.org.apache.commons.fileupload.ProgressListene
 import com.itmill.toolkit.external.org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import com.itmill.toolkit.Application;
-import com.itmill.toolkit.Log;
 import com.itmill.toolkit.Application.WindowAttachEvent;
 import com.itmill.toolkit.Application.WindowDetachEvent;
 import com.itmill.toolkit.terminal.DownloadStream;
@@ -412,7 +411,6 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 													+ resource);
 						} catch (Exception e) {
 							e.printStackTrace();
-							Log.info(e.getMessage());
 						}
 						if (is != null) {
 
@@ -428,9 +426,10 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 									layout.append(buffer, 0, charsRead);
 								r.close();
 							} catch (java.io.IOException e) {
-								Log.info("Resource transfer failed:  "
-										+ request.getRequestURI() + ". ("
-										+ e.getMessage() + ")");
+								System.err
+										.println("Resource transfer failed:  "
+												+ request.getRequestURI()
+												+ ". (" + e.getMessage() + ")");
 							}
 							outWriter.print("\""
 									+ JsonPaintTarget.escapeJSON(layout
