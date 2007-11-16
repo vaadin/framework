@@ -2,14 +2,10 @@ package com.itmill.toolkit.tests.magi;
 
 import com.itmill.toolkit.Application;
 import com.itmill.toolkit.data.Property;
-import com.itmill.toolkit.ui.CustomComponent;
-import com.itmill.toolkit.ui.Label;
-import com.itmill.toolkit.ui.OrderedLayout;
-import com.itmill.toolkit.ui.Select;
+import com.itmill.toolkit.ui.*;
 
 /* Let us add an implementation of the ValueChangeListener interface. */
-public class SelectExample extends CustomComponent implements
-		Property.ValueChangeListener {
+public class SelectExample extends CustomComponent implements Property.ValueChangeListener {
 
 	class Planet extends Object {
 		String planetName;
@@ -24,20 +20,32 @@ public class SelectExample extends CustomComponent implements
 	}
 
 	/* Create the Select object with a caption. */
-	Select select = new Select(/*
-	 * "This is a Select component that allows
-	 * adding new items"
-	 */);
+	AbstractSelect select;
 
 	OrderedLayout layout = new OrderedLayout(OrderedLayout.ORIENTATION_VERTICAL);
 	Label status = new Label("");
 
-	SelectExample(Application application) {
-		setCompositionRoot(layout);
+	SelectExample(Application application, String param, String caption, boolean multiselect) {
+		if (param.equals("optiongroup")) {
+			select = new OptionGroup(caption);
+			select.setMultiSelect(multiselect);
+		} else if (param.equals("twincol")) {
+			select = new TwinColSelect(caption);
+		} else if (param.equals("native")) {
+			select = new NativeSelect(caption);
+		} else if (param.equals("filter")) {
+			select = new Select(caption);
+			((Select)select).setFilteringMode(AbstractSelect.Filtering.FILTERINGMODE_CONTAINS);
+		} else { 
+			select = new Select(caption);
+			select.setMultiSelect(multiselect);
+		}
+
 		layout.addComponent(select);
+		setCompositionRoot(layout);
 
 		/* Fill the component with some items. */
-		final String[] planets = new String[] { "Mercury", "Venus", "Earth",
+		final String[] planets = new String[] {"Mercury", "Venus", "Earth",
 				"Mars", "Jupiter", "Saturn", "Uranus", "Neptune" };
 
 		for (int i = 0; i < planets.length; i++) {
@@ -56,33 +64,23 @@ public class SelectExample extends CustomComponent implements
 			 */
 		}
 
-		/*
-		 * By default, the change event is not triggered immediately when the
-		 * selection changes. This enables it.
-		 */
+		/* By default, the change event is not triggered immediately when the
+		 * selection changes. This enables it. */
 		select.setImmediate(true);
 
 		/* Listen for changes in the selection. */
 		select.addListener(this);
 
-		select.setStyle("twincol");
-		select.setMultiSelect(true);
-		// select.setNewItemsAllowed(true);
+		//select.setStyle("twincol");
+		//select.setMultiSelect(true);
+		//select.setNewItemsAllowed(true);
 		// int a=1;
 
 		// select.setItemCaptionMode(Select.ITEM_CAPTION_MODE_ICON_ONLY);
-		select.setNullSelectionItemId("-- select something --");
+		//select.setNullSelectionItemId("-- select somethingd --");
+		//select.setNullSelectionAllowed(false);
 
 		layout.addComponent(status);
-
-		/*
-		 * status.setValue(String.format("Currently selected item ID: %s<br/>" +
-		 * "Class of the Item ID: %s<br/>" + "Caption: %s", select.getValue(),
-		 * select.getValue().getClass().getName(),
-		 * select.getItemCaption(select.getValue())));
-		 * status.setContentMode(Label.CONTENT_XHTML);
-		 */
-
 	}
 
 	/* Respond to change in the selection. */
@@ -91,7 +89,7 @@ public class SelectExample extends CustomComponent implements
 		 * The event.getProperty() returns the component. The currently selected
 		 * item is the property of the component, retrievable with getValue().
 		 */
-		if (true) {
+		if (false) {
 			status.setValue("Currently selected item ID: "
 					+ event.getProperty().getValue() + "<br/>"
 					+ "Class of the Item ID: "

@@ -1,5 +1,7 @@
 package com.itmill.toolkit.tests.magi;
 import java.net.URL;
+import java.util.Iterator;
+import java.util.Set;
 
 import com.itmill.toolkit.ui.*;
 import com.itmill.toolkit.data.Validator;
@@ -8,7 +10,7 @@ import com.itmill.toolkit.data.Property.ValueChangeListener;
 import com.itmill.toolkit.data.validator.StringLengthValidator;
 import com.itmill.toolkit.terminal.*;
 
-public class MagiTestApplication extends com.itmill.toolkit.Application implements URIHandler {
+public class MagiTestApplication extends com.itmill.toolkit.Application { 
 	Window main = new Window("Application window");
 
 	TheButton butts1;
@@ -21,6 +23,7 @@ public class MagiTestApplication extends com.itmill.toolkit.Application implemen
 	
 	StreamResource strres;
 	OrderedLayout ol;
+	int getwincount = 0;
 
 	public void init() {
 		setTheme("tests-magi");
@@ -29,44 +32,133 @@ public class MagiTestApplication extends com.itmill.toolkit.Application implemen
 	}
 
 	public DownloadStream handleURI(URL context, String relativeUri) {
-		/* Ignore ansynchronous request URIs in IT Mill Toolkit 4.0.x. */
-		if (relativeUri.compareTo("UIDL/") == 0)
-			return null;
+		// @TODO: Is this enough? Does handleURI() ever need to
+		// get these?
+		if (relativeUri.startsWith("APP"))
+			return super.handleURI(context, relativeUri);
 		
+		String example;
+		String param = null;
+
+		int slashPos = relativeUri.indexOf("/");
+		if (slashPos>0) {
+			example = relativeUri.substring(0, slashPos);
+			param   = relativeUri.substring(slashPos+1);
+		} else
+			example = relativeUri;
+	
+		/* Remove existing components and windows. */
 		main.removeAllComponents();
+		Set childwindows = main.getChildWindows();
+		for (Iterator cwi = childwindows.iterator(); cwi.hasNext();) {
+			Window child = (Window) cwi.next();
+			main.removeWindow(child);
+		}
+		main.setLayout(new OrderedLayout());
 		
-		String test = relativeUri.substring(5);
+		if (example.equals("index")) {
+			Object examples[] = {"defaultbutton", "label", "labelcontent",
+								"tree", "embedded", "textfield", "textfieldvalidation",
+								"datefield", "button",
+								"select/select", "select/native", "select/optiongroup", "select/twincol",
+								"filterselect",
+								"tabsheet", "validator", "table", "upload", "link",
+								"gridlayout", "orderedlayout", "formlayout", "panel", "expandlayout", "alignment", "alignment/grid",
+								"window", "window/opener", "window/multiple",
+								"classresource"};
+			for (int i=0; i<examples.length; i++)
+				main.addComponent(new Label("<a href='/tk/testbench2/"+examples[i]+"'>"+examples[i]+"</a>", Label.CONTENT_XHTML));
+			return null;
+		}
 		
-		if (test.equals("defaultbutton"))			defaultButtonTest(main);
-		else if (test.equals("tree"))				treeTest(main);
-		else if (test.equals("embedded"))			init_embeddedTest(main);
-		else if (test.equals("textfield"))			init_textFieldTest(main);
-		else if (test.equals("textfieldvalidation"))textFieldValidation(main);
-		else if (test.equals("datefield"))			init_dateFieldTest(main);
-		else if (test.equals("button"))				init_buttonTest(main);
-		else if (test.equals("select"))				init_selectTest(main);
-		else if (test.equals("tabsheet"))			init_tabSheetTest(main);
-		else if (test.equals("validator"))			init_validatorTest(main);
-		else if (test.equals("table"))				init_tableTest(main);
-		else if (test.equals("upload"))				init_uploadTest(main);
-		else if (test.equals("link"))				init_linkTest(main);
-		else if (test.equals("gridlayout"))			init_gridLayoutTest(main);
-		else if (test.equals("panellayout"))		init_panelLayoutTest(main);
+		if (example.equals("defaultbutton"))			example_defaultButton(main, param);
+		else if (example.equals("label"))				example_Label(main, param);
+		else if (example.equals("labelcontent"))		example_LabelContent(main, param);
+		else if (example.equals("tree"))				example_Tree(main, param);
+		else if (example.equals("embedded"))			example_Embedded(main, param);
+		else if (example.equals("textfield"))			example_TextField(main, param);
+		else if (example.equals("textfieldvalidation"))	example_TextFieldValidation(main, param);
+		else if (example.equals("datefield"))			example_DateField(main, param);
+		else if (example.equals("button"))				example_Button(main, param);
+		else if (example.equals("checkbox"))			example_CheckBox(main, param);
+		else if (example.equals("select"))				example_Select(main, param);
+		else if (example.equals("filterselect"))		example_FilterSelect(main, param);
+		else if (example.equals("tabsheet"))			example_TabSheet(main, param);
+		else if (example.equals("validator"))			example_Validator(main, param);
+		else if (example.equals("table"))				example_Table(main, param);
+		else if (example.equals("upload"))				example_Upload(main, param);
+		else if (example.equals("link"))				example_Link(main, param);
+		else if (example.equals("gridlayout"))			example_GridLayout(main, param);
+		else if (example.equals("orderedlayout"))		example_OrderedLayout(main, param);
+		else if (example.equals("formlayout"))			example_FormLayout(main, param);
+		else if (example.equals("panel"))				example_Panel(main, param);
+		else if (example.equals("expandlayout"))		example_ExpandLayout(main, param);
+		else if (example.equals("alignment"))			example_Alignment(main, param);
+		else if (example.equals("window"))				example_Window(main, param);
+		else if (example.equals("classresource"))		example_ClassResource(main, param);
 		else
-			main.addComponent(new Label("Unknown test '"+test+"'."));		
+			; //main.addComponent(new Label("Unknown test '"+example+"'."));		
 			
 		return null;
 	}
 
+	/*
+	public Window getWindow(String name) {
+		Window superwin = super.getWindow(name);
+		if (superwin != null)
+			return superwin;
+		
+		main.addComponent(new Label("Request 2 for window '"+name+"'."));
+		if (name.equals("panel")) {
+			Window window = new Window("Other Window " + getwincount++);
+			example_Panel(window, null);
+			return window;
+		}
+		return null;
+	}
+*/
 	public void handleButton (Button.ClickEvent event) {
-		ol.setStyle("myLayout2");
+		ol.addStyleName("myLayout2");
 	}
 
-	void defaultButtonTest(Window main) {
+	void example_defaultButton(Window main, String param) {
 		main.addComponent(new DefaultButtonExample());
 	}
 	
-	void treeTest(Window main) {
+	void example_Label(Window main, String param) {
+		/* Some container for the Label. */
+		Panel panel = new Panel("Panel Containing a Label");
+		main.addComponent(panel);
+		
+		panel.addComponent(new Label("This is a Label inside a Panel. There is enough " +
+									 "text in the label to make the text wrap if it " +
+									 "exceeds the width of the panel."));
+	}
+
+	void example_LabelContent(Window main, String param) {
+		GridLayout labelgrid = new GridLayout (2,1);
+		labelgrid.addStyleName("labelgrid");
+		labelgrid.addComponent (new Label ("CONTENT_DEFAULT"));
+		labelgrid.addComponent (new Label ("This is a label in default mode: <plain text>", Label.CONTENT_DEFAULT));
+		labelgrid.addComponent (new Label ("CONTENT_PREFORMATTED"));
+		labelgrid.addComponent (new Label ("This is a preformatted label.\nThe newline character \\n breaks the line.", Label.CONTENT_PREFORMATTED));
+		labelgrid.addComponent (new Label ("CONTENT_RAW"));
+		labelgrid.addComponent (new Label ("This is a label in raw mode.<br>It can contain, for example, unbalanced markup.", Label.CONTENT_RAW));
+		labelgrid.addComponent (new Label ("CONTENT_TEXT"));
+		labelgrid.addComponent (new Label ("This is a label in (plain) text mode", Label.CONTENT_TEXT));
+		labelgrid.addComponent (new Label ("CONTENT_XHTML"));
+		labelgrid.addComponent (new Label ("<i>This</i> is an <b>XHTML<b> formatted label", Label.CONTENT_XHTML));
+		labelgrid.addComponent (new Label ("CONTENT_XML"));
+		labelgrid.addComponent (new Label ("This is an <myelement>XML</myelement> formatted label", Label.CONTENT_XML));
+		main.addComponent(labelgrid);
+		
+		ClassResource labelimage = new ClassResource ("smiley.jpg", this);
+		main.addComponent(new Label("Here we have an image <img src=\""
+									+ this.getRelativeLocation(labelimage) + "\"/> within some text.",
+									Label.CONTENT_XHTML));
+	}
+
+	void example_Tree(Window main, String param) {
 		final Object[][] planets = new Object[][]{
 				new Object[]{"Mercury"}, 
 				new Object[]{"Venus"},
@@ -107,15 +199,45 @@ public class MagiTestApplication extends com.itmill.toolkit.Application implemen
 			}
 		}
 
-		
 		main.addComponent(tree);
 	}
 
-	void init_selectTest(Window main) {
-		main.addComponent(new SelectExample(this));
+	void example_Select(Window main, String param) {
+		OrderedLayout layout = new OrderedLayout (OrderedLayout.ORIENTATION_HORIZONTAL);
+		layout.addStyleName("aligntop");
+		
+		if (param.equals("twincol")) {
+			SelectExample select1 = new SelectExample(this, param, "Select some items", true);
+			layout.addComponent(select1);
+		} else if (param.equals("filter")) {
+			SelectExample select1 = new SelectExample(this, param, "Enter containing substring", false);
+			layout.addComponent(select1);
+		} else {
+			SelectExample select1 = new SelectExample(this, param, "Single Selection Mode", false);
+			SelectExample select2 = new SelectExample(this, param, "Multiple Selection Mode", true);
+			layout.addComponent(select1);
+			layout.addComponent(select2);
+		}
+		main.addComponent(layout);
 	}
 	
-	void init_textFieldTest(Window main) {
+	void example_FilterSelect(Window main, String param) {
+		Select select = new Select("Enter containing substring");
+		main.addComponent(select);
+
+		select.setFilteringMode(AbstractSelect.Filtering.FILTERINGMODE_CONTAINS);
+		
+		/* Fill the component with some items. */
+		final String[] planets = new String[] {"Mercury", "Venus", "Earth",
+				"Mars", "Jupiter", "Saturn", "Uranus", "Neptune" };
+
+		for (int i = 0; i < planets.length; i++)
+			for (int j = 0; j < planets.length; j++) {
+				select.addItem(planets[j] + " to " + planets[i]);
+			}
+	}
+	
+	void example_TextField(Window main, String param) {
 		/* Add a single-line text field. */
 		TextField subject = new TextField("Subject");
 		subject.setColumns(40);
@@ -128,7 +250,7 @@ public class MagiTestApplication extends com.itmill.toolkit.Application implemen
 		main.addComponent(message);
 	}
 	
-	void textFieldValidation(Window main) {
+	void example_TextFieldValidation(Window main, String param) {
 		// Create a text field with a label
 		TextField username = new TextField("Username");
 		main.addComponent(username);
@@ -166,10 +288,10 @@ public class MagiTestApplication extends com.itmill.toolkit.Application implemen
 		});
 	}
 
-	void init_dateFieldTest(Window main) {
+	void example_DateField(Window main, String param) {
 		/* Create a DateField with the calendar style. */
 		DateField date = new DateField("Here is a calendar field");
-		//date.setStyle("calendar");
+		date.setStyle("calendar");
 		
 		/* Set the date and time to present. */
 		date.setValue(new java.util.Date());
@@ -178,7 +300,8 @@ public class MagiTestApplication extends com.itmill.toolkit.Application implemen
 
 		//date.setResolution(DateField.RESOLUTION_DAY);
 	}
-	void init_tabSheetTest(Window main) {
+
+	void example_TabSheet(Window main, String param) {
 		//main.addComponent(new TabSheetExample());
 
 		TabSheet tabsheet = new TabSheet();
@@ -201,19 +324,19 @@ public class MagiTestApplication extends com.itmill.toolkit.Application implemen
 		main.addComponent(tabsheet);
 	}
 
-	void init_validatorTest(Window main) {
+	void example_Validator(Window main, String param) {
 		main.addComponent(new SSNField());
 	}
 
-	void init_tableTest(Window main) {
+	void example_Table(Window main, String param) {
 		main.addComponent(new TableExample());
 	}
 
-	void init_uploadTest(Window main) {
+	void example_Upload(Window main, String param) {
 		main.addComponent(new MyUploader());
 	}
 
-	void init_linkTest(Window main) {
+	void example_Link(Window main, String param) {
 		/* Create a native window object to be opened as a popup window when 
 		 * the link is clicked. */
 		Window popup = new Window("Open a window");
@@ -234,35 +357,13 @@ public class MagiTestApplication extends com.itmill.toolkit.Application implemen
 		main.addComponent(new Link ("link to a resource", new ExternalResource("http://www.itmill.com/")));
 	}
 
-	void init_labelTest(Window main) {
-		GridLayout labelgrid = new GridLayout (2,1);
-		labelgrid.setStyle("labelgrid");
-		labelgrid.addComponent (new Label ("CONTENT_DEFAULT"));
-		labelgrid.addComponent (new Label ("This is a label in default mode: <plain text>", Label.CONTENT_DEFAULT));
-		labelgrid.addComponent (new Label ("CONTENT_PREFORMATTED"));
-		labelgrid.addComponent (new Label ("This is a preformatted label.\nThe newline character \\n breaks the line.", Label.CONTENT_PREFORMATTED));
-		labelgrid.addComponent (new Label ("CONTENT_RAW"));
-		labelgrid.addComponent (new Label ("This is a label in raw mode.<br>It can contain, for example, unbalanced markup.", Label.CONTENT_RAW));
-		labelgrid.addComponent (new Label ("CONTENT_TEXT"));
-		labelgrid.addComponent (new Label ("This is a label in (plain) text mode", Label.CONTENT_TEXT));
-		labelgrid.addComponent (new Label ("CONTENT_XHTML"));
-		labelgrid.addComponent (new Label ("<i>This</i> is an <b>XHTML<b> formatted label", Label.CONTENT_XHTML));
-		labelgrid.addComponent (new Label ("CONTENT_XML"));
-		labelgrid.addComponent (new Label ("This is an <myelement>XML</myelement> formatted label", Label.CONTENT_XML));
-		main.addComponent(labelgrid);
+	void example_Button(Window main, String param) {
+		if (param != null ) {
+			if (param.equals("buttons"))
+				main.addComponent(new TheButton());
+			return;
+		}
 		
-		ClassResource labelimage = new ClassResource ("smiley.jpg", this);
-		main.addComponent(new Label("Here we have an image <img src=\""
-									+ this.getRelativeLocation(labelimage) + "\"/> within some text.",
-									Label.CONTENT_XHTML));
-	}
-		
-	void init_buttonTest(Window main) {
-		/*
-		main.addComponent(mylabel1 = new Label ("Laabeli 1"));
-		main.addComponent(mylabel2 = new Label ("Laabeli 2"));
-		main.addComponent(mylabel3 = new Label ("Laabeli 3"));
-		*/
 		//butts1 = new TheButton ();
 		//main.addComponent(butts1);
 		
@@ -273,75 +374,224 @@ public class MagiTestApplication extends com.itmill.toolkit.Application implemen
 		
 		//main.addComponent(checkbox);
 		Button button = new Button("My Button");
-		button.setStyle("link");
 		main.addComponent(button);
 	}
-	
-	void init_panelLayoutTest(Window main) {
+
+	void example_CheckBox(Window main, String param) {
+		/* A check box with default state (not checked, i.e., false). */ 
+		final CheckBox checkbox1 = new CheckBox("My CheckBox");
+		main.addComponent(checkbox1);
+		
+		/* Another check box with explicitly set checked state. */ 
+		final CheckBox checkbox2 = new CheckBox("Checked CheckBox");
+		/* @TODO: Build fails here, why?
+		checkbox2.setValue(true);
+		*/
+		main.addComponent(checkbox2);
+		
+		/* Make some application logic. We use anynymous listener classes here.
+		 * The above references were defined as "final" to allow accessing them
+		 * from inside anonymous classes. */
+		checkbox1.addListener(new ValueChangeListener() {
+			public void valueChange(ValueChangeEvent event) {
+				/* Copy the value to the other checkbox. */
+				checkbox2.setValue(checkbox1.getValue());
+			}
+		});
+		checkbox2.addListener(new ValueChangeListener() {
+			public void valueChange(ValueChangeEvent event) {
+				/* Copy the value to the other checkbox. */
+				checkbox1.setValue(checkbox2.getValue());
+			}
+		});
+	}
+
+	void example_Panel(Window main, String param) {
 		Panel panel = new Panel ("Contact Information");
-		OrderedLayout ordered = new OrderedLayout(
-				OrderedLayout.ORIENTATION_VERTICAL);
-		ordered.addComponent(new TextField("Name"));
-		ordered.addComponent(new TextField("Email"));
-		ordered.setStyle("form");
-		for (int i=0; i<20; i++)
-			ordered.addComponent(new Label("a row"));
-		panel.setIcon(new ClassResource ("smiley.jpg", main.getApplication()));
-		panel.addComponent(ordered);
+		OrderedLayout form = new FormLayout();
+		form.addComponent(new TextField("Name"));
+		form.addComponent(new TextField("Email"));
+
+		ClassResource icon = new ClassResource ("smiley.jpg", main.getApplication());
+		form.addComponent(new Embedded("Image", icon));
+		panel.setIcon(icon);
+		panel.addComponent(form);
 		main.addComponent(panel);
 	}
 	
-	void init_gridLayoutTest(Window main) {
+	void example_GridLayout(Window main, String param) {
 		/* Create a 4 by 4 grid layout. */
-		GridLayout gridLO = new GridLayout(4, 4);
+		GridLayout grid = new GridLayout(4, 4);
+		grid.addStyleName("example-gridlayout");
 
 		/* Fill out the first row using the cursor. */
-		gridLO.addComponent(new Button("R/C 1"));
+		grid.addComponent(new Button("R/C 1"));
 		for (int i=0; i<3; i++) /* Add a few buttons. */
-			gridLO.addComponent(new Button("Col " + (gridLO.getCursorX()+1)));
+			grid.addComponent(new Button("Col " + (grid.getCursorX()+1)));
 
 		/* Fill out the first column using coordinates. */
 		for (int i=1; i<4; i++)
-			gridLO.addComponent(new Button("Row " + i), 0, i);
+			grid.addComponent(new Button("Row " + i), 0, i);
 
 		/* Add some components of various shapes. */
-		gridLO.addComponent(new Button("3x1 button"), 1, 1, 3, 1);
-		gridLO.addComponent(new Label("1x2 cell"), 1, 2, 1, 3);
+		grid.addComponent(new Button("3x1 button"), 1, 1, 3, 1);
+		grid.addComponent(new Label("1x2 cell"), 1, 2, 1, 3);
 		DateField date = new DateField("A 2x2 date field");
 		date.setStyle("calendar");
-		gridLO.addComponent(date, 2, 2, 3, 3);
+		grid.addComponent(date, 2, 2, 3, 3);
 
-		//gridLO.setStyle("example-bordered");
-		main.addComponent(gridLO);
+		main.addComponent(grid);
+	}
+
+	void example_Alignment(Window main, String param) {
+		if (param.equals("grid")) {
+			/* Create a 3 by 3 grid layout. */
+			GridLayout layout = new GridLayout(3, 3);
+			//OrderedLayout layout = new OrderedLayout(OrderedLayout.ORIENTATION_VERTICAL);
+			main.setLayout(layout);
+			layout.addStyleName("example-alignment");
+			layout.setWidth(400);
+			layout.setWidthUnits(GridLayout.UNITS_PIXELS);
+			layout.setHeight(400);
+			layout.setHeightUnits(GridLayout.UNITS_PIXELS);
+			
+			/* Define cells and their layouts to create. */
+			Object cells[][] = {
+					{new Button("Top Left"),      GridLayout.ALIGNMENT_LEFT,              GridLayout.ALIGNMENT_TOP},
+					{new Button("Top Center"),    GridLayout.HORIZONTAL_ALIGNMENT_CENTER, GridLayout.ALIGNMENT_TOP},
+					{new Button("Top Right"),     GridLayout.ALIGNMENT_RIGHT,             GridLayout.ALIGNMENT_TOP},
+					{new Button("Center Left"),   GridLayout.ALIGNMENT_LEFT,              GridLayout.VERTICAL_ALIGNMENT_CENTER},
+					{new Button("Center Center"), GridLayout.HORIZONTAL_ALIGNMENT_CENTER, GridLayout.VERTICAL_ALIGNMENT_CENTER},
+					{new Button("Center Right"),  GridLayout.ALIGNMENT_RIGHT,             GridLayout.VERTICAL_ALIGNMENT_CENTER},
+					{new Button("Bottom Left"),   GridLayout.ALIGNMENT_LEFT,              GridLayout.ALIGNMENT_BOTTOM},
+					{new Button("Bottom Center"), GridLayout.HORIZONTAL_ALIGNMENT_CENTER, GridLayout.ALIGNMENT_BOTTOM},
+					{new Button("Bottom Right"),  GridLayout.ALIGNMENT_RIGHT,             GridLayout.ALIGNMENT_BOTTOM}
+					};
+	
+			for (int i=0; i<9; i++) {
+				OrderedLayout celllayout = new OrderedLayout();
+				celllayout.addComponent((Component) cells[i][0]);
+				celllayout.setComponentAlignment((Component) cells[i][0], (Integer)cells[i][1], (Integer)cells[i][2]);
+				layout.addComponent(celllayout);
+			}
+		} else {
+			Panel panel = new Panel("A Panel with a Layout");
+			main.addComponent(panel);
+			
+			//panel.addComponent(new )
+		}
 	}
 	
-	void init_orderedLayoutTest(Window main) {
-		OrderedLayout orderedLO = new OrderedLayout(
-				OrderedLayout.ORIENTATION_VERTICAL);
-		orderedLO.addComponent(new TextField("Name"));
-		orderedLO.addComponent(new TextField("Street address"));
-		orderedLO.addComponent(new TextField("Postal code"));
-		/* orderedLO.setStyle("form"); */
-		main.addComponent(orderedLO);
+	void example_OrderedLayout(Window main, String param) {
+		OrderedLayout layout = new OrderedLayout(OrderedLayout.ORIENTATION_VERTICAL);
+		layout.addComponent(new TextField("Name"));
+		layout.addComponent(new TextField("Street address"));
+		layout.addComponent(new TextField("Postal code"));
+		main.addComponent(layout);
 	}
 
-	void init_windowTest() {
-		Window mydialog = new Window("My Dialog");
-		mydialog.addComponent(new Label("A text label in the window."));
-		Button okbutton = new Button("OK");
-		mydialog.addComponent(okbutton);
-		addWindow(mydialog);
+	void example_FormLayout(Window main, String param) {
+		FormLayout layout = new FormLayout();
+		layout.addComponent(new TextField("Name"));
+		layout.addComponent(new TextField("Street address"));
+		layout.addComponent(new TextField("Postal code"));
+		main.addComponent(layout);
 	}
 
-	void init_embeddedTest(Window main) {
-		//main.addComponent(new Embedded("Image title", new ClassResource("smiley.jpg", this)));
+	void example_ExpandLayout(Window main, String param) {
+		for(int w=0; w<2; w++) {
+			ExpandLayout layout = new ExpandLayout(OrderedLayout.ORIENTATION_VERTICAL);
+			
+			/* Set the expanding layout as the root layout of a child window. */
+			Window window = new Window("A Child Window", layout);
+			main.addWindow(window);
+			
+			/* Add some component above the expanding one. */
+			layout.addComponent(new Label("Here be some component."));
+			
+			/* Create the expanding component. */
+			Table table = new Table("My Ever-Expanding Table");
+			for (int i=0; i<5; i++)
+				table.addContainerProperty("col "+(i+1), Integer.class, 0);
+			for (int j=0; j<20; j++)
+				table.addItem(new Object[]{1*j,2*j,3*j,4*j,5*j}, j);
+			layout.addComponent(table);
+	
+			/* Designate the table to be the expanding component. */
+			layout.expand(table);
+			
+			/* Set it to use all available area. */
+			table.setHeight(100);
+			table.setHeightUnits(Table.UNITS_PERCENTAGE);
+			table.setWidth(100);
+			table.setWidthUnits(Table.UNITS_PERCENTAGE);
+	
+			/* Add some component below the expanding one. */
+			Button button2 = new Button("Ok");
+			layout.addComponent(button2);
+			layout.setComponentAlignment(button2, OrderedLayout.ALIGNMENT_RIGHT, 0);
+		}
+	}
+
+	void example_Embedded(Window main, String param) {
 		Embedded image = new Embedded ("", new ClassResource("smiley.jpg", this));
-		image.setStyle("omaimage");
+		image.addStyleName("omaimage");
 		main.addComponent(image);
 		
 		EmbeddedButton button = new EmbeddedButton(new ClassResource("smiley.jpg", this));
-		main.addComponent(button);
+		main.addComponent(button);	
+	}
+
+	void example_Window(Window main, String param) {
+		if (param != null) {
+			if (param.equals("opener"))
+				main.addComponent(new WindowOpener("Window Opener", main));
+			else if (param.equals("multiple")) {
+				/* Create a new window. */
+				Window mywindow = new Window("Second Window");
+				mywindow.setName("mywindow");
+				mywindow.addComponent(new Label("This is a second window."));
+				
+				/* Add the window to the application. */
+				main.getApplication().addWindow(mywindow);
+
+				/* Add link to the second window in the main window. */
+				main.addComponent(new Label("Second window: <a href='" +
+											mywindow.getURL() +
+											"'>middle-click to open</a>",
+											Label.CONTENT_XHTML));
+				main.addComponent(new Label("The second window can be accessed through URL: " +
+											mywindow.getURL()));
+			}
+			return;
+		}
+		
+		/* Create a new window. */
+		Window mywindow = new Window("My Window");
+		mywindow.setName("mywindow");
+
+		/* Add some components in the window. */
+		mywindow.addComponent(new Label("A text label in the window."));
+		Button okbutton = new Button("OK");
+		mywindow.addComponent(okbutton);
+		
+		/* Set window size. */
+		mywindow.setHeight(200);
+		mywindow.setWidth(400);
+
+		/* Set window position. */
+		mywindow.setPositionX(200);
+		mywindow.setPositionY(50);
+
+		/* Add the window to the Application object. */
+		main.addWindow(mywindow);
 		
 	}
 
+	void example_ClassResource(Window main, String param) {
+		DateField df = new DateField();
+		main.addComponent(df);
+		df.setIcon(new ClassResource("smiley.jpg", main.getApplication()));
+		main.addComponent(new Embedded("This is Embedded", new ClassResource("smiley.jpg", main.getApplication())));
+	}
 }

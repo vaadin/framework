@@ -1,3 +1,40 @@
+/*****************************************************************************/
+/* Styling for tests.magi application.                                       */
+/*****************************************************************************/
+
 #itmill-ajax-window {
 	background: white;
 }
+
+/*****************************************************************************/
+/* For example_GridLayout()                                                  */
+/*****************************************************************************/
+table.-example-gridlayout {
+	background: red;
+}
+
+.-example-gridlayout td {
+	background: white;
+}
+
+/*****************************************************************************/
+/* For example_Alignment()                                                   */
+/*****************************************************************************/
+table.-example-alignment {
+	background: red;
+}
+.-example-alignment td {
+	background: white;
+	width: 150px;
+	height: 75px;
+}
+
+.i-orderedlayout {
+	margin: 5px;
+}
+
+/* For SelectExample.java. */
+.i-orderedlayout tr {
+	vertical-align: top;
+}
+
