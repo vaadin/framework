@@ -921,8 +921,6 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
             DOM.setInnerHTML(floatingCopyOfHeaderCell, DOM.getInnerHTML(td));
             floatingCopyOfHeaderCell = DOM
                     .getChild(floatingCopyOfHeaderCell, 1);
-            // TODO isolate non-standard css attribute (filter)
-            // TODO move styles to css file
             DOM.setElementProperty(floatingCopyOfHeaderCell, "className",
                     CLASSNAME + "-header-drag");
             updateFloatingCopysPosition(DOM.getAbsoluteLeft(td), DOM

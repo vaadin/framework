@@ -139,6 +139,7 @@
 	opacity: 0.5;
 	filter: alpha(opacity=50);
 	margin-top: 20px;
+	z-index: 20000;
 }
 
 .i-table-scrollposition {
