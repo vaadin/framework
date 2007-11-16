@@ -1,9 +1,13 @@
-button {
+.i-button {
 	cursor: pointer;
 }
-button.link {
+.i-button.link {
 	border: 0px;
 	text-align: left;
 	text-decoration: underline;
 	background: none;
+}
+
+.i-button img {
+	display:inline;
 }
