@@ -34,12 +34,10 @@ public class IGridLayout extends FlexTable implements Paintable, Container {
         for (Iterator i = uidl.getChildIterator(); i.hasNext();) {
             UIDL r = (UIDL) i.next();
             if ("gr".equals(r.getTag())) {
-                row++;
                 column = 0;
                 for (Iterator j = r.getChildIterator(); j.hasNext();) {
                     UIDL c = (UIDL) j.next();
                     if ("gc".equals(c.getTag())) {
-                        column++;
                         int w;
                         if (c.hasAttribute("w")) {
                             w = c.getIntAttribute("w");
@@ -67,9 +65,10 @@ public class IGridLayout extends FlexTable implements Paintable, Container {
                             }
                             ((Paintable) child).updateFromUIDL(u, client);
                         }
-                        column += w - 1;
+                        column += w;
                     }
                 }
+                row++;
             }
         }
 
