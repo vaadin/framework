@@ -142,11 +142,11 @@
 }
 
 * html .i-window-resizebox {
-	bottom: 0;
-	width: 22px;
-	height: 18px;
-	background: transparent;
-	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../ITMILL/widgetsets/com.itmill.toolkit.terminal.gwt.DefaultWidgetSet/default/window/img/resize.png", sizingMethod="crop");
+	bottom: 1px;
+	right:  1px;
+	width: 15px;
+	height: 12px;
+	background: url(img/resize.png);
 }
 *+html .i-window-resizebox {
 	bottom: 0;
