@@ -21,10 +21,17 @@ public class IButton extends Button implements Paintable {
 
     private Element errorIndicatorElement;
 
+    private Element captionElement = DOM.createSpan();
+
     private ErrorMessage errorMessage;
+
+    private Icon icon;
 
     public IButton() {
         setStyleName(CLASSNAME);
+
+        DOM.appendChild(getElement(), captionElement);
+
         addClickListener(new ClickListener() {
             public void onClick(Widget sender) {
                 if (id == null || client == null) {
@@ -55,6 +62,7 @@ public class IButton extends Button implements Paintable {
         // Set text
         setText(uidl.getStringAttribute("caption"));
 
+        // handle error
         if (uidl.hasAttribute("error")) {
             UIDL errorUidl = uidl.getErrors();
             if (errorIndicatorElement == null) {
@@ -62,6 +70,7 @@ public class IButton extends Button implements Paintable {
                 DOM.setElementProperty(errorIndicatorElement, "className",
                         "i-errorindicator");
                 DOM.sinkEvents(errorIndicatorElement, Event.MOUSEEVENTS);
+                sinkEvents(Event.MOUSEEVENTS);
             }
             DOM.insertChild(getElement(), errorIndicatorElement, 0);
             if (errorMessage == null) {
@@ -73,10 +82,23 @@ public class IButton extends Button implements Paintable {
             DOM.setStyleAttribute(errorIndicatorElement, "display", "none");
         }
 
+        if (uidl.hasAttribute("icon")) {
+            if (icon == null) {
+                icon = new Icon(client);
+                DOM.insertChild(getElement(), icon.getElement(), 0);
+            }
+            icon.setUri(uidl.getStringAttribute("icon"));
+        }
+
+        // handle description
         if (uidl.hasAttribute("description")) {
             setTitle(uidl.getStringAttribute("description"));
         }
 
+    }
+
+    public void setText(String text) {
+        DOM.setInnerText(captionElement, text);
     }
 
     public void onBrowserEvent(Event event) {

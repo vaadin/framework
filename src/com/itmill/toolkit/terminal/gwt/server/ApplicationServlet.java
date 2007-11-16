@@ -520,14 +520,16 @@ public class ApplicationServlet extends HttpServlet {
 
         String contextPath = request.getContextPath();
 
-        page.write("', pathInfo: '" + pathInfo + "'\n};\n" + "</script>\n"
+        String themeUri = contextPath + "/" + THEME_DIRECTORY_PATH + themeName;
+
+        page.write("', pathInfo: '" + pathInfo + "', themeUri: '" + themeUri
+                + "'\n};\n" + "</script>\n"
                 + "<script language='javascript' src='" + contextPath + "/"
                 + WIDGETSET_DIRECTORY_PATH + widgetset + "/" + widgetset
                 + ".nocache.js'></script>\n");
         if (!themeName.equals("default")) {
             page.write("<link REL=\"stylesheet\" TYPE=\"text/css\" HREF=\""
-                    + contextPath + "/" + THEME_DIRECTORY_PATH + themeName
-                    + "/styles.css\">\n");
+                    + themeUri + "/styles.css\">\n");
         }
         page
                 .write("</head>\n<body class=\"i-generated-body\">\n"

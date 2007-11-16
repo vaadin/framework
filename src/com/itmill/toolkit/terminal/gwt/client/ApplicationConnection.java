@@ -91,6 +91,11 @@ public class ApplicationConnection {
      return $wnd.itmill.pathInfo;
      }-*/;
 
+    private native String getThemeUri()
+    /*-{
+     return $wnd.itmill.themeUri;
+     }-*/;
+
     private void makeUidlRequest(String requestData) {
         console.log("Making UIDL Request with params: " + requestData);
         String uri = appUri + "/UIDL" + getPathInfo();
@@ -488,5 +493,21 @@ public class ApplicationConnection {
             contextMenu = new ContextMenu();
         }
         return contextMenu;
+    }
+
+    /**
+     * Translates custom protocols in UIRL URI's to be recognizable by browser.
+     * All uri's from UIDL should be routed via this method before giving them
+     * to browser due URI's in UIDL may contain custom protocols like theme://.
+     * 
+     * @param toolkitUri
+     *                toolkit URI from uidl
+     * @return translated URI ready for browser
+     */
+    public String translateToolkitUri(String toolkitUri) {
+        if (toolkitUri.startsWith("theme")) {
+            toolkitUri = getThemeUri() + toolkitUri.substring(7);
+        }
+        return toolkitUri;
     }
 }
