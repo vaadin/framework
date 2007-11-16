@@ -246,7 +246,8 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
             actionMap.put(key + "_c", caption);
             if (action.hasAttribute("icon")) {
                 // TODO need some uri handling ??
-                actionMap.put(key + "_i", action.getStringAttribute("icon"));
+                actionMap.put(key + "_i", client.translateToolkitUri(action
+                        .getStringAttribute("icon")));
             }
         }
 
