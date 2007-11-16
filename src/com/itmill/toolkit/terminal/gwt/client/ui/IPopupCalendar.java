@@ -52,12 +52,13 @@ public class IPopupCalendar extends ITextualDate implements Paintable,
             int h = calendar.getOffsetHeight();
             int t = calendarToggle.getAbsoluteTop();
             int l = calendarToggle.getAbsoluteLeft();
-            if (l + w > Window.getClientWidth()) {
-                l = Window.getClientWidth() - w;
+            if (l + w > Window.getClientWidth() + Window.getScrollLeft()) {
+                l = Window.getClientWidth() + Window.getScrollLeft() - w;
             }
-            if (t + h > Window.getClientHeight()) {
-                t = Window.getClientHeight() - h
-                        - calendarToggle.getOffsetHeight() - 2;
+            if (t + h > Window.getClientHeight() + Window.getScrollTop()) {
+                t = Window.getClientHeight() + Window.getScrollTop() - h
+                        - calendarToggle.getOffsetHeight() - 30;
+                l += calendarToggle.getOffsetWidth();
             }
             popup.setPopupPosition(l, t + calendarToggle.getOffsetHeight() + 2);
             popup.setWidth(w + "px");
