@@ -250,6 +250,10 @@ public class IFilterSelect extends Composite implements Paintable,
 
             // reset menu size and retrieve its "natural" size
             menu.setHeight("");
+            if (currentPage > 0) {
+                // fix height to avoid height change when getting to last page
+                menu.fixHeightTo(PAGELENTH);
+            }
             offsetHeight = getOffsetHeight();
 
             int desiredWidth = IFilterSelect.this.getOffsetWidth();
@@ -319,6 +323,16 @@ public class IFilterSelect extends Composite implements Paintable,
             setStyleName(CLASSNAME + "-suggestmenu");
         }
 
+        /**
+         * Fixes menus height to use same space as full page would use. Needed
+         * to avoid height changes when quickly "scrolling" to last page
+         */
+        public void fixHeightTo(int pagelenth) {
+            int pixels = pagelenth * (getOffsetHeight() - 2)
+                    / currentSuggestions.size();
+            setHeight((pixels + 2) + "px");
+        }
+
         public void setSuggestions(Collection suggestions) {
             clearItems();
             Iterator it = suggestions.iterator();
@@ -358,16 +372,6 @@ public class IFilterSelect extends Composite implements Paintable,
             suggestionPopup.hide();
         }
 
-        public void setWidth(String width) {
-            super.setWidth(width);
-            // if(width != null && !width.equals("")) {
-            // DOM.setStyleAttribute(DOM.getFirstChild(getElement()), "width",
-            // "100%");
-            // } else {
-            // DOM.setStyleAttribute(DOM.getFirstChild(getElement()), "width",
-            // "");
-            // }
-        }
     }
 
     public static final int FILTERINGMODE_OFF = 0;
@@ -654,25 +658,25 @@ public class IFilterSelect extends Composite implements Paintable,
      * Calculate minumum width for FilterSelect textarea
      */
     private native int minWidth(String captions) /*-{
-                      	if(!captions || captions.length <= 0)
-                      		return 0;
-                      	captions = captions.split("|");
-                      	var d = $wnd.document.createElement("div");
-                      	var html = "";
-                      	for(var i=0; i < captions.length; i++) {
-                      		html += "<div>" + captions[i] + "</div>";
-                      		// TODO apply same CSS classname as in suggestionmenu
-                      	}
-                      	d.style.position = "absolute";
-                      	d.style.top = "0";
-                      	d.style.left = "0";
-                      	d.style.visibility = "hidden";
-                      	d.innerHTML = html;
-                      	$wnd.document.body.appendChild(d);
-                      	var w = d.offsetWidth;
-                      	$wnd.document.body.removeChild(d);
-                      	return w;
-                      }-*/;
+                               	if(!captions || captions.length <= 0)
+                               		return 0;
+                               	captions = captions.split("|");
+                               	var d = $wnd.document.createElement("div");
+                               	var html = "";
+                               	for(var i=0; i < captions.length; i++) {
+                               		html += "<div>" + captions[i] + "</div>";
+                               		// TODO apply same CSS classname as in suggestionmenu
+                               	}
+                               	d.style.position = "absolute";
+                               	d.style.top = "0";
+                               	d.style.left = "0";
+                               	d.style.visibility = "hidden";
+                               	d.innerHTML = html;
+                               	$wnd.document.body.appendChild(d);
+                               	var w = d.offsetWidth;
+                               	$wnd.document.body.removeChild(d);
+                               	return w;
+                               }-*/;
 
     public void onFocus(Widget sender) {
         // NOP
