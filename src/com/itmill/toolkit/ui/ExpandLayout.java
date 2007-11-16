@@ -65,11 +65,10 @@ public class ExpandLayout extends OrderedLayout {
 		if (getOrientation() == ORIENTATION_HORIZONTAL)
 			target.addAttribute("orientation", "horizontal");
 
-		// Store alignment info in this String
-		StringBuffer alignments = new StringBuffer();
-
+		String[] alignmentsArray = new String[components.size()];
 		
 		// Adds all items in all the locations
+		int index = 0;
 		for (Iterator i = getComponentIterator(); i.hasNext();) {
 			Component c = (Component) i.next();
 			if (c != null) {
@@ -79,13 +78,12 @@ public class ExpandLayout extends OrderedLayout {
 				c.paint(target);
 				target.endTag("cc");
 			}
-			alignments.append(getComponentAlignment(c));
-			if (i.hasNext())
-				alignments.append(",");
+			alignmentsArray[index++] = String.valueOf(getComponentAlignment(c));
 
 		}
+		
 		// Add child component alignment info to layout tag
-		target.addAttribute("alignments", alignments.toString());
+		target.addAttribute("alignments", alignmentsArray);
 
 	}
 

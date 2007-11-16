@@ -64,7 +64,7 @@ public class OrderedLayout extends AbstractLayout {
 	/**
 	 * Custom layout slots containing the components.
 	 */
-	private LinkedList components = new LinkedList();
+	protected LinkedList components = new LinkedList();
 
 	/* Child component alignments ************************************** */
 

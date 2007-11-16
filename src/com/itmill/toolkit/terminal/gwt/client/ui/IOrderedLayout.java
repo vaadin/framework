@@ -29,13 +29,6 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
 	public static final int ORIENTATION_VERTICAL = 0;
 	public static final int ORIENTATION_HORIZONTAL = 1;
 
-	public static final int ALIGNMENT_LEFT = 1;
-	public static final int ALIGNMENT_RIGHT = 2;
-	public static final int ALIGNMENT_TOP = 4;
-	public static final int ALIGNMENT_BOTTOM = 8;
-	public static final int ALIGNMENT_HORIZONTAL_CENTER = 16;
-	public static final int ALIGNMENT_VERTICAL_CENTER = 32;
-
 	int orientationMode = ORIENTATION_VERTICAL;
 
 	protected HashMap componentToCaption = new HashMap();
@@ -169,41 +162,10 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
 				removePaintable(p);
 		}
 
-		// Component alignments as a comma separated list.
-		// See com.itmill.toolkit.ui.OrderedLayout.java for possible values.
-		int[] alignments = uidl.getIntArrayAttribute("alignments");
+		// Handle component alignments
+		handleAlignments(uidl);
 
-		int alignmentIndex = 0;
-
-		// Insert alignment attributes
-		Iterator it = getPaintables().iterator();
-		while (it.hasNext()) {
-
-			// Calculate alignment info
-			int alignment = alignments[alignmentIndex++];
-			// Vertical alignment
-			String vAlign = "top";
-			if ((alignment & ALIGNMENT_TOP) == ALIGNMENT_TOP)
-				vAlign = "top";
-			else if ((alignment & ALIGNMENT_BOTTOM) == ALIGNMENT_BOTTOM)
-				vAlign = "bottom";
-			else if ((alignment & ALIGNMENT_VERTICAL_CENTER) == ALIGNMENT_VERTICAL_CENTER)
-				vAlign = "middle";
-			// Horizontal alignment
-			String hAlign = "";
-			if ((alignment & ALIGNMENT_LEFT) == ALIGNMENT_LEFT)
-				hAlign = "left";
-			else if ((alignment & ALIGNMENT_RIGHT) == ALIGNMENT_RIGHT)
-				hAlign = "right";
-			else if ((alignment & ALIGNMENT_HORIZONTAL_CENTER) == ALIGNMENT_HORIZONTAL_CENTER)
-				hAlign = "center";
-
-			Element td = DOM.getParent(((Widget) it.next()).getElement());
-			DOM.setStyleAttribute(td, "vertical-align", vAlign);
-			// TODO use one-cell table to implement horizontal alignments
-			DOM.setStyleAttribute(td, "text-align", hAlign);
-		}
-
+		// Handle layout margins
 		handleMargins(uidl);
 
 	}
@@ -294,7 +256,7 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
 	 */
 	protected Element createWidgetWrappper() {
 		Element td = DOM.createTD();
-		//DOM.setStyleAttribute(td, "overflow", "hidden");
+		// DOM.setStyleAttribute(td, "overflow", "hidden");
 		switch (orientationMode) {
 		case ORIENTATION_HORIZONTAL:
 			return td;
@@ -435,6 +397,29 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
 
 		// Add
 		DOM.setElementProperty(margin, "className", marginClasses);
+	}
+
+	protected void handleAlignments(UIDL uidl) {
+		// Component alignments as a comma separated list.
+		// See com.itmill.toolkit.terminal.gwt.client.ui.AlignmentInfo.java for
+		// possible values.
+		int[] alignments = uidl.getIntArrayAttribute("alignments");
+		int alignmentIndex = 0;
+		// Insert alignment attributes
+		Iterator it = getPaintables().iterator();
+		while (it.hasNext()) {
+
+			// Calculate alignment info
+			AlignmentInfo ai = new AlignmentInfo(alignments[alignmentIndex++]);
+
+			Element td = DOM.getParent(((Widget) it.next()).getElement());
+			DOM.setStyleAttribute(td, "vertical-align", ai
+					.getVerticalAlignment());
+			// TODO use one-cell table to implement horizontal alignments
+			DOM
+					.setStyleAttribute(td, "text-align", ai
+							.getHorizontalAlignment());
+		}
 	}
 
 }

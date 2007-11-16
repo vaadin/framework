@@ -141,39 +141,8 @@ public class IExpandLayout extends IOrderedLayout implements
 		 */
 		((Paintable) expandedWidget).updateFromUIDL(expandedWidgetUidl, client);
 
-		// Component alignments as a comma separated list.
-		// See com.itmill.toolkit.ui.OrderedLayout.java for possible values.
-		String[] alignments = uidl.getStringAttribute("alignments").split(",");
-		int alignmentIndex = 0;
-
-		// Insert alignment attributes
-		Iterator it = getPaintables().iterator();
-		while (it.hasNext()) {
-
-			// Calculate alignment info
-			int alignment = Integer.parseInt((alignments[alignmentIndex++]));
-			// Vertical alignment
-			String vAlign = "top";
-			if ((alignment & ALIGNMENT_TOP) == ALIGNMENT_TOP)
-				vAlign = "top";
-			else if ((alignment & ALIGNMENT_BOTTOM) == ALIGNMENT_BOTTOM)
-				vAlign = "bottom";
-			else if ((alignment & ALIGNMENT_VERTICAL_CENTER) == ALIGNMENT_VERTICAL_CENTER)
-				vAlign = "middle";
-			// Horizontal alignment
-			String hAlign = "";
-			if ((alignment & ALIGNMENT_LEFT) == ALIGNMENT_LEFT)
-				hAlign = "left";
-			else if ((alignment & ALIGNMENT_RIGHT) == ALIGNMENT_RIGHT)
-				hAlign = "right";
-			else if ((alignment & ALIGNMENT_HORIZONTAL_CENTER) == ALIGNMENT_HORIZONTAL_CENTER)
-				hAlign = "center";
-
-			Element td = DOM.getParent(((Widget) it.next()).getElement());
-			DOM.setStyleAttribute(td, "vertical-align", vAlign);
-			// TODO use one-cell table to implement horizontal alignments
-			DOM.setStyleAttribute(td, "text-align", hAlign);
-		}
+		// Set component alignments
+		handleAlignments(uidl);
 
 	}
 
@@ -192,7 +161,6 @@ public class IExpandLayout extends IOrderedLayout implements
 		String height = DOM.getStyleAttribute(table, "height");
 		DOM.setStyleAttribute(table, "height", "");
 
-		
 		// take expanded element temporarely out of flow to make container
 		// minimum sized
 		String originalPositioning = DOM.getStyleAttribute(expandedWidget
@@ -218,7 +186,7 @@ public class IExpandLayout extends IOrderedLayout implements
 		DOM.setStyleAttribute(DOM.getParent(expandedElement), "height",
 				freeSpace + "px");
 		// Component margins will bleed if overflow is not hidden
-		//DOM.setStyleAttribute(expandedElement, "overflow", "hidden");
+		// DOM.setStyleAttribute(expandedElement, "overflow", "hidden");
 
 		DOM.setStyleAttribute(expandedWidget.getElement(), "position",
 				originalPositioning);
