@@ -4,134 +4,146 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.PopupPanel;
+import com.itmill.toolkit.terminal.gwt.client.ui.Icon;
 
 public class Caption extends HTML {
 
-	public static final String CLASSNAME = "i-caption";
+    public static final String CLASSNAME = "i-caption";
 
-	private Paintable owner;
+    private Paintable owner;
 
-	private Element errorIndicatorElement;
+    private Element errorIndicatorElement;
 
-	private Element icon;
+    private Icon icon;
 
-	private Element captionText;
+    private Element captionText;
 
-	private ErrorMessage errorMessage;
+    private ErrorMessage errorMessage;
 
-	/* Caption must be attached to a Paintable */
-	private Caption() {
-	};
+    private ApplicationConnection client;
 
-	public Caption(Paintable component) {
-		super();
-		owner = component;
-		setStyleName(CLASSNAME);
-	}
+    /* Caption must be attached to a Paintable */
+    private Caption() {
+    };
 
-	public void updateCaption(UIDL uidl) {
-		setVisible(!uidl.getBooleanAttribute("invisible"));
+    public Caption(Paintable component, ApplicationConnection client) {
+        super();
+        this.client = client;
+        owner = component;
+        setStyleName(CLASSNAME);
+    }
 
-		if (uidl.hasAttribute("error")) {
-			UIDL errorUidl = uidl.getErrors();
+    public void updateCaption(UIDL uidl) {
+        setVisible(!uidl.getBooleanAttribute("invisible"));
 
-			if (errorIndicatorElement == null) {
-				errorIndicatorElement = DOM.createDiv();
-				DOM.setElementProperty(errorIndicatorElement, "className",
-						"i-errorindicator");
-				DOM.insertChild(getElement(), errorIndicatorElement, 0);
-			}
-			if (errorMessage == null)
-				errorMessage = new ErrorMessage();
-			errorMessage.updateFromUIDL(errorUidl);
+        if (uidl.hasAttribute("error")) {
+            UIDL errorUidl = uidl.getErrors();
 
-		} else if (errorIndicatorElement != null) {
-			DOM.setStyleAttribute(errorIndicatorElement, "display", "none");
-		}
+            if (errorIndicatorElement == null) {
+                errorIndicatorElement = DOM.createDiv();
+                DOM.setElementProperty(errorIndicatorElement, "className",
+                        "i-errorindicator");
+                DOM.insertChild(getElement(), errorIndicatorElement, 0);
+            }
+            if (errorMessage == null) {
+                errorMessage = new ErrorMessage();
+            }
+            errorMessage.updateFromUIDL(errorUidl);
 
-		if (uidl.hasAttribute("icon")) {
-			if (icon == null) {
-				icon = DOM.createImg();
-				DOM.appendChild(getElement(), icon);
-			}
-			DOM.setElementAttribute(icon, "src", uidl
-					.getStringAttribute("icon"));
-		} else {
-			if (icon != null)
-				DOM.removeChild(getElement(), icon);
-		}
+        } else if (errorIndicatorElement != null) {
+            DOM.setStyleAttribute(errorIndicatorElement, "display", "none");
+        }
 
-		if (uidl.hasAttribute("caption")) {
-			if (captionText == null) {
-				captionText = DOM.createSpan();
-				DOM.appendChild(getElement(), captionText);
-			}
-			DOM.setInnerText(captionText, uidl.getStringAttribute("caption"));
-		} else {
-			// TODO should span also be removed
-		}
+        if (uidl.hasAttribute("icon")) {
+            if (icon == null) {
+                icon = new Icon(client);
 
-		if (uidl.hasAttribute("description")) {
-			if (captionText != null) {
-				DOM.setElementProperty(captionText, "title", uidl
-						.getStringAttribute("description"));
-			} else {
-				setTitle(uidl.getStringAttribute("description"));
-			}
-		}
+                DOM.appendChild(getElement(), icon.getElement());
+            }
+            icon.setUri(uidl.getStringAttribute("icon"));
+        } else {
+            if (icon != null) {
+                DOM.removeChild(getElement(), icon.getElement());
+                icon = null;
+            }
 
-	}
+        }
 
-	public void onBrowserEvent(Event event) {
-		Element target = DOM.eventGetTarget(event);
-		if (errorIndicatorElement != null
-				&& DOM.compare(target, errorIndicatorElement)) {
-			switch (DOM.eventGetType(event)) {
-			case Event.ONMOUSEOVER:
-				showErrorMessage();
-				break;
-			case Event.ONMOUSEOUT:
-				hideErrorMessage();
-				break;
-			case Event.ONCLICK:
-				ApplicationConnection.getConsole().log(
-						DOM.getInnerHTML(errorMessage.getElement()));
-			default:
-				break;
-			}
-		}
-	}
+        if (uidl.hasAttribute("caption")) {
+            if (captionText == null) {
+                captionText = DOM.createSpan();
+                DOM.appendChild(getElement(), captionText);
+            }
+            DOM.setInnerText(captionText, uidl.getStringAttribute("caption"));
+        } else {
+            // TODO should span also be removed
+        }
 
-	private void hideErrorMessage() {
-		if (errorMessage != null) {
-			errorMessage.hide();
-		}
-	}
+        if (uidl.hasAttribute("description")) {
+            if (captionText != null) {
+                DOM.setElementProperty(captionText, "title", uidl
+                        .getStringAttribute("description"));
+            } else {
+                setTitle(uidl.getStringAttribute("description"));
+            }
+        }
 
-	private void showErrorMessage() {
-		if (errorMessage != null) {
-			errorMessage.showAt(errorIndicatorElement);
-		}
-	}
+    }
 
-	public static boolean isNeeded(UIDL uidl) {
-		if (uidl.getStringAttribute("caption") != null)
-			return true;
-		if (uidl.hasAttribute("error"))
-			return true;
+    public void onBrowserEvent(Event event) {
+        Element target = DOM.eventGetTarget(event);
+        if (errorIndicatorElement != null
+                && DOM.compare(target, errorIndicatorElement)) {
+            switch (DOM.eventGetType(event)) {
+            case Event.ONMOUSEOVER:
+                showErrorMessage();
+                break;
+            case Event.ONMOUSEOUT:
+                hideErrorMessage();
+                break;
+            case Event.ONCLICK:
+                ApplicationConnection.getConsole().log(
+                        DOM.getInnerHTML(errorMessage.getElement()));
+            default:
+                break;
+            }
+        }
+    }
 
-		// TODO Description ??
+    private void hideErrorMessage() {
+        if (errorMessage != null) {
+            errorMessage.hide();
+        }
+    }
 
-		return false;
-	}
+    private void showErrorMessage() {
+        if (errorMessage != null) {
+            errorMessage.showAt(errorIndicatorElement);
+        }
+    }
 
-	/**
-	 * Returns Paintable for which this Caption belongs to.
-	 * 
-	 * @return owner Widget
-	 */
-	public Paintable getOwner() {
-		return owner;
-	}
+    public static boolean isNeeded(UIDL uidl) {
+        if (uidl.getStringAttribute("caption") != null) {
+            return true;
+        }
+        if (uidl.hasAttribute("error")) {
+            return true;
+        }
+        if (uidl.hasAttribute("icon")) {
+            return true;
+        }
+
+        // TODO Description ??
+
+        return false;
+    }
+
+    /**
+     * Returns Paintable for which this Caption belongs to.
+     * 
+     * @return owner Widget
+     */
+    public Paintable getOwner() {
+        return owner;
+    }
 }
