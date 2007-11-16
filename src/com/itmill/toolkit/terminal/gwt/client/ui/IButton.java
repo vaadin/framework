@@ -23,8 +23,6 @@ public class IButton extends Button implements Paintable {
 
     private ErrorMessage errorMessage;
 
-    private ToolkitOverlay errorContainer;
-
     public IButton() {
         setStyleName(CLASSNAME);
         addClickListener(new ClickListener() {
@@ -104,27 +102,12 @@ public class IButton extends Button implements Paintable {
     }
 
     private void hideErrorMessage() {
-        if (errorContainer != null) {
-            errorContainer.hide();
-        }
+        errorMessage.hide();
     }
 
     private void showErrorMessage() {
         if (errorMessage != null) {
-            if (errorContainer == null) {
-                errorContainer = new ToolkitOverlay();
-                errorContainer.setWidget(errorMessage);
-            }
-            errorContainer.setPopupPosition(DOM
-                    .getAbsoluteLeft(errorIndicatorElement)
-                    + 2
-                    * DOM.getElementPropertyInt(errorIndicatorElement,
-                            "offsetHeight"), DOM
-                    .getAbsoluteTop(errorIndicatorElement)
-                    + 2
-                    * DOM.getElementPropertyInt(errorIndicatorElement,
-                            "offsetHeight"));
-            errorContainer.show();
+            errorMessage.showAt(errorIndicatorElement);
         }
     }
 
