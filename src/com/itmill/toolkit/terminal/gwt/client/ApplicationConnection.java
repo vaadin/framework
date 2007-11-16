@@ -15,7 +15,6 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
-import com.google.gwt.user.client.ui.FocusListener;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HasFocus;
 import com.google.gwt.user.client.ui.HasWidgets;
@@ -26,7 +25,7 @@ import com.itmill.toolkit.terminal.gwt.client.ui.IView;
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class ApplicationConnection implements FocusListener {
+public class ApplicationConnection {
 
     private String appUri;
 
@@ -489,15 +488,5 @@ public class ApplicationConnection implements FocusListener {
             contextMenu = new ContextMenu();
         }
         return contextMenu;
-    }
-
-    public void onFocus(Widget sender) {
-        // TODO Auto-generated method stub
-
-    }
-
-    public void onLostFocus(Widget sender) {
-        // TODO Auto-generated method stub
-
     }
 }
