@@ -134,7 +134,7 @@ public class IPanel extends SimplePanel implements Paintable,
 			"offsetTop") - DOM.getElementPropertyInt(getElement(), "offsetTop") + DOM.getElementPropertyInt(bottomDecoration,
 			"offsetHeight");
 
-			int contentH = availableH - usedH - 1;
+			int contentH = availableH - usedH;
 			if (contentH < 0)
 				contentH = 0;
 			DOM.setStyleAttribute(contentNode, "height", contentH + "px");

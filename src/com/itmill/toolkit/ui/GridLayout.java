@@ -37,6 +37,7 @@ import java.util.Map;
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
 import com.itmill.toolkit.terminal.Sizeable;
+import com.itmill.toolkit.terminal.gwt.client.ui.AlignmentInfo;
 
 /**
  * <p>
@@ -101,32 +102,32 @@ public class GridLayout extends AbstractLayout {
 	/**
 	 * Contained component should be aligned horizontally to the left.
 	 */
-	public static final int ALIGNMENT_LEFT = 1;
+	public static final int ALIGNMENT_LEFT = AlignmentInfo.ALIGNMENT_LEFT;
 
 	/**
 	 * Contained component should be aligned horizontally to the right.
 	 */
-	public static final int ALIGNMENT_RIGHT = 2;
+	public static final int ALIGNMENT_RIGHT = AlignmentInfo.ALIGNMENT_RIGHT;
 
 	/**
 	 * Contained component should be aligned vertically to the top.
 	 */
-	public static final int ALIGNMENT_TOP = 4;
+	public static final int ALIGNMENT_TOP = AlignmentInfo.ALIGNMENT_TOP;
 
 	/**
 	 * Contained component should be aligned vertically to the bottom.
 	 */
-	public static final int ALIGNMENT_BOTTOM = 8;
+	public static final int ALIGNMENT_BOTTOM = AlignmentInfo.ALIGNMENT_BOTTOM;
 
 	/**
 	 * Contained component should be horizontally aligned to center.
 	 */
-	public static final int HORIZONTAL_ALIGNMENT_CENTER = 16;
+	public static final int ALIGNMENT_HORIZONTAL_CENTER = AlignmentInfo.ALIGNMENT_HORIZONTAL_CENTER;
 
 	/**
 	 * Contained component should be vertically aligned to center.
 	 */
-	public static final int VERTICAL_ALIGNMENT_CENTER = 32;
+	public static final int ALIGNMENT_VERTICAL_CENTER = AlignmentInfo.ALIGNMENT_VERTICAL_CENTER;
 
 	/**
 	 * Is spacing between contained components enabled. Defaults to false.

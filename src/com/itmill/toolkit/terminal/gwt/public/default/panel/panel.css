@@ -32,6 +32,10 @@
 	background: #fff;
 }
 
+.i-panel-light-caption {
+	overflow: hidden;
+}
+
 .i-panel-nocaption {
 	height: 9px;
 }

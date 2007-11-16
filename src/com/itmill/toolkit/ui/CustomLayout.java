@@ -28,11 +28,11 @@
 
 package com.itmill.toolkit.ui;
 
+import java.util.HashMap;
+import java.util.Iterator;
+
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
-
-import java.util.Iterator;
-import java.util.HashMap;
 
 /**
  * <p>
@@ -246,6 +246,31 @@ public class CustomLayout extends AbstractLayout {
 	public void setTemplateName(String templateName) {
 		this.templateName = templateName;
 		requestRepaint();
+	}
+
+	/**
+	 * Although most layouts support margins, CustomLayout does not. The
+	 * behaviour of this layout is determined almost completely by the actual
+	 * template.
+	 * 
+	 * @throws UnsupportedOperationException
+	 */
+	public void setMargin(boolean enabled) {
+		throw new UnsupportedOperationException(
+				"CustomLayout does not support margins.");
+	}
+
+	/**
+	 * Although most layouts support margins, CustomLayout does not. The
+	 * behaviour of this layout is determined almost completely by the actual
+	 * template.
+	 * 
+	 * @throws UnsupportedOperationException
+	 */
+	public void setMargin(boolean topEnabled, boolean rightEnabled,
+			boolean bottomEnabled, boolean leftEnabled) {
+		throw new UnsupportedOperationException(
+				"CustomLayout does not support margins.");
 	}
 
 }
