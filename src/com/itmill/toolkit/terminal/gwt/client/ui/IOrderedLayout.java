@@ -15,6 +15,7 @@ import com.itmill.toolkit.terminal.gwt.client.Container;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.StyleConstants;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
+import com.itmill.toolkit.terminal.gwt.client.Util;
 
 /**
  * Abstract base class for ordered layouts. Use either vertical or horizontal
@@ -413,12 +414,21 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
 			AlignmentInfo ai = new AlignmentInfo(alignments[alignmentIndex++]);
 
 			Element td = DOM.getParent(((Widget) it.next()).getElement());
-			DOM.setStyleAttribute(td, "vertical-align", ai
-					.getVerticalAlignment());
+			if (Util.isIE()) {
+				DOM.setElementAttribute(td, "vAlign", ai
+						.getVerticalAlignment());
+			} else {
+				DOM.setStyleAttribute(td, "verticalAlign", ai
+						.getVerticalAlignment());
+			}
 			// TODO use one-cell table to implement horizontal alignments
-			DOM
-					.setStyleAttribute(td, "text-align", ai
-							.getHorizontalAlignment());
+			if (Util.isIE()) {
+				DOM.setElementAttribute(td, "align", ai
+						.getHorizontalAlignment());
+			} else {
+				DOM.setStyleAttribute(td, "textAlign", ai
+						.getHorizontalAlignment());
+			}
 		}
 	}
 
