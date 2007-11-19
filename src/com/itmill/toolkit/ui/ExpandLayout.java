@@ -23,103 +23,109 @@ import com.itmill.toolkit.terminal.Sizeable;
  */
 public class ExpandLayout extends OrderedLayout {
 
-	private Component expanded;
+    private Component expanded;
 
-	public ExpandLayout() {
-		setSizeFull();
-	}
+    public ExpandLayout() {
+        setSizeFull();
+    }
 
-	public ExpandLayout(int orientation) {
-		this();
-		setOrientation(orientation);
-	}
+    public ExpandLayout(int orientation) {
+        this();
+        setOrientation(orientation);
+    }
 
-	/**
-	 * @param c
-	 *            Component which container will be maximized
-	 */
-	public void expand(Component c) {
-		this.expanded = c;
-		requestRepaint();
-	}
+    /**
+     * @param c
+     *                Component which container will be maximized
+     */
+    public void expand(Component c) {
+        expanded = c;
+        requestRepaint();
+    }
 
-	public String getTag() {
-		return "expandlayout";
-	}
+    public String getTag() {
+        return "expandlayout";
+    }
 
-	public void paintContent(PaintTarget target) throws PaintException {
-		
-		// Add margin info. Defaults to false.
-		target.addAttribute("margins", margins.getBitMask());
-		
-		// Size
-		if (getHeight() >= 0)
-			target.addAttribute("height", "" + getHeight()
-					+ Sizeable.UNIT_SYMBOLS[getHeightUnits()]);
-		if (getWidth() >= 0)
-			target.addAttribute("width", "" + getWidth()
-					+ Sizeable.UNIT_SYMBOLS[getWidthUnits()]);
+    public void paintContent(PaintTarget target) throws PaintException {
 
-		// Adds the attributes: orientation
-		// note that the default values (b/vertival) are omitted
-		if (getOrientation() == ORIENTATION_HORIZONTAL)
-			target.addAttribute("orientation", "horizontal");
+        // Add margin info. Defaults to false.
+        target.addAttribute("margins", margins.getBitMask());
 
-		String[] alignmentsArray = new String[components.size()];
-		
-		// Adds all items in all the locations
-		int index = 0;
-		for (Iterator i = getComponentIterator(); i.hasNext();) {
-			Component c = (Component) i.next();
-			if (c != null) {
-				target.startTag("cc");
-				if (c == expanded)
-					target.addAttribute("expanded", true);
-				c.paint(target);
-				target.endTag("cc");
-			}
-			alignmentsArray[index++] = String.valueOf(getComponentAlignment(c));
+        // Size
+        if (getHeight() >= 0) {
+            target.addAttribute("height", "" + getHeight()
+                    + Sizeable.UNIT_SYMBOLS[getHeightUnits()]);
+        }
+        if (getWidth() >= 0) {
+            target.addAttribute("width", "" + getWidth()
+                    + Sizeable.UNIT_SYMBOLS[getWidthUnits()]);
+        }
 
-		}
-		
-		// Add child component alignment info to layout tag
-		target.addAttribute("alignments", alignmentsArray);
+        // Adds the attributes: orientation
+        // note that the default values (b/vertival) are omitted
+        if (getOrientation() == ORIENTATION_HORIZONTAL) {
+            target.addAttribute("orientation", "horizontal");
+        }
 
-	}
+        String[] alignmentsArray = new String[components.size()];
 
-	public void addComponent(Component c, int index) {
-		if (expanded == null) {
-			expanded = c;
-		}
-		super.addComponent(c, index);
-	}
+        // Adds all items in all the locations
+        int index = 0;
+        for (Iterator i = getComponentIterator(); i.hasNext();) {
+            Component c = (Component) i.next();
+            if (c != null) {
+                target.startTag("cc");
+                if (c == expanded) {
+                    target.addAttribute("expanded", true);
+                }
+                c.paint(target);
+                target.endTag("cc");
+            }
+            alignmentsArray[index++] = String.valueOf(getComponentAlignment(c));
 
-	public void addComponent(Component c) {
-		if (expanded == null) {
-			expanded = c;
-		}
-		super.addComponent(c);
-	}
+        }
 
-	public void addComponentAsFirst(Component c) {
-		if (expanded == null) {
-			expanded = c;
-		}
-		super.addComponentAsFirst(c);
-	}
+        // Add child component alignment info to layout tag
+        target.addAttribute("alignments", alignmentsArray);
 
-	public void removeComponent(Component c) {
-		super.removeComponent(c);
-		if (c == expanded && this.getComponentIterator().hasNext())
-			expanded = (Component) this.getComponentIterator().next();
-		else
-			expanded = null;
-	}
+    }
 
-	public void replaceComponent(Component oldComponent, Component newComponent) {
-		super.replaceComponent(oldComponent, newComponent);
-		if (oldComponent == expanded)
-			expanded = newComponent;
-	}
+    public void addComponent(Component c, int index) {
+        if (expanded == null) {
+            expanded = c;
+        }
+        super.addComponent(c, index);
+    }
+
+    public void addComponent(Component c) {
+        if (expanded == null) {
+            expanded = c;
+        }
+        super.addComponent(c);
+    }
+
+    public void addComponentAsFirst(Component c) {
+        if (expanded == null) {
+            expanded = c;
+        }
+        super.addComponentAsFirst(c);
+    }
+
+    public void removeComponent(Component c) {
+        super.removeComponent(c);
+        if (c == expanded && getComponentIterator().hasNext()) {
+            expanded = (Component) getComponentIterator().next();
+        } else {
+            expanded = null;
+        }
+    }
+
+    public void replaceComponent(Component oldComponent, Component newComponent) {
+        super.replaceComponent(oldComponent, newComponent);
+        if (oldComponent == expanded) {
+            expanded = newComponent;
+        }
+    }
 
 }

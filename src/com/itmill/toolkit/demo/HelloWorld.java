@@ -1,6 +1,7 @@
 package com.itmill.toolkit.demo;
 
-import com.itmill.toolkit.ui.*;
+import com.itmill.toolkit.ui.Label;
+import com.itmill.toolkit.ui.Window;
 
 /**
  * The classic "hello, world!" example for IT Mill Toolkit. The class simply
@@ -14,29 +15,29 @@ import com.itmill.toolkit.ui.*;
  */
 public class HelloWorld extends com.itmill.toolkit.Application {
 
-	/**
-	 * The initialization method that is the only requirement for inheriting the
-	 * com.itmill.toolkit.service.Application class. It will be automatically
-	 * called by the framework when a user accesses the application.
-	 */
-	public void init() {
+    /**
+     * The initialization method that is the only requirement for inheriting the
+     * com.itmill.toolkit.service.Application class. It will be automatically
+     * called by the framework when a user accesses the application.
+     */
+    public void init() {
 
-		/*
-		 * - Create new window for the application - Give the window a visible
-		 * title - Set the window to be the main window of the application
-		 */
-		Window main = new Window("Hello window");
-		setMainWindow(main);
+        /*
+         * - Create new window for the application - Give the window a visible
+         * title - Set the window to be the main window of the application
+         */
+        Window main = new Window("Hello window");
+        setMainWindow(main);
 
-		/*
-		 * - Create a label with the classic text - Add the label to the main
-		 * window
-		 */
-		main.addComponent(new Label("Hello World!"));
+        /*
+         * - Create a label with the classic text - Add the label to the main
+         * window
+         */
+        main.addComponent(new Label("Hello World!"));
 
-		/*
-		 * And that's it! The framework will display the main window and its
-		 * contents when the application is accessed with the terminal.
-		 */
-	}
+        /*
+         * And that's it! The framework will display the main window and its
+         * contents when the application is accessed with the terminal.
+         */
+    }
 }

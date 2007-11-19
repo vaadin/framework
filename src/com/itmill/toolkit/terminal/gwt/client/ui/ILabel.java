@@ -7,38 +7,39 @@ import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
 public class ILabel extends HTML implements Paintable {
 
-	public static final String CLASSNAME = "i-label";
+    public static final String CLASSNAME = "i-label";
 
-	public ILabel() {
-		super();
-		setStyleName(CLASSNAME);
-	}
+    public ILabel() {
+        super();
+        setStyleName(CLASSNAME);
+    }
 
-	public ILabel(String text) {
-		super(text);
-		setStyleName(CLASSNAME);
-	}
+    public ILabel(String text) {
+        super(text);
+        setStyleName(CLASSNAME);
+    }
 
-	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 
-		if (client.updateComponent(this, uidl, true))
-			return;
+        if (client.updateComponent(this, uidl, true)) {
+            return;
+        }
 
-		String mode = uidl.getStringAttribute("mode");
-		if (mode == null || "text".equals(mode))
-			setText(uidl.getChildString(0));
-		else if ("pre".equals(mode)) {
-			setHTML(uidl.getChildrenAsXML());
-		} else if ("uidl".equals(mode)) {
-			setHTML(uidl.getChildrenAsXML());
-		} else if ("xhtml".equals(mode)) {
-			setHTML(uidl.getChildUIDL(0).getChildUIDL(0).getChildString(0));
-		} else if ("xml".equals(mode)) {
-			setHTML(uidl.getChildUIDL(0).getChildString(0));
-		} else if ("raw".equals(mode)) {
-			setHTML(uidl.getChildUIDL(0).getChildString(0));
-		} else {
-			setText("");
-		}
-	}
+        String mode = uidl.getStringAttribute("mode");
+        if (mode == null || "text".equals(mode)) {
+            setText(uidl.getChildString(0));
+        } else if ("pre".equals(mode)) {
+            setHTML(uidl.getChildrenAsXML());
+        } else if ("uidl".equals(mode)) {
+            setHTML(uidl.getChildrenAsXML());
+        } else if ("xhtml".equals(mode)) {
+            setHTML(uidl.getChildUIDL(0).getChildUIDL(0).getChildString(0));
+        } else if ("xml".equals(mode)) {
+            setHTML(uidl.getChildUIDL(0).getChildString(0));
+        } else if ("raw".equals(mode)) {
+            setHTML(uidl.getChildUIDL(0).getChildString(0));
+        } else {
+            setText("");
+        }
+    }
 }

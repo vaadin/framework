@@ -14,25 +14,25 @@ import com.itmill.toolkit.terminal.PaintTarget;
  */
 public class OptionGroup extends AbstractSelect {
 
-	public OptionGroup() {
-		super();
-	}
+    public OptionGroup() {
+        super();
+    }
 
-	public OptionGroup(String caption, Collection options) {
-		super(caption, options);
-	}
+    public OptionGroup(String caption, Collection options) {
+        super(caption, options);
+    }
 
-	public OptionGroup(String caption, Container dataSource) {
-		super(caption, dataSource);
-	}
+    public OptionGroup(String caption, Container dataSource) {
+        super(caption, dataSource);
+    }
 
-	public OptionGroup(String caption) {
-		super(caption);
-	}
+    public OptionGroup(String caption) {
+        super(caption);
+    }
 
-	public void paintContent(PaintTarget target) throws PaintException {
-		target.addAttribute("type", "optiongroup");
-		super.paintContent(target);
-	}
+    public void paintContent(PaintTarget target) throws PaintException {
+        target.addAttribute("type", "optiongroup");
+        super.paintContent(target);
+    }
 
 }

@@ -39,76 +39,76 @@ import java.io.InputStream;
  * @since 5.0
  */
 public class HttpUploadStream implements
-		com.itmill.toolkit.terminal.UploadStream {
+        com.itmill.toolkit.terminal.UploadStream {
 
-	/**
-	 * Holds value of property variableName.
-	 */
-	private String streamName;
+    /**
+     * Holds value of property variableName.
+     */
+    private String streamName;
 
-	private String contentName;
+    private String contentName;
 
-	private String contentType;
+    private String contentType;
 
-	/**
-	 * Holds value of property variableValue.
-	 */
-	private InputStream stream;
+    /**
+     * Holds value of property variableValue.
+     */
+    private InputStream stream;
 
-	/**
-	 * Creates a new instance of UploadStreamImpl.
-	 * 
-	 * @param name
-	 *            the name of the stream.
-	 * @param stream
-	 *            the input stream.
-	 * @param contentName
-	 *            the name of the content.
-	 * @param contentType
-	 *            the type of the content.
-	 */
-	public HttpUploadStream(String name, InputStream stream,
-			String contentName, String contentType) {
-		this.streamName = name;
-		this.stream = stream;
-		this.contentName = contentName;
-		this.contentType = contentType;
-	}
+    /**
+     * Creates a new instance of UploadStreamImpl.
+     * 
+     * @param name
+     *                the name of the stream.
+     * @param stream
+     *                the input stream.
+     * @param contentName
+     *                the name of the content.
+     * @param contentType
+     *                the type of the content.
+     */
+    public HttpUploadStream(String name, InputStream stream,
+            String contentName, String contentType) {
+        streamName = name;
+        this.stream = stream;
+        this.contentName = contentName;
+        this.contentType = contentType;
+    }
 
-	/**
-	 * Gets the name of the stream.
-	 * 
-	 * @return the name of the stream.
-	 */
-	public String getStreamName() {
-		return this.streamName;
-	}
+    /**
+     * Gets the name of the stream.
+     * 
+     * @return the name of the stream.
+     */
+    public String getStreamName() {
+        return streamName;
+    }
 
-	/**
-	 * Gets the input stream.
-	 * 
-	 * @return the Input stream.
-	 */
-	public InputStream getStream() {
-		return this.stream;
-	}
+    /**
+     * Gets the input stream.
+     * 
+     * @return the Input stream.
+     */
+    public InputStream getStream() {
+        return stream;
+    }
 
-	/**
-	 * Gets the input stream content type.
-	 * 
-	 * @return the content type of the input stream.
-	 */
-	public String getContentType() {
-		return this.contentType;
-	}
+    /**
+     * Gets the input stream content type.
+     * 
+     * @return the content type of the input stream.
+     */
+    public String getContentType() {
+        return contentType;
+    }
 
-	/**
-	 * Gets the stream content name. Stream content name usually differs from
-	 * the actual stream name. It is used to identify the content of the stream.
-	 * 
-	 * @return the Name of the stream content.
-	 */
-	public String getContentName() {
-		return this.contentName;
-	}
+    /**
+     * Gets the stream content name. Stream content name usually differs from
+     * the actual stream name. It is used to identify the content of the stream.
+     * 
+     * @return the Name of the stream content.
+     */
+    public String getContentName() {
+        return contentName;
+    }
 }

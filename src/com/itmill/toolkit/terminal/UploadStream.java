@@ -42,32 +42,32 @@ import java.io.InputStream;
  */
 public interface UploadStream {
 
-	/**
-	 * Gets the name of the stream.
-	 * 
-	 * @return the name of the stream.
-	 */
-	public String getStreamName();
+    /**
+     * Gets the name of the stream.
+     * 
+     * @return the name of the stream.
+     */
+    public String getStreamName();
 
-	/**
-	 * Gets the input stream.
-	 * 
-	 * @return the Input stream.
-	 */
-	public InputStream getStream();
+    /**
+     * Gets the input stream.
+     * 
+     * @return the Input stream.
+     */
+    public InputStream getStream();
 
-	/**
-	 * Gets the input stream content type.
-	 * 
-	 * @return the content type of the input stream.
-	 */
-	public String getContentType();
+    /**
+     * Gets the input stream content type.
+     * 
+     * @return the content type of the input stream.
+     */
+    public String getContentType();
 
-	/**
-	 * Gets stream content name. Stream content name usually differs from the
-	 * actual stream name. It is used to identify the content of the stream.
-	 * 
-	 * @return the Name of the stream content.
-	 */
-	public String getContentName();
+    /**
+     * Gets stream content name. Stream content name usually differs from the
+     * actual stream name. It is used to identify the content of the stream.
+     * 
+     * @return the Name of the stream content.
+     */
+    public String getContentName();
 }

@@ -15,14 +15,14 @@ import javax.servlet.ServletException;
  * @since 5.0
  */
 public class ApplicationServlet extends
-		com.itmill.toolkit.terminal.gwt.server.ApplicationServlet {
+        com.itmill.toolkit.terminal.gwt.server.ApplicationServlet {
 
-	private static final long serialVersionUID = -1471357707917217303L;
+    private static final long serialVersionUID = -1471357707917217303L;
 
-	public void init(ServletConfig servletConfig) throws ServletException {
-		System.err
-				.println("Compatiblity class in use. Please use com.itmill.toolkit.terminal.gwt.server.ApplicationServlet instead. You probably need to update your web.xml.");
-		super.init(servletConfig);
-	}
+    public void init(ServletConfig servletConfig) throws ServletException {
+        System.err
+                .println("Compatiblity class in use. Please use com.itmill.toolkit.terminal.gwt.server.ApplicationServlet instead. You probably need to update your web.xml.");
+        super.init(servletConfig);
+    }
 
 }

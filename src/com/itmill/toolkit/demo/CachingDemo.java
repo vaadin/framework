@@ -19,45 +19,45 @@ import com.itmill.toolkit.ui.Window;
  */
 public class CachingDemo extends com.itmill.toolkit.Application {
 
-	public void init() {
+    public void init() {
 
-		Window main = new Window("Client-side caching example");
-		setMainWindow(main);
+        Window main = new Window("Client-side caching example");
+        setMainWindow(main);
 
-		setTheme("example");
+        setTheme("example");
 
-		TabSheet ts = new TabSheet();
-		main.addComponent(ts);
+        TabSheet ts = new TabSheet();
+        main.addComponent(ts);
 
-		Layout layout = new OrderedLayout();
-		layout.setMargin(true);
-		Label l = new Label(
-				"This is a normal label, quick to render.<br/>The second tab will be slow to render the first time, after that it will be as quick as this one.");
-		l.setCaption("A normal label");
-		l.setContentMode(Label.CONTENT_XHTML);
-		layout.addComponent(l);
+        Layout layout = new OrderedLayout();
+        layout.setMargin(true);
+        Label l = new Label(
+                "This is a normal label, quick to render.<br/>The second tab will be slow to render the first time, after that it will be as quick as this one.");
+        l.setCaption("A normal label");
+        l.setContentMode(Label.CONTENT_XHTML);
+        layout.addComponent(l);
 
-		ts.addTab(layout, "Normal", null);
+        ts.addTab(layout, "Normal", null);
 
-		layout = new OrderedLayout();
-		layout.setMargin(true);
-		l = new Label(
-				"The first time you change to this tab, this label is very slow to produce (server-side).<br/> However, it will seem fast the second time you change to this tab, because it has not changed and is cached client-side.") {
-			public void paintContent(PaintTarget target) throws PaintException {
-				try {
-					Thread.sleep(3000);
-				} catch (Exception e) {
-					// IGNORED
-				}
-				super.paintContent(target);
-			}
+        layout = new OrderedLayout();
+        layout.setMargin(true);
+        l = new Label(
+                "The first time you change to this tab, this label is very slow to produce (server-side).<br/> However, it will seem fast the second time you change to this tab, because it has not changed and is cached client-side.") {
+            public void paintContent(PaintTarget target) throws PaintException {
+                try {
+                    Thread.sleep(3000);
+                } catch (Exception e) {
+                    // IGNORED
+                }
+                super.paintContent(target);
+            }
 
-		};
-		l.setCaption("A slow label");
-		l.setContentMode(Label.CONTENT_XHTML);
-		layout.addComponent(l);
-		ts.addTab(layout, "Slow", null);
+        };
+        l.setCaption("A slow label");
+        l.setContentMode(Label.CONTENT_XHTML);
+        layout.addComponent(l);
+        ts.addTab(layout, "Slow", null);
 
-	}
+    }
 
 }

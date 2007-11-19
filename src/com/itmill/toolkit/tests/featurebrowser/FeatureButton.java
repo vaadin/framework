@@ -28,60 +28,64 @@
 
 package com.itmill.toolkit.tests.featurebrowser;
 
-import com.itmill.toolkit.ui.*;
+import com.itmill.toolkit.ui.Button;
+import com.itmill.toolkit.ui.Component;
+import com.itmill.toolkit.ui.Form;
+import com.itmill.toolkit.ui.OrderedLayout;
+import com.itmill.toolkit.ui.Select;
 
 public class FeatureButton extends Feature {
 
-	public FeatureButton() {
-		super();
-	}
+    public FeatureButton() {
+        super();
+    }
 
-	protected Component getDemoComponent() {
+    protected Component getDemoComponent() {
 
-		OrderedLayout l = new OrderedLayout();
+        OrderedLayout l = new OrderedLayout();
 
-		Button b = new Button("Caption");
-		l.addComponent(b);
+        Button b = new Button("Caption");
+        l.addComponent(b);
 
-		// Properties
-		propertyPanel = new PropertyPanel(b);
-		Select themes = (Select) propertyPanel.getField("style");
-		themes.addItem("link").getItemProperty(
-				themes.getItemCaptionPropertyId()).setValue("link");
-		Form ap = propertyPanel
-				.createBeanPropertySet(new String[] { "switchMode" });
-		propertyPanel.addProperties("Button Properties", ap);
+        // Properties
+        propertyPanel = new PropertyPanel(b);
+        Select themes = (Select) propertyPanel.getField("style");
+        themes.addItem("link").getItemProperty(
+                themes.getItemCaptionPropertyId()).setValue("link");
+        Form ap = propertyPanel
+                .createBeanPropertySet(new String[] { "switchMode" });
+        propertyPanel.addProperties("Button Properties", ap);
 
-		setJavadocURL("ui/Button.html");
+        setJavadocURL("ui/Button.html");
 
-		return l;
-	}
+        return l;
+    }
 
-	protected String getExampleSrc() {
-		return "Button b = new Button(\"Caption\");\n";
+    protected String getExampleSrc() {
+        return "Button b = new Button(\"Caption\");\n";
 
-	}
+    }
 
-	/**
-	 * @see com.itmill.toolkit.tests.featurebrowser.Feature#getDescriptionXHTML()
-	 */
-	protected String getDescriptionXHTML() {
-		return "In IT Mill Toolkit, boolean input values are represented by buttons. "
-				+ "Buttons may function either as a push buttons or switches. (checkboxes)<br/><br/>"
-				+ "Button can be directly connected to any method of an object, which "
-				+ "is an easy way to trigger events: <code> new Button(\"Play\", myPiano \"playIt\")</code>. "
-				+ "Or in checkbox-mode they can be bound to a boolean proterties and create "
-				+ " simple selectors.<br /><br /> "
-				+ "See the demo and try out how the different properties affect "
-				+ "the presentation of the component.";
-	}
+    /**
+     * @see com.itmill.toolkit.tests.featurebrowser.Feature#getDescriptionXHTML()
+     */
+    protected String getDescriptionXHTML() {
+        return "In IT Mill Toolkit, boolean input values are represented by buttons. "
+                + "Buttons may function either as a push buttons or switches. (checkboxes)<br/><br/>"
+                + "Button can be directly connected to any method of an object, which "
+                + "is an easy way to trigger events: <code> new Button(\"Play\", myPiano \"playIt\")</code>. "
+                + "Or in checkbox-mode they can be bound to a boolean proterties and create "
+                + " simple selectors.<br /><br /> "
+                + "See the demo and try out how the different properties affect "
+                + "the presentation of the component.";
+    }
 
-	protected String getImage() {
-		return "icon_demo.png";
-	}
+    protected String getImage() {
+        return "icon_demo.png";
+    }
 
-	protected String getTitle() {
-		return "Button";
-	}
+    protected String getTitle() {
+        return "Button";
+    }
 
 }

@@ -11,181 +11,184 @@ import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
 public class IDateField extends FlowPanel implements Paintable {
 
-	public static final String CLASSNAME = "i-datefield";
+    public static final String CLASSNAME = "i-datefield";
 
-	protected String id;
+    protected String id;
 
-	protected ApplicationConnection client;
+    protected ApplicationConnection client;
 
-	protected boolean immediate;
+    protected boolean immediate;
 
-	public static int RESOLUTION_YEAR = 0;
-	public static int RESOLUTION_MONTH = 1;
-	public static int RESOLUTION_DAY = 2;
-	public static int RESOLUTION_HOUR = 3;
-	public static int RESOLUTION_MIN = 4;
-	public static int RESOLUTION_SEC = 5;
-	public static int RESOLUTION_MSEC = 6;
+    public static int RESOLUTION_YEAR = 0;
+    public static int RESOLUTION_MONTH = 1;
+    public static int RESOLUTION_DAY = 2;
+    public static int RESOLUTION_HOUR = 3;
+    public static int RESOLUTION_MIN = 4;
+    public static int RESOLUTION_SEC = 5;
+    public static int RESOLUTION_MSEC = 6;
 
-	protected int currentResolution = RESOLUTION_YEAR;
+    protected int currentResolution = RESOLUTION_YEAR;
 
-	protected String currentLocale;
+    protected String currentLocale;
 
-	protected boolean readonly;
+    protected boolean readonly;
 
-	protected boolean enabled;
+    protected boolean enabled;
 
-	protected Date date = null;
+    protected Date date = null;
 
-	protected DateTimeService dts;
+    protected DateTimeService dts;
 
-	public IDateField() {
-		setStyleName(CLASSNAME);
-		dts = new DateTimeService();
-	}
+    public IDateField() {
+        setStyleName(CLASSNAME);
+        dts = new DateTimeService();
+    }
 
-	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-		// Ensure correct implementation and let layout manage caption
-		if (client.updateComponent(this, uidl, true))
-			return;
+    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+        // Ensure correct implementation and let layout manage caption
+        if (client.updateComponent(this, uidl, true)) {
+            return;
+        }
 
-		// Save details
-		this.client = client;
-		this.id = uidl.getId();
-		this.immediate = uidl.getBooleanAttribute("immediate");
+        // Save details
+        this.client = client;
+        id = uidl.getId();
+        immediate = uidl.getBooleanAttribute("immediate");
 
-		readonly = uidl.getBooleanAttribute("readonly");
-		enabled = !uidl.getBooleanAttribute("disabled");
+        readonly = uidl.getBooleanAttribute("readonly");
+        enabled = !uidl.getBooleanAttribute("disabled");
 
-		if (uidl.hasAttribute("locale")) {
-			String locale = uidl.getStringAttribute("locale");
-			try {
-				dts.setLocale(locale);
-				currentLocale = locale;
-			} catch (LocaleNotLoadedException e) {
-				currentLocale = dts.getLocale();
-				// TODO redirect this to console
-				System.out.println("Tried to use an unloaded locale \""
-						+ locale + "\". Using default locale (" + currentLocale
-						+ ").");
-			}
-		}
+        if (uidl.hasAttribute("locale")) {
+            String locale = uidl.getStringAttribute("locale");
+            try {
+                dts.setLocale(locale);
+                currentLocale = locale;
+            } catch (LocaleNotLoadedException e) {
+                currentLocale = dts.getLocale();
+                // TODO redirect this to console
+                System.out.println("Tried to use an unloaded locale \""
+                        + locale + "\". Using default locale (" + currentLocale
+                        + ").");
+            }
+        }
 
-		int newResolution;
-		if (uidl.hasVariable("msec"))
-			newResolution = RESOLUTION_MSEC;
-		else if (uidl.hasVariable("sec"))
-			newResolution = RESOLUTION_SEC;
-		else if (uidl.hasVariable("min"))
-			newResolution = RESOLUTION_MIN;
-		else if (uidl.hasVariable("hour"))
-			newResolution = RESOLUTION_HOUR;
-		else if (uidl.hasVariable("day"))
-			newResolution = RESOLUTION_DAY;
-		else if (uidl.hasVariable("month"))
-			newResolution = RESOLUTION_MONTH;
-		else
-			newResolution = RESOLUTION_YEAR;
+        int newResolution;
+        if (uidl.hasVariable("msec")) {
+            newResolution = RESOLUTION_MSEC;
+        } else if (uidl.hasVariable("sec")) {
+            newResolution = RESOLUTION_SEC;
+        } else if (uidl.hasVariable("min")) {
+            newResolution = RESOLUTION_MIN;
+        } else if (uidl.hasVariable("hour")) {
+            newResolution = RESOLUTION_HOUR;
+        } else if (uidl.hasVariable("day")) {
+            newResolution = RESOLUTION_DAY;
+        } else if (uidl.hasVariable("month")) {
+            newResolution = RESOLUTION_MONTH;
+        } else {
+            newResolution = RESOLUTION_YEAR;
+        }
 
-		currentResolution = newResolution;
+        currentResolution = newResolution;
 
-		int year = uidl.getIntVariable("year");
-		int month = (currentResolution >= RESOLUTION_MONTH) ? uidl
-				.getIntVariable("month") : -1;
-		int day = (currentResolution >= RESOLUTION_DAY) ? uidl
-				.getIntVariable("day") : -1;
-		int hour = (currentResolution >= RESOLUTION_HOUR) ? uidl
-				.getIntVariable("hour") : -1;
-		int min = (currentResolution >= RESOLUTION_MIN) ? uidl
-				.getIntVariable("min") : -1;
-		int sec = (currentResolution >= RESOLUTION_SEC) ? uidl
-				.getIntVariable("sec") : -1;
-		int msec = (currentResolution >= RESOLUTION_MSEC) ? uidl
-				.getIntVariable("msec") : -1;
+        int year = uidl.getIntVariable("year");
+        int month = (currentResolution >= RESOLUTION_MONTH) ? uidl
+                .getIntVariable("month") : -1;
+        int day = (currentResolution >= RESOLUTION_DAY) ? uidl
+                .getIntVariable("day") : -1;
+        int hour = (currentResolution >= RESOLUTION_HOUR) ? uidl
+                .getIntVariable("hour") : -1;
+        int min = (currentResolution >= RESOLUTION_MIN) ? uidl
+                .getIntVariable("min") : -1;
+        int sec = (currentResolution >= RESOLUTION_SEC) ? uidl
+                .getIntVariable("sec") : -1;
+        int msec = (currentResolution >= RESOLUTION_MSEC) ? uidl
+                .getIntVariable("msec") : -1;
 
-		// Construct new date for this datefield (only if not null)
-		if (year > -1)
-			date = new Date((long) getTime(year, month, day, hour, min, sec,
-					msec));
+        // Construct new date for this datefield (only if not null)
+        if (year > -1) {
+            date = new Date((long) getTime(year, month, day, hour, min, sec,
+                    msec));
+        }
 
-	}
+    }
 
-	/*
-	 * We need this redundant native function because Java's Date object doesn't
-	 * have a setMilliseconds method.
-	 */
-	private static native double getTime(int y, int m, int d, int h, int mi,
-			int s, int ms) /*-{
-	try {
-		var date = new Date();
-		if(y && y >= 0) date.setFullYear(y);
-		if(m && m >= 1) date.setMonth(m-1);
-		if(d && d >= 0) date.setDate(d);
-		if(h && h >= 0) date.setHours(h);
-		if(mi && mi >= 0) date.setMinutes(mi);
-		if(s && s >= 0) date.setSeconds(s);
-		if(ms && ms >= 0) date.setMilliseconds(ms);
-		return date.getTime();
-	} catch (e) {
-		// TODO print some error message on the console
-		//console.log(e);
-		return (new Date()).getTime();
-	}
-	}-*/;
+    /*
+     * We need this redundant native function because Java's Date object doesn't
+     * have a setMilliseconds method.
+     */
+    private static native double getTime(int y, int m, int d, int h, int mi,
+            int s, int ms) /*-{
+                   try {
+                   	var date = new Date();
+                   	if(y && y >= 0) date.setFullYear(y);
+                   	if(m && m >= 1) date.setMonth(m-1);
+                   	if(d && d >= 0) date.setDate(d);
+                   	if(h && h >= 0) date.setHours(h);
+                   	if(mi && mi >= 0) date.setMinutes(mi);
+                   	if(s && s >= 0) date.setSeconds(s);
+                   	if(ms && ms >= 0) date.setMilliseconds(ms);
+                   	return date.getTime();
+                   } catch (e) {
+                   	// TODO print some error message on the console
+                   	//console.log(e);
+                   	return (new Date()).getTime();
+                   }
+                   }-*/;
 
-	public int getMilliseconds() {
-		return (int) (date.getTime() - date.getTime() / 1000 * 1000);
-	}
+    public int getMilliseconds() {
+        return (int) (date.getTime() - date.getTime() / 1000 * 1000);
+    }
 
-	public void setMilliseconds(int ms) {
-		date.setTime(date.getTime() / 1000 * 1000 + ms);
-	}
+    public void setMilliseconds(int ms) {
+        date.setTime(date.getTime() / 1000 * 1000 + ms);
+    }
 
-	public int getCurrentResolution() {
-		return currentResolution;
-	}
+    public int getCurrentResolution() {
+        return currentResolution;
+    }
 
-	public void setCurrentResolution(int currentResolution) {
-		this.currentResolution = currentResolution;
-	}
+    public void setCurrentResolution(int currentResolution) {
+        this.currentResolution = currentResolution;
+    }
 
-	public String getCurrentLocale() {
-		return currentLocale;
-	}
+    public String getCurrentLocale() {
+        return currentLocale;
+    }
 
-	public void setCurrentLocale(String currentLocale) {
-		this.currentLocale = currentLocale;
-	}
+    public void setCurrentLocale(String currentLocale) {
+        this.currentLocale = currentLocale;
+    }
 
-	public Date getCurrentDate() {
-		return date;
-	}
+    public Date getCurrentDate() {
+        return date;
+    }
 
-	public void setCurrentDate(Date date) {
-		this.date = date;
-	}
+    public void setCurrentDate(Date date) {
+        this.date = date;
+    }
 
-	public boolean isImmediate() {
-		return immediate;
-	}
+    public boolean isImmediate() {
+        return immediate;
+    }
 
-	public boolean isReadonly() {
-		return readonly;
-	}
+    public boolean isReadonly() {
+        return readonly;
+    }
 
-	public boolean isEnabled() {
-		return enabled;
-	}
+    public boolean isEnabled() {
+        return enabled;
+    }
 
-	public DateTimeService getDateTimeService() {
-		return dts;
-	}
+    public DateTimeService getDateTimeService() {
+        return dts;
+    }
 
-	public String getId() {
-		return id;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public ApplicationConnection getClient() {
-		return client;
-	}
+    public ApplicationConnection getClient() {
+        return client;
+    }
 }

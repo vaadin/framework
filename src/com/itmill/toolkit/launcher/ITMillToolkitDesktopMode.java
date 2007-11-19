@@ -19,6 +19,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.WindowConstants;
 
 import com.itmill.toolkit.launcher.util.BrowserLauncher;
 
@@ -28,165 +29,165 @@ import com.itmill.toolkit.launcher.util.BrowserLauncher;
  */
 public class ITMillToolkitDesktopMode {
 
-	public static void main(String[] args) {
+    public static void main(String[] args) {
 
-		Map serverArgs = ITMillToolkitWebMode.parseArguments(args);
-		boolean deployed = false;
-		try {
-			// Default deployment: embedded.war
-			deployed = deployEmbeddedWarfile(serverArgs);
-		} catch (IOException e1) {
-			e1.printStackTrace();
-			deployed = false;
-		}
+        Map serverArgs = ITMillToolkitWebMode.parseArguments(args);
+        boolean deployed = false;
+        try {
+            // Default deployment: embedded.war
+            deployed = deployEmbeddedWarfile(serverArgs);
+        } catch (IOException e1) {
+            e1.printStackTrace();
+            deployed = false;
+        }
 
-		// Check if deployment was succesful
-		if (!deployed && !serverArgs.containsKey("webroot")) {
-			// Default deployment failed, try other means
-			if (new File("WebContent").exists()) {
-				// Using WebContent directory as webroot
-				serverArgs.put("webroot", "WebContent");
-			} else {
-				System.err.print("Failed to deploy Toolkit application. "
-						+ "Please add --webroot parameter. Exiting.");
-				return;
-			}
-		}
+        // Check if deployment was succesful
+        if (!deployed && !serverArgs.containsKey("webroot")) {
+            // Default deployment failed, try other means
+            if (new File("WebContent").exists()) {
+                // Using WebContent directory as webroot
+                serverArgs.put("webroot", "WebContent");
+            } else {
+                System.err.print("Failed to deploy Toolkit application. "
+                        + "Please add --webroot parameter. Exiting.");
+                return;
+            }
+        }
 
-		// Start the Winstone servlet container
-		String url = ITMillToolkitWebMode.runServer(serverArgs);
+        // Start the Winstone servlet container
+        String url = ITMillToolkitWebMode.runServer(serverArgs);
 
-		// Open browser into application URL
-		if (url != null) {
-			BrowserLauncher.openBrowser(url);
-		}
+        // Open browser into application URL
+        if (url != null) {
+            BrowserLauncher.openBrowser(url);
+        }
 
-		// Open control dialog
-		if (url != null) {
-			openServerControlDialog(url);
-		}
+        // Open control dialog
+        if (url != null) {
+            openServerControlDialog(url);
+        }
 
-	}
+    }
 
-	/**
-	 * Open a control dialog for embedded server.
-	 * 
-	 * @param applicationUrl
-	 *            Application URL
-	 */
-	private static void openServerControlDialog(final String applicationUrl) {
+    /**
+     * Open a control dialog for embedded server.
+     * 
+     * @param applicationUrl
+     *                Application URL
+     */
+    private static void openServerControlDialog(final String applicationUrl) {
 
-		// Main frame
-		final String title = "Desktop Server";
-		final JFrame frame = new JFrame(title);
-		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        // Main frame
+        final String title = "Desktop Server";
+        final JFrame frame = new JFrame(title);
+        frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
-		// Create link label and listen mouse click
-		final JLabel link = new JLabel("<html>"
-				+ "<center>Desktop Server is running at: <br>" + "<a href=\""
-				+ applicationUrl + "\">" + applicationUrl
-				+ "</a><br>Close this window to shutdown the server.</center>"
-				+ "</html>");
-		link.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
-				BrowserLauncher.openBrowser(applicationUrl);
-			}
-		});
+        // Create link label and listen mouse click
+        final JLabel link = new JLabel("<html>"
+                + "<center>Desktop Server is running at: <br>" + "<a href=\""
+                + applicationUrl + "\">" + applicationUrl
+                + "</a><br>Close this window to shutdown the server.</center>"
+                + "</html>");
+        link.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                BrowserLauncher.openBrowser(applicationUrl);
+            }
+        });
 
-		// Create a panel and add components to it.
-		final JPanel contentPane = new JPanel(new FlowLayout());
-		frame.setContentPane(contentPane);
-		contentPane.add(link);
+        // Create a panel and add components to it.
+        final JPanel contentPane = new JPanel(new FlowLayout());
+        frame.setContentPane(contentPane);
+        contentPane.add(link);
 
-		// Close confirmation
-		final JLabel question = new JLabel(
-				"This will stop the server. Are you sure?");
-		final JButton okButton = new JButton("OK");
-		final JButton cancelButton = new JButton("Cancel");
+        // Close confirmation
+        final JLabel question = new JLabel(
+                "This will stop the server. Are you sure?");
+        final JButton okButton = new JButton("OK");
+        final JButton cancelButton = new JButton("Cancel");
 
-		// List for close verify buttons
-		ActionListener buttonListener = new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (e.getSource() == okButton) {
-					System.exit(0);
-				} else {
-					Rectangle bounds = frame.getBounds();
-					frame.setTitle(title);
-					contentPane.removeAll();
-					contentPane.add(link);
-					contentPane.setBounds(bounds);
-					frame.setBounds(bounds);
-					frame.setVisible(true);
-					frame.repaint();
-				}
-			}
-		};
-		okButton.addActionListener(buttonListener);
-		cancelButton.addActionListener(buttonListener);
+        // List for close verify buttons
+        ActionListener buttonListener = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (e.getSource() == okButton) {
+                    System.exit(0);
+                } else {
+                    Rectangle bounds = frame.getBounds();
+                    frame.setTitle(title);
+                    contentPane.removeAll();
+                    contentPane.add(link);
+                    contentPane.setBounds(bounds);
+                    frame.setBounds(bounds);
+                    frame.setVisible(true);
+                    frame.repaint();
+                }
+            }
+        };
+        okButton.addActionListener(buttonListener);
+        cancelButton.addActionListener(buttonListener);
 
-		frame.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				Rectangle bounds = frame.getBounds();
-				frame.setTitle("Confirm close");
-				contentPane.removeAll();
-				contentPane.add(question);
-				contentPane.add(okButton);
-				contentPane.add(cancelButton);
-				frame.setBounds(bounds);
-				frame.setVisible(true);
-				frame.repaint();
-			}
-		});
+        frame.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                Rectangle bounds = frame.getBounds();
+                frame.setTitle("Confirm close");
+                contentPane.removeAll();
+                contentPane.add(question);
+                contentPane.add(okButton);
+                contentPane.add(cancelButton);
+                frame.setBounds(bounds);
+                frame.setVisible(true);
+                frame.repaint();
+            }
+        });
 
-		// Position the window nicely
-		java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit()
-				.getScreenSize();
-		int w = 270;
-		int h = 95;
-		int margin = 20;
-		frame.setBounds(new Rectangle(screenSize.width - w - margin,
-				screenSize.height - h - margin * 2, w, h));
-		frame.toFront();
-		frame.setVisible(true);
-	}
+        // Position the window nicely
+        java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit()
+                .getScreenSize();
+        int w = 270;
+        int h = 95;
+        int margin = 20;
+        frame.setBounds(new Rectangle(screenSize.width - w - margin,
+                screenSize.height - h - margin * 2, w, h));
+        frame.toFront();
+        frame.setVisible(true);
+    }
 
-	/**
-	 * Deploy file named "embedded.war" from classpath (inside jar file).
-	 * 
-	 * @param args
-	 * @return
-	 * @throws IOException
-	 */
-	protected static boolean deployEmbeddedWarfile(Map args) throws IOException {
-		String embeddedWarfileName = "/embedded.war";
-		InputStream embeddedWarfile = ITMillToolkitDesktopMode.class
-				.getResourceAsStream(embeddedWarfileName);
-		if (embeddedWarfile != null) {
-			File tempWarfile = File.createTempFile("embedded", ".war")
-					.getAbsoluteFile();
-			tempWarfile.getParentFile().mkdirs();
-			tempWarfile.deleteOnExit();
+    /**
+     * Deploy file named "embedded.war" from classpath (inside jar file).
+     * 
+     * @param args
+     * @return
+     * @throws IOException
+     */
+    protected static boolean deployEmbeddedWarfile(Map args) throws IOException {
+        String embeddedWarfileName = "/embedded.war";
+        InputStream embeddedWarfile = ITMillToolkitDesktopMode.class
+                .getResourceAsStream(embeddedWarfileName);
+        if (embeddedWarfile != null) {
+            File tempWarfile = File.createTempFile("embedded", ".war")
+                    .getAbsoluteFile();
+            tempWarfile.getParentFile().mkdirs();
+            tempWarfile.deleteOnExit();
 
-			String embeddedWebroot = "winstoneEmbeddedWAR";
-			File tempWebroot = new File(tempWarfile.getParentFile(),
-					embeddedWebroot);
-			tempWebroot.mkdirs();
+            String embeddedWebroot = "winstoneEmbeddedWAR";
+            File tempWebroot = new File(tempWarfile.getParentFile(),
+                    embeddedWebroot);
+            tempWebroot.mkdirs();
 
-			OutputStream out = new FileOutputStream(tempWarfile, true);
-			int read = 0;
-			byte buffer[] = new byte[2048];
-			while ((read = embeddedWarfile.read(buffer)) != -1) {
-				out.write(buffer, 0, read);
-			}
-			out.close();
-			embeddedWarfile.close();
+            OutputStream out = new FileOutputStream(tempWarfile, true);
+            int read = 0;
+            byte buffer[] = new byte[2048];
+            while ((read = embeddedWarfile.read(buffer)) != -1) {
+                out.write(buffer, 0, read);
+            }
+            out.close();
+            embeddedWarfile.close();
 
-			args.put("warfile", tempWarfile.getAbsolutePath());
-			args.put("webroot", tempWebroot.getAbsolutePath());
-			args.remove("webappsDir");
-			args.remove("hostsDir");
-			return true;
-		}
-		return false;
-	}
+            args.put("warfile", tempWarfile.getAbsolutePath());
+            args.put("webroot", tempWebroot.getAbsolutePath());
+            args.remove("webappsDir");
+            args.remove("hostsDir");
+            return true;
+        }
+        return false;
+    }
 }

@@ -1,9 +1,13 @@
 package com.itmill.toolkit.demo;
 
 import java.io.File;
+
 import com.itmill.toolkit.data.Item;
 import com.itmill.toolkit.demo.util.SampleDirectory;
-import com.itmill.toolkit.ui.*;
+import com.itmill.toolkit.ui.Label;
+import com.itmill.toolkit.ui.Panel;
+import com.itmill.toolkit.ui.Tree;
+import com.itmill.toolkit.ui.Window;
 import com.itmill.toolkit.ui.Tree.ExpandEvent;
 
 /**
@@ -17,79 +21,83 @@ import com.itmill.toolkit.ui.Tree.ExpandEvent;
  * 
  */
 public class TreeFilesystem extends com.itmill.toolkit.Application implements
-		Tree.ExpandListener {
+        Tree.ExpandListener {
 
-	// Filesystem explorer panel and it's components
-	private Panel explorerPanel = new Panel("Filesystem explorer");
+    // Filesystem explorer panel and it's components
+    private Panel explorerPanel = new Panel("Filesystem explorer");
 
-	private Tree tree = new Tree();
+    private Tree tree = new Tree();
 
-	public void init() {
-		Window main = new Window("Tree filesystem demo");
-		setMainWindow(main);
+    public void init() {
+        Window main = new Window("Tree filesystem demo");
+        setMainWindow(main);
 
-		// Main window contains heading and panel
-		main.addComponent(new Label("<h2>Tree demo</h2>", Label.CONTENT_XHTML));
+        // Main window contains heading and panel
+        main.addComponent(new Label("<h2>Tree demo</h2>", Label.CONTENT_XHTML));
 
-		// configure file structure panel
-		main.addComponent(explorerPanel);
-		explorerPanel.addComponent(tree);
-		explorerPanel.setHeight(400);
+        // configure file structure panel
+        main.addComponent(explorerPanel);
+        explorerPanel.addComponent(tree);
+        explorerPanel.setHeight(400);
 
-		// "this" handles tree's expand event
-		tree.addListener((Tree.ExpandListener) this);
+        // "this" handles tree's expand event
+        tree.addListener(this);
 
-		// Get sample directory
-		File sampleDir = SampleDirectory.getDirectory(this);
-		// populate tree's root node with example directory
-		if (sampleDir != null)
-			populateNode(sampleDir.getAbsolutePath(), null);
-	}
+        // Get sample directory
+        File sampleDir = SampleDirectory.getDirectory(this);
+        // populate tree's root node with example directory
+        if (sampleDir != null) {
+            populateNode(sampleDir.getAbsolutePath(), null);
+        }
+    }
 
-	/**
-	 * Handle tree expand event, populate expanded node's childs with new files
-	 * and directories.
-	 */
-	public void nodeExpand(ExpandEvent event) {
-		Item i = tree.getItem(event.getItemId());
-		if (!tree.hasChildren(i)) {
-			// populate tree's node which was expanded
-			populateNode(event.getItemId().toString(), event.getItemId());
-		}
-	}
+    /**
+     * Handle tree expand event, populate expanded node's childs with new files
+     * and directories.
+     */
+    public void nodeExpand(ExpandEvent event) {
+        Item i = tree.getItem(event.getItemId());
+        if (!tree.hasChildren(i)) {
+            // populate tree's node which was expanded
+            populateNode(event.getItemId().toString(), event.getItemId());
+        }
+    }
 
-	/**
-	 * Populates files to tree as items. In this example items are of String
-	 * type that consist of file path. New items are added to tree and item's
-	 * parent and children properties are updated.
-	 * 
-	 * @param file
-	 *            path which contents are added to tree
-	 * @param parent
-	 *            for added nodes, if null then new nodes are added to root node
-	 */
-	private void populateNode(String file, Object parent) {
-		File subdir = new File(file);
-		File[] files = subdir.listFiles();
-		for (int x = 0; x < files.length; x++) {
-			try {
-				// add new item (String) to tree
-				String path = files[x].getCanonicalPath().toString();
-				tree.addItem(path);
-				// set parent if this item has one
-				if (parent != null)
-					tree.setParent(path, parent);
-				// check if item is a directory and read access exists
-				if (files[x].isDirectory() && files[x].canRead())
-					// yes, childrens therefore exists
-					tree.setChildrenAllowed(path, true);
-				else
-					// no, childrens therefore do not exists
-					tree.setChildrenAllowed(path, false);
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-		}
-	}
+    /**
+     * Populates files to tree as items. In this example items are of String
+     * type that consist of file path. New items are added to tree and item's
+     * parent and children properties are updated.
+     * 
+     * @param file
+     *                path which contents are added to tree
+     * @param parent
+     *                for added nodes, if null then new nodes are added to root
+     *                node
+     */
+    private void populateNode(String file, Object parent) {
+        File subdir = new File(file);
+        File[] files = subdir.listFiles();
+        for (int x = 0; x < files.length; x++) {
+            try {
+                // add new item (String) to tree
+                String path = files[x].getCanonicalPath().toString();
+                tree.addItem(path);
+                // set parent if this item has one
+                if (parent != null) {
+                    tree.setParent(path, parent);
+                }
+                // check if item is a directory and read access exists
+                if (files[x].isDirectory() && files[x].canRead()) {
+                    // yes, childrens therefore exists
+                    tree.setChildrenAllowed(path, true);
+                } else {
+                    // no, childrens therefore do not exists
+                    tree.setChildrenAllowed(path, false);
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
 
 }

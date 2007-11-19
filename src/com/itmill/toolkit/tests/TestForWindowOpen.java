@@ -8,47 +8,47 @@ import com.itmill.toolkit.ui.Button.ClickEvent;
 
 public class TestForWindowOpen extends CustomComponent {
 
-	public TestForWindowOpen() {
+    public TestForWindowOpen() {
 
-		OrderedLayout main = new OrderedLayout();
-		setCompositionRoot(main);
+        OrderedLayout main = new OrderedLayout();
+        setCompositionRoot(main);
 
-		main.addComponent(new Button("Open in this window",
-				new Button.ClickListener() {
+        main.addComponent(new Button("Open in this window",
+                new Button.ClickListener() {
 
-					public void buttonClick(ClickEvent event) {
-						ExternalResource r = new ExternalResource(
-								"http://www.google.com");
-						getApplication().getMainWindow().open(r);
+                    public void buttonClick(ClickEvent event) {
+                        ExternalResource r = new ExternalResource(
+                                "http://www.google.com");
+                        getApplication().getMainWindow().open(r);
 
-					}
+                    }
 
-				}));
+                }));
 
-		main.addComponent(new Button("Open in target \"asd\"",
-				new Button.ClickListener() {
+        main.addComponent(new Button("Open in target \"asd\"",
+                new Button.ClickListener() {
 
-					public void buttonClick(ClickEvent event) {
-						ExternalResource r = new ExternalResource(
-								"http://www.google.com");
-						getApplication().getMainWindow().open(r, "asd");
+                    public void buttonClick(ClickEvent event) {
+                        ExternalResource r = new ExternalResource(
+                                "http://www.google.com");
+                        getApplication().getMainWindow().open(r, "asd");
 
-					}
+                    }
 
-				}));
+                }));
 
-		main.addComponent(new Button("Open in target \"foo\"",
-				new Button.ClickListener() {
+        main.addComponent(new Button("Open in target \"foo\"",
+                new Button.ClickListener() {
 
-					public void buttonClick(ClickEvent event) {
-						ExternalResource r = new ExternalResource(
-								"http://www.google.com");
-						getApplication().getMainWindow().open(r, "foo");
+                    public void buttonClick(ClickEvent event) {
+                        ExternalResource r = new ExternalResource(
+                                "http://www.google.com");
+                        getApplication().getMainWindow().open(r, "foo");
 
-					}
+                    }
 
-				}));
+                }));
 
-	}
+    }
 
 }

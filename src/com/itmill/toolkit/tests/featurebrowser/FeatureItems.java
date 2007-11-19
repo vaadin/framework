@@ -37,70 +37,70 @@ import com.itmill.toolkit.ui.Select;
 
 public class FeatureItems extends Feature {
 
-	private static final String INTRO_TEXT = ""
-			+ "Item is an object, which contains a set of named "
-			+ "properties. Each property is identified by an "
-			+ "id and a reference to the property can be queried from the Item. "
-			+ "Item defines inner-interfaces for maintaining the item property "
-			+ "set and listening the item property set changes."
-			+ "<br /><br />Items generally represent objects in the object-oriented "
-			+ "model, but with the exception that they are configurable "
-			+ "and provide an event mechanism. The simplest way of utilizing "
-			+ "Item interface is to use existing Item implementations. "
-			+ "Provided utility classes include configurable property set,"
-			+ " bean to item adapter and Form UI component.";
+    private static final String INTRO_TEXT = ""
+            + "Item is an object, which contains a set of named "
+            + "properties. Each property is identified by an "
+            + "id and a reference to the property can be queried from the Item. "
+            + "Item defines inner-interfaces for maintaining the item property "
+            + "set and listening the item property set changes."
+            + "<br /><br />Items generally represent objects in the object-oriented "
+            + "model, but with the exception that they are configurable "
+            + "and provide an event mechanism. The simplest way of utilizing "
+            + "Item interface is to use existing Item implementations. "
+            + "Provided utility classes include configurable property set,"
+            + " bean to item adapter and Form UI component.";
 
-	public FeatureItems() {
-		super();
-	}
+    public FeatureItems() {
+        super();
+    }
 
-	protected Component getDemoComponent() {
+    protected Component getDemoComponent() {
 
-		OrderedLayout l = new OrderedLayout();
+        OrderedLayout l = new OrderedLayout();
 
-		Panel panel = new Panel();
-		panel.setCaption("Items");
-		l.addComponent(panel);
+        Panel panel = new Panel();
+        panel.setCaption("Items");
+        l.addComponent(panel);
 
-		Label label = new Label();
-		panel.addComponent(label);
+        Label label = new Label();
+        panel.addComponent(label);
 
-		label.setContentMode(Label.CONTENT_XHTML);
-		label.setValue(INTRO_TEXT);
+        label.setContentMode(Label.CONTENT_XHTML);
+        label.setValue(INTRO_TEXT);
 
-		// Properties
-		propertyPanel = new PropertyPanel(panel);
-		Form ap = propertyPanel.createBeanPropertySet(new String[] { "width",
-				"height" });
-		Select themes = (Select) propertyPanel.getField("style");
-		themes.addItem("light").getItemProperty(
-				themes.getItemCaptionPropertyId()).setValue("light");
-		themes.addItem("strong").getItemProperty(
-				themes.getItemCaptionPropertyId()).setValue("strong");
-		propertyPanel.addProperties("Panel Properties", ap);
+        // Properties
+        propertyPanel = new PropertyPanel(panel);
+        Form ap = propertyPanel.createBeanPropertySet(new String[] { "width",
+                "height" });
+        Select themes = (Select) propertyPanel.getField("style");
+        themes.addItem("light").getItemProperty(
+                themes.getItemCaptionPropertyId()).setValue("light");
+        themes.addItem("strong").getItemProperty(
+                themes.getItemCaptionPropertyId()).setValue("strong");
+        propertyPanel.addProperties("Panel Properties", ap);
 
-		setJavadocURL("data/Item.html");
+        setJavadocURL("data/Item.html");
 
-		return l;
-	}
+        return l;
+    }
 
-	protected String getExampleSrc() {
-		return null;
-	}
+    protected String getExampleSrc() {
+        return null;
+    }
 
-	/**
-	 * @see com.itmill.toolkit.tests.featurebrowser.Feature#getDescriptionXHTML()
-	 */
-	protected String getDescriptionXHTML() {
-		return null;
-	}
+    /**
+     * @see com.itmill.toolkit.tests.featurebrowser.Feature#getDescriptionXHTML()
+     */
+    protected String getDescriptionXHTML() {
+        return null;
+    }
 
-	protected String getImage() {
-		return "icon_demo.png";
-	}
+    protected String getImage() {
+        return "icon_demo.png";
+    }
 
-	protected String getTitle() {
-		return "Introduction of Data Model Item";
-	}
+    protected String getTitle() {
+        return "Introduction of Data Model Item";
+    }
 
 }

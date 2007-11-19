@@ -61,90 +61,93 @@ import java.util.Set;
  */
 public interface VariableOwner {
 
-	/**
-	 * Dependencies are not needed anymore as HTML-mode is deprecated in Toolkit 5.
-	 * 	 * 
-	 * @return Set of <code>VariableOwners</code> this component directly
-	 *         depend on, <code>null</code> if this component does not depend
-	 *         on anybody.
-	 * @deprecated
-	 */
-	public Set getDirectDependencies();
+    /**
+     * Dependencies are not needed anymore as HTML-mode is deprecated in Toolkit
+     * 5. *
+     * 
+     * @return Set of <code>VariableOwners</code> this component directly
+     *         depend on, <code>null</code> if this component does not depend
+     *         on anybody.
+     * @deprecated
+     */
+    public Set getDirectDependencies();
 
-	/**
-	 * Called when one or more variables handled by the implementing class are
-	 * changed.
-	 * 
-	 * @param source
-	 *            the Source of the variable change. This is the origin of the
-	 *            event. For example in Web Adapter this is the request.
-	 * @param variables
-	 *            the Mapping from variable names to new variable values.
-	 */
-	public void changeVariables(Object source, Map variables);
+    /**
+     * Called when one or more variables handled by the implementing class are
+     * changed.
+     * 
+     * @param source
+     *                the Source of the variable change. This is the origin of
+     *                the event. For example in Web Adapter this is the request.
+     * @param variables
+     *                the Mapping from variable names to new variable values.
+     */
+    public void changeVariables(Object source, Map variables);
 
-	/**
-	 * Dependencies are not needed anymore as HTML-mode is deprecated in Toolkit 5.
-	 * 
-	 * @param depended
-	 *            the <code>VariableOwner</code> component who this component
-	 *            depends on.
-	 * @deprecated
-	 */
-	public void dependsOn(VariableOwner depended);
+    /**
+     * Dependencies are not needed anymore as HTML-mode is deprecated in Toolkit
+     * 5.
+     * 
+     * @param depended
+     *                the <code>VariableOwner</code> component who this
+     *                component depends on.
+     * @deprecated
+     */
+    public void dependsOn(VariableOwner depended);
 
-	/**
-	 * Dependencies are not needed anymore as HTML-mode is deprecated in Toolkit 5.
-	 * 
-	 * @param depended
-	 *            the component to be removed from this component's dependency
-	 *            list.
-	 * @deprecated
-	 */
-	public void removeDirectDependency(VariableOwner depended);
+    /**
+     * Dependencies are not needed anymore as HTML-mode is deprecated in Toolkit
+     * 5.
+     * 
+     * @param depended
+     *                the component to be removed from this component's
+     *                dependency list.
+     * @deprecated
+     */
+    public void removeDirectDependency(VariableOwner depended);
 
-	/**
-	 * <p>
-	 * Tests if the variable owner is enabled or not. The terminal should not
-	 * send any variable changes to disabled variable owners.
-	 * </p>
-	 * 
-	 * @return <code>true</code> if the variable owner is enabled,
-	 *         <code>false</code> if not
-	 */
-	public boolean isEnabled();
+    /**
+     * <p>
+     * Tests if the variable owner is enabled or not. The terminal should not
+     * send any variable changes to disabled variable owners.
+     * </p>
+     * 
+     * @return <code>true</code> if the variable owner is enabled,
+     *         <code>false</code> if not
+     */
+    public boolean isEnabled();
 
-	/**
-	 * <p>
-	 * Tests if the variable owner is in immediate mode or not. Being in
-	 * immediate mode means that all variable changes are required to be sent
-	 * back from the terminal immediately when they occur.
-	 * </p>
-	 * 
-	 * <p>
-	 * <strong>Note:</strong> <code>VariableOwner</code> does not include a
-	 * set- method for the immediateness property. This is because not all
-	 * VariableOwners wish to offer the functionality. Such VariableOwners are
-	 * never in the immediate mode, thus they always return <code>false</code>
-	 * in {@link #isImmediate()}.
-	 * </p>
-	 * 
-	 * @return <code>true</code> if the component is in immediate mode,
-	 *         <code>false</code> if not.
-	 */
-	public boolean isImmediate();
+    /**
+     * <p>
+     * Tests if the variable owner is in immediate mode or not. Being in
+     * immediate mode means that all variable changes are required to be sent
+     * back from the terminal immediately when they occur.
+     * </p>
+     * 
+     * <p>
+     * <strong>Note:</strong> <code>VariableOwner</code> does not include a
+     * set- method for the immediateness property. This is because not all
+     * VariableOwners wish to offer the functionality. Such VariableOwners are
+     * never in the immediate mode, thus they always return <code>false</code>
+     * in {@link #isImmediate()}.
+     * </p>
+     * 
+     * @return <code>true</code> if the component is in immediate mode,
+     *         <code>false</code> if not.
+     */
+    public boolean isImmediate();
 
-	/**
-	 * VariableOwner error event.
-	 */
-	public interface ErrorEvent extends Terminal.ErrorEvent {
+    /**
+     * VariableOwner error event.
+     */
+    public interface ErrorEvent extends Terminal.ErrorEvent {
 
-		/**
-		 * Gets the source VariableOwner.
-		 * 
-		 * @return the variable owner.
-		 */
-		public VariableOwner getVariableOwner();
+        /**
+         * Gets the source VariableOwner.
+         * 
+         * @return the variable owner.
+         */
+        public VariableOwner getVariableOwner();
 
-	}
+    }
 }

@@ -28,8 +28,8 @@
 
 package com.itmill.toolkit.data.util;
 
-import java.beans.Introspector;
 import java.beans.BeanInfo;
+import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 import java.util.Collection;
@@ -47,112 +47,112 @@ import com.itmill.toolkit.data.Property;
  */
 public class BeanItem extends PropertysetItem {
 
-	/**
-	 * The bean which this Item is based on.
-	 */
-	private Object bean;
+    /**
+     * The bean which this Item is based on.
+     */
+    private Object bean;
 
-	/**
-	 * <p>
-	 * Creates a new instance of <code>BeanItem</code> and adds all properties
-	 * of a Java Bean to it. The properties are identified by their respective
-	 * bean names.
-	 * </p>
-	 * 
-	 * <p>
-	 * Note : This version only supports introspectable bean properties and
-	 * their getter and setter methods. Stand-alone <code>is</code> and
-	 * <code>are</code> methods are not supported.
-	 * </p>
-	 * 
-	 * @param bean
-	 *            the Java Bean to copy properties from.
-	 * 
-	 */
-	public BeanItem(Object bean) {
+    /**
+     * <p>
+     * Creates a new instance of <code>BeanItem</code> and adds all properties
+     * of a Java Bean to it. The properties are identified by their respective
+     * bean names.
+     * </p>
+     * 
+     * <p>
+     * Note : This version only supports introspectable bean properties and
+     * their getter and setter methods. Stand-alone <code>is</code> and
+     * <code>are</code> methods are not supported.
+     * </p>
+     * 
+     * @param bean
+     *                the Java Bean to copy properties from.
+     * 
+     */
+    public BeanItem(Object bean) {
 
-		this.bean = bean;
+        this.bean = bean;
 
-		// Try to introspect, if it fails, we just have an empty Item
-		try {
-			// Create bean information
-			BeanInfo info = Introspector.getBeanInfo(bean.getClass());
-			PropertyDescriptor[] pd = info.getPropertyDescriptors();
+        // Try to introspect, if it fails, we just have an empty Item
+        try {
+            // Create bean information
+            BeanInfo info = Introspector.getBeanInfo(bean.getClass());
+            PropertyDescriptor[] pd = info.getPropertyDescriptors();
 
-			// Add all the bean properties as MethodProperties to this Item
-			for (int i = 0; i < pd.length; i++) {
-				Method getMethod = pd[i].getReadMethod();
-				Method setMethod = pd[i].getWriteMethod();
-				Class type = pd[i].getPropertyType();
-				String name = pd[i].getName();
+            // Add all the bean properties as MethodProperties to this Item
+            for (int i = 0; i < pd.length; i++) {
+                Method getMethod = pd[i].getReadMethod();
+                Method setMethod = pd[i].getWriteMethod();
+                Class type = pd[i].getPropertyType();
+                String name = pd[i].getName();
 
-				if ((getMethod != null) && (setMethod != null)) {
-					Property p = new MethodProperty(type, bean, getMethod,
-							setMethod);
-					addItemProperty(name, p);
-				}
-			}
-		} catch (java.beans.IntrospectionException ignored) {
-		}
-	}
+                if ((getMethod != null) && (setMethod != null)) {
+                    Property p = new MethodProperty(type, bean, getMethod,
+                            setMethod);
+                    addItemProperty(name, p);
+                }
+            }
+        } catch (java.beans.IntrospectionException ignored) {
+        }
+    }
 
-	/**
-	 * <p>
-	 * Creates a new instance of <code>BeanItem</code> and adds all listed
-	 * properties of a Java Bean to it - in specified order. The properties are
-	 * identified by their respective bean names.
-	 * </p>
-	 * 
-	 * <p>
-	 * Note : This version only supports introspectable bean properties and
-	 * their getter and setter methods. Stand-alone <code>is</code> and
-	 * <code>are</code> methods are not supported.
-	 * </p>
-	 * 
-	 * @param bean
-	 *            the Java Bean to copy properties from.
-	 * @param propertyIds
-	 *            id of the property.
-	 */
-	public BeanItem(Object bean, Collection propertyIds) {
+    /**
+     * <p>
+     * Creates a new instance of <code>BeanItem</code> and adds all listed
+     * properties of a Java Bean to it - in specified order. The properties are
+     * identified by their respective bean names.
+     * </p>
+     * 
+     * <p>
+     * Note : This version only supports introspectable bean properties and
+     * their getter and setter methods. Stand-alone <code>is</code> and
+     * <code>are</code> methods are not supported.
+     * </p>
+     * 
+     * @param bean
+     *                the Java Bean to copy properties from.
+     * @param propertyIds
+     *                id of the property.
+     */
+    public BeanItem(Object bean, Collection propertyIds) {
 
-		this.bean = bean;
+        this.bean = bean;
 
-		// Try to introspect, if it fails, we just have an empty Item
-		try {
-			// Create bean information
-			BeanInfo info = Introspector.getBeanInfo(bean.getClass());
-			PropertyDescriptor[] pd = info.getPropertyDescriptors();
+        // Try to introspect, if it fails, we just have an empty Item
+        try {
+            // Create bean information
+            BeanInfo info = Introspector.getBeanInfo(bean.getClass());
+            PropertyDescriptor[] pd = info.getPropertyDescriptors();
 
-			// Add all the bean properties as MethodProperties to this Item
-			for (Iterator iter = propertyIds.iterator(); iter.hasNext();) {
-				Object id = iter.next();
-				for (int i = 0; i < pd.length; i++) {
-					String name = pd[i].getName();
-					if (name.equals(id)) {
-						Method getMethod = pd[i].getReadMethod();
-						Method setMethod = pd[i].getWriteMethod();
-						Class type = pd[i].getPropertyType();
+            // Add all the bean properties as MethodProperties to this Item
+            for (Iterator iter = propertyIds.iterator(); iter.hasNext();) {
+                Object id = iter.next();
+                for (int i = 0; i < pd.length; i++) {
+                    String name = pd[i].getName();
+                    if (name.equals(id)) {
+                        Method getMethod = pd[i].getReadMethod();
+                        Method setMethod = pd[i].getWriteMethod();
+                        Class type = pd[i].getPropertyType();
 
-						Property p = new MethodProperty(type, bean, getMethod,
-								setMethod);
-						addItemProperty(name, p);
-					}
-				}
-			}
+                        Property p = new MethodProperty(type, bean, getMethod,
+                                setMethod);
+                        addItemProperty(name, p);
+                    }
+                }
+            }
 
-		} catch (java.beans.IntrospectionException ignored) {
-		}
+        } catch (java.beans.IntrospectionException ignored) {
+        }
 
-	}
+    }
 
-	/**
-	 * Gets the underlying JavaBean object.
-	 * 
-	 * @return the bean object.
-	 */
-	public Object getBean() {
-		return bean;
-	}
+    /**
+     * Gets the underlying JavaBean object.
+     * 
+     * @return the bean object.
+     */
+    public Object getBean() {
+        return bean;
+    }
 
 }

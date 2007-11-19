@@ -47,51 +47,51 @@ import com.itmill.toolkit.Application;
  */
 public interface ApplicationResource extends Resource {
 
-	/**
-	 * Default cache time.
-	 */
-	public static final long DEFAULT_CACHETIME = 1000 * 60 * 60 * 24;
+    /**
+     * Default cache time.
+     */
+    public static final long DEFAULT_CACHETIME = 1000 * 60 * 60 * 24;
 
-	/**
-	 * Gets resource as stream.
-	 */
-	public DownloadStream getStream();
+    /**
+     * Gets resource as stream.
+     */
+    public DownloadStream getStream();
 
-	/**
-	 * Gets the application of the resource.
-	 */
-	public Application getApplication();
+    /**
+     * Gets the application of the resource.
+     */
+    public Application getApplication();
 
-	/**
-	 * Gets the virtual filename for this resource.
-	 * 
-	 * @return the file name associated to this resource.
-	 */
-	public String getFilename();
+    /**
+     * Gets the virtual filename for this resource.
+     * 
+     * @return the file name associated to this resource.
+     */
+    public String getFilename();
 
-	/**
-	 * Gets the length of cache expiration time.
-	 * 
-	 * <p>
-	 * This gives the adapter the possibility cache streams sent to the client.
-	 * The caching may be made in adapter or at the client if the client
-	 * supports caching. Default is <code>DEFAULT_CACHETIME</code>.
-	 * </p>
-	 * 
-	 * @return Cache time in milliseconds
-	 */
-	public long getCacheTime();
+    /**
+     * Gets the length of cache expiration time.
+     * 
+     * <p>
+     * This gives the adapter the possibility cache streams sent to the client.
+     * The caching may be made in adapter or at the client if the client
+     * supports caching. Default is <code>DEFAULT_CACHETIME</code>.
+     * </p>
+     * 
+     * @return Cache time in milliseconds
+     */
+    public long getCacheTime();
 
-	/**
-	 * Gets the size of the download buffer used for this resource.
-	 * 
-	 * <p>
-	 * If the buffer size is 0, the buffer size is decided by the terminal
-	 * adapter. The default value is 0.
-	 * </p>
-	 * 
-	 * @return int the size of the buffer in bytes.
-	 */
-	public int getBufferSize();
+    /**
+     * Gets the size of the download buffer used for this resource.
+     * 
+     * <p>
+     * If the buffer size is 0, the buffer size is decided by the terminal
+     * adapter. The default value is 0.
+     * </p>
+     * 
+     * @return int the size of the buffer in bytes.
+     */
+    public int getBufferSize();
 
 }

@@ -17,64 +17,64 @@ import com.itmill.toolkit.terminal.gwt.client.UIDL;
  * 
  */
 public class IRichTextArea extends Composite implements Paintable,
-		ChangeListener, FocusListener {
+        ChangeListener, FocusListener {
 
-	/**
-	 * The input node CSS classname.
-	 */
-	public static final String CLASSNAME = "i-richtextarea";
+    /**
+     * The input node CSS classname.
+     */
+    public static final String CLASSNAME = "i-richtextarea";
 
-	protected String id;
+    protected String id;
 
-	protected ApplicationConnection client;
+    protected ApplicationConnection client;
 
-	private boolean immediate = false;
+    private boolean immediate = false;
 
-	RichTextArea rta = new RichTextArea();
+    RichTextArea rta = new RichTextArea();
 
-	RichTextToolbar formatter = new RichTextToolbar(rta);
+    RichTextToolbar formatter = new RichTextToolbar(rta);
 
-	public IRichTextArea() {
-		FlowPanel fp = new FlowPanel();
-		fp.add(formatter);
+    public IRichTextArea() {
+        FlowPanel fp = new FlowPanel();
+        fp.add(formatter);
 
-		rta.setWidth("100%");
-		rta.addFocusListener(this);
+        rta.setWidth("100%");
+        rta.addFocusListener(this);
 
-		fp.add(rta);
+        fp.add(rta);
 
-		initWidget(fp);
-		setStyleName(CLASSNAME);
-	}
+        initWidget(fp);
+        setStyleName(CLASSNAME);
+    }
 
-	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-		this.client = client;
-		id = uidl.getId();
+    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+        this.client = client;
+        id = uidl.getId();
 
-		if (client.updateComponent(this, uidl, true)) {
-			return;
-		}
+        if (client.updateComponent(this, uidl, true)) {
+            return;
+        }
 
-		immediate = uidl.getBooleanAttribute("immediate");
+        immediate = uidl.getBooleanAttribute("immediate");
 
-		rta.setHTML(uidl.getStringVariable("text"));
+        rta.setHTML(uidl.getStringVariable("text"));
 
-	}
+    }
 
-	public void onChange(Widget sender) {
-		if (client != null && id != null) {
-			client.updateVariable(id, "text", rta.getText(), immediate);
-		}
-	}
+    public void onChange(Widget sender) {
+        if (client != null && id != null) {
+            client.updateVariable(id, "text", rta.getText(), immediate);
+        }
+    }
 
-	public void onFocus(Widget sender) {
+    public void onFocus(Widget sender) {
 
-	}
+    }
 
-	public void onLostFocus(Widget sender) {
-		String html = rta.getHTML();
-		client.updateVariable(id, "text", html, immediate);
+    public void onLostFocus(Widget sender) {
+        String html = rta.getHTML();
+        client.updateVariable(id, "text", html, immediate);
 
-	}
+    }
 
 }

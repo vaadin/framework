@@ -1,58 +1,63 @@
 package com.itmill.toolkit.tests;
 
 import com.itmill.toolkit.Application;
-import com.itmill.toolkit.ui.*;
+import com.itmill.toolkit.terminal.Sizeable;
+import com.itmill.toolkit.ui.ExpandLayout;
+import com.itmill.toolkit.ui.Label;
+import com.itmill.toolkit.ui.SplitPanel;
+import com.itmill.toolkit.ui.Table;
+import com.itmill.toolkit.ui.Window;
 
 public class TestForApplicationLayoutThatUsesWholeBrosersSpace extends
-		Application {
+        Application {
 
-	Window main = new Window("Windowing test");
+    Window main = new Window("Windowing test");
 
-	ExpandLayout rootLayout;
+    ExpandLayout rootLayout;
 
-	SplitPanel firstLevelSplit;
+    SplitPanel firstLevelSplit;
 
-	public void init() {
-		setMainWindow(main);
+    public void init() {
+        setMainWindow(main);
 
-		rootLayout = new ExpandLayout();
-		main.setLayout(rootLayout);
+        rootLayout = new ExpandLayout();
+        main.setLayout(rootLayout);
 
-		rootLayout.addComponent(new Label("header"));
+        rootLayout.addComponent(new Label("header"));
 
-		firstLevelSplit = new SplitPanel();
+        firstLevelSplit = new SplitPanel();
 
-		SplitPanel secondSplitPanel = new SplitPanel(
-				SplitPanel.ORIENTATION_HORIZONTAL);
-		secondSplitPanel.setFirstComponent(new Label("left"));
+        SplitPanel secondSplitPanel = new SplitPanel(
+                SplitPanel.ORIENTATION_HORIZONTAL);
+        secondSplitPanel.setFirstComponent(new Label("left"));
 
-		ExpandLayout topRight = new ExpandLayout();
-		topRight.addComponent(new Label("topright header"));
+        ExpandLayout topRight = new ExpandLayout();
+        topRight.addComponent(new Label("topright header"));
 
-		Table t = TestForTablesInitialColumnWidthLogicRendering.getTestTable(4,
-				100);
-		t.setWidth(100);
-		t.setWidthUnits(Table.UNITS_PERCENTAGE);
-		t.setHeight(100);
-		t.setHeightUnits(Table.UNITS_PERCENTAGE);
-		topRight.addComponent(t);
-		topRight.expand(t);
+        Table t = TestForTablesInitialColumnWidthLogicRendering.getTestTable(4,
+                100);
+        t.setWidth(100);
+        t.setWidthUnits(Sizeable.UNITS_PERCENTAGE);
+        t.setHeight(100);
+        t.setHeightUnits(Sizeable.UNITS_PERCENTAGE);
+        topRight.addComponent(t);
+        topRight.expand(t);
 
-		topRight.addComponent(new Label("topright footer"));
+        topRight.addComponent(new Label("topright footer"));
 
-		secondSplitPanel.setSecondComponent(topRight);
+        secondSplitPanel.setSecondComponent(topRight);
 
-		ExpandLayout el = new ExpandLayout();
-		el.addComponent(new Label("Bšš"));
+        ExpandLayout el = new ExpandLayout();
+        el.addComponent(new Label("Bï¿½ï¿½"));
 
-		firstLevelSplit.setFirstComponent(secondSplitPanel);
-		firstLevelSplit.setSecondComponent(el);
+        firstLevelSplit.setFirstComponent(secondSplitPanel);
+        firstLevelSplit.setSecondComponent(el);
 
-		rootLayout.addComponent(firstLevelSplit);
-		rootLayout.expand(firstLevelSplit);
+        rootLayout.addComponent(firstLevelSplit);
+        rootLayout.expand(firstLevelSplit);
 
-		rootLayout.addComponent(new Label("footer"));
+        rootLayout.addComponent(new Label("footer"));
 
-	}
+    }
 
 }

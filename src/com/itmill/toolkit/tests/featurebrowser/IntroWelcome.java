@@ -34,8 +34,6 @@ import java.util.Iterator;
 import java.util.Map;
 
 import com.itmill.toolkit.terminal.DownloadStream;
-import com.itmill.toolkit.terminal.PaintException;
-import com.itmill.toolkit.terminal.PaintTarget;
 import com.itmill.toolkit.terminal.ParameterHandler;
 import com.itmill.toolkit.terminal.URIHandler;
 import com.itmill.toolkit.terminal.gwt.server.ApplicationServlet;
@@ -48,150 +46,150 @@ import com.itmill.toolkit.ui.Panel;
 import com.itmill.toolkit.ui.Select;
 
 public class IntroWelcome extends Feature implements URIHandler,
-		ParameterHandler {
+        ParameterHandler {
 
-	private WebBrowser webBrowser = null;
+    private WebBrowser webBrowser = null;
 
-	Panel panel = new Panel();
+    Panel panel = new Panel();
 
-	private static final String WELCOME_TEXT_UPPER = ""
-			+ "This application lets you view and play with some features of "
-			+ "IT Mill Toolkit. Use menu on the left to select component."
-			+ "<br /><br />Note the <b>Properties selection</b> on the top "
-			+ "right corner. Click it open to access component properties and"
-			+ " feel free to edit properties at any time."
-			+ "<br /><br />The area that you are now reading is the component"
-			+ " demo area. Lower area from here contains component description, API"
-			+ " documentation and optional code sample. Note that not all selections"
-			+ " contain demo, only description and API documentation is shown."
-			+ "<br /><br />You may also change application's theme from below the menu."
-			+ " This example application is designed to work best with"
-			+ " <em>Demo</em> theme, other themes are for demonstration purposes only."
-			+ "<br /><br />IT Mill Toolkit enables you to construct complex Web"
-			+ " applications using plain Java, no knowledge of other Web technologies"
-			+ " such as XML, HTML, DOM, JavaScript or browser differences is required."
-			+ "<br /><br />For more information, point your browser to"
-			+ " <a href=\"http://www.itmill.com\" target=\"_new\">www.itmill.com</a>.";
+    private static final String WELCOME_TEXT_UPPER = ""
+            + "This application lets you view and play with some features of "
+            + "IT Mill Toolkit. Use menu on the left to select component."
+            + "<br /><br />Note the <b>Properties selection</b> on the top "
+            + "right corner. Click it open to access component properties and"
+            + " feel free to edit properties at any time."
+            + "<br /><br />The area that you are now reading is the component"
+            + " demo area. Lower area from here contains component description, API"
+            + " documentation and optional code sample. Note that not all selections"
+            + " contain demo, only description and API documentation is shown."
+            + "<br /><br />You may also change application's theme from below the menu."
+            + " This example application is designed to work best with"
+            + " <em>Demo</em> theme, other themes are for demonstration purposes only."
+            + "<br /><br />IT Mill Toolkit enables you to construct complex Web"
+            + " applications using plain Java, no knowledge of other Web technologies"
+            + " such as XML, HTML, DOM, JavaScript or browser differences is required."
+            + "<br /><br />For more information, point your browser to"
+            + " <a href=\"http://www.itmill.com\" target=\"_new\">www.itmill.com</a>.";
 
-	private static final String WELCOME_TEXT_LOWER = ""
-			+ "This area contains the selected component's description, list of properties, javadoc"
-			+ " and optional code sample. "
-			+ "Start your tour now by selecting features from the list"
-			+ " on the left and remember to experiment with the <b>Properties panel</b>"
-			+ " located at the top right corner area.";
+    private static final String WELCOME_TEXT_LOWER = ""
+            + "This area contains the selected component's description, list of properties, javadoc"
+            + " and optional code sample. "
+            + "Start your tour now by selecting features from the list"
+            + " on the left and remember to experiment with the <b>Properties panel</b>"
+            + " located at the top right corner area.";
 
-	// TODO Add browser agent string
-	private String description = WELCOME_TEXT_LOWER
-			+ "<br /><br />IT Mill Toolkit version: "
-			+ ApplicationServlet.VERSION;
-	
-	public IntroWelcome() {
-		super();
-	}
+    // TODO Add browser agent string
+    private String description = WELCOME_TEXT_LOWER
+            + "<br /><br />IT Mill Toolkit version: "
+            + ApplicationServlet.VERSION;
 
-	protected Component getDemoComponent() {
+    public IntroWelcome() {
+        super();
+    }
 
-		OrderedLayout l = new OrderedLayout();
+    protected Component getDemoComponent() {
 
-		panel.setCaption("Welcome to the IT Mill Toolkit feature tour!");
-		l.addComponent(panel);
+        OrderedLayout l = new OrderedLayout();
 
-		Label label = new Label();
-		panel.addComponent(label);
+        panel.setCaption("Welcome to the IT Mill Toolkit feature tour!");
+        l.addComponent(panel);
 
-		label.setContentMode(Label.CONTENT_XHTML);
-		label.setValue(WELCOME_TEXT_UPPER);
+        Label label = new Label();
+        panel.addComponent(label);
 
-		propertyPanel = new PropertyPanel(panel);
-		Form ap = propertyPanel.createBeanPropertySet(new String[] { "width",
-				"height" });
-		Select themes = (Select) propertyPanel.getField("style");
-		themes.addItem("light").getItemProperty(
-				themes.getItemCaptionPropertyId()).setValue("light");
-		themes.addItem("strong").getItemProperty(
-				themes.getItemCaptionPropertyId()).setValue("strong");
-		propertyPanel.addProperties("Panel Properties", ap);
+        label.setContentMode(Label.CONTENT_XHTML);
+        label.setValue(WELCOME_TEXT_UPPER);
 
-		setJavadocURL("package-summary.html");
+        propertyPanel = new PropertyPanel(panel);
+        Form ap = propertyPanel.createBeanPropertySet(new String[] { "width",
+                "height" });
+        Select themes = (Select) propertyPanel.getField("style");
+        themes.addItem("light").getItemProperty(
+                themes.getItemCaptionPropertyId()).setValue("light");
+        themes.addItem("strong").getItemProperty(
+                themes.getItemCaptionPropertyId()).setValue("strong");
+        propertyPanel.addProperties("Panel Properties", ap);
 
-		setPropsReminder(false);
+        setJavadocURL("package-summary.html");
 
-		return l;
-	}
+        setPropsReminder(false);
 
-	protected String getExampleSrc() {
-		return ""
-				+ "package com.itmill.toolkit.demo;\n"
-				+ "import com.itmill.toolkit.ui.*;\n\n"
-				+ "public class HelloWorld extends com.itmill.toolkit.Application {\n"
-				+ "    public void init() {\n"
-				+ "        Window main = new Window(\"Hello window\");\n"
-				+ "        setMainWindow(main);\n"
-				+ "        main.addComponent(new Label(\"Hello World!\"));\n"
-				+ "    }\n" + "}\n";
-	}
+        return l;
+    }
 
-	// not ready yet to give description, see paint instead
-	protected String getDescriptionXHTML() {
-		return description;
-	}
+    protected String getExampleSrc() {
+        return ""
+                + "package com.itmill.toolkit.demo;\n"
+                + "import com.itmill.toolkit.ui.*;\n\n"
+                + "public class HelloWorld extends com.itmill.toolkit.Application {\n"
+                + "    public void init() {\n"
+                + "        Window main = new Window(\"Hello window\");\n"
+                + "        setMainWindow(main);\n"
+                + "        main.addComponent(new Label(\"Hello World!\"));\n"
+                + "    }\n" + "}\n";
+    }
 
-	protected String getImage() {
-		return "icon_intro.png";
-	}
+    // not ready yet to give description, see paint instead
+    protected String getDescriptionXHTML() {
+        return description;
+    }
 
-	protected String getTitle() {
-		return "Welcome";
-	}
+    protected String getImage() {
+        return "icon_intro.png";
+    }
 
-	/**
-	 * Add URI and parametes handlers to window.
-	 * 
-	 * @see com.itmill.toolkit.ui.Component#attach()
-	 */
-	public void attach() {
-		super.attach();
-		getWindow().addURIHandler(this);
-		getWindow().addParameterHandler(this);
-	}
+    protected String getTitle() {
+        return "Welcome";
+    }
 
-	/**
-	 * Remove all handlers from window
-	 * 
-	 * @see com.itmill.toolkit.ui.Component#detach()
-	 */
-	public void detach() {
-		super.detach();
-		getWindow().removeURIHandler(this);
-		getWindow().removeParameterHandler(this);
-	}
+    /**
+     * Add URI and parametes handlers to window.
+     * 
+     * @see com.itmill.toolkit.ui.Component#attach()
+     */
+    public void attach() {
+        super.attach();
+        getWindow().addURIHandler(this);
+        getWindow().addParameterHandler(this);
+    }
 
-	/**
-	 * Update URI
-	 * 
-	 * @see com.itmill.toolkit.terminal.URIHandler#handleURI(URL, String)
-	 */
-	public DownloadStream handleURI(URL context, String relativeUri) {
-		return null;
-	}
+    /**
+     * Remove all handlers from window
+     * 
+     * @see com.itmill.toolkit.ui.Component#detach()
+     */
+    public void detach() {
+        super.detach();
+        getWindow().removeURIHandler(this);
+        getWindow().removeParameterHandler(this);
+    }
 
-	/**
-	 * Show system status if systemStatus is given on URL
-	 * 
-	 * @see com.itmill.toolkit.terminal.ParameterHandler#handleParameters(Map)
-	 */
-	public void handleParameters(Map parameters) {
-		for (Iterator i = parameters.keySet().iterator(); i.hasNext();) {
-			String name = (String) i.next();
-			if (name.equals("systemStatus")) {
-				String status = "";
-				status += "timestamp=" + new Date() + " ";
-				status += "free=" + Runtime.getRuntime().freeMemory() + ", ";
-				status += "total=" + Runtime.getRuntime().totalMemory() + ", ";
-				status += "max=" + Runtime.getRuntime().maxMemory() + "\n";
-				System.out.println(status);
-			}
-		}
-	}
+    /**
+     * Update URI
+     * 
+     * @see com.itmill.toolkit.terminal.URIHandler#handleURI(URL, String)
+     */
+    public DownloadStream handleURI(URL context, String relativeUri) {
+        return null;
+    }
+
+    /**
+     * Show system status if systemStatus is given on URL
+     * 
+     * @see com.itmill.toolkit.terminal.ParameterHandler#handleParameters(Map)
+     */
+    public void handleParameters(Map parameters) {
+        for (Iterator i = parameters.keySet().iterator(); i.hasNext();) {
+            String name = (String) i.next();
+            if (name.equals("systemStatus")) {
+                String status = "";
+                status += "timestamp=" + new Date() + " ";
+                status += "free=" + Runtime.getRuntime().freeMemory() + ", ";
+                status += "total=" + Runtime.getRuntime().totalMemory() + ", ";
+                status += "max=" + Runtime.getRuntime().maxMemory() + "\n";
+                System.out.println(status);
+            }
+        }
+    }
 
 }

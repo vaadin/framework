@@ -45,30 +45,30 @@ import java.net.URL;
  */
 public interface URIHandler {
 
-	/**
-	 * Handles a given relative URI. If the URI handling wants to emit a
-	 * downloadable stream it can return download stream object. If no emitting
-	 * stream is necessary, null should be returned instead.
-	 * 
-	 * @param context
-	 *            the URl.
-	 * @param relativeUri
-	 *            the relative uri.
-	 * @return the download stream object.
-	 */
-	public DownloadStream handleURI(URL context, String relativeUri);
+    /**
+     * Handles a given relative URI. If the URI handling wants to emit a
+     * downloadable stream it can return download stream object. If no emitting
+     * stream is necessary, null should be returned instead.
+     * 
+     * @param context
+     *                the URl.
+     * @param relativeUri
+     *                the relative uri.
+     * @return the download stream object.
+     */
+    public DownloadStream handleURI(URL context, String relativeUri);
 
-	/**
-	 * URIHandler error event.
-	 */
-	public interface ErrorEvent extends Terminal.ErrorEvent {
+    /**
+     * URIHandler error event.
+     */
+    public interface ErrorEvent extends Terminal.ErrorEvent {
 
-		/**
-		 * Gets the source URIHandler.
-		 * 
-		 * @return the URIHandler.
-		 */
-		public URIHandler getURIHandler();
+        /**
+         * Gets the source URIHandler.
+         * 
+         * @return the URIHandler.
+         */
+        public URIHandler getURIHandler();
 
-	}
+    }
 }

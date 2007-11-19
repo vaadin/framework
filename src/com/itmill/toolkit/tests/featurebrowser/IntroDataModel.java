@@ -37,63 +37,63 @@ import com.itmill.toolkit.ui.Select;
 
 public class IntroDataModel extends Feature {
 
-	private static final String INTRO_TEXT = ""
-			+ "This section introduces main concepts of data model in IT Mill Toolkit."
-			+ " It contains brief introduction to Properties, Items, Containers, Validators and"
-			+ " Buffering classes."
-			+ "<br /><br />See the API documentation of respective area for more information.";
+    private static final String INTRO_TEXT = ""
+            + "This section introduces main concepts of data model in IT Mill Toolkit."
+            + " It contains brief introduction to Properties, Items, Containers, Validators and"
+            + " Buffering classes."
+            + "<br /><br />See the API documentation of respective area for more information.";
 
-	public IntroDataModel() {
-		super();
-	}
+    public IntroDataModel() {
+        super();
+    }
 
-	protected Component getDemoComponent() {
+    protected Component getDemoComponent() {
 
-		OrderedLayout l = new OrderedLayout();
+        OrderedLayout l = new OrderedLayout();
 
-		Panel panel = new Panel();
-		panel.setCaption("Data Model");
-		l.addComponent(panel);
+        Panel panel = new Panel();
+        panel.setCaption("Data Model");
+        l.addComponent(panel);
 
-		Label label = new Label();
-		panel.addComponent(label);
+        Label label = new Label();
+        panel.addComponent(label);
 
-		label.setContentMode(Label.CONTENT_XHTML);
-		label.setValue(INTRO_TEXT);
+        label.setContentMode(Label.CONTENT_XHTML);
+        label.setValue(INTRO_TEXT);
 
-		// Properties
-		propertyPanel = new PropertyPanel(panel);
-		Form ap = propertyPanel.createBeanPropertySet(new String[] { "width",
-				"height" });
-		Select themes = (Select) propertyPanel.getField("style");
-		themes.addItem("light").getItemProperty(
-				themes.getItemCaptionPropertyId()).setValue("light");
-		themes.addItem("strong").getItemProperty(
-				themes.getItemCaptionPropertyId()).setValue("strong");
-		propertyPanel.addProperties("Panel Properties", ap);
+        // Properties
+        propertyPanel = new PropertyPanel(panel);
+        Form ap = propertyPanel.createBeanPropertySet(new String[] { "width",
+                "height" });
+        Select themes = (Select) propertyPanel.getField("style");
+        themes.addItem("light").getItemProperty(
+                themes.getItemCaptionPropertyId()).setValue("light");
+        themes.addItem("strong").getItemProperty(
+                themes.getItemCaptionPropertyId()).setValue("strong");
+        propertyPanel.addProperties("Panel Properties", ap);
 
-		setJavadocURL("data/package-summary.html");
+        setJavadocURL("data/package-summary.html");
 
-		return l;
-	}
+        return l;
+    }
 
-	protected String getExampleSrc() {
-		return null;
-	}
+    protected String getExampleSrc() {
+        return null;
+    }
 
-	/**
-	 * @see com.itmill.toolkit.tests.featurebrowser.Feature#getDescriptionXHTML()
-	 */
-	protected String getDescriptionXHTML() {
-		return null;
-	}
+    /**
+     * @see com.itmill.toolkit.tests.featurebrowser.Feature#getDescriptionXHTML()
+     */
+    protected String getDescriptionXHTML() {
+        return null;
+    }
 
-	protected String getImage() {
-		return null;
-	}
+    protected String getImage() {
+        return null;
+    }
 
-	protected String getTitle() {
-		return null;
-	}
+    protected String getTitle() {
+        return null;
+    }
 
 }

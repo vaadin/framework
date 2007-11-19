@@ -17,70 +17,70 @@ import com.itmill.toolkit.ui.Button.ClickEvent;
  */
 public class WindowedDemos extends com.itmill.toolkit.Application {
 
-	// keeps track of created windows
-	private final HashMap windows = new HashMap();
+    // keeps track of created windows
+    private final HashMap windows = new HashMap();
 
-	// mapping demo name to URL
-	private static final HashMap servlets = new HashMap();
-	static {
-		servlets.put("Caching demo", "CachingDemo/");
-		servlets.put("Calculator", "Calc/");
-		servlets.put("Calendar demo", "CalendarDemo/");
-		servlets.put("Select demo", "SelectDemo/");
-		servlets.put("Table demo", "TableDemo/");
-		servlets.put("Browser demo", "BrowserDemo/");
-		servlets.put("Notification demo", "NotificationDemo/");
-	}
+    // mapping demo name to URL
+    private static final HashMap servlets = new HashMap();
+    static {
+        servlets.put("Caching demo", "CachingDemo/");
+        servlets.put("Calculator", "Calc/");
+        servlets.put("Calendar demo", "CalendarDemo/");
+        servlets.put("Select demo", "SelectDemo/");
+        servlets.put("Table demo", "TableDemo/");
+        servlets.put("Browser demo", "BrowserDemo/");
+        servlets.put("Notification demo", "NotificationDemo/");
+    }
 
-	public void init() {
+    public void init() {
 
-		// Create new window for the application and give the window a visible.
-		Window main = new Window("IT Mill Toolkit 5 Windowed Demos");
-		// set as main window
-		setMainWindow(main);
+        // Create new window for the application and give the window a visible.
+        Window main = new Window("IT Mill Toolkit 5 Windowed Demos");
+        // set as main window
+        setMainWindow(main);
 
-		// Create menu window.
-		Window menu = new Window("Select demo");
-		menu.setWidth(200);
-		menu.setHeight(400);
-		main.addWindow(menu); // add to layout
+        // Create menu window.
+        Window menu = new Window("Select demo");
+        menu.setWidth(200);
+        menu.setHeight(400);
+        main.addWindow(menu); // add to layout
 
-		// Create a menu button for each demo
-		for (Iterator it = servlets.keySet().iterator(); it.hasNext();) {
-			String name = (String) it.next();
-			Button b = new Button(name, new Button.ClickListener() {
-				public void buttonClick(ClickEvent event) {
-					show(event.getButton().getCaption());
-				}
+        // Create a menu button for each demo
+        for (Iterator it = servlets.keySet().iterator(); it.hasNext();) {
+            String name = (String) it.next();
+            Button b = new Button(name, new Button.ClickListener() {
+                public void buttonClick(ClickEvent event) {
+                    show(event.getButton().getCaption());
+                }
 
-			});
-			b.setStyleName("link");
-			menu.addComponent(b);
-		}
+            });
+            b.setStyleName("link");
+            menu.addComponent(b);
+        }
 
-	}
+    }
 
-	/**
-	 * Shows the specified demo in a separate window. Creates a new window if
-	 * the demo has not been shown already, re-uses old window otherwise.
-	 * 
-	 * @param demoName
-	 *            the name of the demo to be shown
-	 */
-	private void show(String demoName) {
-		Window w = (Window) windows.get(demoName);
-		if (w == null) {
-			w = new Window(demoName);
-			w.setWidth(520);
-			w.setHeight(500);
-			w.setPositionX(202);
-			windows.put(demoName, w);
-			getMainWindow().addWindow(w);
-		} else {
-			w.setVisible(true);
-		}
-		w.open(new ExternalResource((String) servlets.get(demoName)));
+    /**
+     * Shows the specified demo in a separate window. Creates a new window if
+     * the demo has not been shown already, re-uses old window otherwise.
+     * 
+     * @param demoName
+     *                the name of the demo to be shown
+     */
+    private void show(String demoName) {
+        Window w = (Window) windows.get(demoName);
+        if (w == null) {
+            w = new Window(demoName);
+            w.setWidth(520);
+            w.setHeight(500);
+            w.setPositionX(202);
+            windows.put(demoName, w);
+            getMainWindow().addWindow(w);
+        } else {
+            w.setVisible(true);
+        }
+        w.open(new ExternalResource((String) servlets.get(demoName)));
 
-	}
+    }
 
 }

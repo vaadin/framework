@@ -50,32 +50,32 @@ import java.util.Map;
  */
 public interface ParameterHandler {
 
-	/**
-	 * <p>
-	 * Handles the given parameters. The parameters are given as inmodifieable
-	 * name to value map. All parameters names are of type:
-	 * {@link java.lang.String}. All the parameter values are arrays of
-	 * strings.
-	 * </p>
-	 * 
-	 * @param parameters
-	 *            the Inmodifiable name to value[] mapping.
-	 * 
-	 */
-	public void handleParameters(Map parameters);
+    /**
+     * <p>
+     * Handles the given parameters. The parameters are given as inmodifieable
+     * name to value map. All parameters names are of type:
+     * {@link java.lang.String}. All the parameter values are arrays of
+     * strings.
+     * </p>
+     * 
+     * @param parameters
+     *                the Inmodifiable name to value[] mapping.
+     * 
+     */
+    public void handleParameters(Map parameters);
 
-	/**
-	 * ParameterHandler error event.
-	 */
-	public interface ErrorEvent extends Terminal.ErrorEvent {
+    /**
+     * ParameterHandler error event.
+     */
+    public interface ErrorEvent extends Terminal.ErrorEvent {
 
-		/**
-		 * Gets the source ParameterHandler.
-		 * 
-		 * @return the source Parameter Handler.
-		 */
-		public ParameterHandler getParameterHandler();
+        /**
+         * Gets the source ParameterHandler.
+         * 
+         * @return the source Parameter Handler.
+         */
+        public ParameterHandler getParameterHandler();
 
-	}
+    }
 
 }

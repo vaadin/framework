@@ -41,80 +41,80 @@ package com.itmill.toolkit.terminal;
  */
 public interface Scrollable {
 
-	/**
-	 * Gets scroll X offset.
-	 * 
-	 * <p>
-	 * Scrolling offset is the number of pixels this scrollable has been
-	 * scrolled to left.
-	 * </p>
-	 * 
-	 * @return Horizontal scrolling position in pixels.
-	 */
-	public int getScrollOffsetX();
+    /**
+     * Gets scroll X offset.
+     * 
+     * <p>
+     * Scrolling offset is the number of pixels this scrollable has been
+     * scrolled to left.
+     * </p>
+     * 
+     * @return Horizontal scrolling position in pixels.
+     */
+    public int getScrollOffsetX();
 
-	/**
-	 * Sets scroll X offset.
-	 * 
-	 * <p>
-	 * Scrolling offset is the number of pixels this scrollable has been
-	 * scrolled to left.
-	 * </p>
-	 * 
-	 * @param pixelsScrolledLeft
-	 *            the xOffset.
-	 */
-	public void setScrollOffsetX(int pixelsScrolledLeft);
+    /**
+     * Sets scroll X offset.
+     * 
+     * <p>
+     * Scrolling offset is the number of pixels this scrollable has been
+     * scrolled to left.
+     * </p>
+     * 
+     * @param pixelsScrolledLeft
+     *                the xOffset.
+     */
+    public void setScrollOffsetX(int pixelsScrolledLeft);
 
-	/**
-	 * Gets scroll Y offset.
-	 * 
-	 * <p>
-	 * Scrolling offset is the number of pixels this scrollable has been
-	 * scrolled to down.
-	 * </p>
-	 * 
-	 * @return Vertical scrolling position in pixels.
-	 */
-	public int getScrollOffsetY();
+    /**
+     * Gets scroll Y offset.
+     * 
+     * <p>
+     * Scrolling offset is the number of pixels this scrollable has been
+     * scrolled to down.
+     * </p>
+     * 
+     * @return Vertical scrolling position in pixels.
+     */
+    public int getScrollOffsetY();
 
-	/**
-	 * Sets scroll Y offset.
-	 * 
-	 * <p>
-	 * Scrolling offset is the number of pixels this scrollable has been
-	 * scrolled to down.
-	 * </p>
-	 * 
-	 * @param pixelsScrolledDown
-	 *            the yOffset.
-	 */
-	public void setScrollOffsetY(int pixelsScrolledDown);
+    /**
+     * Sets scroll Y offset.
+     * 
+     * <p>
+     * Scrolling offset is the number of pixels this scrollable has been
+     * scrolled to down.
+     * </p>
+     * 
+     * @param pixelsScrolledDown
+     *                the yOffset.
+     */
+    public void setScrollOffsetY(int pixelsScrolledDown);
 
-	/**
-	 * Is the scrolling enabled.
-	 * 
-	 * <p>
-	 * Enabling scrolling allows the user to scroll the scrollable view
-	 * interactively
-	 * </p>
-	 * 
-	 * @return <code>true</code> if the scrolling is allowed, otherwise
-	 *         <code>false</code>.
-	 */
-	public boolean isScrollable();
+    /**
+     * Is the scrolling enabled.
+     * 
+     * <p>
+     * Enabling scrolling allows the user to scroll the scrollable view
+     * interactively
+     * </p>
+     * 
+     * @return <code>true</code> if the scrolling is allowed, otherwise
+     *         <code>false</code>.
+     */
+    public boolean isScrollable();
 
-	/**
-	 * Enables or disables scrolling..
-	 * 
-	 * <p>
-	 * Enabling scrolling allows the user to scroll the scrollable view
-	 * interactively
-	 * </p>
-	 * 
-	 * @param isScrollingEnabled
-	 *            true if the scrolling is allowed.
-	 */
-	public void setScrollable(boolean isScrollingEnabled);
+    /**
+     * Enables or disables scrolling..
+     * 
+     * <p>
+     * Enabling scrolling allows the user to scroll the scrollable view
+     * interactively
+     * </p>
+     * 
+     * @param isScrollingEnabled
+     *                true if the scrolling is allowed.
+     */
+    public void setScrollable(boolean isScrollingEnabled);
 
 }

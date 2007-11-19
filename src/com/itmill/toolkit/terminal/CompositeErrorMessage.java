@@ -43,153 +43,159 @@ import java.util.List;
  */
 public class CompositeErrorMessage implements ErrorMessage {
 
-	/**
-	 * Array of all the errors.
-	 */
-	private List errors;
+    /**
+     * Array of all the errors.
+     */
+    private List errors;
 
-	/**
-	 * Level of the error.
-	 */
-	private int level;
+    /**
+     * Level of the error.
+     */
+    private int level;
 
-	/**
-	 * Constructor for CompositeErrorMessage.
-	 * 
-	 * @param errorMessages
-	 *            the Array of error messages that are listed togeter. Nulls are
-	 *            ignored, but at least one message is required.
-	 */
-	public CompositeErrorMessage(ErrorMessage[] errorMessages) {
-		errors = new ArrayList(errorMessages.length);
-		level = Integer.MIN_VALUE;
+    /**
+     * Constructor for CompositeErrorMessage.
+     * 
+     * @param errorMessages
+     *                the Array of error messages that are listed togeter. Nulls
+     *                are ignored, but at least one message is required.
+     */
+    public CompositeErrorMessage(ErrorMessage[] errorMessages) {
+        errors = new ArrayList(errorMessages.length);
+        level = Integer.MIN_VALUE;
 
-		for (int i = 0; i < errorMessages.length; i++) {
-			addErrorMessage(errorMessages[i]);
-		}
+        for (int i = 0; i < errorMessages.length; i++) {
+            addErrorMessage(errorMessages[i]);
+        }
 
-		if (errors.size() == 0)
-			throw new IllegalArgumentException(
-					"Composite error message must have at least one error");
+        if (errors.size() == 0) {
+            throw new IllegalArgumentException(
+                    "Composite error message must have at least one error");
+        }
 
-	}
+    }
 
-	/**
-	 * Constructor for CompositeErrorMessage.
-	 * 
-	 * @param errorMessages
-	 *            the Collection of error messages that are listed togeter. At
-	 *            least one message is required.
-	 */
-	public CompositeErrorMessage(Collection errorMessages) {
-		errors = new ArrayList(errorMessages.size());
-		level = Integer.MIN_VALUE;
+    /**
+     * Constructor for CompositeErrorMessage.
+     * 
+     * @param errorMessages
+     *                the Collection of error messages that are listed togeter.
+     *                At least one message is required.
+     */
+    public CompositeErrorMessage(Collection errorMessages) {
+        errors = new ArrayList(errorMessages.size());
+        level = Integer.MIN_VALUE;
 
-		for (Iterator i = errorMessages.iterator(); i.hasNext();) {
-			addErrorMessage((ErrorMessage) i.next());
-		}
+        for (Iterator i = errorMessages.iterator(); i.hasNext();) {
+            addErrorMessage((ErrorMessage) i.next());
+        }
 
-		if (errors.size() == 0)
-			throw new IllegalArgumentException(
-					"Composite error message must have at least one error");
-	}
+        if (errors.size() == 0) {
+            throw new IllegalArgumentException(
+                    "Composite error message must have at least one error");
+        }
+    }
 
-	/**
-	 * The error level is the largest error level in
-	 * 
-	 * @see com.itmill.toolkit.terminal.ErrorMessage#getErrorLevel()
-	 */
-	public final int getErrorLevel() {
-		return level;
-	}
+    /**
+     * The error level is the largest error level in
+     * 
+     * @see com.itmill.toolkit.terminal.ErrorMessage#getErrorLevel()
+     */
+    public final int getErrorLevel() {
+        return level;
+    }
 
-	/**
-	 * Adds a error message into this composite message. Updates the level
-	 * field.
-	 * 
-	 * @param error
-	 *            the error message to be added. Duplicate errors are ignored.
-	 */
-	private void addErrorMessage(ErrorMessage error) {
-		if (error != null && !errors.contains(error)) {
-			this.errors.add(error);
-			int l = error.getErrorLevel();
-			if (l > level)
-				level = l;
-		}
-	}
+    /**
+     * Adds a error message into this composite message. Updates the level
+     * field.
+     * 
+     * @param error
+     *                the error message to be added. Duplicate errors are
+     *                ignored.
+     */
+    private void addErrorMessage(ErrorMessage error) {
+        if (error != null && !errors.contains(error)) {
+            errors.add(error);
+            int l = error.getErrorLevel();
+            if (l > level) {
+                level = l;
+            }
+        }
+    }
 
-	/**
-	 * Gets Error Iterator.
-	 * 
-	 * @return the error iterator.
-	 */
-	public Iterator iterator() {
-		return errors.iterator();
-	}
+    /**
+     * Gets Error Iterator.
+     * 
+     * @return the error iterator.
+     */
+    public Iterator iterator() {
+        return errors.iterator();
+    }
 
-	/**
-	 * @see com.itmill.toolkit.terminal.Paintable#paint(com.itmill.toolkit.terminal.PaintTarget)
-	 */
-	public void paint(PaintTarget target) throws PaintException {
+    /**
+     * @see com.itmill.toolkit.terminal.Paintable#paint(com.itmill.toolkit.terminal.PaintTarget)
+     */
+    public void paint(PaintTarget target) throws PaintException {
 
-		if (errors.size() == 1)
-			((ErrorMessage) errors.iterator().next()).paint(target);
-		else {
-			target.startTag("error");
+        if (errors.size() == 1) {
+            ((ErrorMessage) errors.iterator().next()).paint(target);
+        } else {
+            target.startTag("error");
 
-			if (level > 0 && level <= ErrorMessage.INFORMATION)
-				target.addAttribute("level", "info");
-			else if (level <= ErrorMessage.WARNING)
-				target.addAttribute("level", "warning");
-			else if (level <= ErrorMessage.ERROR)
-				target.addAttribute("level", "error");
-			else if (level <= ErrorMessage.CRITICAL)
-				target.addAttribute("level", "critical");
-			else
-				target.addAttribute("level", "system");
+            if (level > 0 && level <= ErrorMessage.INFORMATION) {
+                target.addAttribute("level", "info");
+            } else if (level <= ErrorMessage.WARNING) {
+                target.addAttribute("level", "warning");
+            } else if (level <= ErrorMessage.ERROR) {
+                target.addAttribute("level", "error");
+            } else if (level <= ErrorMessage.CRITICAL) {
+                target.addAttribute("level", "critical");
+            } else {
+                target.addAttribute("level", "system");
+            }
 
-			// Paint all the exceptions
-			for (Iterator i = errors.iterator(); i.hasNext();) {
-				((ErrorMessage) i.next()).paint(target);
-			}
+            // Paint all the exceptions
+            for (Iterator i = errors.iterator(); i.hasNext();) {
+                ((ErrorMessage) i.next()).paint(target);
+            }
 
-			target.endTag("error");
-		}
-	}
+            target.endTag("error");
+        }
+    }
 
-	/* Documented in super interface */
-	public void addListener(RepaintRequestListener listener) {
-	}
+    /* Documented in super interface */
+    public void addListener(RepaintRequestListener listener) {
+    }
 
-	/* Documented in super interface */
-	public void removeListener(RepaintRequestListener listener) {
-	}
+    /* Documented in super interface */
+    public void removeListener(RepaintRequestListener listener) {
+    }
 
-	/* Documented in super interface */
-	public void requestRepaint() {
-	}
+    /* Documented in super interface */
+    public void requestRepaint() {
+    }
 
-	/* Documented in super interface */
-	public void requestRepaintRequests() {
-	}
+    /* Documented in super interface */
+    public void requestRepaintRequests() {
+    }
 
-	/**
-	 * Returns a comma separated list of the error messages.
-	 * 
-	 * @return String, comma separated list of error messages.
-	 */
-	public String toString() {
-		String retval = "[";
-		int pos = 0;
-		for (Iterator i = errors.iterator(); i.hasNext();) {
-			if (pos > 0)
-				retval += ",";
-			pos++;
-			retval += i.next().toString();
-		}
-		retval += "]";
+    /**
+     * Returns a comma separated list of the error messages.
+     * 
+     * @return String, comma separated list of error messages.
+     */
+    public String toString() {
+        String retval = "[";
+        int pos = 0;
+        for (Iterator i = errors.iterator(); i.hasNext();) {
+            if (pos > 0) {
+                retval += ",";
+            }
+            pos++;
+            retval += i.next().toString();
+        }
+        retval += "]";
 
-		return retval;
-	}
+        return retval;
+    }
 }

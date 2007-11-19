@@ -26,398 +26,398 @@ import com.itmill.toolkit.terminal.gwt.client.Util;
  */
 public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 
-	private static final int DEFAULT_HEIGHT = 300;
+    private static final int DEFAULT_HEIGHT = 300;
 
-	private static final int DEFAULT_WIDTH = 400;
+    private static final int DEFAULT_WIDTH = 400;
 
-	private static final int MIN_HEIGHT = 60;
+    private static final int MIN_HEIGHT = 60;
 
-	private static final int MIN_WIDTH = 80;
+    private static final int MIN_WIDTH = 80;
 
-	private static Vector windowOrder = new Vector();
+    private static Vector windowOrder = new Vector();
 
-	public static final String CLASSNAME = "i-window";
+    public static final String CLASSNAME = "i-window";
 
-	/** pixels used by inner borders and paddings horizontally */
-	protected static final int BORDER_WIDTH_HORIZONTAL = 41;
+    /** pixels used by inner borders and paddings horizontally */
+    protected static final int BORDER_WIDTH_HORIZONTAL = 41;
 
-	/** pixels used by headers, footers, inner borders and paddings vertically */
-	protected static final int BORDER_WIDTH_VERTICAL = 58;
+    /** pixels used by headers, footers, inner borders and paddings vertically */
+    protected static final int BORDER_WIDTH_VERTICAL = 58;
 
-	private static final int STACKING_OFFSET_PIXELS = 15;
+    private static final int STACKING_OFFSET_PIXELS = 15;
 
-	private static final int Z_INDEX_BASE = 10000;
+    private static final int Z_INDEX_BASE = 10000;
 
-	private Paintable layout;
+    private Paintable layout;
 
-	private Element contents;
+    private Element contents;
 
-	private Element header;
+    private Element header;
 
-	private Element footer;
+    private Element footer;
 
-	private Element resizeBox;
+    private Element resizeBox;
 
-	private final ScrollPanel contentPanel = new ScrollPanel();
+    private final ScrollPanel contentPanel = new ScrollPanel();
 
-	private boolean dragging;
+    private boolean dragging;
 
-	private int startX;
+    private int startX;
 
-	private int startY;
+    private int startY;
 
-	private int origX;
+    private int origX;
 
-	private int origY;
+    private int origY;
 
-	private boolean resizing;
+    private boolean resizing;
 
-	private int origW;
+    private int origW;
 
-	private int origH;
+    private int origH;
 
-	private Element closeBox;
+    private Element closeBox;
 
-	protected ApplicationConnection client;
+    protected ApplicationConnection client;
 
-	private String id;
+    private String id;
 
-	ShortcutActionHandler shortcutHandler;
+    ShortcutActionHandler shortcutHandler;
 
-	/** Last known width read from UIDL or updated to application connection */
-	private int uidlWidth = -1;
+    /** Last known width read from UIDL or updated to application connection */
+    private int uidlWidth = -1;
 
-	/** Last known height read from UIDL or updated to application connection */
-	private int uidlHeight = -1;
+    /** Last known height read from UIDL or updated to application connection */
+    private int uidlHeight = -1;
 
-	/** Last known positionx read from UIDL or updated to application connection */
-	private int uidlPositionX = -1;
+    /** Last known positionx read from UIDL or updated to application connection */
+    private int uidlPositionX = -1;
 
-	/** Last known positiony read from UIDL or updated to application connection */
-	private int uidlPositionY = -1;
+    /** Last known positiony read from UIDL or updated to application connection */
+    private int uidlPositionY = -1;
 
-	public IWindow() {
-		super();
-		int order = windowOrder.size();
-		setWindowOrder(order);
-		windowOrder.add(this);
-		setStyleName(CLASSNAME);
-		constructDOM();
-		setPopupPosition(order * STACKING_OFFSET_PIXELS, order
-				* STACKING_OFFSET_PIXELS);
-		contentPanel.addScrollListener(this);
-	}
+    public IWindow() {
+        super();
+        int order = windowOrder.size();
+        setWindowOrder(order);
+        windowOrder.add(this);
+        setStyleName(CLASSNAME);
+        constructDOM();
+        setPopupPosition(order * STACKING_OFFSET_PIXELS, order
+                * STACKING_OFFSET_PIXELS);
+        contentPanel.addScrollListener(this);
+    }
 
-	private void bringToFront() {
-		int curIndex = windowOrder.indexOf(this);
-		if (curIndex + 1 < windowOrder.size()) {
-			windowOrder.remove(this);
-			windowOrder.add(this);
-			for (; curIndex < windowOrder.size(); curIndex++) {
-				((IWindow) windowOrder.get(curIndex)).setWindowOrder(curIndex);
-			}
-		}
-	}
+    private void bringToFront() {
+        int curIndex = windowOrder.indexOf(this);
+        if (curIndex + 1 < windowOrder.size()) {
+            windowOrder.remove(this);
+            windowOrder.add(this);
+            for (; curIndex < windowOrder.size(); curIndex++) {
+                ((IWindow) windowOrder.get(curIndex)).setWindowOrder(curIndex);
+            }
+        }
+    }
 
-	/**
-	 * Returns true if window is the topmost window
-	 * 
-	 * @return
-	 */
-	private boolean isActive() {
-		return windowOrder.lastElement().equals(this);
-	}
-
-	public void setWindowOrder(int order) {
-		DOM.setStyleAttribute(getElement(), "zIndex", ""
-				+ (order + Z_INDEX_BASE));
-	}
-
-	protected void constructDOM() {
-		Element outerHeader = DOM.createDiv();
-		DOM.setElementProperty(outerHeader, "className", CLASSNAME
-				+ "-outerheader");
-		header = DOM.createDiv();
-		DOM.setElementProperty(header, "className", CLASSNAME + "-header");
-		contents = DOM.createDiv();
-		DOM.setElementProperty(contents, "className", CLASSNAME + "-contents");
-		footer = DOM.createDiv();
-		DOM.setElementProperty(footer, "className", CLASSNAME + "-footer");
-		resizeBox = DOM.createDiv();
-		DOM
-				.setElementProperty(resizeBox, "className", CLASSNAME
-						+ "-resizebox");
-		closeBox = DOM.createDiv();
-		DOM.setElementProperty(closeBox, "className", CLASSNAME + "-closebox");
-		DOM.appendChild(footer, resizeBox);
-
-		DOM.sinkEvents(header, Event.MOUSEEVENTS);
-		DOM.sinkEvents(resizeBox, Event.MOUSEEVENTS);
-		DOM.sinkEvents(closeBox, Event.ONCLICK);
-		DOM.sinkEvents(contents, Event.ONCLICK);
-
-		Element wrapper = DOM.createDiv();
-		DOM.setElementProperty(wrapper, "className", CLASSNAME + "-wrap");
-		Element wrapper2 = DOM.createDiv();
-		DOM.setElementProperty(wrapper2, "className", CLASSNAME + "-wrap2");
-
-		DOM.sinkEvents(wrapper, Event.ONKEYDOWN);
-
-		DOM.appendChild(wrapper2, closeBox);
-		DOM.appendChild(wrapper2, outerHeader);
-		DOM.appendChild(outerHeader, header);
-		DOM.appendChild(wrapper2, contents);
-		DOM.appendChild(wrapper2, footer);
-		DOM.appendChild(wrapper, wrapper2);
-		DOM.appendChild(getElement(), wrapper);
-		setWidget(contentPanel);
-
-		// set default size
-		setWidth(DEFAULT_WIDTH + "px");
-		setHeight(DEFAULT_HEIGHT + "px");
-	}
-
-	public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-		this.id = uidl.getId();
-		this.client = client;
-
-		if (uidl.hasAttribute("invisible")) {
-			this.hide();
-			return;
-		}
-
-		if (client.updateComponent(this, uidl, false)) {
-			return;
-		}
-
-		// Initialize the width from UIDL
-		if (uidl.hasVariable("width")) {
-			String width = uidl.getStringVariable("width");
-			setWidth(width);
-		}
-		if (uidl.hasVariable("height")) {
-			String height = uidl.getStringVariable("height");
-			setHeight(height);
-		}
-
-		contentPanel.setScrollPosition(uidl.getIntVariable("scrolltop"));
-		contentPanel.setHorizontalScrollPosition(uidl
-				.getIntVariable("scrollleft"));
-
-		// Initialize the position form UIDL
-		try {
-			int positionx = uidl.getIntVariable("positionx");
-			int positiony = uidl.getIntVariable("positiony");
-			if (positionx >= 0 && positiony >= 0) {
-				setPopupPosition(positionx, positiony);
-			}
-		} catch (IllegalArgumentException e) {
-			// Silently ignored as positionx and positiony are not required
-			// parameters
-		}
-
-		if (!isAttached()) {
-			show();
-		}
-
-		if (uidl.hasAttribute("caption")) {
-			setCaption(uidl.getStringAttribute("caption"));
-		}
-
-		UIDL childUidl = uidl.getChildUIDL(0);
-		if ("open".equals(childUidl.getTag())) {
-			// TODO render different resources (theme:// etc?)
-			// TODO this should be a while-loop for multiple opens
-			if (!childUidl.hasAttribute("name")) {
-				Frame frame = new Frame();
-				DOM.setStyleAttribute(frame.getElement(), "width", "100%");
-				DOM.setStyleAttribute(frame.getElement(), "height", "100%");
-				DOM.setStyleAttribute(frame.getElement(), "border", "0px");
-				frame.setUrl(childUidl.getStringAttribute("src"));
-				contentPanel.setWidget(frame);
-			} else {
-				String target = childUidl.getStringAttribute("name");
-				Window.open(childUidl.getStringAttribute("src"), target, "");
-			}
-		} else {
-			Paintable lo = (Paintable) client.getWidget(childUidl);
-			if (layout != null) {
-				if (layout != lo) {
-					// remove old
-					client.unregisterPaintable(layout);
-					contentPanel.remove((Widget) layout);
-					// add new
-					contentPanel.setWidget((Widget) lo);
-					layout = lo;
-				}
-			} else {
-				contentPanel.setWidget((Widget) lo);
-			}
-			lo.updateFromUIDL(childUidl, client);
-		}
-
-		// we may have actions
-		if (uidl.getChidlCount() > 1) {
-			childUidl = uidl.getChildUIDL(1);
-			if (childUidl.getTag().equals("actions")) {
-				if (shortcutHandler == null) {
-					shortcutHandler = new ShortcutActionHandler(id, client);
-				}
-				shortcutHandler.updateActionMap(childUidl);
-			}
-
-		}
-
-	}
-
-	public void setPopupPosition(int left, int top) {
-		super.setPopupPosition(left, top);
-		if (left != uidlPositionX && client != null) {
-			client.updateVariable(id, "positionx", left, false);
-			uidlPositionX = left;
-		}
-		if (top != uidlPositionY && client != null) {
-			client.updateVariable(id, "positiony", top, false);
-			uidlPositionY = top;
-		}
-	}
-
-	public void setCaption(String c) {
-		DOM.setInnerText(header, c);
-	}
-
-	protected Element getContainerElement() {
-		return contents;
-	}
-
-	public void onBrowserEvent(Event event) {
-		int type = DOM.eventGetType(event);
-		if (type == Event.ONKEYDOWN && shortcutHandler != null) {
-			int modifiers = KeyboardListenerCollection
-					.getKeyboardModifiers(event);
-			shortcutHandler.handleKeyboardEvent((char) DOM
-					.eventGetKeyCode(event), modifiers);
-			return;
-		}
-
-		if (!isActive()) {
-			bringToFront();
-		}
-		Element target = DOM.eventGetTarget(event);
-		if (dragging || DOM.compare(header, target)) {
-			onHeaderEvent(event);
-			DOM.eventCancelBubble(event, true);
-		} else if (resizing || DOM.compare(resizeBox, target)) {
-			onResizeEvent(event);
-			DOM.eventCancelBubble(event, true);
-		} else if (DOM.compare(target, closeBox) && type == Event.ONCLICK) {
-			onCloseClick();
-			DOM.eventCancelBubble(event, true);
-		}
-	}
-
-	private void onCloseClick() {
-		client.updateVariable(id, "close", true, true);
-	}
-
-	private void onResizeEvent(Event event) {
-		switch (DOM.eventGetType(event)) {
-		case Event.ONMOUSEDOWN:
-			resizing = true;
-			startX = DOM.eventGetScreenX(event);
-			startY = DOM.eventGetScreenY(event);
-			origW = DOM.getIntStyleAttribute(getElement(), "width")
-					- BORDER_WIDTH_HORIZONTAL;
-			origH = getWidget().getOffsetHeight();
-			DOM.eventPreventDefault(event);
-			DOM.addEventPreview(this);
-			break;
-		case Event.ONMOUSEUP:
-			resizing = false;
-			DOM.removeEventPreview(this);
-			setSize(event, true);
-			break;
-		case Event.ONMOUSEMOVE:
-			if (resizing) {
-				setSize(event, false);
-				DOM.eventPreventDefault(event);
-			}
-			break;
-		default:
-			DOM.eventPreventDefault(event);
-			break;
-		}
-	}
-
-	public void setSize(Event event, boolean updateVariables) {
-		int w = DOM.eventGetScreenX(event) - startX + origW;
-		if (w < MIN_WIDTH) {
-			w = MIN_WIDTH;
-		}
-		int h = DOM.eventGetScreenY(event) - startY + origH;
-		if (h < MIN_HEIGHT) {
-			h = MIN_HEIGHT;
-		}
-		setWidth(w + "px");
-		setHeight(h + "px");
-		if (updateVariables) {
-			// sending width back always as pixels, no need for unit
-			client.updateVariable(id, "width", w, false);
-			client.updateVariable(id, "height", h, false);
-		}
-		// Update child widget dimensions
-		Util.runDescendentsLayout(this);
-	}
-
-	public void setWidth(String width) {
-		DOM.setStyleAttribute(getElement(), "width", (Integer.parseInt(width
-				.substring(0, width.length() - 2)) + BORDER_WIDTH_HORIZONTAL)
-				+ "px");
-	}
-
-	private void onHeaderEvent(Event event) {
-		switch (DOM.eventGetType(event)) {
-		case Event.ONMOUSEDOWN:
-			dragging = true;
-			startX = DOM.eventGetScreenX(event);
-			startY = DOM.eventGetScreenY(event);
-			origX = DOM.getAbsoluteLeft(getElement());
-			origY = DOM.getAbsoluteTop(getElement());
-			DOM.eventPreventDefault(event);
-			DOM.addEventPreview(this);
-			break;
-		case Event.ONMOUSEUP:
-			dragging = false;
-			DOM.removeEventPreview(this);
-			break;
-		case Event.ONMOUSEMOVE:
-			if (dragging) {
-				int x = DOM.eventGetScreenX(event) - startX + origX;
-				int y = DOM.eventGetScreenY(event) - startY + origY;
-				this.setPopupPosition(x, y);
-				DOM.eventPreventDefault(event);
-			}
-			break;
-		default:
-			break;
-		}
-	}
-
-	public boolean onEventPreview(Event event) {
-		if (dragging) {
-			onHeaderEvent(event);
-			return false;
-		} else if (resizing) {
-			onResizeEvent(event);
-			return false;
-		}
-		// TODO return false when modal
-		return true;
-	}
-
-	public void onScroll(Widget widget, int scrollLeft, int scrollTop) {
-		client.updateVariable(id, "scrolltop", scrollTop, false);
-		client.updateVariable(id, "scrollleft", scrollLeft, false);
-	}
+    /**
+     * Returns true if window is the topmost window
+     * 
+     * @return
+     */
+    private boolean isActive() {
+        return windowOrder.lastElement().equals(this);
+    }
+
+    public void setWindowOrder(int order) {
+        DOM.setStyleAttribute(getElement(), "zIndex", ""
+                + (order + Z_INDEX_BASE));
+    }
+
+    protected void constructDOM() {
+        Element outerHeader = DOM.createDiv();
+        DOM.setElementProperty(outerHeader, "className", CLASSNAME
+                + "-outerheader");
+        header = DOM.createDiv();
+        DOM.setElementProperty(header, "className", CLASSNAME + "-header");
+        contents = DOM.createDiv();
+        DOM.setElementProperty(contents, "className", CLASSNAME + "-contents");
+        footer = DOM.createDiv();
+        DOM.setElementProperty(footer, "className", CLASSNAME + "-footer");
+        resizeBox = DOM.createDiv();
+        DOM
+                .setElementProperty(resizeBox, "className", CLASSNAME
+                        + "-resizebox");
+        closeBox = DOM.createDiv();
+        DOM.setElementProperty(closeBox, "className", CLASSNAME + "-closebox");
+        DOM.appendChild(footer, resizeBox);
+
+        DOM.sinkEvents(header, Event.MOUSEEVENTS);
+        DOM.sinkEvents(resizeBox, Event.MOUSEEVENTS);
+        DOM.sinkEvents(closeBox, Event.ONCLICK);
+        DOM.sinkEvents(contents, Event.ONCLICK);
+
+        Element wrapper = DOM.createDiv();
+        DOM.setElementProperty(wrapper, "className", CLASSNAME + "-wrap");
+        Element wrapper2 = DOM.createDiv();
+        DOM.setElementProperty(wrapper2, "className", CLASSNAME + "-wrap2");
+
+        DOM.sinkEvents(wrapper, Event.ONKEYDOWN);
+
+        DOM.appendChild(wrapper2, closeBox);
+        DOM.appendChild(wrapper2, outerHeader);
+        DOM.appendChild(outerHeader, header);
+        DOM.appendChild(wrapper2, contents);
+        DOM.appendChild(wrapper2, footer);
+        DOM.appendChild(wrapper, wrapper2);
+        DOM.appendChild(getElement(), wrapper);
+        setWidget(contentPanel);
+
+        // set default size
+        setWidth(DEFAULT_WIDTH + "px");
+        setHeight(DEFAULT_HEIGHT + "px");
+    }
+
+    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+        id = uidl.getId();
+        this.client = client;
+
+        if (uidl.hasAttribute("invisible")) {
+            this.hide();
+            return;
+        }
+
+        if (client.updateComponent(this, uidl, false)) {
+            return;
+        }
+
+        // Initialize the width from UIDL
+        if (uidl.hasVariable("width")) {
+            String width = uidl.getStringVariable("width");
+            setWidth(width);
+        }
+        if (uidl.hasVariable("height")) {
+            String height = uidl.getStringVariable("height");
+            setHeight(height);
+        }
+
+        contentPanel.setScrollPosition(uidl.getIntVariable("scrolltop"));
+        contentPanel.setHorizontalScrollPosition(uidl
+                .getIntVariable("scrollleft"));
+
+        // Initialize the position form UIDL
+        try {
+            int positionx = uidl.getIntVariable("positionx");
+            int positiony = uidl.getIntVariable("positiony");
+            if (positionx >= 0 && positiony >= 0) {
+                setPopupPosition(positionx, positiony);
+            }
+        } catch (IllegalArgumentException e) {
+            // Silently ignored as positionx and positiony are not required
+            // parameters
+        }
+
+        if (!isAttached()) {
+            show();
+        }
+
+        if (uidl.hasAttribute("caption")) {
+            setCaption(uidl.getStringAttribute("caption"));
+        }
+
+        UIDL childUidl = uidl.getChildUIDL(0);
+        if ("open".equals(childUidl.getTag())) {
+            // TODO render different resources (theme:// etc?)
+            // TODO this should be a while-loop for multiple opens
+            if (!childUidl.hasAttribute("name")) {
+                Frame frame = new Frame();
+                DOM.setStyleAttribute(frame.getElement(), "width", "100%");
+                DOM.setStyleAttribute(frame.getElement(), "height", "100%");
+                DOM.setStyleAttribute(frame.getElement(), "border", "0px");
+                frame.setUrl(childUidl.getStringAttribute("src"));
+                contentPanel.setWidget(frame);
+            } else {
+                String target = childUidl.getStringAttribute("name");
+                Window.open(childUidl.getStringAttribute("src"), target, "");
+            }
+        } else {
+            Paintable lo = (Paintable) client.getWidget(childUidl);
+            if (layout != null) {
+                if (layout != lo) {
+                    // remove old
+                    client.unregisterPaintable(layout);
+                    contentPanel.remove((Widget) layout);
+                    // add new
+                    contentPanel.setWidget((Widget) lo);
+                    layout = lo;
+                }
+            } else {
+                contentPanel.setWidget((Widget) lo);
+            }
+            lo.updateFromUIDL(childUidl, client);
+        }
+
+        // we may have actions
+        if (uidl.getChidlCount() > 1) {
+            childUidl = uidl.getChildUIDL(1);
+            if (childUidl.getTag().equals("actions")) {
+                if (shortcutHandler == null) {
+                    shortcutHandler = new ShortcutActionHandler(id, client);
+                }
+                shortcutHandler.updateActionMap(childUidl);
+            }
+
+        }
+
+    }
+
+    public void setPopupPosition(int left, int top) {
+        super.setPopupPosition(left, top);
+        if (left != uidlPositionX && client != null) {
+            client.updateVariable(id, "positionx", left, false);
+            uidlPositionX = left;
+        }
+        if (top != uidlPositionY && client != null) {
+            client.updateVariable(id, "positiony", top, false);
+            uidlPositionY = top;
+        }
+    }
+
+    public void setCaption(String c) {
+        DOM.setInnerText(header, c);
+    }
+
+    protected Element getContainerElement() {
+        return contents;
+    }
+
+    public void onBrowserEvent(Event event) {
+        int type = DOM.eventGetType(event);
+        if (type == Event.ONKEYDOWN && shortcutHandler != null) {
+            int modifiers = KeyboardListenerCollection
+                    .getKeyboardModifiers(event);
+            shortcutHandler.handleKeyboardEvent((char) DOM
+                    .eventGetKeyCode(event), modifiers);
+            return;
+        }
+
+        if (!isActive()) {
+            bringToFront();
+        }
+        Element target = DOM.eventGetTarget(event);
+        if (dragging || DOM.compare(header, target)) {
+            onHeaderEvent(event);
+            DOM.eventCancelBubble(event, true);
+        } else if (resizing || DOM.compare(resizeBox, target)) {
+            onResizeEvent(event);
+            DOM.eventCancelBubble(event, true);
+        } else if (DOM.compare(target, closeBox) && type == Event.ONCLICK) {
+            onCloseClick();
+            DOM.eventCancelBubble(event, true);
+        }
+    }
+
+    private void onCloseClick() {
+        client.updateVariable(id, "close", true, true);
+    }
+
+    private void onResizeEvent(Event event) {
+        switch (DOM.eventGetType(event)) {
+        case Event.ONMOUSEDOWN:
+            resizing = true;
+            startX = DOM.eventGetScreenX(event);
+            startY = DOM.eventGetScreenY(event);
+            origW = DOM.getIntStyleAttribute(getElement(), "width")
+                    - BORDER_WIDTH_HORIZONTAL;
+            origH = getWidget().getOffsetHeight();
+            DOM.eventPreventDefault(event);
+            DOM.addEventPreview(this);
+            break;
+        case Event.ONMOUSEUP:
+            resizing = false;
+            DOM.removeEventPreview(this);
+            setSize(event, true);
+            break;
+        case Event.ONMOUSEMOVE:
+            if (resizing) {
+                setSize(event, false);
+                DOM.eventPreventDefault(event);
+            }
+            break;
+        default:
+            DOM.eventPreventDefault(event);
+            break;
+        }
+    }
+
+    public void setSize(Event event, boolean updateVariables) {
+        int w = DOM.eventGetScreenX(event) - startX + origW;
+        if (w < MIN_WIDTH) {
+            w = MIN_WIDTH;
+        }
+        int h = DOM.eventGetScreenY(event) - startY + origH;
+        if (h < MIN_HEIGHT) {
+            h = MIN_HEIGHT;
+        }
+        setWidth(w + "px");
+        setHeight(h + "px");
+        if (updateVariables) {
+            // sending width back always as pixels, no need for unit
+            client.updateVariable(id, "width", w, false);
+            client.updateVariable(id, "height", h, false);
+        }
+        // Update child widget dimensions
+        Util.runDescendentsLayout(this);
+    }
+
+    public void setWidth(String width) {
+        DOM.setStyleAttribute(getElement(), "width", (Integer.parseInt(width
+                .substring(0, width.length() - 2)) + BORDER_WIDTH_HORIZONTAL)
+                + "px");
+    }
+
+    private void onHeaderEvent(Event event) {
+        switch (DOM.eventGetType(event)) {
+        case Event.ONMOUSEDOWN:
+            dragging = true;
+            startX = DOM.eventGetScreenX(event);
+            startY = DOM.eventGetScreenY(event);
+            origX = DOM.getAbsoluteLeft(getElement());
+            origY = DOM.getAbsoluteTop(getElement());
+            DOM.eventPreventDefault(event);
+            DOM.addEventPreview(this);
+            break;
+        case Event.ONMOUSEUP:
+            dragging = false;
+            DOM.removeEventPreview(this);
+            break;
+        case Event.ONMOUSEMOVE:
+            if (dragging) {
+                int x = DOM.eventGetScreenX(event) - startX + origX;
+                int y = DOM.eventGetScreenY(event) - startY + origY;
+                setPopupPosition(x, y);
+                DOM.eventPreventDefault(event);
+            }
+            break;
+        default:
+            break;
+        }
+    }
+
+    public boolean onEventPreview(Event event) {
+        if (dragging) {
+            onHeaderEvent(event);
+            return false;
+        } else if (resizing) {
+            onResizeEvent(event);
+            return false;
+        }
+        // TODO return false when modal
+        return true;
+    }
+
+    public void onScroll(Widget widget, int scrollLeft, int scrollTop) {
+        client.updateVariable(id, "scrolltop", scrollTop, false);
+        client.updateVariable(id, "scrollleft", scrollLeft, false);
+    }
 
 }

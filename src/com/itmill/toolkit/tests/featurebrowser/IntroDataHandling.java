@@ -37,61 +37,61 @@ import com.itmill.toolkit.ui.Select;
 
 public class IntroDataHandling extends Feature {
 
-	private static final String INTRO_TEXT = ""
-			+ "Embedded Objects and Upload components are provided as samples"
-			+ " for data handling section."
-			+ "<br /><br />See the API documentation of respective components for more information.";
+    private static final String INTRO_TEXT = ""
+            + "Embedded Objects and Upload components are provided as samples"
+            + " for data handling section."
+            + "<br /><br />See the API documentation of respective components for more information.";
 
-	public IntroDataHandling() {
-		super();
-	}
+    public IntroDataHandling() {
+        super();
+    }
 
-	protected Component getDemoComponent() {
+    protected Component getDemoComponent() {
 
-		OrderedLayout l = new OrderedLayout();
+        OrderedLayout l = new OrderedLayout();
 
-		Panel panel = new Panel();
-		panel.setCaption("Data Handling");
-		l.addComponent(panel);
+        Panel panel = new Panel();
+        panel.setCaption("Data Handling");
+        l.addComponent(panel);
 
-		Label label = new Label();
-		panel.addComponent(label);
+        Label label = new Label();
+        panel.addComponent(label);
 
-		label.setContentMode(Label.CONTENT_XHTML);
-		label.setValue(INTRO_TEXT);
+        label.setContentMode(Label.CONTENT_XHTML);
+        label.setValue(INTRO_TEXT);
 
-		// Properties
-		propertyPanel = new PropertyPanel(panel);
-		Form ap = propertyPanel.createBeanPropertySet(new String[] { "width",
-				"height" });
-		Select themes = (Select) propertyPanel.getField("style");
-		themes.addItem("light").getItemProperty(
-				themes.getItemCaptionPropertyId()).setValue("light");
-		themes.addItem("strong").getItemProperty(
-				themes.getItemCaptionPropertyId()).setValue("strong");
-		propertyPanel.addProperties("Panel Properties", ap);
+        // Properties
+        propertyPanel = new PropertyPanel(panel);
+        Form ap = propertyPanel.createBeanPropertySet(new String[] { "width",
+                "height" });
+        Select themes = (Select) propertyPanel.getField("style");
+        themes.addItem("light").getItemProperty(
+                themes.getItemCaptionPropertyId()).setValue("light");
+        themes.addItem("strong").getItemProperty(
+                themes.getItemCaptionPropertyId()).setValue("strong");
+        propertyPanel.addProperties("Panel Properties", ap);
 
-		return l;
-	}
+        return l;
+    }
 
-	protected String getExampleSrc() {
-		return null;
-	}
+    protected String getExampleSrc() {
+        return null;
+    }
 
-	/**
-	 * @see com.itmill.toolkit.tests.featurebrowser.Feature#getDescriptionXHTML()
-	 */
-	protected String getDescriptionXHTML() {
-		return "Please select <em>Embedded Objects</em> or <em>Upload</em>"
-				+ " from the menu for more information.";
-	}
+    /**
+     * @see com.itmill.toolkit.tests.featurebrowser.Feature#getDescriptionXHTML()
+     */
+    protected String getDescriptionXHTML() {
+        return "Please select <em>Embedded Objects</em> or <em>Upload</em>"
+                + " from the menu for more information.";
+    }
 
-	protected String getImage() {
-		return null;
-	}
+    protected String getImage() {
+        return null;
+    }
 
-	protected String getTitle() {
-		return null;
-	}
+    protected String getTitle() {
+        return null;
+    }
 
 }

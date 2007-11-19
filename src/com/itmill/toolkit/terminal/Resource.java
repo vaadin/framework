@@ -39,10 +39,10 @@ package com.itmill.toolkit.terminal;
  */
 public interface Resource {
 
-	/**
-	 * Gets the MIME type of the resource.
-	 * 
-	 * @return the MIME type of the resource.
-	 */
-	public String getMIMEType();
+    /**
+     * Gets the MIME type of the resource.
+     * 
+     * @return the MIME type of the resource.
+     */
+    public String getMIMEType();
 }

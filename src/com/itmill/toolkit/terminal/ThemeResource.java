@@ -43,70 +43,73 @@ import com.itmill.toolkit.service.FileTypeResolver;
  */
 public class ThemeResource implements Resource {
 
-	/**
-	 * Id of the terminal managed resource.
-	 */
-	private String resourceID = null;
+    /**
+     * Id of the terminal managed resource.
+     */
+    private String resourceID = null;
 
-	/**
-	 * Creates a resource.
-	 * 
-	 * @param resourceId
-	 *            the Id of the resource.
-	 */
-	public ThemeResource(String resourceId) {
-		if (resourceId == null)
-			throw new NullPointerException("Resource ID must not be null");
-		if (resourceId.length() == 0)
-			throw new IllegalArgumentException("Resource ID can not be empty");
-		if (resourceId.charAt(0) == '/')
-			throw new IllegalArgumentException(
-					"Resource ID must be relative (can not begin with /)");
+    /**
+     * Creates a resource.
+     * 
+     * @param resourceId
+     *                the Id of the resource.
+     */
+    public ThemeResource(String resourceId) {
+        if (resourceId == null) {
+            throw new NullPointerException("Resource ID must not be null");
+        }
+        if (resourceId.length() == 0) {
+            throw new IllegalArgumentException("Resource ID can not be empty");
+        }
+        if (resourceId.charAt(0) == '/') {
+            throw new IllegalArgumentException(
+                    "Resource ID must be relative (can not begin with /)");
+        }
 
-		this.resourceID = resourceId;
-	}
+        resourceID = resourceId;
+    }
 
-	/**
-	 * Tests if the given object equals this Resource.
-	 * 
-	 * @param obj
-	 *            the object to be tested for equality.
-	 * @return <code>true</code> if the given object equals this Icon,
-	 *         <code>false</code> if not.
-	 * @see java.lang.Object#equals(Object)
-	 */
-	public boolean equals(Object obj) {
-		return obj instanceof ThemeResource
-				&& resourceID.equals(((ThemeResource) obj).resourceID);
-	}
+    /**
+     * Tests if the given object equals this Resource.
+     * 
+     * @param obj
+     *                the object to be tested for equality.
+     * @return <code>true</code> if the given object equals this Icon,
+     *         <code>false</code> if not.
+     * @see java.lang.Object#equals(Object)
+     */
+    public boolean equals(Object obj) {
+        return obj instanceof ThemeResource
+                && resourceID.equals(((ThemeResource) obj).resourceID);
+    }
 
-	/**
-	 * @see java.lang.Object#hashCode()
-	 */
-	public int hashCode() {
-		return resourceID.hashCode();
-	}
+    /**
+     * @see java.lang.Object#hashCode()
+     */
+    public int hashCode() {
+        return resourceID.hashCode();
+    }
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
-	public String toString() {
-		return resourceID.toString();
-	}
+    /**
+     * @see java.lang.Object#toString()
+     */
+    public String toString() {
+        return resourceID.toString();
+    }
 
-	/**
-	 * Gets the resource id.
-	 * 
-	 * @return the resource id.
-	 */
-	public String getResourceId() {
-		return resourceID;
-	}
+    /**
+     * Gets the resource id.
+     * 
+     * @return the resource id.
+     */
+    public String getResourceId() {
+        return resourceID;
+    }
 
-	/**
-	 * @see com.itmill.toolkit.terminal.Resource#getMIMEType()
-	 */
-	public String getMIMEType() {
-		return FileTypeResolver.getMIMEType(getResourceId());
-	}
+    /**
+     * @see com.itmill.toolkit.terminal.Resource#getMIMEType()
+     */
+    public String getMIMEType() {
+        return FileTypeResolver.getMIMEType(getResourceId());
+    }
 }

@@ -67,253 +67,260 @@ import com.itmill.toolkit.terminal.SystemError;
  */
 public interface Buffered {
 
-	/**
-	 * Updates all changes since the previous commit to the data source. The
-	 * value stored in the object will always be updated into the data source
-	 * when <code>commit</code> is called.
-	 * 
-	 * @throws SourceException
-	 *             if the operation fails because of an exception is thrown by
-	 *             the data source. The cause is included in the exception.
-	 */
-	public void commit() throws SourceException;
+    /**
+     * Updates all changes since the previous commit to the data source. The
+     * value stored in the object will always be updated into the data source
+     * when <code>commit</code> is called.
+     * 
+     * @throws SourceException
+     *                 if the operation fails because of an exception is thrown
+     *                 by the data source. The cause is included in the
+     *                 exception.
+     */
+    public void commit() throws SourceException;
 
-	/**
-	 * Discards all changes since last commit. The object updates its value from
-	 * the data source.
-	 * 
-	 * @throws SourceException
-	 *             if the operation fails because of an exception is thrown by
-	 *             the data source. The cause is included in the exception.
-	 */
-	public void discard() throws SourceException;
+    /**
+     * Discards all changes since last commit. The object updates its value from
+     * the data source.
+     * 
+     * @throws SourceException
+     *                 if the operation fails because of an exception is thrown
+     *                 by the data source. The cause is included in the
+     *                 exception.
+     */
+    public void discard() throws SourceException;
 
-	/**
-	 * Tests if the object is in write-through mode. If the object is in
-	 * write-through mode, all modifications to it will result in
-	 * <code>commit</code> being called after the modification.
-	 * 
-	 * @return <code>true</code> if the object is in write-through mode,
-	 *         <code>false</code> if it's not.
-	 */
-	public boolean isWriteThrough();
+    /**
+     * Tests if the object is in write-through mode. If the object is in
+     * write-through mode, all modifications to it will result in
+     * <code>commit</code> being called after the modification.
+     * 
+     * @return <code>true</code> if the object is in write-through mode,
+     *         <code>false</code> if it's not.
+     */
+    public boolean isWriteThrough();
 
-	/**
-	 * Sets the object's write-through mode to the specified status. When
-	 * switching the write-through mode on, the <code>commit</code> operation
-	 * will be performed.
-	 * 
-	 * @param writeThrough
-	 *            Boolean value to indicate if the object should be in
-	 *            write-through mode after the call.
-	 * @throws SourceException
-	 *             If the operation fails because of an exception is thrown by
-	 *             the data source.
-	 * 
-	 */
-	public void setWriteThrough(boolean writeThrough) throws SourceException;
+    /**
+     * Sets the object's write-through mode to the specified status. When
+     * switching the write-through mode on, the <code>commit</code> operation
+     * will be performed.
+     * 
+     * @param writeThrough
+     *                Boolean value to indicate if the object should be in
+     *                write-through mode after the call.
+     * @throws SourceException
+     *                 If the operation fails because of an exception is thrown
+     *                 by the data source.
+     * 
+     */
+    public void setWriteThrough(boolean writeThrough) throws SourceException;
 
-	/**
-	 * Tests if the object is in read-through mode. If the object is in
-	 * read-through mode, retrieving its value will result in the value being
-	 * first updated from the data source to the object.
-	 * <p>
-	 * The only exception to this rule is that when the object is not in
-	 * write-through mode and it's buffer contains a modified value, the value
-	 * retrieved from the object will be the locally modified value in the
-	 * buffer which may differ from the value in the data source.
-	 * </p>
-	 * 
-	 * @return <code>true</code> if the object is in read-through mode,
-	 *         <code>false</code> if it's not.
-	 */
-	public boolean isReadThrough();
+    /**
+     * Tests if the object is in read-through mode. If the object is in
+     * read-through mode, retrieving its value will result in the value being
+     * first updated from the data source to the object.
+     * <p>
+     * The only exception to this rule is that when the object is not in
+     * write-through mode and it's buffer contains a modified value, the value
+     * retrieved from the object will be the locally modified value in the
+     * buffer which may differ from the value in the data source.
+     * </p>
+     * 
+     * @return <code>true</code> if the object is in read-through mode,
+     *         <code>false</code> if it's not.
+     */
+    public boolean isReadThrough();
 
-	/**
-	 * Sets the object's read-through mode to the specified status. When
-	 * switching read-through mode on, the object's value is updated from the
-	 * data source.
-	 * 
-	 * @param readThrough
-	 *            Boolean value to indicate if the object should be in
-	 *            read-through mode after the call.
-	 * 
-	 * @throws SourceException
-	 *             If the operation fails because of an exception is thrown by
-	 *             the data source. The cause is included in the exception.
-	 */
-	public void setReadThrough(boolean readThrough) throws SourceException;
+    /**
+     * Sets the object's read-through mode to the specified status. When
+     * switching read-through mode on, the object's value is updated from the
+     * data source.
+     * 
+     * @param readThrough
+     *                Boolean value to indicate if the object should be in
+     *                read-through mode after the call.
+     * 
+     * @throws SourceException
+     *                 If the operation fails because of an exception is thrown
+     *                 by the data source. The cause is included in the
+     *                 exception.
+     */
+    public void setReadThrough(boolean readThrough) throws SourceException;
 
-	/**
-	 * Tests if the value stored in the object has been modified since it was
-	 * last updated from the data source.
-	 * 
-	 * @return <code>true</code> if the value in the object has been modified
-	 *         since the last data source update, <code>false</code> if not.
-	 */
-	public boolean isModified();
+    /**
+     * Tests if the value stored in the object has been modified since it was
+     * last updated from the data source.
+     * 
+     * @return <code>true</code> if the value in the object has been modified
+     *         since the last data source update, <code>false</code> if not.
+     */
+    public boolean isModified();
 
-	/**
-	 * An exception that signals that one or more exceptions occurred while a
-	 * buffered object tried to access its data source or if there is a problem
-	 * in processing a data source.
-	 * 
-	 * @author IT Mill Ltd.
-	 * @version
-	 * @VERSION@
-	 * @since 3.0
-	 */
-	public class SourceException extends RuntimeException implements
-			ErrorMessage {
+    /**
+     * An exception that signals that one or more exceptions occurred while a
+     * buffered object tried to access its data source or if there is a problem
+     * in processing a data source.
+     * 
+     * @author IT Mill Ltd.
+     * @version
+     * @VERSION@
+     * @since 3.0
+     */
+    public class SourceException extends RuntimeException implements
+            ErrorMessage {
 
-		/**
-		 * Serial generated by eclipse.
-		 */
-		private static final long serialVersionUID = 3256720671781630518L;
+        /**
+         * Serial generated by eclipse.
+         */
+        private static final long serialVersionUID = 3256720671781630518L;
 
-		/** Source class implementing the buffered interface */
-		private Buffered source;
+        /** Source class implementing the buffered interface */
+        private Buffered source;
 
-		/** Original cause of the source exception */
-		private Throwable[] causes = {};
+        /** Original cause of the source exception */
+        private Throwable[] causes = {};
 
-		/**
-		 * Creates a source exception that does not include a cause.
-		 * 
-		 * @param source
-		 *            the source object implementing the Buffered interface.
-		 */
-		public SourceException(Buffered source) {
-			this.source = source;
-		}
+        /**
+         * Creates a source exception that does not include a cause.
+         * 
+         * @param source
+         *                the source object implementing the Buffered interface.
+         */
+        public SourceException(Buffered source) {
+            this.source = source;
+        }
 
-		/**
-		 * Creates a source exception from a cause exception.
-		 * 
-		 * @param source
-		 *            the source object implementing the Buffered interface.
-		 * @param cause
-		 *            the original cause for this exception.
-		 */
-		public SourceException(Buffered source, Throwable cause) {
-			this.source = source;
-			causes = new Throwable[] { cause };
-		}
+        /**
+         * Creates a source exception from a cause exception.
+         * 
+         * @param source
+         *                the source object implementing the Buffered interface.
+         * @param cause
+         *                the original cause for this exception.
+         */
+        public SourceException(Buffered source, Throwable cause) {
+            this.source = source;
+            causes = new Throwable[] { cause };
+        }
 
-		/**
-		 * Creates a source exception from multiple causes.
-		 * 
-		 * @param source
-		 *            the source object implementing the Buffered interface.
-		 * @param causes
-		 *            the original causes for this exception.
-		 */
-		public SourceException(Buffered source, Throwable[] causes) {
-			this.source = source;
-			this.causes = causes;
-		}
+        /**
+         * Creates a source exception from multiple causes.
+         * 
+         * @param source
+         *                the source object implementing the Buffered interface.
+         * @param causes
+         *                the original causes for this exception.
+         */
+        public SourceException(Buffered source, Throwable[] causes) {
+            this.source = source;
+            this.causes = causes;
+        }
 
-		/**
-		 * Gets the cause of the exception.
-		 * 
-		 * @return The cause for the exception.
-		 * @throws MoreThanOneCauseException
-		 *             if there is more than one cause for the exception. This
-		 *             is possible if the commit operation triggers more than
-		 *             one error at the same time.
-		 */
-		public final Throwable getCause() {
-			if (causes.length == 0)
-				return null;
-			return causes[0];
-		}
+        /**
+         * Gets the cause of the exception.
+         * 
+         * @return The cause for the exception.
+         * @throws MoreThanOneCauseException
+         *                 if there is more than one cause for the exception.
+         *                 This is possible if the commit operation triggers
+         *                 more than one error at the same time.
+         */
+        public final Throwable getCause() {
+            if (causes.length == 0) {
+                return null;
+            }
+            return causes[0];
+        }
 
-		/**
-		 * Gets all the causes for this exception.
-		 * 
-		 * @return throwables that caused this exception
-		 */
-		public final Throwable[] getCauses() {
-			return causes;
-		}
+        /**
+         * Gets all the causes for this exception.
+         * 
+         * @return throwables that caused this exception
+         */
+        public final Throwable[] getCauses() {
+            return causes;
+        }
 
-		/**
-		 * Gets a source of the exception.
-		 * 
-		 * @return the Buffered object which generated this exception.
-		 */
-		public Buffered getSource() {
-			return source;
-		}
+        /**
+         * Gets a source of the exception.
+         * 
+         * @return the Buffered object which generated this exception.
+         */
+        public Buffered getSource() {
+            return source;
+        }
 
-		/**
-		 * Gets the error level of this buffered source exception. The level of
-		 * the exception is maximum error level of all the contained causes.
-		 * <p>
-		 * The causes that do not specify error level default to
-		 * <code>ERROR</code> level. Also source exception without any causes
-		 * are of level <code>ERROR</code>.
-		 * </p>
-		 * 
-		 * @see com.itmill.toolkit.terminal.ErrorMessage#getErrorLevel()
-		 */
-		public int getErrorLevel() {
+        /**
+         * Gets the error level of this buffered source exception. The level of
+         * the exception is maximum error level of all the contained causes.
+         * <p>
+         * The causes that do not specify error level default to
+         * <code>ERROR</code> level. Also source exception without any causes
+         * are of level <code>ERROR</code>.
+         * </p>
+         * 
+         * @see com.itmill.toolkit.terminal.ErrorMessage#getErrorLevel()
+         */
+        public int getErrorLevel() {
 
-			int level = Integer.MIN_VALUE;
+            int level = Integer.MIN_VALUE;
 
-			for (int i = 0; i < causes.length; i++) {
-				int causeLevel = (causes[i] instanceof ErrorMessage) ? ((ErrorMessage) causes[i])
-						.getErrorLevel()
-						: ErrorMessage.ERROR;
-				if (causeLevel > level)
-					level = causeLevel;
-			}
+            for (int i = 0; i < causes.length; i++) {
+                int causeLevel = (causes[i] instanceof ErrorMessage) ? ((ErrorMessage) causes[i])
+                        .getErrorLevel()
+                        : ErrorMessage.ERROR;
+                if (causeLevel > level) {
+                    level = causeLevel;
+                }
+            }
 
-			return level == Integer.MIN_VALUE ? ErrorMessage.ERROR : level;
-		}
+            return level == Integer.MIN_VALUE ? ErrorMessage.ERROR : level;
+        }
 
-		/* Documented in super interface */
-		public void paint(PaintTarget target) throws PaintException {
-			target.startTag("error");
-			int level = getErrorLevel();
-			if (level > 0 && level <= ErrorMessage.INFORMATION)
-				target.addAttribute("level", "info");
-			else if (level <= ErrorMessage.WARNING)
-				target.addAttribute("level", "warning");
-			else if (level <= ErrorMessage.ERROR)
-				target.addAttribute("level", "error");
-			else if (level <= ErrorMessage.CRITICAL)
-				target.addAttribute("level", "critical");
-			else
-				target.addAttribute("level", "system");
+        /* Documented in super interface */
+        public void paint(PaintTarget target) throws PaintException {
+            target.startTag("error");
+            int level = getErrorLevel();
+            if (level > 0 && level <= ErrorMessage.INFORMATION) {
+                target.addAttribute("level", "info");
+            } else if (level <= ErrorMessage.WARNING) {
+                target.addAttribute("level", "warning");
+            } else if (level <= ErrorMessage.ERROR) {
+                target.addAttribute("level", "error");
+            } else if (level <= ErrorMessage.CRITICAL) {
+                target.addAttribute("level", "critical");
+            } else {
+                target.addAttribute("level", "system");
+            }
 
-			// Paint all the exceptions
-			for (int i = 0; i < causes.length; i++) {
-				if (causes[i] instanceof ErrorMessage)
-					((ErrorMessage) causes[i]).paint(target);
-				else
-					new SystemError(causes[i]).paint(target);
-			}
+            // Paint all the exceptions
+            for (int i = 0; i < causes.length; i++) {
+                if (causes[i] instanceof ErrorMessage) {
+                    ((ErrorMessage) causes[i]).paint(target);
+                } else {
+                    new SystemError(causes[i]).paint(target);
+                }
+            }
 
-			target.endTag("error");
+            target.endTag("error");
 
-		}
+        }
 
-		/* Documented in super interface */
-		public void addListener(RepaintRequestListener listener) {
-		}
+        /* Documented in super interface */
+        public void addListener(RepaintRequestListener listener) {
+        }
 
-		/* Documented in super interface */
-		public void removeListener(RepaintRequestListener listener) {
-		}
+        /* Documented in super interface */
+        public void removeListener(RepaintRequestListener listener) {
+        }
 
-		/* Documented in super interface */
-		public void requestRepaint() {
-		}
+        /* Documented in super interface */
+        public void requestRepaint() {
+        }
 
-		/* Documented in super interface */
-		public void requestRepaintRequests() {
-		}
+        /* Documented in super interface */
+        public void requestRepaintRequests() {
+        }
 
-	}
+    }
 }

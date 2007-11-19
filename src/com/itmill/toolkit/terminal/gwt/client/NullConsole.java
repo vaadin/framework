@@ -7,16 +7,16 @@ package com.itmill.toolkit.terminal.gwt.client;
  */
 public class NullConsole implements Console {
 
-	public void dirUIDL(UIDL u) {
-	}
+    public void dirUIDL(UIDL u) {
+    }
 
-	public void error(String msg) {
-	}
+    public void error(String msg) {
+    }
 
-	public void log(String msg) {
-	}
+    public void log(String msg) {
+    }
 
-	public void printObject(Object msg) {
-	}
+    public void printObject(Object msg) {
+    }
 
 }

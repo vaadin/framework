@@ -34,41 +34,41 @@ import com.itmill.toolkit.ui.OrderedLayout;
 
 public class IntroTerminal extends Feature {
 
-	public IntroTerminal() {
-		super();
-	}
+    public IntroTerminal() {
+        super();
+    }
 
-	protected Component getDemoComponent() {
+    protected Component getDemoComponent() {
 
-		OrderedLayout l = new OrderedLayout();
+        OrderedLayout l = new OrderedLayout();
 
-		Label lab = new Label();
-		lab.setStyle("featurebrowser-none");
-		l.addComponent(lab);
+        Label lab = new Label();
+        lab.setStyle("featurebrowser-none");
+        l.addComponent(lab);
 
-		// Properties
-		propertyPanel = null;
+        // Properties
+        propertyPanel = null;
 
-		return l;
-	}
+        return l;
+    }
 
-	protected String getExampleSrc() {
-		return null;
-	}
+    protected String getExampleSrc() {
+        return null;
+    }
 
-	/**
-	 * @see com.itmill.toolkit.tests.featurebrowser.Feature#getDescriptionXHTML()
-	 */
-	protected String getDescriptionXHTML() {
-		return "";
-	}
+    /**
+     * @see com.itmill.toolkit.tests.featurebrowser.Feature#getDescriptionXHTML()
+     */
+    protected String getDescriptionXHTML() {
+        return "";
+    }
 
-	protected String getImage() {
-		return null;
-	}
+    protected String getImage() {
+        return null;
+    }
 
-	protected String getTitle() {
-		return "Introduction for terminals (TODO)";
-	}
+    protected String getTitle() {
+        return "Introduction for terminals (TODO)";
+    }
 
 }

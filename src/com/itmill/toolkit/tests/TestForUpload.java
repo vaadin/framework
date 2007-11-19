@@ -34,311 +34,312 @@ import com.itmill.toolkit.ui.Upload.SucceededEvent;
 import com.itmill.toolkit.ui.Upload.SucceededListener;
 
 public class TestForUpload extends CustomComponent implements
-		Upload.FinishedListener, FailedListener, SucceededListener,
-		Upload.ProgressListener, StartedListener {
+        Upload.FinishedListener, FailedListener, SucceededListener,
+        Upload.ProgressListener, StartedListener {
 
-	Layout main = new OrderedLayout();
+    Layout main = new OrderedLayout();
 
-	Buffer buffer = new MemoryBuffer();
+    Buffer buffer = new MemoryBuffer();
 
-	Panel status = new Panel("Uploaded file:");
+    Panel status = new Panel("Uploaded file:");
 
-	private final Upload up;
+    private final Upload up;
 
-	private final Label l;
+    private final Label l;
 
-	private final ProgressIndicator pi = new ProgressIndicator();
+    private final ProgressIndicator pi = new ProgressIndicator();
 
-	private final Label memoryStatus;
+    private final Label memoryStatus;
 
-	private final Select uploadBufferSelector;
+    private final Select uploadBufferSelector;
 
-	public TestForUpload() {
-		setCompositionRoot(this.main);
-		this.main.addComponent(new Label(
-				"This is a simple test for upload application. "
-						+ "Upload should work with big files and concurrent "
-						+ "requests should not be blocked. Button 'b' reads "
-						+ "current state into label below it. Memory receiver "
-						+ "streams upload contents into memory. You may track"
-						+ "consumption."
-						+ "tempfile receiver writes upload to file and "
-						+ "should have low memory consumption."));
+    public TestForUpload() {
+        setCompositionRoot(main);
+        main.addComponent(new Label(
+                "This is a simple test for upload application. "
+                        + "Upload should work with big files and concurrent "
+                        + "requests should not be blocked. Button 'b' reads "
+                        + "current state into label below it. Memory receiver "
+                        + "streams upload contents into memory. You may track"
+                        + "consumption."
+                        + "tempfile receiver writes upload to file and "
+                        + "should have low memory consumption."));
 
-		this.main
-				.addComponent(new Label(
-						"Clicking on button b updates information about upload components status or same with garbage collector."));
+        main
+                .addComponent(new Label(
+                        "Clicking on button b updates information about upload components status or same with garbage collector."));
 
-		this.up = new Upload("Upload", this.buffer);
-		this.up.setImmediate(true);
-		this.up.addListener((FinishedListener) this);
-		this.up.addListener((FailedListener) this);
-		this.up.addListener((SucceededListener) this);
-		this.up.addListener((StartedListener) this);
+        up = new Upload("Upload", buffer);
+        up.setImmediate(true);
+        up.addListener((FinishedListener) this);
+        up.addListener((FailedListener) this);
+        up.addListener((SucceededListener) this);
+        up.addListener((StartedListener) this);
 
-		this.up.setProgressListener(this);
+        up.setProgressListener(this);
 
-		Button b = new Button("b", this, "readState");
+        Button b = new Button("b", this, "readState");
 
-		Button c = new Button("b with gc", this, "gc");
+        Button c = new Button("b with gc", this, "gc");
 
-		this.main.addComponent(b);
-		this.main.addComponent(c);
+        main.addComponent(b);
+        main.addComponent(c);
 
-		this.uploadBufferSelector = new Select("Receiver type");
-		this.uploadBufferSelector.setImmediate(true);
-		this.uploadBufferSelector.addItem("memory");
-		this.uploadBufferSelector.setValue("memory");
-		this.uploadBufferSelector.addItem("tempfile");
-		this.uploadBufferSelector
-				.addListener(new AbstractField.ValueChangeListener() {
-					public void valueChange(ValueChangeEvent event) {
-						setBuffer();
-					}
-				});
-		this.main.addComponent(this.uploadBufferSelector);
+        uploadBufferSelector = new Select("Receiver type");
+        uploadBufferSelector.setImmediate(true);
+        uploadBufferSelector.addItem("memory");
+        uploadBufferSelector.setValue("memory");
+        uploadBufferSelector.addItem("tempfile");
+        uploadBufferSelector
+                .addListener(new AbstractField.ValueChangeListener() {
+                    public void valueChange(ValueChangeEvent event) {
+                        setBuffer();
+                    }
+                });
+        main.addComponent(uploadBufferSelector);
 
-		this.main.addComponent(this.up);
-		this.l = new Label("Idle");
-		this.main.addComponent(this.l);
+        main.addComponent(up);
+        l = new Label("Idle");
+        main.addComponent(l);
 
-		this.pi.setVisible(false);
-		this.pi.setPollingInterval(1000);
-		this.main.addComponent(this.pi);
+        pi.setVisible(false);
+        pi.setPollingInterval(1000);
+        main.addComponent(pi);
 
-		this.memoryStatus = new Label();
-		this.main.addComponent(this.memoryStatus);
+        memoryStatus = new Label();
+        main.addComponent(memoryStatus);
 
-		this.status.setVisible(false);
-		this.main.addComponent(this.status);
+        status.setVisible(false);
+        main.addComponent(status);
 
-		Button restart = new Button("R");
-		restart.addListener(new Button.ClickListener() {
+        Button restart = new Button("R");
+        restart.addListener(new Button.ClickListener() {
 
-			public void buttonClick(ClickEvent event) {
-				getApplication().close();
-			}
-		});
-		this.main.addComponent(restart);
+            public void buttonClick(ClickEvent event) {
+                getApplication().close();
+            }
+        });
+        main.addComponent(restart);
 
-	}
+    }
 
-	private void setBuffer() {
-		String id = (String) this.uploadBufferSelector.getValue();
-		if ("memory".equals(id)) {
-			this.buffer = new MemoryBuffer();
-		} else if ("tempfile".equals(id)) {
-			this.buffer = new TmpFileBuffer();
-		}
-		this.up.setReceiver(this.buffer);
-	}
+    private void setBuffer() {
+        String id = (String) uploadBufferSelector.getValue();
+        if ("memory".equals(id)) {
+            buffer = new MemoryBuffer();
+        } else if ("tempfile".equals(id)) {
+            buffer = new TmpFileBuffer();
+        }
+        up.setReceiver(buffer);
+    }
 
-	public void gc() {
-		Runtime.getRuntime().gc();
-		readState();
-	}
+    public void gc() {
+        Runtime.getRuntime().gc();
+        readState();
+    }
 
-	public void readState() {
-		StringBuffer sb = new StringBuffer();
+    public void readState() {
+        StringBuffer sb = new StringBuffer();
 
-		if (this.up.isUploading()) {
-			sb.append("Uploading...");
-			sb.append(this.up.getBytesRead());
-			sb.append("/");
-			sb.append(this.up.getUploadSize());
-			sb.append(" ");
-			sb.append(Math.round(100 * this.up.getBytesRead()
-					/ (double) this.up.getUploadSize()));
-			sb.append("%");
-		} else {
-			sb.append("Idle");
-		}
-		this.l.setValue(sb.toString());
-		refreshMemUsage();
-	}
+        if (up.isUploading()) {
+            sb.append("Uploading...");
+            sb.append(up.getBytesRead());
+            sb.append("/");
+            sb.append(up.getUploadSize());
+            sb.append(" ");
+            sb.append(Math.round(100 * up.getBytesRead()
+                    / (double) up.getUploadSize()));
+            sb.append("%");
+        } else {
+            sb.append("Idle");
+        }
+        l.setValue(sb.toString());
+        refreshMemUsage();
+    }
 
-	public void uploadFinished(FinishedEvent event) {
-		this.status.removeAllComponents();
-		InputStream stream = this.buffer.getStream();
-		if (stream == null) {
-			this.status.addComponent(new Label(
-					"Upload finished, but output buffer is null!!"));
-		} else {
-			this.status.addComponent(new Label("<b>Name:</b> "
-					+ event.getFilename(), Label.CONTENT_XHTML));
-			this.status.addComponent(new Label("<b>Mimetype:</b> "
-					+ event.getMIMEType(), Label.CONTENT_XHTML));
-			this.status.addComponent(new Label("<b>Size:</b> "
-					+ event.getLength() + " bytes.", Label.CONTENT_XHTML));
+    public void uploadFinished(FinishedEvent event) {
+        status.removeAllComponents();
+        InputStream stream = buffer.getStream();
+        if (stream == null) {
+            status.addComponent(new Label(
+                    "Upload finished, but output buffer is null!!"));
+        } else {
+            status
+                    .addComponent(new Label("<b>Name:</b> "
+                            + event.getFilename(), Label.CONTENT_XHTML));
+            status.addComponent(new Label("<b>Mimetype:</b> "
+                    + event.getMIMEType(), Label.CONTENT_XHTML));
+            status.addComponent(new Label("<b>Size:</b> " + event.getLength()
+                    + " bytes.", Label.CONTENT_XHTML));
 
-			this.status.addComponent(new Link("Download "
-					+ this.buffer.getFileName(), new StreamResource(
-					this.buffer, this.buffer.getFileName(), getApplication())));
+            status.addComponent(new Link("Download " + buffer.getFileName(),
+                    new StreamResource(buffer, buffer.getFileName(),
+                            getApplication())));
 
-			this.status.setVisible(true);
-		}
-	}
+            status.setVisible(true);
+        }
+    }
 
-	public interface Buffer extends StreamResource.StreamSource,
-			Upload.Receiver {
+    public interface Buffer extends StreamResource.StreamSource,
+            Upload.Receiver {
 
-		String getFileName();
-	}
+        String getFileName();
+    }
 
-	public class MemoryBuffer implements Buffer {
-		ByteArrayOutputStream outputBuffer = null;
+    public class MemoryBuffer implements Buffer {
+        ByteArrayOutputStream outputBuffer = null;
 
-		String mimeType;
+        String mimeType;
 
-		String fileName;
+        String fileName;
 
-		public MemoryBuffer() {
+        public MemoryBuffer() {
 
-		}
+        }
 
-		public InputStream getStream() {
-			if (this.outputBuffer == null) {
-				return null;
-			}
-			return new ByteArrayInputStream(this.outputBuffer.toByteArray());
-		}
+        public InputStream getStream() {
+            if (outputBuffer == null) {
+                return null;
+            }
+            return new ByteArrayInputStream(outputBuffer.toByteArray());
+        }
 
-		/**
-		 * @see com.itmill.toolkit.ui.Upload.Receiver#receiveUpload(String,
-		 *      String)
-		 */
-		public OutputStream receiveUpload(String filename, String MIMEType) {
-			this.fileName = filename;
-			this.mimeType = MIMEType;
-			this.outputBuffer = new ByteArrayOutputStream();
-			return this.outputBuffer;
-		}
+        /**
+         * @see com.itmill.toolkit.ui.Upload.Receiver#receiveUpload(String,
+         *      String)
+         */
+        public OutputStream receiveUpload(String filename, String MIMEType) {
+            fileName = filename;
+            mimeType = MIMEType;
+            outputBuffer = new ByteArrayOutputStream();
+            return outputBuffer;
+        }
 
-		/**
-		 * Returns the fileName.
-		 * 
-		 * @return String
-		 */
-		public String getFileName() {
-			return this.fileName;
-		}
+        /**
+         * Returns the fileName.
+         * 
+         * @return String
+         */
+        public String getFileName() {
+            return fileName;
+        }
 
-		/**
-		 * Returns the mimeType.
-		 * 
-		 * @return String
-		 */
-		public String getMimeType() {
-			return this.mimeType;
-		}
+        /**
+         * Returns the mimeType.
+         * 
+         * @return String
+         */
+        public String getMimeType() {
+            return mimeType;
+        }
 
-	}
+    }
 
-	public class TmpFileBuffer implements Buffer {
-		String mimeType;
+    public class TmpFileBuffer implements Buffer {
+        String mimeType;
 
-		String fileName;
+        String fileName;
 
-		private File file;
+        private File file;
 
-		private FileInputStream stream;
+        private FileInputStream stream;
 
-		public TmpFileBuffer() {
-			String tempFileName = "upload_tmpfile_"
-					+ System.currentTimeMillis();
-			try {
-				this.file = File.createTempFile(tempFileName, null);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+        public TmpFileBuffer() {
+            String tempFileName = "upload_tmpfile_"
+                    + System.currentTimeMillis();
+            try {
+                file = File.createTempFile(tempFileName, null);
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
 
-		}
+        }
 
-		public InputStream getStream() {
-			if (this.file == null) {
-				return null;
-			}
-			try {
-				return new FileInputStream(this.file);
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return null;
-		}
+        public InputStream getStream() {
+            if (file == null) {
+                return null;
+            }
+            try {
+                return new FileInputStream(file);
+            } catch (FileNotFoundException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            return null;
+        }
 
-		/**
-		 * @see com.itmill.toolkit.ui.Upload.Receiver#receiveUpload(String,
-		 *      String)
-		 */
-		public OutputStream receiveUpload(String filename, String MIMEType) {
-			this.fileName = filename;
-			this.mimeType = MIMEType;
-			try {
-				return new FileOutputStream(this.file);
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return null;
-		}
+        /**
+         * @see com.itmill.toolkit.ui.Upload.Receiver#receiveUpload(String,
+         *      String)
+         */
+        public OutputStream receiveUpload(String filename, String MIMEType) {
+            fileName = filename;
+            mimeType = MIMEType;
+            try {
+                return new FileOutputStream(file);
+            } catch (FileNotFoundException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            return null;
+        }
 
-		/**
-		 * Returns the fileName.
-		 * 
-		 * @return String
-		 */
-		public String getFileName() {
-			return this.fileName;
-		}
+        /**
+         * Returns the fileName.
+         * 
+         * @return String
+         */
+        public String getFileName() {
+            return fileName;
+        }
 
-		/**
-		 * Returns the mimeType.
-		 * 
-		 * @return String
-		 */
-		public String getMimeType() {
-			return this.mimeType;
-		}
+        /**
+         * Returns the mimeType.
+         * 
+         * @return String
+         */
+        public String getMimeType() {
+            return mimeType;
+        }
 
-	}
+    }
 
-	public void uploadFailed(FailedEvent event) {
-		System.out.println(event);
+    public void uploadFailed(FailedEvent event) {
+        System.out.println(event);
 
-		System.out.println(event.getSource());
+        System.out.println(event.getSource());
 
-	}
+    }
 
-	public void uploadSucceeded(SucceededEvent event) {
-		this.pi.setVisible(false);
-		this.l.setValue("Finished upload, idle");
-		System.out.println(event);
-		setBuffer();
-	}
+    public void uploadSucceeded(SucceededEvent event) {
+        pi.setVisible(false);
+        l.setValue("Finished upload, idle");
+        System.out.println(event);
+        setBuffer();
+    }
 
-	public void updateProgress(long readBytes, long contentLenght) {
-		this.pi.setValue(new Float(readBytes / (float) contentLenght));
+    public void updateProgress(long readBytes, long contentLenght) {
+        pi.setValue(new Float(readBytes / (float) contentLenght));
 
-		refreshMemUsage();
-	}
+        refreshMemUsage();
+    }
 
-	private void refreshMemUsage() {
-		this.memoryStatus.setValue("Not available in Java 1.4");
-		/*
-		 * StringBuffer mem = new StringBuffer(); MemoryMXBean mmBean =
-		 * ManagementFactory.getMemoryMXBean(); mem.append("Heap (M):");
-		 * mem.append(mmBean.getHeapMemoryUsage().getUsed() / 1048576);
-		 * mem.append(" |�Non-Heap (M):");
-		 * mem.append(mmBean.getNonHeapMemoryUsage().getUsed() / 1048576);
-		 * memoryStatus.setValue(mem.toString());
-		 */
-	}
+    private void refreshMemUsage() {
+        memoryStatus.setValue("Not available in Java 1.4");
+        /*
+         * StringBuffer mem = new StringBuffer(); MemoryMXBean mmBean =
+         * ManagementFactory.getMemoryMXBean(); mem.append("Heap (M):");
+         * mem.append(mmBean.getHeapMemoryUsage().getUsed() / 1048576);
+         * mem.append(" |�Non-Heap (M):");
+         * mem.append(mmBean.getNonHeapMemoryUsage().getUsed() / 1048576);
+         * memoryStatus.setValue(mem.toString());
+         */
+    }
 
-	public void uploadStarted(StartedEvent event) {
-		this.pi.setVisible(true);
-		this.l.setValue("Started uploading file " + event.getFilename());
-	}
+    public void uploadStarted(StartedEvent event) {
+        pi.setVisible(true);
+        l.setValue("Started uploading file " + event.getFilename());
+    }
 
 }

@@ -30,64 +30,71 @@ package com.itmill.toolkit.tests.featurebrowser;
 
 import java.util.Date;
 
-import com.itmill.toolkit.ui.*;
+import com.itmill.toolkit.ui.Button;
+import com.itmill.toolkit.ui.Component;
+import com.itmill.toolkit.ui.DateField;
+import com.itmill.toolkit.ui.Form;
+import com.itmill.toolkit.ui.GridLayout;
+import com.itmill.toolkit.ui.OrderedLayout;
+import com.itmill.toolkit.ui.TextField;
 
 public class FeatureGridLayout extends Feature {
 
-	public FeatureGridLayout() {
-		super();
-	}
+    public FeatureGridLayout() {
+        super();
+    }
 
-	protected Component getDemoComponent() {
+    protected Component getDemoComponent() {
 
-		OrderedLayout l = new OrderedLayout();
+        OrderedLayout l = new OrderedLayout();
 
-		GridLayout gl = new GridLayout(3, 3);
-		DateField cal = new DateField("Test component 1", new Date());
-		cal.setStyle("calendar");
-		gl.addComponent(cal, 1, 0, 2, 1);
-		for (int i = 2; i < 7; i++)
-			gl.addComponent(new TextField("Test component " + i));
-		l.addComponent(gl);
+        GridLayout gl = new GridLayout(3, 3);
+        DateField cal = new DateField("Test component 1", new Date());
+        cal.setStyle("calendar");
+        gl.addComponent(cal, 1, 0, 2, 1);
+        for (int i = 2; i < 7; i++) {
+            gl.addComponent(new TextField("Test component " + i));
+        }
+        l.addComponent(gl);
 
-		// Properties
-		propertyPanel = new PropertyPanel(gl);
-		Form ap = propertyPanel.createBeanPropertySet(new String[] { "width",
-				"height" });
-		ap.addField("new line", new Button("New Line", gl, "newLine"));
-		ap.addField("space", new Button("Space", gl, "space"));
-		propertyPanel.addProperties("GridLayout Features", ap);
-		propertyPanel.getField("height").dependsOn(
-				propertyPanel.getField("add component"));
+        // Properties
+        propertyPanel = new PropertyPanel(gl);
+        Form ap = propertyPanel.createBeanPropertySet(new String[] { "width",
+                "height" });
+        ap.addField("new line", new Button("New Line", gl, "newLine"));
+        ap.addField("space", new Button("Space", gl, "space"));
+        propertyPanel.addProperties("GridLayout Features", ap);
+        propertyPanel.getField("height").dependsOn(
+                propertyPanel.getField("add component"));
 
-		setJavadocURL("ui/GridLayout.html");
+        setJavadocURL("ui/GridLayout.html");
 
-		return l;
-	}
+        return l;
+    }
 
-	protected String getExampleSrc() {
-		return "GridLayout gl = new GridLayout(2,2);\n"
-				+ "gl.addComponent(new Label(\"Label 1 in GridLayout\"));\n"
-				+ "gl.addComponent(new Label(\"Label 2 in GridLayout\"));\n"
-				+ "gl.addComponent(new Label(\"Label 3 in GridLayout\"));\n"
-				+ "gl.addComponent(new Label(\"Label 4 in GridLayout\"));\n";
-	}
+    protected String getExampleSrc() {
+        return "GridLayout gl = new GridLayout(2,2);\n"
+                + "gl.addComponent(new Label(\"Label 1 in GridLayout\"));\n"
+                + "gl.addComponent(new Label(\"Label 2 in GridLayout\"));\n"
+                + "gl.addComponent(new Label(\"Label 3 in GridLayout\"));\n"
+                + "gl.addComponent(new Label(\"Label 4 in GridLayout\"));\n";
+    }
 
-	/**
-	 * @see com.itmill.toolkit.tests.featurebrowser.Feature#getDescriptionXHTML()
-	 */
-	protected String getDescriptionXHTML() {
-		return "This feature provides a container that lays out components "
-				+ "into a grid of given width and height."
-				+ "<br /><br />On the demo tab you can try out how the different "
-				+ "properties affect the presentation of the component.";
-	}
+    /**
+     * @see com.itmill.toolkit.tests.featurebrowser.Feature#getDescriptionXHTML()
+     */
+    protected String getDescriptionXHTML() {
+        return "This feature provides a container that lays out components "
+                + "into a grid of given width and height."
+                + "<br /><br />On the demo tab you can try out how the different "
+                + "properties affect the presentation of the component.";
+    }
 
-	protected String getImage() {
-		return "icon_demo.png";
-	}
+    protected String getImage() {
+        return "icon_demo.png";
+    }
 
-	protected String getTitle() {
-		return "GridLayout";
-	}
+    protected String getTitle() {
+        return "GridLayout";
+    }
 }

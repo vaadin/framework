@@ -16,304 +16,301 @@ import com.itmill.toolkit.ui.DateField;
 // TODO Allow item selection
 public class CalendarField extends DateField implements Container.Viewer {
 
-	private static final String TAGNAME = "calendarfield";
-	
-	private Date minDate;
-	private Date maxDate;
+    private static final String TAGNAME = "calendarfield";
 
-	private Container dataSource;
-	private Object itemStyleNamePropertyId;
-	private Object itemStartPropertyId;
-	private Object itemEndPropertyId;
-	private Object itemTitlePropertyId;
-	private Object itemDescriptionPropertyId;
-	private Object itemNotimePropertyId;
+    private Date minDate;
+    private Date maxDate;
 
-	public CalendarField() {
-		super();
-		init();
-	}
+    private Container dataSource;
+    private Object itemStyleNamePropertyId;
+    private Object itemStartPropertyId;
+    private Object itemEndPropertyId;
+    private Object itemTitlePropertyId;
+    private Object itemDescriptionPropertyId;
+    private Object itemNotimePropertyId;
 
-	public CalendarField(Property dataSource) throws IllegalArgumentException {
-		super(dataSource);
-		init();
-	}
+    public CalendarField() {
+        super();
+        init();
+    }
 
-	public CalendarField(String caption, Date value) {
-		super(caption, value);
-		init();
-	}
+    public CalendarField(Property dataSource) throws IllegalArgumentException {
+        super(dataSource);
+        init();
+    }
 
-	public CalendarField(String caption, Property dataSource) {
-		super(caption, dataSource);
-		init();
-	}
+    public CalendarField(String caption, Date value) {
+        super(caption, value);
+        init();
+    }
 
-	public CalendarField(String caption) {
-		super(caption);
-		init();
-	}
+    public CalendarField(String caption, Property dataSource) {
+        super(caption, dataSource);
+        init();
+    }
 
-	/*
-	 * Gets the components UIDL tag string. Don't add a JavaDoc comment here, we
-	 * use the default documentation from implemented interface.
-	 */
-	public String getTag() {
-		return TAGNAME;
-	}
+    public CalendarField(String caption) {
+        super(caption);
+        init();
+    }
 
-	public void init() {
-		super.setResolution(RESOLUTION_HOUR);
+    /*
+     * Gets the components UIDL tag string. Don't add a JavaDoc comment here, we
+     * use the default documentation from implemented interface.
+     */
+    public String getTag() {
+        return TAGNAME;
+    }
 
-	}
+    public void init() {
+        super.setResolution(RESOLUTION_HOUR);
 
-	/**
-	 * Sets the resolution of the CalendarField. Only RESOLUTION_DAY and
-	 * RESOLUTION_HOUR are supported.
-	 * 
-	 * @param resolution
-	 *            the resolution to set.
-	 * @see com.itmill.toolkit.ui.DateField#setResolution(int)
-	 */
-	public void setResolution(int resolution) {
-		if (resolution != RESOLUTION_DAY && resolution != RESOLUTION_HOUR) {
-			throw new IllegalArgumentException();
-		}
-		super.setResolution(resolution);
-	}
+    }
 
-	public void setMinimumDate(Date date) {
-		this.minDate = date;
-		requestRepaint();
-	}
+    /**
+     * Sets the resolution of the CalendarField. Only RESOLUTION_DAY and
+     * RESOLUTION_HOUR are supported.
+     * 
+     * @param resolution
+     *                the resolution to set.
+     * @see com.itmill.toolkit.ui.DateField#setResolution(int)
+     */
+    public void setResolution(int resolution) {
+        if (resolution != RESOLUTION_DAY && resolution != RESOLUTION_HOUR) {
+            throw new IllegalArgumentException();
+        }
+        super.setResolution(resolution);
+    }
 
-	public Date getMinimumDate() {
-		return minDate;
-	}
+    public void setMinimumDate(Date date) {
+        minDate = date;
+        requestRepaint();
+    }
 
-	public void setMaximumDate(Date date) {
-		this.maxDate = date;
-		requestRepaint();
-	}
+    public Date getMinimumDate() {
+        return minDate;
+    }
 
-	public Date getMaximumDate() {
-		return maxDate;
-	}
+    public void setMaximumDate(Date date) {
+        maxDate = date;
+        requestRepaint();
+    }
 
-	public Container getContainerDataSource() {
-		return this.dataSource;
-	}
+    public Date getMaximumDate() {
+        return maxDate;
+    }
 
-	public void setContainerDataSource(Container newDataSource) {
-		if (newDataSource == null || checkDataSource(newDataSource)) {
-			this.dataSource = newDataSource;
-		} else {
-			// TODO error message
-			throw new IllegalArgumentException();
-		}
-		requestRepaint();
-	}
+    public Container getContainerDataSource() {
+        return dataSource;
+    }
 
-	private boolean checkDataSource(Container dataSource) {
+    public void setContainerDataSource(Container newDataSource) {
+        if (newDataSource == null || checkDataSource(newDataSource)) {
+            dataSource = newDataSource;
+        } else {
+            // TODO error message
+            throw new IllegalArgumentException();
+        }
+        requestRepaint();
+    }
 
-		// Check old propertyIds
-		if (this.itemEndPropertyId != null) {
-			Class c = dataSource.getType(this.itemEndPropertyId);
-			if (!Date.class.isAssignableFrom(c)) {
-				this.itemEndPropertyId = null;
-			}
-		}
-		if (this.itemNotimePropertyId != null) {
-			Class c = dataSource.getType(this.itemNotimePropertyId);
-			if (!Boolean.class.isAssignableFrom(c)) {
-				this.itemNotimePropertyId = null;
-			}
-		}
-		if (this.itemStartPropertyId != null) {
-			Class c = dataSource.getType(this.itemStartPropertyId);
-			if (Date.class.isAssignableFrom(c)) {
-				// All we _really_ need is one date
-				return true;
-			} else {
-				this.itemStartPropertyId = null;
-			}
-		}
-		// We need at least one Date
-		Collection ids = dataSource.getContainerPropertyIds();
-		for (Iterator it = ids.iterator(); it.hasNext();) {
-			Object id = it.next();
-			Class c = dataSource.getType(id);
-			if (Date.class.isAssignableFrom(c)) {
-				this.itemStartPropertyId = id;
-				return true;
-			}
-		}
+    private boolean checkDataSource(Container dataSource) {
 
-		return false;
-	}
+        // Check old propertyIds
+        if (itemEndPropertyId != null) {
+            Class c = dataSource.getType(itemEndPropertyId);
+            if (!Date.class.isAssignableFrom(c)) {
+                itemEndPropertyId = null;
+            }
+        }
+        if (itemNotimePropertyId != null) {
+            Class c = dataSource.getType(itemNotimePropertyId);
+            if (!Boolean.class.isAssignableFrom(c)) {
+                itemNotimePropertyId = null;
+            }
+        }
+        if (itemStartPropertyId != null) {
+            Class c = dataSource.getType(itemStartPropertyId);
+            if (Date.class.isAssignableFrom(c)) {
+                // All we _really_ need is one date
+                return true;
+            } else {
+                itemStartPropertyId = null;
+            }
+        }
+        // We need at least one Date
+        Collection ids = dataSource.getContainerPropertyIds();
+        for (Iterator it = ids.iterator(); it.hasNext();) {
+            Object id = it.next();
+            Class c = dataSource.getType(id);
+            if (Date.class.isAssignableFrom(c)) {
+                itemStartPropertyId = id;
+                return true;
+            }
+        }
 
-	public Object getItemStyleNamePropertyId() {
-		return itemStyleNamePropertyId;
-	}
+        return false;
+    }
 
-	public void setItemStyleNamePropertyId(Object propertyId) {
-		this.itemStyleNamePropertyId = propertyId;
-	}
+    public Object getItemStyleNamePropertyId() {
+        return itemStyleNamePropertyId;
+    }
 
-	public Object getItemStartPropertyId() {
-		return itemStartPropertyId;
-	}
+    public void setItemStyleNamePropertyId(Object propertyId) {
+        itemStyleNamePropertyId = propertyId;
+    }
 
-	public void setItemStartPropertyId(Object propertyId) {
-		// TODO nullcheck for property id
-		if (this.dataSource != null
-				&& !Date.class.isAssignableFrom(dataSource.getType(propertyId))) {
-			// TODO error message
-			throw new IllegalArgumentException();
-		}
-		this.itemStartPropertyId = propertyId;
-	}
+    public Object getItemStartPropertyId() {
+        return itemStartPropertyId;
+    }
 
-	public Object getItemEndPropertyId() {
-		return itemEndPropertyId;
-	}
+    public void setItemStartPropertyId(Object propertyId) {
+        // TODO nullcheck for property id
+        if (dataSource != null
+                && !Date.class.isAssignableFrom(dataSource.getType(propertyId))) {
+            // TODO error message
+            throw new IllegalArgumentException();
+        }
+        itemStartPropertyId = propertyId;
+    }
 
-	public void setItemEndPropertyId(Object propertyId) {
-		// TODO nullcheck for property id
-		if (this.dataSource != null
-				&& !Date.class.isAssignableFrom(dataSource.getType(propertyId))) {
-			// TODO error message
-			throw new IllegalArgumentException();
-		}
-		this.itemEndPropertyId = propertyId;
-	}
+    public Object getItemEndPropertyId() {
+        return itemEndPropertyId;
+    }
 
-	public Object getItemTitlePropertyId() {
-		return itemTitlePropertyId;
-	}
+    public void setItemEndPropertyId(Object propertyId) {
+        // TODO nullcheck for property id
+        if (dataSource != null
+                && !Date.class.isAssignableFrom(dataSource.getType(propertyId))) {
+            // TODO error message
+            throw new IllegalArgumentException();
+        }
+        itemEndPropertyId = propertyId;
+    }
 
-	public void setItemTitlePropertyId(Object propertyId) {
-		this.itemTitlePropertyId = propertyId;
-	}
+    public Object getItemTitlePropertyId() {
+        return itemTitlePropertyId;
+    }
 
-	public Object getItemDescriptionPropertyId() {
-		return itemDescriptionPropertyId;
-	}
+    public void setItemTitlePropertyId(Object propertyId) {
+        itemTitlePropertyId = propertyId;
+    }
 
-	public void setItemDescriptionPropertyId(Object propertyId) {
-		this.itemDescriptionPropertyId = propertyId;
-	}
+    public Object getItemDescriptionPropertyId() {
+        return itemDescriptionPropertyId;
+    }
 
-	public Object getitemNotimePropertyId() {
-		return itemNotimePropertyId;
-	}
+    public void setItemDescriptionPropertyId(Object propertyId) {
+        itemDescriptionPropertyId = propertyId;
+    }
 
-	public void setItemNotimePropertyId(Object propertyId) {
-		// TODO nullcheck for property id
-		if (this.dataSource != null
-				&& !Boolean.class.isAssignableFrom(dataSource
-						.getType(propertyId))) {
-			// TODO error message
-			throw new IllegalArgumentException();
-		}
-		this.itemNotimePropertyId = propertyId;
-	}
+    public Object getitemNotimePropertyId() {
+        return itemNotimePropertyId;
+    }
 
-	/**
-	 * Paints the content of this component.
-	 * 
-	 * @param target
-	 *            the Paint Event.
-	 * @throws PaintException
-	 *             if the paint operation failed.
-	 */
-	public void paintContent(PaintTarget target) throws PaintException {
-		super.paintContent(target);
+    public void setItemNotimePropertyId(Object propertyId) {
+        // TODO nullcheck for property id
+        if (dataSource != null
+                && !Boolean.class.isAssignableFrom(dataSource
+                        .getType(propertyId))) {
+            // TODO error message
+            throw new IllegalArgumentException();
+        }
+        itemNotimePropertyId = propertyId;
+    }
 
-		if (this.minDate != null) {
-			target.addAttribute("min", String.valueOf(this.minDate.getTime()));
-		}
-		if (this.maxDate != null) {
-			target.addAttribute("max", String.valueOf(this.maxDate.getTime()));
-		}
+    /**
+     * Paints the content of this component.
+     * 
+     * @param target
+     *                the Paint Event.
+     * @throws PaintException
+     *                 if the paint operation failed.
+     */
+    public void paintContent(PaintTarget target) throws PaintException {
+        super.paintContent(target);
 
-		if (this.dataSource != null) {
-			target.startTag("items");
+        if (minDate != null) {
+            target.addAttribute("min", String.valueOf(minDate.getTime()));
+        }
+        if (maxDate != null) {
+            target.addAttribute("max", String.valueOf(maxDate.getTime()));
+        }
 
-			// TODO send one month now, the rest via lazyloading
-			int month = new Date().getMonth();
-			Object value = getValue();
-			if (value != null && value instanceof Date) {
-				month = ((Date) value).getMonth();
-			}
+        if (dataSource != null) {
+            target.startTag("items");
 
-			for (Iterator it = this.dataSource.getItemIds().iterator(); it
-					.hasNext();) {
-				Object itemId = it.next();
-				Item item = (Item) this.dataSource.getItem(itemId);
-				Property p = item.getItemProperty(this.itemStartPropertyId);
-				Date start = (Date) p.getValue();
-				Date end = start; // assume same day
-				if (this.itemEndPropertyId != null) {
-					p = item.getItemProperty(this.itemEndPropertyId);
-					end = (Date) p.getValue();
-					if (end == null) {
-						end = start;
-					} else if (end.before(start)) {
-						Date tmp = start;
-						start = end;
-						end = tmp;
-					}
-				}
+            // TODO send one month now, the rest via lazyloading
+            int month = new Date().getMonth();
+            Object value = getValue();
+            if (value != null && value instanceof Date) {
+                month = ((Date) value).getMonth();
+            }
 
-				// TODO half-done lazyloading logic (hence broken)
+            for (Iterator it = dataSource.getItemIds().iterator(); it.hasNext();) {
+                Object itemId = it.next();
+                Item item = dataSource.getItem(itemId);
+                Property p = item.getItemProperty(itemStartPropertyId);
+                Date start = (Date) p.getValue();
+                Date end = start; // assume same day
+                if (itemEndPropertyId != null) {
+                    p = item.getItemProperty(itemEndPropertyId);
+                    end = (Date) p.getValue();
+                    if (end == null) {
+                        end = start;
+                    } else if (end.before(start)) {
+                        Date tmp = start;
+                        start = end;
+                        end = tmp;
+                    }
+                }
 
-				if (start != null) {
-					if ((start.getMonth() <= month || end.getMonth() >= month)) {
-						target.startTag("item");
-						// TODO different id?
-						target.addAttribute("id", itemId.hashCode());
-						if (this.itemStyleNamePropertyId != null) {
-							p = item
-									.getItemProperty(this.itemStyleNamePropertyId);
-							String styleName = (String) p.getValue();
-							target.addAttribute("styleName", styleName);
-						}
-						target.addAttribute("start", "" + start.getTime());
-						if (end != start) {
-							target.addAttribute("end", "" + end.getTime());
-						}
-						if (this.itemTitlePropertyId != null) {
-							p = item.getItemProperty(this.itemTitlePropertyId);
-							Object val = p.getValue();
-							if (val != null) {
-								target.addAttribute("title", val.toString());
-							}
-						}
-						if (this.itemDescriptionPropertyId != null) {
-							p = item
-									.getItemProperty(this.itemDescriptionPropertyId);
-							Object val = p.getValue();
-							if (val != null) {
-								target.addAttribute("description", val
-										.toString());
-							}
-						}
-						if (this.itemNotimePropertyId != null) {
-							p = item.getItemProperty(this.itemNotimePropertyId);
-							Object val = p.getValue();
-							if (val != null) {
-								target.addAttribute("notime", ((Boolean) val)
-										.booleanValue());
-							}
-						}
+                // TODO half-done lazyloading logic (hence broken)
 
-						target.endTag("item");
-					}
-				}
-			}
+                if (start != null) {
+                    if ((start.getMonth() <= month || end.getMonth() >= month)) {
+                        target.startTag("item");
+                        // TODO different id?
+                        target.addAttribute("id", itemId.hashCode());
+                        if (itemStyleNamePropertyId != null) {
+                            p = item.getItemProperty(itemStyleNamePropertyId);
+                            String styleName = (String) p.getValue();
+                            target.addAttribute("styleName", styleName);
+                        }
+                        target.addAttribute("start", "" + start.getTime());
+                        if (end != start) {
+                            target.addAttribute("end", "" + end.getTime());
+                        }
+                        if (itemTitlePropertyId != null) {
+                            p = item.getItemProperty(itemTitlePropertyId);
+                            Object val = p.getValue();
+                            if (val != null) {
+                                target.addAttribute("title", val.toString());
+                            }
+                        }
+                        if (itemDescriptionPropertyId != null) {
+                            p = item.getItemProperty(itemDescriptionPropertyId);
+                            Object val = p.getValue();
+                            if (val != null) {
+                                target.addAttribute("description", val
+                                        .toString());
+                            }
+                        }
+                        if (itemNotimePropertyId != null) {
+                            p = item.getItemProperty(itemNotimePropertyId);
+                            Object val = p.getValue();
+                            if (val != null) {
+                                target.addAttribute("notime", ((Boolean) val)
+                                        .booleanValue());
+                            }
+                        }
 
-			target.endTag("items");
-		}
-	}
+                        target.endTag("item");
+                    }
+                }
+            }
+
+            target.endTag("items");
+        }
+    }
 }

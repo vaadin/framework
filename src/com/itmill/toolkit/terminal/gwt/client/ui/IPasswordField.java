@@ -10,8 +10,8 @@ import com.google.gwt.user.client.DOM;
  */
 public class IPasswordField extends ITextField {
 
-	public IPasswordField() {
-		super(DOM.createInputPassword());
-	}
+    public IPasswordField() {
+        super(DOM.createInputPassword());
+    }
 
 }

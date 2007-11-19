@@ -659,25 +659,25 @@ public class IFilterSelect extends Composite implements Paintable,
      * Calculate minumum width for FilterSelect textarea
      */
     private native int minWidth(String captions) /*-{
-                                  	if(!captions || captions.length <= 0)
-                                  		return 0;
-                                  	captions = captions.split("|");
-                                  	var d = $wnd.document.createElement("div");
-                                  	var html = "";
-                                  	for(var i=0; i < captions.length; i++) {
-                                  		html += "<div>" + captions[i] + "</div>";
-                                  		// TODO apply same CSS classname as in suggestionmenu
-                                  	}
-                                  	d.style.position = "absolute";
-                                  	d.style.top = "0";
-                                  	d.style.left = "0";
-                                  	d.style.visibility = "hidden";
-                                  	d.innerHTML = html;
-                                  	$wnd.document.body.appendChild(d);
-                                  	var w = d.offsetWidth;
-                                  	$wnd.document.body.removeChild(d);
-                                  	return w;
-                                  }-*/;
+                                                    	if(!captions || captions.length <= 0)
+                                                    		return 0;
+                                                    	captions = captions.split("|");
+                                                    	var d = $wnd.document.createElement("div");
+                                                    	var html = "";
+                                                    	for(var i=0; i < captions.length; i++) {
+                                                    		html += "<div>" + captions[i] + "</div>";
+                                                    		// TODO apply same CSS classname as in suggestionmenu
+                                                    	}
+                                                    	d.style.position = "absolute";
+                                                    	d.style.top = "0";
+                                                    	d.style.left = "0";
+                                                    	d.style.visibility = "hidden";
+                                                    	d.innerHTML = html;
+                                                    	$wnd.document.body.appendChild(d);
+                                                    	var w = d.offsetWidth;
+                                                    	$wnd.document.body.removeChild(d);
+                                                    	return w;
+                                                    }-*/;
 
     public void onFocus(Widget sender) {
         // NOP

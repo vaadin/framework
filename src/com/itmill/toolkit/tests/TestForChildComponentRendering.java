@@ -21,69 +21,71 @@ import com.itmill.toolkit.ui.Select;
  */
 public class TestForChildComponentRendering extends CustomComponent {
 
-	private OrderedLayout main;
+    private OrderedLayout main;
 
-	public TestForChildComponentRendering() {
+    public TestForChildComponentRendering() {
 
-		main = new OrderedLayout();
-		setCompositionRoot(main);
-		createNewView();
-	}
+        main = new OrderedLayout();
+        setCompositionRoot(main);
+        createNewView();
+    }
 
-	public void createNewView() {
-		main.removeAllComponents();
-		main.addComponent(new Label("SDFGFHFHGJGFDSDSSSGFDD"));
+    public void createNewView() {
+        main.removeAllComponents();
+        main.addComponent(new Label("SDFGFHFHGJGFDSDSSSGFDD"));
 
-		Link l = new Link();
-		l.setCaption("Siirry ITMILLIIN");
-		l.setResource(new ExternalResource("http://www.itmill.com/"));
-		l.setTargetHeight(200);
-		l.setTargetWidth(500);
-		l.setTargetBorder(Link.TARGET_BORDER_MINIMAL);
-		main.addComponent(l);
+        Link l = new Link();
+        l.setCaption("Siirry ITMILLIIN");
+        l.setResource(new ExternalResource("http://www.itmill.com/"));
+        l.setTargetHeight(200);
+        l.setTargetWidth(500);
+        l.setTargetBorder(Link.TARGET_BORDER_MINIMAL);
+        main.addComponent(l);
 
-		Select se = new Select();
-		se.setCaption("VALITSET TÄSTÄ");
-		se.addItem("valinta1");
-		se.addItem("Valinta 2");
+        Select se = new Select();
+        se.setCaption("VALITSET TÄSTÄ");
+        se.addItem("valinta1");
+        se.addItem("Valinta 2");
 
-		Button b = new Button("refresh view", this, "createNewView");
-		main.addComponent(b);
+        Button b = new Button("refresh view", this, "createNewView");
+        main.addComponent(b);
 
-		b = new Button("reorder view", this, "randomReorder");
-		main.addComponent(b);
+        b = new Button("reorder view", this, "randomReorder");
+        main.addComponent(b);
 
-		b = new Button("remove randomly one component", this,
-				"removeRandomComponent");
-		main.addComponent(b);
+        b = new Button("remove randomly one component", this,
+                "removeRandomComponent");
+        main.addComponent(b);
 
-	}
+    }
 
-	public void randomReorder() {
-		Iterator it = main.getComponentIterator();
-		ArrayList components = new ArrayList();
-		while (it.hasNext())
-			components.add(it.next());
+    public void randomReorder() {
+        Iterator it = main.getComponentIterator();
+        ArrayList components = new ArrayList();
+        while (it.hasNext()) {
+            components.add(it.next());
+        }
 
-		OrderedLayout v = main;
-		v.removeAllComponents();
+        OrderedLayout v = main;
+        v.removeAllComponents();
 
-		for (int i = components.size(); i > 0; i--) {
-			int index = (int) (Math.random() * i);
-			v.addComponent((Component) components.get(index));
-			components.remove(index);
-		}
-	}
+        for (int i = components.size(); i > 0; i--) {
+            int index = (int) (Math.random() * i);
+            v.addComponent((Component) components.get(index));
+            components.remove(index);
+        }
+    }
 
-	public void removeRandomComponent() {
-		Iterator it = main.getComponentIterator();
-		ArrayList components = new ArrayList();
-		while (it.hasNext())
-			components.add(it.next());
-		int size = components.size();
-		int index = (int) (Math.random() * size);
-		main.removeComponent((Component) components.get(index));
+    public void removeRandomComponent() {
+        Iterator it = main.getComponentIterator();
+        ArrayList components = new ArrayList();
+        while (it.hasNext()) {
+            components.add(it.next());
+        }
+        int size = components.size();
+        int index = (int) (Math.random() * size);
+        main.removeComponent((Component) components.get(index));
 
-	}
+    }
 
 }

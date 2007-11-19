@@ -5,7 +5,11 @@ import java.io.File;
 import com.itmill.toolkit.data.util.FilesystemContainer;
 import com.itmill.toolkit.data.util.FilesystemContainer.FileItem;
 import com.itmill.toolkit.demo.util.SampleDirectory;
-import com.itmill.toolkit.ui.*;
+import com.itmill.toolkit.ui.Field;
+import com.itmill.toolkit.ui.Label;
+import com.itmill.toolkit.ui.Panel;
+import com.itmill.toolkit.ui.Tree;
+import com.itmill.toolkit.ui.Window;
 import com.itmill.toolkit.ui.Component.Event;
 import com.itmill.toolkit.ui.Component.Listener;
 
@@ -21,68 +25,68 @@ import com.itmill.toolkit.ui.Component.Listener;
  * 
  */
 public class TreeFilesystemContainer extends com.itmill.toolkit.Application
-		implements Listener {
+        implements Listener {
 
-	// Filesystem explorer panel and it's components
-	private Panel explorerPanel = new Panel("Filesystem explorer");
+    // Filesystem explorer panel and it's components
+    private Panel explorerPanel = new Panel("Filesystem explorer");
 
-	private Tree filesystem = new Tree();
+    private Tree filesystem = new Tree();
 
-	// File properties panel and it's components
-	private Panel propertyPanel = new Panel("File properties");
+    // File properties panel and it's components
+    private Panel propertyPanel = new Panel("File properties");
 
-	private Label fileProperties = new Label();
+    private Label fileProperties = new Label();
 
-	public void init() {
-		Window main = new Window("Tree FilesystemContainer demo");
-		setMainWindow(main);
+    public void init() {
+        Window main = new Window("Tree FilesystemContainer demo");
+        setMainWindow(main);
 
-		// Main window contains heading and two panels
-		main.addComponent(new Label("<h3>TreeFilesystemContainer demo</h3>",
-				Label.CONTENT_XHTML));
-		main.addComponent(propertyPanel);
-		main.addComponent(explorerPanel);
+        // Main window contains heading and two panels
+        main.addComponent(new Label("<h3>TreeFilesystemContainer demo</h3>",
+                Label.CONTENT_XHTML));
+        main.addComponent(propertyPanel);
+        main.addComponent(explorerPanel);
 
-		// Explorer panel contains tree
-		explorerPanel.addComponent(filesystem);
+        // Explorer panel contains tree
+        explorerPanel.addComponent(filesystem);
 
-		// Property panel contains label
-		propertyPanel.addComponent(fileProperties);
-		fileProperties.setCaption("No file selected.");
-		propertyPanel.setEnabled(false);
+        // Property panel contains label
+        propertyPanel.addComponent(fileProperties);
+        fileProperties.setCaption("No file selected.");
+        propertyPanel.setEnabled(false);
 
-		// Get sample directory
-		File sampleDir = SampleDirectory.getDirectory(this);
-		// Populate tree with FilesystemContainer
-		FilesystemContainer fsc = new FilesystemContainer(sampleDir, true);
-		filesystem.setContainerDataSource(fsc);
-		// "this" handles all filesystem events
-		// e.g. node clicked, expanded etc.
-		filesystem.addListener((Listener) this);
-		// Value changes are immediate
-		filesystem.setImmediate(true);
-	}
+        // Get sample directory
+        File sampleDir = SampleDirectory.getDirectory(this);
+        // Populate tree with FilesystemContainer
+        FilesystemContainer fsc = new FilesystemContainer(sampleDir, true);
+        filesystem.setContainerDataSource(fsc);
+        // "this" handles all filesystem events
+        // e.g. node clicked, expanded etc.
+        filesystem.addListener(this);
+        // Value changes are immediate
+        filesystem.setImmediate(true);
+    }
 
-	/**
-	 * Listener for any component events. This class has been registered as an
-	 * listener for component fsTree.
-	 */
-	public void componentEvent(Event event) {
-		// Check if event occured at fsTree component
-		if (event.getSource() == filesystem) {
-			// Check if event is about changing value
-			if (event.getClass() == Field.ValueChangeEvent.class) {
-				// Update property panel contents
-				FileItem fileItem = (FileItem) filesystem.getItem(filesystem
-						.getValue());
-				fileProperties.setIcon(fileItem.getIcon());
-				fileProperties.setCaption(fileItem.getName() + ", size "
-						+ fileItem.getSize() + " bytes.");
-			}
-			// here we could check for other type of events for filesystem
-			// component
-		}
-		// here we could check for other component's events
-	}
+    /**
+     * Listener for any component events. This class has been registered as an
+     * listener for component fsTree.
+     */
+    public void componentEvent(Event event) {
+        // Check if event occured at fsTree component
+        if (event.getSource() == filesystem) {
+            // Check if event is about changing value
+            if (event.getClass() == Field.ValueChangeEvent.class) {
+                // Update property panel contents
+                FileItem fileItem = (FileItem) filesystem.getItem(filesystem
+                        .getValue());
+                fileProperties.setIcon(fileItem.getIcon());
+                fileProperties.setCaption(fileItem.getName() + ", size "
+                        + fileItem.getSize() + " bytes.");
+            }
+            // here we could check for other type of events for filesystem
+            // component
+        }
+        // here we could check for other component's events
+    }
 
 }
