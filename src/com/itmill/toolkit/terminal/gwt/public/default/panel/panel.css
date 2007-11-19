@@ -38,6 +38,7 @@
 
 .i-panel-nocaption {
 	height: 9px;
+	border-bottom: 1px solid #dee2e3;
 }
 
 .i-panel-caption:before,
@@ -58,7 +59,7 @@
 .i-panel-content {
 	border: 1px solid #babfc0;
 	border-top: none;
-	border-bottom: none;
+	border-bottom: 1px solid #dee2e3;
 	background-color: #fff;
 	overflow: auto;
 }
@@ -94,6 +95,7 @@
 	border-right: none;
 	background: transparent;
 	padding-top: 14px;
+	overflow: hidden;
 }
 
 .i-panel-caption-light:before,

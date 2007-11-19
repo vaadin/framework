@@ -42,15 +42,17 @@ public class ITabsheet extends FlowPanel implements Paintable,
     private final TabListener tl = new TabListener() {
 
         public void onTabSelected(SourcesTabEvents sender, final int tabIndex) {
-            if (client != null && activeTabIndex != tabIndex) {
+            if (ITabsheet.this.client != null
+                    && ITabsheet.this.activeTabIndex != tabIndex) {
                 addStyleDependentName("loading");
-                // run updating variables in deferred command to
-                // bypass some FF
+                // run updating variables in deferred command to bypass some FF
                 // optimization issues
                 DeferredCommand.addCommand(new Command() {
                     public void execute() {
-                        client.updateVariable(id, "selected", ""
-                                + tabKeys.get(tabIndex), true);
+                        ITabsheet.this.client.updateVariable(ITabsheet.this.id,
+                                "selected", ""
+                                        + ITabsheet.this.tabKeys.get(tabIndex),
+                                true);
                     }
                 });
             }
@@ -67,27 +69,31 @@ public class ITabsheet extends FlowPanel implements Paintable,
     public ITabsheet() {
         setStyleName(CLASSNAME);
 
-        tb = new TabBar();
-        tp = new ITabsheetPanel();
-        deco = DOM.createDiv();
+        this.tb = new TabBar();
+        this.tp = new ITabsheetPanel();
+        this.deco = DOM.createDiv();
 
-        tp.setStyleName(CLASSNAME + "-content");
+        this.tp.setStyleName(CLASSNAME + "-content");
         addStyleDependentName("loading"); // Indicate initial progress
-        tb.setStyleName(CLASSNAME + "-tabs");
-        DOM.setElementProperty(deco, "className", CLASSNAME + "-deco");
+        this.tb.setStyleName(CLASSNAME + "-tabs");
+        DOM.setElementProperty(this.deco, "className", CLASSNAME + "-deco");
 
-        add(tb);
-        add(tp);
-        DOM.appendChild(getElement(), deco);
+        add(this.tb);
+        add(this.tp);
+        DOM.appendChild(getElement(), this.deco);
 
-        tb.addTabListener(tl);
+        this.tb.addTabListener(this.tl);
 
         clearTabs();
+
+        // TODO For Safari only. Fix annoying 1px first cell in TabBar.
+        DOM.setStyleAttribute(DOM.getFirstChild(DOM.getFirstChild(DOM
+                .getFirstChild(tb.getElement()))), "display", "none");
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         this.client = client;
-        id = uidl.getId();
+        this.id = uidl.getId();
 
         if (client.updateComponent(this, uidl, false)) {
             return;
@@ -99,11 +105,11 @@ public class ITabsheet extends FlowPanel implements Paintable,
             String decoBaseClass = CLASSNAME + "-deco";
             String decoClass = decoBaseClass;
             for (int i = 0; i < styles.length; i++) {
-                tb.addStyleDependentName(styles[i]);
-                tp.addStyleDependentName(styles[i]);
+                this.tb.addStyleDependentName(styles[i]);
+                this.tp.addStyleDependentName(styles[i]);
                 decoClass += " " + decoBaseClass + "-" + styles[i];
             }
-            DOM.setElementProperty(deco, "className", decoClass);
+            DOM.setElementProperty(this.deco, "className", decoClass);
         }
 
         // Adjust width and height
@@ -119,17 +125,18 @@ public class ITabsheet extends FlowPanel implements Paintable,
                 setHeight(h);
             }
         } else {
-            height = null;
-            tp.setHeight("");
+            this.height = null;
+            this.tp.setHeight("");
         }
 
         // Render content
         UIDL tabs = uidl.getChildUIDL(0);
-        boolean keepCurrentTabs = tabKeys.size() == tabs.getNumberOfChildren();
-        for (int i = 0; keepCurrentTabs && i < tabKeys.size(); i++) {
-            keepCurrentTabs = tabKeys.get(i).equals(
+        boolean keepCurrentTabs = this.tabKeys.size() == tabs
+                .getNumberOfChildren();
+        for (int i = 0; keepCurrentTabs && i < this.tabKeys.size(); i++) {
+            keepCurrentTabs = this.tabKeys.get(i).equals(
                     tabs.getChildUIDL(i).getStringAttribute("key"))
-                    && captions.get(i).equals(
+                    && this.captions.get(i).equals(
                             tabs.getChildUIDL(i).getStringAttribute("caption"));
         }
         if (keepCurrentTabs) {
@@ -137,14 +144,14 @@ public class ITabsheet extends FlowPanel implements Paintable,
             for (Iterator it = tabs.getChildIterator(); it.hasNext();) {
                 UIDL tab = (UIDL) it.next();
                 if (tab.getBooleanAttribute("selected")) {
-                    activeTabIndex = index;
+                    this.activeTabIndex = index;
                     renderContent(tab.getChildUIDL(0));
                 }
                 index++;
             }
         } else {
-            tabKeys.clear();
-            captions.clear();
+            this.tabKeys.clear();
+            this.captions.clear();
             clearTabs();
 
             int index = 0;
@@ -156,19 +163,18 @@ public class ITabsheet extends FlowPanel implements Paintable,
                     caption = "&nbsp;";
                 }
 
-                captions.add(caption);
-                tabKeys.add(key);
+                this.captions.add(caption);
+                this.tabKeys.add(key);
 
-                // Add new tab (additional SPAN-element for
-                // loading indication)
-                tb.insertTab("<span>" + caption + "</span>", true, tb
+                // Add new tab (additional SPAN-element for loading indication)
+                this.tb.insertTab("<span>" + caption + "</span>", true, this.tb
                         .getTabCount());
 
                 // Add placeholder content
-                tp.add(new ILabel(""));
+                this.tp.add(new ILabel(""));
 
                 if (tab.getBooleanAttribute("selected")) {
-                    activeTabIndex = index;
+                    this.activeTabIndex = index;
                     renderContent(tab.getChildUIDL(0));
                 }
                 index++;
@@ -176,18 +182,20 @@ public class ITabsheet extends FlowPanel implements Paintable,
         }
 
         // Open selected tab
-        tb.selectTab(activeTabIndex);
+        this.tb.selectTab(this.activeTabIndex);
 
     }
 
     private void renderContent(final UIDL contentUIDL) {
         DeferredCommand.addCommand(new Command() {
             public void execute() {
-                Widget content = client.getWidget(contentUIDL);
-                tp.remove(activeTabIndex);
-                tp.insert(content, activeTabIndex);
-                tp.showWidget(activeTabIndex);
-                ((Paintable) content).updateFromUIDL(contentUIDL, client);
+                Widget content = ITabsheet.this.client.getWidget(contentUIDL);
+                ITabsheet.this.tp.remove(ITabsheet.this.activeTabIndex);
+                ITabsheet.this.tp
+                        .insert(content, ITabsheet.this.activeTabIndex);
+                ITabsheet.this.tp.showWidget(ITabsheet.this.activeTabIndex);
+                ((Paintable) content).updateFromUIDL(contentUIDL,
+                        ITabsheet.this.client);
                 removeStyleDependentName("loading");
                 ITabsheet.this.iLayout();
             }
@@ -196,15 +204,14 @@ public class ITabsheet extends FlowPanel implements Paintable,
     }
 
     private void clearTabs() {
-        int i = tb.getTabCount();
+        int i = this.tb.getTabCount();
         while (i > 0) {
-            tb.removeTab(--i);
+            this.tb.removeTab(--i);
         }
-        tp.clear();
+        this.tp.clear();
 
-        // Get rid of unnecessary 100% cell heights in TabBar (really
-        // ugly hack)
-        Element tr = DOM.getChild(DOM.getChild(tb.getElement(), 0), 0);
+        // Get rid of unnecessary 100% cell heights in TabBar (really ugly hack)
+        Element tr = DOM.getChild(DOM.getChild(this.tb.getElement(), 0), 0);
         Element rest = DOM.getChild(
                 DOM.getChild(tr, DOM.getChildCount(tr) - 1), 0);
         DOM.removeElementAttribute(rest, "style");
@@ -216,18 +223,18 @@ public class ITabsheet extends FlowPanel implements Paintable,
     }
 
     public void iLayout() {
-        if (height != null) {
+        if (this.height != null) {
             // Make content zero height
-            tp.setHeight("0");
-            DOM.setStyleAttribute(tp.getElement(), "overflow", "hidden");
+            this.tp.setHeight("0");
+            DOM.setStyleAttribute(this.tp.getElement(), "overflow", "hidden");
             // First, calculate needed pixel height
-            super.setHeight(height);
+            super.setHeight(this.height);
             int neededHeight = getOffsetHeight();
             super.setHeight("");
             // Then calculate the size the content area needs to be
             int pixelHeight = getOffsetHeight();
-            tp.setHeight(neededHeight - pixelHeight + "px");
-            DOM.setStyleAttribute(tp.getElement(), "overflow", "");
+            this.tp.setHeight(neededHeight - pixelHeight + "px");
+            DOM.setStyleAttribute(this.tp.getElement(), "overflow", "");
         }
         Util.runDescendentsLayout(this);
     }

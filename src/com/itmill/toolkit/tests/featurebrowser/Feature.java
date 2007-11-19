@@ -131,6 +131,7 @@ public abstract class Feature extends CustomComponent {
             }
             description = new Label(label, Label.CONTENT_XHTML);
             mainLayout.addComponent(description);
+			mainLayout.setMargin(true);
 
             ts.addTab(mainLayout, "Description", null);
         }

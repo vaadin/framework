@@ -51,12 +51,11 @@ public class IPanel extends SimplePanel implements Paintable,
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         // Ensure correct implementation
-        if (client.updateComponent(this, uidl, false)) {
+        if (client.updateComponent(this, uidl, false))
             return;
-        }
 
         this.client = client;
-        id = uidl.getId();
+        this.id = uidl.getId();
 
         // Panel size. Height needs to be saved for later use
         String w = uidl.hasVariable("width") ? uidl.getStringVariable("width")
@@ -64,6 +63,16 @@ public class IPanel extends SimplePanel implements Paintable,
         height = uidl.hasVariable("height") ? uidl.getStringVariable("height")
                 : null;
         setWidth(w != null ? w : "");
+
+        // Restore default stylenames
+        DOM
+                .setElementProperty(captionNode, "className", CLASSNAME
+                        + "-caption");
+        DOM
+                .setElementProperty(contentNode, "className", CLASSNAME
+                        + "-content");
+        DOM.setElementProperty(bottomDecoration, "className", CLASSNAME
+                + "-deco");
 
         // Handle caption displaying
         boolean hasCaption = false;
@@ -77,7 +86,8 @@ public class IPanel extends SimplePanel implements Paintable,
                     + "-nocaption");
         }
 
-        // Add proper stylenames for all elements
+        // Add proper stylenames for all elements. This way we can prevent
+        // unwanted CSS selector inheritance.
         if (uidl.hasAttribute("style")) {
             String[] styles = uidl.getStringAttribute("style").split(" ");
             String captionBaseClass = CLASSNAME
