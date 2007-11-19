@@ -102,7 +102,7 @@ public class SampleDatabase {
         st = connection.createStatement();
         int i = st.executeUpdate(expression);
         if (i == -1) {
-            System.out.println("SampleDatabase error : " + expression);
+            throw new SQLException("Database error : " + expression);
         }
         st.close();
     }
