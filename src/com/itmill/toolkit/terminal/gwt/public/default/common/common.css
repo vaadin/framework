@@ -125,3 +125,20 @@
 	text-decoration: underline;
 	cursor:pointer;
 }
+
+
+
+/* Loading indicator states */
+.i-loading-indicator,
+.i-loading-indicator-delay,
+.i-loading-indicator-wait {
+	width: 31px;
+	height: 31px;
+	background: transparent url(img/loading-indicator.gif);
+}
+.i-loading-indicator-delay {
+	background: transparent url(img/loading-indicator-delay.gif);
+}
+.i-loading-indicator-wait {
+	background: transparent url(img/loading-indicator-wait.gif);
+}

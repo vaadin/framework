@@ -10,6 +10,7 @@
 	border-collapse: collapse;
 	height: 48px;
 	background: transparent url(img/tabs-bg.png) repeat-x bottom left;
+	width: 100%;
 }
 
 .i-tabsheet-tabs .gwt-TabBarFirst {
@@ -121,6 +122,9 @@
 	visibility: hidden;
 	overflow: hidden;
 }
+
+
+
 
 /* IE specific styles */
 * html .i-tabsheet-content {
