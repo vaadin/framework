@@ -198,12 +198,13 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
 
     }
 
-    private native boolean uriEndsWithSlash() /*-{
-                      	var path =  $wnd.location.pathname;
-                      	if(path.charAt(path.length - 1) == "/")
-                      		return true;
-                      	return false;
-                      }-*/;
+    private native boolean uriEndsWithSlash()
+    /*-{
+        var path =  $wnd.location.pathname;
+        if(path.charAt(path.length - 1) == "/")
+            return true;
+        return false;
+    }-*/;
 
     private boolean hasTemplate() {
         if (currentTemplate == null) {
@@ -229,35 +230,38 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
     }
 
     /** Get the location attribute for given element */
-    private static native String getLocation(Element elem) /*-{
-                       return elem.getAttribute("location");
-                       }-*/;
+    private static native String getLocation(Element elem)
+    /*-{
+        return elem.getAttribute("location");
+    }-*/;
 
     /** Evaluate given script in browser document */
-    private static native void eval(String script) /*-{
-                       try {
-                      	 if (script != null) 
-                       eval("{ var document = $doc; var window = $wnd; "+ script + "}");
-                       } catch (e) {
-                       }
-                       }-*/;
+    private static native void eval(String script)
+    /*-{
+      try {
+     	 if (script != null) 
+      eval("{ var document = $doc; var window = $wnd; "+ script + "}");
+      } catch (e) {
+      }
+    }-*/;
 
     /** Prefix all img tag srcs with given prefix. */
-    private static native void prefixImgSrcs(Element e, String srcPrefix) /*-{
-                       try {
-                       var divs = e.getElementsByTagName("img"); 
-                       var base = "" + $doc.location;
-                       var l = base.length-1;
-                       while (l >= 0 && base.charAt(l) != "/") l--;
-                       base = base.substring(0,l+1);
-                       for (var i = 0; i < divs.length; i++) {
-                       var div = divs[i];
-                       var src = div.getAttribute("src");
-                       if (src.indexOf(base) == 0) div.setAttribute("src",base + srcPrefix + src.substring(base.length));
-                       else if (src.indexOf("http") != 0) div.setAttribute("src",srcPrefix + src);
-                       }			
-                       } catch (e) { alert(e + " " + srcPrefix);}
-                       }-*/;
+    private static native void prefixImgSrcs(Element e, String srcPrefix)
+    /*-{
+      try {
+          var divs = e.getElementsByTagName("img"); 
+          var base = "" + $doc.location;
+          var l = base.length-1;
+          while (l >= 0 && base.charAt(l) != "/") l--;
+          base = base.substring(0,l+1);
+          for (var i = 0; i < divs.length; i++) {
+              var div = divs[i];
+              var src = div.getAttribute("src");
+              if (src.indexOf(base) == 0) div.setAttribute("src",base + srcPrefix + src.substring(base.length));
+              else if (src.indexOf("http") != 0) div.setAttribute("src",srcPrefix + src);
+          }			
+      } catch (e) { alert(e + " " + srcPrefix);}
+    }-*/;
 
     /**
      * Extract body part and script tags from raw html-template.
