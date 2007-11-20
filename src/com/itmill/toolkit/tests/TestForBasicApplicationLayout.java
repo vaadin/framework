@@ -48,14 +48,10 @@ public class TestForBasicApplicationLayout extends CustomComponent {
         sp2.setSplitPosition(255, Sizeable.UNITS_PIXELS);
 
         Panel p = new Panel("Accordion Panel");
-        p.setHeight(100);
-        p.setHeightUnits(Sizeable.UNITS_PERCENTAGE);
+        p.setSizeFull();
 
         tab = new TabSheet();
-        tab.setWidth(100);
-        tab.setWidthUnits(Sizeable.UNITS_PERCENTAGE);
-        tab.setHeight(740);
-        tab.setHeightUnits(Sizeable.UNITS_PIXELS);
+        tab.setSizeFull();
 
         Panel report = new Panel("Monthly Program Runs", new ExpandLayout());
         OrderedLayout controls = new OrderedLayout();
@@ -83,10 +79,7 @@ public class TestForBasicApplicationLayout extends CustomComponent {
         table.setColumnCollapsingAllowed(true);
         table.setColumnReorderingAllowed(true);
         table.setSortDisabled(false);
-        table.setWidth(100);
-        table.setWidthUnits(Sizeable.UNITS_PERCENTAGE);
-        table.setHeight(100);
-        table.setHeightUnits(Sizeable.UNITS_PERCENTAGE);
+        table.setSizeFull();
         table.addStyleName("table-inline");
         sp2.setSecondComponent(table);
 
