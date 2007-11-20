@@ -126,40 +126,44 @@ public class IPanel extends SimplePanel implements Paintable,
 
     public void iLayout() {
         if (height != null && height != "") {
-            // need to fix containers height properly
-            DOM.setStyleAttribute(getElement(), "height", height);
-            DOM.setStyleAttribute(contentNode, "overflow", "hidden");
             boolean hasChildren = getWidget() != null;
             Element contentEl = null;
             String origPositioning = null;
             if (hasChildren) {
-                // remove children temporary form normal flow to detect proper
+                // Remove children temporary form normal flow to detect proper
                 // size
                 contentEl = getWidget().getElement();
                 origPositioning = DOM.getStyleAttribute(contentEl, "position");
                 DOM.setStyleAttribute(contentEl, "position", "absolute");
             }
+            // Set defaults
+            DOM.setStyleAttribute(contentNode, "overflow", "hidden");
             DOM.setStyleAttribute(contentNode, "height", "");
-            int availableH = DOM.getElementPropertyInt(getElement(),
-                    "clientHeight");
 
-            int usedH = DOM
-                    .getElementPropertyInt(bottomDecoration, "offsetTop")
-                    - DOM.getElementPropertyInt(getElement(), "offsetTop")
-                    + DOM.getElementPropertyInt(bottomDecoration,
-                            "offsetHeight");
+            // Calculate target height
+            super.setHeight(height);
+            int targetHeight = getOffsetHeight();
 
-            int contentH = availableH - usedH;
-            if (contentH < 0) {
-                contentH = 0;
+            // Calculate used height
+            super.setHeight("");
+            int usedHeight = getOffsetHeight();
+
+            // Calculate content area height (don't allow negative values)
+            int h = targetHeight - usedHeight;
+            if (h < 0) {
+                h = 0;
             }
-            DOM.setStyleAttribute(contentNode, "height", contentH + "px");
+
+            // Set proper values for content element
+            DOM.setStyleAttribute(contentNode, "height", h + "px");
+            DOM.setStyleAttribute(contentNode, "overflow", "auto");
+
+            // Restore content to flow
             if (hasChildren) {
                 ApplicationConnection.getConsole().log(
                         "positioning:" + origPositioning);
                 DOM.setStyleAttribute(contentEl, "position", origPositioning);
             }
-            DOM.setStyleAttribute(contentNode, "overflow", "auto");
         } else {
             DOM.setStyleAttribute(contentNode, "height", "");
         }
