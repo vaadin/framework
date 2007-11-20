@@ -50,41 +50,39 @@
  */
 
 .i-contextmenu {
-	background: #e9eced;
+	background: #e9eced url(../tabsheet/img/tab-bg.png);
 	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
 	background-color: #f6f7f7;
 	color: #464f52;
 	font-size: 12px;
-	line-height: 18px;
+	line-height: 14px;
 }
 
 .i-contextmenu .gwt-MenuBar {
-	border-right: 1px solid #d0d4d5;
-	border-bottom: 2px solid #d0d4d5;
+	border-right: 2px solid #c6cbcc;
+	border-bottom: 2px solid #c6cbcc;
 	border-top: 1px solid #d0d4d5;
-	border-left: 2px solid #d0d4d5;
+	border-left: 1px solid #d0d4d5;
 }
 
 .i-contextmenu .gwt-MenuItem {
-	border-bottom: 1px solid #e6e9e9; 
-	padding:1px;
+	padding: 1px 0;
 	cursor: pointer;
 	vertical-align: middle;
 }
 
 .i-contextmenu .gwt-MenuItem div {
-	border: 1px solid #f6f7f7;
-	padding: 2px 20px 2px 5px;
+	/*border: 1px solid #f6f7f7;*/
+	padding: 1px 20px 1px 8px;
 	cursor: pointer;
 	vertical-align: middle;
 	white-space: nowrap;
+	margin: 1px 0;
 }
 
-.i-contextmenu .gwt-MenuItem-selected {
-	background: #e6e9e9;
-}
 .i-contextmenu .gwt-MenuItem-selected div {
-	border: 1px solid #b6bbbc;
+	color: #fff;
+	background: #5daee8;
 }
 
 .i-contextmenu table {

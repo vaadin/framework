@@ -17,6 +17,8 @@ import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
 public class IUpload extends FormPanel implements Paintable, ClickListener,
         FormHandler {
+    
+    public static final String CLASSNAME = "i-upload";
 
     /**
      * FileUpload component that opens native OS dialog to select file.
@@ -61,6 +63,8 @@ public class IUpload extends FormPanel implements Paintable, ClickListener,
         panel.add(b);
 
         addFormHandler(this);
+        
+        setStyleName(CLASSNAME);
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {

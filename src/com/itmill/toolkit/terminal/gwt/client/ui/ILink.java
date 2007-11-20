@@ -69,17 +69,7 @@ public class ILink extends HTML implements Paintable, ClickListener {
         width = uidl.hasAttribute("width") ? uidl.getIntAttribute("width") : -1;
 
         DOM.setInnerHTML(getElement(), uidl.getStringAttribute("caption"));
-
-        if (readonly) {
-            addStyleName("readonly");
-        } else {
-            removeStyleName("readonly");
-        }
-        if (enabled) {
-            addStyleName("enabled");
-        } else {
-            removeStyleName("enabled");
-        }
+        
     }
 
     public void onClick(Widget sender) {
