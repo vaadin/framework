@@ -20,8 +20,6 @@ import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.Util;
 
 /**
- * TODO make this work horizontally
- * 
  * @author IT Mill Ltd
  */
 public class IExpandLayout extends ComplexPanel implements
