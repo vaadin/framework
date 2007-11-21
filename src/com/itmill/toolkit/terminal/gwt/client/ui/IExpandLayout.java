@@ -464,13 +464,11 @@ public class IExpandLayout extends ComplexPanel implements
     }
 
     public boolean remove(Widget w) {
-        Element wrapper = DOM.getParent(w.getElement());
+        WidgetWrapper ww = getWidgetWrapperFor(w);
         boolean removed = super.remove(w);
         if (removed) {
             if (!(w instanceof Caption)) {
-                DOM.removeChild(childContainer,
-                        orientationMode == ORIENTATION_HORIZONTAL ? wrapper
-                                : DOM.getParent(wrapper));
+                DOM.removeChild(childContainer, ww.getElement());
             }
             return true;
         }
