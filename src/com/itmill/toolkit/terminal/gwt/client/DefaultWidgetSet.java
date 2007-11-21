@@ -12,6 +12,7 @@ import com.itmill.toolkit.terminal.gwt.client.ui.IFilterSelect;
 import com.itmill.toolkit.terminal.gwt.client.ui.IForm;
 import com.itmill.toolkit.terminal.gwt.client.ui.IFormLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.IGridLayout;
+import com.itmill.toolkit.terminal.gwt.client.ui.IHorizontalExpandLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.ILabel;
 import com.itmill.toolkit.terminal.gwt.client.ui.ILink;
 import com.itmill.toolkit.terminal.gwt.client.ui.IListSelect;
@@ -155,6 +156,9 @@ public class DefaultWidgetSet implements WidgetSet {
         } else if ("com.itmill.toolkit.terminal.gwt.client.ui.IExpandLayout"
                 .equals(className)) {
             return new IExpandLayout();
+        } else if ("com.itmill.toolkit.terminal.gwt.client.ui.IHorizontalExpandLayout"
+                .equals(className)) {
+            return new IHorizontalExpandLayout();
         } else if ("com.itmill.toolkit.terminal.gwt.client.ui.richtextarea.IRichTextArea"
                 .equals(className)) {
             return new IRichTextArea();
@@ -264,7 +268,11 @@ public class DefaultWidgetSet implements WidgetSet {
         } else if ("progressindicator".equals(tag)) {
             return "com.itmill.toolkit.terminal.gwt.client.ui.IProgressIndicator";
         } else if ("expandlayout".equals(tag)) {
-            return "com.itmill.toolkit.terminal.gwt.client.ui.IExpandLayout";
+            if ("horizontal".equals(uidl.getStringAttribute("orientation"))) {
+                return "com.itmill.toolkit.terminal.gwt.client.ui.IHorizontalExpandLayout";
+            } else {
+                return "com.itmill.toolkit.terminal.gwt.client.ui.IExpandLayout";
+            }
         }
 
         return "com.itmill.toolkit.terminal.gwt.client.ui.IUnknownComponent";
