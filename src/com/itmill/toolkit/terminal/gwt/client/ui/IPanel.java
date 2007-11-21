@@ -146,7 +146,10 @@ public class IPanel extends SimplePanel implements Paintable,
 
             // Calculate used height
             super.setHeight("");
-            int usedHeight = getOffsetHeight();
+            int usedHeight = DOM.getElementPropertyInt(bottomDecoration,
+                    "offsetTop")
+                    + DOM.getElementPropertyInt(bottomDecoration,
+                            "offsetHeight");
 
             // Calculate content area height (don't allow negative values)
             int h = targetHeight - usedHeight;

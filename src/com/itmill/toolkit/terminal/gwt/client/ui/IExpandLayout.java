@@ -155,7 +155,7 @@ public class IExpandLayout extends ComplexPanel implements
         public VerticalWidgetWrapper() {
             setElement(DOM.createDiv());
             // this is mostly needed for IE, could be isolated
-            DOM.setStyleAttribute(getContainerElement(), "overflow", "hidden");
+            DOM.setStyleAttribute(getContainerElement(), "overflow", "auto");
         }
 
         void setExpandedSize(int pixels) {

@@ -247,21 +247,13 @@ public class ITabsheet extends FlowPanel implements Paintable,
             DOM.setStyleAttribute(contentNode, "overflow", "hidden");
 
             // Calculate target height
-            int targetHeight = 0;
-            /*
-             * if (height.indexOf("%") > 0) { // Percentage heights are handled
-             * separately int parentHeight = DOM.getElementPropertyInt(DOM
-             * .getParent(getElement()), "offsetHeight"); targetHeight =
-             * parentHeight Integer.parseInt(height.substring(0, height.length() -
-             * 1)) / 100; } else {
-             */
             super.setHeight(height);
-            targetHeight = getOffsetHeight();
-            // }
+            int targetHeight = getOffsetHeight();
 
             // Calculate used height
             super.setHeight("");
-            int usedHeight = getOffsetHeight();
+            int usedHeight = DOM.getElementPropertyInt(deco, "offsetTop")
+                    + DOM.getElementPropertyInt(deco, "offsetHeight");
 
             // Calculate content area height (don't allow negative values)
             int h = targetHeight - usedHeight;
