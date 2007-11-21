@@ -67,7 +67,6 @@
 	border-top: none;
 	border-bottom: none;
 	background-color: #fff;
-	overflow: auto;
 }
 
 .i-tabsheet-deco {
@@ -85,26 +84,6 @@
 	background: transparent url(../panel/img/bottom-left.png) no-repeat;
 }
 
-
-
-
-/* Fix Safari bug (one pixel table offset) by 
-   adding one extra pixel in every browser */
-/* Actually, let Safari be a little different, it's a bug */
-/*
-.i-tabsheet-content {
-	margin-left: 1px;
-}
-.i-tabsheet-tabs .gwt-TabBarFirst {
-	display: block;
-	width: 1px;
-	height: 1px;
-	overflow: hidden;
-}
-.i-tabsheet {
-	margin-left: -1px;
-}
-*/
 
 
 /* Progress indication */
@@ -127,12 +106,6 @@
 
 
 /* IE specific styles */
-* html .i-tabsheet-content {
-	border-bottom: 1px solid #babfc0;
-}
-*+html .i-tabsheet-content {
-	border-bottom: 1px solid #babfc0;
-}
 
 * html .i-tabsheet-tabs {
 	height: 46px;
@@ -163,10 +136,14 @@
 }
 
 * html .i-tabsheet-deco {
-	height: 0;
+	height: 1px;
+	background: #babfc0;
 	overflow: hidden;
+	margin: 0;
 }
 *+html .i-tabsheet-deco {
-	height: 0;
+	height: 1px;
+	background: #babfc0;
 	overflow: hidden;
+	margin: 0;
 }

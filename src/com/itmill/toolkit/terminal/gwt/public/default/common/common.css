@@ -66,7 +66,7 @@
 }
 
 .i-contextmenu .gwt-MenuItem {
-	padding: 1px 0;
+	padding: 2px 0;
 	cursor: pointer;
 	vertical-align: middle;
 }
@@ -77,7 +77,6 @@
 	cursor: pointer;
 	vertical-align: middle;
 	white-space: nowrap;
-	margin: 1px 0;
 }
 
 .i-contextmenu .gwt-MenuItem-selected div {
@@ -119,7 +118,7 @@
 	padding-right: 18px;
 }
 
-.i-link {
+.i-link span {
 	text-decoration: underline;
 	cursor:pointer;
 }

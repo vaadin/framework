@@ -61,7 +61,6 @@
 	border-top: none;
 	border-bottom: 1px solid #dee2e3;
 	background-color: #fff;
-	overflow: auto;
 }
 
 .i-panel-deco {
@@ -157,6 +156,13 @@
 }
 *+html .i-panel-content {
 	border-bottom: 1px solid #babfc0;
+}
+
+* html .i-panel-content-light {
+	border-bottom: none;
+}
+*+html .i-panel-content-light {
+	border-bottom: none;
 }
 
 * html .i-panel-deco {
