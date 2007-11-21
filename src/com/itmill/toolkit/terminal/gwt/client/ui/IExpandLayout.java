@@ -426,10 +426,11 @@ public class IExpandLayout extends ComplexPanel implements
 
             int marginTop = DOM.getElementPropertyInt(DOM.getFirstChild(me),
                     "offsetTop")
-                    - DOM.getElementPropertyInt(me, "offsetTop");
+                    - DOM.getElementPropertyInt(element, "offsetTop");
 
             Element lastElement = DOM.getChild(me, (DOM.getChildCount(me) - 1));
             int marginBottom = DOM.getElementPropertyInt(me, "offsetHeight")
+                    + DOM.getElementPropertyInt(me, "offsetTop")
                     - (DOM.getElementPropertyInt(lastElement, "offsetTop") + DOM
                             .getElementPropertyInt(lastElement, "offsetHeight"));
             size -= (marginTop + marginBottom); // FIXME expects same size
