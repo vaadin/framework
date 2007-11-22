@@ -34,7 +34,7 @@ See configure target to adjust this buildfile.
 		<property name="toolkit-jar-location" value="WebContent/WEB-INF/lib/itmill-toolkit-<version></version>.jar" />
 		
 		<!-- where project client-side widgetset source files are located -->
-		<property name="client-side-src-location" value="WebContent/src" />
+		<property name="client-side-src-location" value="WebContent/WEB-INF/src" />
 			
 		<!-- where to generate compiled javascript and theme files -->
 		<property name="client-side-destination" value="WebContent/ITMILL/widgetsets" />
@@ -70,8 +70,8 @@ See configure target to adjust this buildfile.
 		<java classname="com.google.gwt.dev.GWTCompiler" failonerror="yes" fork="yes" maxmemory="128m">
 			<arg value="-out" />
 			<arg value="${client-side-destination}" />
-			<echo>NOTE: Update line below and tell package name to your own widgetset</echo>
-			<arg value="com.itmill.toolkit.terminal.gwt.DefaultWidgetSet" />
+			<!-- NOTE: Update line below and tell package name to your own widgetset -->
+			<arg value="com.myexample.gwt.MyWidgetSet" />
 			<classpath>
 				<path refid="compile.classpath"/>
 			</classpath>
