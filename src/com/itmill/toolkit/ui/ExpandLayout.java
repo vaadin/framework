@@ -52,6 +52,11 @@ public class ExpandLayout extends OrderedLayout {
         // Add margin info. Defaults to false.
         target.addAttribute("margins", margins.getBitMask());
 
+        // Add spacing attribute (omitted if false)
+        if (isSpacingEnabled()) {
+            target.addAttribute("spacing", true);
+        }
+
         // Size
         if (getHeight() >= 0) {
             target.addAttribute("height", "" + getHeight()
