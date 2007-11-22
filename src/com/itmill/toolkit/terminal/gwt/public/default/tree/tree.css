@@ -1,22 +1,25 @@
 .i-tree-node {
-	background-image: url(img/collapsed.png);
-	background-repeat: no-repeat;
+	background: transparent url(img/collapsed.png) no-repeat 2px 1px;
 }
 .i-tree-node-expanded {
-	background-image: url(img/expanded.png);	
+	background: transparent url(img/expanded.png) no-repeat 2px 1px;
 }
 .i-tree-node-leaf {
 	background-image: none;
 }
 .i-tree-node-caption {
+	margin-left: 16px;
+}
+.i-tree-node span {
+	padding: 0 2px;
 	cursor: pointer;
-	margin-left:18px;
 }
 .i-tree-node-selected span {
 	background: #5daee8;
 	color: #fff;
 	padding: 0 2px;
+	cursor: pointer;
 }
 .i-tree-node-children {
-	padding-left: 18px;
+	padding-left: 16px;
 }
