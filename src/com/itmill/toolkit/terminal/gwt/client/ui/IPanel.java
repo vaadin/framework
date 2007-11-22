@@ -51,11 +51,12 @@ public class IPanel extends SimplePanel implements Paintable,
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         // Ensure correct implementation
-        if (client.updateComponent(this, uidl, false))
+        if (client.updateComponent(this, uidl, false)) {
             return;
+        }
 
         this.client = client;
-        this.id = uidl.getId();
+        id = uidl.getId();
 
         // Panel size. Height needs to be saved for later use
         String w = uidl.hasVariable("width") ? uidl.getStringVariable("width")
@@ -149,7 +150,8 @@ public class IPanel extends SimplePanel implements Paintable,
             int usedHeight = DOM.getElementPropertyInt(bottomDecoration,
                     "offsetTop")
                     + DOM.getElementPropertyInt(bottomDecoration,
-                            "offsetHeight");
+                            "offsetHeight")
+                    - DOM.getElementPropertyInt(getElement(), "offsetTop");
 
             // Calculate content area height (don't allow negative values)
             int h = targetHeight - usedHeight;
