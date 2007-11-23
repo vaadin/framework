@@ -33,7 +33,7 @@ public class ITMillToolkitWebMode {
 
         // Start Jetty
         System.out.println("Starting Jetty servlet container.");
-        String url = runServer(serverArgs);
+        String url = runServer(serverArgs, "Web Mode");
 
         // Start Browser
         System.out.println("Starting Web Browser.");
@@ -49,12 +49,14 @@ public class ITMillToolkitWebMode {
      * @param serverArgs
      * @return
      */
-    protected static String runServer(Map serverArgs) {
+    protected static String runServer(Map serverArgs, String mode) {
 
         // Add help for System.out
         System.out
                 .println("-------------------------------------------------\n"
-                        + "Starting IT Mill Toolkit in Web Mode.\n"
+                        + "Starting IT Mill Toolkit in "
+                        + mode
+                        + ".\n"
                         + "Running in http://localhost:"
                         + serverPort
                         + "\n-------------------------------------------------\n");

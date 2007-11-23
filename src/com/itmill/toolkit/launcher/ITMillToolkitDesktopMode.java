@@ -55,7 +55,7 @@ public class ITMillToolkitDesktopMode {
         }
 
         // Start the Winstone servlet container
-        String url = ITMillToolkitWebMode.runServer(serverArgs);
+        String url = ITMillToolkitWebMode.runServer(serverArgs, "Desktop Mode");
 
         // Open browser into application URL
         if (url != null) {
