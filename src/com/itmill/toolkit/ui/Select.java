@@ -69,7 +69,7 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
 
     private int columns = 0;
 
-    // current page when the user is 'paging' trough options
+    // Current page when the user is 'paging' trough options
     private int currentPage;
 
     private int filteringMode = FILTERINGMODE_STARTSWITH;
