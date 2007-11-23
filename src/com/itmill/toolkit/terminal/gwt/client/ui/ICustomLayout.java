@@ -132,6 +132,8 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
         eval(scripts);
         scripts = null;
 
+        iLayout();
+
         // For all contained widgets
         for (Iterator i = uidl.getChildIterator(); i.hasNext();) {
             UIDL uidlForChild = (UIDL) i.next();
