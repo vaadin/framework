@@ -111,6 +111,8 @@ public class ApplicationServlet extends HttpServlet {
     // Configurable parameter names
     private static final String PARAMETER_DEBUG = "Debug";
 
+    private static final String PARAMETER_ITMILL_RESOURCES = "Resources";
+
     private static final int DEFAULT_BUFFER_SIZE = 32 * 1024;
 
     private static final int MAX_BUFFER_SIZE = 64 * 1024;
@@ -515,17 +517,18 @@ public class ApplicationServlet extends HttpServlet {
             widgetset = DEFAULT_WIDGETSET;
         }
 
-        String contextPath = request.getContextPath();
+        String staticFilePath = getApplicationOrSystemProperty(
+                PARAMETER_ITMILL_RESOURCES, appUrl);
 
         // Default theme does not use theme URI
         String themeUri = null;
         if (themeName != null) {
             // Using custom theme
-            themeUri = contextPath + "/" + THEME_DIRECTORY_PATH + themeName;
+            themeUri = staticFilePath + "/" + THEME_DIRECTORY_PATH + themeName;
         }
         page.write("', pathInfo: '" + pathInfo + "', themeUri: '" + themeUri
                 + "'\n};\n" + "</script>\n"
-                + "<script language='javascript' src='" + contextPath + "/"
+                + "<script language='javascript' src='" + staticFilePath + "/"
                 + WIDGETSET_DIRECTORY_PATH + widgetset + "/" + widgetset
                 + ".nocache.js'></script>\n");
 
