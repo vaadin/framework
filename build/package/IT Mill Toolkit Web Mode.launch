@@ -12,6 +12,6 @@
 <listEntry value="org.eclipse.debug.ui.launchGroup.run"/>
 <listEntry value="org.eclipse.debug.ui.launchGroup.debug"/>
 </listAttribute>
-<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.itmill.toolkit.launcher.ITMillWebModeLaunch"/>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.itmill.toolkit.launcher.ITMillToolkitWebMode"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="<eclipse-workspace-name></eclipse-workspace-name>"/>
 </launchConfiguration>

@@ -6,6 +6,8 @@ Client-side code is compiled by using GWTCompiler which compiles client-side Jav
 JavaScript. Generated files are located under WebContent/ITMILL/widgetsets/*.
 
 Client-side compilation is required if you create new or modify existing widgets.
+You may use either this script or IT Mill Toolkit Hosted Mode.launch (in Eclipse)
+to compile your client-side java code. 
 
 By default IT Mill Toolkit first tries to serve widgetset resources from the file system, if that
 fails then files are streamed from itmill-toolkit-<version>.jar. 
