@@ -30,6 +30,10 @@ public class IExpandLayout extends ComplexPanel implements
 
     public static final int ORIENTATION_VERTICAL = 0;
 
+    // We are using minimun for expanded element to avoid "odd" situations where
+    // expanded element is 0 size
+    private static final int EXPANDED_ELEMENTS_MIN_WIDTH = 40;
+
     /**
      * Contains reference to Element where Paintables are wrapped.
      */
@@ -76,7 +80,7 @@ public class IExpandLayout extends ComplexPanel implements
 
     protected void constructDOM() {
         element = DOM.createDiv();
-        DOM.setStyleAttribute(element, "overflow", "hidden");
+        // DOM.setStyleAttribute(element, "overflow", "hidden");
 
         if (orientationMode == ORIENTATION_HORIZONTAL) {
             me = DOM.createDiv();
@@ -106,10 +110,9 @@ public class IExpandLayout extends ComplexPanel implements
     }
 
     protected WidgetWrapper createWidgetWrappper() {
-        switch (orientationMode) {
-        case ORIENTATION_HORIZONTAL:
+        if (orientationMode == ORIENTATION_HORIZONTAL) {
             return new HorizontalWidgetWrapper();
-        default:
+        } else {
             return new VerticalWidgetWrapper();
         }
     }
@@ -122,10 +125,9 @@ public class IExpandLayout extends ComplexPanel implements
      */
     public WidgetWrapper getWidgetWrapperFor(Widget child) {
         Element containerElement = DOM.getParent(child.getElement());
-        switch (orientationMode) {
-        case ORIENTATION_HORIZONTAL:
+        if (orientationMode == ORIENTATION_HORIZONTAL) {
             return new HorizontalWidgetWrapper(containerElement);
-        default:
+        } else {
             return new VerticalWidgetWrapper(containerElement);
         }
     }
@@ -342,9 +344,9 @@ public class IExpandLayout extends ComplexPanel implements
 
         int spaceForExpandedWidget = availableSpace - usedSpace;
 
-        if (spaceForExpandedWidget < 0) {
+        if (spaceForExpandedWidget < EXPANDED_ELEMENTS_MIN_WIDTH) {
             // TODO fire warning for developer
-            spaceForExpandedWidget = 0;
+            spaceForExpandedWidget = EXPANDED_ELEMENTS_MIN_WIDTH;
         }
 
         WidgetWrapper wr = getWidgetWrapperFor(expandedWidget);
@@ -376,15 +378,11 @@ public class IExpandLayout extends ComplexPanel implements
         while (it.hasNext()) {
             Widget w = (Widget) it.next();
             if (w != expandedWidget) {
-                switch (orientationMode) {
-                case ORIENTATION_VERTICAL:
-                    total += DOM.getElementPropertyInt(DOM.getParent(w
-                            .getElement()), "offsetHeight");
-                    break;
-                default:
-                    total += DOM.getElementPropertyInt(DOM.getParent(w
-                            .getElement()), "offsetWidth");
-                    break;
+                WidgetWrapper wr = getWidgetWrapperFor(w);
+                if (orientationMode == ORIENTATION_VERTICAL) {
+                    total += wr.getOffsetHeight();
+                } else {
+                    total += wr.getOffsetWidth();
                 }
             }
         }
@@ -420,9 +418,14 @@ public class IExpandLayout extends ComplexPanel implements
 
     private int getAvailableSpace() {
         int size;
-        switch (orientationMode) {
-        case ORIENTATION_VERTICAL:
+        if (orientationMode == ORIENTATION_VERTICAL) {
+            if (Util.isIE6()) {
+                DOM.setStyleAttribute(getElement(), "overflow", "hidden");
+            }
             size = getOffsetHeight();
+            if (Util.isIE6()) {
+                DOM.setStyleAttribute(getElement(), "overflow", "visible");
+            }
 
             int marginTop = DOM.getElementPropertyInt(DOM.getFirstChild(me),
                     "offsetTop")
@@ -433,12 +436,10 @@ public class IExpandLayout extends ComplexPanel implements
                     + DOM.getElementPropertyInt(me, "offsetTop")
                     - (DOM.getElementPropertyInt(lastElement, "offsetTop") + DOM
                             .getElementPropertyInt(lastElement, "offsetHeight"));
-            size -= (marginTop + marginBottom); // FIXME expects same size
-            // top/bottom margin
-            break;
-        default:
+            size -= (marginTop + marginBottom);
+        } else {
+            // horizontal mode
             size = DOM.getElementPropertyInt(childContainer, "offsetWidth");
-            break;
         }
         return size;
     }
