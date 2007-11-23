@@ -1882,7 +1882,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 
             public void showContextMenu(Event event) {
                 ApplicationConnection.getConsole().log("Context menu");
-                if (actionKeys != null) {
+                if (enabled && actionKeys != null) {
                     int left = DOM.eventGetClientX(event);
                     int top = DOM.eventGetClientY(event);
                     top += Window.getScrollTop();
