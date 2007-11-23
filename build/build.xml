@@ -1,3 +1,4 @@
+
 <?xml version="1.0"?>
 
 <project name="IT Mill Toolkit" basedir="../" default="package-all">
@@ -112,7 +113,6 @@
 
         <!-- Output directory -->
         <property name="output-dir" value="build/result/${product-file}-${version}" />
-        <mkdir dir="build/result" />
 	<mkdir dir="${output-dir}" />
 
         <!-- Create Output Directory Hierarchy -->
@@ -309,9 +309,9 @@
                 <include name="eclipse*launch" />
                 <include name="build-widgetsets.xml" />
             </fileset>
-        	<rename src="eclipse-classpath" dest=".classpath" />
-        	<rename src="eclipse-project" dest=".project" />
         </copy>
+       	<rename src="eclipse-classpath" dest=".classpath" />
+       	<rename src="eclipse-project" dest=".project" />
         <if>
             <equals arg1="${package-platform}" arg2="windows" />
             <then>
