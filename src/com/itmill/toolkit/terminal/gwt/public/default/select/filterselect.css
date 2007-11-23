@@ -63,7 +63,8 @@
 	margin: 2px 0 0 0;
 	overflow:hidden;
 }
-.i-filterselect-prevpage {
+.i-filterselect-prevpage,
+.i-filterselect-prevpage-off {
 	background-position: 50% -1px;
 	margin: 0 0 2px 0;
 }
@@ -74,6 +75,8 @@
 	background-position: 50% -12px;
 }
 .i-filterselect-nextpage span,
+.i-filterselect-nextpage-off span,
+.i-filterselect-prevpage-off span,
 .i-filterselect-prevpage span {
 	display: block;
 	height: 12px;
@@ -83,22 +86,16 @@
 	cursor: pointer;
 	overflow: hidden;
 }
-.i-filterselect-nextpage span {
+.i-filterselect-nextpage span,
+.i-filterselect-nextpage-off span {
 	background: transparent url(img/arrow-down.png) no-repeat 50% 60%;
 }
-.i-filterselect-nextpage-off,
-.i-filterselect-prevpage-off {
-	background: transparent;
-}
-.i-filterselect-nextpage-off span,
-.i-filterselect-prevpage-off span {
-	display: none;
-}
-
 
 .i-filterselect-nextpage-off,
 .i-filterselect-prevpage-off {
 	color: #666;
+	opacity: 0.5;
+	filter: Alpha(opacity=50);
 }
 
 .i-filterselect-status {
