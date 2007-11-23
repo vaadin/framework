@@ -67,6 +67,8 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
      */
     protected int pageLength = 10;
 
+    private int columns = 0;
+
     // current page when the user is 'paging' trough options
     private int currentPage;
 
@@ -140,6 +142,11 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
             if (!needNullSelectOption) {
                 target.addAttribute("nullselectitem", true);
             }
+        }
+
+        // Adds the number of columns
+        if (columns != 0) {
+            target.addAttribute("cols", columns);
         }
 
         // Constructs selected keys array
@@ -421,4 +428,27 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
     public int getFilteringMode() {
         return filteringMode;
     }
+
+    /**
+     * Sets the number of columns in the editor. If the number of columns is set
+     * 0, the actual number of displayed columns is determined implicitly by the
+     * adapter.
+     * 
+     * @param columns
+     *                the number of columns to set.
+     */
+    public void setColumns(int columns) {
+        if (columns < 0) {
+            columns = 0;
+        }
+        if (this.columns != columns) {
+            this.columns = columns;
+            requestRepaint();
+        }
+    }
+
+    public int getColumns() {
+        return columns;
+    }
+
 }

@@ -27,7 +27,9 @@ public class ITwinColSelect extends IOptionGroupBase {
     public ITwinColSelect() {
         super(CLASSNAME);
         options = new ListBox();
+        options.addClickListener(this);
         selections = new ListBox();
+        selections.addClickListener(this);
         options.setVisibleItemCount(VISIBLE_COUNT);
         selections.setVisibleItemCount(VISIBLE_COUNT);
         options.setStyleName(CLASSNAME + "-options");
@@ -35,15 +37,15 @@ public class ITwinColSelect extends IOptionGroupBase {
         Panel buttons = new FlowPanel();
         buttons.setStyleName(CLASSNAME + "-buttons");
         add = new IButton();
-        remove = new IButton();
         add.setText(">>");
-        remove.setText("<<");
         add.addClickListener(this);
+        remove = new IButton();
+        remove.setText("<<");
         remove.addClickListener(this);
         Panel p = ((Panel) optionsContainer);
         p.add(options);
         buttons.add(add);
-        HTML br = new HTML("&nbsp;");
+        HTML br = new HTML("<span/>");
         br.setStyleName(CLASSNAME + "-deco");
         buttons.add(br);
         buttons.add(remove);
@@ -70,6 +72,15 @@ public class ITwinColSelect extends IOptionGroupBase {
                 options.addItem(optionUidl.getStringAttribute("caption"),
                         optionUidl.getStringAttribute("key"));
             }
+        }
+        optionsContainer.setWidth(null);
+        if (getColumns() > 0) {
+            options.setWidth(getColumns() + "em");
+            selections.setWidth(getColumns() + "em");
+        }
+        if (getRows() > 0) {
+            options.setVisibleItemCount(getRows());
+            selections.setVisibleItemCount(getRows());
         }
     }
 
@@ -118,6 +129,8 @@ public class ITwinColSelect extends IOptionGroupBase {
                     String text = options.getItemText(optionIndex);
                     String value = options.getValue(optionIndex);
                     selections.addItem(text, value);
+                    selections.setItemSelected(selections.getItemCount() - 1,
+                            true);
                     options.removeItem(optionIndex);
                 }
             }
@@ -136,11 +149,24 @@ public class ITwinColSelect extends IOptionGroupBase {
                     String text = selections.getItemText(selectionIndex);
                     String value = selections.getValue(selectionIndex);
                     options.addItem(text, value);
+                    options.setItemSelected(options.getItemCount() - 1, true);
                     selections.removeItem(selectionIndex);
                 }
             }
             client.updateVariable(id, "selected", selectedKeys.toArray(),
                     isImmediate());
+        } else if (sender == options) {
+            // unselect all in other list, to avoid mistakes (i.e wrong button)
+            int c = selections.getItemCount();
+            for (int i = 0; i < c; i++) {
+                selections.setItemSelected(i, false);
+            }
+        } else if (sender == selections) {
+            // unselect all in other list, to avoid mistakes (i.e wrong button)
+            int c = options.getItemCount();
+            for (int i = 0; i < c; i++) {
+                options.setItemSelected(i, false);
+            }
         }
     }
 

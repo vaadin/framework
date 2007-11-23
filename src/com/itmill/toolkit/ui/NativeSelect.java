@@ -14,6 +14,9 @@ import com.itmill.toolkit.terminal.PaintTarget;
  */
 public class NativeSelect extends AbstractSelect {
 
+    // width in characters, mimics TextField
+    private int columns = 0;
+
     public NativeSelect() {
         super();
     }
@@ -30,8 +33,35 @@ public class NativeSelect extends AbstractSelect {
         super(caption);
     }
 
+    /**
+     * Sets the number of columns in the editor. If the number of columns is set
+     * 0, the actual number of displayed columns is determined implicitly by the
+     * adapter.
+     * 
+     * @param columns
+     *                the number of columns to set.
+     */
+    public void setColumns(int columns) {
+        if (columns < 0) {
+            columns = 0;
+        }
+        if (this.columns != columns) {
+            this.columns = columns;
+            requestRepaint();
+        }
+    }
+
+    public int getColumns() {
+        return columns;
+    }
+
     public void paintContent(PaintTarget target) throws PaintException {
         target.addAttribute("type", "native");
+        // Adds the number of columns
+        if (columns != 0) {
+            target.addAttribute("cols", columns);
+        }
+
         super.paintContent(target);
     }
 

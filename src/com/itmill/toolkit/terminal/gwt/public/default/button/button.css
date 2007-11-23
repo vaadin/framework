@@ -1,5 +1,6 @@
 .i-button {
 	cursor: pointer;
+	font-size: 13px;
 }
 .i-button.link {
 	border: 0px;

@@ -87,23 +87,25 @@ public class ITextField extends TextBoxBase implements Paintable,
     }
 
     private native void setColumns(Element e, int c) /*-{
-                   try {
-                   	switch(e.tagName.toLowerCase()) {
-                   		case "input":
-                   			e.size = c;
-                   			break;
-                   		case "textarea":
-                   			e.cols = c;
-                   			break;
-                   		default:;
-                   	}
-                   } catch (e) {}
-                   }-*/;
+                      try {
+                      	switch(e.tagName.toLowerCase()) {
+                      		case "input":
+                      			//e.size = c;
+                      			e.style.width = c+"em";
+                      			break;
+                      		case "textarea":
+                      			//e.cols = c;
+                      			e.style.width = c+"em";
+                      			break;
+                      		default:;
+                      	}
+                      } catch (e) {}
+                      }-*/;
 
     private native void setRows(Element e, int r) /*-{
-                   try {
-                   	if(e.tagName.toLowerCase() == "textarea")
-                   		e.rows = r;
-                   } catch (e) {}
-                   }-*/;
+                      try {
+                      	if(e.tagName.toLowerCase() == "textarea")
+                      		e.rows = r;
+                      } catch (e) {}
+                      }-*/;
 }

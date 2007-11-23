@@ -43,6 +43,9 @@ public class IListSelect extends IOptionGroupBase {
                 select.setItemSelected(select.getItemCount() - 1, true);
             }
         }
+        if (getRows() > 0) {
+            select.setVisibleItemCount(getRows());
+        }
     }
 
     protected Object[] getSelectedItems() {

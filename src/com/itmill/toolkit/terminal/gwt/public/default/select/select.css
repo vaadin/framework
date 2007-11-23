@@ -1,7 +1,6 @@
 .i-select {
 
 }
-
 .i-select-option {
 
 }
@@ -23,21 +22,30 @@
 	border-left-color: #d6d6d6;
 	*/
 	display: block;
+	font-size: 13px;
 }
 
 /* Twincol style */
+.i-select-twincol {
+	white-space: nowrap;
+}
 .i-select-twincol-options {
 	float: left;
+	font-size: 13px;
+}
+.i-select-twincol-selections {
+	font-size: 13px;
+	font-weight: bold;
 }
 
 .i-select-twincol-buttons {
 	float: left;
-	width: 40px;
+	padding: 2px; /* does not work in first render in FF ? */
 	text-align: center;
 }
 
 .i-select-twincol-buttons .i-select-twincol-deco {
-	display: inline; /* Needed to push the two buttons in stack */
+	clear:both;
 }
 
 .i-select-twincol .i-textfield {

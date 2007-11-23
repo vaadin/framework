@@ -32,6 +32,10 @@ abstract class IOptionGroupBase extends Composite implements Paintable,
 
     private boolean readonly;
 
+    private int cols = 0;
+
+    private int rows = 0;
+
     private boolean nullSelectionAllowed = true;
 
     private boolean nullSelectionItemAvailable = false;
@@ -94,6 +98,21 @@ abstract class IOptionGroupBase extends Composite implements Paintable,
         return nullSelectionItemAvailable;
     }
 
+    /**
+     * @return "cols" specified in uidl, 0 if not specified
+     */
+    protected int getColumns() {
+        return cols;
+    }
+
+    /**
+     * @return "rows" specified in uidl, 0 if not specified
+     */
+
+    protected int getRows() {
+        return rows;
+    }
+
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         this.client = client;
         id = uidl.getId();
@@ -111,7 +130,17 @@ abstract class IOptionGroupBase extends Composite implements Paintable,
         nullSelectionAllowed = uidl.getBooleanAttribute("nullselect");
         nullSelectionItemAvailable = uidl.getBooleanAttribute("nullselectitem");
 
+        cols = uidl.getIntAttribute("cols");
+        rows = uidl.getIntAttribute("rows");
+
         UIDL ops = uidl.getChildUIDL(0);
+
+        if (getColumns() > 0) {
+            container.setWidth(getColumns() + "em");
+            if (container != optionsContainer) {
+                optionsContainer.setWidth("100%");
+            }
+        }
 
         buildOptions(ops);
 
@@ -119,19 +148,22 @@ abstract class IOptionGroupBase extends Composite implements Paintable,
             if (newItemField == null) {
                 newItemButton = new IButton();
                 newItemButton.setText("+");
+                newItemButton.setWidth("1.5em");
                 newItemButton.addClickListener(this);
                 newItemField = new ITextField();
                 newItemField.addKeyboardListener(this);
-                newItemField.setColumns(16);
+                // newItemField.setColumns(16);
+                if (getColumns() > 0) {
+                    newItemField.setWidth((getColumns() - 2) + "em");
+                }
             }
             newItemField.setEnabled(!disabled && !readonly);
             newItemButton.setEnabled(!disabled && !readonly);
 
-            if (newItemField != null && newItemField.getParent() == container) {
-                return;
+            if (newItemField == null || newItemField.getParent() != container) {
+                container.add(newItemField);
+                container.add(newItemButton);
             }
-            container.add(newItemField);
-            container.add(newItemButton);
         } else if (newItemField != null) {
             container.remove(newItemField);
             container.remove(newItemButton);
