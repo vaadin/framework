@@ -303,11 +303,13 @@
                 </replacetokens>
             </filterchain>
             <fileset dir="build/package">
-                <include name=".classpath" />
-                <include name=".project" />
-                <include name="*.launch" />
+                <include name="eclipse-classpath" />
+                <include name="eclipse-project" />
+                <include name="eclipse*launch" />
                 <include name="build-widgetsets.xml" />
             </fileset>
+        	<rename src="eclipse-classpath" dest=".classpath" />
+        	<rename src="eclipse-project" dest=".project" />
         </copy>
         <if>
             <equals arg1="${package-platform}" arg2="windows" />
@@ -389,6 +391,7 @@
                 <include name="license/*.html" />
             </fileset>
         </copy>
+
         <!-- copy 3rd part libraries used by demo -->
         <copy todir="${output-dir}/lib/demo">
             <fileset dir="lib">
@@ -454,8 +457,6 @@
         <copy todir="${output-dir}/WebContent/WEB-INF/src">
             <fileset dir="build/result/src">
                 <include name="${toolkit-package}/demo/**/*" />
-                <!-- TODO: remove -->
-                <include name="${toolkit-package}/tests/**/*" />
             </fileset>
         </copy>
 
@@ -468,13 +469,17 @@
             <fileset dir="WebContent">
                 <exclude name="**/.svn" />
                 <exclude name="openajax/**" />
+            	<exclude name="index.html" />
+            	<exclude name="WEB-INF/web.xml" />
                 <exclude name="ITMILL/widgetsets/**" />
                 <exclude name="WEB-INF/lib/commons-fileupload-custom.jar" />
-                <!-- TODO: enable -->
-                <!-- <exclude name="ITMILL/themes/tests-*" /> -->
+                <exclude name="ITMILL/themes/tests-*" />
                 <exclude name="WEB-INF/classes/**" />
             </fileset>
         </copy>
+    	
+    	<copy file="build/package/webcontent-index.html" tofile="${output-dir}/WebContent/index.html" />
+    	<copy file="build/package/web.xml" tofile="${output-dir}/WebContent/WEB-INF/web.xml" />
 
     </target>
 
@@ -550,8 +555,6 @@
                 <patternset>
                     <exclude name="${toolkit-package}/demo/**" />
                     <exclude name="${toolkit-package}/launcher/**" />
-                    <!-- TODO remove -->
-                    <exclude name="${toolkit-package}/tests/**" />
                 </patternset>
             </fileset>
             <!-- fileupload, see build/external/fileupload/build.xml -->
@@ -563,8 +566,6 @@
                 <patternset>
                     <exclude name="${toolkit-package}/demo/**" />
                     <exclude name="${toolkit-package}/launcher/**" />
-                    <!-- TODO remove -->
-                    <exclude name="${toolkit-package}/tests/**" />
                 </patternset>
             </fileset>
             <fileset dir="${output-dir}/WebContent">
@@ -596,8 +597,6 @@
                 <include name="${toolkit-package}/demo/**/*" />
                 <!-- user might want to tweak launcher classes -->
                 <include name="${toolkit-package}/launcher/**" />
-                <!-- TODO remove -->
-                <include name="${toolkit-package}/tests/**/*" />
             </fileset>
         </copy>
 
@@ -614,8 +613,6 @@
                 <include name="${toolkit-package}/demo/**/*" />
                 <!-- user might want to tweak launcher classes -->
                 <include name="${toolkit-package}/launcher/**" />
-                <!-- TODO remove -->
-                <include name="${toolkit-package}/tests/**" />
             </fileset>
         </copy>
 
