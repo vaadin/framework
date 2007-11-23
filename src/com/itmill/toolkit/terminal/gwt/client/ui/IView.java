@@ -143,6 +143,13 @@ public class IView extends SimplePanel implements Paintable,
             subWindows.remove(w);
             RootPanel.get().remove(w);
         }
+
+        if (Util.isIE()) {
+            // IE somehow fails some layout on first run, force layout
+            // functions
+            Util.runDescendentsLayout(this);
+        }
+
     }
 
     public void onBrowserEvent(Event event) {
