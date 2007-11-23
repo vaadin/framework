@@ -1,4 +1,3 @@
-
 <?xml version="1.0"?>
 
 <project name="IT Mill Toolkit" basedir="../" default="package-all">
