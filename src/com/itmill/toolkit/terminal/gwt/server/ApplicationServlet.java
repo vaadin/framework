@@ -444,7 +444,8 @@ public class ApplicationServlet extends HttpServlet {
                 System.err
                         .println("Requested resource ["
                                 + filename
-                                + "] not found from filesystem or through class loader.");
+                                + "] not found from filesystem or through class loader."
+                                + " Add widgetset and/or theme JAR to your classpath or add files to WebContent/ITMILL folder.");
                 response.setStatus(404);
                 return;
             }
@@ -514,23 +515,26 @@ public class ApplicationServlet extends HttpServlet {
             widgetset = DEFAULT_WIDGETSET;
         }
 
-        if (themeName == null) {
-            themeName = "default";
-        }
-
         String contextPath = request.getContextPath();
 
-        String themeUri = contextPath + "/" + THEME_DIRECTORY_PATH + themeName;
-
+        // Default theme does not use theme URI
+        String themeUri = null;
+        if (themeName != null) {
+            // Using custom theme
+            themeUri = contextPath + "/" + THEME_DIRECTORY_PATH + themeName;
+        }
         page.write("', pathInfo: '" + pathInfo + "', themeUri: '" + themeUri
                 + "'\n};\n" + "</script>\n"
                 + "<script language='javascript' src='" + contextPath + "/"
                 + WIDGETSET_DIRECTORY_PATH + widgetset + "/" + widgetset
                 + ".nocache.js'></script>\n");
-        if (!themeName.equals("default")) {
+
+        if (themeName != null) {
+            // Custom theme's stylesheet
             page.write("<link REL=\"stylesheet\" TYPE=\"text/css\" HREF=\""
                     + themeUri + "/styles.css\">\n");
         }
+
         page
                 .write("</head>\n<body class=\"i-generated-body\">\n"
                         + "	<iframe id=\"__gwt_historyFrame\" style=\"width:0;height:0;border:0;overflow:hidden\"></iframe>\n"
@@ -1018,9 +1022,9 @@ public class ApplicationServlet extends HttpServlet {
      */
     public class URIHandlerErrorImpl implements URIHandler.ErrorEvent {
 
-        private URIHandler owner;
+        private final URIHandler owner;
 
-        private Throwable throwable;
+        private final Throwable throwable;
 
         /**
          * 
