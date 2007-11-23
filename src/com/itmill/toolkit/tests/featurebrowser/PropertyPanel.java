@@ -498,7 +498,7 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
                         ((TextField) f).setColumns(4);
                     } else {
                         ((TextField) f).setNullSettingAllowed(true);
-                        ((TextField) f).setColumns(24);
+                        ((TextField) f).setColumns(17);
                     }
                 }
             }
