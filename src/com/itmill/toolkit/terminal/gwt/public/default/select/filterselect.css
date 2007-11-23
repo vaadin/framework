@@ -97,6 +97,10 @@
 	opacity: 0.5;
 	filter: Alpha(opacity=50);
 }
+.i-filterselect-nextpage-off span,
+.i-filterselect-prevpage-off span {
+	cursor: default;
+}
 
 .i-filterselect-status {
 	font-size: 11px;
