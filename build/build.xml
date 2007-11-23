@@ -112,7 +112,8 @@
 
         <!-- Output directory -->
         <property name="output-dir" value="build/result/${product-file}-${version}" />
-        <mkdir dir="${output-dir}" />
+        <mkdir dir="build/result" />
+	<mkdir dir="${output-dir}" />
 
         <!-- Create Output Directory Hierarchy -->
         <mkdir dir="${output-dir}/doc/manual" />
