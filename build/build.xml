@@ -104,13 +104,9 @@
 		<mkdir dir="${result-path}" />
 
 		<property file="build/build.properties" />
-		<property name="product-file" value="itmill-toolkit" />
-		<property name="product-name" value="IT Mill Toolkit" />
-		<property name="toolkit-package" value="com/itmill/toolkit" />
-		<property name="eclipse-workspace-name" value="itmill-toolkit-examples" />
-		<property name="eclipse-launch-vmargs" value="-Xms256M -Xmx512M" />
+		<property file="build/VERSION" />
 		<property file="build/html-style.properties" />
-
+		
 		<!-- Destination files -->
 		<property name="lib-jar-name" value="${product-file}-${version}.jar" />
 		<property name="demo-war-name" value="${product-file}-demo-${version}.war" />
@@ -317,10 +313,10 @@
 			</fileset>
 		</copy>
 
-		<rename src="${output-dir}/eclipse-classpath" dest="${output-dir}/.classpath" />
-		<rename src="${output-dir}/eclipse-project" dest="${output-dir}/.project" />
-		<rename src="${output-dir}/eclipse-IT Mill Toolkit Hosted Mode-launch" dest="${output-dir}/IT Mill Toolkit Hosted Mode.launch" />
-		<rename src="${output-dir}/eclipse-IT Mill Toolkit Web Mode-launch" dest="${output-dir}/IT Mill Toolkit Web Mode.launch" />
+		<move file="${output-dir}/eclipse-classpath" tofile="${output-dir}/.classpath" />
+		<move file="${output-dir}/eclipse-project" tofile="${output-dir}/.project" />
+		<move file="${output-dir}/eclipse-IT Mill Toolkit Hosted Mode-launch" tofile="${output-dir}/IT Mill Toolkit Hosted Mode.launch" />
+		<move file="${output-dir}/eclipse-IT Mill Toolkit Web Mode-launch" tofile="${output-dir}/IT Mill Toolkit Web Mode.launch" />
 		<if>
 			<equals arg1="${package-platform}" arg2="windows" />
 			<then>
