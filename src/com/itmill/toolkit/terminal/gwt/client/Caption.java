@@ -22,10 +22,6 @@ public class Caption extends HTML {
 
     private ApplicationConnection client;
 
-    /* Caption must be attached to a Paintable */
-    private Caption() {
-    };
-
     public Caption(Paintable component, ApplicationConnection client) {
         super();
         this.client = client;
