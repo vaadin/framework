@@ -18,8 +18,6 @@ import com.itmill.toolkit.ui.Button.ClickEvent;
 import com.itmill.toolkit.ui.Button.ClickListener;
 
 /**
- * Some test cases for trees. Events panel logs events that happen server side.
- * 
  * @author IT Mill Ltd.
  */
 public class TestForPreconfiguredComponents extends CustomComponent implements
@@ -51,12 +49,11 @@ public class TestForPreconfiguredComponents extends CustomComponent implements
         main.removeAllComponents();
         main
                 .addComponent(new Label(
-                        "In TK5 we introduce some \"new\" componens. Earlier one"
+                        "In Toolkit 5 we introduce new componens. Previously we"
                                 + " usually used setStyle or some other methods on possibly "
                                 + "multiple steps to configure component for ones needs. These new "
                                 + "server side components are mostly just classes that in constructor "
-                                + "set base class to state that programmer wants. This ought to help "
-                                + "newcomers and make code more readable."));
+                                + "set base class to state that programmer wants."));
 
         main.addComponent(new Button("commit"));
 
@@ -89,16 +86,6 @@ public class TestForPreconfiguredComponents extends CustomComponent implements
         test
                 .setCaption("OptionGroup + multiselect manually (configured from select)");
         main.addComponent(test);
-
-        // Tree t = createTestTree();
-        // t.setCaption("with actions");
-        // t.setImmediate(true);
-        // t.addActionHandler(this);
-        // Panel ol = (Panel) createTestBench(t);
-        // al = new Panel("action log");
-        // ol.addComponent(al);
-        // main.addComponent(ol);
-        // contextTree = t;
 
         Button b = new Button("refresh view", this, "createNewView");
         main.addComponent(b);
