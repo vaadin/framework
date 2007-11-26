@@ -20,8 +20,8 @@ import com.itmill.toolkit.ui.TabSheet;
 import com.itmill.toolkit.ui.Table;
 import com.itmill.toolkit.ui.TextField;
 import com.itmill.toolkit.ui.Window;
-import com.itmill.toolkit.ui.Button.ClickEvent;
 import com.itmill.toolkit.ui.TabSheet.SelectedTabChangeEvent;
+import com.itmill.toolkit.ui.Window.Notification;
 
 public class ReservationApplication extends Application {
 
@@ -40,8 +40,6 @@ public class ReservationApplication extends Application {
     private CalendarField reservedTo;
 
     private Label resourceName;
-
-    private Label statusLabel;
 
     private TextField description;
 
@@ -87,23 +85,23 @@ public class ReservationApplication extends Application {
         reservationTab.addComponent(reservationPanel);
 
         OrderedLayout infoLayout = new OrderedLayout();
+        infoLayout.setMargin(false, true, false, false);
         reservationPanel.addComponent(infoLayout);
         resourceName = new Label("From the list above");
         resourceName.setCaption("Choose resource");
         infoLayout.addComponent(resourceName);
         description = new TextField();
-        description.setColumns(45);
+        description.setColumns(20);
         description.setRows(5);
         infoLayout.addComponent(description);
         reservationButton = new Button("Make reservation", this,
                 "makeReservation");
         infoLayout.addComponent(reservationButton);
-        statusLabel = new Label("");
-        statusLabel.setCaption("");
-        infoLayout.addComponent(statusLabel);
 
         map = new GoogleMap();
-        map.setWidth(325);
+        // TODO support EM
+        // map.setWidthUnits(Sizeable.UNITS_EM);
+        map.setWidth(266);
         map.setHeight(210);
         map.setItemMarkerHtmlPropertyId(SampleDB.Resource.PROPERTY_ID_NAME);
         map.setItemMarkerXPropertyId(SampleDB.Resource.PROPERTY_ID_LOCATIONX);
@@ -156,7 +154,6 @@ public class ReservationApplication extends Application {
                 to.add(Calendar.MILLISECOND, (int) currentGapMillis);
                 reservedTo.setValue(to.getTime());
                 refreshSelectedResources();
-                resetStatus();
             }
         });
         reservedTo.addListener(new ValueChangeListener() {
@@ -171,7 +168,6 @@ public class ReservationApplication extends Application {
                     reservedTo.setValue(t.getTime());
                 }
                 refreshSelectedResources();
-                resetStatus();
             }
         });
 
@@ -190,11 +186,11 @@ public class ReservationApplication extends Application {
         mainTabs.addTab(allLayout, "All reservations", null);
         mainTabs.addListener(new TabSheet.SelectedTabChangeListener() {
             public void selectedTabChange(SelectedTabChangeEvent event) {
-                refreshReservations();
+                refreshReservations(true);
             }
         });
 
-        refreshReservations();
+        refreshReservations(true);
     }
 
     public void makeReservation() {
@@ -204,40 +200,25 @@ public class ReservationApplication extends Application {
                 db.addReservation(resource, 0, (Date) reservedFrom.getValue(),
                         (Date) reservedTo.getValue(), (String) description
                                 .getValue());
-                statusLabel.setCaption("Success!");
-                statusLabel
-                        .setValue("You have reserved the resource for the selected period.");
+                getMainWindow()
+                        .showNotification(
+                                "Success!",
+                                "You have reserved the resource for the selected period.",
+                                Notification.TYPE_WARNING_MESSAGE);
+                refreshReservations(false);
             } else {
-                showMessage("No resource selected",
-                        "Please select a resource (or category) to reserve.");
+                getMainWindow().showNotification("Oops!",
+                        "Please select a resource (or category) to reserve.",
+                        Notification.TYPE_WARNING_MESSAGE);
             }
         } catch (ResourceNotAvailableException e) {
-            showMessage("Reservation failed",
-                    "The selected resource was not available for the selected period.");
+            getMainWindow()
+                    .showNotification(
+                            "Not available!",
+                            "The selected resource is already reserved for the selected period.",
+                            Notification.TYPE_ERROR_MESSAGE);
+            refreshReservations(false);
         }
-        refreshReservations();
-    }
-
-    public void showMessage(String caption, String message) {
-        if (popupWindow == null) {
-            popupWindow = new Window("No resource selected");
-            popupWindow.setHeight(50);
-            popupWindow.setPositionX(70);
-            popupWindow.setPositionY(400);
-            popupMessage = new Label(
-                    "Please select a resource (or category) to reserve.");
-            popupWindow.addComponent(popupMessage);
-            Button b = new Button("Ok", new Button.ClickListener() {
-                public void buttonClick(ClickEvent event) {
-                    getMainWindow().removeWindow(popupWindow);
-                }
-            });
-            popupWindow.addComponent(b);
-        } else {
-            popupMessage.setValue(message);
-            popupWindow.setCaption(caption);
-        }
-        getMainWindow().addWindow(popupWindow);
     }
 
     private Item getActiveResource() throws ResourceNotAvailableException {
@@ -253,18 +234,20 @@ public class ReservationApplication extends Application {
                     return resource;
                 }
             }
-            throw new ResourceNotAvailableException("No available resource");
+            throw new ResourceNotAvailableException("No available resources");
         } else {
             return null;
         }
     }
 
-    private void refreshReservations() {
+    private void refreshReservations(boolean alsoResources) {
         Container reservations = db.getReservations(resourcePanel
                 .getSelectedResources());
         reservedFrom.setContainerDataSource(reservations);
         reservedTo.setContainerDataSource(reservations);
-        refreshSelectedResources();
+        if (alsoResources) {
+            refreshSelectedResources();
+        }
         Container allReservations = db.getReservations(null);
         allTable.setContainerDataSource(allReservations);
         if (allReservations != null && allReservations.size() > 0) {
@@ -285,16 +268,21 @@ public class ReservationApplication extends Application {
         try {
             resource = getActiveResource();
         } catch (ResourceNotAvailableException e) {
-            resourceName.setCaption("Not available");
-            resourceName
-                    .setValue("Please choose another time period or resource");
+            /*
+             * resourceName.setCaption("Not available"); resourceName
+             * .setValue("Please choose another time period or resource");
+             */
+            getMainWindow().showNotification("Not available",
+                    "Please choose another resource or time period.",
+                    Notification.TYPE_HUMANIZED_MESSAGE);
+
             // reservationButton.setEnabled(false);
             return;
         }
         map.clear();
         if (resource == null) {
-            resourceName.setCaption("Choose resource");
-            resourceName.setValue("from the list above");
+            resourceName.setCaption("Choose resource above");
+            resourceName.setValue("");
             // reservationButton.setEnabled(false);
             map.setContainerDataSource(db.getResources(null));
             map.setZoomLevel(1);
@@ -342,15 +330,9 @@ public class ReservationApplication extends Application {
                 .setItemDescriptionPropertyId(SampleDB.Reservation.PROPERTY_ID_DESCRIPTION);
     }
 
-    private void resetStatus() {
-        statusLabel.setCaption("");
-        statusLabel.setValue("");
-    }
-
     public void selectedResourcesChanged(
             ResourceSelectorPanel.SelectedResourcesChangedEvent event) {
-        refreshReservations();
-        resetStatus();
+        refreshReservations(true);
     }
 
 }
