@@ -25,25 +25,26 @@ public class TestForWindowOpen extends CustomComponent {
 
                 }));
 
-        main.addComponent(new Button("Open in target \"asd\"",
+        main.addComponent(new Button("Open in target \"mytarget\"",
                 new Button.ClickListener() {
 
                     public void buttonClick(ClickEvent event) {
                         ExternalResource r = new ExternalResource(
                                 "http://www.google.com");
-                        getApplication().getMainWindow().open(r, "asd");
+                        getApplication().getMainWindow().open(r, "mytarget");
 
                     }
 
                 }));
 
-        main.addComponent(new Button("Open in target \"foo\"",
+        main.addComponent(new Button("Open in target \"secondtarget\"",
                 new Button.ClickListener() {
 
                     public void buttonClick(ClickEvent event) {
                         ExternalResource r = new ExternalResource(
                                 "http://www.google.com");
-                        getApplication().getMainWindow().open(r, "foo");
+                        getApplication().getMainWindow()
+                                .open(r, "secondtarget");
 
                     }
 
