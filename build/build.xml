@@ -493,7 +493,19 @@
 			</fileset>
 		</copy>
 
-		<copy file="build/package/webcontent-index.html" tofile="${output-dir}/WebContent/index.html" />
+		<!-- copy WebContent/index.html and rename it -->
+		<copy todir="${output-dir}/WebContent">
+			<filterset>
+				<filter token="VERSION" value="${version}" />
+			</filterset>
+			<fileset dir="build/package">
+				<patternset>
+					<include name="webcontent-index.html" />
+				</patternset>
+			</fileset>
+		</copy>
+		<move file="${output-dir}/WebContent/webcontent-index.html" tofile="${output-dir}/WebContent/index.html" />
+		<!-- <copy file="build/package/webcontent-index.html" tofile="${output-dir}/WebContent/index.html" /> -->
 		<copy file="build/package/web.xml" tofile="${output-dir}/WebContent/WEB-INF/web.xml" />
 
 	</target>
@@ -629,7 +641,7 @@
 		</copy>
 
 		<echo>Building WAR</echo>
-		<war warfile="${output-dir}/lib/${product-file}.war" webxml="WebContent/WEB-INF/web.xml">
+		<war warfile="${output-dir}/lib/${product-file}.war" webxml="build/package/web.xml">
 			<fileset dir="${output-dir}/WebContent">
 				<exclude name="WEB-INF/web.xml" />
 				<include name="**/*" />
@@ -637,14 +649,6 @@
 			<lib dir="${output-dir}/lib">
 				<include name="${lib-jar-name}" />
 			</lib>
-			<!-- All javadoc (demos link to these)-->
-			<fileset dir="${output-dir}">
-				<include name="doc/api/**/*" />
-			</fileset>
-			<!-- All sources (demos link to these)-->
-			<fileset dir="${result-path}/src">
-				<include name="**/*" />
-			</fileset>
 		</war>
 	</target>
 
