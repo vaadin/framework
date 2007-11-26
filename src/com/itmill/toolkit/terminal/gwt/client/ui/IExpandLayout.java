@@ -492,6 +492,9 @@ public class IExpandLayout extends ComplexPanel implements
             remove(c);
         }
         client.unregisterPaintable(p);
+        if (expandedWidget == p) {
+            expandedWidget = null;
+        }
         return remove((Widget) p);
     }
 
