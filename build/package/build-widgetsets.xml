@@ -16,7 +16,7 @@ See configure target to adjust this buildfile.
 
 -->
 
-<project name="IT Mill Toolkit Widgetset" basedir="." default="compile-demo-widgetsets">
+<project name="IT Mill Toolkit Widgetset" basedir="." default="compile-all-widgetsets">
 
 	<!-- 
 		Update based on your project structure, by default this buildfile assumes that you 
@@ -120,6 +120,6 @@ See configure target to adjust this buildfile.
 		</java>
 	</target>
 	
-	<target name="compile-demo-widgetsets" depends="compile-colorpicker_demo-widgetset, compile-reservation_demo-widgetset" />
+	<target name="compile-all-widgetsets" depends="compile-default-widgetset, compile-colorpicker_demo-widgetset, compile-reservation_demo-widgetset" />
 	
 </project>
