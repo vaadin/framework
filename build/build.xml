@@ -61,7 +61,7 @@
 		</exec>
 		<exec executable="ln" failonerror="false">
 			<arg line="-s" />
-			<arg line="${basedir}/build/gwt/gwt" />
+			<arg line="${basedir}/build/gwt/${package-platform}" />
 			<arg line="${output-dir}/gwt" />
 		</exec>
 	</target>
@@ -481,7 +481,6 @@
 				<exclude name="WEB-INF/web.xml" />
 				<exclude name="ITMILL/widgetsets/**" />
 				<exclude name="WEB-INF/lib/commons-fileupload-custom.jar" />
-				<!-- TODO check that tests* are not added -->
 				<exclude name="ITMILL/themes/test*/**" />
 				<exclude name="WEB-INF/classes/**" />
 			</fileset>
@@ -562,8 +561,8 @@
 		<jar jarfile="${output-dir}/lib/${lib-jar-name}" compress="true">
 			<fileset dir="${result-path}/classes">
 				<patternset>
-					<exclude name="${toolkit-package}/demo/**" />
-					<exclude name="${toolkit-package}/launcher/**" />
+					<exclude name="${toolkit-package}/demo/**/*" />
+					<exclude name="${toolkit-package}/launcher/**/*" />
 				</patternset>
 			</fileset>
 			<!-- fileupload, see build/external/fileupload/build.xml -->
