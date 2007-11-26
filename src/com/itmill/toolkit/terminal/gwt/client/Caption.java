@@ -36,8 +36,7 @@ public class Caption extends HTML {
     public void updateCaption(UIDL uidl) {
         setVisible(!uidl.getBooleanAttribute("invisible"));
 
-        setStyleName(getElement(), "i-disabled", uidl.hasAttribute("disabled")
-                || uidl.hasAttribute("readonly"));
+        setStyleName(getElement(), "i-disabled", uidl.hasAttribute("disabled"));
 
         if (uidl.hasAttribute("error")) {
             UIDL errorUidl = uidl.getErrors();
