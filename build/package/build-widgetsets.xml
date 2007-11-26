@@ -27,7 +27,7 @@ See configure target to adjust this buildfile.
 	-->
 	<target name="configure">
 		<!-- which platform we are in, possible values are windows, linux and mac -->
-		<property name="platform" value="<platform></platform>" />
+		<property name="gwt-platform" value="<platform></platform>" />
 		
 		<!-- where platform specific GWT distribution is located -->
 		<property name="gwt-location" value="gwt" />
@@ -45,9 +45,9 @@ See configure target to adjust this buildfile.
 	
 	<target name="init" depends="configure">
 
-		<echo>Configured for ${platform} platform.</echo>
+		<echo>Configured for ${gwt-platform} platform.</echo>
 		<echo>Requirements for classpath:</echo>
-		<echo>  ${gwt-location}/gwt-dev-${platform}.jar</echo>
+		<echo>  ${gwt-location}/gwt-dev-${gwt-platform}.jar</echo>
 		<echo>  ${gwt-location}/gwt-user.jar</echo>
 		<echo>  ${toolkit-jar-location}</echo>
 		<echo>  ${client-side-src-location}</echo>
@@ -59,7 +59,7 @@ See configure target to adjust this buildfile.
 			<pathelement path="${client-side-src-location}" />
 			<pathelement path="${toolkit-jar-location}" />
 			<pathelement path="${gwt-location}/gwt-user.jar" />
-			<pathelement path="${gwt-location}/gwt-dev-${platform}.jar" />
+			<pathelement path="${gwt-location}/gwt-dev-${gwt-platform}.jar" />
 		</path>
 
 	</target>

@@ -563,8 +563,9 @@
 		<jar jarfile="${output-dir}/lib/${lib-jar-name}" compress="true">
 			<fileset dir="${result-path}/classes">
 				<patternset>
-					<exclude name="${toolkit-package}/demo/**/*" />
-					<exclude name="${toolkit-package}/launcher/**/*" />
+					<exclude name="${toolkit-package}/demo/**" />
+					<exclude name="${toolkit-package}/tests/**" />
+					<exclude name="${toolkit-package}/launcher/**" />
 				</patternset>
 			</fileset>
 			<!-- fileupload, see build/external/fileupload/build.xml -->
@@ -575,6 +576,7 @@
 			<fileset dir="${result-path}/src">
 				<patternset>
 					<exclude name="${toolkit-package}/demo/**" />
+					<exclude name="${toolkit-package}/tests/**" />
 					<exclude name="${toolkit-package}/launcher/**" />
 				</patternset>
 			</fileset>
@@ -584,18 +586,6 @@
 				</patternset>
 			</fileset>
 		</jar>
-		<!-- Create Toolkit source JAR -->
-		<!-- Now included within lib-jar-name
-		<jar jarfile="${output-dir}/lib/${lib-src-jar-name}" compress="true">
-			<fileset dir="${result-path}/src">
-				<patternset>
-					<exclude name="${toolkit-package}/demo/**" />
-					<exclude name="${toolkit-package}/tests/**" />
-					<exclude name="${toolkit-package}/launcher/**" />
-				</patternset>
-			</fileset>
-		</jar>
-		-->
 	</target>
 
 	<!-- Demo  - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
