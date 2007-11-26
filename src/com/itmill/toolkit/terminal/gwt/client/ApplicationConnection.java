@@ -469,6 +469,14 @@ public class ApplicationConnection {
         // Visibility
         boolean visible = !uidl.getBooleanAttribute("invisible");
         component.setVisible(visible);
+        // Set captions
+        if (manageCaption) {
+            Container parent = getParentLayout(component);
+            if (parent != null) {
+                parent.updateCaption((Paintable) component, uidl);
+            }
+        }
+
         if (!visible) {
             return true;
         }
@@ -482,15 +490,6 @@ public class ApplicationConnection {
                 registerPaintable(uidl.getId(), (Paintable) w);
                 ((Paintable) w).updateFromUIDL(uidl, this);
                 return true;
-            }
-        }
-
-        // Set captions
-        // TODO Manage Error messages
-        if (manageCaption) {
-            Container parent = getParentLayout(component);
-            if (parent != null) {
-                parent.updateCaption((Paintable) component, uidl);
             }
         }
 
