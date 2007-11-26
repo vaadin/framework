@@ -138,9 +138,16 @@ public class TestBench extends com.itmill.toolkit.Application implements
         bodyLayout.removeAllComponents();
         bodyLayout.setCaption(null);
 
-        String title = ((Class) menu.getValue()).getName();
-        bodyLayout.setCaption(title);
-        bodyLayout.addComponent(createTestable((Class) menu.getValue()));
+        Object o = menu.getValue();
+        if (o instanceof Class) {
+            Class c = (Class) o;
+            String title = c.getName();
+            bodyLayout.setCaption(title);
+            bodyLayout.addComponent(createTestable(c));
+        } else {
+            // NOP node selected
+        }
+
     }
 
     /**
