@@ -85,10 +85,15 @@ public class TestBench extends com.itmill.toolkit.Application implements
         }
 
         menu = new Tree("Testables", testables);
-        // simplify captions
         for (Iterator i = itemCaptions.keySet().iterator(); i.hasNext();) {
             Class testable = (Class) i.next();
-            menu.setItemCaption(testable, testable.getName());
+            // simplify captions
+            String name = testable.getName().replaceAll("com.itmill.toolkit.",
+                    "");
+            menu.setItemCaption(testable, name);
+            // TODO fix #1191
+            System.err.println(name);
+            menu.collapseItem(testable);
         }
 
         menu.addListener(this);
