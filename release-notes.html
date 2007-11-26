@@ -51,6 +51,74 @@ Version <version></version>. This document is under construction.</p>
 
 <br />
 <h4>Known issues in this Release (<version></version>)</h4>
+IE = Internet Explorer, FF = Firefox, SA = Safari, OP = Opera
+<br/>
+Starting any demo may take long time (5 seconds) on some environments. Should not affect on "real" environments, demo issue only.
+<br/>
+Table component makes extra requests when disabling/enabling the table (FF only)
+<br/>
+Window: moving / dragging windows should be more usable
+<br/>
+Embedded / Window: embedded (Flash) are rendered through window
+<br/>
+Panel: setComponentError, setIcon, setDescription do not work
+<br/>
+Select: setEnabled(false) still can be edited
+<br/>
+TabSheet: container area width is different to tabs
+<br/>
+setReadOnly(true): issues on multiple components
+<br/>
+Tabsheet: setComponentError, setIcon, setDescription do not work
+<br/>
+Calendar: jumpy, buttons change position
+<br/>
+Select has thin red lines (other widgets are seen through)
+<br/>
+Window / RichTextArea: whole scrolls / jumps up when bold is clicked
+<br/>
+Session: When server is restarted, application hangs (Safari)
+<br/>
+RichTextEditor: setEnabled(false) still can be edited
+<br/>
+SplitPanel: implement spacing
+<br/>
+Form two-columns GridLayout breaks captions.
+<br/>
+Add setMaxLength() to TextField
+<br/>
+Cancelling (big) uploads should be possible
+<br/>
+(Sub-) Window closing should be possible
+<br/>
+QueryContainer must implement Sortable
+<br/>
+QueryContainer should implement Container.Filterable
+<br/>
+QueryContainer should support preparedstatements-type API
+<br/>
+Creating minimized/optimized widgetset still contains default theme (css files)
+<br/>
+Select: when opening selection div it always starts from top even though currently selected value is elsewhere
+<br/>
+Window resize: if mouse hits scrollbar when dragging, cursor dragging state is lost on (SA)
+<br/>
+Tree don't support icons
+<br/>
+Container.Hierarchical.setParent() should be setItemParent() (etc)
+<br/>
+CustomComponent: setVisible(false) does not hide it, setEnabled(false) does not disable it
+<br/>
+RichTextArea performance issues (FF)
+<br/>
+RichTextArea extra scrollbars issues on some layouts (SA)
+<br/>
+DateField.setLocale floods to other components aswell
+<br/>
+Table column selector div may be positioned randomly wrong (IE)
+<br/>
+Error message in Button is not shown (FF)
+<br/>
 
 
 </div></div></div></div>
