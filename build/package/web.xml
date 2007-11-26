@@ -10,31 +10,31 @@
   <description>
      IT Mill Toolkit examples
   </description>
-
- <servlet>
-    <servlet-name>TestComponentsAndLayouts</servlet-name>
+  
+  <servlet>
+    <servlet-name>WindowedDemos</servlet-name>
     <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
     <init-param>
       <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.tests.TestComponentsAndLayouts</param-value>
+      <param-value>com.itmill.toolkit.demo.WindowedDemos</param-value>
     </init-param>
   </servlet>
   
- <servlet>
-    <servlet-name>TestForNativeWindowing</servlet-name>
+  <servlet>
+    <servlet-name>TestBench</servlet-name>
     <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
     <init-param>
       <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.tests.TestForNativeWindowing</param-value>
+      <param-value>com.itmill.toolkit.demo.testbench.TestBench</param-value>
     </init-param>
   </servlet>
   
-<servlet>
-    <servlet-name>FeatureBrowser</servlet-name>
+   <servlet>
+    <servlet-name>NativeWindowing</servlet-name>
     <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
     <init-param>
       <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.demo.featurebrowser.FeatureBrowser</param-value>
+      <param-value>com.itmill.toolkit.demo.NativeWindowing</param-value>
     </init-param>
   </servlet>
   
@@ -84,15 +84,6 @@
     <init-param>
       <param-name>application</param-name>
       <param-value>com.itmill.toolkit.demo.FilterSelect</param-value>
-    </init-param>
-  </servlet>
-
-  <servlet>
-    <servlet-name>FeaturesApplication</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
-    <init-param>
-      <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.tests.featurebrowser.FeaturesApplication</param-value>
     </init-param>
   </servlet>
 
@@ -215,31 +206,26 @@
     </init-param>
   </servlet>
   
-     <servlet-mapping>
-    <servlet-name>TestSplitPanel</servlet-name>
-    <url-pattern>/TestSplitPanel/*</url-pattern>
+  <servlet-mapping>
+    <servlet-name>WindowedDemos</servlet-name>
+    <url-pattern>/WindowedDemos</url-pattern>
   </servlet-mapping>
-  
-     <servlet-mapping>
-    <servlet-name>RandomLayoutStress</servlet-name>
-    <url-pattern>/RandomLayoutStress/*</url-pattern>
-  </servlet-mapping>
-  
-   <servlet-mapping>
+
+	<servlet-mapping>
     <servlet-name>TestBench</servlet-name>
     <url-pattern>/TestBench/*</url-pattern>
   </servlet-mapping>
-
+  
+  <servlet-mapping>
+    <servlet-name>NativeWindowing</servlet-name>
+    <url-pattern>/NativeWindowing/*</url-pattern>
+  </servlet-mapping>
+  
   <servlet-mapping>
     <servlet-name>Reservr</servlet-name>
     <url-pattern>/Reservr/*</url-pattern>
   </servlet-mapping>
   
-  <servlet-mapping>
-    <servlet-name>CalendarDemo</servlet-name>
-    <url-pattern>/CalendarDemo/*</url-pattern>
-  </servlet-mapping>
-
   <servlet-mapping>
     <servlet-name>SelectDemo</servlet-name>
     <url-pattern>/SelectDemo/*</url-pattern>
@@ -260,11 +246,6 @@
     <url-pattern>/FilterSelect/*</url-pattern>
   </servlet-mapping>
 
-  <servlet-mapping>
-    <servlet-name>FeaturesApplication</servlet-name>
-    <url-pattern>/FeaturesApplication/*</url-pattern>
-  </servlet-mapping>
-  
   <servlet-mapping>
     <servlet-name>Parameters</servlet-name>
     <url-pattern>/Parameters/*</url-pattern>
