@@ -75,11 +75,14 @@
 
 	<!-- Initialization - - - - - - - - - - - - - - - - - - - - - - - - -->
 	<target name="init">
-	
+
 		<property file="build/build.properties" />
-		<property file="build/VERSION" />
+		<property file="build/VERSION.properties" />
 		<property file="build/html-style.properties" />
-		
+
+		<!-- Create result dir unless already exists -->
+		<mkdir dir="${result-path}" />
+
 		<!-- Find out which platform we are in -->
 		<if>
 			<equals arg1="${os.name}" arg2="Windows 2000, Windows XP" />
@@ -104,8 +107,7 @@
 
 		<echo>We are on ${platform} platform, using build/gwt/${platform}/${lib-gwt-dev}.</echo>
 
-		<!-- Create result dir unless already exists -->
-		<mkdir dir="${result-path}" />
+
 
 		<!-- Destination files -->
 		<property name="lib-jar-name" value="${product-file}-${version}.jar" />
@@ -763,7 +765,7 @@
 				<pathelement location="build/lib/XEP/lib/saxon.jar" />
 				<pathelement location="build/lib/XEP/lib/xt.jar" />
 			</classpath>
-		</java>	
+		</java>
 	</target>
 
 	<target name="manual-html">
