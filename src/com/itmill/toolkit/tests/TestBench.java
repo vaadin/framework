@@ -144,13 +144,13 @@ public class TestBench extends com.itmill.toolkit.Application implements
         bodyLayout.setCaption(null);
 
         Object o = menu.getValue();
-        if (o instanceof Class) {
+        if (o != null && o instanceof Class) {
             Class c = (Class) o;
             String title = c.getName();
             bodyLayout.setCaption(title);
             bodyLayout.addComponent(createTestable(c));
         } else {
-            // NOP node selected
+            // NOP node selected or deselected tree item
         }
     }
 
