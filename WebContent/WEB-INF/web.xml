@@ -12,6 +12,15 @@
   </description>
 
  <servlet>
+    <servlet-name>DemoTestBench</servlet-name>
+    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+    <init-param>
+      <param-name>application</param-name>
+      <param-value>com.itmill.toolkit.demo.testbench.TestBench</param-value>
+    </init-param>
+  </servlet>
+  
+ <servlet>
     <servlet-name>TestForNativeWindowing</servlet-name>
     <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
     <init-param>
@@ -333,6 +342,10 @@
     </init-param>
   </servlet>
   
+  	<servlet-mapping>
+    <servlet-name>DemoTestBench</servlet-name>
+    <url-pattern>/DemoTestBench/*</url-pattern>
+  </servlet-mapping>
   
         <servlet-mapping>
     <servlet-name>TestForNativeWindowing</servlet-name>

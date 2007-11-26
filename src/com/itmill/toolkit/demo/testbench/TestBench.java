@@ -88,11 +88,13 @@ public class TestBench extends com.itmill.toolkit.Application implements
         for (Iterator i = itemCaptions.keySet().iterator(); i.hasNext();) {
             Class testable = (Class) i.next();
             // simplify captions
-            String name = testable.getName().replaceAll("com.itmill.toolkit.",
-                    "");
+            String name = testable.getName().substring(
+                    testable.getName().lastIndexOf('.') + 1);
             menu.setItemCaption(testable, name);
-            // TODO fix #1191
-            menu.collapseItem(testable);
+        }
+        // expand all root items
+        for (Iterator i = menu.rootItemIds().iterator(); i.hasNext();) {
+            menu.expandItemsRecursively(i.next());
         }
 
         menu.addListener(this);

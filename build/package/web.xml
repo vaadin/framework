@@ -21,6 +21,15 @@
   </servlet>
   
   <servlet>
+    <servlet-name>BrowserDemo</servlet-name>
+    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+    <init-param>
+      <param-name>application</param-name>
+      <param-value>com.itmill.toolkit.demo.BrowserDemo</param-value>
+    </init-param>
+  </servlet>
+  
+  <servlet>
     <servlet-name>TestBench</servlet-name>
     <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
     <init-param>
@@ -206,9 +215,33 @@
     </init-param>
   </servlet>
   
+   <servlet>
+    <servlet-name>CalendarDemo</servlet-name>
+    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+    <init-param>
+      <param-name>application</param-name>
+      <param-value>com.itmill.toolkit.demo.reservation.CalendarDemo</param-value>
+    </init-param>
+    <init-param>
+      <param-name>widgetset</param-name>
+      <param-value>com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet</param-value>
+    </init-param>
+  </servlet>
+  
+    <servlet-mapping>
+    <servlet-name>BrowserDemo</servlet-name>
+    <url-pattern>/BrowserDemo/*</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>CalendarDemo</servlet-name>
+    <url-pattern>/CalendarDemo/*</url-pattern>
+  </servlet-mapping>
+  
+  
   <servlet-mapping>
     <servlet-name>WindowedDemos</servlet-name>
-    <url-pattern>/WindowedDemos</url-pattern>
+    <url-pattern>/WindowedDemos/*</url-pattern>
   </servlet-mapping>
 
 	<servlet-mapping>
