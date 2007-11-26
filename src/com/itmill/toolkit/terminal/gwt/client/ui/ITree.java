@@ -17,10 +17,6 @@ import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.Util;
 
 /**
- * TODO dump GWT's Tree implementation and use Toolkit 4 style TODO update node
- * close/opens to server (even if no content fetch is needed)
- * 
- * DOM structure
  * 
  */
 public class ITree extends FlowPanel implements Paintable {
@@ -46,6 +42,8 @@ public class ITree extends FlowPanel implements Paintable {
     private boolean isNullSelectionAllowed = true;
 
     private boolean disabled = false;
+
+    private boolean readonly;
 
     public ITree() {
         super();
@@ -94,6 +92,7 @@ public class ITree extends FlowPanel implements Paintable {
         immediate = uidl.hasAttribute("immediate");
 
         disabled = uidl.getBooleanAttribute("disabled");
+        readonly = uidl.getBooleanAttribute("readonly");
 
         isNullSelectionAllowed = uidl.getBooleanAttribute("nullselect");
 
@@ -188,13 +187,14 @@ public class ITree extends FlowPanel implements Paintable {
                 return;
             }
             Element target = DOM.eventGetTarget(event);
-            if (DOM.compare(target, nodeCaptionSpan)) {
-                // caption click = selection change
-                toggleSelection();
-            } else if (DOM.compare(getElement(), target)) {
+            if (DOM.compare(getElement(), target)) {
                 // state change
                 toggleState();
+            } else if (!readonly && DOM.compare(target, nodeCaptionSpan)) {
+                // caption click = selection change
+                toggleSelection();
             }
+
         }
 
         private void toggleSelection() {
@@ -359,14 +359,17 @@ public class ITree extends FlowPanel implements Paintable {
         }
 
         public void showContextMenu(Event event) {
-            if (actionKeys != null) {
-                int left = DOM.eventGetClientX(event);
-                int top = DOM.eventGetClientY(event);
-                top += Window.getScrollTop();
-                left += Window.getScrollLeft();
-                client.getContextMenu().showAt(this, left, top);
+            if (!readonly && !disabled) {
+                if (actionKeys != null) {
+                    int left = DOM.eventGetClientX(event);
+                    int top = DOM.eventGetClientY(event);
+                    top += Window.getScrollTop();
+                    left += Window.getScrollLeft();
+                    client.getContextMenu().showAt(this, left, top);
+                }
+                DOM.eventCancelBubble(event, true);
             }
-            DOM.eventCancelBubble(event, true);
+
         }
 
         private native void attachContextMenuEvent(Element el)
