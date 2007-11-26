@@ -1,0 +1,15 @@
+Starting Toolkit demos
+
+
+1) Under Windows environment
+
+Doubleclick start-demo.bat
+
+
+2) Under Linux or OSX environment
+
+Open shell and execute "sh start-demo.sh"
+
+
+This starts an integrated Servlet Container which runs Toolkit demo
+applications. Your default web browser should be opened automatically.
