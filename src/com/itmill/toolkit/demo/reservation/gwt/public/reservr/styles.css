@@ -2,10 +2,11 @@
 
 /* Entrycalendar styles */
 .i-datefield-entrycalendar-hours {
+	width: 240px;
 	height: auto;
 }
 .i-datefield-entrycalendar-hours table {
-	width: auto;
+	table-layout: fixed;
 }
 .i-datefield-entrycalendar-hours table tr {
 	height: 1em;
@@ -25,18 +26,20 @@
 	background: #5daee8 url(img/calendar-time-selected.gif) no-repeat;
 }
 td.i-datefield-entrycalendar-time {
+	width: 45px;
 	padding: 2px 4px;
 	white-space: nowrap;
-	float: left;
 }
 td.i-datefield-entrycalendar-time span {
 	width: 45px;
 	text-align: right;
 	display: block;
 }
+td.i-datefield-entrycalendar-entry {
+	overflow: hidden;
+}
 td.i-datefield-entrycalendar-entry span {
 	display: block;
-	width: 98%;
 	overflow: hidden;
 	padding: 2px;
 	color: #fff;
