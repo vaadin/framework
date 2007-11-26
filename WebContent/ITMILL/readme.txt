@@ -7,4 +7,5 @@ Widgetsets is generated directory, we suggest that you do not edit it.
 You can re-create widgetsets directory by running below command on top directory.
 ant -f build-widgetsets.xml
 
-See buildwidgetsets.xml and colorpicker demo for more information regarding widgetsets.
+See build-widgetsets.xml and com.itmill.toolkit.demo.colorpicker package for
+more information regarding widgetsets.
