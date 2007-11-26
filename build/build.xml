@@ -145,6 +145,7 @@
 	<target name="internal-package-windows">
 		<echo>Creating package for Windows platform.</echo>
 		<var name="package-platform" value="windows" />
+		<var name="eclipse-launch-vmargs" value="-Xms256M -Xmx512M" />
 		<antcall target="add-platform-specific-files" inheritAll="true" inheritRefs="true" />
 		<zip zipfile="${result-path}/${product-file}-${package-platform}-${version}.zip">
 			<zipfileset prefix="${product-file}-${package-platform}-${version}" dir="${result-path}/${product-file}-${version}">
@@ -163,6 +164,7 @@
 	<target name="internal-package-linux">
 		<echo>Creating package for Linux platform.</echo>
 		<var name="package-platform" value="linux" />
+		<var name="eclipse-launch-vmargs" value="-Xms256M -Xmx512M" />
 		<antcall target="add-platform-specific-files" inheritAll="true" inheritRefs="true" />
 		<tar destfile="${result-path}/${product-file}-${package-platform}-${version}.tar.gz" compression="gzip" longfile="gnu">
 			<!-- TODO use very slow but effective bzip2
