@@ -39,166 +39,22 @@ table.issues td {
 <td align="right" width="20%"></td></tr></table summary=""><hr /></div><div class="book" lang="en">
 <div class="titlepage"><div><div><h1 class="title">
 <a name="N40001"></a>IT Mill Toolkit Release Notes</h1></div>
-<div><h2 class="subtitle">Version 4.0.2</h2></div><div>
+<div><h2 class="subtitle">Version <version></version></h2></div><div>
 <div class="author"><h3 class="author"></h3></div></div>
 <div><p class="copyright">Copyright &copy; 2007 Oy IT Mill Ltd. All rights reserved.</p></div>
 <div><div class="abstract"><p class="title"></p>
 
 <h3>General</h3>
 <p>
-Version 4.0.2 is an maintenance release for IT Mill Toolkit 4.0 branch. It contains bugfixes for various browsers including critical memory leak fixes.
-</p>
+Version <version></version>. This document is under construction.</p>
 <p>
-Client-side API (i.e. JavaScript and CSS files) are subject to change during 2007. These changes are required for better client-side compatibility, and they will not affect on the server-side Java APIs and components. IT Mill Toolkit 4.0 branch is not involved with these changes. Contact support@itmill.com for more information about client-side API changes.
-</p>
-<p>
-Note that executing demos locally may provide security warning from your firewall
-software. This is due to started Web service which is required to run demos.
-You have to ignore warnings or temporarily accept connections to port 8888 on your firewall software.
-</p>
-<p>
-Previously IT Mill Toolkit was called <a href="http://www.millstone.org">Millstone UI Library</a>. The last publicly available
-version of <a href="http://www.millstone.org">Millstone UI Library</a> is 3.1.1. This new generation 4.0.2
-version of the library is still API-level compatible with the previous generation. A simple Millstone migration example is included in demos. 
-</p>
-<p>
-See <a href="index.html">index.html</a> for more information.
-</p>
-
-<h3>Requirements</h3>
-<p>
-Supported server-side environments are
-</p>
-<ul><li>Sun JDK, version 1.4, 5 and 6
-</li><li>Servlet Container, version 2.3 and 2.4
-</li><li>Application Servers / Servlet Containers
-<ul><li>Apache Tomcat, since version 4.1
-</li><li>BEA WebLogic Server, since version 8.1
-</li><li>IBM WebSphere Application Server, since version 5.1
-</li><li>JBoss Application Server, since version 3.2.7
-</li><li>Jetty, since version 5
-</li><li>Oracle Application Server, since version 9i
-</li><li>Sun Java Systems Application Server, since version 7
-</li></ul></li></ul>
-<p>
-Supported client-side environments are
-</p>
-<ul>
- <li>Browsers on AJAX-mode
- <ul>
-  <li>Internet Explorer, version 6 and 7.0</li>
-  <li>Firefox, version 1.5 and 2.0</li>
-  <li>Safari, version 2.0</li>
-  <li>Opera, version 9.0 and 9.1</li>
-  <li>Konqueror, version 3.5</li>
-  <li>Camino version 1.0</li>
-  <li>Series60 version 3.1 fp1</li>
-  <li>WebKit since version 400</li>
- </ul>
- </li>
- <li>Browsers on HTML-mode
- <ul>  
-  <li>Other browsers (non-AJAX capable) use HTML-mode automatically</li>
- </ul>
- </li>
-<li>Operating systems
-<ul><li>Windows 2000 Pro/2000 Server 2003/XP Server/XP Pro/XP Home/Vista
-</li><li>Mac OS X 10.3 / 10.4 / 10.5
-</li><li>Linux Red Hat / CentOS / Suse / Debian / Ubuntu
-</li></ul></li></ul>
-
-<h3>How to start</h3>
-<p>
-See <a href="index.html">index.html</a> for more information or go to <i>Developers' Area</i> at <a href="http://www.itmill.com">www.itmill.com</a>.
-</p>
-
-<h3>Changes in this Release (4.0.2)</h3>
-
-<h4>Compatibility</h4>
-<p>
-IT Mill Toolkit versions 4.0.0 and 4.0.1 are API level compatible with version 4.0.2.
-</p>
-<p>
-Following steps are required to upgrade from Millstone UI Library version 3.1.1 to Toolkit version 4.0.2:
-</p>
-<ul><li>1. update your application's imports
-<ul><li>search for <em>import org.millstone.base.*</em>
-</li><li>and replace to <em>com.itmill.toolkit.*</em>
-</li></ul></li><li>2. update application's Deployment Description, rename WebAdapter class into ApplicationServlet class
-<ul><li>search for <em>&lt;servlet-class&gt;org.millstone.webadapter.WebAdapterServlet&lt;/servlet-class&gt;</em>
-</li><li>and replace to <em>&lt;servlet-class&gt;com.itmill.toolkit.terminal.web.ApplicationServlet&lt;/servlet-class&gt;</em></li></ul></li></ul>
-
-
-<h4>Fixed issues in this Release (4.0.2)</h4>
-<table class="issues" summary="">
-<tbody>
-<tr><td align="left">Since version</td><td align="left">Issue</td><td align="left">Description</td><td align="left">Workaround</td></tr>
-<tr><td align="left">4.0.0</td><td align="left">ContainerHierarchicalWrapper setParent at root level issue</td><td align="left">Relocating an item to root node is not possible with ContainerHierarchicalWrapper. </td><td align="left">If you need to relocate an item to root node, create new Container.</td></tr>
-<tr><td align="left">4.0.0</td><td align="left">DateField format limitation</td><td align="left">DateField component renders dates in day.month.year format.</td><td align="left"></td></tr>
-<tr><td align="left">4.0.0</td><td align="left">Memory leak</td><td align="left">Applications are never garbage collected. This is considered as critical memory leak.</td><td align="left"></td></tr>
-<tr><td align="left">4.0.0</td><td align="left">Some virtual hosts configuration may fail</td><td align="left">Some virtual hosts configurations may not work with Toolkit because of the way Toolkit serves Application resources (XSS issues with URLs).</td><td align="left"></td></tr>
-<tr><td align="left">4.0.1</td><td align="left">Table may throw NullPointerException when it is removed</td><td align="left">NullPointerException may be thrown when Table is being removed from a Container.</td><td align="left"></td></tr>
-<tr><td align="left">4.0.1</td><td align="left">Select with lazyloading issue</td><td align="left">If user first types some letter to a Select component that is using lazyloading style and then selects an item from the list, the first item in the list is always selected.</td><td align="left"></td></tr>
-<tr><td align="left">4.0.0</td><td align="left">Popups position calculation not optimal</td><td align="left">Popups on various UI components are not displayed on best possible place.</td><td align="left"></td></tr>
-<tr><td align="left">4.0.0</td><td align="left">Windows limitation in HTML-mode</td><td align="left">Multiple Window components are not supported in HTML-mode.</td><td align="left">Use AJAX mode instead.</td></tr>
-<tr><td align="left">4.0.1</td><td align="left">Label CONTENT_RAW broken</td><td align="left">Label with content mode CONTENT_RAW does not work.</td><td align="left">Use CONTENT_XHTML as content mode instead.</td></tr>
-<tr><td align="left">4.0.0</td><td align="left">ComponentDetachEvents do not work</td><td align="left">ComponentAttachEvent (wrong) is thrown instead ComponentDetachEvent (correct).</td><td align="left"></td></tr>
-<tr><td align="left">4.0.0</td><td align="left">Servlet Specification 2.4 required to deploy demo WAR</td><td align="left">Official demos located at itmill-toolkit.war had dependency for Servlet Specification version 2.4. This prevents deployment to Servlet Containers that follow version 2.3 specification.</td><td align="left">Downgrade web.xml notation to Servlet Specification version 2.3.</td></tr>
-<tr><td align="left">4.0.1</td><td align="left">Window with Select interoperability issue</td><td align="left">Select with lazyloading under Window component does not work.</td><td align="left"></td></tr>
-<tr><td align="left">4.0.0</td><td align="left">Denial of service under extreme server load</td><td align="left">Toolkit applications are not always served because of concurrency issues under extreme load of multiple concurrent users.</td><td align="left">Clients that get HTTP error messages have to press browser's "refresh" button to get back into their application. After refresh session continues normally.</td></tr>
-<tr><td align="left">4.0.0</td><td align="left">On some rare cases exceptions are not written to console</td><td align="left">ApplicationServlet service method may produce exceptions on some rare cases, these exceptions are only displayed for end user (browser) but not written to console.</td><td align="left"></td></tr>
-<tr><td align="left">4.0.1</td><td align="left">On some cases Application does not start if JavaScript is disabled</td><td align="left">If user has disabled JavaScript from the browser and accesses Toolkit application without renderingMode=detect parameter in URL, eternal looping occurs in user's browser.</td><td align="left">Add renderingMode=detect parameter to URL.</td></tr>
-<tr><td align="left">4.0.1</td><td align="left">Firebug lite debugging tool does not work</td><td align="left">Firebug lite cannot be used as an debugging tool for Toolkit applications.</td><td align="left"></td></tr>
-<tr><td align="left">4.0.1</td><td align="left">Table rendering issue (Opera 9, Firefox)</td><td align="left">Table component with long content does not have optimal cell size on initial render. Affects Opera 9 and Firefox browsers.</td><td align="left"></td></tr>
-<tr><td align="left">4.0.1</td><td align="left">Component tooltip may not close</td><td align="left">Component that has a tooltip (e.g. ComponentError) may not be closed on some cases.</td><td align="left"></td></tr>
-<tr><td align="left">4.0.1</td><td align="left">Select with lazyloading may hang Application (Safari)</td><td align="left">Select with lazyloading hangs Toolkit application if user uses non-ascii characters to filter or look up items.</td><td align="left"></td></tr>
-<tr><td align="left">4.0.0</td><td align="left">Calendar and Window interoperability</td><td align="left">Opening Calendar component in child windows in AJAX-mode is unsupported.</td><td align="left"></td></tr>
-<tr><td align="left">4.0.0</td><td align="left">Table sort provides minor jitter on HTML-mode (Opera 9)</td><td align="left">Sorting Table component rows with HTML-mode may result in temporary relocation of component for small amount of time. This can be seen as minor jitter on client-side. Affects Opera 9 browser.</td><td align="left"></td></tr>
-<tr><td align="left">4.0.1</td><td align="left">Select with lazyloading dropdown issue</td><td align="left">Select with lazyloading keeps dropdown list open even if focus is lost from Select component.</td><td align="left"></td></tr>
-<tr><td align="left">4.0.1</td><td align="left">TabSheet with disabled tab issue</td><td align="left">TabSheet that has disabled tabs is not rendered correctly.</td><td align="left"></td></tr>
-<tr><td align="left">4.0.0</td><td align="left">Table containing Label component issue</td><td align="left">Table may not render Label components with new content after they are updated on some cases.</td><td align="left"></td></tr>
-<tr><td align="left">4.0.0</td><td align="left">Table context menu alignment issue</td><td align="left">Table context menu is aligned wrong if browser window is horizontally scrolled.</td><td align="left"></td></tr>
-<tr><td align="left">4.0.1</td><td align="left">Table containing Select component issue</td><td align="left">Table containing Select with lazyloading has rendering issues.</td><td align="left"></td></tr>
-<tr><td align="left">4.0.1</td><td align="left">Select with lazyloading on bottom of the browser area issue</td><td align="left">When Select with lazyloading is located at bottom of the browser area and user opens dropdown list, browser provides unnecessary scroll effect. </td><td align="left"></td></tr>
-<tr><td align="left">4.0.0</td><td align="left">Initial Toolkit page is not valid</td><td align="left">Initial Toolkit page which serves JavaScript and other application resources back to user's browser does not conform to XHTML 1.0 Transitional specification.</td><td align="left"></td></tr>
-<tr><td align="left">4.0.0</td><td align="left">Table column popup opens right to the table</td><td align="left">Table column popup should open towards table, not to the right of it.</td><td align="left"></td></tr>
-<tr><td align="left">4.0.0</td><td align="left">Obsolete Theme warning in console</td><td align="left">On some developer environments an obsolete warning is displayed if developer is not using default theme package.</td><td align="left"></td></tr>
-<tr><td align="left">4.0.0</td><td align="left">Form getValidators issue</td><td align="left">If Form has no validators and getValidators method is called, new validator list is implicitly created but the validator list is not returned back.</td><td align="left"></td></tr>
-<tr><td align="left">4.0.0</td><td align="left">Customer license may fail on some environments</td><td align="left">Whitespace text-node detection behaves differently on different environments, you might get invalid license exception when accessing Toolkit applications after upgrading your server environment (JDK, Operating system and such).</td><td align="left"></td></tr>
-</tbody></table>
 
 <br />
-<h4>Known issues in this Release (4.0.2)</h4>
-<table class="issues" summary="">
-<tbody>
-<tr><td align="left">Since version</td><td align="left">Issue</td><td align="left">Description</td><td align="left">Workaround</td></tr>
-<tr><td align="left">4.0.1</td><td align="left">TabSheet issue (Safari)</td><td align="left">If user changes any component (e.g. TextField or Select) which is located in Tab A and then moves to Tab B, component state change is lost. Affects Safari browsers.</td><td align="left">Add e.g. Button component that is used to save changes before moving from one Tab to another.</td></tr>
-<tr><td align="left">4.0.0</td><td align="left">Closing Application session not possible.</td><td align="left">AjaxApplicationContext class does not include any method for closing sessions.</td><td align="left">Register TransactionListener where HttpServletRequest class is available. HttpServletRequest provides you access to session.</td></tr>
-<tr><td align="left">4.0.0</td><td align="left">Table with certain configuration does not sort</td><td align="left">When "List" or "Paging" styles are used, Table component sorts only to one direction.</td><td align="left">Use "Default" style.</td></tr>
-<tr><td align="left">4.0.0</td><td align="left">Select NullPointerException</td><td align="left">It is not possible to select null item for Select component after some other item has been selected, doing this results in NullPointerException.</td><td align="left"></td></tr>
-<tr><td align="left">4.0.1</td><td align="left">Table column size modifications broken (Opera 9)</td><td align="left">Dragging table column size larger or smaller does not align headers correctly. Affects Opera 9 browser.</td><td align="left"></td></tr>
-<tr><td align="left">4.0.1</td><td align="left">Table setVisible state issue</td><td align="left">Setting Table visibility to false and then back to true does not always bring Table back to UI.</td><td align="left">Put your Table into component container such as Panel and use Panel's setVisible methods instead.</td></tr>
-<tr><td align="left"></td><td align="left">Table column selector issue (Konqueror)</td><td align="left">Table column hide or show selector makes screen area black while doing selection. Affects Konqueror browser.</td><td align="left"></td></tr>
-<tr><td align="left">4.0.0</td><td align="left">Table row header icon limitation</td><td align="left">Table does not properly support icons in row headers in AJAX rendering mode</td><td align="left"></td></tr>
-<tr><td align="left">4.0.0</td><td align="left">DateField does not support Locale on AJAX-mode</td><td align="left">Changing locale for DateField component does not produce any visible changes when AJAX-mode is used. HTML mode is not affected by this bug.</td><td align="left">You can set locale by calling getApplication().setLocale(new Locale("en","US")), but change affects whole Application and not just DateField.</td></tr>
-<tr><td align="left">4.0.0</td><td align="left">Nokia Communicator 9300i may not work with Toolkit</td><td align="left">Autodetection of Nokia Communicator 9300i may fail. This results to empty application screen.</td><td align="left"></td></tr>
-<tr><td align="left">4.0.0</td><td align="left">Select may produce JavaScript errors</td><td align="left">If "lazyloading" feature is used for Select component, users that have JavaScript debugging in use see an error for each typed character that does not match. This mean cases where user is searching for values that do not exists.  </td><td align="left"></td></tr>
-<tr><td align="left">4.0.0</td><td align="left">Embedded limitation</td><td align="left">Method setVisible() provides no changes on the component.</td><td align="left">Put Embedded component inside some Container and use Container's setVisible() instead.</td></tr>
-<tr><td align="left">4.0.0</td><td align="left">Embedded limitation</td><td align="left">Method setEnable() provides no changes on the component.</td><td align="left"></td></tr>
-<tr><td align="left">4.0.0</td><td align="left">Upload requires manual refresh (Safari / Konqueror)</td><td align="left">Upload component requires manual refresh from browser after file is sent from client to server. This issue is related to bug that exists in Safari and Konqueror browsers. Note, current WebKit has this issue resolved. Affects Safari and Konqueror browsers.</td><td align="left">Test Feature Browser Upload component demo using some other supported browser.</td></tr>
-<tr><td align="left">4.0.0</td><td align="left">Terminal class not usable until Application is initialized.</td><td align="left">Terminal class is null until Application.init() has been completed.</td><td align="left">Create CustomComponent and use it as your Application's first page. You can now override paint() method and access Terminal class before anything is rendered at client-side.</td></tr>
-<tr><td align="left">4.0.0</td><td align="left">Demo package does not work fully with Oracle AS</td><td align="left">When demo package itmill-toolkit.war is deployed to Oracle Application Server, non-AJAX (HTML) demos fail and you cannot browse javadocs or theme code.</td><td align="left">Configure Oracle AS to allow directory listing for docs and themes directories. To get HTML demos work you have to specify the used XSLT processor with JVM parameter like:   -Djavax.xml.transform.TransformerFactory=net.sf.saxon.TransformerFactoryImpl  -Dorg.xml.sax.driver=org.apache.crimson.parser.XMLReaderImpl</td></tr>
-<tr><td align="left">4.0.1</td><td align="left">Setting focus to UI component limitations</td><td align="left">AbstractField.setFocus() method works only for Button and Textfield components.</td><td align="left"></td></tr>
-<tr><td align="left">4.0.0</td><td align="left">Keyboard input feature in beta stage for AJAX-mode</td><td align="left">Keyboard input feature for UI components is supported, but considered as beta for AJAX-mode. API may change.</td><td align="left"></td></tr>
-<tr><td align="left">4.0.0</td><td align="left">Embedded does not work on HTML-mode (IE 6, 7)</td><td align="left">Embedded objects may not be seen on HTML-mode. Affects Internet Explorer 6 and 7 browsers.</td><td align="left"></td></tr>
-<tr><td align="left"></td><td align="left">Window with Modal style issue (Konqueror)</td><td align="left">Modal window makes other application screen area black. After modal window is closed, screen area is again normal. Affects Konqueror browser.</td><td align="left"></td></tr>
-<tr><td align="left">4.0.0</td><td align="left">Button usability (Safari)</td><td align="left">Selected Button component can only be clicked by pressing spacebar when using keyboard. Enter would be a more intuitive choice. Affects Safari browser.</td><td align="left"></td></tr>
-<tr><td align="left">4.0.1</td><td align="left">URIHandler, ParameterHandler broken (Safari)</td><td align="left">URIHandler and ParameterHandler does not work. Affects Safari browsers.</td><td align="left"></td></tr>
-</tbody></table>
+<h4>Known issues in this Release (<version></version>)</h4>
 
 
 </div></div></div></div>
 
 <br />
 
-</div><div class="navfooter"><hr /><table width="100%" summary=""><tr><td align="left" width="40%">&nbsp;</td><td align="center" width="20%">&nbsp;</td><td align="right" width="40%"></td></tr><tr><td valign="top" align="left" width="40%">&nbsp;</td><td align="center" width="20%">&nbsp;</td><td valign="top" align="right" width="40%"></td></tr></table></div></div><div id="footer"><span>Version: 4.0.2</span>&copy; Oy IT Mill Ltd. 2000-2007</div></div></body></html>
+</div><div class="navfooter"><hr /><table width="100%" summary=""><tr><td align="left" width="40%">&nbsp;</td><td align="center" width="20%">&nbsp;</td><td align="right" width="40%"></td></tr><tr><td valign="top" align="left" width="40%">&nbsp;</td><td align="center" width="20%">&nbsp;</td><td valign="top" align="right" width="40%"></td></tr></table></div></div><div id="footer"><span>Version: <version></version></span>&copy; Oy IT Mill Ltd. 2000-2007</div></div></body></html>
