@@ -56,13 +56,13 @@
 		<antcall target="add-platform-specific-files" inheritAll="true" inheritRefs="true" />
 		<exec executable="ln" failonerror="false">
 			<arg line="-s" />
-			<arg line="${basedir}/${output-dir}" />
+			<arg line="${output-dir}" />
 			<arg line="${result-path}/eclipse-test" />
 		</exec>
 		<exec executable="ln" failonerror="false">
 			<arg line="-s" />
 			<arg line="${basedir}/build/gwt/gwt" />
-			<arg line="${basedir}/${output-dir}/gwt" />
+			<arg line="${output-dir}/gwt" />
 		</exec>
 	</target>
 
@@ -75,7 +75,11 @@
 
 	<!-- Initialization - - - - - - - - - - - - - - - - - - - - - - - - -->
 	<target name="init">
-
+	
+		<property file="build/build.properties" />
+		<property file="build/VERSION" />
+		<property file="build/html-style.properties" />
+		
 		<!-- Find out which platform we are in -->
 		<if>
 			<equals arg1="${os.name}" arg2="Windows 2000, Windows XP" />
@@ -103,10 +107,6 @@
 		<!-- Create result dir unless already exists -->
 		<mkdir dir="${result-path}" />
 
-		<property file="build/build.properties" />
-		<property file="build/VERSION" />
-		<property file="build/html-style.properties" />
-		
 		<!-- Destination files -->
 		<property name="lib-jar-name" value="${product-file}-${version}.jar" />
 		<property name="demo-war-name" value="${product-file}-demo-${version}.war" />
@@ -479,7 +479,8 @@
 				<exclude name="WEB-INF/web.xml" />
 				<exclude name="ITMILL/widgetsets/**" />
 				<exclude name="WEB-INF/lib/commons-fileupload-custom.jar" />
-				<exclude name="ITMILL/themes/tests-*" />
+				<!-- TODO check that tests* are not added -->
+				<exclude name="ITMILL/themes/test*/**" />
 				<exclude name="WEB-INF/classes/**" />
 			</fileset>
 		</copy>
