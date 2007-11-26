@@ -13,6 +13,9 @@ import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.TwinColSelect;
 
 /**
+ * TODO: Note you need to add Theme under WebContent/ITMILL/Themes/mytheme in
+ * order to see actual visible results on the browser. Currently changes are
+ * visible only by inspecting DOM.
  * 
  * @author IT Mill Ltd.
  */
@@ -36,6 +39,11 @@ public class TestForMultipleStyleNames extends CustomComponent implements
         main.removeAllComponents();
         main.addComponent(new Label(
                 "TK5 supports multiple stylenames for components."));
+        main.addComponent(new Label("Note you need to add Theme under"
+                + " WebContent/ITMILL/Themes/mytheme"
+                + " in order to see actual visible results"
+                + " on the browser. Currently changes are"
+                + " visible only by inspecting DOM."));
 
         styleNames2 = new ArrayList();
 
