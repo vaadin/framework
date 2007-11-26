@@ -253,7 +253,8 @@ public class ITabsheet extends FlowPanel implements Paintable,
             // Calculate used height
             super.setHeight("");
             int usedHeight = DOM.getElementPropertyInt(deco, "offsetTop")
-                    + DOM.getElementPropertyInt(deco, "offsetHeight");
+                    + DOM.getElementPropertyInt(deco, "offsetHeight")
+                    - DOM.getElementPropertyInt(getElement(), "offsetTop");
 
             // Calculate content area height (don't allow negative values)
             int h = targetHeight - usedHeight;

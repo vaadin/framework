@@ -10,21 +10,6 @@
 	height: 18px;
 }
 
-.i-textfield-focus {
-	border-color: #5daee8;
-}
-
-.i-textfield-error {
-	background: #ff9999;
-}
-
-.i-textfield.i-readonly {
-	background: transparent;
-	color: #222;
-	border: none;
-}
-
-/* TODO impl all textarea styles */
 .i-textarea {
 	background: #fff url(img/bg.png) repeat-x;
 	padding: 2px;
@@ -34,6 +19,23 @@
 	border-right-color: #d6d6d6;
 	margin: 0;
 	font-size: 13px;
+}
+
+.i-textfield-focus,
+.i-textarea-focus {
+	border-color: #5daee8;
+}
+
+.i-textfield-error,
+.i-textarea-error {
+	background: #ff9999;
+}
+
+.i-textfield.i-readonly,
+.i-textarea.i-readonly {
+	background: transparent;
+	color: #222;
+	border: none;
 }
 
 

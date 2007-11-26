@@ -3,9 +3,9 @@
 .i-panel-content,
 .i-panel-deco,
 .i-panel-light,
-.i-panel-light-caption,
-.i-panel-light-content,
-.i-panel-light-deco {
+.i-panel-caption-light,
+.i-panel-content-light,
+.i-panel-deco-light {
 	outline: none; /* Prevent selection outline which might break layouts or cause scrollbars */
 }
 
@@ -18,7 +18,7 @@
 }
 
 .i-panel-caption,
-.i-panel-light-caption {
+.i-panel-caption-light {
 	font-size: 18px;
 	line-height: 18px;
 	font-weight: normal;
@@ -30,10 +30,6 @@
 	border: 1px solid #babfc0;
 	border-top: none;
 	background: #fff;
-}
-
-.i-panel-light-caption {
-	overflow: hidden;
 }
 
 .i-panel-nocaption {
@@ -102,6 +98,13 @@
 	display: none;
 }
 
+.i-panel-nocaption-light {
+	height: 1px;
+	background: #babfc0;
+	overflow: hidden;
+	border: none;
+}
+
 .i-panel-content-light {
 	border: none;
 	background: transparent;
@@ -131,7 +134,8 @@
 
 /* IE specific rules (different selectors for IE6 and IE7.
  * These selectors must be separate because IE6 won't 
- * apply them if they are grouped together.
+ * apply them if they are grouped together 
+ * (it doesn't recognize the '+' selector).
 */
 * html .i-panel-caption {
 	border: 1px solid #babfc0;

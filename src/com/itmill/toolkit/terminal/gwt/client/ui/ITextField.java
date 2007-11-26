@@ -27,7 +27,7 @@ public class ITextField extends TextBoxBase implements Paintable,
     /**
      * This CSS classname is added to the input node on hover.
      */
-    public static final String CLASSNAME_FOCUS = "i-textfield-focus";
+    public static final String CLASSNAME_FOCUS = "focus";
 
     protected String id;
 
@@ -71,11 +71,11 @@ public class ITextField extends TextBoxBase implements Paintable,
     }
 
     public void onFocus(Widget sender) {
-        addStyleName(CLASSNAME_FOCUS);
+        addStyleDependentName(CLASSNAME_FOCUS);
     }
 
     public void onLostFocus(Widget sender) {
-        removeStyleName(CLASSNAME_FOCUS);
+        removeStyleDependentName(CLASSNAME_FOCUS);
     }
 
     public void setColumns(int columns) {
