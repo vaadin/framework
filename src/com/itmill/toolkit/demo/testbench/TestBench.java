@@ -35,7 +35,7 @@ public class TestBench extends com.itmill.toolkit.Application implements
         Property.ValueChangeListener {
 
     // Add here packages which are used for finding testable classes
-    String[] testablePackages = { "com.itmill.toolkit.demo.tests" };
+    String[] testablePackages = { "com.itmill.toolkit.demo.testbench" };
 
     HierarchicalContainer testables = new HierarchicalContainer();
 
@@ -90,6 +90,11 @@ public class TestBench extends com.itmill.toolkit.Application implements
             Class testable = (Class) i.next();
             menu.setItemCaption(testable, testable.getName());
         }
+        // collapse all items within menu
+        for (Iterator i = menu.rootItemIds().iterator(); i.hasNext();) {
+            menu.collapseItemsRecursively(i.next());
+        }
+
         menu.addListener(this);
         menu.setImmediate(true);
 
