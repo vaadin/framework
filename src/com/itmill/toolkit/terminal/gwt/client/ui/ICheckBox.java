@@ -23,6 +23,8 @@ public class ICheckBox extends com.google.gwt.user.client.ui.CheckBox implements
 
     private Element errorIndicatorElement;
 
+    private Icon icon;
+
     private ErrorMessage errorMessage;
 
     public ICheckBox() {
@@ -71,6 +73,18 @@ public class ICheckBox extends com.google.gwt.user.client.ui.CheckBox implements
 
         if (uidl.hasAttribute("description")) {
             setTitle(uidl.getStringAttribute("description"));
+        }
+
+        if (uidl.hasAttribute("icon")) {
+            if (icon == null) {
+                icon = new Icon(client);
+                DOM.insertChild(getElement(), icon.getElement(), 1);
+            }
+            icon.setUri(uidl.getStringAttribute("icon"));
+        } else if (icon != null) {
+            // detach icon
+            DOM.removeChild(getElement(), icon.getElement());
+            icon = null;
         }
 
         // Set text
