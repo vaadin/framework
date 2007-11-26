@@ -7,7 +7,17 @@
 			appUri:'Reservr', pathInfo: '/'
 		};
 	</script>
-	<script src="http://maps.google.com/maps?file=api&amp;v=2" type="text/javascript"></script>
+	<!-- 
+		Google Maps needs an API key if you're not runnign this demo on "localhost". 
+		
+		You can get a Google Maps API key here:
+			http://www.google.com/apis/maps/signup.html
+		
+		Append your Google Maps API key to the src -attribute below, like so:
+			src="http://maps.google.com/maps?file=api&v=2&key=XXXXXXXX"
+		where the X:s represent your key.
+	-->
+	<script src="http://maps.google.com/maps?file=api&v=2" type="text/javascript"></script>
 	<script language='javascript' src='ITMILL/widgetsets/com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet/com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet.nocache.js'></script>
 	<link REL="stylesheet" TYPE="text/css" HREF="ITMILL/themes/reservr/styles.css">
 </head>
