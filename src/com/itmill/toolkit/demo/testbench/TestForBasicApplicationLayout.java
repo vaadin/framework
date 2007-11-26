@@ -80,6 +80,7 @@ public class TestForBasicApplicationLayout extends CustomComponent {
         Table table = new Table();
         // populate Toolkit table component with test SQL table rows
         try {
+            sampleDatabase = new SampleDatabase();
             QueryContainer qc = new QueryContainer("SELECT * FROM employee",
                     sampleDatabase.getConnection());
             table.setContainerDataSource(qc);
