@@ -92,7 +92,6 @@ public class TestBench extends com.itmill.toolkit.Application implements
                     "");
             menu.setItemCaption(testable, name);
             // TODO fix #1191
-            System.err.println(name);
             menu.collapseItem(testable);
         }
 
