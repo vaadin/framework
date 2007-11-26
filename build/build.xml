@@ -272,12 +272,14 @@
 	</target>
 
 	<target name="add-platform-specific-files">
+		<echo>Adding platform specific files for ${package-platform}</echo>
 		<delete includeemptydirs="true" defaultexcludes="false">
 			<fileset dir="${output-dir}">
 				<include name="start-demo.*" />
 				<include name=".project" />
 				<include name=".classpath" />
 				<include name="*.launch" />
+				<include name="build-widgetsets.xml" />
 			</fileset>
 		</delete>
 		<copy todir="${output-dir}">
@@ -327,6 +329,7 @@
 				<copy todir="${output-dir}">
 					<fileset dir="build/package">
 						<include name="start-demo.bat" />
+						<include name="start-demo.txt" />
 					</fileset>
 				</copy>
 			</then>
@@ -337,6 +340,7 @@
 				<copy todir="${output-dir}">
 					<fileset dir="build/package">
 						<include name="start-demo.sh" />
+						<include name="start-demo.txt" />
 					</fileset>
 				</copy>
 				<chmod file="${output-dir}/start-demo.sh" perm="ugo+x" />
@@ -348,6 +352,7 @@
 				<copy todir="${output-dir}">
 					<fileset dir="build/package">
 						<include name="start-demo.sh" />
+						<include name="start-demo.txt" />
 						<include name=".VolumeIcon.icns" />
 						<include name=".DS_Store" />
 					</fileset>
