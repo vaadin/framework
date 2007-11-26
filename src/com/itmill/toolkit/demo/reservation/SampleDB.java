@@ -486,16 +486,17 @@ public class SampleDB {
                         new Double(59.315939), new Double(18.095904) },
                 { "25", "25 Smart fourtwo", "Keys from infodesk.", "Stockholm",
                         new Double(59.330716), new Double(18.058702) },
-                // Boston
-                { "26", "26 Ford Mustang", "Keys from infodesk.", "Boston",
-                        new Double(42.366588), new Double(-71.020955) },
-                { "27", "27 Smart fourtwo", "Keys from infodesk.", "Boston",
-                        new Double(42.365419), new Double(-71.061748) },
-                { "28", "28 Volvo S60", "Keys from Seaport Hotel reception.",
-                        "Boston", new Double(42.34811), new Double(-71.041127) },
-                { "29", "29 Smart fourtwo",
-                        "Keys from Seaport Hotel reception.", "Boston",
-                        new Double(42.348072), new Double(-71.041315) },
+        // Boston
+        /*
+         * { "26", "26 Ford Mustang", "Keys from infodesk.", "Boston", new
+         * Double(42.366588), new Double(-71.020955) }, { "27", "27 Smart
+         * fourtwo", "Keys from infodesk.", "Boston", new Double(42.365419), new
+         * Double(-71.061748) }, { "28", "28 Volvo S60", "Keys from Seaport
+         * Hotel reception.", "Boston", new Double(42.34811), new
+         * Double(-71.041127) }, { "29", "29 Smart fourtwo", "Keys from Seaport
+         * Hotel reception.", "Boston", new Double(42.348072), new
+         * Double(-71.041315) },
+         */
 
         };
 
