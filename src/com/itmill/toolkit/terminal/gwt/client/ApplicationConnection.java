@@ -501,8 +501,6 @@ public class ApplicationConnection {
         boolean enabled = true;
         if (uidl.hasAttribute("disabled")) {
             enabled = !uidl.getBooleanAttribute("disabled");
-        } else if (uidl.hasAttribute("readonly")) {
-            enabled = !uidl.getBooleanAttribute("readonly");
         }
         if (component instanceof FocusWidget) {
             ((FocusWidget) component).setEnabled(enabled);
