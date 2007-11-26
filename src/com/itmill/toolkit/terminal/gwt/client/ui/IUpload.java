@@ -50,6 +50,8 @@ public class IUpload extends FormPanel implements Paintable, ClickListener,
      */
     private boolean submitted = false;
 
+    private boolean enabled;
+
     public IUpload() {
         super();
         setEncoding(FormPanel.ENCODING_MULTIPART);
@@ -76,6 +78,12 @@ public class IUpload extends FormPanel implements Paintable, ClickListener,
         submitButton.setText(uidl.getStringAttribute("buttoncaption"));
         fu.setName(paintableId + "_file");
 
+        if (uidl.hasAttribute("disabled")) {
+            disableUpload();
+        } else if (uidl.getBooleanAttribute("state")) {
+            enableUploaod();
+        }
+
     }
 
     public void onClick(Widget sender) {
@@ -83,10 +91,12 @@ public class IUpload extends FormPanel implements Paintable, ClickListener,
     }
 
     public void onSubmit(FormSubmitEvent event) {
-        if (fu.getFilename().length() == 0 || submitted) {
+        if (fu.getFilename().length() == 0 || submitted || !enabled) {
             event.setCancelled(true);
-            ApplicationConnection.getConsole().log(
-                    "Submit cancelled (no file or already submitted)");
+            ApplicationConnection
+                    .getConsole()
+                    .log(
+                            "Submit cancelled (disabled, no file or already submitted)");
             return;
         }
         submitted = true;
@@ -109,11 +119,13 @@ public class IUpload extends FormPanel implements Paintable, ClickListener,
     protected void disableUpload() {
         submitButton.setEnabled(false);
         fu.setVisible(false);
+        enabled = false;
     }
 
     protected void enableUploaod() {
         submitButton.setEnabled(true);
         fu.setVisible(true);
+        enabled = true;
     }
 
     public void onSubmitComplete(FormSubmitCompleteEvent event) {
