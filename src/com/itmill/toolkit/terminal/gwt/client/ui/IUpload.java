@@ -17,7 +17,7 @@ import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
 public class IUpload extends FormPanel implements Paintable, ClickListener,
         FormHandler {
-    
+
     public static final String CLASSNAME = "i-upload";
 
     /**
@@ -34,7 +34,7 @@ public class IUpload extends FormPanel implements Paintable, ClickListener,
     /**
      * Button that initiates uploading
      */
-    private Button b;
+    private Button submitButton;
 
     /**
      * When expecting big files, programmer may initiate some UI changes when
@@ -57,27 +57,23 @@ public class IUpload extends FormPanel implements Paintable, ClickListener,
 
         setWidget(panel);
         panel.add(fu);
-        // TODO
-        b = new Button("Click to Upload");
-        b.addClickListener(this);
-        panel.add(b);
+        submitButton = new Button();
+        submitButton.addClickListener(this);
+        panel.add(submitButton);
 
         addFormHandler(this);
-        
+
         setStyleName(CLASSNAME);
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        if (client.updateComponent(this, uidl, false)) {
+        if (client.updateComponent(this, uidl, true)) {
             return;
         }
         this.client = client;
         paintableId = uidl.getId();
         setAction(client.getAppUri());
-
-        if (uidl.hasAttribute("caption")) {
-            b.setText(uidl.getStringAttribute("caption"));
-        }
+        submitButton.setText(uidl.getStringAttribute("buttoncaption"));
         fu.setName(paintableId + "_file");
 
     }
@@ -111,12 +107,12 @@ public class IUpload extends FormPanel implements Paintable, ClickListener,
     }
 
     protected void disableUpload() {
-        b.setEnabled(false);
+        submitButton.setEnabled(false);
         fu.setVisible(false);
     }
 
     protected void enableUploaod() {
-        b.setEnabled(true);
+        submitButton.setEnabled(true);
         fu.setVisible(true);
     }
 

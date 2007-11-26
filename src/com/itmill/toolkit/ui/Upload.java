@@ -76,6 +76,8 @@ public class Upload extends AbstractComponent implements Component.Focusable {
 
     private int totalBytes;
 
+    private String buttonCaption = "Upload";
+
     /**
      * ProgressListener to which information about progress is sent during
      * upload
@@ -192,6 +194,8 @@ public class Upload extends AbstractComponent implements Component.Focusable {
         }
 
         target.addAttribute("state", isUploading);
+
+        target.addAttribute("buttoncaption", buttonCaption);
 
         target.addVariable(this, "fake", true);
 
@@ -800,5 +804,23 @@ public class Upload extends AbstractComponent implements Component.Focusable {
          *                unknown
          */
         public void updateProgress(long readBytes, long contentLength);
+    }
+
+    /**
+     * @return String to be rendered into button that fires uploading
+     */
+    public String getButtonCaption() {
+        return buttonCaption;
+    }
+
+    /**
+     * File uploads usually have button that starts actual upload progress. This
+     * method is used to set text in that button.
+     * 
+     * @param buttonCaption
+     *                text for uploads button.
+     */
+    public void setButtonCaption(String buttonCaption) {
+        this.buttonCaption = buttonCaption;
     }
 }
