@@ -18,8 +18,8 @@ public class TestForContainerFilterable extends CustomComponent {
     Table t = new Table();
     private static String parts[] = { "Neo", "Sa", "rem", "the", "adi", "za",
             "tre", "day", "Ca", "re", "cen", "ter", "mi", "nal" };
-    TextField fooFilter = new TextField("foo-filter");
-    TextField barFilter = new TextField("bar-filter");
+    TextField firstFilter = new TextField("first-filter");
+    TextField secondFilter = new TextField("second-filter");
     Button filterButton = new Button("Filter");
     Label count = new Label();
 
@@ -27,12 +27,12 @@ public class TestForContainerFilterable extends CustomComponent {
         setCompositionRoot(lo);
 
         // Init datasource
-        ic.addContainerProperty("foo", String.class, "");
-        ic.addContainerProperty("bar", String.class, "");
+        ic.addContainerProperty("first", String.class, "");
+        ic.addContainerProperty("second", String.class, "");
         for (int i = 0; i < 1000; i++) {
             Object id = ic.addItem();
-            ic.getContainerProperty(id, "foo").setValue(randomWord());
-            ic.getContainerProperty(id, "bar").setValue(randomWord());
+            ic.getContainerProperty(id, "first").setValue(randomWord());
+            ic.getContainerProperty(id, "second").setValue(randomWord());
         }
 
         // Init filtering view
@@ -41,13 +41,13 @@ public class TestForContainerFilterable extends CustomComponent {
         filterPanel.setWidth(100);
         filterPanel.setWidthUnits(Sizeable.UNITS_PERCENTAGE);
         lo.addComponent(filterPanel);
-        filterPanel.addComponent(fooFilter);
-        filterPanel.addComponent(barFilter);
+        filterPanel.addComponent(firstFilter);
+        filterPanel.addComponent(secondFilter);
         filterPanel.addComponent(filterButton);
-        fooFilter
-                .setDescription("Filters foo column in case-sensitive contains manner.");
-        barFilter
-                .setDescription("Filters bar column in case-insensitive prefix manner.");
+        firstFilter
+                .setDescription("Filters first column in case-sensitive contains manner.");
+        secondFilter
+                .setDescription("Filters second column in case-insensitive prefix manner.");
         filterPanel.addComponent(count);
 
         // Table
@@ -61,12 +61,12 @@ public class TestForContainerFilterable extends CustomComponent {
         filterButton.addListener(new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
                 ic.removeAllContainerFilters();
-                if (fooFilter.toString().length() > 0) {
-                    ic.addContainerFilter("foo", fooFilter.toString(), false,
+                if (firstFilter.toString().length() > 0) {
+                    ic.addContainerFilter("first", firstFilter.toString(), false,
                             false);
                 }
-                if (barFilter.toString().length() > 0) {
-                    ic.addContainerFilter("bar", barFilter.toString(), true,
+                if (secondFilter.toString().length() > 0) {
+                    ic.addContainerFilter("second", secondFilter.toString(), true,
                             true);
                 }
                 count.setValue("Rows in table: " + ic.size());
