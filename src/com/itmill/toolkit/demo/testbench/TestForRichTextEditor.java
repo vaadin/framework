@@ -35,6 +35,8 @@ public class TestForRichTextEditor extends CustomComponent implements
         rte = new RichTextArea();
         rte.addListener(this);
 
+        rte.setEnabled(false);
+
         main.addComponent(rte);
 
         main.addComponent(new Button("commit content to label below"));
