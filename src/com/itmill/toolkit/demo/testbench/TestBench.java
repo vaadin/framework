@@ -193,10 +193,6 @@ public class TestBench extends com.itmill.toolkit.Application implements
                                 + files[j].substring(0, files[j].length() - 6);
                         Class c = Class.forName(p);
                         if (c.getSuperclass() != null) {
-                            // if ((c.getSuperclass()
-                            // .equals(com.itmill.toolkit.Application.class))) {
-                            // classes.add(c);
-                            // } else
                             if ((c.getSuperclass()
                                     .equals(com.itmill.toolkit.ui.CustomComponent.class))) {
                                 classes.add(c);
@@ -204,10 +200,6 @@ public class TestBench extends com.itmill.toolkit.Application implements
                         }
                     }
                 }
-            } else {
-                throw new ClassNotFoundException(packageName + " ("
-                        + directory.getPath()
-                        + ") does not appear to be a valid package");
             }
         }
 
