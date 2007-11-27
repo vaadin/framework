@@ -16,6 +16,8 @@ public class ITwinColSelect extends IOptionGroupBase {
 
     private static final int VISIBLE_COUNT = 10;
 
+    private static final String DEFAULT_WIDTH = "10em";
+
     private ListBox options;
 
     private ListBox selections;
@@ -77,6 +79,9 @@ public class ITwinColSelect extends IOptionGroupBase {
         if (getColumns() > 0) {
             options.setWidth(getColumns() + "em");
             selections.setWidth(getColumns() + "em");
+        } else {
+            options.setWidth(DEFAULT_WIDTH);
+            selections.setWidth(DEFAULT_WIDTH);
         }
         if (getRows() > 0) {
             options.setVisibleItemCount(getRows());
