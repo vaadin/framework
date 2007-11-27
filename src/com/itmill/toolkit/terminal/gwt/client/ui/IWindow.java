@@ -200,10 +200,6 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
             setHeight(height);
         }
 
-        contentPanel.setScrollPosition(uidl.getIntVariable("scrolltop"));
-        contentPanel.setHorizontalScrollPosition(uidl
-                .getIntVariable("scrollleft"));
-
         // Initialize the position form UIDL
         try {
             int positionx = uidl.getIntVariable("positionx");
@@ -267,6 +263,11 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
             }
 
         }
+
+        // setting scrollposition must happen after children is rendered
+        contentPanel.setScrollPosition(uidl.getIntVariable("scrolltop"));
+        contentPanel.setHorizontalScrollPosition(uidl
+                .getIntVariable("scrollleft"));
 
     }
 
