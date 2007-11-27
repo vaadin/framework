@@ -1,84 +1,104 @@
 package com.itmill.toolkit.demo;
 
+import java.util.Date;
+
+import com.itmill.toolkit.Application;
 import com.itmill.toolkit.event.Action;
 import com.itmill.toolkit.event.ShortcutAction;
 import com.itmill.toolkit.event.Action.Handler;
-import com.itmill.toolkit.ui.AbstractField;
 import com.itmill.toolkit.ui.Button;
+import com.itmill.toolkit.ui.ExpandLayout;
 import com.itmill.toolkit.ui.Label;
+import com.itmill.toolkit.ui.OrderedLayout;
+import com.itmill.toolkit.ui.Panel;
 import com.itmill.toolkit.ui.TextField;
 import com.itmill.toolkit.ui.Window;
 
 /**
- * Note: This feature is under development and is considered as beta
- * 
- * @author IT Mill Ltd.
- * 
+ * Test application for KeyboardShortcuts
  */
-public class KeyboardShortcut extends com.itmill.toolkit.Application implements
-        Handler {
-    private Window main;
+public class KeyboardShortcut extends Application implements Handler {
 
-    private Button a;
+    private OrderedLayout loki;
 
-    private Button z;
+    private final Label instructions = new Label(
+            "<p>Keyboard shortcuts is a must have feature for applications in a "
+                    + "daily use. In IT Mill toolkit shortcuts are binded to "
+                    + "Panel and its subclasses like Windows (most common place)."
+                    + "</p>"
+                    + "<p>Browsers reserve some keyboard combinations for their own"
+                    + " actions, so all combinations cannot be used in web "
+                    + "applications. (see our article on <a href=\"http://www.itmill"
+                    + ".com/articles/Keybindings_in_Web_Browsers.htm\">"
+                    + "www.itmill.com)</a></p>"
+                    + "Events are attached to Window in this application, so a "
+                    + "component inside window must be focused to fire event on"
+                    + " keyboard shortcut.</p>"
+                    + "<strong>Shortcuts used in this example:</strong> "
+                    + "<br/>ESC restarts program, ctrl-shift-a (Button A), "
+                    + "ctrl-shift-z (Button Z), ctrl-shift-x (Button X)",
+            Label.CONTENT_XHTML);
 
-    private Button x;
+    private final Action ACTION_A = new ShortcutAction("Button a action",
+            ShortcutAction.KeyCode.A, new int[] {
+                    ShortcutAction.ModifierKey.CTRL,
+                    ShortcutAction.ModifierKey.SHIFT });
 
-    private Button close;
+    private final Action ACTION_Z = new ShortcutAction("Button z action",
+            ShortcutAction.KeyCode.Z, new int[] {
+                    ShortcutAction.ModifierKey.CTRL,
+                    ShortcutAction.ModifierKey.SHIFT });
 
-    private AbstractField f;
+    private final Action ACTION_X = new ShortcutAction("Button x action",
+            ShortcutAction.KeyCode.X, new int[] {
+                    ShortcutAction.ModifierKey.CTRL,
+                    ShortcutAction.ModifierKey.SHIFT });
 
-    Action[] actions = new Action[] {
-            new ShortcutAction("Button a action", ShortcutAction.KeyCode.A,
-                    new int[] { ShortcutAction.ModifierKey.CTRL,
-                            ShortcutAction.ModifierKey.SHIFT }),
-            new ShortcutAction("Button z action", ShortcutAction.KeyCode.Z,
-                    new int[] { ShortcutAction.ModifierKey.CTRL,
-                            ShortcutAction.ModifierKey.SHIFT }),
-            new ShortcutAction("Button x action", ShortcutAction.KeyCode.X,
-                    new int[] { ShortcutAction.ModifierKey.CTRL,
-                            ShortcutAction.ModifierKey.SHIFT }),
-            new ShortcutAction("Restart ", ShortcutAction.KeyCode.ESCAPE, null) };
+    private final Action ACTION_RESTART = new ShortcutAction("Restart ",
+            ShortcutAction.KeyCode.ESCAPE, null);
+
+    private Action[] actions = new Action[] { ACTION_A, ACTION_Z, ACTION_X,
+            ACTION_RESTART };
+
+    private TextField f;
 
     public void init() {
 
-        main = new Window("Keyboard shortcuts demo");
-        setMainWindow(main);
+        Window w = new Window("Keyboard shortcuts demo");
+        ExpandLayout main = new ExpandLayout();
+        main.setMargin(true);
+        main.setSpacing(true);
+        setMainWindow(w);
+        w.setLayout(main);
 
-        main
-                .addComponent(new Label(
-                        "<h3>Test application for shortcut actions</h3>"
-                                + "<p><b>Notes:</b><br />"
-                                + "<b>This feature is under development and it's API may still change.</b><br />"
-                                + "<b>If events do not work, <b>set focus to Textfield first.</b><br />"
-                                + "<b>Browsers may have reserved the keyboard combinations used in "
-                                + "this demo for other purposes.</b><br /></p>",
-                        Label.CONTENT_XHTML));
-        main
-                .addComponent(new Label(
-                        "ESC restarts program, ctrl-shift-a clicks A button, "
-                                + "ctrl-shift-z clicks Z button, ctrl-shift-x clicks X button"));
+        Panel p = new Panel("Test application for shortcut actions");
+        p.addComponent(instructions);
+
+        OrderedLayout buttons = new OrderedLayout(
+                OrderedLayout.ORIENTATION_HORIZONTAL);
 
         // Restart button
-        close = new Button("restart", this, "close");
+        Button close = new Button("restart", this, "close");
+        Button a = new Button("Button A", this, "actionAHandler");
+        Button z = new Button("Button Z", this, "actionZHandler");
+        Button x = new Button("Button X", this, "actionXHandler");
+        f = new TextField();
 
-        main.addComponent(close);
+        buttons.addComponent(close);
 
-        a = new Button("Button A", this, "buttonAHandler");
+        buttons.addComponent(a);
+        buttons.addComponent(z);
+        buttons.addComponent(x);
+        buttons.addComponent(f);
+        p.addComponent(buttons);
 
-        z = new Button("Button Z", this, "buttonZHandler");
+        main.addComponent(p);
 
-        x = new Button("Button X", this, "buttonXHandler");
+        loki = new OrderedLayout();
+        main.addComponent(loki);
+        main.expand(loki);
 
-        f = new TextField("Textfield");
-
-        main.addComponent(a);
-        main.addComponent(z);
-        main.addComponent(x);
-        main.addComponent(f);
-
-        main.addActionHandler(this);
+        w.addActionHandler(this);
 
         f.focus();
     }
@@ -88,30 +108,38 @@ public class KeyboardShortcut extends com.itmill.toolkit.Application implements
     }
 
     public void handleAction(Action action, Object sender, Object target) {
-        if (action == actions[0]) {
-            buttonAHandler();
+        if (action == ACTION_A) {
+            actionAHandler();
         }
-        if (action == actions[1]) {
-            buttonZHandler();
+        if (action == ACTION_Z) {
+            actionZHandler();
         }
-        if (action == actions[2]) {
-            buttonXHandler();
+        if (action == ACTION_X) {
+            actionXHandler();
         }
-        if (action == actions[3]) {
-            close();
+        if (action == ACTION_RESTART) {
+            actionRestartHandler();
         }
     }
 
-    public void buttonAHandler() {
-        main.addComponent(new Label("Button A handler fired"));
+    public void actionAHandler() {
+        log("Button A handler fired");
     }
 
-    public void buttonZHandler() {
-        main.addComponent(new Label("Button Z handler fired"));
+    public void actionZHandler() {
+        log("Button Z handler fired");
     }
 
-    public void buttonXHandler() {
-        main.addComponent(new Label("Button X handler fired"));
+    public void actionXHandler() {
+        log("Button X handler fired");
+    }
+
+    public void actionRestartHandler() {
+        close();
+    }
+
+    public void log(String s) {
+        loki.addComponentAsFirst(new Label(new Date() + " : " + s));
     }
 
 }
