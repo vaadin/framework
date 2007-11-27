@@ -45,11 +45,18 @@ public class IRichTextArea extends Composite implements Paintable,
 
         initWidget(fp);
         setStyleName(CLASSNAME);
+
+    }
+
+    public void setEnabled(boolean enabled) {
+        rta.setEnabled(enabled);
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         this.client = client;
         id = uidl.getId();
+
+        setEnabled(!uidl.getBooleanAttribute("disabled"));
 
         if (client.updateComponent(this, uidl, true)) {
             return;
