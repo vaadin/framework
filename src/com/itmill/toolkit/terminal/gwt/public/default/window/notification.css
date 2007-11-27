@@ -1,10 +1,9 @@
 
 .i-Notification {
 	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
-	background-color: #ffffff;
-	color: #999999;
-	border: 10px solid #999999;
-	padding: 0.2em;
+	background-color: #999999;
+	color: #ffffff;
+	padding: 0.3em;
 	cursor: pointer;
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
@@ -27,26 +26,16 @@
 }
 
 .i-Notification.warning {
-	border-color: #f14c1a;
-	color: #f14c1a;
+	background: #f14c1a;
 }
 
 .i-Notification.error {
-	color: #ff0a0a;
-	border-color: #ff0a0a;
+	background-color: #ff0a0a;
 	background-image: url('img/notification-error.png');
 	background-repeat: no-repeat;
 	background-position: center right;
-	padding-right: 40px;
-	border-radius: 10px;
+	padding-right: 30px;
 }
 .i-Notification.tray {
-	border-width: 1px;
-	border-bottom: none;
-	-moz-border-bottom-right-radius: 0px;
-	-moz-border-bottom-left-radius: 0px;
-	-webkit-border-bottom-right-radius: 0px;
-	-webkit-border-bottom-left-radius: 0px;
-	border-radius-bottom-left: 0px;
-	border-radius-bottom-right: 0px;
+
 }
