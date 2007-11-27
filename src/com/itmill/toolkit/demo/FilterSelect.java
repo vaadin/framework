@@ -42,7 +42,7 @@ public class FilterSelect extends com.itmill.toolkit.Application {
         Window main = new Window("Filter select demo");
         setMainWindow(main);
 
-        // default filter
+        // default filterin (Starts with)
         Select s1 = new Select();
         for (int i = 0; i < 105; i++) {
             s1
@@ -62,31 +62,18 @@ public class FilterSelect extends com.itmill.toolkit.Application {
         }
         s2.setFilteringMode(Filtering.FILTERINGMODE_CONTAINS);
 
-        // startswith filter
-        Select s3 = new Select();
-        for (int i = 0; i < 500; i++) {
-            s3
-                    .addItem(firstnames[(int) (Math.random() * (firstnames.length - 1))]
-                            + " "
-                            + lastnames[(int) (Math.random() * (lastnames.length - 1))]);
-        }
-        s3.setFilteringMode(Filtering.FILTERINGMODE_STARTSWITH);
-
         // Add selects to UI using ordered layout and panels
         OrderedLayout orderedLayout = new OrderedLayout(
                 OrderedLayout.ORIENTATION_HORIZONTAL);
 
         Panel panel1 = new Panel("Select with default filter");
         Panel panel2 = new Panel("Select with contains filter");
-        Panel panel3 = new Panel("Select with custom 'EndsWith' filter");
 
         panel1.addComponent(s1);
         panel2.addComponent(s2);
-        panel3.addComponent(s3);
 
         orderedLayout.addComponent(panel1);
         orderedLayout.addComponent(panel2);
-        orderedLayout.addComponent(panel3);
         main.addComponent(orderedLayout);
 
     }
