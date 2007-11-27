@@ -2,8 +2,8 @@
 .i-Notification {
 	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
 	background-color: #ffffff;
-	color: #cccccc;
-	border: 10px solid #cccccc;
+	color: #999999;
+	border: 10px solid #999999;
 	padding: 0.2em;
 	cursor: pointer;
 	-moz-border-radius: 3px;
@@ -41,7 +41,6 @@
 	border-radius: 10px;
 }
 .i-Notification.tray {
-	color: #000000;
 	border-width: 1px;
 	border-bottom: none;
 	-moz-border-bottom-right-radius: 0px;
