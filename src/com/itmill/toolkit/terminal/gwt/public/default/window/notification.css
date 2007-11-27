@@ -31,6 +31,10 @@
 .i-Notification.error {
 	color: #ff0a0a;
 	border-color: #ff0a0a;
+	background-image: url('img/notification-error.png');
+	background-repeat: no-repeat;
+	background-position: center right;
+	padding-right: 40px;
 }
 .i-Notification.tray {
 	color: #000000;
