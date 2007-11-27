@@ -6,6 +6,9 @@
 	border: 10px solid #cccccc;
 	padding: 0.2em;
 	cursor: pointer;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
 }
 .i-Notification H1,
 .i-Notification p,
@@ -35,8 +38,16 @@
 	background-repeat: no-repeat;
 	background-position: center right;
 	padding-right: 40px;
+	border-radius: 10px;
 }
 .i-Notification.tray {
 	color: #000000;
+	border-width: 1px;
 	border-bottom: none;
+	-moz-border-bottom-right-radius: 0px;
+	-moz-border-bottom-left-radius: 0px;
+	-webkit-border-bottom-right-radius: 0px;
+	-webkit-border-bottom-left-radius: 0px;
+	border-radius-bottom-left: 0px;
+	border-radius-bottom-right: 0px;
 }
