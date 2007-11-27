@@ -1765,7 +1765,7 @@ public class IndexedContainer implements Container, Container.Indexed,
             String s1 = f.ignoreCase ? f.filterString.toLowerCase()
                     : f.filterString;
             Property p = item.getItemProperty(f.propertyId);
-            if (p == null) {
+            if (p == null || p.toString() == null) {
                 return false;
             }
             String s2 = f.ignoreCase ? p.toString().toLowerCase() : p
