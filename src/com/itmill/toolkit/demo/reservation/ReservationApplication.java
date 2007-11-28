@@ -186,7 +186,7 @@ public class ReservationApplication extends Application {
         mainTabs.addTab(allLayout, "All reservations", null);
         mainTabs.addListener(new TabSheet.SelectedTabChangeListener() {
             public void selectedTabChange(SelectedTabChangeEvent event) {
-                refreshReservations(true);
+                refreshReservations(false);
             }
         });
 
@@ -268,22 +268,16 @@ public class ReservationApplication extends Application {
         try {
             resource = getActiveResource();
         } catch (ResourceNotAvailableException e) {
-            /*
-             * resourceName.setCaption("Not available"); resourceName
-             * .setValue("Please choose another time period or resource");
-             */
             getMainWindow().showNotification("Not available",
                     "Please choose another resource or time period.",
                     Notification.TYPE_HUMANIZED_MESSAGE);
 
-            // reservationButton.setEnabled(false);
             return;
         }
         map.clear();
         if (resource == null) {
             resourceName.setCaption("Choose resource above");
             resourceName.setValue("");
-            // reservationButton.setEnabled(false);
             map.setContainerDataSource(db.getResources(null));
             map.setZoomLevel(1);
 
@@ -315,7 +309,6 @@ public class ReservationApplication extends Application {
 
             }
             map.setZoomLevel((srs.size() == 1 ? 14 : 9));
-            // reservationButton.setEnabled(true);
         }
 
     }
