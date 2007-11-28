@@ -240,12 +240,6 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
         boolean repaintAll = (request.getParameter(GET_PARAM_REPAINT_ALL) != null)
                 || request.getSession().isNew();
 
-        // If repaint is requested, clean all ids
-        if (repaintAll) {
-            idPaintableMap.clear();
-            paintableIdMap.clear();
-        }
-
         OutputStream out = response.getOutputStream();
         PrintWriter outWriter = new PrintWriter(new BufferedWriter(
                 new OutputStreamWriter(out, "UTF-8")));
