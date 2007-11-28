@@ -629,7 +629,8 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
             return;
         }
         if (!enabled) {
-            // TODO cancel scroll (scrorll back or something)
+            bodyContainer.setScrollPosition(firstRowInViewPort
+                    * tBody.getRowHeight());
             return;
         }
 
@@ -838,9 +839,6 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
         private int width = -1;
 
         private char align = ALIGN_LEFT;
-
-        private HeaderCell() {
-        };
 
         public void setSortable(boolean b) {
             sortable = b;
