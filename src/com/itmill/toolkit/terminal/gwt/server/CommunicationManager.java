@@ -304,7 +304,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
                         requireLocale(application.getLocale().toString());
 
                     } else {
-                        paintables = getDirtyComponents();
+                        paintables = getDirtyComponents(window);
                     }
                     if (paintables != null) {
 
@@ -724,49 +724,6 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
      * before any windows URIs are processed and if a DownloadStream is returned
      * it is sent to the client.
      * 
-     * @param application
-     *                the Application owning the URI.
-     * @param request
-     *                the HTTP request instance.
-     * @param response
-     *                the HTTP response to write to.
-     * @return boolean <code>true</code> if the request was handled and
-     *         further processing should be suppressed, otherwise
-     *         <code>false</code>.
-     * @see com.itmill.toolkit.terminal.URIHandler
-     */
-    private DownloadStream handleURI(Application application,
-            HttpServletRequest request, HttpServletResponse response) {
-
-        String uri = request.getPathInfo();
-
-        // If no URI is available
-        if (uri == null || uri.length() == 0 || uri.equals("/")) {
-            return null;
-        }
-
-        // Remove the leading /
-        while (uri.startsWith("/") && uri.length() > 0) {
-            uri = uri.substring(1);
-        }
-
-        // Handle the uri
-        DownloadStream stream = null;
-        try {
-            stream = application.handleURI(application.getURL(), uri);
-        } catch (Throwable t) {
-            application.terminalError(new URIHandlerErrorImpl(application, t));
-        }
-
-        return stream;
-    }
-
-    /**
-     * Handles the requested URI. An application can add handlers to do special
-     * processing, when a certain URI is requested. The handlers are invoked
-     * before any windows URIs are processed and if a DownloadStream is returned
-     * it is sent to the client.
-     * 
      * @param stream
      *                the downloadable stream.
      * 
@@ -809,8 +766,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
             if (i != null) {
                 while (i.hasNext()) {
                     String param = (String) i.next();
-                    response.setHeader((String) param, stream
-                            .getParameter(param));
+                    response.setHeader(param, stream.getParameter(param));
                 }
             }
 
@@ -895,10 +851,11 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
     }
 
     /**
-     * 
+     * @param w
+     *                main window for which dirty components is to be fetched
      * @return
      */
-    public synchronized Set getDirtyComponents() {
+    public synchronized Set getDirtyComponents(Window w) {
         HashSet resultset = new HashSet(dirtyPaintabletSet);
 
         // The following algorithm removes any components that would be painted
@@ -911,7 +868,9 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
         for (Iterator i = dirtyPaintabletSet.iterator(); i.hasNext();) {
             Paintable p = (Paintable) i.next();
             if (p instanceof Component) {
-                if (dirtyPaintabletSet.contains(((Component) p).getParent())) {
+                Component component = (Component) p;
+                if (component.getWindow() != w
+                        || dirtyPaintabletSet.contains(component.getParent())) {
                     resultset.remove(p);
                 }
             }
