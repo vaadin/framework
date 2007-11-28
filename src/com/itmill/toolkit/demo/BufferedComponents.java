@@ -70,7 +70,7 @@ public class BufferedComponents extends Application {
         // make
         // code changes)
         Button restart = new Button("restart", this, "close");
-        restart.setStyle("link");
+        restart.addStyleName(Button.STYLE_LINK);
         w.addComponent(restart);
     }
 }
