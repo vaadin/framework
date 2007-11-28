@@ -2,13 +2,17 @@
 	cursor: pointer;
 	font-size: 13px;
 }
-.i-button.link {
+
+.i-button img {
+	display:inline;
+}
+
+.i-button-link {
 	border: 0px;
 	text-align: left;
 	text-decoration: underline;
 	background: none;
 }
-
-.i-button img {
-	display:inline;
+.i-button-link span {
+	text-decoration: underline;
 }

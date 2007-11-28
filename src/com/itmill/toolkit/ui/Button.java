@@ -248,6 +248,10 @@ public class Button extends AbstractField {
     /* Click event ************************************************ */
 
     private static final Method BUTTON_CLICK_METHOD;
+
+    /* Button style with no decorations. Looks like a link, acts like a button */
+    public static final String STYLE_LINK = "link";
+
     static {
         try {
             BUTTON_CLICK_METHOD = ClickListener.class.getDeclaredMethod(
