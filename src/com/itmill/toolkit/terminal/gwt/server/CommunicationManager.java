@@ -869,7 +869,12 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
             Paintable p = (Paintable) i.next();
             if (p instanceof Component) {
                 Component component = (Component) p;
-                if (component.getWindow() != w
+                Window componentsRoot = component.getWindow();
+                if (componentsRoot.getParent() != null) {
+                    // this is a subwindow
+                    componentsRoot = (Window) componentsRoot.getParent();
+                }
+                if (componentsRoot != w
                         || dirtyPaintabletSet.contains(component.getParent())) {
                     resultset.remove(p);
                 }
