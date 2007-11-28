@@ -8,9 +8,9 @@ import com.itmill.toolkit.terminal.DownloadStream;
 import com.itmill.toolkit.terminal.ExternalResource;
 import com.itmill.toolkit.terminal.ParameterHandler;
 import com.itmill.toolkit.terminal.URIHandler;
+import com.itmill.toolkit.ui.ExpandLayout;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.Link;
-import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Panel;
 import com.itmill.toolkit.ui.Table;
 import com.itmill.toolkit.ui.Window;
@@ -39,7 +39,7 @@ public class Parameters extends com.itmill.toolkit.Application implements
         main.addURIHandler(this);
         main.addParameterHandler(this);
 
-        OrderedLayout layout = new OrderedLayout();
+        ExpandLayout layout = new ExpandLayout();
         Label info = new Label("To test URI and Parameter Handlers, "
                 + "add get parameters to URL. For example try examples below: ");
         info.setCaption("Usage info");
@@ -66,16 +66,27 @@ public class Parameters extends com.itmill.toolkit.Application implements
         panel1.addComponent(relative);
         layout.addComponent(panel1);
 
-        // Parameters
-        params.addContainerProperty("Values", String.class, "");
+        params.addContainerProperty("Key", String.class, "");
+        params.addContainerProperty("Value", String.class, "");
         Panel panel2 = new Panel("Parameter Handler");
-        params.setCaption("Last parameters");
+        params.setHeight(100);
+        params.setHeightUnits(Table.UNITS_PERCENTAGE);
+        panel2.setHeight(100);
+        panel2.setHeightUnits(Panel.UNITS_PERCENTAGE);
+        panel2.setLayout(new ExpandLayout());
+        panel2.getLayout().setMargin(true);
+
         params.setColumnHeaderMode(Table.COLUMN_HEADER_MODE_ID);
-        params.setRowHeaderMode(Table.ROW_HEADER_MODE_ID);
         panel2.addComponent(params);
         layout.addComponent(panel2);
 
-        main.addComponent(layout);
+        // expand parameter panel and its table
+        layout.expand(panel2);
+
+        layout.setMargin(true);
+        layout.setSpacing(true);
+
+        main.setLayout(layout);
     }
 
     /**
@@ -94,8 +105,7 @@ public class Parameters extends com.itmill.toolkit.Application implements
      * communicate with EmbeddedToolkit.jsp
      */
     public void handleParameters(Map parameters) {
-        // TODO: disabled, see bug #550
-        // params.removeAllItems();
+        params.removeAllItems();
         for (Iterator i = parameters.keySet().iterator(); i.hasNext();) {
             String name = (String) i.next();
             String[] values = (String[]) parameters.get(name);
@@ -106,7 +116,7 @@ public class Parameters extends com.itmill.toolkit.Application implements
                 }
                 v += "'" + values[j] + "'";
             }
-            params.addItem(new Object[] { v }, name);
+            params.addItem(new Object[] { name, v }, name);
         }
     }
 }
