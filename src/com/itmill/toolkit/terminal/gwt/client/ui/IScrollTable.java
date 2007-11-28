@@ -1858,12 +1858,11 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
              * React on click that occur on content cells only
              */
             public void onBrowserEvent(Event event) {
-                String s = DOM.getElementProperty(DOM.eventGetTarget(event),
-                        "className");
                 switch (DOM.eventGetType(event)) {
                 case Event.ONCLICK:
-                    if ((CLASSNAME + "-cell-content").equals(s)) {
-                        ApplicationConnection.getConsole().log("Row click");
+                    Element tdOrTr = DOM.getParent(DOM.eventGetTarget(event));
+                    if (DOM.compare(getElement(), tdOrTr)
+                            || DOM.compare(getElement(), DOM.getParent(tdOrTr))) {
                         if (selectMode > Table.SELECT_MODE_NONE) {
                             toggleSelection();
                             client.updateVariable(paintableId, "selected",
