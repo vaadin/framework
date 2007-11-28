@@ -159,7 +159,6 @@ public class QueryContainerDemo extends com.itmill.toolkit.Application
         tree.setDescription("Try right mouse button to initiate "
                 + "actions menu. Note: on Opera you use meta key "
                 + "and left mouse button.");
-        tree.setStyle("menu");
 
         // Populate Toolkit Tree using select component as data source
         tree.setContainerDataSource(select.getContainerDataSource());
