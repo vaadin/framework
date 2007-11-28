@@ -5,6 +5,7 @@ import java.io.File;
 import com.itmill.toolkit.data.util.FilesystemContainer;
 import com.itmill.toolkit.data.util.FilesystemContainer.FileItem;
 import com.itmill.toolkit.demo.util.SampleDirectory;
+import com.itmill.toolkit.ui.ExpandLayout;
 import com.itmill.toolkit.ui.Field;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.Panel;
@@ -38,14 +39,19 @@ public class TreeFilesystemContainer extends com.itmill.toolkit.Application
     private Label fileProperties = new Label();
 
     public void init() {
-        Window main = new Window("Tree FilesystemContainer demo");
-        setMainWindow(main);
+        Window w = new Window("Tree FilesystemContainer demo");
+        setMainWindow(w);
+        ExpandLayout main = new ExpandLayout();
+        w.setLayout(main);
+        main.setMargin(true);
+        main.setSpacing(true);
 
-        // Main window contains heading and two panels
-        main.addComponent(new Label("<h3>TreeFilesystemContainer demo</h3>",
-                Label.CONTENT_XHTML));
+        propertyPanel.setHeight(120);
         main.addComponent(propertyPanel);
+        explorerPanel.setHeight(100);
+        explorerPanel.setHeightUnits(Panel.UNITS_PERCENTAGE);
         main.addComponent(explorerPanel);
+        main.expand(explorerPanel);
 
         // Explorer panel contains tree
         explorerPanel.addComponent(filesystem);
@@ -82,6 +88,7 @@ public class TreeFilesystemContainer extends com.itmill.toolkit.Application
                 fileProperties.setIcon(fileItem.getIcon());
                 fileProperties.setCaption(fileItem.getName() + ", size "
                         + fileItem.getSize() + " bytes.");
+                propertyPanel.setEnabled(true);
             }
             // here we could check for other type of events for filesystem
             // component
