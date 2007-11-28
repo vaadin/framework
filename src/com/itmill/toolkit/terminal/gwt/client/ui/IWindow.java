@@ -1,5 +1,6 @@
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
+import java.util.Iterator;
 import java.util.Vector;
 
 import com.google.gwt.user.client.DOM;
@@ -258,14 +259,43 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
             lo.updateFromUIDL(childUidl, client);
         }
 
-        // we may have actions
+        // we may have actions and notifications
         if (uidl.getChidlCount() > 1) {
-            childUidl = uidl.getChildUIDL(1);
-            if (childUidl.getTag().equals("actions")) {
-                if (shortcutHandler == null) {
-                    shortcutHandler = new ShortcutActionHandler(id, client);
+            int cnt = uidl.getChidlCount();
+            for (int i = 1; i < cnt; i++) {
+                childUidl = uidl.getChildUIDL(i);
+                if (childUidl.getTag().equals("actions")) {
+                    if (shortcutHandler == null) {
+                        shortcutHandler = new ShortcutActionHandler(id, client);
+                    }
+                    shortcutHandler.updateActionMap(childUidl);
+                } else if (childUidl.getTag().equals("notifications")) {
+                    // TODO needed? move ->
+                    for (Iterator it = childUidl.getChildIterator(); it
+                            .hasNext();) {
+                        UIDL notification = (UIDL) it.next();
+                        String html = "";
+                        if (notification.hasAttribute("caption")) {
+                            html += "<H1>"
+                                    + notification
+                                            .getStringAttribute("caption")
+                                    + "</H1>";
+                        }
+                        if (notification.hasAttribute("message")) {
+                            html += "<p>"
+                                    + notification
+                                            .getStringAttribute("message")
+                                    + "</p>";
+                        }
+
+                        String style = notification.hasAttribute("style") ? notification
+                                .getStringAttribute("style")
+                                : null;
+                        int position = notification.getIntAttribute("position");
+                        int delay = notification.getIntAttribute("delay");
+                        new Notification(delay).show(html, position, style);
+                    }
                 }
-                shortcutHandler.updateActionMap(childUidl);
             }
 
         }
