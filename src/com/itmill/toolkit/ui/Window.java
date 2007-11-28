@@ -148,6 +148,8 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
     private LinkedList notifications;
 
+    private boolean modal;
+
     /* ********************************************************************* */
 
     /**
@@ -481,6 +483,10 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
         // Sets the window theme
         String theme = getTheme();
         target.addAttribute("theme", theme == null ? "" : theme);
+
+        if (modal) {
+            target.addAttribute("modal", true);
+        }
 
         // Marks the main window
         if (getApplication() != null
@@ -1314,5 +1320,15 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
         public String getStyleName() {
             return styleName;
         }
+    }
+
+    /**
+     * Sets sub-window modal, so that widgets behind it cannot be accessed.
+     * 
+     * @param modality
+     *                true if modality is to be turned on
+     */
+    public void setModal(boolean modality) {
+        modal = modality;
     }
 }

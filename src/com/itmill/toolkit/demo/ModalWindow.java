@@ -1,6 +1,5 @@
 package com.itmill.toolkit.demo;
 
-import com.itmill.toolkit.event.Action;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.TextField;
@@ -19,9 +18,10 @@ import com.itmill.toolkit.ui.Button.ClickListener;
  * @see com.itmill.toolkit.ui.Label
  */
 public class ModalWindow extends com.itmill.toolkit.Application implements
-        Action.Handler, ClickListener {
+        ClickListener {
 
     private Window test;
+    private Button reopen;
 
     public void init() {
 
@@ -36,47 +36,44 @@ public class ModalWindow extends com.itmill.toolkit.Application implements
         main.addComponent(f);
 
         // Main window button
-        Button b = new Button("Button on main window");
+        Button b = new Button("Test Button in main window");
         b.addListener(this);
         b.setTabIndex(2);
         main.addComponent(b);
 
+        reopen = new Button("Open modal subwindow");
+        reopen.addListener(this);
+        reopen.setTabIndex(3);
+        main.addComponent(reopen);
+
+    }
+
+    public void buttonClick(ClickEvent event) {
+        if (event.getButton() == reopen) {
+            openSubWindow();
+        }
+        getMainWindow().addComponent(
+                new Label("Button click: " + event.getButton().getCaption()));
+    }
+
+    private void openSubWindow() {
         // Modal window
         test = new Window("Modal window");
-        test.setStyle("modal");
-        addWindow(test);
+        test.setModal(true);
+        getMainWindow().addWindow(test);
         test.addComponent(new Label(
                 "You have to close this window before accessing others."));
 
         // Textfield for modal window
-        f = new TextField();
+        TextField f = new TextField();
         f.setTabIndex(4);
         test.addComponent(f);
         f.focus();
 
         // Modal window button
-        b = new Button("Button on modal window");
-        b.setTabIndex(3);
+        Button b = new Button("Test Button in modal window");
+        b.setTabIndex(5);
         b.addListener(this);
         test.addComponent(b);
-
-    }
-
-    public Action[] getActions(Object target, Object sender) {
-        Action actionA = new Action("Action A for " + target.toString());
-        Action actionB = new Action("Action B for " + target.toString());
-        Action[] actions = new Action[] { actionA, actionB };
-        return actions;
-    }
-
-    public void handleAction(Action action, Object sender, Object target) {
-        test.addComponent(new Label(action.getCaption() + " clicked on "
-                + target));
-
-    }
-
-    public void buttonClick(ClickEvent event) {
-        test.addComponent(new Label("Clicked " + event));
-
     }
 }

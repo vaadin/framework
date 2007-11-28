@@ -96,6 +96,8 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
     /** Last known positiony read from UIDL or updated to application connection */
     private int uidlPositionY = -1;
 
+    private boolean modal = false;
+
     public IWindow() {
         super();
         int order = windowOrder.size();
@@ -190,6 +192,10 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
             return;
         }
 
+        if (uidl.getBooleanAttribute("modal") != modal) {
+            setModal(!modal);
+        }
+
         // Initialize the width from UIDL
         if (uidl.hasVariable("width")) {
             String width = uidl.getStringVariable("width");
@@ -269,6 +275,12 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
         contentPanel.setHorizontalScrollPosition(uidl
                 .getIntVariable("scrollleft"));
 
+    }
+
+    private void setModal(boolean modality) {
+        // TODO create transparent curtain to create visual clue that window is
+        // modal
+        modal = modality;
     }
 
     public void setPopupPosition(int left, int top) {
@@ -411,8 +423,13 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
         } else if (resizing) {
             onResizeEvent(event);
             return false;
+        } else if (modal) {
+            // return false when modal and outside window
+            Element target = DOM.eventGetTarget(event);
+            if (!DOM.isOrHasChild(getElement(), target)) {
+                return false;
+            }
         }
-        // TODO return false when modal
         return true;
     }
 
