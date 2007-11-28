@@ -495,13 +495,15 @@
 
 		<!-- copy WebContent/index.html and rename it -->
 		<copy todir="${output-dir}/WebContent">
-			<filterset>
-				<filter token="VERSION" value="${version}" />
-			</filterset>
+			<filterchain>
+				<expandproperties />
+				<replacetokens begintoken="&lt;" endtoken=">">
+					<token key="version" value="${version}" />
+					<token key="/version" value="" />
+				</replacetokens>
+			</filterchain>
 			<fileset dir="build/package">
-				<patternset>
-					<include name="webcontent-index.html" />
-				</patternset>
+				<filename name="webcontent-index.html" />
 			</fileset>
 		</copy>
 		<move file="${output-dir}/WebContent/webcontent-index.html" tofile="${output-dir}/WebContent/index.html" />
