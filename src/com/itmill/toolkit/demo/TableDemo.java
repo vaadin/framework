@@ -5,10 +5,8 @@ import java.sql.SQLException;
 import com.itmill.toolkit.data.util.QueryContainer;
 import com.itmill.toolkit.demo.util.SampleDatabase;
 import com.itmill.toolkit.event.Action;
-import com.itmill.toolkit.terminal.ExternalResource;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.Label;
-import com.itmill.toolkit.ui.Link;
 import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Table;
 import com.itmill.toolkit.ui.Window;
@@ -29,9 +27,6 @@ public class TableDemo extends com.itmill.toolkit.Application implements
 
     private static final String TABLE_CAPTION = SampleDatabase.ROWCOUNT
             + " dynamically loaded rows from example SQL table";
-
-    private Link menuLink = new Link("Go back to menu", new ExternalResource(
-            "index.html"));
 
     // Table component where SQL rows are attached (using QueryContainer)
     private Table table = new Table();
@@ -72,9 +67,6 @@ public class TableDemo extends com.itmill.toolkit.Application implements
     public void init() {
         Window main = new Window("Table demo");
         setMainWindow(main);
-
-        // Add link back to index.html
-        main.addComponent(menuLink);
 
         // create demo database
         sampleDatabase = new SampleDatabase();
