@@ -17,9 +17,9 @@ import com.itmill.toolkit.ui.Button.ClickEvent;
 public class RichTextExample extends CustomComponent {
 
     public static final String txt = "<h1>RichText editor example</h1>"
-            + "To edit <i>this text</i>, press the <b>Edit</b> button below."
+            + "To edit this text, press the <b>Edit</b> button below."
             + "<br/>"
-            + "See the <A href=\"http://www.itmill.com/manual/\">maual</a> "
+            + "See the <A href=\"http://www.itmill.com/manual/\">manual</a> "
             + "for more information.";
 
     private OrderedLayout main;
@@ -32,7 +32,7 @@ public class RichTextExample extends CustomComponent {
         main.setMargin(true);
         setCompositionRoot(main);
 
-        l = new Label("asd");
+        l = new Label(txt);
         l.setContentMode(Label.CONTENT_XHTML);
         main.addComponent(l);
 
@@ -52,6 +52,8 @@ public class RichTextExample extends CustomComponent {
             }
         });
         main.addComponent(b);
+        main.setComponentAlignment(b, OrderedLayout.ALIGNMENT_RIGHT,
+                OrderedLayout.ALIGNMENT_VERTICAL_CENTER);
     }
 
 }
