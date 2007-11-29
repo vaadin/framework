@@ -86,5 +86,7 @@ public class NotificationExample extends CustomComponent {
             }
         });
         main.addComponent(b);
+        main.setComponentAlignment(b, OrderedLayout.ALIGNMENT_RIGHT,
+                OrderedLayout.ALIGNMENT_VERTICAL_CENTER);
     }
 }

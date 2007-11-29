@@ -3,8 +3,15 @@
  */
 package com.itmill.toolkit.demo.featurebrowser;
 
+import java.net.URL;
+
+import com.itmill.toolkit.terminal.ExternalResource;
+import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.CustomComponent;
+import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.OrderedLayout;
+import com.itmill.toolkit.ui.Window;
+import com.itmill.toolkit.ui.Button.ClickEvent;
 
 /**
  * @author marc
@@ -12,16 +19,72 @@ import com.itmill.toolkit.ui.OrderedLayout;
  */
 public class WindowingExample extends CustomComponent {
 
-    public static final String txt = "There are two main types of windows:";
+    public static final String txt = "<p>There are two main types of windows: application-level windows, and"
+            + "\"subwindows\". </p><p> A subwindow is rendered as a \"inline\" popup window"
+            + " within the (native) browser window to which it was added. You can create"
+            + " a subwindow by creating a new Window and adding it to a application-level window, for instance"
+            + " your main window. </p><p> In contrast, you create a application-level window by"
+            + " creating a new Window and adding it to the Application. Application-level"
+            + " windows are not shown by default - you need to open a browser window for"
+            + " the url representing the window. You can think of the application-level"
+            + " windows as separate views into your application - and a way to create a"
+            + " \"native\" browser window. </p><p> Depending on your needs, it's also"
+            + " possible to create a new window instance (with it's own internal state)"
+            + " for each new (native) browser window, or you can share the same instance"
+            + " (and state) between several browser windows (the latter is most useful"
+            + " for read-only views).</p>";
 
-    /*
-     * application-level windows, and
-     * 
-     */
+    private URL windowUrl = null;
 
     public WindowingExample() {
         OrderedLayout main = new OrderedLayout();
+        main.setMargin(true);
         setCompositionRoot(main);
+
+        Label l = new Label(txt);
+        l.setContentMode(Label.CONTENT_XHTML);
+        main.addComponent(l);
+
+        main.addComponent(new Button("Create a new subwindow",
+                new Button.ClickListener() {
+                    public void buttonClick(ClickEvent event) {
+                        Window w = new Window("Subwindow");
+                        Label l = new Label(txt);
+                        l.setContentMode(Label.CONTENT_XHTML);
+                        w.addComponent(l);
+                        getApplication().getMainWindow().addWindow(w);
+                    }
+                }));
+        main.addComponent(new Button(
+                "Open a application-level window, with shared state",
+                new Button.ClickListener() {
+                    public void buttonClick(ClickEvent event) {
+                        if (windowUrl == null) {
+                            Window w = new Window("Subwindow");
+                            Label l = new Label(txt);
+                            l.setContentMode(Label.CONTENT_XHTML);
+                            w.addComponent(l);
+                            getApplication().addWindow(w);
+                            windowUrl = w.getURL();
+                        }
+                        getApplication().getMainWindow().open(
+                                new ExternalResource(windowUrl), "_new");
+                    }
+                }));
+        main.addComponent(new Button(
+                "Create a new application-level window, with it's own state",
+                new Button.ClickListener() {
+                    public void buttonClick(ClickEvent event) {
+                        Window w = new Window("Subwindow");
+                        getApplication().addWindow(w);
+                        Label l = new Label(w.getName());
+                        l
+                                .setCaption("Each opened window has a separate value:");
+                        w.addComponent(l);
+                        getApplication().getMainWindow().open(
+                                new ExternalResource(w.getURL()), "_new");
+                    }
+                }));
 
     }
 

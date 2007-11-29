@@ -49,7 +49,7 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
             // Intro
             { "Intro", "About", "About this demo", Button.class, Boolean.FALSE },
             // Windowing
-            { "Intro", "Windowing", "About windowing", Button.class,
+            { "Intro", "Windowing", "About windowing", WindowingExample.class,
                     Boolean.FALSE },
             // Basic: Labels
             { "Basic", "Labels", "Some variations of Labels", Button.class,

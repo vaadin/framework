@@ -23,6 +23,13 @@ public class EmbeddedBrowserExample extends ExpandLayout implements
     Embedded emb = new Embedded();
 
     public EmbeddedBrowserExample() {
+        this(new String[] { DEFAULT_URL,
+                "http:// www.itmill.com/index_developers.htm",
+                "http://toolkit.itmill.com/demo/doc/api/",
+                "http://www.itmill.com/manual/index.html" });
+    }
+
+    public EmbeddedBrowserExample(String[] urls) {
         setSizeFull();
 
         // create the address combobox
@@ -34,14 +41,14 @@ public class EmbeddedBrowserExample extends ExpandLayout implements
         // no 'go' -button clicking necessary
         select.setImmediate(true);
         // add some pre-configured URLs
-        select.addItem(DEFAULT_URL);
-        select.addItem("http://www.google.com");
-        select.addItem("http://toolkit.itmill.com/demo");
+        for (int i = 0; i < urls.length; i++) {
+            select.addItem(urls[i]);
+        }
         // add to layout
         addComponent(select);
         // add listener and select initial URL
         select.addListener(this);
-        select.setValue(DEFAULT_URL);
+        select.setValue(urls[0]);
 
         // configure the embedded and add to layout
         emb.setType(Embedded.TYPE_BROWSER);
