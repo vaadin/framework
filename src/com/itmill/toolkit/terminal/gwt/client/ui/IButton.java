@@ -79,7 +79,8 @@ public class IButton extends Button implements Paintable {
             errorMessage.updateFromUIDL(errorUidl);
 
         } else if (errorIndicatorElement != null) {
-            DOM.setStyleAttribute(errorIndicatorElement, "display", "none");
+            DOM.removeChild(getElement(), errorIndicatorElement);
+            errorIndicatorElement = null;
         }
 
         if (uidl.hasAttribute("icon")) {
@@ -88,11 +89,18 @@ public class IButton extends Button implements Paintable {
                 DOM.insertChild(getElement(), icon.getElement(), 0);
             }
             icon.setUri(uidl.getStringAttribute("icon"));
+        } else {
+            if (icon != null) {
+                DOM.removeChild(getElement(), icon.getElement());
+                icon = null;
+            }
         }
 
         // handle description
         if (uidl.hasAttribute("description")) {
             setTitle(uidl.getStringAttribute("description"));
+        } else {
+            setTitle(null);
         }
 
     }
