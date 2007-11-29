@@ -51,7 +51,7 @@ public class ComboBoxExample extends CustomComponent {
         s2.setImmediate(true);
         main.addComponent(s2);
 
-        // contains filter
+        // initially empty
         ComboBox s3 = new ComboBox("Initially empty; enter your own");
         s3.setColumns(20);
         s3.setImmediate(true);
