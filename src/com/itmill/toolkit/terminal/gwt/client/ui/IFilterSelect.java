@@ -419,6 +419,7 @@ public class IFilterSelect extends Composite implements Paintable,
     private int totalMatches;
     private boolean allowNewItem;
     private boolean nullSelectionAllowed;
+    private boolean enabled;
 
     public IFilterSelect() {
         selectedItemIcon.setVisible(false);
@@ -483,6 +484,14 @@ public class IFilterSelect extends Composite implements Paintable,
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         paintableId = uidl.getId();
         this.client = client;
+
+        if (uidl.hasAttribute("disabled") || uidl.hasAttribute("readonly")) {
+            tb.setEnabled(false);
+            enabled = false;
+        } else {
+            tb.setEnabled(true);
+            enabled = true;
+        }
 
         if (client.updateComponent(this, uidl, true)) {
             return;
@@ -585,7 +594,7 @@ public class IFilterSelect extends Composite implements Paintable,
     }
 
     public void onKeyDown(Widget sender, char keyCode, int modifiers) {
-        if (suggestionPopup.isAttached()) {
+        if (enabled && suggestionPopup.isAttached()) {
             switch (keyCode) {
             case KeyboardListener.KEY_DOWN:
                 suggestionPopup.selectNextItem();
@@ -618,26 +627,28 @@ public class IFilterSelect extends Composite implements Paintable,
     }
 
     public void onKeyUp(Widget sender, char keyCode, int modifiers) {
-        switch (keyCode) {
-        case KeyboardListener.KEY_ENTER:
-        case KeyboardListener.KEY_TAB:
-            ; // NOP
-            break;
-        case KeyboardListener.KEY_DOWN:
-        case KeyboardListener.KEY_UP:
-        case KeyboardListener.KEY_PAGEDOWN:
-        case KeyboardListener.KEY_PAGEUP:
-            if (suggestionPopup.isAttached()) {
+        if (enabled) {
+            switch (keyCode) {
+            case KeyboardListener.KEY_ENTER:
+            case KeyboardListener.KEY_TAB:
+                ; // NOP
                 break;
-            } else {
-                // open popup as from gadget
-                filterOptions(0, "");
-                tb.selectAll();
+            case KeyboardListener.KEY_DOWN:
+            case KeyboardListener.KEY_UP:
+            case KeyboardListener.KEY_PAGEDOWN:
+            case KeyboardListener.KEY_PAGEUP:
+                if (suggestionPopup.isAttached()) {
+                    break;
+                } else {
+                    // open popup as from gadget
+                    filterOptions(0, "");
+                    tb.selectAll();
+                    break;
+                }
+            default:
+                filterOptions(currentPage);
                 break;
             }
-        default:
-            filterOptions(currentPage);
-            break;
         }
     }
 
@@ -645,39 +656,43 @@ public class IFilterSelect extends Composite implements Paintable,
      * Listener for popupopener
      */
     public void onClick(Widget sender) {
-        // ask suggestionPopup if it was just closed, we are using GWT Popup's
-        // auto close feature
-        if (!suggestionPopup.isJustClosed()) {
-            filterOptions(0, "");
+        if (enabled) {
+            // ask suggestionPopup if it was just closed, we are using GWT
+            // Popup's
+            // auto close feature
+            if (!suggestionPopup.isJustClosed()) {
+                filterOptions(0, "");
+            }
+            DOM.eventPreventDefault(DOM.eventGetCurrentEvent());
+            tb.selectAll();
+            tb.setFocus(true);
+
         }
-        DOM.eventPreventDefault(DOM.eventGetCurrentEvent());
-        tb.selectAll();
-        tb.setFocus(true);
     }
 
     /*
      * Calculate minumum width for FilterSelect textarea
      */
     private native int minWidth(String captions) /*-{
-                                                       	if(!captions || captions.length <= 0)
-                                                       		return 0;
-                                                       	captions = captions.split("|");
-                                                       	var d = $wnd.document.createElement("div");
-                                                       	var html = "";
-                                                       	for(var i=0; i < captions.length; i++) {
-                                                       		html += "<div>" + captions[i] + "</div>";
-                                                       		// TODO apply same CSS classname as in suggestionmenu
-                                                       	}
-                                                       	d.style.position = "absolute";
-                                                       	d.style.top = "0";
-                                                       	d.style.left = "0";
-                                                       	d.style.visibility = "hidden";
-                                                       	d.innerHTML = html;
-                                                       	$wnd.document.body.appendChild(d);
-                                                       	var w = d.offsetWidth;
-                                                       	$wnd.document.body.removeChild(d);
-                                                       	return w;
-                                                       }-*/;
+                                                                   	if(!captions || captions.length <= 0)
+                                                                   		return 0;
+                                                                   	captions = captions.split("|");
+                                                                   	var d = $wnd.document.createElement("div");
+                                                                   	var html = "";
+                                                                   	for(var i=0; i < captions.length; i++) {
+                                                                   		html += "<div>" + captions[i] + "</div>";
+                                                                   		// TODO apply same CSS classname as in suggestionmenu
+                                                                   	}
+                                                                   	d.style.position = "absolute";
+                                                                   	d.style.top = "0";
+                                                                   	d.style.left = "0";
+                                                                   	d.style.visibility = "hidden";
+                                                                   	d.innerHTML = html;
+                                                                   	$wnd.document.body.appendChild(d);
+                                                                   	var w = d.offsetWidth;
+                                                                   	$wnd.document.body.removeChild(d);
+                                                                   	return w;
+                                                                   }-*/;
 
     public void onFocus(Widget sender) {
         // NOP
