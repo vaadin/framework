@@ -23,7 +23,6 @@ public class IGridLayout extends FlexTable implements Paintable, Container {
             return;
         }
 
-        clear();
         if (uidl.hasAttribute("caption")) {
             setTitle(uidl.getStringAttribute("caption"));
         }
@@ -52,10 +51,16 @@ public class IGridLayout extends FlexTable implements Paintable, Container {
                             Widget child = client.getWidget(u);
                             prepareCell(row, column);
                             Widget oldChild = getWidget(row, column);
+                            if (oldChild instanceof CaptionWrapper) {
+                                CaptionWrapper new_name = (CaptionWrapper) oldChild;
+                                oldChild = (Widget) new_name.getPaintable();
+                            }
                             if (child != oldChild) {
                                 if (oldChild != null) {
-                                    CaptionWrapper cw = (CaptionWrapper) oldChild;
-                                    detachdedPaintables.add(cw.getPaintable());
+                                    detachdedPaintables.add(oldChild);
+                                    CaptionWrapper cw = (CaptionWrapper) widgetToCaptionWrapper
+                                            .get(oldChild);
+                                    cw.removeFromParent();
                                     widgetToCaptionWrapper.remove(oldChild);
                                 }
                                 CaptionWrapper wrapper = new CaptionWrapper(
@@ -63,7 +68,9 @@ public class IGridLayout extends FlexTable implements Paintable, Container {
                                 setWidget(row, column, wrapper);
                                 widgetToCaptionWrapper.put(child, wrapper);
                             }
-                            ((Paintable) child).updateFromUIDL(u, client);
+                            if (!u.getBooleanAttribute("cached")) {
+                                ((Paintable) child).updateFromUIDL(u, client);
+                            }
                         }
                         column += w;
                     }
