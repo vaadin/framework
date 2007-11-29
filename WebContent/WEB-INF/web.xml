@@ -346,7 +346,7 @@
     <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
     <init-param>
       <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.demo.ApplicationDemo</param-value>
+      <param-value>com.itmill.toolkit.demo.featurebrowser.FeatureBrowser</param-value>
     </init-param>
   </servlet>
   
