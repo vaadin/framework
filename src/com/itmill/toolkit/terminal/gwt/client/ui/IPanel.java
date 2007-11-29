@@ -2,10 +2,12 @@ package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
+import com.itmill.toolkit.terminal.gwt.client.ErrorMessage;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.Util;
@@ -21,9 +23,17 @@ public class IPanel extends SimplePanel implements Paintable,
 
     private Element captionNode = DOM.createDiv();
 
+    private Element captionText = DOM.createSpan();
+
+    private Icon icon;
+
     private Element bottomDecoration = DOM.createDiv();
 
     private Element contentNode = DOM.createDiv();
+
+    private Element errorIndicatorElement;
+
+    private ErrorMessage errorMessage;
 
     private String height;
 
@@ -32,6 +42,7 @@ public class IPanel extends SimplePanel implements Paintable,
     public IPanel() {
         super();
         DOM.appendChild(getElement(), captionNode);
+        DOM.appendChild(captionNode, captionText);
         DOM.appendChild(getElement(), contentNode);
         DOM.appendChild(getElement(), bottomDecoration);
         setStyleName(CLASSNAME);
@@ -47,6 +58,10 @@ public class IPanel extends SimplePanel implements Paintable,
 
     protected Element getContainerElement() {
         return contentNode;
+    }
+
+    private void setCaption(String text) {
+        DOM.setInnerText(captionText, text);
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -79,13 +94,19 @@ public class IPanel extends SimplePanel implements Paintable,
         boolean hasCaption = false;
         if (uidl.hasAttribute("caption")
                 && !uidl.getStringAttribute("caption").equals("")) {
-            DOM.setInnerText(captionNode, uidl.getStringAttribute("caption"));
+            setCaption(uidl.getStringAttribute("caption"));
             hasCaption = true;
         } else {
-            DOM.setInnerText(captionNode, "");
+            setCaption("");
             DOM.setElementProperty(captionNode, "className", CLASSNAME
                     + "-nocaption");
         }
+
+        setIconUri(uidl, client);
+
+        handleDescription(uidl);
+
+        handleError(uidl);
 
         // Add proper stylenames for all elements. This way we can prevent
         // unwanted CSS selector inheritance.
@@ -123,6 +144,51 @@ public class IPanel extends SimplePanel implements Paintable,
         }
         ((Paintable) layout).updateFromUIDL(layoutUidl, client);
 
+    }
+
+    private void handleError(UIDL uidl) {
+        if (uidl.hasAttribute("error")) {
+            UIDL errorUidl = uidl.getErrors();
+            if (errorIndicatorElement == null) {
+                errorIndicatorElement = DOM.createDiv();
+                DOM.setElementProperty(errorIndicatorElement, "className",
+                        "i-errorindicator");
+                DOM.sinkEvents(errorIndicatorElement, Event.MOUSEEVENTS);
+                sinkEvents(Event.MOUSEEVENTS);
+            }
+            DOM.insertBefore(captionNode, errorIndicatorElement, captionText);
+            if (errorMessage == null) {
+                errorMessage = new ErrorMessage();
+            }
+            errorMessage.updateFromUIDL(errorUidl);
+
+        } else if (errorIndicatorElement != null) {
+            DOM.removeChild(captionNode, errorIndicatorElement);
+            errorIndicatorElement = null;
+        }
+    }
+
+    private void handleDescription(UIDL uidl) {
+        DOM.setElementProperty(captionText, "title", uidl
+                .hasAttribute("description") ? uidl
+                .getStringAttribute("description") : "");
+    }
+
+    private void setIconUri(UIDL uidl, ApplicationConnection client) {
+        String iconUri = uidl.hasAttribute("icon") ? uidl
+                .getStringAttribute("icon") : null;
+        if (iconUri == null) {
+            if (icon != null) {
+                DOM.removeChild(captionNode, icon.getElement());
+                icon = null;
+            }
+        } else {
+            if (icon == null) {
+                icon = new Icon(client);
+                DOM.insertChild(captionNode, icon.getElement(), 0);
+            }
+            icon.setUri(iconUri);
+        }
     }
 
     public void iLayout() {
@@ -173,6 +239,31 @@ public class IPanel extends SimplePanel implements Paintable,
             DOM.setStyleAttribute(contentNode, "height", "");
         }
         Util.runDescendentsLayout(this);
+    }
+
+    public void onBrowserEvent(Event event) {
+        Element target = DOM.eventGetTarget(event);
+        if (errorIndicatorElement != null
+                && DOM.compare(target, errorIndicatorElement)) {
+            switch (DOM.eventGetType(event)) {
+            case Event.ONMOUSEOVER:
+                if (errorMessage != null) {
+                    errorMessage.showAt(errorIndicatorElement);
+                }
+                break;
+            case Event.ONMOUSEOUT:
+                if (errorMessage != null) {
+                    errorMessage.hide();
+                }
+                break;
+            case Event.ONCLICK:
+                ApplicationConnection.getConsole().log(
+                        DOM.getInnerHTML(errorMessage.getElement()));
+                return;
+            default:
+                break;
+            }
+        }
     }
 
 }
