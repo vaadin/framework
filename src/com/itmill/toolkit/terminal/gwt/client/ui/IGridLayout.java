@@ -37,6 +37,7 @@ public class IGridLayout extends FlexTable implements Paintable, Container {
                 for (Iterator j = r.getChildIterator(); j.hasNext();) {
                     UIDL c = (UIDL) j.next();
                     if ("gc".equals(c.getTag())) {
+                        // Set cell width
                         int w;
                         if (c.hasAttribute("w")) {
                             w = c.getIntAttribute("w");
@@ -45,6 +46,16 @@ public class IGridLayout extends FlexTable implements Paintable, Container {
                         }
                         ((FlexCellFormatter) getCellFormatter()).setColSpan(
                                 row, column, w);
+
+                        // Set cell height
+                        int h;
+                        if (c.hasAttribute("h")) {
+                            h = c.getIntAttribute("h");
+                        } else {
+                            h = 1;
+                        }
+                        ((FlexCellFormatter) getCellFormatter()).setRowSpan(
+                                row, column, h);
 
                         UIDL u = c.getChildUIDL(0);
                         if (u != null) {
