@@ -11,7 +11,7 @@ import com.itmill.toolkit.ui.RichTextArea;
 import com.itmill.toolkit.ui.Button.ClickEvent;
 
 /**
- * @author marc
+ * An example using a RichTextArea to edit a Label in XHTML-mode.
  * 
  */
 public class RichTextExample extends CustomComponent {
@@ -24,22 +24,22 @@ public class RichTextExample extends CustomComponent {
 
     private OrderedLayout main;
     private Label l;
-    private RichTextArea editor;
+    private RichTextArea editor = new RichTextArea();
     private Button b;
 
     public RichTextExample() {
+        // main layout
         main = new OrderedLayout();
         main.setMargin(true);
         setCompositionRoot(main);
-
+        // Add the label
         l = new Label(txt);
         l.setContentMode(Label.CONTENT_XHTML);
         main.addComponent(l);
-
-        editor = new RichTextArea();
-
+        // Edit button with inline click-listener
         b = new Button("Edit", new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
+                // swap Label <-> RichTextArea
                 if (main.getComponentIterator().next() == l) {
                     editor.setValue(l.getValue());
                     main.replaceComponent(l, editor);
