@@ -27,6 +27,7 @@ public class ComboBoxExample extends CustomComponent {
 
         // starts-with filter
         ComboBox s1 = new ComboBox("Select with starts-with filter");
+        s1.setFilteringMode(Filtering.FILTERINGMODE_STARTSWITH);
         s1.setColumns(20);
         for (int i = 0; i < 105; i++) {
             s1
@@ -39,6 +40,7 @@ public class ComboBoxExample extends CustomComponent {
 
         // contains filter
         ComboBox s2 = new ComboBox("Select with contains filter");
+        s2.setFilteringMode(Filtering.FILTERINGMODE_CONTAINS);
         s2.setColumns(20);
         for (int i = 0; i < 500; i++) {
             s2
@@ -46,9 +48,14 @@ public class ComboBoxExample extends CustomComponent {
                             + " "
                             + lastnames[(int) (Math.random() * (lastnames.length - 1))]);
         }
-        s2.setFilteringMode(Filtering.FILTERINGMODE_CONTAINS);
         s2.setImmediate(true);
         main.addComponent(s2);
+
+        // contains filter
+        ComboBox s3 = new ComboBox("Initially empty; enter your own");
+        s3.setColumns(20);
+        s3.setImmediate(true);
+        main.addComponent(s3);
 
     }
 
