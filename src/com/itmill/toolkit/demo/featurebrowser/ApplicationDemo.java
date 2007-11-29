@@ -1,4 +1,4 @@
-package com.itmill.toolkit.demo;
+package com.itmill.toolkit.demo.featurebrowser;
 
 import java.util.HashMap;
 
@@ -7,9 +7,6 @@ import com.itmill.toolkit.data.Property;
 import com.itmill.toolkit.data.Property.ValueChangeEvent;
 import com.itmill.toolkit.data.util.HierarchicalContainer;
 import com.itmill.toolkit.data.util.IndexedContainer;
-import com.itmill.toolkit.demo.featurebrowser.ClientCachingExample;
-import com.itmill.toolkit.demo.featurebrowser.EmbeddedBrowserExample;
-import com.itmill.toolkit.demo.featurebrowser.NotificationExample;
 import com.itmill.toolkit.terminal.ExternalResource;
 import com.itmill.toolkit.terminal.Sizeable;
 import com.itmill.toolkit.ui.Button;
