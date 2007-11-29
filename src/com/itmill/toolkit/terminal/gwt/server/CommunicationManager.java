@@ -74,6 +74,7 @@ import com.itmill.toolkit.terminal.UploadStream;
 import com.itmill.toolkit.terminal.VariableOwner;
 import com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent;
 import com.itmill.toolkit.ui.Component;
+import com.itmill.toolkit.ui.ComponentContainer;
 import com.itmill.toolkit.ui.Upload;
 import com.itmill.toolkit.ui.Window;
 
@@ -305,24 +306,18 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
                         // Creates "working copy" of the current state.
                         List currentPaintables = new ArrayList(paintables);
 
-                        // Sorts the paintable so that parent windows
-                        // are always painted before child windows
+                        // Sorts the Paintable list so that parents
+                        // are always painted before children
                         Collections.sort(currentPaintables, new Comparator() {
-
                             public int compare(Object o1, Object o2) {
-
-                                // If first argumement is now window
-                                // the second is "smaller" if it is.
-                                if (!(o1 instanceof Window)) {
-                                    return (o2 instanceof Window) ? 1 : 0;
-                                }
-
-                                // Now, if second is not window the
-                                // first is smaller.
-                                if (!(o2 instanceof Window)) {
+                                Component c1 = (Component) o1;
+                                Component c2 = (Component) o2;
+                                if (isChildOf(c1, c2)) {
                                     return -1;
                                 }
-
+                                if (isChildOf(c2, c1)) {
+                                    return 1;
+                                }
                                 return 0;
                             }
                         });
@@ -347,6 +342,9 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
                              * Component requested repaint, but is no // longer
                              * attached: skip paintablePainted(p); continue; } }
                              */
+
+                            // TODO we may still get changes that have been
+                            // rendered already (changes with only cached flag)
                             paintTarget.startTag("change");
                             paintTarget.addAttribute("format", "uidl");
                             String pid = getPaintableId(p);
@@ -1103,6 +1101,26 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
                 updated = true;
             }
         }
+    }
+
+    /**
+     * Helper method to test if a component contains another
+     * 
+     * @param parent
+     * @param child
+     */
+    private static boolean isChildOf(Component parent, Component child) {
+        if (parent instanceof ComponentContainer) {
+            Component p;
+            p = child.getParent();
+            while (p != null) {
+                if (parent == p) {
+                    return true;
+                }
+                p = p.getParent();
+            }
+        }
+        return false;
     }
 
 }
