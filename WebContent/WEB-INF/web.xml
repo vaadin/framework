@@ -341,14 +341,6 @@
       <param-value>com.itmill.toolkit.demo.WindowedDemos</param-value>
     </init-param>
   </servlet>
-   <servlet>
-    <servlet-name>ApplicationDemo</servlet-name>
-    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
-    <init-param>
-      <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.demo.featurebrowser.FeatureBrowser</param-value>
-    </init-param>
-  </servlet>
   
   	<servlet-mapping>
     <servlet-name>DemoTestBench</servlet-name>
@@ -509,10 +501,6 @@
   <servlet-mapping>
     <servlet-name>WindowedDemos</servlet-name>
     <url-pattern>/WindowedDemos/*</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>ApplicationDemo</servlet-name>
-    <url-pattern>/ApplicationDemo/*</url-pattern>
   </servlet-mapping>
 
   <welcome-file-list>
