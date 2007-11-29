@@ -61,6 +61,9 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
             // Basic: Fields
             { "Basic", "User input", "TextFields, DateFields, and such",
                     Button.class, Boolean.FALSE },
+            //
+            { "Basic", "RichText", "Rich text editing", RichTextExample.class,
+                    Boolean.FALSE },
             // Basic: Selects
             { "Basic", "Choices, choices", "Some variations of simple selects",
                     Button.class, Boolean.FALSE },
