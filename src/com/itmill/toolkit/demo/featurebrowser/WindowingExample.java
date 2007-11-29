@@ -55,6 +55,17 @@ public class WindowingExample extends CustomComponent {
                         getApplication().getMainWindow().addWindow(w);
                     }
                 }));
+        main.addComponent(new Button("Create a new modal window",
+                new Button.ClickListener() {
+                    public void buttonClick(ClickEvent event) {
+                        Window w = new Window("Modal window");
+                        w.setModal(true);
+                        Label l = new Label(txt);
+                        l.setContentMode(Label.CONTENT_XHTML);
+                        w.addComponent(l);
+                        getApplication().getMainWindow().addWindow(w);
+                    }
+                }));
         main.addComponent(new Button(
                 "Open a application-level window, with shared state",
                 new Button.ClickListener() {
