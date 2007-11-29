@@ -230,18 +230,19 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 
         UIDL childUidl = uidl.getChildUIDL(0);
         if ("open".equals(childUidl.getTag())) {
-            // TODO render different resources (theme:// etc?)
+            String parsedUri = client.translateToolkitUri(childUidl
+                    .getStringAttribute("src"));
             // TODO this should be a while-loop for multiple opens
             if (!childUidl.hasAttribute("name")) {
                 Frame frame = new Frame();
                 DOM.setStyleAttribute(frame.getElement(), "width", "100%");
                 DOM.setStyleAttribute(frame.getElement(), "height", "100%");
                 DOM.setStyleAttribute(frame.getElement(), "border", "0px");
-                frame.setUrl(childUidl.getStringAttribute("src"));
+                frame.setUrl(parsedUri);
                 contentPanel.setWidget(frame);
             } else {
                 String target = childUidl.getStringAttribute("name");
-                Window.open(childUidl.getStringAttribute("src"), target, "");
+                Window.open(parsedUri, target, "");
             }
         } else {
             Paintable lo = (Paintable) client.getWidget(childUidl);
