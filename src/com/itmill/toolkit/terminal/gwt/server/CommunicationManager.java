@@ -455,6 +455,8 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
         } catch (Throwable e) {
             e.printStackTrace();
             // Writes the error report to client
+            // FIXME breaks UIDL response, security shouldn't reveal stack trace
+            // to client side
             OutputStreamWriter w = new OutputStreamWriter(out);
             PrintWriter err = new PrintWriter(w);
             err
@@ -846,7 +848,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 
     /**
      * @param w
-     *                main window for which dirty components is to be fetched
+     *                root window for which dirty components is to be fetched
      * @return
      */
     public synchronized Set getDirtyComponents(Window w) {
@@ -863,14 +865,21 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
             Paintable p = (Paintable) i.next();
             if (p instanceof Component) {
                 Component component = (Component) p;
-                Window componentsRoot = component.getWindow();
-                if (componentsRoot.getParent() != null) {
-                    // this is a subwindow
-                    componentsRoot = (Window) componentsRoot.getParent();
-                }
-                if (componentsRoot != w
-                        || dirtyPaintabletSet.contains(component.getParent())) {
+                if (component.getApplication() == null) {
+                    // component is detached after requestRepaint is called
                     resultset.remove(p);
+                    i.remove();
+                } else {
+                    Window componentsRoot = component.getWindow();
+                    if (componentsRoot.getParent() != null) {
+                        // this is a subwindow
+                        componentsRoot = (Window) componentsRoot.getParent();
+                    }
+                    if (componentsRoot != w
+                            || dirtyPaintabletSet.contains(component
+                                    .getParent())) {
+                        resultset.remove(p);
+                    }
                 }
             }
         }
