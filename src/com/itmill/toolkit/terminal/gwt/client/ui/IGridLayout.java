@@ -14,8 +14,15 @@ import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
 public class IGridLayout extends FlexTable implements Paintable, Container {
 
+    public static final String CLASSNAME = "i-gridlayout";
+
     /** Widget to captionwrapper map */
     private HashMap widgetToCaptionWrapper = new HashMap();
+
+    public IGridLayout() {
+        super();
+        setStyleName(CLASSNAME);
+    }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 
