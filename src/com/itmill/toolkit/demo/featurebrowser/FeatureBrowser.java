@@ -69,7 +69,7 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
                     Button.class, Boolean.FALSE },
             // Organizing: ComboBox
             { "Organizing", "ComboBox", "ComboBox - the swiss army select",
-                    Button.class, Boolean.FALSE },
+                    ComboBoxExample.class, Boolean.FALSE },
             // Organizing: Table
             { "Organizing", "Table", "A dynamic Table with bells and whistles",
                     Button.class, Boolean.FALSE },
