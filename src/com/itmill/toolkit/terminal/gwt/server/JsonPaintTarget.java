@@ -552,7 +552,7 @@ public class JsonPaintTarget implements PaintTarget {
      */
     public void addVariable(VariableOwner owner, String name, String value)
             throws PaintException {
-        tag.addVariable(new StringVariable(owner, name, value));
+        tag.addVariable(new StringVariable(owner, name, escapeJSON(value)));
     }
 
     /**
