@@ -345,9 +345,6 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
             return;
         }
 
-        if (!isActive()) {
-            bringToFront();
-        }
         Element target = DOM.eventGetTarget(event);
         if (dragging || DOM.isOrHasChild(header, target)) {
             onHeaderEvent(event);
@@ -358,6 +355,11 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
         } else if (DOM.compare(target, closeBox) && type == Event.ONCLICK) {
             onCloseClick();
             DOM.eventCancelBubble(event, true);
+        } else {
+            // clicked inside window, ensure to be on top
+            if (!isActive()) {
+                bringToFront();
+            }
         }
     }
 
@@ -368,6 +370,9 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
     private void onResizeEvent(Event event) {
         switch (DOM.eventGetType(event)) {
         case Event.ONMOUSEDOWN:
+            if (!isActive()) {
+                bringToFront();
+            }
             resizing = true;
             startX = DOM.eventGetScreenX(event);
             startY = DOM.eventGetScreenY(event);
@@ -423,6 +428,9 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
     private void onHeaderEvent(Event event) {
         switch (DOM.eventGetType(event)) {
         case Event.ONMOUSEDOWN:
+            if (!isActive()) {
+                bringToFront();
+            }
             dragging = true;
             startX = DOM.eventGetScreenX(event);
             startY = DOM.eventGetScreenY(event);
