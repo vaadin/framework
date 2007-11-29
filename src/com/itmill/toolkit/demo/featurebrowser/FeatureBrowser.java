@@ -75,7 +75,7 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
                     Button.class, Boolean.FALSE },
             // Organizing: Tree
             { "Organizing", "Tree", "Some variations of Buttons and Links",
-                    Button.class, Boolean.FALSE },
+                    TreeExample.class, Boolean.FALSE },
             // Misc: Notifications
             { "Misc", "Notifications", "Notifications can improve usability",
                     NotificationExample.class, Boolean.FALSE },
