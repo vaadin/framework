@@ -99,6 +99,8 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 
     private boolean modal = false;
 
+    private Element headerText;
+
     public IWindow() {
         super();
         int order = windowOrder.size();
@@ -137,11 +139,10 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
     }
 
     protected void constructDOM() {
-        Element outerHeader = DOM.createDiv();
-        DOM.setElementProperty(outerHeader, "className", CLASSNAME
-                + "-outerheader");
         header = DOM.createDiv();
-        DOM.setElementProperty(header, "className", CLASSNAME + "-header");
+        DOM.setElementProperty(header, "className", CLASSNAME + "-outerheader");
+        headerText = DOM.createDiv();
+        DOM.setElementProperty(headerText, "className", CLASSNAME + "-header");
         contents = DOM.createDiv();
         DOM.setElementProperty(contents, "className", CLASSNAME + "-contents");
         footer = DOM.createDiv();
@@ -167,8 +168,8 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
         DOM.sinkEvents(wrapper, Event.ONKEYDOWN);
 
         DOM.appendChild(wrapper2, closeBox);
-        DOM.appendChild(wrapper2, outerHeader);
-        DOM.appendChild(outerHeader, header);
+        DOM.appendChild(wrapper2, header);
+        DOM.appendChild(header, headerText);
         DOM.appendChild(wrapper2, contents);
         DOM.appendChild(wrapper2, footer);
         DOM.appendChild(wrapper, wrapper2);
@@ -326,7 +327,7 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
     }
 
     public void setCaption(String c) {
-        DOM.setInnerText(header, c);
+        DOM.setInnerText(headerText, c);
     }
 
     protected Element getContainerElement() {
@@ -347,7 +348,7 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
             bringToFront();
         }
         Element target = DOM.eventGetTarget(event);
-        if (dragging || DOM.compare(header, target)) {
+        if (dragging || DOM.isOrHasChild(header, target)) {
             onHeaderEvent(event);
             DOM.eventCancelBubble(event, true);
         } else if (resizing || DOM.compare(resizeBox, target)) {
