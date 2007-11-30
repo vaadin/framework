@@ -287,6 +287,8 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
             String caption = getItemCaption(itemId);
             if (caption == null || caption.equals("")) {
                 continue;
+            } else {
+                caption = caption.toLowerCase();
             }
             switch (filteringMode) {
             case FILTERINGMODE_CONTAINS:
@@ -318,6 +320,9 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
             // this is a filter request
             currentPage = ((Integer) variables.get("page")).intValue();
             filterstring = newFilter;
+            if (filterstring != null) {
+                filterstring = filterstring.toLowerCase();
+            }
             requestRepaint();
             return;
         }
