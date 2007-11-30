@@ -501,7 +501,6 @@
 			<fileset dir="WebContent">
 				<exclude name="**/.svn" />
 				<exclude name="openajax/**" />
-				<exclude name="index.html" />
 				<exclude name="WEB-INF/web.xml" />
 				<exclude name="ITMILL/widgetsets/**" />
 				<exclude name="WEB-INF/lib/commons-fileupload-custom.jar" />
@@ -638,7 +637,7 @@
 		-->
 		
 		<echo>Building WAR</echo>
-		<war warfile="${output-dir}/${product-file}.war" webxml="build/package/WebContent/WEB-INF/web.xml">
+		<war warfile="${output-dir}/WebContent/demo/${product-file}.war" webxml="build/package/WebContent/WEB-INF/web.xml">
 			<fileset dir="${output-dir}/WebContent">
 				<exclude name="WEB-INF/web.xml" />
 				<include name="**/*" />
