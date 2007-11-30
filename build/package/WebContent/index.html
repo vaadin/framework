@@ -16,10 +16,12 @@
 		var itmill = function() {
 		
 			var isIE = /MSIE/.test(navigator.userAgent) && !window.opera;
-			var packageOpen = false;
 			var packageContent;
 			var package;
 			var demoArea;
+			var demos;
+			var additionalDemos;
+			var additionalDemosContent;
 		
 			return {
 			
@@ -27,23 +29,32 @@
 					// Fetch references
 					packageContent = document.getElementById("package-contents-content");
 					package = document.getElementById("package-contents");
-					demoArea = document.getElementById("demos");
+					demoArea = document.getElementById("demo-buttons");
+					demos = demoArea.getElementsByTagName("li");
+					additionalDemos = document.getElementById("additional-demos");
+					additionalDemosContent = document.getElementById("additional-demos-content");
 					
-					// Hide package contents initially
+					// Hide panel initially
 					packageContent.style.display = "none";
+					additionalDemosContent.style.display = "none";
+					
+					// Enable additional demos panel hiding/showing
+					var toggle = additionalDemos.getElementsByTagName("h3")[0];
+					toggle.style.cursor = "pointer";
+					toggle.title = "Show/hide additional demos";
+					// Use the quick-n-dirty way to attach event listeners
+					toggle.onclick = function() {itmill.togglePanel(additionalDemosContent)};
 					
 					// Enable package contents panel hiding/showing
-					var toggle = package.getElementsByTagName("h3")[0];
+					toggle = package.getElementsByTagName("h3")[0];
 					toggle.style.cursor = "pointer";
 					toggle.title = "Show/hide package contents";
 					// Use the quick-n-dirty way to attach event listeners
-					toggle.onclick = this.togglePackage;					
+					toggle.onclick = function() {itmill.togglePanel(packageContent)};
 					
-					// TODO enable demo button hovers
-					var demos = demoArea.getElementsByTagName("li");
+					// enable demo button hovers
 					for(var i=0; i < demos.length; i++) {
 						demos[i].onmouseover = this.focusDemo;
-						//demos[i].onmouseout = this.blurDemos;
 					}
 					demoArea.onmouseout = this.blurDemos;
 					
@@ -51,14 +62,25 @@
 					// TODO implement feedback popup
 				},
 				
-				togglePackage : function() {
-					if(packageOpen) {
-							packageContent.style.display = "none";
-							packageOpen = false;
+				togglePanel : function(which) {
+					if(which._open) {
+						which.style.display = "none";
+						which._open = false;
+					} else {
+						which.style.display = "block";
+						which._open = true;
+					}
+					// Dirty fix to reposition package-content panel
+					if(which == additionalDemosContent) {
+						var current = package.style.marginTop ? parseInt(package.style.marginTop) : -105;
+						if(which._open) {
+							if(!which._height)
+								which._height = additionalDemos.offsetHeight - package.offsetHeight;
+							package.style.marginTop = (current + which._height) + "px";
 						} else {
-							packageContent.style.display = "block";
-							packageOpen = true;
+							package.style.marginTop = (current - which._height) + "px";
 						}
+					}
 				},
 				
 				focusDemo : function(e) {
@@ -67,7 +89,6 @@
 					if(target.nodeType != 1 || target.nodeName != "LI")
 						return;
 						
-					var demos = document.getElementById("demos").getElementsByTagName("li");
 					for(var i=0; i < demos.length; i++) {
 						var demo = demos[i];
 						if(demo != target) {
@@ -88,9 +109,8 @@
 				blurDemos : function(e) {
 					var evt = e ? e : window.event;
 					var target = evt.toElement || evt.relatedTarget;
-					if((target == demoArea || target.parentNode == demoArea || target.parentNode.parentNode == demoArea) && target.nodeName != "H2")
+					if(target == demoArea || target.parentNode == demoArea || target.parentNode.parentNode == demoArea)
 						return;
-					var demos = document.getElementById("demos").getElementsByTagName("li");
 					for(var i=0; i < demos.length; i++) {
 						if(isIE)
 							demos[i].style.filter = "";
@@ -118,12 +138,30 @@
 		
 			<div id="demos">
 				<h2>Demos</h2>
-				<ul>
+				<ul id="demo-buttons">
 					<li id="feature-browser"><a href="FeaturesApplication/">Feature browser</a></li>
 					<li id="notifications"><a href="NotificationDemo/">Notifications</a></li>
 					<li id="reservr"><a href="reservr.html">Reservation application</a></li>
 					<li id="windowed-demos"><a href="WindowedDemos">Windowed demos</a></li>
-				</ul>			
+					<li class="clearer"></li> <!-- // simplifies things in JavaScipt -->
+				</ul>
+				
+				<div class="clearer"></div>
+				
+				<div id="additional-demos" class="panel">
+					<div class="top"></div>
+					
+					<h3>&raquo; Additional demos</h3>
+					
+					<div id="additional-demos-content"> <!-- For JavaScript hooking -->
+					<ul>
+						<li><a href="table-demo">Table Demo</a></li>
+						<li><a href="select-demo">Select Demo</a></li>
+					</ul>
+					</div>
+				
+					<div class="bottom"></div>
+				</div> <!-- /additional-demos -->
 			</div> <!-- /demos -->
 			
 			<div id="getting-started">
@@ -158,7 +196,7 @@
 				
 			</div> <!-- /support-licensing -->
 			
-			<div id="package-contents">
+			<div id="package-contents" class="panel">
 				<div class="top"></div>
 				
 				<h3>&raquo; Package contents</h3>

@@ -191,20 +191,27 @@ a.more span {
 
 /* demo icons */
 
-#demos ul {
+#demo-buttons {
 	list-style: none;
 	margin: 0;
 	padding: 0;
+	width: 100%;
 }
 
-#demos li {
+#demo-buttons li {
 	float: left;
 	width: 160px;
 	height: 135px;
 	margin-top: 14px;
 }
 
-#demos li a {
+#demo-buttons .clearer {
+	float: none;
+	height: 0;
+	margin: 0;
+}
+
+#demo-buttons li a {
 	display: block;
 	padding-top: 115px;
 	height: 20px;
@@ -212,38 +219,36 @@ a.more span {
 	text-align: center;
 }
 
-#demos #windowed-demos {
+#demo-buttons #windowed-demos {
 	background: #fff url(../img/demos/windowed.png) no-repeat;
 }
 
-#demos #reservr {
+#demo-buttons #reservr {
 	background: #fff url(../img/demos/reservr.png) no-repeat;
 	margin-right: 15px;
 }
 
-#demos #feature-browser {
+#demo-buttons #feature-browser {
 	background: #fff url(../img/demos/features.png) no-repeat;
 	margin-right: 15px;
 }
 
-#demos #notifications {
+#demo-buttons #notifications {
 	background: #fff url(../img/demos/notifications.png) no-repeat;
 }
 
 
 /* package contents */
 
-#package-contents {
+.panel {
 	width: 300px;
-	float: right;
 	padding: 0 17px 0 17px;
-	margin: -155px 0 0 0;
 	background: #ecf0f3 url(../img/package-bg.png);
 	overflow: hidden;
 	font-size: 1.1em;
 }
 
-#package-contents .top {
+.panel .top {
 	height: 5px;
 	width: 334px;
 	margin: 0 -17px 0 -17px;
@@ -251,12 +256,17 @@ a.more span {
 	overflow: hidden;
 }
 
-#package-contents .bottom {
+.panel .bottom {
 	height: 5px;
 	width: 334px;
 	margin: 0 -17px 0 -17px;
 	background: transparent url(../img/package-bottom.png);
 	overflow: hidden;
+}
+
+#package-contents {
+	float: right;
+	margin: -105px 1px 0 0;
 }
 
 #package-contents-content {
@@ -307,4 +317,20 @@ a.more span {
 #package-contents .support {
 	clear: left;
 	padding-top: 1.5em;
+}
+
+
+
+/* additional demos */
+
+#additional-demos {
+	clear: left;
+	font-size: 1em;
+	margin-top: 10px;
+}
+
+#additional-demos h3 {
+	font-size: 1.1em;
+	margin: 4px 0 5px 0;
+	color: #5b7b93;
 }
