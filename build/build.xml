@@ -407,7 +407,6 @@
 				<exclude name="**/.svn" />
 				<include name="release-notes.html" />
 				<include name="*.html" />
-				<include name="*.txt" />
 				<include name="license/*.html" />
 			</fileset>
 		</copy>
