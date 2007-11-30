@@ -20,8 +20,8 @@ public class LabelsExample extends CustomComponent {
 
     private static final String pre = "This text has linebreaks.\n\n"
             + "They will show up in a preformatted Label,\n"
-            + "but not in a \"plain\" Label.\n\n" + "       Indented row. \n"
-            + "       Same indentation.";
+            + "but not in a \"plain\" Label.\n\n"
+            + "       This is an indented row. \n       Same indentation here.";
 
     public LabelsExample() {
 

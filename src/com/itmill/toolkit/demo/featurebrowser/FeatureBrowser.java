@@ -155,6 +155,9 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
         } catch (Exception e) {
             e.printStackTrace(System.err);
         }
+        // Hide some columns
+        table.setVisibleColumns(new Object[] { PROPERTY_ID_CATEGORY,
+                PROPERTY_ID_NAME, PROPERTY_ID_DESC, PROPERTY_ID_VIEWED });
         table.addListener(this);
         table.setImmediate(true);
         split2.addComponent(table);
@@ -251,7 +254,9 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
         prop = item.getItemProperty(PROPERTY_ID_CLASS);
         prop.setValue(data[p++]);
         prop = item.getItemProperty(PROPERTY_ID_VIEWED);
-        prop.setValue(data[p++]);
+        Button b = new Button("", false);
+        b.setEnabled(false);
+        prop.setValue(b);
     }
 
     private HierarchicalContainer createContainer() {
@@ -259,10 +264,9 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
         c.addContainerProperty(PROPERTY_ID_CATEGORY, String.class, null);
         c.addContainerProperty(PROPERTY_ID_NAME, String.class, "");
         c.addContainerProperty(PROPERTY_ID_DESC, String.class, "");
-        c.addContainerProperty(PROPERTY_ID_CLASS, Class.class, Button.class);
-        c
-                .addContainerProperty(PROPERTY_ID_VIEWED, Boolean.class,
-                        Boolean.FALSE);
+        c.addContainerProperty(PROPERTY_ID_CLASS, Class.class, null);
+        c.addContainerProperty(PROPERTY_ID_VIEWED, Button.class, new Button("",
+                false));
         return c;
     }
 
@@ -270,6 +274,7 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
         if (event.getProperty() == tree) {
             Object id = tree.getValue();
             Item item = tree.getItem(id);
+            //
             String section;
             if (tree.isRoot(id)) {
                 section = ""; // show all sections
@@ -291,6 +296,8 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
                                 false, true);
             }
             if (!tree.hasChildren(id)) {
+                // Example, not section
+                // update table selection
                 table.setValue(id);
             }
 
@@ -309,6 +316,13 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
                     ts.removeAllComponents();
                     ts.addTab(component, caption, null);
                 }
+                // update "viewed" state
+                Button b = (Button) item.getItemProperty(PROPERTY_ID_VIEWED)
+                        .getValue();
+                if (b != null) {
+                    b.setValue(Boolean.TRUE);
+                }
+                table.requestRepaint();
             }
         }
 
@@ -326,9 +340,4 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
         return (Component) components.get(componentClass);
     }
 
-    public class Dummy extends Label {
-        public Dummy() {
-            super("Dummy component");
-        }
-    }
 }
