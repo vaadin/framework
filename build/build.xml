@@ -120,7 +120,7 @@
 		<!-- Output directory -->
 		<property name="output-dir" value="${result-path}/${product-file}-${version}" />
 		<mkdir dir="${output-dir}" />
-		
+
 		<!-- Create Output Directory Hierarchy -->
 		<mkdir dir="${output-dir}/WebContent" />
 		<mkdir dir="${output-dir}/WebContent/lib" />
@@ -516,7 +516,12 @@
 			</fileset>
 		</copy>
 
-		<!-- copy WebContent/index.html and rename it -->
+		<!-- copy build/package/WebContent/* -->
+		<copy todir="${output-dir}/WebContent">
+			<fileset dir="build/package/WebContent">
+				<exclude name="index.html" />
+			</fileset>
+		</copy>
 		<copy todir="${output-dir}/WebContent">
 			<filterchain>
 				<expandproperties />
@@ -525,13 +530,10 @@
 					<token key="/version" value="" />
 				</replacetokens>
 			</filterchain>
-			<fileset dir="build/package">
-				<filename name="webcontent-index.html" />
+			<fileset dir="build/package/WebContent">
+				<filename name="index.html" />
 			</fileset>
 		</copy>
-		<move file="${output-dir}/WebContent/webcontent-index.html" tofile="${output-dir}/WebContent/index.html" />
-		<!-- <copy file="build/package/webcontent-index.html" tofile="${output-dir}/WebContent/index.html" /> -->
-		<copy file="build/package/web.xml" tofile="${output-dir}/WebContent/WEB-INF/web.xml" />
 
 	</target>
 
