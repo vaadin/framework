@@ -526,11 +526,11 @@ public class ApplicationServlet extends HttpServlet {
             // Using custom theme
             themeUri = staticFilePath + "/" + THEME_DIRECTORY_PATH + themeName;
         }
-        page.write("', pathInfo: '" + pathInfo + "', themeUri: '" + themeUri
-                + "'\n};\n" + "</script>\n"
-                + "<script language='javascript' src='" + staticFilePath + "/"
-                + WIDGETSET_DIRECTORY_PATH + widgetset + "/" + widgetset
-                + ".nocache.js'></script>\n");
+        page.write("', pathInfo: '" + pathInfo + "', themeUri: "
+                + (themeUri != null ? "'" + themeUri + "'" : "null") + "\n};\n"
+                + "</script>\n" + "<script language='javascript' src='"
+                + staticFilePath + "/" + WIDGETSET_DIRECTORY_PATH + widgetset
+                + "/" + widgetset + ".nocache.js'></script>\n");
 
         if (themeName != null) {
             // Custom theme's stylesheet
