@@ -206,7 +206,7 @@
 		<antcall target="create-mac-diskimage" inheritAll="true" inheritRefs="true" />
 	</target>
 
-	<target name="internal-package-mac-leopard">
+	<target name="internal-package-mac_leopard">
 		<var name="package-platform" value="mac" />
 		<echo>Creating package for ${package-platform}_leopard platform.</echo>
 		<var name="eclipse-launch-vmargs" value="-Xms256M -Xmx512M" />
@@ -374,6 +374,7 @@
 			<then>
 				<copy todir="${output-dir}">
 					<fileset dir="build/package">
+						<include name="Start IT Mill Toolkit.app" />
 						<include name="start-demo.sh" />
 						<include name="start-demo.txt" />
 						<include name=".VolumeIcon.icns" />
@@ -394,12 +395,12 @@
    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	<target name="root">
 
-		<copy todir="${output-dir}/license">
+		<copy todir="${output-dir}/WebContent/license">
 			<fileset dir="license">
 				<filename name="*.pdf" />
 			</fileset>
 		</copy>
-		<copy todir="${output-dir}">
+		<copy todir="${output-dir}/WebContent">
 			<filterchain>
 				<expandproperties />
 				<replacetokens begintoken="&lt;" endtoken=">">
@@ -411,7 +412,7 @@
 				<filename name="release-notes.html" />
 			</fileset>
 		</copy>
-		<copy todir="${output-dir}">
+		<copy todir="${output-dir}/WebContent">
 			<filterchain>
 				<expandproperties />
 				<replacetokens begintoken="&lt;" endtoken=">">
@@ -431,12 +432,12 @@
 		</copy>
 
 		<!-- copy 3rd part libraries used by demo -->
-		<copy todir="${output-dir}/lib/demo">
+		<copy todir="${output-dir}/WebContent/lib/demo">
 			<fileset dir="lib">
 				<include name="reservr/**/*" />
 			</fileset>
 		</copy>
-		<copy todir="${output-dir}/lib">
+		<copy todir="${output-dir}/WebContent/lib">
 			<fileset dir="lib">
 				<include name="jetty/**/*" />
 			</fileset>
@@ -660,13 +661,15 @@
 			</fileset>
 		</copy>
 
+		<!--
 		<echo>Adding javadocs</echo>
 		<copy todir="${output-dir}/WebContent/doc">
 			<fileset dir="${output-dir}/doc">
 				<include name="api/**/*" />
 			</fileset>
 		</copy>
-
+		-->
+		
 		<echo>Building WAR</echo>
 		<war warfile="${output-dir}/lib/${product-file}.war" webxml="build/package/web.xml">
 			<fileset dir="${output-dir}/WebContent">
