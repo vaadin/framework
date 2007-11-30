@@ -324,6 +324,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
             // client.console.log("removing row from the end");
             tBody.unlinkRow(false);
         }
+        tBody.fixSpacers();
 
     }
 
@@ -1548,16 +1549,16 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
                 // firstRendered) {
             } else if (true) {
                 // completely new set of rows
-                // create one row before truncating row
-                IScrollTableRow row = createRow((UIDL) it.next());
                 while (lastRendered + 1 > firstRendered) {
                     unlinkRow(false);
                 }
+                IScrollTableRow row = createRow((UIDL) it.next());
                 firstRendered = firstIndex;
                 lastRendered = firstIndex - 1;
-                fixSpacers();
                 addRow(row);
                 lastRendered++;
+                setContainerHeight();
+                fixSpacers();
                 while (it.hasNext()) {
                     addRow(createRow((UIDL) it.next()));
                     lastRendered++;
