@@ -411,8 +411,6 @@
 			<filterchain>
 				<expandproperties />
 				<replacetokens begintoken="&lt;" endtoken=">">
-					<token key="body" value="${html.body.tag}${html.body.start1}${product-name}${html.body.start2}" />
-					<token key="/body" value="${html.body.end}${html.body.endtag}" />
 					<token key="version" value="${version}" />
 					<token key="/version" value="" />
 				</replacetokens>
@@ -509,25 +507,6 @@
 				<exclude name="WEB-INF/lib/commons-fileupload-custom.jar" />
 				<exclude name="ITMILL/themes/test*/**" />
 				<exclude name="WEB-INF/classes/**" />
-			</fileset>
-		</copy>
-
-		<!-- copy build/package/WebContent/* -->
-		<copy todir="${output-dir}/WebContent">
-			<fileset dir="build/package/WebContent">
-				<exclude name="index.html" />
-			</fileset>
-		</copy>
-		<copy todir="${output-dir}/WebContent">
-			<filterchain>
-				<expandproperties />
-				<replacetokens begintoken="&lt;" endtoken=">">
-					<token key="version" value="${version}" />
-					<token key="/version" value="" />
-				</replacetokens>
-			</filterchain>
-			<fileset dir="build/package/WebContent">
-				<filename name="index.html" />
 			</fileset>
 		</copy>
 
