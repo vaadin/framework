@@ -391,7 +391,7 @@
 	<target name="root">
 
 		<copy todir="${output-dir}/WebContent/license">
-			<fileset dir="license">
+			<fileset dir="WebContent/license">
 				<filename name="*.pdf" />
 			</fileset>
 		</copy>
@@ -403,21 +403,9 @@
 					<token key="/version" value="" />
 				</replacetokens>
 			</filterchain>
-			<fileset dir="">
-				<filename name="release-notes.html" />
-			</fileset>
-		</copy>
-		<copy todir="${output-dir}/WebContent">
-			<filterchain>
-				<expandproperties />
-				<replacetokens begintoken="&lt;" endtoken=">">
-					<token key="version" value="${version}" />
-					<token key="/version" value="" />
-				</replacetokens>
-			</filterchain>
-			<fileset dir="">
+			<fileset dir="WebContent">
 				<exclude name="**/.svn" />
-				<exclude name="release-notes.html" />
+				<include name="release-notes.html" />
 				<include name="*.html" />
 				<include name="*.txt" />
 				<include name="license/*.html" />
