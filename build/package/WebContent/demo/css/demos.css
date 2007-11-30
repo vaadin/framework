@@ -67,7 +67,7 @@ a.more span {
 
 #container .content {
 	background: #fff url(../img/content-bg.png);
-	padding: 10px 27px 20px 27px;
+	padding: 10px 27px 10px 27px;
 	width: 705px; /* for IE hasLayout, fixes beekaboo-bug */
 }
 
@@ -128,65 +128,23 @@ a.more span {
 	letter-spacing: -0.02em;
 }
 
-#getting-started h2 {
-	background: transparent url(../img/icon-home.png) no-repeat;
-	margin-bottom: 78px;
-}
 #demos h2 {
 	background: transparent url(../img/icon-eye.png) no-repeat;
 }
-#support-licensing h2 {
-	background: transparent url(../img/icon-doc.png) no-repeat;
-}
 
-#getting-started,
-#demos,
-#support-licensing {
+#demos {
 	font-size: 1.3em;
 }
 
-#getting-started,
-#support-licensing {
-	width: 340px;
-}
-
 #demos {
-	width: 335px;
-	float: right;
+	width: 705px;
 	font-size: 1.2em;
 }
 
-#getting-started h4,
-#demos h4,
-#support-licensing h4 {
+#demos h4 {
 	font-weight: bold;
 	margin: 1em 0 0.2em 0;
 }
-
-#getting-started p,
-#support-licensing p {
-	margin: 0 0 1em 0;
-}
-
-#support-licensing .links {
-	list-style: none;
-	padding: 0;
-	margin: -1em 0 1em 0;
-	height: 1.8em;
-}
-
-#support-licensing .links li {
-	float: left;
-	margin-right: 1.5em;
-}
-
-
-/* eclipse image */
-
-#getting-started {
-	background: transparent url(../img/eclipse-quickstart.png) no-repeat 0 40px;
-}
-
 
 
 /* demo icons */
@@ -201,7 +159,7 @@ a.more span {
 	float: left;
 	width: 160px;
 	height: 135px;
-	margin-top: 14px;
+	margin: 14px 15px 0 0;
 }
 
 #demos li a {
@@ -218,12 +176,10 @@ a.more span {
 
 #demos #reservr {
 	background: #fff url(../img/demos/reservr.png) no-repeat;
-	margin-right: 15px;
 }
 
 #demos #feature-browser {
 	background: #fff url(../img/demos/features.png) no-repeat;
-	margin-right: 15px;
 }
 
 #demos #notifications {
@@ -231,19 +187,19 @@ a.more span {
 }
 
 
-/* package contents */
+/* additional demos */
 
-#package-contents {
+#additional {
 	width: 300px;
-	float: right;
 	padding: 0 17px 0 17px;
-	margin: -155px 0 0 0;
+	margin-top: 20px;
 	background: #ecf0f3 url(../img/package-bg.png);
 	overflow: hidden;
 	font-size: 1.1em;
+	clear: left;
 }
 
-#package-contents .top {
+#additional .top {
 	height: 5px;
 	width: 334px;
 	margin: 0 -17px 0 -17px;
@@ -251,7 +207,7 @@ a.more span {
 	overflow: hidden;
 }
 
-#package-contents .bottom {
+#additional .bottom {
 	height: 5px;
 	width: 334px;
 	margin: 0 -17px 0 -17px;
@@ -259,52 +215,18 @@ a.more span {
 	overflow: hidden;
 }
 
-#package-contents-content {
+#additional-content {
 	margin: 13px 0 17px 0;
 }
 
-#package-contents ul {
+#additional ul {
 	list-style: none;
 	margin: 0;
 	padding: 0;
 }
 
-#package-contents h3 {
+#additional h3 {
 	font-size: 1.1em;
 	margin: 4px 0 5px 0;
 	color: #5b7b93;
-}
-
-#package-contents em {
-	font-size: 0.9em;
-	font-style: normal;
-	float: right;
-	margin-top: -23px;
-	color: #87a0b2
-}
-
-#package-contents h5 {
-	font-weight: bold;
-	margin: 0 0 0.2em 0;
-	color: #3f5f77;
-}
-
-#package-contents p {
-	margin: 0;
-}
-
-#package-contents .library {
-	width: 143px;
-	margin-right: 15px;
-	float: left;
-}
-
-#package-contents .documentation {
-	width: 134px;
-	float: left;
-}
-
-#package-contents .support {
-	clear: left;
-	padding-top: 1.5em;
 }

@@ -2,8 +2,8 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<title>IT Mill Toolkit 5</title>
-		<link rel="stylesheet" type="text/css" href="demo/css/styles.css" />
+		<title>IT Mill Toolkit 5 Demos</title>
+		<link rel="stylesheet" type="text/css" href="demo/css/demos.css" />
 		<!--[if IE]>
 		<link rel="stylesheet" type="text/css" href="demo/css/ie.css" />
 		<![endif]-->
@@ -25,8 +25,8 @@
 			
 				init : function() {
 					// Fetch references
-					packageContent = document.getElementById("package-contents-content");
-					package = document.getElementById("package-contents");
+					packageContent = document.getElementById("additional-content");
+					package = document.getElementById("additional");
 					demoArea = document.getElementById("demos");
 					
 					// Hide package contents initially
@@ -90,7 +90,7 @@
 					var target = evt.toElement || evt.relatedTarget;
 					if((target == demoArea || target.parentNode == demoArea || target.parentNode.parentNode == demoArea) && target.nodeName != "H2")
 						return;
-					var demos = document.getElementById("demos").getElementsByTagName("li");
+					var demos = demoArea.getElementsByTagName("li");
 					for(var i=0; i < demos.length; i++) {
 						if(isIE)
 							demos[i].style.filter = "";
@@ -123,72 +123,23 @@
 					<li id="notifications"><a href="notification-demo">Notifications</a></li>
 					<li id="reservr"><a href="reservr">Reservation application</a></li>
 					<li id="windowed-demos"><a href="windowed-demo">Windowed demos</a></li>
-				</ul>			
+				</ul>
+				<div class="clearer"></div>
 			</div> <!-- /demos -->
 			
-			<div id="getting-started">
-				<h2>Getting started</h2>
-				
-				<h4>Eclipse IDE Quickstart</h4>
-				<p>The easiest way to start working with IT Mill Toolkit is to 
-				use Eclipse IDE with the Toolkit quickstart project.
-				<a href="quickstart.html" class="more">Instant Toolkit workspace for Eclipse</a></p>
-				
-				<h4>Manual Deployment</h4>
-				<p>If you do not use Eclipse, you can manually deploy the Toolkit 
-				WAR-package to your server with these simple steps.
-				<a href="deployment.html" class="more">How to deploy Toolkit WAR-package to a server</a></p>
-				
-			</div> <!-- /getting-started -->
+			<div class="clearer"></div>
 			
-			<div id="support-licensing">
-				<h2>Support and Licensing</h2>
-				
-				<h4>Documentation</h4>
-				<p>Need help using IT Mill Toolkit? Look no further. Everything you need to know is here.</p>
-				<ul class="links">
-					<li><a href="manual.html">Manual</a> <a href="manual.pdf" class="more"><span>(</span>PDF<span>)</span></a></li>
-					<li><a href="javadoc.html" class="more">JavaDoc API</a></li>
-					<li><a href="http://forum.itmill.com" class="more">Support forum</a></li>
-				</ul>
-				
-				<h4>Licenses</h4>
-				<p>All of IT Mill Toolkit's core is licensed under liberal Open Source license. Commercial licenses are also available.
-				<a href="licensing-guidelines.html" class="more">Licensing Guidelines</a></p>
-				
-			</div> <!-- /support-licensing -->
-			
-			<div id="package-contents">
+			<div id="additional">
 				<div class="top"></div>
 				
-				<h3>&raquo; Package contents</h3>
-				<em>Version 5.0.0-beta</em>
+				<h3>&raquo; Additional demos</h3>
 				
-				<div id="package-contents-content"> <!-- For JavaScript hooking -->
+				<div id="additional-content"> <!-- For JavaScript hooking -->
 				
-				<div class="library">
-					<h5>Library</h5>
-					<p>Contains all you need to start a new Toolkit project (binaries, sources, default 
-					themes and widgetsets). <a href="toolkit-jar">Toolkit JAR</a></p>
-				</div>
-				
-				<div class="documentation">
-					<h5>Documentation</h5>
-					<ul>
-						<li><a href="release-notes.html">Release Notes</a></li>
-						<li><a href="manual.html">Manual</a> &nbsp; (<a href="manual.pdf">view as PDF</a>)</li>
-						<li><a href="javadoc.html">JavaDoc API</a></li>
-					</ul>
-				</div>
-				
-				<div class="support">
-					<h5>Support &amp; Licensing</h5>
-					<ul>
-						<li><a href="http://forum.itmill.com">Support forum</a></li>
-						<li><a href="licensing-guidelines.html">Licensing Guidelines</a></li>
-						<li>Prices and purchase from <a href="mailto:sales@itmill.com">sales@itmill.com</a></li>
-					</ul>
-				</div>
+				<ul>
+					<li><a href="table-demo">Table Demo</a></li>
+					<li><a href="select-demo">Select Demo</a></li>
+				</ul>
 				
 				</div>
 			
