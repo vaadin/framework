@@ -570,8 +570,14 @@ public class ApplicationConnection {
      * @return translated URI ready for browser
      */
     public String translateToolkitUri(String toolkitUri) {
-        if (toolkitUri.startsWith("theme")) {
-            toolkitUri = getThemeUri() + toolkitUri.substring(7);
+        if (toolkitUri.startsWith("theme://")) {
+            String themeUri = getThemeUri();
+            if (themeUri == null) {
+                console
+                        .error("Theme not set: ThemeResource will not be found. ("
+                                + toolkitUri + ")");
+            }
+            toolkitUri = themeUri + toolkitUri.substring(7);
         }
         return toolkitUri;
     }
