@@ -677,7 +677,7 @@
 				<exclude name="WEB-INF/web.xml" />
 				<include name="**/*" />
 			</fileset>
-			<lib dir="${output-dir}/lib">
+			<lib dir="${output-dir}/WebContent/lib">
 				<include name="${lib-jar-name}" />
 			</lib>
 		</war>
