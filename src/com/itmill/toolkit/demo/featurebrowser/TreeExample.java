@@ -7,11 +7,14 @@ import com.itmill.toolkit.event.Action;
 import com.itmill.toolkit.ui.CustomComponent;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.OrderedLayout;
+import com.itmill.toolkit.ui.Panel;
 import com.itmill.toolkit.ui.TextField;
 import com.itmill.toolkit.ui.Tree;
 
 /**
- * 
+ * Demonstrates basic Tree -functionality. Actions are used for add/remove item
+ * functionality, and a ValueChangeListener reacts to both the Tree and the
+ * TextField.
  */
 public class TreeExample extends CustomComponent implements Action.Handler,
         Tree.ValueChangeListener {
@@ -20,30 +23,31 @@ public class TreeExample extends CustomComponent implements Action.Handler,
     private static final Action DELETE = new Action("Delete item");
     private static final Action[] actions = new Action[] { ADD, DELETE };
 
+    // Id for the caption property
     private static final Object CAPTION_PROPERTY = "caption";
 
-    private static final String desc = "Select an item in the tree to edit it's"
-            + " caption. Right-click to add or remove items.";
+    private static final String desc = "Try both right- and left-click!";
 
     Tree tree;
-    TextField tf;
+    TextField editor;
 
     public TreeExample() {
-        OrderedLayout main = new OrderedLayout();
+        OrderedLayout main = new OrderedLayout(
+                OrderedLayout.ORIENTATION_HORIZONTAL);
         main.setMargin(true);
         setCompositionRoot(main);
-        // Description
-        main.addComponent(new Label(desc));
-        // Caption editor
-        tf = new TextField("Edit item caption");
-        tf.setImmediate(true);
-        tf.setEnabled(false);
-        tf.setColumns(15);
-        main.addComponent(tf);
 
-        // Add tree with a few items
+        // Panel w/ Tree
+        Panel p = new Panel("Select item");
+        p.setStyleName(Panel.STYLE_LIGHT);
+        p.setWidth(250);
+        // Description
+        p.addComponent(new Label(desc));
+        // Tree with a few items
         tree = new Tree();
         tree.setImmediate(true);
+        // we'll use a property for caption instead of the item id ("value"),
+        // so that multiple items can have the same caption
         tree.addContainerProperty(CAPTION_PROPERTY, String.class, "");
         tree.setItemCaptionMode(Tree.ITEM_CAPTION_MODE_PROPERTY);
         tree.setItemCaptionPropertyId(CAPTION_PROPERTY);
@@ -53,13 +57,28 @@ public class TreeExample extends CustomComponent implements Action.Handler,
             addCaptionedItem("Team A", id);
             addCaptionedItem("Team B", id);
         }
+        // listen for selections
         tree.addListener(this);
+        // "context menu"
         tree.addActionHandler(this);
-        main.addComponent(tree);
+        p.addComponent(tree);
+        main.addComponent(p);
 
+        // Panel w/ TextField ("editor")
+        p = new Panel("Edit item caption");
+        p.setStyleName(Panel.STYLE_LIGHT);
+        editor = new TextField();
+        // make immediate, instead of adding an "apply" button
+        editor.setImmediate(true);
+        editor.setEnabled(false);
+        editor.setColumns(15);
+        p.addComponent(editor);
+        main.addComponent(p);
     }
 
     public Action[] getActions(Object target, Object sender) {
+        // We can provide different actions for each target (item), but we'll
+        // use the same actions all the time.
         return actions;
     }
 
@@ -71,40 +90,60 @@ public class TreeExample extends CustomComponent implements Action.Handler,
             Object id = addCaptionedItem("New Item", target);
             tree.expandItem(target);
             tree.setValue(id);
-            tf.focus();
+            editor.focus();
         }
     }
 
     public void valueChange(ValueChangeEvent event) {
-        Object id = tree.getValue();
+        Object id = tree.getValue(); // selected item id
         if (event.getProperty() == tree) {
+            // a Tree item was (un) selected
             if (id == null) {
-                tf.removeListener(this);
-                tf.setValue("");
-                tf.setEnabled(false);
-
+                // no selecteion, disable TextField
+                editor.removeListener(this);
+                editor.setValue("");
+                editor.setEnabled(false);
             } else {
-                tf.setEnabled(true);
+                // item selected
+                // first remove previous listener
+                editor.removeListener(this);
+                // enable TextField and update value
+                editor.setEnabled(true);
                 Item item = tree.getItem(id);
-                tf.setValue(item.getItemProperty(CAPTION_PROPERTY).getValue());
-                tf.addListener(this);
+                editor.setValue(item.getItemProperty(CAPTION_PROPERTY)
+                        .getValue());
+                // listen for TextField changes
+                editor.addListener(this);
+                editor.focus();
             }
         } else {
             // TextField
             if (id != null) {
                 Item item = tree.getItem(id);
                 Property p = item.getItemProperty(CAPTION_PROPERTY);
-                p.setValue(tf.getValue());
+                p.setValue(editor.getValue());
                 tree.requestRepaint();
             }
 
         }
     }
 
+    /**
+     * Helper to add an item with specified caption and (optional) parent.
+     * 
+     * @param caption
+     *                The item caption
+     * @param parent
+     *                The (optional) parent item id
+     * @return the created item's id
+     */
     private Object addCaptionedItem(String caption, Object parent) {
+        // add item, let tree decide id
         Object id = tree.addItem();
+        // get the created item
         Item item = tree.getItem(id);
-        Property p = item.getItemProperty("caption");
+        // set our "caption" property
+        Property p = item.getItemProperty(CAPTION_PROPERTY);
         p.setValue(caption);
         if (parent != null) {
             tree.setParent(id, parent);
