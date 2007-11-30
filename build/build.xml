@@ -605,7 +605,7 @@
 	<target name="libs" depends="compile-java, compile-client-side">
 		<echo>Creating libs (server-side)</echo>
 		<!-- Create Toolkit JAR -->
-		<jar jarfile="${output-dir}/lib/${lib-jar-name}" compress="true">
+		<jar jarfile="${output-dir}/WebContent/lib/${lib-jar-name}" compress="true">
 			<fileset dir="${result-path}/classes">
 				<patternset>
 					<exclude name="${toolkit-package}/demo/**" />
@@ -645,14 +645,15 @@
 			</fileset>
 		</copy>
 
+		<!-- TODO remove WebContent/lib? -->
 		<echo>Adding (duplicating) Toolkit JAR to WebContent/WEB-INF/lib</echo>
 		<copy todir="${output-dir}/WebContent/WEB-INF/lib">
-			<fileset dir="${output-dir}/lib">
+			<fileset dir="${output-dir}/WebContent/lib">
 				<include name="${lib-jar-name}" />
 			</fileset>
 		</copy>
 
-		<echo>Adding (duplicating) source for demo</echo>
+		<echo>Adding source for demo</echo>
 		<copy todir="${output-dir}/WebContent/WEB-INF/src">
 			<fileset dir="${result-path}/src">
 				<include name="${toolkit-package}/demo/**/*" />
