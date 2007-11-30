@@ -1,0 +1,11 @@
+/* for IE hasLayout, fixes background not showing */
+* html a.more {
+	zoom: 1;
+}
+*+html a.more {
+	zoom: 1;
+}
+
+a.more span {
+	color: #5c666a;
+}
