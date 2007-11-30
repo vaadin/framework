@@ -18,7 +18,7 @@
 	 * itmill-toolkit-mac-<version>.tar.gz
 	 * itmill-toolkit-mac-<version>.dmg
 
-	NOTE: This build script requires directories named ${gwt-dir}/(linux|windows|mac) .
+	NOTE: This build script requires directories named ${gwt-dir}/(linux|windows|mac|mac_leopard) .
 	See build.properties to define path where your gwt installation is located.
 	You must unpack platform specific binaries under linux, windows and mac directories.
 	${gwt-dir}/${platform} (linux|windows|mac) are used for
@@ -29,7 +29,7 @@
 	<!-- 
 	Call one of package-* targets unless you understand what you are doing 
 	-->
-	<target name="package-all" depends="clean-all, init, build, docs, internal-package-mac, internal-package-windows, internal-package-linux" description="Build public packages for Windows, Linux and Mac platforms.">
+	<target name="package-all" depends="clean-all, init, build, docs, internal-package-mac, internal-package-mac_leopard, internal-package-windows, internal-package-linux" description="Build public packages for Windows, Linux and Mac platforms.">
 	</target>
 
 	<target name="package-mac" depends="clean-all, init, build, docs, internal-package-mac" description="Create public tar.gz package for Mac.">
@@ -55,6 +55,7 @@
 		<!-- TODO: on Mac Leopard, we should not use -XstartOnFirstThread -->
 		<var name="eclipse-launch-vmargs" value="-XstartOnFirstThread -Xms128M -Xmx512M" />
 		<antcall target="add-platform-specific-files" inheritAll="true" inheritRefs="true" />
+		<delete file="${result-path}/eclipse-test" followsymlinks="false" />
 		<exec executable="ln" failonerror="false">
 			<arg line="-s" />
 			<arg line="${output-dir}" />
@@ -144,8 +145,8 @@
 	</target>
 
 	<target name="internal-package-windows">
-		<echo>Creating package for Windows platform.</echo>
 		<var name="package-platform" value="windows" />
+		<echo>Creating package for ${package-platform} platform.</echo>
 		<var name="eclipse-launch-vmargs" value="-Xms256M -Xmx512M" />
 		<antcall target="add-platform-specific-files" inheritAll="true" inheritRefs="true" />
 		<zip zipfile="${result-path}/${product-file}-${package-platform}-${version}.zip">
@@ -154,7 +155,7 @@
 					<include name="**/*" />
 				</patternset>
 			</zipfileset>
-			<zipfileset prefix="${product-file}-${package-platform}-${version}/gwt" dir="${gwt-dir}/windows">
+			<zipfileset prefix="${product-file}-${package-platform}-${version}/gwt" dir="${gwt-dir}/${package-platform}">
 				<patternset>
 					<include name="**/*" />
 				</patternset>
@@ -163,8 +164,8 @@
 	</target>
 
 	<target name="internal-package-linux">
-		<echo>Creating package for Linux platform.</echo>
 		<var name="package-platform" value="linux" />
+		<echo>Creating package for ${package-platform} platform.</echo>
 		<var name="eclipse-launch-vmargs" value="-Xms256M -Xmx512M" />
 		<antcall target="add-platform-specific-files" inheritAll="true" inheritRefs="true" />
 		<tar destfile="${result-path}/${product-file}-${package-platform}-${version}.tar.gz" compression="gzip" longfile="gnu">
@@ -176,7 +177,7 @@
 					<include name="**/*" />
 				</patternset>
 			</tarfileset>
-			<tarfileset prefix="${product-file}-${package-platform}-${version}/gwt" dir="${gwt-dir}/linux">
+			<tarfileset prefix="${product-file}-${package-platform}-${version}/gwt" dir="${gwt-dir}/${package-platform}">
 				<patternset>
 					<include name="**/*" />
 				</patternset>
@@ -185,8 +186,8 @@
 	</target>
 
 	<target name="internal-package-mac">
-		<echo>Creating package for Mac platform.</echo>
 		<var name="package-platform" value="mac" />
+		<echo>Creating package for ${package-platform} platform.</echo>
 		<var name="eclipse-launch-vmargs" value="-XstartOnFirstThread -Xms256M -Xmx512M" />
 		<antcall target="add-platform-specific-files" inheritAll="true" inheritRefs="true" />
 		<tar destfile="${result-path}/${product-file}-${package-platform}-${version}.tar.gz" compression="gzip" longfile="gnu">
@@ -195,14 +196,36 @@
 					<include name="**/*" />
 				</patternset>
 			</tarfileset>
-			<tarfileset prefix="${product-file}-${package-platform}-${version}/gwt" dir="${gwt-dir}/mac">
+			<tarfileset prefix="${product-file}-${package-platform}-${version}/gwt" dir="${gwt-dir}/${package-platform}">
 				<patternset>
 					<include name="**/*" />
 				</patternset>
 			</tarfileset>
 		</tar>
 		<!-- TODO: remove me: DISABLE for speed -->
-        <antcall target="create-mac-diskimage" inheritAll="true" inheritRefs="true" />
+		<antcall target="create-mac-diskimage" inheritAll="true" inheritRefs="true" />
+	</target>
+
+	<target name="internal-package-mac-leopard">
+		<var name="package-platform" value="mac" />
+		<echo>Creating package for ${package-platform}_leopard platform.</echo>
+		<var name="eclipse-launch-vmargs" value="-Xms256M -Xmx512M" />
+		<antcall target="add-platform-specific-files" inheritAll="true" inheritRefs="true" />
+		<var name="package-platform" value="mac_leopard" />
+		<tar destfile="${result-path}/${product-file}-${package-platform}-${version}.tar.gz" compression="gzip" longfile="gnu">
+			<tarfileset prefix="${product-file}-${package-platform}-${version}" dir="${result-path}/${product-file}-${version}">
+				<patternset>
+					<include name="**/*" />
+				</patternset>
+			</tarfileset>
+			<tarfileset prefix="${product-file}-${package-platform}-${version}/gwt" dir="${gwt-dir}/${package-platform}">
+				<patternset>
+					<include name="**/*" />
+				</patternset>
+			</tarfileset>
+		</tar>
+		<!-- TODO: remove me: DISABLE for speed -->
+		<antcall target="create-mac-diskimage" inheritAll="true" inheritRefs="true" />
 	</target>
 
 	<target name="create-mac-diskimage">
