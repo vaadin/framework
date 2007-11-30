@@ -8,8 +8,29 @@ import com.itmill.toolkit.data.Validator;
 import com.itmill.toolkit.data.Property.ValueChangeEvent;
 import com.itmill.toolkit.data.Property.ValueChangeListener;
 import com.itmill.toolkit.data.validator.StringLengthValidator;
-import com.itmill.toolkit.terminal.*;
-import com.itmill.toolkit.ui.*;
+import com.itmill.toolkit.terminal.ClassResource;
+import com.itmill.toolkit.terminal.DownloadStream;
+import com.itmill.toolkit.terminal.ExternalResource;
+import com.itmill.toolkit.terminal.StreamResource;
+import com.itmill.toolkit.terminal.UserError;
+import com.itmill.toolkit.ui.AbstractSelect;
+import com.itmill.toolkit.ui.Button;
+import com.itmill.toolkit.ui.CheckBox;
+import com.itmill.toolkit.ui.DateField;
+import com.itmill.toolkit.ui.Embedded;
+import com.itmill.toolkit.ui.ExpandLayout;
+import com.itmill.toolkit.ui.FormLayout;
+import com.itmill.toolkit.ui.GridLayout;
+import com.itmill.toolkit.ui.Label;
+import com.itmill.toolkit.ui.Link;
+import com.itmill.toolkit.ui.OrderedLayout;
+import com.itmill.toolkit.ui.Panel;
+import com.itmill.toolkit.ui.Select;
+import com.itmill.toolkit.ui.TabSheet;
+import com.itmill.toolkit.ui.Table;
+import com.itmill.toolkit.ui.TextField;
+import com.itmill.toolkit.ui.Tree;
+import com.itmill.toolkit.ui.Window;
 
 public class MagiTestApplication extends com.itmill.toolkit.Application {
     Window main = new Window("Application window");
@@ -64,9 +85,9 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
                     "tree", "embedded", "textfield", "textfieldvalidation",
                     "datefield", "button", "select/select", "select/native",
                     "select/optiongroup", "select/twincol", "filterselect",
-                    "validator", "table", "upload", "link",
-                    "gridlayout", "orderedlayout", "formlayout", "panel",
-                    "expandlayout", "tabsheet", "alignment", "alignment/grid", "window",
+                    "validator", "table", "upload", "link", "gridlayout",
+                    "orderedlayout", "formlayout", "panel", "expandlayout",
+                    "tabsheet", "alignment", "alignment/grid", "window",
                     "window/opener", "window/multiple", "classresource" };
             for (int i = 0; i < examples.length; i++) {
                 main.addComponent(new Label("<a href='/tk/testbench2/"
@@ -76,32 +97,57 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
             return null;
         }
 
-        if (example.equals("defaultbutton"))            example_defaultButton(main, param);
-        else if (example.equals("label"))               example_Label(main, param);
-        else if (example.equals("labelcontent"))        example_LabelContent(main, param);
-        else if (example.equals("tree"))                example_Tree(main, param);
-        else if (example.equals("embedded"))            example_Embedded(main, param);
-        else if (example.equals("textfield"))           example_TextField(main, param);
-        else if (example.equals("textfieldvalidation")) example_TextFieldValidation(main, param);
-        else if (example.equals("datefield"))           example_DateField(main, param);
-        else if (example.equals("button"))              example_Button(main, param);
-        else if (example.equals("checkbox"))            example_CheckBox(main, param);
-        else if (example.equals("select"))              example_Select(main, param);
-        else if (example.equals("filterselect"))        example_FilterSelect(main, param);
-        else if (example.equals("validator"))           example_Validator(main, param);
-        else if (example.equals("table"))               example_Table(main, param);
-        else if (example.equals("upload"))              example_Upload(main, param);
-        else if (example.equals("link"))                example_Link(main, param);
-        else if (example.equals("gridlayout"))          example_GridLayout(main, param);
-        else if (example.equals("orderedlayout"))       example_OrderedLayout(main, param);
-        else if (example.equals("formlayout"))          example_FormLayout(main, param);
-        else if (example.equals("tabsheet"))            example_TabSheet(main, param);
-        else if (example.equals("panel"))               example_Panel(main, param);
-        else if (example.equals("expandlayout"))        example_ExpandLayout(main, param);
-        else if (example.equals("alignment"))           example_Alignment(main, param);
-        else if (example.equals("window"))              example_Window(main, param);
-        else if (example.equals("classresource"))       example_ClassResource(main, param);
-        else {
+        if (example.equals("defaultbutton")) {
+            example_defaultButton(main, param);
+        } else if (example.equals("label")) {
+            example_Label(main, param);
+        } else if (example.equals("labelcontent")) {
+            example_LabelContent(main, param);
+        } else if (example.equals("tree")) {
+            example_Tree(main, param);
+        } else if (example.equals("embedded")) {
+            example_Embedded(main, param);
+        } else if (example.equals("textfield")) {
+            example_TextField(main, param);
+        } else if (example.equals("textfieldvalidation")) {
+            example_TextFieldValidation(main, param);
+        } else if (example.equals("datefield")) {
+            example_DateField(main, param);
+        } else if (example.equals("button")) {
+            example_Button(main, param);
+        } else if (example.equals("checkbox")) {
+            example_CheckBox(main, param);
+        } else if (example.equals("select")) {
+            example_Select(main, param);
+        } else if (example.equals("filterselect")) {
+            example_FilterSelect(main, param);
+        } else if (example.equals("validator")) {
+            example_Validator(main, param);
+        } else if (example.equals("table")) {
+            example_Table(main, param);
+        } else if (example.equals("upload")) {
+            example_Upload(main, param);
+        } else if (example.equals("link")) {
+            example_Link(main, param);
+        } else if (example.equals("gridlayout")) {
+            example_GridLayout(main, param);
+        } else if (example.equals("orderedlayout")) {
+            example_OrderedLayout(main, param);
+        } else if (example.equals("formlayout")) {
+            example_FormLayout(main, param);
+        } else if (example.equals("tabsheet")) {
+            example_TabSheet(main, param);
+        } else if (example.equals("panel")) {
+            example_Panel(main, param);
+        } else if (example.equals("expandlayout")) {
+            example_ExpandLayout(main, param);
+        } else if (example.equals("alignment")) {
+            example_Alignment(main, param);
+        } else if (example.equals("window")) {
+            example_Window(main, param);
+        } else if (example.equals("classresource")) {
+            example_ClassResource(main, param);
+        } else {
             ; // main.addComponent(new Label("Unknown test '"+example+"'."));
         }
 
@@ -338,17 +384,9 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
     }
 
     void example_Link(Window main, String param) {
-        /*
-         * Create a native window object to be opened as a popup window when the
-         * link is clicked.
-         */
-        Window popup = new Window("Open a window");
-        popup.setStyle("native");
-        popup.addComponent(new Button("Some component"));
-        main.getApplication().addWindow(popup);
 
         /* Create a link that opens the popup window. */
-        Link alink = new Link(popup);
+        Link alink = new Link();
 
         /* Set the resource to be opened in the window. */
         alink.setResource(new ExternalResource("http://www.itmill.com/"));
@@ -558,26 +596,27 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
     void example_TabSheet(Window main, String param) {
         if (param.equals("icon")) {
             TabSheet tabsheet = new TabSheet();
-        
+
             tabsheet.addTab(new Label("Contents of the first tab"),
-                            "First Tab",
-                            new ClassResource ("images/Mercury_small.png", main.getApplication()));
+                    "First Tab", new ClassResource("images/Mercury_small.png",
+                            main.getApplication()));
             tabsheet.addTab(new Label("Contents of the second tab"),
-                            "Second Tab",
-                            new ClassResource ("images/Venus_small.png", this));
+                    "Second Tab", new ClassResource("images/Venus_small.png",
+                            this));
             tabsheet.addTab(new Label("Contents of the third tab"),
-                            "Third tab",
-                            new ClassResource ("images/Earth_small.png", this));
-        
+                    "Third tab", new ClassResource("images/Earth_small.png",
+                            this));
+
             main.addComponent(tabsheet);
-            //main.addComponent(new Embedded("Emb", new ClassResource ("images/Mercury_small.png", this)));
-        
+            // main.addComponent(new Embedded("Emb", new ClassResource
+            // ("images/Mercury_small.png", this)));
+
         } else {
             main.addComponent(new TabSheetExample());
         }
     }
 
-   void example_Embedded(Window main, String param) {
+    void example_Embedded(Window main, String param) {
         Embedded image = new Embedded("", new ClassResource("smiley.jpg", this));
         image.addStyleName("omaimage");
         main.addComponent(image);
