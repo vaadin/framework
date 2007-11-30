@@ -120,16 +120,16 @@
 		<!-- Output directory -->
 		<property name="output-dir" value="${result-path}/${product-file}-${version}" />
 		<mkdir dir="${output-dir}" />
-
+		
 		<!-- Create Output Directory Hierarchy -->
-		<mkdir dir="${output-dir}/doc/manual" />
-		<mkdir dir="${output-dir}/doc/api" />
-		<mkdir dir="${output-dir}/lib" />
 		<mkdir dir="${output-dir}/WebContent" />
+		<mkdir dir="${output-dir}/WebContent/lib" />
+		<mkdir dir="${output-dir}/WebContent/doc" />
+		<mkdir dir="${output-dir}/WebContent/doc/manual" />
+		<mkdir dir="${output-dir}/WebContent/doc/api" />
+		<mkdir dir="${output-dir}/WebContent/doc/example-source" />
 		<mkdir dir="${output-dir}/WebContent/WEB-INF" />
 		<mkdir dir="${output-dir}/WebContent/WEB-INF/classes" />
-		<mkdir dir="${output-dir}/WebContent/doc" />
-		<mkdir dir="${output-dir}/WebContent/doc/demo-source" />
 
 		<!-- Construct classpath used by java and javadoc compilation -->
 		<path id="compile.classpath">
@@ -499,7 +499,7 @@
 		</copy>
 
 		<echo>Creating demo source html files</echo>
-		<java2html srcdir="${output-dir}/WebContent/WEB-INF/src/${toolkit-package}/demo" destdir="${output-dir}/WebContent/doc/demo-source/${toolkit-package}/demo" includes="**/*.java" style="eclipse" showLineNumbers="false" showFileName="true" showTableBorder="false" />
+		<java2html srcdir="${output-dir}/WebContent/WEB-INF/src/${toolkit-package}/demo" destdir="${output-dir}/WebContent/doc/example-source/${toolkit-package}/demo" includes="**/*.java" style="eclipse" showLineNumbers="false" showFileName="true" showTableBorder="false" />
 
 		<!-- Add WebContent -->
 		<echo>Adding WebContent files, excluding ITMILL/widgetsets and few internal development libraries.</echo>
@@ -658,7 +658,7 @@
 			</fileset>
 		</copy>
 
-		<echo>Adding (duplicating) javadocs for demo</echo>
+		<echo>Adding javadocs</echo>
 		<copy todir="${output-dir}/WebContent/doc">
 			<fileset dir="${output-dir}/doc">
 				<include name="api/**/*" />
@@ -688,13 +688,13 @@
   Documentation: Add documentation including style files
    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	<target name="package-docs">
-		<copy todir="${output-dir}/doc/manual/html-style">
+		<copy todir="${output-dir}/WebContent/doc/manual/html-style">
 			<fileset dir="doc/manual/html-style">
 				<exclude name="**/.svn" />
 				<exclude name="**/test.html" />
 			</fileset>
 		</copy>
-		<copy todir="${output-dir}/doc">
+		<copy todir="${output-dir}/WebContent/doc">
 			<fileset dir="doc">
 				<exclude name="**/.svn" />
 				<include name="dtd/**/*.dtd" />
@@ -707,7 +707,7 @@
   Documentation: Add Javadoc to doc
    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	<target name="javadoc" depends="preprocess-src">
-		<javadoc destdir="${output-dir}/doc/api" author="true" version="true" use="true" windowtitle="${product-name}" classpathref="compile.classpath">
+		<javadoc destdir="${output-dir}/WebContent/doc/api" author="true" version="true" use="true" windowtitle="${product-name}" classpathref="compile.classpath">
 			<packageset dir="${result-path}/src">
 				<include name="${toolkit-package}/**" />
 				<exclude name="${toolkit-package}/demo/**" />
@@ -782,7 +782,7 @@
 		</java>
 		<echo>PDF Manual: converting fo to pdf</echo>
 		<!-- Run XEP FO processor to convert FO to PDF -->
-		<java classname="com.renderx.xep.XSLDriver" error="${result-path}/xep-error.log" failonerror="yes" fork="yes" maxmemory="512m" input="${result-path}/book.fo" output="${output-dir}/doc/manual.pdf">
+		<java classname="com.renderx.xep.XSLDriver" error="${result-path}/xep-error.log" failonerror="yes" fork="yes" maxmemory="512m" input="${result-path}/book.fo" output="${output-dir}/WebContent/doc/manual.pdf">
 			<arg value="-Dcom.renderx.xep.CONFIG=build/lib/XEP/xep.xml" />
 			<classpath>
 				<pathelement location="build/lib/XEP/lib/tools.jar" />
@@ -816,14 +816,14 @@
 			<arg value="-xsl" />
 			<arg value="build/docbook/conf/temp.xsl" />
 			<arg value="-out" />
-			<arg value="${output-dir}/doc/manual/index.html" />
+			<arg value="${output-dir}/WebContent/doc/manual/index.html" />
 			<arg value="-param" />
 			<arg value="use.extensions" />
 			<arg value="1" />
 			<classpath refid="docbook-xsl.classpath" />
 		</java>
 		<delete file="build/docbook/conf/temp.xsl" />
-		<copy todir="${output-dir}/doc/manual/img">
+		<copy todir="${output-dir}/WebContent/doc/manual/img">
 			<fileset dir="doc/manual/img">
 				<exclude name="**/.svn" />
 			</fileset>
