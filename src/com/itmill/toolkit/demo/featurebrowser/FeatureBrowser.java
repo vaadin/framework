@@ -43,14 +43,8 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
 
     private HashMap components = new HashMap();
 
-    // category, name, desc, class, viewed
     private static final Object[][] demos = new Object[][] {
-    // START
-            // Intro
-            { "Intro", "About", "About this demo", Button.class, Boolean.FALSE },
-            // Windowing
-            { "Intro", "Windowing", "About windowing", WindowingExample.class,
-                    Boolean.FALSE },
+    // Category, Name, Desc, Class, Viewed
             // Basic: Labels
             { "Basic", "Labels", "Some variations of Labels", Button.class,
                     Boolean.FALSE },
@@ -86,6 +80,9 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
             { "Misc", "Embedding",
                     "You can embed resources - another site in this case",
                     EmbeddedBrowserExample.class, Boolean.FALSE },
+            // Windowing
+            { "Misc", "Windowing", "About windowing", WindowingExample.class,
+                    Boolean.FALSE },
     // END
     };
 
@@ -105,7 +102,7 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
         Object rootId = container.addItem();
         Item item = container.getItem(rootId);
         Property p = item.getItemProperty(PROPERTY_ID_NAME);
-        p.setValue("All");
+        p.setValue("All examples");
         for (int i = 0; i < demos.length; i++) {
             Object[] demo = demos[i];
             String section = (String) demo[0];
