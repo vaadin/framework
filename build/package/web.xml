@@ -12,6 +12,15 @@
   </description>
   
   <servlet>
+    <servlet-name>FeatureBrowser</servlet-name>
+    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+    <init-param>
+      <param-name>application</param-name>
+      <param-value>com.itmill.toolkit.demo.featurebrowser.FeatureBrowser</param-value>
+    </init-param>
+  </servlet>
+  
+  <servlet>
     <servlet-name>WindowedDemos</servlet-name>
     <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
     <init-param>
@@ -227,6 +236,11 @@
       <param-value>com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet</param-value>
     </init-param>
   </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>FeatureBrowser</servlet-name>
+    <url-pattern>/FeatureBrowser/*</url-pattern>
+  </servlet-mapping>
   
     <servlet-mapping>
     <servlet-name>BrowserDemo</servlet-name>
