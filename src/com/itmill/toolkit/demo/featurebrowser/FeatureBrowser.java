@@ -9,8 +9,10 @@ import com.itmill.toolkit.data.util.HierarchicalContainer;
 import com.itmill.toolkit.data.util.IndexedContainer;
 import com.itmill.toolkit.terminal.ExternalResource;
 import com.itmill.toolkit.terminal.Sizeable;
+import com.itmill.toolkit.terminal.ThemeResource;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.Component;
+import com.itmill.toolkit.ui.Embedded;
 import com.itmill.toolkit.ui.ExpandLayout;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.Layout;
@@ -47,49 +49,46 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
     // Category, Name, Desc, Class, Viewed
             // Getting started: Labels
             { "Getting started", "Labels", "Some variations of Labels",
-                    LabelsExample.class, Boolean.FALSE },
+                    LabelsExample.class },
             // Getting started: Buttons
             { "Getting started", "Buttons and links",
-                    "Some variations of Buttons and Links", Button.class,
-                    Boolean.FALSE },
+                    "Some variations of Buttons and Links", Button.class },
             // Getting started: Fields
             { "Getting started", "User input",
-                    "TextFields, DateFields, and such", Button.class,
-                    Boolean.FALSE },
+                    "TextFields, DateFields, and such", Button.class },
             //
             { "Getting started", "RichText", "Rich text editing",
-                    RichTextExample.class, Boolean.FALSE },
+                    RichTextExample.class },
             // Getting started: Selects
             { "Getting started", "Choices, choices",
-                    "Some variations of simple selects", Button.class,
-                    Boolean.FALSE },
+                    "Some variations of simple selects", Button.class },
             // Wrangling data: ComboBox
             { "Wrangling data", "ComboBox", "ComboBox - the swiss army select",
-                    ComboBoxExample.class, Boolean.FALSE },
+                    ComboBoxExample.class },
             // Wrangling data: Table
             { "Wrangling data", "Table",
-                    "A dynamic Table with bells and whistles", Button.class,
-                    Boolean.FALSE },
+                    "A dynamic Table with bells and whistles", Button.class },
             // Wrangling data: Tree
             { "Wrangling data", "Tree", "Some variations of Buttons and Links",
-                    TreeExample.class, Boolean.FALSE },
+                    TreeExample.class },
             // Misc: Notifications
             { "Misc", "Notifications", "Notifications can improve usability",
-                    NotificationExample.class, Boolean.FALSE },
+                    NotificationExample.class },
             // Misc: Caching
             { "Misc", "Client caching", "A simple demo of client-side caching",
-                    ClientCachingExample.class, Boolean.FALSE },
+                    ClientCachingExample.class },
             // Misc: Embedded
             { "Misc", "Embedding",
                     "You can embed resources - another site in this case",
-                    EmbeddedBrowserExample.class, Boolean.FALSE },
+                    EmbeddedBrowserExample.class },
             // Windowing
-            { "Misc", "Windowing", "About windowing", WindowingExample.class,
-                    Boolean.FALSE },
+            { "Misc", "Windowing", "About windowing", WindowingExample.class },
     // END
     };
 
     public void init() {
+        // Need to set a theme for ThemeResources to work
+        setTheme("example");
 
         // Create new window for the application and give the window a visible.
         Window main = new Window("IT Mill Toolkit 5");
@@ -223,8 +222,8 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
                 }));
 
         exp.addComponent(wbLayout);
-        exp.setComponentAlignment(wbLayout, exp.ALIGNMENT_RIGHT,
-                exp.ALIGNMENT_TOP);
+        exp.setComponentAlignment(wbLayout, ExpandLayout.ALIGNMENT_RIGHT,
+                ExpandLayout.ALIGNMENT_TOP);
 
         ts = new TabSheet();
         ts.setSizeFull();
@@ -236,8 +235,8 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
 
         Label status = new Label("Copyright IT Mill 2007");
         exp.addComponent(status);
-        exp.setComponentAlignment(status, exp.ALIGNMENT_RIGHT,
-                exp.ALIGNMENT_VERTICAL_CENTER);
+        exp.setComponentAlignment(status, ExpandLayout.ALIGNMENT_RIGHT,
+                ExpandLayout.ALIGNMENT_VERTICAL_CENTER);
 
         // select initial section ("All")
         tree.setValue(rootId);
@@ -253,10 +252,6 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
         prop.setValue(data[p++]);
         prop = item.getItemProperty(PROPERTY_ID_CLASS);
         prop.setValue(data[p++]);
-        prop = item.getItemProperty(PROPERTY_ID_VIEWED);
-        Button b = new Button("", false);
-        b.setEnabled(false);
-        prop.setValue(b);
     }
 
     private HierarchicalContainer createContainer() {
@@ -265,8 +260,7 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
         c.addContainerProperty(PROPERTY_ID_NAME, String.class, "");
         c.addContainerProperty(PROPERTY_ID_DESC, String.class, "");
         c.addContainerProperty(PROPERTY_ID_CLASS, Class.class, null);
-        c.addContainerProperty(PROPERTY_ID_VIEWED, Button.class, new Button("",
-                false));
+        c.addContainerProperty(PROPERTY_ID_VIEWED, Embedded.class, null);
         return c;
     }
 
@@ -317,10 +311,10 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
                     ts.addTab(component, caption, null);
                 }
                 // update "viewed" state
-                Button b = (Button) item.getItemProperty(PROPERTY_ID_VIEWED)
-                        .getValue();
-                if (b != null) {
-                    b.setValue(Boolean.TRUE);
+                Property p = item.getItemProperty(PROPERTY_ID_VIEWED);
+                if (p.getValue() == null) {
+                    p.setValue(new Embedded("", new ThemeResource(
+                            "icons/ok.png")));
                 }
                 table.requestRepaint();
             }
