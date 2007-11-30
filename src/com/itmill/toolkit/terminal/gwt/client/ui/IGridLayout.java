@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.CaptionWrapper;
@@ -57,6 +58,11 @@ public class IGridLayout extends FlexTable implements Paintable, Container {
                         } else {
                             w = 1;
                         }
+                        // TODO do real alignments
+                        (getRowFormatter()).setVerticalAlign(row,
+                                HasVerticalAlignment.ALIGN_TOP);
+
+                        // set col span
                         ((FlexCellFormatter) getCellFormatter()).setColSpan(
                                 row, column, w);
 
