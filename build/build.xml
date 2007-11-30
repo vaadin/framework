@@ -672,7 +672,7 @@
 		-->
 		
 		<echo>Building WAR</echo>
-		<war warfile="${output-dir}/lib/${product-file}.war" webxml="build/package/web.xml">
+		<war warfile="${output-dir}/lib/${product-file}.war" webxml="build/package/WebContent/WEB-INF/web.xml">
 			<fileset dir="${output-dir}/WebContent">
 				<exclude name="WEB-INF/web.xml" />
 				<include name="**/*" />
