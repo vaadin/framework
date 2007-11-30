@@ -247,204 +247,201 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 
         try {
 
-            // Is this a download request from application
-            DownloadStream download = null;
-
             // The rest of the process is synchronized with the application
             // in order to guarantee that no parallel variable handling is
             // made
             synchronized (application) {
 
-                // Change all variables based on request parameters
-                handleVariables(request, application);
-
-                // If this is not a download request
-                if (download == null) {
-
-                    // Finds the window within the application
-                    Window window = null;
-                    if (application.isRunning()) {
-                        window = getApplicationWindow(request, application);
-                    }
-
-                    // Removes application if it has stopped
-                    if (!application.isRunning()) {
-                        endApplication(request, response, application);
-                        return;
-                    }
-
+                // Finds the window within the application
+                Window window = null;
+                if (application.isRunning()) {
+                    window = getApplicationWindow(request, application);
                     // Returns if no window found
                     if (window == null) {
                         return;
                     }
+                } else {
+                    return;
+                }
 
-                    // Sets the response type
-                    response.setContentType("application/json; charset=UTF-8");
-                    // some dirt to prevent cross site scripting
-                    outWriter.print(")/*{");
-
-                    outWriter.print("\"changes\":[");
-
-                    paintTarget = new JsonPaintTarget(this, outWriter,
-                            !repaintAll);
-
-                    // Paints components
-                    Set paintables;
-                    if (repaintAll) {
-                        paintables = new LinkedHashSet();
-                        paintables.add(window);
-
-                        // Reset sent locales
-                        locales = null;
-                        requireLocale(application.getLocale().toString());
-
-                    } else {
-                        paintables = getDirtyComponents(window);
-                    }
-                    if (paintables != null) {
-
-                        // Creates "working copy" of the current state.
-                        List currentPaintables = new ArrayList(paintables);
-
-                        // Sorts the Paintable list so that parents
-                        // are always painted before children
-                        Collections.sort(currentPaintables, new Comparator() {
-                            public int compare(Object o1, Object o2) {
-                                Component c1 = (Component) o1;
-                                Component c2 = (Component) o2;
-                                if (isChildOf(c1, c2)) {
-                                    return -1;
-                                }
-                                if (isChildOf(c2, c1)) {
-                                    return 1;
-                                }
-                                return 0;
-                            }
-                        });
-
-                        for (Iterator i = currentPaintables.iterator(); i
-                                .hasNext();) {
-                            Paintable p = (Paintable) i.next();
-
-                            // TODO CLEAN
-                            if (p instanceof Window) {
-                                Window w = (Window) p;
-                                if (w.getTerminal() == null) {
-                                    w.setTerminal(application.getMainWindow()
-                                            .getTerminal());
-                                }
-                            }
-                            /*
-                             * This does not seem to happen in tk5, but remember
-                             * this case: else if (p instanceof Component) { if
-                             * (((Component) p).getParent() == null ||
-                             * ((Component) p).getApplication() == null) { //
-                             * Component requested repaint, but is no // longer
-                             * attached: skip paintablePainted(p); continue; } }
-                             */
-
-                            // TODO we may still get changes that have been
-                            // rendered already (changes with only cached flag)
-                            paintTarget.startTag("change");
-                            paintTarget.addAttribute("format", "uidl");
-                            String pid = getPaintableId(p);
-                            paintTarget.addAttribute("pid", pid);
-
-                            // Track paints to identify empty paints
-                            paintTarget.setTrackPaints(true);
-                            p.paint(paintTarget);
-
-                            // If no paints add attribute empty
-                            if (paintTarget.getNumberOfPaints() <= 0) {
-                                paintTarget.addAttribute("visible", false);
-                            }
-                            paintTarget.endTag("change");
-                            paintablePainted(p);
+                // If repaint is requested, clean all ids in this root window
+                if (repaintAll) {
+                    for (Iterator it = idPaintableMap.keySet().iterator(); it
+                            .hasNext();) {
+                        Component c = (Component) idPaintableMap.get(it.next());
+                        if (isChildOf(window, c)) {
+                            it.remove();
+                            paintableIdMap.remove(c);
                         }
                     }
+                }
 
-                    paintTarget.close();
-                    outWriter.print("]"); // close changes
+                // Change all variables based on request parameters
+                handleVariables(request, application);
 
-                    outWriter.print(", \"meta\" : {");
-                    boolean metaOpen = false;
+                // Removes application if it has stopped during variable changes
+                if (!application.isRunning()) {
+                    endApplication(request, response, application);
+                    return;
+                }
 
-                    // add meta instruction for client to set focus if it is set
-                    Paintable f = (Paintable) application.consumeFocus();
-                    if (f != null) {
-                        if (metaOpen) {
-                            outWriter.write(",");
+                // Sets the response type
+                response.setContentType("application/json; charset=UTF-8");
+                // some dirt to prevent cross site scripting
+                outWriter.print(")/*{");
+
+                outWriter.print("\"changes\":[");
+
+                paintTarget = new JsonPaintTarget(this, outWriter, !repaintAll);
+
+                // Paints components
+                Set paintables;
+                if (repaintAll) {
+                    paintables = new LinkedHashSet();
+                    paintables.add(window);
+
+                    // Reset sent locales
+                    locales = null;
+                    requireLocale(application.getLocale().toString());
+
+                } else {
+                    paintables = getDirtyComponents(window);
+                }
+                if (paintables != null) {
+
+                    // Creates "working copy" of the current state.
+                    List currentPaintables = new ArrayList(paintables);
+
+                    // Sorts the Paintable list so that parents
+                    // are always painted before children
+                    Collections.sort(currentPaintables, new Comparator() {
+                        public int compare(Object o1, Object o2) {
+                            Component c1 = (Component) o1;
+                            Component c2 = (Component) o2;
+                            if (isChildOf(c1, c2)) {
+                                return -1;
+                            }
+                            if (isChildOf(c2, c1)) {
+                                return 1;
+                            }
+                            return 0;
                         }
-                        outWriter.write("\"focus\":\"" + getPaintableId(f)
+                    });
+
+                    for (Iterator i = currentPaintables.iterator(); i.hasNext();) {
+                        Paintable p = (Paintable) i.next();
+
+                        // TODO CLEAN
+                        if (p instanceof Window) {
+                            Window w = (Window) p;
+                            if (w.getTerminal() == null) {
+                                w.setTerminal(application.getMainWindow()
+                                        .getTerminal());
+                            }
+                        }
+                        /*
+                         * This does not seem to happen in tk5, but remember
+                         * this case: else if (p instanceof Component) { if
+                         * (((Component) p).getParent() == null || ((Component)
+                         * p).getApplication() == null) { // Component requested
+                         * repaint, but is no // longer attached: skip
+                         * paintablePainted(p); continue; } }
+                         */
+
+                        // TODO we may still get changes that have been
+                        // rendered already (changes with only cached flag)
+                        paintTarget.startTag("change");
+                        paintTarget.addAttribute("format", "uidl");
+                        String pid = getPaintableId(p);
+                        paintTarget.addAttribute("pid", pid);
+
+                        // Track paints to identify empty paints
+                        paintTarget.setTrackPaints(true);
+                        p.paint(paintTarget);
+
+                        // If no paints add attribute empty
+                        if (paintTarget.getNumberOfPaints() <= 0) {
+                            paintTarget.addAttribute("visible", false);
+                        }
+                        paintTarget.endTag("change");
+                        paintablePainted(p);
+                    }
+                }
+
+                paintTarget.close();
+                outWriter.print("]"); // close changes
+
+                outWriter.print(", \"meta\" : {");
+                boolean metaOpen = false;
+
+                // add meta instruction for client to set focus if it is set
+                Paintable f = (Paintable) application.consumeFocus();
+                if (f != null) {
+                    if (metaOpen) {
+                        outWriter.write(",");
+                    }
+                    outWriter.write("\"focus\":\"" + getPaintableId(f) + "\"");
+                }
+
+                outWriter.print("}, \"resources\" : {");
+
+                // Precache custom layouts
+                String themeName = window.getTheme();
+                if (request.getParameter("theme") != null) {
+                    themeName = request.getParameter("theme");
+                }
+                if (themeName == null) {
+                    themeName = "default";
+                }
+
+                // TODO We should only precache the layouts that are not
+                // cached already
+                int resourceIndex = 0;
+                for (Iterator i = paintTarget.getPreCachedResources()
+                        .iterator(); i.hasNext();) {
+                    String resource = (String) i.next();
+                    InputStream is = null;
+                    try {
+                        is = applicationServlet
+                                .getServletContext()
+                                .getResourceAsStream(
+                                        "/"
+                                                + ApplicationServlet.THEME_DIRECTORY_PATH
+                                                + themeName + "/" + resource);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    if (is != null) {
+
+                        outWriter.print((resourceIndex++ > 0 ? ", " : "")
+                                + "\"" + resource + "\" : ");
+                        StringBuffer layout = new StringBuffer();
+
+                        try {
+                            InputStreamReader r = new InputStreamReader(is);
+                            char[] buffer = new char[20000];
+                            int charsRead = 0;
+                            while ((charsRead = r.read(buffer)) > 0) {
+                                layout.append(buffer, 0, charsRead);
+                            }
+                            r.close();
+                        } catch (java.io.IOException e) {
+                            System.err.println("Resource transfer failed:  "
+                                    + request.getRequestURI() + ". ("
+                                    + e.getMessage() + ")");
+                        }
+                        outWriter.print("\""
+                                + JsonPaintTarget.escapeJSON(layout.toString())
                                 + "\"");
                     }
-
-                    outWriter.print("}, \"resources\" : {");
-
-                    // Precache custom layouts
-                    String themeName = window.getTheme();
-                    if (request.getParameter("theme") != null) {
-                        themeName = request.getParameter("theme");
-                    }
-                    if (themeName == null) {
-                        themeName = "default";
-                    }
-
-                    // TODO We should only precache the layouts that are not
-                    // cached already
-                    int resourceIndex = 0;
-                    for (Iterator i = paintTarget.getPreCachedResources()
-                            .iterator(); i.hasNext();) {
-                        String resource = (String) i.next();
-                        InputStream is = null;
-                        try {
-                            is = applicationServlet
-                                    .getServletContext()
-                                    .getResourceAsStream(
-                                            "/"
-                                                    + ApplicationServlet.THEME_DIRECTORY_PATH
-                                                    + themeName + "/"
-                                                    + resource);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        if (is != null) {
-
-                            outWriter.print((resourceIndex++ > 0 ? ", " : "")
-                                    + "\"" + resource + "\" : ");
-                            StringBuffer layout = new StringBuffer();
-
-                            try {
-                                InputStreamReader r = new InputStreamReader(is);
-                                char[] buffer = new char[20000];
-                                int charsRead = 0;
-                                while ((charsRead = r.read(buffer)) > 0) {
-                                    layout.append(buffer, 0, charsRead);
-                                }
-                                r.close();
-                            } catch (java.io.IOException e) {
-                                System.err
-                                        .println("Resource transfer failed:  "
-                                                + request.getRequestURI()
-                                                + ". (" + e.getMessage() + ")");
-                            }
-                            outWriter.print("\""
-                                    + JsonPaintTarget.escapeJSON(layout
-                                            .toString()) + "\"");
-                        }
-                    }
-                    outWriter.print("}");
-
-                    printLocaleDeclarations(outWriter);
-
-                    outWriter.flush();
-                    outWriter.close();
-                    out.flush();
-                } else {
-
-                    // For download request, transfer the downloaded data
-                    handleDownload(download, request, response);
                 }
+                outWriter.print("}");
+
+                printLocaleDeclarations(outWriter);
+
+                outWriter.flush();
+                outWriter.close();
+                out.flush();
             }
 
             out.flush();
