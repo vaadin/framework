@@ -35,7 +35,11 @@ public class IGridLayout extends FlexTable implements Paintable, Container {
         }
         int row = 0, column = 0;
 
-        ArrayList detachdedPaintables = new ArrayList();
+        ArrayList oldWidgetWrappers = new ArrayList();
+        for (Iterator iterator = iterator(); iterator.hasNext();) {
+            oldWidgetWrappers.add(iterator.next());
+        }
+        clear();
 
         for (Iterator i = uidl.getChildIterator(); i.hasNext();) {
             UIDL r = (UIDL) i.next();
@@ -44,6 +48,8 @@ public class IGridLayout extends FlexTable implements Paintable, Container {
                 for (Iterator j = r.getChildIterator(); j.hasNext();) {
                     UIDL c = (UIDL) j.next();
                     if ("gc".equals(c.getTag())) {
+                        prepareCell(row, column);
+
                         // Set cell width
                         int w;
                         if (c.hasAttribute("w")) {
@@ -67,25 +73,19 @@ public class IGridLayout extends FlexTable implements Paintable, Container {
                         UIDL u = c.getChildUIDL(0);
                         if (u != null) {
                             Widget child = client.getWidget(u);
-                            prepareCell(row, column);
-                            Widget oldChild = getWidget(row, column);
-                            if (oldChild instanceof CaptionWrapper) {
-                                CaptionWrapper new_name = (CaptionWrapper) oldChild;
-                                oldChild = (Widget) new_name.getPaintable();
+                            CaptionWrapper wr;
+                            if (widgetToCaptionWrapper.containsKey(child)) {
+                                wr = (CaptionWrapper) widgetToCaptionWrapper
+                                        .get(child);
+                                oldWidgetWrappers.remove(wr);
+                            } else {
+                                wr = new CaptionWrapper((Paintable) child,
+                                        client);
+                                widgetToCaptionWrapper.put(child, wr);
                             }
-                            if (child != oldChild) {
-                                if (oldChild != null) {
-                                    detachdedPaintables.add(oldChild);
-                                    CaptionWrapper cw = (CaptionWrapper) widgetToCaptionWrapper
-                                            .get(oldChild);
-                                    cw.removeFromParent();
-                                    widgetToCaptionWrapper.remove(oldChild);
-                                }
-                                CaptionWrapper wrapper = new CaptionWrapper(
-                                        (Paintable) child, client);
-                                setWidget(row, column, wrapper);
-                                widgetToCaptionWrapper.put(child, wrapper);
-                            }
+
+                            setWidget(row, column, wr);
+
                             if (!u.getBooleanAttribute("cached")) {
                                 ((Paintable) child).updateFromUIDL(u, client);
                             }
@@ -97,13 +97,11 @@ public class IGridLayout extends FlexTable implements Paintable, Container {
             }
         }
 
-        // for loop detached widgets and unregister them unless they are
-        // attached (case of widget which is moved to another cell)
-        for (Iterator it = detachdedPaintables.iterator(); it.hasNext();) {
-            Widget w = (Widget) it.next();
-            if (!w.isAttached()) {
-                client.unregisterPaintable((Paintable) w);
-            }
+        // loop oldWidgetWrappers that where not re-attached and unregister them
+        for (Iterator it = oldWidgetWrappers.iterator(); it.hasNext();) {
+            CaptionWrapper w = (CaptionWrapper) it.next();
+            client.unregisterPaintable(w.getPaintable());
+            widgetToCaptionWrapper.remove(w.getPaintable());
         }
     }
 
