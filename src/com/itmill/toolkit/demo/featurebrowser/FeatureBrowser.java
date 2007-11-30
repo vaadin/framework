@@ -45,30 +45,33 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
 
     private static final Object[][] demos = new Object[][] {
     // Category, Name, Desc, Class, Viewed
-            // Basic: Labels
-            { "Basic", "Labels", "Some variations of Labels", Button.class,
-                    Boolean.FALSE },
-            // Basic: Buttons
-            { "Basic", "Buttons and links",
+            // Getting started: Labels
+            { "Getting started", "Labels", "Some variations of Labels",
+                    LabelsExample.class, Boolean.FALSE },
+            // Getting started: Buttons
+            { "Getting started", "Buttons and links",
                     "Some variations of Buttons and Links", Button.class,
                     Boolean.FALSE },
-            // Basic: Fields
-            { "Basic", "User input", "TextFields, DateFields, and such",
-                    Button.class, Boolean.FALSE },
-            //
-            { "Basic", "RichText", "Rich text editing", RichTextExample.class,
+            // Getting started: Fields
+            { "Getting started", "User input",
+                    "TextFields, DateFields, and such", Button.class,
                     Boolean.FALSE },
-            // Basic: Selects
-            { "Basic", "Choices, choices", "Some variations of simple selects",
-                    Button.class, Boolean.FALSE },
-            // Organizing: ComboBox
-            { "Organizing", "ComboBox", "ComboBox - the swiss army select",
+            //
+            { "Getting started", "RichText", "Rich text editing",
+                    RichTextExample.class, Boolean.FALSE },
+            // Getting started: Selects
+            { "Getting started", "Choices, choices",
+                    "Some variations of simple selects", Button.class,
+                    Boolean.FALSE },
+            // Wrangling data: ComboBox
+            { "Wrangling data", "ComboBox", "ComboBox - the swiss army select",
                     ComboBoxExample.class, Boolean.FALSE },
-            // Organizing: Table
-            { "Organizing", "Table", "A dynamic Table with bells and whistles",
-                    Button.class, Boolean.FALSE },
-            // Organizing: Tree
-            { "Organizing", "Tree", "Some variations of Buttons and Links",
+            // Wrangling data: Table
+            { "Wrangling data", "Table",
+                    "A dynamic Table with bells and whistles", Button.class,
+                    Boolean.FALSE },
+            // Wrangling data: Tree
+            { "Wrangling data", "Tree", "Some variations of Buttons and Links",
                     TreeExample.class, Boolean.FALSE },
             // Misc: Notifications
             { "Misc", "Notifications", "Notifications can improve usability",
