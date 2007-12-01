@@ -72,7 +72,7 @@
 			<mapper type="glob" from="*.html" to="*.jsp" />
 		</move>
 		<!-- make a zip file -->
-		<zip destfile="build/result/www.itmill.com//manual.zip" basedir="build/result/www.itmill.com/manual" />
+		<zip destfile="build/result/www.itmill.com//itmill-toolkit-5-manual.zip" basedir="build/result/www.itmill.com/manual" />
 	</target>
 
 	<!-- Clean results - - - - - - - - - - - - - - - - - - - - - - - - - -->
