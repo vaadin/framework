@@ -102,7 +102,7 @@ See configure target to adjust this buildfile.
 			<arg value="com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet" />
 			<classpath>
 				<path refid="compile.classpath"/>
-				<pathelement location="lib/demo/reservr/googlemaps_gwt.jar" />
+				<pathelement location="WebContent/demo/lib/reservr/googlemaps_gwt.jar" />
 			</classpath>
 		</java>
 	</target>

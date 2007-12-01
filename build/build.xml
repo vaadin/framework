@@ -60,11 +60,16 @@
 			<arg line="${output-dir}" />
 			<arg line="${result-path}/eclipse-test" />
 		</exec>
+		<!--
 		<exec executable="ln" failonerror="false">
 			<arg line="-s" />
 			<arg line="${gwt-dir}/${package-platform}" />
 			<arg line="${output-dir}/gwt" />
 		</exec>
+		-->
+		<!--
+		<antcall target="create-mac-diskimage" inheritAll="true" inheritRefs="true" />
+		-->
 	</target>
 
 	<!-- Clean results - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -107,8 +112,6 @@
 		<property name="lib-gwt-dev" value="gwt-dev-${platform}.jar" />
 
 		<echo>We are on ${platform} platform, using ${gwt-dir}/${platform}/${lib-gwt-dev}.</echo>
-
-
 
 		<!-- Destination files -->
 		<property name="lib-jar-name" value="${product-file}-${version}.jar" />
@@ -202,7 +205,7 @@
 			</tarfileset>
 		</tar>
 		<!-- TODO: remove me: DISABLE for speed -->
-		<antcall target="create-mac-diskimage" inheritAll="true" inheritRefs="true" />
+		<!-- <antcall target="create-mac-diskimage" inheritAll="true" inheritRefs="true" /> -->
 	</target>
 
 	<target name="internal-package-mac_leopard">
@@ -224,7 +227,7 @@
 			</tarfileset>
 		</tar>
 		<!-- TODO: remove me: DISABLE for speed -->
-		<antcall target="create-mac-diskimage" inheritAll="true" inheritRefs="true" />
+		<!-- <antcall target="create-mac-diskimage" inheritAll="true" inheritRefs="true" /> -->
 	</target>
 
 	<target name="create-mac-diskimage">
@@ -272,7 +275,7 @@
 					<arg line='${mount.dir}' />
 				</exec>
 				<!-- set executable bit -->
-				<chmod file="${mount.dir}/start-demo.sh" perm="ugo+x" />
+				<chmod file="${mount.dir}/start.sh" perm="ugo+x" />
 				<!-- close image -->
 				<exec executable="hdiutil" failonerror="true">
 					<arg line='detach ${mount.dir}/' />
@@ -297,13 +300,13 @@
 		<echo>Adding platform specific files for ${package-platform}</echo>
 		<delete includeemptydirs="true" defaultexcludes="false">
 			<fileset dir="${output-dir}">
-				<include name="start-demo.*" />
-				<include name=".project" />
-				<include name=".classpath" />
+				<include name=".*" />
 				<include name="*.launch" />
+				<include name="*.txt" />
 				<include name="build-widgetsets.xml" />
 			</fileset>
 		</delete>
+		<copy file="build/package/${package-platform}-readme.txt" tofile="${output-dir}/readme.txt" />
 		<copy todir="${output-dir}">
 			<filterchain>
 				<expandproperties />
@@ -350,7 +353,7 @@
 			<then>
 				<copy todir="${output-dir}">
 					<fileset dir="build/package">
-						<include name="start-demo.bat" />
+						<include name="start.bat" />
 					</fileset>
 				</copy>
 			</then>
@@ -360,10 +363,10 @@
 			<then>
 				<copy todir="${output-dir}">
 					<fileset dir="build/package">
-						<include name="start-demo.sh" />
+						<include name="start.sh" />
 					</fileset>
 				</copy>
-				<chmod file="${output-dir}/start-demo.sh" perm="ugo+x" />
+				<chmod file="${output-dir}/start.sh" perm="ugo+x" />
 			</then>
 		</if>
 		<if>
@@ -371,13 +374,29 @@
 			<then>
 				<copy todir="${output-dir}">
 					<fileset dir="build/package">
-						<include name="Start IT Mill Toolkit.app/**/*" />
-						<include name="start-demo.sh" />
-						<include name=".VolumeIcon.icns" />
-						<!-- TODO: <include name=".DS_Store" /> -->
+						<include name="start.sh" />
 					</fileset>
 				</copy>
-				<chmod file="${output-dir}/start-demo.sh" perm="ugo+x" />
+				<!-- must be done in native way, otherwise fails -->
+				<!-- but again, ant just fails with any * or other special characters -->
+				<!--
+				<exec executable="cp" failonerror="true">
+					<arg line="-r" />
+					<arg line="build/package/Start*.app" />
+					<arg line="${output-dir}" />
+				</exec>
+				<exec executable="cp" failonerror="true">
+					<arg line="build/package/Icon*" />
+					<arg line="${output-dir}" />
+				</exec>
+				<exec executable="cp" failonerror="true">
+					<arg line="build/package/mac-DS_Store" />
+					<arg line="${output-dir}/.DS_Store" />
+				</exec>
+				-->
+				<!-- <copy file="build/package/mac-DS_Store" tofile="${output-dir}/.DS_Store" /> -->
+				<copy file="build/package/mac-VolumeIcon.icns" tofile="${output-dir}/.VolumeIcon.icns" />
+				<chmod file="${output-dir}/start.sh" perm="ugo+x" />
 			</then>
 		</if>
 	</target>
@@ -493,6 +512,14 @@
 				<exclude name="WEB-INF/lib/commons-fileupload-custom.jar" />
 				<exclude name="ITMILL/themes/test*/**" />
 				<exclude name="WEB-INF/classes/**" />
+			</fileset>
+		</copy>
+
+		<!-- Add package specific WebContent files from build/package/WebContent -->
+		<copy todir="${output-dir}/WebContent">
+			<fileset dir="build/package/WebContent">
+				<exclude name="**/.*" />
+				<include name="**/*" />
 			</fileset>
 		</copy>
 
@@ -614,19 +641,9 @@
 			</fileset>
 		</copy>
 
-		<!--
-		<echo>Adding javadocs</echo>
-		<copy todir="${output-dir}/WebContent/doc">
-			<fileset dir="${output-dir}/doc">
-				<include name="api/**/*" />
-			</fileset>
-		</copy>
-		-->
-		
 		<echo>Building WAR</echo>
-		<war warfile="${output-dir}/WebContent/demo/${product-file}.war" webxml="build/package/WebContent/WEB-INF/web.xml">
+		<war warfile="${output-dir}/WebContent/demo/${product-file}.war">
 			<fileset dir="${output-dir}/WebContent">
-				<exclude name="WEB-INF/web.xml" />
 				<include name="**/*" />
 			</fileset>
 			<lib dir="${output-dir}/WebContent/WEB-INF/lib">
@@ -797,6 +814,5 @@
 
 	<!-- java2html converter -->
 	<taskdef name="java2html" classname="de.java2html.anttasks.Java2HtmlTask" classpath="build/lib/java2html.jar" />
-
 
 </project>
