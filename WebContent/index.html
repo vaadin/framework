@@ -36,7 +36,14 @@
 					
 					// Hide panel initially
 					packageContent.style.display = "none";
+					package.style.cssFloat = "right";
+					package.style.styleFloat = "right";
+					package.style.clear = "right";
+					package.style.marginTop = "-105px";
+					package.style.marginRight = "1px";
+					package.style.display = "inline";
 					additionalDemosContent.style.display = "none";
+					additionalDemos._smallHeight = additionalDemos.offsetHeight;
 					
 					// Enable additional demos panel hiding/showing
 					var toggle = additionalDemos.getElementsByTagName("h3")[0];
@@ -59,7 +66,17 @@
 					demoArea.onmouseout = this.blurDemos;
 					
 					
-					// TODO implement feedback popup
+					// feedback popup
+					var fb = document.getElementById("feedback").getElementsByTagName("textarea")[0];
+					fb._originalValue = fb.value;
+					fb.style.height = "14px";
+					fb.className = "blur";
+					fb.onfocus = function() {
+						fb.className = "";
+						fb.style.height = "50px";
+						if(fb.value == fb._originalValue)
+							fb.value = "";
+					}
 				},
 				
 				togglePanel : function(which) {
@@ -72,13 +89,10 @@
 					}
 					// Dirty fix to reposition package-content panel
 					if(which == additionalDemosContent) {
-						var current = package.style.marginTop ? parseInt(package.style.marginTop) : -105;
 						if(which._open) {
-							if(!which._height)
-								which._height = additionalDemos.offsetHeight - package.offsetHeight;
-							package.style.marginTop = (current + which._height) + "px";
+							package.style.marginTop = "8px";
 						} else {
-							package.style.marginTop = (current - which._height) + "px";
+							package.style.marginTop = "-105px";
 						}
 					}
 				},
@@ -239,6 +253,18 @@
 			
 				<div class="bottom"></div>
 			</div> <!-- /package-contents -->
+			
+			<div id="feedback" class="panel">
+				<div class="top"></div>
+					<h4>Instant Feedback</h4>
+					<form action="http://www.itmill.com/formmail.app" enctype="multipart/form-data" method="post">
+					<input name="SuccessUrl"type="hidden" value="http://www.itmill.com/developers/feedback_ok.htm">
+					Send a quick message to Toolkit R&D team:<br />
+					<textarea name="feedback" cols="38" rows="3" multiline="true">Comments, suggestions, bug reports - anything.</textarea><br />
+					<input type="submit" value="Send" />
+					</form>
+				<div class="bottom"></div>
+			</div>
 			
 			<div class="clearer"></div>
 		</div> <!-- /content-->
