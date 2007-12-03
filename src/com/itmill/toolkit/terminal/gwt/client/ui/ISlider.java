@@ -97,8 +97,8 @@ public class ISlider extends Widget implements Paintable,
         this.client = client;
         id = uidl.getId();
 
-        // Ensure correct implementation (handle own caption)
-        if (client.updateComponent(this, uidl, false)) {
+        // Ensure correct implementation
+        if (client.updateComponent(this, uidl, true)) {
             return;
         }
 
