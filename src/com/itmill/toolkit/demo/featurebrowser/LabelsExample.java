@@ -39,10 +39,11 @@ public class LabelsExample extends CustomComponent {
         p.addComponent(l);
         g.addComponent(p);
         // plain w/ caption
-        p = new Panel("Plain w/ caption");
+        p = new Panel("Plain w/ caption + tooltip");
         p.setStyleName(Panel.STYLE_LIGHT);
         l = new Label("A plain label with caption.");
         l.setCaption("Label caption");
+        l.setDescription("This is a description (tooltip) for the label.");
         p.addComponent(l);
         g.addComponent(p);
         // plain w/ xhtml

@@ -52,7 +52,7 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
                     LabelsExample.class },
             // Getting started: Buttons
             { "Getting started", "Buttons and links",
-                    "Some variations of Buttons and Links", Button.class },
+                    "Some variations of Buttons and Links", ButtonExample.class },
             // Getting started: Fields
             { "Getting started", "User input",
                     "TextFields, DateFields, and such", Button.class },
