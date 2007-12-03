@@ -61,7 +61,7 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
                     RichTextExample.class },
             // Getting started: Selects
             { "Getting started", "Choices, choices",
-                    "Some variations of simple selects", Button.class },
+                    "Some variations of simple selects", SelectExample.class },
             // Wrangling data: ComboBox
             { "Wrangling data", "ComboBox", "ComboBox - the swiss army select",
                     ComboBoxExample.class },
