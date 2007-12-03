@@ -60,11 +60,10 @@ public class ILink extends HTML implements Paintable, ClickListener {
         enabled = uidl.hasAttribute("disabled") ? false : true;
         readonly = uidl.hasAttribute("readonly") ? true : false;
 
-        if (uidl.hasAttribute("target")) {
-            target = uidl.getStringAttribute(target);
+        if (uidl.hasAttribute("name")) {
+            target = uidl.getStringAttribute("name");
         }
         if (uidl.hasAttribute("src")) {
-            // TODO theme source
             src = client.translateToolkitUri(uidl.getStringAttribute("src"));
         }
 
@@ -123,7 +122,7 @@ public class ILink extends HTML implements Paintable, ClickListener {
     public void onClick(Widget sender) {
         if (enabled && !readonly) {
             if (target == null) {
-                target = "_blank";
+                target = "_self";
             }
             String features;
             switch (borderStyle) {
@@ -134,24 +133,23 @@ public class ILink extends HTML implements Paintable, ClickListener {
                 features = "menubar=yes,location=no,status=no";
                 break;
             default:
-                features = "menubar=yes,location=yes,scrollbars=yes,status=yes";
+                features = "";
                 break;
             }
-            if (width > 0 || height > 0) {
-                features += ",resizable=no";
-                if (width > 0) {
-                    features += ",width=" + width;
-                }
-                if (height > 0) {
-                    features += ",height=" + height;
-                }
-            } else {
-                features += ",resizable=yes";
+
+            if (width > 0) {
+                features += (features.length() > 0 ? "," : "") + "width="
+                        + width;
             }
+            if (height > 0) {
+                features += (features.length() > 0 ? "," : "") + "height="
+                        + height;
+            }
+
             Window.open(src, target, features);
         }
     }
-    
+
     public void onBrowserEvent(Event event) {
         Element target = DOM.eventGetTarget(event);
         if (errorIndicatorElement != null
