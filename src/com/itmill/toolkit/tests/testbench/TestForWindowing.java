@@ -1,4 +1,4 @@
-package com.itmill.toolkit.demo.testbench;
+package com.itmill.toolkit.tests.testbench;
 
 import com.itmill.toolkit.data.Property.ValueChangeEvent;
 import com.itmill.toolkit.data.Property.ValueChangeListener;

@@ -298,6 +298,41 @@
 
 	<target name="add-platform-specific-files">
 		<echo>Adding platform specific files for ${package-platform}</echo>
+		<copy todir="${output-dir}">
+			<filterchain>
+				<expandproperties />
+				<replacetokens begintoken="&lt;" endtoken=">">
+					<token key="version" value="${version}" />
+					<token key="/version" value="" />
+				</replacetokens>
+				<replacetokens begintoken="&lt;" endtoken=">">
+					<token key="platform" value="${package-platform}" />
+					<token key="/platform" value="" />
+				</replacetokens>
+			</filterchain>
+			<fileset dir="WebContent/license">
+				<include name="COPYING" />
+			</fileset>
+		</copy>
+		<copy todir="${output-dir}/WebContent">
+			<filterchain>
+				<expandproperties />
+				<replacetokens begintoken="&lt;" endtoken=">">
+					<token key="version" value="${version}" />
+					<token key="/version" value="" />
+				</replacetokens>
+				<replacetokens begintoken="&lt;" endtoken=">">
+					<token key="platform" value="${package-platform}" />
+					<token key="/platform" value="" />
+				</replacetokens>
+			</filterchain>
+			<fileset dir="WebContent">
+				<exclude name="**/.svn" />
+				<include name="release-notes.html" />
+				<include name="*.html" />
+				<include name="license/*.html" />
+			</fileset>
+		</copy>
 		<delete includeemptydirs="true" defaultexcludes="false">
 			<fileset dir="${output-dir}">
 				<include name=".*" />
@@ -375,6 +410,10 @@
 					</fileset>
 				</copy>
 				<chmod file="${output-dir}/start.sh" perm="ugo+x" />
+				<exec executable="chmod" failonerror="false">
+					<arg line="ugo+x" />
+					<arg line="${output-dir}/start.sh" />
+				</exec>
 			</then>
 		</if>
 		<if>
@@ -385,12 +424,12 @@
 						<include name="start.sh" />
 					</fileset>
 				</copy>
-				<!-- must be done in native way, otherwise fails -->
-				<exec executable="cp" failonerror="true">
+				<!-- must be done manually -->
+				<!-- <exec executable="cp" failonerror="true">
 					<arg line="-r" />
 					<arg line="build/package/Start.app" />
 					<arg line="${output-dir}" />
-				</exec>
+				</exec> -->
 				<!-- but again, ant just fails with any * or other special characters -->
 				<!-- package icon or folder background image / icon placements not in use -->
 				<!--
@@ -405,50 +444,15 @@
 				<copy file="build/package/mac-VolumeIcon.icns" tofile="${output-dir}/.VolumeIcon.icns" />
 				-->
 				<chmod file="${output-dir}/start.sh" perm="ugo+x" />
+				<exec executable="chmod" failonerror="false">
+					<arg line="ugo+x" />
+					<arg line="${output-dir}/start.sh" />
+				</exec>
 			</then>
 		</if>
 	</target>
 
-	<target name="build" depends="root, demo" description="Build package required files, without packing them.">
-	</target>
-
-	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  Add and filter root files
-   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	<target name="root">
-
-		<copy todir="${output-dir}/WebContent/license">
-			<fileset dir="WebContent/license">
-				<filename name="*.pdf" />
-			</fileset>
-		</copy>
-		<copy todir="${output-dir}/WebContent">
-			<filterchain>
-				<expandproperties />
-				<replacetokens begintoken="&lt;" endtoken=">">
-					<token key="version" value="${version}" />
-					<token key="/version" value="" />
-				</replacetokens>
-			</filterchain>
-			<fileset dir="WebContent">
-				<exclude name="**/.svn" />
-				<include name="release-notes.html" />
-				<include name="*.html" />
-				<include name="license/*.html" />
-			</fileset>
-		</copy>
-
-		<!-- copy 3rd part libraries used by demo -->
-		<copy todir="${output-dir}/WebContent/demo/lib">
-			<fileset dir="lib">
-				<include name="reservr/**/*" />
-			</fileset>
-		</copy>
-		<copy todir="${output-dir}/WebContent/demo/lib">
-			<fileset dir="lib">
-				<include name="jetty/**/*" />
-			</fileset>
-		</copy>
+	<target name="build" depends="demo" description="Build package required files, without packing them.">
 	</target>
 
 
@@ -497,6 +501,18 @@
   WebContent
    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	<target name="webcontent" depends="preprocess-src">
+
+		<!-- copy 3rd part libraries used by demo -->
+		<copy todir="${output-dir}/WebContent/demo/lib">
+			<fileset dir="lib">
+				<include name="reservr/**/*" />
+			</fileset>
+		</copy>
+		<copy todir="${output-dir}/WebContent/demo/lib">
+			<fileset dir="lib">
+				<include name="jetty/**/*" />
+			</fileset>
+		</copy>
 
 		<!-- Add demo sources -->
 		<echo>Adding demo sources to WebContent/WEB-INF/src</echo>

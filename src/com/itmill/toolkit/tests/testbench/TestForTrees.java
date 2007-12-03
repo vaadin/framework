@@ -1,27 +1,23 @@
-package com.itmill.toolkit.demo.testbench;
+package com.itmill.toolkit.tests.testbench;
 
 import com.itmill.toolkit.event.Action;
 import com.itmill.toolkit.event.Action.Handler;
-import com.itmill.toolkit.ui.AbstractSelect;
 import com.itmill.toolkit.ui.Button;
-import com.itmill.toolkit.ui.CheckBox;
 import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.CustomComponent;
 import com.itmill.toolkit.ui.Label;
-import com.itmill.toolkit.ui.NativeSelect;
-import com.itmill.toolkit.ui.OptionGroup;
 import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Panel;
 import com.itmill.toolkit.ui.Tree;
-import com.itmill.toolkit.ui.TwinColSelect;
 import com.itmill.toolkit.ui.Button.ClickEvent;
 import com.itmill.toolkit.ui.Button.ClickListener;
 
 /**
+ * Some test cases for trees. Events panel logs events that happen server side.
+ * 
  * @author IT Mill Ltd.
  */
-public class TestForPreconfiguredComponents extends CustomComponent implements
-        Handler {
+public class TestForTrees extends CustomComponent implements Handler {
 
     private static final String[] firstnames = new String[] { "John", "Mary",
             "Joe", "Sarah", "Jeff", "Jane", "Peter", "Marc", "Josie", "Linus" };
@@ -30,16 +26,16 @@ public class TestForPreconfiguredComponents extends CustomComponent implements
             "Smith", "Jones", "Beck", "Sheridan", "Picard", "Hill", "Fielding",
             "Einstein" };
 
-    private final OrderedLayout main = new OrderedLayout();
+    private OrderedLayout main = new OrderedLayout();
 
-    private final Action[] actions = new Action[] { new Action("edit"),
+    private Action[] actions = new Action[] { new Action("edit"),
             new Action("delete") };
 
     private Panel al;
 
     private Tree contextTree;
 
-    public TestForPreconfiguredComponents() {
+    public TestForTrees() {
 
         setCompositionRoot(main);
         createNewView();
@@ -49,56 +45,45 @@ public class TestForPreconfiguredComponents extends CustomComponent implements
         main.removeAllComponents();
         main
                 .addComponent(new Label(
-                        "In Toolkit 5 we introduce new componens. Previously we"
-                                + " usually used setStyle or some other methods on possibly "
-                                + "multiple steps to configure component for ones needs. These new "
-                                + "server side components are mostly just classes that in constructor "
-                                + "set base class to state that programmer wants."));
+                        "Some test cases for trees. Events panel logs events that happen server side."));
 
         main.addComponent(new Button("commit"));
 
-        Panel test = createTestBench(new CheckBox());
-        test.setCaption("CheckBox (configured from button)");
-        main.addComponent(test);
+        Tree t;
 
-        AbstractSelect s = new TwinColSelect();
-        fillSelect(s, 20);
-        test = createTestBench(s);
-        test.setCaption("TwinColSelect (configured from select)");
-        main.addComponent(test);
+        t = createTestTree();
+        t.setCaption("Default settings");
+        main.addComponent(createTestBench(t));
 
-        s = new NativeSelect();
-        fillSelect(s, 20);
-        test = createTestBench(s);
-        test.setCaption("Native (configured from select)");
-        main.addComponent(test);
+        t = createTestTree();
+        t.setCaption("Multiselect settings");
+        t.setMultiSelect(true);
+        main.addComponent(createTestBench(t));
 
-        s = new OptionGroup();
-        fillSelect(s, 20);
-        test = createTestBench(s);
-        test.setCaption("OptionGroup (configured from select)");
-        main.addComponent(test);
+        t = createTestTree();
+        t.setCaption("Multiselect and immediate");
+        t.setImmediate(true);
+        t.setMultiSelect(true);
+        main.addComponent(createTestBench(t));
 
-        s = new OptionGroup();
-        fillSelect(s, 20);
-        s.setMultiSelect(true);
-        test = createTestBench(s);
-        test
-                .setCaption("OptionGroup + multiselect manually (configured from select)");
-        main.addComponent(test);
+        t = createTestTree();
+        t.setCaption("immediate");
+        t.setImmediate(true);
+        main.addComponent(createTestBench(t));
+
+        t = createTestTree();
+        t.setCaption("with actions");
+        t.setImmediate(true);
+        t.addActionHandler(this);
+        OrderedLayout ol = (OrderedLayout) createTestBench(t);
+        al = new Panel("action log");
+        ol.addComponent(al);
+        main.addComponent(ol);
+        contextTree = t;
 
         Button b = new Button("refresh view", this, "createNewView");
         main.addComponent(b);
 
-    }
-
-    public static void fillSelect(AbstractSelect s, int items) {
-        for (int i = 0; i < items; i++) {
-            String name = firstnames[(int) (Math.random() * (firstnames.length - 1))]
-                    + " "
-                    + lastnames[(int) (Math.random() * (lastnames.length - 1))];
-            s.addItem(name);
-        }
     }
 
     public Tree createTestTree() {
@@ -129,26 +114,21 @@ public class TestForPreconfiguredComponents extends CustomComponent implements
         return t;
     }
 
-    public Panel createTestBench(Component t) {
-        Panel ol = new Panel();
-        ol.setLayout(new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL));
+    public Component createTestBench(Tree t) {
+        OrderedLayout ol = new OrderedLayout();
+        ol.setOrientation(OrderedLayout.ORIENTATION_HORIZONTAL);
 
         ol.addComponent(t);
 
-        final OrderedLayout ol2 = new OrderedLayout(
-                OrderedLayout.ORIENTATION_HORIZONTAL);
         final Panel status = new Panel("Events");
-        final Button clear = new Button("clear event log");
+        final Button clear = new Button("c");
         clear.addListener(new ClickListener() {
             public void buttonClick(ClickEvent event) {
                 status.removeAllComponents();
-                status.addComponent(ol2);
+                status.addComponent(clear);
             }
         });
-        ol2.addComponent(clear);
-        final Button commit = new Button("commit changes");
-        ol2.addComponent(commit);
-        status.addComponent(ol2);
+        status.addComponent(clear);
 
         status.setHeight(300);
         status.setWidth(400);

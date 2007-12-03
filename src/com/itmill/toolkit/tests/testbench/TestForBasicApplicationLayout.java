@@ -1,4 +1,4 @@
-package com.itmill.toolkit.demo.testbench;
+package com.itmill.toolkit.tests.testbench;
 
 import java.sql.SQLException;
 import java.util.Locale;

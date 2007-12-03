@@ -1,4 +1,4 @@
-package com.itmill.toolkit.demo.testbench;
+package com.itmill.toolkit.tests.testbench;
 
 import java.io.File;
 import java.net.URL;

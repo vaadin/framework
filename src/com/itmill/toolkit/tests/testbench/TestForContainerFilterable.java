@@ -1,4 +1,4 @@
-package com.itmill.toolkit.demo.testbench;
+package com.itmill.toolkit.tests.testbench;
 
 import com.itmill.toolkit.data.util.IndexedContainer;
 import com.itmill.toolkit.terminal.Sizeable;

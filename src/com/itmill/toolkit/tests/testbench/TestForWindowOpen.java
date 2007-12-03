@@ -1,4 +1,4 @@
-package com.itmill.toolkit.demo.testbench;
+package com.itmill.toolkit.tests.testbench;
 
 import com.itmill.toolkit.terminal.ExternalResource;
 import com.itmill.toolkit.ui.Button;

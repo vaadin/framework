@@ -1,4 +1,4 @@
-package com.itmill.toolkit.demo.testbench;
+package com.itmill.toolkit.tests.testbench;
 
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.SplitPanel;

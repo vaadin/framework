@@ -2,25 +2,30 @@
 
 How to Start?
 
-Open shell and execute "sh start.sh". IT Mill Toolkit webpage guides you forward.
+Open shell and execute "sh start.sh". This starts IT Mill Toolkit
+web application which guides your forward. 
 
 
 What's Inside the IT Mill Toolkit Package?
 
-You should explore package through the provided webpage within the package,
-see 'How to Start?' above. Package is an web application itself and directly
-importable to Eclipse IDE.
+You should start exploring IT Mill Toolkit through the provided web application
+within this package, see 'How to Start?' above. WebContent contains demos,
+documentation and other useful information to get started with IT Mill Toolkit.
 
-Here are few important locations and files:
+This directory is directly importable to Eclipse IDE using
+"File / Import / Existing Projects into Workspace" selection from Eclipse main
+menu.
 
-start.sh
-- start exploring IT Mill Toolkit by executing this script
+Below is a list of most important locations and files:
 
-WebContent/License
-- license files
+Start IT Mill Toolkit
+- start exploring IT Mill Toolkit by double-clicking this icon
+
+COPYING
+- license file
 
 WebContent/WEB-INF/lib/itmill-toolkit-<version></version>.jar
-- IT Mill Toolkit library containing sources and compiled files
+- IT Mill Toolkit library containing Java source and compiled files
 
 WebContent/demo/itmill-toolkit.war
 - deployable demo application for your application server
@@ -52,3 +57,7 @@ build-widgetsets.xml
 
 WebContent/ITMILL
 - widgetsets and themes
+
+gwt
+- Google Web Toolkit is required for building new widgetsets
+
