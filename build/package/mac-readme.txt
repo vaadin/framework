@@ -2,7 +2,7 @@
 
 How to Start?
 
-Just double-click icon Start. IT Mill Toolkit webpage guides you forward.
+Just double-click Start icon. IT Mill Toolkit webpage guides you forward.
 If for some reason Start icon fails in your environment, another option is
 to open shell and execute "sh start.sh".
 
