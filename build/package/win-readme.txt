@@ -13,7 +13,7 @@ importable to Eclipse IDE.
 
 Here are few important locations and files:
 
-Start
+start.bat
 - start exploring IT Mill Toolkit by double-clicking this icon
 
 WebContent/License

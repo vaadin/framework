@@ -13,8 +13,8 @@ importable to Eclipse IDE.
 
 Here are few important locations and files:
 
-Start
-- start exploring IT Mill Toolkit by double-clicking this icon
+start.sh
+- start exploring IT Mill Toolkit by executing this script
 
 WebContent/License
 - license files
