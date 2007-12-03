@@ -54,7 +54,7 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
             { "Getting started", "Buttons and links",
                     "Some variations of Buttons and Links", ButtonExample.class },
             // Getting started: Fields
-            { "Getting started", "User input",
+            { "Getting started", "Basic value input",
                     "TextFields, DateFields, and such", ValueInputExample.class },
             //
             { "Getting started", "RichText", "Rich text editing",
