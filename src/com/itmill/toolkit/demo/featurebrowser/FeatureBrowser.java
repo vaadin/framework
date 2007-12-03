@@ -49,7 +49,7 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
     // Category, Name, Desc, Class, Viewed
             // Getting started: Labels
             { "Getting started", "Labels", "Some variations of Labels",
-                    LabelsExample.class },
+                    LabelExample.class },
             // Getting started: Buttons
             { "Getting started", "Buttons and links",
                     "Some variations of Buttons and Links", ButtonExample.class },

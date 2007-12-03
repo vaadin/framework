@@ -12,7 +12,7 @@ import com.itmill.toolkit.ui.Panel;
  * 
  * @author IT Mill Ltd.
  */
-public class LabelsExample extends CustomComponent {
+public class LabelExample extends CustomComponent {
 
     private static final String xhtml = "This text has <b>HTML</b> formatting.<br/>"
             + "A plain <i>Label</i> will show the markup, while a <u>XHTML-mode</u>"
@@ -23,7 +23,7 @@ public class LabelsExample extends CustomComponent {
             + "but not in a \"plain\" Label.\n\n"
             + "       This is an indented row. \n       Same indentation here.";
 
-    public LabelsExample() {
+    public LabelExample() {
 
         OrderedLayout main = new OrderedLayout();
         main.setMargin(true);
