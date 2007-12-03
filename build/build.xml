@@ -306,7 +306,15 @@
 				<include name="build-widgetsets.xml" />
 			</fileset>
 		</delete>
-		<copy file="build/package/${package-platform}-readme.txt" tofile="${output-dir}/readme.txt" />
+		<copy file="build/package/${package-platform}-readme.txt" tofile="${output-dir}/readme.txt">
+			<filterchain>
+				<expandproperties />
+				<replacetokens begintoken="&lt;" endtoken=">">
+					<token key="version" value="${version}" />
+					<token key="/version" value="" />
+				</replacetokens>
+			</filterchain>
+		</copy>
 		<copy todir="${output-dir}">
 			<filterchain>
 				<expandproperties />
@@ -378,13 +386,14 @@
 					</fileset>
 				</copy>
 				<!-- must be done in native way, otherwise fails -->
-				<!-- but again, ant just fails with any * or other special characters -->
-				<!--
 				<exec executable="cp" failonerror="true">
 					<arg line="-r" />
-					<arg line="build/package/Start*.app" />
+					<arg line="build/package/Start.app" />
 					<arg line="${output-dir}" />
 				</exec>
+				<!-- but again, ant just fails with any * or other special characters -->
+				<!-- package icon or folder background image / icon placements not in use -->
+				<!--
 				<exec executable="cp" failonerror="true">
 					<arg line="build/package/Icon*" />
 					<arg line="${output-dir}" />
@@ -393,9 +402,8 @@
 					<arg line="build/package/mac-DS_Store" />
 					<arg line="${output-dir}/.DS_Store" />
 				</exec>
-				-->
-				<!-- <copy file="build/package/mac-DS_Store" tofile="${output-dir}/.DS_Store" /> -->
 				<copy file="build/package/mac-VolumeIcon.icns" tofile="${output-dir}/.VolumeIcon.icns" />
+				-->
 				<chmod file="${output-dir}/start.sh" perm="ugo+x" />
 			</then>
 		</if>
