@@ -41,7 +41,7 @@
 	<target name="package-linux" depends="clean-all, init, build, docs, internal-package-linux" description="Create public tar.bz2 package for Linux.">
 	</target>
 
-	<target name="package-jar-war" depends="clean-all, init, build" description="Create itmill-toolkit-x.y.z.jar and war file.">
+	<target name="package-jar" depends="clean-all, init, build" description="Create itmill-toolkit-x.y.z.jar file.">
 	</target>
 
 	<!-- internal tests for packaging -->
@@ -115,7 +115,6 @@
 
 		<!-- Destination files -->
 		<property name="lib-jar-name" value="${product-file}-${version}.jar" />
-		<property name="demo-war-name" value="${product-file}-demo-${version}.war" />
 
 		<echo message="Prepared to build ${product-file} version ${version} packages" />
 
@@ -131,6 +130,7 @@
 		<mkdir dir="${output-dir}/WebContent/doc/api" />
 		<mkdir dir="${output-dir}/WebContent/doc/example-source" />
 		<mkdir dir="${output-dir}/WebContent/WEB-INF" />
+		<mkdir dir="${output-dir}/WebContent/WEB-INF/lib" />
 		<mkdir dir="${output-dir}/WebContent/WEB-INF/classes" />
 
 		<!-- Construct classpath used by java and javadoc compilation -->
@@ -330,7 +330,7 @@
 				<exclude name="**/.svn" />
 				<include name="release-notes.html" />
 				<include name="*.html" />
-				<include name="license/*.html" />
+				<include name="license/licensing-guidelines.html" />
 			</fileset>
 		</copy>
 		<delete includeemptydirs="true" defaultexcludes="false">
@@ -530,15 +530,11 @@
 		<copy todir="${output-dir}/WebContent">
 			<fileset dir="WebContent">
 				<exclude name="**/.svn" />
-				<exclude name="openajax/**" />
-				<exclude name="WEB-INF/web.xml" />
-				<exclude name="ITMILL/widgetsets/**" />
-				<exclude name="WEB-INF/lib/commons-fileupload-custom.jar" />
-				<exclude name="ITMILL/themes/test*/**" />
-				<exclude name="WEB-INF/classes/**" />
+				<include name="demo/**/*" />
+				<include name="META-INF/**/*" />
 			</fileset>
 		</copy>
-
+		
 		<!-- Add package specific WebContent files from build/package/WebContent -->
 		<copy todir="${output-dir}/WebContent">
 			<fileset dir="build/package/WebContent">
@@ -642,10 +638,11 @@
 				</patternset>
 			</fileset>
 		</jar>
+		<copy file="${output-dir}/WebContent/WEB-INF/lib/${lib-jar-name}" tofile="${output-dir}/WebContent/${lib-jar-name}" />
 	</target>
 
 	<!-- Demo  - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	<target name="demo" depends="libs, javadoc">
+	<target name="demo" depends="libs, docs">
 		<echo>Building demo</echo>
 		<echo>Adding demo class files.</echo>
 		<copy todir="${output-dir}/WebContent/WEB-INF/classes">
@@ -664,9 +661,10 @@
 				<include name="${toolkit-package}/launcher/**" />
 			</fileset>
 		</copy>
-
+		
+		<!--
 		<echo>Building WAR</echo>
-		<war warfile="${output-dir}/WebContent/demo/${product-file}.war">
+		<war warfile="${output-dir}/${product-file}.war">
 			<fileset dir="${output-dir}/WebContent">
 				<include name="**/*" />
 			</fileset>
@@ -674,6 +672,7 @@
 				<include name="${lib-jar-name}" />
 			</lib>
 		</war>
+		-->
 	</target>
 
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
