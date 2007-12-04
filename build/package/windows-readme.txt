@@ -1,20 +1,29 @@
-== IT Mill Toolkit <version></version> Readme ==
+==============================================================================
+IT Mill Toolkit <version></version> Readme
+==============================================================================
 
+-------------
 How to Start?
+-------------
 
-Just double-click start.bat icon. This starts IT Mill Toolkit web application
-which guides your forward.
+Just double-click start.bat icon. It will start a web application at port 8888 on the
+local host and opens a web browser window to display the start page of IT Mill Toolkit
+Content Browser.
 
+The installation directory is a web application as itself and is directly importable to
+Eclipse IDE by selecting "File / Import / Existing Projects into Workspace" from Eclipse
+main menu. See the manual for detailed instructions.
 
+------------------------------------------
 What's Inside the IT Mill Toolkit Package?
+------------------------------------------
 
-You should start exploring IT Mill Toolkit through the provided web application
-within this package, see 'How to Start?' above. WebContent contains demos,
-documentation and other useful information to get started with IT Mill Toolkit.
+You should start exploring IT Mill Toolkit through the provided Content Browser web
+application within this package; see 'How to Start?' above.
 
-This directory is directly importable to Eclipse IDE using
-"File / Import / Existing Projects into Workspace" selection from Eclipse main
-menu.
+The WebContent directory contains the content available through the Content Browser: the
+IT Mill Toolkit Library, demos, documentation, and other useful information to get started
+with IT Mill Toolkit.
 
 Below is a list of most important locations and files:
 
@@ -25,39 +34,38 @@ COPYING
 - license file
 
 WebContent/WEB-INF/lib/itmill-toolkit-<version></version>.jar
-- IT Mill Toolkit library containing Java source and compiled files
+- IT Mill Toolkit Library containing Java source and compiled files
 
 WebContent/demo/itmill-toolkit.war
 - deployable demo application for your application server
 
 WebContent/doc/manual.pdf
-- manual in PDF format
+- IT Mill Toolkit Reference Manual in PDF format
 
 WebContent/doc/manual/index.html
-- manual in HTML format
+- IT Mill Toolkit Reference Manual in HTML format
 
 WebContent/doc/api/index.html
-- JavaDocs
+- IT Mill Toolkit API Documentation as JavaDoc reference
 
 WebContent/WEB-INF/src
-- demo source code, compiled into WebContent/WEB-INF/classes
+- Content Browser source code, compiled into WebContent/WEB-INF/classes
  
 WebContent/doc/example-source
-- example source in HTML format
+- example source code in HTML format
 
 WebContent/demo
-- files required by demos
+- files required by the demos
 
 IT Mill Toolkit Hosted Mode.launch
 IT Mill Toolkit Web Mode.launch
 - launch configurations for Eclipse workspace
 
 build-widgetsets.xml
-- builds GWT widgetsets for IT Mill Toolkit applications
+- builds GWT widget sets for IT Mill Toolkit applications
 
 WebContent/ITMILL
-- widgetsets and themes
+- widget sets and themes
 
 gwt
-- Google Web Toolkit is required for building new widgetsets
-
+- Google Web Toolkit is required for building new widget sets
