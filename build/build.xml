@@ -196,7 +196,7 @@
 			<tarfileset prefix="${product-file}-${package-platform}-${version}" dir="${result-path}/${product-file}-${version}">
 				<patternset>
 					<include name="**/*" />
-				</patternset>doc/manual/index.html
+				</patternset>
 			</tarfileset>
 			<tarfileset prefix="${product-file}-${package-platform}-${version}/gwt" dir="${gwt-dir}/${package-platform}">
 				<patternset>
@@ -298,6 +298,17 @@
 
 	<target name="add-platform-specific-files">
 		<echo>Adding platform specific files for ${package-platform}</echo>
+		<delete includeemptydirs="true" defaultexcludes="false">
+			<fileset dir="${output-dir}">
+				<include name=".*" />
+				<include name="*.launch" />
+				<include name="*.txt" />
+				<include name="*.bat" />
+				<include name="*.sh" />
+				<include name="*.app" />
+				<include name="build-widgetsets.xml" />
+			</fileset>
+		</delete>
 		<copy todir="${output-dir}">
 			<filterchain>
 				<expandproperties />
@@ -333,14 +344,6 @@
 				<include name="license/licensing-guidelines.html" />
 			</fileset>
 		</copy>
-		<delete includeemptydirs="true" defaultexcludes="false">
-			<fileset dir="${output-dir}">
-				<include name=".*" />
-				<include name="*.launch" />
-				<include name="*.txt" />
-				<include name="build-widgetsets.xml" />
-			</fileset>
-		</delete>
 		<copy file="build/package/${package-platform}-readme.txt" tofile="${output-dir}/readme.txt">
 			<filterchain>
 				<expandproperties />
