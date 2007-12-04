@@ -7,6 +7,7 @@ import com.itmill.toolkit.data.Item;
 import com.itmill.toolkit.data.Property;
 import com.itmill.toolkit.event.Action;
 import com.itmill.toolkit.ui.Button;
+import com.itmill.toolkit.ui.CheckBox;
 import com.itmill.toolkit.ui.CustomComponent;
 import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Table;
@@ -41,6 +42,7 @@ public class TableExample extends CustomComponent implements Action.Handler,
     Button saveSelected;
     Button hireSelected;
     Button deleteSelected;
+    Button deselect;
 
     public TableExample() {
         // main layout
@@ -78,6 +80,10 @@ public class TableExample extends CustomComponent implements Action.Handler,
         deleteSelected.setStyleName(Button.STYLE_LINK);
         deleteSelected.addListener(this);
         horiz.addComponent(deleteSelected);
+        deselect = new Button("Deselect all");
+        deselect.setStyleName(Button.STYLE_LINK);
+        deselect.addListener(this);
+        horiz.addComponent(deselect);
 
         // "saved" table, minimalistic
         saved = new Table();
@@ -89,6 +95,17 @@ public class TableExample extends CustomComponent implements Action.Handler,
         initProperties(saved);
         saved.addActionHandler(this);
         main.addComponent(saved);
+
+        CheckBox b = new CheckBox("Editmode");
+        b.addListener(new CheckBox.ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                saved.setEditable(((Boolean) event.getButton().getValue())
+                        .booleanValue());
+            }
+        });
+        b.setImmediate(true);
+        main.addComponent(b);
+
     }
 
     // set up the properties (columns)
@@ -189,7 +206,9 @@ public class TableExample extends CustomComponent implements Action.Handler,
 
     public void buttonClick(ClickEvent event) {
         Button b = event.getButton();
-        if (b == saveSelected) {
+        if (b == deselect) {
+            source.setValue(null);
+        } else if (b == saveSelected) {
             // loop each selected and copy to "saved" table
             Set selected = (Set) source.getValue();
             int s = 0;
