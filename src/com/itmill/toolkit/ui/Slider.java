@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.ui;
 
 import java.util.Map;
@@ -90,7 +94,7 @@ public class Slider extends AbstractField {
      * (client-side implementation decides the increment, usually somewhere
      * between 5-10% of slide range).
      */
-    private boolean arrows = false;
+    private final boolean arrows = false;
 
     /**
      * Default Slider constructor. Sets all values to defaults and the slide
@@ -175,7 +179,7 @@ public class Slider extends AbstractField {
             if ((new Double(getValue().toString())).doubleValue() > max) {
                 super.setValue(new Double(max));
             }
-        } catch (ClassCastException e) {
+        } catch (final ClassCastException e) {
             super.setValue(new Double(max));
         }
         requestRepaint();
@@ -203,7 +207,7 @@ public class Slider extends AbstractField {
             if ((new Double(getValue().toString())).doubleValue() < min) {
                 super.setValue(new Double(min));
             }
-        } catch (ClassCastException e) {
+        } catch (final ClassCastException e) {
             super.setValue(new Double(min));
         }
         requestRepaint();
@@ -263,7 +267,7 @@ public class Slider extends AbstractField {
      */
     public void setValue(Double value, boolean repaintIsNotNeeded)
             throws ValueOutOfBoundsException {
-        double v = value.doubleValue();
+        final double v = value.doubleValue();
         double newValue;
         if (resolution > 0) {
             // Round up to resolution
@@ -358,17 +362,17 @@ public class Slider extends AbstractField {
      * 
      * @param visible
      *//*
-     * public void setArrows(boolean visible) { arrows = visible;
-     * requestRepaint(); }
-     */
+         * public void setArrows(boolean visible) { arrows = visible;
+         * requestRepaint(); }
+         */
 
     /*
      * Does the slider have arrows?
      * 
      * @return arrows visible
      *//*
-     * public boolean isArrowsVisible() { return arrows; }
-     */
+         * public boolean isArrowsVisible() { return arrows; }
+         */
 
     public String getTag() {
         return "slider";
@@ -421,13 +425,13 @@ public class Slider extends AbstractField {
      */
     public void changeVariables(Object source, Map variables) {
         if (variables.containsKey("value")) {
-            Object value = variables.get("value");
-            Double newValue = new Double(value.toString());
+            final Object value = variables.get("value");
+            final Double newValue = new Double(value.toString());
             if (newValue != null && newValue != getValue()
                     && !newValue.equals(getValue())) {
                 try {
                     setValue(newValue, true);
-                } catch (ValueOutOfBoundsException e) {
+                } catch (final ValueOutOfBoundsException e) {
                     // Convert to nearest bound
                     double out = e.getValue().doubleValue();
                     if (out < min) {
@@ -455,7 +459,7 @@ public class Slider extends AbstractField {
          */
         private static final long serialVersionUID = -6451298598644446340L;
 
-        private Double value;
+        private final Double value;
 
         /**
          * Constructs an <code>ValueOutOfBoundsException</code> with the

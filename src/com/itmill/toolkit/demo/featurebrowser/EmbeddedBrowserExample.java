@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.demo.featurebrowser;
 
 import com.itmill.toolkit.data.Property.ValueChangeEvent;
@@ -33,7 +37,7 @@ public class EmbeddedBrowserExample extends ExpandLayout implements
         setSizeFull();
 
         // create the address combobox
-        Select select = new Select();
+        final Select select = new Select();
         // allow input
         select.setNewItemsAllowed(true);
         // no empty selection
@@ -59,7 +63,7 @@ public class EmbeddedBrowserExample extends ExpandLayout implements
     }
 
     public void valueChange(ValueChangeEvent event) {
-        String url = (String) event.getProperty().getValue();
+        final String url = (String) event.getProperty().getValue();
         if (url != null) {
             // the selected url has changed, let's go there
             emb.setSource(new ExternalResource(url));

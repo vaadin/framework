@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.ui;
 
 import java.util.Iterator;
@@ -73,12 +77,12 @@ public class ExpandLayout extends OrderedLayout {
             target.addAttribute("orientation", "horizontal");
         }
 
-        String[] alignmentsArray = new String[components.size()];
+        final String[] alignmentsArray = new String[components.size()];
 
         // Adds all items in all the locations
         int index = 0;
-        for (Iterator i = getComponentIterator(); i.hasNext();) {
-            Component c = (Component) i.next();
+        for (final Iterator i = getComponentIterator(); i.hasNext();) {
+            final Component c = (Component) i.next();
             if (c != null) {
                 target.startTag("cc");
                 if (c == expanded) {

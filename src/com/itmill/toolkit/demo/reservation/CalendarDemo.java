@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.demo.reservation;
 
 import java.sql.SQLException;
@@ -35,7 +39,7 @@ public class CalendarDemo extends com.itmill.toolkit.Application {
      * Initialize Application. Demo components are added to main window.
      */
     public void init() {
-        Window main = new Window("Calendar demo");
+        final Window main = new Window("Calendar demo");
         setMainWindow(main);
 
         main.setLayout(new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL));
@@ -54,8 +58,8 @@ public class CalendarDemo extends com.itmill.toolkit.Application {
 
         from.addListener(new ValueChangeListener() {
             public void valueChange(ValueChangeEvent event) {
-                Date fd = (Date) from.getValue();
-                Date td = (Date) to.getValue();
+                final Date fd = (Date) from.getValue();
+                final Date td = (Date) to.getValue();
                 if (fd == null) {
                     to.setValue(null);
                     to.setEnabled(false);
@@ -85,12 +89,12 @@ public class CalendarDemo extends com.itmill.toolkit.Application {
      */
     private void initCalendars() {
         try {
-            QueryContainer qc = new QueryContainer("SELECT * FROM "
+            final QueryContainer qc = new QueryContainer("SELECT * FROM "
                     + SampleCalendarDatabase.DB_TABLE_NAME, sampleDatabase
                     .getConnection());
             from.setContainerDataSource(qc);
             to.setContainerDataSource(qc);
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             e.printStackTrace();
         }
         /*

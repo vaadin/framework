@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.launcher;
 
 import java.awt.FlowLayout;
@@ -31,12 +35,12 @@ public class ITMillToolkitDesktopMode {
 
     public static void main(String[] args) {
 
-        Map serverArgs = ITMillToolkitWebMode.parseArguments(args);
+        final Map serverArgs = ITMillToolkitWebMode.parseArguments(args);
         boolean deployed = false;
         try {
             // Default deployment: embedded.war
             deployed = deployEmbeddedWarfile(serverArgs);
-        } catch (IOException e1) {
+        } catch (final IOException e1) {
             e1.printStackTrace();
             deployed = false;
         }
@@ -55,7 +59,8 @@ public class ITMillToolkitDesktopMode {
         }
 
         // Start the Winstone servlet container
-        String url = ITMillToolkitWebMode.runServer(serverArgs, "Desktop Mode");
+        final String url = ITMillToolkitWebMode.runServer(serverArgs,
+                "Desktop Mode");
 
         // Open browser into application URL
         if (url != null) {
@@ -106,7 +111,7 @@ public class ITMillToolkitDesktopMode {
         final JButton cancelButton = new JButton("Cancel");
 
         // List for close verify buttons
-        ActionListener buttonListener = new ActionListener() {
+        final ActionListener buttonListener = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (e.getSource() == okButton) {
                     System.exit(0);
@@ -127,7 +132,7 @@ public class ITMillToolkitDesktopMode {
 
         frame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
-                Rectangle bounds = frame.getBounds();
+                final Rectangle bounds = frame.getBounds();
                 frame.setTitle("Confirm close");
                 contentPane.removeAll();
                 contentPane.add(question);
@@ -140,11 +145,11 @@ public class ITMillToolkitDesktopMode {
         });
 
         // Position the window nicely
-        java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit()
-                .getScreenSize();
-        int w = 270;
-        int h = 95;
-        int margin = 20;
+        final java.awt.Dimension screenSize = java.awt.Toolkit
+                .getDefaultToolkit().getScreenSize();
+        final int w = 270;
+        final int h = 95;
+        final int margin = 20;
         frame.setBounds(new Rectangle(screenSize.width - w - margin,
                 screenSize.height - h - margin * 2, w, h));
         frame.toFront();
@@ -159,23 +164,23 @@ public class ITMillToolkitDesktopMode {
      * @throws IOException
      */
     protected static boolean deployEmbeddedWarfile(Map args) throws IOException {
-        String embeddedWarfileName = "/embedded.war";
-        InputStream embeddedWarfile = ITMillToolkitDesktopMode.class
+        final String embeddedWarfileName = "/embedded.war";
+        final InputStream embeddedWarfile = ITMillToolkitDesktopMode.class
                 .getResourceAsStream(embeddedWarfileName);
         if (embeddedWarfile != null) {
-            File tempWarfile = File.createTempFile("embedded", ".war")
+            final File tempWarfile = File.createTempFile("embedded", ".war")
                     .getAbsoluteFile();
             tempWarfile.getParentFile().mkdirs();
             tempWarfile.deleteOnExit();
 
-            String embeddedWebroot = "winstoneEmbeddedWAR";
-            File tempWebroot = new File(tempWarfile.getParentFile(),
+            final String embeddedWebroot = "winstoneEmbeddedWAR";
+            final File tempWebroot = new File(tempWarfile.getParentFile(),
                     embeddedWebroot);
             tempWebroot.mkdirs();
 
-            OutputStream out = new FileOutputStream(tempWarfile, true);
+            final OutputStream out = new FileOutputStream(tempWarfile, true);
             int read = 0;
-            byte buffer[] = new byte[2048];
+            final byte buffer[] = new byte[2048];
             while ((read = embeddedWarfile.read(buffer)) != -1) {
                 out.write(buffer, 0, read);
             }

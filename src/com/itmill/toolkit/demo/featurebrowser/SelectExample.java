@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.demo.featurebrowser;
 
 import com.itmill.toolkit.data.Property.ValueChangeEvent;
@@ -20,24 +24,24 @@ import com.itmill.toolkit.ui.TwinColSelect;
 public class SelectExample extends CustomComponent {
 
     // listener that shows a value change notification
-    private Field.ValueChangeListener listener = new Field.ValueChangeListener() {
+    private final Field.ValueChangeListener listener = new Field.ValueChangeListener() {
         public void valueChange(ValueChangeEvent event) {
             getWindow().showNotification("" + event.getProperty().getValue());
         }
     };
 
     public SelectExample() {
-        OrderedLayout main = new OrderedLayout();
+        final OrderedLayout main = new OrderedLayout();
         main.setMargin(true);
         setCompositionRoot(main);
 
-        OrderedLayout horiz = new OrderedLayout(
+        final OrderedLayout horiz = new OrderedLayout(
                 OrderedLayout.ORIENTATION_HORIZONTAL);
         main.addComponent(horiz);
-        Panel single = new Panel("Single selects");
+        final Panel single = new Panel("Single selects");
         single.setStyleName(Panel.STYLE_LIGHT);
         horiz.addComponent(single);
-        Panel multi = new Panel("Multi selects");
+        final Panel multi = new Panel("Multi selects");
         multi.setStyleName(Panel.STYLE_LIGHT);
         horiz.addComponent(multi);
 

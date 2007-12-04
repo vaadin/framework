@@ -1,30 +1,6 @@
-/* *************************************************************************
- 
- IT Mill Toolkit 
-
- Development of Browser User Interfaces Made Easy
-
- Copyright (C) 2000-2006 IT Mill Ltd
- 
- *************************************************************************
-
- This product is distributed under commercial license that can be found
- from the product package on license.pdf. Use of this product might 
- require purchasing a commercial license from IT Mill Ltd. For guidelines 
- on usage, see licensing-guidelines.html
-
- *************************************************************************
- 
- For more information, contact:
- 
- IT Mill Ltd                           phone: +358 2 4802 7180
- Ruukinkatu 2-4                        fax:   +358 2 4802 7181
- 20540, Turku                          email:  info@itmill.com
- Finland                               company www: www.itmill.com
- 
- Primary source for information and releases: www.itmill.com
-
- ********************************************************************** */
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
 
 package com.itmill.toolkit.tests.featurebrowser;
 
@@ -41,7 +17,7 @@ public class FeatureDateField extends Feature {
 
     static private String[] localeNames;
     static {
-        Locale[] locales = Locale.getAvailableLocales();
+        final Locale[] locales = Locale.getAvailableLocales();
         localeNames = new String[locales.length];
         for (int i = 0; i < locales.length; i++) {
             localeNames[i] = locales[i].getDisplayName();
@@ -54,18 +30,18 @@ public class FeatureDateField extends Feature {
 
     protected Component getDemoComponent() {
 
-        OrderedLayout l = new OrderedLayout();
+        final OrderedLayout l = new OrderedLayout();
 
         l.addComponent(new Label("Your default locale is: "
                 + getApplication().getLocale().toString().replace('_', '-')));
 
-        DateField df = new DateField();
+        final DateField df = new DateField();
         df.setValue(new java.util.Date());
         l.addComponent(df);
 
         // Properties
         propertyPanel = new PropertyPanel(df);
-        Form ap = propertyPanel.createBeanPropertySet(new String[] {
+        final Form ap = propertyPanel.createBeanPropertySet(new String[] {
                 "resolution", "locale" });
         ap.replaceWithSelect("resolution", new Object[] {
                 new Integer(DateField.RESOLUTION_YEAR),
@@ -82,7 +58,7 @@ public class FeatureDateField extends Feature {
         ap.getField("resolution").setValue(
                 new Integer(DateField.RESOLUTION_DAY));
         ap.getField("locale").setValue(Locale.getDefault());
-        Select themes = (Select) propertyPanel.getField("style");
+        final Select themes = (Select) propertyPanel.getField("style");
         themes.addItem("text").getItemProperty(
                 themes.getItemCaptionPropertyId()).setValue("text");
         themes.addItem("calendar").getItemProperty(

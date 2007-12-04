@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.client;
 
 import java.util.HashMap;
@@ -23,7 +27,7 @@ public class LocaleService {
     private static String defaultLocale;
 
     public static void addLocale(JSONObject json) {
-        String key = ((JSONString) json.get("name")).stringValue();
+        final String key = ((JSONString) json.get("name")).stringValue();
         if (cache.containsKey(key)) {
             cache.remove(key);
         }
@@ -48,9 +52,9 @@ public class LocaleService {
     public static String[] getMonthNames(String locale)
             throws LocaleNotLoadedException {
         if (cache.containsKey(locale)) {
-            JSONObject l = (JSONObject) cache.get(locale);
-            JSONArray mn = (JSONArray) l.get("mn");
-            String[] temp = new String[12];
+            final JSONObject l = (JSONObject) cache.get(locale);
+            final JSONArray mn = (JSONArray) l.get("mn");
+            final String[] temp = new String[12];
             temp[0] = ((JSONString) mn.get(0)).stringValue();
             temp[1] = ((JSONString) mn.get(1)).stringValue();
             temp[2] = ((JSONString) mn.get(2)).stringValue();
@@ -72,9 +76,9 @@ public class LocaleService {
     public static String[] getShortMonthNames(String locale)
             throws LocaleNotLoadedException {
         if (cache.containsKey(locale)) {
-            JSONObject l = (JSONObject) cache.get(locale);
-            JSONArray smn = (JSONArray) l.get("smn");
-            String[] temp = new String[12];
+            final JSONObject l = (JSONObject) cache.get(locale);
+            final JSONArray smn = (JSONArray) l.get("smn");
+            final String[] temp = new String[12];
             temp[0] = ((JSONString) smn.get(0)).stringValue();
             temp[1] = ((JSONString) smn.get(1)).stringValue();
             temp[2] = ((JSONString) smn.get(2)).stringValue();
@@ -96,9 +100,9 @@ public class LocaleService {
     public static String[] getDayNames(String locale)
             throws LocaleNotLoadedException {
         if (cache.containsKey(locale)) {
-            JSONObject l = (JSONObject) cache.get(locale);
-            JSONArray dn = (JSONArray) l.get("dn");
-            String[] temp = new String[7];
+            final JSONObject l = (JSONObject) cache.get(locale);
+            final JSONArray dn = (JSONArray) l.get("dn");
+            final String[] temp = new String[7];
             temp[0] = ((JSONString) dn.get(0)).stringValue();
             temp[1] = ((JSONString) dn.get(1)).stringValue();
             temp[2] = ((JSONString) dn.get(2)).stringValue();
@@ -115,9 +119,9 @@ public class LocaleService {
     public static String[] getShortDayNames(String locale)
             throws LocaleNotLoadedException {
         if (cache.containsKey(locale)) {
-            JSONObject l = (JSONObject) cache.get(locale);
-            JSONArray sdn = (JSONArray) l.get("sdn");
-            String[] temp = new String[7];
+            final JSONObject l = (JSONObject) cache.get(locale);
+            final JSONArray sdn = (JSONArray) l.get("sdn");
+            final String[] temp = new String[7];
             temp[0] = ((JSONString) sdn.get(0)).stringValue();
             temp[1] = ((JSONString) sdn.get(1)).stringValue();
             temp[2] = ((JSONString) sdn.get(2)).stringValue();
@@ -134,8 +138,8 @@ public class LocaleService {
     public static int getFirstDayOfWeek(String locale)
             throws LocaleNotLoadedException {
         if (cache.containsKey(locale)) {
-            JSONObject l = (JSONObject) cache.get(locale);
-            JSONNumber fdow = (JSONNumber) l.get("fdow");
+            final JSONObject l = (JSONObject) cache.get(locale);
+            final JSONNumber fdow = (JSONNumber) l.get("fdow");
             return (int) fdow.getValue();
         } else {
             throw new LocaleNotLoadedException(locale);
@@ -145,8 +149,8 @@ public class LocaleService {
     public static String getDateFormat(String locale)
             throws LocaleNotLoadedException {
         if (cache.containsKey(locale)) {
-            JSONObject l = (JSONObject) cache.get(locale);
-            JSONString df = (JSONString) l.get("df");
+            final JSONObject l = (JSONObject) cache.get(locale);
+            final JSONString df = (JSONString) l.get("df");
             return df.stringValue();
         } else {
             throw new LocaleNotLoadedException(locale);
@@ -156,8 +160,8 @@ public class LocaleService {
     public static boolean isTwelveHourClock(String locale)
             throws LocaleNotLoadedException {
         if (cache.containsKey(locale)) {
-            JSONObject l = (JSONObject) cache.get(locale);
-            JSONBoolean thc = (JSONBoolean) l.get("thc");
+            final JSONObject l = (JSONObject) cache.get(locale);
+            final JSONBoolean thc = (JSONBoolean) l.get("thc");
             return thc.booleanValue();
         } else {
             throw new LocaleNotLoadedException(locale);
@@ -167,8 +171,8 @@ public class LocaleService {
     public static String getClockDelimiter(String locale)
             throws LocaleNotLoadedException {
         if (cache.containsKey(locale)) {
-            JSONObject l = (JSONObject) cache.get(locale);
-            JSONString hmd = (JSONString) l.get("hmd");
+            final JSONObject l = (JSONObject) cache.get(locale);
+            final JSONString hmd = (JSONString) l.get("hmd");
             return hmd.stringValue();
         } else {
             throw new LocaleNotLoadedException(locale);
@@ -178,9 +182,9 @@ public class LocaleService {
     public static String[] getAmPmStrings(String locale)
             throws LocaleNotLoadedException {
         if (cache.containsKey(locale)) {
-            JSONObject l = (JSONObject) cache.get(locale);
-            JSONArray ampm = (JSONArray) l.get("ampm");
-            String[] temp = new String[2];
+            final JSONObject l = (JSONObject) cache.get(locale);
+            final JSONArray ampm = (JSONArray) l.get("ampm");
+            final String[] temp = new String[2];
             temp[0] = ((JSONString) ampm.get(0)).stringValue();
             temp[1] = ((JSONString) ampm.get(1)).stringValue();
             return temp;

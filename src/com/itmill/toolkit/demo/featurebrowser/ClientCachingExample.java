@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.demo.featurebrowser;
 
 import com.itmill.toolkit.terminal.PaintException;
@@ -28,13 +32,13 @@ public class ClientCachingExample extends CustomComponent {
 
     public ClientCachingExample() {
 
-        OrderedLayout main = new OrderedLayout();
+        final OrderedLayout main = new OrderedLayout();
         main.setMargin(true);
         setCompositionRoot(main);
 
         main.addComponent(new Label(msg));
 
-        TabSheet ts = new TabSheet();
+        final TabSheet ts = new TabSheet();
         main.addComponent(ts);
 
         Layout layout = new OrderedLayout();
@@ -51,7 +55,7 @@ public class ClientCachingExample extends CustomComponent {
             public void paintContent(PaintTarget target) throws PaintException {
                 try {
                     Thread.sleep(3000);
-                } catch (Exception e) {
+                } catch (final Exception e) {
                     // IGNORED
                 }
                 super.paintContent(target);

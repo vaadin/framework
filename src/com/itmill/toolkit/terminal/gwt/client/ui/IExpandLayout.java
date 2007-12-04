@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import java.util.ArrayList;
@@ -73,7 +77,7 @@ public class IExpandLayout extends ComplexPanel implements
     }
 
     public void add(Widget w) {
-        WidgetWrapper wrapper = createWidgetWrappper();
+        final WidgetWrapper wrapper = createWidgetWrappper();
         DOM.appendChild(childContainer, wrapper.getElement());
         super.add(w, wrapper.getContainerElement());
     }
@@ -124,7 +128,7 @@ public class IExpandLayout extends ComplexPanel implements
      * @return
      */
     public WidgetWrapper getWidgetWrapperFor(Widget child) {
-        Element containerElement = DOM.getParent(child.getElement());
+        final Element containerElement = DOM.getParent(child.getElement());
         if (orientationMode == ORIENTATION_HORIZONTAL) {
             return new HorizontalWidgetWrapper(containerElement);
         } else {
@@ -161,7 +165,7 @@ public class IExpandLayout extends ComplexPanel implements
         }
 
         void setExpandedSize(int pixels) {
-            int spaceForMarginsAndSpacings = getOffsetHeight()
+            final int spaceForMarginsAndSpacings = getOffsetHeight()
                     - DOM.getElementPropertyInt(getElement(), "clientHeight");
             int fixedInnerSize = pixels - spaceForMarginsAndSpacings;
             if (fixedInnerSize < 0) {
@@ -220,9 +224,9 @@ public class IExpandLayout extends ComplexPanel implements
                 } else {
                     if (td == null) {
                         // build one cell table
-                        Element table = DOM.createTable();
-                        Element tBody = DOM.createTBody();
-                        Element tr = DOM.createTR();
+                        final Element table = DOM.createTable();
+                        final Element tBody = DOM.createTBody();
+                        final Element tr = DOM.createTR();
                         td = DOM.createTD();
                         DOM.appendChild(table, tBody);
                         DOM.appendChild(tBody, tr);
@@ -234,7 +238,7 @@ public class IExpandLayout extends ComplexPanel implements
                         DOM.setElementProperty(td, "className", CLASSNAME
                                 + "-valign");
                         // move possible content to cell
-                        Element content = DOM.getFirstChild(getElement());
+                        final Element content = DOM.getFirstChild(getElement());
                         if (content != null) {
                             DOM.removeChild(getElement(), content);
                             DOM.appendChild(td, content);
@@ -263,10 +267,10 @@ public class IExpandLayout extends ComplexPanel implements
     }
 
     protected ArrayList getPaintables() {
-        ArrayList al = new ArrayList();
-        Iterator it = iterator();
+        final ArrayList al = new ArrayList();
+        final Iterator it = iterator();
         while (it.hasNext()) {
-            Widget w = (Widget) it.next();
+            final Widget w = (Widget) it.next();
             if (w instanceof Paintable) {
                 al.add(w);
             }
@@ -290,15 +294,16 @@ public class IExpandLayout extends ComplexPanel implements
         // Component alignments as a comma separated list.
         // See com.itmill.toolkit.terminal.gwt.client.ui.AlignmentInfo.java for
         // possible values.
-        int[] alignments = uidl.getIntArrayAttribute("alignments");
+        final int[] alignments = uidl.getIntArrayAttribute("alignments");
         int alignmentIndex = 0;
         // Set alignment attributes
-        Iterator it = getPaintables().iterator();
+        final Iterator it = getPaintables().iterator();
         boolean first = true;
         while (it.hasNext()) {
             // Calculate alignment info
-            AlignmentInfo ai = new AlignmentInfo(alignments[alignmentIndex++]);
-            WidgetWrapper wr = getWidgetWrapperFor((Widget) it.next());
+            final AlignmentInfo ai = new AlignmentInfo(
+                    alignments[alignmentIndex++]);
+            final WidgetWrapper wr = getWidgetWrapperFor((Widget) it.next());
             wr.setAlignment(ai.getVerticalAlignment(), ai
                     .getHorizontalAlignment());
             if (first) {
@@ -312,7 +317,8 @@ public class IExpandLayout extends ComplexPanel implements
     }
 
     protected void handleMargins(UIDL uidl) {
-        MarginInfo margins = new MarginInfo(uidl.getIntAttribute("margins"));
+        final MarginInfo margins = new MarginInfo(uidl
+                .getIntAttribute("margins"));
         setStyleName(me, CLASSNAME + "-" + StyleConstants.LAYOUT_MARGIN_TOP,
                 margins.hasTop());
         setStyleName(me, StyleConstants.LAYOUT_MARGIN_RIGHT, margins.hasRight());
@@ -338,9 +344,9 @@ public class IExpandLayout extends ComplexPanel implements
             return;
         }
 
-        int availableSpace = getAvailableSpace();
+        final int availableSpace = getAvailableSpace();
 
-        int usedSpace = getUsedSpace();
+        final int usedSpace = getUsedSpace();
 
         int spaceForExpandedWidget = availableSpace - usedSpace;
 
@@ -349,7 +355,7 @@ public class IExpandLayout extends ComplexPanel implements
             spaceForExpandedWidget = EXPANDED_ELEMENTS_MIN_WIDTH;
         }
 
-        WidgetWrapper wr = getWidgetWrapperFor(expandedWidget);
+        final WidgetWrapper wr = getWidgetWrapperFor(expandedWidget);
         wr.setExpandedSize(spaceForExpandedWidget);
 
         // TODO save previous size and only propagate if really changed
@@ -373,12 +379,12 @@ public class IExpandLayout extends ComplexPanel implements
 
     private int getUsedSpace() {
         int total = 0;
-        int widgetCount = getWidgetCount();
-        Iterator it = iterator();
+        final int widgetCount = getWidgetCount();
+        final Iterator it = iterator();
         while (it.hasNext()) {
-            Widget w = (Widget) it.next();
+            final Widget w = (Widget) it.next();
             if (w != expandedWidget) {
-                WidgetWrapper wr = getWidgetWrapperFor(w);
+                final WidgetWrapper wr = getWidgetWrapperFor(w);
                 if (orientationMode == ORIENTATION_VERTICAL) {
                     total += wr.getOffsetHeight();
                 } else {
@@ -393,8 +399,8 @@ public class IExpandLayout extends ComplexPanel implements
     private int getSpacingSize() {
         if (hasComponentSpacing) {
             if (spacingSize < 0) {
-                Element temp = DOM.createDiv();
-                WidgetWrapper wr = createWidgetWrappper();
+                final Element temp = DOM.createDiv();
+                final WidgetWrapper wr = createWidgetWrappper();
                 wr.setSpacingEnabled(true);
                 DOM.appendChild(temp, wr.getElement());
                 DOM.setStyleAttribute(temp, "position", "absolute");
@@ -427,12 +433,14 @@ public class IExpandLayout extends ComplexPanel implements
                 DOM.setStyleAttribute(getElement(), "overflow", "visible");
             }
 
-            int marginTop = DOM.getElementPropertyInt(DOM.getFirstChild(me),
-                    "offsetTop")
+            final int marginTop = DOM.getElementPropertyInt(DOM
+                    .getFirstChild(me), "offsetTop")
                     - DOM.getElementPropertyInt(element, "offsetTop");
 
-            Element lastElement = DOM.getChild(me, (DOM.getChildCount(me) - 1));
-            int marginBottom = DOM.getElementPropertyInt(me, "offsetHeight")
+            final Element lastElement = DOM.getChild(me,
+                    (DOM.getChildCount(me) - 1));
+            final int marginBottom = DOM.getElementPropertyInt(me,
+                    "offsetHeight")
                     + DOM.getElementPropertyInt(me, "offsetTop")
                     - (DOM.getElementPropertyInt(lastElement, "offsetTop") + DOM
                             .getElementPropertyInt(lastElement, "offsetHeight"));
@@ -446,16 +454,16 @@ public class IExpandLayout extends ComplexPanel implements
 
     protected void insert(Widget w, int beforeIndex) {
         if (w instanceof Caption) {
-            Caption c = (Caption) w;
+            final Caption c = (Caption) w;
             // captions go into same container element as their
             // owners
-            Element container = DOM.getParent(((UIObject) c.getOwner())
+            final Element container = DOM.getParent(((UIObject) c.getOwner())
                     .getElement());
-            Element captionContainer = DOM.createDiv();
+            final Element captionContainer = DOM.createDiv();
             DOM.insertChild(container, captionContainer, 0);
             insert(w, captionContainer, beforeIndex, false);
         } else {
-            WidgetWrapper wrapper = createWidgetWrappper();
+            final WidgetWrapper wrapper = createWidgetWrappper();
             DOM.insertChild(childContainer, wrapper.getElement(), beforeIndex);
             insert(w, wrapper.getContainerElement(), beforeIndex, false);
         }
@@ -466,8 +474,8 @@ public class IExpandLayout extends ComplexPanel implements
     }
 
     public boolean remove(Widget w) {
-        WidgetWrapper ww = getWidgetWrapperFor(w);
-        boolean removed = super.remove(w);
+        final WidgetWrapper ww = getWidgetWrapperFor(w);
+        final boolean removed = super.remove(w);
         if (removed) {
             if (!(w instanceof Caption)) {
                 DOM.removeChild(childContainer, ww.getElement());
@@ -478,7 +486,7 @@ public class IExpandLayout extends ComplexPanel implements
     }
 
     public void removeCaption(Widget w) {
-        Caption c = (Caption) componentToCaption.get(w);
+        final Caption c = (Caption) componentToCaption.get(w);
         if (c != null) {
             this.remove(c);
             componentToCaption.remove(w);
@@ -486,7 +494,7 @@ public class IExpandLayout extends ComplexPanel implements
     }
 
     public boolean removePaintable(Paintable p) {
-        Caption c = (Caption) componentToCaption.get(p);
+        final Caption c = (Caption) componentToCaption.get(p);
         if (c != null) {
             componentToCaption.remove(c);
             remove(c);
@@ -500,12 +508,12 @@ public class IExpandLayout extends ComplexPanel implements
 
     public void replaceChildComponent(Widget from, Widget to) {
         client.unregisterPaintable((Paintable) from);
-        Caption c = (Caption) componentToCaption.get(from);
+        final Caption c = (Caption) componentToCaption.get(from);
         if (c != null) {
             remove(c);
             componentToCaption.remove(c);
         }
-        int index = getWidgetIndex(from);
+        final int index = getWidgetIndex(from);
         if (index >= 0) {
             remove(index);
             insert(to, index);
@@ -518,7 +526,7 @@ public class IExpandLayout extends ComplexPanel implements
 
         if (Caption.isNeeded(uidl)) {
             if (c == null) {
-                int index = getWidgetIndex((Widget) component);
+                final int index = getWidgetIndex((Widget) component);
                 c = new Caption(component, client);
                 insert(c, index);
                 componentToCaption.put(component, c);
@@ -571,10 +579,10 @@ public class IExpandLayout extends ComplexPanel implements
 
         hasComponentSpacing = uidl.getBooleanAttribute("spacing");
 
-        ArrayList uidlWidgets = new ArrayList();
-        for (Iterator it = uidl.getChildIterator(); it.hasNext();) {
-            UIDL cellUidl = (UIDL) it.next();
-            Widget child = client.getWidget(cellUidl.getChildUIDL(0));
+        final ArrayList uidlWidgets = new ArrayList();
+        for (final Iterator it = uidl.getChildIterator(); it.hasNext();) {
+            final UIDL cellUidl = (UIDL) it.next();
+            final Widget child = client.getWidget(cellUidl.getChildUIDL(0));
             uidlWidgets.add(child);
             if (cellUidl.hasAttribute("expanded")) {
                 expandedWidget = child;
@@ -582,16 +590,16 @@ public class IExpandLayout extends ComplexPanel implements
             }
         }
 
-        ArrayList oldWidgets = getPaintables();
+        final ArrayList oldWidgets = getPaintables();
 
-        Iterator oldIt = oldWidgets.iterator();
-        Iterator newIt = uidlWidgets.iterator();
-        Iterator newUidl = uidl.getChildIterator();
+        final Iterator oldIt = oldWidgets.iterator();
+        final Iterator newIt = uidlWidgets.iterator();
+        final Iterator newUidl = uidl.getChildIterator();
 
         Widget oldChild = null;
         while (newIt.hasNext()) {
-            Widget child = (Widget) newIt.next();
-            UIDL childUidl = ((UIDL) newUidl.next()).getChildUIDL(0);
+            final Widget child = (Widget) newIt.next();
+            final UIDL childUidl = ((UIDL) newUidl.next()).getChildUIDL(0);
             if (oldChild == null && oldIt.hasNext()) {
                 // search for next old Paintable which still exists in layout
                 // and delete others
@@ -626,7 +634,7 @@ public class IExpandLayout extends ComplexPanel implements
                 insert(child, index);
             } else {
                 // insert new child before old one
-                int index = getWidgetIndex(oldChild);
+                final int index = getWidgetIndex(oldChild);
                 insert(child, index);
             }
             if (child != expandedWidget) {
@@ -636,7 +644,7 @@ public class IExpandLayout extends ComplexPanel implements
         // remove possibly remaining old Paintable object which were not updated
         while (oldIt.hasNext()) {
             oldChild = (Widget) oldIt.next();
-            Paintable p = (Paintable) oldChild;
+            final Paintable p = (Paintable) oldChild;
             if (!uidlWidgets.contains(p)) {
                 removePaintable(p);
             }

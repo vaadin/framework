@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import com.google.gwt.user.client.Command;
@@ -43,16 +47,16 @@ public class ISlider extends Widget implements Paintable,
     private boolean arrows;
 
     /* DOM element for slider's base */
-    private Element base;
+    private final Element base;
 
     /* DOM element for slider's handle */
-    private Element handle;
+    private final Element handle;
 
     /* DOM element for decrement arrow */
-    private Element smaller;
+    private final Element smaller;
 
     /* DOM element for increment arrow */
-    private Element bigger;
+    private final Element bigger;
 
     /* Temporary dragging/animation variables */
     private boolean dragging = false;
@@ -159,7 +163,7 @@ public class ISlider extends Widget implements Paintable,
         final String domProperty = vertical ? "offsetHeight" : "offsetWidth";
 
         if (size == -1) {
-            Element p = DOM.getParent(getElement());
+            final Element p = DOM.getParent(getElement());
             if (DOM.getElementPropertyInt(p, domProperty) > 50) {
                 if (vertical) {
                     setHeight();
@@ -172,7 +176,7 @@ public class ISlider extends Widget implements Paintable,
                 DOM.setStyleAttribute(base, styleAttribute, MIN_SIZE + "px");
                 DeferredCommand.addCommand(new Command() {
                     public void execute() {
-                        Element p = DOM.getParent(getElement());
+                        final Element p = DOM.getParent(getElement());
                         if (DOM.getElementPropertyInt(p, domProperty) > (MIN_SIZE + 5)) {
                             if (vertical) {
                                 setHeight();
@@ -193,9 +197,9 @@ public class ISlider extends Widget implements Paintable,
     }
 
     private void buildHandle() {
-        String styleAttribute = vertical ? "height" : "width";
-        String handleAttribute = vertical ? "marginTop" : "marginLeft";
-        String domProperty = vertical ? "offsetHeight" : "offsetWidth";
+        final String styleAttribute = vertical ? "height" : "width";
+        final String handleAttribute = vertical ? "marginTop" : "marginLeft";
+        final String domProperty = vertical ? "offsetHeight" : "offsetWidth";
 
         DOM.setStyleAttribute(handle, handleAttribute, "0");
 
@@ -204,9 +208,9 @@ public class ISlider extends Widget implements Paintable,
             int s = (int) (Double.parseDouble(DOM.getElementProperty(base,
                     domProperty)) / 100 * handleSize);
             if (handleSize == -1) {
-                int baseS = Integer.parseInt(DOM.getElementProperty(base,
+                final int baseS = Integer.parseInt(DOM.getElementProperty(base,
                         domProperty));
-                double range = (max - min) * (resolution + 1) * 3;
+                final double range = (max - min) * (resolution + 1) * 3;
                 s = (int) (baseS - range);
             }
             if (s < 3) {
@@ -231,14 +235,14 @@ public class ISlider extends Widget implements Paintable,
 
         // Update handle position
         final String styleAttribute = vertical ? "marginTop" : "marginLeft";
-        String domProperty = vertical ? "offsetHeight" : "offsetWidth";
-        int handleSize = Integer.parseInt(DOM.getElementProperty(handle,
+        final String domProperty = vertical ? "offsetHeight" : "offsetWidth";
+        final int handleSize = Integer.parseInt(DOM.getElementProperty(handle,
                 domProperty));
-        int baseSize = Integer.parseInt(DOM.getElementProperty(base,
+        final int baseSize = Integer.parseInt(DOM.getElementProperty(base,
                 domProperty));
-        int range = baseSize - handleSize;
+        final int range = baseSize - handleSize;
         double v = value.doubleValue();
-        double valueRange = max - min;
+        final double valueRange = max - min;
         double p = 0;
         if (valueRange > 0) {
             p = range * ((v - min) / valueRange);
@@ -253,7 +257,7 @@ public class ISlider extends Widget implements Paintable,
         }
         final double pos = p;
 
-        int current = DOM.getIntStyleAttribute(handle, styleAttribute);
+        final int current = DOM.getIntStyleAttribute(handle, styleAttribute);
 
         if ((int) (Math.round(pos)) != current && animate) {
             if (anim != null) {
@@ -261,7 +265,7 @@ public class ISlider extends Widget implements Paintable,
             }
             anim = new Timer() {
                 private int current;
-                private int goal = (int) Math.round(pos);
+                private final int goal = (int) Math.round(pos);
                 private int dir = 0;
 
                 public void run() {
@@ -277,7 +281,7 @@ public class ISlider extends Widget implements Paintable,
                         cancel();
                         return;
                     }
-                    int increment = (goal - current) / 2;
+                    final int increment = (goal - current) / 2;
                     DOM.setStyleAttribute(handle, styleAttribute,
                             (current + increment) + "px");
                 }
@@ -311,7 +315,7 @@ public class ISlider extends Widget implements Paintable,
         if (disabled || readonly) {
             return;
         }
-        Element targ = DOM.eventGetTarget(event);
+        final Element targ = DOM.eventGetTarget(event);
 
         if (DOM.eventGetType(event) == Event.ONMOUSEWHEEL) {
             processMouseWheelEvent(event);
@@ -327,7 +331,7 @@ public class ISlider extends Widget implements Paintable,
     }
 
     private void processMouseWheelEvent(Event event) {
-        int dir = DOM.eventGetMouseWheelVelocityY(event);
+        final int dir = DOM.eventGetMouseWheelVelocityY(event);
         if (dir < 0) {
             increaseValue(event, false);
         } else {
@@ -426,16 +430,16 @@ public class ISlider extends Widget implements Paintable,
     private void setValueByEvent(Event event, boolean animate, boolean roundup) {
         double v = min; // Fallback to min
 
-        int coord = vertical ? DOM.eventGetClientY(event) : DOM
+        final int coord = vertical ? DOM.eventGetClientY(event) : DOM
                 .eventGetClientX(event);
-        String domProperty = vertical ? "offsetHeight" : "offsetWidth";
+        final String domProperty = vertical ? "offsetHeight" : "offsetWidth";
 
-        double handleSize = Integer.parseInt(DOM.getElementProperty(handle,
+        final double handleSize = Integer.parseInt(DOM.getElementProperty(
+                handle, domProperty));
+        final double baseSize = Integer.parseInt(DOM.getElementProperty(base,
                 domProperty));
-        double baseSize = Integer.parseInt(DOM.getElementProperty(base,
-                domProperty));
-        double baseOffset = vertical ? DOM.getAbsoluteTop(base) - handleSize
-                / 2 : DOM.getAbsoluteLeft(base) + handleSize / 2;
+        final double baseOffset = vertical ? DOM.getAbsoluteTop(base)
+                - handleSize / 2 : DOM.getAbsoluteLeft(base) + handleSize / 2;
 
         if (vertical) {
             v = ((baseSize - (coord - baseOffset)) / (baseSize - handleSize))
@@ -467,10 +471,10 @@ public class ISlider extends Widget implements Paintable,
             // Calculate decoration size
             DOM.setStyleAttribute(base, "height", "0");
             DOM.setStyleAttribute(base, "overflow", "hidden");
-            int decoHeight = DOM.getElementPropertyInt(getElement(),
+            final int decoHeight = DOM.getElementPropertyInt(getElement(),
                     "offsetHeight");
             // Get available space size
-            int availableHeight = DOM.getElementPropertyInt(DOM
+            final int availableHeight = DOM.getElementPropertyInt(DOM
                     .getParent(getElement()), "offsetHeight");
             int h = availableHeight - decoHeight;
             if (h < MIN_SIZE) {

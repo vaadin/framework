@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import com.google.gwt.user.client.ui.HTML;
@@ -25,7 +29,7 @@ public class ILabel extends HTML implements Paintable {
             return;
         }
 
-        String mode = uidl.getStringAttribute("mode");
+        final String mode = uidl.getStringAttribute("mode");
         if (mode == null || "text".equals(mode)) {
             setText(uidl.getChildString(0));
         } else if ("pre".equals(mode)) {

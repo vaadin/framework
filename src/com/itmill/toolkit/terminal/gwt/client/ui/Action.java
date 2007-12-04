@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import com.google.gwt.user.client.Command;
@@ -24,7 +28,7 @@ public abstract class Action implements Command {
     public abstract void execute();
 
     public String getHTML() {
-        StringBuffer sb = new StringBuffer();
+        final StringBuffer sb = new StringBuffer();
         sb.append("<div>");
         if (getIconUrl() != null) {
             sb.append("<img src=\"" + getIconUrl() + "\" alt=\"icon\" />");

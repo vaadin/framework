@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.tests;
 
 import java.util.Locale;
@@ -32,7 +36,7 @@ public class TestDateField extends CustomComponent {
         df = new DateField();
         main.addComponent(df);
 
-        ErrorMessage errorMsg = new UserError("User error " + df);
+        final ErrorMessage errorMsg = new UserError("User error " + df);
         df.setCaption("DateField caption " + df);
         df.setDescription("DateField description " + df);
         df.setComponentError(errorMsg);
@@ -42,21 +46,22 @@ public class TestDateField extends CustomComponent {
         df.addStyleName("thisShouldBeHarmless");
 
         // Another test: locale
-        DateField df1 = new DateField();
+        final DateField df1 = new DateField();
         main.addComponent(df1);
         df1.setLocale(new Locale("en", "US"));
 
-        DateField df2 = new DateField();
+        final DateField df2 = new DateField();
         main.addComponent(df2);
         df2.setLocale(new Locale("de", "DE"));
 
-        DateField df3 = new DateField();
+        final DateField df3 = new DateField();
         main.addComponent(df3);
         df3.setLocale(new Locale("ru", "RU"));
     }
 
     public void attach() {
-        ClassResource res = new ClassResource("m.gif", super.getApplication());
+        final ClassResource res = new ClassResource("m.gif", super
+                .getApplication());
         df.setIcon(res);
         super.attach();
     }

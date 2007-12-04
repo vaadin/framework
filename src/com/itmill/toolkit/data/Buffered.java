@@ -1,30 +1,6 @@
-/* *************************************************************************
- 
- IT Mill Toolkit 
-
- Development of Browser User Interfaces Made Easy
-
- Copyright (C) 2000-2006 IT Mill Ltd
- 
- *************************************************************************
-
- This product is distributed under commercial license that can be found
- from the product package on license.pdf. Use of this product might 
- require purchasing a commercial license from IT Mill Ltd. For guidelines 
- on usage, see licensing-guidelines.html
-
- *************************************************************************
- 
- For more information, contact:
- 
- IT Mill Ltd                           phone: +358 2 4802 7180
- Ruukinkatu 2-4                        fax:   +358 2 4802 7181
- 20540, Turku                          email:  info@itmill.com
- Finland                               company www: www.itmill.com
- 
- Primary source for information and releases: www.itmill.com
-
- ********************************************************************** */
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
 
 package com.itmill.toolkit.data;
 
@@ -175,7 +151,7 @@ public interface Buffered {
         private static final long serialVersionUID = 3256720671781630518L;
 
         /** Source class implementing the buffered interface */
-        private Buffered source;
+        private final Buffered source;
 
         /** Original cause of the source exception */
         private Throwable[] causes = {};
@@ -266,7 +242,7 @@ public interface Buffered {
             int level = Integer.MIN_VALUE;
 
             for (int i = 0; i < causes.length; i++) {
-                int causeLevel = (causes[i] instanceof ErrorMessage) ? ((ErrorMessage) causes[i])
+                final int causeLevel = (causes[i] instanceof ErrorMessage) ? ((ErrorMessage) causes[i])
                         .getErrorLevel()
                         : ErrorMessage.ERROR;
                 if (causeLevel > level) {
@@ -280,7 +256,7 @@ public interface Buffered {
         /* Documented in super interface */
         public void paint(PaintTarget target) throws PaintException {
             target.startTag("error");
-            int level = getErrorLevel();
+            final int level = getErrorLevel();
             if (level > 0 && level <= ErrorMessage.INFORMATION) {
                 target.addAttribute("level", "info");
             } else if (level <= ErrorMessage.WARNING) {

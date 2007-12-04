@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.demo.reservation.gwt.client;
 
 import com.google.gwt.core.client.GWT;
@@ -9,7 +13,7 @@ import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
 public class ReservationWidgetSet extends DefaultWidgetSet {
     public Widget createWidget(UIDL uidl) {
-        String className = resolveWidgetTypeName(uidl);
+        final String className = resolveWidgetTypeName(uidl);
         if ("com.itmill.toolkit.terminal.gwt.client.ui.IGoogleMap"
                 .equals(className)) {
             return new IGoogleMap();
@@ -23,7 +27,7 @@ public class ReservationWidgetSet extends DefaultWidgetSet {
 
     protected String resolveWidgetTypeName(UIDL uidl) {
 
-        String tag = uidl.getTag();
+        final String tag = uidl.getTag();
         if ("googlemap".equals(tag)) {
             return "com.itmill.toolkit.terminal.gwt.client.ui.IGoogleMap";
         } else if ("calendarfield".equals(tag)) {

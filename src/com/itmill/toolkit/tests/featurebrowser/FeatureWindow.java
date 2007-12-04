@@ -1,30 +1,6 @@
-/* *************************************************************************
- 
- IT Mill Toolkit 
-
- Development of Browser User Interfaces Made Easy
-
- Copyright (C) 2000-2006 IT Mill Ltd
- 
- *************************************************************************
-
- This product is distributed under commercial license that can be found
- from the product package on license.pdf. Use of this product might 
- require purchasing a commercial license from IT Mill Ltd. For guidelines 
- on usage, see licensing-guidelines.html
-
- *************************************************************************
- 
- For more information, contact:
- 
- IT Mill Ltd                           phone: +358 2 4802 7180
- Ruukinkatu 2-4                        fax:   +358 2 4802 7181
- 20540, Turku                          email:  info@itmill.com
- Finland                               company www: www.itmill.com
- 
- Primary source for information and releases: www.itmill.com
-
- ********************************************************************** */
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
 
 package com.itmill.toolkit.tests.featurebrowser;
 
@@ -38,9 +14,10 @@ import com.itmill.toolkit.ui.Window.CloseEvent;
 
 public class FeatureWindow extends Feature implements Window.CloseListener {
 
-    private Button addButton = new Button("Add window", this, "addWin");
+    private final Button addButton = new Button("Add window", this, "addWin");
 
-    private Button removeButton = new Button("Remove window", this, "delWin");
+    private final Button removeButton = new Button("Remove window", this,
+            "delWin");
 
     private Window demoWindow;
 
@@ -52,9 +29,9 @@ public class FeatureWindow extends Feature implements Window.CloseListener {
 
     protected Component getDemoComponent() {
 
-        OrderedLayout layoutRoot = new OrderedLayout();
-        OrderedLayout layoutUpper = new OrderedLayout();
-        OrderedLayout layoutLower = new OrderedLayout();
+        final OrderedLayout layoutRoot = new OrderedLayout();
+        final OrderedLayout layoutUpper = new OrderedLayout();
+        final OrderedLayout layoutLower = new OrderedLayout();
 
         demoWindow = new Window("Feature Test Window");
         demoWindow.addListener(this);

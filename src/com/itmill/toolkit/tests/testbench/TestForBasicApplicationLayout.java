@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.tests.testbench;
 
 import java.sql.SQLException;
@@ -21,9 +25,9 @@ import com.itmill.toolkit.ui.Button.ClickListener;
 
 public class TestForBasicApplicationLayout extends CustomComponent {
 
-    private Button click;
-    private Button click2;
-    private TabSheet tab;
+    private final Button click;
+    private final Button click2;
+    private final TabSheet tab;
 
     // Database provided with sample data
     private SampleDatabase sampleDatabase;
@@ -47,26 +51,27 @@ public class TestForBasicApplicationLayout extends CustomComponent {
 
         });
 
-        SplitPanel sp = new SplitPanel(SplitPanel.ORIENTATION_HORIZONTAL);
+        final SplitPanel sp = new SplitPanel(SplitPanel.ORIENTATION_HORIZONTAL);
         sp.setSplitPosition(290, Sizeable.UNITS_PIXELS);
 
-        SplitPanel sp2 = new SplitPanel(SplitPanel.ORIENTATION_VERTICAL);
+        final SplitPanel sp2 = new SplitPanel(SplitPanel.ORIENTATION_VERTICAL);
         sp2.setSplitPosition(255, Sizeable.UNITS_PIXELS);
 
-        Panel p = new Panel("Accordion Panel");
+        final Panel p = new Panel("Accordion Panel");
         p.setSizeFull();
 
         tab = new TabSheet();
         tab.setSizeFull();
 
-        Panel report = new Panel("Monthly Program Runs", new ExpandLayout());
-        OrderedLayout controls = new OrderedLayout();
+        final Panel report = new Panel("Monthly Program Runs",
+                new ExpandLayout());
+        final OrderedLayout controls = new OrderedLayout();
         controls.setMargin(true);
         controls.addComponent(new Label("Report tab"));
         controls.addComponent(click);
         controls.addComponent(click2);
         report.addComponent(controls);
-        DateField cal = new DateField();
+        final DateField cal = new DateField();
         cal.setResolution(DateField.RESOLUTION_DAY);
         cal.setLocale(new Locale("en", "US"));
         report.addComponent(cal);
@@ -77,14 +82,14 @@ public class TestForBasicApplicationLayout extends CustomComponent {
 
         sp2.setFirstComponent(report);
 
-        Table table = new Table();
+        final Table table = new Table();
         // populate Toolkit table component with test SQL table rows
         try {
             sampleDatabase = new SampleDatabase();
-            QueryContainer qc = new QueryContainer("SELECT * FROM employee",
-                    sampleDatabase.getConnection());
+            final QueryContainer qc = new QueryContainer(
+                    "SELECT * FROM employee", sampleDatabase.getConnection());
             table.setContainerDataSource(qc);
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             e.printStackTrace();
         }
         // define which columns should be visible on Table component

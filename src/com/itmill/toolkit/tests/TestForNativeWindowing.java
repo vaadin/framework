@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.tests;
 
 import java.net.MalformedURLException;
@@ -31,7 +35,7 @@ public class TestForNativeWindowing extends Application {
                         w.setWidth(100);
                         w.setHeight(400);
 
-                        Button closebutton = new Button("Close "
+                        final Button closebutton = new Button("Close "
                                 + w.getCaption(), new Button.ClickListener() {
                             public void buttonClick(ClickEvent event) {
                                 main.removeWindow(w);
@@ -83,7 +87,7 @@ public class TestForNativeWindowing extends Application {
                                                                             .currentTimeMillis()
                                                                     + "/")),
                                             null);
-                        } catch (MalformedURLException e) {
+                        } catch (final MalformedURLException e) {
                         }
                     }
                 }));
@@ -94,13 +98,13 @@ public class TestForNativeWindowing extends Application {
 
     public Window getWindow(String name) {
 
-        Window w = super.getWindow(name);
+        final Window w = super.getWindow(name);
         if (w != null) {
             return w;
         }
 
         if (name != null && name.startsWith("mainwin-")) {
-            String postfix = name.substring("mainwin-".length());
+            final String postfix = name.substring("mainwin-".length());
             final Window ww = new Window("Window: " + postfix);
             ww.setName(name);
             ww.addComponent(new Label(

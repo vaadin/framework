@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.demo;
 
 import java.util.Date;
@@ -57,31 +61,31 @@ public class KeyboardShortcut extends Application implements Handler {
     private final Action ACTION_RESTART = new ShortcutAction("Restart ",
             ShortcutAction.KeyCode.ESCAPE, null);
 
-    private Action[] actions = new Action[] { ACTION_A, ACTION_Z, ACTION_X,
-            ACTION_RESTART };
+    private final Action[] actions = new Action[] { ACTION_A, ACTION_Z,
+            ACTION_X, ACTION_RESTART };
 
     private TextField f;
 
     public void init() {
 
-        Window w = new Window("Keyboard shortcuts demo");
-        ExpandLayout main = new ExpandLayout();
+        final Window w = new Window("Keyboard shortcuts demo");
+        final ExpandLayout main = new ExpandLayout();
         main.setMargin(true);
         main.setSpacing(true);
         setMainWindow(w);
         w.setLayout(main);
 
-        Panel p = new Panel("Test application for shortcut actions");
+        final Panel p = new Panel("Test application for shortcut actions");
         p.addComponent(instructions);
 
-        OrderedLayout buttons = new OrderedLayout(
+        final OrderedLayout buttons = new OrderedLayout(
                 OrderedLayout.ORIENTATION_HORIZONTAL);
 
         // Restart button
-        Button close = new Button("restart", this, "close");
-        Button a = new Button("Button A", this, "actionAHandler");
-        Button z = new Button("Button Z", this, "actionZHandler");
-        Button x = new Button("Button X", this, "actionXHandler");
+        final Button close = new Button("restart", this, "close");
+        final Button a = new Button("Button A", this, "actionAHandler");
+        final Button z = new Button("Button Z", this, "actionZHandler");
+        final Button x = new Button("Button X", this, "actionXHandler");
         f = new TextField();
 
         buttons.addComponent(close);

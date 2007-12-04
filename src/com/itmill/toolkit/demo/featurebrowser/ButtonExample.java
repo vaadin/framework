@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.demo.featurebrowser;
 
 import com.itmill.toolkit.terminal.ExternalResource;
@@ -21,18 +25,18 @@ public class ButtonExample extends CustomComponent implements
 
     public ButtonExample() {
 
-        OrderedLayout main = new OrderedLayout();
+        final OrderedLayout main = new OrderedLayout();
         main.setMargin(true);
         setCompositionRoot(main);
 
-        OrderedLayout horiz = new OrderedLayout(
+        final OrderedLayout horiz = new OrderedLayout(
                 OrderedLayout.ORIENTATION_HORIZONTAL);
         main.addComponent(horiz);
-        Panel basic = new Panel("Basic buttons");
+        final Panel basic = new Panel("Basic buttons");
         basic.setStyleName(Panel.STYLE_LIGHT);
         horiz.addComponent(basic);
 
-        Panel bells = new Panel("w/ bells & whistles");
+        final Panel bells = new Panel("w/ bells & whistles");
         bells.setStyleName(Panel.STYLE_LIGHT);
         horiz.addComponent(bells);
 
@@ -77,10 +81,10 @@ public class ButtonExample extends CustomComponent implements
         b.setDescription("Link-style, icon+tootip, no caption");
         basic.addComponent(b);
 
-        Panel links = new Panel("Links");
+        final Panel links = new Panel("Links");
         links.setStyleName(Panel.STYLE_LIGHT);
         main.addComponent(links);
-        Label desc = new Label(
+        final Label desc = new Label(
                 "The main difference between a Link and"
                         + " a link-styled Button is that the Link works client-"
                         + " side, whereas the Button works server side.<br/> This means"
@@ -123,7 +127,7 @@ public class ButtonExample extends CustomComponent implements
     }
 
     public void buttonClick(ClickEvent event) {
-        Button b = event.getButton();
+        final Button b = event.getButton();
         getWindow().showNotification(
                 "Clicked"
                         + (b instanceof CheckBox ? ", value: "

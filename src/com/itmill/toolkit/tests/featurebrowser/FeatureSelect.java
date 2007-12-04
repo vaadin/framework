@@ -1,30 +1,6 @@
-/* *************************************************************************
- 
- IT Mill Toolkit 
-
- Development of Browser User Interfaces Made Easy
-
- Copyright (C) 2000-2006 IT Mill Ltd
- 
- *************************************************************************
-
- This product is distributed under commercial license that can be found
- from the product package on license.pdf. Use of this product might 
- require purchasing a commercial license from IT Mill Ltd. For guidelines 
- on usage, see licensing-guidelines.html
-
- *************************************************************************
- 
- For more information, contact:
- 
- IT Mill Ltd                           phone: +358 2 4802 7180
- Ruukinkatu 2-4                        fax:   +358 2 4802 7181
- 20540, Turku                          email:  info@itmill.com
- Finland                               company www: www.itmill.com
- 
- Primary source for information and releases: www.itmill.com
-
- ********************************************************************** */
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
 
 package com.itmill.toolkit.tests.featurebrowser;
 
@@ -50,9 +26,9 @@ public class FeatureSelect extends Feature {
 
     protected Component getDemoComponent() {
 
-        OrderedLayout l = new OrderedLayout();
+        final OrderedLayout l = new OrderedLayout();
 
-        Select s = new Select("Select employee");
+        final Select s = new Select("Select employee");
         for (int i = 0; i < 50; i++) {
             s
                     .addItem(firstnames[(int) (Math.random() * (firstnames.length - 1))]
@@ -63,7 +39,7 @@ public class FeatureSelect extends Feature {
 
         // Properties
         propertyPanel = new PropertyPanel(s);
-        Select themes = (Select) propertyPanel.getField("style");
+        final Select themes = (Select) propertyPanel.getField("style");
         themes.addItem("optiongroup").getItemProperty(
                 themes.getItemCaptionPropertyId()).setValue("optiongroup");
         themes.addItem("twincol").getItemProperty(

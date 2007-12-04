@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import java.util.Date;
@@ -21,7 +25,7 @@ import com.itmill.toolkit.terminal.gwt.client.LocaleService;
 public class CalendarPanel extends FlexTable implements MouseListener,
         ClickListener {
 
-    private IDateField datefield;
+    private final IDateField datefield;
 
     private IEventButton prevYear;
 
@@ -60,9 +64,9 @@ public class CalendarPanel extends FlexTable implements MouseListener,
     }
 
     private void buildCalendar(boolean forceRedraw) {
-        boolean needsMonth = datefield.getCurrentResolution() > IDateField.RESOLUTION_YEAR;
+        final boolean needsMonth = datefield.getCurrentResolution() > IDateField.RESOLUTION_YEAR;
         boolean needsBody = datefield.getCurrentResolution() >= IDateField.RESOLUTION_DAY;
-        boolean needsTime = datefield.getCurrentResolution() >= IDateField.RESOLUTION_HOUR;
+        final boolean needsTime = datefield.getCurrentResolution() >= IDateField.RESOLUTION_HOUR;
         buildCalendarHeader(forceRedraw, needsMonth);
         clearCalendarBody(!needsBody);
         if (needsBody) {
@@ -142,7 +146,8 @@ public class CalendarPanel extends FlexTable implements MouseListener,
             }
 
             // Print weekday names
-            int firstDay = datefield.getDateTimeService().getFirstDayOfWeek();
+            final int firstDay = datefield.getDateTimeService()
+                    .getFirstDayOfWeek();
             for (int i = 0; i < 7; i++) {
                 int day = i + firstDay;
                 if (day > 6) {
@@ -158,9 +163,9 @@ public class CalendarPanel extends FlexTable implements MouseListener,
             }
         }
 
-        String monthName = needsMonth ? datefield.getDateTimeService()
+        final String monthName = needsMonth ? datefield.getDateTimeService()
                 .getMonth(datefield.getCurrentDate().getMonth()) : "";
-        int year = datefield.getCurrentDate().getYear() + 1900;
+        final int year = datefield.getCurrentDate().getYear() + 1900;
         setHTML(0, 2, "<span class=\"" + IDateField.CLASSNAME
                 + "-calendarpanel-month\">" + monthName + " " + year
                 + "</span>");
@@ -171,32 +176,33 @@ public class CalendarPanel extends FlexTable implements MouseListener,
         if (date == null) {
             date = new Date();
         }
-        int startWeekDay = datefield.getDateTimeService().getStartWeekDay(date);
-        int numDays = DateTimeService.getNumberOfDaysInMonth(date);
+        final int startWeekDay = datefield.getDateTimeService()
+                .getStartWeekDay(date);
+        final int numDays = DateTimeService.getNumberOfDaysInMonth(date);
         int dayCount = 0;
-        Date today = new Date();
-        Date curr = new Date(date.getTime());
+        final Date today = new Date();
+        final Date curr = new Date(date.getTime());
         for (int row = 2; row < 8; row++) {
             for (int col = 0; col < 7; col++) {
                 if (!(row == 2 && col < startWeekDay)) {
                     if (dayCount < numDays) {
-                        int selectedDate = ++dayCount;
+                        final int selectedDate = ++dayCount;
                         String title = "";
                         if (entrySource != null) {
                             curr.setDate(dayCount);
-                            List entries = entrySource.getEntries(curr,
+                            final List entries = entrySource.getEntries(curr,
                                     IDateField.RESOLUTION_DAY);
                             if (entries != null) {
-                                for (Iterator it = entries.iterator(); it
+                                for (final Iterator it = entries.iterator(); it
                                         .hasNext();) {
-                                    CalendarEntry entry = (CalendarEntry) it
+                                    final CalendarEntry entry = (CalendarEntry) it
                                             .next();
                                     title += (title.length() > 0 ? ", " : "")
                                             + entry.getStringForDate(curr);
                                 }
                             }
                         }
-                        String baseclass = IDateField.CLASSNAME
+                        final String baseclass = IDateField.CLASSNAME
                                 + "-calendarpanel-day";
                         String cssClass = baseclass;
                         if (!isEnabledDate(curr)) {
@@ -371,7 +377,7 @@ public class CalendarPanel extends FlexTable implements MouseListener,
 
     private class DateClickListener implements TableListener {
 
-        private CalendarPanel cal;
+        private final CalendarPanel cal;
 
         public DateClickListener(CalendarPanel panel) {
             cal = panel;
@@ -383,14 +389,14 @@ public class CalendarPanel extends FlexTable implements MouseListener,
                 return;
             }
 
-            String text = cal.getText(row, col);
+            final String text = cal.getText(row, col);
             if (text.equals(" ")) {
                 return;
             }
 
             try {
-                Integer day = new Integer(text);
-                Date newDate = new Date(cal.datefield.getCurrentDate()
+                final Integer day = new Integer(text);
+                final Date newDate = new Date(cal.datefield.getCurrentDate()
                         .getTime());
                 newDate.setDate(day.intValue());
                 if (!isEnabledDate(newDate)) {
@@ -402,7 +408,7 @@ public class CalendarPanel extends FlexTable implements MouseListener,
                         cal.datefield.isImmediate());
 
                 updateCalendar();
-            } catch (NumberFormatException e) {
+            } catch (final NumberFormatException e) {
                 // Not a number, ignore and stop here
                 return;
             }
@@ -412,7 +418,7 @@ public class CalendarPanel extends FlexTable implements MouseListener,
 
     public void setLimits(Date min, Date max) {
         if (min != null) {
-            Date d = new Date(min.getTime());
+            final Date d = new Date(min.getTime());
             d.setHours(0);
             d.setMinutes(0);
             d.setSeconds(1);
@@ -421,7 +427,7 @@ public class CalendarPanel extends FlexTable implements MouseListener,
             minDate = null;
         }
         if (max != null) {
-            Date d = new Date(max.getTime());
+            final Date d = new Date(max.getTime());
             d.setHours(24);
             d.setMinutes(59);
             d.setSeconds(59);

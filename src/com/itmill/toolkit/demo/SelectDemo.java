@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.demo;
 
 import java.sql.SQLException;
@@ -32,11 +36,11 @@ public class SelectDemo extends com.itmill.toolkit.Application {
      * Initialize Application. Demo components are added to main window.
      */
     public void init() {
-        Window main = new Window("Select demo");
+        final Window main = new Window("Select demo");
         setMainWindow(main);
 
         // Main window contains heading, table, select and tree
-        Panel panel = new Panel("Select demo (a.k.a Google Suggests)");
+        final Panel panel = new Panel("Select demo (a.k.a Google Suggests)");
         panel.addComponent(lazySelect);
         panel.addComponent(new Label("<hr />", Label.CONTENT_XHTML));
         panel.addComponent(select);
@@ -54,12 +58,12 @@ public class SelectDemo extends com.itmill.toolkit.Application {
         select.setItemCaptionPropertyId("WORKER");
         // populate Toolkit select component with test SQL table rows
         try {
-            QueryContainer qc = new QueryContainer(
+            final QueryContainer qc = new QueryContainer(
                     "SELECT ID, UNIT||', '||LASTNAME||' '||FIRSTNAME"
                             + " AS WORKER FROM employee ORDER BY WORKER",
                     sampleDatabase.getConnection());
             select.setContainerDataSource(qc);
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             e.printStackTrace();
         }
 

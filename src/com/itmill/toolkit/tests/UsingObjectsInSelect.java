@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.tests;
 
 import java.util.LinkedList;
@@ -13,20 +17,21 @@ import com.itmill.toolkit.ui.Window;
 public class UsingObjectsInSelect extends com.itmill.toolkit.Application
         implements ValueChangeListener {
 
-    private Select select = new Select();
-    private Label selectedTask = new Label("Selected task", Label.CONTENT_XHTML);
+    private final Select select = new Select();
+    private final Label selectedTask = new Label("Selected task",
+            Label.CONTENT_XHTML);
 
     public LinkedList exampleTasks = new LinkedList();
 
     public static Random random = new Random(1);
 
     public void init() {
-        Window main = new Window("Select demo");
+        final Window main = new Window("Select demo");
         setMainWindow(main);
 
-        Panel panel = new Panel("Select demo");
+        final Panel panel = new Panel("Select demo");
         panel.addComponent(select);
-        Panel panel2 = new Panel("Selection");
+        final Panel panel2 = new Panel("Selection");
         panel2.addComponent(selectedTask);
 
         select.setCaption("Select component");
@@ -40,12 +45,12 @@ public class UsingObjectsInSelect extends com.itmill.toolkit.Application
     }
 
     public void createExampleTasks() {
-        String[] assignedTo = new String[] { "John", "Mary", "Joe", "Sarah",
-                "Jeff", "Jane", "Peter", "Marc", "Josie", "Linus" };
-        String[] type = new String[] { "Enhancement", "Bugfix", "Testing",
-                "Task" };
+        final String[] assignedTo = new String[] { "John", "Mary", "Joe",
+                "Sarah", "Jeff", "Jane", "Peter", "Marc", "Josie", "Linus" };
+        final String[] type = new String[] { "Enhancement", "Bugfix",
+                "Testing", "Task" };
         for (int j = 0; j < 100; j++) {
-            Task task = new Task(
+            final Task task = new Task(
                     type[(int) (random.nextDouble() * (type.length - 1))],
                     assignedTo[(int) (random.nextDouble() * (assignedTo.length - 1))],
                     random.nextInt(100));
@@ -54,7 +59,7 @@ public class UsingObjectsInSelect extends com.itmill.toolkit.Application
     }
 
     public void valueChange(ValueChangeEvent event) {
-        Task task = (Task) select.getValue();
+        final Task task = (Task) select.getValue();
         selectedTask.setValue("<b>Type:</b> " + task.getType()
                 + "<br /><b>Assigned to:</b> " + task.getAssignedTo()
                 + "<br /><b>Estimated hours: </b>" + task.getEstimatedHours());

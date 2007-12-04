@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import com.google.gwt.user.client.DOM;
@@ -36,7 +40,7 @@ public class ILink extends HTML implements Paintable, ClickListener {
 
     private Element errorIndicatorElement;
 
-    private Element captionElement = DOM.createSpan();
+    private final Element captionElement = DOM.createSpan();
 
     private ErrorMessage errorMessage;
 
@@ -86,7 +90,7 @@ public class ILink extends HTML implements Paintable, ClickListener {
 
         // handle error
         if (uidl.hasAttribute("error")) {
-            UIDL errorUidl = uidl.getErrors();
+            final UIDL errorUidl = uidl.getErrors();
             if (errorIndicatorElement == null) {
                 errorIndicatorElement = DOM.createDiv();
                 DOM.setElementProperty(errorIndicatorElement, "className",
@@ -151,7 +155,7 @@ public class ILink extends HTML implements Paintable, ClickListener {
     }
 
     public void onBrowserEvent(Event event) {
-        Element target = DOM.eventGetTarget(event);
+        final Element target = DOM.eventGetTarget(event);
         if (errorIndicatorElement != null
                 && DOM.compare(target, errorIndicatorElement)) {
             switch (DOM.eventGetType(event)) {

@@ -1,30 +1,6 @@
-/* *************************************************************************
- 
- IT Mill Toolkit 
-
- Development of Browser User Interfaces Made Easy
-
- Copyright (C) 2000-2006 IT Mill Ltd
- 
- *************************************************************************
-
- This product is distributed under commercial license that can be found
- from the product package on license.pdf. Use of this product might 
- require purchasing a commercial license from IT Mill Ltd. For guidelines 
- on usage, see licensing-guidelines.html
-
- *************************************************************************
- 
- For more information, contact:
- 
- IT Mill Ltd                           phone: +358 2 4802 7180
- Ruukinkatu 2-4                        fax:   +358 2 4802 7181
- 20540, Turku                          email:  info@itmill.com
- Finland                               company www: www.itmill.com
- 
- Primary source for information and releases: www.itmill.com
-
- ********************************************************************** */
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
 
 package com.itmill.toolkit.ui;
 
@@ -202,7 +178,7 @@ public class DateField extends AbstractField {
         super.paintContent(target);
 
         // Adds the locale as attribute
-        Locale l = getLocale();
+        final Locale l = getLocale();
         if (l != null) {
             target.addAttribute("locale", l.toString());
         }
@@ -210,8 +186,8 @@ public class DateField extends AbstractField {
         target.addAttribute("type", type);
 
         // Gets the calendar
-        Calendar calendar = getCalendar();
-        Date currentDate = (Date) getValue();
+        final Calendar calendar = getCalendar();
+        final Date currentDate = (Date) getValue();
 
         for (int r = resolution; r <= largestModifiable; r++) {
             switch (r) {
@@ -273,7 +249,7 @@ public class DateField extends AbstractField {
                         .containsKey("msec"))) {
 
             // Old and new dates
-            Date oldDate = (Date) getValue();
+            final Date oldDate = (Date) getValue();
             Date newDate = null;
 
             // Gets the new date in parts
@@ -307,7 +283,7 @@ public class DateField extends AbstractField {
             } else {
 
                 // Clone the calendar for date operation
-                Calendar cal = getCalendar();
+                final Calendar cal = getCalendar();
 
                 // Make sure that meaningful values exists
                 // Use the previous value if some of the variables
@@ -357,7 +333,7 @@ public class DateField extends AbstractField {
      * implemented interface.
      */
     public String toString() {
-        Date value = (Date) getValue();
+        final Date value = (Date) getValue();
         if (value != null) {
             return value.toString();
         }
@@ -383,10 +359,10 @@ public class DateField extends AbstractField {
 
             // Try to parse as string
             try {
-                SimpleDateFormat parser = new SimpleDateFormat();
-                Date val = parser.parse(newValue.toString());
+                final SimpleDateFormat parser = new SimpleDateFormat();
+                final Date val = parser.parse(newValue.toString());
                 super.setValue(val, repaintIsNotNeeded);
-            } catch (ParseException e) {
+            } catch (final ParseException e) {
                 throw new Property.ConversionException(e.getMessage());
             }
         }
@@ -446,10 +422,10 @@ public class DateField extends AbstractField {
         }
 
         // Clone the instance
-        Calendar newCal = (Calendar) calendar.clone();
+        final Calendar newCal = (Calendar) calendar.clone();
 
         // Assigns the current time tom calendar.
-        Date currentDate = (Date) getValue();
+        final Date currentDate = (Date) getValue();
         if (currentDate != null) {
             newCal.setTime(currentDate);
         }

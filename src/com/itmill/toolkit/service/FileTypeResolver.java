@@ -1,30 +1,6 @@
-/* *************************************************************************
- 
- IT Mill Toolkit 
-
- Development of Browser User Interfaces Made Easy
-
- Copyright (C) 2000-2006 IT Mill Ltd
- 
- *************************************************************************
-
- This product is distributed under commercial license that can be found
- from the product package on license.pdf. Use of this product might 
- require purchasing a commercial license from IT Mill Ltd. For guidelines 
- on usage, see licensing-guidelines.html
-
- *************************************************************************
- 
- For more information, contact:
- 
- IT Mill Ltd                           phone: +358 2 4802 7180
- Ruukinkatu 2-4                        fax:   +358 2 4802 7181
- 20540, Turku                          email:  info@itmill.com
- Finland                               company www: www.itmill.com
- 
- Primary source for information and releases: www.itmill.com
-
- ********************************************************************** */
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
 
 package com.itmill.toolkit.service;
 
@@ -226,13 +202,14 @@ public class FileTypeResolver {
     static {
 
         // Initialize extension to MIME map
-        StringTokenizer lines = new StringTokenizer(initialExtToMIMEMap, ",");
+        final StringTokenizer lines = new StringTokenizer(initialExtToMIMEMap,
+                ",");
         while (lines.hasMoreTokens()) {
-            String line = lines.nextToken();
-            StringTokenizer exts = new StringTokenizer(line);
-            String type = exts.nextToken();
+            final String line = lines.nextToken();
+            final StringTokenizer exts = new StringTokenizer(line);
+            final String type = exts.nextToken();
             while (exts.hasMoreTokens()) {
-                String ext = exts.nextToken();
+                final String ext = exts.nextToken();
                 addExtension(ext, type);
             }
         }
@@ -265,10 +242,10 @@ public class FileTypeResolver {
         dotIndex++;
 
         if (fileName.length() > dotIndex) {
-            String ext = fileName.substring(dotIndex);
+            final String ext = fileName.substring(dotIndex);
 
             // Return type from extension map, if found
-            String type = (String) extToMIMEMap.get(ext);
+            final String type = (String) extToMIMEMap.get(ext);
             if (type != null) {
                 return type;
             }
@@ -289,8 +266,8 @@ public class FileTypeResolver {
      */
     public static Resource getIcon(String fileName) {
 
-        String mimeType = getMIMEType(fileName);
-        Resource icon = (Resource) MIMEToIconMap.get(mimeType);
+        final String mimeType = getMIMEType(fileName);
+        final Resource icon = (Resource) MIMEToIconMap.get(mimeType);
         if (icon != null) {
             return icon;
         }
@@ -312,8 +289,8 @@ public class FileTypeResolver {
      */
     public static Resource getIcon(File file) {
 
-        String mimeType = getMIMEType(file);
-        Resource icon = (Resource) MIMEToIconMap.get(mimeType);
+        final String mimeType = getMIMEType(file);
+        final Resource icon = (Resource) MIMEToIconMap.get(mimeType);
         if (icon != null) {
             return icon;
         }

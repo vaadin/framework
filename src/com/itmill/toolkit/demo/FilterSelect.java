@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.demo;
 
 import com.itmill.toolkit.ui.OrderedLayout;
@@ -39,11 +43,11 @@ public class FilterSelect extends com.itmill.toolkit.Application {
          * - Create new window for the application - Give the window a visible
          * title - Set the window to be the main window of the application
          */
-        Window main = new Window("Filter select demo");
+        final Window main = new Window("Filter select demo");
         setMainWindow(main);
 
         // default filterin (Starts with)
-        Select s1 = new Select();
+        final Select s1 = new Select();
         for (int i = 0; i < 105; i++) {
             s1
                     .addItem(firstnames[(int) (Math.random() * (firstnames.length - 1))]
@@ -53,7 +57,7 @@ public class FilterSelect extends com.itmill.toolkit.Application {
         s1.setImmediate(true);
 
         // contains filter
-        Select s2 = new Select();
+        final Select s2 = new Select();
         for (int i = 0; i < 500; i++) {
             s2
                     .addItem(firstnames[(int) (Math.random() * (firstnames.length - 1))]
@@ -63,11 +67,11 @@ public class FilterSelect extends com.itmill.toolkit.Application {
         s2.setFilteringMode(Filtering.FILTERINGMODE_CONTAINS);
 
         // Add selects to UI using ordered layout and panels
-        OrderedLayout orderedLayout = new OrderedLayout(
+        final OrderedLayout orderedLayout = new OrderedLayout(
                 OrderedLayout.ORIENTATION_HORIZONTAL);
 
-        Panel panel1 = new Panel("Select with default filter");
-        Panel panel2 = new Panel("Select with contains filter");
+        final Panel panel1 = new Panel("Select with default filter");
+        final Panel panel2 = new Panel("Select with contains filter");
 
         panel1.addComponent(s1);
         panel2.addComponent(s2);

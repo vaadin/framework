@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.demo;
 
 import com.itmill.toolkit.data.Property.ValueChangeEvent;
@@ -25,18 +29,18 @@ public class BrowserDemo extends com.itmill.toolkit.Application implements
 
     public void init() {
         // Create and set main window
-        Window browser = new Window("IT Mill Browser");
+        final Window browser = new Window("IT Mill Browser");
         setMainWindow(browser);
 
         // Use the expand layout to allow one component to use as much
         // space as
         // possible.
-        ExpandLayout exl = new ExpandLayout();
+        final ExpandLayout exl = new ExpandLayout();
         browser.setLayout(exl);
         exl.setSizeFull();
 
         // create the address combobox
-        Select select = new Select();
+        final Select select = new Select();
         // allow input
         select.setNewItemsAllowed(true);
         // no empty selection
@@ -62,7 +66,7 @@ public class BrowserDemo extends com.itmill.toolkit.Application implements
     }
 
     public void valueChange(ValueChangeEvent event) {
-        String url = (String) event.getProperty().getValue();
+        final String url = (String) event.getProperty().getValue();
         if (url != null) {
             // the selected url has changed, let's go there
             emb.setSource(new ExternalResource(url));

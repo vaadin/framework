@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import java.util.Iterator;
@@ -18,13 +22,13 @@ public class ITwinColSelect extends IOptionGroupBase {
 
     private static final String DEFAULT_WIDTH = "10em";
 
-    private ListBox options;
+    private final ListBox options;
 
-    private ListBox selections;
+    private final ListBox selections;
 
-    private IButton add;
+    private final IButton add;
 
-    private IButton remove;
+    private final IButton remove;
 
     public ITwinColSelect() {
         super(CLASSNAME);
@@ -36,7 +40,7 @@ public class ITwinColSelect extends IOptionGroupBase {
         selections.setVisibleItemCount(VISIBLE_COUNT);
         options.setStyleName(CLASSNAME + "-options");
         selections.setStyleName(CLASSNAME + "-selections");
-        Panel buttons = new FlowPanel();
+        final Panel buttons = new FlowPanel();
         buttons.setStyleName(CLASSNAME + "-buttons");
         add = new IButton();
         add.setText(">>");
@@ -44,10 +48,10 @@ public class ITwinColSelect extends IOptionGroupBase {
         remove = new IButton();
         remove.setText("<<");
         remove.addClickListener(this);
-        Panel p = ((Panel) optionsContainer);
+        final Panel p = ((Panel) optionsContainer);
         p.add(options);
         buttons.add(add);
-        HTML br = new HTML("<span/>");
+        final HTML br = new HTML("<span/>");
         br.setStyleName(CLASSNAME + "-deco");
         buttons.add(br);
         buttons.add(remove);
@@ -56,7 +60,7 @@ public class ITwinColSelect extends IOptionGroupBase {
     }
 
     protected void buildOptions(UIDL uidl) {
-        boolean enabled = !isDisabled() && !isReadonly();
+        final boolean enabled = !isDisabled() && !isReadonly();
         options.setMultipleSelect(isMultiselect());
         selections.setMultipleSelect(isMultiselect());
         options.setEnabled(enabled);
@@ -65,8 +69,8 @@ public class ITwinColSelect extends IOptionGroupBase {
         remove.setEnabled(enabled);
         options.clear();
         selections.clear();
-        for (Iterator i = uidl.getChildIterator(); i.hasNext();) {
-            UIDL optionUidl = (UIDL) i.next();
+        for (final Iterator i = uidl.getChildIterator(); i.hasNext();) {
+            final UIDL optionUidl = (UIDL) i.next();
             if (optionUidl.hasAttribute("selected")) {
                 selections.addItem(optionUidl.getStringAttribute("caption"),
                         optionUidl.getStringAttribute("key"));
@@ -90,7 +94,7 @@ public class ITwinColSelect extends IOptionGroupBase {
     }
 
     protected Object[] getSelectedItems() {
-        Vector selectedItemKeys = new Vector();
+        final Vector selectedItemKeys = new Vector();
         for (int i = 0; i < selections.getItemCount(); i++) {
             selectedItemKeys.add(selections.getValue(i));
         }
@@ -98,7 +102,7 @@ public class ITwinColSelect extends IOptionGroupBase {
     }
 
     private boolean[] getItemsToAdd() {
-        boolean[] selectedIndexes = new boolean[options.getItemCount()];
+        final boolean[] selectedIndexes = new boolean[options.getItemCount()];
         for (int i = 0; i < options.getItemCount(); i++) {
             if (options.isItemSelected(i)) {
                 selectedIndexes[i] = true;
@@ -110,7 +114,7 @@ public class ITwinColSelect extends IOptionGroupBase {
     }
 
     private boolean[] getItemsToRemove() {
-        boolean[] selectedIndexes = new boolean[selections.getItemCount()];
+        final boolean[] selectedIndexes = new boolean[selections.getItemCount()];
         for (int i = 0; i < selections.getItemCount(); i++) {
             if (selections.isItemSelected(i)) {
                 selectedIndexes[i] = true;
@@ -124,15 +128,16 @@ public class ITwinColSelect extends IOptionGroupBase {
     public void onClick(Widget sender) {
         super.onClick(sender);
         if (sender == add) {
-            boolean[] sel = getItemsToAdd();
+            final boolean[] sel = getItemsToAdd();
             for (int i = 0; i < sel.length; i++) {
                 if (sel[i]) {
-                    int optionIndex = i - (sel.length - options.getItemCount());
+                    final int optionIndex = i
+                            - (sel.length - options.getItemCount());
                     selectedKeys.add(options.getValue(optionIndex));
 
                     // Move selection to another column
-                    String text = options.getItemText(optionIndex);
-                    String value = options.getValue(optionIndex);
+                    final String text = options.getItemText(optionIndex);
+                    final String value = options.getValue(optionIndex);
                     selections.addItem(text, value);
                     selections.setItemSelected(selections.getItemCount() - 1,
                             true);
@@ -143,16 +148,16 @@ public class ITwinColSelect extends IOptionGroupBase {
                     isImmediate());
 
         } else if (sender == remove) {
-            boolean[] sel = getItemsToRemove();
+            final boolean[] sel = getItemsToRemove();
             for (int i = 0; i < sel.length; i++) {
                 if (sel[i]) {
-                    int selectionIndex = i
+                    final int selectionIndex = i
                             - (sel.length - selections.getItemCount());
                     selectedKeys.remove(selections.getValue(selectionIndex));
 
                     // Move selection to another column
-                    String text = selections.getItemText(selectionIndex);
-                    String value = selections.getValue(selectionIndex);
+                    final String text = selections.getItemText(selectionIndex);
+                    final String value = selections.getValue(selectionIndex);
                     options.addItem(text, value);
                     options.setItemSelected(options.getItemCount() - 1, true);
                     selections.removeItem(selectionIndex);
@@ -162,13 +167,13 @@ public class ITwinColSelect extends IOptionGroupBase {
                     isImmediate());
         } else if (sender == options) {
             // unselect all in other list, to avoid mistakes (i.e wrong button)
-            int c = selections.getItemCount();
+            final int c = selections.getItemCount();
             for (int i = 0; i < c; i++) {
                 selections.setItemSelected(i, false);
             }
         } else if (sender == selections) {
             // unselect all in other list, to avoid mistakes (i.e wrong button)
-            int c = options.getItemCount();
+            final int c = options.getItemCount();
             for (int i = 0; i < c; i++) {
                 options.setItemSelected(i, false);
             }

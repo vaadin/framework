@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import java.util.HashSet;
@@ -63,9 +67,9 @@ public class IView extends SimplePanel implements Paintable,
         // Open URL:s
         while (childIndex < uidl.getChidlCount()
                 && "open".equals(uidl.getChildUIDL(childIndex).getTag())) {
-            UIDL open = uidl.getChildUIDL(childIndex);
-            String url = open.getStringAttribute("src");
-            String target = open.getStringAttribute("name");
+            final UIDL open = uidl.getChildUIDL(childIndex);
+            final String url = open.getStringAttribute("src");
+            final String target = open.getStringAttribute("name");
             if (target == null) {
                 goTo(url);
             } else {
@@ -77,7 +81,7 @@ public class IView extends SimplePanel implements Paintable,
 
         // Draw this application level window
         UIDL childUidl = uidl.getChildUIDL(childIndex);
-        Paintable lo = (Paintable) client.getWidget(childUidl);
+        final Paintable lo = (Paintable) client.getWidget(childUidl);
 
         if (layout != null) {
             if (layout != lo) {
@@ -94,12 +98,12 @@ public class IView extends SimplePanel implements Paintable,
         layout.updateFromUIDL(childUidl, client);
 
         // Update subwindows
-        HashSet removedSubWindows = new HashSet(subWindows);
+        final HashSet removedSubWindows = new HashSet(subWindows);
 
         // Open new windows
         while ((childUidl = uidl.getChildUIDL(childIndex++)) != null) {
             if ("window".equals(childUidl.getTag())) {
-                Widget w = client.getWidget(childUidl);
+                final Widget w = client.getWidget(childUidl);
                 if (subWindows.contains(w)) {
                     removedSubWindows.remove(w);
                 } else {
@@ -112,8 +116,9 @@ public class IView extends SimplePanel implements Paintable,
                 }
                 actionHandler.updateActionMap(childUidl);
             } else if (childUidl.getTag().equals("notifications")) {
-                for (Iterator it = childUidl.getChildIterator(); it.hasNext();) {
-                    UIDL notification = (UIDL) it.next();
+                for (final Iterator it = childUidl.getChildIterator(); it
+                        .hasNext();) {
+                    final UIDL notification = (UIDL) it.next();
                     String html = "";
                     if (notification.hasAttribute("caption")) {
                         html += "<H1>"
@@ -126,19 +131,20 @@ public class IView extends SimplePanel implements Paintable,
                                 + "</p>";
                     }
 
-                    String style = notification.hasAttribute("style") ? notification
+                    final String style = notification.hasAttribute("style") ? notification
                             .getStringAttribute("style")
                             : null;
-                    int position = notification.getIntAttribute("position");
-                    int delay = notification.getIntAttribute("delay");
+                    final int position = notification
+                            .getIntAttribute("position");
+                    final int delay = notification.getIntAttribute("delay");
                     new Notification(delay).show(html, position, style);
                 }
             }
         }
 
         // Close old windows
-        for (Iterator rem = removedSubWindows.iterator(); rem.hasNext();) {
-            IWindow w = (IWindow) rem.next();
+        for (final Iterator rem = removedSubWindows.iterator(); rem.hasNext();) {
+            final IWindow w = (IWindow) rem.next();
             client.unregisterPaintable(w);
             subWindows.remove(w);
             RootPanel.get().remove(w);
@@ -155,7 +161,7 @@ public class IView extends SimplePanel implements Paintable,
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
         if (DOM.eventGetType(event) == Event.ONKEYDOWN && actionHandler != null) {
-            int modifiers = KeyboardListenerCollection
+            final int modifiers = KeyboardListenerCollection
                     .getKeyboardModifiers(event);
             actionHandler.handleKeyboardEvent(
                     (char) DOM.eventGetKeyCode(event), modifiers);

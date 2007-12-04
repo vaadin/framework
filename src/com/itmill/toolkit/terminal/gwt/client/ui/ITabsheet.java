@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import java.util.ArrayList;
@@ -26,8 +30,8 @@ public class ITabsheet extends FlowPanel implements Paintable,
     String id;
     ApplicationConnection client;
 
-    private ArrayList tabKeys = new ArrayList();
-    private ArrayList captions = new ArrayList();
+    private final ArrayList tabKeys = new ArrayList();
+    private final ArrayList captions = new ArrayList();
     int activeTabIndex = 0;
     private final TabBar tb;
     private final ITabsheetPanel tp;
@@ -37,17 +41,14 @@ public class ITabsheet extends FlowPanel implements Paintable,
     private final TabListener tl = new TabListener() {
 
         public void onTabSelected(SourcesTabEvents sender, final int tabIndex) {
-            if (ITabsheet.this.client != null
-                    && ITabsheet.this.activeTabIndex != tabIndex) {
+            if (client != null && activeTabIndex != tabIndex) {
                 addStyleDependentName("loading");
                 // run updating variables in deferred command to bypass some FF
                 // optimization issues
                 DeferredCommand.addCommand(new Command() {
                     public void execute() {
-                        ITabsheet.this.client.updateVariable(ITabsheet.this.id,
-                                "selected", ""
-                                        + ITabsheet.this.tabKeys.get(tabIndex),
-                                true);
+                        client.updateVariable(id, "selected", ""
+                                + tabKeys.get(tabIndex), true);
                     }
                 });
             }
@@ -82,9 +83,9 @@ public class ITabsheet extends FlowPanel implements Paintable,
         add(tb);
         DOM.appendChild(getElement(), contentNode);
         insert(tp, contentNode, 0, true);
-        DOM.appendChild(getElement(), this.deco);
+        DOM.appendChild(getElement(), deco);
 
-        this.tb.addTabListener(this.tl);
+        tb.addTabListener(tl);
 
         clearTabs();
 
@@ -95,7 +96,7 @@ public class ITabsheet extends FlowPanel implements Paintable,
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         this.client = client;
-        this.id = uidl.getId();
+        id = uidl.getId();
 
         if (client.updateComponent(this, uidl, false)) {
             return;
@@ -105,10 +106,10 @@ public class ITabsheet extends FlowPanel implements Paintable,
 
         // Add proper stylenames for all elements
         if (uidl.hasAttribute("style")) {
-            String[] styles = uidl.getStringAttribute("style").split(" ");
-            String contentBaseClass = "CLASSNAME" + "-content";
+            final String[] styles = uidl.getStringAttribute("style").split(" ");
+            final String contentBaseClass = "CLASSNAME" + "-content";
             String contentClass = contentBaseClass;
-            String decoBaseClass = CLASSNAME + "-deco";
+            final String decoBaseClass = CLASSNAME + "-deco";
             String decoClass = decoBaseClass;
             for (int i = 0; i < styles.length; i++) {
                 tb.addStyleDependentName(styles[i]);
@@ -137,7 +138,7 @@ public class ITabsheet extends FlowPanel implements Paintable,
         }
 
         // Render content
-        UIDL tabs = uidl.getChildUIDL(0);
+        final UIDL tabs = uidl.getChildUIDL(0);
         boolean keepCurrentTabs = tabKeys.size() == tabs.getNumberOfChildren();
         for (int i = 0; keepCurrentTabs && i < tabKeys.size(); i++) {
             keepCurrentTabs = tabKeys.get(i).equals(
@@ -147,8 +148,8 @@ public class ITabsheet extends FlowPanel implements Paintable,
         }
         if (keepCurrentTabs) {
             int index = 0;
-            for (Iterator it = tabs.getChildIterator(); it.hasNext();) {
-                UIDL tab = (UIDL) it.next();
+            for (final Iterator it = tabs.getChildIterator(); it.hasNext();) {
+                final UIDL tab = (UIDL) it.next();
                 if (tab.getBooleanAttribute("selected")) {
                     activeTabIndex = index;
                     renderContent(tab.getChildUIDL(0));
@@ -161,9 +162,9 @@ public class ITabsheet extends FlowPanel implements Paintable,
             clearTabs();
 
             int index = 0;
-            for (Iterator it = tabs.getChildIterator(); it.hasNext();) {
-                UIDL tab = (UIDL) it.next();
-                String key = tab.getStringAttribute("key");
+            for (final Iterator it = tabs.getChildIterator(); it.hasNext();) {
+                final UIDL tab = (UIDL) it.next();
+                final String key = tab.getStringAttribute("key");
                 String caption = tab.getStringAttribute("caption");
                 if (caption == null) {
                     caption = "&nbsp;";
@@ -188,21 +189,20 @@ public class ITabsheet extends FlowPanel implements Paintable,
         }
 
         // Open selected tab, if there's something to show
-        if (tabKeys.size() > 0)
+        if (tabKeys.size() > 0) {
             tb.selectTab(activeTabIndex);
+        }
 
     }
 
     private void renderContent(final UIDL contentUIDL) {
         DeferredCommand.addCommand(new Command() {
             public void execute() {
-                Widget content = ITabsheet.this.client.getWidget(contentUIDL);
-                ITabsheet.this.tp.remove(ITabsheet.this.activeTabIndex);
-                ITabsheet.this.tp
-                        .insert(content, ITabsheet.this.activeTabIndex);
-                ITabsheet.this.tp.showWidget(ITabsheet.this.activeTabIndex);
-                ((Paintable) content).updateFromUIDL(contentUIDL,
-                        ITabsheet.this.client);
+                final Widget content = client.getWidget(contentUIDL);
+                tp.remove(activeTabIndex);
+                tp.insert(content, activeTabIndex);
+                tp.showWidget(activeTabIndex);
+                ((Paintable) content).updateFromUIDL(contentUIDL, client);
                 ITabsheet.this.removeStyleDependentName("loading");
                 ITabsheet.this.iLayout();
             }
@@ -218,9 +218,9 @@ public class ITabsheet extends FlowPanel implements Paintable,
         tp.clear();
 
         // Get rid of unnecessary 100% cell heights in TabBar (really ugly hack)
-        Element tr = DOM.getChild(DOM.getChild(tb.getElement(), 0), 0);
-        Element rest = DOM.getChild(
-                DOM.getChild(tr, DOM.getChildCount(tr) - 1), 0);
+        final Element tr = DOM.getChild(DOM.getChild(tb.getElement(), 0), 0);
+        final Element rest = DOM.getChild(DOM.getChild(tr, DOM
+                .getChildCount(tr) - 1), 0);
         DOM.removeElementAttribute(rest, "style");
     }
 
@@ -241,18 +241,18 @@ public class ITabsheet extends FlowPanel implements Paintable,
     public void iLayout() {
         if (height != null && height != "") {
             // Take content out of flow for a while
-            String originalPositioning = DOM.getStyleAttribute(tp.getElement(),
-                    "position");
+            final String originalPositioning = DOM.getStyleAttribute(tp
+                    .getElement(), "position");
             DOM.setStyleAttribute(tp.getElement(), "position", "absolute");
             DOM.setStyleAttribute(contentNode, "overflow", "hidden");
 
             // Calculate target height
             super.setHeight(height);
-            int targetHeight = getOffsetHeight();
+            final int targetHeight = getOffsetHeight();
 
             // Calculate used height
             super.setHeight("");
-            int usedHeight = DOM.getElementPropertyInt(deco, "offsetTop")
+            final int usedHeight = DOM.getElementPropertyInt(deco, "offsetTop")
                     + DOM.getElementPropertyInt(deco, "offsetHeight")
                     - DOM.getElementPropertyInt(getElement(), "offsetTop");
 

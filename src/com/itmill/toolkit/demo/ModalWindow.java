@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.demo;
 
 import com.itmill.toolkit.ui.Button;
@@ -26,17 +30,17 @@ public class ModalWindow extends com.itmill.toolkit.Application implements
     public void init() {
 
         // Create main window
-        Window main = new Window("ModalWindow demo");
+        final Window main = new Window("ModalWindow demo");
         setMainWindow(main);
         main.addComponent(new Label("ModalWindow demo"));
 
         // Main window textfield
-        TextField f = new TextField();
+        final TextField f = new TextField();
         f.setTabIndex(1);
         main.addComponent(f);
 
         // Main window button
-        Button b = new Button("Test Button in main window");
+        final Button b = new Button("Test Button in main window");
         b.addListener(this);
         b.setTabIndex(2);
         main.addComponent(b);
@@ -65,13 +69,13 @@ public class ModalWindow extends com.itmill.toolkit.Application implements
                 "You have to close this window before accessing others."));
 
         // Textfield for modal window
-        TextField f = new TextField();
+        final TextField f = new TextField();
         f.setTabIndex(4);
         test.addComponent(f);
         f.focus();
 
         // Modal window button
-        Button b = new Button("Test Button in modal window");
+        final Button b = new Button("Test Button in modal window");
         b.setTabIndex(5);
         b.addListener(this);
         test.addComponent(b);

@@ -1,30 +1,6 @@
-/* *************************************************************************
- 
- IT Mill Toolkit 
-
- Development of Browser User Interfaces Made Easy
-
- Copyright (C) 2000-2006 IT Mill Ltd
- 
- *************************************************************************
-
- This product is distributed under commercial license that can be found
- from the product package on license.pdf. Use of this product might 
- require purchasing a commercial license from IT Mill Ltd. For guidelines 
- on usage, see licensing-guidelines.html
-
- *************************************************************************
- 
- For more information, contact:
- 
- IT Mill Ltd                           phone: +358 2 4802 7180
- Ruukinkatu 2-4                        fax:   +358 2 4802 7181
- 20540, Turku                          email:  info@itmill.com
- Finland                               company www: www.itmill.com
- 
- Primary source for information and releases: www.itmill.com
-
- ********************************************************************** */
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
 
 package com.itmill.toolkit.terminal.gwt.server;
 
@@ -96,17 +72,17 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 
     private static int MAX_BUFFER_SIZE = 64 * 1024;
 
-    private HashSet dirtyPaintabletSet = new HashSet();
+    private final HashSet dirtyPaintabletSet = new HashSet();
 
-    private WeakHashMap paintableIdMap = new WeakHashMap();
+    private final WeakHashMap paintableIdMap = new WeakHashMap();
 
-    private WeakHashMap idPaintableMap = new WeakHashMap();
+    private final WeakHashMap idPaintableMap = new WeakHashMap();
 
     private int idSequence = 0;
 
-    private Application application;
+    private final Application application;
 
-    private Set removedWindows = new HashSet();
+    private final Set removedWindows = new HashSet();
 
     private JsonPaintTarget paintTarget;
 
@@ -114,7 +90,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 
     private int pendingLocalesIndex;
 
-    private ApplicationServlet applicationServlet;
+    private final ApplicationServlet applicationServlet;
 
     public CommunicationManager(Application application,
             ApplicationServlet applicationServlet) {
@@ -152,9 +128,9 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
     public void handleFileUpload(HttpServletRequest request,
             HttpServletResponse response) throws IOException {
         // Create a new file upload handler
-        ServletFileUpload upload = new ServletFileUpload();
+        final ServletFileUpload upload = new ServletFileUpload();
 
-        UploadProgressListener pl = new UploadProgressListener();
+        final UploadProgressListener pl = new UploadProgressListener();
 
         upload.setProgressListener(pl);
 
@@ -168,16 +144,17 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
              * request.
              */
             while (iter.hasNext()) {
-                FileItemStream item = iter.next();
-                String name = item.getFieldName();
+                final FileItemStream item = iter.next();
+                final String name = item.getFieldName();
                 final String filename = item.getName();
                 final String mimeType = item.getContentType();
                 final InputStream stream = item.openStream();
                 if (item.isFormField()) {
                     // ignored, upload requests contian only files
                 } else {
-                    String pid = name.split("_")[0];
-                    Upload uploadComponent = (Upload) idPaintableMap.get(pid);
+                    final String pid = name.split("_")[0];
+                    final Upload uploadComponent = (Upload) idPaintableMap
+                            .get(pid);
                     if (uploadComponent == null) {
                         throw new FileUploadException(
                                 "Upload component not found");
@@ -186,7 +163,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
                         // put upload component into receiving state
                         uploadComponent.startUpload();
                     }
-                    UploadStream upstream = new UploadStream() {
+                    final UploadStream upstream = new UploadStream() {
 
                         public String getContentName() {
                             return filename;
@@ -213,14 +190,14 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
                     uploadComponent.receiveUpload(upstream);
                 }
             }
-        } catch (FileUploadException e) {
+        } catch (final FileUploadException e) {
             e.printStackTrace();
         }
 
         // Send short response to acknowledge client that request was done
         response.setContentType("text/html");
-        OutputStream out = response.getOutputStream();
-        PrintWriter outWriter = new PrintWriter(new BufferedWriter(
+        final OutputStream out = response.getOutputStream();
+        final PrintWriter outWriter = new PrintWriter(new BufferedWriter(
                 new OutputStreamWriter(out, "UTF-8")));
         outWriter.print("<html><body>download handled</body></html>");
         outWriter.flush();
@@ -241,8 +218,8 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
         boolean repaintAll = (request.getParameter(GET_PARAM_REPAINT_ALL) != null)
                 || request.getSession().isNew();
 
-        OutputStream out = response.getOutputStream();
-        PrintWriter outWriter = new PrintWriter(new BufferedWriter(
+        final OutputStream out = response.getOutputStream();
+        final PrintWriter outWriter = new PrintWriter(new BufferedWriter(
                 new OutputStreamWriter(out, "UTF-8")));
 
         try {
@@ -266,9 +243,10 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 
                 // If repaint is requested, clean all ids in this root window
                 if (repaintAll) {
-                    for (Iterator it = idPaintableMap.keySet().iterator(); it
+                    for (final Iterator it = idPaintableMap.keySet().iterator(); it
                             .hasNext();) {
-                        Component c = (Component) idPaintableMap.get(it.next());
+                        final Component c = (Component) idPaintableMap.get(it
+                                .next());
                         if (isChildOf(window, c)) {
                             it.remove();
                             paintableIdMap.remove(c);
@@ -310,14 +288,14 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
                 if (paintables != null) {
 
                     // Creates "working copy" of the current state.
-                    List currentPaintables = new ArrayList(paintables);
+                    final List currentPaintables = new ArrayList(paintables);
 
                     // Sorts the Paintable list so that parents
                     // are always painted before children
                     Collections.sort(currentPaintables, new Comparator() {
                         public int compare(Object o1, Object o2) {
-                            Component c1 = (Component) o1;
-                            Component c2 = (Component) o2;
+                            final Component c1 = (Component) o1;
+                            final Component c2 = (Component) o2;
                             if (isChildOf(c1, c2)) {
                                 return -1;
                             }
@@ -328,12 +306,13 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
                         }
                     });
 
-                    for (Iterator i = currentPaintables.iterator(); i.hasNext();) {
-                        Paintable p = (Paintable) i.next();
+                    for (final Iterator i = currentPaintables.iterator(); i
+                            .hasNext();) {
+                        final Paintable p = (Paintable) i.next();
 
                         // TODO CLEAN
                         if (p instanceof Window) {
-                            Window w = (Window) p;
+                            final Window w = (Window) p;
                             if (w.getTerminal() == null) {
                                 w.setTerminal(application.getMainWindow()
                                         .getTerminal());
@@ -352,7 +331,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
                         // rendered already (changes with only cached flag)
                         paintTarget.startTag("change");
                         paintTarget.addAttribute("format", "uidl");
-                        String pid = getPaintableId(p);
+                        final String pid = getPaintableId(p);
                         paintTarget.addAttribute("pid", pid);
 
                         // Track paints to identify empty paints
@@ -372,10 +351,10 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
                 outWriter.print("]"); // close changes
 
                 outWriter.print(", \"meta\" : {");
-                boolean metaOpen = false;
+                final boolean metaOpen = false;
 
                 // add meta instruction for client to set focus if it is set
-                Paintable f = (Paintable) application.consumeFocus();
+                final Paintable f = (Paintable) application.consumeFocus();
                 if (f != null) {
                     if (metaOpen) {
                         outWriter.write(",");
@@ -397,9 +376,9 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
                 // TODO We should only precache the layouts that are not
                 // cached already
                 int resourceIndex = 0;
-                for (Iterator i = paintTarget.getPreCachedResources()
+                for (final Iterator i = paintTarget.getPreCachedResources()
                         .iterator(); i.hasNext();) {
-                    String resource = (String) i.next();
+                    final String resource = (String) i.next();
                     InputStream is = null;
                     try {
                         is = applicationServlet
@@ -408,24 +387,25 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
                                         "/"
                                                 + ApplicationServlet.THEME_DIRECTORY_PATH
                                                 + themeName + "/" + resource);
-                    } catch (Exception e) {
+                    } catch (final Exception e) {
                         e.printStackTrace();
                     }
                     if (is != null) {
 
                         outWriter.print((resourceIndex++ > 0 ? ", " : "")
                                 + "\"" + resource + "\" : ");
-                        StringBuffer layout = new StringBuffer();
+                        final StringBuffer layout = new StringBuffer();
 
                         try {
-                            InputStreamReader r = new InputStreamReader(is);
-                            char[] buffer = new char[20000];
+                            final InputStreamReader r = new InputStreamReader(
+                                    is);
+                            final char[] buffer = new char[20000];
                             int charsRead = 0;
                             while ((charsRead = r.read(buffer)) > 0) {
                                 layout.append(buffer, 0, charsRead);
                             }
                             r.close();
-                        } catch (java.io.IOException e) {
+                        } catch (final java.io.IOException e) {
                             System.err.println("Resource transfer failed:  "
                                     + request.getRequestURI() + ". ("
                                     + e.getMessage() + ")");
@@ -447,13 +427,13 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
             out.flush();
             out.close();
 
-        } catch (Throwable e) {
+        } catch (final Throwable e) {
             e.printStackTrace();
             // Writes the error report to client
             // FIXME breaks UIDL response, security shouldn't reveal stack trace
             // to client side
-            OutputStreamWriter w = new OutputStreamWriter(out);
-            PrintWriter err = new PrintWriter(w);
+            final OutputStreamWriter w = new OutputStreamWriter(out);
+            final PrintWriter err = new PrintWriter(w);
             err
                     .write("<html><head><title>Application Internal Error</title></head><body>");
             err.write("<h1>" + e.toString() + "</h1><pre>\n");
@@ -469,16 +449,16 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
     private Map handleVariables(HttpServletRequest request,
             Application application2) {
 
-        Map params = new HashMap(request.getParameterMap());
-        String changes = (String) ((params.get("changes") instanceof String[]) ? ((String[]) params
+        final Map params = new HashMap(request.getParameterMap());
+        final String changes = (String) ((params.get("changes") instanceof String[]) ? ((String[]) params
                 .get("changes"))[0]
                 : params.get("changes"));
         params.remove("changes");
         if (changes != null) {
-            String[] ca = changes.split("\u0001");
+            final String[] ca = changes.split("\u0001");
             for (int i = 0; i < ca.length; i++) {
                 String[] vid = ca[i].split("_");
-                VariableOwner owner = (VariableOwner) idPaintableMap
+                final VariableOwner owner = (VariableOwner) idPaintableMap
                         .get(vid[0]);
                 if (owner != null) {
                     Map m;
@@ -547,22 +527,23 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 
         // Store JVM default locale for later restoration
         // (we'll have to change the default locale for a while)
-        Locale jvmDefault = Locale.getDefault();
+        final Locale jvmDefault = Locale.getDefault();
 
         // Send locale informations to client
         outWriter.print(", \"locales\":[");
         for (; pendingLocalesIndex < locales.size(); pendingLocalesIndex++) {
 
-            Locale l = generateLocale((String) locales.get(pendingLocalesIndex));
+            final Locale l = generateLocale((String) locales
+                    .get(pendingLocalesIndex));
             // Locale name
             outWriter.print("{\"name\":\"" + l.toString() + "\",");
 
             /*
              * Month names (both short and full)
              */
-            DateFormatSymbols dfs = new DateFormatSymbols(l);
-            String[] short_months = dfs.getShortMonths();
-            String[] months = dfs.getMonths();
+            final DateFormatSymbols dfs = new DateFormatSymbols(l);
+            final String[] short_months = dfs.getShortMonths();
+            final String[] months = dfs.getMonths();
             outWriter.print("\"smn\":[\""
                     + // ShortMonthNames
                     short_months[0] + "\",\"" + short_months[1] + "\",\""
@@ -583,8 +564,8 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
             /*
              * Weekday names (both short and full)
              */
-            String[] short_days = dfs.getShortWeekdays();
-            String[] days = dfs.getWeekdays();
+            final String[] short_days = dfs.getShortWeekdays();
+            final String[] days = dfs.getWeekdays();
             outWriter.print("\"sdn\":[\""
                     + // ShortDayNames
                     short_days[1] + "\",\"" + short_days[2] + "\",\""
@@ -600,7 +581,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
             /*
              * First day of week (0 = sunday, 1 = monday)
              */
-            Calendar cal = new GregorianCalendar(l);
+            final Calendar cal = new GregorianCalendar(l);
             outWriter.print("\"fdow\":" + (cal.getFirstDayOfWeek() - 1) + ",");
 
             /*
@@ -609,41 +590,41 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
             // Force our locale as JVM default for a while (SimpleDateFormat
             // uses JVM default)
             Locale.setDefault(l);
-            String df = new SimpleDateFormat().toPattern();
+            final String df = new SimpleDateFormat().toPattern();
             int timeStart = df.indexOf("H");
             if (timeStart < 0) {
                 timeStart = df.indexOf("h");
             }
-            int ampm_first = df.indexOf("a");
+            final int ampm_first = df.indexOf("a");
             // E.g. in Korean locale AM/PM is before h:mm
             // TODO should take that into consideration on client-side as well,
             // now always h:mm a
             if (ampm_first > 0 && ampm_first < timeStart) {
                 timeStart = ampm_first;
             }
-            String dateformat = df.substring(0, timeStart - 1);
+            final String dateformat = df.substring(0, timeStart - 1);
 
             outWriter.print("\"df\":\"" + dateformat.trim() + "\",");
 
             /*
              * Time formatting (24 or 12 hour clock and AM/PM suffixes)
              */
-            String timeformat = df.substring(timeStart, df.length()); // Doesn't
+            final String timeformat = df.substring(timeStart, df.length()); // Doesn't
             // return
             // second
             // or
             // milliseconds
             // We use timeformat to determine 12/24-hour clock
-            boolean twelve_hour_clock = timeformat.indexOf("a") > -1;
+            final boolean twelve_hour_clock = timeformat.indexOf("a") > -1;
             // TODO there are other possibilities as well, like 'h' in french
             // (ignore them, too complicated)
-            String hour_min_delimiter = timeformat.indexOf(".") > -1 ? "."
+            final String hour_min_delimiter = timeformat.indexOf(".") > -1 ? "."
                     : ":";
             // outWriter.print("\"tf\":\"" + timeformat + "\",");
             outWriter.print("\"thc\":" + twelve_hour_clock + ",");
             outWriter.print("\"hmd\":\"" + hour_min_delimiter + "\"");
             if (twelve_hour_clock) {
-                String[] ampm = dfs.getAmPmStrings();
+                final String[] ampm = dfs.getAmPmStrings();
                 outWriter.print(",\"ampm\":[\"" + ampm[0] + "\",\"" + ampm[1]
                         + "\"]");
             }
@@ -690,7 +671,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
             if (path.charAt(0) == '/') {
                 path = path.substring(1);
             }
-            int index = path.indexOf('/');
+            final int index = path.indexOf('/');
             if (index < 0) {
                 windowName = path;
                 path = "";
@@ -729,14 +710,14 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
             HttpServletRequest request, HttpServletResponse response) {
 
         // Download from given stream
-        InputStream data = stream.getStream();
+        final InputStream data = stream.getStream();
         if (data != null) {
 
             // Sets content type
             response.setContentType(stream.getContentType());
 
             // Sets cache headers
-            long cacheTime = stream.getCacheTime();
+            final long cacheTime = stream.getCacheTime();
             if (cacheTime <= 0) {
                 response.setHeader("Cache-Control", "no-cache");
                 response.setHeader("Pragma", "no-cache");
@@ -753,10 +734,10 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 
             // Copy download stream parameters directly
             // to HTTP headers.
-            Iterator i = stream.getParameterNames();
+            final Iterator i = stream.getParameterNames();
             if (i != null) {
                 while (i.hasNext()) {
-                    String param = (String) i.next();
+                    final String param = (String) i.next();
                     response.setHeader(param, stream.getParameter(param));
                 }
             }
@@ -765,18 +746,18 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
             if (bufferSize <= 0 || bufferSize > MAX_BUFFER_SIZE) {
                 bufferSize = DEFAULT_BUFFER_SIZE;
             }
-            byte[] buffer = new byte[bufferSize];
+            final byte[] buffer = new byte[bufferSize];
             int bytesRead = 0;
 
             try {
-                OutputStream out = response.getOutputStream();
+                final OutputStream out = response.getOutputStream();
 
                 while ((bytesRead = data.read(buffer)) > 0) {
                     out.write(buffer, 0, bytesRead);
                     out.flush();
                 }
                 out.close();
-            } catch (IOException ignored) {
+            } catch (final IOException ignored) {
             }
 
         }
@@ -807,8 +788,8 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
         // tell client that application has quit and where to point browser now
         // Set the response type
         response.setContentType("application/json; charset=UTF-8");
-        ServletOutputStream out = response.getOutputStream();
-        PrintWriter outWriter = new PrintWriter(new BufferedWriter(
+        final ServletOutputStream out = response.getOutputStream();
+        final PrintWriter outWriter = new PrintWriter(new BufferedWriter(
                 new OutputStreamWriter(out, "UTF-8")));
         outWriter.print(")/*{");
         outWriter.print("\"redirect\":{");
@@ -847,7 +828,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
      * @return
      */
     public synchronized Set getDirtyComponents(Window w) {
-        HashSet resultset = new HashSet(dirtyPaintabletSet);
+        final HashSet resultset = new HashSet(dirtyPaintabletSet);
 
         // The following algorithm removes any components that would be painted
         // as
@@ -856,10 +837,10 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
         // The result is that each component should be painted exactly once and
         // any unmodified components will be painted as "cached=true".
 
-        for (Iterator i = dirtyPaintabletSet.iterator(); i.hasNext();) {
-            Paintable p = (Paintable) i.next();
+        for (final Iterator i = dirtyPaintabletSet.iterator(); i.hasNext();) {
+            final Paintable p = (Paintable) i.next();
             if (p instanceof Component) {
-                Component component = (Component) p;
+                final Component component = (Component) p;
                 if (component.getApplication() == null) {
                     // component is detached after requestRepaint is called
                     resultset.remove(p);
@@ -886,7 +867,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
      * @see com.itmill.toolkit.terminal.Paintable.RepaintRequestListener#repaintRequested(com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent)
      */
     public void repaintRequested(RepaintRequestEvent event) {
-        Paintable p = event.getPaintable();
+        final Paintable p = event.getPaintable();
         dirtyPaintabletSet.add(p);
 
     }
@@ -963,7 +944,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
         }
 
         public Set entrySet() {
-            Set s = new HashSet();
+            final Set s = new HashSet();
             s.add(new Map.Entry() {
 
                 public Object getKey() {
@@ -993,7 +974,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
         }
 
         public Set keySet() {
-            Set s = new HashSet();
+            final Set s = new HashSet();
             s.add(name);
             return s;
         }
@@ -1015,7 +996,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
         }
 
         public Collection values() {
-            LinkedList s = new LinkedList();
+            final LinkedList s = new LinkedList();
             s.add(value);
             return s;
 
@@ -1027,9 +1008,9 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
      */
     public class URIHandlerErrorImpl implements URIHandler.ErrorEvent {
 
-        private URIHandler owner;
+        private final URIHandler owner;
 
-        private Throwable throwable;
+        private final Throwable throwable;
 
         /**
          * 
@@ -1068,7 +1049,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
     }
 
     private Locale generateLocale(String value) {
-        String[] temp = value.split("_");
+        final String[] temp = value.split("_");
         if (temp.length == 1) {
             return new Locale(temp[0]);
         } else if (temp.length == 2) {

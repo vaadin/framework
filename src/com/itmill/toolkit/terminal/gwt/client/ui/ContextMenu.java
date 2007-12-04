@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import com.google.gwt.user.client.Window;
@@ -9,7 +13,7 @@ public class ContextMenu extends ToolkitOverlay {
 
     private ActionOwner actionOwner;
 
-    private CMenuBar menu = new CMenuBar();
+    private final CMenuBar menu = new CMenuBar();
 
     private int left;
 
@@ -47,9 +51,9 @@ public class ContextMenu extends ToolkitOverlay {
         this.left = left;
         this.top = top;
         menu.clearItems();
-        Action[] actions = actionOwner.getActions();
+        final Action[] actions = actionOwner.getActions();
         for (int i = 0; i < actions.length; i++) {
-            Action a = actions[i];
+            final Action a = actions[i];
             menu.addItem(new MenuItem(a.getHTML(), true, a));
         }
 

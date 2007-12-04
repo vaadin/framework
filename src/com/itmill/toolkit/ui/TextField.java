@@ -1,30 +1,6 @@
-/* *************************************************************************
- 
- IT Mill Toolkit 
-
- Development of Browser User Interfaces Made Easy
-
- Copyright (C) 2000-2006 IT Mill Ltd
- 
- *************************************************************************
-
- This product is distributed under commercial license that can be found
- from the product package on license.pdf. Use of this product might 
- require purchasing a commercial license from IT Mill Ltd. For guidelines 
- on usage, see licensing-guidelines.html
-
- *************************************************************************
- 
- For more information, contact:
- 
- IT Mill Ltd                           phone: +358 2 4802 7180
- Ruukinkatu 2-4                        fax:   +358 2 4802 7181
- 20540, Turku                          email:  info@itmill.com
- Finland                               company www: www.itmill.com
- 
- Primary source for information and releases: www.itmill.com
-
- ********************************************************************** */
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
 
 package com.itmill.toolkit.ui;
 
@@ -174,8 +150,8 @@ public class TextField extends AbstractField {
         }
 
         // Adds the number of column and rows
-        int c = getColumns();
-        int r = getRows();
+        final int c = getColumns();
+        final int r = getRows();
         if (c != 0) {
             target.addAttribute("cols", String.valueOf(c));
         }
@@ -208,11 +184,11 @@ public class TextField extends AbstractField {
      * @see Format
      */
     protected String getFormattedValue() {
-        Object value = getValue();
+        final Object value = getValue();
         if (format != null && value != null) {
             try {
                 return format.format(value);
-            } catch (IllegalArgumentException ignored) {
+            } catch (final IllegalArgumentException ignored) {
                 // Ignored exception
             }
         }
@@ -243,7 +219,7 @@ public class TextField extends AbstractField {
             // Only do the setting if the string representation of the value
             // has been updated
             String newValue = (String) variables.get("text");
-            String oldValue = getFormattedValue();
+            final String oldValue = getFormattedValue();
             if (newValue != null
                     && (oldValue == null || isNullSettingAllowed())
                     && newValue.equals(getNullRepresentation())) {

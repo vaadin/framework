@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import com.google.gwt.user.client.Timer;
@@ -34,7 +38,7 @@ public class IUpload extends FormPanel implements Paintable, ClickListener,
     /**
      * Button that initiates uploading
      */
-    private Button submitButton;
+    private final Button submitButton;
 
     /**
      * When expecting big files, programmer may initiate some UI changes when

@@ -1,30 +1,6 @@
-/* *************************************************************************
- 
- IT Mill Toolkit 
-
- Development of Browser User Interfaces Made Easy
-
- Copyright (C) 2000-2006 IT Mill Ltd
- 
- *************************************************************************
-
- This product is distributed under commercial license that can be found
- from the product package on license.pdf. Use of this product might 
- require purchasing a commercial license from IT Mill Ltd. For guidelines 
- on usage, see licensing-guidelines.html
-
- *************************************************************************
- 
- For more information, contact:
- 
- IT Mill Ltd                           phone: +358 2 4802 7180
- Ruukinkatu 2-4                        fax:   +358 2 4802 7181
- 20540, Turku                          email:  info@itmill.com
- Finland                               company www: www.itmill.com
- 
- Primary source for information and releases: www.itmill.com
-
- ********************************************************************** */
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
 
 package com.itmill.toolkit.tests.featurebrowser;
 
@@ -59,8 +35,8 @@ public class FeatureTable extends Feature implements Action.Handler {
 
     private boolean actionsActive = false;
 
-    private Button actionHandlerSwitch = new Button("Activate actions", this,
-            "toggleActions");
+    private final Button actionHandlerSwitch = new Button("Activate actions",
+            this, "toggleActions");
 
     public void toggleActions() {
         if (actionsActive) {
@@ -76,7 +52,7 @@ public class FeatureTable extends Feature implements Action.Handler {
 
     protected Component getDemoComponent() {
 
-        OrderedLayout l = new OrderedLayout();
+        final OrderedLayout l = new OrderedLayout();
 
         // Sample table
         t = new Table("Corporate Employees");
@@ -110,7 +86,7 @@ public class FeatureTable extends Feature implements Action.Handler {
 
         // Properties
         propertyPanel = new PropertyPanel(t);
-        Form ap = propertyPanel.createBeanPropertySet(new String[] {
+        final Form ap = propertyPanel.createBeanPropertySet(new String[] {
                 "pageLength", "rowHeaderMode", "selectable",
                 "columnHeaderMode", "columnCollapsingAllowed",
                 "columnReorderingAllowed", "width", "height" });
@@ -132,7 +108,7 @@ public class FeatureTable extends Feature implements Action.Handler {
                 "Explicit", "Explicit defaults ID", "Hidden", "Icon only",
                 "ID", "Index", "Item", "Property" });
 
-        Select themes = (Select) propertyPanel.getField("style");
+        final Select themes = (Select) propertyPanel.getField("style");
         themes.addItem("list").getItemProperty(
                 themes.getItemCaptionPropertyId()).setValue("list");
         themes.addItem("paging").getItemProperty(
@@ -199,13 +175,13 @@ public class FeatureTable extends Feature implements Action.Handler {
         return "Table";
     }
 
-    private Action ACTION1 = new Action("Action 1");
+    private final Action ACTION1 = new Action("Action 1");
 
-    private Action ACTION2 = new Action("Action 2");
+    private final Action ACTION2 = new Action("Action 2");
 
-    private Action ACTION3 = new Action("Action 3");
+    private final Action ACTION3 = new Action("Action 3");
 
-    private Action[] actions = new Action[] { ACTION1, ACTION2, ACTION3 };
+    private final Action[] actions = new Action[] { ACTION1, ACTION2, ACTION3 };
 
     public Action[] getActions(Object target, Object sender) {
         return actions;

@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.tests;
 
 import java.util.Date;
@@ -10,13 +14,13 @@ import com.itmill.toolkit.ui.Table;
 
 public class PerformanceTestSubTreeCaching extends CustomComponent {
 
-    private OrderedLayout main;
+    private final OrderedLayout main;
 
-    private OrderedLayout testContainer;
+    private final OrderedLayout testContainer;
 
     private Date startTime;
 
-    private Label result;
+    private final Label result;
 
     private static final String DESCRIPTION = "Hyphothesis: Toolkit 4 has major architechtural problem when adding "
             + "small incrementall updates to a container which has either a lot or "
@@ -55,8 +59,8 @@ public class PerformanceTestSubTreeCaching extends CustomComponent {
     }
 
     public void endTest() {
-        long millis = (new Date()).getTime() - startTime.getTime();
-        Float f = new Float(millis / 1000.0);
+        final long millis = (new Date()).getTime() - startTime.getTime();
+        final Float f = new Float(millis / 1000.0);
         result.setValue("Test completed in " + f + " seconds");
     }
 
@@ -68,7 +72,7 @@ public class PerformanceTestSubTreeCaching extends CustomComponent {
     private void populateContainer(OrderedLayout container, int n) {
         for (int i = 0; i < n; i++) {
             // array_type array_element = [i];
-            Table t = TestForTablesInitialColumnWidthLogicRendering
+            final Table t = TestForTablesInitialColumnWidthLogicRendering
                     .getTestTable(5, 100);
             container.addComponent(t);
         }

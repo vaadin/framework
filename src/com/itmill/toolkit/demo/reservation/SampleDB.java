@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.demo.reservation;
 
 import java.sql.Connection;
@@ -118,17 +122,17 @@ public class SampleDB {
     private void dropTables() {
         try {
             update("DROP TABLE " + Reservation.TABLE);
-        } catch (SQLException IGNORED) {
+        } catch (final SQLException IGNORED) {
             // IGNORED, assuming it was not there
         }
         try {
             update("DROP TABLE " + Resource.TABLE);
-        } catch (SQLException IGNORED) {
+        } catch (final SQLException IGNORED) {
             // IGNORED, assuming it was not there
         }
         try {
             update("DROP TABLE " + User.TABLE);
-        } catch (SQLException IGNORED) {
+        } catch (final SQLException IGNORED) {
             // IGNORED, assuming it was not there
         }
     }
@@ -142,7 +146,7 @@ public class SampleDB {
         try {
             Class.forName("org.hsqldb.jdbcDriver").newInstance();
             connection = DriverManager.getConnection(DB_URL);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -156,7 +160,7 @@ public class SampleDB {
     private void update(String expression) throws SQLException {
         Statement st = null;
         st = connection.createStatement();
-        int i = st.executeUpdate(expression);
+        final int i = st.executeUpdate(expression);
         if (i == -1) {
             System.out.println("SampleDatabase error : " + expression);
         }
@@ -173,7 +177,7 @@ public class SampleDB {
             String stmt = null;
             stmt = CREATE_TABLE_RESOURCE;
             update(stmt);
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             if (e.toString().indexOf("Table already exists") == -1) {
                 throw new RuntimeException(e);
             }
@@ -182,7 +186,7 @@ public class SampleDB {
             String stmt = null;
             stmt = CREATE_TABLE_USER;
             update(stmt);
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             if (e.toString().indexOf("Table already exists") == -1) {
                 throw new RuntimeException(e);
             }
@@ -191,7 +195,7 @@ public class SampleDB {
             String stmt = null;
             stmt = CREATE_TABLE_RESERVATION;
             update(stmt);
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             if (e.toString().indexOf("Table already exists") == -1) {
                 throw new RuntimeException(e);
             }
@@ -205,15 +209,15 @@ public class SampleDB {
     private String testDatabase() {
         String result = null;
         try {
-            Statement stmt = connection.createStatement(
+            final Statement stmt = connection.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
-            ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM "
+            final ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM "
                     + Resource.TABLE);
             rs.next();
             result = "rowcount for table test is " + rs.getObject(1).toString();
             stmt.close();
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             throw new RuntimeException(e);
         }
         return result;
@@ -225,14 +229,14 @@ public class SampleDB {
 
     public Container getCategories() {
         // TODO where deleted=?
-        String q = "SELECT DISTINCT(" + Resource.PROPERTY_ID_CATEGORY
+        final String q = "SELECT DISTINCT(" + Resource.PROPERTY_ID_CATEGORY
                 + ") FROM " + Resource.TABLE + " ORDER BY "
                 + Resource.PROPERTY_ID_CATEGORY;
         try {
             return new QueryContainer(q, connection,
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_READ_ONLY);
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             throw new RuntimeException(e);
         }
 
@@ -251,7 +255,7 @@ public class SampleDB {
             return new QueryContainer(q, connection,
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_READ_ONLY);
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             throw new RuntimeException(e);
         }
 
@@ -266,8 +270,8 @@ public class SampleDB {
         q += " WHERE " + Reservation.PROPERTY_ID_RESOURCE_ID + "="
                 + Resource.PROPERTY_ID_ID;
         if (resources != null && resources.size() > 0) {
-            StringBuffer s = new StringBuffer();
-            for (Iterator it = resources.iterator(); it.hasNext();) {
+            final StringBuffer s = new StringBuffer();
+            for (final Iterator it = resources.iterator(); it.hasNext();) {
                 if (s.length() > 0) {
                     s.append(",");
                 }
@@ -279,7 +283,7 @@ public class SampleDB {
         }
         q += " ORDER BY " + Reservation.PROPERTY_ID_RESERVED_FROM;
         try {
-            QueryContainer qc = new QueryContainer(q, connection,
+            final QueryContainer qc = new QueryContainer(q, connection,
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_READ_ONLY);
             if (qc.size() < 1) {
@@ -287,7 +291,7 @@ public class SampleDB {
             } else {
                 return qc;
             }
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             throw new RuntimeException(e);
         }
     }
@@ -295,13 +299,13 @@ public class SampleDB {
     public void addReservation(Item resource, int reservedById,
             Date reservedFrom, Date reservedTo, String description) {
         if (reservedFrom.after(reservedTo)) {
-            Date tmp = reservedTo;
+            final Date tmp = reservedTo;
             reservedTo = reservedFrom;
             reservedFrom = tmp;
         }
-        int resourceId = ((Integer) resource.getItemProperty(
+        final int resourceId = ((Integer) resource.getItemProperty(
                 Resource.PROPERTY_ID_ID).getValue()).intValue();
-        String q = "INSERT INTO " + Reservation.TABLE + " ("
+        final String q = "INSERT INTO " + Reservation.TABLE + " ("
                 + Reservation.PROPERTY_ID_RESOURCE_ID + ","
                 + Reservation.PROPERTY_ID_RESERVED_BY_ID + ","
                 + Reservation.PROPERTY_ID_RESERVED_FROM + ","
@@ -314,7 +318,7 @@ public class SampleDB {
                     throw new ResourceNotAvailableException(
                             "The resource is not available at that time.");
                 }
-                PreparedStatement p = connection.prepareStatement(q);
+                final PreparedStatement p = connection.prepareStatement(q);
                 p.setInt(1, resourceId);
                 p.setInt(2, reservedById);
                 p.setTimestamp(3,
@@ -322,7 +326,7 @@ public class SampleDB {
                 p.setTimestamp(4, new java.sql.Timestamp(reservedTo.getTime()));
                 p.setString(5, description);
                 p.execute();
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 throw new RuntimeException(e);
             }
         }
@@ -332,12 +336,12 @@ public class SampleDB {
             Date reservedTo) {
         // TODO where deleted=?
         if (reservedFrom.after(reservedTo)) {
-            Date tmp = reservedTo;
+            final Date tmp = reservedTo;
             reservedTo = reservedFrom;
             reservedFrom = tmp;
         }
-        String checkQ = "SELECT count(*) FROM " + Reservation.TABLE + " WHERE "
-                + Reservation.PROPERTY_ID_RESOURCE_ID + "=? AND (("
+        final String checkQ = "SELECT count(*) FROM " + Reservation.TABLE
+                + " WHERE " + Reservation.PROPERTY_ID_RESOURCE_ID + "=? AND (("
                 + Reservation.PROPERTY_ID_RESERVED_FROM + ">=? AND "
                 + Reservation.PROPERTY_ID_RESERVED_FROM + "<?) OR ("
                 + Reservation.PROPERTY_ID_RESERVED_TO + ">? AND "
@@ -345,7 +349,7 @@ public class SampleDB {
                 + Reservation.PROPERTY_ID_RESERVED_FROM + "<=? AND "
                 + Reservation.PROPERTY_ID_RESERVED_TO + ">=?)" + ")";
         try {
-            PreparedStatement p = connection.prepareStatement(checkQ);
+            final PreparedStatement p = connection.prepareStatement(checkQ);
             p.setInt(1, resourceId);
             p.setTimestamp(2, new java.sql.Timestamp(reservedFrom.getTime()));
             p.setTimestamp(3, new java.sql.Timestamp(reservedTo.getTime()));
@@ -354,11 +358,11 @@ public class SampleDB {
             p.setTimestamp(6, new java.sql.Timestamp(reservedFrom.getTime()));
             p.setTimestamp(7, new java.sql.Timestamp(reservedTo.getTime()));
             p.execute();
-            ResultSet rs = p.getResultSet();
+            final ResultSet rs = p.getResultSet();
             if (rs.next() && rs.getInt(1) > 0) {
                 return false;
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new RuntimeException(e);
         }
         return true;
@@ -366,50 +370,52 @@ public class SampleDB {
 
     public Container getUsers() {
         // TODO where deleted=?
-        String q = "SELECT * FROM " + User.TABLE + " ORDER BY "
+        final String q = "SELECT * FROM " + User.TABLE + " ORDER BY "
                 + User.PROPERTY_ID_FULLNAME;
         try {
-            QueryContainer qc = new QueryContainer(q, connection,
+            final QueryContainer qc = new QueryContainer(q, connection,
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_READ_ONLY);
             return qc;
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
     public void generateReservations() {
-        int days = 30;
-        String descriptions[] = { "Picking up guests from airport",
+        final int days = 30;
+        final String descriptions[] = { "Picking up guests from airport",
                 "Sightseeing with the guests",
                 "Moving new servers from A to B", "Shopping",
                 "Customer meeting", "Guests arriving at harbour",
                 "Moving furniture", "Taking guests to see town" };
-        Container cat = getCategories();
-        Collection cIds = cat.getItemIds();
-        for (Iterator it = cIds.iterator(); it.hasNext();) {
-            Object id = it.next();
-            Item ci = cat.getItem(id);
-            String c = (String) ci.getItemProperty(
+        final Container cat = getCategories();
+        final Collection cIds = cat.getItemIds();
+        for (final Iterator it = cIds.iterator(); it.hasNext();) {
+            final Object id = it.next();
+            final Item ci = cat.getItem(id);
+            final String c = (String) ci.getItemProperty(
                     Resource.PROPERTY_ID_CATEGORY).getValue();
-            Container resources = getResources(c);
-            Collection rIds = resources.getItemIds();
-            Calendar cal = Calendar.getInstance();
+            final Container resources = getResources(c);
+            final Collection rIds = resources.getItemIds();
+            final Calendar cal = Calendar.getInstance();
             cal.set(Calendar.MINUTE, 0);
             cal.set(Calendar.SECOND, 0);
             cal.set(Calendar.MILLISECOND, 0);
-            int hourNow = new Date().getHours();
+            final int hourNow = new Date().getHours();
             // cal.add(Calendar.DAY_OF_MONTH, -days);
             for (int i = 0; i < days; i++) {
                 int r = 3;
-                for (Iterator rit = rIds.iterator(); rit.hasNext() && r > 0; r--) {
-                    Object rid = rit.next();
-                    Item resource = resources.getItem(rid);
-                    int s = hourNow - 6 + (int) Math.round(Math.random() * 6.0);
-                    int e = s + 1 + (int) Math.round(Math.random() * 4.0);
-                    Date start = new Date(cal.getTimeInMillis());
+                for (final Iterator rit = rIds.iterator(); rit.hasNext()
+                        && r > 0; r--) {
+                    final Object rid = rit.next();
+                    final Item resource = resources.getItem(rid);
+                    final int s = hourNow - 6
+                            + (int) Math.round(Math.random() * 6.0);
+                    final int e = s + 1 + (int) Math.round(Math.random() * 4.0);
+                    final Date start = new Date(cal.getTimeInMillis());
                     start.setHours(s);
-                    Date end = new Date(cal.getTimeInMillis());
+                    final Date end = new Date(cal.getTimeInMillis());
                     end.setHours(e);
                     addReservation(resource, 0, start, end,
                             descriptions[(int) Math.floor(Math.random()
@@ -423,7 +429,7 @@ public class SampleDB {
 
     public void generateResources() {
 
-        Object[][] resources = {
+        final Object[][] resources = {
                 // Turku
                 { "01", "01 Ford Mondeo", "w/ company logo", "Turku",
                         new Double(60.510857), new Double(22.275424) },
@@ -500,7 +506,7 @@ public class SampleDB {
 
         };
 
-        String q = "INSERT INTO " + Resource.TABLE + "("
+        final String q = "INSERT INTO " + Resource.TABLE + "("
                 + Resource.PROPERTY_ID_STYLENAME + ","
                 + Resource.PROPERTY_ID_NAME + ","
                 + Resource.PROPERTY_ID_DESCRIPTION + ","
@@ -509,7 +515,7 @@ public class SampleDB {
                 + Resource.PROPERTY_ID_LOCATIONY + ")"
                 + " VALUES (?,?,?,?,?,?)";
         try {
-            PreparedStatement stmt = connection.prepareStatement(q);
+            final PreparedStatement stmt = connection.prepareStatement(q);
             for (int i = 0; i < resources.length; i++) {
                 int j = 0;
                 stmt.setString(j + 1, (String) resources[i][j++]);
@@ -522,22 +528,22 @@ public class SampleDB {
                         .doubleValue());
                 stmt.execute();
             }
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
     public void generateDemoUser() {
-        String q = "INSERT INTO USER (" + User.PROPERTY_ID_FULLNAME + ","
+        final String q = "INSERT INTO USER (" + User.PROPERTY_ID_FULLNAME + ","
                 + User.PROPERTY_ID_EMAIL + "," + User.PROPERTY_ID_PASSWORD
                 + ") VALUES (?,?,?)";
         try {
-            PreparedStatement stmt = connection.prepareStatement(q);
+            final PreparedStatement stmt = connection.prepareStatement(q);
             stmt.setString(1, "Demo User");
             stmt.setString(2, "demo.user@itmill.com");
             stmt.setString(3, "demo");
             stmt.execute();
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             throw new RuntimeException(e);
         }
 

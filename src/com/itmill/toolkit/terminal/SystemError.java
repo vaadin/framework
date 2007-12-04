@@ -1,30 +1,6 @@
-/* *************************************************************************
- 
- IT Mill Toolkit 
-
- Development of Browser User Interfaces Made Easy
-
- Copyright (C) 2000-2006 IT Mill Ltd
- 
- *************************************************************************
-
- This product is distributed under commercial license that can be found
- from the product package on license.pdf. Use of this product might 
- require purchasing a commercial license from IT Mill Ltd. For guidelines 
- on usage, see licensing-guidelines.html
-
- *************************************************************************
- 
- For more information, contact:
- 
- IT Mill Ltd                           phone: +358 2 4802 7180
- Ruukinkatu 2-4                        fax:   +358 2 4802 7181
- 20540, Turku                          email:  info@itmill.com
- Finland                               company www: www.itmill.com
- 
- Primary source for information and releases: www.itmill.com
-
- ********************************************************************** */
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
 
 package com.itmill.toolkit.terminal;
 
@@ -104,7 +80,7 @@ public class SystemError extends RuntimeException implements ErrorMessage {
         target.addAttribute("level", "system");
 
         // Paint the error message
-        String message = getLocalizedMessage();
+        final String message = getLocalizedMessage();
         if (message != null) {
             target.addSection("h2", message);
         }
@@ -112,7 +88,7 @@ public class SystemError extends RuntimeException implements ErrorMessage {
         // Paint the exception
         if (cause != null) {
             target.addSection("h3", "Exception");
-            StringWriter buffer = new StringWriter();
+            final StringWriter buffer = new StringWriter();
             cause.printStackTrace(new PrintWriter(buffer));
             target.addSection("pre", buffer.toString());
         }

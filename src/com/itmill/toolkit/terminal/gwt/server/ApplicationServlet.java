@@ -1,30 +1,6 @@
-/* *************************************************************************
- 
- IT Mill Toolkit 
-
- Development of Browser User Interfaces Made Easy
-
- Copyright (C) 2000-2006 IT Mill Ltd
- 
- *************************************************************************
-
- This product is distributed under commercial license that can be found
- from the product package on license.pdf. Use of this product might 
- require purchasing a commercial license from IT Mill Ltd. For guidelines 
- on usage, see licensing-guidelines.html
-
- *************************************************************************
- 
- For more information, contact:
- 
- IT Mill Ltd                           phone: +358 2 4802 7180
- Ruukinkatu 2-4                        fax:   +358 2 4802 7181
- 20540, Turku                          email:  info@itmill.com
- Finland                               company www: www.itmill.com
- 
- Primary source for information and releases: www.itmill.com
-
- ********************************************************************** */
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
 
 package com.itmill.toolkit.terminal.gwt.server;
 
@@ -102,7 +78,7 @@ public class ApplicationServlet extends HttpServlet {
         } else {
             VERSION = "@VERSION@";
         }
-        String[] digits = VERSION.split("\\.");
+        final String[] digits = VERSION.split("\\.");
         VERSION_MAJOR = Integer.parseInt(digits[0]);
         VERSION_MINOR = Integer.parseInt(digits[1]);
         VERSION_BUILD = digits[2];
@@ -166,38 +142,39 @@ public class ApplicationServlet extends HttpServlet {
         super.init(servletConfig);
 
         // Get applicationRunner
-        String applicationRunner = servletConfig
+        final String applicationRunner = servletConfig
                 .getInitParameter("applicationRunner");
         if (applicationRunner != null) {
-            if ("true".equals(applicationRunner))
+            if ("true".equals(applicationRunner)) {
                 applicationRunnerMode = true;
-            else if ("false".equals(applicationRunner))
+            } else if ("false".equals(applicationRunner)) {
                 applicationRunnerMode = false;
-            else
+            } else {
                 throw new ServletException(
                         "If applicationRunner parameter is given for an application, it must be 'true' or 'false'");
+            }
         }
 
         // Stores the application parameters into Properties object
         applicationProperties = new Properties();
-        for (Enumeration e = servletConfig.getInitParameterNames(); e
+        for (final Enumeration e = servletConfig.getInitParameterNames(); e
                 .hasMoreElements();) {
-            String name = (String) e.nextElement();
+            final String name = (String) e.nextElement();
             applicationProperties.setProperty(name, servletConfig
                     .getInitParameter(name));
         }
 
         // Overrides with server.xml parameters
-        ServletContext context = servletConfig.getServletContext();
-        for (Enumeration e = context.getInitParameterNames(); e
+        final ServletContext context = servletConfig.getServletContext();
+        for (final Enumeration e = context.getInitParameterNames(); e
                 .hasMoreElements();) {
-            String name = (String) e.nextElement();
+            final String name = (String) e.nextElement();
             applicationProperties.setProperty(name, context
                     .getInitParameter(name));
         }
 
         // Gets the debug window parameter
-        String debug = getApplicationOrSystemProperty(PARAMETER_DEBUG, "")
+        final String debug = getApplicationOrSystemProperty(PARAMETER_DEBUG, "")
                 .toLowerCase();
 
         // Enables application specific debug
@@ -209,20 +186,20 @@ public class ApplicationServlet extends HttpServlet {
         debugMode = debug;
 
         // Gets custom class loader
-        String classLoaderName = getApplicationOrSystemProperty("ClassLoader",
-                null);
+        final String classLoaderName = getApplicationOrSystemProperty(
+                "ClassLoader", null);
         ClassLoader classLoader;
         if (classLoaderName == null) {
             classLoader = getClass().getClassLoader();
         } else {
             try {
-                Class classLoaderClass = getClass().getClassLoader().loadClass(
-                        classLoaderName);
-                Constructor c = classLoaderClass
+                final Class classLoaderClass = getClass().getClassLoader()
+                        .loadClass(classLoaderName);
+                final Constructor c = classLoaderClass
                         .getConstructor(new Class[] { ClassLoader.class });
                 classLoader = (ClassLoader) c
                         .newInstance(new Object[] { getClass().getClassLoader() });
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 System.err.println("Could not find specified class loader: "
                         + classLoaderName);
                 throw new ServletException(e);
@@ -234,14 +211,15 @@ public class ApplicationServlet extends HttpServlet {
         // as the servlet itself
         if (!applicationRunnerMode) {
             // Gets the application class name
-            String applicationClassName = servletConfig
+            final String applicationClassName = servletConfig
                     .getInitParameter("application");
-            if (applicationClassName == null)
+            if (applicationClassName == null) {
                 throw new ServletException(
                         "Application not specified in servlet parameters");
+            }
             try {
                 applicationClass = classLoader.loadClass(applicationClassName);
-            } catch (ClassNotFoundException e) {
+            } catch (final ClassNotFoundException e) {
                 throw new ServletException("Failed to load application class: "
                         + applicationClassName);
             }
@@ -278,11 +256,11 @@ public class ApplicationServlet extends HttpServlet {
 
         // Try system properties
         String pkgName;
-        Package pkg = getClass().getPackage();
+        final Package pkg = getClass().getPackage();
         if (pkg != null) {
             pkgName = pkg.getName();
         } else {
-            String className = getClass().getName();
+            final String className = getClass().getName();
             pkgName = new String(className.toCharArray(), 0, className
                     .lastIndexOf('.'));
         }
@@ -322,7 +300,7 @@ public class ApplicationServlet extends HttpServlet {
         if (request.getPathInfo() != null) {
             if (applicationRunnerMode
                     && (request.getPathInfo().indexOf("/", 1) != -1)) {
-                String resourceUrl = request.getPathInfo().substring(
+                final String resourceUrl = request.getPathInfo().substring(
                         request.getPathInfo().indexOf('/', 1));
                 if (resourceUrl.startsWith("/ITMILL/")) {
                     serveStaticResourcesInITMILL(resourceUrl, response);
@@ -346,8 +324,8 @@ public class ApplicationServlet extends HttpServlet {
             }
 
             // Update browser details
-            WebBrowser browser = WebApplicationContext.getApplicationContext(
-                    request.getSession()).getBrowser();
+            final WebBrowser browser = WebApplicationContext
+                    .getApplicationContext(request.getSession()).getBrowser();
             browser.updateBrowserProperties(request);
             // TODO Add screen height and width to the GWT client
 
@@ -367,12 +345,12 @@ public class ApplicationServlet extends HttpServlet {
             DownloadStream download = null;
 
             // Handles AJAX UIDL requests
-            String resourceId = request.getPathInfo();
+            final String resourceId = request.getPathInfo();
             if (resourceId != null) {
                 if (applicationRunnerMode) {
                     if (resourceId.indexOf("/", 1) != -1) {
-                        String resourceUrl = resourceId.substring(resourceId
-                                .indexOf('/', 1));
+                        final String resourceUrl = resourceId
+                                .substring(resourceId.indexOf('/', 1));
                         if (resourceId != null
                                 && (resourceUrl.startsWith(AJAX_UIDL_URI))) {
                             getApplicationManager(application)
@@ -433,7 +411,7 @@ public class ApplicationServlet extends HttpServlet {
                 }
 
                 // Handle parameters
-                Map parameters = request.getParameterMap();
+                final Map parameters = request.getParameterMap();
                 if (window != null && parameters != null) {
                     window.handleParameters(parameters);
                 }
@@ -446,7 +424,7 @@ public class ApplicationServlet extends HttpServlet {
                 handleDownload(download, request, response);
             }
 
-        } catch (Throwable e) {
+        } catch (final Throwable e) {
             // Print stacktrace
             e.printStackTrace();
             // Re-throw other exceptions
@@ -470,7 +448,7 @@ public class ApplicationServlet extends HttpServlet {
      */
     private void serveStaticResourcesInITMILL(String filename,
             HttpServletResponse response) throws IOException {
-        ServletContext sc = getServletContext();
+        final ServletContext sc = getServletContext();
         InputStream is = sc.getResourceAsStream(filename);
         if (is == null) {
             // try if requested file is found from classloader
@@ -478,7 +456,7 @@ public class ApplicationServlet extends HttpServlet {
                 // strip leading "/" otherwise stream from JAR wont work
                 filename = filename.substring(1);
                 is = classLoader.getResourceAsStream(filename);
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 e.printStackTrace();
             }
             if (is == null) {
@@ -492,12 +470,12 @@ public class ApplicationServlet extends HttpServlet {
                 return;
             }
         }
-        String mimetype = sc.getMimeType(filename);
+        final String mimetype = sc.getMimeType(filename);
         if (mimetype != null) {
             response.setContentType(mimetype);
         }
-        OutputStream os = response.getOutputStream();
-        byte buffer[] = new byte[20000];
+        final OutputStream os = response.getOutputStream();
+        final byte buffer[] = new byte[20000];
         int bytes;
         while ((bytes = is.read(buffer)) >= 0) {
             os.write(buffer, 0, bytes);
@@ -525,9 +503,9 @@ public class ApplicationServlet extends HttpServlet {
             HttpServletResponse response, Window window, String themeName)
             throws IOException, MalformedURLException {
         response.setContentType("text/html");
-        BufferedWriter page = new BufferedWriter(new OutputStreamWriter(
+        final BufferedWriter page = new BufferedWriter(new OutputStreamWriter(
                 response.getOutputStream()));
-        String pathInfo = request.getPathInfo() == null ? "/" : request
+        final String pathInfo = request.getPathInfo() == null ? "/" : request
                 .getPathInfo();
         page
                 .write("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" "
@@ -545,11 +523,12 @@ public class ApplicationServlet extends HttpServlet {
         if (applicationRunnerMode) {
             String servletPath = request.getContextPath()
                     + request.getServletPath();
-            if (request.getPathInfo().indexOf('/', 1) == -1)
+            if (request.getPathInfo().indexOf('/', 1) == -1) {
                 servletPath += request.getPathInfo();
-            else
+            } else {
                 servletPath += request.getPathInfo().substring(1,
                         request.getPathInfo().indexOf('/', 1));
+            }
             appUrl = servletPath;
         } else {
             urlParts = getApplicationUrl(request).toString().split("\\/");
@@ -568,7 +547,7 @@ public class ApplicationServlet extends HttpServlet {
             widgetset = DEFAULT_WIDGETSET;
         }
 
-        String staticFilePath = getApplicationOrSystemProperty(
+        final String staticFilePath = getApplicationOrSystemProperty(
                 PARAMETER_ITMILL_RESOURCES, appUrl);
 
         // Default theme does not use theme URI
@@ -635,7 +614,7 @@ public class ApplicationServlet extends HttpServlet {
         DownloadStream stream = null;
         try {
             stream = application.handleURI(application.getURL(), uri);
-        } catch (Throwable t) {
+        } catch (final Throwable t) {
             application.terminalError(new URIHandlerErrorImpl(application, t));
         }
 
@@ -662,14 +641,14 @@ public class ApplicationServlet extends HttpServlet {
             HttpServletRequest request, HttpServletResponse response) {
 
         // Download from given stream
-        InputStream data = stream.getStream();
+        final InputStream data = stream.getStream();
         if (data != null) {
 
             // Sets content type
             response.setContentType(stream.getContentType());
 
             // Sets cache headers
-            long cacheTime = stream.getCacheTime();
+            final long cacheTime = stream.getCacheTime();
             if (cacheTime <= 0) {
                 response.setHeader("Cache-Control", "no-cache");
                 response.setHeader("Pragma", "no-cache");
@@ -686,10 +665,10 @@ public class ApplicationServlet extends HttpServlet {
 
             // Copy download stream parameters directly
             // to HTTP headers.
-            Iterator i = stream.getParameterNames();
+            final Iterator i = stream.getParameterNames();
             if (i != null) {
                 while (i.hasNext()) {
-                    String param = (String) i.next();
+                    final String param = (String) i.next();
                     response.setHeader(param, stream.getParameter(param));
                 }
             }
@@ -698,18 +677,18 @@ public class ApplicationServlet extends HttpServlet {
             if (bufferSize <= 0 || bufferSize > MAX_BUFFER_SIZE) {
                 bufferSize = DEFAULT_BUFFER_SIZE;
             }
-            byte[] buffer = new byte[bufferSize];
+            final byte[] buffer = new byte[bufferSize];
             int bytesRead = 0;
 
             try {
-                OutputStream out = response.getOutputStream();
+                final OutputStream out = response.getOutputStream();
 
                 while ((bytesRead = data.read(buffer)) > 0) {
                     out.write(buffer, 0, bytesRead);
                     out.flush();
                 }
                 out.close();
-            } catch (IOException ignored) {
+            } catch (final IOException ignored) {
             }
 
         }
@@ -758,7 +737,7 @@ public class ApplicationServlet extends HttpServlet {
         try {
             data = getServletContext().getResourceAsStream(
                     THEME_DIRECTORY_PATH + themeName + "/" + resourceId);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             e.printStackTrace();
             data = null;
         }
@@ -779,9 +758,9 @@ public class ApplicationServlet extends HttpServlet {
                 // Tomcats
 
                 // Writes the data to client
-                byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
+                final byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
                 int bytesRead = 0;
-                OutputStream out = response.getOutputStream();
+                final OutputStream out = response.getOutputStream();
                 while ((bytesRead = data.read(buffer)) > 0) {
                     out.write(buffer, 0, bytesRead);
                 }
@@ -791,7 +770,7 @@ public class ApplicationServlet extends HttpServlet {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
             }
 
-        } catch (java.io.IOException e) {
+        } catch (final java.io.IOException e) {
             System.err.println("Resource transfer failed:  "
                     + request.getRequestURI() + ". (" + e.getMessage() + ")");
         }
@@ -813,7 +792,7 @@ public class ApplicationServlet extends HttpServlet {
 
         URL applicationUrl;
         try {
-            URL reqURL = new URL(
+            final URL reqURL = new URL(
                     (request.isSecure() ? "https://" : "http://")
                             + request.getServerName()
                             + ((request.isSecure() && request.getServerPort() == 443)
@@ -821,8 +800,9 @@ public class ApplicationServlet extends HttpServlet {
                                             .getServerPort() == 80) ? "" : ":"
                                     + request.getServerPort())
                             + request.getRequestURI());
-            if (applicationRunnerMode)
+            if (applicationRunnerMode) {
                 return reqURL;
+            }
             String servletPath = request.getContextPath()
                     + request.getServletPath();
             if (servletPath.length() == 0
@@ -830,7 +810,7 @@ public class ApplicationServlet extends HttpServlet {
                 servletPath = servletPath + "/";
             }
             applicationUrl = new URL(reqURL, servletPath);
-        } catch (MalformedURLException e) {
+        } catch (final MalformedURLException e) {
             System.err.println("Error constructing application url "
                     + request.getRequestURI() + " (" + e + ")");
             throw e;
@@ -863,27 +843,28 @@ public class ApplicationServlet extends HttpServlet {
             InstantiationException {
 
         // Ensures that the session is still valid
-        HttpSession session = request.getSession(true);
+        final HttpSession session = request.getSession(true);
 
         // Gets application list for the session.
-        Collection applications = WebApplicationContext.getApplicationContext(
-                session).getApplications();
+        final Collection applications = WebApplicationContext
+                .getApplicationContext(session).getApplications();
 
         // Search for the application (using the application URI) from the list
-        for (Iterator i = applications.iterator(); i.hasNext();) {
-            Application a = (Application) i.next();
-            String aPath = a.getURL().getPath();
+        for (final Iterator i = applications.iterator(); i.hasNext();) {
+            final Application a = (Application) i.next();
+            final String aPath = a.getURL().getPath();
             String servletPath = request.getContextPath()
                     + request.getServletPath();
             if (servletPath.length() < aPath.length()) {
                 servletPath += "/";
             }
             if (applicationRunnerMode) {
-                if (request.getPathInfo().indexOf('/', 1) == -1)
+                if (request.getPathInfo().indexOf('/', 1) == -1) {
                     servletPath += request.getPathInfo();
-                else
+                } else {
                     servletPath += request.getPathInfo().substring(1,
                             request.getPathInfo().indexOf('/', 1));
+                }
 
             }
             if (servletPath.equals(aPath)) {
@@ -899,16 +880,16 @@ public class ApplicationServlet extends HttpServlet {
             }
         }
         // Creates application, because a running one was not found
-        WebApplicationContext context = WebApplicationContext
+        final WebApplicationContext context = WebApplicationContext
                 .getApplicationContext(request.getSession());
-        URL applicationUrl = getApplicationUrl(request);
+        final URL applicationUrl = getApplicationUrl(request);
 
         if (applicationRunnerMode) {
-            String applicationClassName = applicationUrl.getPath().substring(
-                    applicationUrl.getPath().lastIndexOf('/') + 1);
+            final String applicationClassName = applicationUrl.getPath()
+                    .substring(applicationUrl.getPath().lastIndexOf('/') + 1);
             try {
                 applicationClass = classLoader.loadClass(applicationClassName);
-            } catch (ClassNotFoundException e) {
+            } catch (final ClassNotFoundException e) {
                 throw new InstantiationException(
                         "Failed to load application class: "
                                 + applicationClassName);
@@ -917,7 +898,7 @@ public class ApplicationServlet extends HttpServlet {
 
         // Creates new application and start it
         try {
-            Application application = (Application) applicationClass
+            final Application application = (Application) applicationClass
                     .newInstance();
             context.addApplication(application);
 
@@ -928,11 +909,11 @@ public class ApplicationServlet extends HttpServlet {
             application.start(applicationUrl, applicationProperties, context);
             return application;
 
-        } catch (IllegalAccessException e) {
+        } catch (final IllegalAccessException e) {
             System.err.println("Illegal access to application class "
                     + applicationClass.getName());
             throw e;
-        } catch (InstantiationException e) {
+        } catch (final InstantiationException e) {
             System.err.println("Failed to instantiate application class: "
                     + applicationClass.getName());
             throw e;
@@ -960,7 +941,7 @@ public class ApplicationServlet extends HttpServlet {
             logoutUrl = application.getURL().toString();
         }
 
-        HttpSession session = request.getSession();
+        final HttpSession session = request.getSession();
         if (session != null) {
             WebApplicationContext.getApplicationContext(session)
                     .removeApplication(application);
@@ -998,7 +979,7 @@ public class ApplicationServlet extends HttpServlet {
             if (path.charAt(0) == '/') {
                 path = path.substring(1);
             }
-            int index = path.indexOf('/');
+            final int index = path.indexOf('/');
             if (index < 0) {
                 windowName = path;
                 path = "";
@@ -1050,7 +1031,7 @@ public class ApplicationServlet extends HttpServlet {
      */
     public boolean isDebugMode(Map parameters) {
         if (parameters != null) {
-            Object[] debug = (Object[]) parameters.get("debug");
+            final Object[] debug = (Object[]) parameters.get("debug");
             if (debug != null && !"false".equals(debug[0].toString())
                     && !"false".equals(debugMode)) {
                 return true;
@@ -1171,9 +1152,9 @@ public class ApplicationServlet extends HttpServlet {
             return resultPath;
         } else {
             try {
-                URL url = servletContext.getResource(path);
+                final URL url = servletContext.getResource(path);
                 resultPath = url.getFile();
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 // ignored
             }
         }

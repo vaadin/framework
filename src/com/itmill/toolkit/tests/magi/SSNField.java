@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.tests.magi;
 
 import java.text.MessageFormat;
@@ -25,7 +29,7 @@ public class SSNField extends CustomComponent implements
         public boolean isValid(Object value) {
             try {
                 validate(value);
-            } catch (InvalidValueException e) {
+            } catch (final InvalidValueException e) {
                 return false;
             }
             return true;
@@ -33,13 +37,13 @@ public class SSNField extends CustomComponent implements
 
         /** Validate the given SSN. */
         public void validate(Object value) throws InvalidValueException {
-            String ssn = (String) value;
+            final String ssn = (String) value;
             if (ssn.length() != 11) {
                 throw new InvalidValueException("Invalid SSN length");
             }
 
-            String numbers = ssn.substring(0, 6) + ssn.substring(7, 10);
-            int checksum = new Integer(numbers).intValue() % 31;
+            final String numbers = ssn.substring(0, 6) + ssn.substring(7, 10);
+            final int checksum = new Integer(numbers).intValue() % 31;
             if (!ssn.substring(10).equals(
                     "0123456789ABCDEFHJKLMNPRSTUVWXY".substring(checksum,
                             checksum + 1))) {
@@ -58,7 +62,7 @@ public class SSNField extends CustomComponent implements
         myfield.setFormat(new MessageFormat("{0,number,##}"));
 
         /* Create and set the validator object for the field. */
-        SSNValidator ssnvalidator = new SSNValidator();
+        final SSNValidator ssnvalidator = new SSNValidator();
         myfield.addValidator(ssnvalidator);
 
         /*
@@ -85,7 +89,7 @@ public class SSNField extends CustomComponent implements
             /* The value was correct. */
             myerror.setValue("Ok");
             myfield.setStyle("");
-        } catch (Validator.InvalidValueException e) {
+        } catch (final Validator.InvalidValueException e) {
             /* Report the error message to the user. */
             myerror.setValue(e.getMessage());
 

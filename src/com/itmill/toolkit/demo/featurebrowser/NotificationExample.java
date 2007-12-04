@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.demo.featurebrowser;
 
 import java.util.Date;
@@ -35,7 +39,7 @@ public class NotificationExample extends CustomComponent {
      */
     public NotificationExample() {
         // Main layout
-        OrderedLayout main = new OrderedLayout();
+        final OrderedLayout main = new OrderedLayout();
         main.setMargin(true); // use theme-specific margin
         setCompositionRoot(main);
 
@@ -75,7 +79,7 @@ public class NotificationExample extends CustomComponent {
         message.setValue("A quick one jumped over the lazy dog.");
 
         // Button to show the notification
-        Button b = new Button("Show notification", new ClickListener() {
+        final Button b = new Button("Show notification", new ClickListener() {
             // this is an inline ClickListener
             public void buttonClick(ClickEvent event) {
                 // show the notification

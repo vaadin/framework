@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.demo.util;
 
 import java.io.File;
@@ -55,7 +59,7 @@ public class SampleDirectory {
             return file;
         }
         // Add failure notification as an Panel to main window
-        Panel errorPanel = new Panel("Demo application error");
+        final Panel errorPanel = new Panel("Demo application error");
         errorPanel.setStyle("strong");
         errorPanel.setComponentError(new SystemError(
                 "Cannot provide sample directory"));

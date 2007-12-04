@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import java.util.ArrayList;
@@ -37,8 +41,8 @@ public class IFilterSelect extends Composite implements Paintable,
 
     public class FilterSelectSuggestion implements Suggestion, Command {
 
-        private String key;
-        private String caption;
+        private final String key;
+        private final String caption;
         private String iconUri;
 
         public FilterSelectSuggestion(UIDL uidl) {
@@ -51,7 +55,7 @@ public class IFilterSelect extends Composite implements Paintable,
         }
 
         public String getDisplayString() {
-            StringBuffer sb = new StringBuffer();
+            final StringBuffer sb = new StringBuffer();
             if (iconUri != null) {
                 sb.append("<img src=\"");
                 sb.append(iconUri);
@@ -88,11 +92,11 @@ public class IFilterSelect extends Composite implements Paintable,
 
         private static final String Z_INDEX = "30000";
 
-        private SuggestionMenu menu;
+        private final SuggestionMenu menu;
 
-        private Element up = DOM.createDiv();
-        private Element down = DOM.createDiv();
-        private Element status = DOM.createDiv();
+        private final Element up = DOM.createDiv();
+        private final Element down = DOM.createDiv();
+        private final Element status = DOM.createDiv();
 
         private boolean isPagingEnabled = true;
 
@@ -105,7 +109,7 @@ public class IFilterSelect extends Composite implements Paintable,
             setStyleName(CLASSNAME + "-suggestpopup");
             DOM.setStyleAttribute(getElement(), "zIndex", Z_INDEX);
 
-            Element root = getContainerElement();
+            final Element root = getContainerElement();
 
             DOM.setInnerHTML(up, "<span>Prev</span>");
             DOM.sinkEvents(up, Event.ONCLICK);
@@ -122,12 +126,12 @@ public class IFilterSelect extends Composite implements Paintable,
         public void showSuggestions(Collection currentSuggestions,
                 int currentPage, int totalSuggestions) {
             menu.setSuggestions(currentSuggestions);
-            int x = IFilterSelect.this.getAbsoluteLeft();
+            final int x = IFilterSelect.this.getAbsoluteLeft();
             int y = tb.getAbsoluteTop();
             y += tb.getOffsetHeight();
             setPopupPosition(x, y);
-            int first = currentPage * PAGELENTH + 1;
-            int last = first + currentSuggestions.size() - 1;
+            final int first = currentPage * PAGELENTH + 1;
+            final int last = first + currentSuggestions.size() - 1;
             DOM.setInnerText(status, (totalSuggestions == 0 ? 0 : first) + "-"
                     + last + "/" + totalSuggestions);
             setPrevButtonActive(first > 1);
@@ -168,10 +172,10 @@ public class IFilterSelect extends Composite implements Paintable,
         }
 
         public void selectNextItem() {
-            MenuItem cur = menu.getSelectedItem();
-            int index = 1 + menu.getItems().indexOf(cur);
+            final MenuItem cur = menu.getSelectedItem();
+            final int index = 1 + menu.getItems().indexOf(cur);
             if (menu.getItems().size() > index) {
-                MenuItem newSelectedItem = (MenuItem) menu.getItems()
+                final MenuItem newSelectedItem = (MenuItem) menu.getItems()
                         .get(index);
                 menu.selectItem(newSelectedItem);
                 tb.setText(newSelectedItem.getText());
@@ -185,10 +189,10 @@ public class IFilterSelect extends Composite implements Paintable,
         }
 
         public void selectPrevItem() {
-            MenuItem cur = menu.getSelectedItem();
-            int index = -1 + menu.getItems().indexOf(cur);
+            final MenuItem cur = menu.getSelectedItem();
+            final int index = -1 + menu.getItems().indexOf(cur);
             if (index > -1) {
-                MenuItem newSelectedItem = (MenuItem) menu.getItems()
+                final MenuItem newSelectedItem = (MenuItem) menu.getItems()
                         .get(index);
                 menu.selectItem(newSelectedItem);
                 tb.setText(newSelectedItem.getText());
@@ -200,8 +204,8 @@ public class IFilterSelect extends Composite implements Paintable,
                     filterOptions(currentPage - 1);
                 }
             } else {
-                MenuItem newSelectedItem = (MenuItem) menu.getItems().get(
-                        menu.getItems().size() - 1);
+                final MenuItem newSelectedItem = (MenuItem) menu.getItems()
+                        .get(menu.getItems().size() - 1);
                 menu.selectItem(newSelectedItem);
                 tb.setText(newSelectedItem.getText());
                 tb.setSelectionRange(lastFilter.length(), newSelectedItem
@@ -211,7 +215,7 @@ public class IFilterSelect extends Composite implements Paintable,
         }
 
         public void onBrowserEvent(Event event) {
-            Element target = DOM.eventGetTarget(event);
+            final Element target = DOM.eventGetTarget(event);
             if (DOM.compare(target, up)
                     || DOM.compare(target, DOM.getChild(up, 0))) {
                 filterOptions(currentPage - 1, lastFilter);
@@ -257,7 +261,7 @@ public class IFilterSelect extends Composite implements Paintable,
             }
             offsetHeight = getOffsetHeight();
 
-            int desiredWidth = IFilterSelect.this.getOffsetWidth();
+            final int desiredWidth = IFilterSelect.this.getOffsetWidth();
             int naturalMenuWidth = DOM.getElementPropertyInt(DOM
                     .getFirstChild(menu.getElement()), "offsetWidth");
             if (naturalMenuWidth < desiredWidth) {
@@ -305,7 +309,7 @@ public class IFilterSelect extends Composite implements Paintable,
          * @return true if popup was just closed
          */
         public boolean isJustClosed() {
-            long now = (new Date()).getTime();
+            final long now = (new Date()).getTime();
             return (lastAutoClosed > 0 && (now - lastAutoClosed) < 200);
         }
 
@@ -329,17 +333,18 @@ public class IFilterSelect extends Composite implements Paintable,
          * to avoid height changes when quickly "scrolling" to last page
          */
         public void fixHeightTo(int pagelenth) {
-            int pixels = pagelenth * (getOffsetHeight() - 2)
+            final int pixels = pagelenth * (getOffsetHeight() - 2)
                     / currentSuggestions.size();
             setHeight((pixels + 2) + "px");
         }
 
         public void setSuggestions(Collection suggestions) {
             clearItems();
-            Iterator it = suggestions.iterator();
+            final Iterator it = suggestions.iterator();
             while (it.hasNext()) {
-                FilterSelectSuggestion s = (FilterSelectSuggestion) it.next();
-                MenuItem mi = new MenuItem(s.getDisplayString(), true, s);
+                final FilterSelectSuggestion s = (FilterSelectSuggestion) it
+                        .next();
+                final MenuItem mi = new MenuItem(s.getDisplayString(), true, s);
                 this.addItem(mi);
                 if (s == currentSuggestion) {
                     selectItem(mi);
@@ -348,16 +353,17 @@ public class IFilterSelect extends Composite implements Paintable,
         }
 
         public void doSelectedItemAction() {
-            MenuItem item = getSelectedItem();
+            final MenuItem item = getSelectedItem();
             if (item != null
                     && item.getText().toLowerCase().startsWith(
                             lastFilter.toLowerCase())) {
                 doItemAction(item, true);
             } else if (allowNewItem) {
-                String newItemValue = tb.getText();
+                final String newItemValue = tb.getText();
                 // check for exact match in menu
                 if (getItems().size() == 1) {
-                    MenuItem potentialExactMatch = (MenuItem) getItems().get(0);
+                    final MenuItem potentialExactMatch = (MenuItem) getItems()
+                            .get(0);
                     if (potentialExactMatch.getText().equals(newItemValue)) {
                         selectItem(potentialExactMatch);
                         doSelectedItemAction();
@@ -399,7 +405,7 @@ public class IFilterSelect extends Composite implements Paintable,
 
     private int currentPage;
 
-    private Collection currentSuggestions = new ArrayList();
+    private final Collection currentSuggestions = new ArrayList();
 
     private boolean immediate;
 
@@ -461,9 +467,10 @@ public class IFilterSelect extends Composite implements Paintable,
         }
         if (clientSideFiltering) {
             currentSuggestions.clear();
-            for (Iterator it = allSuggestions.iterator(); it.hasNext();) {
-                FilterSelectSuggestion s = (FilterSelectSuggestion) it.next();
-                String string = s.getDisplayString().toLowerCase();
+            for (final Iterator it = allSuggestions.iterator(); it.hasNext();) {
+                final FilterSelectSuggestion s = (FilterSelectSuggestion) it
+                        .next();
+                final String string = s.getDisplayString().toLowerCase();
                 if (string.startsWith(filter.toLowerCase())) {
                     currentSuggestions.add(s);
                 }
@@ -512,7 +519,7 @@ public class IFilterSelect extends Composite implements Paintable,
         allowNewItem = uidl.hasAttribute("allownewitem");
 
         currentSuggestions.clear();
-        UIDL options = uidl.getChildUIDL(0);
+        final UIDL options = uidl.getChildUIDL(0);
         totalSuggestions = uidl.getIntAttribute("totalitems");
         totalMatches = uidl.getIntAttribute("totalMatches");
 
@@ -520,9 +527,9 @@ public class IFilterSelect extends Composite implements Paintable,
         if (clientSideFiltering) {
             allSuggestions = new ArrayList();
         }
-        for (Iterator i = options.getChildIterator(); i.hasNext();) {
-            UIDL optionUidl = (UIDL) i.next();
-            FilterSelectSuggestion suggestion = new FilterSelectSuggestion(
+        for (final Iterator i = options.getChildIterator(); i.hasNext();) {
+            final UIDL optionUidl = (UIDL) i.next();
+            final FilterSelectSuggestion suggestion = new FilterSelectSuggestion(
                     optionUidl);
             currentSuggestions.add(suggestion);
             if (clientSideFiltering) {
@@ -547,8 +554,8 @@ public class IFilterSelect extends Composite implements Paintable,
         }
 
         // Calculate minumum textarea width
-        int minw = minWidth(captions);
-        Element spacer = DOM.createDiv();
+        final int minw = minWidth(captions);
+        final Element spacer = DOM.createDiv();
         DOM.setStyleAttribute(spacer, "width", minw + "px");
         DOM.setStyleAttribute(spacer, "height", "0");
         DOM.setStyleAttribute(spacer, "overflow", "hidden");
@@ -674,25 +681,25 @@ public class IFilterSelect extends Composite implements Paintable,
      * Calculate minumum width for FilterSelect textarea
      */
     private native int minWidth(String captions) /*-{
-                                                                   	if(!captions || captions.length <= 0)
-                                                                   		return 0;
-                                                                   	captions = captions.split("|");
-                                                                   	var d = $wnd.document.createElement("div");
-                                                                   	var html = "";
-                                                                   	for(var i=0; i < captions.length; i++) {
-                                                                   		html += "<div>" + captions[i] + "</div>";
-                                                                   		// TODO apply same CSS classname as in suggestionmenu
-                                                                   	}
-                                                                   	d.style.position = "absolute";
-                                                                   	d.style.top = "0";
-                                                                   	d.style.left = "0";
-                                                                   	d.style.visibility = "hidden";
-                                                                   	d.innerHTML = html;
-                                                                   	$wnd.document.body.appendChild(d);
-                                                                   	var w = d.offsetWidth;
-                                                                   	$wnd.document.body.removeChild(d);
-                                                                   	return w;
-                                                                   }-*/;
+                                                                         	if(!captions || captions.length <= 0)
+                                                                         		return 0;
+                                                                         	captions = captions.split("|");
+                                                                         	var d = $wnd.document.createElement("div");
+                                                                         	var html = "";
+                                                                         	for(var i=0; i < captions.length; i++) {
+                                                                         		html += "<div>" + captions[i] + "</div>";
+                                                                         		// TODO apply same CSS classname as in suggestionmenu
+                                                                         	}
+                                                                         	d.style.position = "absolute";
+                                                                         	d.style.top = "0";
+                                                                         	d.style.left = "0";
+                                                                         	d.style.visibility = "hidden";
+                                                                         	d.innerHTML = html;
+                                                                         	$wnd.document.body.appendChild(d);
+                                                                         	var w = d.offsetWidth;
+                                                                         	$wnd.document.body.removeChild(d);
+                                                                         	return w;
+                                                                         }-*/;
 
     public void onFocus(Widget sender) {
         // NOP

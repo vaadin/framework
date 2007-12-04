@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -17,9 +21,9 @@ public class ICustomComponent extends SimplePanel implements Paintable {
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 
-        UIDL child = uidl.getChildUIDL(0);
+        final UIDL child = uidl.getChildUIDL(0);
         if (child != null) {
-            Paintable p = (Paintable) client.getWidget(child);
+            final Paintable p = (Paintable) client.getWidget(child);
             if (p != getWidget()) {
                 if (getWidget() != null) {
                     client.unregisterPaintable((Paintable) getWidget());

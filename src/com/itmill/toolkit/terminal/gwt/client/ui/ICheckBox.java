@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import com.google.gwt.user.client.DOM;
@@ -53,7 +57,7 @@ public class ICheckBox extends com.google.gwt.user.client.ui.CheckBox implements
         }
 
         if (uidl.hasAttribute("error")) {
-            UIDL errorUidl = uidl.getErrors();
+            final UIDL errorUidl = uidl.getErrors();
 
             if (errorIndicatorElement == null) {
                 errorIndicatorElement = DOM.createDiv();
@@ -95,7 +99,7 @@ public class ICheckBox extends com.google.gwt.user.client.ui.CheckBox implements
 
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
-        Element target = DOM.eventGetTarget(event);
+        final Element target = DOM.eventGetTarget(event);
         if (errorIndicatorElement != null
                 && DOM.compare(target, errorIndicatorElement)) {
             switch (DOM.eventGetType(event)) {

@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.demo;
 
 import com.itmill.toolkit.terminal.PaintException;
@@ -21,12 +25,12 @@ public class CachingDemo extends com.itmill.toolkit.Application {
 
     public void init() {
 
-        Window main = new Window("Client-side caching example");
+        final Window main = new Window("Client-side caching example");
         setMainWindow(main);
 
         setTheme("example");
 
-        TabSheet ts = new TabSheet();
+        final TabSheet ts = new TabSheet();
         main.addComponent(ts);
 
         Layout layout = new OrderedLayout();
@@ -46,7 +50,7 @@ public class CachingDemo extends com.itmill.toolkit.Application {
             public void paintContent(PaintTarget target) throws PaintException {
                 try {
                     Thread.sleep(3000);
-                } catch (Exception e) {
+                } catch (final Exception e) {
                     // IGNORED
                 }
                 super.paintContent(target);

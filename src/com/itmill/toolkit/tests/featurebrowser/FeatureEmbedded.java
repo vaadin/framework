@@ -1,30 +1,6 @@
-/* *************************************************************************
- 
- IT Mill Toolkit 
-
- Development of Browser User Interfaces Made Easy
-
- Copyright (C) 2000-2006 IT Mill Ltd
- 
- *************************************************************************
-
- This product is distributed under commercial license that can be found
- from the product package on license.pdf. Use of this product might 
- require purchasing a commercial license from IT Mill Ltd. For guidelines 
- on usage, see licensing-guidelines.html
-
- *************************************************************************
- 
- For more information, contact:
- 
- IT Mill Ltd                           phone: +358 2 4802 7180
- Ruukinkatu 2-4                        fax:   +358 2 4802 7181
- 20540, Turku                          email:  info@itmill.com
- Finland                               company www: www.itmill.com
- 
- Primary source for information and releases: www.itmill.com
-
- ********************************************************************** */
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
 
 package com.itmill.toolkit.tests.featurebrowser;
 
@@ -43,11 +19,11 @@ public class FeatureEmbedded extends Feature {
 
     protected Component getDemoComponent() {
 
-        OrderedLayout l = new OrderedLayout();
+        final OrderedLayout l = new OrderedLayout();
 
-        ClassResource flashResource = new ClassResource("itmill_spin.swf",
-                getApplication());
-        Embedded emb = new Embedded("Embedded Caption", flashResource);
+        final ClassResource flashResource = new ClassResource(
+                "itmill_spin.swf", getApplication());
+        final Embedded emb = new Embedded("Embedded Caption", flashResource);
         emb.setType(Embedded.TYPE_OBJECT);
         emb.setMimeType("application/x-shockwave-flash");
         emb.setWidth(250);
@@ -56,16 +32,16 @@ public class FeatureEmbedded extends Feature {
 
         // Properties
         propertyPanel = new PropertyPanel(emb);
-        Form ap = propertyPanel.createBeanPropertySet(new String[] { "type",
-                "source", "width", "height", "widthUnits", "heightUnits",
-                "codebase", "codetype", "archive", "mimeType", "standby",
-                "classId" });
+        final Form ap = propertyPanel.createBeanPropertySet(new String[] {
+                "type", "source", "width", "height", "widthUnits",
+                "heightUnits", "codebase", "codetype", "archive", "mimeType",
+                "standby", "classId" });
         ap.replaceWithSelect("type", new Object[] {
                 new Integer(Embedded.TYPE_IMAGE),
                 new Integer(Embedded.TYPE_OBJECT) }, new Object[] { "Image",
                 "Object" });
-        Object[] units = new Object[Sizeable.UNIT_SYMBOLS.length];
-        Object[] symbols = new Object[Sizeable.UNIT_SYMBOLS.length];
+        final Object[] units = new Object[Sizeable.UNIT_SYMBOLS.length];
+        final Object[] symbols = new Object[Sizeable.UNIT_SYMBOLS.length];
         for (int i = 0; i < units.length; i++) {
             units[i] = new Integer(i);
             symbols[i] = Sizeable.UNIT_SYMBOLS[i];

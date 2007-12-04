@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.tests.magi;
 
 import java.net.URL;
@@ -63,7 +67,7 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
         String example;
         String param = null;
 
-        int slashPos = relativeUri.indexOf("/");
+        final int slashPos = relativeUri.indexOf("/");
         if (slashPos > 0) {
             example = relativeUri.substring(0, slashPos);
             param = relativeUri.substring(slashPos + 1);
@@ -73,22 +77,23 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
 
         /* Remove existing components and windows. */
         main.removeAllComponents();
-        Set childwindows = main.getChildWindows();
-        for (Iterator cwi = childwindows.iterator(); cwi.hasNext();) {
-            Window child = (Window) cwi.next();
+        final Set childwindows = main.getChildWindows();
+        for (final Iterator cwi = childwindows.iterator(); cwi.hasNext();) {
+            final Window child = (Window) cwi.next();
             main.removeWindow(child);
         }
         main.setLayout(new OrderedLayout());
 
         if (example.equals("index")) {
-            Object examples[] = { "defaultbutton", "label", "labelcontent",
-                    "tree", "embedded", "textfield", "textfieldvalidation",
-                    "datefield", "button", "select/select", "select/native",
-                    "select/optiongroup", "select/twincol", "filterselect",
-                    "validator", "table", "upload", "link", "gridlayout",
-                    "orderedlayout", "formlayout", "panel", "expandlayout",
-                    "tabsheet", "alignment", "alignment/grid", "window",
-                    "window/opener", "window/multiple", "classresource" };
+            final Object examples[] = { "defaultbutton", "label",
+                    "labelcontent", "tree", "embedded", "textfield",
+                    "textfieldvalidation", "datefield", "button",
+                    "select/select", "select/native", "select/optiongroup",
+                    "select/twincol", "filterselect", "validator", "table",
+                    "upload", "link", "gridlayout", "orderedlayout",
+                    "formlayout", "panel", "expandlayout", "tabsheet",
+                    "alignment", "alignment/grid", "window", "window/opener",
+                    "window/multiple", "classresource" };
             for (int i = 0; i < examples.length; i++) {
                 main.addComponent(new Label("<a href='/tk/testbench2/"
                         + examples[i] + "'>" + examples[i] + "</a>",
@@ -173,7 +178,7 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
 
     void example_Label(Window main, String param) {
         /* Some container for the Label. */
-        Panel panel = new Panel("Panel Containing a Label");
+        final Panel panel = new Panel("Panel Containing a Label");
         main.addComponent(panel);
 
         panel.addComponent(new Label(
@@ -183,7 +188,7 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
     }
 
     void example_LabelContent(Window main, String param) {
-        GridLayout labelgrid = new GridLayout(2, 1);
+        final GridLayout labelgrid = new GridLayout(2, 1);
         labelgrid.addStyleName("labelgrid");
         labelgrid.addComponent(new Label("CONTENT_DEFAULT"));
         labelgrid.addComponent(new Label(
@@ -212,7 +217,7 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
                 Label.CONTENT_XML));
         main.addComponent(labelgrid);
 
-        ClassResource labelimage = new ClassResource("smiley.jpg", this);
+        final ClassResource labelimage = new ClassResource("smiley.jpg", this);
         main.addComponent(new Label("Here we have an image <img src=\""
                 + getRelativeLocation(labelimage) + "\"/> within some text.",
                 Label.CONTENT_XHTML));
@@ -233,11 +238,11 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
                 new Object[] { "Neptune", "Triton", "Proteus", "Nereid",
                         "Larissa" } };
 
-        Tree tree = new Tree("The Planets and Major Moons");
+        final Tree tree = new Tree("The Planets and Major Moons");
 
         /* Add planets as root items in the tree. */
         for (int i = 0; i < planets.length; i++) {
-            String planet = (String) (planets[i][0]);
+            final String planet = (String) (planets[i][0]);
             tree.addItem(planet);
 
             if (planets[i].length == 1) {
@@ -246,7 +251,7 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
             } else {
                 /* Add children (moons) under the planets. */
                 for (int j = 1; j < planets[i].length; j++) {
-                    String moon = (String) planets[i][j];
+                    final String moon = (String) planets[i][j];
 
                     /* Add the item as a regular item. */
                     tree.addItem(moon);
@@ -267,22 +272,22 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
     }
 
     void example_Select(Window main, String param) {
-        OrderedLayout layout = new OrderedLayout(
+        final OrderedLayout layout = new OrderedLayout(
                 OrderedLayout.ORIENTATION_HORIZONTAL);
         layout.addStyleName("aligntop");
 
         if (param.equals("twincol")) {
-            SelectExample select1 = new SelectExample(this, param,
+            final SelectExample select1 = new SelectExample(this, param,
                     "Select some items", true);
             layout.addComponent(select1);
         } else if (param.equals("filter")) {
-            SelectExample select1 = new SelectExample(this, param,
+            final SelectExample select1 = new SelectExample(this, param,
                     "Enter containing substring", false);
             layout.addComponent(select1);
         } else {
-            SelectExample select1 = new SelectExample(this, param,
+            final SelectExample select1 = new SelectExample(this, param,
                     "Single Selection Mode", false);
-            SelectExample select2 = new SelectExample(this, param,
+            final SelectExample select2 = new SelectExample(this, param,
                     "Multiple Selection Mode", true);
             layout.addComponent(select1);
             layout.addComponent(select2);
@@ -291,7 +296,7 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
     }
 
     void example_FilterSelect(Window main, String param) {
-        Select select = new Select("Enter containing substring");
+        final Select select = new Select("Enter containing substring");
         main.addComponent(select);
 
         select
@@ -310,12 +315,12 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
 
     void example_TextField(Window main, String param) {
         /* Add a single-line text field. */
-        TextField subject = new TextField("Subject");
+        final TextField subject = new TextField("Subject");
         subject.setColumns(40);
         main.addComponent(subject);
 
         /* Add a multi-line text field. */
-        TextField message = new TextField("Message");
+        final TextField message = new TextField("Message");
         message.setRows(7);
         message.setColumns(40);
         main.addComponent(message);
@@ -323,7 +328,7 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
 
     void example_TextFieldValidation(Window main, String param) {
         // Create a text field with a label
-        TextField username = new TextField("Username");
+        final TextField username = new TextField("Username");
         main.addComponent(username);
 
         // Set visible length to 16 characters
@@ -342,7 +347,7 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
         username.addListener(new ValueChangeListener() {
             public void valueChange(ValueChangeEvent event) {
                 // Get the source of the event
-                TextField username = (TextField) (event.getProperty());
+                final TextField username = (TextField) (event.getProperty());
 
                 try {
                     // Validate the field value.
@@ -350,7 +355,7 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
 
                     // The value was ok, reset a possible error
                     username.setComponentError(null);
-                } catch (Validator.InvalidValueException e) {
+                } catch (final Validator.InvalidValueException e) {
                     // The value was not ok. Set the error.
                     username.setComponentError(new UserError(e.getMessage()));
                 }
@@ -360,7 +365,7 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
 
     void example_DateField(Window main, String param) {
         /* Create a DateField with the calendar style. */
-        DateField date = new DateField("Here is a calendar field");
+        final DateField date = new DateField("Here is a calendar field");
         date.setStyle("calendar");
 
         /* Set the date and time to present. */
@@ -386,14 +391,15 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
     void example_Link(Window main, String param) {
 
         /* Create a link that opens the popup window. */
-        Link alink = new Link();
+        final Link alink = new Link();
 
         /* Set the resource to be opened in the window. */
         alink.setResource(new ExternalResource("http://www.itmill.com/"));
 
         main.addComponent(alink);
 
-        ClassResource mydocument = new ClassResource("mydocument.pdf", this);
+        final ClassResource mydocument = new ClassResource("mydocument.pdf",
+                this);
         main.addComponent(new Link("The document (pdf)", mydocument));
         main.addComponent(new Link("link to a resource", new ExternalResource(
                 "http://www.itmill.com/")));
@@ -416,7 +422,7 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
         // Button checkbox = new Button ("This is a checkbox");
 
         // main.addComponent(checkbox);
-        Button button = new Button("My Button");
+        final Button button = new Button("My Button");
         main.addComponent(button);
     }
 
@@ -452,12 +458,12 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
     }
 
     void example_Panel(Window main, String param) {
-        Panel panel = new Panel("Contact Information");
-        OrderedLayout form = new FormLayout();
+        final Panel panel = new Panel("Contact Information");
+        final OrderedLayout form = new FormLayout();
         form.addComponent(new TextField("Name"));
         form.addComponent(new TextField("Email"));
 
-        ClassResource icon = new ClassResource("smiley.jpg", main
+        final ClassResource icon = new ClassResource("smiley.jpg", main
                 .getApplication());
         form.addComponent(new Embedded("Image", icon));
         panel.setIcon(icon);
@@ -467,7 +473,7 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
 
     void example_GridLayout(Window main, String param) {
         /* Create a 4 by 4 grid layout. */
-        GridLayout grid = new GridLayout(4, 4);
+        final GridLayout grid = new GridLayout(4, 4);
         grid.addStyleName("example-gridlayout");
 
         /* Fill out the first row using the cursor. */
@@ -484,7 +490,7 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
         /* Add some components of various shapes. */
         grid.addComponent(new Button("3x1 button"), 1, 1, 3, 1);
         grid.addComponent(new Label("1x2 cell"), 1, 2, 1, 3);
-        DateField date = new DateField("A 2x2 date field");
+        final DateField date = new DateField("A 2x2 date field");
         date.setStyle("calendar");
         grid.addComponent(date, 2, 2, 3, 3);
 
@@ -494,7 +500,7 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
     void example_Alignment(Window main, String param) {
         if (param.equals("grid")) {
             /* Create a 3 by 3 grid layout. */
-            GridLayout layout = new GridLayout(3, 3);
+            final GridLayout layout = new GridLayout(3, 3);
             // OrderedLayout layout = new
             // OrderedLayout(OrderedLayout.ORIENTATION_VERTICAL);
             main.setLayout(layout);
@@ -530,7 +536,7 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
              * layout.addComponent(celllayout); }
              */
         } else {
-            Panel panel = new Panel("A Panel with a Layout");
+            final Panel panel = new Panel("A Panel with a Layout");
             main.addComponent(panel);
 
             // panel.addComponent(new )
@@ -538,7 +544,7 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
     }
 
     void example_OrderedLayout(Window main, String param) {
-        OrderedLayout layout = new OrderedLayout(
+        final OrderedLayout layout = new OrderedLayout(
                 OrderedLayout.ORIENTATION_VERTICAL);
         layout.addComponent(new TextField("Name"));
         layout.addComponent(new TextField("Street address"));
@@ -547,7 +553,7 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
     }
 
     void example_FormLayout(Window main, String param) {
-        FormLayout layout = new FormLayout();
+        final FormLayout layout = new FormLayout();
         layout.addComponent(new TextField("Name"));
         layout.addComponent(new TextField("Street address"));
         layout.addComponent(new TextField("Postal code"));
@@ -556,18 +562,18 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
 
     void example_ExpandLayout(Window main, String param) {
         for (int w = 0; w < 2; w++) {
-            ExpandLayout layout = new ExpandLayout(
+            final ExpandLayout layout = new ExpandLayout(
                     OrderedLayout.ORIENTATION_VERTICAL);
 
             /* Set the expanding layout as the root layout of a child window. */
-            Window window = new Window("A Child Window", layout);
+            final Window window = new Window("A Child Window", layout);
             main.addWindow(window);
 
             /* Add some component above the expanding one. */
             layout.addComponent(new Label("Here be some component."));
 
             /* Create the expanding component. */
-            Table table = new Table("My Ever-Expanding Table");
+            final Table table = new Table("My Ever-Expanding Table");
             /*
              * FIXME Java 5 -> 1.4 for (int i=0; i<5; i++)
              * table.addContainerProperty("col "+(i+1), Integer.class, 0); for
@@ -586,7 +592,7 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
             table.setWidthUnits(Table.UNITS_PERCENTAGE);
 
             /* Add some component below the expanding one. */
-            Button button2 = new Button("Ok");
+            final Button button2 = new Button("Ok");
             layout.addComponent(button2);
             layout.setComponentAlignment(button2,
                     OrderedLayout.ALIGNMENT_RIGHT, 0);
@@ -595,7 +601,7 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
 
     void example_TabSheet(Window main, String param) {
         if (param.equals("icon")) {
-            TabSheet tabsheet = new TabSheet();
+            final TabSheet tabsheet = new TabSheet();
 
             tabsheet.addTab(new Label("Contents of the first tab"),
                     "First Tab", new ClassResource("images/Mercury_small.png",
@@ -617,11 +623,12 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
     }
 
     void example_Embedded(Window main, String param) {
-        Embedded image = new Embedded("", new ClassResource("smiley.jpg", this));
+        final Embedded image = new Embedded("", new ClassResource("smiley.jpg",
+                this));
         image.addStyleName("omaimage");
         main.addComponent(image);
 
-        EmbeddedButton button = new EmbeddedButton(new ClassResource(
+        final EmbeddedButton button = new EmbeddedButton(new ClassResource(
                 "smiley.jpg", this));
         main.addComponent(button);
     }
@@ -632,7 +639,7 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
                 main.addComponent(new WindowOpener("Window Opener", main));
             } else if (param.equals("multiple")) {
                 /* Create a new window. */
-                Window mywindow = new Window("Second Window");
+                final Window mywindow = new Window("Second Window");
                 mywindow.setName("mywindow");
                 mywindow.addComponent(new Label("This is a second window."));
 
@@ -651,12 +658,12 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
         }
 
         /* Create a new window. */
-        Window mywindow = new Window("My Window");
+        final Window mywindow = new Window("My Window");
         mywindow.setName("mywindow");
 
         /* Add some components in the window. */
         mywindow.addComponent(new Label("A text label in the window."));
-        Button okbutton = new Button("OK");
+        final Button okbutton = new Button("OK");
         mywindow.addComponent(okbutton);
 
         /* Set window size. */
@@ -673,7 +680,7 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
     }
 
     void example_ClassResource(Window main, String param) {
-        DateField df = new DateField();
+        final DateField df = new DateField();
         main.addComponent(df);
         df.setIcon(new ClassResource("smiley.jpg", main.getApplication()));
         main.addComponent(new Embedded("This is Embedded", new ClassResource(

@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import java.util.HashMap;
@@ -27,16 +31,16 @@ public class IFormLayout extends FlexTable implements Container {
         }
 
         int i = 0;
-        for (Iterator it = uidl.getChildIterator(); it.hasNext(); i++) {
+        for (final Iterator it = uidl.getChildIterator(); it.hasNext(); i++) {
             prepareCell(i, 1);
-            UIDL childUidl = (UIDL) it.next();
-            Paintable p = (Paintable) client.getWidget(childUidl);
+            final UIDL childUidl = (UIDL) it.next();
+            final Paintable p = (Paintable) client.getWidget(childUidl);
             Caption c = (Caption) componentToCaption.get(p);
             if (c == null) {
                 c = new Caption(p, client);
                 componentToCaption.put(p, c);
             }
-            Paintable oldComponent = (Paintable) getWidget(i, 1);
+            final Paintable oldComponent = (Paintable) getWidget(i, 1);
             if (oldComponent == null) {
                 setWidget(i, 1, (Widget) p);
             } else if (oldComponent != p) {
@@ -48,7 +52,7 @@ public class IFormLayout extends FlexTable implements Container {
         }
         i++;
         while (getRowCount() > i) {
-            Paintable p = (Paintable) getWidget(i, 1);
+            final Paintable p = (Paintable) getWidget(i, 1);
             client.unregisterPaintable(p);
             componentToCaption.remove(p);
             removeRow(i);
@@ -63,7 +67,8 @@ public class IFormLayout extends FlexTable implements Container {
         int i;
         for (i = 0; i < getRowCount(); i++) {
             if (oldComponent == getWidget(i, 1)) {
-                Caption newCap = new Caption((Paintable) newComponent, client);
+                final Caption newCap = new Caption((Paintable) newComponent,
+                        client);
                 setWidget(i, 0, newCap);
                 setWidget(i, 1, newComponent);
                 client.unregisterPaintable((Paintable) oldComponent);
@@ -73,7 +78,7 @@ public class IFormLayout extends FlexTable implements Container {
     }
 
     public void updateCaption(Paintable component, UIDL uidl) {
-        Caption c = (Caption) componentToCaption.get(component);
+        final Caption c = (Caption) componentToCaption.get(component);
         if (c != null) {
             c.updateCaption(uidl);
         }

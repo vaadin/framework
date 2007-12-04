@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.demo.reservation;
 
 import java.util.Collection;
@@ -118,19 +122,19 @@ public class CalendarField extends DateField implements Container.Viewer {
 
         // Check old propertyIds
         if (itemEndPropertyId != null) {
-            Class c = dataSource.getType(itemEndPropertyId);
+            final Class c = dataSource.getType(itemEndPropertyId);
             if (!Date.class.isAssignableFrom(c)) {
                 itemEndPropertyId = null;
             }
         }
         if (itemNotimePropertyId != null) {
-            Class c = dataSource.getType(itemNotimePropertyId);
+            final Class c = dataSource.getType(itemNotimePropertyId);
             if (!Boolean.class.isAssignableFrom(c)) {
                 itemNotimePropertyId = null;
             }
         }
         if (itemStartPropertyId != null) {
-            Class c = dataSource.getType(itemStartPropertyId);
+            final Class c = dataSource.getType(itemStartPropertyId);
             if (Date.class.isAssignableFrom(c)) {
                 // All we _really_ need is one date
                 return true;
@@ -139,10 +143,10 @@ public class CalendarField extends DateField implements Container.Viewer {
             }
         }
         // We need at least one Date
-        Collection ids = dataSource.getContainerPropertyIds();
-        for (Iterator it = ids.iterator(); it.hasNext();) {
-            Object id = it.next();
-            Class c = dataSource.getType(id);
+        final Collection ids = dataSource.getContainerPropertyIds();
+        for (final Iterator it = ids.iterator(); it.hasNext();) {
+            final Object id = it.next();
+            final Class c = dataSource.getType(id);
             if (Date.class.isAssignableFrom(c)) {
                 itemStartPropertyId = id;
                 return true;
@@ -242,14 +246,15 @@ public class CalendarField extends DateField implements Container.Viewer {
 
             // TODO send one month now, the rest via lazyloading
             int month = new Date().getMonth();
-            Object value = getValue();
+            final Object value = getValue();
             if (value != null && value instanceof Date) {
                 month = ((Date) value).getMonth();
             }
 
-            for (Iterator it = dataSource.getItemIds().iterator(); it.hasNext();) {
-                Object itemId = it.next();
-                Item item = dataSource.getItem(itemId);
+            for (final Iterator it = dataSource.getItemIds().iterator(); it
+                    .hasNext();) {
+                final Object itemId = it.next();
+                final Item item = dataSource.getItem(itemId);
                 Property p = item.getItemProperty(itemStartPropertyId);
                 Date start = (Date) p.getValue();
                 Date end = start; // assume same day
@@ -259,7 +264,7 @@ public class CalendarField extends DateField implements Container.Viewer {
                     if (end == null) {
                         end = start;
                     } else if (end.before(start)) {
-                        Date tmp = start;
+                        final Date tmp = start;
                         start = end;
                         end = tmp;
                     }
@@ -274,7 +279,7 @@ public class CalendarField extends DateField implements Container.Viewer {
                         target.addAttribute("id", itemId.hashCode());
                         if (itemStyleNamePropertyId != null) {
                             p = item.getItemProperty(itemStyleNamePropertyId);
-                            String styleName = (String) p.getValue();
+                            final String styleName = (String) p.getValue();
                             target.addAttribute("styleName", styleName);
                         }
                         target.addAttribute("start", "" + start.getTime());
@@ -283,14 +288,14 @@ public class CalendarField extends DateField implements Container.Viewer {
                         }
                         if (itemTitlePropertyId != null) {
                             p = item.getItemProperty(itemTitlePropertyId);
-                            Object val = p.getValue();
+                            final Object val = p.getValue();
                             if (val != null) {
                                 target.addAttribute("title", val.toString());
                             }
                         }
                         if (itemDescriptionPropertyId != null) {
                             p = item.getItemProperty(itemDescriptionPropertyId);
-                            Object val = p.getValue();
+                            final Object val = p.getValue();
                             if (val != null) {
                                 target.addAttribute("description", val
                                         .toString());
@@ -298,7 +303,7 @@ public class CalendarField extends DateField implements Container.Viewer {
                         }
                         if (itemNotimePropertyId != null) {
                             p = item.getItemProperty(itemNotimePropertyId);
-                            Object val = p.getValue();
+                            final Object val = p.getValue();
                             if (val != null) {
                                 target.addAttribute("notime", ((Boolean) val)
                                         .booleanValue());

@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.tests;
 
 import java.util.Vector;
@@ -19,7 +23,7 @@ import com.itmill.toolkit.ui.Table;
 public class TestForTablesInitialColumnWidthLogicRendering extends
         CustomComponent {
 
-    private OrderedLayout main = new OrderedLayout();
+    private final OrderedLayout main = new OrderedLayout();
 
     public TestForTablesInitialColumnWidthLogicRendering() {
 
@@ -79,19 +83,19 @@ public class TestForTablesInitialColumnWidthLogicRendering extends
         t.setWidth(200);
         main.addComponent(t);
 
-        Button b = new Button("refresh view", this, "createNewView");
+        final Button b = new Button("refresh view", this, "createNewView");
         main.addComponent(b);
 
     }
 
     public static Table getTestTable(int cols, int rows) {
-        Table t = new Table();
+        final Table t = new Table();
         t.setColumnCollapsingAllowed(true);
         for (int i = 0; i < cols; i++) {
             t.addContainerProperty(testString[i], String.class, "");
         }
         for (int i = 0; i < rows; i++) {
-            Vector content = new Vector();
+            final Vector content = new Vector();
             for (int j = 0; j < cols; j++) {
                 content.add(rndString());
             }

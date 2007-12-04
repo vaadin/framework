@@ -1,30 +1,6 @@
-/* *************************************************************************
- 
- IT Mill Toolkit 
-
- Development of Browser User Interfaces Made Easy
-
- Copyright (C) 2000-2006 IT Mill Ltd
- 
- *************************************************************************
-
- This product is distributed under commercial license that can be found
- from the product package on license.pdf. Use of this product might 
- require purchasing a commercial license from IT Mill Ltd. For guidelines 
- on usage, see licensing-guidelines.html
-
- *************************************************************************
- 
- For more information, contact:
- 
- IT Mill Ltd                           phone: +358 2 4802 7180
- Ruukinkatu 2-4                        fax:   +358 2 4802 7181
- 20540, Turku                          email:  info@itmill.com
- Finland                               company www: www.itmill.com
- 
- Primary source for information and releases: www.itmill.com
-
- ********************************************************************** */
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
 
 package com.itmill.toolkit.ui;
 
@@ -72,7 +48,7 @@ public class OrderedLayout extends AbstractLayout {
     /**
      * Mapping from components to alignments (horizontal + vertical).
      */
-    private Map componentToAlignment = new HashMap();
+    private final Map componentToAlignment = new HashMap();
 
     /**
      * Contained component should be aligned horizontally to the left.
@@ -230,11 +206,11 @@ public class OrderedLayout extends AbstractLayout {
             target.addAttribute("spacing", spacing);
         }
 
-        String[] alignmentsArray = new String[components.size()];
+        final String[] alignmentsArray = new String[components.size()];
         // Adds all items in all the locations
         int index = 0;
-        for (Iterator i = components.iterator(); i.hasNext();) {
-            Component c = (Component) i.next();
+        for (final Iterator i = components.iterator(); i.hasNext();) {
+            final Component c = (Component) i.next();
             if (c != null) {
                 // Paint child component UIDL
                 c.paint(target);
@@ -276,9 +252,9 @@ public class OrderedLayout extends AbstractLayout {
         // FIXME remove lines below and uncomment above
         // Workaround to bypass IOrderedLayouts limitations (separate classes
         // for different orientation + subtreecacing)
-        Iterator it = getComponentIterator();
+        final Iterator it = getComponentIterator();
         while (it.hasNext()) {
-            Component c = (Component) it.next();
+            final Component c = (Component) it.next();
             c.requestRepaint();
         }
     }
@@ -290,8 +266,8 @@ public class OrderedLayout extends AbstractLayout {
         int oldLocation = -1;
         int newLocation = -1;
         int location = 0;
-        for (Iterator i = components.iterator(); i.hasNext();) {
-            Component component = (Component) i.next();
+        for (final Iterator i = components.iterator(); i.hasNext();) {
+            final Component component = (Component) i.next();
 
             if (component == oldComponent) {
                 oldLocation = location;
@@ -347,7 +323,8 @@ public class OrderedLayout extends AbstractLayout {
     }
 
     public int getComponentAlignment(Component childComponent) {
-        Integer bitMask = (Integer) componentToAlignment.get(childComponent);
+        final Integer bitMask = (Integer) componentToAlignment
+                .get(childComponent);
         if (bitMask != null) {
             return bitMask.intValue();
         } else {

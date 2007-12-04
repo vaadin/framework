@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import com.google.gwt.user.client.DOM;
@@ -14,7 +18,7 @@ public class IProgressIndicator extends Widget implements Paintable {
     Element wrapper = DOM.createDiv();
     Element indicator = DOM.createDiv();
     private ApplicationConnection client;
-    private Poller poller;
+    private final Poller poller;
 
     public IProgressIndicator() {
         setElement(wrapper);
@@ -33,16 +37,17 @@ public class IProgressIndicator extends Widget implements Paintable {
         if (client.updateComponent(this, uidl, true)) {
             return;
         }
-        boolean indeterminate = uidl.getBooleanAttribute("indeterminate");
+        final boolean indeterminate = uidl.getBooleanAttribute("indeterminate");
 
         if (indeterminate) {
             // TODO put up some image or something
         } else {
             try {
-                float f = Float.parseFloat(uidl.getStringAttribute("state"));
-                int size = Math.round(100 * f);
+                final float f = Float.parseFloat(uidl
+                        .getStringAttribute("state"));
+                final int size = Math.round(100 * f);
                 DOM.setStyleAttribute(indicator, "width", size + "%");
-            } catch (Exception e) {
+            } catch (final Exception e) {
             }
         }
         poller.scheduleRepeating(uidl.getIntAttribute("pollinginterval"));

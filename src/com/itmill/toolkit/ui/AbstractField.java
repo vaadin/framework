@@ -1,30 +1,6 @@
-/* *************************************************************************
- 
- IT Mill Toolkit 
-
- Development of Browser User Interfaces Made Easy
-
- Copyright (C) 2000-2006 IT Mill Ltd
- 
- *************************************************************************
-
- This product is distributed under commercial license that can be found
- from the product package on license.pdf. Use of this product might 
- require purchasing a commercial license from IT Mill Ltd. For guidelines 
- on usage, see licensing-guidelines.html
-
- *************************************************************************
- 
- For more information, contact:
- 
- IT Mill Ltd                           phone: +358 2 4802 7180
- Ruukinkatu 2-4                        fax:   +358 2 4802 7181
- 20540, Turku                          email:  info@itmill.com
- Finland                               company www: www.itmill.com
- 
- Primary source for information and releases: www.itmill.com
-
- ********************************************************************** */
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
 
 package com.itmill.toolkit.ui;
 
@@ -220,13 +196,13 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     public void commit() throws Buffered.SourceException {
         if (dataSource != null && (isInvalidCommitted() || isValid())
                 && !dataSource.isReadOnly()) {
-            Object newValue = getValue();
+            final Object newValue = getValue();
             try {
 
                 // Commits the value to datasource.
                 dataSource.setValue(newValue);
 
-            } catch (Throwable e) {
+            } catch (final Throwable e) {
 
                 // Sets the buffering state.
                 currentBufferedSourceException = new Buffered.SourceException(
@@ -276,7 +252,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
                     currentBufferedSourceException = null;
                     requestRepaint();
                 }
-            } catch (Throwable e) {
+            } catch (final Throwable e) {
 
                 // Sets the buffering state
                 currentBufferedSourceException = new Buffered.SourceException(
@@ -287,7 +263,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
                 throw currentBufferedSourceException;
             }
 
-            boolean wasModified = isModified();
+            final boolean wasModified = isModified();
             modified = false;
 
             // If the new value differs from the previous one
@@ -370,7 +346,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      * @see java.lang.Object#toString()
      */
     public String toString() {
-        Object value = getValue();
+        final Object value = getValue();
         if (value == null) {
             return null;
         }
@@ -392,7 +368,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
             return value;
         }
 
-        Object newValue = dataSource.getValue();
+        final Object newValue = dataSource.getValue();
         if ((newValue == null && value != null)
                 || (newValue != null && !newValue.equals(value))) {
             setInternalValue(newValue);
@@ -438,9 +414,9 @@ public abstract class AbstractField extends AbstractComponent implements Field,
 
             // If invalid values are not allowed, the value must be checked
             if (!isInvalidAllowed()) {
-                Collection v = getValidators();
+                final Collection v = getValidators();
                 if (v != null) {
-                    for (Iterator i = v.iterator(); i.hasNext();) {
+                    for (final Iterator i = v.iterator(); i.hasNext();) {
                         ((Validator) i.next()).validate(newValue);
                     }
                 }
@@ -461,7 +437,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
                     // The buffer is now unmodified
                     modified = false;
 
-                } catch (Throwable e) {
+                } catch (final Throwable e) {
 
                     // Sets the buffering state
                     currentBufferedSourceException = new Buffered.SourceException(
@@ -518,12 +494,12 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     public void setPropertyDataSource(Property newDataSource) {
 
         // Saves the old value
-        Object oldValue = value;
+        final Object oldValue = value;
 
         // Discards all changes to old datasource
         try {
             discard();
-        } catch (Buffered.SourceException ignored) {
+        } catch (final Buffered.SourceException ignored) {
         }
 
         // Stops listening the old data source changes
@@ -542,7 +518,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
                 setInternalValue(dataSource.getValue());
             }
             modified = false;
-        } catch (Throwable e) {
+        } catch (final Throwable e) {
             currentBufferedSourceException = new Buffered.SourceException(this,
                     e);
             modified = true;
@@ -555,9 +531,10 @@ public abstract class AbstractField extends AbstractComponent implements Field,
 
         // Copy the validators from the data source
         if (dataSource instanceof Validatable) {
-            Collection validators = ((Validatable) dataSource).getValidators();
+            final Collection validators = ((Validatable) dataSource)
+                    .getValidators();
             if (validators != null) {
-                for (Iterator i = validators.iterator(); i.hasNext();) {
+                for (final Iterator i = validators.iterator(); i.hasNext();) {
                     addValidator((Validator) i.next());
                 }
             }
@@ -623,8 +600,8 @@ public abstract class AbstractField extends AbstractComponent implements Field,
             return true;
         }
 
-        Object value = getValue();
-        for (Iterator i = validators.iterator(); i.hasNext();) {
+        final Object value = getValue();
+        for (final Iterator i = validators.iterator(); i.hasNext();) {
             if (!((Validator) i.next()).isValid(value)) {
                 return false;
             }
@@ -648,13 +625,13 @@ public abstract class AbstractField extends AbstractComponent implements Field,
         // Initialize temps
         Validator.InvalidValueException firstError = null;
         LinkedList errors = null;
-        Object value = getValue();
+        final Object value = getValue();
 
         // Gets all the validation errors
-        for (Iterator i = validators.iterator(); i.hasNext();) {
+        for (final Iterator i = validators.iterator(); i.hasNext();) {
             try {
                 ((Validator) i.next()).validate(value);
-            } catch (Validator.InvalidValueException e) {
+            } catch (final Validator.InvalidValueException e) {
                 if (firstError == null) {
                     firstError = e;
                 } else {
@@ -678,10 +655,10 @@ public abstract class AbstractField extends AbstractComponent implements Field,
         }
 
         // Creates composite validator
-        Validator.InvalidValueException[] exceptions = new Validator.InvalidValueException[errors
+        final Validator.InvalidValueException[] exceptions = new Validator.InvalidValueException[errors
                 .size()];
         int index = 0;
-        for (Iterator i = errors.iterator(); i.hasNext();) {
+        for (final Iterator i = errors.iterator(); i.hasNext();) {
             exceptions[index++] = (Validator.InvalidValueException) i.next();
         }
 
@@ -725,7 +702,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      * @see com.itmill.toolkit.ui.AbstractComponent#getErrorMessage()
      */
     public ErrorMessage getErrorMessage() {
-        ErrorMessage superError = super.getErrorMessage();
+        final ErrorMessage superError = super.getErrorMessage();
         return superError;
         /*
          * TODO: Check the logic of this ErrorMessage validationError = null;
@@ -750,7 +727,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
             VALUE_CHANGE_METHOD = Property.ValueChangeListener.class
                     .getDeclaredMethod("valueChange",
                             new Class[] { Property.ValueChangeEvent.class });
-        } catch (java.lang.NoSuchMethodException e) {
+        } catch (final java.lang.NoSuchMethodException e) {
             // This should never happen
             throw new java.lang.RuntimeException();
         }
@@ -796,7 +773,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
                     .getDeclaredMethod(
                             "readOnlyStatusChange",
                             new Class[] { Property.ReadOnlyStatusChangeEvent.class });
-        } catch (java.lang.NoSuchMethodException e) {
+        } catch (final java.lang.NoSuchMethodException e) {
             // This should never happen
             throw new java.lang.RuntimeException();
         }
@@ -885,7 +862,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      * Asks the terminal to place the cursor to this field.
      */
     public void focus() {
-        Window w = getWindow();
+        final Window w = getWindow();
         if (w != null) {
             w.setFocusedComponent(this);
         } else {
@@ -917,7 +894,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
 
         // Boolean field
         if (Boolean.class.isAssignableFrom(propertyType)) {
-            Button button = new Button("");
+            final Button button = new Button("");
             button.setSwitchMode(true);
             button.setImmediate(false);
             return button;

@@ -1,30 +1,6 @@
-/* *************************************************************************
- 
- IT Mill Toolkit 
-
- Development of Browser User Interfaces Made Easy
-
- Copyright (C) 2000-2006 IT Mill Ltd
- 
- *************************************************************************
-
- This product is distributed under commercial license that can be found
- from the product package on license.pdf. Use of this product might 
- require purchasing a commercial license from IT Mill Ltd. For guidelines 
- on usage, see licensing-guidelines.html
-
- *************************************************************************
- 
- For more information, contact:
- 
- IT Mill Ltd                           phone: +358 2 4802 7180
- Ruukinkatu 2-4                        fax:   +358 2 4802 7181
- 20540, Turku                          email:  info@itmill.com
- Finland                               company www: www.itmill.com
- 
- Primary source for information and releases: www.itmill.com
-
- ********************************************************************** */
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
 
 package com.itmill.toolkit.terminal.gwt.server;
 
@@ -61,13 +37,13 @@ public class WebApplicationContext implements ApplicationContext,
 
     private List listeners;
 
-    private HttpSession session;
+    private final HttpSession session;
 
-    private WeakHashMap formActions = new WeakHashMap();
+    private final WeakHashMap formActions = new WeakHashMap();
 
-    private HashSet applications = new HashSet();
+    private final HashSet applications = new HashSet();
 
-    private WebBrowser browser = new WebBrowser();
+    private final WebBrowser browser = new WebBrowser();
 
     /**
      * Creates a new Web Application Context.
@@ -93,7 +69,7 @@ public class WebApplicationContext implements ApplicationContext,
      * @return the Action to be set into Form action attribute.
      */
     public String getWindowFormAction(Window window) {
-        String action = (String) formActions.get(window);
+        final String action = (String) formActions.get(window);
         return action == null ? "" : action;
     }
 
@@ -125,7 +101,7 @@ public class WebApplicationContext implements ApplicationContext,
      * @see com.itmill.toolkit.service.ApplicationContext#getBaseDirectory()
      */
     public File getBaseDirectory() {
-        String realPath = ApplicationServlet.getResourcePath(session
+        final String realPath = ApplicationServlet.getResourcePath(session
                 .getServletContext(), "/");
         if (realPath == null) {
             return null;
@@ -228,7 +204,7 @@ public class WebApplicationContext implements ApplicationContext,
         if (listeners == null) {
             return;
         }
-        for (Iterator i = listeners.iterator(); i.hasNext();) {
+        for (final Iterator i = listeners.iterator(); i.hasNext();) {
             ((ApplicationContext.TransactionListener) i.next())
                     .transactionStart(application, request);
         }
@@ -248,11 +224,11 @@ public class WebApplicationContext implements ApplicationContext,
         }
 
         LinkedList exceptions = null;
-        for (Iterator i = listeners.iterator(); i.hasNext();) {
+        for (final Iterator i = listeners.iterator(); i.hasNext();) {
             try {
                 ((ApplicationContext.TransactionListener) i.next())
                         .transactionEnd(application, request);
-            } catch (RuntimeException t) {
+            } catch (final RuntimeException t) {
                 if (exceptions == null) {
                     exceptions = new LinkedList();
                 }
@@ -262,14 +238,14 @@ public class WebApplicationContext implements ApplicationContext,
 
         // If any runtime exceptions occurred, throw a combined exception
         if (exceptions != null) {
-            StringBuffer msg = new StringBuffer();
-            for (Iterator i = listeners.iterator(); i.hasNext();) {
-                RuntimeException e = (RuntimeException) i.next();
+            final StringBuffer msg = new StringBuffer();
+            for (final Iterator i = listeners.iterator(); i.hasNext();) {
+                final RuntimeException e = (RuntimeException) i.next();
                 if (msg.length() == 0) {
                     msg.append("\n\n--------------------------\n\n");
                 }
                 msg.append(e.getMessage() + "\n");
-                StringWriter trace = new StringWriter();
+                final StringWriter trace = new StringWriter();
                 e.printStackTrace(new PrintWriter(trace, true));
                 msg.append(trace.toString());
             }
@@ -300,7 +276,8 @@ public class WebApplicationContext implements ApplicationContext,
         // closing
 
         while (!applications.isEmpty()) {
-            Application app = (Application) applications.iterator().next();
+            final Application app = (Application) applications.iterator()
+                    .next();
             app.close();
             removeApplication(app);
         }

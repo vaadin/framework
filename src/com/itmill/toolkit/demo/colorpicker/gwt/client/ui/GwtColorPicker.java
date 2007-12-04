@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.demo.colorpicker.gwt.client.ui;
 
 import com.google.gwt.user.client.DOM;
@@ -20,15 +24,15 @@ public class GwtColorPicker extends Composite implements ClickListener {
 
     public GwtColorPicker() {
         // Create a 4x4 grid of buttons with names for 16 colors
-        Grid grid = new Grid(4, 4);
-        String[] colors = new String[] { "aqua", "black", "blue", "fuchsia",
-                "gray", "green", "lime", "maroon", "navy", "olive", "purple",
-                "red", "silver", "teal", "white", "yellow" };
+        final Grid grid = new Grid(4, 4);
+        final String[] colors = new String[] { "aqua", "black", "blue",
+                "fuchsia", "gray", "green", "lime", "maroon", "navy", "olive",
+                "purple", "red", "silver", "teal", "white", "yellow" };
         int colornum = 0;
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++, colornum++) {
                 // Create a button for each color
-                Button button = new Button(colors[colornum]);
+                final Button button = new Button(colors[colornum]);
                 button.addClickListener(this);
 
                 // Put the button in the Grid layout
@@ -49,7 +53,7 @@ public class GwtColorPicker extends Composite implements ClickListener {
 
         // Create a panel with the color grid and currently selected color
         // indicator
-        HorizontalPanel panel = new HorizontalPanel();
+        final HorizontalPanel panel = new HorizontalPanel();
         panel.add(grid);
         panel.add(currentcolor);
 
@@ -60,7 +64,7 @@ public class GwtColorPicker extends Composite implements ClickListener {
         // the parent of the label element. Notice that the element has no
         // parent
         // before the widget has been added to the horizontal panel.
-        Element panelcell = DOM.getParent(currentcolor.getElement());
+        final Element panelcell = DOM.getParent(currentcolor.getElement());
         DOM.setElementProperty(panelcell, "className",
                 "colorpicker-currentcolorbox");
 
@@ -85,8 +89,8 @@ public class GwtColorPicker extends Composite implements ClickListener {
 
         // Obtain the DOM elements. This assumes that the <td> element
         // of the HorizontalPanel is the parent of the label element.
-        Element nameelement = currentcolor.getElement();
-        Element cell = DOM.getParent(nameelement);
+        final Element nameelement = currentcolor.getElement();
+        final Element cell = DOM.getParent(nameelement);
 
         // Give feedback by changing the background color
         DOM.setStyleAttribute(cell, "background", newcolor);

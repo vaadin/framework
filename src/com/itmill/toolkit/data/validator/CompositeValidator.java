@@ -1,30 +1,6 @@
-/* *************************************************************************
- 
- IT Mill Toolkit 
-
- Development of Browser User Interfaces Made Easy
-
- Copyright (C) 2000-2006 IT Mill Ltd
- 
- *************************************************************************
-
- This product is distributed under commercial license that can be found
- from the product package on license.pdf. Use of this product might 
- require purchasing a commercial license from IT Mill Ltd. For guidelines 
- on usage, see licensing-guidelines.html
-
- *************************************************************************
- 
- For more information, contact:
- 
- IT Mill Ltd                           phone: +358 2 4802 7180
- Ruukinkatu 2-4                        fax:   +358 2 4802 7181
- 20540, Turku                          email:  info@itmill.com
- Finland                               company www: www.itmill.com
- 
- Primary source for information and releases: www.itmill.com
-
- ********************************************************************** */
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
 
 package com.itmill.toolkit.data.validator;
 
@@ -77,7 +53,7 @@ public class CompositeValidator implements Validator {
     /**
      * List of contained validators.
      */
-    private LinkedList validators = new LinkedList();
+    private final LinkedList validators = new LinkedList();
 
     /**
      * Error message.
@@ -121,18 +97,18 @@ public class CompositeValidator implements Validator {
     public void validate(Object value) throws Validator.InvalidValueException {
         switch (mode) {
         case MODE_AND:
-            for (Iterator i = validators.iterator(); i.hasNext();) {
+            for (final Iterator i = validators.iterator(); i.hasNext();) {
                 ((Validator) i.next()).validate(value);
             }
             return;
 
         case MODE_OR:
             Validator.InvalidValueException first = null;
-            for (Iterator i = validators.iterator(); i.hasNext();) {
+            for (final Iterator i = validators.iterator(); i.hasNext();) {
                 try {
                     ((Validator) i.next()).validate(value);
                     return;
-                } catch (Validator.InvalidValueException e) {
+                } catch (final Validator.InvalidValueException e) {
                     if (first == null) {
                         first = e;
                     }
@@ -141,7 +117,7 @@ public class CompositeValidator implements Validator {
             if (first == null) {
                 return;
             }
-            String em = getErrorMessage();
+            final String em = getErrorMessage();
             if (em != null) {
                 throw new Validator.InvalidValueException(em);
             } else {
@@ -165,8 +141,8 @@ public class CompositeValidator implements Validator {
     public boolean isValid(Object value) {
         switch (mode) {
         case MODE_AND:
-            for (Iterator i = validators.iterator(); i.hasNext();) {
-                Validator v = (Validator) i.next();
+            for (final Iterator i = validators.iterator(); i.hasNext();) {
+                final Validator v = (Validator) i.next();
                 if (!v.isValid(value)) {
                     return false;
                 }
@@ -174,8 +150,8 @@ public class CompositeValidator implements Validator {
             return true;
 
         case MODE_OR:
-            for (Iterator i = validators.iterator(); i.hasNext();) {
-                Validator v = (Validator) i.next();
+            for (final Iterator i = validators.iterator(); i.hasNext();) {
+                final Validator v = (Validator) i.next();
                 if (v.isValid(value)) {
                     return true;
                 }
@@ -286,15 +262,15 @@ public class CompositeValidator implements Validator {
             return null;
         }
 
-        HashSet found = new HashSet();
-        for (Iterator i = validators.iterator(); i.hasNext();) {
-            Validator v = (Validator) i.next();
+        final HashSet found = new HashSet();
+        for (final Iterator i = validators.iterator(); i.hasNext();) {
+            final Validator v = (Validator) i.next();
             if (validatorType.isAssignableFrom(v.getClass())) {
                 found.add(v);
             }
             if (v instanceof CompositeValidator
                     && ((CompositeValidator) v).getMode() == MODE_AND) {
-                Collection c = ((CompositeValidator) v)
+                final Collection c = ((CompositeValidator) v)
                         .getSubValidators(validatorType);
                 if (c != null) {
                     found.addAll(c);

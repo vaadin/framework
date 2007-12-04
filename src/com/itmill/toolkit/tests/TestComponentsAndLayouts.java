@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.tests;
 
 import java.io.File;
@@ -78,7 +82,7 @@ public class TestComponentsAndLayouts extends Application implements Listener,
     }
 
     public void createNewView() {
-        Window main = new Window("Main window");
+        final Window main = new Window("Main window");
         setMainWindow(main);
 
         // By default push all containers inside main window
@@ -112,7 +116,7 @@ public class TestComponentsAndLayouts extends Application implements Listener,
                     .addComponent(new Label(
                             "<hr /><h1>Components inside horizontal OrderedLayout</h3>",
                             Label.CONTENT_XHTML));
-            OrderedLayout ol = new OrderedLayout(
+            final OrderedLayout ol = new OrderedLayout(
                     OrderedLayout.ORIENTATION_HORIZONTAL);
             populateLayout(ol);
             target.addComponent(ol);
@@ -124,7 +128,7 @@ public class TestComponentsAndLayouts extends Application implements Listener,
                     .addComponent(new Label(
                             "<br/><br/><br/><hr /><h1>Components inside vertical OrderedLayout</h3>",
                             Label.CONTENT_XHTML));
-            OrderedLayout ol2 = new OrderedLayout(
+            final OrderedLayout ol2 = new OrderedLayout(
                     OrderedLayout.ORIENTATION_VERTICAL);
             populateLayout(ol2);
             target.addComponent(ol2);
@@ -136,7 +140,7 @@ public class TestComponentsAndLayouts extends Application implements Listener,
                     .addComponent(new Label(
                             "<hr /><h1>Components inside ExpandLayout (height 250px)</h3>",
                             Label.CONTENT_XHTML));
-            ExpandLayout el = new ExpandLayout();
+            final ExpandLayout el = new ExpandLayout();
             el.setHeight(250);
             el.setHeightUnits(Sizeable.UNITS_PIXELS);
             populateLayout(el);
@@ -148,7 +152,7 @@ public class TestComponentsAndLayouts extends Application implements Listener,
             target.addComponent(new Label(
                     "<hr /><h1>Components inside Panel</h3>",
                     Label.CONTENT_XHTML));
-            Panel panel = new Panel("Panel");
+            final Panel panel = new Panel("Panel");
             populateLayout(panel.getLayout());
             target.addComponent(panel);
         }
@@ -159,13 +163,14 @@ public class TestComponentsAndLayouts extends Application implements Listener,
                     .addComponent(new Label(
                             "<hr /><h1>Components inside vertical SplitPanel (splitpanel is under 250height ExpandLayout)</h3>",
                             Label.CONTENT_XHTML));
-            ExpandLayout sp1l = new ExpandLayout();
+            final ExpandLayout sp1l = new ExpandLayout();
             sp1l.setHeight(250);
             sp1l.setHeightUnits(Sizeable.UNITS_PIXELS);
-            SplitPanel sp1 = new SplitPanel(SplitPanel.ORIENTATION_VERTICAL);
+            final SplitPanel sp1 = new SplitPanel(
+                    SplitPanel.ORIENTATION_VERTICAL);
             sp1l.addComponent(sp1);
-            OrderedLayout sp1first = new OrderedLayout();
-            OrderedLayout sp1second = new OrderedLayout();
+            final OrderedLayout sp1first = new OrderedLayout();
+            final OrderedLayout sp1second = new OrderedLayout();
             sp1.setFirstComponent(sp1first);
             populateLayout(sp1first);
             populateLayout(sp1second);
@@ -179,13 +184,14 @@ public class TestComponentsAndLayouts extends Application implements Listener,
                     .addComponent(new Label(
                             "<hr /><h1>Components inside horizontal SplitPanel (splitpanel is under 250px height ExpandLayout)</h3>",
                             Label.CONTENT_XHTML));
-            ExpandLayout sp2l = new ExpandLayout();
+            final ExpandLayout sp2l = new ExpandLayout();
             sp2l.setHeight(250);
             sp2l.setHeightUnits(Sizeable.UNITS_PIXELS);
-            SplitPanel sp2 = new SplitPanel(SplitPanel.ORIENTATION_HORIZONTAL);
+            final SplitPanel sp2 = new SplitPanel(
+                    SplitPanel.ORIENTATION_HORIZONTAL);
             sp2l.addComponent(sp2);
-            OrderedLayout sp2first = new OrderedLayout();
-            OrderedLayout sp2second = new OrderedLayout();
+            final OrderedLayout sp2first = new OrderedLayout();
+            final OrderedLayout sp2second = new OrderedLayout();
             sp2.setFirstComponent(sp2first);
             populateLayout(sp2first);
             populateLayout(sp2second);
@@ -198,10 +204,10 @@ public class TestComponentsAndLayouts extends Application implements Listener,
             target.addComponent(new Label(
                     "<hr /><h1>Components inside TabSheet</h3>",
                     Label.CONTENT_XHTML));
-            TabSheet tabsheet = new TabSheet();
-            OrderedLayout tab1 = new OrderedLayout();
+            final TabSheet tabsheet = new TabSheet();
+            final OrderedLayout tab1 = new OrderedLayout();
             tab1.addComponent(new Label("try tab2"));
-            OrderedLayout tab2 = new OrderedLayout();
+            final OrderedLayout tab2 = new OrderedLayout();
             populateLayout(tab2);
             tabsheet.addTab(tab1, "TabSheet tab1", new ClassResource("m.gif",
                     this));
@@ -219,7 +225,7 @@ public class TestComponentsAndLayouts extends Application implements Listener,
             target.addComponent(new Label(
                     "<hr /><h1>Components inside GridLayout</h3>",
                     Label.CONTENT_XHTML));
-            GridLayout gridLayout = new GridLayout(4, 100);
+            final GridLayout gridLayout = new GridLayout(4, 100);
             populateLayout(gridLayout);
             target.addComponent(gridLayout);
             // test(gridLayout);
@@ -228,58 +234,61 @@ public class TestComponentsAndLayouts extends Application implements Listener,
     }
 
     void populateLayout(Layout layout) {
-        Button button = new Button("Button " + count++);
+        final Button button = new Button("Button " + count++);
         test(layout, button);
 
-        DateField df = new DateField("DateField " + count++);
+        final DateField df = new DateField("DateField " + count++);
         test(layout, df);
 
-        CheckBox cb = new CheckBox("Checkbox " + count++);
+        final CheckBox cb = new CheckBox("Checkbox " + count++);
         test(layout, cb);
 
-        ClassResource flashResource = new ClassResource("itmill_spin.swf", this);
-        Embedded emb = new Embedded("Embedded " + count++, flashResource);
+        final ClassResource flashResource = new ClassResource(
+                "itmill_spin.swf", this);
+        final Embedded emb = new Embedded("Embedded " + count++, flashResource);
         emb.setType(Embedded.TYPE_OBJECT);
         emb.setMimeType("application/x-shockwave-flash");
         emb.setWidth(250);
         emb.setHeight(100);
         test(layout, emb);
 
-        Panel panel = new Panel("Panel " + count++);
+        final Panel panel = new Panel("Panel " + count++);
         test(layout, panel);
 
-        Label label = new Label("Label " + count++);
+        final Label label = new Label("Label " + count++);
         test(layout, label);
 
-        Link link = new Link("Link " + count++, new ExternalResource(
+        final Link link = new Link("Link " + count++, new ExternalResource(
                 "www.itmill.com"));
         test(layout, link);
 
-        NativeSelect nativeSelect = new NativeSelect("NativeSelect " + count++);
+        final NativeSelect nativeSelect = new NativeSelect("NativeSelect "
+                + count++);
         nativeSelect.setContainerDataSource(getContainer());
         test(layout, nativeSelect);
 
-        OptionGroup optionGroup = new OptionGroup("OptionGroup " + count++);
+        final OptionGroup optionGroup = new OptionGroup("OptionGroup "
+                + count++);
         optionGroup.setContainerDataSource(getSmallContainer());
         optionGroup.setItemCaptionPropertyId("UNIT");
         test(layout, optionGroup);
 
-        ProgressIndicator pi = new ProgressIndicator();
+        final ProgressIndicator pi = new ProgressIndicator();
         pi.setCaption("ProgressIndicator");
         test(layout, pi);
 
-        RichTextArea rta = new RichTextArea();
+        final RichTextArea rta = new RichTextArea();
         test(layout, rta);
 
-        Select select = new Select("Select " + count++);
+        final Select select = new Select("Select " + count++);
         select.setContainerDataSource(getSmallContainer());
         select.setItemCaptionPropertyId("UNIT");
         test(layout, select);
 
-        Slider slider = new Slider("Slider " + count++);
+        final Slider slider = new Slider("Slider " + count++);
         test(layout, slider);
 
-        Table table = new Table("Table " + count++);
+        final Table table = new Table("Table " + count++);
         table.setPageLength(10);
         table.setSelectable(true);
         table.setRowHeaderMode(Table.ROW_HEADER_MODE_INDEX);
@@ -293,10 +302,10 @@ public class TestComponentsAndLayouts extends Application implements Listener,
         table.setItemCaptionPropertyId("ID");
         test(layout, table);
 
-        TabSheet tabsheet = new TabSheet();
-        OrderedLayout tab1 = new OrderedLayout();
+        final TabSheet tabsheet = new TabSheet();
+        final OrderedLayout tab1 = new OrderedLayout();
         tab1.addComponent(new Label("tab1 " + count++));
-        OrderedLayout tab2 = new OrderedLayout();
+        final OrderedLayout tab2 = new OrderedLayout();
         tab2.addComponent(new Label("tab2 " + count++));
         tabsheet.addTab(tab1, "Default (not configured) TabSheet tab1",
                 new ClassResource("m.gif", this));
@@ -304,31 +313,31 @@ public class TestComponentsAndLayouts extends Application implements Listener,
                 "m.gif", this));
         test(layout, tabsheet);
 
-        TextField tf = new TextField("Textfield " + count++);
+        final TextField tf = new TextField("Textfield " + count++);
         test(layout, tf);
         // do not configure tab1
         // test(tab1);
         test(tab2);
 
-        Tree tree = new Tree("Tree " + count++);
-        File sampleDir = SampleDirectory.getDirectory(this);
-        FilesystemContainer fsc = new FilesystemContainer(sampleDir, true);
+        final Tree tree = new Tree("Tree " + count++);
+        final File sampleDir = SampleDirectory.getDirectory(this);
+        final FilesystemContainer fsc = new FilesystemContainer(sampleDir, true);
         tree.setContainerDataSource(fsc);
         test(layout, tree);
 
-        TwinColSelect twinColSelect = new TwinColSelect("TwinColSelect "
+        final TwinColSelect twinColSelect = new TwinColSelect("TwinColSelect "
                 + count++);
         twinColSelect.setContainerDataSource(getSmallContainer());
         twinColSelect.setItemCaptionPropertyId("UNIT");
         test(layout, twinColSelect);
 
-        Upload upload = new Upload("Upload (non-functional)", null);
+        final Upload upload = new Upload("Upload (non-functional)", null);
         test(layout, upload);
 
         // Custom components
         layout.addComponent(new Label("<B>Below are few custom components</B>",
                 Label.CONTENT_XHTML));
-        TestForUpload tfu = new TestForUpload();
+        final TestForUpload tfu = new TestForUpload();
         layout.addComponent(tfu);
         layout.addComponent(new Label("<br/><b>----------<br/></p>",
                 Label.CONTENT_XHTML));
@@ -347,7 +356,7 @@ public class TestComponentsAndLayouts extends Application implements Listener,
         try {
             return new QueryContainer("SELECT * FROM employee", sampleDatabase
                     .getConnection());
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             e.printStackTrace();
         }
         return null;
@@ -359,7 +368,7 @@ public class TestComponentsAndLayouts extends Application implements Listener,
             return new QueryContainer(
                     "SELECT DISTINCT UNIT AS UNIT FROM employee",
                     sampleDatabase.getConnection());
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             e.printStackTrace();
         }
         return null;
@@ -376,7 +385,7 @@ public class TestComponentsAndLayouts extends Application implements Listener,
         // try to add listener
         try {
             c.addListener(this);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             System.err.println("Could not add listener for component " + c
                     + ", count was " + count);
         }
@@ -392,8 +401,8 @@ public class TestComponentsAndLayouts extends Application implements Listener,
         setComponentProperties(c);
 
         // AbstractComponent specific configuration
-        ClassResource res = new ClassResource("m.gif", this);
-        ErrorMessage errorMsg = new UserError("User error " + c);
+        final ClassResource res = new ClassResource("m.gif", this);
+        final ErrorMessage errorMsg = new UserError("User error " + c);
         if ((c.getCaption() == null) || (c.getCaption().length() <= 0)) {
             c.setCaption("Caption " + c);
         }
@@ -434,7 +443,7 @@ public class TestComponentsAndLayouts extends Application implements Listener,
 
     public void componentEvent(Event event) {
         eventCount++;
-        String feedback = "eventCount=" + eventCount + ", class="
+        final String feedback = "eventCount=" + eventCount + ", class="
                 + event.getClass() + ", source=" + event.getSource()
                 + ", toString()=" + event.toString();
         System.out.println("eventListenerFeedback: " + feedback);

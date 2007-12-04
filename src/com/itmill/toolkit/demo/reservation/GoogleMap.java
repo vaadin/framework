@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.demo.reservation;
 
 import java.awt.geom.Point2D;
@@ -15,8 +19,8 @@ import com.itmill.toolkit.ui.AbstractComponent;
 
 public class GoogleMap extends AbstractComponent implements Sizeable,
         Container.Viewer {
-    private String TAG_MARKERS = "markers";
-    private String TAG_MARKER = "marker";
+    private final String TAG_MARKERS = "markers";
+    private final String TAG_MARKER = "marker";
     private int width = 400;
     private int height = 300;
     private int zoomLevel = 15;
@@ -43,14 +47,14 @@ public class GoogleMap extends AbstractComponent implements Sizeable,
 
         if (dataSource != null) {
             target.startTag(TAG_MARKERS);
-            Collection itemIds = dataSource.getItemIds();
-            for (Iterator it = itemIds.iterator(); it.hasNext();) {
-                Object itemId = it.next();
-                Item item = dataSource.getItem(itemId);
+            final Collection itemIds = dataSource.getItemIds();
+            for (final Iterator it = itemIds.iterator(); it.hasNext();) {
+                final Object itemId = it.next();
+                final Item item = dataSource.getItem(itemId);
                 Property p = item.getItemProperty(getItemMarkerXPropertyId());
-                Double x = (Double) (p != null ? p.getValue() : null);
+                final Double x = (Double) (p != null ? p.getValue() : null);
                 p = item.getItemProperty(getItemMarkerYPropertyId());
-                Double y = (Double) (p != null ? p.getValue() : null);
+                final Double y = (Double) (p != null ? p.getValue() : null);
                 if (x == null || y == null) {
                     continue;
                 }
@@ -58,7 +62,7 @@ public class GoogleMap extends AbstractComponent implements Sizeable,
                 target.addAttribute("x", x.doubleValue());
                 target.addAttribute("y", y.doubleValue());
                 p = item.getItemProperty(getItemMarkerHtmlPropertyId());
-                String h = (String) (p != null ? p.getValue() : null);
+                final String h = (String) (p != null ? p.getValue() : null);
                 target.addAttribute("html", h);
                 target.endTag(TAG_MARKER);
             }
@@ -170,11 +174,11 @@ public class GoogleMap extends AbstractComponent implements Sizeable,
         if (dataSource == null) {
             initDataSource();
         }
-        Object markerId = dataSource.addItem();
+        final Object markerId = dataSource.addItem();
         if (markerId == null) {
             return null;
         }
-        Item marker = dataSource.getItem(markerId);
+        final Item marker = dataSource.getItem(markerId);
         Property p = marker.getItemProperty(getItemMarkerXPropertyId());
         p.setValue(new Double(location.x));
         p = marker.getItemProperty(getItemMarkerYPropertyId());

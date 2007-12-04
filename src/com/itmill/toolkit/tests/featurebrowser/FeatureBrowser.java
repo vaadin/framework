@@ -1,30 +1,6 @@
-/* *************************************************************************
- 
- IT Mill Toolkit 
-
- Development of Browser User Interfaces Made Easy
-
- Copyright (C) 2000-2006 IT Mill Ltd
- 
- *************************************************************************
-
- This product is distributed under commercial license that can be found
- from the product package on license.pdf. Use of this product might 
- require purchasing a commercial license from IT Mill Ltd. For guidelines 
- on usage, see licensing-guidelines.html
-
- *************************************************************************
- 
- For more information, contact:
- 
- IT Mill Ltd                           phone: +358 2 4802 7180
- Ruukinkatu 2-4                        fax:   +358 2 4802 7181
- 20540, Turku                          email:  info@itmill.com
- Finland                               company www: www.itmill.com
- 
- Primary source for information and releases: www.itmill.com
-
- ********************************************************************** */
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
 
 package com.itmill.toolkit.tests.featurebrowser;
 
@@ -57,7 +33,7 @@ public class FeatureBrowser extends CustomComponent implements
 
     private boolean initialized = false;
 
-    private Select themeSelector = new Select();
+    private final Select themeSelector = new Select();
 
     public void attach() {
 
@@ -89,7 +65,7 @@ public class FeatureBrowser extends CustomComponent implements
         themeSelector.setImmediate(true);
 
         // Restart button
-        Button close = new Button("restart", getApplication(), "close");
+        final Button close = new Button("restart", getApplication(), "close");
         close.setStyle("link");
         mainlayout.addComponent(close, "restart");
 
@@ -143,7 +119,7 @@ public class FeatureBrowser extends CustomComponent implements
         // new FeatureParameters());
 
         // Pre-open all menus
-        for (Iterator i = features.getItemIds().iterator(); i.hasNext();) {
+        for (final Iterator i = features.getItemIds().iterator(); i.hasNext();) {
             features.expandItem(i.next());
         }
 
@@ -158,11 +134,11 @@ public class FeatureBrowser extends CustomComponent implements
     }
 
     public void registerFeature(String path, Feature feature) {
-        StringTokenizer st = new StringTokenizer(path, "/");
+        final StringTokenizer st = new StringTokenizer(path, "/");
         String id = "";
         String parentId = null;
         while (st.hasMoreTokens()) {
-            String token = st.nextToken();
+            final String token = st.nextToken();
             id += "/" + token;
             if (!features.containsId(id)) {
                 features.addItem(id);
@@ -194,19 +170,20 @@ public class FeatureBrowser extends CustomComponent implements
                                 + ((AbstractComponent) event.getProperty())
                                         .getTag() + ", " + event.getProperty());
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             // ignored, should never happen
         }
 
         // Change feature
         if (event.getProperty() == features) {
-            Object id = features.getValue();
+            final Object id = features.getValue();
             if (id != null) {
                 if (features.areChildrenAllowed(id)) {
                     features.expandItem(id);
                 }
-                Property p = features.getContainerProperty(id, "feature");
-                Feature feature = p != null ? ((Feature) p.getValue()) : null;
+                final Property p = features.getContainerProperty(id, "feature");
+                final Feature feature = p != null ? ((Feature) p.getValue())
+                        : null;
                 if (feature != null) {
                     mainlayout.removeComponent(currentFeature);
                     mainlayout.removeComponent(currentFeature.getTabSheet());
@@ -236,7 +213,7 @@ public class FeatureBrowser extends CustomComponent implements
                     "buttonClick " + event.getButton().getTag() + ", "
                             + event.getButton().getCaption() + ", "
                             + event.getButton().getValue());
-        } catch (Exception e) {
+        } catch (final Exception e) {
             // ignored, should never happen
         }
 

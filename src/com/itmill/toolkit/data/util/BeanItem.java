@@ -1,30 +1,6 @@
-/* *************************************************************************
- 
- IT Mill Toolkit 
-
- Development of Browser User Interfaces Made Easy
-
- Copyright (C) 2000-2006 IT Mill Ltd
- 
- *************************************************************************
-
- This product is distributed under commercial license that can be found
- from the product package on license.pdf. Use of this product might 
- require purchasing a commercial license from IT Mill Ltd. For guidelines 
- on usage, see licensing-guidelines.html
-
- *************************************************************************
- 
- For more information, contact:
- 
- IT Mill Ltd                           phone: +358 2 4802 7180
- Ruukinkatu 2-4                        fax:   +358 2 4802 7181
- 20540, Turku                          email:  info@itmill.com
- Finland                               company www: www.itmill.com
- 
- Primary source for information and releases: www.itmill.com
-
- ********************************************************************** */
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
 
 package com.itmill.toolkit.data.util;
 
@@ -50,7 +26,7 @@ public class BeanItem extends PropertysetItem {
     /**
      * The bean which this Item is based on.
      */
-    private Object bean;
+    private final Object bean;
 
     /**
      * <p>
@@ -76,23 +52,23 @@ public class BeanItem extends PropertysetItem {
         // Try to introspect, if it fails, we just have an empty Item
         try {
             // Create bean information
-            BeanInfo info = Introspector.getBeanInfo(bean.getClass());
-            PropertyDescriptor[] pd = info.getPropertyDescriptors();
+            final BeanInfo info = Introspector.getBeanInfo(bean.getClass());
+            final PropertyDescriptor[] pd = info.getPropertyDescriptors();
 
             // Add all the bean properties as MethodProperties to this Item
             for (int i = 0; i < pd.length; i++) {
-                Method getMethod = pd[i].getReadMethod();
-                Method setMethod = pd[i].getWriteMethod();
-                Class type = pd[i].getPropertyType();
-                String name = pd[i].getName();
+                final Method getMethod = pd[i].getReadMethod();
+                final Method setMethod = pd[i].getWriteMethod();
+                final Class type = pd[i].getPropertyType();
+                final String name = pd[i].getName();
 
                 if ((getMethod != null) && (setMethod != null)) {
-                    Property p = new MethodProperty(type, bean, getMethod,
-                            setMethod);
+                    final Property p = new MethodProperty(type, bean,
+                            getMethod, setMethod);
                     addItemProperty(name, p);
                 }
             }
-        } catch (java.beans.IntrospectionException ignored) {
+        } catch (final java.beans.IntrospectionException ignored) {
         }
     }
 
@@ -121,27 +97,27 @@ public class BeanItem extends PropertysetItem {
         // Try to introspect, if it fails, we just have an empty Item
         try {
             // Create bean information
-            BeanInfo info = Introspector.getBeanInfo(bean.getClass());
-            PropertyDescriptor[] pd = info.getPropertyDescriptors();
+            final BeanInfo info = Introspector.getBeanInfo(bean.getClass());
+            final PropertyDescriptor[] pd = info.getPropertyDescriptors();
 
             // Add all the bean properties as MethodProperties to this Item
-            for (Iterator iter = propertyIds.iterator(); iter.hasNext();) {
-                Object id = iter.next();
+            for (final Iterator iter = propertyIds.iterator(); iter.hasNext();) {
+                final Object id = iter.next();
                 for (int i = 0; i < pd.length; i++) {
-                    String name = pd[i].getName();
+                    final String name = pd[i].getName();
                     if (name.equals(id)) {
-                        Method getMethod = pd[i].getReadMethod();
-                        Method setMethod = pd[i].getWriteMethod();
-                        Class type = pd[i].getPropertyType();
+                        final Method getMethod = pd[i].getReadMethod();
+                        final Method setMethod = pd[i].getWriteMethod();
+                        final Class type = pd[i].getPropertyType();
 
-                        Property p = new MethodProperty(type, bean, getMethod,
-                                setMethod);
+                        final Property p = new MethodProperty(type, bean,
+                                getMethod, setMethod);
                         addItemProperty(name, p);
                     }
                 }
             }
 
-        } catch (java.beans.IntrospectionException ignored) {
+        } catch (final java.beans.IntrospectionException ignored) {
         }
 
     }

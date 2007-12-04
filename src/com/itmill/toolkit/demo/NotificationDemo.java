@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.demo;
 
 import com.itmill.toolkit.data.Item;
@@ -33,7 +37,7 @@ public class NotificationDemo extends com.itmill.toolkit.Application {
     public void init() {
 
         // Create new window for the application and give the window a visible.
-        Window main = new Window("Notification demo");
+        final Window main = new Window("Notification demo");
         // set as main window
         setMainWindow(main);
 
@@ -73,7 +77,7 @@ public class NotificationDemo extends com.itmill.toolkit.Application {
         main.addComponent(message); // add to layout
 
         // Button to show the notification
-        Button b = new Button("Show notification", new ClickListener() {
+        final Button b = new Button("Show notification", new ClickListener() {
             // this is an inline ClickListener
             public void buttonClick(ClickEvent event) {
                 // show the notification

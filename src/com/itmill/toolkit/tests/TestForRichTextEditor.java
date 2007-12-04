@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.tests;
 
 import com.itmill.toolkit.data.Property.ValueChangeEvent;
@@ -15,7 +19,7 @@ import com.itmill.toolkit.ui.RichTextArea;
 public class TestForRichTextEditor extends CustomComponent implements
         ValueChangeListener {
 
-    private OrderedLayout main = new OrderedLayout();
+    private final OrderedLayout main = new OrderedLayout();
 
     private Label l;
 

@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import java.util.Date;
@@ -5,7 +9,7 @@ import java.util.Date;
 import com.itmill.toolkit.terminal.gwt.client.DateTimeService;
 
 public class CalendarEntry {
-    private String styleName;
+    private final String styleName;
     private Date start;
     private Date end;
     private String title;

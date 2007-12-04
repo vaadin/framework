@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.client;
 
 public class DateLocale extends
@@ -22,7 +26,7 @@ public class DateLocale extends
     public static String getAM() {
         try {
             return LocaleService.getAmPmStrings(locale)[0];
-        } catch (LocaleNotLoadedException e) {
+        } catch (final LocaleNotLoadedException e) {
             // TODO redirect to console
             System.out.println("Tried to use an unloaded locale \"" + locale
                     + "\".");
@@ -33,7 +37,7 @@ public class DateLocale extends
     public static String getPM() {
         try {
             return LocaleService.getAmPmStrings(locale)[1];
-        } catch (LocaleNotLoadedException e) {
+        } catch (final LocaleNotLoadedException e) {
             // TODO redirect to console
             System.out.println("Tried to use an unloaded locale \"" + locale
                     + "\".");
@@ -44,7 +48,7 @@ public class DateLocale extends
     public String[] getWEEKDAY_LONG() {
         try {
             return LocaleService.getDayNames(locale);
-        } catch (LocaleNotLoadedException e) {
+        } catch (final LocaleNotLoadedException e) {
             // TODO redirect to console
             System.out.println("Tried to use an unloaded locale \"" + locale
                     + "\".");
@@ -55,7 +59,7 @@ public class DateLocale extends
     public String[] getWEEKDAY_SHORT() {
         try {
             return LocaleService.getShortDayNames(locale);
-        } catch (LocaleNotLoadedException e) {
+        } catch (final LocaleNotLoadedException e) {
             // TODO redirect to console
             System.out.println("Tried to use an unloaded locale \"" + locale
                     + "\".");

@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
@@ -5,7 +9,7 @@ import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
 public class IDateFieldCalendar extends IDateField {
 
-    private CalendarPanel date;
+    private final CalendarPanel date;
 
     public IDateFieldCalendar() {
         super();

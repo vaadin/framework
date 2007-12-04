@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -27,7 +31,7 @@ public class IForm extends SimplePanel implements Paintable {
             return;
         }
 
-        UIDL layoutUidl = uidl.getChildUIDL(0);
+        final UIDL layoutUidl = uidl.getChildUIDL(0);
         if (lo == null) {
             lo = (Container) client.getWidget(layoutUidl);
             setWidget((Widget) lo);

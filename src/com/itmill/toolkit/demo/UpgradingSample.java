@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.demo;
 
 //
@@ -34,27 +38,28 @@ public class UpgradingSample extends Application implements
         Property.ValueChangeListener {
 
     /* Menu for navigating inside the application. */
-    private Tree menu = new Tree();
+    private final Tree menu = new Tree();
 
     /* Contents of the website */
-    private String[][] pages = { { "Welcome", "Welcome to our website..." },
+    private final String[][] pages = {
+            { "Welcome", "Welcome to our website..." },
             { "Products", "Public product information." },
             { "Contact", "Public contact information." },
             { "CRM", "CRM Database requiring login." },
             { "Intranet", "Internal information database." } };
 
     /* Application layout */
-    private GridLayout layout = new GridLayout(2, 1);
+    private final GridLayout layout = new GridLayout(2, 1);
 
     /* Initialize the application */
     public void init() {
 
         // Create the main window of the application
-        Window main = new Window("Login example", layout);
+        final Window main = new Window("Login example", layout);
         setMainWindow(main);
 
         // Add menu and loginbox to the application
-        OrderedLayout l = new OrderedLayout();
+        final OrderedLayout l = new OrderedLayout();
         layout.addComponent(l, 0, 0);
         l.addComponent(menu);
         l.addComponent(new LoginBox());
@@ -88,10 +93,10 @@ public class UpgradingSample extends Application implements
     // Handle menu selection and update visible page
     public void valueChange(Property.ValueChangeEvent event) {
         layout.removeComponent(1, 0);
-        String title = (String) menu.getValue();
+        final String title = (String) menu.getValue();
         for (int i = 0; i < pages.length; i++) {
             if (pages[i][0].equals(title)) {
-                Panel p = new Panel(pages[i][0]);
+                final Panel p = new Panel(pages[i][0]);
                 p.addComponent(new Label(pages[i][1]));
                 p.setStyle("strong");
                 layout.addComponent(p, 1, 0);
@@ -104,18 +109,18 @@ public class UpgradingSample extends Application implements
             Application.UserChangeListener {
 
         // The components this loginbox is composed of
-        private TextField loginName = new TextField("Name");
+        private final TextField loginName = new TextField("Name");
 
-        private Button loginButton = new Button("Enter", this, "login");
+        private final Button loginButton = new Button("Enter", this, "login");
 
-        private Panel loginPanel = new Panel("Login");
+        private final Panel loginPanel = new Panel("Login");
 
-        private Panel statusPanel = new Panel();
+        private final Panel statusPanel = new Panel();
 
-        private Button logoutButton = new Button("Logout",
+        private final Button logoutButton = new Button("Logout",
                 UpgradingSample.this, "close");
 
-        private Label statusLabel = new Label();
+        private final Label statusLabel = new Label();
 
         // Initialize login component
         public LoginBox() {
@@ -138,7 +143,7 @@ public class UpgradingSample extends Application implements
 
         // Login into application
         public void login() {
-            String name = (String) loginName.getValue();
+            final String name = (String) loginName.getValue();
             if (name != null && name.length() > 0) {
                 setUser(name);
             }

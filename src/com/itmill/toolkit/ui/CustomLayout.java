@@ -1,30 +1,6 @@
-/* *************************************************************************
- 
- IT Mill Toolkit 
-
- Development of Browser User Interfaces Made Easy
-
- Copyright (C) 2000-2006 IT Mill Ltd
- 
- *************************************************************************
-
- This product is distributed under commercial license that can be found
- from the product package on license.pdf. Use of this product might 
- require purchasing a commercial license from IT Mill Ltd. For guidelines 
- on usage, see licensing-guidelines.html
-
- *************************************************************************
- 
- For more information, contact:
- 
- IT Mill Ltd                           phone: +358 2 4802 7180
- Ruukinkatu 2-4                        fax:   +358 2 4802 7181
- 20540, Turku                          email:  info@itmill.com
- Finland                               company www: www.itmill.com
- 
- Primary source for information and releases: www.itmill.com
-
- ********************************************************************** */
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
 
 package com.itmill.toolkit.ui;
 
@@ -66,7 +42,7 @@ public class CustomLayout extends AbstractLayout {
     /**
      * Custom layout slots containing the components.
      */
-    private HashMap slots = new HashMap();
+    private final HashMap slots = new HashMap();
 
     private String templateName;
 
@@ -95,7 +71,7 @@ public class CustomLayout extends AbstractLayout {
      *                the location of the component.
      */
     public void addComponent(Component c, String location) {
-        Component old = (Component) slots.get(location);
+        final Component old = (Component) slots.get(location);
         if (old != null) {
             removeComponent(old);
         }
@@ -178,10 +154,10 @@ public class CustomLayout extends AbstractLayout {
 
         target.addAttribute("template", templateName);
         // Adds all items in all the locations
-        for (Iterator i = slots.keySet().iterator(); i.hasNext();) {
+        for (final Iterator i = slots.keySet().iterator(); i.hasNext();) {
             // Gets the (location,component)
-            String location = (String) i.next();
-            Component c = (Component) slots.get(location);
+            final String location = (String) i.next();
+            final Component c = (Component) slots.get(location);
             if (c != null) {
                 // Writes the item
                 target.startTag("location");
@@ -198,9 +174,9 @@ public class CustomLayout extends AbstractLayout {
         // Gets the locations
         String oldLocation = null;
         String newLocation = null;
-        for (Iterator i = slots.keySet().iterator(); i.hasNext();) {
-            String location = (String) i.next();
-            Component component = (Component) slots.get(location);
+        for (final Iterator i = slots.keySet().iterator(); i.hasNext();) {
+            final String location = (String) i.next();
+            final Component component = (Component) slots.get(location);
             if (component == oldComponent) {
                 oldLocation = location;
             }

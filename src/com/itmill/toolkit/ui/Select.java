@@ -1,30 +1,6 @@
-/* *************************************************************************
- 
- IT Mill Toolkit 
-
- Development of Browser User Interfaces Made Easy
-
- Copyright (C) 2000-2006 IT Mill Ltd
- 
- *************************************************************************
-
- This product is distributed under commercial license that can be found
- from the product package on license.pdf. Use of this product might 
- require purchasing a commercial license from IT Mill Ltd. For guidelines 
- on usage, see licensing-guidelines.html
-
- *************************************************************************
- 
- For more information, contact:
- 
- IT Mill Ltd                           phone: +358 2 4802 7180
- Ruukinkatu 2-4                        fax:   +358 2 4802 7181
- 20540, Turku                          email:  info@itmill.com
- Finland                               company www: www.itmill.com
- 
- Primary source for information and releases: www.itmill.com
-
- ********************************************************************** */
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
 
 package com.itmill.toolkit.ui;
 
@@ -188,7 +164,7 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
          */
         target.startTag("options");
 
-        boolean paintNullSelection = needNullSelectOption
+        final boolean paintNullSelection = needNullSelectOption
                 && (currentPage == 0 && (filterstring == null
                         || filterstring.equals("") || filterstring.equals("-")));
 
@@ -214,16 +190,16 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
             }
             options = options.subList(first, last);
         }
-        Iterator i = options.iterator();
+        final Iterator i = options.iterator();
         // Paints the available selection options from data source
 
         while (i.hasNext()) {
 
             // Gets the option attribute values
-            Object id = i.next();
-            String key = itemIdMapper.key(id);
-            String caption = getItemCaption(id);
-            Resource icon = getItemIcon(id);
+            final Object id = i.next();
+            final String key = itemIdMapper.key(id);
+            final String caption = getItemCaption(id);
+            final Resource icon = getItemIcon(id);
 
             // Paints the option
             target.startTag("so");
@@ -282,8 +258,8 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
         prevfilterstring = filterstring;
 
         filteredOptions = new LinkedList();
-        for (Iterator it = items.iterator(); it.hasNext();) {
-            Object itemId = it.next();
+        for (final Iterator it = items.iterator(); it.hasNext();) {
+            final Object itemId = it.next();
             String caption = getItemCaption(itemId);
             if (caption == null || caption.equals("")) {
                 continue;
@@ -330,7 +306,7 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
         // Try to set the property value
 
         // New option entered (and it is allowed)
-        String newitem = (String) variables.get("newitem");
+        final String newitem = (String) variables.get("newitem");
         if (newitem != null && newitem.length() > 0) {
 
             // Checks for readonly
@@ -346,7 +322,7 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
                     try {
                         getContainerProperty(newitem,
                                 getItemCaptionPropertyId()).setValue(newitem);
-                    } catch (Property.ConversionException ignored) {
+                    } catch (final Property.ConversionException ignored) {
                         // The conversion exception is safely ignored, the
                         // caption is
                         // just missing
@@ -358,7 +334,7 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
 
         // Selection change
         if (variables.containsKey("selected")) {
-            String[] ka = (String[]) variables.get("selected");
+            final String[] ka = (String[]) variables.get("selected");
 
             // Multiselect mode
             if (isMultiSelect()) {
@@ -366,9 +342,9 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
                 // TODO Optimize by adding repaintNotNeeded whan applicaple
 
                 // Converts the key-array to id-set
-                LinkedList s = new LinkedList();
+                final LinkedList s = new LinkedList();
                 for (int i = 0; i < ka.length; i++) {
-                    Object id = itemIdMapper.get(ka[i]);
+                    final Object id = itemIdMapper.get(ka[i]);
                     if (id != null && containsId(id)) {
                         s.add(id);
                     } else if (itemIdMapper.isNewIdKey(ka[i])
@@ -379,7 +355,7 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
 
                 // Limits the deselection to the set of visible items
                 // (non-visible items can not be deselected)
-                Collection visible = getVisibleItemIds();
+                final Collection visible = getVisibleItemIds();
                 if (visible != null) {
                     Set newsel = (Set) getValue();
                     if (newsel == null) {
@@ -398,13 +374,13 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
                 if (ka.length == 0) {
 
                     // Allows deselection only if the deselected item is visible
-                    Object current = getValue();
-                    Collection visible = getVisibleItemIds();
+                    final Object current = getValue();
+                    final Collection visible = getVisibleItemIds();
                     if (visible != null && visible.contains(current)) {
                         setValue(null, true);
                     }
                 } else {
-                    Object id = itemIdMapper.get(ka[0]);
+                    final Object id = itemIdMapper.get(ka[0]);
                     if (id != null && id.equals(getNullSelectionItemId())) {
                         setValue(null, true);
                     } else if (itemIdMapper.isNewIdKey(ka[0])) {

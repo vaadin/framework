@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.tests;
 
 import java.util.Random;
@@ -27,7 +31,7 @@ import com.itmill.toolkit.ui.Window;
  */
 public class RandomLayoutStress extends com.itmill.toolkit.Application {
 
-    private Random seededRandom = new Random(1);
+    private final Random seededRandom = new Random(1);
 
     // FIXME increasing these settings brings out interesting client-side issues
     // (DOM errors)
@@ -42,11 +46,12 @@ public class RandomLayoutStress extends com.itmill.toolkit.Application {
      * Initialize Application. Demo components are added to main window.
      */
     public void init() {
-        Window mainWindow = new Window("Layout demo");
+        final Window mainWindow = new Window("Layout demo");
         setMainWindow(mainWindow);
 
         // Create horizontal ordered layout
-        Panel panelA = new Panel("Panel containing horizontal ordered layout");
+        final Panel panelA = new Panel(
+                "Panel containing horizontal ordered layout");
         OrderedLayout layoutA = new OrderedLayout(
                 OrderedLayout.ORIENTATION_HORIZONTAL);
         // Add 4 random components
@@ -55,7 +60,8 @@ public class RandomLayoutStress extends com.itmill.toolkit.Application {
         panelA.addComponent(layoutA);
 
         // Create vertical ordered layout
-        Panel panelB = new Panel("Panel containing vertical ordered layout");
+        final Panel panelB = new Panel(
+                "Panel containing vertical ordered layout");
         OrderedLayout layoutB = new OrderedLayout(
                 OrderedLayout.ORIENTATION_VERTICAL);
         // Add 4 random components
@@ -64,9 +70,9 @@ public class RandomLayoutStress extends com.itmill.toolkit.Application {
         panelB.addComponent(layoutB);
 
         // Create grid layout
-        int gridSize = (int) java.lang.Math.sqrt(componentCountC);
-        Panel panelG = new Panel("Panel containing grid layout (" + gridSize
-                + " x " + gridSize + ")");
+        final int gridSize = (int) java.lang.Math.sqrt(componentCountC);
+        final Panel panelG = new Panel("Panel containing grid layout ("
+                + gridSize + " x " + gridSize + ")");
         GridLayout layoutG = new GridLayout(gridSize, gridSize);
         // Add 12 random components
         fillLayout(layoutG, componentCountC);
@@ -74,7 +80,7 @@ public class RandomLayoutStress extends com.itmill.toolkit.Application {
         panelG.addComponent(layoutG);
 
         // Create TabSheet
-        TabSheet tabsheet = new TabSheet();
+        final TabSheet tabsheet = new TabSheet();
         tabsheet
                 .setCaption("Tabsheet, above layouts are added to this component");
         layoutA = new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
@@ -91,8 +97,8 @@ public class RandomLayoutStress extends com.itmill.toolkit.Application {
         tabsheet.addTab(layoutG, "Grid layout (4 x 2)", null);
 
         // Create custom layout
-        Panel panelC = new Panel("Custom layout with style exampleStyle");
-        CustomLayout layoutC = new CustomLayout("exampleStyle");
+        final Panel panelC = new Panel("Custom layout with style exampleStyle");
+        final CustomLayout layoutC = new CustomLayout("exampleStyle");
         // Add 4 random components
         fillLayout(layoutC, componentCountD);
         // Add layout to panel
@@ -108,7 +114,7 @@ public class RandomLayoutStress extends com.itmill.toolkit.Application {
 
     private AbstractComponent getRandomComponent(int caption) {
         AbstractComponent result = null;
-        int randint = seededRandom.nextInt(7);
+        final int randint = seededRandom.nextInt(7);
         switch (randint) {
         case 0:
             // Label

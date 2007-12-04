@@ -264,12 +264,14 @@ public class RichTextToolbar extends Composite {
             } else if (sender == justifyRight) {
                 basic.setJustification(RichTextArea.Justification.RIGHT);
             } else if (sender == insertImage) {
-                String url = Window.prompt("Enter an image URL:", "http://");
+                final String url = Window.prompt("Enter an image URL:",
+                        "http://");
                 if (url != null) {
                     extended.insertImage(url);
                 }
             } else if (sender == createLink) {
-                String url = Window.prompt("Enter a link URL:", "http://");
+                final String url = Window
+                        .prompt("Enter a link URL:", "http://");
                 if (url != null) {
                     extended.createLink(url);
                 }
@@ -319,17 +321,17 @@ public class RichTextToolbar extends Composite {
             RichTextArea.FontSize.LARGE, RichTextArea.FontSize.X_LARGE,
             RichTextArea.FontSize.XX_LARGE };
 
-    private Images images = (Images) GWT.create(Images.class);
-    private Strings strings = (Strings) GWT.create(Strings.class);
-    private EventListener listener = new EventListener();
+    private final Images images = (Images) GWT.create(Images.class);
+    private final Strings strings = (Strings) GWT.create(Strings.class);
+    private final EventListener listener = new EventListener();
 
-    private RichTextArea richText;
-    private RichTextArea.BasicFormatter basic;
-    private RichTextArea.ExtendedFormatter extended;
+    private final RichTextArea richText;
+    private final RichTextArea.BasicFormatter basic;
+    private final RichTextArea.ExtendedFormatter extended;
 
-    private VerticalPanel outer = new VerticalPanel();
-    private HorizontalPanel topPanel = new HorizontalPanel();
-    private HorizontalPanel bottomPanel = new HorizontalPanel();
+    private final VerticalPanel outer = new VerticalPanel();
+    private final HorizontalPanel topPanel = new HorizontalPanel();
+    private final HorizontalPanel bottomPanel = new HorizontalPanel();
     private ToggleButton bold;
     private ToggleButton italic;
     private ToggleButton underline;
@@ -427,7 +429,7 @@ public class RichTextToolbar extends Composite {
     }
 
     private ListBox createColorList(String caption) {
-        ListBox lb = new ListBox();
+        final ListBox lb = new ListBox();
         lb.addChangeListener(listener);
         lb.setVisibleItemCount(1);
 
@@ -442,7 +444,7 @@ public class RichTextToolbar extends Composite {
     }
 
     private ListBox createFontList() {
-        ListBox lb = new ListBox();
+        final ListBox lb = new ListBox();
         lb.addChangeListener(listener);
         lb.setVisibleItemCount(1);
 
@@ -458,7 +460,7 @@ public class RichTextToolbar extends Composite {
     }
 
     private ListBox createFontSizes() {
-        ListBox lb = new ListBox();
+        final ListBox lb = new ListBox();
         lb.addChangeListener(listener);
         lb.setVisibleItemCount(1);
 
@@ -474,7 +476,7 @@ public class RichTextToolbar extends Composite {
     }
 
     private PushButton createPushButton(AbstractImagePrototype img, String tip) {
-        PushButton pb = new PushButton(img.createImage());
+        final PushButton pb = new PushButton(img.createImage());
         pb.addClickListener(listener);
         pb.setTitle(tip);
         return pb;
@@ -482,7 +484,7 @@ public class RichTextToolbar extends Composite {
 
     private ToggleButton createToggleButton(AbstractImagePrototype img,
             String tip) {
-        ToggleButton tb = new ToggleButton(img.createImage());
+        final ToggleButton tb = new ToggleButton(img.createImage());
         tb.addClickListener(listener);
         tb.setTitle(tip);
         return tb;

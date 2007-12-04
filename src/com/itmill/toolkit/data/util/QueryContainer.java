@@ -1,30 +1,6 @@
-/* *************************************************************************
- 
- IT Mill Toolkit 
-
- Development of Browser User Interfaces Made Easy
-
- Copyright (C) 2000-2006 IT Mill Ltd
- 
- *************************************************************************
-
- This product is distributed under commercial license that can be found
- from the product package on license.pdf. Use of this product might 
- require purchasing a commercial license from IT Mill Ltd. For guidelines 
- on usage, see licensing-guidelines.html
-
- *************************************************************************
- 
- For more information, contact:
- 
- IT Mill Ltd                           phone: +358 2 4802 7180
- Ruukinkatu 2-4                        fax:   +358 2 4802 7181
- 20540, Turku                          email:  info@itmill.com
- Finland                               company www: www.itmill.com
- 
- Primary source for information and releases: www.itmill.com
-
- ********************************************************************** */
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
 
 package com.itmill.toolkit.data.util;
 
@@ -83,15 +59,15 @@ public class QueryContainer implements Container, Container.Ordered,
 
     private int resultSetConcurrency = DEFAULT_RESULTSET_CONCURRENCY;
 
-    private String queryStatement;
+    private final String queryStatement;
 
-    private Connection connection;
+    private final Connection connection;
 
     private ResultSet result;
 
     private Collection propertyIds;
 
-    private HashMap propertyTypes = new HashMap();
+    private final HashMap propertyTypes = new HashMap();
 
     private int size = -1;
 
@@ -151,12 +127,12 @@ public class QueryContainer implements Container, Container.Ordered,
         refresh();
         ResultSetMetaData metadata;
         metadata = result.getMetaData();
-        int count = metadata.getColumnCount();
-        ArrayList list = new ArrayList(count);
+        final int count = metadata.getColumnCount();
+        final ArrayList list = new ArrayList(count);
         for (int i = 1; i <= count; i++) {
-            String columnName = metadata.getColumnName(i);
+            final String columnName = metadata.getColumnName(i);
             list.add(columnName);
-            Property p = getContainerProperty(new Integer(1), columnName);
+            final Property p = getContainerProperty(new Integer(1), columnName);
             propertyTypes.put(columnName, p == null ? Object.class : p
                     .getType());
         }
@@ -227,7 +203,7 @@ public class QueryContainer implements Container, Container.Ordered,
      * @return collection of Item IDs
      */
     public Collection getItemIds() {
-        Collection c = new ArrayList(size);
+        final Collection c = new ArrayList(size);
         for (int i = 1; i <= size; i++) {
             c.add(new Integer(i));
         }
@@ -257,7 +233,7 @@ public class QueryContainer implements Container, Container.Ordered,
         try {
             result.absolute(((Integer) itemId).intValue());
             value = result.getObject((String) propertyId);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             return null;
         }
 
@@ -299,7 +275,7 @@ public class QueryContainer implements Container, Container.Ordered,
         if (!(id instanceof Integer)) {
             return false;
         }
-        int i = ((Integer) id).intValue();
+        final int i = ((Integer) id).intValue();
         if (i < 1) {
             return false;
         }
@@ -485,7 +461,7 @@ public class QueryContainer implements Container, Container.Ordered,
         if (size < 1 || !(id instanceof Integer)) {
             return null;
         }
-        int i = ((Integer) id).intValue();
+        final int i = ((Integer) id).intValue();
         if (i >= size) {
             return null;
         }
@@ -503,7 +479,7 @@ public class QueryContainer implements Container, Container.Ordered,
         if (size < 1 || !(id instanceof Integer)) {
             return null;
         }
-        int i = ((Integer) id).intValue();
+        final int i = ((Integer) id).intValue();
         if (i <= 1) {
             return null;
         }
@@ -589,7 +565,7 @@ public class QueryContainer implements Container, Container.Ordered,
     public void finalize() {
         try {
             close();
-        } catch (SQLException ignored) {
+        } catch (final SQLException ignored) {
 
         }
     }
@@ -653,7 +629,7 @@ public class QueryContainer implements Container, Container.Ordered,
         if (size < 1 || !(id instanceof Integer)) {
             return -1;
         }
-        int i = ((Integer) id).intValue();
+        final int i = ((Integer) id).intValue();
         if (i >= size || i < 1) {
             return -1;
         }

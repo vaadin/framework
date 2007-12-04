@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import java.util.Set;
@@ -49,7 +53,7 @@ abstract class IOptionGroupBase extends Composite implements Paintable,
     /**
      * Panel containing the component
      */
-    private Panel container;
+    private final Panel container;
 
     private ITextField newItemField;
 
@@ -133,7 +137,7 @@ abstract class IOptionGroupBase extends Composite implements Paintable,
         cols = uidl.getIntAttribute("cols");
         rows = uidl.getIntAttribute("rows");
 
-        UIDL ops = uidl.getChildUIDL(0);
+        final UIDL ops = uidl.getChildUIDL(0);
 
         if (getColumns() > 0) {
             container.setWidth(getColumns() + "em");
@@ -208,7 +212,7 @@ abstract class IOptionGroupBase extends Composite implements Paintable,
     protected abstract Object[] getSelectedItems();
 
     protected Object getSelectedItem() {
-        Object[] sel = getSelectedItems();
+        final Object[] sel = getSelectedItems();
         if (sel.length > 0) {
             return sel[0];
         } else {

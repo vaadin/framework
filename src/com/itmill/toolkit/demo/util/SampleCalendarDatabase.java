@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.demo.util;
 
 import java.sql.Connection;
@@ -68,11 +72,11 @@ public class SampleCalendarDatabase {
      */
     private void connect() {
         // use memory-Only Database
-        String url = "jdbc:hsqldb:mem:toolkit";
+        final String url = "jdbc:hsqldb:mem:toolkit";
         try {
             Class.forName("org.hsqldb.jdbcDriver").newInstance();
             connection = DriverManager.getConnection(url, "sa", "");
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -86,7 +90,7 @@ public class SampleCalendarDatabase {
     public void update(String expression) throws SQLException {
         Statement st = null;
         st = connection.createStatement();
-        int i = st.executeUpdate(expression);
+        final int i = st.executeUpdate(expression);
         if (i == -1) {
             System.out.println("SampleDatabase error : " + expression);
         }
@@ -107,14 +111,15 @@ public class SampleCalendarDatabase {
                     + "EVENTSTART DATETIME, EVENTEND DATETIME, NOTIME BOOLEAN  )";
             update(stmt);
             for (int j = 0; j < ENTRYCOUNT; j++) {
-                Timestamp start = new Timestamp(new java.util.Date().getTime());
+                final Timestamp start = new Timestamp(new java.util.Date()
+                        .getTime());
                 start.setDate((int) ((Math.random() - 0.4) * 200));
                 start.setMinutes(0);
                 start.setHours(8 + (int) Math.random() * 12);
-                Timestamp end = new Timestamp(start.getTime());
+                final Timestamp end = new Timestamp(start.getTime());
                 if (Math.random() < 0.7) {
                     long t = end.getTime();
-                    long hour = 60 * 60 * 1000;
+                    final long hour = 60 * 60 * 1000;
                     t = t + hour + (Math.round(Math.random() * 3 * hour));
                     end.setTime(t);
                 }
@@ -128,7 +133,7 @@ public class SampleCalendarDatabase {
                         + "','" + end + "'," + (Math.random() > 0.7) + ")";
                 update(stmt);
             }
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             if (e.toString().indexOf("Table already exists") == -1) {
                 throw new RuntimeException(e);
             }
@@ -142,15 +147,15 @@ public class SampleCalendarDatabase {
     private String testDatabase() {
         String result = null;
         try {
-            Statement stmt = connection.createStatement(
+            final Statement stmt = connection.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
-            ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM "
+            final ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM "
                     + DB_TABLE_NAME);
             rs.next();
             result = "rowcount for table test is " + rs.getObject(1).toString();
             stmt.close();
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             throw new RuntimeException(e);
         }
         return result;

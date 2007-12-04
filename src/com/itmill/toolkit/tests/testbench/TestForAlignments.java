@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.tests.testbench;
 
 import com.itmill.toolkit.ui.Button;
@@ -10,18 +14,18 @@ public class TestForAlignments extends CustomComponent {
 
     public TestForAlignments() {
 
-        OrderedLayout main = new OrderedLayout();
+        final OrderedLayout main = new OrderedLayout();
 
-        Button b1 = new Button("Right");
-        Button b2 = new Button("Left");
-        Button b3 = new Button("Bottom");
-        Button b4 = new Button("Top");
-        TextField t1 = new TextField("Right aligned");
-        TextField t2 = new TextField("Bottom aligned");
-        DateField d1 = new DateField("Center aligned");
-        DateField d2 = new DateField("Center aligned");
+        final Button b1 = new Button("Right");
+        final Button b2 = new Button("Left");
+        final Button b3 = new Button("Bottom");
+        final Button b4 = new Button("Top");
+        final TextField t1 = new TextField("Right aligned");
+        final TextField t2 = new TextField("Bottom aligned");
+        final DateField d1 = new DateField("Center aligned");
+        final DateField d2 = new DateField("Center aligned");
 
-        OrderedLayout vert = new OrderedLayout();
+        final OrderedLayout vert = new OrderedLayout();
         vert.addComponent(b1);
         vert.addComponent(b2);
         vert.addComponent(t1);
@@ -36,7 +40,7 @@ public class TestForAlignments extends CustomComponent {
         vert.setComponentAlignment(d1,
                 OrderedLayout.ALIGNMENT_HORIZONTAL_CENTER,
                 OrderedLayout.ALIGNMENT_TOP);
-        OrderedLayout hori = new OrderedLayout(
+        final OrderedLayout hori = new OrderedLayout(
                 OrderedLayout.ORIENTATION_HORIZONTAL);
         hori.addComponent(b3);
         hori.addComponent(b4);

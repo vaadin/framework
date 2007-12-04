@@ -1,30 +1,6 @@
-/* *************************************************************************
- 
- IT Mill Toolkit 
-
- Development of Browser User Interfaces Made Easy
-
- Copyright (C) 2000-2006 IT Mill Ltd
- 
- *************************************************************************
-
- This product is distributed under commercial license that can be found
- from the product package on license.pdf. Use of this product might 
- require purchasing a commercial license from IT Mill Ltd. For guidelines 
- on usage, see licensing-guidelines.html
-
- *************************************************************************
- 
- For more information, contact:
- 
- IT Mill Ltd                           phone: +358 2 4802 7180
- Ruukinkatu 2-4                        fax:   +358 2 4802 7181
- 20540, Turku                          email:  info@itmill.com
- Finland                               company www: www.itmill.com
- 
- Primary source for information and releases: www.itmill.com
-
- ********************************************************************** */
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
 
 package com.itmill.toolkit.tests.featurebrowser;
 
@@ -47,7 +23,7 @@ public abstract class Feature extends CustomComponent {
 
     private boolean propsReminder = true;
 
-    private OrderedLayout layout;
+    private final OrderedLayout layout;
 
     private TabSheet ts;
 
@@ -96,7 +72,7 @@ public abstract class Feature extends CustomComponent {
         javadoc.setContentMode(Label.CONTENT_XHTML);
 
         // Demo
-        Component demo = getDemoComponent();
+        final Component demo = getDemoComponent();
         if (demo != null) {
             layout.addComponent(demo);
         }
@@ -109,11 +85,11 @@ public abstract class Feature extends CustomComponent {
         ts.setHeightUnits(Sizeable.UNITS_PERCENTAGE);
 
         // Description tab
-        String title = getTitle();
+        final String title = getTitle();
         if (getDescriptionXHTML() != null) {
-            OrderedLayout mainLayout = new OrderedLayout(
+            final OrderedLayout mainLayout = new OrderedLayout(
                     OrderedLayout.ORIENTATION_VERTICAL);
-            OrderedLayout layout = new OrderedLayout(
+            final OrderedLayout layout = new OrderedLayout(
                     OrderedLayout.ORIENTATION_HORIZONTAL);
             mainLayout.addComponent(layout);
             if (getImage() != null) {
@@ -131,7 +107,7 @@ public abstract class Feature extends CustomComponent {
             }
             description = new Label(label, Label.CONTENT_XHTML);
             mainLayout.addComponent(description);
-			mainLayout.setMargin(true);
+            mainLayout.setMargin(true);
 
             ts.addTab(mainLayout, "Description", null);
         }
@@ -145,9 +121,9 @@ public abstract class Feature extends CustomComponent {
         }
 
         // Code Sample tab
-        String example = getExampleSrc();
+        final String example = getExampleSrc();
         if (example != null) {
-            OrderedLayout l = new OrderedLayout();
+            final OrderedLayout l = new OrderedLayout();
             if (getTitle() != null) {
                 l.addComponent(new Label(
                         "<b>// " + getTitle() + " example</b>",

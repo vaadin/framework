@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import java.util.ArrayList;
@@ -18,7 +22,7 @@ public class IGridLayout extends FlexTable implements Paintable, Container {
     public static final String CLASSNAME = "i-gridlayout";
 
     /** Widget to captionwrapper map */
-    private HashMap widgetToCaptionWrapper = new HashMap();
+    private final HashMap widgetToCaptionWrapper = new HashMap();
 
     public IGridLayout() {
         super();
@@ -36,18 +40,18 @@ public class IGridLayout extends FlexTable implements Paintable, Container {
         }
         int row = 0, column = 0;
 
-        ArrayList oldWidgetWrappers = new ArrayList();
-        for (Iterator iterator = iterator(); iterator.hasNext();) {
+        final ArrayList oldWidgetWrappers = new ArrayList();
+        for (final Iterator iterator = iterator(); iterator.hasNext();) {
             oldWidgetWrappers.add(iterator.next());
         }
         clear();
 
-        for (Iterator i = uidl.getChildIterator(); i.hasNext();) {
-            UIDL r = (UIDL) i.next();
+        for (final Iterator i = uidl.getChildIterator(); i.hasNext();) {
+            final UIDL r = (UIDL) i.next();
             if ("gr".equals(r.getTag())) {
                 column = 0;
-                for (Iterator j = r.getChildIterator(); j.hasNext();) {
-                    UIDL c = (UIDL) j.next();
+                for (final Iterator j = r.getChildIterator(); j.hasNext();) {
+                    final UIDL c = (UIDL) j.next();
                     if ("gc".equals(c.getTag())) {
                         prepareCell(row, column);
 
@@ -76,9 +80,9 @@ public class IGridLayout extends FlexTable implements Paintable, Container {
                         ((FlexCellFormatter) getCellFormatter()).setRowSpan(
                                 row, column, h);
 
-                        UIDL u = c.getChildUIDL(0);
+                        final UIDL u = c.getChildUIDL(0);
                         if (u != null) {
-                            Widget child = client.getWidget(u);
+                            final Widget child = client.getWidget(u);
                             CaptionWrapper wr;
                             if (widgetToCaptionWrapper.containsKey(child)) {
                                 wr = (CaptionWrapper) widgetToCaptionWrapper
@@ -104,8 +108,8 @@ public class IGridLayout extends FlexTable implements Paintable, Container {
         }
 
         // loop oldWidgetWrappers that where not re-attached and unregister them
-        for (Iterator it = oldWidgetWrappers.iterator(); it.hasNext();) {
-            CaptionWrapper w = (CaptionWrapper) it.next();
+        for (final Iterator it = oldWidgetWrappers.iterator(); it.hasNext();) {
+            final CaptionWrapper w = (CaptionWrapper) it.next();
             client.unregisterPaintable(w.getPaintable());
             widgetToCaptionWrapper.remove(w.getPaintable());
         }
@@ -124,7 +128,7 @@ public class IGridLayout extends FlexTable implements Paintable, Container {
     }
 
     public void updateCaption(Paintable component, UIDL uidl) {
-        CaptionWrapper wrapper = (CaptionWrapper) widgetToCaptionWrapper
+        final CaptionWrapper wrapper = (CaptionWrapper) widgetToCaptionWrapper
                 .get(component);
         wrapper.updateCaption(uidl);
     }

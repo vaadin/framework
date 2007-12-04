@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.tests;
 
 import java.util.ArrayList;
@@ -57,17 +61,17 @@ public class BasicRandomTest extends com.itmill.toolkit.Application implements
 
     private static int COMPONENT_MAX_GROUPED_NUMBER = 5;
 
-    private OrderedLayout mainLayout = new OrderedLayout();
+    private final OrderedLayout mainLayout = new OrderedLayout();
 
     private Layout testingLayout;
 
-    private TextField randomSeedValue = new TextField("Seed for random");
+    private final TextField randomSeedValue = new TextField("Seed for random");
 
-    private Button seedShuffle = new Button("Shuffle with seed", this,
+    private final Button seedShuffle = new Button("Shuffle with seed", this,
             "seedShuffle");
 
-    private Button randomShuffle = new Button("Seed randomly and shuffle",
-            this, "randomShuffle");
+    private final Button randomShuffle = new Button(
+            "Seed randomly and shuffle", this, "randomShuffle");
 
     private Label display = null;
 
@@ -83,7 +87,7 @@ public class BasicRandomTest extends com.itmill.toolkit.Application implements
 
     private long eventCounter = 0;
 
-    private Label statusLabel = new Label();
+    private final Label statusLabel = new Label();
 
     // Store button object => real value map
     // needed because button captions are randomized
@@ -91,7 +95,7 @@ public class BasicRandomTest extends com.itmill.toolkit.Application implements
 
     public void init() {
         // addWindow(new Window("ATFTest", create()));
-        Window mainWindow = new Window("Testing", create());
+        final Window mainWindow = new Window("Testing", create());
         setMainWindow(mainWindow);
 
         setUser(new Long(System.currentTimeMillis()).toString());
@@ -120,9 +124,9 @@ public class BasicRandomTest extends com.itmill.toolkit.Application implements
                         + "through X buttons and ensure that Result label "
                         + "contains correct value.", Label.CONTENT_XHTML));
 
-        OrderedLayout setupLayout = new OrderedLayout(
+        final OrderedLayout setupLayout = new OrderedLayout(
                 OrderedLayout.ORIENTATION_HORIZONTAL);
-        Panel statusPanel = new Panel("Status");
+        final Panel statusPanel = new Panel("Status");
         statusPanel.setWidth(200);
         setupLayout.addComponent(statusPanel);
         statusPanel.addComponent(statusLabel);
@@ -155,7 +159,7 @@ public class BasicRandomTest extends com.itmill.toolkit.Application implements
             // randomize using user given value
             rand = new Random(Long.parseLong((String) randomSeedValue
                     .getValue()));
-        } catch (Exception e) {
+        } catch (final Exception e) {
             randomize();
         }
         testingLayout = new GridLayout(5, 5);
@@ -176,7 +180,7 @@ public class BasicRandomTest extends com.itmill.toolkit.Application implements
     }
 
     private void randomize() {
-        long newSeed = System.currentTimeMillis();
+        final long newSeed = System.currentTimeMillis();
         rand = new Random(newSeed);
         randomSeedValue.setValue(String.valueOf(newSeed));
     }
@@ -189,7 +193,7 @@ public class BasicRandomTest extends com.itmill.toolkit.Application implements
         components = new ArrayList();
 
         // create label
-        Label userLabel = new Label("user");
+        final Label userLabel = new Label("user");
         userLabel.setValue(getUser());
         // userLabel.setUIID("Label_user");
         components.add(userLabel);
@@ -201,16 +205,16 @@ public class BasicRandomTest extends com.itmill.toolkit.Application implements
         components.add(display);
 
         // create calculator buttonsStatus:
-        String[][] calcValues = {
+        final String[][] calcValues = {
                 { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "+", "-",
                         "*", "/", "=", "C" },
                 { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "plus",
                         "minus", "multiple", "divisor", "equals", "clear" } };
-        String[] randomizedCaptions = { "a", "b", "c", "y", "8", "3" };
+        final String[] randomizedCaptions = { "a", "b", "c", "y", "8", "3" };
         // String[] randomizedCaptions = { "X" };
         buttonValues = new HashMap();
         for (int i = 0; i > calcValues[0].length; i++) {
-            Button button = new Button("", this);
+            final Button button = new Button("", this);
             // Test requirement: ATF must not rely on caption
             // button.setCaption(randomizedCaptions[rand
             // .nextInt(randomizedCaptions.length)]);
@@ -238,8 +242,8 @@ public class BasicRandomTest extends com.itmill.toolkit.Application implements
     private Component getComponent() {
         if (components.size() > 0) {
             // components found, return any
-            int i = rand.nextInt(components.size());
-            Component c = (Component) components.get(i);
+            final int i = rand.nextInt(components.size());
+            final Component c = (Component) components.get(i);
             components.remove(i);
             return c;
         } else {
@@ -251,23 +255,23 @@ public class BasicRandomTest extends com.itmill.toolkit.Application implements
     private void addComponents(Layout layout) {
         while (components.size() > 0) {
             // Get random container
-            ComponentContainer container = getRandomComponentContainer(""
+            final ComponentContainer container = getRandomComponentContainer(""
                     + captionCounter++);
             layout.addComponent(container);
             // Get random amount of components for above container
-            int groupsize = rand.nextInt(COMPONENT_MAX_GROUPED_NUMBER) + 1;
+            final int groupsize = rand.nextInt(COMPONENT_MAX_GROUPED_NUMBER) + 1;
             for (int j = 0; j < groupsize; j++) {
-                Component c = getComponent();
+                final Component c = getComponent();
                 if (c != null) {
                     if (container instanceof TabSheet) {
-                        ComponentContainer tab = (ComponentContainer) ((TabSheet) container)
+                        final ComponentContainer tab = (ComponentContainer) ((TabSheet) container)
                                 .getSelectedTab();
                         tab.addComponent(c);
                     } else if (container instanceof GridLayout) {
-                        GridLayout gl = (GridLayout) container;
+                        final GridLayout gl = (GridLayout) container;
                         if (j == 0) {
-                            int x = rand.nextInt(gl.getWidth());
-                            int y = rand.nextInt(gl.getHeight());
+                            final int x = rand.nextInt(gl.getWidth());
+                            final int y = rand.nextInt(gl.getHeight());
                             gl.removeComponent(x, y);
                             gl.addComponent(c, x, y);
                         } else {
@@ -282,7 +286,7 @@ public class BasicRandomTest extends com.itmill.toolkit.Application implements
     }
 
     public void buttonClick(Button.ClickEvent event) {
-        String value = (String) buttonValues.get(event.getButton());
+        final String value = (String) buttonValues.get(event.getButton());
         eventCounter++;
         try {
             // Number button pressed
@@ -292,7 +296,7 @@ public class BasicRandomTest extends com.itmill.toolkit.Application implements
                     + ", value " + Double.toString(current));
             System.out.println("#" + eventCounter + ": button " + value
                     + ", value " + Double.toString(current));
-        } catch (java.lang.NumberFormatException e) {
+        } catch (final java.lang.NumberFormatException e) {
             // Operation button pressed
             if (operation.equals("+")) {
                 stored += current;
@@ -330,7 +334,7 @@ public class BasicRandomTest extends com.itmill.toolkit.Application implements
      */
     private ComponentContainer getRandomComponentContainer(String caption) {
         ComponentContainer result = null;
-        int randint = rand.nextInt(5);
+        final int randint = rand.nextInt(5);
         switch (randint) {
         case 0:
             result = new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
@@ -364,11 +368,11 @@ public class BasicRandomTest extends com.itmill.toolkit.Application implements
             ((Panel) result).setCaption("Panel_" + caption);
             break;
         case 4:
-            TabSheet ts = new TabSheet();
+            final TabSheet ts = new TabSheet();
             ts.setCaption("TabSheet_" + caption);
             // randomly select one of the tabs
-            int selectedTab = rand.nextInt(3);
-            ArrayList tabs = new ArrayList();
+            final int selectedTab = rand.nextInt(3);
+            final ArrayList tabs = new ArrayList();
             for (int i = 0; i < 3; i++) {
                 String tabCaption = "tab" + i;
                 if (selectedTab == i) {
@@ -394,7 +398,7 @@ public class BasicRandomTest extends com.itmill.toolkit.Application implements
      */
     private AbstractComponent getRandomComponent(String caption) {
         AbstractComponent result = null;
-        int randint = rand.nextInt(7); // calendar disabled
+        final int randint = rand.nextInt(7); // calendar disabled
         switch (randint) {
         case 0:
             // Label
@@ -446,8 +450,8 @@ public class BasicRandomTest extends com.itmill.toolkit.Application implements
     }
 
     private AbstractComponent getExamplePicture(String caption) {
-        ClassResource cr = new ClassResource("icon_demo.png", this);
-        Embedded em = new Embedded("Embedded " + caption, cr);
+        final ClassResource cr = new ClassResource("icon_demo.png", this);
+        final Embedded em = new Embedded("Embedded " + caption, cr);
         return em;
     }
 
@@ -466,7 +470,7 @@ public class BasicRandomTest extends com.itmill.toolkit.Application implements
      */
     public void terminalError(
             com.itmill.toolkit.terminal.Terminal.ErrorEvent event) {
-        Throwable e = event.getThrowable();
+        final Throwable e = event.getThrowable();
         System.err.println(getUser().toString() + " terminalError: "
                 + e.toString());
         e.printStackTrace();

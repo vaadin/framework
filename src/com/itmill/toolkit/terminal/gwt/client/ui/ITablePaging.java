@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import java.util.HashMap;
@@ -30,17 +34,17 @@ import com.itmill.toolkit.terminal.gwt.client.UIDL;
 public class ITablePaging extends Composite implements Table, Paintable,
         ClickListener {
 
-    private Grid tBody = new Grid();
-    private Button nextPage = new Button("&gt;");
-    private Button prevPage = new Button("&lt;");
-    private Button firstPage = new Button("&lt;&lt;");
-    private Button lastPage = new Button("&gt;&gt;");
+    private final Grid tBody = new Grid();
+    private final Button nextPage = new Button("&gt;");
+    private final Button prevPage = new Button("&lt;");
+    private final Button firstPage = new Button("&lt;&lt;");
+    private final Button lastPage = new Button("&gt;&gt;");
 
     private int pageLength = 15;
 
     private boolean rowHeaders = false;
 
-    private Map columnOrder = new HashMap();
+    private final Map columnOrder = new HashMap();
 
     private ApplicationConnection client;
     private String id;
@@ -49,19 +53,19 @@ public class ITablePaging extends Composite implements Table, Paintable,
 
     private int selectMode = Table.SELECT_MODE_NONE;
 
-    private Vector selectedRowKeys = new Vector();
+    private final Vector selectedRowKeys = new Vector();
 
     private int totalRows;
 
-    private HashMap columnWidths = new HashMap();
+    private final HashMap columnWidths = new HashMap();
 
-    private HashMap visibleColumns = new HashMap();
+    private final HashMap visibleColumns = new HashMap();
 
     private int rows;
 
     private int firstRow;
     private boolean sortAscending = true;
-    private HorizontalPanel pager;
+    private final HorizontalPanel pager;
 
     public HashMap rowKeysToTableRows = new HashMap();
 
@@ -69,7 +73,7 @@ public class ITablePaging extends Composite implements Table, Paintable,
 
         tBody.setStyleName("itable-tbody");
 
-        VerticalPanel panel = new VerticalPanel();
+        final VerticalPanel panel = new VerticalPanel();
 
         pager = new HorizontalPanel();
         pager.add(firstPage);
@@ -108,9 +112,10 @@ public class ITablePaging extends Composite implements Table, Paintable,
             }
 
             if (uidl.hasAttribute("selected")) {
-                Set selectedKeys = uidl.getStringArrayVariableAsSet("selected");
+                final Set selectedKeys = uidl
+                        .getStringArrayVariableAsSet("selected");
                 selectedRowKeys.clear();
-                for (Iterator it = selectedKeys.iterator(); it.hasNext();) {
+                for (final Iterator it = selectedKeys.iterator(); it.hasNext();) {
                     selectedRowKeys.add(it.next());
                 }
             }
@@ -126,8 +131,8 @@ public class ITablePaging extends Composite implements Table, Paintable,
 
         UIDL rowData = null;
         UIDL visibleColumns = null;
-        for (Iterator it = uidl.getChildIterator(); it.hasNext();) {
-            UIDL c = (UIDL) it.next();
+        for (final Iterator it = uidl.getChildIterator(); it.hasNext();) {
+            final UIDL c = (UIDL) it.next();
             if (c.getTag().equals("rows")) {
                 rowData = c;
             } else if (c.getTag().equals("actions")) {
@@ -145,12 +150,12 @@ public class ITablePaging extends Composite implements Table, Paintable,
     }
 
     private void updateHeader(UIDL c) {
-        Iterator it = c.getChildIterator();
+        final Iterator it = c.getChildIterator();
         visibleColumns.clear();
         int colIndex = (rowHeaders ? 1 : 0);
         while (it.hasNext()) {
-            UIDL col = (UIDL) it.next();
-            String cid = col.getStringAttribute("cid");
+            final UIDL col = (UIDL) it.next();
+            final String cid = col.getStringAttribute("cid");
             if (!col.hasAttribute("collapsed")) {
                 tBody.setWidget(0, colIndex, new HeaderCell(cid, col
                         .getStringAttribute("caption")));
@@ -176,28 +181,29 @@ public class ITablePaging extends Composite implements Table, Paintable,
      *                which contains row data
      */
     private void updateBody(UIDL uidl) {
-        Iterator it = uidl.getChildIterator();
+        final Iterator it = uidl.getChildIterator();
 
         int curRowIndex = 1;
         while (it.hasNext()) {
-            UIDL rowUidl = (UIDL) it.next();
-            TableRow row = new TableRow(curRowIndex, String.valueOf(rowUidl
-                    .getIntAttribute("key")), rowUidl.hasAttribute("selected"));
+            final UIDL rowUidl = (UIDL) it.next();
+            final TableRow row = new TableRow(curRowIndex, String
+                    .valueOf(rowUidl.getIntAttribute("key")), rowUidl
+                    .hasAttribute("selected"));
             int colIndex = 0;
             if (rowHeaders) {
                 tBody.setWidget(curRowIndex, colIndex, new BodyCell(row,
                         rowUidl.getStringAttribute("caption")));
                 colIndex++;
             }
-            Iterator cells = rowUidl.getChildIterator();
+            final Iterator cells = rowUidl.getChildIterator();
             while (cells.hasNext()) {
-                Object cell = cells.next();
+                final Object cell = cells.next();
                 if (cell instanceof String) {
                     tBody.setWidget(curRowIndex, colIndex, new BodyCell(row,
                             (String) cell));
                 } else {
-                    Widget cellContent = client.getWidget((UIDL) cell);
-                    BodyCell bodyCell = new BodyCell(row);
+                    final Widget cellContent = client.getWidget((UIDL) cell);
+                    final BodyCell bodyCell = new BodyCell(row);
                     bodyCell.setWidget(cellContent);
                     tBody.setWidget(curRowIndex, colIndex, bodyCell);
                 }
@@ -262,7 +268,7 @@ public class ITablePaging extends Composite implements Table, Paintable,
             }
         }
         if (sender instanceof HeaderCell) {
-            HeaderCell hCell = (HeaderCell) sender;
+            final HeaderCell hCell = (HeaderCell) sender;
             client.updateVariable(id, "sortcolumn", hCell.getCid(), false);
             client.updateVariable(id, "sortascending", (sortAscending ? false
                     : true), true);
@@ -299,7 +305,7 @@ public class ITablePaging extends Composite implements Table, Paintable,
      * @author mattitahvonen
      */
     public class BodyCell extends SimplePanel {
-        private TableRow row;
+        private final TableRow row;
 
         public BodyCell(TableRow row) {
             super();
@@ -336,8 +342,8 @@ public class ITablePaging extends Composite implements Table, Paintable,
 
     private class TableRow {
 
-        private String key;
-        private int rowIndex;
+        private final String key;
+        private final int rowIndex;
         private boolean selected = false;
 
         public TableRow(int rowIndex, String rowKey, boolean selected) {
@@ -402,9 +408,10 @@ public class ITablePaging extends Composite implements Table, Paintable,
     }
 
     public void deselectAll() {
-        Object[] keys = selectedRowKeys.toArray();
+        final Object[] keys = selectedRowKeys.toArray();
         for (int i = 0; i < keys.length; i++) {
-            TableRow tableRow = (TableRow) rowKeysToTableRows.get(keys[i]);
+            final TableRow tableRow = (TableRow) rowKeysToTableRows
+                    .get(keys[i]);
             if (tableRow != null) {
                 tableRow.setSelected(false);
             }

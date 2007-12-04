@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.demo;
 
 import com.itmill.toolkit.Application;
@@ -17,11 +21,11 @@ public class BufferedComponents extends Application {
 
     public void init() {
 
-        Window w = new Window("Buffered UI components demo");
+        final Window w = new Window("Buffered UI components demo");
         addWindow(w);
 
         // Create property
-        Float floatValue = new Float(1.0f);
+        final Float floatValue = new Float(1.0f);
         property = new ObjectProperty(floatValue);
 
         // Textfield
@@ -32,12 +36,12 @@ public class BufferedComponents extends Application {
         w.addComponent(text);
 
         // Property state
-        Label propertyState = new Label(property);
+        final Label propertyState = new Label(property);
         propertyState.setCaption("Property (data source) state");
         w.addComponent(propertyState);
 
         // Button state
-        Label textState = new Label(text);
+        final Label textState = new Label(text);
         textState.setCaption("TextField state");
         w.addComponent(textState);
 
@@ -45,7 +49,7 @@ public class BufferedComponents extends Application {
         w.addComponent(new Button("increase property value",
                 new Button.ClickListener() {
                     public void buttonClick(ClickEvent event) {
-                        Float currentValue = (Float) property.getValue();
+                        final Float currentValue = (Float) property.getValue();
                         property.setValue(new Float(
                                 currentValue.floatValue() + 1.0));
                     }
@@ -69,7 +73,7 @@ public class BufferedComponents extends Application {
         // (easier debugging when you dont have to restart the server to
         // make
         // code changes)
-        Button restart = new Button("restart", this, "close");
+        final Button restart = new Button("restart", this, "close");
         restart.addStyleName(Button.STYLE_LINK);
         w.addComponent(restart);
     }

@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.tests.magi;
 
 import java.io.File;
@@ -27,11 +31,11 @@ public class MyUploader extends CustomComponent implements
             try {
                 /* Open the file for writing. */
                 fos = new FileOutputStream(file);
-            } catch (java.io.FileNotFoundException e) {
+            } catch (final java.io.FileNotFoundException e) {
                 return null; /*
-                 * Error while opening the file. Not reported
-                 * here.
-                 */
+                                 * Error while opening the file. Not reported
+                                 * here.
+                                 */
             }
 
             return fos; /* Return the output stream. */
@@ -50,7 +54,7 @@ public class MyUploader extends CustomComponent implements
         uploadReceiver = new MyUploadReceiver();
 
         /* Create the Upload component. */
-        Upload upload = new Upload("Upload", uploadReceiver);
+        final Upload upload = new Upload("Upload", uploadReceiver);
 
         /* Listen for Upload.FinishedEvent events. */
         upload.addListener(this);
@@ -72,8 +76,8 @@ public class MyUploader extends CustomComponent implements
                 + " of type '" + event.getMIMEType() + "' uploaded."));
 
         /* Display the uploaded file in the image panel. */
-        FileResource imageResource = new FileResource(uploadReceiver.getFile(),
-                getApplication());
+        final FileResource imageResource = new FileResource(uploadReceiver
+                .getFile(), getApplication());
         imagePanel.removeAllComponents();
         imagePanel.addComponent(new Embedded("", imageResource));
     }

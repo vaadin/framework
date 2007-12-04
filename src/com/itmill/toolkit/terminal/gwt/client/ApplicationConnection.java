@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.client;
 
 import java.util.Date;
@@ -30,17 +34,17 @@ import com.itmill.toolkit.terminal.gwt.client.ui.IView;
  */
 public class ApplicationConnection {
 
-    private String appUri;
+    private final String appUri;
 
-    private HashMap resourcesMap = new HashMap();
+    private final HashMap resourcesMap = new HashMap();
 
     private static Console console;
 
-    private Vector pendingVariables = new Vector();
+    private final Vector pendingVariables = new Vector();
 
-    private HashMap idToPaintable = new HashMap();
+    private final HashMap idToPaintable = new HashMap();
 
-    private HashMap paintableToId = new HashMap();
+    private final HashMap paintableToId = new HashMap();
 
     private final WidgetSet widgetSet;
 
@@ -49,7 +53,7 @@ public class ApplicationConnection {
     private Timer loadTimer;
     private Element loadElement;
 
-    private IView view;
+    private final IView view;
 
     public ApplicationConnection(WidgetSet widgetSet) {
         this.widgetSet = widgetSet;
@@ -108,8 +112,8 @@ public class ApplicationConnection {
         showLoadingIndicator();
 
         console.log("Making UIDL Request with params: " + requestData);
-        String uri = appUri + "/UIDL" + getPathInfo();
-        RequestBuilder rb = new RequestBuilder(RequestBuilder.POST, uri);
+        final String uri = appUri + "/UIDL" + getPathInfo();
+        final RequestBuilder rb = new RequestBuilder(RequestBuilder.POST, uri);
         rb.setHeader("Content-Type",
                 "application/x-www-form-urlencoded; charset=utf-8");
         try {
@@ -126,7 +130,7 @@ public class ApplicationConnection {
 
             });
 
-        } catch (RequestException e) {
+        } catch (final RequestException e) {
             // TODO Better reporting to user
             console.error(e.getMessage());
         }
@@ -156,7 +160,7 @@ public class ApplicationConnection {
                                 + "px");
 
                 // Initialize other timers
-                Timer delay = new Timer() {
+                final Timer delay = new Timer() {
                     public void run() {
                         DOM.setElementProperty(loadElement, "className",
                                 "i-loading-indicator-delay");
@@ -165,7 +169,7 @@ public class ApplicationConnection {
                 // Second one kicks in at 1500ms
                 delay.schedule(1200);
 
-                Timer wait = new Timer() {
+                final Timer wait = new Timer() {
                     public void run() {
                         DOM.setElementProperty(loadElement, "className",
                                 "i-loading-indicator-wait");
@@ -191,20 +195,21 @@ public class ApplicationConnection {
     private void handleReceivedJSONMessage(Response response) {
         hideLoadingIndicator();
 
-        Date start = new Date();
-        String jsonText = response.getText().substring(3) + "}";
+        final Date start = new Date();
+        final String jsonText = response.getText().substring(3) + "}";
         JSONValue json;
         try {
             json = JSONParser.parse(jsonText);
-        } catch (com.google.gwt.json.client.JSONException e) {
+        } catch (final com.google.gwt.json.client.JSONException e) {
             console.log(e.getMessage() + " - Original JSON-text:");
             console.log(jsonText);
             return;
         }
         // Handle redirect
-        JSONObject redirect = (JSONObject) ((JSONObject) json).get("redirect");
+        final JSONObject redirect = (JSONObject) ((JSONObject) json)
+                .get("redirect");
         if (redirect != null) {
-            JSONString url = (JSONString) redirect.get("url");
+            final JSONString url = (JSONString) redirect.get("url");
             if (url != null) {
                 console.log("redirecting to " + url.stringValue());
                 redirect(url.stringValue());
@@ -213,37 +218,38 @@ public class ApplicationConnection {
         }
 
         // Store resources
-        JSONObject resources = (JSONObject) ((JSONObject) json)
+        final JSONObject resources = (JSONObject) ((JSONObject) json)
                 .get("resources");
-        for (Iterator i = resources.keySet().iterator(); i.hasNext();) {
-            String key = (String) i.next();
+        for (final Iterator i = resources.keySet().iterator(); i.hasNext();) {
+            final String key = (String) i.next();
             resourcesMap.put(key, ((JSONString) resources.get(key))
                     .stringValue());
         }
 
         // Store locale data
         if (((JSONObject) json).containsKey("locales")) {
-            JSONArray l = (JSONArray) ((JSONObject) json).get("locales");
+            final JSONArray l = (JSONArray) ((JSONObject) json).get("locales");
             for (int i = 0; i < l.size(); i++) {
                 LocaleService.addLocale((JSONObject) l.get(i));
             }
         }
 
         // Process changes
-        JSONArray changes = (JSONArray) ((JSONObject) json).get("changes");
+        final JSONArray changes = (JSONArray) ((JSONObject) json)
+                .get("changes");
         for (int i = 0; i < changes.size(); i++) {
             try {
-                UIDL change = new UIDL((JSONArray) changes.get(i));
+                final UIDL change = new UIDL((JSONArray) changes.get(i));
                 try {
                     console.dirUIDL(change);
-                } catch (Exception e) {
+                } catch (final Exception e) {
                     console.log(e.getMessage());
                     // TODO: dir doesn't work in any browser although it should
                     // work (works in hosted mode)
                     // it partially did at some part but now broken.
                 }
-                UIDL uidl = change.getChildUIDL(0);
-                Paintable paintable = getPaintable(uidl.getId());
+                final UIDL uidl = change.getChildUIDL(0);
+                final Paintable paintable = getPaintable(uidl.getId());
                 if (paintable != null) {
                     paintable.updateFromUIDL(uidl, this);
                 } else {
@@ -256,24 +262,25 @@ public class ApplicationConnection {
                         view.updateFromUIDL(uidl, this);
                     }
                 }
-            } catch (Throwable e) {
+            } catch (final Throwable e) {
                 e.printStackTrace();
             }
         }
 
         if (((JSONObject) json).containsKey("meta")) {
-            JSONObject meta = ((JSONObject) json).get("meta").isObject();
+            final JSONObject meta = ((JSONObject) json).get("meta").isObject();
             if (meta.containsKey("focus")) {
-                String focusPid = meta.get("focus").isString().stringValue();
-                Paintable toBeFocused = getPaintable(focusPid);
+                final String focusPid = meta.get("focus").isString()
+                        .stringValue();
+                final Paintable toBeFocused = getPaintable(focusPid);
                 if (toBeFocused instanceof HasFocus) {
-                    HasFocus toBeFocusedWidget = (HasFocus) toBeFocused;
+                    final HasFocus toBeFocusedWidget = (HasFocus) toBeFocused;
                     toBeFocusedWidget.setFocus(true);
                 }
             }
         }
 
-        long prosessingTime = (new Date().getTime()) - start.getTime();
+        final long prosessingTime = (new Date().getTime()) - start.getTime();
         console.log(" Processing time was " + String.valueOf(prosessingTime)
                 + "ms for " + jsonText.length() + " characters of JSON");
         console.log("Referenced paintables: " + idToPaintable.size());
@@ -301,9 +308,9 @@ public class ApplicationConnection {
     }
 
     public void unregisterChildPaintables(HasWidgets container) {
-        Iterator it = container.iterator();
+        final Iterator it = container.iterator();
         while (it.hasNext()) {
-            Widget w = (Widget) it.next();
+            final Widget w = (Widget) it.next();
             if (w instanceof Paintable) {
                 unregisterPaintable((Paintable) w);
             }
@@ -325,7 +332,7 @@ public class ApplicationConnection {
 
     private void addVariableToQueue(String paintableId, String variableName,
             String encodedValue, boolean immediate, char type) {
-        String id = paintableId + "_" + variableName + "_" + type;
+        final String id = paintableId + "_" + variableName + "_" + type;
         for (int i = 0; i < pendingVariables.size(); i += 2) {
             if ((pendingVariables.get(i)).equals(id)) {
                 pendingVariables.remove(i);
@@ -341,7 +348,7 @@ public class ApplicationConnection {
     }
 
     public void sendPendingVariableChanges() {
-        StringBuffer req = new StringBuffer();
+        final StringBuffer req = new StringBuffer();
 
         req.append("changes=");
         for (int i = 0; i < pendingVariables.size(); i++) {
@@ -398,7 +405,7 @@ public class ApplicationConnection {
 
     public void updateVariable(String paintableId, String variableName,
             Object[] values, boolean immediate) {
-        StringBuffer buf = new StringBuffer();
+        final StringBuffer buf = new StringBuffer();
         for (int i = 0; i < values.length; i++) {
             if (i > 0) {
                 buf.append(",");
@@ -471,7 +478,7 @@ public class ApplicationConnection {
         component.setVisible(visible);
         // Set captions
         if (manageCaption) {
-            Container parent = getParentLayout(component);
+            final Container parent = getParentLayout(component);
             if (parent != null) {
                 parent.updateCaption((Paintable) component, uidl);
             }
@@ -483,9 +490,9 @@ public class ApplicationConnection {
 
         // Switch to correct implementation if needed
         if (!widgetSet.isCorrectImplementation(component, uidl)) {
-            Container parent = getParentLayout(component);
+            final Container parent = getParentLayout(component);
             if (parent != null) {
-                Widget w = widgetSet.createWidget(uidl);
+                final Widget w = widgetSet.createWidget(uidl);
                 parent.replaceChildComponent(component, w);
                 registerPaintable(uidl.getId(), (Paintable) w);
                 ((Paintable) w).updateFromUIDL(uidl, this);
@@ -513,7 +520,7 @@ public class ApplicationConnection {
         // add additional styles as css classes, prefixed with component default
         // stylename
         if (uidl.hasAttribute("style")) {
-            String[] styles = uidl.getStringAttribute("style").split(" ");
+            final String[] styles = uidl.getStringAttribute("style").split(" ");
             for (int i = 0; i < styles.length; i++) {
                 component.addStyleDependentName(styles[i]);
             }
@@ -534,7 +541,7 @@ public class ApplicationConnection {
      * @return Either existing or new widget corresponding to UIDL.
      */
     public Widget getWidget(UIDL uidl) {
-        String id = uidl.getId();
+        final String id = uidl.getId();
         Widget w = (Widget) getPaintable(id);
         if (w != null) {
             return w;
@@ -571,7 +578,7 @@ public class ApplicationConnection {
      */
     public String translateToolkitUri(String toolkitUri) {
         if (toolkitUri.startsWith("theme://")) {
-            String themeUri = getThemeUri();
+            final String themeUri = getThemeUri();
             if (themeUri == null) {
                 console
                         .error("Theme not set: ThemeResource will not be found. ("

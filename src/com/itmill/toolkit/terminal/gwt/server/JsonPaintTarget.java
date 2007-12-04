@@ -1,30 +1,6 @@
-/* *************************************************************************
- 
- IT Mill Toolkit 
-
- Development of Browser User Interfaces Made Easy
-
- Copyright (C) 2000-2006 IT Mill Ltd
- 
- *************************************************************************
-
- This product is distributed under commercial license that can be found
- from the product package on license.pdf. Use of this product might 
- require purchasing a commercial license from IT Mill Ltd. For guidelines 
- on usage, see licensing-guidelines.html
-
- *************************************************************************
- 
- For more information, contact:
- 
- IT Mill Ltd                           phone: +358 2 4802 7180
- Ruukinkatu 2-4                        fax:   +358 2 4802 7181
- 20540, Turku                          email:  info@itmill.com
- Finland                               company www: www.itmill.com
- 
- Primary source for information and releases: www.itmill.com
-
- ********************************************************************** */
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
 
 package com.itmill.toolkit.terminal.gwt.server;
 
@@ -63,17 +39,17 @@ public class JsonPaintTarget implements PaintTarget {
 
     private final static String UIDL_ARG_ID = "id";
 
-    private Stack mOpenTags;
+    private final Stack mOpenTags;
 
-    private Stack openJsonTags;
+    private final Stack openJsonTags;
 
     private boolean mTagArgumentListOpen;
 
-    private PrintWriter uidlBuffer;
+    private final PrintWriter uidlBuffer;
 
     private boolean closed = false;
 
-    private CommunicationManager manager;
+    private final CommunicationManager manager;
 
     private boolean trackPaints = false;
 
@@ -199,7 +175,7 @@ public class JsonPaintTarget implements PaintTarget {
         }
 
         if (openJsonTags.size() > 0) {
-            JsonTag parent = (JsonTag) openJsonTags.pop();
+            final JsonTag parent = (JsonTag) openJsonTags.pop();
 
             String lastTag = "";
 
@@ -260,11 +236,11 @@ public class JsonPaintTarget implements PaintTarget {
             return new StringBuffer("");
         }
 
-        StringBuffer result = new StringBuffer(xml.length() * 2);
+        final StringBuffer result = new StringBuffer(xml.length() * 2);
 
         for (int i = 0; i < xml.length(); i++) {
-            char c = xml.charAt(i);
-            String s = toXmlChar(c);
+            final char c = xml.charAt(i);
+            final String s = toXmlChar(c);
             if (s != null) {
                 result.append(s);
             } else {
@@ -278,9 +254,9 @@ public class JsonPaintTarget implements PaintTarget {
         if (s == null) {
             return "";
         }
-        StringBuffer sb = new StringBuffer();
+        final StringBuffer sb = new StringBuffer();
         for (int i = 0; i < s.length(); i++) {
-            char ch = s.charAt(i);
+            final char ch = s.charAt(i);
             switch (ch) {
             case '"':
                 sb.append("\\\"");
@@ -308,7 +284,7 @@ public class JsonPaintTarget implements PaintTarget {
                 break;
             default:
                 if (ch >= '\u0000' && ch <= '\u001F') {
-                    String ss = Integer.toHexString(ch);
+                    final String ss = Integer.toHexString(ch);
                     sb.append("\\u");
                     for (int k = 0; k < 4 - ss.length(); k++) {
                         sb.append('0');
@@ -392,8 +368,8 @@ public class JsonPaintTarget implements PaintTarget {
             addAttribute(name, ((ExternalResource) value).getURL());
 
         } else if (value instanceof ApplicationResource) {
-            ApplicationResource r = (ApplicationResource) value;
-            Application a = r.getApplication();
+            final ApplicationResource r = (ApplicationResource) value;
+            final Application a = r.getApplication();
             if (a == null) {
                 throw new PaintException(
                         "Application not specified for resorce "
@@ -412,7 +388,8 @@ public class JsonPaintTarget implements PaintTarget {
             addAttribute(name, uri);
 
         } else if (value instanceof ThemeResource) {
-            String uri = "theme://" + ((ThemeResource) value).getResourceId();
+            final String uri = "theme://"
+                    + ((ThemeResource) value).getResourceId();
             addAttribute(name, uri);
         } else {
             throw new PaintException("Ajax adapter does not "
@@ -523,7 +500,7 @@ public class JsonPaintTarget implements PaintTarget {
             throw new NullPointerException(
                     "Parameters must be non-null strings");
         }
-        StringBuffer buf = new StringBuffer();
+        final StringBuffer buf = new StringBuffer();
         buf.append("\"" + name + "\":[");
         for (int i = 0; i < values.length; i++) {
             if (i > 0) {
@@ -809,8 +786,8 @@ public class JsonPaintTarget implements PaintTarget {
     public boolean startTag(Paintable paintable, String tagName)
             throws PaintException {
         startTag(tagName, true);
-        boolean isPreviouslyPainted = manager.hasPaintableId(paintable);
-        String id = manager.getPaintableId(paintable);
+        final boolean isPreviouslyPainted = manager.hasPaintableId(paintable);
+        final String id = manager.getPaintableId(paintable);
         paintable.addListener(manager);
         addAttribute("id", id);
         return cacheEnabled && isPreviouslyPainted;
@@ -941,8 +918,8 @@ public class JsonPaintTarget implements PaintTarget {
         }
 
         public String getData() {
-            StringBuffer buf = new StringBuffer();
-            Iterator it = children.iterator();
+            final StringBuffer buf = new StringBuffer();
+            final Iterator it = children.iterator();
             while (it.hasNext()) {
                 buf.append(startField());
                 buf.append(it.next());
@@ -955,11 +932,11 @@ public class JsonPaintTarget implements PaintTarget {
         }
 
         private String attributesAsJsonObject() {
-            StringBuffer buf = new StringBuffer();
+            final StringBuffer buf = new StringBuffer();
             buf.append(startField());
             buf.append("{");
-            for (Iterator iter = attr.iterator(); iter.hasNext();) {
-                String element = (String) iter.next();
+            for (final Iterator iter = attr.iterator(); iter.hasNext();) {
+                final String element = (String) iter.next();
                 buf.append(element);
                 if (iter.hasNext()) {
                     buf.append(",");
@@ -978,12 +955,12 @@ public class JsonPaintTarget implements PaintTarget {
             if (variables.size() == 0) {
                 return "";
             }
-            StringBuffer buf = new StringBuffer();
+            final StringBuffer buf = new StringBuffer();
             buf.append(startField());
             buf.append("\"v\":{");
-            Iterator iter = variables.iterator();
+            final Iterator iter = variables.iterator();
             while (iter.hasNext()) {
-                Variable element = (Variable) iter.next();
+                final Variable element = (Variable) iter.next();
                 buf.append(element.getJsonPresentation());
                 if (iter.hasNext()) {
                     buf.append(",");

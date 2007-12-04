@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import java.util.ArrayList;
@@ -15,7 +19,7 @@ import com.itmill.toolkit.terminal.gwt.client.UIDL;
  * @author IT Mill ltd
  */
 public class ShortcutActionHandler {
-    private ArrayList actions = new ArrayList();
+    private final ArrayList actions = new ArrayList();
     private ApplicationConnection client;
     private String paintableId;
 
@@ -42,19 +46,19 @@ public class ShortcutActionHandler {
      */
     public void updateActionMap(UIDL c) {
         actions.clear();
-        Iterator it = c.getChildIterator();
+        final Iterator it = c.getChildIterator();
         while (it.hasNext()) {
-            UIDL action = (UIDL) it.next();
+            final UIDL action = (UIDL) it.next();
 
             int[] modifiers = null;
             if (action.hasAttribute("mk")) {
                 modifiers = action.getIntArrayAttribute("mk");
             }
 
-            ShortcutKeyCombination kc = new ShortcutKeyCombination(action
+            final ShortcutKeyCombination kc = new ShortcutKeyCombination(action
                     .getIntAttribute("kc"), modifiers);
-            String key = action.getStringAttribute("key");
-            String caption = action.getStringAttribute("caption");
+            final String key = action.getStringAttribute("key");
+            final String caption = action.getStringAttribute("caption");
             actions.add(new ShortcutAction(key, kc, caption));
         }
     }
@@ -69,11 +73,11 @@ public class ShortcutActionHandler {
      *                modifier keys (bitmask like in {@link KeyboardListener})
      */
     public void handleKeyboardEvent(char keyCode, int modifiers) {
-        ShortcutKeyCombination kc = new ShortcutKeyCombination(keyCode,
+        final ShortcutKeyCombination kc = new ShortcutKeyCombination(keyCode,
                 modifiers);
-        Iterator it = actions.iterator();
+        final Iterator it = actions.iterator();
         while (it.hasNext()) {
-            ShortcutAction a = (ShortcutAction) it.next();
+            final ShortcutAction a = (ShortcutAction) it.next();
             if (a.getShortcutCombination().equals(kc)) {
                 client.updateVariable(paintableId, "action", a.getKey(), true);
                 break;
@@ -137,9 +141,9 @@ class ShortcutKeyCombination {
 
 class ShortcutAction {
 
-    private ShortcutKeyCombination sc;
-    private String caption;
-    private String key;
+    private final ShortcutKeyCombination sc;
+    private final String caption;
+    private final String key;
 
     public ShortcutAction(String key, ShortcutKeyCombination sc, String caption) {
         this.sc = sc;

@@ -1,30 +1,6 @@
-/* *************************************************************************
- 
- IT Mill Toolkit 
-
- Development of Browser User Interfaces Made Easy
-
- Copyright (C) 2000-2006 IT Mill Ltd
- 
- *************************************************************************
-
- This product is distributed under commercial license that can be found
- from the product package on license.pdf. Use of this product might 
- require purchasing a commercial license from IT Mill Ltd. For guidelines 
- on usage, see licensing-guidelines.html
-
- *************************************************************************
- 
- For more information, contact:
- 
- IT Mill Ltd                           phone: +358 2 4802 7180
- Ruukinkatu 2-4                        fax:   +358 2 4802 7181
- 20540, Turku                          email:  info@itmill.com
- Finland                               company www: www.itmill.com
- 
- Primary source for information and releases: www.itmill.com
-
- ********************************************************************** */
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
 
 package com.itmill.toolkit.data.util;
 
@@ -59,7 +35,7 @@ public class ObjectProperty implements Property, Property.ValueChangeNotifier,
     /**
      * Data type of the Property's value.
      */
-    private Class type;
+    private final Class type;
 
     /**
      * Internal list of registered value change listeners.
@@ -147,7 +123,7 @@ public class ObjectProperty implements Property, Property.ValueChangeNotifier,
      *         ObjectProperty
      */
     public String toString() {
-        Object value = getValue();
+        final Object value = getValue();
         if (value != null) {
             return value.toString();
         } else {
@@ -210,14 +186,14 @@ public class ObjectProperty implements Property, Property.ValueChangeNotifier,
             try {
 
                 // Gets the string constructor
-                Constructor constr = getType().getConstructor(
+                final Constructor constr = getType().getConstructor(
                         new Class[] { String.class });
 
                 // Creates new object from the string
                 value = constr
                         .newInstance(new Object[] { newValue.toString() });
 
-            } catch (java.lang.Exception e) {
+            } catch (final java.lang.Exception e) {
                 throw new Property.ConversionException(e);
             }
         }
@@ -356,8 +332,8 @@ public class ObjectProperty implements Property, Property.ValueChangeNotifier,
      */
     private void fireValueChange() {
         if (valueChangeListeners != null) {
-            Object[] l = valueChangeListeners.toArray();
-            Property.ValueChangeEvent event = new ObjectProperty.ValueChangeEvent(
+            final Object[] l = valueChangeListeners.toArray();
+            final Property.ValueChangeEvent event = new ObjectProperty.ValueChangeEvent(
                     this);
             for (int i = 0; i < l.length; i++) {
                 ((Property.ValueChangeListener) l[i]).valueChange(event);
@@ -370,8 +346,8 @@ public class ObjectProperty implements Property, Property.ValueChangeNotifier,
      */
     private void fireReadOnlyStatusChange() {
         if (readOnlyStatusChangeListeners != null) {
-            Object[] l = readOnlyStatusChangeListeners.toArray();
-            Property.ReadOnlyStatusChangeEvent event = new ObjectProperty.ReadOnlyStatusChangeEvent(
+            final Object[] l = readOnlyStatusChangeListeners.toArray();
+            final Property.ReadOnlyStatusChangeEvent event = new ObjectProperty.ReadOnlyStatusChangeEvent(
                     this);
             for (int i = 0; i < l.length; i++) {
                 ((Property.ReadOnlyStatusChangeListener) l[i])

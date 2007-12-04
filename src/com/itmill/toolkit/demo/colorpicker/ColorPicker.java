@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.demo.colorpicker;
 
 import java.util.Map;
@@ -50,7 +54,7 @@ public class ColorPicker extends AbstractField {
     public void changeVariables(Object source, Map variables) {
         // Sets the currently selected color
         if (variables.containsKey("colorname") && !isReadOnly()) {
-            String newValue = (String) variables.get("colorname");
+            final String newValue = (String) variables.get("colorname");
             // Changing the property of the component will
             // trigger a ValueChangeEvent
             setValue(newValue, true);

@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import java.util.ArrayList;
@@ -63,7 +67,7 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
         size = DOM.createDiv();
         DOM.setInnerHTML(size, structure);
         margin = DOM.getFirstChild(size);
-        Element tBody = DOM.getFirstChild(DOM.getFirstChild(margin));
+        final Element tBody = DOM.getFirstChild(DOM.getFirstChild(margin));
         if (orientationMode == ORIENTATION_HORIZONTAL) {
             childContainer = DOM.createTR();
             DOM.appendChild(tBody, childContainer);
@@ -103,23 +107,23 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
 
         // Update contained components
 
-        ArrayList uidlWidgets = new ArrayList();
-        for (Iterator it = uidl.getChildIterator(); it.hasNext();) {
-            UIDL uidlForChild = (UIDL) it.next();
-            Widget child = client.getWidget(uidlForChild);
+        final ArrayList uidlWidgets = new ArrayList();
+        for (final Iterator it = uidl.getChildIterator(); it.hasNext();) {
+            final UIDL uidlForChild = (UIDL) it.next();
+            final Widget child = client.getWidget(uidlForChild);
             uidlWidgets.add(child);
         }
 
-        ArrayList oldWidgets = getPaintables();
+        final ArrayList oldWidgets = getPaintables();
 
-        Iterator oldIt = oldWidgets.iterator();
-        Iterator newIt = uidlWidgets.iterator();
-        Iterator newUidl = uidl.getChildIterator();
+        final Iterator oldIt = oldWidgets.iterator();
+        final Iterator newIt = uidlWidgets.iterator();
+        final Iterator newUidl = uidl.getChildIterator();
 
         Widget oldChild = null;
         while (newIt.hasNext()) {
-            Widget child = (Widget) newIt.next();
-            UIDL childUidl = (UIDL) newUidl.next();
+            final Widget child = (Widget) newIt.next();
+            final UIDL childUidl = (UIDL) newUidl.next();
 
             if (oldChild == null && oldIt.hasNext()) {
                 // search for next old Paintable which still exists in layout
@@ -155,7 +159,7 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
                 this.insert(child, index);
             } else {
                 // insert new child before old one
-                int index = getWidgetIndex(oldChild);
+                final int index = getWidgetIndex(oldChild);
                 insert(child, index);
             }
             ((Paintable) child).updateFromUIDL(childUidl, client);
@@ -163,7 +167,7 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
         // remove possibly remaining old Paintable object which were not updated
         while (oldIt.hasNext()) {
             oldChild = (Widget) oldIt.next();
-            Paintable p = (Paintable) oldChild;
+            final Paintable p = (Paintable) oldChild;
             if (!uidlWidgets.contains(p)) {
                 removePaintable(p);
             }
@@ -183,10 +187,10 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
      * @return list of Paintable objects
      */
     protected ArrayList getPaintables() {
-        ArrayList al = new ArrayList();
-        Iterator it = iterator();
+        final ArrayList al = new ArrayList();
+        final Iterator it = iterator();
         while (it.hasNext()) {
-            Widget w = (Widget) it.next();
+            final Widget w = (Widget) it.next();
             if (w instanceof Paintable) {
                 al.add(w);
             }
@@ -203,7 +207,7 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
      *                Paintable to be removed
      */
     public boolean removePaintable(Paintable p) {
-        Caption c = (Caption) componentToCaption.get(p);
+        final Caption c = (Caption) componentToCaption.get(p);
         if (c != null) {
             componentToCaption.remove(c);
             remove(c);
@@ -220,12 +224,12 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
      */
     public void replaceChildComponent(Widget from, Widget to) {
         client.unregisterPaintable((Paintable) from);
-        Caption c = (Caption) componentToCaption.get(from);
+        final Caption c = (Caption) componentToCaption.get(from);
         if (c != null) {
             remove(c);
             componentToCaption.remove(c);
         }
-        int index = getWidgetIndex(from);
+        final int index = getWidgetIndex(from);
         if (index >= 0) {
             remove(index);
             insert(to, index);
@@ -234,16 +238,16 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
 
     protected void insert(Widget w, int beforeIndex) {
         if (w instanceof Caption) {
-            Caption c = (Caption) w;
+            final Caption c = (Caption) w;
             // captions go into same container element as their
             // owners
-            Element container = DOM.getParent(((UIObject) c.getOwner())
+            final Element container = DOM.getParent(((UIObject) c.getOwner())
                     .getElement());
-            Element captionContainer = DOM.createDiv();
+            final Element captionContainer = DOM.createDiv();
             DOM.insertChild(container, captionContainer, 0);
             insert(w, captionContainer, beforeIndex, false);
         } else {
-            Element wrapper = createWidgetWrappper();
+            final Element wrapper = createWidgetWrappper();
             DOM.insertChild(childContainer, wrapper, beforeIndex);
             insert(w, getWidgetContainerFromWrapper(wrapper), beforeIndex,
                     false);
@@ -263,7 +267,7 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
      * creates an Element which will contain child widget
      */
     protected Element createWidgetWrappper() {
-        Element td = DOM.createTD();
+        final Element td = DOM.createTD();
         // We need this overflow:hidden, because it's the default rendering of
         // IE (although it can be overridden with overflow:visible).
         DOM.setStyleAttribute(td, "overflow", "hidden");
@@ -271,7 +275,7 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
         case ORIENTATION_HORIZONTAL:
             return td;
         default:
-            Element tr = DOM.createTR();
+            final Element tr = DOM.createTR();
             DOM.appendChild(tr, td);
             return tr;
         }
@@ -287,7 +291,7 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
 
         if (Caption.isNeeded(uidl)) {
             if (c == null) {
-                int index = getWidgetIndex((Widget) component);
+                final int index = getWidgetIndex((Widget) component);
                 c = new Caption(component, client);
                 insert(c, index);
                 componentToCaption.put(component, c);
@@ -302,7 +306,7 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
     }
 
     public void removeCaption(Widget w) {
-        Caption c = (Caption) componentToCaption.get(w);
+        final Caption c = (Caption) componentToCaption.get(w);
         if (c != null) {
             this.remove(c);
             componentToCaption.remove(w);
@@ -310,7 +314,7 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
     }
 
     public void add(Widget w) {
-        Element wrapper = createWidgetWrappper();
+        final Element wrapper = createWidgetWrappper();
         DOM.appendChild(childContainer, wrapper);
         super.add(w, orientationMode == ORIENTATION_HORIZONTAL ? wrapper : DOM
                 .getFirstChild(wrapper));
@@ -321,8 +325,8 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
     }
 
     public boolean remove(Widget w) {
-        Element wrapper = DOM.getParent(w.getElement());
-        boolean removed = super.remove(w);
+        final Element wrapper = DOM.getParent(w.getElement());
+        final boolean removed = super.remove(w);
         if (removed) {
             if (!(w instanceof Caption)) {
                 DOM.removeChild(childContainer,
@@ -349,8 +353,9 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
     protected void handleMargins(UIDL uidl) {
         // Modify layout margins
         String marginClasses = "";
-        MarginInfo margins = new MarginInfo(uidl.getIntAttribute("margins"));
-        Element topBottomMarginContainer = orientationMode == ORIENTATION_HORIZONTAL ? DOM
+        final MarginInfo margins = new MarginInfo(uidl
+                .getIntAttribute("margins"));
+        final Element topBottomMarginContainer = orientationMode == ORIENTATION_HORIZONTAL ? DOM
                 .getParent(childContainer)
                 : childContainer;
         // Top margin
@@ -418,16 +423,17 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
         // Component alignments as a comma separated list.
         // See com.itmill.toolkit.terminal.gwt.client.ui.AlignmentInfo.java for
         // possible values.
-        int[] alignments = uidl.getIntArrayAttribute("alignments");
+        final int[] alignments = uidl.getIntArrayAttribute("alignments");
         int alignmentIndex = 0;
         // Insert alignment attributes
-        Iterator it = getPaintables().iterator();
+        final Iterator it = getPaintables().iterator();
         while (it.hasNext()) {
 
             // Calculate alignment info
-            AlignmentInfo ai = new AlignmentInfo(alignments[alignmentIndex++]);
+            final AlignmentInfo ai = new AlignmentInfo(
+                    alignments[alignmentIndex++]);
 
-            Element td = DOM.getParent(((Widget) it.next()).getElement());
+            final Element td = DOM.getParent(((Widget) it.next()).getElement());
             if (Util.isIE()) {
                 DOM
                         .setElementAttribute(td, "vAlign", ai

@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.demo.colorpicker;
 
 import com.itmill.toolkit.data.Property.ValueChangeEvent;
@@ -39,7 +43,7 @@ public class ColorPickerApplication extends com.itmill.toolkit.Application {
         main.addComponent(colorname);
 
         // Server-side manipulation of the component state
-        Button button = new Button("Set to white");
+        final Button button = new Button("Set to white");
         button.addListener(new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
                 colorselector.setColor("white");

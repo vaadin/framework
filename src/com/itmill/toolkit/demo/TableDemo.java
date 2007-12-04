@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.demo;
 
 import java.sql.SQLException;
@@ -29,43 +33,44 @@ public class TableDemo extends com.itmill.toolkit.Application implements
             + " dynamically loaded rows from example SQL table";
 
     // Table component where SQL rows are attached (using QueryContainer)
-    private Table table = new Table();
+    private final Table table = new Table();
 
     // Label which displays last performed action against table row
-    private Label tableLastAction = new Label("No action selected for table.");
+    private final Label tableLastAction = new Label(
+            "No action selected for table.");
 
     // Database provided with sample data
     private SampleDatabase sampleDatabase;
 
     // Example Actions for table
-    private Action ACTION1 = new Action("Upload");
+    private final Action ACTION1 = new Action("Upload");
 
-    private Action ACTION2 = new Action("Download");
+    private final Action ACTION2 = new Action("Download");
 
-    private Action ACTION3 = new Action("Show history");
+    private final Action ACTION3 = new Action("Show history");
 
-    private Action[] actions = new Action[] { ACTION1, ACTION2, ACTION3 };
+    private final Action[] actions = new Action[] { ACTION1, ACTION2, ACTION3 };
 
     // Button which is used to disable or enable table
     // note: when button click event occurs, tableEnabler() method is called
-    private Button tableEnabler = new Button("Disable table", this,
+    private final Button tableEnabler = new Button("Disable table", this,
             "tableEnabler");
 
     // Button which is used to hide or show table
     // note: when button click event occurs, tableVisibility() method is called
-    private Button tableVisibility = new Button("Hide table", this,
+    private final Button tableVisibility = new Button("Hide table", this,
             "tableVisibility");
 
     // Button which is used to hide or show table
     // note: when button click event occurs, tableVisibility() method is called
-    private Button tableCaption = new Button("Hide caption", this,
+    private final Button tableCaption = new Button("Hide caption", this,
             "tableCaption");
 
     /**
      * Initialize Application. Demo components are added to main window.
      */
     public void init() {
-        Window main = new Window("Table demo");
+        final Window main = new Window("Table demo");
         setMainWindow(main);
 
         // create demo database
@@ -78,7 +83,7 @@ public class TableDemo extends com.itmill.toolkit.Application implements
                                 + "<b>Rows are loaded from the server as they are needed.<br />"
                                 + "Try scrolling the table to see it in action.</b><br />"
                                 + ACTION_DESCRIPTION, Label.CONTENT_XHTML));
-        OrderedLayout layout = new OrderedLayout(
+        final OrderedLayout layout = new OrderedLayout(
                 OrderedLayout.ORIENTATION_HORIZONTAL);
         // TODO: disabled until #655 fixed
         // layout.addComponent(tableVisibility);
@@ -111,10 +116,10 @@ public class TableDemo extends com.itmill.toolkit.Application implements
 
         // populate Toolkit table component with test SQL table rows
         try {
-            QueryContainer qc = new QueryContainer("SELECT * FROM employee",
-                    sampleDatabase.getConnection());
+            final QueryContainer qc = new QueryContainer(
+                    "SELECT * FROM employee", sampleDatabase.getConnection());
             table.setContainerDataSource(qc);
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             e.printStackTrace();
         }
         // define which columns should be visible on Table component

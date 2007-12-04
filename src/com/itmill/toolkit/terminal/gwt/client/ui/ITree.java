@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import java.util.HashMap;
@@ -29,13 +33,13 @@ public class ITree extends FlowPanel implements Paintable {
     private boolean selectable;
     private boolean isMultiselect;
 
-    private HashMap keyToNode = new HashMap();
+    private final HashMap keyToNode = new HashMap();
 
     /**
      * This map contains captions and icon urls for actions like: * "33_c" ->
      * "Edit" * "33_i" -> "http://dom.com/edit.png"
      */
-    private HashMap actionMap = new HashMap();
+    private final HashMap actionMap = new HashMap();
 
     private boolean immediate;
 
@@ -51,11 +55,11 @@ public class ITree extends FlowPanel implements Paintable {
     }
 
     private void updateActionMap(UIDL c) {
-        Iterator it = c.getChildIterator();
+        final Iterator it = c.getChildIterator();
         while (it.hasNext()) {
-            UIDL action = (UIDL) it.next();
-            String key = action.getStringAttribute("key");
-            String caption = action.getStringAttribute("caption");
+            final UIDL action = (UIDL) it.next();
+            final String key = action.getStringAttribute("key");
+            final String caption = action.getStringAttribute("caption");
             actionMap.put(key + "_c", caption);
             if (action.hasAttribute("icon")) {
                 // TODO need some uri handling ??
@@ -97,17 +101,17 @@ public class ITree extends FlowPanel implements Paintable {
         isNullSelectionAllowed = uidl.getBooleanAttribute("nullselect");
 
         clear();
-        for (Iterator i = uidl.getChildIterator(); i.hasNext();) {
-            UIDL childUidl = (UIDL) i.next();
+        for (final Iterator i = uidl.getChildIterator(); i.hasNext();) {
+            final UIDL childUidl = (UIDL) i.next();
             if ("actions".equals(childUidl.getTag())) {
                 updateActionMap(childUidl);
                 continue;
             }
-            TreeNode childTree = new TreeNode();
+            final TreeNode childTree = new TreeNode();
             this.add(childTree);
             childTree.updateFromUIDL(childUidl, client);
         }
-        String selectMode = uidl.getStringAttribute("selectmode");
+        final String selectMode = uidl.getStringAttribute("selectmode");
         selectable = selectMode != null;
         isMultiselect = "multi".equals(selectMode);
 
@@ -116,7 +120,7 @@ public class ITree extends FlowPanel implements Paintable {
     }
 
     private void handleUpdate(UIDL uidl) {
-        TreeNode rootNode = (TreeNode) keyToNode.get(uidl
+        final TreeNode rootNode = (TreeNode) keyToNode.get(uidl
                 .getStringAttribute("rootKey"));
         if (rootNode != null) {
             if (!rootNode.getState()) {
@@ -132,8 +136,8 @@ public class ITree extends FlowPanel implements Paintable {
         if (selected) {
             if (!isMultiselect) {
                 while (selectedIds.size() > 0) {
-                    String id = (String) selectedIds.iterator().next();
-                    TreeNode oldSelection = (TreeNode) keyToNode.get(id);
+                    final String id = (String) selectedIds.iterator().next();
+                    final TreeNode oldSelection = (TreeNode) keyToNode.get(id);
                     oldSelection.setSelected(false);
                     selectedIds.remove(id);
                 }
@@ -186,7 +190,7 @@ public class ITree extends FlowPanel implements Paintable {
             if (disabled) {
                 return;
             }
-            Element target = DOM.eventGetTarget(event);
+            final Element target = DOM.eventGetTarget(event);
             if (DOM.compare(getElement(), target)) {
                 // state change
                 toggleState();
@@ -208,7 +212,7 @@ public class ITree extends FlowPanel implements Paintable {
         }
 
         protected void constructDom() {
-            Element root = DOM.createDiv();
+            final Element root = DOM.createDiv();
             nodeCaptionDiv = DOM.createDiv();
             DOM.setElementProperty(nodeCaptionDiv, "className", CLASSNAME
                     + "-caption");
@@ -301,14 +305,14 @@ public class ITree extends FlowPanel implements Paintable {
             childNodeContainer.clear();
             childNodeContainer.setVisible(true);
             while (i.hasNext()) {
-                UIDL childUidl = (UIDL) i.next();
+                final UIDL childUidl = (UIDL) i.next();
                 // actions are in bit weird place, don't mix them with children,
                 // but current node's actions
                 if ("actions".equals(childUidl.getTag())) {
                     updateActionMap(childUidl);
                     continue;
                 }
-                TreeNode childTree = new TreeNode();
+                final TreeNode childTree = new TreeNode();
                 childNodeContainer.add(childTree);
                 childTree.updateFromUIDL(childUidl, client);
             }
@@ -323,10 +327,10 @@ public class ITree extends FlowPanel implements Paintable {
             if (actionKeys == null) {
                 return new Action[] {};
             }
-            Action[] actions = new Action[actionKeys.length];
+            final Action[] actions = new Action[actionKeys.length];
             for (int i = 0; i < actions.length; i++) {
-                String actionKey = actionKeys[i];
-                TreeAction a = new TreeAction(this, String.valueOf(key),
+                final String actionKey = actionKeys[i];
+                final TreeAction a = new TreeAction(this, String.valueOf(key),
                         actionKey);
                 a.setCaption(getActionCaption(actionKey));
                 a.setIconUrl(getActionIcon(actionKey));

@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.client;
 
 import java.util.Date;
@@ -56,7 +60,7 @@ public class DateTimeService {
     public String getMonth(int month) {
         try {
             return LocaleService.getMonthNames(currentLocale)[month];
-        } catch (LocaleNotLoadedException e) {
+        } catch (final LocaleNotLoadedException e) {
             // TODO redirect to console
             System.out.println(e + ":" + e.getMessage());
         }
@@ -66,7 +70,7 @@ public class DateTimeService {
     public String getShortMonth(int month) {
         try {
             return LocaleService.getShortMonthNames(currentLocale)[month];
-        } catch (LocaleNotLoadedException e) {
+        } catch (final LocaleNotLoadedException e) {
             // TODO redirect to console
             System.out.println(e + ":" + e.getMessage());
         }
@@ -76,7 +80,7 @@ public class DateTimeService {
     public String getDay(int day) {
         try {
             return LocaleService.getDayNames(currentLocale)[day];
-        } catch (LocaleNotLoadedException e) {
+        } catch (final LocaleNotLoadedException e) {
             // TODO redirect to console
             System.out.println(e + ":" + e.getMessage());
         }
@@ -86,7 +90,7 @@ public class DateTimeService {
     public String getShortDay(int day) {
         try {
             return LocaleService.getShortDayNames(currentLocale)[day];
-        } catch (LocaleNotLoadedException e) {
+        } catch (final LocaleNotLoadedException e) {
             // TODO redirect to console
             System.out.println(e + ":" + e.getMessage());
         }
@@ -96,7 +100,7 @@ public class DateTimeService {
     public int getFirstDayOfWeek() {
         try {
             return LocaleService.getFirstDayOfWeek(currentLocale);
-        } catch (LocaleNotLoadedException e) {
+        } catch (final LocaleNotLoadedException e) {
             // TODO redirect to console
             System.out.println(e + ":" + e.getMessage());
         }
@@ -106,7 +110,7 @@ public class DateTimeService {
     public boolean isTwelveHourClock() {
         try {
             return LocaleService.isTwelveHourClock(currentLocale);
-        } catch (LocaleNotLoadedException e) {
+        } catch (final LocaleNotLoadedException e) {
             // TODO redirect to console
             System.out.println(e + ":" + e.getMessage());
         }
@@ -116,7 +120,7 @@ public class DateTimeService {
     public String getClockDelimeter() {
         try {
             return LocaleService.getClockDelimiter(currentLocale);
-        } catch (LocaleNotLoadedException e) {
+        } catch (final LocaleNotLoadedException e) {
             // TODO redirect to console
             System.out.println(e + ":" + e.getMessage());
         }
@@ -126,23 +130,23 @@ public class DateTimeService {
     public String[] getAmPmStrings() {
         try {
             return LocaleService.getAmPmStrings(currentLocale);
-        } catch (LocaleNotLoadedException e) {
+        } catch (final LocaleNotLoadedException e) {
             // TODO redirect to console
             System.out.println(e + ":" + e.getMessage());
         }
-        String[] temp = new String[2];
+        final String[] temp = new String[2];
         temp[0] = "AM";
         temp[1] = "PM";
         return temp;
     }
 
     public int getStartWeekDay(Date date) {
-        Date dateForFirstOfThisMonth = new Date(date.getYear(),
-                date.getMonth(), 1);
+        final Date dateForFirstOfThisMonth = new Date(date.getYear(), date
+                .getMonth(), 1);
         int firstDay;
         try {
             firstDay = LocaleService.getFirstDayOfWeek(currentLocale);
-        } catch (LocaleNotLoadedException e) {
+        } catch (final LocaleNotLoadedException e) {
             firstDay = 0;
             // TODO redirect to console
             System.out.println(e + ":" + e.getMessage());
@@ -157,7 +161,7 @@ public class DateTimeService {
     public String getDateFormat() {
         try {
             return LocaleService.getDateFormat(currentLocale);
-        } catch (LocaleNotLoadedException e) {
+        } catch (final LocaleNotLoadedException e) {
             // TODO redirect to console
             System.out.println(e + ":" + e.getMessage());
         }
@@ -165,7 +169,7 @@ public class DateTimeService {
     }
 
     public static int getNumberOfDaysInMonth(Date date) {
-        int month = date.getMonth();
+        final int month = date.getMonth();
         if (month == 1 && true == isLeapYear(date)) {
             return 29;
         }
@@ -174,14 +178,14 @@ public class DateTimeService {
 
     public static boolean isLeapYear(Date date) {
         // Instantiate the date for 1st March of that year
-        Date firstMarch = new Date(date.getYear(), 2, 1);
+        final Date firstMarch = new Date(date.getYear(), 2, 1);
 
         // Go back 1 day
-        long firstMarchTime = firstMarch.getTime();
-        long lastDayTimeFeb = firstMarchTime - (24 * 60 * 60 * 1000); // NUM_MILLISECS_A_DAY
+        final long firstMarchTime = firstMarch.getTime();
+        final long lastDayTimeFeb = firstMarchTime - (24 * 60 * 60 * 1000); // NUM_MILLISECS_A_DAY
 
         // Instantiate new Date with this time
-        Date febLastDay = new Date(lastDayTimeFeb);
+        final Date febLastDay = new Date(lastDayTimeFeb);
 
         // Check for date in this new instance
         return (29 == febLastDay.getDate()) ? true : false;
@@ -241,9 +245,9 @@ public class DateTimeService {
     }
 
     private static int getDayInt(Date date) {
-        int y = date.getYear();
-        int m = date.getMonth();
-        int d = date.getDate();
+        final int y = date.getYear();
+        final int m = date.getMonth();
+        final int d = date.getDate();
 
         return ((y + 1900) * 10000 + m * 100 + d) * 1000000000;
     }

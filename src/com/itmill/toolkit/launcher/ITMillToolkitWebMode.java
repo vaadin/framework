@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.launcher;
 
 import java.util.HashMap;
@@ -29,11 +33,11 @@ public class ITMillToolkitWebMode {
     public static void main(String[] args) {
 
         // Pass-through of arguments for Jetty
-        Map serverArgs = parseArguments(args);
+        final Map serverArgs = parseArguments(args);
 
         // Start Jetty
         System.out.println("Starting Jetty servlet container.");
-        String url = runServer(serverArgs, "Web Mode");
+        final String url = runServer(serverArgs, "Web Mode");
 
         // Start Browser
         System.out.println("Starting Web Browser.");
@@ -66,9 +70,9 @@ public class ITMillToolkitWebMode {
         assignDefault(serverArgs, "httpPort", serverPort);
 
         try {
-            long started = System.currentTimeMillis();
+            final long started = System.currentTimeMillis();
 
-            Server server = new Server();
+            final Server server = new Server();
 
             // String threadPoolName =
             // System.getProperty("jetty.threadpool.name",
@@ -91,14 +95,14 @@ public class ITMillToolkitWebMode {
             // threadPool.setLowThreads(lowThreads);
             // server.setThreadPool(threadPool);
 
-            Connector connector = new SelectChannelConnector();
+            final Connector connector = new SelectChannelConnector();
             // FIXME httpPort hardcoded to 8888
             // connector.setPort(Integer.valueOf(serverArgs.get("httpPort")
             // .toString()));
             connector.setPort(8888);
             server.setConnectors(new Connector[] { connector });
 
-            WebAppContext webappcontext = new WebAppContext();
+            final WebAppContext webappcontext = new WebAppContext();
             webappcontext.setContextPath("");
             webappcontext.setWar(serverArgs.get("webroot").toString());
             // enable hot code replace
@@ -109,7 +113,7 @@ public class ITMillToolkitWebMode {
             server.start();
             // System.err.println("Started Jetty in "
             // + (System.currentTimeMillis() - started) + "ms.");
-        } catch (Exception e) {
+        } catch (final Exception e) {
             e.printStackTrace();
             return null;
         }
@@ -139,12 +143,12 @@ public class ITMillToolkitWebMode {
      * @return map of arguments key value pairs.
      */
     protected static Map parseArguments(String[] args) {
-        Map map = new HashMap();
+        final Map map = new HashMap();
         for (int i = 0; i < args.length; i++) {
-            int d = args[i].indexOf("=");
+            final int d = args[i].indexOf("=");
             if (d > 0 && d < args[i].length() && args[i].startsWith("--")) {
-                String name = args[i].substring(2, d);
-                String value = args[i].substring(d + 1);
+                final String name = args[i].substring(2, d);
+                final String value = args[i].substring(d + 1);
                 map.put(name, value);
             }
         }

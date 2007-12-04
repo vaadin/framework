@@ -1,6 +1,7 @@
-/**
- * 
+/* 
+@ITMillApache2LicenseForJavaFiles@
  */
+
 package com.itmill.toolkit.ui;
 
 import java.util.Date;

@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.tests;
 
 import java.util.ArrayList;
@@ -21,7 +25,7 @@ import com.itmill.toolkit.ui.Select;
  */
 public class TestForChildComponentRendering extends CustomComponent {
 
-    private OrderedLayout main;
+    private final OrderedLayout main;
 
     public TestForChildComponentRendering() {
 
@@ -34,7 +38,7 @@ public class TestForChildComponentRendering extends CustomComponent {
         main.removeAllComponents();
         main.addComponent(new Label("SDFGFHFHGJGFDSDSSSGFDD"));
 
-        Link l = new Link();
+        final Link l = new Link();
         l.setCaption("Siirry ITMILLIIN");
         l.setResource(new ExternalResource("http://www.itmill.com/"));
         l.setTargetHeight(200);
@@ -42,7 +46,7 @@ public class TestForChildComponentRendering extends CustomComponent {
         l.setTargetBorder(Link.TARGET_BORDER_MINIMAL);
         main.addComponent(l);
 
-        Select se = new Select();
+        final Select se = new Select();
         se.setCaption("VALITSET TÄSTÄ");
         se.addItem("valinta1");
         se.addItem("Valinta 2");
@@ -60,30 +64,30 @@ public class TestForChildComponentRendering extends CustomComponent {
     }
 
     public void randomReorder() {
-        Iterator it = main.getComponentIterator();
-        ArrayList components = new ArrayList();
+        final Iterator it = main.getComponentIterator();
+        final ArrayList components = new ArrayList();
         while (it.hasNext()) {
             components.add(it.next());
         }
 
-        OrderedLayout v = main;
+        final OrderedLayout v = main;
         v.removeAllComponents();
 
         for (int i = components.size(); i > 0; i--) {
-            int index = (int) (Math.random() * i);
+            final int index = (int) (Math.random() * i);
             v.addComponent((Component) components.get(index));
             components.remove(index);
         }
     }
 
     public void removeRandomComponent() {
-        Iterator it = main.getComponentIterator();
-        ArrayList components = new ArrayList();
+        final Iterator it = main.getComponentIterator();
+        final ArrayList components = new ArrayList();
         while (it.hasNext()) {
             components.add(it.next());
         }
-        int size = components.size();
-        int index = (int) (Math.random() * size);
+        final int size = components.size();
+        final int index = (int) (Math.random() * size);
         main.removeComponent((Component) components.get(index));
 
     }

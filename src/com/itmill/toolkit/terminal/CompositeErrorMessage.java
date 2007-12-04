@@ -1,30 +1,6 @@
-/* *************************************************************************
- 
- IT Mill Toolkit 
-
- Development of Browser User Interfaces Made Easy
-
- Copyright (C) 2000-2006 IT Mill Ltd
- 
- *************************************************************************
-
- This product is distributed under commercial license that can be found
- from the product package on license.pdf. Use of this product might 
- require purchasing a commercial license from IT Mill Ltd. For guidelines 
- on usage, see licensing-guidelines.html
-
- *************************************************************************
- 
- For more information, contact:
- 
- IT Mill Ltd                           phone: +358 2 4802 7180
- Ruukinkatu 2-4                        fax:   +358 2 4802 7181
- 20540, Turku                          email:  info@itmill.com
- Finland                               company www: www.itmill.com
- 
- Primary source for information and releases: www.itmill.com
-
- ********************************************************************** */
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
 
 package com.itmill.toolkit.terminal;
 
@@ -46,7 +22,7 @@ public class CompositeErrorMessage implements ErrorMessage {
     /**
      * Array of all the errors.
      */
-    private List errors;
+    private final List errors;
 
     /**
      * Level of the error.
@@ -86,7 +62,7 @@ public class CompositeErrorMessage implements ErrorMessage {
         errors = new ArrayList(errorMessages.size());
         level = Integer.MIN_VALUE;
 
-        for (Iterator i = errorMessages.iterator(); i.hasNext();) {
+        for (final Iterator i = errorMessages.iterator(); i.hasNext();) {
             addErrorMessage((ErrorMessage) i.next());
         }
 
@@ -116,7 +92,7 @@ public class CompositeErrorMessage implements ErrorMessage {
     private void addErrorMessage(ErrorMessage error) {
         if (error != null && !errors.contains(error)) {
             errors.add(error);
-            int l = error.getErrorLevel();
+            final int l = error.getErrorLevel();
             if (l > level) {
                 level = l;
             }
@@ -155,7 +131,7 @@ public class CompositeErrorMessage implements ErrorMessage {
             }
 
             // Paint all the exceptions
-            for (Iterator i = errors.iterator(); i.hasNext();) {
+            for (final Iterator i = errors.iterator(); i.hasNext();) {
                 ((ErrorMessage) i.next()).paint(target);
             }
 
@@ -187,7 +163,7 @@ public class CompositeErrorMessage implements ErrorMessage {
     public String toString() {
         String retval = "[";
         int pos = 0;
-        for (Iterator i = errors.iterator(); i.hasNext();) {
+        for (final Iterator i = errors.iterator(); i.hasNext();) {
             if (pos > 0) {
                 retval += ",";
             }

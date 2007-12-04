@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.demo.featurebrowser;
 
 import com.itmill.toolkit.data.Property.ValueChangeEvent;
@@ -19,12 +23,12 @@ import com.itmill.toolkit.ui.Window.Notification;
 public class ValueInputExample extends CustomComponent {
 
     public ValueInputExample() {
-        OrderedLayout main = new OrderedLayout();
+        final OrderedLayout main = new OrderedLayout();
         main.setMargin(true);
         setCompositionRoot(main);
 
         // listener that shows a value change notification
-        Field.ValueChangeListener listener = new Field.ValueChangeListener() {
+        final Field.ValueChangeListener listener = new Field.ValueChangeListener() {
             public void valueChange(ValueChangeEvent event) {
                 getWindow().showNotification("Received",
                         "<pre>" + event.getProperty().getValue() + "</pre>",
@@ -106,13 +110,13 @@ public class ValueInputExample extends CustomComponent {
         slider.addListener(new Slider.ValueChangeListener() {
             public void valueChange(ValueChangeEvent event) {
                 // update caption when value changes
-                Slider s = (Slider) event.getProperty();
+                final Slider s = (Slider) event.getProperty();
                 s.setCaption("Value: " + s.getValue());
             }
         });
         try {
             slider.setValue(20);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             e.printStackTrace(System.err);
         }
         left.addComponent(slider);
@@ -122,13 +126,13 @@ public class ValueInputExample extends CustomComponent {
         slider.addListener(new Slider.ValueChangeListener() {
             public void valueChange(ValueChangeEvent event) {
                 // update caption when value changes
-                Slider s = (Slider) event.getProperty();
+                final Slider s = (Slider) event.getProperty();
                 s.setCaption("Value: " + s.getValue());
             }
         });
         try {
             slider.setValue(0.5);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             e.printStackTrace(System.err);
         }
         left.addComponent(slider);

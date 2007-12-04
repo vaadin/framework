@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.client;
 
 import com.google.gwt.user.client.DOM;
@@ -10,7 +14,7 @@ public class Caption extends HTML {
 
     public static final String CLASSNAME = "i-caption";
 
-    private Paintable owner;
+    private final Paintable owner;
 
     private Element errorIndicatorElement;
 
@@ -20,7 +24,7 @@ public class Caption extends HTML {
 
     private ErrorMessage errorMessage;
 
-    private ApplicationConnection client;
+    private final ApplicationConnection client;
 
     public Caption(Paintable component, ApplicationConnection client) {
         super();
@@ -35,7 +39,7 @@ public class Caption extends HTML {
         setStyleName(getElement(), "i-disabled", uidl.hasAttribute("disabled"));
 
         if (uidl.hasAttribute("error")) {
-            UIDL errorUidl = uidl.getErrors();
+            final UIDL errorUidl = uidl.getErrors();
 
             if (errorIndicatorElement == null) {
                 errorIndicatorElement = DOM.createDiv();
@@ -89,7 +93,7 @@ public class Caption extends HTML {
     }
 
     public void onBrowserEvent(Event event) {
-        Element target = DOM.eventGetTarget(event);
+        final Element target = DOM.eventGetTarget(event);
         if (errorIndicatorElement != null
                 && DOM.compare(target, errorIndicatorElement)) {
             switch (DOM.eventGetType(event)) {

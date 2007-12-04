@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.tests;
 
 import java.util.Collection;
@@ -23,7 +27,7 @@ import com.itmill.toolkit.ui.Select;
 public class TestSelectAndDatefieldInDeepLayouts extends CustomComponent {
 
     public TestSelectAndDatefieldInDeepLayouts() {
-        OrderedLayout root = (OrderedLayout) getOrderedLayout();
+        final OrderedLayout root = (OrderedLayout) getOrderedLayout();
         setCompositionRoot(root);
 
         root.addComponent(getSelect());
@@ -31,7 +35,7 @@ public class TestSelectAndDatefieldInDeepLayouts extends CustomComponent {
         root.addComponent(getSelect());
         root.addComponent(getDateField());
 
-        Panel p1 = getPanel();
+        final Panel p1 = getPanel();
         root.addComponent(p1);
 
         p1.addComponent(getSelect());
@@ -39,7 +43,7 @@ public class TestSelectAndDatefieldInDeepLayouts extends CustomComponent {
         p1.addComponent(getSelect());
         p1.addComponent(getDateField());
 
-        OrderedLayout l1 = (OrderedLayout) getOrderedLayout();
+        final OrderedLayout l1 = (OrderedLayout) getOrderedLayout();
         p1.addComponent(l1);
 
         l1.addComponent(getSelect());
@@ -47,7 +51,7 @@ public class TestSelectAndDatefieldInDeepLayouts extends CustomComponent {
         l1.addComponent(getSelect());
         l1.addComponent(getDateField());
 
-        Panel p2 = getPanel();
+        final Panel p2 = getPanel();
         l1.addComponent(p2);
 
         p2.addComponent(getSelect());
@@ -58,13 +62,13 @@ public class TestSelectAndDatefieldInDeepLayouts extends CustomComponent {
     }
 
     AbstractLayout getOrderedLayout() {
-        OrderedLayout l = new OrderedLayout();
+        final OrderedLayout l = new OrderedLayout();
         l.setCaption(getCaption("orderedlayout"));
         return l;
     }
 
     Panel getPanel() {
-        Panel panel = new Panel();
+        final Panel panel = new Panel();
         panel.setCaption(getCaption("panel"));
         return panel;
     }
@@ -78,7 +82,7 @@ public class TestSelectAndDatefieldInDeepLayouts extends CustomComponent {
     }
 
     private Collection getSelectOptions() {
-        Collection opts = new Vector(3);
+        final Collection opts = new Vector(3);
         opts.add(getCaption("opt 1"));
         opts.add(getCaption("opt 2"));
         opts.add(getCaption("opt 3"));

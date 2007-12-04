@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.client.util;
 
 import java.util.Date;
@@ -57,7 +61,7 @@ public class SimpleDateParser {
             { "y", "(\\d{1,2})", DateLocale.TOKEN_YEAR },
             { "a", "(\\S{1,4})", DateLocale.TOKEN_AM_PM } };
 
-    private Pattern regularExpression;
+    private final Pattern regularExpression;
 
     private String instructions = "";
 
@@ -67,7 +71,7 @@ public class SimpleDateParser {
         }
         if (format.startsWith("'")) {
             format = format.substring(1);
-            int end = format.indexOf("'");
+            final int end = format.indexOf("'");
             if (end == -1) {
                 throw new IllegalArgumentException("Unmatched single quotes.");
             }
@@ -75,8 +79,8 @@ public class SimpleDateParser {
             format = format.substring(end + 1);
         }
         for (int i = 0; i < TOKENS.length; i++) {
-            String[] row = TOKENS[i];
-            String datePattern = row[DATE_PATTERN];
+            final String[] row = TOKENS[i];
+            final String datePattern = row[DATE_PATTERN];
             if (!format.startsWith(datePattern)) {
                 continue;
             }
@@ -111,9 +115,10 @@ public class SimpleDateParser {
 
         if (component.equals(DateLocale.TOKEN_HOUR_12)) {
             int h = Integer.parseInt(text);
-            String token = com.itmill.toolkit.terminal.gwt.client.DateLocale
+            final String token = com.itmill.toolkit.terminal.gwt.client.DateLocale
                     .getPM();
-            String which = input.substring(input.length() - token.length()); // Assumes
+            final String which = input.substring(input.length()
+                    - token.length()); // Assumes
             // both
             // AM
             // and
@@ -142,15 +147,15 @@ public class SimpleDateParser {
     }
 
     public SimpleDateParser(String format) {
-        String[] args = new String[] { "", "" };
+        final String[] args = new String[] { "", "" };
         _parse(format, args);
         regularExpression = new Pattern(args[REGEX]);
         instructions = args[INSTRUCTION];
     }
 
     public Date parse(String input) {
-        Date date = new Date(0, 0, 0, 0, 0, 0);
-        String matches[] = regularExpression.match(input);
+        final Date date = new Date(0, 0, 0, 0, 0, 0);
+        final String matches[] = regularExpression.match(input);
         if (matches == null) {
             throw new IllegalArgumentException(input + " does not match "
                     + regularExpression.pattern());
@@ -160,7 +165,7 @@ public class SimpleDateParser {
                     + input + " does not match " + regularExpression.pattern());
         }
         for (int group = 0; group < instructions.length(); group++) {
-            String match = matches[group + 1];
+            final String match = matches[group + 1];
             load(date, match, "" + instructions.charAt(group), input,
                     regularExpression);
         }

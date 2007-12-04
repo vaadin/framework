@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 /*
@@ -16,7 +20,7 @@ package com.itmill.toolkit.terminal.gwt.client.ui;
  * the License.
  */
 
-//COPIED HERE DUE package privates in GWT
+// COPIED HERE DUE package privates in GWT
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.HasHTML;

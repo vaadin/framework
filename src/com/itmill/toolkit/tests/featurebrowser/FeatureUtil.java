@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.tests.featurebrowser;
 
 import java.text.SimpleDateFormat;
@@ -20,7 +24,7 @@ public class FeatureUtil {
         if (statistics) {
             try {
                 return format.format(new Date());
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 // ignored, should never happen
             }
         }

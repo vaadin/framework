@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import com.google.gwt.user.client.DOM;
@@ -12,15 +16,15 @@ public class IEmbedded extends HTML implements Paintable {
         if (client.updateComponent(this, uidl, true)) {
             return;
         }
-        String w = uidl.hasAttribute("width") ? uidl
+        final String w = uidl.hasAttribute("width") ? uidl
                 .getStringAttribute("width") : "100%";
-        String h = uidl.hasAttribute("height") ? uidl
+        final String h = uidl.hasAttribute("height") ? uidl
                 .getStringAttribute("height") : "100%";
         DOM.setStyleAttribute(getElement(), "width", w);
         DOM.setStyleAttribute(getElement(), "height", h);
 
         if (uidl.hasAttribute("type")) {
-            String type = uidl.getStringAttribute("type");
+            final String type = uidl.getStringAttribute("type");
             if (type.equals("image")) {
                 setHTML("<img src=\"" + getSrc(uidl, client) + "\"/>");
             } else if (type.equals("browser")) {
@@ -31,7 +35,7 @@ public class IEmbedded extends HTML implements Paintable {
                         "Unknown Embedded type '" + type + "'");
             }
         } else if (uidl.hasAttribute("mimetype")) {
-            String mime = uidl.getStringAttribute("mimetype");
+            final String mime = uidl.getStringAttribute("mimetype");
             if (mime.equals("application/x-shockwave-flash")) {
                 setHTML("<object width=\"" + w + "\" height=\"" + h
                         + "\"><param name=\"movie\" value=\""

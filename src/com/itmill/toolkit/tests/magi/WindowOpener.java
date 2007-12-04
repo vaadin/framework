@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.tests.magi;
 
 import com.itmill.toolkit.ui.Button;
@@ -20,7 +24,7 @@ public class WindowOpener extends CustomComponent implements
         mainwindow = main;
 
         /* The component consists of a button that opens the window. */
-        OrderedLayout layout = new OrderedLayout();
+        final OrderedLayout layout = new OrderedLayout();
         layout.addComponent(openbutton = new Button("Open Window", this,
                 "openButtonClick"));
         layout.addComponent(explanation = new Label("Explanation"));

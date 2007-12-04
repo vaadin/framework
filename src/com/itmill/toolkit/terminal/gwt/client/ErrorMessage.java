@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.client;
 
 import java.util.Iterator;
@@ -18,16 +22,16 @@ public class ErrorMessage extends FlowPanel {
 
     public void updateFromUIDL(UIDL uidl) {
         clear();
-        for (Iterator it = uidl.getChildIterator(); it.hasNext();) {
-            Object child = it.next();
+        for (final Iterator it = uidl.getChildIterator(); it.hasNext();) {
+            final Object child = it.next();
             if (child instanceof String) {
-                String errorMessage = (String) child;
+                final String errorMessage = (String) child;
                 add(new HTML(errorMessage));
             } else if (child instanceof UIDL.XML) {
-                UIDL.XML xml = (UIDL.XML) child;
+                final UIDL.XML xml = (UIDL.XML) child;
                 add(new HTML(xml.getXMLAsString()));
             } else {
-                ErrorMessage childError = new ErrorMessage();
+                final ErrorMessage childError = new ErrorMessage();
                 add(childError);
                 childError.updateFromUIDL((UIDL) child);
             }
@@ -57,7 +61,7 @@ public class ErrorMessage extends FlowPanel {
     }
 
     public void hide() {
-        ToolkitOverlay errorContainer = (ToolkitOverlay) getParent();
+        final ToolkitOverlay errorContainer = (ToolkitOverlay) getParent();
         if (errorContainer != null) {
             errorContainer.hide();
         }

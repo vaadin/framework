@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.demo.colorpicker.gwt.client.ui;
 
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;

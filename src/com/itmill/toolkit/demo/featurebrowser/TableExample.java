@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.demo.featurebrowser;
 
 import java.util.Iterator;
@@ -46,7 +50,7 @@ public class TableExample extends CustomComponent implements Action.Handler,
 
     public TableExample() {
         // main layout
-        OrderedLayout main = new OrderedLayout();
+        final OrderedLayout main = new OrderedLayout();
         main.setMargin(true);
         setCompositionRoot(main);
 
@@ -64,7 +68,7 @@ public class TableExample extends CustomComponent implements Action.Handler,
         main.addComponent(source);
 
         // x-selected button row
-        OrderedLayout horiz = new OrderedLayout(
+        final OrderedLayout horiz = new OrderedLayout(
                 OrderedLayout.ORIENTATION_HORIZONTAL);
         horiz.setMargin(false, false, true, false);
         main.addComponent(horiz);
@@ -96,7 +100,7 @@ public class TableExample extends CustomComponent implements Action.Handler,
         saved.addActionHandler(this);
         main.addComponent(saved);
 
-        CheckBox b = new CheckBox("Modify saved creatures");
+        final CheckBox b = new CheckBox("Modify saved creatures");
         b.addListener(new CheckBox.ClickListener() {
             public void buttonClick(ClickEvent event) {
                 saved.setEditable(((Boolean) event.getButton().getValue())
@@ -122,17 +126,17 @@ public class TableExample extends CustomComponent implements Action.Handler,
     private void fillTable(Table table) {
         initProperties(table);
 
-        String[] sp = new String[] { "Fox", "Dog", "Cat", "Moose", "Penguin",
-                "Cow" };
-        String[] ty = new String[] { "Quick", "Lazy", "Sleepy", "Fidgety",
-                "Crazy", "Kewl" };
-        String[] ki = new String[] { "Jumping", "Walking", "Sleeping",
+        final String[] sp = new String[] { "Fox", "Dog", "Cat", "Moose",
+                "Penguin", "Cow" };
+        final String[] ty = new String[] { "Quick", "Lazy", "Sleepy",
+                "Fidgety", "Crazy", "Kewl" };
+        final String[] ki = new String[] { "Jumping", "Walking", "Sleeping",
                 "Skipping", "Dancing" };
 
         for (int i = 0; i < 100; i++) {
-            String s = sp[(int) (Math.random() * sp.length)];
-            String t = ty[(int) (Math.random() * ty.length)];
-            String k = ki[(int) (Math.random() * ki.length)];
+            final String s = sp[(int) (Math.random() * sp.length)];
+            final String t = ty[(int) (Math.random() * ty.length)];
+            final String k = ki[(int) (Math.random() * ki.length)];
             table.addItem(new Object[] { s, t, k, Boolean.FALSE }, new Integer(
                     i));
         }
@@ -142,7 +146,7 @@ public class TableExample extends CustomComponent implements Action.Handler,
     // Called for each item (row), returns valid actions for that item
     public Action[] getActions(Object target, Object sender) {
         if (sender == source) {
-            Item item = source.getItem(target);
+            final Item item = source.getItem(target);
             // save, delete, and hire if not already hired
             if (item != null
                     && item.getItemProperty(PROPERTY_HIRED).getValue() == Boolean.FALSE) {
@@ -178,7 +182,7 @@ public class TableExample extends CustomComponent implements Action.Handler,
                     return;
                 }
                 // "manual" copy of the item properties we want
-                Item added = saved.addItem(target);
+                final Item added = saved.addItem(target);
                 Property p = added.getItemProperty(PROPERTY_SPECIES);
                 p.setValue(item.getItemProperty(PROPERTY_SPECIES).getValue());
                 p = added.getItemProperty(PROPERTY_TYPE);
@@ -197,7 +201,7 @@ public class TableExample extends CustomComponent implements Action.Handler,
         } else {
             // sender==saved
             if (action == ACTION_DELETE) {
-                Item item = saved.getItem(target);
+                final Item item = saved.getItem(target);
                 getWindow().showNotification("Deleted", "" + item);
                 saved.removeItem(target);
             }
@@ -205,18 +209,18 @@ public class TableExample extends CustomComponent implements Action.Handler,
     }
 
     public void buttonClick(ClickEvent event) {
-        Button b = event.getButton();
+        final Button b = event.getButton();
         if (b == deselect) {
             source.setValue(null);
         } else if (b == saveSelected) {
             // loop each selected and copy to "saved" table
-            Set selected = (Set) source.getValue();
+            final Set selected = (Set) source.getValue();
             int s = 0;
-            for (Iterator it = selected.iterator(); it.hasNext();) {
-                Object id = it.next();
+            for (final Iterator it = selected.iterator(); it.hasNext();) {
+                final Object id = it.next();
                 if (!saved.containsId(id)) {
-                    Item item = source.getItem(id);
-                    Item added = saved.addItem(id);
+                    final Item item = source.getItem(id);
+                    final Item added = saved.addItem(id);
                     // "manual" copy of the properties we want
                     Property p = added.getItemProperty(PROPERTY_SPECIES);
                     p.setValue(item.getItemProperty(PROPERTY_SPECIES)
@@ -236,11 +240,11 @@ public class TableExample extends CustomComponent implements Action.Handler,
         } else if (b == hireSelected) {
             // loop each selected and set property HIRED to true
             int s = 0;
-            Set selected = (Set) source.getValue();
-            for (Iterator it = selected.iterator(); it.hasNext();) {
-                Object id = it.next();
+            final Set selected = (Set) source.getValue();
+            for (final Iterator it = selected.iterator(); it.hasNext();) {
+                final Object id = it.next();
                 Item item = source.getItem(id);
-                Property p = item.getItemProperty(PROPERTY_HIRED);
+                final Property p = item.getItemProperty(PROPERTY_HIRED);
                 if (p.getValue() == Boolean.FALSE) {
                     p.setValue(Boolean.TRUE);
                     source.requestRepaint();
@@ -258,9 +262,9 @@ public class TableExample extends CustomComponent implements Action.Handler,
         } else {
             // loop trough selected and delete
             int s = 0;
-            Set selected = (Set) source.getValue();
-            for (Iterator it = selected.iterator(); it.hasNext();) {
-                Object id = it.next();
+            final Set selected = (Set) source.getValue();
+            for (final Iterator it = selected.iterator(); it.hasNext();) {
+                final Object id = it.next();
                 if (source.containsId(id)) {
                     s++;
                     source.removeItem(id);

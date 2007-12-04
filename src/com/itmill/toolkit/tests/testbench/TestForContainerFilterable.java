@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.tests.testbench;
 
 import com.itmill.toolkit.data.util.IndexedContainer;
@@ -30,13 +34,13 @@ public class TestForContainerFilterable extends CustomComponent {
         ic.addContainerProperty("first", String.class, "");
         ic.addContainerProperty("second", String.class, "");
         for (int i = 0; i < 1000; i++) {
-            Object id = ic.addItem();
+            final Object id = ic.addItem();
             ic.getContainerProperty(id, "first").setValue(randomWord());
             ic.getContainerProperty(id, "second").setValue(randomWord());
         }
 
         // Init filtering view
-        Panel filterPanel = new Panel("Filter", new OrderedLayout(
+        final Panel filterPanel = new Panel("Filter", new OrderedLayout(
                 OrderedLayout.ORIENTATION_HORIZONTAL));
         filterPanel.setWidth(100);
         filterPanel.setWidthUnits(Sizeable.UNITS_PERCENTAGE);
@@ -62,12 +66,12 @@ public class TestForContainerFilterable extends CustomComponent {
             public void buttonClick(ClickEvent event) {
                 ic.removeAllContainerFilters();
                 if (firstFilter.toString().length() > 0) {
-                    ic.addContainerFilter("first", firstFilter.toString(), false,
-                            false);
+                    ic.addContainerFilter("first", firstFilter.toString(),
+                            false, false);
                 }
                 if (secondFilter.toString().length() > 0) {
-                    ic.addContainerFilter("second", secondFilter.toString(), true,
-                            true);
+                    ic.addContainerFilter("second", secondFilter.toString(),
+                            true, true);
                 }
                 count.setValue("Rows in table: " + ic.size());
             }
@@ -84,7 +88,7 @@ public class TestForContainerFilterable extends CustomComponent {
 
     private String randomWord() {
         int len = (int) (Math.random() * 4);
-        StringBuffer buf = new StringBuffer();
+        final StringBuffer buf = new StringBuffer();
         while (len-- >= 0) {
             buf.append(parts[(int) (Math.random() * parts.length)]);
         }

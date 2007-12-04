@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.tests;
 
 import com.itmill.toolkit.ui.Button;
@@ -18,7 +22,7 @@ public class TestSetVisibleAndCaching extends com.itmill.toolkit.Application {
     int selectedPanel = 0;
 
     public void init() {
-        Window mainWindow = new Window("TestSetVisibleAndCaching");
+        final Window mainWindow = new Window("TestSetVisibleAndCaching");
         setMainWindow(mainWindow);
 
         panelA.addComponent(new Label(

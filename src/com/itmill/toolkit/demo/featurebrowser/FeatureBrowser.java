@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.demo.featurebrowser;
 
 import java.util.HashMap;
@@ -10,6 +14,7 @@ import com.itmill.toolkit.data.util.IndexedContainer;
 import com.itmill.toolkit.terminal.ExternalResource;
 import com.itmill.toolkit.terminal.Sizeable;
 import com.itmill.toolkit.terminal.ThemeResource;
+import com.itmill.toolkit.ui.AbstractSelect;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.Embedded;
@@ -46,7 +51,7 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
     private TabSheet ts;
 
     // Example "cache"
-    private HashMap exampleInstances = new HashMap();
+    private final HashMap exampleInstances = new HashMap();
 
     // List of examples
     private static final Object[][] demos = new Object[][] {
@@ -99,23 +104,24 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
         setTheme("example");
 
         // Create new window for the application and give the window a visible.
-        Window main = new Window("IT Mill Toolkit 5");
+        final Window main = new Window("IT Mill Toolkit 5");
         // set as main window
         setMainWindow(main);
 
-        SplitPanel split = new SplitPanel(SplitPanel.ORIENTATION_HORIZONTAL);
+        final SplitPanel split = new SplitPanel(
+                SplitPanel.ORIENTATION_HORIZONTAL);
         split.setSplitPosition(200, Sizeable.UNITS_PIXELS);
         main.setLayout(split);
 
-        HashMap sectionIds = new HashMap();
-        HierarchicalContainer container = createContainer();
-        Object rootId = container.addItem();
+        final HashMap sectionIds = new HashMap();
+        final HierarchicalContainer container = createContainer();
+        final Object rootId = container.addItem();
         Item item = container.getItem(rootId);
         Property p = item.getItemProperty(PROPERTY_ID_NAME);
         p.setValue("All examples");
         for (int i = 0; i < demos.length; i++) {
-            Object[] demo = demos[i];
-            String section = (String) demo[0];
+            final Object[] demo = demos[i];
+            final String section = (String) demo[0];
             Object sectionId;
             if (sectionIds.containsKey(section)) {
                 sectionId = sectionIds.get(section);
@@ -127,7 +133,7 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
                 p = item.getItemProperty(PROPERTY_ID_NAME);
                 p.setValue(section);
             }
-            Object id = container.addItem();
+            final Object id = container.addItem();
             container.setParent(id, sectionId);
             initItem(container.getItem(id), demo);
 
@@ -138,7 +144,7 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
         tree.setMultiSelect(false);
         tree.setNullSelectionAllowed(false);
         tree.setContainerDataSource(container);
-        tree.setItemCaptionMode(Tree.ITEM_CAPTION_MODE_PROPERTY);
+        tree.setItemCaptionMode(AbstractSelect.ITEM_CAPTION_MODE_PROPERTY);
         tree.setItemCaptionPropertyId(PROPERTY_ID_NAME);
         tree.addListener(this);
         tree.setImmediate(true);
@@ -146,7 +152,7 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
 
         split.addComponent(tree);
 
-        SplitPanel split2 = new SplitPanel();
+        final SplitPanel split2 = new SplitPanel();
         split2.setSplitPosition(200, Sizeable.UNITS_PIXELS);
         split.addComponent(split2);
 
@@ -159,7 +165,7 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
         table.setNullSelectionAllowed(false);
         try {
             table.setContainerDataSource((IndexedContainer) container.clone());
-        } catch (Exception e) {
+        } catch (final Exception e) {
             e.printStackTrace(System.err);
         }
         // Hide some columns
@@ -169,11 +175,11 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
         table.setImmediate(true);
         split2.addComponent(table);
 
-        ExpandLayout exp = new ExpandLayout();
+        final ExpandLayout exp = new ExpandLayout();
         exp.setMargin(true);
         split2.addComponent(exp);
 
-        OrderedLayout wbLayout = new OrderedLayout(
+        final OrderedLayout wbLayout = new OrderedLayout(
                 OrderedLayout.ORIENTATION_HORIZONTAL);
         Button b = new Button("Open in sub-window", new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
@@ -203,13 +209,13 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
             public void buttonClick(ClickEvent event) {
                 Component component = (Component) ts.getComponentIterator()
                         .next();
-                String caption = ts.getTabCaption(component);
+                final String caption = ts.getTabCaption(component);
                 Window w = getWindow(caption);
                 if (w == null) {
                     try {
                         component = (Component) component.getClass()
                                 .newInstance();
-                    } catch (Exception e) {
+                    } catch (final Exception e) {
                         // Could not create
                         return;
                     }
@@ -230,8 +236,8 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
         wbLayout.addComponent(b);
 
         exp.addComponent(wbLayout);
-        exp.setComponentAlignment(wbLayout, ExpandLayout.ALIGNMENT_RIGHT,
-                ExpandLayout.ALIGNMENT_TOP);
+        exp.setComponentAlignment(wbLayout, OrderedLayout.ALIGNMENT_RIGHT,
+                OrderedLayout.ALIGNMENT_TOP);
 
         ts = new TabSheet();
         ts.setSizeFull();
@@ -239,13 +245,13 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
         exp.addComponent(ts);
         exp.expand(ts);
 
-        Label status = new Label(
+        final Label status = new Label(
                 "<a href=\"http://www.itmill.com/index_developers.htm\">Developer Area</a>"
                         + " | <a href=\"http://www.itmill.com/developers_documentation.htm\">Documentation</a>");
         status.setContentMode(Label.CONTENT_XHTML);
         exp.addComponent(status);
-        exp.setComponentAlignment(status, ExpandLayout.ALIGNMENT_RIGHT,
-                ExpandLayout.ALIGNMENT_VERTICAL_CENTER);
+        exp.setComponentAlignment(status, OrderedLayout.ALIGNMENT_RIGHT,
+                OrderedLayout.ALIGNMENT_VERTICAL_CENTER);
 
         // select initial section ("All")
         tree.setValue(rootId);
@@ -270,7 +276,7 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
     }
 
     private HierarchicalContainer createContainer() {
-        HierarchicalContainer c = new HierarchicalContainer();
+        final HierarchicalContainer c = new HierarchicalContainer();
         c.addContainerProperty(PROPERTY_ID_CATEGORY, String.class, null);
         c.addContainerProperty(PROPERTY_ID_NAME, String.class, "");
         c.addContainerProperty(PROPERTY_ID_DESC, String.class, "");
@@ -281,8 +287,8 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
 
     public void valueChange(ValueChangeEvent event) {
         if (event.getProperty() == tree) {
-            Object id = tree.getValue();
-            Item item = tree.getItem(id);
+            final Object id = tree.getValue();
+            final Item item = tree.getItem(id);
             //
             String section;
             if (tree.isRoot(id)) {
@@ -296,7 +302,7 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
             }
 
             table.setValue(null);
-            IndexedContainer c = (IndexedContainer) table
+            final IndexedContainer c = (IndexedContainer) table
                     .getContainerDataSource();
             c.removeAllContainerFilters();
             if (section != null) {
@@ -315,18 +321,18 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
                 table.removeListener(this);
                 tree.setValue(table.getValue());
                 table.addListener(this);
-                Item item = table.getItem(table.getValue());
-                Class c = (Class) item.getItemProperty(PROPERTY_ID_CLASS)
+                final Item item = table.getItem(table.getValue());
+                final Class c = (Class) item.getItemProperty(PROPERTY_ID_CLASS)
                         .getValue();
-                Component component = getComponent(c);
+                final Component component = getComponent(c);
                 if (component != null) {
-                    String caption = (String) item.getItemProperty(
+                    final String caption = (String) item.getItemProperty(
                             PROPERTY_ID_NAME).getValue();
                     ts.removeAllComponents();
                     ts.addTab(component, caption, null);
                 }
                 // update "viewed" state
-                Property p = item.getItemProperty(PROPERTY_ID_VIEWED);
+                final Property p = item.getItemProperty(PROPERTY_ID_VIEWED);
                 if (p.getValue() == null) {
                     p.setValue(new Embedded("", new ThemeResource(
                             "icons/ok.png")));
@@ -340,9 +346,9 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
     private Component getComponent(Class componentClass) {
         if (!exampleInstances.containsKey(componentClass)) {
             try {
-                Component c = (Component) componentClass.newInstance();
+                final Component c = (Component) componentClass.newInstance();
                 exampleInstances.put(componentClass, c);
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 return null;
             }
         }

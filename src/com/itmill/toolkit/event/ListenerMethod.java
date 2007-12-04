@@ -1,30 +1,6 @@
-/* *************************************************************************
- 
- IT Mill Toolkit 
-
- Development of Browser User Interfaces Made Easy
-
- Copyright (C) 2000-2006 IT Mill Ltd
- 
- *************************************************************************
-
- This product is distributed under commercial license that can be found
- from the product package on license.pdf. Use of this product might 
- require purchasing a commercial license from IT Mill Ltd. For guidelines 
- on usage, see licensing-guidelines.html
-
- *************************************************************************
- 
- For more information, contact:
- 
- IT Mill Ltd                           phone: +358 2 4802 7180
- Ruukinkatu 2-4                        fax:   +358 2 4802 7181
- 20540, Turku                          email:  info@itmill.com
- Finland                               company www: www.itmill.com
- 
- Primary source for information and releases: www.itmill.com
-
- ********************************************************************** */
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
 
 package com.itmill.toolkit.event;
 
@@ -64,18 +40,18 @@ public class ListenerMethod implements EventListener {
      * Type of the event that should trigger this listener. Also the subclasses
      * of this class are accepted to trigger the listener.
      */
-    private Class eventType;
+    private final Class eventType;
 
     /**
      * The object containing the trigger method.
      */
-    private Object object;
+    private final Object object;
 
     /**
      * The trigger method to call when an event passing the given criteria
      * fires.
      */
-    private Method method;
+    private final Method method;
 
     /**
      * Optional argument set to pass to the trigger method.
@@ -189,7 +165,7 @@ public class ListenerMethod implements EventListener {
             throws java.lang.IllegalArgumentException {
 
         // Finds the correct method
-        Method[] methods = object.getClass().getMethods();
+        final Method[] methods = object.getClass().getMethods();
         Method method = null;
         for (int i = 0; i < methods.length; i++) {
             if (methods[i].getName().equals(methodName)) {
@@ -296,7 +272,7 @@ public class ListenerMethod implements EventListener {
             Object[] arguments) throws java.lang.IllegalArgumentException {
 
         // Find the correct method
-        Method[] methods = object.getClass().getMethods();
+        final Method[] methods = object.getClass().getMethods();
         Method method = null;
         for (int i = 0; i < methods.length; i++) {
             if (methods[i].getName().equals(methodName)) {
@@ -351,7 +327,7 @@ public class ListenerMethod implements EventListener {
         this.method = method;
         eventArgumentIndex = -1;
 
-        Class[] params = method.getParameterTypes();
+        final Class[] params = method.getParameterTypes();
 
         if (params.length == 0) {
             arguments = new Object[0];
@@ -395,7 +371,7 @@ public class ListenerMethod implements EventListener {
             throws java.lang.IllegalArgumentException {
 
         // Finds the correct method
-        Method[] methods = object.getClass().getMethods();
+        final Method[] methods = object.getClass().getMethods();
         Method method = null;
         for (int i = 0; i < methods.length; i++) {
             if (methods[i].getName().equals(methodName)) {
@@ -411,7 +387,7 @@ public class ListenerMethod implements EventListener {
         this.method = method;
         eventArgumentIndex = -1;
 
-        Class[] params = method.getParameterTypes();
+        final Class[] params = method.getParameterTypes();
 
         if (params.length == 0) {
             arguments = new Object[0];
@@ -443,7 +419,7 @@ public class ListenerMethod implements EventListener {
                     if (eventArgumentIndex == 0 && arguments.length == 1) {
                         method.invoke(object, new Object[] { event });
                     } else {
-                        Object[] arg = new Object[arguments.length];
+                        final Object[] arg = new Object[arguments.length];
                         for (int i = 0; i < arg.length; i++) {
                             arg[i] = arguments[i];
                         }
@@ -454,11 +430,11 @@ public class ListenerMethod implements EventListener {
                     method.invoke(object, arguments);
                 }
 
-            } catch (java.lang.IllegalAccessException e) {
+            } catch (final java.lang.IllegalAccessException e) {
                 // This should never happen
                 throw new java.lang.RuntimeException(
                         "Internal error - please report: " + e.toString());
-            } catch (java.lang.reflect.InvocationTargetException e) {
+            } catch (final java.lang.reflect.InvocationTargetException e) {
                 // This should never happen
                 throw new MethodException("Invocation if method " + method
                         + " failed.", e.getTargetException());
@@ -526,7 +502,7 @@ public class ListenerMethod implements EventListener {
          */
         private static final long serialVersionUID = 3257005445242894135L;
 
-        private Throwable cause;
+        private final Throwable cause;
 
         private String message;
 

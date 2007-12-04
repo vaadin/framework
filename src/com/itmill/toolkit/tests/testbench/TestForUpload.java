@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.tests.testbench;
 
 import java.io.ByteArrayInputStream;
@@ -78,9 +82,9 @@ public class TestForUpload extends CustomComponent implements
 
         up.setProgressListener(this);
 
-        Button b = new Button("b", this, "readState");
+        final Button b = new Button("b", this, "readState");
 
-        Button c = new Button("b with gc", this, "gc");
+        final Button c = new Button("b with gc", this, "gc");
 
         main.addComponent(b);
         main.addComponent(c);
@@ -112,7 +116,7 @@ public class TestForUpload extends CustomComponent implements
         status.setVisible(false);
         main.addComponent(status);
 
-        Button restart = new Button("R");
+        final Button restart = new Button("R");
         restart.addListener(new Button.ClickListener() {
 
             public void buttonClick(ClickEvent event) {
@@ -124,7 +128,7 @@ public class TestForUpload extends CustomComponent implements
     }
 
     private void setBuffer() {
-        String id = (String) uploadBufferSelector.getValue();
+        final String id = (String) uploadBufferSelector.getValue();
         if ("memory".equals(id)) {
             buffer = new MemoryBuffer();
         } else if ("tempfile".equals(id)) {
@@ -139,7 +143,7 @@ public class TestForUpload extends CustomComponent implements
     }
 
     public void readState() {
-        StringBuffer sb = new StringBuffer();
+        final StringBuffer sb = new StringBuffer();
 
         if (up.isUploading()) {
             sb.append("Uploading...");
@@ -159,7 +163,7 @@ public class TestForUpload extends CustomComponent implements
 
     public void uploadFinished(FinishedEvent event) {
         status.removeAllComponents();
-        InputStream stream = buffer.getStream();
+        final InputStream stream = buffer.getStream();
         if (stream == null) {
             status.addComponent(new Label(
                     "Upload finished, but output buffer is null!!"));
@@ -245,11 +249,11 @@ public class TestForUpload extends CustomComponent implements
         private FileInputStream stream;
 
         public TmpFileBuffer() {
-            String tempFileName = "upload_tmpfile_"
+            final String tempFileName = "upload_tmpfile_"
                     + System.currentTimeMillis();
             try {
                 file = File.createTempFile(tempFileName, null);
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
@@ -262,7 +266,7 @@ public class TestForUpload extends CustomComponent implements
             }
             try {
                 return new FileInputStream(file);
-            } catch (FileNotFoundException e) {
+            } catch (final FileNotFoundException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
@@ -278,7 +282,7 @@ public class TestForUpload extends CustomComponent implements
             mimeType = MIMEType;
             try {
                 return new FileOutputStream(file);
-            } catch (FileNotFoundException e) {
+            } catch (final FileNotFoundException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }

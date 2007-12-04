@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.demo.featurebrowser;
 
 import com.itmill.toolkit.ui.CustomComponent;
@@ -17,11 +21,11 @@ public class LayoutExample extends CustomComponent {
 
     public LayoutExample() {
 
-        OrderedLayout main = new OrderedLayout();
+        final OrderedLayout main = new OrderedLayout();
         main.setMargin(true);
         setCompositionRoot(main);
 
-        GridLayout g = new GridLayout(2, 5);
+        final GridLayout g = new GridLayout(2, 5);
         main.addComponent(g);
 
         // panel
@@ -53,7 +57,7 @@ public class LayoutExample extends CustomComponent {
         ol.addComponent(new Label("Component 3"));
         ts.addTab(ol, "Horizontal OrderedLayout", null);
 
-        GridLayout gl = new GridLayout(3, 3);
+        final GridLayout gl = new GridLayout(3, 3);
         gl.setMargin(true);
         gl.addComponent(new Label("Component 1.1"));
         gl.addComponent(new Label("Component 1.2"));

@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import java.util.HashMap;
@@ -14,9 +18,9 @@ public class IOptionGroup extends IOptionGroupBase {
 
     public static final String CLASSNAME = "i-select-optiongroup";
 
-    private Panel panel;
+    private final Panel panel;
 
-    private Map optionsToKeys;
+    private final Map optionsToKeys;
 
     public IOptionGroup() {
         super(CLASSNAME);
@@ -29,8 +33,8 @@ public class IOptionGroup extends IOptionGroupBase {
      */
     protected void buildOptions(UIDL uidl) {
         panel.clear();
-        for (Iterator it = uidl.getChildIterator(); it.hasNext();) {
-            UIDL opUidl = (UIDL) it.next();
+        for (final Iterator it = uidl.getChildIterator(); it.hasNext();) {
+            final UIDL opUidl = (UIDL) it.next();
             CheckBox op;
             if (isMultiselect()) {
                 op = new ICheckBox();
@@ -56,8 +60,8 @@ public class IOptionGroup extends IOptionGroupBase {
     public void onClick(Widget sender) {
         super.onClick(sender);
         if (sender instanceof CheckBox) {
-            boolean selected = ((CheckBox) sender).isChecked();
-            String key = (String) optionsToKeys.get(sender);
+            final boolean selected = ((CheckBox) sender).isChecked();
+            final String key = (String) optionsToKeys.get(sender);
             if (!isMultiselect()) {
                 selectedKeys.clear();
             }

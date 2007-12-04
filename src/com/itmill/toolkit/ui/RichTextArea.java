@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.ui;
 
 import com.itmill.toolkit.terminal.PaintException;

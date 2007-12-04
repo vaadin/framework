@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.tests;
 
 import com.itmill.toolkit.Application;
@@ -27,15 +31,15 @@ public class TestForApplicationLayoutThatUsesWholeBrosersSpace extends
 
         firstLevelSplit = new SplitPanel();
 
-        SplitPanel secondSplitPanel = new SplitPanel(
+        final SplitPanel secondSplitPanel = new SplitPanel(
                 SplitPanel.ORIENTATION_HORIZONTAL);
         secondSplitPanel.setFirstComponent(new Label("left"));
 
-        ExpandLayout topRight = new ExpandLayout();
+        final ExpandLayout topRight = new ExpandLayout();
         topRight.addComponent(new Label("topright header"));
 
-        Table t = TestForTablesInitialColumnWidthLogicRendering.getTestTable(4,
-                100);
+        final Table t = TestForTablesInitialColumnWidthLogicRendering
+                .getTestTable(4, 100);
         t.setWidth(100);
         t.setWidthUnits(Sizeable.UNITS_PERCENTAGE);
         t.setHeight(100);
@@ -47,7 +51,7 @@ public class TestForApplicationLayoutThatUsesWholeBrosersSpace extends
 
         secondSplitPanel.setSecondComponent(topRight);
 
-        ExpandLayout el = new ExpandLayout();
+        final ExpandLayout el = new ExpandLayout();
         el.addComponent(new Label("B��"));
 
         firstLevelSplit.setFirstComponent(secondSplitPanel);

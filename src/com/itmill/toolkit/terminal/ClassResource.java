@@ -1,30 +1,6 @@
-/* *************************************************************************
- 
- IT Mill Toolkit 
-
- Development of Browser User Interfaces Made Easy
-
- Copyright (C) 2000-2006 IT Mill Ltd
- 
- *************************************************************************
-
- This product is distributed under commercial license that can be found
- from the product package on license.pdf. Use of this product might 
- require purchasing a commercial license from IT Mill Ltd. For guidelines 
- on usage, see licensing-guidelines.html
-
- *************************************************************************
- 
- For more information, contact:
- 
- IT Mill Ltd                           phone: +358 2 4802 7180
- Ruukinkatu 2-4                        fax:   +358 2 4802 7181
- 20540, Turku                          email:  info@itmill.com
- Finland                               company www: www.itmill.com
- 
- Primary source for information and releases: www.itmill.com
-
- ********************************************************************** */
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
 
 package com.itmill.toolkit.terminal;
 
@@ -59,17 +35,17 @@ public class ClassResource implements ApplicationResource {
     /**
      * Associated class used for indetifying the source of the resource.
      */
-    private Class associatedClass;
+    private final Class associatedClass;
 
     /**
      * Name of the resource is relative to the associated class.
      */
-    private String resourceName;
+    private final String resourceName;
 
     /**
      * Application used for serving the class.
      */
-    private Application application;
+    private final Application application;
 
     /**
      * Creates a new application resource instance. The resource id is relative
@@ -153,7 +129,7 @@ public class ClassResource implements ApplicationResource {
      * @see com.itmill.toolkit.terminal.ApplicationResource#getStream()
      */
     public DownloadStream getStream() {
-        DownloadStream ds = new DownloadStream(associatedClass
+        final DownloadStream ds = new DownloadStream(associatedClass
                 .getResourceAsStream(resourceName), getMIMEType(),
                 getFilename());
         ds.setBufferSize(getBufferSize());

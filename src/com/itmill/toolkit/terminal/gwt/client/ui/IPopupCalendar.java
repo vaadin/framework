@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import com.google.gwt.user.client.Window;
@@ -12,11 +16,11 @@ import com.itmill.toolkit.terminal.gwt.client.UIDL;
 public class IPopupCalendar extends ITextualDate implements Paintable,
         ClickListener, PopupListener {
 
-    private IButton calendarToggle;
+    private final IButton calendarToggle;
 
-    private CalendarPanel calendar;
+    private final CalendarPanel calendar;
 
-    private ToolkitOverlay popup;
+    private final ToolkitOverlay popup;
     private boolean open = false;
 
     public IPopupCalendar() {
@@ -49,8 +53,8 @@ public class IPopupCalendar extends ITextualDate implements Paintable,
             // clear previous values
             popup.setWidth("");
             popup.setHeight("");
-            int w = calendar.getOffsetWidth();
-            int h = calendar.getOffsetHeight();
+            final int w = calendar.getOffsetWidth();
+            final int h = calendar.getOffsetHeight();
             int t = calendarToggle.getAbsoluteTop();
             int l = calendarToggle.getAbsoluteLeft();
             if (l + w > Window.getClientWidth() + Window.getScrollLeft()) {

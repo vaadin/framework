@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.tests;
 
 import com.itmill.toolkit.terminal.ExternalResource;
@@ -10,14 +14,14 @@ public class TestForWindowOpen extends CustomComponent {
 
     public TestForWindowOpen() {
 
-        OrderedLayout main = new OrderedLayout();
+        final OrderedLayout main = new OrderedLayout();
         setCompositionRoot(main);
 
         main.addComponent(new Button("Open in this window",
                 new Button.ClickListener() {
 
                     public void buttonClick(ClickEvent event) {
-                        ExternalResource r = new ExternalResource(
+                        final ExternalResource r = new ExternalResource(
                                 "http://www.google.com");
                         getApplication().getMainWindow().open(r);
 
@@ -29,7 +33,7 @@ public class TestForWindowOpen extends CustomComponent {
                 new Button.ClickListener() {
 
                     public void buttonClick(ClickEvent event) {
-                        ExternalResource r = new ExternalResource(
+                        final ExternalResource r = new ExternalResource(
                                 "http://www.google.com");
                         getApplication().getMainWindow().open(r, "mytarget");
 
@@ -41,7 +45,7 @@ public class TestForWindowOpen extends CustomComponent {
                 new Button.ClickListener() {
 
                     public void buttonClick(ClickEvent event) {
-                        ExternalResource r = new ExternalResource(
+                        final ExternalResource r = new ExternalResource(
                                 "http://www.google.com");
                         getApplication().getMainWindow()
                                 .open(r, "secondtarget");

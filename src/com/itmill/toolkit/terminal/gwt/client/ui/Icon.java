@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import com.google.gwt.user.client.DOM;
@@ -5,7 +9,7 @@ import com.google.gwt.user.client.ui.UIObject;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 
 public class Icon extends UIObject {
-    private ApplicationConnection client;
+    private final ApplicationConnection client;
     private String myUri;
 
     public Icon(ApplicationConnection client) {

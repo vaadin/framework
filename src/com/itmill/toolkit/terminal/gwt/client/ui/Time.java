@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import com.google.gwt.user.client.ui.ChangeListener;
@@ -7,7 +11,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class Time extends FlowPanel implements ChangeListener {
 
-    private IDateField datefield;
+    private final IDateField datefield;
 
     private ListBox hours;
 
@@ -30,10 +34,10 @@ public class Time extends FlowPanel implements ChangeListener {
     }
 
     private void buildTime(boolean redraw) {
-        boolean thc = datefield.getDateTimeService().isTwelveHourClock();
+        final boolean thc = datefield.getDateTimeService().isTwelveHourClock();
         if (redraw) {
             clear();
-            int numHours = thc ? 12 : 24;
+            final int numHours = thc ? 12 : 24;
             hours = new ListBox();
             hours.setStyleName(INativeSelect.CLASSNAME);
             for (int i = 0; i < numHours; i++) {
@@ -43,7 +47,7 @@ public class Time extends FlowPanel implements ChangeListener {
             if (thc) {
                 ampm = new ListBox();
                 ampm.setStyleName(INativeSelect.CLASSNAME);
-                String[] ampmText = datefield.getDateTimeService()
+                final String[] ampmText = datefield.getDateTimeService()
                         .getAmPmStrings();
                 ampm.addItem(ampmText[0]);
                 ampm.addItem(ampmText[1]);
@@ -81,9 +85,9 @@ public class Time extends FlowPanel implements ChangeListener {
                 msec.addChangeListener(this);
             }
 
-            String delimiter = datefield.getDateTimeService()
+            final String delimiter = datefield.getDateTimeService()
                     .getClockDelimeter();
-            boolean ro = datefield.isReadonly();
+            final boolean ro = datefield.isReadonly();
 
             if (ro) {
                 int h = 0;
@@ -101,7 +105,7 @@ public class Time extends FlowPanel implements ChangeListener {
             if (datefield.getCurrentResolution() >= IDateField.RESOLUTION_MIN) {
                 add(new ILabel(delimiter));
                 if (ro) {
-                    int m = mins.getSelectedIndex();
+                    final int m = mins.getSelectedIndex();
                     add(new ILabel(m < 10 ? "0" + m : "" + m));
                 } else {
                     add(mins);
@@ -110,7 +114,7 @@ public class Time extends FlowPanel implements ChangeListener {
             if (datefield.getCurrentResolution() >= IDateField.RESOLUTION_SEC) {
                 add(new ILabel(delimiter));
                 if (ro) {
-                    int s = sec.getSelectedIndex();
+                    final int s = sec.getSelectedIndex();
                     add(new ILabel(s < 10 ? "0" + s : "" + s));
                 } else {
                     add(sec);
@@ -119,8 +123,8 @@ public class Time extends FlowPanel implements ChangeListener {
             if (datefield.getCurrentResolution() == IDateField.RESOLUTION_MSEC) {
                 add(new ILabel("."));
                 if (ro) {
-                    int m = datefield.getMilliseconds();
-                    String ms = m < 100 ? "0" + m : "" + m;
+                    final int m = datefield.getMilliseconds();
+                    final String ms = m < 100 ? "0" + m : "" + m;
                     add(new ILabel(m < 10 ? "0" + ms : ms));
                 } else {
                     add(msec);
@@ -171,7 +175,7 @@ public class Time extends FlowPanel implements ChangeListener {
         if (datefield.isReadonly() && !redraw) {
             // Do complete redraw when in read-only status
             clear();
-            String delimiter = datefield.getDateTimeService()
+            final String delimiter = datefield.getDateTimeService()
                     .getClockDelimeter();
 
             int h = datefield.getCurrentDate().getHours();
@@ -182,18 +186,18 @@ public class Time extends FlowPanel implements ChangeListener {
 
             if (datefield.getCurrentResolution() >= IDateField.RESOLUTION_MIN) {
                 add(new ILabel(delimiter));
-                int m = mins.getSelectedIndex();
+                final int m = mins.getSelectedIndex();
                 add(new ILabel(m < 10 ? "0" + m : "" + m));
             }
             if (datefield.getCurrentResolution() >= IDateField.RESOLUTION_SEC) {
                 add(new ILabel(delimiter));
-                int s = sec.getSelectedIndex();
+                final int s = sec.getSelectedIndex();
                 add(new ILabel(s < 10 ? "0" + s : "" + s));
             }
             if (datefield.getCurrentResolution() == IDateField.RESOLUTION_MSEC) {
                 add(new ILabel("."));
-                int m = datefield.getMilliseconds();
-                String ms = m < 100 ? "0" + m : "" + m;
+                final int m = datefield.getMilliseconds();
+                final String ms = m < 100 ? "0" + m : "" + m;
                 add(new ILabel(m < 10 ? "0" + ms : ms));
             }
             if (datefield.getCurrentResolution() == IDateField.RESOLUTION_HOUR) {
@@ -206,7 +210,7 @@ public class Time extends FlowPanel implements ChangeListener {
             }
         }
 
-        boolean enabled = datefield.isEnabled();
+        final boolean enabled = datefield.isEnabled();
         hours.setEnabled(enabled);
         if (mins != null) {
             mins.setEnabled(enabled);
@@ -244,25 +248,26 @@ public class Time extends FlowPanel implements ChangeListener {
                     datefield.isImmediate());
             updateTime(false);
         } else if (sender == mins) {
-            int m = mins.getSelectedIndex();
+            final int m = mins.getSelectedIndex();
             datefield.getCurrentDate().setMinutes(m);
             datefield.getClient().updateVariable(datefield.getId(), "min", m,
                     datefield.isImmediate());
             updateTime(false);
         } else if (sender == sec) {
-            int s = sec.getSelectedIndex();
+            final int s = sec.getSelectedIndex();
             datefield.getCurrentDate().setSeconds(s);
             datefield.getClient().updateVariable(datefield.getId(), "sec", s,
                     datefield.isImmediate());
             updateTime(false);
         } else if (sender == msec) {
-            int ms = msec.getSelectedIndex();
+            final int ms = msec.getSelectedIndex();
             datefield.setMilliseconds(ms);
             datefield.getClient().updateVariable(datefield.getId(), "msec", ms,
                     datefield.isImmediate());
             updateTime(false);
         } else if (sender == ampm) {
-            int h = hours.getSelectedIndex() + ampm.getSelectedIndex() * 12;
+            final int h = hours.getSelectedIndex() + ampm.getSelectedIndex()
+                    * 12;
             datefield.getCurrentDate().setHours(h);
             datefield.getClient().updateVariable(datefield.getId(), "hour", h,
                     datefield.isImmediate());

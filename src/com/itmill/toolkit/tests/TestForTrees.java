@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.tests;
 
 import com.itmill.toolkit.event.Action;
@@ -26,9 +30,9 @@ public class TestForTrees extends CustomComponent implements Handler {
             "Smith", "Jones", "Beck", "Sheridan", "Picard", "Hill", "Fielding",
             "Einstein" };
 
-    private OrderedLayout main = new OrderedLayout();
+    private final OrderedLayout main = new OrderedLayout();
 
-    private Action[] actions = new Action[] { new Action("edit"),
+    private final Action[] actions = new Action[] { new Action("edit"),
             new Action("delete") };
 
     private Panel al;
@@ -75,20 +79,20 @@ public class TestForTrees extends CustomComponent implements Handler {
         t.setCaption("with actions");
         t.setImmediate(true);
         t.addActionHandler(this);
-        OrderedLayout ol = (OrderedLayout) createTestBench(t);
+        final OrderedLayout ol = (OrderedLayout) createTestBench(t);
         al = new Panel("action log");
         ol.addComponent(al);
         main.addComponent(ol);
         contextTree = t;
 
-        Button b = new Button("refresh view", this, "createNewView");
+        final Button b = new Button("refresh view", this, "createNewView");
         main.addComponent(b);
 
     }
 
     public Tree createTestTree() {
         Tree t = new Tree("Tree");
-        String[] names = new String[100];
+        final String[] names = new String[100];
         for (int i = 0; i < names.length; i++) {
             names[i] = firstnames[(int) (Math.random() * (firstnames.length - 1))]
                     + " "
@@ -99,7 +103,7 @@ public class TestForTrees extends CustomComponent implements Handler {
         t = new Tree("Organization Structure");
         for (int i = 0; i < 100; i++) {
             t.addItem(names[i]);
-            String parent = names[(int) (Math.random() * (names.length - 1))];
+            final String parent = names[(int) (Math.random() * (names.length - 1))];
             if (t.containsId(parent)) {
                 t.setParent(names[i], parent);
             }
@@ -115,7 +119,7 @@ public class TestForTrees extends CustomComponent implements Handler {
     }
 
     public Component createTestBench(Tree t) {
-        OrderedLayout ol = new OrderedLayout();
+        final OrderedLayout ol = new OrderedLayout();
         ol.setOrientation(OrderedLayout.ORIENTATION_HORIZONTAL);
 
         ol.addComponent(t);

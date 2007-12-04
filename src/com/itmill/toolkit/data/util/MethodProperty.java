@@ -1,30 +1,6 @@
-/* *************************************************************************
- 
- IT Mill Toolkit 
-
- Development of Browser User Interfaces Made Easy
-
- Copyright (C) 2000-2006 IT Mill Ltd
- 
- *************************************************************************
-
- This product is distributed under commercial license that can be found
- from the product package on license.pdf. Use of this product might 
- require purchasing a commercial license from IT Mill Ltd. For guidelines 
- on usage, see licensing-guidelines.html
-
- *************************************************************************
- 
- For more information, contact:
- 
- IT Mill Ltd                           phone: +358 2 4802 7180
- Ruukinkatu 2-4                        fax:   +358 2 4802 7181
- 20540, Turku                          email:  info@itmill.com
- Finland                               company www: www.itmill.com
- 
- Primary source for information and releases: www.itmill.com
-
- ********************************************************************** */
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
 
 package com.itmill.toolkit.data.util;
 
@@ -65,7 +41,7 @@ public class MethodProperty implements Property {
     /**
      * The object that includes the property the MethodProperty is bound to.
      */
-    private Object instance;
+    private final Object instance;
 
     /**
      * Argument arrays for the getter and setter methods.
@@ -132,12 +108,12 @@ public class MethodProperty implements Property {
      */
     public MethodProperty(Object instance, String beanPropertyName) {
 
-        Class beanClass = instance.getClass();
+        final Class beanClass = instance.getClass();
 
         // Assure that the first letter is upper cased (it is a common
         // mistake to write firstName, not FirstName).
         if (Character.isLowerCase(beanPropertyName.charAt(0))) {
-            char[] buf = beanPropertyName.toCharArray();
+            final char[] buf = beanPropertyName.toCharArray();
             buf[0] = Character.toUpperCase(buf[0]);
             beanPropertyName = new String(buf);
         }
@@ -147,15 +123,15 @@ public class MethodProperty implements Property {
         try {
             getMethod = beanClass.getMethod("get" + beanPropertyName,
                     new Class[] {});
-        } catch (java.lang.NoSuchMethodException ignored) {
+        } catch (final java.lang.NoSuchMethodException ignored) {
             try {
                 getMethod = beanClass.getMethod("is" + beanPropertyName,
                         new Class[] {});
-            } catch (java.lang.NoSuchMethodException ignoredAsWell) {
+            } catch (final java.lang.NoSuchMethodException ignoredAsWell) {
                 try {
                     getMethod = beanClass.getMethod("are" + beanPropertyName,
                             new Class[] {});
-                } catch (java.lang.NoSuchMethodException e) {
+                } catch (final java.lang.NoSuchMethodException e) {
                     throw new MethodProperty.MethodException("Bean property "
                             + beanPropertyName + " can not be found");
                 }
@@ -170,7 +146,7 @@ public class MethodProperty implements Property {
         try {
             setMethod = beanClass.getMethod("set" + beanPropertyName,
                     new Class[] { type });
-        } catch (java.lang.NoSuchMethodException skipped) {
+        } catch (final java.lang.NoSuchMethodException skipped) {
         }
 
         // Gets the return type from get method
@@ -313,7 +289,7 @@ public class MethodProperty implements Property {
         this.type = type;
 
         // Find set and get -methods
-        Method[] m = instance.getClass().getMethods();
+        final Method[] m = instance.getClass().getMethods();
 
         // Finds get method
         boolean found = false;
@@ -332,7 +308,7 @@ public class MethodProperty implements Property {
             }
 
             // Tests the parameter types
-            Class[] c = m[i].getParameterTypes();
+            final Class[] c = m[i].getParameterTypes();
             if (c.length != getArgs.length) {
 
                 // not the right amount of parameters, try next method
@@ -381,7 +357,7 @@ public class MethodProperty implements Property {
                 }
 
                 // Checks parameter compatibility
-                Class[] c = m[i].getParameterTypes();
+                final Class[] c = m[i].getParameterTypes();
                 if (c.length != setArgs.length) {
 
                     // not the right amount of parameters, try next method
@@ -554,7 +530,7 @@ public class MethodProperty implements Property {
     public Object getValue() {
         try {
             return getMethod.invoke(instance, getArgs);
-        } catch (Throwable e) {
+        } catch (final Throwable e) {
             throw new MethodProperty.MethodException(e);
         }
     }
@@ -567,7 +543,7 @@ public class MethodProperty implements Property {
      * @return String representation of the value stored in the Property
      */
     public String toString() {
-        Object value = getValue();
+        final Object value = getValue();
         if (value == null) {
             return null;
         }
@@ -634,13 +610,13 @@ public class MethodProperty implements Property {
             try {
 
                 // Gets the string constructor
-                Constructor constr = getType().getConstructor(
+                final Constructor constr = getType().getConstructor(
                         new Class[] { String.class });
 
                 value = constr
                         .newInstance(new Object[] { newValue.toString() });
 
-            } catch (java.lang.Exception e) {
+            } catch (final java.lang.Exception e) {
                 throw new Property.ConversionException(e);
             }
 
@@ -664,16 +640,16 @@ public class MethodProperty implements Property {
             } else {
 
                 // Sets the value to argument array
-                Object[] args = new Object[setArgs.length];
+                final Object[] args = new Object[setArgs.length];
                 for (int i = 0; i < setArgs.length; i++) {
                     args[i] = (i == setArgumentIndex) ? value : setArgs[i];
                 }
                 setMethod.invoke(instance, args);
             }
-        } catch (InvocationTargetException e) {
-            Throwable targetException = e.getTargetException();
+        } catch (final InvocationTargetException e) {
+            final Throwable targetException = e.getTargetException();
             throw new MethodProperty.MethodException(targetException);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new MethodProperty.MethodException(e);
         }
     }
@@ -685,7 +661,7 @@ public class MethodProperty implements Property {
      *                the new read-only status of the Property.
      */
     public void setReadOnly(boolean newStatus) {
-        boolean prevStatus = readOnly;
+        final boolean prevStatus = readOnly;
         if (newStatus) {
             readOnly = true;
         } else {
@@ -825,8 +801,8 @@ public class MethodProperty implements Property {
      */
     private void fireReadOnlyStatusChange() {
         if (readOnlyStatusChangeListeners != null) {
-            Object[] l = readOnlyStatusChangeListeners.toArray();
-            Property.ReadOnlyStatusChangeEvent event = new MethodProperty.ReadOnlyStatusChangeEvent(
+            final Object[] l = readOnlyStatusChangeListeners.toArray();
+            final Property.ReadOnlyStatusChangeEvent event = new MethodProperty.ReadOnlyStatusChangeEvent(
                     this);
             for (int i = 0; i < l.length; i++) {
                 ((Property.ReadOnlyStatusChangeListener) l[i])

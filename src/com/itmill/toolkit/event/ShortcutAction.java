@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.event;
 
 import com.itmill.toolkit.terminal.Resource;
@@ -11,9 +15,9 @@ import com.itmill.toolkit.terminal.Resource;
  */
 public class ShortcutAction extends Action {
 
-    private int keyCode;
+    private final int keyCode;
 
-    private int[] modifiers;
+    private final int[] modifiers;
 
     public ShortcutAction(String caption, int kc, int[] m) {
         super(caption);

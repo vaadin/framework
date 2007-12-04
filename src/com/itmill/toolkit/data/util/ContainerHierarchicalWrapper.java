@@ -1,30 +1,6 @@
-/* *************************************************************************
- 
- IT Mill Toolkit 
-
- Development of Browser User Interfaces Made Easy
-
- Copyright (C) 2000-2006 IT Mill Ltd
- 
- *************************************************************************
-
- This product is distributed under commercial license that can be found
- from the product package on license.pdf. Use of this product might 
- require purchasing a commercial license from IT Mill Ltd. For guidelines 
- on usage, see licensing-guidelines.html
-
- *************************************************************************
- 
- For more information, contact:
- 
- IT Mill Ltd                           phone: +358 2 4802 7180
- Ruukinkatu 2-4                        fax:   +358 2 4802 7181
- 20540, Turku                          email:  info@itmill.com
- Finland                               company www: www.itmill.com
- 
- Primary source for information and releases: www.itmill.com
-
- ********************************************************************** */
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
 
 package com.itmill.toolkit.data.util;
 
@@ -60,7 +36,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
         Container.ItemSetChangeNotifier, Container.PropertySetChangeNotifier {
 
     /** The wrapped container */
-    private Container container;
+    private final Container container;
 
     /** Set of IDs of those contained Items that can't have children. */
     private HashSet noChildrenAllowed = null;
@@ -130,23 +106,23 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
             else {
 
                 // Calculate the set of all items in the hierarchy
-                HashSet s = new HashSet();
+                final HashSet s = new HashSet();
                 s.add(parent.keySet());
                 s.add(children.keySet());
                 s.addAll(roots);
 
                 // Remove unnecessary items
-                for (Iterator i = s.iterator(); i.hasNext();) {
-                    Object id = i.next();
+                for (final Iterator i = s.iterator(); i.hasNext();) {
+                    final Object id = i.next();
                     if (!container.containsId(id)) {
                         removeFromHierarchyWrapper(id);
                     }
                 }
 
                 // Add all the missing items
-                Collection ids = container.getItemIds();
-                for (Iterator i = ids.iterator(); i.hasNext();) {
-                    Object id = i.next();
+                final Collection ids = container.getItemIds();
+                for (final Iterator i = ids.iterator(); i.hasNext();) {
+                    final Object id = i.next();
                     if (!s.contains(id)) {
                         addToHierarchyWrapper(id);
                         s.add(id);
@@ -171,9 +147,9 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
         if (isRoot(itemId)) {
             roots.remove(itemId);
         }
-        Object p = parent.get(itemId);
+        final Object p = parent.get(itemId);
         if (p != null) {
-            LinkedList c = (LinkedList) children.get(p);
+            final LinkedList c = (LinkedList) children.get(p);
             if (c != null) {
                 c.remove(itemId);
             }
@@ -221,7 +197,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
             return ((Container.Hierarchical) container).getChildren(itemId);
         }
 
-        Collection c = (Collection) children.get(itemId);
+        final Collection c = (Collection) children.get(itemId);
         if (c == null) {
             return null;
         }
@@ -361,7 +337,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
         }
 
         // Get the old parent
-        Object oldParentId = parent.get(itemId);
+        final Object oldParentId = parent.get(itemId);
 
         // Check if no change is necessary
         if ((newParentId == null && oldParentId == null)
@@ -373,7 +349,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
         if (newParentId == null) {
 
             // Remove from old parents children list
-            LinkedList l = (LinkedList) children.get(itemId);
+            final LinkedList l = (LinkedList) children.get(itemId);
             if (l != null) {
                 l.remove(itemId);
                 if (l.isEmpty()) {
@@ -418,7 +394,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
         if (oldParentId == null) {
             roots.remove(itemId);
         } else {
-            LinkedList l = (LinkedList) children.get(oldParentId);
+            final LinkedList l = (LinkedList) children.get(oldParentId);
             if (l != null) {
                 l.remove(itemId);
                 if (l.isEmpty()) {
@@ -441,7 +417,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
      */
     public Object addItem() throws UnsupportedOperationException {
 
-        Object id = container.addItem();
+        final Object id = container.addItem();
         if (id != null) {
             addToHierarchyWrapper(id);
         }
@@ -460,7 +436,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
      */
     public Item addItem(Object itemId) throws UnsupportedOperationException {
 
-        Item item = container.addItem(itemId);
+        final Item item = container.addItem(itemId);
         if (item != null) {
             addToHierarchyWrapper(itemId);
         }
@@ -477,7 +453,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
      */
     public boolean removeAllItems() throws UnsupportedOperationException {
 
-        boolean success = container.removeAllItems();
+        final boolean success = container.removeAllItems();
 
         if (success) {
             roots.clear();
@@ -502,7 +478,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
     public boolean removeItem(Object itemId)
             throws UnsupportedOperationException {
 
-        boolean success = container.removeItem(itemId);
+        final boolean success = container.removeItem(itemId);
 
         if (success) {
             removeFromHierarchyWrapper(itemId);

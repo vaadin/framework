@@ -1,30 +1,6 @@
-/* *************************************************************************
- 
- IT Mill Toolkit 
-
- Development of Browser User Interfaces Made Easy
-
- Copyright (C) 2000-2006 IT Mill Ltd
- 
- *************************************************************************
-
- This product is distributed under commercial license that can be found
- from the product package on license.pdf. Use of this product might 
- require purchasing a commercial license from IT Mill Ltd. For guidelines 
- on usage, see licensing-guidelines.html
-
- *************************************************************************
- 
- For more information, contact:
- 
- IT Mill Ltd                           phone: +358 2 4802 7180
- Ruukinkatu 2-4                        fax:   +358 2 4802 7181
- 20540, Turku                          email:  info@itmill.com
- Finland                               company www: www.itmill.com
- 
- Primary source for information and releases: www.itmill.com
-
- ********************************************************************** */
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
 
 package com.itmill.toolkit.ui;
 
@@ -394,7 +370,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
         // Checks that the new visible columns contains no nulls and properties
         // exist
-        Collection properties = getContainerPropertyIds();
+        final Collection properties = getContainerPropertyIds();
         for (int i = 0; i < visibleColumns.length; i++) {
             if (visibleColumns[i] == null) {
                 throw new NullPointerException("Properties must be non-nulls");
@@ -407,15 +383,15 @@ public class Table extends AbstractSelect implements Action.Container,
 
         // If this is called befor the constructor is finished, it might be
         // uninitialized
-        LinkedList newVC = new LinkedList();
+        final LinkedList newVC = new LinkedList();
         for (int i = 0; i < visibleColumns.length; i++) {
             newVC.add(visibleColumns[i]);
         }
 
         // Removes alignments, icons and headers from hidden columns
         if (this.visibleColumns != null) {
-            for (Iterator i = this.visibleColumns.iterator(); i.hasNext();) {
-                Object col = i.next();
+            for (final Iterator i = this.visibleColumns.iterator(); i.hasNext();) {
+                final Object col = i.next();
                 if (!newVC.contains(col)) {
                     setColumnHeader(col, null);
                     setColumnAlignment(col, null);
@@ -448,9 +424,9 @@ public class Table extends AbstractSelect implements Action.Container,
         if (columnHeaders == null) {
             return null;
         }
-        String[] headers = new String[visibleColumns.size()];
+        final String[] headers = new String[visibleColumns.size()];
         int i = 0;
-        for (Iterator it = visibleColumns.iterator(); it.hasNext(); i++) {
+        for (final Iterator it = visibleColumns.iterator(); it.hasNext(); i++) {
             headers[i] = (String) columnHeaders.get(it.next());
         }
         return headers;
@@ -481,7 +457,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
         this.columnHeaders.clear();
         int i = 0;
-        for (Iterator it = visibleColumns.iterator(); it.hasNext()
+        for (final Iterator it = visibleColumns.iterator(); it.hasNext()
                 && i < columnHeaders.length; i++) {
             this.columnHeaders.put(it.next(), columnHeaders[i]);
         }
@@ -507,9 +483,9 @@ public class Table extends AbstractSelect implements Action.Container,
         if (columnIcons == null) {
             return null;
         }
-        Resource[] icons = new Resource[visibleColumns.size()];
+        final Resource[] icons = new Resource[visibleColumns.size()];
         int i = 0;
-        for (Iterator it = visibleColumns.iterator(); it.hasNext(); i++) {
+        for (final Iterator it = visibleColumns.iterator(); it.hasNext(); i++) {
             icons[i] = (Resource) columnIcons.get(it.next());
         }
 
@@ -540,7 +516,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
         this.columnIcons.clear();
         int i = 0;
-        for (Iterator it = visibleColumns.iterator(); it.hasNext()
+        for (final Iterator it = visibleColumns.iterator(); it.hasNext()
                 && i < columnIcons.length; i++) {
             this.columnIcons.put(it.next(), columnIcons[i]);
         }
@@ -571,9 +547,9 @@ public class Table extends AbstractSelect implements Action.Container,
         if (columnAlignments == null) {
             return null;
         }
-        String[] alignments = new String[visibleColumns.size()];
+        final String[] alignments = new String[visibleColumns.size()];
         int i = 0;
-        for (Iterator it = visibleColumns.iterator(); it.hasNext(); i++) {
+        for (final Iterator it = visibleColumns.iterator(); it.hasNext(); i++) {
             alignments[i++] = getColumnAlignment(it.next());
         }
 
@@ -607,7 +583,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
         // Checks all alignments
         for (int i = 0; i < columnAlignments.length; i++) {
-            String a = columnAlignments[i];
+            final String a = columnAlignments[i];
             if (a != null && !a.equals(ALIGN_LEFT) && !a.equals(ALIGN_CENTER)
                     && !a.equals(ALIGN_RIGHT)) {
                 throw new IllegalArgumentException("Column " + i
@@ -616,9 +592,9 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         // Resets the alignments
-        HashMap newCA = new HashMap();
+        final HashMap newCA = new HashMap();
         int i = 0;
-        for (Iterator it = visibleColumns.iterator(); it.hasNext()
+        for (final Iterator it = visibleColumns.iterator(); it.hasNext()
                 && i < columnAlignments.length; i++) {
             newCA.put(it.next(), columnAlignments[i]);
         }
@@ -650,7 +626,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * @return width of colun or -1 when value not set
      */
     public int getColumnWidth(Object propertyId) {
-        Integer value = (Integer) columnWidths.get(propertyId);
+        final Integer value = (Integer) columnWidths.get(propertyId);
         if (value == null) {
             return -1;
         }
@@ -699,7 +675,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
         // Priorise index over id if indexes are supported
         if (items instanceof Container.Indexed) {
-            int index = getCurrentPageFirstItemIndex();
+            final int index = getCurrentPageFirstItemIndex();
             Object id = null;
             if (index >= 0 && index < size()) {
                 id = ((Container.Indexed) items).getIdByIndex(index);
@@ -730,7 +706,7 @@ public class Table extends AbstractSelect implements Action.Container,
         try {
             index = ((Container.Indexed) items)
                     .indexOfId(currentPageFirstItemId);
-        } catch (ClassCastException e) {
+        } catch (final ClassCastException e) {
 
             // If the table item container does not have index, we have to
             // calculates the index by hand
@@ -839,7 +815,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * @return the specified column's alignment if it as one; null otherwise.
      */
     public String getColumnAlignment(Object propertyId) {
-        String a = (String) columnAlignments.get(propertyId);
+        final String a = (String) columnAlignments.get(propertyId);
         return a == null ? ALIGN_LEFT : a;
     }
 
@@ -973,7 +949,7 @@ public class Table extends AbstractSelect implements Action.Container,
         if (columnOrder == null || !isColumnReorderingAllowed()) {
             return;
         }
-        LinkedList newOrder = new LinkedList();
+        final LinkedList newOrder = new LinkedList();
         for (int i = 0; i < columnOrder.length; i++) {
             if (columnOrder[i] != null
                     && visibleColumns.contains(columnOrder[i])) {
@@ -981,8 +957,8 @@ public class Table extends AbstractSelect implements Action.Container,
                 newOrder.add(columnOrder[i]);
             }
         }
-        for (Iterator it = visibleColumns.iterator(); it.hasNext();) {
-            Object columnId = it.next();
+        for (final Iterator it = visibleColumns.iterator(); it.hasNext();) {
+            final Object columnId = it.next();
             if (!newOrder.contains(columnId)) {
                 newOrder.add(columnId);
             }
@@ -1023,7 +999,7 @@ public class Table extends AbstractSelect implements Action.Container,
             try {
                 currentPageFirstItemId = ((Container.Indexed) items)
                         .getIdByIndex(newIndex);
-            } catch (IndexOutOfBoundsException e) {
+            } catch (final IndexOutOfBoundsException e) {
                 currentPageFirstItemId = null;
             }
             currentPageFirstItemIndex = newIndex;
@@ -1241,7 +1217,7 @@ public class Table extends AbstractSelect implements Action.Container,
     public Object addItem(Object[] cells, Object itemId)
             throws UnsupportedOperationException {
 
-        Object[] cols = getVisibleColumns();
+        final Object[] cols = getVisibleColumns();
 
         // Checks that a correct number of cells are given
         if (cells.length != cols.length) {
@@ -1328,7 +1304,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
         // Page start index
         if (variables.containsKey("firstvisible")) {
-            Integer value = (Integer) variables.get("firstvisible");
+            final Integer value = (Integer) variables.get("firstvisible");
             if (value != null) {
                 setCurrentPageFirstItemIndex(value.intValue());
             }
@@ -1351,14 +1327,15 @@ public class Table extends AbstractSelect implements Action.Container,
 
         // Actions
         if (variables.containsKey("action")) {
-            StringTokenizer st = new StringTokenizer((String) variables
+            final StringTokenizer st = new StringTokenizer((String) variables
                     .get("action"), ",");
             if (st.countTokens() == 2) {
-                Object itemId = itemIdMapper.get(st.nextToken());
-                Action action = (Action) actionMapper.get(st.nextToken());
+                final Object itemId = itemIdMapper.get(st.nextToken());
+                final Action action = (Action) actionMapper.get(st.nextToken());
                 if (action != null && containsId(itemId)
                         && actionHandlers != null) {
-                    for (Iterator i = actionHandlers.iterator(); i.hasNext();) {
+                    for (final Iterator i = actionHandlers.iterator(); i
+                            .hasNext();) {
                         ((Action.Handler) i.next()).handleAction(action, this,
                                 itemId);
                     }
@@ -1370,15 +1347,15 @@ public class Table extends AbstractSelect implements Action.Container,
         boolean doSort = false;
         if (!sortDisabled) {
             if (variables.containsKey("sortcolumn")) {
-                String colId = (String) variables.get("sortcolumn");
+                final String colId = (String) variables.get("sortcolumn");
                 if (colId != null && !"".equals(colId) && !"null".equals(colId)) {
-                    Object id = columnIdMap.get(colId);
+                    final Object id = columnIdMap.get(colId);
                     setSortContainerPropertyId(id);
                     doSort = true;
                 }
             }
             if (variables.containsKey("sortascending")) {
-                boolean state = ((Boolean) variables.get("sortascending"))
+                final boolean state = ((Boolean) variables.get("sortascending"))
                         .booleanValue();
                 if (state != sortAscending) {
                     setSortAscending(state);
@@ -1395,27 +1372,30 @@ public class Table extends AbstractSelect implements Action.Container,
         if (isColumnCollapsingAllowed()) {
             if (variables.containsKey("collapsedcolumns")) {
                 try {
-                    Object[] ids = (Object[]) variables.get("collapsedcolumns");
-                    for (Iterator it = visibleColumns.iterator(); it.hasNext();) {
+                    final Object[] ids = (Object[]) variables
+                            .get("collapsedcolumns");
+                    for (final Iterator it = visibleColumns.iterator(); it
+                            .hasNext();) {
                         setColumnCollapsed(it.next(), false);
                     }
                     for (int i = 0; i < ids.length; i++) {
                         setColumnCollapsed(columnIdMap.get(ids[i].toString()),
                                 true);
                     }
-                } catch (Exception ignored) {
+                } catch (final Exception ignored) {
                 }
             }
         }
         if (isColumnReorderingAllowed()) {
             if (variables.containsKey("columnorder")) {
                 try {
-                    Object[] ids = (Object[]) variables.get("columnorder");
+                    final Object[] ids = (Object[]) variables
+                            .get("columnorder");
                     for (int i = 0; i < ids.length; i++) {
                         ids[i] = columnIdMap.get(ids[i].toString());
                     }
                     setColumnOrder(ids);
-                } catch (Exception ignored) {
+                } catch (final Exception ignored) {
                 }
             }
         }
@@ -1452,16 +1432,16 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         // Initialize temps
-        Object[] colids = getVisibleColumns();
-        int cols = colids.length;
-        int first = getCurrentPageFirstItemIndex();
+        final Object[] colids = getVisibleColumns();
+        final int cols = colids.length;
+        final int first = getCurrentPageFirstItemIndex();
         int total = size();
-        int pagelen = getPageLength();
-        int colHeadMode = getColumnHeaderMode();
-        boolean colheads = colHeadMode != COLUMN_HEADER_MODE_HIDDEN;
-        boolean rowheads = getRowHeaderMode() != ROW_HEADER_MODE_HIDDEN;
-        Object[][] cells = getVisibleCells();
-        boolean iseditable = isEditable();
+        final int pagelen = getPageLength();
+        final int colHeadMode = getColumnHeaderMode();
+        final boolean colheads = colHeadMode != COLUMN_HEADER_MODE_HIDDEN;
+        final boolean rowheads = getRowHeaderMode() != ROW_HEADER_MODE_HIDDEN;
+        final Object[][] cells = getVisibleCells();
+        final boolean iseditable = isEditable();
         int rows = cells[0].length;
 
         if (!isNullSelectionAllowed() && getNullSelectionItemId() != null
@@ -1503,10 +1483,10 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         // Visible column order
-        Collection sortables = getSortableContainerPropertyIds();
-        ArrayList visibleColOrder = new ArrayList();
-        for (Iterator it = visibleColumns.iterator(); it.hasNext();) {
-            Object columnId = it.next();
+        final Collection sortables = getSortableContainerPropertyIds();
+        final ArrayList visibleColOrder = new ArrayList();
+        for (final Iterator it = visibleColumns.iterator(); it.hasNext();) {
+            final Object columnId = it.next();
             if (!isColumnCollapsed(columnId)) {
                 visibleColOrder.add(columnIdMap.key(columnId));
             }
@@ -1514,20 +1494,20 @@ public class Table extends AbstractSelect implements Action.Container,
         target.addAttribute("vcolorder", visibleColOrder.toArray());
 
         // Rows
-        Set actionSet = new LinkedHashSet();
-        boolean selectable = isSelectable();
-        boolean[] iscomponent = new boolean[visibleColumns.size()];
+        final Set actionSet = new LinkedHashSet();
+        final boolean selectable = isSelectable();
+        final boolean[] iscomponent = new boolean[visibleColumns.size()];
         int iscomponentIndex = 0;
-        for (Iterator it = visibleColumns.iterator(); it.hasNext()
+        for (final Iterator it = visibleColumns.iterator(); it.hasNext()
                 && iscomponentIndex < iscomponent.length;) {
-            Object columnId = it.next();
-            Class colType = getType(columnId);
+            final Object columnId = it.next();
+            final Class colType = getType(columnId);
             iscomponent[iscomponentIndex++] = colType != null
                     && Component.class.isAssignableFrom(colType);
         }
         target.startTag("rows");
         for (int i = 0; i < cells[0].length; i++) {
-            Object itemId = cells[CELL_ITEMID][i];
+            final Object itemId = cells[CELL_ITEMID][i];
 
             if (!isNullSelectionAllowed() && getNullSelectionItemId() != null
                     && itemId == getNullSelectionItemId()) {
@@ -1558,13 +1538,14 @@ public class Table extends AbstractSelect implements Action.Container,
 
             // Actions
             if (actionHandlers != null) {
-                ArrayList keys = new ArrayList();
-                for (Iterator ahi = actionHandlers.iterator(); ahi.hasNext();) {
-                    Action[] aa = ((Action.Handler) ahi.next()).getActions(
-                            itemId, this);
+                final ArrayList keys = new ArrayList();
+                for (final Iterator ahi = actionHandlers.iterator(); ahi
+                        .hasNext();) {
+                    final Action[] aa = ((Action.Handler) ahi.next())
+                            .getActions(itemId, this);
                     if (aa != null) {
                         for (int ai = 0; ai < aa.length; ai++) {
-                            String key = actionMapper.key(aa[ai]);
+                            final String key = actionMapper.key(aa[ai]);
                             actionSet.add(aa[ai]);
                             keys.add(key);
                         }
@@ -1575,15 +1556,15 @@ public class Table extends AbstractSelect implements Action.Container,
 
             // cells
             int currentColumn = 0;
-            for (Iterator it = visibleColumns.iterator(); it.hasNext(); currentColumn++) {
-                Object columnId = it.next();
+            for (final Iterator it = visibleColumns.iterator(); it.hasNext(); currentColumn++) {
+                final Object columnId = it.next();
                 if (columnId == null || isColumnCollapsed(columnId)) {
                     continue;
                 }
                 if ((iscomponent[currentColumn] || iseditable)
                         && Component.class.isInstance(cells[CELL_FIRSTCOL
                                 + currentColumn][i])) {
-                    Component c = (Component) cells[CELL_FIRSTCOL
+                    final Component c = (Component) cells[CELL_FIRSTCOL
                             + currentColumn][i];
                     if (c == null) {
                         target.addText("");
@@ -1630,8 +1611,8 @@ public class Table extends AbstractSelect implements Action.Container,
         if (!actionSet.isEmpty()) {
             target.addVariable(this, "action", "");
             target.startTag("actions");
-            for (Iterator it = actionSet.iterator(); it.hasNext();) {
-                Action a = (Action) it.next();
+            for (final Iterator it = actionSet.iterator(); it.hasNext();) {
+                final Action a = (Action) it.next();
                 target.startTag("action");
                 if (a.getCaption() != null) {
                     target.addAttribute("caption", a.getCaption());
@@ -1645,9 +1626,9 @@ public class Table extends AbstractSelect implements Action.Container,
             target.endTag("actions");
         }
         if (columnReorderingAllowed) {
-            String[] colorder = new String[visibleColumns.size()];
+            final String[] colorder = new String[visibleColumns.size()];
             int i = 0;
-            for (Iterator it = visibleColumns.iterator(); it.hasNext()
+            for (final Iterator it = visibleColumns.iterator(); it.hasNext()
                     && i < colorder.length;) {
                 colorder[i++] = columnIdMap.key(it.next());
             }
@@ -1655,18 +1636,18 @@ public class Table extends AbstractSelect implements Action.Container,
         }
         // Available columns
         if (columnCollapsingAllowed) {
-            HashSet ccs = new HashSet();
-            for (Iterator i = visibleColumns.iterator(); i.hasNext();) {
-                Object o = i.next();
+            final HashSet ccs = new HashSet();
+            for (final Iterator i = visibleColumns.iterator(); i.hasNext();) {
+                final Object o = i.next();
                 if (isColumnCollapsed(o)) {
                     ccs.add(o);
                 }
             }
-            String[] collapsedkeys = new String[ccs.size()];
+            final String[] collapsedkeys = new String[ccs.size()];
             int nextColumn = 0;
-            for (Iterator it = visibleColumns.iterator(); it.hasNext()
+            for (final Iterator it = visibleColumns.iterator(); it.hasNext()
                     && nextColumn < collapsedkeys.length;) {
-                Object columnId = it.next();
+                final Object columnId = it.next();
                 if (isColumnCollapsed(columnId)) {
                     collapsedkeys[nextColumn++] = columnIdMap.key(columnId);
                 }
@@ -1675,12 +1656,12 @@ public class Table extends AbstractSelect implements Action.Container,
         }
         target.startTag("visiblecolumns");
         int i = 0;
-        for (Iterator it = visibleColumns.iterator(); it.hasNext(); i++) {
-            Object columnId = it.next();
+        for (final Iterator it = visibleColumns.iterator(); it.hasNext(); i++) {
+            final Object columnId = it.next();
             if (columnId != null) {
                 target.startTag("column");
                 target.addAttribute("cid", columnIdMap.key(columnId));
-                String head = getColumnHeader(columnId);
+                final String head = getColumnHeader(columnId);
                 target.addAttribute("caption", (head != null ? head : ""));
                 if (isColumnCollapsed(columnId)) {
                     target.addAttribute("collapsed", true);
@@ -1732,7 +1713,7 @@ public class Table extends AbstractSelect implements Action.Container,
         if (listenedProperties == null) {
             listenedProperties = new LinkedList();
         } else {
-            for (Iterator i = listenedProperties.iterator(); i.hasNext();) {
+            for (final Iterator i = listenedProperties.iterator(); i.hasNext();) {
                 ((Property.ValueChangeNotifier) i.next()).removeListener(this);
             }
         }
@@ -1741,16 +1722,16 @@ public class Table extends AbstractSelect implements Action.Container,
         if (visibleComponents == null) {
             visibleComponents = new LinkedList();
         } else {
-            for (Iterator i = visibleComponents.iterator(); i.hasNext();) {
+            for (final Iterator i = visibleComponents.iterator(); i.hasNext();) {
                 ((Component) i.next()).setParent(null);
             }
             visibleComponents.clear();
         }
 
         // Collects the basic facts about the table page
-        Object[] colids = getVisibleColumns();
-        int cols = colids.length;
-        int pagelen = getPageLength();
+        final Object[] colids = getVisibleColumns();
+        final int cols = colids.length;
+        final int pagelen = getPageLength();
         int firstIndex = getCurrentPageFirstItemIndex();
         int rows = size();
         if (rows > 0 && firstIndex >= 0) {
@@ -1791,8 +1772,8 @@ public class Table extends AbstractSelect implements Action.Container,
             }
         }
 
-        int headmode = getRowHeaderMode();
-        boolean[] iscomponent = new boolean[cols];
+        final int headmode = getRowHeaderMode();
+        final boolean[] iscomponent = new boolean[cols];
         for (int i = 0; i < cols; i++) {
             iscomponent[i] = Component.class
                     .isAssignableFrom(getType(colids[i]));
@@ -1816,7 +1797,7 @@ public class Table extends AbstractSelect implements Action.Container,
             if (cols > 0) {
                 for (int j = 0; j < cols; j++) {
                     Object value = null;
-                    Property p = getContainerProperty(id, colids[j]);
+                    final Property p = getContainerProperty(id, colids[j]);
                     if (p != null) {
                         if (p instanceof Property.ValueChangeNotifier) {
                             ((Property.ValueChangeNotifier) p)
@@ -1849,7 +1830,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
         // Assures that all the rows of the cell-buffer are valid
         if (filledRows != cells[0].length) {
-            Object[][] temp = new Object[cells.length][filledRows];
+            final Object[][] temp = new Object[cells.length][filledRows];
             for (int i = 0; i < cells.length; i++) {
                 for (int j = 0; j < filledRows; j++) {
                     temp[i][j] = cells[i][j];
@@ -1886,8 +1867,8 @@ public class Table extends AbstractSelect implements Action.Container,
     protected Object getPropertyValue(Object rowId, Object colId,
             Property property) {
         if (isEditable() && fieldFactory != null) {
-            Field f = fieldFactory.createField(getContainerDataSource(), rowId,
-                    colId, this);
+            final Field f = fieldFactory.createField(getContainerDataSource(),
+                    rowId, colId, this);
             if (f != null) {
                 f.setPropertyDataSource(property);
                 return f;
@@ -1984,7 +1965,7 @@ public class Table extends AbstractSelect implements Action.Container,
         super.attach();
 
         if (visibleComponents != null) {
-            for (Iterator i = visibleComponents.iterator(); i.hasNext();) {
+            for (final Iterator i = visibleComponents.iterator(); i.hasNext();) {
                 ((Component) i.next()).attach();
             }
         }
@@ -1999,7 +1980,7 @@ public class Table extends AbstractSelect implements Action.Container,
         super.detach();
 
         if (visibleComponents != null) {
-            for (Iterator i = visibleComponents.iterator(); i.hasNext();) {
+            for (final Iterator i = visibleComponents.iterator(); i.hasNext();) {
                 ((Component) i.next()).detach();
             }
         }
@@ -2022,8 +2003,9 @@ public class Table extends AbstractSelect implements Action.Container,
      * @see com.itmill.toolkit.data.Container#removeItem(Object)
      */
     public boolean removeItem(Object itemId) {
-        Object nextItemId = ((Container.Ordered) items).nextItemId(itemId);
-        boolean ret = super.removeItem(itemId);
+        final Object nextItemId = ((Container.Ordered) items)
+                .nextItemId(itemId);
+        final boolean ret = super.removeItem(itemId);
         if (ret && (itemId != null) && (itemId.equals(currentPageFirstItemId))) {
             currentPageFirstItemId = nextItemId;
         }
@@ -2111,9 +2093,9 @@ public class Table extends AbstractSelect implements Action.Container,
      */
     public Collection getVisibleItemIds() {
 
-        LinkedList visible = new LinkedList();
+        final LinkedList visible = new LinkedList();
 
-        Object[][] cells = getVisibleCells();
+        final Object[][] cells = getVisibleCells();
         for (int i = 0; i < cells[CELL_ITEMID].length; i++) {
             visible.add(cells[CELL_ITEMID][i]);
         }
@@ -2334,9 +2316,9 @@ public class Table extends AbstractSelect implements Action.Container,
      */
     public void sort(Object[] propertyId, boolean[] ascending)
             throws UnsupportedOperationException {
-        Container c = getContainerDataSource();
+        final Container c = getContainerDataSource();
         if (c instanceof Container.Sortable) {
-            int pageIndex = getCurrentPageFirstItemIndex();
+            final int pageIndex = getCurrentPageFirstItemIndex();
             ((Container.Sortable) c).sort(propertyId, ascending);
             setCurrentPageFirstItemIndex(pageIndex);
         } else if (c != null) {
@@ -2366,7 +2348,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * @see com.itmill.toolkit.data.Container.Sortable#getSortableContainerPropertyIds()
      */
     public Collection getSortableContainerPropertyIds() {
-        Container c = getContainerDataSource();
+        final Container c = getContainerDataSource();
         if (c instanceof Container.Sortable && !isSortDisabled()) {
             return ((Container.Sortable) c).getSortableContainerPropertyIds();
         } else {

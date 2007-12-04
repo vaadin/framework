@@ -1,30 +1,6 @@
-/* *************************************************************************
- 
- IT Mill Toolkit 
-
- Development of Browser User Interfaces Made Easy
-
- Copyright (C) 2000-2006 IT Mill Ltd
- 
- *************************************************************************
-
- This product is distributed under commercial license that can be found
- from the product package on license.pdf. Use of this product might 
- require purchasing a commercial license from IT Mill Ltd. For guidelines 
- on usage, see licensing-guidelines.html
-
- *************************************************************************
- 
- For more information, contact:
- 
- IT Mill Ltd                           phone: +358 2 4802 7180
- Ruukinkatu 2-4                        fax:   +358 2 4802 7181
- 20540, Turku                          email:  info@itmill.com
- Finland                               company www: www.itmill.com
- 
- Primary source for information and releases: www.itmill.com
-
- ********************************************************************** */
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
 
 package com.itmill.toolkit.ui;
 
@@ -73,7 +49,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
                     "nodeExpand", new Class[] { ExpandEvent.class });
             COLLAPSE_METHOD = CollapseListener.class.getDeclaredMethod(
                     "nodeCollapse", new Class[] { CollapseEvent.class });
-        } catch (java.lang.NoSuchMethodException e) {
+        } catch (final java.lang.NoSuchMethodException e) {
             // This should never happen
             e.printStackTrace();
             throw new java.lang.RuntimeException(
@@ -231,12 +207,12 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         boolean result = true;
 
         // Initial stack
-        Stack todo = new Stack();
+        final Stack todo = new Stack();
         todo.add(startItemId);
 
         // Expands recursively
         while (!todo.isEmpty()) {
-            Object id = todo.pop();
+            final Object id = todo.pop();
             if (areChildrenAllowed(id) && !expandItem(id, false)) {
                 result = false;
             }
@@ -284,12 +260,12 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         boolean result = true;
 
         // Initial stack
-        Stack todo = new Stack();
+        final Stack todo = new Stack();
         todo.add(startItemId);
 
         // Collapse recursively
         while (!todo.isEmpty()) {
-            Object id = todo.pop();
+            final Object id = todo.pop();
             if (areChildrenAllowed(id) && !collapseItem(id)) {
                 result = false;
             }
@@ -360,9 +336,9 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 
         // Collapses the nodes
         if (variables.containsKey("collapse")) {
-            String[] keys = (String[]) variables.get("collapse");
+            final String[] keys = (String[]) variables.get("collapse");
             for (int i = 0; i < keys.length; i++) {
-                Object id = itemIdMapper.get(keys[i]);
+                final Object id = itemIdMapper.get(keys[i]);
                 if (id != null && isExpanded(id)) {
                     expanded.remove(id);
                     fireCollapseEvent(id);
@@ -376,9 +352,9 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
             if (variables.containsKey("requestChildTree")) {
                 sendChildTree = true;
             }
-            String[] keys = (String[]) variables.get("expand");
+            final String[] keys = (String[]) variables.get("expand");
             for (int i = 0; i < keys.length; i++) {
-                Object id = itemIdMapper.get(keys[i]);
+                final Object id = itemIdMapper.get(keys[i]);
                 if (id != null) {
                     expandItem(id, sendChildTree);
                 }
@@ -391,14 +367,15 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         // Actions
         if (variables.containsKey("action")) {
 
-            StringTokenizer st = new StringTokenizer((String) variables
+            final StringTokenizer st = new StringTokenizer((String) variables
                     .get("action"), ",");
             if (st.countTokens() == 2) {
-                Object itemId = itemIdMapper.get(st.nextToken());
-                Action action = (Action) actionMapper.get(st.nextToken());
+                final Object itemId = itemIdMapper.get(st.nextToken());
+                final Action action = (Action) actionMapper.get(st.nextToken());
                 if (action != null && containsId(itemId)
                         && actionHandlers != null) {
-                    for (Iterator i = actionHandlers.iterator(); i.hasNext();) {
+                    for (final Iterator i = actionHandlers.iterator(); i
+                            .hasNext();) {
                         ((Action.Handler) i.next()).handleAction(action, this,
                                 itemId);
                     }
@@ -448,7 +425,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         }
 
         // Initialize variables
-        Set actionSet = new LinkedHashSet();
+        final Set actionSet = new LinkedHashSet();
         String[] selectedKeys;
         if (isMultiSelect()) {
             selectedKeys = new String[((Set) getValue()).size()];
@@ -456,10 +433,10 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
             selectedKeys = new String[(getValue() == null ? 0 : 1)];
         }
         int keyIndex = 0;
-        LinkedList expandedKeys = new LinkedList();
+        final LinkedList expandedKeys = new LinkedList();
 
         // Iterates through hierarchical tree using a stack of iterators
-        Stack iteratorStack = new Stack();
+        final Stack iteratorStack = new Stack();
         Collection ids;
         if (partialUpdate) {
             ids = getChildren(expandedItemId);
@@ -474,7 +451,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         while (!iteratorStack.isEmpty()) {
 
             // Gets the iterator for current tree level
-            Iterator i = (Iterator) iteratorStack.peek();
+            final Iterator i = (Iterator) iteratorStack.peek();
 
             // If the level is finished, back to previous tree level
             if (!i.hasNext()) {
@@ -490,10 +467,10 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 
             // Adds the item on current level
             else {
-                Object itemId = i.next();
+                final Object itemId = i.next();
 
                 // Starts the item / node
-                boolean isNode = areChildrenAllowed(itemId)
+                final boolean isNode = areChildrenAllowed(itemId)
                         && hasChildren(itemId);
                 if (isNode) {
                     target.startTag("node");
@@ -503,11 +480,11 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 
                 // Adds the attributes
                 target.addAttribute("caption", getItemCaption(itemId));
-                Resource icon = getItemIcon(itemId);
+                final Resource icon = getItemIcon(itemId);
                 if (icon != null) {
                     target.addAttribute("icon", getItemIcon(itemId));
                 }
-                String key = itemIdMapper.key(itemId);
+                final String key = itemIdMapper.key(itemId);
                 target.addAttribute("key", key);
                 if (isSelected(itemId)) {
                     target.addAttribute("selected", true);
@@ -520,14 +497,14 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 
                 // Actions
                 if (actionHandlers != null) {
-                    ArrayList keys = new ArrayList();
-                    for (Iterator ahi = actionHandlers.iterator(); ahi
+                    final ArrayList keys = new ArrayList();
+                    for (final Iterator ahi = actionHandlers.iterator(); ahi
                             .hasNext();) {
-                        Action[] aa = ((Action.Handler) ahi.next()).getActions(
-                                itemId, this);
+                        final Action[] aa = ((Action.Handler) ahi.next())
+                                .getActions(itemId, this);
                         if (aa != null) {
                             for (int ai = 0; ai < aa.length; ai++) {
-                                String akey = actionMapper.key(aa[ai]);
+                                final String akey = actionMapper.key(aa[ai]);
                                 actionSet.add(aa[ai]);
                                 keys.add(akey);
                             }
@@ -554,8 +531,8 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         if (!actionSet.isEmpty()) {
             target.addVariable(this, "action", "");
             target.startTag("actions");
-            for (Iterator i = actionSet.iterator(); i.hasNext();) {
-                Action a = (Action) i.next();
+            for (final Iterator i = actionSet.iterator(); i.hasNext();) {
+                final Action a = (Action) i.next();
                 target.startTag("action");
                 if (a.getCaption() != null) {
                     target.addAttribute("caption", a.getCaption());
@@ -648,8 +625,8 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      *      boolean)
      */
     public boolean setChildrenAllowed(Object itemId, boolean areChildrenAllowed) {
-        boolean success = ((Container.Hierarchical) items).setChildrenAllowed(
-                itemId, areChildrenAllowed);
+        final boolean success = ((Container.Hierarchical) items)
+                .setChildrenAllowed(itemId, areChildrenAllowed);
         if (success) {
             fireValueChange(false);
         }
@@ -663,8 +640,8 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      *      Object)
      */
     public boolean setParent(Object itemId, Object newParentId) {
-        boolean success = ((Container.Hierarchical) items).setParent(itemId,
-                newParentId);
+        final boolean success = ((Container.Hierarchical) items).setParent(
+                itemId, newParentId);
         if (success) {
             requestRepaint();
         }
@@ -923,18 +900,18 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      */
     public Collection getVisibleItemIds() {
 
-        LinkedList visible = new LinkedList();
+        final LinkedList visible = new LinkedList();
 
         // Iterates trough hierarchical tree using a stack of iterators
-        Stack iteratorStack = new Stack();
-        Collection ids = rootItemIds();
+        final Stack iteratorStack = new Stack();
+        final Collection ids = rootItemIds();
         if (ids != null) {
             iteratorStack.push(ids.iterator());
         }
         while (!iteratorStack.isEmpty()) {
 
             // Gets the iterator for current tree level
-            Iterator i = (Iterator) iteratorStack.peek();
+            final Iterator i = (Iterator) iteratorStack.peek();
 
             // If the level is finished, back to previous tree level
             if (!i.hasNext()) {
@@ -945,7 +922,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 
             // Adds the item on current level
             else {
-                Object itemId = i.next();
+                final Object itemId = i.next();
 
                 visible.add(itemId);
 

@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.demo;
 
 import java.io.File;
@@ -5,6 +9,7 @@ import java.io.File;
 import com.itmill.toolkit.data.util.FilesystemContainer;
 import com.itmill.toolkit.data.util.FilesystemContainer.FileItem;
 import com.itmill.toolkit.demo.util.SampleDirectory;
+import com.itmill.toolkit.terminal.Sizeable;
 import com.itmill.toolkit.ui.ExpandLayout;
 import com.itmill.toolkit.ui.Field;
 import com.itmill.toolkit.ui.Label;
@@ -29,19 +34,19 @@ public class TreeFilesystemContainer extends com.itmill.toolkit.Application
         implements Listener {
 
     // Filesystem explorer panel and it's components
-    private Panel explorerPanel = new Panel("Filesystem explorer");
+    private final Panel explorerPanel = new Panel("Filesystem explorer");
 
-    private Tree filesystem = new Tree();
+    private final Tree filesystem = new Tree();
 
     // File properties panel and it's components
-    private Panel propertyPanel = new Panel("File properties");
+    private final Panel propertyPanel = new Panel("File properties");
 
-    private Label fileProperties = new Label();
+    private final Label fileProperties = new Label();
 
     public void init() {
-        Window w = new Window("Tree FilesystemContainer demo");
+        final Window w = new Window("Tree FilesystemContainer demo");
         setMainWindow(w);
-        ExpandLayout main = new ExpandLayout();
+        final ExpandLayout main = new ExpandLayout();
         w.setLayout(main);
         main.setMargin(true);
         main.setSpacing(true);
@@ -49,7 +54,7 @@ public class TreeFilesystemContainer extends com.itmill.toolkit.Application
         propertyPanel.setHeight(120);
         main.addComponent(propertyPanel);
         explorerPanel.setHeight(100);
-        explorerPanel.setHeightUnits(Panel.UNITS_PERCENTAGE);
+        explorerPanel.setHeightUnits(Sizeable.UNITS_PERCENTAGE);
         main.addComponent(explorerPanel);
         main.expand(explorerPanel);
 
@@ -62,9 +67,9 @@ public class TreeFilesystemContainer extends com.itmill.toolkit.Application
         propertyPanel.setEnabled(false);
 
         // Get sample directory
-        File sampleDir = SampleDirectory.getDirectory(this);
+        final File sampleDir = SampleDirectory.getDirectory(this);
         // Populate tree with FilesystemContainer
-        FilesystemContainer fsc = new FilesystemContainer(sampleDir, true);
+        final FilesystemContainer fsc = new FilesystemContainer(sampleDir, true);
         filesystem.setContainerDataSource(fsc);
         // "this" handles all filesystem events
         // e.g. node clicked, expanded etc.
@@ -83,8 +88,8 @@ public class TreeFilesystemContainer extends com.itmill.toolkit.Application
             // Check if event is about changing value
             if (event.getClass() == Field.ValueChangeEvent.class) {
                 // Update property panel contents
-                FileItem fileItem = (FileItem) filesystem.getItem(filesystem
-                        .getValue());
+                final FileItem fileItem = (FileItem) filesystem
+                        .getItem(filesystem.getValue());
                 fileProperties.setIcon(fileItem.getIcon());
                 fileProperties.setCaption(fileItem.getName() + ", size "
                         + fileItem.getSize() + " bytes.");

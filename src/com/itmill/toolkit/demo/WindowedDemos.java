@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.demo;
 
 import java.util.HashMap;
@@ -35,20 +39,20 @@ public class WindowedDemos extends com.itmill.toolkit.Application {
     public void init() {
 
         // Create new window for the application and give the window a visible.
-        Window main = new Window("IT Mill Toolkit 5 Windowed Demos");
+        final Window main = new Window("IT Mill Toolkit 5 Windowed Demos");
         // set as main window
         setMainWindow(main);
 
         // Create menu window.
-        Window menu = new Window("Select demo");
+        final Window menu = new Window("Select demo");
         menu.setWidth(200);
         menu.setHeight(400);
         main.addWindow(menu); // add to layout
 
         // Create a menu button for each demo
-        for (Iterator it = servlets.keySet().iterator(); it.hasNext();) {
-            String name = (String) it.next();
-            Button b = new Button(name, new Button.ClickListener() {
+        for (final Iterator it = servlets.keySet().iterator(); it.hasNext();) {
+            final String name = (String) it.next();
+            final Button b = new Button(name, new Button.ClickListener() {
                 public void buttonClick(ClickEvent event) {
                     show(event.getButton().getCaption());
                 }

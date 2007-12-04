@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.client;
 
 import com.google.gwt.user.client.Event;
@@ -11,13 +15,13 @@ import com.itmill.toolkit.terminal.gwt.client.ui.IWindow;
 
 public final class DebugConsole extends IWindow implements Console {
 
-    private Panel panel;
+    private final Panel panel;
 
     public DebugConsole(ApplicationConnection client) {
         super();
         this.client = client;
         panel = new FlowPanel();
-        ScrollPanel p = new ScrollPanel();
+        final ScrollPanel p = new ScrollPanel();
         p.add(panel);
         setWidget(p);
         setCaption("Debug window");

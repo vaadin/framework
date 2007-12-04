@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import com.google.gwt.user.client.DOM;
@@ -21,7 +25,7 @@ public class IButton extends Button implements Paintable {
 
     private Element errorIndicatorElement;
 
-    private Element captionElement = DOM.createSpan();
+    private final Element captionElement = DOM.createSpan();
 
     private ErrorMessage errorMessage;
 
@@ -64,7 +68,7 @@ public class IButton extends Button implements Paintable {
 
         // handle error
         if (uidl.hasAttribute("error")) {
-            UIDL errorUidl = uidl.getErrors();
+            final UIDL errorUidl = uidl.getErrors();
             if (errorIndicatorElement == null) {
                 errorIndicatorElement = DOM.createDiv();
                 DOM.setElementProperty(errorIndicatorElement, "className",
@@ -110,7 +114,7 @@ public class IButton extends Button implements Paintable {
     }
 
     public void onBrowserEvent(Event event) {
-        Element target = DOM.eventGetTarget(event);
+        final Element target = DOM.eventGetTarget(event);
         if (errorIndicatorElement != null
                 && DOM.compare(target, errorIndicatorElement)) {
             switch (DOM.eventGetType(event)) {

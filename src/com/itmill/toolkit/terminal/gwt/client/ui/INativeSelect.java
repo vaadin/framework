@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import java.util.Iterator;
@@ -29,8 +33,8 @@ public class INativeSelect extends IOptionGroupBase {
             // can't unselect last item in singleselect mode
             select.addItem("", null);
         }
-        for (Iterator i = uidl.getChildIterator(); i.hasNext();) {
-            UIDL optionUidl = (UIDL) i.next();
+        for (final Iterator i = uidl.getChildIterator(); i.hasNext();) {
+            final UIDL optionUidl = (UIDL) i.next();
             select.addItem(optionUidl.getStringAttribute("caption"), optionUidl
                     .getStringAttribute("key"));
             if (optionUidl.hasAttribute("selected")) {
@@ -40,7 +44,7 @@ public class INativeSelect extends IOptionGroupBase {
     }
 
     protected Object[] getSelectedItems() {
-        Vector selectedItemKeys = new Vector();
+        final Vector selectedItemKeys = new Vector();
         for (int i = 0; i < select.getItemCount(); i++) {
             if (select.isItemSelected(i)) {
                 selectedItemKeys.add(select.getValue(i));

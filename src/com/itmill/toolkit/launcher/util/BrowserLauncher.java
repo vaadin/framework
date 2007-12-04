@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.launcher.util;
 
 import java.io.IOException;
@@ -16,10 +20,11 @@ public class BrowserLauncher {
      */
     public static void openBrowser(String url) {
 
-        Runtime runtime = Runtime.getRuntime();
+        final Runtime runtime = Runtime.getRuntime();
         boolean started = false;
 
-        String os = System.getProperty("os.name", "windows").toLowerCase();
+        final String os = System.getProperty("os.name", "windows")
+                .toLowerCase();
 
         // Linux
         if (os.indexOf("linux") >= 0) {
@@ -29,7 +34,7 @@ public class BrowserLauncher {
                 try {
                     runtime.exec("x-www-browser " + url);
                     started = true;
-                } catch (IOException e) {
+                } catch (final IOException e) {
                 }
             }
 
@@ -38,7 +43,7 @@ public class BrowserLauncher {
                 try {
                     runtime.exec("firefox " + url);
                     started = true;
-                } catch (IOException e) {
+                } catch (final IOException e) {
                 }
             }
 
@@ -47,7 +52,7 @@ public class BrowserLauncher {
                 try {
                     runtime.exec("mozilla " + url);
                     started = true;
-                } catch (IOException e) {
+                } catch (final IOException e) {
                 }
             }
 
@@ -56,7 +61,7 @@ public class BrowserLauncher {
                 try {
                     runtime.exec("konqueror " + url);
                     started = true;
-                } catch (IOException e) {
+                } catch (final IOException e) {
                 }
             }
         }
@@ -69,7 +74,7 @@ public class BrowserLauncher {
                 try {
                     runtime.exec("open " + url);
                     started = true;
-                } catch (IOException e) {
+                } catch (final IOException e) {
                 }
             }
         }
@@ -80,7 +85,7 @@ public class BrowserLauncher {
                 try {
                     runtime.exec("cmd /c start " + url);
                     started = true;
-                } catch (IOException e) {
+                } catch (final IOException e) {
                 }
             }
         }

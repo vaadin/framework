@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.tests.magi;
 
 import com.itmill.toolkit.event.Action;
@@ -55,7 +59,7 @@ public class DefaultButtonExample extends CustomComponent implements Handler {
      * buttons.
      */
     public Action[] getActions(Object target, Object sender) {
-        Action[] actions = new Action[1];
+        final Action[] actions = new Action[1];
 
         // Set the action for the requested component
         if (sender == ok) {

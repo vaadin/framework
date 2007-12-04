@@ -1,30 +1,6 @@
-/* *************************************************************************
- 
- IT Mill Toolkit 
-
- Development of Browser User Interfaces Made Easy
-
- Copyright (C) 2000-2006 IT Mill Ltd
- 
- *************************************************************************
-
- This product is distributed under commercial license that can be found
- from the product package on license.pdf. Use of this product might 
- require purchasing a commercial license from IT Mill Ltd. For guidelines 
- on usage, see licensing-guidelines.html
-
- *************************************************************************
- 
- For more information, contact:
- 
- IT Mill Ltd                           phone: +358 2 4802 7180
- Ruukinkatu 2-4                        fax:   +358 2 4802 7181
- 20540, Turku                          email:  info@itmill.com
- Finland                               company www: www.itmill.com
- 
- Primary source for information and releases: www.itmill.com
-
- ********************************************************************** */
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
 
 package com.itmill.toolkit;
 
@@ -130,7 +106,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
     /**
      * Mapping from window name to window instance.
      */
-    private Hashtable windows = new Hashtable();
+    private final Hashtable windows = new Hashtable();
 
     /**
      * Main window of the application.
@@ -180,9 +156,9 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
     /**
      * Application resource mapping: key <-> resource.
      */
-    private Hashtable resourceKeyMap = new Hashtable();
+    private final Hashtable resourceKeyMap = new Hashtable();
 
-    private Hashtable keyResourceMap = new Hashtable();
+    private final Hashtable keyResourceMap = new Hashtable();
 
     private long lastResourceKeyNumber = 0;
 
@@ -230,7 +206,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
         }
 
         // Gets the window by name
-        Window window = (Window) windows.get(name);
+        final Window window = (Window) windows.get(name);
 
         return window;
     }
@@ -324,8 +300,8 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
     private void fireWindowAttachEvent(Window window) {
         // Fires the window attach event
         if (windowAttachListeners != null) {
-            Object[] listeners = windowAttachListeners.toArray();
-            WindowAttachEvent event = new WindowAttachEvent(window);
+            final Object[] listeners = windowAttachListeners.toArray();
+            final WindowAttachEvent event = new WindowAttachEvent(window);
             for (int i = 0; i < listeners.length; i++) {
                 ((WindowAttachListener) listeners[i]).windowAttached(event);
             }
@@ -361,8 +337,8 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
     private void fireWindowDetachEvent(Window window) {
         // Fires the window detach event
         if (windowDetachListeners != null) {
-            Object[] listeners = windowDetachListeners.toArray();
-            WindowDetachEvent event = new WindowDetachEvent(window);
+            final Object[] listeners = windowDetachListeners.toArray();
+            final WindowDetachEvent event = new WindowDetachEvent(window);
             for (int i = 0; i < listeners.length; i++) {
                 ((WindowDetachListener) listeners[i]).windowDetached(event);
             }
@@ -394,12 +370,12 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
      *                the new user.
      */
     public void setUser(Object user) {
-        Object prevUser = this.user;
+        final Object prevUser = this.user;
         if (user != prevUser && (user == null || !user.equals(prevUser))) {
             this.user = user;
             if (userChangeListeners != null) {
-                Object[] listeners = userChangeListeners.toArray();
-                UserChangeEvent event = new UserChangeEvent(this, user,
+                final Object[] listeners = userChangeListeners.toArray();
+                final UserChangeEvent event = new UserChangeEvent(this, user,
                         prevUser);
                 for (int i = 0; i < listeners.length; i++) {
                     ((UserChangeListener) listeners[i])
@@ -502,11 +478,11 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
     public void setTheme(String theme) {
 
         // Collect list of windows not having the current or future theme
-        LinkedList toBeUpdated = new LinkedList();
-        String myTheme = getTheme();
-        for (Iterator i = getWindows().iterator(); i.hasNext();) {
-            Window w = (Window) i.next();
-            String windowTheme = w.getTheme();
+        final LinkedList toBeUpdated = new LinkedList();
+        final String myTheme = getTheme();
+        for (final Iterator i = getWindows().iterator(); i.hasNext();) {
+            final Window w = (Window) i.next();
+            final String windowTheme = w.getTheme();
             if ((windowTheme == null)
                     || (!theme.equals(windowTheme) && windowTheme
                             .equals(myTheme))) {
@@ -518,7 +494,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
         this.theme = theme;
 
         // Ask windows to update themselves
-        for (Iterator i = toBeUpdated.iterator(); i.hasNext();) {
+        for (final Iterator i = toBeUpdated.iterator(); i.hasNext();) {
             ((Window) i.next()).requestRepaint();
         }
     }
@@ -586,7 +562,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
         }
 
         // Generate key
-        String key = String.valueOf(++lastResourceKeyNumber);
+        final String key = String.valueOf(++lastResourceKeyNumber);
 
         // Add the resource to mappings
         resourceKeyMap.put(resource, key);
@@ -600,7 +576,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
      *                the resource to remove.
      */
     public void removeResource(ApplicationResource resource) {
-        Object key = resourceKeyMap.get(resource);
+        final Object key = resourceKeyMap.get(resource);
         if (key != null) {
             resourceKeyMap.remove(resource);
             keyResourceMap.remove(key);
@@ -617,14 +593,14 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
     public String getRelativeLocation(ApplicationResource resource) {
 
         // Gets the key
-        String key = (String) resourceKeyMap.get(resource);
+        final String key = (String) resourceKeyMap.get(resource);
 
         // If the resource is not registered, return null
         if (key == null) {
             return null;
         }
 
-        String filename = resource.getFilename();
+        final String filename = resource.getFilename();
         if (filename == null) {
             return "APP/" + key + "/";
         } else {
@@ -644,7 +620,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 
         // Resolves the prefix
         String prefix = relativeUri;
-        int index = relativeUri.indexOf('/');
+        final int index = relativeUri.indexOf('/');
         if (index >= 0) {
             prefix = relativeUri.substring(0, index);
         }
@@ -653,12 +629,12 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
         if (prefix.equals("APP")) {
 
             // Handles the resource request
-            int next = relativeUri.indexOf('/', index + 1);
+            final int next = relativeUri.indexOf('/', index + 1);
             if (next < 0) {
                 return null;
             }
-            String key = relativeUri.substring(index + 1, next);
-            ApplicationResource resource = (ApplicationResource) keyResourceMap
+            final String key = relativeUri.substring(index + 1, next);
+            final ApplicationResource resource = (ApplicationResource) keyResourceMap
                     .get(key);
             if (resource != null) {
                 return resource.getStream();
@@ -674,11 +650,11 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
             URL windowContext;
             try {
                 windowContext = new URL(context, prefix + "/");
-                String windowUri = relativeUri.length() > prefix.length() + 1 ? relativeUri
+                final String windowUri = relativeUri.length() > prefix.length() + 1 ? relativeUri
                         .substring(prefix.length() + 1)
                         : "";
                 return window.handleURI(windowContext, windowUri);
-            } catch (MalformedURLException e) {
+            } catch (final MalformedURLException e) {
                 return null;
             }
         }
@@ -737,12 +713,12 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
         /**
          * New user of the application.
          */
-        private Object newUser;
+        private final Object newUser;
 
         /**
          * Previous user of the application.
          */
-        private Object prevUser;
+        private final Object prevUser;
 
         /**
          * Constructor for user change event.
@@ -849,7 +825,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
          */
         private static final long serialVersionUID = 3544669568644691769L;
 
-        private Window window;
+        private final Window window;
 
         /**
          * Creates a event.
@@ -891,7 +867,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
          */
         private static final long serialVersionUID = 3977578104367822392L;
 
-        private Window window;
+        private final Window window;
 
         /**
          * Creates a event.
@@ -1066,7 +1042,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 
         // Shows the error in AbstractComponent
         if (owner instanceof AbstractComponent) {
-            Throwable e = event.getThrowable();
+            final Throwable e = event.getThrowable();
             if (e instanceof ErrorMessage) {
                 ((AbstractComponent) owner).setComponentError((ErrorMessage) e);
             } else {
@@ -1099,7 +1075,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
      * @return Focused component or null if none is focused.
      */
     public Component.Focusable consumeFocus() {
-        Component.Focusable f = pendingFocus;
+        final Component.Focusable f = pendingFocus;
         pendingFocus = null;
         return f;
     }

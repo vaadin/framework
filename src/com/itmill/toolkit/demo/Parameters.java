@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.demo;
 
 import java.net.URL;
@@ -7,6 +11,7 @@ import java.util.Map;
 import com.itmill.toolkit.terminal.DownloadStream;
 import com.itmill.toolkit.terminal.ExternalResource;
 import com.itmill.toolkit.terminal.ParameterHandler;
+import com.itmill.toolkit.terminal.Sizeable;
 import com.itmill.toolkit.terminal.URIHandler;
 import com.itmill.toolkit.ui.ExpandLayout;
 import com.itmill.toolkit.ui.Label;
@@ -25,41 +30,41 @@ import com.itmill.toolkit.ui.Window;
 public class Parameters extends com.itmill.toolkit.Application implements
         URIHandler, ParameterHandler {
 
-    private Label context = new Label();
+    private final Label context = new Label();
 
-    private Label relative = new Label();
+    private final Label relative = new Label();
 
-    private Table params = new Table();
+    private final Table params = new Table();
 
     public void init() {
-        Window main = new Window("Parameters demo");
+        final Window main = new Window("Parameters demo");
         setMainWindow(main);
 
         // This class acts both as URI handler and parameter handler
         main.addURIHandler(this);
         main.addParameterHandler(this);
 
-        ExpandLayout layout = new ExpandLayout();
-        Label info = new Label("To test URI and Parameter Handlers, "
+        final ExpandLayout layout = new ExpandLayout();
+        final Label info = new Label("To test URI and Parameter Handlers, "
                 + "add get parameters to URL. For example try examples below: ");
         info.setCaption("Usage info");
         layout.addComponent(info);
         try {
-            URL u1 = new URL(getURL(), "test/uri?test=1&test=2");
-            URL u2 = new URL(getURL(), "foo/bar?mary=john&count=3");
+            final URL u1 = new URL(getURL(), "test/uri?test=1&test=2");
+            final URL u2 = new URL(getURL(), "foo/bar?mary=john&count=3");
             layout.addComponent(new Link(u1.toString(),
                     new ExternalResource(u1)));
             layout.addComponent(new Label("Or this: "));
             layout.addComponent(new Link(u2.toString(),
                     new ExternalResource(u2)));
-        } catch (Exception e) {
+        } catch (final Exception e) {
             System.out.println("Couldn't get hostname for this machine: "
                     + e.toString());
             e.printStackTrace();
         }
 
         // URI
-        Panel panel1 = new Panel("URI Handler");
+        final Panel panel1 = new Panel("URI Handler");
         context.setCaption("Last URI handler context");
         panel1.addComponent(context);
         relative.setCaption("Last relative URI");
@@ -68,11 +73,11 @@ public class Parameters extends com.itmill.toolkit.Application implements
 
         params.addContainerProperty("Key", String.class, "");
         params.addContainerProperty("Value", String.class, "");
-        Panel panel2 = new Panel("Parameter Handler");
+        final Panel panel2 = new Panel("Parameter Handler");
         params.setHeight(100);
-        params.setHeightUnits(Table.UNITS_PERCENTAGE);
+        params.setHeightUnits(Sizeable.UNITS_PERCENTAGE);
         panel2.setHeight(100);
-        panel2.setHeightUnits(Panel.UNITS_PERCENTAGE);
+        panel2.setHeightUnits(Sizeable.UNITS_PERCENTAGE);
         panel2.setLayout(new ExpandLayout());
         panel2.getLayout().setMargin(true);
 
@@ -106,9 +111,9 @@ public class Parameters extends com.itmill.toolkit.Application implements
      */
     public void handleParameters(Map parameters) {
         params.removeAllItems();
-        for (Iterator i = parameters.keySet().iterator(); i.hasNext();) {
-            String name = (String) i.next();
-            String[] values = (String[]) parameters.get(name);
+        for (final Iterator i = parameters.keySet().iterator(); i.hasNext();) {
+            final String name = (String) i.next();
+            final String[] values = (String[]) parameters.get(name);
             String v = "";
             for (int j = 0; j < values.length; j++) {
                 if (v.length() > 0) {

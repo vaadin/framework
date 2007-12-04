@@ -1,6 +1,7 @@
-/**
- * 
+/* 
+@ITMillApache2LicenseForJavaFiles@
  */
+
 package com.itmill.toolkit.demo.featurebrowser;
 
 import com.itmill.toolkit.ui.Button;
@@ -22,10 +23,10 @@ public class RichTextExample extends CustomComponent {
             + "See the <A href=\"http://www.itmill.com/manual/\">manual</a> "
             + "for more information.";
 
-    private OrderedLayout main;
-    private Label l;
-    private RichTextArea editor = new RichTextArea();
-    private Button b;
+    private final OrderedLayout main;
+    private final Label l;
+    private final RichTextArea editor = new RichTextArea();
+    private final Button b;
 
     public RichTextExample() {
         // main layout

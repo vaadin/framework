@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.server;
 
 import java.util.Locale;
@@ -54,18 +58,18 @@ public class WebBrowser implements Terminal {
         address = request.getRemoteAddr();
         secureConnection = request.isSecure();
 
-        String agent = request.getHeader("user-agent");
+        final String agent = request.getHeader("user-agent");
         if (agent != null) {
             browserApplication = agent;
         }
 
-        String sw = request.getParameter("screenWidth");
-        String sh = request.getParameter("screenHeight");
+        final String sw = request.getParameter("screenWidth");
+        final String sh = request.getParameter("screenHeight");
         if (sw != null && sh != null) {
             try {
                 screenHeight = Integer.parseInt(sh);
                 screenWidth = Integer.parseInt(sw);
-            } catch (NumberFormatException e) {
+            } catch (final NumberFormatException e) {
                 screenHeight = screenWidth = 0;
             }
         }

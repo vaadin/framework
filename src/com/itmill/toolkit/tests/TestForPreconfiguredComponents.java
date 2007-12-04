@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.tests;
 
 import com.itmill.toolkit.event.Action;
@@ -87,14 +91,14 @@ public class TestForPreconfiguredComponents extends CustomComponent implements
                 .setCaption("OptionGroup + multiselect manually (configured from select)");
         main.addComponent(test);
 
-        Button b = new Button("refresh view", this, "createNewView");
+        final Button b = new Button("refresh view", this, "createNewView");
         main.addComponent(b);
 
     }
 
     public static void fillSelect(AbstractSelect s, int items) {
         for (int i = 0; i < items; i++) {
-            String name = firstnames[(int) (Math.random() * (firstnames.length - 1))]
+            final String name = firstnames[(int) (Math.random() * (firstnames.length - 1))]
                     + " "
                     + lastnames[(int) (Math.random() * (lastnames.length - 1))];
             s.addItem(name);
@@ -103,7 +107,7 @@ public class TestForPreconfiguredComponents extends CustomComponent implements
 
     public Tree createTestTree() {
         Tree t = new Tree("Tree");
-        String[] names = new String[100];
+        final String[] names = new String[100];
         for (int i = 0; i < names.length; i++) {
             names[i] = firstnames[(int) (Math.random() * (firstnames.length - 1))]
                     + " "
@@ -114,7 +118,7 @@ public class TestForPreconfiguredComponents extends CustomComponent implements
         t = new Tree("Organization Structure");
         for (int i = 0; i < 100; i++) {
             t.addItem(names[i]);
-            String parent = names[(int) (Math.random() * (names.length - 1))];
+            final String parent = names[(int) (Math.random() * (names.length - 1))];
             if (t.containsId(parent)) {
                 t.setParent(names[i], parent);
             }
@@ -130,7 +134,7 @@ public class TestForPreconfiguredComponents extends CustomComponent implements
     }
 
     public Panel createTestBench(Component t) {
-        Panel ol = new Panel();
+        final Panel ol = new Panel();
         ol.setLayout(new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL));
 
         ol.addComponent(t);

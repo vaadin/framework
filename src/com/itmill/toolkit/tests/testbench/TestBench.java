@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.tests.testbench;
 
 import java.io.File;
@@ -56,9 +60,10 @@ public class TestBench extends com.itmill.toolkit.Application implements
         for (int p = 0; p < testablePackages.length; p++) {
             testables.addItem(testablePackages[p]);
             try {
-                List testableClasses = getTestableClassesForPackage(testablePackages[p]);
-                for (Iterator it = testableClasses.iterator(); it.hasNext();) {
-                    Class t = (Class) it.next();
+                final List testableClasses = getTestableClassesForPackage(testablePackages[p]);
+                for (final Iterator it = testableClasses.iterator(); it
+                        .hasNext();) {
+                    final Class t = (Class) it.next();
                     // ignore TestBench itself
                     if (t.equals(TestBench.class)) {
                         continue;
@@ -68,32 +73,32 @@ public class TestBench extends com.itmill.toolkit.Application implements
                         itemCaptions.put(t, t.getName());
                         testables.setParent(t, testablePackages[p]);
                         continue;
-                    } catch (Exception e) {
+                    } catch (final Exception e) {
                         try {
                             testables.addItem(t);
                             itemCaptions.put(t, t.getName());
                             testables.setParent(t, testablePackages[p]);
                             continue;
-                        } catch (Exception e1) {
+                        } catch (final Exception e1) {
                             e1.printStackTrace();
                         }
                     }
                 }
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 e.printStackTrace();
             }
         }
 
         menu = new Tree("Testables", testables);
-        for (Iterator i = itemCaptions.keySet().iterator(); i.hasNext();) {
-            Class testable = (Class) i.next();
+        for (final Iterator i = itemCaptions.keySet().iterator(); i.hasNext();) {
+            final Class testable = (Class) i.next();
             // simplify captions
-            String name = testable.getName().substring(
+            final String name = testable.getName().substring(
                     testable.getName().lastIndexOf('.') + 1);
             menu.setItemCaption(testable, name);
         }
         // expand all root items
-        for (Iterator i = menu.rootItemIds().iterator(); i.hasNext();) {
+        for (final Iterator i = menu.rootItemIds().iterator(); i.hasNext();) {
             menu.expandItemsRecursively(i.next());
         }
 
@@ -118,14 +123,14 @@ public class TestBench extends com.itmill.toolkit.Application implements
 
     private Component createTestable(Class c) {
         try {
-            Application app = (Application) c.newInstance();
+            final Application app = (Application) c.newInstance();
             app.init();
             return app.getMainWindow().getLayout();
-        } catch (Exception e) {
+        } catch (final Exception e) {
             try {
-                CustomComponent cc = (CustomComponent) c.newInstance();
+                final CustomComponent cc = (CustomComponent) c.newInstance();
                 return cc;
-            } catch (Exception e1) {
+            } catch (final Exception e1) {
                 e1.printStackTrace();
                 return new Label("Cannot create custom component: "
                         + e1.toString());
@@ -138,10 +143,10 @@ public class TestBench extends com.itmill.toolkit.Application implements
         bodyLayout.removeAllComponents();
         bodyLayout.setCaption(null);
 
-        Object o = menu.getValue();
+        final Object o = menu.getValue();
         if (o != null && o instanceof Class) {
-            Class c = (Class) o;
-            String title = c.getName();
+            final Class c = (Class) o;
+            final String title = c.getName();
             bodyLayout.setCaption(title);
             bodyLayout.addComponent(createTestable(c));
         } else {
@@ -160,38 +165,39 @@ public class TestBench extends com.itmill.toolkit.Application implements
      */
     public static List getTestableClassesForPackage(String packageName)
             throws Exception {
-        ArrayList directories = new ArrayList();
+        final ArrayList directories = new ArrayList();
         try {
-            ClassLoader cld = Thread.currentThread().getContextClassLoader();
+            final ClassLoader cld = Thread.currentThread()
+                    .getContextClassLoader();
             if (cld == null) {
                 throw new ClassNotFoundException("Can't get class loader.");
             }
-            String path = packageName.replace('.', '/');
+            final String path = packageName.replace('.', '/');
             // Ask for all resources for the path
-            Enumeration resources = cld.getResources(path);
+            final Enumeration resources = cld.getResources(path);
             while (resources.hasMoreElements()) {
-                URL url = (URL) resources.nextElement();
+                final URL url = (URL) resources.nextElement();
                 directories.add(new File(url.getFile()));
             }
-        } catch (Exception x) {
+        } catch (final Exception x) {
             throw new Exception(packageName
                     + " does not appear to be a valid package.");
         }
 
-        ArrayList classes = new ArrayList();
+        final ArrayList classes = new ArrayList();
         // For every directory identified capture all the .class files
-        for (Iterator it = directories.iterator(); it.hasNext();) {
-            File directory = (File) it.next();
+        for (final Iterator it = directories.iterator(); it.hasNext();) {
+            final File directory = (File) it.next();
             if (directory.exists()) {
                 // Get the list of the files contained in the package
-                String[] files = directory.list();
+                final String[] files = directory.list();
                 for (int j = 0; j < files.length; j++) {
                     // we are only interested in .class files
                     if (files[j].endsWith(".class")) {
                         // removes the .class extension
-                        String p = packageName + '.'
+                        final String p = packageName + '.'
                                 + files[j].substring(0, files[j].length() - 6);
-                        Class c = Class.forName(p);
+                        final Class c = Class.forName(p);
                         if (c.getSuperclass() != null) {
                             if ((c.getSuperclass()
                                     .equals(com.itmill.toolkit.ui.CustomComponent.class))) {

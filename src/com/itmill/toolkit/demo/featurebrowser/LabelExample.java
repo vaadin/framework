@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.demo.featurebrowser;
 
 import com.itmill.toolkit.ui.CustomComponent;
@@ -25,11 +29,11 @@ public class LabelExample extends CustomComponent {
 
     public LabelExample() {
 
-        OrderedLayout main = new OrderedLayout();
+        final OrderedLayout main = new OrderedLayout();
         main.setMargin(true);
         setCompositionRoot(main);
 
-        GridLayout g = new GridLayout(2, 4);
+        final GridLayout g = new GridLayout(2, 4);
         main.addComponent(g);
 
         // plain w/o caption

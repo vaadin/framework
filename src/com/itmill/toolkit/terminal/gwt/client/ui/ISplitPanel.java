@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import com.google.gwt.user.client.DOM;
@@ -27,13 +31,13 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
 
     private Widget secondChild;
 
-    private Element wrapper = DOM.createDiv();
+    private final Element wrapper = DOM.createDiv();
 
-    private Element firstContainer = DOM.createDiv();
+    private final Element firstContainer = DOM.createDiv();
 
-    private Element secondContainer = DOM.createDiv();
+    private final Element secondContainer = DOM.createDiv();
 
-    private Element splitter = DOM.createDiv();
+    private final Element splitter = DOM.createDiv();
 
     private boolean resizing;
 
@@ -116,9 +120,9 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
 
         setSplitPosition(uidl.getStringAttribute("position"));
 
-        Paintable newFirstChild = (Paintable) client.getWidget(uidl
+        final Paintable newFirstChild = (Paintable) client.getWidget(uidl
                 .getChildUIDL(0));
-        Paintable newSecondChild = (Paintable) client.getWidget(uidl
+        final Paintable newSecondChild = (Paintable) client.getWidget(uidl
                 .getChildUIDL(1));
         if (firstChild != newFirstChild) {
             if (firstChild != null) {
@@ -277,7 +281,7 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
     }
 
     public void onMouseDown(Event event) {
-        Element trg = DOM.eventGetTarget(event);
+        final Element trg = DOM.eventGetTarget(event);
         if (DOM.compare(trg, splitter)
                 || DOM.compare(trg, DOM.getChild(splitter, 0))) {
             resizing = true;
@@ -294,12 +298,12 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
     public void onMouseMove(Event event) {
         switch (orientation) {
         case ORIENTATION_HORIZONTAL:
-            int x = DOM.eventGetClientX(event);
+            final int x = DOM.eventGetClientX(event);
             onHorizontalMouseMove(x);
             break;
         case ORIENTATION_VERTICAL:
         default:
-            int y = DOM.eventGetClientY(event);
+            final int y = DOM.eventGetClientY(event);
             onVerticalMouseMove(y);
             break;
         }

@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.client;
 
 import com.google.gwt.core.client.GWT;
@@ -53,7 +57,7 @@ public class DefaultWidgetSet implements WidgetSet {
 
     public Widget createWidget(UIDL uidl) {
 
-        String className = resolveWidgetTypeName(uidl);
+        final String className = resolveWidgetTypeName(uidl);
         if ("com.itmill.toolkit.terminal.gwt.client.ui.ICheckBox"
                 .equals(className)) {
             return new ICheckBox();
@@ -174,7 +178,7 @@ public class DefaultWidgetSet implements WidgetSet {
 
     protected String resolveWidgetTypeName(UIDL uidl) {
 
-        String tag = uidl.getTag();
+        final String tag = uidl.getTag();
         if ("button".equals(tag)) {
             if ("switch".equals(uidl.getStringAttribute("type"))) {
                 return "com.itmill.toolkit.terminal.gwt.client.ui.ICheckBox";
@@ -199,7 +203,7 @@ public class DefaultWidgetSet implements WidgetSet {
             return "com.itmill.toolkit.terminal.gwt.client.ui.ITree";
         } else if ("select".equals(tag)) {
             if (uidl.hasAttribute("type")) {
-                String type = uidl.getStringAttribute("type");
+                final String type = uidl.getStringAttribute("type");
                 if (type.equals("twincol")) {
                     return "com.itmill.toolkit.terminal.gwt.client.ui.ITwinColSelect";
                 }

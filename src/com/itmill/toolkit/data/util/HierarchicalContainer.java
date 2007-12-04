@@ -1,30 +1,6 @@
-/* *************************************************************************
- 
- IT Mill Toolkit 
-
- Development of Browser User Interfaces Made Easy
-
- Copyright (C) 2000-2006 IT Mill Ltd
- 
- *************************************************************************
-
- This product is distributed under commercial license that can be found
- from the product package on license.pdf. Use of this product might 
- require purchasing a commercial license from IT Mill Ltd. For guidelines 
- on usage, see licensing-guidelines.html
-
- *************************************************************************
- 
- For more information, contact:
- 
- IT Mill Ltd                           phone: +358 2 4802 7180
- Ruukinkatu 2-4                        fax:   +358 2 4802 7181
- 20540, Turku                          email:  info@itmill.com
- Finland                               company www: www.itmill.com
- 
- Primary source for information and releases: www.itmill.com
-
- ********************************************************************** */
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
 
 package com.itmill.toolkit.data.util;
 
@@ -52,22 +28,22 @@ public class HierarchicalContainer extends IndexedContainer implements
     /**
      * Set of IDs of those contained Items that can't have children.
      */
-    private HashSet noChildrenAllowed = new HashSet();
+    private final HashSet noChildrenAllowed = new HashSet();
 
     /**
      * Mapping from Item ID to parent Item.
      */
-    private Hashtable parent = new Hashtable();
+    private final Hashtable parent = new Hashtable();
 
     /**
      * Mapping from Item ID to a list of child IDs.
      */
-    private Hashtable children = new Hashtable();
+    private final Hashtable children = new Hashtable();
 
     /**
      * List that contains all root elements of the container.
      */
-    private LinkedList roots = new LinkedList();
+    private final LinkedList roots = new LinkedList();
 
     /*
      * Can the specified Item have any children? Don't add a JavaDoc comment
@@ -83,7 +59,7 @@ public class HierarchicalContainer extends IndexedContainer implements
      * interface.
      */
     public Collection getChildren(Object itemId) {
-        Collection c = (Collection) children.get(itemId);
+        final Collection c = (Collection) children.get(itemId);
         if (c == null) {
             return null;
         }
@@ -187,7 +163,7 @@ public class HierarchicalContainer extends IndexedContainer implements
         }
 
         // Gets the old parent
-        Object oldParentId = parent.get(itemId);
+        final Object oldParentId = parent.get(itemId);
 
         // Checks if no change is necessary
         if ((newParentId == null && oldParentId == null)
@@ -199,7 +175,7 @@ public class HierarchicalContainer extends IndexedContainer implements
         if (newParentId == null) {
 
             // Removes from old parents children list
-            LinkedList l = (LinkedList) children.get(itemId);
+            final LinkedList l = (LinkedList) children.get(itemId);
             if (l != null) {
                 l.remove(itemId);
                 if (l.isEmpty()) {
@@ -244,7 +220,7 @@ public class HierarchicalContainer extends IndexedContainer implements
         if (oldParentId == null) {
             roots.remove(itemId);
         } else {
-            LinkedList l = (LinkedList) children.get(oldParentId);
+            final LinkedList l = (LinkedList) children.get(oldParentId);
             if (l != null) {
                 l.remove(itemId);
                 if (l.isEmpty()) {
@@ -260,7 +236,7 @@ public class HierarchicalContainer extends IndexedContainer implements
      * @see com.itmill.toolkit.data.Container#addItem()
      */
     public Object addItem() {
-        Object id = super.addItem();
+        final Object id = super.addItem();
         if (id != null && !roots.contains(id)) {
             roots.add(id);
         }
@@ -272,7 +248,7 @@ public class HierarchicalContainer extends IndexedContainer implements
      * @see com.itmill.toolkit.data.Container#addItem(Object)
      */
     public Item addItem(Object itemId) {
-        Item item = super.addItem(itemId);
+        final Item item = super.addItem(itemId);
         if (item != null) {
             roots.add(itemId);
         }
@@ -283,7 +259,7 @@ public class HierarchicalContainer extends IndexedContainer implements
      * @see com.itmill.toolkit.data.Container#removeAllItems()
      */
     public boolean removeAllItems() {
-        boolean success = super.removeAllItems();
+        final boolean success = super.removeAllItems();
 
         if (success) {
             roots.clear();
@@ -298,16 +274,16 @@ public class HierarchicalContainer extends IndexedContainer implements
      * @see com.itmill.toolkit.data.Container#removeItem(Object)
      */
     public boolean removeItem(Object itemId) {
-        boolean success = super.removeItem(itemId);
+        final boolean success = super.removeItem(itemId);
 
         if (success) {
             if (isRoot(itemId)) {
                 roots.remove(itemId);
             }
             children.remove(itemId);
-            Object p = parent.get(itemId);
+            final Object p = parent.get(itemId);
             if (p != null) {
-                LinkedList c = (LinkedList) children.get(p);
+                final LinkedList c = (LinkedList) children.get(p);
                 if (c != null) {
                     c.remove(itemId);
                 }

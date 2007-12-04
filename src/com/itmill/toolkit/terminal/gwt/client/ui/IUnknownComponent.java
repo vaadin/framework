@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import com.google.gwt.user.client.ui.Composite;
@@ -13,7 +17,7 @@ public class IUnknownComponent extends Composite implements Paintable {
     Tree uidlTree = new Tree();
 
     public IUnknownComponent() {
-        VerticalPanel panel = new VerticalPanel();
+        final VerticalPanel panel = new VerticalPanel();
         panel.add(caption);
         panel.add(uidlTree);
         initWidget(panel);

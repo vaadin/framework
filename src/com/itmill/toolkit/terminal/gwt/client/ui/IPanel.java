@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import com.google.gwt.user.client.DOM;
@@ -21,15 +25,15 @@ public class IPanel extends SimplePanel implements Paintable,
 
     String id;
 
-    private Element captionNode = DOM.createDiv();
+    private final Element captionNode = DOM.createDiv();
 
-    private Element captionText = DOM.createSpan();
+    private final Element captionText = DOM.createSpan();
 
     private Icon icon;
 
-    private Element bottomDecoration = DOM.createDiv();
+    private final Element bottomDecoration = DOM.createDiv();
 
-    private Element contentNode = DOM.createDiv();
+    private final Element contentNode = DOM.createDiv();
 
     private Element errorIndicatorElement;
 
@@ -74,8 +78,8 @@ public class IPanel extends SimplePanel implements Paintable,
         id = uidl.getId();
 
         // Panel size. Height needs to be saved for later use
-        String w = uidl.hasVariable("width") ? uidl.getStringVariable("width")
-                : null;
+        final String w = uidl.hasVariable("width") ? uidl
+                .getStringVariable("width") : null;
         height = uidl.hasVariable("height") ? uidl.getStringVariable("height")
                 : null;
         setWidth(w != null ? w : "");
@@ -111,11 +115,11 @@ public class IPanel extends SimplePanel implements Paintable,
         // Add proper stylenames for all elements. This way we can prevent
         // unwanted CSS selector inheritance.
         if (uidl.hasAttribute("style")) {
-            String[] styles = uidl.getStringAttribute("style").split(" ");
-            String captionBaseClass = CLASSNAME
+            final String[] styles = uidl.getStringAttribute("style").split(" ");
+            final String captionBaseClass = CLASSNAME
                     + (hasCaption ? "-caption" : "-nocaption");
-            String contentBaseClass = CLASSNAME + "-content";
-            String decoBaseClass = CLASSNAME + "-deco";
+            final String contentBaseClass = CLASSNAME + "-content";
+            final String decoBaseClass = CLASSNAME + "-deco";
             String captionClass = captionBaseClass;
             String contentClass = contentBaseClass;
             String decoClass = decoBaseClass;
@@ -133,8 +137,8 @@ public class IPanel extends SimplePanel implements Paintable,
         iLayout();
 
         // Render content
-        UIDL layoutUidl = uidl.getChildUIDL(0);
-        Widget newLayout = client.getWidget(layoutUidl);
+        final UIDL layoutUidl = uidl.getChildUIDL(0);
+        final Widget newLayout = client.getWidget(layoutUidl);
         if (newLayout != layout) {
             if (layout != null) {
                 client.unregisterPaintable((Paintable) layout);
@@ -148,7 +152,7 @@ public class IPanel extends SimplePanel implements Paintable,
 
     private void handleError(UIDL uidl) {
         if (uidl.hasAttribute("error")) {
-            UIDL errorUidl = uidl.getErrors();
+            final UIDL errorUidl = uidl.getErrors();
             if (errorIndicatorElement == null) {
                 errorIndicatorElement = DOM.createDiv();
                 DOM.setElementProperty(errorIndicatorElement, "className",
@@ -175,7 +179,7 @@ public class IPanel extends SimplePanel implements Paintable,
     }
 
     private void setIconUri(UIDL uidl, ApplicationConnection client) {
-        String iconUri = uidl.hasAttribute("icon") ? uidl
+        final String iconUri = uidl.hasAttribute("icon") ? uidl
                 .getStringAttribute("icon") : null;
         if (iconUri == null) {
             if (icon != null) {
@@ -193,7 +197,7 @@ public class IPanel extends SimplePanel implements Paintable,
 
     public void iLayout() {
         if (height != null && height != "") {
-            boolean hasChildren = getWidget() != null;
+            final boolean hasChildren = getWidget() != null;
             Element contentEl = null;
             String origPositioning = null;
             if (hasChildren) {
@@ -209,11 +213,11 @@ public class IPanel extends SimplePanel implements Paintable,
 
             // Calculate target height
             super.setHeight(height);
-            int targetHeight = getOffsetHeight();
+            final int targetHeight = getOffsetHeight();
 
             // Calculate used height
             super.setHeight("");
-            int usedHeight = DOM.getElementPropertyInt(bottomDecoration,
+            final int usedHeight = DOM.getElementPropertyInt(bottomDecoration,
                     "offsetTop")
                     + DOM.getElementPropertyInt(bottomDecoration,
                             "offsetHeight")
@@ -242,7 +246,7 @@ public class IPanel extends SimplePanel implements Paintable,
     }
 
     public void onBrowserEvent(Event event) {
-        Element target = DOM.eventGetTarget(event);
+        final Element target = DOM.eventGetTarget(event);
         if (errorIndicatorElement != null
                 && DOM.compare(target, errorIndicatorElement)) {
             switch (DOM.eventGetType(event)) {

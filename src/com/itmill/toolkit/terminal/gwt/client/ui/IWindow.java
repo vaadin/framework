@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import java.util.Iterator;
@@ -86,10 +90,10 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
     ShortcutActionHandler shortcutHandler;
 
     /** Last known width read from UIDL or updated to application connection */
-    private int uidlWidth = -1;
+    private final int uidlWidth = -1;
 
     /** Last known height read from UIDL or updated to application connection */
-    private int uidlHeight = -1;
+    private final int uidlHeight = -1;
 
     /** Last known positionx read from UIDL or updated to application connection */
     private int uidlPositionX = -1;
@@ -103,7 +107,7 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 
     public IWindow() {
         super();
-        int order = windowOrder.size();
+        final int order = windowOrder.size();
         setWindowOrder(order);
         windowOrder.add(this);
         setStyleName(CLASSNAME);
@@ -160,9 +164,9 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
         DOM.sinkEvents(closeBox, Event.ONCLICK);
         DOM.sinkEvents(contents, Event.ONCLICK);
 
-        Element wrapper = DOM.createDiv();
+        final Element wrapper = DOM.createDiv();
         DOM.setElementProperty(wrapper, "className", CLASSNAME + "-wrap");
-        Element wrapper2 = DOM.createDiv();
+        final Element wrapper2 = DOM.createDiv();
         DOM.setElementProperty(wrapper2, "className", CLASSNAME + "-wrap2");
 
         DOM.sinkEvents(wrapper, Event.ONKEYDOWN);
@@ -200,22 +204,22 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 
         // Initialize the width from UIDL
         if (uidl.hasVariable("width")) {
-            String width = uidl.getStringVariable("width");
+            final String width = uidl.getStringVariable("width");
             setWidth(width);
         }
         if (uidl.hasVariable("height")) {
-            String height = uidl.getStringVariable("height");
+            final String height = uidl.getStringVariable("height");
             setHeight(height);
         }
 
         // Initialize the position form UIDL
         try {
-            int positionx = uidl.getIntVariable("positionx");
-            int positiony = uidl.getIntVariable("positiony");
+            final int positionx = uidl.getIntVariable("positionx");
+            final int positiony = uidl.getIntVariable("positiony");
             if (positionx >= 0 && positiony >= 0) {
                 setPopupPosition(positionx, positiony);
             }
-        } catch (IllegalArgumentException e) {
+        } catch (final IllegalArgumentException e) {
             // Silently ignored as positionx and positiony are not required
             // parameters
         }
@@ -230,22 +234,22 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 
         UIDL childUidl = uidl.getChildUIDL(0);
         if ("open".equals(childUidl.getTag())) {
-            String parsedUri = client.translateToolkitUri(childUidl
+            final String parsedUri = client.translateToolkitUri(childUidl
                     .getStringAttribute("src"));
             // TODO this should be a while-loop for multiple opens
             if (!childUidl.hasAttribute("name")) {
-                Frame frame = new Frame();
+                final Frame frame = new Frame();
                 DOM.setStyleAttribute(frame.getElement(), "width", "100%");
                 DOM.setStyleAttribute(frame.getElement(), "height", "100%");
                 DOM.setStyleAttribute(frame.getElement(), "border", "0px");
                 frame.setUrl(parsedUri);
                 contentPanel.setWidget(frame);
             } else {
-                String target = childUidl.getStringAttribute("name");
+                final String target = childUidl.getStringAttribute("name");
                 Window.open(parsedUri, target, "");
             }
         } else {
-            Paintable lo = (Paintable) client.getWidget(childUidl);
+            final Paintable lo = (Paintable) client.getWidget(childUidl);
             if (layout != null) {
                 if (layout != lo) {
                     // remove old
@@ -263,7 +267,7 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 
         // we may have actions and notifications
         if (uidl.getChidlCount() > 1) {
-            int cnt = uidl.getChidlCount();
+            final int cnt = uidl.getChidlCount();
             for (int i = 1; i < cnt; i++) {
                 childUidl = uidl.getChildUIDL(i);
                 if (childUidl.getTag().equals("actions")) {
@@ -273,9 +277,9 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
                     shortcutHandler.updateActionMap(childUidl);
                 } else if (childUidl.getTag().equals("notifications")) {
                     // TODO needed? move ->
-                    for (Iterator it = childUidl.getChildIterator(); it
+                    for (final Iterator it = childUidl.getChildIterator(); it
                             .hasNext();) {
-                        UIDL notification = (UIDL) it.next();
+                        final UIDL notification = (UIDL) it.next();
                         String html = "";
                         if (notification.hasAttribute("caption")) {
                             html += "<H1>"
@@ -290,11 +294,12 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
                                     + "</p>";
                         }
 
-                        String style = notification.hasAttribute("style") ? notification
+                        final String style = notification.hasAttribute("style") ? notification
                                 .getStringAttribute("style")
                                 : null;
-                        int position = notification.getIntAttribute("position");
-                        int delay = notification.getIntAttribute("delay");
+                        final int position = notification
+                                .getIntAttribute("position");
+                        final int delay = notification.getIntAttribute("delay");
                         new Notification(delay).show(html, position, style);
                     }
                 }
@@ -336,16 +341,16 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
     }
 
     public void onBrowserEvent(Event event) {
-        int type = DOM.eventGetType(event);
+        final int type = DOM.eventGetType(event);
         if (type == Event.ONKEYDOWN && shortcutHandler != null) {
-            int modifiers = KeyboardListenerCollection
+            final int modifiers = KeyboardListenerCollection
                     .getKeyboardModifiers(event);
             shortcutHandler.handleKeyboardEvent((char) DOM
                     .eventGetKeyCode(event), modifiers);
             return;
         }
 
-        Element target = DOM.eventGetTarget(event);
+        final Element target = DOM.eventGetTarget(event);
         if (dragging || DOM.isOrHasChild(header, target)) {
             onHeaderEvent(event);
             DOM.eventCancelBubble(event, true);
@@ -445,8 +450,8 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
             break;
         case Event.ONMOUSEMOVE:
             if (dragging) {
-                int x = DOM.eventGetScreenX(event) - startX + origX;
-                int y = DOM.eventGetScreenY(event) - startY + origY;
+                final int x = DOM.eventGetScreenX(event) - startX + origX;
+                final int y = DOM.eventGetScreenY(event) - startY + origY;
                 setPopupPosition(x, y);
                 DOM.eventPreventDefault(event);
             }
@@ -465,7 +470,7 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
             return false;
         } else if (modal) {
             // return false when modal and outside window
-            Element target = DOM.eventGetTarget(event);
+            final Element target = DOM.eventGetTarget(event);
             if (!DOM.isOrHasChild(getElement(), target)) {
                 return false;
             }

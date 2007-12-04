@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.demo.reservation;
 
 import java.util.HashMap;
@@ -14,8 +18,8 @@ import com.itmill.toolkit.ui.Button.ClickEvent;
 
 public class ResourceSelectorPanel extends Panel implements
         Button.ClickListener {
-    private HashMap categoryLayouts = new HashMap();
-    private HashMap categoryResources = new HashMap();
+    private final HashMap categoryLayouts = new HashMap();
+    private final HashMap categoryResources = new HashMap();
 
     private Container allResources;
     private LinkedList selectedResources = null;
@@ -30,17 +34,18 @@ public class ResourceSelectorPanel extends Panel implements
         categoryLayouts.clear();
         categoryResources.clear();
         if (resources != null && resources.size() > 0) {
-            for (Iterator it = resources.getItemIds().iterator(); it.hasNext();) {
-                Item resource = resources.getItem(it.next());
-                Integer id = (Integer) resource.getItemProperty(
+            for (final Iterator it = resources.getItemIds().iterator(); it
+                    .hasNext();) {
+                final Item resource = resources.getItem(it.next());
+                final Integer id = (Integer) resource.getItemProperty(
                         SampleDB.Resource.PROPERTY_ID_ID).getValue();
-                String category = (String) resource.getItemProperty(
+                final String category = (String) resource.getItemProperty(
                         SampleDB.Resource.PROPERTY_ID_CATEGORY).getValue();
-                String name = (String) resource.getItemProperty(
+                final String name = (String) resource.getItemProperty(
                         SampleDB.Resource.PROPERTY_ID_NAME).getValue();
-                String description = (String) resource.getItemProperty(
+                final String description = (String) resource.getItemProperty(
                         SampleDB.Resource.PROPERTY_ID_DESCRIPTION).getValue();
-                Button rButton = new Button(name, this);
+                final Button rButton = new Button(name, this);
                 rButton.setStyleName("link");
                 rButton.setDescription(description);
                 rButton.setData(resource);
@@ -54,7 +59,7 @@ public class ResourceSelectorPanel extends Panel implements
                     categoryLayouts.put(category, resourceLayout);
                     resourceList = new LinkedList();
                     categoryResources.put(category, resourceList);
-                    Button cButton = new Button(category + " (any)", this);
+                    final Button cButton = new Button(category + " (any)", this);
                     cButton.setStyleName("important-link");
                     cButton.setData(category);
                     resourceLayout.addComponent(cButton);
@@ -68,13 +73,13 @@ public class ResourceSelectorPanel extends Panel implements
     // Selects one initial categore, inpractice randomly
     public void selectFirstCategory() {
         try {
-            Object catId = categoryResources.keySet().iterator().next();
-            LinkedList res = (LinkedList) categoryResources.get(catId);
-            Layout l = (Layout) categoryLayouts.get(catId);
-            Button catB = (Button) l.getComponentIterator().next();
+            final Object catId = categoryResources.keySet().iterator().next();
+            final LinkedList res = (LinkedList) categoryResources.get(catId);
+            final Layout l = (Layout) categoryLayouts.get(catId);
+            final Button catB = (Button) l.getComponentIterator().next();
             setSelectedResources(res);
             catB.setStyleName("selected-link");
-        } catch (Exception e) {
+        } catch (final Exception e) {
             e.printStackTrace(System.err);
         }
     }
@@ -89,18 +94,18 @@ public class ResourceSelectorPanel extends Panel implements
     }
 
     public void buttonClick(ClickEvent event) {
-        Object source = event.getSource();
+        final Object source = event.getSource();
         if (source instanceof Button) {
-            Object data = ((Button) source).getData();
-            String name = ((Button) source).getCaption();
+            final Object data = ((Button) source).getData();
+            final String name = ((Button) source).getCaption();
             resetStyles();
             if (data instanceof Item) {
-                LinkedList rlist = new LinkedList();
+                final LinkedList rlist = new LinkedList();
                 rlist.add(data);
                 setSelectedResources(rlist);
             } else {
-                String category = (String) data;
-                LinkedList resources = (LinkedList) categoryResources
+                final String category = (String) data;
+                final LinkedList resources = (LinkedList) categoryResources
                         .get(category);
                 setSelectedResources(resources);
             }
@@ -110,10 +115,11 @@ public class ResourceSelectorPanel extends Panel implements
     }
 
     private void resetStyles() {
-        for (Iterator it = categoryLayouts.values().iterator(); it.hasNext();) {
-            Layout lo = (Layout) it.next();
-            for (Iterator bit = lo.getComponentIterator(); bit.hasNext();) {
-                Button b = (Button) bit.next();
+        for (final Iterator it = categoryLayouts.values().iterator(); it
+                .hasNext();) {
+            final Layout lo = (Layout) it.next();
+            for (final Iterator bit = lo.getComponentIterator(); bit.hasNext();) {
+                final Button b = (Button) bit.next();
                 if (b.getData() instanceof Item) {
                     b.setStyleName("link");
                 } else {

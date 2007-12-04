@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import com.google.gwt.user.client.DOM;
@@ -154,12 +158,12 @@ public class Notification extends ToolkitOverlay {
                 }
             }
         };
-        int msec = fadeMsec / (startOpacity / 5);
+        final int msec = fadeMsec / (startOpacity / 5);
         fader.scheduleRepeating(msec);
     }
 
     public void setPosition(int position) {
-        Element el = getElement();
+        final Element el = getElement();
         DOM.setStyleAttribute(el, "top", null);
         DOM.setStyleAttribute(el, "left", null);
         DOM.setStyleAttribute(el, "bottom", null);

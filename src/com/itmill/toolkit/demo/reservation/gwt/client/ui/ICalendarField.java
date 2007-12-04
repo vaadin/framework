@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.demo.reservation.gwt.client.ui;
 
 import java.util.ArrayList;
@@ -21,15 +25,15 @@ import com.itmill.toolkit.terminal.gwt.client.ui.IDateField;
 
 public class ICalendarField extends IDateField {
 
-    private CalendarPanel calPanel;
+    private final CalendarPanel calPanel;
 
     private SimplePanel hourPanel;
 
     private FlexTable hourTable;
 
-    private EntrySource entrySource;
+    private final EntrySource entrySource;
 
-    private TableListener ftListener = new HourTableListener();
+    private final TableListener ftListener = new HourTableListener();
 
     private int realResolution = RESOLUTION_DAY;
 
@@ -57,20 +61,21 @@ public class ICalendarField extends IDateField {
         realResolution = currentResolution;
         currentResolution = RESOLUTION_DAY;
         if (uidl.hasAttribute("min")) {
-            String mins = uidl.getStringAttribute("min");
-            long min = (mins != null ? Long.parseLong(mins) : 0);
-            String maxs = uidl.getStringAttribute("max");
-            long max = (maxs != null ? Long.parseLong(maxs) : 0);
-            Date minDate = (min > 0 ? new Date(min) : null);
-            Date maxDate = (max > 0 ? new Date(max) : null);
+            final String mins = uidl.getStringAttribute("min");
+            final long min = (mins != null ? Long.parseLong(mins) : 0);
+            final String maxs = uidl.getStringAttribute("max");
+            final long max = (maxs != null ? Long.parseLong(maxs) : 0);
+            final Date minDate = (min > 0 ? new Date(min) : null);
+            final Date maxDate = (max > 0 ? new Date(max) : null);
             calPanel.setLimits(minDate, maxDate);
         }
         entrySource.clear();
-        for (Iterator cit = uidl.getChildIterator(); cit.hasNext();) {
-            UIDL child = (UIDL) cit.next();
+        for (final Iterator cit = uidl.getChildIterator(); cit.hasNext();) {
+            final UIDL child = (UIDL) cit.next();
             if (child.getTag().equals("items")) {
-                for (Iterator iit = child.getChildIterator(); iit.hasNext();) {
-                    UIDL item = (UIDL) iit.next();
+                for (final Iterator iit = child.getChildIterator(); iit
+                        .hasNext();) {
+                    final UIDL item = (UIDL) iit.next();
                     entrySource.addItem(item);
                 }
                 break;
@@ -107,7 +112,7 @@ public class ICalendarField extends IDateField {
                     CLASSNAME + "-row-" + style);
             String hstr = (i < 10 ? "0" : "") + i + ":00";
             if (dts.isTwelveHourClock()) {
-                String ampm = (i < 12 ? "am" : "pm");
+                final String ampm = (i < 12 ? "am" : "pm");
                 hstr = (i <= 12 ? i : i - 12) + ":00 " + ampm;
             }
             hourTable.setHTML(i, 0, "<span>" + hstr + "</span>");
@@ -115,11 +120,11 @@ public class ICalendarField extends IDateField {
                     .setStyleName(i, 0, CLASSNAME + "-time");
         }
 
-        List entries = entrySource.getEntries(date,
+        final List entries = entrySource.getEntries(date,
                 DateTimeService.RESOLUTION_DAY);
         int currentCol = 1;
-        for (Iterator it = entries.iterator(); it.hasNext();) {
-            CalendarEntry entry = (CalendarEntry) it.next();
+        for (final Iterator it = entries.iterator(); it.hasNext();) {
+            final CalendarEntry entry = (CalendarEntry) it.next();
             int start = 0;
             int hours = 24;
             if (!entry.isNotime()) {
@@ -147,19 +152,19 @@ public class ICalendarField extends IDateField {
             hourTable.getFlexCellFormatter().setRowSpan(start, col, hours);
             hourTable.getFlexCellFormatter().setStyleName(start, col,
                     CLASSNAME + "-entry");
-            String sn = entry.getStyleName();
+            final String sn = entry.getStyleName();
             if (sn != null && !sn.equals("")) {
                 hourTable.getFlexCellFormatter().addStyleName(start, col,
                         CLASSNAME + "-" + entry.getStyleName());
             }
-            Element el = hourTable.getFlexCellFormatter()
-                    .getElement(start, col);
+            final Element el = hourTable.getFlexCellFormatter().getElement(
+                    start, col);
 
             String tooltip;
             if (DateTimeService.isSameDay(entry.getStart(), entry.getEnd())) {
                 tooltip = (start < 10 ? "0" : "") + start + ":00";
                 if (dts.isTwelveHourClock()) {
-                    String ampm = (start < 12 ? "am" : "pm");
+                    final String ampm = (start < 12 ? "am" : "pm");
                     tooltip = (start <= 12 ? start : start - 12) + ":00 "
                             + ampm;
 
@@ -180,20 +185,20 @@ public class ICalendarField extends IDateField {
         }
 
         // int hour = new Date().getHours()+1; // scroll to current hour
-        int hour = this.date.getHours() + 1; // scroll to selected
+        final int hour = this.date.getHours() + 1; // scroll to selected
         // hour
-        int h1 = hourPanel.getOffsetHeight() / 2;
-        int oh = hourTable.getOffsetHeight();
-        int h2 = (int) (hour / 24.0 * oh);
-        int scrollTop = h2 - h1;
-        Element el = hourPanel.getElement();
+        final int h1 = hourPanel.getOffsetHeight() / 2;
+        final int oh = hourTable.getOffsetHeight();
+        final int h2 = (int) (hour / 24.0 * oh);
+        final int scrollTop = h2 - h1;
+        final Element el = hourPanel.getElement();
         setScrollTop(el, scrollTop);
 
     }
 
     private native void setScrollTop(Element el, int scrollTop) /*-{
-                       el.scrollTop = scrollTop;
-                     }-*/;
+                             el.scrollTop = scrollTop;
+                           }-*/;
 
     private class HourTableListener implements TableListener {
 
@@ -209,36 +214,37 @@ public class ICalendarField extends IDateField {
 
     private class EntrySource implements CalendarPanel.CalendarEntrySource {
 
-        private HashMap dates = new HashMap();
+        private final HashMap dates = new HashMap();
 
         public void addItem(UIDL item) {
-            String styleName = item.getStringAttribute("styleName");
-            Integer id = new Integer(item.getIntAttribute("id"));
-            long start = Long.parseLong(item.getStringAttribute("start"));
-            Date startDate = new Date(start);
+            final String styleName = item.getStringAttribute("styleName");
+            final Integer id = new Integer(item.getIntAttribute("id"));
+            final long start = Long.parseLong(item.getStringAttribute("start"));
+            final Date startDate = new Date(start);
             long end = -1;
             try {
                 end = Long.parseLong(item.getStringAttribute("end"));
-            } catch (Exception IGNORED) {
+            } catch (final Exception IGNORED) {
                 // IGNORED attribute not required
             }
-            Date endDate = (end > 0 && end != start ? new Date(end) : new Date(
-                    start));
-            String title = item.getStringAttribute("title");
-            String desc = item.getStringAttribute("description");
-            boolean notime = item.getBooleanAttribute("notime");
-            CalendarEntry entry = new CalendarEntry(styleName, startDate,
+            final Date endDate = (end > 0 && end != start ? new Date(end)
+                    : new Date(start));
+            final String title = item.getStringAttribute("title");
+            final String desc = item.getStringAttribute("description");
+            final boolean notime = item.getBooleanAttribute("notime");
+            final CalendarEntry entry = new CalendarEntry(styleName, startDate,
                     endDate, title, desc, notime);
 
             // TODO should remove+readd if the same entry (id) is
             // added again
 
-            for (Date d = entry.getStart(); d.getYear() <= entry.getEnd()
+            for (final Date d = entry.getStart(); d.getYear() <= entry.getEnd()
                     .getYear()
                     && d.getMonth() <= entry.getEnd().getYear()
                     && d.getDate() <= entry.getEnd().getDate(); d.setTime(d
                     .getTime() + 86400000)) {
-                String key = d.getYear() + "" + d.getMonth() + "" + d.getDate();
+                final String key = d.getYear() + "" + d.getMonth() + ""
+                        + d.getDate();
                 ArrayList l = (ArrayList) dates.get(key);
                 if (l == null) {
                     l = new ArrayList();
@@ -249,14 +255,14 @@ public class ICalendarField extends IDateField {
         }
 
         public List getEntries(Date date, int resolution) {
-            List entries = (List) dates.get(date.getYear() + ""
+            final List entries = (List) dates.get(date.getYear() + ""
                     + date.getMonth() + "" + date.getDate());
-            ArrayList res = new ArrayList();
+            final ArrayList res = new ArrayList();
             if (entries == null) {
                 return res;
             }
-            for (Iterator it = entries.iterator(); it.hasNext();) {
-                CalendarEntry item = (CalendarEntry) it.next();
+            for (final Iterator it = entries.iterator(); it.hasNext();) {
+                final CalendarEntry item = (CalendarEntry) it.next();
                 if (DateTimeService.isInRange(date, item.getStart(), item
                         .getEnd(), resolution)) {
                     res.add(item);

@@ -1,30 +1,6 @@
-/* *************************************************************************
- 
- IT Mill Toolkit 
-
- Development of Browser User Interfaces Made Easy
-
- Copyright (C) 2000-2006 IT Mill Ltd
- 
- *************************************************************************
-
- This product is distributed under commercial license that can be found
- from the product package on license.pdf. Use of this product might 
- require purchasing a commercial license from IT Mill Ltd. For guidelines 
- on usage, see licensing-guidelines.html
-
- *************************************************************************
- 
- For more information, contact:
- 
- IT Mill Ltd                           phone: +358 2 4802 7180
- Ruukinkatu 2-4                        fax:   +358 2 4802 7181
- 20540, Turku                          email:  info@itmill.com
- Finland                               company www: www.itmill.com
- 
- Primary source for information and releases: www.itmill.com
-
- ********************************************************************** */
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
 
 package com.itmill.toolkit.tests.featurebrowser;
 
@@ -51,8 +27,8 @@ public class FeatureTree extends Feature implements Action.Handler {
 
     private boolean actionsActive = false;
 
-    private Button actionHandlerSwitch = new Button("Activate actions", this,
-            "toggleActions");
+    private final Button actionHandlerSwitch = new Button("Activate actions",
+            this, "toggleActions");
 
     public FeatureTree() {
         super();
@@ -71,22 +47,22 @@ public class FeatureTree extends Feature implements Action.Handler {
     }
 
     public void expandAll() {
-        for (Iterator i = t.rootItemIds().iterator(); i.hasNext();) {
+        for (final Iterator i = t.rootItemIds().iterator(); i.hasNext();) {
             t.expandItemsRecursively(i.next());
         }
     }
 
     public void collapseAll() {
-        for (Iterator i = t.rootItemIds().iterator(); i.hasNext();) {
+        for (final Iterator i = t.rootItemIds().iterator(); i.hasNext();) {
             t.collapseItemsRecursively(i.next());
         }
     }
 
     protected Component getDemoComponent() {
 
-        OrderedLayout l = new OrderedLayout();
+        final OrderedLayout l = new OrderedLayout();
 
-        String[] names = new String[100];
+        final String[] names = new String[100];
         for (int i = 0; i < names.length; i++) {
             names[i] = firstnames[(int) (Math.random() * (firstnames.length - 1))]
                     + " "
@@ -97,7 +73,7 @@ public class FeatureTree extends Feature implements Action.Handler {
         t = new Tree("Organization Structure");
         for (int i = 0; i < 100; i++) {
             t.addItem(names[i]);
-            String parent = names[(int) (Math.random() * (names.length - 1))];
+            final String parent = names[(int) (Math.random() * (names.length - 1))];
             if (t.containsId(parent)) {
                 t.setParent(names[i], parent);
             }
@@ -121,9 +97,9 @@ public class FeatureTree extends Feature implements Action.Handler {
 
         // Properties
         propertyPanel = new PropertyPanel(t);
-        Form ap = propertyPanel
+        final Form ap = propertyPanel
                 .createBeanPropertySet(new String[] { "selectable" });
-        Select themes = (Select) propertyPanel.getField("style");
+        final Select themes = (Select) propertyPanel.getField("style");
         themes.addItem("menu").getItemProperty(
                 themes.getItemCaptionPropertyId()).setValue("menu");
         propertyPanel.addProperties("Tree Properties", ap);
@@ -174,13 +150,13 @@ public class FeatureTree extends Feature implements Action.Handler {
         return "Tree";
     }
 
-    private Action ACTION1 = new Action("Action 1");
+    private final Action ACTION1 = new Action("Action 1");
 
-    private Action ACTION2 = new Action("Action 2");
+    private final Action ACTION2 = new Action("Action 2");
 
-    private Action ACTION3 = new Action("Action 3");
+    private final Action ACTION3 = new Action("Action 3");
 
-    private Action[] actions = new Action[] { ACTION1, ACTION2, ACTION3 };
+    private final Action[] actions = new Action[] { ACTION1, ACTION2, ACTION3 };
 
     public Action[] getActions(Object target, Object sender) {
         return actions;

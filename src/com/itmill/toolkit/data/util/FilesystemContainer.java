@@ -1,30 +1,6 @@
-/* *************************************************************************
- 
- IT Mill Toolkit 
-
- Development of Browser User Interfaces Made Easy
-
- Copyright (C) 2000-2006 IT Mill Ltd
- 
- *************************************************************************
-
- This product is distributed under commercial license that can be found
- from the product package on license.pdf. Use of this product might 
- require purchasing a commercial license from IT Mill Ltd. For guidelines 
- on usage, see licensing-guidelines.html
-
- *************************************************************************
- 
- For more information, contact:
- 
- IT Mill Ltd                           phone: +358 2 4802 7180
- Ruukinkatu 2-4                        fax:   +358 2 4802 7181
- 20540, Turku                          email:  info@itmill.com
- Finland                               company www: www.itmill.com
- 
- Primary source for information and releases: www.itmill.com
-
- ********************************************************************** */
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
 
 package com.itmill.toolkit.data.util;
 
@@ -104,7 +80,7 @@ public class FilesystemContainer implements Container.Hierarchical {
             FILEITEM_NAME = FileItem.class.getMethod("getName", new Class[] {});
             FILEITEM_ICON = FileItem.class.getMethod("getIcon", new Class[] {});
             FILEITEM_SIZE = FileItem.class.getMethod("getSize", new Class[] {});
-        } catch (NoSuchMethodException e) {
+        } catch (final NoSuchMethodException e) {
 
         }
     }
@@ -189,7 +165,7 @@ public class FilesystemContainer implements Container.Hierarchical {
      */
     public void addRoot(File root) {
         if (root != null) {
-            File[] newRoots = new File[roots.length + 1];
+            final File[] newRoots = new File[roots.length + 1];
             for (int i = 0; i < roots.length; i++) {
                 newRoots[i] = roots[i];
             }
@@ -234,7 +210,7 @@ public class FilesystemContainer implements Container.Hierarchical {
             return Collections.unmodifiableCollection(new LinkedList());
         }
 
-        List l = Arrays.asList(f);
+        final List l = Arrays.asList(f);
         Collections.sort(l);
 
         return Collections.unmodifiableCollection(l);
@@ -312,7 +288,7 @@ public class FilesystemContainer implements Container.Hierarchical {
             return Collections.unmodifiableCollection(new LinkedList());
         }
 
-        List l = Arrays.asList(f);
+        final List l = Arrays.asList(f);
         Collections.sort(l);
 
         return Collections.unmodifiableCollection(l);
@@ -376,7 +352,7 @@ public class FilesystemContainer implements Container.Hierarchical {
             try {
                 val |= ((File) itemId).getCanonicalPath().startsWith(
                         roots[i].getCanonicalPath());
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 // Exception ignored
             }
 
@@ -416,11 +392,11 @@ public class FilesystemContainer implements Container.Hierarchical {
         } else {
             l = f.listFiles();
         }
-        List ll = Arrays.asList(l);
+        final List ll = Arrays.asList(l);
         Collections.sort(ll);
 
-        for (Iterator i = ll.iterator(); i.hasNext();) {
-            File lf = (File) i.next();
+        for (final Iterator i = ll.iterator(); i.hasNext();) {
+            final File lf = (File) i.next();
             if (lf.isDirectory()) {
                 addItemIds(col, lf);
             } else {
@@ -436,7 +412,7 @@ public class FilesystemContainer implements Container.Hierarchical {
     public Collection getItemIds() {
 
         if (recursive) {
-            Collection col = new ArrayList();
+            final Collection col = new ArrayList();
             for (int i = 0; i < roots.length; i++) {
                 addItemIds(col, roots[i]);
             }
@@ -457,7 +433,7 @@ public class FilesystemContainer implements Container.Hierarchical {
                 return Collections.unmodifiableCollection(new LinkedList());
             }
 
-            List l = Arrays.asList(f);
+            final List l = Arrays.asList(f);
             Collections.sort(l);
             return Collections.unmodifiableCollection(l);
         }
@@ -612,7 +588,7 @@ public class FilesystemContainer implements Container.Hierarchical {
         /**
          * The wrapped file.
          */
-        private File file;
+        private final File file;
 
         /**
          * Constructs a FileItem from a existing file.
@@ -664,7 +640,7 @@ public class FilesystemContainer implements Container.Hierarchical {
             if (obj == null || !(obj instanceof FileItem)) {
                 return false;
             }
-            FileItem fi = (FileItem) obj;
+            final FileItem fi = (FileItem) obj;
             return fi.getHost() == getHost() && fi.file.equals(file);
         }
 
@@ -759,7 +735,7 @@ public class FilesystemContainer implements Container.Hierarchical {
      */
     public class FileExtensionFilter implements FilenameFilter {
 
-        private String filter;
+        private final String filter;
 
         /**
          * Constructs a new FileExtensionFilter using given extension.

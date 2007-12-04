@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import com.google.gwt.user.client.Timer;
@@ -12,7 +16,7 @@ import com.itmill.toolkit.terminal.gwt.client.util.SimpleDateFormat;
 public class ITextualDate extends IDateField implements Paintable,
         ChangeListener {
 
-    private ITextField text;
+    private final ITextField text;
 
     private SimpleDateFormat format;
 
@@ -60,18 +64,19 @@ public class ITextualDate extends IDateField implements Paintable,
                 if (h > 11 && dts.isTwelveHourClock()) {
                     h -= 12;
                 }
-                int m = currentResolution > IDateField.RESOLUTION_HOUR ? date
-                        .getMinutes() : 0;
+                final int m = currentResolution > IDateField.RESOLUTION_HOUR ? date
+                        .getMinutes()
+                        : 0;
                 dateText += " " + (h < 10 ? "0" + h : "" + h)
                         + dts.getClockDelimeter() + (m < 10 ? "0" + m : "" + m);
             }
             if (currentResolution >= IDateField.RESOLUTION_SEC) {
-                int s = date.getSeconds();
+                final int s = date.getSeconds();
                 dateText += dts.getClockDelimeter()
                         + (s < 10 ? "0" + s : "" + s);
             }
             if (currentResolution == IDateField.RESOLUTION_MSEC) {
-                int ms = getMilliseconds();
+                final int ms = getMilliseconds();
                 String text = "" + ms;
                 if (ms < 10) {
                     text = "00" + text;
@@ -145,10 +150,10 @@ public class ITextualDate extends IDateField implements Paintable,
 
                 try {
                     date = format.parse(text.getText());
-                } catch (Exception e) {
+                } catch (final Exception e) {
                     ApplicationConnection.getConsole().log(e.getMessage());
                     text.addStyleName(ITextField.CLASSNAME + "-error");
-                    Timer t = new Timer() {
+                    final Timer t = new Timer() {
                         public void run() {
                             text.removeStyleName(ITextField.CLASSNAME
                                     + "-error");

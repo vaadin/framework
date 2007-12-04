@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.demo;
 
 import java.sql.SQLException;
@@ -37,35 +41,37 @@ public class QueryContainerDemo extends com.itmill.toolkit.Application
             + " dynamically loaded rows from example SQL table";
 
     // Table component where SQL rows are attached (using QueryContainer)
-    private Table table = new Table();
+    private final Table table = new Table();
 
-    private Label tableLastAction = new Label("No action selected for table.");
+    private final Label tableLastAction = new Label(
+            "No action selected for table.");
 
     // Select component where SQL rows are attached (using QueryContainer)
-    private Select select = new Select();
+    private final Select select = new Select();
 
     // Tree component that uses select as datasource
-    private Tree tree = new Tree();
+    private final Tree tree = new Tree();
 
-    private Label treeLastAction = new Label("No action selected for tree.");
+    private final Label treeLastAction = new Label(
+            "No action selected for tree.");
 
     // Database provided with sample data
     private SampleDatabase sampleDatabase;
 
     // Example Actions for table
-    private Action ACTION1 = new Action("Upload");
+    private final Action ACTION1 = new Action("Upload");
 
-    private Action ACTION2 = new Action("Download");
+    private final Action ACTION2 = new Action("Download");
 
-    private Action ACTION3 = new Action("Show history");
+    private final Action ACTION3 = new Action("Show history");
 
-    private Action[] actions = new Action[] { ACTION1, ACTION2, ACTION3 };
+    private final Action[] actions = new Action[] { ACTION1, ACTION2, ACTION3 };
 
     /**
      * Initialize Application. Demo components are added to main window.
      */
     public void init() {
-        Window main = new Window("QueryContainer demo");
+        final Window main = new Window("QueryContainer demo");
         setMainWindow(main);
 
         // Main window contains heading, table, select and tree
@@ -111,10 +117,10 @@ public class QueryContainerDemo extends com.itmill.toolkit.Application
 
         // populate Toolkit table component with test SQL table rows
         try {
-            QueryContainer qc = new QueryContainer("SELECT * FROM employee",
-                    sampleDatabase.getConnection());
+            final QueryContainer qc = new QueryContainer(
+                    "SELECT * FROM employee", sampleDatabase.getConnection());
             table.setContainerDataSource(qc);
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             e.printStackTrace();
         }
         // define which columns should be visible on Table component
@@ -134,11 +140,11 @@ public class QueryContainerDemo extends com.itmill.toolkit.Application
 
         // populate Toolkit select component with test SQL table rows
         try {
-            QueryContainer qc = new QueryContainer(
+            final QueryContainer qc = new QueryContainer(
                     "SELECT DISTINCT UNIT FROM employee", sampleDatabase
                             .getConnection());
             select.setContainerDataSource(qc);
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             e.printStackTrace();
         }
     }

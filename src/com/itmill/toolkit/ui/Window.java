@@ -1,30 +1,6 @@
-/* *************************************************************************
- 
- IT Mill Toolkit 
-
- Development of Browser User Interfaces Made Easy
-
- Copyright (C) 2000-2006 IT Mill Ltd
- 
- *************************************************************************
-
- This product is distributed under commercial license that can be found
- from the product package on license.pdf. Use of this product might 
- require purchasing a commercial license from IT Mill Ltd. For guidelines 
- on usage, see licensing-guidelines.html
-
- *************************************************************************
- 
- For more information, contact:
- 
- IT Mill Ltd                           phone: +358 2 4802 7180
- Ruukinkatu 2-4                        fax:   +358 2 4802 7181
- 20540, Turku                          email:  info@itmill.com
- Finland                               company www: www.itmill.com
- 
- Primary source for information and releases: www.itmill.com
-
- ********************************************************************** */
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
 
 package com.itmill.toolkit.ui;
 
@@ -349,7 +325,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
                 handlers = uriHandlerList.toArray();
             }
             for (int i = 0; i < handlers.length; i++) {
-                DownloadStream ds = ((URIHandler) handlers[i]).handleURI(
+                final DownloadStream ds = ((URIHandler) handlers[i]).handleURI(
                         context, relativeUri);
                 if (ds != null) {
                     if (result != null) {
@@ -477,11 +453,11 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
             throws PaintException {
 
         // Sets the window name
-        String name = getName();
+        final String name = getName();
         target.addAttribute("name", name == null ? "" : name);
 
         // Sets the window theme
-        String theme = getTheme();
+        final String theme = getTheme();
         target.addAttribute("theme", theme == null ? "" : theme);
 
         if (modal) {
@@ -497,7 +473,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
         // Open requested resource
         synchronized (openList) {
             if (!openList.isEmpty()) {
-                for (Iterator i = openList.iterator(); i.hasNext();) {
+                for (final Iterator i = openList.iterator(); i.hasNext();) {
                     ((OpenResource) i.next()).paintContent(target);
                 }
                 openList.clear();
@@ -527,16 +503,16 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
         }
 
         // Paint subwindows
-        for (Iterator i = subwindows.iterator(); i.hasNext();) {
-            Window w = (Window) i.next();
+        for (final Iterator i = subwindows.iterator(); i.hasNext();) {
+            final Window w = (Window) i.next();
             w.paint(target);
         }
 
         // Paint notifications
         if (notifications != null) {
             target.startTag("notifications");
-            for (Iterator it = notifications.iterator(); it.hasNext();) {
-                Notification n = (Notification) it.next();
+            for (final Iterator it = notifications.iterator(); it.hasNext();) {
+                final Notification n = (Notification) it.next();
                 target.startTag("notification");
                 if (n.getCaption() != null) {
                     target.addAttribute("caption", n.getCaption());
@@ -636,7 +612,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
         try {
             return new URL(application.getURL(), getName() + "/");
-        } catch (MalformedURLException e) {
+        } catch (final MalformedURLException e) {
             throw new RuntimeException("Internal problem, please report");
         }
     }
@@ -858,42 +834,42 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
         super.changeVariables(source, variables);
 
         // Gets the focused component
-        String focusedId = (String) variables.get("focused");
+        final String focusedId = (String) variables.get("focused");
         if (focusedId != null) {
             try {
-                long id = Long.parseLong(focusedId);
+                final long id = Long.parseLong(focusedId);
                 focusedComponent = Window.getFocusableById(id);
-            } catch (NumberFormatException ignored) {
+            } catch (final NumberFormatException ignored) {
                 // We ignore invalid focusable ids
             }
         }
 
         // Positioning
-        Integer positionx = (Integer) variables.get("positionx");
+        final Integer positionx = (Integer) variables.get("positionx");
         if (positionx != null) {
-            int x = positionx.intValue();
+            final int x = positionx.intValue();
             setPositionX(x < 0 ? -1 : x);
         }
-        Integer positiony = (Integer) variables.get("positiony");
+        final Integer positiony = (Integer) variables.get("positiony");
         if (positiony != null) {
-            int y = positiony.intValue();
+            final int y = positiony.intValue();
             setPositionY(y < 0 ? -1 : y);
         }
 
         // Scroll position
-        Integer scrolltop = (Integer) variables.get("scrolltop");
+        final Integer scrolltop = (Integer) variables.get("scrolltop");
         if (scrolltop != null) {
-            int top = scrolltop.intValue();
+            final int top = scrolltop.intValue();
             setScrollTop(top < 0 ? 0 : top);
         }
-        Integer scrollleft = (Integer) variables.get("scrollleft");
+        final Integer scrollleft = (Integer) variables.get("scrollleft");
         if (scrollleft != null) {
-            int left = scrollleft.intValue();
+            final int left = scrollleft.intValue();
             setScrollLeft(left < 0 ? 0 : left);
         }
 
         // Closing
-        Boolean close = (Boolean) variables.get("close");
+        final Boolean close = (Boolean) variables.get("close");
         if (close != null && close.booleanValue()) {
             setVisible(false);
             fireClose();
@@ -916,7 +892,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      *                the Focused component or null if none is focused.
      */
     public void setFocusedComponent(Component.Focusable focusable) {
-        Application app = getApplication();
+        final Application app = getApplication();
         if (app != null) {
             app.setFocusedComponent(focusable);
             focusedComponent = focusable;
@@ -936,8 +912,8 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      *                the focused component.
      */
     public static long getNewFocusableId(Component.Focusable focusable) {
-        long newId = ++lastUsedFocusableId;
-        WeakReference ref = new WeakReference(focusable);
+        final long newId = ++lastUsedFocusableId;
+        final WeakReference ref = new WeakReference(focusable);
         focusableComponents.put(new Long(newId), ref);
         return newId;
     }
@@ -950,10 +926,10 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * @return the focusable Id.
      */
     public static Component.Focusable getFocusableById(long focusableId) {
-        WeakReference ref = (WeakReference) focusableComponents.get(new Long(
-                focusableId));
+        final WeakReference ref = (WeakReference) focusableComponents
+                .get(new Long(focusableId));
         if (ref != null) {
-            Object o = ref.get();
+            final Object o = ref.get();
             if (o != null) {
                 return (Component.Focusable) o;
             }
@@ -968,8 +944,8 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      *                the focusable Id to remove.
      */
     public static void removeFocusableId(long focusableId) {
-        Long id = new Long(focusableId);
-        WeakReference ref = (WeakReference) focusableComponents.get(id);
+        final Long id = new Long(focusableId);
+        final WeakReference ref = (WeakReference) focusableComponents.get(id);
         ref.clear();
         focusableComponents.remove(id);
     }
@@ -1033,7 +1009,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
         try {
             WINDOW_CLOSE_METHOD = CloseListener.class.getDeclaredMethod(
                     "windowClose", new Class[] { CloseEvent.class });
-        } catch (java.lang.NoSuchMethodException e) {
+        } catch (final java.lang.NoSuchMethodException e) {
             // This should never happen
             throw new java.lang.RuntimeException();
         }

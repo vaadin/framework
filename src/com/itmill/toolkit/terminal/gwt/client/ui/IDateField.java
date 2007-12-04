@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import java.util.Date;
@@ -59,11 +63,11 @@ public class IDateField extends FlowPanel implements Paintable {
         enabled = !uidl.getBooleanAttribute("disabled");
 
         if (uidl.hasAttribute("locale")) {
-            String locale = uidl.getStringAttribute("locale");
+            final String locale = uidl.getStringAttribute("locale");
             try {
                 dts.setLocale(locale);
                 currentLocale = locale;
-            } catch (LocaleNotLoadedException e) {
+            } catch (final LocaleNotLoadedException e) {
                 currentLocale = dts.getLocale();
                 // TODO redirect this to console
                 System.out.println("Tried to use an unloaded locale \""
@@ -91,18 +95,18 @@ public class IDateField extends FlowPanel implements Paintable {
 
         currentResolution = newResolution;
 
-        int year = uidl.getIntVariable("year");
-        int month = (currentResolution >= RESOLUTION_MONTH) ? uidl
+        final int year = uidl.getIntVariable("year");
+        final int month = (currentResolution >= RESOLUTION_MONTH) ? uidl
                 .getIntVariable("month") : -1;
-        int day = (currentResolution >= RESOLUTION_DAY) ? uidl
+        final int day = (currentResolution >= RESOLUTION_DAY) ? uidl
                 .getIntVariable("day") : -1;
-        int hour = (currentResolution >= RESOLUTION_HOUR) ? uidl
+        final int hour = (currentResolution >= RESOLUTION_HOUR) ? uidl
                 .getIntVariable("hour") : -1;
-        int min = (currentResolution >= RESOLUTION_MIN) ? uidl
+        final int min = (currentResolution >= RESOLUTION_MIN) ? uidl
                 .getIntVariable("min") : -1;
-        int sec = (currentResolution >= RESOLUTION_SEC) ? uidl
+        final int sec = (currentResolution >= RESOLUTION_SEC) ? uidl
                 .getIntVariable("sec") : -1;
-        int msec = (currentResolution >= RESOLUTION_MSEC) ? uidl
+        final int msec = (currentResolution >= RESOLUTION_MSEC) ? uidl
                 .getIntVariable("msec") : -1;
 
         // Construct new date for this datefield (only if not null)
@@ -119,22 +123,22 @@ public class IDateField extends FlowPanel implements Paintable {
      */
     private static native double getTime(int y, int m, int d, int h, int mi,
             int s, int ms) /*-{
-                   try {
-                   	var date = new Date();
-                   	if(y && y >= 0) date.setFullYear(y);
-                   	if(m && m >= 1) date.setMonth(m-1);
-                   	if(d && d >= 0) date.setDate(d);
-                   	if(h && h >= 0) date.setHours(h);
-                   	if(mi && mi >= 0) date.setMinutes(mi);
-                   	if(s && s >= 0) date.setSeconds(s);
-                   	if(ms && ms >= 0) date.setMilliseconds(ms);
-                   	return date.getTime();
-                   } catch (e) {
-                   	// TODO print some error message on the console
-                   	//console.log(e);
-                   	return (new Date()).getTime();
-                   }
-                   }-*/;
+                         try {
+                         	var date = new Date();
+                         	if(y && y >= 0) date.setFullYear(y);
+                         	if(m && m >= 1) date.setMonth(m-1);
+                         	if(d && d >= 0) date.setDate(d);
+                         	if(h && h >= 0) date.setHours(h);
+                         	if(mi && mi >= 0) date.setMinutes(mi);
+                         	if(s && s >= 0) date.setSeconds(s);
+                         	if(ms && ms >= 0) date.setMilliseconds(ms);
+                         	return date.getTime();
+                         } catch (e) {
+                         	// TODO print some error message on the console
+                         	//console.log(e);
+                         	return (new Date()).getTime();
+                         }
+                         }-*/;
 
     public int getMilliseconds() {
         return (int) (date.getTime() - date.getTime() / 1000 * 1000);

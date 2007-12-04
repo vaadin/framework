@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.demo;
 
 import com.itmill.toolkit.ui.Label;
@@ -26,7 +30,7 @@ public class HelloWorld extends com.itmill.toolkit.Application {
          * - Create new window for the application - Give the window a visible
          * title - Set the window to be the main window of the application
          */
-        Window main = new Window("Hello window");
+        final Window main = new Window("Hello window");
         setMainWindow(main);
 
         /*

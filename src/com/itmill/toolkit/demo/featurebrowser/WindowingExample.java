@@ -1,6 +1,7 @@
-/**
- * 
+/* 
+@ITMillApache2LicenseForJavaFiles@
  */
+
 package com.itmill.toolkit.demo.featurebrowser;
 
 import java.net.URL;
@@ -37,19 +38,19 @@ public class WindowingExample extends CustomComponent {
     private URL windowUrl = null;
 
     public WindowingExample() {
-        OrderedLayout main = new OrderedLayout();
+        final OrderedLayout main = new OrderedLayout();
         main.setMargin(true);
         setCompositionRoot(main);
 
-        Label l = new Label(txt);
+        final Label l = new Label(txt);
         l.setContentMode(Label.CONTENT_XHTML);
         main.addComponent(l);
 
         main.addComponent(new Button("Create a new subwindow",
                 new Button.ClickListener() {
                     public void buttonClick(ClickEvent event) {
-                        Window w = new Window("Subwindow");
-                        Label l = new Label(txt);
+                        final Window w = new Window("Subwindow");
+                        final Label l = new Label(txt);
                         l.setContentMode(Label.CONTENT_XHTML);
                         w.addComponent(l);
                         getApplication().getMainWindow().addWindow(w);
@@ -58,9 +59,9 @@ public class WindowingExample extends CustomComponent {
         main.addComponent(new Button("Create a new modal window",
                 new Button.ClickListener() {
                     public void buttonClick(ClickEvent event) {
-                        Window w = new Window("Modal window");
+                        final Window w = new Window("Modal window");
                         w.setModal(true);
-                        Label l = new Label(txt);
+                        final Label l = new Label(txt);
                         l.setContentMode(Label.CONTENT_XHTML);
                         w.addComponent(l);
                         getApplication().getMainWindow().addWindow(w);
@@ -71,8 +72,8 @@ public class WindowingExample extends CustomComponent {
                 new Button.ClickListener() {
                     public void buttonClick(ClickEvent event) {
                         if (windowUrl == null) {
-                            Window w = new Window("Subwindow");
-                            Label l = new Label(txt);
+                            final Window w = new Window("Subwindow");
+                            final Label l = new Label(txt);
                             l.setContentMode(Label.CONTENT_XHTML);
                             w.addComponent(l);
                             getApplication().addWindow(w);
@@ -86,10 +87,11 @@ public class WindowingExample extends CustomComponent {
                 "Create a new application-level window, with it's own state",
                 new Button.ClickListener() {
                     public void buttonClick(ClickEvent event) {
-                        Window w = new Window("Subwindow");
+                        final Window w = new Window("Subwindow");
                         getApplication().addWindow(w);
-                        Label l = new Label("Each opened window has its own"
-                                + " name, and is accessed trough its own uri.");
+                        final Label l = new Label(
+                                "Each opened window has its own"
+                                        + " name, and is accessed trough its own uri.");
                         l.setCaption("Window " + w.getName());
                         w.addComponent(l);
                         getApplication().getMainWindow().open(

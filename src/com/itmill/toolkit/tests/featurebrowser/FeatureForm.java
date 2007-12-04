@@ -1,30 +1,6 @@
-/* *************************************************************************
- 
- IT Mill Toolkit 
-
- Development of Browser User Interfaces Made Easy
-
- Copyright (C) 2000-2006 IT Mill Ltd
- 
- *************************************************************************
-
- This product is distributed under commercial license that can be found
- from the product package on license.pdf. Use of this product might 
- require purchasing a commercial license from IT Mill Ltd. For guidelines 
- on usage, see licensing-guidelines.html
-
- *************************************************************************
- 
- For more information, contact:
- 
- IT Mill Ltd                           phone: +358 2 4802 7180
- Ruukinkatu 2-4                        fax:   +358 2 4802 7181
- 20540, Turku                          email:  info@itmill.com
- Finland                               company www: www.itmill.com
- 
- Primary source for information and releases: www.itmill.com
-
- ********************************************************************** */
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
 
 package com.itmill.toolkit.tests.featurebrowser;
 
@@ -77,7 +53,7 @@ public class FeatureForm extends Feature implements
         }
 
         demo.addComponent(test);
-        OrderedLayout actions = new OrderedLayout(
+        final OrderedLayout actions = new OrderedLayout(
                 OrderedLayout.ORIENTATION_HORIZONTAL);
         demo.addComponent(actions);
 
@@ -111,7 +87,7 @@ public class FeatureForm extends Feature implements
 
         if (event.getProperty() == resetLayout) {
 
-            String value = (String) resetLayout.getValue();
+            final String value = (String) resetLayout.getValue();
 
             if (value != null) {
                 formLayout = null;
@@ -131,14 +107,14 @@ public class FeatureForm extends Feature implements
 
         if (event.getProperty() == addField) {
 
-            String value = (String) addField.getValue();
+            final String value = (String) addField.getValue();
 
             if (value != null) {
                 if (value.equals("Text field")) {
                     test.addField(new Object(), new TextField("Test field"));
                 }
                 if (value.equals("Time")) {
-                    DateField d = new DateField("Time", new Date());
+                    final DateField d = new DateField("Time", new Date());
                     d
                             .setDescription("This is a DateField-component with text-style");
                     d.setResolution(DateField.RESOLUTION_MIN);
@@ -146,7 +122,7 @@ public class FeatureForm extends Feature implements
                     test.addField(new Object(), d);
                 }
                 if (value.equals("Calendar")) {
-                    DateField c = new DateField("Calendar", new Date());
+                    final DateField c = new DateField("Calendar", new Date());
                     c
                             .setDescription("DateField-component with calendar-style and day-resolution");
                     c.setStyle("calendar");
@@ -154,7 +130,7 @@ public class FeatureForm extends Feature implements
                     test.addField(new Object(), c);
                 }
                 if (value.equals("Option group")) {
-                    Select s = new Select("Options");
+                    final Select s = new Select("Options");
                     s.setDescription("Select-component with optiongroup-style");
                     s.addItem("Linux");
                     s.addItem("Windows");

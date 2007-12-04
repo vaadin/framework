@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.demo;
 
 import com.itmill.toolkit.ui.Button;
@@ -57,7 +61,7 @@ public class Calc extends com.itmill.toolkit.Application implements
     public void init() {
 
         // Create a new layout for the components used by the calculator
-        GridLayout layout = new GridLayout(4, 5);
+        final GridLayout layout = new GridLayout(4, 5);
 
         // Create a new label component for displaying the result
         display = new Label(Double.toString(current));
@@ -68,7 +72,7 @@ public class Calc extends com.itmill.toolkit.Application implements
 
         // Create the buttons and place them in the grid
         for (int i = 0; i < captions.length; i++) {
-            Button button = new Button(captions[i], this);
+            final Button button = new Button(captions[i], this);
             layout.addComponent(button);
         }
 
@@ -102,7 +106,7 @@ public class Calc extends com.itmill.toolkit.Application implements
             current = current * 10
                     + Double.parseDouble(event.getButton().getCaption());
             display.setValue(Double.toString(current));
-        } catch (java.lang.NumberFormatException e) {
+        } catch (final java.lang.NumberFormatException e) {
 
             // Operation button pressed
             if (operation.equals("+")) {

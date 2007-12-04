@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import java.util.HashMap;
@@ -82,19 +86,19 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 
     private int selectMode = Table.SELECT_MODE_NONE;
 
-    private HashSet selectedRowKeys = new HashSet();
+    private final HashSet selectedRowKeys = new HashSet();
 
     private boolean initializedAndAttached = false;
 
-    private TableHead tHead = new TableHead();
+    private final TableHead tHead = new TableHead();
 
-    private ScrollPanel bodyContainer = new ScrollPanel();
+    private final ScrollPanel bodyContainer = new ScrollPanel();
 
     private int totalRows;
 
     private Set collapsedColumns;
 
-    private RowRequestHandler rowRequestHandler;
+    private final RowRequestHandler rowRequestHandler;
     private IScrollTableBody tBody;
     private String width;
     private String height;
@@ -107,11 +111,11 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
      * This map contains captions and icon urls for actions like: * "33_c" ->
      * "Edit" * "33_i" -> "http://dom.com/edit.png"
      */
-    private HashMap actionMap = new HashMap();
+    private final HashMap actionMap = new HashMap();
     private String[] visibleColOrder;
     private boolean initialContentReceived = false;
     private Element scrollPositionElement;
-    private FlowPanel panel;
+    private final FlowPanel panel;
     private boolean enabled;
     private boolean showColHeaders;
 
@@ -140,7 +144,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
         this.client = client;
         paintableId = uidl.getStringAttribute("id");
         immediate = uidl.getBooleanAttribute("immediate");
-        int newTotalRows = uidl.getIntAttribute("totalrows");
+        final int newTotalRows = uidl.getIntAttribute("totalrows");
         if (newTotalRows != totalRows) {
             totalRows = newTotalRows;
             if (initializedAndAttached) {
@@ -171,9 +175,10 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
         }
 
         if (uidl.hasVariable("selected")) {
-            Set selectedKeys = uidl.getStringArrayVariableAsSet("selected");
+            final Set selectedKeys = uidl
+                    .getStringArrayVariableAsSet("selected");
             selectedRowKeys.clear();
-            for (Iterator it = selectedKeys.iterator(); it.hasNext();) {
+            for (final Iterator it = selectedKeys.iterator(); it.hasNext();) {
                 selectedRowKeys.add(it.next());
             }
         }
@@ -200,8 +205,8 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
         }
 
         UIDL rowData = null;
-        for (Iterator it = uidl.getChildIterator(); it.hasNext();) {
-            UIDL c = (UIDL) it.next();
+        for (final Iterator it = uidl.getChildIterator(); it.hasNext();) {
+            final UIDL c = (UIDL) it.next();
             if (c.getTag().equals("rows")) {
                 rowData = c;
             } else if (c.getTag().equals("actions")) {
@@ -230,19 +235,19 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
     }
 
     private void updateVisibleColumns(UIDL uidl) {
-        Iterator it = uidl.getChildIterator();
+        final Iterator it = uidl.getChildIterator();
         while (it.hasNext()) {
-            UIDL col = (UIDL) it.next();
+            final UIDL col = (UIDL) it.next();
             tHead.updateCellFromUIDL(col);
         }
     }
 
     private void updateActionMap(UIDL c) {
-        Iterator it = c.getChildIterator();
+        final Iterator it = c.getChildIterator();
         while (it.hasNext()) {
-            UIDL action = (UIDL) it.next();
-            String key = action.getStringAttribute("key");
-            String caption = action.getStringAttribute("caption");
+            final UIDL action = (UIDL) it.next();
+            final String key = action.getStringAttribute("key");
+            final String caption = action.getStringAttribute("caption");
             actionMap.put(key + "_c", caption);
             if (action.hasAttribute("icon")) {
                 // TODO need some uri handling ??
@@ -280,7 +285,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
         }
 
         for (int i = 0; i < strings.length; i++) {
-            String cid = strings[i];
+            final String cid = strings[i];
             visibleColOrder[colIndex] = cid;
             tHead.enableColumn(cid, colIndex);
             colIndex++;
@@ -312,13 +317,13 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 
         tBody.renderRows(uidl, firstRow, reqRows);
 
-        int optimalFirstRow = (int) (firstRowInViewPort - pageLength
+        final int optimalFirstRow = (int) (firstRowInViewPort - pageLength
                 * CACHE_RATE);
         while (tBody.getFirstRendered() < optimalFirstRow) {
             // client.console.log("removing row from start");
             tBody.unlinkRow(true);
         }
-        int optimalLastRow = (int) (firstRowInViewPort + pageLength + pageLength
+        final int optimalLastRow = (int) (firstRowInViewPort + pageLength + pageLength
                 * CACHE_RATE);
         while (tBody.getLastRendered() > optimalLastRow) {
             // client.console.log("removing row from the end");
@@ -362,7 +367,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
     }
 
     private void setColWidth(int colIndex, int w) {
-        HeaderCell cell = tHead.getHeaderCell(colIndex);
+        final HeaderCell cell = tHead.getHeaderCell(colIndex);
         cell.setWidth(w);
         tBody.setColWidth(colIndex, w);
     }
@@ -372,7 +377,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
     }
 
     private IScrollTableRow getRenderedRowByKey(String key) {
-        Iterator it = tBody.iterator();
+        final Iterator it = tBody.iterator();
         IScrollTableRow r = null;
         while (it.hasNext()) {
             r = (IScrollTableRow) it.next();
@@ -385,7 +390,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 
     private void reOrderColumn(String columnKey, int newIndex) {
 
-        int oldIndex = getColIndexByKey(columnKey);
+        final int oldIndex = getColIndexByKey(columnKey);
 
         // Change header order
         tHead.moveCell(oldIndex, newIndex);
@@ -400,7 +405,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
          * array unless on moved columnKey. On new index also put the moved key
          * i == index on columnOrder, j == index on newOrder
          */
-        String oldKeyOnNewIndex = visibleColOrder[newIndex];
+        final String oldKeyOnNewIndex = visibleColOrder[newIndex];
         if (showRowHeaders) {
             newIndex--; // columnOrder don't have rowHeader
         }
@@ -414,7 +419,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
             }
         }
         // finally we can build the new columnOrder for server
-        String[] newOrder = new String[columnOrder.length];
+        final String[] newOrder = new String[columnOrder.length];
         for (int i = 0, j = 0; j < newOrder.length; i++) {
             if (j == newIndex) {
                 newOrder[j] = columnKey;
@@ -433,7 +438,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
         // also update visibleColumnOrder
         int i = showRowHeaders ? 1 : 0;
         for (int j = 0; j < newOrder.length; j++) {
-            String cid = newOrder[j];
+            final String cid = newOrder[j];
             if (!isCollapsedColumn(cid)) {
                 visibleColOrder[i++] = cid;
             }
@@ -453,7 +458,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
         super.onDetach();
         // ensure that scrollPosElement will be detached
         if (scrollPositionElement != null) {
-            Element parent = DOM.getParent(scrollPositionElement);
+            final Element parent = DOM.getParent(scrollPositionElement);
             if (parent != null) {
                 DOM.removeChild(parent, scrollPositionElement);
             }
@@ -481,20 +486,20 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
         int totalExplicitColumnsWidths = 0;
         int total = 0;
 
-        int[] widths = new int[tHead.visibleCells.size()];
+        final int[] widths = new int[tHead.visibleCells.size()];
 
         // first loop: collect natural widths
         while (headCells.hasNext()) {
-            HeaderCell hCell = (HeaderCell) headCells.next();
+            final HeaderCell hCell = (HeaderCell) headCells.next();
             int w;
             if (hCell.getWidth() > 0) {
                 // server has defined column width explicitly
                 w = hCell.getWidth();
                 totalExplicitColumnsWidths += w;
             } else {
-                int hw = DOM.getElementPropertyInt(hCell.getElement(),
+                final int hw = DOM.getElementPropertyInt(hCell.getElement(),
                         "offsetWidth");
-                int cw = tBody.getColWidth(i);
+                final int cw = tBody.getColWidth(i);
                 w = (hw > cw ? hw : cw) + IScrollTableBody.CELL_EXTRA_WIDTH;
             }
             widths[i] = w;
@@ -539,8 +544,8 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 
         if (availW > total) {
             // natural size is smaller than available space
-            int extraSpace = availW - total;
-            int totalWidthR = total - totalExplicitColumnsWidths;
+            final int extraSpace = availW - total;
+            final int totalWidthR = total - totalExplicitColumnsWidths;
             if (totalWidthR > 0) {
                 // now we will share this sum relatively to those without
                 // explicit width
@@ -551,7 +556,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
                     hCell = (HeaderCell) headCells.next();
                     if (hCell.getWidth() == -1) {
                         int w = widths[i];
-                        int newSpace = extraSpace * w / totalWidthR;
+                        final int newSpace = extraSpace * w / totalWidthR;
                         w += newSpace;
                         widths[i] = w;
                     }
@@ -566,9 +571,9 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
         i = 0;
         headCells = tHead.iterator();
         while (headCells.hasNext()) {
-            HeaderCell hCell = (HeaderCell) headCells.next();
+            final HeaderCell hCell = (HeaderCell) headCells.next();
             if (hCell.getWidth() == -1) {
-                int w = widths[i];
+                final int w = widths[i];
                 setColWidth(i, w);
             }
             i++;
@@ -655,8 +660,8 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
         if (preLimit < 0) {
             preLimit = 0;
         }
-        int lastRendered = tBody.getLastRendered();
-        int firstRendered = tBody.getFirstRendered();
+        final int lastRendered = tBody.getLastRendered();
+        final int firstRendered = tBody.getFirstRendered();
 
         if (postLimit <= lastRendered && preLimit >= firstRendered) {
             client.updateVariable(paintableId, "firstvisible",
@@ -822,7 +827,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
         Element floatingCopyOfHeaderCell;
 
         private boolean sortable = false;
-        private String cid;
+        private final String cid;
         private boolean dragging;
 
         private int dragStartX;
@@ -1016,7 +1021,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
                         createFloatingCopy();
                         moved = true;
                     }
-                    int x = DOM.eventGetClientX(event)
+                    final int x = DOM.eventGetClientX(event)
                             + DOM.getElementPropertyInt(tHead.hTableWrapper,
                                     "scrollLeft");
                     int slotX = headerX;
@@ -1026,13 +1031,13 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
                     if (showRowHeaders) {
                         start++;
                     }
-                    int visibleCellCount = tHead.getVisibleCellCount();
+                    final int visibleCellCount = tHead.getVisibleCellCount();
                     for (int i = start; i <= visibleCellCount; i++) {
                         if (i > 0) {
-                            String colKey = getColKeyByIndex(i - 1);
+                            final String colKey = getColKeyByIndex(i - 1);
                             slotX += getColWidth(colKey);
                         }
-                        int dist = Math.abs(x - slotX);
+                        final int dist = Math.abs(x - slotX);
                         if (closestDistance == -1 || dist < closestDistance) {
                             closestDistance = dist;
                             closestSlot = i;
@@ -1065,7 +1070,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
                 break;
             case Event.ONMOUSEMOVE:
                 if (isResizing) {
-                    int deltaX = DOM.eventGetClientX(event) - dragStartX;
+                    final int deltaX = DOM.eventGetClientX(event) - dragStartX;
                     if (deltaX == 0) {
                         return;
                     }
@@ -1147,7 +1152,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
         Element headerTableBody = DOM.createTBody();
         Element tr = DOM.createTR();
 
-        private Element columnSelector = DOM.createDiv();
+        private final Element columnSelector = DOM.createDiv();
 
         private int focusedSlot = -1;
 
@@ -1179,7 +1184,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
         }
 
         public void updateCellFromUIDL(UIDL col) {
-            String cid = col.getStringAttribute("cid");
+            final String cid = col.getStringAttribute("cid");
             HeaderCell c = getHeaderCell(cid);
             if (c == null) {
                 c = new HeaderCell(cid, col.getStringAttribute("caption"));
@@ -1200,14 +1205,14 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
                 c.setAlign(col.getStringAttribute("align").charAt(0));
             }
             if (col.hasAttribute("width")) {
-                String width = col.getStringAttribute("width");
+                final String width = col.getStringAttribute("width");
                 c.setWidth(Integer.parseInt(width));
             }
             // TODO icon
         }
 
         public void enableColumn(String cid, int index) {
-            HeaderCell c = getHeaderCell(cid);
+            final HeaderCell c = getHeaderCell(cid);
             if (!c.isEnabled()) {
                 setHeaderCell(index, c);
             }
@@ -1275,8 +1280,8 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
         }
 
         public void moveCell(int oldIndex, int newIndex) {
-            HeaderCell hCell = getHeaderCell(oldIndex);
-            Element cell = hCell.getElement();
+            final HeaderCell hCell = getHeaderCell(oldIndex);
+            final Element cell = hCell.getElement();
 
             visibleCells.remove(oldIndex);
             DOM.removeChild(tr, cell);
@@ -1300,7 +1305,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
         }
 
         public void removeCell(String colKey) {
-            HeaderCell c = getHeaderCell(colKey);
+            final HeaderCell c = getHeaderCell(colKey);
             remove(c);
         }
 
@@ -1335,8 +1340,8 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
         public void onBrowserEvent(Event event) {
             if (enabled) {
                 if (DOM.compare(DOM.eventGetTarget(event), columnSelector)) {
-                    int left = DOM.getAbsoluteLeft(columnSelector);
-                    int top = DOM.getAbsoluteTop(columnSelector)
+                    final int left = DOM.getAbsoluteLeft(columnSelector);
+                    final int top = DOM.getAbsoluteTop(columnSelector)
                             + DOM.getElementPropertyInt(columnSelector,
                                     "offsetHeight");
                     client.getContextMenu().showAt(this, left, top);
@@ -1380,7 +1385,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
              * Override default method to distinguish on/off columns
              */
             public String getHTML() {
-                StringBuffer buf = new StringBuffer();
+                final StringBuffer buf = new StringBuffer();
                 if (collapsed) {
                     buf.append("<span class=\"i-off\">");
                 }
@@ -1410,16 +1415,18 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
                 for (i = 0; i < visibleColOrder.length; i++) {
                     cols[i] = visibleColOrder[i];
                 }
-                for (Iterator it = collapsedColumns.iterator(); it.hasNext();) {
+                for (final Iterator it = collapsedColumns.iterator(); it
+                        .hasNext();) {
                     cols[i++] = it.next();
                 }
             }
-            Action[] actions = new Action[cols.length];
+            final Action[] actions = new Action[cols.length];
 
             for (int i = 0; i < cols.length; i++) {
-                String cid = (String) cols[i];
-                HeaderCell c = getHeaderCell(cid);
-                VisibleColumnAction a = new VisibleColumnAction(c.getColKey());
+                final String cid = (String) cols[i];
+                final HeaderCell c = getHeaderCell(cid);
+                final VisibleColumnAction a = new VisibleColumnAction(c
+                        .getColKey());
                 a.setCaption(c.getCaption());
                 if (!c.isEnabled()) {
                     a.setCollapsed(true);
@@ -1441,8 +1448,8 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
          * Returns column alignments for visible columns
          */
         public char[] getColumnAlignments() {
-            Iterator it = visibleCells.iterator();
-            char[] aligns = new char[visibleCells.size()];
+            final Iterator it = visibleCells.iterator();
+            final char[] aligns = new char[visibleCells.size()];
             int colIndex = 0;
             while (it.hasNext()) {
                 aligns[colIndex++] = ((HeaderCell) it.next()).getAlign();
@@ -1468,7 +1475,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 
         private int rowHeight = -1;
 
-        private List renderedRows = new Vector();
+        private final List renderedRows = new Vector();
 
         private boolean initDone = false;
 
@@ -1512,11 +1519,11 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
         public void renderInitialRows(UIDL rowData, int firstIndex, int rows) {
             firstRendered = firstIndex;
             lastRendered = firstIndex + rows - 1;
-            Iterator it = rowData.getChildIterator();
+            final Iterator it = rowData.getChildIterator();
             aligns = tHead.getColumnAlignments();
             while (it.hasNext()) {
-                IScrollTableRow row = new IScrollTableRow((UIDL) it.next(),
-                        aligns);
+                final IScrollTableRow row = new IScrollTableRow((UIDL) it
+                        .next(), aligns);
                 addRow(row);
             }
             if (isAttached()) {
@@ -1526,16 +1533,16 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 
         public void renderRows(UIDL rowData, int firstIndex, int rows) {
             aligns = tHead.getColumnAlignments();
-            Iterator it = rowData.getChildIterator();
+            final Iterator it = rowData.getChildIterator();
             if (firstIndex == lastRendered + 1) {
                 while (it.hasNext()) {
-                    IScrollTableRow row = createRow((UIDL) it.next());
+                    final IScrollTableRow row = createRow((UIDL) it.next());
                     addRow(row);
                     lastRendered++;
                 }
                 fixSpacers();
             } else if (firstIndex + rows == firstRendered) {
-                IScrollTableRow[] rowArray = new IScrollTableRow[rows];
+                final IScrollTableRow[] rowArray = new IScrollTableRow[rows];
                 int i = rows;
                 while (it.hasNext()) {
                     i--;
@@ -1552,7 +1559,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
                 while (lastRendered + 1 > firstRendered) {
                     unlinkRow(false);
                 }
-                IScrollTableRow row = createRow((UIDL) it.next());
+                final IScrollTableRow row = createRow((UIDL) it.next());
                 firstRendered = firstIndex;
                 lastRendered = firstIndex - 1;
                 addRow(row);
@@ -1581,11 +1588,12 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
          * @param uidl
          */
         private IScrollTableRow createRow(UIDL uidl) {
-            IScrollTableRow row = new IScrollTableRow(uidl, aligns);
-            int cells = DOM.getChildCount(row.getElement());
+            final IScrollTableRow row = new IScrollTableRow(uidl, aligns);
+            final int cells = DOM.getChildCount(row.getElement());
             for (int i = 0; i < cells; i++) {
-                Element cell = DOM.getChild(row.getElement(), i);
-                int w = IScrollTable.this.getColWidth(getColKeyByIndex(i));
+                final Element cell = DOM.getChild(row.getElement(), i);
+                final int w = IScrollTable.this
+                        .getColWidth(getColKeyByIndex(i));
                 DOM.setStyleAttribute(DOM.getFirstChild(cell), "width",
                         (w - CELL_CONTENT_PADDING) + "px");
                 DOM.setStyleAttribute(cell, "width", w + "px");
@@ -1642,7 +1650,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
                 index = renderedRows.size() - 1;
                 lastRendered--;
             }
-            IScrollTableRow toBeRemoved = (IScrollTableRow) renderedRows
+            final IScrollTableRow toBeRemoved = (IScrollTableRow) renderedRows
                     .get(index);
             client.unregisterChildPaintables(toBeRemoved);
             DOM.removeChild(tBody, toBeRemoved.getElement());
@@ -1698,7 +1706,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 
         public int getColWidth(int i) {
             if (initDone) {
-                Element e = DOM.getChild(DOM.getChild(tBody, 0), i);
+                final Element e = DOM.getChild(DOM.getChild(tBody, 0), i);
                 return DOM.getElementPropertyInt(e, "offsetWidth");
             } else {
                 return 0;
@@ -1706,9 +1714,10 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
         }
 
         public void setColWidth(int colIndex, int w) {
-            int rows = DOM.getChildCount(tBody);
+            final int rows = DOM.getChildCount(tBody);
             for (int i = 0; i < rows; i++) {
-                Element cell = DOM.getChild(DOM.getChild(tBody, i), colIndex);
+                final Element cell = DOM.getChild(DOM.getChild(tBody, i),
+                        colIndex);
                 DOM.setStyleAttribute(DOM.getFirstChild(cell), "width",
                         (w - CELL_CONTENT_PADDING) + "px");
                 DOM.setStyleAttribute(cell, "width", w + "px");
@@ -1726,11 +1735,11 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
         public void moveCol(int oldIndex, int newIndex) {
 
             // loop all rows and move given index to its new place
-            Iterator rows = iterator();
+            final Iterator rows = iterator();
             while (rows.hasNext()) {
-                IScrollTableRow row = (IScrollTableRow) rows.next();
+                final IScrollTableRow row = (IScrollTableRow) rows.next();
 
-                Element td = DOM.getChild(row.getElement(), oldIndex);
+                final Element td = DOM.getChild(row.getElement(), oldIndex);
                 DOM.removeChild(row.getElement(), td);
 
                 DOM.insertChild(row.getElement(), td, newIndex);
@@ -1743,7 +1752,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 
             Vector childWidgets = new Vector();
             private boolean selected = false;
-            private int rowKey;
+            private final int rowKey;
 
             private String[] actionKeys = null;
 
@@ -1796,13 +1805,14 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
                     actionKeys = uidl.getStringArrayAttribute("al");
                 }
 
-                Iterator cells = uidl.getChildIterator();
+                final Iterator cells = uidl.getChildIterator();
                 while (cells.hasNext()) {
-                    Object cell = cells.next();
+                    final Object cell = cells.next();
                     if (cell instanceof String) {
                         addCell(cell.toString(), aligns[col++]);
                     } else {
-                        Widget cellContent = client.getWidget((UIDL) cell);
+                        final Widget cellContent = client
+                                .getWidget((UIDL) cell);
                         ((Paintable) cellContent).updateFromUIDL((UIDL) cell,
                                 client);
                         addCell(cellContent, aligns[col++]);
@@ -1815,8 +1825,8 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 
             public void addCell(String text, char align) {
                 // String only content is optimized by not using Label widget
-                Element td = DOM.createTD();
-                Element container = DOM.createDiv();
+                final Element td = DOM.createTD();
+                final Element container = DOM.createDiv();
                 DOM.setElementProperty(container, "className", CLASSNAME
                         + "-cell-content");
                 DOM.setInnerHTML(container, text);
@@ -1836,8 +1846,8 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
             }
 
             public void addCell(Widget w, char align) {
-                Element td = DOM.createTD();
-                Element container = DOM.createDiv();
+                final Element td = DOM.createTD();
+                final Element container = DOM.createDiv();
                 DOM.setElementProperty(container, "className", CLASSNAME
                         + "-cell-content");
                 // TODO make widget cells respect align. text-align:center for
@@ -1864,7 +1874,8 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
             public void onBrowserEvent(Event event) {
                 switch (DOM.eventGetType(event)) {
                 case Event.ONCLICK:
-                    Element tdOrTr = DOM.getParent(DOM.eventGetTarget(event));
+                    final Element tdOrTr = DOM.getParent(DOM
+                            .eventGetTarget(event));
                     if (DOM.compare(getElement(), tdOrTr)
                             || DOM.compare(getElement(), DOM.getParent(tdOrTr))) {
                         if (selectMode > Table.SELECT_MODE_NONE) {
@@ -1919,11 +1930,11 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
                 if (actionKeys == null) {
                     return new Action[] {};
                 }
-                Action[] actions = new Action[actionKeys.length];
+                final Action[] actions = new Action[actionKeys.length];
                 for (int i = 0; i < actions.length; i++) {
-                    String actionKey = actionKeys[i];
-                    TreeAction a = new TreeAction(this, String.valueOf(rowKey),
-                            actionKey);
+                    final String actionKey = actionKeys[i];
+                    final TreeAction a = new TreeAction(this, String
+                            .valueOf(rowKey), actionKey);
                     a.setCaption(getActionCaption(actionKey));
                     a.setIconUrl(getActionIcon(actionKey));
                     actions[i] = a;
@@ -1942,9 +1953,9 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
     }
 
     public void deselectAll() {
-        Object[] keys = selectedRowKeys.toArray();
+        final Object[] keys = selectedRowKeys.toArray();
         for (int i = 0; i < keys.length; i++) {
-            IScrollTableRow row = getRenderedRowByKey((String) keys[i]);
+            final IScrollTableRow row = getRenderedRowByKey((String) keys[i]);
             if (row != null && row.isSelected()) {
                 row.toggleSelection();
             }
@@ -1975,13 +1986,13 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
         // workaround very common 100% height problem - extract borders
         if (height.equals("100%")) {
             final int borders = getBorderSpace();
-            Element elem = getElement();
-            Element parentElem = DOM.getParent(elem);
+            final Element elem = getElement();
+            final Element parentElem = DOM.getParent(elem);
 
             // put table away from flow for a moment
             DOM.setStyleAttribute(getElement(), "position", "absolute");
             // get containers natural space for table
-            int availPixels = DOM.getElementPropertyInt(parentElem,
+            final int availPixels = DOM.getElementPropertyInt(parentElem,
                     "offsetHeight");
             // put table back to flow
             DOM.setStyleAttribute(getElement(), "position", "static");
@@ -1998,7 +2009,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
     }
 
     private int getBorderSpace() {
-        Element el = getElement();
+        final Element el = getElement();
         return DOM.getElementPropertyInt(el, "offsetHeight")
                 - DOM.getElementPropertyInt(el, "clientHeight");
     }

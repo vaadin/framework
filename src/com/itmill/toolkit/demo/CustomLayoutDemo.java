@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.demo;
 
 import com.itmill.toolkit.ui.Button;
@@ -29,21 +33,21 @@ public class CustomLayoutDemo extends com.itmill.toolkit.Application implements
 
     private CustomLayout mainLayout = null;
 
-    private Panel bodyPanel = new Panel();
+    private final Panel bodyPanel = new Panel();
 
-    private TextField username = new TextField("Username");
+    private final TextField username = new TextField("Username");
 
-    private TextField loginPwd = new TextField("Password");
+    private final TextField loginPwd = new TextField("Password");
 
-    private Button loginButton = new Button("Login", this, "loginClicked");
+    private final Button loginButton = new Button("Login", this, "loginClicked");
 
-    private Tree menu = new Tree();
+    private final Tree menu = new Tree();
 
     /**
      * Initialize Application. Demo components are added to main window.
      */
     public void init() {
-        Window mainWindow = new Window("CustomLayout demo");
+        final Window mainWindow = new Window("CustomLayout demo");
         setMainWindow(mainWindow);
 
         // set the application to use example -theme
@@ -52,7 +56,7 @@ public class CustomLayoutDemo extends com.itmill.toolkit.Application implements
         // Create custom layout, themes/example/layout/mainLayout.html
         mainLayout = new CustomLayout("mainLayout");
         // wrap custom layout inside a panel
-        Panel customLayoutPanel = new Panel(
+        final Panel customLayoutPanel = new Panel(
                 "Panel containing custom layout (mainLayout.html)");
         customLayoutPanel.addComponent(mainLayout);
 

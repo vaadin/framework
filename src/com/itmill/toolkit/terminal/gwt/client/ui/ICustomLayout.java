@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import java.util.HashMap;
@@ -28,13 +32,13 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
     public static final String CLASSNAME = "i-customlayout";
 
     /** Location-name to containing element in DOM map */
-    private HashMap locationToElement = new HashMap();
+    private final HashMap locationToElement = new HashMap();
 
     /** Location-name to contained widget map */
-    private HashMap locationToWidget = new HashMap();
+    private final HashMap locationToWidget = new HashMap();
 
     /** Widget to captionwrapper map */
-    private HashMap widgetToCaptionWrapper = new HashMap();
+    private final HashMap widgetToCaptionWrapper = new HashMap();
 
     /** Currently rendered style */
     String currentTemplate;
@@ -84,7 +88,7 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
         }
 
         // Get previous widget
-        Widget previous = (Widget) locationToWidget.get(location);
+        final Widget previous = (Widget) locationToWidget.get(location);
         // NOP if given widget already exists in this location
         if (previous == widget) {
             return;
@@ -135,16 +139,17 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
         iLayout();
 
         // For all contained widgets
-        for (Iterator i = uidl.getChildIterator(); i.hasNext();) {
-            UIDL uidlForChild = (UIDL) i.next();
+        for (final Iterator i = uidl.getChildIterator(); i.hasNext();) {
+            final UIDL uidlForChild = (UIDL) i.next();
             if (uidlForChild.getTag().equals("location")) {
-                String location = uidlForChild.getStringAttribute("name");
-                Widget child = client.getWidget(uidlForChild.getChildUIDL(0));
+                final String location = uidlForChild.getStringAttribute("name");
+                final Widget child = client.getWidget(uidlForChild
+                        .getChildUIDL(0));
                 try {
                     setWidget(child, location);
                     ((Paintable) child).updateFromUIDL(uidlForChild
                             .getChildUIDL(0), client);
-                } catch (IllegalArgumentException e) {
+                } catch (final IllegalArgumentException e) {
                     // If no location is found, this component is not visible
                 }
             }
@@ -156,7 +161,7 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
     /** Initialize HTML-layout. */
     private void initializeHTML(UIDL uidl, ApplicationConnection client) {
 
-        String newTemplate = uidl.getStringAttribute("template");
+        final String newTemplate = uidl.getStringAttribute("template");
 
         // Get the HTML-template from client
         String template = client
@@ -219,12 +224,12 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
     /** Collect locations from template */
     private void scanForLocations(Element elem) {
 
-        String location = getLocation(elem);
+        final String location = getLocation(elem);
         if (location != null) {
             locationToElement.put(location, elem);
             DOM.setInnerHTML(elem, "");
         } else {
-            int len = DOM.getChildCount(elem);
+            final int len = DOM.getChildCount(elem);
             for (int i = 0; i < len; i++) {
                 scanForLocations(DOM.getChild(elem, i));
             }
@@ -291,7 +296,7 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
         while (scriptStart > 0) {
             res += html.substring(endOfPrevScript, scriptStart);
             scriptStart = lc.indexOf(">", scriptStart);
-            int j = lc.indexOf("</script>", scriptStart);
+            final int j = lc.indexOf("</script>", scriptStart);
             scripts += html.substring(scriptStart + 1, j) + ";";
             nextPosToCheck = endOfPrevScript = j + "</script>".length();
             scriptStart = lc.indexOf("<script", nextPosToCheck);
@@ -307,7 +312,7 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
         } else {
             res = "";
             startOfBody = lc.indexOf(">", startOfBody) + 1;
-            int endOfBody = lc.indexOf("</body>", startOfBody);
+            final int endOfBody = lc.indexOf("</body>", startOfBody);
             if (endOfBody > startOfBody) {
                 res = html.substring(startOfBody, endOfBody);
             } else {
@@ -320,7 +325,7 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
 
     /** Replace child components */
     public void replaceChildComponent(Widget from, Widget to) {
-        String location = getLocation(from);
+        final String location = getLocation(from);
         if (location == null) {
             throw new IllegalArgumentException();
         }
@@ -338,7 +343,7 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
                 .get(component);
         if (Caption.isNeeded(uidl)) {
             if (wrapper == null) {
-                String loc = getLocation((Widget) component);
+                final String loc = getLocation((Widget) component);
                 super.remove((Widget) component);
                 wrapper = new CaptionWrapper(component, client);
                 super.add(wrapper, (Element) locationToElement.get(loc));
@@ -347,7 +352,7 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
             wrapper.updateCaption(uidl);
         } else {
             if (wrapper != null) {
-                String loc = getLocation((Widget) component);
+                final String loc = getLocation((Widget) component);
                 super.remove(wrapper);
                 super.add((Widget) wrapper.getPaintable(),
                         (Element) locationToElement.get(loc));
@@ -358,8 +363,9 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
 
     /** Get the location of an widget */
     public String getLocation(Widget w) {
-        for (Iterator i = locationToWidget.keySet().iterator(); i.hasNext();) {
-            String location = (String) i.next();
+        for (final Iterator i = locationToWidget.keySet().iterator(); i
+                .hasNext();) {
+            final String location = (String) i.next();
             if (locationToWidget.get(location) == w) {
                 return location;
             }
@@ -370,11 +376,12 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
     /** Removes given widget from the layout */
     public boolean remove(Widget w) {
         client.unregisterPaintable((Paintable) w);
-        String location = getLocation(w);
+        final String location = getLocation(w);
         if (location != null) {
             locationToWidget.remove(location);
         }
-        CaptionWrapper cw = (CaptionWrapper) widgetToCaptionWrapper.get(w);
+        final CaptionWrapper cw = (CaptionWrapper) widgetToCaptionWrapper
+                .get(w);
         if (cw != null) {
             widgetToCaptionWrapper.remove(w);
             return super.remove(cw);

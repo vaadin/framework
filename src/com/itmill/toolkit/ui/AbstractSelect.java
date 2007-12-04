@@ -1,30 +1,6 @@
-/* *************************************************************************
- 
- IT Mill Toolkit 
-
- Development of Browser User Interfaces Made Easy
-
- Copyright (C) 2000-2006 IT Mill Ltd
- 
- *************************************************************************
-
- This product is distributed under commercial license that can be found
- from the product package on license.pdf. Use of this product might 
- require purchasing a commercial license from IT Mill Ltd. For guidelines 
- on usage, see licensing-guidelines.html
-
- *************************************************************************
- 
- For more information, contact:
- 
- IT Mill Ltd                           phone: +358 2 4802 7180
- Ruukinkatu 2-4                        fax:   +358 2 4802 7181
- 20540, Turku                          email:  info@itmill.com
- Finland                               company www: www.itmill.com
- 
- Primary source for information and releases: www.itmill.com
-
- ********************************************************************** */
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
 
 package com.itmill.toolkit.ui;
 
@@ -246,9 +222,9 @@ public abstract class AbstractSelect extends AbstractField implements
     public AbstractSelect(String caption, Collection options) {
 
         // Creates the options container and add given options to it
-        Container c = new IndexedContainer();
+        final Container c = new IndexedContainer();
         if (options != null) {
-            for (Iterator i = options.iterator(); i.hasNext();) {
+            for (final Iterator i = options.iterator(); i.hasNext();) {
                 c.addItem(i.next());
             }
         }
@@ -300,14 +276,14 @@ public abstract class AbstractSelect extends AbstractField implements
         target.startTag("options");
         int keyIndex = 0;
         // Support for external null selection item id
-        Collection ids = getItemIds();
+        final Collection ids = getItemIds();
         if (isNullSelectionAllowed() && getNullSelectionItemId() != null
                 && !ids.contains(getNullSelectionItemId())) {
             // Gets the option attribute values
-            Object id = getNullSelectionItemId();
-            String key = itemIdMapper.key(id);
-            String caption = getItemCaption(id);
-            Resource icon = getItemIcon(id);
+            final Object id = getNullSelectionItemId();
+            final String key = itemIdMapper.key(id);
+            final String caption = getItemCaption(id);
+            final Resource icon = getItemIcon(id);
             // Paints option
             target.startTag("so");
             if (icon != null) {
@@ -323,20 +299,20 @@ public abstract class AbstractSelect extends AbstractField implements
             target.endTag("so");
         }
 
-        Iterator i = getItemIds().iterator();
+        final Iterator i = getItemIds().iterator();
         // Paints the available selection options from data source
         while (i.hasNext()) {
             // Gets the option attribute values
-            Object id = i.next();
+            final Object id = i.next();
             if (!isNullSelectionAllowed() && id != null
                     && id.equals(getNullSelectionItemId())) {
                 // Remove item if it's the null selection item but null
                 // selection is not allowed
                 continue;
             }
-            String key = itemIdMapper.key(id);
-            String caption = getItemCaption(id);
-            Resource icon = getItemIcon(id); // Paints the option
+            final String key = itemIdMapper.key(id);
+            final String caption = getItemCaption(id);
+            final Resource icon = getItemIcon(id); // Paints the option
             target.startTag("so");
             if (icon != null) {
                 target.addAttribute("icon", icon);
@@ -373,7 +349,7 @@ public abstract class AbstractSelect extends AbstractField implements
         // Try to set the property value
 
         // New option entered (and it is allowed)
-        String newitem = (String) variables.get("newitem");
+        final String newitem = (String) variables.get("newitem");
         if (newitem != null && newitem.length() > 0) {
 
             // Checks for readonly
@@ -389,7 +365,7 @@ public abstract class AbstractSelect extends AbstractField implements
                     try {
                         getContainerProperty(newitem,
                                 getItemCaptionPropertyId()).setValue(newitem);
-                    } catch (Property.ConversionException ignored) {
+                    } catch (final Property.ConversionException ignored) {
                         // The conversion exception is safely ignored, the
                         // caption is
                         // just missing
@@ -400,7 +376,7 @@ public abstract class AbstractSelect extends AbstractField implements
 
         // Selection change
         if (variables.containsKey("selected")) {
-            String[] ka = (String[]) variables.get("selected");
+            final String[] ka = (String[]) variables.get("selected");
 
             // Multiselect mode
             if (isMultiSelect()) {
@@ -408,9 +384,9 @@ public abstract class AbstractSelect extends AbstractField implements
                 // TODO Optimize by adding repaintNotNeeded when applicable
 
                 // Converts the key-array to id-set
-                LinkedList s = new LinkedList();
+                final LinkedList s = new LinkedList();
                 for (int i = 0; i < ka.length; i++) {
-                    Object id = itemIdMapper.get(ka[i]);
+                    final Object id = itemIdMapper.get(ka[i]);
                     if (!isNullSelectionAllowed()
                             && (id == null || id == getNullSelectionItemId())) {
                         // skip empty selection if nullselection is not allowed
@@ -431,7 +407,7 @@ public abstract class AbstractSelect extends AbstractField implements
 
                 // Limits the deselection to the set of visible items
                 // (non-visible items can not be deselected)
-                Collection visible = getVisibleItemIds();
+                final Collection visible = getVisibleItemIds();
                 if (visible != null) {
                     Set newsel = (Set) getValue();
                     if (newsel == null) {
@@ -453,13 +429,13 @@ public abstract class AbstractSelect extends AbstractField implements
                 if (ka.length == 0) {
                     // Allows deselection only if the deselected item is
                     // visible
-                    Object current = getValue();
-                    Collection visible = getVisibleItemIds();
+                    final Object current = getValue();
+                    final Collection visible = getVisibleItemIds();
                     if (visible != null && visible.contains(current)) {
                         setValue(null, true);
                     }
                 } else {
-                    Object id = itemIdMapper.get(ka[0]);
+                    final Object id = itemIdMapper.get(ka[0]);
                     if (!isNullSelectionAllowed() && id == null) {
                         requestRepaint();
                     } else if (id != null
@@ -520,7 +496,7 @@ public abstract class AbstractSelect extends AbstractField implements
      * @see com.itmill.toolkit.ui.AbstractField#getValue()
      */
     public Object getValue() {
-        Object retValue = super.getValue();
+        final Object retValue = super.getValue();
 
         if (isMultiSelect()) {
 
@@ -533,7 +509,7 @@ public abstract class AbstractSelect extends AbstractField implements
             } else if (retValue instanceof Collection) {
                 return new HashSet((Collection) retValue);
             } else {
-                Set s = new HashSet();
+                final Set s = new HashSet();
                 if (items.containsId(retValue)) {
                     s.add(retValue);
                 }
@@ -689,7 +665,7 @@ public abstract class AbstractSelect extends AbstractField implements
     public boolean addContainerProperty(Object propertyId, Class type,
             Object defaultValue) throws UnsupportedOperationException {
 
-        boolean retval = items.addContainerProperty(propertyId, type,
+        final boolean retval = items.addContainerProperty(propertyId, type,
                 defaultValue);
         if (retval && !(items instanceof Container.PropertySetChangeNotifier)) {
             firePropertySetChange();
@@ -708,7 +684,7 @@ public abstract class AbstractSelect extends AbstractField implements
      */
     public boolean removeAllItems() throws UnsupportedOperationException {
 
-        boolean retval = items.removeAllItems();
+        final boolean retval = items.removeAllItems();
         itemIdMapper.removeAll();
         if (retval) {
             setValue(null);
@@ -729,7 +705,7 @@ public abstract class AbstractSelect extends AbstractField implements
      */
     public Object addItem() throws UnsupportedOperationException {
 
-        Object retval = items.addItem();
+        final Object retval = items.addItem();
         if (retval != null
                 && !(items instanceof Container.ItemSetChangeNotifier)) {
             fireItemSetChange();
@@ -753,7 +729,7 @@ public abstract class AbstractSelect extends AbstractField implements
      */
     public Item addItem(Object itemId) throws UnsupportedOperationException {
 
-        Item retval = items.addItem(itemId);
+        final Item retval = items.addItem(itemId);
         if (retval != null
                 && !(items instanceof Container.ItemSetChangeNotifier)) {
             fireItemSetChange();
@@ -773,7 +749,7 @@ public abstract class AbstractSelect extends AbstractField implements
             throws UnsupportedOperationException {
 
         unselect(itemId);
-        boolean retval = items.removeItem(itemId);
+        final boolean retval = items.removeItem(itemId);
         itemIdMapper.remove(itemId);
         if (retval && !(items instanceof Container.ItemSetChangeNotifier)) {
             fireItemSetChange();
@@ -794,7 +770,7 @@ public abstract class AbstractSelect extends AbstractField implements
     public boolean removeContainerProperty(Object propertyId)
             throws UnsupportedOperationException {
 
-        boolean retval = items.removeContainerProperty(propertyId);
+        final boolean retval = items.removeContainerProperty(propertyId);
         if (retval && !(items instanceof Container.PropertySetChangeNotifier)) {
             firePropertySetChange();
         }
@@ -821,13 +797,13 @@ public abstract class AbstractSelect extends AbstractField implements
                 try {
                     ((Container.ItemSetChangeNotifier) items)
                             .removeListener(this);
-                } catch (ClassCastException ignored) {
+                } catch (final ClassCastException ignored) {
                     // Ignored
                 }
                 try {
                     ((Container.PropertySetChangeNotifier) items)
                             .removeListener(this);
-                } catch (ClassCastException ignored) {
+                } catch (final ClassCastException ignored) {
                     // Ignored
                 }
             }
@@ -842,13 +818,13 @@ public abstract class AbstractSelect extends AbstractField implements
             if (items != null) {
                 try {
                     ((Container.ItemSetChangeNotifier) items).addListener(this);
-                } catch (ClassCastException ignored) {
+                } catch (final ClassCastException ignored) {
                     // Ignored
                 }
                 try {
                     ((Container.PropertySetChangeNotifier) items)
                             .addListener(this);
-                } catch (ClassCastException ignored) {
+                } catch (final ClassCastException ignored) {
                     // Ignored
                 }
             }
@@ -894,19 +870,19 @@ public abstract class AbstractSelect extends AbstractField implements
         if (multiSelect != this.multiSelect) {
 
             // Selection before mode change
-            Object oldValue = getValue();
+            final Object oldValue = getValue();
 
             this.multiSelect = multiSelect;
 
             // Convert the value type
             if (multiSelect) {
-                Set s = new HashSet();
+                final Set s = new HashSet();
                 if (oldValue != null) {
                     s.add(oldValue);
                 }
                 setValue(s);
             } else {
-                Set s = (Set) oldValue;
+                final Set s = (Set) oldValue;
                 if (s == null || s.isEmpty()) {
                     setValue(null);
                 } else {
@@ -994,12 +970,12 @@ public abstract class AbstractSelect extends AbstractField implements
             try {
                 caption = String.valueOf(((Container.Indexed) items)
                         .indexOfId(itemId));
-            } catch (ClassCastException ignored) {
+            } catch (final ClassCastException ignored) {
             }
             break;
 
         case ITEM_CAPTION_MODE_ITEM:
-            Item i = getItem(itemId);
+            final Item i = getItem(itemId);
             if (i != null) {
                 caption = i.toString();
             }
@@ -1017,7 +993,7 @@ public abstract class AbstractSelect extends AbstractField implements
             break;
 
         case ITEM_CAPTION_MODE_PROPERTY:
-            Property p = getContainerProperty(itemId,
+            final Property p = getContainerProperty(itemId,
                     getItemCaptionPropertyId());
             if (p != null) {
                 caption = p.toString();
@@ -1056,7 +1032,7 @@ public abstract class AbstractSelect extends AbstractField implements
      * @return the Icon for the item or null, if not specified.
      */
     public Resource getItemIcon(Object itemId) {
-        Resource explicit = (Resource) itemIcons.get(itemId);
+        final Resource explicit = (Resource) itemIcons.get(itemId);
         if (explicit != null) {
             return explicit;
         }
@@ -1065,11 +1041,12 @@ public abstract class AbstractSelect extends AbstractField implements
             return null;
         }
 
-        Property ip = getContainerProperty(itemId, getItemIconPropertyId());
+        final Property ip = getContainerProperty(itemId,
+                getItemIconPropertyId());
         if (ip == null) {
             return null;
         }
-        Object icon = ip.getValue();
+        final Object icon = ip.getValue();
         if (icon instanceof Resource) {
             return (Resource) icon;
         }
@@ -1267,7 +1244,7 @@ public abstract class AbstractSelect extends AbstractField implements
         if (isMultiSelect()) {
             return ((Set) getValue()).contains(itemId);
         } else {
-            Object value = getValue();
+            final Object value = getValue();
             return itemId.equals(value == null ? getNullSelectionItemId()
                     : value);
         }
@@ -1290,7 +1267,7 @@ public abstract class AbstractSelect extends AbstractField implements
     public void select(Object itemId) {
         if (!isSelected(itemId) && items.containsId(itemId)) {
             if (isMultiSelect()) {
-                Set s = new HashSet((Set) getValue());
+                final Set s = new HashSet((Set) getValue());
                 s.add(itemId);
                 setValue(s);
             } else if (itemId.equals(getNullSelectionItemId())) {
@@ -1313,7 +1290,7 @@ public abstract class AbstractSelect extends AbstractField implements
     public void unselect(Object itemId) {
         if (isSelected(itemId)) {
             if (isMultiSelect()) {
-                Set s = new HashSet((Set) getValue());
+                final Set s = new HashSet((Set) getValue());
                 s.remove(itemId);
                 setValue(s);
             } else {
@@ -1403,8 +1380,8 @@ public abstract class AbstractSelect extends AbstractField implements
     protected void firePropertySetChange() {
         if (propertySetEventListeners != null
                 && !propertySetEventListeners.isEmpty()) {
-            Container.PropertySetChangeEvent event = new PropertySetChangeEvent();
-            Object[] listeners = propertySetEventListeners.toArray();
+            final Container.PropertySetChangeEvent event = new PropertySetChangeEvent();
+            final Object[] listeners = propertySetEventListeners.toArray();
             for (int i = 0; i < listeners.length; i++) {
                 ((Container.PropertySetChangeListener) listeners[i])
                         .containerPropertySetChange(event);
@@ -1418,8 +1395,8 @@ public abstract class AbstractSelect extends AbstractField implements
      */
     protected void fireItemSetChange() {
         if (itemSetEventListeners != null && !itemSetEventListeners.isEmpty()) {
-            Container.ItemSetChangeEvent event = new ItemSetChangeEvent();
-            Object[] listeners = itemSetEventListeners.toArray();
+            final Container.ItemSetChangeEvent event = new ItemSetChangeEvent();
+            final Object[] listeners = itemSetEventListeners.toArray();
             for (int i = 0; i < listeners.length; i++) {
                 ((Container.ItemSetChangeListener) listeners[i])
                         .containerItemSetChange(event);

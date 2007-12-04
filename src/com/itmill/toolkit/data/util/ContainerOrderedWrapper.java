@@ -1,30 +1,6 @@
-/* *************************************************************************
- 
- IT Mill Toolkit 
-
- Development of Browser User Interfaces Made Easy
-
- Copyright (C) 2000-2006 IT Mill Ltd
- 
- *************************************************************************
-
- This product is distributed under commercial license that can be found
- from the product package on license.pdf. Use of this product might 
- require purchasing a commercial license from IT Mill Ltd. For guidelines 
- on usage, see licensing-guidelines.html
-
- *************************************************************************
- 
- For more information, contact:
- 
- IT Mill Ltd                           phone: +358 2 4802 7180
- Ruukinkatu 2-4                        fax:   +358 2 4802 7181
- 20540, Turku                          email:  info@itmill.com
- Finland                               company www: www.itmill.com
- 
- Primary source for information and releases: www.itmill.com
-
- ********************************************************************** */
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
 
 package com.itmill.toolkit.data.util;
 
@@ -60,7 +36,7 @@ public class ContainerOrderedWrapper implements Container.Ordered,
     /**
      * The wrapped container
      */
-    private Container container;
+    private final Container container;
 
     /**
      * Ordering information, ie. the mapping from Item ID to the next item ID
@@ -123,8 +99,8 @@ public class ContainerOrderedWrapper implements Container.Ordered,
      */
     private void removeFromOrderWrapper(Object id) {
         if (id != null) {
-            Object pid = prev.get(id);
-            Object nid = next.get(id);
+            final Object pid = prev.get(id);
+            final Object nid = next.get(id);
             if (first.equals(id)) {
                 first = nid;
             }
@@ -202,7 +178,7 @@ public class ContainerOrderedWrapper implements Container.Ordered,
 
         if (!ordered) {
 
-            Collection ids = container.getItemIds();
+            final Collection ids = container.getItemIds();
 
             // Recreates ordering if some parts of it are missing
             if (next == null || first == null || last == null || prev != null) {
@@ -213,17 +189,17 @@ public class ContainerOrderedWrapper implements Container.Ordered,
             }
 
             // Filter out all the missing items
-            LinkedList l = new LinkedList(next.keySet());
-            for (Iterator i = l.iterator(); i.hasNext();) {
-                Object id = i.next();
+            final LinkedList l = new LinkedList(next.keySet());
+            for (final Iterator i = l.iterator(); i.hasNext();) {
+                final Object id = i.next();
                 if (!container.containsId(id)) {
                     removeFromOrderWrapper(id);
                 }
             }
 
             // Adds missing items
-            for (Iterator i = ids.iterator(); i.hasNext();) {
-                Object id = i.next();
+            for (final Iterator i = ids.iterator(); i.hasNext();) {
+                final Object id = i.next();
                 if (!next.containsKey(id)) {
                     addToOrderWrapper(id);
                 }
@@ -332,7 +308,7 @@ public class ContainerOrderedWrapper implements Container.Ordered,
      */
     public Object addItem() throws UnsupportedOperationException {
 
-        Object id = container.addItem();
+        final Object id = container.addItem();
         if (id != null) {
             addToOrderWrapper(id);
         }
@@ -350,7 +326,7 @@ public class ContainerOrderedWrapper implements Container.Ordered,
      *                 if the addItem is not supported.
      */
     public Item addItem(Object itemId) throws UnsupportedOperationException {
-        Item item = container.addItem(itemId);
+        final Item item = container.addItem(itemId);
         if (item != null) {
             addToOrderWrapper(itemId);
         }
@@ -366,7 +342,7 @@ public class ContainerOrderedWrapper implements Container.Ordered,
      *                 if the removeAllItems is not supported.
      */
     public boolean removeAllItems() throws UnsupportedOperationException {
-        boolean success = container.removeAllItems();
+        final boolean success = container.removeAllItems();
         if (success) {
             first = last = null;
             next.clear();
@@ -389,7 +365,7 @@ public class ContainerOrderedWrapper implements Container.Ordered,
     public boolean removeItem(Object itemId)
             throws UnsupportedOperationException {
 
-        boolean success = container.removeItem(itemId);
+        final boolean success = container.removeItem(itemId);
         if (success) {
             removeFromOrderWrapper(itemId);
         }
@@ -536,7 +512,7 @@ public class ContainerOrderedWrapper implements Container.Ordered,
         }
 
         // Adds the item to container
-        Item item = container.addItem(newItemId);
+        final Item item = container.addItem(newItemId);
 
         // Puts the new item to its correct place
         if (item != null) {
@@ -558,7 +534,7 @@ public class ContainerOrderedWrapper implements Container.Ordered,
         }
 
         // Adds the item to container
-        Object id = container.addItem();
+        final Object id = container.addItem();
 
         // Puts the new item to its correct place
         if (id != null) {

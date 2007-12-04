@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.tests;
 
 import com.itmill.toolkit.ui.CustomComponent;
@@ -25,10 +29,10 @@ public class TestIFrames extends CustomComponent {
     }
 
     private Label createEmbedded(String URL) {
-        int width = 600;
-        int height = 250;
-        String iFrame = "<iframe height=\"" + height + "\" width=\"" + width
-                + "\" src=\"" + URL + "\" />";
+        final int width = 600;
+        final int height = 250;
+        final String iFrame = "<iframe height=\"" + height + "\" width=\""
+                + width + "\" src=\"" + URL + "\" />";
         return new Label(iFrame, Label.CONTENT_XHTML);
     }
 

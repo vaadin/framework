@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.tests;
 
 import java.util.ArrayList;
@@ -63,19 +67,19 @@ public class TestForMultipleStyleNames extends CustomComponent implements
 
     public void valueChange(ValueChangeEvent event) {
 
-        String currentStyle = l.getStyle();
-        String[] tmp = currentStyle.split(" ");
-        ArrayList curStyles = new ArrayList();
+        final String currentStyle = l.getStyle();
+        final String[] tmp = currentStyle.split(" ");
+        final ArrayList curStyles = new ArrayList();
         for (int i = 0; i < tmp.length; i++) {
             if (tmp[i] != "") {
                 curStyles.add(tmp[i]);
             }
         }
 
-        Collection styles = (Collection) s.getValue();
+        final Collection styles = (Collection) s.getValue();
 
-        for (Iterator iterator = styles.iterator(); iterator.hasNext();) {
-            String styleName = (String) iterator.next();
+        for (final Iterator iterator = styles.iterator(); iterator.hasNext();) {
+            final String styleName = (String) iterator.next();
             if (curStyles.contains(styleName)) {
                 // already added
                 curStyles.remove(styleName);
@@ -83,8 +87,9 @@ public class TestForMultipleStyleNames extends CustomComponent implements
                 l.addStyleName(styleName);
             }
         }
-        for (Iterator iterator2 = curStyles.iterator(); iterator2.hasNext();) {
-            String object = (String) iterator2.next();
+        for (final Iterator iterator2 = curStyles.iterator(); iterator2
+                .hasNext();) {
+            final String object = (String) iterator2.next();
             l.removeStyleName(object);
         }
     }

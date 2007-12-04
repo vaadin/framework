@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.tests;
 
 import com.itmill.toolkit.ui.Label;
@@ -11,7 +15,7 @@ public class TestSplitPanel extends com.itmill.toolkit.Application {
     SplitPanel verticalSplit = new SplitPanel(SplitPanel.ORIENTATION_VERTICAL);
 
     public void init() {
-        Window mainWindow = new Window("Feature Browser");
+        final Window mainWindow = new Window("Feature Browser");
         setMainWindow(mainWindow);
 
         verticalSplit.setFirstComponent(new Label("vertical first"));

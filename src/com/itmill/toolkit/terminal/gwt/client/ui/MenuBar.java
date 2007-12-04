@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 /*
@@ -16,7 +20,7 @@ package com.itmill.toolkit.terminal.gwt.client.ui;
  * the License.
  */
 
-//COPIED HERE DUE package privates in GWT
+// COPIED HERE DUE package privates in GWT
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,13 +56,14 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class MenuBar extends Widget implements PopupListener {
 
-    private Element body;
-    private ArrayList items = new ArrayList();
+    private final Element body;
+    private final ArrayList items = new ArrayList();
     private MenuBar parentMenu;
     private PopupPanel popup;
     private MenuItem selectedItem;
     private MenuBar shownChildMenu;
-    private boolean vertical, autoOpen;
+    private final boolean vertical;
+    private boolean autoOpen;
 
     /**
      * Creates an empty horizontal menu bar.
@@ -76,18 +81,18 @@ public class MenuBar extends Widget implements PopupListener {
     public MenuBar(boolean vertical) {
         super();
 
-        Element table = DOM.createTable();
+        final Element table = DOM.createTable();
         body = DOM.createTBody();
         DOM.appendChild(table, body);
 
         if (!vertical) {
-            Element tr = DOM.createTR();
+            final Element tr = DOM.createTR();
             DOM.appendChild(body, tr);
         }
 
         this.vertical = vertical;
 
-        Element outer = DOM.createDiv();
+        final Element outer = DOM.createDiv();
         DOM.appendChild(outer, table);
         setElement(outer);
 
@@ -130,7 +135,7 @@ public class MenuBar extends Widget implements PopupListener {
      * @return the {@link MenuItem} object created
      */
     public MenuItem addItem(String text, boolean asHTML, Command cmd) {
-        MenuItem item = new MenuItem(text, asHTML, cmd);
+        final MenuItem item = new MenuItem(text, asHTML, cmd);
         addItem(item);
         return item;
     }
@@ -148,7 +153,7 @@ public class MenuBar extends Widget implements PopupListener {
      * @return the {@link MenuItem} object created
      */
     public MenuItem addItem(String text, boolean asHTML, MenuBar popup) {
-        MenuItem item = new MenuItem(text, asHTML, popup);
+        final MenuItem item = new MenuItem(text, asHTML, popup);
         addItem(item);
         return item;
     }
@@ -164,7 +169,7 @@ public class MenuBar extends Widget implements PopupListener {
      * @return the {@link MenuItem} object created
      */
     public MenuItem addItem(String text, Command cmd) {
-        MenuItem item = new MenuItem(text, cmd);
+        final MenuItem item = new MenuItem(text, cmd);
         addItem(item);
         return item;
     }
@@ -180,7 +185,7 @@ public class MenuBar extends Widget implements PopupListener {
      * @return the {@link MenuItem} object created
      */
     public MenuItem addItem(String text, MenuBar popup) {
-        MenuItem item = new MenuItem(text, popup);
+        final MenuItem item = new MenuItem(text, popup);
         addItem(item);
         return item;
     }
@@ -189,7 +194,7 @@ public class MenuBar extends Widget implements PopupListener {
      * Removes all menu items from this menu bar.
      */
     public void clearItems() {
-        Element container = getItemContainerElement();
+        final Element container = getItemContainerElement();
         while (DOM.getChildCount(container) > 0) {
             DOM.removeChild(container, DOM.getChild(container, 0));
         }
@@ -209,7 +214,7 @@ public class MenuBar extends Widget implements PopupListener {
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
 
-        MenuItem item = findItem(DOM.eventGetTarget(event));
+        final MenuItem item = findItem(DOM.eventGetTarget(event));
         switch (DOM.eventGetType(event)) {
         case Event.ONCLICK: {
             // Fire an item's command when the user clicks on it.
@@ -255,12 +260,12 @@ public class MenuBar extends Widget implements PopupListener {
      *                the item to be removed
      */
     public void removeItem(MenuItem item) {
-        int idx = items.indexOf(item);
+        final int idx = items.indexOf(item);
         if (idx == -1) {
             return;
         }
 
-        Element container = getItemContainerElement();
+        final Element container = getItemContainerElement();
         DOM.removeChild(container, DOM.getChild(container, idx));
         items.remove(idx);
     }
@@ -355,7 +360,7 @@ public class MenuBar extends Widget implements PopupListener {
                 closeAllParents();
 
                 // Fire the item's command.
-                Command cmd = item.getCommand();
+                final Command cmd = item.getCommand();
                 if (cmd != null) {
                     DeferredCommand.addCommand(cmd);
                 }
@@ -384,8 +389,8 @@ public class MenuBar extends Widget implements PopupListener {
                     // If the event target is part of the parent menu, suppress
                     // the
                     // event altogether.
-                    Element target = DOM.eventGetTarget(event);
-                    Element parentMenuElement = item.getParentMenu()
+                    final Element target = DOM.eventGetTarget(event);
+                    final Element parentMenuElement = item.getParentMenu()
                             .getElement();
                     if (DOM.isOrHasChild(parentMenuElement, target)) {
                         return false;
@@ -466,7 +471,7 @@ public class MenuBar extends Widget implements PopupListener {
 
     private MenuItem findItem(Element hItem) {
         for (int i = 0; i < items.size(); ++i) {
-            MenuItem item = (MenuItem) items.get(i);
+            final MenuItem item = (MenuItem) items.get(i);
             if (DOM.isOrHasChild(item.getElement(), hItem)) {
                 return item;
             }

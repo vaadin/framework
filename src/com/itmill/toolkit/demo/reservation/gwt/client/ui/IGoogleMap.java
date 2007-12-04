@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.demo.reservation.gwt.client.ui;
 
 import java.util.Iterator;
@@ -32,18 +36,18 @@ public class IGoogleMap extends GMap2Widget implements Paintable {
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         map.clearOverlays();
         GLatLng pos = null;
-        for (Iterator it = uidl.getChildIterator(); it.hasNext();) {
-            UIDL u = (UIDL) it.next();
+        for (final Iterator it = uidl.getChildIterator(); it.hasNext();) {
+            final UIDL u = (UIDL) it.next();
             if (u.getTag().equals("markers")) {
 
-                for (Iterator m = u.getChildIterator(); m.hasNext();) {
-                    UIDL umarker = (UIDL) m.next();
-                    String html = "<span>" + umarker.getStringAttribute("html")
-                            + "</span>";
-                    double x = umarker.getDoubleAttribute("x");
-                    double y = umarker.getDoubleAttribute("y");
+                for (final Iterator m = u.getChildIterator(); m.hasNext();) {
+                    final UIDL umarker = (UIDL) m.next();
+                    final String html = "<span>"
+                            + umarker.getStringAttribute("html") + "</span>";
+                    final double x = umarker.getDoubleAttribute("x");
+                    final double y = umarker.getDoubleAttribute("y");
                     pos = new GLatLng(x, y);
-                    GMarker marker = new GMarker(pos);
+                    final GMarker marker = new GMarker(pos);
                     map.addOverlay(marker);
                     if (html != null) {
                         addMarkerPopup(marker, html);
@@ -61,8 +65,9 @@ public class IGoogleMap extends GMap2Widget implements Paintable {
             map.setZoom(uidl.getIntAttribute("zoom"));
         }
         if (uidl.hasAttribute("centerX") && uidl.hasAttribute("centerY")) {
-            GLatLng center = new GLatLng(uidl.getDoubleAttribute("centerX"),
-                    uidl.getDoubleAttribute("centerY"));
+            final GLatLng center = new GLatLng(uidl
+                    .getDoubleAttribute("centerX"), uidl
+                    .getDoubleAttribute("centerY"));
             map.setCenter(center);
         } else if (pos != null) {
             // use last marker position

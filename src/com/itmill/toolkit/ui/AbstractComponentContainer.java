@@ -1,30 +1,6 @@
-/* *************************************************************************
- 
- IT Mill Toolkit 
-
- Development of Browser User Interfaces Made Easy
-
- Copyright (C) 2000-2006 IT Mill Ltd
- 
- *************************************************************************
-
- This product is distributed under commercial license that can be found
- from the product package on license.pdf. Use of this product might 
- require purchasing a commercial license from IT Mill Ltd. For guidelines 
- on usage, see licensing-guidelines.html
-
- *************************************************************************
- 
- For more information, contact:
- 
- IT Mill Ltd                           phone: +358 2 4802 7180
- Ruukinkatu 2-4                        fax:   +358 2 4802 7181
- 20540, Turku                          email:  info@itmill.com
- Finland                               company www: www.itmill.com
- 
- Primary source for information and releases: www.itmill.com
-
- ********************************************************************** */
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
 
 package com.itmill.toolkit.ui;
 
@@ -58,15 +34,15 @@ public abstract class AbstractComponentContainer extends AbstractComponent
      * reimplemented in extending classes for a more powerfull implementation.
      */
     public void removeAllComponents() {
-        LinkedList l = new LinkedList();
+        final LinkedList l = new LinkedList();
 
         // Adds all components
-        for (Iterator i = getComponentIterator(); i.hasNext();) {
+        for (final Iterator i = getComponentIterator(); i.hasNext();) {
             l.add(i.next());
         }
 
         // Removes all component
-        for (Iterator i = l.iterator(); i.hasNext();) {
+        for (final Iterator i = l.iterator(); i.hasNext();) {
             removeComponent((Component) i.next());
         }
     }
@@ -77,13 +53,13 @@ public abstract class AbstractComponentContainer extends AbstractComponent
      * implemented interface.
      */
     public void moveComponentsFrom(ComponentContainer source) {
-        LinkedList components = new LinkedList();
-        for (Iterator i = source.getComponentIterator(); i.hasNext();) {
+        final LinkedList components = new LinkedList();
+        for (final Iterator i = source.getComponentIterator(); i.hasNext();) {
             components.add(i.next());
         }
 
-        for (Iterator i = components.iterator(); i.hasNext();) {
-            Component c = (Component) i.next();
+        for (final Iterator i = components.iterator(); i.hasNext();) {
+            final Component c = (Component) i.next();
             source.removeComponent(c);
             addComponent(c);
         }
@@ -98,7 +74,7 @@ public abstract class AbstractComponentContainer extends AbstractComponent
     public void attach() {
         super.attach();
 
-        for (Iterator i = getComponentIterator(); i.hasNext();) {
+        for (final Iterator i = getComponentIterator(); i.hasNext();) {
             ((Component) i.next()).attach();
         }
     }
@@ -112,7 +88,7 @@ public abstract class AbstractComponentContainer extends AbstractComponent
     public void detach() {
         super.detach();
 
-        for (Iterator i = getComponentIterator(); i.hasNext();) {
+        for (final Iterator i = getComponentIterator(); i.hasNext();) {
             ((Component) i.next()).detach();
         }
     }
@@ -131,7 +107,7 @@ public abstract class AbstractComponentContainer extends AbstractComponent
             COMPONENT_DETACHED_METHOD = ComponentDetachListener.class
                     .getDeclaredMethod("componentDetachedFromContainer",
                             new Class[] { ComponentDetachEvent.class });
-        } catch (java.lang.NoSuchMethodException e) {
+        } catch (final java.lang.NoSuchMethodException e) {
             // This should never happen
             throw new java.lang.RuntimeException();
         }

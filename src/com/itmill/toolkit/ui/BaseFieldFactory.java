@@ -1,30 +1,6 @@
-/* *************************************************************************
- 
- IT Mill Toolkit 
-
- Development of Browser User Interfaces Made Easy
-
- Copyright (C) 2000-2006 IT Mill Ltd
- 
- *************************************************************************
-
- This product is distributed under commercial license that can be found
- from the product package on license.pdf. Use of this product might 
- require purchasing a commercial license from IT Mill Ltd. For guidelines 
- on usage, see licensing-guidelines.html
-
- *************************************************************************
- 
- For more information, contact:
- 
- IT Mill Ltd                           phone: +358 2 4802 7180
- Ruukinkatu 2-4                        fax:   +358 2 4802 7181
- 20540, Turku                          email:  info@itmill.com
- Finland                               company www: www.itmill.com
- 
- Primary source for information and releases: www.itmill.com
-
- ********************************************************************** */
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
 
 package com.itmill.toolkit.ui;
 
@@ -74,14 +50,14 @@ public class BaseFieldFactory implements FieldFactory {
 
         // Date field
         if (Date.class.isAssignableFrom(type)) {
-            DateField df = new DateField();
+            final DateField df = new DateField();
             df.setResolution(DateField.RESOLUTION_DAY);
             return df;
         }
 
         // Boolean field
         if (Boolean.class.isAssignableFrom(type)) {
-            Button button = new Button();
+            final Button button = new Button();
             button.setSwitchMode(true);
             button.setImmediate(false);
             return button;
@@ -112,7 +88,8 @@ public class BaseFieldFactory implements FieldFactory {
      */
     public Field createField(Item item, Object propertyId, Component uiContext) {
         if (item != null && propertyId != null) {
-            Field f = createField(item.getItemProperty(propertyId), uiContext);
+            final Field f = createField(item.getItemProperty(propertyId),
+                    uiContext);
             if (f instanceof AbstractComponent) {
                 ((AbstractComponent) f).setCaption(propertyId.toString());
             }

@@ -1,30 +1,6 @@
-/* *************************************************************************
- 
- IT Mill Toolkit 
-
- Development of Browser User Interfaces Made Easy
-
- Copyright (C) 2000-2006 IT Mill Ltd
- 
- *************************************************************************
-
- This product is distributed under commercial license that can be found
- from the product package on license.pdf. Use of this product might 
- require purchasing a commercial license from IT Mill Ltd. For guidelines 
- on usage, see licensing-guidelines.html
-
- *************************************************************************
- 
- For more information, contact:
- 
- IT Mill Ltd                           phone: +358 2 4802 7180
- Ruukinkatu 2-4                        fax:   +358 2 4802 7181
- 20540, Turku                          email:  info@itmill.com
- Finland                               company www: www.itmill.com
- 
- Primary source for information and releases: www.itmill.com
-
- ********************************************************************** */
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
 
 package com.itmill.toolkit.ui;
 
@@ -53,24 +29,24 @@ public class TabSheet extends AbstractComponentContainer implements Sizeable {
     /**
      * Linked list of component tabs.
      */
-    private LinkedList tabs = new LinkedList();
+    private final LinkedList tabs = new LinkedList();
 
     /**
      * Tab -> caption mapping.
      */
-    private Hashtable tabCaptions = new Hashtable();
+    private final Hashtable tabCaptions = new Hashtable();
 
     /**
      * Tab -> icon mapping .
      */
-    private Hashtable tabIcons = new Hashtable();
+    private final Hashtable tabIcons = new Hashtable();
 
     /**
      * Selected tab.
      */
     private Component selected = null;
 
-    private KeyMapper keyMapper = new KeyMapper();
+    private final KeyMapper keyMapper = new KeyMapper();
 
     /**
      * Holds the value of property tabsHIdden.
@@ -197,8 +173,8 @@ public class TabSheet extends AbstractComponentContainer implements Sizeable {
      *                the container components are removed from.
      */
     public void moveComponentsFrom(ComponentContainer source) {
-        for (Iterator i = source.getComponentIterator(); i.hasNext();) {
-            Component c = (Component) i.next();
+        for (final Iterator i = source.getComponentIterator(); i.hasNext();) {
+            final Component c = (Component) i.next();
             String caption = null;
             Resource icon = null;
             if (TabSheet.class.isAssignableFrom(source.getClass())) {
@@ -237,17 +213,17 @@ public class TabSheet extends AbstractComponentContainer implements Sizeable {
 
         target.startTag("tabs");
 
-        for (Iterator i = getComponentIterator(); i.hasNext();) {
-            Component c = (Component) i.next();
+        for (final Iterator i = getComponentIterator(); i.hasNext();) {
+            final Component c = (Component) i.next();
             if (!c.isVisible()) {
                 continue;
             }
             target.startTag("tab");
-            Resource icon = getTabIcon(c);
+            final Resource icon = getTabIcon(c);
             if (icon != null) {
                 target.addAttribute("icon", icon);
             }
-            String caption = getTabCaption(c);
+            final String caption = getTabCaption(c);
             if (!c.isEnabled()) {
                 target.addAttribute("disabled", true);
             }
@@ -381,17 +357,17 @@ public class TabSheet extends AbstractComponentContainer implements Sizeable {
     public void replaceComponent(Component oldComponent, Component newComponent) {
 
         // Gets the captions
-        String oldCaption = getTabCaption(oldComponent);
-        Resource oldIcon = getTabIcon(oldComponent);
-        String newCaption = getTabCaption(newComponent);
-        Resource newIcon = getTabIcon(newComponent);
+        final String oldCaption = getTabCaption(oldComponent);
+        final Resource oldIcon = getTabIcon(oldComponent);
+        final String newCaption = getTabCaption(newComponent);
+        final Resource newIcon = getTabIcon(newComponent);
 
         // Gets the locations
         int oldLocation = -1;
         int newLocation = -1;
         int location = 0;
-        for (Iterator i = tabs.iterator(); i.hasNext();) {
-            Component component = (Component) i.next();
+        for (final Iterator i = tabs.iterator(); i.hasNext();) {
+            final Component component = (Component) i.next();
 
             if (component == oldComponent) {
                 oldLocation = location;
@@ -442,7 +418,7 @@ public class TabSheet extends AbstractComponentContainer implements Sizeable {
             SELECTED_TAB_CHANGE_METHOD = SelectedTabChangeListener.class
                     .getDeclaredMethod("selectedTabChange",
                             new Class[] { SelectedTabChangeEvent.class });
-        } catch (java.lang.NoSuchMethodException e) {
+        } catch (final java.lang.NoSuchMethodException e) {
             // This should never happen
             throw new java.lang.RuntimeException();
         }

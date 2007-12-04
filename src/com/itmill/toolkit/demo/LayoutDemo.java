@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.demo;
 
 import com.itmill.toolkit.terminal.ClassResource;
@@ -25,13 +29,13 @@ public class LayoutDemo extends com.itmill.toolkit.Application {
      * Initialize Application. Demo components are added to main window.
      */
     public void init() {
-        Window mainWindow = new Window("Layout demo");
+        final Window mainWindow = new Window("Layout demo");
         setMainWindow(mainWindow);
 
         //
         // Create horizontal ordered layout
         //
-        OrderedLayout layoutA = new OrderedLayout(
+        final OrderedLayout layoutA = new OrderedLayout(
                 OrderedLayout.ORIENTATION_HORIZONTAL);
         // Add 4 panels
         fillLayout(layoutA, 4);
@@ -39,7 +43,7 @@ public class LayoutDemo extends com.itmill.toolkit.Application {
         //
         // Create vertical ordered layout
         //
-        OrderedLayout layoutB = new OrderedLayout(
+        final OrderedLayout layoutB = new OrderedLayout(
                 OrderedLayout.ORIENTATION_VERTICAL);
         // Add 4 panels
         fillLayout(layoutB, 4);
@@ -47,14 +51,14 @@ public class LayoutDemo extends com.itmill.toolkit.Application {
         //
         // Create grid layout
         //
-        GridLayout layoutG = new GridLayout(4, 4);
+        final GridLayout layoutG = new GridLayout(4, 4);
         // Add 16 panels components
         fillLayout(layoutG, 16);
 
         //
         // Create grid layout
         //
-        GridLayout layoutG2 = new GridLayout(4, 4);
+        final GridLayout layoutG2 = new GridLayout(4, 4);
         // Add 4 panels with absolute coordinates (diagonally)
         layoutG2.addComponent(getExampleComponent("x=0, y=0"), 0, 0);
         layoutG2.addComponent(getExampleComponent("x=1, y=1"), 1, 1);
@@ -69,7 +73,7 @@ public class LayoutDemo extends com.itmill.toolkit.Application {
         //
         // Create TabSheet
         //
-        TabSheet tabsheet = new TabSheet();
+        final TabSheet tabsheet = new TabSheet();
         tabsheet
                 .setCaption("Tabsheet, above layouts are added to this component");
         tabsheet.addTab(layoutA, "Horizontal ordered layout", null);
@@ -106,14 +110,15 @@ public class LayoutDemo extends com.itmill.toolkit.Application {
     }
 
     private Component getExamplePicture(String caption) {
-        ClassResource cr = new ClassResource("features/m-bullet-blue.gif", this);
-        Embedded em = new Embedded("Embedded " + caption, cr);
+        final ClassResource cr = new ClassResource(
+                "features/m-bullet-blue.gif", this);
+        final Embedded em = new Embedded("Embedded " + caption, cr);
         em.setWidth(170);
         return em;
     }
 
     private Component getExampleComponent(String caption) {
-        Panel panel = new Panel();
+        final Panel panel = new Panel();
         panel.setCaption("Panel component " + caption);
         panel
                 .addComponent(new Label(

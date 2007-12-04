@@ -63,7 +63,7 @@ import java.util.Date;
  * @version $Revision: 0.0 $
  */
 public class SimpleDateFormat {
-    private String format;
+    private final String format;
     private DateLocale locale = new DateLocale();
 
     /**
@@ -89,8 +89,8 @@ public class SimpleDateFormat {
             String lastTokenType = null;
             String currentToken = "";
             for (int i = 0; i < format.length(); i++) {
-                String thisChar = format.substring(i, i + 1);
-                String currentTokenType = DateLocale.SUPPORTED_DF_TOKENS
+                final String thisChar = format.substring(i, i + 1);
+                final String currentTokenType = DateLocale.SUPPORTED_DF_TOKENS
                         .contains(thisChar) ? thisChar : "";
                 if (currentTokenType.equals(lastTokenType) || i == 0) {
                     currentToken += thisChar;
@@ -126,7 +126,7 @@ public class SimpleDateFormat {
      */
     private String handleToken(String token, Date date) {
         String response = token;
-        String tc = token.substring(0, 1);
+        final String tc = token.substring(0, 1);
         if (DateLocale.TOKEN_DAY_OF_WEEK.equals(tc)) {
             if (token.length() > 3) {
                 response = locale.getWEEKDAY_LONG()[date.getDay()];
@@ -187,7 +187,7 @@ public class SimpleDateFormat {
             // else
             // response = Integer.toString(date.getSeconds());
         } else if (DateLocale.TOKEN_AM_PM.equals(tc)) {
-            int hour = date.getHours();
+            final int hour = date.getHours();
             if (hour > 11) {
                 response = DateLocale.getPM();
             } else {

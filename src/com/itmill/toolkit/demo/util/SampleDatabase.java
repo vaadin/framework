@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.demo.util;
 
 import java.sql.Connection;
@@ -82,11 +86,11 @@ public class SampleDatabase {
      */
     private void connect() {
         // use memory-Only Database
-        String url = "jdbc:hsqldb:mem:toolkit";
+        final String url = "jdbc:hsqldb:mem:toolkit";
         try {
             Class.forName("org.hsqldb.jdbcDriver").newInstance();
             connection = DriverManager.getConnection(url, "sa", "");
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -100,7 +104,7 @@ public class SampleDatabase {
     public void update(String expression) throws SQLException {
         Statement st = null;
         st = connection.createStatement();
-        int i = st.executeUpdate(expression);
+        final int i = st.executeUpdate(expression);
         if (i == -1) {
             throw new SQLException("Database error : " + expression);
         }
@@ -134,7 +138,7 @@ public class SampleDatabase {
                         + "'" + ")";
                 update(stmt);
             }
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             if (e.toString().indexOf("Table already exists") == -1) {
                 throw new RuntimeException(e);
             }
@@ -148,14 +152,15 @@ public class SampleDatabase {
     private String testDatabase() {
         String result = null;
         try {
-            Statement stmt = connection.createStatement(
+            final Statement stmt = connection.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
-            ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM employee");
+            final ResultSet rs = stmt
+                    .executeQuery("SELECT COUNT(*) FROM employee");
             rs.next();
             result = "rowcount for table test is " + rs.getObject(1).toString();
             stmt.close();
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             throw new RuntimeException(e);
         }
         return result;

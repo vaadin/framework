@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.demo;
 
 import java.io.File;
@@ -24,12 +28,12 @@ public class TreeFilesystem extends com.itmill.toolkit.Application implements
         Tree.ExpandListener {
 
     // Filesystem explorer panel and it's components
-    private Panel explorerPanel = new Panel("Filesystem explorer");
+    private final Panel explorerPanel = new Panel("Filesystem explorer");
 
-    private Tree tree = new Tree();
+    private final Tree tree = new Tree();
 
     public void init() {
-        Window main = new Window("Tree filesystem demo");
+        final Window main = new Window("Tree filesystem demo");
         setMainWindow(main);
 
         // Main window contains heading and panel
@@ -44,7 +48,7 @@ public class TreeFilesystem extends com.itmill.toolkit.Application implements
         tree.addListener(this);
 
         // Get sample directory
-        File sampleDir = SampleDirectory.getDirectory(this);
+        final File sampleDir = SampleDirectory.getDirectory(this);
         // populate tree's root node with example directory
         if (sampleDir != null) {
             populateNode(sampleDir.getAbsolutePath(), null);
@@ -56,7 +60,7 @@ public class TreeFilesystem extends com.itmill.toolkit.Application implements
      * and directories.
      */
     public void nodeExpand(ExpandEvent event) {
-        Item i = tree.getItem(event.getItemId());
+        final Item i = tree.getItem(event.getItemId());
         if (!tree.hasChildren(i)) {
             // populate tree's node which was expanded
             populateNode(event.getItemId().toString(), event.getItemId());
@@ -75,12 +79,12 @@ public class TreeFilesystem extends com.itmill.toolkit.Application implements
      *                node
      */
     private void populateNode(String file, Object parent) {
-        File subdir = new File(file);
-        File[] files = subdir.listFiles();
+        final File subdir = new File(file);
+        final File[] files = subdir.listFiles();
         for (int x = 0; x < files.length; x++) {
             try {
                 // add new item (String) to tree
-                String path = files[x].getCanonicalPath().toString();
+                final String path = files[x].getCanonicalPath().toString();
                 tree.addItem(path);
                 // set parent if this item has one
                 if (parent != null) {
@@ -94,7 +98,7 @@ public class TreeFilesystem extends com.itmill.toolkit.Application implements
                     // no, childrens therefore do not exists
                     tree.setChildrenAllowed(path, false);
                 }
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 throw new RuntimeException(e);
             }
         }

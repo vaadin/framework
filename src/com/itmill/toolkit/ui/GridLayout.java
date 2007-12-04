@@ -1,30 +1,6 @@
-/* *************************************************************************
- 
- IT Mill Toolkit 
-
- Development of Browser User Interfaces Made Easy
-
- Copyright (C) 2000-2007 IT Mill Ltd
- 
- *************************************************************************
-
- This product is distributed under commercial license that can be found
- from the product package on license.pdf. Use of this product might 
- require purchasing a commercial license from IT Mill Ltd. For guidelines 
- on usage, see licensing-guidelines.html
-
- *************************************************************************
- 
- For more information, contact:
- 
- IT Mill Ltd                           phone: +358 2 4802 7180
- Ruukinkatu 2-4                        fax:   +358 2 4802 7181
- 20540, Turku                          email:  info@itmill.com
- Finland                               company www: www.itmill.com
- 
- Primary source for information and releases: www.itmill.com
-
- ********************************************************************** */
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
 
 package com.itmill.toolkit.ui;
 
@@ -87,12 +63,12 @@ public class GridLayout extends AbstractLayout {
      * Contains all items that are placed on the grid. These are components with
      * grid area definition.
      */
-    private LinkedList areas = new LinkedList();
+    private final LinkedList areas = new LinkedList();
 
     /**
      * Mapping from components to their respective areas.
      */
-    private LinkedList components = new LinkedList();
+    private final LinkedList components = new LinkedList();
 
     /**
      * Mapping from components to alignments (horizontal + vertical).
@@ -204,7 +180,7 @@ public class GridLayout extends AbstractLayout {
         }
 
         // Creates the area
-        Area area = new Area(component, column1, row1, column2, row2);
+        final Area area = new Area(component, column1, row1, column2, row2);
 
         // Checks the validity of the coordinates
         if (column2 < column1 || row2 < row1) {
@@ -221,11 +197,11 @@ public class GridLayout extends AbstractLayout {
         // Inserts the component to right place at the list
         // Respect top-down, left-right ordering
         component.setParent(this);
-        Iterator i = areas.iterator();
+        final Iterator i = areas.iterator();
         int index = 0;
         boolean done = false;
         while (!done && i.hasNext()) {
-            Area existingArea = (Area) i.next();
+            final Area existingArea = (Area) i.next();
             if ((existingArea.row1 >= row1 && existingArea.column1 > column1)
                     || existingArea.row1 > row1) {
                 areas.add(index, area);
@@ -253,8 +229,8 @@ public class GridLayout extends AbstractLayout {
      *                 if <code>area</code> overlaps with any existing area.
      */
     private void checkExistingOverlaps(Area area) throws OverlapsException {
-        for (Iterator i = areas.iterator(); i.hasNext();) {
-            Area existingArea = (Area) i.next();
+        for (final Iterator i = areas.iterator(); i.hasNext();) {
+            final Area existingArea = (Area) i.next();
             if (existingArea.overlaps(area)) {
                 // Component not added, overlaps with existing component
                 throw new OverlapsException(existingArea);
@@ -323,7 +299,7 @@ public class GridLayout extends AbstractLayout {
                 area = new Area(component, cursorX, cursorY, cursorX, cursorY);
                 checkExistingOverlaps(area);
                 done = true;
-            } catch (OverlapsException ignored) {
+            } catch (final OverlapsException ignored) {
                 space();
             }
         }
@@ -351,8 +327,8 @@ public class GridLayout extends AbstractLayout {
         super.removeComponent(component);
 
         Area area = null;
-        for (Iterator i = areas.iterator(); area == null && i.hasNext();) {
-            Area a = (Area) i.next();
+        for (final Iterator i = areas.iterator(); area == null && i.hasNext();) {
+            final Area a = (Area) i.next();
             if (a.getComponent() == component) {
                 area = a;
             }
@@ -379,8 +355,8 @@ public class GridLayout extends AbstractLayout {
     public void removeComponent(int column, int row) {
 
         // Finds the area
-        for (Iterator i = areas.iterator(); i.hasNext();) {
-            Area area = (Area) i.next();
+        for (final Iterator i = areas.iterator(); i.hasNext();) {
+            final Area area = (Area) i.next();
             if (area.getColumn1() == column && area.getRow1() == row) {
                 removeComponent(area.getComponent());
                 return;
@@ -419,13 +395,13 @@ public class GridLayout extends AbstractLayout {
         }
 
         // Area iterator
-        Iterator areaiterator = areas.iterator();
+        final Iterator areaiterator = areas.iterator();
 
         // Current item to be processed (fetch first item)
         Area area = areaiterator.hasNext() ? (Area) areaiterator.next() : null;
 
         // Collects rowspan related information here
-        HashMap cellUsed = new HashMap();
+        final HashMap cellUsed = new HashMap();
 
         // Empty cell collector
         int emptyCells = 0;
@@ -454,8 +430,8 @@ public class GridLayout extends AbstractLayout {
                     }
 
                     // Now proceed rendering current item
-                    int cols = (area.column2 - area.column1) + 1;
-                    int rows = (area.row2 - area.row1) + 1;
+                    final int cols = (area.column2 - area.column1) + 1;
+                    final int rows = (area.row2 - area.row1) + 1;
                     target.startTag("gc");
 
                     target.addAttribute("x", curx);
@@ -500,8 +476,8 @@ public class GridLayout extends AbstractLayout {
 
                         // Current column contains already an item,
                         // check if rowspan affects at current x,y position
-                        int rowspanDepth = ((Integer) cellUsed.get(new Integer(
-                                curx))).intValue();
+                        final int rowspanDepth = ((Integer) cellUsed
+                                .get(new Integer(curx))).intValue();
 
                         if (rowspanDepth >= cury) {
 
@@ -582,22 +558,22 @@ public class GridLayout extends AbstractLayout {
         /**
          * The column of the upper left corner cell of the area.
          */
-        private int column1;
+        private final int column1;
 
         /**
          * The row of the upper left corner cell of the area.
          */
-        private int row1;
+        private final int row1;
 
         /**
          * The column of the lower right corner cell of the area.
          */
-        private int column2;
+        private final int column2;
 
         /**
          * The row of the lower right corner cell of the area.
          */
-        private int row2;
+        private final int row2;
 
         /**
          * Component painted on the area.
@@ -765,7 +741,7 @@ public class GridLayout extends AbstractLayout {
          */
         private static final long serialVersionUID = 3978144339870101561L;
 
-        private Area existingArea;
+        private final Area existingArea;
 
         /**
          * Constructs an <code>OverlapsException</code>.
@@ -802,7 +778,7 @@ public class GridLayout extends AbstractLayout {
          */
         private static final long serialVersionUID = 3618985589664592694L;
 
-        private Area areaOutOfBounds;
+        private final Area areaOutOfBounds;
 
         /**
          * Constructs an <code>OoutOfBoundsException</code> with the specified
@@ -874,8 +850,8 @@ public class GridLayout extends AbstractLayout {
 
         // Checks for overlaps
         if (cols > columns) {
-            for (Iterator i = areas.iterator(); i.hasNext();) {
-                Area area = (Area) i.next();
+            for (final Iterator i = areas.iterator(); i.hasNext();) {
+                final Area area = (Area) i.next();
                 if (area.column2 >= columns) {
                     throw new OutOfBoundsException(area);
                 }
@@ -946,8 +922,8 @@ public class GridLayout extends AbstractLayout {
 
         // Checks for overlaps
         if (this.rows > rows) {
-            for (Iterator i = areas.iterator(); i.hasNext();) {
-                Area area = (Area) i.next();
+            for (final Iterator i = areas.iterator(); i.hasNext();) {
+                final Area area = (Area) i.next();
                 if (area.row2 >= rows) {
                     throw new OutOfBoundsException(area);
                 }
@@ -998,9 +974,9 @@ public class GridLayout extends AbstractLayout {
         // Gets the locations
         Area oldLocation = null;
         Area newLocation = null;
-        for (Iterator i = areas.iterator(); i.hasNext();) {
-            Area location = (Area) i.next();
-            Component component = location.getComponent();
+        for (final Iterator i = areas.iterator(); i.hasNext();) {
+            final Area location = (Area) i.next();
+            final Component component = location.getComponent();
             if (component == oldComponent) {
                 oldLocation = location;
             }

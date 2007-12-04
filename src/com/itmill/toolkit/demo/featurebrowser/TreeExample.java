@@ -1,9 +1,14 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.demo.featurebrowser;
 
 import com.itmill.toolkit.data.Item;
 import com.itmill.toolkit.data.Property;
 import com.itmill.toolkit.data.Property.ValueChangeEvent;
 import com.itmill.toolkit.event.Action;
+import com.itmill.toolkit.ui.AbstractSelect;
 import com.itmill.toolkit.ui.CustomComponent;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.OrderedLayout;
@@ -32,7 +37,7 @@ public class TreeExample extends CustomComponent implements Action.Handler,
     TextField editor;
 
     public TreeExample() {
-        OrderedLayout main = new OrderedLayout(
+        final OrderedLayout main = new OrderedLayout(
                 OrderedLayout.ORIENTATION_HORIZONTAL);
         main.setMargin(true);
         setCompositionRoot(main);
@@ -49,10 +54,10 @@ public class TreeExample extends CustomComponent implements Action.Handler,
         // we'll use a property for caption instead of the item id ("value"),
         // so that multiple items can have the same caption
         tree.addContainerProperty(CAPTION_PROPERTY, String.class, "");
-        tree.setItemCaptionMode(Tree.ITEM_CAPTION_MODE_PROPERTY);
+        tree.setItemCaptionMode(AbstractSelect.ITEM_CAPTION_MODE_PROPERTY);
         tree.setItemCaptionPropertyId(CAPTION_PROPERTY);
         for (int i = 1; i <= 3; i++) {
-            Object id = addCaptionedItem("Section " + i, null);
+            final Object id = addCaptionedItem("Section " + i, null);
             tree.expandItem(id);
             addCaptionedItem("Team A", id);
             addCaptionedItem("Team B", id);
@@ -87,7 +92,7 @@ public class TreeExample extends CustomComponent implements Action.Handler,
             tree.removeItem(target);
         } else {
             // Add
-            Object id = addCaptionedItem("New Item", target);
+            final Object id = addCaptionedItem("New Item", target);
             tree.expandItem(target);
             tree.setValue(id);
             editor.focus();
@@ -95,7 +100,7 @@ public class TreeExample extends CustomComponent implements Action.Handler,
     }
 
     public void valueChange(ValueChangeEvent event) {
-        Object id = tree.getValue(); // selected item id
+        final Object id = tree.getValue(); // selected item id
         if (event.getProperty() == tree) {
             // a Tree item was (un) selected
             if (id == null) {
@@ -109,7 +114,7 @@ public class TreeExample extends CustomComponent implements Action.Handler,
                 editor.removeListener(this);
                 // enable TextField and update value
                 editor.setEnabled(true);
-                Item item = tree.getItem(id);
+                final Item item = tree.getItem(id);
                 editor.setValue(item.getItemProperty(CAPTION_PROPERTY)
                         .getValue());
                 // listen for TextField changes
@@ -119,8 +124,8 @@ public class TreeExample extends CustomComponent implements Action.Handler,
         } else {
             // TextField
             if (id != null) {
-                Item item = tree.getItem(id);
-                Property p = item.getItemProperty(CAPTION_PROPERTY);
+                final Item item = tree.getItem(id);
+                final Property p = item.getItemProperty(CAPTION_PROPERTY);
                 p.setValue(editor.getValue());
                 tree.requestRepaint();
             }
@@ -139,11 +144,11 @@ public class TreeExample extends CustomComponent implements Action.Handler,
      */
     private Object addCaptionedItem(String caption, Object parent) {
         // add item, let tree decide id
-        Object id = tree.addItem();
+        final Object id = tree.addItem();
         // get the created item
-        Item item = tree.getItem(id);
+        final Item item = tree.getItem(id);
         // set our "caption" property
-        Property p = item.getItemProperty(CAPTION_PROPERTY);
+        final Property p = item.getItemProperty(CAPTION_PROPERTY);
         p.setValue(caption);
         if (parent != null) {
             tree.setParent(id, parent);

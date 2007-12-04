@@ -1,30 +1,6 @@
-/* *************************************************************************
- 
- IT Mill Toolkit 
-
- Development of Browser User Interfaces Made Easy
-
- Copyright (C) 2000-2006 IT Mill Ltd
- 
- *************************************************************************
-
- This product is distributed under commercial license that can be found
- from the product package on license.pdf. Use of this product might 
- require purchasing a commercial license from IT Mill Ltd. For guidelines 
- on usage, see licensing-guidelines.html
-
- *************************************************************************
- 
- For more information, contact:
- 
- IT Mill Ltd                           phone: +358 2 4802 7180
- Ruukinkatu 2-4                        fax:   +358 2 4802 7181
- 20540, Turku                          email:  info@itmill.com
- Finland                               company www: www.itmill.com
- 
- Primary source for information and releases: www.itmill.com
-
- ********************************************************************** */
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
 
 package com.itmill.toolkit.ui;
 
@@ -229,14 +205,14 @@ public class Panel extends AbstractComponentContainer implements Sizeable,
             target.addVariable(this, "action", "");
             target.startTag("actions");
 
-            for (Iterator ahi = actionHandlers.iterator(); ahi.hasNext();) {
-                Action[] aa = ((Action.Handler) ahi.next()).getActions(null,
-                        this);
+            for (final Iterator ahi = actionHandlers.iterator(); ahi.hasNext();) {
+                final Action[] aa = ((Action.Handler) ahi.next()).getActions(
+                        null, this);
                 if (aa != null) {
                     for (int ai = 0; ai < aa.length; ai++) {
-                        Action a = aa[ai];
+                        final Action a = aa[ai];
                         target.startTag("action");
-                        String akey = actionMapper.key(aa[ai]);
+                        final String akey = actionMapper.key(aa[ai]);
                         target.addAttribute("key", akey);
                         if (a.getCaption() != null) {
                             target.addAttribute("caption", a.getCaption());
@@ -245,11 +221,11 @@ public class Panel extends AbstractComponentContainer implements Sizeable,
                             target.addAttribute("icon", a.getIcon());
                         }
                         if (a instanceof ShortcutAction) {
-                            ShortcutAction sa = (ShortcutAction) a;
+                            final ShortcutAction sa = (ShortcutAction) a;
                             target.addAttribute("kc", sa.getKeyCode());
-                            int[] modifiers = sa.getModifiers();
+                            final int[] modifiers = sa.getModifiers();
                             if (modifiers != null) {
-                                String[] smodifiers = new String[modifiers.length];
+                                final String[] smodifiers = new String[modifiers.length];
                                 for (int i = 0; i < modifiers.length; i++) {
                                     smodifiers[i] = String
                                             .valueOf(modifiers[i]);
@@ -322,8 +298,8 @@ public class Panel extends AbstractComponentContainer implements Sizeable,
         super.changeVariables(source, variables);
 
         // Get new size
-        Integer newWidth = (Integer) variables.get("width");
-        Integer newHeight = (Integer) variables.get("height");
+        final Integer newWidth = (Integer) variables.get("width");
+        final Integer newHeight = (Integer) variables.get("height");
         if (newWidth != null && newWidth.intValue() != getWidth()) {
             setWidth(newWidth.intValue());
             // ensure units as we are reading pixels
@@ -337,8 +313,8 @@ public class Panel extends AbstractComponentContainer implements Sizeable,
         }
 
         // Scrolling
-        Integer newScrollX = (Integer) variables.get("scrollleft");
-        Integer newScrollY = (Integer) variables.get("scrolldown");
+        final Integer newScrollX = (Integer) variables.get("scrollleft");
+        final Integer newScrollY = (Integer) variables.get("scrolldown");
         if (newScrollX != null && newScrollX.intValue() != getScrollOffsetX()) {
             setScrollOffsetX(newScrollX.intValue());
         }
@@ -348,10 +324,10 @@ public class Panel extends AbstractComponentContainer implements Sizeable,
 
         // Actions
         if (variables.containsKey("action")) {
-            String key = (String) variables.get("action");
-            Action action = (Action) actionMapper.get(key);
+            final String key = (String) variables.get("action");
+            final Action action = (Action) actionMapper.get(key);
             if (action != null && actionHandlers != null) {
-                for (Iterator i = actionHandlers.iterator(); i.hasNext();) {
+                for (final Iterator i = actionHandlers.iterator(); i.hasNext();) {
                     ((Action.Handler) i.next())
                             .handleAction(action, this, this);
                 }

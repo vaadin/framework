@@ -1,30 +1,6 @@
-/* *************************************************************************
- 
- IT Mill Toolkit 
-
- Development of Browser User Interfaces Made Easy
-
- Copyright (C) 2000-2006 IT Mill Ltd
- 
- *************************************************************************
-
- This product is distributed under commercial license that can be found
- from the product package on license.pdf. Use of this product might 
- require purchasing a commercial license from IT Mill Ltd. For guidelines 
- on usage, see licensing-guidelines.html
-
- *************************************************************************
- 
- For more information, contact:
- 
- IT Mill Ltd                           phone: +358 2 4802 7180
- Ruukinkatu 2-4                        fax:   +358 2 4802 7181
- 20540, Turku                          email:  info@itmill.com
- Finland                               company www: www.itmill.com
- 
- Primary source for information and releases: www.itmill.com
-
- ********************************************************************** */
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
 
 package com.itmill.toolkit.data.util;
 
@@ -158,8 +134,8 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
     public String toString() {
         String retValue = "";
 
-        for (Iterator i = getItemPropertyIds().iterator(); i.hasNext();) {
-            Object propertyId = i.next();
+        for (final Iterator i = getItemPropertyIds().iterator(); i.hasNext();) {
+            final Object propertyId = i.next();
             retValue += getItemProperty(propertyId).toString();
             if (i.hasNext()) {
                 retValue += " ";
@@ -232,8 +208,8 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
      */
     private void fireItemPropertySetChange() {
         if (propertySetChangeListeners != null) {
-            Object[] l = propertySetChangeListeners.toArray();
-            Item.PropertySetChangeEvent event = new PropertysetItem.PropertySetChangeEvent(
+            final Object[] l = propertySetChangeListeners.toArray();
+            final Item.PropertySetChangeEvent event = new PropertysetItem.PropertySetChangeEvent(
                     this);
             for (int i = 0; i < l.length; i++) {
                 ((Item.PropertySetChangeListener) l[i])
@@ -265,7 +241,7 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
      */
     public Object clone() throws CloneNotSupportedException {
 
-        PropertysetItem npsi = new PropertysetItem();
+        final PropertysetItem npsi = new PropertysetItem();
 
         npsi.list = list != null ? (LinkedList) list.clone() : null;
         npsi.propertySetChangeListeners = propertySetChangeListeners != null ? (LinkedList) propertySetChangeListeners
@@ -293,7 +269,7 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
             return false;
         }
 
-        PropertysetItem other = (PropertysetItem) obj;
+        final PropertysetItem other = (PropertysetItem) obj;
 
         if (other.list != list) {
             if (other.list == null) {

@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.client.ui.richtextarea;
 
 import com.google.gwt.user.client.ui.ChangeListener;
@@ -35,7 +39,7 @@ public class IRichTextArea extends Composite implements Paintable,
     RichTextToolbar formatter = new RichTextToolbar(rta);
 
     public IRichTextArea() {
-        FlowPanel fp = new FlowPanel();
+        final FlowPanel fp = new FlowPanel();
         fp.add(formatter);
 
         rta.setWidth("100%");
@@ -79,7 +83,7 @@ public class IRichTextArea extends Composite implements Paintable,
     }
 
     public void onLostFocus(Widget sender) {
-        String html = rta.getHTML();
+        final String html = rta.getHTML();
         client.updateVariable(id, "text", html, immediate);
 
     }

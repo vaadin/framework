@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import com.google.gwt.user.client.DOM;
@@ -60,7 +64,7 @@ public class ITabsheetPanel extends ComplexPanel {
     }
 
     public boolean remove(Widget w) {
-        boolean removed = super.remove(w);
+        final boolean removed = super.remove(w);
         if (removed) {
             resetChildWidget(w);
 

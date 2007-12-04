@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.tests;
 
 import com.itmill.toolkit.data.Property.ValueChangeEvent;
@@ -10,7 +14,7 @@ public class TableSelectTest extends CustomComponent implements
         Table.ValueChangeListener {
 
     public TableSelectTest() {
-        OrderedLayout main = new OrderedLayout();
+        final OrderedLayout main = new OrderedLayout();
         setCompositionRoot(main);
         main.addComponent(new Label("Hello World!"));
 
@@ -68,7 +72,7 @@ public class TableSelectTest extends CustomComponent implements
         try {
             t.setMultiSelect(true);
             t.setCaption("multi(SHOLD FAIL BUT DID NOT) nullsel nullselid");
-        } catch (Exception e) {
+        } catch (final Exception e) {
             System.err.println("failed ok");
         }
         t.setNullSelectionAllowed(true);
@@ -81,7 +85,7 @@ public class TableSelectTest extends CustomComponent implements
         try {
             t.setMultiSelect(true);
             t.setCaption("multi(SHOLD FAIL BUT DID NOT) NO-nullsel nullselid");
-        } catch (Exception e) {
+        } catch (final Exception e) {
             System.err.println("failed ok");
         }
         t.setNullSelectionAllowed(false);
@@ -110,7 +114,7 @@ public class TableSelectTest extends CustomComponent implements
     }
 
     public void valueChange(ValueChangeEvent event) {
-        Object val = event.getProperty().getValue();
+        final Object val = event.getProperty().getValue();
 
         System.err.println("Value: " + val);
 

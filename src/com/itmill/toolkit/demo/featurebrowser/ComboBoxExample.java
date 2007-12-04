@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.demo.featurebrowser;
 
 import com.itmill.toolkit.ui.ComboBox;
@@ -21,12 +25,12 @@ public class ComboBoxExample extends CustomComponent {
             "Fielding", "Einstein" };
 
     public ComboBoxExample() {
-        OrderedLayout main = new OrderedLayout();
+        final OrderedLayout main = new OrderedLayout();
         main.setMargin(true);
         setCompositionRoot(main);
 
         // starts-with filter
-        ComboBox s1 = new ComboBox("Select with starts-with filter");
+        final ComboBox s1 = new ComboBox("Select with starts-with filter");
         s1.setFilteringMode(Filtering.FILTERINGMODE_STARTSWITH);
         s1.setColumns(20);
         for (int i = 0; i < 105; i++) {
@@ -39,7 +43,7 @@ public class ComboBoxExample extends CustomComponent {
         main.addComponent(s1);
 
         // contains filter
-        ComboBox s2 = new ComboBox("Select with contains filter");
+        final ComboBox s2 = new ComboBox("Select with contains filter");
         s2.setFilteringMode(Filtering.FILTERINGMODE_CONTAINS);
         s2.setColumns(20);
         for (int i = 0; i < 500; i++) {
@@ -52,7 +56,7 @@ public class ComboBoxExample extends CustomComponent {
         main.addComponent(s2);
 
         // initially empty
-        ComboBox s3 = new ComboBox("Initially empty; enter your own");
+        final ComboBox s3 = new ComboBox("Initially empty; enter your own");
         s3.setColumns(20);
         s3.setImmediate(true);
         main.addComponent(s3);

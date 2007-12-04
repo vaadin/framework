@@ -1,30 +1,6 @@
-/* *************************************************************************
- 
- IT Mill Toolkit 
-
- Development of Browser User Interfaces Made Easy
-
- Copyright (C) 2000-2006 IT Mill Ltd
- 
- *************************************************************************
-
- This product is distributed under commercial license that can be found
- from the product package on license.pdf. Use of this product might 
- require purchasing a commercial license from IT Mill Ltd. For guidelines 
- on usage, see licensing-guidelines.html
-
- *************************************************************************
- 
- For more information, contact:
- 
- IT Mill Ltd                           phone: +358 2 4802 7180
- Ruukinkatu 2-4                        fax:   +358 2 4802 7181
- 20540, Turku                          email:  info@itmill.com
- Finland                               company www: www.itmill.com
- 
- Primary source for information and releases: www.itmill.com
-
- ********************************************************************** */
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
 
 package com.itmill.toolkit.event;
 
@@ -86,14 +62,14 @@ public class EventRouter implements MethodEventSource {
     public void removeListener(Class eventType, Object target) {
 
         if (listenerList != null) {
-            Iterator i = listenerList.iterator();
+            final Iterator i = listenerList.iterator();
             while (i.hasNext()) {
                 try {
-                    ListenerMethod lm = (ListenerMethod) i.next();
+                    final ListenerMethod lm = (ListenerMethod) i.next();
                     if (lm.matches(eventType, target)) {
                         i.remove();
                     }
-                } catch (java.lang.ClassCastException e) {
+                } catch (final java.lang.ClassCastException e) {
                     // Class cast exceptions are ignored
                 }
             }
@@ -108,14 +84,14 @@ public class EventRouter implements MethodEventSource {
     public void removeListener(Class eventType, Object target, Method method) {
 
         if (listenerList != null) {
-            Iterator i = listenerList.iterator();
+            final Iterator i = listenerList.iterator();
             while (i.hasNext()) {
                 try {
-                    ListenerMethod lm = (ListenerMethod) i.next();
+                    final ListenerMethod lm = (ListenerMethod) i.next();
                     if (lm.matches(eventType, target, method)) {
                         i.remove();
                     }
-                } catch (java.lang.ClassCastException e) {
+                } catch (final java.lang.ClassCastException e) {
                     // Class cast exceptions are ignored
                 }
             }
@@ -130,7 +106,7 @@ public class EventRouter implements MethodEventSource {
     public void removeListener(Class eventType, Object target, String methodName) {
 
         // Find the correct method
-        Method[] methods = target.getClass().getMethods();
+        final Method[] methods = target.getClass().getMethods();
         Method method = null;
         for (int i = 0; i < methods.length; i++) {
             if (methods[i].getName().equals(methodName)) {
@@ -143,14 +119,14 @@ public class EventRouter implements MethodEventSource {
 
         // Remove the listeners
         if (listenerList != null) {
-            Iterator i = listenerList.iterator();
+            final Iterator i = listenerList.iterator();
             while (i.hasNext()) {
                 try {
-                    ListenerMethod lm = (ListenerMethod) i.next();
+                    final ListenerMethod lm = (ListenerMethod) i.next();
                     if (lm.matches(eventType, target, method)) {
                         i.remove();
                     }
-                } catch (java.lang.ClassCastException e) {
+                } catch (final java.lang.ClassCastException e) {
                     // Class cast exceptions are ignored
                 }
             }
@@ -178,7 +154,7 @@ public class EventRouter implements MethodEventSource {
 
             // Send the event to all listeners. The listeners themselves
             // will filter out unwanted events.
-            Iterator i = new LinkedList(listenerList).iterator();
+            final Iterator i = new LinkedList(listenerList).iterator();
             while (i.hasNext()) {
                 ((ListenerMethod) i.next()).receiveEvent(event);
             }

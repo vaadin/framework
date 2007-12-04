@@ -1,30 +1,6 @@
-/* *************************************************************************
- 
- IT Mill Toolkit 
-
- Development of Browser User Interfaces Made Easy
-
- Copyright (C) 2000-2006 IT Mill Ltd
- 
- *************************************************************************
-
- This product is distributed under commercial license that can be found
- from the product package on license.pdf. Use of this product might 
- require purchasing a commercial license from IT Mill Ltd. For guidelines 
- on usage, see licensing-guidelines.html
-
- *************************************************************************
- 
- For more information, contact:
- 
- IT Mill Ltd                           phone: +358 2 4802 7180
- Ruukinkatu 2-4                        fax:   +358 2 4802 7181
- 20540, Turku                          email:  info@itmill.com
- Finland                               company www: www.itmill.com
- 
- Primary source for information and releases: www.itmill.com
-
- ********************************************************************** */
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
 
 package com.itmill.toolkit.tests.featurebrowser;
 
@@ -65,19 +41,19 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
 
     private Select addComponent;
 
-    private OrderedLayout formsLayout = new OrderedLayout();
+    private final OrderedLayout formsLayout = new OrderedLayout();
 
-    private LinkedList forms = new LinkedList();
+    private final LinkedList forms = new LinkedList();
 
-    private Button setButton = new Button("Set", this);
+    private final Button setButton = new Button("Set", this);
 
-    private Button discardButton = new Button("Discard changes", this);
+    private final Button discardButton = new Button("Discard changes", this);
 
-    private Table allProperties = new Table();
+    private final Table allProperties = new Table();
 
-    private Object objectToConfigure;
+    private final Object objectToConfigure;
 
-    private BeanItem config;
+    private final BeanItem config;
 
     protected static final int COLUMNS = 3;
 
@@ -100,7 +76,7 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
         config = new BeanItem(objectToConfigure);
 
         // Control buttons
-        OrderedLayout buttons = new OrderedLayout(
+        final OrderedLayout buttons = new OrderedLayout(
                 OrderedLayout.ORIENTATION_HORIZONTAL);
         buttons.setMargin(false, true, true, true);
         buttons.addComponent(setButton);
@@ -141,7 +117,7 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
     public void addProperties(String propertySetCaption, Form properties) {
 
         // Create new panel containing the form
-        Panel p = new Panel();
+        final Panel p = new Panel();
         p.setCaption(propertySetCaption);
         p.setStyle("light");
         p.addComponent(properties);
@@ -166,8 +142,8 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
         allProperties.removeAllItems();
 
         // Collect demoed properties
-        HashSet listed = new HashSet();
-        for (Iterator i = forms.iterator(); i.hasNext();) {
+        final HashSet listed = new HashSet();
+        for (final Iterator i = forms.iterator(); i.hasNext();) {
             listed.addAll(((Form) i.next()).getItemPropertyIds());
         }
 
@@ -175,10 +151,10 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
         BeanInfo info;
         try {
             info = Introspector.getBeanInfo(objectToConfigure.getClass());
-        } catch (IntrospectionException e) {
+        } catch (final IntrospectionException e) {
             throw new RuntimeException(e.toString());
         }
-        PropertyDescriptor[] pd = info.getPropertyDescriptors();
+        final PropertyDescriptor[] pd = info.getPropertyDescriptors();
 
         // Fill the table
         for (int i = 0; i < pd.length; i++) {
@@ -193,9 +169,9 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
     private void addBasicComponentProperties() {
 
         // Set of properties
-        Form set = createBeanPropertySet(new String[] { "caption", "icon",
-                "componentError", "description", "enabled", "visible", "style",
-                "readOnly", "immediate" });
+        final Form set = createBeanPropertySet(new String[] { "caption",
+                "icon", "componentError", "description", "enabled", "visible",
+                "style", "readOnly", "immediate" });
 
         // Icon
         set.replaceWithSelect("icon", new Object[] { null,
@@ -206,7 +182,7 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
         Throwable sampleException;
         try {
             throw new NullPointerException("sample exception");
-        } catch (NullPointerException e) {
+        } catch (final NullPointerException e) {
             sampleException = e;
         }
         set
@@ -228,7 +204,8 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
                                 "Sample Formatted error", "Sample System Error" });
 
         // Style
-        String currentStyle = ((Component) objectToConfigure).getStyleName();
+        final String currentStyle = ((Component) objectToConfigure)
+                .getStyleName();
         if (currentStyle == null) {
             set.replaceWithSelect("style", new Object[] { null },
                     new Object[] { "Default" }).setNewItemsAllowed(true);
@@ -312,8 +289,8 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
 
     /** Add properties for selecting */
     private void addSelectProperties() {
-        Form set = createBeanPropertySet(new String[] { "newItemsAllowed",
-                "lazyLoading", "multiSelect" });
+        final Form set = createBeanPropertySet(new String[] {
+                "newItemsAllowed", "lazyLoading", "multiSelect" });
         addProperties("Select Properties", set);
 
         set.getField("multiSelect").setDescription(
@@ -344,7 +321,7 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
     private void addFieldProperties() {
         // TODO bug #211 states that setFocus works only for Button and
         // Textfield UI components
-        Form set = new Form(new GridLayout(COLUMNS, 1));
+        final Form set = new Form(new GridLayout(COLUMNS, 1));
         set.addField("focus", new Button("Focus", objectToConfigure, "focus"));
         set.getField("focus").setDescription(
                 "Focus the cursor to this field. Not all "
@@ -357,7 +334,7 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
      * container
      */
     private void addComponentContainerProperties() {
-        Form set = new Form(new OrderedLayout(
+        final Form set = new Form(new OrderedLayout(
                 OrderedLayout.ORIENTATION_VERTICAL));
 
         addComponent = new Select();
@@ -385,13 +362,13 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
                     "valueChange "
                             + ((AbstractComponent) event.getProperty())
                                     .getTag() + ", " + event.getProperty());
-        } catch (Exception e) {
+        } catch (final Exception e) {
             // ignored, should never happen
         }
 
         // Adding components to component container
         if (event.getProperty() == addComponent) {
-            String value = (String) addComponent.getValue();
+            final String value = (String) addComponent.getValue();
 
             if (value != null) {
                 // TextField component
@@ -402,7 +379,7 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
 
                 // DateField time style
                 if (value.equals("Time")) {
-                    DateField d = new DateField("Time", new Date());
+                    final DateField d = new DateField("Time", new Date());
                     d
                             .setDescription("This is a DateField-component with text-style");
                     d.setResolution(DateField.RESOLUTION_MIN);
@@ -413,7 +390,7 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
 
                 // Date field calendar style
                 if (value.equals("Calendar")) {
-                    DateField c = new DateField("Calendar", new Date());
+                    final DateField c = new DateField("Calendar", new Date());
                     c
                             .setDescription("DateField-component with calendar-style and day-resolution");
                     c.setStyle("calendar");
@@ -424,7 +401,7 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
 
                 // Select option group style
                 if (value.equals("Option group")) {
-                    Select s = new Select("Options");
+                    final Select s = new Select("Options");
                     s.setDescription("Select-component with optiongroup-style");
                     s.addItem("Linux");
                     s.addItem("Windows");
@@ -439,10 +416,10 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
                 addComponent.setValue(null);
             }
         } else if (event.getProperty() == getField("lazyLoading")) {
-            boolean newValue = ((Boolean) event.getProperty().getValue())
+            final boolean newValue = ((Boolean) event.getProperty().getValue())
                     .booleanValue();
-            Field multiselect = getField("multiSelect");
-            Field newitems = getField("newItemsAllowed");
+            final Field multiselect = getField("multiSelect");
+            final Field newitems = getField("newItemsAllowed");
             if (newValue) {
                 newitems.setValue(Boolean.FALSE);
                 newitems.setVisible(false);
@@ -463,7 +440,7 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
                     "buttonClick " + event.getButton().getTag() + ", "
                             + event.getButton().getCaption() + ", "
                             + event.getButton().getValue());
-        } catch (Exception e) {
+        } catch (final Exception e) {
             // ignored, should never happen
         }
         // Commit all changed on all forms
@@ -473,7 +450,7 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
 
         // Discard all changed on all forms
         if (event.getButton() == discardButton) {
-            for (Iterator i = forms.iterator(); i.hasNext();) {
+            for (final Iterator i = forms.iterator(); i.hasNext();) {
                 ((Form) i.next()).discard();
             }
         }
@@ -485,14 +462,14 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
      */
     protected Form createBeanPropertySet(String names[]) {
 
-        Form set = new Form(new OrderedLayout(
+        final Form set = new Form(new OrderedLayout(
                 OrderedLayout.ORIENTATION_VERTICAL));
 
         for (int i = 0; i < names.length; i++) {
-            Property p = config.getItemProperty(names[i]);
+            final Property p = config.getItemProperty(names[i]);
             if (p != null) {
                 set.addItemProperty(names[i], p);
-                Field f = set.getField(names[i]);
+                final Field f = set.getField(names[i]);
                 if (f instanceof TextField) {
                     if (Integer.class.equals(p.getType())) {
                         ((TextField) f).setColumns(4);
@@ -509,9 +486,9 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
 
     /** Find a field from all forms */
     public Field getField(Object propertyId) {
-        for (Iterator i = forms.iterator(); i.hasNext();) {
-            Form f = (Form) i.next();
-            Field af = f.getField(propertyId);
+        for (final Iterator i = forms.iterator(); i.hasNext();) {
+            final Form f = (Form) i.next();
+            final Field af = f.getField(propertyId);
             if (af != null) {
                 return af;
             }
@@ -524,7 +501,7 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
     }
 
     protected void commit() {
-        for (Iterator i = forms.iterator(); i.hasNext();) {
+        for (final Iterator i = forms.iterator(); i.hasNext();) {
             ((Form) i.next()).commit();
         }
     }
