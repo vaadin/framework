@@ -196,7 +196,7 @@
 			<tarfileset prefix="${product-file}-${package-platform}-${version}" dir="${result-path}/${product-file}-${version}">
 				<patternset>
 					<include name="**/*" />
-				</patternset>
+				</patternset>doc/manual/index.html
 			</tarfileset>
 			<tarfileset prefix="${product-file}-${package-platform}-${version}/gwt" dir="${gwt-dir}/${package-platform}">
 				<patternset>
@@ -530,7 +530,9 @@
 		<copy todir="${output-dir}/WebContent">
 			<fileset dir="WebContent">
 				<exclude name="**/.svn" />
+				<exclude name="ITMILL/themes/tests*/**/*" />
 				<include name="demo/**/*" />
+				<include name="ITMILL/themes/**/*" />
 				<include name="META-INF/**/*" />
 			</fileset>
 		</copy>
