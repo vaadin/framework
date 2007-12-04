@@ -12,6 +12,7 @@
 	text-align: left;
 	text-decoration: underline;
 	background: none;
+	padding-left: 0px;
 }
 .i-button-link span {
 	text-decoration: underline;
