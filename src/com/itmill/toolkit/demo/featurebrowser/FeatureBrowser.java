@@ -72,7 +72,7 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
             // Wrangling data: Table
             { "Wrangling data", "Table",
                     "A dynamic Table with bells, whistles and actions",
-                    Button.class },
+                    TableExample.class },
             // Wrangling data: Tree
             { "Wrangling data", "Tree", "A hierarchy of things",
                     TreeExample.class },
