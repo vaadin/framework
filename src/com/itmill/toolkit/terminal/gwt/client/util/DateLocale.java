@@ -1,7 +1,3 @@
-/* 
-@ITMillApache2LicenseForJavaFiles@
- */
-
 package com.itmill.toolkit.terminal.gwt.client.util;
 
 import java.util.Arrays;
