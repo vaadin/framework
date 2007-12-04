@@ -51,7 +51,7 @@ public class TableExample extends CustomComponent implements Action.Handler,
         setCompositionRoot(main);
 
         // "source" table with bells & whistlesenabled
-        source = new Table("Also try the row context-menu");
+        source = new Table("All creatures");
         source.setPageLength(7);
         source.setWidth(550);
         source.setColumnCollapsingAllowed(true);
@@ -86,7 +86,7 @@ public class TableExample extends CustomComponent implements Action.Handler,
         horiz.addComponent(deselect);
 
         // "saved" table, minimalistic
-        saved = new Table();
+        saved = new Table("Saved creatures");
         saved.setPageLength(5);
         saved.setWidth(550);
         saved.setSelectable(false);
@@ -96,7 +96,7 @@ public class TableExample extends CustomComponent implements Action.Handler,
         saved.addActionHandler(this);
         main.addComponent(saved);
 
-        CheckBox b = new CheckBox("Editmode");
+        CheckBox b = new CheckBox("Modify saved creatures");
         b.addListener(new CheckBox.ClickListener() {
             public void buttonClick(ClickEvent event) {
                 saved.setEditable(((Boolean) event.getButton().getValue())
