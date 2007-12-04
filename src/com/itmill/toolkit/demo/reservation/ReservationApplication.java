@@ -47,8 +47,6 @@ public class ReservationApplication extends Application {
 
     private Table allTable;
 
-    private CalendarField allCalendar;
-
     private GoogleMap map;
 
     private Window popupWindow;
@@ -171,14 +169,13 @@ public class ReservationApplication extends Application {
             }
         });
 
-        Panel allLayout = new Panel(new OrderedLayout(
-                OrderedLayout.ORIENTATION_HORIZONTAL));
+        OrderedLayout allLayout = new OrderedLayout(
+                OrderedLayout.ORIENTATION_HORIZONTAL);
         allLayout.addStyleName(Panel.STYLE_LIGHT);
-        allLayout.getLayout().setMargin(true);
-        allCalendar = new CalendarField();
-        initCalendarFieldPropertyIds(allCalendar);
-        allLayout.addComponent(allCalendar);
+        allLayout.setMargin(true);
+
         allTable = new Table();
+        allTable.setHeight(300);
         allTable.setWidth(700);
         allTable.setColumnCollapsingAllowed(true);
         allTable.setColumnReorderingAllowed(true);
@@ -260,7 +257,6 @@ public class ReservationApplication extends Application {
             allTable.setColumnHeaders(new String[] { "From", "To", "Resource",
                     "Description", "Message" });
         }
-        allCalendar.setContainerDataSource(allReservations);
     }
 
     private void refreshSelectedResources() {
