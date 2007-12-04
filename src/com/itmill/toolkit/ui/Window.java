@@ -1189,12 +1189,16 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
         this.scrollLeft = scrollLeft;
     }
 
-    public void showNotification(String message) {
-        addNotification(new Notification(message));
+    public void showNotification(String caption) {
+        addNotification(new Notification(caption));
     }
 
-    public void showNotification(String message, int type) {
-        addNotification(new Notification(message, type));
+    public void showNotification(String caption, int type) {
+        addNotification(new Notification(caption, type));
+    }
+
+    public void showNotification(String caption, String message) {
+        addNotification(new Notification(caption, message));
     }
 
     public void showNotification(String caption, String message, int type) {
@@ -1237,12 +1241,16 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
         private int delayMsec = 0;
         private String styleName;
 
-        public Notification(String message) {
-            this(null, message, TYPE_HUMANIZED_MESSAGE);
+        public Notification(String caption) {
+            this(caption, null, TYPE_HUMANIZED_MESSAGE);
         }
 
-        public Notification(String message, int type) {
-            this(null, message, type);
+        public Notification(String caption, int type) {
+            this(caption, null, type);
+        }
+
+        public Notification(String caption, String message) {
+            this(caption, message, TYPE_HUMANIZED_MESSAGE);
         }
 
         public Notification(String caption, String message, int type) {
