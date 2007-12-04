@@ -66,6 +66,9 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
             // Getting started: Selects
             { "Getting started", "Choices, choices",
                     "Some variations of simple selects", SelectExample.class },
+            // Layouts
+            { "Getting started", "Layouts", "Laying out components",
+                    LayoutExample.class },
             // Wrangling data: ComboBox
             { "Wrangling data", "ComboBox", "ComboBox - the swiss army select",
                     ComboBoxExample.class },
@@ -236,13 +239,22 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
         exp.addComponent(ts);
         exp.expand(ts);
 
-        Label status = new Label("Copyright IT Mill 2007");
+        Label status = new Label(
+                "<a href=\"http://www.itmill.com/index_developers.htm\">Developer Area</a>"
+                        + " | <a href=\"http://www.itmill.com/developers_documentation.htm\">Documentation</a>");
+        status.setContentMode(Label.CONTENT_XHTML);
         exp.addComponent(status);
         exp.setComponentAlignment(status, ExpandLayout.ALIGNMENT_RIGHT,
                 ExpandLayout.ALIGNMENT_VERTICAL_CENTER);
 
         // select initial section ("All")
         tree.setValue(rootId);
+
+        getMainWindow()
+                .showNotification(
+                        "Welcome",
+                        "Choose an example to begin.<br/><br/>And remember to experiment!",
+                        Window.Notification.TYPE_TRAY_NOTIFICATION);
     }
 
     private void initItem(Item item, Object[] data) {
