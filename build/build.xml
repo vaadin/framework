@@ -526,12 +526,13 @@
 		<java2html srcdir="${output-dir}/WebContent/WEB-INF/src/${toolkit-package}/demo" destdir="${output-dir}/WebContent/doc/example-source/${toolkit-package}/demo" includes="**/*.java" style="eclipse" showLineNumbers="false" showFileName="true" showTableBorder="false" />
 
 		<!-- Add WebContent -->
-		<echo>Adding WebContent files, excluding ITMILL/widgetsets and few internal development libraries.</echo>
+		<echo>Adding ITMILL/themes, demo and hsqldb.jar files.</echo>
 		<copy todir="${output-dir}/WebContent">
 			<fileset dir="WebContent">
 				<exclude name="**/.svn" />
 				<exclude name="ITMILL/themes/tests*/**/*" />
 				<include name="demo/**/*" />
+				<include name="WEB-INF/lib/hsqldb.jar" />
 				<include name="ITMILL/themes/**/*" />
 				<include name="META-INF/**/*" />
 			</fileset>
