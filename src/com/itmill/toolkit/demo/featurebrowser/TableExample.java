@@ -35,19 +35,20 @@ public class TableExample extends CustomComponent implements Action.Handler,
     private static final Object PROPERTY_KIND = "Kind";
     private static final Object PROPERTY_HIRED = "Hired";
 
+    // "global" components
     Table source;
     Table saved;
-
     Button saveSelected;
     Button hireSelected;
     Button deleteSelected;
 
     public TableExample() {
-
+        // main layout
         OrderedLayout main = new OrderedLayout();
         main.setMargin(true);
         setCompositionRoot(main);
 
+        // "source" table with bells & whistlesenabled
         source = new Table("Also try the row context-menu");
         source.setPageLength(7);
         source.setWidth(550);
@@ -60,6 +61,7 @@ public class TableExample extends CustomComponent implements Action.Handler,
         source.addActionHandler(this);
         main.addComponent(source);
 
+        // x-selected button row
         OrderedLayout horiz = new OrderedLayout(
                 OrderedLayout.ORIENTATION_HORIZONTAL);
         horiz.setMargin(false, false, true, false);
@@ -77,6 +79,7 @@ public class TableExample extends CustomComponent implements Action.Handler,
         deleteSelected.addListener(this);
         horiz.addComponent(deleteSelected);
 
+        // "saved" table, minimalistic
         saved = new Table();
         saved.setPageLength(5);
         saved.setWidth(550);
@@ -88,6 +91,7 @@ public class TableExample extends CustomComponent implements Action.Handler,
         main.addComponent(saved);
     }
 
+    // set up the properties (columns)
     private void initProperties(Table table) {
         table.addContainerProperty(PROPERTY_SPECIES, String.class, "");
         table.addContainerProperty(PROPERTY_TYPE, String.class, "");
@@ -97,6 +101,7 @@ public class TableExample extends CustomComponent implements Action.Handler,
                         Boolean.FALSE);
     }
 
+    // fill the table with some random data
     private void fillTable(Table table) {
         initProperties(table);
 
@@ -117,9 +122,11 @@ public class TableExample extends CustomComponent implements Action.Handler,
 
     }
 
+    // Called for each item (row), returns valid actions for that item
     public Action[] getActions(Object target, Object sender) {
         if (sender == source) {
             Item item = source.getItem(target);
+            // save, delete, and hire if not already hired
             if (item != null
                     && item.getItemProperty(PROPERTY_HIRED).getValue() == Boolean.FALSE) {
                 return ACTIONS_HIRE;
@@ -127,14 +134,17 @@ public class TableExample extends CustomComponent implements Action.Handler,
                 return ACTIONS_NOHIRE;
             }
         } else {
+            // "saved" table only has one action
             return new Action[] { ACTION_DELETE };
         }
     }
 
+    // called when an action is invoked on an item (row)
     public void handleAction(Action action, Object sender, Object target) {
         if (sender == source) {
             Item item = source.getItem(target);
             if (action == ACTION_HIRE) {
+                // set HIRED property to true
                 item.getItemProperty(PROPERTY_HIRED).setValue(Boolean.TRUE);
                 source.requestRepaint();
                 if (saved.containsId(target)) {
@@ -142,13 +152,15 @@ public class TableExample extends CustomComponent implements Action.Handler,
                     item.getItemProperty(PROPERTY_HIRED).setValue(Boolean.TRUE);
                     saved.requestRepaint();
                 }
-
                 getWindow().showNotification("Hired", "" + item);
+
             } else if (action == ACTION_SAVE) {
                 if (saved.containsId(target)) {
+                    // let's not save twice
                     getWindow().showNotification("Already saved", "" + item);
                     return;
                 }
+                // "manual" copy of the item properties we want
                 Item added = saved.addItem(target);
                 Property p = added.getItemProperty(PROPERTY_SPECIES);
                 p.setValue(item.getItemProperty(PROPERTY_SPECIES).getValue());
@@ -164,6 +176,7 @@ public class TableExample extends CustomComponent implements Action.Handler,
                 getWindow().showNotification("Deleted ", "" + item);
                 source.removeItem(target);
             }
+
         } else {
             // sender==saved
             if (action == ACTION_DELETE) {
@@ -177,33 +190,32 @@ public class TableExample extends CustomComponent implements Action.Handler,
     public void buttonClick(ClickEvent event) {
         Button b = event.getButton();
         if (b == saveSelected) {
+            // loop each selected and copy to "saved" table
             Set selected = (Set) source.getValue();
-            if (selected != null) {
-                int s = 0;
-                for (Iterator it = selected.iterator(); it.hasNext();) {
-                    Object id = it.next();
-                    if (!saved.containsId(id)) {
-                        Item item = source.getItem(id);
-                        Item added = saved.addItem(id);
-                        Property p = added.getItemProperty(PROPERTY_SPECIES);
-                        p.setValue(item.getItemProperty(PROPERTY_SPECIES)
-                                .getValue());
-                        p = added.getItemProperty(PROPERTY_TYPE);
-                        p.setValue(item.getItemProperty(PROPERTY_TYPE)
-                                .getValue());
-                        p = added.getItemProperty(PROPERTY_KIND);
-                        p.setValue(item.getItemProperty(PROPERTY_KIND)
-                                .getValue());
-                        p = added.getItemProperty(PROPERTY_HIRED);
-                        p.setValue(item.getItemProperty(PROPERTY_HIRED)
-                                .getValue());
-                        s++;
-                    }
+            int s = 0;
+            for (Iterator it = selected.iterator(); it.hasNext();) {
+                Object id = it.next();
+                if (!saved.containsId(id)) {
+                    Item item = source.getItem(id);
+                    Item added = saved.addItem(id);
+                    // "manual" copy of the properties we want
+                    Property p = added.getItemProperty(PROPERTY_SPECIES);
+                    p.setValue(item.getItemProperty(PROPERTY_SPECIES)
+                            .getValue());
+                    p = added.getItemProperty(PROPERTY_TYPE);
+                    p.setValue(item.getItemProperty(PROPERTY_TYPE).getValue());
+                    p = added.getItemProperty(PROPERTY_KIND);
+                    p.setValue(item.getItemProperty(PROPERTY_KIND).getValue());
+                    p = added.getItemProperty(PROPERTY_HIRED);
+                    p.setValue(item.getItemProperty(PROPERTY_HIRED).getValue());
+                    s++;
                 }
-                getWindow().showNotification("Saved " + s);
-                saved.requestRepaint();
             }
+            getWindow().showNotification("Saved " + s);
+            saved.requestRepaint();
+
         } else if (b == hireSelected) {
+            // loop each selected and set property HIRED to true
             int s = 0;
             Set selected = (Set) source.getValue();
             for (Iterator it = selected.iterator(); it.hasNext();) {
@@ -216,6 +228,7 @@ public class TableExample extends CustomComponent implements Action.Handler,
                     s++;
                 }
                 if (saved.containsId(id)) {
+                    // also update "saved" table
                     item = saved.getItem(id);
                     item.getItemProperty(PROPERTY_HIRED).setValue(Boolean.TRUE);
                     saved.requestRepaint();
@@ -224,7 +237,7 @@ public class TableExample extends CustomComponent implements Action.Handler,
             getWindow().showNotification("Hired " + s);
 
         } else {
-            // delete selected
+            // loop trough selected and delete
             int s = 0;
             Set selected = (Set) source.getValue();
             for (Iterator it = selected.iterator(); it.hasNext();) {
