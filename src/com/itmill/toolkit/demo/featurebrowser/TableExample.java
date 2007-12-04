@@ -1,21 +1,24 @@
 package com.itmill.toolkit.demo.featurebrowser;
 
+import java.util.Iterator;
+import java.util.Set;
+
 import com.itmill.toolkit.data.Item;
 import com.itmill.toolkit.data.Property;
-import com.itmill.toolkit.data.Property.ValueChangeEvent;
 import com.itmill.toolkit.event.Action;
+import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.CustomComponent;
-import com.itmill.toolkit.ui.Field;
 import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Table;
+import com.itmill.toolkit.ui.Button.ClickEvent;
 
 /**
  * Table example.
  * 
  * @author IT Mill Ltd.
  */
-public class TableExample extends CustomComponent implements
-        Field.ValueChangeListener, Action.Handler {
+public class TableExample extends CustomComponent implements Action.Handler,
+        Button.ClickListener {
 
     // Actions
     private static final Action ACTION_SAVE = new Action("Save");
@@ -35,30 +38,48 @@ public class TableExample extends CustomComponent implements
     Table source;
     Table saved;
 
+    Button saveSelected;
+    Button hireSelected;
+    Button deleteSelected;
+
     public TableExample() {
 
         OrderedLayout main = new OrderedLayout();
         main.setMargin(true);
         setCompositionRoot(main);
 
-        source = new Table("The source");
+        source = new Table("Also try the row context-menu");
         source.setPageLength(7);
-        source.setWidth(100);
-        source.setWidthUnits(Table.UNITS_PERCENTAGE);
+        source.setWidth(550);
         source.setColumnCollapsingAllowed(true);
         source.setColumnReorderingAllowed(true);
         source.setSelectable(true);
         source.setMultiSelect(true);
-        source.setImmediate(true);
         source.setRowHeaderMode(Table.ROW_HEADER_MODE_ID);
         fillTable(source);
         source.addActionHandler(this);
         main.addComponent(source);
 
-        saved = new Table("Saved");
-        saved.setPageLength(4);
-        saved.setWidth(100);
-        saved.setWidthUnits(Table.UNITS_PERCENTAGE);
+        OrderedLayout horiz = new OrderedLayout(
+                OrderedLayout.ORIENTATION_HORIZONTAL);
+        horiz.setMargin(false, false, true, false);
+        main.addComponent(horiz);
+        saveSelected = new Button("Save selected");
+        saveSelected.setStyleName(Button.STYLE_LINK);
+        saveSelected.addListener(this);
+        horiz.addComponent(saveSelected);
+        hireSelected = new Button("Hire selected");
+        hireSelected.setStyleName(Button.STYLE_LINK);
+        hireSelected.addListener(this);
+        horiz.addComponent(hireSelected);
+        deleteSelected = new Button("Delete selected");
+        deleteSelected.setStyleName(Button.STYLE_LINK);
+        deleteSelected.addListener(this);
+        horiz.addComponent(deleteSelected);
+
+        saved = new Table();
+        saved.setPageLength(5);
+        saved.setWidth(550);
         saved.setSelectable(false);
         saved.setColumnHeaderMode(Table.COLUMN_HEADER_MODE_HIDDEN);
         saved.setRowHeaderMode(Table.ROW_HEADER_MODE_ID);
@@ -153,8 +174,69 @@ public class TableExample extends CustomComponent implements
         }
     }
 
-    public void valueChange(ValueChangeEvent event) {
-        // TODO Auto-generated method stub
+    public void buttonClick(ClickEvent event) {
+        Button b = event.getButton();
+        if (b == saveSelected) {
+            Set selected = (Set) source.getValue();
+            if (selected != null) {
+                int s = 0;
+                for (Iterator it = selected.iterator(); it.hasNext();) {
+                    Object id = it.next();
+                    if (!saved.containsId(id)) {
+                        Item item = source.getItem(id);
+                        Item added = saved.addItem(id);
+                        Property p = added.getItemProperty(PROPERTY_SPECIES);
+                        p.setValue(item.getItemProperty(PROPERTY_SPECIES)
+                                .getValue());
+                        p = added.getItemProperty(PROPERTY_TYPE);
+                        p.setValue(item.getItemProperty(PROPERTY_TYPE)
+                                .getValue());
+                        p = added.getItemProperty(PROPERTY_KIND);
+                        p.setValue(item.getItemProperty(PROPERTY_KIND)
+                                .getValue());
+                        p = added.getItemProperty(PROPERTY_HIRED);
+                        p.setValue(item.getItemProperty(PROPERTY_HIRED)
+                                .getValue());
+                        s++;
+                    }
+                }
+                getWindow().showNotification("Saved " + s);
+                saved.requestRepaint();
+            }
+        } else if (b == hireSelected) {
+            int s = 0;
+            Set selected = (Set) source.getValue();
+            for (Iterator it = selected.iterator(); it.hasNext();) {
+                Object id = it.next();
+                Item item = source.getItem(id);
+                Property p = item.getItemProperty(PROPERTY_HIRED);
+                if (p.getValue() == Boolean.FALSE) {
+                    p.setValue(Boolean.TRUE);
+                    source.requestRepaint();
+                    s++;
+                }
+                if (saved.containsId(id)) {
+                    item = saved.getItem(id);
+                    item.getItemProperty(PROPERTY_HIRED).setValue(Boolean.TRUE);
+                    saved.requestRepaint();
+                }
+            }
+            getWindow().showNotification("Hired " + s);
+
+        } else {
+            // delete selected
+            int s = 0;
+            Set selected = (Set) source.getValue();
+            for (Iterator it = selected.iterator(); it.hasNext();) {
+                Object id = it.next();
+                if (source.containsId(id)) {
+                    s++;
+                    source.removeItem(id);
+                    source.requestRepaint();
+                }
+            }
+            getWindow().showNotification("Deleted " + s);
+        }
 
     }
 
