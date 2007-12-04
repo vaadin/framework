@@ -5,11 +5,11 @@ import com.itmill.toolkit.ui.CustomComponent;
 import com.itmill.toolkit.ui.DateField;
 import com.itmill.toolkit.ui.Field;
 import com.itmill.toolkit.ui.InlineDateField;
-import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Panel;
 import com.itmill.toolkit.ui.Slider;
 import com.itmill.toolkit.ui.TextField;
+import com.itmill.toolkit.ui.Window.Notification;
 
 /**
  * Shows some basic fields for value input; TextField, DateField, Slider...
@@ -18,13 +18,19 @@ import com.itmill.toolkit.ui.TextField;
  */
 public class ValueInputExample extends CustomComponent {
 
-    // used to show the last entered value in the textfields
-    Label textfieldValue;
-
     public ValueInputExample() {
         OrderedLayout main = new OrderedLayout();
         main.setMargin(true);
         setCompositionRoot(main);
+
+        // listener that shows a value change notification
+        Field.ValueChangeListener listener = new Field.ValueChangeListener() {
+            public void valueChange(ValueChangeEvent event) {
+                getWindow().showNotification("Received",
+                        "<pre>" + event.getProperty().getValue() + "</pre>",
+                        Notification.TYPE_WARNING_MESSAGE);
+            }
+        };
 
         // TextField
         OrderedLayout horiz = new OrderedLayout(
@@ -33,19 +39,9 @@ public class ValueInputExample extends CustomComponent {
         Panel left = new Panel("TextField");
         left.setStyleName(Panel.STYLE_LIGHT);
         horiz.addComponent(left);
-        Panel right = new Panel("Last input");
+        Panel right = new Panel("multiline");
         right.setStyleName(Panel.STYLE_LIGHT);
         horiz.addComponent(right);
-        // "last entered" -label
-        textfieldValue = new Label();
-        textfieldValue.setContentMode(Label.CONTENT_PREFORMATTED);
-        right.addComponent(textfieldValue);
-        // listener that will update the last entered value for the TextFields
-        Field.ValueChangeListener listener = new Field.ValueChangeListener() {
-            public void valueChange(ValueChangeEvent event) {
-                textfieldValue.setValue(event.getProperty().getValue());
-            }
-        };
         // basic TextField
         TextField tf = new TextField("Basic");
         tf.setColumns(15);
@@ -58,7 +54,7 @@ public class ValueInputExample extends CustomComponent {
         tf.setRows(5);
         tf.setImmediate(true);
         tf.addListener(listener);
-        left.addComponent(tf);
+        right.addComponent(tf);
 
         // DateFields
         horiz = new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
@@ -66,26 +62,37 @@ public class ValueInputExample extends CustomComponent {
         left = new Panel("DateField");
         left.setStyleName(Panel.STYLE_LIGHT);
         horiz.addComponent(left);
-        right = new Panel("Inline ");
+        right = new Panel("inline");
         right.setStyleName(Panel.STYLE_LIGHT);
         horiz.addComponent(right);
         // default
-        DateField df = new DateField("Default (day) resolution");
+        DateField df = new DateField("Day resolution");
+        df.addListener(listener);
+        df.setImmediate(true);
+        df.setResolution(DateField.RESOLUTION_DAY);
         left.addComponent(df);
         // minute
         df = new DateField("Minute resolution");
+        df.addListener(listener);
+        df.setImmediate(true);
         df.setResolution(DateField.RESOLUTION_MIN);
         left.addComponent(df);
         // year
         df = new DateField("Year resolution");
+        df.addListener(listener);
+        df.setImmediate(true);
         df.setResolution(DateField.RESOLUTION_YEAR);
         left.addComponent(df);
         // msec
         df = new DateField("Millisecond resolution");
+        df.addListener(listener);
+        df.setImmediate(true);
         df.setResolution(DateField.RESOLUTION_MSEC);
         left.addComponent(df);
         // Inline
         df = new InlineDateField();
+        df.addListener(listener);
+        df.setImmediate(true);
         right.addComponent(df);
 
         // Slider

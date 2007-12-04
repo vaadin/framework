@@ -1,9 +1,10 @@
 package com.itmill.toolkit.demo.featurebrowser;
 
+import com.itmill.toolkit.data.Property.ValueChangeEvent;
 import com.itmill.toolkit.ui.AbstractSelect;
 import com.itmill.toolkit.ui.ComboBox;
 import com.itmill.toolkit.ui.CustomComponent;
-import com.itmill.toolkit.ui.Label;
+import com.itmill.toolkit.ui.Field;
 import com.itmill.toolkit.ui.ListSelect;
 import com.itmill.toolkit.ui.NativeSelect;
 import com.itmill.toolkit.ui.OptionGroup;
@@ -18,8 +19,12 @@ import com.itmill.toolkit.ui.TwinColSelect;
  */
 public class SelectExample extends CustomComponent {
 
-    // used to show the last entered value in the textfields
-    Label selectedValue;
+    // listener that shows a value change notification
+    private Field.ValueChangeListener listener = new Field.ValueChangeListener() {
+        public void valueChange(ValueChangeEvent event) {
+            getWindow().showNotification("" + event.getProperty().getValue());
+        }
+    };
 
     public SelectExample() {
         OrderedLayout main = new OrderedLayout();
@@ -35,45 +40,57 @@ public class SelectExample extends CustomComponent {
         Panel multi = new Panel("Multi selects");
         multi.setStyleName(Panel.STYLE_LIGHT);
         horiz.addComponent(multi);
-        // "last selected" -label
-        selectedValue = new Label();
 
+        // radio button group
         AbstractSelect sel = new OptionGroup("OptionGroup");
         initSelect(sel);
         single.addComponent(sel);
-
+        // checkbox group
         sel = new OptionGroup("OptionGroup");
-        sel.setMultiSelect(true);
+        sel.setMultiSelect(true); // TODO: throws if set after listener - why?
         initSelect(sel);
         multi.addComponent(sel);
-
+        // single-select list
         sel = new ListSelect("ListSelect");
+        ((ListSelect) sel).setColumns(15);
         initSelect(sel);
         single.addComponent(sel);
-
+        // multi-select list
         sel = new ListSelect("ListSelect");
+        ((ListSelect) sel).setColumns(15);
         sel.setMultiSelect(true);
         initSelect(sel);
         multi.addComponent(sel);
-
+        // native-style dropdows
         sel = new NativeSelect("NativeSelect");
+        ((NativeSelect) sel).setColumns(15);
         initSelect(sel);
         single.addComponent(sel);
-
+        // combobox
         sel = new ComboBox("ComboBox");
+        ((ComboBox) sel).setColumns(15);
         initSelect(sel);
         single.addComponent(sel);
-
+        // "twin column" select
         sel = new TwinColSelect("TwinColSelect");
+        ((TwinColSelect) sel).setColumns(15);
         initSelect(sel);
         multi.addComponent(sel);
     }
 
-    private static void initSelect(AbstractSelect sel) {
+    /*
+     * Initialize select with some values, make immediate and add listener.
+     */
+    private void initSelect(AbstractSelect sel) {
         for (int i = 1; i <= 5; i++) {
             sel.addItem("Item " + i);
         }
-        sel.setValue(null);
+        // select one item
+        sel.select("Item 1");
+
+        // make immediate, add listener
+        sel.setImmediate(true);
+        sel.addListener(listener);
     }
 
 }

@@ -88,9 +88,9 @@ public class WindowingExample extends CustomComponent {
                     public void buttonClick(ClickEvent event) {
                         Window w = new Window("Subwindow");
                         getApplication().addWindow(w);
-                        Label l = new Label(w.getName());
-                        l
-                                .setCaption("Each opened window has a separate value:");
+                        Label l = new Label("Each opened window has its own"
+                                + " name, and is accessed trough its own uri.");
+                        l.setCaption("Window " + w.getName());
                         w.addComponent(l);
                         getApplication().getMainWindow().open(
                                 new ExternalResource(w.getURL()), "_new");

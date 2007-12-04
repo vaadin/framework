@@ -24,7 +24,7 @@ public class EmbeddedBrowserExample extends ExpandLayout implements
 
     public EmbeddedBrowserExample() {
         this(new String[] { DEFAULT_URL,
-                "http:// www.itmill.com/index_developers.htm",
+                "http://www.itmill.com/index_developers.htm",
                 "http://toolkit.itmill.com/demo/doc/api/",
                 "http://www.itmill.com/manual/index.html" });
     }

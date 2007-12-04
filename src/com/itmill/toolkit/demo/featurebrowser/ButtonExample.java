@@ -19,8 +19,6 @@ import com.itmill.toolkit.ui.Button.ClickEvent;
 public class ButtonExample extends CustomComponent implements
         Button.ClickListener {
 
-    Panel status;
-
     public ButtonExample() {
 
         OrderedLayout main = new OrderedLayout();
@@ -33,12 +31,10 @@ public class ButtonExample extends CustomComponent implements
         Panel basic = new Panel("Basic buttons");
         basic.setStyleName(Panel.STYLE_LIGHT);
         horiz.addComponent(basic);
-        Panel bells = new Panel("+ bells & whistles");
+
+        Panel bells = new Panel("w/ bells & whistles");
         bells.setStyleName(Panel.STYLE_LIGHT);
         horiz.addComponent(bells);
-        status = new Panel("Clicked");
-        status.setStyleName(Panel.STYLE_LIGHT);
-        horiz.addComponent(status);
 
         Button b = new Button("Basic button");
         b.addListener(this);
@@ -127,16 +123,11 @@ public class ButtonExample extends CustomComponent implements
     }
 
     public void buttonClick(ClickEvent event) {
-        Button clicked = event.getButton();
-        String caption = clicked.getCaption();
-        if (caption == null) {
-            caption = "&lt;icon&gt;";
-        }
-        status.removeAllComponents();
-        Label l = new Label("Clicked: " + caption + "<br/>" + "Value: "
-                + clicked.getValue());
-        l.setContentMode(Label.CONTENT_XHTML);
-        status.addComponent(l);
+        Button b = event.getButton();
+        getWindow().showNotification(
+                "Clicked"
+                        + (b instanceof CheckBox ? ", value: "
+                                + event.getButton().getValue() : ""));
 
     }
 

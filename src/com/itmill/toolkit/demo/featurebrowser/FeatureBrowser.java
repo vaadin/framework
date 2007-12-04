@@ -33,18 +33,22 @@ import com.itmill.toolkit.ui.Button.ClickEvent;
 public class FeatureBrowser extends com.itmill.toolkit.Application implements
         Select.ValueChangeListener {
 
+    // Property IDs
     private static final Object PROPERTY_ID_CATEGORY = "Category";
     private static final Object PROPERTY_ID_NAME = "Name";
     private static final Object PROPERTY_ID_DESC = "Description";
     private static final Object PROPERTY_ID_CLASS = "Class";
     private static final Object PROPERTY_ID_VIEWED = "Viewed";
 
+    // Global components
     private Tree tree;
     private Table table;
     private TabSheet ts;
 
-    private HashMap components = new HashMap();
+    // Example "cache"
+    private HashMap exampleInstances = new HashMap();
 
+    // List of examples
     private static final Object[][] demos = new Object[][] {
     // Category, Name, Desc, Class, Viewed
             // Getting started: Labels
@@ -52,7 +56,7 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
                     LabelExample.class },
             // Getting started: Buttons
             { "Getting started", "Buttons and links",
-                    "Some variations of Buttons and Links", ButtonExample.class },
+                    "Various Buttons and Links", ButtonExample.class },
             // Getting started: Fields
             { "Getting started", "Basic value input",
                     "TextFields, DateFields, and such", ValueInputExample.class },
@@ -67,19 +71,20 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
                     ComboBoxExample.class },
             // Wrangling data: Table
             { "Wrangling data", "Table",
-                    "A dynamic Table with bells and whistles", Button.class },
+                    "A dynamic Table with bells, whistles and actions",
+                    Button.class },
             // Wrangling data: Tree
-            { "Wrangling data", "Tree", "Some variations of Buttons and Links",
+            { "Wrangling data", "Tree", "A hierarchy of things",
                     TreeExample.class },
             // Misc: Notifications
             { "Misc", "Notifications", "Notifications can improve usability",
                     NotificationExample.class },
             // Misc: Caching
-            { "Misc", "Client caching", "A simple demo of client-side caching",
+            { "Misc", "Client caching", "Demonstrating of client-side caching",
                     ClientCachingExample.class },
             // Misc: Embedded
             { "Misc", "Embedding",
-                    "You can embed resources - another site in this case",
+                    "Embedding resources - another site in this case",
                     EmbeddedBrowserExample.class },
             // Windowing
             { "Misc", "Windowing", "About windowing", WindowingExample.class },
@@ -164,62 +169,62 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
         ExpandLayout exp = new ExpandLayout();
         exp.setMargin(true);
         split2.addComponent(exp);
+
         OrderedLayout wbLayout = new OrderedLayout(
                 OrderedLayout.ORIENTATION_HORIZONTAL);
-
-        wbLayout.addComponent(new Button("Open in popup window",
-                new Button.ClickListener() {
-                    public void buttonClick(ClickEvent event) {
-                        Component component = (Component) ts
-                                .getComponentIterator().next();
-                        String caption = ts.getTabCaption(component);
-                        try {
-                            component = (Component) component.getClass()
-                                    .newInstance();
-                        } catch (Exception e) {
-                            // Could not create
-                            return;
-                        }
-                        Window w = new Window(caption);
-                        if (Layout.class.isAssignableFrom(component.getClass())) {
-                            w.setLayout((Layout) component);
-                        } else {
-                            w.getLayout().setSizeFull();
-                            w.addComponent(component);
-                        }
-                        getMainWindow().addWindow(w);
+        Button b = new Button("Open in sub-window", new Button.ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                Component component = (Component) ts.getComponentIterator()
+                        .next();
+                String caption = ts.getTabCaption(component);
+                try {
+                    component = (Component) component.getClass().newInstance();
+                } catch (Exception e) {
+                    // Could not create
+                    return;
+                }
+                Window w = new Window(caption);
+                w.setWidth(640);
+                if (Layout.class.isAssignableFrom(component.getClass())) {
+                    w.setLayout((Layout) component);
+                } else {
+                    w.getLayout().setSizeFull();
+                    w.addComponent(component);
+                }
+                getMainWindow().addWindow(w);
+            }
+        });
+        b.setStyleName(Button.STYLE_LINK);
+        wbLayout.addComponent(b);
+        b = new Button("Open in native window", new Button.ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                Component component = (Component) ts.getComponentIterator()
+                        .next();
+                String caption = ts.getTabCaption(component);
+                Window w = getWindow(caption);
+                if (w == null) {
+                    try {
+                        component = (Component) component.getClass()
+                                .newInstance();
+                    } catch (Exception e) {
+                        // Could not create
+                        return;
                     }
-                }));
-        wbLayout.addComponent(new Button("Open in native window",
-                new Button.ClickListener() {
-                    public void buttonClick(ClickEvent event) {
-                        Component component = (Component) ts
-                                .getComponentIterator().next();
-                        String caption = ts.getTabCaption(component);
-                        Window w = getWindow(caption);
-                        if (w == null) {
-                            try {
-                                component = (Component) component.getClass()
-                                        .newInstance();
-                            } catch (Exception e) {
-                                // Could not create
-                                return;
-                            }
-                            w = new Window(caption);
-                            w.setName(caption);
-                            if (Layout.class.isAssignableFrom(component
-                                    .getClass())) {
-                                w.setLayout((Layout) component);
-                            } else {
-                                w.getLayout().setSizeFull();
-                                w.addComponent(component);
-                            }
-                            addWindow(w);
-                        }
-                        getMainWindow().open(new ExternalResource(w.getURL()),
-                                caption);
+                    w = new Window(caption);
+                    w.setName(caption);
+                    if (Layout.class.isAssignableFrom(component.getClass())) {
+                        w.setLayout((Layout) component);
+                    } else {
+                        w.getLayout().setSizeFull();
+                        w.addComponent(component);
                     }
-                }));
+                    addWindow(w);
+                }
+                getMainWindow().open(new ExternalResource(w.getURL()), caption);
+            }
+        });
+        b.setStyleName(Button.STYLE_LINK);
+        wbLayout.addComponent(b);
 
         exp.addComponent(wbLayout);
         exp.setComponentAlignment(wbLayout, ExpandLayout.ALIGNMENT_RIGHT,
@@ -227,9 +232,7 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
 
         ts = new TabSheet();
         ts.setSizeFull();
-        ts.addTab(new Label(
-                "Choose demo (Only Notification and CliensSideCaching yet"),
-                "Demo", null);
+        ts.addTab(new Label(""), "Choose example", null);
         exp.addComponent(ts);
         exp.expand(ts);
 
@@ -323,15 +326,15 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
     }
 
     private Component getComponent(Class componentClass) {
-        if (!components.containsKey(componentClass)) {
+        if (!exampleInstances.containsKey(componentClass)) {
             try {
                 Component c = (Component) componentClass.newInstance();
-                components.put(componentClass, c);
+                exampleInstances.put(componentClass, c);
             } catch (Exception e) {
                 return null;
             }
         }
-        return (Component) components.get(componentClass);
+        return (Component) exampleInstances.get(componentClass);
     }
 
 }
