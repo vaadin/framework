@@ -33,11 +33,11 @@ Start IT Mill Toolkit
 COPYING
 - license file
 
+itmill-toolkit.war
+- deployable demo application for your application server
+
 WebContent/WEB-INF/lib/itmill-toolkit-<version></version>.jar
 - IT Mill Toolkit Library containing Java source and compiled files
-
-WebContent/demo/itmill-toolkit.war
-- deployable demo application for your application server
 
 WebContent/doc/manual.pdf
 - IT Mill Toolkit Reference Manual in PDF format
