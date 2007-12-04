@@ -65,6 +65,20 @@ public class ResourceSelectorPanel extends Panel implements
         }
     }
 
+    // Selects one initial categore, inpractice randomly
+    public void selectFirstCategory() {
+        try {
+            Object catId = categoryResources.keySet().iterator().next();
+            LinkedList res = (LinkedList) categoryResources.get(catId);
+            Layout l = (Layout) categoryLayouts.get(catId);
+            Button catB = (Button) l.getComponentIterator().next();
+            setSelectedResources(res);
+            catB.setStyleName("selected-link");
+        } catch (Exception e) {
+            e.printStackTrace(System.err);
+        }
+    }
+
     private void setSelectedResources(LinkedList resources) {
         selectedResources = resources;
         fireEvent(new SelectedResourcesChangedEvent());

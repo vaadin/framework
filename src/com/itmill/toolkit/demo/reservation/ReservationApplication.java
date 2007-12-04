@@ -187,6 +187,7 @@ public class ReservationApplication extends Application {
             }
         });
 
+        resourcePanel.selectFirstCategory();
         refreshReservations(true);
     }
 
