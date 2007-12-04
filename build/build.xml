@@ -455,16 +455,17 @@
 	<target name="build" depends="demo" description="Build package required files, without packing them.">
 	</target>
 
-
 	<!-- Copy and preprocess sources for packaging 
 	NOTE: Replaces <version></version> tags with build version tag for some "textual" files
 	-->
 	<target name="preprocess-src">
+		<loadfile property="ITMillApache2LicenseForJavaFiles" srcFile="build/ITMillApache2LicenseForJavaFiles.txt" />
 		<mkdir dir="${result-path}/src" />
 		<echo>Copying src directory and processing copied files.</echo>
 		<echo>Replacing &lt;version&gt; tag with build version for java/html/css/xml files.</echo>
 		<copy todir="${result-path}/src">
 			<filterset>
+				<filter token="ITMillApache2LicenseForJavaFiles" value="${ITMillApache2LicenseForJavaFiles}" />
 				<filter token="VERSION" value="${version}" />
 			</filterset>
 			<fileset dir="src">
@@ -537,7 +538,7 @@
 				<include name="META-INF/**/*" />
 			</fileset>
 		</copy>
-		
+
 		<!-- Add package specific WebContent files from build/package/WebContent -->
 		<copy todir="${output-dir}/WebContent">
 			<fileset dir="build/package/WebContent">
@@ -664,7 +665,7 @@
 				<include name="${toolkit-package}/launcher/**" />
 			</fileset>
 		</copy>
-		
+
 		<!--
 		<echo>Building WAR</echo>
 		<war warfile="${output-dir}/${product-file}.war">
