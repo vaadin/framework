@@ -29,7 +29,7 @@
 	<!-- 
 	Call one of package-* targets unless you understand what you are doing 
 	-->
-	<target name="package-all" depends="clean-all, init, build, docs, internal-package-mac, internal-package-mac_leopard, internal-package-windows, internal-package-linux" description="Build public packages for Windows, Linux and Mac platforms.">
+	<target name="package-all" depends="clean-all, init, build, docs, internal-package-mac, internal-package-mac_leopard, internal-package-windows, internal-package-linux, internal-package-war" description="Build public packages for Windows, Linux and Mac platforms.">
 	</target>
 
 	<target name="package-mac" depends="clean-all, init, build, docs, internal-package-mac" description="Create public tar.gz package for Mac.">
@@ -42,6 +42,9 @@
 	</target>
 
 	<target name="package-jar" depends="clean-all, init, build" description="Create itmill-toolkit-x.y.z.jar file.">
+	</target>
+
+	<target name="package-war" depends="clean-all, init, build, docs, internal-package-mac, internal-package-war">
 	</target>
 
 	<!-- internal tests for packaging -->
@@ -230,6 +233,19 @@
 		<!-- <antcall target="create-mac-diskimage" inheritAll="true" inheritRefs="true" /> -->
 	</target>
 
+	<target name="internal-package-war">
+		<echo>Building WAR</echo>
+		<war warfile="${output-dir}/${product-file}.war">
+			<fileset dir="${output-dir}/WebContent">
+				<include name="**/*" />
+			</fileset>
+			<lib dir="${output-dir}/WebContent/WEB-INF/lib">
+				<include name="${lib-jar-name}" />
+			</lib>
+		</war>
+	</target>
+
+
 	<target name="create-mac-diskimage">
 		<!-- create Mac disk image (dmg) also -->
 		<property name="mount.dir" value="${result-path}/mac-mounted-image" />
@@ -341,7 +357,8 @@
 				<exclude name="**/.svn" />
 				<include name="release-notes.html" />
 				<include name="*.html" />
-				<include name="license/licensing-guidelines.html" />
+				<include name="license/*.html" />
+				<include name="license/*.txt" />
 			</fileset>
 		</copy>
 		<copy file="build/package/${package-platform}-readme.txt" tofile="${output-dir}/readme.txt">
@@ -672,18 +689,6 @@
 				<include name="${toolkit-package}/launcher/**" />
 			</fileset>
 		</copy>
-
-		<!--
-		<echo>Building WAR</echo>
-		<war warfile="${output-dir}/${product-file}.war">
-			<fileset dir="${output-dir}/WebContent">
-				<include name="**/*" />
-			</fileset>
-			<lib dir="${output-dir}/WebContent/WEB-INF/lib">
-				<include name="${lib-jar-name}" />
-			</lib>
-		</war>
-		-->
 	</target>
 
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
