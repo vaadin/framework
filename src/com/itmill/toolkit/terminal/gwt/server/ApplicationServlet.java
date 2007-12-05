@@ -297,17 +297,17 @@ public class ApplicationServlet extends HttpServlet {
     protected void service(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
 
-        if (request.getPathInfo() != null) {
-            if (applicationRunnerMode
-                    && (request.getPathInfo().indexOf("/", 1) != -1)) {
-                final String resourceUrl = request.getPathInfo().substring(
-                        request.getPathInfo().indexOf('/', 1));
-                if (resourceUrl.startsWith("/ITMILL/")) {
-                    serveStaticResourcesInITMILL(resourceUrl, response);
-                    return;
-                }
-            } else if (request.getPathInfo().startsWith("/ITMILL/")) {
-                serveStaticResourcesInITMILL(request.getPathInfo(), response);
+        // check we should serve static files (widgetsets, themes)
+        if ((request.getPathInfo() != null)
+                && (request.getPathInfo().length() > 10)) {
+            if ((request.getContextPath() != null)
+                    && (request.getRequestURI().startsWith("/ITMILL/"))) {
+                serveStaticResourcesInITMILL(request.getRequestURI(), response);
+                return;
+            } else if (request.getRequestURI().startsWith(
+                    request.getContextPath() + "/ITMILL/")) {
+                serveStaticResourcesInITMILL(request.getRequestURI().substring(
+                        request.getContextPath().length()), response);
                 return;
             }
         }
@@ -345,25 +345,17 @@ public class ApplicationServlet extends HttpServlet {
             DownloadStream download = null;
 
             // Handles AJAX UIDL requests
-            final String resourceId = request.getPathInfo();
-            if (resourceId != null) {
+            if (request.getPathInfo() != null) {
+                String compare = AJAX_UIDL_URI;
                 if (applicationRunnerMode) {
-                    if (resourceId.indexOf("/", 1) != -1) {
-                        final String resourceUrl = resourceId
-                                .substring(resourceId.indexOf('/', 1));
-                        if (resourceId != null
-                                && (resourceUrl.startsWith(AJAX_UIDL_URI))) {
-                            getApplicationManager(application)
-                                    .handleUidlRequest(request, response);
-                            return;
-                        }
-                    }
-                } else {
-                    if (resourceId.startsWith(AJAX_UIDL_URI)) {
-                        getApplicationManager(application).handleUidlRequest(
-                                request, response);
-                        return;
-                    }
+                    final String[] URIparts = getApplicationRunnerURIs(request);
+                    final String applicationClassname = URIparts[4];
+                    compare = "/" + applicationClassname + AJAX_UIDL_URI;
+                }
+                if (request.getPathInfo().startsWith(compare)) {
+                    getApplicationManager(application).handleUidlRequest(
+                            request, response);
+                    return;
                 }
             }
 
@@ -448,6 +440,7 @@ public class ApplicationServlet extends HttpServlet {
      */
     private void serveStaticResourcesInITMILL(String filename,
             HttpServletResponse response) throws IOException {
+
         final ServletContext sc = getServletContext();
         InputStream is = sc.getResourceAsStream(filename);
         if (is == null) {
@@ -519,19 +512,16 @@ public class ApplicationServlet extends HttpServlet {
         // don't use server and port in uri. It may cause problems with some
         // virtual server configurations which lose the server name
         String appUrl = "";
-        String[] urlParts;
+        // widgetset is not application specific
+        String widgetsetUrl = "";
         if (applicationRunnerMode) {
-            String servletPath = request.getContextPath()
-                    + request.getServletPath();
-            if (request.getPathInfo().indexOf('/', 1) == -1) {
-                servletPath += request.getPathInfo();
-            } else {
-                servletPath += request.getPathInfo().substring(1,
-                        request.getPathInfo().indexOf('/', 1));
-            }
-            appUrl = servletPath;
+            final String[] URIparts = getApplicationRunnerURIs(request);
+            widgetsetUrl = URIparts[0];
+            appUrl = URIparts[1];
         } else {
-            urlParts = getApplicationUrl(request).toString().split("\\/");
+            final String[] urlParts = getApplicationUrl(request).toString()
+                    .split("\\/");
+            widgetsetUrl = "/" + urlParts[3];
             for (int i = 3; i < urlParts.length; i++) {
                 appUrl += "/" + urlParts[i];
             }
@@ -548,7 +538,7 @@ public class ApplicationServlet extends HttpServlet {
         }
 
         final String staticFilePath = getApplicationOrSystemProperty(
-                PARAMETER_ITMILL_RESOURCES, appUrl);
+                PARAMETER_ITMILL_RESOURCES, widgetsetUrl);
 
         // Default theme does not use theme URI
         String themeUri = null;
@@ -556,6 +546,7 @@ public class ApplicationServlet extends HttpServlet {
             // Using custom theme
             themeUri = staticFilePath + "/" + THEME_DIRECTORY_PATH + themeName;
         }
+
         page.write("', pathInfo: '" + pathInfo + "', themeUri: "
                 + (themeUri != null ? "'" + themeUri + "'" : "null") + "\n};\n"
                 + "</script>\n" + "<script language='javascript' src='"
@@ -800,9 +791,6 @@ public class ApplicationServlet extends HttpServlet {
                                             .getServerPort() == 80) ? "" : ":"
                                     + request.getServerPort())
                             + request.getRequestURI());
-            if (applicationRunnerMode) {
-                return reqURL;
-            }
             String servletPath = request.getContextPath()
                     + request.getServletPath();
             if (servletPath.length() == 0
@@ -817,6 +805,41 @@ public class ApplicationServlet extends HttpServlet {
         }
 
         return applicationUrl;
+    }
+
+    /**
+     * If request URL is e.g.
+     * http://localhost:8080/itmill/run/com.itmill.toolkit.demo.Calc then
+     * context=itmill Toolkit applicationRunner servlet=run launched Toolkit
+     * application=com.itmill.toolkit.demo.Calc
+     * 
+     * @param request
+     * @return string array containing widgetsetUri, applicationUri and context,
+     *         runner, applicationClassname separately
+     */
+    private String[] getApplicationRunnerURIs(HttpServletRequest request) {
+        final String[] urlParts = request.getRequestURI().toString().split(
+                "\\/");
+        String context = null;
+        String runner = null;
+        String applicationClassname = null;
+        if (urlParts[1].equals(request.getContextPath().replaceAll("\\/", ""))) {
+            // class name comes after web context and runner application
+            context = urlParts[1];
+            runner = urlParts[2];
+            applicationClassname = urlParts[3];
+            return new String[] { "/" + context,
+                    "/" + context + "/" + runner + "/" + applicationClassname,
+                    context, runner, applicationClassname };
+        } else {
+            // no context
+            context = "";
+            runner = urlParts[1];
+            applicationClassname = urlParts[2];
+            return new String[] { "/",
+                    "/" + runner + "/" + applicationClassname, context, runner,
+                    applicationClassname };
+        }
     }
 
     /**
@@ -853,19 +876,16 @@ public class ApplicationServlet extends HttpServlet {
         for (final Iterator i = applications.iterator(); i.hasNext();) {
             final Application a = (Application) i.next();
             final String aPath = a.getURL().getPath();
-            String servletPath = request.getContextPath()
-                    + request.getServletPath();
-            if (servletPath.length() < aPath.length()) {
-                servletPath += "/";
-            }
+            String servletPath = "";
             if (applicationRunnerMode) {
-                if (request.getPathInfo().indexOf('/', 1) == -1) {
-                    servletPath += request.getPathInfo();
-                } else {
-                    servletPath += request.getPathInfo().substring(1,
-                            request.getPathInfo().indexOf('/', 1));
+                final String[] URIparts = getApplicationRunnerURIs(request);
+                servletPath = URIparts[1];
+            } else {
+                servletPath = request.getContextPath()
+                        + request.getServletPath();
+                if (servletPath.length() < aPath.length()) {
+                    servletPath += "/";
                 }
-
             }
             if (servletPath.equals(aPath)) {
                 // Found a running application
@@ -882,18 +902,22 @@ public class ApplicationServlet extends HttpServlet {
         // Creates application, because a running one was not found
         final WebApplicationContext context = WebApplicationContext
                 .getApplicationContext(request.getSession());
-        final URL applicationUrl = getApplicationUrl(request);
+        final URL applicationUrl;
 
         if (applicationRunnerMode) {
-            final String applicationClassName = applicationUrl.getPath()
-                    .substring(applicationUrl.getPath().lastIndexOf('/') + 1);
+            final String[] URIparts = getApplicationRunnerURIs(request);
+            final String applicationClassname = URIparts[4];
+            applicationUrl = new URL(getApplicationUrl(request).toString()
+                    + applicationClassname);
             try {
-                applicationClass = classLoader.loadClass(applicationClassName);
+                applicationClass = classLoader.loadClass(applicationClassname);
             } catch (final ClassNotFoundException e) {
                 throw new InstantiationException(
                         "Failed to load application class: "
-                                + applicationClassName);
+                                + applicationClassname);
             }
+        } else {
+            applicationUrl = getApplicationUrl(request);
         }
 
         // Creates new application and start it
