@@ -211,7 +211,7 @@
 	<target name="internal-package-mac_leopard">
 		<var name="package-platform" value="mac" />
 		<echo>Creating package for ${package-platform}_leopard platform.</echo>
-		<var name="eclipse-launch-vmargs" value="-Xms256M -Xmx512M" />
+		<var name="eclipse-launch-vmargs" value="-XstartOnFirstThread -Xms256M -Xmx512M" />
 		<antcall target="add-platform-specific-files" inheritAll="true" inheritRefs="true" />
 		<var name="package-platform" value="mac_leopard" />
 		<tar destfile="${result-path}/${product-file}-${package-platform}-${version}.tar.gz" compression="gzip" longfile="gnu">
@@ -534,6 +534,10 @@
 		<copy todir="${output-dir}/WebContent">
 			<fileset dir="WebContent">
 				<exclude name="**/.svn" />
+				<!-- TODO check what is neccessary -->
+				<exclude name="ITMILL/themes/tests*" />
+				<exclude name="ITMILL/themes/tests-magi/**/*" />
+				<exclude name="ITMILL/themes/tests-featurebrowser/**/*" />
 				<exclude name="ITMILL/themes/tests*/**/*" />
 				<include name="demo/**/*" />
 				<include name="WEB-INF/lib/hsqldb.jar" />
