@@ -77,6 +77,7 @@ public class IPopupCalendar extends ITextualDate implements Paintable,
     public void onPopupClosed(PopupPanel sender, boolean autoClosed) {
         if (sender == popup) {
             buildDate();
+            open = false;
         }
     }
 
