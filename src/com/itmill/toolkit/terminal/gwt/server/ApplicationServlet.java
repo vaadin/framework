@@ -13,12 +13,11 @@ import java.lang.reflect.Constructor;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
-import java.util.Date;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
-import java.util.WeakHashMap;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -93,9 +92,7 @@ public class ApplicationServlet extends HttpServlet {
 
     private static final int MAX_BUFFER_SIZE = 64 * 1024;
 
-    private static WeakHashMap applicationToLastRequestDate = new WeakHashMap();
-
-    private static WeakHashMap applicationToAjaxAppMgrMap = new WeakHashMap();
+    protected static HashMap applicationToAjaxAppMgrMap = new HashMap();
 
     private static final String RESOURCE_URI = "/RES/";
 
@@ -297,7 +294,7 @@ public class ApplicationServlet extends HttpServlet {
     protected void service(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
 
-        // check we should serve static files (widgetsets, themes)
+        // check if we should serve static files (widgetsets, themes)
         if ((request.getPathInfo() != null)
                 && (request.getPathInfo().length() > 10)) {
             if ((request.getContextPath() != null)
@@ -331,11 +328,6 @@ public class ApplicationServlet extends HttpServlet {
 
             // Gets the application
             application = getApplication(request);
-
-            // Sets the last application request date
-            synchronized (applicationToLastRequestDate) {
-                applicationToLastRequestDate.put(application, new Date());
-            }
 
             // Invokes context transaction listeners
             ((WebApplicationContext) application.getContext())
@@ -422,7 +414,6 @@ public class ApplicationServlet extends HttpServlet {
             // Re-throw other exceptions
             throw new ServletException(e);
         } finally {
-
             // Notifies transaction end
             if (application != null) {
                 ((WebApplicationContext) application.getContext())
@@ -1142,13 +1133,12 @@ public class ApplicationServlet extends HttpServlet {
     }
 
     /**
-     * Gets AJAX application manager for an application.
+     * Gets communication manager for an application.
      * 
-     * If this application has not been running in ajax mode before, new manager
-     * is created and web adapter stops listening to changes.
+     * If this application has not been running before, new manager is created.
      * 
      * @param application
-     * @return AJAX Application Manager
+     * @return CommunicationManager
      */
     private CommunicationManager getApplicationManager(Application application) {
         CommunicationManager mgr = (CommunicationManager) applicationToAjaxAppMgrMap
@@ -1159,7 +1149,6 @@ public class ApplicationServlet extends HttpServlet {
             // Creates new manager
             mgr = new CommunicationManager(application, this);
             applicationToAjaxAppMgrMap.put(application, mgr);
-
             // Manager takes control over the application
             mgr.takeControl();
         }
