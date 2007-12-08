@@ -124,7 +124,6 @@ public class WebApplicationContext implements ApplicationContext,
      * @see com.itmill.toolkit.service.ApplicationContext#getApplications()
      */
     public Collection getApplications() {
-
         return Collections.unmodifiableCollection(applications);
     }
 
@@ -274,11 +273,11 @@ public class WebApplicationContext implements ApplicationContext,
     public void valueUnbound(HttpSessionBindingEvent event) {
         // If we are going to be unbound from the session, the session must be
         // closing
-
         while (!applications.isEmpty()) {
             final Application app = (Application) applications.iterator()
                     .next();
             app.close();
+            ApplicationServlet.applicationToAjaxAppMgrMap.remove(app);
             removeApplication(app);
         }
     }
