@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.net.SocketException;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -34,6 +35,8 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.catalina.connector.ClientAbortException;
 
 import com.itmill.toolkit.Application;
 import com.itmill.toolkit.Application.WindowAttachEvent;
@@ -106,7 +109,6 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
     public void takeControl() {
         application.addListener((Application.WindowAttachListener) this);
         application.addListener((Application.WindowDetachListener) this);
-
     }
 
     /**
@@ -426,7 +428,14 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 
             out.flush();
             out.close();
-
+        } catch (ClientAbortException e) {
+            // Most likely client browser closed socket
+            System.err
+                    .println("Warning: ClientAbortException in ApplicationServlet");
+        } catch (SocketException e) {
+            // Most likely client browser closed socket
+            System.err
+                    .println("Warning: SocketException in ApplicationServlet");
         } catch (final Throwable e) {
             e.printStackTrace();
             // Writes the error report to client
@@ -818,7 +827,6 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
     }
 
     public synchronized boolean hasPaintableId(Paintable paintable) {
-
         return paintableIdMap.containsKey(paintable);
     }
 
