@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.lang.reflect.Constructor;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -21,6 +22,7 @@ import java.util.Properties;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -51,22 +53,22 @@ public class ApplicationServlet extends HttpServlet {
     private static final long serialVersionUID = -4937882979845826574L;
 
     /**
-     * Version number of this release. For example "4.0.0".
+     * Version number of this release. For example "5.0.0".
      */
     public static final String VERSION;
 
     /**
-     * Major version number. For example 4 in 4.1.0.
+     * Major version number. For example 5 in 5.1.0.
      */
     public static final int VERSION_MAJOR;
 
     /**
-     * Minor version number. For example 1 in 4.1.0.
+     * Minor version number. For example 1 in 5.1.0.
      */
     public static final int VERSION_MINOR;
 
     /**
-     * Builds number. For example 0-beta1 in 4.0.0-beta1.
+     * Builds number. For example 0-custom_tag in 5.0.0-custom_tag.
      */
     public static final String VERSION_BUILD;
 
@@ -310,11 +312,19 @@ public class ApplicationServlet extends HttpServlet {
         }
 
         Application application = null;
+        boolean UIDLrequest = false;
         try {
 
             // handle file upload if multipart request
             if (ServletFileUpload.isMultipartContent(request)) {
-                application = getApplication(request);
+                application = getExistingApplication(request, response);
+                if (application == null) {
+                    throw new SessionExpired();
+                }
+                // Invokes context transaction listeners
+                // note: endTransaction is called on finalize below
+                ((WebApplicationContext) application.getContext())
+                        .startTransaction(application, request);
                 getApplicationManager(application).handleFileUpload(request,
                         response);
                 return;
@@ -326,16 +336,6 @@ public class ApplicationServlet extends HttpServlet {
             browser.updateBrowserProperties(request);
             // TODO Add screen height and width to the GWT client
 
-            // Gets the application
-            application = getApplication(request);
-
-            // Invokes context transaction listeners
-            ((WebApplicationContext) application.getContext())
-                    .startTransaction(application, request);
-
-            // Is this a download request from application
-            DownloadStream download = null;
-
             // Handles AJAX UIDL requests
             if (request.getPathInfo() != null) {
                 String compare = AJAX_UIDL_URI;
@@ -345,16 +345,55 @@ public class ApplicationServlet extends HttpServlet {
                     compare = "/" + applicationClassname + AJAX_UIDL_URI;
                 }
                 if (request.getPathInfo().startsWith(compare)) {
+                    UIDLrequest = true;
+                    application = getExistingApplication(request, response);
+                    if (application == null) {
+                        // No existing applications found
+                        final String repaintAll = request
+                                .getParameter("repaintAll");
+                        if ((repaintAll != null) && (repaintAll.equals("1"))) {
+                            // UIDL request contains valid repaintAll=1 event,
+                            // probably user wants to initiate new application
+                            // through custom index.html without writeAjaxPage
+                            application = getNewApplication(request, response);
+                        } else {
+                            // UIDL request refers to non-existing application
+                            throw new SessionExpired();
+                        }
+                    }
+                    // Invokes context transaction listeners
+                    // note: endTransaction is called on finalize below
+                    ((WebApplicationContext) application.getContext())
+                            .startTransaction(application, request);
                     getApplicationManager(application).handleUidlRequest(
                             request, response);
                     return;
                 }
             }
 
-            // Handles the URI if the application is still running
-            if (application.isRunning()) {
-                download = handleURI(application, request, response);
+            // Get existing application
+            application = getExistingApplication(request, response);
+            if (application == null) {
+                // Not found, creating new application
+                application = getNewApplication(request, response);
             }
+
+            // Invokes context transaction listeners
+            // note: endTransaction is called on finalize below
+            ((WebApplicationContext) application.getContext())
+                    .startTransaction(application, request);
+
+            // Removes application if it has stopped
+            if (!application.isRunning()) {
+                endApplication(request, response, application);
+                return;
+            }
+
+            // Is this a download request from application
+            DownloadStream download = null;
+
+            // Handles the URI if the application is still running
+            download = handleURI(application, request, response);
 
             // If this is not a download request
             if (download == null) {
@@ -368,15 +407,7 @@ public class ApplicationServlet extends HttpServlet {
 
                 // Finds the window within the application
                 Window window = null;
-                if (application.isRunning()) {
-                    window = getApplicationWindow(request, application);
-                }
-
-                // Removes application if it has stopped
-                if (!application.isRunning()) {
-                    endApplication(request, response, application);
-                    return;
-                }
+                window = getApplicationWindow(request, application);
 
                 // Sets terminal type for the window, if not already set
                 if (window.getTerminal() == null) {
@@ -408,11 +439,19 @@ public class ApplicationServlet extends HttpServlet {
                 handleDownload(download, request, response);
             }
 
+        } catch (final SessionExpired e) {
+            // Session has expired
+            criticalNotification(request, response, "Your session has expired.");
         } catch (final Throwable e) {
-            // Print stacktrace
             e.printStackTrace();
-            // Re-throw other exceptions
-            throw new ServletException(e);
+            // if this was an UIDL request, response UIDL back to client
+            if (UIDLrequest) {
+                criticalNotification(request, response,
+                        "Internal error. Please notify administrator.");
+            } else {
+                // Re-throw other exceptions
+                throw new ServletException(e);
+            }
         } finally {
             // Notifies transaction end
             if (application != null) {
@@ -467,6 +506,103 @@ public class ApplicationServlet extends HttpServlet {
     }
 
     /**
+     * Send notification to client's application. Used to notify client of
+     * critical errors and session expiration due to long inactivity. Server has
+     * no knowledge of what application client refers to.
+     * 
+     * @param request
+     *                the HTTP request instance.
+     * @param response
+     *                the HTTP response to write to.
+     * @param caption
+     *                for the notification message
+     * @throws IOException
+     *                 if the writing failed due to input/output error.
+     */
+    private void criticalNotification(HttpServletRequest request,
+            HttpServletResponse response, String caption) throws IOException {
+
+        final String[] urls = getAppAndWidgetUrl(request);
+        final String appUrl = urls[0];
+
+        // clients JS app is still running, but server application either
+        // no longer exists or it might fail to perform reasonably.
+        // send a notification to client's application and link how
+        // to "restart" application.
+
+        // Set the response type
+        response.setContentType("application/json; charset=UTF-8");
+        final ServletOutputStream out = response.getOutputStream();
+        final PrintWriter outWriter = new PrintWriter(new BufferedWriter(
+                new OutputStreamWriter(out, "UTF-8")));
+        // TODO review: assuming that required widgets exists and using
+        // hardcoded: PID0, name: 0
+        outWriter.print(")/*{\"changes\":[[\"change\",{\"format\": \"uidl\""
+                + ",\"pid\": \"PID0\"},[\"window\",{\"id\": \"PID0\","
+                + "\"caption\": \"Session expired\",\"name\": \"0\","
+                + "\"theme\": \"\",\"main\":true,\"v\":{\"scrollleft\":0"
+                + ",\"scrolldown\":0,\"positionx\":-1,\"positiony\":-1,"
+                + "\"scrolltop\":0,\"scrollleft\":0,\"close\":false,"
+                + "\"focused\":\"\"}},[\"orderedlayout\",{\"id\": "
+                + "\"PID1\",\"cached\":true}],[\"notifications\",{},"
+                + "[\"notification\",{\"caption\": \"" + caption
+                + "\",\"message\": \"<br />Please click " + "<a href=\\\""
+                + appUrl + "\\\">here</a> to restart your application.<br />"
+                + "You can also click your browser's"
+                + " refresh button.<br />\","
+                + "\"position\":1,\"delay\":-1,\"style\": \"error\"}]]]]],"
+                + " \"meta\" : {}, \"resources\": {}, \"locales\":[]");
+        outWriter.flush();
+        outWriter.close();
+        out.flush();
+    }
+
+    /**
+     * Resolve application URL and widgetset URL. Widgetset is not application
+     * specific.
+     * 
+     * @param request
+     * @return string array consisting of application url first and then
+     *         widgetset url.
+     */
+    private String[] getAppAndWidgetUrl(HttpServletRequest request) {
+        // don't use server and port in uri. It may cause problems with some
+        // virtual server configurations which lose the server name
+        String appUrl = null;
+        String widgetsetUrl = null;
+        if (applicationRunnerMode) {
+            final String[] URIparts = getApplicationRunnerURIs(request);
+            widgetsetUrl = URIparts[0];
+            if (widgetsetUrl.equals("/")) {
+                widgetsetUrl = "";
+            }
+            appUrl = URIparts[1];
+        } else {
+            String[] urlParts;
+            try {
+                urlParts = getApplicationUrl(request).toString().split("\\/");
+                appUrl = "";
+                widgetsetUrl = "";
+                // if context is specified add it to widgetsetUrl
+                if (urlParts[3].equals(request.getContextPath().replaceAll(
+                        "\\/", ""))) {
+                    widgetsetUrl += "/" + urlParts[3];
+                }
+                for (int i = 3; i < urlParts.length; i++) {
+                    appUrl += "/" + urlParts[i];
+                }
+                if (appUrl.endsWith("/")) {
+                    appUrl = appUrl.substring(0, appUrl.length() - 1);
+                }
+            } catch (final MalformedURLException e) {
+                e.printStackTrace();
+            }
+
+        }
+        return new String[] { appUrl, widgetsetUrl };
+    }
+
+    /**
      * 
      * @param request
      *                the HTTP request.
@@ -501,34 +637,9 @@ public class ApplicationServlet extends HttpServlet {
                         + "<script type=\"text/javascript\">\n"
                         + "	var itmill = {\n" + "		appUri:'");
 
-        // don't use server and port in uri. It may cause problems with some
-        // virtual server configurations which lose the server name
-        String appUrl = "";
-        // widgetset is not application specific
-        String widgetsetUrl = "";
-        if (applicationRunnerMode) {
-            final String[] URIparts = getApplicationRunnerURIs(request);
-            widgetsetUrl = URIparts[0];
-            if (widgetsetUrl.equals("/")) {
-                widgetsetUrl = "";
-            }
-            appUrl = URIparts[1];
-        } else {
-            final String[] urlParts = getApplicationUrl(request).toString()
-                    .split("\\/");
-            widgetsetUrl = "";
-            // if context is specified add it to widgetsetUrl
-            if (urlParts[3].equals(request.getContextPath().replaceAll("\\/",
-                    ""))) {
-                widgetsetUrl += "/" + urlParts[3];
-            }
-            for (int i = 3; i < urlParts.length; i++) {
-                appUrl += "/" + urlParts[i];
-            }
-            if (appUrl.endsWith("/")) {
-                appUrl = appUrl.substring(0, appUrl.length() - 1);
-            }
-        }
+        final String[] urls = getAppAndWidgetUrl(request);
+        final String appUrl = urls[0];
+        final String widgetsetUrl = urls[1];
         page.write(appUrl);
 
         String widgetset = applicationProperties
@@ -848,22 +959,19 @@ public class ApplicationServlet extends HttpServlet {
      * 
      * @param request
      *                the HTTP request.
+     * @param response
      * @return Application instance, or null if the URL does not map to valid
      *         application.
      * @throws MalformedURLException
      *                 if the application is denied access to the persistent
      *                 data store represented by the given URL.
      * @throws SAXException
-     * @throws LicenseViolation
-     * @throws InvalidLicenseFile
-     * @throws LicenseSignatureIsInvalid
-     * @throws LicenseFileHasNotBeenRead
      * @throws IllegalAccessException
      * @throws InstantiationException
      */
-    private Application getApplication(HttpServletRequest request)
-            throws MalformedURLException, SAXException, IllegalAccessException,
-            InstantiationException {
+    private Application getExistingApplication(HttpServletRequest request,
+            HttpServletResponse response) throws MalformedURLException,
+            SAXException, IllegalAccessException, InstantiationException {
 
         // Ensures that the session is still valid
         final HttpSession session = request.getSession(true);
@@ -899,7 +1007,31 @@ public class ApplicationServlet extends HttpServlet {
                 break;
             }
         }
-        // Creates application, because a running one was not found
+
+        // Existing application not found
+        return null;
+    }
+
+    /**
+     * Creates new application for given request.
+     * 
+     * @param request
+     *                the HTTP request.
+     * @param response
+     * @return Application instance, or null if the URL does not map to valid
+     *         application.
+     * @throws MalformedURLException
+     *                 if the application is denied access to the persistent
+     *                 data store represented by the given URL.
+     * @throws SAXException
+     * @throws IllegalAccessException
+     * @throws InstantiationException
+     */
+    private Application getNewApplication(HttpServletRequest request,
+            HttpServletResponse response) throws MalformedURLException,
+            SAXException, IllegalAccessException, InstantiationException {
+
+        // Create application
         final WebApplicationContext context = WebApplicationContext
                 .getApplicationContext(request.getSession());
         final URL applicationUrl;
@@ -931,6 +1063,7 @@ public class ApplicationServlet extends HttpServlet {
 
             // Starts application
             application.start(applicationUrl, applicationProperties, context);
+
             return application;
 
         } catch (final IllegalAccessException e) {
