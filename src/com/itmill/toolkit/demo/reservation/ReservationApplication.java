@@ -57,13 +57,10 @@ public class ReservationApplication extends Application {
     private Label popupMessage;
 
     public void init() {
+        //
+        db = new SampleDB();
 
-        db = new SampleDB(true);
-        db.generateResources();
-        db.generateDemoUser();
-        db.generateReservations();
-
-        final Window mainWindow = new Window("Reservr");
+        final Window mainWindow = new Window("Reservr ");
         setMainWindow(mainWindow);
         setTheme("reservr");
 
@@ -272,7 +269,7 @@ public class ReservationApplication extends Application {
             getMainWindow().showNotification("Not available",
                     "Please choose another resource or time period.",
                     Notification.TYPE_HUMANIZED_MESSAGE);
-
+            refreshReservations(false);
             return;
         }
         map.clear();

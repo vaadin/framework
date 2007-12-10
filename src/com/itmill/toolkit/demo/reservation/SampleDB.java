@@ -95,31 +95,18 @@ public class SampleDB {
             + "), FOREIGN KEY (" + Reservation.PROPERTY_ID_RESERVED_BY_ID
             + ") REFERENCES " + User.TABLE + "(" + User.PROPERTY_ID_ID + "))";
 
-    private Connection connection = null;
+    private static Connection connection = null;
 
     /**
      * Create database.
      */
     public SampleDB() {
-        this(false);
-    }
-
-    public SampleDB(boolean recreate) {
         // connect to SQL database
         connect();
 
-        if (recreate) {
-            dropTables();
-        }
-
-        // initialize SQL database
-        createTables();
-
-        // test by executing sample JDBC query
-        testDatabase();
     }
 
-    private void dropTables() {
+    private synchronized void dropTables() {
         try {
             update("DROP TABLE " + Reservation.TABLE);
         } catch (final SQLException IGNORED) {
@@ -142,12 +129,26 @@ public class SampleDB {
      * named database in implicitly created into system memory.
      * 
      */
-    private void connect() {
-        try {
-            Class.forName("org.hsqldb.jdbcDriver").newInstance();
-            connection = DriverManager.getConnection(DB_URL);
-        } catch (final Exception e) {
-            throw new RuntimeException(e);
+    private synchronized void connect() {
+        if (connection == null) {
+            try {
+                Class.forName("org.hsqldb.jdbcDriver").newInstance();
+                connection = DriverManager.getConnection(DB_URL);
+            } catch (final Exception e) {
+                throw new RuntimeException(e);
+            }
+
+            dropTables();
+            // initialize SQL database
+            createTables();
+
+            // test by executing sample JDBC query
+            testDatabase();
+
+            generateResources();
+            generateDemoUser();
+            generateReservations();
+
         }
     }
 
@@ -157,7 +158,7 @@ public class SampleDB {
      * @param expression
      * @throws SQLException
      */
-    private void update(String expression) throws SQLException {
+    private synchronized void update(String expression) throws SQLException {
         Statement st = null;
         st = connection.createStatement();
         final int i = st.executeUpdate(expression);
@@ -172,7 +173,7 @@ public class SampleDB {
      * names as HSQLDB returns column names in capitalized form with this demo.
      * 
      */
-    private void createTables() {
+    private synchronized void createTables() {
         try {
             String stmt = null;
             stmt = CREATE_TABLE_RESOURCE;
@@ -206,7 +207,7 @@ public class SampleDB {
      * Test database connection with simple SELECT command.
      * 
      */
-    private String testDatabase() {
+    private synchronized String testDatabase() {
         String result = null;
         try {
             final Statement stmt = connection.createStatement(
@@ -296,7 +297,7 @@ public class SampleDB {
         }
     }
 
-    public void addReservation(Item resource, int reservedById,
+    public synchronized void addReservation(Item resource, int reservedById,
             Date reservedFrom, Date reservedTo, String description) {
         if (reservedFrom.after(reservedTo)) {
             final Date tmp = reservedTo;
@@ -382,7 +383,7 @@ public class SampleDB {
         }
     }
 
-    public void generateReservations() {
+    public synchronized void generateReservations() {
         final int days = 30;
         final String descriptions[] = { "Picking up guests from airport",
                 "Sightseeing with the guests",
@@ -427,7 +428,7 @@ public class SampleDB {
 
     }
 
-    public void generateResources() {
+    public synchronized void generateResources() {
 
         final Object[][] resources = {
                 // Turku
@@ -533,7 +534,7 @@ public class SampleDB {
         }
     }
 
-    public void generateDemoUser() {
+    public synchronized void generateDemoUser() {
         final String q = "INSERT INTO USER (" + User.PROPERTY_ID_FULLNAME + ","
                 + User.PROPERTY_ID_EMAIL + "," + User.PROPERTY_ID_PASSWORD
                 + ") VALUES (?,?,?)";
