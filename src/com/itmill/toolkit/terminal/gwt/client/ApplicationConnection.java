@@ -534,24 +534,25 @@ public class ApplicationConnection {
     }
 
     /**
-     * Get either existing or new widget for given UIDL.
+     * Get either existing or new Paintable for given UIDL.
      * 
-     * If corresponding paintable has been previously painted, return it.
-     * Otherwise create and register a new widget from UIDL. Caller must update
-     * the returned widget from UIDL after it has been connected to parent.
+     * If corresponding Paintable has been previously painted, return it.
+     * Otherwise create and register a new Paintable from UIDL. Caller must
+     * update the returned Paintable from UIDL after it has been connected to
+     * parent.
      * 
      * @param uidl
-     *                UIDL to create widget from.
-     * @return Either existing or new widget corresponding to UIDL.
+     *                UIDL to create Paintable from.
+     * @return Either existing or new Paintable corresponding to UIDL.
      */
-    public Widget getWidget(UIDL uidl) {
+    public Paintable getPaintable(UIDL uidl) {
         final String id = uidl.getId();
-        Widget w = (Widget) getPaintable(id);
+        Paintable w = getPaintable(id);
         if (w != null) {
             return w;
         }
-        w = widgetSet.createWidget(uidl);
-        registerPaintable(id, (Paintable) w);
+        w = (Paintable) widgetSet.createWidget(uidl);
+        registerPaintable(id, w);
         return w;
     }
 

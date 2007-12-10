@@ -143,12 +143,11 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
             final UIDL uidlForChild = (UIDL) i.next();
             if (uidlForChild.getTag().equals("location")) {
                 final String location = uidlForChild.getStringAttribute("name");
-                final Widget child = client.getWidget(uidlForChild
+                final Paintable child = client.getPaintable(uidlForChild
                         .getChildUIDL(0));
                 try {
-                    setWidget(child, location);
-                    ((Paintable) child).updateFromUIDL(uidlForChild
-                            .getChildUIDL(0), client);
+                    setWidget((Widget) child, location);
+                    child.updateFromUIDL(uidlForChild.getChildUIDL(0), client);
                 } catch (final IllegalArgumentException e) {
                     // If no location is found, this component is not visible
                 }

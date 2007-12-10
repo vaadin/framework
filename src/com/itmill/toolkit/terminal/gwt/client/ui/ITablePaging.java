@@ -202,9 +202,10 @@ public class ITablePaging extends Composite implements Table, Paintable,
                     tBody.setWidget(curRowIndex, colIndex, new BodyCell(row,
                             (String) cell));
                 } else {
-                    final Widget cellContent = client.getWidget((UIDL) cell);
+                    final Paintable cellContent = client
+                            .getPaintable((UIDL) cell);
                     final BodyCell bodyCell = new BodyCell(row);
-                    bodyCell.setWidget(cellContent);
+                    bodyCell.setWidget((Widget) cellContent);
                     tBody.setWidget(curRowIndex, colIndex, bodyCell);
                 }
                 colIndex++;

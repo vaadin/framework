@@ -1814,11 +1814,10 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
                     if (cell instanceof String) {
                         addCell(cell.toString(), aligns[col++]);
                     } else {
-                        final Widget cellContent = client
-                                .getWidget((UIDL) cell);
-                        ((Paintable) cellContent).updateFromUIDL((UIDL) cell,
-                                client);
-                        addCell(cellContent, aligns[col++]);
+                        final Paintable cellContent = client
+                                .getPaintable((UIDL) cell);
+                        (cellContent).updateFromUIDL((UIDL) cell, client);
+                        addCell((Widget) cellContent, aligns[col++]);
                     }
                 }
                 if (uidl.hasAttribute("selected") && !isSelected()) {

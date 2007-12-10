@@ -249,7 +249,7 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
                 Window.open(parsedUri, target, "");
             }
         } else {
-            final Paintable lo = (Paintable) client.getWidget(childUidl);
+            final Paintable lo = (Paintable) client.getPaintable(childUidl);
             if (layout != null) {
                 if (layout != lo) {
                     // remove old

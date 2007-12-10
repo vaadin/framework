@@ -82,22 +82,21 @@ public class IGridLayout extends FlexTable implements Paintable, Container {
 
                         final UIDL u = c.getChildUIDL(0);
                         if (u != null) {
-                            final Widget child = client.getWidget(u);
+                            final Paintable child = client.getPaintable(u);
                             CaptionWrapper wr;
                             if (widgetToCaptionWrapper.containsKey(child)) {
                                 wr = (CaptionWrapper) widgetToCaptionWrapper
                                         .get(child);
                                 oldWidgetWrappers.remove(wr);
                             } else {
-                                wr = new CaptionWrapper((Paintable) child,
-                                        client);
+                                wr = new CaptionWrapper(child, client);
                                 widgetToCaptionWrapper.put(child, wr);
                             }
 
                             setWidget(row, column, wr);
 
                             if (!u.getBooleanAttribute("cached")) {
-                                ((Paintable) child).updateFromUIDL(u, client);
+                                child.updateFromUIDL(u, client);
                             }
                         }
                         column += w;

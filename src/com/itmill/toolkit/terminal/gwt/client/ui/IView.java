@@ -81,7 +81,7 @@ public class IView extends SimplePanel implements Paintable,
 
         // Draw this application level window
         UIDL childUidl = uidl.getChildUIDL(childIndex);
-        final Paintable lo = (Paintable) client.getWidget(childUidl);
+        final Paintable lo = client.getPaintable(childUidl);
 
         if (layout != null) {
             if (layout != lo) {
@@ -103,13 +103,13 @@ public class IView extends SimplePanel implements Paintable,
         // Open new windows
         while ((childUidl = uidl.getChildUIDL(childIndex++)) != null) {
             if ("window".equals(childUidl.getTag())) {
-                final Widget w = client.getWidget(childUidl);
+                final Paintable w = client.getPaintable(childUidl);
                 if (subWindows.contains(w)) {
                     removedSubWindows.remove(w);
                 } else {
                     subWindows.add(w);
                 }
-                ((Paintable) w).updateFromUIDL(childUidl, client);
+                w.updateFromUIDL(childUidl, client);
             } else if ("actions".equals(childUidl.getTag())) {
                 if (actionHandler == null) {
                     actionHandler = new ShortcutActionHandler(id, client);
@@ -150,7 +150,7 @@ public class IView extends SimplePanel implements Paintable,
             RootPanel.get().remove(w);
         }
 
-        if (Util.isIE()) {
+        if (true) {
             // IE somehow fails some layout on first run, force layout
             // functions
             Util.runDescendentsLayout(this);

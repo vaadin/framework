@@ -114,7 +114,7 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
         final ArrayList uidlWidgets = new ArrayList();
         for (final Iterator it = uidl.getChildIterator(); it.hasNext();) {
             final UIDL uidlForChild = (UIDL) it.next();
-            final Widget child = client.getWidget(uidlForChild);
+            final Paintable child = client.getPaintable(uidlForChild);
             uidlWidgets.add(child);
         }
 

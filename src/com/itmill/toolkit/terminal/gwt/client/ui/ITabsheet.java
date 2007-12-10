@@ -198,11 +198,11 @@ public class ITabsheet extends FlowPanel implements Paintable,
     private void renderContent(final UIDL contentUIDL) {
         DeferredCommand.addCommand(new Command() {
             public void execute() {
-                final Widget content = client.getWidget(contentUIDL);
+                final Paintable content = client.getPaintable(contentUIDL);
                 tp.remove(activeTabIndex);
-                tp.insert(content, activeTabIndex);
+                tp.insert((Widget) content, activeTabIndex);
                 tp.showWidget(activeTabIndex);
-                ((Paintable) content).updateFromUIDL(contentUIDL, client);
+                (content).updateFromUIDL(contentUIDL, client);
                 ITabsheet.this.removeStyleDependentName("loading");
                 ITabsheet.this.iLayout();
             }

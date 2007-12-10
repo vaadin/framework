@@ -23,7 +23,7 @@ public class ICustomComponent extends SimplePanel implements Paintable {
 
         final UIDL child = uidl.getChildUIDL(0);
         if (child != null) {
-            final Paintable p = (Paintable) client.getWidget(child);
+            final Paintable p = (Paintable) client.getPaintable(child);
             if (p != getWidget()) {
                 if (getWidget() != null) {
                     client.unregisterPaintable((Paintable) getWidget());

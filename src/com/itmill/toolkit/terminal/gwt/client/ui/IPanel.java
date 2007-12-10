@@ -41,7 +41,7 @@ public class IPanel extends SimplePanel implements Paintable,
 
     private String height;
 
-    private Widget layout;
+    private Paintable layout;
 
     public IPanel() {
         super();
@@ -138,15 +138,15 @@ public class IPanel extends SimplePanel implements Paintable,
 
         // Render content
         final UIDL layoutUidl = uidl.getChildUIDL(0);
-        final Widget newLayout = client.getWidget(layoutUidl);
+        final Paintable newLayout = client.getPaintable(layoutUidl);
         if (newLayout != layout) {
             if (layout != null) {
-                client.unregisterPaintable((Paintable) layout);
+                client.unregisterPaintable(layout);
             }
-            setWidget(newLayout);
+            setWidget((Widget) newLayout);
             layout = newLayout;
         }
-        ((Paintable) layout).updateFromUIDL(layoutUidl, client);
+        (layout).updateFromUIDL(layoutUidl, client);
 
     }
 

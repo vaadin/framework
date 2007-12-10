@@ -582,10 +582,11 @@ public class IExpandLayout extends ComplexPanel implements
         final ArrayList uidlWidgets = new ArrayList();
         for (final Iterator it = uidl.getChildIterator(); it.hasNext();) {
             final UIDL cellUidl = (UIDL) it.next();
-            final Widget child = client.getWidget(cellUidl.getChildUIDL(0));
+            final Paintable child = client.getPaintable(cellUidl
+                    .getChildUIDL(0));
             uidlWidgets.add(child);
             if (cellUidl.hasAttribute("expanded")) {
-                expandedWidget = child;
+                expandedWidget = (Widget) child;
                 expandedWidgetUidl = cellUidl.getChildUIDL(0);
             }
         }

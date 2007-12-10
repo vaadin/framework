@@ -120,9 +120,9 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
 
         setSplitPosition(uidl.getStringAttribute("position"));
 
-        final Paintable newFirstChild = (Paintable) client.getWidget(uidl
+        final Paintable newFirstChild = (Paintable) client.getPaintable(uidl
                 .getChildUIDL(0));
-        final Paintable newSecondChild = (Paintable) client.getWidget(uidl
+        final Paintable newSecondChild = (Paintable) client.getPaintable(uidl
                 .getChildUIDL(1));
         if (firstChild != newFirstChild) {
             if (firstChild != null) {

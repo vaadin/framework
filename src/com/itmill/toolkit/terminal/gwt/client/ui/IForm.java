@@ -33,7 +33,7 @@ public class IForm extends SimplePanel implements Paintable {
 
         final UIDL layoutUidl = uidl.getChildUIDL(0);
         if (lo == null) {
-            lo = (Container) client.getWidget(layoutUidl);
+            lo = (Container) client.getPaintable(layoutUidl);
             setWidget((Widget) lo);
         }
         lo.updateFromUIDL(layoutUidl, client);
