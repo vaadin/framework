@@ -141,27 +141,6 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
         // by terminal
         int keyIndex = 0;
 
-        /*
-         * if (!isLazyLoading()) { // Support for external null selection item
-         * id Collection ids = getItemIds(); if (getNullSelectionItemId() !=
-         * null && (!ids.contains(getNullSelectionItemId()))) { // Gets the
-         * option attribute values Object id = getNullSelectionItemId(); String
-         * key = this.itemIdMapper.key(id); String caption = getItemCaption(id);
-         * Resource icon = getItemIcon(id); // Paints option
-         * target.startTag("so"); if (icon != null) {
-         * target.addAttribute("icon", icon); } target.addAttribute("caption",
-         * caption); target.addAttribute("nullselection", true);
-         * target.addAttribute("key", key); if (isSelected(id)) {
-         * target.addAttribute("selected", true); selectedKeys[keyIndex++] =
-         * key; } target.endTag("so"); } }
-         */
-        /*
-         * Iterator i; if (this.filterstring != null) { i =
-         * this.optionFilter.filter(this.filterstring,
-         * this.lazyLoadingPageLength, this.page).iterator();
-         * target.addAttribute("totalMatches", this.optionFilter
-         * .getMatchCount()); } else { i = getItemIds().iterator(); }
-         */
         target.startTag("options");
 
         final boolean paintNullSelection = needNullSelectOption
@@ -170,7 +149,7 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
 
         if (paintNullSelection) {
             target.startTag("so");
-            target.addAttribute("caption", "-");
+            target.addAttribute("caption", "");
             target.addAttribute("key", "");
             target.endTag("so");
         }
@@ -329,6 +308,9 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
                     }
                 }
                 setValue(newitem);
+                // rebuild list
+                filterstring = newitem;
+                prevfilterstring = null;
             }
         }
 
