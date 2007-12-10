@@ -189,7 +189,7 @@ public class ApplicationConnection {
     private void hideLoadingIndicator() {
         if (loadTimer != null) {
             loadTimer.cancel();
-            if(loadTimer2 != null) {
+            if (loadTimer2 != null) {
                 loadTimer2.cancel();
                 loadTimer3.cancel();
             }
@@ -458,8 +458,9 @@ public class ApplicationConnection {
      * component is an instanceof FocusWidget, also handle component disabling
      * when needed.
      * 
-     * @param currentWidget
-     *                Current widget that might need replacement
+     * @param component
+     *                Widget to be updated, expected to implement an instance of
+     *                Paintable
      * @param uidl
      *                UIDL to be painted
      * @param manageCaption
