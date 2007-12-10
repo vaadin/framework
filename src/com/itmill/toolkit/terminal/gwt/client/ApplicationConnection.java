@@ -425,17 +425,6 @@ public class ApplicationConnection {
                 immediate, 'a');
     }
 
-    public static Container getParentLayout(Widget component) {
-        Widget parent = component.getParent();
-        while (parent != null && !(parent instanceof Container)) {
-            parent = parent.getParent();
-        }
-        if (parent != null && ((Container) parent).hasChildComponent(component)) {
-            return (Container) parent;
-        }
-        return null;
-    }
-
     /**
      * Update generic component features.
      * 
@@ -487,7 +476,7 @@ public class ApplicationConnection {
         component.setVisible(visible);
         // Set captions
         if (manageCaption) {
-            final Container parent = getParentLayout(component);
+            final Container parent = Util.getParentLayout(component);
             if (parent != null) {
                 parent.updateCaption((Paintable) component, uidl);
             }
@@ -499,7 +488,7 @@ public class ApplicationConnection {
 
         // Switch to correct implementation if needed
         if (!widgetSet.isCorrectImplementation(component, uidl)) {
-            final Container parent = getParentLayout(component);
+            final Container parent = Util.getParentLayout(component);
             if (parent != null) {
                 final Widget w = widgetSet.createWidget(uidl);
                 parent.replaceChildComponent(component, w);
