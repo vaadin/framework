@@ -623,7 +623,14 @@ public class ApplicationServlet extends HttpServlet {
 
         page
                 .write("<html xmlns=\"http://www.w3.org/1999/xhtml\" style=\"width:100%;"
-                        + "height:100%;border:0;margin:0;\">\n<head>\n<title>IT Mill Toolkit 5</title>\n"
+                        + "height:100%;border:0;margin:0;\">\n<head>\n"
+                        + "<style>"
+                        // Add critical styles due Safari timing issues
+                        // TODO workaround for this hack
+                        + "#itmill-ajax-window {height: 100%;}.i-generated-body "
+                        + "{width:100%;height:100%;border:0;margin:0;}.i-view "
+                        + "{height: 100%;width: 100%;}</style>"
+                        + "<title>IT Mill Toolkit 5</title>\n"
                         + "<script type=\"text/javascript\">\n"
                         + "	var itmill = {\n" + "		appUri:'");
 
