@@ -22,6 +22,23 @@
 		Please name the sub directory differently when creating a extended widget set
 		(e.g. src="mywidgets/styles.css") to avoid naming conflicts.
 	 -->
-	<stylesheet src="default/styles.css"/>
+	
+	<stylesheet src="default/common/common.css"/>
+	<stylesheet src="default/button/button.css"/>
+	<stylesheet src="default/textfield/textfield.css"/>
+	<stylesheet src="default/select/select.css"/>
+	<stylesheet src="default/panel/panel.css"/>
+	<stylesheet src="default/tabsheet/tabsheet.css"/>
+	<stylesheet src="default/datefield/datefield.css"/>
+	<stylesheet src="default/table/table.css"/>
+	<stylesheet src="default/slider/slider.css"/>
+	<stylesheet src="default/window/window.css"/>
+	<stylesheet src="default/window/notification.css"/>
+	<stylesheet src="default/caption/caption.css"/>
+	<stylesheet src="default/tree/tree.css"/>
+	<stylesheet src="default/splitpanel/splitpanel.css"/>
+	<stylesheet src="default/select/filterselect.css"/>
+	<stylesheet src="default/progressindicator/progressindicator.css"/>
+	<stylesheet src="default/expandlayout/expandlayout.css"/>
 
 </module>
