@@ -1,3 +1,36 @@
+/* First rules here are to avoid some bugs with Safari and network latency ~ > 100ms->
+ *  Size calculations fail without them. Other problems may also appear, but the 
+ * most critical ones can be avoided with these.
+ * TODO workaround: concatenate style sheets
+ */
+
+#itmill-ajax-window {
+	background: #e9eced;
+	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
+	color: #464f52;
+	font-size: 13px;
+	line-height: 18px;
+	height: 100%;
+}
+/* body tag created by servlet */
+.i-generated-body {
+	background: #e9eced;
+	width:100%;
+	height:100%;
+	border:0;
+	margin:0;
+	overflow:auto;
+}
+
+.i-view {
+	height: 100%;
+	width: 100%
+	overflow: auto; 
+	/* avoid scrollbars with margins in root layout */
+	margin-top:-1px;
+	border-top:1px solid transparent;
+}
+
 @import "common/common.css";
 @import "button/button.css";
 @import "textfield/textfield.css";
