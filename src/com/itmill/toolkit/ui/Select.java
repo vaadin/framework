@@ -144,8 +144,8 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
         target.startTag("options");
 
         final boolean paintNullSelection = needNullSelectOption
-                && (currentPage == 0 && (filterstring == null
-                        || filterstring.equals("") || filterstring.equals("-")));
+                && (currentPage == 0 && (filterstring == null || filterstring
+                        .equals("")));
 
         if (paintNullSelection) {
             target.startTag("so");
@@ -219,6 +219,7 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
     protected List getFilteredOptions() {
         if (filterstring == null || filterstring.equals("")
                 || filteringMode == FILTERINGMODE_OFF) {
+            prevfilterstring = null;
             filteredOptions = new LinkedList(getItemIds());
             return filteredOptions;
         }

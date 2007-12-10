@@ -462,7 +462,7 @@ public class IFilterSelect extends Composite implements Paintable,
             return;
         }
         if (!filter.equals(lastFilter)) {
-            // we are on subsequant page and text has changed -> reset page
+            // we are on subsequent page and text has changed -> reset page
             page = 0;
         }
         if (clientSideFiltering) {
@@ -715,7 +715,7 @@ public class IFilterSelect extends Composite implements Paintable,
             if (currentSuggestion != null) {
                 tb.setText(currentSuggestion.getDisplayString());
             } else {
-                tb.setText("-");
+                tb.setText("");
             }
         }
     }
