@@ -36,8 +36,6 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.catalina.connector.ClientAbortException;
-
 import com.itmill.toolkit.Application;
 import com.itmill.toolkit.Application.WindowAttachEvent;
 import com.itmill.toolkit.Application.WindowDetachEvent;
@@ -428,10 +426,6 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 
             out.flush();
             out.close();
-        } catch (ClientAbortException e) {
-            // Most likely client browser closed socket
-            System.err
-                    .println("Warning: ClientAbortException in ApplicationServlet");
         } catch (SocketException e) {
             // Most likely client browser closed socket
             System.err
