@@ -1679,8 +1679,11 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
         }
 
         private void fixSpacers() {
-            DOM.setStyleAttribute(preSpacer, "height", getRowHeight()
-                    * firstRendered + "px");
+            int prepx = getRowHeight() * firstRendered;
+            if (prepx < 0) {
+                prepx = 0;
+            }
+            DOM.setStyleAttribute(preSpacer, "height", prepx + "px");
             int postpx = getRowHeight() * (totalRows - 1 - lastRendered);
             if (postpx < 0) {
                 postpx = 0;
