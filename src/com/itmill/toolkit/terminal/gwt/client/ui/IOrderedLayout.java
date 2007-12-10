@@ -55,7 +55,7 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
     protected Element topMargin = null;
     protected Element bottomMargin = null;
 
-    private static final String structure = "<div><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"table-layout:fixed;\"><tbody></tbody></table></div>";
+    private static final String structure = "<div><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tbody></tbody></table></div>";
 
     public IOrderedLayout(int orientation) {
         orientationMode = orientation;
@@ -87,22 +87,26 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
         }
 
         // Set size
+        // TODO move these to own methods (override setWidth & setHeight)
         if (uidl.hasAttribute("width")) {
             setWidth(uidl.getStringAttribute("width"));
             DOM.setStyleAttribute(DOM.getFirstChild(margin), "width", "100%");
+            DOM.setStyleAttribute(getElement(), "tableLayout", "fixed");
         } else {
             setWidth("");
             DOM.setStyleAttribute(DOM.getFirstChild(margin), "width", "");
+            DOM.setStyleAttribute(getElement(), "tableLayout", "");
         }
         if (uidl.hasAttribute("height")) {
             setHeight(uidl.getStringAttribute("height"));
-            // TODO override setHeight() method and move these there
             DOM.setStyleAttribute(margin, "height", "100%");
             DOM.setStyleAttribute(DOM.getFirstChild(margin), "height", "100%");
+            DOM.setStyleAttribute(getElement(), "tableLayout", "fixed");
         } else {
             setHeight("");
             DOM.setStyleAttribute(margin, "height", "");
             DOM.setStyleAttribute(DOM.getFirstChild(margin), "height", "");
+            DOM.setStyleAttribute(getElement(), "tableLayout", "");
         }
 
         // Update contained components
