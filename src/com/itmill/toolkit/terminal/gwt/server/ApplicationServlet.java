@@ -529,6 +529,8 @@ public class ApplicationServlet extends HttpServlet {
         // send a notification to client's application and link how
         // to "restart" application.
 
+        // TODO message should be localized
+
         // Set the response type
         response.setContentType("application/json; charset=UTF-8");
         final ServletOutputStream out = response.getOutputStream();
