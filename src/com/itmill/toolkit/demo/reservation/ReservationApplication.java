@@ -141,7 +141,7 @@ public class ReservationApplication extends Application {
                 if (fd == null) {
                     reservedTo.setValue(null);
                     reservedTo.setEnabled(false);
-                    refreshSelectedResources();
+                    refreshSelectedResources(true);
                     return;
                 } else {
                     reservedTo.setEnabled(true);
@@ -152,7 +152,7 @@ public class ReservationApplication extends Application {
                 to.setTime(fd);
                 to.add(Calendar.MILLISECOND, (int) currentGapMillis);
                 reservedTo.setValue(to.getTime());
-                refreshSelectedResources();
+                refreshSelectedResources(true);
             }
         });
         reservedTo.addListener(new ValueChangeListener() {
@@ -166,7 +166,7 @@ public class ReservationApplication extends Application {
                     t.add(Calendar.MILLISECOND, (int) DEFAULT_GAP_MILLIS);
                     reservedTo.setValue(t.getTime());
                 }
-                refreshSelectedResources();
+                refreshSelectedResources(true);
             }
         });
 
@@ -184,12 +184,13 @@ public class ReservationApplication extends Application {
         mainTabs.addTab(allLayout, "All reservations", null);
         mainTabs.addListener(new TabSheet.SelectedTabChangeListener() {
             public void selectedTabChange(SelectedTabChangeEvent event) {
-                refreshReservations(false);
+                refreshReservations();
             }
         });
 
         resourcePanel.selectFirstCategory();
-        refreshReservations(true);
+        refreshReservations();
+        refreshSelectedResources(true);
     }
 
     public void makeReservation() {
@@ -204,7 +205,8 @@ public class ReservationApplication extends Application {
                                 "Success!",
                                 "You have reserved the resource for the selected period.",
                                 Notification.TYPE_WARNING_MESSAGE);
-                refreshReservations(false);
+                refreshReservations();
+                refreshSelectedResources(false);
             } else {
                 getMainWindow().showNotification("Oops!",
                         "Please select a resource (or category) to reserve.",
@@ -216,7 +218,7 @@ public class ReservationApplication extends Application {
                             "Not available!",
                             "The selected resource is already reserved for the selected period.",
                             Notification.TYPE_ERROR_MESSAGE);
-            refreshReservations(false);
+            refreshReservations();
         }
     }
 
@@ -239,14 +241,11 @@ public class ReservationApplication extends Application {
         }
     }
 
-    private void refreshReservations(boolean alsoResources) {
+    private void refreshReservations() {
         final Container reservations = db.getReservations(resourcePanel
                 .getSelectedResources());
         reservedFrom.setContainerDataSource(reservations);
         reservedTo.setContainerDataSource(reservations);
-        if (alsoResources) {
-            refreshSelectedResources();
-        }
         final Container allReservations = db.getReservations(null);
         allTable.setContainerDataSource(allReservations);
         if (allReservations != null && allReservations.size() > 0) {
@@ -261,15 +260,17 @@ public class ReservationApplication extends Application {
         }
     }
 
-    private void refreshSelectedResources() {
+    private void refreshSelectedResources(boolean alertIfNotAvailable) {
         Item resource = null;
         try {
             resource = getActiveResource();
         } catch (final ResourceNotAvailableException e) {
-            getMainWindow().showNotification("Not available",
-                    "Please choose another resource or time period.",
-                    Notification.TYPE_HUMANIZED_MESSAGE);
-            refreshReservations(false);
+            if (alertIfNotAvailable) {
+                getMainWindow().showNotification("Not available",
+                        "Please choose another resource or time period.",
+                        Notification.TYPE_HUMANIZED_MESSAGE);
+            }
+            refreshReservations();
             return;
         }
         map.clear();
@@ -323,7 +324,8 @@ public class ReservationApplication extends Application {
 
     public void selectedResourcesChanged(
             ResourceSelectorPanel.SelectedResourcesChangedEvent event) {
-        refreshReservations(true);
+        refreshReservations();
+        refreshSelectedResources(true);
     }
 
 }
