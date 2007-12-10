@@ -52,6 +52,8 @@ public class ApplicationConnection {
     private ContextMenu contextMenu = null;
 
     private Timer loadTimer;
+    private Timer loadTimer2;
+    private Timer loadTimer3;
     private Element loadElement;
 
     private final IView view;
@@ -161,23 +163,23 @@ public class ApplicationConnection {
                                 + "px");
 
                 // Initialize other timers
-                final Timer delay = new Timer() {
+                loadTimer2 = new Timer() {
                     public void run() {
                         DOM.setElementProperty(loadElement, "className",
                                 "i-loading-indicator-delay");
                     }
                 };
                 // Second one kicks in at 1500ms
-                delay.schedule(1200);
+                loadTimer2.schedule(1200);
 
-                final Timer wait = new Timer() {
+                loadTimer3 = new Timer() {
                     public void run() {
                         DOM.setElementProperty(loadElement, "className",
                                 "i-loading-indicator-wait");
                     }
                 };
                 // Third one kicks in at 5000ms
-                wait.schedule(4700);
+                loadTimer3.schedule(4700);
             }
         };
         // First one kicks in at 300ms
@@ -187,6 +189,10 @@ public class ApplicationConnection {
     private void hideLoadingIndicator() {
         if (loadTimer != null) {
             loadTimer.cancel();
+            if(loadTimer2 != null) {
+                loadTimer2.cancel();
+                loadTimer3.cancel();
+            }
         }
         if (loadElement != null) {
             DOM.setStyleAttribute(loadElement, "display", "none");
