@@ -44,7 +44,6 @@ import com.itmill.toolkit.external.org.apache.commons.fileupload.FileItemStream;
 import com.itmill.toolkit.external.org.apache.commons.fileupload.FileUploadException;
 import com.itmill.toolkit.external.org.apache.commons.fileupload.ProgressListener;
 import com.itmill.toolkit.external.org.apache.commons.fileupload.servlet.ServletFileUpload;
-import com.itmill.toolkit.terminal.DownloadStream;
 import com.itmill.toolkit.terminal.Paintable;
 import com.itmill.toolkit.terminal.URIHandler;
 import com.itmill.toolkit.terminal.UploadStream;
@@ -694,80 +693,6 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
     }
 
     /**
-     * Handles the requested URI. An application can add handlers to do special
-     * processing, when a certain URI is requested. The handlers are invoked
-     * before any windows URIs are processed and if a DownloadStream is returned
-     * it is sent to the client.
-     * 
-     * @param stream
-     *                the downloadable stream.
-     * 
-     * @param request
-     *                the HTTP request instance.
-     * @param response
-     *                the HTTP response to write to.
-     * 
-     * @see com.itmill.toolkit.terminal.URIHandler
-     */
-    private void handleDownload(DownloadStream stream,
-            HttpServletRequest request, HttpServletResponse response) {
-
-        // Download from given stream
-        final InputStream data = stream.getStream();
-        if (data != null) {
-
-            // Sets content type
-            response.setContentType(stream.getContentType());
-
-            // Sets cache headers
-            final long cacheTime = stream.getCacheTime();
-            if (cacheTime <= 0) {
-                response.setHeader("Cache-Control", "no-cache");
-                response.setHeader("Pragma", "no-cache");
-                response.setDateHeader("Expires", 0);
-            } else {
-                response.setHeader("Cache-Control", "max-age=" + cacheTime
-                        / 1000);
-                response.setDateHeader("Expires", System.currentTimeMillis()
-                        + cacheTime);
-                response.setHeader("Pragma", "cache"); // Required to apply
-                // caching in some
-                // Tomcats
-            }
-
-            // Copy download stream parameters directly
-            // to HTTP headers.
-            final Iterator i = stream.getParameterNames();
-            if (i != null) {
-                while (i.hasNext()) {
-                    final String param = (String) i.next();
-                    response.setHeader(param, stream.getParameter(param));
-                }
-            }
-
-            int bufferSize = stream.getBufferSize();
-            if (bufferSize <= 0 || bufferSize > MAX_BUFFER_SIZE) {
-                bufferSize = DEFAULT_BUFFER_SIZE;
-            }
-            final byte[] buffer = new byte[bufferSize];
-            int bytesRead = 0;
-
-            try {
-                final OutputStream out = response.getOutputStream();
-
-                while ((bytesRead = data.read(buffer)) > 0) {
-                    out.write(buffer, 0, bytesRead);
-                    out.flush();
-                }
-                out.close();
-            } catch (final IOException ignored) {
-            }
-
-        }
-
-    }
-
-    /**
      * Ends the Application.
      * 
      * @param request
@@ -907,14 +832,6 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
     public synchronized Set getRemovedWindows() {
         return Collections.unmodifiableSet(removedWindows);
 
-    }
-
-    /**
-     * 
-     * @param w
-     */
-    private void removedWindowNotified(Window w) {
-        removedWindows.remove(w);
     }
 
     private final class SingleValueMap implements Map {
