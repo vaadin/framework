@@ -28,6 +28,7 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ui.ContextMenu;
 import com.itmill.toolkit.terminal.gwt.client.ui.IView;
+import com.itmill.toolkit.terminal.gwt.client.ui.Notification;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -277,6 +278,14 @@ public class ApplicationConnection {
                     final HasFocus toBeFocusedWidget = (HasFocus) toBeFocused;
                     toBeFocusedWidget.setFocus(true);
                 }
+            }
+            if (meta.containsKey("appError")) {
+                JSONObject error = meta.get("appError").isObject();
+                String caption = error.get("caption").isString().stringValue();
+                String message = error.get("message").isString().stringValue();
+                String html = "<h1>" + caption + "</h1><p>" + message + "</p>";
+                new Notification(Notification.DELAY_FOREVER).show(html,
+                        Notification.CENTERED, "error");
             }
         }
 

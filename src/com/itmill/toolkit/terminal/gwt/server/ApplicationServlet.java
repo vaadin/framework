@@ -314,7 +314,6 @@ public class ApplicationServlet extends HttpServlet {
         Application application = null;
         boolean UIDLrequest = false;
         try {
-
             // handle file upload if multipart request
             if (ServletFileUpload.isMultipartContent(request)) {
                 application = getExistingApplication(request, response);
@@ -535,23 +534,15 @@ public class ApplicationServlet extends HttpServlet {
         final ServletOutputStream out = response.getOutputStream();
         final PrintWriter outWriter = new PrintWriter(new BufferedWriter(
                 new OutputStreamWriter(out, "UTF-8")));
-        // TODO review: assuming that required widgets exists and using
-        // hardcoded: PID0, name: 0
-        outWriter.print(")/*{\"changes\":[[\"change\",{\"format\": \"uidl\""
-                + ",\"pid\": \"PID0\"},[\"window\",{\"id\": \"PID0\","
-                + "\"caption\": \"Session expired\",\"name\": \"0\","
-                + "\"theme\": \"\",\"main\":true,\"v\":{\"scrollleft\":0"
-                + ",\"scrolldown\":0,\"positionx\":-1,\"positiony\":-1,"
-                + "\"scrolltop\":0,\"scrollleft\":0,\"close\":false,"
-                + "\"focused\":\"\"}},[\"orderedlayout\",{\"id\": "
-                + "\"PID1\",\"cached\":true}],[\"notifications\",{},"
-                + "[\"notification\",{\"caption\": \"" + caption
-                + "\",\"message\": \"<br />Please click " + "<a href=\\\""
-                + appUrl + "\\\">here</a> to restart your application.<br />"
-                + "You can also click your browser's"
-                + " refresh button.<br />\","
-                + "\"position\":1,\"delay\":-1,\"style\": \"error\"}]]]]],"
-                + " \"meta\" : {}, \"resources\": {}, \"locales\":[]");
+        outWriter
+                .print(")/*{\"changes\":[], \"meta\" : {"
+                        + "\"appError\": {"
+                        + "\"caption\":\""
+                        + caption
+                        + "\","
+                        + "\"message\" : \"Please click <a href=\\\"\\\" onclick=\\\"Javascript: window.location.reload()\\\" >here</a> to restart your application.<br />"
+                        + "You can also click your browser's refresh button.\""
+                        + "}}, \"resources\": {}, \"locales\":[]");
         outWriter.flush();
         outWriter.close();
         out.flush();
