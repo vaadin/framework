@@ -521,9 +521,6 @@ public class ApplicationServlet extends HttpServlet {
     private void criticalNotification(HttpServletRequest request,
             HttpServletResponse response, String caption) throws IOException {
 
-        final String[] urls = getAppAndWidgetUrl(request);
-        final String appUrl = urls[0];
-
         // clients JS app is still running, but server application either
         // no longer exists or it might fail to perform reasonably.
         // send a notification to client's application and link how
