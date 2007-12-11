@@ -76,6 +76,7 @@ public class ApplicationConnection {
 
         if (isTestingMode()) {
             usePaintableIdsInDOM = true;
+            initializeTestingTools(getTestServerUri());
         }
 
         makeUidlRequest("repaintAll=1");
@@ -85,13 +86,19 @@ public class ApplicationConnection {
 
     }
 
+    private native static String getTestServerUri()
+    /*-{
+        return $wnd.itmill.testingToolsUri;
+    }-*/;
+
     private native static boolean isTestingMode()
     /*-{
         return $wnd.itmill.testingToolsUri ? true : false;
     }-*/;
 
-    private native static void initializeTestingTools(String uri)
+    private native static void initializeTestingTools(String testServerUri)
     /*-{
+        $wnd.itmill.startATF(testServerUri);
     }-*/;
 
     public static Console getConsole() {
