@@ -310,7 +310,7 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
                 }
                 setValue(newitem);
                 // rebuild list
-                filterstring = newitem;
+                filterstring = null;
                 prevfilterstring = null;
             }
         }
