@@ -46,9 +46,6 @@ public class Caption extends HTML {
                 DOM.setElementProperty(errorIndicatorElement, "className",
                         "i-errorindicator");
                 DOM.insertChild(getElement(), errorIndicatorElement, 0);
-            } else {
-                // Restore the indicator that was previously made invisible 
-                DOM.setStyleAttribute(errorIndicatorElement, "display", "inline");
             }
             if (errorMessage == null) {
                 errorMessage = new ErrorMessage();
@@ -56,8 +53,8 @@ public class Caption extends HTML {
             errorMessage.updateFromUIDL(errorUidl);
 
         } else if (errorIndicatorElement != null) {
-            // Just make the error indicator element invisible
-            DOM.setStyleAttribute(errorIndicatorElement, "display", "none");
+            DOM.removeChild(getElement(), errorIndicatorElement);
+            errorIndicatorElement = null;
         }
 
         if (uidl.hasAttribute("icon")) {
