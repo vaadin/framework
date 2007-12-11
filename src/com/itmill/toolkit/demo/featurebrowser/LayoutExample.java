@@ -9,7 +9,6 @@ import com.itmill.toolkit.ui.GridLayout;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Panel;
-import com.itmill.toolkit.ui.SplitPanel;
 import com.itmill.toolkit.ui.TabSheet;
 
 /**
@@ -67,6 +66,7 @@ public class LayoutExample extends CustomComponent {
         gl.addComponent(new Label("Component 3.3"), 2, 2);
         ts.addTab(gl, "GridLayout", null);
 
+        /*- TODO spitpanel removed for now - do we need it here?
         ts = new TabSheet();
         ts.setHeight(150);
         g.addComponent(ts, 0, 2, 1, 2);
@@ -80,6 +80,7 @@ public class LayoutExample extends CustomComponent {
         sp.addComponent(new Label("Component 1"));
         sp.addComponent(new Label("Component 2"));
         ts.addTab(sp, "Horizontal SplitPanel", null);
+        -*/
 
     }
 }
