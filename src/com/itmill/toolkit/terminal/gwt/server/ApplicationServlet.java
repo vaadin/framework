@@ -10,9 +10,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.Writer;
 import java.lang.reflect.Constructor;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -125,6 +127,10 @@ public class ApplicationServlet extends HttpServlet {
 
     private ClassLoader classLoader;
 
+    private boolean testingToolsActive = false;
+
+    private String testingToolsServerUri = null;
+
     /**
      * Called by the servlet container to indicate to a servlet that the servlet
      * is being placed into service.
@@ -184,6 +190,14 @@ public class ApplicationServlet extends HttpServlet {
         }
         debugMode = debug;
 
+        // Gets ATF parameters if feature is activated
+        if (getApplicationOrSystemProperty("testingToolsActive", "false")
+                .equals("true")) {
+            testingToolsActive = true;
+            testingToolsServerUri = getApplicationOrSystemProperty(
+                    "testingToolsServerUri", null);
+        }
+
         // Gets custom class loader
         final String classLoaderName = getApplicationOrSystemProperty(
                 "ClassLoader", null);
@@ -226,6 +240,7 @@ public class ApplicationServlet extends HttpServlet {
             // This servlet is in application runner mode, it uses classloader
             // later to create Applications based on URL
         }
+
     }
 
     /**
@@ -649,11 +664,25 @@ public class ApplicationServlet extends HttpServlet {
             themeUri = staticFilePath + "/" + THEME_DIRECTORY_PATH + themeName;
         }
 
-        page.write("', pathInfo: '" + pathInfo + "', themeUri: "
-                + (themeUri != null ? "'" + themeUri + "'" : "null") + "\n};\n"
-                + "</script>\n" + "<script language='javascript' src='"
-                + staticFilePath + "/" + WIDGETSET_DIRECTORY_PATH + widgetset
-                + "/" + widgetset + ".nocache.js'></script>\n");
+        boolean testingWindow = testingToolsActive
+                && request.getParameter("TT") != null;
+
+        page.write("', pathInfo: '" + pathInfo);
+        page.write("', themeUri: ");
+        page.write(themeUri != null ? "'" + themeUri + "'" : "null");
+        if (testingWindow) {
+            page.write(", testingToolsUri : '" + getTestingToolsUri() + "'");
+        }
+
+        page.write("\n};\n</script>\n");
+
+        if (testingWindow) {
+            writeTestingToolsScripts(page, request);
+        }
+
+        page.write("<script language='javascript' src='" + staticFilePath + "/"
+                + WIDGETSET_DIRECTORY_PATH + widgetset + "/" + widgetset
+                + ".nocache.js'></script>\n");
 
         if (themeName != null) {
             // Custom theme's stylesheet
@@ -669,6 +698,113 @@ public class ApplicationServlet extends HttpServlet {
 
         page.close();
 
+    }
+
+    private void writeTestingToolsScripts(Writer page,
+            HttpServletRequest request) throws IOException {
+        // ATF script and CSS files are served from ATFServer
+        String ext = getTestingToolsUri();
+        ext = ext.substring(0, ext.lastIndexOf('/'));
+        page.write("<script src=\"" + ext + "/ext/ATF.js"
+                + "\" type=\"text/javascript\"></script>\n");
+        page.write("<link rel=\"stylesheet\" href=\"" + ext + "/ext/ATF.css"
+                + "\" type=\"text/css\" />\n");
+        if (request.getParameter("ATF-TC") != null
+                || request.getParameter("ATF-TS") != null) {
+            proxyTestCases(request.getParameter("ATF-TC"), request
+                    .getParameter("ATF-TS"), request
+                    .getParameter("ATF-TS-RUN-ID"), page);
+        }
+    }
+
+    private String getTestingToolsUri() {
+        if (testingToolsServerUri == null) {
+            // Default behavior is that ATFServer application exists on
+            // same application server as current application does.
+            testingToolsServerUri = "/ATF/ATFServer";
+        }
+        return testingToolsServerUri;
+    }
+
+    /**
+     * Fetches testcase or testsuite scripts from ATF server and injects script
+     * to AUT client
+     * 
+     * @param testCaseId
+     * @param testSuiteId
+     * @param testSuiteRunId
+     * @param page
+     * @throws IOException
+     * @throws MalformedURLException
+     */
+    private void proxyTestCases(String testCaseId, String testSuiteId,
+            String testSuiteRunId, Writer page) throws IOException,
+            MalformedURLException {
+        URLConnection conn;
+
+        String testCaseProviderURL = getTestingToolsUri();
+        if (testCaseId != null) {
+            testCaseProviderURL += "/ATF-TC/" + testCaseId;
+        }
+        if (testSuiteId != null) {
+            testCaseProviderURL += "/ATF-TS/" + testSuiteId;
+        }
+        if (testSuiteRunId != null) {
+            testCaseProviderURL += "/ATF-TS-RUN-ID/" + testSuiteRunId;
+        }
+
+        conn = new URL(testCaseProviderURL).openConnection();
+        InputStream is = conn.getInputStream();
+
+        StringBuffer builder = new StringBuffer();
+        byte[] b = new byte[4096];
+        for (int n; (n = is.read(b)) != -1;) {
+            builder.append(new String(b, 0, n));
+        }
+        is.close();
+
+        if (builder != null && builder.length() > 0
+                && builder.toString().startsWith("ATF-TC=")) {
+            int lineEnd = builder.indexOf("\n");
+            String returnedTestCaseId = builder.substring(builder
+                    .indexOf("ATF-TC=") + 7, lineEnd);
+            builder.replace(0, lineEnd + 1, "");
+
+            String returnedTestSuiteRunId = null;
+
+            if (testSuiteId != null) {
+                lineEnd = builder.indexOf("\n");
+                returnedTestSuiteRunId = builder.substring(builder
+                        .indexOf("ATF-TS-RUN-ID=") + 14, lineEnd);
+            }
+
+            if (builder.length() < lineEnd + 1) {
+                throw new RuntimeException(
+                        "The received testscript is illegal. Expected testcase script id in first line "
+                                + " and the actual script in following lines. The script: "
+                                + builder.toString());
+            }
+
+            page
+                    .write("<script language=\"JavaScript\" type=\"text/javascript\">\n");
+            page
+                    .write("itmill.ATFtestCaseId = \"" + returnedTestCaseId
+                            + "\";");
+            page.write("\n");
+            if (testSuiteId != null) {
+                page.write("itmill.ATFtestSuiteId = \"" + testSuiteId + "\";");
+                page.write("\n");
+            }
+            if (returnedTestSuiteRunId != null) {
+                page.write("itmill.ATFtestSuiteRunId = \""
+                        + returnedTestSuiteRunId + "\";");
+                page.write("\n");
+                builder = builder.delete(0, lineEnd);
+            }
+            String script = builder.toString().replaceAll("\n", "\\\\n");
+            page.write("itmill.ATFtestCaseScript = \"" + script + "\";\n");
+            page.write("</script>\n");
+        }
     }
 
     /**

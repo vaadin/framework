@@ -58,6 +58,12 @@ public class ApplicationConnection {
 
     private final IView view;
 
+    /**
+     * True if each Paintable objects id is injected to DOM. Used for Testing
+     * Tools.
+     */
+    private boolean usePaintableIdsInDOM = false;
+
     public ApplicationConnection(WidgetSet widgetSet) {
         this.widgetSet = widgetSet;
         appUri = getAppUri();
@@ -68,12 +74,25 @@ public class ApplicationConnection {
             console = new NullConsole();
         }
 
+        if (isTestingMode()) {
+            usePaintableIdsInDOM = true;
+        }
+
         makeUidlRequest("repaintAll=1");
 
         // TODO remove hardcoded id name
         view = new IView("itmill-ajax-window");
 
     }
+
+    private native static boolean isTestingMode()
+    /*-{
+        return $wnd.itmill.testingToolsUri ? true : false;
+    }-*/;
+
+    private native static void initializeTestingTools(String uri)
+    /*-{
+    }-*/;
 
     public static Console getConsole() {
         return console;
@@ -529,6 +548,10 @@ public class ApplicationConnection {
             for (int i = 0; i < styles.length; i++) {
                 component.addStyleDependentName(styles[i]);
             }
+        }
+
+        if (usePaintableIdsInDOM) {
+            DOM.setElementProperty(component.getElement(), "id", uidl.getId());
         }
 
         return false;
