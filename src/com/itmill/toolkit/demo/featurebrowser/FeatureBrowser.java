@@ -246,8 +246,8 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
         exp.expand(ts);
 
         final Label status = new Label(
-                "<a href=\"http://www.itmill.com/index_developers.htm\">Developer Area</a>"
-                        + " | <a href=\"http://www.itmill.com/developers_documentation.htm\">Documentation</a>");
+                "<a href=\"http://www.itmill.com/developers/\">Developer Area</a>"
+                        + " | <a href=\"http://www.itmill.com/documentation/\">Documentation</a>");
         status.setContentMode(Label.CONTENT_XHTML);
         exp.addComponent(status);
         exp.setComponentAlignment(status, OrderedLayout.ALIGNMENT_RIGHT,
