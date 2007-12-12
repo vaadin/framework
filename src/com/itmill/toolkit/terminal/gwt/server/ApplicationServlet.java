@@ -671,7 +671,8 @@ public class ApplicationServlet extends HttpServlet {
         page.write("', themeUri: ");
         page.write(themeUri != null ? "'" + themeUri + "'" : "null");
         if (testingWindow) {
-            page.write(", testingToolsUri : '" + getTestingToolsUri() + "'");
+            page.write(", testingToolsUri : '" + getTestingToolsUri(request)
+                    + "'");
         }
 
         page.write("\n};\n</script>\n");
@@ -703,7 +704,7 @@ public class ApplicationServlet extends HttpServlet {
     private void writeTestingToolsScripts(Writer page,
             HttpServletRequest request) throws IOException {
         // ATF script and CSS files are served from ATFServer
-        String ext = getTestingToolsUri();
+        String ext = getTestingToolsUri(request);
         ext = ext.substring(0, ext.lastIndexOf('/'));
         page.write("<script src=\"" + ext + "/ext/ATF.js"
                 + "\" type=\"text/javascript\"></script>\n");
@@ -713,15 +714,18 @@ public class ApplicationServlet extends HttpServlet {
                 || request.getParameter("ATF-TS") != null) {
             proxyTestCases(request.getParameter("ATF-TC"), request
                     .getParameter("ATF-TS"), request
-                    .getParameter("ATF-TS-RUN-ID"), page);
+                    .getParameter("ATF-TS-RUN-ID"), page,
+                    getTestingToolsUri(request));
         }
     }
 
-    private String getTestingToolsUri() {
+    private String getTestingToolsUri(HttpServletRequest request) {
         if (testingToolsServerUri == null) {
             // Default behavior is that ATFServer application exists on
             // same application server as current application does.
-            testingToolsServerUri = "/ATF/ATFServer";
+            testingToolsServerUri = "http" + (request.isSecure() ? "s" : "")
+                    + "://" + request.getServerName() + ":"
+                    + request.getLocalPort() + "/ATF/ATFServer";
         }
         return testingToolsServerUri;
     }
@@ -734,26 +738,26 @@ public class ApplicationServlet extends HttpServlet {
      * @param testSuiteId
      * @param testSuiteRunId
      * @param page
+     * @param testServerUri
      * @throws IOException
      * @throws MalformedURLException
      */
     private void proxyTestCases(String testCaseId, String testSuiteId,
-            String testSuiteRunId, Writer page) throws IOException,
-            MalformedURLException {
+            String testSuiteRunId, Writer page, String testServerUri)
+            throws IOException, MalformedURLException {
         URLConnection conn;
 
-        String testCaseProviderURL = getTestingToolsUri();
         if (testCaseId != null) {
-            testCaseProviderURL += "/ATF-TC/" + testCaseId;
+            testServerUri += "/ATF-TC/" + testCaseId;
         }
         if (testSuiteId != null) {
-            testCaseProviderURL += "/ATF-TS/" + testSuiteId;
+            testServerUri += "/ATF-TS/" + testSuiteId;
         }
         if (testSuiteRunId != null) {
-            testCaseProviderURL += "/ATF-TS-RUN-ID/" + testSuiteRunId;
+            testServerUri += "/ATF-TS-RUN-ID/" + testSuiteRunId;
         }
 
-        conn = new URL(testCaseProviderURL).openConnection();
+        conn = new URL(testServerUri).openConnection();
         InputStream is = conn.getInputStream();
 
         StringBuffer builder = new StringBuffer();
