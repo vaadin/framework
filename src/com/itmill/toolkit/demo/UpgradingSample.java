@@ -65,7 +65,7 @@ public class UpgradingSample extends Application implements
         l.addComponent(new LoginBox());
 
         // Setup menu
-        menu.setStyle("menu");
+        menu.setStyleName("menu");
         menu.addListener(this);
         menu.setImmediate(true);
         addToMenu(new String[] { "Welcome", "Products", "Contact" });
@@ -98,7 +98,7 @@ public class UpgradingSample extends Application implements
             if (pages[i][0].equals(title)) {
                 final Panel p = new Panel(pages[i][0]);
                 p.addComponent(new Label(pages[i][1]));
-                p.setStyle("strong");
+                p.setStyleName("strong");
                 layout.addComponent(p, 1, 0);
             }
         }
@@ -128,7 +128,7 @@ public class UpgradingSample extends Application implements
             // Initialize the component
             loginPanel.addComponent(loginName);
             loginPanel.addComponent(loginButton);
-            loginPanel.setStyle("strong");
+            loginPanel.setStyleName("strong");
             loginName.setColumns(8);
             statusPanel.addComponent(statusLabel);
             statusPanel.addComponent(logoutButton);

@@ -6,7 +6,6 @@ package com.itmill.toolkit.ui;
 
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
-import com.itmill.toolkit.terminal.Sizeable;
 import com.itmill.toolkit.terminal.gwt.client.ui.MarginInfo;
 
 /**
