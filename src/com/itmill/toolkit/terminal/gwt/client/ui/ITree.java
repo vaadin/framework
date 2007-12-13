@@ -182,7 +182,6 @@ public class ITree extends FlowPanel implements Paintable {
         public TreeNode() {
             constructDom();
             sinkEvents(Event.ONCLICK);
-            setStyleName(CLASSNAME);
         }
 
         public void onBrowserEvent(Event event) {
@@ -256,6 +255,7 @@ public class ITree extends FlowPanel implements Paintable {
             } else {
                 addStyleName(CLASSNAME + "-leaf");
             }
+            addStyleName(CLASSNAME);
 
             if (uidl.getBooleanAttribute("expanded") && !getState()) {
                 setState(true, false);
