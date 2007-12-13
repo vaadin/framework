@@ -52,6 +52,7 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
 
     // Example "cache"
     private final HashMap exampleInstances = new HashMap();
+    private String section;
 
     // List of examples
     private static final Object[][] demos = new Object[][] {
@@ -290,26 +291,27 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
             final Object id = tree.getValue();
             final Item item = tree.getItem(id);
             //
-            String section;
+            String newSection;
             if (tree.isRoot(id)) {
-                section = ""; // show all sections
+                newSection = ""; // show all sections
             } else if (tree.hasChildren(id)) {
-                section = (String) item.getItemProperty(PROPERTY_ID_NAME)
+                newSection = (String) item.getItemProperty(PROPERTY_ID_NAME)
                         .getValue();
             } else {
-                section = (String) item.getItemProperty(PROPERTY_ID_CATEGORY)
-                        .getValue();
+                newSection = (String) item
+                        .getItemProperty(PROPERTY_ID_CATEGORY).getValue();
             }
 
             table.setValue(null);
             final IndexedContainer c = (IndexedContainer) table
                     .getContainerDataSource();
-            c.removeAllContainerFilters();
-            if (section != null) {
-                c
-                        .addContainerFilter(PROPERTY_ID_CATEGORY, section,
-                                false, true);
+
+            if (newSection != null && !newSection.equals(section)) {
+                c.removeAllContainerFilters();
+                c.addContainerFilter(PROPERTY_ID_CATEGORY, newSection, false,
+                        true);
             }
+            section = newSection;
             if (!tree.hasChildren(id)) {
                 // Example, not section
                 // update table selection
