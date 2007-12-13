@@ -6,7 +6,7 @@ package com.itmill.toolkit.tests;
 
 import java.util.Vector;
 
-import com.itmill.toolkit.terminal.Sizeable;
+import com.itmill.toolkit.terminal.Size;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.CustomComponent;
 import com.itmill.toolkit.ui.Label;
@@ -57,20 +57,18 @@ public class TestForTablesInitialColumnWidthLogicRendering extends
         t = getTestTable(3, 40);
         t
                 .setCaption("Table with some columns and wide explicit width. (Ought to widen columns to use all space)");
-        t.setWidth(1000);
+        t.getSize().setWidth(1000);
         main.addComponent(t);
 
         t = getTestTable(12, 4);
         t.setCaption("Table with  some rows and lot of columns, width == 100%");
-        t.setWidth(100);
-        t.setWidthUnits(Sizeable.UNITS_PERCENTAGE);
+        t.getSize().setWidth(100, Size.UNITS_PERCENTAGE);
         main.addComponent(t);
 
         t = getTestTable(12, 100);
         t
                 .setCaption("Table with  lot of rows and lot of columns, width == 50%");
-        t.setWidth(50);
-        t.setWidthUnits(Sizeable.UNITS_PERCENTAGE);
+        t.getSize().setWidth(50, Size.UNITS_PERCENTAGE);
         main.addComponent(t);
 
         t = getTestTable(5, 100);
@@ -80,7 +78,7 @@ public class TestForTablesInitialColumnWidthLogicRendering extends
         t = getTestTable(4, 4);
         t.setCaption("Table with some rows and width = 200px");
 
-        t.setWidth(200);
+        t.getSize().setWidth(200);
         main.addComponent(t);
 
         final Button b = new Button("refresh view", this, "createNewView");

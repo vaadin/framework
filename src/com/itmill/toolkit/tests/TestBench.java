@@ -15,7 +15,7 @@ import java.util.List;
 import com.itmill.toolkit.Application;
 import com.itmill.toolkit.data.Property;
 import com.itmill.toolkit.data.util.HierarchicalContainer;
-import com.itmill.toolkit.terminal.Sizeable;
+import com.itmill.toolkit.terminal.Size;
 import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.CustomComponent;
 import com.itmill.toolkit.ui.ExpandLayout;
@@ -112,8 +112,7 @@ public class TestBench extends com.itmill.toolkit.Application implements
         mainLayout.addComponent(menu);
 
         bodyLayout.addStyleName("light");
-        bodyLayout.setHeight(100);
-        bodyLayout.setHeightUnits(Sizeable.UNITS_PERCENTAGE);
+        bodyLayout.getSize().setHeight(100, Size.UNITS_PERCENTAGE);
         bodyLayout.setLayout(new ExpandLayout());
 
         mainLayout.addComponent(bodyLayout);

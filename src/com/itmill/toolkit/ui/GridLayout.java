@@ -10,9 +10,10 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 
+import com.itmill.toolkit.terminal.HasSize;
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
-import com.itmill.toolkit.terminal.Sizeable;
+import com.itmill.toolkit.terminal.Size;
 import com.itmill.toolkit.terminal.gwt.client.ui.AlignmentInfo;
 
 /**
@@ -35,7 +36,7 @@ import com.itmill.toolkit.terminal.gwt.client.ui.AlignmentInfo;
  * @VERSION@
  * @since 3.0
  */
-public class GridLayout extends AbstractLayout {
+public class GridLayout extends AbstractLayout implements HasSize {
 
     /**
      * Initial grid columns.
@@ -111,6 +112,11 @@ public class GridLayout extends AbstractLayout {
     private boolean spacing = false;
 
     /**
+     * Sizing object.
+     */
+    private Size size;
+
+    /**
      * Constructor for grid of given size (number of cells). Note that grid's
      * final size depends on the items that are added into the grid. Grid grows
      * if you add components outside the grid's area.
@@ -123,6 +129,7 @@ public class GridLayout extends AbstractLayout {
     public GridLayout(int columns, int rows) {
         setColumns(columns);
         setRows(rows);
+        size = new Size(this);
     }
 
     /**
@@ -385,6 +392,9 @@ public class GridLayout extends AbstractLayout {
     public void paintContent(PaintTarget target) throws PaintException {
 
         super.paintContent(target);
+
+        // Size
+        size.paint(target);
 
         // TODO refactor attribute names in future release.
         target.addAttribute("h", rows);
@@ -801,31 +811,17 @@ public class GridLayout extends AbstractLayout {
     }
 
     /**
-     * Sets the width of the layout.
-     * <p>
-     * <strong>NOTE:</strong> The behaviour of this methdod has changed in
-     * version 5.0. Now this method won't set the number of columns in the grid
-     * like it used to (use {@link #setColumns()} for that). Instead, it sets
-     * the actual visual width of the layout in pixels or in another unit
-     * specified in {@link Sizeable}.UNIT_SYMBOLS.
-     * </p>
+     * @deprecated use setColumns instead.
      */
-    public void setWidth(int width) {
-        super.setWidth(width);
+    public void setWidth(int columns) {
+        setColumns(columns);
     }
 
     /**
-     * Gets the width of the layout.
-     * <p>
-     * <strong>NOTE:</strong> The behaviour of this methdod has changed in
-     * version 5.0. Now this method won't return the number of columns in the
-     * grid like it used to (use {@link #getColumns()} for that). Instead, it
-     * returns the actual visual width of the layout in pixels or in another
-     * unit specified in {@link Sizeable}.UNIT_SYMBOLS.
-     * </p>
+     * @deprecated use getColumns instead.
      */
     public int getWidth() {
-        return super.getWidth();
+        return getColumns();
     }
 
     /**
@@ -873,31 +869,17 @@ public class GridLayout extends AbstractLayout {
     }
 
     /**
-     * Set the height of the layout.
-     * <p>
-     * <strong>NOTE:</strong> The behaviour of this methdod has changed in
-     * version 5.0. Now this method won't set the number of rows in the grid
-     * like it used to (use {@link #setRows()} for that). Instead, it sets the
-     * actual visual height of the layout in pixels or in another unit specified
-     * in {@link Sizeable}.UNIT_SYMBOLS.
-     * </p>
+     * @deprecated use setRows() instead.
      */
-    public void setHeight(int height) {
-        super.setHeight(height);
+    public void setHeight(int rows) {
+        setRows(rows);
     }
 
     /**
-     * Gets the height of the layout.
-     * <p>
-     * <strong>NOTE:</strong> The behaviour of this methdod has changed in
-     * version 5.0. Now this method won't return the number of rows in the grid
-     * like it used to (use {@link #getRows()} for that). Instead, it returns
-     * the actual visual height of the layout in pixels or in another unit
-     * specified in {@link Sizeable}.UNIT_SYMBOLS.
-     * </p>
+     * @deprecated use getRows() instead.
      */
     public int getHeight() {
-        return super.getHeight();
+        return getRows();
     }
 
     /**
@@ -1042,6 +1024,10 @@ public class GridLayout extends AbstractLayout {
      */
     public void setSpacing(boolean enabled) {
         spacing = enabled;
+    }
+
+    public Size getSize() {
+        return size;
     }
 
 }

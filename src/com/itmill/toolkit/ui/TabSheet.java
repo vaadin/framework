@@ -10,11 +10,12 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 
+import com.itmill.toolkit.terminal.HasSize;
 import com.itmill.toolkit.terminal.KeyMapper;
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
 import com.itmill.toolkit.terminal.Resource;
-import com.itmill.toolkit.terminal.Sizeable;
+import com.itmill.toolkit.terminal.Size;
 
 /**
  * Tabsheet component.
@@ -24,7 +25,7 @@ import com.itmill.toolkit.terminal.Sizeable;
  * @VERSION@
  * @since 3.0
  */
-public class TabSheet extends AbstractComponentContainer implements Sizeable {
+public class TabSheet extends AbstractComponentContainer implements HasSize {
 
     /**
      * Linked list of component tabs.
@@ -53,29 +54,7 @@ public class TabSheet extends AbstractComponentContainer implements Sizeable {
      */
     private boolean tabsHidden;
 
-    /**
-     * Height of the layout. Set to -1 for undefined height.
-     */
-    private int height = -1;
-
-    /**
-     * Height unit.
-     * 
-     * @see com.itmill.toolkit.terminal.Sizeable.UNIT_SYMBOLS;
-     */
-    private int heightUnit = UNITS_PIXELS;
-
-    /**
-     * Width of the layout. Set to -1 for undefined width.
-     */
-    private int width = -1;
-
-    /**
-     * Width unit.
-     * 
-     * @see com.itmill.toolkit.terminal.Sizeable.UNIT_SYMBOLS;
-     */
-    private int widthUnit = UNITS_PIXELS;
+    private Size size;
 
     /**
      * Constructs a new Tabsheet. Tabsheet is immediate by default.
@@ -83,6 +62,7 @@ public class TabSheet extends AbstractComponentContainer implements Sizeable {
     public TabSheet() {
         super();
         setImmediate(true);
+        size = new Size(this);
     }
 
     /**
@@ -197,15 +177,8 @@ public class TabSheet extends AbstractComponentContainer implements Sizeable {
      */
     public void paintContent(PaintTarget target) throws PaintException {
 
-        // Add size info
-        if (getHeight() > -1) {
-            target.addAttribute("height", getHeight()
-                    + UNIT_SYMBOLS[getHeightUnits()]);
-        }
-        if (getWidth() > -1) {
-            target.addAttribute("width", getWidth()
-                    + UNIT_SYMBOLS[getWidthUnits()]);
-        }
+        // Size
+        size.paint(target);
 
         if (areTabsHidden()) {
             target.addAttribute("hidetabs", true);
@@ -509,106 +482,8 @@ public class TabSheet extends AbstractComponentContainer implements Sizeable {
         fireEvent(new SelectedTabChangeEvent(this));
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.itmill.toolkit.terminal.Sizeable#getHeight()
-     */
-    public int getHeight() {
-        return height;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.itmill.toolkit.terminal.Sizeable#getHeightUnits()
-     */
-    public int getHeightUnits() {
-        return heightUnit;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.itmill.toolkit.terminal.Sizeable#getWidth()
-     */
-    public int getWidth() {
-        return width;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.itmill.toolkit.terminal.Sizeable#getWidthUnits()
-     */
-    public int getWidthUnits() {
-        return widthUnit;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.itmill.toolkit.terminal.Sizeable#setHeight(int)
-     */
-    public void setHeight(int height) {
-        this.height = height;
-        requestRepaint();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.itmill.toolkit.terminal.Sizeable#setHeightUnits(int)
-     */
-    public void setHeightUnits(int units) {
-        heightUnit = units;
-        requestRepaint();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.itmill.toolkit.terminal.Sizeable#setSizeFull()
-     */
-    public void setSizeFull() {
-        height = 100;
-        width = 100;
-        heightUnit = UNITS_PERCENTAGE;
-        widthUnit = UNITS_PERCENTAGE;
-        requestRepaint();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.itmill.toolkit.terminal.Sizeable#setSizeUndefined()
-     */
-    public void setSizeUndefined() {
-        height = -1;
-        width = -1;
-        heightUnit = UNITS_PIXELS;
-        widthUnit = UNITS_PIXELS;
-        requestRepaint();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.itmill.toolkit.terminal.Sizeable#setWidth(int)
-     */
-    public void setWidth(int width) {
-        this.width = width;
-        requestRepaint();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.itmill.toolkit.terminal.Sizeable#setWidthUnits(int)
-     */
-    public void setWidthUnits(int units) {
-        widthUnit = units;
-        requestRepaint();
+    public Size getSize() {
+        return size;
     }
 
 }

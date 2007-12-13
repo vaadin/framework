@@ -11,11 +11,12 @@ import java.util.Map;
 import com.itmill.toolkit.event.Action;
 import com.itmill.toolkit.event.ShortcutAction;
 import com.itmill.toolkit.event.Action.Handler;
+import com.itmill.toolkit.terminal.HasSize;
 import com.itmill.toolkit.terminal.KeyMapper;
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
 import com.itmill.toolkit.terminal.Scrollable;
-import com.itmill.toolkit.terminal.Sizeable;
+import com.itmill.toolkit.terminal.Size;
 
 /**
  * Panel - a simple single component container.
@@ -25,37 +26,15 @@ import com.itmill.toolkit.terminal.Sizeable;
  * @VERSION@
  * @since 3.0
  */
-public class Panel extends AbstractComponentContainer implements Sizeable,
+public class Panel extends AbstractComponentContainer implements HasSize,
         Scrollable, ComponentContainer.ComponentAttachListener,
         ComponentContainer.ComponentDetachListener, Action.Container {
 
     public static final String STYLE_LIGHT = "light";
 
     public static final String STYLE_EMPHASIZE = "emphasize";
-
-    /**
-     * Height of the layout. Set to -1 for undefined height.
-     */
-    private int height = -1;
-
-    /**
-     * Height unit.
-     * 
-     * @see com.itmill.toolkit.terminal.Sizeable.UNIT_SYMBOLS;
-     */
-    private int heightUnit = UNITS_PIXELS;
-
-    /**
-     * Width of the layout. Set to -1 for undefined width.
-     */
-    private int width = -1;
-
-    /**
-     * Width unit.
-     * 
-     * @see com.itmill.toolkit.terminal.Sizeable.UNIT_SYMBOLS;
-     */
-    private int widthUnit = UNITS_PIXELS;
+    
+    private Size size;
 
     /**
      * Layout of the panel.
@@ -88,6 +67,7 @@ public class Panel extends AbstractComponentContainer implements Sizeable,
      */
     public Panel() {
         setLayout(null);
+        size = new Size(this);
     }
 
     /**
@@ -98,6 +78,7 @@ public class Panel extends AbstractComponentContainer implements Sizeable,
      */
     public Panel(Layout layout) {
         setLayout(layout);
+        size = new Size(this);
     }
 
     /**
@@ -121,6 +102,7 @@ public class Panel extends AbstractComponentContainer implements Sizeable,
     public Panel(String caption, Layout layout) {
         this(layout);
         setCaption(caption);
+        size = new Size(this);
     }
 
     /**
@@ -187,13 +169,13 @@ public class Panel extends AbstractComponentContainer implements Sizeable,
         layout.paint(target);
 
         // Add size info as variables
-        if (getHeight() > -1) {
-            target.addVariable(this, "height", getHeight()
-                    + UNIT_SYMBOLS[getHeightUnits()]);
+        if (size.getHeight() > -1) {
+            target.addVariable(this, "height", size.getHeight()
+                    + Size.UNIT_SYMBOLS[size.getHeightUnits()]);
         }
-        if (getWidth() > -1) {
-            target.addVariable(this, "width", getWidth()
-                    + UNIT_SYMBOLS[getWidthUnits()]);
+        if (size.getWidth() > -1) {
+            target.addVariable(this, "width", size.getWidth()
+                    + Size.UNIT_SYMBOLS[size.getWidthUnits()]);
         }
 
         if (isScrollable()) {
@@ -300,16 +282,16 @@ public class Panel extends AbstractComponentContainer implements Sizeable,
         // Get new size
         final Integer newWidth = (Integer) variables.get("width");
         final Integer newHeight = (Integer) variables.get("height");
-        if (newWidth != null && newWidth.intValue() != getWidth()) {
-            setWidth(newWidth.intValue());
-            // ensure units as we are reading pixels
-            setWidthUnits(UNITS_PIXELS);
+        if (newWidth != null && newWidth.intValue() != size.getWidth()) {
+            size.setWidth(newWidth.intValue());
+            // ensure units, as we are reading pixels
+            size.setWidthUnits(Size.UNITS_PIXELS);
 
         }
-        if (newHeight != null && newHeight.intValue() != getHeight()) {
-            setHeight(newHeight.intValue());
-            // ensure units as we are reading pixels
-            setHeightUnits(UNITS_PIXELS);
+        if (newHeight != null && newHeight.intValue() != size.getHeight()) {
+            size.setHeight(newHeight.intValue());
+            // ensure units, as we are reading pixels
+            size.setHeightUnits(Size.UNITS_PIXELS);
         }
 
         // Scrolling
@@ -481,106 +463,67 @@ public class Panel extends AbstractComponentContainer implements Sizeable,
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.itmill.toolkit.terminal.Sizeable#getHeight()
-     */
-    public int getHeight() {
-        return height;
+    public Size getSize() {
+        return size;
     }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.itmill.toolkit.terminal.Sizeable#getHeightUnits()
-     */
-    public int getHeightUnits() {
-        return heightUnit;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.itmill.toolkit.terminal.Sizeable#getWidth()
-     */
-    public int getWidth() {
-        return width;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.itmill.toolkit.terminal.Sizeable#getWidthUnits()
-     */
-    public int getWidthUnits() {
-        return widthUnit;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.itmill.toolkit.terminal.Sizeable#setHeight(int)
-     */
-    public void setHeight(int height) {
-        this.height = height;
-        requestRepaint();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.itmill.toolkit.terminal.Sizeable#setHeightUnits(int)
-     */
-    public void setHeightUnits(int units) {
-        heightUnit = units;
-        requestRepaint();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.itmill.toolkit.terminal.Sizeable#setSizeFull()
-     */
-    public void setSizeFull() {
-        height = 100;
-        width = 100;
-        heightUnit = UNITS_PERCENTAGE;
-        widthUnit = UNITS_PERCENTAGE;
-        requestRepaint();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.itmill.toolkit.terminal.Sizeable#setSizeUndefined()
-     */
-    public void setSizeUndefined() {
-        height = -1;
-        width = -1;
-        heightUnit = UNITS_PIXELS;
-        widthUnit = UNITS_PIXELS;
-        requestRepaint();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.itmill.toolkit.terminal.Sizeable#setWidth(int)
+    
+    
+    /* Compatibility methods */
+    
+    /**
+     * @deprecated use Size object instead (getSize().setWidth()).
      */
     public void setWidth(int width) {
-        this.width = width;
-        requestRepaint();
+        size.setWidth(width);
     }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.itmill.toolkit.terminal.Sizeable#setWidthUnits(int)
+    
+    /**
+     * @deprecated use Size object instead (getSize().setWidthUnits()).
      */
-    public void setWidthUnits(int units) {
-        widthUnit = units;
-        requestRepaint();
+    public void setWidthUnits(int unit) {
+        size.setWidthUnits(unit);
+    }
+    
+    /**
+     * @deprecated use Size object instead (getSize().setHeight()).
+     */
+    public void setHeight(int height) {
+        size.setHeight(height);
+    }
+    
+    /**
+     * @deprecated use Size object instead (getSize().setHeightUnits()).
+     */
+    public void setHeightUnits(int unit) {
+        size.setHeightUnits(unit);
+    }
+    
+    /**
+     * @deprecated use Size object instead (getSize().getWidth()).
+     */
+    public int getWidth() {
+        return size.getWidth();
+    }
+    
+    /**
+     * @deprecated use Size object instead (getSize().getWidthUnits()).
+     */
+    public int getWidthUnits() {
+        return size.getWidthUnits();
+    }
+    
+    /**
+     * @deprecated use Size object instead (getSize().getHeight()).
+     */
+    public int getHeight() {
+        return size.getHeight();
+    }
+    
+    /**
+     * @deprecated use Size object instead (getSize().getHeightUnits()).
+     */
+    public int getHeightUnits() {
+        return size.getHeightUnits();
     }
 
 }

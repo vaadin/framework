@@ -6,7 +6,6 @@ package com.itmill.toolkit.tests.featurebrowser;
 
 import com.itmill.toolkit.terminal.ClassResource;
 import com.itmill.toolkit.terminal.Resource;
-import com.itmill.toolkit.terminal.Sizeable;
 import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.CustomComponent;
 import com.itmill.toolkit.ui.Embedded;
@@ -79,10 +78,7 @@ public abstract class Feature extends CustomComponent {
 
         ts = new TabSheet();
 
-        ts.setWidth(100);
-        ts.setWidthUnits(Sizeable.UNITS_PERCENTAGE);
-        ts.setHeight(100);
-        ts.setHeightUnits(Sizeable.UNITS_PERCENTAGE);
+        ts.getSize().setSizeFull();
 
         // Description tab
         final String title = getTitle();

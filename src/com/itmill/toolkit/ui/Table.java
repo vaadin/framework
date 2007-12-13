@@ -21,11 +21,12 @@ import com.itmill.toolkit.data.Property;
 import com.itmill.toolkit.data.util.ContainerOrderedWrapper;
 import com.itmill.toolkit.data.util.IndexedContainer;
 import com.itmill.toolkit.event.Action;
+import com.itmill.toolkit.terminal.HasSize;
 import com.itmill.toolkit.terminal.KeyMapper;
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
 import com.itmill.toolkit.terminal.Resource;
-import com.itmill.toolkit.terminal.Sizeable;
+import com.itmill.toolkit.terminal.Size;
 
 /**
  * <code>TableComponent</code> is used for representing data or components in
@@ -37,7 +38,7 @@ import com.itmill.toolkit.terminal.Sizeable;
  * @since 3.0
  */
 public class Table extends AbstractSelect implements Action.Container,
-        Container.Ordered, Container.Sortable, Sizeable {
+        Container.Ordered, Container.Sortable, HasSize {
 
     private static final int CELL_KEY = 0;
 
@@ -49,25 +50,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     private static final int CELL_FIRSTCOL = 4;
 
-    /**
-     * Width of the table or -1 if unspecified.
-     */
-    private int width = -1;
-
-    /**
-     * Height of the table or -1 if unspecified.
-     */
-    private int height = -1;
-
-    /**
-     * Width unit.
-     */
-    private int widthUnit = Sizeable.UNITS_PIXELS;
-
-    /**
-     * Height unit.
-     */
-    private int heightUnit = Sizeable.UNITS_PIXELS;
+    private Size size;
 
     /**
      * Left column alignment. <b>This is the default behaviour. </b>
@@ -308,6 +291,7 @@ public class Table extends AbstractSelect implements Action.Container,
      */
     public Table() {
         setRowHeaderMode(ROW_HEADER_MODE_HIDDEN);
+        size = new Size(this);
     }
 
     /**
@@ -1422,14 +1406,7 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         // Size
-        if (getHeight() >= 0) {
-            target.addAttribute("height", "" + getHeight()
-                    + Sizeable.UNIT_SYMBOLS[getHeightUnits()]);
-        }
-        if (getWidth() >= 0) {
-            target.addAttribute("width", "" + getWidth()
-                    + Sizeable.UNIT_SYMBOLS[getWidthUnits()]);
-        }
+        size.paint(target);
 
         // Initialize temps
         final Object[] colids = getVisibleColumns();
@@ -2439,92 +2416,6 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     /**
-     * Gets height property unit.
-     * 
-     * @see com.itmill.toolkit.terminal.Sizeable#getHeightUnits()
-     */
-    public int getHeightUnits() {
-        return heightUnit;
-    }
-
-    /**
-     * Gets width property unit.
-     * 
-     * @see com.itmill.toolkit.terminal.Sizeable#getWidthUnits()
-     */
-    public int getWidthUnits() {
-        return widthUnit;
-    }
-
-    /**
-     * Sets height units.
-     * 
-     * @see com.itmill.toolkit.terminal.Sizeable#setHeightUnits(int)
-     */
-    public void setHeightUnits(int units) {
-        heightUnit = units;
-    }
-
-    /**
-     * Sets width units. Table supports only Sizeable.UNITS_PIXELS and
-     * Sizeable.UNITS_PERCENTAGE. Setting to any other throws
-     * IllegalArgumentException.
-     * 
-     * @see com.itmill.toolkit.terminal.Sizeable#setWidthUnits(int)
-     */
-    public void setWidthUnits(int units) {
-        if (units != Sizeable.UNITS_PIXELS
-                && units != Sizeable.UNITS_PERCENTAGE) {
-            throw new IllegalArgumentException();
-        }
-        widthUnit = units;
-    }
-
-    /**
-     * Gets height.
-     * 
-     * @return height value as a positive integer or negative value if not
-     *         assigned.
-     * @see com.itmill.toolkit.terminal.Sizeable#getHeight()
-     */
-    public int getHeight() {
-        return height;
-    }
-
-    /**
-     * Gets width.
-     * 
-     * @return width value as positive integer or negative value if not
-     *         assigned.
-     * @see com.itmill.toolkit.terminal.Sizeable#getWidth()
-     */
-    public int getWidth() {
-        return width;
-    }
-
-    /**
-     * Sets height. Use negative value to let the client decide the height.
-     * 
-     * @param height
-     *                the height to set.
-     */
-    public void setHeight(int height) {
-        this.height = height;
-        requestRepaint();
-    }
-
-    /**
-     * Sets width. Use negative value to allow the client decide the width.
-     * 
-     * @param width
-     *                the width to set.
-     */
-    public void setWidth(int width) {
-        this.width = width;
-        requestRepaint();
-    }
-
-    /**
      * Table does not support lazy options loading mode. Setting this true will
      * throw UnsupportedOperationException.
      * 
@@ -2537,28 +2428,66 @@ public class Table extends AbstractSelect implements Action.Container,
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.itmill.toolkit.terminal.Sizeable#setSizeFull()
-     */
-    public void setSizeFull() {
-        setWidth(100);
-        setHeight(100);
-        setWidthUnits(UNITS_PERCENTAGE);
-        setHeightUnits(UNITS_PERCENTAGE);
+    public Size getSize() {
+        return size;
     }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.itmill.toolkit.terminal.Sizeable#setSizeUndefined()
+    
+    /* Compatibility methods */
+    
+    /**
+     * @deprecated use Size object instead (getSize().setWidth()).
      */
-    public void setSizeUndefined() {
-        setWidth(-1);
-        setHeight(-1);
-        setWidthUnits(UNITS_PIXELS);
-        setHeightUnits(UNITS_PIXELS);
+    public void setWidth(int width) {
+        size.setWidth(width);
+    }
+    
+    /**
+     * @deprecated use Size object instead (getSize().setWidthUnits()).
+     */
+    public void setWidthUnits(int unit) {
+        size.setWidthUnits(unit);
+    }
+    
+    /**
+     * @deprecated use Size object instead (getSize().setHeight()).
+     */
+    public void setHeight(int height) {
+        size.setHeight(height);
+    }
+    
+    /**
+     * @deprecated use Size object instead (getSize().setHeightUnits()).
+     */
+    public void setHeightUnits(int unit) {
+        size.setHeightUnits(unit);
+    }
+    
+    /**
+     * @deprecated use Size object instead (getSize().getWidth()).
+     */
+    public int getWidth() {
+        return size.getWidth();
+    }
+    
+    /**
+     * @deprecated use Size object instead (getSize().getWidthUnits()).
+     */
+    public int getWidthUnits() {
+        return size.getWidthUnits();
+    }
+    
+    /**
+     * @deprecated use Size object instead (getSize().getHeight()).
+     */
+    public int getHeight() {
+        return size.getHeight();
+    }
+    
+    /**
+     * @deprecated use Size object instead (getSize().getHeightUnits()).
+     */
+    public int getHeightUnits() {
+        return size.getHeightUnits();
     }
 
 }

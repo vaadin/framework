@@ -57,7 +57,7 @@ public class TableExample extends CustomComponent implements Action.Handler,
         // "source" table with bells & whistlesenabled
         source = new Table("All creatures");
         source.setPageLength(7);
-        source.setWidth(550);
+        source.getSize().setWidth(550);
         source.setColumnCollapsingAllowed(true);
         source.setColumnReorderingAllowed(true);
         source.setSelectable(true);
@@ -92,7 +92,7 @@ public class TableExample extends CustomComponent implements Action.Handler,
         // "saved" table, minimalistic
         saved = new Table("Saved creatures");
         saved.setPageLength(5);
-        saved.setWidth(550);
+        saved.getSize().setWidth(550);
         saved.setSelectable(false);
         saved.setColumnHeaderMode(Table.COLUMN_HEADER_MODE_HIDDEN);
         saved.setRowHeaderMode(Table.ROW_HEADER_MODE_ID);

@@ -42,7 +42,7 @@ public class TreeFilesystem extends com.itmill.toolkit.Application implements
         // configure file structure panel
         main.addComponent(explorerPanel);
         explorerPanel.addComponent(tree);
-        explorerPanel.setHeight(400);
+        explorerPanel.getSize().setHeight(400);
 
         // "this" handles tree's expand event
         tree.addListener(this);

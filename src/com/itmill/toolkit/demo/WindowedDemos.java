@@ -45,8 +45,8 @@ public class WindowedDemos extends com.itmill.toolkit.Application {
 
         // Create menu window.
         final Window menu = new Window("Select demo");
-        menu.setWidth(200);
-        menu.setHeight(400);
+        menu.getSize().setWidth(200);
+        menu.getSize().setHeight(400);
         main.addWindow(menu); // add to layout
 
         // Create a menu button for each demo
@@ -75,8 +75,8 @@ public class WindowedDemos extends com.itmill.toolkit.Application {
         Window w = (Window) windows.get(demoName);
         if (w == null) {
             w = new Window(demoName);
-            w.setWidth(520);
-            w.setHeight(500);
+            w.getSize().setWidth(520);
+            w.getSize().setHeight(500);
             w.setPositionX(202);
             windows.put(demoName, w);
             getMainWindow().addWindow(w);

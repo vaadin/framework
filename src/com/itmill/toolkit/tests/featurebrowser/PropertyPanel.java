@@ -28,6 +28,7 @@ import com.itmill.toolkit.ui.DateField;
 import com.itmill.toolkit.ui.Field;
 import com.itmill.toolkit.ui.Form;
 import com.itmill.toolkit.ui.GridLayout;
+import com.itmill.toolkit.ui.OptionGroup;
 import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Panel;
 import com.itmill.toolkit.ui.Select;
@@ -66,10 +67,7 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
         setCaption("Properties");
         addComponent(formsLayout);
 
-        setWidth(100);
-        setWidthUnits(Table.UNITS_PERCENTAGE);
-        setHeight(100);
-        setHeightUnits(Table.UNITS_PERCENTAGE);
+        getSize().setSizeFull();
 
         // Target object
         this.objectToConfigure = objectToConfigure;
@@ -105,10 +103,7 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
                 Table.ALIGN_LEFT, Table.ALIGN_CENTER, Table.ALIGN_CENTER });
         allProperties.setColumnHeaderMode(Table.COLUMN_HEADER_MODE_ID);
         allProperties.setPageLength(0);
-        allProperties.setWidth(100);
-        allProperties.setWidthUnits(Table.UNITS_PERCENTAGE);
-        allProperties.setHeight(100);
-        allProperties.setHeightUnits(Table.UNITS_PERCENTAGE);
+        allProperties.getSize().setSizeFull();
         updatePropertyList();
 
     }
@@ -119,7 +114,7 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
         // Create new panel containing the form
         final Panel p = new Panel();
         p.setCaption(propertySetCaption);
-        p.setStyle("light");
+        p.setStyleName(Panel.STYLE_LIGHT);
         p.addComponent(properties);
         formsLayout.addComponent(p);
 
@@ -383,7 +378,7 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
                     d
                             .setDescription("This is a DateField-component with text-style");
                     d.setResolution(DateField.RESOLUTION_MIN);
-                    d.setStyle("text");
+                    d.setStyleName("text");
                     ((AbstractComponentContainer) objectToConfigure)
                             .addComponent(d);
                 }
@@ -393,7 +388,7 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
                     final DateField c = new DateField("Calendar", new Date());
                     c
                             .setDescription("DateField-component with calendar-style and day-resolution");
-                    c.setStyle("calendar");
+                    c.setStyleName("calendar");
                     c.setResolution(DateField.RESOLUTION_DAY);
                     ((AbstractComponentContainer) objectToConfigure)
                             .addComponent(c);
@@ -401,13 +396,12 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
 
                 // Select option group style
                 if (value.equals("Option group")) {
-                    final Select s = new Select("Options");
+                    final OptionGroup s = new OptionGroup("Options");
                     s.setDescription("Select-component with optiongroup-style");
                     s.addItem("Linux");
                     s.addItem("Windows");
                     s.addItem("Solaris");
                     s.addItem("Symbian");
-                    s.setStyle("optiongroup");
 
                     ((AbstractComponentContainer) objectToConfigure)
                             .addComponent(s);

@@ -51,10 +51,10 @@ public class TreeFilesystemContainer extends com.itmill.toolkit.Application
         main.setMargin(true);
         main.setSpacing(true);
 
-        propertyPanel.setHeight(120);
+        propertyPanel.getSize().setHeight(120);
         main.addComponent(propertyPanel);
-        explorerPanel.setHeight(100);
-        explorerPanel.setHeightUnits(Sizeable.UNITS_PERCENTAGE);
+        explorerPanel.getSize().setHeight(100);
+        explorerPanel.getSize().setHeightUnits(Sizeable.UNITS_PERCENTAGE);
         main.addComponent(explorerPanel);
         main.expand(explorerPanel);
 

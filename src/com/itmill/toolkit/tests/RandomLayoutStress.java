@@ -154,12 +154,12 @@ public class RandomLayoutStress extends com.itmill.toolkit.Application {
                                     + "extremities and may have a caption to clarify the nature of the contained components' purpose."
                                     + " Panel contains an layout where the actual contained components are added, "
                                     + "this layout may be switched on the fly."));
-            ((Panel) result).setWidth(250);
+            ((Panel) result).getSize().setWidth(250);
             break;
         case 6:
             // Datefield
             result = new DateField();
-            ((DateField) result).setStyle("calendar");
+            ((DateField) result).setStyleName("calendar");
             ((DateField) result).setValue(new java.util.Date());
             result.setCaption("Calendar component " + caption);
             break;

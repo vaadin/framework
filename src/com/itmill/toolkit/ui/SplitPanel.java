@@ -6,9 +6,10 @@ package com.itmill.toolkit.ui;
 
 import java.util.Iterator;
 
+import com.itmill.toolkit.terminal.HasSize;
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
-import com.itmill.toolkit.terminal.Sizeable;
+import com.itmill.toolkit.terminal.Size;
 
 /**
  * SplitPanel.
@@ -21,7 +22,7 @@ import com.itmill.toolkit.terminal.Sizeable;
  * @VERSION@
  * @since 5.0
  */
-public class SplitPanel extends AbstractLayout {
+public class SplitPanel extends AbstractLayout implements HasSize {
 
     /* Predefined orientations ***************************************** */
 
@@ -46,7 +47,9 @@ public class SplitPanel extends AbstractLayout {
 
     private int pos = 50;
 
-    private int posUnit = UNITS_PERCENTAGE;
+    private int posUnit = Size.UNITS_PERCENTAGE;
+
+    private Size size;
 
     /**
      * Creates a new split panel. The orientation of the panels is
@@ -54,7 +57,8 @@ public class SplitPanel extends AbstractLayout {
      */
     public SplitPanel() {
         orientation = ORIENTATION_VERTICAL;
-        setSizeFull();
+        size = new Size(this);
+        size.setSizeFull();
     }
 
     /**
@@ -65,8 +69,8 @@ public class SplitPanel extends AbstractLayout {
      *                the Orientation of the layout.
      */
     public SplitPanel(int orientation) {
-        this.orientation = orientation;
-        setSizeFull();
+        this();
+        setOrientation(orientation);
     }
 
     /**
@@ -194,7 +198,9 @@ public class SplitPanel extends AbstractLayout {
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);
 
-        final String position = pos + UNIT_SYMBOLS[posUnit];
+        size.paint(target);
+
+        final String position = pos + Size.UNIT_SYMBOLS[posUnit];
 
         target.addAttribute("position", position);
 
@@ -254,7 +260,7 @@ public class SplitPanel extends AbstractLayout {
      *                the new size of the first region in persentage
      */
     public void setSplitPosition(int pos) {
-        setSplitPosition(pos, UNITS_PERCENTAGE);
+        setSplitPosition(pos, Size.UNITS_PERCENTAGE);
     }
 
     /**
@@ -263,12 +269,17 @@ public class SplitPanel extends AbstractLayout {
      * @param pos
      *                size of the first region
      * @param unit
-     *                the unit (from {@link Sizeable}) in which the size is
+     *                the unit (from {@link Size}) in which the size is
      *                given.
      */
     public void setSplitPosition(int pos, int unit) {
         this.pos = pos;
         posUnit = unit;
+    }
+
+    public Size getSize() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

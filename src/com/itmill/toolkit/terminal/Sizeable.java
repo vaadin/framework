@@ -12,6 +12,7 @@ package com.itmill.toolkit.terminal;
  * @version
  * @VERSION@
  * @since 3.0
+ * @deprecated
  */
 public interface Sizeable {
 

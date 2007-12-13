@@ -4,7 +4,6 @@
 
 package com.itmill.toolkit.ui;
 
-import com.itmill.toolkit.terminal.Sizeable;
 
 /**
  * Extension to the {@link ComponentContainer} interface which adds the
@@ -17,7 +16,7 @@ import com.itmill.toolkit.terminal.Sizeable;
  * @VERSION@
  * @since 3.0
  */
-public interface Layout extends ComponentContainer, Sizeable {
+public interface Layout extends ComponentContainer {
 
     /**
      * Enable layout margins. Affects all four sides of the layout. This will

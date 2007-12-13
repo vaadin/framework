@@ -99,7 +99,7 @@ public class ReservationApplication extends Application {
 
         map = new GoogleMap();
         // TODO support EM
-        // map.setWidthUnits(Sizeable.UNITS_EM);
+        // map.setWidthUnits(Size.UNITS_EM);
         map.setWidth(266);
         map.setHeight(210);
         map.setItemMarkerHtmlPropertyId(SampleDB.Resource.PROPERTY_ID_NAME);
@@ -176,8 +176,8 @@ public class ReservationApplication extends Application {
         allLayout.setMargin(true);
 
         allTable = new Table();
-        allTable.setHeight(300);
-        allTable.setWidth(700);
+        allTable.getSize().setHeight(300);
+        allTable.getSize().setWidth(700);
         allTable.setColumnCollapsingAllowed(true);
         allTable.setColumnReorderingAllowed(true);
         allLayout.addComponent(allTable);

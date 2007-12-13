@@ -5,7 +5,6 @@
 package com.itmill.toolkit.tests;
 
 import com.itmill.toolkit.Application;
-import com.itmill.toolkit.terminal.Sizeable;
 import com.itmill.toolkit.ui.ExpandLayout;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.SplitPanel;
@@ -40,10 +39,7 @@ public class TestForApplicationLayoutThatUsesWholeBrosersSpace extends
 
         final Table t = TestForTablesInitialColumnWidthLogicRendering
                 .getTestTable(4, 100);
-        t.setWidth(100);
-        t.setWidthUnits(Sizeable.UNITS_PERCENTAGE);
-        t.setHeight(100);
-        t.setHeightUnits(Sizeable.UNITS_PERCENTAGE);
+        t.getSize().setSizeFull();
         topRight.addComponent(t);
         topRight.expand(t);
 

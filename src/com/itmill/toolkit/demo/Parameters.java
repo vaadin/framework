@@ -11,7 +11,6 @@ import java.util.Map;
 import com.itmill.toolkit.terminal.DownloadStream;
 import com.itmill.toolkit.terminal.ExternalResource;
 import com.itmill.toolkit.terminal.ParameterHandler;
-import com.itmill.toolkit.terminal.Sizeable;
 import com.itmill.toolkit.terminal.URIHandler;
 import com.itmill.toolkit.ui.ExpandLayout;
 import com.itmill.toolkit.ui.Label;
@@ -74,10 +73,7 @@ public class Parameters extends com.itmill.toolkit.Application implements
         params.addContainerProperty("Key", String.class, "");
         params.addContainerProperty("Value", String.class, "");
         final Panel panel2 = new Panel("Parameter Handler");
-        params.setHeight(100);
-        params.setHeightUnits(Sizeable.UNITS_PERCENTAGE);
-        panel2.setHeight(100);
-        panel2.setHeightUnits(Sizeable.UNITS_PERCENTAGE);
+        params.getSize().setSizeFull();
         panel2.setLayout(new ExpandLayout());
         panel2.getLayout().setMargin(true);
 

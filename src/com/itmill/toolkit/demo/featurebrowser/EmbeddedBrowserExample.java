@@ -34,7 +34,7 @@ public class EmbeddedBrowserExample extends ExpandLayout implements
     }
 
     public EmbeddedBrowserExample(String[] urls) {
-        setSizeFull();
+        getSize().setSizeFull();
 
         // create the address combobox
         final Select select = new Select();

@@ -15,6 +15,7 @@ import com.itmill.toolkit.data.validator.StringLengthValidator;
 import com.itmill.toolkit.terminal.ClassResource;
 import com.itmill.toolkit.terminal.DownloadStream;
 import com.itmill.toolkit.terminal.ExternalResource;
+import com.itmill.toolkit.terminal.Size;
 import com.itmill.toolkit.terminal.StreamResource;
 import com.itmill.toolkit.terminal.UserError;
 import com.itmill.toolkit.ui.AbstractSelect;
@@ -366,7 +367,7 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
     void example_DateField(Window main, String param) {
         /* Create a DateField with the calendar style. */
         final DateField date = new DateField("Here is a calendar field");
-        date.setStyle("calendar");
+        date.setStyleName("calendar");
 
         /* Set the date and time to present. */
         date.setValue(new java.util.Date());
@@ -491,7 +492,7 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
         grid.addComponent(new Button("3x1 button"), 1, 1, 3, 1);
         grid.addComponent(new Label("1x2 cell"), 1, 2, 1, 3);
         final DateField date = new DateField("A 2x2 date field");
-        date.setStyle("calendar");
+        date.setStyleName("calendar");
         grid.addComponent(date, 2, 2, 3, 3);
 
         main.addComponent(grid);
@@ -505,10 +506,8 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
             // OrderedLayout(OrderedLayout.ORIENTATION_VERTICAL);
             main.setLayout(layout);
             layout.addStyleName("example-alignment");
-            layout.setWidth(400);
-            layout.setWidthUnits(GridLayout.UNITS_PIXELS);
-            layout.setHeight(400);
-            layout.setHeightUnits(GridLayout.UNITS_PIXELS);
+            layout.getSize().setWidth(400, Size.UNITS_PIXELS);
+            layout.getSize().setHeight(400, Size.UNITS_PIXELS);
 
             /* Define cells and their layouts to create. */
             /*
@@ -586,10 +585,7 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
             layout.expand(table);
 
             /* Set it to use all available area. */
-            table.setHeight(100);
-            table.setHeightUnits(Table.UNITS_PERCENTAGE);
-            table.setWidth(100);
-            table.setWidthUnits(Table.UNITS_PERCENTAGE);
+            table.getSize().setSizeFull();
 
             /* Add some component below the expanding one. */
             final Button button2 = new Button("Ok");
@@ -667,8 +663,8 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
         mywindow.addComponent(okbutton);
 
         /* Set window size. */
-        mywindow.setHeight(200);
-        mywindow.setWidth(400);
+        mywindow.getSize().setHeight(200);
+        mywindow.getSize().setWidth(400);
 
         /* Set window position. */
         mywindow.setPositionX(200);
