@@ -49,13 +49,8 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
     /*
      * Elements that provides the Layout interface implementation.
      */
-    protected Element size;
+    protected Element root;
     protected Element margin;
-
-    protected Element topMargin = null;
-    protected Element bottomMargin = null;
-
-    private static final String structure = "<div><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tbody></tbody></table></div>";
 
     public IOrderedLayout(int orientation) {
         orientationMode = orientation;
@@ -64,17 +59,17 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
     }
 
     protected void constructDOM() {
-        size = DOM.createDiv();
-        DOM.setInnerHTML(size, structure);
-        margin = DOM.getFirstChild(size);
-        final Element tBody = DOM.getFirstChild(DOM.getFirstChild(margin));
+        root = DOM.createDiv();
+        margin = DOM.createDiv();
+        DOM.appendChild(root, margin);
         if (orientationMode == ORIENTATION_HORIZONTAL) {
-            childContainer = DOM.createTR();
-            DOM.appendChild(tBody, childContainer);
+            final String structure = "<table cellspacing=\"0\" cellpadding=\"0\"><tbody><tr></tr></tbody></table>";
+            DOM.setInnerHTML(margin, structure);
+            childContainer = DOM.getFirstChild(DOM.getFirstChild(DOM.getFirstChild(margin)));
         } else {
-            childContainer = tBody;
+            childContainer = margin;
         }
-        setElement(size);
+        setElement(root);
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -84,29 +79,6 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
         // Ensure correct implementation
         if (client.updateComponent(this, uidl, false)) {
             return;
-        }
-
-        // Set size
-        // TODO move these to own methods (override setWidth & setHeight)
-        if (uidl.hasAttribute("width")) {
-            setWidth(uidl.getStringAttribute("width"));
-            DOM.setStyleAttribute(DOM.getFirstChild(margin), "width", "100%");
-            DOM.setStyleAttribute(getElement(), "tableLayout", "fixed");
-        } else {
-            setWidth("");
-            DOM.setStyleAttribute(DOM.getFirstChild(margin), "width", "");
-            DOM.setStyleAttribute(getElement(), "tableLayout", "");
-        }
-        if (uidl.hasAttribute("height")) {
-            setHeight(uidl.getStringAttribute("height"));
-            DOM.setStyleAttribute(margin, "height", "100%");
-            DOM.setStyleAttribute(DOM.getFirstChild(margin), "height", "100%");
-            DOM.setStyleAttribute(getElement(), "tableLayout", "fixed");
-        } else {
-            setHeight("");
-            DOM.setStyleAttribute(margin, "height", "");
-            DOM.setStyleAttribute(DOM.getFirstChild(margin), "height", "");
-            DOM.setStyleAttribute(getElement(), "tableLayout", "");
         }
 
         // Update contained components
@@ -253,17 +225,7 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
         } else {
             final Element wrapper = createWidgetWrappper();
             DOM.insertChild(childContainer, wrapper, beforeIndex);
-            insert(w, getWidgetContainerFromWrapper(wrapper), beforeIndex,
-                    false);
-        }
-    }
-
-    protected Element getWidgetContainerFromWrapper(Element wrapper) {
-        switch (orientationMode) {
-        case ORIENTATION_HORIZONTAL:
-            return wrapper;
-        default:
-            return DOM.getFirstChild(wrapper);
+            insert(w, wrapper, beforeIndex, false);
         }
     }
 
@@ -271,17 +233,13 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
      * creates an Element which will contain child widget
      */
     protected Element createWidgetWrappper() {
-        final Element td = DOM.createTD();
-        // We need this overflow:hidden, because it's the default rendering of
-        // IE (although it can be overridden with overflow:visible).
-        DOM.setStyleAttribute(td, "overflow", "hidden");
         switch (orientationMode) {
         case ORIENTATION_HORIZONTAL:
+            final Element td = DOM.createTD();
             return td;
         default:
-            final Element tr = DOM.createTR();
-            DOM.appendChild(tr, td);
-            return tr;
+            final Element div = DOM.createDiv();
+            return div;
         }
     }
 
@@ -320,8 +278,7 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
     public void add(Widget w) {
         final Element wrapper = createWidgetWrappper();
         DOM.appendChild(childContainer, wrapper);
-        super.add(w, orientationMode == ORIENTATION_HORIZONTAL ? wrapper : DOM
-                .getFirstChild(wrapper));
+        super.add(w, wrapper);
     }
 
     public boolean remove(int index) {
@@ -333,9 +290,7 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
         final boolean removed = super.remove(w);
         if (removed) {
             if (!(w instanceof Caption)) {
-                DOM.removeChild(childContainer,
-                        orientationMode == ORIENTATION_HORIZONTAL ? wrapper
-                                : DOM.getParent(wrapper));
+                DOM.removeChild(childContainer, wrapper);
             }
             return true;
         }
@@ -355,72 +310,16 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
     }
 
     protected void handleMargins(UIDL uidl) {
-        // Modify layout margins
-        String marginClasses = "";
         final MarginInfo margins = new MarginInfo(uidl
                 .getIntAttribute("margins"));
-        final Element topBottomMarginContainer = orientationMode == ORIENTATION_HORIZONTAL ? DOM
-                .getParent(childContainer)
-                : childContainer;
-        // Top margin
-        // remove from current position so we can insert it to proper position
-        if (topMargin != null) {
-            DOM.removeChild(topBottomMarginContainer, topMargin);
-        }
-        topMargin = null;
-        if (margins.hasTop()) {
-            marginClasses += " " + StyleConstants.LAYOUT_MARGIN_TOP;
-            if (topMargin == null) {
-                // We need to insert a new row in to the table
-                topMargin = DOM.createTR();
-                DOM.appendChild(topMargin, DOM.createTD());
-                DOM.appendChild(DOM.getFirstChild(topMargin), DOM.createDiv());
-                DOM.setElementProperty(topMargin, "className", CLASSNAME
-                        + "-toppad");
-                if (orientationMode == ORIENTATION_HORIZONTAL) {
-                    DOM.setElementAttribute(DOM.getFirstChild(topMargin),
-                            "colspan", "" + getPaintables().size());
-                }
-                DOM.insertChild(topBottomMarginContainer, topMargin, 0);
-            }
-        }
-
-        // Right margin
-        if (margins.hasRight()) {
-            marginClasses += " " + StyleConstants.LAYOUT_MARGIN_RIGHT;
-        }
-
-        // Bottom margin
-        // remove from current position so we can insert it to proper position
-        if (bottomMargin != null) {
-            DOM.removeChild(topBottomMarginContainer, bottomMargin);
-        }
-        bottomMargin = null;
-        if (margins.hasBottom()) {
-            marginClasses += " " + StyleConstants.LAYOUT_MARGIN_BOTTOM;
-            if (bottomMargin == null) {
-                // We need to insert a new row in to the table
-                bottomMargin = DOM.createTR();
-                DOM.appendChild(bottomMargin, DOM.createTD());
-                DOM.appendChild(DOM.getFirstChild(bottomMargin), DOM
-                        .createDiv());
-                DOM.setElementProperty(bottomMargin, "className", CLASSNAME
-                        + "-bottompad");
-                if (orientationMode == ORIENTATION_HORIZONTAL) {
-                    DOM.setElementAttribute(DOM.getFirstChild(bottomMargin),
-                            "colspan", "" + getPaintables().size());
-                }
-                DOM.appendChild(topBottomMarginContainer, bottomMargin);
-            }
-        }
-
-        // Left margin
-        if (margins.hasLeft()) {
-            marginClasses += " " + StyleConstants.LAYOUT_MARGIN_LEFT;
-        }
-
-        // Add
-        DOM.setElementProperty(margin, "className", marginClasses);
+        setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_TOP, margins
+                .hasTop());
+        setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_RIGHT, margins
+                .hasRight());
+        setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_BOTTOM,
+                margins.hasBottom());
+        setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_LEFT, margins
+                .hasLeft());
     }
 
     protected void handleAlignments(UIDL uidl) {

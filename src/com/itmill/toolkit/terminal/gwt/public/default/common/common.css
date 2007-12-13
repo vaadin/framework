@@ -95,28 +95,10 @@
 }
 
 
-
-/* TODO move to layout.css */
-/* Layout margin values */
-
-
-.i-layoutmargin-top .i-orderedlayout-toppad div, 
-.i-layoutmargin-bottom .i-orderedlayout-bottompad div,
-.i-layoutmargin-top .i-expandlayout-toppad div,
-.i-layoutmargin-bottom .i-expandlayout-bottompad div,
-.i-layoutmargin-top .i-orderedlayout-toppad td, 
-.i-layoutmargin-bottom .i-orderedlayout-bottompad td,
-.i-layoutmargin-top .i-expandlayout-toppad td,
-.i-layoutmargin-bottom .i-expandlayout-bottompad td {
-	height: 15px;
-	overflow: hidden;
-}
-.i-layoutmargin-left {
-	padding-left: 18px;
-}
-.i-layoutmargin-right {
-	padding-right: 18px;
-}
+/**
+ * Link component styles 
+ * (useless to move into a separate file)
+ */
 
 .i-link span {
 	text-decoration: underline;
@@ -126,6 +108,7 @@
 
 
 /* Loading indicator states */
+
 .i-loading-indicator,
 .i-loading-indicator-delay,
 .i-loading-indicator-wait {

@@ -181,7 +181,7 @@ public class IExpandLayout extends ComplexPanel implements
         }
 
         void setSpacingEnabled(boolean b) {
-            setStyleName(getElement(), CLASSNAME + "-vspacing", b);
+            setStyleName(getElement(), CLASSNAME + "-" + StyleConstants.VERTICAL_SPACING, b);
         }
     }
 
@@ -262,7 +262,7 @@ public class IExpandLayout extends ComplexPanel implements
         }
 
         void setSpacingEnabled(boolean b) {
-            setStyleName(getElement(), CLASSNAME + "-hspacing", b);
+            setStyleName(getElement(), CLASSNAME + "-" + StyleConstants.HORIZONTAL_SPACING, b);
         }
     }
 
@@ -319,12 +319,14 @@ public class IExpandLayout extends ComplexPanel implements
     protected void handleMargins(UIDL uidl) {
         final MarginInfo margins = new MarginInfo(uidl
                 .getIntAttribute("margins"));
-        setStyleName(me, CLASSNAME + "-" + StyleConstants.LAYOUT_MARGIN_TOP,
-                margins.hasTop());
-        setStyleName(me, StyleConstants.LAYOUT_MARGIN_RIGHT, margins.hasRight());
-        setStyleName(me, CLASSNAME + "-" + StyleConstants.LAYOUT_MARGIN_BOTTOM,
+        setStyleName(me, CLASSNAME + "-" + StyleConstants.MARGIN_TOP, margins
+                .hasTop());
+        setStyleName(me, CLASSNAME + "-" + StyleConstants.MARGIN_RIGHT, margins
+                .hasRight());
+        setStyleName(me, CLASSNAME + "-" + StyleConstants.MARGIN_BOTTOM,
                 margins.hasBottom());
-        setStyleName(me, StyleConstants.LAYOUT_MARGIN_LEFT, margins.hasLeft());
+        setStyleName(me, CLASSNAME + "-" + StyleConstants.MARGIN_LEFT, margins
+                .hasLeft());
     }
 
     public boolean hasChildComponent(Widget component) {

@@ -40,5 +40,6 @@
 	<stylesheet src="default/select/filterselect.css"/>
 	<stylesheet src="default/progressindicator/progressindicator.css"/>
 	<stylesheet src="default/expandlayout/expandlayout.css"/>
+	<stylesheet src="default/orderedlayout/orderedlayout.css"/>
 
 </module>

@@ -208,7 +208,7 @@ public class Button extends AbstractField {
      * @see com.itmill.toolkit.ui.AbstractComponent#setImmediate(boolean)
      */
     public void setImmediate(boolean immediate) {
-        // Push buttons are allways immediate
+        // Push buttons are always immediate
         super.setImmediate(!isSwitchMode() || immediate);
     }
 
