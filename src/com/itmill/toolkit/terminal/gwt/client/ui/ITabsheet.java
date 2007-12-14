@@ -4,14 +4,11 @@
 
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SourcesTabEvents;
 import com.google.gwt.user.client.ui.TabBar;
 import com.google.gwt.user.client.ui.TabListener;
@@ -22,21 +19,16 @@ import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.Util;
 
-public class ITabsheet extends FlowPanel implements Paintable,
+public class ITabsheet extends ITabsheetBase implements
         ContainerResizedListener {
 
     public static final String CLASSNAME = "i-tabsheet";
 
-    String id;
-    ApplicationConnection client;
-
-    private final ArrayList tabKeys = new ArrayList();
-    private final ArrayList captions = new ArrayList();
-    int activeTabIndex = 0;
     private final TabBar tb;
     private final ITabsheetPanel tp;
     private final Element contentNode, deco;
-    private boolean disabled;
+
+    private String height;
 
     private final TabListener tl = new TabListener() {
 
@@ -63,10 +55,8 @@ public class ITabsheet extends FlowPanel implements Paintable,
 
     };
 
-    private String height;
-
     public ITabsheet() {
-        setStyleName(CLASSNAME);
+        super(CLASSNAME);
 
         tb = new TabBar();
         tp = new ITabsheetPanel();
@@ -87,7 +77,7 @@ public class ITabsheet extends FlowPanel implements Paintable,
 
         tb.addTabListener(tl);
 
-        clearTabs();
+        clear();
 
         // TODO Use for Safari only. Fix annoying 1px first cell in TabBar.
         DOM.setStyleAttribute(DOM.getFirstChild(DOM.getFirstChild(DOM
@@ -95,16 +85,10 @@ public class ITabsheet extends FlowPanel implements Paintable,
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        this.client = client;
-        id = uidl.getId();
+        super.updateFromUIDL(uidl, client);
 
-        if (client.updateComponent(this, uidl, false)) {
-            return;
-        }
-
-        disabled = uidl.hasAttribute("disabled");
-
-        // Add proper stylenames for all elements
+        // Add proper stylenames for all elements (easier to prevent unwanted
+        // style inheritance)
         if (uidl.hasAttribute("style")) {
             final String[] styles = uidl.getStringAttribute("style").split(" ");
             final String contentBaseClass = "CLASSNAME" + "-content";
@@ -125,74 +109,26 @@ public class ITabsheet extends FlowPanel implements Paintable,
             DOM.setElementProperty(deco, "className", CLASSNAME + "-deco");
         }
 
-        // Adjust width and height
-        if (uidl.hasAttribute("height")) {
-            setHeight(uidl.getStringAttribute("height"));
-        } else {
-            setHeight("");
+    }
+
+    protected void renderTab(final UIDL contentUidl, String caption, int index,
+            boolean selected) {
+        // TODO check indexes, now new tabs get placed last (changing tab order
+        // is not supported from server-side)
+        tb.addTab(caption);
+        if (selected) {
+            renderContent(contentUidl);
+            tb.selectTab(index);
         }
-        if (uidl.hasAttribute("width")) {
-            setWidth(uidl.getStringAttribute("width"));
-        } else {
-            setWidth("");
+        // Add place-holder content
+        tp.add(new Label(""));
+    }
+
+    protected void selectTab(int index, final UIDL contentUidl) {
+        if (index != activeTabIndex) {
+            activeTabIndex = index;
+            renderContent(contentUidl);
         }
-
-        // Render content
-        final UIDL tabs = uidl.getChildUIDL(0);
-        boolean keepCurrentTabs = tabKeys.size() == tabs.getNumberOfChildren();
-        for (int i = 0; keepCurrentTabs && i < tabKeys.size(); i++) {
-            keepCurrentTabs = tabKeys.get(i).equals(
-                    tabs.getChildUIDL(i).getStringAttribute("key"))
-                    && captions.get(i).equals(
-                            tabs.getChildUIDL(i).getStringAttribute("caption"));
-        }
-        if (keepCurrentTabs) {
-            int index = 0;
-            for (final Iterator it = tabs.getChildIterator(); it.hasNext();) {
-                final UIDL tab = (UIDL) it.next();
-                if (tab.getBooleanAttribute("selected")) {
-                    activeTabIndex = index;
-                    renderContent(tab.getChildUIDL(0));
-                }
-                index++;
-            }
-        } else {
-            tabKeys.clear();
-            captions.clear();
-            clearTabs();
-
-            int index = 0;
-            for (final Iterator it = tabs.getChildIterator(); it.hasNext();) {
-                final UIDL tab = (UIDL) it.next();
-                final String key = tab.getStringAttribute("key");
-                String caption = tab.getStringAttribute("caption");
-                if (caption == null) {
-                    caption = "&nbsp;";
-                }
-
-                captions.add(caption);
-                tabKeys.add(key);
-
-                // Add new tab (additional SPAN-element for loading indication)
-                tb.insertTab("<span>" + caption + "</span>", true, tb
-                        .getTabCount());
-
-                // Add placeholder content
-                tp.add(new ILabel(""));
-
-                if (tab.getBooleanAttribute("selected")) {
-                    activeTabIndex = index;
-                    renderContent(tab.getChildUIDL(0));
-                }
-                index++;
-            }
-        }
-
-        // Open selected tab, if there's something to show
-        if (tabKeys.size() > 0) {
-            tb.selectTab(activeTabIndex);
-        }
-
     }
 
     private void renderContent(final UIDL contentUIDL) {
@@ -207,10 +143,9 @@ public class ITabsheet extends FlowPanel implements Paintable,
                 ITabsheet.this.iLayout();
             }
         });
-
     }
 
-    private void clearTabs() {
+    public void clear() {
         int i = tb.getTabCount();
         while (i > 0) {
             tb.removeTab(--i);

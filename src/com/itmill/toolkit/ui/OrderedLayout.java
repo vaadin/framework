@@ -351,7 +351,7 @@ public class OrderedLayout extends AbstractLayout {
 
     /**
      * 
-     * @return true if spacing layout leaves space between components
+     * @return true if spacing, layout leaves space between components
      */
     public boolean isSpacingEnabled() {
         return spacing;

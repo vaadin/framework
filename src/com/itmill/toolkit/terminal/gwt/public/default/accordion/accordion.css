@@ -1,0 +1,35 @@
+.i-accordion {
+	outline: none;
+	border-bottom: 1px solid #c8cccd;
+}
+
+.i-accordion-item-caption {
+	height: 25px;
+	padding: 6px 0 0 18px;
+	overflow: hidden;
+	white-space: nowrap;
+	background: #edf0f0 url(../tabsheet/img/tab-bg.png);
+	font-size: 15px;
+	color: #656d73;
+	border-top: 1px solid #c8cccd;
+}
+
+.i-accordion-item-caption span {
+	padding-left: 16px;
+	background: transparent url(img/collapsed-icon.png) no-repeat 0 50%;
+}
+
+.i-accordion-item-open .i-accordion-item-caption {
+	color: #3b4b57;
+	background: #d5dee2 url(img/selected-bg.png);
+	border-top-color: #cbd7de;
+	border-bottom-color: #bfc9d4;
+}
+
+.i-accordion-item-open .i-accordion-item-caption span {
+	background: transparent url(img/expanded-icon.png) no-repeat 0 55%;
+}
+
+.i-accordion-item-content {
+	border-top: 1px solid #c8cccd;
+}

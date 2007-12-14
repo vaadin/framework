@@ -41,5 +41,6 @@
 	<stylesheet src="default/progressindicator/progressindicator.css"/>
 	<stylesheet src="default/expandlayout/expandlayout.css"/>
 	<stylesheet src="default/orderedlayout/orderedlayout.css"/>
+	<stylesheet src="default/accordion/accordion.css"/>
 
 </module>

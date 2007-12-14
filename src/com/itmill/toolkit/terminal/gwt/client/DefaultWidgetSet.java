@@ -6,6 +6,7 @@ package com.itmill.toolkit.terminal.gwt.client;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
+import com.itmill.toolkit.terminal.gwt.client.ui.IAccordion;
 import com.itmill.toolkit.terminal.gwt.client.ui.IButton;
 import com.itmill.toolkit.terminal.gwt.client.ui.ICheckBox;
 import com.itmill.toolkit.terminal.gwt.client.ui.ICustomLayout;
@@ -166,6 +167,9 @@ public class DefaultWidgetSet implements WidgetSet {
         } else if ("com.itmill.toolkit.terminal.gwt.client.ui.richtextarea.IRichTextArea"
                 .equals(className)) {
             return new IRichTextArea();
+        } else if ("com.itmill.toolkit.terminal.gwt.client.ui.IAccordion"
+                .equals(className)) {
+            return new IAccordion();
         }
 
         return new IUnknownComponent();
@@ -229,6 +233,8 @@ public class DefaultWidgetSet implements WidgetSet {
             return "com.itmill.toolkit.terminal.gwt.client.ui.IPanel";
         } else if ("tabsheet".equals(tag)) {
             return "com.itmill.toolkit.terminal.gwt.client.ui.ITabsheet";
+        } else if ("accordion".equals(tag)) {
+            return "com.itmill.toolkit.terminal.gwt.client.ui.IAccordion";
         } else if ("embedded".equals(tag)) {
             return "com.itmill.toolkit.terminal.gwt.client.ui.IEmbedded";
         } else if ("customlayout".equals(tag)) {
