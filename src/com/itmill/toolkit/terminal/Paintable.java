@@ -44,6 +44,17 @@ public interface Paintable extends java.util.EventListener {
     public void requestRepaint();
 
     /**
+     * Adds an unique id for component that get's transferred to terminal for
+     * testing purposes.
+     * 
+     * @param id
+     *                A short (< 20 chars) alphanumeric indentifier
+     */
+    public void setTestingIdentifier(String id);
+
+    public String getTestingIdentifier();
+
+    /**
      * Repaint request event is thrown when the paintable needs to be repainted.
      * This is typically done when the <code>paint</code> method would return
      * dissimilar UIDL from the previous call of the method.

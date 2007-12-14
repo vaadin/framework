@@ -723,9 +723,9 @@ public class ApplicationServlet extends HttpServlet {
         if (testingToolsServerUri == null) {
             // Default behavior is that ATFServer application exists on
             // same application server as current application does.
-            testingToolsServerUri = "http" + (request.isSecure() ? "s" : "")
-                    + "://" + request.getServerName() + ":"
-                    + request.getLocalPort() + "/ATF/ATFServer";
+            testingToolsServerUri = "http" + (request.isSecure() ? "s" : "") + "://"
+                    + request.getServerName() + ":" + request.getLocalPort()
+                    + "/ATF/ATFServer";
         }
         return testingToolsServerUri;
     }

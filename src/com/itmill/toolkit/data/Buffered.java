@@ -298,5 +298,15 @@ public interface Buffered {
         public void requestRepaintRequests() {
         }
 
+        public String getTestingIdentifier() {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        public void setTestingIdentifier(String id) {
+            throw new UnsupportedOperationException(
+                    "Setting testing id for this Paintable is not implemented");
+        }
+
     }
 }

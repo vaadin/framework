@@ -62,6 +62,8 @@ public class CustomComponent implements Component {
      */
     private boolean repaintRequestListenersNotified = false;
 
+    private String testingId;
+
     /**
      * Constructs a new custom component.
      * 
@@ -496,6 +498,14 @@ public class CustomComponent implements Component {
      */
     public void removeStyleName(String style) {
 
+    }
+
+    public void setTestingIdentifier(String id) {
+        testingId = id;
+    }
+
+    public String getTestingIdentifier() {
+        return testingId;
     }
 
 }

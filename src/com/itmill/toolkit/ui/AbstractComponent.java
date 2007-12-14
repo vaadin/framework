@@ -113,6 +113,8 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      */
     private boolean repaintRequestListenersNotified = false;
 
+    private String testingId;
+
     /* Constructor ***************************************************** */
 
     /**
@@ -129,6 +131,14 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * @return the component's UIDL tag as <code>String</code>
      */
     public abstract String getTag();
+
+    public void setTestingIdentifier(String id) {
+        testingId = id;
+    }
+
+    public String getTestingIdentifier() {
+        return testingId;
+    }
 
     /**
      * Gets style for component. Multiple styles are joined with spaces.

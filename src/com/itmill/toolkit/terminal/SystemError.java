@@ -123,4 +123,13 @@ public class SystemError extends RuntimeException implements ErrorMessage {
     public void requestRepaintRequests() {
     }
 
+    public String getTestingIdentifier() {
+        return null;
+    }
+
+    public void setTestingIdentifier(String id) {
+        throw new UnsupportedOperationException(
+                "Setting testing id for this Paintable is not implemented");
+    }
+
 }

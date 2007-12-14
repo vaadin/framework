@@ -737,7 +737,11 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 
         String id = (String) paintableIdMap.get(paintable);
         if (id == null) {
-            id = "PID" + Integer.toString(idSequence++);
+            // use testing identifier as id if set
+            id = paintable.getTestingIdentifier();
+            if (id == null) {
+                id = "PID" + Integer.toString(idSequence++);
+            }
             paintableIdMap.put(paintable, id);
             idPaintableMap.put(id, paintable);
         }
