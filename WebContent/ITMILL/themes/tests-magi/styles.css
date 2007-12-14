@@ -9,11 +9,11 @@
 /*****************************************************************************/
 /* For example_GridLayout()                                                  */
 /*****************************************************************************/
-table.-example-gridlayout {
-	background: red;
+table.i-gridlayout-example-gridlayout {
+	background: blue;
 }
 
-.-example-gridlayout td {
+.i-gridlayout-example-gridlayout td {
 	background: white;
 }
 
@@ -21,7 +21,7 @@ table.-example-gridlayout {
 /* For example_Alignment()                                                   */
 /*****************************************************************************/
 table.-example-alignment {
-	background: red;
+	background: blue;
 }
 .-example-alignment td {
 	background: white;

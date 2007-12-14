@@ -26,6 +26,7 @@ import com.itmill.toolkit.ui.Embedded;
 import com.itmill.toolkit.ui.ExpandLayout;
 import com.itmill.toolkit.ui.FormLayout;
 import com.itmill.toolkit.ui.GridLayout;
+import com.itmill.toolkit.ui.InlineDateField;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.Link;
 import com.itmill.toolkit.ui.OrderedLayout;
@@ -36,6 +37,7 @@ import com.itmill.toolkit.ui.Table;
 import com.itmill.toolkit.ui.TextField;
 import com.itmill.toolkit.ui.Tree;
 import com.itmill.toolkit.ui.Window;
+import com.itmill.toolkit.ui.Button.ClickEvent;
 
 public class MagiTestApplication extends com.itmill.toolkit.Application {
     Window main = new Window("Application window");
@@ -59,11 +61,10 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
     }
 
     public DownloadStream handleURI(URL context, String relativeUri) {
-        // @TODO: Is this enough? Does handleURI() ever need to
-        // get these?
-        if (relativeUri.startsWith("APP")) {
+        // Let default implementation handle requests for
+        // application resources.
+        if (relativeUri.startsWith("APP"))
             return super.handleURI(context, relativeUri);
-        }
 
         String example;
         String param = null;
@@ -94,7 +95,7 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
                     "upload", "link", "gridlayout", "orderedlayout",
                     "formlayout", "panel", "expandlayout", "tabsheet",
                     "alignment", "alignment/grid", "window", "window/opener",
-                    "window/multiple", "classresource" };
+                    "window/multiple", "classresource", "usererror" };
             for (int i = 0; i < examples.length; i++) {
                 main.addComponent(new Label("<a href='/tk/testbench2/"
                         + examples[i] + "'>" + examples[i] + "</a>",
@@ -117,6 +118,8 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
             example_TextField(main, param);
         } else if (example.equals("textfieldvalidation")) {
             example_TextFieldValidation(main, param);
+        } else if (example.equals("usererror")) {
+            example_UserError(main, param);
         } else if (example.equals("datefield")) {
             example_DateField(main, param);
         } else if (example.equals("button")) {
@@ -226,18 +229,14 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
 
     void example_Tree(Window main, String param) {
         final Object[][] planets = new Object[][] {
-                new Object[] { "Mercury" },
-                new Object[] { "Venus" },
-                new Object[] { "Earth", "The Moon" },
-                new Object[] { "Mars", "Phobos", "Deimos" },
-                new Object[] { "Jupiter", "Io", "Europa", "Ganymedes",
-                        "Callisto" },
-                new Object[] { "Saturn", "Titan", "Tethys", "Dione", "Rhea",
-                        "Iapetus" },
-                new Object[] { "Uranus", "Miranda", "Ariel", "Umbriel",
-                        "Titania", "Oberon" },
-                new Object[] { "Neptune", "Triton", "Proteus", "Nereid",
-                        "Larissa" } };
+            new Object[] {"Mercury"},
+            new Object[] {"Venus"},
+            new Object[] {"Earth", "The Moon"},
+            new Object[] {"Mars", "Phobos", "Deimos"},
+            new Object[] {"Jupiter", "Io", "Europa", "Ganymedes", "Callisto"},
+            new Object[] {"Saturn", "Titan", "Tethys", "Dione", "Rhea", "Iapetus"},
+            new Object[] {"Uranus", "Miranda", "Ariel", "Umbriel", "Titania", "Oberon"},
+            new Object[] {"Neptune", "Triton", "Proteus", "Nereid", "Larissa"}};
 
         final Tree tree = new Tree("The Planets and Major Moons");
 
@@ -364,6 +363,48 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
         });
     }
 
+    void example_UserError(final Window main, String param) {
+        if (param != null) {
+            if (param.equals("form")) {
+         
+                final FormLayout layout = new FormLayout();
+                main.addComponent(layout);
+        
+                final TextField textfield = new TextField("Enter name");
+                layout.addComponent(textfield);
+                textfield.setComponentError(null);
+
+                final Button button = new Button("Click me!");
+                layout.addComponent(button);
+        
+                button.addListener(new Button.ClickListener() {
+                    public void buttonClick(ClickEvent event) {
+                        if (((String)textfield.getValue()).length() == 0)
+                            textfield.setComponentError(new UserError("Must not be empty"));
+                        else // Clear the error
+                            textfield.setComponentError(null);
+                    }
+                });
+            }
+        } else {
+            final TextField textfield = new TextField("Enter name");
+            main.addComponent(textfield);
+            textfield.setComponentError(null);
+
+            final Button button = new Button("Click me!");
+            main.addComponent(button);
+    
+            button.addListener(new Button.ClickListener() {
+                public void buttonClick(ClickEvent event) {
+                    if (((String)textfield.getValue()).length() == 0)
+                        textfield.setComponentError(new UserError("Must not be empty"));
+                    else // Clear the error
+                        textfield.setComponentError(null);
+                }
+            });
+        }
+    }
+    
     void example_DateField(Window main, String param) {
         /* Create a DateField with the calendar style. */
         final DateField date = new DateField("Here is a calendar field");
@@ -459,11 +500,20 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
     }
 
     void example_Panel(Window main, String param) {
+        // Create a panel with a caption.
         final Panel panel = new Panel("Contact Information");
+        
+        // Create a layout inside the panel
         final OrderedLayout form = new FormLayout();
+           
+        // Set the layout as the root layout of the panel
+        panel.setLayout(form);
+        
+        // Add some components
         form.addComponent(new TextField("Name"));
         form.addComponent(new TextField("Email"));
 
+        // Add the panel to the main window
         final ClassResource icon = new ClassResource("smiley.jpg", main
                 .getApplication());
         form.addComponent(new Embedded("Image", icon));
@@ -491,8 +541,8 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
         /* Add some components of various shapes. */
         grid.addComponent(new Button("3x1 button"), 1, 1, 3, 1);
         grid.addComponent(new Label("1x2 cell"), 1, 2, 1, 3);
-        final DateField date = new DateField("A 2x2 date field");
-        date.setStyleName("calendar");
+        final InlineDateField date = new InlineDateField("A 2x2 date field");
+        date.setResolution(DateField.RESOLUTION_DAY);
         grid.addComponent(date, 2, 2, 3, 3);
 
         main.addComponent(grid);
@@ -506,6 +556,7 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
             // OrderedLayout(OrderedLayout.ORIENTATION_VERTICAL);
             main.setLayout(layout);
             layout.addStyleName("example-alignment");
+
             layout.getSize().setWidth(400, Size.UNITS_PIXELS);
             layout.getSize().setHeight(400, Size.UNITS_PIXELS);
 
@@ -624,8 +675,7 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
         image.addStyleName("omaimage");
         main.addComponent(image);
 
-        final EmbeddedButton button = new EmbeddedButton(new ClassResource(
-                "smiley.jpg", this));
+        final EmbeddedButton button = new EmbeddedButton(new ClassResource("smiley.jpg", this));
         main.addComponent(button);
     }
 
@@ -644,11 +694,10 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
 
                 /* Add link to the second window in the main window. */
                 main.addComponent(new Label("Second window: <a href='"
-                        + mywindow.getURL() + "'>middle-click to open</a>",
-                        Label.CONTENT_XHTML));
-                main.addComponent(new Label(
-                        "The second window can be accessed through URL: "
-                                + mywindow.getURL()));
+                                            + mywindow.getURL() + "'>middle-click to open</a>",
+                                  Label.CONTENT_XHTML));
+                main.addComponent(new Label("The second window can be accessed through URL: "
+                                            + mywindow.getURL()));
             }
             return;
         }
