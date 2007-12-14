@@ -52,6 +52,8 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
     protected Element root;
     protected Element margin;
 
+    private boolean hasComponentSpacing;
+
     public IOrderedLayout(int orientation) {
         orientationMode = orientation;
         constructDOM();
@@ -65,7 +67,8 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
         if (orientationMode == ORIENTATION_HORIZONTAL) {
             final String structure = "<table cellspacing=\"0\" cellpadding=\"0\"><tbody><tr></tr></tbody></table>";
             DOM.setInnerHTML(margin, structure);
-            childContainer = DOM.getFirstChild(DOM.getFirstChild(DOM.getFirstChild(margin)));
+            childContainer = DOM.getFirstChild(DOM.getFirstChild(DOM
+                    .getFirstChild(margin)));
         } else {
             childContainer = margin;
         }
@@ -80,6 +83,9 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
         if (client.updateComponent(this, uidl, false)) {
             return;
         }
+
+        //
+        hasComponentSpacing = uidl.getBooleanAttribute("spacing");
 
         // Update contained components
 
@@ -312,14 +318,14 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
     protected void handleMargins(UIDL uidl) {
         final MarginInfo margins = new MarginInfo(uidl
                 .getIntAttribute("margins"));
-        setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_TOP, margins
-                .hasTop());
-        setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_RIGHT, margins
-                .hasRight());
+        setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_TOP,
+                margins.hasTop());
+        setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_RIGHT,
+                margins.hasRight());
         setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_BOTTOM,
                 margins.hasBottom());
-        setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_LEFT, margins
-                .hasLeft());
+        setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_LEFT,
+                margins.hasLeft());
     }
 
     protected void handleAlignments(UIDL uidl) {
@@ -330,30 +336,47 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
         int alignmentIndex = 0;
         // Insert alignment attributes
         final Iterator it = getPaintables().iterator();
+        boolean first = true;
         while (it.hasNext()) {
 
             // Calculate alignment info
             final AlignmentInfo ai = new AlignmentInfo(
                     alignments[alignmentIndex++]);
 
-            final Element td = DOM.getParent(((Widget) it.next()).getElement());
+            final Element wrapper = DOM.getParent(((Widget) it.next())
+                    .getElement());
             if (Util.isIE()) {
-                DOM
-                        .setElementAttribute(td, "vAlign", ai
-                                .getVerticalAlignment());
+                DOM.setElementAttribute(wrapper, "vAlign", ai
+                        .getVerticalAlignment());
             } else {
-                DOM.setStyleAttribute(td, "verticalAlign", ai
+                DOM.setStyleAttribute(wrapper, "verticalAlign", ai
                         .getVerticalAlignment());
             }
             // TODO use one-cell table to implement horizontal alignments
             if (Util.isIE()) {
-                DOM.setElementAttribute(td, "align", ai
+                DOM.setElementAttribute(wrapper, "align", ai
                         .getHorizontalAlignment());
             } else {
-                DOM.setStyleAttribute(td, "textAlign", ai
+                DOM.setStyleAttribute(wrapper, "textAlign", ai
                         .getHorizontalAlignment());
             }
+
+            if (first) {
+                setSpacingEnabled(wrapper, false);
+                first = false;
+            } else {
+                setSpacingEnabled(wrapper, hasComponentSpacing);
+            }
         }
+    }
+
+    private void setSpacingEnabled(Element e, boolean b) {
+        setStyleName(
+                e,
+                CLASSNAME
+                        + "-"
+                        + (orientationMode == ORIENTATION_HORIZONTAL ? StyleConstants.HORIZONTAL_SPACING
+                                : StyleConstants.VERTICAL_SPACING), b);
     }
 
 }

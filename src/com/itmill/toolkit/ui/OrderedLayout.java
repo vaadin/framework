@@ -346,6 +346,7 @@ public class OrderedLayout extends AbstractLayout {
      */
     public void setSpacing(boolean enabled) {
         spacing = enabled;
+        requestRepaint();
     }
 
     /**

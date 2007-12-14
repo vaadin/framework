@@ -10,3 +10,10 @@
 .i-orderedlayout-margin-left {
 	padding-left: 18px;
 }
+
+.i-orderedlayout-vspacing {
+	margin-top: 8px;
+}
+.i-orderedlayout-hspacing {
+	padding-left: 8px;
+}
