@@ -162,11 +162,11 @@ public interface Validator {
         public void requestRepaintRequests() {
         }
 
-        public String getTestingIdentifier() {
+        public String getDebugId() {
             return null;
         }
 
-        public void setTestingIdentifier(String id) {
+        public void setDebugId(String id) {
             throw new UnsupportedOperationException(
                     "Setting testing id for this Paintable is not implemented");
         }

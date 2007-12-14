@@ -500,11 +500,11 @@ public class CustomComponent implements Component {
 
     }
 
-    public void setTestingIdentifier(String id) {
+    public void setDebugId(String id) {
         testingId = id;
     }
 
-    public String getTestingIdentifier() {
+    public String getDebugId() {
         return testingId;
     }
 

@@ -48,11 +48,11 @@ public interface Paintable extends java.util.EventListener {
      * testing purposes.
      * 
      * @param id
-     *                A short (< 20 chars) alphanumeric indentifier
+     *                A short (< 20 chars) alphanumeric id
      */
-    public void setTestingIdentifier(String id);
+    public void setDebugId(String id);
 
-    public String getTestingIdentifier();
+    public String getDebugId();
 
     /**
      * Repaint request event is thrown when the paintable needs to be repainted.

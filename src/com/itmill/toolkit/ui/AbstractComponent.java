@@ -132,11 +132,11 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      */
     public abstract String getTag();
 
-    public void setTestingIdentifier(String id) {
+    public void setDebugId(String id) {
         testingId = id;
     }
 
-    public String getTestingIdentifier() {
+    public String getDebugId() {
         return testingId;
     }
 
