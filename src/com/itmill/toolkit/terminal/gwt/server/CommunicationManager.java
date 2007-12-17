@@ -151,7 +151,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
                 if (item.isFormField()) {
                     // ignored, upload requests contian only files
                 } else {
-                    final String pid = name.split("_")[0];
+                    final String pid = name.split("|")[0];
                     final Upload uploadComponent = (Upload) idPaintableMap
                             .get(pid);
                     if (uploadComponent == null) {
@@ -457,15 +457,18 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
                 : params.get("changes"));
         params.remove("changes");
         if (changes != null) {
+            // keys are one paired indexes variable values on odd ones
             final String[] ca = changes.split("\u0001");
             for (int i = 0; i < ca.length; i++) {
-                String[] vid = ca[i].split("_");
+                // extract variable info from key of format
+                // "PID_variableName_type"
+                String[] vid = ca[i].split("\\|");
                 final VariableOwner owner = (VariableOwner) idPaintableMap
                         .get(vid[0]);
                 if (owner != null) {
                     Map m;
                     if (i + 2 >= ca.length
-                            || !vid[0].equals(ca[i + 2].split("_")[0])) {
+                            || !vid[0].equals(ca[i + 2].split("|")[0])) {
                         if (ca.length > i + 1) {
                             m = new SingleValueMap(vid[1],
                                     convertVariableValue(vid[2].charAt(0),
@@ -480,8 +483,8 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
                                 ca[++i]));
                     }
                     while (i + 1 < ca.length
-                            && vid[0].equals(ca[i + 1].split("_")[0])) {
-                        vid = ca[++i].split("_");
+                            && vid[0].equals(ca[i + 1].split("|")[0])) {
+                        vid = ca[++i].split("|");
                         m.put(vid[1], convertVariableValue(vid[2].charAt(0),
                                 ca[++i]));
                     }

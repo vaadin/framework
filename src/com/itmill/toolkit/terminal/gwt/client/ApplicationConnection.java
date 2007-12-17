@@ -373,7 +373,7 @@ public class ApplicationConnection {
 
     private void addVariableToQueue(String paintableId, String variableName,
             String encodedValue, boolean immediate, char type) {
-        final String id = paintableId + "_" + variableName + "_" + type;
+        final String id = paintableId + "|" + variableName + "|" + type;
         for (int i = 0; i < pendingVariables.size(); i += 2) {
             if ((pendingVariables.get(i)).equals(id)) {
                 pendingVariables.remove(i);
