@@ -64,6 +64,8 @@ public class ApplicationConnection {
      */
     private boolean usePaintableIdsInDOM = false;
 
+    private Request uidlRequest;
+
     public ApplicationConnection(WidgetSet widgetSet) {
         this.widgetSet = widgetSet;
         appUri = getAppUri();
@@ -76,7 +78,7 @@ public class ApplicationConnection {
 
         if (isTestingMode()) {
             usePaintableIdsInDOM = true;
-            initializeTestingTools(getTestServerUri());
+            initializeTestingTools(getTestServerUri(), this);
         }
 
         makeUidlRequest("repaintAll=1");
@@ -96,8 +98,13 @@ public class ApplicationConnection {
         return $wnd.itmill.testingToolsUri ? true : false;
     }-*/;
 
-    private native static void initializeTestingTools(String testServerUri)
+    private native static void initializeTestingTools(String testServerUri,
+            ApplicationConnection ap)
     /*-{
+        $wnd.itmill.gwtClient = {};
+        $wnd.itmill.gwtClient.hasActiveRequest = function() {
+                return ap.@com.itmill.toolkit.terminal.gwt.client.ApplicationConnection::hasActiveRequest()();
+        }
         $wnd.itmill.startATF(testServerUri);
     }-*/;
 
@@ -125,6 +132,10 @@ public class ApplicationConnection {
      return u;
      }-*/;
 
+    public boolean hasActiveRequest() {
+        return uidlRequest.isPending();
+    }
+
     private native String getPathInfo()
     /*-{
      return $wnd.itmill.pathInfo;
@@ -146,7 +157,7 @@ public class ApplicationConnection {
         rb.setHeader("Content-Type",
                 "application/x-www-form-urlencoded; charset=utf-8");
         try {
-            rb.sendRequest(requestData, new RequestCallback() {
+            uidlRequest = rb.sendRequest(requestData, new RequestCallback() {
                 public void onError(Request request, Throwable exception) {
                     // TODO Better reporting to user
                     console.error("Got error");
@@ -599,6 +610,10 @@ public class ApplicationConnection {
     public ContextMenu getContextMenu() {
         if (contextMenu == null) {
             contextMenu = new ContextMenu();
+            if (usePaintableIdsInDOM) {
+                DOM.setElementProperty(contextMenu.getElement(), "id",
+                        "PID_TOOLKIT_CM");
+            }
         }
         return contextMenu;
     }
