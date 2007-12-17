@@ -387,7 +387,17 @@ public class ApplicationServlet extends HttpServlet {
 
             // Get existing application
             application = getExistingApplication(request, response);
-            if (application == null) {
+            if (application == null
+                    || request.getParameter("restartApplication") != null) {
+                if (request.getParameter("restartApplication") != null
+                        && application != null) {
+                    application.close();
+                    final HttpSession session = request.getSession();
+                    if (session != null) {
+                        WebApplicationContext.getApplicationContext(session)
+                                .removeApplication(application);
+                    }
+                }
                 // Not found, creating new application
                 application = getNewApplication(request, response);
             }
@@ -723,9 +733,9 @@ public class ApplicationServlet extends HttpServlet {
         if (testingToolsServerUri == null) {
             // Default behavior is that ATFServer application exists on
             // same application server as current application does.
-            testingToolsServerUri = "http" + (request.isSecure() ? "s" : "") + "://"
-                    + request.getServerName() + ":" + request.getLocalPort()
-                    + "/ATF/ATFServer";
+            testingToolsServerUri = "http" + (request.isSecure() ? "s" : "")
+                    + "://" + request.getServerName() + ":"
+                    + request.getLocalPort() + "/ATF/ATFServer";
         }
         return testingToolsServerUri;
     }
