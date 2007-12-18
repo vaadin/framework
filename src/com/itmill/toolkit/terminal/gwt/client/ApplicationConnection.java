@@ -58,6 +58,8 @@ public class ApplicationConnection {
 
     private final IView view;
 
+    private boolean applicationRunning = false;
+
     /**
      * True if each Paintable objects id is injected to DOM. Used for Testing
      * Tools.
@@ -82,6 +84,7 @@ public class ApplicationConnection {
         }
 
         makeUidlRequest("repaintAll=1");
+        applicationRunning = true;
 
         // TODO remove hardcoded id name
         view = new IView("itmill-ajax-window");
@@ -329,6 +332,7 @@ public class ApplicationConnection {
                 String html = "<h1>" + caption + "</h1><p>" + message + "</p>";
                 new Notification(Notification.DELAY_FOREVER).show(html,
                         Notification.CENTERED, "error");
+                applicationRunning = false;
             }
         }
 
@@ -400,18 +404,20 @@ public class ApplicationConnection {
     }
 
     public void sendPendingVariableChanges() {
-        final StringBuffer req = new StringBuffer();
+        if (applicationRunning) {
+            final StringBuffer req = new StringBuffer();
 
-        req.append("changes=");
-        for (int i = 0; i < pendingVariables.size(); i++) {
-            if (i > 0) {
-                req.append("\u0001");
+            req.append("changes=");
+            for (int i = 0; i < pendingVariables.size(); i++) {
+                if (i > 0) {
+                    req.append("\u0001");
+                }
+                req.append(pendingVariables.get(i));
             }
-            req.append(pendingVariables.get(i));
-        }
 
-        pendingVariables.clear();
-        makeUidlRequest(req.toString());
+            pendingVariables.clear();
+            makeUidlRequest(req.toString());
+        }
     }
 
     private static native String escapeString(String value)
