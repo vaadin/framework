@@ -40,7 +40,9 @@ public class IProgressIndicator extends Widget implements Paintable {
         final boolean indeterminate = uidl.getBooleanAttribute("indeterminate");
 
         if (indeterminate) {
-            // TODO put up some image or something
+            // TODO put up some different image or something. For now, it
+            // looks like a determinate PI at 0.0 and ignores the value.
+            DOM.setStyleAttribute(indicator, "width", "0px");
         } else {
             try {
                 final float f = Float.parseFloat(uidl
