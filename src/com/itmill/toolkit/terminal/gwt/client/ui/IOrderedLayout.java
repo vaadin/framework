@@ -397,35 +397,48 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
             if (Util.isIE()) {
                 DOM.setElementAttribute(getElement(), "align",
                         horizontalAlignment);
-            } else if (!horizontalAlignment.equals("left")) {
+            } else {
                 // use one-cell table to implement horizontal alignments, only
                 // for values other than "left" (which is default)
                 // build one cell table
-                if (td == null) {
-                    final Element table = DOM.createTable();
-                    final Element tBody = DOM.createTBody();
-                    final Element tr = DOM.createTR();
-                    td = DOM.createTD();
-                    DOM.appendChild(table, tBody);
-                    DOM.appendChild(tBody, tr);
-                    DOM.appendChild(tr, td);
-                    DOM.setElementAttribute(table, "cellpadding", "0");
-                    DOM.setElementAttribute(table, "cellspacing", "0");
-                    DOM.setStyleAttribute(table, "width", "100%");
-                    // use className for identification
-                    DOM.setElementProperty(td, "className", "i_align");
-                    // move possible content to cell
-                    while (DOM.getChildCount(getElement()) > 0) {
-                        final Element content = DOM.getFirstChild(getElement());
+                if (!horizontalAlignment.equals("left")) {
+                    if (td == null) {
+                        final Element table = DOM.createTable();
+                        final Element tBody = DOM.createTBody();
+                        final Element tr = DOM.createTR();
+                        td = DOM.createTD();
+                        DOM.appendChild(table, tBody);
+                        DOM.appendChild(tBody, tr);
+                        DOM.appendChild(tr, td);
+                        DOM.setElementAttribute(table, "cellpadding", "0");
+                        DOM.setElementAttribute(table, "cellspacing", "0");
+                        DOM.setStyleAttribute(table, "width", "100%");
+                        // use className for identification
+                        DOM.setElementProperty(td, "className", "i_align");
+                        // move possible content to cell
+                        while (DOM.getChildCount(getElement()) > 0) {
+                            Element content = DOM.getFirstChild(getElement());
+                            if (content != null) {
+                                DOM.removeChild(getElement(), content);
+                                DOM.appendChild(td, content);
+                            }
+                        }
+                        DOM.appendChild(getElement(), table);
+                    }
+                    DOM.setElementAttribute(td, "align", horizontalAlignment);
+                } else if (td != null) {
+                    // Move content to main container
+                    while (DOM.getChildCount(td) > 0) {
+                        Element content = DOM.getFirstChild(td);
                         if (content != null) {
-                            DOM.removeChild(getElement(), content);
-                            DOM.appendChild(td, content);
+                            DOM.removeChild(td, content);
+                            DOM.appendChild(getElement(), content);
                         }
                     }
-                    DOM.appendChild(getElement(), table);
+                    // Remove unneeded table element
+                    DOM.removeChild(getElement(), DOM
+                            .getFirstChild(getElement()));
                 }
-                // set alignment
-                DOM.setElementAttribute(td, "align", horizontalAlignment);
             }
         }
 
