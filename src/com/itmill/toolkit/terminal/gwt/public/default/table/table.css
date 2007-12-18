@@ -1,6 +1,7 @@
 .i-table {
 	border: 1px solid #b6bbbc;
 	overflow: hidden;
+	text-align: left /* Force default alignment */
 }
 
 .i-table.table-inline {
@@ -162,14 +163,16 @@
 /* disabled row in column selector */
 .i-off {
 	font-style: italic;
+	color:
 }
 
 
 /* IE specific styles */
 * html .i-table-scrollposition {
 	background: transparent;
-	/* We need two different filters because we cannot be sure of the context 
+	/* We need multiple different filters because we cannot be sure of the context 
 	   the browser is currently in (i.e. with ending slash or without). */
+	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../../ITMILL/widgetsets/com.itmill.toolkit.terminal.gwt.DefaultWidgetSet/default/table/img/scroll-position-bg.png", sizingMethod="scale");
 	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../ITMILL/widgetsets/com.itmill.toolkit.terminal.gwt.DefaultWidgetSet/default/table/img/scroll-position-bg.png", sizingMethod="scale");
 	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="ITMILL/widgetsets/com.itmill.toolkit.terminal.gwt.DefaultWidgetSet/default/table/img/scroll-position-bg.png", sizingMethod="scale");
 }

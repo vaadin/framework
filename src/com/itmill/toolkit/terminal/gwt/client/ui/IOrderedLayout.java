@@ -223,29 +223,15 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
             final Caption c = (Caption) w;
             // captions go into same container element as their
             // owners
-            final Element container = DOM.getParent(((UIObject) c.getOwner())
-                    .getElement());
+            final Element container = getWidgetWrapperFor((Widget) c.getOwner())
+                    .getContainerElement();
             final Element captionContainer = DOM.createDiv();
             DOM.insertChild(container, captionContainer, 0);
             insert(w, captionContainer, beforeIndex, false);
         } else {
-            final Element wrapper = createWidgetWrappper();
-            DOM.insertChild(childContainer, wrapper, beforeIndex);
-            insert(w, wrapper, beforeIndex, false);
-        }
-    }
-
-    /**
-     * creates an Element which will contain child widget
-     */
-    protected Element createWidgetWrappper() {
-        switch (orientationMode) {
-        case ORIENTATION_HORIZONTAL:
-            final Element td = DOM.createTD();
-            return td;
-        default:
-            final Element div = DOM.createDiv();
-            return div;
+            WidgetWrapper wr = new WidgetWrapper();
+            DOM.insertChild(childContainer, wr.getElement(), beforeIndex);
+            insert(w, wr.getContainerElement(), beforeIndex, false);
         }
     }
 
@@ -282,9 +268,9 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
     }
 
     public void add(Widget w) {
-        final Element wrapper = createWidgetWrappper();
-        DOM.appendChild(childContainer, wrapper);
-        super.add(w, wrapper);
+        WidgetWrapper wr = new WidgetWrapper();
+        DOM.appendChild(childContainer, wr.getElement());
+        super.add(w, wr.getContainerElement());
     }
 
     public boolean remove(int index) {
@@ -292,7 +278,7 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
     }
 
     public boolean remove(Widget w) {
-        final Element wrapper = DOM.getParent(w.getElement());
+        final Element wrapper = getWidgetWrapperFor(w).getElement();
         final boolean removed = super.remove(w);
         if (removed) {
             if (!(w instanceof Caption)) {
@@ -343,40 +329,126 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
             final AlignmentInfo ai = new AlignmentInfo(
                     alignments[alignmentIndex++]);
 
-            final Element wrapper = DOM.getParent(((Widget) it.next())
-                    .getElement());
-            if (Util.isIE()) {
-                DOM.setElementAttribute(wrapper, "vAlign", ai
-                        .getVerticalAlignment());
-            } else {
-                DOM.setStyleAttribute(wrapper, "verticalAlign", ai
-                        .getVerticalAlignment());
-            }
-            // TODO use one-cell table to implement horizontal alignments
-            if (Util.isIE()) {
-                DOM.setElementAttribute(wrapper, "align", ai
-                        .getHorizontalAlignment());
-            } else {
-                DOM.setStyleAttribute(wrapper, "textAlign", ai
-                        .getHorizontalAlignment());
-            }
+            final WidgetWrapper wr = getWidgetWrapperFor((Widget) it.next());
+            wr.setAlignment(ai.getVerticalAlignment(), ai
+                    .getHorizontalAlignment());
 
+            // Handle spacing in this loop as well
             if (first) {
-                setSpacingEnabled(wrapper, false);
+                wr.setSpacingEnabled(false);
                 first = false;
             } else {
-                setSpacingEnabled(wrapper, hasComponentSpacing);
+                wr.setSpacingEnabled(hasComponentSpacing);
             }
         }
     }
 
-    private void setSpacingEnabled(Element e, boolean b) {
-        setStyleName(
-                e,
-                CLASSNAME
-                        + "-"
-                        + (orientationMode == ORIENTATION_HORIZONTAL ? StyleConstants.HORIZONTAL_SPACING
-                                : StyleConstants.VERTICAL_SPACING), b);
+    /**
+     * WidgetWrapper classe. Helper classe for spacing and alignment handling.
+     * 
+     */
+    class WidgetWrapper extends UIObject {
+
+        Element td;
+
+        public WidgetWrapper() {
+            if (orientationMode == ORIENTATION_VERTICAL) {
+                setElement(DOM.createDiv());
+                // Apply 'hasLayout' for IE (needed to get accurate dimension
+                // calculations)
+                if (Util.isIE()) {
+                    DOM.setStyleAttribute(getElement(), "zoom", "1");
+                }
+            } else {
+                setElement(DOM.createTD());
+            }
+        }
+
+        public WidgetWrapper(Element element) {
+            if (DOM.getElementProperty(element, "className").equals("i_align")) {
+                td = element;
+                setElement(DOM.getParent(DOM.getParent(DOM.getParent(DOM
+                        .getParent(td)))));
+            } else {
+                setElement(element);
+            }
+        }
+
+        Element getContainerElement() {
+            if (td != null) {
+                return td;
+            } else {
+                return getElement();
+            }
+        }
+
+        void setAlignment(String verticalAlignment, String horizontalAlignment) {
+
+            // Set vertical alignment
+            if (Util.isIE()) {
+                DOM.setElementAttribute(getElement(), "vAlign",
+                        verticalAlignment);
+            } else {
+                DOM.setStyleAttribute(getElement(), "verticalAlign",
+                        verticalAlignment);
+            }
+
+            // Set horizontal alignment
+            if (Util.isIE()) {
+                DOM.setElementAttribute(getElement(), "align",
+                        horizontalAlignment);
+            } else if (!horizontalAlignment.equals("left")) {
+                // use one-cell table to implement horizontal alignments, only
+                // for values other than "left" (which is default)
+                // build one cell table
+                if (td == null) {
+                    final Element table = DOM.createTable();
+                    final Element tBody = DOM.createTBody();
+                    final Element tr = DOM.createTR();
+                    td = DOM.createTD();
+                    DOM.appendChild(table, tBody);
+                    DOM.appendChild(tBody, tr);
+                    DOM.appendChild(tr, td);
+                    DOM.setElementAttribute(table, "cellpadding", "0");
+                    DOM.setElementAttribute(table, "cellspacing", "0");
+                    DOM.setStyleAttribute(table, "width", "100%");
+                    // use className for identification
+                    DOM.setElementProperty(td, "className", "i_align");
+                    // move possible content to cell
+                    while (DOM.getChildCount(getElement()) > 0) {
+                        final Element content = DOM.getFirstChild(getElement());
+                        if (content != null) {
+                            DOM.removeChild(getElement(), content);
+                            DOM.appendChild(td, content);
+                        }
+                    }
+                    DOM.appendChild(getElement(), table);
+                }
+                // set alignment
+                DOM.setElementAttribute(td, "align", horizontalAlignment);
+            }
+        }
+
+        void setSpacingEnabled(boolean b) {
+            setStyleName(
+                    getElement(),
+                    CLASSNAME
+                            + "-"
+                            + (orientationMode == ORIENTATION_HORIZONTAL ? StyleConstants.HORIZONTAL_SPACING
+                                    : StyleConstants.VERTICAL_SPACING), b);
+        }
+
+    }
+
+    /**
+     * Returns given widgets WidgetWrapper
+     * 
+     * @param child
+     * @return
+     */
+    public WidgetWrapper getWidgetWrapperFor(Widget child) {
+        final Element containerElement = DOM.getParent(child.getElement());
+        return new WidgetWrapper(containerElement);
     }
 
 }

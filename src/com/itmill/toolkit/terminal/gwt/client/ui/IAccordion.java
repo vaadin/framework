@@ -80,9 +80,9 @@ public class IAccordion extends ITabsheetBase implements
     public void onSelectTab(StackItem item) {
         final int index = stack.indexOf(item);
         if (index != activeTabIndex && !disabled && !readonly) {
-            if (getSelectedStack() == null)
-                return;
-            getSelectedStack().close();
+            if (getSelectedStack() != null) {
+                getSelectedStack().close();
+            }
             addStyleDependentName("loading");
             // run updating variables in deferred command to bypass some FF
             // optimization issues
@@ -113,20 +113,22 @@ public class IAccordion extends ITabsheetBase implements
             return;
 
         if (height != null && height != "") {
-            // Detach visible widget from document flow for a while to calculate used height correctly
+            // Detach visible widget from document flow for a while to calculate
+            // used height correctly
             Widget w = item.getContent().getContainedWidget();
             String originalPositioning = "";
-            if(w != null) {
-                originalPositioning = DOM.getStyleAttribute(w.getElement(), "position");
+            if (w != null) {
+                originalPositioning = DOM.getStyleAttribute(w.getElement(),
+                        "position");
                 DOM.setStyleAttribute(w.getElement(), "visibility", "hidden");
                 DOM.setStyleAttribute(w.getElement(), "position", "absolute");
             }
             item.getContent().setHeight("");
-            
 
             // Calculate target height
             super.setHeight(height);
-            int targetHeight = getOffsetHeight();
+            int targetHeight = DOM.getElementPropertyInt(DOM
+                    .getParent(getElement()), "offsetHeight");
             super.setHeight("");
 
             // Calculate used height
@@ -136,10 +138,11 @@ public class IAccordion extends ITabsheetBase implements
             if (h < 0)
                 h = 0;
             item.getContent().setHeight(h + "px");
-            
+
             // Put widget back into normal flow
-            if(w != null) {
-                DOM.setStyleAttribute(w.getElement(), "position", originalPositioning);
+            if (w != null) {
+                DOM.setStyleAttribute(w.getElement(), "position",
+                        originalPositioning);
                 DOM.setStyleAttribute(w.getElement(), "visibility", "");
             }
         } else {
@@ -232,7 +235,7 @@ public class IAccordion extends ITabsheetBase implements
     protected class StackContent extends UIObject {
 
         private Widget widget;
-        
+
         protected StackContent() {
             setElement(DOM.createDiv());
             setVisible(false);
@@ -259,7 +262,7 @@ public class IAccordion extends ITabsheetBase implements
             (content).updateFromUIDL(contentUidl, client);
             widget = (Widget) content;
         }
-        
+
         public Widget getContainedWidget() {
             return widget;
         }

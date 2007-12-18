@@ -7,6 +7,7 @@
 .i-panel-content-light,
 .i-panel-deco-light {
 	outline: none; /* Prevent selection outline which might break layouts or cause scrollbars */
+	text-align: left /* Force default alignment */
 }
 
 .i-panel:before {

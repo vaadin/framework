@@ -253,7 +253,7 @@ public class IExpandLayout extends ComplexPanel implements
             }
         }
 
-        public Element getContainerElementu() {
+        public Element getContainerElement() {
             if (td == null) {
                 return super.getContainerElement();
             } else {

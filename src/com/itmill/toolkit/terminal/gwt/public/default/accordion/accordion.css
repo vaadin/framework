@@ -1,6 +1,7 @@
 .i-accordion {
 	outline: none;
 	overflow: hidden;
+	text-align: left /* Force default alignment */
 }
 
 .i-accordion-item-caption {

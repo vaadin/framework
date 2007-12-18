@@ -1,3 +1,7 @@
+.i-tree {
+	text-align: left /* Force default alignment */
+}
+
 .i-tree-node {
 	background: transparent url(img/collapsed.png) no-repeat 2px 1px;
 }

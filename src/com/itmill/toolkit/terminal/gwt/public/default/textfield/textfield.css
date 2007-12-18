@@ -8,6 +8,7 @@
 	margin: 0;
 	font-size: 13px;
 	height: 18px;
+	text-align: left /* Force default alignment */
 }
 
 .i-textarea {

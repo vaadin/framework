@@ -3,6 +3,7 @@
 	background: transparent url(img/bg-left-filter.png) no-repeat;
 	margin-right: 1px;
 	white-space: nowrap;
+	text-align: left /* Force default alignment */
 }
 
 .i-filterselect-input {

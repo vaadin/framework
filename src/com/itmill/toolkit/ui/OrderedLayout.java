@@ -320,6 +320,7 @@ public class OrderedLayout extends AbstractLayout {
             int horizontalAlignment, int verticalAlignment) {
         componentToAlignment.put(childComponent, new Integer(
                 horizontalAlignment + verticalAlignment));
+        requestRepaint();
     }
 
     public int getComponentAlignment(Component childComponent) {
