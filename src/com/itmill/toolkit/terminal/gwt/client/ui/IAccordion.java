@@ -241,6 +241,10 @@ public class IAccordion extends ITabsheetBase implements
             setVisible(false);
             setStyleName(CLASSNAME + "-item-content");
             DOM.setStyleAttribute(getElement(), "overflow", "auto");
+            // Force 'hasLayout' in IE6 (prevents layout problems)
+            if (Util.isIE6()) {
+                DOM.setStyleAttribute(getElement(), "zoom", "1");
+            }
         }
 
         protected StackContent(UIDL contentUidl) {
