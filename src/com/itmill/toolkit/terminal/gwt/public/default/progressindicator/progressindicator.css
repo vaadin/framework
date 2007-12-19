@@ -10,3 +10,10 @@
 	height: 9px;
 	overflow: hidden; /* for IE6 */
 }
+
+.i-progressindicator-indeterminate {
+	background: #dfe2e4 url(../common/img/ajax-loader-medium.gif);
+	height: 16px;
+	width: 16px;
+	overflow: hidden; /* for IE6 */
+}
