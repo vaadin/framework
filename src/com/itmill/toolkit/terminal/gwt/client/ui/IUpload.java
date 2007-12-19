@@ -54,7 +54,7 @@ public class IUpload extends FormPanel implements Paintable, ClickListener,
      */
     private boolean submitted = false;
 
-    private boolean enabled;
+    private boolean enabled = true;
 
     public IUpload() {
         super();
