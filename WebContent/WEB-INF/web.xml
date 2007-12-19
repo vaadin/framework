@@ -11,6 +11,21 @@
      IT Mill Toolkit examples
   </description>
 
+  <!-- Permit use of IT Mill Testing Tools for this servlet container -->
+  <context-param>
+  	<param-name>testingToolsActive</param-name>
+  	<param-value>true</param-value>
+  	<description>IT Mill Testing Tools activation</description>
+  </context-param>
+  
+  <!-- Undefined, use default URI for Testing Tools Server
+   <context-param>
+  	<param-name>testingToolsServerUri</param-name>
+  	<param-value>http://localhost:8080/TestingTools/</param-value>
+  	<description>IT Mill Testing Tools URI</description>
+  </context-param>
+  -->
+  
 <servlet>
     <servlet-name>ITMillToolkitApplicationRunner</servlet-name>
     <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>

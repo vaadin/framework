@@ -112,7 +112,7 @@ public class ApplicationConnection {
         $wnd.itmill.gwtClient.hasActiveRequest = function() {
                 return ap.@com.itmill.toolkit.terminal.gwt.client.ApplicationConnection::hasActiveRequest()();
         }
-        $wnd.itmill.startATF(testServerUri);
+        $wnd.itmill.startTT(testServerUri);
     }-*/;
 
     public static Console getConsole() {

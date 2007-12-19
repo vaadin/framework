@@ -190,7 +190,7 @@ public class ApplicationServlet extends HttpServlet {
         }
         debugMode = debug;
 
-        // Gets ATF parameters if feature is activated
+        // Gets Testing Tools parameters if feature is activated
         if (getApplicationOrSystemProperty("testingToolsActive", "false")
                 .equals("true")) {
             testingToolsActive = true;
@@ -713,36 +713,38 @@ public class ApplicationServlet extends HttpServlet {
 
     private void writeTestingToolsScripts(Writer page,
             HttpServletRequest request) throws IOException {
-        // ATF script and CSS files are served from ATFServer
+        // Testing Tools script and CSS files are served from Testing Tools
+        // Server
         String ext = getTestingToolsUri(request);
         ext = ext.substring(0, ext.lastIndexOf('/'));
-        page.write("<script src=\"" + ext + "/ext/ATF.js"
+        page.write("<script src=\"" + ext + "/ext/TT.js"
                 + "\" type=\"text/javascript\"></script>\n");
-        page.write("<link rel=\"stylesheet\" href=\"" + ext + "/ext/ATF.css"
+        page.write("<link rel=\"stylesheet\" href=\"" + ext + "/ext/TT.css"
                 + "\" type=\"text/css\" />\n");
-        if (request.getParameter("ATF-TC") != null
-                || request.getParameter("ATF-TS") != null) {
-            proxyTestCases(request.getParameter("ATF-TC"), request
-                    .getParameter("ATF-TS"), request
-                    .getParameter("ATF-TS-RUN-ID"), page,
+        if (request.getParameter("TT-TC") != null
+                || request.getParameter("TT-TS") != null) {
+            proxyTestCases(request.getParameter("TT-TC"), request
+                    .getParameter("TT-TS"), request
+                    .getParameter("TT-TS-RUN-ID"), page,
                     getTestingToolsUri(request));
         }
     }
 
     private String getTestingToolsUri(HttpServletRequest request) {
         if (testingToolsServerUri == null) {
-            // Default behavior is that ATFServer application exists on
-            // same application server as current application does.
+            // Default behavior is that Testing Tools Server application exists
+            // on same application server as current application does.
             testingToolsServerUri = "http" + (request.isSecure() ? "s" : "")
                     + "://" + request.getServerName() + ":"
-                    + request.getLocalPort() + "/ATF/ATFServer";
+                    + request.getLocalPort()
+                    + "/TestingTools/TestingToolsServer";
         }
         return testingToolsServerUri;
     }
 
     /**
-     * Fetches testcase or testsuite scripts from ATF server and injects script
-     * to AUT client
+     * Fetches testcase or testsuite scripts from Testing Tools server and
+     * injects script to AUT client
      * 
      * @param testCaseId
      * @param testSuiteId
@@ -758,13 +760,13 @@ public class ApplicationServlet extends HttpServlet {
         URLConnection conn;
 
         if (testCaseId != null) {
-            testServerUri += "/ATF-TC/" + testCaseId;
+            testServerUri += "/TT-TC/" + testCaseId;
         }
         if (testSuiteId != null) {
-            testServerUri += "/ATF-TS/" + testSuiteId;
+            testServerUri += "/TT-TS/" + testSuiteId;
         }
         if (testSuiteRunId != null) {
-            testServerUri += "/ATF-TS-RUN-ID/" + testSuiteRunId;
+            testServerUri += "/TT-TS-RUN-ID/" + testSuiteRunId;
         }
 
         conn = new URL(testServerUri).openConnection();
@@ -778,10 +780,10 @@ public class ApplicationServlet extends HttpServlet {
         is.close();
 
         if (builder != null && builder.length() > 0
-                && builder.toString().startsWith("ATF-TC=")) {
+                && builder.toString().startsWith("TT-TC=")) {
             int lineEnd = builder.indexOf("\n");
             String returnedTestCaseId = builder.substring(builder
-                    .indexOf("ATF-TC=") + 7, lineEnd);
+                    .indexOf("TT-TC=") + 7, lineEnd);
             builder.replace(0, lineEnd + 1, "");
 
             String returnedTestSuiteRunId = null;
@@ -789,7 +791,7 @@ public class ApplicationServlet extends HttpServlet {
             if (testSuiteId != null) {
                 lineEnd = builder.indexOf("\n");
                 returnedTestSuiteRunId = builder.substring(builder
-                        .indexOf("ATF-TS-RUN-ID=") + 14, lineEnd);
+                        .indexOf("TT-TS-RUN-ID=") + 14, lineEnd);
             }
 
             if (builder.length() < lineEnd + 1) {
@@ -801,22 +803,20 @@ public class ApplicationServlet extends HttpServlet {
 
             page
                     .write("<script language=\"JavaScript\" type=\"text/javascript\">\n");
-            page
-                    .write("itmill.ATFtestCaseId = \"" + returnedTestCaseId
-                            + "\";");
+            page.write("itmill.TTtestCaseId = \"" + returnedTestCaseId + "\";");
             page.write("\n");
             if (testSuiteId != null) {
-                page.write("itmill.ATFtestSuiteId = \"" + testSuiteId + "\";");
+                page.write("itmill.TTtestSuiteId = \"" + testSuiteId + "\";");
                 page.write("\n");
             }
             if (returnedTestSuiteRunId != null) {
-                page.write("itmill.ATFtestSuiteRunId = \""
+                page.write("itmill.TTtestSuiteRunId = \""
                         + returnedTestSuiteRunId + "\";");
                 page.write("\n");
                 builder = builder.delete(0, lineEnd);
             }
             String script = builder.toString().replaceAll("\n", "\\\\n");
-            page.write("itmill.ATFtestCaseScript = \"" + script + "\";\n");
+            page.write("itmill.TTtestCaseScript = \"" + script + "\";\n");
             page.write("</script>\n");
         }
     }
