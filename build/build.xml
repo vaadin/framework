@@ -41,7 +41,7 @@
 	<target name="package-linux" depends="clean-all, init, build, docs, internal-package-linux" description="Create public tar.bz2 package for Linux.">
 	</target>
 
-	<target name="package-jar" depends="clean-all, init, build" description="Create itmill-toolkit-x.y.z.jar file.">
+	<target name="package-jar" depends="clean-all, init, libs" description="Create itmill-toolkit-x.y.z.jar file.">
 	</target>
 
 	<target name="package-war" depends="clean-all, init, build, docs, internal-package-mac, internal-package-war">
