@@ -181,24 +181,14 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
         locationToElement.clear();
         scanForLocations(getElement());
 
-        // Remap image srcs in layout
-        Widget parent = getParent();
-        while (parent != null && !(parent instanceof IView)) {
-            parent = parent.getParent();
-        }
-        if (parent != null && ((IView) parent).getTheme() != null) {
-            String prefix;
-            if (uriEndsWithSlash()) {
-                prefix = "../ITMILL/themes/";
-            } else {
-                prefix = "ITMILL/themes/";
-            }
-            prefixImgSrcs(getElement(), prefix + ((IView) parent).getTheme()
-                    + "/layouts/");
+        String themeName = client.getTheme();
+        String prefix;
+        if (uriEndsWithSlash()) {
+            prefix = "../ITMILL/themes/";
         } else {
-            throw (new IllegalStateException(
-                    "Could not find IView; maybe updateFromUIDL() was called before attaching the widget?"));
+            prefix = "ITMILL/themes/";
         }
+        prefixImgSrcs(getElement(), prefix + themeName + "/layouts/");
 
         publishResizedFunction(DOM.getFirstChild(getElement()));
 

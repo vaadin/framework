@@ -654,4 +654,8 @@ public class ApplicationConnection {
         }
         return toolkitUri;
     }
+
+    public String getTheme() {
+        return view.getTheme();
+    }
 }
