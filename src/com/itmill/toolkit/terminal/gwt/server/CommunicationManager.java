@@ -72,6 +72,16 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 
     private static int MAX_BUFFER_SIZE = 64 * 1024;
 
+    /* Variable records indexes */
+    private static final int VAR_PID = 1;
+    private static final int VAR_NAME = 2;
+    private static final int VAR_TYPE = 3;
+    private static final int VAR_VALUE = 0;
+
+    private static final String VAR_RECORD_SEPARATOR = "\u001e";
+
+    private static final String VAR_FIELD_SEPARATOR = "\u001f";
+
     private final HashSet dirtyPaintabletSet = new HashSet();
 
     private final WeakHashMap paintableIdMap = new WeakHashMap();
@@ -149,9 +159,9 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
                 final String mimeType = item.getContentType();
                 final InputStream stream = item.openStream();
                 if (item.isFormField()) {
-                    // ignored, upload requests contian only files
+                    // ignored, upload requests contains only files
                 } else {
-                    final String pid = name.split("|")[0];
+                    final String pid = name.split("_")[0];
                     final Upload uploadComponent = (Upload) idPaintableMap
                             .get(pid);
                     if (uploadComponent == null) {
@@ -456,43 +466,57 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
                 .get("changes"))[0]
                 : params.get("changes"));
         params.remove("changes");
-        if (changes != null) {
-            // keys are one paired indexes variable values on odd ones
-            final String[] ca = changes.split("\u0001");
-            for (int i = 0; i < ca.length; i++) {
-                // extract variable info from key of format
-                // "PID|variableName|type"
-                String[] vid = ca[i].split("\\|");
+        if (changes != null && changes.length() > 0) {
+
+            // extract variables to two dim string array
+            final String[] tmp = changes.split(VAR_RECORD_SEPARATOR);
+            final String[][] variableRecords = new String[tmp.length][4];
+            for (int i = 0; i < tmp.length; i++) {
+                variableRecords[i] = tmp[i].split(VAR_FIELD_SEPARATOR);
+            }
+
+            for (int i = 0; i < variableRecords.length; i++) {
+                String[] variable = variableRecords[i];
+                String[] nextVariable = null;
+                if (i + 1 < variableRecords.length) {
+                    nextVariable = variableRecords[i + 1];
+                }
                 final VariableOwner owner = (VariableOwner) idPaintableMap
-                        .get(vid[0]);
+                        .get(variable[VAR_PID]);
                 if (owner != null) {
                     Map m;
-                    if (i + 2 >= ca.length
-                            || !vid[0].equals(ca[i + 2].split("\\|")[0])) {
-                        if (ca.length > i + 1) {
-                            m = new SingleValueMap(vid[1],
-                                    convertVariableValue(vid[2].charAt(0),
-                                            ca[++i]));
-                        } else {
-                            m = new SingleValueMap(vid[1],
-                                    convertVariableValue(vid[2].charAt(0), ""));
-                        }
-                    } else {
+                    if (nextVariable != null
+                            && variable[VAR_PID].equals(nextVariable[VAR_PID])) {
+                        // we have more than one value changes in row for one
+                        // variable owner, collect em in HashMap
                         m = new HashMap();
-                        m.put(vid[1], convertVariableValue(vid[2].charAt(0),
-                                ca[++i]));
+                        m.put(variable[VAR_NAME], convertVariableValue(
+                                variable[VAR_TYPE].charAt(0),
+                                variable[VAR_VALUE]));
+                    } else {
+                        // use optimized single value map
+                        m = new SingleValueMap(variable[VAR_NAME],
+                                convertVariableValue(variable[VAR_TYPE]
+                                        .charAt(0), variable[VAR_VALUE]));
                     }
-                    while (i + 1 < ca.length
-                            && vid[0].equals(ca[i + 1].split("\\|")[0])) {
-                        vid = ca[++i].split("\\|");
-                        m.put(vid[1], convertVariableValue(vid[2].charAt(0),
-                                ca[++i]));
+                    // collect following variable changes for this owner
+                    while (nextVariable != null
+                            && variable[VAR_PID].equals(nextVariable[VAR_PID])) {
+                        i++;
+                        variable = nextVariable;
+                        if (i + 1 < variableRecords.length) {
+                            nextVariable = variableRecords[i + 1];
+                        } else {
+                            nextVariable = null;
+                        }
+                        m.put(variable[VAR_NAME], convertVariableValue(
+                                variable[VAR_TYPE].charAt(0),
+                                variable[VAR_VALUE]));
                     }
                     owner.changeVariables(request, m);
                 }
             }
         }
-
         return params;
     }
 

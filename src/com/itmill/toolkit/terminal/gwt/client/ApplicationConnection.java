@@ -35,6 +35,10 @@ import com.itmill.toolkit.terminal.gwt.client.ui.Notification;
  */
 public class ApplicationConnection {
 
+    private static final String VAR_RECORD_SEPARATOR = "\u001e";
+
+    private static final String VAR_FIELD_SEPARATOR = "\u001f";
+
     private final String appUri;
 
     private final HashMap resourcesMap = new HashMap();
@@ -388,16 +392,17 @@ public class ApplicationConnection {
 
     private void addVariableToQueue(String paintableId, String variableName,
             String encodedValue, boolean immediate, char type) {
-        final String id = paintableId + "|" + variableName + "|" + type;
+        final String id = paintableId + VAR_FIELD_SEPARATOR + variableName
+                + VAR_FIELD_SEPARATOR + type;
         for (int i = 0; i < pendingVariables.size(); i += 2) {
             if ((pendingVariables.get(i)).equals(id)) {
-                pendingVariables.remove(i);
-                pendingVariables.remove(i);
+                pendingVariables.remove(i - 1);
+                pendingVariables.remove(i - 1);
                 break;
             }
         }
-        pendingVariables.add(id);
         pendingVariables.add(encodedValue);
+        pendingVariables.add(id);
         if (immediate) {
             sendPendingVariableChanges();
         }
@@ -410,7 +415,11 @@ public class ApplicationConnection {
             req.append("changes=");
             for (int i = 0; i < pendingVariables.size(); i++) {
                 if (i > 0) {
-                    req.append("\u0001");
+                    if (i % 2 == 0) {
+                        req.append(VAR_RECORD_SEPARATOR);
+                    } else {
+                        req.append(VAR_FIELD_SEPARATOR);
+                    }
                 }
                 req.append(pendingVariables.get(i));
             }
