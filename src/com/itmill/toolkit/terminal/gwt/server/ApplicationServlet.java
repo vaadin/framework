@@ -781,7 +781,7 @@ public class ApplicationServlet extends HttpServlet {
                 && builder.toString().startsWith("TT-TC=")) {
             int lineEnd = builder.indexOf("\n");
             String returnedTestCaseId = builder.substring(builder
-                    .indexOf("TT-TC=") + 7, lineEnd);
+                    .indexOf("TT-TC=") + 6, lineEnd);
             builder.replace(0, lineEnd + 1, "");
 
             String returnedTestSuiteRunId = null;
@@ -789,7 +789,7 @@ public class ApplicationServlet extends HttpServlet {
             if (testSuiteId != null) {
                 lineEnd = builder.indexOf("\n");
                 returnedTestSuiteRunId = builder.substring(builder
-                        .indexOf("TT-TS-RUN-ID=") + 14, lineEnd);
+                        .indexOf("TT-TS-RUN-ID=") + 13, lineEnd);
             }
 
             if (builder.length() < lineEnd + 1) {
