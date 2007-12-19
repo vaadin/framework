@@ -558,15 +558,13 @@ public class ApplicationServlet extends HttpServlet {
         final ServletOutputStream out = response.getOutputStream();
         final PrintWriter outWriter = new PrintWriter(new BufferedWriter(
                 new OutputStreamWriter(out, "UTF-8")));
-        outWriter
-                .print(")/*{\"changes\":[], \"meta\" : {"
-                        + "\"appError\": {"
-                        + "\"caption\":\""
-                        + caption
-                        + "\","
-                        + "\"message\" : \"Please click <a href=\\\"\\\" onclick=\\\"Javascript: window.location.reload()\\\" >here</a> to restart your application.<br />"
-                        + "You can also click your browser's refresh button.\""
-                        + "}}, \"resources\": {}, \"locales\":[]");
+        outWriter.print(")/*{\"changes\":[], \"meta\" : {" + "\"appError\": {"
+                + "\"caption\":\"" + caption + "\","
+                + "\"message\" : \"<br />Please click <a href=\\\"\\\""
+                + "onclick=\\\"Javascript: window.location.reload()\\\" >"
+                + "here</a> to restart your application.<br />"
+                + "You can also click your browser's refresh button.\""
+                + "}}, \"resources\": {}, \"locales\":[]");
         outWriter.flush();
         outWriter.close();
         out.flush();
