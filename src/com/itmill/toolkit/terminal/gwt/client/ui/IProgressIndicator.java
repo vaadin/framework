@@ -19,6 +19,7 @@ public class IProgressIndicator extends Widget implements Paintable {
     Element indicator = DOM.createDiv();
     private ApplicationConnection client;
     private final Poller poller;
+    private boolean indeterminate = false;
 
     public IProgressIndicator() {
         setElement(wrapper);
@@ -37,12 +38,11 @@ public class IProgressIndicator extends Widget implements Paintable {
         if (client.updateComponent(this, uidl, true)) {
             return;
         }
-        final boolean indeterminate = uidl.getBooleanAttribute("indeterminate");
+
+        indeterminate = uidl.getBooleanAttribute("indeterminate");
 
         if (indeterminate) {
-            // TODO put up some different image or something. For now, it
-            // looks like a determinate PI at 0.0 and ignores the value.
-            DOM.setStyleAttribute(indicator, "width", "0px");
+            this.setStyleName(CLASSNAME + "-indeterminate");
         } else {
             try {
                 final float f = Float.parseFloat(uidl
