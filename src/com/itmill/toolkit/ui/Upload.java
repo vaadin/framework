@@ -15,7 +15,27 @@ import com.itmill.toolkit.terminal.PaintTarget;
 import com.itmill.toolkit.terminal.UploadStream;
 
 /**
- * Component for client file uploading.
+ * Component for uploading files from client to server.
+ * 
+ * The visible component consists of a file name input box and a browse
+ * button and an upload submit button to start uploading.
+ * 
+ * The Upload component needs a java.io.OutputStream to write the uploaded
+ * data. You need to implement the Upload.Receiver interface and return
+ * the output stream in the receiveUpload() method.
+ * 
+ * You can get an event regarding starting (StartedEvent),
+ * progress (ProgressEvent), and finishing (FinishedEvent) of upload by
+ * implementing StartedListener, ProgressListener, and FinishedListener,
+ * respectively. The FinishedListener is called for both failed and
+ * succeeded uploads. If you wish to separate between these two cases,
+ * you can use SucceededListener (SucceededEvenet) and FailedListener
+ * (FailedEvent).
+ * 
+ * The upload component does not itself show upload progress, but
+ * you can use the ProgressIndicator for providing progress feedback
+ * by implementing ProgressListener and updating the indicator in
+ * updateProgress(). 
  * 
  * @author IT Mill Ltd.
  * @version
@@ -64,10 +84,14 @@ public class Upload extends AbstractComponent implements Component.Focusable {
 
     /**
      * Creates a new instance of Upload that redirects the uploaded data to
-     * given stream.
+     * stream given by the Receiver.
      * 
      * @param caption
+     *            Normal component caption. You can set the caption of the
+     *            upload submit button with setButtonCaption().
      * @param uploadReceiver
+     *            Receiver to call to retrieve output stream when upload
+     *            starts.
      */
     public Upload(String caption, Receiver uploadReceiver) {
         focusableId = Window.getNewFocusableId(this);
@@ -98,6 +122,8 @@ public class Upload extends AbstractComponent implements Component.Focusable {
         // Gets the output target stream
         final OutputStream out = receiver.receiveUpload(filename, type);
         if (out == null) {
+            fireUploadInterrupted(filename, type, 0);
+            endUpload();
             throw new RuntimeException(
                     "Error getting outputstream from upload receiver");
         }
@@ -179,7 +205,8 @@ public class Upload extends AbstractComponent implements Component.Focusable {
     }
 
     /**
-     * Interface that must be implemented by the upload receivers.
+     * Interface that must be implemented by the upload receivers to provide
+     * the Upload component an output stream to write the uploaded data. 
      * 
      * @author IT Mill Ltd.
      * @version
@@ -230,7 +257,9 @@ public class Upload extends AbstractComponent implements Component.Focusable {
 
     /**
      * Upload.Received event is sent when the upload receives a file, regardless
-     * if the receival was successfull.
+     * of whether the reception was successful or failed. If you wish to
+     * distinguish between the two cases, use either SucceededEvent or
+     * FailedEvent, which are both subclasses of the FinishedEvent.
      * 
      * @author IT Mill Ltd.
      * @version
