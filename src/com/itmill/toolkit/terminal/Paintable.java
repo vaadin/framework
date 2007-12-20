@@ -20,7 +20,7 @@ public interface Paintable extends java.util.EventListener {
 
     /**
      * <p>
-     * Paints the paintable into a UIDL stream. This method creates the UIDL
+     * Paints the Paintable into a UIDL stream. This method creates the UIDL
      * sequence describing it and outputs it to the given UIDL stream.
      * </p>
      * 
@@ -52,6 +52,11 @@ public interface Paintable extends java.util.EventListener {
      */
     public void setDebugId(String id);
 
+    /**
+     * Get's currently set debug identifier
+     * 
+     * @return current debug id, null if not set
+     */
     public String getDebugId();
 
     /**
