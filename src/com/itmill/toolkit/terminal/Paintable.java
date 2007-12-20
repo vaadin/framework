@@ -45,7 +45,8 @@ public interface Paintable extends java.util.EventListener {
 
     /**
      * Adds an unique id for component that get's transferred to terminal for
-     * testing purposes.
+     * testing purposes. Keeping identifiers unique throughout the Application
+     * instance is on programmers responsibility.
      * 
      * @param id
      *                A short (< 20 chars) alphanumeric id
