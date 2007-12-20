@@ -755,7 +755,8 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
     }
 
     /**
-     * Gets the Paintable Id.
+     * Gets the Paintable Id. If Paintable has debug id set it will be used
+     * prefixed with "PID_S". Otherwise a sequenced ID is created.
      * 
      * @param paintable
      * @return the paintable Id.
@@ -768,6 +769,8 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
             id = paintable.getDebugId();
             if (id == null) {
                 id = "PID" + Integer.toString(idSequence++);
+            } else {
+                id = "PID_S" + id;
             }
             paintableIdMap.put(paintable, id);
             idPaintableMap.put(id, paintable);
