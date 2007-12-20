@@ -132,10 +132,16 @@ public class IFilterSelect extends Composite implements Paintable,
             setPopupPosition(x, y);
             final int first = currentPage * PAGELENTH + 1;
             final int last = first + currentSuggestions.size() - 1;
-            DOM.setInnerText(status, (totalSuggestions == 0 ? 0 : first) + "-"
-                    + last + "/" + totalSuggestions);
+            final int matches = totalSuggestions
+                    - (nullSelectionAllowed ? 1 : 0);
+            if (last > 0) {
+                DOM.setInnerText(status, (totalSuggestions == 0 ? 0 : first)
+                        + "-" + last + "/" + matches);
+            } else {
+                DOM.setInnerText(status, "");
+            }
             setPrevButtonActive(first > 1);
-            setNextButtonActive(last < totalSuggestions);
+            setNextButtonActive(last < matches);
 
             // clear previously fixed width
             menu.setWidth("");
@@ -333,9 +339,11 @@ public class IFilterSelect extends Composite implements Paintable,
          * to avoid height changes when quickly "scrolling" to last page
          */
         public void fixHeightTo(int pagelenth) {
-            final int pixels = pagelenth * (getOffsetHeight() - 2)
-                    / currentSuggestions.size();
-            setHeight((pixels + 2) + "px");
+            if (currentSuggestions.size() > 0) {
+                final int pixels = pagelenth * (getOffsetHeight() - 2)
+                        / currentSuggestions.size();
+                setHeight((pixels + 2) + "px");
+            }
         }
 
         public void setSuggestions(Collection suggestions) {
@@ -446,7 +454,7 @@ public class IFilterSelect extends Composite implements Paintable,
     }
 
     public boolean hasNextPage() {
-        if (totalSuggestions > (currentPage + 1) * PAGELENTH) {
+        if (totalMatches > (currentPage + 1) * PAGELENTH) {
             return true;
         } else {
             return false;
