@@ -7,7 +7,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.ui.UIObject;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
@@ -53,10 +53,8 @@ public class IAccordion extends ITabsheetBase implements
         // is not supported from server-side)
         StackItem item = new StackItem(caption);
         if (selected) {
-            item.setContent(new StackContent(contentUidl));
+            item.setContent(contentUidl);
             item.open();
-        } else {
-            item.setContent(new StackContent());
         }
 
         if (stack.size() == 0) {
@@ -71,7 +69,7 @@ public class IAccordion extends ITabsheetBase implements
         if (index != activeTabIndex) {
             activeTabIndex = index;
             StackItem item = (StackItem) stack.get(index);
-            item.setContent(new StackContent(contentUidl));
+            item.setContent(contentUidl);
             item.open();
             iLayout();
         }
@@ -115,7 +113,7 @@ public class IAccordion extends ITabsheetBase implements
         if (height != null && height != "") {
             // Detach visible widget from document flow for a while to calculate
             // used height correctly
-            Widget w = item.getContent().getContainedWidget();
+            Widget w = item.getWidget();
             String originalPositioning = "";
             if (w != null) {
                 originalPositioning = DOM.getStyleAttribute(w.getElement(),
@@ -123,7 +121,7 @@ public class IAccordion extends ITabsheetBase implements
                 DOM.setStyleAttribute(w.getElement(), "visibility", "hidden");
                 DOM.setStyleAttribute(w.getElement(), "position", "absolute");
             }
-            item.getContent().setHeight("");
+            DOM.setStyleAttribute(item.getContainerElement(), "height", "");
 
             // Calculate target height
             super.setHeight(height);
@@ -137,7 +135,8 @@ public class IAccordion extends ITabsheetBase implements
             int h = targetHeight - usedHeight;
             if (h < 0)
                 h = 0;
-            item.getContent().setHeight(h + "px");
+            DOM.setStyleAttribute(item.getContainerElement(), "height", h
+                    + "px");
 
             // Put widget back into normal flow
             if (w != null) {
@@ -146,28 +145,38 @@ public class IAccordion extends ITabsheetBase implements
                 DOM.setStyleAttribute(w.getElement(), "visibility", "");
             }
         } else {
-            item.getContent().setHeight("");
+            DOM.setStyleAttribute(item.getContainerElement(), "height", "");
         }
 
         Util.runDescendentsLayout(this);
     }
 
-    protected class StackItem extends Widget {
+    protected class StackItem extends SimplePanel {
 
         private String caption;
         private Element captionNode;
         private boolean open = false;
-        private StackContent content;
+        private Element content;
 
         protected StackItem() {
             setElement(DOM.createDiv());
             captionNode = DOM.createDiv();
+            content = DOM.createDiv();
             // Additional SPAN element for styling
             DOM.appendChild(captionNode, DOM.createSpan());
             DOM.appendChild(getElement(), captionNode);
+            DOM.appendChild(getElement(), content);
             setStylePrimaryName(CLASSNAME + "-item");
+            DOM.setElementProperty(content, "className", CLASSNAME
+                    + "-item-content");
             DOM.setElementProperty(captionNode, "className", CLASSNAME
                     + "-item-caption");
+            DOM.setStyleAttribute(content, "overflow", "auto");
+            DOM.setStyleAttribute(content, "display", "none");
+            // Force 'hasLayout' in IE6 (prevents layout problems)
+            if (Util.isIE6()) {
+                DOM.setStyleAttribute(content, "zoom", "1");
+            }
             sinkEvents(Event.ONCLICK);
         }
 
@@ -179,7 +188,7 @@ public class IAccordion extends ITabsheetBase implements
         public StackItem(String caption, UIDL contentUidl) {
             this();
             setCaption(caption);
-            setContent(new StackContent(contentUidl));
+            setContent(contentUidl);
         }
 
         public void setCaption(String caption) {
@@ -193,13 +202,13 @@ public class IAccordion extends ITabsheetBase implements
 
         public void open() {
             open = true;
-            content.show();
+            DOM.setStyleAttribute(content, "display", "");
             addStyleDependentName("open");
         }
 
         public void close() {
             open = false;
-            content.hide();
+            DOM.setStyleAttribute(content, "display", "none");
             removeStyleDependentName("open");
         }
 
@@ -207,17 +216,17 @@ public class IAccordion extends ITabsheetBase implements
             return open;
         }
 
-        public StackContent getContent() {
-            return content;
+        public void setContent(UIDL contentUidl) {
+            final Paintable content = client.getPaintable(contentUidl);
+            if (content != getWidget()) {
+                client.unregisterPaintable((Paintable) getWidget());
+            }
+            setWidget((Widget) content);
+            content.updateFromUIDL(contentUidl, client);
         }
 
-        public void setContent(StackContent content) {
-            if (this.content != null) {
-                // Remove old content
-                DOM.removeChild(getElement(), getContent().getElement());
-            }
-            this.content = content;
-            DOM.appendChild(getElement(), getContent().getElement());
+        public Element getContainerElement() {
+            return content;
         }
 
         public void onBrowserEvent(Event evt) {
@@ -228,47 +237,6 @@ public class IAccordion extends ITabsheetBase implements
                     ((IAccordion) getParent()).onSelectTab(this);
                 }
             }
-        }
-
-    }
-
-    protected class StackContent extends UIObject {
-
-        private Widget widget;
-
-        protected StackContent() {
-            setElement(DOM.createDiv());
-            setVisible(false);
-            setStyleName(CLASSNAME + "-item-content");
-            DOM.setStyleAttribute(getElement(), "overflow", "auto");
-            // Force 'hasLayout' in IE6 (prevents layout problems)
-            if (Util.isIE6()) {
-                DOM.setStyleAttribute(getElement(), "zoom", "1");
-            }
-        }
-
-        protected StackContent(UIDL contentUidl) {
-            this();
-            renderContent(contentUidl);
-        }
-
-        public void show() {
-            setVisible(true);
-        }
-
-        public void hide() {
-            setVisible(false);
-        }
-
-        private void renderContent(UIDL contentUidl) {
-            final Paintable content = client.getPaintable(contentUidl);
-            DOM.appendChild(getElement(), ((Widget) content).getElement());
-            (content).updateFromUIDL(contentUidl, client);
-            widget = (Widget) content;
-        }
-
-        public Widget getContainedWidget() {
-            return widget;
         }
 
     }

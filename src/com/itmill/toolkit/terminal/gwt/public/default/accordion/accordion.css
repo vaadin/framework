@@ -27,6 +27,7 @@
 	border-top-color: #cbd7de;
 	border-bottom-color: #bfc9d4;
 	cursor: default;
+	text-shadow: #fafafa 1px 1px 0;
 }
 
 .i-accordion-item-open .i-accordion-item-caption span {
