@@ -723,7 +723,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
                 .getElementPropertyInt(getElement(), "offsetWidth") / 2 - 80)
                 + "px");
         DOM.setStyleAttribute(scrollPositionElement, "marginTop", -(DOM
-                .getElementPropertyInt(getElement(), "offsetHeight") / 2)
+                .getElementPropertyInt(getElement(), "offsetHeight") - 2)
                 + "px");
 
         int last = (firstRowInViewPort + pageLength);
