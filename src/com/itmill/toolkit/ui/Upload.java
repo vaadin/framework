@@ -737,6 +737,11 @@ public class Upload extends AbstractComponent implements Component.Focusable {
     /**
      * Go into upload state. This is to prevent double uploading on same
      * component.
+     * 
+     * Warning: this is an internal method used by the framework and should
+     * not be used by user of the Upload component. Using it results
+     * in the Upload component going in wrong state and not working.
+     * It is currently public because it is used by another class.
      */
     public void startUpload() {
         if (isUploading) {
@@ -747,6 +752,9 @@ public class Upload extends AbstractComponent implements Component.Focusable {
 
     /**
      * Go into state where new uploading can begin.
+     * 
+     * Warning: this is an internal method used by the framework and should
+     * not be used by user of the Upload component.
      */
     public void endUpload() {
         isUploading = false;
