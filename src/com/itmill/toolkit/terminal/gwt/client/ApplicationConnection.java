@@ -394,7 +394,7 @@ public class ApplicationConnection {
             String encodedValue, boolean immediate, char type) {
         final String id = paintableId + VAR_FIELD_SEPARATOR + variableName
                 + VAR_FIELD_SEPARATOR + type;
-        for (int i = 0; i < pendingVariables.size(); i += 2) {
+        for (int i = 1; i < pendingVariables.size(); i += 2) {
             if ((pendingVariables.get(i)).equals(id)) {
                 pendingVariables.remove(i - 1);
                 pendingVariables.remove(i - 1);
