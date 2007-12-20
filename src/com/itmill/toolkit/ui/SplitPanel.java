@@ -278,8 +278,7 @@ public class SplitPanel extends AbstractLayout implements HasSize {
     }
 
     public Size getSize() {
-        // TODO Auto-generated method stub
-        return null;
+        return size;
     }
 
 }
