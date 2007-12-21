@@ -580,9 +580,15 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
         }
 
         if (firstvisible > 0) {
-            bodyContainer
-                    .setScrollPosition(firstvisible * tBody.getRowHeight());
-            firstRowInViewPort = firstvisible;
+            // Deferred due some Firefox oddities. IE & Safari could survive
+            // without
+            DeferredCommand.addCommand(new Command() {
+                public void execute() {
+                    bodyContainer.setScrollPosition(firstvisible
+                            * tBody.getRowHeight());
+                    firstRowInViewPort = firstvisible;
+                }
+            });
         }
 
         DeferredCommand.addCommand(new Command() {
