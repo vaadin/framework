@@ -427,11 +427,17 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
     /**
      * In custom layout one may want to run layout functions made with
      * JavaScript. This function tests if one exists (with name "iLayoutJS" in
-     * layouts first DOM node) and runs if it. Return value is used to determine
-     * is children needs to be notified of size changes.
+     * layouts first DOM node) and runs et. Return value is used to determine if
+     * children needs to be notified of size changes.
+     * 
+     * Note! When implementing a JS layout function you most likely want to call
+     * notifyChildrenOfSizeChange() function on your custom layouts main
+     * element. That method is used to control whether child components layout
+     * functions are to be run.
      * 
      * @param el
-     * @return true if layout function was run and it returned true.
+     * @return true if layout function exists and was run successfully, else
+     *         false.
      */
     private native boolean iLayoutJS(Element el)
     /*-{
