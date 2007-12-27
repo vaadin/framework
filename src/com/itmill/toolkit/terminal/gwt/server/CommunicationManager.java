@@ -68,10 +68,6 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 
     private static String GET_PARAM_REPAINT_ALL = "repaintAll";
 
-    private static int DEFAULT_BUFFER_SIZE = 32 * 1024;
-
-    private static int MAX_BUFFER_SIZE = 64 * 1024;
-
     /* Variable records indexes */
     private static final int VAR_PID = 1;
     private static final int VAR_NAME = 2;
