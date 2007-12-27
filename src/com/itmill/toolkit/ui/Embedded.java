@@ -12,7 +12,6 @@ import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
 import com.itmill.toolkit.terminal.Resource;
 import com.itmill.toolkit.terminal.Size;
-import com.itmill.toolkit.terminal.Sizeable;
 
 /**
  * Component for embedding external objects.
@@ -22,7 +21,7 @@ import com.itmill.toolkit.terminal.Sizeable;
  * @VERSION@
  * @since 3.0
  */
-public class Embedded extends AbstractComponent implements HasSize, Sizeable {
+public class Embedded extends AbstractComponent implements HasSize {
 
     /**
      * General object type.
@@ -422,44 +421,62 @@ public class Embedded extends AbstractComponent implements HasSize, Sizeable {
         return size;
     }
 
-    public int getHeight() {
-        return size.getHeight();
-    }
+    /* Compatibility methods for previous Sizeable interface */
 
-    public int getHeightUnits() {
-        return size.getHeightUnits();
-    }
-
-    public int getWidth() {
-        return size.getWidth();
-    }
-
-    public int getWidthUnits() {
-        return size.getWidthUnits();
-    }
-
-    public void setHeight(int height) {
-        size.setHeight(height);
-    }
-
-    public void setHeightUnits(int units) {
-        size.setHeightUnits(units);
-    }
-
-    public void setSizeFull() {
-        size.setSizeFull();
-    }
-
-    public void setSizeUndefined() {
-        size.setSizeUndefined();
-    }
-
+    /**
+     * @deprecated use Size object instead (getSize().setWidth()).
+     */
     public void setWidth(int width) {
         size.setWidth(width);
     }
 
-    public void setWidthUnits(int units) {
-        size.setWidthUnits(units);
+    /**
+     * @deprecated use Size object instead (getSize().setWidthUnits()).
+     */
+    public void setWidthUnits(int unit) {
+        size.setWidthUnits(unit);
+    }
+
+    /**
+     * @deprecated use Size object instead (getSize().setHeight()).
+     */
+    public void setHeight(int height) {
+        size.setHeight(height);
+    }
+
+    /**
+     * @deprecated use Size object instead (getSize().setHeightUnits()).
+     */
+    public void setHeightUnits(int unit) {
+        size.setHeightUnits(unit);
+    }
+
+    /**
+     * @deprecated use Size object instead (getSize().getWidth()).
+     */
+    public int getWidth() {
+        return size.getWidth();
+    }
+
+    /**
+     * @deprecated use Size object instead (getSize().getWidthUnits()).
+     */
+    public int getWidthUnits() {
+        return size.getWidthUnits();
+    }
+
+    /**
+     * @deprecated use Size object instead (getSize().getHeight()).
+     */
+    public int getHeight() {
+        return size.getHeight();
+    }
+
+    /**
+     * @deprecated use Size object instead (getSize().getHeightUnits()).
+     */
+    public int getHeightUnits() {
+        return size.getHeightUnits();
     }
 
 }
