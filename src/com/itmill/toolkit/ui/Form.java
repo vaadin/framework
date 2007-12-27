@@ -369,7 +369,6 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
 
         if (propertyId != null && field != null) {
             dependsOn(field);
-            field.dependsOn(this);
             fields.put(propertyId, field);
             propertyIds.addLast(propertyId);
             field.setReadThrough(readThrough);
@@ -439,7 +438,6 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
             propertyIds.remove(id);
             fields.remove(id);
             removeDirectDependency(field);
-            field.removeDirectDependency(this);
             layout.removeComponent(field);
             return true;
         }
@@ -675,7 +673,6 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
         layout.replaceComponent(oldField, newField);
         fields.put(propertyId, newField);
         removeDirectDependency(oldField);
-        oldField.removeDirectDependency(this);
         dependsOn(newField);
         newField.dependsOn(this);
 
