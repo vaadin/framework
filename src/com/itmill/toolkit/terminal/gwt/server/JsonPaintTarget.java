@@ -35,15 +35,9 @@ public class JsonPaintTarget implements PaintTarget {
 
     private final static String UIDL_ARG_NAME = "name";
 
-    private final static String UIDL_ARG_VALUE = "value";
-
-    private final static String UIDL_ARG_ID = "id";
-
     private final Stack mOpenTags;
 
     private final Stack openJsonTags;
-
-    private boolean mTagArgumentListOpen;
 
     private final PrintWriter uidlBuffer;
 
@@ -88,12 +82,6 @@ public class JsonPaintTarget implements PaintTarget {
         // Initialize tag-writing
         mOpenTags = new Stack();
         openJsonTags = new Stack();
-        mTagArgumentListOpen = false;
-
-        // Adds document declaration
-
-        // Adds UIDL start tag and its attributes
-
         cacheEnabled = cachingRequired;
     }
 
@@ -141,8 +129,6 @@ public class JsonPaintTarget implements PaintTarget {
         mOpenTags.push(tagName);
 
         tag = new JsonTag(tagName);
-
-        mTagArgumentListOpen = true;
 
         customLayoutArgumentsOpen = "customlayout".equals(tagName);
 
@@ -732,7 +718,6 @@ public class JsonPaintTarget implements PaintTarget {
         if (namespace != null) {
             addAttribute("xmlns", namespace);
         }
-        mTagArgumentListOpen = false;
         customLayoutArgumentsOpen = false;
 
         if (sectionData != null) {
