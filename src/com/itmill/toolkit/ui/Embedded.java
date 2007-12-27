@@ -7,9 +7,11 @@ package com.itmill.toolkit.ui;
 import java.util.Hashtable;
 import java.util.Iterator;
 
+import com.itmill.toolkit.terminal.HasSize;
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
 import com.itmill.toolkit.terminal.Resource;
+import com.itmill.toolkit.terminal.Size;
 import com.itmill.toolkit.terminal.Sizeable;
 
 /**
@@ -20,7 +22,7 @@ import com.itmill.toolkit.terminal.Sizeable;
  * @VERSION@
  * @since 3.0
  */
-public class Embedded extends AbstractComponent implements Sizeable {
+public class Embedded extends AbstractComponent implements HasSize, Sizeable {
 
     /**
      * General object type.
@@ -48,17 +50,6 @@ public class Embedded extends AbstractComponent implements Sizeable {
     private Resource source = null;
 
     /**
-     * Dimensions of the object.
-     */
-    private int width = -1;
-
-    private int height = -1;
-
-    private int widthUnits = Sizeable.UNITS_PIXELS;
-
-    private int heightUnits = Sizeable.UNITS_PIXELS;
-
-    /**
      * Generic object attributes.
      */
     private String mimeType = null;
@@ -80,6 +71,8 @@ public class Embedded extends AbstractComponent implements Sizeable {
     private String classId = null;
 
     private String archive = null;
+
+    private Size size = new Size(this);
 
     /**
      * Creates a new empty Embedded object.
@@ -124,6 +117,8 @@ public class Embedded extends AbstractComponent implements Sizeable {
      */
     public void paintContent(PaintTarget target) throws PaintException {
 
+        size.paint(target);
+
         switch (type) {
         case TYPE_IMAGE:
             target.addAttribute("type", "image");
@@ -139,15 +134,6 @@ public class Embedded extends AbstractComponent implements Sizeable {
             target.addAttribute("src", source);
         }
 
-        // Dimensions
-        if (width > 0) {
-            target.addAttribute("width", "" + width
-                    + Sizeable.UNIT_SYMBOLS[widthUnits]);
-        }
-        if (height > 0) {
-            target.addAttribute("height", "" + height
-                    + Sizeable.UNIT_SYMBOLS[heightUnits]);
-        }
         if (mimeType != null && !"".equals(mimeType)) {
             target.addAttribute("mimetype", mimeType);
         }
@@ -319,54 +305,6 @@ public class Embedded extends AbstractComponent implements Sizeable {
     }
 
     /**
-     * Returns the visual height of the object. Default height is -1, which is
-     * interpreted as "unspecified".
-     * 
-     * @return the height in units specified by heightUnits property.
-     */
-    public int getHeight() {
-        return height;
-    }
-
-    /**
-     * Returns the visual width of the object. Default width is -1, which is
-     * interpreted as "unspecified".
-     * 
-     * @return the width in units specified by widthUnits property.
-     */
-    public int getWidth() {
-        return width;
-    }
-
-    /**
-     * Sets the visual height of the object. Default height is -1, which is
-     * interpreted as "unspecified".
-     * 
-     * @param height
-     *                the height in units specified by heightUnits property.
-     */
-    public void setHeight(int height) {
-        if (this.height != height) {
-            this.height = height;
-            requestRepaint();
-        }
-    }
-
-    /**
-     * Sets the visual width of the object. Default width is -1, which is
-     * interpreted as "unspecified".
-     * 
-     * @param width
-     *                the width in units specified by widthUnits property.
-     */
-    public void setWidth(int width) {
-        if (this.width != width) {
-            this.width = width;
-            requestRepaint();
-        }
-    }
-
-    /**
      * Gets the classId attribute.
      * 
      * @return the class id.
@@ -480,74 +418,48 @@ public class Embedded extends AbstractComponent implements Sizeable {
         }
     }
 
-    /**
-     * Gets the height property units. Default units are
-     * <code>Sizeable.UNITS_PIXELS</code>.
-     * 
-     * @see com.itmill.toolkit.terminal.Sizeable#getHeightUnits()
-     */
+    public Size getSize() {
+        return size;
+    }
+
+    public int getHeight() {
+        return size.getHeight();
+    }
+
     public int getHeightUnits() {
-        return heightUnits;
+        return size.getHeightUnits();
     }
 
-    /**
-     * Gets the width property units. Default units are
-     * <code>Sizeable.UNITS_PIXELS</code>.
-     * 
-     * @see com.itmill.toolkit.terminal.Sizeable#getWidthUnits()
-     */
+    public int getWidth() {
+        return size.getWidth();
+    }
+
     public int getWidthUnits() {
-        return widthUnits;
+        return size.getWidthUnits();
     }
 
-    /**
-     * Sets the height property units.
-     * 
-     * @see com.itmill.toolkit.terminal.Sizeable#setHeightUnits(int)
-     */
+    public void setHeight(int height) {
+        size.setHeight(height);
+    }
+
     public void setHeightUnits(int units) {
-        if (units >= 0 && units <= Sizeable.UNITS_PERCENTAGE
-                && heightUnits != units) {
-            heightUnits = units;
-            requestRepaint();
-        }
+        size.setHeightUnits(units);
     }
 
-    /**
-     * Sets the width property units.
-     * 
-     * @see com.itmill.toolkit.terminal.Sizeable#setWidthUnits(int)
-     */
-    public void setWidthUnits(int units) {
-        if (units >= 0 && units <= Sizeable.UNITS_PERCENTAGE
-                && widthUnits != units) {
-            widthUnits = units;
-            requestRepaint();
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.itmill.toolkit.terminal.Sizeable#setSizeFull()
-     */
     public void setSizeFull() {
-        setWidth(100);
-        setHeight(100);
-        setWidthUnits(UNITS_PERCENTAGE);
-        setHeightUnits(UNITS_PERCENTAGE);
+        size.setSizeFull();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.itmill.toolkit.terminal.Sizeable#setSizeUndefined()
-     */
     public void setSizeUndefined() {
-        setWidth(-1);
-        setHeight(-1);
-        setWidthUnits(UNITS_PIXELS);
-        setHeightUnits(UNITS_PIXELS);
+        size.setSizeUndefined();
+    }
+
+    public void setWidth(int width) {
+        size.setWidth(width);
+    }
+
+    public void setWidthUnits(int units) {
+        size.setWidthUnits(units);
     }
 
 }
