@@ -17,16 +17,12 @@ public class IForm extends SimplePanel implements Paintable {
 
     private Container lo;
 
-    private ApplicationConnection client;
-
     public IForm() {
         super();
         setStyleName(CLASSNAME);
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        this.client = client;
-
         if (client.updateComponent(this, uidl, true)) {
             return;
         }
