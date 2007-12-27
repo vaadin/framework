@@ -181,14 +181,16 @@ public class IExpandLayout extends ComplexPanel implements
         }
 
         void setSpacingEnabled(boolean b) {
-            setStyleName(getElement(), CLASSNAME + "-" + StyleConstants.VERTICAL_SPACING, b);
+            setStyleName(getElement(), CLASSNAME + "-"
+                    + StyleConstants.VERTICAL_SPACING, b);
         }
     }
 
     class HorizontalWidgetWrapper extends WidgetWrapper {
 
-        Element td;
-        String valign = "top";
+        private Element td;
+        private String valign = "top";
+        private String align = "left";
 
         public HorizontalWidgetWrapper(Element element) {
             if (DOM.getElementProperty(element, "nodeName").equals("TD")) {
@@ -251,6 +253,11 @@ public class IExpandLayout extends ComplexPanel implements
                 }
                 valign = verticalAlignment;
             }
+            if (!align.equals(horizontalAlignment)) {
+                DOM.setStyleAttribute(getContainerElement(), "textAlign",
+                        horizontalAlignment);
+                align = horizontalAlignment;
+            }
         }
 
         public Element getContainerElement() {
@@ -262,7 +269,8 @@ public class IExpandLayout extends ComplexPanel implements
         }
 
         void setSpacingEnabled(boolean b) {
-            setStyleName(getElement(), CLASSNAME + "-" + StyleConstants.HORIZONTAL_SPACING, b);
+            setStyleName(getElement(), CLASSNAME + "-"
+                    + StyleConstants.HORIZONTAL_SPACING, b);
         }
     }
 
@@ -340,6 +348,7 @@ public class IExpandLayout extends ComplexPanel implements
                 pixels = 0;
             }
             DOM.setStyleAttribute(me, "height", pixels + "px");
+            DOM.setStyleAttribute(me, "overflow", "hidden");
         }
 
         if (expandedWidget == null) {
@@ -366,15 +375,26 @@ public class IExpandLayout extends ComplexPanel implements
 
     private int getTopMargin() {
         if (topMargin < 0) {
-            topMargin = DOM.getElementPropertyInt(childContainer, "offsetTop");
+            topMargin = DOM.getElementPropertyInt(childContainer, "offsetTop")
+                    - DOM.getElementPropertyInt(getElement(), "offsetTop");
         }
-        return topMargin;
+        if (topMargin < 0) {
+                // FIXME shouldn't happen
+            return 0;
+        } else {
+            return topMargin;
+        }
     }
 
     private int getBottomMargin() {
         if (bottomMargin < 0) {
-            bottomMargin = DOM.getElementPropertyInt(me, "offsetHeight")
+            bottomMargin = DOM.getElementPropertyInt(me, "offsetTop")
+                    + DOM.getElementPropertyInt(me, "offsetHeight")
                     - DOM.getElementPropertyInt(breakElement, "offsetTop");
+            if (bottomMargin < 0) {
+                // FIXME shouldn't happen
+                return 0;
+            }
         }
         return bottomMargin;
     }
