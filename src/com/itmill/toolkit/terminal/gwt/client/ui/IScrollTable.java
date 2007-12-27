@@ -1162,8 +1162,6 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 
         private int focusedSlot = -1;
 
-        private boolean columnCollapsing = false;
-
         public TableHead() {
             DOM.setStyleAttribute(hTableWrapper, "overflow", "hidden");
             DOM.setElementProperty(hTableWrapper, "className", CLASSNAME
@@ -1233,7 +1231,6 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
         }
 
         public void setColumnCollapsingAllowed(boolean cc) {
-            columnCollapsing = cc;
             if (cc) {
                 DOM.setStyleAttribute(columnSelector, "display", "block");
             } else {
