@@ -23,9 +23,6 @@ public class ShortcutActionHandler {
     private ApplicationConnection client;
     private String paintableId;
 
-    private ShortcutActionHandler() {
-    }
-
     /**
      * 
      * @param pid
