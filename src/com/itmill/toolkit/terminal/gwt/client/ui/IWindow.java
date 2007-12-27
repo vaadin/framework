@@ -89,12 +89,6 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 
     ShortcutActionHandler shortcutHandler;
 
-    /** Last known width read from UIDL or updated to application connection */
-    private final int uidlWidth = -1;
-
-    /** Last known height read from UIDL or updated to application connection */
-    private final int uidlHeight = -1;
-
     /** Last known positionx read from UIDL or updated to application connection */
     private int uidlPositionX = -1;
 
@@ -249,7 +243,7 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
                 Window.open(parsedUri, target, "");
             }
         } else {
-            final Paintable lo = (Paintable) client.getPaintable(childUidl);
+            final Paintable lo = client.getPaintable(childUidl);
             if (layout != null) {
                 if (layout != lo) {
                     // remove old
