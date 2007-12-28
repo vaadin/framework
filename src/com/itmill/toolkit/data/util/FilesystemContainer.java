@@ -31,6 +31,10 @@ import com.itmill.toolkit.terminal.Resource;
  * @VERSION@
  * @since 3.0
  */
+/**
+ * @author mattitahvonen
+ * 
+ */
 public class FilesystemContainer implements Container.Hierarchical {
 
     /**
@@ -815,9 +819,11 @@ public class FilesystemContainer implements Container.Hierarchical {
         this.recursive = recursive;
     }
 
-    /**
-     * @see com.itmill.toolkit.data.Container#addContainerProperty(Object,
-     *      Class, Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.itmill.toolkit.data.Container#addContainerProperty(java.lang.Object,
+     *      java.lang.Class, java.lang.Object)
      */
     public boolean addContainerProperty(Object propertyId, Class type,
             Object defaultValue) throws UnsupportedOperationException {
@@ -825,7 +831,9 @@ public class FilesystemContainer implements Container.Hierarchical {
                 "File system container does not support this operation");
     }
 
-    /**
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.itmill.toolkit.data.Container#addItem()
      */
     public Object addItem() throws UnsupportedOperationException {
@@ -833,15 +841,19 @@ public class FilesystemContainer implements Container.Hierarchical {
                 "File system container does not support this operation");
     }
 
-    /**
-     * @see com.itmill.toolkit.data.Container#addItem(Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.itmill.toolkit.data.Container#addItem(java.lang.Object)
      */
     public Item addItem(Object itemId) throws UnsupportedOperationException {
         throw new UnsupportedOperationException(
                 "File system container does not support this operation");
     }
 
-    /**
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.itmill.toolkit.data.Container#removeAllItems()
      */
     public boolean removeAllItems() throws UnsupportedOperationException {
@@ -849,8 +861,10 @@ public class FilesystemContainer implements Container.Hierarchical {
                 "File system container does not support this operation");
     }
 
-    /**
-     * @see com.itmill.toolkit.data.Container#removeItem(Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.itmill.toolkit.data.Container#removeItem(java.lang.Object)
      */
     public boolean removeItem(Object itemId)
             throws UnsupportedOperationException {
@@ -858,8 +872,10 @@ public class FilesystemContainer implements Container.Hierarchical {
                 "File system container does not support this operation");
     }
 
-    /**
-     * @see com.itmill.toolkit.data.Container#removeContainerProperty(Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.itmill.toolkit.data.Container#removeContainerProperty(java.lang.Object)
      */
     public boolean removeContainerProperty(Object propertyId)
             throws UnsupportedOperationException {
