@@ -1400,7 +1400,9 @@ public class IndexedContainer implements Container, Container.Indexed,
 
     }
 
-    /**
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.itmill.toolkit.data.Container.Sortable#getSortableContainerPropertyIds()
      */
     public Collection getSortableContainerPropertyIds() {
@@ -1522,7 +1524,9 @@ public class IndexedContainer implements Container, Container.Indexed,
         return nc;
     }
 
-    /**
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
     public boolean equals(Object obj) {
@@ -1592,7 +1596,9 @@ public class IndexedContainer implements Container, Container.Indexed,
         return true;
     }
 
-    /**
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#hashCode()
      */
     public int hashCode() {
