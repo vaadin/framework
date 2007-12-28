@@ -200,6 +200,10 @@ public class IPanel extends SimplePanel implements Paintable,
             final boolean hasChildren = getWidget() != null;
             Element contentEl = null;
             String origPositioning = null;
+            // save scroll position
+            int scrollTop = DOM.getElementPropertyInt(contentNode, "scrollTop");
+            int scrollLeft = DOM.getElementPropertyInt(contentNode,
+                    "scrollLeft");
             if (hasChildren) {
                 // Remove children temporary form normal flow to detect proper
                 // size
@@ -207,6 +211,7 @@ public class IPanel extends SimplePanel implements Paintable,
                 origPositioning = DOM.getStyleAttribute(contentEl, "position");
                 DOM.setStyleAttribute(contentEl, "position", "absolute");
             }
+
             // Set defaults
             DOM.setStyleAttribute(contentNode, "overflow", "hidden");
             DOM.setStyleAttribute(contentNode, "height", "");
@@ -239,6 +244,10 @@ public class IPanel extends SimplePanel implements Paintable,
                         "positioning:" + origPositioning);
                 DOM.setStyleAttribute(contentEl, "position", origPositioning);
             }
+            // restore scroll position
+            DOM.setElementPropertyInt(contentNode, "scrollTop", scrollTop);
+            DOM.setElementPropertyInt(contentNode, "scrollLeft", scrollLeft);
+
         } else {
             DOM.setStyleAttribute(contentNode, "height", "");
         }

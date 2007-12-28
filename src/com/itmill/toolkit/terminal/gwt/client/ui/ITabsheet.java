@@ -175,6 +175,10 @@ public class ITabsheet extends ITabsheetBase implements
 
     public void iLayout() {
         if (height != null && height != "") {
+            // save scroll position
+            int scrollTop = DOM.getElementPropertyInt(contentNode, "scrollTop");
+            int scrollLeft = DOM.getElementPropertyInt(contentNode,
+                    "scrollLeft");
             // Take content out of flow for a while
             final String originalPositioning = DOM.getStyleAttribute(tp
                     .getElement(), "position");
@@ -202,6 +206,9 @@ public class ITabsheet extends ITabsheetBase implements
             DOM.setStyleAttribute(tp.getElement(), "position",
                     originalPositioning);
             DOM.setStyleAttribute(contentNode, "overflow", "auto");
+            // restore scroll position
+            DOM.setElementPropertyInt(contentNode, "scrollTop", scrollTop);
+            DOM.setElementPropertyInt(contentNode, "scrollLeft", scrollLeft);
         } else {
             tp.setHeight("");
         }
