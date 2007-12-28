@@ -79,8 +79,10 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
             { "Wrangling data", "ComboBox", "ComboBox - the swiss army select",
                     ComboBoxExample.class },
             // Wrangling data: Table
-            { "Wrangling data", "Table",
-                    "A dynamic Table with bells, whistles and actions",
+            {
+                    "Wrangling data",
+                    "Table (\"grid\")",
+                    "Table with bells, whistles, editmode and actions (contextmenu)",
                     TableExample.class },
             // Wrangling data: Tree
             { "Wrangling data", "Tree", "A hierarchy of things",
@@ -198,7 +200,7 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
                 if (Layout.class.isAssignableFrom(component.getClass())) {
                     w.setLayout((Layout) component);
                 } else {
-                    //w.getLayout().getSize().setSizeFull();
+                    // w.getLayout().getSize().setSizeFull();
                     w.addComponent(component);
                 }
                 getMainWindow().addWindow(w);
@@ -225,7 +227,7 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
                     if (Layout.class.isAssignableFrom(component.getClass())) {
                         w.setLayout((Layout) component);
                     } else {
-                        //w.getLayout().getSize().setSizeFull();
+                        // w.getLayout().getSize().setSizeFull();
                         w.addComponent(component);
                     }
                     addWindow(w);

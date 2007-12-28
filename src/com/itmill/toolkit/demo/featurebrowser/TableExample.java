@@ -88,6 +88,15 @@ public class TableExample extends CustomComponent implements Action.Handler,
         deselect.setStyleName(Button.STYLE_LINK);
         deselect.addListener(this);
         horiz.addComponent(deselect);
+        final CheckBox editmode = new CheckBox("Editmode ");
+        editmode.addListener(new CheckBox.ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                source.setEditable(((Boolean) event.getButton().getValue())
+                        .booleanValue());
+            }
+        });
+        editmode.setImmediate(true);
+        horiz.addComponent(editmode);
 
         // "saved" table, minimalistic
         saved = new Table("Saved creatures");
