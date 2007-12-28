@@ -232,8 +232,10 @@ public class HierarchicalContainer extends IndexedContainer implements
         return true;
     }
 
-    /**
-     * @see com.itmill.toolkit.data.Container#addItem()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.itmill.toolkit.data.util.IndexedContainer#addItem()
      */
     public Object addItem() {
         final Object id = super.addItem();
@@ -244,8 +246,10 @@ public class HierarchicalContainer extends IndexedContainer implements
 
     }
 
-    /**
-     * @see com.itmill.toolkit.data.Container#addItem(Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.itmill.toolkit.data.util.IndexedContainer#addItem(java.lang.Object)
      */
     public Item addItem(Object itemId) {
         final Item item = super.addItem(itemId);
@@ -255,8 +259,10 @@ public class HierarchicalContainer extends IndexedContainer implements
         return item;
     }
 
-    /**
-     * @see com.itmill.toolkit.data.Container#removeAllItems()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.itmill.toolkit.data.util.IndexedContainer#removeAllItems()
      */
     public boolean removeAllItems() {
         final boolean success = super.removeAllItems();
@@ -270,8 +276,10 @@ public class HierarchicalContainer extends IndexedContainer implements
         return success;
     }
 
-    /**
-     * @see com.itmill.toolkit.data.Container#removeItem(Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.itmill.toolkit.data.util.IndexedContainer#removeItem(java.lang.Object)
      */
     public boolean removeItem(Object itemId) {
         final boolean success = super.removeItem(itemId);
