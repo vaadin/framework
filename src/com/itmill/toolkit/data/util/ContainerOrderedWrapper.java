@@ -499,9 +499,11 @@ public class ContainerOrderedWrapper implements Container.Ordered,
         }
     }
 
-    /**
-     * @see com.itmill.toolkit.data.Container.Ordered#addItemAfter(Object,
-     *      Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.itmill.toolkit.data.Container.Ordered#addItemAfter(java.lang.Object,
+     *      java.lang.Object)
      */
     public Item addItemAfter(Object previousItemId, Object newItemId)
             throws UnsupportedOperationException {
@@ -522,8 +524,10 @@ public class ContainerOrderedWrapper implements Container.Ordered,
         return item;
     }
 
-    /**
-     * @see com.itmill.toolkit.data.Container.Ordered#addItemAfter(Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.itmill.toolkit.data.Container.Ordered#addItemAfter(java.lang.Object)
      */
     public Object addItemAfter(Object previousItemId)
             throws UnsupportedOperationException {
