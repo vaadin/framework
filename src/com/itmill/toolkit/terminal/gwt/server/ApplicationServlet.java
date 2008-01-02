@@ -777,44 +777,19 @@ public class ApplicationServlet extends HttpServlet {
         }
         is.close();
 
-        if (builder != null && builder.length() > 0
-                && builder.toString().startsWith("TT-TC=")) {
-            int lineEnd = builder.indexOf("\n");
-            String returnedTestCaseId = builder.substring(builder
-                    .indexOf("TT-TC=") + 6, lineEnd);
-            builder.replace(0, lineEnd + 1, "");
-
-            String returnedTestSuiteRunId = null;
-
-            if (testSuiteId != null) {
-                lineEnd = builder.indexOf("\n");
-                returnedTestSuiteRunId = builder.substring(builder
-                        .indexOf("TT-TS-RUN-ID=") + 13, lineEnd);
-            }
-
-            if (builder.length() < lineEnd + 1) {
-                throw new RuntimeException(
-                        "The received testscript is illegal. Expected testcase script id in first line "
-                                + " and the actual script in following lines. The script: "
-                                + builder.toString());
-            }
-
+        if (builder != null && builder.length() > 0) {
             page
                     .write("<script language=\"JavaScript\" type=\"text/javascript\">\n");
-            page.write("itmill.TTtestCaseId = \"" + returnedTestCaseId + "\";");
-            page.write("\n");
+            page.write("itmill.TTtestCaseId = \"" + testCaseId + "\";\n");
             if (testSuiteId != null) {
-                page.write("itmill.TTtestSuiteId = \"" + testSuiteId + "\";");
-                page.write("\n");
+                page.write("itmill.TTtestSuiteId = \"" + testSuiteId + "\";\n");
             }
-            if (returnedTestSuiteRunId != null) {
-                page.write("itmill.TTtestSuiteRunId = \""
-                        + returnedTestSuiteRunId + "\";");
-                page.write("\n");
-                builder = builder.delete(0, lineEnd);
+            if (testSuiteRunId != null) {
+                page.write("itmill.TTtestSuiteRunId = \"" + testSuiteRunId
+                        + "\";\n");
             }
-            String script = builder.toString().replaceAll("\n", "\\\\n");
-            page.write("itmill.TTtestCaseScript = \"" + script + "\";\n");
+            page.write("itmill.TTtestCaseScript = \"" + builder.toString()
+                    + "\";\n");
             page.write("</script>\n");
         }
     }
