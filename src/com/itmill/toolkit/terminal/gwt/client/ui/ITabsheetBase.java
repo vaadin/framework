@@ -73,7 +73,7 @@ abstract class ITabsheetBase extends FlowPanel implements Paintable {
                 final boolean selected = tab.getBooleanAttribute("selected");
                 String caption = tab.getStringAttribute("caption");
                 if (caption == null) {
-                    caption = "&nbsp;";
+                    caption = " ";
                 }
 
                 captions.add(caption);
