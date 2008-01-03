@@ -29,6 +29,7 @@ public class ITabsheet extends ITabsheetBase implements
     private final Element contentNode, deco;
 
     private String height;
+    private String width;
 
     private final TabListener tl = new TabListener() {
 
@@ -160,30 +161,49 @@ public class ITabsheet extends ITabsheetBase implements
     }
 
     public void setHeight(String height) {
+        if (this.height == null && height == null)
+            return;
+        String oldHeight = this.height;
         this.height = height;
-        iLayout();
+        if ((this.height != null && height == null)
+                || (this.height == null && height != null)
+                || !oldHeight.equals(height)) {
+            iLayout();
+        }
     }
 
     public void setWidth(String width) {
+        String oldWidth = this.width;
+        this.width = width;
         if ("100%".equals(width)) {
             // Allow browser to calculate width
             super.setWidth("");
         } else {
             super.setWidth(width);
         }
+        if ((this.width != null && width == null)
+                || (this.width == null && width != null)
+                || !oldWidth.equals(width))
+            // Run descendant layout functions
+            Util.runDescendentsLayout(this);
     }
 
     public void iLayout() {
         if (height != null && height != "") {
-            // save scroll position
+
+            // Save scroll position
             int scrollTop = DOM.getElementPropertyInt(contentNode, "scrollTop");
             int scrollLeft = DOM.getElementPropertyInt(contentNode,
                     "scrollLeft");
+
             // Take content out of flow for a while
             final String originalPositioning = DOM.getStyleAttribute(tp
                     .getElement(), "position");
             DOM.setStyleAttribute(tp.getElement(), "position", "absolute");
+
+            // Set defaults for content element
             DOM.setStyleAttribute(contentNode, "overflow", "hidden");
+            DOM.setStyleAttribute(contentNode, "height", "");
 
             // Calculate target height
             super.setHeight(height);
@@ -195,22 +215,27 @@ public class ITabsheet extends ITabsheetBase implements
                     + DOM.getElementPropertyInt(deco, "offsetHeight")
                     - DOM.getElementPropertyInt(getElement(), "offsetTop");
 
-            // Calculate content area height (don't allow negative values)
-            int h = targetHeight - usedHeight;
-            if (h < 0) {
-                h = 0;
+            // Calculate needed content area height
+            int newHeight = targetHeight - usedHeight;
+            if (newHeight < 0) {
+                newHeight = 0;
             }
 
             // Set proper values for content element
-            tp.setHeight(h + "px");
+            DOM.setStyleAttribute(contentNode, "height", newHeight + "px");
+            DOM.setStyleAttribute(contentNode, "overflow", "auto");
+
+            // Restore content to normal flow
             DOM.setStyleAttribute(tp.getElement(), "position",
                     originalPositioning);
-            DOM.setStyleAttribute(contentNode, "overflow", "auto");
-            // restore scroll position
+
+            // Restore scroll position
             DOM.setElementPropertyInt(contentNode, "scrollTop", scrollTop);
             DOM.setElementPropertyInt(contentNode, "scrollLeft", scrollLeft);
+
         } else {
-            tp.setHeight("");
+            DOM.setStyleAttribute(contentNode, "height", "");
+            DOM.setStyleAttribute(contentNode, "overflow", "");
         }
         Util.runDescendentsLayout(this);
     }

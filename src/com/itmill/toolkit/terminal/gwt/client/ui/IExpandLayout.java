@@ -34,7 +34,7 @@ public class IExpandLayout extends ComplexPanel implements
 
     public static final int ORIENTATION_VERTICAL = 0;
 
-    // We are using minimun for expanded element to avoid "odd" situations where
+    // We are using minimum for expanded element to avoid "odd" situations where
     // expanded element is 0 size
     private static final int EXPANDED_ELEMENTS_MIN_WIDTH = 40;
 
@@ -60,7 +60,7 @@ public class IExpandLayout extends ComplexPanel implements
     protected int topMargin = -1;
     private String width;
     private String height;
-    private Element me;
+    private Element marginElement;
     private Element breakElement;
     private int bottomMargin = -1;
     private boolean hasComponentSpacing;
@@ -87,10 +87,10 @@ public class IExpandLayout extends ComplexPanel implements
         // DOM.setStyleAttribute(element, "overflow", "hidden");
 
         if (orientationMode == ORIENTATION_HORIZONTAL) {
-            me = DOM.createDiv();
+            marginElement = DOM.createDiv();
             if (Util.isIE()) {
-                DOM.setStyleAttribute(me, "zoom", "1");
-                DOM.setStyleAttribute(me, "overflow", "hidden");
+                DOM.setStyleAttribute(marginElement, "zoom", "1");
+                DOM.setStyleAttribute(marginElement, "overflow", "hidden");
             }
             childContainer = DOM.createDiv();
             if (Util.isIE()) {
@@ -102,13 +102,13 @@ public class IExpandLayout extends ComplexPanel implements
             DOM.setStyleAttribute(breakElement, "overflow", "hidden");
             DOM.setStyleAttribute(breakElement, "height", "0px");
             DOM.setStyleAttribute(breakElement, "clear", "both");
-            DOM.appendChild(me, childContainer);
-            DOM.appendChild(me, breakElement);
-            DOM.appendChild(element, me);
+            DOM.appendChild(marginElement, childContainer);
+            DOM.appendChild(marginElement, breakElement);
+            DOM.appendChild(element, marginElement);
         } else {
             childContainer = DOM.createDiv();
             DOM.appendChild(element, childContainer);
-            me = childContainer;
+            marginElement = childContainer;
         }
         setElement(element);
     }
@@ -160,8 +160,9 @@ public class IExpandLayout extends ComplexPanel implements
 
         public VerticalWidgetWrapper() {
             setElement(DOM.createDiv());
-            // this is mostly needed for IE, could be isolated
-            DOM.setStyleAttribute(getContainerElement(), "overflow", "auto");
+            // Set to 'hidden' at first (prevent IE6 content overflows), and set
+            // to 'auto' later.
+            DOM.setStyleAttribute(getContainerElement(), "overflow", "hidden");
         }
 
         void setExpandedSize(int pixels) {
@@ -172,6 +173,7 @@ public class IExpandLayout extends ComplexPanel implements
                 fixedInnerSize = 0;
             }
             setHeight(fixedInnerSize + "px");
+            DOM.setStyleAttribute(getContainerElement(), "overflow", "auto");
         }
 
         void setAlignment(String verticalAlignment, String horizontalAlignment) {
@@ -327,14 +329,14 @@ public class IExpandLayout extends ComplexPanel implements
     protected void handleMargins(UIDL uidl) {
         final MarginInfo margins = new MarginInfo(uidl
                 .getIntAttribute("margins"));
-        setStyleName(me, CLASSNAME + "-" + StyleConstants.MARGIN_TOP, margins
-                .hasTop());
-        setStyleName(me, CLASSNAME + "-" + StyleConstants.MARGIN_RIGHT, margins
-                .hasRight());
-        setStyleName(me, CLASSNAME + "-" + StyleConstants.MARGIN_BOTTOM,
-                margins.hasBottom());
-        setStyleName(me, CLASSNAME + "-" + StyleConstants.MARGIN_LEFT, margins
-                .hasLeft());
+        setStyleName(marginElement,
+                CLASSNAME + "-" + StyleConstants.MARGIN_TOP, margins.hasTop());
+        setStyleName(marginElement, CLASSNAME + "-"
+                + StyleConstants.MARGIN_RIGHT, margins.hasRight());
+        setStyleName(marginElement, CLASSNAME + "-"
+                + StyleConstants.MARGIN_BOTTOM, margins.hasBottom());
+        setStyleName(marginElement, CLASSNAME + "-"
+                + StyleConstants.MARGIN_LEFT, margins.hasLeft());
     }
 
     public boolean hasChildComponent(Widget component) {
@@ -347,8 +349,8 @@ public class IExpandLayout extends ComplexPanel implements
             if (pixels < 0) {
                 pixels = 0;
             }
-            DOM.setStyleAttribute(me, "height", pixels + "px");
-            DOM.setStyleAttribute(me, "overflow", "hidden");
+            DOM.setStyleAttribute(marginElement, "height", pixels + "px");
+            DOM.setStyleAttribute(marginElement, "overflow", "hidden");
         }
 
         if (expandedWidget == null) {
@@ -379,7 +381,7 @@ public class IExpandLayout extends ComplexPanel implements
                     - DOM.getElementPropertyInt(getElement(), "offsetTop");
         }
         if (topMargin < 0) {
-                // FIXME shouldn't happen
+            // FIXME shouldn't happen
             return 0;
         } else {
             return topMargin;
@@ -388,8 +390,9 @@ public class IExpandLayout extends ComplexPanel implements
 
     private int getBottomMargin() {
         if (bottomMargin < 0) {
-            bottomMargin = DOM.getElementPropertyInt(me, "offsetTop")
-                    + DOM.getElementPropertyInt(me, "offsetHeight")
+            bottomMargin = DOM
+                    .getElementPropertyInt(marginElement, "offsetTop")
+                    + DOM.getElementPropertyInt(marginElement, "offsetHeight")
                     - DOM.getElementPropertyInt(breakElement, "offsetTop");
             if (bottomMargin < 0) {
                 // FIXME shouldn't happen
@@ -456,14 +459,14 @@ public class IExpandLayout extends ComplexPanel implements
             }
 
             final int marginTop = DOM.getElementPropertyInt(DOM
-                    .getFirstChild(me), "offsetTop")
+                    .getFirstChild(marginElement), "offsetTop")
                     - DOM.getElementPropertyInt(element, "offsetTop");
 
-            final Element lastElement = DOM.getChild(me,
-                    (DOM.getChildCount(me) - 1));
-            final int marginBottom = DOM.getElementPropertyInt(me,
+            final Element lastElement = DOM.getChild(marginElement, (DOM
+                    .getChildCount(marginElement) - 1));
+            final int marginBottom = DOM.getElementPropertyInt(marginElement,
                     "offsetHeight")
-                    + DOM.getElementPropertyInt(me, "offsetTop")
+                    + DOM.getElementPropertyInt(marginElement, "offsetTop")
                     - (DOM.getElementPropertyInt(lastElement, "offsetTop") + DOM
                             .getElementPropertyInt(lastElement, "offsetHeight"));
             size -= (marginTop + marginBottom);
