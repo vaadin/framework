@@ -1,9 +1,10 @@
 .resulttable {
-	border-collapse: collapse;
 	border-spacing: 0px;
 	margin: 0px 0px 0px 0px;
 	width: 100%;
+	border-left: 1px solid #b6bbbc;
 }
+
 .resulttable TR.error {
 	background-color: #ffeeee;
 }
