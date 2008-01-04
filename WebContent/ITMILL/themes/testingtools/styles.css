@@ -1,0 +1,35 @@
+.resulttable {
+	border-collapse: collapse;
+	border-spacing: 0px;
+	margin: 0px 0px 0px 0px;
+	width: 100%;
+}
+.resulttable TR.error {
+	background-color: #ffeeee;
+}
+.resulttable TR.even {
+	background-color: #eeeeee;
+}
+.resulttable .line {
+	text-align: right;
+	border-right: 1px solid #cccccc;
+}
+.resulttable .line A {
+	color: #666666;
+	text-decoration: none;
+}
+.resulttable .error .line A {
+	color: red;
+}
+
+.resulttable .code {
+	white-space: nowrap;
+	font-family: monospace;
+	border-right: 1px solid #cccccc;
+	padding: 3px 3px 3px 7px;
+}
+.resulttable .msg {
+	color: red;
+	padding: 5px 10px 5px 10px;
+	white-space: nowrap;
+}
