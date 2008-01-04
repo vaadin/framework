@@ -21,7 +21,7 @@
   <!-- Undefined, use default URI for Testing Tools Server
    <context-param>
   	<param-name>testingToolsServerUri</param-name>
-  	<param-value>http://localhost:8080/TestingTools/</param-value>
+  	<param-value>http://localhost:8080/TestingTools/TestingToolsServer</param-value>
   	<description>IT Mill Testing Tools URI</description>
   </context-param>
   -->
