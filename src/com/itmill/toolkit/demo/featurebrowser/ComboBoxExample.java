@@ -4,6 +4,8 @@
 
 package com.itmill.toolkit.demo.featurebrowser;
 
+import java.util.Random;
+
 import com.itmill.toolkit.ui.ComboBox;
 import com.itmill.toolkit.ui.CustomComponent;
 import com.itmill.toolkit.ui.OrderedLayout;
@@ -33,11 +35,12 @@ public class ComboBoxExample extends CustomComponent {
         final ComboBox s1 = new ComboBox("Select with starts-with filter");
         s1.setFilteringMode(Filtering.FILTERINGMODE_STARTSWITH);
         s1.setColumns(20);
+        Random r = new Random(5);
         for (int i = 0; i < 105; i++) {
             s1
-                    .addItem(firstnames[(int) (Math.random() * (firstnames.length - 1))]
+                    .addItem(firstnames[(int) (r.nextDouble() * (firstnames.length - 1))]
                             + " "
-                            + lastnames[(int) (Math.random() * (lastnames.length - 1))]);
+                            + lastnames[(int) (r.nextDouble() * (lastnames.length - 1))]);
         }
         s1.setImmediate(true);
         main.addComponent(s1);
@@ -48,9 +51,9 @@ public class ComboBoxExample extends CustomComponent {
         s2.setColumns(20);
         for (int i = 0; i < 500; i++) {
             s2
-                    .addItem(firstnames[(int) (Math.random() * (firstnames.length - 1))]
+                    .addItem(firstnames[(int) (r.nextDouble() * (firstnames.length - 1))]
                             + " "
-                            + lastnames[(int) (Math.random() * (lastnames.length - 1))]);
+                            + lastnames[(int) (r.nextDouble() * (lastnames.length - 1))]);
         }
         s2.setImmediate(true);
         main.addComponent(s2);

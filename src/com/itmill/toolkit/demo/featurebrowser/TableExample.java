@@ -5,6 +5,7 @@
 package com.itmill.toolkit.demo.featurebrowser;
 
 import java.util.Iterator;
+import java.util.Random;
 import java.util.Set;
 
 import com.itmill.toolkit.data.Item;
@@ -56,6 +57,7 @@ public class TableExample extends CustomComponent implements Action.Handler,
 
         // "source" table with bells & whistlesenabled
         source = new Table("All creatures");
+        source.setDebugId("PID_S_ALLC");
         source.setPageLength(7);
         source.getSize().setWidth(550);
         source.setColumnCollapsingAllowed(true);
@@ -142,10 +144,12 @@ public class TableExample extends CustomComponent implements Action.Handler,
         final String[] ki = new String[] { "Jumping", "Walking", "Sleeping",
                 "Skipping", "Dancing" };
 
+        Random r = new Random(5);
+
         for (int i = 0; i < 100; i++) {
-            final String s = sp[(int) (Math.random() * sp.length)];
-            final String t = ty[(int) (Math.random() * ty.length)];
-            final String k = ki[(int) (Math.random() * ki.length)];
+            final String s = sp[(int) (r.nextDouble() * sp.length)];
+            final String t = ty[(int) (r.nextDouble() * ty.length)];
+            final String k = ki[(int) (r.nextDouble() * ki.length)];
             table.addItem(new Object[] { s, t, k, Boolean.FALSE }, new Integer(
                     i));
         }

@@ -103,6 +103,7 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
     };
 
     public void init() {
+
         // Need to set a theme for ThemeResources to work
         setTheme("example");
 
@@ -143,6 +144,7 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
         }
 
         tree = new Tree();
+        tree.setDebugId("PID_S_menu");
         tree.setSelectable(true);
         tree.setMultiSelect(false);
         tree.setNullSelectionAllowed(false);
@@ -243,6 +245,7 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
                 OrderedLayout.ALIGNMENT_TOP);
 
         ts = new TabSheet();
+        ts.setDebugId("PIS_S_TS");
         ts.getSize().setSizeFull();
         ts.addTab(new Label(""), "Choose example", null);
         exp.addComponent(ts);
