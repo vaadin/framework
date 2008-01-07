@@ -50,7 +50,7 @@ public class TreeExample extends CustomComponent implements Action.Handler,
         p.addComponent(new Label(desc));
         // Tree with a few items
         tree = new Tree();
-        tree.setDebugId("PID_S_testtree");
+        tree.setDebugId("PID_TreeExample");
         tree.setImmediate(true);
         // we'll use a property for caption instead of the item id ("value"),
         // so that multiple items can have the same caption

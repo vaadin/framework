@@ -144,7 +144,7 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
         }
 
         tree = new Tree();
-        tree.setDebugId("PID_S_menu");
+        tree.setDebugId("PID_MainMenu");
         tree.setSelectable(true);
         tree.setMultiSelect(false);
         tree.setNullSelectionAllowed(false);
