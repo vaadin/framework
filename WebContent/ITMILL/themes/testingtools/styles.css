@@ -8,6 +8,9 @@
 .resulttable TR.error {
 	background-color: #ffeeee;
 }
+.resulttable TR.warn {
+	background-color: #ffffee;
+}
 .resulttable TR.even {
 	background-color: #eeeeee;
 }
@@ -22,6 +25,9 @@
 .resulttable .error .line A {
 	color: red;
 }
+.resulttable .warn .line A {
+	color: green;
+}
 
 .resulttable .code {
 	white-space: nowrap;
@@ -29,8 +35,13 @@
 	border-right: 1px solid #cccccc;
 	padding: 3px 3px 3px 7px;
 }
-.resulttable .msg {
-	color: red;
+.resulttable .msg {	
 	padding: 5px 10px 5px 10px;
 	white-space: nowrap;
+}
+.resulttable .msg span {
+	color: green;
+}
+.resulttable .msg span.err {
+	color: red;
 }
