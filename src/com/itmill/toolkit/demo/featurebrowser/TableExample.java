@@ -57,7 +57,6 @@ public class TableExample extends CustomComponent implements Action.Handler,
 
         // "source" table with bells & whistlesenabled
         source = new Table("All creatures");
-        source.setDebugId("PID_AllCreatures");
         source.setPageLength(7);
         source.getSize().setWidth(550);
         source.setColumnCollapsingAllowed(true);

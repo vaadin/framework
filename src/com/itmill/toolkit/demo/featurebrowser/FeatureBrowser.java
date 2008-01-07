@@ -144,7 +144,7 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
         }
 
         tree = new Tree();
-        tree.setDebugId("PID_MainMenu");
+        tree.setDebugId("FeatureBrowser: Main Tree");
         tree.setSelectable(true);
         tree.setMultiSelect(false);
         tree.setNullSelectionAllowed(false);
@@ -162,6 +162,7 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
         split.addComponent(split2);
 
         table = new Table();
+        table.setDebugId("FeatureBrowser: Main Table");
         table.getSize().setSizeFull();
         table.setColumnReorderingAllowed(true);
         table.setColumnCollapsingAllowed(true);
@@ -245,7 +246,6 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
                 OrderedLayout.ALIGNMENT_TOP);
 
         ts = new TabSheet();
-        ts.setDebugId("PIS_S_TS");
         ts.getSize().setSizeFull();
         ts.addTab(new Label(""), "Choose example", null);
         exp.addComponent(ts);
