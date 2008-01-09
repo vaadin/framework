@@ -23,7 +23,6 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -78,7 +77,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 
     private static final String VAR_FIELD_SEPARATOR = "\u001f";
 
-    private final HashSet dirtyPaintabletSet = new HashSet();
+    private final ArrayList dirtyPaintabletSet = new ArrayList();
 
     private final WeakHashMap paintableIdMap = new WeakHashMap();
 
@@ -278,9 +277,9 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
                 paintTarget = new JsonPaintTarget(this, outWriter, !repaintAll);
 
                 // Paints components
-                Set paintables;
+                ArrayList paintables;
                 if (repaintAll) {
-                    paintables = new LinkedHashSet();
+                    paintables = new ArrayList();
                     paintables.add(window);
 
                     // Reset sent locales
@@ -292,12 +291,9 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
                 }
                 if (paintables != null) {
 
-                    // Creates "working copy" of the current state.
-                    final List currentPaintables = new ArrayList(paintables);
-
                     // Sorts the Paintable list so that parents
                     // are always painted before children
-                    Collections.sort(currentPaintables, new Comparator() {
+                    Collections.sort(paintables, new Comparator() {
                         public int compare(Object o1, Object o2) {
                             final Component c1 = (Component) o1;
                             final Component c2 = (Component) o2;
@@ -311,8 +307,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
                         }
                     });
 
-                    for (final Iterator i = currentPaintables.iterator(); i
-                            .hasNext();) {
+                    for (final Iterator i = paintables.iterator(); i.hasNext();) {
                         final Paintable p = (Paintable) i.next();
 
                         // TODO CLEAN
@@ -784,8 +779,8 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
      *                root window for which dirty components is to be fetched
      * @return
      */
-    public synchronized Set getDirtyComponents(Window w) {
-        final HashSet resultset = new HashSet(dirtyPaintabletSet);
+    public synchronized ArrayList getDirtyComponents(Window w) {
+        final ArrayList resultset = new ArrayList(dirtyPaintabletSet);
 
         // The following algorithm removes any components that would be painted
         // as
@@ -825,8 +820,9 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
      */
     public void repaintRequested(RepaintRequestEvent event) {
         final Paintable p = event.getPaintable();
-        dirtyPaintabletSet.add(p);
-
+        if (!dirtyPaintabletSet.contains(p)) {
+            dirtyPaintabletSet.add(p);
+        }
     }
 
     /**
@@ -843,7 +839,9 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
      */
     public void windowAttached(WindowAttachEvent event) {
         event.getWindow().addListener(this);
-        dirtyPaintabletSet.add(event.getWindow());
+        if (!dirtyPaintabletSet.contains(event.getWindow())) {
+            dirtyPaintabletSet.add(event.getWindow());
+        }
     }
 
     /**
