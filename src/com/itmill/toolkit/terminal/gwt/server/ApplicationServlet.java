@@ -731,9 +731,9 @@ public class ApplicationServlet extends HttpServlet {
     private String getTestingToolsUri(HttpServletRequest request) {
         if (testingToolsServerUri == null) {
             // Default behavior is that Testing Tools Server application exists
-            // on same host as current application does in port 8089.
+            // on same host as current application does in port 8099.
             testingToolsServerUri = "http" + "://" + request.getServerName()
-                    + ":8089" + "/TestingTools/TestingToolsServer";
+                    + ":8099" + "/TestingToolsServer";
         }
         return testingToolsServerUri;
     }
