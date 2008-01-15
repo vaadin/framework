@@ -161,13 +161,14 @@ public class ITabsheet extends ITabsheetBase implements
     }
 
     public void setHeight(String height) {
-        if (this.height == null && height == null)
+        if (this.height == null && height == null) {
             return;
+        }
         String oldHeight = this.height;
         this.height = height;
         if ((this.height != null && height == null)
                 || (this.height == null && height != null)
-                || !oldHeight.equals(height)) {
+                || !height.equals(oldHeight)) {
             iLayout();
         }
     }
@@ -183,9 +184,10 @@ public class ITabsheet extends ITabsheetBase implements
         }
         if ((this.width != null && width == null)
                 || (this.width == null && width != null)
-                || !oldWidth.equals(width))
+                || !width.equals(oldWidth)) {
             // Run descendant layout functions
             Util.runDescendentsLayout(this);
+        }
     }
 
     public void iLayout() {
