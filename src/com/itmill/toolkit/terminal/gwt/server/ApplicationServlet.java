@@ -455,7 +455,7 @@ public class ApplicationServlet extends HttpServlet {
                     window.handleParameters(parameters);
                 }
 
-                writeAjaxPage(request, response, window, themeName);
+                writeAjaxPage(request, response, window, themeName, application);
             }
 
             // For normal requests, transform the window
@@ -633,8 +633,8 @@ public class ApplicationServlet extends HttpServlet {
      *                 store represented by the given URL.
      */
     private void writeAjaxPage(HttpServletRequest request,
-            HttpServletResponse response, Window window, String themeName)
-            throws IOException, MalformedURLException {
+            HttpServletResponse response, Window window, String themeName,
+            Application application) throws IOException, MalformedURLException {
         response.setContentType("text/html");
         final BufferedWriter page = new BufferedWriter(new OutputStreamWriter(
                 response.getOutputStream()));
@@ -681,6 +681,13 @@ public class ApplicationServlet extends HttpServlet {
         if (testingWindow) {
             page.write(", testingToolsUri : '" + getTestingToolsUri(request)
                     + "'");
+        }
+        if (testingToolsActive) {
+            page.write(", versionInfo : {toolkitVersion:\"");
+            page.write(VERSION);
+            page.write("\",applicationVersion:\"");
+            page.write(application.getVersion());
+            page.write("\"}");
         }
 
         page.write("\n};\n</script>\n");

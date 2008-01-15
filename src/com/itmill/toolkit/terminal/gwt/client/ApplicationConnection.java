@@ -126,11 +126,14 @@ public class ApplicationConnection {
     private native static void initializeTestingTools(String testServerUri,
             ApplicationConnection ap)
     /*-{
-        $wnd.itmill.gwtClient = {};
-        $wnd.itmill.gwtClient.hasActiveRequest = function() {
-                return ap.@com.itmill.toolkit.terminal.gwt.client.ApplicationConnection::hasActiveRequest()();
-        }
-        $wnd.itmill.startTT(testServerUri);
+         var client = {};
+         client.hasActiveRequest = function() {
+             return ap.@com.itmill.toolkit.terminal.gwt.client.ApplicationConnection::hasActiveRequest()();
+         }
+         client.getVersionInfo = function() {
+             return $wnd.itmill.versionInfo;
+         }
+         $wnd.itmill.startTT(testServerUri, client);
     }-*/;
 
     public static Console getConsole() {

@@ -1080,4 +1080,15 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
         return f;
     }
 
+    /**
+     * Override this method to return correct version number of your
+     * Application. Version information is delivered for example to Testing
+     * Tools test results.
+     * 
+     * @return version string
+     */
+    public String getVersion() {
+        return "NONVERSIONED";
+    }
+
 }
