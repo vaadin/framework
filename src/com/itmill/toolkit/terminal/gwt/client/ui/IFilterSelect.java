@@ -125,6 +125,13 @@ public class IFilterSelect extends Composite implements Paintable,
 
         public void showSuggestions(Collection currentSuggestions,
                 int currentPage, int totalSuggestions) {
+
+            if (ApplicationConnection.isTestingMode()) {
+                // Add TT anchor point
+                DOM.setElementProperty(getElement(), "id", paintableId
+                        + "_OPTIONLIST");
+            }
+
             menu.setSuggestions(currentSuggestions);
             final int x = IFilterSelect.this.getAbsoluteLeft();
             int y = tb.getAbsoluteTop();

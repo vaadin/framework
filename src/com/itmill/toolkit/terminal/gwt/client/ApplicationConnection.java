@@ -45,6 +45,8 @@ public class ApplicationConnection {
 
     private static Console console;
 
+    private static boolean testingMode;
+
     private final Vector pendingVariables = new Vector();
 
     private final HashMap idToPaintable = new HashMap();
@@ -82,7 +84,7 @@ public class ApplicationConnection {
             console = new NullConsole();
         }
 
-        if (isTestingMode()) {
+        if (checkTestingMode()) {
             usePaintableIdsInDOM = true;
             initializeTestingTools(getTestServerUri(), this);
         }
@@ -100,9 +102,25 @@ public class ApplicationConnection {
         return $wnd.itmill.testingToolsUri;
     }-*/;
 
-    private native static boolean isTestingMode()
+    /**
+     * Method to check if application is in testing mode. Can be used after
+     * application init.
+     * 
+     * @return true if in testing mode
+     */
+    public static boolean isTestingMode() {
+        return testingMode;
+    }
+
+    /**
+     * Check is application is run in testing mode.
+     * 
+     * @return true if in testing mode
+     */
+    private native static boolean checkTestingMode()
     /*-{
-        return $wnd.itmill.testingToolsUri ? true : false;
+        @com.itmill.toolkit.terminal.gwt.client.ApplicationConnection::testingMode = $wnd.itmill.testingToolsUri ? true : false;
+        return @com.itmill.toolkit.terminal.gwt.client.ApplicationConnection::testingMode;
     }-*/;
 
     private native static void initializeTestingTools(String testServerUri,
