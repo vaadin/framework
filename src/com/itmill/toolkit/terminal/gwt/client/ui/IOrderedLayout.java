@@ -84,6 +84,9 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
             return;
         }
 
+        // Handle layout margins
+        handleMargins(uidl);
+
         //
         hasComponentSpacing = uidl.getBooleanAttribute("spacing");
 
@@ -157,10 +160,6 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
 
         // Handle component alignments
         handleAlignments(uidl);
-
-        // Handle layout margins
-        handleMargins(uidl);
-
     }
 
     /**
