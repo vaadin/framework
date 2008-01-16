@@ -77,7 +77,7 @@ public class ApplicationServlet extends HttpServlet {
     /* Initialize version numbers from string replaced by build-script. */
     static {
         if ("@VERSION@".equals("@" + "VERSION" + "@")) {
-            VERSION = "4.9.9-INTERNAL-NONVERSIONED-DEBUG-BUILD";
+            VERSION = "5.9.9-INTERNAL-NONVERSIONED-DEBUG-BUILD";
         } else {
             VERSION = "@VERSION@";
         }
@@ -793,8 +793,8 @@ public class ApplicationServlet extends HttpServlet {
                 page.write("itmill.TTtestSuiteRunId = \"" + testSuiteRunId
                         + "\";\n");
             }
-            page.write("itmill.TTtestCaseScript = \"" + builder.toString()
-                    + "\";\n");
+            page.write("itmill.TTtestCaseScript = " + builder.toString()
+                    + ";\n");
             page.write("</script>\n");
         }
     }
