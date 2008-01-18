@@ -89,6 +89,8 @@ public class ApplicationConnection {
             initializeTestingTools(getTestServerUri(), this);
         }
 
+        initializeClientHooks();
+
         makeUidlRequest("repaintAll=1");
         applicationRunning = true;
 
@@ -134,6 +136,21 @@ public class ApplicationConnection {
              return $wnd.itmill.versionInfo;
          }
          $wnd.itmill.startTT(testServerUri, client);
+    }-*/;
+
+    /**
+     * Publishes functions for use from javascript.
+     * <ul>
+     * <li><code>itmill.forceSync()</code> sends pending variable changes, in
+     * effect synchronizing the server and client state.</li>
+     * </ul>
+     */
+    private native void initializeClientHooks()
+    /*-{
+        var app = this;
+        $wnd.itmill.forceSync = function() {
+            app.@com.itmill.toolkit.terminal.gwt.client.ApplicationConnection::sendPendingVariableChanges()();
+        }
     }-*/;
 
     public static Console getConsole() {

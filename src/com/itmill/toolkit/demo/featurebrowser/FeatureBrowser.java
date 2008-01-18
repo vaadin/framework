@@ -99,6 +99,10 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
                     EmbeddedBrowserExample.class },
             // Windowing
             { "Misc", "Windowing", "About windowing", WindowingExample.class },
+            // JavaScript API
+            { "Misc", "JavaScript API",
+                    "JavaScript to IT Mill Toolkit communication",
+                    JavaScriptAPIExample.class },
     // END
     };
 
