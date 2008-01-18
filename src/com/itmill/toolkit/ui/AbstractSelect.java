@@ -179,6 +179,7 @@ public abstract class AbstractSelect extends AbstractField implements
 
     // Null (empty) selection is enabled by default
     private boolean nullSelectionAllowed = true;
+    private NewItemHandler newItemHandler;
 
     /* Constructors ********************************************************* */
 
@@ -351,27 +352,7 @@ public abstract class AbstractSelect extends AbstractField implements
         // New option entered (and it is allowed)
         final String newitem = (String) variables.get("newitem");
         if (newitem != null && newitem.length() > 0) {
-
-            // Checks for readonly
-            if (isReadOnly()) {
-                throw new Property.ReadOnlyException();
-            }
-
-            // Adds new option
-            if (addItem(newitem) != null) {
-
-                // Sets the caption property, if used
-                if (getItemCaptionPropertyId() != null) {
-                    try {
-                        getContainerProperty(newitem,
-                                getItemCaptionPropertyId()).setValue(newitem);
-                    } catch (final Property.ConversionException ignored) {
-                        // The conversion exception is safely ignored, the
-                        // caption is
-                        // just missing
-                    }
-                }
-            }
+            getNewItemHandler().addNewItem(newitem);
         }
 
         // Selection change
@@ -393,9 +374,6 @@ public abstract class AbstractSelect extends AbstractField implements
                         requestRepaint();
                     } else if (id != null && containsId(id)) {
                         s.add(id);
-                    } else if (itemIdMapper.isNewIdKey(ka[i])
-                            && newitem != null && newitem.length() > 0) {
-                        s.add(newitem);
                     }
                 }
 
@@ -441,11 +419,78 @@ public abstract class AbstractSelect extends AbstractField implements
                     } else if (id != null
                             && id.equals(getNullSelectionItemId())) {
                         setValue(null, true);
-                    } else if (itemIdMapper.isNewIdKey(ka[0])) {
-                        setValue(newitem);
                     } else {
                         setValue(id, true);
                     }
+                }
+            }
+        }
+    }
+
+    /**
+     * TODO refine doc Setter for new item handler that is called when user adds
+     * new item in newItemAllowed mode.
+     * 
+     * @param newItemHandler
+     */
+    public void setNewItemHandler(NewItemHandler newItemHandler) {
+        this.newItemHandler = newItemHandler;
+    }
+
+    /**
+     * TODO refine doc
+     * 
+     * @return
+     */
+    public NewItemHandler getNewItemHandler() {
+        if (newItemHandler == null) {
+            newItemHandler = new DefaultNewItemHandler();
+        }
+        return newItemHandler;
+    }
+
+    public interface NewItemHandler {
+        void addNewItem(String newItemCaption);
+    }
+
+    /**
+     * TODO refine doc
+     * 
+     * This is a default class that handles adding new items that are typed by
+     * user to selects container.
+     * 
+     * By extending this class one may implement some logic on new item addition
+     * like database inserts.
+     * 
+     */
+    public class DefaultNewItemHandler implements NewItemHandler {
+        public void addNewItem(String newItemCaption) {
+            // Checks for readonly
+            if (isReadOnly()) {
+                throw new Property.ReadOnlyException();
+            }
+
+            // Adds new option
+            if (addItem(newItemCaption) != null) {
+
+                // Sets the caption property, if used
+                if (getItemCaptionPropertyId() != null) {
+                    try {
+                        getContainerProperty(newItemCaption,
+                                getItemCaptionPropertyId()).setValue(
+                                newItemCaption);
+                    } catch (final Property.ConversionException ignored) {
+                        // The conversion exception is safely ignored, the
+                        // caption is
+                        // just missing
+                    }
+                }
+                if (isMultiSelect()) {
+                    Set values = new HashSet((Collection) getValue());
+                    values.add(newItemCaption);
+                    setValue(values);
+                } else {
+                    setValue(newItemCaption);
                 }
             }
         }

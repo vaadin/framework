@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.Set;
 
 import com.itmill.toolkit.data.Container;
-import com.itmill.toolkit.data.Property;
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
 import com.itmill.toolkit.terminal.Resource;
@@ -288,31 +287,10 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
         // New option entered (and it is allowed)
         final String newitem = (String) variables.get("newitem");
         if (newitem != null && newitem.length() > 0) {
-
-            // Checks for readonly
-            if (isReadOnly()) {
-                throw new Property.ReadOnlyException();
-            }
-
-            // Adds new option
-            if (addItem(newitem) != null) {
-
-                // Sets the caption property, if used
-                if (getItemCaptionPropertyId() != null) {
-                    try {
-                        getContainerProperty(newitem,
-                                getItemCaptionPropertyId()).setValue(newitem);
-                    } catch (final Property.ConversionException ignored) {
-                        // The conversion exception is safely ignored, the
-                        // caption is
-                        // just missing
-                    }
-                }
-                setValue(newitem);
-                // rebuild list
-                filterstring = null;
-                prevfilterstring = null;
-            }
+            getNewItemHandler().addNewItem(newitem);
+            // rebuild list
+            filterstring = null;
+            prevfilterstring = null;
         }
 
         // Selection change
@@ -330,9 +308,6 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
                     final Object id = itemIdMapper.get(ka[i]);
                     if (id != null && containsId(id)) {
                         s.add(id);
-                    } else if (itemIdMapper.isNewIdKey(ka[i])
-                            && newitem != null && newitem.length() > 0) {
-                        s.add(newitem);
                     }
                 }
 
@@ -366,8 +341,6 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
                     final Object id = itemIdMapper.get(ka[0]);
                     if (id != null && id.equals(getNullSelectionItemId())) {
                         setValue(null, true);
-                    } else if (itemIdMapper.isNewIdKey(ka[0])) {
-                        setValue(newitem);
                     } else {
                         setValue(id, true);
                     }
