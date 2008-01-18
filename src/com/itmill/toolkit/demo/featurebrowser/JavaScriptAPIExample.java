@@ -12,7 +12,7 @@ import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.CustomComponent;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.OrderedLayout;
-import com.itmill.toolkit.ui.RichTextArea;
+import com.itmill.toolkit.ui.TextField;
 import com.itmill.toolkit.ui.Button.ClickEvent;
 
 /**
@@ -25,13 +25,15 @@ public class JavaScriptAPIExample extends CustomComponent {
 
     private final OrderedLayout main;
     private final Label l;
-    private final RichTextArea editor = new RichTextArea();
+    private final TextField editor = new TextField();
 
     public JavaScriptAPIExample() {
         // main layout
         main = new OrderedLayout();
         main.setMargin(true);
         setCompositionRoot(main);
+        editor.setRows(7);
+        editor.setColumns(50);
         // Add the label
         l = new Label(txt);
         l.setContentMode(Label.CONTENT_XHTML);
