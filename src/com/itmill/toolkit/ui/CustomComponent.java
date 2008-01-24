@@ -293,11 +293,10 @@ public class CustomComponent implements Component {
                         ((RepaintRequestListener) listeners[i])
                                 .repaintRequested(event);
                         alreadyNotified.add(listeners[i]);
+                        repaintRequestListenersNotified = true;
                     }
                 }
             }
-
-            repaintRequestListenersNotified = true;
 
             // Notify the parent
             final Component parent = getParent();
