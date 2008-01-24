@@ -33,7 +33,7 @@ import com.itmill.toolkit.terminal.gwt.client.Util;
 import com.itmill.toolkit.terminal.gwt.client.ui.IScrollTable.IScrollTableBody.IScrollTableRow;
 
 /**
- * Constructor for IScrollTable
+ * IScrollTable
  * 
  * IScrollTable is a FlowPanel having two widgets in it: * TableHead component *
  * ScrollPanel
@@ -119,6 +119,9 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
     private boolean enabled;
     private boolean showColHeaders;
 
+    /** flag to indicate that table body has changed */
+    private boolean isNewBody = false;
+
     public IScrollTable() {
 
         bodyContainer.addScrollListener(this);
@@ -147,8 +150,10 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
         final int newTotalRows = uidl.getIntAttribute("totalrows");
         if (newTotalRows != totalRows) {
             totalRows = newTotalRows;
-            if (initializedAndAttached) {
-                tBody.setContainerHeight();
+            if (tBody != null) {
+                initializedAndAttached = false;
+                initialContentReceived = false;
+                isNewBody = true;
             }
         }
 
@@ -212,7 +217,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
             } else if (c.getTag().equals("actions")) {
                 updateActionMap(c);
             } else if (c.getTag().equals("visiblecolumns")) {
-                updateVisibleColumns(c);
+                tHead.updateCellsFromUIDL(c);
             }
         }
         updateHeader(uidl.getStringArrayAttribute("vcolorder"));
@@ -221,6 +226,10 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
             updateBody(rowData, uidl.getIntAttribute("firstrow"), uidl
                     .getIntAttribute("rows"));
         } else {
+            if (tBody != null) {
+                tBody.removeFromParent();
+                client.unregisterChildPaintables(tBody);
+            }
             tBody = new IScrollTableBody();
 
             tBody.renderInitialRows(rowData, uidl.getIntAttribute("firstrow"),
@@ -232,14 +241,6 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
             }
         }
         hideScrollPositionAnnotation();
-    }
-
-    private void updateVisibleColumns(UIDL uidl) {
-        final Iterator it = uidl.getChildIterator();
-        while (it.hasNext()) {
-            final UIDL col = (UIDL) it.next();
-            tHead.updateCellFromUIDL(col);
-        }
     }
 
     private void updateActionMap(UIDL c) {
@@ -284,7 +285,8 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
             tHead.removeCell("0");
         }
 
-        for (int i = 0; i < strings.length; i++) {
+        int i;
+        for (i = 0; i < strings.length; i++) {
             final String cid = strings[i];
             visibleColOrder[colIndex] = cid;
             tHead.enableColumn(cid, colIndex);
@@ -488,6 +490,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 
         final int[] widths = new int[tHead.visibleCells.size()];
 
+        tHead.enableBrowserIntelligence();
         // first loop: collect natural widths
         while (headCells.hasNext()) {
             final HeaderCell hCell = (HeaderCell) headCells.next();
@@ -506,7 +509,6 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
             total += w;
             i++;
         }
-
         tHead.disableBrowserIntelligence();
 
         if (height == null) {
@@ -567,17 +569,19 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
             // bodys size will be more than available and scrollbar will appear
         }
 
-        // last loop: set possibly modified values
+        // last loop: set possibly modified values or reset if new tBody
         i = 0;
         headCells = tHead.iterator();
         while (headCells.hasNext()) {
             final HeaderCell hCell = (HeaderCell) headCells.next();
-            if (hCell.getWidth() == -1) {
+            if (isNewBody || hCell.getWidth() == -1) {
                 final int w = widths[i];
                 setColWidth(i, w);
             }
             i++;
         }
+
+        isNewBody = false;
 
         if (firstvisible > 0) {
             // Deferred due some Firefox oddities. IE & Safari could survive
@@ -1187,32 +1191,49 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
             availableCells.put("0", new RowHeadersHeaderCell());
         }
 
-        public void updateCellFromUIDL(UIDL col) {
-            final String cid = col.getStringAttribute("cid");
-            HeaderCell c = getHeaderCell(cid);
-            if (c == null) {
-                c = new HeaderCell(cid, col.getStringAttribute("caption"));
-                availableCells.put(cid, c);
-            } else {
-                c.setText(col.getStringAttribute("caption"));
-            }
-
-            if (col.hasAttribute("sortable")) {
-                c.setSortable(true);
-                if (cid.equals(sortColumn)) {
-                    c.setSorted(true);
+        public void updateCellsFromUIDL(UIDL uidl) {
+            Iterator it = uidl.getChildIterator();
+            HashSet updated = new HashSet();
+            updated.add("0");
+            while (it.hasNext()) {
+                final UIDL col = (UIDL) it.next();
+                final String cid = col.getStringAttribute("cid");
+                updated.add(cid);
+                HeaderCell c = getHeaderCell(cid);
+                if (c == null) {
+                    c = new HeaderCell(cid, col.getStringAttribute("caption"));
+                    availableCells.put(cid, c);
                 } else {
-                    c.setSorted(false);
+                    c.setText(col.getStringAttribute("caption"));
+                }
+
+                if (col.hasAttribute("sortable")) {
+                    c.setSortable(true);
+                    if (cid.equals(sortColumn)) {
+                        c.setSorted(true);
+                    } else {
+                        c.setSorted(false);
+                    }
+                }
+                if (col.hasAttribute("align")) {
+                    c.setAlign(col.getStringAttribute("align").charAt(0));
+                }
+                if (col.hasAttribute("width")) {
+                    final String width = col.getStringAttribute("width");
+                    c.setWidth(Integer.parseInt(width));
+                }
+                // TODO icon
+            }
+            // check for orphaned header cells
+            it = availableCells.keySet().iterator();
+            while (it.hasNext()) {
+                String cid = (String) it.next();
+                if (!updated.contains(cid)) {
+                    removeCell(cid);
+                    it.remove();
                 }
             }
-            if (col.hasAttribute("align")) {
-                c.setAlign(col.getStringAttribute("align").charAt(0));
-            }
-            if (col.hasAttribute("width")) {
-                final String width = col.getStringAttribute("width");
-                c.setWidth(Integer.parseInt(width));
-            }
-            // TODO icon
+
         }
 
         public void enableColumn(String cid, int index) {
@@ -1241,6 +1262,10 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
         public void disableBrowserIntelligence() {
             DOM.setStyleAttribute(hTableContainer, "width", WRAPPER_WIDTH
                     + "px");
+        }
+
+        public void enableBrowserIntelligence() {
+            DOM.setStyleAttribute(hTableContainer, "width", "");
         }
 
         public void setHeaderCell(int index, HeaderCell cell) {
@@ -1535,6 +1560,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
         }
 
         public void renderRows(UIDL rowData, int firstIndex, int rows) {
+            // FIXME REVIEW
             aligns = tHead.getColumnAlignments();
             final Iterator it = rowData.getChildIterator();
             if (firstIndex == lastRendered + 1) {
@@ -1555,9 +1581,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
                     addRowBeforeFirstRendered(rowArray[i]);
                     firstRendered--;
                 }
-                // } else if (firstIndex > lastRendered || firstIndex + rows <
-                // firstRendered) {
-            } else if (true) {
+            } else {
                 // completely new set of rows
                 while (lastRendered + 1 > firstRendered) {
                     unlinkRow(false);
@@ -1574,10 +1598,6 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
                     lastRendered++;
                 }
                 fixSpacers();
-            } else {
-                // sorted or column reordering changed
-                ApplicationConnection.getConsole().log(
-                        "Bad update" + firstIndex + "/" + rows);
             }
         }
 
