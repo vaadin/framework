@@ -329,20 +329,22 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 
                         // TODO we may still get changes that have been
                         // rendered already (changes with only cached flag)
-                        paintTarget.startTag("change");
-                        paintTarget.addAttribute("format", "uidl");
-                        final String pid = getPaintableId(p);
-                        paintTarget.addAttribute("pid", pid);
+                        if (!paintTarget.isAlreadyPainted(p)) {
+                            paintTarget.startTag("change");
+                            paintTarget.addAttribute("format", "uidl");
+                            final String pid = getPaintableId(p);
+                            paintTarget.addAttribute("pid", pid);
 
-                        // Track paints to identify empty paints
-                        paintTarget.setTrackPaints(true);
-                        p.paint(paintTarget);
+                            // Track paints to identify empty paints
+                            paintTarget.setTrackPaints(true);
+                            p.paint(paintTarget);
 
-                        // If no paints add attribute empty
-                        if (paintTarget.getNumberOfPaints() <= 0) {
-                            paintTarget.addAttribute("visible", false);
+                            // If no paints add attribute empty
+                            if (paintTarget.getNumberOfPaints() <= 0) {
+                                paintTarget.addAttribute("visible", false);
+                            }
+                            paintTarget.endTag("change");
                         }
-                        paintTarget.endTag("change");
                         paintablePainted(p);
                     }
                 }
@@ -803,9 +805,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
                         // this is a subwindow
                         componentsRoot = (Window) componentsRoot.getParent();
                     }
-                    if (componentsRoot != w
-                            || dirtyPaintabletSet.contains(component
-                                    .getParent())) {
+                    if (componentsRoot != w) {
                         resultset.remove(p);
                     }
                 }

@@ -5,6 +5,7 @@
 package com.itmill.toolkit.terminal.gwt.server;
 
 import java.io.PrintWriter;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -60,6 +61,8 @@ public class JsonPaintTarget implements PaintTarget {
     private int errorsOpen;
 
     private boolean cacheEnabled = false;
+
+    private Collection paintedComponents = new HashSet();
 
     /**
      * Creates a new XMLPrintWriter, without automatic line flushing.
@@ -775,6 +778,7 @@ public class JsonPaintTarget implements PaintTarget {
         final String id = manager.getPaintableId(paintable);
         paintable.addListener(manager);
         addAttribute("id", id);
+        paintedComponents.add(paintable);
         return cacheEnabled && isPreviouslyPainted;
     }
 
@@ -1090,5 +1094,19 @@ public class JsonPaintTarget implements PaintTarget {
 
     public void setPreCachedResources(Set preCachedResources) {
         throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Method to check if paintable is already painted into this target.
+     * 
+     * @param p
+     * @return true if already painted
+     */
+    public boolean isAlreadyPainted(Paintable p) {
+        if (paintedComponents.contains(p)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
