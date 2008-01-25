@@ -79,14 +79,13 @@ public class TableDemo extends com.itmill.toolkit.Application implements
         // Main window contains heading, two buttons, table and label
         main
                 .addComponent(new Label(
-                        "<h2>Table demo</h2>"
+                        "<h1>Table demo</h1>"
                                 + "<b>Rows are loaded from the server as they are needed.<br />"
                                 + "Try scrolling the table to see it in action.</b><br />"
                                 + ACTION_DESCRIPTION, Label.CONTENT_XHTML));
         final OrderedLayout layout = new OrderedLayout(
                 OrderedLayout.ORIENTATION_HORIZONTAL);
-        // TODO: disabled until #655 fixed
-        // layout.addComponent(tableVisibility);
+        layout.addComponent(tableVisibility);
         layout.addComponent(tableEnabler);
         layout.addComponent(tableCaption);
         main.addComponent(layout);
