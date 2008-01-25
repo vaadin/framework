@@ -369,35 +369,42 @@ public class IFilterSelect extends Composite implements Paintable,
 
         public void doSelectedItemAction() {
             final MenuItem item = getSelectedItem();
-            if (allowNewItem) {
-                final String newItemValue = tb.getText();
-                // check for exact match in menu
-                int p = getItems().size();
-                if (p > 0) {
-                    for (int i = 0; i < p; i++) {
-                        final MenuItem potentialExactMatch = (MenuItem) getItems()
-                                .get(i);
-                        if (potentialExactMatch.getText().equals(newItemValue)) {
-                            selectItem(potentialExactMatch);
-                            doItemAction(potentialExactMatch, true);
-                            suggestionPopup.hide();
-                            return;
-                        }
+            final String enteredItemValue = tb.getText();
+            // check for exact match in menu
+            int p = getItems().size();
+            if (p > 0) {
+                for (int i = 0; i < p; i++) {
+                    final MenuItem potentialExactMatch = (MenuItem) getItems()
+                            .get(i);
+                    if (potentialExactMatch.getText().equals(enteredItemValue)) {
+                        selectItem(potentialExactMatch);
+                        doItemAction(potentialExactMatch, true);
+                        suggestionPopup.hide();
+                        return;
                     }
                 }
+            }
+            if (allowNewItem) {
 
-                if (!newItemValue.equals("")) {
-                    client.updateVariable(paintableId, "newitem", newItemValue,
-                            true);
+                if (!enteredItemValue.equals("")) {
+                    client.updateVariable(paintableId, "newitem",
+                            enteredItemValue, immediate);
                 }
             } else if (item != null
                     && item.getText().toLowerCase().startsWith(
                             lastFilter.toLowerCase())) {
                 doItemAction(item, true);
+            } else {
+                if (currentSuggestion != null) {
+                    tb.setText(currentSuggestion.getReplacementString());
+                    selectedOptionKey = currentSuggestion.key;
+                } else {
+                    tb.setText("");
+                    selectedOptionKey = null;
+                }
             }
             suggestionPopup.hide();
         }
-
     }
 
     public static final int FILTERINGMODE_OFF = 0;
@@ -728,14 +735,9 @@ public class IFilterSelect extends Composite implements Paintable,
     }
 
     public void onLostFocus(Widget sender) {
-        if (currentSuggestion == null
-                || !tb.getText().equals(
-                        currentSuggestion.getReplacementString())) {
-            if (currentSuggestion != null) {
-                tb.setText(currentSuggestion.getDisplayString());
-            } else {
-                tb.setText("");
-            }
+        if (suggestionPopup.isJustClosed()) {
+            suggestionPopup.menu.doSelectedItemAction();
         }
+
     }
 }
