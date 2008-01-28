@@ -800,20 +800,6 @@ public class GridLayout extends AbstractLayout {
     }
 
     /**
-     * @deprecated use setColumns instead.
-     */
-    public void setWidth(int columns) {
-        setColumns(columns);
-    }
-
-    /**
-     * @deprecated use getColumns instead.
-     */
-    public int getWidth() {
-        return getColumns();
-    }
-
-    /**
      * Sets the number of columns in the grid. The column count can not be
      * reduced if there are any areas that would be outside of the shrunk grid.
      * 
@@ -855,20 +841,6 @@ public class GridLayout extends AbstractLayout {
      */
     public final int getColumns() {
         return cols;
-    }
-
-    /**
-     * @deprecated use setRows() instead.
-     */
-    public void setHeight(int rows) {
-        setRows(rows);
-    }
-
-    /**
-     * @deprecated use getRows() instead.
-     */
-    public int getHeight() {
-        return getRows();
     }
 
     /**
