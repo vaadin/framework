@@ -6,10 +6,8 @@ package com.itmill.toolkit.ui;
 
 import java.util.Iterator;
 
-import com.itmill.toolkit.terminal.HasSize;
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
-import com.itmill.toolkit.terminal.Size;
 
 /**
  * SplitPanel.
@@ -22,7 +20,7 @@ import com.itmill.toolkit.terminal.Size;
  * @VERSION@
  * @since 5.0
  */
-public class SplitPanel extends AbstractLayout implements HasSize {
+public class SplitPanel extends AbstractLayout {
 
     /* Predefined orientations ***************************************** */
 
@@ -47,9 +45,7 @@ public class SplitPanel extends AbstractLayout implements HasSize {
 
     private int pos = 50;
 
-    private int posUnit = Size.UNITS_PERCENTAGE;
-
-    private Size size;
+    private int posUnit = UNITS_PERCENTAGE;
 
     /**
      * Creates a new split panel. The orientation of the panels is
@@ -57,8 +53,7 @@ public class SplitPanel extends AbstractLayout implements HasSize {
      */
     public SplitPanel() {
         orientation = ORIENTATION_VERTICAL;
-        size = new Size(this);
-        size.setSizeFull();
+        setSizeFull();
     }
 
     /**
@@ -198,9 +193,7 @@ public class SplitPanel extends AbstractLayout implements HasSize {
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);
 
-        size.paint(target);
-
-        final String position = pos + Size.UNIT_SYMBOLS[posUnit];
+        final String position = pos + UNIT_SYMBOLS[posUnit];
 
         target.addAttribute("position", position);
 
@@ -260,7 +253,7 @@ public class SplitPanel extends AbstractLayout implements HasSize {
      *                the new size of the first region in persentage
      */
     public void setSplitPosition(int pos) {
-        setSplitPosition(pos, Size.UNITS_PERCENTAGE);
+        setSplitPosition(pos, UNITS_PERCENTAGE);
     }
 
     /**
@@ -269,16 +262,11 @@ public class SplitPanel extends AbstractLayout implements HasSize {
      * @param pos
      *                size of the first region
      * @param unit
-     *                the unit (from {@link Size}) in which the size is
-     *                given.
+     *                the unit (from {@link Size}) in which the size is given.
      */
     public void setSplitPosition(int pos, int unit) {
         this.pos = pos;
         posUnit = unit;
-    }
-
-    public Size getSize() {
-        return size;
     }
 
 }

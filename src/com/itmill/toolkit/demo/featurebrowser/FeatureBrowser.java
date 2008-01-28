@@ -12,7 +12,6 @@ import com.itmill.toolkit.data.Property.ValueChangeEvent;
 import com.itmill.toolkit.data.util.HierarchicalContainer;
 import com.itmill.toolkit.data.util.IndexedContainer;
 import com.itmill.toolkit.terminal.ExternalResource;
-import com.itmill.toolkit.terminal.Size;
 import com.itmill.toolkit.terminal.ThemeResource;
 import com.itmill.toolkit.ui.AbstractSelect;
 import com.itmill.toolkit.ui.Button;
@@ -118,7 +117,7 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
 
         final SplitPanel split = new SplitPanel(
                 SplitPanel.ORIENTATION_HORIZONTAL);
-        split.setSplitPosition(200, Size.UNITS_PIXELS);
+        split.setSplitPosition(200, SplitPanel.UNITS_PIXELS);
         main.setLayout(split);
 
         final HashMap sectionIds = new HashMap();
@@ -162,12 +161,12 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
         split.addComponent(tree);
 
         final SplitPanel split2 = new SplitPanel();
-        split2.setSplitPosition(200, Size.UNITS_PIXELS);
+        split2.setSplitPosition(200, SplitPanel.UNITS_PIXELS);
         split.addComponent(split2);
 
         table = new Table();
         table.setDebugId("FeatureBrowser: Main Table");
-        table.getSize().setSizeFull();
+        table.setSizeFull();
         table.setColumnReorderingAllowed(true);
         table.setColumnCollapsingAllowed(true);
         table.setSelectable(true);
@@ -203,7 +202,7 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
                     return;
                 }
                 Window w = new Window(caption);
-                w.getSize().setWidth(640);
+                w.setWidth(640);
                 if (Layout.class.isAssignableFrom(component.getClass())) {
                     w.setLayout((Layout) component);
                 } else {
@@ -250,7 +249,7 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
                 OrderedLayout.ALIGNMENT_TOP);
 
         ts = new TabSheet();
-        ts.getSize().setSizeFull();
+        ts.setSizeFull();
         ts.addTab(new Label(""), "Choose example", null);
         exp.addComponent(ts);
         exp.expand(ts);

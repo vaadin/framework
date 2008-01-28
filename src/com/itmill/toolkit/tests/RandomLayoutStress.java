@@ -154,7 +154,7 @@ public class RandomLayoutStress extends com.itmill.toolkit.Application {
                                     + "extremities and may have a caption to clarify the nature of the contained components' purpose."
                                     + " Panel contains an layout where the actual contained components are added, "
                                     + "this layout may be switched on the fly."));
-            ((Panel) result).getSize().setWidth(250);
+            ((Panel) result).setWidth(250);
             break;
         case 6:
             // Datefield

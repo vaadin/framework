@@ -73,7 +73,7 @@ public class Parameters extends com.itmill.toolkit.Application implements
         params.addContainerProperty("Key", String.class, "");
         params.addContainerProperty("Value", String.class, "");
         final Panel panel2 = new Panel("Parameter Handler");
-        params.getSize().setSizeFull();
+        params.setSizeFull();
         panel2.setLayout(new ExpandLayout());
         panel2.getLayout().setMargin(true);
 

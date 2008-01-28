@@ -507,4 +507,56 @@ public class CustomComponent implements Component {
         return testingId;
     }
 
+    // TODO bridge sizeable methods to composition root and documentate
+
+    public int getHeight() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    public int getHeightUnits() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    public int getWidth() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    public int getWidthUnits() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    public void setHeight(int height) {
+        // TODO Auto-generated method stub
+
+    }
+
+    public void setHeightUnits(int units) {
+        // TODO Auto-generated method stub
+
+    }
+
+    public void setSizeFull() {
+        // TODO Auto-generated method stub
+
+    }
+
+    public void setSizeUndefined() {
+        // TODO Auto-generated method stub
+
+    }
+
+    public void setWidth(int width) {
+        // TODO Auto-generated method stub
+
+    }
+
+    public void setWidthUnits(int units) {
+        // TODO Auto-generated method stub
+
+    }
+
 }

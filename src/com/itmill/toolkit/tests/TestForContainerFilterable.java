@@ -5,7 +5,6 @@
 package com.itmill.toolkit.tests;
 
 import com.itmill.toolkit.data.util.IndexedContainer;
-import com.itmill.toolkit.terminal.Size;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.CustomComponent;
 import com.itmill.toolkit.ui.Label;
@@ -42,7 +41,7 @@ public class TestForContainerFilterable extends CustomComponent {
         // Init filtering view
         final Panel filterPanel = new Panel("Filter", new OrderedLayout(
                 OrderedLayout.ORIENTATION_HORIZONTAL));
-        filterPanel.getSize().setWidth(100, Size.UNITS_PERCENTAGE);
+        filterPanel.setWidth(100, Panel.UNITS_PERCENTAGE);
         lo.addComponent(filterPanel);
         filterPanel.addComponent(fooFilter);
         filterPanel.addComponent(barFilter);
@@ -56,7 +55,7 @@ public class TestForContainerFilterable extends CustomComponent {
         // Table
         lo.addComponent(t);
         t.setPageLength(12);
-        t.getSize().setWidth(100, Size.UNITS_PERCENTAGE);
+        t.setWidth(100, Table.UNITS_PERCENTAGE);
         t.setContainerDataSource(ic);
 
         // Handler

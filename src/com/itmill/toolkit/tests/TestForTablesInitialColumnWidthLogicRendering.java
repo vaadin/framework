@@ -6,12 +6,12 @@ package com.itmill.toolkit.tests;
 
 import java.util.Vector;
 
-import com.itmill.toolkit.terminal.Size;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.CustomComponent;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Table;
+import com.itmill.toolkit.ui.Button.ClickEvent;
 
 /**
  * 
@@ -57,18 +57,18 @@ public class TestForTablesInitialColumnWidthLogicRendering extends
         t = getTestTable(3, 40);
         t
                 .setCaption("Table with some columns and wide explicit width. (Ought to widen columns to use all space)");
-        t.getSize().setWidth(1000);
+        t.setWidth(1000);
         main.addComponent(t);
 
         t = getTestTable(12, 4);
         t.setCaption("Table with  some rows and lot of columns, width == 100%");
-        t.getSize().setWidth(100, Size.UNITS_PERCENTAGE);
+        t.setWidth(100, Table.UNITS_PERCENTAGE);
         main.addComponent(t);
 
         t = getTestTable(12, 100);
         t
                 .setCaption("Table with  lot of rows and lot of columns, width == 50%");
-        t.getSize().setWidth(50, Size.UNITS_PERCENTAGE);
+        t.setWidth(50, Table.UNITS_PERCENTAGE);
         main.addComponent(t);
 
         t = getTestTable(5, 100);
@@ -78,7 +78,7 @@ public class TestForTablesInitialColumnWidthLogicRendering extends
         t = getTestTable(4, 4);
         t.setCaption("Table with some rows and width = 200px");
 
-        t.getSize().setWidth(200);
+        t.setWidth(200);
         main.addComponent(t);
 
         final Button b = new Button("refresh view", this, "createNewView");
@@ -92,11 +92,19 @@ public class TestForTablesInitialColumnWidthLogicRendering extends
         for (int i = 0; i < cols; i++) {
             t.addContainerProperty(testString[i], String.class, "");
         }
+        t.addContainerProperty("button", Button.class, null);
         for (int i = 0; i < rows; i++) {
             final Vector content = new Vector();
             for (int j = 0; j < cols; j++) {
                 content.add(rndString());
             }
+            content.add(new Button("b", new Button.ClickListener() {
+
+                public void buttonClick(ClickEvent event) {
+                    System.out.println("b click");
+
+                }
+            }));
             t.addItem(content.toArray(), "" + i);
         }
         return t;

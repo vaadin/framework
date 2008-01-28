@@ -78,7 +78,7 @@ public abstract class Feature extends CustomComponent {
 
         ts = new TabSheet();
 
-        ts.getSize().setSizeFull();
+        ts.setSizeFull();
 
         // Description tab
         final String title = getTitle();

@@ -29,11 +29,11 @@ public class TestForNativeWindowing extends Application {
                         main.addWindow(w);
                         w.setPositionX(100);
                         w.setPositionY(100);
-                        w.getSize().setWidth(200);
-                        w.getSize().setHeight(200);
+                        w.setWidth(200);
+                        w.setHeight(200);
 
-                        w.getSize().setWidth(100);
-                        w.getSize().setHeight(400);
+                        w.setWidth(100);
+                        w.setHeight(400);
 
                         final Button closebutton = new Button("Close "
                                 + w.getCaption(), new Button.ClickListener() {

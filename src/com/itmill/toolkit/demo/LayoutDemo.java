@@ -127,7 +127,7 @@ public class LayoutDemo extends com.itmill.toolkit.Application {
                                 + " Panel contains an layout where the actual contained components are added, "
                                 + "this layout may be switched on the fly.",
                         Label.CONTENT_XHTML));
-        panel.getSize().setWidth(222);
+        panel.setWidth(222);
         return panel;
     }
 

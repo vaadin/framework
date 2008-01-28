@@ -67,7 +67,7 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
         setCaption("Properties");
         addComponent(formsLayout);
 
-        getSize().setSizeFull();
+        setSizeFull();
 
         // Target object
         this.objectToConfigure = objectToConfigure;
@@ -103,7 +103,7 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
                 Table.ALIGN_LEFT, Table.ALIGN_CENTER, Table.ALIGN_CENTER });
         allProperties.setColumnHeaderMode(Table.COLUMN_HEADER_MODE_ID);
         allProperties.setPageLength(0);
-        allProperties.getSize().setSizeFull();
+        allProperties.setSizeFull();
         updatePropertyList();
 
     }

@@ -127,7 +127,7 @@ public class BasicRandomTest extends com.itmill.toolkit.Application implements
         final OrderedLayout setupLayout = new OrderedLayout(
                 OrderedLayout.ORIENTATION_HORIZONTAL);
         final Panel statusPanel = new Panel("Status");
-        statusPanel.getSize().setWidth(200);
+        statusPanel.setWidth(200);
         setupLayout.addComponent(statusPanel);
         statusPanel.addComponent(statusLabel);
         setupLayout.addComponent(randomSeedValue);
@@ -383,7 +383,7 @@ public class BasicRandomTest extends com.itmill.toolkit.Application implements
                         tabCaption, null);
             }
             ts.setSelectedTab((ComponentContainer) tabs.get(selectedTab));
-            result = (ComponentContainer) ts;
+            result = ts;
             break;
         }
 

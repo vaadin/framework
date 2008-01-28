@@ -11,12 +11,10 @@ import java.util.Map;
 import com.itmill.toolkit.event.Action;
 import com.itmill.toolkit.event.ShortcutAction;
 import com.itmill.toolkit.event.Action.Handler;
-import com.itmill.toolkit.terminal.HasSize;
 import com.itmill.toolkit.terminal.KeyMapper;
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
 import com.itmill.toolkit.terminal.Scrollable;
-import com.itmill.toolkit.terminal.Size;
 
 /**
  * Panel - a simple single component container.
@@ -26,15 +24,13 @@ import com.itmill.toolkit.terminal.Size;
  * @VERSION@
  * @since 3.0
  */
-public class Panel extends AbstractComponentContainer implements HasSize,
-        Scrollable, ComponentContainer.ComponentAttachListener,
+public class Panel extends AbstractComponentContainer implements Scrollable,
+        ComponentContainer.ComponentAttachListener,
         ComponentContainer.ComponentDetachListener, Action.Container {
 
     public static final String STYLE_LIGHT = "light";
 
     public static final String STYLE_EMPHASIZE = "emphasize";
-    
-    private Size size;
 
     /**
      * Layout of the panel.
@@ -67,7 +63,6 @@ public class Panel extends AbstractComponentContainer implements HasSize,
      */
     public Panel() {
         setLayout(null);
-        size = new Size(this);
     }
 
     /**
@@ -78,7 +73,6 @@ public class Panel extends AbstractComponentContainer implements HasSize,
      */
     public Panel(Layout layout) {
         setLayout(layout);
-        size = new Size(this);
     }
 
     /**
@@ -102,7 +96,6 @@ public class Panel extends AbstractComponentContainer implements HasSize,
     public Panel(String caption, Layout layout) {
         this(layout);
         setCaption(caption);
-        size = new Size(this);
     }
 
     /**
@@ -169,13 +162,13 @@ public class Panel extends AbstractComponentContainer implements HasSize,
         layout.paint(target);
 
         // Add size info as variables
-        if (size.getHeight() > -1) {
-            target.addVariable(this, "height", size.getHeight()
-                    + Size.UNIT_SYMBOLS[size.getHeightUnits()]);
+        if (getHeight() > -1) {
+            target.addVariable(this, "height", getHeight()
+                    + UNIT_SYMBOLS[getHeightUnits()]);
         }
-        if (size.getWidth() > -1) {
-            target.addVariable(this, "width", size.getWidth()
-                    + Size.UNIT_SYMBOLS[size.getWidthUnits()]);
+        if (getWidth() > -1) {
+            target.addVariable(this, "width", getWidth()
+                    + UNIT_SYMBOLS[getWidthUnits()]);
         }
 
         if (isScrollable()) {
@@ -282,16 +275,16 @@ public class Panel extends AbstractComponentContainer implements HasSize,
         // Get new size
         final Integer newWidth = (Integer) variables.get("width");
         final Integer newHeight = (Integer) variables.get("height");
-        if (newWidth != null && newWidth.intValue() != size.getWidth()) {
-            size.setWidth(newWidth.intValue());
+        if (newWidth != null && newWidth.intValue() != getWidth()) {
+            setWidth(newWidth.intValue());
             // ensure units, as we are reading pixels
-            size.setWidthUnits(Size.UNITS_PIXELS);
+            setWidthUnits(UNITS_PIXELS);
 
         }
-        if (newHeight != null && newHeight.intValue() != size.getHeight()) {
-            size.setHeight(newHeight.intValue());
+        if (newHeight != null && newHeight.intValue() != getHeight()) {
+            setHeight(newHeight.intValue());
             // ensure units, as we are reading pixels
-            size.setHeightUnits(Size.UNITS_PIXELS);
+            setHeightUnits(UNITS_PIXELS);
         }
 
         // Scrolling
@@ -462,68 +455,4 @@ public class Panel extends AbstractComponentContainer implements HasSize,
             requestRepaint();
         }
     }
-
-    public Size getSize() {
-        return size;
-    }
-    
-    
-    /* Compatibility methods */
-    
-    /**
-     * @deprecated use Size object instead (getSize().setWidth()).
-     */
-    public void setWidth(int width) {
-        size.setWidth(width);
-    }
-    
-    /**
-     * @deprecated use Size object instead (getSize().setWidthUnits()).
-     */
-    public void setWidthUnits(int unit) {
-        size.setWidthUnits(unit);
-    }
-    
-    /**
-     * @deprecated use Size object instead (getSize().setHeight()).
-     */
-    public void setHeight(int height) {
-        size.setHeight(height);
-    }
-    
-    /**
-     * @deprecated use Size object instead (getSize().setHeightUnits()).
-     */
-    public void setHeightUnits(int unit) {
-        size.setHeightUnits(unit);
-    }
-    
-    /**
-     * @deprecated use Size object instead (getSize().getWidth()).
-     */
-    public int getWidth() {
-        return size.getWidth();
-    }
-    
-    /**
-     * @deprecated use Size object instead (getSize().getWidthUnits()).
-     */
-    public int getWidthUnits() {
-        return size.getWidthUnits();
-    }
-    
-    /**
-     * @deprecated use Size object instead (getSize().getHeight()).
-     */
-    public int getHeight() {
-        return size.getHeight();
-    }
-    
-    /**
-     * @deprecated use Size object instead (getSize().getHeightUnits()).
-     */
-    public int getHeightUnits() {
-        return size.getHeightUnits();
-    }
-
 }

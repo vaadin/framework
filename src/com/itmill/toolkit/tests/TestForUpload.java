@@ -246,8 +246,6 @@ public class TestForUpload extends CustomComponent implements
 
         private File file;
 
-        private FileInputStream stream;
-
         public TmpFileBuffer() {
             final String tempFileName = "upload_tmpfile_"
                     + System.currentTimeMillis();

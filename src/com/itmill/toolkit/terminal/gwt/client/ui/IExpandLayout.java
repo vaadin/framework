@@ -327,16 +327,18 @@ public class IExpandLayout extends ComplexPanel implements
     }
 
     protected void handleMargins(UIDL uidl) {
-        final MarginInfo margins = new MarginInfo(uidl
-                .getIntAttribute("margins"));
-        setStyleName(marginElement,
-                CLASSNAME + "-" + StyleConstants.MARGIN_TOP, margins.hasTop());
-        setStyleName(marginElement, CLASSNAME + "-"
-                + StyleConstants.MARGIN_RIGHT, margins.hasRight());
-        setStyleName(marginElement, CLASSNAME + "-"
-                + StyleConstants.MARGIN_BOTTOM, margins.hasBottom());
-        setStyleName(marginElement, CLASSNAME + "-"
-                + StyleConstants.MARGIN_LEFT, margins.hasLeft());
+        if (uidl.hasAttribute("margins")) {
+            final MarginInfo margins = new MarginInfo(uidl
+                    .getIntAttribute("margins"));
+            setStyleName(marginElement, CLASSNAME + "-"
+                    + StyleConstants.MARGIN_TOP, margins.hasTop());
+            setStyleName(marginElement, CLASSNAME + "-"
+                    + StyleConstants.MARGIN_RIGHT, margins.hasRight());
+            setStyleName(marginElement, CLASSNAME + "-"
+                    + StyleConstants.MARGIN_BOTTOM, margins.hasBottom());
+            setStyleName(marginElement, CLASSNAME + "-"
+                    + StyleConstants.MARGIN_LEFT, margins.hasLeft());
+        }
     }
 
     public boolean hasChildComponent(Widget component) {
@@ -588,19 +590,13 @@ public class IExpandLayout extends ComplexPanel implements
 
         this.client = client;
 
+        // Modify layout margins
+        handleMargins(uidl);
+
         // Ensure correct implementation
         if (client.updateComponent(this, uidl, false)) {
             return;
         }
-
-        // Modify layout margins
-        handleMargins(uidl);
-
-        setWidth(uidl.hasAttribute("width") ? uidl.getStringAttribute("width")
-                : "");
-
-        setHeight(uidl.hasAttribute("height") ? uidl
-                .getStringAttribute("height") : "");
 
         hasComponentSpacing = uidl.getBooleanAttribute("spacing");
 

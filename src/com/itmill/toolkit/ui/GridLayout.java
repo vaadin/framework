@@ -10,10 +10,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 
-import com.itmill.toolkit.terminal.HasSize;
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
-import com.itmill.toolkit.terminal.Size;
 import com.itmill.toolkit.terminal.gwt.client.ui.AlignmentInfo;
 
 /**
@@ -36,7 +34,7 @@ import com.itmill.toolkit.terminal.gwt.client.ui.AlignmentInfo;
  * @VERSION@
  * @since 3.0
  */
-public class GridLayout extends AbstractLayout implements HasSize {
+public class GridLayout extends AbstractLayout {
 
     /**
      * Initial grid columns.
@@ -112,11 +110,6 @@ public class GridLayout extends AbstractLayout implements HasSize {
     private boolean spacing = false;
 
     /**
-     * Sizing object.
-     */
-    private Size size;
-
-    /**
      * Constructor for grid of given size (number of cells). Note that grid's
      * final size depends on the items that are added into the grid. Grid grows
      * if you add components outside the grid's area.
@@ -129,7 +122,6 @@ public class GridLayout extends AbstractLayout implements HasSize {
     public GridLayout(int columns, int rows) {
         setColumns(columns);
         setRows(rows);
-        size = new Size(this);
     }
 
     /**
@@ -392,9 +384,6 @@ public class GridLayout extends AbstractLayout implements HasSize {
     public void paintContent(PaintTarget target) throws PaintException {
 
         super.paintContent(target);
-
-        // Size
-        size.paint(target);
 
         // TODO refactor attribute names in future release.
         target.addAttribute("h", rows);
@@ -1024,10 +1013,6 @@ public class GridLayout extends AbstractLayout implements HasSize {
      */
     public void setSpacing(boolean enabled) {
         spacing = enabled;
-    }
-
-    public Size getSize() {
-        return size;
     }
 
 }

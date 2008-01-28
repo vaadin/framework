@@ -13,6 +13,7 @@ import com.itmill.toolkit.Application;
 import com.itmill.toolkit.terminal.ErrorMessage;
 import com.itmill.toolkit.terminal.Paintable;
 import com.itmill.toolkit.terminal.Resource;
+import com.itmill.toolkit.terminal.Sizeable;
 import com.itmill.toolkit.terminal.VariableOwner;
 
 /**
@@ -24,7 +25,7 @@ import com.itmill.toolkit.terminal.VariableOwner;
  * @VERSION@
  * @since 3.0
  */
-public interface Component extends Paintable, VariableOwner {
+public interface Component extends Paintable, VariableOwner, Sizeable {
 
     /**
      * Gets style for component. Multiple styles are joined with spaces.

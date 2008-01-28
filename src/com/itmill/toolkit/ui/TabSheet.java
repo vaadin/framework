@@ -10,12 +10,10 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 
-import com.itmill.toolkit.terminal.HasSize;
 import com.itmill.toolkit.terminal.KeyMapper;
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
 import com.itmill.toolkit.terminal.Resource;
-import com.itmill.toolkit.terminal.Size;
 
 /**
  * Tabsheet component.
@@ -25,7 +23,7 @@ import com.itmill.toolkit.terminal.Size;
  * @VERSION@
  * @since 3.0
  */
-public class TabSheet extends AbstractComponentContainer implements HasSize {
+public class TabSheet extends AbstractComponentContainer {
 
     /**
      * Linked list of component tabs.
@@ -54,15 +52,12 @@ public class TabSheet extends AbstractComponentContainer implements HasSize {
      */
     private boolean tabsHidden;
 
-    private Size size;
-
     /**
      * Constructs a new Tabsheet. Tabsheet is immediate by default.
      */
     public TabSheet() {
         super();
         setImmediate(true);
-        size = new Size(this);
     }
 
     /**
@@ -176,9 +171,6 @@ public class TabSheet extends AbstractComponentContainer implements HasSize {
      *                 if the paint operation failed.
      */
     public void paintContent(PaintTarget target) throws PaintException {
-
-        // Size
-        size.paint(target);
 
         if (areTabsHidden()) {
             target.addAttribute("hidetabs", true);
@@ -480,10 +472,6 @@ public class TabSheet extends AbstractComponentContainer implements HasSize {
      */
     protected void fireSelectedTabChange() {
         fireEvent(new SelectedTabChangeEvent(this));
-    }
-
-    public Size getSize() {
-        return size;
     }
 
 }

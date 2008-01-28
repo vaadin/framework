@@ -5,7 +5,6 @@
 package com.itmill.toolkit.tests.featurebrowser;
 
 import com.itmill.toolkit.terminal.ClassResource;
-import com.itmill.toolkit.terminal.Sizeable;
 import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.Embedded;
 import com.itmill.toolkit.ui.Form;
@@ -40,11 +39,11 @@ public class FeatureEmbedded extends Feature {
                 new Integer(Embedded.TYPE_IMAGE),
                 new Integer(Embedded.TYPE_OBJECT) }, new Object[] { "Image",
                 "Object" });
-        final Object[] units = new Object[Sizeable.UNIT_SYMBOLS.length];
-        final Object[] symbols = new Object[Sizeable.UNIT_SYMBOLS.length];
+        final Object[] units = new Object[Embedded.UNIT_SYMBOLS.length];
+        final Object[] symbols = new Object[Embedded.UNIT_SYMBOLS.length];
         for (int i = 0; i < units.length; i++) {
             units[i] = new Integer(i);
-            symbols[i] = Sizeable.UNIT_SYMBOLS[i];
+            symbols[i] = Embedded.UNIT_SYMBOLS[i];
         }
         ap.replaceWithSelect("heightUnits", units, symbols);
         ap.replaceWithSelect("widthUnits", units, symbols);

@@ -6,10 +6,8 @@ package com.itmill.toolkit.ui;
 
 import java.util.Iterator;
 
-import com.itmill.toolkit.terminal.HasSize;
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
-import com.itmill.toolkit.terminal.Size;
 
 /**
  * TODO finish documentation
@@ -26,14 +24,12 @@ import com.itmill.toolkit.terminal.Size;
  * other components don't use. Or just provide expanded container.
  * 
  */
-public class ExpandLayout extends OrderedLayout implements HasSize {
+public class ExpandLayout extends OrderedLayout {
 
     private Component expanded;
-    private Size size;
 
     public ExpandLayout() {
-        size = new Size(this);
-        size.setSizeFull();
+        setSizeFull();
     }
 
     public ExpandLayout(int orientation) {
@@ -63,9 +59,6 @@ public class ExpandLayout extends OrderedLayout implements HasSize {
         if (isSpacingEnabled()) {
             target.addAttribute("spacing", true);
         }
-
-        // Size
-        size.paint(target);
 
         // Adds the attributes: orientation
         // note that the default values (b/vertival) are omitted
@@ -131,10 +124,6 @@ public class ExpandLayout extends OrderedLayout implements HasSize {
         if (oldComponent == expanded) {
             expanded = newComponent;
         }
-    }
-
-    public Size getSize() {
-        return size;
     }
 
 }

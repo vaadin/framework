@@ -225,6 +225,8 @@ public class ITabsheet extends ITabsheetBase implements
 
             // Set proper values for content element
             DOM.setStyleAttribute(contentNode, "height", newHeight + "px");
+            tp.setHeight("100%");
+
             DOM.setStyleAttribute(contentNode, "overflow", "auto");
 
             // Restore content to normal flow

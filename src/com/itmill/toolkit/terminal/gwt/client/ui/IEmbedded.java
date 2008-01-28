@@ -4,7 +4,6 @@
 
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.HTML;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
@@ -12,16 +11,13 @@ import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
 public class IEmbedded extends HTML implements Paintable {
 
+    private String heigth;
+    private String width;
+
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         if (client.updateComponent(this, uidl, true)) {
             return;
         }
-        final String w = uidl.hasAttribute("width") ? uidl
-                .getStringAttribute("width") : "100%";
-        final String h = uidl.hasAttribute("height") ? uidl
-                .getStringAttribute("height") : "100%";
-        DOM.setStyleAttribute(getElement(), "width", w);
-        DOM.setStyleAttribute(getElement(), "height", h);
 
         if (uidl.hasAttribute("type")) {
             final String type = uidl.getStringAttribute("type");
@@ -37,11 +33,11 @@ public class IEmbedded extends HTML implements Paintable {
         } else if (uidl.hasAttribute("mimetype")) {
             final String mime = uidl.getStringAttribute("mimetype");
             if (mime.equals("application/x-shockwave-flash")) {
-                setHTML("<object width=\"" + w + "\" height=\"" + h
+                setHTML("<object width=\"" + width + "\" height=\"" + heigth
                         + "\"><param name=\"movie\" value=\""
                         + getSrc(uidl, client) + "\"><embed src=\""
-                        + getSrc(uidl, client) + "\" width=\"" + w
-                        + "\" height=\"" + h + "\"></embed></object>");
+                        + getSrc(uidl, client) + "\" width=\"" + width
+                        + "\" height=\"" + heigth + "\"></embed></object>");
             } else {
                 ApplicationConnection.getConsole().log(
                         "Unknown Embedded mimetype '" + mime + "'");
@@ -62,5 +58,21 @@ public class IEmbedded extends HTML implements Paintable {
      */
     private String getSrc(UIDL uidl, ApplicationConnection client) {
         return client.translateToolkitUri(uidl.getStringAttribute("src"));
+    }
+
+    public void setWidth(String width) {
+        if (width == null || width.equals("")) {
+            width = "100%";
+        }
+        this.width = width;
+        super.setHeight(width);
+    }
+
+    public void setHeight(String height) {
+        if (height == null || height.equals("")) {
+            height = "100%";
+        }
+        heigth = height;
+        super.setHeight(height);
     }
 }

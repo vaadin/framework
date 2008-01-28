@@ -4,7 +4,6 @@
 
 package com.itmill.toolkit.tests;
 
-import com.itmill.toolkit.terminal.Size;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.CustomComponent;
 import com.itmill.toolkit.ui.ExpandLayout;
@@ -28,8 +27,8 @@ public class TestForExpandLayout2 extends CustomComponent {
         main = new ExpandLayout(ExpandLayout.ORIENTATION_HORIZONTAL);
 
         Panel left = new Panel("Left column");
-        left.getSize().setHeight(100, Size.UNITS_PERCENTAGE);
-        left.getSize().setWidth(150);
+        left.setHeight(100, Panel.UNITS_PERCENTAGE);
+        left.setWidth(150);
         main.addComponent(left);
 
         ExpandLayout center = new ExpandLayout();
@@ -37,11 +36,11 @@ public class TestForExpandLayout2 extends CustomComponent {
         Panel mainContent = new Panel();
         center.addComponent(mainContent);
         center.expand(mainContent);
-        mainContent.getSize().setSizeFull();
+        mainContent.setSizeFull();
 
         ExpandLayout buttons = new ExpandLayout(
                 ExpandLayout.ORIENTATION_HORIZONTAL);
-        buttons.getSize().setHeight(30, Size.UNITS_PIXELS);
+        buttons.setHeight(30, ExpandLayout.UNITS_PIXELS);
         Button b1 = new Button("Save");
         Button b2 = new Button("Cancel");
         Button b3 = new Button("Logout");
@@ -56,8 +55,8 @@ public class TestForExpandLayout2 extends CustomComponent {
         main.expand(center);
 
         Panel right = new Panel("Right column");
-        right.getSize().setHeight(100, Size.UNITS_PERCENTAGE);
-        right.getSize().setWidth(200);
+        right.setHeight(100, Panel.UNITS_PERCENTAGE);
+        right.setWidth(200);
 
         main.addComponent(right);
 

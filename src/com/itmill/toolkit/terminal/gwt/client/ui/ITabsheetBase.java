@@ -36,18 +36,6 @@ abstract class ITabsheetBase extends FlowPanel implements Paintable {
         id = uidl.getId();
         disabled = uidl.hasAttribute("disabled");
 
-        // Adjust width and height
-        if (uidl.hasAttribute("height")) {
-            setHeight(uidl.getStringAttribute("height"));
-        } else {
-            setHeight("");
-        }
-        if (uidl.hasAttribute("width")) {
-            setWidth(uidl.getStringAttribute("width"));
-        } else {
-            setWidth("");
-        }
-
         // Render content
         final UIDL tabs = uidl.getChildUIDL(0);
         if (keepCurrentTabs(uidl)) {

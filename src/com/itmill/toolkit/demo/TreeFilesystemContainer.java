@@ -9,7 +9,6 @@ import java.io.File;
 import com.itmill.toolkit.data.util.FilesystemContainer;
 import com.itmill.toolkit.data.util.FilesystemContainer.FileItem;
 import com.itmill.toolkit.demo.util.SampleDirectory;
-import com.itmill.toolkit.terminal.Size;
 import com.itmill.toolkit.ui.ExpandLayout;
 import com.itmill.toolkit.ui.Field;
 import com.itmill.toolkit.ui.Label;
@@ -51,10 +50,10 @@ public class TreeFilesystemContainer extends com.itmill.toolkit.Application
         main.setMargin(true);
         main.setSpacing(true);
 
-        propertyPanel.getSize().setHeight(120);
+        propertyPanel.setHeight(120);
         main.addComponent(propertyPanel);
-        explorerPanel.getSize().setHeight(100);
-        explorerPanel.getSize().setHeightUnits(Size.UNITS_PERCENTAGE);
+        explorerPanel.setHeight(100);
+        explorerPanel.setHeightUnits(Panel.UNITS_PERCENTAGE);
         main.addComponent(explorerPanel);
         main.expand(explorerPanel);
 

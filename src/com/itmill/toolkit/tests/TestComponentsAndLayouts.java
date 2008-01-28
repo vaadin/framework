@@ -17,7 +17,6 @@ import com.itmill.toolkit.event.Action;
 import com.itmill.toolkit.terminal.ClassResource;
 import com.itmill.toolkit.terminal.ErrorMessage;
 import com.itmill.toolkit.terminal.ExternalResource;
-import com.itmill.toolkit.terminal.Size;
 import com.itmill.toolkit.terminal.UserError;
 import com.itmill.toolkit.ui.AbstractComponent;
 import com.itmill.toolkit.ui.Button;
@@ -141,7 +140,7 @@ public class TestComponentsAndLayouts extends Application implements Listener,
                             "<hr /><h1>Components inside ExpandLayout (height 250px)</h3>",
                             Label.CONTENT_XHTML));
             final ExpandLayout el = new ExpandLayout();
-            el.getSize().setHeight(250, Size.UNITS_PIXELS);
+            el.setHeight(250, Component.UNITS_PIXELS);
             populateLayout(el);
             target.addComponent(el);
         }
@@ -163,7 +162,7 @@ public class TestComponentsAndLayouts extends Application implements Listener,
                             "<hr /><h1>Components inside vertical SplitPanel (splitpanel is under 250height ExpandLayout)</h3>",
                             Label.CONTENT_XHTML));
             final ExpandLayout sp1l = new ExpandLayout();
-            sp1l.getSize().setHeight(250, Size.UNITS_PIXELS);
+            sp1l.setHeight(250, ExpandLayout.UNITS_PIXELS);
             final SplitPanel sp1 = new SplitPanel(
                     SplitPanel.ORIENTATION_VERTICAL);
             sp1l.addComponent(sp1);
@@ -183,7 +182,7 @@ public class TestComponentsAndLayouts extends Application implements Listener,
                             "<hr /><h1>Components inside horizontal SplitPanel (splitpanel is under 250px height ExpandLayout)</h3>",
                             Label.CONTENT_XHTML));
             final ExpandLayout sp2l = new ExpandLayout();
-            sp2l.getSize().setHeight(250, Size.UNITS_PIXELS);
+            sp2l.setHeight(250, SplitPanel.UNITS_PIXELS);
             final SplitPanel sp2 = new SplitPanel(
                     SplitPanel.ORIENTATION_HORIZONTAL);
             sp2l.addComponent(sp2);

@@ -514,7 +514,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
         if (height == null) {
             bodyContainer.setHeight((tBody.getRowHeight() * pageLength) + "px");
         } else {
-            setHeight(height);
+            mySetHeight(height);
             iLayout();
         }
 
@@ -523,15 +523,15 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
             w += getScrollbarWidth();
             bodyContainer.setWidth(w + "px");
             tHead.setWidth(w + "px");
-            setWidth(w + "px");
+            super.setWidth(w + "px");
         } else {
             if (width.indexOf("px") > 0) {
                 bodyContainer.setWidth(width);
                 tHead.setWidth(width);
-                setWidth(width);
+                super.setWidth(width);
             } else if (width.indexOf("%") > 0) {
                 if (!width.equals("100%")) {
-                    setWidth(width);
+                    super.setWidth(width);
                 }
                 // contained blocks are relative to parents
                 bodyContainer.setWidth("100%");
@@ -618,7 +618,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
                  * which is what users usually want. So recalculate pixels via
                  * setHeight.
                  */
-                setHeight(height);
+                mySetHeight(height);
             }
 
             int contentH = (DOM.getElementPropertyInt(getElement(),
@@ -2007,7 +2007,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
         return panel.remove(w);
     }
 
-    public void setHeight(String height) {
+    public void mySetHeight(String height) {
         // workaround very common 100% height problem - extract borders
         if (height.equals("100%")) {
             final int borders = getBorderSpace();
@@ -2037,6 +2037,14 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
         final Element el = getElement();
         return DOM.getElementPropertyInt(el, "offsetHeight")
                 - DOM.getElementPropertyInt(el, "clientHeight");
+    }
+
+    public void setWidth(String width) {
+        // NOP size handled internally
+    }
+
+    public void setHeight(String height) {
+        // NOP size handled internally
     }
 
 }

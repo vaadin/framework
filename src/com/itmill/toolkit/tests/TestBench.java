@@ -15,7 +15,6 @@ import java.util.List;
 import com.itmill.toolkit.Application;
 import com.itmill.toolkit.data.Property;
 import com.itmill.toolkit.data.util.HierarchicalContainer;
-import com.itmill.toolkit.terminal.Size;
 import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.CustomComponent;
 import com.itmill.toolkit.ui.ExpandLayout;
@@ -108,11 +107,12 @@ public class TestBench extends com.itmill.toolkit.Application implements
 
         menu.addListener(this);
         menu.setImmediate(true);
+        menu.setNullSelectionAllowed(false);
 
         mainLayout.addComponent(menu);
 
         bodyLayout.addStyleName("light");
-        bodyLayout.getSize().setHeight(100, Size.UNITS_PERCENTAGE);
+        bodyLayout.setHeight(100, Component.UNITS_PERCENTAGE);
         bodyLayout.setLayout(new ExpandLayout());
 
         mainLayout.addComponent(bodyLayout);

@@ -7,10 +7,8 @@ package com.itmill.toolkit.ui;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import com.itmill.toolkit.terminal.HasSize;
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
-import com.itmill.toolkit.terminal.Size;
 
 /**
  * <p>
@@ -39,7 +37,7 @@ import com.itmill.toolkit.terminal.Size;
  * @VERSION@
  * @since 3.0
  */
-public class CustomLayout extends AbstractLayout implements HasSize {
+public class CustomLayout extends AbstractLayout {
 
     /**
      * Custom layout slots containing the components.
@@ -48,14 +46,11 @@ public class CustomLayout extends AbstractLayout implements HasSize {
 
     private String templateName;
 
-    private Size size;
-
     /**
      * Constructor for custom layout with given template name.
      */
     public CustomLayout(String template) {
         templateName = template;
-        size = new Size(this);
     }
 
     /**
@@ -157,9 +152,6 @@ public class CustomLayout extends AbstractLayout implements HasSize {
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);
 
-        // Size
-        size.paint(target);
-
         target.addAttribute("template", templateName);
         // Adds all items in all the locations
         for (final Iterator i = slots.keySet().iterator(); i.hasNext();) {
@@ -258,10 +250,6 @@ public class CustomLayout extends AbstractLayout implements HasSize {
             boolean bottomEnabled, boolean leftEnabled) {
         throw new UnsupportedOperationException(
                 "CustomLayout does not support margins.");
-    }
-
-    public Size getSize() {
-        return size;
     }
 
 }

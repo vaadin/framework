@@ -15,7 +15,7 @@ import com.itmill.toolkit.data.validator.StringLengthValidator;
 import com.itmill.toolkit.terminal.ClassResource;
 import com.itmill.toolkit.terminal.DownloadStream;
 import com.itmill.toolkit.terminal.ExternalResource;
-import com.itmill.toolkit.terminal.Size;
+import com.itmill.toolkit.terminal.Sizeable;
 import com.itmill.toolkit.terminal.StreamResource;
 import com.itmill.toolkit.terminal.UserError;
 import com.itmill.toolkit.ui.AbstractSelect;
@@ -63,8 +63,9 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
     public DownloadStream handleURI(URL context, String relativeUri) {
         // Let default implementation handle requests for
         // application resources.
-        if (relativeUri.startsWith("APP"))
+        if (relativeUri.startsWith("APP")) {
             return super.handleURI(context, relativeUri);
+        }
 
         String example;
         String param = null;
@@ -229,14 +230,18 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
 
     void example_Tree(Window main, String param) {
         final Object[][] planets = new Object[][] {
-            new Object[] {"Mercury"},
-            new Object[] {"Venus"},
-            new Object[] {"Earth", "The Moon"},
-            new Object[] {"Mars", "Phobos", "Deimos"},
-            new Object[] {"Jupiter", "Io", "Europa", "Ganymedes", "Callisto"},
-            new Object[] {"Saturn", "Titan", "Tethys", "Dione", "Rhea", "Iapetus"},
-            new Object[] {"Uranus", "Miranda", "Ariel", "Umbriel", "Titania", "Oberon"},
-            new Object[] {"Neptune", "Triton", "Proteus", "Nereid", "Larissa"}};
+                new Object[] { "Mercury" },
+                new Object[] { "Venus" },
+                new Object[] { "Earth", "The Moon" },
+                new Object[] { "Mars", "Phobos", "Deimos" },
+                new Object[] { "Jupiter", "Io", "Europa", "Ganymedes",
+                        "Callisto" },
+                new Object[] { "Saturn", "Titan", "Tethys", "Dione", "Rhea",
+                        "Iapetus" },
+                new Object[] { "Uranus", "Miranda", "Ariel", "Umbriel",
+                        "Titania", "Oberon" },
+                new Object[] { "Neptune", "Triton", "Proteus", "Nereid",
+                        "Larissa" } };
 
         final Tree tree = new Tree("The Planets and Major Moons");
 
@@ -366,23 +371,25 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
     void example_UserError(final Window main, String param) {
         if (param != null) {
             if (param.equals("form")) {
-         
+
                 final FormLayout layout = new FormLayout();
                 main.addComponent(layout);
-        
+
                 final TextField textfield = new TextField("Enter name");
                 layout.addComponent(textfield);
                 textfield.setComponentError(null);
 
                 final Button button = new Button("Click me!");
                 layout.addComponent(button);
-        
+
                 button.addListener(new Button.ClickListener() {
                     public void buttonClick(ClickEvent event) {
-                        if (((String)textfield.getValue()).length() == 0)
-                            textfield.setComponentError(new UserError("Must not be empty"));
-                        else // Clear the error
+                        if (((String) textfield.getValue()).length() == 0) {
+                            textfield.setComponentError(new UserError(
+                                    "Must not be empty"));
+                        } else {
                             textfield.setComponentError(null);
+                        }
                     }
                 });
             }
@@ -393,18 +400,20 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
 
             final Button button = new Button("Click me!");
             main.addComponent(button);
-    
+
             button.addListener(new Button.ClickListener() {
                 public void buttonClick(ClickEvent event) {
-                    if (((String)textfield.getValue()).length() == 0)
-                        textfield.setComponentError(new UserError("Must not be empty"));
-                    else // Clear the error
+                    if (((String) textfield.getValue()).length() == 0) {
+                        textfield.setComponentError(new UserError(
+                                "Must not be empty"));
+                    } else {
                         textfield.setComponentError(null);
+                    }
                 }
             });
         }
     }
-    
+
     void example_DateField(Window main, String param) {
         /* Create a DateField with the calendar style. */
         final DateField date = new DateField("Here is a calendar field");
@@ -502,13 +511,13 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
     void example_Panel(Window main, String param) {
         // Create a panel with a caption.
         final Panel panel = new Panel("Contact Information");
-        
+
         // Create a layout inside the panel
         final OrderedLayout form = new FormLayout();
-           
+
         // Set the layout as the root layout of the panel
         panel.setLayout(form);
-        
+
         // Add some components
         form.addComponent(new TextField("Name"));
         form.addComponent(new TextField("Email"));
@@ -557,8 +566,8 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
             main.setLayout(layout);
             layout.addStyleName("example-alignment");
 
-            layout.getSize().setWidth(400, Size.UNITS_PIXELS);
-            layout.getSize().setHeight(400, Size.UNITS_PIXELS);
+            layout.setWidth(400, Sizeable.UNITS_PIXELS);
+            layout.setHeight(400, Sizeable.UNITS_PIXELS);
 
             /* Define cells and their layouts to create. */
             /*
@@ -636,7 +645,7 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
             layout.expand(table);
 
             /* Set it to use all available area. */
-            table.getSize().setSizeFull();
+            table.setSizeFull();
 
             /* Add some component below the expanding one. */
             final Button button2 = new Button("Ok");
@@ -675,7 +684,8 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
         image.addStyleName("omaimage");
         main.addComponent(image);
 
-        final EmbeddedButton button = new EmbeddedButton(new ClassResource("smiley.jpg", this));
+        final EmbeddedButton button = new EmbeddedButton(new ClassResource(
+                "smiley.jpg", this));
         main.addComponent(button);
     }
 
@@ -694,10 +704,11 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
 
                 /* Add link to the second window in the main window. */
                 main.addComponent(new Label("Second window: <a href='"
-                                            + mywindow.getURL() + "'>middle-click to open</a>",
-                                  Label.CONTENT_XHTML));
-                main.addComponent(new Label("The second window can be accessed through URL: "
-                                            + mywindow.getURL()));
+                        + mywindow.getURL() + "'>middle-click to open</a>",
+                        Label.CONTENT_XHTML));
+                main.addComponent(new Label(
+                        "The second window can be accessed through URL: "
+                                + mywindow.getURL()));
             }
             return;
         }
@@ -712,8 +723,8 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
         mywindow.addComponent(okbutton);
 
         /* Set window size. */
-        mywindow.getSize().setHeight(200);
-        mywindow.getSize().setWidth(400);
+        mywindow.setHeight(200);
+        mywindow.setWidth(400);
 
         /* Set window position. */
         mywindow.setPositionX(200);

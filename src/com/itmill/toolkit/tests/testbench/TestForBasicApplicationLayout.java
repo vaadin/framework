@@ -9,8 +9,8 @@ import java.util.Locale;
 
 import com.itmill.toolkit.data.util.QueryContainer;
 import com.itmill.toolkit.demo.util.SampleDatabase;
-import com.itmill.toolkit.terminal.Size;
 import com.itmill.toolkit.ui.Button;
+import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.CustomComponent;
 import com.itmill.toolkit.ui.DateField;
 import com.itmill.toolkit.ui.ExpandLayout;
@@ -37,7 +37,7 @@ public class TestForBasicApplicationLayout extends CustomComponent {
         click = new Button("Set height -1", new ClickListener() {
 
             public void buttonClick(ClickEvent event) {
-                tab.getSize().setHeight(-1);
+                tab.setHeight(-1);
             }
 
         });
@@ -45,22 +45,22 @@ public class TestForBasicApplicationLayout extends CustomComponent {
         click2 = new Button("Set height 100%", new ClickListener() {
 
             public void buttonClick(ClickEvent event) {
-                tab.getSize().setHeight(100, Size.UNITS_PERCENTAGE);
+                tab.setHeight(100, TabSheet.UNITS_PERCENTAGE);
             }
 
         });
 
         final SplitPanel sp = new SplitPanel(SplitPanel.ORIENTATION_HORIZONTAL);
-        sp.setSplitPosition(290, Size.UNITS_PIXELS);
+        sp.setSplitPosition(290, Component.UNITS_PIXELS);
 
         final SplitPanel sp2 = new SplitPanel(SplitPanel.ORIENTATION_VERTICAL);
-        sp2.setSplitPosition(255, Size.UNITS_PIXELS);
+        sp2.setSplitPosition(255, Component.UNITS_PIXELS);
 
         final Panel p = new Panel("Accordion Panel");
-        p.getSize().setSizeFull();
+        p.setSizeFull();
 
         tab = new TabSheet();
-        tab.getSize().setSizeFull();
+        tab.setSizeFull();
 
         final Panel report = new Panel("Monthly Program Runs",
                 new ExpandLayout());
@@ -76,7 +76,7 @@ public class TestForBasicApplicationLayout extends CustomComponent {
         report.addComponent(cal);
         ((ExpandLayout) report.getLayout()).expand(controls);
         report.addStyleName(Panel.STYLE_LIGHT);
-        report.getSize().setHeight(100, Size.UNITS_PERCENTAGE);
+        report.setHeight(100, Component.UNITS_PERCENTAGE);
 
         sp2.setFirstComponent(report);
 
@@ -100,7 +100,7 @@ public class TestForBasicApplicationLayout extends CustomComponent {
         table.setColumnCollapsingAllowed(true);
         table.setColumnReorderingAllowed(true);
         table.setSortDisabled(false);
-        table.getSize().setSizeFull();
+        table.setSizeFull();
         table.addStyleName("table-inline");
         sp2.setSecondComponent(table);
 

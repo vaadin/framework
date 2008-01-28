@@ -595,6 +595,8 @@ public class ApplicationConnection {
             }
         }
 
+        updateComponentSize(component, uidl);
+
         // Styles + disabled & readonly
         component.setStyleName(component.getStylePrimaryName());
 
@@ -626,6 +628,15 @@ public class ApplicationConnection {
         }
 
         return false;
+    }
+
+    private void updateComponentSize(Widget component, UIDL uidl) {
+        String w = uidl.hasAttribute("width") ? uidl
+                .getStringAttribute("width") : "";
+        component.setWidth(w);
+        String h = uidl.hasAttribute("height") ? uidl
+                .getStringAttribute("height") : "";
+        component.setHeight(h);
     }
 
     /**

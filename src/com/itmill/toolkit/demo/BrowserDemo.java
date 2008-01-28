@@ -37,7 +37,7 @@ public class BrowserDemo extends com.itmill.toolkit.Application implements
         // possible.
         final ExpandLayout exl = new ExpandLayout();
         browser.setLayout(exl);
-        exl.getSize().setSizeFull();
+        exl.setSizeFull();
 
         // create the address combobox
         final Select select = new Select();

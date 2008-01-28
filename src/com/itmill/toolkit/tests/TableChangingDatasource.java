@@ -26,8 +26,8 @@ public class TableChangingDatasource extends CustomComponent implements
 
         t = new Table();
 
-        t.getSize().setWidth(500);
-        t.getSize().setHeight(300);
+        t.setWidth(500);
+        t.setHeight(300);
 
         ta[0] = TestForTablesInitialColumnWidthLogicRendering
                 .getTestTable(3, 0);

@@ -176,8 +176,8 @@ public class ReservationApplication extends Application {
         allLayout.setMargin(true);
 
         allTable = new Table();
-        allTable.getSize().setHeight(300);
-        allTable.getSize().setWidth(700);
+        allTable.setHeight(300);
+        allTable.setWidth(700);
         allTable.setColumnCollapsingAllowed(true);
         allTable.setColumnReorderingAllowed(true);
         allLayout.addComponent(allTable);

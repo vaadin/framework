@@ -134,8 +134,8 @@ public class TestForTrees extends CustomComponent implements Handler {
         });
         status.addComponent(clear);
 
-        status.getSize().setHeight(300);
-        status.getSize().setWidth(400);
+        status.setHeight(300);
+        status.setWidth(400);
 
         ol.addComponent(status);
 

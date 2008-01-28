@@ -21,12 +21,10 @@ import com.itmill.toolkit.data.Property;
 import com.itmill.toolkit.data.util.ContainerOrderedWrapper;
 import com.itmill.toolkit.data.util.IndexedContainer;
 import com.itmill.toolkit.event.Action;
-import com.itmill.toolkit.terminal.HasSize;
 import com.itmill.toolkit.terminal.KeyMapper;
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
 import com.itmill.toolkit.terminal.Resource;
-import com.itmill.toolkit.terminal.Size;
 
 /**
  * <code>TableComponent</code> is used for representing data or components in
@@ -38,7 +36,7 @@ import com.itmill.toolkit.terminal.Size;
  * @since 3.0
  */
 public class Table extends AbstractSelect implements Action.Container,
-        Container.Ordered, Container.Sortable, HasSize {
+        Container.Ordered, Container.Sortable {
 
     private static final int CELL_KEY = 0;
 
@@ -49,8 +47,6 @@ public class Table extends AbstractSelect implements Action.Container,
     private static final int CELL_ITEMID = 3;
 
     private static final int CELL_FIRSTCOL = 4;
-
-    private Size size;
 
     /**
      * Left column alignment. <b>This is the default behaviour. </b>
@@ -291,7 +287,6 @@ public class Table extends AbstractSelect implements Action.Container,
      */
     public Table() {
         setRowHeaderMode(ROW_HEADER_MODE_HIDDEN);
-        size = new Size(this);
     }
 
     /**
@@ -1405,9 +1400,6 @@ public class Table extends AbstractSelect implements Action.Container,
             target.addAttribute("tabindex", getTabIndex());
         }
 
-        // Size
-        size.paint(target);
-
         // Initialize temps
         final Object[] colids = getVisibleColumns();
         final int cols = colids.length;
@@ -2426,68 +2418,6 @@ public class Table extends AbstractSelect implements Action.Container,
             throw new UnsupportedOperationException(
                     "Lazy options loading is not supported by Table.");
         }
-    }
-
-    public Size getSize() {
-        return size;
-    }
-    
-    /* Compatibility methods */
-    
-    /**
-     * @deprecated use Size object instead (getSize().setWidth()).
-     */
-    public void setWidth(int width) {
-        size.setWidth(width);
-    }
-    
-    /**
-     * @deprecated use Size object instead (getSize().setWidthUnits()).
-     */
-    public void setWidthUnits(int unit) {
-        size.setWidthUnits(unit);
-    }
-    
-    /**
-     * @deprecated use Size object instead (getSize().setHeight()).
-     */
-    public void setHeight(int height) {
-        size.setHeight(height);
-    }
-    
-    /**
-     * @deprecated use Size object instead (getSize().setHeightUnits()).
-     */
-    public void setHeightUnits(int unit) {
-        size.setHeightUnits(unit);
-    }
-    
-    /**
-     * @deprecated use Size object instead (getSize().getWidth()).
-     */
-    public int getWidth() {
-        return size.getWidth();
-    }
-    
-    /**
-     * @deprecated use Size object instead (getSize().getWidthUnits()).
-     */
-    public int getWidthUnits() {
-        return size.getWidthUnits();
-    }
-    
-    /**
-     * @deprecated use Size object instead (getSize().getHeight()).
-     */
-    public int getHeight() {
-        return size.getHeight();
-    }
-    
-    /**
-     * @deprecated use Size object instead (getSize().getHeightUnits()).
-     */
-    public int getHeightUnits() {
-        return size.getHeightUnits();
     }
 
 }

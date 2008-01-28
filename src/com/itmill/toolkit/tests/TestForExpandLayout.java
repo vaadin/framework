@@ -4,7 +4,6 @@
 
 package com.itmill.toolkit.tests;
 
-import com.itmill.toolkit.terminal.Size;
 import com.itmill.toolkit.ui.CustomComponent;
 import com.itmill.toolkit.ui.DateField;
 import com.itmill.toolkit.ui.ExpandLayout;
@@ -36,7 +35,7 @@ public class TestForExpandLayout extends CustomComponent {
                 el.addComponent(l);
             }
             if (i > 0) {
-                el.getSize().setHeight(1, Size.UNITS_EM);
+                el.setHeight(1, ExpandLayout.UNITS_EM);
             }
             main.addComponent(el);
         }

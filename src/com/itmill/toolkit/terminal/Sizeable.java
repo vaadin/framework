@@ -12,7 +12,6 @@ package com.itmill.toolkit.terminal;
  * @version
  * @VERSION@
  * @since 3.0
- * @deprecated
  */
 public interface Sizeable {
 
@@ -68,6 +67,8 @@ public interface Sizeable {
      * implementation.
      */
     public static final int UNITS_ROWS = 9;
+
+    public static final int SIZE_UNDEFINED = -1;
 
     /**
      * Textual representations of units symbols. Supported units and their

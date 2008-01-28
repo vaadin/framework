@@ -39,7 +39,7 @@ public class TestForApplicationLayoutThatUsesWholeBrosersSpace extends
 
         final Table t = TestForTablesInitialColumnWidthLogicRendering
                 .getTestTable(4, 100);
-        t.getSize().setSizeFull();
+        t.setSizeFull();
         topRight.addComponent(t);
         topRight.expand(t);
 

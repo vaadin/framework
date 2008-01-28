@@ -82,7 +82,7 @@ public class IPanel extends SimplePanel implements Paintable,
                 .getStringVariable("width") : null;
         height = uidl.hasVariable("height") ? uidl.getStringVariable("height")
                 : null;
-        setWidth(w != null ? w : "");
+        super.setWidth(w != null ? w : "");
 
         // Restore default stylenames
         DOM
@@ -277,6 +277,20 @@ public class IPanel extends SimplePanel implements Paintable,
                 break;
             }
         }
+    }
+
+    /**
+     * Panal handles dimensions by itself
+     */
+    public void setHeight(String height) {
+        // NOP
+    }
+
+    /**
+     * Panal handles dimensions by itself
+     */
+    public void setWidth(String width) {
+        // NOP
     }
 
 }

@@ -4,7 +4,6 @@
 
 package com.itmill.toolkit.tests;
 
-import com.itmill.toolkit.terminal.Size;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.CustomComponent;
 import com.itmill.toolkit.ui.DateField;
@@ -56,7 +55,7 @@ public class TestForExpandLayout3 extends CustomComponent {
         el.expand(b);
         el.setComponentAlignment(b, ExpandLayout.ALIGNMENT_HORIZONTAL_CENTER,
                 ExpandLayout.ALIGNMENT_VERTICAL_CENTER);
-        el.getSize().setHeight(60, Size.UNITS_PIXELS);
+        el.setHeight(60, ExpandLayout.UNITS_PIXELS);
         el.setMargin(true);
         main.addComponent(el);
 
@@ -71,7 +70,7 @@ public class TestForExpandLayout3 extends CustomComponent {
         el.expand(b);
         el.setComponentAlignment(b, ExpandLayout.ALIGNMENT_RIGHT,
                 ExpandLayout.ALIGNMENT_BOTTOM);
-        el.getSize().setHeight(100, Size.UNITS_PIXELS);
+        el.setHeight(100, ExpandLayout.UNITS_PIXELS);
         el.setSpacing(true);
 
         main.addComponent(el);
