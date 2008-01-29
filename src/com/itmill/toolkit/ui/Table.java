@@ -1918,10 +1918,15 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * Notifies this listener that the Property's value has changed.
      * 
+     * Also listens content changes (Contained Properties value changes) to
+     * refresh content area.
+     * 
      * @see com.itmill.toolkit.data.Property.ValueChangeListener#valueChange(Property.ValueChangeEvent)
      */
     public void valueChange(Property.ValueChangeEvent event) {
-        super.valueChange(event);
+        if (event.getProperty() == this) {
+            super.valueChange(event);
+        }
         requestRepaint();
     }
 
