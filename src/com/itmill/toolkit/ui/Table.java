@@ -1322,14 +1322,14 @@ public class Table extends AbstractSelect implements Action.Container,
             }
         }
 
-        // Sorting
-        boolean doSort = false;
         if (!sortDisabled) {
+            // Sorting
+            boolean doSort = false;
             if (variables.containsKey("sortcolumn")) {
                 final String colId = (String) variables.get("sortcolumn");
                 if (colId != null && !"".equals(colId) && !"null".equals(colId)) {
                     final Object id = columnIdMap.get(colId);
-                    setSortContainerPropertyId(id);
+                    setSortContainerPropertyId(id, false);
                     doSort = true;
                 }
             }
@@ -1337,13 +1337,13 @@ public class Table extends AbstractSelect implements Action.Container,
                 final boolean state = ((Boolean) variables.get("sortascending"))
                         .booleanValue();
                 if (state != sortAscending) {
-                    setSortAscending(state);
+                    setSortAscending(state, false);
                     doSort = true;
                 }
             }
-        }
-        if (doSort) {
-            this.sort();
+            if (doSort) {
+                this.sort();
+            }
         }
 
         // Dynamic column hide/show and order
@@ -2345,15 +2345,28 @@ public class Table extends AbstractSelect implements Action.Container,
      *                the Container property id of the currently sorted column.
      */
     public void setSortContainerPropertyId(Object propertyId) {
+        setSortContainerPropertyId(propertyId, true);
+    }
+
+    /**
+     * Internal method to set currently sorted column property id. With doSort
+     * flag actual sorting may be bypassed.
+     * 
+     * @param propertyId
+     * @param doSort
+     */
+    private void setSortContainerPropertyId(Object propertyId, boolean doSort) {
         if ((sortContainerPropertyId != null && !sortContainerPropertyId
                 .equals(propertyId))
                 || (sortContainerPropertyId == null && propertyId != null)) {
             sortContainerPropertyId = propertyId;
-            sort();
-        }
 
-        // Assures the visual refresh
-        refreshCurrentPage();
+            if (doSort) {
+                sort();
+                // Assures the visual refresh
+                refreshCurrentPage();
+            }
+        }
     }
 
     /**
@@ -2374,11 +2387,23 @@ public class Table extends AbstractSelect implements Action.Container,
      *                descending.
      */
     public void setSortAscending(boolean ascending) {
+        setSortAscending(ascending, true);
+    }
+
+    /**
+     * Internal method to set sort ascending. With doSort flag actual sort can
+     * be bypassed.
+     * 
+     * @param ascending
+     * @param doSort
+     */
+    private void setSortAscending(boolean ascending, boolean doSort) {
         if (sortAscending != ascending) {
             sortAscending = ascending;
-            sort();
+            if (doSort) {
+                sort();
+            }
         }
-
         // Assures the visual refresh
         refreshCurrentPage();
     }
