@@ -1595,6 +1595,8 @@ public abstract class AbstractSelect extends AbstractField implements
      * appropriate. Call addNotifierForItem() for each painted item (and
      * remember to clear).
      * 
+     * NOTE: singleton, use getCaptionChangeListener().
+     * 
      */
     protected class CaptionChangeListener implements
             Item.PropertySetChangeListener, Property.ValueChangeListener {
