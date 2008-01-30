@@ -70,49 +70,20 @@ public class ITMillToolkitWebMode {
         assignDefault(serverArgs, "httpPort", serverPort);
 
         try {
-            final long started = System.currentTimeMillis();
-
             final Server server = new Server();
 
-            // String threadPoolName =
-            // System.getProperty("jetty.threadpool.name",
-            // "Jetty thread");
-            // int maxIdleTimeMs = Integer.getInteger(
-            // "jetty.threadpool.maxIdleTimeMs", 60000);
-            // int maxThreads =
-            // Integer.getInteger("jetty.threadpool.maxThreads",
-            // 100);
-            // int minThreads =
-            // Integer.getInteger("jetty.threadpool.minThreads",
-            // 1);
-            // int lowThreads = Integer.getInteger(
-            // "jetty.threadpool.maxIdleTimeMs", 25);
-            // BoundedThreadPool threadPool = new BoundedThreadPool();
-            // threadPool.setName(threadPoolName);
-            // threadPool.setMaxIdleTimeMs(maxIdleTimeMs);
-            // threadPool.setMaxThreads(maxThreads);
-            // threadPool.setMinThreads(minThreads);
-            // threadPool.setLowThreads(lowThreads);
-            // server.setThreadPool(threadPool);
-
             final Connector connector = new SelectChannelConnector();
-            // FIXME httpPort hardcoded to 8888
-            // connector.setPort(Integer.valueOf(serverArgs.get("httpPort")
-            // .toString()));
+
             connector.setPort(8888);
             server.setConnectors(new Connector[] { connector });
 
             final WebAppContext webappcontext = new WebAppContext();
             webappcontext.setContextPath("");
             webappcontext.setWar(serverArgs.get("webroot").toString());
-            // enable hot code replace
-            webappcontext.setCopyWebDir(true);
 
             server.setHandler(webappcontext);
 
             server.start();
-            // System.err.println("Started Jetty in "
-            // + (System.currentTimeMillis() - started) + "ms.");
         } catch (final Exception e) {
             e.printStackTrace();
             return null;
