@@ -12,7 +12,6 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Frame;
-import com.google.gwt.user.client.ui.KeyboardListenerCollection;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.ScrollListener;
 import com.google.gwt.user.client.ui.ScrollPanel;
@@ -334,13 +333,10 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
         return contents;
     }
 
-    public void onBrowserEvent(Event event) {
+    public void onBrowserEvent(final Event event) {
         final int type = DOM.eventGetType(event);
         if (type == Event.ONKEYDOWN && shortcutHandler != null) {
-            final int modifiers = KeyboardListenerCollection
-                    .getKeyboardModifiers(event);
-            shortcutHandler.handleKeyboardEvent((char) DOM
-                    .eventGetKeyCode(event), modifiers);
+            shortcutHandler.handleKeyboardEvent(event);
             return;
         }
 

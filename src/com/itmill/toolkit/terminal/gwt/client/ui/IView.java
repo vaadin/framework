@@ -11,7 +11,6 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.WindowResizeListener;
-import com.google.gwt.user.client.ui.KeyboardListenerCollection;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -161,10 +160,7 @@ public class IView extends SimplePanel implements Paintable,
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
         if (DOM.eventGetType(event) == Event.ONKEYDOWN && actionHandler != null) {
-            final int modifiers = KeyboardListenerCollection
-                    .getKeyboardModifiers(event);
-            actionHandler.handleKeyboardEvent(
-                    (char) DOM.eventGetKeyCode(event), modifiers);
+            actionHandler.handleKeyboardEvent(event);
             return;
         }
     }

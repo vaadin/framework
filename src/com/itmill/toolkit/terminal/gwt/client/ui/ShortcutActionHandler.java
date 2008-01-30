@@ -7,7 +7,13 @@ package com.itmill.toolkit.terminal.gwt.client.ui;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.DeferredCommand;
+import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.KeyboardListener;
+import com.google.gwt.user.client.ui.KeyboardListenerCollection;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
@@ -60,27 +66,35 @@ public class ShortcutActionHandler {
         }
     }
 
-    /**
-     * This method compares given key code and modifier keys to internal list of
-     * actions. If matching action is found it is fired.
-     * 
-     * @param keyCode
-     *                character typed
-     * @param modifiers
-     *                modifier keys (bitmask like in {@link KeyboardListener})
-     */
-    public void handleKeyboardEvent(char keyCode, int modifiers) {
+    public void handleKeyboardEvent(Event event) {
+        final int modifiers = KeyboardListenerCollection
+                .getKeyboardModifiers(event);
+        final char keyCode = (char) DOM.eventGetKeyCode(event);
         final ShortcutKeyCombination kc = new ShortcutKeyCombination(keyCode,
                 modifiers);
         final Iterator it = actions.iterator();
         while (it.hasNext()) {
             final ShortcutAction a = (ShortcutAction) it.next();
             if (a.getShortcutCombination().equals(kc)) {
-                client.updateVariable(paintableId, "action", a.getKey(), true);
+                shakeTarget(DOM.eventGetTarget(event));
+                DeferredCommand.addCommand(new Command() {
+                    public void execute() {
+                        client.updateVariable(paintableId, "action",
+                                a.getKey(), true);
+                    }
+                });
                 break;
             }
         }
     }
+
+    public static native void shakeTarget(Element e)
+    /*-{
+            if(e.blur) {
+                e.blur();
+                e.focus();
+       }
+    }-*/;
 
 }
 
