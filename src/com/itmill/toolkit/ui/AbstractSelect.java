@@ -181,6 +181,9 @@ public abstract class AbstractSelect extends AbstractField implements
     private boolean nullSelectionAllowed = true;
     private NewItemHandler newItemHandler;
 
+    // Caption (Item / Property) change listeners
+    CaptionChangeListener captionChangeListener;
+
     /* Constructors ********************************************************* */
 
     /**
@@ -273,7 +276,10 @@ public abstract class AbstractSelect extends AbstractField implements
         }
 
         // ==
+        // first remove all previous item/property listeners
+        getCaptionChangeListener().clear();
         // Paints the options and create array of selected id keys
+
         target.startTag("options");
         int keyIndex = 0;
         // Support for external null selection item id
@@ -313,6 +319,8 @@ public abstract class AbstractSelect extends AbstractField implements
             }
             final String key = itemIdMapper.key(id);
             final String caption = getItemCaption(id);
+            // add listener for each item, to cause repaint if an item changes
+            getCaptionChangeListener().addNotifierForItem(id);
             final Resource icon = getItemIcon(id); // Paints the option
             target.startTag("so");
             if (icon != null) {
@@ -834,6 +842,8 @@ public abstract class AbstractSelect extends AbstractField implements
         if (newDataSource == null) {
             newDataSource = new IndexedContainer();
         }
+
+        getCaptionChangeListener().clear();
 
         if (items != newDataSource) {
 
@@ -1565,7 +1575,94 @@ public abstract class AbstractSelect extends AbstractField implements
      * @see com.itmill.toolkit.ui.AbstractComponent#detach()
      */
     public void detach() {
+        getCaptionChangeListener().clear();
         super.detach();
+    }
+
+    // Caption change listener
+    protected CaptionChangeListener getCaptionChangeListener() {
+        if (captionChangeListener == null) {
+            captionChangeListener = new CaptionChangeListener();
+        }
+        return captionChangeListener;
+    }
+
+    /**
+     * This is a listener helper for Item and Property changes that should cause
+     * a repaint. It should be attached to all items that are displayed, and the
+     * default implementation does this in paintContent(). Especially
+     * "lazyloading" components should take care to add and remove listeners as
+     * appropriate. Call addNotifierForItem() for each painted item (and
+     * remember to clear).
+     * 
+     */
+    protected class CaptionChangeListener implements
+            Item.PropertySetChangeListener, Property.ValueChangeListener {
+
+        HashSet captionChangeNotifiers = new HashSet();
+
+        public void addNotifierForItem(Object itemId) {
+            switch (getItemCaptionMode()) {
+            case ITEM_CAPTION_MODE_ITEM:
+                final Item i = getItem(itemId);
+                if (i == null) {
+                    return;
+                }
+                if (i instanceof Item.PropertySetChangeNotifier) {
+                    ((Item.PropertySetChangeNotifier) i)
+                            .addListener(getCaptionChangeListener());
+                    captionChangeNotifiers.add(i);
+                }
+                Collection pids = i.getItemPropertyIds();
+                if (pids != null) {
+                    for (Iterator it = pids.iterator(); it.hasNext();) {
+                        Property p = i.getItemProperty(it.next());
+                        if (p != null
+                                || p instanceof Property.ValueChangeNotifier) {
+                            ((Property.ValueChangeNotifier) p)
+                                    .addListener(getCaptionChangeListener());
+                            captionChangeNotifiers.add(p);
+                        }
+                    }
+
+                }
+                break;
+            case ITEM_CAPTION_MODE_PROPERTY:
+                final Property p = getContainerProperty(itemId,
+                        getItemCaptionPropertyId());
+                if (p != null || p instanceof Property.ValueChangeNotifier) {
+                    ((Property.ValueChangeNotifier) p)
+                            .addListener(getCaptionChangeListener());
+                    captionChangeNotifiers.add(p);
+                }
+                break;
+
+            }
+        }
+
+        public void clear() {
+            for (Iterator it = captionChangeNotifiers.iterator(); it.hasNext();) {
+                Object notifier = it.next();
+                if (notifier instanceof Item.PropertySetChangeNotifier) {
+                    ((Item.PropertySetChangeNotifier) notifier)
+                            .removeListener(getCaptionChangeListener());
+                } else {
+                    ((Property.ValueChangeNotifier) notifier)
+                            .removeListener(getCaptionChangeListener());
+                }
+            }
+        }
+
+        public void valueChange(
+                com.itmill.toolkit.data.Property.ValueChangeEvent event) {
+            requestRepaint();
+        }
+
+        public void itemPropertySetChange(
+                com.itmill.toolkit.data.Item.PropertySetChangeEvent event) {
+            requestRepaint();
+        }
+
     }
 
 }

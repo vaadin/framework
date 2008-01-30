@@ -82,6 +82,9 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
      *                 if the paint operation failed.
      */
     public void paintContent(PaintTarget target) throws PaintException {
+        // clear caption change listeners
+        getCaptionChangeListener().clear();
+
         // Focus control id
         if (getFocusableId() > 0) {
             target.addAttribute("focusid", getFocusableId());
@@ -178,6 +181,7 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
             final String key = itemIdMapper.key(id);
             final String caption = getItemCaption(id);
             final Resource icon = getItemIcon(id);
+            getCaptionChangeListener().addNotifierForItem(id);
 
             // Paints the option
             target.startTag("so");

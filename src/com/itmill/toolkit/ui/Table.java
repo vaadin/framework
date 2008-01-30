@@ -1681,7 +1681,8 @@ public class Table extends AbstractSelect implements Action.Container,
         // Stops listening the old properties and initialise the list
         if (listenedProperties == null) {
             listenedProperties = new LinkedList();
-        } else {
+        } else if (reqRowsToPaint < 0) {
+            // TODO the above if is not perfect - should be fixed properly
             for (final Iterator i = listenedProperties.iterator(); i.hasNext();) {
                 ((Property.ValueChangeNotifier) i.next()).removeListener(this);
             }
@@ -1690,7 +1691,8 @@ public class Table extends AbstractSelect implements Action.Container,
         // Detach old visible component from the table
         if (visibleComponents == null) {
             visibleComponents = new LinkedList();
-        } else {
+        } else if (reqRowsToPaint < 0) {
+            // TODO the above if is not perfect - should be fixed properly
             for (final Iterator i = visibleComponents.iterator(); i.hasNext();) {
                 ((Component) i.next()).setParent(null);
             }

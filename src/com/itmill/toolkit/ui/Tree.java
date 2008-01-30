@@ -396,6 +396,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
             target.addAttribute("partialUpdate", true);
             target.addAttribute("rootKey", itemIdMapper.key(expandedItemId));
         } else {
+            getCaptionChangeListener().clear();
 
             // Focus control id
             if (getFocusableId() > 0) {
@@ -494,6 +495,9 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
                     target.addAttribute("expanded", true);
                     expandedKeys.add(key);
                 }
+
+                // Add caption change listener
+                getCaptionChangeListener().addNotifierForItem(itemId);
 
                 // Actions
                 if (actionHandlers != null) {
