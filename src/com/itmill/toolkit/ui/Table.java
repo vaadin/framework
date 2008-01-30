@@ -2449,4 +2449,13 @@ public class Table extends AbstractSelect implements Action.Container,
         }
     }
 
+    /*
+     * Override abstract fields to string method to avoid non-informative null's
+     * in debugger
+     */
+    public String toString() {
+        return "Table:" + getContainerPropertyIds() + ", rows "
+                + getContainerDataSource().size() + " ,value:"
+                + super.toString();
+    }
 }
