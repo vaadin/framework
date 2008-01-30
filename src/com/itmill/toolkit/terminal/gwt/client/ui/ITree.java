@@ -179,6 +179,8 @@ public class ITree extends FlowPanel implements Paintable {
 
         private boolean open;
 
+        private Icon icon;
+
         public TreeNode() {
             constructDom();
             sinkEvents(Event.ONCLICK);
@@ -263,6 +265,20 @@ public class ITree extends FlowPanel implements Paintable {
 
             if (uidl.getBooleanAttribute("selected")) {
                 setSelected(true);
+            }
+
+            if (uidl.hasAttribute("icon")) {
+                if (icon == null) {
+                    icon = new Icon(client);
+                    DOM.insertBefore(nodeCaptionDiv, icon.getElement(),
+                            nodeCaptionSpan);
+                }
+                icon.setUri(uidl.getStringAttribute("icon"));
+            } else {
+                if (icon != null) {
+                    DOM.removeChild(nodeCaptionDiv, icon.getElement());
+                    icon = null;
+                }
             }
         }
 
