@@ -309,7 +309,7 @@ public class ContainerOrderedWrapper implements Container.Ordered,
     public Object addItem() throws UnsupportedOperationException {
 
         final Object id = container.addItem();
-        if (id != null) {
+        if (!ordered && id != null) {
             addToOrderWrapper(id);
         }
         return id;
@@ -327,7 +327,7 @@ public class ContainerOrderedWrapper implements Container.Ordered,
      */
     public Item addItem(Object itemId) throws UnsupportedOperationException {
         final Item item = container.addItem(itemId);
-        if (item != null) {
+        if (!ordered && item != null) {
             addToOrderWrapper(itemId);
         }
         return item;
@@ -343,7 +343,7 @@ public class ContainerOrderedWrapper implements Container.Ordered,
      */
     public boolean removeAllItems() throws UnsupportedOperationException {
         final boolean success = container.removeAllItems();
-        if (success) {
+        if (!ordered && success) {
             first = last = null;
             next.clear();
             prev.clear();
@@ -366,7 +366,7 @@ public class ContainerOrderedWrapper implements Container.Ordered,
             throws UnsupportedOperationException {
 
         final boolean success = container.removeItem(itemId);
-        if (success) {
+        if (!ordered && success) {
             removeFromOrderWrapper(itemId);
         }
         return success;
@@ -459,7 +459,8 @@ public class ContainerOrderedWrapper implements Container.Ordered,
      */
     public void addListener(Container.ItemSetChangeListener listener) {
         if (container instanceof Container.ItemSetChangeNotifier) {
-            ((Container.ItemSetChangeNotifier) container).addListener(listener);
+            ((Container.ItemSetChangeNotifier) container)
+                    .addListener(new PiggybackListener(listener));
         }
     }
 
@@ -471,7 +472,7 @@ public class ContainerOrderedWrapper implements Container.Ordered,
     public void removeListener(Container.ItemSetChangeListener listener) {
         if (container instanceof Container.ItemSetChangeNotifier) {
             ((Container.ItemSetChangeNotifier) container)
-                    .removeListener(listener);
+                    .removeListener(new PiggybackListener(listener));
         }
     }
 
@@ -483,7 +484,7 @@ public class ContainerOrderedWrapper implements Container.Ordered,
     public void addListener(Container.PropertySetChangeListener listener) {
         if (container instanceof Container.PropertySetChangeNotifier) {
             ((Container.PropertySetChangeNotifier) container)
-                    .addListener(listener);
+                    .addListener(new PiggybackListener(listener));
         }
     }
 
@@ -495,7 +496,7 @@ public class ContainerOrderedWrapper implements Container.Ordered,
     public void removeListener(Container.PropertySetChangeListener listener) {
         if (container instanceof Container.PropertySetChangeNotifier) {
             ((Container.PropertySetChangeNotifier) container)
-                    .removeListener(listener);
+                    .removeListener(new PiggybackListener(listener));
         }
     }
 
@@ -517,7 +518,7 @@ public class ContainerOrderedWrapper implements Container.Ordered,
         final Item item = container.addItem(newItemId);
 
         // Puts the new item to its correct place
-        if (item != null) {
+        if (!ordered && item != null) {
             addToOrderWrapper(newItemId, previousItemId);
         }
 
@@ -541,11 +542,51 @@ public class ContainerOrderedWrapper implements Container.Ordered,
         final Object id = container.addItem();
 
         // Puts the new item to its correct place
-        if (id != null) {
+        if (!ordered && id != null) {
             addToOrderWrapper(id, previousItemId);
         }
 
         return id;
+    }
+
+    /**
+     * This listener 'piggybacks' on the real listener in order to update the
+     * wrapper when needed. It proxies equals() and hashCode() to the real
+     * listener so that the correct listener gets removed.
+     * 
+     */
+    private class PiggybackListener implements
+            Container.PropertySetChangeListener,
+            Container.ItemSetChangeListener {
+
+        Object listener;
+
+        public PiggybackListener(Object realListener) {
+            listener = realListener;
+        }
+
+        public void containerItemSetChange(ItemSetChangeEvent event) {
+            updateOrderWrapper();
+            ((Container.ItemSetChangeListener) listener)
+                    .containerItemSetChange(event);
+
+        }
+
+        public void containerPropertySetChange(PropertySetChangeEvent event) {
+            updateOrderWrapper();
+            ((Container.PropertySetChangeListener) listener)
+                    .containerPropertySetChange(event);
+
+        }
+
+        public boolean equals(Object obj) {
+            return listener.equals(obj);
+        }
+
+        public int hashCode() {
+            return listener.hashCode();
+        }
+
     }
 
 }
