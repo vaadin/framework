@@ -5,9 +5,11 @@
 package com.itmill.toolkit.event;
 
 import java.lang.reflect.Method;
+import java.util.Collections;
 import java.util.EventObject;
 import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * <code>EventRouter</code> class implementing the inheritable event listening
@@ -24,7 +26,7 @@ public class EventRouter implements MethodEventSource {
     /**
      * List of registered listeners.
      */
-    private LinkedList listenerList = null;
+    private Set listenerList = null;
 
     /*
      * Registers a new listener with the specified activation method to listen
@@ -34,10 +36,12 @@ public class EventRouter implements MethodEventSource {
     public void addListener(Class eventType, Object object, Method method) {
 
         if (listenerList == null) {
-            listenerList = new LinkedList();
+            listenerList = Collections.synchronizedSet(new LinkedHashSet());
         }
 
-        listenerList.add(new ListenerMethod(eventType, object, method));
+        synchronized (listenerList) {
+            listenerList.add(new ListenerMethod(eventType, object, method));
+        }
     }
 
     /*
@@ -48,10 +52,12 @@ public class EventRouter implements MethodEventSource {
     public void addListener(Class eventType, Object object, String methodName) {
 
         if (listenerList == null) {
-            listenerList = new LinkedList();
+            listenerList = Collections.synchronizedSet(new LinkedHashSet());
         }
 
-        listenerList.add(new ListenerMethod(eventType, object, methodName));
+        synchronized (listenerList) {
+            listenerList.add(new ListenerMethod(eventType, object, methodName));
+        }
     }
 
     /*
@@ -60,17 +66,19 @@ public class EventRouter implements MethodEventSource {
      * interface.
      */
     public void removeListener(Class eventType, Object target) {
-
         if (listenerList != null) {
-            final Iterator i = listenerList.iterator();
-            while (i.hasNext()) {
-                try {
-                    final ListenerMethod lm = (ListenerMethod) i.next();
-                    if (lm.matches(eventType, target)) {
-                        i.remove();
+            synchronized (listenerList) {
+                final Iterator i = listenerList.iterator();
+                while (i.hasNext()) {
+                    try {
+                        final ListenerMethod lm = (ListenerMethod) i.next();
+                        if (lm.matches(eventType, target)) {
+                            i.remove();
+                            return;
+                        }
+                    } catch (final java.lang.ClassCastException e) {
+                        // Class cast exceptions are ignored
                     }
-                } catch (final java.lang.ClassCastException e) {
-                    // Class cast exceptions are ignored
                 }
             }
         }
@@ -84,22 +92,25 @@ public class EventRouter implements MethodEventSource {
     public void removeListener(Class eventType, Object target, Method method) {
 
         if (listenerList != null) {
-            final Iterator i = listenerList.iterator();
-            while (i.hasNext()) {
-                try {
-                    final ListenerMethod lm = (ListenerMethod) i.next();
-                    if (lm.matches(eventType, target, method)) {
-                        i.remove();
+            synchronized (listenerList) {
+                final Iterator i = listenerList.iterator();
+                while (i.hasNext()) {
+                    try {
+                        final ListenerMethod lm = (ListenerMethod) i.next();
+                        if (lm.matches(eventType, target, method)) {
+                            i.remove();
+                            return;
+                        }
+                    } catch (final java.lang.ClassCastException e) {
+                        // Class cast exceptions are ignored
                     }
-                } catch (final java.lang.ClassCastException e) {
-                    // Class cast exceptions are ignored
                 }
             }
         }
     }
 
     /*
-     * Removes the event listener method matching the given given paramaters.
+     * Removes the event listener method matching the given given parameters.
      * Don't add a JavaDoc comment here, we use the default documentation from
      * implemented interface.
      */
@@ -119,15 +130,18 @@ public class EventRouter implements MethodEventSource {
 
         // Remove the listeners
         if (listenerList != null) {
-            final Iterator i = listenerList.iterator();
-            while (i.hasNext()) {
-                try {
-                    final ListenerMethod lm = (ListenerMethod) i.next();
-                    if (lm.matches(eventType, target, method)) {
-                        i.remove();
+            synchronized (listenerList) {
+                final Iterator i = listenerList.iterator();
+                while (i.hasNext()) {
+                    try {
+                        final ListenerMethod lm = (ListenerMethod) i.next();
+                        if (lm.matches(eventType, target, method)) {
+                            i.remove();
+                            return;
+                        }
+                    } catch (final java.lang.ClassCastException e) {
+                        // Class cast exceptions are ignored
                     }
-                } catch (final java.lang.ClassCastException e) {
-                    // Class cast exceptions are ignored
                 }
             }
         }
@@ -137,7 +151,9 @@ public class EventRouter implements MethodEventSource {
      * Removes all listeners from event router.
      */
     public void removeAllListeners() {
-        listenerList = null;
+        synchronized (listenerList) {
+            listenerList = null;
+        }
     }
 
     /**
@@ -148,15 +164,15 @@ public class EventRouter implements MethodEventSource {
      *                the Event to be sent to all listeners.
      */
     public void fireEvent(EventObject event) {
-
         // It is not necessary to send any events if there are no listeners
         if (listenerList != null) {
-
             // Send the event to all listeners. The listeners themselves
             // will filter out unwanted events.
-            final Iterator i = new LinkedList(listenerList).iterator();
-            while (i.hasNext()) {
-                ((ListenerMethod) i.next()).receiveEvent(event);
+            synchronized (listenerList) {
+                final Iterator i = listenerList.iterator();
+                while (i.hasNext()) {
+                    ((ListenerMethod) i.next()).receiveEvent(event);
+                }
             }
         }
     }

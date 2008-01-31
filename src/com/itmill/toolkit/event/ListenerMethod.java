@@ -5,6 +5,7 @@
 package com.itmill.toolkit.event;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.EventListener;
 import java.util.EventObject;
 
@@ -456,7 +457,7 @@ public class ListenerMethod implements EventListener {
      *                by this listener.
      * @return <code>true</code> if <code>target</code> is the same object
      *         as the one stored in this object and <code>eventType</code>
-     *         equals the event type stored in this object.
+     *         equals the event type stored in this object. *
      */
     public boolean matches(Class eventType, Object target) {
         return (target == object) && (eventType.equals(this.eventType));
@@ -484,6 +485,41 @@ public class ListenerMethod implements EventListener {
         return (target == object)
                 && (eventType.equals(this.eventType) && method
                         .equals(this.method));
+    }
+
+    public int hashCode() {
+        int hash = 7;
+
+        hash = 31 * hash + eventArgumentIndex;
+        hash = 31 * hash + (eventType == null ? 0 : eventType.hashCode());
+        hash = 31 * hash + (object == null ? 0 : object.hashCode());
+        hash = 31 * hash + (method == null ? 0 : method.hashCode());
+        hash = 31 * hash + (arguments == null ? 0 : Arrays.hashCode(arguments));
+
+        return hash;
+    }
+
+    public boolean equals(Object obj) {
+
+        if (this == obj)
+            return true;
+
+        // return false if obj is a subclass (do not use instanceof check)
+        if ((obj == null) || (obj.getClass() != this.getClass()))
+            return false;
+
+        // obj is of same class, test it further
+        ListenerMethod t = (ListenerMethod) obj;
+
+        return eventArgumentIndex == t.eventArgumentIndex
+                && (eventType == t.eventType || (eventType != null && eventType
+                        .equals(t.eventType)))
+                && (object == t.object || (object != null && object
+                        .equals(t.object)))
+                && (method == t.method || (method != null && method
+                        .equals(t.method)))
+                && (arguments == t.arguments || (Arrays.deepEquals(arguments,
+                        t.arguments)));
     }
 
     /**

@@ -822,6 +822,10 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      *                the object instance who owns the activation method.
      * @param methodName
      *                the name of the activation method.
+     * @deprecated Use {@link #addListener(Class, Object, Method)} or
+     *             {@link #addListener(com.itmill.toolkit.ui.Component.Listener)}
+     *             instead. Using this method is discouraged because it cannot
+     *             be checked during compilation.
      */
     public void addListener(Class eventType, Object object, String methodName) {
         if (eventRouter == null) {
