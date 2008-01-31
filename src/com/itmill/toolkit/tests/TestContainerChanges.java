@@ -11,6 +11,7 @@ import com.itmill.toolkit.data.util.IndexedContainer;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.ComboBox;
 import com.itmill.toolkit.ui.CustomComponent;
+import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.ListSelect;
 import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Panel;
@@ -24,8 +25,8 @@ import com.itmill.toolkit.ui.Button.ClickEvent;
  */
 public class TestContainerChanges extends CustomComponent {
     Container cont = new IndexedContainer();
-    Container notordered = new ContainerHierarchicalWrapper(cont);
-    Container nothierarchical = new ContainerOrderedWrapper(cont);
+    Container hierarchical = new ContainerHierarchicalWrapper(cont);
+    Container ordered = new ContainerOrderedWrapper(cont);
 
     int cnt = 0;
     Table tbl;
@@ -37,6 +38,10 @@ public class TestContainerChanges extends CustomComponent {
 
         OrderedLayout main = new OrderedLayout();
         setCompositionRoot(main);
+
+        main
+                .addComponent(new Label(
+                        "The same IndexedContainer is wrapped in a ordered/hierarchical wrapper and is set as data source for all components . The buttons only affect the 'original' IndexedContainer."));
 
         OrderedLayout h = new OrderedLayout(
                 OrderedLayout.ORIENTATION_HORIZONTAL);
@@ -55,7 +60,7 @@ public class TestContainerChanges extends CustomComponent {
         tbl.setEditable(true);
         tbl.setRowHeaderMode(Table.ROW_HEADER_MODE_ID);
         // Original container
-        tbl.setContainerDataSource(notordered);
+        tbl.setContainerDataSource(hierarchical);
 
         Table tbl2 = new Table();
         tbl2.setHeight(200);
@@ -73,7 +78,7 @@ public class TestContainerChanges extends CustomComponent {
         });
         tbl2.setRowHeaderMode(Table.ROW_HEADER_MODE_ID);
         // non-ordered container will get wrapped
-        tbl2.setContainerDataSource(notordered);
+        tbl2.setContainerDataSource(hierarchical);
 
         OrderedLayout buttons = new OrderedLayout();
         v.addComponent(buttons);
@@ -138,18 +143,18 @@ public class TestContainerChanges extends CustomComponent {
 
         });
         buttons.addComponent(b);
-        b = new Button("nothierarchical", new Button.ClickListener() {
+        b = new Button("ordered", new Button.ClickListener() {
 
             public void buttonClick(ClickEvent event) {
-                tbl.setContainerDataSource(nothierarchical);
+                tbl.setContainerDataSource(ordered);
             }
 
         });
         buttons.addComponent(b);
-        b = new Button("notordered", new Button.ClickListener() {
+        b = new Button("hierarchical", new Button.ClickListener() {
 
             public void buttonClick(ClickEvent event) {
-                tbl.setContainerDataSource(notordered);
+                tbl.setContainerDataSource(hierarchical);
             }
 
         });
@@ -159,13 +164,13 @@ public class TestContainerChanges extends CustomComponent {
         p.setStyleName(Panel.STYLE_LIGHT);
         h.addComponent(p);
         Tree tree = new Tree("ITEM_CAPTION_MODE_PROPERTY");
-        tree.setContainerDataSource(nothierarchical);
+        tree.setContainerDataSource(ordered);
         tree.setItemCaptionPropertyId("Asd");
         tree.setItemCaptionMode(Tree.ITEM_CAPTION_MODE_PROPERTY);
         p.addComponent(tree);
         tree = new Tree("ITEM_CAPTION_MODE_ITEM");
         // nonhierarchical container will get wrapped
-        tree.setContainerDataSource(nothierarchical);
+        tree.setContainerDataSource(ordered);
         tree.setItemCaptionMode(Tree.ITEM_CAPTION_MODE_ITEM);
         p.addComponent(tree);
 
