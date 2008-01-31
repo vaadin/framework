@@ -21,8 +21,9 @@ import com.itmill.toolkit.data.Property;
  * 
  * <p>
  * If the wrapped container is changed directly (that is, not through the
- * wrapper), the ordering must be updated with the {@link #updateOrderWrapper()}
- * method.
+ * wrapper), and does not implement Container.ItemSetChangeNotifier and/or
+ * Container.PropertySetChangeNotifier the hierarchy information must be updated
+ * with the {@link #updateOrderWrapper()} method.
  * </p>
  * 
  * @author IT Mill Ltd.
@@ -586,7 +587,7 @@ public class ContainerOrderedWrapper implements Container.Ordered,
         }
 
         public boolean equals(Object obj) {
-            return listener.equals(obj);
+            return obj == listener || (obj != null && obj.equals(listener));
         }
 
         public int hashCode() {

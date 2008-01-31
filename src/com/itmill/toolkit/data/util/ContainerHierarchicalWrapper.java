@@ -23,8 +23,9 @@ import com.itmill.toolkit.data.Property;
  * 
  * <p>
  * If the wrapped container is changed directly (that is, not through the
- * wrapper), the hierarchy information must be updated with the
- * {@link #updateHierarchicalWrapper()} method.
+ * wrapper), and does not implement Container.ItemSetChangeNotifier and/or
+ * Container.PropertySetChangeNotifier the hierarchy information must be updated
+ * with the {@link #updateHierarchicalWrapper()} method.
  * </p>
  * 
  * @author IT Mill Ltd.
@@ -419,7 +420,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
     public Object addItem() throws UnsupportedOperationException {
 
         final Object id = container.addItem();
-        if (id != null) {
+        if (!hierarchical && id != null) {
             addToHierarchyWrapper(id);
         }
         return id;
@@ -438,7 +439,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
     public Item addItem(Object itemId) throws UnsupportedOperationException {
 
         final Item item = container.addItem(itemId);
-        if (item != null) {
+        if (!hierarchical && item != null) {
             addToHierarchyWrapper(itemId);
         }
         return item;
@@ -456,7 +457,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
 
         final boolean success = container.removeAllItems();
 
-        if (success) {
+        if (!hierarchical && success) {
             roots.clear();
             parent.clear();
             children.clear();
@@ -481,7 +482,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
 
         final boolean success = container.removeItem(itemId);
 
-        if (success) {
+        if (!hierarchical && success) {
             removeFromHierarchyWrapper(itemId);
         }
 
@@ -667,7 +668,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
         }
 
         public boolean equals(Object obj) {
-            return listener.equals(obj);
+            return obj == listener || (obj != null && obj.equals(listener));
         }
 
         public int hashCode() {
