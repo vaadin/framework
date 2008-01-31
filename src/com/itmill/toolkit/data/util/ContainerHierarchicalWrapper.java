@@ -81,6 +81,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
         }
 
         updateHierarchicalWrapper();
+
     }
 
     /**
@@ -93,7 +94,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
 
         if (!hierarchical) {
 
-            // Recreate hierarchy and datasrtuctures if missing
+            // Recreate hierarchy and data structures if missing
             if (noChildrenAllowed == null || parent == null || children == null
                     || roots == null) {
                 noChildrenAllowed = new HashSet();
@@ -594,7 +595,8 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
      */
     public void addListener(Container.ItemSetChangeListener listener) {
         if (container instanceof Container.ItemSetChangeNotifier) {
-            ((Container.ItemSetChangeNotifier) container).addListener(listener);
+            ((Container.ItemSetChangeNotifier) container)
+                    .addListener(new PiggybackListener(listener));
         }
     }
 
@@ -606,7 +608,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
     public void removeListener(Container.ItemSetChangeListener listener) {
         if (container instanceof Container.ItemSetChangeNotifier) {
             ((Container.ItemSetChangeNotifier) container)
-                    .removeListener(listener);
+                    .removeListener(new PiggybackListener(listener));
         }
     }
 
@@ -618,7 +620,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
     public void addListener(Container.PropertySetChangeListener listener) {
         if (container instanceof Container.PropertySetChangeNotifier) {
             ((Container.PropertySetChangeNotifier) container)
-                    .addListener(listener);
+                    .addListener(new PiggybackListener(listener));
         }
     }
 
@@ -630,7 +632,47 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
     public void removeListener(Container.PropertySetChangeListener listener) {
         if (container instanceof Container.PropertySetChangeNotifier) {
             ((Container.PropertySetChangeNotifier) container)
-                    .removeListener(listener);
+                    .removeListener(new PiggybackListener(listener));
         }
+    }
+
+    /**
+     * This listener 'piggybacks' on the real listener in order to update the
+     * wrapper when needed. It proxies equals() and hashCode() to the real
+     * listener so that the correct listener gets removed.
+     * 
+     */
+    private class PiggybackListener implements
+            Container.PropertySetChangeListener,
+            Container.ItemSetChangeListener {
+
+        Object listener;
+
+        public PiggybackListener(Object realListener) {
+            listener = realListener;
+        }
+
+        public void containerItemSetChange(ItemSetChangeEvent event) {
+            updateHierarchicalWrapper();
+            ((Container.ItemSetChangeListener) listener)
+                    .containerItemSetChange(event);
+
+        }
+
+        public void containerPropertySetChange(PropertySetChangeEvent event) {
+            updateHierarchicalWrapper();
+            ((Container.PropertySetChangeListener) listener)
+                    .containerPropertySetChange(event);
+
+        }
+
+        public boolean equals(Object obj) {
+            return listener.equals(obj);
+        }
+
+        public int hashCode() {
+            return listener.hashCode();
+        }
+
     }
 }
