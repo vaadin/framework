@@ -110,11 +110,22 @@ public class TestForTablesInitialColumnWidthLogicRendering extends
         return t;
     }
 
-    static String[] testString = new String[] { "DSFdsfs", "böö", "1",
-            "sdf sdfsd fsdfsdf sdf", "SDF SADds FASDF dsaf", "foo", "VADSFA",
-            "DSFSD FS", "whattaa", " sdf sdfsd ", "DSf sdf sdf", "foods f",
-            "VADsd fSFA", "DSFsd fSD FS", "wha sdf ttaa", " sd sdff sdfsd ",
-            "DSf sdf sdf", "SDFsd sd fadsfadfs" };
+    static String[] testString = new String[] { "Jacob", "Michael", "Joshua",
+            "Matthew", "Ethan", "Andrew", "Daniel", "Anthony", "Christopher",
+            "Joseph", "William", "Alexander", "Ryan", "David", "Nicholas",
+            "Tyler", "James", "John", "Jonathan", "Nathan", "Samuel",
+            "Christian", "Noah", "Dylan", "Benjamin", "Logan", "Brandon",
+            "Gabriel", "Zachary", "Jose", "Elijah", "Angel", "Kevin", "Jack",
+            "Caleb", "Justin", "Austin", "Evan", "Robert", "Thomas", "Luke",
+            "Mason", "Aidan", "Jackson", "Isaiah", "Jordan", "Gavin", "Connor",
+            "Aiden", "Isaac", "Jason", "Cameron", "Hunter", "Jayden", "Juan",
+            "Charles", "Aaron", "Lucas", "Luis", "Owen", "Landon", "Diego",
+            "Brian", "Adam", "Adrian", "Kyle", "Eric", "Ian", "Nathaniel",
+            "Carlos", "Alex", "Bryan", "Jesus", "Julian", "Sean", "Carter",
+            "Hayden", "Jeremiah", "Cole", "Brayden", "Wyatt", "Chase",
+            "Steven", "Timothy", "Dominic", "Sebastian", "Xavier", "Jaden",
+            "Jesse", "Devin", "Seth", "Antonio", "Richard", "Miguel", "Colin",
+            "Cody", "Alejandro", "Caden", "Blake", "Carson" };
 
     public static String rndString() {
         return testString[(int) (Math.random() * testString.length)];
