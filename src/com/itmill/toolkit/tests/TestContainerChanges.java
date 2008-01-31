@@ -83,7 +83,7 @@ public class TestContainerChanges extends CustomComponent {
         OrderedLayout buttons = new OrderedLayout();
         v.addComponent(buttons);
 
-        Button b = new Button("Commit", new Button.ClickListener() {
+        Button b = new Button("table.commit()", new Button.ClickListener() {
 
             public void buttonClick(ClickEvent event) {
                 tbl.commit();
@@ -92,42 +92,46 @@ public class TestContainerChanges extends CustomComponent {
         });
         buttons.addComponent(b);
 
-        b = new Button("Add item", new Button.ClickListener() {
+        b = new Button("indexedcontainer.addItem()",
+                new Button.ClickListener() {
 
-            public void buttonClick(ClickEvent event) {
-                cont.addItem(new Integer(cnt++));
-            }
+                    public void buttonClick(ClickEvent event) {
+                        cont.addItem(new Integer(cnt++));
+                    }
 
-        });
+                });
         buttons.addComponent(b);
-        b = new Button("Add NULL item", new Button.ClickListener() {
+        b = new Button("indexedcontainer.addItem(null)",
+                new Button.ClickListener() {
 
-            public void buttonClick(ClickEvent event) {
-                cont.addItem(null);
-            }
+                    public void buttonClick(ClickEvent event) {
+                        cont.addItem(null);
+                    }
 
-        });
+                });
         buttons.addComponent(b);
-        b = new Button("Remove last", new Button.ClickListener() {
+        b = new Button("indexedcontainer.removeItem(table.lastItemId()",
+                new Button.ClickListener() {
 
-            public void buttonClick(ClickEvent event) {
-                cont.removeItem(tbl.lastItemId());
-            }
+                    public void buttonClick(ClickEvent event) {
+                        cont.removeItem(tbl.lastItemId());
+                    }
 
-        });
-        buttons.addComponent(b);
-
-        b = new Button("Add property", new Button.ClickListener() {
-
-            public void buttonClick(ClickEvent event) {
-                cont.addContainerProperty("prop" + cnt, String.class, "#"
-                        + cnt++);
-            }
-
-        });
+                });
         buttons.addComponent(b);
 
-        b = new Button("clear", new Button.ClickListener() {
+        b = new Button("indexedcontainer.addContainerProperty()",
+                new Button.ClickListener() {
+
+                    public void buttonClick(ClickEvent event) {
+                        cont.addContainerProperty("prop" + cnt, String.class,
+                                "#" + cnt++);
+                    }
+
+                });
+        buttons.addComponent(b);
+
+        b = new Button("indexedcontainer.clear()", new Button.ClickListener() {
 
             public void buttonClick(ClickEvent event) {
                 cont.removeAllItems();
@@ -135,29 +139,32 @@ public class TestContainerChanges extends CustomComponent {
 
         });
         buttons.addComponent(b);
-        b = new Button("idx", new Button.ClickListener() {
+        b = new Button("table.setContainerDataSource(indexedcontainer)",
+                new Button.ClickListener() {
 
-            public void buttonClick(ClickEvent event) {
-                tbl.setContainerDataSource(cont);
-            }
+                    public void buttonClick(ClickEvent event) {
+                        tbl.setContainerDataSource(cont);
+                    }
 
-        });
+                });
         buttons.addComponent(b);
-        b = new Button("ordered", new Button.ClickListener() {
+        b = new Button("table.setContainerDataSource(orderedwrapper)",
+                new Button.ClickListener() {
 
-            public void buttonClick(ClickEvent event) {
-                tbl.setContainerDataSource(ordered);
-            }
+                    public void buttonClick(ClickEvent event) {
+                        tbl.setContainerDataSource(ordered);
+                    }
 
-        });
+                });
         buttons.addComponent(b);
-        b = new Button("hierarchical", new Button.ClickListener() {
+        b = new Button("table.setContainerDataSource(hierarchicalwrapper)",
+                new Button.ClickListener() {
 
-            public void buttonClick(ClickEvent event) {
-                tbl.setContainerDataSource(hierarchical);
-            }
+                    public void buttonClick(ClickEvent event) {
+                        tbl.setContainerDataSource(hierarchical);
+                    }
 
-        });
+                });
         buttons.addComponent(b);
 
         Panel p = new Panel("Tree");
