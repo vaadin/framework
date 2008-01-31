@@ -264,6 +264,9 @@ public class ContainerOrderedWrapper implements Container.Ordered,
         if (ordered) {
             return ((Container.Ordered) container).nextItemId(itemId);
         }
+        if (itemId == null) {
+            return null;
+        }
         return next.get(itemId);
     }
 
@@ -275,6 +278,9 @@ public class ContainerOrderedWrapper implements Container.Ordered,
     public Object prevItemId(Object itemId) {
         if (ordered) {
             return ((Container.Ordered) container).prevItemId(itemId);
+        }
+        if (itemId == null) {
+            return null;
         }
         return prev.get(itemId);
     }
