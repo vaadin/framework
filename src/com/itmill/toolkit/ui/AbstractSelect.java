@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
@@ -159,12 +160,12 @@ public abstract class AbstractSelect extends AbstractField implements
     /**
      * List of property set change event listeners.
      */
-    private LinkedList propertySetEventListeners = null;
+    private Set propertySetEventListeners = null;
 
     /**
      * List of item set change event listeners.
      */
-    private LinkedList itemSetEventListeners = null;
+    private Set itemSetEventListeners = null;
 
     /**
      * Item id that represents null selection of this select.
@@ -1371,7 +1372,7 @@ public abstract class AbstractSelect extends AbstractField implements
      */
     public void addListener(Container.PropertySetChangeListener listener) {
         if (propertySetEventListeners == null) {
-            propertySetEventListeners = new LinkedList();
+            propertySetEventListeners = new LinkedHashSet();
         }
         propertySetEventListeners.add(listener);
     }
@@ -1397,7 +1398,7 @@ public abstract class AbstractSelect extends AbstractField implements
      */
     public void addListener(Container.ItemSetChangeListener listener) {
         if (itemSetEventListeners == null) {
-            itemSetEventListeners = new LinkedList();
+            itemSetEventListeners = new LinkedHashSet();
         }
         itemSetEventListeners.add(listener);
     }
