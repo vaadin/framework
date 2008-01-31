@@ -1109,4 +1109,49 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
         setWidth(width);
         setWidthUnits(unit);
     }
+
+    public void setWidth(String width) {
+        int[] p = parseStringSize(width);
+        setWidth(p[0]);
+        setWidthUnits(p[1]);
+    }
+
+    public void setHeight(String width) {
+        int[] p = parseStringSize(width);
+        setHeight(p[0]);
+        setHeightUnits(p[1]);
+    }
+
+    /*
+     * returns array with size in index 0 unit in index 1
+     */
+    private static int[] parseStringSize(String s) {
+        int[] values = new int[2];
+        s = s.trim();
+        if (s.contains("%")) {
+            values[1] = UNITS_PERCENTAGE;
+            values[0] = (int) Float.parseFloat(s.substring(0, s.indexOf("%")));
+        } else {
+            values[0] = (int) Float.parseFloat(s.substring(0, s.length() - 2));
+            if (s.endsWith("px")) {
+                values[1] = UNITS_PIXELS;
+            } else if (s.endsWith("em")) {
+                values[1] = UNITS_EM;
+            } else if (s.endsWith("ex")) {
+                values[1] = UNITS_EX;
+            } else if (s.endsWith("in")) {
+                values[1] = UNITS_INCH;
+            } else if (s.endsWith("cm")) {
+                values[1] = UNITS_CM;
+            } else if (s.endsWith("mm")) {
+                values[1] = UNITS_MM;
+            } else if (s.endsWith("pt")) {
+                values[1] = UNITS_POINTS;
+            } else if (s.endsWith("pc")) {
+                values[1] = UNITS_PICAS;
+            }
+        }
+        return values;
+    }
+
 }

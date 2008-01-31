@@ -559,4 +559,14 @@ public class CustomComponent implements Component {
 
     }
 
+    public void setHeight(String height) {
+        // TODO Auto-generated method stub
+
+    }
+
+    public void setWidth(String width) {
+        // TODO Auto-generated method stub
+
+    }
+
 }

@@ -41,12 +41,12 @@ public interface Sizeable {
     public static final int UNITS_EX = 4;
 
     /**
-     * Unit code representing millimetres.
+     * Unit code representing millimeters.
      */
     public static final int UNITS_MM = 5;
 
     /**
-     * Unit code representing centimetres.
+     * Unit code representing centimeters.
      */
     public static final int UNITS_CM = 6;
 
@@ -155,6 +155,22 @@ public interface Sizeable {
      *                the units used in height property.
      */
     public void setHeightUnits(int units);
+
+    /**
+     * TODO
+     * 
+     * @param height
+     *                in CSS style string representation
+     */
+    public void setHeight(String height);
+
+    /**
+     * TODO
+     * 
+     * @param width
+     *                in CSS style string representation
+     */
+    public void setWidth(String width);
 
     /**
      * Sets the size to 100% x 100%.
