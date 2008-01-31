@@ -34,12 +34,10 @@ public class EventRouter implements MethodEventSource {
      * use the default documentation from implemented interface.
      */
     public void addListener(Class eventType, Object object, Method method) {
-
-        if (listenerList == null) {
-            listenerList = Collections.synchronizedSet(new LinkedHashSet());
-        }
-
         synchronized (listenerList) {
+            if (listenerList == null) {
+                listenerList = Collections.synchronizedSet(new LinkedHashSet());
+            }
             listenerList.add(new ListenerMethod(eventType, object, method));
         }
     }
@@ -50,12 +48,10 @@ public class EventRouter implements MethodEventSource {
      * here, we use the default documentation from implemented interface.
      */
     public void addListener(Class eventType, Object object, String methodName) {
-
-        if (listenerList == null) {
-            listenerList = Collections.synchronizedSet(new LinkedHashSet());
-        }
-
         synchronized (listenerList) {
+            if (listenerList == null) {
+                listenerList = Collections.synchronizedSet(new LinkedHashSet());
+            }
             listenerList.add(new ListenerMethod(eventType, object, methodName));
         }
     }
@@ -66,8 +62,8 @@ public class EventRouter implements MethodEventSource {
      * interface.
      */
     public void removeListener(Class eventType, Object target) {
-        if (listenerList != null) {
-            synchronized (listenerList) {
+        synchronized (listenerList) {
+            if (listenerList != null) {
                 final Iterator i = listenerList.iterator();
                 while (i.hasNext()) {
                     try {
@@ -90,9 +86,8 @@ public class EventRouter implements MethodEventSource {
      * implemented interface.
      */
     public void removeListener(Class eventType, Object target, Method method) {
-
-        if (listenerList != null) {
-            synchronized (listenerList) {
+        synchronized (listenerList) {
+            if (listenerList != null) {
                 final Iterator i = listenerList.iterator();
                 while (i.hasNext()) {
                     try {
@@ -128,9 +123,9 @@ public class EventRouter implements MethodEventSource {
             throw new IllegalArgumentException();
         }
 
-        // Remove the listeners
-        if (listenerList != null) {
-            synchronized (listenerList) {
+        synchronized (listenerList) {
+            // Remove the listeners
+            if (listenerList != null) {
                 final Iterator i = listenerList.iterator();
                 while (i.hasNext()) {
                     try {
@@ -145,6 +140,7 @@ public class EventRouter implements MethodEventSource {
                 }
             }
         }
+
     }
 
     /**
@@ -164,11 +160,12 @@ public class EventRouter implements MethodEventSource {
      *                the Event to be sent to all listeners.
      */
     public void fireEvent(EventObject event) {
-        // It is not necessary to send any events if there are no listeners
-        if (listenerList != null) {
-            // Send the event to all listeners. The listeners themselves
-            // will filter out unwanted events.
-            synchronized (listenerList) {
+        synchronized (listenerList) {
+            // It is not necessary to send any events if there are no listeners
+            if (listenerList != null) {
+                // Send the event to all listeners. The listeners themselves
+                // will filter out unwanted events.
+
                 final Iterator i = listenerList.iterator();
                 while (i.hasNext()) {
                     ((ListenerMethod) i.next()).receiveEvent(event);
