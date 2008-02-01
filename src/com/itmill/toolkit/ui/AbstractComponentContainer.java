@@ -182,14 +182,8 @@ public abstract class AbstractComponentContainer extends AbstractComponent
 
         if (c.getParent() != null) {
             // If the component already has a parent, try to remove it
-            try {
-                ComponentContainer oldParent = (ComponentContainer) c
-                        .getParent();
-                oldParent.removeComponent(c);
-            } catch (Exception e) {
-                throw new IllegalStateException(
-                        "Component could be removed from it's old parent.");
-            }
+            ComponentContainer oldParent = (ComponentContainer) c.getParent();
+            oldParent.removeComponent(c);
 
         }
 
