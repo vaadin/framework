@@ -270,8 +270,8 @@ public class BasicRandomTest extends com.itmill.toolkit.Application implements
                     } else if (container instanceof GridLayout) {
                         final GridLayout gl = (GridLayout) container;
                         if (j == 0) {
-                            final int x = rand.nextInt(gl.getWidth());
-                            final int y = rand.nextInt(gl.getHeight());
+                            final int x = rand.nextInt(gl.getColumns());
+                            final int y = rand.nextInt(gl.getRows());
                             gl.removeComponent(x, y);
                             gl.addComponent(c, x, y);
                         } else {
@@ -355,8 +355,8 @@ public class BasicRandomTest extends com.itmill.toolkit.Application implements
             }
             gl.setCaption("GridLayout_" + caption);
             gl.setDescription(gl.getCaption());
-            for (int x = 0; x < gl.getWidth(); x++) {
-                for (int y = 0; y < gl.getHeight(); y++) {
+            for (int x = 0; x < gl.getColumns(); x++) {
+                for (int y = 0; y < gl.getRows(); y++) {
                     gl.addComponent(getExamplePicture("x=" + x + ", y=" + y),
                             x, y);
                 }
