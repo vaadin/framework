@@ -169,6 +169,30 @@ public abstract class AbstractComponentContainer extends AbstractComponent
      * @see com.itmill.toolkit.ui.ComponentContainer#addComponent(Component)
      */
     public void addComponent(Component c) {
+        if (c instanceof ComponentContainer) {
+            // Make sure we're not adding the component inside it's own content
+            for (Component parent = this; parent != null; parent = parent
+                    .getParent()) {
+                if (parent == c) {
+                    throw new IllegalArgumentException(
+                            "Component cannot be added inside it's own content");
+                }
+            }
+        }
+
+        if (c.getParent() != null) {
+            // If the component already has a parent, try to remove it
+            try {
+                ComponentContainer oldParent = (ComponentContainer) c
+                        .getParent();
+                oldParent.removeComponent(c);
+            } catch (Exception e) {
+                throw new IllegalStateException(
+                        "Component could be removed from it's old parent.");
+            }
+
+        }
+
         c.setParent(this);
         fireComponentAttachEvent(c);
     }

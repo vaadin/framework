@@ -450,15 +450,18 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      */
     public void setParent(Component parent) {
 
-        // If the parent is not changed, dont do nothing
+        // If the parent is not changed, don't do anything
         if (parent == this.parent) {
             return;
+        }
+
+        if (parent != null && this.parent != null) {
+            throw new IllegalStateException("Component already has a parent.");
         }
 
         // Send detach event if the component have been connected to a window
         if (getApplication() != null) {
             detach();
-            this.parent = null;
         }
 
         // Connect to new parent
