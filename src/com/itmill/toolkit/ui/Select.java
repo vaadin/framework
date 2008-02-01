@@ -53,6 +53,11 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
     private String prevfilterstring;
     private List filteredOptions;
 
+    /**
+     * Flag to indicate that request repaint is called by filter request only
+     */
+    private boolean optionRequest;
+
     /* Constructors ********************************************************* */
 
     /* Component methods **************************************************** */
@@ -157,20 +162,7 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
         }
 
         List options = getFilteredOptions();
-        if (options.size() > pageLength) {
-            int first = currentPage * pageLength;
-            int last = first + pageLength;
-            if (needNullSelectOption) {
-                if (currentPage > 0) {
-                    first--;
-                }
-                last--;
-            }
-            if (options.size() < last) {
-                last = options.size();
-            }
-            options = options.subList(first, last);
-        }
+        options = sanitetizeList(options, needNullSelectOption);
         final Iterator i = options.iterator();
         // Paints the available selection options from data source
 
@@ -217,6 +209,58 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
         target.addVariable(this, "filter", filterstring);
         target.addVariable(this, "page", currentPage);
 
+        optionRequest = true;
+    }
+
+    /**
+     * Makes correct sublist of given list of options.
+     * 
+     * If paint is not an option request (affected by page or filter change),
+     * page will be the one where possible selection exists.
+     * 
+     * Detects proper first and last item in list to return right page of
+     * options.
+     * 
+     * @param options
+     * @param needNullSelectOption
+     *                flag to indicate if nullselect option needs to be taken
+     *                into consideration
+     */
+    private List sanitetizeList(List options, boolean needNullSelectOption) {
+
+        if (options.size() > pageLength) {
+            int first = currentPage * pageLength;
+            int last = first + pageLength;
+            if (needNullSelectOption) {
+                if (currentPage > 0) {
+                    first--;
+                }
+                last--;
+            }
+            if (options.size() < last) {
+                last = options.size();
+            }
+            if (!optionRequest) {
+                // TODO ensure proper page
+                if (!isMultiSelect()) {
+                    Object selection = getValue();
+                    if (selection != null) {
+                        int index = options.indexOf(selection);
+                        if (index != -1 && (index < first || index >= last)) {
+                            int newPage = (index + (needNullSelectOption ? 1
+                                    : 0))
+                                    / pageLength;
+                            currentPage = newPage;
+                            return sanitetizeList(options, needNullSelectOption);
+                        }
+                    }
+                }
+            }
+
+            return options.subList(first, last);
+        } else {
+            return options;
+        }
     }
 
     protected List getFilteredOptions() {
@@ -282,7 +326,7 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
             if (filterstring != null) {
                 filterstring = filterstring.toLowerCase();
             }
-            requestRepaint();
+            optionRepaint();
             return;
         }
 
@@ -351,6 +395,17 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
                 }
             }
         }
+    }
+
+    public void requestRepaint() {
+        super.requestRepaint();
+        optionRequest = false;
+        prevfilterstring = filterstring;
+        filterstring = null;
+    }
+
+    private void optionRepaint() {
+        super.requestRepaint();
     }
 
     /**
