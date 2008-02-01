@@ -494,7 +494,6 @@ public class ListenerMethod implements EventListener {
         hash = 31 * hash + (eventType == null ? 0 : eventType.hashCode());
         hash = 31 * hash + (object == null ? 0 : object.hashCode());
         hash = 31 * hash + (method == null ? 0 : method.hashCode());
-        hash = 31 * hash + (arguments == null ? 0 : Arrays.hashCode(arguments));
 
         return hash;
     }
@@ -518,7 +517,7 @@ public class ListenerMethod implements EventListener {
                         .equals(t.object)))
                 && (method == t.method || (method != null && method
                         .equals(t.method)))
-                && (arguments == t.arguments || (Arrays.deepEquals(arguments,
+                && (arguments == t.arguments || (Arrays.equals(arguments,
                         t.arguments)));
     }
 
