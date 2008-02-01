@@ -31,6 +31,8 @@ public class ICheckBox extends com.google.gwt.user.client.ui.CheckBox implements
 
     private ErrorMessage errorMessage;
 
+    private boolean isBlockMode = false;
+
     public ICheckBox() {
         setStyleName(CLASSNAME);
         addClickListener(new ClickListener() {
@@ -116,6 +118,25 @@ public class ICheckBox extends com.google.gwt.user.client.ui.CheckBox implements
                 break;
             }
         }
+    }
 
+    public void setWidth(String width) {
+        setBlockMode();
+        super.setWidth(width);
+    }
+
+    public void setHeight(String height) {
+        setBlockMode();
+        super.setHeight(height);
+    }
+
+    /**
+     * makes container element (span) to be block element to enable sizing.
+     */
+    private void setBlockMode() {
+        if (!isBlockMode) {
+            DOM.setStyleAttribute(getElement(), "display", "block");
+            isBlockMode = true;
+        }
     }
 }

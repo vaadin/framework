@@ -7,6 +7,7 @@ package com.itmill.toolkit.terminal.gwt.client.ui;
 import java.util.Iterator;
 import java.util.Vector;
 
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.ListBox;
@@ -19,7 +20,7 @@ public class ITwinColSelect extends IOptionGroupBase {
     private static final String CLASSNAME = "i-select-twincol";
 
     private static final int VISIBLE_COUNT = 10;
-    
+
     private static final int DEFAULT_COLUMN_COUNT = 10;
 
     private final ListBox options;
@@ -29,6 +30,12 @@ public class ITwinColSelect extends IOptionGroupBase {
     private final IButton add;
 
     private final IButton remove;
+
+    private FlowPanel buttons;
+
+    private Panel panel;
+
+    private boolean widthSet = false;
 
     public ITwinColSelect() {
         super(CLASSNAME);
@@ -40,7 +47,7 @@ public class ITwinColSelect extends IOptionGroupBase {
         selections.setVisibleItemCount(VISIBLE_COUNT);
         options.setStyleName(CLASSNAME + "-options");
         selections.setStyleName(CLASSNAME + "-selections");
-        final Panel buttons = new FlowPanel();
+        buttons = new FlowPanel();
         buttons.setStyleName(CLASSNAME + "-buttons");
         add = new IButton();
         add.setText(">>");
@@ -48,15 +55,15 @@ public class ITwinColSelect extends IOptionGroupBase {
         remove = new IButton();
         remove.setText("<<");
         remove.addClickListener(this);
-        final Panel p = ((Panel) optionsContainer);
-        p.add(options);
+        panel = ((Panel) optionsContainer);
+        panel.add(options);
         buttons.add(add);
         final HTML br = new HTML("<span/>");
         br.setStyleName(CLASSNAME + "-deco");
         buttons.add(br);
         buttons.add(remove);
-        p.add(buttons);
-        p.add(selections);
+        panel.add(buttons);
+        panel.add(selections);
     }
 
     protected void buildOptions(UIDL uidl) {
@@ -79,15 +86,14 @@ public class ITwinColSelect extends IOptionGroupBase {
                         optionUidl.getStringAttribute("key"));
             }
         }
-        optionsContainer.setWidth(null);
         if (getColumns() > 0) {
             options.setWidth(getColumns() + "em");
             selections.setWidth(getColumns() + "em");
-            optionsContainer.setWidth((getColumns()*2 + 3) + "em");
-        } else {
+            optionsContainer.setWidth((getColumns() * 2 + 3) + "em");
+        } else if (!widthSet) {
             options.setWidth(DEFAULT_COLUMN_COUNT + "em");
             selections.setWidth(DEFAULT_COLUMN_COUNT + "em");
-            optionsContainer.setWidth((DEFAULT_COLUMN_COUNT*2 + 2) + "em");
+            optionsContainer.setWidth((DEFAULT_COLUMN_COUNT * 2 + 2) + "em");
         }
         if (getRows() > 0) {
             options.setVisibleItemCount(getRows());
@@ -182,4 +188,28 @@ public class ITwinColSelect extends IOptionGroupBase {
         }
     }
 
+    public void setHeight(String height) {
+        super.setHeight(height);
+        setFullHeightInternals();
+    }
+
+    private void setFullHeightInternals() {
+        options.setHeight("100%");
+        selections.setHeight("100%");
+    }
+
+    public void setWidth(String width) {
+        super.setWidth(width);
+        if (!"".equals(width) && width != null) {
+            setRelativeInternalWidths();
+        }
+    }
+
+    private void setRelativeInternalWidths() {
+        DOM.setStyleAttribute(getElement(), "position", "relative");
+        buttons.setWidth("16%");
+        options.setWidth("42%");
+        selections.setWidth("42%");
+        widthSet = true;
+    }
 }

@@ -63,4 +63,14 @@ public class INativeSelect extends IOptionGroupBase {
         }
     }
 
+    public void setHeight(String height) {
+        select.setHeight(height);
+        super.setHeight(height);
+    }
+
+    public void setWidth(String width) {
+        select.setWidth(width);
+        super.setWidth(width);
+    }
+
 }
