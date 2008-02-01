@@ -131,8 +131,9 @@ public class TestSizeableIncomponents extends Application {
         String[] list2 = (new File(dir.getFile())).list();
         for (int i = 0; i < list2.length; i++) {
             String f = list2[i];
-            if (f.endsWith(".class") && !f.contains("CustomComponent")) {
-                f = f.replace(".class", "");
+            if (f.endsWith(".class") && (f.indexOf("CustomComponent") == -1)
+                    && (f.indexOf("Window") == -1)) {
+                f = f.replaceAll(".class", "");
                 String className = "com.itmill.toolkit.ui." + f;
                 Class c;
                 try {
@@ -220,8 +221,8 @@ public class TestSizeableIncomponents extends Application {
 
         public String getTestableName() {
             StringBuffer sb = new StringBuffer();
-            sb.append(classToTest.getName().replace("com.itmill.toolkit.ui.",
-                    ""));
+            sb.append(classToTest.getName().replaceAll(
+                    "com.itmill.toolkit.ui.", ""));
             sb.append("[");
             for (Iterator i = configurations.iterator(); i.hasNext();) {
                 sb.append(((Configuration) i.next()).getDescription());
