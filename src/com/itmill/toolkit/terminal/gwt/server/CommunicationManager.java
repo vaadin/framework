@@ -36,8 +36,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.itmill.toolkit.Application;
-import com.itmill.toolkit.Application.WindowAttachEvent;
-import com.itmill.toolkit.Application.WindowDetachEvent;
 import com.itmill.toolkit.external.org.apache.commons.fileupload.FileItemIterator;
 import com.itmill.toolkit.external.org.apache.commons.fileupload.FileItemStream;
 import com.itmill.toolkit.external.org.apache.commons.fileupload.FileUploadException;
@@ -62,8 +60,7 @@ import com.itmill.toolkit.ui.Window;
  * @VERSION@
  * @since 5.0
  */
-public class CommunicationManager implements Paintable.RepaintRequestListener,
-        Application.WindowAttachListener, Application.WindowDetachListener {
+public class CommunicationManager implements Paintable.RepaintRequestListener {
 
     private static String GET_PARAM_REPAINT_ALL = "repaintAll";
 
@@ -102,24 +99,6 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
         this.application = application;
         this.applicationServlet = applicationServlet;
         requireLocale(application.getLocale().toString());
-    }
-
-    /**
-     * 
-     * 
-     */
-    public void takeControl() {
-        application.addListener((Application.WindowAttachListener) this);
-        application.addListener((Application.WindowDetachListener) this);
-    }
-
-    /**
-     * 
-     * 
-     */
-    public void releaseControl() {
-        application.removeListener((Application.WindowAttachListener) this);
-        application.removeListener((Application.WindowDetachListener) this);
     }
 
     /**
@@ -423,7 +402,6 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
 
                 outWriter.flush();
                 outWriter.close();
-                out.flush();
             }
 
             out.flush();
@@ -832,34 +810,6 @@ public class CommunicationManager implements Paintable.RepaintRequestListener,
     public void paintablePainted(Paintable p) {
         dirtyPaintabletSet.remove(p);
         p.requestRepaintRequests();
-    }
-
-    /**
-     * @see com.itmill.toolkit.Application.WindowAttachListener#windowAttached(com.itmill.toolkit.Application.WindowAttachEvent)
-     */
-    public void windowAttached(WindowAttachEvent event) {
-        event.getWindow().addListener(this);
-        if (!dirtyPaintabletSet.contains(event.getWindow())) {
-            dirtyPaintabletSet.add(event.getWindow());
-        }
-    }
-
-    /**
-     * @see com.itmill.toolkit.Application.WindowDetachListener#windowDetached(com.itmill.toolkit.Application.WindowDetachEvent)
-     */
-    public void windowDetached(WindowDetachEvent event) {
-        event.getWindow().removeListener(this);
-        // Notify client of the close operation
-        removedWindows.add(event.getWindow());
-    }
-
-    /**
-     * 
-     * @return
-     */
-    public synchronized Set getRemovedWindows() {
-        return Collections.unmodifiableSet(removedWindows);
-
     }
 
     private final class SingleValueMap implements Map {

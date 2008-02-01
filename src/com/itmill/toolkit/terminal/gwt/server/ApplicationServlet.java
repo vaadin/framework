@@ -1401,8 +1401,6 @@ public class ApplicationServlet extends HttpServlet {
             // Creates new manager
             mgr = new CommunicationManager(application, this);
             applicationToAjaxAppMgrMap.put(application, mgr);
-            // Manager takes control over the application
-            mgr.takeControl();
         }
 
         return mgr;

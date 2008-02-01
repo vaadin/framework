@@ -124,7 +124,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
     private LinkedList notifications;
 
-    private boolean modal;
+    private boolean modal = false;
 
     /* ********************************************************************* */
 
@@ -871,7 +871,23 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
         // Closing
         final Boolean close = (Boolean) variables.get("close");
         if (close != null && close.booleanValue()) {
+            close();
+        }
+    }
+
+    /**
+     * Method that handles window closing (from UI). If one wants to have window
+     * that cannot be closed (with server side check), override this with and
+     * empty method.
+     */
+    protected void close() {
+        Window parent = (Window) getParent();
+        if (parent == null) {
             setVisible(false);
+            fireClose();
+        } else {
+            // subwindow is removed from parent
+            parent.removeWindow(this);
             fireClose();
         }
     }
