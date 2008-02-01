@@ -128,8 +128,8 @@ public class OrderedLayout extends AbstractLayout {
      *                the component to be added.
      */
     public void addComponent(Component c) {
-        components.add(c);
         super.addComponent(c);
+        components.add(c);
         requestRepaint();
     }
 
@@ -141,8 +141,8 @@ public class OrderedLayout extends AbstractLayout {
      *                the component to be added.
      */
     public void addComponentAsFirst(Component c) {
-        components.addFirst(c);
         super.addComponent(c);
+        components.addFirst(c);
         requestRepaint();
     }
 
@@ -156,8 +156,8 @@ public class OrderedLayout extends AbstractLayout {
      *                currently in and after the position are shifted forwards.
      */
     public void addComponent(Component c, int index) {
-        components.add(index, c);
         super.addComponent(c);
+        components.add(index, c);
         requestRepaint();
     }
 
