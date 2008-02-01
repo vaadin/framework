@@ -1132,7 +1132,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
     private static int[] parseStringSize(String s) {
         int[] values = new int[2];
         s = s.trim();
-        if (s.contains("%")) {
+        if (s.indexOf("%") != -1) {
             values[1] = UNITS_PERCENTAGE;
             values[0] = (int) Float.parseFloat(s.substring(0, s.indexOf("%")));
         } else {
