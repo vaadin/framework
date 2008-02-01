@@ -415,9 +415,15 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
     }
 
     public void setWidth(String width) {
-        DOM.setStyleAttribute(getElement(), "width", (Integer.parseInt(width
-                .substring(0, width.length() - 2)) + BORDER_WIDTH_HORIZONTAL)
-                + "px");
+        if (!"".equals(width)) {
+            DOM
+                    .setStyleAttribute(
+                            getElement(),
+                            "width",
+                            (Integer.parseInt(width.substring(0,
+                                    width.length() - 2)) + BORDER_WIDTH_HORIZONTAL)
+                                    + "px");
+        }
     }
 
     private void onHeaderEvent(Event event) {
