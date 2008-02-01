@@ -193,9 +193,12 @@ public class GridLayout extends AbstractLayout {
         // Checks that newItem does not overlap with existing items
         checkExistingOverlaps(area);
 
+        // first attemt to add to super
+        super.addComponent(component);
+
         // Inserts the component to right place at the list
         // Respect top-down, left-right ordering
-        component.setParent(this);
+        // component.setParent(this);
         final Iterator i = areas.iterator();
         int index = 0;
         boolean done = false;
@@ -214,7 +217,6 @@ public class GridLayout extends AbstractLayout {
             components.addLast(component);
         }
 
-        super.addComponent(component);
         requestRepaint();
     }
 
