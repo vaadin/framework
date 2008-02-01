@@ -287,7 +287,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 
         // If no main window is set, declare the window to be main window
         if (getMainWindow() == null) {
-            setMainWindow(window);
+            mainWindow = window;
         }
     }
 
