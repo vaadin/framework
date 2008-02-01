@@ -4,6 +4,8 @@
 
 package com.itmill.toolkit.ui;
 
+import java.lang.reflect.Method;
+
 import com.itmill.toolkit.data.Property;
 
 public class CheckBox extends Button {
@@ -54,6 +56,10 @@ public class CheckBox extends Button {
      * @param methodName
      *                the name of the method in target object, that receives
      *                button click events.
+     * @deprecated Use {@link #addListener(Class, Object, Method)} or
+     *             {@link #addListener(com.itmill.toolkit.ui.Component.Listener)}
+     *             instead. Using this method is discouraged because it cannot
+     *             be checked during compilation.
      */
     public CheckBox(String caption, Object target, String methodName) {
         setCaption(caption);

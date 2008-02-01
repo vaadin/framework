@@ -8,7 +8,7 @@ import java.lang.reflect.Method;
 
 /**
  * <p>
- * Interface for classes supporting registeration of methods as event receivers.
+ * Interface for classes supporting registration of methods as event receivers.
  * </p>
  * 
  * <p>

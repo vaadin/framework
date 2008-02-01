@@ -31,7 +31,7 @@ public abstract class AbstractComponentContainer extends AbstractComponent
 
     /**
      * Removes all components from the container. This should probably be
-     * reimplemented in extending classes for a more powerfull implementation.
+     * re-implemented in extending classes for a more powerful implementation.
      */
     public void removeAllComponents() {
         final LinkedList l = new LinkedList();
