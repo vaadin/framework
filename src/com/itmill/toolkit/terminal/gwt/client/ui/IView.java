@@ -64,7 +64,7 @@ public class IView extends SimplePanel implements Paintable,
         int childIndex = 0;
 
         // Open URL:s
-        while (childIndex < uidl.getChidlCount()
+        while (childIndex < uidl.getChildCount()
                 && "open".equals(uidl.getChildUIDL(childIndex).getTag())) {
             final UIDL open = uidl.getChildUIDL(childIndex);
             final String url = open.getStringAttribute("src");

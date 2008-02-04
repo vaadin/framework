@@ -458,7 +458,7 @@ public class UIDL {
         }
     }
 
-    public int getChidlCount() {
+    public int getChildCount() {
         return json.size() - 2;
     }
 

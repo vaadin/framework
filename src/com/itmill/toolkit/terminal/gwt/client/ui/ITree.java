@@ -248,7 +248,7 @@ public class ITree extends FlowPanel implements Paintable {
             }
 
             if (uidl.getTag().equals("node")) {
-                if (uidl.getChidlCount() == 0) {
+                if (uidl.getChildCount() == 0) {
                     childNodeContainer.setVisible(false);
                 } else {
                     renderChildNodes(uidl.getChildIterator());

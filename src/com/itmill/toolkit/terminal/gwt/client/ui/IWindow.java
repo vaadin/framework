@@ -259,8 +259,8 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
         }
 
         // we may have actions and notifications
-        if (uidl.getChidlCount() > 1) {
-            final int cnt = uidl.getChidlCount();
+        if (uidl.getChildCount() > 1) {
+            final int cnt = uidl.getChildCount();
             for (int i = 1; i < cnt; i++) {
                 childUidl = uidl.getChildUIDL(i);
                 if (childUidl.getTag().equals("actions")) {
