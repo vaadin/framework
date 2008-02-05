@@ -147,8 +147,6 @@
 	width: 160px;
 	height: 39px;
 	background: transparent url(img/scroll-position-bg.png);
-	opacity: 0.5;
-	filter: alpha(opacity=50);
 }
 
 .i-table-scrollposition span {
