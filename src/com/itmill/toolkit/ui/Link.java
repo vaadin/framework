@@ -116,10 +116,10 @@ public class Link extends AbstractComponent {
 
         // Target window size
         if (getTargetWidth() >= 0) {
-            target.addAttribute("width", getTargetWidth());
+            target.addAttribute("targetWidth", getTargetWidth());
         }
         if (getTargetHeight() >= 0) {
-            target.addAttribute("height", getTargetHeight());
+            target.addAttribute("targetHeight", getTargetHeight());
         }
 
         // Target window border
