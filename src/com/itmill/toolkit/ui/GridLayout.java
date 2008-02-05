@@ -104,6 +104,8 @@ public class GridLayout extends AbstractLayout {
      */
     public static final int ALIGNMENT_VERTICAL_CENTER = AlignmentInfo.ALIGNMENT_VERTICAL_CENTER;
 
+    private static final int ALIGNMENT_DEFAULT = ALIGNMENT_TOP + ALIGNMENT_LEFT;
+
     /**
      * Is spacing between contained components enabled. Defaults to false.
      */
@@ -407,6 +409,9 @@ public class GridLayout extends AbstractLayout {
         // Empty cell collector
         int emptyCells = 0;
 
+        final String[] alignmentsArray = new String[components.size()];
+        int index = 0;
+
         // Iterates every applicable row
         for (int cury = 0; cury < rows; cury++) {
             target.startTag("gr");
@@ -445,6 +450,9 @@ public class GridLayout extends AbstractLayout {
                         target.addAttribute("h", rows);
                     }
                     area.getComponent().paint(target);
+
+                    alignmentsArray[index++] = String
+                            .valueOf(getComponentAlignment(area.getComponent()));
 
                     target.endTag("gc");
 
@@ -532,6 +540,20 @@ public class GridLayout extends AbstractLayout {
         } // iterates every row
 
         // Last row handled
+
+        // Add child component alignment info to layout tag
+        target.addAttribute("alignments", alignmentsArray);
+
+    }
+
+    public int getComponentAlignment(Component childComponent) {
+        final Integer bitMask = (Integer) componentToAlignment
+                .get(childComponent);
+        if (bitMask != null) {
+            return bitMask.intValue();
+        } else {
+            return ALIGNMENT_DEFAULT;
+        }
     }
 
     /**
