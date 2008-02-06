@@ -441,8 +441,6 @@ public class IFilterSelect extends Composite implements Paintable,
 
     private String lastFilter = "";
 
-    private int totalSuggestions;
-
     private FilterSelectSuggestion currentSuggestion;
 
     private boolean clientSideFiltering;
@@ -546,7 +544,6 @@ public class IFilterSelect extends Composite implements Paintable,
 
         currentSuggestions.clear();
         final UIDL options = uidl.getChildUIDL(0);
-        totalSuggestions = uidl.getIntAttribute("totalitems");
         totalMatches = uidl.getIntAttribute("totalMatches");
 
         String captions = "";

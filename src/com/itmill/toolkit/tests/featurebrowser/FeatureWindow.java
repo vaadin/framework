@@ -46,8 +46,6 @@ public class FeatureWindow extends Feature implements Window.CloseListener {
 
         // Properties
         propertyPanel = new PropertyPanel(demoWindow);
-        propertyPanel.dependsOn(addButton);
-        propertyPanel.dependsOn(removeButton);
         windowProperties = propertyPanel.createBeanPropertySet(new String[] {
                 "width", "height", "name", "theme", "border", "scrollable", });
         windowProperties.replaceWithSelect("border", new Object[] {

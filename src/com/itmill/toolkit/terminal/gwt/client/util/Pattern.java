@@ -65,16 +65,16 @@ public class Pattern {
 
     private static native JavaScriptObject _createExpression(String pattern,
             String flags)/*-{
-                                                    		 return new RegExp(pattern, flags);
-                                                    		 }-*/;
+                                                            		 return new RegExp(pattern, flags);
+                                                            		 }-*/;
 
     private native void _match(String text, List matches)/*-{
-                                                    		 var regExp = this.@com.itmill.toolkit.terminal.gwt.client.util.Pattern::regExp;
-                                                    		 var result = text.match(regExp);
-                                                    		 if (result == null) return;
-                                                    		 for (var i=0;i<result.length;i++)
-                                                    		 matches.@java.util.ArrayList::add(Ljava/lang/Object;)(result[i]);
-                                                    		 }-*/;
+                                                            		 var regExp = this.@com.itmill.toolkit.terminal.gwt.client.util.Pattern::regExp;
+                                                            		 var result = text.match(regExp);
+                                                            		 if (result == null) return;
+                                                            		 for (var i=0;i<result.length;i++)
+                                                            		 matches.@java.util.ArrayList::add(Ljava/lang/Object;)(result[i]);
+                                                            		 }-*/;
 
     /**
      * Determines wether the specified regular expression is validated by the
@@ -155,9 +155,9 @@ public class Pattern {
      * @return
      */
     public native boolean matches(String text)/*-{
-                                                    		 var regExp = this.@com.itmill.toolkit.terminal.gwt.client.util.Pattern::regExp;
-                                                    		 return regExp.test(text);
-                                                    		 }-*/;
+                                                            		 var regExp = this.@com.itmill.toolkit.terminal.gwt.client.util.Pattern::regExp;
+                                                            		 return regExp.test(text);
+                                                            		 }-*/;
 
     /**
      * Returns the regular expression for this pattern
@@ -165,16 +165,16 @@ public class Pattern {
      * @return
      */
     public native String pattern()/*-{
-                                                    		 var regExp = this.@com.itmill.toolkit.terminal.gwt.client.util.Pattern::regExp;
-                                                    		 return regExp.source;
-                                                    		 }-*/;
+                                                            		 var regExp = this.@com.itmill.toolkit.terminal.gwt.client.util.Pattern::regExp;
+                                                            		 return regExp.source;
+                                                            		 }-*/;
 
     private native void _split(String input, List results)/*-{
-                                                    		 var regExp = this.@com.itmill.toolkit.terminal.gwt.client.util.Pattern::regExp;
-                                                    		 var parts = input.split(regExp);
-                                                    		 for (var i=0;i<parts.length;i++)
-                                                    		 results.@java.util.ArrayList::add(Ljava/lang/Object;)(parts[i]	);
-                                                    		 }-*/;
+                                                            		 var regExp = this.@com.itmill.toolkit.terminal.gwt.client.util.Pattern::regExp;
+                                                            		 var parts = input.split(regExp);
+                                                            		 for (var i=0;i<parts.length;i++)
+                                                            		 results.@java.util.ArrayList::add(Ljava/lang/Object;)(parts[i]	);
+                                                            		 }-*/;
 
     /**
      * Split an input string by the pattern's regular expression

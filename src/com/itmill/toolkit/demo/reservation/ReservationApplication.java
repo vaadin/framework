@@ -53,9 +53,6 @@ public class ReservationApplication extends Application {
 
     private GoogleMap map;
 
-    private Window popupWindow;
-    private Label popupMessage;
-
     public void init() {
         //
         db = new SampleDB();

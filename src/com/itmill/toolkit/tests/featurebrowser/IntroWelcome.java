@@ -13,7 +13,6 @@ import com.itmill.toolkit.terminal.DownloadStream;
 import com.itmill.toolkit.terminal.ParameterHandler;
 import com.itmill.toolkit.terminal.URIHandler;
 import com.itmill.toolkit.terminal.gwt.server.ApplicationServlet;
-import com.itmill.toolkit.terminal.gwt.server.WebBrowser;
 import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.Form;
 import com.itmill.toolkit.ui.Label;
@@ -23,8 +22,6 @@ import com.itmill.toolkit.ui.Select;
 
 public class IntroWelcome extends Feature implements URIHandler,
         ParameterHandler {
-
-    private final WebBrowser webBrowser = null;
 
     Panel panel = new Panel();
 

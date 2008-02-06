@@ -86,14 +86,12 @@ public class ICalendarField extends IDateField {
     }
 
     protected void buildDayView(Date date) {
-        boolean firstRender = true;
         if (hourPanel == null) {
             hourPanel = new SimplePanel();
             hourPanel.setStyleName(CLASSNAME + "-hours");
             calPanel.getFlexCellFormatter().setColSpan(8, 0, 7);
             calPanel.setWidget(8, 0, hourPanel);
         } else {
-            firstRender = false;
             hourPanel.clear();
         }
         hourTable = new FlexTable();
@@ -197,8 +195,8 @@ public class ICalendarField extends IDateField {
     }
 
     private native void setScrollTop(Element el, int scrollTop) /*-{
-                             el.scrollTop = scrollTop;
-                           }-*/;
+                                   el.scrollTop = scrollTop;
+                                 }-*/;
 
     private class HourTableListener implements TableListener {
 
@@ -218,7 +216,7 @@ public class ICalendarField extends IDateField {
 
         public void addItem(UIDL item) {
             final String styleName = item.getStringAttribute("styleName");
-            final Integer id = new Integer(item.getIntAttribute("id"));
+            // final Integer id = new Integer(item.getIntAttribute("id"));
             final long start = Long.parseLong(item.getStringAttribute("start"));
             final Date startDate = new Date(start);
             long end = -1;

@@ -210,7 +210,7 @@ public class BasicRandomTest extends com.itmill.toolkit.Application implements
                         "*", "/", "=", "C" },
                 { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "plus",
                         "minus", "multiple", "divisor", "equals", "clear" } };
-        final String[] randomizedCaptions = { "a", "b", "c", "y", "8", "3" };
+        // final String[] randomizedCaptions = { "a", "b", "c", "y", "8", "3" };
         // String[] randomizedCaptions = { "X" };
         buttonValues = new HashMap();
         for (int i = 0; i > calcValues[0].length; i++) {

@@ -119,8 +119,6 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
         formsLayout.addComponent(p);
 
         // Setup buffering
-        setButton.dependsOn(properties);
-        discardButton.dependsOn(properties);
         properties.setWriteThrough(false);
         // TODO change this to false, and test it is suitable for FeatureBrowser
         // demo

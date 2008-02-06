@@ -40,8 +40,6 @@ public class FeatureGridLayout extends Feature {
         ap.addField("new line", new Button("New Line", gl, "newLine"));
         ap.addField("space", new Button("Space", gl, "space"));
         propertyPanel.addProperties("GridLayout Features", ap);
-        propertyPanel.getField("height").dependsOn(
-                propertyPanel.getField("add component"));
 
         setJavadocURL("ui/GridLayout.html");
 

@@ -21,7 +21,7 @@ public class ResourceSelectorPanel extends Panel implements
     private final HashMap categoryLayouts = new HashMap();
     private final HashMap categoryResources = new HashMap();
 
-    private Container allResources;
+    // private Container allResources;
     private LinkedList selectedResources = null;
 
     public ResourceSelectorPanel(String caption) {
@@ -37,8 +37,8 @@ public class ResourceSelectorPanel extends Panel implements
             for (final Iterator it = resources.getItemIds().iterator(); it
                     .hasNext();) {
                 final Item resource = resources.getItem(it.next());
-                final Integer id = (Integer) resource.getItemProperty(
-                        SampleDB.Resource.PROPERTY_ID_ID).getValue();
+                // final Integer id = (Integer) resource.getItemProperty(
+                // SampleDB.Resource.PROPERTY_ID_ID).getValue();
                 final String category = (String) resource.getItemProperty(
                         SampleDB.Resource.PROPERTY_ID_CATEGORY).getValue();
                 final String name = (String) resource.getItemProperty(
@@ -97,7 +97,6 @@ public class ResourceSelectorPanel extends Panel implements
         final Object source = event.getSource();
         if (source instanceof Button) {
             final Object data = ((Button) source).getData();
-            final String name = ((Button) source).getCaption();
             resetStyles();
             if (data instanceof Item) {
                 final LinkedList rlist = new LinkedList();

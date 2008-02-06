@@ -6,7 +6,6 @@ package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
@@ -44,8 +43,6 @@ public class ITablePaging extends Composite implements Table, Paintable,
 
     private boolean rowHeaders = false;
 
-    private final Map columnOrder = new HashMap();
-
     private ApplicationConnection client;
     private String id;
 
@@ -56,8 +53,6 @@ public class ITablePaging extends Composite implements Table, Paintable,
     private final Vector selectedRowKeys = new Vector();
 
     private int totalRows;
-
-    private final HashMap columnWidths = new HashMap();
 
     private final HashMap visibleColumns = new HashMap();
 

@@ -412,7 +412,6 @@ public class ListenerMethod implements EventListener {
      *                this event will not be passed to the trigger method.
      */
     public void receiveEvent(EventObject event) {
-
         // Only send events supported by the method
         if (eventType.isAssignableFrom(event.getClass())) {
             try {
