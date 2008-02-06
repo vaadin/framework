@@ -1396,18 +1396,16 @@ public class ApplicationServlet extends HttpServlet {
         CommunicationManager mgr = (CommunicationManager) applicationToAjaxAppMgrMap
                 .get(application);
 
-        // This application is going from Web to AJAX mode, create new manager
         if (mgr == null) {
             // Creates new manager
             mgr = new CommunicationManager(application, this);
             applicationToAjaxAppMgrMap.put(application, mgr);
         }
-
         return mgr;
     }
 
     /**
-     * Gets resource path using different implementations. Required fo
+     * Gets resource path using different implementations. Required to
      * supporting different servlet container implementations (application
      * servers).
      * 
@@ -1427,7 +1425,7 @@ public class ApplicationServlet extends HttpServlet {
                 final URL url = servletContext.getResource(path);
                 resultPath = url.getFile();
             } catch (final Exception e) {
-                // ignored
+                e.printStackTrace();
             }
         }
         return resultPath;
