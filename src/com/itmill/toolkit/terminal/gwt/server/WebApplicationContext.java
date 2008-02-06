@@ -273,12 +273,22 @@ public class WebApplicationContext implements ApplicationContext,
     public void valueUnbound(HttpSessionBindingEvent event) {
         // If we are going to be unbound from the session, the session must be
         // closing
-        while (!applications.isEmpty()) {
-            final Application app = (Application) applications.iterator()
-                    .next();
-            app.close();
-            ApplicationServlet.applicationToAjaxAppMgrMap.remove(app);
-            removeApplication(app);
+        try {
+            while (!applications.isEmpty()) {
+                final Application app = (Application) applications.iterator()
+                        .next();
+                app.close();
+                ApplicationServlet.applicationToAjaxAppMgrMap.remove(app);
+                removeApplication(app);
+            }
+        } catch (Exception e) {
+            // This should never happen but is possible with rare
+            // configurations (e.g. robustness tests). If you have one
+            // thread doing HTTP socket write and another thread trying to
+            // remove same application here. Possible if you got e.g. session
+            // lifetime 1 min but socket write may take longer than 1 min.
+            System.err.println("Could not remove application, leaking memory.");
+            e.printStackTrace();
         }
     }
 

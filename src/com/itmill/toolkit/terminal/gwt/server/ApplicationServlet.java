@@ -381,6 +381,7 @@ public class ApplicationServlet extends HttpServlet {
                             .startTransaction(application, request);
                     getApplicationManager(application).handleUidlRequest(
                             request, response);
+
                     return;
                 }
             }

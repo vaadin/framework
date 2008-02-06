@@ -46,6 +46,7 @@ import com.itmill.toolkit.terminal.URIHandler;
 import com.itmill.toolkit.terminal.UploadStream;
 import com.itmill.toolkit.terminal.VariableOwner;
 import com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent;
+import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.ComponentContainer;
 import com.itmill.toolkit.ui.Upload;
@@ -70,9 +71,9 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
     private static final int VAR_TYPE = 3;
     private static final int VAR_VALUE = 0;
 
-    private static final String VAR_RECORD_SEPARATOR = "\u001e";
+    private static final String VAR_RECORD_SEPARATOR = ApplicationConnection.VAR_RECORD_SEPARATOR;
 
-    private static final String VAR_FIELD_SEPARATOR = "\u001f";
+    private static final String VAR_FIELD_SEPARATOR = ApplicationConnection.VAR_FIELD_SEPARATOR;
 
     private final ArrayList dirtyPaintabletSet = new ArrayList();
 
@@ -83,8 +84,6 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
     private int idSequence = 0;
 
     private final Application application;
-
-    private final Set removedWindows = new HashSet();
 
     private JsonPaintTarget paintTarget;
 
@@ -218,9 +217,16 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
                     window = getApplicationWindow(request, application);
                     // Returns if no window found
                     if (window == null) {
+                        // This should not happen, no windows exists but
+                        // application is still open.
+                        System.err
+                                .println("Warning, could not get window for application with request URI "
+                                        + request.getRequestURI());
                         return;
                     }
                 } else {
+                    // application has been closed
+                    endApplication(request, response, application);
                     return;
                 }
 
@@ -423,8 +429,6 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
             e.printStackTrace(new PrintWriter(err));
             err.write("\n</pre></body></html>");
             err.close();
-        } finally {
-
         }
 
     }
@@ -437,8 +441,8 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
                 .get("changes"))[0]
                 : params.get("changes"));
         params.remove("changes");
-        if (changes != null && changes.length() > 0) {
 
+        if (changes != null && changes.length() > 0) {
             // extract variables to two dim string array
             final String[] tmp = changes.split(VAR_RECORD_SEPARATOR);
             final String[][] variableRecords = new String[tmp.length][4];
@@ -470,6 +474,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
                                 convertVariableValue(variable[VAR_TYPE]
                                         .charAt(0), variable[VAR_VALUE]));
                     }
+
                     // collect following variable changes for this owner
                     while (nextVariable != null
                             && variable[VAR_PID].equals(nextVariable[VAR_PID])) {
