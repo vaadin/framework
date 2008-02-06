@@ -34,9 +34,9 @@ public class ILink extends HTML implements Paintable, ClickListener {
 
     private boolean readonly;
 
-    private int width;
+    private int targetWidth;
 
-    private int height;
+    private int targetHeight;
 
     private Element errorIndicatorElement;
 
@@ -81,9 +81,10 @@ public class ILink extends HTML implements Paintable, ClickListener {
             borderStyle = BORDER_STYLE_DEFAULT;
         }
 
-        height = uidl.hasAttribute("height") ? uidl.getIntAttribute("height")
-                : -1;
-        width = uidl.hasAttribute("width") ? uidl.getIntAttribute("width") : -1;
+        targetHeight = uidl.hasAttribute("height") ? uidl
+                .getIntAttribute("targetHeight") : -1;
+        targetWidth = uidl.hasAttribute("width") ? uidl
+                .getIntAttribute("targetHeidth") : -1;
 
         // Set link caption
         DOM.setInnerText(captionElement, uidl.getStringAttribute("caption"));
@@ -141,13 +142,13 @@ public class ILink extends HTML implements Paintable, ClickListener {
                 break;
             }
 
-            if (width > 0) {
+            if (targetWidth > 0) {
                 features += (features.length() > 0 ? "," : "") + "width="
-                        + width;
+                        + targetWidth;
             }
-            if (height > 0) {
+            if (targetHeight > 0) {
                 features += (features.length() > 0 ? "," : "") + "height="
-                        + height;
+                        + targetHeight;
             }
 
             Window.open(src, target, features);
