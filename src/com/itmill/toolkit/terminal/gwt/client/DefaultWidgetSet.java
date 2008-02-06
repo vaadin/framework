@@ -43,6 +43,8 @@ import com.itmill.toolkit.terminal.gwt.client.ui.ITwinColSelect;
 import com.itmill.toolkit.terminal.gwt.client.ui.IUnknownComponent;
 import com.itmill.toolkit.terminal.gwt.client.ui.IUpload;
 import com.itmill.toolkit.terminal.gwt.client.ui.IWindow;
+import com.itmill.toolkit.terminal.gwt.client.ui.absolutegrid.ISizeableGridLayout;
+import com.itmill.toolkit.terminal.gwt.client.ui.absolutegrid.ISizeableOrderedLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.richtextarea.IRichTextArea;
 
 public class DefaultWidgetSet implements WidgetSet {
@@ -68,6 +70,9 @@ public class DefaultWidgetSet implements WidgetSet {
         } else if ("com.itmill.toolkit.terminal.gwt.client.ui.IWindow"
                 .equals(className)) {
             return new IWindow();
+        } else if ("com.itmill.toolkit.terminal.gwt.client.ui.absolutegrid.ISizeableOrderedLayout"
+                .equals(className)) {
+            return new ISizeableOrderedLayout();
         } else if ("com.itmill.toolkit.terminal.gwt.client.ui.IOrderedLayoutVertical"
                 .equals(className)) {
             return new IOrderedLayoutVertical();
@@ -80,6 +85,9 @@ public class DefaultWidgetSet implements WidgetSet {
         } else if ("com.itmill.toolkit.terminal.gwt.client.ui.ILink"
                 .equals(className)) {
             return new ILink();
+        } else if ("com.itmill.toolkit.terminal.gwt.client.ui.absolutegrid.ISizeableGridLayout"
+                .equals(className)) {
+            return new ISizeableGridLayout();
         } else if ("com.itmill.toolkit.terminal.gwt.client.ui.IGridLayout"
                 .equals(className)) {
             return new IGridLayout();
@@ -192,7 +200,10 @@ public class DefaultWidgetSet implements WidgetSet {
         } else if ("window".equals(tag)) {
             return "com.itmill.toolkit.terminal.gwt.client.ui.IWindow";
         } else if ("orderedlayout".equals(tag)) {
-            if ("horizontal".equals(uidl.getStringAttribute("orientation"))) {
+            if (uidl.hasAttribute("height")) {
+                return "com.itmill.toolkit.terminal.gwt.client.ui.absolutegrid.ISizeableOrderedLayout";
+            } else if ("horizontal".equals(uidl
+                    .getStringAttribute("orientation"))) {
                 return "com.itmill.toolkit.terminal.gwt.client.ui.IOrderedLayoutHorizontal";
             } else {
                 return "com.itmill.toolkit.terminal.gwt.client.ui.IOrderedLayoutVertical";
@@ -202,7 +213,14 @@ public class DefaultWidgetSet implements WidgetSet {
         } else if ("link".equals(tag)) {
             return "com.itmill.toolkit.terminal.gwt.client.ui.ILink";
         } else if ("gridlayout".equals(tag)) {
-            return "com.itmill.toolkit.terminal.gwt.client.ui.IGridLayout";
+            if (uidl.hasAttribute("height")) {
+                // height needs to be set to use sizeable grid layout, with
+                // width only or no size at all it fails to render properly.
+                return "com.itmill.toolkit.terminal.gwt.client.ui.absolutegrid.ISizeableGridLayout";
+            } else {
+                // Fall back to GWT FlexTable based implementation.
+                return "com.itmill.toolkit.terminal.gwt.client.ui.IGridLayout";
+            }
         } else if ("tree".equals(tag)) {
             return "com.itmill.toolkit.terminal.gwt.client.ui.ITree";
         } else if ("select".equals(tag)) {
