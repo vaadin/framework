@@ -39,7 +39,7 @@ import com.itmill.toolkit.terminal.Resource;
  * @author IT Mill Ltd.
  * @version
  * @VERSION@
- * @since 3.0
+ * @since 5.0
  */
 public abstract class AbstractSelect extends AbstractField implements
         Container, Container.Viewer, Container.PropertySetChangeListener,
