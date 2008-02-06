@@ -5,7 +5,6 @@
 package com.itmill.toolkit.terminal;
 
 import java.util.Map;
-import java.util.Set;
 
 /**
  * <p>
@@ -16,37 +15,12 @@ import java.util.Set;
  * changes.
  * </p>
  * 
- * <p>
- * The variable-owning components can be linked with <i>dependency relationships</i>.
- * A dependency between two components means that all variable change events to
- * the depended component will be handled before any such events to the
- * depending component.
- * </p>
- * 
- * <p>
- * For example, the commit button for a text field will depend on that text
- * field. This is because we want to handle any pending changes the user makes
- * to the contents on the text field before we accept the click of the commit
- * button which starts processing the text field contents.
- * </p>
- * 
  * @author IT Mill Ltd.
  * @version
  * @VERSION@
  * @since 3.0
  */
 public interface VariableOwner {
-
-    /**
-     * Dependencies are not needed anymore as HTML-mode is deprecated in Toolkit
-     * 5. *
-     * 
-     * @return Set of <code>VariableOwners</code> this component directly
-     *         depend on, <code>null</code> if this component does not depend
-     *         on anybody.
-     * @deprecated
-     */
-    public Set getDirectDependencies();
 
     /**
      * Called when one or more variables handled by the implementing class are
@@ -59,28 +33,6 @@ public interface VariableOwner {
      *                the Mapping from variable names to new variable values.
      */
     public void changeVariables(Object source, Map variables);
-
-    /**
-     * Dependencies are not needed anymore as HTML-mode is deprecated in Toolkit
-     * 5.
-     * 
-     * @param depended
-     *                the <code>VariableOwner</code> component who this
-     *                component depends on.
-     * @deprecated
-     */
-    public void dependsOn(VariableOwner depended);
-
-    /**
-     * Dependencies are not needed anymore as HTML-mode is deprecated in Toolkit
-     * 5.
-     * 
-     * @param depended
-     *                the component to be removed from this component's
-     *                dependency list.
-     * @deprecated
-     */
-    public void removeDirectDependency(VariableOwner depended);
 
     /**
      * <p>

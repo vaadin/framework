@@ -124,13 +124,11 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
 
         // Sets the panel to be parent for the layout
         layout.setParent(this);
-        dependsOn(layout);
 
         // If panel already contains a layout, move the contents to new one
         // and detach old layout from the panel
         if (this.layout != null) {
             layout.moveComponentsFrom(this.layout);
-            removeDirectDependency(this.layout);
             this.layout.setParent(null);
         }
 

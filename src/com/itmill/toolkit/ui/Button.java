@@ -63,9 +63,12 @@ public class Button extends AbstractField {
     }
 
     /**
-     * Creates a new push button with a method listening button clicks. The
-     * method must have either no parameters, or only one parameter of
-     * Button.ClickEvent type.
+     * Creates a new push button with a method listening button clicks. Using
+     * this method is discouraged because it cannot be checked during
+     * compilation. Use
+     * {@link #Button(String, com.itmill.toolkit.ui.Button.ClickListener)}
+     * instead. The method must have either no parameters, or only one parameter
+     * of Button.ClickEvent type.
      * 
      * @param caption
      *                the Button caption.
@@ -74,10 +77,6 @@ public class Button extends AbstractField {
      * @param methodName
      *                the name of the method in target object, that receives
      *                button click events.
-     * @deprecated Use
-     *             {@link #Button(String, com.itmill.toolkit.ui.Button.ClickListener)}
-     *             instead. Using this method is discouraged because it cannot
-     *             be checked during compilation.
      */
     public Button(String caption, Object target, String methodName) {
         this(caption);

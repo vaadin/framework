@@ -45,8 +45,12 @@ public class CheckBox extends Button {
     }
 
     /**
-     * Creates a new switch button with a method listening button clicks. The
-     * method must have either no parameters, or only one parameter of
+     * Convenience method for creating a new switch button with a method
+     * listening button clicks. Using this method is discouraged because it
+     * cannot be checked during compilation. Use
+     * {@link #addListener(Class, Object, Method)} or
+     * {@link #addListener(com.itmill.toolkit.ui.Component.Listener)} instead.
+     * The method must have either no parameters, or only one parameter of
      * Button.ClickEvent type.
      * 
      * @param caption
@@ -56,10 +60,6 @@ public class CheckBox extends Button {
      * @param methodName
      *                the name of the method in target object, that receives
      *                button click events.
-     * @deprecated Use {@link #addListener(Class, Object, Method)} or
-     *             {@link #addListener(com.itmill.toolkit.ui.Component.Listener)}
-     *             instead. Using this method is discouraged because it cannot
-     *             be checked during compilation.
      */
     public CheckBox(String caption, Object target, String methodName) {
         setCaption(caption);

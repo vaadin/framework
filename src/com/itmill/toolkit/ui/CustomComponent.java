@@ -8,13 +8,11 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
 import com.itmill.toolkit.Application;
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
 import com.itmill.toolkit.terminal.Resource;
-import com.itmill.toolkit.terminal.VariableOwner;
 
 /**
  * Custom component provides simple implementation of Component interface for
@@ -422,17 +420,6 @@ public class CustomComponent implements Component {
      *      java.util.Map)
      */
     public void changeVariables(Object source, Map variables) {
-    }
-
-    /* Dependency -framework is deprecated */
-    public void dependsOn(VariableOwner depended) {
-    }
-
-    public void removeDirectDependency(VariableOwner depended) {
-    }
-
-    public Set getDirectDependencies() {
-        return null;
     }
 
     /* Event functions are not implemented by default -------------------- */
