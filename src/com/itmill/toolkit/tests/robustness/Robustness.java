@@ -45,6 +45,10 @@ public abstract class Robustness extends com.itmill.toolkit.Application
         remove.addListener(this);
         create.addListener(this);
 
+        remove.setDescription("After this garbage collector should"
+                + " be able to collect every component"
+                + " inside stressLayout.");
+
         close.setDebugId("close");
         remove.setDebugId("remove");
         create.setDebugId("create");
@@ -56,6 +60,9 @@ public abstract class Robustness extends com.itmill.toolkit.Application
             create();
         else if (event.getButton() == remove) {
             main.removeComponent(stressLayout);
+            stressLayout = null;
+            System.out.println("main.getLayout()=" + main.getLayout());
+            System.out.println(Log.getMemoryStatistics());
         } else if (event.getButton() == close) {
             System.out.println("Before close, memory statistics:");
             System.out.println(Log.getMemoryStatistics());
