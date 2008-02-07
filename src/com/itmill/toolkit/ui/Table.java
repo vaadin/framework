@@ -1039,9 +1039,6 @@ public class Table extends AbstractSelect implements Action.Container,
                 newIndex = currentPageFirstItemIndex = size() - 1;
             }
         }
-
-        // Assures the visual refresh
-        refreshCurrentPage();
     }
 
     /**
@@ -2165,6 +2162,8 @@ public class Table extends AbstractSelect implements Action.Container,
         pageBuffer = null;
         super.containerItemSetChange(event);
         setCurrentPageFirstItemIndex(getCurrentPageFirstItemIndex());
+        refreshCurrentPage();
+
     }
 
     /**
@@ -2373,6 +2372,8 @@ public class Table extends AbstractSelect implements Action.Container,
             final int pageIndex = getCurrentPageFirstItemIndex();
             ((Container.Sortable) c).sort(propertyId, ascending);
             setCurrentPageFirstItemIndex(pageIndex);
+            refreshCurrentPage();
+
         } else if (c != null) {
             throw new UnsupportedOperationException(
                     "Underlying Data does not allow sorting");
