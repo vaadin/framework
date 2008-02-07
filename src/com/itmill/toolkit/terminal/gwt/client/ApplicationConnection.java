@@ -35,9 +35,9 @@ import com.itmill.toolkit.terminal.gwt.client.ui.Notification;
  */
 public class ApplicationConnection {
 
-    private static final String VAR_RECORD_SEPARATOR = "\u001e";
+    public static final String VAR_RECORD_SEPARATOR = "\u001e";
 
-    private static final String VAR_FIELD_SEPARATOR = "\u001f";
+    public static final String VAR_FIELD_SEPARATOR = "\u001f";
 
     private final String appUri;
 
