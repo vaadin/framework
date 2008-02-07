@@ -11,7 +11,6 @@ import java.util.Map;
 
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
-import com.itmill.toolkit.terminal.gwt.client.ui.AlignmentInfo;
 
 /**
  * Ordered layout.
@@ -24,7 +23,8 @@ import com.itmill.toolkit.terminal.gwt.client.ui.AlignmentInfo;
  * @VERSION@
  * @since 3.0
  */
-public class OrderedLayout extends AbstractLayout {
+public class OrderedLayout extends AbstractLayout implements
+        Layout.AlignmentHandler, Layout.SpacingHandler {
 
     /* Predefined orientations ***************************************** */
 
@@ -38,6 +38,8 @@ public class OrderedLayout extends AbstractLayout {
      */
     public static int ORIENTATION_HORIZONTAL = 1;
 
+    private static final int ALIGNMENT_DEFAULT = ALIGNMENT_TOP + ALIGNMENT_LEFT;
+
     /**
      * Custom layout slots containing the components.
      */
@@ -49,38 +51,6 @@ public class OrderedLayout extends AbstractLayout {
      * Mapping from components to alignments (horizontal + vertical).
      */
     private final Map componentToAlignment = new HashMap();
-
-    /**
-     * Contained component should be aligned horizontally to the left.
-     */
-    public static final int ALIGNMENT_LEFT = AlignmentInfo.ALIGNMENT_LEFT;
-
-    /**
-     * Contained component should be aligned horizontally to the right.
-     */
-    public static final int ALIGNMENT_RIGHT = AlignmentInfo.ALIGNMENT_RIGHT;
-
-    /**
-     * Contained component should be aligned vertically to the top.
-     */
-    public static final int ALIGNMENT_TOP = AlignmentInfo.ALIGNMENT_TOP;
-
-    /**
-     * Contained component should be aligned vertically to the bottom.
-     */
-    public static final int ALIGNMENT_BOTTOM = AlignmentInfo.ALIGNMENT_BOTTOM;
-
-    /**
-     * Contained component should be horizontally aligned to center.
-     */
-    public static final int ALIGNMENT_HORIZONTAL_CENTER = AlignmentInfo.ALIGNMENT_HORIZONTAL_CENTER;
-
-    /**
-     * Contained component should be vertically aligned to center.
-     */
-    public static final int ALIGNMENT_VERTICAL_CENTER = AlignmentInfo.ALIGNMENT_VERTICAL_CENTER;
-
-    private static final int ALIGNMENT_DEFAULT = ALIGNMENT_TOP + ALIGNMENT_LEFT;
 
     /**
      * Orientation of the layout.
@@ -303,18 +273,11 @@ public class OrderedLayout extends AbstractLayout {
         }
     }
 
-    /**
-     * Set alignment for one contained component in this layout. Alignment is
-     * calculated as a bit mask of the two passed values.
+    /*
+     * (non-Javadoc)
      * 
-     * @param childComponent
-     *                the component to align within it's layout cell.
-     * @param horizontalAlignment
-     *                the horizontal alignment for the child component (left,
-     *                center, right).
-     * @param verticalAlignment
-     *                the vertical alignment for the child component (top,
-     *                center, bottom).
+     * @see com.itmill.toolkit.ui.Layout.AlignmentHandler#setComponentAlignment(com.itmill.toolkit.ui.Component,
+     *      int, int)
      */
     public void setComponentAlignment(Component childComponent,
             int horizontalAlignment, int verticalAlignment) {
@@ -323,6 +286,11 @@ public class OrderedLayout extends AbstractLayout {
         requestRepaint();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.itmill.toolkit.ui.Layout.AlignmentHandler#getComponentAlignment(com.itmill.toolkit.ui.Component)
+     */
     public int getComponentAlignment(Component childComponent) {
         final Integer bitMask = (Integer) componentToAlignment
                 .get(childComponent);
@@ -333,26 +301,20 @@ public class OrderedLayout extends AbstractLayout {
         }
     }
 
-    /**
-     * Enable spacing between child components within this layout.
+    /*
+     * (non-Javadoc)
      * 
-     * <p>
-     * <strong>NOTE:</strong> This will only affect spaces between components,
-     * not also all around spacing of the layout (i.e. do not mix this with HTML
-     * Table elements cellspacing-attribute). Use {@link #setMargin(boolean)} to
-     * add extra space around the layout.
-     * </p>
-     * 
-     * @param enabled
+     * @see com.itmill.toolkit.ui.Layout.SpacingHandler#setSpacing(boolean)
      */
     public void setSpacing(boolean enabled) {
         spacing = enabled;
         requestRepaint();
     }
 
-    /**
+    /*
+     * (non-Javadoc)
      * 
-     * @return true if spacing, layout leaves space between components
+     * @see com.itmill.toolkit.ui.Layout.SpacingHandler#isSpacingEnabled()
      */
     public boolean isSpacingEnabled() {
         return spacing;
