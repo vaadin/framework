@@ -39,6 +39,7 @@ public abstract class Robustness extends com.itmill.toolkit.Application
 
         main.addComponent(label);
         main.addComponent(close);
+        main.addComponent(remove);
         main.addComponent(create);
         close.addListener(this);
         remove.addListener(this);
