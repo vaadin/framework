@@ -911,6 +911,9 @@ public class ApplicationServlet extends HttpServlet {
                 }
                 out.close();
             } catch (final IOException ignored) {
+                System.err
+                        .println("Warning: ApplicationServlet.handleDownload()"
+                                + " threw IOException.");
             }
 
         }
