@@ -1017,7 +1017,8 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
      * Invoked by the terminal on any exception that occurs in application and
      * is thrown by the <code>setVariable</code> to the terminal. The default
      * implementation sets the exceptions as <code>ComponentErrors</code> to
-     * the component that initiated the exception.
+     * the component that initiated the exception and prints stack trace to
+     * System.err.
      * </p>
      * <p>
      * You can safely override this method in your application in order to
@@ -1029,6 +1030,8 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
      * @see com.itmill.toolkit.terminal.Terminal.ErrorListener#terminalError(com.itmill.toolkit.terminal.Terminal.ErrorEvent)
      */
     public void terminalError(Terminal.ErrorEvent event) {
+        // throw it to System.err too
+        event.getThrowable().printStackTrace();
 
         // Finds the original source of the error/exception
         Object owner = null;
