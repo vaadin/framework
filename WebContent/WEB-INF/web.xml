@@ -18,12 +18,37 @@
   	<description>IT Mill Testing Tools activation</description>
   </context-param>
   
+    <context-param>
+  	<param-name>testingToolsServerUri</param-name>
+  	<param-value>http://192.168.1.120:8099/TestingToolsServer</param-value>
+  	<description>IT Mill Testing Tools URI</description>
+  </context-param>
+  
 <servlet>
     <servlet-name>ITMillToolkitApplicationRunner</servlet-name>
     <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
     <init-param>
       <param-name>applicationRunner</param-name>
       <param-value>true</param-value>
+    </init-param>
+  </servlet>
+  
+  
+  <servlet>
+    <servlet-name>RobustnessComplex</servlet-name>
+    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+    <init-param>
+      <param-name>application</param-name>
+      <param-value>com.itmill.toolkit.tests.robustness.RobustnessComplex</param-value>
+    </init-param>
+  </servlet>
+  
+  <servlet>
+    <servlet-name>RobustnessSimple</servlet-name>
+    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+    <init-param>
+      <param-name>application</param-name>
+      <param-value>com.itmill.toolkit.tests.robustness.RobustnessSimple</param-value>
     </init-param>
   </servlet>
   
@@ -378,6 +403,16 @@
        <servlet-mapping>
     <servlet-name>iWork</servlet-name>
     <url-pattern>/iWork/*</url-pattern>
+  </servlet-mapping>
+  
+    <servlet-mapping>
+    <servlet-name>RobustnessSimple</servlet-name>
+    <url-pattern>/RobustnessSimple/*</url-pattern>
+  </servlet-mapping>
+  
+   <servlet-mapping>
+    <servlet-name>RobustnessComplex</servlet-name>
+    <url-pattern>/RobustnessComplex/*</url-pattern>
   </servlet-mapping>
   
      <servlet-mapping>

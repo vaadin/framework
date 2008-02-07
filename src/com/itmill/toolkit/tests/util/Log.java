@@ -175,9 +175,15 @@ public class Log {
      * Simple way to check for memory consumption without profiler.
      */
     public static String getMemoryStatistics() {
+        // You should call gc before printing statistics (if you are not using a
+        // profiler)
         System.gc();
-        return "Memory:\n" + Runtime.getRuntime().totalMemory() + " (Total)\n"
-                + +Runtime.getRuntime().freeMemory() + " (Free)\n";
+        long inUse = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime()
+                .freeMemory());
+        System.out.println(inUse);
+        return "Memory:\n" + inUse + " (Used)\n"
+                + Runtime.getRuntime().totalMemory() + " (Total)\n"
+                + Runtime.getRuntime().freeMemory() + " (Free)\n";
 
     }
 }

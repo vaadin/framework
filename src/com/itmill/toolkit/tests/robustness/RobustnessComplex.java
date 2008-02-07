@@ -1,5 +1,6 @@
 package com.itmill.toolkit.tests.robustness;
 
+import com.itmill.toolkit.tests.util.Log;
 import com.itmill.toolkit.tests.util.RandomComponents;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.ComponentContainer;
@@ -60,6 +61,10 @@ public class RobustnessComplex extends com.itmill.toolkit.Application implements
         stressLayout = randomComponents
                 .getRandomComponentContainer("Component container " + count);
 
+        Label label = new Label("Label " + Log.getMemoryStatistics(),
+                Label.CONTENT_PREFORMATTED);
+        stressLayout.addComponent(label);
+
         // fill with random components
         randomComponents.fillLayout(stressLayout, 20);
 
@@ -70,5 +75,4 @@ public class RobustnessComplex extends com.itmill.toolkit.Application implements
         System.out.println("Created " + count + " times.");
         // }
     }
-
 }

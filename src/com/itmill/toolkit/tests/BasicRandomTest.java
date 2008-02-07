@@ -8,21 +8,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
-import com.itmill.toolkit.terminal.ClassResource;
-import com.itmill.toolkit.terminal.ExternalResource;
-import com.itmill.toolkit.ui.AbstractComponent;
+import com.itmill.toolkit.tests.util.RandomComponents;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.ComponentContainer;
-import com.itmill.toolkit.ui.DateField;
-import com.itmill.toolkit.ui.Embedded;
 import com.itmill.toolkit.ui.GridLayout;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.Layout;
-import com.itmill.toolkit.ui.Link;
 import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Panel;
-import com.itmill.toolkit.ui.Select;
 import com.itmill.toolkit.ui.TabSheet;
 import com.itmill.toolkit.ui.TextField;
 import com.itmill.toolkit.ui.Window;
@@ -93,10 +87,14 @@ public class BasicRandomTest extends com.itmill.toolkit.Application implements
     // needed because button captions are randomized
     private HashMap buttonValues;
 
+    private RandomComponents randomComponents;
+
     public void init() {
         // addWindow(new Window("ATFTest", create()));
         final Window mainWindow = new Window("Testing", create());
         setMainWindow(mainWindow);
+
+        randomComponents = new RandomComponents();
 
         setUser(new Long(System.currentTimeMillis()).toString());
     }
@@ -182,6 +180,7 @@ public class BasicRandomTest extends com.itmill.toolkit.Application implements
     private void randomize() {
         final long newSeed = System.currentTimeMillis();
         rand = new Random(newSeed);
+        randomComponents.setRandom(rand);
         randomSeedValue.setValue(String.valueOf(newSeed));
     }
 
@@ -230,7 +229,7 @@ public class BasicRandomTest extends com.itmill.toolkit.Application implements
         // Create random "noise" components
         //
         for (int i = 0; i < COMPONENT_NUMBER; i++) {
-            components.add(getRandomComponent(""));
+            components.add(randomComponents.getRandomComponent(i));
         }
     }
 
@@ -255,8 +254,8 @@ public class BasicRandomTest extends com.itmill.toolkit.Application implements
     private void addComponents(Layout layout) {
         while (components.size() > 0) {
             // Get random container
-            final ComponentContainer container = getRandomComponentContainer(""
-                    + captionCounter++);
+            final ComponentContainer container = randomComponents
+                    .getRandomComponentContainer("" + captionCounter++);
             layout.addComponent(container);
             // Get random amount of components for above container
             final int groupsize = rand.nextInt(COMPONENT_MAX_GROUPED_NUMBER) + 1;
@@ -324,135 +323,6 @@ public class BasicRandomTest extends com.itmill.toolkit.Application implements
             System.out.println("#" + eventCounter + ": button " + value
                     + ", value " + Double.toString(stored));
         }
-    }
-
-    /**
-     * Get random component container
-     * 
-     * @param caption
-     * @return
-     */
-    private ComponentContainer getRandomComponentContainer(String caption) {
-        ComponentContainer result = null;
-        final int randint = rand.nextInt(5);
-        switch (randint) {
-        case 0:
-            result = new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
-            ((OrderedLayout) result).setCaption("OrderedLayout_horizontal_"
-                    + caption);
-            break;
-        case 1:
-            result = new OrderedLayout(OrderedLayout.ORIENTATION_VERTICAL);
-            ((OrderedLayout) result).setCaption("OrderedLayout_vertical_"
-                    + caption);
-            break;
-        case 2:
-            GridLayout gl;
-            if (rand.nextInt(1) > 0) {
-                gl = new GridLayout();
-            } else {
-                gl = new GridLayout(rand.nextInt(3) + 1, rand.nextInt(3) + 1);
-            }
-            gl.setCaption("GridLayout_" + caption);
-            gl.setDescription(gl.getCaption());
-            for (int x = 0; x < gl.getColumns(); x++) {
-                for (int y = 0; y < gl.getRows(); y++) {
-                    gl.addComponent(getExamplePicture("x=" + x + ", y=" + y),
-                            x, y);
-                }
-            }
-            result = gl;
-            break;
-        case 3:
-            result = new Panel();
-            ((Panel) result).setCaption("Panel_" + caption);
-            break;
-        case 4:
-            final TabSheet ts = new TabSheet();
-            ts.setCaption("TabSheet_" + caption);
-            // randomly select one of the tabs
-            final int selectedTab = rand.nextInt(3);
-            final ArrayList tabs = new ArrayList();
-            for (int i = 0; i < 3; i++) {
-                String tabCaption = "tab" + i;
-                if (selectedTab == i) {
-                    tabCaption = "tabX";
-                }
-                tabs.add(new OrderedLayout());
-                ts.addTab((ComponentContainer) tabs.get(tabs.size() - 1),
-                        tabCaption, null);
-            }
-            ts.setSelectedTab((ComponentContainer) tabs.get(selectedTab));
-            result = ts;
-            break;
-        }
-
-        return result;
-    }
-
-    /**
-     * Get random component. Used to provide "noise" for AUT.
-     * 
-     * @param caption
-     * @return
-     */
-    private AbstractComponent getRandomComponent(String caption) {
-        AbstractComponent result = null;
-        final int randint = rand.nextInt(7); // calendar disabled
-        switch (randint) {
-        case 0:
-            // Label
-            result = new Label("Label component " + caption);
-            break;
-        case 1:
-            // Button
-            result = new Button("Button component " + caption);
-            break;
-        case 2:
-            // TextField
-            result = new TextField("TextField component " + caption);
-            break;
-        case 3:
-            // Select
-            result = new Select("Select " + caption);
-            result.setCaption("Select component " + caption);
-            ((Select) result).addItem("First item");
-            ((Select) result).addItem("Second item");
-            ((Select) result).addItem("Third item");
-            break;
-        case 4:
-            // Link
-            result = new Link("", new ExternalResource("http://www.itmill.com"));
-            result.setCaption("Link component " + caption);
-            break;
-        case 5:
-            // Embedded
-            result = getExamplePicture(caption);
-            break;
-        case 6:
-            // Datefield
-            result = new DateField();
-            ((DateField) result).setValue(new java.util.Date());
-            ((DateField) result).setResolution(DateField.RESOLUTION_DAY);
-            result.setCaption("DateField component " + caption);
-            break;
-        case 7:
-            // Calendar
-            result = new DateField();
-            ((DateField) result).setStyle("calendar");
-            ((DateField) result).setValue(new java.util.Date());
-            ((DateField) result).setResolution(DateField.RESOLUTION_DAY);
-            result.setCaption("Calendar component " + caption);
-            break;
-        }
-
-        return result;
-    }
-
-    private AbstractComponent getExamplePicture(String caption) {
-        final ClassResource cr = new ClassResource("icon_demo.png", this);
-        final Embedded em = new Embedded("Embedded " + caption, cr);
-        return em;
     }
 
     /**

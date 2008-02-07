@@ -1,7 +1,6 @@
 package com.itmill.toolkit.tests.robustness;
 
 import com.itmill.toolkit.tests.util.Log;
-import com.itmill.toolkit.tests.util.RandomComponents;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.ComponentContainer;
 import com.itmill.toolkit.ui.Label;
@@ -23,8 +22,6 @@ public class RobustnessSimple extends com.itmill.toolkit.Application implements
     final Label label = new Label();
 
     ComponentContainer stressLayout;
-
-    RandomComponents randomComponents = new RandomComponents();
 
     public void init() {
         createNewView();
@@ -55,10 +52,8 @@ public class RobustnessSimple extends com.itmill.toolkit.Application implements
 
         // remove old stressLayout, all dependant components should be now
         // allowed for garbage collection.
-        if (stressLayout != null) {
-            stressLayout.removeAllComponents();
+        if (stressLayout != null)
             main.removeComponent(stressLayout);
-        }
 
         // create new stress layout
         stressLayout = new OrderedLayout();
