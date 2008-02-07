@@ -1018,7 +1018,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
      * is thrown by the <code>setVariable</code> to the terminal. The default
      * implementation sets the exceptions as <code>ComponentErrors</code> to
      * the component that initiated the exception and prints stack trace to
-     * System.err.
+     * standard error stream.
      * </p>
      * <p>
      * You can safely override this method in your application in order to
@@ -1030,7 +1030,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
      * @see com.itmill.toolkit.terminal.Terminal.ErrorListener#terminalError(com.itmill.toolkit.terminal.Terminal.ErrorEvent)
      */
     public void terminalError(Terminal.ErrorEvent event) {
-        // throw it to System.err too
+        // throw it to standard error stream too
         event.getThrowable().printStackTrace();
 
         // Finds the original source of the error/exception
