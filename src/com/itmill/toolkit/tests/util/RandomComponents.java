@@ -9,12 +9,9 @@ import com.itmill.toolkit.data.Property.ValueChangeListener;
 import com.itmill.toolkit.demo.featurebrowser.ButtonExample;
 import com.itmill.toolkit.demo.featurebrowser.ClientCachingExample;
 import com.itmill.toolkit.demo.featurebrowser.ComboBoxExample;
-import com.itmill.toolkit.demo.featurebrowser.EmbeddedBrowserExample;
-import com.itmill.toolkit.demo.featurebrowser.JavaScriptAPIExample;
 import com.itmill.toolkit.demo.featurebrowser.LabelExample;
 import com.itmill.toolkit.demo.featurebrowser.LayoutExample;
 import com.itmill.toolkit.demo.featurebrowser.NotificationExample;
-import com.itmill.toolkit.demo.featurebrowser.RichTextExample;
 import com.itmill.toolkit.demo.featurebrowser.SelectExample;
 import com.itmill.toolkit.demo.featurebrowser.TableExample;
 import com.itmill.toolkit.demo.featurebrowser.TreeExample;
@@ -22,6 +19,7 @@ import com.itmill.toolkit.demo.featurebrowser.ValueInputExample;
 import com.itmill.toolkit.demo.featurebrowser.WindowingExample;
 import com.itmill.toolkit.terminal.ExternalResource;
 import com.itmill.toolkit.terminal.ThemeResource;
+import com.itmill.toolkit.tests.StressComponentsInTable;
 import com.itmill.toolkit.ui.AbstractComponent;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.ComponentContainer;
@@ -116,7 +114,7 @@ public class RandomComponents {
 
     public AbstractComponent getRandomComponent(int caption) {
         AbstractComponent result = null;
-        final int randint = seededRandom.nextInt(22);
+        int randint = seededRandom.nextInt(23);
         MultiListener l = new MultiListener();
         switch (randint) {
         case 0:
@@ -198,11 +196,17 @@ public class RandomComponents {
             break;
         case 11:
             result = new OrderedLayout();
-            ((OrderedLayout) result).addComponent(new EmbeddedBrowserExample());
+            // TODO: disabled gwt bug with mixed up iframe's
+            // ((OrderedLayout) result).addComponent(new
+            // EmbeddedBrowserExample());
+            ((OrderedLayout) result).addComponent(new LabelExample());
             break;
         case 12:
             result = new OrderedLayout();
-            ((OrderedLayout) result).addComponent(new JavaScriptAPIExample());
+            // TODO: this application leaks memory
+            // ((OrderedLayout) result).addComponent(new
+            // JavaScriptAPIExample());
+            ((OrderedLayout) result).addComponent(new LabelExample());
             break;
         case 13:
             result = new OrderedLayout();
@@ -218,7 +222,8 @@ public class RandomComponents {
             break;
         case 16:
             result = new OrderedLayout();
-            ((OrderedLayout) result).addComponent(new RichTextExample());
+            // ((OrderedLayout) result).addComponent(new RichTextExample());
+            ((OrderedLayout) result).addComponent(new LabelExample());
             break;
         case 17:
             result = new OrderedLayout();
@@ -239,6 +244,11 @@ public class RandomComponents {
         case 21:
             result = new OrderedLayout();
             ((OrderedLayout) result).addComponent(new WindowingExample());
+            break;
+        case 22:
+            result = new OrderedLayout();
+            ((OrderedLayout) result)
+                    .addComponent(new StressComponentsInTable());
             break;
         }
 

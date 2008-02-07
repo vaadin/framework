@@ -180,7 +180,6 @@ public class Log {
         System.gc();
         long inUse = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime()
                 .freeMemory());
-        System.out.println(inUse);
         return "Memory:\n" + inUse + " (Used)\n"
                 + Runtime.getRuntime().totalMemory() + " (Total)\n"
                 + Runtime.getRuntime().freeMemory() + " (Free)\n";
