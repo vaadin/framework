@@ -13,13 +13,13 @@ import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Table;
 import com.itmill.toolkit.ui.Button.ClickEvent;
 
-public class TestForComponentsInTable extends CustomComponent {
+public class StressComponentsInTable extends CustomComponent {
 
-    public TestForComponentsInTable() {
+    public StressComponentsInTable() {
         final OrderedLayout main = new OrderedLayout();
         setCompositionRoot(main);
 
-        main.addComponent(getTestTable(4, 100));
+        main.addComponent(getTestTable(4, 1000));
 
     }
 
