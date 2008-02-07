@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.WeakHashMap;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -47,6 +46,7 @@ import com.itmill.toolkit.terminal.UploadStream;
 import com.itmill.toolkit.terminal.VariableOwner;
 import com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
+import com.itmill.toolkit.tests.util.Log;
 import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.ComponentContainer;
 import com.itmill.toolkit.ui.Upload;
@@ -77,9 +77,9 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
 
     private final ArrayList dirtyPaintabletSet = new ArrayList();
 
-    private final WeakHashMap paintableIdMap = new WeakHashMap();
+    private final HashMap paintableIdMap = new HashMap();
 
-    private final WeakHashMap idPaintableMap = new WeakHashMap();
+    private final HashMap idPaintableMap = new HashMap();
 
     private int idSequence = 0;
 
@@ -415,7 +415,8 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
         } catch (SocketException e) {
             // Most likely client browser closed socket
             System.err
-                    .println("Warning: SocketException in ApplicationServlet");
+                    .println("Warning: SocketException in CommunicationManager."
+                            + " Most likely client (browser) closed socket.");
         } catch (final Throwable e) {
             e.printStackTrace();
             // Writes the error report to client
@@ -429,6 +430,21 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
             e.printStackTrace(new PrintWriter(err));
             err.write("\n</pre></body></html>");
             err.close();
+        } finally {
+            synchronized (application) {
+                for (Iterator it = paintableIdMap.keySet().iterator(); it
+                        .hasNext();) {
+                    Component p = (Component) it.next();
+                    if (p.getApplication() == null) {
+
+                        idPaintableMap.remove(paintableIdMap.get(p));
+                        it.remove();
+                    }
+                }
+
+                Log.debug("paintableIdMap.size=" + paintableIdMap.size()
+                        + ", idPaintableMap.size=" + idPaintableMap.size());
+            }
         }
 
     }
@@ -737,7 +753,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
      * @param paintable
      * @return the paintable Id.
      */
-    public synchronized String getPaintableId(Paintable paintable) {
+    public String getPaintableId(Paintable paintable) {
 
         String id = (String) paintableIdMap.get(paintable);
         if (id == null) {
@@ -755,7 +771,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
         return id;
     }
 
-    public synchronized boolean hasPaintableId(Paintable paintable) {
+    public boolean hasPaintableId(Paintable paintable) {
         return paintableIdMap.containsKey(paintable);
     }
 
@@ -764,7 +780,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
      *                root window for which dirty components is to be fetched
      * @return
      */
-    public synchronized ArrayList getDirtyComponents(Window w) {
+    public ArrayList getDirtyComponents(Window w) {
         final ArrayList resultset = new ArrayList(dirtyPaintabletSet);
 
         // The following algorithm removes any components that would be painted
