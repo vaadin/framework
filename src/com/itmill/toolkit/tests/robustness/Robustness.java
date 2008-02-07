@@ -19,6 +19,8 @@ public abstract class Robustness extends com.itmill.toolkit.Application
 
     final Button close = new Button("Close application");
 
+    final Button remove = new Button("Remove all components");
+
     final Button create = new Button("Create");
 
     final Label label = new Label();
@@ -39,18 +41,26 @@ public abstract class Robustness extends com.itmill.toolkit.Application
         main.addComponent(close);
         main.addComponent(create);
         close.addListener(this);
+        remove.addListener(this);
         create.addListener(this);
 
-        create.setDebugId("createButton");
+        close.setDebugId("close");
+        remove.setDebugId("remove");
+        create.setDebugId("create");
+
     }
 
     public void buttonClick(ClickEvent event) {
         if (event.getButton() == create)
             create();
-        else if (event.getButton() == close) {
+        else if (event.getButton() == remove) {
+            main.removeComponent(stressLayout);
+        } else if (event.getButton() == close) {
             System.out.println("Before close, memory statistics:");
             System.out.println(Log.getMemoryStatistics());
             close();
+            // Still valueUnbound (session expiration) needs to occur for GC to
+            // do its work
             System.out.println("After close, memory statistics:");
             System.out.println(Log.getMemoryStatistics());
         }
