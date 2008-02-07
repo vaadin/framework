@@ -272,6 +272,16 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
                     requireLocale(application.getLocale().toString());
 
                 } else {
+                    // remove detached components from paintableIdMap so they
+                    // can be GC'ed
+                    for (Iterator it = paintableIdMap.keySet().iterator(); it
+                            .hasNext();) {
+                        Component p = (Component) it.next();
+                        if (p.getApplication() == null) {
+                            idPaintableMap.remove(paintableIdMap.get(p));
+                            it.remove();
+                        }
+                    }
                     paintables = getDirtyComponents(window);
                 }
                 if (paintables != null) {
@@ -431,20 +441,8 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
             err.write("\n</pre></body></html>");
             err.close();
         } finally {
-            synchronized (application) {
-                for (Iterator it = paintableIdMap.keySet().iterator(); it
-                        .hasNext();) {
-                    Component p = (Component) it.next();
-                    if (p.getApplication() == null) {
-
-                        idPaintableMap.remove(paintableIdMap.get(p));
-                        it.remove();
-                    }
-                }
-
-                Log.debug("paintableIdMap.size=" + paintableIdMap.size()
-                        + ", idPaintableMap.size=" + idPaintableMap.size());
-            }
+            Log.debug("paintableIdMap.size=" + paintableIdMap.size()
+                    + ", idPaintableMap.size=" + idPaintableMap.size());
         }
 
     }
