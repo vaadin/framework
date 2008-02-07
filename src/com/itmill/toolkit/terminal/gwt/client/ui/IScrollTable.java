@@ -687,8 +687,13 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
             rowRequestHandler
                     .setReqFirstRow((int) (firstRowInViewPort - pageLength
                             * CACHE_RATE));
-            rowRequestHandler
-                    .setReqRows((int) (2 * CACHE_RATE * pageLength + pageLength));
+            int last = firstRowInViewPort
+                    + (int) (CACHE_RATE * pageLength + pageLength);
+            if (last > totalRows) {
+                last = totalRows - 1;
+            }
+            rowRequestHandler.setReqRows(last
+                    - rowRequestHandler.getReqFirstRow());
             rowRequestHandler.deferRowFetch();
             return;
         }
@@ -791,6 +796,36 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
         public void run() {
             ApplicationConnection.getConsole().log(
                     "Getting " + reqRows + " rows from " + reqFirstRow);
+
+            int firstToBeRendered = tBody.firstRendered;
+            if (reqFirstRow < firstToBeRendered) {
+                firstToBeRendered = reqFirstRow;
+            } else if (firstRowInViewPort - (int) (CACHE_RATE * pageLength) > firstToBeRendered) {
+                firstToBeRendered = firstRowInViewPort
+                        - (int) (CACHE_RATE * pageLength);
+                if (firstToBeRendered < 0) {
+                    firstToBeRendered = 0;
+                }
+            }
+
+            int lastToBeRendered = tBody.lastRendered;
+
+            if (reqFirstRow + reqRows > lastToBeRendered) {
+                lastToBeRendered = reqFirstRow + reqRows;
+            } else if (firstRowInViewPort + pageLength + pageLength
+                    * CACHE_RATE < lastToBeRendered) {
+                lastToBeRendered = (firstRowInViewPort + pageLength + (int) (pageLength * CACHE_RATE));
+                if (lastToBeRendered >= totalRows) {
+                    lastToBeRendered = totalRows;
+                }
+            }
+
+            client.updateVariable(paintableId, "firstToBeRendered",
+                    firstToBeRendered, false);
+
+            client.updateVariable(paintableId, "lastToBeRendered",
+                    lastToBeRendered, false);
+
             client.updateVariable(paintableId, "firstvisible",
                     firstRowInViewPort, false);
             client.updateVariable(paintableId, "reqfirstrow", reqFirstRow,

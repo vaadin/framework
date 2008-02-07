@@ -21,6 +21,7 @@ import com.itmill.toolkit.terminal.Paintable;
 import com.itmill.toolkit.terminal.Resource;
 import com.itmill.toolkit.terminal.ThemeResource;
 import com.itmill.toolkit.terminal.VariableOwner;
+import com.itmill.toolkit.ui.Component;
 
 /**
  * User Interface Description Language Target.
@@ -1102,11 +1103,13 @@ public class JsonPaintTarget implements PaintTarget {
      * @param p
      * @return true if already painted
      */
-    public boolean isAlreadyPainted(Paintable p) {
+    public boolean isNeedsToBePainted(Paintable p) {
         if (paintedComponents.contains(p)) {
-            return true;
-        } else {
             return false;
+        } else if (((Component) p).getApplication() == null) {
+            return false;
+        } else {
+            return true;
         }
     }
 }

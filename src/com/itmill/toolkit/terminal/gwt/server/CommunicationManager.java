@@ -48,7 +48,6 @@ import com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.tests.util.Log;
 import com.itmill.toolkit.ui.Component;
-import com.itmill.toolkit.ui.ComponentContainer;
 import com.itmill.toolkit.ui.Upload;
 import com.itmill.toolkit.ui.Window;
 
@@ -324,7 +323,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
 
                         // TODO we may still get changes that have been
                         // rendered already (changes with only cached flag)
-                        if (!paintTarget.isAlreadyPainted(p)) {
+                        if (paintTarget.isNeedsToBePainted(p)) {
                             paintTarget.startTag("change");
                             paintTarget.addAttribute("format", "uidl");
                             final String pid = getPaintableId(p);
@@ -778,7 +777,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
      *                root window for which dirty components is to be fetched
      * @return
      */
-    public ArrayList getDirtyComponents(Window w) {
+    private ArrayList getDirtyComponents(Window w) {
         final ArrayList resultset = new ArrayList(dirtyPaintabletSet);
 
         // The following algorithm removes any components that would be painted
@@ -1004,15 +1003,12 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
      * @param child
      */
     private static boolean isChildOf(Component parent, Component child) {
-        if (parent instanceof ComponentContainer) {
-            Component p;
-            p = child.getParent();
-            while (p != null) {
-                if (parent == p) {
-                    return true;
-                }
-                p = p.getParent();
+        Component p = child.getParent();
+        while (p != null) {
+            if (parent == p) {
+                return true;
             }
+            p = p.getParent();
         }
         return false;
     }

@@ -280,6 +280,12 @@ public class Table extends AbstractSelect implements Action.Container,
      */
     private int reqFirstRowToPaint = -1;
 
+    private int firstToBeRenderedInClient = -1;
+
+    private int lastToBeRenderedInClient = -1;
+
+    private boolean rowFetch;
+
     /* Table constructors *************************************************** */
 
     /**
@@ -1292,6 +1298,16 @@ public class Table extends AbstractSelect implements Action.Container,
         // Sets requested firstrow and rows for the next paint
         if (variables.containsKey("reqfirstrow")
                 || variables.containsKey("reqrows")) {
+
+            try {
+                firstToBeRenderedInClient = ((Integer) variables
+                        .get("firstToBeRendered")).intValue();
+                lastToBeRenderedInClient = ((Integer) variables
+                        .get("lastToBeRendered")).intValue();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             Integer value = (Integer) variables.get("reqfirstrow");
             if (value != null) {
                 reqFirstRowToPaint = value.intValue();
@@ -1299,9 +1315,13 @@ public class Table extends AbstractSelect implements Action.Container,
             value = (Integer) variables.get("reqrows");
             if (value != null) {
                 reqRowsToPaint = value.intValue();
+                // sanity check
+                if (reqFirstRowToPaint + reqRowsToPaint > size()) {
+                    reqRowsToPaint = size() - reqFirstRowToPaint;
+                }
             }
             pageBuffer = null;
-            requestRepaint();
+            requestRepaint(true);
         }
 
         // Actions
@@ -1381,6 +1401,26 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     /**
+     * Reques repaint
+     * 
+     * @param rowFetch
+     *                true if this is just a row fetch
+     */
+    private void requestRepaint(boolean rowFetchOnly) {
+        if (rowFetchOnly) {
+            rowFetch = true;
+        } else {
+            rowFetch = false;
+        }
+        super.requestRepaint();
+        // TODO Auto-generated method stub
+    }
+
+    public void requestRepaint() {
+        requestRepaint(false);
+    }
+
+    /**
      * Paints the content of this component.
      * 
      * @param target
@@ -1411,7 +1451,12 @@ public class Table extends AbstractSelect implements Action.Container,
         final boolean rowheads = getRowHeaderMode() != ROW_HEADER_MODE_HIDDEN;
         final Object[][] cells = getVisibleCells();
         final boolean iseditable = isEditable();
-        int rows = cells[0].length;
+        int rows;
+        if (reqRowsToPaint >= 0) {
+            rows = reqRowsToPaint;
+        } else {
+            rows = cells[0].length;
+        }
 
         if (!isNullSelectionAllowed() && getNullSelectionItemId() != null
                 && containsId(getNullSelectionItemId())) {
@@ -1475,7 +1520,22 @@ public class Table extends AbstractSelect implements Action.Container,
                     && Component.class.isAssignableFrom(colType);
         }
         target.startTag("rows");
-        for (int i = 0; i < cells[0].length; i++) {
+        // cells array contains all that are supposed to be visible on client,
+        // but we'll start from the one requested by client
+        int start = 0;
+        if (reqFirstRowToPaint != -1 && firstToBeRenderedInClient != -1) {
+            start = reqFirstRowToPaint - firstToBeRenderedInClient;
+        }
+        int end = cells[0].length;
+        if (reqRowsToPaint != -1) {
+            end = start + reqRowsToPaint;
+        }
+        // sanity check
+        if (lastToBeRenderedInClient != -1 && lastToBeRenderedInClient < end) {
+            end = lastToBeRenderedInClient + 1;
+        }
+
+        for (int i = start; i < end; i++) {
             final Object itemId = cells[CELL_ITEMID][i];
 
             if (!isNullSelectionAllowed() && getNullSelectionItemId() != null
@@ -1655,6 +1715,7 @@ public class Table extends AbstractSelect implements Action.Container,
             }
         }
         target.endTag("visiblecolumns");
+        rowFetch = false;
     }
 
     /**
@@ -1669,35 +1730,21 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * Gets the cached visible table contents.
      * 
-     * @return the cahced visible table conetents.
+     * @return the cached visible table contents.
      */
     private Object[][] getVisibleCells() {
+
+        LinkedList oldListenedProperties = listenedProperties;
+        LinkedList oldVisibleComponents = visibleComponents;
 
         // Returns a buffered value if possible
         if (pageBuffer != null && isPageBufferingEnabled()) {
             return pageBuffer;
         }
 
-        // Stops listening the old properties and initialise the list
-        if (listenedProperties == null) {
-            listenedProperties = new LinkedList();
-        } else if (reqRowsToPaint < 0) {
-            // TODO the above if is not perfect - should be fixed properly
-            for (final Iterator i = listenedProperties.iterator(); i.hasNext();) {
-                ((Property.ValueChangeNotifier) i.next()).removeListener(this);
-            }
-        }
-
-        // Detach old visible component from the table
-        if (visibleComponents == null) {
-            visibleComponents = new LinkedList();
-        } else if (reqRowsToPaint < 0) {
-            // TODO the above if is not perfect - should be fixed properly
-            for (final Iterator i = visibleComponents.iterator(); i.hasNext();) {
-                ((Component) i.next()).setParent(null);
-            }
-            visibleComponents.clear();
-        }
+        // initialize the listener collections
+        listenedProperties = new LinkedList();
+        visibleComponents = new LinkedList();
 
         // Collects the basic facts about the table page
         final Object[] colids = getVisibleColumns();
@@ -1713,12 +1760,17 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         // If "to be painted next" variables are set, use them
-        if (reqRowsToPaint >= 0) {
-            rows = reqRowsToPaint;
+        if (rowFetch
+                && lastToBeRenderedInClient - firstToBeRenderedInClient > 0) {
+            rows = lastToBeRenderedInClient - firstToBeRenderedInClient;
         }
         Object id;
-        if (reqFirstRowToPaint >= 0 && reqFirstRowToPaint < size()) {
-            firstIndex = reqFirstRowToPaint;
+        if (rowFetch && firstToBeRenderedInClient >= 0) {
+            if (firstToBeRenderedInClient < size()) {
+                firstIndex = firstToBeRenderedInClient;
+            } else {
+                firstIndex = size() - 1;
+            }
         }
         if (size() > 0) {
             if (rows + firstIndex > size()) {
@@ -1814,6 +1866,31 @@ public class Table extends AbstractSelect implements Action.Container,
         // to possible conserve memory from large non-buffered pages
         if (isPageBufferingEnabled()) {
             pageBuffer = cells;
+        }
+
+        if (oldListenedProperties != null) {
+            int c = 0;
+            for (final Iterator i = oldListenedProperties.iterator(); i
+                    .hasNext();) {
+                Property.ValueChangeNotifier o = (ValueChangeNotifier) i.next();
+                if (!listenedProperties.contains(o)) {
+                    o.removeListener(this);
+                    c++;
+                }
+            }
+            System.out.println(c + " listeners removed");
+        }
+        if (oldVisibleComponents != null) {
+            int count = 0;
+            for (final Iterator i = oldVisibleComponents.iterator(); i
+                    .hasNext();) {
+                Component c = (Component) i.next();
+                if (!visibleComponents.contains(c)) {
+                    c.setParent(null);
+                    count++;
+                }
+            }
+            System.out.println(count + " components detached");
         }
 
         return cells;
