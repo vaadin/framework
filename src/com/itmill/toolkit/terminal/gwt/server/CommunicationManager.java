@@ -278,6 +278,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
                         if (p.getApplication() == null) {
                             idPaintableMap.remove(paintableIdMap.get(p));
                             it.remove();
+                            dirtyPaintabletSet.remove(p);
                         }
                     }
                     paintables = getDirtyComponents(window);
@@ -322,7 +323,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
 
                         // TODO we may still get changes that have been
                         // rendered already (changes with only cached flag)
-                        if (paintTarget.isNeedsToBePainted(p)) {
+                        if (paintTarget.needsToBePainted(p)) {
                             paintTarget.startTag("change");
                             paintTarget.addAttribute("format", "uidl");
                             final String pid = getPaintableId(p);

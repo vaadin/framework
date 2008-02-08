@@ -1101,9 +1101,10 @@ public class JsonPaintTarget implements PaintTarget {
      * Method to check if paintable is already painted into this target.
      * 
      * @param p
-     * @return true if already painted
+     * @return true if is not yet painted into this target and is connected to
+     *         app
      */
-    public boolean isNeedsToBePainted(Paintable p) {
+    public boolean needsToBePainted(Paintable p) {
         if (paintedComponents.contains(p)) {
             return false;
         } else if (((Component) p).getApplication() == null) {

@@ -65,7 +65,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Column header mode: Column headers are hidden. <b>This is the default
-     * behaviour. </b>
+     * behavior. </b>
      */
     public static final int COLUMN_HEADER_MODE_HIDDEN = -1;
 
@@ -195,11 +195,6 @@ public class Table extends AbstractSelect implements Action.Container,
     private int currentPageFirstItemIndex = 0;
 
     /**
-     * Holds value of property pageBuffering.
-     */
-    private boolean pageBuffering = false;
-
-    /**
      * Holds value of property selectable.
      */
     private boolean selectable = false;
@@ -284,7 +279,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     private int lastToBeRenderedInClient = -1;
 
-    private boolean rowFetch;
+    private boolean isContentRefreshesEnabled = true;
 
     /* Table constructors *************************************************** */
 
@@ -388,7 +383,7 @@ public class Table extends AbstractSelect implements Action.Container,
         this.visibleColumns = newVC;
 
         // Assures visual refresh
-        refreshCurrentPage();
+        refreshRenderedCells();
     }
 
     /**
@@ -448,7 +443,7 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         // Assures the visual refresh
-        refreshCurrentPage();
+        refreshRenderedCells();
     }
 
     /**
@@ -507,7 +502,7 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         // Assure visual refresh
-        refreshCurrentPage();
+        refreshRenderedCells();
     }
 
     /**
@@ -586,7 +581,7 @@ public class Table extends AbstractSelect implements Action.Container,
         this.columnAlignments = newCA;
 
         // Assures the visual refresh
-        refreshCurrentPage();
+        refreshRenderedCells();
     }
 
     /**
@@ -647,7 +642,7 @@ public class Table extends AbstractSelect implements Action.Container,
             // "scroll" to first row
             setCurrentPageFirstItemIndex(0);
             // Assures the visual refresh
-            refreshCurrentPage();
+            refreshRenderedCells();
         }
     }
 
@@ -712,7 +707,7 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         // Assures the visual refresh
-        refreshCurrentPage();
+        refreshRenderedCells();
 
     }
 
@@ -748,7 +743,7 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         // Assures the visual refresh
-        refreshCurrentPage();
+        refreshRenderedCells();
     }
 
     /**
@@ -789,7 +784,7 @@ public class Table extends AbstractSelect implements Action.Container,
         columnHeaders.put(propertyId, header);
 
         // Assures the visual refresh
-        refreshCurrentPage();
+        refreshRenderedCells();
     }
 
     /**
@@ -835,7 +830,7 @@ public class Table extends AbstractSelect implements Action.Container,
         columnAlignments.put(propertyId, alignment);
 
         // Assures the visual refresh
-        refreshCurrentPage();
+        refreshRenderedCells();
     }
 
     /**
@@ -873,7 +868,7 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         // Assures the visual refresh
-        refreshCurrentPage();
+        refreshRenderedCells();
     }
 
     /**
@@ -899,7 +894,7 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         // Assures the visual refresh
-        refreshCurrentPage();
+        refreshRenderedCells();
     }
 
     /**
@@ -921,7 +916,7 @@ public class Table extends AbstractSelect implements Action.Container,
         columnReorderingAllowed = reorderingAllowed;
 
         // Assures the visual refresh
-        refreshCurrentPage();
+        refreshRenderedCells();
     }
 
     /*
@@ -951,7 +946,7 @@ public class Table extends AbstractSelect implements Action.Container,
         visibleColumns = newOrder;
 
         // Assure visual refresh
-        refreshCurrentPage();
+        refreshRenderedCells();
     }
 
     /**
@@ -1044,26 +1039,24 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * Getter for property pageBuffering.
      * 
+     * @deprecated functionality is not needed in ajax rendering model
+     * 
      * @return the Value of property pageBuffering.
      */
     public boolean isPageBufferingEnabled() {
-        return pageBuffering;
+        return true;
     }
 
     /**
      * Setter for property pageBuffering.
+     * 
+     * @deprecated functionality is not needed in ajax rendering model
      * 
      * @param pageBuffering
      *                the New value of property pageBuffering.
      */
     public void setPageBufferingEnabled(boolean pageBuffering) {
 
-        this.pageBuffering = pageBuffering;
-
-        // If page buffering is disabled, clear the buffer
-        if (!pageBuffering) {
-            pageBuffer = null;
-        }
     }
 
     /**
@@ -1118,18 +1111,185 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         // Assures the visual refresh
-        refreshCurrentPage();
+        refreshRenderedCells();
     }
 
     /**
-     * Refreshes the current page contents. If the page buffering is turned off,
-     * it is not necessary to call this explicitely.
+     * Refreshes rendered rows
+     */
+    private void refreshRenderedCells() {
+        if (getParent() == null) {
+            return;
+        }
+
+        if (isContentRefreshesEnabled) {
+
+            LinkedList oldListenedProperties = listenedProperties;
+            LinkedList oldVisibleComponents = visibleComponents;
+
+            // initialize the listener collections
+            listenedProperties = new LinkedList();
+            visibleComponents = new LinkedList();
+
+            // Collects the basic facts about the table page
+            final Object[] colids = getVisibleColumns();
+            final int cols = colids.length;
+            final int pagelen = getPageLength();
+            int firstIndex = getCurrentPageFirstItemIndex();
+            int rows = size();
+            if (rows > 0 && firstIndex >= 0) {
+                rows -= firstIndex;
+            }
+            if (pagelen > 0 && pagelen < rows) {
+                rows = pagelen;
+            }
+
+            // If "to be painted next" variables are set, use them
+            if (lastToBeRenderedInClient - firstToBeRenderedInClient > 0) {
+                rows = lastToBeRenderedInClient - firstToBeRenderedInClient + 1;
+            }
+            Object id;
+            if (firstToBeRenderedInClient >= 0) {
+                if (firstToBeRenderedInClient < size()) {
+                    firstIndex = firstToBeRenderedInClient;
+                } else {
+                    firstIndex = size() - 1;
+                }
+            }
+            if (size() > 0) {
+                if (rows + firstIndex > size()) {
+                    rows = size() - firstIndex;
+                }
+            } else {
+                rows = 0;
+            }
+
+            Object[][] cells = new Object[cols + CELL_FIRSTCOL][rows];
+            if (rows == 0) {
+                pageBuffer = cells;
+                return;
+            }
+
+            // Gets the first item id
+            if (items instanceof Container.Indexed) {
+                id = ((Container.Indexed) items).getIdByIndex(firstIndex);
+            } else {
+                id = ((Container.Ordered) items).firstItemId();
+                for (int i = 0; i < firstIndex; i++) {
+                    id = ((Container.Ordered) items).nextItemId(id);
+                }
+            }
+
+            final int headmode = getRowHeaderMode();
+            final boolean[] iscomponent = new boolean[cols];
+            for (int i = 0; i < cols; i++) {
+                iscomponent[i] = Component.class
+                        .isAssignableFrom(getType(colids[i]));
+            }
+
+            // Creates the page contents
+            int filledRows = 0;
+            for (int i = 0; i < rows && id != null; i++) {
+                cells[CELL_ITEMID][i] = id;
+                cells[CELL_KEY][i] = itemIdMapper.key(id);
+                if (headmode != ROW_HEADER_MODE_HIDDEN) {
+                    switch (headmode) {
+                    case ROW_HEADER_MODE_INDEX:
+                        cells[CELL_HEADER][i] = String.valueOf(i + firstIndex
+                                + 1);
+                        break;
+                    default:
+                        cells[CELL_HEADER][i] = getItemCaption(id);
+                    }
+                    cells[CELL_ICON][i] = getItemIcon(id);
+                }
+                if (cols > 0) {
+                    for (int j = 0; j < cols; j++) {
+                        Object value = null;
+                        final Property p = getContainerProperty(id, colids[j]);
+                        if (p != null) {
+                            if (p instanceof Property.ValueChangeNotifier) {
+                                if (oldListenedProperties == null
+                                        || !oldListenedProperties.contains(p)) {
+                                    ((Property.ValueChangeNotifier) p)
+                                            .addListener(this);
+                                }
+                                listenedProperties.add(p);
+                            }
+                            if (iscomponent[j]) {
+                                value = p.getValue();
+                            } else if (p != null) {
+                                value = getPropertyValue(id, colids[j], p);
+                            } else {
+                                value = getPropertyValue(id, colids[j], null);
+                            }
+                        } else {
+                            value = "";
+                        }
+
+                        if (value instanceof Component) {
+                            if (oldVisibleComponents == null
+                                    || !oldVisibleComponents.contains(value)) {
+                                ((Component) value).setParent(this);
+                            }
+                            visibleComponents.add(value);
+                        }
+                        cells[CELL_FIRSTCOL + j][i] = value;
+
+                    }
+                }
+                id = ((Container.Ordered) items).nextItemId(id);
+
+                filledRows++;
+            }
+
+            // Assures that all the rows of the cell-buffer are valid
+            if (filledRows != cells[0].length) {
+                final Object[][] temp = new Object[cells.length][filledRows];
+                for (int i = 0; i < cells.length; i++) {
+                    for (int j = 0; j < filledRows; j++) {
+                        temp[i][j] = cells[i][j];
+                    }
+                }
+                cells = temp;
+            }
+
+            // Saves the results to internal buffer
+            pageBuffer = cells;
+
+            if (oldVisibleComponents != null) {
+                for (final Iterator i = oldVisibleComponents.iterator(); i
+                        .hasNext();) {
+                    Component c = (Component) i.next();
+                    if (!visibleComponents.contains(c)) {
+                        c.setParent(null);
+                    }
+                }
+            }
+
+            if (oldListenedProperties != null) {
+                for (final Iterator i = oldListenedProperties.iterator(); i
+                        .hasNext();) {
+                    Property.ValueChangeNotifier o = (ValueChangeNotifier) i
+                            .next();
+                    if (!listenedProperties.contains(o)) {
+                        o.removeListener(this);
+                    }
+                }
+            }
+
+            requestRepaint();
+        }
+
+    }
+
+    /**
+     * Refreshes the current page contents.
+     * 
+     * @deprecated should not need to be used
      */
     public void refreshCurrentPage() {
 
-        // Clear page buffer and notify about the change
-        pageBuffer = null;
-        requestRepaint();
     }
 
     /**
@@ -1169,7 +1329,7 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         // Assure visual refresh
-        refreshCurrentPage();
+        refreshRenderedCells();
     }
 
     /**
@@ -1229,7 +1389,7 @@ public class Table extends AbstractSelect implements Action.Container,
         return itemId;
     }
 
-    /* Overriding select behavior******************************************** */
+    /* Overriding select behavior ******************************************** */
 
     /**
      * Sets the Container that serves as the data source of the viewer.
@@ -1262,7 +1422,7 @@ public class Table extends AbstractSelect implements Action.Container,
         setVisibleColumns(getContainerPropertyIds().toArray());
 
         // Assure visual refresh
-        refreshCurrentPage();
+        refreshRenderedCells();
     }
 
     /* Component basics ***************************************************** */
@@ -1274,6 +1434,10 @@ public class Table extends AbstractSelect implements Action.Container,
      *      java.util.Map)
      */
     public void changeVariables(Object source, Map variables) {
+
+        boolean clientNeedsContentRefresh = false;
+
+        disableContentRefreshing();
 
         if (!isSelectable() && variables.containsKey("selected")) {
             // Not-selectable is a special case, AbstractSelect does not support
@@ -1317,8 +1481,7 @@ public class Table extends AbstractSelect implements Action.Container,
                     reqRowsToPaint = size() - reqFirstRowToPaint;
                 }
             }
-            pageBuffer = null;
-            requestRepaint(true);
+            clientNeedsContentRefresh = true;
         }
 
         // Actions
@@ -1360,6 +1523,7 @@ public class Table extends AbstractSelect implements Action.Container,
             }
             if (doSort) {
                 this.sort();
+                clientNeedsContentRefresh = true;
             }
         }
 
@@ -1380,6 +1544,7 @@ public class Table extends AbstractSelect implements Action.Container,
                     }
                 } catch (final Exception ignored) {
                 }
+                clientNeedsContentRefresh = true;
             }
         }
         if (isColumnReorderingAllowed()) {
@@ -1393,28 +1558,34 @@ public class Table extends AbstractSelect implements Action.Container,
                     setColumnOrder(ids);
                 } catch (final Exception ignored) {
                 }
+                clientNeedsContentRefresh = true;
             }
         }
+
+        enableContentRefreshing(clientNeedsContentRefresh);
     }
 
     /**
-     * Reques repaint
+     * Go to mode where content updates are not done. This is due we want to
+     * bypass expensive content for some reason (like when we know we may have
+     * other content changes on their way).
      * 
-     * @param rowFetch
-     *                true if this is just a row fetch
      */
-    private void requestRepaint(boolean rowFetchOnly) {
-        if (rowFetchOnly) {
-            rowFetch = true;
-        } else {
-            rowFetch = false;
-        }
-        super.requestRepaint();
-        // TODO Auto-generated method stub
+    protected void disableContentRefreshing() {
+        isContentRefreshesEnabled = false;
     }
 
-    public void requestRepaint() {
-        requestRepaint(false);
+    /**
+     * Go to mode where content content refreshing has effect.
+     * 
+     * @param refreshContent
+     *                true if content refresh needs to be done
+     */
+    protected void enableContentRefreshing(boolean refreshContent) {
+        isContentRefreshesEnabled = true;
+        if (refreshContent) {
+            refreshRenderedCells();
+        }
     }
 
     /**
@@ -1624,7 +1795,6 @@ public class Table extends AbstractSelect implements Action.Container,
         // pageBuffer
         reqFirstRowToPaint = -1;
         reqRowsToPaint = -1;
-        pageBuffer = null;
         target.addVariable(this, "reqrows", reqRowsToPaint);
         target.addVariable(this, "reqfirstrow", reqFirstRowToPaint);
 
@@ -1707,7 +1877,6 @@ public class Table extends AbstractSelect implements Action.Container,
             }
         }
         target.endTag("visiblecolumns");
-        rowFetch = false;
     }
 
     /**
@@ -1725,167 +1894,10 @@ public class Table extends AbstractSelect implements Action.Container,
      * @return the cached visible table contents.
      */
     private Object[][] getVisibleCells() {
-
-        LinkedList oldListenedProperties = listenedProperties;
-        LinkedList oldVisibleComponents = visibleComponents;
-
-        // Returns a buffered value if possible
-        if (pageBuffer != null && isPageBufferingEnabled()) {
-            return pageBuffer;
+        if (pageBuffer == null) {
+            refreshRenderedCells();
         }
-
-        // initialize the listener collections
-        listenedProperties = new LinkedList();
-        visibleComponents = new LinkedList();
-
-        // Collects the basic facts about the table page
-        final Object[] colids = getVisibleColumns();
-        final int cols = colids.length;
-        final int pagelen = getPageLength();
-        int firstIndex = getCurrentPageFirstItemIndex();
-        int rows = size();
-        if (rows > 0 && firstIndex >= 0) {
-            rows -= firstIndex;
-        }
-        if (pagelen > 0 && pagelen < rows) {
-            rows = pagelen;
-        }
-
-        // If "to be painted next" variables are set, use them
-        if (rowFetch
-                && lastToBeRenderedInClient - firstToBeRenderedInClient > 0) {
-            rows = lastToBeRenderedInClient - firstToBeRenderedInClient;
-        }
-        Object id;
-        if (rowFetch && firstToBeRenderedInClient >= 0) {
-            if (firstToBeRenderedInClient < size()) {
-                firstIndex = firstToBeRenderedInClient;
-            } else {
-                firstIndex = size() - 1;
-            }
-        }
-        if (size() > 0) {
-            if (rows + firstIndex > size()) {
-                rows = size() - firstIndex;
-            }
-        } else {
-            rows = 0;
-        }
-
-        Object[][] cells = new Object[cols + CELL_FIRSTCOL][rows];
-        if (rows == 0) {
-            return cells;
-        }
-
-        // Gets the first item id
-        if (items instanceof Container.Indexed) {
-            id = ((Container.Indexed) items).getIdByIndex(firstIndex);
-        } else {
-            id = ((Container.Ordered) items).firstItemId();
-            for (int i = 0; i < firstIndex; i++) {
-                id = ((Container.Ordered) items).nextItemId(id);
-            }
-        }
-
-        final int headmode = getRowHeaderMode();
-        final boolean[] iscomponent = new boolean[cols];
-        for (int i = 0; i < cols; i++) {
-            iscomponent[i] = Component.class
-                    .isAssignableFrom(getType(colids[i]));
-        }
-
-        // Creates the page contents
-        int filledRows = 0;
-        for (int i = 0; i < rows && id != null; i++) {
-            cells[CELL_ITEMID][i] = id;
-            cells[CELL_KEY][i] = itemIdMapper.key(id);
-            if (headmode != ROW_HEADER_MODE_HIDDEN) {
-                switch (headmode) {
-                case ROW_HEADER_MODE_INDEX:
-                    cells[CELL_HEADER][i] = String.valueOf(i + firstIndex + 1);
-                    break;
-                default:
-                    cells[CELL_HEADER][i] = getItemCaption(id);
-                }
-                cells[CELL_ICON][i] = getItemIcon(id);
-            }
-            if (cols > 0) {
-                for (int j = 0; j < cols; j++) {
-                    Object value = null;
-                    final Property p = getContainerProperty(id, colids[j]);
-                    if (p != null) {
-                        if (p instanceof Property.ValueChangeNotifier) {
-                            ((Property.ValueChangeNotifier) p)
-                                    .addListener(this);
-                            listenedProperties.add(p);
-                        }
-                        if (iscomponent[j]) {
-                            value = p.getValue();
-                        } else if (p != null) {
-                            value = getPropertyValue(id, colids[j], p);
-                        } else {
-                            value = getPropertyValue(id, colids[j], null);
-                        }
-                    } else {
-                        value = "";
-                    }
-
-                    if (value instanceof Component) {
-                        ((Component) value).setParent(this);
-                        visibleComponents.add(value);
-                    }
-                    cells[CELL_FIRSTCOL + j][i] = value;
-
-                }
-            }
-            id = ((Container.Ordered) items).nextItemId(id);
-
-            filledRows++;
-        }
-
-        // Assures that all the rows of the cell-buffer are valid
-        if (filledRows != cells[0].length) {
-            final Object[][] temp = new Object[cells.length][filledRows];
-            for (int i = 0; i < cells.length; i++) {
-                for (int j = 0; j < filledRows; j++) {
-                    temp[i][j] = cells[i][j];
-                }
-            }
-            cells = temp;
-        }
-
-        // Saves the results to internal buffer iff in buffering mode
-        // to possible conserve memory from large non-buffered pages
-        if (isPageBufferingEnabled()) {
-            pageBuffer = cells;
-        }
-
-        if (oldListenedProperties != null) {
-            int c = 0;
-            for (final Iterator i = oldListenedProperties.iterator(); i
-                    .hasNext();) {
-                Property.ValueChangeNotifier o = (ValueChangeNotifier) i.next();
-                if (!listenedProperties.contains(o)) {
-                    o.removeListener(this);
-                    c++;
-                }
-            }
-            System.out.println(c + " listeners removed");
-        }
-        if (oldVisibleComponents != null) {
-            int count = 0;
-            for (final Iterator i = oldVisibleComponents.iterator(); i
-                    .hasNext();) {
-                Component c = (Component) i.next();
-                if (!visibleComponents.contains(c)) {
-                    c.setParent(null);
-                    count++;
-                }
-            }
-            System.out.println(count + " components detached");
-        }
-
-        return cells;
+        return pageBuffer;
     }
 
     /**
@@ -2007,6 +2019,8 @@ public class Table extends AbstractSelect implements Action.Container,
      */
     public void attach() {
         super.attach();
+
+        refreshRenderedCells();
 
         if (visibleComponents != null) {
             for (final Iterator i = visibleComponents.iterator(); i.hasNext();) {
@@ -2154,11 +2168,17 @@ public class Table extends AbstractSelect implements Action.Container,
      * @see com.itmill.toolkit.data.Container.ItemSetChangeListener#containerItemSetChange(com.itmill.toolkit.data.Container.ItemSetChangeEvent)
      */
     public void containerItemSetChange(Container.ItemSetChangeEvent event) {
-        pageBuffer = null;
         super.containerItemSetChange(event);
+        if (event instanceof IndexedContainer.ItemSetChangeEvent) {
+            IndexedContainer.ItemSetChangeEvent evt = (IndexedContainer.ItemSetChangeEvent) event;
+            if (firstToBeRenderedInClient <= evt.getAddedItemIndex()
+                    && lastToBeRenderedInClient >= evt.getAddedItemIndex()) {
+                return;
+            }
+        }
+        // ensure that page still has first item in page
         setCurrentPageFirstItemIndex(getCurrentPageFirstItemIndex());
-        refreshCurrentPage();
-
+        refreshRenderedCells();
     }
 
     /**
@@ -2169,8 +2189,8 @@ public class Table extends AbstractSelect implements Action.Container,
      */
     public void containerPropertySetChange(
             Container.PropertySetChangeEvent event) {
-        pageBuffer = null;
         super.containerPropertySetChange(event);
+        refreshRenderedCells();
     }
 
     /**
@@ -2305,7 +2325,7 @@ public class Table extends AbstractSelect implements Action.Container,
         this.fieldFactory = fieldFactory;
 
         // Assure visual refresh
-        refreshCurrentPage();
+        refreshRenderedCells();
     }
 
     /**
@@ -2347,7 +2367,7 @@ public class Table extends AbstractSelect implements Action.Container,
         this.editable = editable;
 
         // Assure visual refresh
-        refreshCurrentPage();
+        refreshRenderedCells();
     }
 
     /**
@@ -2367,7 +2387,7 @@ public class Table extends AbstractSelect implements Action.Container,
             final int pageIndex = getCurrentPageFirstItemIndex();
             ((Container.Sortable) c).sort(propertyId, ascending);
             setCurrentPageFirstItemIndex(pageIndex);
-            refreshCurrentPage();
+            refreshRenderedCells();
 
         } else if (c != null) {
             throw new UnsupportedOperationException(
@@ -2439,7 +2459,7 @@ public class Table extends AbstractSelect implements Action.Container,
             if (doSort) {
                 sort();
                 // Assures the visual refresh
-                refreshCurrentPage();
+                refreshRenderedCells();
             }
         }
     }
@@ -2480,7 +2500,7 @@ public class Table extends AbstractSelect implements Action.Container,
             }
         }
         // Assures the visual refresh
-        refreshCurrentPage();
+        refreshRenderedCells();
     }
 
     /**
@@ -2507,7 +2527,7 @@ public class Table extends AbstractSelect implements Action.Container,
     public void setSortDisabled(boolean sortDisabled) {
         if (this.sortDisabled != sortDisabled) {
             this.sortDisabled = sortDisabled;
-            refreshCurrentPage();
+            refreshRenderedCells();
         }
     }
 

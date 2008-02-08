@@ -657,8 +657,8 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 
         firstRowInViewPort = (int) Math.ceil(scrollTop
                 / (double) tBody.getRowHeight());
-        ApplicationConnection.getConsole().log(
-                "At scrolltop: " + scrollTop + " At row " + firstRowInViewPort);
+        // ApplicationConnection.getConsole().log(
+        // "At scrolltop: " + scrollTop + " At row " + firstRowInViewPort);
 
         int postLimit = (int) (firstRowInViewPort + pageLength + pageLength
                 * CACHE_REACT_RATE);
@@ -682,27 +682,27 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
         if (firstRowInViewPort - pageLength * CACHE_RATE > lastRendered
                 || firstRowInViewPort + pageLength + pageLength * CACHE_RATE < firstRendered) {
             // need a totally new set
-            ApplicationConnection.getConsole().log(
-                    "Table: need a totally new set");
+            // ApplicationConnection.getConsole().log(
+            // "Table: need a totally new set");
             rowRequestHandler
                     .setReqFirstRow((int) (firstRowInViewPort - pageLength
                             * CACHE_RATE));
-            int last = firstRowInViewPort
-                    + (int) (CACHE_RATE * pageLength + pageLength);
+            int last = firstRowInViewPort + (int) CACHE_RATE * pageLength
+                    + pageLength;
             if (last > totalRows) {
                 last = totalRows - 1;
             }
             rowRequestHandler.setReqRows(last
-                    - rowRequestHandler.getReqFirstRow());
+                    - rowRequestHandler.getReqFirstRow() + 1);
             rowRequestHandler.deferRowFetch();
             return;
         }
         if (preLimit < firstRendered) {
             // need some rows to the beginning of the rendered area
-            ApplicationConnection
-                    .getConsole()
-                    .log(
-                            "Table: need some rows to the beginning of the rendered area");
+            // ApplicationConnection
+            // .getConsole()
+            // .log(
+            // "Table: need some rows to the beginning of the rendered area");
             rowRequestHandler
                     .setReqFirstRow((int) (firstRowInViewPort - pageLength
                             * CACHE_RATE));
@@ -714,8 +714,8 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
         }
         if (postLimit > lastRendered) {
             // need some rows to the end of the rendered area
-            ApplicationConnection.getConsole().log(
-                    "need some rows to the end of the rendered area");
+            // ApplicationConnection.getConsole().log(
+            // "need some rows to the end of the rendered area");
             rowRequestHandler.setReqFirstRow(lastRendered + 1);
             rowRequestHandler.setReqRows((int) ((firstRowInViewPort
                     + pageLength + pageLength * CACHE_RATE) - lastRendered));
@@ -725,7 +725,6 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
     }
 
     private void announceScrollPosition() {
-        ApplicationConnection.getConsole().log("" + firstRowInViewPort);
         if (scrollPositionElement == null) {
             scrollPositionElement = DOM.createDiv();
             DOM.setElementProperty(scrollPositionElement, "className",
@@ -810,13 +809,13 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 
             int lastToBeRendered = tBody.lastRendered;
 
-            if (reqFirstRow + reqRows > lastToBeRendered) {
-                lastToBeRendered = reqFirstRow + reqRows;
+            if (reqFirstRow + reqRows - 1 > lastToBeRendered) {
+                lastToBeRendered = reqFirstRow + reqRows - 1;
             } else if (firstRowInViewPort + pageLength + pageLength
                     * CACHE_RATE < lastToBeRendered) {
                 lastToBeRendered = (firstRowInViewPort + pageLength + (int) (pageLength * CACHE_RATE));
                 if (lastToBeRendered >= totalRows) {
-                    lastToBeRendered = totalRows;
+                    lastToBeRendered = totalRows - 1;
                 }
             }
 
