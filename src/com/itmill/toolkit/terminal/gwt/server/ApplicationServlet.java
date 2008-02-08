@@ -395,6 +395,9 @@ public class ApplicationServlet extends HttpServlet {
                     application.close();
                     final HttpSession session = request.getSession();
                     if (session != null) {
+                        application.close();
+                        ApplicationServlet.applicationToAjaxAppMgrMap
+                                .remove(application);
                         WebApplicationContext.getApplicationContext(session)
                                 .removeApplication(application);
                     }
