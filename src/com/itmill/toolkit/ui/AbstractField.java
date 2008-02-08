@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import com.itmill.toolkit.Application;
 import com.itmill.toolkit.data.Buffered;
 import com.itmill.toolkit.data.Property;
 import com.itmill.toolkit.data.Validatable;
@@ -848,9 +849,9 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      * Asks the terminal to place the cursor to this field.
      */
     public void focus() {
-        final Window w = getWindow();
-        if (w != null) {
-            w.setFocusedComponent(this);
+        final Application app = getApplication();
+        if (app != null) {
+            app.setFocusedComponent(this);
         } else {
             delayedFocus = true;
         }

@@ -1068,6 +1068,11 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
         return context;
     }
 
+    /**
+     * @deprecated Call component's focus method instead.
+     * 
+     * @param focusable
+     */
     public void setFocusedComponent(Focusable focusable) {
         pendingFocus = focusable;
     }
@@ -1075,6 +1080,8 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
     /**
      * Gets and nulls focused component in this window
      * 
+     * @deprecated This method will be replaced with focus listener in the
+     *             future releases.
      * @return Focused component or null if none is focused.
      */
     public Component.Focusable consumeFocus() {

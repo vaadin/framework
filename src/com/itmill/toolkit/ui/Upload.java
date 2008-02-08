@@ -10,6 +10,7 @@ import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.util.Map;
 
+import com.itmill.toolkit.Application;
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
 import com.itmill.toolkit.terminal.UploadStream;
@@ -41,6 +42,8 @@ import com.itmill.toolkit.terminal.UploadStream;
  * @since 3.0
  */
 public class Upload extends AbstractComponent implements Component.Focusable {
+
+    private boolean delayedFocus;
 
     /**
      * Upload buffer size.
@@ -687,9 +690,11 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      * @see com.itmill.toolkit.ui.Component.Focusable#focus()
      */
     public void focus() {
-        final Window w = getWindow();
-        if (w != null) {
-            w.setFocusedComponent(this);
+        final Application app = getApplication();
+        if (app != null) {
+            app.setFocusedComponent(this);
+        } else {
+            delayedFocus = true;
         }
     }
 
@@ -822,4 +827,18 @@ public class Upload extends AbstractComponent implements Component.Focusable {
     public void setButtonCaption(String buttonCaption) {
         this.buttonCaption = buttonCaption;
     }
+
+    /**
+     * Notifies the component that it is connected to an application.
+     * 
+     * @see com.itmill.toolkit.ui.Component#attach()
+     */
+    public void attach() {
+        super.attach();
+        if (delayedFocus) {
+            delayedFocus = false;
+            focus();
+        }
+    }
+
 }

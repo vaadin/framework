@@ -94,11 +94,6 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     private int border = BORDER_DEFAULT;
 
     /**
-     * Focused component.
-     */
-    private Focusable focusedComponent;
-
-    /**
      * Distance of Window top border in pixels from top border of the containing
      * (main window) or -1 if unspecified.
      */
@@ -868,29 +863,6 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
             // subwindow is removed from parent
             parent.removeWindow(this);
             fireClose();
-        }
-    }
-
-    /**
-     * Gets the currently focused component in this window.
-     * 
-     * @return the Focused component or null if none is focused.
-     */
-    public Component.Focusable getFocusedComponent() {
-        return focusedComponent;
-    }
-
-    /**
-     * Sets the currently focused component in this window.
-     * 
-     * @param focusable
-     *                the Focused component or null if none is focused.
-     */
-    public void setFocusedComponent(Component.Focusable focusable) {
-        final Application app = getApplication();
-        if (app != null) {
-            app.setFocusedComponent(focusable);
-            focusedComponent = focusable;
         }
     }
 
