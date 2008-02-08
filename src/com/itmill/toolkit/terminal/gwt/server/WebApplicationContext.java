@@ -13,7 +13,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.WeakHashMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -22,7 +21,6 @@ import javax.servlet.http.HttpSessionBindingListener;
 
 import com.itmill.toolkit.Application;
 import com.itmill.toolkit.service.ApplicationContext;
-import com.itmill.toolkit.ui.Window;
 
 /**
  * Web application context for the IT Mill Toolkit applications.
@@ -39,8 +37,6 @@ public class WebApplicationContext implements ApplicationContext,
 
     private final HttpSession session;
 
-    private final WeakHashMap formActions = new WeakHashMap();
-
     private final HashSet applications = new HashSet();
 
     private final WebBrowser browser = new WebBrowser();
@@ -53,46 +49,6 @@ public class WebApplicationContext implements ApplicationContext,
      */
     WebApplicationContext(HttpSession session) {
         this.session = session;
-    }
-
-    /**
-     * Gets the form action for given window.
-     * <p>
-     * By default, this action is "", which preserves the current url. Commonly
-     * this is wanted to be set to <code>application.getUrl.toString</code> or
-     * <code>window.getUrl.toString</code> in order to clean any local links
-     * or parameters set from the action.
-     * </p>
-     * 
-     * @param window
-     *                the Window for which the action is queried.
-     * @return the Action to be set into Form action attribute.
-     */
-    public String getWindowFormAction(Window window) {
-        final String action = (String) formActions.get(window);
-        return action == null ? "" : action;
-    }
-
-    /**
-     * Sets the form action for given window.
-     * <p>
-     * By default, this action is "", which preserves the current url. Commonly
-     * this is wanted to be set to <code>application.getUrl.toString</code> or
-     * <code>window.getUrl.toString</code> in order to clean any local links
-     * or parameters set from the action.
-     * </p>
-     * 
-     * @param window
-     *                the Window for which the action is set.
-     * @param action
-     *                the New action for the window.
-     */
-    public void setWindowFormAction(Window window, String action) {
-        if (action == null || action == "") {
-            formActions.remove(window);
-        } else {
-            formActions.put(window, action);
-        }
     }
 
     /**
