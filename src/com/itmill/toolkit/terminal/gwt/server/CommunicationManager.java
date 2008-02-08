@@ -84,8 +84,6 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
 
     private final Application application;
 
-    private JsonPaintTarget paintTarget;
-
     private List locales;
 
     private int pendingLocalesIndex;
@@ -258,7 +256,8 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
 
                 outWriter.print("\"changes\":[");
 
-                paintTarget = new JsonPaintTarget(this, outWriter, !repaintAll);
+                JsonPaintTarget paintTarget = new JsonPaintTarget(this,
+                        outWriter, !repaintAll);
 
                 // Paints components
                 ArrayList paintables;
