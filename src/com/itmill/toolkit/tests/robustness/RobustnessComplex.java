@@ -27,7 +27,7 @@ public class RobustnessComplex extends Robustness implements
         stressLayout.addComponent(label);
 
         // fill with random components
-        randomComponents.fillLayout(stressLayout, 20);
+        randomComponents.fillLayout(stressLayout, 25);
 
         // add new component container to main layout
         main.addComponent(stressLayout);

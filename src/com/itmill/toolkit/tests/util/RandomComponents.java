@@ -17,7 +17,6 @@ import com.itmill.toolkit.demo.featurebrowser.TableExample;
 import com.itmill.toolkit.demo.featurebrowser.TreeExample;
 import com.itmill.toolkit.demo.featurebrowser.ValueInputExample;
 import com.itmill.toolkit.demo.featurebrowser.WindowingExample;
-import com.itmill.toolkit.terminal.ExternalResource;
 import com.itmill.toolkit.terminal.ThemeResource;
 import com.itmill.toolkit.tests.StressComponentsInTable;
 import com.itmill.toolkit.ui.AbstractComponent;
@@ -27,7 +26,6 @@ import com.itmill.toolkit.ui.DateField;
 import com.itmill.toolkit.ui.Embedded;
 import com.itmill.toolkit.ui.GridLayout;
 import com.itmill.toolkit.ui.Label;
-import com.itmill.toolkit.ui.Link;
 import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Panel;
 import com.itmill.toolkit.ui.Select;
@@ -56,6 +54,7 @@ public class RandomComponents {
         ComponentContainer result = null;
         final int randint = seededRandom.nextInt(5);
         switch (randint) {
+
         case 0:
             result = new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
             ((OrderedLayout) result).setCaption("OrderedLayout_horizontal_"
@@ -154,8 +153,11 @@ public class RandomComponents {
             break;
         case 4:
             // Link
-            result = new Link("", new ExternalResource("http://www.itmill.com"));
-            result.setCaption("Link component " + caption);
+            // result = new Link("", new
+            // ExternalResource("http://www.itmill.com"));
+            // result.setCaption("Link component " + caption);
+            result = new OrderedLayout();
+            ((OrderedLayout) result).addComponent(new LabelExample());
             break;
         case 5:
             // Link
@@ -206,6 +208,7 @@ public class RandomComponents {
             // TODO: this application leaks memory
             // ((OrderedLayout) result).addComponent(new
             // JavaScriptAPIExample());
+
             ((OrderedLayout) result).addComponent(new LabelExample());
             break;
         case 13:
@@ -231,19 +234,19 @@ public class RandomComponents {
             break;
         case 18:
             result = new OrderedLayout();
-            ((OrderedLayout) result).addComponent(new TableExample());
+            ((OrderedLayout) result).addComponent(new ValueInputExample());
             break;
         case 19:
             result = new OrderedLayout();
-            ((OrderedLayout) result).addComponent(new TreeExample());
+            ((OrderedLayout) result).addComponent(new WindowingExample());
             break;
         case 20:
             result = new OrderedLayout();
-            ((OrderedLayout) result).addComponent(new ValueInputExample());
+            ((OrderedLayout) result).addComponent(new TreeExample());
             break;
         case 21:
             result = new OrderedLayout();
-            ((OrderedLayout) result).addComponent(new WindowingExample());
+            ((OrderedLayout) result).addComponent(new TableExample());
             break;
         case 22:
             result = new OrderedLayout();

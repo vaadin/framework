@@ -17,13 +17,13 @@ public abstract class Robustness extends com.itmill.toolkit.Application
 
     final Window main = new Window("Robustness tests by featurebrowser");
 
-    final Button close = new Button("Close application");
+    Button close = new Button("Close application");
 
-    final Button remove = new Button("Remove all components");
+    Button remove = new Button("Remove all components");
 
-    final Button create = new Button("Create");
+    Button create = new Button("Create");
 
-    final Label label = new Label();
+    Label label = new Label();
 
     ComponentContainer stressLayout;
 
@@ -59,7 +59,14 @@ public abstract class Robustness extends com.itmill.toolkit.Application
         if (event.getButton() == create)
             create();
         else if (event.getButton() == remove) {
-            main.removeComponent(stressLayout);
+            main.removeAllComponents();
+            close.removeListener(this);
+            remove.removeListener(this);
+            create.removeListener(this);
+            close = null;
+            remove = null;
+            create = null;
+            label = null;
             stressLayout = null;
             System.out.println("main.getLayout()=" + main.getLayout());
             System.out.println(Log.getMemoryStatistics());
