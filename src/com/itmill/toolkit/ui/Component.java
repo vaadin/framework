@@ -385,13 +385,5 @@ public interface Component extends Paintable, VariableOwner, Sizeable {
          */
         public void setTabIndex(int tabIndex);
 
-        /**
-         * Gets the unique ID of focusable. This will be used to move input
-         * focus directly to this component.
-         * 
-         * @return the Unique id of focusable.
-         */
-        public long getFocusableId();
-
     }
 }

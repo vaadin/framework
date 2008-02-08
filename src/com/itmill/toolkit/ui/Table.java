@@ -1427,11 +1427,6 @@ public class Table extends AbstractSelect implements Action.Container,
      */
     public void paintContent(PaintTarget target) throws PaintException {
 
-        // Focus control id
-        if (getFocusableId() > 0) {
-            target.addAttribute("focusid", getFocusableId());
-        }
-
         // The tab ordering number
         if (getTabIndex() > 0) {
             target.addAttribute("tabindex", getTabIndex());

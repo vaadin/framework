@@ -90,11 +90,6 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
         // clear caption change listeners
         getCaptionChangeListener().clear();
 
-        // Focus control id
-        if (getFocusableId() > 0) {
-            target.addAttribute("focusid", getFocusableId());
-        }
-
         // The tab ordering number
         if (getTabIndex() > 0) {
             target.addAttribute("tabindex", getTabIndex());

@@ -398,11 +398,6 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         } else {
             getCaptionChangeListener().clear();
 
-            // Focus control id
-            if (getFocusableId() > 0) {
-                target.addAttribute("focusid", getFocusableId());
-            }
-
             // The tab ordering number
             if (getTabIndex() > 0) {
                 target.addAttribute("tabindex", getTabIndex());
@@ -489,7 +484,12 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
                 target.addAttribute("key", key);
                 if (isSelected(itemId)) {
                     target.addAttribute("selected", true);
-                    selectedKeys[keyIndex++] = key;
+                    try {
+                        selectedKeys[keyIndex++] = key;
+                    } catch (Exception e) {
+                        // TODO Fix, see TreeExample (featurebrowser)
+                        e.printStackTrace();
+                    }
                 }
                 if (areChildrenAllowed(itemId) && isExpanded(itemId)) {
                     target.addAttribute("expanded", true);

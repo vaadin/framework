@@ -4,12 +4,10 @@
 
 package com.itmill.toolkit.ui;
 
-import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -494,14 +492,6 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
         // Window closing
         target.addVariable(this, "close", false);
 
-        // Sets the focused component
-        if (focusedComponent != null) {
-            target.addVariable(this, "focused", ""
-                    + focusedComponent.getFocusableId());
-        } else {
-            target.addVariable(this, "focused", "");
-        }
-
         // Paint subwindows
         for (final Iterator i = subwindows.iterator(); i.hasNext();) {
             final Window w = (Window) i.next();
@@ -833,17 +823,6 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     public void changeVariables(Object source, Map variables) {
         super.changeVariables(source, variables);
 
-        // Gets the focused component
-        final String focusedId = (String) variables.get("focused");
-        if (focusedId != null) {
-            try {
-                final long id = Long.parseLong(focusedId);
-                focusedComponent = Window.getFocusableById(id);
-            } catch (final NumberFormatException ignored) {
-                // We ignore invalid focusable ids
-            }
-        }
-
         // Positioning
         final Integer positionx = (Integer) variables.get("positionx");
         if (positionx != null) {
@@ -913,57 +892,6 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
             app.setFocusedComponent(focusable);
             focusedComponent = focusable;
         }
-    }
-
-    /* Focusable id generator ****************************************** */
-
-    private static long lastUsedFocusableId = 0;
-
-    private static Map focusableComponents = new HashMap();
-
-    /**
-     * Gets an id for focusable component.
-     * 
-     * @param focusable
-     *                the focused component.
-     */
-    public static long getNewFocusableId(Component.Focusable focusable) {
-        final long newId = ++lastUsedFocusableId;
-        final WeakReference ref = new WeakReference(focusable);
-        focusableComponents.put(new Long(newId), ref);
-        return newId;
-    }
-
-    /**
-     * Maps the focusable id back to focusable component.
-     * 
-     * @param focusableId
-     *                the Focused Id.
-     * @return the focusable Id.
-     */
-    public static Component.Focusable getFocusableById(long focusableId) {
-        final WeakReference ref = (WeakReference) focusableComponents
-                .get(new Long(focusableId));
-        if (ref != null) {
-            final Object o = ref.get();
-            if (o != null) {
-                return (Component.Focusable) o;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Releases the focusable component id when not used anymore.
-     * 
-     * @param focusableId
-     *                the focusable Id to remove.
-     */
-    public static void removeFocusableId(long focusableId) {
-        final Long id = new Long(focusableId);
-        final WeakReference ref = (WeakReference) focusableComponents.get(id);
-        ref.clear();
-        focusableComponents.remove(id);
     }
 
     /**

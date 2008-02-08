@@ -17,25 +17,23 @@ import com.itmill.toolkit.terminal.UploadStream;
 /**
  * Component for uploading files from client to server.
  * 
- * The visible component consists of a file name input box and a browse
- * button and an upload submit button to start uploading.
+ * The visible component consists of a file name input box and a browse button
+ * and an upload submit button to start uploading.
  * 
- * The Upload component needs a java.io.OutputStream to write the uploaded
- * data. You need to implement the Upload.Receiver interface and return
- * the output stream in the receiveUpload() method.
+ * The Upload component needs a java.io.OutputStream to write the uploaded data.
+ * You need to implement the Upload.Receiver interface and return the output
+ * stream in the receiveUpload() method.
  * 
- * You can get an event regarding starting (StartedEvent),
- * progress (ProgressEvent), and finishing (FinishedEvent) of upload by
- * implementing StartedListener, ProgressListener, and FinishedListener,
- * respectively. The FinishedListener is called for both failed and
- * succeeded uploads. If you wish to separate between these two cases,
- * you can use SucceededListener (SucceededEvenet) and FailedListener
- * (FailedEvent).
+ * You can get an event regarding starting (StartedEvent), progress
+ * (ProgressEvent), and finishing (FinishedEvent) of upload by implementing
+ * StartedListener, ProgressListener, and FinishedListener, respectively. The
+ * FinishedListener is called for both failed and succeeded uploads. If you wish
+ * to separate between these two cases, you can use SucceededListener
+ * (SucceededEvenet) and FailedListener (FailedEvent).
  * 
- * The upload component does not itself show upload progress, but
- * you can use the ProgressIndicator for providing progress feedback
- * by implementing ProgressListener and updating the indicator in
- * updateProgress(). 
+ * The upload component does not itself show upload progress, but you can use
+ * the ProgressIndicator for providing progress feedback by implementing
+ * ProgressListener and updating the indicator in updateProgress().
  * 
  * @author IT Mill Ltd.
  * @version
@@ -64,8 +62,6 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      */
     private Receiver receiver;
 
-    private long focusableId = -1;
-
     private boolean isUploading;
 
     private long contentLength = -1;
@@ -87,14 +83,13 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      * stream given by the Receiver.
      * 
      * @param caption
-     *            Normal component caption. You can set the caption of the
-     *            upload submit button with setButtonCaption().
+     *                Normal component caption. You can set the caption of the
+     *                upload submit button with setButtonCaption().
      * @param uploadReceiver
-     *            Receiver to call to retrieve output stream when upload
-     *            starts.
+     *                Receiver to call to retrieve output stream when upload
+     *                starts.
      */
     public Upload(String caption, Receiver uploadReceiver) {
-        focusableId = Window.getNewFocusableId(this);
         setCaption(caption);
         receiver = uploadReceiver;
     }
@@ -205,8 +200,8 @@ public class Upload extends AbstractComponent implements Component.Focusable {
     }
 
     /**
-     * Interface that must be implemented by the upload receivers to provide
-     * the Upload component an output stream to write the uploaded data. 
+     * Interface that must be implemented by the upload receivers to provide the
+     * Upload component an output stream to write the uploaded data.
      * 
      * @author IT Mill Ltd.
      * @version
@@ -717,15 +712,6 @@ public class Upload extends AbstractComponent implements Component.Focusable {
     }
 
     /**
-     * Gets the unique ID of focusable.
-     * 
-     * @see com.itmill.toolkit.ui.Component.Focusable#getFocusableId()
-     */
-    public long getFocusableId() {
-        return focusableId;
-    }
-
-    /**
      * Sets the size of the file currently being uploaded.
      * 
      * @param contentLength
@@ -738,10 +724,10 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      * Go into upload state. This is to prevent double uploading on same
      * component.
      * 
-     * Warning: this is an internal method used by the framework and should
-     * not be used by user of the Upload component. Using it results
-     * in the Upload component going in wrong state and not working.
-     * It is currently public because it is used by another class.
+     * Warning: this is an internal method used by the framework and should not
+     * be used by user of the Upload component. Using it results in the Upload
+     * component going in wrong state and not working. It is currently public
+     * because it is used by another class.
      */
     public void startUpload() {
         if (isUploading) {
@@ -753,8 +739,8 @@ public class Upload extends AbstractComponent implements Component.Focusable {
     /**
      * Go into state where new uploading can begin.
      * 
-     * Warning: this is an internal method used by the framework and should
-     * not be used by user of the Upload component.
+     * Warning: this is an internal method used by the framework and should not
+     * be used by user of the Upload component.
      */
     public void endUpload() {
         isUploading = false;

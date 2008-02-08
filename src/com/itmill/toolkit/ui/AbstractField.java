@@ -103,31 +103,17 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     private int tabIndex = 0;
 
     /**
-     * Unique focusable id.
-     */
-    private long focusableId = -1;
-
-    /**
      * Required field.
      */
     private boolean required = false;
 
     /* Component basics ************************************************ */
 
-    public AbstractField() {
-        focusableId = Window.getNewFocusableId(this);
-    }
-
     /*
      * Paints the field. Don't add a JavaDoc comment here, we use the default
      * documentation from the implemented interface.
      */
     public void paintContent(PaintTarget target) throws PaintException {
-
-        // Focus control id
-        if (focusableId > 0) {
-            target.addAttribute("focusid", focusableId);
-        }
 
         // The tab ordering number
         if (tabIndex > 0) {
@@ -939,15 +925,6 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     }
 
     /**
-     * Gets the unique ID of focusable
-     * 
-     * @see com.itmill.toolkit.ui.Component.Focusable#getFocusableId()
-     */
-    public long getFocusableId() {
-        return focusableId;
-    }
-
-    /**
      * Notifies the component that it is connected to an application.
      * 
      * @see com.itmill.toolkit.ui.Component#attach()
@@ -980,15 +957,4 @@ public abstract class AbstractField extends AbstractComponent implements Field,
         this.required = required;
     }
 
-    /**
-     * Free used resources.
-     * 
-     * @see java.lang.Object#finalize()
-     */
-    public void finalize() throws Throwable {
-        if (focusableId > -1) {
-            Window.removeFocusableId(focusableId);
-        }
-        super.finalize();
-    }
 }
