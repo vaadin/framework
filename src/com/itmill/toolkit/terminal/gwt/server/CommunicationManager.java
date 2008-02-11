@@ -46,7 +46,6 @@ import com.itmill.toolkit.terminal.UploadStream;
 import com.itmill.toolkit.terminal.VariableOwner;
 import com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
-import com.itmill.toolkit.tests.util.Log;
 import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.Upload;
 import com.itmill.toolkit.ui.Window;
@@ -439,11 +438,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
             e.printStackTrace(new PrintWriter(err));
             err.write("\n</pre></body></html>");
             err.close();
-        } finally {
-            Log.debug("paintableIdMap.size=" + paintableIdMap.size()
-                    + ", idPaintableMap.size=" + idPaintableMap.size());
         }
-
     }
 
     private Map handleVariables(HttpServletRequest request,
