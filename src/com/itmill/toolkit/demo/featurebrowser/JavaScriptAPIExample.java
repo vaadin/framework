@@ -59,7 +59,7 @@ public class JavaScriptAPIExample extends CustomComponent {
 
         // 
         Label l = new Label(
-                "This label will update it's value AFTER it's rendered to the client. "
+                "This label will update it's server-side value AFTER it's rendered to the client-side. "
                         + "The client will be synchronized on reload, when you click a button, "
                         + "or when itmill.forceSync() is called.") {
 
@@ -86,7 +86,6 @@ public class JavaScriptAPIExample extends CustomComponent {
             try {
                 Thread.sleep(500);
                 label.setValue(new Date().toString());
-                join();
             } catch (Exception e) {
                 e.printStackTrace();
             }
