@@ -2424,6 +2424,7 @@ public class Table extends AbstractSelect implements Action.Container,
         this.editable = editable;
 
         // Assure visual refresh
+        resetPageBuffer();
         refreshRenderedCells();
     }
 
