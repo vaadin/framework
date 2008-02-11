@@ -62,6 +62,7 @@ public class ComboBoxExample extends CustomComponent {
         final ComboBox s3 = new ComboBox("Initially empty; enter your own");
         s3.setColumns(20);
         s3.setImmediate(true);
+        s3.setNewItemsAllowed(true);
         main.addComponent(s3);
 
     }
