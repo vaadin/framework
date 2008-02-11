@@ -385,6 +385,7 @@ public class Table extends AbstractSelect implements Action.Container,
         this.visibleColumns = newVC;
 
         // Assures visual refresh
+        resetPageBuffer();
         refreshRenderedCells();
     }
 
@@ -445,6 +446,7 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         // Assures the visual refresh
+        resetPageBuffer();
         refreshRenderedCells();
     }
 
@@ -504,6 +506,7 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         // Assure visual refresh
+        resetPageBuffer();
         refreshRenderedCells();
     }
 
@@ -583,6 +586,7 @@ public class Table extends AbstractSelect implements Action.Container,
         this.columnAlignments = newCA;
 
         // Assures the visual refresh
+        resetPageBuffer();
         refreshRenderedCells();
     }
 
@@ -644,6 +648,7 @@ public class Table extends AbstractSelect implements Action.Container,
             // "scroll" to first row
             setCurrentPageFirstItemIndex(0);
             // Assures the visual refresh
+            resetPageBuffer();
             refreshRenderedCells();
         }
     }
@@ -745,6 +750,7 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         // Assures the visual refresh
+        resetPageBuffer();
         refreshRenderedCells();
     }
 
@@ -870,6 +876,7 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         // Assures the visual refresh
+        resetPageBuffer();
         refreshRenderedCells();
     }
 
@@ -948,6 +955,7 @@ public class Table extends AbstractSelect implements Action.Container,
         visibleColumns = newOrder;
 
         // Assure visual refresh
+        resetPageBuffer();
         refreshRenderedCells();
     }
 
@@ -1189,7 +1197,7 @@ public class Table extends AbstractSelect implements Action.Container,
                         .isAssignableFrom(getType(colids[i]));
             }
             int firstIndexNotInCache;
-            if (pageBuffer != null) {
+            if (pageBuffer != null && pageBuffer[CELL_ITEMID].length > 0) {
                 firstIndexNotInCache = pageBufferFirstIndex
                         + pageBuffer[CELL_ITEMID].length;
             } else {
@@ -2214,7 +2222,8 @@ public class Table extends AbstractSelect implements Action.Container,
         super.containerItemSetChange(event);
         if (event instanceof IndexedContainer.ItemSetChangeEvent) {
             IndexedContainer.ItemSetChangeEvent evt = (IndexedContainer.ItemSetChangeEvent) event;
-            if (firstToBeRenderedInClient <= evt.getAddedItemIndex()
+            if (evt.getAddedItemIndex() != -1
+                    && firstToBeRenderedInClient <= evt.getAddedItemIndex()
                     && lastToBeRenderedInClient >= evt.getAddedItemIndex()) {
                 return;
             }
@@ -2236,6 +2245,7 @@ public class Table extends AbstractSelect implements Action.Container,
             Container.PropertySetChangeEvent event) {
         super.containerPropertySetChange(event);
 
+        resetPageBuffer();
         refreshRenderedCells();
     }
 
@@ -2371,6 +2381,7 @@ public class Table extends AbstractSelect implements Action.Container,
         this.fieldFactory = fieldFactory;
 
         // Assure visual refresh
+        resetPageBuffer();
         refreshRenderedCells();
     }
 
@@ -2433,6 +2444,7 @@ public class Table extends AbstractSelect implements Action.Container,
             final int pageIndex = getCurrentPageFirstItemIndex();
             ((Container.Sortable) c).sort(propertyId, ascending);
             setCurrentPageFirstItemIndex(pageIndex);
+            resetPageBuffer();
             refreshRenderedCells();
 
         } else if (c != null) {
