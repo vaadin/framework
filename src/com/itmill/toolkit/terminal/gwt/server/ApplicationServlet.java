@@ -96,6 +96,8 @@ public class ApplicationServlet extends HttpServlet {
 
     private static final int MAX_BUFFER_SIZE = 64 * 1024;
 
+    // TODO This is session specific not servlet wide data. No need to store
+    // this here, move it to Session from where it can be queried when required
     protected static HashMap applicationToAjaxAppMgrMap = new HashMap();
 
     private static final String RESOURCE_URI = "/RES/";
