@@ -1231,8 +1231,8 @@ public class Table extends AbstractSelect implements Action.Container,
                             if (index < firstIndexNotInCache
                                     && index >= pageBufferFirstIndex) {
                                 // we have data already in our cache,
-                                    // recycle it instead of fetching it via
-                                    // getValue/getPropertyValue
+                                // recycle it instead of fetching it via
+                                // getValue/getPropertyValue
                                 int indexInOldBuffer = index
                                         - pageBufferFirstIndex;
                                 value = pageBuffer[CELL_FIRSTCOL + j][indexInOldBuffer];
@@ -2216,6 +2216,7 @@ public class Table extends AbstractSelect implements Action.Container,
         // ensure that page still has first item in page
         setCurrentPageFirstItemIndex(getCurrentPageFirstItemIndex());
 
+        resetPageBuffer();
         refreshRenderedCells();
     }
 
