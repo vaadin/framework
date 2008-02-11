@@ -281,6 +281,8 @@ public class Table extends AbstractSelect implements Action.Container,
 
     private boolean isContentRefreshesEnabled = true;
 
+    private int pageBufferFirstIndex;
+
     /* Table constructors *************************************************** */
 
     /**
@@ -1186,6 +1188,13 @@ public class Table extends AbstractSelect implements Action.Container,
                 iscomponent[i] = Component.class
                         .isAssignableFrom(getType(colids[i]));
             }
+            int firstIndexNotInCache;
+            if (pageBuffer != null) {
+                firstIndexNotInCache = pageBufferFirstIndex
+                        + pageBuffer[CELL_ITEMID].length;
+            } else {
+                firstIndexNotInCache = -1;
+            }
 
             // Creates the page contents
             int filledRows = 0;
@@ -1203,10 +1212,13 @@ public class Table extends AbstractSelect implements Action.Container,
                     }
                     cells[CELL_ICON][i] = getItemIcon(id);
                 }
+
                 if (cols > 0) {
                     for (int j = 0; j < cols; j++) {
-                        Object value = null;
                         final Property p = getContainerProperty(id, colids[j]);
+                        Object value = null;
+                        // check in current pageBuffer already has row
+                        int index = firstIndex + i;
                         if (p != null) {
                             if (p instanceof Property.ValueChangeNotifier) {
                                 if (oldListenedProperties == null
@@ -1216,12 +1228,24 @@ public class Table extends AbstractSelect implements Action.Container,
                                 }
                                 listenedProperties.add(p);
                             }
-                            if (iscomponent[j]) {
-                                value = p.getValue();
-                            } else if (p != null) {
-                                value = getPropertyValue(id, colids[j], p);
+                            if (index < firstIndexNotInCache
+                                    && index >= pageBufferFirstIndex) {
+                                // we have data already in our cache,
+                                    // recycle it instead of fetching it via
+                                    // getValue/getPropertyValue
+                                int indexInOldBuffer = index
+                                        - pageBufferFirstIndex;
+                                value = pageBuffer[CELL_FIRSTCOL + j][indexInOldBuffer];
                             } else {
-                                value = getPropertyValue(id, colids[j], null);
+
+                                if (iscomponent[j]) {
+                                    value = p.getValue();
+                                } else if (p != null) {
+                                    value = getPropertyValue(id, colids[j], p);
+                                } else {
+                                    value = getPropertyValue(id, colids[j],
+                                            null);
+                                }
                             }
                         } else {
                             value = "";
@@ -1235,9 +1259,9 @@ public class Table extends AbstractSelect implements Action.Container,
                             visibleComponents.add(value);
                         }
                         cells[CELL_FIRSTCOL + j][i] = value;
-
                     }
                 }
+
                 id = ((Container.Ordered) items).nextItemId(id);
 
                 filledRows++;
@@ -1253,6 +1277,8 @@ public class Table extends AbstractSelect implements Action.Container,
                 }
                 cells = temp;
             }
+
+            pageBufferFirstIndex = firstIndex;
 
             // Saves the results to internal buffer
             pageBuffer = cells;
@@ -1523,7 +1549,7 @@ public class Table extends AbstractSelect implements Action.Container,
             }
             if (doSort) {
                 this.sort();
-                clientNeedsContentRefresh = true;
+                resetPageBuffer();
             }
         }
 
@@ -2008,8 +2034,19 @@ public class Table extends AbstractSelect implements Action.Container,
     public void valueChange(Property.ValueChangeEvent event) {
         if (event.getProperty() == this) {
             super.valueChange(event);
+        } else {
+            resetPageBuffer();
+            refreshRenderedCells();
         }
         requestRepaint();
+    }
+
+    private void resetPageBuffer() {
+        firstToBeRenderedInClient = -1;
+        lastToBeRenderedInClient = -1;
+        reqFirstRowToPaint = -1;
+        reqRowsToPaint = -1;
+        pageBuffer = null;
     }
 
     /**
@@ -2178,6 +2215,7 @@ public class Table extends AbstractSelect implements Action.Container,
         }
         // ensure that page still has first item in page
         setCurrentPageFirstItemIndex(getCurrentPageFirstItemIndex());
+
         refreshRenderedCells();
     }
 
@@ -2190,6 +2228,7 @@ public class Table extends AbstractSelect implements Action.Container,
     public void containerPropertySetChange(
             Container.PropertySetChangeEvent event) {
         super.containerPropertySetChange(event);
+
         refreshRenderedCells();
     }
 

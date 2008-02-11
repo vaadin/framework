@@ -900,9 +900,9 @@ public class IndexedContainer implements Container, Container.Indexed,
                 if (listenerList != null) {
                     final Property.ValueChangeEvent event = new IndexedContainer.PropertyValueChangeEvent(
                             source);
-                    for (final Iterator i = listenerList.iterator(); i
-                            .hasNext();) {
-                        ((Property.ValueChangeListener) i.next())
+                    Object[] listeners = listenerList.toArray();
+                    for (int i = 0; i < listeners.length; i++) {
+                        ((Property.ValueChangeListener) listeners[i])
                                 .valueChange(event);
                     }
                 }
