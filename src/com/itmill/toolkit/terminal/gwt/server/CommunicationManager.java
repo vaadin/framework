@@ -87,12 +87,8 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
 
     private int pendingLocalesIndex;
 
-    private final ApplicationServlet applicationServlet;
-
-    public CommunicationManager(Application application,
-            ApplicationServlet applicationServlet) {
+        public CommunicationManager(Application application) {
         this.application = application;
-        this.applicationServlet = applicationServlet;
         requireLocale(application.getLocale().toString());
     }
 
@@ -190,7 +186,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
      * @throws IOException
      */
     public void handleUidlRequest(HttpServletRequest request,
-            HttpServletResponse response) throws IOException {
+            HttpServletResponse response, ApplicationServlet applicationServlet) throws IOException {
 
         // repaint requested or session has timed out and new one is created
         boolean repaintAll = (request.getParameter(GET_PARAM_REPAINT_ALL) != null)

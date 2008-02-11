@@ -382,7 +382,7 @@ public class ApplicationServlet extends HttpServlet {
                     ((WebApplicationContext) application.getContext())
                             .startTransaction(application, request);
                     getApplicationManager(application).handleUidlRequest(
-                            request, response);
+                            request, response, this);
 
                     return;
                 }
@@ -1407,7 +1407,7 @@ public class ApplicationServlet extends HttpServlet {
 
         if (mgr == null) {
             // Creates new manager
-            mgr = new CommunicationManager(application, this);
+            mgr = new CommunicationManager(application);
             applicationToAjaxAppMgrMap.put(application, mgr);
         }
         return mgr;
