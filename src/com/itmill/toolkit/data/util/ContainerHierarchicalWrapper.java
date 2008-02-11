@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 
 import com.itmill.toolkit.data.Container;
@@ -49,7 +50,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
     private Hashtable children = null;
 
     /** List that contains all root elements of the container. */
-    private LinkedList roots = null;
+    private LinkedHashSet roots = null;
 
     /** Is the wrapped container hierarchical by itself ? */
     private boolean hierarchical;
@@ -78,7 +79,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
             noChildrenAllowed = new HashSet();
             parent = new Hashtable();
             children = new Hashtable();
-            roots = new LinkedList(container.getItemIds());
+            roots = new LinkedHashSet(container.getItemIds());
         }
 
         updateHierarchicalWrapper();
@@ -101,7 +102,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
                 noChildrenAllowed = new HashSet();
                 parent = new Hashtable();
                 children = new Hashtable();
-                roots = new LinkedList(container.getItemIds());
+                roots = new LinkedHashSet(container.getItemIds());
             }
 
             // Check that the hierarchy is up-to-date
@@ -109,8 +110,8 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
 
                 // Calculate the set of all items in the hierarchy
                 final HashSet s = new HashSet();
-                s.add(parent.keySet());
-                s.add(children.keySet());
+                s.addAll(parent.keySet());
+                s.addAll(children.keySet());
                 s.addAll(roots);
 
                 // Remove unnecessary items
