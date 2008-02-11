@@ -1787,6 +1787,12 @@ public class Table extends AbstractSelect implements Action.Container,
                     if (c == null) {
                         target.addText("");
                     } else {
+                        /*
+                         * FIXME ensuring that table never gets "cached" child
+                         * paints by calling requestRepaint for child component
+                         * IScrollTable currently can's survive those.
+                         */
+                        c.requestRepaint();
                         c.paint(target);
                     }
                 } else {
