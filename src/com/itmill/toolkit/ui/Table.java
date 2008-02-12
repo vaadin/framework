@@ -1731,6 +1731,9 @@ public class Table extends AbstractSelect implements Action.Container,
         if (lastToBeRenderedInClient != -1 && lastToBeRenderedInClient < end) {
             end = lastToBeRenderedInClient + 1;
         }
+        if (start > cells[CELL_ITEMID].length || start < 0) {
+            start = 0;
+        }
 
         for (int i = start; i < end; i++) {
             final Object itemId = cells[CELL_ITEMID][i];
