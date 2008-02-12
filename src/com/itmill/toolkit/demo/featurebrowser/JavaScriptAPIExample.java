@@ -21,7 +21,7 @@ import com.itmill.toolkit.ui.Button.ClickEvent;
  */
 public class JavaScriptAPIExample extends CustomComponent {
 
-    public static final String txt = "<A href=\"javascript:itmill.forceSync();\">javascript:itmill.forceSync();</A>";
+    public static final String txt = "(more examples will be added here as the APIs are made public)<br/><br/><A href=\"javascript:itmill.forceSync();\">javascript:itmill.forceSync();</A>";
 
     private final OrderedLayout main;
     private final Label l;
