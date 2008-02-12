@@ -144,19 +144,19 @@ public class ListenerOrder extends com.itmill.toolkit.Application implements
     public void containerPropertySetChange(PropertySetChangeEvent event) {
         String msg = "containerPropertySetChange from " + this;
         System.out.println(msg);
-        // getMainWindow().showNotification(msg);
+        getMainWindow().showNotification(msg);
     }
 
     public void containerItemSetChange(ItemSetChangeEvent event) {
         String msg = "containerItemSetChange from " + this;
         System.out.println(msg);
-        // getMainWindow().showNotification(msg);
+        getMainWindow().showNotification(msg);
     }
 
     public void valueChange(ValueChangeEvent event) {
         String msg = "valueChange from " + this;
         System.out.println(msg);
-        // getMainWindow().showNotification(msg);
+        getMainWindow().showNotification(msg);
     }
 
 }
