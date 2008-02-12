@@ -1425,6 +1425,14 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /* Overriding select behavior ******************************************** */
 
+    public void setValue(Object newValue) throws ReadOnlyException,
+            ConversionException {
+        // external selection change, need to truncate pageBuffer
+        resetPageBuffer();
+        refreshRenderedCells();
+        super.setValue(newValue);
+    }
+
     /**
      * Sets the Container that serves as the data source of the viewer.
      * 
@@ -2615,4 +2623,5 @@ public class Table extends AbstractSelect implements Action.Container,
                 + getContainerDataSource().size() + " ,value:"
                 + super.toString();
     }
+
 }
