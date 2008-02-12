@@ -977,11 +977,11 @@ public class Table extends AbstractSelect implements Action.Container,
     public void setCurrentPageFirstItemIndex(int newIndex) {
 
         // Ensures that the new value is valid
+        if (newIndex >= size()) {
+            newIndex = size() - pageLength;
+        }
         if (newIndex < 0) {
             newIndex = 0;
-        }
-        if (newIndex >= size()) {
-            newIndex = size() - 1;
         }
 
         // Refresh first item id
