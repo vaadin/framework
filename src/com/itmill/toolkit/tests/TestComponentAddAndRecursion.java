@@ -5,6 +5,7 @@ package com.itmill.toolkit.tests;
 
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.CustomComponent;
+import com.itmill.toolkit.ui.GridLayout;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Panel;
@@ -39,7 +40,27 @@ public class TestComponentAddAndRecursion extends CustomComponent {
         p3 = new Panel("p3");
         p2.addComponent(p3);
 
-        Button b = new Button("move B", new Button.ClickListener() {
+        Button b = new Button("use gridlayout", new Button.ClickListener() {
+
+            public void buttonClick(ClickEvent event) {
+                p.setLayout(new GridLayout());
+                p2.setLayout(new GridLayout());
+                p3.setLayout(new GridLayout());
+            }
+
+        });
+        main.addComponent(b);
+        b = new Button("use orderedlayout", new Button.ClickListener() {
+
+            public void buttonClick(ClickEvent event) {
+                p.setLayout(new OrderedLayout());
+                p2.setLayout(new OrderedLayout());
+                p3.setLayout(new OrderedLayout());
+            }
+
+        });
+        main.addComponent(b);
+        b = new Button("move B", new Button.ClickListener() {
 
             public void buttonClick(ClickEvent event) {
                 p2.addComponent(l2);
