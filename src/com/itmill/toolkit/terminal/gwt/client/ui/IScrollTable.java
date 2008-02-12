@@ -321,7 +321,8 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 
         final int optimalFirstRow = (int) (firstRowInViewPort - pageLength
                 * CACHE_RATE);
-        while (tBody.getFirstRendered() < optimalFirstRow) {
+        while (tBody.getLastRendered() > optimalFirstRow
+                && tBody.getFirstRendered() < optimalFirstRow) {
             // client.console.log("removing row from start");
             tBody.unlinkRow(true);
         }
