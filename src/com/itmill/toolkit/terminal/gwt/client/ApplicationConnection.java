@@ -76,7 +76,12 @@ public class ApplicationConnection {
 
     public ApplicationConnection(WidgetSet widgetSet) {
         this.widgetSet = widgetSet;
-        appUri = getAppUri();
+        String tmp = getAppUri();
+        if (!tmp.endsWith("/")) {
+            appUri = tmp + "/";
+        } else {
+            appUri = tmp;
+        }
 
         if (isDebugMode()) {
             console = new DebugConsole(this);
@@ -197,7 +202,7 @@ public class ApplicationConnection {
         showLoadingIndicator();
 
         console.log("Making UIDL Request with params: " + requestData);
-        final String uri = appUri + "/UIDL" + getPathInfo();
+        final String uri = appUri + "UIDL" + getPathInfo();
         final RequestBuilder rb = new RequestBuilder(RequestBuilder.POST, uri);
         rb.setHeader("Content-Type",
                 "application/x-www-form-urlencoded; charset=utf-8");

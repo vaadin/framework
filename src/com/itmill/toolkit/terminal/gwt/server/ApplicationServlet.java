@@ -603,8 +603,9 @@ public class ApplicationServlet extends HttpServlet {
                 appUrl = "";
                 widgetsetUrl = "";
                 // if context is specified add it to widgetsetUrl
-                if (urlParts[3].equals(request.getContextPath().replaceAll(
-                        "\\/", ""))) {
+                if (urlParts.length > 3
+                        && urlParts[3].equals(request.getContextPath()
+                                .replaceAll("\\/", ""))) {
                     widgetsetUrl += "/" + urlParts[3];
                 }
                 for (int i = 3; i < urlParts.length; i++) {
