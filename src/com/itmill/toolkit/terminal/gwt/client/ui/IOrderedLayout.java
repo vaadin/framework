@@ -105,6 +105,8 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
         final Iterator newIt = uidlWidgets.iterator();
         final Iterator newUidl = uidl.getChildIterator();
 
+        final ArrayList paintedWidgets = new ArrayList();
+
         Widget oldChild = null;
         while (newIt.hasNext()) {
             final Widget child = (Widget) newIt.next();
@@ -116,7 +118,9 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
                 while (oldIt.hasNext()) {
                     oldChild = (Widget) oldIt.next();
                     // now oldChild is an instance of Paintable
-                    if (uidlWidgets.contains(oldChild)) {
+                    if (paintedWidgets.contains(oldChild)) {
+                        continue;
+                    } else if (uidlWidgets.contains(oldChild)) {
                         break;
                     } else {
                         removePaintable((Paintable) oldChild);
@@ -148,6 +152,7 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
                 insert(child, index);
             }
             ((Paintable) child).updateFromUIDL(childUidl, client);
+            paintedWidgets.add(child);
         }
         // remove possibly remaining old Paintable object which were not updated
         while (oldIt.hasNext()) {
