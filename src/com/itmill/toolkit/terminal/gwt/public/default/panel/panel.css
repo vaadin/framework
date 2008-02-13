@@ -58,6 +58,7 @@
 	border-top: none;
 	border-bottom: 1px solid #dee2e3;
 	background-color: #fff;
+	overflow: auto;
 }
 
 .i-panel-deco {

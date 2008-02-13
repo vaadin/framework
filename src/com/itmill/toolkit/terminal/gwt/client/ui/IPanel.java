@@ -43,6 +43,8 @@ public class IPanel extends SimplePanel implements Paintable,
 
     private Paintable layout;
 
+    ShortcutActionHandler shortcutHandler;
+
     public IPanel() {
         super();
         DOM.appendChild(getElement(), captionNode);
@@ -58,6 +60,7 @@ public class IPanel extends SimplePanel implements Paintable,
                         + "-content");
         DOM.setElementProperty(bottomDecoration, "className", CLASSNAME
                 + "-deco");
+        DOM.sinkEvents(getElement(), Event.ONKEYDOWN);
     }
 
     protected Element getContainerElement() {
@@ -147,6 +150,20 @@ public class IPanel extends SimplePanel implements Paintable,
             layout = newLayout;
         }
         (layout).updateFromUIDL(layoutUidl, client);
+
+        // We may have actions attached to this panel
+        if (uidl.getChildCount() > 1) {
+            final int cnt = uidl.getChildCount();
+            for (int i = 1; i < cnt; i++) {
+                UIDL childUidl = uidl.getChildUIDL(i);
+                if (childUidl.getTag().equals("actions")) {
+                    if (shortcutHandler == null) {
+                        shortcutHandler = new ShortcutActionHandler(id, client);
+                    }
+                    shortcutHandler.updateActionMap(childUidl);
+                }
+            }
+        }
 
     }
 
@@ -256,9 +273,14 @@ public class IPanel extends SimplePanel implements Paintable,
 
     public void onBrowserEvent(Event event) {
         final Element target = DOM.eventGetTarget(event);
+        final int type = DOM.eventGetType(event);
+        if (type == Event.ONKEYDOWN && shortcutHandler != null) {
+            shortcutHandler.handleKeyboardEvent(event);
+            return;
+        }
         if (errorIndicatorElement != null
                 && DOM.compare(target, errorIndicatorElement)) {
-            switch (DOM.eventGetType(event)) {
+            switch (type) {
             case Event.ONMOUSEOVER:
                 if (errorMessage != null) {
                     errorMessage.showAt(errorIndicatorElement);
@@ -280,14 +302,14 @@ public class IPanel extends SimplePanel implements Paintable,
     }
 
     /**
-     * Panal handles dimensions by itself
+     * Panel handles dimensions by itself.
      */
     public void setHeight(String height) {
         // NOP
     }
 
     /**
-     * Panal handles dimensions by itself
+     * Panel handles dimensions by itself.
      */
     public void setWidth(String width) {
         // NOP

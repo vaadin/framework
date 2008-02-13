@@ -182,6 +182,10 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
         id = uidl.getId();
         this.client = client;
 
+        // Workaround needed for Testing Tools (GWT generates window DOM
+        // slightly different in different browsers).
+        DOM.setElementProperty(closeBox, "id", id + "_window_close");
+
         if (uidl.hasAttribute("invisible")) {
             this.hide();
             return;
