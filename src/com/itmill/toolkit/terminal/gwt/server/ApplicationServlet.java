@@ -14,7 +14,6 @@ import java.io.Writer;
 import java.lang.reflect.Constructor;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -682,6 +681,8 @@ public class ApplicationServlet extends HttpServlet {
         boolean testingWindow = testingToolsActive
                 && request.getParameter("TT") != null;
 
+        // TODO simplify if possible (probably)
+
         page.write("', pathInfo: '" + pathInfo);
         page.write("', themeUri: ");
         page.write(themeUri != null ? "'" + themeUri + "'" : "null");
@@ -733,13 +734,7 @@ public class ApplicationServlet extends HttpServlet {
                 + "\" type=\"text/javascript\"></script>\n");
         page.write("<link rel=\"stylesheet\" href=\"" + ext + "/ext/TT.css"
                 + "\" type=\"text/css\" />\n");
-        if (request.getParameter("TT-TC") != null
-                || request.getParameter("TT-TS") != null) {
-            proxyTestCases(request.getParameter("TT-TC"), request
-                    .getParameter("TT-TS"), request
-                    .getParameter("TT-TS-RUN-ID"), page,
-                    getTestingToolsUri(request));
-        }
+
     }
 
     private String getTestingToolsUri(HttpServletRequest request) {
@@ -750,60 +745,6 @@ public class ApplicationServlet extends HttpServlet {
                     + ":8099" + "/TestingToolsServer";
         }
         return testingToolsServerUri;
-    }
-
-    /**
-     * Fetches testcase or testsuite scripts from Testing Tools server and
-     * injects script to AUT client
-     * 
-     * @param testCaseId
-     * @param testSuiteId
-     * @param testSuiteRunId
-     * @param page
-     * @param testServerUri
-     * @throws IOException
-     * @throws MalformedURLException
-     */
-    private void proxyTestCases(String testCaseId, String testSuiteId,
-            String testSuiteRunId, Writer page, String testServerUri)
-            throws IOException, MalformedURLException {
-        URLConnection conn;
-
-        if (testCaseId != null) {
-            testServerUri += "/TT-TC/" + testCaseId;
-        }
-        if (testSuiteId != null) {
-            testServerUri += "/TT-TS/" + testSuiteId;
-        }
-        if (testSuiteRunId != null) {
-            testServerUri += "/TT-TS-RUN-ID/" + testSuiteRunId;
-        }
-
-        conn = new URL(testServerUri).openConnection();
-        InputStream is = conn.getInputStream();
-
-        StringBuffer builder = new StringBuffer();
-        byte[] b = new byte[4096];
-        for (int n; (n = is.read(b)) != -1;) {
-            builder.append(new String(b, 0, n));
-        }
-        is.close();
-
-        if (builder != null && builder.length() > 0) {
-            page
-                    .write("<script language=\"JavaScript\" type=\"text/javascript\">\n");
-            page.write("itmill.TTtestCaseId = \"" + testCaseId + "\";\n");
-            if (testSuiteId != null) {
-                page.write("itmill.TTtestSuiteId = \"" + testSuiteId + "\";\n");
-            }
-            if (testSuiteRunId != null) {
-                page.write("itmill.TTtestSuiteRunId = \"" + testSuiteRunId
-                        + "\";\n");
-            }
-            page.write("itmill.TTtestCaseScript = " + builder.toString()
-                    + ";\n");
-            page.write("</script>\n");
-        }
     }
 
     /**
