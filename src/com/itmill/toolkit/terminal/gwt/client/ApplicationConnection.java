@@ -134,7 +134,7 @@ public class ApplicationConnection {
          client.getVersionInfo = function() {
              return $wnd.itmill.versionInfo;
          }
-         $wnd.top.itmill.startTT(client);
+         $wnd.top.itmill.registerToTT(client);
     }-*/;
 
     /**
