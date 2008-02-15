@@ -121,7 +121,7 @@ public class ApplicationConnection {
      */
     private native static boolean checkTestingMode()
     /*-{
-        @com.itmill.toolkit.terminal.gwt.client.ApplicationConnection::testingMode = $wnd.itmill.testingToolsUri ? true : false;
+        @com.itmill.toolkit.terminal.gwt.client.ApplicationConnection::testingMode = $wnd.top.itmill.registerToTT ? true : false;
         return @com.itmill.toolkit.terminal.gwt.client.ApplicationConnection::testingMode;
     }-*/;
 
