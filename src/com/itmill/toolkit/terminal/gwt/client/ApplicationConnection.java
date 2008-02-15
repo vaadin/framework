@@ -91,7 +91,7 @@ public class ApplicationConnection {
 
         if (checkTestingMode()) {
             usePaintableIdsInDOM = true;
-            initializeTestingTools(getTestServerUri(), this);
+            initializeTestingTools(this);
         }
 
         initializeClientHooks();
@@ -103,11 +103,6 @@ public class ApplicationConnection {
         view = new IView("itmill-ajax-window");
 
     }
-
-    private native static String getTestServerUri()
-    /*-{
-        return $wnd.itmill.testingToolsUri;
-    }-*/;
 
     /**
      * Method to check if application is in testing mode. Can be used after
@@ -130,17 +125,16 @@ public class ApplicationConnection {
         return @com.itmill.toolkit.terminal.gwt.client.ApplicationConnection::testingMode;
     }-*/;
 
-    private native static void initializeTestingTools(String testServerUri,
-            ApplicationConnection ap)
+    private native static void initializeTestingTools(ApplicationConnection ap)
     /*-{
          var client = {};
-         client.hasActiveRequest = function() {
+         client.isActive = function() {
              return ap.@com.itmill.toolkit.terminal.gwt.client.ApplicationConnection::hasActiveRequest()();
          }
          client.getVersionInfo = function() {
              return $wnd.itmill.versionInfo;
          }
-         $wnd.itmill.startTT(testServerUri, client);
+         $wnd.top.itmill.startTT(client);
     }-*/;
 
     /**
