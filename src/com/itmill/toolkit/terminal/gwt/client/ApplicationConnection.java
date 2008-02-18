@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -22,6 +23,8 @@ import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.WindowCloseListener;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HasFocus;
 import com.google.gwt.user.client.ui.HasWidgets;
@@ -74,6 +77,15 @@ public class ApplicationConnection {
 
     private Request uidlRequest;
 
+    /**
+     * Contains reference for client wrapper given to Testing Tools.
+     * 
+     * Used in JSNI functions
+     * 
+     * @SuppressWarnings
+     */
+    private JavaScriptObject ttClientWrapper = null;
+
     public ApplicationConnection(WidgetSet widgetSet) {
         this.widgetSet = widgetSet;
         String tmp = getAppUri();
@@ -91,7 +103,16 @@ public class ApplicationConnection {
 
         if (checkTestingMode()) {
             usePaintableIdsInDOM = true;
-            initializeTestingTools(this);
+            initializeTestingTools();
+            Window.addWindowCloseListener(new WindowCloseListener() {
+                public void onWindowClosed() {
+                    uninitializeTestingTools();
+                }
+
+                public String onWindowClosing() {
+                    return null;
+                }
+            });
         }
 
         initializeClientHooks();
@@ -125,8 +146,9 @@ public class ApplicationConnection {
         return @com.itmill.toolkit.terminal.gwt.client.ApplicationConnection::testingMode;
     }-*/;
 
-    private native static void initializeTestingTools(ApplicationConnection ap)
+    private native void initializeTestingTools()
     /*-{
+         var ap = this;
          var client = {};
          client.isActive = function() {
              return ap.@com.itmill.toolkit.terminal.gwt.client.ApplicationConnection::hasActiveRequest()();
@@ -135,6 +157,12 @@ public class ApplicationConnection {
              return $wnd.itmill.versionInfo;
          }
          $wnd.top.itmill.registerToTT(client);
+         this.@com.itmill.toolkit.terminal.gwt.client.ApplicationConnection::ttClientWrapper = client;
+    }-*/;
+
+    private native void uninitializeTestingTools()
+    /*-{
+         $wnd.top.itmill.unregisterFromTT(this.@com.itmill.toolkit.terminal.gwt.client.ApplicationConnection::ttClientWrapper);
     }-*/;
 
     /**
