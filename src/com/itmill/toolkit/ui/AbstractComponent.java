@@ -1104,8 +1104,8 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
         setWidthUnits(p[1]);
     }
 
-    public void setHeight(String width) {
-        int[] p = parseStringSize(width);
+    public void setHeight(String height) {
+        int[] p = parseStringSize(height);
         setHeight(p[0]);
         setHeightUnits(p[1]);
     }
