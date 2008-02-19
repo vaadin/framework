@@ -678,18 +678,11 @@ public class ApplicationServlet extends HttpServlet {
             themeUri = staticFilePath + "/" + THEME_DIRECTORY_PATH + themeName;
         }
 
-        boolean testingWindow = testingToolsActive
-                && request.getParameter("TT") != null;
-
         // TODO simplify if possible (probably)
 
         page.write("', pathInfo: '" + pathInfo);
         page.write("', themeUri: ");
         page.write(themeUri != null ? "'" + themeUri + "'" : "null");
-        if (testingWindow) {
-            page.write(", testingToolsUri : '" + getTestingToolsUri(request)
-                    + "'");
-        }
         if (testingToolsActive) {
             page.write(", versionInfo : {toolkitVersion:\"");
             page.write(VERSION);
@@ -699,6 +692,9 @@ public class ApplicationServlet extends HttpServlet {
         }
 
         page.write("\n};\n</script>\n");
+
+        boolean testingWindow = testingToolsActive
+                && request.getParameter("TT") != null;
 
         if (testingWindow) {
             writeTestingToolsScripts(page, request);
