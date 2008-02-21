@@ -153,8 +153,10 @@ public class ApplicationConnection {
          client.isActive = function() {
              return ap.@com.itmill.toolkit.terminal.gwt.client.ApplicationConnection::hasActiveRequest()();
          }
-         client.getVersionInfo = function() {
-             return $wnd.itmill.versionInfo;
+         if ($wnd.itmill.versionInfo) {
+             client.getVersionInfo = function() {
+                 return $wnd.itmill.versionInfo;
+             }
          }
          $wnd.top.itmill.registerToTT(client);
          this.@com.itmill.toolkit.terminal.gwt.client.ApplicationConnection::ttClientWrapper = client;
