@@ -116,7 +116,7 @@ public class ITabsheet extends ITabsheetBase implements
             boolean selected) {
         // TODO check indexes, now new tabs get placed last (changing tab order
         // is not supported from server-side)
-        tb.addTab(caption);
+        tb.addTab("<span>" + caption + "</span>", true);
         if (selected) {
             renderContent(contentUidl);
             tb.selectTab(index);
