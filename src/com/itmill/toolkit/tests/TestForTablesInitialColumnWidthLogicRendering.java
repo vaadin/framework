@@ -4,6 +4,7 @@
 
 package com.itmill.toolkit.tests;
 
+import java.util.Iterator;
 import java.util.Vector;
 
 import com.itmill.toolkit.ui.Button;
@@ -48,6 +49,18 @@ public class TestForTablesInitialColumnWidthLogicRendering extends
 
         t = getTestTable(5, 200);
         t.setCaption("Table with  some cols and lot of rows");
+        main.addComponent(t);
+
+        t = getTestTable(5, 5);
+        t
+                .setCaption("Table with  some cols and rows rows, some col widths fixed");
+
+        Iterator it = t.getContainerPropertyIds().iterator();
+        it.next();
+        it.next();
+        t.setColumnWidth(it.next(), 30);
+        t.setColumnWidth(it.next(), 30);
+        t.setWidth("700px");
         main.addComponent(t);
 
         t = getTestTable(12, 4);
