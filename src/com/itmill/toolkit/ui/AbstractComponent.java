@@ -46,7 +46,8 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
     private String caption;
 
     /**
-     * Application specific data object.
+     * Application specific data object. The component does not use or modify
+     * this.
      */
     private Object applicationData;
 
@@ -964,7 +965,8 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
     }
 
     /**
-     * Sets the application specific data object.
+     * Sets the data object, that can be used for any application specific data.
+     * The component does not use or modify this data.
      * 
      * @param data
      *                the Application specific data.
@@ -975,7 +977,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
     }
 
     /**
-     * Gets the application specific data.
+     * Gets the application specific data. See {@link #setData(Object)}.
      * 
      * @return the Application specific data set with setData function.
      * @since 3.1
