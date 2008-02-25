@@ -95,9 +95,10 @@ public class CalendarPanel extends FlexTable implements MouseListener,
     }
 
     private void buildCalendarHeader(boolean forceRedraw, boolean needsMonth) {
+        Date cdate = datefield.getCurrentDate();
         // Can't draw a calendar without a date
-        if (datefield.getCurrentDate() == null) {
-            datefield.setCurrentDate(new Date());
+        if (cdate == null) {
+            cdate = new Date();
         }
 
         if (forceRedraw) {
@@ -164,8 +165,8 @@ public class CalendarPanel extends FlexTable implements MouseListener,
         }
 
         final String monthName = needsMonth ? datefield.getDateTimeService()
-                .getMonth(datefield.getCurrentDate().getMonth()) : "";
-        final int year = datefield.getCurrentDate().getYear() + 1900;
+                .getMonth(cdate.getMonth()) : "";
+        final int year = cdate.getYear() + 1900;
         setHTML(0, 2, "<span class=\"" + IDateField.CLASSNAME
                 + "-calendarpanel-month\">" + monthName + " " + year
                 + "</span>");
@@ -173,8 +174,10 @@ public class CalendarPanel extends FlexTable implements MouseListener,
 
     private void buildCalendarBody() {
         Date date = datefield.getCurrentDate();
+        boolean selected = true; // date actually selected?
         if (date == null) {
             date = new Date();
+            selected = false;
         }
         final int startWeekDay = datefield.getDateTimeService()
                 .getStartWeekDay(date);
@@ -208,7 +211,7 @@ public class CalendarPanel extends FlexTable implements MouseListener,
                         if (!isEnabledDate(curr)) {
                             cssClass += " " + baseclass + "-disabled";
                         }
-                        if (date.getDate() == dayCount) {
+                        if (selected && date.getDate() == dayCount) {
                             cssClass += " " + baseclass + "-selected";
                         }
                         if (today.getDate() == dayCount

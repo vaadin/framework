@@ -4,6 +4,8 @@
 
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
+import java.util.Date;
+
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.ListBox;
@@ -149,27 +151,35 @@ public class Time extends FlowPanel implements ChangeListener {
         }
 
         // Update times
+        Date cdate = datefield.getCurrentDate();
+        boolean selected = true;
+        if (cdate == null) {
+            cdate = new Date();
+            selected = false;
+        }
         if (thc) {
-            int h = datefield.getCurrentDate().getHours();
+            int h = cdate.getHours();
             ampm.setSelectedIndex(h < 12 ? 0 : 1);
             h -= ampm.getSelectedIndex() * 12;
             hours.setSelectedIndex(h);
         } else {
-            hours.setSelectedIndex(datefield.getCurrentDate().getHours());
+            hours.setSelectedIndex(cdate.getHours());
         }
         if (datefield.getCurrentResolution() >= IDateField.RESOLUTION_MIN) {
-            mins.setSelectedIndex(datefield.getCurrentDate().getMinutes());
+            mins.setSelectedIndex(cdate.getMinutes());
         }
         if (datefield.getCurrentResolution() >= IDateField.RESOLUTION_SEC) {
-            sec.setSelectedIndex(datefield.getCurrentDate().getSeconds());
+            sec.setSelectedIndex(cdate.getSeconds());
         }
         if (datefield.getCurrentResolution() == IDateField.RESOLUTION_MSEC) {
-            msec.setSelectedIndex(datefield.getMilliseconds());
+            if (selected) {
+                msec.setSelectedIndex(datefield.getMilliseconds());
+            } else {
+                msec.setSelectedIndex(0);
+            }
         }
         if (thc) {
-            ampm
-                    .setSelectedIndex(datefield.getCurrentDate().getHours() < 12 ? 0
-                            : 1);
+            ampm.setSelectedIndex(cdate.getHours() < 12 ? 0 : 1);
         }
 
         if (datefield.isReadonly() && !redraw) {
@@ -178,7 +188,7 @@ public class Time extends FlowPanel implements ChangeListener {
             final String delimiter = datefield.getDateTimeService()
                     .getClockDelimeter();
 
-            int h = datefield.getCurrentDate().getHours();
+            int h = cdate.getHours();
             if (thc) {
                 h -= h < 12 ? 0 : 12;
             }
@@ -205,8 +215,7 @@ public class Time extends FlowPanel implements ChangeListener {
             }
             if (thc) {
                 add(new ILabel("&nbsp;"));
-                add(new ILabel(ampm.getItemText(datefield.getCurrentDate()
-                        .getHours() < 12 ? 0 : 1)));
+                add(new ILabel(ampm.getItemText(cdate.getHours() < 12 ? 0 : 1)));
             }
         }
 

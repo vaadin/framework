@@ -113,6 +113,8 @@ public class IDateField extends FlowPanel implements Paintable {
         if (year > -1) {
             date = new Date((long) getTime(year, month, day, hour, min, sec,
                     msec));
+        } else {
+            date = null;
         }
 
     }
@@ -122,23 +124,24 @@ public class IDateField extends FlowPanel implements Paintable {
      * have a setMilliseconds method.
      */
     private static native double getTime(int y, int m, int d, int h, int mi,
-            int s, int ms) /*-{
-                         try {
-                         	var date = new Date();
-                         	if(y && y >= 0) date.setFullYear(y);
-                         	if(m && m >= 1) date.setMonth(m-1);
-                         	if(d && d >= 0) date.setDate(d);
-                         	if(h && h >= 0) date.setHours(h);
-                         	if(mi && mi >= 0) date.setMinutes(mi);
-                         	if(s && s >= 0) date.setSeconds(s);
-                         	if(ms && ms >= 0) date.setMilliseconds(ms);
-                         	return date.getTime();
-                         } catch (e) {
-                         	// TODO print some error message on the console
-                         	//console.log(e);
-                         	return (new Date()).getTime();
-                         }
-                         }-*/;
+            int s, int ms)
+    /*-{
+       try {
+       	var date = new Date();
+       	if(y && y >= 0) date.setFullYear(y);
+       	if(m && m >= 1) date.setMonth(m-1);
+       	if(d && d >= 0) date.setDate(d);
+       	if(h && h >= 0) date.setHours(h);
+       	if(mi && mi >= 0) date.setMinutes(mi);
+       	if(s && s >= 0) date.setSeconds(s);
+       	if(ms && ms >= 0) date.setMilliseconds(ms);
+       	return date.getTime();
+       } catch (e) {
+       	// TODO print some error message on the console
+       	//console.log(e);
+       	return (new Date()).getTime();
+       }
+    }-*/;
 
     public int getMilliseconds() {
         return (int) (date.getTime() - date.getTime() / 1000 * 1000);
