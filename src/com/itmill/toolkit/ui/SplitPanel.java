@@ -47,6 +47,8 @@ public class SplitPanel extends AbstractLayout {
 
     private int posUnit = UNITS_PERCENTAGE;
 
+    private boolean locked = false;
+
     /**
      * Creates a new split panel. The orientation of the panels is
      * <code>ORIENTATION_VERTICAL</code>.
@@ -196,6 +198,10 @@ public class SplitPanel extends AbstractLayout {
         final String position = pos + UNIT_SYMBOLS[posUnit];
 
         target.addAttribute("position", position);
+        
+        if(isLocked()) {
+            target.addAttribute("locked", true);
+        }
 
         if (firstComponent != null) {
             firstComponent.paint(target);
@@ -267,6 +273,29 @@ public class SplitPanel extends AbstractLayout {
     public void setSplitPosition(int pos, int unit) {
         this.pos = pos;
         posUnit = unit;
+    }
+
+    /**
+     * Lock the SplitPanels position, disabling the user from dragging the split
+     * handle.
+     * 
+     * @param locked
+     *                Set <code>true</code> if locked, <code>false</code>
+     *                otherwise.
+     */
+    public void setLocked(boolean locked) {
+        this.locked = locked;
+        requestRepaint();
+    }
+
+    /**
+     * Is the SplitPanel handle locked (user not allowed to change split
+     * position by dragging).
+     * 
+     * @return <code>true</code> if locked, <code>false</code> otherwise.
+     */
+    public boolean isLocked() {
+        return locked;
     }
 
 }

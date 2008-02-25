@@ -49,6 +49,10 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
 
     private int origMouseY;
 
+    private boolean locked;
+
+    private String splitterStyleName;
+
     public ISplitPanel() {
         this(ORIENTATION_HORIZONTAL);
     }
@@ -99,15 +103,16 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
             DOM.setStyleAttribute(splitter, "height", "100%");
             DOM.setStyleAttribute(firstContainer, "height", "100%");
             DOM.setStyleAttribute(secondContainer, "height", "100%");
-            DOM.setElementProperty(splitter, "className", CLASSNAME
-                    + "-hsplitter");
         } else {
             DOM.setStyleAttribute(splitter, "width", "100%");
             DOM.setStyleAttribute(firstContainer, "width", "100%");
             DOM.setStyleAttribute(secondContainer, "width", "100%");
-            DOM.setElementProperty(splitter, "className", CLASSNAME
-                    + "-vsplitter");
         }
+
+        splitterStyleName = CLASSNAME
+                + (orientation == ORIENTATION_HORIZONTAL ? "-hsplitter"
+                        : "-vsplitter");
+        DOM.setElementProperty(splitter, "className", splitterStyleName);
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -116,6 +121,14 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
         }
 
         setSplitPosition(uidl.getStringAttribute("position"));
+
+        locked = uidl.hasAttribute("locked");
+        if (locked) {
+            DOM.setElementProperty(splitter, "className", splitterStyleName
+                    + "-locked");
+        } else {
+            DOM.setElementProperty(splitter, "className", splitterStyleName);
+        }
 
         final Paintable newFirstChild = client.getPaintable(uidl
                 .getChildUIDL(0));
@@ -278,6 +291,9 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
     }
 
     public void onMouseDown(Event event) {
+        if (locked) {
+            return;
+        }
         final Element trg = DOM.eventGetTarget(event);
         if (DOM.compare(trg, splitter)
                 || DOM.compare(trg, DOM.getChild(splitter, 0))) {
