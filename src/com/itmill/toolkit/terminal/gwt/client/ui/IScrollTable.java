@@ -120,7 +120,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
     private boolean showColHeaders;
 
     /** flag to indicate that table body has changed */
-    private boolean isNewBody = false;
+    private boolean isNewBody = true;
 
     public IScrollTable() {
 
