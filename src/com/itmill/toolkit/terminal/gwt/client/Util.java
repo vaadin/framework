@@ -18,40 +18,43 @@ public class Util {
      * Stops execution on firefox browsers on a breakpoint.
      * 
      */
-    public static native void browserDebugger() /*-{
-                               	if(window.console)
-                               		debugger;
-                               }-*/;
+    public static native void browserDebugger()
+    /*-{
+        if(window.console)
+            debugger;
+    }-*/;
 
     /**
      * Detects if current browser is IE.
      * 
      * @return true if IE
      */
-    public static native boolean isIE() /*-{
-                               	var browser=$wnd.navigator.appName;
-                               	if (browser=="Microsoft Internet Explorer") {
-                               		return true;
-                               	}
-                               	return false;
-                               }-*/;
+    public static native boolean isIE()
+    /*-{
+       var browser=$wnd.navigator.appName;
+       if (browser=="Microsoft Internet Explorer") {
+           return true;
+       }
+       return false;
+    }-*/;
 
     /**
      * Detects if current browser is IE6.
      * 
      * @return true if IE6
      */
-    public static native boolean isIE6() /*-{
-                               	var browser=$wnd.navigator.appName;
-                               	if (browser=="Microsoft Internet Explorer") {
-                               		var ua = navigator.userAgent;
-                                  		var re  = new RegExp("MSIE ([0-9]{1,}[\.0-9]{0,})");
-                                  		if (re.exec(ua) != null)
-                                    		rv = parseFloat(RegExp.$1);
-                                    		if(rv == 6) return true;
-                               	}
-                               	return false;
-                               }-*/;
+    public static native boolean isIE6()
+    /*-{
+    var browser=$wnd.navigator.appName;
+    if (browser=="Microsoft Internet Explorer") {
+    	var ua = navigator.userAgent;
+      		var re  = new RegExp("MSIE ([0-9]{1,}[\.0-9]{0,})");
+      		if (re.exec(ua) != null)
+        		rv = parseFloat(RegExp.$1);
+        		if(rv == 6) return true;
+    }
+    return false;
+    }-*/;
 
     /**
      * Nulls oncontextmenu function on given element. We need to manually clear
@@ -60,9 +63,10 @@ public class Util {
      * 
      * @param el
      */
-    public native static void removeContextMenuEvent(Element el) /*-{
-                               	el.oncontextmenu = null;
-                               }-*/;
+    public native static void removeContextMenuEvent(Element el)
+    /*-{
+      	el.oncontextmenu = null;
+    }-*/;
 
     /**
      * Traverses recursively ancestors until ContainerResizedListener child
@@ -99,5 +103,9 @@ public class Util {
             return (Container) parent;
         }
         return null;
+    }
+
+    public static boolean isIE7() {
+        return isIE() && !isIE6();
     }
 }

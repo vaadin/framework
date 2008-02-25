@@ -38,7 +38,10 @@ public class Caption extends HTML {
 
         setStyleName(getElement(), "i-disabled", uidl.hasAttribute("disabled"));
 
+        boolean isEmpty = true;
+
         if (uidl.hasAttribute("error")) {
+            isEmpty = false;
             final UIDL errorUidl = uidl.getErrors();
 
             if (errorIndicatorElement == null) {
@@ -64,6 +67,7 @@ public class Caption extends HTML {
                 DOM.appendChild(getElement(), icon.getElement());
             }
             icon.setUri(uidl.getStringAttribute("icon"));
+            isEmpty = false;
         } else {
             if (icon != null) {
                 DOM.removeChild(getElement(), icon.getElement());
@@ -77,7 +81,13 @@ public class Caption extends HTML {
                 captionText = DOM.createSpan();
                 DOM.appendChild(getElement(), captionText);
             }
-            DOM.setInnerText(captionText, uidl.getStringAttribute("caption"));
+            String c = uidl.getStringAttribute("caption");
+            if (c == null) {
+                c = "";
+            } else {
+                isEmpty = false;
+            }
+            DOM.setInnerText(captionText, c);
         } else {
             // TODO should span also be removed
         }
@@ -89,6 +99,13 @@ public class Caption extends HTML {
             } else {
                 setTitle(uidl.getStringAttribute("description"));
             }
+        }
+        // Workaround for IE7 weirdness, returns bad height in some
+        // circumstances when Caption is empty. See #1444
+        // IE6 works perfectly without them. I wonder what happens when
+        // IE8 arrives...
+        if (isEmpty && Util.isIE7()) {
+            setHeight("0px");
         }
 
     }
