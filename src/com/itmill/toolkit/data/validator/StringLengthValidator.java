@@ -67,12 +67,20 @@ public class StringLengthValidator implements Validator {
      *                 if the value was invalid.
      */
     public void validate(Object value) throws Validator.InvalidValueException {
-        if (value == null && !allowNull) {
-            throw new Validator.InvalidValueException(errorMessage);
+        if (value == null) {
+            if (allowNull) {
+                return;
+            } else {
+                throw new Validator.InvalidValueException(errorMessage);
+            }
         }
         final String s = value.toString();
-        if (s == null && !allowNull) {
-            throw new Validator.InvalidValueException(errorMessage);
+        if (s == null) {
+            if (allowNull) {
+                return;
+            } else {
+                throw new Validator.InvalidValueException(errorMessage);
+            }
         }
         final int len = s.length();
         if ((minLength >= 0 && len < minLength)
@@ -89,12 +97,12 @@ public class StringLengthValidator implements Validator {
      * @return <code>true</code> for valid value, otherwise <code>false</code>.
      */
     public boolean isValid(Object value) {
-        if (value == null && !allowNull) {
-            return true;
+        if (value == null) {
+            return allowNull;
         }
         final String s = value.toString();
-        if (s == null && !allowNull) {
-            return true;
+        if (s == null) {
+            return allowNull;
         }
         final int len = s.length();
         if ((minLength >= 0 && len < minLength)
