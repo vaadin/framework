@@ -7,12 +7,16 @@ import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.CustomComponent;
 import com.itmill.toolkit.ui.ExpandLayout;
 import com.itmill.toolkit.ui.Label;
+import com.itmill.toolkit.ui.Layout;
 import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Panel;
 import com.itmill.toolkit.ui.Table;
 import com.itmill.toolkit.ui.Window;
+import com.itmill.toolkit.ui.Button.ClickEvent;
 
 public class Ticket1435 extends Application {
+
+    private static final boolean useWorkaround = true;
 
     public void init() {
 
@@ -71,9 +75,16 @@ public class Ticket1435 extends Application {
             label.setStyleName("caption");
             header.addComponent(label);
 
-            OrderedLayout buttonContainer = new OrderedLayout(
-                    OrderedLayout.ORIENTATION_HORIZONTAL);
-            header.addComponent(buttonContainer);
+            final Layout buttonContainer;
+            if (useWorkaround) {
+                buttonContainer = header;
+
+            } else {
+                buttonContainer = new OrderedLayout(
+                        OrderedLayout.ORIENTATION_HORIZONTAL);
+                header.addComponent(buttonContainer);
+
+            }
 
             Button edit = new Button("Edit");
             edit.setStyleName("link");
@@ -99,26 +110,47 @@ public class Ticket1435 extends Application {
             options.setStyleName("link");
             buttonContainer.addComponent(options);
 
-            Button collapse = new Button("Collapse");
+            final Button expand = new Button("Expand");
+
+            final Button collapse = new Button("Collapse");
+            buttonContainer.addComponent(collapse);
+
             collapse.setStyleName("collapse");
             collapse.addListener(new Button.ClickListener() {
                 public void buttonClick(Button.ClickEvent event) {
-                    boolean visible = container.isVisible();
-                    container.setVisible(!visible);
-                    header.setHeight(!visible ? "26px" : "25px");
-                    if (visible) {
+                    if (useWorkaround) {
+                        container.setVisible(false);
                         lastHeight = root.getHeight();
                         lastHeightUnit = root.getHeightUnits();
-                        root.setHeight("25px");
+                        root.setHeight("26px");
+                        buttonContainer.replaceComponent(collapse, expand);
                     } else {
-                        root.setHeight(lastHeight, lastHeightUnit);
+                        boolean visible = container.isVisible();
+                        container.setVisible(!visible);
+                        if (visible) {
+                            lastHeight = root.getHeight();
+                            lastHeightUnit = root.getHeightUnits();
+                            root.setHeight("26px");
+                        } else {
+                            root.setHeight(lastHeight, lastHeightUnit);
+                        }
+                        event.getButton().setCaption(
+                                visible ? "Expand" : "Collapse");
                     }
-                    event.getButton().setCaption(
-                            visible ? "Expand" : "Collapse");
                 }
             });
 
-            buttonContainer.addComponent(collapse);
+            if (useWorkaround) {
+                expand.addListener(new Button.ClickListener() {
+
+                    public void buttonClick(ClickEvent event) {
+                        container.setVisible(true);
+                        root.setHeight(lastHeight, lastHeightUnit);
+                        buttonContainer.replaceComponent(expand, collapse);
+                    }
+                });
+            }
+
         }
 
         private void initContainer() {
