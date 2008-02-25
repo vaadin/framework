@@ -112,10 +112,12 @@ public class ExpandLayout extends OrderedLayout {
 
     public void removeComponent(Component c) {
         super.removeComponent(c);
-        if (c == expanded && getComponentIterator().hasNext()) {
-            expanded = (Component) getComponentIterator().next();
-        } else {
-            expanded = null;
+        if (c == expanded) {
+            if (getComponentIterator().hasNext()) {
+                expanded = (Component) getComponentIterator().next();
+            } else {
+                expanded = null;
+            }
         }
     }
 
