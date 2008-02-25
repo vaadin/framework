@@ -122,6 +122,12 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
     /** flag to indicate that table body has changed */
     private boolean isNewBody = true;
 
+    /**
+     * Stores old height for IE, that sometimes fails to return correct height
+     * for container element. Then this value is used as a fallback.
+     */
+    private int oldAvailPixels;
+
     public IScrollTable() {
 
         bodyContainer.addScrollListener(this);
@@ -2046,14 +2052,25 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
         // workaround very common 100% height problem - extract borders
         if (height.equals("100%")) {
             final int borders = getBorderSpace();
-            final Element elem = getElement();
-            final Element parentElem = DOM.getParent(elem);
+            final Element parentElem = DOM.getParent(getElement());
 
             // put table away from flow for a moment
             DOM.setStyleAttribute(getElement(), "position", "absolute");
             // get containers natural space for table
-            final int availPixels = DOM.getElementPropertyInt(parentElem,
+            int availPixels = DOM.getElementPropertyInt(parentElem,
                     "offsetHeight");
+            if (Util.isIE()) {
+                if (availPixels == 0) {
+                    // In complex layouts IE sometimes rather randomly returns 0
+                    // although container really has height. Use old value if
+                    // one exits.
+                    if (oldAvailPixels > 0) {
+                        availPixels = oldAvailPixels;
+                    }
+                } else {
+                    oldAvailPixels = availPixels;
+                }
+            }
             // put table back to flow
             DOM.setStyleAttribute(getElement(), "position", "static");
             // set 100% height with borders
