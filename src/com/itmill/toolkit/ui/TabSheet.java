@@ -416,12 +416,12 @@ public class TabSheet extends AbstractComponentContainer {
         }
 
         /**
-         * Select where the event occurred
+         * TabSheet where the event occurred.
          * 
          * @return the Source of the event.
          */
-        public Select getSelect() {
-            return (Select) getSource();
+        public TabSheet getTabSheet() {
+            return (TabSheet) getSource();
         }
     }
 
