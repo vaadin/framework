@@ -34,9 +34,14 @@ public class IExpandLayout extends ComplexPanel implements
 
     public static final int ORIENTATION_VERTICAL = 0;
 
-    // We are using minimum for expanded element to avoid "odd" situations where
-    // expanded element is 0 size
-    private static final int EXPANDED_ELEMENTS_MIN_WIDTH = 40;
+    /**
+     * Minimum pixels reserved for expanded element to avoid "odd" situations
+     * where expanded element is 0 size. Default is 5 pixels to show user a hint
+     * that there is a component. Then user can often use splitpanel or resize
+     * window to show component properly. This value may be insane in some
+     * applications. Override this to specify a proper for your case.
+     */
+    protected static final int EXPANDED_ELEMENTS_MIN_WIDTH = 5;
 
     /**
      * Contains reference to Element where Paintables are wrapped.
