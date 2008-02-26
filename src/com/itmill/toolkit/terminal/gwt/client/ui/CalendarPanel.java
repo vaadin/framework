@@ -61,6 +61,7 @@ public class CalendarPanel extends FlexTable implements MouseListener,
         setStyleName(IDateField.CLASSNAME + "-calendarpanel");
         // buildCalendar(true);
         addTableListener(new DateClickListener(this));
+
     }
 
     private void buildCalendar(boolean forceRedraw) {
@@ -95,12 +96,6 @@ public class CalendarPanel extends FlexTable implements MouseListener,
     }
 
     private void buildCalendarHeader(boolean forceRedraw, boolean needsMonth) {
-        Date cdate = datefield.getCurrentDate();
-        // Can't draw a calendar without a date
-        if (cdate == null) {
-            cdate = new Date();
-        }
-
         if (forceRedraw) {
             if (prevMonth == null) { // Only do once
                 prevYear = new IEventButton();
@@ -165,26 +160,28 @@ public class CalendarPanel extends FlexTable implements MouseListener,
         }
 
         final String monthName = needsMonth ? datefield.getDateTimeService()
-                .getMonth(cdate.getMonth()) : "";
-        final int year = cdate.getYear() + 1900;
+                .getMonth(datefield.getShowingDate().getMonth()) : "";
+        final int year = datefield.getShowingDate().getYear() + 1900;
         setHTML(0, 2, "<span class=\"" + IDateField.CLASSNAME
                 + "-calendarpanel-month\">" + monthName + " " + year
                 + "</span>");
     }
 
     private void buildCalendarBody() {
-        Date date = datefield.getCurrentDate();
-        boolean selected = true; // date actually selected?
-        if (date == null) {
-            date = new Date();
-            selected = false;
-        }
+        // date actually selected?
+        Date currentDate = datefield.getCurrentDate();
+        Date showing = datefield.getShowingDate();
+        boolean selected = (currentDate != null
+                && currentDate.getMonth() == showing.getMonth() && currentDate
+                .getYear() == showing.getYear());
+
         final int startWeekDay = datefield.getDateTimeService()
-                .getStartWeekDay(date);
-        final int numDays = DateTimeService.getNumberOfDaysInMonth(date);
+                .getStartWeekDay(datefield.getShowingDate());
+        final int numDays = DateTimeService.getNumberOfDaysInMonth(datefield
+                .getShowingDate());
         int dayCount = 0;
         final Date today = new Date();
-        final Date curr = new Date(date.getTime());
+        final Date curr = new Date(datefield.getShowingDate().getTime());
         for (int row = 2; row < 8; row++) {
             for (int col = 0; col < 7; col++) {
                 if (!(row == 2 && col < startWeekDay)) {
@@ -211,12 +208,15 @@ public class CalendarPanel extends FlexTable implements MouseListener,
                         if (!isEnabledDate(curr)) {
                             cssClass += " " + baseclass + "-disabled";
                         }
-                        if (selected && date.getDate() == dayCount) {
+                        if (selected
+                                && datefield.getShowingDate().getDate() == dayCount) {
                             cssClass += " " + baseclass + "-selected";
                         }
                         if (today.getDate() == dayCount
-                                && today.getMonth() == date.getMonth()
-                                && today.getYear() == date.getYear()) {
+                                && today.getMonth() == datefield
+                                        .getShowingDate().getMonth()
+                                && today.getYear() == datefield
+                                        .getShowingDate().getYear()) {
                             cssClass += " " + baseclass + "-today";
                         }
                         if (title.length() > 0) {
@@ -276,34 +276,18 @@ public class CalendarPanel extends FlexTable implements MouseListener,
         if (!datefield.isEnabled() || datefield.isReadonly()) {
             return;
         }
-
+        Date showingDate = datefield.getShowingDate();
         if (sender == prevYear) {
-            datefield.getCurrentDate().setYear(
-                    datefield.getCurrentDate().getYear() - 1);
-            datefield.getClient().updateVariable(datefield.getId(), "year",
-                    datefield.getCurrentDate().getYear() + 1900,
-                    datefield.isImmediate());
+            showingDate.setYear(showingDate.getYear() - 1);
             updateCalendar();
         } else if (sender == nextYear) {
-            datefield.getCurrentDate().setYear(
-                    datefield.getCurrentDate().getYear() + 1);
-            datefield.getClient().updateVariable(datefield.getId(), "year",
-                    datefield.getCurrentDate().getYear() + 1900,
-                    datefield.isImmediate());
+            showingDate.setYear(showingDate.getYear() + 1);
             updateCalendar();
         } else if (sender == prevMonth) {
-            datefield.getCurrentDate().setMonth(
-                    datefield.getCurrentDate().getMonth() - 1);
-            datefield.getClient().updateVariable(datefield.getId(), "month",
-                    datefield.getCurrentDate().getMonth() + 1,
-                    datefield.isImmediate());
+            showingDate.setMonth(showingDate.getMonth() - 1);
             updateCalendar();
         } else if (sender == nextMonth) {
-            datefield.getCurrentDate().setMonth(
-                    datefield.getCurrentDate().getMonth() + 1);
-            datefield.getClient().updateVariable(datefield.getId(), "month",
-                    datefield.getCurrentDate().getMonth() + 1,
-                    datefield.isImmediate());
+            showingDate.setMonth(showingDate.getMonth() + 1);
             updateCalendar();
         }
     }
@@ -399,8 +383,10 @@ public class CalendarPanel extends FlexTable implements MouseListener,
 
             try {
                 final Integer day = new Integer(text);
-                final Date newDate = new Date(cal.datefield.getCurrentDate()
-                        .getTime());
+                if (cal.datefield.getCurrentDate() == null) {
+                    cal.datefield.setCurrentDate(new Date());
+                }
+                final Date newDate = cal.datefield.getShowingDate();
                 newDate.setDate(day.intValue());
                 if (!isEnabledDate(newDate)) {
                     return;

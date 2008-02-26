@@ -40,6 +40,8 @@ public class IDateField extends FlowPanel implements Paintable {
     protected boolean enabled;
 
     protected Date date = null;
+    // e.g when paging a calendar, before actually selecting
+    protected Date showingDate = new Date();
 
     protected DateTimeService dts;
 
@@ -113,8 +115,10 @@ public class IDateField extends FlowPanel implements Paintable {
         if (year > -1) {
             date = new Date((long) getTime(year, month, day, hour, min, sec,
                     msec));
+            showingDate.setTime(date.getTime());
         } else {
             date = null;
+            showingDate = new Date();
         }
 
     }
@@ -173,6 +177,14 @@ public class IDateField extends FlowPanel implements Paintable {
 
     public void setCurrentDate(Date date) {
         this.date = date;
+    }
+
+    public Date getShowingDate() {
+        return showingDate;
+    }
+
+    public void setShowingDate(Date date) {
+        showingDate = date;
     }
 
     public boolean isImmediate() {
