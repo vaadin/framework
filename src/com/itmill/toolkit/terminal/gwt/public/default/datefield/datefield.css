@@ -63,6 +63,7 @@
 	font-weight: bold;
 	text-align: center;
 	text-shadow: #ffffff 2px 2px 0;
+	white-space: nowrap;
 }
 
 /* Year buttons */
