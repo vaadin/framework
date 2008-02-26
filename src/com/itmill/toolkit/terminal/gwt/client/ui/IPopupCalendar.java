@@ -5,6 +5,7 @@
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.PopupListener;
@@ -54,6 +55,7 @@ public class IPopupCalendar extends ITextualDate implements Paintable,
 
     public void onClick(Widget sender) {
         if (sender == calendarToggle && !open) {
+            open = true;
             calendar.updateCalendar();
             // clear previous values
             popup.setWidth("");
@@ -81,19 +83,21 @@ public class IPopupCalendar extends ITextualDate implements Paintable,
                     // fix size
                     popup.setWidth(w + "px");
                     popup.setHeight(h + "px");
-                    open = true;
-
                 }
             });
-        } else {
-            open = false;
         }
     }
 
     public void onPopupClosed(PopupPanel sender, boolean autoClosed) {
         if (sender == popup) {
             buildDate();
-            open = false;
+            // Sigh.
+            Timer t = new Timer() {
+                public void run() {
+                    open = false;
+                }
+            };
+            t.schedule(100);
         }
     }
 
