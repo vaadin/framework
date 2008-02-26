@@ -9,7 +9,6 @@ import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Caption;
 import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.Util;
@@ -196,12 +195,6 @@ public class AbsoluteGrid extends Composite implements ContainerResizedListener 
                         // larger than reserved area
                     }
                     if (alignmentInfo.isVerticalCenter()) {
-                        ApplicationConnection.getConsole().log("oh" + oh);
-                        ApplicationConnection.getConsole().log("wt" + wt);
-                        ApplicationConnection.getConsole().log("wh" + wh);
-                        ApplicationConnection.getConsole().log(
-                                "freespace" + freeSpace);
-
                         DOM.setStyleAttribute(getElement(), "paddingTop",
                                 (freeSpace / 2) + "px");
                     } else {
