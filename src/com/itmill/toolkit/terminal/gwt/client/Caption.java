@@ -100,12 +100,18 @@ public class Caption extends HTML {
                 setTitle(uidl.getStringAttribute("description"));
             }
         }
-        // Workaround for IE7 weirdness, returns bad height in some
+        // Workaround for IE weirdness, sometimes returns bad height in some
         // circumstances when Caption is empty. See #1444
-        // IE6 works perfectly without them. I wonder what happens when
-        // IE8 arrives...
-        if (isEmpty && Util.isIE7()) {
-            setHeight("0px");
+        // IE7 bugs more often. I wonder what happens when IE8 arrives...
+        if (Util.isIE()) {
+            if (isEmpty) {
+                setHeight("0px");
+                DOM.setStyleAttribute(getElement(), "overflow", "hidden");
+            } else {
+                setHeight("");
+                DOM.setStyleAttribute(getElement(), "overflow", "");
+            }
+
         }
 
     }
