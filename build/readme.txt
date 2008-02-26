@@ -10,7 +10,7 @@ See documentation on build.xml how product is build.
 3. Extract or link GWT distribution under build/gwt/<platform> directory / directories
 - <platform> = linux|windows|mac
 
-4. Update Eclipse project classpath build/gwt/<platform>/gwt-user.jav and gwt-dev-<platform>.jar
+4. Update Eclipse project classpath build/gwt/<platform>/gwt-user.jar and gwt-dev-<platform>.jar
 
 Note: All GWT distributions have been moved to 
 https://svn.itmill.com/svn/itmill-toolkit/gwt
