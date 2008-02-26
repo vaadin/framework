@@ -261,7 +261,7 @@ public class CalendarPanel extends FlexTable implements MouseListener,
     }
 
     public void onClick(Widget sender) {
-        processClickEvent(sender);
+        // processClickEvent(sender, true);
     }
 
     private boolean isEnabledDate(Date date) {
@@ -272,36 +272,39 @@ public class CalendarPanel extends FlexTable implements MouseListener,
         return true;
     }
 
-    private void processClickEvent(Widget sender) {
+    private void processClickEvent(Widget sender, boolean updateVariable) {
         if (!datefield.isEnabled() || datefield.isReadonly()) {
             return;
         }
         Date showingDate = datefield.getShowingDate();
-        if (sender == prevYear) {
-            showingDate.setYear(showingDate.getYear() - 1);
-            updateCalendar();
-        } else if (sender == nextYear) {
-            showingDate.setYear(showingDate.getYear() + 1);
-            updateCalendar();
-        } else if (sender == prevMonth) {
-            showingDate.setMonth(showingDate.getMonth() - 1);
-            updateCalendar();
-        } else if (sender == nextMonth) {
-            showingDate.setMonth(showingDate.getMonth() + 1);
-            updateCalendar();
-        }
-        if (datefield.getCurrentResolution() == IDateField.RESOLUTION_YEAR
-                || datefield.getCurrentResolution() == IDateField.RESOLUTION_MONTH) {
-            // Due to current UI, update variable if res=year/month
-            datefield.setCurrentDate(new Date(showingDate.getTime()));
-            if (datefield.getCurrentResolution() == IDateField.RESOLUTION_MONTH) {
-                datefield.getClient().updateVariable(datefield.getId(),
-                        "month", datefield.getCurrentDate().getMonth() + 1,
-                        false);
+        if (!updateVariable) {
+            if (sender == prevYear) {
+                showingDate.setYear(showingDate.getYear() - 1);
+                updateCalendar();
+            } else if (sender == nextYear) {
+                showingDate.setYear(showingDate.getYear() + 1);
+                updateCalendar();
+            } else if (sender == prevMonth) {
+                showingDate.setMonth(showingDate.getMonth() - 1);
+                updateCalendar();
+            } else if (sender == nextMonth) {
+                showingDate.setMonth(showingDate.getMonth() + 1);
+                updateCalendar();
             }
-            datefield.getClient().updateVariable(datefield.getId(), "year",
-                    datefield.getCurrentDate().getYear() + 1900,
-                    datefield.isImmediate());
+        } else {
+            if (datefield.getCurrentResolution() == IDateField.RESOLUTION_YEAR
+                    || datefield.getCurrentResolution() == IDateField.RESOLUTION_MONTH) {
+                // Due to current UI, update variable if res=year/month
+                datefield.setCurrentDate(new Date(showingDate.getTime()));
+                if (datefield.getCurrentResolution() == IDateField.RESOLUTION_MONTH) {
+                    datefield.getClient().updateVariable(datefield.getId(),
+                            "month", datefield.getCurrentDate().getMonth() + 1,
+                            false);
+                }
+                datefield.getClient().updateVariable(datefield.getId(), "year",
+                        datefield.getCurrentDate().getYear() + 1900,
+                        datefield.isImmediate());
+            }
         }
     }
 
@@ -309,9 +312,10 @@ public class CalendarPanel extends FlexTable implements MouseListener,
 
     public void onMouseDown(final Widget sender, int x, int y) {
         if (sender instanceof IEventButton) {
+            processClickEvent(sender, false);
             timer = new Timer() {
                 public void run() {
-                    processClickEvent(sender);
+                    processClickEvent(sender, false);
                 }
             };
             timer.scheduleRepeating(100);
@@ -334,6 +338,7 @@ public class CalendarPanel extends FlexTable implements MouseListener,
         if (timer != null) {
             timer.cancel();
         }
+        processClickEvent(sender, true);
     }
 
     private class IEventButton extends IButton implements SourcesMouseEvents {
