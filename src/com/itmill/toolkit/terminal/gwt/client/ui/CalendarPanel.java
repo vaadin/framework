@@ -290,6 +290,19 @@ public class CalendarPanel extends FlexTable implements MouseListener,
             showingDate.setMonth(showingDate.getMonth() + 1);
             updateCalendar();
         }
+        if (datefield.getCurrentResolution() == IDateField.RESOLUTION_YEAR
+                || datefield.getCurrentResolution() == IDateField.RESOLUTION_MONTH) {
+            // Due to current UI, update variable if res=year/month
+            datefield.setCurrentDate(new Date(showingDate.getTime()));
+            if (datefield.getCurrentResolution() == IDateField.RESOLUTION_MONTH) {
+                datefield.getClient().updateVariable(datefield.getId(),
+                        "month", datefield.getCurrentDate().getMonth() + 1,
+                        false);
+            }
+            datefield.getClient().updateVariable(datefield.getId(), "year",
+                    datefield.getCurrentDate().getYear() + 1900,
+                    datefield.isImmediate());
+        }
     }
 
     private Timer timer;
@@ -393,7 +406,13 @@ public class CalendarPanel extends FlexTable implements MouseListener,
                 }
                 cal.datefield.getCurrentDate().setTime(newDate.getTime());
                 cal.datefield.getClient().updateVariable(cal.datefield.getId(),
-                        "day", cal.datefield.getCurrentDate().getDate(),
+                        "day", cal.datefield.getCurrentDate().getDate(), false);
+                cal.datefield.getClient().updateVariable(cal.datefield.getId(),
+                        "month", cal.datefield.getCurrentDate().getMonth() + 1,
+                        false);
+                cal.datefield.getClient().updateVariable(cal.datefield.getId(),
+                        "year",
+                        cal.datefield.getCurrentDate().getYear() + 1900,
                         cal.datefield.isImmediate());
 
                 updateCalendar();
