@@ -4,7 +4,9 @@
 
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ComplexPanel;
@@ -94,7 +96,17 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
 
         DOM.setStyleAttribute(firstContainer, "overflow", "auto");
         DOM.setStyleAttribute(secondContainer, "overflow", "auto");
-
+        if (Util.isIE7()) {
+            /*
+             * Part I of IE7 weirdness hack, will be set to auto in layout phase
+             * 
+             * With IE7 one will sometimes get scrollbars with overflow auto
+             * even though there is nothing to scroll (content fits into area).
+             * 
+             */
+            DOM.setStyleAttribute(firstContainer, "overflow", "hidden");
+            DOM.setStyleAttribute(secondContainer, "overflow", "hidden");
+        }
     }
 
     private void setOrientation(int orientation) {
@@ -148,6 +160,15 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
         }
         newFirstChild.updateFromUIDL(uidl.getChildUIDL(0), client);
         newSecondChild.updateFromUIDL(uidl.getChildUIDL(1), client);
+
+        if (Util.isIE7()) {
+            // Part III of IE7 hack
+            DeferredCommand.addCommand(new Command() {
+                public void execute() {
+                    iLayout();
+                }
+            });
+        }
     }
 
     private void setSplitPosition(String pos) {
@@ -225,14 +246,26 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
                     secondContainerHeight + "px");
             DOM.setStyleAttribute(secondContainer, "top",
                     (pixelPosition + getSplitterSize()) + "px");
-            break;
-        default:
-            ApplicationConnection.getConsole().log("???");
-
+            ApplicationConnection.getConsole().log(
+                    "secondContainerHeight:" + secondContainerHeight);
             break;
         }
 
-        Util.runDescendentsLayout(this);
+        if (Util.isIE7()) {
+            // Part I of IE7 weirdness hack, will be set to auto in layout phase
+            DOM.setStyleAttribute(firstContainer, "overflow", "hidden");
+            DOM.setStyleAttribute(secondContainer, "overflow", "hidden");
+            Util.runDescendentsLayout(this);
+            DeferredCommand.addCommand(new Command() {
+                public void execute() {
+                    DOM.setStyleAttribute(firstContainer, "overflow", "auto");
+                    DOM.setStyleAttribute(secondContainer, "overflow", "auto");
+                }
+            });
+        } else {
+            Util.runDescendentsLayout(this);
+        }
+
     }
 
     private void setFirstWidget(Widget w) {
