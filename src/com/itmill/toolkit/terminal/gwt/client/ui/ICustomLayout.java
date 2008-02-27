@@ -57,7 +57,6 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
         DOM.setStyleAttribute(getElement(), "border", "none");
         DOM.setStyleAttribute(getElement(), "margin", "0");
         DOM.setStyleAttribute(getElement(), "padding", "0");
-        DOM.setStyleAttribute(getElement(), "overflow", "hidden");
         setStyleName(CLASSNAME);
     }
 
