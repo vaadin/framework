@@ -81,11 +81,10 @@ public class IPanel extends SimplePanel implements Paintable,
         id = uidl.getId();
 
         // Panel size. Height needs to be saved for later use
-        final String w = uidl.hasVariable("width") ? uidl
-                .getStringVariable("width") : null;
         height = uidl.hasVariable("height") ? uidl.getStringVariable("height")
                 : null;
-        super.setWidth(w != null ? w : "");
+        setWidth(uidl.hasVariable("width") ? uidl.getStringVariable("width")
+                : "");
 
         // Restore default stylenames
         DOM
@@ -312,7 +311,11 @@ public class IPanel extends SimplePanel implements Paintable,
      * Panel handles dimensions by itself.
      */
     public void setWidth(String width) {
-        // NOP
+        // Let browser handle 100% width (DIV element takes all size by default).
+        // This way we can specify borders for Panel's outer element.
+        if(!width.equals("100%")) {
+            super.setWidth(width);
+        }
     }
 
 }
