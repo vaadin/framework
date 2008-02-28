@@ -26,6 +26,7 @@ import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Panel;
 import com.itmill.toolkit.ui.ProgressIndicator;
 import com.itmill.toolkit.ui.Select;
+import com.itmill.toolkit.ui.TextField;
 import com.itmill.toolkit.ui.Upload;
 import com.itmill.toolkit.ui.Button.ClickEvent;
 import com.itmill.toolkit.ui.Upload.FailedEvent;
@@ -57,6 +58,10 @@ public class TestForUpload extends CustomComponent implements
 
     private final Select uploadBufferSelector;
 
+    private TextField textField;
+
+    private Label textFieldValue;
+
     public TestForUpload() {
         setCompositionRoot(main);
         main.addComponent(new Label(
@@ -72,6 +77,11 @@ public class TestForUpload extends CustomComponent implements
         main
                 .addComponent(new Label(
                         "Clicking on button b updates information about upload components status or same with garbage collector."));
+
+        textField = new TextField("Test field");
+        textFieldValue = new Label();
+        main.addComponent(textField);
+        main.addComponent(textFieldValue);
 
         up = new Upload("Upload", buffer);
         up.setImmediate(true);
@@ -342,6 +352,8 @@ public class TestForUpload extends CustomComponent implements
     public void uploadStarted(StartedEvent event) {
         pi.setVisible(true);
         l.setValue("Started uploading file " + event.getFilename());
+        textFieldValue.setValue(" TestFields value at the upload start is:"
+                + textField.getValue());
     }
 
 }
