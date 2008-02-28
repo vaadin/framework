@@ -103,14 +103,18 @@ public class IUpload extends FormPanel implements Paintable, ClickListener,
                             "Submit cancelled (disabled, no file or already submitted)");
             return;
         }
+        // flush possibly pending variable changes, so they will be handled
+        // before upload
+        client.sendPendingVariableChanges();
+
         submitted = true;
         ApplicationConnection.getConsole().log("Submitted form");
 
         disableUpload();
 
         /*
-         * visit server after upload to see possible changes from UploadStarted
-         * event
+         * Visit server a moment after upload has started to see possible
+         * changes from UploadStarted event. Will be cleared on complete.
          */
         t = new Timer() {
             public void run() {
