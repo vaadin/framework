@@ -63,6 +63,12 @@ public class Calc extends com.itmill.toolkit.Application implements
         // Create a new layout for the components used by the calculator
         final GridLayout layout = new GridLayout(4, 5);
 
+        // Styling: fix grids size, cells will become equally sized
+        layout.setWidth("15em");
+        layout.setHeight("18em");
+        // Styling: leave margin around layout
+        layout.setMargin(true);
+
         // Create a new label component for displaying the result
         display = new Label(Double.toString(current));
         display.setCaption("Result");
@@ -73,6 +79,7 @@ public class Calc extends com.itmill.toolkit.Application implements
         // Create the buttons and place them in the grid
         for (int i = 0; i < captions.length; i++) {
             final Button button = new Button(captions[i], this);
+            button.setSizeFull(); // use all size given by grid
             layout.addComponent(button);
         }
 
