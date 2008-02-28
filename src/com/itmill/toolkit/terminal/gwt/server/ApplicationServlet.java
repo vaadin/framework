@@ -418,6 +418,16 @@ public class ApplicationServlet extends HttpServlet {
                 return;
             }
 
+            // Finds the window within the application
+            Window window = null;
+            window = getApplicationWindow(request, application);
+
+            // Handle parameters
+            final Map parameters = request.getParameterMap();
+            if (window != null && parameters != null) {
+                window.handleParameters(parameters);
+            }
+
             // Is this a download request from application
             DownloadStream download = null;
 
@@ -426,17 +436,6 @@ public class ApplicationServlet extends HttpServlet {
 
             // If this is not a download request
             if (download == null) {
-
-                // TODO Clean this branch
-
-                // Window renders are not cacheable
-                response.setHeader("Cache-Control", "no-cache");
-                response.setHeader("Pragma", "no-cache");
-                response.setDateHeader("Expires", 0);
-
-                // Finds the window within the application
-                Window window = null;
-                window = getApplicationWindow(request, application);
 
                 // Sets terminal type for the window, if not already set
                 if (window.getTerminal() == null) {
@@ -454,17 +453,9 @@ public class ApplicationServlet extends HttpServlet {
                     return;
                 }
 
-                // Handle parameters
-                final Map parameters = request.getParameterMap();
-                if (window != null && parameters != null) {
-                    window.handleParameters(parameters);
-                }
-
                 writeAjaxPage(request, response, window, themeName, application);
-            }
 
-            // For normal requests, transform the window
-            if (download != null) {
+            } else {
                 handleDownload(download, request, response);
             }
 
@@ -641,6 +632,12 @@ public class ApplicationServlet extends HttpServlet {
     private void writeAjaxPage(HttpServletRequest request,
             HttpServletResponse response, Window window, String themeName,
             Application application) throws IOException, MalformedURLException {
+
+        // Window renders are not cacheable
+        response.setHeader("Cache-Control", "no-cache");
+        response.setHeader("Pragma", "no-cache");
+        response.setDateHeader("Expires", 0);
+
         response.setContentType("text/html");
         final BufferedWriter page = new BufferedWriter(new OutputStreamWriter(
                 response.getOutputStream()));
