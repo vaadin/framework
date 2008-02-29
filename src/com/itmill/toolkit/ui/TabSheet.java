@@ -321,6 +321,11 @@ public class TabSheet extends AbstractComponentContainer {
     /* Documented in superclass */
     public void replaceComponent(Component oldComponent, Component newComponent) {
 
+        if (selected == oldComponent) {
+            // keep selection w/o selectedTabChange event
+            selected = newComponent;
+        }
+
         // Gets the captions
         final String oldCaption = getTabCaption(oldComponent);
         final Resource oldIcon = getTabIcon(oldComponent);
@@ -373,6 +378,7 @@ public class TabSheet extends AbstractComponentContainer {
 
             requestRepaint();
         }
+
     }
 
     /* Click event ************************************************ */
