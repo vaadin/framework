@@ -137,13 +137,17 @@ public class IFilterSelect extends Composite implements Paintable,
             int y = tb.getAbsoluteTop();
             y += tb.getOffsetHeight();
             setPopupPosition(x, y);
-            final int first = currentPage * PAGELENTH + 1;
+            final int first = currentPage * PAGELENTH
+                    + (nullSelectionAllowed && currentPage > 0 ? 0 : 1);
             final int last = first + currentSuggestions.size() - 1;
             final int matches = totalSuggestions
                     - (nullSelectionAllowed ? 1 : 0);
             if (last > 0) {
+                // nullsel not counted, as requested by user
                 DOM.setInnerText(status, (totalSuggestions == 0 ? 0 : first)
-                        + "-" + last + "/" + matches);
+                        + "-"
+                        + (nullSelectionAllowed && currentPage == 0 ? last - 1
+                                : last) + "/" + matches);
             } else {
                 DOM.setInnerText(status, "");
             }
