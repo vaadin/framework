@@ -554,6 +554,13 @@ public class IFilterSelect extends Composite implements Paintable,
         if (clientSideFiltering) {
             allSuggestions = new ArrayList();
         }
+
+        if (uidl.hasVariable("selected")
+                && uidl.getStringArrayVariable("selected").length == 0) {
+            // select nulled
+            tb.setText("");
+        }
+
         for (final Iterator i = options.getChildIterator(); i.hasNext();) {
             final UIDL optionUidl = (UIDL) i.next();
             final FilterSelectSuggestion suggestion = new FilterSelectSuggestion(
