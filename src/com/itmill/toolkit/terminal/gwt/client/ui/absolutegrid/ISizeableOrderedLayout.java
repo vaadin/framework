@@ -43,7 +43,8 @@ public class ISizeableOrderedLayout extends AbsoluteGrid implements Paintable,
             return;
         }
 
-        orientation = uidl.getIntAttribute("orientation");
+        orientation = (uidl.hasAttribute("orientation") ? ORIENTETION_HORIZONTAL
+                : 0);
 
         if (uidl.hasAttribute("caption")) {
             setTitle(uidl.getStringAttribute("caption"));
