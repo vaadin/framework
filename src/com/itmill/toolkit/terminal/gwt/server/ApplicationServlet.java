@@ -643,6 +643,8 @@ public class ApplicationServlet extends HttpServlet {
                 response.getOutputStream()));
         final String pathInfo = request.getPathInfo() == null ? "/" : request
                 .getPathInfo();
+        String title = ((window == null || window.getCaption() == null) ? "IT Mill Toolkit 5"
+                : window.getCaption());
         page
                 .write("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" "
                         + "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n");
@@ -650,7 +652,9 @@ public class ApplicationServlet extends HttpServlet {
         page
                 .write("<html xmlns=\"http://www.w3.org/1999/xhtml\" style=\"width:100%;"
                         + "height:100%;border:0;margin:0;\">\n<head>\n"
-                        + "<title>IT Mill Toolkit 5</title>\n"
+                        + "<title>"
+                        + title
+                        + "</title>\n"
                         + "<script type=\"text/javascript\">\n"
                         + "	var itmill = {\n" + "		appUri:'");
 
