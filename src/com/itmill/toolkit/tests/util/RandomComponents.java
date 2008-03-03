@@ -9,9 +9,12 @@ import com.itmill.toolkit.data.Property.ValueChangeListener;
 import com.itmill.toolkit.demo.featurebrowser.ButtonExample;
 import com.itmill.toolkit.demo.featurebrowser.ClientCachingExample;
 import com.itmill.toolkit.demo.featurebrowser.ComboBoxExample;
+import com.itmill.toolkit.demo.featurebrowser.EmbeddedBrowserExample;
+import com.itmill.toolkit.demo.featurebrowser.JavaScriptAPIExample;
 import com.itmill.toolkit.demo.featurebrowser.LabelExample;
 import com.itmill.toolkit.demo.featurebrowser.LayoutExample;
 import com.itmill.toolkit.demo.featurebrowser.NotificationExample;
+import com.itmill.toolkit.demo.featurebrowser.RichTextExample;
 import com.itmill.toolkit.demo.featurebrowser.SelectExample;
 import com.itmill.toolkit.demo.featurebrowser.TableExample;
 import com.itmill.toolkit.demo.featurebrowser.TreeExample;
@@ -199,17 +202,11 @@ public class RandomComponents {
         case 11:
             result = new OrderedLayout();
             // TODO: disabled gwt bug with mixed up iframe's
-            // ((OrderedLayout) result).addComponent(new
-            // EmbeddedBrowserExample());
-            ((OrderedLayout) result).addComponent(new LabelExample());
+            ((OrderedLayout) result).addComponent(new EmbeddedBrowserExample());
             break;
         case 12:
             result = new OrderedLayout();
-            // TODO: this application leaks memory
-            // ((OrderedLayout) result).addComponent(new
-            // JavaScriptAPIExample());
-
-            ((OrderedLayout) result).addComponent(new LabelExample());
+            ((OrderedLayout) result).addComponent(new JavaScriptAPIExample());
             break;
         case 13:
             result = new OrderedLayout();
@@ -225,8 +222,7 @@ public class RandomComponents {
             break;
         case 16:
             result = new OrderedLayout();
-            // ((OrderedLayout) result).addComponent(new RichTextExample());
-            ((OrderedLayout) result).addComponent(new LabelExample());
+            ((OrderedLayout) result).addComponent(new RichTextExample());
             break;
         case 17:
             result = new OrderedLayout();
