@@ -390,7 +390,7 @@ public class IFilterSelect extends Composite implements Paintable,
             }
             if (allowNewItem) {
 
-                if (!enteredItemValue.equals("")) {
+                if (!enteredItemValue.equals(emptyText)) {
                     client.updateVariable(paintableId, "newitem",
                             enteredItemValue, immediate);
                 }
@@ -400,10 +400,13 @@ public class IFilterSelect extends Composite implements Paintable,
                 doItemAction(item, true);
             } else {
                 if (currentSuggestion != null) {
-                    tb.setText(currentSuggestion.getReplacementString());
+                    String text = currentSuggestion.getReplacementString();
+                    tb.setText((text.equals("") ? emptyText : text));
+                    // TODO add/remove class CLASSNAME_EMPTY
                     selectedOptionKey = currentSuggestion.key;
                 } else {
-                    tb.setText("");
+                    tb.setText(emptyText);
+                    // TODO add class CLASSNAME_EMPTY
                     selectedOptionKey = null;
                 }
             }
@@ -454,6 +457,11 @@ public class IFilterSelect extends Composite implements Paintable,
     private boolean allowNewItem;
     private boolean nullSelectionAllowed;
     private boolean enabled;
+
+    // shown in unfocused empty field, disappears on focus (e.g "Search here")
+    private String emptyText = "";
+    private static final String CLASSNAME_EMPTY = "empty";
+    private static final String ATTR_EMPTYTEXT = "emptytext";
 
     public IFilterSelect() {
         selectedItemIcon.setVisible(false);
@@ -536,6 +544,11 @@ public class IFilterSelect extends Composite implements Paintable,
 
         nullSelectionAllowed = uidl.hasAttribute("nullselect");
 
+        if (uidl.hasAttribute(ATTR_EMPTYTEXT)) {
+            // "emptytext" changed from server
+            emptyText = uidl.getStringAttribute(ATTR_EMPTYTEXT);
+        }
+
         if (true) {
             suggestionPopup.setPagingEnabled(true);
             clientSideFiltering = false;
@@ -550,15 +563,9 @@ public class IFilterSelect extends Composite implements Paintable,
         final UIDL options = uidl.getChildUIDL(0);
         totalMatches = uidl.getIntAttribute("totalMatches");
 
-        String captions = "";
+        String captions = emptyText;
         if (clientSideFiltering) {
             allSuggestions = new ArrayList();
-        }
-
-        if (uidl.hasVariable("selected")
-                && uidl.getStringArrayVariable("selected").length == 0) {
-            // select nulled
-            tb.setText("");
         }
 
         for (final Iterator i = options.getChildIterator(); i.hasNext();) {
@@ -579,6 +586,13 @@ public class IFilterSelect extends Composite implements Paintable,
                 captions += "|";
             }
             captions += suggestion.getReplacementString();
+        }
+
+        if (!filtering && uidl.hasVariable("selected")
+                && uidl.getStringArrayVariable("selected").length == 0) {
+            // select nulled
+            tb.setText(emptyText);
+            // TODO add class CLASSNAME_EMPTY
         }
 
         if (filtering
@@ -616,7 +630,9 @@ public class IFilterSelect extends Composite implements Paintable,
             // normal selection
             newKey = String.valueOf(suggestion.getOptionKey());
         }
-        tb.setText(suggestion.getReplacementString());
+        String text = suggestion.getReplacementString();
+        tb.setText(text.equals("") ? emptyText : text);
+        // TODO add/remove class CLASSNAME_EMPTY
         setSelectedItemIcon(suggestion.getIconUri());
         if (!newKey.equals(selectedOptionKey)) {
             selectedOptionKey = newKey;
@@ -660,6 +676,7 @@ public class IFilterSelect extends Composite implements Paintable,
             case KeyboardListener.KEY_ENTER:
             case KeyboardListener.KEY_TAB:
                 suggestionPopup.menu.doSelectedItemAction();
+                tb.setFocus(false);
                 break;
             }
         }
@@ -707,8 +724,8 @@ public class IFilterSelect extends Composite implements Paintable,
                 filterOptions(0, "");
             }
             DOM.eventPreventDefault(DOM.eventGetCurrentEvent());
-            tb.selectAll();
             tb.setFocus(true);
+            tb.selectAll();
 
         }
     }
@@ -739,13 +756,19 @@ public class IFilterSelect extends Composite implements Paintable,
     }-*/;
 
     public void onFocus(Widget sender) {
-        // NOP
+        if (emptyText.equals(tb.getText())) {
+            tb.setText("");
+            // TODO remove class CLASSNAME_EMPTY
+        }
     }
 
     public void onLostFocus(Widget sender) {
         if (suggestionPopup.isJustClosed()) {
             suggestionPopup.menu.doSelectedItemAction();
         }
-
+        if ("".equals(tb.getText())) {
+            tb.setText(emptyText);
+            // TODO add CLASSNAME_EMPTY
+        }
     }
 }

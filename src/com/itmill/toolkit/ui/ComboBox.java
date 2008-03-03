@@ -17,6 +17,9 @@ import com.itmill.toolkit.data.Container;
  * 
  */
 public class ComboBox extends Select {
+
+    private String emptyText = null;
+
     public ComboBox() {
         setMultiSelect(false);
         setNewItemsAllowed(false);
@@ -46,5 +49,22 @@ public class ComboBox extends Select {
         }
         super.setMultiSelect(multiSelect);
     }
+
+    /*- TODO enable and test this - client impl exists
+    public String getEmptyText() {
+        return emptyText;
+    }
+
+    public void setEmptyText(String emptyText) {
+        this.emptyText = emptyText;
+    }
+
+    public void paintContent(PaintTarget target) throws PaintException {
+        if (emptyText != null) {
+            target.addAttribute("emptytext", emptyText);
+        }
+        super.paintContent(target);
+    }
+    -*/
 
 }
