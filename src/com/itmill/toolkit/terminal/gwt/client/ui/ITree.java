@@ -112,7 +112,7 @@ public class ITree extends FlowPanel implements Paintable {
             childTree.updateFromUIDL(childUidl, client);
         }
         final String selectMode = uidl.getStringAttribute("selectmode");
-        selectable = selectMode != null;
+        selectable = !"none".equals(selectMode);
         isMultiselect = "multi".equals(selectMode);
 
         selectedIds = uidl.getStringArrayVariableAsSet("selected");
