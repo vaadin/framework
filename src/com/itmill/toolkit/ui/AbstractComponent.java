@@ -584,41 +584,39 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
 
             // Paint the contents of the component
 
-            if (getHeight() >= 0) {
-                target.addAttribute("height", "" + getHeight()
-                        + UNIT_SYMBOLS[getHeightUnits()]);
-            }
-            if (getWidth() >= 0) {
-                target.addAttribute("width", "" + getWidth()
-                        + UNIT_SYMBOLS[getWidthUnits()]);
-            }
-
-            if (styles != null && styles.size() > 0) {
-                target.addAttribute("style", getStyle());
-            }
-            if (isReadOnly()) {
-                target.addAttribute("readonly", true);
-            }
-            if (!isVisible()) {
-                target.addAttribute("invisible", true);
-            }
-            if (isImmediate()) {
-                target.addAttribute("immediate", true);
-            }
-            if (!isEnabled()) {
-                target.addAttribute("disabled", true);
-            }
-            if (getCaption() != null) {
-                target.addAttribute("caption", getCaption());
-            }
-            if (getIcon() != null) {
-                target.addAttribute("icon", getIcon());
-            }
-
             // Only paint content of visible components.
             if (isVisible()) {
-                final String desc = getDescription();
-                if (desc != null && description.length() > 0) {
+
+                if (getHeight() >= 0) {
+                    target.addAttribute("height", "" + getHeight()
+                            + UNIT_SYMBOLS[getHeightUnits()]);
+                }
+                if (getWidth() >= 0) {
+                    target.addAttribute("width", "" + getWidth()
+                            + UNIT_SYMBOLS[getWidthUnits()]);
+                }
+
+                if (styles != null && styles.size() > 0) {
+                    target.addAttribute("style", getStyle());
+                }
+                if (isReadOnly()) {
+                    target.addAttribute("readonly", true);
+                }
+
+                if (isImmediate()) {
+                    target.addAttribute("immediate", true);
+                }
+                if (!isEnabled()) {
+                    target.addAttribute("disabled", true);
+                }
+                if (getCaption() != null) {
+                    target.addAttribute("caption", getCaption());
+                }
+                if (getIcon() != null) {
+                    target.addAttribute("icon", getIcon());
+                }
+
+                if (getDescription() != null && getDescription().length() > 0) {
                     target.addAttribute("description", getDescription());
                 }
 
@@ -628,6 +626,8 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
                 if (error != null) {
                     error.paint(target);
                 }
+            } else {
+                target.addAttribute("invisible", true);
             }
         } else {
 

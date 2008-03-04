@@ -186,8 +186,12 @@ public abstract class Feature extends CustomComponent {
     }
 
     // Fix for #512
-    public Label getDescription() {
-        return description;
+    public String getDescription() {
+        if (description != null && description.getValue() != null) {
+            return description.getValue().toString();
+        } else {
+            return null;
+        }
     }
 
 }

@@ -9,6 +9,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ui.IAccordion;
 import com.itmill.toolkit.terminal.gwt.client.ui.IButton;
 import com.itmill.toolkit.terminal.gwt.client.ui.ICheckBox;
+import com.itmill.toolkit.terminal.gwt.client.ui.ICustomComponent;
 import com.itmill.toolkit.terminal.gwt.client.ui.ICustomLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.IDateFieldCalendar;
 import com.itmill.toolkit.terminal.gwt.client.ui.IEmbedded;
@@ -118,6 +119,9 @@ public class DefaultWidgetSet implements WidgetSet {
         } else if ("com.itmill.toolkit.terminal.gwt.client.ui.ICustomLayout"
                 .equals(className)) {
             return new ICustomLayout();
+        } else if ("com.itmill.toolkit.terminal.gwt.client.ui.ICustomComponent"
+                .equals(className)) {
+            return new ICustomComponent();
         } else if ("com.itmill.toolkit.terminal.gwt.client.ui.ITextArea"
                 .equals(className)) {
             return new ITextArea();
@@ -257,6 +261,8 @@ public class DefaultWidgetSet implements WidgetSet {
             return "com.itmill.toolkit.terminal.gwt.client.ui.IEmbedded";
         } else if ("customlayout".equals(tag)) {
             return "com.itmill.toolkit.terminal.gwt.client.ui.ICustomLayout";
+        } else if ("customcomponent".equals(tag)) {
+            return "com.itmill.toolkit.terminal.gwt.client.ui.ICustomComponent";
         } else if ("textfield".equals(tag)) {
             if (uidl.getBooleanAttribute("richtext")) {
                 return "com.itmill.toolkit.terminal.gwt.client.ui.richtextarea.IRichTextArea";

@@ -4,15 +4,10 @@
 
 package com.itmill.toolkit.ui;
 
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.Locale;
-import java.util.Map;
+import java.util.Iterator;
 
-import com.itmill.toolkit.Application;
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
-import com.itmill.toolkit.terminal.Resource;
 
 /**
  * Custom component provides simple implementation of Component interface for
@@ -28,7 +23,15 @@ import com.itmill.toolkit.terminal.Resource;
  * @VERSION@
  * @since 3.0
  */
-public class CustomComponent implements Component {
+/**
+ * @author mattitahvonen
+ * 
+ */
+/**
+ * @author mattitahvonen
+ * 
+ */
+public class CustomComponent extends AbstractComponentContainer {
 
     /**
      * The root component implementing the custom component.
@@ -36,31 +39,9 @@ public class CustomComponent implements Component {
     private Component root = null;
 
     /**
-     * The visibility of the component.
-     */
-    private boolean visible = true;
-
-    /**
-     * The parent of the component.
-     */
-    private Component parent = null;
-
-    /**
      * Type of the component.
      */
     private String componentType = null;
-
-    /**
-     * List of repaint request listeners or null if not listened at all.
-     */
-    private LinkedList repaintRequestListeners = null;
-
-    /**
-     * Are all the repaint listeners notified about recent changes ?
-     */
-    private boolean repaintRequestListenersNotified = false;
-
-    private String testingId;
 
     /**
      * Constructs a new custom component.
@@ -111,335 +92,27 @@ public class CustomComponent implements Component {
      */
     protected final void setCompositionRoot(Component compositionRoot) {
         if (compositionRoot != root && root != null) {
-            root.setParent(null);
+            super.removeComponent(root);
         }
         root = compositionRoot;
         if (root != null) {
-            root.setParent(this);
+            super.addComponent(root);
         }
     }
 
     /* Basic component features ------------------------------------------ */
 
-    /**
-     * Notifies the component that it is connected to an application.
-     * 
-     * @see com.itmill.toolkit.ui.Component#attach()
-     */
-    public void attach() {
-        if (root != null) {
-            root.attach();
-            requestRepaint();
-        }
-    }
-
-    /**
-     * Notifies the component that it is detached from the application.
-     * 
-     * @see com.itmill.toolkit.ui.Component#detach()
-     */
-    public void detach() {
-        if (root != null) {
-            root.detach();
-        }
-    }
-
-    /**
-     * Gets the component's parent application
-     * 
-     * @see com.itmill.toolkit.ui.Component#getApplication()
-     */
-    public Application getApplication() {
-        if (parent == null) {
-            return null;
-        }
-        return parent.getApplication();
-    }
-
-    /**
-     * The caption of the custom component is by default the caption of the root
-     * component, or null if the root is not set.
-     * 
-     * @see com.itmill.toolkit.ui.Component#getCaption()
-     */
-    public String getCaption() {
-        if (root == null) {
-            return null;
-        }
-        return root.getCaption();
-    }
-
-    /**
-     * The icon of the custom component is by default the icon of the root
-     * component, or null if the root is not set.
-     * 
-     * @see com.itmill.toolkit.ui.Component#getIcon()
-     */
-    public Resource getIcon() {
-        if (root == null) {
-            return null;
-        }
-        return root.getIcon();
-    }
-
-    /**
-     * The icon of the custom component is by default the locale of the parent
-     * or null if the parent is not set.
-     * 
-     * @see com.itmill.toolkit.ui.Component#getLocale()
-     */
-    public Locale getLocale() {
-        if (parent == null) {
-            return null;
-        }
-        return parent.getLocale();
-    }
-
-    /**
-     * Gets the visual parent of the component.
-     * 
-     * @see com.itmill.toolkit.ui.Component#getParent()
-     */
-    public Component getParent() {
-        return parent;
-    }
-
-    /**
-     * Custom component does not implement custom styles by default and this
-     * function returns null.
-     * 
-     * @see com.itmill.toolkit.ui.Component#getStyle()
-     */
-    public String getStyleName() {
-        return null;
-    }
-
-    /**
-     * Gets the component's parent window.
-     * 
-     * @see com.itmill.toolkit.ui.Component#getWindow()
-     */
-    public Window getWindow() {
-        if (parent == null) {
-            return null;
-        }
-        return parent.getWindow();
-    }
-
-    /**
-     * Custom component is always enabled by default.
-     * 
-     * @see com.itmill.toolkit.ui.Component#isEnabled()
-     */
-    public boolean isEnabled() {
-        return true;
-    }
-
-    /**
-     * Custom component is by default in the non-immediate mode. The
-     * immediateness of the custom component is defined by the components it is
-     * composed of.
-     * 
-     * @see com.itmill.toolkit.terminal.VariableOwner#isImmediate()
-     */
-    public boolean isImmediate() {
-        return false;
-    }
-
-    /**
-     * The custom components are not readonly by default.
-     * 
-     * @see com.itmill.toolkit.ui.Component#isReadOnly()
-     */
-    public boolean isReadOnly() {
-        return false;
-    }
-
-    /**
-     * Tests if the component is visible or not.
-     * 
-     * @see com.itmill.toolkit.ui.Component#isVisible()
-     */
-    public boolean isVisible() {
-        return visible;
-    }
-
-    /* Documentation copied from interface */
-    public void requestRepaint() {
-
-        // The effect of the repaint request is identical to case where a
-        // child requests repaint
-        childRequestedRepaint(null);
-    }
-
-    /* Documentation copied from interface */
-    public void childRequestedRepaint(Collection alreadyNotified) {
-
-        // Notify listeners only once
-        if (!repaintRequestListenersNotified) {
-
-            // Notify the listeners
-            if (repaintRequestListeners != null
-                    && !repaintRequestListeners.isEmpty()) {
-                final Object[] listeners = repaintRequestListeners.toArray();
-                final RepaintRequestEvent event = new RepaintRequestEvent(this);
-                for (int i = 0; i < listeners.length; i++) {
-                    if (alreadyNotified == null) {
-                        alreadyNotified = new LinkedList();
-                    }
-                    if (!alreadyNotified.contains(listeners[i])) {
-                        ((RepaintRequestListener) listeners[i])
-                                .repaintRequested(event);
-                        alreadyNotified.add(listeners[i]);
-                        repaintRequestListenersNotified = true;
-                    }
-                }
-            }
-
-            // Notify the parent
-            final Component parent = getParent();
-            if (parent != null) {
-                parent.childRequestedRepaint(alreadyNotified);
-            }
-
-        }
-    }
-
-    /* Documentation copied from interface */
-    public void addListener(RepaintRequestListener listener) {
-        if (repaintRequestListeners == null) {
-            repaintRequestListeners = new LinkedList();
-        }
-        if (!repaintRequestListeners.contains(listener)) {
-            repaintRequestListeners.add(listener);
-        }
-    }
-
-    /* Documentation copied from interface */
-    public void removeListener(RepaintRequestListener listener) {
-        if (repaintRequestListeners != null) {
-            repaintRequestListeners.remove(listener);
-            if (repaintRequestListeners.isEmpty()) {
-                repaintRequestListeners = null;
-            }
-        }
-    }
-
-    /**
-     * The custom component is allways enabled by default.
-     */
-    public void setEnabled(boolean enabled) {
-    }
-
-    /**
-     * Sets the component's parent component.
-     * 
-     * @see com.itmill.toolkit.ui.Component#setParent(com.itmill.toolkit.ui.Component)
-     */
-    public void setParent(Component parent) {
-
-        // If the parent is not changed, dont do nothing
-        if (parent == this.parent) {
-            return;
-        }
-
-        // Sends the detach event if the component have been connected to a
-        // window
-        if (getApplication() != null) {
-            detach();
-            this.parent = null;
-        }
-
-        // Connects to new parent
-        this.parent = parent;
-
-        // Sends the attach event if connected to a window
-        if (getApplication() != null) {
-            attach();
-        }
-    }
-
-    /**
-     * Sets the component's to read-only mode to the specified state.
-     * 
-     * @see com.itmill.toolkit.ui.Component#setReadOnly(boolean)
-     */
-    public void setReadOnly(boolean readOnly) {
-    }
-
-    /**
-     * Custom component does not implement custom styles by default.
-     * 
-     * @see com.itmill.toolkit.ui.Component#setStyle(java.lang.String)
-     */
-    public void setStyleName(String style) {
-    }
-
-    /**
-     * Sets the components visibility status.
-     * 
-     * @see com.itmill.toolkit.ui.Component#setVisible(boolean)
-     */
-    public void setVisible(boolean visible) {
-        this.visible = visible;
-    }
-
-    /* Documented in super interface */
-    public void requestRepaintRequests() {
-        repaintRequestListenersNotified = false;
-    }
-
-    /* Documented in super interface */
-    public void paint(PaintTarget target) throws PaintException {
+    public void paintContent(PaintTarget target) throws PaintException {
         if (root == null) {
             throw new IllegalStateException("Composition root must be set to"
                     + " non-null value before the " + getClass().getName()
                     + " can be painted");
         }
 
-        if (isVisible()) {
-            final String type = getComponentType();
-            if (type != null) {
-                if (!target.startTag(this, "component")) {
-                    target.addAttribute("type", type);
-                    root.paint(target);
-                }
-                target.endTag("component");
-            } else {
-                root.paint(target);
-            }
+        if (getComponentType() != null) {
+            target.addAttribute("type", getComponentType());
         }
-        repaintRequestListenersNotified = false;
-    }
-
-    /**
-     * Called when one or more variables handled by the implementing class are
-     * changed.
-     * 
-     * @see com.itmill.toolkit.terminal.VariableOwner#changeVariables(java.lang.Object,
-     *      java.util.Map)
-     */
-    public void changeVariables(Object source, Map variables) {
-    }
-
-    /* Event functions are not implemented by default -------------------- */
-
-    /**
-     * Custom component does not implement any component events by default.
-     * 
-     * @param listener
-     *                the listener to add.
-     */
-    public void addListener(Component.Listener listener) {
-    }
-
-    /**
-     * Custom component does not implement any component events by default.
-     * 
-     * @param listener
-     *                the listener to remove.
-     */
-    public void removeListener(Component.Listener listener) {
+        root.paint(target);
     }
 
     /**
@@ -459,8 +132,7 @@ public class CustomComponent implements Component {
      * Sets the component type.
      * 
      * The component type is textual type of the component. This is included in
-     * the UIDL as component tag attribute. If the component type is null
-     * (default), the component tag is not included in the UIDL at all.
+     * the UIDL as component tag attribute.
      * 
      * @param componentType
      *                the componentType to set.
@@ -469,91 +141,75 @@ public class CustomComponent implements Component {
         this.componentType = componentType;
     }
 
-    /**
-     * Custom component does not implement custom styles by default.
-     * 
-     * @see com.itmill.toolkit.ui.Component#getStyle()
-     */
-    public void addStyleName(String style) {
+    public String getTag() {
+        return "customcomponent";
+    }
+
+    public Iterator getComponentIterator() {
+        return new Iterator() {
+            boolean first = true;
+
+            public boolean hasNext() {
+                return first;
+            }
+
+            public Object next() {
+                first = false;
+                return root;
+            }
+
+            public void remove() {
+                throw new UnsupportedOperationException();
+            }
+        };
     }
 
     /**
-     * Custom component does not implement custom styles by default.
+     * This method is not supported by CustomComponent.
      * 
-     * @see com.itmill.toolkit.ui.Component#getStyle()
+     * @see com.itmill.toolkit.ui.ComponentContainer#replaceComponent(com.itmill.toolkit.ui.Component,
+     *      com.itmill.toolkit.ui.Component)
      */
-    public void removeStyleName(String style) {
-
+    public void replaceComponent(Component oldComponent, Component newComponent) {
+        throw new UnsupportedOperationException();
     }
 
-    public void setDebugId(String id) {
-        testingId = id;
+    /**
+     * This method is not supported by CustomComponent. Use
+     * {@link CustomComponent#setCompositionRoot(Component)} to set
+     * CustomComponents "child".
+     * 
+     * @see com.itmill.toolkit.ui.AbstractComponentContainer#addComponent(com.itmill.toolkit.ui.Component)
+     */
+    public void addComponent(Component c) {
+        throw new UnsupportedOperationException();
     }
 
-    public String getDebugId() {
-        return testingId;
+    /**
+     * This method is not supported by CustomComponent.
+     * 
+     * @see com.itmill.toolkit.ui.AbstractComponentContainer#moveComponentsFrom(com.itmill.toolkit.ui.ComponentContainer)
+     */
+    public void moveComponentsFrom(ComponentContainer source) {
+        throw new UnsupportedOperationException();
     }
 
-    // TODO bridge sizeable methods to composition root and documentate
-
-    public int getHeight() {
-        // TODO Auto-generated method stub
-        return 0;
+    /**
+     * This method is not supported by CustomComponent.
+     * 
+     * @see com.itmill.toolkit.ui.AbstractComponentContainer#removeAllComponents()
+     */
+    public void removeAllComponents() {
+        throw new UnsupportedOperationException();
     }
 
-    public int getHeightUnits() {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
-    public int getWidth() {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
-    public int getWidthUnits() {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
-    public void setHeight(int height) {
-        // TODO Auto-generated method stub
-
-    }
-
-    public void setHeightUnits(int units) {
-        // TODO Auto-generated method stub
-
-    }
-
-    public void setSizeFull() {
-        // TODO Auto-generated method stub
-
-    }
-
-    public void setSizeUndefined() {
-        // TODO Auto-generated method stub
-
-    }
-
-    public void setWidth(int width) {
-        // TODO Auto-generated method stub
-
-    }
-
-    public void setWidthUnits(int units) {
-        // TODO Auto-generated method stub
-
-    }
-
-    public void setHeight(String height) {
-        // TODO Auto-generated method stub
-
-    }
-
-    public void setWidth(String width) {
-        // TODO Auto-generated method stub
-
+    /**
+     * This method is not supported by CustomComponent.
+     * 
+     * @see com.itmill.toolkit.ui.AbstractComponentContainer#removeComponent(com.itmill.toolkit.ui.Component)
+     */
+    public void removeComponent(Component c) {
+        throw new UnsupportedOperationException();
     }
 
 }

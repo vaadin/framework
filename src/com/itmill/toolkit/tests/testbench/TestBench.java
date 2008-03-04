@@ -127,6 +127,7 @@ public class TestBench extends com.itmill.toolkit.Application implements
         } catch (final Exception e) {
             try {
                 final CustomComponent cc = (CustomComponent) c.newInstance();
+                cc.setSizeFull();
                 return cc;
             } catch (final Exception e1) {
                 e1.printStackTrace();

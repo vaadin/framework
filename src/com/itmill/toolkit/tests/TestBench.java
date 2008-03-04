@@ -19,6 +19,7 @@ import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.CustomComponent;
 import com.itmill.toolkit.ui.ExpandLayout;
 import com.itmill.toolkit.ui.Label;
+import com.itmill.toolkit.ui.Layout;
 import com.itmill.toolkit.ui.Panel;
 import com.itmill.toolkit.ui.SplitPanel;
 import com.itmill.toolkit.ui.Tree;
@@ -128,10 +129,13 @@ public class TestBench extends com.itmill.toolkit.Application implements
         try {
             final Application app = (Application) c.newInstance();
             app.init();
-            return app.getMainWindow().getLayout();
+            Layout lo = app.getMainWindow().getLayout();
+            lo.setParent(null);
+            return lo;
         } catch (final Exception e) {
             try {
                 final CustomComponent cc = (CustomComponent) c.newInstance();
+                cc.setSizeFull();
                 return cc;
             } catch (final Exception e1) {
                 e1.printStackTrace();
