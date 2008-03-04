@@ -34,7 +34,7 @@ public class IFormLayout extends FlexTable implements Container {
         for (final Iterator it = uidl.getChildIterator(); it.hasNext(); i++) {
             prepareCell(i, 1);
             final UIDL childUidl = (UIDL) it.next();
-            final Paintable p = (Paintable) client.getPaintable(childUidl);
+            final Paintable p = client.getPaintable(childUidl);
             Caption c = (Caption) componentToCaption.get(p);
             if (c == null) {
                 c = new Caption(p, client);
@@ -50,7 +50,7 @@ public class IFormLayout extends FlexTable implements Container {
             setWidget(i, 0, c);
             p.updateFromUIDL(childUidl, client);
         }
-        i++;
+
         while (getRowCount() > i) {
             final Paintable p = (Paintable) getWidget(i, 1);
             client.unregisterPaintable(p);
