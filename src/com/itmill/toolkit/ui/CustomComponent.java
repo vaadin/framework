@@ -23,14 +23,6 @@ import com.itmill.toolkit.terminal.PaintTarget;
  * @VERSION@
  * @since 3.0
  */
-/**
- * @author mattitahvonen
- * 
- */
-/**
- * @author mattitahvonen
- * 
- */
 public class CustomComponent extends AbstractComponentContainer {
 
     /**
@@ -119,8 +111,7 @@ public class CustomComponent extends AbstractComponentContainer {
      * Gets the component type.
      * 
      * The component type is textual type of the component. This is included in
-     * the UIDL as component tag attribute. If the component type is null
-     * (default), the component tag is not included in the UIDL at all.
+     * the UIDL as component tag attribute.
      * 
      * @return the component type.
      */
