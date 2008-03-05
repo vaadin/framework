@@ -87,6 +87,11 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
      *                 if the paint operation failed.
      */
     public void paintContent(PaintTarget target) throws PaintException {
+        if (isMultiSelect()) {
+            super.paintContent(target);
+            return;
+        }
+
         // clear caption change listeners
         getCaptionChangeListener().clear();
 
@@ -105,10 +110,6 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
             target.addAttribute("required", true);
         }
 
-        // Paints select attributes
-        if (isMultiSelect()) {
-            target.addAttribute("selectmode", "multi");
-        }
         if (isNewItemsAllowed()) {
             target.addAttribute("allownewitem", true);
         }
