@@ -154,6 +154,7 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 
         DOM.sinkEvents(header, Event.MOUSEEVENTS);
         DOM.sinkEvents(resizeBox, Event.MOUSEEVENTS);
+        DOM.sinkEvents(getElement(), Event.ONLOSECAPTURE);
         DOM.sinkEvents(closeBox, Event.ONCLICK);
         DOM.sinkEvents(contents, Event.ONCLICK);
 
@@ -378,14 +379,15 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
             origW = DOM.getIntStyleAttribute(getElement(), "width")
                     - BORDER_WIDTH_HORIZONTAL;
             origH = getWidget().getOffsetHeight();
-            DOM.eventPreventDefault(event);
-            DOM.addEventPreview(this);
+            DOM.setCapture(getElement());
             break;
         case Event.ONMOUSEUP:
             resizing = false;
-            DOM.removeEventPreview(this);
+            DOM.releaseCapture(getElement());
             setSize(event, true);
             break;
+        case Event.ONLOSECAPTURE:
+            resizing = false;
         case Event.ONMOUSEMOVE:
             if (resizing) {
                 setSize(event, false);
@@ -441,12 +443,15 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
             startY = DOM.eventGetScreenY(event);
             origX = DOM.getAbsoluteLeft(getElement());
             origY = DOM.getAbsoluteTop(getElement());
+            DOM.setCapture(getElement());
             DOM.eventPreventDefault(event);
-            DOM.addEventPreview(this);
             break;
         case Event.ONMOUSEUP:
             dragging = false;
-            DOM.removeEventPreview(this);
+            DOM.releaseCapture(getElement());
+            break;
+        case Event.ONLOSECAPTURE:
+            dragging = false;
             break;
         case Event.ONMOUSEMOVE:
             if (dragging) {
