@@ -88,6 +88,9 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
      */
     public void paintContent(PaintTarget target) throws PaintException {
         if (isMultiSelect()) {
+            // background compatibility hack. This object shouldn't be used for
+            // multiselect lists anymore (ListSelect instead). This fallbacks to
+            // a simpler paint method in super class.
             super.paintContent(target);
             return;
         }
