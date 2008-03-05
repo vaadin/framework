@@ -903,7 +903,10 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      */
     public void setVisibleItemProperties(Collection visibleProperties) {
         visibleItemProperties = visibleProperties;
-        final Object value = getValue();
+        Object value = getValue();
+        if (value == null) {
+            value = itemDatasource;
+        }
         setFormDataSource(value, getVisibleItemProperties());
     }
 
