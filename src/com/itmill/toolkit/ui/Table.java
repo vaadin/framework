@@ -2163,11 +2163,18 @@ public class Table extends AbstractSelect implements Action.Container,
      */
     public boolean addContainerProperty(Object propertyId, Class type,
             Object defaultValue) throws UnsupportedOperationException {
-        if (!super.addContainerProperty(propertyId, type, defaultValue)) {
-            return false;
-        }
+        
+        boolean visibleColAdded = false;
         if (!visibleColumns.contains(propertyId)) {
             visibleColumns.add(propertyId);
+            visibleColAdded = true;
+        }
+        
+        if (!super.addContainerProperty(propertyId, type, defaultValue)) {
+            if(visibleColAdded) {
+                visibleColumns.remove(propertyId);
+            }
+            return false;
         }
         return true;
     }

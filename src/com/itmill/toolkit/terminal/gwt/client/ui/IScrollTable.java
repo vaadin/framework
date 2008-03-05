@@ -497,18 +497,23 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 
         final int[] widths = new int[tHead.visibleCells.size()];
 
+        if (width == null) {
+            // if this is a re-init, remove old manually fixed size
+            bodyContainer.setWidth("");
+            tHead.setWidth("");
+            super.setWidth("");
+        }
+
         tHead.enableBrowserIntelligence();
         // first loop: collect natural widths
         while (headCells.hasNext()) {
             final HeaderCell hCell = (HeaderCell) headCells.next();
-            int w;
-            if (hCell.getWidth() > 0) {
+            int w = hCell.getWidth();
+            if (w > 0) {
                 // server has defined column width explicitly
-                w = hCell.getWidth();
                 totalExplicitColumnsWidths += w;
             } else {
-                final int hw = DOM.getElementPropertyInt(hCell.getElement(),
-                        "offsetWidth");
+                final int hw = hCell.getOffsetWidth();
                 final int cw = tBody.getColWidth(i);
                 w = (hw > cw ? hw : cw) + IScrollTableBody.CELL_EXTRA_WIDTH;
             }
@@ -516,6 +521,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
             total += w;
             i++;
         }
+
         tHead.disableBrowserIntelligence();
 
         if (height == null) {
@@ -916,6 +922,10 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 
             DOM.setElementProperty(captionContainer, "className", CLASSNAME
                     + "-caption-container");
+
+            // ensure no clipping initially (problem on column additions)
+            DOM.setStyleAttribute(captionContainer, "overflow", "visible");
+
             DOM.sinkEvents(captionContainer, Event.MOUSEEVENTS);
 
             DOM.appendChild(td, captionContainer);
@@ -926,6 +936,10 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
         }
 
         public void setWidth(int w) {
+            if (width == -1) {
+                // go to default mode, clip content if necessary
+                DOM.setStyleAttribute(captionContainer, "overflow", "");
+            }
             width = w;
             DOM.setStyleAttribute(captionContainer, "width", (w
                     - DRAG_WIDGET_WIDTH - 4)
@@ -1244,6 +1258,12 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
                 if (c == null) {
                     c = new HeaderCell(cid, col.getStringAttribute("caption"));
                     availableCells.put(cid, c);
+                    if (initializedAndAttached) {
+                        // we will need a column width recalculation
+                        initializedAndAttached = false;
+                        initialContentReceived = false;
+                        isNewBody = true;
+                    }
                 } else {
                     c.setText(col.getStringAttribute("caption"));
                 }
