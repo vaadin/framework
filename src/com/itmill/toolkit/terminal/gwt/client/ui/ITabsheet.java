@@ -61,6 +61,7 @@ public class ITabsheet extends ITabsheetBase implements
 
         tb = new TabBar();
         tp = new ITabsheetPanel();
+        tp.setStyleName(CLASSNAME + "-tabsheetpanel");
         contentNode = DOM.createDiv();
         deco = DOM.createDiv();
 

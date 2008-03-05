@@ -70,6 +70,12 @@
 	background-color: #fff;
 }
 
+.i-tabsheet-tabsheetpanel {
+	border-top: 1px solid transparent;
+	border-bottom: 1px solid white;
+	margin-bottom: -1px;
+}
+
 .i-tabsheet-deco {
 	height: 9px;
 	background: transparent url(../panel/img/bottom-right.png) repeat-x right top;
