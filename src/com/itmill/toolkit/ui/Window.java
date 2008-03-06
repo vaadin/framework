@@ -1191,6 +1191,11 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * A notification message, used to display temporary messages to the user -
      * for example "Document saved", or "Save failed".
      * <p>
+     * The notification message can consist of several parts: caption,
+     * description and icon. It is usually used with only caption - one should
+     * be wary of filling the notification with too much information.
+     * </p>
+     * <p>
      * The notification message tries to be as unobtrusive as possible, while
      * still drawing needed attention. There are several basic types of messages
      * that can be used in different situations:
