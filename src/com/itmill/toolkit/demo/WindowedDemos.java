@@ -9,6 +9,7 @@ import java.util.Iterator;
 
 import com.itmill.toolkit.terminal.ExternalResource;
 import com.itmill.toolkit.ui.Button;
+import com.itmill.toolkit.ui.Embedded;
 import com.itmill.toolkit.ui.Window;
 import com.itmill.toolkit.ui.Button.ClickEvent;
 
@@ -78,13 +79,18 @@ public class WindowedDemos extends com.itmill.toolkit.Application {
             w.setWidth(520);
             w.setHeight(500);
             w.setPositionX(202);
+            w.getLayout().setSizeFull();
+            w.getLayout().setMargin(false);
             windows.put(demoName, w);
-            getMainWindow().addWindow(w);
-        } else {
-            w.setVisible(true);
+            Embedded emb = new Embedded();
+            emb.setType(Embedded.TYPE_BROWSER);
+            emb
+                    .setSource(new ExternalResource((String) servlets
+                            .get(demoName)));
+            emb.setSizeFull();
+            w.addComponent(emb);
         }
-        w.open(new ExternalResource((String) servlets.get(demoName)));
-
+        getMainWindow().addWindow(w);
     }
 
 }
