@@ -110,8 +110,8 @@ public class LayoutDemo extends com.itmill.toolkit.Application {
     }
 
     private Component getExamplePicture(String caption) {
-        final ClassResource cr = new ClassResource(
-                "features/m-bullet-blue.gif", this);
+        // loads image from package com.itmill-toolkit.demo
+        final ClassResource cr = new ClassResource("m-bullet-blue.gif", this);
         final Embedded em = new Embedded("Embedded " + caption, cr);
         em.setWidth(170);
         return em;
