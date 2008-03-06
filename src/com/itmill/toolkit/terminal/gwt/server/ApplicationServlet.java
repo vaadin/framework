@@ -124,7 +124,11 @@ public class ApplicationServlet extends HttpServlet {
 
     private String debugMode = "";
 
-    private boolean applicationRunnerMode = false;
+    // Is application runner mode enabled
+    private boolean applicationRunnerConfigured = false;
+
+    // If current request is using application runner, classname is stored here
+    private String applicationRunnerClassname = "";
 
     private ClassLoader classLoader;
 
@@ -152,9 +156,9 @@ public class ApplicationServlet extends HttpServlet {
                 .getInitParameter("applicationRunner");
         if (applicationRunner != null) {
             if ("true".equals(applicationRunner)) {
-                applicationRunnerMode = true;
+                applicationRunnerConfigured = true;
             } else if ("false".equals(applicationRunner)) {
-                applicationRunnerMode = false;
+                applicationRunnerConfigured = false;
             } else {
                 throw new ServletException(
                         "If applicationRunner parameter is given for an application, it must be 'true' or 'false'");
@@ -223,7 +227,7 @@ public class ApplicationServlet extends HttpServlet {
 
         // Loads the application class using the same class loader
         // as the servlet itself
-        if (!applicationRunnerMode) {
+        if (!applicationRunnerConfigured) {
             // Gets the application class name
             final String applicationClassName = servletConfig
                     .getInitParameter("application");
@@ -354,10 +358,10 @@ public class ApplicationServlet extends HttpServlet {
             // Handles AJAX UIDL requests
             if (request.getPathInfo() != null) {
                 String compare = AJAX_UIDL_URI;
-                if (applicationRunnerMode) {
+                if (applicationRunnerConfigured) {
                     final String[] URIparts = getApplicationRunnerURIs(request);
-                    final String applicationClassname = URIparts[4];
-                    compare = "/" + applicationClassname + AJAX_UIDL_URI;
+                    applicationRunnerClassname = URIparts[4];
+                    compare = "/" + applicationRunnerClassname + AJAX_UIDL_URI;
                 }
                 if (request.getPathInfo().startsWith(compare)) {
                     UIDLrequest = true;
@@ -579,7 +583,7 @@ public class ApplicationServlet extends HttpServlet {
         // virtual server configurations which lose the server name
         String appUrl = null;
         String widgetsetUrl = null;
-        if (applicationRunnerMode) {
+        if (applicationRunnerConfigured) {
             final String[] URIparts = getApplicationRunnerURIs(request);
             widgetsetUrl = URIparts[0];
             if (widgetsetUrl.equals("/")) {
@@ -774,6 +778,11 @@ public class ApplicationServlet extends HttpServlet {
         // Removes the leading /
         while (uri.startsWith("/") && uri.length() > 0) {
             uri = uri.substring(1);
+        }
+
+        // If using application runner, remove package and class name
+        if (applicationRunnerClassname != null) {
+            uri = uri.replaceFirst(applicationRunnerClassname + "/", "");
         }
 
         // Handles the uri
@@ -1052,7 +1061,7 @@ public class ApplicationServlet extends HttpServlet {
             final Application a = (Application) i.next();
             final String aPath = a.getURL().getPath();
             String servletPath = "";
-            if (applicationRunnerMode) {
+            if (applicationRunnerConfigured) {
                 final String[] URIparts = getApplicationRunnerURIs(request);
                 servletPath = URIparts[1];
             } else {
@@ -1103,7 +1112,7 @@ public class ApplicationServlet extends HttpServlet {
                 .getApplicationContext(request.getSession());
         final URL applicationUrl;
 
-        if (applicationRunnerMode) {
+        if (applicationRunnerConfigured) {
             final String[] URIparts = getApplicationRunnerURIs(request);
             final String applicationClassname = URIparts[4];
             applicationUrl = new URL(getApplicationUrl(request).toString()
