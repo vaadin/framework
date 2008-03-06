@@ -1085,6 +1085,16 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     }
 
     /**
+     * Sets sub-window modal, so that widgets behind it cannot be accessed.
+     * 
+     * @param modality
+     *                true if modality is to be turned on
+     */
+    public void setModal(boolean modality) {
+        modal = modality;
+    }
+
+    /**
      * Shows a notification message on the middle of the window. The message
      * automatically disappears ("humanized message").
      * 
@@ -1231,27 +1241,61 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
         public static final int DELAY_NONE = 0;
 
         private String caption;
-        private String message;
+        private String description;
         private Resource icon;
         private int position = POSITION_CENTERED;
         private int delayMsec = 0;
         private String styleName;
 
+        /**
+         * Creates a "humanized" notification message.
+         * 
+         * @param caption
+         *                The message to show
+         */
         public Notification(String caption) {
             this(caption, null, TYPE_HUMANIZED_MESSAGE);
         }
 
+        /**
+         * Creates a notification message of the specified type.
+         * 
+         * @param caption
+         *                The message to show
+         * @param type
+         *                The type of message
+         */
         public Notification(String caption, int type) {
             this(caption, null, type);
         }
 
-        public Notification(String caption, String message) {
-            this(caption, message, TYPE_HUMANIZED_MESSAGE);
+        /**
+         * Creates a "humanized" notification message with a bigger caption and
+         * smaller description.
+         * 
+         * @param caption
+         *                The message caption
+         * @param description
+         *                The message description
+         */
+        public Notification(String caption, String description) {
+            this(caption, description, TYPE_HUMANIZED_MESSAGE);
         }
 
-        public Notification(String caption, String message, int type) {
+        /**
+         * Creates a notification message of the specified type, with a bigger
+         * caption and smaller description.
+         * 
+         * @param caption
+         *                The message caption
+         * @param description
+         *                The message description
+         * @param type
+         *                The type of message
+         */
+        public Notification(String caption, String description, int type) {
             this.caption = caption;
-            this.message = message;
+            this.description = description;
             setType(type);
         }
 
@@ -1277,62 +1321,136 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
         }
 
+        /**
+         * Gets the caption part of the notification message.
+         * 
+         * @return The message caption
+         */
         public String getCaption() {
             return caption;
         }
 
+        /**
+         * Sets the caption part of the notification message
+         * 
+         * @param caption
+         *                The message caption
+         */
         public void setCaption(String caption) {
             this.caption = caption;
         }
 
+        /**
+         * @deprecated Use {@link #getDescription()} instead.
+         * @return
+         */
         public String getMessage() {
-            return message;
+            return description;
         }
 
-        public void setMessage(String message) {
-            this.message = message;
+        /**
+         * @deprecated Use {@link #setDescription(String)} instead.
+         * @param description
+         */
+        public void setMessage(String description) {
+            this.description = description;
         }
 
+        /**
+         * Gets the description part of the notification message.
+         * 
+         * @return The message description.
+         */
+        public String getDescription() {
+            return description;
+        }
+
+        /**
+         * Sets the description part of the notification message.
+         * 
+         * @param description
+         */
+        public void setDescription(String description) {
+            this.description = description;
+        }
+
+        /**
+         * Gets the position of the notification message.
+         * 
+         * @return The position
+         */
         public int getPosition() {
             return position;
         }
 
+        /**
+         * Sets the position of the notification message.
+         * 
+         * @param position
+         *                The desired notification position
+         */
         public void setPosition(int position) {
             this.position = position;
         }
 
+        /**
+         * Gets the icon part of the notification message.
+         * 
+         * @return The message icon
+         */
         public Resource getIcon() {
             return icon;
         }
 
+        /**
+         * Sets the icon part of the notification message.
+         * 
+         * @param icon
+         *                The desired message icon
+         */
         public void setIcon(Resource icon) {
             this.icon = icon;
         }
 
+        /**
+         * Gets the delay before the notification disappears.
+         * 
+         * @return the delay in msec, -1 indicates the message has to be
+         *         clicked.
+         */
         public int getDelayMsec() {
             return delayMsec;
         }
 
+        /**
+         * Sets the delay before the notification disappears.
+         * 
+         * @param delayMsec
+         *                the desired delay in msec, -1 to require the user to
+         *                click the message
+         */
         public void setDelayMsec(int delayMsec) {
             this.delayMsec = delayMsec;
         }
 
+        /**
+         * Sets the style name for the notification message.
+         * 
+         * @param styleName
+         *                The desired style name.
+         */
         public void setStyleName(String styleName) {
             this.styleName = styleName;
         }
 
+        /**
+         * Gets the style name for the notification message.
+         * 
+         * @return
+         */
         public String getStyleName() {
             return styleName;
         }
     }
 
-    /**
-     * Sets sub-window modal, so that widgets behind it cannot be accessed.
-     * 
-     * @param modality
-     *                true if modality is to be turned on
-     */
-    public void setModal(boolean modality) {
-        modal = modality;
-    }
 }
