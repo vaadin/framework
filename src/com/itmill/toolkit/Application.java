@@ -407,10 +407,16 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
      * corresponds to the given URL and it will return windows when asked for
      * them.
      * 
+     * Application properties are defined by servlet configuration object
+     * {@link javax.servlet.ServletConfig} and they are overridden by
+     * context-wide initialization parameters
+     * {@link javax.servlet.ServletContext}.
+     * 
      * @param applicationUrl
      *                the URL the application should respond to.
      * @param applicationProperties
-     *                the Application properties as specified by the adapter.
+     *                the Application properties as specified by the servlet
+     *                configuration.
      * @param context
      *                the context application will be running in.
      * 
@@ -527,6 +533,9 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
     /**
      * Returns an enumeration of all the names in this application.
      * 
+     * See {@link #start(URL, Properties, ApplicationContext)} how properties
+     * are defined.
+     * 
      * @return an enumeration of all the keys in this property list, including
      *         the keys in the default property list.
      * 
@@ -538,6 +547,9 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
     /**
      * Searches for the property with the specified name in this application.
      * This method returns <code>null</code> if the property is not found.
+     * 
+     * See {@link #start(URL, Properties, ApplicationContext)} how properties
+     * are defined.
      * 
      * @param name
      *                the name of the property.
