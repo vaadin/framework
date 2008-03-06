@@ -146,7 +146,7 @@ public class IView extends SimplePanel implements Paintable,
             final IWindow w = (IWindow) rem.next();
             client.unregisterPaintable(w);
             subWindows.remove(w);
-            RootPanel.get().remove(w);
+            w.hide();
         }
 
         if (true) {
