@@ -124,11 +124,11 @@ public class ApplicationServlet extends HttpServlet {
 
     private String debugMode = "";
 
-    // Is application runner mode enabled
-    private boolean applicationRunnerConfigured = false;
+    // Is this servlet application runner
+    private boolean isApplicationRunnerServlet = false;
 
-    // If current request is using application runner, classname is stored here
-    private String applicationRunnerClassname = "";
+    // If servlet is application runner, store request's classname
+    private String applicationRunnerClassname = null;
 
     private ClassLoader classLoader;
 
@@ -156,9 +156,9 @@ public class ApplicationServlet extends HttpServlet {
                 .getInitParameter("applicationRunner");
         if (applicationRunner != null) {
             if ("true".equals(applicationRunner)) {
-                applicationRunnerConfigured = true;
+                isApplicationRunnerServlet = true;
             } else if ("false".equals(applicationRunner)) {
-                applicationRunnerConfigured = false;
+                isApplicationRunnerServlet = false;
             } else {
                 throw new ServletException(
                         "If applicationRunner parameter is given for an application, it must be 'true' or 'false'");
@@ -227,7 +227,7 @@ public class ApplicationServlet extends HttpServlet {
 
         // Loads the application class using the same class loader
         // as the servlet itself
-        if (!applicationRunnerConfigured) {
+        if (!isApplicationRunnerServlet) {
             // Gets the application class name
             final String applicationClassName = servletConfig
                     .getInitParameter("application");
@@ -358,7 +358,7 @@ public class ApplicationServlet extends HttpServlet {
             // Handles AJAX UIDL requests
             if (request.getPathInfo() != null) {
                 String compare = AJAX_UIDL_URI;
-                if (applicationRunnerConfigured) {
+                if (isApplicationRunnerServlet) {
                     final String[] URIparts = getApplicationRunnerURIs(request);
                     applicationRunnerClassname = URIparts[4];
                     compare = "/" + applicationRunnerClassname + AJAX_UIDL_URI;
@@ -583,7 +583,7 @@ public class ApplicationServlet extends HttpServlet {
         // virtual server configurations which lose the server name
         String appUrl = null;
         String widgetsetUrl = null;
-        if (applicationRunnerConfigured) {
+        if (isApplicationRunnerServlet) {
             final String[] URIparts = getApplicationRunnerURIs(request);
             widgetsetUrl = URIparts[0];
             if (widgetsetUrl.equals("/")) {
@@ -781,7 +781,7 @@ public class ApplicationServlet extends HttpServlet {
         }
 
         // If using application runner, remove package and class name
-        if (applicationRunnerClassname != null) {
+        if (isApplicationRunnerServlet) {
             uri = uri.replaceFirst(applicationRunnerClassname + "/", "");
         }
 
@@ -1061,7 +1061,7 @@ public class ApplicationServlet extends HttpServlet {
             final Application a = (Application) i.next();
             final String aPath = a.getURL().getPath();
             String servletPath = "";
-            if (applicationRunnerConfigured) {
+            if (isApplicationRunnerServlet) {
                 final String[] URIparts = getApplicationRunnerURIs(request);
                 servletPath = URIparts[1];
             } else {
@@ -1112,7 +1112,7 @@ public class ApplicationServlet extends HttpServlet {
                 .getApplicationContext(request.getSession());
         final URL applicationUrl;
 
-        if (applicationRunnerConfigured) {
+        if (isApplicationRunnerServlet) {
             final String[] URIparts = getApplicationRunnerURIs(request);
             final String applicationClassname = URIparts[4];
             applicationUrl = new URL(getApplicationUrl(request).toString()
