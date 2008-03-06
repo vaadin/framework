@@ -7,12 +7,15 @@ package com.itmill.toolkit.terminal.gwt.client.ui;
 import java.util.Iterator;
 import java.util.Vector;
 
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ScrollListener;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -96,6 +99,8 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 
     private boolean modal = false;
 
+    private Element modalityCurtain;
+
     private Element headerText;
 
     public IWindow() {
@@ -103,7 +108,6 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
         final int order = windowOrder.size();
         setWindowOrder(order);
         windowOrder.add(this);
-        setStyleName(CLASSNAME);
         constructDOM();
         setPopupPosition(order * STACKING_OFFSET_PIXELS, order
                 * STACKING_OFFSET_PIXELS);
@@ -131,8 +135,12 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
     }
 
     public void setWindowOrder(int order) {
-        DOM.setStyleAttribute(getElement(), "zIndex", ""
-                + (order + Z_INDEX_BASE));
+        int zIndex = (order + Z_INDEX_BASE);
+        if (modal) {
+            zIndex += 1000;
+            DOM.setStyleAttribute(modalityCurtain, "zIndex", "" + zIndex);
+        }
+        DOM.setStyleAttribute(getElement(), "zIndex", "" + zIndex);
     }
 
     protected void constructDOM() {
@@ -160,6 +168,7 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 
         final Element wrapper = DOM.createDiv();
         DOM.setElementProperty(wrapper, "className", CLASSNAME + "-wrap");
+
         final Element wrapper2 = DOM.createDiv();
         DOM.setElementProperty(wrapper2, "className", CLASSNAME + "-wrap2");
 
@@ -171,7 +180,9 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
         DOM.appendChild(wrapper2, contents);
         DOM.appendChild(wrapper2, footer);
         DOM.appendChild(wrapper, wrapper2);
-        DOM.appendChild(getElement(), wrapper);
+        DOM.appendChild(super.getContainerElement(), wrapper);
+        DOM.setElementProperty(getElement(), "className", CLASSNAME);
+
         setWidget(contentPanel);
 
         // set default size
@@ -312,10 +323,53 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 
     }
 
+    public void show() {
+        if (modal) {
+            showModalityCurtain();
+        }
+        super.show();
+    }
+
+    public void hide() {
+        if (modal) {
+            hideModalityCurtain();
+        }
+        super.hide();
+    }
+
     private void setModal(boolean modality) {
-        // TODO create transparent curtain to create visual clue that window is
-        // modal
         modal = modality;
+        if (modal) {
+            modalityCurtain = DOM.createDiv();
+            DOM.setElementProperty(modalityCurtain, "className", CLASSNAME
+                    + "-modalitycurtain");
+            if (isAttached()) {
+                showModalityCurtain();
+                bringToFront();
+            } else {
+                DeferredCommand.addCommand(new Command() {
+                    public void execute() {
+                        // modal window must on top of others
+                        bringToFront();
+                    }
+                });
+            }
+        } else {
+            if (modalityCurtain != null) {
+                if (isAttached()) {
+                    hideModalityCurtain();
+                }
+                modalityCurtain = null;
+            }
+        }
+    }
+
+    private void showModalityCurtain() {
+        DOM.appendChild(RootPanel.getBodyElement(), modalityCurtain);
+    }
+
+    private void hideModalityCurtain() {
+        DOM.removeChild(RootPanel.getBodyElement(), modalityCurtain);
     }
 
     public void setPopupPosition(int left, int top) {

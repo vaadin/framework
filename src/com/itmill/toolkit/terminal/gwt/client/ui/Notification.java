@@ -38,6 +38,8 @@ public class Notification extends ToolkitOverlay {
     private EventPreview eventPreview;
 
     private String temporaryStyle;
+    private int x = -1;
+    private int y = -1;
 
     public Notification() {
         setStylePrimaryName(STYLENAME);
@@ -57,7 +59,7 @@ public class Notification extends ToolkitOverlay {
     }
 
     public void startDelay() {
-        DOM.removeEventPreview(eventPreview);
+        DOM.releaseCapture(getElement());
         if (delayMsec > 0) {
             delay = new Timer() {
                 public void run() {
@@ -102,39 +104,33 @@ public class Notification extends ToolkitOverlay {
         super.show();
         setPosition(position);
 
-        if (eventPreview == null) {
-            eventPreview = new EventPreview() {
-                int x = -1;
-                int y = -1;
+        DOM.setCapture(getElement());
 
-                public boolean onEventPreview(Event event) {
-                    switch (DOM.eventGetType(event)) {
-                    case Event.ONMOUSEMOVE:
-                        if (x < 0) {
-                            x = DOM.eventGetClientX(event);
-                            y = DOM.eventGetClientY(event);
-                        } else if (Math.abs(DOM.eventGetClientX(event) - x) > mouseMoveThreshold
-                                || Math.abs(DOM.eventGetClientY(event) - y) > mouseMoveThreshold) {
+        if (style.equals("error")) {
+            if (eventPreview == null) {
+                eventPreview = new EventPreview() {
+                    public boolean onEventPreview(Event event) {
+                        Element target = DOM.eventGetTarget(event);
+                        if (DOM.isOrHasChild(getElement(), target)
+                                && DOM.eventGetType(event) == Event.ONCLICK) {
                             startDelay();
+                            DOM.removeEventPreview(this);
+                            return true;
+                        } else {
+                            DOM.eventCancelBubble(event, true);
+                            return false;
                         }
-                        break;
-                    case Event.KEYEVENTS:
-                    case Event.ONCLICK:
-                    case Event.ONDBLCLICK:
-                    case Event.ONSCROLL:
-                    default:
-                        startDelay();
                     }
-                    return true;
-                }
-            };
+                };
+            }
+
+            DOM.addEventPreview(eventPreview);
         }
 
-        DOM.addEventPreview(eventPreview);
     }
 
     public void hide() {
-        DOM.removeEventPreview(eventPreview);
+        DOM.releaseCapture(getElement());
         cancelDelay();
         cancelFade();
         if (temporaryStyle != null) {
@@ -145,6 +141,7 @@ public class Notification extends ToolkitOverlay {
     }
 
     public void fade() {
+        DOM.releaseCapture(getElement());
         cancelDelay();
         fader = new Timer() {
             int opacity = startOpacity;
@@ -223,9 +220,21 @@ public class Notification extends ToolkitOverlay {
     }
 
     public void onBrowserEvent(Event event) {
-        DOM.removeEventPreview(eventPreview);
-        if (fader == null) {
-            fade();
+        switch (DOM.eventGetType(event)) {
+        case Event.ONMOUSEMOVE:
+            if (x < 0) {
+                x = DOM.eventGetClientX(event);
+                y = DOM.eventGetClientY(event);
+            } else if (Math.abs(DOM.eventGetClientX(event) - x) > mouseMoveThreshold
+                    || Math.abs(DOM.eventGetClientY(event) - y) > mouseMoveThreshold) {
+                startDelay();
+            }
+            break;
+        default:
+            if (fader == null) {
+                fade();
+            }
+            break;
         }
     }
 
