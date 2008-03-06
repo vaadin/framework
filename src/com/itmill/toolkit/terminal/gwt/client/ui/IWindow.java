@@ -241,11 +241,14 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
             setCaption(uidl.getStringAttribute("caption"));
         }
 
-        UIDL childUidl = uidl.getChildUIDL(0);
-        if ("open".equals(childUidl.getTag())) {
+        boolean showingUrl = false;
+        int childIndex = 0;
+        UIDL childUidl = uidl.getChildUIDL(childIndex++);
+        while ("open".equals(childUidl.getTag())) {
+            // TODO multipe opens with the same target will in practice just
+            // open the last one - should we fix that somehow?
             final String parsedUri = client.translateToolkitUri(childUidl
                     .getStringAttribute("src"));
-            // TODO this should be a while-loop for multiple opens
             if (!childUidl.hasAttribute("name")) {
                 final Frame frame = new Frame();
                 DOM.setStyleAttribute(frame.getElement(), "width", "100%");
@@ -253,26 +256,30 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
                 DOM.setStyleAttribute(frame.getElement(), "border", "0px");
                 frame.setUrl(parsedUri);
                 contentPanel.setWidget(frame);
+                showingUrl = true;
             } else {
                 final String target = childUidl.getStringAttribute("name");
                 Window.open(parsedUri, target, "");
             }
-        } else {
-            final Paintable lo = client.getPaintable(childUidl);
-            if (layout != null) {
-                if (layout != lo) {
-                    // remove old
-                    client.unregisterPaintable(layout);
-                    contentPanel.remove((Widget) layout);
-                    // add new
-                    contentPanel.setWidget((Widget) lo);
-                    layout = lo;
-                }
-            } else {
-                contentPanel.setWidget((Widget) lo);
-            }
-            lo.updateFromUIDL(childUidl, client);
+            childUidl = uidl.getChildUIDL(childIndex++);
         }
+
+        final Paintable lo = client.getPaintable(childUidl);
+        if (layout != null) {
+            if (layout != lo) {
+                // remove old
+                client.unregisterPaintable(layout);
+                contentPanel.remove((Widget) layout);
+                // add new
+                if (!showingUrl) {
+                    contentPanel.setWidget((Widget) lo);
+                }
+                layout = lo;
+            }
+        } else if (!showingUrl) {
+            contentPanel.setWidget((Widget) lo);
+        }
+        lo.updateFromUIDL(childUidl, client);
 
         // we may have actions and notifications
         if (uidl.getChildCount() > 1) {
@@ -290,6 +297,12 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
                             .hasNext();) {
                         final UIDL notification = (UIDL) it.next();
                         String html = "";
+                        if (notification.hasAttribute("icon")) {
+                            final String parsedUri = client
+                                    .translateToolkitUri(notification
+                                            .getStringAttribute("icon"));
+                            html += "<IMG src=\"" + parsedUri + "\" />";
+                        }
                         if (notification.hasAttribute("caption")) {
                             html += "<H1>"
                                     + notification

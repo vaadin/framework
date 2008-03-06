@@ -505,6 +505,9 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
                 if (n.getMessage() != null) {
                     target.addAttribute("message", n.getMessage());
                 }
+                if (n.getIcon() != null) {
+                    target.addAttribute("icon", n.getIcon());
+                }
                 target.addAttribute("position", n.getPosition());
                 target.addAttribute("delay", n.getDelayMsec());
                 if (n.getStyleName() != null) {
@@ -1081,22 +1084,87 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
         this.scrollLeft = scrollLeft;
     }
 
+    /**
+     * Shows a notification message on the middle of the window. The message
+     * automatically disappears ("humanized message").
+     * 
+     * @see #showNotification(com.itmill.toolkit.ui.Window.Notification)
+     * @see Notification
+     * 
+     * @param caption
+     *                The message
+     */
     public void showNotification(String caption) {
         addNotification(new Notification(caption));
     }
 
+    /**
+     * Shows a notification message the window. The position and behavior of the
+     * message depends on the type, which is one of the basic types defined in
+     * {@link Notification}, for instance Notification.TYPE_WARNING_MESSAGE.
+     * 
+     * @see #showNotification(com.itmill.toolkit.ui.Window.Notification)
+     * @see Notification
+     * 
+     * @param caption
+     *                The message
+     * @param type
+     *                The message type
+     */
     public void showNotification(String caption, int type) {
         addNotification(new Notification(caption, type));
     }
 
-    public void showNotification(String caption, String message) {
-        addNotification(new Notification(caption, message));
+    /**
+     * Shows a notification consisting of a bigger caption and a smaller
+     * description on the middle of the window. The message automatically
+     * disappears ("humanized message").
+     * 
+     * @see #showNotification(com.itmill.toolkit.ui.Window.Notification)
+     * @see Notification
+     * 
+     * @param caption
+     *                The caption of the message
+     * @param description
+     *                The message description
+     * 
+     */
+    public void showNotification(String caption, String description) {
+        addNotification(new Notification(caption, description));
     }
 
-    public void showNotification(String caption, String message, int type) {
-        addNotification(new Notification(caption, message, type));
+    /**
+     * Shows a notification consisting of a bigger caption and a smaller
+     * description. The position and behavior of the message depends on the
+     * type, which is one of the basic types defined in {@link Notification},
+     * for instance Notification.TYPE_WARNING_MESSAGE.
+     * 
+     * @see #showNotification(com.itmill.toolkit.ui.Window.Notification)
+     * @see Notification
+     * 
+     * @param caption
+     *                The caption of the message
+     * @param description
+     *                The message description
+     * @param type
+     *                The message type
+     */
+    public void showNotification(String caption, String description, int type) {
+        addNotification(new Notification(caption, description, type));
     }
 
+    /**
+     * Shows a notification message.
+     * 
+     * @see Notification
+     * @see #showNotification(String)
+     * @see #showNotification(String, int)
+     * @see #showNotification(String, String)
+     * @see #showNotification(String, String, int)
+     * 
+     * @param notification
+     *                The notification message to show
+     */
     public void showNotification(Notification notification) {
         addNotification(notification);
     }
@@ -1109,7 +1177,43 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
         requestRepaint();
     }
 
-    public class Notification {
+    /**
+     * A notification message, used to display temporary messages to the user -
+     * for example "Document saved", or "Save failed".
+     * <p>
+     * The notification message tries to be as unobtrusive as possible, while
+     * still drawing needed attention. There are several basic types of messages
+     * that can be used in different situations:
+     * <ul>
+     * <li> TYPE_HUMANIZED_MESSAGE fades away quickly as soon as the user uses
+     * the mouse or types something. It can be used to show fairly unimportant
+     * messages, such as feedback that an operation succeeded ("Document Saved") -
+     * the kind of messages the user ignores once the application is familiar.</li>
+     * <li>TYPE_WARNING_MESSAGE is shown for a short while after the user uses
+     * the mouse or types something. It's default style is also more noticeable
+     * than the humanized message. It can be used for messages that do not
+     * contain a lot of important information, but should be noticed by the
+     * user. Despite the name, it does not have to be a warning, but can be used
+     * instead of the humanized message whenever you want to make the message a
+     * little more noticeable. </li>
+     * <li>TYPE_ERROR_MESSAGE requires to user to click it before disappearing,
+     * and can be used for critical messages.</li>
+     * <li>TYPE_TRAY_NOTIFICATION is shown for a while in the lower left corner
+     * of the window, and can be used for "convenience notifications" that do
+     * not have to be noticed immediately, and should not interfere with the
+     * current task - for instance to show "You have a new message in your
+     * inbox" while the user is working in some other area of the application.
+     * </li>
+     * </ul>
+     * </p>
+     * <p>
+     * In addition to the basic pre-configured types, a Notification can also be
+     * configured to show up in a custom position, for a specified time (or
+     * until clicked), and with a custom stylename. An icon can also be added.
+     * </p>
+     * 
+     */
+    public static class Notification {
         public static final int TYPE_HUMANIZED_MESSAGE = 1;
         public static final int TYPE_WARNING_MESSAGE = 2;
         public static final int TYPE_ERROR_MESSAGE = 3;

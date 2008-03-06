@@ -119,6 +119,12 @@ public class IView extends SimplePanel implements Paintable,
                         .hasNext();) {
                     final UIDL notification = (UIDL) it.next();
                     String html = "";
+                    if (notification.hasAttribute("icon")) {
+                        final String parsedUri = client
+                                .translateToolkitUri(notification
+                                        .getStringAttribute("icon"));
+                        html += "<IMG src=\"" + parsedUri + "\" />";
+                    }
                     if (notification.hasAttribute("caption")) {
                         html += "<H1>"
                                 + notification.getStringAttribute("caption")
