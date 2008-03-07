@@ -357,12 +357,14 @@ public class ApplicationServlet extends HttpServlet {
 
             // Handles AJAX UIDL requests
             if (request.getPathInfo() != null) {
+
                 String compare = AJAX_UIDL_URI;
                 if (isApplicationRunnerServlet) {
                     final String[] URIparts = getApplicationRunnerURIs(request);
                     applicationRunnerClassname = URIparts[4];
                     compare = "/" + applicationRunnerClassname + AJAX_UIDL_URI;
                 }
+
                 if (request.getPathInfo().startsWith(compare)) {
                     UIDLrequest = true;
                     application = getExistingApplication(request, response);
@@ -380,13 +382,15 @@ public class ApplicationServlet extends HttpServlet {
                             throw new SessionExpired();
                         }
                     }
+
                     // Invokes context transaction listeners
                     // note: endTransaction is called on finalize below
                     ((WebApplicationContext) application.getContext())
                             .startTransaction(application, request);
+
+                    // Handle UIDL request
                     getApplicationManager(application).handleUidlRequest(
                             request, response, this);
-
                     return;
                 }
             }
@@ -457,9 +461,11 @@ public class ApplicationServlet extends HttpServlet {
                     return;
                 }
 
+                // Send initial AJAX page that kickstarts Toolkit application
                 writeAjaxPage(request, response, window, themeName, application);
 
             } else {
+                // Client downloads an resource
                 handleDownload(download, request, response);
             }
 
@@ -995,14 +1001,19 @@ public class ApplicationServlet extends HttpServlet {
     }
 
     /**
+     * Parses application runner URIs.
+     * 
      * If request URL is e.g.
      * http://localhost:8080/itmill/run/com.itmill.toolkit.demo.Calc then
-     * context=itmill Toolkit applicationRunner servlet=run launched Toolkit
-     * application=com.itmill.toolkit.demo.Calc
+     * <ul>
+     * <li>context=itmill</li>
+     * <li>Runner servlet=run</li>
+     * <li>Toolkit application=com.itmill.toolkit.demo.Calc</li>
+     * </ul>
      * 
      * @param request
-     * @return string array containing widgetsetUri, applicationUri and context,
-     *         runner, applicationClassname separately
+     * @return string array containing widgetset URI, application URI and
+     *         context, runner, application classname
      */
     private String[] getApplicationRunnerURIs(HttpServletRequest request) {
         final String[] urlParts = request.getRequestURI().toString().split(
