@@ -82,7 +82,7 @@ public class IUpload extends FormPanel implements Paintable, ClickListener,
         submitButton.setText(uidl.getStringAttribute("buttoncaption"));
         fu.setName(paintableId + "_file");
 
-        if (uidl.hasAttribute("disabled")) {
+        if (uidl.hasAttribute("disabled") || uidl.hasAttribute("readonly")) {
             disableUpload();
         } else if (uidl.getBooleanAttribute("state")) {
             enableUploaod();

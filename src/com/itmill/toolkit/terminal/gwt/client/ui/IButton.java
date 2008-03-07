@@ -86,7 +86,7 @@ public class IButton extends Button implements Paintable {
             DOM.removeChild(getElement(), errorIndicatorElement);
             errorIndicatorElement = null;
         }
-
+        
         if (uidl.hasAttribute("readonly")) {
             setEnabled(false);
         }
