@@ -34,7 +34,6 @@ import com.itmill.toolkit.ui.NativeSelect;
 import com.itmill.toolkit.ui.OptionGroup;
 import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Panel;
-import com.itmill.toolkit.ui.ProgressIndicator;
 import com.itmill.toolkit.ui.RichTextArea;
 import com.itmill.toolkit.ui.Select;
 import com.itmill.toolkit.ui.Slider;
@@ -96,7 +95,7 @@ public class TestComponentsAndLayouts extends Application implements Listener,
         main.addComponent(eventListenerFeedback);
 
         // //////////////////////////////////////////////////////////////////////////
-        if (true) {
+        if (false) {
             window = new Window("Components inside Window (TEST: Window)");
 
             if (false) {
@@ -131,6 +130,38 @@ public class TestComponentsAndLayouts extends Application implements Listener,
                     OrderedLayout.ORIENTATION_VERTICAL);
             populateLayout(ol2);
             target.addComponent(ol2);
+        }
+
+        // //////////////////////////////////////////////////////////////////////////
+        if (false) {
+            target.addComponent(new Label(
+                    "<hr /><h1>Components inside TabSheet</h3>",
+                    Label.CONTENT_XHTML));
+            final TabSheet tabsheet = new TabSheet();
+            final OrderedLayout tab1 = new OrderedLayout();
+            tab1.addComponent(new Label("try tab2"));
+            final OrderedLayout tab2 = new OrderedLayout();
+            populateLayout(tab2);
+            tabsheet.addTab(tab1, "TabSheet tab1", new ClassResource("m.gif",
+                    this));
+            tabsheet.addTab(tab2, "TabSheet tab2", new ClassResource("m.gif",
+                    this));
+            target.addComponent(tabsheet);
+            // test(tabsheet);
+            // test(tab1);
+            // test(tab2);
+            // test(expandLayout);
+        }
+
+        // //////////////////////////////////////////////////////////////////////////
+        if (false) {
+            target.addComponent(new Label(
+                    "<hr /><h1>Components inside GridLayout</h3>",
+                    Label.CONTENT_XHTML));
+            final GridLayout gridLayout = new GridLayout(4, 100);
+            populateLayout(gridLayout);
+            target.addComponent(gridLayout);
+            // test(gridLayout);
         }
 
         // //////////////////////////////////////////////////////////////////////////
@@ -195,38 +226,6 @@ public class TestComponentsAndLayouts extends Application implements Listener,
             target.addComponent(sp2l);
         }
 
-        // //////////////////////////////////////////////////////////////////////////
-        if (false) {
-            target.addComponent(new Label(
-                    "<hr /><h1>Components inside TabSheet</h3>",
-                    Label.CONTENT_XHTML));
-            final TabSheet tabsheet = new TabSheet();
-            final OrderedLayout tab1 = new OrderedLayout();
-            tab1.addComponent(new Label("try tab2"));
-            final OrderedLayout tab2 = new OrderedLayout();
-            populateLayout(tab2);
-            tabsheet.addTab(tab1, "TabSheet tab1", new ClassResource("m.gif",
-                    this));
-            tabsheet.addTab(tab2, "TabSheet tab2", new ClassResource("m.gif",
-                    this));
-            target.addComponent(tabsheet);
-            // test(tabsheet);
-            // test(tab1);
-            // test(tab2);
-            // test(expandLayout);
-        }
-
-        // //////////////////////////////////////////////////////////////////////////
-        if (false) {
-            target.addComponent(new Label(
-                    "<hr /><h1>Components inside GridLayout</h3>",
-                    Label.CONTENT_XHTML));
-            final GridLayout gridLayout = new GridLayout(4, 100);
-            populateLayout(gridLayout);
-            target.addComponent(gridLayout);
-            // test(gridLayout);
-        }
-
     }
 
     void populateLayout(Layout layout) {
@@ -269,9 +268,9 @@ public class TestComponentsAndLayouts extends Application implements Listener,
         optionGroup.setItemCaptionPropertyId("UNIT");
         test(layout, optionGroup);
 
-        final ProgressIndicator pi = new ProgressIndicator();
-        pi.setCaption("ProgressIndicator");
-        test(layout, pi);
+        // final ProgressIndicator pi = new ProgressIndicator();
+        // pi.setCaption("ProgressIndicator");
+        // test(layout, pi);
 
         final RichTextArea rta = new RichTextArea();
         test(layout, rta);
@@ -375,8 +374,8 @@ public class TestComponentsAndLayouts extends Application implements Listener,
         // TWEAK these
         // c.setEnabled(false);
         // c.setVisible(false);
-        // c.setStyleName("testStyleName");
-        // c.setReadOnly(true);
+        c.setStyleName("testStyleName");
+        c.setReadOnly(true);
 
         // try to add listener
         try {
@@ -404,12 +403,12 @@ public class TestComponentsAndLayouts extends Application implements Listener,
         }
 
         // TWEAK these
-        c.setDescription("Description " + c);
         c.setComponentError(errorMsg);
         c.setIcon(res);
         c.setImmediate(true);
         // c.addStyleName("addedTestStyleName");
         // c.setStyleName("singleTestStyleName");
+        c.setDescription("Description here..");
     }
 
     void test(CustomComponent c) {
@@ -442,7 +441,7 @@ public class TestComponentsAndLayouts extends Application implements Listener,
         final String feedback = "eventCount=" + eventCount + ", class="
                 + event.getClass() + ", source=" + event.getSource()
                 + ", toString()=" + event.toString();
-        System.out.println("eventListenerFeedback: " + feedback);
+        // System.out.println("eventListenerFeedback: " + feedback);
         eventListenerFeedback.setValue("Events: " + eventCount);
     }
 
