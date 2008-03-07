@@ -378,6 +378,16 @@ public class ApplicationConnection {
             }
         }
 
+        JSONObject meta = null;
+        if (((JSONObject) json).containsKey("meta")) {
+            meta = ((JSONObject) json).get("meta").isObject();
+            if (meta.containsKey("repaintAll")) {
+                view.clear();
+                idToPaintable.clear();
+                paintableToId.clear();
+            }
+        }
+
         // Process changes
         final JSONArray changes = (JSONArray) ((JSONObject) json)
                 .get("changes");
@@ -411,8 +421,7 @@ public class ApplicationConnection {
             }
         }
 
-        if (((JSONObject) json).containsKey("meta")) {
-            final JSONObject meta = ((JSONObject) json).get("meta").isObject();
+        if (meta != null) {
             if (meta.containsKey("focus")) {
                 final String focusPid = meta.get("focus").isString()
                         .stringValue();

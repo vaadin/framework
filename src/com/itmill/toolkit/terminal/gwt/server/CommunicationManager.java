@@ -256,6 +256,13 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
 
                 outWriter.print("\"changes\":[");
 
+                // re-get mainwindow - may have been changed
+                Window newWindow = getApplicationWindow(request, application);
+                if (newWindow != window) {
+                    window = newWindow;
+                    repaintAll = true;
+                }
+
                 JsonPaintTarget paintTarget = new JsonPaintTarget(this,
                         outWriter, !repaintAll);
 
@@ -347,7 +354,12 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
                 outWriter.print("]"); // close changes
 
                 outWriter.print(", \"meta\" : {");
-                final boolean metaOpen = false;
+                boolean metaOpen = false;
+
+                if (repaintAll) {
+                    metaOpen = true;
+                    outWriter.write("\"repaintAll\":true");
+                }
 
                 // add meta instruction for client to set focus if it is set
                 final Paintable f = (Paintable) application.consumeFocus();
