@@ -20,7 +20,9 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
@@ -86,6 +88,8 @@ public class ApplicationConnection {
      */
     private JavaScriptObject ttClientWrapper = null;
 
+    private int activeRequests = 0;
+
     public ApplicationConnection(WidgetSet widgetSet) {
         this.widgetSet = widgetSet;
         String tmp = getAppUri();
@@ -117,12 +121,11 @@ public class ApplicationConnection {
 
         initializeClientHooks();
 
-        makeUidlRequest("repaintAll=1");
-        applicationRunning = true;
-
         // TODO remove hardcoded id name
         view = new IView("itmill-ajax-window");
 
+        makeUidlRequest("repaintAll=1");
+        applicationRunning = true;
     }
 
     /**
@@ -221,9 +224,7 @@ public class ApplicationConnection {
      }-*/;
 
     private void makeUidlRequest(String requestData) {
-
-        // place loading indicator
-        showLoadingIndicator();
+        startRequest();
 
         console.log("Making UIDL Request with params: " + requestData);
         final String uri = appUri + "UIDL" + getPathInfo();
@@ -250,51 +251,74 @@ public class ApplicationConnection {
         }
     }
 
-    private void showLoadingIndicator() {
-        loadTimer = new Timer() {
-            public void run() {
-                // show initial throbber
-                if (loadElement == null) {
-                    loadElement = DOM.createDiv();
-                    DOM.setStyleAttribute(loadElement, "position", "absolute");
-                    DOM.appendChild(view.getElement(), loadElement);
+    private void startRequest() {
+        activeRequests++;
+        showLoadingIndicator();
+    }
+
+    private void endRequest() {
+        activeRequests--;
+        // deferring to avoid flickering
+        DeferredCommand.addCommand(new Command() {
+            public void execute() {
+                if (activeRequests == 0) {
+                    hideLoadingIndicator();
                 }
-                DOM.setElementProperty(loadElement, "className",
-                        "i-loading-indicator");
-                DOM.setStyleAttribute(loadElement, "display", "block");
-                // Position
-                DOM.setStyleAttribute(loadElement, "top", (view
-                        .getAbsoluteTop() + 6)
-                        + "px");
-                DOM.setStyleAttribute(loadElement, "left",
-                        (view.getAbsoluteLeft()
-                                + view.getOffsetWidth()
-                                - DOM.getElementPropertyInt(loadElement,
-                                        "offsetWidth") - 5)
-                                + "px");
-
-                // Initialize other timers
-                loadTimer2 = new Timer() {
-                    public void run() {
-                        DOM.setElementProperty(loadElement, "className",
-                                "i-loading-indicator-delay");
-                    }
-                };
-                // Second one kicks in at 1500ms
-                loadTimer2.schedule(1200);
-
-                loadTimer3 = new Timer() {
-                    public void run() {
-                        DOM.setElementProperty(loadElement, "className",
-                                "i-loading-indicator-wait");
-                    }
-                };
-                // Third one kicks in at 5000ms
-                loadTimer3.schedule(4700);
             }
-        };
-        // First one kicks in at 300ms
-        loadTimer.schedule(300);
+        });
+    }
+
+    private void showLoadingIndicator() {
+        // show initial throbber
+        if (loadTimer == null) {
+            loadTimer = new Timer() {
+                public void run() {
+                    // show initial throbber
+                    if (loadElement == null) {
+                        loadElement = DOM.createDiv();
+                        DOM.setStyleAttribute(loadElement, "position",
+                                "absolute");
+                        DOM.appendChild(view.getElement(), loadElement);
+                        ApplicationConnection.getConsole().log(
+                                "inserting load indicator");
+                    }
+                    DOM.setElementProperty(loadElement, "className",
+                            "i-loading-indicator");
+                    DOM.setStyleAttribute(loadElement, "display", "block");
+                    // Position
+                    DOM.setStyleAttribute(loadElement, "top", (view
+                            .getAbsoluteTop() + 6)
+                            + "px");
+                    DOM.setStyleAttribute(loadElement, "left", (view
+                            .getAbsoluteLeft()
+                            + view.getOffsetWidth()
+                            - DOM.getElementPropertyInt(loadElement,
+                                    "offsetWidth") - 5)
+                            + "px");
+
+                    // Initialize other timers
+                    loadTimer2 = new Timer() {
+                        public void run() {
+                            DOM.setElementProperty(loadElement, "className",
+                                    "i-loading-indicator-delay");
+                        }
+                    };
+                    // Second one kicks in at 1500ms
+                    loadTimer2.schedule(1200);
+
+                    loadTimer3 = new Timer() {
+                        public void run() {
+                            DOM.setElementProperty(loadElement, "className",
+                                    "i-loading-indicator-wait");
+                        }
+                    };
+                    // Third one kicks in at 5000ms
+                    loadTimer3.schedule(4700);
+                }
+            };
+            // First one kicks in at 300ms
+            loadTimer.schedule(300);
+        }
     }
 
     private void hideLoadingIndicator() {
@@ -304,15 +328,15 @@ public class ApplicationConnection {
                 loadTimer2.cancel();
                 loadTimer3.cancel();
             }
+            loadTimer = null;
         }
         if (loadElement != null) {
-            DOM.setStyleAttribute(loadElement, "display", "none");
+            DOM.removeChild(view.getElement(), loadElement);
+            loadElement = null;
         }
     }
 
     private void handleReceivedJSONMessage(Response response) {
-        hideLoadingIndicator();
-
         final Date start = new Date();
         String jsonText = response.getText();
         // for(;;);[realjson]
@@ -414,6 +438,7 @@ public class ApplicationConnection {
                 + "ms for " + jsonText.length() + " characters of JSON");
         console.log("Referenced paintables: " + idToPaintable.size());
 
+        endRequest();
     }
 
     // Redirect browser
