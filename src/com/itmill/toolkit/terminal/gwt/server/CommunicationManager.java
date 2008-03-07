@@ -129,6 +129,10 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
                     final String pid = name.split("_")[0];
                     final Upload uploadComponent = (Upload) idPaintableMap
                             .get(pid);
+                    if (uploadComponent.isReadOnly()) {
+                        throw new FileUploadException(
+                                "Warning: ignored file upload because upload component is set as read-only");
+                    }
                     if (uploadComponent == null) {
                         throw new FileUploadException(
                                 "Upload component not found");
