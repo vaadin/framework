@@ -102,6 +102,7 @@ public class Notification extends ToolkitOverlay {
             addStyleName(style);
         }
         super.show();
+        DOM.removeEventPreview(this);
         setPosition(position);
 
         DOM.setCapture(getElement());
