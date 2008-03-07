@@ -465,7 +465,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
                 }
                 final VariableOwner owner = (VariableOwner) idPaintableMap
                         .get(variable[VAR_PID]);
-                if (owner != null) {
+                if (owner != null && owner.isEnabled()) {
                     Map m;
                     if (nextVariable != null
                             && variable[VAR_PID].equals(nextVariable[VAR_PID])) {
@@ -497,6 +497,21 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
                                 variable[VAR_VALUE]));
                     }
                     owner.changeVariables(request, m);
+                } else {
+                    // Ignore variable change
+                    String msg = "Warning: Ignoring variable change for ";
+                    if (owner != null) {
+                        msg += "disabled component " + owner.getClass();
+                    } else {
+                        msg += "non-existent component, VAR_PID="
+                                + variable[VAR_PID];
+                    }
+                    String caption = ((Component) owner).getCaption();
+                    if (caption != null) {
+                        msg += ", caption=" + caption;
+                    }
+                    System.err.println(msg);
+                    continue;
                 }
             }
         }
