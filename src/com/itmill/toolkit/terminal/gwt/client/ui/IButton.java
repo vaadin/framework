@@ -87,6 +87,10 @@ public class IButton extends Button implements Paintable {
             errorIndicatorElement = null;
         }
 
+        if (uidl.hasAttribute("readonly")) {
+            setEnabled(false);
+        }
+
         if (uidl.hasAttribute("icon")) {
             if (icon == null) {
                 icon = new Icon(client);

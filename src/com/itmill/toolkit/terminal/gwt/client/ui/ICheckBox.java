@@ -81,6 +81,10 @@ public class ICheckBox extends com.google.gwt.user.client.ui.CheckBox implements
             setTitle(uidl.getStringAttribute("description"));
         }
 
+        if (uidl.hasAttribute("readonly")) {
+            setEnabled(false);
+        }
+
         if (uidl.hasAttribute("icon")) {
             if (icon == null) {
                 icon = new Icon(client);
