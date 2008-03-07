@@ -152,7 +152,11 @@ public class Button extends AbstractField {
      * @param variables
      */
     public void changeVariables(Object source, Map variables) {
-        if (variables.containsKey("state")) {
+        if (isReadOnly()) {
+            System.err
+                    .println("Button: ignoring change variable for read-only component, caption="
+                            + getCaption());
+        } else if (variables.containsKey("state")) {
             // Gets the new and old button states
             final Boolean newValue = (Boolean) variables.get("state");
             final Boolean oldValue = (Boolean) getValue();
