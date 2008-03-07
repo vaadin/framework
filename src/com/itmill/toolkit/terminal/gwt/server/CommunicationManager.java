@@ -87,7 +87,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
 
     private int pendingLocalesIndex;
 
-        public CommunicationManager(Application application) {
+    public CommunicationManager(Application application) {
         this.application = application;
         requireLocale(application.getLocale().toString());
     }
@@ -186,7 +186,8 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
      * @throws IOException
      */
     public void handleUidlRequest(HttpServletRequest request,
-            HttpServletResponse response, ApplicationServlet applicationServlet) throws IOException {
+            HttpServletResponse response, ApplicationServlet applicationServlet)
+            throws IOException {
 
         // repaint requested or session has timed out and new one is created
         boolean repaintAll = (request.getParameter(GET_PARAM_REPAINT_ALL) != null)
@@ -247,7 +248,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
                 // Sets the response type
                 response.setContentType("application/json; charset=UTF-8");
                 // some dirt to prevent cross site scripting
-                outWriter.print(")/*{");
+                outWriter.print("for(;;);[{");
 
                 outWriter.print("\"changes\":[");
 
@@ -409,6 +410,8 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
                 outWriter.print("}");
 
                 printLocaleDeclarations(outWriter);
+
+                outWriter.print("}]");
 
                 outWriter.flush();
                 outWriter.close();
@@ -726,9 +729,9 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
         final ServletOutputStream out = response.getOutputStream();
         final PrintWriter outWriter = new PrintWriter(new BufferedWriter(
                 new OutputStreamWriter(out, "UTF-8")));
-        outWriter.print(")/*{");
+        outWriter.print("for(;;);[{");
         outWriter.print("\"redirect\":{");
-        outWriter.write("\"url\":\"" + logoutUrl + "\"}");
+        outWriter.write("\"url\":\"" + logoutUrl + "\"}}]");
         outWriter.flush();
         outWriter.close();
         out.flush();

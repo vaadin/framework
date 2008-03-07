@@ -314,7 +314,9 @@ public class ApplicationConnection {
         hideLoadingIndicator();
 
         final Date start = new Date();
-        final String jsonText = response.getText().substring(3) + "}";
+        String jsonText = response.getText();
+        // for(;;);[realjson]
+        jsonText = jsonText.substring(9, jsonText.length() - 1);
         JSONValue json;
         try {
             json = JSONParser.parse(jsonText);
