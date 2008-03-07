@@ -105,6 +105,14 @@ public class Upload extends AbstractComponent implements Component.Focusable {
         return "upload";
     }
 
+    /**
+     * This method is called by terminal when upload is received.
+     * 
+     * Note, this method is called outside synchronized (Application) block, so
+     * overriding this may be dangerous.
+     * 
+     * @param upload
+     */
     public void receiveUpload(UploadStream upload) {
         if (!isUploading) {
             throw new IllegalStateException("uploading not started");
@@ -114,13 +122,19 @@ public class Upload extends AbstractComponent implements Component.Focusable {
         final String filename = upload.getContentName();
         final String type = upload.getContentType();
 
-        fireStarted(filename, type);
+        final Application application = getApplication();
+
+        synchronized (application) {
+            fireStarted(filename, type);
+        }
 
         // Gets the output target stream
         final OutputStream out = receiver.receiveUpload(filename, type);
         if (out == null) {
-            fireNoOutputStream(filename, type, 0);
-            endUpload();
+            synchronized (application) {
+                fireNoOutputStream(filename, type, 0);
+                endUpload();
+            }
             return;
         }
 
@@ -128,8 +142,10 @@ public class Upload extends AbstractComponent implements Component.Focusable {
 
         if (null == in) {
             // No file, for instance non-existent filename in html upload
-            fireNoInputStream(filename, type, 0);
-            endUpload();
+            synchronized (application) {
+                fireNoInputStream(filename, type, 0);
+                endUpload();
+            }
             return;
         }
 
@@ -143,21 +159,27 @@ public class Upload extends AbstractComponent implements Component.Focusable {
                 if (progressListener != null && contentLength > 0) {
                     // update progress if listener set and contentLength
                     // received
-                    progressListener.updateProgress(totalBytes, contentLength);
+                    synchronized (application) {
+                        progressListener.updateProgress(totalBytes,
+                                contentLength);
+                    }
                 }
             }
 
             // upload successful
             out.close();
-            fireUploadSuccess(filename, type, totalBytes);
-            endUpload();
-            requestRepaint();
+            synchronized (application) {
+                fireUploadSuccess(filename, type, totalBytes);
+                endUpload();
+                requestRepaint();
+            }
 
         } catch (final Exception e) {
-
-            // Download interrupted
-            fireUploadInterrupted(filename, type, totalBytes, e);
-            endUpload();
+            synchronized (application) {
+                // Download interrupted
+                fireUploadInterrupted(filename, type, totalBytes, e);
+                endUpload();
+            }
         }
     }
 
