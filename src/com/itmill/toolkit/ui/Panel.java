@@ -122,6 +122,11 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
             layout.setMargin(true);
         }
 
+        if (layout == this.layout) {
+            // don't set the same layout twice
+            return;
+        }
+
         // Sets the panel to be parent for the layout
         layout.setParent(this);
 
