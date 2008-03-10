@@ -31,6 +31,13 @@ public class ITabsheet extends ITabsheetBase implements
     private String height;
     private String width;
 
+    /**
+     * Previous visible widget is set invisible with CSS (not display: none, but
+     * visibility: hidden), to avoid flickering during render process. Normal
+     * visibility must be returned later when new widget is rendered.
+     */
+    private Widget previousVisibleWidget;
+
     private final TabListener tl = new TabListener() {
 
         public void onTabSelected(SourcesTabEvents sender, final int tabIndex) {
@@ -39,7 +46,12 @@ public class ITabsheet extends ITabsheetBase implements
                 // run updating variables in deferred command to bypass some FF
                 // optimization issues
                 DeferredCommand.addCommand(new Command() {
+
                     public void execute() {
+                        previousVisibleWidget = tp.getWidget(tp
+                                .getVisibleWidget());
+                        DOM.setStyleAttribute(previousVisibleWidget
+                                .getElement(), "visibility", "hidden");
                         client.updateVariable(id, "selected", ""
                                 + tabKeys.get(tabIndex), true);
                     }
@@ -142,6 +154,11 @@ public class ITabsheet extends ITabsheetBase implements
                 tp.showWidget(activeTabIndex);
                 (content).updateFromUIDL(contentUIDL, client);
                 ITabsheet.this.removeStyleDependentName("loading");
+                if (previousVisibleWidget != null) {
+                    DOM.setStyleAttribute(previousVisibleWidget.getElement(),
+                            "visibility", "");
+                    previousVisibleWidget = null;
+                }
                 ITabsheet.this.iLayout();
             }
         });
