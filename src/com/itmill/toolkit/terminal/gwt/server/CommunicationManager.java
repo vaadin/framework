@@ -516,15 +516,16 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
                 } else {
                     // Ignore variable change
                     String msg = "Warning: Ignoring variable change for ";
+                    String caption = null;
                     if (owner != null) {
                         msg += "disabled component " + owner.getClass();
+                        caption = ((Component) owner).getCaption();
+                        if (caption != null) {
+                            msg += ", caption=" + caption;
+                        }
                     } else {
                         msg += "non-existent component, VAR_PID="
                                 + variable[VAR_PID];
-                    }
-                    String caption = ((Component) owner).getCaption();
-                    if (caption != null) {
-                        msg += ", caption=" + caption;
                     }
                     System.err.println(msg);
                     continue;
