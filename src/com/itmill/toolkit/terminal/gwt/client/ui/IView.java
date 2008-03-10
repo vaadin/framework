@@ -38,10 +38,18 @@ public class IView extends SimplePanel implements Paintable,
 
     private ShortcutActionHandler actionHandler;
 
+    /** stored width for IE resize optiomization */
     private int width;
 
+    /** stored height for IE resize optiomization */
     private int height;
 
+    /**
+     * We are postponing resize process with IE. IE bugs with scrollbars in some
+     * situations, that causes false onWindowResized calls. With Timer we will
+     * give IE some time to decide if it really wants to keep current size
+     * (scrollbars).
+     */
     private Timer resizeTimer;
 
     public IView(String elementId) {
@@ -178,6 +186,11 @@ public class IView extends SimplePanel implements Paintable,
 
     public void onWindowResized(int width, int height) {
         if (Util.isIE()) {
+            /*
+             * IE will give us some false resized events due bugs with
+             * scrollbars. Postponing layout phase to see if size was really
+             * changed.
+             */
             if (resizeTimer == null) {
                 resizeTimer = new Timer() {
                     public void run() {
