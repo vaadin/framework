@@ -9,6 +9,7 @@ import java.util.Iterator;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.WindowResizeListener;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -36,6 +37,12 @@ public class IView extends SimplePanel implements Paintable,
     private String id;
 
     private ShortcutActionHandler actionHandler;
+
+    private int width;
+
+    private int height;
+
+    private Timer resizeTimer;
 
     public IView(String elementId) {
         super();
@@ -155,11 +162,9 @@ public class IView extends SimplePanel implements Paintable,
             w.hide();
         }
 
-        if (true) {
-            // IE somehow fails some layout on first run, force layout
-            // functions
-            Util.runDescendentsLayout(this);
-        }
+        // IE somehow fails some layout on first run, force layout
+        // functions
+        Util.runDescendentsLayout(this);
 
     }
 
@@ -172,7 +177,41 @@ public class IView extends SimplePanel implements Paintable,
     }
 
     public void onWindowResized(int width, int height) {
-        Util.runDescendentsLayout(this);
+        if (Util.isIE()) {
+            if (resizeTimer == null) {
+                resizeTimer = new Timer() {
+                    public void run() {
+                        boolean changed = false;
+                        if (IView.this.width != getOffsetWidth()) {
+                            IView.this.width = getOffsetWidth();
+                            changed = true;
+                            ApplicationConnection.getConsole().log(
+                                    "window w" + IView.this.width);
+                        }
+                        if (IView.this.height != getOffsetHeight()) {
+                            IView.this.height = getOffsetHeight();
+                            changed = true;
+                            ApplicationConnection.getConsole().log(
+                                    "window h" + IView.this.height);
+                        }
+                        if (changed) {
+                            ApplicationConnection
+                                    .getConsole()
+                                    .log(
+                                            "Running layout functions due window resize");
+                            Util.runDescendentsLayout(IView.this);
+                        }
+                    }
+                };
+            } else {
+                resizeTimer.cancel();
+            }
+            resizeTimer.schedule(200);
+        } else {
+            ApplicationConnection.getConsole().log(
+                    "Running layout functions due window resize");
+            Util.runDescendentsLayout(this);
+        }
     }
 
     public native static void goTo(String url)
