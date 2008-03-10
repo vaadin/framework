@@ -27,6 +27,10 @@ public class IAccordion extends ITabsheetBase implements
     public IAccordion() {
         super(CLASSNAME);
         stack = new ArrayList();
+        // IE6 needs this to calculate offsetHeight correctly
+        if (Util.isIE6()) {
+            DOM.setStyleAttribute(getElement(), "zoom", "1");
+        }
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -121,7 +125,7 @@ public class IAccordion extends ITabsheetBase implements
                 DOM.setStyleAttribute(w.getElement(), "visibility", "hidden");
                 DOM.setStyleAttribute(w.getElement(), "position", "absolute");
             }
-            DOM.setStyleAttribute(item.getContainerElement(), "height", "");
+            DOM.setStyleAttribute(item.getContainerElement(), "height", "0");
 
             // Calculate target height
             super.setHeight(height);
@@ -227,6 +231,10 @@ public class IAccordion extends ITabsheetBase implements
 
         public Element getContainerElement() {
             return content;
+        }
+
+        public Element getCaptionElement() {
+            return captionNode;
         }
 
         public void onBrowserEvent(Event evt) {
