@@ -25,9 +25,8 @@ abstract class ITabsheetBase extends FlowPanel implements Paintable {
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 
-        // Ensure correct implementation and don't let ApplicationConnection
-        // handle component caption
-        if (client.updateComponent(this, uidl, false)) {
+        // Ensure correct implementation
+        if (client.updateComponent(this, uidl, true)) {
             return;
         }
 
