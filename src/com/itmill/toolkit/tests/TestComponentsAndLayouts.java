@@ -19,6 +19,7 @@ import com.itmill.toolkit.terminal.ErrorMessage;
 import com.itmill.toolkit.terminal.ExternalResource;
 import com.itmill.toolkit.terminal.UserError;
 import com.itmill.toolkit.ui.AbstractComponent;
+import com.itmill.toolkit.ui.Accordion;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.CheckBox;
 import com.itmill.toolkit.ui.Component;
@@ -150,6 +151,27 @@ public class TestComponentsAndLayouts extends Application implements Listener,
             // test(tabsheet);
             // test(tab1);
             // test(tab2);
+            // test(expandLayout);
+        }
+
+        // //////////////////////////////////////////////////////////////////////////
+        if (true) {
+            target.addComponent(new Label(
+                    "<hr /><h1>Components inside Accordion</h3>",
+                    Label.CONTENT_XHTML));
+            final Accordion accordion = new Accordion();
+            final OrderedLayout acc1 = new OrderedLayout();
+            acc1.addComponent(new Label("try acc2"));
+            final OrderedLayout acc2 = new OrderedLayout();
+            populateLayout(acc2);
+            accordion.addTab(acc1, "Accordion acc1", new ClassResource("m.gif",
+                    this));
+            accordion.addTab(acc2, "Accordion acc2", new ClassResource("m.gif",
+                    this));
+            target.addComponent(accordion);
+            // test(accordion);
+            // test(acc1);
+            // test(acc2);
             // test(expandLayout);
         }
 
@@ -309,11 +331,22 @@ public class TestComponentsAndLayouts extends Application implements Listener,
                 "m.gif", this));
         test(layout, tabsheet);
 
+        final Accordion accordion = new Accordion();
+        final OrderedLayout acc1 = new OrderedLayout();
+        acc1.addComponent(new Label("acc1 " + count++));
+        final OrderedLayout acc2 = new OrderedLayout();
+        acc2.addComponent(new Label("acc2 " + count++));
+        accordion.addTab(acc1, "Default (not configured) Accordion acc1",
+                new ClassResource("m.gif", this));
+        accordion.addTab(acc2, "Configured Accordion acc2", new ClassResource(
+                "m.gif", this));
+        test(layout, accordion);
+
         final TextField tf = new TextField("Textfield " + count++);
         test(layout, tf);
-        // do not configure tab1
-        // test(tab1);
-        test(tab2);
+        // do not configure acc1
+        // test(acc1);
+        test(acc2);
 
         final Tree tree = new Tree("Tree " + count++);
         final File sampleDir = SampleDirectory.getDirectory(this);
@@ -374,7 +407,7 @@ public class TestComponentsAndLayouts extends Application implements Listener,
     void setComponentProperties(Component c) {
         // TWEAK these
         // c.setEnabled(false);
-        c.setVisible(false);
+        // c.setVisible(false);
         c.setStyleName("testStyleName");
         // c.setReadOnly(true);
 
