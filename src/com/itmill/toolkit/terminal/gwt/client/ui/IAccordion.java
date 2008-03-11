@@ -56,10 +56,6 @@ public class IAccordion extends ITabsheetBase implements
         // TODO check indexes, now new tabs get placed last (changing tab order
         // is not supported from server-side)
         StackItem item = new StackItem(caption);
-        if (selected) {
-            item.setContent(contentUidl);
-            item.open();
-        }
 
         if (stack.size() == 0) {
             item.addStyleDependentName("first");
@@ -67,15 +63,20 @@ public class IAccordion extends ITabsheetBase implements
 
         stack.add(item);
         add(item);
+
+        if (selected) {
+            item.open();
+            item.setContent(contentUidl);
+        }
     }
 
     protected void selectTab(final int index, final UIDL contentUidl) {
         if (index != activeTabIndex) {
             activeTabIndex = index;
             StackItem item = (StackItem) stack.get(index);
-            item.setContent(contentUidl);
             item.open();
             iLayout();
+            item.setContent(contentUidl);
         }
     }
 
@@ -111,8 +112,9 @@ public class IAccordion extends ITabsheetBase implements
 
     public void iLayout() {
         StackItem item = getSelectedStack();
-        if (item == null)
+        if (item == null) {
             return;
+        }
 
         if (height != null && height != "") {
             // Detach visible widget from document flow for a while to calculate
@@ -137,8 +139,9 @@ public class IAccordion extends ITabsheetBase implements
             int usedHeight = getOffsetHeight();
 
             int h = targetHeight - usedHeight;
-            if (h < 0)
+            if (h < 0) {
                 h = 0;
+            }
             DOM.setStyleAttribute(item.getContainerElement(), "height", h
                     + "px");
 
