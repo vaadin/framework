@@ -95,7 +95,7 @@ public class TestComponentsAndLayouts extends Application implements Listener,
         main.addComponent(eventListenerFeedback);
 
         // //////////////////////////////////////////////////////////////////////////
-        if (false) {
+        if (true) {
             window = new Window("Components inside Window (TEST: Window)");
 
             if (false) {
@@ -133,7 +133,7 @@ public class TestComponentsAndLayouts extends Application implements Listener,
         }
 
         // //////////////////////////////////////////////////////////////////////////
-        if (false) {
+        if (true) {
             target.addComponent(new Label(
                     "<hr /><h1>Components inside TabSheet</h3>",
                     Label.CONTENT_XHTML));
@@ -154,7 +154,7 @@ public class TestComponentsAndLayouts extends Application implements Listener,
         }
 
         // //////////////////////////////////////////////////////////////////////////
-        if (false) {
+        if (true) {
             target.addComponent(new Label(
                     "<hr /><h1>Components inside GridLayout</h3>",
                     Label.CONTENT_XHTML));
@@ -165,19 +165,20 @@ public class TestComponentsAndLayouts extends Application implements Listener,
         }
 
         // //////////////////////////////////////////////////////////////////////////
-        if (false) {
+        if (true) {
             target
                     .addComponent(new Label(
                             "<hr /><h1>Components inside ExpandLayout (height 250px)</h3>",
                             Label.CONTENT_XHTML));
             final ExpandLayout el = new ExpandLayout();
             el.setHeight(250, Component.UNITS_PIXELS);
+            el.expand(new Label("This label will expand on expand layout"));
             populateLayout(el);
             target.addComponent(el);
         }
 
         // //////////////////////////////////////////////////////////////////////////
-        if (false) {
+        if (true) {
             target.addComponent(new Label(
                     "<hr /><h1>Components inside Panel</h3>",
                     Label.CONTENT_XHTML));
@@ -187,7 +188,7 @@ public class TestComponentsAndLayouts extends Application implements Listener,
         }
 
         // //////////////////////////////////////////////////////////////////////////
-        if (false) {
+        if (true) {
             target
                     .addComponent(new Label(
                             "<hr /><h1>Components inside vertical SplitPanel (splitpanel is under 250height ExpandLayout)</h3>",
@@ -207,7 +208,7 @@ public class TestComponentsAndLayouts extends Application implements Listener,
         }
 
         // //////////////////////////////////////////////////////////////////////////
-        if (false) {
+        if (true) {
             target
                     .addComponent(new Label(
                             "<hr /><h1>Components inside horizontal SplitPanel (splitpanel is under 250px height ExpandLayout)</h3>",
@@ -373,9 +374,9 @@ public class TestComponentsAndLayouts extends Application implements Listener,
     void setComponentProperties(Component c) {
         // TWEAK these
         // c.setEnabled(false);
-        // c.setVisible(false);
+        c.setVisible(false);
         c.setStyleName("testStyleName");
-        c.setReadOnly(true);
+        // c.setReadOnly(true);
 
         // try to add listener
         try {
@@ -406,7 +407,7 @@ public class TestComponentsAndLayouts extends Application implements Listener,
         c.setComponentError(errorMsg);
         c.setIcon(res);
         c.setImmediate(true);
-        // c.addStyleName("addedTestStyleName");
+        c.addStyleName("addedTestStyleName");
         // c.setStyleName("singleTestStyleName");
         c.setDescription("Description here..");
     }
@@ -441,7 +442,7 @@ public class TestComponentsAndLayouts extends Application implements Listener,
         final String feedback = "eventCount=" + eventCount + ", class="
                 + event.getClass() + ", source=" + event.getSource()
                 + ", toString()=" + event.toString();
-        // System.out.println("eventListenerFeedback: " + feedback);
+        System.out.println("eventListenerFeedback: " + feedback);
         eventListenerFeedback.setValue("Events: " + eventCount);
     }
 
