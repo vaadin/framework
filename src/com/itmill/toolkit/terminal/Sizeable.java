@@ -157,7 +157,14 @@ public interface Sizeable {
     public void setHeightUnits(int units);
 
     /**
-     * TODO
+     * Sets the height of the component using String presentation.
+     * 
+     * String presentation is similar to what is used in Cascading Style Sheets.
+     * Size can be length or percentage of available size.
+     * 
+     * See <a
+     * href="http://www.w3.org/TR/REC-CSS2/syndata.html#value-def-length">CSS
+     * spesification</a> for more details.
      * 
      * @param height
      *                in CSS style string representation
@@ -165,7 +172,14 @@ public interface Sizeable {
     public void setHeight(String height);
 
     /**
-     * TODO
+     * Sets the width of the component using String presentation.
+     * 
+     * String presentation is similar to what is used in Cascading Style Sheets.
+     * Size can be length or percentage of available size.
+     * 
+     * See <a
+     * href="http://www.w3.org/TR/REC-CSS2/syndata.html#value-def-length">CSS
+     * spesification</a> for more details.
      * 
      * @param width
      *                in CSS style string representation
