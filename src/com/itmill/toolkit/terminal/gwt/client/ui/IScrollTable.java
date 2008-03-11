@@ -1479,11 +1479,12 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
                 final StringBuffer buf = new StringBuffer();
                 if (collapsed) {
                     buf.append("<span class=\"i-off\">");
+                } else {
+                    buf.append("<span class=\"i-on\">");
                 }
                 buf.append(super.getHTML());
-                if (collapsed) {
-                    buf.append("</span>");
-                }
+                buf.append("</span>");
+
                 return buf.toString();
             }
 
