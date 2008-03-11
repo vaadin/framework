@@ -20,6 +20,7 @@ import com.itmill.toolkit.demo.featurebrowser.TableExample;
 import com.itmill.toolkit.demo.featurebrowser.TreeExample;
 import com.itmill.toolkit.demo.featurebrowser.ValueInputExample;
 import com.itmill.toolkit.demo.featurebrowser.WindowingExample;
+import com.itmill.toolkit.terminal.ExternalResource;
 import com.itmill.toolkit.terminal.ThemeResource;
 import com.itmill.toolkit.tests.StressComponentsInTable;
 import com.itmill.toolkit.ui.AbstractComponent;
@@ -29,6 +30,7 @@ import com.itmill.toolkit.ui.DateField;
 import com.itmill.toolkit.ui.Embedded;
 import com.itmill.toolkit.ui.GridLayout;
 import com.itmill.toolkit.ui.Label;
+import com.itmill.toolkit.ui.Link;
 import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Panel;
 import com.itmill.toolkit.ui.Select;
@@ -156,11 +158,8 @@ public class RandomComponents {
             break;
         case 4:
             // Link
-            // result = new Link("", new
-            // ExternalResource("http://www.itmill.com"));
-            // result.setCaption("Link component " + caption);
-            result = new OrderedLayout();
-            ((OrderedLayout) result).addComponent(new LabelExample());
+            result = new Link("", new ExternalResource("http://www.itmill.com"));
+            result.setCaption("Link component " + caption);
             break;
         case 5:
             // Link
