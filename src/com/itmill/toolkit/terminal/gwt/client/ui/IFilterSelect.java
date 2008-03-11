@@ -592,6 +592,7 @@ public class IFilterSelect extends Composite implements Paintable,
                 && uidl.getStringArrayVariable("selected").length == 0) {
             // select nulled
             tb.setText(emptyText);
+            selectedOptionKey = null;
             // TODO add class CLASSNAME_EMPTY
         }
 
