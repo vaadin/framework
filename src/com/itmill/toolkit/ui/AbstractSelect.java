@@ -1621,7 +1621,7 @@ public abstract class AbstractSelect extends AbstractField implements
                     for (Iterator it = pids.iterator(); it.hasNext();) {
                         Property p = i.getItemProperty(it.next());
                         if (p != null
-                                || p instanceof Property.ValueChangeNotifier) {
+                                && p instanceof Property.ValueChangeNotifier) {
                             ((Property.ValueChangeNotifier) p)
                                     .addListener(getCaptionChangeListener());
                             captionChangeNotifiers.add(p);
