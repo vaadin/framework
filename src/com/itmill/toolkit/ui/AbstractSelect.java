@@ -1633,7 +1633,7 @@ public abstract class AbstractSelect extends AbstractField implements
             case ITEM_CAPTION_MODE_PROPERTY:
                 final Property p = getContainerProperty(itemId,
                         getItemCaptionPropertyId());
-                if (p != null || p instanceof Property.ValueChangeNotifier) {
+                if (p != null && p instanceof Property.ValueChangeNotifier) {
                     ((Property.ValueChangeNotifier) p)
                             .addListener(getCaptionChangeListener());
                     captionChangeNotifiers.add(p);
