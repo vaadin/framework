@@ -1165,6 +1165,9 @@ public class Table extends AbstractSelect implements Action.Container,
                 } else {
                     firstIndex = size() - 1;
                 }
+            } else {
+                // initial load
+                firstToBeRenderedInClient = firstIndex;
             }
             if (size() > 0) {
                 if (rows + firstIndex > size()) {
@@ -1688,8 +1691,10 @@ public class Table extends AbstractSelect implements Action.Container,
         }
         target.addAttribute("cols", cols);
         target.addAttribute("rows", rows);
+
         target.addAttribute("firstrow",
-                (reqFirstRowToPaint >= 0 ? reqFirstRowToPaint : first));
+                (reqFirstRowToPaint >= 0 ? reqFirstRowToPaint
+                        : firstToBeRenderedInClient));
         target.addAttribute("totalrows", total);
         if (pagelen != 0) {
             target.addAttribute("pagelength", pagelen);
@@ -2163,15 +2168,15 @@ public class Table extends AbstractSelect implements Action.Container,
      */
     public boolean addContainerProperty(Object propertyId, Class type,
             Object defaultValue) throws UnsupportedOperationException {
-        
+
         boolean visibleColAdded = false;
         if (!visibleColumns.contains(propertyId)) {
             visibleColumns.add(propertyId);
             visibleColAdded = true;
         }
-        
+
         if (!super.addContainerProperty(propertyId, type, defaultValue)) {
-            if(visibleColAdded) {
+            if (visibleColAdded) {
                 visibleColumns.remove(propertyId);
             }
             return false;
