@@ -7,7 +7,6 @@ package com.itmill.toolkit.terminal.gwt.client.ui;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.EventPreview;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
@@ -35,11 +34,11 @@ public class Notification extends ToolkitOverlay {
 
     private Timer fader;
     private Timer delay;
-    private EventPreview eventPreview;
 
-    private String temporaryStyle;
     private int x = -1;
     private int y = -1;
+
+    private String temporaryStyle;
 
     public Notification() {
         setStylePrimaryName(STYLENAME);
@@ -59,7 +58,7 @@ public class Notification extends ToolkitOverlay {
     }
 
     public void startDelay() {
-        DOM.releaseCapture(getElement());
+        DOM.removeEventPreview(this);
         if (delayMsec > 0) {
             delay = new Timer() {
                 public void run() {
@@ -102,36 +101,11 @@ public class Notification extends ToolkitOverlay {
             addStyleName(style);
         }
         super.show();
-        DOM.removeEventPreview(this);
         setPosition(position);
-
-        DOM.setCapture(getElement());
-
-        if (style.equals("error")) {
-            if (eventPreview == null) {
-                eventPreview = new EventPreview() {
-                    public boolean onEventPreview(Event event) {
-                        Element target = DOM.eventGetTarget(event);
-                        if (DOM.isOrHasChild(getElement(), target)
-                                && DOM.eventGetType(event) == Event.ONCLICK) {
-                            startDelay();
-                            DOM.removeEventPreview(this);
-                            return true;
-                        } else {
-                            DOM.eventCancelBubble(event, true);
-                            return false;
-                        }
-                    }
-                };
-            }
-
-            DOM.addEventPreview(eventPreview);
-        }
-
     }
 
     public void hide() {
-        DOM.releaseCapture(getElement());
+        DOM.removeEventPreview(this);
         cancelDelay();
         cancelFade();
         if (temporaryStyle != null) {
@@ -142,7 +116,7 @@ public class Notification extends ToolkitOverlay {
     }
 
     public void fade() {
-        DOM.releaseCapture(getElement());
+        DOM.removeEventPreview(this);
         cancelDelay();
         fader = new Timer() {
             int opacity = startOpacity;
@@ -221,8 +195,28 @@ public class Notification extends ToolkitOverlay {
     }
 
     public void onBrowserEvent(Event event) {
-        switch (DOM.eventGetType(event)) {
+        DOM.removeEventPreview(this);
+        if (fader == null) {
+            fade();
+        }
+    }
+
+    public boolean onEventPreview(Event event) {
+        int type = DOM.eventGetType(event);
+        // "modal"
+        if (delayMsec == -1) {
+            if (type == Event.ONCLICK
+                    && DOM
+                            .isOrHasChild(getElement(), DOM
+                                    .eventGetTarget(event))) {
+                fade();
+            }
+            return false;
+        }
+        // default
+        switch (type) {
         case Event.ONMOUSEMOVE:
+
             if (x < 0) {
                 x = DOM.eventGetClientX(event);
                 y = DOM.eventGetClientY(event);
@@ -231,12 +225,14 @@ public class Notification extends ToolkitOverlay {
                 startDelay();
             }
             break;
+        case Event.ONCLICK:
+        case Event.ONDBLCLICK:
+        case Event.KEYEVENTS:
+        case Event.ONSCROLL:
         default:
-            if (fader == null) {
-                fade();
-            }
-            break;
+            startDelay();
         }
+        return true;
     }
 
 }
