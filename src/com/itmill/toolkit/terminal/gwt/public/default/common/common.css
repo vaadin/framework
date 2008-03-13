@@ -105,7 +105,9 @@
 	cursor:pointer;
 }
 
-
+.i-label {
+	overflow: hidden;
+}
 
 /* Loading indicator states */
 

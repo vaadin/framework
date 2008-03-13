@@ -14,6 +14,7 @@ import com.itmill.toolkit.terminal.KeyMapper;
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
 import com.itmill.toolkit.terminal.Resource;
+import com.itmill.toolkit.terminal.Paintable.RepaintRequestListener;
 
 /**
  * Tabsheet component.
@@ -23,7 +24,8 @@ import com.itmill.toolkit.terminal.Resource;
  * @VERSION@
  * @since 3.0
  */
-public class TabSheet extends AbstractComponentContainer {
+public class TabSheet extends AbstractComponentContainer implements
+        RepaintRequestListener {
 
     /**
      * Linked list of component tabs.
@@ -90,44 +92,60 @@ public class TabSheet extends AbstractComponentContainer {
                     fireSelectedTabChange();
                 }
             }
+            c.removeListener(this);
             requestRepaint();
         }
     }
 
     /**
-     * Adds the component into this container. The component is added as a tab
-     * where its default tab-caption is the caption of the component.
+     * Adds a new tab into TabSheet. Components caption and icon are rendered
+     * into tab.
      * 
      * @param c
      *                the component to be added.
      */
     public void addComponent(Component c) {
-        addTab(c, c.getCaption(), getIcon());
+        addTab(c);
     }
 
     /**
-     * Adds the new tab into TabSheet.
+     * Adds a new tab into TabSheet with overridden caption and icon.
      * 
      * @param c
      *                the component to be added onto tab.
      * @param caption
-     *                the caption of the tab.
+     *                the caption of the tab to be used instead of components
+     *                own.
      * @param icon
-     *                the Set the icon of the tab.
+     *                the icon of the tab to be used instead of components own.
      */
     public void addTab(Component c, String caption, Resource icon) {
         if (c != null) {
-            tabs.addLast(c);
             tabCaptions.put(c, caption != null ? caption : "");
             if (icon != null) {
                 tabIcons.put(c, icon);
             }
+            addTab(c);
+        }
+    }
+
+    /**
+     * Adds a new tab into TabSheet. Components caption and icon are rendered
+     * into tab.
+     * 
+     * @param c
+     *                the component to be added onto tab.
+     */
+    public void addTab(Component c) {
+        if (c != null) {
+            tabs.addLast(c);
             if (selected == null) {
                 selected = c;
                 fireSelectedTabChange();
             }
             super.addComponent(c);
             requestRepaint();
+            c.addListener(this);
         }
     }
 
@@ -184,18 +202,28 @@ public class TabSheet extends AbstractComponentContainer {
                 continue;
             }
             target.startTag("tab");
+            if (!c.isEnabled()) {
+                target.addAttribute("disabled", true);
+            }
             final Resource icon = getTabIcon(c);
             if (icon != null) {
                 target.addAttribute("icon", icon);
             }
             final String caption = getTabCaption(c);
-            if (!c.isEnabled()) {
-                target.addAttribute("disabled", true);
-            }
-
             if (caption != null && caption.length() > 0) {
                 target.addAttribute("caption", caption);
             }
+
+            if (c instanceof AbstractComponent) {
+                AbstractComponent ac = (AbstractComponent) c;
+                if (ac.getDescription() != null) {
+                    target.addAttribute("description", ac.getDescription());
+                }
+                if (ac.getComponentError() != null) {
+                    ac.getComponentError().paint(target);
+                }
+            }
+
             target.addAttribute("key", keyMapper.key(c));
             if (c.equals(selected)) {
                 target.addAttribute("selected", true);
@@ -240,13 +268,18 @@ public class TabSheet extends AbstractComponentContainer {
     public String getTabCaption(Component c) {
         String caption = (String) tabCaptions.get(c);
         if (caption == null) {
+            caption = c.getCaption();
+        }
+        if (caption == null) {
             caption = "";
         }
         return caption;
     }
 
     /**
-     * Sets the caption for a component.
+     * Sets overridden tab caption for given component.
+     * 
+     * Normally TabSheet uses caption from component
      * 
      * @param c
      *                the component.
@@ -265,11 +298,17 @@ public class TabSheet extends AbstractComponentContainer {
      *                the component.
      */
     public Resource getTabIcon(Component c) {
-        return (Resource) tabIcons.get(c);
+        if (tabIcons.containsKey(c)) {
+            return (Resource) tabIcons.get(c);
+        } else {
+            return c.getIcon();
+        }
     }
 
     /**
-     * ] Sets the icon for a component.
+     * Sets overridden icon for given component.
+     * 
+     * Normally TabSheet uses icon from component
      * 
      * @param c
      * @param icon
@@ -478,6 +517,14 @@ public class TabSheet extends AbstractComponentContainer {
      */
     protected void fireSelectedTabChange() {
         fireEvent(new SelectedTabChangeEvent(this));
+    }
+
+    /*
+     * We need to repaint on child repaint due the way captions and icons are
+     * handled
+     */
+    public void repaintRequested(RepaintRequestEvent event) {
+        requestRepaint();
     }
 
 }

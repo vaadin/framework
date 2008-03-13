@@ -84,12 +84,14 @@ public class ITabsheetPanel extends ComplexPanel {
      */
     public void showWidget(int index) {
         checkIndexBoundsForAccess(index);
-
-        if (visibleWidget != null) {
-            visibleWidget.setVisible(false);
+        Widget newVisible = getWidget(index);
+        if (visibleWidget != newVisible) {
+            if (visibleWidget != null) {
+                visibleWidget.setVisible(false);
+            }
+            visibleWidget = newVisible;
+            visibleWidget.setVisible(true);
         }
-        visibleWidget = getWidget(index);
-        visibleWidget.setVisible(true);
     }
 
     /**

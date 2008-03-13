@@ -2122,4 +2122,25 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
         // NOP size handled internally
     }
 
+    /*
+     * Overridden due Table might not survive of visibility change (scroll pos
+     * lost). Example ITabPanel just set contained components invisible and back
+     * when changing tabs.
+     */
+    public void setVisible(boolean visible) {
+        if (isVisible() != visible) {
+            super.setVisible(visible);
+            if (initializedAndAttached) {
+                if (visible) {
+                    DeferredCommand.addCommand(new Command() {
+                        public void execute() {
+                            bodyContainer.setScrollPosition(firstRowInViewPort
+                                    * tBody.getRowHeight());
+                        }
+                    });
+                }
+            }
+        }
+    }
+
 }

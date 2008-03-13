@@ -14,6 +14,7 @@ import com.google.gwt.user.client.ui.TabBar;
 import com.google.gwt.user.client.ui.TabListener;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
+import com.itmill.toolkit.terminal.gwt.client.Caption;
 import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
@@ -125,13 +126,14 @@ public class ITabsheet extends ITabsheetBase implements
 
     }
 
-    protected void renderTab(final UIDL contentUidl, String caption, int index,
-            boolean selected) {
+    protected void renderTab(final UIDL tabUidl, int index, boolean selected) {
         // TODO check indexes, now new tabs get placed last (changing tab order
         // is not supported from server-side)
-        tb.addTab("<span>" + caption + "</span>", true);
+        Caption c = new Caption(null, client);
+        c.updateCaption(tabUidl);
+        tb.addTab(c);
         if (selected) {
-            renderContent(contentUidl);
+            renderContent(tabUidl.getChildUIDL(0));
             tb.selectTab(index);
         }
         // Add place-holder content
@@ -141,17 +143,30 @@ public class ITabsheet extends ITabsheetBase implements
     protected void selectTab(int index, final UIDL contentUidl) {
         if (index != activeTabIndex) {
             activeTabIndex = index;
-            renderContent(contentUidl);
         }
+        renderContent(contentUidl);
     }
 
     private void renderContent(final UIDL contentUIDL) {
         DeferredCommand.addCommand(new Command() {
             public void execute() {
                 final Paintable content = client.getPaintable(contentUIDL);
-                tp.remove(activeTabIndex);
-                tp.insert((Widget) content, activeTabIndex);
+                if (tp.getWidgetCount() > activeTabIndex) {
+                    Widget old = tp.getWidget(activeTabIndex);
+                    if (old != content) {
+                        tp.remove(activeTabIndex);
+                        if (old instanceof Paintable) {
+                            client.unregisterPaintable((Paintable) old);
+                        }
+                        tp.insert((Widget) content, activeTabIndex);
+                    }
+                } else {
+                    tp.add((Widget) content);
+                }
+
                 tp.showWidget(activeTabIndex);
+
+                ITabsheet.this.iLayout();
                 (content).updateFromUIDL(contentUIDL, client);
                 ITabsheet.this.removeStyleDependentName("loading");
                 if (previousVisibleWidget != null) {
@@ -159,7 +174,6 @@ public class ITabsheet extends ITabsheetBase implements
                             "visibility", "");
                     previousVisibleWidget = null;
                 }
-                ITabsheet.this.iLayout();
             }
         });
     }
@@ -210,50 +224,16 @@ public class ITabsheet extends ITabsheetBase implements
 
     public void iLayout() {
         if (height != null && height != "") {
-
-            // Save scroll position
-            int scrollTop = DOM.getElementPropertyInt(contentNode, "scrollTop");
-            int scrollLeft = DOM.getElementPropertyInt(contentNode,
-                    "scrollLeft");
-
-            // Take content out of flow for a while
-            final String originalPositioning = DOM.getStyleAttribute(tp
-                    .getElement(), "position");
-            DOM.setStyleAttribute(tp.getElement(), "position", "absolute");
-
-            // Set defaults for content element
-            DOM.setStyleAttribute(contentNode, "overflow", "hidden");
-            DOM.setStyleAttribute(contentNode, "height", "");
-
-            // Calculate target height
             super.setHeight(height);
-            final int targetHeight = getOffsetHeight();
 
-            // Calculate used height
-            super.setHeight("");
-            final int usedHeight = DOM.getElementPropertyInt(deco, "offsetTop")
-                    + DOM.getElementPropertyInt(deco, "offsetHeight")
-                    - DOM.getElementPropertyInt(getElement(), "offsetTop");
-
-            // Calculate needed content area height
-            int newHeight = targetHeight - usedHeight;
-            if (newHeight < 0) {
-                newHeight = 0;
-            }
+            final int contentHeight = getOffsetHeight()
+                    - DOM.getElementPropertyInt(deco, "offsetHeight")
+                    - tb.getOffsetHeight();
 
             // Set proper values for content element
-            DOM.setStyleAttribute(contentNode, "height", newHeight + "px");
-            tp.setHeight("100%");
-
+            DOM.setStyleAttribute(contentNode, "height", contentHeight + "px");
             DOM.setStyleAttribute(contentNode, "overflow", "auto");
-
-            // Restore content to normal flow
-            DOM.setStyleAttribute(tp.getElement(), "position",
-                    originalPositioning);
-
-            // Restore scroll position
-            DOM.setElementPropertyInt(contentNode, "scrollTop", scrollTop);
-            DOM.setElementPropertyInt(contentNode, "scrollLeft", scrollLeft);
+            tp.setHeight("100%");
 
         } else {
             DOM.setStyleAttribute(contentNode, "height", "");

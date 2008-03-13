@@ -9,9 +9,16 @@
 .i-errorindicator {
 	width: 16px;
 	height: 16px;
+	padding-right:2px;
 	display: block;
 	float:left;
 	background: transparent url(../icons/16/error.png) no-repeat;
+	vertical-align: middle;
+}
+
+.i-caption .i-icon {
+	padding-right:2px;
+	vertical-align: middle;
 }
 
 .i-error {

@@ -12,6 +12,16 @@
 	height: 48px;
 	background: transparent url(img/tabs-bg.png) repeat-x bottom left;
 	width: 100%;
+	overflow:hidden;
+}
+
+.i-tabsheet-tabs .i-caption {
+	white-space: nowrap;
+}
+
+/* for IE (does not inherit) */
+.i-tabsheet-tabs .i-caption span {
+	white-space: nowrap;
 }
 
 .i-tabsheet-tabs .gwt-TabBarFirst {
@@ -65,15 +75,9 @@
 
 .i-tabsheet-content {
 	border: 1px solid #babfc0;
-	border-top: none;
-	border-bottom: none;
 	background-color: #fff;
-}
-
-.i-tabsheet-tabsheetpanel {
-	border-top: 1px solid transparent;
-	border-bottom: 1px solid white;
-	margin-bottom: -1px;
+	border-bottom: none;
+	border-top: none;
 }
 
 .i-tabsheet-deco {

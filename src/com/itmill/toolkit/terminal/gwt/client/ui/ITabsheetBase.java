@@ -69,7 +69,7 @@ abstract class ITabsheetBase extends FlowPanel implements Paintable {
                 if (selected) {
                     activeTabIndex = index;
                 }
-                renderTab(tab.getChildUIDL(0), caption, index, selected);
+                renderTab(tab, index, selected);
                 index++;
             }
         }
@@ -92,8 +92,8 @@ abstract class ITabsheetBase extends FlowPanel implements Paintable {
      * Implement in extending classes. This method should render needed elements
      * and set the visibility of the tab according to the 'selected' parameter.
      */
-    protected abstract void renderTab(final UIDL contentUidl, String caption,
-            int index, boolean selected);
+    protected abstract void renderTab(final UIDL tabUidl, int index,
+            boolean selected);
 
     /*
      * Implement in extending classes. This method should render any previously

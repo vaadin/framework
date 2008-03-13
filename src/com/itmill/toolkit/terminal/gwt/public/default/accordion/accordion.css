@@ -16,11 +16,6 @@
 	cursor: pointer;
 }
 
-.i-accordion-item-caption span {
-	padding-left: 16px;
-	background: transparent url(img/collapsed-icon.png) no-repeat 0 50%;
-}
-
 .i-accordion-item-open .i-accordion-item-caption {
 	color: #3b4b57;
 	background: #d5dee2 url(img/selected-bg.png);
@@ -28,10 +23,6 @@
 	border-bottom-color: #bfc9d4;
 	cursor: default;
 	text-shadow: #fafafa 1px 1px 0;
-}
-
-.i-accordion-item-open .i-accordion-item-caption span {
-	background: transparent url(img/expanded-icon.png) no-repeat 0 55%;
 }
 
 .i-accordion-item-content {

@@ -8,11 +8,11 @@
 }
 
 .i-button-link {
-	border: 0px;
+	border: none;
 	text-align: left;
 	text-decoration: underline;
 	background: none;
-	padding-left: 0px;
+	padding: 0;
 }
 .i-button-link span {
 	text-decoration: underline;

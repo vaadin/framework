@@ -6,10 +6,11 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
+import com.itmill.toolkit.terminal.gwt.client.Caption;
 import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
@@ -51,11 +52,11 @@ public class IAccordion extends ITabsheetBase implements
         return (StackItem) stack.get(activeTabIndex);
     }
 
-    protected void renderTab(UIDL contentUidl, String caption, int index,
-            boolean selected) {
+    protected void renderTab(UIDL tabUidl, int index, boolean selected) {
         // TODO check indexes, now new tabs get placed last (changing tab order
         // is not supported from server-side)
-        StackItem item = new StackItem(caption);
+
+        StackItem item = new StackItem(tabUidl);
 
         if (stack.size() == 0) {
             item.addStyleDependentName("first");
@@ -66,18 +67,18 @@ public class IAccordion extends ITabsheetBase implements
 
         if (selected) {
             item.open();
-            item.setContent(contentUidl);
+            item.setContent(tabUidl.getChildUIDL(0));
         }
     }
 
     protected void selectTab(final int index, final UIDL contentUidl) {
+        StackItem item = (StackItem) stack.get(index);
         if (index != activeTabIndex) {
             activeTabIndex = index;
-            StackItem item = (StackItem) stack.get(index);
             item.open();
             iLayout();
-            item.setContent(contentUidl);
         }
+        item.setContent(contentUidl);
     }
 
     public void onSelectTab(StackItem item) {
@@ -119,7 +120,7 @@ public class IAccordion extends ITabsheetBase implements
         if (height != null && height != "") {
             // Detach visible widget from document flow for a while to calculate
             // used height correctly
-            Widget w = item.getWidget();
+            Widget w = item.getPaintable();
             String originalPositioning = "";
             if (w != null) {
                 originalPositioning = DOM.getStyleAttribute(w.getElement(),
@@ -158,19 +159,25 @@ public class IAccordion extends ITabsheetBase implements
         Util.runDescendentsLayout(this);
     }
 
-    protected class StackItem extends SimplePanel {
+    /**
+     * TODO Caption widget not properly attached
+     */
+    protected class StackItem extends ComplexPanel implements ClickListener {
 
-        private String caption;
-        private Element captionNode;
+        private Caption caption;
         private boolean open = false;
         private Element content;
+        private Element captionNode;
+        private Paintable paintable;
 
-        protected StackItem() {
+        public StackItem(UIDL tabUidl) {
             setElement(DOM.createDiv());
-            captionNode = DOM.createDiv();
+            caption = new Caption(null, client);
+            caption.addClickListener(this);
             content = DOM.createDiv();
-            // Additional SPAN element for styling
-            DOM.appendChild(captionNode, DOM.createSpan());
+            captionNode = DOM.createDiv();
+            super.add(caption, captionNode);
+            DOM.appendChild(captionNode, caption.getElement());
             DOM.appendChild(getElement(), captionNode);
             DOM.appendChild(getElement(), content);
             setStylePrimaryName(CLASSNAME + "-item");
@@ -184,37 +191,36 @@ public class IAccordion extends ITabsheetBase implements
             if (Util.isIE6()) {
                 DOM.setStyleAttribute(content, "zoom", "1");
             }
-            sinkEvents(Event.ONCLICK);
+
+            caption.updateCaption(tabUidl);
         }
 
-        public StackItem(String caption) {
-            this();
-            setCaption(caption);
+        public Element getContainerElement() {
+            return content;
         }
 
-        public StackItem(String caption, UIDL contentUidl) {
-            this();
-            setCaption(caption);
-            setContent(contentUidl);
-        }
-
-        public void setCaption(String caption) {
-            this.caption = caption;
-            DOM.setInnerText(DOM.getFirstChild(captionNode), caption);
-        }
-
-        public String getCaption() {
-            return caption;
+        public Widget getPaintable() {
+            if (getWidgetCount() > 1) {
+                return getWidget(1);
+            } else {
+                return null;
+            }
         }
 
         public void open() {
             open = true;
             DOM.setStyleAttribute(content, "display", "");
             addStyleDependentName("open");
+            if (getPaintable() != null) {
+                add(getPaintable(), content);
+            }
         }
 
         public void close() {
             open = false;
+            if (getPaintable() != null) {
+                remove(getPaintable());
+            }
             DOM.setStyleAttribute(content, "display", "none");
             removeStyleDependentName("open");
         }
@@ -224,32 +230,21 @@ public class IAccordion extends ITabsheetBase implements
         }
 
         public void setContent(UIDL contentUidl) {
-            final Paintable content = client.getPaintable(contentUidl);
-            if (content != getWidget()) {
-                client.unregisterPaintable((Paintable) getWidget());
+            final Paintable newPntbl = client.getPaintable(contentUidl);
+            if (getPaintable() == null) {
+                add((Widget) newPntbl, content);
+            } else if (getPaintable() != newPntbl) {
+                client.unregisterPaintable((Paintable) getWidget(1));
+                remove(1);
+                add((Widget) newPntbl, content);
             }
-            setWidget((Widget) content);
-            content.updateFromUIDL(contentUidl, client);
+            paintable = newPntbl;
+            paintable.updateFromUIDL(contentUidl, client);
         }
 
-        public Element getContainerElement() {
-            return content;
+        public void onClick(Widget sender) {
+            onSelectTab(this);
         }
-
-        public Element getCaptionElement() {
-            return captionNode;
-        }
-
-        public void onBrowserEvent(Event evt) {
-            if (DOM.eventGetType(evt) == Event.ONCLICK) {
-                Element target = DOM.eventGetTarget(evt);
-                if (DOM.compare(target, captionNode)
-                        || DOM.compare(target, DOM.getFirstChild(captionNode))) {
-                    ((IAccordion) getParent()).onSelectTab(this);
-                }
-            }
-        }
-
     }
 
 }

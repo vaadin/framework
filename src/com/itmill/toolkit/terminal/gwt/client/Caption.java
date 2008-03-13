@@ -26,6 +26,13 @@ public class Caption extends HTML {
 
     private final ApplicationConnection client;
 
+    /**
+     * 
+     * @param component
+     *                optional owner of caption. If not set, getOwner will
+     *                return null
+     * @param client
+     */
     public Caption(Paintable component, ApplicationConnection client) {
         super();
         this.client = client;
@@ -133,6 +140,8 @@ public class Caption extends HTML {
             default:
                 break;
             }
+        } else {
+            super.onBrowserEvent(event);
         }
     }
 
