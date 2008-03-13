@@ -677,7 +677,6 @@ public class IFilterSelect extends Composite implements Paintable,
             case KeyboardListener.KEY_ENTER:
             case KeyboardListener.KEY_TAB:
                 suggestionPopup.menu.doSelectedItemAction();
-                tb.setFocus(false);
                 break;
             }
         }
