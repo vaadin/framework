@@ -420,7 +420,12 @@ public class CalendarPanel extends FlexTable implements MouseListener,
                         cal.datefield.getCurrentDate().getYear() + 1900,
                         cal.datefield.isImmediate());
 
-                updateCalendar();
+                if (datefield instanceof ITextualDate) {
+                    ((ToolkitOverlay) getParent()).hide();
+                } else {
+                    updateCalendar();
+                }
+
             } catch (final NumberFormatException e) {
                 // Not a number, ignore and stop here
                 return;
@@ -460,6 +465,15 @@ public class CalendarPanel extends FlexTable implements MouseListener,
 
     public interface CalendarEntrySource {
         public List getEntries(Date date, int resolution);
+    }
+
+    /**
+     * Sets focus to Calendar panel.
+     * 
+     * @param focus
+     */
+    public void setFocus(boolean focus) {
+        nextYear.setFocus(focus);
     }
 
 }

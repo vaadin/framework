@@ -35,7 +35,7 @@ public class IPopupCalendar extends ITextualDate implements Paintable,
         add(calendarToggle);
 
         calendar = new CalendarPanel(this);
-        popup = new ToolkitOverlay(true);
+        popup = new ToolkitOverlay(true, true);
         popup.setStyleName(IDateField.CLASSNAME + "-popup");
         popup.setWidget(calendar);
         popup.addPopupListener(this);
@@ -83,6 +83,7 @@ public class IPopupCalendar extends ITextualDate implements Paintable,
                     // fix size
                     popup.setWidth(w + "px");
                     popup.setHeight(h + "px");
+                    setFocus(true);
                 }
             });
         }
@@ -99,6 +100,15 @@ public class IPopupCalendar extends ITextualDate implements Paintable,
             };
             t.schedule(100);
         }
+    }
+
+    /**
+     * Sets focus to Calendar panel.
+     * 
+     * @param focus
+     */
+    public void setFocus(boolean focus) {
+        calendar.setFocus(focus);
     }
 
 }
