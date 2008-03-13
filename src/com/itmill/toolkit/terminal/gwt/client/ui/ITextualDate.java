@@ -48,11 +48,6 @@ public class ITextualDate extends IDateField implements Paintable,
         format = new SimpleDateFormat(cleanFormat(dts.getDateFormat()));
         format.setLocale(dl);
 
-        // Size the textfield a bit smaller if no clock time is needed
-        if (currentResolution <= IDateField.RESOLUTION_DAY) {
-            text.setColumns(12);
-        }
-
         // Create the initial text for the textfield
         String dateText = "";
         if (date != null) {
