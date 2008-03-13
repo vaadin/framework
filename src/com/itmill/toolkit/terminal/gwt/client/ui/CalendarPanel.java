@@ -420,7 +420,8 @@ public class CalendarPanel extends FlexTable implements MouseListener,
                         cal.datefield.getCurrentDate().getYear() + 1900,
                         cal.datefield.isImmediate());
 
-                if (datefield instanceof ITextualDate) {
+                if (datefield instanceof ITextualDate
+                        && resolution < IDateField.RESOLUTION_HOUR) {
                     ((ToolkitOverlay) getParent()).hide();
                 } else {
                     updateCalendar();
