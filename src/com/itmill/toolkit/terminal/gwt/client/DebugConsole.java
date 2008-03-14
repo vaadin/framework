@@ -36,9 +36,7 @@ public final class DebugConsole extends IWindow implements Console {
         // TODO stack to bottom (create window manager of some sort)
         setPixelSize(60, 60);
         setPopupPosition(Window.getClientWidth()
-                - (60 + IWindow.BORDER_WIDTH_HORIZONTAL), Window
-                .getClientHeight()
-                - (80 + IWindow.BORDER_WIDTH_VERTICAL));
+                - (100 + IWindow.BORDER_WIDTH_HORIZONTAL), 0);
     }
 
     /*
