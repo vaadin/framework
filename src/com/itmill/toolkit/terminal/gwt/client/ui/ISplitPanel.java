@@ -246,8 +246,6 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
                     secondContainerHeight + "px");
             DOM.setStyleAttribute(secondContainer, "top",
                     (pixelPosition + getSplitterSize()) + "px");
-            ApplicationConnection.getConsole().log(
-                    "secondContainerHeight:" + secondContainerHeight);
             break;
         }
 
