@@ -8,19 +8,26 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
+import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.DateLocale;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.util.SimpleDateFormat;
 
 public class ITextualDate extends IDateField implements Paintable,
-        ChangeListener {
+        ChangeListener, ContainerResizedListener {
 
     private final ITextField text;
 
     private SimpleDateFormat format;
 
     private DateLocale dl;
+
+    private String width;
+
+    private boolean needLayout;
+
+    protected int fieldExtraWidth = -1;
 
     public ITextualDate() {
         super();
@@ -236,5 +243,44 @@ public class ITextualDate extends IDateField implements Paintable,
         format = format.replaceAll("--", "-");
 
         return format.trim();
+    }
+
+    public void setWidth(String newWidth) {
+        if (!"".equals(newWidth) && (width == null || !newWidth.equals(width))) {
+            needLayout = true;
+            width = newWidth;
+            super.setWidth(width);
+            iLayout();
+            if (newWidth.indexOf("%") < 0) {
+                needLayout = false;
+            }
+        } else {
+            if (width != null && !"".equals(width)) {
+                super.setWidth("");
+                needLayout = true;
+                iLayout();
+                needLayout = false;
+                width = null;
+            }
+        }
+    }
+
+    /**
+     * Returns pixels in x-axis reserved for other than textfield content.
+     * 
+     * @return extra width in pixels
+     */
+    protected int getFieldExtraWidth() {
+        if (fieldExtraWidth < 0) {
+            text.setWidth("0px");
+            fieldExtraWidth = text.getOffsetWidth();
+        }
+        return fieldExtraWidth;
+    }
+
+    public void iLayout() {
+        if (needLayout) {
+            text.setWidth((getOffsetWidth() - getFieldExtraWidth()) + "px");
+        }
     }
 }

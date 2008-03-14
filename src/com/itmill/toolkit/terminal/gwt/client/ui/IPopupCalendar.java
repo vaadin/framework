@@ -111,4 +111,12 @@ public class IPopupCalendar extends ITextualDate implements Paintable,
         calendar.setFocus(focus);
     }
 
+    protected int getFieldExtraWidth() {
+        if (fieldExtraWidth < 0) {
+            fieldExtraWidth = super.getFieldExtraWidth();
+            fieldExtraWidth += calendarToggle.getOffsetWidth();
+        }
+        return fieldExtraWidth;
+    }
+
 }
