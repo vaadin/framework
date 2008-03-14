@@ -146,8 +146,9 @@ public class IFilterSelect extends Composite implements Paintable,
                 // nullsel not counted, as requested by user
                 DOM.setInnerText(status, (totalSuggestions == 0 ? 0 : first)
                         + "-"
-                        + (nullSelectionAllowed && currentPage == 0 ? last - 1
-                                : last) + "/" + matches);
+                        + ("".equals(lastFilter) && nullSelectionAllowed
+                                && currentPage == 0 ? last - 1 : last) + "/"
+                        + matches);
             } else {
                 DOM.setInnerText(status, "");
             }
@@ -200,8 +201,8 @@ public class IFilterSelect extends Composite implements Paintable,
                         .getText().length()
                         - lastFilter.length());
 
-            } else if (!clientSideFiltering && hasNextPage()) {
-                filterOptions(currentPage + 1);
+            } else if (hasNextPage()) {
+                filterOptions(currentPage + 1, lastFilter);
             }
         }
 
@@ -218,7 +219,7 @@ public class IFilterSelect extends Composite implements Paintable,
                         - lastFilter.length());
             } else if (index == -1) {
                 if (currentPage > 0) {
-                    filterOptions(currentPage - 1);
+                    filterOptions(currentPage - 1, lastFilter);
                 }
             } else {
                 final MenuItem newSelectedItem = (MenuItem) menu.getItems()
@@ -450,9 +451,6 @@ public class IFilterSelect extends Composite implements Paintable,
 
     private FilterSelectSuggestion currentSuggestion;
 
-    private boolean clientSideFiltering;
-
-    private ArrayList allSuggestions;
     private int totalMatches;
     private boolean allowNewItem;
     private boolean nullSelectionAllowed;
@@ -499,29 +497,19 @@ public class IFilterSelect extends Composite implements Paintable,
         }
         if (!filter.equals(lastFilter)) {
             // we are on subsequent page and text has changed -> reset page
-            page = 0;
-        }
-        if (clientSideFiltering) {
-            currentSuggestions.clear();
-            for (final Iterator it = allSuggestions.iterator(); it.hasNext();) {
-                final FilterSelectSuggestion s = (FilterSelectSuggestion) it
-                        .next();
-                final String string = s.getDisplayString().toLowerCase();
-                if (string.startsWith(filter.toLowerCase())) {
-                    currentSuggestions.add(s);
-                }
+            if ("".equals(filter)) {
+                // let server decide
+                page = -1;
+            } else {
+                page = 0;
             }
-            lastFilter = filter;
-            currentPage = page;
-            suggestionPopup.showSuggestions(currentSuggestions, page,
-                    currentSuggestions.size());
-        } else {
-            filtering = true;
-            client.updateVariable(paintableId, "filter", filter, false);
-            client.updateVariable(paintableId, "page", page, true);
-            lastFilter = filter;
-            currentPage = page;
         }
+
+        filtering = true;
+        client.updateVariable(paintableId, "filter", filter, false);
+        client.updateVariable(paintableId, "page", page, true);
+        lastFilter = filter;
+        currentPage = page;
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -544,18 +532,14 @@ public class IFilterSelect extends Composite implements Paintable,
 
         nullSelectionAllowed = uidl.hasAttribute("nullselect");
 
+        currentPage = uidl.getIntVariable("page");
+
         if (uidl.hasAttribute(ATTR_EMPTYTEXT)) {
             // "emptytext" changed from server
             emptyText = uidl.getStringAttribute(ATTR_EMPTYTEXT);
         }
 
-        if (true) {
-            suggestionPopup.setPagingEnabled(true);
-            clientSideFiltering = false;
-        } else {
-            suggestionPopup.setPagingEnabled(false);
-            clientSideFiltering = true;
-        }
+        suggestionPopup.setPagingEnabled(true);
 
         allowNewItem = uidl.hasAttribute("allownewitem");
 
@@ -564,20 +548,16 @@ public class IFilterSelect extends Composite implements Paintable,
         totalMatches = uidl.getIntAttribute("totalMatches");
 
         String captions = emptyText;
-        if (clientSideFiltering) {
-            allSuggestions = new ArrayList();
-        }
 
         for (final Iterator i = options.getChildIterator(); i.hasNext();) {
             final UIDL optionUidl = (UIDL) i.next();
             final FilterSelectSuggestion suggestion = new FilterSelectSuggestion(
                     optionUidl);
             currentSuggestions.add(suggestion);
-            if (clientSideFiltering) {
-                allSuggestions.add(suggestion);
-            }
-            if (!filtering && optionUidl.hasAttribute("selected")) {
-                tb.setText(suggestion.getReplacementString());
+            if (optionUidl.hasAttribute("selected")) {
+                if (!filtering) {
+                    tb.setText(suggestion.getReplacementString());
+                }
                 currentSuggestion = suggestion;
             }
 
@@ -632,7 +612,7 @@ public class IFilterSelect extends Composite implements Paintable,
             selectedOptionKey = newKey;
             client.updateVariable(paintableId, "selected",
                     new String[] { selectedOptionKey }, immediate);
-            lastFilter = tb.getText();
+            // currentPage = -1; // forget the page
         }
         suggestionPopup.hide();
     }
@@ -694,7 +674,8 @@ public class IFilterSelect extends Composite implements Paintable,
                     break;
                 } else {
                     // open popup as from gadget
-                    filterOptions(0, "");
+                    filterOptions(-1, "");
+                    lastFilter = "";
                     tb.selectAll();
                     break;
                 }
@@ -714,7 +695,8 @@ public class IFilterSelect extends Composite implements Paintable,
             // Popup's
             // auto close feature
             if (!suggestionPopup.isJustClosed()) {
-                filterOptions(0, "");
+                filterOptions(-1, "");
+                lastFilter = "";
             }
             DOM.eventPreventDefault(DOM.eventGetCurrentEvent());
             tb.setFocus(true);

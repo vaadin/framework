@@ -45,7 +45,7 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
     private int columns = 0;
 
     // Current page when the user is 'paging' trough options
-    private int currentPage;
+    private int currentPage = -1;
 
     private int filteringMode = FILTERINGMODE_STARTSWITH;
 
@@ -144,6 +144,15 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
 
         target.startTag("options");
 
+        if (currentPage < 0) {
+            optionRequest = false;
+            currentPage = 0;
+            filterstring = "";
+        }
+
+        List options = getFilteredOptions();
+        options = sanitetizeList(options, needNullSelectOption);
+
         final boolean paintNullSelection = needNullSelectOption
                 && (currentPage == 0 && (filterstring == null || filterstring
                         .equals("")));
@@ -155,8 +164,6 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
             target.endTag("so");
         }
 
-        List options = getFilteredOptions();
-        options = sanitetizeList(options, needNullSelectOption);
         final Iterator i = options.iterator();
         // Paints the available selection options from data source
 
@@ -202,6 +209,8 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
 
         target.addVariable(this, "filter", filterstring);
         target.addVariable(this, "page", currentPage);
+
+        currentPage = -1; // current page is always set by client
 
         optionRequest = true;
     }
@@ -312,35 +321,12 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
      *      java.util.Map)
      */
     public void changeVariables(Object source, Map variables) {
-        String newFilter;
-        if ((newFilter = (String) variables.get("filter")) != null) {
-            // this is a filter request
-            currentPage = ((Integer) variables.get("page")).intValue();
-            filterstring = newFilter;
-            if (filterstring != null) {
-                filterstring = filterstring.toLowerCase();
-            }
-            optionRepaint();
-            return;
-        }
-
-        // Try to set the property value
-
-        // New option entered (and it is allowed)
-        final String newitem = (String) variables.get("newitem");
-        if (newitem != null && newitem.length() > 0) {
-            getNewItemHandler().addNewItem(newitem);
-            // rebuild list
-            filterstring = null;
-            prevfilterstring = null;
-        }
-
         // Selection change
         if (variables.containsKey("selected")) {
             final String[] ka = (String[]) variables.get("selected");
 
-            // Multiselect mode
             if (isMultiSelect()) {
+                // Multiselect mode
 
                 // TODO Optimize by adding repaintNotNeeded whan applicaple
 
@@ -367,10 +353,8 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
                     newsel.addAll(s);
                     setValue(newsel, true);
                 }
-            }
-
-            // Single select mode
-            else {
+            } else {
+                // Single select mode
                 if (ka.length == 0) {
 
                     // Allows deselection only if the deselected item is visible
@@ -389,6 +373,30 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
                 }
             }
         }
+
+        String newFilter;
+        if ((newFilter = (String) variables.get("filter")) != null) {
+            // this is a filter request
+            currentPage = ((Integer) variables.get("page")).intValue();
+            filterstring = newFilter;
+            if (filterstring != null) {
+                filterstring = filterstring.toLowerCase();
+            }
+            optionRepaint();
+            return;
+        }
+
+        // Try to set the property value
+
+        // New option entered (and it is allowed)
+        final String newitem = (String) variables.get("newitem");
+        if (newitem != null && newitem.length() > 0) {
+            getNewItemHandler().addNewItem(newitem);
+            // rebuild list
+            filterstring = null;
+            prevfilterstring = null;
+        }
+
     }
 
     public void requestRepaint() {
