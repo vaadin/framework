@@ -555,4 +555,11 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
         client.updateVariable(id, "scrollleft", scrollLeft, false);
     }
 
+    public void addStyleDependentName(String styleSuffix) {
+        // IWindow's getStyleElement() does not return the same element as
+        // getElement(), so we need to override this.
+        setStyleName(getElement(), getStylePrimaryName() + "-" + styleSuffix,
+                true);
+    }
+
 }
