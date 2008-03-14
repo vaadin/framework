@@ -126,11 +126,6 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
             }
         }
 
-        // Adds the number of columns
-        if (columns != 0) {
-            target.addAttribute("cols", columns);
-        }
-
         // Constructs selected keys array
         String[] selectedKeys;
         if (isMultiSelect()) {
@@ -425,9 +420,14 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
     }
 
     /**
+     * Note, one should use more generic setWidth(String) method instead of
+     * this. This now days actually converts columns to width with em css unit.
+     * 
      * Sets the number of columns in the editor. If the number of columns is set
      * 0, the actual number of displayed columns is determined implicitly by the
      * adapter.
+     * 
+     * @deprecated
      * 
      * @param columns
      *                the number of columns to set.
@@ -438,10 +438,15 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
         }
         if (this.columns != columns) {
             this.columns = columns;
+            setWidth(columns, Select.UNITS_EM);
             requestRepaint();
         }
     }
 
+    /**
+     * @deprecated see setter function
+     * @return
+     */
     public int getColumns() {
         return columns;
     }

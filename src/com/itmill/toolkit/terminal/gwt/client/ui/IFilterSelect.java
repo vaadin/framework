@@ -612,13 +612,6 @@ public class IFilterSelect extends Composite implements Paintable,
         DOM.setStyleAttribute(spacer, "overflow", "hidden");
         DOM.appendChild(panel.getElement(), spacer);
 
-        // Set columns (width) is given
-        if (uidl.hasAttribute("cols")) {
-            DOM.setStyleAttribute(getElement(), "width", uidl
-                    .getIntAttribute("cols")
-                    + "em");
-        }
-
     }
 
     public void onSuggestionSelected(FilterSelectSuggestion suggestion) {
