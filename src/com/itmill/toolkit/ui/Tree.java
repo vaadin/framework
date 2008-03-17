@@ -466,8 +466,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
                 final Object itemId = i.next();
 
                 // Starts the item / node
-                final boolean isNode = areChildrenAllowed(itemId)
-                        && hasChildren(itemId);
+                final boolean isNode = areChildrenAllowed(itemId);
                 if (isNode) {
                     target.startTag("node");
                 } else {
