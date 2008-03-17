@@ -315,14 +315,14 @@ public class FileTypeResolver {
             throw new NullPointerException("File can not be null");
         }
 
-        // Drives
-        if (file.getParentFile() == null) {
-            return "inode/drive";
-        }
-
         // Directories
         if (file.isDirectory()) {
-            return "inode/directory";
+            // Drives
+            if (file.getParentFile() == null) {
+                return "inode/drive";
+            } else {
+                return "inode/directory";
+            }
         }
 
         // Return type from extension
