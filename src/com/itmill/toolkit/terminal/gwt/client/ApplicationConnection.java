@@ -345,6 +345,7 @@ public class ApplicationConnection {
         try {
             json = JSONParser.parse(jsonText);
         } catch (final com.google.gwt.json.client.JSONException e) {
+            endRequest();
             console.log(e.getMessage() + " - Original JSON-text:");
             console.log(jsonText);
             return;
