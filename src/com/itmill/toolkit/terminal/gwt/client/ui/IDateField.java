@@ -103,13 +103,13 @@ public class IDateField extends FlowPanel implements Paintable {
         final int day = (currentResolution >= RESOLUTION_DAY) ? uidl
                 .getIntVariable("day") : -1;
         final int hour = (currentResolution >= RESOLUTION_HOUR) ? uidl
-                .getIntVariable("hour") : -1;
+                .getIntVariable("hour") : 0;
         final int min = (currentResolution >= RESOLUTION_MIN) ? uidl
-                .getIntVariable("min") : -1;
+                .getIntVariable("min") : 0;
         final int sec = (currentResolution >= RESOLUTION_SEC) ? uidl
-                .getIntVariable("sec") : -1;
+                .getIntVariable("sec") : 0;
         final int msec = (currentResolution >= RESOLUTION_MSEC) ? uidl
-                .getIntVariable("msec") : -1;
+                .getIntVariable("msec") : 0;
 
         // Construct new date for this datefield (only if not null)
         if (year > -1) {
@@ -135,10 +135,10 @@ public class IDateField extends FlowPanel implements Paintable {
        	if(y && y >= 0) date.setFullYear(y);
        	if(m && m >= 1) date.setMonth(m-1);
        	if(d && d >= 0) date.setDate(d);
-       	if(h && h >= 0) date.setHours(h);
-       	if(mi && mi >= 0) date.setMinutes(mi);
-       	if(s && s >= 0) date.setSeconds(s);
-       	if(ms && ms >= 0) date.setMilliseconds(ms);
+       	if(h >= 0) date.setHours(h);
+       	if(mi >= 0) date.setMinutes(mi);
+       	if(s >= 0) date.setSeconds(s);
+       	if(ms >= 0) date.setMilliseconds(ms);
        	return date.getTime();
        } catch (e) {
        	// TODO print some error message on the console
