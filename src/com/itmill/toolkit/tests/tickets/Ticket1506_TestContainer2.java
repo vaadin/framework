@@ -1,0 +1,110 @@
+package com.itmill.toolkit.tests.tickets;
+
+import com.itmill.toolkit.data.Container;
+import com.itmill.toolkit.data.Item;
+import com.itmill.toolkit.data.Property;
+import com.itmill.toolkit.data.util.PropertysetItem;
+import com.itmill.toolkit.data.util.ObjectProperty;
+
+import java.util.*;
+
+/**
+ * @author Efecte R&D
+ * @version $Revision$, $Date$
+ */
+public class Ticket1506_TestContainer2 implements Container {
+    private Map items = new HashMap();
+    public static final String ITEM_1_ID = "1";
+    public static final String ITEM_2_ID = "2";
+    public static final String PROPERTY_1_ID = "property 1";
+    public static final String PROPERTY_2_ID = "property 2";
+
+    private void loadItems() {
+        for (int i = 1; i < 15; i++) {
+            final PropertysetItem item = new PropertysetItem();
+            item.addItemProperty(PROPERTY_1_ID, new ObjectProperty("value " + i, String.class));
+            item.addItemProperty(PROPERTY_2_ID, new ObjectProperty("name " + i, String.class));
+            this.items.put(String.valueOf(i), item);
+        }
+    }
+
+    public Item getItem(Object itemId) {
+        if (items.isEmpty()) {
+            loadItems();
+        }
+        return (Item) items.get(itemId);
+    }
+
+    public Collection getContainerPropertyIds() {
+        if (items.isEmpty()) {
+            loadItems();
+        }
+        ArrayList a = new ArrayList();
+        a.add(PROPERTY_1_ID);
+        a.add(PROPERTY_2_ID);
+        return a;
+    }
+
+    public Collection getItemIds() {
+        if (items.isEmpty()) {
+            loadItems();
+        }
+        return items.keySet();
+    }
+
+    public Property getContainerProperty(Object itemId, Object propertyId) {
+        if (items.isEmpty()) {
+            loadItems();
+        }
+        Item item = (Item) items.get(itemId);
+        if (item != null) {
+            return item.getItemProperty(propertyId);
+        }
+        return null;
+    }
+
+    public Class getType(Object propertyId) {
+        if (items.isEmpty()) {
+            loadItems();
+        }
+        return String.class;
+    }
+
+    public int size() {
+        if (items.isEmpty()) {
+            loadItems();
+        }
+        return items.size();
+    }
+
+    public boolean containsId(Object itemId) {
+        if (items.isEmpty()) {
+            loadItems();
+        }
+        return items.containsKey(itemId);
+    }
+
+    public Item addItem(Object itemId) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    public Object addItem() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    public boolean removeItem(Object itemId) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    public boolean addContainerProperty(Object propertyId, Class type, Object defaultValue) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    public boolean removeContainerProperty(Object propertyId) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    public boolean removeAllItems() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+}
