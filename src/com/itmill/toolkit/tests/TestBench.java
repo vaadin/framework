@@ -42,7 +42,8 @@ public class TestBench extends com.itmill.toolkit.Application implements
     String[] testablePackages = { "com.itmill.toolkit.tests",
             "com.itmill.toolkit.demo", "com.itmill.toolkit.demo.colorpicker",
             "com.itmill.toolkit.demo.reservation",
-            "com.itmill.toolkit.demo.features" };
+            "com.itmill.toolkit.demo.features",
+            "com.itmill.toolkit.tests.tickets"};
 
     HierarchicalContainer testables = new HierarchicalContainer();
 
@@ -75,12 +76,14 @@ public class TestBench extends com.itmill.toolkit.Application implements
                         testables.addItem(t);
                         itemCaptions.put(t, t.getName());
                         testables.setParent(t, testablePackages[p]);
+                        testables.setChildrenAllowed(t, false);
                         continue;
                     } catch (final Exception e) {
                         try {
                             testables.addItem(t);
                             itemCaptions.put(t, t.getName());
                             testables.setParent(t, testablePackages[p]);
+                            testables.setChildrenAllowed(t, false);
                             continue;
                         } catch (final Exception e1) {
                             e1.printStackTrace();

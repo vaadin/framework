@@ -121,7 +121,7 @@ public class ApplicationConnection {
 
         initializeClientHooks();
 
-        // TODO remove hardcoded id name
+        // TODO remove hard coded id name
         view = new IView("itmill-ajax-window");
 
         makeUidlRequest("repaintAll=1");
@@ -758,6 +758,9 @@ public class ApplicationConnection {
      * @return translated URI ready for browser
      */
     public String translateToolkitUri(String toolkitUri) {
+        if (toolkitUri == null) {
+            return null;
+        }
         if (toolkitUri.startsWith("theme://")) {
             final String themeUri = getThemeUri();
             if (themeUri == null) {

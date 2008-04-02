@@ -140,7 +140,7 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
                 // TODO this might be optimized by moving only container element
                 // to correct position
                 removeCaption(child);
-                int index = getWidgetIndex(oldChild);
+                int index = getPaintableIndex(oldChild);
                 if (componentToCaption.containsKey(oldChild)) {
                     index--;
                 }
@@ -148,7 +148,7 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
                 this.insert(child, index);
             } else {
                 // insert new child before old one
-                final int index = getWidgetIndex(oldChild);
+                final int index = getPaintableIndex(oldChild); // TODO this returns wrong value if captions are used
                 insert(child, index);
             }
             ((Paintable) child).updateFromUIDL(childUidl, client);
@@ -215,7 +215,7 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
             remove(c);
             componentToCaption.remove(c);
         }
-        final int index = getWidgetIndex(from);
+        final int index = getPaintableIndex(from);
         if (index >= 0) {
             remove(index);
             insert(to, index);
@@ -240,7 +240,7 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
     }
 
     public boolean hasChildComponent(Widget component) {
-        return getWidgetIndex(component) >= 0;
+        return getPaintableIndex(component) >= 0;
     }
 
     public void updateCaption(Paintable component, UIDL uidl) {
@@ -249,7 +249,7 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
 
         if (Caption.isNeeded(uidl)) {
             if (c == null) {
-                final int index = getWidgetIndex((Widget) component);
+                final int index = getPaintableIndex((Widget) component);
                 c = new Caption(component, client);
                 insert(c, index);
                 componentToCaption.put(component, c);
@@ -303,6 +303,30 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
 
     public int getWidgetIndex(Widget child) {
         return getChildren().indexOf(child);
+    }
+
+    public int getPaintableCount() {
+        int size = 0;
+        for(Iterator it = getChildren().iterator(); it.hasNext();) {
+            Widget w = (Widget) it.next();
+            if (!(w instanceof Caption)) {
+                size++;
+            }
+        }
+        return size;
+    }
+
+    public int getPaintableIndex(Widget child) {
+        int i = 0;
+        for(Iterator it = getChildren().iterator(); it.hasNext();) {
+            Widget w = (Widget) it.next();
+            if (w == child) {
+                return i;
+            } else if (!(w instanceof Caption)) {
+                i++;
+            }
+        }
+        return -1;
     }
 
     protected void handleMargins(UIDL uidl) {

@@ -73,7 +73,11 @@ public class IEmbedded extends HTML implements Paintable {
      * @return
      */
     private String getSrc(UIDL uidl, ApplicationConnection client) {
-        return client.translateToolkitUri(uidl.getStringAttribute("src"));
+        String url =  client.translateToolkitUri(uidl.getStringAttribute("src"));
+        if (url == null) {
+            return "";
+        }
+        return url;
     }
 
     public void setWidth(String width) {
