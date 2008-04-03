@@ -73,7 +73,7 @@ public class IEmbedded extends HTML implements Paintable {
      * @return
      */
     private String getSrc(UIDL uidl, ApplicationConnection client) {
-        String url =  client.translateToolkitUri(uidl.getStringAttribute("src"));
+        String url = client.translateToolkitUri(uidl.getStringAttribute("src"));
         if (url == null) {
             return "";
         }
@@ -94,5 +94,14 @@ public class IEmbedded extends HTML implements Paintable {
         }
         heigth = height;
         super.setHeight(height);
+    }
+
+    protected void onDetach() {
+        // Force browser to fire unload event when component is detached from
+        // the view (IE doesn't do this automatically)
+        if (browserElement != null) {
+            DOM.setElementAttribute(browserElement, "src", "javascript:false");
+        }
+        super.onDetach();
     }
 }
