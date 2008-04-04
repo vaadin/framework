@@ -666,7 +666,8 @@ public class ApplicationServlet extends HttpServlet {
                         + title
                         + "</title>\n"
                         + "<script type=\"text/javascript\">\n"
-                        + "	var itmill = {\n" + "		appUri:'");
+                        + "	var itmill = {toolkitConfigurations: {'itmill-ajax-window' :{\n"
+                        + "		appUri:'");
 
         final String[] urls = getAppAndWidgetUrl(request);
         final String appUrl = urls[0];
@@ -702,7 +703,7 @@ public class ApplicationServlet extends HttpServlet {
             page.write("\"}");
         }
 
-        page.write("\n};\n</script>\n");
+        page.write("\n}}};\n</script>\n");
 
         boolean testingWindow = testingToolsActive
                 && request.getParameter("TT") != null;

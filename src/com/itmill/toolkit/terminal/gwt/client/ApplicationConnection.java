@@ -44,8 +44,6 @@ public class ApplicationConnection {
 
     public static final String VAR_FIELD_SEPARATOR = "\u001f";
 
-    private final String appUri;
-
     private final HashMap resourcesMap = new HashMap();
 
     private static Console console;
@@ -90,14 +88,14 @@ public class ApplicationConnection {
 
     private int activeRequests = 0;
 
-    public ApplicationConnection(WidgetSet widgetSet) {
+    private String applicationUri;
+
+    private ApplicationConfiguration configuration;
+
+    public ApplicationConnection(WidgetSet widgetSet,
+            ApplicationConfiguration cnf) {
         this.widgetSet = widgetSet;
-        String tmp = getAppUri();
-        if (!tmp.endsWith("/")) {
-            appUri = tmp + "/";
-        } else {
-            appUri = tmp;
-        }
+        configuration = cnf;
 
         if (isDebugMode()) {
             console = new DebugConsole(this);
@@ -122,7 +120,7 @@ public class ApplicationConnection {
         initializeClientHooks();
 
         // TODO remove hard coded id name
-        view = new IView("itmill-ajax-window");
+        view = new IView(cnf.getRootPanelId());
 
         makeUidlRequest("repaintAll=1");
         applicationRunning = true;
@@ -176,6 +174,8 @@ public class ApplicationConnection {
      * <li><code>itmill.forceSync()</code> sends pending variable changes, in
      * effect synchronizing the server and client state.</li>
      * </ul>
+     * 
+     * TODO make this multi-app aware
      */
     private native void initializeClientHooks()
     /*-{
@@ -196,38 +196,19 @@ public class ApplicationConnection {
      return re.test(uri);
      }-*/;
 
-    public native String getAppUri()
-    /*-{
-     var u = $wnd.itmill.appUri;
-     if (u.indexOf("/") != 0 && u.indexOf("http") != 0) {
-     var b = $wnd.location.href;
-     var i = b.length-1;
-     while (b.charAt(i) != "/" && i>0) i--;
-     b = b.substring(0,i+1);
-     u = b + u;
-     }
-     return u;
-     }-*/;
+    public String getAppUri() {
+        return configuration.getApplicationUri();
+    };
 
     public boolean hasActiveRequest() {
         return uidlRequest.isPending();
     }
 
-    private native String getPathInfo()
-    /*-{
-     return $wnd.itmill.pathInfo;
-     }-*/;
-
-    private native String getThemeUri()
-    /*-{
-     return $wnd.itmill.themeUri;
-     }-*/;
-
     private void makeUidlRequest(String requestData) {
         startRequest();
 
         console.log("Making UIDL Request with params: " + requestData);
-        final String uri = appUri + "UIDL" + getPathInfo();
+        final String uri = getAppUri() + "UIDL" + configuration.getPathInfo();
         final RequestBuilder rb = new RequestBuilder(RequestBuilder.POST, uri);
         rb.setHeader("Content-Type",
                 "application/x-www-form-urlencoded; charset=utf-8");
@@ -762,7 +743,7 @@ public class ApplicationConnection {
             return null;
         }
         if (toolkitUri.startsWith("theme://")) {
-            final String themeUri = getThemeUri();
+            final String themeUri = configuration.getThemeUri();
             if (themeUri == null) {
                 console
                         .error("Theme not set: ThemeResource will not be found. ("

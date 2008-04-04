@@ -4,6 +4,9 @@
 
 package com.itmill.toolkit.terminal.gwt.client;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ui.IAccordion;
@@ -50,13 +53,18 @@ import com.itmill.toolkit.terminal.gwt.client.ui.richtextarea.IRichTextArea;
 
 public class DefaultWidgetSet implements WidgetSet {
 
-    protected ApplicationConnection appConn;
-
     /**
      * This is the entry point method.
      */
     public void onModuleLoad() {
-        appConn = new ApplicationConnection(this);
+        ArrayList appIds = new ArrayList();
+        ApplicationConfiguration.loadAppIdListFromDOM(appIds);
+        for (Iterator iterator = appIds.iterator(); iterator.hasNext();) {
+            String appId = (String) iterator.next();
+            ApplicationConfiguration appConf = ApplicationConfiguration
+                    .getConfigFromDOM(appId);
+            new ApplicationConnection(this, appConf);
+        }
     }
 
     public Widget createWidget(UIDL uidl) {
