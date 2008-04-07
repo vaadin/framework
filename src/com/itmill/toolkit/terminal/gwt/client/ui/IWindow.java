@@ -33,10 +33,6 @@ import com.itmill.toolkit.terminal.gwt.client.Util;
  */
 public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 
-    private static final int DEFAULT_HEIGHT = 300;
-
-    private static final int DEFAULT_WIDTH = 400;
-
     private static final int MIN_HEIGHT = 60;
 
     private static final int MIN_WIDTH = 80;
@@ -184,10 +180,6 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
         DOM.setElementProperty(getElement(), "className", CLASSNAME);
 
         setWidget(contentPanel);
-
-        // set default size
-        setWidth(DEFAULT_WIDTH + "px");
-        setHeight(DEFAULT_HEIGHT + "px");
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -245,7 +237,7 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
         int childIndex = 0;
         UIDL childUidl = uidl.getChildUIDL(childIndex++);
         while ("open".equals(childUidl.getTag())) {
-            // TODO multipe opens with the same target will in practice just
+            // TODO multiple opens with the same target will in practice just
             // open the last one - should we fix that somehow?
             final String parsedUri = client.translateToolkitUri(childUidl
                     .getStringAttribute("src"));
@@ -301,13 +293,13 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
                             final String parsedUri = client
                                     .translateToolkitUri(notification
                                             .getStringAttribute("icon"));
-                            html += "<IMG src=\"" + parsedUri + "\" />";
+                            html += "<img src=\"" + parsedUri + "\" />";
                         }
                         if (notification.hasAttribute("caption")) {
-                            html += "<H1>"
+                            html += "<h1>"
                                     + notification
                                             .getStringAttribute("caption")
-                                    + "</H1>";
+                                    + "</h1>";
                         }
                         if (notification.hasAttribute("message")) {
                             html += "<p>"
@@ -443,8 +435,7 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
             resizing = true;
             startX = DOM.eventGetScreenX(event);
             startY = DOM.eventGetScreenY(event);
-            origW = DOM.getIntStyleAttribute(getElement(), "width")
-                    - BORDER_WIDTH_HORIZONTAL;
+            origW = getWidget().getOffsetWidth();
             origH = getWidget().getOffsetHeight();
             DOM.setCapture(getElement());
             break;
