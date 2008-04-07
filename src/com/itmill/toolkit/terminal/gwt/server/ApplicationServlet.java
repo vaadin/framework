@@ -398,11 +398,11 @@ public class ApplicationServlet extends HttpServlet {
             // Get existing application
             application = getExistingApplication(request, response);
             if (application == null
-                    || request.getParameter("restartApplication") != null) {
-                if (request.getParameter("restartApplication") != null
-                        && application != null) {
+                    || request.getParameter("restartApplication") != null
+                    || request.getParameter("closeApplication") != null) {
+                if (application != null) {
                     application.close();
-                    final HttpSession session = request.getSession();
+                    final HttpSession session = request.getSession(false);
                     if (session != null) {
                         application.close();
                         ApplicationServlet.applicationToAjaxAppMgrMap
@@ -410,6 +410,9 @@ public class ApplicationServlet extends HttpServlet {
                         WebApplicationContext.getApplicationContext(session)
                                 .removeApplication(application);
                     }
+                }
+                if (request.getParameter("closeApplication") != null) {
+                    return;
                 }
                 // Not found, creating new application
                 application = getNewApplication(request, response);
@@ -471,7 +474,32 @@ public class ApplicationServlet extends HttpServlet {
 
         } catch (final SessionExpired e) {
             // Session has expired
-            criticalNotification(request, response, "Your session has expired.");
+            // Get new application so we can fetch the sessionExpiredURL
+            Application app = null;
+            try {
+                app = (Application) applicationClass.newInstance();
+                app.init();
+            } catch (InstantiationException e1) {
+                // Should not happen
+                e1.printStackTrace();
+            } catch (IllegalAccessException e1) {
+                // Should not happen
+                e1.printStackTrace();
+            }
+
+            // Redirect if expiredURL is found
+            if (app != null && app.getSessionExpiredURL() != null) {
+                if (UIDLrequest) {
+                    redirectUidlRequest(request, response, app
+                            .getSessionExpiredURL());
+                } else {
+                    response.sendRedirect(app.getSessionExpiredURL());
+                }
+            } else {
+                // Else show a notification to the client
+                criticalNotification(request, response,
+                        "Your session has expired.");
+            }
         } catch (final Throwable e) {
             e.printStackTrace();
             // if this was an UIDL request, response UIDL back to client
@@ -536,6 +564,31 @@ public class ApplicationServlet extends HttpServlet {
     }
 
     /**
+     * Redirect an UIDL request to move to a new URL.
+     * 
+     * @param request
+     *                the HTTP request instance.
+     * @param response
+     *                the HTTP response to write to.
+     * @param url
+     *                the URL to redirect to.
+     * @throws IOException
+     *                 if the writing failed due to input/output error.
+     */
+    private void redirectUidlRequest(HttpServletRequest request,
+            HttpServletResponse response, String url) throws IOException {
+        // Set the response type
+        response.setContentType("application/json; charset=UTF-8");
+        final ServletOutputStream out = response.getOutputStream();
+        final PrintWriter outWriter = new PrintWriter(new BufferedWriter(
+                new OutputStreamWriter(out, "UTF-8")));
+        outWriter.print("for(;;);[{\"redirect\":{\"url\":\"" + url + "\"}}]");
+        outWriter.flush();
+        outWriter.close();
+        out.flush();
+    }
+
+    /**
      * Send notification to client's application. Used to notify client of
      * critical errors and session expiration due to long inactivity. Server has
      * no knowledge of what application client refers to.
@@ -566,10 +619,8 @@ public class ApplicationServlet extends HttpServlet {
                 new OutputStreamWriter(out, "UTF-8")));
         outWriter.print("for(;;);[{\"changes\":[], \"meta\" : {"
                 + "\"appError\": {" + "\"caption\":\"" + caption + "\","
-                + "\"message\" : \"<br />Please click <a href=\\\"\\\""
-                + "onclick=\\\"javascript:window.location.reload()\\\" >"
-                + "here</a> to restart your application.<br />"
-                + "You can also click your browser's refresh button.\""
+                + "\"message\" : \"<br />You can click your browser's"
+                + " refresh button to restart your application.\""
                 + "}}, \"resources\": {}, \"locales\":[]}]");
         outWriter.flush();
         outWriter.close();

@@ -163,10 +163,17 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
     private long lastResourceKeyNumber = 0;
 
     /**
-     * URL the user is redirected to on application close or null if application
-     * is just closed
+     * URL where the user is redirected to on application close, or null if
+     * application is just closed without redirection.
      */
     private String logoutURL = null;
+
+    /**
+     * URL where the user is redirected to when the Toolkit ApplicationServlet
+     * session expires, or null if the application is just closed without
+     * redirection.
+     */
+    private String expiredURL = null;
 
     private Focusable pendingFocus;
 
@@ -996,7 +1003,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
     }
 
     /**
-     * Returns the URL user is redirected to on application close.If the URL is
+     * Returns the URL user is redirected to on application close. If the URL is
      * <code>null</code>, the application is closed normally as defined by
      * the application running environment.
      * <p>
@@ -1022,6 +1029,31 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
      */
     public void setLogoutURL(String logoutURL) {
         this.logoutURL = logoutURL;
+    }
+
+    /**
+     * Returns the URL where user is redirected to when the Toolkit
+     * ApplicationServlet session expires. If the URL is <code>null</code>,
+     * the application is closed normally and it shows a notification to the
+     * client.
+     * 
+     * @return the URL.
+     */
+    public String getSessionExpiredURL() {
+        return expiredURL;
+    }
+
+    /**
+     * Sets the URL where user is redirected to when the Toolkit
+     * ApplicationServlet session expires. If the URL is <code>null</code>,
+     * the application is closed normally and it shows a notification to the
+     * client.
+     * 
+     * @param expiredURL
+     *                the expiredURL to set.
+     */
+    public void setSessionExpiredURL(String expiredURL) {
+        this.expiredURL = expiredURL;
     }
 
     /**
