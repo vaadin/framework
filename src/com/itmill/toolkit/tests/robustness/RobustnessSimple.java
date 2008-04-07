@@ -1,6 +1,6 @@
 package com.itmill.toolkit.tests.robustness;
 
-import com.itmill.toolkit.tests.util.Log;
+import com.itmill.toolkit.automatedtests.util.Log;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.OrderedLayout;

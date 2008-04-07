@@ -1,4 +1,8 @@
-package com.itmill.toolkit.tests.util;
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
+package com.itmill.toolkit.automatedtests.util;
 
 import com.itmill.toolkit.data.Container.ItemSetChangeEvent;
 import com.itmill.toolkit.data.Container.ItemSetChangeListener;

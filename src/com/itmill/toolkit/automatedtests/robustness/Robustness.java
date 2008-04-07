@@ -1,7 +1,11 @@
-package com.itmill.toolkit.tests.robustness;
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
+package com.itmill.toolkit.automatedtests.robustness;
 
 import com.itmill.toolkit.automatedtests.util.Log;
-import com.itmill.toolkit.tests.util.RandomComponents;
+import com.itmill.toolkit.automatedtests.util.RandomComponents;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.ComponentContainer;
 import com.itmill.toolkit.ui.Label;
@@ -35,6 +39,7 @@ public abstract class Robustness extends com.itmill.toolkit.Application
 
     public void createNewView() {
         setMainWindow(main);
+        main.setDebugId("MainWindow");
         main.removeAllComponents();
 
         main.addComponent(label);

@@ -1,9 +1,13 @@
-package com.itmill.toolkit.tests.util;
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
+package com.itmill.toolkit.automatedtests.util;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-import com.itmill.toolkit.automatedtests.util.MultiListener;
+import com.itmill.toolkit.automatedtests.ComponentsInTable;
 import com.itmill.toolkit.data.Container.ItemSetChangeListener;
 import com.itmill.toolkit.data.Container.PropertySetChangeListener;
 import com.itmill.toolkit.data.Property.ValueChangeListener;
@@ -23,7 +27,6 @@ import com.itmill.toolkit.demo.featurebrowser.ValueInputExample;
 import com.itmill.toolkit.demo.featurebrowser.WindowingExample;
 import com.itmill.toolkit.terminal.ExternalResource;
 import com.itmill.toolkit.terminal.ThemeResource;
-import com.itmill.toolkit.tests.StressComponentsInTable;
 import com.itmill.toolkit.ui.AbstractComponent;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.ComponentContainer;
@@ -40,14 +43,11 @@ import com.itmill.toolkit.ui.TextField;
 
 public class RandomComponents {
 
-    private Random seededRandom = new Random(1);
+    private Random rand = null;
 
     public RandomComponents() {
-
-    }
-
-    public void setRandom(Random rand) {
-        this.seededRandom = rand;
+        // Always use the same seed, used to ensure deterministic behaviour
+        rand = new Random(1);
     }
 
     /**
@@ -58,7 +58,7 @@ public class RandomComponents {
      */
     public ComponentContainer getRandomComponentContainer(String caption) {
         ComponentContainer result = null;
-        final int randint = seededRandom.nextInt(5);
+        final int randint = rand.nextInt(5);
         switch (randint) {
 
         case 0:
@@ -73,11 +73,10 @@ public class RandomComponents {
             break;
         case 2:
             GridLayout gl;
-            if (seededRandom.nextInt(1) > 0) {
+            if (rand.nextInt(1) > 0) {
                 gl = new GridLayout();
             } else {
-                gl = new GridLayout(seededRandom.nextInt(3) + 1, seededRandom
-                        .nextInt(3) + 1);
+                gl = new GridLayout(rand.nextInt(3) + 1, rand.nextInt(3) + 1);
             }
             gl.setCaption("GridLayout_" + caption);
             gl.setDescription(gl.getCaption());
@@ -98,7 +97,7 @@ public class RandomComponents {
             final TabSheet ts = new TabSheet();
             ts.setCaption("TabSheet_" + caption);
             // randomly select one of the tabs
-            final int selectedTab = seededRandom.nextInt(3);
+            final int selectedTab = rand.nextInt(3);
             final ArrayList tabs = new ArrayList();
             for (int i = 0; i < 3; i++) {
                 String tabCaption = "tab" + i;
@@ -119,18 +118,20 @@ public class RandomComponents {
 
     public AbstractComponent getRandomComponent(int caption) {
         AbstractComponent result = null;
-        int randint = seededRandom.nextInt(23);
+        int randint = rand.nextInt(23);
         MultiListener l = new MultiListener();
         switch (randint) {
         case 0:
             // Label
             result = new Label();
             result.setCaption("Label component " + caption);
+            result.setDebugId(result.getCaption());
             break;
         case 1:
             // Button
             result = new Button();
             result.setCaption("Button component " + caption);
+            result.setDebugId(result.getCaption());
             // some listeners
             ((Button) result).addListener((Button.ClickListener) l);
             break;
@@ -138,11 +139,13 @@ public class RandomComponents {
             // TextField
             result = new TextField();
             result.setCaption("TextField component " + caption);
+            result.setDebugId(result.getCaption());
             break;
         case 3:
             // Select
             result = new Select("Select component " + caption);
             result.setCaption("Select component " + caption);
+            result.setDebugId(result.getCaption());
             result.setImmediate(true);
             ((Select) result).setNewItemsAllowed(true);
             // items
@@ -180,12 +183,14 @@ public class RandomComponents {
             ((DateField) result).setStyleName("calendar");
             ((DateField) result).setValue(new java.util.Date());
             result.setCaption("Calendar component " + caption);
+            result.setDebugId(result.getCaption());
             break;
         case 7:
             // Datefield
             result = new DateField();
             ((DateField) result).setValue(new java.util.Date());
             result.setCaption("Calendar component " + caption);
+            result.setDebugId(result.getCaption());
             break;
         case 8:
             result = new OrderedLayout();
@@ -201,7 +206,6 @@ public class RandomComponents {
             break;
         case 11:
             result = new OrderedLayout();
-            // TODO: disabled gwt bug with mixed up iframe's
             ((OrderedLayout) result).addComponent(new EmbeddedBrowserExample());
             break;
         case 12:
@@ -247,7 +251,7 @@ public class RandomComponents {
         case 22:
             result = new OrderedLayout();
             ((OrderedLayout) result)
-                    .addComponent(new StressComponentsInTable());
+                    .addComponent(new ComponentsInTable(4, 1000));
             break;
         }
 

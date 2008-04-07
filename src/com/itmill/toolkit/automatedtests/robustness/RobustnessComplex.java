@@ -1,6 +1,10 @@
-package com.itmill.toolkit.tests.robustness;
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
 
-import com.itmill.toolkit.tests.util.Log;
+package com.itmill.toolkit.automatedtests.robustness;
+
+import com.itmill.toolkit.automatedtests.util.Log;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.Label;
 
@@ -27,7 +31,7 @@ public class RobustnessComplex extends Robustness implements
         stressLayout.addComponent(label);
 
         // fill with random components
-        randomComponents.fillLayout(stressLayout, 25);
+        randomComponents.fillLayout(stressLayout, 50);
 
         // add new component container to main layout
         main.addComponent(stressLayout);

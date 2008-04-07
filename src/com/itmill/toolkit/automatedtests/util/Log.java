@@ -1,4 +1,8 @@
-package com.itmill.toolkit.tests.util;
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
+package com.itmill.toolkit.automatedtests.util;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -34,8 +38,6 @@ public class Log {
 
     public static int ERROR = 3;
 
-    // public List messages = new LinkedList();
-
     private static Log log;
 
     public static HashMap classMethodCallCounter = new HashMap();
@@ -45,7 +47,6 @@ public class Log {
     }
 
     public static void reset() {
-        // log.messages = new LinkedList();
         classMethodCallCounter = new HashMap();
     }
 
@@ -61,16 +62,10 @@ public class Log {
                 .getStackTrace();
         try {
             String key = "";
-            // Class fromCallerClass = Class.forName(st[4].getClassName());
-            // String fromMethodName = st[4].getMethodName();
-            // Class callerClass = Class.forName(st[3].getClassName());
             String methodName = st[3].getMethodName();
             int line = st[3].getLineNumber();
 
             String clazz = st[3].getClassName() + ".java";
-            // String clazz = st[3].getClassName().substring(
-            // st[3].getClassName().lastIndexOf('.') + 1)
-            // + ".java";
             key = "(" + clazz + ":" + line + ")" + " " + methodName;
             Integer value = (Integer) classMethodCallCounter.get(key);
             if (value == null)
@@ -82,19 +77,6 @@ public class Log {
         } catch (Exception e) {
             return "unknown class.method";
         }
-
-        // List stacks = new ArrayList();
-        // for (int i = 0; i < st.length; i++) {
-        // try {
-        // Class callerClass = Class.forName(st[i].getClassName());
-        // String methodName = st[i].getMethodName();
-        // System.out.println(i + " = " + callerClass + ", " + methodName);
-        // stacks.add(callerClass.getSimpleName());
-        // } catch (ClassNotFoundException e) {
-        // }
-        // }
-        // System.out.println("\n");
-        // return "";
 
     }
 
@@ -108,18 +90,8 @@ public class Log {
         return result;
     }
 
-    // public String toString() {
-    // StringBuffer sb = new StringBuffer(2048);
-    // for (final Iterator it = messages.iterator(); it.hasNext();) {
-    // Message msg = (Message) it.next();
-    // sb.append(msg.toString() + "\n");
-    // }
-    // return sb.toString();
-    // }
-
     public void add(int type, String message) {
         String source = getSource();
-        // log.messages.add(new Message(DEBUG, message, source));
         if (type >= debug) {
             if (showClassInformation)
                 System.out.println(source + ": " + message);
@@ -143,33 +115,6 @@ public class Log {
     public static void error(String message) {
         log.add(ERROR, message);
     }
-
-    public class Message {
-
-        private final long timemillis = System.currentTimeMillis();
-
-        private final int type;
-
-        private final String source;
-
-        private final String message;
-
-        public Message(int type, String message, String source) {
-            this.source = source;
-            this.type = type;
-            this.message = message;
-        }
-
-        public String toString() {
-            return df.format(new Date(timemillis)) + ";" + source + ";" + type
-                    + ";" + message;
-        }
-
-    }
-
-    // public List getMessages() {
-    // return messages;
-    // }
 
     /**
      * Simple way to check for memory consumption without profiler.
