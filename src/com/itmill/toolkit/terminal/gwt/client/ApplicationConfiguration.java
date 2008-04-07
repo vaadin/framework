@@ -39,7 +39,7 @@ public class ApplicationConfiguration {
         if($wnd.itmill.toolkitConfigurations && $wnd.itmill.toolkitConfigurations[id]) {
             var jsobj = $wnd.itmill.toolkitConfigurations[id];
             var uri = jsobj.appUri;
-            if(uri[uri.lenght -1] != "/") {
+            if(uri[uri.length -1] != "/") {
                 uri = uri + "/";
             }
             this.@com.itmill.toolkit.terminal.gwt.client.ApplicationConfiguration::appUri = uri;
