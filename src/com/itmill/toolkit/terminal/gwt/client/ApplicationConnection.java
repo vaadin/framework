@@ -154,14 +154,22 @@ public class ApplicationConnection {
          client.isActive = function() {
              return ap.@com.itmill.toolkit.terminal.gwt.client.ApplicationConnection::hasActiveRequest()();
          }
-         if ($wnd.itmill.versionInfo) {
+         var vi = ap.@com.itmill.toolkit.terminal.gwt.client.ApplicationConnection::getVersionInfo()();
+         if (vi) {
              client.getVersionInfo = function() {
-                 return $wnd.itmill.versionInfo;
+                 return vi;
              }
          }
          $wnd.top.itmill.registerToTT(client);
          this.@com.itmill.toolkit.terminal.gwt.client.ApplicationConnection::ttClientWrapper = client;
     }-*/;
+
+    /**
+     * Helper for tt initialization
+     */
+    private JavaScriptObject getVersionInfo() {
+        return configuration.getVersionInfoJSObject();
+    }
 
     private native void uninitializeTestingTools()
     /*-{

@@ -754,15 +754,6 @@ public class ApplicationServlet extends HttpServlet {
             page.write("\"}");
         }
         page.write("\n}}\n");
-        if (testingToolsActive) {
-            // TODO backwards compatibility; TT does not (yet) support multiple
-            // apps on one page
-            page.write(", versionInfo : {toolkitVersion:\"");
-            page.write(VERSION);
-            page.write("\",applicationVersion:\"");
-            page.write(application.getVersion());
-            page.write("\"}");
-        }
 
         page.write("};\n</script>\n");
 

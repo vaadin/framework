@@ -32,6 +32,10 @@ public class ApplicationConfiguration {
         id = appId;
     }
 
+    public JavaScriptObject getVersionInfoJSObject() {
+        return versionInfo;
+    }
+
     private native void loadFromDOM()
     /*-{
 
