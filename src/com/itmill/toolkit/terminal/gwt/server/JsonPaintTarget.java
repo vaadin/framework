@@ -783,6 +783,12 @@ public class JsonPaintTarget implements PaintTarget {
         return cacheEnabled && isPreviouslyPainted;
     }
 
+    public void paintReference(Paintable paintable, String referenceName)
+            throws PaintException {
+        final String id = manager.getPaintableId(paintable);
+        addAttribute(referenceName, id);
+    }
+
     /**
      * @see com.itmill.toolkit.terminal.PaintTarget#addCharacterData(java.lang.String)
      */

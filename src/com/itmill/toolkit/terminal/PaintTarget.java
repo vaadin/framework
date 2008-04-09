@@ -56,6 +56,24 @@ public interface PaintTarget {
             throws PaintException;
 
     /**
+     * Paints a component reference as an attribute to current tag. This method
+     * is meant to enable component interactions on client side. With reference
+     * the client side component can communicate directly to other component.
+     * 
+     * Note! This is still an experimental feature and API is likely to change
+     * in future.
+     * 
+     * @param paintable
+     *                the Paintable to reference
+     * @param referenceName
+     * @throws PaintException
+     * 
+     * @since 5.2
+     */
+    public void paintReference(Paintable paintable, String referenceName)
+            throws PaintException;
+
+    /**
      * Prints element start tag.
      * 
      * <pre>
