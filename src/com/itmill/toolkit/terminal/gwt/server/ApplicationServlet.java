@@ -101,7 +101,7 @@ public class ApplicationServlet extends HttpServlet {
 
     private static final String RESOURCE_URI = "/RES/";
 
-    private static final String AJAX_UIDL_URI = "/UIDL/";
+    private static final String AJAX_UIDL_URI = "/UIDL";
 
     static final String THEME_DIRECTORY_PATH = "ITMILL/themes/";
 
@@ -112,7 +112,7 @@ public class ApplicationServlet extends HttpServlet {
     // Name of the default widget set, used if not specified in web.xml
     private static final String DEFAULT_WIDGETSET = "com.itmill.toolkit.terminal.gwt.DefaultWidgetSet";
 
-    // Widget set narameter name
+    // Widget set parameter name
     private static final String PARAMETER_WIDGETSET = "widgetset";
 
     // Private fields
@@ -365,7 +365,8 @@ public class ApplicationServlet extends HttpServlet {
                     compare = "/" + applicationRunnerClassname + AJAX_UIDL_URI;
                 }
 
-                if (request.getPathInfo().startsWith(compare)) {
+                if (request.getPathInfo().startsWith(compare + "/")
+                        || request.getPathInfo().endsWith(compare)) {
                     UIDLrequest = true;
                     application = getExistingApplication(request, response);
                     if (application == null) {
@@ -694,6 +695,11 @@ public class ApplicationServlet extends HttpServlet {
             HttpServletResponse response, Window window, String themeName,
             Application application) throws IOException, MalformedURLException {
 
+        // Portlets only want a html fragment
+        // TODO own (itmill) attribute for this e.g
+        // ApplicationServlet.class.getName()+".writeFragment"
+        boolean fragment = (request.getAttribute("javax.portlet.request") != null);
+
         // Window renders are not cacheable
         response.setHeader("Cache-Control", "no-cache");
         response.setHeader("Pragma", "no-cache");
@@ -706,30 +712,15 @@ public class ApplicationServlet extends HttpServlet {
                 .getPathInfo();
         String title = ((window == null || window.getCaption() == null) ? "IT Mill Toolkit 5"
                 : window.getCaption());
-        page
-                .write("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" "
-                        + "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n");
-
-        page
-                .write("<html xmlns=\"http://www.w3.org/1999/xhtml\" style=\"width:100%;"
-                        + "height:100%;border:0;margin:0;\">\n<head>\n"
-                        + "<title>"
-                        + title
-                        + "</title>\n"
-                        + "<script type=\"text/javascript\">\n"
-                        + "	var itmill = {toolkitConfigurations: {'itmill-ajax-window' :{\n"
-                        + "		appUri:'");
-
-        final String[] urls = getAppAndWidgetUrl(request);
-        final String appUrl = urls[0];
-        final String widgetsetUrl = urls[1];
-        page.write(appUrl);
 
         String widgetset = applicationProperties
                 .getProperty(PARAMETER_WIDGETSET);
         if (widgetset == null) {
             widgetset = DEFAULT_WIDGETSET;
         }
+        final String[] urls = getAppAndWidgetUrl(request);
+        final String appUrl = urls[0];
+        final String widgetsetUrl = urls[1];
 
         final String staticFilePath = getApplicationOrSystemProperty(
                 PARAMETER_ITMILL_RESOURCES, widgetsetUrl);
@@ -741,45 +732,102 @@ public class ApplicationServlet extends HttpServlet {
             themeUri = staticFilePath + "/" + THEME_DIRECTORY_PATH + themeName;
         }
 
-        // TODO simplify if possible (probably)
+        if (fragment) {
+            // someone is including this fragment and might want to know
+            // which app was instantiated
+            // TODO not neccessary
+            request.setAttribute(Application.class.getName(), application);
 
-        page.write("', pathInfo: '" + pathInfo);
-        page.write("', themeUri: ");
-        page.write(themeUri != null ? "'" + themeUri + "'" : "null");
-        if (testingToolsActive) {
-            page.write(", versionInfo : {toolkitVersion:\"");
-            page.write(VERSION);
-            page.write("\",applicationVersion:\"");
-            page.write(application.getVersion());
-            page.write("\"}");
+            page.write("<script language='javascript' src='" + staticFilePath
+                    + "/" + WIDGETSET_DIRECTORY_PATH + widgetset + "/"
+                    + widgetset + ".nocache.js'></script>\n");
+            if (themeName != null) {
+                // Custom theme's stylesheet
+                page.write("<link REL=\"stylesheet\" TYPE=\"text/css\" HREF=\""
+                        + themeUri + "/styles.css\">\n");
+            }
+            // TODO styles & win-name from attribute
+            page.write("<div id=\"itmill-ajax-window\"></div>");
+
+            page
+                    .write("<script type=\"text/javascript\">\n"
+                            + " var itmill = {toolkitConfigurations: {'itmill-ajax-window' :{\n"
+                            + "         appUri:'");
+
+            page.write(appUrl);
+
+            // TODO if (!itmill) etc
+
+            page.write("', pathInfo: '" + pathInfo);
+            page.write("', themeUri: ");
+            page.write(themeUri != null ? "'" + themeUri + "'" : "null");
+            if (testingToolsActive) {
+                page.write(", versionInfo : {toolkitVersion:\"");
+                page.write(VERSION);
+                page.write("\",applicationVersion:\"");
+                page.write(application.getVersion());
+                page.write("\"}");
+            }
+            page.write("\n}}\n");
+
+            page.write("};\n</script>\n");
+
+        } else {
+            page
+                    .write("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" "
+                            + "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n");
+
+            page
+                    .write("<html xmlns=\"http://www.w3.org/1999/xhtml\" style=\"width:100%;"
+                            + "height:100%;border:0;margin:0;\">\n<head>\n"
+                            + "<title>"
+                            + title
+                            + "</title>\n"
+                            + "<script type=\"text/javascript\">\n"
+                            + "	var itmill = {toolkitConfigurations: {'itmill-ajax-window' :{\n"
+                            + "		appUri:'");
+
+            page.write(appUrl);
+
+            // TODO simplify if possible (probably)
+
+            page.write("', pathInfo: '" + pathInfo);
+            page.write("', themeUri: ");
+            page.write(themeUri != null ? "'" + themeUri + "'" : "null");
+            if (testingToolsActive) {
+                page.write(", versionInfo : {toolkitVersion:\"");
+                page.write(VERSION);
+                page.write("\",applicationVersion:\"");
+                page.write(application.getVersion());
+                page.write("\"}");
+            }
+            page.write("\n}}\n");
+
+            page.write("};\n</script>\n");
+
+            boolean testingWindow = testingToolsActive
+                    && request.getParameter("TT") != null;
+
+            if (testingWindow) {
+                writeTestingToolsScripts(page, request);
+            }
+
+            page.write("<script language='javascript' src='" + staticFilePath
+                    + "/" + WIDGETSET_DIRECTORY_PATH + widgetset + "/"
+                    + widgetset + ".nocache.js'></script>\n");
+
+            if (themeName != null) {
+                // Custom theme's stylesheet
+                page.write("<link REL=\"stylesheet\" TYPE=\"text/css\" HREF=\""
+                        + themeUri + "/styles.css\">\n");
+            }
+
+            page
+                    .write("</head>\n<body class=\"i-generated-body\">\n"
+                            + "	<iframe id=\"__gwt_historyFrame\" style=\"width:0;height:0;border:0;overflow:hidden\" src=\"javascript:false\"></iframe>\n"
+                            + "	<div id=\"itmill-ajax-window\" style=\"position: absolute;top:0;left:0;width:100%;height:100%;border:0;margin:0\"></div>"
+                            + "	</body>\n" + "</html>\n");
         }
-        page.write("\n}}\n");
-
-        page.write("};\n</script>\n");
-
-        boolean testingWindow = testingToolsActive
-                && request.getParameter("TT") != null;
-
-        if (testingWindow) {
-            writeTestingToolsScripts(page, request);
-        }
-
-        page.write("<script language='javascript' src='" + staticFilePath + "/"
-                + WIDGETSET_DIRECTORY_PATH + widgetset + "/" + widgetset
-                + ".nocache.js'></script>\n");
-
-        if (themeName != null) {
-            // Custom theme's stylesheet
-            page.write("<link REL=\"stylesheet\" TYPE=\"text/css\" HREF=\""
-                    + themeUri + "/styles.css\">\n");
-        }
-
-        page
-                .write("</head>\n<body class=\"i-generated-body\">\n"
-                        + "	<iframe id=\"__gwt_historyFrame\" style=\"width:0;height:0;border:0;overflow:hidden\" src=\"javascript:false\"></iframe>\n"
-                        + "	<div id=\"itmill-ajax-window\" style=\"position: absolute;top:0;left:0;width:100%;height:100%;border:0;margin:0\"></div>"
-                        + "	</body>\n" + "</html>\n");
-
         page.close();
 
     }
