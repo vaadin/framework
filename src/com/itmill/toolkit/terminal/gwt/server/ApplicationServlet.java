@@ -700,12 +700,6 @@ public class ApplicationServlet extends HttpServlet {
         // ApplicationServlet.class.getName()+".writeFragment"
         boolean fragment = (request.getAttribute("javax.portlet.request") != null);
 
-        // Window renders are not cacheable
-        response.setHeader("Cache-Control", "no-cache");
-        response.setHeader("Pragma", "no-cache");
-        response.setDateHeader("Expires", 0);
-
-        response.setContentType("text/html");
         final BufferedWriter page = new BufferedWriter(new OutputStreamWriter(
                 response.getOutputStream()));
         final String pathInfo = request.getPathInfo() == null ? "/" : request
@@ -732,102 +726,83 @@ public class ApplicationServlet extends HttpServlet {
             themeUri = staticFilePath + "/" + THEME_DIRECTORY_PATH + themeName;
         }
 
-        if (fragment) {
-            // someone is including this fragment and might want to know
-            // which app was instantiated
-            // TODO not neccessary
-            request.setAttribute(Application.class.getName(), application);
+        boolean testingApplication = testingToolsActive
+                && request.getParameter("TT") != null;
 
-            page.write("<script language='javascript' src='" + staticFilePath
-                    + "/" + WIDGETSET_DIRECTORY_PATH + widgetset + "/"
-                    + widgetset + ".nocache.js'></script>\n");
-            if (themeName != null) {
-                // Custom theme's stylesheet
-                page.write("<link REL=\"stylesheet\" TYPE=\"text/css\" HREF=\""
-                        + themeUri + "/styles.css\">\n");
-            }
-            // TODO styles & win-name from attribute
-            page.write("<div id=\"itmill-ajax-window\"></div>");
+        if (!fragment) {
+            // Window renders are not cacheable
+            response.setCharacterEncoding("utf-8");
+            response.setHeader("Cache-Control", "no-cache");
+            response.setHeader("Pragma", "no-cache");
+            response.setDateHeader("Expires", 0);
+            response.setContentType("text/html");
 
-            page
-                    .write("<script type=\"text/javascript\">\n"
-                            + " var itmill = {toolkitConfigurations: {'itmill-ajax-window' :{\n"
-                            + "         appUri:'");
+            // write html header
+            page.write("<!DOCTYPE html PUBLIC \"-//W3C//DTD "
+                    + "XHTML 1.0 Transitional//EN\" "
+                    + "\"http://www.w3.org/TR/xhtml1/"
+                    + "DTD/xhtml1-transitional.dtd\">\n");
 
-            page.write(appUrl);
+            page.write("<html xmlns=\"http://www.w3.org/1999/xhtml\""
+                    + ">\n<head>\n");
+            page.write("<style type=\"text/css\">"
+                    + "html, body {height:100%;}</style>");
+            page.write("<title>" + title + "</title>");
 
-            // TODO if (!itmill) etc
-
-            page.write("', pathInfo: '" + pathInfo);
-            page.write("', themeUri: ");
-            page.write(themeUri != null ? "'" + themeUri + "'" : "null");
-            if (testingToolsActive) {
-                page.write(", versionInfo : {toolkitVersion:\"");
-                page.write(VERSION);
-                page.write("\",applicationVersion:\"");
-                page.write(application.getVersion());
-                page.write("\"}");
-            }
-            page.write("\n}}\n");
-
-            page.write("};\n</script>\n");
-
-        } else {
-            page
-                    .write("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" "
-                            + "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n");
-
-            page
-                    .write("<html xmlns=\"http://www.w3.org/1999/xhtml\" style=\"width:100%;"
-                            + "height:100%;border:0;margin:0;\">\n<head>\n"
-                            + "<title>"
-                            + title
-                            + "</title>\n"
-                            + "<script type=\"text/javascript\">\n"
-                            + "	var itmill = {toolkitConfigurations: {'itmill-ajax-window' :{\n"
-                            + "		appUri:'");
-
-            page.write(appUrl);
-
-            // TODO simplify if possible (probably)
-
-            page.write("', pathInfo: '" + pathInfo);
-            page.write("', themeUri: ");
-            page.write(themeUri != null ? "'" + themeUri + "'" : "null");
-            if (testingToolsActive) {
-                page.write(", versionInfo : {toolkitVersion:\"");
-                page.write(VERSION);
-                page.write("\",applicationVersion:\"");
-                page.write(application.getVersion());
-                page.write("\"}");
-            }
-            page.write("\n}}\n");
-
-            page.write("};\n</script>\n");
-
-            boolean testingWindow = testingToolsActive
-                    && request.getParameter("TT") != null;
-
-            if (testingWindow) {
+            if (testingApplication) {
                 writeTestingToolsScripts(page, request);
             }
 
-            page.write("<script language='javascript' src='" + staticFilePath
-                    + "/" + WIDGETSET_DIRECTORY_PATH + widgetset + "/"
-                    + widgetset + ".nocache.js'></script>\n");
-
-            if (themeName != null) {
-                // Custom theme's stylesheet
-                page.write("<link REL=\"stylesheet\" TYPE=\"text/css\" HREF=\""
-                        + themeUri + "/styles.css\">\n");
-            }
-
-            page
-                    .write("</head>\n<body class=\"i-generated-body\">\n"
-                            + "	<iframe id=\"__gwt_historyFrame\" style=\"width:0;height:0;border:0;overflow:hidden\" src=\"javascript:false\"></iframe>\n"
-                            + "	<div id=\"itmill-ajax-window\" style=\"position: absolute;top:0;left:0;width:100%;height:100%;border:0;margin:0\"></div>"
-                            + "	</body>\n" + "</html>\n");
+            page.write("\n</head>\n<body class=\"i-generated-body\">\n");
         }
+
+        String appId = appUrl;
+        appId = appId.replaceAll("/", "");
+
+        page.write("<script type=\"text/javascript\">\n");
+        page.write("//<![CDATA[\n");
+        page.write("if(!itmill) {\n var itmill = "
+                + "{toolkitConfigurations:{}, themesLoaded:{}};\n");
+        page.write("document.write('<iframe id=\"__gwt_historyFrame\" "
+                + "style=\"width:0;height:0;border:0;overflow:"
+                + "hidden\" src=\"javascript:false\"></iframe>');\n");
+        page.write("document.write(\"<script language='javascript' src='"
+                + staticFilePath + "/" + WIDGETSET_DIRECTORY_PATH + widgetset
+                + "/" + widgetset + ".nocache.js'><\\/script>\");\n}\n");
+        if (themeName != null) {
+            // Custom theme's stylesheet, load only once
+            page.write("if(!itmill.themesLoaded['" + themeName + "']) {\n");
+            page.write("var stylesheet = document.createElement('link');\n");
+            page.write("stylesheet.setAttribute('rel', 'stylesheet');\n");
+            page.write("stylesheet.setAttribute('type', 'text/css');\n");
+            page.write("stylesheet.setAttribute('href', '" + themeUri
+                    + "/styles.css');\n");
+            page.write("document.getElementsByTagName(\"head\")"
+                    + "[0].appendChild(stylesheet);\n");
+            page.write("itmill.themesLoaded['" + themeName + "'] = true;\n}\n");
+        }
+
+        page.write("itmill.toolkitConfigurations[\"" + appId + "\"] = {");
+        page.write("appUri:'" + appUrl + "', ");
+        page.write("pathInfo: '" + pathInfo + "', ");
+        page.write("themeUri:");
+        page.write(themeUri != null ? "'" + themeUri + "'" : "null");
+        if (testingApplication) {
+            page.write(", versionInfo : {toolkitVersion:\"");
+            page.write(VERSION);
+            page.write("\",applicationVersion:\"");
+            page.write(application.getVersion());
+            page.write("\"}");
+        }
+        page.write("};\n//]]>\n</script>\n");
+
+        page.write("<div id=\"" + appId + "\" class=\"i-app\"></div>\n");
+
+        if (!fragment) {
+            // close html
+            page.write("</body>\n</html>\n");
+        }
+
         page.close();
 
     }

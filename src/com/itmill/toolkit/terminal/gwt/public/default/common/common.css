@@ -1,11 +1,3 @@
-#itmill-ajax-window {
-	background: #e9eced;
-	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
-	color: #464f52;
-	font-size: 13px;
-	line-height: 18px;
-	height: 100%;
-}
 /* body tag created by servlet */
 .i-generated-body {
 	background: #e9eced;
@@ -15,25 +7,38 @@
 	margin:0;
 	overflow:auto;
 }
+.i-app {
+	background: #e9eced;
+	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
+	color: #464f52;
+	font-size: 13px;
+	line-height: 18px;
+	height: 100%;
+}
 
 .i-view {
 	height: 100%;
-	width: 100%
+	width: 100%;
 	overflow: auto; 
 	/* avoid scrollbars with margins in root layout */
 	margin-top:-1px;
 	border-top:1px solid transparent;
 }
 
-#itmill-ajax-window input, 
-#itmill-ajax-window select, 
-#itmill-ajax-window textarea, 
-#itmill-ajax-window button {
+.i-app input, 
+.i-window input, 
+.i-app select, 
+.i-window select, 
+.i-app textarea, 
+.i-window textarea, 
+.i-app button,
+.i-window button {
 	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
 	color: #464f52;
 }
 
-#itmill-ajax-window select {
+.i-app select,
+.i-window select {
 	padding: 0;
 	margin: 0;
 }
