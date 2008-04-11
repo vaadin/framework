@@ -757,7 +757,7 @@ public class ApplicationServlet extends HttpServlet {
         }
 
         String appId = appUrl;
-        appId = appId.replaceAll("/", "");
+        appId = appId.replaceAll("[^a-zA-Z0-9]", "");
 
         page.write("<script type=\"text/javascript\">\n");
         page.write("//<![CDATA[\n");
