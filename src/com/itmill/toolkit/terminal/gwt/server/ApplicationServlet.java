@@ -752,10 +752,6 @@ public class ApplicationServlet extends HttpServlet {
                     + "html, body {height:100%;}</style>");
             page.write("<title>" + title + "</title>");
 
-            if (testingApplication) {
-                writeTestingToolsScripts(page, request);
-            }
-
             page.write("\n</head>\n<body class=\"i-generated-body\">\n");
         }
 
@@ -790,7 +786,7 @@ public class ApplicationServlet extends HttpServlet {
         page.write("pathInfo: '" + pathInfo + "', ");
         page.write("themeUri:");
         page.write(themeUri != null ? "'" + themeUri + "'" : "null");
-        if (testingApplication) {
+        if (false && testingApplication) {
             page.write(", versionInfo : {toolkitVersion:\"");
             page.write(VERSION);
             page.write("\",applicationVersion:\"");
@@ -798,6 +794,10 @@ public class ApplicationServlet extends HttpServlet {
             page.write("\"}");
         }
         page.write("};\n//]]>\n</script>\n");
+
+        if (testingApplication) {
+            writeTestingToolsScripts(page, request);
+        }
 
         page.write("<div id=\"" + appId + "\" class=\"i-app\"></div>\n");
 
