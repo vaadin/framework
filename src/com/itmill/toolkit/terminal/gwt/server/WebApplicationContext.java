@@ -33,22 +33,20 @@ import com.itmill.toolkit.service.ApplicationContext;
 public class WebApplicationContext implements ApplicationContext,
         HttpSessionBindingListener {
 
-    private List listeners;
+    protected List listeners;
 
-    private final HttpSession session;
+    protected HttpSession session;
 
-    private final HashSet applications = new HashSet();
+    protected final HashSet applications = new HashSet();
 
-    private final WebBrowser browser = new WebBrowser();
+    protected WebBrowser browser = new WebBrowser();
 
     /**
      * Creates a new Web Application Context.
      * 
-     * @param session
-     *                the HTTP session.
      */
-    WebApplicationContext(HttpSession session) {
-        this.session = session;
+    WebApplicationContext() {
+
     }
 
     /**
@@ -95,8 +93,11 @@ public class WebApplicationContext implements ApplicationContext,
         WebApplicationContext cx = (WebApplicationContext) session
                 .getAttribute(WebApplicationContext.class.getName());
         if (cx == null) {
-            cx = new WebApplicationContext(session);
+            cx = new WebApplicationContext();
             session.setAttribute(WebApplicationContext.class.getName(), cx);
+        }
+        if (cx.session == null) {
+            cx.session = session;
         }
         return cx;
     }
