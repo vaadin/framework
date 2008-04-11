@@ -3,6 +3,8 @@
 
 <display>
 	<category name="IT Mill Toolkit">
-		<portlet id="ApplicationPortlet" />
+		<portlet id="PortletDemo" />
+		<portlet id="Calc" />
+		<portlet id="FeatureBrowser" />
 	</category>
 </display>

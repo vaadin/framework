@@ -5,9 +5,13 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd">
 
 	<portlet>
-		<portlet-name>ApplicationPortlet</portlet-name>
-		<display-name>IT Mill Toolkit Portlet</display-name>
+		<portlet-name>PortletDemo</portlet-name>
+		<display-name>IT Mill Toolkit PortletDemo</display-name>
 		<portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>
+		<init-param>
+			<name>application</name>
+			<value>PortletDemo</value>
+		</init-param>
 		<supports>
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
@@ -15,8 +19,72 @@
             <portlet-mode>help</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>IT Mill Toolkit ApplicationPortlet</title>
-			<short-title>ApplicationPortlet</short-title>
+			<title>IT Mill Toolkit PortletDemo</title>
+			<short-title>PortletDemo</short-title>
+		</portlet-info>
+		
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+	<portlet>
+		<portlet-name>FeatureBrowser</portlet-name>
+		<display-name>IT Mill Toolkit FeatureBrowser</display-name>
+		<portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>
+		<init-param>
+			<name>application</name>
+			<value>FeatureBrowser</value>
+		</init-param>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+            <portlet-mode>edit</portlet-mode>
+            <portlet-mode>help</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>IT Mill Toolkit FeatureBrowser</title>
+			<short-title>FeatureBrowser</short-title>
+		</portlet-info>
+		
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+	<portlet>
+		<portlet-name>Calc</portlet-name>
+		<display-name>IT Mill Toolkit Calc</display-name>
+		<portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>
+		<init-param>
+			<name>application</name>
+			<value>Calc</value>
+		</init-param>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+            <portlet-mode>edit</portlet-mode>
+            <portlet-mode>help</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>IT Mill Toolkit Calc</title>
+			<short-title>Calc</short-title>
 		</portlet-info>
 		
 		<security-role-ref>
