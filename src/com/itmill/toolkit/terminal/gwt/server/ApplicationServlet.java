@@ -699,6 +699,9 @@ public class ApplicationServlet extends HttpServlet {
         // TODO own (itmill) attribute for this e.g
         // ApplicationServlet.class.getName()+".writeFragment"
         boolean fragment = (request.getAttribute("javax.portlet.request") != null);
+        if (fragment) {
+            request.setAttribute(Application.class.getName(), application);
+        }
 
         final BufferedWriter page = new BufferedWriter(new OutputStreamWriter(
                 response.getOutputStream()));
