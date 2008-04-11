@@ -11,6 +11,10 @@
      IT Mill Toolkit examples
   </description>
   
+  <session-config>
+    <session-timeout>20</session-timeout>
+  </session-config>
+  
   <!-- Permit use of IT Mill Testing Tools for this servlet container -->
   <context-param>
   	<param-name>testingToolsActive</param-name>
@@ -270,7 +274,7 @@
     </init-param>
   </servlet>
   
-   <!-- Automated tests used by Testing Tools plug-in client -->
+   <!-- Section begins: Automated tests used by Testing Tools plug-in client -->
    <servlet>
     <servlet-name>TestSimplestApplication</servlet-name>
     <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
@@ -297,6 +301,12 @@
       <param-value>com.itmill.toolkit.automatedtests.featurebrowser.FeatureBrowser</param-value>
     </init-param>
   </servlet>
+  
+  <servlet>
+    <servlet-name>StatusServlet</servlet-name>
+    <servlet-class>com.itmill.toolkit.automatedtests.util.StatusServlet</servlet-class>
+  </servlet>
+  <!-- Section ends: Automated tests used by Testing Tools plug-in client -->
   
   <servlet-mapping>
     <servlet-name>ITMillToolkitApplicationRunner</servlet-name>
@@ -414,7 +424,7 @@
     <url-pattern>/NotificationDemo/*</url-pattern>
   </servlet-mapping>
   
-  <!-- Automated tests used by Testing Tools plug-in client -->
+  <!-- Section begins: Automated tests used by Testing Tools plug-in client -->
     <servlet-mapping>
     <servlet-name>TestSimplestApplication</servlet-name>
     <url-pattern>/TestSimplestApplication/*</url-pattern>
@@ -429,6 +439,12 @@
     <servlet-name>TestFeatureBrowser</servlet-name>
     <url-pattern>/TestFeatureBrowser/*</url-pattern>
   </servlet-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>StatusServlet</servlet-name>
+    <url-pattern>/StatusServlet/*</url-pattern>
+  </servlet-mapping>
+  <!-- Section ends: Automated tests used by Testing Tools plug-in client -->
 
   <welcome-file-list>
     <welcome-file>index.jsp</welcome-file>
