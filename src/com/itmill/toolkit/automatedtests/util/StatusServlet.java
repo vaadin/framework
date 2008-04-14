@@ -72,8 +72,8 @@ public class StatusServlet extends HttpServlet {
 
         String p = "";
         p += "<p>StatusServlet " + dfHuman.format(new Date()) + "</p>";
-
-        System.gc();
+        for (int i = 0; i < 30; i++)
+            System.gc();
         long inUse = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime()
                 .freeMemory());
         p += "<p>Memory:<br />\n<memused>" + inUse
