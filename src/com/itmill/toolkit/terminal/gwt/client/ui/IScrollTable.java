@@ -197,8 +197,10 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
         if (uidl.hasAttribute("selectmode")) {
             if (uidl.getStringAttribute("selectmode").equals("multi")) {
                 selectMode = Table.SELECT_MODE_MULTI;
-            } else {
+            } else if (uidl.getStringAttribute("selectmode").equals("single")) {
                 selectMode = Table.SELECT_MODE_SINGLE;
+            } else {
+                selectMode = Table.SELECT_MODE_NONE;
             }
         }
 
