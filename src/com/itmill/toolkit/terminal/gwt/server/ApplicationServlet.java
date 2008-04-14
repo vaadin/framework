@@ -751,6 +751,12 @@ public class ApplicationServlet extends HttpServlet {
                     + "html, body {height:100%;}</style>");
             page.write("<title>" + title + "</title>");
 
+            if (testingApplication) {
+                // TT script needs to be in head as it needs to be the first
+                // to hook capturing event listeners
+                writeTestingToolsScripts(page, request);
+            }
+
             page.write("\n</head>\n<body class=\"i-generated-body\">\n");
         }
 
@@ -759,8 +765,10 @@ public class ApplicationServlet extends HttpServlet {
 
         page.write("<script type=\"text/javascript\">\n");
         page.write("//<![CDATA[\n");
-        page.write("if(!itmill) {\n var itmill = "
-                + "{toolkitConfigurations:{}, themesLoaded:{}};\n");
+        page.write("if(!itmill || !itmill.toolkitConfigurations) {\n "
+                + "if(!itmill) { var itmill = {}} \n"
+                + "itmill.toolkitConfigurations = {};\n"
+                + "itmill.themesLoaded = {};\n");
         page.write("document.write('<iframe id=\"__gwt_historyFrame\" "
                 + "style=\"width:0;height:0;border:0;overflow:"
                 + "hidden\" src=\"javascript:false\"></iframe>');\n");
@@ -785,7 +793,7 @@ public class ApplicationServlet extends HttpServlet {
         page.write("pathInfo: '" + pathInfo + "', ");
         page.write("themeUri:");
         page.write(themeUri != null ? "'" + themeUri + "'" : "null");
-        if (false && testingApplication) {
+        if (testingApplication) {
             page.write(", versionInfo : {toolkitVersion:\"");
             page.write(VERSION);
             page.write("\",applicationVersion:\"");
@@ -793,10 +801,6 @@ public class ApplicationServlet extends HttpServlet {
             page.write("\"}");
         }
         page.write("};\n//]]>\n</script>\n");
-
-        if (testingApplication) {
-            writeTestingToolsScripts(page, request);
-        }
 
         page.write("<div id=\"" + appId + "\" class=\"i-app\"></div>\n");
 
