@@ -15,7 +15,7 @@ import javax.portlet.RenderResponse;
 
 import com.itmill.toolkit.Application;
 
-public class ITMillApplicationPortlet implements Portlet {
+public class ApplicationPortlet implements Portlet {
     // The application to show
     protected String app = "Calc";
     // some applications might require that the height is specified
@@ -44,13 +44,6 @@ public class ITMillApplicationPortlet implements Portlet {
     public void render(RenderRequest request, RenderResponse response)
             throws PortletException, IOException {
 
-        /*-
-        PortletPreferences prefs = request.getPreferences();
-        app = prefs.getValue("application", app);
-        theme = prefs.getValue("theme", "default");
-        height = prefs.getValue("height", null);
-        -*/
-
         // display the IT Mill Toolkit application
         writeAjaxWindow(request, response);
     }
@@ -78,9 +71,6 @@ public class ITMillApplicationPortlet implements Portlet {
                     .getRequestDispatcher("/" + app);
 
             try {
-                // TODO remove:
-
-                System.err.println(request.getContextPath() + " (portlet ctx)");
                 // TODO height
                 dispatcher.include(request, response);
 

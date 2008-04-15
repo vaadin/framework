@@ -7,7 +7,7 @@
 	<portlet>
 		<portlet-name>PortletDemoPortlet</portlet-name>
 		<display-name>IT Mill Toolkit PortletDemo</display-name>
-		<portlet-class>com.itmill.toolkit.terminal.gwt.server.ITMillApplicationPortlet</portlet-class>
+		<portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>
 		<init-param>
 			<name>application</name>
 			<value>PortletDemo</value>
@@ -39,7 +39,7 @@
 	<portlet>
 		<portlet-name>FeatureBrowserPortlet</portlet-name>
 		<display-name>IT Mill Toolkit FeatureBrowser</display-name>
-		<portlet-class>com.itmill.toolkit.terminal.gwt.server.ITMillApplicationPortlet</portlet-class>
+		<portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>
 		<init-param>
 			<name>application</name>
 			<value>FeatureBrowser</value>
@@ -71,7 +71,7 @@
 	<portlet>
 		<portlet-name>CalcPortlet</portlet-name>
 		<display-name>IT Mill Toolkit Calc</display-name>
-		<portlet-class>com.itmill.toolkit.terminal.gwt.server.ITMillApplicationPortlet</portlet-class>
+		<portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>
 		<init-param>
 			<name>application</name>
 			<value>Calc</value>

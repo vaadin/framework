@@ -651,12 +651,24 @@ public class ApplicationServlet extends HttpServlet {
             String[] urlParts;
             try {
                 urlParts = getApplicationUrl(request).toString().split("\\/");
+                // TODO remove:
+                System.err.println(getApplicationUrl(request).toString()
+                        + " parts: " + urlParts.length);
+                System.err.println(request.getContextPath() + "(servlet ctx)");
                 appUrl = "";
                 widgetsetUrl = "";
                 // if context is specified add it to widgetsetUrl
+                String ctxPath = request.getContextPath();
+                if (ctxPath.length() == 0
+                        && request
+                                .getAttribute("javax.servlet.include.context_path") != null) {
+                    // include request (e.g portlet), get contex path from
+                    // attribute
+                    ctxPath = (String) request
+                            .getAttribute("javax.servlet.include.context_path");
+                }
                 if (urlParts.length > 3
-                        && urlParts[3].equals(request.getContextPath()
-                                .replaceAll("\\/", ""))) {
+                        && urlParts[3].equals(ctxPath.replaceAll("\\/", ""))) {
                     widgetsetUrl += "/" + urlParts[3];
                 }
                 for (int i = 3; i < urlParts.length; i++) {
@@ -1066,8 +1078,18 @@ public class ApplicationServlet extends HttpServlet {
                                             .getServerPort() == 80) ? "" : ":"
                                     + request.getServerPort())
                             + request.getRequestURI());
-            String servletPath = request.getContextPath()
-                    + request.getServletPath();
+            String servletPath = "";
+            if (request.getAttribute("javax.servlet.include.servlet_path") != null) {
+                // this is an include request
+                servletPath = request.getAttribute(
+                        "javax.servlet.include.context_path").toString()
+                        + request
+                                .getAttribute("javax.servlet.include.servlet_path");
+
+            } else {
+                servletPath = request.getContextPath()
+                        + request.getServletPath();
+            }
             if (servletPath.length() == 0
                     || servletPath.charAt(servletPath.length() - 1) != '/') {
                 servletPath = servletPath + "/";
