@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.itmill.tookit.demo;
+package com.itmill.toolkit.demo;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -33,6 +33,7 @@ public class PortletDemo extends Application {
 
     public void init() {
         main = new Window();
+        setMainWindow(main);
         tf.setEnabled(false);
         main.addComponent(tf);
 
@@ -43,9 +44,13 @@ public class PortletDemo extends Application {
         portletMax.setEnabled(false);
         main.addComponent(portletMax);
 
-        PortletApplicationContext ctx = (PortletApplicationContext) getContext();
+        if (getContext() instanceof PortletApplicationContext) {
+            PortletApplicationContext ctx = (PortletApplicationContext) getContext();
+            ctx.addPortletListener(this, new DemoPortletListener());
+        } else {
+            getMainWindow().showNotification("Not inited via Portal!");
+        }
 
-        ctx.addPortletListener(this, new DemoPortletListener());
     }
 
     private class DemoPortletListener implements PortletListener {

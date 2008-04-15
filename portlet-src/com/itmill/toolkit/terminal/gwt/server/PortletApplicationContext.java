@@ -42,6 +42,7 @@ public class PortletApplicationContext extends WebApplicationContext {
 
     static public PortletApplicationContext getApplicationContext(
             PortletSession session) {
+        System.err.println("PortletApplicationContext.getApplicationContext");
         WebApplicationContext cx = (WebApplicationContext) session
                 .getAttribute(WebApplicationContext.class.getName(),
                         PortletSession.APPLICATION_SCOPE);

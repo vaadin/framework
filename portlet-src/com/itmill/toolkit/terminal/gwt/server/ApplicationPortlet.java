@@ -17,7 +17,7 @@ import com.itmill.toolkit.Application;
 
 public class ApplicationPortlet implements Portlet {
     // The application to show
-    protected String app = "PortletDemo";
+    protected String app = "Calc";
     // some applications might require that the height is specified
     protected String height = null; // e.g "200px"
 
@@ -31,7 +31,7 @@ public class ApplicationPortlet implements Portlet {
         this.config = config;
         app = config.getInitParameter("application");
         if (app == null) {
-            app = "PortalDemo";
+            app = "PortletDemo";
         }
         height = config.getInitParameter("height");
     }
@@ -61,8 +61,10 @@ public class ApplicationPortlet implements Portlet {
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
 
-        if (app != null) {
+        out.println("<h1>WTF?</h1>");
 
+        if (app != null) {
+            System.err.println("WTFFF???");
             PortletSession sess = request.getPortletSession();
             PortletApplicationContext ctx = PortletApplicationContext
                     .getApplicationContext(sess);
@@ -76,11 +78,16 @@ public class ApplicationPortlet implements Portlet {
             -*/
 
             PortletRequestDispatcher dispatcher = sess.getPortletContext()
-                    .getRequestDispatcher("/" + app);
+                    .getRequestDispatcher(
+                            "/" + request.getContextPath() + "/" + app);
 
             try {
+                // TODO remove:
+
+                System.err.println(request.getContextPath() + " (portlet ctx)");
                 // TODO height
                 dispatcher.include(request, response);
+
             } catch (PortletException e) {
                 out.print("<h1>Servlet include failed!</h1>");
                 out.print("<div>" + e + "</div>");
