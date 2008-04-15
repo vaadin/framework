@@ -651,10 +651,6 @@ public class ApplicationServlet extends HttpServlet {
             String[] urlParts;
             try {
                 urlParts = getApplicationUrl(request).toString().split("\\/");
-                // TODO remove:
-                System.err.println(getApplicationUrl(request).toString()
-                        + " parts: " + urlParts.length);
-                System.err.println(request.getContextPath() + "(servlet ctx)");
                 appUrl = "";
                 widgetsetUrl = "";
                 // if context is specified add it to widgetsetUrl
