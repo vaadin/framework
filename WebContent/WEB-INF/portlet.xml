@@ -5,9 +5,9 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd">
 
 	<portlet>
-		<portlet-name>PortletDemo</portlet-name>
+		<portlet-name>PortletDemoPortlet</portlet-name>
 		<display-name>IT Mill Toolkit PortletDemo</display-name>
-		<portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>
+		<portlet-class>com.itmill.toolkit.terminal.gwt.server.ITMillApplicationPortlet</portlet-class>
 		<init-param>
 			<name>application</name>
 			<value>PortletDemo</value>
@@ -37,9 +37,9 @@
 		</security-role-ref>
 	</portlet>
 	<portlet>
-		<portlet-name>FeatureBrowser</portlet-name>
+		<portlet-name>FeatureBrowserPortlet</portlet-name>
 		<display-name>IT Mill Toolkit FeatureBrowser</display-name>
-		<portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>
+		<portlet-class>com.itmill.toolkit.terminal.gwt.server.ITMillApplicationPortlet</portlet-class>
 		<init-param>
 			<name>application</name>
 			<value>FeatureBrowser</value>
@@ -69,9 +69,9 @@
 		</security-role-ref>
 	</portlet>
 	<portlet>
-		<portlet-name>Calc</portlet-name>
+		<portlet-name>CalcPortlet</portlet-name>
 		<display-name>IT Mill Toolkit Calc</display-name>
-		<portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>
+		<portlet-class>com.itmill.toolkit.terminal.gwt.server.ITMillApplicationPortlet</portlet-class>
 		<init-param>
 			<name>application</name>
 			<value>Calc</value>

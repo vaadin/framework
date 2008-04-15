@@ -4,17 +4,17 @@
 <liferay-portlet-app>
 
 	<portlet>
-		<portlet-name>PortletDemo</portlet-name>
+		<portlet-name>PortletDemoPortlet</portlet-name>
 		<instanceable>true</instanceable>	
 		<ajaxable>false</ajaxable>
 	</portlet>
 	<portlet>
-		<portlet-name>Calc</portlet-name>
+		<portlet-name>CalcPortlet</portlet-name>
 		<instanceable>true</instanceable>	
 		<ajaxable>false</ajaxable>
 	</portlet>
 	<portlet>
-		<portlet-name>FeatureBrowser</portlet-name>
+		<portlet-name>FeatureBrowserPortlet</portlet-name>
 		<instanceable>true</instanceable>	
 		<ajaxable>false</ajaxable>
 	</portlet>

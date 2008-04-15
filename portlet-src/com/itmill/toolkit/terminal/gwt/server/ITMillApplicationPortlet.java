@@ -15,7 +15,7 @@ import javax.portlet.RenderResponse;
 
 import com.itmill.toolkit.Application;
 
-public class ApplicationPortlet implements Portlet {
+public class ITMillApplicationPortlet implements Portlet {
     // The application to show
     protected String app = "Calc";
     // some applications might require that the height is specified
@@ -61,10 +61,7 @@ public class ApplicationPortlet implements Portlet {
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
 
-        out.println("<h1>WTF?</h1>");
-
         if (app != null) {
-            System.err.println("WTFFF???");
             PortletSession sess = request.getPortletSession();
             PortletApplicationContext ctx = PortletApplicationContext
                     .getApplicationContext(sess);
@@ -78,8 +75,7 @@ public class ApplicationPortlet implements Portlet {
             -*/
 
             PortletRequestDispatcher dispatcher = sess.getPortletContext()
-                    .getRequestDispatcher(
-                            "/" + request.getContextPath() + "/" + app);
+                    .getRequestDispatcher("/" + app);
 
             try {
                 // TODO remove:

@@ -37,10 +37,8 @@ public class PortletDemo extends Application {
         tf.setEnabled(false);
         main.addComponent(tf);
 
-        portletEdit.setCaption("Portlet edit/view");
         portletEdit.setEnabled(false);
         main.addComponent(portletEdit);
-        portletMax.setCaption("Maximize/normal portlet");
         portletMax.setEnabled(false);
         main.addComponent(portletMax);
 
@@ -48,7 +46,8 @@ public class PortletDemo extends Application {
             PortletApplicationContext ctx = (PortletApplicationContext) getContext();
             ctx.addPortletListener(this, new DemoPortletListener());
         } else {
-            getMainWindow().showNotification("Not inited via Portal!");
+            getMainWindow().showNotification("Not inited via Portal!",
+                    Notification.TYPE_ERROR_MESSAGE);
         }
 
     }
@@ -64,11 +63,15 @@ public class PortletDemo extends Application {
 
         public void handleRenderRequest(RenderRequest request,
                 RenderResponse response) {
+            portletEdit.setEnabled(true);
+            portletMax.setEnabled(true);
+            tf.setEnabled((request.getPortletMode() == PortletMode.EDIT));
+
             getMainWindow().showNotification(
                     "Portlet status",
-                    "mode: " + request.getPortletMode() + "<br/> state: "
+                    "Mode: " + request.getPortletMode() + " State: "
                             + request.getWindowState(),
-                    Notification.TYPE_TRAY_NOTIFICATION);
+                    Notification.TYPE_WARNING_MESSAGE);
 
             PortletURL url = response.createActionURL();
             try {
@@ -76,6 +79,9 @@ public class PortletDemo extends Application {
                         .setPortletMode((request.getPortletMode() == PortletMode.VIEW ? PortletMode.EDIT
                                 : PortletMode.VIEW));
                 portletEdit.setResource(new ExternalResource(url.toString()));
+                portletEdit
+                        .setCaption((request.getPortletMode() == PortletMode.VIEW ? "Edit"
+                                : "Done"));
             } catch (Exception e) {
                 portletEdit.setEnabled(false);
             }
@@ -85,9 +91,12 @@ public class PortletDemo extends Application {
                 url
                         .setWindowState((request.getWindowState() == WindowState.NORMAL ? WindowState.MAXIMIZED
                                 : WindowState.NORMAL));
-                portletEdit.setResource(new ExternalResource(url.toString()));
+                portletMax.setResource(new ExternalResource(url.toString()));
+                portletMax
+                        .setCaption((request.getWindowState() == WindowState.NORMAL ? "Maximize"
+                                : "Back to normal"));
             } catch (Exception e) {
-                portletEdit.setEnabled(false);
+                portletMax.setEnabled(false);
             }
 
         }

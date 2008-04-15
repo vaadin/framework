@@ -20,7 +20,7 @@
   
     <context-param>
   	<param-name>testingToolsServerUri</param-name>
-  	<param-value>http://192.168.1.120:8099/TestingToolsServer</param-value>
+  	<param-value>http://192.168.1.242:8099/TestingToolsServer</param-value>
   	<description>IT Mill Testing Tools URI</description>
   </context-param>
   
@@ -383,6 +383,19 @@
       <param-value>com.itmill.toolkit.demo.WindowedDemos</param-value>
     </init-param>
   </servlet>
+  
+   <servlet>
+    <servlet-name>PortletDemo</servlet-name>
+    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+    <init-param>
+      <param-name>application</param-name>
+      <param-value>com.itmill.toolkit.demo.PortletDemo</param-value>
+    </init-param>
+  </servlet>
+ <servlet-mapping>
+    <servlet-name>PortletDemo</servlet-name>
+    <url-pattern>/PortletDemo/*</url-pattern>
+  </servlet-mapping> 
   
   	<servlet-mapping>
     <servlet-name>ITMillToolkitApplicationRunner</servlet-name>
