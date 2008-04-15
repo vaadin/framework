@@ -3,9 +3,13 @@
  */
 package com.itmill.toolkit.demo;
 
+import java.util.Iterator;
+import java.util.Map;
+
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletMode;
+import javax.portlet.PortletRequest;
 import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
@@ -15,6 +19,7 @@ import com.itmill.toolkit.Application;
 import com.itmill.toolkit.terminal.ExternalResource;
 import com.itmill.toolkit.terminal.gwt.server.PortletApplicationContext;
 import com.itmill.toolkit.terminal.gwt.server.PortletApplicationContext.PortletListener;
+import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.Link;
 import com.itmill.toolkit.ui.TextField;
 import com.itmill.toolkit.ui.Window;
@@ -27,14 +32,21 @@ import com.itmill.toolkit.ui.Window.Notification;
 public class PortletDemo extends Application {
 
     Window main = new Window();
-    TextField tf = new TextField();
+    TextField tf = new TextField("Some value");
+    Label userInfo = new Label();
     Link portletEdit = new Link();
     Link portletMax = new Link();
 
     public void init() {
         main = new Window();
         setMainWindow(main);
+
+        userInfo.setCaption("User info");
+        userInfo.setContentMode(Label.CONTENT_PREFORMATTED);
+        main.addComponent(userInfo);
+
         tf.setEnabled(false);
+        tf.setImmediate(true);
         main.addComponent(tf);
 
         portletEdit.setEnabled(false);
@@ -63,16 +75,38 @@ public class PortletDemo extends Application {
 
         public void handleRenderRequest(RenderRequest request,
                 RenderResponse response) {
+            // Portlet up-and-running, enable stuff
             portletEdit.setEnabled(true);
             portletMax.setEnabled(true);
+
+            // Editable if we're in editmode
             tf.setEnabled((request.getPortletMode() == PortletMode.EDIT));
 
+            // Show notification about current mode and state
             getMainWindow().showNotification(
                     "Portlet status",
                     "Mode: " + request.getPortletMode() + " State: "
                             + request.getWindowState(),
                     Notification.TYPE_WARNING_MESSAGE);
 
+            // Display current user info
+            Map uinfo = (Map) request.getAttribute(PortletRequest.USER_INFO);
+            if (uinfo != null) {
+                String s = "";
+                for (Iterator it = uinfo.keySet().iterator(); it.hasNext();) {
+                    Object key = it.next();
+                    Object val = uinfo.get(key);
+                    s += key + ": " + val + "\n";
+                }
+                if (request.isUserInRole("administrator")) {
+                    s += "(administrator)";
+                }
+                userInfo.setValue(s);
+            } else {
+                userInfo.setValue("-");
+            }
+
+            // Create Edit/Done link (actionUrl)
             PortletURL url = response.createActionURL();
             try {
                 url
@@ -85,7 +119,7 @@ public class PortletDemo extends Application {
             } catch (Exception e) {
                 portletEdit.setEnabled(false);
             }
-
+            // Create Maximize/Normal link (actionUrl)
             url = response.createActionURL();
             try {
                 url
