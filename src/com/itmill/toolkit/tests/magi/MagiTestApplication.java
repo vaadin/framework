@@ -21,6 +21,8 @@ import com.itmill.toolkit.terminal.UserError;
 import com.itmill.toolkit.ui.AbstractSelect;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.CheckBox;
+import com.itmill.toolkit.ui.Component;
+import com.itmill.toolkit.ui.CustomLayout;
 import com.itmill.toolkit.ui.DateField;
 import com.itmill.toolkit.ui.Embedded;
 import com.itmill.toolkit.ui.ExpandLayout;
@@ -29,8 +31,10 @@ import com.itmill.toolkit.ui.GridLayout;
 import com.itmill.toolkit.ui.InlineDateField;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.Link;
+import com.itmill.toolkit.ui.NativeSelect;
 import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Panel;
+import com.itmill.toolkit.ui.ProgressIndicator;
 import com.itmill.toolkit.ui.Select;
 import com.itmill.toolkit.ui.TabSheet;
 import com.itmill.toolkit.ui.Table;
@@ -56,17 +60,18 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
 
     public void init() {
         setTheme("tests-magi");
-
+        
         setMainWindow(main);
     }
 
     public DownloadStream handleURI(URL context, String relativeUri) {
         // Let default implementation handle requests for
         // application resources.
-        if (relativeUri.startsWith("APP")) {
+        if (relativeUri.startsWith("APP"))
             return super.handleURI(context, relativeUri);
-        }
-
+        if (relativeUri.startsWith("win-"))
+            return super.handleURI(context, relativeUri);
+        
         String example;
         String param = null;
 
@@ -96,7 +101,9 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
                     "upload", "link", "gridlayout", "orderedlayout",
                     "formlayout", "panel", "expandlayout", "tabsheet",
                     "alignment", "alignment/grid", "window", "window/opener",
-                    "window/multiple", "classresource", "usererror" };
+                    "window/multiple", "classresource", "usererror",
+                    "progress/window", "progress/thread", "progress",
+                    "customlayout", "spacing"};
             for (int i = 0; i < examples.length; i++) {
                 main.addComponent(new Label("<a href='/tk/testbench2/"
                         + examples[i] + "'>" + examples[i] + "</a>",
@@ -157,6 +164,12 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
             example_Window(main, param);
         } else if (example.equals("classresource")) {
             example_ClassResource(main, param);
+        } else if (example.equals("progress")) {
+            example_ProgressIndicator(main, param);
+        } else if (example.equals("customlayout")) {
+            example_CustomLayout(main, param);
+        } else if (example.equals("spacing")) {
+            example_Spacing(main, param);
         } else {
             ; // main.addComponent(new Label("Unknown test '"+example+"'."));
         }
@@ -178,7 +191,7 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
     }
 
     void example_defaultButton(Window main, String param) {
-        main.addComponent(new DefaultButtonExample());
+        main.addComponent(new DefaultButtonExample(main));
     }
 
     void example_Label(Window main, String param) {
@@ -570,30 +583,24 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
             layout.setHeight(400, Sizeable.UNITS_PIXELS);
 
             /* Define cells and their layouts to create. */
-            /*
-             * FIXME Java 5 -> 1.4 Object cells[][] = { {new Button("Top Left"),
-             * GridLayout.ALIGNMENT_LEFT, GridLayout.ALIGNMENT_TOP}, {new
-             * Button("Top Center"), GridLayout.HORIZONTAL_ALIGNMENT_CENTER,
-             * GridLayout.ALIGNMENT_TOP}, {new Button("Top Right"),
-             * GridLayout.ALIGNMENT_RIGHT, GridLayout.ALIGNMENT_TOP}, {new
-             * Button("Center Left"), GridLayout.ALIGNMENT_LEFT,
-             * GridLayout.VERTICAL_ALIGNMENT_CENTER}, {new Button("Center
-             * Center"), GridLayout.HORIZONTAL_ALIGNMENT_CENTER,
-             * GridLayout.VERTICAL_ALIGNMENT_CENTER}, {new Button("Center
-             * Right"), GridLayout.ALIGNMENT_RIGHT,
-             * GridLayout.VERTICAL_ALIGNMENT_CENTER}, {new Button("Bottom
-             * Left"), GridLayout.ALIGNMENT_LEFT, GridLayout.ALIGNMENT_BOTTOM},
-             * {new Button("Bottom Center"),
-             * GridLayout.HORIZONTAL_ALIGNMENT_CENTER,
-             * GridLayout.ALIGNMENT_BOTTOM}, {new Button("Bottom Right"),
-             * GridLayout.ALIGNMENT_RIGHT, GridLayout.ALIGNMENT_BOTTOM} };
-             * 
-             * for (int i=0; i<9; i++) { OrderedLayout celllayout = new
-             * OrderedLayout(); celllayout.addComponent((Component)
-             * cells[i][0]); celllayout.setComponentAlignment((Component)
-             * cells[i][0], (Integer)cells[i][1], (Integer)cells[i][2]);
-             * layout.addComponent(celllayout); }
-             */
+            
+             Object cells[][] = {
+                     {new Button("Top Left"),      new Integer(GridLayout.ALIGNMENT_LEFT),              new Integer(GridLayout.ALIGNMENT_TOP)},
+                     {new Button("Top Center"),    new Integer(GridLayout.ALIGNMENT_HORIZONTAL_CENTER), new Integer(GridLayout.ALIGNMENT_TOP)},
+                     {new Button("Top Right"),     new Integer(GridLayout.ALIGNMENT_RIGHT),             new Integer(GridLayout.ALIGNMENT_TOP)},
+                     {new Button("Center Left"),   new Integer(GridLayout.ALIGNMENT_LEFT),              new Integer(GridLayout.ALIGNMENT_VERTICAL_CENTER)},
+                     {new Button("Center Center"), new Integer(GridLayout.ALIGNMENT_HORIZONTAL_CENTER), new Integer(GridLayout.ALIGNMENT_VERTICAL_CENTER)},
+                     {new Button("Center Right"),  new Integer(GridLayout.ALIGNMENT_RIGHT),             new Integer(GridLayout.ALIGNMENT_VERTICAL_CENTER)},
+                     {new Button("Bottom Left"),   new Integer(GridLayout.ALIGNMENT_LEFT),              new Integer(GridLayout.ALIGNMENT_BOTTOM)},
+                     {new Button("Bottom Center"), new Integer(GridLayout.ALIGNMENT_HORIZONTAL_CENTER), new Integer(GridLayout.ALIGNMENT_BOTTOM)},
+                     {new Button("Bottom Right"),  new Integer(GridLayout.ALIGNMENT_RIGHT),             new Integer(GridLayout.ALIGNMENT_BOTTOM)}};
+             
+             for (int i=0; i<9; i++) {
+                 OrderedLayout celllayout = new OrderedLayout();
+                 celllayout.addComponent((Component) cells[i][0]);
+                 celllayout.setComponentAlignment((Component)cells[i][0], ((Integer)cells[i][1]).intValue(), ((Integer)cells[i][2]).intValue());
+                 layout.addComponent(celllayout);
+             }
         } else {
             final Panel panel = new Panel("A Panel with a Layout");
             main.addComponent(panel);
@@ -620,6 +627,49 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
     }
 
     void example_ExpandLayout(Window main, String param) {
+        if (param != null && param.equals("centered")) {
+            Label widget = new Label("Here is text");
+    
+            ExpandLayout layout = new ExpandLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
+            layout.addComponent(widget);
+            layout.expand(widget);
+            layout.setComponentAlignment(widget, OrderedLayout.ALIGNMENT_HORIZONTAL_CENTER, OrderedLayout.ALIGNMENT_VERTICAL_CENTER);
+            layout.setWidth(100, Sizeable.UNITS_PERCENTAGE);
+            layout.setHeight(100, Sizeable.UNITS_PERCENTAGE);
+    
+            main.setLayout(layout);
+            
+            return;
+        } else if (param != null && param.equals("window")) {
+            Window window = new Window("Progress");
+            window.setHeight(100, Sizeable.UNITS_PIXELS);
+            window.setWidth(200, Sizeable.UNITS_PIXELS);
+            main.addWindow(window);
+            
+            ProgressIndicator progress = new ProgressIndicator(new Float(0.4));
+            progress.addStyleName("fullwidth");
+            progress.setPollingInterval(1000000);
+            progress.setIndeterminate(false);
+    
+            ExpandLayout layout = new ExpandLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
+            layout.setHeight(100, Sizeable.UNITS_PERCENTAGE);
+            layout.setComponentAlignment(progress, OrderedLayout.ALIGNMENT_HORIZONTAL_CENTER, OrderedLayout.ALIGNMENT_VERTICAL_CENTER);
+            window.setLayout(layout);
+            window.addComponent(progress);
+            
+            return;
+        } else if (param != null && param.equals("size")) {
+            ExpandLayout layout = new ExpandLayout();
+            layout.setSizeFull();
+            main.setLayout(layout);
+
+            Button button = new Button("This is a button in middle of nowhere");
+            layout.addComponent(button);
+            layout.setComponentAlignment(button, OrderedLayout.ALIGNMENT_HORIZONTAL_CENTER, OrderedLayout.ALIGNMENT_VERTICAL_CENTER);
+            
+            return;
+        }
+
         for (int w = 0; w < 2; w++) {
             final ExpandLayout layout = new ExpandLayout(
                     OrderedLayout.ORIENTATION_VERTICAL);
@@ -672,7 +722,53 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
             main.addComponent(tabsheet);
             // main.addComponent(new Embedded("Emb", new ClassResource
             // ("images/Mercury_small.png", this)));
+        } else if (param.equals("expanding")) {
+            // Create the layout
+            ExpandLayout expanding = new ExpandLayout(OrderedLayout.ORIENTATION_VERTICAL);
+            
+            // It is important to set the expanding layout as the root layout
+            // of the containing window, in this case the main window, and not
+            // use addComponent(), which would place the layout inside the
+            // default root layout.
+            main.setLayout(expanding);
+            
+            // Create a tab sheet that fills the expanding layout
+            final TabSheet tabsheet = new TabSheet();
+            tabsheet.addTab(new Label("Contents of the first tab"), "First Tab", null);
+            tabsheet.addTab(new Label("Contents of the second tab"), "Second Tab", null);
+            tabsheet.addTab(new Label("Contents of the third tab"), "Third tab", null);
+            
+            // Set the tabsheet to scale to full size inside its container
+            tabsheet.setWidth(100, Sizeable.UNITS_PERCENTAGE);
+            tabsheet.setHeight(100, Sizeable.UNITS_PERCENTAGE);
 
+            // Add the tab sheet to the layout as usual
+            expanding.addComponent(tabsheet);
+
+            // Set the tab sheet to be the expanding component
+            expanding.expand(tabsheet);
+        } else if (param.equals("ordered")) {
+            // Create the layout
+            OrderedLayout layout = new OrderedLayout(OrderedLayout.ORIENTATION_VERTICAL);
+            
+            // It is important to set the expanding layout as the root layout
+            // of the containing window, in this case the main window, and not
+            // use addComponent(), which would place the layout inside the
+            // default root layout.
+            main.setLayout(layout);
+            
+            // Create a tab sheet that fills the expanding layout
+            final TabSheet tabsheet = new TabSheet();
+            tabsheet.addTab(new Label("Contents of the first tab"), "First Tab", null);
+            tabsheet.addTab(new Label("Contents of the second tab"), "Second Tab", null);
+            tabsheet.addTab(new Label("Contents of the third tab"), "Third tab", null);
+            
+            // Set the tabsheet to scale to full size inside its container
+            tabsheet.setWidth(100, Sizeable.UNITS_PERCENTAGE);
+            //tabsheet().setHeight(100, Sizeable.UNITS_PERCENTAGE);
+
+            // Add the tab sheet to the layout as usual
+            layout.addComponent(tabsheet);
         } else {
             main.addComponent(new TabSheetExample());
         }
@@ -741,5 +837,196 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
         df.setIcon(new ClassResource("smiley.jpg", main.getApplication()));
         main.addComponent(new Embedded("This is Embedded", new ClassResource(
                 "smiley.jpg", main.getApplication())));
+    }
+    
+    void example_ProgressIndicator(final Window main, String param) {
+        if (param != null) {
+            if (param.equals("thread")) {
+
+                // Create the indicator
+                final ProgressIndicator indicator = new ProgressIndicator(new Float(0.0));
+                main.addComponent(indicator);
+                
+                // Set polling frequency to 0.5 seconds.
+                indicator.setPollingInterval(1000);
+                
+                //indicator.addStyleName("invisible");
+                final Label text = new Label("-- Not running --");
+                main.addComponent(text);
+                
+                // Add a button to start the progress
+                final Button button = new Button("Click to start");
+                main.addComponent(button);
+        
+                // Another thread to do some work
+                class WorkThread extends Thread {
+                    public void run () {
+                        double current = 0.0;
+                        while (true) {
+                            // Do some "heavy work"
+                            try {
+                                sleep(50); // Sleep for 50 milliseconds
+                            } catch (InterruptedException e) {}
+                            
+                            // Grow the progress value until it reaches 1.0.
+                            current += 0.01;
+                            if (current>1.0)
+                                indicator.setValue(new Float(1.0));
+                            else 
+                                indicator.setValue(new Float(current));
+                            
+                            // After the progress is full for a while, stop.
+                            if (current > 1.2) {
+                                // Restore the state to initial.
+                                indicator.setValue(new Float(0.0));
+                                button.setVisible(true);
+                                break;
+                            }
+                        }
+                    }
+                }
+                
+                // Clicking the button creates and runs a work thread
+                button.addListener(new Button.ClickListener() {
+                    public void buttonClick(ClickEvent event) {
+                        final WorkThread thread = new WorkThread();
+                        thread.start();
+                        
+                        // The button hides until the work is done.
+                        button.setVisible(false);
+                    }
+                });
+            } else if (param.equals("window")) {
+                // Create a table in the main window to hold items added in the second window
+                final Table table = new Table();
+                table.setPageLength(5);
+                table.setWidth(100, Sizeable.UNITS_PERCENTAGE);
+                table.addContainerProperty("Name", String.class, "");
+                main.addComponent(table);
+
+                // Create the second window
+                final Window adderWindow = new Window("Add Items");
+                adderWindow.setName("win-adder");
+                main.getApplication().addWindow(adderWindow);
+
+                // Create selection component to add items to the table
+                final NativeSelect select = new NativeSelect("Select item to add");
+                select.setImmediate(true);
+                adderWindow.addComponent(select);
+                
+                // Add some items to the selection
+                String items[] = new String[]{"-- Select --", "Mercury", "Venus", 
+                        "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune"};
+                for (int i=0; i<items.length; i++)
+                    select.addItem(items[i]);
+                select.setNullSelectionItemId(items[0]);
+                
+                // When an item is selected in the second window, add
+                // table in the main window
+                select.addListener(new ValueChangeListener() {
+                    public void valueChange(ValueChangeEvent event) {
+                        // If the selected value is something else but null selection item.
+                        if (select.getValue() != null) {
+                            // Add the selected item to the table in the main window
+                            table.addItem(new Object[]{select.getValue()}, new Integer(table.size()));
+                        }
+                    }
+                });
+
+                // Link to open the selection window
+                Link link = new Link("Click to open second window",
+                                     new ExternalResource(adderWindow.getURL()),
+                                     "_new", 50, 200, Link.TARGET_BORDER_DEFAULT);
+                main.addComponent(link);
+
+                // Enable polling to update the main window
+                ProgressIndicator poller = new ProgressIndicator();
+                poller.addStyleName("invisible");
+                main.addComponent(poller);
+            } else if (param.equals("centered")) {
+/*                GridLayout grid = new GridLayout(3,3);
+                main.setLayout(grid);
+                grid().setWidth(100, Sizeable.UNITS_PERCENTAGE);
+                
+                ExpandLayout layout2 = new ExpandLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
+                layout2().setWidth(50, Sizeable.UNITS_PERCENTAGE);
+
+                ProgressIndicator poller = new ProgressIndicator(new Float(0.4));
+                poller.setPollingInterval(1000000);
+                poller.setIndeterminate(false);
+                layout2.addComponent(poller);
+
+                grid.addComponent(layout2, 1, 1);
+                */
+
+                //ExpandLayout layout2 = new ExpandLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
+                
+                /*ProgressIndicator poller = new ProgressIndicator(new Float(0.4));
+                poller.setPollingInterval(1000000);
+                poller.setIndeterminate(false);*/
+                /*layout2.addComponent(poller);
+                layout2().setWidth(50, Sizeable.UNITS_PERCENTAGE);*/
+                
+                //layout.setComponentAlignment(poller, OrderedLayout.ALIGNMENT_HORIZONTAL_CENTER, OrderedLayout.ALIGNMENT_VERTICAL_CENTER);
+                /*GridLayout grid = new GridLayout(1,1);
+                grid.addComponent(layout2, 0, 0);
+                grid().setWidth(100, Sizeable.UNITS_PERCENTAGE);*/
+                
+                /*GridLayout layout = new GridLayout(1,1); //OrderedLayout.ORIENTATION_HORIZONTAL);
+                layout.addComponent(poller);
+                //layout.expand(poller);
+                layout.setComponentAlignment(poller, OrderedLayout.ALIGNMENT_HORIZONTAL_CENTER, OrderedLayout.ALIGNMENT_VERTICAL_CENTER);
+                layout().setWidth(100, Sizeable.UNITS_PERCENTAGE);
+                layout().setHeight(100, Sizeable.UNITS_PERCENTAGE);*/
+                
+            }
+        } else {
+            ProgressIndicator poller = new ProgressIndicator(new Float(0.0));
+            poller.setPollingInterval(1000000);
+            poller.setIndeterminate(true);
+            main.addComponent(poller);
+        }
+    }
+    
+    void example_CustomLayout(final Window main, String param) {
+        Window sub = new Window("Login");
+        sub.setModal(true);
+        main.addWindow(sub);
+        
+        // Create the custom layout and set it as the root layout of
+        // the containing window.
+        CustomLayout custom = new CustomLayout("layoutname");
+        sub.setLayout(custom);
+        
+        // Create components and bind them to the location tags
+        // in the custom layout.
+        TextField username = new TextField();
+        custom.addComponent(username, "username");
+        
+        TextField password = new TextField();
+        custom.addComponent(password, "password");
+        
+        Button ok = new Button("Login");
+        custom.addComponent(ok, "okbutton");
+    }
+
+    void example_Spacing(final Window main, String param) {
+        OrderedLayout vert = new OrderedLayout();
+        main.setLayout(vert);
+
+        OrderedLayout layout1 = new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
+        vert.addComponent(layout1);
+        layout1.addStyleName("spacingexample");
+        layout1.addComponent(new Label("Cell 1"));
+        layout1.addComponent(new Label("Cell 2"));
+        layout1.addComponent(new Label("Cell 3"));
+        
+        OrderedLayout layout2 = new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
+        vert.addComponent(layout2);
+        layout2.addStyleName("spacingexample");
+        layout2.setSpacing(true);
+        layout2.addComponent(new Label("Cell 1"));
+        layout2.addComponent(new Label("Cell 2"));
+        layout2.addComponent(new Label("Cell 3"));
     }
 }

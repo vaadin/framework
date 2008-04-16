@@ -7,50 +7,63 @@ package com.itmill.toolkit.tests.magi;
 import com.itmill.toolkit.event.Action;
 import com.itmill.toolkit.event.ShortcutAction;
 import com.itmill.toolkit.event.Action.Handler;
+import com.itmill.toolkit.ui.AbstractField;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.CustomComponent;
+import com.itmill.toolkit.ui.FormLayout;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Panel;
 import com.itmill.toolkit.ui.TextField;
+import com.itmill.toolkit.ui.Window;
 
 public class DefaultButtonExample extends CustomComponent implements Handler {
     // Define and create user interface components
     Panel panel = new Panel("Login");
-    OrderedLayout formlayout = new OrderedLayout(
-            OrderedLayout.ORIENTATION_VERTICAL);
+    OrderedLayout formlayout = new FormLayout();
     TextField username = new TextField("Username");
     TextField password = new TextField("Password");
-    OrderedLayout buttons = new OrderedLayout(
-            OrderedLayout.ORIENTATION_HORIZONTAL);
+    OrderedLayout buttons = new FormLayout();
 
-    // Create buttons and define their listener methods. Here we use
-    // parameterless
+    // Create buttons and define their listener methods. Here we use parameterless
     // methods so that we can use same methods for both click events and
-    // keyboard
-    // actions.
+    // keyboard actions.
     Button ok = new Button("OK", this, "okHandler");
     Button cancel = new Button("Cancel", this, "cancelHandler");
 
-    public DefaultButtonExample() {
+    // Have the unmodified Enter key cause an event
+    Action action_ok = new ShortcutAction("Default key",
+                                          ShortcutAction.KeyCode.ENTER,
+                                          null);
+
+    // Have the C key modified with Alt cause an event
+    Action action_cancel = new ShortcutAction("Alt+C",
+                                              ShortcutAction.KeyCode.C,
+                                              new int[] { ShortcutAction.ModifierKey.ALT });
+
+    Window window = null;
+
+    public DefaultButtonExample(Window win) {
         // Set up the user interface
         setCompositionRoot(panel);
         panel.addComponent(formlayout);
+        formlayout.setOrientation(OrderedLayout.ORIENTATION_VERTICAL);
         formlayout.addComponent(username);
         formlayout.addComponent(password);
-        formlayout.setStyle("form");
         formlayout.addComponent(buttons);
+        buttons.setOrientation(OrderedLayout.ORIENTATION_HORIZONTAL);
         buttons.addComponent(ok);
         buttons.addComponent(cancel);
 
         // Set focus to username
         username.focus();
 
-        // Set this object as the action handler for actions related to the Ok
-        // and Cancel buttons.
-        // @TODO
-        // ok.addActionHandler(this);
-        // cancel.addActionHandler(this);
+        // Set this object as the action handler
+        System.out.println("adding ah");
+        win.addActionHandler(this);
+        window = win;
+
+        System.out.println("start done.");
     }
 
     /**
@@ -59,21 +72,8 @@ public class DefaultButtonExample extends CustomComponent implements Handler {
      * buttons.
      */
     public Action[] getActions(Object target, Object sender) {
-        final Action[] actions = new Action[1];
-
-        // Set the action for the requested component
-        if (sender == ok) {
-            // Bind the unmodified Enter key to the Ok button.
-            actions[0] = new ShortcutAction("Default key",
-                    ShortcutAction.KeyCode.ENTER, null);
-        } else if (sender == cancel) {
-            // Bind "C" key modified with Alt to the Cancel button.
-            actions[0] = new ShortcutAction("Alt+C", ShortcutAction.KeyCode.C,
-                    new int[] { ShortcutAction.ModifierKey.ALT });
-        } else {
-            return null;
-        }
-        return actions;
+        System.out.println("getActions()");
+        return new Action[] {action_ok, action_cancel};
     }
 
     /**
@@ -81,21 +81,22 @@ public class DefaultButtonExample extends CustomComponent implements Handler {
      * the same listener methods that are called with ButtonClick events.
      */
     public void handleAction(Action action, Object sender, Object target) {
-        if (target == ok) {
+        if (action == action_ok)
             okHandler();
-        }
-        if (target == cancel) {
+        if (action == action_cancel)
             cancelHandler();
-        }
     }
 
     public void okHandler() {
         // Do something: report the click
-        formlayout.addComponent(new Label("OK clicked"));
+        formlayout.addComponent(new Label("OK clicked. "+
+                                          "User="+username.getValue()+
+                                          ", password="+password.getValue()));
+        //  
     }
 
     public void cancelHandler() {
         // Do something: report the click
-        formlayout.addComponent(new Label("Cancel clicked"));
+        formlayout.addComponent(new Label("Cancel clicked. User="+username.getValue()+", password="+password.getValue()));
     }
 }

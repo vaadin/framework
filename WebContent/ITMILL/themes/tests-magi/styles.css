@@ -20,10 +20,10 @@ table.i-gridlayout-example-gridlayout {
 /*****************************************************************************/
 /* For example_Alignment()                                                   */
 /*****************************************************************************/
-table.-example-alignment {
+table.i-gridlayout-example-alignment {
 	background: blue;
 }
-.-example-alignment td {
+.i-gridlayout-example-alignment td {
 	background: white;
 	width: 150px;
 	height: 75px;
@@ -38,3 +38,34 @@ table.-example-alignment {
 	vertical-align: top;
 }
 
+/*****************************************************************************/
+/* For example_ProgressIndicator()                                           */
+/*****************************************************************************/
+.i-progressindicator-invisible {
+	display: none;
+}
+
+.i-progressindicator-fullwidth {
+    width: 100px;
+}
+
+/*****************************************************************************/
+/* For example_Spacing()                                                     */
+/*****************************************************************************/
+.i-orderedlayout-spacingexample table {
+    background: blue;
+}
+
+.i-orderedlayout-spacingexample td {
+    background: white;
+}
+
+/* Set horizontal cell spacing for all OrderedLayouts. */
+.i-orderedlayout-hspacing {
+    padding-left: 10px;
+}
+
+/* Set horizontal cell spacing in specific layout with "spacingexample" style. */
+.i-orderedlayout-spacingexample .i-orderedlayout-hspacing {
+    padding-left: 50px;
+}
