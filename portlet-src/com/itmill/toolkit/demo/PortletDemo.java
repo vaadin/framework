@@ -36,6 +36,7 @@ public class PortletDemo extends Application {
     Label userInfo = new Label();
     Link portletEdit = new Link();
     Link portletMax = new Link();
+    Link someAction = null;
 
     public void init() {
         main = new Window();
@@ -69,7 +70,7 @@ public class PortletDemo extends Application {
         public void handleActionRequest(ActionRequest request,
                 ActionResponse response) {
 
-            getMainWindow().showNotification("Action received");
+            main.addComponent(new Label("Action received"));
 
         }
 
@@ -131,6 +132,19 @@ public class PortletDemo extends Application {
                                 : "Back to normal"));
             } catch (Exception e) {
                 portletMax.setEnabled(false);
+            }
+
+            if (someAction == null) {
+                url = response.createActionURL();
+                try {
+                    someAction = new Link("An action", new ExternalResource(url
+                            .toString()));
+                    main.addComponent(someAction);
+                } catch (Exception e) {
+                    // Oops
+                    System.err.println("Could not create someAction: " + e);
+                }
+
             }
 
         }
