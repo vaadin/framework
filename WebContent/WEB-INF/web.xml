@@ -367,6 +367,24 @@
   </servlet>
 
   <servlet>
+    <servlet-name>WindowTestServlet</servlet-name>
+    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+    <init-param>
+      <param-name>application</param-name>
+      <param-value>com.itmill.toolkit.tests.magi.WindowTestApplication</param-value>
+    </init-param>
+  </servlet>
+
+  <servlet>
+    <servlet-name>ChatServlet</servlet-name>
+    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+    <init-param>
+      <param-name>application</param-name>
+      <param-value>com.itmill.toolkit.tests.magi.ChatApplication</param-value>
+    </init-param>
+  </servlet>
+
+  <servlet>
     <servlet-name>BrowserDemo</servlet-name>
     <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
     <init-param>
@@ -561,6 +579,16 @@
   <servlet-mapping>
     <servlet-name>MagiTestServlet</servlet-name>
     <url-pattern>/testbench2/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>WindowTestServlet</servlet-name>
+    <url-pattern>/windowtest/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>ChatServlet</servlet-name>
+    <url-pattern>/chat/*</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
