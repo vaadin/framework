@@ -178,8 +178,6 @@ public class StdView extends OrderedLayout {
             cal.set(Calendar.MINUTE, 0);
             cal.set(Calendar.MILLISECOND, 0);
             cal.set(Calendar.SECOND, 0);
-            cal.add(Calendar.HOUR_OF_DAY, 1);
-
             start.setValue(cal.getTime());
             cal.add(Calendar.HOUR_OF_DAY, 1);
             end.setValue(cal.getTime());
