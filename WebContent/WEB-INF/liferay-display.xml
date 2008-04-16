@@ -2,9 +2,43 @@
 <!DOCTYPE display PUBLIC "-//Liferay//DTD Display 4.0.0//EN" "http://www.liferay.com/dtd/liferay-display_4_0_0.dtd">
 
 <display>
-	<category name="IT Mill Toolkit">
-		<portlet id="PortletDemoPortlet" />
-		<portlet id="CalcPortlet" />
-		<portlet id="FeatureBrowserPortlet" />
-	</category>
+        <category name="IT Mill Toolkit">
+                <portlet id="PortletDemoPortlet" />
+                <portlet id="ITMillToolkitApplicationRunnerPortlet" />
+                <portlet id="DemoTestBenchPortlet" />
+                <portlet id="TestForNativeWindowingPortlet" />
+                <portlet id="iWorkPortlet" />
+                <portlet id="RobustnessSimplePortlet" />
+                <portlet id="RobustnessComplexPortlet" />
+                <portlet id="TestSplitPanelPortlet" />
+                <portlet id="RandomLayoutStressPortlet" />
+                <portlet id="TestBenchPortlet" />
+                <portlet id="ReservrPortlet" />
+                <portlet id="CalendarDemoPortlet" />
+                <portlet id="SelectDemoPortlet" />
+                <portlet id="BufferedComponentsPortlet" />
+                <portlet id="TableDemoPortlet" />
+                <portlet id="CustomLayoutDemoPortlet" />
+                <portlet id="LayoutDemoPortlet" />
+                <portlet id="FilterSelectPortlet" />
+                <portlet id="FeatureBrowserPortlet" />
+                <portlet id="FeaturesApplicationPortlet" />
+                <portlet id="ParametersPortlet" />
+                <portlet id="UpgradingSamplePortlet" />
+                <portlet id="QueryContainerDemoPortlet" />
+                <portlet id="TreeFilesystemContainerPortlet" />
+                <portlet id="TreeFilesystemPortlet" />
+                <portlet id="ModalWindowPortlet" />
+                <portlet id="HelloWorldPortlet" />
+                <portlet id="CalcPortlet" />
+                <portlet id="KeyboardShortcutPortlet" />
+                <portlet id="CustomGwtComponentDemoPortlet" />
+                <portlet id="ColorPickerApplicationPortlet" />
+                <portlet id="CachingDemoPortlet" />
+                <portlet id="NotificationDemoPortlet" />
+                <portlet id="MagiTestServletPortlet" />
+                <portlet id="BrowserDemoPortlet" />
+                <portlet id="WindowedDemosPortlet" />
+
+        </category>
 </display>

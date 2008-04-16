@@ -1,104 +1,1158 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <portlet-app
-	xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd"
-	version="1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd">
-
-	<portlet>
-		<portlet-name>PortletDemoPortlet</portlet-name>
-		<display-name>IT Mill Toolkit PortletDemo</display-name>
-		<portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>
-		<init-param>
-			<name>application</name>
-			<value>PortletDemo</value>
-		</init-param>
-		<supports>
-			<mime-type>text/html</mime-type>
-			<portlet-mode>view</portlet-mode>
-            <portlet-mode>edit</portlet-mode>
-            <portlet-mode>help</portlet-mode>
-		</supports>
-		<portlet-info>
-			<title>IT Mill Toolkit PortletDemo</title>
-			<short-title>PortletDemo</short-title>
-		</portlet-info>
-		
-		<security-role-ref>
-			<role-name>administrator</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>guest</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>power-user</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>user</role-name>
-		</security-role-ref>
-	</portlet>
-	<portlet>
-		<portlet-name>FeatureBrowserPortlet</portlet-name>
-		<display-name>IT Mill Toolkit FeatureBrowser</display-name>
-		<portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>
-		<init-param>
-			<name>application</name>
-			<value>FeatureBrowser</value>
-		</init-param>
-		<supports>
-			<mime-type>text/html</mime-type>
-			<portlet-mode>view</portlet-mode>
-            <portlet-mode>edit</portlet-mode>
-            <portlet-mode>help</portlet-mode>
-		</supports>
-		<portlet-info>
-			<title>IT Mill Toolkit FeatureBrowser</title>
-			<short-title>FeatureBrowser</short-title>
-		</portlet-info>
-		
-		<security-role-ref>
-			<role-name>administrator</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>guest</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>power-user</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>user</role-name>
-		</security-role-ref>
-	</portlet>
-	<portlet>
-		<portlet-name>CalcPortlet</portlet-name>
-		<display-name>IT Mill Toolkit Calc</display-name>
-		<portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>
-		<init-param>
-			<name>application</name>
-			<value>Calc</value>
-		</init-param>
-		<supports>
-			<mime-type>text/html</mime-type>
-			<portlet-mode>view</portlet-mode>
-            <portlet-mode>edit</portlet-mode>
-            <portlet-mode>help</portlet-mode>
-		</supports>
-		<portlet-info>
-			<title>IT Mill Toolkit Calc</title>
-			<short-title>Calc</short-title>
-		</portlet-info>
-		
-		<security-role-ref>
-			<role-name>administrator</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>guest</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>power-user</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>user</role-name>
-		</security-role-ref>
-	</portlet>
-
+        xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd"
+        version="1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd">
+        <portlet>
+                <portlet-name>PortletDemoPortlet</portlet-name>
+                <display-name>IT Mill Toolkit PortletDemo</display-name>
+                <portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>
+                <init-param>
+                        <name>application</name>
+                        <value>PortletDemo</value>
+                </init-param>
+                <supports>
+                        <mime-type>text/html</mime-type>
+                        <portlet-mode>view</portlet-mode>
+                        <portlet-mode>edit</portlet-mode>
+                        <portlet-mode>help</portlet-mode>
+                </supports>
+                <portlet-info>
+                        <title>IT Mill Toolkit PortletDemo</title>
+                        <short-title>PortletDemo</short-title>
+                </portlet-info>
+                
+                <security-role-ref>
+                        <role-name>administrator</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>guest</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>power-user</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>user</role-name>
+                </security-role-ref>
+        </portlet>
+        <portlet>
+                <portlet-name>ITMillToolkitApplicationRunnerPortlet</portlet-name>
+                <display-name>IT Mill Toolkit ITMillToolkitApplicationRunner</display-name>
+                <portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>
+                <init-param>
+                        <name>application</name>
+                        <value>run</value>
+                </init-param>
+                <supports>
+                        <mime-type>text/html</mime-type>
+                        <portlet-mode>view</portlet-mode>
+                        <portlet-mode>edit</portlet-mode>
+                        <portlet-mode>help</portlet-mode>
+                </supports>
+                <portlet-info>
+                        <title>IT Mill Toolkit ITMillToolkitApplicationRunner</title>
+                        <short-title>ITMillToolkitApplicationRunner</short-title>
+                </portlet-info>
+                
+                <security-role-ref>
+                        <role-name>administrator</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>guest</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>power-user</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>user</role-name>
+                </security-role-ref>
+        </portlet>
+        <portlet>
+                <portlet-name>DemoTestBenchPortlet</portlet-name>
+                <display-name>IT Mill Toolkit DemoTestBench</display-name>
+                <portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>
+                <init-param>
+                        <name>application</name>
+                        <value>DemoTestBench</value>
+                </init-param>
+                <supports>
+                        <mime-type>text/html</mime-type>
+                        <portlet-mode>view</portlet-mode>
+                        <portlet-mode>edit</portlet-mode>
+                        <portlet-mode>help</portlet-mode>
+                </supports>
+                <portlet-info>
+                        <title>IT Mill Toolkit DemoTestBench</title>
+                        <short-title>DemoTestBench</short-title>
+                </portlet-info>
+                
+                <security-role-ref>
+                        <role-name>administrator</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>guest</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>power-user</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>user</role-name>
+                </security-role-ref>
+        </portlet>
+        <portlet>
+                <portlet-name>TestForNativeWindowingPortlet</portlet-name>
+                <display-name>IT Mill Toolkit TestForNativeWindowing</display-name>
+                <portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>
+                <init-param>
+                        <name>application</name>
+                        <value>TestForNativeWindowing</value>
+                </init-param>
+                <supports>
+                        <mime-type>text/html</mime-type>
+                        <portlet-mode>view</portlet-mode>
+                        <portlet-mode>edit</portlet-mode>
+                        <portlet-mode>help</portlet-mode>
+                </supports>
+                <portlet-info>
+                        <title>IT Mill Toolkit TestForNativeWindowing</title>
+                        <short-title>TestForNativeWindowing</short-title>
+                </portlet-info>
+                
+                <security-role-ref>
+                        <role-name>administrator</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>guest</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>power-user</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>user</role-name>
+                </security-role-ref>
+        </portlet>
+        <portlet>
+                <portlet-name>iWorkPortlet</portlet-name>
+                <display-name>IT Mill Toolkit iWork</display-name>
+                <portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>
+                <init-param>
+                        <name>application</name>
+                        <value>iWork</value>
+                </init-param>
+                <supports>
+                        <mime-type>text/html</mime-type>
+                        <portlet-mode>view</portlet-mode>
+                        <portlet-mode>edit</portlet-mode>
+                        <portlet-mode>help</portlet-mode>
+                </supports>
+                <portlet-info>
+                        <title>IT Mill Toolkit iWork</title>
+                        <short-title>iWork</short-title>
+                </portlet-info>
+                
+                <security-role-ref>
+                        <role-name>administrator</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>guest</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>power-user</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>user</role-name>
+                </security-role-ref>
+        </portlet>
+        <portlet>
+                <portlet-name>RobustnessSimplePortlet</portlet-name>
+                <display-name>IT Mill Toolkit RobustnessSimple</display-name>
+                <portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>
+                <init-param>
+                        <name>application</name>
+                        <value>RobustnessSimple</value>
+                </init-param>
+                <supports>
+                        <mime-type>text/html</mime-type>
+                        <portlet-mode>view</portlet-mode>
+                        <portlet-mode>edit</portlet-mode>
+                        <portlet-mode>help</portlet-mode>
+                </supports>
+                <portlet-info>
+                        <title>IT Mill Toolkit RobustnessSimple</title>
+                        <short-title>RobustnessSimple</short-title>
+                </portlet-info>
+                
+                <security-role-ref>
+                        <role-name>administrator</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>guest</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>power-user</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>user</role-name>
+                </security-role-ref>
+        </portlet>
+        <portlet>
+                <portlet-name>RobustnessComplexPortlet</portlet-name>
+                <display-name>IT Mill Toolkit RobustnessComplex</display-name>
+                <portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>
+                <init-param>
+                        <name>application</name>
+                        <value>RobustnessComplex</value>
+                </init-param>
+                <supports>
+                        <mime-type>text/html</mime-type>
+                        <portlet-mode>view</portlet-mode>
+                        <portlet-mode>edit</portlet-mode>
+                        <portlet-mode>help</portlet-mode>
+                </supports>
+                <portlet-info>
+                        <title>IT Mill Toolkit RobustnessComplex</title>
+                        <short-title>RobustnessComplex</short-title>
+                </portlet-info>
+                
+                <security-role-ref>
+                        <role-name>administrator</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>guest</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>power-user</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>user</role-name>
+                </security-role-ref>
+        </portlet>
+        <portlet>
+                <portlet-name>TestSplitPanelPortlet</portlet-name>
+                <display-name>IT Mill Toolkit TestSplitPanel</display-name>
+                <portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>
+                <init-param>
+                        <name>application</name>
+                        <value>TestSplitPanel</value>
+                </init-param>
+                <supports>
+                        <mime-type>text/html</mime-type>
+                        <portlet-mode>view</portlet-mode>
+                        <portlet-mode>edit</portlet-mode>
+                        <portlet-mode>help</portlet-mode>
+                </supports>
+                <portlet-info>
+                        <title>IT Mill Toolkit TestSplitPanel</title>
+                        <short-title>TestSplitPanel</short-title>
+                </portlet-info>
+                
+                <security-role-ref>
+                        <role-name>administrator</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>guest</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>power-user</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>user</role-name>
+                </security-role-ref>
+        </portlet>
+        <portlet>
+                <portlet-name>RandomLayoutStressPortlet</portlet-name>
+                <display-name>IT Mill Toolkit RandomLayoutStress</display-name>
+                <portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>
+                <init-param>
+                        <name>application</name>
+                        <value>RandomLayoutStress</value>
+                </init-param>
+                <supports>
+                        <mime-type>text/html</mime-type>
+                        <portlet-mode>view</portlet-mode>
+                        <portlet-mode>edit</portlet-mode>
+                        <portlet-mode>help</portlet-mode>
+                </supports>
+                <portlet-info>
+                        <title>IT Mill Toolkit RandomLayoutStress</title>
+                        <short-title>RandomLayoutStress</short-title>
+                </portlet-info>
+                
+                <security-role-ref>
+                        <role-name>administrator</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>guest</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>power-user</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>user</role-name>
+                </security-role-ref>
+        </portlet>
+        <portlet>
+                <portlet-name>TestBenchPortlet</portlet-name>
+                <display-name>IT Mill Toolkit TestBench</display-name>
+                <portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>
+                <init-param>
+                        <name>application</name>
+                        <value>TestBench</value>
+                </init-param>
+                <supports>
+                        <mime-type>text/html</mime-type>
+                        <portlet-mode>view</portlet-mode>
+                        <portlet-mode>edit</portlet-mode>
+                        <portlet-mode>help</portlet-mode>
+                </supports>
+                <portlet-info>
+                        <title>IT Mill Toolkit TestBench</title>
+                        <short-title>TestBench</short-title>
+                </portlet-info>
+                
+                <security-role-ref>
+                        <role-name>administrator</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>guest</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>power-user</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>user</role-name>
+                </security-role-ref>
+        </portlet>
+        <portlet>
+                <portlet-name>ReservrPortlet</portlet-name>
+                <display-name>IT Mill Toolkit Reservr</display-name>
+                <portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>
+                <init-param>
+                        <name>application</name>
+                        <value>Reservr</value>
+                </init-param>
+                <supports>
+                        <mime-type>text/html</mime-type>
+                        <portlet-mode>view</portlet-mode>
+                        <portlet-mode>edit</portlet-mode>
+                        <portlet-mode>help</portlet-mode>
+                </supports>
+                <portlet-info>
+                        <title>IT Mill Toolkit Reservr</title>
+                        <short-title>Reservr</short-title>
+                </portlet-info>
+                
+                <security-role-ref>
+                        <role-name>administrator</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>guest</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>power-user</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>user</role-name>
+                </security-role-ref>
+        </portlet>
+        <portlet>
+                <portlet-name>CalendarDemoPortlet</portlet-name>
+                <display-name>IT Mill Toolkit CalendarDemo</display-name>
+                <portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>
+                <init-param>
+                        <name>application</name>
+                        <value>CalendarDemo</value>
+                </init-param>
+                <supports>
+                        <mime-type>text/html</mime-type>
+                        <portlet-mode>view</portlet-mode>
+                        <portlet-mode>edit</portlet-mode>
+                        <portlet-mode>help</portlet-mode>
+                </supports>
+                <portlet-info>
+                        <title>IT Mill Toolkit CalendarDemo</title>
+                        <short-title>CalendarDemo</short-title>
+                </portlet-info>
+                
+                <security-role-ref>
+                        <role-name>administrator</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>guest</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>power-user</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>user</role-name>
+                </security-role-ref>
+        </portlet>
+        <portlet>
+                <portlet-name>SelectDemoPortlet</portlet-name>
+                <display-name>IT Mill Toolkit SelectDemo</display-name>
+                <portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>
+                <init-param>
+                        <name>application</name>
+                        <value>SelectDemo</value>
+                </init-param>
+                <supports>
+                        <mime-type>text/html</mime-type>
+                        <portlet-mode>view</portlet-mode>
+                        <portlet-mode>edit</portlet-mode>
+                        <portlet-mode>help</portlet-mode>
+                </supports>
+                <portlet-info>
+                        <title>IT Mill Toolkit SelectDemo</title>
+                        <short-title>SelectDemo</short-title>
+                </portlet-info>
+                
+                <security-role-ref>
+                        <role-name>administrator</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>guest</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>power-user</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>user</role-name>
+                </security-role-ref>
+        </portlet>
+        <portlet>
+                <portlet-name>BufferedComponentsPortlet</portlet-name>
+                <display-name>IT Mill Toolkit BufferedComponents</display-name>
+                <portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>
+                <init-param>
+                        <name>application</name>
+                        <value>BufferedComponents</value>
+                </init-param>
+                <supports>
+                        <mime-type>text/html</mime-type>
+                        <portlet-mode>view</portlet-mode>
+                        <portlet-mode>edit</portlet-mode>
+                        <portlet-mode>help</portlet-mode>
+                </supports>
+                <portlet-info>
+                        <title>IT Mill Toolkit BufferedComponents</title>
+                        <short-title>BufferedComponents</short-title>
+                </portlet-info>
+                
+                <security-role-ref>
+                        <role-name>administrator</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>guest</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>power-user</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>user</role-name>
+                </security-role-ref>
+        </portlet>
+        <portlet>
+                <portlet-name>TableDemoPortlet</portlet-name>
+                <display-name>IT Mill Toolkit TableDemo</display-name>
+                <portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>
+                <init-param>
+                        <name>application</name>
+                        <value>TableDemo</value>
+                </init-param>
+                <supports>
+                        <mime-type>text/html</mime-type>
+                        <portlet-mode>view</portlet-mode>
+                        <portlet-mode>edit</portlet-mode>
+                        <portlet-mode>help</portlet-mode>
+                </supports>
+                <portlet-info>
+                        <title>IT Mill Toolkit TableDemo</title>
+                        <short-title>TableDemo</short-title>
+                </portlet-info>
+                
+                <security-role-ref>
+                        <role-name>administrator</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>guest</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>power-user</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>user</role-name>
+                </security-role-ref>
+        </portlet>
+        <portlet>
+                <portlet-name>CustomLayoutDemoPortlet</portlet-name>
+                <display-name>IT Mill Toolkit CustomLayoutDemo</display-name>
+                <portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>
+                <init-param>
+                        <name>application</name>
+                        <value>CustomLayoutDemo</value>
+                </init-param>
+                <supports>
+                        <mime-type>text/html</mime-type>
+                        <portlet-mode>view</portlet-mode>
+                        <portlet-mode>edit</portlet-mode>
+                        <portlet-mode>help</portlet-mode>
+                </supports>
+                <portlet-info>
+                        <title>IT Mill Toolkit CustomLayoutDemo</title>
+                        <short-title>CustomLayoutDemo</short-title>
+                </portlet-info>
+                
+                <security-role-ref>
+                        <role-name>administrator</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>guest</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>power-user</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>user</role-name>
+                </security-role-ref>
+        </portlet>
+        <portlet>
+                <portlet-name>LayoutDemoPortlet</portlet-name>
+                <display-name>IT Mill Toolkit LayoutDemo</display-name>
+                <portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>
+                <init-param>
+                        <name>application</name>
+                        <value>LayoutDemo</value>
+                </init-param>
+                <supports>
+                        <mime-type>text/html</mime-type>
+                        <portlet-mode>view</portlet-mode>
+                        <portlet-mode>edit</portlet-mode>
+                        <portlet-mode>help</portlet-mode>
+                </supports>
+                <portlet-info>
+                        <title>IT Mill Toolkit LayoutDemo</title>
+                        <short-title>LayoutDemo</short-title>
+                </portlet-info>
+                
+                <security-role-ref>
+                        <role-name>administrator</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>guest</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>power-user</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>user</role-name>
+                </security-role-ref>
+        </portlet>
+        <portlet>
+                <portlet-name>FilterSelectPortlet</portlet-name>
+                <display-name>IT Mill Toolkit FilterSelect</display-name>
+                <portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>
+                <init-param>
+                        <name>application</name>
+                        <value>FilterSelect</value>
+                </init-param>
+                <supports>
+                        <mime-type>text/html</mime-type>
+                        <portlet-mode>view</portlet-mode>
+                        <portlet-mode>edit</portlet-mode>
+                        <portlet-mode>help</portlet-mode>
+                </supports>
+                <portlet-info>
+                        <title>IT Mill Toolkit FilterSelect</title>
+                        <short-title>FilterSelect</short-title>
+                </portlet-info>
+                
+                <security-role-ref>
+                        <role-name>administrator</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>guest</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>power-user</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>user</role-name>
+                </security-role-ref>
+        </portlet>
+        <portlet>
+                <portlet-name>FeatureBrowserPortlet</portlet-name>
+                <display-name>IT Mill Toolkit FeatureBrowser</display-name>
+                <portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>
+                <init-param>
+                        <name>application</name>
+                        <value>FeatureBrowser</value>
+                </init-param>
+                <supports>
+                        <mime-type>text/html</mime-type>
+                        <portlet-mode>view</portlet-mode>
+                        <portlet-mode>edit</portlet-mode>
+                        <portlet-mode>help</portlet-mode>
+                </supports>
+                <portlet-info>
+                        <title>IT Mill Toolkit FeatureBrowser</title>
+                        <short-title>FeatureBrowser</short-title>
+                </portlet-info>
+                
+                <security-role-ref>
+                        <role-name>administrator</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>guest</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>power-user</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>user</role-name>
+                </security-role-ref>
+        </portlet>
+        <portlet>
+                <portlet-name>FeaturesApplicationPortlet</portlet-name>
+                <display-name>IT Mill Toolkit FeaturesApplication</display-name>
+                <portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>
+                <init-param>
+                        <name>application</name>
+                        <value>FeaturesApplication</value>
+                </init-param>
+                <supports>
+                        <mime-type>text/html</mime-type>
+                        <portlet-mode>view</portlet-mode>
+                        <portlet-mode>edit</portlet-mode>
+                        <portlet-mode>help</portlet-mode>
+                </supports>
+                <portlet-info>
+                        <title>IT Mill Toolkit FeaturesApplication</title>
+                        <short-title>FeaturesApplication</short-title>
+                </portlet-info>
+                
+                <security-role-ref>
+                        <role-name>administrator</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>guest</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>power-user</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>user</role-name>
+                </security-role-ref>
+        </portlet>
+        <portlet>
+                <portlet-name>ParametersPortlet</portlet-name>
+                <display-name>IT Mill Toolkit Parameters</display-name>
+                <portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>
+                <init-param>
+                        <name>application</name>
+                        <value>Parameters</value>
+                </init-param>
+                <supports>
+                        <mime-type>text/html</mime-type>
+                        <portlet-mode>view</portlet-mode>
+                        <portlet-mode>edit</portlet-mode>
+                        <portlet-mode>help</portlet-mode>
+                </supports>
+                <portlet-info>
+                        <title>IT Mill Toolkit Parameters</title>
+                        <short-title>Parameters</short-title>
+                </portlet-info>
+                
+                <security-role-ref>
+                        <role-name>administrator</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>guest</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>power-user</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>user</role-name>
+                </security-role-ref>
+        </portlet>
+        <portlet>
+                <portlet-name>UpgradingSamplePortlet</portlet-name>
+                <display-name>IT Mill Toolkit UpgradingSample</display-name>
+                <portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>
+                <init-param>
+                        <name>application</name>
+                        <value>UpgradingSample</value>
+                </init-param>
+                <supports>
+                        <mime-type>text/html</mime-type>
+                        <portlet-mode>view</portlet-mode>
+                        <portlet-mode>edit</portlet-mode>
+                        <portlet-mode>help</portlet-mode>
+                </supports>
+                <portlet-info>
+                        <title>IT Mill Toolkit UpgradingSample</title>
+                        <short-title>UpgradingSample</short-title>
+                </portlet-info>
+                
+                <security-role-ref>
+                        <role-name>administrator</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>guest</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>power-user</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>user</role-name>
+                </security-role-ref>
+        </portlet>
+        <portlet>
+                <portlet-name>QueryContainerDemoPortlet</portlet-name>
+                <display-name>IT Mill Toolkit QueryContainerDemo</display-name>
+                <portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>
+                <init-param>
+                        <name>application</name>
+                        <value>QueryContainerDemo</value>
+                </init-param>
+                <supports>
+                        <mime-type>text/html</mime-type>
+                        <portlet-mode>view</portlet-mode>
+                        <portlet-mode>edit</portlet-mode>
+                        <portlet-mode>help</portlet-mode>
+                </supports>
+                <portlet-info>
+                        <title>IT Mill Toolkit QueryContainerDemo</title>
+                        <short-title>QueryContainerDemo</short-title>
+                </portlet-info>
+                
+                <security-role-ref>
+                        <role-name>administrator</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>guest</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>power-user</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>user</role-name>
+                </security-role-ref>
+        </portlet>
+        <portlet>
+                <portlet-name>TreeFilesystemContainerPortlet</portlet-name>
+                <display-name>IT Mill Toolkit TreeFilesystemContainer</display-name>
+                <portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>
+                <init-param>
+                        <name>application</name>
+                        <value>TreeFilesystemContainer</value>
+                </init-param>
+                <supports>
+                        <mime-type>text/html</mime-type>
+                        <portlet-mode>view</portlet-mode>
+                        <portlet-mode>edit</portlet-mode>
+                        <portlet-mode>help</portlet-mode>
+                </supports>
+                <portlet-info>
+                        <title>IT Mill Toolkit TreeFilesystemContainer</title>
+                        <short-title>TreeFilesystemContainer</short-title>
+                </portlet-info>
+                
+                <security-role-ref>
+                        <role-name>administrator</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>guest</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>power-user</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>user</role-name>
+                </security-role-ref>
+        </portlet>
+        <portlet>
+                <portlet-name>TreeFilesystemPortlet</portlet-name>
+                <display-name>IT Mill Toolkit TreeFilesystem</display-name>
+                <portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>
+                <init-param>
+                        <name>application</name>
+                        <value>TreeFilesystem</value>
+                </init-param>
+                <supports>
+                        <mime-type>text/html</mime-type>
+                        <portlet-mode>view</portlet-mode>
+                        <portlet-mode>edit</portlet-mode>
+                        <portlet-mode>help</portlet-mode>
+                </supports>
+                <portlet-info>
+                        <title>IT Mill Toolkit TreeFilesystem</title>
+                        <short-title>TreeFilesystem</short-title>
+                </portlet-info>
+                
+                <security-role-ref>
+                        <role-name>administrator</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>guest</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>power-user</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>user</role-name>
+                </security-role-ref>
+        </portlet>
+        <portlet>
+                <portlet-name>ModalWindowPortlet</portlet-name>
+                <display-name>IT Mill Toolkit ModalWindow</display-name>
+                <portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>
+                <init-param>
+                        <name>application</name>
+                        <value>ModalWindow</value>
+                </init-param>
+                <supports>
+                        <mime-type>text/html</mime-type>
+                        <portlet-mode>view</portlet-mode>
+                        <portlet-mode>edit</portlet-mode>
+                        <portlet-mode>help</portlet-mode>
+                </supports>
+                <portlet-info>
+                        <title>IT Mill Toolkit ModalWindow</title>
+                        <short-title>ModalWindow</short-title>
+                </portlet-info>
+                
+                <security-role-ref>
+                        <role-name>administrator</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>guest</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>power-user</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>user</role-name>
+                </security-role-ref>
+        </portlet>
+        <portlet>
+                <portlet-name>HelloWorldPortlet</portlet-name>
+                <display-name>IT Mill Toolkit HelloWorld</display-name>
+                <portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>
+                <init-param>
+                        <name>application</name>
+                        <value>HelloWorld</value>
+                </init-param>
+                <supports>
+                        <mime-type>text/html</mime-type>
+                        <portlet-mode>view</portlet-mode>
+                        <portlet-mode>edit</portlet-mode>
+                        <portlet-mode>help</portlet-mode>
+                </supports>
+                <portlet-info>
+                        <title>IT Mill Toolkit HelloWorld</title>
+                        <short-title>HelloWorld</short-title>
+                </portlet-info>
+                
+                <security-role-ref>
+                        <role-name>administrator</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>guest</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>power-user</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>user</role-name>
+                </security-role-ref>
+        </portlet>
+        <portlet>
+                <portlet-name>CalcPortlet</portlet-name>
+                <display-name>IT Mill Toolkit Calc</display-name>
+                <portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>
+                <init-param>
+                        <name>application</name>
+                        <value>Calc</value>
+                </init-param>
+                <supports>
+                        <mime-type>text/html</mime-type>
+                        <portlet-mode>view</portlet-mode>
+                        <portlet-mode>edit</portlet-mode>
+                        <portlet-mode>help</portlet-mode>
+                </supports>
+                <portlet-info>
+                        <title>IT Mill Toolkit Calc</title>
+                        <short-title>Calc</short-title>
+                </portlet-info>
+                
+                <security-role-ref>
+                        <role-name>administrator</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>guest</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>power-user</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>user</role-name>
+                </security-role-ref>
+        </portlet>
+        <portlet>
+                <portlet-name>KeyboardShortcutPortlet</portlet-name>
+                <display-name>IT Mill Toolkit KeyboardShortcut</display-name>
+                <portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>
+                <init-param>
+                        <name>application</name>
+                        <value>KeyboardShortcut</value>
+                </init-param>
+                <supports>
+                        <mime-type>text/html</mime-type>
+                        <portlet-mode>view</portlet-mode>
+                        <portlet-mode>edit</portlet-mode>
+                        <portlet-mode>help</portlet-mode>
+                </supports>
+                <portlet-info>
+                        <title>IT Mill Toolkit KeyboardShortcut</title>
+                        <short-title>KeyboardShortcut</short-title>
+                </portlet-info>
+                
+                <security-role-ref>
+                        <role-name>administrator</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>guest</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>power-user</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>user</role-name>
+                </security-role-ref>
+        </portlet>
+        <portlet>
+                <portlet-name>CustomGwtComponentDemoPortlet</portlet-name>
+                <display-name>IT Mill Toolkit CustomGwtComponentDemo</display-name>
+                <portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>
+                <init-param>
+                        <name>application</name>
+                        <value>customgwt</value>
+                </init-param>
+                <supports>
+                        <mime-type>text/html</mime-type>
+                        <portlet-mode>view</portlet-mode>
+                        <portlet-mode>edit</portlet-mode>
+                        <portlet-mode>help</portlet-mode>
+                </supports>
+                <portlet-info>
+                        <title>IT Mill Toolkit CustomGwtComponentDemo</title>
+                        <short-title>CustomGwtComponentDemo</short-title>
+                </portlet-info>
+                
+                <security-role-ref>
+                        <role-name>administrator</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>guest</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>power-user</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>user</role-name>
+                </security-role-ref>
+        </portlet>
+        <portlet>
+                <portlet-name>ColorPickerApplicationPortlet</portlet-name>
+                <display-name>IT Mill Toolkit ColorPickerApplication</display-name>
+                <portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>
+                <init-param>
+                        <name>application</name>
+                        <value>colorpicker</value>
+                </init-param>
+                <supports>
+                        <mime-type>text/html</mime-type>
+                        <portlet-mode>view</portlet-mode>
+                        <portlet-mode>edit</portlet-mode>
+                        <portlet-mode>help</portlet-mode>
+                </supports>
+                <portlet-info>
+                        <title>IT Mill Toolkit ColorPickerApplication</title>
+                        <short-title>ColorPickerApplication</short-title>
+                </portlet-info>
+                
+                <security-role-ref>
+                        <role-name>administrator</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>guest</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>power-user</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>user</role-name>
+                </security-role-ref>
+        </portlet>
+        <portlet>
+                <portlet-name>CachingDemoPortlet</portlet-name>
+                <display-name>IT Mill Toolkit CachingDemo</display-name>
+                <portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>
+                <init-param>
+                        <name>application</name>
+                        <value>CachingDemo</value>
+                </init-param>
+                <supports>
+                        <mime-type>text/html</mime-type>
+                        <portlet-mode>view</portlet-mode>
+                        <portlet-mode>edit</portlet-mode>
+                        <portlet-mode>help</portlet-mode>
+                </supports>
+                <portlet-info>
+                        <title>IT Mill Toolkit CachingDemo</title>
+                        <short-title>CachingDemo</short-title>
+                </portlet-info>
+                
+                <security-role-ref>
+                        <role-name>administrator</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>guest</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>power-user</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>user</role-name>
+                </security-role-ref>
+        </portlet>
+        <portlet>
+                <portlet-name>NotificationDemoPortlet</portlet-name>
+                <display-name>IT Mill Toolkit NotificationDemo</display-name>
+                <portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>
+                <init-param>
+                        <name>application</name>
+                        <value>NotificationDemo</value>
+                </init-param>
+                <supports>
+                        <mime-type>text/html</mime-type>
+                        <portlet-mode>view</portlet-mode>
+                        <portlet-mode>edit</portlet-mode>
+                        <portlet-mode>help</portlet-mode>
+                </supports>
+                <portlet-info>
+                        <title>IT Mill Toolkit NotificationDemo</title>
+                        <short-title>NotificationDemo</short-title>
+                </portlet-info>
+                
+                <security-role-ref>
+                        <role-name>administrator</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>guest</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>power-user</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>user</role-name>
+                </security-role-ref>
+        </portlet>
+        <portlet>
+                <portlet-name>MagiTestServletPortlet</portlet-name>
+                <display-name>IT Mill Toolkit MagiTestServlet</display-name>
+                <portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>
+                <init-param>
+                        <name>application</name>
+                        <value>testbench2</value>
+                </init-param>
+                <supports>
+                        <mime-type>text/html</mime-type>
+                        <portlet-mode>view</portlet-mode>
+                        <portlet-mode>edit</portlet-mode>
+                        <portlet-mode>help</portlet-mode>
+                </supports>
+                <portlet-info>
+                        <title>IT Mill Toolkit MagiTestServlet</title>
+                        <short-title>MagiTestServlet</short-title>
+                </portlet-info>
+                
+                <security-role-ref>
+                        <role-name>administrator</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>guest</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>power-user</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>user</role-name>
+                </security-role-ref>
+        </portlet>
+        <portlet>
+                <portlet-name>BrowserDemoPortlet</portlet-name>
+                <display-name>IT Mill Toolkit BrowserDemo</display-name>
+                <portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>
+                <init-param>
+                        <name>application</name>
+                        <value>BrowserDemo</value>
+                </init-param>
+                <supports>
+                        <mime-type>text/html</mime-type>
+                        <portlet-mode>view</portlet-mode>
+                        <portlet-mode>edit</portlet-mode>
+                        <portlet-mode>help</portlet-mode>
+                </supports>
+                <portlet-info>
+                        <title>IT Mill Toolkit BrowserDemo</title>
+                        <short-title>BrowserDemo</short-title>
+                </portlet-info>
+                
+                <security-role-ref>
+                        <role-name>administrator</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>guest</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>power-user</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>user</role-name>
+                </security-role-ref>
+        </portlet>
+        <portlet>
+                <portlet-name>WindowedDemosPortlet</portlet-name>
+                <display-name>IT Mill Toolkit WindowedDemos</display-name>
+                <portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>
+                <init-param>
+                        <name>application</name>
+                        <value>WindowedDemos</value>
+                </init-param>
+                <supports>
+                        <mime-type>text/html</mime-type>
+                        <portlet-mode>view</portlet-mode>
+                        <portlet-mode>edit</portlet-mode>
+                        <portlet-mode>help</portlet-mode>
+                </supports>
+                <portlet-info>
+                        <title>IT Mill Toolkit WindowedDemos</title>
+                        <short-title>WindowedDemos</short-title>
+                </portlet-info>
+                
+                <security-role-ref>
+                        <role-name>administrator</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>guest</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>power-user</role-name>
+                </security-role-ref>
+                <security-role-ref>
+                        <role-name>user</role-name>
+                </security-role-ref>
+        </portlet>
 </portlet-app>
