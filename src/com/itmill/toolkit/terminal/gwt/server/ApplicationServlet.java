@@ -783,18 +783,6 @@ public class ApplicationServlet extends HttpServlet {
         page.write("document.write(\"<script language='javascript' src='"
                 + staticFilePath + "/" + WIDGETSET_DIRECTORY_PATH + widgetset
                 + "/" + widgetset + ".nocache.js'><\\/script>\");\n}\n");
-        if (themeName != null) {
-            // Custom theme's stylesheet, load only once
-            page.write("if(!itmill.themesLoaded['" + themeName + "']) {\n");
-            page.write("var stylesheet = document.createElement('link');\n");
-            page.write("stylesheet.setAttribute('rel', 'stylesheet');\n");
-            page.write("stylesheet.setAttribute('type', 'text/css');\n");
-            page.write("stylesheet.setAttribute('href', '" + themeUri
-                    + "/styles.css');\n");
-            page.write("document.getElementsByTagName(\"head\")"
-                    + "[0].appendChild(stylesheet);\n");
-            page.write("itmill.themesLoaded['" + themeName + "'] = true;\n}\n");
-        }
 
         page.write("itmill.toolkitConfigurations[\"" + appId + "\"] = {");
         page.write("appUri:'" + appUrl + "', ");
@@ -810,10 +798,26 @@ public class ApplicationServlet extends HttpServlet {
         }
         page.write("};\n//]]>\n</script>\n");
 
+        if (themeName != null) {
+            // Custom theme's stylesheet, load only once, in different script
+            // tag to be dominate styles injected by widget
+            // set
+            page.write("<script type=\"text/javascript\">\n");
+            page.write("//<![CDATA[\n");
+            page.write("if(!itmill.themesLoaded['" + themeName + "']) {\n");
+            page.write("var stylesheet = document.createElement('link');\n");
+            page.write("stylesheet.setAttribute('rel', 'stylesheet');\n");
+            page.write("stylesheet.setAttribute('type', 'text/css');\n");
+            page.write("stylesheet.setAttribute('href', '" + themeUri
+                    + "/styles.css');\n");
+            page.write("document.body.appendChild(stylesheet);\n");
+            page.write("itmill.themesLoaded['" + themeName + "'] = true;\n}\n");
+            page.write("//]]>\n</script>\n");
+        }
+
         page.write("<div id=\"" + appId + "\" class=\"i-app\"></div>\n");
 
         if (!fragment) {
-            // close html
             page.write("</body>\n</html>\n");
         }
 
