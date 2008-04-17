@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -194,9 +195,10 @@ public class ICalendarField extends IDateField {
 
     }
 
-    private native void setScrollTop(Element el, int scrollTop) /*-{
-                                   el.scrollTop = scrollTop;
-                                 }-*/;
+    private native void setScrollTop(Element el, int scrollTop)
+    /*-{
+         el.scrollTop = scrollTop;
+    }-*/;
 
     private class HourTableListener implements TableListener {
 
@@ -217,16 +219,23 @@ public class ICalendarField extends IDateField {
         public void addItem(UIDL item) {
             final String styleName = item.getStringAttribute("styleName");
             // final Integer id = new Integer(item.getIntAttribute("id"));
-            final long start = Long.parseLong(item.getStringAttribute("start"));
-            final Date startDate = new Date(start);
-            long end = -1;
-            try {
-                end = Long.parseLong(item.getStringAttribute("end"));
-            } catch (final Exception IGNORED) {
-                // IGNORED attribute not required
+
+            DateTimeFormat dtf = DateTimeFormat
+                    .getFormat("d MMM yyyy HH:mm:ss Z");
+
+            Date startDate = dtf.parse(item.getStringAttribute("start"));
+
+            // fix times with server-client difference
+            int diff = (startDate.getTimezoneOffset() - item
+                    .getIntAttribute("Z")) * 60000;
+            startDate = new Date(startDate.getTime() + diff);
+            Date endDate;
+            if (item.hasAttribute("end")) {
+                endDate = dtf.parse(item.getStringAttribute("end"));
+                endDate = new Date(endDate.getTime() + diff);
+            } else {
+                endDate = (Date) startDate.clone();
             }
-            final Date endDate = (end > 0 && end != start ? new Date(end)
-                    : new Date(start));
             final String title = item.getStringAttribute("title");
             final String desc = item.getStringAttribute("description");
             final boolean notime = item.getBooleanAttribute("notime");

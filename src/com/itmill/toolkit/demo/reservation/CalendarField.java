@@ -4,6 +4,7 @@
 
 package com.itmill.toolkit.demo.reservation;
 
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
@@ -68,7 +69,7 @@ public class CalendarField extends DateField implements Container.Viewer {
 
     public void init() {
         super.setResolution(RESOLUTION_HOUR);
-
+        
     }
 
     /**
@@ -282,15 +283,22 @@ public class CalendarField extends DateField implements Container.Viewer {
                             final String styleName = (String) p.getValue();
                             target.addAttribute("styleName", styleName);
                         }
-                        target.addAttribute("start", "" + start.getTime());
+                        SimpleDateFormat sdf = new SimpleDateFormat(
+                                "d MMM yyyy HH:mm:ss Z");
+
+                        target.addAttribute("Z", start.getTimezoneOffset());
+
+                        target.addAttribute("start", "" + sdf.format(start));
+
                         if (end != start) {
-                            target.addAttribute("end", "" + end.getTime());
+                            target.addAttribute("end", "" + sdf.format(end));
                         }
                         if (itemTitlePropertyId != null) {
                             p = item.getItemProperty(itemTitlePropertyId);
                             final Object val = p.getValue();
                             if (val != null) {
                                 target.addAttribute("title", val.toString());
+                                System.out.println(val);
                             }
                         }
                         if (itemDescriptionPropertyId != null) {
