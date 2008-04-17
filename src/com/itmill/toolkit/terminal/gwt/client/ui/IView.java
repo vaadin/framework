@@ -72,6 +72,10 @@ public class IView extends SimplePanel implements Paintable,
 
         // Some attributes to note
         theme = uidl.getStringAttribute("theme");
+        if (uidl.hasAttribute("style")) {
+            addStyleName(uidl.getStringAttribute("style"));
+        }
+
         com.google.gwt.user.client.Window.setTitle(uidl
                 .getStringAttribute("caption"));
 
