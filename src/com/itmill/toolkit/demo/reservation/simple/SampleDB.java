@@ -399,6 +399,10 @@ public class SampleDB {
     public synchronized void generateResources() {
 
         final Object[][] resources = {
+
+                // TODO change cars to rooms, projectors and other office
+                // resources
+
                 // Turku
                 { "01", "01 Ford Mondeo", "w/ company logo", "Turku",
                         new Double(60.510857), new Double(22.275424) },

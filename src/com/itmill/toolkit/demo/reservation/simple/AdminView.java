@@ -23,7 +23,7 @@ public class AdminView extends OrderedLayout {
     protected Item editedItem;
 
     AdminView(SimpleReserver app) {
-        setWidth("250px");
+        setWidth("280px");
 
         application = app;
 

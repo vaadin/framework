@@ -31,7 +31,7 @@ public class StdView extends OrderedLayout {
     private EditorWindow editor = new EditorWindow();
 
     StdView(SimpleReserver app) {
-        setWidth("250px");
+        setWidth("280px");
         application = app;
 
         resources.setImmediate(true);
