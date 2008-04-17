@@ -17,7 +17,7 @@ import com.itmill.toolkit.Application;
 
 public class ApplicationPortlet implements Portlet {
     // The application to show
-    protected String app = "Calc";
+    protected String app = null;
     // some applications might require that the height is specified
     protected String height = null; // e.g "200px"
 
