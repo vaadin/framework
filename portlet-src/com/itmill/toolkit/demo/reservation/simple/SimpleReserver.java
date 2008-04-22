@@ -1,9 +1,10 @@
 package com.itmill.toolkit.demo.reservation.simple;
 
+import java.security.Principal;
+
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletMode;
-import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
@@ -15,10 +16,14 @@ import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Window;
 import com.itmill.toolkit.ui.Button.ClickEvent;
 import com.itmill.toolkit.ui.Button.ClickListener;
+import com.liferay.portal.model.User;
+import com.liferay.portal.service.UserServiceUtil;
 
 /**
  * This is a stripped down version of Reservr example. Idea is to create simple,
- * but actually usable portal gadget.
+ * but actually usable portal gadget. Example is Liferay spesific (in user
+ * handling), so you need to add portal-kernel.jar and portal-service.jar files
+ * to your classpath.
  * 
  */
 public class SimpleReserver extends Application {
@@ -35,6 +40,8 @@ public class SimpleReserver extends Application {
 
     private boolean isPortlet;
 
+    protected User user;
+
     public void init() {
         final Window w = new Window("Simple Reserver");
         w.addStyleName("simplereserver");
@@ -43,6 +50,7 @@ public class SimpleReserver extends Application {
             isPortlet = true;
             PortletApplicationContext context = (PortletApplicationContext) getContext();
             context.addPortletListener(this, new PortletListener() {
+
                 public void handleActionRequest(ActionRequest request,
                         ActionResponse response) {
 
@@ -54,6 +62,15 @@ public class SimpleReserver extends Application {
                     if ((request.getPortletMode() == PortletMode.EDIT && !isAdminView)
                             || (request.getPortletMode() == PortletMode.VIEW && isAdminView)) {
                         toggleMode();
+                    }
+
+                    // save user object to application for later use
+                    Principal userPrincipal = request.getUserPrincipal();
+                    try {
+                        user = UserServiceUtil.getUserById(Long
+                                .parseLong(userPrincipal.toString()));
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
 
                 }
@@ -95,14 +112,13 @@ public class SimpleReserver extends Application {
 
     public Object getUser() {
         if (getContext() instanceof PortletApplicationContext) {
-            PortletApplicationContext context = (PortletApplicationContext) getContext();
-            Object username = context.getPortletSession().getAttribute(
-                    "userName", PortletSession.APPLICATION_SCOPE);
-            if (username == null) {
-                return "Guest Portaluser";
+            try {
+                return user.getFirstName() + " " + user.getLastName();
+            } catch (Exception e) {
+                // TODO: handle exception
+                e.printStackTrace();
+                return "Portlet Demouser";
             }
-            return username.toString();
-
         } else {
             Object user = super.getUser();
             if (user == null) {
@@ -113,5 +129,4 @@ public class SimpleReserver extends Application {
         }
 
     }
-
 }
