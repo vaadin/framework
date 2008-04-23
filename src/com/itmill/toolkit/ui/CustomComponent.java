@@ -83,12 +83,16 @@ public class CustomComponent extends AbstractComponentContainer {
      *                the root of the composition component tree.
      */
     protected final void setCompositionRoot(Component compositionRoot) {
-        if (compositionRoot != root && root != null) {
-            super.removeComponent(root);
-        }
-        root = compositionRoot;
-        if (root != null) {
-            super.addComponent(root);
+        if (compositionRoot != root) {
+            if (root != null) {
+                // remove old component
+                super.removeComponent(root);
+            }
+            if (compositionRoot != null) {
+                // set new component
+                super.addComponent(compositionRoot);
+            }
+            root = compositionRoot;
         }
     }
 
