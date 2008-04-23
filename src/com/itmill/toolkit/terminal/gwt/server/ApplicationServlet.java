@@ -798,23 +798,6 @@ public class ApplicationServlet extends HttpServlet {
         }
         page.write("};\n//]]>\n</script>\n");
 
-        if (themeName != null) {
-            // Custom theme's stylesheet, load only once, in different script
-            // tag to be dominate styles injected by widget
-            // set
-            page.write("<script type=\"text/javascript\">\n");
-            page.write("//<![CDATA[\n");
-            page.write("if(!itmill.themesLoaded['" + themeName + "']) {\n");
-            page.write("var stylesheet = document.createElement('link');\n");
-            page.write("stylesheet.setAttribute('rel', 'stylesheet');\n");
-            page.write("stylesheet.setAttribute('type', 'text/css');\n");
-            page.write("stylesheet.setAttribute('href', '" + themeUri
-                    + "/styles.css');\n");
-            page.write("document.body.appendChild(stylesheet);\n");
-            page.write("itmill.themesLoaded['" + themeName + "'] = true;\n}\n");
-            page.write("//]]>\n</script>\n");
-        }
-
         page.write("<div id=\"" + appId + "\" class=\"i-app\"></div>\n");
 
         if (!fragment) {
