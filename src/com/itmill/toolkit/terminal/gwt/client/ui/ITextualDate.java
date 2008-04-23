@@ -255,7 +255,7 @@ public class ITextualDate extends IDateField implements Paintable,
                 needLayout = false;
             }
         } else {
-            if (width != null && !"".equals(width)) {
+            if ("".equals(newWidth) && width != null && !"".equals(width)) {
                 super.setWidth("");
                 needLayout = true;
                 iLayout();
