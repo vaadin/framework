@@ -86,6 +86,29 @@ public class ApplicationServlet extends HttpServlet {
         VERSION_BUILD = digits[2];
     }
 
+    /**
+     * If the attribute is present in the request, a html fragment will be
+     * written instead of a whole page.
+     */
+    public static final String REQUEST_FRAGMENT = ApplicationServlet.class
+            .getName()
+            + ".fragment";
+    /**
+     * This request attribute forces widgetset used; e.g for portlets that can
+     * not have different widgetsets.
+     */
+    public static final String REQUEST_WIDGETSET = ApplicationServlet.class
+            .getName()
+            + ".widgetset";
+    /**
+     * This request attribute is used to add styles to the main element. E.g
+     * "height:500px" generates a style="height:500px" to the main element,
+     * useful from some embedding situations (e.g portlet include.)
+     */
+    public static final String REQUEST_APPSTYLE = ApplicationServlet.class
+            .getName()
+            + ".style";
+
     // Configurable parameter names
     private static final String PARAMETER_DEBUG = "Debug";
 
@@ -706,10 +729,8 @@ public class ApplicationServlet extends HttpServlet {
             HttpServletResponse response, Window window, String themeName,
             Application application) throws IOException, MalformedURLException {
 
-        // Portlets only want a html fragment
-        // TODO own (itmill) attribute for this e.g
-        // ApplicationServlet.class.getName()+".writeFragment"
-        boolean fragment = (request.getAttribute("javax.portlet.request") != null);
+        // e.g portlets only want a html fragment
+        boolean fragment = (request.getAttribute(REQUEST_FRAGMENT) != null);
         if (fragment) {
             request.setAttribute(Application.class.getName(), application);
         }
@@ -721,8 +742,18 @@ public class ApplicationServlet extends HttpServlet {
         String title = ((window == null || window.getCaption() == null) ? "IT Mill Toolkit 5"
                 : window.getCaption());
 
-        String widgetset = applicationProperties
-                .getProperty(PARAMETER_WIDGETSET);
+        String widgetset = null;
+        // request widgetset takes precedence (e.g portlet include)
+        Object reqParam = request.getAttribute(REQUEST_WIDGETSET);
+        try {
+            widgetset = (String) reqParam;
+        } catch (Exception e) {
+            System.err.println("Warning: request param " + REQUEST_WIDGETSET
+                    + " could not be used (not a String?)" + e);
+        }
+        if (widgetset == null) {
+            widgetset = applicationProperties.getProperty(PARAMETER_WIDGETSET);
+        }
         if (widgetset == null) {
             widgetset = DEFAULT_WIDGETSET;
         }
@@ -820,12 +851,17 @@ public class ApplicationServlet extends HttpServlet {
             page.write("//]]>\n</script>\n");
         }
 
-        page.write("<div id=\"" + appId + "\" class=\"i-app\"></div>\n");
+        String style = null;
+        reqParam = request.getAttribute(REQUEST_APPSTYLE);
+        if (reqParam != null) {
+            style = "style=\"" + reqParam + "\"";
+        }
+        page.write("<div id=\"" + appId + "\" class=\"i-app\" "
+                + (style != null ? style : "") + "></div>\n");
 
         if (!fragment) {
             page.write("</body>\n</html>\n");
         }
-
         page.close();
 
     }

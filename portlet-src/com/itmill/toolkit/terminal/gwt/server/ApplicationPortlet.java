@@ -18,22 +18,21 @@ import com.itmill.toolkit.Application;
 public class ApplicationPortlet implements Portlet {
     // The application to show
     protected String app = null;
-    // some applications might require that the height is specified
-    protected String height = null; // e.g "200px"
-
-    private PortletConfig config;
+    // some applications might require forced height (and, more seldom, width)
+    protected String style = null; // e.g "height:500px;"
+    protected String widgetset = null;
 
     public void destroy() {
-        config = null;
+
     }
 
     public void init(PortletConfig config) throws PortletException {
-        this.config = config;
         app = config.getInitParameter("application");
         if (app == null) {
             app = "PortletDemo";
         }
-        height = config.getInitParameter("height");
+        style = config.getInitParameter("style");
+        widgetset = config.getInitParameter("widgetset");
     }
 
     public void processAction(ActionRequest request, ActionResponse response)
@@ -51,30 +50,30 @@ public class ApplicationPortlet implements Portlet {
     protected void writeAjaxWindow(RenderRequest request,
             RenderResponse response) throws IOException {
 
-        response.setContentType("text/html");
-        PrintWriter out = response.getWriter();
-
         if (app != null) {
             PortletSession sess = request.getPortletSession();
             PortletApplicationContext ctx = PortletApplicationContext
                     .getApplicationContext(sess);
 
-            /*- TODO store som info somewhere?
-            PortletInfo pi = ctx.setPortletInfo(request.getContextPath() + "/"
-                    + app + (app.endsWith("/") ? "" : "/"), request
-                    .getPortletMode(), request.getWindowState(), request
-                    .getUserPrincipal(), (Map) request
-                    .getAttribute(PortletRequest.USER_INFO), config);
-            -*/
-
             PortletRequestDispatcher dispatcher = sess.getPortletContext()
                     .getRequestDispatcher("/" + app);
 
             try {
-                // TODO height
+                request.setAttribute(ApplicationServlet.REQUEST_FRAGMENT,
+                        "true");
+                if (widgetset != null) {
+                    request.setAttribute(ApplicationServlet.REQUEST_WIDGETSET,
+                            widgetset);
+                }
+                if (style != null) {
+                    request.setAttribute(ApplicationServlet.REQUEST_APPSTYLE,
+                            style);
+                }
                 dispatcher.include(request, response);
 
             } catch (PortletException e) {
+                response.setContentType("text/html");
+                PrintWriter out = response.getWriter();
                 out.print("<h1>Servlet include failed!</h1>");
                 out.print("<div>" + e + "</div>");
                 ctx.setPortletApplication(this, null);
