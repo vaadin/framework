@@ -93,6 +93,7 @@ public class CustomComponent extends AbstractComponentContainer {
                 super.addComponent(compositionRoot);
             }
             root = compositionRoot;
+            requestRepaint();
         }
     }
 
