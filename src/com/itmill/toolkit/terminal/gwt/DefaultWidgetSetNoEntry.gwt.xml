@@ -21,7 +21,6 @@
 		Default theme for this widget set. 
 		Please name the sub directory differently when creating a extended widget set
 		(e.g. src="mywidgets/styles.css") to avoid naming conflicts.
-	 -->
 	
 	<stylesheet src="default/common/common.css"/>
 	<stylesheet src="default/button/button.css"/>
@@ -42,5 +41,6 @@
 	<stylesheet src="default/expandlayout/expandlayout.css"/>
 	<stylesheet src="default/orderedlayout/orderedlayout.css"/>
 	<stylesheet src="default/accordion/accordion.css"/>
+	 -->
 
 </module>

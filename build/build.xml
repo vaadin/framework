@@ -521,7 +521,7 @@
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   WebContent
    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	<target name="webcontent" depends="preprocess-src">
+	<target name="webcontent" depends="preprocess-src,defaulttheme">
 
 		<!-- copy 3rd part libraries used by demo -->
 		<copy todir="${output-dir}/WebContent/demo/lib">
@@ -584,6 +584,15 @@
 		<mkdir dir="${result-path}/classes" />
 		<javac source="1.4" target="1.4" classpathref="compile.classpath" srcdir="${result-path}/src" destdir="${result-path}/classes" includes="${toolkit-package}/**" debug="true">
 		</javac>
+	</target>
+	
+	<target name="defaulttheme" >
+		<echo>Combining default themes css files</echo>
+		<java classname="com.itmill.toolkit.buildhelpers.CompileDefaultTheme" failonerror="yes" fork="yes">
+			<classpath>
+				<pathelement location="build/buildhelpers" />
+			</classpath>
+		</java>
 	</target>
 
 	<target name="compile-client-side" depends="webcontent">
@@ -690,7 +699,7 @@
 			</fileset>
 		</copy>
 	</target>
-
+	
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   Documentation 
    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->

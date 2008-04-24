@@ -162,7 +162,7 @@
 
 /* rowe in column selector */
 .i-on div {
-	background-image: url('img/check.gif');
+	background-image: url(img/check.gif);
 	background-repeat: no-repeat;
 	background-position: 2px center;
 	text-indent: 6px;

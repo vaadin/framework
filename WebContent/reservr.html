@@ -35,6 +35,18 @@
 	itmill.toolkitConfigurations["itmill-ajax-window"] = {appUri:'/Reservr', pathInfo: '/', themeUri:'/ITMILL/themes/reservr'};
 	//]]>
 	</script>
+	<script type="text/javascript">
+	//<![CDATA[
+	if(!itmill.themesLoaded['reservr']) {
+	var stylesheet = document.createElement('link');
+	stylesheet.setAttribute('rel', 'stylesheet');
+	stylesheet.setAttribute('type', 'text/css');
+	stylesheet.setAttribute('href', '/ITMILL/themes/reservr/styles.css');
+	document.getElementsByTagName('head')[0].appendChild(stylesheet);
+	itmill.themesLoaded['reservr'] = true;
+	}
+	//]]>
+	</script>
 	<div id="itmill-ajax-window"></div>	
 </body>
 </html>

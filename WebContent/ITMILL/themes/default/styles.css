@@ -1,0 +1,1649 @@
+/* Automatically compiled css file from subdirectories. */
+.i-accordion {
+	outline: none;
+	overflow: hidden;
+	text-align: left /* Force default alignment */
+}
+
+.i-accordion-item-caption {
+	height: 24px;
+	padding: 7px 0 0 18px;
+	overflow: hidden;
+	white-space: nowrap;
+	background: #edf0f0 url(tabsheet/img/tab-bg.png);
+	font-size: 15px;
+	color: #656d73;
+	border-top: 1px solid #c8cccd;
+	cursor: pointer;
+}
+
+.i-accordion-item-open .i-accordion-item-caption {
+	color: #3b4b57;
+	background: #d5dee2 url(accordion/img/selected-bg.png);
+	border-top-color: #cbd7de;
+	border-bottom-color: #bfc9d4;
+	cursor: default;
+	text-shadow: #fafafa 1px 1px 0;
+}
+
+.i-accordion-item-content {
+	border-top: 1px solid #c8cccd;
+}
+.i-button {
+	cursor: pointer;
+	font-size: 13px;
+}
+
+.i-button img {
+	display:inline;
+}
+
+.i-button-link {
+	border: none;
+	text-align: left;
+	text-decoration: underline;
+	background: none;
+	padding: 0;
+}
+.i-button-link span {
+	text-decoration: underline;
+}
+/* Provide some extra whitespace for wrapped elements
+   (these elements usually need the extra space, since 
+   they aren't even handling their own caption) */
+.i-captionwrapper {
+	margin: 0.3em 0 0 0;
+	text-align: left /* Force default alignment */
+}
+
+.i-errorindicator {
+	width: 16px;
+	height: 16px;
+	padding-right:2px;
+	display: block;
+	float:left;
+	background: transparent url(icons/16/error.png) no-repeat;
+	vertical-align: middle;
+}
+
+.i-caption .i-icon {
+	padding-right:2px;
+	vertical-align: middle;
+}
+
+.i-error {
+	padding-left: 15px;
+	background: #fff;
+	border: 1px solid red;
+}
+/* body tag created by servlet */
+.i-generated-body {
+	background: #e9eced;
+	width:100%;
+	height:100%;
+	border:0;
+	margin:0;
+	overflow:auto;
+}
+.i-app {
+	background: #e9eced;
+	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
+	color: #464f52;
+	font-size: 13px;
+	line-height: 18px;
+	height: 100%;
+}
+
+.i-view {
+	height: 100%;
+	width: 100%;
+	overflow: auto; 
+	/* avoid scrollbars with margins in root layout */
+	margin-top:-1px;
+	border-top:1px solid transparent;
+}
+
+.i-app input, 
+.i-window input, 
+.i-app select, 
+.i-window select, 
+.i-app textarea, 
+.i-window textarea, 
+.i-app button,
+.i-window button {
+	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
+	color: #464f52;
+}
+
+.i-app select,
+.i-window select {
+	padding: 0;
+	margin: 0;
+}
+
+.i-disabled {
+	opacity: 0.3;
+	filter: Alpha(opacity=30);
+}
+
+
+
+/**
+ * Context menu styles 
+ */
+
+.i-contextmenu {
+	background: #e9eced url(tabsheet/img/tab-bg.png);
+	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
+	background-color: #f6f7f7;
+	color: #464f52;
+	font-size: 12px;
+	line-height: 14px;
+}
+
+.i-contextmenu .gwt-MenuBar {
+	border-right: 2px solid #c6cbcc;
+	border-bottom: 2px solid #c6cbcc;
+	border-top: 1px solid #d0d4d5;
+	border-left: 1px solid #d0d4d5;
+}
+
+.i-contextmenu .gwt-MenuItem {
+	padding: 2px 0;
+	cursor: pointer;
+	vertical-align: middle;
+}
+
+.i-contextmenu .gwt-MenuItem div {
+	/*border: 1px solid #f6f7f7;*/
+	padding: 1px 20px 1px 8px;
+	cursor: pointer;
+	vertical-align: middle;
+	white-space: nowrap;
+}
+
+.i-contextmenu .gwt-MenuItem-selected div {
+	color: #fff;
+	background: #5daee8;
+}
+
+.i-contextmenu table {
+	border-collapse:collapse;
+	margin:0;
+	padding:0;
+}
+.i-contextmenu .gwt-MenuItem img {
+	margin-right: 10px;
+	vertical-align: middle;
+}
+
+
+/**
+ * Link component styles 
+ * (useless to move into a separate file)
+ */
+
+.i-link span {
+	text-decoration: underline;
+	cursor:pointer;
+}
+
+.i-label {
+	overflow: hidden;
+}
+
+/* Loading indicator states */
+
+.i-loading-indicator,
+.i-loading-indicator-delay,
+.i-loading-indicator-wait {
+	width: 31px;
+	height: 31px;
+	background: transparent url(common/img/loading-indicator.gif);
+}
+.i-loading-indicator-delay {
+	background: transparent url(common/img/loading-indicator-delay.gif);
+}
+.i-loading-indicator-wait {
+	background: transparent url(common/img/loading-indicator-wait.gif);
+}
+.i-datefield .i-button {
+	width: 22px;
+	height: 25px;
+	padding: 0;
+	overflow: hidden;
+	border: none;
+	background: transparent url(datefield/img/open-button.png) no-repeat right 1px;
+	text-indent: -90000px;
+}
+
+.i-datefield-popup {
+	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
+	color: #464f52;
+	font-size: 12px;
+	background: #f6f7f7;
+	border: 1px solid #b6bbbc;
+	padding: 6px;
+}
+
+.i-datefield-calendarpanel {
+	width: 19em;
+	font-size: 12px;
+}
+
+.i-datefield-popup .i-datefield-calendarpanel {
+	width: 16em;
+}
+
+.i-datefield-calendarpanel table {
+	width: 100%;
+}
+
+.i-datefield-calendarpanel td {
+	text-align: right;
+	width: 14.2%;
+	padding: 0;
+	margin: 0;
+}
+
+.i-datefield-calendarpanel td span {
+	display: block;
+}
+
+.i-datefield-calendarpanel-header {
+	height: 30px;
+}
+
+.i-datefield-calendarpanel-header,
+.i-datefield-calendarpanel strong {
+	font-size: 13px;
+}
+
+.i-datefield-popup .i-datefield-calendarpanel-header,
+.i-datefield-popup .i-datefield-calendarpanel strong {
+	font-size: 12px;
+}
+
+.i-datefield-calendarpanel-header td {
+	text-align: center;
+}
+
+.i-datefield-calendarpanel-month {
+	font-weight: bold;
+	text-align: center;
+	text-shadow: #ffffff 2px 2px 0;
+	white-space: nowrap;
+}
+
+/* Year buttons */
+.i-datefield-calendarpanel .i-button-prevyear,
+.i-datefield-calendarpanel .i-button-nextyear {
+	display: block;
+	width: 16px;
+	height: 16px;
+	border: none;
+	padding: 0;
+	background: transparent url(datefield/img/prevyear.png) no-repeat;
+	text-indent: -90000px;
+	margin: 0 auto;
+}
+.i-datefield-calendarpanel .i-button-nextyear {
+	background: transparent url(datefield/img/nextyear.png) no-repeat;
+}
+.i-datefield-calendarpanel .i-button-prevyear:hover,
+.i-datefield-calendarpanel .i-button-nextyear:hover {
+	background-position: left bottom;
+}
+
+/* Month buttons */
+.i-datefield-calendarpanel .i-button-prevmonth,
+.i-datefield-calendarpanel .i-button-nextmonth {
+	display: block;
+	width: 11px;
+	height: 16px;
+	border: none;
+	padding: 0;
+	background: transparent url(datefield/img/prevmonth.png) no-repeat;
+	text-indent: -90000px;
+	margin: 0 auto;
+}
+.i-datefield-calendarpanel .i-button-nextmonth {
+	background: transparent url(datefield/img/nextmonth.png) no-repeat;
+}
+.i-datefield-calendarpanel .i-button-prevmonth:hover,
+.i-datefield-calendarpanel .i-button-nextmonth:hover {
+	background-position: left bottom;
+}
+
+.i-datefield-calendarpanel strong {
+	color: #ee5311;
+	display: block;
+	width: 20px;
+}
+
+.i-datefield-calendarpanel-day,
+.i-datefield-calendarpanel-day-today {
+	cursor: pointer;
+	padding: 1px 3px;
+	width: 14px;
+	height: 16px;
+}
+
+.i-datefield-calendarpanel-day-today {
+	border: 1px solid #429ce9;
+	width: 12px;
+	height: 14px
+}
+
+.i-disabled .i-datefield-calendarpanel-day,
+.i-disabled .i-datefield-calendarpanel-day-today {
+	cursor: default;
+}
+
+.i-datefield-calendarpanel-day-entry {
+	color: #6a98b5;
+}
+
+.i-datefield-calendarpanel-day-disabled {
+	font-weight: normal;
+	color: #dddddd;
+	cursor: default;
+	opacity: 0.5;
+}
+
+.i-datefield-calendarpanel-day-entry.i-datefield-calendarpanel-day-disabled {
+	color: #afd6f8;
+}
+
+.i-datefield-calendarpanel-day-selected {
+	font-weight: bold;
+	width: 14px;
+	height: 16px;
+	color: #fff;
+	padding: 1px 3px;
+	background: transparent url(datefield/img/selected-bg.png) no-repeat 50% 50%;
+	cursor: default;
+	border: none;
+}
+
+.i-datefield-time {
+	white-space: nowrap;
+	font-size: 11px;
+}
+
+.i-datefield-time .i-label {
+	display: inline;
+}
+
+.i-datefield-time .i-select {
+	font-size: 10px;
+	padding: 0;
+	margin: 0;
+}
+.i-expandlayout-lo-table {
+	margin:0;
+	padding:0;
+	height:100%;
+	border:0;
+	border-spacing: 0;
+}
+.i-expandlayout-lo-td {
+	margin:0;
+	padding:0;
+	height:100%;
+	border:0;
+}
+
+.i-expandlayout-valign {
+	margin:0;
+	padding:0;
+	border:0;
+	border-collapse:collapse;
+	border-spacing:0;
+	height:100%;
+	width:100%;
+}
+
+.i-expandlayout-margin-top {
+	padding-top: 15px;
+}
+.i-expandlayout-margin-right {
+	padding-right: 18px;
+}
+.i-expandlayout-margin-bottom {
+	padding-bottom: 15px;
+}
+.i-expandlayout-margin-left {
+	padding-left: 18px;
+}
+
+.i-expandlayout-vspacing {
+	margin-top: 8px;
+}
+.i-expandlayout-hspacing {
+	margin-left: 8px;
+}
+
+.i-Notification {
+	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
+	background-color: #999999;
+	color: #ffffff;
+	padding: 0.3em;
+	cursor: pointer;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+}
+.i-Notification H1,
+.i-Notification p,
+.i-Notification.error H1,
+.i-Notification.error p,
+.i-Notification.warning H1,
+.i-Notification.warning p {
+	display: inline;
+	padding: 0.1em;
+}
+.i-Notification.tray H1,
+.i-Notification.tray p {
+	display: block;
+	font-size: 1em;
+	line-height: 0.5em;
+}
+
+.i-Notification.warning {
+	background: #f14c1a;
+}
+
+.i-Notification.error {
+	background-color: #ff0a0a;
+	background-image: url(notification/'img/notification-error.png');
+	background-repeat: no-repeat;
+	background-position: center right;
+	padding-right: 30px;
+}
+.i-Notification.tray {
+
+}
+.i-orderedlayout-margin-top {
+	padding-top: 15px;
+}
+.i-orderedlayout-margin-right {
+	padding-right: 18px;
+}
+.i-orderedlayout-margin-bottom {
+	padding-bottom: 15px;
+}
+.i-orderedlayout-margin-left {
+	padding-left: 18px;
+}
+
+.i-orderedlayout-vspacing {
+	margin-top: 8px;
+}
+.i-orderedlayout-hspacing {
+	padding-left: 8px;
+}
+.i-panel,
+.i-panel-caption,
+.i-panel-content,
+.i-panel-deco,
+.i-panel-light,
+.i-panel-caption-light,
+.i-panel-content-light,
+.i-panel-deco-light {
+	outline: none; /* Prevent selection outline which might break layouts or cause scrollbars */
+	text-align: left /* Force default alignment */
+}
+
+.i-panel:before {
+	display: block;
+	content: "";
+	background: transparent url(panel/img/top-right.png) repeat-x right top;
+	height: 9px;
+	margin-left: 9px;
+}
+
+.i-panel-caption,
+.i-panel-caption-light {
+	font-size: 18px;
+	line-height: 18px;
+	font-weight: normal;
+	letter-spacing: -0.03em;
+	color: #f14c1a;
+	white-space: nowrap;
+	height: 18px;
+	padding: 6px 18px 14px 18px;
+	border: 1px solid #babfc0;
+	border-top: none;
+	background: #fff;
+}
+
+.i-panel-nocaption {
+	height: 9px;
+	border-bottom: 1px solid #dee2e3;
+}
+
+.i-panel-caption:before,
+.i-panel-nocaption:before {
+	display: block;
+	content: "";
+	position: relative;
+	width: 9px;
+	height: 9px;
+	background: transparent url(panel/img/top-left.png) no-repeat;
+	margin: -15px 0 5px -19px;
+}
+
+.i-panel-nocaption:before {
+	margin: -9px 0 0 0;
+}
+
+.i-panel-content {
+	border: 1px solid #babfc0;
+	border-top: none;
+	border-bottom: 1px solid #dee2e3;
+	background-color: #fff;
+	overflow: auto;
+}
+
+.i-panel-deco {
+	height: 9px;
+	background: transparent url(panel/img/bottom-right.png) repeat-x right top;
+	margin-left: 9px;
+}
+
+.i-panel-deco:before {
+	display: block;
+	content: "";
+	width: 9px;
+	height: 9px;
+	margin-left: -9px;
+	background: transparent url(panel/img/bottom-left.png) no-repeat;
+}
+
+
+
+
+
+
+/* Light panel style */
+
+.i-panel-light:before {
+	display: none;
+}
+
+.i-panel-caption-light {
+	border-left: none;
+	border-right: none;
+	background: transparent;
+	padding-top: 14px;
+	overflow: hidden;
+}
+
+.i-panel-caption-light:before,
+.i-panel-nocaption-light:before {
+	display: none;
+}
+
+.i-panel-nocaption-light {
+	height: 1px;
+	background: #babfc0;
+	overflow: hidden;
+	border: none;
+}
+
+.i-panel-content-light {
+	border: none;
+	background: transparent;
+}
+
+.i-panel-deco-light {
+	height: 0;
+	overflow: hidden;
+}
+
+
+
+
+
+/* Light panel contained within another panel or a tabsheet */
+
+.i-panel .i-panel-caption-light,
+.i-tabsheet .i-panel-caption-light {
+	margin-top: -1px;
+	padding-top: 14px;
+	border-top: 1px solid #babfc0;
+}
+
+
+
+
+
+/* IE specific rules (different selectors for IE6 and IE7.
+ * These selectors must be separate because IE6 won't 
+ * apply them if they are grouped together 
+ * (it doesn't recognize the '+' selector).
+*/
+* html .i-panel-caption {
+	border: 1px solid #babfc0;
+	padding-top: 14px;
+}
+*+html .i-panel-caption {
+	border: 1px solid #babfc0;
+	padding-top: 14px;
+}
+
+* html .i-panel-caption-light {
+	border-left: none;
+	border-right: none;
+}
+*+html .i-panel-caption-light {
+	border-left: none;
+	border-right: none;
+}
+
+* html .i-panel-content {
+	border-bottom: 1px solid #babfc0;
+}
+*+html .i-panel-content {
+	border-bottom: 1px solid #babfc0;
+}
+
+* html .i-panel-content-light {
+	border-bottom: none;
+}
+*+html .i-panel-content-light {
+	border-bottom: none;
+}
+
+* html .i-panel-deco {
+	height: 0;
+	overflow: hidden;
+}
+*+html .i-panel-deco {
+	height: 0;
+	overflow: hidden;
+}
+
+/* Without caption */
+* html .i-panel-nocaption {
+	height: 1px;
+	overflow: hidden;
+	background: #c1c6cc;
+	border: none;
+}
+*+html .i-panel-nocaption {
+	height: 1px;
+	overflow: hidden;
+	background: #c1c6cc;
+	border: none;
+}
+.i-progressindicator {
+	background: #dfe2e4 url(progressindicator/img/base.gif);
+	height: 9px;
+	border: 1px solid #b6bbbc;
+	overflow: hidden; /* for IE6 */
+}
+
+.i-progressindicator div {
+	background: #f7f9f9 url(progressindicator/img/progress.png);
+	height: 9px;
+	overflow: hidden; /* for IE6 */
+}
+
+.i-progressindicator-indeterminate {
+	background: #dfe2e4 url(common/img/ajax-loader-medium.gif);
+	height: 16px;
+	width: 16px;
+	overflow: hidden; /* for IE6 */
+}
+.i-select {
+	text-align: left /* Force default alignment */
+}
+.i-select-option {
+
+}
+
+.i-select-optiongroup {
+
+}
+
+.i-select-optiongroup .i-select-option {
+	display: block;
+	white-space: nowrap;
+}
+
+.i-select-select {
+	/*
+	border: 1px solid #b6b6b6;
+	border-bottom-color: #9d9d9d;
+	border-top-color: #d6d6d6;
+	border-left-color: #d6d6d6;
+	*/
+	display: block;
+	font-size: 13px;
+}
+
+/* Twincol style */
+.i-select-twincol {
+	white-space: nowrap;
+}
+.i-select-twincol-options {
+	float: left;
+	font-size: 13px;
+}
+.i-select-twincol-selections {
+	font-size: 13px;
+	font-weight: bold;
+}
+
+.i-select-twincol-buttons {
+	float: left;
+	padding: 2px; /* does not work in first render in FF ? */
+	text-align: center;
+}
+
+.i-select-twincol-buttons .i-select-twincol-deco {
+	clear:both;
+}
+
+.i-select-twincol .i-textfield {
+	display: block;
+	float: left;
+	clear: left;
+}
+
+.i-select-twincol .i-button {
+	display: block;
+	float: left;
+}
+
+.i-select-twincol-buttons .i-button {
+	display: inline;
+	float: none;
+}
+
+/** Filterselect aka ComboBox styles */
+
+.i-filterselect {
+	height: 23px;
+	background: transparent url(select/img/bg-left-filter.png) no-repeat;
+	margin-right: 1px;
+	white-space: nowrap;
+	text-align: left /* Force default alignment */
+}
+
+.i-filterselect-input {
+	width: 99%;
+	border: none;
+	background: transparent;
+	height: 20px;
+	margin: 0;
+	padding: 3px 0 0 4px;
+	font-size: 13px;
+}
+
+.i-filterselect-button {
+	float: right;
+	margin: -23px -1px 0 0;
+	width: 25px;
+	height: 23px;
+	cursor: pointer;
+	background: transparent url(select/img/bg-right-filter.png);
+	position: relative;
+}
+.i-filterselect-button:hover {
+	background-position: bottom left;
+}
+
+.i-filterselect-suggestpopup {
+	background: #f6f7f7;
+	border: 1px solid #b6bbbc;
+	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
+	color: #464f52;
+	font-size: 12px;
+	line-height: 18px;
+	margin-top: -1px;
+}
+.i-filterselect-suggestmenu {
+	margin-left: -2px;
+}
+.i-filterselect-suggestmenu .gwt-MenuItem {
+	padding: 1px 5px;
+	cursor: pointer;
+	height: 18px;
+	white-space: nowrap;
+}
+
+.i-filterselect-suggestmenu .gwt-MenuItem-selected {
+	background: #5daee8;
+	color: #fff;
+}
+
+.i-filterselect-nextpage,
+.i-filterselect-nextpage-off,
+.i-filterselect-prevpage-off,
+.i-filterselect-prevpage {
+	height: 11px;
+	width:100%;
+	background: transparent url(select/img/button-bg.png) no-repeat 50% 0;
+	text-align: center;
+	margin: 2px 0 0 0;
+	overflow:hidden;
+}
+.i-filterselect-prevpage,
+.i-filterselect-prevpage-off {
+	background-position: 50% -1px;
+	margin: 0 0 2px 0;
+}
+.i-filterselect-prevpage:hover {
+	background-position: 50% bottom;
+}
+.i-filterselect-nextpage:hover {
+	background-position: 50% -12px;
+}
+.i-filterselect-nextpage span,
+.i-filterselect-nextpage-off span,
+.i-filterselect-prevpage-off span,
+.i-filterselect-prevpage span {
+	display: block;
+	height: 12px;
+	width:100%;
+	background: transparent url(select/img/arrow-up.png) no-repeat 50% 40%;
+	text-indent: -90000px;
+	cursor: pointer;
+	overflow: hidden;
+}
+.i-filterselect-nextpage span,
+.i-filterselect-nextpage-off span {
+	background: transparent url(select/img/arrow-down.png) no-repeat 50% 60%;
+}
+
+.i-filterselect-nextpage-off,
+.i-filterselect-prevpage-off {
+	color: #666;
+	opacity: 0.5;
+	filter: Alpha(opacity=50);
+}
+.i-filterselect-nextpage-off span,
+.i-filterselect-prevpage-off span {
+	cursor: default;
+}
+
+.i-filterselect-status {
+	font-size: 11px;
+	line-height: 11px;
+	width:100%;
+	padding: 4px 0px;
+	height: 11px;
+	white-space: nowrap;
+	text-align: center;
+	border-top: 1px solid #b6bbbc;
+}
+
+/* IE specific styles */
+
+* html .i-filterselect {
+
+}
+* html .i-filterselect-input {
+	margin-top: -1px;
+}
+
+*+html .i-filterselect-input {
+	margin-top: -1px;
+}
+* html .i-filterselect-button {
+	position: static;
+	margin-top: -24px;
+}
+*+html .i-filterselect-button {
+	position: static;
+	margin-top: -24px;
+}
+
+
+/*--------------------------
+  Default (horizontal) styles
+  --------------------------*/
+
+.i-slider {
+	border: 1px solid #cccfd0;
+	height: 3px;
+	margin: 5px 0;
+}
+
+.i-slider-base {
+	height: 2px;
+	border-top: 1px solid #cbcdce;
+	background: #f3f3f4;
+}
+.i-slider-handle {
+	background: transparent url(slider/img/handle-horizontal.png);
+	width: 12px;
+	height: 12px;
+	margin-top: -5px;
+	font-size: 0;
+	cursor: pointer;
+}
+.i-slider-handle:hover {
+	background-position: left bottom;
+}
+/* TODO
+.i-slider-bigger {
+	background: #dde4ef url(slider/img/arrow-right.png);
+	float: right;
+	width: 14px;
+	height: 14px;
+	overflow: hidden;
+	margin: 0 0 0 1px;
+}
+
+.i-slider-bigger:hover {
+	background-image: url(slider/img/arrow-right-over.png);
+}
+
+.i-slider-smaller {
+	background: #dde4ef url(slider/img/arrow-left.png);
+	float: left;
+	width: 14px;
+	height: 14px;
+	overflow: hidden;
+	margin: 0 1px 0 0;
+}
+
+.i-slider-smaller:hover {
+	background-image: url(slider/img/arrow-left-over.png);
+}
+*/
+
+
+/*-----------------
+  Vertical styles 
+  -----------------*/
+
+.i-slider-vertical {
+	width: 3px;
+	height: auto;
+	margin: 0 5px;
+}
+.i-slider-vertical .i-slider-base {
+	width: 2px;
+	border-left: 1px solid #cbcdce;
+	background: #f3f3f4;
+}
+.i-slider-vertical .i-slider-handle {
+	background: transparent url(slider/img/handle-vertical.png);
+	width: 12px;
+	height: 12px;
+	font-size: 0;
+	cursor: pointer;
+	margin-left: -5px;
+}
+.i-slider-vertical .i-slider-handle:hover {
+	background-position: left bottom;
+}
+.i-slider-vertical .i-slider-bigger {
+
+}
+.i-slider-vertical .i-slider-smaller {
+
+}
+
+
+
+/* IE specific styles */
+
+* html .i-slider,
+* html .i-slider-vertical {
+	margin: 0;
+}
+* html .i-slider .i-slider-handle {
+	margin: -1px 0;
+}
+* html .i-slider-vertical .i-slider-handle {
+	margin: 0 -1px;
+}
+.i-splitpanel-horizontal .i-splitpanel-hsplitter {
+	width: 6px;
+	font-size: 1px; /* for IE6 */
+}
+
+.i-splitpanel-horizontal .i-splitpanel-hsplitter div {
+	width: 6px;
+	font-size: 1px; /* for IE6 */
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	background: #ccd2d0 url(splitpanel/img/bg_hor.png);
+	border: 1px solid #b6bbbc;
+	cursor: e-resize;
+	margin: 0 -1px;
+}
+
+.i-splitpanel-vertical .i-splitpanel-vsplitter {
+	height: 6px;
+	font-size: 1px; /* for IE6 */
+}
+
+.i-splitpanel-vertical .i-splitpanel-vsplitter div {
+	height: 6px;
+	font-size: 1px; /* for IE6 */
+	background: #ccd2d0 url(splitpanel/img/bg_ver.png);
+	border: 1px solid #b6bbbc;
+	cursor: n-resize;
+	margin: -1px 0;
+}
+
+
+
+
+
+/* IE specific styles */
+
+* html .i-splitpanel-horizontal .i-splitpanel-hsplitter div {
+	height: 99%;
+}
+
+* html .i-splitpanel-vertical .i-splitpanel-vsplitter {
+	height: 8px;
+}
+
+* html .i-splitpanel-vertical .i-splitpanel-vsplitter div {
+	margin: 0;
+}
+
+.i-table {
+	border: 1px solid #b6bbbc;
+	overflow: hidden;
+	text-align: left /* Force default alignment */
+}
+
+.i-table.table-inline {
+	border-left: none;
+	border-right: none;
+	/*margin: -16px -18px 0 -18px;*/
+}
+
+.i-table-header-wrap {
+	height: 36px;
+	background: #e7edf3 url(table/img/header-bg.png) repeat-x;
+	border-bottom: 1px solid #b6bbbc;
+	overflow: hidden;
+}
+
+.i-table-header {
+	height: 36px;
+}
+
+.i-table-header table,
+.i-table-table {
+	border-collapse: collapse;
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+.i-table-header td,
+.i-table-table td {
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+.i-table-header td {
+	cursor: pointer;
+}
+
+.i-table-resizer {
+	display: block;
+	height: 36px;
+	float: right;
+	background: transparent url(table/img/resizer-bg.png) repeat-y 50% 50%;
+	cursor: col-resize;
+}
+
+.i-table-caption-container {
+	float: right;
+	overflow: hidden;
+	white-space: nowrap;
+	color: #393a3c;
+	font-size: 15px;
+	padding-top: 9px;
+	text-shadow: #ffffff 2px 2px 0;
+}
+
+.i-table-header-cell-asc .i-table-caption-container {
+	background: transparent url(table/img/sort-asc.png) no-repeat right 80%;
+}
+.i-table-header-cell-desc .i-table-caption-container {
+	background: transparent url(table/img/sort-desc.png) no-repeat right 80%;
+}
+.i-table-header-cell:hover,
+.i-table-header-cell-asc:hover,
+.i-table-header-cell-desc:hover {
+	background: transparent url(table/img/header-bg-over.png) repeat-x;
+}
+
+
+.i-table-body {
+	background: #fff;
+}
+
+.i-table-row-spacer {
+	height: 10px;
+	overflow: hidden; /* IE hack to allow < one line height divs */
+}
+
+.i-table-row,
+.i-table-row-odd {
+	border: 0;
+	margin: 0;
+	padding: 0;
+	background-color: #fff;
+	cursor: default;
+}
+.i-table-row-odd {
+	background-color: #f6f7f7;
+}
+.i-table-row:hover,
+.i-table-row-odd:hover {
+	background-color: #edeeee;
+}
+.i-table .i-selected {
+	background: #d5dde0;
+	color: #456572;
+}
+.i-table-row td,
+.i-table-row-odd td {
+	padding: 3px 0;
+}
+.i-table-cell-content {
+	white-space: nowrap;
+	overflow: hidden;
+	padding-left: 3px;
+}
+
+
+
+.i-table-column-selector {
+	float: right;
+	background: transparent url(table/img/colsel.png) no-repeat;
+	margin: -36px 0 0 0;
+	height: 36px;
+	width: 15px;
+	position: relative; /* hide this from IE, it works without it */
+}
+
+.i-table-focus-slot-left {
+	border-left: 2px solid #b6bbbc;
+	margin-right: -2px;
+}
+.i-table-focus-slot-right {
+	border-right: 2px solid #b6bbbc;
+	margin-left: -2px;
+}
+
+.i-table-header-drag {
+	position: absolute;
+	background: #e7edf3 url(table/img/header-bg.png) repeat-x;
+	border: 1px solid #b6bbbc;
+	padding: 4px;
+	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
+	color: #464f52;
+	font-size: 15px;
+	opacity: 0.5;
+	filter: alpha(opacity=50);
+	margin-top: 20px;
+	z-index: 20000;
+}
+
+.i-table-scrollposition {
+	width: 160px;
+	height: 39px;
+	background: transparent url(table/img/scroll-position-bg.png);
+}
+
+.i-table-scrollposition span {
+	display: block;
+	margin-top: 8px;
+	text-align: center;
+	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
+	color: #464f52;
+	font-size: 15px;
+	text-shadow: #ffffff 2px 2px 0;
+}
+
+
+/* rowe in column selector */
+.i-on div {
+	background-image: url(table/img/check.gif);
+	background-repeat: no-repeat;
+	background-position: 2px center;
+	text-indent: 6px;
+}
+.i-off div {
+	text-indent: 6px;
+}
+
+
+/* IE specific styles */
+* html .i-table-scrollposition {
+	background: transparent;
+	/* We need multiple different filters because we cannot be sure of the context 
+	   the browser is currently in (i.e. with ending slash or without). */
+	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../../ITMILL/widgetsets/com.itmill.toolkit.terminal.gwt.DefaultWidgetSet/default/table/img/scroll-position-bg.png", sizingMethod="scale");
+	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../ITMILL/widgetsets/com.itmill.toolkit.terminal.gwt.DefaultWidgetSet/default/table/img/scroll-position-bg.png", sizingMethod="scale");
+	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="ITMILL/widgetsets/com.itmill.toolkit.terminal.gwt.DefaultWidgetSet/default/table/img/scroll-position-bg.png", sizingMethod="scale");
+}
+.i-tabsheet,
+.i-tabsheet-content,
+.i-tabsheet-deco {
+	outline: none; /* Prevent selection outline which might break layouts or cause scrollbars */
+	text-align: left /* Force default alignment */
+}
+
+
+.i-tabsheet-tabs {
+	empty-cells: hide;
+	border-collapse: collapse;
+	height: 48px;
+	background: transparent url(tabsheet/img/tabs-bg.png) repeat-x bottom left;
+	width: 100%;
+	overflow:hidden;
+}
+
+.i-tabsheet-tabs .i-caption {
+	white-space: nowrap;
+}
+
+/* for IE (does not inherit) */
+.i-tabsheet-tabs .i-caption span {
+	white-space: nowrap;
+}
+
+.i-tabsheet-tabs .gwt-TabBarFirst {
+	display: none;
+}
+
+.i-tabsheet-tabs .gwt-TabBarRest {
+	border: 1px solid #b6bbbc;
+	background: #f8f9f9 url(tabsheet/img/tab-bg.png);
+	height: 37px;
+}
+
+.i-tabsheet-tabs .gwt-TabBarItem {
+	border: 1px solid #b6bbbc;
+	border-right: none;
+	height: 20px;
+	padding: 9px 15px 8px 15px;
+	margin-top: 9px;
+	color: #777f85;
+	font-size: 15px;
+	line-height: 15px;
+	background: #f8f9f9 url(tabsheet/img/tab-bg.png);
+	cursor: pointer;
+}
+
+.i-tabsheet-tabs .gwt-TabBarItem-selected {
+	border: none;
+	background: transparent url(panel/img/top-left.png) no-repeat;
+	margin-top: -9px;
+	padding-left: 16px;
+	height: 30px;
+	cursor: default;
+	color: #ee5311;
+}
+
+.i-tabsheet-tabs .gwt-TabBarItem:hover {
+	color: #4b5257;
+}
+
+.i-tabsheet-tabs .gwt-TabBarItem-selected:hover {
+	color: #ee5311;
+}
+
+.i-tabsheet-tabs .gwt-TabBarItem-selected:before {
+	display: block;
+	height: 9px;
+	background: transparent url(panel/img/top-right.png) repeat-x right top;
+	content: "";
+	margin: -9px -16px 9px -6px;
+}
+
+.i-tabsheet-content {
+	border: 1px solid #babfc0;
+	background-color: #fff;
+	border-bottom: none;
+	border-top: none;
+}
+
+.i-tabsheet-deco {
+	height: 9px;
+	background: transparent url(panel/img/bottom-right.png) repeat-x right top;
+	margin-left: 9px;
+}
+
+.i-tabsheet-deco:before {
+	display: block;
+	content: "";
+	width: 9px;
+	height: 9px;
+	margin-left: -9px;
+	background: transparent url(panel/img/bottom-left.png) no-repeat;
+}
+
+
+
+/* Progress indication */
+
+.i-tabsheet-loading .i-tabsheet-tabs .gwt-TabBarItem-selected span{
+	background: transparent url(common/img/ajax-loader.gif) no-repeat;
+	display: block;
+	margin-left: -10px;
+	padding-left: 10px;
+	margin-top: -12px;
+	padding-top: 12px;
+}
+
+.i-tabsheet-loading .i-tabsheet-content * {
+	visibility: hidden;
+	overflow: hidden;
+}
+
+
+
+
+/* IE specific styles */
+
+* html .i-tabsheet-tabs {
+	height: 46px;
+}
+*+html .i-tabsheet-tabs {
+	height: 46px;
+}
+
+* html .i-tabsheet-tabs .gwt-TabBarItem-selected {
+	border: 1px solid #babfc0;
+	border-bottom: none;
+	background: #fff;
+	margin-top: 0;
+	height: 23px;
+	padding: 18px 14px 6px 15px;
+	cursor: default;
+	color: #ee5311;
+}
+*+html .i-tabsheet-tabs .gwt-TabBarItem-selected {
+	border: 1px solid #babfc0;
+	border-bottom: none;
+	background: #fff;
+	margin-top: 0;
+	height: 23px;
+	padding: 18px 14px 6px 15px;
+	cursor: default;
+	color: #ee5311;
+}
+
+* html .i-tabsheet-deco {
+	height: 1px;
+	background: #babfc0;
+	overflow: hidden;
+	margin: 0;
+}
+*+html .i-tabsheet-deco {
+	height: 1px;
+	background: #babfc0;
+	overflow: hidden;
+	margin: 0;
+}
+.i-textfield {
+	background: #fff url(textfield/img/bg.png) repeat-x;
+	padding: 2px;
+	border: 1px solid #b6b6b6;
+	border-top-color: #9d9d9d;
+	border-bottom-color: #d6d6d6;
+	border-right-color: #d6d6d6;
+	margin: 0;
+	font-size: 13px;
+	height: 18px;
+	text-align: left /* Force default alignment */
+}
+
+.i-textarea {
+	background: #fff url(textfield/img/bg.png) repeat-x;
+	padding: 2px;
+	border: 1px solid #b6b6b6;
+	border-top-color: #9d9d9d;
+	border-bottom-color: #d6d6d6;
+	border-right-color: #d6d6d6;
+	margin: 0;
+	font-size: 13px;
+}
+
+.i-textfield-focus,
+.i-textarea-focus {
+	border-color: #5daee8;
+}
+
+.i-textfield-error,
+.i-textarea-error {
+	background: #ff9999;
+}
+
+.i-textfield.i-readonly,
+.i-textarea.i-readonly {
+	background: transparent;
+	color: #222;
+	border: none;
+}
+
+
+.i-richtextarea {
+	border: 1px solid #b6b6b6;
+	overflow: hidden;
+}
+.i-richtextarea .gwt-RichTextArea {
+	background: #fff url(textfield/img/bg.png) repeat-x;
+}
+.i-richtextarea iframe {
+	border: 0;
+}
+.i-tree {
+	text-align: left /* Force default alignment */
+}
+
+.i-tree-node {
+	background: transparent url(tree/img/collapsed.png) no-repeat 2px 1px;
+}
+.i-tree-node-expanded {
+	background: transparent url(tree/img/expanded.png) no-repeat 2px 1px;
+}
+.i-tree-node-leaf {
+	background-image: none;
+}
+.i-tree-node-caption {
+	margin-left: 16px;
+}
+.i-tree-node span {
+	padding: 0 2px;
+	cursor: pointer;
+	white-space: nowrap;
+}
+.i-tree-node-selected span {
+	background: #5daee8;
+	color: #fff;
+	padding: 0 2px;
+	cursor: pointer;
+}
+.i-tree-node-children {
+	padding-left: 16px;
+}
+.i-window {
+	color: #464f52;
+	font-size: 13px;
+	line-height: 18px;
+}
+
+.i-window:before {
+	display: block;
+	content: "";
+	background: transparent url(window/img/top-right.png) repeat-x right top;
+	height: 21px;
+	margin-left: 21px;
+}
+
+.i-window-wrap {
+	padding-left: 20px;
+	background: transparent url(window/img/left-bg.png) repeat-y;
+	/* somehow this won't inherit from .i-window */
+	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
+}
+
+.i-window-wrap2 {
+	padding-right: 20px;
+	background: transparent url(window/img/right-bg.png) repeat-y top right;
+}
+
+.i-window-outerheader {
+	height: 18px;
+	padding: 8px 34px 14px 12px;
+	background: #fff;
+}
+
+.i-window-header {
+	font-size: 18px;
+	line-height: 18px;
+	font-weight: normal;
+	letter-spacing: -0.03em;
+	color: #f14c1a;
+	white-space: nowrap;
+	cursor: move;
+	text-overflow:ellipsis;
+	overflow:hidden;
+}
+
+.i-window-outerheader:before {
+	display: block;
+	content: "";
+	width: 21px;
+	height: 21px;
+	margin: -29px 0 6px -32px;
+	background: transparent url(window/img/top-left.png);
+}
+
+.i-window-contents {
+	background: #fff;
+	border: 1px solid #babfc0;
+	font-size: 13px;
+	line-height: 18px;
+}
+
+.i-window-footer {
+	height: 0;
+	font-size: 0px;
+	/* Occupy more height to prevent scrollbars in Mac FF */
+	margin-bottom: 46px;
+}
+
+.i-window-footer:before {
+	display: block;
+	content: "";
+	width: 21px;
+	height: 46px;
+	background: transparent url(window/img/bottom-left.png);
+	margin-left: -20px;
+}
+
+.i-window-footer:after {
+	display: block;
+	content: "";
+	height: 46px;
+	background: transparent url(window/img/bottom-right.png) no-repeat top right;
+	margin: -46px -20px 0 1px;
+}
+
+.i-window-resizebox {
+	position:absolute;
+	bottom: 24px;
+	right: 0;
+	width: 25px;
+	height: 21px;
+	cursor: se-resize;
+	background: transparent url(window/img/resize.png);
+}
+
+.i-window-closebox {
+	position:absolute;
+	top: 33px;
+	right: 36px;
+	width: 12px;
+	height: 11px;
+	background: transparent url(window/img/close.png);
+	cursor: pointer;
+	overflow: hidden;
+}
+.i-window-closebox:hover {
+	background-position: 0 -11px;
+}
+
+.i-window-modalitycurtain {
+	top:0;
+	left:0;
+	background:white;
+	opacity: 0.5;
+	position:fixed;
+	width:100%;
+	height:100%;
+	filter: alpha(opacity=50);
+}
+
+/* IE6 workaround for position:fixed; */
+* html .i-window-modalitycurtain { 
+	position: absolute;
+	top: expression((ignoreMe = document.documentElement.scrollTop) + "px"); 
+}
+
+/* IE specific styles */
+
+* html .i-window-wrap {
+	padding: 12px;
+	border: 1px solid #e8e9e9;
+	background: #d8dee0;
+	/*filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../ITMILL/widgetsets/com.itmill.toolkit.terminal.gwt.DefaultWidgetSet/default/window/img/bg-color.png", sizingMethod="scale");*/
+	/*zoom: 1;  to gain hasLayout, IE won't apply filter otherwise */
+}
+*+html .i-window-wrap {
+	padding: 12px;
+	border: 1px solid #e8e9e9;
+	background: transparent url(window/img/bg-color.png) repeat;
+}
+
+* html .i-window-wrap2 {
+	padding: 6px;
+	border: 1px solid #babfc0;
+	background: #fff;
+}
+*+html .i-window-wrap2 {
+	padding: 6px;
+	border: 1px solid #babfc0;
+	background: #fff;
+}
+
+* html .i-window-footer {
+	margin-bottom: 0;
+}
+*+html .i-window-footer {
+	margin-bottom: 0;
+}
+
+* html .i-window-resizebox {
+	bottom: 1px;
+	right:  1px;
+	width: 15px;
+	height: 12px;
+	background: url(window/img/resize.png);
+}
+*+html .i-window-resizebox {
+	bottom: 0;
+	background-position: 3px 3px;
+}

@@ -97,10 +97,6 @@ public class ApplicationConnection {
         this.widgetSet = widgetSet;
         configuration = cnf;
 
-        if (cnf.getThemeUri() != null) {
-            injectCss(cnf.getThemeUri() + "/styles.css");
-        }
-
         if (isDebugMode()) {
             console = new DebugConsole(this);
         } else {
@@ -129,27 +125,6 @@ public class ApplicationConnection {
         makeUidlRequest("repaintAll=1");
         applicationRunning = true;
     }
-
-    /**
-     * Injects CSS to head element
-     * 
-     * TODO since gwt 1.5 this can be made non-native
-     * 
-     * @param css
-     */
-    private native static void injectCss(String cssUri)
-    /*-{
-        
-        if(!$wnd.itmill.themesLoaded[cssUri]) {
-            var stylesheet = $doc.createElement('link');
-            stylesheet.setAttribute('rel', 'stylesheet');
-            stylesheet.setAttribute('type', 'text/css');
-            stylesheet.setAttribute('href', cssUri);
-            var h = $doc.getElementsByTagName("head")[0];   
-            h.appendChild(stylesheet);
-            $wnd.itmill.themesLoaded[cssUri] = true;
-        }
-    }-*/;
 
     /**
      * Method to check if application is in testing mode. Can be used after
