@@ -49,7 +49,7 @@ public class PortletConfigurationGenerator {
             + "                        <portlet-mode>help</portlet-mode>\r\n"
             + "                </supports>\r\n"
             + "                <portlet-info>\r\n"
-            + "                        <title>IT Mill Toolkit %NAME%</title>\r\n"
+            + "                        <title>%NAME%</title>\r\n"
             + "                        <short-title>%NAME%</short-title>\r\n"
             + "                </portlet-info>\r\n"
             + "                \r\n"
@@ -66,7 +66,10 @@ public class PortletConfigurationGenerator {
             + "                        <role-name>user</role-name>\r\n"
             + "                </security-role-ref>\r\n"
             + "        </portlet>\r\n";
-    private static final String PORTLET_XML_FOOT = "</portlet-app>";
+    private static final String PORTLET_XML_FOOT = "        <container-runtime-option>\r\n"
+            + "                <name>javax.portlet.escapeXml</name>\r\n"
+            + "                <value>false</value>\r\n"
+            + "        </container-runtime-option>" + "</portlet-app>";
 
     private static final String LIFERAY_PORTLET_XML_HEAD = "<?xml version=\"1.0\"?>\r\n"
             + "<!DOCTYPE liferay-portlet-app PUBLIC \"-//Liferay//DTD Portlet Application 4.3.0//EN\" \"http://www.liferay.com/dtd/liferay-portlet-app_4_3_0.dtd\">\r\n"
