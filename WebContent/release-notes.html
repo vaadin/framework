@@ -30,331 +30,59 @@
   changes are possible, including API changes, before the stable release.
 </p>
 
-    <h2>Summary of changes between IT Mill Toolkit 5.0 and 5.1</h2>
-
-<p>See detailed <a href="#changelog">ChangeLog</a> below for a complete list of changes.</p>
-
+    <h2>Important Changes</h2>
+    
 <h4>General</h4>
 <ul>
-    <li>Numerous stability improvements towards a stable Release 5.</li>
-    <li>Support for upcoming IT Mill Testing Tools</li>
-    <li>Manual updated further towards Toolkit 5</li>
-    <li>Upgraded Jetty Servlet Container for demo applications and QuickStart
-    project. Web application is no longer copied to a temporary folder during
-    startup, which should speed up startup and make debugging on Eclipse work
-    better.</li>
+  <li><p>Support for multiple applications in the same browser window.
+See <tt>WebContent/multiapp.html</tt> for an example on how to embed
+multiple applications.</p><p><i><b>IMPORTANT!</b> If you have embedded
+Toolkit Applications in a HTML page with earlier versions of IT Mill
+Toolkit, you must update the embedding page! Run the application
+separately,
+view the source code, and copy the loading code to your HTML
+page.</i></p></li>
+
+  <li>Many bug fixes. See the ChangeLog below.</li>
 </ul>
 
-<h4>Changed Behavior</h4>
-<ul>
-  <li>ComboBox component no longer in newItemsAllowed mode by default. <i>Important, may break applications</i>.</li>
-  <li>Adding a component first to A and then to B will move the component from A to B</li>
-</ul>
-
-<h4>Notable API Enhancements</h4>
-<ul>
-    <li>All components now implement Sizeable interface (Component interface extends Sizeable)</li>
-    <li>GridLayout?'s setWidth/Height now means the functions in Sizeable. Previously they were used to set rows and cols in grid</li>
-</ul>
-
-<h4>Deprecated</h4>
-<ul>
-    <li>Deprecated <i>setFocusedComponent()</i>
-    and <i>consumeFocus()</i> in Application class, because they had a design flaw
-    and have to be redesigned later. The <i>getFocusedComponent()</i> had  
-    very different behaviour than was expected and was removed altogether.</li>
-
-    <li>Deprecated methods that used a string parameter to do Java reflect.
-    They allowed easy but bad and error prone programming style, which does not
-    survive re-factoring.</li>
-</ul>
-
-<h4>Notable Fixes</h4>
-<ul>
-  <li>Fixed significant memory leaks and should be clean now.</li>
-  <li>Removed remaining uses of WeakHashMap, allowing better compatibility with Terracotta</li>
-</ul>
-
-<p>See detailed <a href="#changelog">ChangeLog</a> below for a complete list of changes.</p>
-
-
-<h2>Known Issues in <version></version> (beta)</h3>
-
-<h3>Installation Issues</h3>
-
-<ul>
-  <li>At least with Windows XP default unzipper or when using WinRAR to
-	uncompress the installation package, uncompression can result in an
-	error such as "<i>The system cannot find the file
-	specified.</i>" This is because the uncompressor is unable to
-	handle long file paths where the total length exceeds 256 characters.
-	This occurs, for example, if you try to uncompress the package under
-	Desktop. You should uncompress the package directly under <tt>C:\</tt>
-	or some other short path.</li>
-
-  <li>In Windows, you must have Java Runtime Environment (JRE) installed
-	or the batch file will fail and close immediately.</li>
-</ul>
-
-<h3>Issues by number</h3>
-<ul>
-  <li>#20: CompositeValidator.getErrorMessage is broken</li>
-  <li>#88: Tabsheet can't be rendered if it has no tabs</li>
-  <li>#139: Form setVisibleItemProperties() doesn't work</li>
-  <li>#147: Table.getCurrentPageFirstItemId() does not work correctly</li>
-  <li>#148: icon doesn't appear in pop-up actions</li>
-  <li>#151: StringLengthValidator bugs</li>
-  <li>#152: setContainerDataSource fires value change</li>
-  <li>#158: Table Sorting does not work if data source implements Container.Ordered, but not Container.Indexed</li>
-  <li>#161: Datasource resize might throw ArrayOutOfBundes or NegativeArraySize exceptions from the table</li>
-  <li>#174: Upload.notifyListeners() does nothing</li>
-  <li>#463: Button: Callback method selected randomly when multiple methods match</li>
-  <li>#557: Label icon doens't work in Table</li>
-  <li>#560: Gridlayout alignment hardcoded</li>
-  <li>#588: addListener() should not add same listener multiple times</li>
-  <li>#591: TabSheet.replaceComponent loses selected tab</li>
-  <li>#657: MethodProperty NPE when args == null</li>
-  <li>#666: Tree component keeps last selection after changing selectable-property to false</li>
-  <li>#677: Components inside a disabled Panel are not disabled</li>
-  <li>#740: Validator.Suggestive: suggestValidValue never called?</li>
-  <li>#810: Table.setContainerDataSource does not clear selection</li>
-  <li>#825: QueryContainer doesn't allow closing without losing container data.</li>
-  <li>#826: Select adds new items before + clicked</li>
-  <li>#831: Re-enabling a tab does not display the change</li>
-  <li>#832: Invalid getSelect() method in TabSheet.SelectedTabChangeEvent</li>
-  <li>#846: Make validation error cleanup automatic in abstract component</li>
-  <li>#913: Formatted descriptions (tooltips)</li>
-  <li>#936: Table component makes extra requests when disabling/enabling the table (FF only)</li>
-  <li>#1021: Reservr: creates temp files to root (database related?)</li>
-  <li>#1049: Round corners for IE6/IE7</li>
-  <li>#1078: Select / ComboBox : when opening selection div it always starts from top even though currently selected value is elsewhere</li>
-  <li>#1080: Window resize: if mouse hits scrollbar when dragging, cursor dragging state is lost on Safari 3</li>
-  <li>#1086: ITree: Keyboard navigation</li>
-  <li>#1092: Calendar: jumpy, buttons change position</li>
-  <li>#1093: Select has thin red lines (other widgets are seen through)</li>
-  <li>#1103: Table: hangs on TestComponentsAndLayouts</li>
-  <li>#1106: Embedded / Window: embedded (Flash) are rendered through window</li>
-  <li>#1117: Window / RichTextArea: whole scrolls / jumps up when bold is clicked</li>
-  <li>#1132: RichTextEditor: setEnabled(false) still can be edited</li>
-  <li>#1136: CustomComponent: setVisible(false) does not hide it, setEnabled(false) does not disable it</li>
-  <li>#1141: RichTextArea performance issues (FF)</li>
-  <li>#1142: TabSheet: container area width is different to tabs</li>
-  <li>#1143: setReadOnly(true): issues on multiple components</li>
-  <li>#1145: Embedded, IEmbedded does not support enough types of content</li>
-  <li>#1150: DateField.setLocale floods to other components aswell</li>
-  <li>#1161: Table column selector div may be positioned randomly wrong (IE)</li>
-  <li>#1166: SplitPanel: Browser crash (SA)</li>
-  <li>#1172: Error message in Button is not shown (FF)</li>
-  <li>#1174: Where comes data for the Application.getProperty()</li>
-  <li>#1185: Tabsheet: setComponentError, setIcon, setDescription do not work</li>
-  <li>#1187: Application resource requests passed to URIHandler</li>
-  <li>#1193: RichTextArea extra scrollbars issues on some layouts (SA)</li>
-  <li>#1207: Security issue: JSON client<->server communication</li>
-  <li>#1211: ISlider: Provide proper feedback (current value) to user when moving handle</li>
-  <li>#1218: Tables cache rows in non-optimal state after container change</li>
-  <li>#1219: Transparent PNG Resources do not work in IE6</li>
-  <li>#1220: Opening a full native browser window in IE6 with Link does not have a location bar</li>
-  <li>#1222: (Notifications) Layouting cause scroll position disappearing in IE6,FF,SA (FeatureBrowser)</li>
-  <li>#1223: ITable loading indicator bg is missing in IE6 (again)</li>
-  <li>#1225: ExpandLayout initial size too small in IE7</li>
-  <li>#1226: DateField calendar popup won't close if some notification is still showing</li>
-  <li>#1228: DateField: setValue(null) doesn't clear field in client</li>
-  <li>#1229: Documentation: References to ITK-INF directory in chapter "Creating and Using Themes"</li>
-  <li>#1232: Accordion: setComponentError, setIcon, setDescription does not work</li>
-  <li>#1244: Multiple TransactionListeners per application</li>
-  <li>#1245: ITree collapsing/expanding broken in some circumstances in IE6</li>
-  <li>#1247: JSON escape security bug in TK5</li>
-  <li>#1281: Application cannot access Servlet in TK5 anymore</li>
-  <li>#1335: Single item not removed from Table immediately on client-side</li>
-  <li>#1362: Creating a login panel that password managers detect is a pain</li>
-  <li>#1364: Update focused component info back to server on each UIDL-request</li>
-  <li>#1368: Selects do not listen for item/property changes</li>
-  <li>#1373: Null should not be a valid item id</li>
-  <li>#1377: Ensure that ComponentContainers work correctly</li>
-  <li>#1379: UI events from client to server are sent in random order</li>
-  <li>#1386: GWT bugs with iframe's (application crash), see RobustnessComplex test</li>
-  <li>#1387: Slider component not working (RobustnessCOmplex test)</li>
-  <li>#1390: Application runner /run/com.itmill.toolkit.demo.Calc has class / resource loading issues</li>
-  <li>#1392: Review Window.open code, it may leak memory (how to release these resources?)</li>
-  <li>#1394: Focus server-side code needs redesign and implementation</li>
-  <li>#1395: The deployment documentation does not specify the need to map /ITMILL/* to the application</li>
-  <li>#1399: FeatureBrowser: JavaScript API remove it or add better explanation</li>
-  <li>#1401: TabSheet render broken on CachingDemo</li>
-  <li>#1403: Client-side freezes with Modal window</li>
-  <li>#1408: Calculator looks quite ugly and jumpy (IE7)</li>
-  <li>#1414: Reloading windowed demos leaves all iframes empty</li>
-  <li>#1421: Immediate-mode Select placed in a Form breaks all other component listeners in that form</li>
-  <li>#1422: ApplicationServlet: Tries to close application when session is expired, code is never reached</li>
-  <li>#1426: CustomLayout within CustomLayout not visible</li>
-  <li>#1423: Button Listener vanishes after one event, if requestRepaint is not called</li>
-  <li>#1435: ExpandlLayout/Table combination: multiple rendering issues on different browsers</li>
-  <li>#1436: Select: GUI not updated properly after setValue(null)</li>
-  <li>#1437: iLayout problem with subcomponent changes</li>
-  <li>#1445: Table is not container (client side)</li>
-  <li>#1446: Upload problematic</li>
-  <li>#1461: Table does not refresh as expected in some instances</li>
-  <li>#1483: Table throws ReadOnlyException when setReadOnly is true and user selects and row</li>
-  <li>#1484: TabSheet: setIcon and setComponentError does not work</li>
-  <li>#1486: Client-side javascript error</li>
-  <li>#1488: Panel: render broken</li>
-  <li>#1489: TabSheet render bug</li>
-  <li>#1491: TabSheet/IAccordion issues</li>
-  <li>#1492: Notifications (humanized and warning) should disappear when the user starts typing something</li>
-  <li>#1493: Embedded iLayout fails to size correctly in IE</li>
-  <li>#1495:    Modal window: all input fields (textfields and filterselects) lose cursor caret (Firefox only)</li>
-  <li>#1499:    FileResource in root path returns invalid MIME type (inode/drive)</li>
-  <li>#1500:    Embedded: document.onunload does not fire in IE6/7</li>
-</ul>
-                
-<h2><a name="closed">Closed Issues</a></h2>
-<ul>
-  <li>#88: Tabsheet can't be rendered if it has no tabs (INVALID)</li>
-  <li>#139: Form setVisibleItemProperties() doesn't work (FIXED)</li>
-  <li>#147: Table.getCurrentPageFirstItemId() does not work correctly (WORKSFORME)</li>
-  <li>#148: icon doesn't appear in pop-up actions (WONTFIX)</li>
-  <li>#151: StringLengthValidator bugs (FIXED)</li>
-  <li>#152: setContainerDataSource fires value change (WONTFIX)</li>
-  <li>#158: Table Sorting does not work if data source implements Container.Ordered, but not Container.Indexed (WORKSFORME)</li>
-  <li>#174: Upload.notifyListeners() does nothing (FIXED)</li>
-  <li>#463: Button: Callback method selected randomly when multiple methods match (FIXED)</li>
-  <li>#557: Label icon doens't work in Table (WONTFIX)</li>
-  <li>#560: Gridlayout alignment hardcoded (INVALID)</li>
-  <li>#588: addListener() should not add same listener multiple times (FIXED)</li>
-  <li>#591: TabSheet.replaceComponent loses selected tab (FIXED)</li>
-  <li>#666: Tree component keeps last selection after changing selectable-property to false (INVALID)</li>
-  <li>#826: Select adds new items before + clicked (WONTFIX)</li>
-  <li>#832: Invalid getSelect() method in TabSheet.SelectedTabChangeEvent (FIXED)</li>
-  <li>#936: Table component makes extra requests when disabling/enabling the table (FF only) (WORKSFORME)</li>
-  <li>#1021: Reservr: creates temp files to root (database related?) (WONTFIX)</li>
-  <li>#1078: Select / ComboBox : when opening selection div it always starts from top even though currently selected value is elsewhere (FIXED)</li>
-  <li>#1092: Calendar: jumpy, buttons change position (FIXED)</li>
-  <li>#1093: Select has thin red lines (other widgets are seen through) (WORKSFORME)</li>
-  <li>#1103: Table: hangs on TestComponentsAndLayouts (FIXED)</li>
-  <li>#1136: CustomComponent: setVisible(false) does not hide it, setEnabled(false) does not disable it (FIXED)</li>
-  <li>#1141: RichTextArea performance issues (FF) (WONTFIX)</li>
-  <li>#1142: TabSheet: container area width is different to tabs (WONTFIX)</li>
-  <li>#1143: setReadOnly(true): issues on multiple components (FIXED)</li>
-  <li>#1166: SplitPanel: Browser crash (SA) (WORKSFORME)</li>
-  <li>#1174: Where comes data for the Application.getProperty() (FIXED)</li>
-  <li>#1185: Tabsheet: setComponentError, setIcon, setDescription do not work (FIXED)</li>
-  <li>#1207: Security issue: JSON client<->server communication (DUPLICATE)</li>
-  <li>#1225: IE7 renders scrollbars even though content fits properly into area. (FIXED)</li>
-  <li>#1226: DateField calendar popup won't close if some notification is still showing (FIXED)</li>
-  <li>#1228: DateField: setValue(null) doesn't clear field in client (FIXED)</li>
-  <li>#1244: Multiple TransactionListeners per application (INVALID)</li>
-  <li>#1247: JSON escape security bug in TK5 (FIXED)</li>
-  <li>#1281: Application cannot access Servlet in TK5 anymore (INVALID)</li>
-  <li>#1335: Single item not removed from Table immediately on client-side (FIXED)</li>
-  <li>#1368: Table does not react to propertyset changes properly (FIXED)</li>
-  <li>#1386: GWT bugs with iframe's (application crash), see RobustnessComplex test (WONTFIX)</li>
-  <li>#1387: Slider component not working (RobustnessCOmplex test) (FIXED)</li>
-  <li>#1390: Application runner class / resource loading fails (FIXED)</li>
-  <li>#1392: Review Window.open code, it may leak memory (how to release these resources?) (FIXED)</li>
-  <li>#1403: Client-side freezes with Modal window (FIXED)</li>
-  <li>#1408: Calculator looks quite ugly and jumpy (IE7) (FIXED)</li>
-  <li>#1414: Reloading windowed demos leaves all iframes empty (FIXED)</li>
-  <li>#1421: Immediate-mode Select placed in a Form breaks all other component listeners in that form (INVALID)</li>
-  <li>#1422: ApplicationServlet: Tries to close application when session is expired, code is never reached (FIXED)</li>
-  <li>#1423: Button Listener vanishes after one event, if requestRepaint is not called (INVALID)</li>
-  <li>#1426: CustomLayout within CustomLayout not visible (FIXED)</li>
-  <li>#1435: ExpandlLayout/Table combination: multiple rendering issues on different browsers (FIXED)</li>
-  <li>#1436: Select: GUI not updated properly after setValue(null) (FIXED)</li>
-</ul>
-
-<h2><a name="changelog">Detailed ChangeLog</a></h2>
+    <h2>ChangeLog Between IT Mill Toolkit 5.1.1 and 5.1.2</h2>
 
 <p>Listing by ChangeSet number, changed file (other files may also have changed), description, and a possible bug number.</p>
 
 <ul>
-<li>3920: IScrollTable.java: workaround for random table collapses in IE</li>
-<li>3921: CalendarPanel.java+ (3 files): DateField nulled as appropriate. Fixes #1228</li>
-<li>3922: Caption.java: #1345, #1444 Caption size sometimes broken in IE6 too.</li>
-<li>3923: AbsoluteGrid.java: removed log messages</li>
-<li>3924: IExpandLayout.java: changed minimum size for expanded widget</li>
-<li>3925: CalendarPanel.java+ (2 files): Enabled paging (browsing calendar) w/o actually changing selected date.</li>
-<li>3926: datefield.css: year/month does not wrap anymore</li>
-<li>3927: CalendarPanel.java: Fixed variable changing bugs.</li>
-<li>3928: CalendarPanel.java: Enabled quick-browsing (holding mousebutton) year/month w/o immediate varchange.</li>
-<li>3929: IPopupCalendar.java: Enabled closing of calendar popup by clicking calendar button.</li>
-<li>3930: eclipse-classpath+ (9 files): Merged /branches/5.1 (3858:3929) back to trunk.</li>
-<li>3933: ISplitPanel.java: fixes #1225</li>
-<li>3934: Upload.java: Quite a bit of changes: added possibility to better detect _why_ upload failed. Tested all events, should fix #174. Javadoc still contains mention of ProgressEvent, that does not exist.</li>
-<li>3935: ICustomLayout.java: fixes #1426</li>
-<li>3936: IPanel.java: IPanel setWidth changed: 100% won't go to outmost div element anymore, we let browser determine maximum width.</li>
-<li>3937: ApplicationServlet.java: fixes #1451</li>
-<li>3939: IUpload.java: fixes #1452</li>
-<li>3941: Calc.java: fixes #1408</li>
-<li>3946: IFilterSelect.java: Now could items right when nullselectionallowed (1-9/10 -&gt; 1-9/9). Fixes #1453</li>
-<li>3948: IFilterSelect.java: Select (ComboBox / FilterSelect) properly emptied if nulled serverside. Fixes #1436</li>
-<li>3949: TabSheet.java: replacing selected tab no longer changes to first tab, fixes #591</li>
-<li>3950: ISizeableOrderedLayout.java: Enabled horizontal orientation: orientation attribute was read wrong.</li>
-<li>3955: RandomComponents.java: Activated few examples more for robustness tests.</li>
-<li>3956: IFilterSelect.java+ (2 files): Fixed one ("filtering") regression.  Implemeted "emptyText" functionality (weekend coding), but the code is disabled (commented out) serverside - #1455 will enable it.</li>
-<li>3957: ApplicationServlet.java: Title of generated page is no longer "IT Mill Toolkit 5" if the mainwindow has a caption. Fixes #1456</li>
-<li>3962: ITree.java: Enabled selectmode=none. Fixes #1459</li>
-<li>3963: CustomComponent.java+ (7 files): Refactored CustomComponent. Fixed possible NPE  in Abstract component. Optimization for AbstractComponent.</li>
-<li>3964: CustomComponent.java: fixed javadoc</li>
-<li>3965: IFormLayout.java: Formlayout removed components wrong (left one extra component)</li>
-<li>3969: Form.java: setVisibleItemProperties() did not consider itemDataSource, fixes #139</li>
-<li>3970: Select.java: enabled multiselect in Select component (Should use ListSelect, but for backwards compatibility)</li>
-<li>3973: (3 files): fixes #1368</li>
-<li>3974: ITabsheet.java+ (2 files): Added classname to ITabSheet's ITabSheetPanel, and added borders to top and bottom; fixes #1457 (PRE -tag caused thick holes trough tabsheet.</li>
-<li>3975: IWindow.java: fixes #1403</li>
-<li>3981: m-bullet-blue.gif+ (2 files): Fixed #1467: LayoutDemo class resource missing</li>
-<li>3982: ApplicationServlet.java: Fixed #1390: Application runner has class / resource loading issues</li>
-<li>3983: IView.java: proper window closing via hide() method</li>
-<li>3984: Notification.java+ (3 files): fixes #1202, #1465</li>
-<li>3985: ApplicationServlet.java: Fixed (again) #1390: Application runner has class / resource loading issues</li>
-<li>3986: Application.java: Fixed #1174: Where comes data for the Application.getProperty()</li>
-<li>3987: window.css: modality curtain css</li>
-<li>3988: WindowedDemos.java: Reload left window empty ( #1414 ). Also, changes to windowing had broken window re-open at some point.</li>
-<li>3989: IView.java+ (3 files): Documented Notification ( #1359 ) and implemented icon support that was i the API but not working.</li>
-<li>3993: ApplicationServlet.java+ (3 files): JSON UIDL change: ')/*{JSON' changed to 'for(;;);[{JSON}]'. Fixes #1247</li>
-<li>3994: ApplicationServlet.java: doc update</li>
-<li>3995: ApplicationConnection.java: Evolved activity indicator a bit. Animated gifs don't work while JS is busy, so still not a perfect solution.</li>
-<li>3996: TestComponentsAndLayouts.java: Fails with setReadOnly=true</li>
-<li>3997: IScrollTable.java: not sending cache request if disabled</li>
-<li>3998: IButton.java+ (2 files): Fixed partially #1475: setReadOnly(true) fails for: Checkbox, Button, Upload. Checkbox and Button setReadonly(false) now disables iCheckbox and iButton on the client-side.</li>
-<li>3999: Button.java: Continued fix for #1475: setReadOnly(true) fails for: Checkbox, Button, Upload. Checkbox and Button setReadonly(false) now ignores variable changes.</li>
-<li>4000: CommunicationManager.java: Fixed #1474: Security Issue: Variable changes are still handled for disabled and non-existent components</li>
-<li>4002: CommunicationManager.java: Continued fix for #1475: setReadOnly(true) fails for: Checkbox, Button, Upload. Upload setReadonly(false) now ignores file upload when set as readonly</li>
-<li>4003: ApplicationConnection.java+ (2 files): Mainwindow (and theoretically other windows) can now be changed; fixes #1450</li>
-<li>4004: IButton.java+ (2 files): Continued fix for #1475: setReadOnly(true) fails for: Checkbox, Button, Upload. Upload setReadonly(false) now disables iUpload on the client-side correctly.</li>
-<li>4005: Upload.java: Documentation and making upload events more thread safe</li>
-<li>4007: Notification.java: No longer interferes with datefield (and other popups) - eventPreview removed. Fixes #1226</li>
-<li>4008: IAccordion.java: Fixed IAccordion layout function problems in IE6. Height now gets calculated correctly.</li>
-<li>4009: CommunicationManager.java: Fixed NPE (warning message): for variable change requests which relate to non-existent components.</li>
-<li>4011: Panel.java: Don't allow setting the same layout multiple times (caused bug)</li>
-<li>4012: ITabsheet.java: ITabsheet: fixed very bad flickering issue (seen in WH)</li>
-<li>4013: IView.java: Fixes major rendering bug (collapsed tab sheet content) in IE. Bug was easily reproducible in WH. Also a huge optimization.</li>
-<li>4014: IView.java: commenting IE hack</li>
-<li>4019: table.css+ (2 files): Table column selector now has both on and off styles, and checkmark for visible columns. Fixes #1469</li>
-<li>4020: check.gif: Table column selector now has both on and off styles, and checkmark for visible columns. Fixes #1469</li>
-<li>4021: Sizeable.java: fixes #1476</li>
-<li>4022: ITabsheetBase.java: fixes #1185 enabled captions and other component generals for tabsheet</li>
-<li>4023: IFilterSelect.java: selectedOptionKey was not nulled when selection was nulled serverside, so selecting the item that was selected before the serverside nulling sometimes did not send variable change. </li>
-<li>4027: IAccordion.java: Fixes #1490</li>
-<li>4028: AbstractSelect.java: Abstract select assumed Property is always ValueChangeNotifier (bug in if -clause)</li>
-<li>4029: AbstractSelect.java: One more: Abstract select assumed Property is always ValueChangeNotifier (bug in if -clause)</li>
+<li>4084: ApplicationConnection.java: avoid "hanged response indicator" when receiving non-valid json </li>
+<li>4085: filterselect.css: Minor fix for filterselect theme.</li>
+<li>4086: IDateField.java: Fixed GUI bug with time values like 00:00:00.000 (used current values if field was 0)</li>
+<li>4088: ApplicationServlet.java: Fixes #1514: Add src-attribute for __gwt_historyFrame IFRAME-element to prevent IE6 security issues when using SSL</li>
+<li>4101: Ticket1506_TestContainer.java+ (4 files): New ticket testcase for #1506</li>
+<li>4106: IEmbedded.java: Fix: setting a new source for TYPE_BROWSER Embedded component doesn't replace the original IFRAME-element, it only changes the src-attribute value. This way the browser can keep history information of the url changes.</li>
+<li>4107: IEmbedded.java+ (5 files): Fix: IEmbedded won't through exceptions for null-source values.
+Fix: IOrderedLayout now handles component additions in between old components with captions (previously the insertion index was calculated wrong because of the caption elements were included in the index).
+Small fixes to TestBench.</li>
+<li>4126: IEmbedded.java: Fix: Force browser to fire unload event when component is detached from the view (IE doesn't do this automatically).</li>
+<li>4127: ApplicationServlet.java+ (5 files): initial commit for #704</li>
+<li>4132: IWindow.java: IWindow now sizes itself respective to its content if no size is explicitly specified. Use "-1" to clear any previous size settings.</li>
+<li>4134: ApplicationServlet.java+ (2 files): -Enhancement: Application.setSessionExpiredURL now allows the developer to set the URL where to redirect the client after the application session has expired. The redirect is not pushed to the client, i.e. the client has to make a request to the expired application to get redirected.
+-Minor modification to the session expired notification (onclick="window.location.reload()" was not working properly).
+-Enhancement: "closeApplication" parameter allows Testing Tools to close the application after tests.</li>
+<li>4135: ApplicationServlet.java+ (2 files): TT backwards compatibility fix: adds old (pre-multiapp) versionInfo to js.
+Also fixed typo in ApplicationConfiguration.</li>
+<li>4138: SimplestApplication.java+ (36 files): Created com.itmill.toolkit.automatedtests package which contains "official" automated tests
+ * do not touch them unless you change automated test client's testcase scripts too.
+ * copy your testing application to package com.itmill.toolkit.automatedtests
+ * do not point to "development / testing / production" packages which are edited in the future without relation to testing
+ * use setDebugId's for all components that are used in testing
+ 
+Moved few classes from "experimental" com.itmill.toolkit.tests package into "official" side.
 
-<li>4033: ITabsheetBase.java+ (12 files): fixes multiple issues with tabsheet, accordion, table etc</li>
-<li>4034: IFilterSelect.java: fixed combobox not to lose focus on keyboard selection</li>
-<li>4035: Table.java: scroll position now correct on page reload</li>
-<li>4036: Notification.java: eventPreview fixed, should not interfere with modal window.</li>
-<li>4038: IPopupCalendar.java+ (2 files): Fixed calendar popup inside modal panel. CalendarPopup now closes on on date select.</li>
-<li>4039: CalendarPanel.java: auto closing popup now only when resolution is less than hour</li>
-<li>4040: ITextualDate.java: removed obsolete width</li>
-<li>4045: IPopupCalendar.java+ (2 files): TextFields now support width properly</li>
-<li>4046: ISplitPanel.java: removed obsolete log message</li>
-<li>4047: Select.java+ (2 files): fixed width with combobox, deprecated setColumns</li>
-<li>4048: DebugConsole.java: debug console now does not send invalid variable changes</li>
-<li>4051: IWindow.java: FIX: IWindow style dependent names were assigned to the wrong DOM element.</li>
-<li>4052: DebugConsole.java: Changed debug consoles default position.</li>
-<li>4054: Select.java+ (2 files): fixed lots of ComboBox bugs + cleaned the code</li>
-<li>4060: FileTypeResolver.java: fixes #1499</li>
-<li>4061: Tree.java: reverted to trust on isChildrenAllowd only when deciding leaf vs. node (Regression in TreeFilesystem and most likely in other apps that generate subtree on expand events)</li>
-<li>4077: book.pdf+ (4 files): Updated manual. Minor fixes and additions.</li>
-  </ul>  
+Copied featurebrowser to automatedtests package and added setDebugId's for most components that are used in the testing.
+</li>
+<li>4148: ApplicationServlet.java+ (3 files): fixes #1544</li>
+<li>4246: 5.1.2: Created 5.1.2 release branch from 2008-04-09 00:00 trunk.
+</li>
+<li>4247: VERSION.properties+ (2 files): Merged some material from 5.1.1 branch (4032:HEAD) to 5.1.2 branch.</li>
+</ul>
 			
 			</div> <!-- /getting-started -->
 			

@@ -355,6 +355,7 @@
 			</filterchain>
 			<fileset dir="WebContent">
 				<exclude name="**/.svn" />
+				<exclude name="windoweddemos.html" />
 				<include name="release-notes.html" />
 				<include name="*.html" />
 				<include name="license/*.html" />
