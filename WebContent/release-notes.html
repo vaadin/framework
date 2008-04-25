@@ -190,371 +190,170 @@
   <li>#1435: ExpandlLayout/Table combination: multiple rendering issues on different browsers</li>
   <li>#1436: Select: GUI not updated properly after setValue(null)</li>
   <li>#1437: iLayout problem with subcomponent changes</li>
- </ul>
-				
+  <li>#1445: Table is not container (client side)</li>
+  <li>#1446: Upload problematic</li>
+  <li>#1461: Table does not refresh as expected in some instances</li>
+  <li>#1483: Table throws ReadOnlyException when setReadOnly is true and user selects and row</li>
+  <li>#1484: TabSheet: setIcon and setComponentError does not work</li>
+  <li>#1486: Client-side javascript error</li>
+  <li>#1488: Panel: render broken</li>
+  <li>#1489: TabSheet render bug</li>
+  <li>#1491: TabSheet/IAccordion issues</li>
+  <li>#1492: Notifications (humanized and warning) should disappear when the user starts typing something</li>
+  <li>#1493: Embedded iLayout fails to size correctly in IE</li>
+  <li>#1495:    Modal window: all input fields (textfields and filterselects) lose cursor caret (Firefox only)</li>
+  <li>#1499:    FileResource in root path returns invalid MIME type (inode/drive)</li>
+  <li>#1500:    Embedded: document.onunload does not fire in IE6/7</li>
+</ul>
+                
+<h2><a name="closed">Closed Issues</a></h2>
+<ul>
+  <li>#88: Tabsheet can't be rendered if it has no tabs (INVALID)</li>
+  <li>#139: Form setVisibleItemProperties() doesn't work (FIXED)</li>
+  <li>#147: Table.getCurrentPageFirstItemId() does not work correctly (WORKSFORME)</li>
+  <li>#148: icon doesn't appear in pop-up actions (WONTFIX)</li>
+  <li>#151: StringLengthValidator bugs (FIXED)</li>
+  <li>#152: setContainerDataSource fires value change (WONTFIX)</li>
+  <li>#158: Table Sorting does not work if data source implements Container.Ordered, but not Container.Indexed (WORKSFORME)</li>
+  <li>#174: Upload.notifyListeners() does nothing (FIXED)</li>
+  <li>#463: Button: Callback method selected randomly when multiple methods match (FIXED)</li>
+  <li>#557: Label icon doens't work in Table (WONTFIX)</li>
+  <li>#560: Gridlayout alignment hardcoded (INVALID)</li>
+  <li>#588: addListener() should not add same listener multiple times (FIXED)</li>
+  <li>#591: TabSheet.replaceComponent loses selected tab (FIXED)</li>
+  <li>#666: Tree component keeps last selection after changing selectable-property to false (INVALID)</li>
+  <li>#826: Select adds new items before + clicked (WONTFIX)</li>
+  <li>#832: Invalid getSelect() method in TabSheet.SelectedTabChangeEvent (FIXED)</li>
+  <li>#936: Table component makes extra requests when disabling/enabling the table (FF only) (WORKSFORME)</li>
+  <li>#1021: Reservr: creates temp files to root (database related?) (WONTFIX)</li>
+  <li>#1078: Select / ComboBox : when opening selection div it always starts from top even though currently selected value is elsewhere (FIXED)</li>
+  <li>#1092: Calendar: jumpy, buttons change position (FIXED)</li>
+  <li>#1093: Select has thin red lines (other widgets are seen through) (WORKSFORME)</li>
+  <li>#1103: Table: hangs on TestComponentsAndLayouts (FIXED)</li>
+  <li>#1136: CustomComponent: setVisible(false) does not hide it, setEnabled(false) does not disable it (FIXED)</li>
+  <li>#1141: RichTextArea performance issues (FF) (WONTFIX)</li>
+  <li>#1142: TabSheet: container area width is different to tabs (WONTFIX)</li>
+  <li>#1143: setReadOnly(true): issues on multiple components (FIXED)</li>
+  <li>#1166: SplitPanel: Browser crash (SA) (WORKSFORME)</li>
+  <li>#1174: Where comes data for the Application.getProperty() (FIXED)</li>
+  <li>#1185: Tabsheet: setComponentError, setIcon, setDescription do not work (FIXED)</li>
+  <li>#1207: Security issue: JSON client<->server communication (DUPLICATE)</li>
+  <li>#1225: IE7 renders scrollbars even though content fits properly into area. (FIXED)</li>
+  <li>#1226: DateField calendar popup won't close if some notification is still showing (FIXED)</li>
+  <li>#1228: DateField: setValue(null) doesn't clear field in client (FIXED)</li>
+  <li>#1244: Multiple TransactionListeners per application (INVALID)</li>
+  <li>#1247: JSON escape security bug in TK5 (FIXED)</li>
+  <li>#1281: Application cannot access Servlet in TK5 anymore (INVALID)</li>
+  <li>#1335: Single item not removed from Table immediately on client-side (FIXED)</li>
+  <li>#1368: Table does not react to propertyset changes properly (FIXED)</li>
+  <li>#1386: GWT bugs with iframe's (application crash), see RobustnessComplex test (WONTFIX)</li>
+  <li>#1387: Slider component not working (RobustnessCOmplex test) (FIXED)</li>
+  <li>#1390: Application runner class / resource loading fails (FIXED)</li>
+  <li>#1392: Review Window.open code, it may leak memory (how to release these resources?) (FIXED)</li>
+  <li>#1403: Client-side freezes with Modal window (FIXED)</li>
+  <li>#1408: Calculator looks quite ugly and jumpy (IE7) (FIXED)</li>
+  <li>#1414: Reloading windowed demos leaves all iframes empty (FIXED)</li>
+  <li>#1421: Immediate-mode Select placed in a Form breaks all other component listeners in that form (INVALID)</li>
+  <li>#1422: ApplicationServlet: Tries to close application when session is expired, code is never reached (FIXED)</li>
+  <li>#1423: Button Listener vanishes after one event, if requestRepaint is not called (INVALID)</li>
+  <li>#1426: CustomLayout within CustomLayout not visible (FIXED)</li>
+  <li>#1435: ExpandlLayout/Table combination: multiple rendering issues on different browsers (FIXED)</li>
+  <li>#1436: Select: GUI not updated properly after setValue(null) (FIXED)</li>
+</ul>
+
 <h2><a name="changelog">Detailed ChangeLog</a></h2>
 
 <p>Listing by ChangeSet number, changed file (other files may also have changed), description, and a possible bug number.</p>
 
 <ul>
-  <li>3179: ApplicationServlet.java: resources fix, did not work if context was set</li>
-
-  <li>3185: IPopupCalendar.java: Fixes small bug (after closing popup from somewhere else than the calendar button you have to click twice to open it again).</li>
-  
-  <li>3187: ApplicationServlet.java: We do not need this synhronized block in each http request. WeakHashMap helps nothing here, using HashMap, reference cleared explicitly on session timeout (valueUnbound)</li>
-  
-  <li>3188: CommunicationManager.java: Cleaner error reporting (not full stacktrace) when client abruptly presses STOP button on browser or closes sockets in the middle of request sending by other means. Anyone gets these on production server and stacktraces were replaced with cleaner warning messages indicating that this is most likely not a bug.</li>  
-
-  <li>3189: WebApplicationContext.java: Fixed critical memory leak, applications could never be garbage collected on real environments.</li>
-  
-  <li>3191: ApplicationServlet.java+: Enhancements for Session invalid/expired, critical notifications sending. Transaction Listener bugfixes. Refactoring.</li>
-  
-  <li>3192: CommunicationManager.java: Fix</li>
-  
-  <li>3193: IFilterSelect.java: case-insensitive filtering</li>
-  
-  <li>3194: ApplicationServlet.java+: Rewrote "criticalError"</li>
-  
-  <li>3198: IOrderedLayout.java: Quick-fix for BETA release. Now layouts without size work more reliably.</li>
-  
-  <li>3201: Select.java: Selects newitem. nullitem "-" -> ""</li>
-  
-  <li>3202: ApplicationConnection.java+: Loading throbbers should now be cleared after updates (all three timers). ITwinColSelect won't wrap elements anymore. ITree won't wrap it's texts anymore.</li>
-  
-  <li>3203: IScrollTable.java: fixed one negative argument (IE)</li>
-  
-  <li>3206: styles.css: workaround for "Safari and network with latency rendering bug"</li>
-  
-  <li>3208: IFilterSelect.java: "-" -> "" clientside as well. One filtering bug fixed.</li>
-  
-  <li>3212: Caption.java: Fixed #1213. Reshow error indicator if re-enabled.</li>
-  
-  <li>3214: Caption.java: Fixes #1213 in another way. Remove indicator element altogether.</li>
-  
-  <li>3218: IFilterSelect.java, Select.java: ComboBox fixes: select newitem, entered item exists, etc issues</li>
-  
-  <li>3228: Major layout API changes: Sizeable is now deprecated. Use HasSize-interface instead in combination with Size object (see ExpandLayout.java for example). OrderedLayout is no longer sizable. Table and Panel implement compatibility methods to proxy old size calls to the new Size object.</li>
-  
-  <li>3229: Cleaned up setStyle -> setStyleName and removed all references to Sizeable.</li>
-  
-  <li>3232: New IOrderedLayout implementation (without sizing abilities).</li>
-  
-  <li>3233: ITree.java: removed flickering node state indicator</li>
-
-  <li>3236: IOrderedLayout.java+: Implemented layout spacing in IOrderedLayout.</li>
-  
-  <li>3240: Buffered.java: added testingId field to Paintable.</li>
-  
-  <li>3241: refactored method name to correspond to the one (setDebugId) to be added to GWT (according to rumors)</li>
-  
-  <li>3242: New component: Accordion. Doesn't support sizing properly yet (only width). ITabsheet refactored: new superclass for different kinds of tabs, ITabsheetBase. Use this when you want to create some sort of tabbable component.</li>  
-  
-  <li>3243: Accordion now supports sizing with height also.</li>
-  
-  <li>3246: ApplicationConnection.java+: changed underscores to pipes in parameter keys (now allows to have underscore in testingID and paramater names)</li>
-  
-  <li>3247: ApplicationServlet.java: fixes #1233: Multiple TransactionListeners per application</li>
-  
-  <li>3248: ApplicationConnection.java: client now publishes method that can be used to check if client is busy</li>
-  
-  <li>3251: Proper implementation of alignments in IOrderedLayout + small fixes to css-files and some typos corrected</li>
-  
-  <li>3252: IOrderedLayout.java: Fixed bug with IOrderedLayout alignments (changing alignment on-the-fly now works as expected).</li>
-  
-  <li>3253: IAccordion.java: Fixed one rendering bug in IE6 (IAccordion content not showing up when stack changed, 'hasLayout' was the culprit).</li>
-  
-  <li>3255: ApplicationConnection.java: client now don't make requests if expired or crashed application</li>
-  
-  <li>3257: IProgressIndicator.java: Quick fix for ProgressIndicator in indeterminate mode.</li>
-  
-  <li>3258: IProgressIndicator.java: fixes bug on Forum 18/12/2007: Possible bug in ProgressIndicator.setIndeterminate method</li>
-  
-  <li>3260: CommunicationManager.java: Fixes multiple variable issues</li>
-  
-  <li>3261: IUpload.java: proper default value</li>
-  
-  <li>3262: ApplicationConnection.java+: rewrote parameter handling so that it can be understood better. Separator's no control characters so collisions with field values shouldn't happen.</li>
-
-  <li>3263: ATF is now TT (Testing Tools).</li>
-  
-  <li>3267: ApplicationServlet.java+: Better aligned "session expired" message.</li>
-  
-  <li>3268: ApplicationConnection.java+: fixes #1238: CustomLayouts broken in subwindows</li>
-  
-  <li>3271: ApplicationServlet.java: Fixed regression from ATF->TT fix.</li>
-  
-  <li>3272: SplitPanel.java: Fixed unintentionally unimplemented TODO method, which caused a NullPointerException.</li>
-  
-  <li>3273: ApplicationConnection.java: fixed removing already updated variables from queue.</li>
-  
-  <li>3274: IAccordion.java+: Fixed IAccordion: contained widgets now get attached properly and work as expected.</li>
-  
-  <li>3284: CommunicationManager.java: user set debug id's now prefixed with "PID_S"</li>
-  
-  <li>3285: Upload.java: Fixes a problem with upload state that occurred if getting an upload stream failed. Reviewed by Matti. Added also some comments.</li>
-  
-  <li>3286: IFilterSelect.java: ComboBox: fixes #1224 (empty dropdown still allows pages to be navigated) and some false information on status panel.</li>
-  
-  <li>3287: IScrollTable.java: fixes #1214: ITable: loading indicator element blocks scrollwheel events</li>
-  
-  <li>3289: IScrollTable.java: ITable: now scrolls to right position with Firefox</li>
-  
-  <li>3291: IExpandLayout.java+: fixes for IExpandLayout and added some complex tests for it</li>
-  
-  <li>3292: Embedded.java: Embedded now implements HasSize</li>
-  
-  <li>3299: ShortcutActionHandler.java: removed obsolete constructor</li>
-
-  <li>3312: ListenerMethod.java: Added e.printStackTrace() for "this should never happen" block. It does happens due to developer error =&gt; print clear error message.</li>
-
-  <li>3321: FeatureBrowser.java: Made it easier to find the "editable grid" (table in editmode)</li>
-
-  <li>3336: IPanel.java: save scroll pos before removing content, restore afterwards (#1222)</li>
-
-  <li>3346: ITabsheetBase.java: Corrected empty tab caption from "&amp;nbsp" to ""</li>
-
-  <li>3352: IExpandLayout.java: Fixes #1221: ExpandLayout/Tabsheet combo behaves oddly in IE6</li>
-  
-  <li>3355: web.xml: Fixed testing tools notation.</li>
-
-  <li>3359: styles.css: added testingtools theme (css)</li>
-
-  <li>3375: styles.css: Make resulttable border even. (kludge: slitpanel overlap)</li>
-
-  <li>3389: styles.css: warns and errors differ in color (style)</li>
-  
-  <li>3391: TreeExample.java: Changed debug id's PID_S into PID and gave better names.</li>
-
-  <li>3397: TreeExample.java: Removed debugId's from few components. Better naming</li>
-
-  <li>3426: CommunicationManager.java: PID's are now assigned deterministic, fixes #1249: Paintables should not be painted in random order</li>
-  
-  <li>3433: IPopupCalendar.java: static id for floating calendars (#1260). Also showing popup with callback function to avoid flickering</li>
-  
-  <li>3441: ApplicationServlet.java: new TT default port for TK5</li>
-  
-  <li>3443: ApplicationServlet.java: fixed port typo, removed context from default TT server</li>
-  
-  <li>3502: IOrderedLayout.java: fixes size aware components inside ordered layout that has margins</li>
-  
-  <li>3508: ITabsheet.java: fixed tabsheet in hosted mode (NPE)</li>
-
-  <li>3510: ApplicationConnection.java: added api for components to check testing mode, added TT anchor for FilterSelect popups</li>
-
-  <li>3524: ApplicationServlet.java: added getVersion to Application and giving version info to TT</li>
-
-  <li>3538: ApplicationServlet.java: testcase is now JS object</li>
-
-  <li>3577: ApplicationConnection.java: ApplicationConnection publishes javascript function itmill.forceSync(). FeatureBrowser contains example.</li>
-
-  <li>3578: Select.java: Added feature to allow custom logic when user adds new item to select</li>
-
-  <li>3581: JavaScriptAPIExample.java: small fix</li>
-
-  <li>3584: web.xml: using default testing tools uri</li>
-
-  <li>3619: KeyMapper.java: removed obsolete method</li>
-
-  <li>3648: JsonPaintTarget.java: fixes #1332: Fix and detect subtree caching problem in TT</li>
-  
-  <li>3653: IScrollTable.java: fixes #1331: Table can't handle container changes properly</li>
-
-  <li>3654: CustomComponent.java: changed setting repaintRequestListenersNotified flag to same place as in AbstractComponent (only when listener really found)</li>
-
-  <li>3659: IFilterSelect.java: Non-immediate mode works like it should when not in immediate mode. Un-focusing the component will not revert value if the value is valid.</li>
-
-  <li>3662: ExpandLayout.java: component implements sizeable and simple general terminal implementation</li>
-
-  <li>3663: GridLayout.java: Height now method in Sizeable</li>
-
-  <li>3664: Table.java: fixes #1355: Table fires false ValueChangeEvents when contained properties are changed</li>
-
-  <li>3666: Table.java: fixes #97: Table.sort() is called multiple times</li>
-  
-  <li>3667: Table.java: better toString for Table (no more null's in d debugger)</li>
-  
-  <li>3668: ITree.java: fixes #1085: Tree don't support icons</li>
-  
-  <li>3669: jetty-util-6.1.7.jar: Fixed #1334: Jetty demo project startup in Eclipse takes >30 sec</li>
-  
-  <li>3670: jetty-util-6.1.5.jar: Removed old jetty librarirs.</li>
-  
-  <li>3671: Select.java: property as appropriate. Version 1. Table still needs work (might 'leak' listeners as it is now)</li>
-  
-  <li>3674: IView.java: cleaned and fixed shortcuthandler code</li>
-  
-  <li>3676: build.xml: Updated servlet-api version to servlet-api-2.5-6.1.7.</li>
-
-  <li>3677: ContainerHierarchicalWrapper.java: ContainerHierarchicalWrapper now notices changes to the wrapped container by piggybacking on listeners added by the wrapper 'user'.</li>
-  
-  <li>3678: ContainerOrderedWrapper.java: Wrapper now piggybacks on listeners in order to update content as appropriate (#1370). Also fixed a few NPEs when wrapping a ContainerOrdered.</li>
-
-  <li>3679: ContainerOrderedWrapper.java: Fixed two NPE situations.</li>
-
-  <li>3680: Sizeable.java: setWidth(String) and setHeight(String) methods added to Sizeable</li>
-
-  <li>3681: EventRouter.java: Fixed #588 (partially, other places still need fixes): addListener() should not add same listener multiple times. EventRouter
- is now thread safe,
- listenerList contains unique listeners, duplicates are not allowed.
-
-ListenerMethod:
- implemented proper equals and hashCode methods.
-
-AbstractComponent:
- @deprecated Use {@link #addListener(Class, Object, Method)} or
-             {@link #addListener(com.itmill.toolkit.ui.Component.Listener)}
-             instead. Using this method is discouraged because it cannot
-              be checked during compilation.</li>
-  <li>3682: EventRouter.java: Concurrency issues fixed even further.</li>
-  
-  <li>3683: EventRouter.java: Removed synchronized blocks because I forgot that whole CommunicationManager takes care of application level locking =&gt; we assume only single thread will access any EventRouter instance at any point.</li>
-  
-  <li>3684: AbstractSelect.java: Fixed #588 (another partial fix for larger listener problems): addListener() should not add same listener multiple times. AbstractSelect itemSetEventListener and propertySetEventListener contains only unique listeners, hence duplicates are not allowed</li>
-
-  <li>3685: ContainerOrderedWrapper.java: Fixed PiggybackListener.equals()</li>
-
-  <li>3691: ComboBox.java: ComboBox newItemsAllowed=false by default, to avoid mistakes (#1374): ComboBox should not be in newItemsAllowed -mode by default. May affect applications! Must be prominently noted in changes -file.</li>
-
-  <li>3692: Select.java: fixes #1078: Select / ComboBox : when opening selection div it always starts from top even though currently selected value is elsewhere</li>
-
-  <li>3693: Deprecated Button(String caption, Object target, String methodName), CheckBox(String caption, Object target, String methodName). Reason: Using this method is discouraged because it cannot be checked during compilation. Java reflect is done through string variable. Error prone and this does not survive re-factoring (=&gt; applications brake). Typo fixes.</li>
-
-  <li>3694: AbstractComponent.java: Java 1.4-ified</li>
-
-  <li>3695: ListenerMethod.java: Fixed 1.5 java code back to 1.4.2</li>
-
-  <li>3696: TestSizeableIncomponents.java: java 1.4</li>
-
-  <li>3697: IListSelect.java: some changes to support Sizeable</li>
-  
-  <li>3698: AbstractComponent.java: AbstractComponent.setParent(parent) cannot be called if component already has parent, unless the new parent is null (unsetting parent). AbstractComponentContainer.addComponent(component) removes the component from it's previous ComponentContainer if needed (moves component), or throws if the component can't be removed. Fixes #1137: Adding the same component instance multiple times should throw. All components that contain other components should implement ComponentContainer for this to be perfect (e.g CustomComponent, Table)</li>
-
-  <li>3700: IWindow.java: fixed setting height for windows</li>
-  
-  <li>3701: AbstractComponentContainer.java: Simplified; assume component's parent is always ComponentContainer.</li>
-  
-  <li>3703: OrderedLayout.java: changed order of component adding, in case super.addComponent() throws...</li>
-  
-  <li>3704: ApplicationServlet.java: fixes #1036 and removes some obsolete code: (Sub-) Window closing should be made in a standard way</li>
-
-  <li>3705: Application.java: setting main window in a cleaner manner when main window is not yet set</li>
-
-  <li>3706: GridLayout.java: Changed addComponent() a bit: must call super, can't call setParent() directly.</li>
-
-  <li>3707: IView.java: renamed function (typo)</li>
-
-  <li>3710: table.css: removed row indicator opacity (looks bad in IE)</li>
-  
-  <li>3711: GridLayout.java: alignments painting for GridLayout</li>
-  
-  <li>3712: Link.java: rename target width attribute in uidl to avoid collapsing with Sizeable width</li>
-  
-  <li>3713: ILink.java: rename target width attribute in uidl to avoid collapsing with Sizeable width</li>
-  
-  <li>3714: "Sizeable" Grid and OrderedLayout</li>
-  
-  <li>3715: ApplicationServlet.java: Added stacktrace if getBaseResource fails. Doc fixes.</li>
-  
-  <li>3716: ApplicationServlet.java: Fixed #1380: If application has been closed (or it has no window) client gets empty response. UIDL VAR_RECORD_SEPARATOR and VAR_FIELD_SEPARATORS now point to single entity definition. Removed obsolete code. Fixed documentation.</li>
-
-  <li>3718: CustomComponent.java: 1. Removed obsolete dependency framework methods and interface definitions. 2. "Undeprecated" reflection based listeners, we still wish to support these. But I noted on javadoc that using these methods is discouraged and suggested better methods.</li>
-
-  <li>3719: AbstractSelect.java: version since fix</li>
-
-  <li>3721: LogPrintWriter.java: Added few tests utility classes that can be used for:
- * Logging (displays caller class, method, linenumber which is clickable on Eclipse console)
- * LogPrintWriter which can be used to gather all data send from server to client (if you wish not to use firebug)
- * RandomComponents which provides means to create random layouts and random components / demo custom components
- * Test listeners for checking robustness / memory leaks</li>
-
-  <li>3723: Layout.java: extracted alignments and spacing to layouts subinterfaces</li>
-
-  <li>3724: ApplicationConnection.java: Fix</li>
-
-  <li>3725: CommunicationManager.java: listener.. leaks within the session</li>
-
-  <li>3728: CommunicationManager.java: listener.. leaks within the session</li>
-
-  <li>3729: Application.java: Newbies can easily do bad code that throws exceptions but those are simply ignored on the server-side logs (System streams). We should print stack traces by default to System.err too, users may override this behaviour if required.</li>
-
-  <li>3731: ApplicationServlet.java: Added wwarning message to standard error stream if download fails.</li>
-
-  <li>3739: JsonPaintTarget.java: extracted alignments and spacing to layouts subinterfaces</li>
-  
-  <li>3741: Table.java: Not painting table if only first visible info is updated</li>
-  
-  <li>3750: ApplicationServlet.java: Fixed RestartApplication, now also calls application's close method, and removes it from ApplicationServlet.applicationToAjaxAppMgrMap so it can be GC'ed.</li>
-
-  <li>3751: CommunicationManager.java: JSONPaintTarget does not need to be class attribute.</li>
-
-  <li>3752: Select.java: Fixed #1393 (Focusable has id which is obsolete)</li>
-
-  <li>3755: Upload.java: Deprecated Application.setFocusedComponent and Application.consumeFocus(), this design flaw will be fixed in later releases. Upload setFocus() now works even if it is not yet attached.</li>
-
-  <li>3756: JsonPaintTarget.java: table now refreshes its contents and does component attaching etc in right place (not during paint phase)</li>
-  
-  <li>3757: IndexedContainer.java: table now refreshes its contents and does component attaching etc in right place (not during paint phase)</li>
-
-  <li>3758: WebApplicationContext.java: Got rid of last WeakHashMap, should now be able to do Terracotta</li>
-
-  <li>3760: CommunicationManager.java: Removed logging.</li>
-
-  <li>3762: ApplicationServlet.java: Added TODO ("security" and design related comment)</li>
-
-  <li>3763: ComboBoxExample.java: Fixed combobox example to allow new items.</li>
-
-  <li>3764: ContainerHierarchicalWrapper.java: updateHierarchicalWrapper() produced duplicate nodes when setting parent for a root node (moving it in the hierarchy). Fixes #1385: Regression: Featurebrowser TreeExample demo crashes application (NPE)</li>
-
-  <li>3765: JavaScriptAPIExample.java: Fixed deadlock on JavaScriptAPIExample, also better documentation.</li>
-
-  <li>3766: IndexedContainer.java: trying to fix table issues</li>
-
-  <li>3767: Table.java: small fix</li>
-
-  <li>3768: Table.java: workaround for IScrollTable bug to server side paint method</li>
-
-  <li>3769: Table.java: table: forcing pageBuffer flush on some events just to be sure of getting updates + fixed bug where newItemId in itemsetchanged event compared badly with rendered indexes default value</li>
-
-  <li>3770: Table.java: pageBuffer reset on editability change</li>
-
-  <li>3771: ApplicationServlet.java: Removed unneeded ApplicationServlet reference from CommunicationManager as proposed by Kai Virkki in order to make CommunicationManager runnable in Terracotta.</li>
-
-  <li>3772: Table.java: sanity check</li>
-
-  <li>3773: Table.java: fixed first visible to me more sane</li>
-
-  <li>3774: Table.java: fixed some server side selection change issue</li>
-
-  <li>3775: IScrollTable.java: added sanity check for while loop, should fix eternal loop in some rare circumstances</li>
-
-  <li>3782: RichTextExample.java: updated link to manual</li>
-
-  <li>3783: JavaScriptAPIExample.java: description improvement</li>
-
-  <li>3784: ApplicationServlet.java: slashes and no contexts. fixes #1369: Applications cannot be deployed in the root context of an appserver</li>
-
-  <li>3785: OrderedLayoutSwapComponents.java: test case for OrderedLayout component swapping</li>
-
-  <li>3786: IOrderedLayout.java: fixes #1409: IOrderedLayout (standard version) has bug in ordering</li>
-
-  <li>3787: IPanel.java: Added ShortcutActionHandler to IPanel.</li>
-
-  <li>3801: ApplicationConnection.java: refactoring tt init</li>
-
-  <li>3803: ApplicationConnection.java: refactoring TT init</li>
-
-  <li>3807: ApplicationConnection.java: refactoring TT init</li>
-
-  <li>3808: ApplicationServlet.java: Does not write TestingTools TestCase script anymore - fetched directly from server.</li>
-
-  <li>3817: ApplicationConnection.java: unregistering client from TT</li>
-
-  <li>3818: AbstractComponent.java: Fixed typo: setHeight(String width)   -&gt;   setHeight(String height)</li>
-
-  <li>3821: ApplicationConnection.java: itmill namespace check</li>
-
-  <li>3838: ApplicationServlet.java: removed unnecessary TTServerUri</li>
-  
+<li>3920: IScrollTable.java: workaround for random table collapses in IE</li>
+<li>3921: CalendarPanel.java+ (3 files): DateField nulled as appropriate. Fixes #1228</li>
+<li>3922: Caption.java: #1345, #1444 Caption size sometimes broken in IE6 too.</li>
+<li>3923: AbsoluteGrid.java: removed log messages</li>
+<li>3924: IExpandLayout.java: changed minimum size for expanded widget</li>
+<li>3925: CalendarPanel.java+ (2 files): Enabled paging (browsing calendar) w/o actually changing selected date.</li>
+<li>3926: datefield.css: year/month does not wrap anymore</li>
+<li>3927: CalendarPanel.java: Fixed variable changing bugs.</li>
+<li>3928: CalendarPanel.java: Enabled quick-browsing (holding mousebutton) year/month w/o immediate varchange.</li>
+<li>3929: IPopupCalendar.java: Enabled closing of calendar popup by clicking calendar button.</li>
+<li>3930: eclipse-classpath+ (9 files): Merged /branches/5.1 (3858:3929) back to trunk.</li>
+<li>3933: ISplitPanel.java: fixes #1225</li>
+<li>3934: Upload.java: Quite a bit of changes: added possibility to better detect _why_ upload failed. Tested all events, should fix #174. Javadoc still contains mention of ProgressEvent, that does not exist.</li>
+<li>3935: ICustomLayout.java: fixes #1426</li>
+<li>3936: IPanel.java: IPanel setWidth changed: 100% won't go to outmost div element anymore, we let browser determine maximum width.</li>
+<li>3937: ApplicationServlet.java: fixes #1451</li>
+<li>3939: IUpload.java: fixes #1452</li>
+<li>3941: Calc.java: fixes #1408</li>
+<li>3946: IFilterSelect.java: Now could items right when nullselectionallowed (1-9/10 -&gt; 1-9/9). Fixes #1453</li>
+<li>3948: IFilterSelect.java: Select (ComboBox / FilterSelect) properly emptied if nulled serverside. Fixes #1436</li>
+<li>3949: TabSheet.java: replacing selected tab no longer changes to first tab, fixes #591</li>
+<li>3950: ISizeableOrderedLayout.java: Enabled horizontal orientation: orientation attribute was read wrong.</li>
+<li>3955: RandomComponents.java: Activated few examples more for robustness tests.</li>
+<li>3956: IFilterSelect.java+ (2 files): Fixed one ("filtering") regression.  Implemeted "emptyText" functionality (weekend coding), but the code is disabled (commented out) serverside - #1455 will enable it.</li>
+<li>3957: ApplicationServlet.java: Title of generated page is no longer "IT Mill Toolkit 5" if the mainwindow has a caption. Fixes #1456</li>
+<li>3962: ITree.java: Enabled selectmode=none. Fixes #1459</li>
+<li>3963: CustomComponent.java+ (7 files): Refactored CustomComponent. Fixed possible NPE  in Abstract component. Optimization for AbstractComponent.</li>
+<li>3964: CustomComponent.java: fixed javadoc</li>
+<li>3965: IFormLayout.java: Formlayout removed components wrong (left one extra component)</li>
+<li>3969: Form.java: setVisibleItemProperties() did not consider itemDataSource, fixes #139</li>
+<li>3970: Select.java: enabled multiselect in Select component (Should use ListSelect, but for backwards compatibility)</li>
+<li>3973: (3 files): fixes #1368</li>
+<li>3974: ITabsheet.java+ (2 files): Added classname to ITabSheet's ITabSheetPanel, and added borders to top and bottom; fixes #1457 (PRE -tag caused thick holes trough tabsheet.</li>
+<li>3975: IWindow.java: fixes #1403</li>
+<li>3981: m-bullet-blue.gif+ (2 files): Fixed #1467: LayoutDemo class resource missing</li>
+<li>3982: ApplicationServlet.java: Fixed #1390: Application runner has class / resource loading issues</li>
+<li>3983: IView.java: proper window closing via hide() method</li>
+<li>3984: Notification.java+ (3 files): fixes #1202, #1465</li>
+<li>3985: ApplicationServlet.java: Fixed (again) #1390: Application runner has class / resource loading issues</li>
+<li>3986: Application.java: Fixed #1174: Where comes data for the Application.getProperty()</li>
+<li>3987: window.css: modality curtain css</li>
+<li>3988: WindowedDemos.java: Reload left window empty ( #1414 ). Also, changes to windowing had broken window re-open at some point.</li>
+<li>3989: IView.java+ (3 files): Documented Notification ( #1359 ) and implemented icon support that was i the API but not working.</li>
+<li>3993: ApplicationServlet.java+ (3 files): JSON UIDL change: ')/*{JSON' changed to 'for(;;);[{JSON}]'. Fixes #1247</li>
+<li>3994: ApplicationServlet.java: doc update</li>
+<li>3995: ApplicationConnection.java: Evolved activity indicator a bit. Animated gifs don't work while JS is busy, so still not a perfect solution.</li>
+<li>3996: TestComponentsAndLayouts.java: Fails with setReadOnly=true</li>
+<li>3997: IScrollTable.java: not sending cache request if disabled</li>
+<li>3998: IButton.java+ (2 files): Fixed partially #1475: setReadOnly(true) fails for: Checkbox, Button, Upload. Checkbox and Button setReadonly(false) now disables iCheckbox and iButton on the client-side.</li>
+<li>3999: Button.java: Continued fix for #1475: setReadOnly(true) fails for: Checkbox, Button, Upload. Checkbox and Button setReadonly(false) now ignores variable changes.</li>
+<li>4000: CommunicationManager.java: Fixed #1474: Security Issue: Variable changes are still handled for disabled and non-existent components</li>
+<li>4002: CommunicationManager.java: Continued fix for #1475: setReadOnly(true) fails for: Checkbox, Button, Upload. Upload setReadonly(false) now ignores file upload when set as readonly</li>
+<li>4003: ApplicationConnection.java+ (2 files): Mainwindow (and theoretically other windows) can now be changed; fixes #1450</li>
+<li>4004: IButton.java+ (2 files): Continued fix for #1475: setReadOnly(true) fails for: Checkbox, Button, Upload. Upload setReadonly(false) now disables iUpload on the client-side correctly.</li>
+<li>4005: Upload.java: Documentation and making upload events more thread safe</li>
+<li>4007: Notification.java: No longer interferes with datefield (and other popups) - eventPreview removed. Fixes #1226</li>
+<li>4008: IAccordion.java: Fixed IAccordion layout function problems in IE6. Height now gets calculated correctly.</li>
+<li>4009: CommunicationManager.java: Fixed NPE (warning message): for variable change requests which relate to non-existent components.</li>
+<li>4011: Panel.java: Don't allow setting the same layout multiple times (caused bug)</li>
+<li>4012: ITabsheet.java: ITabsheet: fixed very bad flickering issue (seen in WH)</li>
+<li>4013: IView.java: Fixes major rendering bug (collapsed tab sheet content) in IE. Bug was easily reproducible in WH. Also a huge optimization.</li>
+<li>4014: IView.java: commenting IE hack</li>
+<li>4019: table.css+ (2 files): Table column selector now has both on and off styles, and checkmark for visible columns. Fixes #1469</li>
+<li>4020: check.gif: Table column selector now has both on and off styles, and checkmark for visible columns. Fixes #1469</li>
+<li>4021: Sizeable.java: fixes #1476</li>
+<li>4022: ITabsheetBase.java: fixes #1185 enabled captions and other component generals for tabsheet</li>
+<li>4023: IFilterSelect.java: selectedOptionKey was not nulled when selection was nulled serverside, so selecting the item that was selected before the serverside nulling sometimes did not send variable change. </li>
+<li>4027: IAccordion.java: Fixes #1490</li>
+<li>4028: AbstractSelect.java: Abstract select assumed Property is always ValueChangeNotifier (bug in if -clause)</li>
+<li>4029: AbstractSelect.java: One more: Abstract select assumed Property is always ValueChangeNotifier (bug in if -clause)</li>
+
+<li>4033: ITabsheetBase.java+ (12 files): fixes multiple issues with tabsheet, accordion, table etc</li>
+<li>4034: IFilterSelect.java: fixed combobox not to lose focus on keyboard selection</li>
+<li>4035: Table.java: scroll position now correct on page reload</li>
+<li>4036: Notification.java: eventPreview fixed, should not interfere with modal window.</li>
+<li>4038: IPopupCalendar.java+ (2 files): Fixed calendar popup inside modal panel. CalendarPopup now closes on on date select.</li>
+<li>4039: CalendarPanel.java: auto closing popup now only when resolution is less than hour</li>
+<li>4040: ITextualDate.java: removed obsolete width</li>
+<li>4045: IPopupCalendar.java+ (2 files): TextFields now support width properly</li>
+<li>4046: ISplitPanel.java: removed obsolete log message</li>
+<li>4047: Select.java+ (2 files): fixed width with combobox, deprecated setColumns</li>
+<li>4048: DebugConsole.java: debug console now does not send invalid variable changes</li>
+<li>4051: IWindow.java: FIX: IWindow style dependent names were assigned to the wrong DOM element.</li>
+<li>4052: DebugConsole.java: Changed debug consoles default position.</li>
+<li>4054: Select.java+ (2 files): fixed lots of ComboBox bugs + cleaned the code</li>
+<li>4060: FileTypeResolver.java: fixes #1499</li>
+<li>4061: Tree.java: reverted to trust on isChildrenAllowd only when deciding leaf vs. node (Regression in TreeFilesystem and most likely in other apps that generate subtree on expand events)</li>
+<li>4077: book.pdf+ (4 files): Updated manual. Minor fixes and additions.</li>
   </ul>  
 			
 			</div> <!-- /getting-started -->
