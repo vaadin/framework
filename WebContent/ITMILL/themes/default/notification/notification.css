@@ -31,7 +31,7 @@
 
 .i-Notification.error {
 	background-color: #ff0a0a;
-	background-image: url('img/notification-error.png');
+	background-image: url(img/notification-error.png);
 	background-repeat: no-repeat;
 	background-position: center right;
 	padding-right: 30px;
