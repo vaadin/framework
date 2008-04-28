@@ -145,6 +145,19 @@
   </servlet>
   
   <servlet>
+    <servlet-name>SimpleReserver</servlet-name>
+    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+    <init-param>
+      <param-name>application</param-name>
+      <param-value>com.itmill.toolkit.demo.reservation.simple.SimpleReserver</param-value>
+    </init-param>
+    <init-param>
+      <param-name>widgetset</param-name>
+      <param-value>com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet</param-value>
+    </init-param>
+  </servlet>
+  
+  <servlet>
     <servlet-name>CalendarDemo</servlet-name>
     <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
     <init-param>
@@ -407,12 +420,13 @@
     <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
     <init-param>
       <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.demo.PortletDemo</param-value>
+      <param-value>com.itmill.toolkit.demo.portlet.PortletDemo</param-value>
     </init-param>
   </servlet>
  <servlet-mapping>
     <servlet-name>PortletDemo</servlet-name>
     <url-pattern>/PortletDemo/*</url-pattern>
+    <!-- portlet -->
   </servlet-mapping> 
   
   	<servlet-mapping>
@@ -466,6 +480,12 @@
     <url-pattern>/Reservr/*</url-pattern>
   </servlet-mapping>
   
+ <servlet-mapping>
+    <servlet-name>SimpleReserver</servlet-name>
+    <url-pattern>/SimpleReserver/*</url-pattern>
+    <!-- portlet style=height:400px -->
+  </servlet-mapping>
+  
   <servlet-mapping>
     <servlet-name>CalendarDemo</servlet-name>
     <url-pattern>/CalendarDemo/*</url-pattern>
@@ -474,6 +494,7 @@
   <servlet-mapping>
     <servlet-name>SelectDemo</servlet-name>
     <url-pattern>/SelectDemo/*</url-pattern>
+    <!-- portlet -->
   </servlet-mapping>
 
   <servlet-mapping>
@@ -484,6 +505,7 @@
   <servlet-mapping>
     <servlet-name>TableDemo</servlet-name>
     <url-pattern>/TableDemo/*</url-pattern>
+    <!-- portlet -->
   </servlet-mapping>
 
   <servlet-mapping>
@@ -499,11 +521,13 @@
   <servlet-mapping>
     <servlet-name>FilterSelect</servlet-name>
     <url-pattern>/FilterSelect/*</url-pattern>
+    <!-- portlet -->
   </servlet-mapping>
 
  <servlet-mapping>
     <servlet-name>FeatureBrowser</servlet-name>
     <url-pattern>/FeatureBrowser/*</url-pattern>
+    <!-- portlet style=height:650px -->
   </servlet-mapping>
 
   <servlet-mapping>
@@ -539,6 +563,7 @@
   <servlet-mapping>
     <servlet-name>ModalWindow</servlet-name>
     <url-pattern>/ModalWindow/*</url-pattern>
+    <!-- portlet -->
   </servlet-mapping>
 
   <servlet-mapping>
@@ -549,6 +574,7 @@
   <servlet-mapping>
     <servlet-name>Calc</servlet-name>
     <url-pattern>/Calc/*</url-pattern>
+    <!-- portlet -->
   </servlet-mapping>
 
   <servlet-mapping>
@@ -574,6 +600,7 @@
   <servlet-mapping>
     <servlet-name>NotificationDemo</servlet-name>
     <url-pattern>/NotificationDemo/*</url-pattern>
+    <!-- portlet -->
   </servlet-mapping>
 
   <servlet-mapping>
@@ -589,11 +616,13 @@
   <servlet-mapping>
     <servlet-name>ChatServlet</servlet-name>
     <url-pattern>/chat/*</url-pattern>
+    <!-- portlet -->
   </servlet-mapping>
 
   <servlet-mapping>
     <servlet-name>BrowserDemo</servlet-name>
     <url-pattern>/BrowserDemo/*</url-pattern>
+    <!-- portlet style=height:650px -->
   </servlet-mapping>
 
   <servlet-mapping>
