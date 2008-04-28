@@ -675,6 +675,7 @@
 			<fileset dir="${output-dir}/WebContent">
 				<patternset>
 					<include name="ITMILL/widgetsets/com.itmill.toolkit.terminal.gwt.DefaultWidgetSet/**/*" />
+					<include name="ITMILL/themes/default/**/*" />
 				</patternset>
 			</fileset>
 		</jar>
