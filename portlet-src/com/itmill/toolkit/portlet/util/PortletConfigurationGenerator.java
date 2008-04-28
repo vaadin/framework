@@ -19,6 +19,10 @@ import java.util.regex.Pattern;
  * Currently uses regular expressions to avoid dependencies; does not strictly
  * adhere to xml rules, but should work with a 'normal' web.xml.
  * 
+ * To be included, the servlet-mapping must include a special comment: <!--
+ * portlet --> If the portlet requires some special styles (i.e height): <!--
+ * portlet style=height:400px -->
+ * 
  * @author marc
  */
 public class PortletConfigurationGenerator {
@@ -29,79 +33,79 @@ public class PortletConfigurationGenerator {
     private static final String LIFERAY_DISPLAY_XML_FILE = "liferay-display.xml";
 
     // "templates" follow;
-    private static final String PORTLET_XML_HEAD = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
-            + "<portlet-app\r\n"
-            + "        xmlns=\"http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd\"\r\n"
-            + "        version=\"1.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\r\n"
-            + "        xsi:schemaLocation=\"http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd\">\r\n";
-    private static final String PORTLET_XML_SECTION = "        <portlet>\r\n"
-            + "                <portlet-name>%PORTLETNAME%</portlet-name>\r\n"
-            + "                <display-name>IT Mill Toolkit %NAME%</display-name>\r\n"
-            + "                <portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>\r\n"
-            + "                <init-param>\r\n"
-            + "                        <name>application</name>\r\n"
-            + "                        <value>%URL%</value>\r\n"
-            + "                </init-param>\r\n"
-            + "                <supports>\r\n"
-            + "                        <mime-type>text/html</mime-type>\r\n"
-            + "                        <portlet-mode>view</portlet-mode>\r\n"
-            + "                        <portlet-mode>edit</portlet-mode>\r\n"
-            + "                        <portlet-mode>help</portlet-mode>\r\n"
-            + "                </supports>\r\n"
-            + "                <portlet-info>\r\n"
-            + "                        <title>%NAME%</title>\r\n"
-            + "                        <short-title>%NAME%</short-title>\r\n"
-            + "                </portlet-info>\r\n"
-            + "                \r\n"
-            + "                <security-role-ref>\r\n"
-            + "                        <role-name>administrator</role-name>\r\n"
-            + "                </security-role-ref>\r\n"
-            + "                <security-role-ref>\r\n"
-            + "                        <role-name>guest</role-name>\r\n"
-            + "                </security-role-ref>\r\n"
-            + "                <security-role-ref>\r\n"
-            + "                        <role-name>power-user</role-name>\r\n"
-            + "                </security-role-ref>\r\n"
-            + "                <security-role-ref>\r\n"
-            + "                        <role-name>user</role-name>\r\n"
-            + "                </security-role-ref>\r\n"
-            + "        </portlet>\r\n";
-    private static final String PORTLET_XML_FOOT = "        <container-runtime-option>\r\n"
-            + "                <name>javax.portlet.escapeXml</name>\r\n"
-            + "                <value>false</value>\r\n"
-            + "        </container-runtime-option>" + "</portlet-app>";
+    private static final String PORTLET_XML_HEAD = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<portlet-app\n"
+            + "        xmlns=\"http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd\"\n"
+            + "        version=\"1.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
+            + "        xsi:schemaLocation=\"http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd\">\n";
+    private static final String PORTLET_XML_SECTION = "        <portlet>\n"
+            + "                <portlet-name>%PORTLETNAME%</portlet-name>\n"
+            + "                <display-name>IT Mill Toolkit %NAME%</display-name>\n"
+            + "                <portlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationPortlet</portlet-class>\n"
+            + "                <init-param>\n"
+            + "                        <name>application</name>\n"
+            + "                        <value>%URL%</value>\n"
+            + "                </init-param>\n"
+            + "                %EXTRAPARAMS%\n"
+            + "                <supports>\n"
+            + "                        <mime-type>text/html</mime-type>\n"
+            + "                        <portlet-mode>view</portlet-mode>\n"
+            + "                        <portlet-mode>edit</portlet-mode>\n"
+            + "                        <portlet-mode>help</portlet-mode>\n"
+            + "                </supports>\n"
+            + "                <portlet-info>\n"
+            + "                        <title>%NAME%</title>\n"
+            + "                        <short-title>%NAME%</short-title>\n"
+            + "                </portlet-info>\n" + "                \n"
+            + "                <security-role-ref>\n"
+            + "                        <role-name>administrator</role-name>\n"
+            + "                </security-role-ref>\n"
+            + "                <security-role-ref>\n"
+            + "                        <role-name>guest</role-name>\n"
+            + "                </security-role-ref>\n"
+            + "                <security-role-ref>\n"
+            + "                        <role-name>power-user</role-name>\n"
+            + "                </security-role-ref>\n"
+            + "                <security-role-ref>\n"
+            + "                        <role-name>user</role-name>\n"
+            + "                </security-role-ref>\n" + "        </portlet>\n";
+    private static final String PORTLET_XML_FOOT = "        %CONTEXTPARAMS%\n"
+            + "        <container-runtime-option>\n"
+            + "                <name>javax.portlet.escapeXml</name>\n"
+            + "                <value>false</value>\n"
+            + "        </container-runtime-option>\n" + "</portlet-app>";
 
-    private static final String LIFERAY_PORTLET_XML_HEAD = "<?xml version=\"1.0\"?>\r\n"
-            + "<!DOCTYPE liferay-portlet-app PUBLIC \"-//Liferay//DTD Portlet Application 4.3.0//EN\" \"http://www.liferay.com/dtd/liferay-portlet-app_4_3_0.dtd\">\r\n"
-            + "\r\n" + "<liferay-portlet-app>\r\n" + "";
-    private static final String LIFERAY_PORTLET_XML_SECTION = "        <portlet>\r\n"
-            + "                <portlet-name>%PORTLETNAME%</portlet-name>\r\n"
-            + "                <instanceable>true</instanceable>       \r\n"
-            + "                <ajaxable>false</ajaxable>\r\n"
-            + "        </portlet>\r\n" + "";
-    private static final String LIFERAY_PORTLET_XML_FOOT = "    \r\n"
-            + "        <role-mapper>\r\n"
-            + "                <role-name>administrator</role-name>\r\n"
-            + "                <role-link>Administrator</role-link>\r\n"
-            + "        </role-mapper>\r\n" + "        <role-mapper>\r\n"
-            + "                <role-name>guest</role-name>\r\n"
-            + "                <role-link>Guest</role-link>\r\n"
-            + "        </role-mapper>\r\n" + "        <role-mapper>\r\n"
-            + "                <role-name>power-user</role-name>\r\n"
-            + "                <role-link>Power User</role-link>\r\n"
-            + "        </role-mapper>\r\n" + "        <role-mapper>\r\n"
-            + "                <role-name>user</role-name>\r\n"
-            + "                <role-link>User</role-link>\r\n"
-            + "        </role-mapper>\r\n" + "        \r\n"
+    private static final String LIFERAY_PORTLET_XML_HEAD = "<?xml version=\"1.0\"?>\n"
+            + "<!DOCTYPE liferay-portlet-app PUBLIC \"-//Liferay//DTD Portlet Application 4.3.0//EN\" \"http://www.liferay.com/dtd/liferay-portlet-app_4_3_0.dtd\">\n"
+            + "\n" + "<liferay-portlet-app>\n" + "";
+    private static final String LIFERAY_PORTLET_XML_SECTION = "        <portlet>\n"
+            + "                <portlet-name>%PORTLETNAME%</portlet-name>\n"
+            + "                <instanceable>true</instanceable>       \n"
+            + "                <ajaxable>false</ajaxable>\n"
+            + "        </portlet>\n" + "";
+    private static final String LIFERAY_PORTLET_XML_FOOT = "    \n"
+            + "        <role-mapper>\n"
+            + "                <role-name>administrator</role-name>\n"
+            + "                <role-link>Administrator</role-link>\n"
+            + "        </role-mapper>\n" + "        <role-mapper>\n"
+            + "                <role-name>guest</role-name>\n"
+            + "                <role-link>Guest</role-link>\n"
+            + "        </role-mapper>\n" + "        <role-mapper>\n"
+            + "                <role-name>power-user</role-name>\n"
+            + "                <role-link>Power User</role-link>\n"
+            + "        </role-mapper>\n" + "        <role-mapper>\n"
+            + "                <role-name>user</role-name>\n"
+            + "                <role-link>User</role-link>\n"
+            + "        </role-mapper>\n" + "        \n"
             + "</liferay-portlet-app>";
-    private static final String LIFERAY_DISPLAY_XML_HEAD = "<?xml version=\"1.0\"?>\r\n"
-            + "<!DOCTYPE display PUBLIC \"-//Liferay//DTD Display 4.0.0//EN\" \"http://www.liferay.com/dtd/liferay-display_4_0_0.dtd\">\r\n"
-            + "\r\n"
-            + "<display>\r\n"
-            + "        <category name=\"IT Mill Toolkit\">\r\n" + "";
-    private static final String LIFERAY_DISPLAY_XML_SECTION = "                <portlet id=\"%PORTLETNAME%\" />\r\n";
-    private static final String LIFERAY_DISPLAY_XML_FOOT = "\r\n"
-            + "        </category>\r\n" + "</display>";
+    private static final String LIFERAY_DISPLAY_XML_HEAD = "<?xml version=\"1.0\"?>\n"
+            + "<!DOCTYPE display PUBLIC \"-//Liferay//DTD Display 4.0.0//EN\" \"http://www.liferay.com/dtd/liferay-display_4_0_0.dtd\">\n"
+            + "\n"
+            + "<display>\n"
+            + "        <category name=\"IT Mill Toolkit\">\n" + "";
+    private static final String LIFERAY_DISPLAY_XML_SECTION = "                <portlet id=\"%PORTLETNAME%\" />\n";
+    private static final String LIFERAY_DISPLAY_XML_FOOT = "\n"
+            + "        </category>\n" + "</display>";
 
     /**
      * @param args
@@ -110,8 +114,14 @@ public class PortletConfigurationGenerator {
     public static void main(String[] args) {
         if (args.length < 1 || !new File(args[0]).isDirectory()) {
             System.err
-                    .println("Usage: PortletConfigurationGenerator <directory>");
+                    .println("Usage: PortletConfigurationGenerator <directory> [widgetset]");
             return;
+        }
+
+        String widgetset = "";
+        if (args.length > 1) {
+            widgetset = "<context-param><name>widgetset</name><value>"
+                    + args[1] + "</value></context-param>";
         }
 
         /*
@@ -189,18 +199,28 @@ public class PortletConfigurationGenerator {
             String lpstring = LIFERAY_PORTLET_XML_HEAD;
             String ldstring = LIFERAY_DISPLAY_XML_HEAD;
 
-            Pattern p = Pattern
-                    .compile(
-                            "<servlet-mapping>.*?<servlet-name>(.*?)<\\/servlet-name>.*?<url-pattern>(.*?)<\\/url-pattern>.*?<\\/servlet-mapping>",
-                            Pattern.MULTILINE);
-            Matcher m = p.matcher(webXml);
+            Pattern p1 = Pattern
+                    .compile("<servlet-mapping>.*?<servlet-name>(.*?)<\\/servlet-name>.*?<url-pattern>(.*?)<\\/url-pattern>(.*?)<\\/servlet-mapping>");
+            Pattern p2 = Pattern
+                    .compile(".*?<!--\\s+portlet\\s?(style=\\S+)?\\s+-->.*?");
+            Matcher m = p1.matcher(webXml);
             while (m.find()) {
-                if (m.groupCount() != 2) {
-                    System.out
-                            .println("Could not find servlet-name and url-pattern for: "
-                                    + m.group());
+                if (m.groupCount() < 3) {
+                    // don't include
                     continue;
                 }
+                Matcher m2 = p2.matcher(m.group(3));
+                if (!m2.find()) {
+                    // don't include
+                    continue;
+                }
+
+                String style = "";
+                if (m2.groupCount() == 1 && m2.group(1) != null) {
+                    style = "<init-param><name>style</name><value>"
+                            + m2.group(1) + "</value></init-param>";
+                }
+
                 String name = m.group(1);
                 // remove leading- and trailing whitespace
                 name = name.replaceAll("^\\s*", "");
@@ -219,11 +239,15 @@ public class PortletConfigurationGenerator {
                 if (url.endsWith("/")) {
                     url = url.substring(0, url.length() - 1);
                 }
+
                 System.out.println("Mapping " + pname + " to " + url);
+
                 String s = PORTLET_XML_SECTION;
                 s = s.replaceAll("%NAME%", name);
                 s = s.replaceAll("%PORTLETNAME%", pname);
                 s = s.replaceAll("%URL%", url);
+                s = s.replaceAll("%EXTRAPARAMS%", style);
+
                 pstring += s;
 
                 s = LIFERAY_PORTLET_XML_SECTION;
@@ -240,7 +264,8 @@ public class PortletConfigurationGenerator {
 
             }
 
-            pstring += PORTLET_XML_FOOT;
+            pstring += PORTLET_XML_FOOT
+                    .replaceAll("%CONTEXTPARAMS%", widgetset);
             lpstring += LIFERAY_PORTLET_XML_FOOT;
             ldstring += LIFERAY_DISPLAY_XML_FOOT;
 
