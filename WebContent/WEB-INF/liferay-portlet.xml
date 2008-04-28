@@ -8,57 +8,7 @@
                 <ajaxable>false</ajaxable>
         </portlet>
         <portlet>
-                <portlet-name>ITMillToolkitApplicationRunnerPortlet</portlet-name>
-                <instanceable>true</instanceable>       
-                <ajaxable>false</ajaxable>
-        </portlet>
-        <portlet>
-                <portlet-name>DemoTestBenchPortlet</portlet-name>
-                <instanceable>true</instanceable>       
-                <ajaxable>false</ajaxable>
-        </portlet>
-        <portlet>
-                <portlet-name>TestForNativeWindowingPortlet</portlet-name>
-                <instanceable>true</instanceable>       
-                <ajaxable>false</ajaxable>
-        </portlet>
-        <portlet>
-                <portlet-name>iWorkPortlet</portlet-name>
-                <instanceable>true</instanceable>       
-                <ajaxable>false</ajaxable>
-        </portlet>
-        <portlet>
-                <portlet-name>RobustnessSimplePortlet</portlet-name>
-                <instanceable>true</instanceable>       
-                <ajaxable>false</ajaxable>
-        </portlet>
-        <portlet>
-                <portlet-name>RobustnessComplexPortlet</portlet-name>
-                <instanceable>true</instanceable>       
-                <ajaxable>false</ajaxable>
-        </portlet>
-        <portlet>
-                <portlet-name>TestSplitPanelPortlet</portlet-name>
-                <instanceable>true</instanceable>       
-                <ajaxable>false</ajaxable>
-        </portlet>
-        <portlet>
-                <portlet-name>RandomLayoutStressPortlet</portlet-name>
-                <instanceable>true</instanceable>       
-                <ajaxable>false</ajaxable>
-        </portlet>
-        <portlet>
-                <portlet-name>TestBenchPortlet</portlet-name>
-                <instanceable>true</instanceable>       
-                <ajaxable>false</ajaxable>
-        </portlet>
-        <portlet>
-                <portlet-name>ReservrPortlet</portlet-name>
-                <instanceable>true</instanceable>       
-                <ajaxable>false</ajaxable>
-        </portlet>
-        <portlet>
-                <portlet-name>CalendarDemoPortlet</portlet-name>
+                <portlet-name>SimpleReserverPortlet</portlet-name>
                 <instanceable>true</instanceable>       
                 <ajaxable>false</ajaxable>
         </portlet>
@@ -68,22 +18,7 @@
                 <ajaxable>false</ajaxable>
         </portlet>
         <portlet>
-                <portlet-name>BufferedComponentsPortlet</portlet-name>
-                <instanceable>true</instanceable>       
-                <ajaxable>false</ajaxable>
-        </portlet>
-        <portlet>
                 <portlet-name>TableDemoPortlet</portlet-name>
-                <instanceable>true</instanceable>       
-                <ajaxable>false</ajaxable>
-        </portlet>
-        <portlet>
-                <portlet-name>CustomLayoutDemoPortlet</portlet-name>
-                <instanceable>true</instanceable>       
-                <ajaxable>false</ajaxable>
-        </portlet>
-        <portlet>
-                <portlet-name>LayoutDemoPortlet</portlet-name>
                 <instanceable>true</instanceable>       
                 <ajaxable>false</ajaxable>
         </portlet>
@@ -98,42 +33,7 @@
                 <ajaxable>false</ajaxable>
         </portlet>
         <portlet>
-                <portlet-name>FeaturesApplicationPortlet</portlet-name>
-                <instanceable>true</instanceable>       
-                <ajaxable>false</ajaxable>
-        </portlet>
-        <portlet>
-                <portlet-name>ParametersPortlet</portlet-name>
-                <instanceable>true</instanceable>       
-                <ajaxable>false</ajaxable>
-        </portlet>
-        <portlet>
-                <portlet-name>UpgradingSamplePortlet</portlet-name>
-                <instanceable>true</instanceable>       
-                <ajaxable>false</ajaxable>
-        </portlet>
-        <portlet>
-                <portlet-name>QueryContainerDemoPortlet</portlet-name>
-                <instanceable>true</instanceable>       
-                <ajaxable>false</ajaxable>
-        </portlet>
-        <portlet>
-                <portlet-name>TreeFilesystemContainerPortlet</portlet-name>
-                <instanceable>true</instanceable>       
-                <ajaxable>false</ajaxable>
-        </portlet>
-        <portlet>
-                <portlet-name>TreeFilesystemPortlet</portlet-name>
-                <instanceable>true</instanceable>       
-                <ajaxable>false</ajaxable>
-        </portlet>
-        <portlet>
                 <portlet-name>ModalWindowPortlet</portlet-name>
-                <instanceable>true</instanceable>       
-                <ajaxable>false</ajaxable>
-        </portlet>
-        <portlet>
-                <portlet-name>HelloWorldPortlet</portlet-name>
                 <instanceable>true</instanceable>       
                 <ajaxable>false</ajaxable>
         </portlet>
@@ -143,42 +43,17 @@
                 <ajaxable>false</ajaxable>
         </portlet>
         <portlet>
-                <portlet-name>KeyboardShortcutPortlet</portlet-name>
-                <instanceable>true</instanceable>       
-                <ajaxable>false</ajaxable>
-        </portlet>
-        <portlet>
-                <portlet-name>CustomGwtComponentDemoPortlet</portlet-name>
-                <instanceable>true</instanceable>       
-                <ajaxable>false</ajaxable>
-        </portlet>
-        <portlet>
-                <portlet-name>ColorPickerApplicationPortlet</portlet-name>
-                <instanceable>true</instanceable>       
-                <ajaxable>false</ajaxable>
-        </portlet>
-        <portlet>
-                <portlet-name>CachingDemoPortlet</portlet-name>
-                <instanceable>true</instanceable>       
-                <ajaxable>false</ajaxable>
-        </portlet>
-        <portlet>
                 <portlet-name>NotificationDemoPortlet</portlet-name>
                 <instanceable>true</instanceable>       
                 <ajaxable>false</ajaxable>
         </portlet>
         <portlet>
-                <portlet-name>MagiTestServletPortlet</portlet-name>
+                <portlet-name>ChatServletPortlet</portlet-name>
                 <instanceable>true</instanceable>       
                 <ajaxable>false</ajaxable>
         </portlet>
         <portlet>
                 <portlet-name>BrowserDemoPortlet</portlet-name>
-                <instanceable>true</instanceable>       
-                <ajaxable>false</ajaxable>
-        </portlet>
-        <portlet>
-                <portlet-name>WindowedDemosPortlet</portlet-name>
                 <instanceable>true</instanceable>       
                 <ajaxable>false</ajaxable>
         </portlet>
