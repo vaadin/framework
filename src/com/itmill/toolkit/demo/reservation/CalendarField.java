@@ -69,7 +69,7 @@ public class CalendarField extends DateField implements Container.Viewer {
 
     public void init() {
         super.setResolution(RESOLUTION_HOUR);
-        
+
     }
 
     /**
@@ -298,7 +298,6 @@ public class CalendarField extends DateField implements Container.Viewer {
                             final Object val = p.getValue();
                             if (val != null) {
                                 target.addAttribute("title", val.toString());
-                                System.out.println(val);
                             }
                         }
                         if (itemDescriptionPropertyId != null) {
