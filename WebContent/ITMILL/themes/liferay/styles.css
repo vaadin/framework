@@ -4,7 +4,7 @@
  * Simplified default theme to work seamlessly with Liferay
  */
 
-.i-app {
+div.i-app {
 	background-color: transparent;
 }
 
@@ -29,7 +29,7 @@ input[type="text"].i-filterselect-input {
 	margin: 0px;
 	padding: 3px 0px 0px 4px;
 }
-
+	
 .simplereserver div.i-datefield-entrycalendar-hours {
 	height: 200px;
 	overflow: auto;
