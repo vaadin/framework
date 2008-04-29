@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.itmill.toolkit.portlet.util;
+package com.itmill.toolkit.util;
 
 import java.io.BufferedReader;
 import java.io.File;

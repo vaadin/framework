@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.itmill.toolkit.demo.portlet;
+package com.itmill.toolkit.demo;
 
 import java.util.Iterator;
 import java.util.Map;
