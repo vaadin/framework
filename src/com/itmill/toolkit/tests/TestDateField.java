@@ -46,17 +46,21 @@ public class TestDateField extends CustomComponent {
         df.addStyleName("thisShouldBeHarmless");
 
         // Another test: locale
-        final DateField df1 = new DateField();
+        final DateField df1 = new DateField("US locale");
         main.addComponent(df1);
         df1.setLocale(new Locale("en", "US"));
 
-        final DateField df2 = new DateField();
+        final DateField df2 = new DateField("DE locale");
         main.addComponent(df2);
         df2.setLocale(new Locale("de", "DE"));
 
-        final DateField df3 = new DateField();
+        final DateField df3 = new DateField("RU locale");
         main.addComponent(df3);
         df3.setLocale(new Locale("ru", "RU"));
+
+        final DateField df4 = new DateField("FI locale");
+        main.addComponent(df4);
+        df4.setLocale(new Locale("fi", "FI"));
     }
 
     public void attach() {
