@@ -18,6 +18,16 @@
 	margin-left: 9px;
 }
 
+.i-panel-caption .i-errorindicator {
+	float: none;
+	padding-right:18px;
+	display:inline;
+}
+
+.i-panel-caption .i-icon {
+	display:inline;
+}
+
 .i-panel-caption,
 .i-panel-caption-light {
 	font-size: 18px;
