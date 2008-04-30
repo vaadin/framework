@@ -158,16 +158,6 @@ public class DateTimeService {
         return start;
     }
 
-    public String getDateFormat() {
-        try {
-            return LocaleService.getDateFormat(currentLocale);
-        } catch (final LocaleNotLoadedException e) {
-            // TODO redirect to console
-            System.out.println(e + ":" + e.getMessage());
-        }
-        return "M/d/yy";
-    }
-
     public static int getNumberOfDaysInMonth(Date date) {
         final int month = date.getMonth();
         if (month == 1 && true == isLeapYear(date)) {

@@ -4,24 +4,23 @@
 
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
-import com.itmill.toolkit.terminal.gwt.client.DateLocale;
+import com.itmill.toolkit.terminal.gwt.client.LocaleNotLoadedException;
+import com.itmill.toolkit.terminal.gwt.client.LocaleService;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
-import com.itmill.toolkit.terminal.gwt.client.util.SimpleDateFormat;
 
 public class ITextualDate extends IDateField implements Paintable,
         ChangeListener, ContainerResizedListener {
 
     private final ITextField text;
 
-    private SimpleDateFormat format;
-
-    private DateLocale dl;
+    private String formatStr;
 
     private String width;
 
@@ -37,62 +36,70 @@ public class ITextualDate extends IDateField implements Paintable,
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+        int origRes = currentResolution;
         super.updateFromUIDL(uidl, client);
+        if (origRes != currentResolution) {
+            // force recreating format string
+            formatStr = null;
+        }
         buildDate();
     }
 
-    public void buildDate() {
-        dl = new DateLocale();
-        DateLocale.setLocale(currentLocale);
+    protected String getFormatString() {
+        if (formatStr == null) {
+            if (currentResolution == RESOLUTION_YEAR) {
+                formatStr = "yyyy"; // force full year
+            } else {
 
-        com.itmill.toolkit.terminal.gwt.client.util.DateLocale.SUPPORTED_DF_TOKENS = com.itmill.toolkit.terminal.gwt.client.util.DateLocale.TOKENS_RESOLUTION_YEAR;
-        if (currentResolution == IDateField.RESOLUTION_MONTH) {
-            com.itmill.toolkit.terminal.gwt.client.util.DateLocale.SUPPORTED_DF_TOKENS = com.itmill.toolkit.terminal.gwt.client.util.DateLocale.TOKENS_RESOLUTION_MONTH;
-        } else if (currentResolution >= IDateField.RESOLUTION_DAY) {
-            com.itmill.toolkit.terminal.gwt.client.util.DateLocale.SUPPORTED_DF_TOKENS = com.itmill.toolkit.terminal.gwt.client.util.DateLocale.TOKENS_RESOLUTION_DAY;
+                try {
+                    String frmString = LocaleService
+                            .getDateFormat(currentLocale);
+                    frmString = cleanFormat(frmString);
+                    String delim = LocaleService
+                            .getClockDelimiter(currentLocale);
+
+                    if (currentResolution >= RESOLUTION_HOUR) {
+                        if (dts.isTwelveHourClock()) {
+                            frmString += " hh";
+                        } else {
+                            frmString += " HH";
+                        }
+                        if (currentResolution >= RESOLUTION_MIN) {
+                            frmString += ":mm";
+                            if (currentResolution >= RESOLUTION_SEC) {
+                                frmString += ":ss";
+                                if (currentResolution >= RESOLUTION_MSEC) {
+                                    frmString += ".SSS";
+                                }
+                            }
+                        }
+                        if (dts.isTwelveHourClock()) {
+                            frmString += " aaa";
+                        }
+
+                    }
+
+                    formatStr = frmString;
+                } catch (LocaleNotLoadedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
         }
+        return formatStr;
+    }
 
-        format = new SimpleDateFormat(cleanFormat(dts.getDateFormat()));
-        format.setLocale(dl);
+    /**
+     * 
+     */
+    protected void buildDate() {
 
         // Create the initial text for the textfield
-        String dateText = "";
+        String dateText;
         if (date != null) {
-            dateText = format.format(date);
-
-            if (currentResolution >= IDateField.RESOLUTION_HOUR) {
-                com.itmill.toolkit.terminal.gwt.client.util.DateLocale.SUPPORTED_DF_TOKENS = com.itmill.toolkit.terminal.gwt.client.util.DateLocale.TOKENS_RESOLUTION_ALL;
-                int h = date.getHours();
-                if (h > 11 && dts.isTwelveHourClock()) {
-                    h -= 12;
-                }
-                final int m = currentResolution > IDateField.RESOLUTION_HOUR ? date
-                        .getMinutes()
-                        : 0;
-                dateText += " " + (h < 10 ? "0" + h : "" + h)
-                        + dts.getClockDelimeter() + (m < 10 ? "0" + m : "" + m);
-            }
-            if (currentResolution >= IDateField.RESOLUTION_SEC) {
-                final int s = date.getSeconds();
-                dateText += dts.getClockDelimeter()
-                        + (s < 10 ? "0" + s : "" + s);
-            }
-            if (currentResolution == IDateField.RESOLUTION_MSEC) {
-                final int ms = getMilliseconds();
-                String text = "" + ms;
-                if (ms < 10) {
-                    text = "00" + text;
-                } else if (ms < 100) {
-                    text = "0" + text;
-                }
-                dateText += "." + text;
-            }
-            if (currentResolution >= IDateField.RESOLUTION_HOUR
-                    && dts.isTwelveHourClock()) {
-                dateText += " "
-                        + (date.getHours() < 12 ? dts.getAmPmStrings()[0] : dts
-                                .getAmPmStrings()[1]);
-            }
+            dateText = DateTimeFormat.getFormat(getFormatString()).format(date);
+        } else {
+            dateText = "";
         }
 
         text.setText(dateText);
@@ -108,50 +115,9 @@ public class ITextualDate extends IDateField implements Paintable,
     public void onChange(Widget sender) {
         if (sender == text) {
             if (!text.getText().equals("")) {
-                com.itmill.toolkit.terminal.gwt.client.util.DateLocale.SUPPORTED_DF_TOKENS = com.itmill.toolkit.terminal.gwt.client.util.DateLocale.TOKENS_RESOLUTION_ALL;
-                if (currentResolution == IDateField.RESOLUTION_YEAR) {
-                    com.itmill.toolkit.terminal.gwt.client.util.DateLocale.SUPPORTED_DF_TOKENS = com.itmill.toolkit.terminal.gwt.client.util.DateLocale.TOKENS_RESOLUTION_YEAR;
-                } else if (currentResolution == IDateField.RESOLUTION_MONTH) {
-                    com.itmill.toolkit.terminal.gwt.client.util.DateLocale.SUPPORTED_DF_TOKENS = com.itmill.toolkit.terminal.gwt.client.util.DateLocale.TOKENS_RESOLUTION_MONTH;
-                } else if (currentResolution == IDateField.RESOLUTION_DAY) {
-                    com.itmill.toolkit.terminal.gwt.client.util.DateLocale.SUPPORTED_DF_TOKENS = com.itmill.toolkit.terminal.gwt.client.util.DateLocale.TOKENS_RESOLUTION_DAY;
-                }
-
-                String f = cleanFormat(dts.getDateFormat());
-
-                if (currentResolution >= IDateField.RESOLUTION_HOUR) {
-                    f += " "
-                            + (dts.isTwelveHourClock() ? com.itmill.toolkit.terminal.gwt.client.util.DateLocale.TOKEN_HOUR_12
-                                    + com.itmill.toolkit.terminal.gwt.client.util.DateLocale.TOKEN_HOUR_12
-                                    : com.itmill.toolkit.terminal.gwt.client.util.DateLocale.TOKEN_HOUR_24
-                                            + com.itmill.toolkit.terminal.gwt.client.util.DateLocale.TOKEN_HOUR_24)
-                            + dts.getClockDelimeter()
-                            + com.itmill.toolkit.terminal.gwt.client.util.DateLocale.TOKEN_MINUTE
-                            + com.itmill.toolkit.terminal.gwt.client.util.DateLocale.TOKEN_MINUTE;
-                }
-                if (currentResolution >= IDateField.RESOLUTION_SEC) {
-                    f += dts.getClockDelimeter()
-                            + com.itmill.toolkit.terminal.gwt.client.util.DateLocale.TOKEN_SECOND
-                            + com.itmill.toolkit.terminal.gwt.client.util.DateLocale.TOKEN_SECOND;
-                }
-                if (currentResolution == IDateField.RESOLUTION_MSEC) {
-                    f += "."
-                            + com.itmill.toolkit.terminal.gwt.client.util.DateLocale.TOKEN_MILLISECOND
-                            + com.itmill.toolkit.terminal.gwt.client.util.DateLocale.TOKEN_MILLISECOND
-                            + com.itmill.toolkit.terminal.gwt.client.util.DateLocale.TOKEN_MILLISECOND;
-                }
-                if (currentResolution >= IDateField.RESOLUTION_HOUR
-                        && dts.isTwelveHourClock()) {
-                    f += " "
-                            + com.itmill.toolkit.terminal.gwt.client.util.DateLocale.TOKEN_AM_PM;
-                }
-
-                format = new SimpleDateFormat(f);
-                DateLocale.setLocale(currentLocale);
-                format.setLocale(dl);
-
                 try {
-                    date = format.parse(text.getText());
+                    date = DateTimeFormat.getFormat(getFormatString()).parse(
+                            text.getText());
                 } catch (final Exception e) {
                     ApplicationConnection.getConsole().log(e.getMessage());
                     text.addStyleName(ITextField.CLASSNAME + "-error");
@@ -166,6 +132,7 @@ public class ITextualDate extends IDateField implements Paintable,
                 }
 
             } else {
+                ApplicationConnection.getConsole().log("jep jep");
                 date = null;
             }
 
