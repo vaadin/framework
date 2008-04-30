@@ -91,10 +91,9 @@
 
 		<!-- Create result dir unless already exists -->
 		<mkdir dir="${result-path}" />
-
 		<!-- Find out which platform we are in -->
 		<if>
-			<equals arg1="${os.name}" arg2="Windows 2000, Windows XP" />
+			<contains arg1="${os.name}" arg2="Windows" />
 			<then>
 				<property name="platform" value="windows" />
 			</then>
@@ -145,6 +144,9 @@
 			<pathelement path="lib/jetty/jetty-6.1.7.jar" />
 			<pathelement path="lib/jetty/jetty-util-6.1.7.jar" />
 			<pathelement path="lib/jetty/servlet-api-2.5-6.1.7.jar" />
+			<pathelement path="lib/portlet/portal-kernel.jar" />
+			<pathelement path="lib/portlet/portal-service.jar" />
+			<pathelement path="lib/portlet/portlet.jar" />
 		</path>
 
 	</target>
