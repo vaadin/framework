@@ -5,7 +5,6 @@
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
@@ -36,6 +35,9 @@ public class ITextualDate extends IDateField implements Paintable,
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+        // remove possibly added invalid value indication
+        text.removeStyleName(ITextField.CLASSNAME + "-error");
+
         int origRes = currentResolution;
         super.updateFromUIDL(uidl, client);
         if (origRes != currentResolution) {
@@ -118,22 +120,19 @@ public class ITextualDate extends IDateField implements Paintable,
                 try {
                     date = DateTimeFormat.getFormat(getFormatString()).parse(
                             text.getText());
+                    // remove possibly added invalid value indication
+                    text.removeStyleName(ITextField.CLASSNAME + "-error");
                 } catch (final Exception e) {
                     ApplicationConnection.getConsole().log(e.getMessage());
                     text.addStyleName(ITextField.CLASSNAME + "-error");
-                    final Timer t = new Timer() {
-                        public void run() {
-                            text.removeStyleName(ITextField.CLASSNAME
-                                    + "-error");
-                        }
-                    };
-                    t.schedule(2000);
-                    return;
+                    client.updateVariable(id, "lastInvalidDateString", text
+                            .getText(), false);
+                    date = null;
                 }
-
             } else {
-                ApplicationConnection.getConsole().log("jep jep");
                 date = null;
+                // remove possibly added invalid value indication
+                text.removeStyleName(ITextField.CLASSNAME + "-error");
             }
 
             // Update variables
@@ -177,7 +176,6 @@ public class ITextualDate extends IDateField implements Paintable,
                         date != null ? getMilliseconds() : -1, immediate);
             }
 
-            buildDate();
         }
     }
 
