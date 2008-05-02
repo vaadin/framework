@@ -93,19 +93,19 @@
 		<mkdir dir="${result-path}" />
 		<!-- Find out which platform we are in -->
 		<if>
-			<os family="windows" />
+			<contains arg1="${os.name}" arg2="Windows" />
 			<then>
 				<property name="platform" value="windows" />
 			</then>
 		</if>
 		<if>
-			<os family="unix" />
+			<equals arg1="${os.name}" arg2="Linux" />
 			<then>
 				<property name="platform" value="linux" />
 			</then>
 		</if>
 		<if>
-			<os family="mac" />
+			<equals arg1="${os.name}" arg2="Mac OS X" />
 			<then>
 				<property name="platform" value="mac" />
 			</then>
