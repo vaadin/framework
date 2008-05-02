@@ -124,6 +124,14 @@ public class ITabsheet extends ITabsheetBase implements
             DOM.setElementProperty(deco, "className", CLASSNAME + "-deco");
         }
 
+        if (uidl.hasAttribute("hidetabs")) {
+            tb.setVisible(false);
+            addStyleName(CLASSNAME + "-hidetabs");
+        } else {
+            tb.setVisible(true);
+            removeStyleName(CLASSNAME + "-hidetabs");
+        }
+
     }
 
     protected void renderTab(final UIDL tabUidl, int index, boolean selected) {

@@ -80,6 +80,10 @@
 	border-top: none;
 }
 
+.i-tabsheet-hidetabs .i-tabsheet-content {
+	border-top: 1px solid #b5babb;
+}
+
 .i-tabsheet-deco {
 	height: 9px;
 	background: transparent url(../panel/img/bottom-right.png) repeat-x right top;
