@@ -179,11 +179,9 @@ public class TableExample extends CustomComponent implements Action.Handler,
             if (action == ACTION_HIRE) {
                 // set HIRED property to true
                 item.getItemProperty(PROPERTY_HIRED).setValue(Boolean.TRUE);
-                source.requestRepaint();
                 if (saved.containsId(target)) {
                     item = saved.getItem(target);
                     item.getItemProperty(PROPERTY_HIRED).setValue(Boolean.TRUE);
-                    saved.requestRepaint();
                 }
                 getWindow().showNotification("Hired", "" + item);
 
@@ -247,7 +245,6 @@ public class TableExample extends CustomComponent implements Action.Handler,
                 }
             }
             getWindow().showNotification("Saved " + s);
-            saved.requestRepaint();
 
         } else if (b == hireSelected) {
             // loop each selected and set property HIRED to true
@@ -259,14 +256,12 @@ public class TableExample extends CustomComponent implements Action.Handler,
                 final Property p = item.getItemProperty(PROPERTY_HIRED);
                 if (p.getValue() == Boolean.FALSE) {
                     p.setValue(Boolean.TRUE);
-                    source.requestRepaint();
                     s++;
                 }
                 if (saved.containsId(id)) {
                     // also update "saved" table
                     item = saved.getItem(id);
                     item.getItemProperty(PROPERTY_HIRED).setValue(Boolean.TRUE);
-                    saved.requestRepaint();
                 }
             }
             getWindow().showNotification("Hired " + s);
@@ -280,7 +275,6 @@ public class TableExample extends CustomComponent implements Action.Handler,
                 if (source.containsId(id)) {
                     s++;
                     source.removeItem(id);
-                    source.requestRepaint();
                 }
             }
             getWindow().showNotification("Deleted " + s);
