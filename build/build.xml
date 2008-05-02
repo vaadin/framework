@@ -93,7 +93,7 @@
 		<mkdir dir="${result-path}" />
 		<!-- Find out which platform we are in -->
 		<if>
-			<contains arg1="${os.name}" arg2="Windows" />
+			<contains string="${os.name}" substring="Windows" />
 			<then>
 				<property name="platform" value="windows" />
 			</then>
