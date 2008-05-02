@@ -106,7 +106,7 @@ public class ITabsheet extends ITabsheetBase implements
         // style inheritance)
         if (uidl.hasAttribute("style")) {
             final String[] styles = uidl.getStringAttribute("style").split(" ");
-            final String contentBaseClass = "CLASSNAME" + "-content";
+            final String contentBaseClass = CLASSNAME + "-content";
             String contentClass = contentBaseClass;
             final String decoBaseClass = CLASSNAME + "-deco";
             String decoClass = decoBaseClass;
