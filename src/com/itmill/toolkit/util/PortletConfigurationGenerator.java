@@ -109,7 +109,7 @@ public class PortletConfigurationGenerator {
 
     /**
      * @param args
-     *                <path to directory with web.xml>
+     *                <path to directory with web.xml> [widgetset to use]
      */
     public static void main(String[] args) {
         if (args.length < 1 || !new File(args[0]).isDirectory()) {
