@@ -1664,6 +1664,41 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
                     lastRendered++;
                 }
                 fixSpacers();
+                DeferredCommand.addCommand(new Command() {
+                    public void execute() {
+                        // this may be a new set of rows due content change,
+                        // ensure we have proper cache rows
+                        int reactFirstRow = (int) (firstRowInViewPort - pageLength
+                                * CACHE_REACT_RATE);
+                        int reactLastRow = (int) (firstRowInViewPort
+                                + pageLength + pageLength * CACHE_REACT_RATE);
+                        if (reactFirstRow < 0) {
+                            reactFirstRow = 0;
+                        }
+                        if (reactLastRow > totalRows) {
+                            reactLastRow = totalRows - 1;
+                        }
+                        if (reactFirstRow < firstRendered
+                                || reactLastRow > lastRendered) {
+                            // re-fetch full cache area
+                            reactFirstRow = (int) (firstRowInViewPort - pageLength
+                                    * CACHE_RATE);
+                            reactLastRow = (int) (firstRowInViewPort
+                                    + pageLength + pageLength * CACHE_RATE);
+                            if (reactFirstRow < 0) {
+                                reactFirstRow = 0;
+                            }
+                            if (reactLastRow > totalRows) {
+                                reactLastRow = totalRows - 1;
+                            }
+                            // fetch some lines before
+                            rowRequestHandler.setReqFirstRow(reactFirstRow);
+                            rowRequestHandler.setReqRows((int) (2 * pageLength
+                                    * CACHE_RATE + pageLength));
+                            rowRequestHandler.deferRowFetch(1);
+                        }
+                    }
+                });
             }
         }
 
