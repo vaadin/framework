@@ -8,6 +8,7 @@ import com.itmill.toolkit.data.Property.ValueChangeEvent;
 import com.itmill.toolkit.data.Property.ValueChangeListener;
 import com.itmill.toolkit.ui.AbstractSelect;
 import com.itmill.toolkit.ui.Button;
+import com.itmill.toolkit.ui.CheckBox;
 import com.itmill.toolkit.ui.CustomComponent;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.OptionGroup;
@@ -29,17 +30,25 @@ public class TestForWindowing extends CustomComponent {
         main.addComponent(new Label(
                 "Click the button to create a new inline window."));
 
+        final CheckBox asModal = new CheckBox("As modal");
+        main.addComponent(asModal);
+
         final Button create = new Button("Create a new window",
                 new ClickListener() {
 
                     public void buttonClick(ClickEvent event) {
                         Window w = new Window("Testing Window");
 
+                        if (((Boolean) asModal.getValue()).booleanValue()) {
+                            w.setModal(true);
+                        }
+
                         AbstractSelect s1 = new OptionGroup();
                         s1.setCaption("1. Select output format");
                         s1.addItem("Excel sheet");
                         s1.addItem("CSV plain text");
                         s1.setValue("Excel sheet");
+                        s1.setImmediate(true);
 
                         s2 = new Select();
                         s2.addItem("Separate by comma (,)");
