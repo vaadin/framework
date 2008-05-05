@@ -11,6 +11,7 @@ import com.itmill.toolkit.ui.CustomComponent;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.RichTextArea;
+import com.itmill.toolkit.ui.Button.ClickEvent;
 
 /**
  * 
@@ -45,6 +46,16 @@ public class TestForRichTextEditor extends CustomComponent implements
 
         l = new Label("", Label.CONTENT_XHTML);
         main.addComponent(l);
+
+        Button b = new Button("enabled");
+        b.setSwitchMode(true);
+        b.setImmediate(true);
+        b.addListener(new Button.ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                rte.setEnabled(!rte.isEnabled());
+            }
+        });
+        main.addComponent(b);
 
     }
 
