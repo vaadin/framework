@@ -8,6 +8,7 @@ import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusListener;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.RichTextArea;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
@@ -34,12 +35,17 @@ public class IRichTextArea extends Composite implements Paintable,
 
     private boolean immediate = false;
 
-    RichTextArea rta = new RichTextArea();
+    private RichTextArea rta = new RichTextArea();
 
-    RichTextToolbar formatter = new RichTextToolbar(rta);
+    private RichTextToolbar formatter = new RichTextToolbar(rta);
+
+    private HTML html = new HTML();
+
+    private final FlowPanel fp = new FlowPanel();
+
+    private boolean enabled = true;
 
     public IRichTextArea() {
-        final FlowPanel fp = new FlowPanel();
         fp.add(formatter);
 
         rta.setWidth("100%");
@@ -53,13 +59,28 @@ public class IRichTextArea extends Composite implements Paintable,
     }
 
     public void setEnabled(boolean enabled) {
-        rta.setEnabled(enabled);
+        if (this.enabled != enabled) {
+            rta.setEnabled(enabled);
+            if (enabled) {
+                fp.remove(html);
+                fp.add(rta);
+            } else {
+                html.setHTML(rta.getHTML());
+                fp.remove(rta);
+                fp.add(html);
+            }
+
+            this.enabled = enabled;
+        }
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         this.client = client;
         id = uidl.getId();
 
+        if (uidl.hasVariable("text")) {
+            rta.setHTML(uidl.getStringVariable("text"));
+        }
         setEnabled(!uidl.getBooleanAttribute("disabled"));
 
         if (client.updateComponent(this, uidl, true)) {
@@ -67,8 +88,6 @@ public class IRichTextArea extends Composite implements Paintable,
         }
 
         immediate = uidl.getBooleanAttribute("immediate");
-
-        rta.setHTML(uidl.getStringVariable("text"));
 
     }
 
