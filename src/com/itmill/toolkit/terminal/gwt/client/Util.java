@@ -108,4 +108,18 @@ public class Util {
     public static boolean isIE7() {
         return isIE() && !isIE6();
     }
+
+    public static native boolean isFF2()
+    /*-{
+    var browser=$wnd.navigator.appName;
+    if (browser=="Netscape") {
+        var ua = navigator.userAgent;
+        var re  = new RegExp("Firefox/([0-9]+)");
+        if (re.exec(ua) != null)
+            var rv = parseInt(RegExp.$1);
+            if(rv && rv == 2) 
+                return true;
+    }
+    return false;
+    }-*/;
 }

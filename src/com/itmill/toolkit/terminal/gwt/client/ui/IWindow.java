@@ -371,6 +371,13 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 
     private void showModalityCurtain() {
         DOM.appendChild(RootPanel.getBodyElement(), modalityCurtain);
+        if (Util.isFF2()) {
+            DOM.setStyleAttribute(modalityCurtain, "height", DOM
+                    .getElementPropertyInt(RootPanel.getBodyElement(),
+                            "offsetHeight")
+                    + "px");
+            DOM.setStyleAttribute(modalityCurtain, "position", "absolute");
+        }
     }
 
     private void hideModalityCurtain() {
