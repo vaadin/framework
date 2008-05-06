@@ -228,6 +228,13 @@ public class TabSheet extends AbstractComponentContainer implements
             if (c.equals(selected)) {
                 target.addAttribute("selected", true);
                 c.paint(target);
+            } else {
+                /*
+                 * Component is kind of painted (caption, enabled, icon ...)
+                 * without paint methdod, so we must manually clear unpainted
+                 * flag.
+                 */
+                c.requestRepaintRequests();
             }
             target.endTag("tab");
         }
