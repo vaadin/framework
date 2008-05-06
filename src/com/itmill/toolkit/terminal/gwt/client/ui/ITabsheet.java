@@ -44,17 +44,17 @@ public class ITabsheet extends ITabsheetBase implements
         public void onTabSelected(SourcesTabEvents sender, final int tabIndex) {
             if (client != null && activeTabIndex != tabIndex) {
                 addStyleDependentName("loading");
-                // run updating variables in deferred command to bypass some FF
+                // run updating variables in deferred command to bypass some
+                // FF
                 // optimization issues
                 DeferredCommand.addCommand(new Command() {
-
                     public void execute() {
                         previousVisibleWidget = tp.getWidget(tp
                                 .getVisibleWidget());
                         DOM.setStyleAttribute(previousVisibleWidget
                                 .getElement(), "visibility", "hidden");
-                        client.updateVariable(id, "selected", ""
-                                + tabKeys.get(tabIndex), true);
+                        client.updateVariable(id, "selected", tabKeys.get(
+                                tabIndex).toString(), true);
                     }
                 });
             }
@@ -64,6 +64,11 @@ public class ITabsheet extends ITabsheetBase implements
             if (disabled) {
                 return false;
             }
+            final Object tabKey = tabKeys.get(tabIndex);
+            if (disabledTabKeys.contains(tabKey)) {
+                return false;
+            }
+
             return true;
         }
 

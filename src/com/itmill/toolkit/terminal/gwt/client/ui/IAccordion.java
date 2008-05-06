@@ -83,7 +83,8 @@ public class IAccordion extends ITabsheetBase implements
 
     public void onSelectTab(StackItem item) {
         final int index = stack.indexOf(item);
-        if (index != activeTabIndex && !disabled && !readonly) {
+        if (index != activeTabIndex && !disabled && !readonly
+                && !disabledTabKeys.contains(tabKeys.get(index))) {
             if (getSelectedStack() != null) {
                 getSelectedStack().close();
             }

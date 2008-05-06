@@ -1,7 +1,9 @@
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
@@ -18,6 +20,7 @@ abstract class ITabsheetBase extends FlowPanel implements Paintable {
     protected int activeTabIndex = 0;
     protected boolean disabled;
     protected boolean readonly;
+    protected Set disabledTabKeys = new HashSet();
 
     public ITabsheetBase(String classname) {
         setStylePrimaryName(classname);
@@ -51,6 +54,7 @@ abstract class ITabsheetBase extends FlowPanel implements Paintable {
             // Clear previous values
             tabKeys.clear();
             captions.clear();
+            disabledTabKeys.clear();
             clear();
 
             int index = 0;
@@ -61,6 +65,10 @@ abstract class ITabsheetBase extends FlowPanel implements Paintable {
                 String caption = tab.getStringAttribute("caption");
                 if (caption == null) {
                     caption = " ";
+                }
+
+                if (tab.getBooleanAttribute("disabled")) {
+                    disabledTabKeys.add(key);
                 }
 
                 captions.add(caption);
@@ -80,10 +88,13 @@ abstract class ITabsheetBase extends FlowPanel implements Paintable {
         final UIDL tabs = uidl.getChildUIDL(0);
         boolean retval = tabKeys.size() == tabs.getNumberOfChildren();
         for (int i = 0; retval && i < tabKeys.size(); i++) {
-            retval = tabKeys.get(i).equals(
-                    tabs.getChildUIDL(i).getStringAttribute("key"))
+            String key = (String) tabKeys.get(i);
+            UIDL tabUIDL = tabs.getChildUIDL(i);
+            retval = key.equals(tabUIDL.getStringAttribute("key"))
                     && captions.get(i).equals(
-                            tabs.getChildUIDL(i).getStringAttribute("caption"));
+                            tabUIDL.getStringAttribute("caption"))
+                    && (tabUIDL.hasAttribute("disabled") == disabledTabKeys
+                            .contains(key));
         }
         return retval;
     }
