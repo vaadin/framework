@@ -35,9 +35,8 @@ public class KeyboardShortcut extends Application implements Handler {
                     + "applications. (see our article on <a href=\"http://www.itmill"
                     + ".com/articles/Keybindings_in_Web_Browsers.htm\">"
                     + "www.itmill.com)</a></p>"
-                    + "Events are attached to Window in this application, so a "
-                    + "component inside window must be focused to fire event on"
-                    + " keyboard shortcut.</p>"
+                    + "<p>Focus must be inside web application (eg. not in address "
+                    + "bar) for shortcuts to work. By default app element is focused.</p>"
                     + "<strong>Shortcuts used in this example:</strong> "
                     + "<br/>ESC restarts program, ctrl-shift-a (Button A), "
                     + "ctrl-shift-z (Button Z), ctrl-shift-x (Button X)",
@@ -104,7 +103,6 @@ public class KeyboardShortcut extends Application implements Handler {
 
         w.addActionHandler(this);
 
-        f.focus();
     }
 
     public Action[] getActions(Object target, Object sender) {

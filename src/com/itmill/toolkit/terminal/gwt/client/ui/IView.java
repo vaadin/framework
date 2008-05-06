@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
@@ -55,12 +56,29 @@ public class IView extends SimplePanel implements Paintable,
     public IView(String elementId) {
         super();
         setStyleName(CLASSNAME);
+
         DOM.sinkEvents(getElement(), Event.ONKEYDOWN);
+
+        DOM.setElementPropertyInt(getElement(), "tabIndex", 0);
 
         RootPanel.get(elementId).add(this);
 
         Window.addWindowResizeListener(this);
+
+        // set focus to iview element by default to listen possible keyboard
+        // shortcuts
+        focus(getElement());
+
     }
+
+    private static native void focus(Element el)
+    /*-{
+        try {
+            el.focus();
+        } catch (e) {
+        
+        }
+    }-*/;
 
     public String getTheme() {
         return theme;
