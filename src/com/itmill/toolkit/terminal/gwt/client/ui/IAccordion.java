@@ -68,6 +68,10 @@ public class IAccordion extends ITabsheetBase implements
         if (selected) {
             item.open();
             item.setContent(tabUidl.getChildUIDL(0));
+        } else if (tabUidl.getChildCount() > 0) {
+            // updating a drawn child on hidden tab
+            Paintable paintable = client.getPaintable(tabUidl.getChildUIDL(0));
+            paintable.updateFromUIDL(tabUidl.getChildUIDL(0), client);
         }
     }
 
@@ -232,6 +236,8 @@ public class IAccordion extends ITabsheetBase implements
 
         public void setContent(UIDL contentUidl) {
             final Paintable newPntbl = client.getPaintable(contentUidl);
+            // due hack #1 in ITabsheetBase
+            ((Widget) newPntbl).setVisible(true);
             if (getPaintable() == null) {
                 add((Widget) newPntbl, content);
             } else if (getPaintable() != newPntbl) {

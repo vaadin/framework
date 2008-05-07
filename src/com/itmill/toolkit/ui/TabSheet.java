@@ -54,6 +54,8 @@ public class TabSheet extends AbstractComponentContainer implements
      */
     private boolean tabsHidden;
 
+    private LinkedList paintedTabs = new LinkedList();
+
     /**
      * Constructs a new Tabsheet. Tabsheet is immediate by default.
      */
@@ -228,12 +230,10 @@ public class TabSheet extends AbstractComponentContainer implements
             if (c.equals(selected)) {
                 target.addAttribute("selected", true);
                 c.paint(target);
+                paintedTabs.add(c);
+            } else if (paintedTabs.contains(c)) {
+                c.paint(target);
             } else {
-                /*
-                 * Component is kind of painted (caption, enabled, icon ...)
-                 * without paint methdod, so we must manually clear unpainted
-                 * flag.
-                 */
                 c.requestRepaintRequests();
             }
             target.endTag("tab");
@@ -532,6 +532,11 @@ public class TabSheet extends AbstractComponentContainer implements
      */
     public void repaintRequested(RepaintRequestEvent event) {
         requestRepaint();
+    }
+
+    public void detach() {
+        super.detach();
+        paintedTabs.clear();
     }
 
 }

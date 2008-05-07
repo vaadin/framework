@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
@@ -47,6 +48,15 @@ abstract class ITabsheetBase extends FlowPanel implements Paintable {
                 final boolean selected = tab.getBooleanAttribute("selected");
                 if (selected) {
                     selectTab(index, tab.getChildUIDL(0));
+                } else if (tab.getChildCount() > 0) {
+                    // updating a drawn child on hidden tab
+                    Paintable paintable = client.getPaintable(tab
+                            .getChildUIDL(0));
+                    // TODO widget may flash on screen
+                    paintable.updateFromUIDL(tab.getChildUIDL(0), client);
+                    // Hack #1 in ITabsheetBase: due ITabsheets content has no
+                    // wrappers for each tab, we need to hide the actual widgets
+                    ((Widget) paintable).setVisible(false);
                 }
                 index++;
             }

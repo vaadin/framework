@@ -148,6 +148,10 @@ public class ITabsheet extends ITabsheetBase implements
         if (selected) {
             renderContent(tabUidl.getChildUIDL(0));
             tb.selectTab(index);
+        } else if (tabUidl.getChildCount() > 0) {
+            // updating a drawn child on hidden tab
+            Paintable paintable = client.getPaintable(tabUidl.getChildUIDL(0));
+            paintable.updateFromUIDL(tabUidl.getChildUIDL(0), client);
         }
         // Add place-holder content
         tp.add(new Label(""));
