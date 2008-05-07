@@ -89,6 +89,9 @@
 		<property file="build/VERSION.properties" />
 		<property file="build/html-style.properties" />
 
+		<!-- Can run XEP only if license is available. -->
+        <available file="build/lib/XEP/license.xml" property="xep.license.available"/>
+
 		<!-- Create result dir unless already exists -->
 		<mkdir dir="${result-path}" />
 		<!-- Find out which platform we are in -->
@@ -787,8 +790,18 @@
 		</javadoc>
 	</target>
 
+	<!-- Build PDF manual from sources or just copy it. -->
+    <target name="manual-pdf" depends="build-manual-pdf, copy-manual-pdf">
+    </target>
+	
+	<!-- Just copy a prebuilt PDF manual. -->
+    <target name="copy-manual-pdf" unless="xep.license.available">
+        <echo>PDF Manual: No XEP license available, just copy a prebuilt PDF.</echo>
+        <copy file="doc/manual/book.pdf" tofile="${output-dir}/WebContent/doc/manual.pdf" />
+    </target>
+
 	<!-- XEP-based FO building -->
-	<target name="manual-pdf">
+	<target name="build-manual-pdf" if="xep.license.available">
 		<echo>PDF Manual: processing images (TBD)</echo>
 		<!-- TBD -->
 		<echo>PDF Manual: converting xml to fo</echo>
