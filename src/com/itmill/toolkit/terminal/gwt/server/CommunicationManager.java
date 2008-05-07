@@ -286,6 +286,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
                             idPaintableMap.remove(paintableIdMap.get(p));
                             it.remove();
                             dirtyPaintabletSet.remove(p);
+                            p.removeListener(this);
                         }
                     }
                     paintables = getDirtyComponents(window);
