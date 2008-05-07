@@ -21,7 +21,7 @@ import com.itmill.toolkit.ui.Button.ClickEvent;
  */
 public class JavaScriptAPIExample extends CustomComponent {
 
-    public static final String txt = "(more examples will be added here as the APIs are made public)<br/><br/><A href=\"javascript:itmill.forceSync();\">javascript:itmill.forceSync();</A>";
+    public static final String txt = "<p>For advanced client side programmers Toolkit offers a simple method which can be used to force sync client with server. This may be needed for example if another part of a mashup changes things on server.</p> (more examples will be added here as the APIs are made public)<br/><br/><A href=\"javascript:itmill.forceSync();\">javascript:itmill.forceSync();</A>";
 
     private final OrderedLayout main;
     private final Label l;
