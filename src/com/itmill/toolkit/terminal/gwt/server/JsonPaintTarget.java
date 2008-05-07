@@ -47,10 +47,6 @@ public class JsonPaintTarget implements PaintTarget {
 
     private final CommunicationManager manager;
 
-    private boolean trackPaints = false;
-
-    private int numberOfPaints = 0;
-
     private int changes = 0;
 
     Set preCachedResources = new HashSet();
@@ -113,11 +109,6 @@ public class JsonPaintTarget implements PaintTarget {
         // In case of null data output nothing:
         if (tagName == null) {
             throw new NullPointerException();
-        }
-
-        // Increments paint tracker
-        if (isTrackPaints()) {
-            numberOfPaints++;
         }
 
         // Ensures that the target is open
@@ -796,37 +787,6 @@ public class JsonPaintTarget implements PaintTarget {
         if (text != null) {
             tag.addData(text);
         }
-    }
-
-    /**
-     * 
-     * @return
-     */
-    public boolean isTrackPaints() {
-        return trackPaints;
-    }
-
-    /**
-     * Gets the number of paints.
-     * 
-     * @return the number of paints.
-     */
-    public int getNumberOfPaints() {
-        return numberOfPaints;
-    }
-
-    /**
-     * Sets the tracking to true or false.
-     * 
-     * This also resets the number of paints.
-     * 
-     * @param enabled
-     *                is the tracking is enabled or not.
-     * @see #getNumberOfPaints()
-     */
-    public void setTrackPaints(boolean enabled) {
-        trackPaints = enabled;
-        numberOfPaints = 0;
     }
 
     /**

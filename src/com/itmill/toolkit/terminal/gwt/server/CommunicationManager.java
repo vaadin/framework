@@ -348,14 +348,8 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
                             final String pid = getPaintableId(p);
                             paintTarget.addAttribute("pid", pid);
 
-                            // Track paints to identify empty paints
-                            paintTarget.setTrackPaints(true);
                             p.paint(paintTarget);
 
-                            // If no paints add attribute empty
-                            if (paintTarget.getNumberOfPaints() <= 0) {
-                                paintTarget.addAttribute("visible", false);
-                            }
                             paintTarget.endTag("change");
                         }
                         paintablePainted(p);
@@ -862,7 +856,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
      * 
      * @param p
      */
-    public void paintablePainted(Paintable p) {
+    private void paintablePainted(Paintable p) {
         dirtyPaintabletSet.remove(p);
         p.requestRepaintRequests();
     }
