@@ -227,6 +227,9 @@ public class ISlider extends Widget implements Paintable,
     }
 
     private void setValue(Double value, boolean animate, boolean updateToServer) {
+        if (value == null) {
+            return;
+        }
         if (value.doubleValue() < min) {
             value = new Double(min);
         } else if (value.doubleValue() > max) {

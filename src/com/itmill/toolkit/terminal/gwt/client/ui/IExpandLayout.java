@@ -690,7 +690,9 @@ public class IExpandLayout extends ComplexPanel implements
          * Expanded widget is updated after layout function so it has its
          * container fixed at the moment of updateFromUIDL.
          */
-        ((Paintable) expandedWidget).updateFromUIDL(expandedWidgetUidl, client);
-
+        if (expandedWidget != null) {
+            ((Paintable) expandedWidget).updateFromUIDL(expandedWidgetUidl,
+                    client);
+        }
     }
 }
