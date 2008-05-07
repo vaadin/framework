@@ -537,6 +537,11 @@
 				<include name="jetty/**/*" />
 			</fileset>
 		</copy>
+        <copy todir="${output-dir}/WebContent/demo/lib">
+            <fileset dir="lib">
+                <include name="portlet/**/*" />
+            </fileset>
+        </copy>
 
 		<!-- Add demo sources -->
 		<echo>Adding demo sources to WebContent/WEB-INF/src</echo>
@@ -573,7 +578,12 @@
 				<include name="**/*" />
 			</fileset>
 		</copy>
-
+		<java classname="com.itmill.toolkit.buildhelpers.PortletConfigurationGenerator" failonerror="yes" fork="yes" maxmemory="512m">
+		    <arg value="${output-dir}/WebContent/WEB-INF" />
+		    <classpath>
+		        <pathelement location="build/buildhelpers/" />
+		    </classpath>
+		</java>
 	</target>
 
 	<target name="compile-fileupload">

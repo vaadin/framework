@@ -66,6 +66,15 @@
     </init-param>
   </servlet>
   
+   <servlet>
+    <servlet-name>PortletDemo</servlet-name>
+    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+    <init-param>
+      <param-name>application</param-name>
+      <param-value>com.itmill.toolkit.demo.PortletDemo</param-value>
+    </init-param>
+  </servlet>
+
   <servlet>
     <servlet-name>BrowserDemo</servlet-name>
     <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
@@ -99,6 +108,19 @@
     <init-param>
       <param-name>application</param-name>
       <param-value>com.itmill.toolkit.demo.reservation.ReservationApplication</param-value>
+    </init-param>
+    <init-param>
+      <param-name>widgetset</param-name>
+      <param-value>com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet</param-value>
+    </init-param>
+  </servlet>
+  
+  <servlet>
+    <servlet-name>SimpleReserver</servlet-name>
+    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+    <init-param>
+      <param-name>application</param-name>
+      <param-value>com.itmill.toolkit.demo.reservation.simple.SimpleReserver</param-value>
     </init-param>
     <init-param>
       <param-name>widgetset</param-name>
@@ -307,7 +329,13 @@
     <servlet-class>com.itmill.toolkit.automatedtests.util.StatusServlet</servlet-class>
   </servlet>
   <!-- Section ends: Automated tests used by Testing Tools plug-in client -->
-  
+
+  <servlet-mapping>
+    <servlet-name>PortletDemo</servlet-name>
+    <url-pattern>/PortletDemo/*</url-pattern>
+    <!-- portlet -->
+  </servlet-mapping> 
+
   <servlet-mapping>
     <servlet-name>ITMillToolkitApplicationRunner</servlet-name>
     <url-pattern>/run/*</url-pattern>
@@ -349,6 +377,12 @@
     <url-pattern>/Reservr/*</url-pattern>
   </servlet-mapping>
   
+  <servlet-mapping>
+    <servlet-name>SimpleReserver</servlet-name>
+    <url-pattern>/SimpleReserver/*</url-pattern>
+    <!-- portlet style=height:400px -->
+  </servlet-mapping>
+
   <servlet-mapping>
     <servlet-name>SelectDemo</servlet-name>
     <url-pattern>/SelectDemo/*</url-pattern>
