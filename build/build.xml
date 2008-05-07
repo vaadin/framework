@@ -580,6 +580,7 @@
 		</copy>
 		<java classname="com.itmill.toolkit.buildhelpers.PortletConfigurationGenerator" failonerror="yes" fork="yes" maxmemory="512m">
 		    <arg value="${output-dir}/WebContent/WEB-INF" />
+		    <arg value="com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet" />
 		    <classpath>
 		        <pathelement location="build/buildhelpers/" />
 		    </classpath>
