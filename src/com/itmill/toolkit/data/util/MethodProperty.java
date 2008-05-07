@@ -461,10 +461,15 @@ public class MethodProperty implements Property {
                     "Property GET-method cannot not be null: " + type);
         }
 
-        if (setMethod != null
-                && (setArgumentIndex < 0 || setArgumentIndex >= setArgs.length)) {
-            throw new IndexOutOfBoundsException(
-                    "The setArgumentIndex must be >= 0 and < setArgs.length");
+        if (setMethod != null) {
+            if (setArgs == null) {
+                throw new IndexOutOfBoundsException(
+                        "The setArgs can not be null");
+            }
+            if (setArgumentIndex < 0 || setArgumentIndex >= setArgs.length) {
+                throw new IndexOutOfBoundsException(
+                        "The setArgumentIndex must be >= 0 and < setArgs.length");
+            }
         }
 
         // Gets the return type from get method
