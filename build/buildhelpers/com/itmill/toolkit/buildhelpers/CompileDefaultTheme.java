@@ -8,6 +8,8 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.Comparator;
 
 /**
  * Helper to combine css diveded into separate per component dirs into one to
@@ -30,6 +32,11 @@ public class CompileDefaultTheme {
                 .append("/* Automatically compiled css file from subdirectories. */\n");
 
         File[] subdir = f.listFiles();
+        Arrays.sort(subdir, new Comparator() {
+            public int compare(Object arg0, Object arg1) {
+                return ((File) arg0).compareTo((File) arg1);
+            }
+        });
 
         for (int i = 0; i < subdir.length; i++) {
             File dir = subdir[i];
