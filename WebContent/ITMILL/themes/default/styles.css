@@ -99,6 +99,7 @@
 	width: 100%;
 	overflow: auto; 
 	/* avoid scrollbars with margins in root layout */
+	outline: none;
 	margin-top:-1px;
 	border-top:1px solid transparent;
 }
