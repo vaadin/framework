@@ -420,7 +420,7 @@
     <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
     <init-param>
       <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.demo.portlet.PortletDemo</param-value>
+      <param-value>com.itmill.toolkit.demo.PortletDemo</param-value>
     </init-param>
   </servlet>
  <servlet-mapping>
