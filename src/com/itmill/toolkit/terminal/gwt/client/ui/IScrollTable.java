@@ -1567,7 +1567,12 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 
         public static final int DEFAULT_ROW_HEIGHT = 24;
 
-        public static final int CELL_CONTENT_PADDING = 3;
+        /**
+         * Amount of padding inside one table cell (this is reduced from the
+         * "cellContent" element's width). You may override this in your own
+         * widgetset.
+         */
+        public static final int CELL_CONTENT_PADDING = 8;
 
         private int rowHeight = -1;
 

@@ -101,12 +101,20 @@
 }
 .i-table-row td,
 .i-table-row-odd td {
-	padding: 3px 0;
+	padding: 0;
 }
 .i-table-cell-content {
 	white-space: nowrap;
 	overflow: hidden;
-	padding-left: 3px;
+	padding: 3px 5px 3px 3px;
+	height: 18px;
+}
+
+/* Fix textfield size to correspond label size in */
+.i-table-cell-content .i-textfield {
+	height: auto;
+	margin: -2px 0 -3px -3px;
+	width: 97%; /* approximate */
 }
 
 
