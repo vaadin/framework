@@ -195,7 +195,7 @@ public class WebApplicationContext implements ApplicationContext,
         // If any runtime exceptions occurred, throw a combined exception
         if (exceptions != null) {
             final StringBuffer msg = new StringBuffer();
-            for (final Iterator i = listeners.iterator(); i.hasNext();) {
+            for (final Iterator i = exceptions.iterator(); i.hasNext();) {
                 final RuntimeException e = (RuntimeException) i.next();
                 if (msg.length() == 0) {
                     msg.append("\n\n--------------------------\n\n");
