@@ -506,8 +506,7 @@ public class ApplicationServlet extends HttpServlet {
             try {
                 Method m = applicationClass
                         .getMethod("getSystemMessages", null);
-                ci = (Application.CustomizedSystemMessages) m
-                        .invoke(null, null);
+                ci = (Application.SystemMessages) m.invoke(null, null);
             } catch (Exception e2) {
                 // Not critical, but something is still wrong; print stacktrace
                 e2.printStackTrace();
@@ -532,8 +531,7 @@ public class ApplicationServlet extends HttpServlet {
                 try {
                     Method m = applicationClass.getMethod("getSystemMessages",
                             null);
-                    ci = (Application.CustomizedSystemMessages) m.invoke(null,
-                            null);
+                    ci = (Application.SystemMessages) m.invoke(null, null);
                 } catch (Exception e2) {
                     // Not critical, but something is still wrong; print
                     // stacktrace
