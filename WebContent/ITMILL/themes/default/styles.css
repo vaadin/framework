@@ -1299,6 +1299,10 @@
 	cursor: pointer;
 }
 
+.i-tabsheet-tabs .gwt-TabBarItem .i-caption-disabled {
+	cursor: default;
+}
+
 .i-tabsheet-tabs .gwt-TabBarItem-selected {
 	border: none;
 	background: transparent url(panel/img/top-left.png) no-repeat;
@@ -1622,6 +1626,10 @@
 }
 
 /* IE specific styles */
+
+* html .i-window {
+	width: 0;
+}
 
 * html .i-window-wrap {
 	padding: 12px;
