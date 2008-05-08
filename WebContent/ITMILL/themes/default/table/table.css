@@ -106,7 +106,8 @@
 .i-table-cell-content {
 	white-space: nowrap;
 	overflow: hidden;
-	padding: 3px 5px 3px 3px;
+	padding: 3px 0 3px 3px;
+	margin-right: 5px;
 	height: 18px;
 }
 
