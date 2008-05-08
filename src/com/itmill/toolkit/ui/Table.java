@@ -1439,6 +1439,9 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * Sets the Container that serves as the data source of the viewer.
      * 
+     * As a side-effect Table's value (selection) is set to null due old
+     * selection not necessary exists in new Container.
+     * 
      * @see com.itmill.toolkit.data.Container.Viewer#setContainerDataSource(Container)
      */
     public void setContainerDataSource(Container newDataSource) {
@@ -1465,6 +1468,10 @@ public class Table extends AbstractSelect implements Action.Container,
             collapsedColumns.clear();
         }
         setVisibleColumns(getContainerPropertyIds().toArray());
+
+        // null value as we may not be sure that currently selected identifier
+        // exits in new ds
+        setValue(null);
 
         // Assure visual refresh
         refreshRenderedCells();
