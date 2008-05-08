@@ -39,3 +39,16 @@
 .i-Notification.tray {
 
 }
+
+.i-Notification.system {
+	background-color: #ff0a0a;
+	opacity: 0.7;
+	filter: alpha(opacity=70);
+}
+.i-Notification.system H1 {
+	display: block;
+	margin: 0px;
+}
+.i-Notification.system p {
+	white-space: nowrap;
+}
