@@ -88,8 +88,6 @@ public class ApplicationConnection {
 
     private int activeRequests = 0;
 
-    private String applicationUri;
-
     private ApplicationConfiguration configuration;
 
     public ApplicationConnection(WidgetSet widgetSet,
