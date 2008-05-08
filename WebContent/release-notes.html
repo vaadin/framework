@@ -32,9 +32,23 @@
 
     <h2>Important Changes</h2>
     
-<h4>General</h4>
+<p>The <version></version> release if IT Mill Toolkit includes new features and a number
+of fixed problems.</p>
+
 <ul>
-  <li><p>Support for multiple applications in the same browser window.
+  <li>Support for Java Portlets. See the following dev.itmill.com wiki articles for details.</li>
+
+  <ul>
+    <li><a href="http://dev.itmill.com/wiki/Articles/PortalTools">PortalTools - IT Mill Toolkit Portal Integration</a></li>
+    <li><a href="http://dev.itmill.com/wiki/Articles/SimplePortalIntegration">Simple IT Mill Toolkit Portal Integration</a> -- instructions for using the portal integration</li>
+  </ul>
+
+  <li>Default theme has been collected in a single CSS file in
+  <tt>WebContent/ITMILL/themes/default/styles.css</tt>, which is a compilation of the
+  separate CSS files in the subdirectories. Custom themes should inherit this stylesheet
+  with <tt>import</tt> command.</li>
+
+  <li>(In 5.1.2) <p>Support for multiple applications in the same browser window.
 See <tt>WebContent/multiapp.html</tt> for an example on how to embed
 multiple applications.</p><p><i><b>IMPORTANT!</b> If you have embedded
 Toolkit Applications in a HTML page with earlier versions of IT Mill
@@ -44,46 +58,13 @@ view the source code, and copy the loading code to your HTML
 page.</i></p></li>
 
   <li>Many bug fixes. See the ChangeLog below.</li>
+
+  <li>For up-to-date status of known problems, see the developer website <a href="http://dev.itmill.com/">dev.itmill.com</a>.</li>
+
 </ul>
 
-    <h2>ChangeLog Between IT Mill Toolkit 5.1.1 and 5.1.2</h2>
+    <h2>ChangeLog Between IT Mill Toolkit 5.1.2 and 5.2.0</h2>
 
-<p>Listing by ChangeSet number, changed file (other files may also have changed), description, and a possible bug number.</p>
-
-<ul>
-<li>4084: ApplicationConnection.java: avoid "hanged response indicator" when receiving non-valid json </li>
-<li>4085: filterselect.css: Minor fix for filterselect theme.</li>
-<li>4086: IDateField.java: Fixed GUI bug with time values like 00:00:00.000 (used current values if field was 0)</li>
-<li>4088: ApplicationServlet.java: Fixes #1514: Add src-attribute for __gwt_historyFrame IFRAME-element to prevent IE6 security issues when using SSL</li>
-<li>4101: Ticket1506_TestContainer.java+ (4 files): New ticket testcase for #1506</li>
-<li>4106: IEmbedded.java: Fix: setting a new source for TYPE_BROWSER Embedded component doesn't replace the original IFRAME-element, it only changes the src-attribute value. This way the browser can keep history information of the url changes.</li>
-<li>4107: IEmbedded.java+ (5 files): Fix: IEmbedded won't through exceptions for null-source values.
-Fix: IOrderedLayout now handles component additions in between old components with captions (previously the insertion index was calculated wrong because of the caption elements were included in the index).
-Small fixes to TestBench.</li>
-<li>4126: IEmbedded.java: Fix: Force browser to fire unload event when component is detached from the view (IE doesn't do this automatically).</li>
-<li>4127: ApplicationServlet.java+ (5 files): initial commit for #704</li>
-<li>4132: IWindow.java: IWindow now sizes itself respective to its content if no size is explicitly specified. Use "-1" to clear any previous size settings.</li>
-<li>4134: ApplicationServlet.java+ (2 files): -Enhancement: Application.setSessionExpiredURL now allows the developer to set the URL where to redirect the client after the application session has expired. The redirect is not pushed to the client, i.e. the client has to make a request to the expired application to get redirected.
--Minor modification to the session expired notification (onclick="window.location.reload()" was not working properly).
--Enhancement: "closeApplication" parameter allows Testing Tools to close the application after tests.</li>
-<li>4135: ApplicationServlet.java+ (2 files): TT backwards compatibility fix: adds old (pre-multiapp) versionInfo to js.
-Also fixed typo in ApplicationConfiguration.</li>
-<li>4138: SimplestApplication.java+ (36 files): Created com.itmill.toolkit.automatedtests package which contains "official" automated tests
- * do not touch them unless you change automated test client's testcase scripts too.
- * copy your testing application to package com.itmill.toolkit.automatedtests
- * do not point to "development / testing / production" packages which are edited in the future without relation to testing
- * use setDebugId's for all components that are used in testing
- 
-Moved few classes from "experimental" com.itmill.toolkit.tests package into "official" side.
-
-Copied featurebrowser to automatedtests package and added setDebugId's for most components that are used in the testing.
-</li>
-<li>4148: ApplicationServlet.java+ (3 files): fixes #1544</li>
-<li>4246: 5.1.2: Created 5.1.2 release branch from 2008-04-09 00:00 trunk.
-</li>
-<li>4247: VERSION.properties+ (2 files): Merged some material from 5.1.1 branch (4032:HEAD) to 5.1.2 branch.</li>
-</ul>
-			
 			</div> <!-- /getting-started -->
 			
 			<div class="clearer"></div>
