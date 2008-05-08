@@ -111,7 +111,7 @@
 	height: 18px;
 }
 
-/* Fix textfield size to correspond label size in */
+/* Fix textfield size to correspond label size inside table */
 .i-table-cell-content .i-textfield {
 	height: auto;
 	margin: -2px 0 -3px -3px;
