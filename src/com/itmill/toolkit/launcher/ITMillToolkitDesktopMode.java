@@ -5,6 +5,7 @@
 package com.itmill.toolkit.launcher;
 
 import java.awt.FlowLayout;
+import java.awt.HeadlessException;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -69,7 +70,11 @@ public class ITMillToolkitDesktopMode {
 
         // Open control dialog
         if (url != null) {
-            openServerControlDialog(url);
+            try {
+                openServerControlDialog(url);
+            } catch (HeadlessException e) {
+                // nop, starting from console
+            }
         }
 
     }
