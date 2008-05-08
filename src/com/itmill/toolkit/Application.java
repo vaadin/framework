@@ -169,11 +169,11 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
     private String logoutURL = null;
 
     /**
-     * URL where the user is redirected to when the Toolkit ApplicationServlet
-     * session expires, or null if the application is just closed without
-     * redirection.
+     * Experimental API, not finalized. The default SystemMessages (read-only).
+     * Change by overriding getSystemMessages() and returning
+     * CustomizedSystemMessages
      */
-    private String expiredURL = null;
+    private static final SystemMessages DEFAULT_SYSTEM_MESSAGES = new SystemMessages();
 
     private Focusable pendingFocus;
 
@@ -1032,28 +1032,18 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
     }
 
     /**
-     * Returns the URL where user is redirected to when the Toolkit
-     * ApplicationServlet session expires. If the URL is <code>null</code>,
-     * the application is closed normally and it shows a notification to the
-     * client.
+     * Experimental API, not finalized. Gets the SystemMessages for this
+     * application. SystemMessages are used to notify the user of various
+     * critical situations that can occur, such as session expiration,
+     * client/server out of sync, and internal server error.
      * 
-     * @return the URL.
-     */
-    public String getSessionExpiredURL() {
-        return expiredURL;
-    }
-
-    /**
-     * Sets the URL where user is redirected to when the Toolkit
-     * ApplicationServlet session expires. If the URL is <code>null</code>,
-     * the application is closed normally and it shows a notification to the
-     * client.
+     * You can customize the messages by overriding this method and returning
+     * CustomizedSystemMessages.
      * 
-     * @param expiredURL
-     *                the expiredURL to set.
+     * @return the SystemMessages for this application
      */
-    public void setSessionExpiredURL(String expiredURL) {
-        this.expiredURL = expiredURL;
+    public static SystemMessages getSystemMessages() {
+        return DEFAULT_SYSTEM_MESSAGES;
     }
 
     /**
@@ -1143,6 +1133,115 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
      */
     public String getVersion() {
         return "NONVERSIONED";
+    }
+
+    /**
+     * Experimental API, not finalized. Contains the system messages used to
+     * notify the user about various critical situations that can occur.
+     * 
+     * Customize by overriding the static Application.getSystemMessages() and
+     * return CustomizedSystemMessages.
+     */
+    public static class SystemMessages {
+        protected String sessionExpiredURL = null;
+        protected String sessionExpiredCaption = "Session Expired";
+        protected String sessionExpiredMessage = "Take note of any unsaved data, and <u>click here</u> to continue.";
+
+        protected String internalErrorURL = null;
+        protected String internalErrorCaption = "Internal Error";
+        protected String internalErrorMessage = "Please notify the administrator.<br/>Take note of any unsaved data, and <u>click here</u> to continue.";
+
+        protected String outOfSyncURL = null;
+        protected String outOfSyncCaption = "Out of sync";
+        protected String outOfSyncMessage = "Something has caused us to be out of sync with the server.<br/>Take note of any unsaved data, and <u>click here</u> to re-sync.";
+
+        private SystemMessages() {
+
+        }
+
+        public String getSessionExpiredURL() {
+            return sessionExpiredURL;
+        }
+
+        public String getSessionExpiredCaption() {
+            return sessionExpiredCaption;
+        }
+
+        public String getSessionExpiredMessage() {
+            return sessionExpiredMessage;
+        }
+
+        public String getInternalErrorURL() {
+            return internalErrorURL;
+        }
+
+        public String getInternalErrorCaption() {
+            return internalErrorCaption;
+        }
+
+        public String getInternalErrorMessage() {
+            return internalErrorMessage;
+        }
+
+        public String getOutOfSyncURL() {
+            return outOfSyncURL;
+        }
+
+        public String getOutOfSyncCaption() {
+            return outOfSyncCaption;
+        }
+
+        public String getOutOfSyncMessage() {
+            return outOfSyncMessage;
+        }
+
+    }
+
+    /**
+     * Experimental API, not finalized. Contains the system messages used to
+     * notify the user about various critical situations that can occur.
+     * 
+     * Customize by overriding the static Application.getSystemMessages() and
+     * return CustomizedSystemMessages.
+     */
+    public static class CustomizedSystemMessages extends SystemMessages {
+
+        public void setSessionExpiredURL(String sessionExpiredURL) {
+            this.sessionExpiredURL = sessionExpiredURL;
+        }
+
+        public void setSessionExpiredCaption(String sessionExpiredCaption) {
+            this.sessionExpiredCaption = sessionExpiredCaption;
+        }
+
+        public void setSessionExpiredMessage(String sessionExpiredMessage) {
+            this.sessionExpiredMessage = sessionExpiredMessage;
+        }
+
+        public void setInternalErrorURL(String internalErrorURL) {
+            this.internalErrorURL = internalErrorURL;
+        }
+
+        public void setInternalErrorCaption(String internalErrorCaption) {
+            this.internalErrorCaption = internalErrorCaption;
+        }
+
+        public void setInternalErrorMessage(String internalErrorMessage) {
+            this.internalErrorMessage = internalErrorMessage;
+        }
+
+        public void setOutOfSyncURL(String outOfSyncURL) {
+            this.outOfSyncURL = outOfSyncURL;
+        }
+
+        public void setOutOfSyncCaption(String outOfSyncCaption) {
+            this.outOfSyncCaption = outOfSyncCaption;
+        }
+
+        public void setOutOfSyncMessage(String outOfSyncMessage) {
+            this.outOfSyncMessage = outOfSyncMessage;
+        }
+
     }
 
 }

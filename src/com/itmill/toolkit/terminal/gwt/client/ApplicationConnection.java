@@ -34,6 +34,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ui.ContextMenu;
 import com.itmill.toolkit.terminal.gwt.client.ui.IView;
 import com.itmill.toolkit.terminal.gwt.client.ui.Notification;
+import com.itmill.toolkit.terminal.gwt.client.ui.Notification.HideEvent;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -421,11 +422,28 @@ public class ApplicationConnection {
             }
             if (meta.containsKey("appError")) {
                 JSONObject error = meta.get("appError").isObject();
-                String caption = error.get("caption").isString().stringValue();
-                String message = error.get("message").isString().stringValue();
-                String html = "<h1>" + caption + "</h1><p>" + message + "</p>";
-                new Notification(Notification.DELAY_FOREVER).show(html,
-                        Notification.CENTERED, "error");
+                JSONValue val = error.get("caption");
+                String html = "";
+                if (val.isString() != null) {
+                    html += "<h1>" + val.isString().stringValue() + "</h1>";
+                }
+                val = error.get("message");
+                if (val.isString() != null) {
+                    html += "<p>" + val.isString().stringValue() + "</p>";
+                }
+                val = error.get("url");
+                String url = null;
+                if (val.isString() != null) {
+                    url = val.isString().stringValue();
+                }
+
+                if (html.length() != 0) {
+                    Notification n = new Notification(1000 * 60 * 45); // 45min
+                    n.addEventListener(new NotificationRedirect(url));
+                    n.show(html, Notification.CENTERED_TOP, "system");
+                } else {
+                    redirect(url);
+                }
                 applicationRunning = false;
             }
         }
@@ -438,10 +456,14 @@ public class ApplicationConnection {
         endRequest();
     }
 
-    // Redirect browser
+    // Redirect browser, null reloads current page
     private static native void redirect(String url)
     /*-{
-     $wnd.location = url;
+      if (url) {
+         $wnd.location = url;
+      } else {
+          $wnd.location = $wnd.location;
+      }
      }-*/;
 
     public void registerPaintable(String id, Paintable paintable) {
@@ -762,5 +784,23 @@ public class ApplicationConnection {
 
     public String getTheme() {
         return view.getTheme();
+    }
+
+    /**
+     * Listens for Notification hide event, and redirects. Used for system
+     * messages, such as session expired.
+     * 
+     */
+    private class NotificationRedirect implements Notification.EventListener {
+        String url;
+
+        NotificationRedirect(String url) {
+            this.url = url;
+        }
+
+        public void notificationHidden(HideEvent event) {
+            redirect(url);
+        }
+
     }
 }

@@ -4,6 +4,10 @@
 
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
+import java.util.ArrayList;
+import java.util.EventObject;
+import java.util.Iterator;
+
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
@@ -39,6 +43,8 @@ public class Notification extends ToolkitOverlay {
     private int y = -1;
 
     private String temporaryStyle;
+
+    private ArrayList listeners;
 
     public Notification() {
         setStylePrimaryName(STYLENAME);
@@ -94,7 +100,6 @@ public class Notification extends ToolkitOverlay {
     }
 
     public void show(int position, String style) {
-        hide();
         setOpacity(getElement(), startOpacity);
         if (style != null) {
             temporaryStyle = style;
@@ -113,6 +118,7 @@ public class Notification extends ToolkitOverlay {
             temporaryStyle = null;
         }
         super.hide();
+        fireEvent(new HideEvent(this));
     }
 
     public void fade() {
@@ -235,4 +241,36 @@ public class Notification extends ToolkitOverlay {
         return true;
     }
 
+    public void addEventListener(EventListener listener) {
+        if (listeners == null) {
+            listeners = new ArrayList();
+        }
+        listeners.add(listener);
+    }
+
+    public void removeEventListener(EventListener listener) {
+        if (listeners == null) {
+            return;
+        }
+        listeners.remove(listener);
+    }
+
+    private void fireEvent(HideEvent event) {
+        if (listeners != null) {
+            for (Iterator it = listeners.iterator(); it.hasNext();) {
+                EventListener l = (EventListener) it.next();
+                l.notificationHidden(event);
+            }
+        }
+    }
+
+    public class HideEvent extends EventObject {
+        public HideEvent(Object source) {
+            super(source);
+        }
+    }
+
+    public interface EventListener extends java.util.EventListener {
+        public void notificationHidden(HideEvent event);
+    }
 }

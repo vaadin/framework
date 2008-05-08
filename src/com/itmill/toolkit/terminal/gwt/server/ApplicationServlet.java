@@ -12,6 +12,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
@@ -500,39 +501,47 @@ public class ApplicationServlet extends HttpServlet {
             }
 
         } catch (final SessionExpired e) {
-            // Session has expired
-            // Get new application so we can fetch the sessionExpiredURL
-            Application app = null;
+            // Session has expired, notify user
+            Application.SystemMessages ci = Application.getSystemMessages();
             try {
-                app = (Application) applicationClass.newInstance();
-                app.init();
-            } catch (InstantiationException e1) {
-                // Should not happen
-                e1.printStackTrace();
-            } catch (IllegalAccessException e1) {
-                // Should not happen
-                e1.printStackTrace();
+                Method m = applicationClass
+                        .getMethod("getSystemMessages", null);
+                ci = (Application.CustomizedSystemMessages) m
+                        .invoke(null, null);
+            } catch (Exception e2) {
+                // Not critical, but something is still wrong; print stacktrace
+                e2.printStackTrace();
             }
 
-            // Redirect if expiredURL is found
-            if (app != null && app.getSessionExpiredURL() != null) {
-                if (UIDLrequest) {
-                    redirectUidlRequest(request, response, app
-                            .getSessionExpiredURL());
-                } else {
-                    response.sendRedirect(app.getSessionExpiredURL());
-                }
+            if (!UIDLrequest) {
+                // 'plain' http req - e.g. browser reload;
+                // just go ahead redirect the browser
+                response.sendRedirect(ci.getSessionExpiredURL());
             } else {
-                // Else show a notification to the client
-                criticalNotification(request, response,
-                        "Your session has expired.");
+                // send uidl redirect
+                criticalNotification(request, response, ci
+                        .getSessionExpiredCaption(), ci
+                        .getSessionExpiredMessage(), ci.getSessionExpiredURL());
             }
+
         } catch (final Throwable e) {
             e.printStackTrace();
             // if this was an UIDL request, response UIDL back to client
             if (UIDLrequest) {
-                criticalNotification(request, response,
-                        "Internal error. Please notify administrator.");
+                Application.SystemMessages ci = Application.getSystemMessages();
+                try {
+                    Method m = applicationClass.getMethod("getSystemMessages",
+                            null);
+                    ci = (Application.CustomizedSystemMessages) m.invoke(null,
+                            null);
+                } catch (Exception e2) {
+                    // Not critical, but something is still wrong; print
+                    // stacktrace
+                    e2.printStackTrace();
+                }
+                criticalNotification(request, response, ci
+                        .getInternalErrorCaption(), ci
+                        .getInternalErrorMessage(), ci.getInternalErrorURL());
             } else {
                 // Re-throw other exceptions
                 throw new ServletException(e);
@@ -591,31 +600,6 @@ public class ApplicationServlet extends HttpServlet {
     }
 
     /**
-     * Redirect an UIDL request to move to a new URL.
-     * 
-     * @param request
-     *                the HTTP request instance.
-     * @param response
-     *                the HTTP response to write to.
-     * @param url
-     *                the URL to redirect to.
-     * @throws IOException
-     *                 if the writing failed due to input/output error.
-     */
-    private void redirectUidlRequest(HttpServletRequest request,
-            HttpServletResponse response, String url) throws IOException {
-        // Set the response type
-        response.setContentType("application/json; charset=UTF-8");
-        final ServletOutputStream out = response.getOutputStream();
-        final PrintWriter outWriter = new PrintWriter(new BufferedWriter(
-                new OutputStreamWriter(out, "UTF-8")));
-        outWriter.print("for(;;);[{\"redirect\":{\"url\":\"" + url + "\"}}]");
-        outWriter.flush();
-        outWriter.close();
-        out.flush();
-    }
-
-    /**
      * Send notification to client's application. Used to notify client of
      * critical errors and session expiration due to long inactivity. Server has
      * no knowledge of what application client refers to.
@@ -625,19 +609,32 @@ public class ApplicationServlet extends HttpServlet {
      * @param response
      *                the HTTP response to write to.
      * @param caption
-     *                for the notification message
+     *                for the notification
+     * @param message
+     *                for the notification
+     * @param url
+     *                url to load after message, null for current page
      * @throws IOException
      *                 if the writing failed due to input/output error.
      */
-    private void criticalNotification(HttpServletRequest request,
-            HttpServletResponse response, String caption) throws IOException {
+    void criticalNotification(HttpServletRequest request,
+            HttpServletResponse response, String caption, String message,
+            String url) throws IOException {
 
         // clients JS app is still running, but server application either
         // no longer exists or it might fail to perform reasonably.
         // send a notification to client's application and link how
         // to "restart" application.
 
-        // TODO message should be localized
+        if (caption != null) {
+            caption = "\"" + caption + "\"";
+        }
+        if (message != null) {
+            message = "\"" + message + "\"";
+        }
+        if (url != null) {
+            url = "\"" + url + "\"";
+        }
 
         // Set the response type
         response.setContentType("application/json; charset=UTF-8");
@@ -645,9 +642,8 @@ public class ApplicationServlet extends HttpServlet {
         final PrintWriter outWriter = new PrintWriter(new BufferedWriter(
                 new OutputStreamWriter(out, "UTF-8")));
         outWriter.print("for(;;);[{\"changes\":[], \"meta\" : {"
-                + "\"appError\": {" + "\"caption\":\"" + caption + "\","
-                + "\"message\" : \"<br />You can click your browser's"
-                + " refresh button to restart your application.\""
+                + "\"appError\": {" + "\"caption\":" + caption + ","
+                + "\"message\" : " + message + "," + "\"url\" : " + url
                 + "}}, \"resources\": {}, \"locales\":[]}]");
         outWriter.flush();
         outWriter.close();

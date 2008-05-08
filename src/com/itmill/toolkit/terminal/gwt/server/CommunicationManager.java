@@ -35,6 +35,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.itmill.toolkit.Application;
+import com.itmill.toolkit.Application.SystemMessages;
 import com.itmill.toolkit.external.org.apache.commons.fileupload.FileItemIterator;
 import com.itmill.toolkit.external.org.apache.commons.fileupload.FileItemStream;
 import com.itmill.toolkit.external.org.apache.commons.fileupload.FileUploadException;
@@ -241,7 +242,15 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
                 }
 
                 // Change all variables based on request parameters
-                handleVariables(request, application);
+                if (!handleVariables(request, application)) {
+                    // var inconsistency; the client is probably out-of-sync
+                    SystemMessages ci = application.getSystemMessages();
+                    applicationServlet.criticalNotification(request, response,
+                            ci.getOutOfSyncCaption(), ci.getOutOfSyncMessage(),
+                            ci.getOutOfSyncURL());
+                    // need to do a repaint all after this
+                    return;
+                }
 
                 // Removes application if it has stopped during variable changes
                 if (!application.isRunning()) {
@@ -462,9 +471,18 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
         }
     }
 
-    private Map handleVariables(HttpServletRequest request,
+    /**
+     * If this method returns false, something was submitted that we did not
+     * expect; this is probably due to the client being out-of-sync and sending
+     * variable changes for non-existing pids
+     * 
+     * @param request
+     * @param application2
+     * @return true if successful, false if there was an inconsistency
+     */
+    private boolean handleVariables(HttpServletRequest request,
             Application application2) {
-
+        boolean success = true;
         final Map params = new HashMap(request.getParameterMap());
         final String changes = (String) ((params.get("changes") instanceof String[]) ? ((String[]) params
                 .get("changes"))[0]
@@ -531,13 +549,14 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
                     } else {
                         msg += "non-existent component, VAR_PID="
                                 + variable[VAR_PID];
+                        success = false;
                     }
                     System.err.println(msg);
                     continue;
                 }
             }
         }
-        return params;
+        return success;
     }
 
     private Object convertVariableValue(char variableType, String strValue) {
