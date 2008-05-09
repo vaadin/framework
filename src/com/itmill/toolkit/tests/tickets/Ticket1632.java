@@ -32,7 +32,8 @@ public class Ticket1632 extends Application {
 
         t.addItem(new Object[] { "foo", "bar" }, "4");
 
-        Item i = t.getContainerDataSource().addItem("5");
+        // workaround to add item with all values
+        Item i = t.addItem("5");
         i.getItemProperty("col1").setValue("jep");
         i.getItemProperty("col2").setValue("foo");
         i.getItemProperty("col3").setValue("bar");
