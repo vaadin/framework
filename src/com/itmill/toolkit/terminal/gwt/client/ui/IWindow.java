@@ -203,14 +203,16 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
             setModal(!modal);
         }
 
-        // Initialize the width from UIDL
+        // Initialize the size from UIDL
+        // FIXME relational size is for outer size, others are applied for
+        // content
         if (uidl.hasVariable("width")) {
             final String width = uidl.getStringVariable("width");
-            setWidth(width);
-        }
-        if (uidl.hasVariable("height")) {
-            final String height = uidl.getStringVariable("height");
-            setHeight(height);
+            if (width.indexOf("px") < 0) {
+                DOM.setStyleAttribute(getElement(), "width", width);
+            } else {
+                setWidth(width);
+            }
         }
 
         // Initialize the position form UIDL
@@ -227,6 +229,26 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 
         if (!isAttached()) {
             show();
+        }
+
+        // Height set after show so we can detect space used by decorations
+        if (uidl.hasVariable("height")) {
+            final String height = uidl.getStringVariable("height");
+            if (height.indexOf("%") > 0) {
+                int winHeight = Window.getClientHeight();
+                float percent = Float.parseFloat(height.substring(0, height
+                        .indexOf("%"))) / 100.0f;
+                int contentPixels = (int) (winHeight * percent);
+                contentPixels -= (DOM.getElementPropertyInt(getElement(),
+                        "offsetHeight") - DOM.getElementPropertyInt(contents,
+                        "offsetHeight"));
+                // FIXME hardcoded contents elements border size
+                contentPixels -= 2;
+
+                setHeight(contentPixels + "px");
+            } else {
+                setHeight(height);
+            }
         }
 
         if (uidl.hasAttribute("caption")) {

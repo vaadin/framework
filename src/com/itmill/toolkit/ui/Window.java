@@ -20,7 +20,6 @@ import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
 import com.itmill.toolkit.terminal.ParameterHandler;
 import com.itmill.toolkit.terminal.Resource;
-import com.itmill.toolkit.terminal.Sizeable;
 import com.itmill.toolkit.terminal.Terminal;
 import com.itmill.toolkit.terminal.URIHandler;
 
@@ -721,28 +720,6 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      */
     public void setTerminal(Terminal type) {
         terminal = type;
-    }
-
-    /**
-     * Window only supports pixels as unit.
-     * 
-     * @see com.itmill.toolkit.terminal.Sizeable#getHeightUnits()
-     */
-    public void setHeightUnits(int units) {
-        if (units != Sizeable.UNITS_PIXELS) {
-            throw new IllegalArgumentException("Only pixels are supported");
-        }
-    }
-
-    /**
-     * Window only supports pixels as unit.
-     * 
-     * @see com.itmill.toolkit.terminal.Sizeable#getWidthUnits()
-     */
-    public void setWidthUnits(int units) {
-        if (units != Sizeable.UNITS_PIXELS) {
-            throw new IllegalArgumentException("Only pixels are supported");
-        }
     }
 
     /**
