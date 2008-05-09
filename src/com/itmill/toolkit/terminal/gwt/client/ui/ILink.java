@@ -174,7 +174,10 @@ public class ILink extends HTML implements Paintable, ClickListener {
                 break;
             }
         }
-        super.onBrowserEvent(event);
+        if (DOM.compare(target, captionElement)
+                || (icon != null && DOM.compare(target, icon.getElement()))) {
+            super.onBrowserEvent(event);
+        }
     }
 
     private void hideErrorMessage() {
