@@ -32,6 +32,8 @@ public class ITabsheet extends ITabsheetBase implements
     private String height;
     private String width;
 
+    private boolean waitingForResponse;
+
     /**
      * Previous visible widget is set invisible with CSS (not display: none, but
      * visibility: hidden), to avoid flickering during render process. Normal
@@ -57,11 +59,12 @@ public class ITabsheet extends ITabsheetBase implements
                                 tabIndex).toString(), true);
                     }
                 });
+                waitingForResponse = true;
             }
         }
 
         public boolean onBeforeTabSelected(SourcesTabEvents sender, int tabIndex) {
-            if (disabled) {
+            if (disabled || waitingForResponse) {
                 return false;
             }
             final Object tabKey = tabKeys.get(tabIndex);
@@ -136,7 +139,7 @@ public class ITabsheet extends ITabsheetBase implements
             tb.setVisible(true);
             removeStyleName(CLASSNAME + "-hidetabs");
         }
-
+        waitingForResponse = false;
     }
 
     protected void renderTab(final UIDL tabUidl, int index, boolean selected) {
