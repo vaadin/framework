@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.lang.reflect.Method;
 import java.net.SocketException;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
@@ -228,6 +229,36 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
                     return;
                 }
 
+                // Change all variables based on request parameters
+                if (!handleVariables(request, application)) {
+                    // var inconsistency; the client is probably out-of-sync
+                    SystemMessages ci = null;
+                    try {
+                        Method m = application.getClass().getMethod(
+                                "getSystemMessages", null);
+                        ci = (Application.SystemMessages) m.invoke(null, null);
+                    } catch (Exception e2) {
+                        // Not critical, but something is still wrong; print
+                        // stacktrace
+                        e2.printStackTrace();
+                    }
+                    if (ci != null) {
+                        String msg = ci.getOutOfSyncMessage();
+                        String cap = ci.getOutOfSyncCaption();
+                        if (msg != null || cap != null) {
+                            applicationServlet.criticalNotification(request,
+                                    response, cap, msg, ci.getOutOfSyncURL());
+                            // will reload page after this
+                            return;
+                        }
+                    }
+                    // No message to show, let's just repaint all.
+                    System.err
+                            .println("Warning: variable inconsistency - client is probably out-of-sync, repainting all.");
+                    repaintAll = true;
+
+                }
+
                 // If repaint is requested, clean all ids in this root window
                 if (repaintAll) {
                     for (final Iterator it = idPaintableMap.keySet().iterator(); it
@@ -239,17 +270,6 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
                             paintableIdMap.remove(c);
                         }
                     }
-                }
-
-                // Change all variables based on request parameters
-                if (!handleVariables(request, application)) {
-                    // var inconsistency; the client is probably out-of-sync
-                    SystemMessages ci = application.getSystemMessages();
-                    applicationServlet.criticalNotification(request, response,
-                            ci.getOutOfSyncCaption(), ci.getOutOfSyncMessage(),
-                            ci.getOutOfSyncURL());
-                    // need to do a repaint all after this
-                    return;
                 }
 
                 // Removes application if it has stopped during variable changes
