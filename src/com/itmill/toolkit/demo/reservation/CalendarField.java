@@ -284,7 +284,7 @@ public class CalendarField extends DateField implements Container.Viewer {
                             target.addAttribute("styleName", styleName);
                         }
                         SimpleDateFormat sdf = new SimpleDateFormat(
-                                "d MMM yyyy HH:mm:ss Z");
+                                "d MM yyyy HH:mm:ss Z");
 
                         target.addAttribute("Z", start.getTimezoneOffset());
 

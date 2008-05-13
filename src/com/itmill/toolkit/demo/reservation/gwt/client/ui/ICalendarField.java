@@ -221,7 +221,7 @@ public class ICalendarField extends IDateField {
             // final Integer id = new Integer(item.getIntAttribute("id"));
 
             DateTimeFormat dtf = DateTimeFormat
-                    .getFormat("d MMM yyyy HH:mm:ss Z");
+                    .getFormat("d MM yyyy HH:mm:ss Z");
 
             Date startDate = dtf.parse(item.getStringAttribute("start"));
 
