@@ -1324,9 +1324,9 @@
 .i-tabsheet-tabs .gwt-TabBarItem-selected {
 	border: none;
 	background: transparent url(panel/img/top-left.png) no-repeat;
-	margin-top: -9px;
-	padding-left: 16px;
-	height: 30px;
+	margin: 0;
+	padding: 0;
+	height: 48px;
 	cursor: default;
 	color: #ee5311;
 }
@@ -1339,12 +1339,11 @@
 	color: #ee5311;
 }
 
-.i-tabsheet-tabs .gwt-TabBarItem-selected:before {
-	display: block;
-	height: 9px;
+.i-tabsheet-tabs .gwt-TabBarItem-selected .i-caption {
 	background: transparent url(panel/img/top-right.png) repeat-x right top;
-	content: "";
-	margin: -9px -16px 9px -6px;
+	margin: 0 -1px 0 9px;
+	height: 18px;
+	padding: 16px 16px 0 7px
 }
 
 .i-tabsheet-content {
@@ -1422,6 +1421,17 @@
 	padding: 18px 14px 6px 15px;
 	cursor: default;
 	color: #ee5311;
+}
+
+* html .i-tabsheet-tabs .gwt-TabBarItem-selected .i-caption {
+	background: transparent;
+	padding: 0;
+	margin: 0;
+}
+*+html .i-tabsheet-tabs .gwt-TabBarItem-selected .i-caption {
+	background: transparent;
+	padding: 0;
+	margin: 0;
 }
 
 * html .i-tabsheet-deco {
