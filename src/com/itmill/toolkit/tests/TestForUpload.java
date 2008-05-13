@@ -53,6 +53,7 @@ public class TestForUpload extends CustomComponent implements
     private final Label l;
 
     private final ProgressIndicator pi = new ProgressIndicator();
+    private final ProgressIndicator pi2 = new ProgressIndicator();
 
     private final Label memoryStatus;
 
@@ -91,6 +92,15 @@ public class TestForUpload extends CustomComponent implements
         up.addListener((StartedListener) this);
 
         up.setProgressListener(this);
+        up.addListener(new Upload.ProgressListener() {
+
+            public void updateProgress(long readBytes, long contentLenght) {
+                pi2.setValue(new Float(readBytes / (float) contentLenght));
+
+                refreshMemUsage();
+            }
+
+        });
 
         final Button b = new Button("b", this, "readState");
 
@@ -119,6 +129,10 @@ public class TestForUpload extends CustomComponent implements
         pi.setVisible(false);
         pi.setPollingInterval(1000);
         main.addComponent(pi);
+
+        pi2.setVisible(false);
+        pi2.setPollingInterval(1000);
+        main.addComponent(pi2);
 
         memoryStatus = new Label();
         main.addComponent(memoryStatus);
@@ -326,6 +340,7 @@ public class TestForUpload extends CustomComponent implements
 
     public void uploadSucceeded(SucceededEvent event) {
         pi.setVisible(false);
+        pi2.setVisible(false);
         l.setValue("Finished upload, idle");
         System.out.println(event);
         setBuffer();
@@ -351,6 +366,7 @@ public class TestForUpload extends CustomComponent implements
 
     public void uploadStarted(StartedEvent event) {
         pi.setVisible(true);
+        pi2.setVisible(true);
         l.setValue("Started uploading file " + event.getFilename());
         textFieldValue.setValue(" TestFields value at the upload start is:"
                 + textField.getValue());

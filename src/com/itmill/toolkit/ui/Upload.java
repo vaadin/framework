@@ -7,6 +7,8 @@ package com.itmill.toolkit.ui;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Map;
 
 import com.itmill.toolkit.Application;
@@ -77,6 +79,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      * upload
      */
     private ProgressListener progressListener;
+    private LinkedHashSet progressListeners;
 
     /* TODO: Add a default constructor, receive to temp file. */
 
@@ -160,8 +163,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
                     // update progress if listener set and contentLength
                     // received
                     synchronized (application) {
-                        progressListener.updateProgress(totalBytes,
-                                contentLength);
+                        fireUpdateProgress(totalBytes, contentLength);
                     }
                 }
             }
@@ -711,6 +713,31 @@ public class Upload extends AbstractComponent implements Component.Focusable {
     }
 
     /**
+     * Adds the upload success event listener.
+     * 
+     * @param listener
+     *                the Listener to be added.
+     */
+    public void addListener(ProgressListener listener) {
+        if (progressListeners == null) {
+            progressListeners = new LinkedHashSet();
+        }
+        progressListeners.add(listener);
+    }
+
+    /**
+     * Removes the upload success event listener.
+     * 
+     * @param listener
+     *                the Listener to be removed.
+     */
+    public void removeListener(ProgressListener listener) {
+        if (progressListeners != null) {
+            progressListeners.remove(listener);
+        }
+    }
+
+    /**
      * Emit upload received event.
      * 
      * @param filename
@@ -773,6 +800,30 @@ public class Upload extends AbstractComponent implements Component.Focusable {
     protected void fireUploadSuccess(String filename, String MIMEType,
             long length) {
         fireEvent(new Upload.SucceededEvent(this, filename, MIMEType, length));
+    }
+
+    /**
+     * Emits the progress event.
+     * 
+     * @param totalBytes
+     *                bytes received so far
+     * @param contentLength
+     *                actual size of the file being uploaded, if known
+     * 
+     */
+    protected void fireUpdateProgress(long totalBytes, long contentLength) {
+        // this is implemented differently than other listeners to maintain
+        // backwards compatibility
+        if (progressListeners != null) {
+            for (Iterator it = progressListeners.iterator(); it.hasNext();) {
+                ProgressListener l = (ProgressListener) it.next();
+                l.updateProgress(totalBytes, contentLength);
+            }
+        }
+        // deprecated:
+        if (progressListener != null) {
+            progressListener.updateProgress(totalBytes, contentLength);
+        }
     }
 
     /**
@@ -886,8 +937,9 @@ public class Upload extends AbstractComponent implements Component.Focusable {
     }
 
     /**
-     * Sets listener to track progress of upload.
+     * This method is deprecated, use addListener(ProgressListener) instead.
      * 
+     * @deprecated Use addListener(ProgressListener) instead.
      * @param progressListener
      */
     public void setProgressListener(ProgressListener progressListener) {
@@ -895,8 +947,9 @@ public class Upload extends AbstractComponent implements Component.Focusable {
     }
 
     /**
-     * Gets listener that tracks progress of upload.
+     * This method is deprecated.
      * 
+     * @deprecated Replaced with addListener/removeListener
      * @return listener
      * 
      */
