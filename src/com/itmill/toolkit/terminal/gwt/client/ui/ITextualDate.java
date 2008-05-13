@@ -13,6 +13,7 @@ import com.itmill.toolkit.terminal.gwt.client.LocaleNotLoadedException;
 import com.itmill.toolkit.terminal.gwt.client.LocaleService;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
+import com.itmill.toolkit.terminal.gwt.client.Util;
 
 public class ITextualDate extends IDateField implements Paintable,
         ChangeListener, ContainerResizedListener {
@@ -212,6 +213,9 @@ public class ITextualDate extends IDateField implements Paintable,
 
     public void setWidth(String newWidth) {
         if (!"".equals(newWidth) && (width == null || !newWidth.equals(width))) {
+            if (Util.isIE6()) {
+                text.setColumns(1); // in IE6 cols ~ min-width
+            }
             needLayout = true;
             width = newWidth;
             super.setWidth(width);
