@@ -17,7 +17,7 @@ import com.itmill.toolkit.data.Validator;
  */
 public class NullValidator implements Validator {
 
-    private boolean allowNull;
+    private boolean onlyNullAllowed;
 
     private String errorMessage;
 
@@ -26,12 +26,12 @@ public class NullValidator implements Validator {
      * 
      * @param errorMessage
      *                the error message to display on invalidation.
-     * @param allowNull
-     *                Are nulls allowed?
+     * @param onlyNullAllowed
+     *                Are only nulls allowed?
      */
-    public NullValidator(String errorMessage, boolean allowNull) {
+    public NullValidator(String errorMessage, boolean onlyNullAllowed) {
         setErrorMessage(errorMessage);
-        setNullAllowed(allowNull);
+        setNullAllowed(onlyNullAllowed);
     }
 
     /**
@@ -43,7 +43,8 @@ public class NullValidator implements Validator {
      *                 if the value was invalid.
      */
     public void validate(Object value) throws Validator.InvalidValueException {
-        if ((allowNull && value != null) || (!allowNull && value == null)) {
+        if ((onlyNullAllowed && value != null)
+                || (!onlyNullAllowed && value == null)) {
             throw new Validator.InvalidValueException(errorMessage);
         }
     }
@@ -57,7 +58,7 @@ public class NullValidator implements Validator {
      *          <code>false</code>.
      */
     public boolean isValid(Object value) {
-        return allowNull ? value == null : value != null;
+        return onlyNullAllowed ? value == null : value != null;
     }
 
     /**
@@ -65,18 +66,18 @@ public class NullValidator implements Validator {
      * <code>false</code>.
      */
     public final boolean isNullAllowed() {
-        return allowNull;
+        return onlyNullAllowed;
     }
 
     /**
-     * Sets if nulls are to be allowed.
+     * Sets if nulls (and only nulls) are to be allowed.
      * 
      * @param allowNull
      *                If true, only nulls are allowed. If false only non-nulls
      *                are allowed. Do we allow nulls?
      */
-    public void setNullAllowed(boolean allowNull) {
-        this.allowNull = allowNull;
+    public void setNullAllowed(boolean onlyNullAllowed) {
+        this.onlyNullAllowed = onlyNullAllowed;
     }
 
     /**
