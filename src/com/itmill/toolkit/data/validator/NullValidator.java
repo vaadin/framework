@@ -72,7 +72,7 @@ public class NullValidator implements Validator {
     /**
      * Sets if nulls (and only nulls) are to be allowed.
      * 
-     * @param allowNull
+     * @param onlyNullAllowed
      *                If true, only nulls are allowed. If false only non-nulls
      *                are allowed. Do we allow nulls?
      */
