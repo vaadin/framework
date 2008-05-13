@@ -46,32 +46,6 @@ public interface Validator {
     public boolean isValid(Object value);
 
     /**
-     * Adds the proposing functionality to a {@link Validator}. A
-     * <code>Suggestive</code> validator can propose a valid value for the
-     * object it is attached to validate. This way the {@link Validatable}
-     * object may avoid situations where it contains a value that could lead to
-     * a error.
-     * 
-     * @author IT Mill Ltd.
-     * @version
-     * @VERSION@
-     * @since 3.0
-     */
-    public interface Suggestive extends Validator {
-
-        /**
-         * Suggests another value that can be used instead of the proposedValue
-         * if it is invalid. If it is valid in the opinion of this validator,
-         * however, it is returned as is.
-         * 
-         * @param proposedValue
-         *                Originally proposed value that could be invalid.
-         * @return Suggested value that's not invalid against this validator
-         */
-        public Object suggestValidValue(Object proposedValue);
-    }
-
-    /**
      * Invalid value exception can be thrown by {@link Validator} when a given
      * value is not valid.
      * 
