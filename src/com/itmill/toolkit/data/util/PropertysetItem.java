@@ -108,6 +108,9 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
      */
     public boolean addItemProperty(Object id, Property property) {
 
+    	// Null ids are not accepted
+    	if (id == null) throw new NullPointerException("Item property id can not be null");
+
         // Cant add a property twice
         if (map.containsKey(id)) {
             return false;

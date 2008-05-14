@@ -19,6 +19,7 @@ import java.util.Collection;
  * {@link Item#getItemPropertyIds()}).
  * <li>all Properties in the Items corresponding to the same Property ID must
  * have the same data type.
+ * <li>All Items within a container are uniquely identified by their non-null ids
  * </ul>
  * 
  * <p>

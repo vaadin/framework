@@ -140,6 +140,10 @@ public class IndexedContainer implements Container, Container.Indexed,
      *         not found in the list
      */
     public Item getItem(Object itemId) {
+
+    	// Null ids are not accepted
+    	if (itemId == null) throw new NullPointerException("Container item id can not be null");
+
         if (items.containsKey(itemId)
                 && (filteredItemIds == null || filteredItemIds.contains(itemId))) {
             return new IndexedContainerItem(itemId);
@@ -335,6 +339,9 @@ public class IndexedContainer implements Container, Container.Indexed,
      */
     public Item addItem(Object itemId) {
 
+    	// Null ids are not accepted
+    	if (itemId == null) throw new NullPointerException("Container item id can not be null");
+    	
         // Makes sure that the Item has not been created yet
         if (items.containsKey(itemId)) {
             return null;
@@ -1188,7 +1195,8 @@ public class IndexedContainer implements Container, Container.Indexed,
          */
         private IndexedContainerProperty(Object itemId, Object propertyId) {
             if (itemId == null || propertyId == null) {
-                throw new NullPointerException();
+            	// Null ids are not accepted
+            	throw new NullPointerException("Container item or property ids can not be null");
             }
             this.propertyId = propertyId;
             this.itemId = itemId;

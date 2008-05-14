@@ -9,7 +9,7 @@ import java.util.Collection;
 /**
  * <p>
  * Provides a mechanism for handling a set of Properties, each associated to a
- * locally unique identifier. The interface is split into subinterfaces to
+ * locally unique non-null identifier. The interface is split into subinterfaces to
  * enable a class to implement only the functionalities it needs.
  * </p>
  * 
