@@ -4,6 +4,8 @@
 
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
+import java.util.Iterator;
+
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
@@ -93,18 +95,17 @@ public class ITabsheet extends ITabsheetBase implements
                         + "-content");
         DOM.setElementProperty(deco, "className", CLASSNAME + "-deco");
 
-        add(tb);
+        add(tb, getElement());
         DOM.appendChild(getElement(), contentNode);
-        insert(tp, contentNode, 0, true);
+        add(tp, contentNode);
         DOM.appendChild(getElement(), deco);
 
         tb.addTabListener(tl);
 
-        clear();
-
         // TODO Use for Safari only. Fix annoying 1px first cell in TabBar.
         DOM.setStyleAttribute(DOM.getFirstChild(DOM.getFirstChild(DOM
                 .getFirstChild(tb.getElement()))), "display", "none");
+
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -168,48 +169,30 @@ public class ITabsheet extends ITabsheetBase implements
     }
 
     private void renderContent(final UIDL contentUIDL) {
-        DeferredCommand.addCommand(new Command() {
-            public void execute() {
-                final Paintable content = client.getPaintable(contentUIDL);
-                if (tp.getWidgetCount() > activeTabIndex) {
-                    Widget old = tp.getWidget(activeTabIndex);
-                    if (old != content) {
-                        tp.remove(activeTabIndex);
-                        if (old instanceof Paintable) {
-                            client.unregisterPaintable((Paintable) old);
-                        }
-                        tp.insert((Widget) content, activeTabIndex);
-                    }
-                } else {
-                    tp.add((Widget) content);
+        final Paintable content = client.getPaintable(contentUIDL);
+        if (tp.getWidgetCount() > activeTabIndex) {
+            Widget old = tp.getWidget(activeTabIndex);
+            if (old != content) {
+                tp.remove(activeTabIndex);
+                if (old instanceof Paintable) {
+                    client.unregisterPaintable((Paintable) old);
                 }
-
-                tp.showWidget(activeTabIndex);
-
-                ITabsheet.this.iLayout();
-                (content).updateFromUIDL(contentUIDL, client);
-                ITabsheet.this.removeStyleDependentName("loading");
-                if (previousVisibleWidget != null) {
-                    DOM.setStyleAttribute(previousVisibleWidget.getElement(),
-                            "visibility", "");
-                    previousVisibleWidget = null;
-                }
+                tp.insert((Widget) content, activeTabIndex);
             }
-        });
-    }
-
-    public void clear() {
-        int i = tb.getTabCount();
-        while (i > 0) {
-            tb.removeTab(--i);
+        } else {
+            tp.add((Widget) content);
         }
-        tp.clear();
 
-        // Get rid of unnecessary 100% cell heights in TabBar (really ugly hack)
-        final Element tr = DOM.getChild(DOM.getChild(tb.getElement(), 0), 0);
-        final Element rest = DOM.getChild(DOM.getChild(tr, DOM
-                .getChildCount(tr) - 1), 0);
-        DOM.removeElementAttribute(rest, "style");
+        tp.showWidget(activeTabIndex);
+
+        ITabsheet.this.iLayout();
+        (content).updateFromUIDL(contentUIDL, client);
+        ITabsheet.this.removeStyleDependentName("loading");
+        if (previousVisibleWidget != null) {
+            DOM.setStyleAttribute(previousVisibleWidget.getElement(),
+                    "visibility", "");
+            previousVisibleWidget = null;
+        }
     }
 
     public void setHeight(String height) {
@@ -260,5 +243,25 @@ public class ITabsheet extends ITabsheetBase implements
             DOM.setStyleAttribute(contentNode, "overflow", "");
         }
         Util.runDescendentsLayout(this);
+    }
+
+    protected void clearPaintables() {
+
+        int i = tb.getTabCount();
+        while (i > 0) {
+            tb.removeTab(--i);
+        }
+        tp.clear();
+
+        // Get rid of unnecessary 100% cell heights in TabBar (really ugly hack)
+        final Element tr = DOM.getChild(DOM.getChild(tb.getElement(), 0), 0);
+        final Element rest = DOM.getChild(DOM.getChild(tr, DOM
+                .getChildCount(tr) - 1), 0);
+        DOM.removeElementAttribute(rest, "style");
+
+    }
+
+    protected Iterator getPaintableIterator() {
+        return tp.iterator();
     }
 }

@@ -1,6 +1,9 @@
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
@@ -21,13 +24,14 @@ public class IAccordion extends ITabsheetBase implements
 
     public static final String CLASSNAME = "i-accordion";
 
-    private ArrayList stack;
+    private ArrayList stack = new ArrayList();
+
+    private Set paintables = new HashSet();
 
     private String height;
 
     public IAccordion() {
         super(CLASSNAME);
-        stack = new ArrayList();
         // IE6 needs this to calculate offsetHeight correctly
         if (Util.isIE6()) {
             DOM.setStyleAttribute(getElement(), "zoom", "1");
@@ -36,13 +40,7 @@ public class IAccordion extends ITabsheetBase implements
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         super.updateFromUIDL(uidl, client);
-
         iLayout();
-    }
-
-    public void clear() {
-        super.clear();
-        stack.clear();
     }
 
     private StackItem getSelectedStack() {
@@ -63,7 +61,7 @@ public class IAccordion extends ITabsheetBase implements
         }
 
         stack.add(item);
-        add(item);
+        add(item, getElement());
 
         if (selected) {
             item.open();
@@ -240,10 +238,13 @@ public class IAccordion extends ITabsheetBase implements
             ((Widget) newPntbl).setVisible(true);
             if (getPaintable() == null) {
                 add((Widget) newPntbl, content);
+                paintables.add(newPntbl);
             } else if (getPaintable() != newPntbl) {
                 client.unregisterPaintable((Paintable) getWidget(1));
+                paintables.remove(getWidget(1));
                 remove(1);
                 add((Widget) newPntbl, content);
+                paintables.add(newPntbl);
             }
             paintable = newPntbl;
             paintable.updateFromUIDL(contentUidl, client);
@@ -252,6 +253,15 @@ public class IAccordion extends ITabsheetBase implements
         public void onClick(Widget sender) {
             onSelectTab(this);
         }
+    }
+
+    protected void clearPaintables() {
+        stack.clear();
+        clear();
+    }
+
+    protected Iterator getPaintableIterator() {
+        return paintables.iterator();
     }
 
 }
