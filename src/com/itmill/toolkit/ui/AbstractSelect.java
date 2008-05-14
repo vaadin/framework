@@ -356,7 +356,7 @@ public abstract class AbstractSelect extends AbstractField implements
      *      java.util.Map)
      */
     public void changeVariables(Object source, Map variables) {
-        // Try to set the property value
+    	super.changeVariables(source, variables);
 
         // New option entered (and it is allowed)
         final String newitem = (String) variables.get("newitem");

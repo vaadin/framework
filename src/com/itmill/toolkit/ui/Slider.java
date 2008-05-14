@@ -424,7 +424,8 @@ public class Slider extends AbstractField {
      * @param variables
      */
     public void changeVariables(Object source, Map variables) {
-        if (variables.containsKey("value")) {
+    	super.changeVariables(source, variables);
+    	if (variables.containsKey("value")) {
             final Object value = variables.get("value");
             final Double newValue = new Double(value.toString());
             if (newValue != null && newValue != getValue()

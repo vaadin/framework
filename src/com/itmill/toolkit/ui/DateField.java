@@ -238,6 +238,7 @@ public class DateField extends AbstractField {
      * interface.
      */
     public void changeVariables(Object source, Map variables) {
+    	super.changeVariables(source, variables);
 
         if (!isReadOnly()
                 && (variables.containsKey("year")

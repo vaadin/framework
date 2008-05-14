@@ -213,6 +213,8 @@ public class TextField extends AbstractField {
      */
     public void changeVariables(Object source, Map variables) {
 
+    	super.changeVariables(source, variables);
+    	
         // Sets the text
         if (variables.containsKey("text") && !isReadOnly()) {
 

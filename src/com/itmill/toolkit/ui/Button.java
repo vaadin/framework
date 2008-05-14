@@ -152,6 +152,7 @@ public class Button extends AbstractField {
      * @param variables
      */
     public void changeVariables(Object source, Map variables) {
+    	super.changeVariables(source, variables);
         if (isReadOnly()) {
             System.err.println("Button: ignoring variable change for"
                     + " read-only component, caption=" + getCaption());
