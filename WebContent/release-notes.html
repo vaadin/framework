@@ -15,7 +15,10 @@
 		<div class="header">
 			<h1>Introducing IT Mill Toolkit 5</h1>
 			<em>Effortless web application development for Java-programmers.</em>
-			<a href="http://www.itmill.com" title="Open www.itmill.com">Visit itmill.com</a>
+			<div id="header-links">
+			  <a href="http://dev.itmill.com" title="Open dev.itmill.com">Visit developer site dev.itmill.com</a><br/>
+                            <a href="http://forum.itmill.com" title="Open forum.itmill.com">Visit support site forum.itmill.com</a>
+			</div>
 		</div> <!-- /Header -->
 		
 		<div class="content">
@@ -39,29 +42,51 @@ of fixed problems.</p>
   <li>Support for Java Portlets. See the following dev.itmill.com wiki articles for details.</li>
 
   <ul>
-    <li><a href="http://dev.itmill.com/wiki/Articles/PortalTools">PortalTools - IT Mill Toolkit Portal Integration</a></li>
+    <li><a href="http://dev.itmill.com/wiki/Articles/PortalTools">PortalTools - IT Mill Toolkit Portal Integration</a> -- an introduction</li>
     <li><a href="http://dev.itmill.com/wiki/Articles/SimplePortalIntegration">Simple IT Mill Toolkit Portal Integration</a> -- instructions for using the portal integration</li>
   </ul>
 
   <li>Default theme has been collected in a single CSS file in
   <tt>WebContent/ITMILL/themes/default/styles.css</tt>, which is a compilation of the
-  separate CSS files in the subdirectories. Custom themes should inherit this stylesheet
-  with <tt>import</tt> command.</li>
+  separate CSS files in the subdirectories. Custom themes must inherit this stylesheet
+  with the <tt>import</tt> command:
+<pre>@import "../default/styles.css";</pre></li>
 
-  <li>(In 5.1.2) <p>Support for multiple applications in the same browser window.
-See <tt>WebContent/multiapp.html</tt> for an example on how to embed
-multiple applications.</p><p><i><b>IMPORTANT!</b> If you have embedded
-Toolkit Applications in a HTML page with earlier versions of IT Mill
-Toolkit, you must update the embedding page! Run the application
-separately,
-view the source code, and copy the loading code to your HTML
-page.</i></p></li>
+  <li>The default theme for <b>TabSheet</b> has changed in a way that may cause
+  incompatibility with custom styling. If you have problems, just ask on the <a
+  href="http://forum.itmill.com/">forum</a>.</li>
+
+  <li>(Since 5.1.2) <p>Support for multiple applications in the same browser window.  See
+  <tt>WebContent/multiapp.html</tt> for an example on how to embed multiple
+  applications.</p><p><i><b>IMPORTANT!</b> If you have embedded Toolkit Applications in a
+  HTML page with earlier versions of IT Mill Toolkit, you must update the embedding page! 
+  Run the application separately, view the source code, and copy the loading code to your
+  HTML page.</i></p></li>
 
   <li>Many bug fixes. See the ChangeLog below.</li>
 
   <li>For up-to-date status of known problems, see the developer website <a href="http://dev.itmill.com/">dev.itmill.com</a>.</li>
 
 </ul>
+    <h2>Important known problems in <version></version></h2>
+
+<ul>
+  <li><a href="http://dev.itmill.com/ticket/1155">#1155</a> Uncompressing the installation
+  package fails in Windows if using the default Zip uncompression. Uncompression gives (in
+  Windows Vista) an error message about too long filenames, and a more obscure message in
+  other versions of Windows. Workaround: use <a href="http://www.7-zip.org/">7-Zip</a> or
+  some other good unzip program for Windows.</li>
+
+  <li><a href="http://dev.itmill.com/ticket/1636">#1636</a> Incompatibility with some
+  versions of Firefox and other browsers based on Gekko 1.7. For example, the hosted mode
+  browser of Google Web Toolkit 1.4.62 (included in IT Mill Toolkit) does not work in
+  Linux. This is due to the new client-side loader code. For a workaround for hosted mode
+  browser, use a custom loader HTML page, see for example the <tt>multiapp.html</tt> demo
+  page.</li>
+
+</ul>
+
+<p>For other known problems, see open tickets at developer site <a href="http://dev.itmill.com/">dev.itmill.com</a>.</p>
 
     <h2>ChangeLog Between IT Mill Toolkit 5.1.2 and 5.2.0</h2>
 
