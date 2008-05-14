@@ -91,6 +91,8 @@ public class ApplicationConnection {
 
     private ApplicationConfiguration configuration;
 
+    private Vector pendingVariableBursts = new Vector();
+
     public ApplicationConnection(WidgetSet widgetSet,
             ApplicationConfiguration cnf) {
         this.widgetSet = widgetSet;
@@ -245,6 +247,9 @@ public class ApplicationConnection {
     }
 
     private void endRequest() {
+
+        checkForPendingVariableBursts();
+
         activeRequests--;
         // deferring to avoid flickering
         DeferredCommand.addCommand(new Command() {
@@ -254,6 +259,46 @@ public class ApplicationConnection {
                 }
             }
         });
+    }
+
+    /**
+     * This method is called after applying uidl change set to application.
+     * 
+     * It will clean current and queued variable change sets. And send next
+     * change set if it exists.
+     */
+    private void checkForPendingVariableBursts() {
+        cleanVariableBurst(pendingVariables);
+        if (pendingVariableBursts.size() > 0) {
+            for (Iterator iterator = pendingVariableBursts.iterator(); iterator
+                    .hasNext();) {
+                cleanVariableBurst((Vector) iterator.next());
+            }
+            Vector nextBurst = (Vector) pendingVariableBursts.firstElement();
+            pendingVariableBursts.remove(0);
+            buildAndSendVariableBurst(nextBurst);
+        }
+    }
+
+    /**
+     * Cleans given queue of variable changes of such changes that came from
+     * components that do not exist anymore.
+     * 
+     * @param variableBurst
+     */
+    private void cleanVariableBurst(Vector variableBurst) {
+        for (int i = 1; i < variableBurst.size(); i += 2) {
+            String id = (String) variableBurst.get(i);
+            id = id.substring(0, id.indexOf(VAR_FIELD_SEPARATOR));
+            if (!idToPaintable.containsKey(id)) {
+                // variable owner does not exist anymore
+                variableBurst.remove(i - 1);
+                variableBurst.remove(i - 1);
+                i -= 2;
+                ApplicationConnection.getConsole().log(
+                        "Removed variable from removed component: " + id);
+            }
+        }
     }
 
     private void showLoadingIndicator() {
@@ -521,25 +566,48 @@ public class ApplicationConnection {
         }
     }
 
+    /**
+     * This method sends currently queued variable changes to server. It is
+     * called when immediate variable update must happen.
+     * 
+     * To ensure correct order for variable changes (due servers multithreading
+     * or network), we always wait for active request to be handler before
+     * sending a new one. If there is an active request, we will put varible
+     * "burst" to queue that will be purged after current request is handled.
+     * 
+     */
     public void sendPendingVariableChanges() {
         if (applicationRunning) {
-            final StringBuffer req = new StringBuffer();
-
-            req.append("changes=");
-            for (int i = 0; i < pendingVariables.size(); i++) {
-                if (i > 0) {
-                    if (i % 2 == 0) {
-                        req.append(VAR_RECORD_SEPARATOR);
-                    } else {
-                        req.append(VAR_FIELD_SEPARATOR);
-                    }
+            if (hasActiveRequest()) {
+                // skip empty queues if there are pending bursts to be sent
+                if (pendingVariables.size() > 0
+                        || pendingVariableBursts.size() == 0) {
+                    Vector burst = (Vector) pendingVariables.clone();
+                    pendingVariableBursts.add(burst);
                 }
-                req.append(pendingVariables.get(i));
+            } else {
+                buildAndSendVariableBurst(pendingVariables);
             }
-
-            pendingVariables.clear();
-            makeUidlRequest(req.toString());
         }
+    }
+
+    private void buildAndSendVariableBurst(Vector pendingVariables) {
+        final StringBuffer req = new StringBuffer();
+
+        req.append("changes=");
+        for (int i = 0; i < pendingVariables.size(); i++) {
+            if (i > 0) {
+                if (i % 2 == 0) {
+                    req.append(VAR_RECORD_SEPARATOR);
+                } else {
+                    req.append(VAR_FIELD_SEPARATOR);
+                }
+            }
+            req.append(pendingVariables.get(i));
+        }
+
+        pendingVariables.clear();
+        makeUidlRequest(req.toString());
     }
 
     private static native String escapeString(String value)
