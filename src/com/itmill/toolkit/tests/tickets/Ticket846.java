@@ -3,6 +3,7 @@ package com.itmill.toolkit.tests.tickets;
 import java.util.Collections;
 import java.util.LinkedList;
 
+// FIXME: WARNING sun.net.www.http.Hurryable is Sun proprietary API and may be removed in a future release
 import sun.net.www.http.Hurryable;
 
 import com.itmill.toolkit.Application;
@@ -14,7 +15,7 @@ import com.itmill.toolkit.ui.Window;
 
 public class Ticket846 extends Application {
 
-	@Override
+	// FIXME: Not allowed in Java 1.4: @Override
 	public void init() {
 
 		final Window mainWin = new Window("Test app for #846");
@@ -40,6 +41,8 @@ public class Ticket846 extends Application {
 			}
 		});
 		
+		// FIXME: "For each" expression not allowed in Java 1.4
+		/*
 		for (String props : new String[] {"required","invalidAllowed","readOnly","readThrough","invalidCommitted"}) {
 			Button b = new Button(props,new MethodProperty(tx,props));
 			b.setImmediate(true);
@@ -53,6 +56,7 @@ public class Ticket846 extends Application {
 						mainWin.showNotification("The field is " + (tx.isValid()?"":"not ") + "valid");
 					};
 				}));
+				*/
 	}
 
 }

@@ -853,13 +853,13 @@ public abstract class AbstractField extends AbstractComponent implements Field,
 		}
 	}
 
-	@Override
+	// FIXME: Annotations are not supported in Java 1.4: @Override
 	public void changeVariables(Object source, Map variables) {
 		super.changeVariables(source, variables);
 		if (validators != null && !validators.isEmpty()) requestRepaint();
 	}
 
-	@Override
+    // FIXME: Annotations are not supported in Java 1.4: @Override
 	public String getTag() {
 		// TODO Auto-generated method stub
 		return null;
