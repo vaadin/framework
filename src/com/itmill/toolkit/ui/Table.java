@@ -283,6 +283,8 @@ public class Table extends AbstractSelect implements Action.Container,
 
     private int pageBufferFirstIndex;
 
+    private boolean containerChangeToBeRendered = false;
+
     /* Table constructors *************************************************** */
 
     /**
@@ -1521,16 +1523,20 @@ public class Table extends AbstractSelect implements Action.Container,
                 e.printStackTrace();
             }
 
-            Integer value = (Integer) variables.get("reqfirstrow");
-            if (value != null) {
-                reqFirstRowToPaint = value.intValue();
-            }
-            value = (Integer) variables.get("reqrows");
-            if (value != null) {
-                reqRowsToPaint = value.intValue();
-                // sanity check
-                if (reqFirstRowToPaint + reqRowsToPaint > size()) {
-                    reqRowsToPaint = size() - reqFirstRowToPaint;
+            // respect suggested rows only if table is not otherwise updated
+            // (row caches emptied by other event)
+            if (!containerChangeToBeRendered) {
+                Integer value = (Integer) variables.get("reqfirstrow");
+                if (value != null) {
+                    reqFirstRowToPaint = value.intValue();
+                }
+                value = (Integer) variables.get("reqrows");
+                if (value != null) {
+                    reqRowsToPaint = value.intValue();
+                    // sanity check
+                    if (reqFirstRowToPaint + reqRowsToPaint > size()) {
+                        reqRowsToPaint = size() - reqFirstRowToPaint;
+                    }
                 }
             }
             clientNeedsContentRefresh = true;
@@ -1858,6 +1864,7 @@ public class Table extends AbstractSelect implements Action.Container,
         // pageBuffer
         reqFirstRowToPaint = -1;
         reqRowsToPaint = -1;
+        containerChangeToBeRendered = false;
         target.addVariable(this, "reqrows", reqRowsToPaint);
         target.addVariable(this, "reqfirstrow", reqFirstRowToPaint);
 
@@ -2074,6 +2081,7 @@ public class Table extends AbstractSelect implements Action.Container,
         } else {
             resetPageBuffer();
             refreshRenderedCells();
+            containerChangeToBeRendered = true;
         }
         requestRepaint();
     }
