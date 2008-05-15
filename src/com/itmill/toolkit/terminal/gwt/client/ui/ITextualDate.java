@@ -9,6 +9,7 @@ import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
+import com.itmill.toolkit.terminal.gwt.client.Focusable;
 import com.itmill.toolkit.terminal.gwt.client.LocaleNotLoadedException;
 import com.itmill.toolkit.terminal.gwt.client.LocaleService;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
@@ -16,7 +17,7 @@ import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.Util;
 
 public class ITextualDate extends IDateField implements Paintable,
-        ChangeListener, ContainerResizedListener {
+        ChangeListener, ContainerResizedListener, Focusable {
 
     private final ITextField text;
 
@@ -251,5 +252,9 @@ public class ITextualDate extends IDateField implements Paintable,
         if (needLayout) {
             text.setWidth((getOffsetWidth() - getFieldExtraWidth()) + "px");
         }
+    }
+
+    public void focus() {
+        text.setFocus(true);
     }
 }

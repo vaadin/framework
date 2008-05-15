@@ -463,7 +463,12 @@ public class ApplicationConnection {
                 if (toBeFocused instanceof HasFocus) {
                     final HasFocus toBeFocusedWidget = (HasFocus) toBeFocused;
                     toBeFocusedWidget.setFocus(true);
+                } else if (toBeFocused instanceof Focusable) {
+                    ((Focusable) toBeFocused).focus();
+                } else {
+                    getConsole().log("Could not focus component");
                 }
+
             }
             if (meta.containsKey("appError")) {
                 JSONObject error = meta.get("appError").isObject();
