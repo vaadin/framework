@@ -49,7 +49,10 @@
 	filter: Alpha(opacity=30);
 }
 
-
+.i-required-field-indicator {
+	padding-left:2px;
+	color: red;
+}
 
 /**
  * Context menu styles 

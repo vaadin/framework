@@ -18,6 +18,8 @@ public class Caption extends HTML {
 
     private Element errorIndicatorElement;
 
+    private Element requiredFieldIndicator;
+
     private Icon icon;
 
     private Element captionText;
@@ -107,6 +109,21 @@ public class Caption extends HTML {
                 setTitle(uidl.getStringAttribute("description"));
             }
         }
+
+        if (uidl.getBooleanAttribute("required")) {
+            if (requiredFieldIndicator == null) {
+                requiredFieldIndicator = DOM.createSpan();
+                DOM.setInnerText(requiredFieldIndicator, "*");
+                DOM.setElementProperty(requiredFieldIndicator, "className",
+                        "i-required-field-indicator");
+                DOM.appendChild(getElement(), requiredFieldIndicator);
+            }
+        } else {
+            if (requiredFieldIndicator != null) {
+                DOM.removeChild(getElement(), requiredFieldIndicator);
+            }
+        }
+
         // Workaround for IE weirdness, sometimes returns bad height in some
         // circumstances when Caption is empty. See #1444
         // IE7 bugs more often. I wonder what happens when IE8 arrives...
