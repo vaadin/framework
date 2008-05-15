@@ -15,7 +15,6 @@ import com.itmill.toolkit.ui.Window;
 
 public class Ticket846 extends Application {
 
-	// FIXME: Not allowed in Java 1.4: @Override
 	public void init() {
 
 		final Window mainWin = new Window("Test app for #846");
@@ -41,10 +40,9 @@ public class Ticket846 extends Application {
 			}
 		});
 		
-		// FIXME: "For each" expression not allowed in Java 1.4
-		/*
-		for (String props : new String[] {"required","invalidAllowed","readOnly","readThrough","invalidCommitted"}) {
-			Button b = new Button(props,new MethodProperty(tx,props));
+		final String[] visibleProps = {"required","invalidAllowed","readOnly","readThrough","invalidCommitted"}; 
+		for (int i=0;i<visibleProps.length; i++ ) {
+			Button b = new Button(visibleProps[i],new MethodProperty(tx,visibleProps[i]));
 			b.setImmediate(true);
 			mainWin.addComponent(b);
 		}
@@ -56,7 +54,6 @@ public class Ticket846 extends Application {
 						mainWin.showNotification("The field is " + (tx.isValid()?"":"not ") + "valid");
 					};
 				}));
-				*/
 	}
 
 }
