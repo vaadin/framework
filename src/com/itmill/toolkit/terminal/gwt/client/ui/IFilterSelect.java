@@ -28,6 +28,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.PopupPanel.PositionCallback;
 import com.google.gwt.user.client.ui.SuggestOracle.Suggestion;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
+import com.itmill.toolkit.terminal.gwt.client.Focusable;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.Util;
@@ -37,7 +38,7 @@ import com.itmill.toolkit.terminal.gwt.client.Util;
  * TODO needs major refactoring (to be extensible etc)
  */
 public class IFilterSelect extends Composite implements Paintable,
-        KeyboardListener, ClickListener, FocusListener {
+        KeyboardListener, ClickListener, FocusListener, Focusable {
 
     public class FilterSelectSuggestion implements Suggestion, Command {
 
@@ -745,5 +746,9 @@ public class IFilterSelect extends Composite implements Paintable,
             tb.setText(emptyText);
             // TODO add CLASSNAME_EMPTY
         }
+    }
+
+    public void focus() {
+        tb.setFocus(true);
     }
 }
