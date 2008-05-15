@@ -69,7 +69,7 @@ public class PortletConfigurationGenerator {
             + "                <security-role-ref>\n"
             + "                        <role-name>user</role-name>\n"
             + "                </security-role-ref>\n" + "        </portlet>\n";
-    private static final String PORTLET_XML_FOOT = "        %CONTEXTPARAMS%\n"
+    private static final String PORTLET_XML_FOOT = "\n"
             + "        <container-runtime-option>\n"
             + "                <name>javax.portlet.escapeXml</name>\n"
             + "                <value>false</value>\n"
@@ -120,8 +120,9 @@ public class PortletConfigurationGenerator {
 
         String widgetset = "";
         if (args.length > 1) {
-            widgetset = "<context-param><name>widgetset</name><value>"
-                    + args[1] + "</value></context-param>";
+            widgetset = "\n                "
+                    + "<init-param><name>widgetset</name><value>" + args[1]
+                    + "</value></init-param>";
         }
 
         /*
@@ -220,6 +221,7 @@ public class PortletConfigurationGenerator {
                     style = "<init-param><name>style</name><value>"
                             + m2.group(1) + "</value></init-param>";
                 }
+                style += widgetset;
 
                 String name = m.group(1);
                 // remove leading- and trailing whitespace
@@ -264,8 +266,7 @@ public class PortletConfigurationGenerator {
 
             }
 
-            pstring += PORTLET_XML_FOOT
-                    .replaceAll("%CONTEXTPARAMS%", widgetset);
+            pstring += PORTLET_XML_FOOT;
             lpstring += LIFERAY_PORTLET_XML_FOOT;
             ldstring += LIFERAY_DISPLAY_XML_FOOT;
 

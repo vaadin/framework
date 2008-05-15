@@ -12,6 +12,7 @@
                         <value>PortletDemo</value>
                 </init-param>
                 
+                <init-param><name>widgetset</name><value>com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet</value></init-param>
                 <supports>
                         <mime-type>text/html</mime-type>
                         <portlet-mode>view</portlet-mode>
@@ -45,6 +46,7 @@
                         <value>SimpleReserver</value>
                 </init-param>
                 <init-param><name>style</name><value>style=height:400px</value></init-param>
+                <init-param><name>widgetset</name><value>com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet</value></init-param>
                 <supports>
                         <mime-type>text/html</mime-type>
                         <portlet-mode>view</portlet-mode>
@@ -78,6 +80,7 @@
                         <value>SelectDemo</value>
                 </init-param>
                 
+                <init-param><name>widgetset</name><value>com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet</value></init-param>
                 <supports>
                         <mime-type>text/html</mime-type>
                         <portlet-mode>view</portlet-mode>
@@ -111,6 +114,7 @@
                         <value>TableDemo</value>
                 </init-param>
                 
+                <init-param><name>widgetset</name><value>com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet</value></init-param>
                 <supports>
                         <mime-type>text/html</mime-type>
                         <portlet-mode>view</portlet-mode>
@@ -144,6 +148,7 @@
                         <value>FilterSelect</value>
                 </init-param>
                 
+                <init-param><name>widgetset</name><value>com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet</value></init-param>
                 <supports>
                         <mime-type>text/html</mime-type>
                         <portlet-mode>view</portlet-mode>
@@ -177,6 +182,7 @@
                         <value>FeatureBrowser</value>
                 </init-param>
                 <init-param><name>style</name><value>style=height:650px</value></init-param>
+                <init-param><name>widgetset</name><value>com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet</value></init-param>
                 <supports>
                         <mime-type>text/html</mime-type>
                         <portlet-mode>view</portlet-mode>
@@ -210,6 +216,7 @@
                         <value>ModalWindow</value>
                 </init-param>
                 
+                <init-param><name>widgetset</name><value>com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet</value></init-param>
                 <supports>
                         <mime-type>text/html</mime-type>
                         <portlet-mode>view</portlet-mode>
@@ -243,6 +250,7 @@
                         <value>Calc</value>
                 </init-param>
                 
+                <init-param><name>widgetset</name><value>com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet</value></init-param>
                 <supports>
                         <mime-type>text/html</mime-type>
                         <portlet-mode>view</portlet-mode>
@@ -276,6 +284,7 @@
                         <value>NotificationDemo</value>
                 </init-param>
                 
+                <init-param><name>widgetset</name><value>com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet</value></init-param>
                 <supports>
                         <mime-type>text/html</mime-type>
                         <portlet-mode>view</portlet-mode>
@@ -309,6 +318,7 @@
                         <value>chat</value>
                 </init-param>
                 
+                <init-param><name>widgetset</name><value>com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet</value></init-param>
                 <supports>
                         <mime-type>text/html</mime-type>
                         <portlet-mode>view</portlet-mode>
@@ -342,6 +352,7 @@
                         <value>BrowserDemo</value>
                 </init-param>
                 <init-param><name>style</name><value>style=height:650px</value></init-param>
+                <init-param><name>widgetset</name><value>com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet</value></init-param>
                 <supports>
                         <mime-type>text/html</mime-type>
                         <portlet-mode>view</portlet-mode>
@@ -366,7 +377,7 @@
                         <role-name>user</role-name>
                 </security-role-ref>
         </portlet>
-        <context-param><name>widgetset</name><value>com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet</value></context-param>
+
         <container-runtime-option>
                 <name>javax.portlet.escapeXml</name>
                 <value>false</value>
