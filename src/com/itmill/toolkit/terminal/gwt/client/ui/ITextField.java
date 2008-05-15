@@ -58,6 +58,12 @@ public class ITextField extends TextBoxBase implements Paintable,
             return;
         }
 
+        if (uidl.getBooleanAttribute("readonly")) {
+            setReadOnly(true);
+        } else {
+            setReadOnly(false);
+        }
+
         immediate = uidl.getBooleanAttribute("immediate");
 
         if (uidl.hasAttribute("cols")) {
