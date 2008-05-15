@@ -192,9 +192,10 @@ public class IView extends SimplePanel implements Paintable,
             w.hide();
         }
 
+        onWindowResized(Window.getClientWidth(), Window.getClientHeight());
         // IE somehow fails some layout on first run, force layout
         // functions
-        Util.runDescendentsLayout(this);
+        // Util.runDescendentsLayout(this);
 
     }
 
@@ -243,9 +244,15 @@ public class IView extends SimplePanel implements Paintable,
             }
             resizeTimer.schedule(200);
         } else {
+            // temporary set overflow hidden, not to let scrollbars disturb
+            // layout functions
+            final String overflow = DOM.getStyleAttribute(getElement(),
+                    "overflow");
+            DOM.setStyleAttribute(getElement(), "overflow", "hidden");
             ApplicationConnection.getConsole().log(
                     "Running layout functions due window resize");
             Util.runDescendentsLayout(this);
+            DOM.setStyleAttribute(getElement(), "overflow", overflow);
         }
     }
 
