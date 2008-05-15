@@ -1,10 +1,5 @@
 package com.itmill.toolkit.tests.tickets;
 
-import java.util.Collections;
-import java.util.LinkedList;
-
-// FIXME: WARNING sun.net.www.http.Hurryable is Sun proprietary API and may be removed in a future release
-import sun.net.www.http.Hurryable;
 
 import com.itmill.toolkit.Application;
 import com.itmill.toolkit.data.Validator;
