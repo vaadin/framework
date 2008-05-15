@@ -78,6 +78,8 @@ public class Slider extends AbstractField {
      * Slider size in pixels. In horizontal mode, if set to -1, allow 100% width
      * of container. In vertical mode, if set to -1, default height is
      * determined by the client-side implementation.
+     * 
+     * @deprecated
      */
     private int size = -1;
 
@@ -313,6 +315,7 @@ public class Slider extends AbstractField {
      * Get the current Slider size.
      * 
      * @return size in pixels or -1 for auto sizing.
+     * @deprecated use standard getWidth/getHeight instead
      */
     public int getSize() {
         return size;
@@ -323,9 +326,20 @@ public class Slider extends AbstractField {
      * 
      * @param size
      *                in pixels, or -1 auto sizing.
+     * @deprecated use standard setWidth/setHeight instead
      */
     public void setSize(int size) {
         this.size = size;
+        switch (orientation) {
+        case ORIENTATION_HORIZONTAL:
+            setWidth(size);
+            setWidthUnits(UNITS_PIXELS);
+            break;
+        default:
+            setHeight(size);
+            setHeightUnits(UNITS_PIXELS);
+            break;
+        }
         requestRepaint();
     }
 
@@ -424,8 +438,8 @@ public class Slider extends AbstractField {
      * @param variables
      */
     public void changeVariables(Object source, Map variables) {
-    	super.changeVariables(source, variables);
-    	if (variables.containsKey("value")) {
+        super.changeVariables(source, variables);
+        if (variables.containsKey("value")) {
             final Object value = variables.get("value");
             final Double newValue = new Double(value.toString());
             if (newValue != null && newValue != getValue()

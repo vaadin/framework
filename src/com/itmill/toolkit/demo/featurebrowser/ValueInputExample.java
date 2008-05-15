@@ -105,7 +105,8 @@ public class ValueInputExample extends CustomComponent {
         main.addComponent(left);
         // int slider
         Slider slider = new Slider(0, 100);
-        slider.setSize(300);
+        slider.setWidth("300px");
+        // slider.setSize(300);
         slider.setImmediate(true);
         slider.addListener(new Slider.ValueChangeListener() {
             public void valueChange(ValueChangeEvent event) {
