@@ -27,7 +27,6 @@ import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.DateField;
 import com.itmill.toolkit.ui.Field;
 import com.itmill.toolkit.ui.Form;
-import com.itmill.toolkit.ui.GridLayout;
 import com.itmill.toolkit.ui.OptionGroup;
 import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Panel;
@@ -312,14 +311,16 @@ public class PropertyPanel extends Panel implements Button.ClickListener,
 
     /** Field special properties */
     private void addFieldProperties() {
-        // TODO bug #211 states that setFocus works only for Button and
-        // Textfield UI components
-        final Form set = new Form(new GridLayout(COLUMNS, 1));
+        // Set of properties
+        final Form set = createBeanPropertySet(new String[] { "required" });
+
         set.addField("focus", new Button("Focus", objectToConfigure, "focus"));
         set.getField("focus").setDescription(
                 "Focus the cursor to this field. Not all "
                         + "components and/or terminals support this feature.");
+
         addProperties("Field Features", set);
+
     }
 
     /**
