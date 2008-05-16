@@ -950,6 +950,12 @@ public class ApplicationServlet extends HttpServlet {
     private void handleDownload(DownloadStream stream,
             HttpServletRequest request, HttpServletResponse response) {
 
+        if (stream.getParameter("Location") != null) {
+            response.setStatus(HttpServletResponse.SC_FOUND);
+            response.addHeader("Location", stream.getParameter("Location"));
+            return;
+        }
+
         // Download from given stream
         final InputStream data = stream.getStream();
         if (data != null) {
