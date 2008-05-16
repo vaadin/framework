@@ -213,14 +213,12 @@ public class ITree extends FlowPanel implements Paintable {
         }
 
         protected void constructDom() {
-            final Element root = DOM.createDiv();
             nodeCaptionDiv = DOM.createDiv();
             DOM.setElementProperty(nodeCaptionDiv, "className", CLASSNAME
                     + "-caption");
             nodeCaptionSpan = DOM.createSpan();
-            DOM.appendChild(root, nodeCaptionDiv);
+            DOM.appendChild(getElement(), nodeCaptionDiv);
             DOM.appendChild(nodeCaptionDiv, nodeCaptionSpan);
-            setElement(root);
 
             childNodeContainer = new FlowPanel();
             childNodeContainer.setStylePrimaryName(CLASSNAME + "-children");
