@@ -4,9 +4,22 @@
 /* Styling for tests.magi application.                                       */
 /*****************************************************************************/
 
-#itmill-ajax-window {
+#tk5testbench2 {
 	background: white;
 }
+
+/*****************************************************************************/
+/* For example_Tree()                                                  */
+/*****************************************************************************/
+
+.i-expandlayout-treeexample .i-panel .i-orderedlayout {
+	padding: 0px;
+}
+
+.i-orderedlayout-margin-top    { padding-top:    0px; }
+.i-orderedlayout-margin-left   { padding-left:   0px; }
+.i-orderedlayout-margin-bottom { padding-bottom: 0px; }
+.i-orderedlayout-margin-right  { padding-right:  0px; }
 
 /*****************************************************************************/
 /* For example_GridLayout()                                                  */
@@ -22,10 +35,10 @@ table.i-gridlayout-example-gridlayout {
 /*****************************************************************************/
 /* For example_Alignment()                                                   */
 /*****************************************************************************/
-table.i-gridlayout-example-alignment {
+.i-gridlayout-example-alignment {
 	background: blue;
 }
-.i-gridlayout-example-alignment td {
+.i-gridlayout-example-alignment .i-expandlayout {
 	background: white;
 	width: 150px;
 	height: 75px;
@@ -69,5 +82,35 @@ table.i-gridlayout-example-alignment {
 
 /* Set horizontal cell spacing in specific layout with "spacingexample" style. */
 .i-orderedlayout-spacingexample .i-orderedlayout-hspacing {
-    padding-left: 50px;
+    padding-left: 30px;
 }
+
+/* Set vertical cell spacing in specific layout with "spacingexample" style. */
+.i-orderedlayout-spacingexample .i-orderedlayout-vspacing {
+    margin-top: 30px;
+}
+
+table.i-gridlayout-spacingexample {
+    background: blue;
+}
+
+.i-gridlayout-spacingexample td {
+    background: white;
+}
+
+/*****************************************************************************/
+/* For example_Margin()                                                      */
+/*****************************************************************************/
+.i-orderedlayout-marginexample1 { padding-left:   200px; }
+.i-orderedlayout-marginexample1 { padding-right:  100px; }
+.i-orderedlayout-marginexample1 { padding-top:    50px;  }
+.i-orderedlayout-marginexample1 { padding-bottom: 25px;  }
+
+.i-orderedlayout-marginexample2 .i-orderedlayout-margin-left   { padding-left:   200px; }
+.i-orderedlayout-marginexample2 .i-orderedlayout-margin-right  { padding-right:  100px; }
+.i-orderedlayout-marginexample2 .i-orderedlayout-margin-top    { padding-top:    50px;  }
+.i-orderedlayout-marginexample2 .i-orderedlayout-margin-bottom { padding-bottom: 25px;  }
+
+.i-orderedlayout-marginexample1 { background: #d0d0ff; border: 1px;}
+.i-orderedlayout-marginexample2 { background: #ffd0d0; border: 1px;}
+.i-orderedlayout-marginexample table { background: white; }

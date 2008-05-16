@@ -34,7 +34,7 @@ public class TableExample extends CustomComponent {
         /* We use these entries to generate random items in a table. */
         final String[] firstnames = new String[] { "Donald", "Patty", "Sally",
                 "Douglas" };
-        final String[] lastnames = new String[] { "Smith", "Jones", "Adams",
+        final String[] lastnames = new String[] { "Smith", "Jones", "   Adams",
                 "Knuth" };
 
         /* Add some items in the table and assign them an Item ID (IID). */

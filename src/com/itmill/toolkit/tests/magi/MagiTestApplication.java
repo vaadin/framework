@@ -6,6 +6,7 @@ package com.itmill.toolkit.tests.magi;
 
 import java.net.URL;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Set;
 
 import com.itmill.toolkit.data.Validator;
@@ -18,6 +19,7 @@ import com.itmill.toolkit.terminal.ExternalResource;
 import com.itmill.toolkit.terminal.Sizeable;
 import com.itmill.toolkit.terminal.StreamResource;
 import com.itmill.toolkit.terminal.UserError;
+import com.itmill.toolkit.terminal.gwt.server.WebApplicationContext;
 import com.itmill.toolkit.ui.AbstractSelect;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.CheckBox;
@@ -34,6 +36,7 @@ import com.itmill.toolkit.ui.Link;
 import com.itmill.toolkit.ui.NativeSelect;
 import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Panel;
+import com.itmill.toolkit.ui.PopupDateField;
 import com.itmill.toolkit.ui.ProgressIndicator;
 import com.itmill.toolkit.ui.Select;
 import com.itmill.toolkit.ui.TabSheet;
@@ -103,9 +106,9 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
                     "alignment", "alignment/grid", "window", "window/opener",
                     "window/multiple", "classresource", "usererror",
                     "progress/window", "progress/thread", "progress",
-                    "customlayout", "spacing"};
+                    "customlayout", "spacing", "margin", "clientinfo"};
             for (int i = 0; i < examples.length; i++) {
-                main.addComponent(new Label("<a href='/tk/testbench2/"
+                main.addComponent(new Label("<a href='/tk5/testbench2/"
                         + examples[i] + "'>" + examples[i] + "</a>",
                         Label.CONTENT_XHTML));
             }
@@ -170,6 +173,10 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
             example_CustomLayout(main, param);
         } else if (example.equals("spacing")) {
             example_Spacing(main, param);
+        } else if (example.equals("margin")) {
+            example_Margin(main, param);
+        } else if (example.equals("clientinfo")) {
+            example_ClientInfo(main, param);
         } else {
             ; // main.addComponent(new Label("Unknown test '"+example+"'."));
         }
@@ -247,16 +254,12 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
                 new Object[] { "Venus" },
                 new Object[] { "Earth", "The Moon" },
                 new Object[] { "Mars", "Phobos", "Deimos" },
-                new Object[] { "Jupiter", "Io", "Europa", "Ganymedes",
-                        "Callisto" },
-                new Object[] { "Saturn", "Titan", "Tethys", "Dione", "Rhea",
-                        "Iapetus" },
-                new Object[] { "Uranus", "Miranda", "Ariel", "Umbriel",
-                        "Titania", "Oberon" },
-                new Object[] { "Neptune", "Triton", "Proteus", "Nereid",
-                        "Larissa" } };
+                new Object[] { "Jupiter", "Io", "Europa", "Ganymedes", "Callisto" },
+                new Object[] { "Saturn", "Titan", "Tethys", "Dione", "Rhea", "Iapetus" },
+                new Object[] { "Uranus", "Miranda", "Ariel", "Umbriel", "Titania", "Oberon" },
+                new Object[] { "Neptune", "Triton", "Proteus", "Nereid", "Larissa" } };
 
-        final Tree tree = new Tree("The Planets and Major Moons");
+        final Tree tree = new Tree();
 
         /* Add planets as root items in the tree. */
         for (int i = 0; i < planets.length; i++) {
@@ -285,8 +288,38 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
                 tree.expandItemsRecursively(planet);
             }
         }
+        
+        // Horizontal layout with the tree on the left and a details panel on the right. 
+        final ExpandLayout horlayout = new ExpandLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
+        horlayout.addStyleName("treeexample");
+        horlayout.setSizeFull();
+        
+        final Panel treepanel = new Panel("The Planets and Major Moons");
+        treepanel.addComponent(tree);
+        horlayout.addComponent(treepanel);
+        
+        final Panel detailspanel = new Panel("Details");
+        horlayout.addComponent(detailspanel);
+        horlayout.expand(detailspanel);
+        
+        final OrderedLayout detailslayout = new OrderedLayout();
+        detailspanel.setLayout(detailslayout);
+        
+        // When a tree item (planet or moon) is clicked, open the item in Details view.
+        tree.setImmediate(true);
+        tree.addListener(new ValueChangeListener() {
+            public void valueChange(ValueChangeEvent event) {
+                String planet = (String) tree.getValue();
+                detailspanel.setCaption("Details on " + planet);
+                detailslayout.removeAllComponents();
+                
+                // Put some stuff in the Details view.
+                detailslayout.addComponent(new Label("Where is the cat?"));
+                detailslayout.addComponent(new Label("The cat is in " + planet + "."));
+            }
+        });
 
-        main.addComponent(tree);
+        main.setLayout(horlayout);
     }
 
     void example_Select(Window main, String param) {
@@ -428,16 +461,33 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
     }
 
     void example_DateField(Window main, String param) {
+        OrderedLayout layout = new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
+        
         /* Create a DateField with the calendar style. */
-        final DateField date = new DateField("Here is a calendar field");
-        date.setStyleName("calendar");
+        final DateField popupdate = new PopupDateField("Popup calendar field");
+
+        /* Set resolution of the date/time display. */
+        popupdate.setResolution(DateField.RESOLUTION_MIN);
 
         /* Set the date and time to present. */
-        date.setValue(new java.util.Date());
+        popupdate.setValue(new java.util.Date());
 
-        main.addComponent(date);
+        /* Create a DateField with the calendar style. */
+        final DateField inlinedate = new InlineDateField("Inline calendar field");
+        
+        /* Set locale of the DateField to American English. */
+        inlinedate.setLocale(new Locale("en", "US"));
 
-        // date.setResolution(DateField.RESOLUTION_DAY);
+        /* Set the date and time to present. */
+        inlinedate.setValue(new java.util.Date());
+
+        /* Set resolution of the date/time display. */
+        inlinedate.setResolution(DateField.RESOLUTION_MIN);
+
+        layout.addComponent(popupdate);
+        layout.addComponent(inlinedate);
+        layout.setSpacing(true);
+        main.addComponent(layout);
     }
 
     void example_Validator(Window main, String param) {
@@ -585,21 +635,22 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
             /* Define cells and their layouts to create. */
             
              Object cells[][] = {
-                     {new Button("Top Left"),      new Integer(GridLayout.ALIGNMENT_LEFT),              new Integer(GridLayout.ALIGNMENT_TOP)},
-                     {new Button("Top Center"),    new Integer(GridLayout.ALIGNMENT_HORIZONTAL_CENTER), new Integer(GridLayout.ALIGNMENT_TOP)},
-                     {new Button("Top Right"),     new Integer(GridLayout.ALIGNMENT_RIGHT),             new Integer(GridLayout.ALIGNMENT_TOP)},
-                     {new Button("Center Left"),   new Integer(GridLayout.ALIGNMENT_LEFT),              new Integer(GridLayout.ALIGNMENT_VERTICAL_CENTER)},
-                     {new Button("Center Center"), new Integer(GridLayout.ALIGNMENT_HORIZONTAL_CENTER), new Integer(GridLayout.ALIGNMENT_VERTICAL_CENTER)},
-                     {new Button("Center Right"),  new Integer(GridLayout.ALIGNMENT_RIGHT),             new Integer(GridLayout.ALIGNMENT_VERTICAL_CENTER)},
-                     {new Button("Bottom Left"),   new Integer(GridLayout.ALIGNMENT_LEFT),              new Integer(GridLayout.ALIGNMENT_BOTTOM)},
-                     {new Button("Bottom Center"), new Integer(GridLayout.ALIGNMENT_HORIZONTAL_CENTER), new Integer(GridLayout.ALIGNMENT_BOTTOM)},
-                     {new Button("Bottom Right"),  new Integer(GridLayout.ALIGNMENT_RIGHT),             new Integer(GridLayout.ALIGNMENT_BOTTOM)}};
+                     {new Button("Top Left"),      new Integer(OrderedLayout.ALIGNMENT_LEFT),              new Integer(OrderedLayout.ALIGNMENT_TOP)},
+                     {new Label("Top Center"),    new Integer(OrderedLayout.ALIGNMENT_HORIZONTAL_CENTER), new Integer(OrderedLayout.ALIGNMENT_TOP)},
+                     {new Label("Top Right"),     new Integer(OrderedLayout.ALIGNMENT_RIGHT),             new Integer(OrderedLayout.ALIGNMENT_TOP)},
+                     {new Button("Center Left"),   new Integer(OrderedLayout.ALIGNMENT_LEFT),              new Integer(OrderedLayout.ALIGNMENT_VERTICAL_CENTER)},
+                     {new Button("Center Center"), new Integer(OrderedLayout.ALIGNMENT_HORIZONTAL_CENTER), new Integer(OrderedLayout.ALIGNMENT_VERTICAL_CENTER)},
+                     {new Button("Center Right"),  new Integer(OrderedLayout.ALIGNMENT_RIGHT),             new Integer(OrderedLayout.ALIGNMENT_VERTICAL_CENTER)},
+                     {new Button("Bottom Left"),   new Integer(OrderedLayout.ALIGNMENT_LEFT),              new Integer(OrderedLayout.ALIGNMENT_BOTTOM)},
+                     {new Button("Bottom Center"), new Integer(OrderedLayout.ALIGNMENT_HORIZONTAL_CENTER), new Integer(OrderedLayout.ALIGNMENT_BOTTOM)},
+                     {new Button("Bottom Right"),  new Integer(OrderedLayout.ALIGNMENT_RIGHT),             new Integer(OrderedLayout.ALIGNMENT_BOTTOM)}};
              
              for (int i=0; i<9; i++) {
-                 OrderedLayout celllayout = new OrderedLayout();
+                 ExpandLayout celllayout = new ExpandLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
                  celllayout.addComponent((Component) cells[i][0]);
                  celllayout.setComponentAlignment((Component)cells[i][0], ((Integer)cells[i][1]).intValue(), ((Integer)cells[i][2]).intValue());
                  layout.addComponent(celllayout);
+                 //layout.setComponentAlignment((Component)cells[i][0], ((Integer)cells[i][1]).intValue(), ((Integer)cells[i][2]).intValue());
              }
         } else {
             final Panel panel = new Panel("A Panel with a Layout");
@@ -1011,22 +1062,92 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
     }
 
     void example_Spacing(final Window main, String param) {
-        OrderedLayout vert = new OrderedLayout();
-        main.setLayout(vert);
+        OrderedLayout containinglayout = new OrderedLayout();
+        main.setLayout(containinglayout);
 
-        OrderedLayout layout1 = new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
-        vert.addComponent(layout1);
-        layout1.addStyleName("spacingexample");
-        layout1.addComponent(new Label("Cell 1"));
-        layout1.addComponent(new Label("Cell 2"));
-        layout1.addComponent(new Label("Cell 3"));
+        GridLayout grid = new GridLayout(4,3);
+        grid.addStyleName("spacingexample");
+        containinglayout.addComponent(grid);
+        grid.addComponent(new Label(""), 0, 0);
+        grid.addComponent(new Label(""), 1, 0);
         
+        grid.addComponent(new Label("No spacing:"),0,1);
+        OrderedLayout layout1 = new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
+        grid.addComponent(layout1,1,1);
+        layout1.addStyleName("spacingexample");
+        layout1.addComponent(new Button("Component 1"));
+        layout1.addComponent(new Button("Component 2"));
+        layout1.addComponent(new Button("Component 3"));
+        
+        grid.addComponent(new Label("Horizontal spacing:"), 0, 2);
         OrderedLayout layout2 = new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
-        vert.addComponent(layout2);
+        grid.addComponent(layout2,1,2);
         layout2.addStyleName("spacingexample");
         layout2.setSpacing(true);
-        layout2.addComponent(new Label("Cell 1"));
-        layout2.addComponent(new Label("Cell 2"));
-        layout2.addComponent(new Label("Cell 3"));
+        layout2.addComponent(new Button("Component 1"));
+        layout2.addComponent(new Button("Component 2"));
+        layout2.addComponent(new Button("Component 3"));
+
+        grid.addComponent(new Label("No spacing:"),2,0);
+        OrderedLayout layout3 = new OrderedLayout(OrderedLayout.ORIENTATION_VERTICAL);
+        grid.addComponent(layout3,2,1,2,2);
+        layout3.addStyleName("spacingexample");
+        layout3.addComponent(new Button("Component 1"));
+        layout3.addComponent(new Button("Component 2"));
+        layout3.addComponent(new Button("Component 3"));
+
+        grid.addComponent(new Label("Vertical spacing:"),3,0);
+        OrderedLayout layout4 = new OrderedLayout(OrderedLayout.ORIENTATION_VERTICAL);
+        grid.addComponent(layout4,3,1,3,2);
+        layout4.addStyleName("spacingexample");
+        layout4.setSpacing(true);
+        layout4.addComponent(new Button("Component 1"));
+        layout4.addComponent(new Button("Component 2"));
+        layout4.addComponent(new Button("Component 3"));
+}
+
+    void example_Margin(final Window main, String param) {
+        OrderedLayout hor = new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
+        main.setLayout(hor);
+        
+        OrderedLayout containinglayout = new OrderedLayout();
+        hor.addComponent(containinglayout);
+
+        OrderedLayout layout1 = new OrderedLayout();
+        containinglayout.addComponent(new Label("Regular layout margins:"));
+        containinglayout.addComponent(layout1);
+        layout1.addStyleName("marginexample1");
+        layout1.addComponent(new Button("Component 1"));
+        layout1.addComponent(new Button("Component 2"));
+        layout1.addComponent(new Button("Component 3"));
+
+        // Create a layout
+        OrderedLayout layout2 = new OrderedLayout();
+        containinglayout.addComponent(new Label("Layout with a special margin element:"));
+        containinglayout.addComponent(layout2);
+        
+        // Set style name for the layout to allow styling it
+        layout2.addStyleName("marginexample2");
+        
+        // Have margin on all sides around the layout
+        layout2.setMargin(true);
+        
+        // Put something inside the layout
+        layout2.addComponent(new Button("Component 1"));
+        layout2.addComponent(new Button("Component 2"));
+        layout2.addComponent(new Button("Component 3"));
+    }
+
+    void example_ClientInfo(final Window main, String param) {
+        // Get the client identification string
+        WebApplicationContext context2 = (WebApplicationContext) getContext();
+        String browserApplication = context2.getBrowser().getBrowserApplication();
+        
+        // Add a browser-dependent style name for the main window
+        if (browserApplication.indexOf("Firefox/2") != -1)
+            main.addStyleName("firefox2");
+        
+        // Display the client identification string
+        main.addComponent(new Label(browserApplication));
     }
 }
