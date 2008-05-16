@@ -753,21 +753,19 @@ public class ApplicationConnection {
 
         updateComponentSize(component, uidl);
 
-        // Styles + disabled & readonly
-        component.setStyleName(component.getStylePrimaryName());
-
-        // first disabling and read-only status
-        boolean enabled = true;
-        if (uidl.hasAttribute("disabled")) {
-            enabled = !uidl.getBooleanAttribute("disabled");
-        }
+        boolean enabled = !uidl.getBooleanAttribute("disabled");
         if (component instanceof FocusWidget) {
             ((FocusWidget) component).setEnabled(enabled);
         }
+
+        StringBuffer styleBuf = new StringBuffer();
+        String primaryName = component.getStylePrimaryName();
+        styleBuf.append(primaryName);
+
+        // first disabling and read-only status
         if (!enabled) {
-            component.addStyleName("i-disabled");
-        } else {
-            component.removeStyleName("i-disabled");
+            styleBuf.append(" ");
+            styleBuf.append("i-disabled");
         }
 
         // add additional styles as css classes, prefixed with component default
@@ -775,25 +773,30 @@ public class ApplicationConnection {
         if (uidl.hasAttribute("style")) {
             final String[] styles = uidl.getStringAttribute("style").split(" ");
             for (int i = 0; i < styles.length; i++) {
-                component.addStyleDependentName(styles[i]);
+                styleBuf.append(" ");
+                styleBuf.append(primaryName);
+                styleBuf.append("-");
+                styleBuf.append(styles[i]);
             }
         }
 
         // add modified classname to Fields
         if (component instanceof Field && uidl.hasAttribute("modified")) {
-            component.addStyleName(MODIFIED_CLASSNAME);
+            styleBuf.append(" ");
+            styleBuf.append(MODIFIED_CLASSNAME);
         }
         // add error classname to components w/ error
         if (uidl.hasAttribute("error")) {
-            component.addStyleName(ERROR_CLASSNAME);
+            styleBuf.append(" ");
+            styleBuf.append(ERROR_CLASSNAME);
         }
+
+        // Styles + disabled & readonly
+        component.setStyleName(styleBuf.toString());
 
         if (usePaintableIdsInDOM) {
             DOM.setElementProperty(component.getElement(), "id", uidl.getId());
         }
-
-        // TODO this should really build one string with all the classnames
-        // and setStyleName() once
 
         return false;
     }
