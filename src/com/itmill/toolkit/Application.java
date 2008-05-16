@@ -627,7 +627,13 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
         }
     }
 
-    /*
+    /**
+     * This method gets called by terminal. It has lots of duties like to pass
+     * uri handler to proper uri handlers registered to windows etc.
+     * 
+     * In most situations developers should NOT OVERRIDE this method. Instead
+     * developers should implement and register uri handlers to windows.
+     * 
      * @see com.itmill.toolkit.terminal.URIHandler#handleURI(URL, String)
      */
     public DownloadStream handleURI(URL context, String relativeUri) {
