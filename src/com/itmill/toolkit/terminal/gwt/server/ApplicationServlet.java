@@ -800,49 +800,111 @@ public class ApplicationServlet extends HttpServlet {
         String appId = appUrl;
         appId = appId.replaceAll("[^a-zA-Z0-9]", "");
 
-        page.write("<script type=\"text/javascript\">\n");
-        page.write("//<![CDATA[\n");
-        page.write("if(!itmill || !itmill.toolkitConfigurations) {\n "
-                + "if(!itmill) { var itmill = {}} \n"
-                + "itmill.toolkitConfigurations = {};\n"
-                + "itmill.themesLoaded = {};\n");
-        page.write("document.write('<iframe id=\"__gwt_historyFrame\" "
-                + "style=\"width:0;height:0;border:0;overflow:"
-                + "hidden\" src=\"javascript:false\"></iframe>');\n");
-        page.write("document.write(\"<script language='javascript' src='"
-                + staticFilePath + "/" + WIDGETSET_DIRECTORY_PATH + widgetset
-                + "/" + widgetset + ".nocache.js'><\\/script>\");\n}\n");
+        if (isGecko17(request)) {
+            // special start page for gecko 1.7 versions. Firefox 1.0 is not
+            // supported, but the hack is make it possible to use linux and
+            // hosted mode browser for debugging. Note that due this hack,
+            // debugging gwt code in portals with linux will be problematic if
+            // there are multiple toolkit portlets visible at the same time.
+            // TODO remove this when hosted mode on linux gets newer gecko
 
-        page.write("itmill.toolkitConfigurations[\"" + appId + "\"] = {");
-        page.write("appUri:'" + appUrl + "', ");
-        page.write("pathInfo: '" + pathInfo + "', ");
-        page.write("themeUri:");
-        page.write(themeUri != null ? "'" + themeUri + "'" : "null");
-        if (testingApplication) {
-            page.write(", versionInfo : {toolkitVersion:\"");
-            page.write(VERSION);
-            page.write("\",applicationVersion:\"");
-            page.write(application.getVersion());
-            page.write("\"}");
-        }
-        page.write("};\n//]]>\n</script>\n");
-
-        if (themeName != null) {
-            // Custom theme's stylesheet, load only once, in different script
-            // tag to be dominate styles injected by widget
-            // set
+            page.write("<iframe id=\"__gwt_historyFrame\" "
+                    + "style=\"width:0;height:0;border:0;overflow:"
+                    + "hidden\" src=\"javascript:false\"></iframe>\n");
+            page.write("<script language='javascript' src='" + staticFilePath
+                    + "/" + WIDGETSET_DIRECTORY_PATH + widgetset + "/"
+                    + widgetset + ".nocache.js'></script>\n");
             page.write("<script type=\"text/javascript\">\n");
             page.write("//<![CDATA[\n");
-            page.write("if(!itmill.themesLoaded['" + themeName + "']) {\n");
-            page.write("var stylesheet = document.createElement('link');\n");
-            page.write("stylesheet.setAttribute('rel', 'stylesheet');\n");
-            page.write("stylesheet.setAttribute('type', 'text/css');\n");
-            page.write("stylesheet.setAttribute('href', '" + themeUri
-                    + "/styles.css');\n");
-            page
-                    .write("document.getElementsByTagName('head')[0].appendChild(stylesheet);\n");
-            page.write("itmill.themesLoaded['" + themeName + "'] = true;\n}\n");
-            page.write("//]]>\n</script>\n");
+            page.write("if(!itmill || !itmill.toolkitConfigurations) {\n "
+                    + "if(!itmill) { var itmill = {}} \n"
+                    + "itmill.toolkitConfigurations = {};\n"
+                    + "itmill.themesLoaded = {}};\n");
+
+            page.write("itmill.toolkitConfigurations[\"" + appId + "\"] = {");
+            page.write("appUri:'" + appUrl + "', ");
+            page.write("pathInfo: '" + pathInfo + "', ");
+            page.write("themeUri:");
+            page.write(themeUri != null ? "'" + themeUri + "'" : "null");
+            if (testingApplication) {
+                page.write(", versionInfo : {toolkitVersion:\"");
+                page.write(VERSION);
+                page.write("\",applicationVersion:\"");
+                page.write(application.getVersion());
+                page.write("\"}");
+            }
+            page.write("};\n//]]>\n</script>\n");
+
+            if (themeName != null) {
+                // Custom theme's stylesheet, load only once, in different
+                // script
+                // tag to be dominate styles injected by widget
+                // set
+                page.write("<script type=\"text/javascript\">\n");
+                page.write("//<![CDATA[\n");
+                page.write("if(!itmill.themesLoaded['" + themeName + "']) {\n");
+                page
+                        .write("var stylesheet = document.createElement('link');\n");
+                page.write("stylesheet.setAttribute('rel', 'stylesheet');\n");
+                page.write("stylesheet.setAttribute('type', 'text/css');\n");
+                page.write("stylesheet.setAttribute('href', '" + themeUri
+                        + "/styles.css');\n");
+                page
+                        .write("document.getElementsByTagName('head')[0].appendChild(stylesheet);\n");
+                page.write("itmill.themesLoaded['" + themeName
+                        + "'] = true;\n}\n");
+                page.write("//]]>\n</script>\n");
+            }
+
+        } else {
+            page.write("<script type=\"text/javascript\">\n");
+            page.write("//<![CDATA[\n");
+            page.write("if(!itmill || !itmill.toolkitConfigurations) {\n "
+                    + "if(!itmill) { var itmill = {}} \n"
+                    + "itmill.toolkitConfigurations = {};\n"
+                    + "itmill.themesLoaded = {};\n");
+            page.write("document.write('<iframe id=\"__gwt_historyFrame\" "
+                    + "style=\"width:0;height:0;border:0;overflow:"
+                    + "hidden\" src=\"javascript:false\"></iframe>');\n");
+            page.write("document.write(\"<script language='javascript' src='"
+                    + staticFilePath + "/" + WIDGETSET_DIRECTORY_PATH
+                    + widgetset + "/" + widgetset
+                    + ".nocache.js'><\\/script>\");\n}\n");
+
+            page.write("itmill.toolkitConfigurations[\"" + appId + "\"] = {");
+            page.write("appUri:'" + appUrl + "', ");
+            page.write("pathInfo: '" + pathInfo + "', ");
+            page.write("themeUri:");
+            page.write(themeUri != null ? "'" + themeUri + "'" : "null");
+            if (testingApplication) {
+                page.write(", versionInfo : {toolkitVersion:\"");
+                page.write(VERSION);
+                page.write("\",applicationVersion:\"");
+                page.write(application.getVersion());
+                page.write("\"}");
+            }
+            page.write("};\n//]]>\n</script>\n");
+
+            if (themeName != null) {
+                // Custom theme's stylesheet, load only once, in different
+                // script
+                // tag to be dominate styles injected by widget
+                // set
+                page.write("<script type=\"text/javascript\">\n");
+                page.write("//<![CDATA[\n");
+                page.write("if(!itmill.themesLoaded['" + themeName + "']) {\n");
+                page
+                        .write("var stylesheet = document.createElement('link');\n");
+                page.write("stylesheet.setAttribute('rel', 'stylesheet');\n");
+                page.write("stylesheet.setAttribute('type', 'text/css');\n");
+                page.write("stylesheet.setAttribute('href', '" + themeUri
+                        + "/styles.css');\n");
+                page
+                        .write("document.getElementsByTagName('head')[0].appendChild(stylesheet);\n");
+                page.write("itmill.themesLoaded['" + themeName
+                        + "'] = true;\n}\n");
+                page.write("//]]>\n</script>\n");
+            }
         }
 
         String style = null;
@@ -858,6 +920,16 @@ public class ApplicationServlet extends HttpServlet {
         }
         page.close();
 
+    }
+
+    private boolean isGecko17(HttpServletRequest request) {
+        final WebBrowser browser = WebApplicationContext.getApplicationContext(
+                request.getSession()).getBrowser();
+        if (browser.getBrowserApplication().indexOf("rv:1.7.") > 0
+                && browser.getBrowserApplication().indexOf("Gecko") > 0) {
+            return true;
+        }
+        return false;
     }
 
     private void writeTestingToolsScripts(Writer page,
