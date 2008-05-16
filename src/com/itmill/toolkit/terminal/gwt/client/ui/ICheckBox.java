@@ -15,7 +15,7 @@ import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
 public class ICheckBox extends com.google.gwt.user.client.ui.CheckBox implements
-        Paintable {
+        Paintable, Field {
 
     public static final String CLASSNAME = "i-checkbox";
 

@@ -20,14 +20,13 @@ import com.itmill.toolkit.terminal.gwt.client.UIDL;
  * @author IT Mill Ltd.
  * 
  */
-public class ITextField extends TextBoxBase implements Paintable,
+public class ITextField extends TextBoxBase implements Paintable, Field,
         ChangeListener, FocusListener {
 
     /**
      * The input node CSS classname.
      */
     public static final String CLASSNAME = "i-textfield";
-
     /**
      * This CSS classname is added to the input node on hover.
      */

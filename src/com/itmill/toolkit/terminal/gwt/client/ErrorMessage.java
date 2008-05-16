@@ -13,7 +13,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.itmill.toolkit.terminal.gwt.client.ui.ToolkitOverlay;
 
 public class ErrorMessage extends FlowPanel {
-    public static final String CLASSNAME = "i-error";
+    public static final String CLASSNAME = "i-errormessage";
 
     public ErrorMessage() {
         super();

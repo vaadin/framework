@@ -37,7 +37,7 @@ import com.itmill.toolkit.terminal.gwt.client.Util;
  * 
  * TODO needs major refactoring (to be extensible etc)
  */
-public class IFilterSelect extends Composite implements Paintable,
+public class IFilterSelect extends Composite implements Paintable, Field,
         KeyboardListener, ClickListener, FocusListener, Focusable {
 
     public class FilterSelectSuggestion implements Suggestion, Command {

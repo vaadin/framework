@@ -11,7 +11,7 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
-public class INativeSelect extends IOptionGroupBase {
+public class INativeSelect extends IOptionGroupBase implements Field {
 
     public static final String CLASSNAME = "i-select";
 

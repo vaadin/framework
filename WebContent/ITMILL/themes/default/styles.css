@@ -71,10 +71,10 @@
 	vertical-align: middle;
 }
 
-.i-error {
-	padding-left: 15px;
-	background: #fff;
-	border: 1px solid red;
+.i-errormessage {
+	padding: 7px;
+	background-color: #FFE0E0;
+	border: 1px solid #FFB0B0;
 }
 /* body tag created by servlet */
 .i-generated-body {
@@ -126,10 +126,36 @@
 	opacity: 0.3;
 	filter: Alpha(opacity=30);
 }
-
 .i-required-field-indicator {
 	padding-left:2px;
 	color: red;
+}
+
+/* Field modified & error */
+input.i-modified,
+.i-richtextarea.i-modified iframe.gwt-RichTextArea,
+.i-checkbox.i-modified,
+.i-modified .i-select-option,
+.i-modified .i-textfield,
+.i-modified .i-datefield-calendarpanel,
+.i-modified .i-select-select,
+.i-modified .i-select-twincol-selections,
+.i-modified .i-select-twincol-options,
+.i-modified .i-slider-base {
+	background-color: #FFFFE0;
+}
+
+input.i-error,
+.i-richtextarea.i-error iframe.gwt-RichTextArea,
+.i-checkbox.i-error,
+.i-error .i-select-option,
+.i-error .i-textfield,
+.i-error .i-datefield-calendarpanel,
+.i-error .i-select-select,
+.i-error .i-select-twincol-selections,
+.i-error .i-select-twincol-options,
+.i-error .i-slider-base {
+	background-color: #FFE0E0;
 }
 
 /**

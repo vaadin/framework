@@ -17,7 +17,7 @@ import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.Util;
 
-public class ISlider extends Widget implements Paintable,
+public class ISlider extends Widget implements Paintable, Field,
         ContainerResizedListener {
 
     public static final String CLASSNAME = "i-slider";

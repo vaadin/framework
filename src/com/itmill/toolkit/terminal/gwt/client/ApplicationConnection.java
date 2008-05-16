@@ -32,6 +32,7 @@ import com.google.gwt.user.client.ui.HasFocus;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ui.ContextMenu;
+import com.itmill.toolkit.terminal.gwt.client.ui.Field;
 import com.itmill.toolkit.terminal.gwt.client.ui.IView;
 import com.itmill.toolkit.terminal.gwt.client.ui.Notification;
 import com.itmill.toolkit.terminal.gwt.client.ui.Notification.HideEvent;
@@ -40,6 +41,8 @@ import com.itmill.toolkit.terminal.gwt.client.ui.Notification.HideEvent;
  * Entry point classes define <code>onModuleLoad()</code>.
  */
 public class ApplicationConnection {
+    public static final String MODIFIED_CLASSNAME = "i-modified";
+    public static final String ERROR_CLASSNAME = "i-error";
 
     public static final String VAR_RECORD_SEPARATOR = "\u001e";
 
@@ -555,6 +558,11 @@ public class ApplicationConnection {
 
     private void addVariableToQueue(String paintableId, String variableName,
             String encodedValue, boolean immediate, char type) {
+        Paintable p = getPaintable(paintableId);
+        if (p instanceof Widget && p instanceof Field) {
+            // Mark as modified if it's a Field
+            ((Widget) p).addStyleName(MODIFIED_CLASSNAME);
+        }
         final String id = paintableId + VAR_FIELD_SEPARATOR + variableName
                 + VAR_FIELD_SEPARATOR + type;
         for (int i = 1; i < pendingVariables.size(); i += 2) {
@@ -771,9 +779,21 @@ public class ApplicationConnection {
             }
         }
 
+        // add modified classname to Fields
+        if (component instanceof Field && uidl.hasAttribute("modified")) {
+            component.addStyleName(MODIFIED_CLASSNAME);
+        }
+        // add error classname to components w/ error
+        if (uidl.hasAttribute("error")) {
+            component.addStyleName(ERROR_CLASSNAME);
+        }
+
         if (usePaintableIdsInDOM) {
             DOM.setElementProperty(component.getElement(), "id", uidl.getId());
         }
+
+        // TODO this should really build one string with all the classnames
+        // and setStyleName() once
 
         return false;
     }

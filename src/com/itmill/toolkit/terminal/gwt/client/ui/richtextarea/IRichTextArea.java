@@ -14,6 +14,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
+import com.itmill.toolkit.terminal.gwt.client.ui.Field;
 
 /**
  * This class represents a basic text input field with one row.
@@ -21,7 +22,7 @@ import com.itmill.toolkit.terminal.gwt.client.UIDL;
  * @author IT Mill Ltd.
  * 
  */
-public class IRichTextArea extends Composite implements Paintable,
+public class IRichTextArea extends Composite implements Paintable, Field,
         ChangeListener, FocusListener {
 
     /**

@@ -16,7 +16,7 @@ import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
-public class IPopupCalendar extends ITextualDate implements Paintable,
+public class IPopupCalendar extends ITextualDate implements Paintable, Field,
         ClickListener, PopupListener {
 
     private final IButton calendarToggle;

@@ -17,7 +17,7 @@ import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
-abstract class IOptionGroupBase extends Composite implements Paintable,
+abstract class IOptionGroupBase extends Composite implements Paintable, Field,
         ClickListener, ChangeListener, KeyboardListener {
 
     public static final String CLASSNAME_OPTION = "i-select-option";

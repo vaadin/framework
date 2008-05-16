@@ -13,7 +13,7 @@ import com.itmill.toolkit.terminal.gwt.client.LocaleNotLoadedException;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
-public class IDateField extends FlowPanel implements Paintable {
+public class IDateField extends FlowPanel implements Paintable, Field {
 
     public static final String CLASSNAME = "i-datefield";
 

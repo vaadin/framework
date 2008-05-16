@@ -21,8 +21,8 @@
 	vertical-align: middle;
 }
 
-.i-error {
-	padding-left: 15px;
-	background: #fff;
-	border: 1px solid red;
+.i-errormessage {
+	padding: 7px;
+	background-color: #FFE0E0;
+	border: 1px solid #FFB0B0;
 }
