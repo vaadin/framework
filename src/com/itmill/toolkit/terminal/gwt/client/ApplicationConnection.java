@@ -314,14 +314,14 @@ public class ApplicationConnection {
                         DOM.appendChild(view.getElement(), loadElement);
                         ApplicationConnection.getConsole().log(
                                 "inserting load indicator");
+                        // Position
+                        DOM.setStyleAttribute(loadElement, "top", (view
+                                .getAbsoluteTop() + 6)
+                                + "px");
                     }
                     DOM.setElementProperty(loadElement, "className",
                             "i-loading-indicator");
                     DOM.setStyleAttribute(loadElement, "display", "block");
-                    // Position
-                    DOM.setStyleAttribute(loadElement, "top", (view
-                            .getAbsoluteTop() + 6)
-                            + "px");
                     DOM.setStyleAttribute(loadElement, "left", (view
                             .getAbsoluteLeft()
                             + view.getOffsetWidth()
