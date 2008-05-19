@@ -119,6 +119,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      */
     public Form() {
         this(null);
+        setValidationVisible(false);
     }
 
     /**
@@ -143,6 +144,8 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
         super();
         setLayout(formLayout);
         setFieldFactory(fieldFactory);
+        setValidationVisible(false);
+
     }
 
     /* Documented in interface */
@@ -163,6 +166,11 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
     public void commit() throws Buffered.SourceException {
 
         LinkedList problems = null;
+
+        // Only commit on valid state if so requested
+        if (!isInvalidCommitted() && !isValid()) {
+            return;
+        }
 
         // Try to commit all
         for (final Iterator i = propertyIds.iterator(); i.hasNext();) {
