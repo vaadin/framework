@@ -121,6 +121,7 @@ public class Caption extends HTML {
         } else {
             if (requiredFieldIndicator != null) {
                 DOM.removeChild(getElement(), requiredFieldIndicator);
+                requiredFieldIndicator = null;
             }
         }
 
