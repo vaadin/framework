@@ -123,6 +123,54 @@ public class BeanItem extends PropertysetItem {
     }
 
     /**
+     * <p>
+     * Creates a new instance of <code>BeanItem</code> and adds all listed
+     * properties of a Java Bean to it - in specified order. The properties are
+     * identified by their respective bean names.
+     * </p>
+     * 
+     * <p>
+     * Note : This version only supports introspectable bean properties and
+     * their getter and setter methods. Stand-alone <code>is</code> and
+     * <code>are</code> methods are not supported.
+     * </p>
+     * 
+     * @param bean
+     *                the Java Bean to copy properties from.
+     * @param propertyIds
+     *                ids of the properties.
+     */
+    public BeanItem(Object bean, String[] propertyIds) {
+        this.bean = bean;
+
+        // Try to introspect, if it fails, we just have an empty Item
+        try {
+            // Create bean information
+            final BeanInfo info = Introspector.getBeanInfo(bean.getClass());
+            final PropertyDescriptor[] pd = info.getPropertyDescriptors();
+
+            // Add all the bean properties as MethodProperties to this Item
+            for (int j = 0; j < propertyIds.length; j++) {
+                final Object id = propertyIds[j];
+                for (int i = 0; i < pd.length; i++) {
+                    final String name = pd[i].getName();
+                    if (name.equals(id)) {
+                        final Method getMethod = pd[i].getReadMethod();
+                        final Method setMethod = pd[i].getWriteMethod();
+                        final Class type = pd[i].getPropertyType();
+
+                        final Property p = new MethodProperty(type, bean,
+                                getMethod, setMethod);
+                        addItemProperty(name, p);
+                    }
+                }
+            }
+
+        } catch (final java.beans.IntrospectionException ignored) {
+        }
+    }
+
+    /**
      * Gets the underlying JavaBean object.
      * 
      * @return the bean object.
