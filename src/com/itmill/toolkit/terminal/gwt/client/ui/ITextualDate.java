@@ -19,6 +19,8 @@ import com.itmill.toolkit.terminal.gwt.client.Util;
 public class ITextualDate extends IDateField implements Paintable, Field,
         ChangeListener, ContainerResizedListener, Focusable {
 
+    private static final String ERROR_CLASSNAME = CLASSNAME + "-error";
+
     private final ITextField text;
 
     private String formatStr;
@@ -37,8 +39,6 @@ public class ITextualDate extends IDateField implements Paintable, Field,
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        // remove possibly added invalid value indication
-        removeStyleName("i-error");
 
         int origRes = currentResolution;
         super.updateFromUIDL(uidl, client);
@@ -97,7 +97,7 @@ public class ITextualDate extends IDateField implements Paintable, Field,
      * 
      */
     protected void buildDate() {
-        removeStyleName("i-error");
+        removeStyleName(ERROR_CLASSNAME);
         // Create the initial text for the textfield
         String dateText;
         if (date != null) {
@@ -124,10 +124,10 @@ public class ITextualDate extends IDateField implements Paintable, Field,
                     date = DateTimeFormat.getFormat(getFormatString()).parse(
                             text.getText());
                     // remove possibly added invalid value indication
-                    removeStyleName("i-error");
+                    removeStyleName(ERROR_CLASSNAME);
                 } catch (final Exception e) {
                     ApplicationConnection.getConsole().log(e.getMessage());
-                    addStyleName("i-error");
+                    addStyleName(ERROR_CLASSNAME);
                     client.updateVariable(id, "lastInvalidDateString", text
                             .getText(), false);
                     date = null;
@@ -135,7 +135,7 @@ public class ITextualDate extends IDateField implements Paintable, Field,
             } else {
                 date = null;
                 // remove possibly added invalid value indication
-                removeStyleName("i-error");
+                removeStyleName(ERROR_CLASSNAME);
             }
 
             // Update variables

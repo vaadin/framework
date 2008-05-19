@@ -104,6 +104,10 @@
 	border-top:1px solid transparent;
 }
 
+.i-view:active, .i-view:focus { 
+	outline: none;
+}
+
 .i-app input, 
 .i-window input, 
 .i-app select, 
@@ -142,6 +146,7 @@ input.i-modified,
 .i-modified .i-select-twincol-selections,
 .i-modified .i-select-twincol-options,
 .i-modified .i-slider-base {
+	background:transparent;
 	background-color: #FFFFE0;
 }
 
@@ -155,6 +160,7 @@ input.i-error,
 .i-error .i-select-twincol-selections,
 .i-error .i-select-twincol-options,
 .i-error .i-slider-base {
+	background:transparent;
 	background-color: #FFE0E0;
 }
 
@@ -409,6 +415,10 @@ input.i-error,
 	font-size: 10px;
 	padding: 0;
 	margin: 0;
+}
+
+.i-datefield-error .i-textfield {
+	background: #ff9999;
 }
 .i-expandlayout-lo-table {
 	margin:0;
@@ -1502,11 +1512,6 @@ input.i-error,
 .i-textfield-focus,
 .i-textarea-focus {
 	border-color: #5daee8;
-}
-
-.i-textfield-error,
-.i-textarea-error {
-	background: #ff9999;
 }
 
 .i-textfield.i-readonly,

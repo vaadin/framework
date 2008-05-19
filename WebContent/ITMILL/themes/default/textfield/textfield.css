@@ -27,11 +27,6 @@
 	border-color: #5daee8;
 }
 
-.i-textfield-error,
-.i-textarea-error {
-	background: #ff9999;
-}
-
 .i-textfield.i-readonly,
 .i-textarea.i-readonly {
 	background: transparent;

@@ -171,3 +171,7 @@
 	padding: 0;
 	margin: 0;
 }
+
+.i-datefield-error .i-textfield {
+	background: #ff9999;
+}
