@@ -11,8 +11,7 @@
 	height: 16px;
 	padding-right:13px;
 	display: inline;
-	background: transparent url(icons/16/error.png) no-repeat top right;
-	vertical-align: middle;
+	background: transparent url(../icons/16/error.png) no-repeat top right;
 }
 
 .i-caption .i-icon {
