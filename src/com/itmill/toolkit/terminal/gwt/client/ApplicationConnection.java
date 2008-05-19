@@ -558,11 +558,6 @@ public class ApplicationConnection {
 
     private void addVariableToQueue(String paintableId, String variableName,
             String encodedValue, boolean immediate, char type) {
-        Paintable p = getPaintable(paintableId);
-        if (p instanceof Widget && p instanceof Field) {
-            // Mark as modified if it's a Field
-            ((Widget) p).addStyleName(MODIFIED_CLASSNAME);
-        }
         final String id = paintableId + VAR_FIELD_SEPARATOR + variableName
                 + VAR_FIELD_SEPARATOR + type;
         for (int i = 1; i < pendingVariables.size(); i += 2) {
@@ -781,7 +776,7 @@ public class ApplicationConnection {
         }
 
         // add modified classname to Fields
-        if (component instanceof Field && uidl.hasAttribute("modified")) {
+        if (uidl.hasAttribute("modified") && component instanceof Field) {
             styleBuf.append(" ");
             styleBuf.append(MODIFIED_CLASSNAME);
         }
