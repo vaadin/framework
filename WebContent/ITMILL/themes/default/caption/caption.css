@@ -13,7 +13,13 @@
 	display: inline;
 	background: transparent url(../icons/16/error.png) no-repeat top right;
 }
-
+* html .i-errorindicator {
+	margin-left:-3px;
+}
+*+html .i-errorindicator {
+	margin-left:-3px;
+}
+	
 .i-caption .i-icon {
 	padding-right: 2px;
 	vertical-align: middle;
