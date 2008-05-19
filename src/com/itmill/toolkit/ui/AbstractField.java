@@ -110,6 +110,11 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      */
     private boolean required = false;
 
+    /**
+     * Is automatic validation enabled.
+     */
+    private boolean validationVisible = true;
+
     /* Component basics ************************************************ */
 
     /*
@@ -691,12 +696,14 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      */
     public ErrorMessage getErrorMessage() {
 
-        // Check validation errors
+        // Check validation errors only if automatic validation is enabled
         ErrorMessage validationError = null;
-        try {
-            validate();
-        } catch (Validator.InvalidValueException e) {
-            validationError = e;
+        if (isValidationVisible()) {
+            try {
+                validate();
+            } catch (Validator.InvalidValueException e) {
+                validationError = e;
+            }
         }
 
         // Check if there are any systems errors
@@ -974,6 +981,40 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     public void setRequired(boolean required) {
         this.required = required;
         requestRepaint();
+    }
+
+    /**
+     * Is automatic, visible validation enabled?
+     * 
+     * If automatic validation is enabled, any validators connected to this
+     * component are evaluated while painting the component and potential error
+     * messages are sent to client. If the automatic validation is turned off,
+     * isValid() and validate() methods still work, but one must show the
+     * validation in their own code.
+     * 
+     * @return True, if automatic validation is enabled.
+     */
+    public boolean isValidationVisible() {
+        return validationVisible;
+    }
+
+    /**
+     * Enable or disable automatic, visible validation.
+     * 
+     * If automatic validation is enabled, any validators connected to this
+     * component are evaluated while painting the component and potential error
+     * messages are sent to client. If the automatic validation is turned off,
+     * isValid() and validate() methods still work, but one must show the
+     * validation in their own code.
+     * 
+     * @param validateAutomatically
+     *                True, if automatic validation is enabled.
+     */
+    public void setValidationVisible(boolean validateAutomatically) {
+        if (validationVisible != validateAutomatically) {
+            requestRepaint();
+            validationVisible = validateAutomatically;
+        }
     }
 
 }
