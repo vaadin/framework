@@ -57,7 +57,7 @@ public class Caption extends HTML {
                 errorIndicatorElement = DOM.createDiv();
                 DOM.setElementProperty(errorIndicatorElement, "className",
                         "i-errorindicator");
-                DOM.insertChild(getElement(), errorIndicatorElement, 0);
+                DOM.appendChild(getElement(), errorIndicatorElement);
             }
             if (errorMessage == null) {
                 errorMessage = new ErrorMessage();
@@ -73,7 +73,7 @@ public class Caption extends HTML {
             if (icon == null) {
                 icon = new Icon(client);
 
-                DOM.appendChild(getElement(), icon.getElement());
+                DOM.insertChild(getElement(), icon.getElement(), 0);
             }
             icon.setUri(uidl.getStringAttribute("icon"));
             isEmpty = false;
@@ -88,7 +88,9 @@ public class Caption extends HTML {
         if (uidl.hasAttribute("caption")) {
             if (captionText == null) {
                 captionText = DOM.createSpan();
-                DOM.appendChild(getElement(), captionText);
+                DOM
+                        .insertChild(getElement(), captionText,
+                                icon == null ? 0 : 1);
             }
             String c = uidl.getStringAttribute("caption");
             if (c == null) {

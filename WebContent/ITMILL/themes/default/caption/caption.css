@@ -9,10 +9,9 @@
 .i-errorindicator {
 	width: 10px;
 	height: 16px;
-	padding-right:2px;
-	display: block;
-	float:left;
-	background: transparent url(../icons/16/error.png) no-repeat;
+	padding-right:13px;
+	display: inline;
+	background: transparent url(icons/16/error.png) no-repeat top right;
 	vertical-align: middle;
 }
 
