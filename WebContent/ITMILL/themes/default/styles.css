@@ -57,7 +57,7 @@
 }
 
 .i-errorindicator {
-	width: 16px;
+	width: 10px;
 	height: 16px;
 	padding-right:2px;
 	display: block;
@@ -67,7 +67,7 @@
 }
 
 .i-caption .i-icon {
-	padding-right:2px;
+	padding-right: 2px;
 	vertical-align: middle;
 }
 
