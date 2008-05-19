@@ -22,6 +22,10 @@
 }
 
 .i-errormessage {
+	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
+	color: #464f52;
+	font-size: 13px;
+	line-height: 18px;
 	padding: 7px;
 	background-color: #FFE0E0;
 	border: 1px solid #FFB0B0;
