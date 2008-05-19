@@ -14,7 +14,6 @@ import com.itmill.toolkit.data.Buffered;
 import com.itmill.toolkit.data.Item;
 import com.itmill.toolkit.data.Property;
 import com.itmill.toolkit.data.Validatable;
-import com.itmill.toolkit.data.Validator;
 import com.itmill.toolkit.data.Validator.InvalidValueException;
 import com.itmill.toolkit.data.util.BeanItem;
 import com.itmill.toolkit.terminal.PaintException;
@@ -95,11 +94,6 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * Field factory for this form.
      */
     private FieldFactory fieldFactory;
-
-    /**
-     * Registered Validators.
-     */
-    private LinkedList validators;
 
     /**
      * Visible item properties.
@@ -380,7 +374,9 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
             propertyIds.addLast(propertyId);
             field.setReadThrough(readThrough);
             field.setWriteThrough(writeThrough);
-
+            if (isImmediate() && field instanceof AbstractComponent) {
+                ((AbstractComponent) field).setImmediate(true);
+            }
             if (layout instanceof CustomLayout) {
                 ((CustomLayout) layout).addComponent(field, propertyId
                         .toString());
@@ -703,42 +699,6 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
     }
 
     /**
-     * Adds a new validator for this object.
-     * 
-     * @see com.itmill.toolkit.data.Validatable#addValidator(com.itmill.toolkit.data.Validator)
-     */
-    public void addValidator(Validator validator) {
-
-        if (validators == null) {
-            validators = new LinkedList();
-        }
-        validators.add(validator);
-    }
-
-    /**
-     * Removes a previously registered validator from the object.
-     * 
-     * @see com.itmill.toolkit.data.Validatable#removeValidator(com.itmill.toolkit.data.Validator)
-     */
-    public void removeValidator(Validator validator) {
-        if (validators != null) {
-            validators.remove(validator);
-        }
-    }
-
-    /**
-     * Gets the Lists all validators currently registered for the object.
-     * 
-     * @see com.itmill.toolkit.data.Validatable#getValidators()
-     */
-    public Collection getValidators() {
-        if (validators == null) {
-            validators = new LinkedList();
-        }
-        return validators;
-    }
-
-    /**
      * Tests the current value of the object against all registered validators
      * 
      * @see com.itmill.toolkit.data.Validatable#isValid()
@@ -748,7 +708,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
         for (final Iterator i = propertyIds.iterator(); i.hasNext();) {
             valid &= ((Field) fields.get(i.next())).isValid();
         }
-        return valid;
+        return valid && super.isValid();
     }
 
     /**
@@ -757,6 +717,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * @see com.itmill.toolkit.data.Validatable#validate()
      */
     public void validate() throws InvalidValueException {
+        super.validate();
         for (final Iterator i = propertyIds.iterator(); i.hasNext();) {
             ((Field) fields.get(i.next())).validate();
         }
@@ -939,6 +900,20 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
         super.setTabIndex(tabIndex);
         for (final Iterator i = getItemPropertyIds().iterator(); i.hasNext();) {
             (getField(i.next())).setTabIndex(tabIndex);
+        }
+    }
+
+    /**
+     * Setting the form to be immediate also sets all the fields of the form to
+     * the same state.
+     */
+    public void setImmediate(boolean immediate) {
+        super.setImmediate(immediate);
+        for (Iterator i = fields.values().iterator(); i.hasNext();) {
+            Field f = (Field) i.next();
+            if (f instanceof AbstractComponent) {
+                ((AbstractComponent) f).setImmediate(immediate);
+            }
         }
     }
 }
