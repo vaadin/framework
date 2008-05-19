@@ -355,6 +355,17 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
             showModalityCurtain();
         }
         super.show();
+        if (Util.isFF2()) {
+            // "missing cursor" browser bug workaround for FF2 in Windows and
+            // Linux
+            DeferredCommand.addCommand(new Command() {
+                public void execute() {
+                    String overflow = DOM.getStyleAttribute(getElement(),
+                            "overflow");
+                    DOM.setStyleAttribute(getElement(), "overflow", "auto");
+                }
+            });
+        }
     }
 
     public void hide() {
@@ -392,7 +403,6 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
     }
 
     private void showModalityCurtain() {
-        DOM.appendChild(RootPanel.getBodyElement(), modalityCurtain);
         if (Util.isFF2()) {
             DOM.setStyleAttribute(modalityCurtain, "height", DOM
                     .getElementPropertyInt(RootPanel.getBodyElement(),
@@ -400,6 +410,7 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
                     + "px");
             DOM.setStyleAttribute(modalityCurtain, "position", "absolute");
         }
+        DOM.appendChild(RootPanel.getBodyElement(), modalityCurtain);
     }
 
     private void hideModalityCurtain() {
