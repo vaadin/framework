@@ -45,3 +45,10 @@
 .i-richtextarea iframe {
 	border: 0;
 }
+
+.i-textarea-error,
+.i-textfield-error,
+.i-richtextarea-error iframe.gwt-RichTextArea {
+	background:transparent;
+	background-color: #FFE0E0;	
+}

@@ -17,3 +17,8 @@
 .i-button-link span {
 	text-decoration: underline;
 }
+
+.i-checkbox-error {
+	background:transparent;
+	background-color: #FFE0E0;
+}

@@ -41,8 +41,8 @@ import com.itmill.toolkit.terminal.gwt.client.ui.Notification.HideEvent;
  * Entry point classes define <code>onModuleLoad()</code>.
  */
 public class ApplicationConnection {
-    public static final String MODIFIED_CLASSNAME = "i-modified";
-    public static final String ERROR_CLASSNAME = "i-error";
+    private static final String MODIFIED_CLASSNAME = "i-modified";
+    private static final String ERROR_CLASSNAME_EXT = "-error";
 
     public static final String VAR_RECORD_SEPARATOR = "\u001e";
 
@@ -754,7 +754,7 @@ public class ApplicationConnection {
         }
 
         StringBuffer styleBuf = new StringBuffer();
-        String primaryName = component.getStylePrimaryName();
+        final String primaryName = component.getStylePrimaryName();
         styleBuf.append(primaryName);
 
         // first disabling and read-only status
@@ -783,7 +783,8 @@ public class ApplicationConnection {
         // add error classname to components w/ error
         if (uidl.hasAttribute("error")) {
             styleBuf.append(" ");
-            styleBuf.append(ERROR_CLASSNAME);
+            styleBuf.append(primaryName);
+            styleBuf.append(ERROR_CLASSNAME_EXT);
         }
 
         // Styles + disabled & readonly

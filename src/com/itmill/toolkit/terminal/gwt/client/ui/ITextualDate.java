@@ -19,7 +19,8 @@ import com.itmill.toolkit.terminal.gwt.client.Util;
 public class ITextualDate extends IDateField implements Paintable, Field,
         ChangeListener, ContainerResizedListener, Focusable {
 
-    private static final String ERROR_CLASSNAME = CLASSNAME + "-error";
+    private static final String PARSE_ERROR_CLASSNAME = CLASSNAME
+            + "-parseerror";
 
     private final ITextField text;
 
@@ -97,7 +98,7 @@ public class ITextualDate extends IDateField implements Paintable, Field,
      * 
      */
     protected void buildDate() {
-        removeStyleName(ERROR_CLASSNAME);
+        removeStyleName(PARSE_ERROR_CLASSNAME);
         // Create the initial text for the textfield
         String dateText;
         if (date != null) {
@@ -124,10 +125,10 @@ public class ITextualDate extends IDateField implements Paintable, Field,
                     date = DateTimeFormat.getFormat(getFormatString()).parse(
                             text.getText());
                     // remove possibly added invalid value indication
-                    removeStyleName(ERROR_CLASSNAME);
+                    removeStyleName(PARSE_ERROR_CLASSNAME);
                 } catch (final Exception e) {
                     ApplicationConnection.getConsole().log(e.getMessage());
-                    addStyleName(ERROR_CLASSNAME);
+                    addStyleName(PARSE_ERROR_CLASSNAME);
                     client.updateVariable(id, "lastInvalidDateString", text
                             .getText(), false);
                     date = null;
@@ -135,7 +136,7 @@ public class ITextualDate extends IDateField implements Paintable, Field,
             } else {
                 date = null;
                 // remove possibly added invalid value indication
-                removeStyleName(ERROR_CLASSNAME);
+                removeStyleName(PARSE_ERROR_CLASSNAME);
             }
 
             // Update variables

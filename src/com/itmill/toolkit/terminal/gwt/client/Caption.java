@@ -110,8 +110,10 @@ public class Caption extends HTML {
             if (captionText != null) {
                 DOM.setElementProperty(captionText, "title", uidl
                         .getStringAttribute("description"));
+                addStyleDependentName("hasdescription");
             } else {
                 setTitle(uidl.getStringAttribute("description"));
+                removeStyleDependentName("hasdescription");
             }
         }
 

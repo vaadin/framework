@@ -182,6 +182,22 @@
 	border-top: 1px solid #b6bbbc;
 }
 
+.i-filterselect-error {
+	background: transparent url(img/bg-left-filter-error.png) no-repeat;
+}
+
+.i-filterselect-error .i-filterselect-button {
+	background: transparent url(img/bg-right-filter-error.png);
+}
+
+.i-select-error .i-select-option,
+.i-select-error .i-select-select,
+.i-select-error .i-select-twincol-selections,
+.i-select-error .i-select-twincol-options {
+	background:transparent;
+	background-color: #FFE0E0;
+}
+
 /* IE specific styles */
 
 * html .i-filterselect {

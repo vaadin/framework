@@ -172,6 +172,12 @@
 	margin: 0;
 }
 
-.i-datefield-error .i-textfield {
+.i-datefield-error .i-textfield,
+.i-datefield-error .i-datefield-calendarpanel {
+	background:transparent;
+	background-color: #FFE0E0;
+}
+
+.i-datefield-rendererror .i-textfield {
 	background: #ff9999;
 }

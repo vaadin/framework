@@ -72,16 +72,12 @@ input.i-modified,
 	background-color: #FFFFE0;
 }
 
-input.i-error,
-.i-richtextarea.i-error iframe.gwt-RichTextArea,
-.i-checkbox.i-error,
-.i-error .i-select-option,
-.i-error .i-textfield,
-.i-error .i-datefield-calendarpanel,
-.i-error .i-select-select,
-.i-error .i-select-twincol-selections,
-.i-error .i-select-twincol-options,
-.i-error .i-slider-base {
+.i-checkbox-error,
+.i-select-error .i-select-option,
+.i-select-error .i-select-select,
+.i-select-error .i-select-twincol-selections,
+.i-select-error .i-select-twincol-options,
+.i-slider-error .i-slider-base {
 	background:transparent;
 	background-color: #FFE0E0;
 }

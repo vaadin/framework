@@ -1,0 +1,6 @@
+.i-formlayout-cell .i-errorindicator {
+	width: 10px;
+	height: 16px;
+	display: block;
+	background: transparent url(../icons/16/error.png) no-repeat top right;
+}
