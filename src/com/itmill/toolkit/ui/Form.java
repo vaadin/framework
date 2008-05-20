@@ -101,6 +101,17 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
     private Collection visibleItemProperties;
 
     /**
+     * Form needs to repaint itself if child fields value changes due possible
+     * change in form validity.
+     */
+    private ValueChangeListener fieldValueChangeListener = new ValueChangeListener() {
+        public void valueChange(
+                com.itmill.toolkit.data.Property.ValueChangeEvent event) {
+            requestRepaint();
+        }
+    };
+
+    /**
      * Contructs a new form with default layout.
      * 
      * <p>
@@ -371,6 +382,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
 
         if (propertyId != null && field != null) {
             fields.put(propertyId, field);
+            field.addListener(fieldValueChangeListener);
             propertyIds.addLast(propertyId);
             field.setReadThrough(readThrough);
             field.setWriteThrough(writeThrough);
@@ -441,6 +453,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
             propertyIds.remove(id);
             fields.remove(id);
             layout.removeComponent(field);
+            field.removeListener(fieldValueChangeListener);
             return true;
         }
 
@@ -674,6 +687,8 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
         // Replaces the old field with new one
         layout.replaceComponent(oldField, newField);
         fields.put(propertyId, newField);
+        newField.addListener(fieldValueChangeListener);
+        oldField.removeListener(fieldValueChangeListener);
 
         return newField;
     }
