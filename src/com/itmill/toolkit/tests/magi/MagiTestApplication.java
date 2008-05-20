@@ -106,9 +106,10 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
                     "alignment", "alignment/grid", "window", "window/opener",
                     "window/multiple", "classresource", "usererror",
                     "progress/window", "progress/thread", "progress",
-                    "customlayout", "spacing", "margin", "clientinfo"};
+                    "customlayout", "spacing", "margin", "clientinfo",
+                    "fillinform/templates"};
             for (int i = 0; i < examples.length; i++) {
-                main.addComponent(new Label("<a href='/tk5/testbench2/"
+                main.addComponent(new Label("<a href='/tk/testbench2/"
                         + examples[i] + "'>" + examples[i] + "</a>",
                         Label.CONTENT_XHTML));
             }
@@ -177,6 +178,8 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
             example_Margin(main, param);
         } else if (example.equals("clientinfo")) {
             example_ClientInfo(main, param);
+        } else if (example.equals("fillinform")) {
+            example_FillInForm(main, param);
         } else {
             ; // main.addComponent(new Label("Unknown test '"+example+"'."));
         }
@@ -403,12 +406,8 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
                 try {
                     // Validate the field value.
                     username.validate();
-
-                    // The value was ok, reset a possible error
-                    username.setComponentError(null);
                 } catch (final Validator.InvalidValueException e) {
-                    // The value was not ok. Set the error.
-                    username.setComponentError(new UserError(e.getMessage()));
+                    // The value was not ok. The error was set.
                 }
             }
         });
@@ -1149,5 +1148,32 @@ public class MagiTestApplication extends com.itmill.toolkit.Application {
         
         // Display the client identification string
         main.addComponent(new Label(browserApplication));
+    }
+
+    void example_FillInForm(final Window main, String param) {
+    	if (param.equals("templates")) {    	
+    		// Create a custom layout from the fill-in-form.html template.
+    		CustomLayout fillinlayout = new CustomLayout("fill-in-form");
+    	
+    		// The style will set the display to be "inline".
+    		fillinlayout.addStyleName("fillinlayout");
+    	
+    		// Create the fields that occur in the text.
+    		TextField field1 = new TextField();
+    		TextField field2 = new TextField();
+    		fillinlayout.addComponent(field1, "q1");
+    		fillinlayout.addComponent(field2, "q2");
+    	
+    		main.addComponent(fillinlayout);
+    	} else {
+    		String fillintext = "The <q1> is mightier than <q2>.";
+    		int pos = 0;
+    		while (pos < fillintext.length()) {
+    			int nexttag = fillintext.indexOf("<", pos);
+    			if (nexttag == -1) {
+    				
+    			}
+    		}
+    	}
     }
 }
