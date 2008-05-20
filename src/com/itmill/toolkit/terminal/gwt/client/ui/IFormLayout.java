@@ -27,6 +27,7 @@ public class IFormLayout extends FlexTable implements Container {
 
     HashMap componentToCaption = new HashMap();
     private ApplicationConnection client;
+    private HashMap componentToError = new HashMap();
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         this.client = client;
@@ -45,6 +46,11 @@ public class IFormLayout extends FlexTable implements Container {
                 c = new Caption(p, client);
                 componentToCaption.put(p, c);
             }
+            ErrorFlag error = (ErrorFlag) componentToError.get(p);
+            if (error == null) {
+                error = new ErrorFlag();
+                componentToError.put(p, error);
+            }
             final Paintable oldComponent = (Paintable) getWidget(i, 1);
             if (oldComponent == null) {
                 setWidget(i, 1, (Widget) p);
@@ -53,16 +59,13 @@ public class IFormLayout extends FlexTable implements Container {
                 setWidget(i, 1, (Widget) p);
             }
             setWidget(i, 0, c);
-            p.updateFromUIDL(childUidl, client);
 
             prepareCell(i, 2);
             getCellFormatter().setStyleName(i, 2, "i-formlayout-errorcell");
-            ErrorFlag error = (ErrorFlag) getWidget(i, 2);
-            if (error == null) {
-                error = new ErrorFlag();
-                setWidget(i, 2, error);
-            }
-            error.updateFromUIDL(childUidl);
+            setWidget(i, 2, error);
+
+            p.updateFromUIDL(childUidl, client);
+
         }
 
         while (getRowCount() > i) {
@@ -95,6 +98,10 @@ public class IFormLayout extends FlexTable implements Container {
         final Caption c = (Caption) componentToCaption.get(component);
         if (c != null) {
             c.updateCaption(uidl);
+        }
+        final ErrorFlag e = (ErrorFlag) componentToError.get(component);
+        if (e != null) {
+            e.updateFromUIDL(uidl);
         }
     }
 
