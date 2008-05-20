@@ -66,7 +66,7 @@ public class ValueInputExample extends CustomComponent {
 
         // DateFields
 
-        Date d = new Date(1998, 1, 22, 13, 14, 15);
+        Date d = new Date(98, 1, 22, 13, 14, 15);
 
         horiz = new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
         main.addComponent(horiz);
