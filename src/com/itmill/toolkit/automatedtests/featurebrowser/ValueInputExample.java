@@ -4,6 +4,8 @@
 
 package com.itmill.toolkit.automatedtests.featurebrowser;
 
+import java.util.Date;
+
 import com.itmill.toolkit.data.Property.ValueChangeEvent;
 import com.itmill.toolkit.ui.CustomComponent;
 import com.itmill.toolkit.ui.DateField;
@@ -63,6 +65,9 @@ public class ValueInputExample extends CustomComponent {
         right.addComponent(tf);
 
         // DateFields
+
+        Date d = new Date(1998, 1, 22, 13, 14, 15);
+
         horiz = new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
         main.addComponent(horiz);
         left = new Panel("DateField");
@@ -74,12 +79,14 @@ public class ValueInputExample extends CustomComponent {
         // default
         DateField df = new DateField("Day resolution");
         df.setDebugId("DayResolutionDateField");
+        df.setValue(d);
         df.addListener(listener);
         df.setImmediate(true);
         df.setResolution(DateField.RESOLUTION_DAY);
         left.addComponent(df);
         // minute
         df = new DateField("Minute resolution");
+        df.setValue(d);
         df.setDebugId("MinuteResolutionDateField");
         df.addListener(listener);
         df.setImmediate(true);
@@ -87,6 +94,7 @@ public class ValueInputExample extends CustomComponent {
         left.addComponent(df);
         // year
         df = new DateField("Year resolution");
+        df.setValue(d);
         df.setDebugId("YearResolutionDateField");
         df.addListener(listener);
         df.setImmediate(true);
@@ -94,6 +102,7 @@ public class ValueInputExample extends CustomComponent {
         left.addComponent(df);
         // msec
         df = new DateField("Millisecond resolution");
+        df.setValue(d);
         df.setDebugId("MillisecondResolutionDateField");
         df.addListener(listener);
         df.setImmediate(true);
@@ -101,6 +110,7 @@ public class ValueInputExample extends CustomComponent {
         left.addComponent(df);
         // Inline
         df = new InlineDateField();
+        df.setValue(d);
         df.setDebugId("InlineDateField");
         df.addListener(listener);
         df.setImmediate(true);
