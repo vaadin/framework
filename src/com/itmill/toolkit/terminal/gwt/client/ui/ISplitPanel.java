@@ -192,6 +192,9 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
         int wholeSize;
         int pixelPosition;
 
+        DOM.setStyleAttribute(firstContainer, "overflow", "hidden");
+        DOM.setStyleAttribute(secondContainer, "overflow", "hidden");
+
         switch (orientation) {
         case ORIENTATION_HORIZONTAL:
             wholeSize = DOM.getElementPropertyInt(wrapper, "clientWidth");
@@ -251,8 +254,6 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
 
         if (Util.isIE7()) {
             // Part I of IE7 weirdness hack, will be set to auto in layout phase
-            DOM.setStyleAttribute(firstContainer, "overflow", "hidden");
-            DOM.setStyleAttribute(secondContainer, "overflow", "hidden");
             Util.runDescendentsLayout(this);
             DeferredCommand.addCommand(new Command() {
                 public void execute() {
@@ -262,6 +263,8 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
             });
         } else {
             Util.runDescendentsLayout(this);
+            DOM.setStyleAttribute(firstContainer, "overflow", "auto");
+            DOM.setStyleAttribute(secondContainer, "overflow", "auto");
         }
 
     }
