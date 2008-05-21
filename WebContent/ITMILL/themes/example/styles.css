@@ -1,2 +1,7 @@
 @import url(../default/styles.css);
 
+.i-generated-body {
+	/* full height layout does not need scrollable body; 
+	avoids excess scrollbars if moving sub-window over the window area */
+	overflow:hidden;
+}
