@@ -322,11 +322,6 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
      */
     public void changeVariables(Object source, Map variables) {
 
-    	// TODO We really should call super instead, but this needs validating that AbstractSelect.changeVariables is correct. See ticket #
-		if (isReadThrough() || !isModified() || (getValidators() != null && !getValidators().isEmpty())) {
-			fireValueChange(false);
-		}
-
         // Selection change
         if (variables.containsKey("selected")) {
             final String[] ka = (String[]) variables.get("selected");

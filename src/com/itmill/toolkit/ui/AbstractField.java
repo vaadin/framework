@@ -56,7 +56,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     private boolean delayedFocus;
 
     /**
-     * Value of the datafield.
+     * Value of the abstract field.
      */
     private Object value;
 
@@ -863,9 +863,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
 
     public void changeVariables(Object source, Map variables) {
         super.changeVariables(source, variables);
-        if (validators != null && !validators.isEmpty()) {
-            requestRepaint();
-        }
+
     }
 
     /**
@@ -938,14 +936,18 @@ public abstract class AbstractField extends AbstractComponent implements Field,
 
     /**
      * Sets the internal field value. This is purely used by AbstractField to
-     * change the internal Field value. It does not trigger any events. It can
-     * be overriden by the inheriting classes to update all dependent variables.
+     * change the internal Field value. It does not trigger valuechange events.
+     * It can be overriden by the inheriting classes to update all dependent
+     * variables.
      * 
      * @param newValue
      *                the new value to be set.
      */
     protected void setInternalValue(Object newValue) {
         value = newValue;
+        if (validators != null && !validators.isEmpty()) {
+            requestRepaint();
+        }
     }
 
     /**
