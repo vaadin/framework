@@ -331,16 +331,18 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 
         final int optimalFirstRow = (int) (firstRowInViewPort - pageLength
                 * CACHE_RATE);
-        while (tBody.getLastRendered() > optimalFirstRow
+        boolean cont = true;
+        while (cont && tBody.getLastRendered() > optimalFirstRow
                 && tBody.getFirstRendered() < optimalFirstRow) {
             // client.console.log("removing row from start");
-            tBody.unlinkRow(true);
+            cont = tBody.unlinkRow(true);
         }
         final int optimalLastRow = (int) (firstRowInViewPort + pageLength + pageLength
                 * CACHE_RATE);
-        while (tBody.getLastRendered() > optimalLastRow) {
+        cont = true;
+        while (cont && tBody.getLastRendered() > optimalLastRow) {
             // client.console.log("removing row from the end");
-            tBody.unlinkRow(false);
+            cont = tBody.unlinkRow(false);
         }
         tBody.fixSpacers();
 
@@ -1769,9 +1771,12 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
             return renderedRows.iterator();
         }
 
-        public void unlinkRow(boolean fromBeginning) {
+        /**
+         * @return false if couldn't remove row
+         */
+        public boolean unlinkRow(boolean fromBeginning) {
             if (lastRendered - firstRendered < 0) {
-                return;
+                return false;
             }
             int index;
             if (fromBeginning) {
@@ -1788,6 +1793,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
             orphan(toBeRemoved);
             renderedRows.remove(index);
             fixSpacers();
+            return true;
         }
 
         public boolean remove(Widget w) {
