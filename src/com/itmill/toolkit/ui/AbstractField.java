@@ -554,6 +554,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
             validators = new LinkedList();
         }
         validators.add(validator);
+        requestRepaint();
     }
 
     /**
@@ -579,6 +580,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
         if (validators != null) {
             validators.remove(validator);
         }
+        requestRepaint();
     }
 
     /**
