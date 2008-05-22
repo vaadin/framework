@@ -198,8 +198,8 @@ public class SplitPanel extends AbstractLayout {
         final String position = pos + UNIT_SYMBOLS[posUnit];
 
         target.addAttribute("position", position);
-        
-        if(isLocked()) {
+
+        if (isLocked()) {
             target.addAttribute("locked", true);
         }
 
@@ -247,7 +247,7 @@ public class SplitPanel extends AbstractLayout {
         if (oldComponent == firstComponent) {
             setFirstComponent(newComponent);
         } else if (oldComponent == secondComponent) {
-            setSecondComponent(secondComponent);
+            setSecondComponent(newComponent);
         }
         requestRepaint();
     }
