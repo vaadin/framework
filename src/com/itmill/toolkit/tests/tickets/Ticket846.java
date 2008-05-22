@@ -45,6 +45,8 @@ public class Ticket846 extends Application {
             mainWin.addComponent(b);
         }
 
+        // tx.setIcon(new ThemeResource("icons/16/folder.png"));
+
         mainWin.addComponent(new Button("Validate integer",
                 new Button.ClickListener() {
                     public void buttonClick(
@@ -53,6 +55,10 @@ public class Ticket846 extends Application {
                                 + (tx.isValid() ? "" : "not ") + "valid");
                     };
                 }));
+        TextField caption = new TextField("Caption", new MethodProperty(tx,
+                "caption"));
+        caption.setImmediate(true);
+        mainWin.addComponent(caption);
     }
 
 }

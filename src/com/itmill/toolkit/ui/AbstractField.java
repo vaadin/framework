@@ -1037,7 +1037,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      * also treats empty string as "empty".
      */
     protected boolean isEmpty() {
-        return (value == null);
+        return (getValue() == null);
     }
 
     /**

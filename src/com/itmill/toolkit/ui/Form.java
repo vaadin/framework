@@ -14,6 +14,7 @@ import com.itmill.toolkit.data.Buffered;
 import com.itmill.toolkit.data.Item;
 import com.itmill.toolkit.data.Property;
 import com.itmill.toolkit.data.Validatable;
+import com.itmill.toolkit.data.Validator;
 import com.itmill.toolkit.data.Validator.InvalidValueException;
 import com.itmill.toolkit.data.util.BeanItem;
 import com.itmill.toolkit.terminal.PaintException;
@@ -104,7 +105,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * Form needs to repaint itself if child fields value changes due possible
      * change in form validity.
      */
-    private ValueChangeListener fieldValueChangeListener = new ValueChangeListener() {
+    private final ValueChangeListener fieldValueChangeListener = new ValueChangeListener() {
         public void valueChange(
                 com.itmill.toolkit.data.Property.ValueChangeEvent event) {
             requestRepaint();
@@ -931,4 +932,29 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
             }
         }
     }
+
+    /** Form is empty if all of its fields are empty. */
+    protected boolean isEmpty() {
+
+        for (Iterator i = fields.values().iterator(); i.hasNext();) {
+            Field f = (Field) i.next();
+            if (f instanceof AbstractField) {
+                if (!((AbstractField) f).isEmpty()) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Adding validators directly to form is not supported.
+     * 
+     * Add the validators to form fields instead.
+     */
+    public void addValidator(Validator validator) {
+        throw new UnsupportedOperationException();
+    }
+
 }

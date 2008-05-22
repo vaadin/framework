@@ -41,9 +41,10 @@ public class Ticket736 extends Application {
         // Add some validators for the form
         f.getField("zip").addValidator(new IsInteger());
         f.getField("state").addValidator(new IsValidState());
-        f.getField("name").addValidator(new IsNotEmpty());
-        f.getField("street").addValidator(new IsNotEmpty());
-        f.getField("city").addValidator(new IsNotEmpty());
+        f.getField("name").setRequired(true);
+        f.getField("street").setRequired(true);
+        f.getField("city").setRequired(true);
+        f.getField("zip").setRequired(true);
 
         // Debug form properties
         final Panel formProperties = new Panel("Form properties");
@@ -67,23 +68,6 @@ public class Ticket736 extends Application {
                         mainWin.showNotification(address.toString());
                     }
                 }));
-
-        final AddressValidator av = new AddressValidator();
-        mainWin.addComponent(new Button("Add addressvalidator",
-                new Button.ClickListener() {
-
-                    public void buttonClick(ClickEvent event) {
-                        f.addValidator(av);
-                    }
-                }));
-        mainWin.addComponent(new Button("Remove addressvalidator",
-                new Button.ClickListener() {
-
-                    public void buttonClick(ClickEvent event) {
-                        f.removeValidator(av);
-                    }
-                }));
-
     }
 
     /** Address pojo. */
@@ -170,33 +154,6 @@ public class Ticket736 extends Application {
         }
     }
 
-    class AddressValidator implements Validator {
-
-        public boolean isValid(Object value) {
-            if (!(value instanceof Address)) {
-                return false;
-            }
-            Address a = (Address) value;
-            if (a.getCity() == null || ("" + a.getCity()).length() < 1) {
-                return false;
-            }
-            if (a.getStreet() == null || ("" + a.getStreet()).length() < 1) {
-                return false;
-            }
-            if (a.getZip() == null || ("" + a.getZip()).length() < 5) {
-                return false;
-            }
-            return true;
-        }
-
-        public void validate(Object value) throws InvalidValueException {
-            if (!isValid(value)) {
-                throw new InvalidValueException(
-                        "Address should at least have street, zip and city set");
-            }
-        }
-    }
-
     /** Simple state validator */
     class IsValidState implements Validator {
 
@@ -217,24 +174,6 @@ public class Ticket736 extends Application {
             if (!isValid(value)) {
                 throw new InvalidValueException(
                         "State must be either two capital letter abreviation or left empty");
-            }
-        }
-    }
-
-    /** Simple non-empty validator */
-    class IsNotEmpty implements Validator {
-
-        public boolean isValid(Object value) {
-
-            if (value == null || "".equals("" + value)) {
-                return false;
-            }
-            return true;
-        }
-
-        public void validate(Object value) throws InvalidValueException {
-            if (!isValid(value)) {
-                throw new InvalidValueException("Must not be empty");
             }
         }
     }
