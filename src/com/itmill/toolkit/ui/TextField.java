@@ -213,8 +213,8 @@ public class TextField extends AbstractField {
      */
     public void changeVariables(Object source, Map variables) {
 
-    	super.changeVariables(source, variables);
-    	
+        super.changeVariables(source, variables);
+
         // Sets the text
         if (variables.containsKey("text") && !isReadOnly()) {
 
@@ -454,6 +454,10 @@ public class TextField extends AbstractField {
      */
     public void setFormat(Format format) {
         this.format = format;
+    }
+
+    protected boolean isEmpty() {
+        return super.isEmpty() || toString().length() == 0;
     }
 
 }

@@ -591,6 +591,16 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      */
     public boolean isValid() {
 
+        if (isRequired()) {
+            if (isEmpty()) {
+                return false;
+            }
+        } else {
+            if (isEmpty()) {
+                return true;
+            }
+        }
+
         if (validators == null) {
             return true;
         }
@@ -611,6 +621,16 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      * @see com.itmill.toolkit.data.Validatable#validate()
      */
     public void validate() throws Validator.InvalidValueException {
+
+        if (isRequired()) {
+            if (isEmpty()) {
+                throw new Validator.InvalidValueException("");
+            }
+        } else {
+            if (isEmpty()) {
+                return;
+            }
+        }
 
         // If there is no validator, there can not be any errors
         if (validators == null) {
@@ -698,13 +718,17 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      */
     public ErrorMessage getErrorMessage() {
 
-        // Check validation errors only if automatic validation is enabled
+        // Check validation errors only if automatic validation is enabled.
+        // As an exception, no validation messages are shown for empty
+        // required fields, as in those cases user is aware of the problem.
         ErrorMessage validationError = null;
         if (isValidationVisible()) {
-            try {
-                validate();
-            } catch (Validator.InvalidValueException e) {
-                validationError = e;
+            if (!(isRequired() && isEmpty())) {
+                try {
+                    validate();
+                } catch (Validator.InvalidValueException e) {
+                    validationError = e;
+                }
             }
         }
 
@@ -969,6 +993,16 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     /**
      * Is this field required. Required fields must filled by the user.
      * 
+     * If the field is required, it is visually indicated in the user interface.
+     * Furthermore, setting field to be required implicitly adds "non-empty"
+     * validator and thus isValid() == false or any isEmpty() fields. In those
+     * cases validation errors are not painted as it is obvious that the user
+     * must fill in the required fields.
+     * 
+     * On the other hand, for the non-required fields isValid() == true if the
+     * field isEmpty() regardless of any attached validators.
+     * 
+     * 
      * @return <code>true</code> if the field is required .otherwise
      *         <code>false</code>.
      */
@@ -979,12 +1013,31 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     /**
      * Sets the field required. Required fields must filled by the user.
      * 
+     * If the field is required, it is visually indicated in the user interface.
+     * Furthermore, setting field to be required implicitly adds "non-empty"
+     * validator and thus isValid() == false or any isEmpty() fields. In those
+     * cases validation errors are not painted as it is obvious that the user
+     * must fill in the required fields.
+     * 
+     * On the other hand, for the non-required fields isValid() == true if the
+     * field isEmpty() regardless of any attached validators.
+     * 
      * @param required
      *                Is the field required.
      */
     public void setRequired(boolean required) {
         this.required = required;
         requestRepaint();
+    }
+
+    /**
+     * Is the field empty?
+     * 
+     * In general, "empty" state is same as null. As an exception, TextField
+     * also treats empty string as "empty".
+     */
+    protected boolean isEmpty() {
+        return (value == null);
     }
 
     /**
