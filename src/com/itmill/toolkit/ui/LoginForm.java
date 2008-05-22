@@ -162,6 +162,8 @@ public class LoginForm extends CustomComponent {
      */
     public class LoginEvent extends Event {
 
+        private static final long serialVersionUID = 1966036438671224308L;
+
         private Map params;
 
         private LoginEvent(Map params) {
