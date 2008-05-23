@@ -263,20 +263,26 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     /* ********************************************************************* */
 
     /**
-     * Adds the new URI handler to this window.
+     * Adds the new URI handler to this window. For sub-windows, URI handlers
+     * are attached to root level window.
      * 
      * @param handler
      *                the URI handler to add.
      */
     public void addURIHandler(URIHandler handler) {
-        // TODO Subwindow support
-
-        if (uriHandlerList == null) {
-            uriHandlerList = new LinkedList();
-        }
-        synchronized (uriHandlerList) {
-            if (!uriHandlerList.contains(handler)) {
-                uriHandlerList.addLast(handler);
+        if (getParent() != null) {
+            // this is subwindow, attach to main level instead
+            // TODO hold internal list also and remove on detach
+            Window mainWindow = (Window) getParent();
+            mainWindow.addURIHandler(handler);
+        } else {
+            if (uriHandlerList == null) {
+                uriHandlerList = new LinkedList();
+            }
+            synchronized (uriHandlerList) {
+                if (!uriHandlerList.contains(handler)) {
+                    uriHandlerList.addLast(handler);
+                }
             }
         }
     }
@@ -288,15 +294,19 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      *                the URI handler to remove.
      */
     public void removeURIHandler(URIHandler handler) {
-        // TODO Subwindow support
-
-        if (handler == null || uriHandlerList == null) {
-            return;
-        }
-        synchronized (uriHandlerList) {
-            uriHandlerList.remove(handler);
-            if (uriHandlerList.isEmpty()) {
-                uriHandlerList = null;
+        if (getParent() != null) {
+            // this is subwindow
+            Window mainWindow = (Window) getParent();
+            mainWindow.removeURIHandler(handler);
+        } else {
+            if (handler == null || uriHandlerList == null) {
+                return;
+            }
+            synchronized (uriHandlerList) {
+                uriHandlerList.remove(handler);
+                if (uriHandlerList.isEmpty()) {
+                    uriHandlerList = null;
+                }
             }
         }
     }
@@ -308,7 +318,6 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * @param relativeUri
      */
     public DownloadStream handleURI(URL context, String relativeUri) {
-        // TODO Subwindow support
 
         DownloadStream result = null;
         if (uriHandlerList != null) {
@@ -335,21 +344,29 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     /* ********************************************************************* */
 
     /**
-     * Adds the new parameter handler to this window.
+     * Adds the new parameter handler to this window. For sub windows, parameter
+     * handlers are attached to parent windows.
      * 
      * @param handler
      *                the parameter handler to add.
      */
     public void addParameterHandler(ParameterHandler handler) {
-        // TODO Subwindow support
-        if (parameterHandlerList == null) {
-            parameterHandlerList = new LinkedList();
-        }
-        synchronized (parameterHandlerList) {
-            if (!parameterHandlerList.contains(handler)) {
-                parameterHandlerList.addLast(handler);
+        if (getParent() != null) {
+            // this is subwindow
+            // TODO hold internal list also and remove on detach
+            Window mainWindow = (Window) getParent();
+            mainWindow.addParameterHandler(handler);
+        } else {
+            if (parameterHandlerList == null) {
+                parameterHandlerList = new LinkedList();
+            }
+            synchronized (parameterHandlerList) {
+                if (!parameterHandlerList.contains(handler)) {
+                    parameterHandlerList.addLast(handler);
+                }
             }
         }
+
     }
 
     /**
@@ -359,14 +376,19 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      *                the parameter handler to remove.
      */
     public void removeParameterHandler(ParameterHandler handler) {
-        // TODO Subwindow support
-        if (handler == null || parameterHandlerList == null) {
-            return;
-        }
-        synchronized (parameterHandlerList) {
-            parameterHandlerList.remove(handler);
-            if (parameterHandlerList.isEmpty()) {
-                parameterHandlerList = null;
+        if (getParent() != null) {
+            // this is subwindow
+            Window mainWindow = (Window) getParent();
+            mainWindow.addParameterHandler(handler);
+        } else {
+            if (handler == null || parameterHandlerList == null) {
+                return;
+            }
+            synchronized (parameterHandlerList) {
+                parameterHandlerList.remove(handler);
+                if (parameterHandlerList.isEmpty()) {
+                    parameterHandlerList = null;
+                }
             }
         }
     }
