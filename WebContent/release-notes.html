@@ -33,7 +33,7 @@
   changes are possible, including API changes, before the stable release.
 </p>
 
-    <h2>Important API Changes</h2>
+    <h2>Important Changes</h2>
     
 <p>The <version></version> release if IT Mill Toolkit includes new features and a number
 of fixed problems. You should also notice the changes that cause backward incompatibility
@@ -67,15 +67,22 @@ page.</p>
   inherit this stylesheet</b> with the <tt>import</tt> command: <pre>@import
   "../default/styles.css";</pre></li>
 
+  <li>Google Web Toolkit (gwt) libraries have been updated to 1.4.62, giving improved
+  support for IE6. This <b>requires updating GWT libraries in classpath to the new
+  versions</b>, if (and only if) you are developing custom widgets. As a downside, the
+  Hosted Mode Browser of GWT 1.4.62 on Linux platform is based on Gecco 1.7, see #1636
+  below.</li>
+
   <li>The default theme for <b>TabSheet</b> has changed in a way that may cause
   incompatibility with custom styling. If you have problems, just ask on the <a
   href="http://forum.itmill.com/">forum</a>.</li>
 
   <li>Many bug fixes. See the ChangeLog below.</li>
 
-  <li>For up-to-date status of known problems, see the developer website <a href="http://dev.itmill.com/">dev.itmill.com</a>.</li>
-
 </ul>
+
+  <p>For up-to-date status of known problems, see the developer website <a href="http://dev.itmill.com/">dev.itmill.com</a>.</p>
+
     <h2>Important known problems in <version></version></h2>
 
 <ul>
@@ -96,6 +103,44 @@ page.</p>
 </ul>
 
 <p>For other known problems, see open tickets at developer site <a href="http://dev.itmill.com/">dev.itmill.com</a>.</p>
+
+    <h2>Requirements</h2>
+
+  <p>IT Mill Toolkit is available for the following operating systems:</p>
+
+  <ul>
+    <li>Windows (see the Zip installation notice above)</li>
+
+    <li>Linux</li>
+
+    <li>Mac OS X Tiger (mac) or Leopard (leopard)</li>
+
+    <li>Other UNIX operating systems such as Sun Solaris using the Linux installation package.</li>
+  </ul>
+
+  <p>IT Mill Toolkit supports the following browsers:</p>
+
+  <ul>
+    <li>Mozilla Firefox releases 1.5, 2, and 3 (see notice above about Gecco 1.7).</li>
+    <li>Internet Explorer releases 6, 7, and 8.</li>
+    <li>Safari 3</li>
+    <li>Opera 9</li>
+  </ul>
+
+  <p>There may be differences between the exact versions of the supported browsers that
+  may cause incompatibility with applications made with IT Mill Toolkit.</p>
+
+  <p>The following browsers are not supported but have been found to work to a large degree:</p>
+  <ul>
+    <li>Safari 2</li>
+    <li>iPhone</li>
+    <li>Galeon, Epiphany and other Gecco-based browsers (see notice about Gecco 1.7 above)</li>
+    <li>Nokia Internet Tablet N800 and N810 (ITOS 2008)</li>
+  </ul>
+
+  <p>Nokia E-series phones with at least 128MB of memory have been known to work with
+  older versions, but not with IT Mill Toolkit 5.2.0. Konqueror, the default browser in
+  many Linux distributions, is known to have limited usability.</p>
 
     <h2>ChangeLog Between IT Mill Toolkit 5.1.2 and 5.2.0</h2>
 
