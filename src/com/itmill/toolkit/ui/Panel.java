@@ -397,7 +397,8 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      * @see com.itmill.toolkit.ui.Component#attach()
      */
     public void attach() {
-        super.attach();
+        // can't call parent here as this is Panels hierarchy is a hack
+        requestRepaint();
         if (layout != null) {
             layout.attach();
         }
@@ -409,6 +410,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      * @see com.itmill.toolkit.ui.Component#detach()
      */
     public void detach() {
+        // can't call parent here as this is Panels hierarchy is a hack
         if (layout != null) {
             layout.detach();
         }
