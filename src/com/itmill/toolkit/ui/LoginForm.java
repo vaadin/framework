@@ -122,8 +122,11 @@ public class LoginForm extends CustomComponent {
         return (""
                 + "<html>"
                 + "<head><script type='text/javascript'>"
-                + "var setTarget = function() {document.forms[0]"
-                + ".action = top.location;document.forms[0].username.focus();};"
+                + "var setTarget = function() {"
+                + "var uri = top.location.href;"
+                + "uri = uri.replace(/\\\\?.*/, '');"
+                + "uri += /loginHandler;"
+                + ".action = uri;document.forms[0].username.focus();};"
                 + "</script>"
                 + "<link rel='stylesheet' href='"
                 + guessedThemeUri
@@ -154,6 +157,9 @@ public class LoginForm extends CustomComponent {
         // response is handled. (May happen if login handler removes login
         // form
         window = getWindow();
+        if (window.getParent() != null) {
+            window = (Window) window.getParent();
+        }
         super.detach();
     }
 
