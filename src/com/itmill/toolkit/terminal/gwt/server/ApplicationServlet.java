@@ -925,9 +925,11 @@ public class ApplicationServlet extends HttpServlet {
     private boolean isGecko17(HttpServletRequest request) {
         final WebBrowser browser = WebApplicationContext.getApplicationContext(
                 request.getSession()).getBrowser();
-        if (browser.getBrowserApplication().indexOf("rv:1.7.") > 0
-                && browser.getBrowserApplication().indexOf("Gecko") > 0) {
-            return true;
+        if (browser != null && browser.getBrowserApplication() != null) {
+            if (browser.getBrowserApplication().indexOf("rv:1.7.") > 0
+                    && browser.getBrowserApplication().indexOf("Gecko") > 0) {
+                return true;
+            }
         }
         return false;
     }
