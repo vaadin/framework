@@ -4,7 +4,10 @@ import com.itmill.toolkit.Application;
 import com.itmill.toolkit.data.Validator;
 import com.itmill.toolkit.data.util.BeanItem;
 import com.itmill.toolkit.data.util.MethodProperty;
+import com.itmill.toolkit.terminal.ThemeResource;
+import com.itmill.toolkit.ui.AbstractComponent;
 import com.itmill.toolkit.ui.Button;
+import com.itmill.toolkit.ui.ExpandLayout;
 import com.itmill.toolkit.ui.Form;
 import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Panel;
@@ -20,11 +23,15 @@ public class Ticket736 extends Application {
         final Window mainWin = new Window("Test app for #736");
         setMainWindow(mainWin);
 
+        mainWin.setTheme("example");
+
         // Create form for editing address
         final Form f = new Form();
         f.setItemDataSource(new BeanItem(address, new String[] { "name",
                 "street", "zip", "city", "state", "country" }));
         f.setCaption("Office address");
+        f.setIcon(new ThemeResource("../default/icons/16/document.png"));
+        f.setDescription("Jep jpe, this is form description.");
         mainWin.addComponent(f);
 
         // Select to use buffered mode for editing to enable commit and discard
@@ -32,14 +39,19 @@ public class Ticket736 extends Application {
         f.setReadThrough(false);
         Button commit = new Button("Commit", f, "commit");
         Button discard = new Button("Discard", f, "discard");
-        OrderedLayout ol = new OrderedLayout(
-                OrderedLayout.ORIENTATION_HORIZONTAL);
+        ExpandLayout ol = new ExpandLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
+        ol.setHeight("3em");
         ol.addComponent(commit);
+        ol.setComponentAlignment(commit, ExpandLayout.ALIGNMENT_RIGHT,
+                ExpandLayout.ALIGNMENT_TOP);
         ol.addComponent(discard);
-        mainWin.addComponent(ol);
+        f.setFooter(ol);
 
         // Add some validators for the form
         f.getField("zip").addValidator(new IsInteger());
+        f.getField("zip").setDescription("Jepjep");
+        ((AbstractComponent) f.getField("zip")).setIcon(new ThemeResource(
+                "../default/icons/16/folder.png"));
         f.getField("state").addValidator(new IsValidState());
         f.getField("name").setRequired(true);
         f.getField("street").setRequired(true);

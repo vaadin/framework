@@ -112,6 +112,8 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
         }
     };
 
+    private Layout formFooter;
+
     /**
      * Contructs a new form with default layout.
      * 
@@ -163,6 +165,9 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);
         layout.paint(target);
+        if (formFooter != null) {
+            formFooter.paint(target);
+        }
     }
 
     /*
@@ -955,6 +960,34 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      */
     public void addValidator(Validator validator) {
         throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Returns a layout that is rendered below normal form contents. This area
+     * can be used for example to include buttons related to form contents.
+     * 
+     * @return layout rendered below normal form contents.
+     */
+    public Layout getFooter() {
+        if (formFooter == null) {
+            formFooter = new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
+            setParent(formFooter);
+        }
+        return formFooter;
+    }
+
+    /**
+     * Sets the layout that is rendered below normal form contens.
+     * 
+     * @param newFormFooter
+     *                the new Layout
+     */
+    public void setFooter(Layout newFormFooter) {
+        if (formFooter != null) {
+            formFooter.setParent(null);
+        }
+        formFooter = newFormFooter;
+        formFooter.setParent(this);
     }
 
 }

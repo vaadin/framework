@@ -4,3 +4,17 @@
 	display: block;
 	background: transparent url(../icons/16/error.png) no-repeat top right;
 }
+.i-formlayout-captioncell {
+	text-align:right;
+}
+.i-form-errormessage {
+	background: transparent url(../icons/16/error.png) no-repeat top left;
+	padding-left: 20px;
+	margin-bottom: 5px;
+	margin-top: 5px;
+	min-height: 20px;
+}
+
+* html .i-form-errormessage {
+	height: 20px
+}

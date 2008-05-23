@@ -41,10 +41,10 @@ public class IFormLayout extends FlexTable implements Container {
             prepareCell(i, 1);
             final UIDL childUidl = (UIDL) it.next();
             final Paintable p = client.getPaintable(childUidl);
-            Caption c = (Caption) componentToCaption.get(p);
-            if (c == null) {
-                c = new Caption(p, client);
-                componentToCaption.put(p, c);
+            Caption caption = (Caption) componentToCaption.get(p);
+            if (caption == null) {
+                caption = new Caption(p, client);
+                componentToCaption.put(p, caption);
             }
             ErrorFlag error = (ErrorFlag) componentToError.get(p);
             if (error == null) {
@@ -52,17 +52,18 @@ public class IFormLayout extends FlexTable implements Container {
                 componentToError.put(p, error);
             }
             final Paintable oldComponent = (Paintable) getWidget(i, 1);
+            prepareCell(i, 2);
             if (oldComponent == null) {
-                setWidget(i, 1, (Widget) p);
+                setWidget(i, 2, (Widget) p);
             } else if (oldComponent != p) {
                 client.unregisterPaintable(oldComponent);
-                setWidget(i, 1, (Widget) p);
+                setWidget(i, 2, (Widget) p);
             }
-            setWidget(i, 0, c);
+            getCellFormatter().setStyleName(i, 0, "i-formlayout-captioncell");
+            setWidget(i, 0, caption);
 
-            prepareCell(i, 2);
-            getCellFormatter().setStyleName(i, 2, "i-formlayout-errorcell");
-            setWidget(i, 2, error);
+            getCellFormatter().setStyleName(i, 1, "i-formlayout-errorcell");
+            setWidget(i, 1, error);
 
             p.updateFromUIDL(childUidl, client);
 

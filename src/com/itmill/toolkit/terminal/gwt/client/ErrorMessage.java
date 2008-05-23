@@ -22,18 +22,22 @@ public class ErrorMessage extends FlowPanel {
 
     public void updateFromUIDL(UIDL uidl) {
         clear();
-        for (final Iterator it = uidl.getChildIterator(); it.hasNext();) {
-            final Object child = it.next();
-            if (child instanceof String) {
-                final String errorMessage = (String) child;
-                add(new HTML(errorMessage));
-            } else if (child instanceof UIDL.XML) {
-                final UIDL.XML xml = (UIDL.XML) child;
-                add(new HTML(xml.getXMLAsString()));
-            } else {
-                final ErrorMessage childError = new ErrorMessage();
-                add(childError);
-                childError.updateFromUIDL((UIDL) child);
+        if (uidl.getChildCount() == 0) {
+            add(new HTML(" "));
+        } else {
+            for (final Iterator it = uidl.getChildIterator(); it.hasNext();) {
+                final Object child = it.next();
+                if (child instanceof String) {
+                    final String errorMessage = (String) child;
+                    add(new HTML(errorMessage));
+                } else if (child instanceof UIDL.XML) {
+                    final UIDL.XML xml = (UIDL.XML) child;
+                    add(new HTML(xml.getXMLAsString()));
+                } else {
+                    final ErrorMessage childError = new ErrorMessage();
+                    add(childError);
+                    childError.updateFromUIDL((UIDL) child);
+                }
             }
         }
     }
