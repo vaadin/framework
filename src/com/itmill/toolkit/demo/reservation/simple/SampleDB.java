@@ -60,7 +60,7 @@ public class SampleDB {
     }
 
     // TODO -> param
-    private static final String DB_URL = "jdbc:hsqldb:file:reservation.db";
+    private static final String DB_URL = "jdbc:hsqldb:file:reservationsimple.db";
 
     private static final String CREATE_TABLE_RESOURCE = "CREATE TABLE "
             + Resource.TABLE + " (" + " " + Resource.PROPERTY_ID_ID
