@@ -12,10 +12,15 @@ import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
 public class IEmbedded extends HTML implements Paintable {
+    private static String CLASSNAME = "i-embedded";
 
     private String heigth;
     private String width;
     private Element browserElement;
+
+    public IEmbedded() {
+        setStyleName(CLASSNAME);
+    }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         if (client.updateComponent(this, uidl, true)) {
