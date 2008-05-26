@@ -58,8 +58,10 @@ public class IForm extends ComplexPanel implements Paintable,
             return;
         }
 
+        boolean legendEmpty = true;
         if (uidl.hasAttribute("caption")) {
             DOM.setInnerText(caption, uidl.getStringAttribute("caption"));
+            legendEmpty = false;
         } else {
             DOM.setInnerText(caption, "");
         }
@@ -69,10 +71,16 @@ public class IForm extends ComplexPanel implements Paintable,
                 DOM.insertChild(legend, icon.getElement(), 0);
             }
             icon.setUri(uidl.getStringAttribute("icon"));
+            legendEmpty = false;
         } else {
             if (icon != null) {
                 DOM.removeChild(legend, icon.getElement());
             }
+        }
+        if (legendEmpty) {
+            DOM.setStyleAttribute(legend, "display", "none");
+        } else {
+            DOM.setStyleAttribute(legend, "display", "");
         }
 
         if (uidl.hasAttribute("error")) {
