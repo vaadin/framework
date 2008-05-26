@@ -124,6 +124,8 @@ public class IForm extends ComplexPanel implements Paintable,
     public void iLayout() {
         // fix contained components container size as they may have relative
         // widths
+        DOM.setStyleAttribute(fieldContainer, "width", "");
+        DOM.setStyleAttribute(footerContainer, "width", "");
         int width = DOM.getElementPropertyInt(desc, "offsetWidth");
         DOM.setStyleAttribute(fieldContainer, "width", width + "px");
         DOM.setStyleAttribute(footerContainer, "width", width + "px");
