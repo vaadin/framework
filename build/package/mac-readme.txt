@@ -6,13 +6,10 @@ IT Mill Toolkit <version></version> Readme
 How to Start?
 -------------
 
-Just double-click start.sh in the installation directory. It will
+Start Terminal.app and run the start.sh script in the installation directory. It will
 start a web application at port 8888 on the local host and opens a web
 browser window to display the start page of IT Mill Toolkit Content
 Browser.
-
-If the start icon fails in your environment for some reason, another option is to open a
-shell window, change to the installation directory, and execute "sh start.sh".
 
 The installation directory is a web application as itself and is directly importable to
 Eclipse IDE by selecting "File / Import / Existing Projects into Workspace" from Eclipse
