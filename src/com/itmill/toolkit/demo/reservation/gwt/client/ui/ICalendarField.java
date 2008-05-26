@@ -133,7 +133,7 @@ public class ICalendarField extends IDateField {
                 d = entry.getEnd();
                 hours = (d.getDate() > date.getDate() ? 24 : d.getHours())
                         - start;
-                if (hours == 0) {
+                if (hours < 1) {
                     // We can't draw entries smaller than
                     // one
                     hours = 1;
@@ -245,8 +245,8 @@ public class ICalendarField extends IDateField {
             // TODO should remove+readd if the same entry (id) is
             // added again
 
-            for (final Date d = entry.getStart(); d.getYear() <= entry.getEnd()
-                    .getYear()
+            for (final Date d = new Date(entry.getStart().getTime()); d
+                    .getYear() <= entry.getEnd().getYear()
                     && d.getMonth() <= entry.getEnd().getYear()
                     && d.getDate() <= entry.getEnd().getDate(); d.setTime(d
                     .getTime() + 86400000)) {
