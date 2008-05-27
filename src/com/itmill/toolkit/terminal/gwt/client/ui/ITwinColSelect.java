@@ -190,7 +190,12 @@ public class ITwinColSelect extends IOptionGroupBase {
 
     public void setHeight(String height) {
         super.setHeight(height);
-        setFullHeightInternals();
+        if ("".equals(height)) {
+            options.setHeight("");
+            selections.setHeight("");
+        } else {
+            setFullHeightInternals();
+        }
     }
 
     private void setFullHeightInternals() {
