@@ -662,7 +662,11 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
             final ApplicationResource resource = (ApplicationResource) keyResourceMap
                     .get(key);
             if (resource != null) {
-                return resource.getStream();
+                DownloadStream stream = resource.getStream();
+                if (stream != null) {
+                    stream.setCacheTime(resource.getCacheTime());
+                    return stream;
+                }
             }
 
             // Resource requests override uri handling
