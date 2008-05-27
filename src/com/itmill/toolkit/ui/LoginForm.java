@@ -45,7 +45,7 @@ public class LoginForm extends CustomComponent {
         }
 
         public long getCacheTime() {
-            return 0;
+            return -1;
         }
 
         public String getFilename() {
@@ -53,8 +53,11 @@ public class LoginForm extends CustomComponent {
         }
 
         public DownloadStream getStream() {
-            return new DownloadStream(new ByteArrayInputStream(getLoginHTML()),
-                    getMIMEType(), getFilename());
+            DownloadStream downloadStream = new DownloadStream(
+                    new ByteArrayInputStream(getLoginHTML()), getMIMEType(),
+                    getFilename());
+            downloadStream.setCacheTime(getCacheTime());
+            return downloadStream;
         }
 
         public String getMIMEType() {
