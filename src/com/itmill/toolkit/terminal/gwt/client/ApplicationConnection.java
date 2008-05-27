@@ -181,10 +181,11 @@ public class ApplicationConnection {
     }-*/;
 
     /**
-     * Publishes functions for use from javascript.
+     * Publishes a JavaScript API for mash-up applications.
      * <ul>
      * <li><code>itmill.forceSync()</code> sends pending variable changes, in
-     * effect synchronizing the server and client state.</li>
+     * effect synchronizing the server and client state. This is done for all
+     * applications on host page.</li>
      * </ul>
      * 
      * TODO make this multi-app aware
@@ -192,7 +193,14 @@ public class ApplicationConnection {
     private native void initializeClientHooks()
     /*-{
         var app = this;
+        var oldSync;
+        if($wnd.itmill.forceSync) {
+            oldSync = $wnd.itmill.forceSync;
+        }
         $wnd.itmill.forceSync = function() {
+            if(oldSync) {
+                oldSync();
+            }
             app.@com.itmill.toolkit.terminal.gwt.client.ApplicationConnection::sendPendingVariableChanges()();
         }
     }-*/;
