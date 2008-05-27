@@ -794,7 +794,8 @@ public class ApplicationServlet extends HttpServlet {
                 writeTestingToolsScripts(page, request);
             }
 
-            page.write("\n</head>\n<body class=\"i-generated-body\">\n");
+            page
+                    .write("\n</head>\n<body scroll=\"auto\" class=\"i-generated-body\">\n");
         }
 
         String appId = appUrl;
