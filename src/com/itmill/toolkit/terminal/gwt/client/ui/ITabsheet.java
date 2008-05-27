@@ -164,6 +164,7 @@ public class ITabsheet extends ITabsheetBase implements
     protected void selectTab(int index, final UIDL contentUidl) {
         if (index != activeTabIndex) {
             activeTabIndex = index;
+            tb.selectTab(activeTabIndex);
         }
         renderContent(contentUidl);
     }
