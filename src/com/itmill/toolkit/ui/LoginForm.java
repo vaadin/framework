@@ -49,15 +49,12 @@ public class LoginForm extends CustomComponent {
         }
 
         public String getFilename() {
-            return "login.html";
+            return "login";
         }
 
         public DownloadStream getStream() {
-            DownloadStream downloadStream = new DownloadStream(
-                    new ByteArrayInputStream(getLoginHTML()), getMIMEType(),
-                    getFilename());
-            downloadStream.setCacheTime(getCacheTime());
-            return downloadStream;
+            return new DownloadStream(new ByteArrayInputStream(getLoginHTML()),
+                    getMIMEType(), getFilename());
         }
 
         public String getMIMEType() {
@@ -93,8 +90,11 @@ public class LoginForm extends CustomComponent {
             if (window != null) {
                 window.removeURIHandler(this);
             }
-            return new DownloadStream(new ByteArrayInputStream(responce
-                    .getBytes()), "text/html", "loginSuccesfull.html");
+            DownloadStream downloadStream = new DownloadStream(
+                    new ByteArrayInputStream(responce.getBytes()), "text/html",
+                    "loginSuccesfull");
+            downloadStream.setCacheTime(-1);
+            return downloadStream;
         }
     };
 
