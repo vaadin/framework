@@ -252,7 +252,8 @@ input.i-modified,
 .i-loading-indicator-wait {
 	background: transparent url(common/img/loading-indicator-wait.gif);
 }
-.i-datefield .i-button {
+.i-datefield-button {
+	font-size:13px;
 	width: 22px;
 	height: 25px;
 	padding: 0;

@@ -7,6 +7,7 @@ package com.itmill.toolkit.terminal.gwt.client.ui;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.PopupListener;
 import com.google.gwt.user.client.ui.PopupPanel;
@@ -19,7 +20,7 @@ import com.itmill.toolkit.terminal.gwt.client.UIDL;
 public class IPopupCalendar extends ITextualDate implements Paintable, Field,
         ClickListener, PopupListener {
 
-    private final IButton calendarToggle;
+    private final Button calendarToggle;
 
     private final CalendarPanel calendar;
 
@@ -29,7 +30,8 @@ public class IPopupCalendar extends ITextualDate implements Paintable, Field,
     public IPopupCalendar() {
         super();
 
-        calendarToggle = new IButton();
+        calendarToggle = new Button();
+        calendarToggle.setStyleName(CLASSNAME + "-button");
         calendarToggle.setText("...");
         calendarToggle.addClickListener(this);
         add(calendarToggle);
