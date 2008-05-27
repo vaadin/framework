@@ -296,8 +296,8 @@ public class IFilterSelect extends Composite implements Paintable, Field,
 
             if (offsetHeight + getPopupTop() > Window.getClientHeight()
                     + Window.getScrollTop()) {
-                top = Window.getClientHeight() + Window.getScrollTop()
-                        - offsetHeight - EXTRASPACE
+                // popup on top of input instead
+                top = getPopupTop() - offsetHeight
                         - IFilterSelect.this.getOffsetHeight();
                 if (top < 0) {
                     top = 0;
