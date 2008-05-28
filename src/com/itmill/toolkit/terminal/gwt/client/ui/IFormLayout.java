@@ -51,8 +51,8 @@ public class IFormLayout extends FlexTable implements Container {
                 error = new ErrorFlag();
                 componentToError.put(p, error);
             }
-            final Paintable oldComponent = (Paintable) getWidget(i, 1);
             prepareCell(i, 2);
+            final Paintable oldComponent = (Paintable) getWidget(i, 2);
             if (oldComponent == null) {
                 setWidget(i, 2, (Widget) p);
             } else if (oldComponent != p) {
