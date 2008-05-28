@@ -32,7 +32,20 @@ public class IEmbedded extends HTML implements Paintable {
         if (uidl.hasAttribute("type")) {
             final String type = uidl.getStringAttribute("type");
             if (type.equals("image")) {
-                setHTML("<img src=\"" + getSrc(uidl, client) + "\"/>");
+                String w = uidl.getStringAttribute("width");
+                if (w != null) {
+                    w = " width=\"" + w + "\" ";
+                } else {
+                    w = "";
+                }
+                String h = uidl.getStringAttribute("height");
+                if (h != null) {
+                    h = " height=\"" + h + "\" ";
+                } else {
+                    h = "";
+                }
+                setHTML("<img src=\"" + getSrc(uidl, client) + "\"" + w + h
+                        + "/>");
             } else if (type.equals("browser")) {
                 if (browserElement == null) {
                     setHTML("<iframe width=\"100%\" height=\"100%\" frameborder=\"0\" src=\""
