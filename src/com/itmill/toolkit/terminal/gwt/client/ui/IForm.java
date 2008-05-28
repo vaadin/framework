@@ -101,8 +101,14 @@ public class IForm extends ComplexPanel implements Paintable,
         iLayout();
 
         final UIDL layoutUidl = uidl.getChildUIDL(0);
+        Container newLo = (Container) client.getPaintable(layoutUidl);
         if (lo == null) {
-            lo = (Container) client.getPaintable(layoutUidl);
+            lo = newLo;
+            add((Widget) lo, fieldContainer);
+        } else if (lo != newLo) {
+            client.unregisterPaintable(lo);
+            remove((Widget) lo);
+            lo = newLo;
             add((Widget) lo, fieldContainer);
         }
         lo.updateFromUIDL(layoutUidl, client);
