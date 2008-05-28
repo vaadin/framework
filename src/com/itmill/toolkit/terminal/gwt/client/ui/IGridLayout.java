@@ -8,9 +8,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
+import com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConstant;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.CaptionWrapper;
 import com.itmill.toolkit.terminal.gwt.client.Container;
@@ -46,6 +50,9 @@ public class IGridLayout extends FlexTable implements Paintable, Container {
         }
         clear();
 
+        final int[] alignments = uidl.getIntArrayAttribute("alignments");
+        int alignmentIndex = 0;
+
         for (final Iterator i = uidl.getChildIterator(); i.hasNext();) {
             final UIDL r = (UIDL) i.next();
             if ("gr".equals(r.getTag())) {
@@ -62,9 +69,29 @@ public class IGridLayout extends FlexTable implements Paintable, Container {
                         } else {
                             w = 1;
                         }
-                        // TODO do real alignments
-                        (getRowFormatter()).setVerticalAlign(row,
-                                HasVerticalAlignment.ALIGN_TOP);
+                        AlignmentInfo alignmentInfo = new AlignmentInfo(
+                                alignments[alignmentIndex++]);
+
+                        VerticalAlignmentConstant va;
+                        if (alignmentInfo.isBottom()) {
+                            va = HasVerticalAlignment.ALIGN_BOTTOM;
+                        } else if (alignmentInfo.isTop()) {
+                            va = HasVerticalAlignment.ALIGN_TOP;
+                        } else {
+                            va = HasVerticalAlignment.ALIGN_MIDDLE;
+                        }
+
+                        HorizontalAlignmentConstant ha;
+
+                        if (alignmentInfo.isLeft()) {
+                            ha = HasHorizontalAlignment.ALIGN_LEFT;
+                        } else if (alignmentInfo.isHorizontalCenter()) {
+                            ha = HasHorizontalAlignment.ALIGN_CENTER;
+                        } else {
+                            ha = HasHorizontalAlignment.ALIGN_RIGHT;
+                        }
+
+                        getCellFormatter().setAlignment(row, column, ha, va);
 
                         // set col span
                         ((FlexCellFormatter) getCellFormatter()).setColSpan(
@@ -94,6 +121,9 @@ public class IGridLayout extends FlexTable implements Paintable, Container {
                             }
 
                             setWidget(row, column, wr);
+
+                            DOM.setStyleAttribute(wr.getElement(), "textAlign",
+                                    alignmentInfo.getHorizontalAlignment());
 
                             if (!u.getBooleanAttribute("cached")) {
                                 child.updateFromUIDL(u, client);
