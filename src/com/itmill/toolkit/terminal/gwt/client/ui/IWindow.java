@@ -478,6 +478,7 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
             origW = getWidget().getOffsetWidth();
             origH = getWidget().getOffsetHeight();
             DOM.setCapture(getElement());
+            DOM.eventPreventDefault(event);
             break;
         case Event.ONMOUSEUP:
             resizing = false;
