@@ -79,8 +79,6 @@ public class ApplicationConnection {
      */
     private boolean usePaintableIdsInDOM = false;
 
-    private Request uidlRequest;
-
     /**
      * Contains reference for client wrapper given to Testing Tools.
      * 
@@ -221,7 +219,7 @@ public class ApplicationConnection {
     };
 
     public boolean hasActiveRequest() {
-        return uidlRequest.isPending();
+        return (activeRequests > 0);
     }
 
     private void makeUidlRequest(String requestData) {
@@ -233,10 +231,11 @@ public class ApplicationConnection {
         rb.setHeader("Content-Type",
                 "application/x-www-form-urlencoded; charset=utf-8");
         try {
-            uidlRequest = rb.sendRequest(requestData, new RequestCallback() {
+            rb.sendRequest(requestData, new RequestCallback() {
                 public void onError(Request request, Throwable exception) {
                     // TODO Better reporting to user
                     console.error("Got error");
+                    endRequest();
                 }
 
                 public void onResponseReceived(Request request,
@@ -249,6 +248,7 @@ public class ApplicationConnection {
         } catch (final RequestException e) {
             // TODO Better reporting to user
             console.error(e.getMessage());
+            endRequest();
         }
     }
 
