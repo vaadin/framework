@@ -5,6 +5,7 @@
 package com.itmill.toolkit.automatedtests.util;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Random;
 
 import com.itmill.toolkit.automatedtests.ComponentsInTable;
@@ -15,7 +16,6 @@ import com.itmill.toolkit.demo.featurebrowser.ButtonExample;
 import com.itmill.toolkit.demo.featurebrowser.ClientCachingExample;
 import com.itmill.toolkit.demo.featurebrowser.ComboBoxExample;
 import com.itmill.toolkit.demo.featurebrowser.EmbeddedBrowserExample;
-import com.itmill.toolkit.demo.featurebrowser.JavaScriptAPIExample;
 import com.itmill.toolkit.demo.featurebrowser.LabelExample;
 import com.itmill.toolkit.demo.featurebrowser.LayoutExample;
 import com.itmill.toolkit.demo.featurebrowser.NotificationExample;
@@ -44,6 +44,8 @@ import com.itmill.toolkit.ui.TextField;
 public class RandomComponents {
 
     private Random rand = null;
+
+    private static Date date = new Date(2002, 2, 3, 4, 5, 6);
 
     public RandomComponents() {
         // Always use the same seed, used to ensure deterministic behaviour
@@ -181,14 +183,14 @@ public class RandomComponents {
             // Datefield
             result = new DateField();
             ((DateField) result).setStyleName("calendar");
-            ((DateField) result).setValue(new java.util.Date());
+            ((DateField) result).setValue(date);
             result.setCaption("Calendar component " + caption);
             result.setDebugId(result.getCaption());
             break;
         case 7:
             // Datefield
             result = new DateField();
-            ((DateField) result).setValue(new java.util.Date());
+            ((DateField) result).setValue(date);
             result.setCaption("Calendar component " + caption);
             result.setDebugId(result.getCaption());
             break;
@@ -210,7 +212,7 @@ public class RandomComponents {
             break;
         case 12:
             result = new OrderedLayout();
-            ((OrderedLayout) result).addComponent(new JavaScriptAPIExample());
+            ((OrderedLayout) result).addComponent(new EmbeddedBrowserExample());
             break;
         case 13:
             result = new OrderedLayout();
