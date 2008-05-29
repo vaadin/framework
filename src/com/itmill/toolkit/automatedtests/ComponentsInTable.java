@@ -5,6 +5,7 @@
 package com.itmill.toolkit.automatedtests;
 
 import java.util.Date;
+import java.util.Random;
 import java.util.Vector;
 
 import com.itmill.toolkit.ui.Button;
@@ -14,6 +15,8 @@ import com.itmill.toolkit.ui.Table;
 import com.itmill.toolkit.ui.Button.ClickEvent;
 
 public class ComponentsInTable extends CustomComponent {
+
+    static final Random rnd = new Random(1);
 
     public ComponentsInTable(int cols, int rows) {
         final OrderedLayout main = new OrderedLayout();
@@ -68,7 +71,7 @@ public class ComponentsInTable extends CustomComponent {
             "Cody", "Alejandro", "Caden", "Blake", "Carson" };
 
     public static String rndString() {
-        return testString[(int) (Math.random() * testString.length)];
+        return testString[(int) (rnd.nextDouble() * testString.length)];
     }
 
 }
