@@ -2,7 +2,7 @@
 @ITMillApache2LicenseForJavaFiles@
  */
 
-package com.itmill.toolkit.tests.magi;
+package com.itmill.toolkit.tests.book;
 
 import com.itmill.toolkit.data.Property;
 import com.itmill.toolkit.data.Property.ValueChangeEvent;

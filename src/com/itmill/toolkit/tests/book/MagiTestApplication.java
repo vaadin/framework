@@ -2,7 +2,7 @@
 @ITMillApache2LicenseForJavaFiles@
  */
 
-package com.itmill.toolkit.tests.magi;
+package com.itmill.toolkit.tests.book;
 
 import java.net.URL;
 import java.util.Iterator;

@@ -1,4 +1,4 @@
-package com.itmill.toolkit.tests.magi;
+package com.itmill.toolkit.tests.book;
 
 import java.util.*;
 import com.itmill.toolkit.Application;
