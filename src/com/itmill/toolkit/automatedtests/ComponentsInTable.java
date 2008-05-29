@@ -16,8 +16,6 @@ import com.itmill.toolkit.ui.Button.ClickEvent;
 
 public class ComponentsInTable extends CustomComponent {
 
-    static final Random rnd = new Random(1);
-
     public ComponentsInTable(int cols, int rows) {
         final OrderedLayout main = new OrderedLayout();
         setCompositionRoot(main);
@@ -26,6 +24,8 @@ public class ComponentsInTable extends CustomComponent {
     }
 
     public static Table getTestTable(int cols, int rows) {
+        Random rnd = new Random(1);
+
         final Table t = new Table();
         t.setColumnCollapsingAllowed(true);
         for (int i = 0; i < cols; i++) {
@@ -35,7 +35,7 @@ public class ComponentsInTable extends CustomComponent {
         for (int i = 0; i < rows; i++) {
             final Vector content = new Vector();
             for (int j = 0; j < cols; j++) {
-                content.add(rndString());
+                content.add(rndString(rnd));
             }
             content.add(new Button("b" + i, new Button.ClickListener() {
 
@@ -70,7 +70,7 @@ public class ComponentsInTable extends CustomComponent {
             "Jesse", "Devin", "Seth", "Antonio", "Richard", "Miguel", "Colin",
             "Cody", "Alejandro", "Caden", "Blake", "Carson" };
 
-    public static String rndString() {
+    public static String rndString(Random rnd) {
         return testString[(int) (rnd.nextDouble() * testString.length)];
     }
 
