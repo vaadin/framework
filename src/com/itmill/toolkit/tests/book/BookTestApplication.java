@@ -46,7 +46,7 @@ import com.itmill.toolkit.ui.Tree;
 import com.itmill.toolkit.ui.Window;
 import com.itmill.toolkit.ui.Button.ClickEvent;
 
-public class MagiTestApplication extends com.itmill.toolkit.Application {
+public class BookTestApplication extends com.itmill.toolkit.Application {
     Window main = new Window("Application window");
 
     TheButton butts1;

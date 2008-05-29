@@ -371,11 +371,11 @@
   </servlet>
 
   <servlet>
-    <servlet-name>MagiTestServlet</servlet-name>
+    <servlet-name>BookTestServlet</servlet-name>
     <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
     <init-param>
       <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.tests.magi.MagiTestApplication</param-value>
+      <param-value>com.itmill.toolkit.tests.book.BookTestApplication</param-value>
     </init-param>
   </servlet>
 
@@ -384,7 +384,7 @@
     <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
     <init-param>
       <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.tests.magi.WindowTestApplication</param-value>
+      <param-value>com.itmill.toolkit.tests.book.WindowTestApplication</param-value>
     </init-param>
   </servlet>
 
@@ -393,7 +393,7 @@
     <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
     <init-param>
       <param-name>application</param-name>
-      <param-value>com.itmill.toolkit.tests.magi.ChatApplication</param-value>
+      <param-value>com.itmill.toolkit.tests.book.ChatApplication</param-value>
     </init-param>
   </servlet>
 
@@ -604,8 +604,8 @@
   </servlet-mapping>
 
   <servlet-mapping>
-    <servlet-name>MagiTestServlet</servlet-name>
-    <url-pattern>/testbench2/*</url-pattern>
+    <servlet-name>BookTestServlet</servlet-name>
+    <url-pattern>/book/*</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
