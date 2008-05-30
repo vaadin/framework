@@ -12,6 +12,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -33,6 +34,7 @@ import javax.servlet.http.HttpSession;
 import org.xml.sax.SAXException;
 
 import com.itmill.toolkit.Application;
+import com.itmill.toolkit.Application.SystemMessages;
 import com.itmill.toolkit.external.org.apache.commons.fileupload.servlet.ServletFileUpload;
 import com.itmill.toolkit.service.FileTypeResolver;
 import com.itmill.toolkit.terminal.DownloadStream;
@@ -502,16 +504,7 @@ public class ApplicationServlet extends HttpServlet {
 
         } catch (final SessionExpired e) {
             // Session has expired, notify user
-            Application.SystemMessages ci = Application.getSystemMessages();
-            try {
-                Method m = applicationClass
-                        .getMethod("getSystemMessages", null);
-                ci = (Application.SystemMessages) m.invoke(null, null);
-            } catch (Exception e2) {
-                // Not critical, but something is still wrong; print stacktrace
-                e2.printStackTrace();
-            }
-
+            Application.SystemMessages ci = getSystemMessages();
             if (!UIDLrequest) {
                 // 'plain' http req - e.g. browser reload;
                 // just go ahead redirect the browser
@@ -527,16 +520,7 @@ public class ApplicationServlet extends HttpServlet {
             e.printStackTrace();
             // if this was an UIDL request, response UIDL back to client
             if (UIDLrequest) {
-                Application.SystemMessages ci = Application.getSystemMessages();
-                try {
-                    Method m = applicationClass.getMethod("getSystemMessages",
-                            null);
-                    ci = (Application.SystemMessages) m.invoke(null, null);
-                } catch (Exception e2) {
-                    // Not critical, but something is still wrong; print
-                    // stacktrace
-                    e2.printStackTrace();
-                }
+                Application.SystemMessages ci = getSystemMessages();
                 criticalNotification(request, response, ci
                         .getInternalErrorCaption(), ci
                         .getInternalErrorMessage(), ci.getInternalErrorURL());
@@ -551,6 +535,39 @@ public class ApplicationServlet extends HttpServlet {
                         .endTransaction(application, request);
             }
         }
+    }
+
+    /** Get system messages from the current application class */
+    private SystemMessages getSystemMessages() {
+        try {
+            Class appCls = applicationClass;
+            if (isApplicationRunnerServlet) {
+                appCls = getClass().getClassLoader().loadClass(
+                        applicationRunnerClassname);
+            }
+            Method m = appCls.getMethod("getSystemMessages", null);
+            return (Application.SystemMessages) m.invoke(null, null);
+        } catch (ClassNotFoundException e) {
+            // This should never happen
+            e.printStackTrace();
+        } catch (SecurityException e) {
+            e.printStackTrace();
+            System.out
+                    .print("Error: getSystemMessage() should be static public");
+        } catch (NoSuchMethodException e) {
+            // This is completely ok and should be silently ignored
+        } catch (IllegalArgumentException e) {
+            // This should never happen
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+            System.out
+                    .print("Error: getSystemMessage() should be static public");
+        } catch (InvocationTargetException e) {
+            // This should never happen
+            e.printStackTrace();
+        }
+        return Application.getSystemMessages();
     }
 
     /**
