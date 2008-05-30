@@ -894,6 +894,9 @@ input.i-modified,
 .i-filterselect-button:hover {
 	background-position: bottom left;
 }
+.i-disabled .i-filterselect-button:hover {
+	background-position: top left;
+}
 
 .i-filterselect-suggestpopup {
 	background: #f6f7f7;
