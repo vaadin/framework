@@ -247,6 +247,10 @@ public class Time extends FlowPanel implements ChangeListener {
     }
 
     public void onChange(Widget sender) {
+        if (datefield.getCurrentDate() == null) {
+            // was null on server, need to set
+            datefield.setCurrentDate(new Date());
+        }
         if (sender == hours) {
             int h = hours.getSelectedIndex();
             if (datefield.getDateTimeService().isTwelveHourClock()) {
