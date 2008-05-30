@@ -62,7 +62,7 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
     int getwincount = 0;
 
     public void init() {
-        setTheme("tests-magi");
+        setTheme("tests-book");
         
         setMainWindow(main);
     }
@@ -96,11 +96,11 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
         main.setLayout(new OrderedLayout());
 
         if (example.equals("index")) {
-            final Object examples[] = { "defaultbutton", "label",
+            final String examples[] = { "defaultbutton", "label",
                     "labelcontent", "tree", "embedded", "textfield",
                     "textfieldvalidation", "datefield", "button",
                     "select/select", "select/native", "select/optiongroup",
-                    "select/twincol", "filterselect", "validator", "table",
+                    "select/twincol", "filterselect", "validator", "table", "table/select",
                     "upload", "link", "gridlayout", "orderedlayout",
                     "formlayout", "panel", "expandlayout", "tabsheet",
                     "alignment", "alignment/grid", "window", "window/opener",
@@ -109,8 +109,8 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
                     "customlayout", "spacing", "margin", "clientinfo",
                     "fillinform/templates"};
             for (int i = 0; i < examples.length; i++) {
-                main.addComponent(new Label("<a href='/tk/testbench2/"
-                        + examples[i] + "'>" + examples[i] + "</a>",
+                main.addComponent(new Label("<a href='" + context.toString() +
+                        examples[i] + "'>" + examples[i] + "</a>",
                         Label.CONTENT_XHTML));
             }
             return null;
@@ -494,7 +494,10 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
     }
 
     void example_Table(Window main, String param) {
-        main.addComponent(new TableExample());
+        if (param.equals("select")) {
+            main.addComponent(new TableExample2());
+        } else
+            main.addComponent(new TableExample1());
     }
 
     void example_Upload(Window main, String param) {
