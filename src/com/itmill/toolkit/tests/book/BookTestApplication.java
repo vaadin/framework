@@ -8,10 +8,15 @@ import java.net.URL;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Set;
+import java.util.Vector;
 
+import com.itmill.toolkit.data.Container;
+import com.itmill.toolkit.data.Item;
+import com.itmill.toolkit.data.Property;
 import com.itmill.toolkit.data.Validator;
 import com.itmill.toolkit.data.Property.ValueChangeEvent;
 import com.itmill.toolkit.data.Property.ValueChangeListener;
+import com.itmill.toolkit.data.util.BeanItem;
 import com.itmill.toolkit.data.validator.StringLengthValidator;
 import com.itmill.toolkit.terminal.ClassResource;
 import com.itmill.toolkit.terminal.DownloadStream;
@@ -28,6 +33,9 @@ import com.itmill.toolkit.ui.CustomLayout;
 import com.itmill.toolkit.ui.DateField;
 import com.itmill.toolkit.ui.Embedded;
 import com.itmill.toolkit.ui.ExpandLayout;
+import com.itmill.toolkit.ui.Field;
+import com.itmill.toolkit.ui.FieldFactory;
+import com.itmill.toolkit.ui.Form;
 import com.itmill.toolkit.ui.FormLayout;
 import com.itmill.toolkit.ui.GridLayout;
 import com.itmill.toolkit.ui.InlineDateField;
@@ -102,7 +110,7 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
                     "select/select", "select/native", "select/optiongroup",
                     "select/twincol", "filterselect", "validator", "table", "table/select",
                     "upload", "link", "gridlayout", "orderedlayout",
-                    "formlayout", "panel", "expandlayout", "tabsheet",
+                    "formlayout", "form", "panel", "expandlayout", "tabsheet",
                     "alignment", "alignment/grid", "window", "window/opener",
                     "window/multiple", "classresource", "usererror",
                     "progress/window", "progress/thread", "progress",
@@ -156,6 +164,8 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
             example_OrderedLayout(main, param);
         } else if (example.equals("formlayout")) {
             example_FormLayout(main, param);
+        } else if (example.equals("form")) {
+            example_Form(main, param);
         } else if (example.equals("tabsheet")) {
             example_TabSheet(main, param);
         } else if (example.equals("panel")) {
@@ -677,6 +687,10 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
         layout.addComponent(new TextField("Street address"));
         layout.addComponent(new TextField("Postal code"));
         main.addComponent(layout);
+    }
+
+    void example_Form(Window main, String param) {
+        main.addComponent(new FormExample());
     }
 
     void example_ExpandLayout(Window main, String param) {
