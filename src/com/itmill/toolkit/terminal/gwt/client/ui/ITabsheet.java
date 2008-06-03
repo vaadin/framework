@@ -10,6 +10,7 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SourcesTabEvents;
 import com.google.gwt.user.client.ui.TabBar;
@@ -26,6 +27,12 @@ public class ITabsheet extends ITabsheetBase implements
         ContainerResizedListener {
 
     public static final String CLASSNAME = "i-tabsheet";
+
+    public static final String SCROLLER_CLASSNAME = "i-tabsheet-scroller";
+    private final Element scroller; // the tab-scroller element
+    private final Element scrollerNext; // the tab-scroller next button element
+    private final Element scrollerPrev; // the tab-scroller prev button element
+    private int scrollerIndex = 0;
 
     private final TabBar tb;
     private final ITabsheetPanel tp;
@@ -82,10 +89,26 @@ public class ITabsheet extends ITabsheetBase implements
     public ITabsheet() {
         super(CLASSNAME);
 
+        // Tab scrolling
+        DOM.setStyleAttribute(getElement(), "overflow", "hidden");
+        scroller = DOM.createDiv();
+        DOM.setElementProperty(scroller, "className", SCROLLER_CLASSNAME);
+        scrollerPrev = DOM.createButton();
+        DOM.setElementProperty(scrollerPrev, "className", SCROLLER_CLASSNAME
+                + "Prev");
+        DOM.sinkEvents(scrollerPrev, Event.ONCLICK);
+        scrollerNext = DOM.createButton();
+        DOM.setElementProperty(scrollerNext, "className", SCROLLER_CLASSNAME
+                + "Next");
+        DOM.sinkEvents(scrollerNext, Event.ONCLICK);
+        DOM.appendChild(getElement(), scroller);
+
+        // Tabs
         tb = new TabBar();
         tp = new ITabsheetPanel();
         tp.setStyleName(CLASSNAME + "-tabsheetpanel");
         contentNode = DOM.createDiv();
+
         deco = DOM.createDiv();
 
         addStyleDependentName("loading"); // Indicate initial progress
@@ -95,7 +118,10 @@ public class ITabsheet extends ITabsheetBase implements
                         + "-content");
         DOM.setElementProperty(deco, "className", CLASSNAME + "-deco");
 
-        add(tb, getElement());
+        add(tb, scroller);
+        DOM.appendChild(scroller, scrollerPrev);
+        DOM.appendChild(scroller, scrollerNext);
+
         DOM.appendChild(getElement(), contentNode);
         add(tp, contentNode);
         DOM.appendChild(getElement(), deco);
@@ -106,6 +132,33 @@ public class ITabsheet extends ITabsheetBase implements
         DOM.setStyleAttribute(DOM.getFirstChild(DOM.getFirstChild(DOM
                 .getFirstChild(tb.getElement()))), "display", "none");
 
+    }
+
+    public void onBrowserEvent(Event event) {
+
+        // Tab scrolling
+        if (isScrolledTabs()
+                && DOM.compare(DOM.eventGetTarget(event), scrollerPrev)) {
+            if (scrollerIndex > 0) {
+                DOM.setStyleAttribute(DOM.getChild(DOM.getFirstChild(DOM
+                        .getFirstChild(tb.getElement())), scrollerIndex),
+                        "display", "");
+                scrollerIndex--;
+                updateTabScroller();
+            }
+        } else if (isClippedTabs()
+                && DOM.compare(DOM.eventGetTarget(event), scrollerNext)) {
+            int tabs = tb.getTabCount();
+            if (scrollerIndex + 1 <= tabs) {
+                scrollerIndex++;
+                DOM.setStyleAttribute(DOM.getChild(DOM.getFirstChild(DOM
+                        .getFirstChild(tb.getElement())), scrollerIndex),
+                        "display", "none");
+                updateTabScroller();
+            }
+        } else {
+            super.onBrowserEvent(event);
+        }
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -140,6 +193,7 @@ public class ITabsheet extends ITabsheetBase implements
             tb.setVisible(true);
             removeStyleName(CLASSNAME + "-hidetabs");
         }
+        updateTabScroller();
         waitingForResponse = false;
     }
 
@@ -244,6 +298,41 @@ public class ITabsheet extends ITabsheetBase implements
             DOM.setStyleAttribute(contentNode, "overflow", "");
         }
         Util.runDescendentsLayout(this);
+
+        updateTabScroller();
+    }
+
+    /**
+     * Layouts the tab-scroller elements, and applies styles.
+     */
+    private void updateTabScroller() {
+        DOM.setStyleAttribute(scroller, "width", tp.getOffsetWidth() + "px");
+
+        if (scrollerIndex > tb.getTabCount()) {
+            scrollerIndex = 0;
+        }
+        boolean scrolled = isScrolledTabs();
+        boolean clipped = isClippedTabs();
+        if (tb.isVisible() && (scrolled || clipped)) {
+            DOM.setStyleAttribute(scrollerNext, "display", "");
+            DOM.setStyleAttribute(scrollerPrev, "display", "");
+            DOM.setElementProperty(scrollerPrev, "className",
+                    SCROLLER_CLASSNAME + (scrolled ? "Prev" : "Prev-disabled"));
+            DOM.setElementProperty(scrollerNext, "className",
+                    SCROLLER_CLASSNAME + (clipped ? "Next" : "Next-disabled"));
+        } else {
+            DOM.setStyleAttribute(scrollerNext, "display", "none");
+            DOM.setStyleAttribute(scrollerPrev, "display", "none");
+        }
+
+    }
+
+    private boolean isScrolledTabs() {
+        return scrollerIndex > 0;
+    }
+
+    private boolean isClippedTabs() {
+        return tb.getOffsetWidth() > getOffsetWidth();
     }
 
     protected void clearPaintables() {

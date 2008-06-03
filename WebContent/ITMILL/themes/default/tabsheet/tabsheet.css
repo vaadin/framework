@@ -15,6 +15,58 @@
 	overflow:hidden;
 }
 
+.i-tabsheet-scroller {
+	white-space: nowrap;
+	text-align: right;
+	overflow: hidden;
+	height: 48px;
+}
+.i-tabsheet-hidetabs .i-tabsheet-scroller {
+	display: none;
+}
+.i-tabsheet-scrollerPrev,
+.i-tabsheet-scrollerNext {
+	border: none;
+	width: 12px;
+	height: 27px;
+	position: relative;
+	margin-top: -10px;
+	top: -23px;
+}
+.i-tabsheet-scrollerPrev-disabled,
+.i-tabsheet-scrollerNext-disabled {
+	border: none;
+	width: 12px;
+	height: 27px;
+	position: relative;
+	margin-top: -10px;
+	top: -23px;
+}
+
+.i-tabsheet-scrollerNext,
+.i-tabsheet-scrollerNext-disabled {
+	background: transparent url(img/next.png) no-repeat bottom left;
+	margin-right: 0px;
+}
+.i-tabsheet-scrollerPrev,
+.i-tabsheet-scrollerPrev-disabled {
+	background: transparent url(img/prev.png) no-repeat bottom left;
+	margin-right: 1px;
+}
+.i-tabsheet-scrollerPrev:hover,
+.i-tabsheet-scrollerNext:hover {
+	background-position: bottom right;
+}
+.i-tabsheet-scrollerPrev-disabled,
+.i-tabsheet-scrollerNext-disabled {
+	opacity: 0.5;
+}
+.i-tabsheet-scrollerPrev-disabled:hover,
+.i-tabsheet-scrollerNext-disabled:hover {
+	background-position: bottom left;
+	opacity: 0.5;
+}
+
 .i-tabsheet-tabs .i-caption {
 	white-space: nowrap;
 }
