@@ -193,6 +193,17 @@ public class ITabsheet extends ITabsheetBase implements
             tb.setVisible(true);
             removeStyleName(CLASSNAME + "-hidetabs");
         }
+
+        // tabs; push or not
+        if (uidl.hasAttribute("width")) {
+            // update width later, in updateTabScroller();
+            DOM.setStyleAttribute(scroller, "width", "1px");
+            DOM.setStyleAttribute(scroller, "overflow", "hidden");
+        } else {
+            DOM.setStyleAttribute(scroller, "width", "");
+            DOM.setStyleAttribute(scroller, "overflow", "visible");
+        }
+
         updateTabScroller();
         waitingForResponse = false;
     }
@@ -306,7 +317,8 @@ public class ITabsheet extends ITabsheetBase implements
      * Layouts the tab-scroller elements, and applies styles.
      */
     private void updateTabScroller() {
-        DOM.setStyleAttribute(scroller, "width", tp.getOffsetWidth() + "px");
+
+        DOM.setStyleAttribute(scroller, "width", getOffsetWidth() + "px");
 
         if (scrollerIndex > tb.getTabCount()) {
             scrollerIndex = 0;
