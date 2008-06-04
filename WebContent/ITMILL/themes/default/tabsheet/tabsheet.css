@@ -9,61 +9,58 @@
 .i-tabsheet-tabs {
 	empty-cells: hide;
 	border-collapse: collapse;
-	height: 48px;
+	height: 38px;
 	background: transparent url(img/tabs-bg.png) repeat-x bottom left;
 	width: 100%;
 	overflow:hidden;
 }
 
+.i-tabsheet-hidetabs .i-tabsheet-tabcontainer {
+	display: none;
+}
+
 .i-tabsheet-scroller {
 	white-space: nowrap;
 	text-align: right;
-	height: 48px;
+	height: 1px;
 }
-.i-tabsheet-hidetabs .i-tabsheet-scroller {
-	display: none;
-}
+
 .i-tabsheet-scrollerPrev,
 .i-tabsheet-scrollerNext {
 	border: none;
 	width: 12px;
-	height: 38px;
-	position: relative;
-	margin-top: -10px;
-	top: -29px;
+	height: 37px;
+	margin-top: 11px;
+	opacity: 0.9999;
 }
 .i-tabsheet-scrollerPrev-disabled,
 .i-tabsheet-scrollerNext-disabled {
 	border: none;
 	width: 12px;
-	height: 38px;
-	position: relative;
-	margin-top: -10px;
-	top: -29px;
+	height: 37px;
+	margin-top: 11px;
+	opacity: 0.9999;
 }
 
 .i-tabsheet-scrollerNext,
 .i-tabsheet-scrollerNext-disabled {
-	background: transparent url(img/next.png) no-repeat bottom left;
-	margin-right: 0px;
+	background: transparent url(img/next.png) no-repeat;
 }
 .i-tabsheet-scrollerPrev,
 .i-tabsheet-scrollerPrev-disabled {
-	background: transparent url(img/prev.png) no-repeat bottom left;
-	margin-right: 0px;
+	background: transparent url(img/prev.png) no-repeat;
 }
 .i-tabsheet-scrollerPrev:hover,
 .i-tabsheet-scrollerNext:hover {
-	background-position: bottom right;
+	background-position: -24px 0px;
 }
 .i-tabsheet-scrollerPrev-disabled,
 .i-tabsheet-scrollerNext-disabled {
-	opacity: 0.5;
+	background-position: -12px 0px;
 }
 .i-tabsheet-scrollerPrev-disabled:hover,
 .i-tabsheet-scrollerNext-disabled:hover {
-	background-position: bottom left;
-	opacity: 0.5;
+	background-position: -12px 0px;
 }
 
 .i-tabsheet-tabs .i-caption {

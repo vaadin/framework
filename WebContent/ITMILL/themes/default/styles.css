@@ -1381,10 +1381,58 @@ input.i-modified,
 .i-tabsheet-tabs {
 	empty-cells: hide;
 	border-collapse: collapse;
-	height: 48px;
+	height: 38px;
 	background: transparent url(tabsheet/img/tabs-bg.png) repeat-x bottom left;
 	width: 100%;
 	overflow:hidden;
+}
+
+.i-tabsheet-hidetabs .i-tabsheet-tabcontainer {
+	display: none;
+}
+
+.i-tabsheet-scroller {
+	white-space: nowrap;
+	text-align: right;
+	height: 1px;
+}
+
+.i-tabsheet-scrollerPrev,
+.i-tabsheet-scrollerNext {
+	border: none;
+	width: 12px;
+	height: 37px;
+	margin-top: 11px;
+	opacity: 0.9999;
+}
+.i-tabsheet-scrollerPrev-disabled,
+.i-tabsheet-scrollerNext-disabled {
+	border: none;
+	width: 12px;
+	height: 37px;
+	margin-top: 11px;
+	opacity: 0.9999;
+}
+
+.i-tabsheet-scrollerNext,
+.i-tabsheet-scrollerNext-disabled {
+	background: transparent url(tabsheet/img/next.png) no-repeat;
+}
+.i-tabsheet-scrollerPrev,
+.i-tabsheet-scrollerPrev-disabled {
+	background: transparent url(tabsheet/img/prev.png) no-repeat;
+}
+.i-tabsheet-scrollerPrev:hover,
+.i-tabsheet-scrollerNext:hover {
+	background-position: -24px 0px;
+}
+.i-tabsheet-scrollerPrev-disabled,
+.i-tabsheet-scrollerNext-disabled {
+	background-position: -12px 0px;
+}
+.i-tabsheet-scrollerPrev-disabled:hover,
+.i-tabsheet-scrollerNext-disabled:hover {
+	background-position: -12px 0px;
 }
 
 .i-tabsheet-tabs .i-caption {

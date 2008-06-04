@@ -28,10 +28,12 @@ public class ITabsheet extends ITabsheetBase implements
 
     public static final String CLASSNAME = "i-tabsheet";
 
+    public static final String TABS_CLASSNAME = "i-tabsheet-tabcontainer";
     public static final String SCROLLER_CLASSNAME = "i-tabsheet-scroller";
-    private final Element scroller; // the tab-scroller element
-    private final Element scrollerNext; // the tab-scroller next button element
-    private final Element scrollerPrev; // the tab-scroller prev button element
+    private final Element tabs; // tabbar and 'scroller' container
+    private final Element scroller; // tab-scroller element
+    private final Element scrollerNext; // tab-scroller next button element
+    private final Element scrollerPrev; // tab-scroller prev button element
     private int scrollerIndex = 0;
 
     private final TabBar tb;
@@ -91,7 +93,10 @@ public class ITabsheet extends ITabsheetBase implements
 
         // Tab scrolling
         DOM.setStyleAttribute(getElement(), "overflow", "hidden");
+        tabs = DOM.createDiv();
+        DOM.setElementProperty(tabs, "className", TABS_CLASSNAME);
         scroller = DOM.createDiv();
+        DOM.appendChild(tabs, scroller);
         DOM.setElementProperty(scroller, "className", SCROLLER_CLASSNAME);
         scrollerPrev = DOM.createButton();
         DOM.setElementProperty(scrollerPrev, "className", SCROLLER_CLASSNAME
@@ -101,7 +106,7 @@ public class ITabsheet extends ITabsheetBase implements
         DOM.setElementProperty(scrollerNext, "className", SCROLLER_CLASSNAME
                 + "Next");
         DOM.sinkEvents(scrollerNext, Event.ONCLICK);
-        DOM.appendChild(getElement(), scroller);
+        DOM.appendChild(getElement(), tabs);
 
         // Tabs
         tb = new TabBar();
@@ -118,7 +123,7 @@ public class ITabsheet extends ITabsheetBase implements
                         + "-content");
         DOM.setElementProperty(deco, "className", CLASSNAME + "-deco");
 
-        add(tb, scroller);
+        add(tb, tabs);
         DOM.appendChild(scroller, scrollerPrev);
         DOM.appendChild(scroller, scrollerNext);
 
@@ -197,11 +202,11 @@ public class ITabsheet extends ITabsheetBase implements
         // tabs; push or not
         if (uidl.hasAttribute("width")) {
             // update width later, in updateTabScroller();
-            DOM.setStyleAttribute(scroller, "width", "1px");
-            DOM.setStyleAttribute(scroller, "overflow", "hidden");
+            DOM.setStyleAttribute(tabs, "width", "1px");
+            DOM.setStyleAttribute(tabs, "overflow", "hidden");
         } else {
-            DOM.setStyleAttribute(scroller, "width", "");
-            DOM.setStyleAttribute(scroller, "overflow", "visible");
+            DOM.setStyleAttribute(tabs, "width", "");
+            DOM.setStyleAttribute(tabs, "overflow", "visible");
         }
 
         updateTabScroller();
@@ -318,7 +323,7 @@ public class ITabsheet extends ITabsheetBase implements
      */
     private void updateTabScroller() {
 
-        DOM.setStyleAttribute(scroller, "width", getOffsetWidth() + "px");
+        DOM.setStyleAttribute(tabs, "width", getOffsetWidth() + "px");
 
         if (scrollerIndex > tb.getTabCount()) {
             scrollerIndex = 0;
