@@ -183,7 +183,17 @@ public class FormExample extends CustomComponent {
         // Set required fields.
         form.getField("name").setRequired(true);
 
+        // Set the form to act immediately on user input. This is
+        // Necessary for the validation to occur immediately when the
+        // input focus changes.
         form.setImmediate(true);
+
+        // Have the validation error indicator area visible.
+        form.setValidationVisible(true);
+        
+        // Set buffering so that commit() must be called for the form
+        // before input is written to the data. (Input is not written
+        // immediately through).
         form.setWriteThrough(false);
         form.setReadThrough(false);
 
@@ -197,11 +207,11 @@ public class FormExample extends CustomComponent {
                 ExpandLayout.ALIGNMENT_TOP);
         footer.setHeight("30px");
         footer.addComponent(reset);
+        form.setFooter(footer);
 
         OrderedLayout root = new OrderedLayout();
         root.setWidth(400, OrderedLayout.UNITS_PIXELS);
         root.addComponent(form);
-        root.addComponent(footer);
         this.setCompositionRoot(root);
     }
 }
