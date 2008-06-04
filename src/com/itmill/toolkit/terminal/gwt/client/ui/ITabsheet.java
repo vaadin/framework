@@ -205,6 +205,7 @@ public class ITabsheet extends ITabsheetBase implements
             DOM.setStyleAttribute(tabs, "width", "1px");
             DOM.setStyleAttribute(tabs, "overflow", "hidden");
         } else {
+            showAllTabs();
             DOM.setStyleAttribute(tabs, "width", "");
             DOM.setStyleAttribute(tabs, "overflow", "visible");
         }
@@ -342,6 +343,14 @@ public class ITabsheet extends ITabsheetBase implements
             DOM.setStyleAttribute(scrollerPrev, "display", "none");
         }
 
+    }
+
+    private void showAllTabs() {
+        scrollerIndex = 0;
+        for (int i = 0; i < tb.getTabCount(); i++) {
+            DOM.setStyleAttribute(DOM.getChild(DOM.getFirstChild(DOM
+                    .getFirstChild(tb.getElement())), i + 1), "display", "");
+        }
     }
 
     private boolean isScrolledTabs() {
