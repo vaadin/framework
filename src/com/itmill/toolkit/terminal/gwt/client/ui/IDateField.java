@@ -155,6 +155,14 @@ public class IDateField extends FlowPanel implements Paintable, Field {
         date.setTime(date.getTime() / 1000 * 1000 + ms);
     }
 
+    public int getShowingMilliseconds() {
+        return (int) (showingDate.getTime() - showingDate.getTime() / 1000 * 1000);
+    }
+
+    public void setShowingMilliseconds(int ms) {
+        showingDate.setTime(showingDate.getTime() / 1000 * 1000 + ms);
+    }
+
     public int getCurrentResolution() {
         return currentResolution;
     }

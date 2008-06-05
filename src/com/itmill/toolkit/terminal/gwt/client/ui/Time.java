@@ -257,24 +257,28 @@ public class Time extends FlowPanel implements ChangeListener {
                 h = h + ampm.getSelectedIndex() * 12;
             }
             datefield.getCurrentDate().setHours(h);
+            datefield.getShowingDate().setHours(h);
             datefield.getClient().updateVariable(datefield.getId(), "hour", h,
                     datefield.isImmediate());
             updateTime(false);
         } else if (sender == mins) {
             final int m = mins.getSelectedIndex();
             datefield.getCurrentDate().setMinutes(m);
+            datefield.getShowingDate().setMinutes(m);
             datefield.getClient().updateVariable(datefield.getId(), "min", m,
                     datefield.isImmediate());
             updateTime(false);
         } else if (sender == sec) {
             final int s = sec.getSelectedIndex();
             datefield.getCurrentDate().setSeconds(s);
+            datefield.getShowingDate().setSeconds(s);
             datefield.getClient().updateVariable(datefield.getId(), "sec", s,
                     datefield.isImmediate());
             updateTime(false);
         } else if (sender == msec) {
             final int ms = msec.getSelectedIndex();
             datefield.setMilliseconds(ms);
+            datefield.setShowingMilliseconds(ms);
             datefield.getClient().updateVariable(datefield.getId(), "msec", ms,
                     datefield.isImmediate());
             updateTime(false);
@@ -282,6 +286,7 @@ public class Time extends FlowPanel implements ChangeListener {
             final int h = hours.getSelectedIndex() + ampm.getSelectedIndex()
                     * 12;
             datefield.getCurrentDate().setHours(h);
+            datefield.getShowingDate().setHours(h);
             datefield.getClient().updateVariable(datefield.getId(), "hour", h,
                     datefield.isImmediate());
             updateTime(false);
