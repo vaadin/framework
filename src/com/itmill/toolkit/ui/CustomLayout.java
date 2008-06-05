@@ -63,7 +63,8 @@ public class CustomLayout extends AbstractLayout {
     }
 
     /**
-     * Adds the component into this container to given location.
+     * Adds the component into this container to given location. If the location
+     * is already populated, the old component is removed.
      * 
      * @param c
      *                the component to be added.
