@@ -512,6 +512,29 @@ input.i-modified,
 	padding-right: 18px;
 }
 
+.i-gridlayout-grid {
+	margin:0;
+	padding:0;
+	border-collapse: collapse;
+	border:0;
+}
+
+.i-gridlayout-cell {
+	margin:0;
+	padding:0;
+}
+
+.i-gridlayout-spacing .i-gridlayout-cell {
+	padding-left: 15px;
+	padding-top:15px;
+}
+.i-gridlayout-spacing .i-gridlayout-firstcol {
+	padding-left: 0;
+}
+.i-gridlayout-spacing .i-gridlayout-firstrow {
+	padding-top: 0;
+}
+
 .i-Notification {
 	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
 	background-color: #999999;

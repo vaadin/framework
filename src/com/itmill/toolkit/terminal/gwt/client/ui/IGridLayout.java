@@ -56,6 +56,9 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
         setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_LEFT,
                 margins.hasLeft());
 
+        setStyleName(margin, CLASSNAME + "-" + "spacing", uidl
+                .hasAttribute("spacing"));
+
         grid.updateFromUIDL(uidl, client);
     }
 
@@ -78,7 +81,7 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
 
         public Grid() {
             super();
-            setStyleName(CLASSNAME);
+            setStyleName(CLASSNAME + "-grid");
         }
 
         public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -132,12 +135,21 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
                                 ha = HasHorizontalAlignment.ALIGN_RIGHT;
                             }
 
-                            getCellFormatter()
-                                    .setAlignment(row, column, ha, va);
+                            FlexCellFormatter formatter = (FlexCellFormatter) getCellFormatter();
+
+                            formatter.setAlignment(row, column, ha, va);
 
                             // set col span
-                            ((FlexCellFormatter) getCellFormatter())
-                                    .setColSpan(row, column, w);
+                            formatter.setColSpan(row, column, w);
+
+                            String styleNames = CLASSNAME + "-cell";
+                            if (column == 0) {
+                                styleNames += " " + CLASSNAME + "-firstcol";
+                            }
+                            if (row == 0) {
+                                styleNames += " " + CLASSNAME + "-firstrow";
+                            }
+                            formatter.setStyleName(row, column, styleNames);
 
                             // Set cell height
                             int h;

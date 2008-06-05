@@ -46,7 +46,7 @@ public class Ticket1572 extends com.itmill.toolkit.Application {
         main.addComponent(b);
 
         Button b2 = new Button("next spacing state");
-        b.addListener(new Button.ClickListener() {
+        b2.addListener(new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
                 nextSpacingState();
             }
@@ -101,8 +101,17 @@ public class Ticket1572 extends com.itmill.toolkit.Application {
         }
     }
 
+    private boolean spacing = true;
+
     private void nextSpacingState() {
-        spacingstate.setValue("        // TODO Auto-generated method stub");
+        spacing = !spacing;
+        if (spacing) {
+            gl.setSpacing(true);
+            spacingstate.setValue("Spacing on");
+        } else {
+            gl.setSpacing(false);
+            spacingstate.setValue("Spacing off");
+        }
     }
 
 }
