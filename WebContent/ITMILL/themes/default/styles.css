@@ -499,6 +499,18 @@ input.i-modified,
 * html .i-form-errormessage {
 	height: 20px
 }
+.i-gridlayout-margin-top {
+	padding-top: 15px;
+}
+.i-gridlayout-margin-bottom {
+	padding-bottom: 15px;
+}
+.i-gridlayout-margin-left {
+	padding-left: 18px;
+} 
+.i-gridlayout-margin-right {
+	padding-right: 18px;
+}
 
 .i-Notification {
 	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
