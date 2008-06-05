@@ -5,7 +5,9 @@
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -137,6 +139,9 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
 
         iLayout();
 
+        Set oldWidgets = new HashSet();
+        oldWidgets.addAll(locationToWidget.values());
+
         // For all contained widgets
         for (final Iterator i = uidl.getChildIterator(); i.hasNext();) {
             final UIDL uidlForChild = (UIDL) i.next();
@@ -150,6 +155,14 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
                 } catch (final IllegalArgumentException e) {
                     // If no location is found, this component is not visible
                 }
+                oldWidgets.remove(child);
+            }
+        }
+        for (Iterator iterator = oldWidgets.iterator(); iterator.hasNext();) {
+            Widget oldWidget = (Widget) iterator.next();
+            if (oldWidget.isAttached()) {
+                // slot of this widget is emptied, remove it
+                remove(oldWidget);
             }
         }
 

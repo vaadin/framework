@@ -10,7 +10,7 @@ public class Ticket1775 extends com.itmill.toolkit.Application {
 
     public void init() {
 
-        final Window main = new Window("#1673");
+        final Window main = new Window("#1775");
         setMainWindow(main);
         main.setTheme("example");
         String layoutName = "mainLayout";
