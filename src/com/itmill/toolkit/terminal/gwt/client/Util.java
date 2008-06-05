@@ -6,6 +6,7 @@ package com.itmill.toolkit.terminal.gwt.client;
 
 import java.util.Iterator;
 
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
@@ -122,4 +123,17 @@ public class Util {
     }
     return false;
     }-*/;
+
+    private static final Element escapeHtmlHelper = DOM.createDiv();
+
+    /**
+     * Converts html entities to text.
+     * 
+     * @param html
+     * @return escaped string presentation of given html
+     */
+    public static String escapeHTML(String html) {
+        DOM.setInnerText(escapeHtmlHelper, html);
+        return DOM.getInnerHTML(escapeHtmlHelper);
+    }
 }

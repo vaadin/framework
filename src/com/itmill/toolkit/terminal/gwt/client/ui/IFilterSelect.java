@@ -62,7 +62,7 @@ public class IFilterSelect extends Composite implements Paintable, Field,
                 sb.append(iconUri);
                 sb.append("\" alt=\"icon\" class=\"i-icon\" />");
             }
-            sb.append(caption);
+            sb.append(Util.escapeHTML(caption));
             return sb.toString();
         }
 
