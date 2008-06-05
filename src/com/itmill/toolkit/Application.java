@@ -1048,7 +1048,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
      * client/server out of sync, and internal server error.
      * 
      * You can customize the messages by overriding this method and returning
-     * CustomizedSystemMessages.
+     * {@link CustomizedSystemMessages}
      * 
      * @return the SystemMessages for this application
      */
@@ -1148,61 +1148,121 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
     /**
      * Experimental API, not finalized. Contains the system messages used to
      * notify the user about various critical situations that can occur.
-     * 
+     * <p>
      * Customize by overriding the static Application.getSystemMessages() and
-     * return CustomizedSystemMessages.
+     * returning {@link CustomizedSystemMessages}
+     * </p>
+     * 
      */
     public static class SystemMessages {
         protected String sessionExpiredURL = null;
+        protected boolean sessionExpiredNotificationEnabled = true;
         protected String sessionExpiredCaption = "Session Expired";
         protected String sessionExpiredMessage = "Take note of any unsaved data, and <u>click here</u> to continue.";
 
         protected String internalErrorURL = null;
+        protected boolean internalErrorNotificationEnabled = true;
         protected String internalErrorCaption = "Internal Error";
         protected String internalErrorMessage = "Please notify the administrator.<br/>Take note of any unsaved data, and <u>click here</u> to continue.";
 
         protected String outOfSyncURL = null;
+        protected boolean outOfSyncNotificationEnabled = true;
         protected String outOfSyncCaption = "Out of sync";
         protected String outOfSyncMessage = "Something has caused us to be out of sync with the server.<br/>Take note of any unsaved data, and <u>click here</u> to re-sync.";
 
+        /**
+         * Use {@link CustomizedSystemMessages} to customize
+         */
         private SystemMessages() {
 
         }
 
+        /**
+         * @return the URL to load on null for restart
+         */
         public String getSessionExpiredURL() {
             return sessionExpiredURL;
         }
 
+        /**
+         * @return true = notification enabled, false = notification disabled
+         */
+        public boolean isSessionExpiredNotificationEnabled() {
+            return sessionExpiredNotificationEnabled;
+        }
+
+        /**
+         * @return the notification caption, or null for no caption
+         */
         public String getSessionExpiredCaption() {
-            return sessionExpiredCaption;
+            return (sessionExpiredNotificationEnabled ? sessionExpiredCaption
+                    : null);
         }
 
+        /**
+         * @return the notification message, or null for no message
+         */
         public String getSessionExpiredMessage() {
-            return sessionExpiredMessage;
+            return (sessionExpiredNotificationEnabled ? sessionExpiredMessage
+                    : null);
         }
 
+        /**
+         * @return the URL to load on null for restart
+         */
         public String getInternalErrorURL() {
             return internalErrorURL;
         }
 
+        /**
+         * @return true = notification enabled, false = notification disabled
+         */
+        public boolean isInternalErrorNotificationEnabled() {
+            return internalErrorNotificationEnabled;
+        }
+
+        /**
+         * @return the notification caption, or null for no caption
+         */
         public String getInternalErrorCaption() {
-            return internalErrorCaption;
+            return (internalErrorNotificationEnabled ? internalErrorCaption
+                    : null);
         }
 
+        /**
+         * @return the notification message, or null for no message
+         */
         public String getInternalErrorMessage() {
-            return internalErrorMessage;
+            return (internalErrorNotificationEnabled ? internalErrorMessage
+                    : null);
         }
 
+        /**
+         * @return the URL to load on null for restart
+         */
         public String getOutOfSyncURL() {
             return outOfSyncURL;
         }
 
-        public String getOutOfSyncCaption() {
-            return outOfSyncCaption;
+        /**
+         * @return true = notification enabled, false = notification disabled
+         */
+        public boolean isOutOfSyncNotificationEnabled() {
+            return outOfSyncNotificationEnabled;
         }
 
+        /**
+         * @return the notification caption, or null for no caption
+         */
+        public String getOutOfSyncCaption() {
+            return (outOfSyncNotificationEnabled ? outOfSyncCaption : null);
+        }
+
+        /**
+         * @return the notification message, or null for no message
+         */
         public String getOutOfSyncMessage() {
-            return outOfSyncMessage;
+            return (outOfSyncNotificationEnabled ? outOfSyncMessage : null);
         }
 
     }
@@ -1210,44 +1270,166 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
     /**
      * Experimental API, not finalized. Contains the system messages used to
      * notify the user about various critical situations that can occur.
-     * 
+     * <p>
      * Customize by overriding the static Application.getSystemMessages() and
-     * return CustomizedSystemMessages.
+     * returning CustomizedSystemMessages. Note that getSystemMessages() is
+     * static - changing the system messages will by default change the message
+     * for all users of the application.
+     * </p>
+     * <p>
+     * The default behavior is to show a notification, and restart the
+     * application the the user clicks the message. <br/> Instead of restarting
+     * the application, you can set a specific URL that the user is taken to.<br/>
+     * Setting both caption and message to null will restart the application (or
+     * go to the specified URL) without displaying a notification.
+     * set*NotificationEnabled(false) will achieve the same thing.
+     * </p>
+     * <p>
+     * The situations are:
+     * <li> Session expired: the user session has expired, usually due to
+     * inactivity.</li>
+     * <li> Internal error: unhandled critical server error (e.g out of memory,
+     * database crash)
+     * <li> Out of sync: the client is not in sync with the server. E.g the user
+     * opens two windows showing the same application, and makes changes in one
+     * of the windows - the other window is no longer in sync, and (for
+     * instance) pressing a button that is no longer present in the UI will
+     * cause a out-of-sync -situation. You might want to disable the
+     * notification if silently ignoring a action (e.g button press) is not a
+     * problem in your application.
+     * </p>
      */
+
     public static class CustomizedSystemMessages extends SystemMessages {
 
+        /**
+         * Sets the URL to go to when the session has expired.
+         * 
+         * @param sessionExpiredURL
+         *                the URL to go to, or null to reload current
+         */
         public void setSessionExpiredURL(String sessionExpiredURL) {
             this.sessionExpiredURL = sessionExpiredURL;
         }
 
+        /**
+         * Enables or disables the notification. If disabled, the set URL (or
+         * current) is loaded directly.
+         * 
+         * @param sessionExpiredNotificationEnabled
+         *                true = enabled, false = disabled
+         */
+        public void setSessionExpiredNotificationEnabled(
+                boolean sessionExpiredNotificationEnabled) {
+            this.sessionExpiredNotificationEnabled = sessionExpiredNotificationEnabled;
+        }
+
+        /**
+         * Sets the caption of the notification. Set to null for no caption. If
+         * both caption and message is null, the notification is disabled;
+         * 
+         * @param sessionExpiredCaption
+         *                the caption
+         */
         public void setSessionExpiredCaption(String sessionExpiredCaption) {
             this.sessionExpiredCaption = sessionExpiredCaption;
         }
 
+        /**
+         * Sets the message of the notification. Set to null for no message. If
+         * both caption and message is null, the notification is disabled;
+         * 
+         * @param sessionExpiredMessage
+         *                the message
+         */
         public void setSessionExpiredMessage(String sessionExpiredMessage) {
             this.sessionExpiredMessage = sessionExpiredMessage;
         }
 
+        /**
+         * Sets the URL to go to when an internal error occurs.
+         * 
+         * @param internalErrorURL
+         *                the URL to go to, or null to reload current
+         */
         public void setInternalErrorURL(String internalErrorURL) {
             this.internalErrorURL = internalErrorURL;
         }
 
+        /**
+         * Enables or disables the notification. If disabled, the set URL (or
+         * current) is loaded directly.
+         * 
+         * @param internalErrorNotificationEnabled
+         *                true = enabled, false = disabled
+         */
+        public void setInternalErrorNotificationEnabled(
+                boolean internalErrorNotificationEnabled) {
+            this.internalErrorNotificationEnabled = internalErrorNotificationEnabled;
+        }
+
+        /**
+         * Sets the caption of the notification. Set to null for no caption. If
+         * both caption and message is null, the notification is disabled;
+         * 
+         * @param internalErrorCaption
+         *                the caption
+         */
         public void setInternalErrorCaption(String internalErrorCaption) {
             this.internalErrorCaption = internalErrorCaption;
         }
 
+        /**
+         * Sets the message of the notification. Set to null for no message. If
+         * both caption and message is null, the notification is disabled;
+         * 
+         * @param internalErrorMessage
+         *                the message
+         */
         public void setInternalErrorMessage(String internalErrorMessage) {
             this.internalErrorMessage = internalErrorMessage;
         }
 
+        /**
+         * Sets the URL to go to when the client is out-of-sync.
+         * 
+         * @param outOfSyncURL
+         *                the URL to go to, or null to reload current
+         */
         public void setOutOfSyncURL(String outOfSyncURL) {
             this.outOfSyncURL = outOfSyncURL;
         }
 
+        /**
+         * Enables or disables the notification. If disabled, the set URL (or
+         * current) is loaded directly.
+         * 
+         * @param outOfSyncNotificationEnabled
+         *                true = enabled, false = disabled
+         */
+        public void setOutOfSyncNotificationEnabled(
+                boolean outOfSyncNotificationEnabled) {
+            this.outOfSyncNotificationEnabled = outOfSyncNotificationEnabled;
+        }
+
+        /**
+         * Sets the caption of the notification. Set to null for no caption. If
+         * both caption and message is null, the notification is disabled;
+         * 
+         * @param outOfSyncCaption
+         *                the caption
+         */
         public void setOutOfSyncCaption(String outOfSyncCaption) {
             this.outOfSyncCaption = outOfSyncCaption;
         }
 
+        /**
+         * Sets the message of the notification. Set to null for no message. If
+         * both caption and message is null, the notification is disabled;
+         * 
+         * @param outOfSyncMessage
+         *                the message
+         */
         public void setOutOfSyncMessage(String outOfSyncMessage) {
             this.outOfSyncMessage = outOfSyncMessage;
         }
