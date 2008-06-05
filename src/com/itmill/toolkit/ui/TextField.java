@@ -176,7 +176,7 @@ public class TextField extends AbstractField {
     }
 
     /**
-     * Gets the formatted dtring value. Sets the field value by using the
+     * Gets the formatted string value. Sets the field value by using the
      * assigned Format.
      * 
      * @return the Formatted value.
