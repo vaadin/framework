@@ -1148,7 +1148,8 @@ public class Table extends AbstractSelect implements Action.Container,
             final int cols = colids.length;
             final int pagelen = getPageLength();
             int firstIndex = getCurrentPageFirstItemIndex();
-            int rows = size();
+            int rows, totalRows;
+            rows = totalRows = size();
             if (rows > 0 && firstIndex >= 0) {
                 rows -= firstIndex;
             }
@@ -1162,18 +1163,18 @@ public class Table extends AbstractSelect implements Action.Container,
             }
             Object id;
             if (firstToBeRenderedInClient >= 0) {
-                if (firstToBeRenderedInClient < size()) {
+                if (firstToBeRenderedInClient < totalRows) {
                     firstIndex = firstToBeRenderedInClient;
                 } else {
-                    firstIndex = size() - 1;
+                    firstIndex = totalRows - 1;
                 }
             } else {
                 // initial load
                 firstToBeRenderedInClient = firstIndex;
             }
-            if (size() > 0) {
-                if (rows + firstIndex > size()) {
-                    rows = size() - firstIndex;
+            if (totalRows > 0) {
+                if (rows + firstIndex > totalRows) {
+                    rows = totalRows - firstIndex;
                 }
             } else {
                 rows = 0;
