@@ -962,6 +962,7 @@ public class GridLayout extends AbstractLayout implements
             int horizontalAlignment, int verticalAlignment) {
         componentToAlignment.put(childComponent, new Integer(
                 horizontalAlignment + verticalAlignment));
+        requestRepaint();
     }
 
     /*
@@ -971,6 +972,7 @@ public class GridLayout extends AbstractLayout implements
      */
     public void setSpacing(boolean enabled) {
         spacing = enabled;
+        requestRepaint();
     }
 
     /*
