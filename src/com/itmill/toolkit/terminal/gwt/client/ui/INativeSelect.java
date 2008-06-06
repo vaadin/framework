@@ -7,7 +7,6 @@ package com.itmill.toolkit.terminal.gwt.client.ui;
 import java.util.Iterator;
 import java.util.Vector;
 
-import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
@@ -15,11 +14,12 @@ public class INativeSelect extends IOptionGroupBase implements Field {
 
     public static final String CLASSNAME = "i-select";
 
-    protected ListBox select;
+    protected TooltipListBox select;
 
     public INativeSelect() {
-        super(new ListBox(false), CLASSNAME);
-        select = (ListBox) optionsContainer;
+        super(new TooltipListBox(false), CLASSNAME);
+        select = (TooltipListBox) optionsContainer;
+        select.setSelect(this);
         select.setVisibleItemCount(1);
         select.addChangeListener(this);
         select.setStyleName(CLASSNAME + "-select");
@@ -27,6 +27,7 @@ public class INativeSelect extends IOptionGroupBase implements Field {
     }
 
     protected void buildOptions(UIDL uidl) {
+        select.setClient(client);
         select.setEnabled(!isDisabled() && !isReadonly());
         select.clear();
         if (isNullSelectionAllowed() && !isNullSelectionItemAvailable()) {
