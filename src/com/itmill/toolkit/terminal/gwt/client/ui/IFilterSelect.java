@@ -145,7 +145,7 @@ public class IFilterSelect extends Composite implements Paintable, Field,
                     - (nullSelectionAllowed ? 1 : 0);
             if (last > 0) {
                 // nullsel not counted, as requested by user
-                DOM.setInnerText(status, (totalSuggestions == 0 ? 0 : first)
+                DOM.setInnerText(status, (matches == 0 ? 0 : first)
                         + "-"
                         + ("".equals(lastFilter) && nullSelectionAllowed
                                 && currentPage == 0 ? last - 1 : last) + "/"
