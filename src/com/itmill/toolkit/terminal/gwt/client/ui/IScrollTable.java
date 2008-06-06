@@ -1989,8 +1989,21 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
                 final Element container = DOM.createDiv();
                 DOM.setElementProperty(container, "className", CLASSNAME
                         + "-cell-content");
-                // TODO make widget cells respect align. text-align:center for
-                // IE, margin: auto for others
+                // TODO most components work with this, but not all (e.g.
+                // Select)
+                // Old comment: make widget cells respect align.
+                // text-align:center for IE, margin: auto for others
+                if (align != ALIGN_LEFT) {
+                    switch (align) {
+                    case ALIGN_CENTER:
+                        DOM.setStyleAttribute(container, "textAlign", "center");
+                        break;
+                    case ALIGN_RIGHT:
+                    default:
+                        DOM.setStyleAttribute(container, "textAlign", "right");
+                        break;
+                    }
+                }
                 DOM.appendChild(td, container);
                 DOM.appendChild(getElement(), td);
                 DOM.appendChild(container, w.getElement());
