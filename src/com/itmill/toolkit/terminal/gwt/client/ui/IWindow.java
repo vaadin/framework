@@ -96,6 +96,7 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
     private boolean modal = false;
 
     private Element modalityCurtain;
+    private Element draggingCurtain;
 
     private Element headerText;
 
@@ -417,6 +418,31 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
         DOM.removeChild(RootPanel.getBodyElement(), modalityCurtain);
     }
 
+    /*
+     * Shows (or hides) an empty div on top of all other content; used when
+     * resizing or moving, so that iframes (etc) do not steal event.
+     */
+    private void showDraggingCurtain(boolean show) {
+        if (show && draggingCurtain == null) {
+            ApplicationConnection.getConsole().log("SHOW");
+            draggingCurtain = DOM.createDiv();
+            DOM.setStyleAttribute(draggingCurtain, "position", "absolute");
+            DOM.setStyleAttribute(draggingCurtain, "top", "0px");
+            DOM.setStyleAttribute(draggingCurtain, "left", "0px");
+            DOM.setStyleAttribute(draggingCurtain, "width", "100%");
+            DOM.setStyleAttribute(draggingCurtain, "height", "100%");
+            DOM.setStyleAttribute(draggingCurtain, "zIndex", ""
+                    + ToolkitOverlay.Z_INDEX);
+
+            DOM.appendChild(RootPanel.getBodyElement(), draggingCurtain);
+        } else if (!show && draggingCurtain != null) {
+            ApplicationConnection.getConsole().log("HIDE");
+            DOM.removeChild(RootPanel.getBodyElement(), draggingCurtain);
+            draggingCurtain = null;
+        }
+
+    }
+
     public void setPopupPosition(int left, int top) {
         super.setPopupPosition(left, top);
         if (left != uidlPositionX && client != null) {
@@ -472,6 +498,7 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
             if (!isActive()) {
                 bringToFront();
             }
+            showDraggingCurtain(true);
             resizing = true;
             startX = DOM.eventGetScreenX(event);
             startY = DOM.eventGetScreenY(event);
@@ -481,11 +508,13 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
             DOM.eventPreventDefault(event);
             break;
         case Event.ONMOUSEUP:
+            showDraggingCurtain(false);
             resizing = false;
             DOM.releaseCapture(getElement());
             setSize(event, true);
             break;
         case Event.ONLOSECAPTURE:
+            showDraggingCurtain(false);
             resizing = false;
         case Event.ONMOUSEMOVE:
             if (resizing) {
@@ -537,6 +566,7 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
             if (!isActive()) {
                 bringToFront();
             }
+            showDraggingCurtain(true);
             dragging = true;
             startX = DOM.eventGetScreenX(event);
             startY = DOM.eventGetScreenY(event);
@@ -547,9 +577,11 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
             break;
         case Event.ONMOUSEUP:
             dragging = false;
+            showDraggingCurtain(false);
             DOM.releaseCapture(getElement());
             break;
         case Event.ONLOSECAPTURE:
+            showDraggingCurtain(false);
             dragging = false;
             break;
         case Event.ONMOUSEMOVE:
