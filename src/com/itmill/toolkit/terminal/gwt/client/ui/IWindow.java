@@ -356,17 +356,29 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
             showModalityCurtain();
         }
         super.show();
-        if (Util.isFF2()) {
-            // "missing cursor" browser bug workaround for FF2 in Windows and
-            // Linux
+
+        setFF2CaretFixEnabled(true);
+
+    }
+
+    private void setFF2CaretFixEnabled(boolean enable) {
+        // "missing cursor" browser bug workaround for FF2 in Windows andLinux
+        if (!Util.isFF2()) {
+            return;
+        }
+        if (enable) {
             DeferredCommand.addCommand(new Command() {
                 public void execute() {
                     String overflow = DOM.getStyleAttribute(getElement(),
                             "overflow");
                     DOM.setStyleAttribute(getElement(), "overflow", "auto");
                 }
+
             });
+        } else {
+            DOM.setStyleAttribute(getElement(), "overflow", "");
         }
+
     }
 
     public void hide() {
@@ -424,7 +436,9 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
      */
     private void showDraggingCurtain(boolean show) {
         if (show && draggingCurtain == null) {
-            ApplicationConnection.getConsole().log("SHOW");
+
+            setFF2CaretFixEnabled(false); // makes FF2 slow
+
             draggingCurtain = DOM.createDiv();
             DOM.setStyleAttribute(draggingCurtain, "position", "absolute");
             DOM.setStyleAttribute(draggingCurtain, "top", "0px");
@@ -436,7 +450,9 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 
             DOM.appendChild(RootPanel.getBodyElement(), draggingCurtain);
         } else if (!show && draggingCurtain != null) {
-            ApplicationConnection.getConsole().log("HIDE");
+
+            setFF2CaretFixEnabled(true); // makes FF2 slow
+
             DOM.removeChild(RootPanel.getBodyElement(), draggingCurtain);
             draggingCurtain = null;
         }
