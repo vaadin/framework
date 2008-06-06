@@ -41,9 +41,15 @@ public class IProgressIndicator extends Widget implements Paintable {
 
         indeterminate = uidl.getBooleanAttribute("indeterminate");
 
+        String style = CLASSNAME;
+        if (uidl.getBooleanAttribute("disabled")) {
+            style += "-disabled";
+        }
+
         if (indeterminate) {
-            this.setStyleName(CLASSNAME + "-indeterminate");
+            this.setStyleName(style + "-indeterminate");
         } else {
+            setStyleName(style);
             try {
                 final float f = Float.parseFloat(uidl
                         .getStringAttribute("state"));
@@ -52,7 +58,17 @@ public class IProgressIndicator extends Widget implements Paintable {
             } catch (final Exception e) {
             }
         }
-        poller.scheduleRepeating(uidl.getIntAttribute("pollinginterval"));
+
+        if (!uidl.getBooleanAttribute("disabled")) {
+            poller.scheduleRepeating(uidl.getIntAttribute("pollinginterval"));
+        }
+    }
+
+    public void setVisible(boolean visible) {
+        super.setVisible(visible);
+        if (!visible) {
+            poller.cancel();
+        }
     }
 
     class Poller extends Timer {

@@ -5,6 +5,13 @@
 	overflow: hidden; /* for IE6 */
 }
 
+.i-progressindicator-disabled {
+	background: #dfe2e4 url(img/disabled.gif);
+	height: 9px;
+	border: 1px solid #b6bbbc;
+	overflow: hidden; /* for IE6 */
+}
+
 .i-progressindicator div {
 	background: #f7f9f9 url(img/progress.png);
 	height: 9px;
@@ -13,6 +20,12 @@
 
 .i-progressindicator-indeterminate {
 	background: #dfe2e4 url(../common/img/ajax-loader-medium.gif);
+	height: 16px;
+	width: 16px;
+	overflow: hidden; /* for IE6 */
+}
+.i-progressindicator-disabled-indeterminate {
+	background: #dfe2e4 url(../common/img/blank.gif);
 	height: 16px;
 	width: 16px;
 	overflow: hidden; /* for IE6 */

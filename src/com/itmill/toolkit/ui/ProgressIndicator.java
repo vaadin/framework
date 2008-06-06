@@ -214,13 +214,23 @@ public class ProgressIndicator extends AbstractField implements Property,
     }
 
     /**
-     * Sets the ProgressIndicator to indeterminate mode.
+     * Sets wheter or not the ProgressIndicator is indeterminate.
      * 
      * @param newValue
      *                true to set to indeterminate mode.
      */
     public void setIndeterminate(boolean newValue) {
         indeterminate = newValue;
+        requestRepaint();
+    }
+
+    /**
+     * Gets whether or not the ProgressIndicator is indeterminate.
+     * 
+     * @return true to set to indeterminate mode.
+     */
+    public boolean isIndeterminate() {
+        return indeterminate;
     }
 
     /**
@@ -231,6 +241,7 @@ public class ProgressIndicator extends AbstractField implements Property,
      */
     public void setPollingInterval(int newValue) {
         pollingInterval = newValue;
+        requestRepaint();
     }
 
     /**
