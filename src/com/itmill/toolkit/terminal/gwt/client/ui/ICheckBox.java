@@ -10,8 +10,8 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
-import com.itmill.toolkit.terminal.gwt.client.ErrorMessage;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
+import com.itmill.toolkit.terminal.gwt.client.Tooltip;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
 public class ICheckBox extends com.google.gwt.user.client.ui.CheckBox implements
@@ -29,8 +29,6 @@ public class ICheckBox extends com.google.gwt.user.client.ui.CheckBox implements
 
     private Icon icon;
 
-    private ErrorMessage errorMessage;
-
     private boolean isBlockMode = false;
 
     public ICheckBox() {
@@ -45,7 +43,7 @@ public class ICheckBox extends com.google.gwt.user.client.ui.CheckBox implements
             }
 
         });
-
+        sinkEvents(Tooltip.TOOLTIP_EVENTS);
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -59,26 +57,14 @@ public class ICheckBox extends com.google.gwt.user.client.ui.CheckBox implements
         }
 
         if (uidl.hasAttribute("error")) {
-            final UIDL errorUidl = uidl.getErrors();
-
             if (errorIndicatorElement == null) {
                 errorIndicatorElement = DOM.createDiv();
-                DOM.sinkEvents(errorIndicatorElement, Event.MOUSEEVENTS);
                 DOM.setElementProperty(errorIndicatorElement, "className",
                         "i-errorindicator");
                 DOM.appendChild(getElement(), errorIndicatorElement);
             }
-            if (errorMessage == null) {
-                errorMessage = new ErrorMessage();
-            }
-            errorMessage.updateFromUIDL(errorUidl);
-
         } else if (errorIndicatorElement != null) {
             DOM.setStyleAttribute(errorIndicatorElement, "display", "none");
-        }
-
-        if (uidl.hasAttribute("description")) {
-            setTitle(uidl.getStringAttribute("description"));
         }
 
         if (uidl.hasAttribute("readonly")) {
@@ -105,22 +91,8 @@ public class ICheckBox extends com.google.gwt.user.client.ui.CheckBox implements
 
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
-        final Element target = DOM.eventGetTarget(event);
-        if (errorIndicatorElement != null
-                && DOM.compare(target, errorIndicatorElement)) {
-            switch (DOM.eventGetType(event)) {
-            case Event.ONMOUSEOVER:
-                errorMessage.showAt(errorIndicatorElement);
-                break;
-            case Event.ONMOUSEOUT:
-                errorMessage.hide();
-                break;
-            case Event.ONCLICK:
-                ApplicationConnection.getConsole().log(
-                        DOM.getInnerHTML(errorMessage.getElement()));
-            default:
-                break;
-            }
+        if (client != null) {
+            client.handleTooltipEvent(event, this);
         }
     }
 

@@ -22,9 +22,9 @@ abstract class IOptionGroupBase extends Composite implements Paintable, Field,
 
     public static final String CLASSNAME_OPTION = "i-select-option";
 
-    ApplicationConnection client;
+    protected ApplicationConnection client;
 
-    String id;
+    protected String id;
 
     protected Set selectedKeys;
 

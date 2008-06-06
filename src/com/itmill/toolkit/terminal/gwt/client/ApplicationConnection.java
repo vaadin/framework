@@ -24,6 +24,7 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.WindowCloseListener;
@@ -59,6 +60,9 @@ public class ApplicationConnection {
     private final HashMap idToPaintable = new HashMap();
 
     private final HashMap paintableToId = new HashMap();
+
+    /** Contains ExtendedTitleInfo by paintable id */
+    private final HashMap paintableToTitle = new HashMap();
 
     private final WidgetSet widgetSet;
 
@@ -533,7 +537,9 @@ public class ApplicationConnection {
     }
 
     public void unregisterPaintable(Paintable p) {
-        idToPaintable.remove(paintableToId.get(p));
+        Object id = paintableToId.get(p);
+        idToPaintable.remove(id);
+        paintableToTitle.remove(id);
         paintableToId.remove(p);
 
         if (p instanceof HasWidgets) {
@@ -788,11 +794,21 @@ public class ApplicationConnection {
             styleBuf.append(" ");
             styleBuf.append(MODIFIED_CLASSNAME);
         }
+
+        TooltipInfo tooltipInfo = getTitleInfo((Paintable) component);
+        if (uidl.hasAttribute("description")) {
+            tooltipInfo.setTitle(uidl.getStringAttribute("description"));
+        }
+
         // add error classname to components w/ error
         if (uidl.hasAttribute("error")) {
             styleBuf.append(" ");
             styleBuf.append(primaryName);
             styleBuf.append(ERROR_CLASSNAME_EXT);
+
+            tooltipInfo.setErrorUidl(uidl.getErrors());
+        } else {
+            tooltipInfo.setErrorUidl(null);
         }
 
         // Styles + disabled & readonly
@@ -901,6 +917,41 @@ public class ApplicationConnection {
         public void notificationHidden(HideEvent event) {
             redirect(url);
         }
+
+    }
+
+    /* Extended title handling */
+
+    /**
+     * Data showed in tooltips are stored centrilized as it may be needed in
+     * varios place: caption, layouts, and in owner components themselves.
+     * 
+     * Updating TooltipInfo is done in updateComponent method.
+     * 
+     */
+    public TooltipInfo getTitleInfo(Paintable titleOwner) {
+        TooltipInfo info = (TooltipInfo) paintableToTitle.get(titleOwner);
+        if (info == null) {
+            info = new TooltipInfo();
+            paintableToTitle.put(titleOwner, info);
+        }
+        return info;
+    }
+
+    private final Tooltip tooltip = new Tooltip(this);
+
+    /**
+     * Component may want to delegate Tooltip handling to client. Layouts add
+     * Tooltip (description, errors) to caption, but some components may want
+     * them to appear one other elements too.
+     * 
+     * Events wanted by this handler are same as in Tooltip.TOOLTIP_EVENTS
+     * 
+     * @param event
+     * @param owner
+     */
+    public void handleTooltipEvent(Event event, Paintable owner) {
+        tooltip.handleTooltipEvent(event, owner);
 
     }
 }

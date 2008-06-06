@@ -30,6 +30,7 @@ import com.google.gwt.user.client.ui.SuggestOracle.Suggestion;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Focusable;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
+import com.itmill.toolkit.terminal.gwt.client.Tooltip;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.Util;
 
@@ -426,7 +427,14 @@ public class IFilterSelect extends Composite implements Paintable, Field,
 
     private final FlowPanel panel = new FlowPanel();
 
-    private final TextBox tb = new TextBox();
+    private final TextBox tb = new TextBox() {
+        public void onBrowserEvent(Event event) {
+            super.onBrowserEvent(event);
+            if (client != null) {
+                client.handleTooltipEvent(event, IFilterSelect.this);
+            }
+        }
+    };
 
     private final SuggestionPopup suggestionPopup = new SuggestionPopup();
 
@@ -465,6 +473,7 @@ public class IFilterSelect extends Composite implements Paintable, Field,
     public IFilterSelect() {
         selectedItemIcon.setVisible(false);
         panel.add(selectedItemIcon);
+        tb.sinkEvents(Tooltip.TOOLTIP_EVENTS);
         panel.add(tb);
         panel.add(popupOpener);
         initWidget(panel);

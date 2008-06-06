@@ -6,12 +6,14 @@ package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.FocusListener;
 import com.google.gwt.user.client.ui.TextBoxBase;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
+import com.itmill.toolkit.terminal.gwt.client.Tooltip;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
 /**
@@ -47,6 +49,14 @@ public class ITextField extends TextBoxBase implements Paintable, Field,
         setStyleName(CLASSNAME);
         addChangeListener(this);
         addFocusListener(this);
+        sinkEvents(Tooltip.TOOLTIP_EVENTS);
+    }
+
+    public void onBrowserEvent(Event event) {
+        super.onBrowserEvent(event);
+        if (client != null) {
+            client.handleTooltipEvent(event, this);
+        }
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {

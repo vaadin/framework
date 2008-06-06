@@ -83,6 +83,26 @@ input.i-modified,
 }
 
 /**
+ * Custom toolktip
+ */
+ .i-tooltip {
+ 	background-color: #ffffcc;
+ 	border: 1px solid #464f52;
+ 	font-size: 12px;
+ 	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
+	color: #464f52;
+ }
+
+.i-tooltip-text {
+	margin: 4px;
+}
+
+ .i-tooltip .i-errormessage {
+	padding: 4px;
+	border-width: 0  0 1px 0;
+ }
+
+/**
  * Context menu styles 
  */
 

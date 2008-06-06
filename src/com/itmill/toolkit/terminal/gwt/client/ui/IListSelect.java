@@ -7,8 +7,10 @@ package com.itmill.toolkit.terminal.gwt.client.ui;
 import java.util.Iterator;
 import java.util.Vector;
 
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.itmill.toolkit.terminal.gwt.client.Tooltip;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
 public class IListSelect extends IOptionGroupBase {
@@ -21,7 +23,22 @@ public class IListSelect extends IOptionGroupBase {
 
     private int lastSelectedIndex = -1;
 
+    private class MyListBox extends ListBox {
+        MyListBox() {
+            super();
+            sinkEvents(Tooltip.TOOLTIP_EVENTS);
+        }
+
+        public void onBrowserEvent(Event event) {
+            super.onBrowserEvent(event);
+            if (client != null) {
+                client.handleTooltipEvent(event, IListSelect.this);
+            }
+        }
+    }
+
     public IListSelect() {
+        // TODO use myListBox to have Tooltips
         super(new ListBox(), CLASSNAME);
         select = (ListBox) optionsContainer;
         select.addChangeListener(this);

@@ -6,11 +6,13 @@ package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import java.util.Date;
 
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.DateTimeService;
 import com.itmill.toolkit.terminal.gwt.client.LocaleNotLoadedException;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
+import com.itmill.toolkit.terminal.gwt.client.Tooltip;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
 public class IDateField extends FlowPanel implements Paintable, Field {
@@ -48,6 +50,14 @@ public class IDateField extends FlowPanel implements Paintable, Field {
     public IDateField() {
         setStyleName(CLASSNAME);
         dts = new DateTimeService();
+        sinkEvents(Tooltip.TOOLTIP_EVENTS);
+    }
+
+    public void onBrowserEvent(Event event) {
+        super.onBrowserEvent(event);
+        if (client != null) {
+            client.handleTooltipEvent(event, this);
+        }
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {

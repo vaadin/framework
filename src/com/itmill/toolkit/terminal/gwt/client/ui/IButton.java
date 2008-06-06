@@ -11,8 +11,8 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
-import com.itmill.toolkit.terminal.gwt.client.ErrorMessage;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
+import com.itmill.toolkit.terminal.gwt.client.Tooltip;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
 public class IButton extends Button implements Paintable {
@@ -26,8 +26,6 @@ public class IButton extends Button implements Paintable {
     private Element errorIndicatorElement;
 
     private final Element captionElement = DOM.createSpan();
-
-    private ErrorMessage errorMessage;
 
     private Icon icon;
 
@@ -49,6 +47,7 @@ public class IButton extends Button implements Paintable {
                 client.updateVariable(id, "state", true, true);
             }
         });
+        sinkEvents(Tooltip.TOOLTIP_EVENTS);
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -68,25 +67,18 @@ public class IButton extends Button implements Paintable {
 
         // handle error
         if (uidl.hasAttribute("error")) {
-            final UIDL errorUidl = uidl.getErrors();
             if (errorIndicatorElement == null) {
                 errorIndicatorElement = DOM.createDiv();
                 DOM.setElementProperty(errorIndicatorElement, "className",
                         "i-errorindicator");
-                DOM.sinkEvents(errorIndicatorElement, Event.MOUSEEVENTS);
-                sinkEvents(Event.MOUSEEVENTS);
             }
             DOM.insertChild(getElement(), errorIndicatorElement, 0);
-            if (errorMessage == null) {
-                errorMessage = new ErrorMessage();
-            }
-            errorMessage.updateFromUIDL(errorUidl);
 
         } else if (errorIndicatorElement != null) {
             DOM.removeChild(getElement(), errorIndicatorElement);
             errorIndicatorElement = null;
         }
-        
+
         if (uidl.hasAttribute("readonly")) {
             setEnabled(false);
         }
@@ -103,14 +95,6 @@ public class IButton extends Button implements Paintable {
                 icon = null;
             }
         }
-
-        // handle description
-        if (uidl.hasAttribute("description")) {
-            setTitle(uidl.getStringAttribute("description"));
-        } else {
-            setTitle(null);
-        }
-
     }
 
     public void setText(String text) {
@@ -118,34 +102,9 @@ public class IButton extends Button implements Paintable {
     }
 
     public void onBrowserEvent(Event event) {
-        final Element target = DOM.eventGetTarget(event);
-        if (errorIndicatorElement != null
-                && DOM.compare(target, errorIndicatorElement)) {
-            switch (DOM.eventGetType(event)) {
-            case Event.ONMOUSEOVER:
-                showErrorMessage();
-                break;
-            case Event.ONMOUSEOUT:
-                hideErrorMessage();
-                break;
-            case Event.ONCLICK:
-                ApplicationConnection.getConsole().log(
-                        DOM.getInnerHTML(errorMessage.getElement()));
-                return;
-            default:
-                break;
-            }
-        }
         super.onBrowserEvent(event);
-    }
-
-    private void hideErrorMessage() {
-        errorMessage.hide();
-    }
-
-    private void showErrorMessage() {
-        if (errorMessage != null) {
-            errorMessage.showAt(errorIndicatorElement);
+        if (client != null) {
+            client.handleTooltipEvent(event, this);
         }
     }
 
