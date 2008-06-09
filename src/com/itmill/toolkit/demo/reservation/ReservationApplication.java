@@ -167,18 +167,12 @@ public class ReservationApplication extends Application {
             }
         });
 
-        final OrderedLayout allLayout = new OrderedLayout(
-                OrderedLayout.ORIENTATION_HORIZONTAL);
-        allLayout.addStyleName(Panel.STYLE_LIGHT);
-        allLayout.setMargin(true);
-
         allTable = new Table();
-        allTable.setHeight(300);
-        allTable.setWidth(700);
+        allTable.setWidth("100%");
+        allTable.setHeight("450px");
         allTable.setColumnCollapsingAllowed(true);
         allTable.setColumnReorderingAllowed(true);
-        allLayout.addComponent(allTable);
-        mainTabs.addTab(allLayout, "All reservations", null);
+        mainTabs.addTab(allTable, "All reservations", null);
         mainTabs.addListener(new TabSheet.SelectedTabChangeListener() {
             public void selectedTabChange(SelectedTabChangeEvent event) {
                 refreshReservations();
