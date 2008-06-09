@@ -420,7 +420,7 @@ public class CalendarPanel extends FlexTable implements MouseListener,
                             "msec", datefield.getMilliseconds(), false);
                 }
 
-                // cal.datefield.getCurrentDate().setTime(newDate.getTime());
+                cal.datefield.getCurrentDate().setTime(newDate.getTime());
                 cal.datefield.getClient().updateVariable(cal.datefield.getId(),
                         "day", cal.datefield.getCurrentDate().getDate(), false);
                 cal.datefield.getClient().updateVariable(cal.datefield.getId(),
