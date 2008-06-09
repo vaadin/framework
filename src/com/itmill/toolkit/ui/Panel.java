@@ -108,49 +108,50 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
     }
 
     /**
-     * Sets the layout of the panel. All the components are moved to new layout.
+     * Sets the layout of the panel.
      * 
-     * @param layout
+     * If given layout is null, an OrderedLayout is used as a default.
+     * 
+     * Components from old layout are not moved to new layout by default
+     * (changed in 5.2.2). Use function in Layout interface manually.
+     * 
+     * @param newLayout
      *                the New layout of the panel.
      */
-    public void setLayout(Layout layout) {
+    public void setLayout(Layout newLayout) {
 
         // Only allow non-null layouts
-        if (layout == null) {
-            layout = new OrderedLayout();
+        if (newLayout == null) {
+            newLayout = new OrderedLayout();
             // Force margins by default
-            layout.setMargin(true);
+            newLayout.setMargin(true);
         }
 
-        if (layout == this.layout) {
+        if (newLayout == layout) {
             // don't set the same layout twice
             return;
         }
 
-        // Sets the panel to be parent for the layout
-        layout.setParent(this);
-
-        // If panel already contains a layout, move the contents to new one
-        // and detach old layout from the panel
-        if (this.layout != null) {
-            layout.moveComponentsFrom(this.layout);
-            this.layout.setParent(null);
-        }
-
-        // Removes the event listeners from the old layout
-        if (this.layout != null) {
-            this.layout
+        // detach old layout if present
+        if (layout != null) {
+            layout.setParent(null);
+            layout
                     .removeListener((ComponentContainer.ComponentAttachListener) this);
-            this.layout
+            layout
                     .removeListener((ComponentContainer.ComponentDetachListener) this);
         }
 
+        // Sets the panel to be parent for the layout
+        newLayout.setParent(this);
+
         // Sets the new layout
-        this.layout = layout;
+        layout = newLayout;
 
         // Adds the event listeners for new layout
-        layout.addListener((ComponentContainer.ComponentAttachListener) this);
-        layout.addListener((ComponentContainer.ComponentDetachListener) this);
+        newLayout
+                .addListener((ComponentContainer.ComponentAttachListener) this);
+        newLayout
+                .addListener((ComponentContainer.ComponentDetachListener) this);
     }
 
     /**
