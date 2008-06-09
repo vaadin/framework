@@ -26,12 +26,13 @@
 	background: #5daee8 url(img/calendar-time-selected.gif) no-repeat;
 }
 .i-datefield-calendarpanel td.i-datefield-entrycalendar-time {
-	width: 45px;
-	padding: 2px 4px;
+	width: 55px;
+	padding: 2px 0px;
 	white-space: nowrap;
 }
 td.i-datefield-entrycalendar-time span {
-	width: 45px;
+	width: 47px;
+	padding: 0px 4px;
 	text-align: right;
 	display: block;
 }
