@@ -16,6 +16,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Container;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
+import com.itmill.toolkit.terminal.gwt.client.StyleConstants;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.Util;
 
@@ -23,6 +24,8 @@ import com.itmill.toolkit.terminal.gwt.client.Util;
  * Two col Layout that places caption on left col and field on right col
  */
 public class IFormLayout extends FlexTable implements Container {
+
+    private final static String CLASSNAME = "i-formlayout";
 
     HashMap componentToCaption = new HashMap();
     private ApplicationConnection client;
@@ -34,6 +37,22 @@ public class IFormLayout extends FlexTable implements Container {
         if (client.updateComponent(this, uidl, false)) {
             return;
         }
+
+        final MarginInfo margins = new MarginInfo(uidl
+                .getIntAttribute("margins"));
+
+        Element margin = getElement();
+        setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_TOP,
+                margins.hasTop());
+        setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_RIGHT,
+                margins.hasRight());
+        setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_BOTTOM,
+                margins.hasBottom());
+        setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_LEFT,
+                margins.hasLeft());
+
+        setStyleName(margin, CLASSNAME + "-" + "spacing", uidl
+                .hasAttribute("spacing"));
 
         int i = 0;
         for (final Iterator it = uidl.getChildIterator(); it.hasNext(); i++) {
@@ -58,13 +77,24 @@ public class IFormLayout extends FlexTable implements Container {
                 client.unregisterPaintable(oldComponent);
                 setWidget(i, 2, (Widget) p);
             }
-            getCellFormatter().setStyleName(i, 0, "i-formlayout-captioncell");
+            getCellFormatter().setStyleName(i, 2, CLASSNAME + "-contentcell");
+            getCellFormatter().setStyleName(i, 0, CLASSNAME + "-captioncell");
             setWidget(i, 0, caption);
 
-            getCellFormatter().setStyleName(i, 1, "i-formlayout-errorcell");
+            getCellFormatter().setStyleName(i, 1, CLASSNAME + "-errorcell");
             setWidget(i, 1, error);
 
             p.updateFromUIDL(childUidl, client);
+
+            String rowstyles = CLASSNAME + "-row";
+            if (i == 0) {
+                rowstyles += " " + CLASSNAME + "-firstrow";
+            }
+            if (!it.hasNext()) {
+                rowstyles += " " + CLASSNAME + "-lastrow";
+            }
+
+            getRowFormatter().setStyleName(i, rowstyles);
 
         }
 
