@@ -136,11 +136,10 @@ public class Caption extends HTML {
     }
 
     public void onBrowserEvent(Event event) {
+        super.onBrowserEvent(event);
         final Element target = DOM.eventGetTarget(event);
         if (client != null && !DOM.compare(target, getElement())) {
             client.handleTooltipEvent(event, owner);
-        } else {
-            super.onBrowserEvent(event);
         }
     }
 
