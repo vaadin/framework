@@ -4,6 +4,8 @@
 
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
+import java.util.Date;
+
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.Widget;
@@ -138,6 +140,8 @@ public class ITextualDate extends IDateField implements Paintable, Field,
                 // remove possibly added invalid value indication
                 removeStyleName(PARSE_ERROR_CLASSNAME);
             }
+
+            showingDate = new Date(date.getTime());
 
             // Update variables
             // (only the smallest defining resolution needs to be
