@@ -241,6 +241,21 @@ public class AbsoluteGrid extends Composite implements ContainerResizedListener 
         private void setHorizontalAling() {
             DOM.setStyleAttribute(getElement(), "textAlign", alignmentInfo
                     .getHorizontalAlignment());
+            if (getWidget() != null) {
+                Element el = getWidget().getElement();
+                if (alignmentInfo.isHorizontalCenter()
+                        || alignmentInfo.isRight()) {
+                    DOM.setStyleAttribute(el, "marginLeft", "auto");
+                } else {
+                    DOM.setStyleAttribute(el, "marginLeft", "");
+                }
+                if (alignmentInfo.isHorizontalCenter()
+                        || alignmentInfo.isLeft()) {
+                    DOM.setStyleAttribute(el, "marginRight", "auto");
+                } else {
+                    DOM.setStyleAttribute(el, "marginRight", "");
+                }
+            }
         }
     }
 
