@@ -184,7 +184,7 @@ input.i-modified,
 	color: #464f52;
  }
 
- .i-tooltip-text {
+.i-tooltip-text {
 	margin: 4px;
 }
 
@@ -192,7 +192,6 @@ input.i-modified,
 	padding: 4px;
 	border-width: 0  0 1px 0;
  }
-
 
 /**
  * Context menu styles 
@@ -546,9 +545,10 @@ input.i-modified,
 }
 
 .i-gridlayout-spacing .i-gridlayout-cell {
-	padding-left: 15px;
-	padding-top:15px;
+	padding-left: 8px;
+	padding-top: 8px;
 }
+
 .i-gridlayout-spacing .i-gridlayout-firstcol {
 	padding-left: 0;
 }
@@ -840,6 +840,13 @@ input.i-modified,
 	overflow: hidden; /* for IE6 */
 }
 
+.i-progressindicator-disabled {
+	background: #dfe2e4 url(progressindicator/img/disabled.gif);
+	height: 9px;
+	border: 1px solid #b6bbbc;
+	overflow: hidden; /* for IE6 */
+}
+
 .i-progressindicator div {
 	background: #f7f9f9 url(progressindicator/img/progress.png);
 	height: 9px;
@@ -848,6 +855,12 @@ input.i-modified,
 
 .i-progressindicator-indeterminate {
 	background: #dfe2e4 url(common/img/ajax-loader-medium.gif);
+	height: 16px;
+	width: 16px;
+	overflow: hidden; /* for IE6 */
+}
+.i-progressindicator-disabled-indeterminate {
+	background: #dfe2e4 url(common/img/blank.gif);
 	height: 16px;
 	width: 16px;
 	overflow: hidden; /* for IE6 */
