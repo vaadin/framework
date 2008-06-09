@@ -249,7 +249,28 @@ public class Time extends FlowPanel implements ChangeListener {
     public void onChange(Widget sender) {
         if (datefield.getCurrentDate() == null) {
             // was null on server, need to set
-            datefield.setCurrentDate(new Date());
+            Date now = datefield.getShowingDate();
+            if (now == null) {
+                now = new Date();
+                datefield.setShowingDate(now);
+            }
+            datefield.setCurrentDate(new Date(now.getTime()));
+
+            // Init variables with current time
+            datefield.getClient().updateVariable(datefield.getId(), "year",
+                    now.getYear() + 1900, false);
+            datefield.getClient().updateVariable(datefield.getId(), "month",
+                    now.getMonth() + 1, false);
+            datefield.getClient().updateVariable(datefield.getId(), "day",
+                    now.getDate(), false);
+            datefield.getClient().updateVariable(datefield.getId(), "hour",
+                    now.getHours(), false);
+            datefield.getClient().updateVariable(datefield.getId(), "min",
+                    now.getMinutes(), false);
+            datefield.getClient().updateVariable(datefield.getId(), "sec",
+                    now.getSeconds(), false);
+            datefield.getClient().updateVariable(datefield.getId(), "msec",
+                    datefield.getMilliseconds(), false);
         }
         if (sender == hours) {
             int h = hours.getSelectedIndex();

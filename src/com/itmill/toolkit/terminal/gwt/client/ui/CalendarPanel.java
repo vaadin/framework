@@ -401,15 +401,26 @@ public class CalendarPanel extends FlexTable implements MouseListener,
 
             try {
                 final Integer day = new Integer(text);
-                if (cal.datefield.getCurrentDate() == null) {
-                    cal.datefield.setCurrentDate(new Date());
-                }
                 final Date newDate = cal.datefield.getShowingDate();
                 newDate.setDate(day.intValue());
                 if (!isEnabledDate(newDate)) {
                     return;
                 }
-                cal.datefield.getCurrentDate().setTime(newDate.getTime());
+                if (cal.datefield.getCurrentDate() == null) {
+                    cal.datefield.setCurrentDate(new Date(newDate.getTime()));
+
+                    // Init variables with current time
+                    datefield.getClient().updateVariable(cal.datefield.getId(),
+                            "hour", newDate.getHours(), false);
+                    datefield.getClient().updateVariable(cal.datefield.getId(),
+                            "min", newDate.getMinutes(), false);
+                    datefield.getClient().updateVariable(cal.datefield.getId(),
+                            "sec", newDate.getSeconds(), false);
+                    datefield.getClient().updateVariable(cal.datefield.getId(),
+                            "msec", datefield.getMilliseconds(), false);
+                }
+
+                // cal.datefield.getCurrentDate().setTime(newDate.getTime());
                 cal.datefield.getClient().updateVariable(cal.datefield.getId(),
                         "day", cal.datefield.getCurrentDate().getDate(), false);
                 cal.datefield.getClient().updateVariable(cal.datefield.getId(),
