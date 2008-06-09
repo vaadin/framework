@@ -15,7 +15,6 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Container;
-import com.itmill.toolkit.terminal.gwt.client.ErrorMessage;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.Util;
@@ -102,7 +101,7 @@ public class IFormLayout extends FlexTable implements Container {
         }
         final ErrorFlag e = (ErrorFlag) componentToError.get(component);
         if (e != null) {
-            e.updateFromUIDL(uidl);
+            e.updateFromUIDL(uidl, component);
         }
     }
 
@@ -177,11 +176,8 @@ public class IFormLayout extends FlexTable implements Container {
 
             if (uidl.hasAttribute("description")) {
                 if (captionText != null) {
-                    DOM.setElementProperty(captionText, "title", uidl
-                            .getStringAttribute("description"));
                     addStyleDependentName("hasdescription");
                 } else {
-                    setTitle(uidl.getStringAttribute("description"));
                     removeStyleDependentName("hasdescription");
                 }
             }
@@ -225,21 +221,27 @@ public class IFormLayout extends FlexTable implements Container {
         public Paintable getOwner() {
             return owner;
         }
+
+        public void onBrowserEvent(Event event) {
+            super.onBrowserEvent(event);
+            if (client != null) {
+                client.handleTooltipEvent(event, owner);
+            }
+        }
     }
 
     private class ErrorFlag extends HTML {
         private static final String CLASSNAME = ".i-form-layout-error-indicator";
         Element errorIndicatorElement;
-        private ErrorMessage errorMessage;
+        private Paintable owner;
 
         public ErrorFlag() {
             setStyleName(CLASSNAME);
         }
 
-        public void updateFromUIDL(UIDL uidl) {
+        public void updateFromUIDL(UIDL uidl, Paintable component) {
+            owner = component;
             if (uidl.hasAttribute("error")) {
-                final UIDL errorUidl = uidl.getErrors();
-
                 if (errorIndicatorElement == null) {
                     errorIndicatorElement = DOM.createDiv();
                     if (Util.isIE()) {
@@ -249,10 +251,6 @@ public class IFormLayout extends FlexTable implements Container {
                             "i-errorindicator");
                     DOM.appendChild(getElement(), errorIndicatorElement);
                 }
-                if (errorMessage == null) {
-                    errorMessage = new ErrorMessage();
-                }
-                errorMessage.updateFromUIDL(errorUidl);
 
             } else if (errorIndicatorElement != null) {
                 DOM.removeChild(getElement(), errorIndicatorElement);
@@ -261,36 +259,9 @@ public class IFormLayout extends FlexTable implements Container {
         }
 
         public void onBrowserEvent(Event event) {
-            final Element target = DOM.eventGetTarget(event);
-            if (errorIndicatorElement != null
-                    && DOM.compare(target, errorIndicatorElement)) {
-                switch (DOM.eventGetType(event)) {
-                case Event.ONMOUSEOVER:
-                    showErrorMessage();
-                    break;
-                case Event.ONMOUSEOUT:
-                    hideErrorMessage();
-                    break;
-                case Event.ONCLICK:
-                    ApplicationConnection.getConsole().log(
-                            DOM.getInnerHTML(errorMessage.getElement()));
-                default:
-                    break;
-                }
-            } else {
-                super.onBrowserEvent(event);
-            }
-        }
-
-        private void hideErrorMessage() {
-            if (errorMessage != null) {
-                errorMessage.hide();
-            }
-        }
-
-        private void showErrorMessage() {
-            if (errorMessage != null) {
-                errorMessage.showAt(errorIndicatorElement);
+            super.onBrowserEvent(event);
+            if (owner != null) {
+                client.handleTooltipEvent(event, owner);
             }
         }
 
