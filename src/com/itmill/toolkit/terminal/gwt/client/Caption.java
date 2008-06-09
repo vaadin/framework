@@ -153,8 +153,9 @@ public class Caption extends HTML {
         if (uidl.hasAttribute("icon")) {
             return true;
         }
-
-        // TODO Description ??
+        if (uidl.hasAttribute("required")) {
+            return true;
+        }
 
         return false;
     }
