@@ -552,7 +552,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
                 if (!width.equals("100%")) {
                     super.setWidth(width);
                 }
-                // contained blocks are relative to parents
+                // contained blocks are relatively to container element
                 bodyContainer.setWidth("100%");
                 tHead.setWidth("100%");
 
@@ -1309,6 +1309,15 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
             final HeaderCell c = getHeaderCell(cid);
             if (!c.isEnabled()) {
                 setHeaderCell(index, c);
+                if (c.getWidth() == -1) {
+                    if (initializedAndAttached) {
+                        // column is not drawn before,
+                        // we will need a column width recalculation
+                        initializedAndAttached = false;
+                        initialContentReceived = false;
+                        isNewBody = true;
+                    }
+                }
             }
         }
 
