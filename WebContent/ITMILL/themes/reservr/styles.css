@@ -14,13 +14,12 @@ body {
 }
 
 #header {
-	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana,
-		sans-serif;
+	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
 	padding: 10px;
 }
 
 #logo {
-	line-height: 33px;
+	line-height: 43px;
 	color: #F14C1A;
 	font-size: 22px;
 	letter-spacing: -0.03em;
