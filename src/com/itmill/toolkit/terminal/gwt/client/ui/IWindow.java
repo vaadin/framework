@@ -157,8 +157,6 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
         DOM.setElementProperty(closeBox, "className", CLASSNAME + "-closebox");
         DOM.appendChild(footer, resizeBox);
 
-        DOM.sinkEvents(header, Event.MOUSEEVENTS);
-        DOM.sinkEvents(resizeBox, Event.MOUSEEVENTS);
         DOM.sinkEvents(getElement(), Event.ONLOSECAPTURE);
         DOM.sinkEvents(closeBox, Event.ONCLICK);
         DOM.sinkEvents(contents, Event.ONCLICK);
@@ -179,6 +177,8 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
         DOM.appendChild(wrapper, wrapper2);
         DOM.appendChild(super.getContainerElement(), wrapper);
         DOM.setElementProperty(getElement(), "className", CLASSNAME);
+
+        sinkEvents(Event.MOUSEEVENTS);
 
         setWidget(contentPanel);
     }
@@ -487,16 +487,18 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
         }
 
         final Element target = DOM.eventGetTarget(event);
-        if (dragging || DOM.isOrHasChild(header, target)) {
-            onHeaderEvent(event);
-            DOM.eventCancelBubble(event, true);
-        } else if (resizing || DOM.compare(resizeBox, target)) {
+        if (resizing || DOM.compare(resizeBox, target)) {
             onResizeEvent(event);
             DOM.eventCancelBubble(event, true);
-        } else if (DOM.compare(target, closeBox) && type == Event.ONCLICK) {
-            onCloseClick();
+        } else if (DOM.compare(target, closeBox)) {
+            if (type == Event.ONCLICK) {
+                onCloseClick();
+                DOM.eventCancelBubble(event, true);
+            }
+        } else if (dragging || !DOM.isOrHasChild(contents, target)) {
+            onDragEvent(event);
             DOM.eventCancelBubble(event, true);
-        } else {
+        } else if (type == Event.ONCLICK) {
             // clicked inside window, ensure to be on top
             if (!isActive()) {
                 bringToFront();
@@ -576,7 +578,7 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
         }
     }
 
-    private void onHeaderEvent(Event event) {
+    private void onDragEvent(Event event) {
         switch (DOM.eventGetType(event)) {
         case Event.ONMOUSEDOWN:
             if (!isActive()) {
@@ -615,7 +617,7 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 
     public boolean onEventPreview(Event event) {
         if (dragging) {
-            onHeaderEvent(event);
+            onDragEvent(event);
             return false;
         } else if (resizing) {
             onResizeEvent(event);
