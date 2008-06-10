@@ -1,7 +1,7 @@
 /* 
 @ITMillApache2LicenseForJavaFiles@
  */
-
+// 
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import com.google.gwt.user.client.Command;
@@ -9,7 +9,6 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
@@ -60,7 +59,6 @@ public class ISlider extends Widget implements Paintable, Field,
 
     /* Temporary dragging/animation variables */
     private boolean dragging = false;
-    private Timer anim;
 
     public ISlider() {
         super();
@@ -137,10 +135,6 @@ public class ISlider extends Widget implements Paintable, Field,
         value = new Double(uidl.getDoubleVariable("value"));
 
         handleSize = uidl.getIntAttribute("hsize");
-
-        if (uidl.hasAttribute("size")) {
-            size = uidl.getIntAttribute("size");
-        }
 
         buildBase();
 
@@ -230,6 +224,7 @@ public class ISlider extends Widget implements Paintable, Field,
         if (value == null) {
             return;
         }
+
         if (value.doubleValue() < min) {
             value = new Double(min);
         } else if (value.doubleValue() > max) {
@@ -245,6 +240,13 @@ public class ISlider extends Widget implements Paintable, Field,
                 domProperty));
         final int range = baseSize - handleSize;
         double v = value.doubleValue();
+        // Round value to resolution
+        if (resolution > 0) {
+            v = Math.round(v * Math.pow(10, resolution));
+            v = v / Math.pow(10, resolution);
+        } else {
+            v = Math.round(v);
+        }
         final double valueRange = max - min;
         double p = 0;
         if (valueRange > 0) {
@@ -262,45 +264,7 @@ public class ISlider extends Widget implements Paintable, Field,
 
         final int current = DOM.getIntStyleAttribute(handle, styleAttribute);
 
-        if ((int) (Math.round(pos)) != current && animate) {
-            if (anim != null) {
-                anim.cancel();
-            }
-            anim = new Timer() {
-                private int current;
-                private final int goal = (int) Math.round(pos);
-                private int dir = 0;
-
-                public void run() {
-                    current = DOM.getIntStyleAttribute(handle, styleAttribute);
-
-                    // Determine direction
-                    if (dir == 0) {
-                        dir = (goal - current) / Math.abs(goal - current);
-                    }
-
-                    if ((dir > 0 && current >= goal)
-                            || (dir < 0 && current <= goal)) {
-                        cancel();
-                        return;
-                    }
-                    final int increment = (goal - current) / 2;
-                    DOM.setStyleAttribute(handle, styleAttribute,
-                            (current + increment) + "px");
-                }
-            };
-            anim.scheduleRepeating(50);
-        } else {
-            DOM.setStyleAttribute(handle, styleAttribute, ((int) pos) + "px");
-        }
-
-        // Round value to resolution
-        if (resolution > 0) {
-            v = (int) (v * Math.pow(10, resolution));
-            v = v / Math.pow(10, resolution);
-        } else {
-            v = Math.round(v);
-        }
+        DOM.setStyleAttribute(handle, styleAttribute, (Math.round(pos)) + "px");
 
         // TODO give more detailed info when dragging and do roundup
         DOM.setElementAttribute(handle, "title", "" + v);
@@ -325,9 +289,9 @@ public class ISlider extends Widget implements Paintable, Field,
         } else if (dragging || DOM.compare(targ, handle)) {
             processHandleEvent(event);
         } else if (DOM.compare(targ, smaller)) {
-            decreaseValue(event, true);
+            decreaseValue(event);
         } else if (DOM.compare(targ, bigger)) {
-            increaseValue(event, true);
+            increaseValue(event);
         } else {
             processBaseEvent(event);
         }
@@ -336,9 +300,9 @@ public class ISlider extends Widget implements Paintable, Field,
     private void processMouseWheelEvent(Event event) {
         final int dir = DOM.eventGetMouseWheelVelocityY(event);
         if (dir < 0) {
-            increaseValue(event, false);
+            increaseValue(event);
         } else {
-            decreaseValue(event, false);
+            decreaseValue(event);
         }
         DOM.eventPreventDefault(event);
         DOM.eventCancelBubble(event, true);
@@ -348,9 +312,6 @@ public class ISlider extends Widget implements Paintable, Field,
         switch (DOM.eventGetType(event)) {
         case Event.ONMOUSEDOWN:
             if (!disabled && !readonly) {
-                if (anim != null) {
-                    anim.cancel();
-                }
                 dragging = true;
                 DOM.setCapture(getElement());
                 DOM.eventPreventDefault(event); // prevent selecting text
@@ -386,48 +347,14 @@ public class ISlider extends Widget implements Paintable, Field,
         }
     }
 
-    private void decreaseValue(Event event, boolean animate) {
+    private void decreaseValue(Event event) {
         setValue(new Double(value.doubleValue() - Math.pow(10, -resolution)),
                 false, true);
-        if (DOM.eventGetType(event) == Event.ONMOUSEDOWN && animate) {
-            if (anim != null) {
-                anim.cancel();
-            }
-            anim = new Timer() {
-                public void run() {
-                    if (value.doubleValue() - Math.pow(10, -resolution) > min) {
-                        setValue(new Double(value.doubleValue()
-                                - Math.pow(10, -resolution)), false, true);
-                    }
-                }
-            };
-            anim.scheduleRepeating(100);
-            DOM.eventCancelBubble(event, true);
-        } else if (anim != null) {
-            anim.cancel();
-        }
     }
 
-    private void increaseValue(Event event, boolean animate) {
+    private void increaseValue(Event event) {
         setValue(new Double(value.doubleValue() + Math.pow(10, -resolution)),
                 false, true);
-        if (DOM.eventGetType(event) == Event.ONMOUSEDOWN && animate) {
-            if (anim != null) {
-                anim.cancel();
-            }
-            anim = new Timer() {
-                public void run() {
-                    if (value.doubleValue() - Math.pow(10, -resolution) < max) {
-                        setValue(new Double(value.doubleValue()
-                                + Math.pow(10, -resolution)), false, true);
-                    }
-                }
-            };
-            anim.scheduleRepeating(100);
-            DOM.eventCancelBubble(event, true);
-        } else if (anim != null) {
-            anim.cancel();
-        }
     }
 
     private void setValueByEvent(Event event, boolean animate, boolean roundup) {
@@ -474,12 +401,7 @@ public class ISlider extends Widget implements Paintable, Field,
             // Calculate decoration size
             DOM.setStyleAttribute(base, "height", "0");
             DOM.setStyleAttribute(base, "overflow", "hidden");
-            final int decoHeight = DOM.getElementPropertyInt(getElement(),
-                    "offsetHeight");
-            // Get available space size
-            final int availableHeight = DOM.getElementPropertyInt(DOM
-                    .getParent(getElement()), "offsetHeight");
-            int h = availableHeight - decoHeight;
+            int h = DOM.getElementPropertyInt(getElement(), "offsetHeight");
             if (h < MIN_SIZE) {
                 h = MIN_SIZE;
             }
