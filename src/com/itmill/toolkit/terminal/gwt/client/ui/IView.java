@@ -59,7 +59,7 @@ public class IView extends SimplePanel implements Paintable,
 
         DOM.sinkEvents(getElement(), Event.ONKEYDOWN);
 
-        DOM.setElementPropertyInt(getElement(), "tabIndex", 0);
+        DOM.setElementProperty(getElement(), "tabIndex", "0");
 
         RootPanel.get(elementId).add(this);
 
