@@ -1,3 +1,6 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
 package com.itmill.toolkit.terminal.gwt.client;
 
 public class TooltipInfo {
