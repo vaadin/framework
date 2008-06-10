@@ -1,3 +1,6 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
 package com.itmill.toolkit.terminal.gwt.client;
 
 import com.google.gwt.user.client.DOM;
