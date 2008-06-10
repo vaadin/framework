@@ -1311,7 +1311,7 @@ public class ApplicationServlet extends HttpServlet {
             String servletPath = "";
             if (isApplicationRunnerServlet) {
                 final String[] URIparts = getApplicationRunnerURIs(request);
-                servletPath = URIparts[1];
+                servletPath = URIparts[1] + "/";
             } else {
                 servletPath = request.getContextPath()
                         + request.getServletPath();
@@ -1364,7 +1364,7 @@ public class ApplicationServlet extends HttpServlet {
             final String[] URIparts = getApplicationRunnerURIs(request);
             final String applicationClassname = URIparts[4];
             applicationUrl = new URL(getApplicationUrl(request).toString()
-                    + applicationClassname);
+                    + applicationClassname + "/");
             try {
                 applicationClass = classLoader.loadClass(applicationClassname);
             } catch (final ClassNotFoundException e) {
