@@ -1407,6 +1407,14 @@ input.i-modified,
 	position: relative; /* hide this from IE, it works without it */
 }
 
+* html .i-table-column-selector {
+	position: static;
+}
+
+*+html .i-table-column-selector  {
+	position: static;
+}
+
 .i-table-focus-slot-left {
 	border-left: 2px solid #b6bbbc;
 	margin-right: -2px;
