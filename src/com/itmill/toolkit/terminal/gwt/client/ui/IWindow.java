@@ -253,7 +253,8 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
         }
 
         if (uidl.hasAttribute("caption")) {
-            setCaption(uidl.getStringAttribute("caption"));
+            setCaption(uidl.getStringAttribute("caption"), uidl
+                    .getStringAttribute("icon"));
         }
 
         boolean showingUrl = false;
@@ -472,7 +473,16 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
     }
 
     public void setCaption(String c) {
-        DOM.setInnerText(headerText, c);
+        setCaption(c, null);
+    }
+
+    public void setCaption(String c, String icon) {
+        String html = c;
+        if (icon != null) {
+            icon = client.translateToolkitUri(icon);
+            html = "<img src=\"" + icon + "\" class=\"i-icon\" />" + html;
+        }
+        DOM.setInnerHTML(headerText, html);
     }
 
     protected Element getContainerElement() {

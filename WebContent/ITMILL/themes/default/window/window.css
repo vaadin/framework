@@ -42,6 +42,11 @@
 	overflow:hidden;
 }
 
+.i-window-header .i-icon {
+	vertical-align: bottom;
+}
+
+
 .i-window-outerheader:before {
 	display: block;
 	content: "";
