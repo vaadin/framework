@@ -982,6 +982,10 @@ input.i-modified,
 	padding: 3px 0 0 4px;
 	font-size: 13px;
 }
+.i-filterselect-input:focus {
+	/* button clips safari outline otherwise (#1684) */
+	outline-offset: -1px; 
+}
 
 .i-filterselect-button {
 	float: right;
