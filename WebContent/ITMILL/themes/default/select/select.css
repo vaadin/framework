@@ -100,7 +100,8 @@
 .i-filterselect-button:hover {
 	background-position: bottom left;
 }
-.i-disabled .i-filterselect-button:hover {
+.i-disabled .i-filterselect-button:hover,
+.i-readonly .i-filterselect-button:hover {
 	background-position: top left;
 }
 

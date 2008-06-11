@@ -776,6 +776,10 @@ public class ApplicationConnection {
             styleBuf.append(" ");
             styleBuf.append("i-disabled");
         }
+        if (uidl.getBooleanAttribute("readonly")) {
+            styleBuf.append(" ");
+            styleBuf.append("i-readonly");
+        }
 
         // add additional styles as css classes, prefixed with component default
         // stylename

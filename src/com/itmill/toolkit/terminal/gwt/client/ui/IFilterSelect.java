@@ -526,7 +526,10 @@ public class IFilterSelect extends Composite implements Paintable, Field,
         paintableId = uidl.getId();
         this.client = client;
 
-        if (uidl.hasAttribute("disabled") || uidl.hasAttribute("readonly")) {
+        boolean readonly = uidl.hasAttribute("readonly");
+        boolean disabled = uidl.hasAttribute("disabled");
+
+        if (disabled || readonly) {
             tb.setEnabled(false);
             enabled = false;
         } else {
