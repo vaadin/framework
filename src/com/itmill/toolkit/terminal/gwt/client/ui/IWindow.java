@@ -491,12 +491,18 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 
     public void onBrowserEvent(final Event event) {
         final int type = DOM.eventGetType(event);
+
         if (type == Event.ONKEYDOWN && shortcutHandler != null) {
             shortcutHandler.handleKeyboardEvent(event);
             return;
         }
 
         final Element target = DOM.eventGetTarget(event);
+
+        if (client != null && !DOM.compare(target, header)) {
+            client.handleTooltipEvent(event, this);
+        }
+
         if (resizing || DOM.compare(resizeBox, target)) {
             onResizeEvent(event);
             DOM.eventCancelBubble(event, true);
