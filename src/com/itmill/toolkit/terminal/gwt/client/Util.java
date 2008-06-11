@@ -26,38 +26,6 @@ public class Util {
     }-*/;
 
     /**
-     * Detects if current browser is IE.
-     * 
-     * @return true if IE
-     */
-    public static native boolean isIE()
-    /*-{
-       var browser=$wnd.navigator.appName;
-       if (browser=="Microsoft Internet Explorer") {
-           return true;
-       }
-       return false;
-    }-*/;
-
-    /**
-     * Detects if current browser is IE6.
-     * 
-     * @return true if IE6
-     */
-    public static native boolean isIE6()
-    /*-{
-    var browser=$wnd.navigator.appName;
-    if (browser=="Microsoft Internet Explorer") {
-    	var ua = navigator.userAgent;
-      		var re  = new RegExp("MSIE ([0-9]{1,}[\.0-9]{0,})");
-      		if (re.exec(ua) != null)
-        		rv = parseFloat(RegExp.$1);
-        		if(rv == 6) return true;
-    }
-    return false;
-    }-*/;
-
-    /**
      * Nulls oncontextmenu function on given element. We need to manually clear
      * context menu events due bad browsers memory leaks, since GWT don't
      * support them.
@@ -106,23 +74,43 @@ public class Util {
         return null;
     }
 
-    public static boolean isIE7() {
-        return isIE() && !isIE6();
+    /**
+     * Detects if current browser is IE.
+     * 
+     * @deprecated use BrowserInfo class instead
+     * 
+     * @return true if IE
+     */
+    public static boolean isIE() {
+        return BrowserInfo.get().isIE();
     }
 
-    public static native boolean isFF2()
-    /*-{
-    var browser=$wnd.navigator.appName;
-    if (browser=="Netscape") {
-        var ua = navigator.userAgent;
-        var re  = new RegExp("Firefox/([0-9]+)");
-        if (re.exec(ua) != null)
-            var rv = parseInt(RegExp.$1);
-            if(rv && rv == 2) 
-                return true;
+    /**
+     * Detects if current browser is IE6.
+     * 
+     * @deprecated use BrowserInfo class instead
+     * 
+     * @return true if IE6
+     */
+    public static boolean isIE6() {
+        return BrowserInfo.get().isIE6();
     }
-    return false;
-    }-*/;
+
+    /**
+     * @deprecated use BrowserInfo class instead
+     * @return
+     */
+    public static boolean isIE7() {
+        return BrowserInfo.get().isIE7();
+    }
+
+    /**
+     * @deprecated use BrowserInfo class instead
+     * @return
+     */
+    public static boolean isFF2() {
+        return BrowserInfo.get().isFF2();
+    }
 
     private static final Element escapeHtmlHelper = DOM.createDiv();
 
