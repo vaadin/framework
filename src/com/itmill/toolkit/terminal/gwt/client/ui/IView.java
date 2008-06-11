@@ -17,6 +17,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
+import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.Util;
@@ -67,7 +68,23 @@ public class IView extends SimplePanel implements Paintable,
 
         // set focus to iview element by default to listen possible keyboard
         // shortcuts
-        focus(getElement());
+        if (BrowserInfo.get().isSafari()
+                && BrowserInfo.get().getWebkitVersion() < 526) {
+            // old webkits don't support focusing div elements
+            Element fElem = DOM.createInputCheck();
+            DOM.setStyleAttribute(fElem, "margin", "0");
+            DOM.setStyleAttribute(fElem, "padding", "0");
+            DOM.setStyleAttribute(fElem, "border", "0");
+            DOM.setStyleAttribute(fElem, "outline", "0");
+            DOM.setStyleAttribute(fElem, "width", "1px");
+            DOM.setStyleAttribute(fElem, "height", "1px");
+            DOM.setStyleAttribute(fElem, "position", "absolute");
+            DOM.setStyleAttribute(fElem, "opacity", "0.1");
+            DOM.appendChild(getElement(), fElem);
+            focus(fElem);
+        } else {
+            focus(getElement());
+        }
 
     }
 
