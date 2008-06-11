@@ -151,7 +151,9 @@ public class TreeExample extends CustomComponent implements Action.Handler,
         final Property p = item.getItemProperty(CAPTION_PROPERTY);
         p.setValue(caption);
         if (parent != null) {
+            tree.setChildrenAllowed(parent, true);
             tree.setParent(id, parent);
+            tree.setChildrenAllowed(id, false);
         }
         return id;
     }
