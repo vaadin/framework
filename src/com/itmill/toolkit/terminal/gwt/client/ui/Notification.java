@@ -142,10 +142,10 @@ public class Notification extends ToolkitOverlay {
 
     public void setPosition(int position) {
         final Element el = getElement();
-        DOM.setStyleAttribute(el, "top", null);
-        DOM.setStyleAttribute(el, "left", null);
-        DOM.setStyleAttribute(el, "bottom", null);
-        DOM.setStyleAttribute(el, "right", null);
+        DOM.setStyleAttribute(el, "top", "");
+        DOM.setStyleAttribute(el, "left", "");
+        DOM.setStyleAttribute(el, "bottom", "");
+        DOM.setStyleAttribute(el, "right", "");
         switch (position) {
         case TOP_LEFT:
             DOM.setStyleAttribute(el, "top", "0px");
@@ -170,7 +170,7 @@ public class Notification extends ToolkitOverlay {
             break;
         case CENTERED_BOTTOM:
             center();
-            DOM.setStyleAttribute(el, "top", null);
+            DOM.setStyleAttribute(el, "top", "");
             DOM.setStyleAttribute(el, "bottom", "0px");
             break;
         default:
