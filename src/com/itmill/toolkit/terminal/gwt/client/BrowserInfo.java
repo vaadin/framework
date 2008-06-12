@@ -109,6 +109,10 @@ public class BrowserInfo {
         return ieVersion;
     }
 
+    public boolean isOpera() {
+        return isOpera;
+    }
+
     public native static String getBrowserString()
     /*-{
         return $wnd.navigator.userAgent;
@@ -117,7 +121,7 @@ public class BrowserInfo {
     public static void test() {
         Console c = ApplicationConnection.getConsole();
 
-        c.log("getBrowserString() " + get().getBrowserString());
+        c.log("getBrowserString() " + getBrowserString());
         c.log("isIE() " + get().isIE());
         c.log("isIE6() " + get().isIE6());
         c.log("isIE7() " + get().isIE7());

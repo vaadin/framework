@@ -68,7 +68,7 @@ public class IView extends SimplePanel implements Paintable,
 
         // set focus to iview element by default to listen possible keyboard
         // shortcuts
-        if (BrowserInfo.get().isSafari()
+        if (BrowserInfo.get().isOpera() || BrowserInfo.get().isSafari()
                 && BrowserInfo.get().getWebkitVersion() < 526) {
             // old webkits don't support focusing div elements
             Element fElem = DOM.createInputCheck();
