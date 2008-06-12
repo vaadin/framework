@@ -10,6 +10,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
+import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
 import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.ErrorMessage;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
@@ -44,6 +45,10 @@ public class IPanel extends SimplePanel implements Paintable,
     private Paintable layout;
 
     ShortcutActionHandler shortcutHandler;
+
+    private String width;
+
+    private Element geckoCaptionMeter;
 
     public IPanel() {
         super();
@@ -136,7 +141,7 @@ public class IPanel extends SimplePanel implements Paintable,
         }
 
         // Height adjustment
-        iLayout();
+        iLayout(false);
 
         // Render content
         final UIDL layoutUidl = uidl.getChildUIDL(0);
@@ -212,6 +217,10 @@ public class IPanel extends SimplePanel implements Paintable,
     }
 
     public void iLayout() {
+        iLayout(true);
+    }
+
+    public void iLayout(boolean runGeckoFix) {
         if (height != null && height != "") {
             final boolean hasChildren = getWidget() != null;
             Element contentEl = null;
@@ -267,6 +276,30 @@ public class IPanel extends SimplePanel implements Paintable,
         } else {
             DOM.setStyleAttribute(contentNode, "height", "");
         }
+
+        if (runGeckoFix && BrowserInfo.get().isGecko()) {
+            // workaround for #1764
+            if (width == null || width.equals("")) {
+                if (geckoCaptionMeter == null) {
+                    geckoCaptionMeter = DOM.createDiv();
+                    DOM.appendChild(captionNode, geckoCaptionMeter);
+                }
+                int captionWidth = DOM.getElementPropertyInt(captionText,
+                        "offsetWidth");
+                int availWidth = DOM.getElementPropertyInt(geckoCaptionMeter,
+                        "offsetWidth");
+                if (captionWidth == availWidth) {
+                    /*
+                     * Caption width defines panel width -> Gecko based browsers
+                     * somehow fails to float things right, without the
+                     * "noncode" below
+                     */
+                    setWidth(getOffsetWidth() + "px");
+                } else {
+                    DOM.setStyleAttribute(captionNode, "width", "");
+                }
+            }
+        }
         Util.runDescendentsLayout(this);
     }
 
@@ -311,9 +344,11 @@ public class IPanel extends SimplePanel implements Paintable,
      * Panel handles dimensions by itself.
      */
     public void setWidth(String width) {
-        // Let browser handle 100% width (DIV element takes all size by default).
+        this.width = width;
+        // Let browser handle 100% width (DIV element takes all size by
+        // default).
         // This way we can specify borders for Panel's outer element.
-        if(!width.equals("100%")) {
+        if (!width.equals("100%")) {
             super.setWidth(width);
         }
     }

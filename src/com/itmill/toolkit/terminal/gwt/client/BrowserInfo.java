@@ -89,6 +89,10 @@ public class BrowserInfo {
         return isIE && ieVersion == 7;
     }
 
+    public boolean isGecko() {
+        return isGecko;
+    }
+
     public boolean isFF2() {
         return isGecko && geckoVersion == 1.8;
     }
