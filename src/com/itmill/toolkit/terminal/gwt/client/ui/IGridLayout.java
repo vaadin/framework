@@ -20,20 +20,47 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConst
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.CaptionWrapper;
 import com.itmill.toolkit.terminal.gwt.client.Container;
+import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.StyleConstants;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
+import com.itmill.toolkit.terminal.gwt.client.Util;
 
-public class IGridLayout extends SimplePanel implements Paintable, Container {
+public class IGridLayout extends SimplePanel implements Paintable, Container,
+        ContainerResizedListener {
 
     public static final String CLASSNAME = "i-gridlayout";
 
     private Grid grid = new Grid();
 
+    private boolean needsLayout = false;
+
+    private Element margin = DOM.createDiv();
+
+    private Element meterElement;
+
+    private String width;
+
     public IGridLayout() {
         super();
+        DOM.appendChild(getElement(), margin);
+        DOM.setStyleAttribute(getElement(), "overflow", "hidden");
         setStyleName(CLASSNAME);
         setWidget(grid);
+    }
+
+    protected Element getContainerElement() {
+        return margin;
+    }
+
+    public void setWidth(String width) {
+        this.width = width;
+        if (width != null && !width.equals("")) {
+            needsLayout = true;
+        } else {
+            needsLayout = false;
+            grid.setWidth("");
+        }
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -41,11 +68,9 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
         if (client.updateComponent(this, uidl, false)) {
             return;
         }
-
         final MarginInfo margins = new MarginInfo(uidl
                 .getIntAttribute("margins"));
 
-        Element margin = getElement();
         setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_TOP,
                 margins.hasTop());
         setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_RIGHT,
@@ -57,7 +82,7 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
 
         setStyleName(margin, CLASSNAME + "-" + "spacing", uidl
                 .hasAttribute("spacing"));
-
+        iLayout();
         grid.updateFromUIDL(uidl, client);
     }
 
@@ -218,6 +243,26 @@ public class IGridLayout extends SimplePanel implements Paintable, Container {
             wrapper.updateCaption(uidl);
         }
 
+    }
+
+    public void iLayout() {
+        if (needsLayout) {
+            super.setWidth(width);
+            if (meterElement == null) {
+                meterElement = DOM.createDiv();
+                DOM.setStyleAttribute(meterElement, "overflow", "hidden");
+                DOM.setStyleAttribute(meterElement, "height", "0");
+                DOM.appendChild(getContainerElement(), meterElement);
+            }
+            int contentWidth = DOM.getElementPropertyInt(meterElement,
+                    "offsetWidth");
+            int offsetWidth = getOffsetWidth();
+
+            grid.setWidth((offsetWidth - (offsetWidth - contentWidth)) + "px");
+        } else {
+            grid.setWidth("");
+        }
+        Util.runDescendentsLayout(this);
     }
 
 }
