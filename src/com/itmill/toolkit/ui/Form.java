@@ -971,7 +971,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
     public Layout getFooter() {
         if (formFooter == null) {
             formFooter = new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
-            setParent(formFooter);
+            formFooter.setParent(this);
         }
         return formFooter;
     }
