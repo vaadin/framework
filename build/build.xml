@@ -82,6 +82,28 @@
 		</delete>
 	</target>
 
+    <!-- Find out which platform we are in -->
+	<target name="init-platform">
+        <if>
+            <contains string="${os.name}" substring="Windows" />
+            <then>
+                <property name="platform" value="windows" />
+            </then>
+        </if>
+        <if>
+            <equals arg1="${os.name}" arg2="Linux" />
+            <then>
+                <property name="platform" value="linux" />
+            </then>
+        </if>
+        <if>
+            <equals arg1="${os.name}" arg2="Mac OS X" />
+            <then>
+                <property name="platform" value="mac" />
+            </then>
+        </if>
+	</target>
+	
 	<!-- Initialization - - - - - - - - - - - - - - - - - - - - - - - - -->
 	<target name="init">
 
@@ -94,25 +116,7 @@
 
 		<!-- Create result dir unless already exists -->
 		<mkdir dir="${result-path}" />
-		<!-- Find out which platform we are in -->
-		<if>
-			<contains string="${os.name}" substring="Windows" />
-			<then>
-				<property name="platform" value="windows" />
-			</then>
-		</if>
-		<if>
-			<equals arg1="${os.name}" arg2="Linux" />
-			<then>
-				<property name="platform" value="linux" />
-			</then>
-		</if>
-		<if>
-			<equals arg1="${os.name}" arg2="Mac OS X" />
-			<then>
-				<property name="platform" value="mac" />
-			</then>
-		</if>
+
 		<!-- required when compiling WebContent/ITMILL/widgetsets (and also Java server-side classes) -->
 		<property name="lib-gwt-dev" value="gwt-dev-${platform}.jar" />
 
@@ -614,66 +618,117 @@
 		</java>
 	</target>
 
-	<target name="compile-client-side" depends="webcontent">
-		<parallel>
-			<sequential>
-				<echo>Compiling src (client-side)</echo>
-				<echo>com.itmill.toolkit.terminal.gwt.DefaultWidgetSet</echo>
-				<java classname="com.google.gwt.dev.GWTCompiler" failonerror="yes" fork="yes" maxmemory="512m">
-					<arg value="-out" />
-					<arg value="${output-dir}/WebContent/ITMILL/widgetsets" />
-					<arg value="com.itmill.toolkit.terminal.gwt.DefaultWidgetSet" />
-					<arg value="-style" />
-					<arg value="OBF" />
-					<classpath>
-						<pathelement location="${gwt-dir}/${platform}/gwt-user.jar" />
-						<pathelement location="${gwt-dir}/${platform}/${lib-gwt-dev}" />
-						<pathelement location="${result-path}/src" />
-					</classpath>
-				</java>
-			</sequential>
+	<target name="testtarget">
+		<echo>TEST TARGET CALLED</echo>
+	</target>
 
-			<sequential>
-				<echo>com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet</echo>
-				<java classname="com.google.gwt.dev.GWTCompiler" failonerror="yes" fork="yes" maxmemory="512m">
-					<arg value="-out" />
-					<arg value="${output-dir}/WebContent/ITMILL/widgetsets" />
-					<arg value="com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet" />
-					<arg value="-style" />
-					<arg value="OBF" />
-					<classpath>
-						<pathelement location="${gwt-dir}/${platform}/gwt-user.jar" />
-						<pathelement location="${gwt-dir}/${platform}/${lib-gwt-dev}" />
-						<pathelement location="${result-path}/src" />
-						<!-- demo jars -->
-						<pathelement location="${output-dir}/WebContent/demo/lib/reservr/googlemaps_gwt.jar" />
-						<!-- demo widgetset sources -->
-						<pathelement path="${output-dir}/WebContent/WEB-INF/src" />
-					</classpath>
-				</java>
-			</sequential>
+    <target name="compile-widgetset-default">
+        <echo>Compiling src (client-side)</echo>
+        <echo>com.itmill.toolkit.terminal.gwt.DefaultWidgetSet</echo>
+        <java classname="com.google.gwt.dev.GWTCompiler" failonerror="yes" fork="yes" maxmemory="512m">
+            <arg value="-out" />
+            <arg value="${output-dir}/WebContent/ITMILL/widgetsets" />
+            <arg value="com.itmill.toolkit.terminal.gwt.DefaultWidgetSet" />
+            <arg value="-style" />
+            <arg value="OBF" />
+            <classpath>
+                <pathelement location="${gwt-dir}/${platform}/gwt-user.jar" />
+                <pathelement location="${gwt-dir}/${platform}/${lib-gwt-dev}" />
+                <pathelement location="${result-path}/src" />
+            </classpath>
+        </java>
+        <echo>Compiled DefaultWidgetSet</echo>
+    </target>
 
-			<sequential>
-				<echo>com.itmill.toolkit.demo.colorpicker.gwt.ColorPickerWidgetSet</echo>
-				<java classname="com.google.gwt.dev.GWTCompiler" failonerror="yes" fork="yes" maxmemory="512m">
-					<arg value="-out" />
-					<arg value="${output-dir}/WebContent/ITMILL/widgetsets" />
-					<arg value="com.itmill.toolkit.demo.colorpicker.gwt.ColorPickerWidgetSet" />
-					<arg value="-style" />
-					<arg value="OBF" />
-					<classpath>
-						<pathelement location="${gwt-dir}/${platform}/gwt-user.jar" />
-						<pathelement location="${gwt-dir}/${platform}/${lib-gwt-dev}" />
-						<pathelement location="${result-path}/src" />
-						<!-- demo widgetset sources -->
-						<pathelement path="${output-dir}/WebContent/WEB-INF/src" />
-					</classpath>
-				</java>
-			</sequential>
+    <target name="compile-widgetset-reserver">
+        <condition property="googlemaps-jar" value="${output-dir}/WebContent/demo/lib/reservr/googlemaps_gwt.jar">
+             <available file="${output-dir}/WebContent/demo/lib/reservr/googlemaps_gwt.jar"/>
+        </condition>
+        <condition property="googlemaps-jar" value="lib/reservr/googlemaps_gwt.jar">
+            <available file="lib/reservr/googlemaps_gwt.jar"/>
+        </condition>
+        <echo>com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet</echo>
+        <java classname="com.google.gwt.dev.GWTCompiler" failonerror="yes" fork="yes" maxmemory="512m">
+            <arg value="-out" />
+            <arg value="${output-dir}/WebContent/ITMILL/widgetsets" />
+            <arg value="com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet" />
+            <arg value="-style" />
+            <arg value="OBF" />
+            <classpath>
+                <pathelement location="${gwt-dir}/${platform}/gwt-user.jar" />
+                <pathelement location="${gwt-dir}/${platform}/${lib-gwt-dev}" />
+                <pathelement location="${result-path}/src" />
+                <!-- demo jars -->
+                <pathelement location="${googlemaps-jar}" />
+                <!-- demo widgetset sources -->
+                <pathelement path="${output-dir}/WebContent/WEB-INF/src" />
+            </classpath>
+        </java>
+        <echo>Compiled ReservationWidgetSet</echo>
+    </target>
+
+    <target name="compile-widgetset-colorpicker">
+        <echo>com.itmill.toolkit.demo.colorpicker.gwt.ColorPickerWidgetSet</echo>
+        <java classname="com.google.gwt.dev.GWTCompiler" failonerror="yes" fork="yes" maxmemory="512m">
+            <arg value="-out" />
+            <arg value="${output-dir}/WebContent/ITMILL/widgetsets" />
+            <arg value="com.itmill.toolkit.demo.colorpicker.gwt.ColorPickerWidgetSet" />
+            <arg value="-style" />
+            <arg value="OBF" />
+            <classpath>
+                <pathelement location="${gwt-dir}/${platform}/gwt-user.jar" />
+                <pathelement location="${gwt-dir}/${platform}/${lib-gwt-dev}" />
+                <pathelement location="${result-path}/src" />
+                <!-- demo widgetset sources -->
+                <pathelement path="${output-dir}/WebContent/WEB-INF/src" />
+            </classpath>
+        </java>
+    	<echo>Compiled ColorPickerWidgetSet</echo>
+    </target>
+
+	<!-- Builds the client-side engine, i.e., the widgetsets in parallel. -->
+	<target name="compile-client-side">
+		<parallel threadsperprocessor="1">
+	        <subant antfile="build.xml" target="compile-widgetset-default" inheritall="true" buildpath="build"/>
+            <subant antfile="build.xml" target="compile-widgetset-reserver" inheritall="true" buildpath="build"/> 
+            <subant antfile="build.xml" target="compile-widgetset-colorpicker" inheritall="true" buildpath="build"/>
 		</parallel>
 	</target>
 
-	<target name="libs" depends="compile-java, compile-client-side">
+	<!-- Definitions for building local components, i.e., not for an installation package. -->
+	<target name="init-nonpackage" depends="init-platform">
+        <property file="build/build.properties" />
+        <property file="build/VERSION.properties" />
+
+		<!-- Definitions for building the client-side. -->
+        <property name="output-dir" value="."/>
+		
+		<!-- Override the result path defined in build.properties. -->
+		<property name="result-path" value="."/>
+
+		<!-- required when compiling WebContent/ITMILL/widgetsets (and also Java server-side classes) -->
+        <property name="lib-gwt-dev" value="gwt-dev-${platform}.jar" />
+
+        <echo>We are on ${platform} platform, using ${gwt-dir}/${platform}/${lib-gwt-dev}.</echo>
+	</target>
+	
+	<!-- Builds all widgetsets locally, i.e., not for an installation package. -->
+	<target name="widgetsets" depends="init-nonpackage, compile-client-side">
+	</target>
+
+    <!-- Builds the default widgetset locally, i.e., not for an installation package. -->
+    <target name="widgetset-default" depends="init-nonpackage, compile-widgetset-default">
+    </target>
+
+    <!-- Builds the reservation widgetset locally, i.e., not for an installation package. -->
+    <target name="widgetset-reserver" depends="init-nonpackage, compile-widgetset-reserver">
+    </target>
+
+    <!-- Builds the colorpicker widgetset locally, i.e., not for an installation package. -->
+    <target name="widgetset-colorpicker" depends="init-nonpackage, compile-widgetset-colorpicker">
+    </target>
+
+	<target name="libs" depends="compile-java, webcontent, compile-client-side">
 		<echo>Creating libs (server-side) ${lib-jar-name}</echo>
 		<!-- Create Toolkit JAR -->
 		<jar jarfile="${output-dir}/WebContent/WEB-INF/lib/${lib-jar-name}" compress="true">
@@ -854,7 +909,7 @@
 		</java>
 	</target>
 
-	<target name="manual-html">
+	<target name="manual-html" depends="init, preprocess-src">
 		<echo>Manual: HTML</echo>
 		<delete file="build/docbook/conf/temp.xsl" />
 		<copy file="build/docbook/conf/custom-html-docbook.xsl" tofile="build/docbook/conf/temp.xsl">
