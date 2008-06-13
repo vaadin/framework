@@ -105,7 +105,7 @@
 	</target>
 	
 	<!-- Initialization - - - - - - - - - - - - - - - - - - - - - - - - -->
-	<target name="init">
+	<target name="init" depends="init-platform">
 
 		<property file="build/build.properties" />
 		<property file="build/VERSION.properties" />
@@ -688,6 +688,7 @@
 
 	<!-- Builds the client-side engine, i.e., the widgetsets in parallel. -->
 	<target name="compile-client-side">
+		<echo>Compiling widget sets in parallel.</echo>
 		<parallel threadsperprocessor="1">
 	        <subant antfile="build.xml" target="compile-widgetset-default" inheritall="true" buildpath="build"/>
             <subant antfile="build.xml" target="compile-widgetset-reserver" inheritall="true" buildpath="build"/> 
