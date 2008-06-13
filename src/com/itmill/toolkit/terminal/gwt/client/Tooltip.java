@@ -63,8 +63,8 @@ public class Tooltip extends ToolkitOverlay {
 
                     offsetWidth = getOffsetWidth();
 
-                    int x = tooltipEventMouseX + 10;
-                    int y = tooltipEventMouseY + 10;
+                    int x = tooltipEventMouseX + 10 + Window.getScrollLeft();
+                    int y = tooltipEventMouseY + 10 + Window.getScrollTop();
 
                     if (x + offsetWidth + MARGIN - Window.getScrollLeft() > Window
                             .getClientWidth()) {
