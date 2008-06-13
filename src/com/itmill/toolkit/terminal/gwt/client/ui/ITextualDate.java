@@ -141,7 +141,9 @@ public class ITextualDate extends IDateField implements Paintable, Field,
                 removeStyleName(PARSE_ERROR_CLASSNAME);
             }
 
-            showingDate = new Date(date.getTime());
+            if (date != null) {
+                showingDate = new Date(date.getTime());
+            }
 
             // Update variables
             // (only the smallest defining resolution needs to be
