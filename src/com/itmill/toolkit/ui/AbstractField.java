@@ -595,10 +595,6 @@ public abstract class AbstractField extends AbstractComponent implements Field,
             if (isEmpty()) {
                 return false;
             }
-        } else {
-            if (isEmpty()) {
-                return true;
-            }
         }
 
         if (validators == null) {
@@ -625,10 +621,6 @@ public abstract class AbstractField extends AbstractComponent implements Field,
         if (isRequired()) {
             if (isEmpty()) {
                 throw new Validator.InvalidValueException("");
-            }
-        } else {
-            if (isEmpty()) {
-                return;
             }
         }
 
