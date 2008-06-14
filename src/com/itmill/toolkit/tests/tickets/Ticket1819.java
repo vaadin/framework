@@ -36,7 +36,7 @@ public class Ticket1819 extends com.itmill.toolkit.Application {
             s.addItem("");
             s.addItem("foo");
             s.addItem("bar");
-            s.setNullSelectionItemId("<null>");
+            s.setNullSelectionItemId("-null-");
             s.setImmediate(true);
         }
 
