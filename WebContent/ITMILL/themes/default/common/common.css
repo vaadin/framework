@@ -58,6 +58,7 @@
 }
 
 /* Field modified */
+/* Disabled by default
 input.i-modified,
 .i-richtextarea.i-modified iframe.gwt-RichTextArea,
 .i-checkbox.i-modified,
@@ -71,7 +72,7 @@ input.i-modified,
 	background:transparent;
 	background-color: #FFFFE0;
 }
-
+*/
 
 /**
  * Custom toolktip

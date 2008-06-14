@@ -46,9 +46,20 @@
 	border: 0;
 }
 
+/* Disabled by default
 .i-textarea-error,
 .i-textfield-error,
 .i-richtextarea-error iframe.gwt-RichTextArea {
 	background:transparent;
 	background-color: #FFE0E0;	
 }
+*/
+
+/* Disabled by default
+.i-textarea-required,
+.i-textfield-required,
+.i-richtextarea-required iframe.gwt-RichTextArea {
+	background:transparent;
+	background-color: #FFE0E0;	
+}
+*/

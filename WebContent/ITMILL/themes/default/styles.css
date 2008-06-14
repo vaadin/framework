@@ -49,10 +49,19 @@
 	text-decoration: underline;
 }
 
+/* Disabled by default
 .i-checkbox-error {
 	background:transparent;
 	background-color: #FFE0E0;
 }
+*/
+
+/* Disabled by default
+.i-checkbox-required {
+	background:transparent;
+	background-color: #FFE0E0;
+}
+*/
 /* Provide some extra whitespace for wrapped elements
    (these elements usually need the extra space, since 
    they aren't even handling their own caption) */
@@ -149,6 +158,7 @@
 }
 
 /* Field modified */
+/* Disabled by default
 input.i-modified,
 .i-richtextarea.i-modified iframe.gwt-RichTextArea,
 .i-checkbox.i-modified,
@@ -162,7 +172,7 @@ input.i-modified,
 	background:transparent;
 	background-color: #FFFFE0;
 }
-
+*/
 
 /**
  * Custom toolktip
@@ -438,11 +448,21 @@ input.i-modified,
 	margin: 0;
 }
 
+/* Disabled by default
 .i-datefield-error .i-textfield,
 .i-datefield-error .i-datefield-calendarpanel {
 	background:transparent;
 	background-color: #FFE0E0;
 }
+*/
+
+/* Disabled by default
+.i-datefield-required .i-textfield,
+.i-datefield-required .i-datefield-calendarpanel {
+	background:transparent;
+	background-color: #FFE0E0;
+}
+*/
 
 .i-datefield-rendererror .i-textfield {
 	background: #ff9999;
@@ -1088,6 +1108,7 @@ input.i-modified,
 	background: transparent url(select/img/bg-right-filter-error.png);
 }
 
+/* Disabled by default
 .i-select-error .i-select-option,
 .i-select-error .i-select-select,
 .i-select-error .i-select-twincol-selections,
@@ -1095,6 +1116,17 @@ input.i-modified,
 	background:transparent;
 	background-color: #FFE0E0;
 }
+*/
+
+/* Disabled by default
+.i-select-required .i-select-option,
+.i-select-required .i-select-select,
+.i-select-required .i-select-twincol-selections,
+.i-select-required .i-select-twincol-options {
+	background:transparent;
+	background-color: #FFE0E0;
+}
+*/
 
 /* IE specific styles */
 
@@ -1226,11 +1258,19 @@ input.i-modified,
 
 }
 
+/* Disabled by default
 .i-slider-error .i-slider-base {
 	background:transparent;
 	background-color: #FFE0E0;
 }
+*/
 
+/* Disabled by default
+.i-slider-required .i-slider-base {
+	background:transparent;
+	background-color: #FFE0E0;
+}
+*/
 
 /* IE specific styles */
 
@@ -1766,12 +1806,23 @@ input.i-modified,
 	border: 0;
 }
 
+/* Disabled by default
 .i-textarea-error,
 .i-textfield-error,
 .i-richtextarea-error iframe.gwt-RichTextArea {
 	background:transparent;
 	background-color: #FFE0E0;	
 }
+*/
+
+/* Disabled by default
+.i-textarea-required,
+.i-textfield-required,
+.i-richtextarea-required iframe.gwt-RichTextArea {
+	background:transparent;
+	background-color: #FFE0E0;	
+}
+*/
 .i-tree {
 	text-align: left /* Force default alignment */
 }

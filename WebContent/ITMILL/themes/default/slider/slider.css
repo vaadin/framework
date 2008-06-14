@@ -106,11 +106,19 @@
 
 }
 
+/* Disabled by default
 .i-slider-error .i-slider-base {
 	background:transparent;
 	background-color: #FFE0E0;
 }
+*/
 
+/* Disabled by default
+.i-slider-required .i-slider-base {
+	background:transparent;
+	background-color: #FFE0E0;
+}
+*/
 
 /* IE specific styles */
 

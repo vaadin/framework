@@ -198,6 +198,7 @@
 	background: transparent url(img/bg-right-filter-error.png);
 }
 
+/* Disabled by default
 .i-select-error .i-select-option,
 .i-select-error .i-select-select,
 .i-select-error .i-select-twincol-selections,
@@ -205,6 +206,17 @@
 	background:transparent;
 	background-color: #FFE0E0;
 }
+*/
+
+/* Disabled by default
+.i-select-required .i-select-option,
+.i-select-required .i-select-select,
+.i-select-required .i-select-twincol-selections,
+.i-select-required .i-select-twincol-options {
+	background:transparent;
+	background-color: #FFE0E0;
+}
+*/
 
 /* IE specific styles */
 

@@ -18,7 +18,16 @@
 	text-decoration: underline;
 }
 
+/* Disabled by default
 .i-checkbox-error {
 	background:transparent;
 	background-color: #FFE0E0;
 }
+*/
+
+/* Disabled by default
+.i-checkbox-required {
+	background:transparent;
+	background-color: #FFE0E0;
+}
+*/
