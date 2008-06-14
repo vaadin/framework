@@ -169,8 +169,14 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
 
         while (i.hasNext()) {
 
-            // Gets the option attribute values
             final Object id = i.next();
+
+            if (!isNullSelectionAllowed() && id != null
+                    && id.equals(getNullSelectionItemId()) && !isSelected(id)) {
+                continue;
+            }
+
+            // Gets the option attribute values
             final String key = itemIdMapper.key(id);
             final String caption = getItemCaption(id);
             final Resource icon = getItemIcon(id);
