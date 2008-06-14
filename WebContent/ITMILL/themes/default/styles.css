@@ -148,7 +148,7 @@
 	color: red;
 }
 
-/* Field modified & error */
+/* Field modified */
 input.i-modified,
 .i-richtextarea.i-modified iframe.gwt-RichTextArea,
 .i-checkbox.i-modified,
@@ -163,15 +163,6 @@ input.i-modified,
 	background-color: #FFFFE0;
 }
 
-.i-checkbox-error,
-.i-select-error .i-select-option,
-.i-select-error .i-select-select,
-.i-select-error .i-select-twincol-selections,
-.i-select-error .i-select-twincol-options,
-.i-slider-error .i-slider-base {
-	background:transparent;
-	background-color: #FFE0E0;
-}
 
 /**
  * Custom toolktip
