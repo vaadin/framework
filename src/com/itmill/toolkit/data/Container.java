@@ -19,7 +19,8 @@ import java.util.Collection;
  * {@link Item#getItemPropertyIds()}).
  * <li>all Properties in the Items corresponding to the same Property ID must
  * have the same data type.
- * <li>All Items within a container are uniquely identified by their non-null ids
+ * <li>All Items within a container are uniquely identified by their non-null
+ * ids
  * </ul>
  * 
  * <p>
@@ -468,10 +469,7 @@ public interface Container {
                 throws UnsupportedOperationException;
 
         /**
-         * Tests if the Item with given ID can have any children. If the
-         * Container also implements the <code>Managed</code> interface, the
-         * items created with <code>newItem</code> can have children by
-         * default.
+         * Tests if the Item with given ID can have any children.
          * 
          * @param itemId
          *                ID of the Item in the container whose child capability
@@ -632,9 +630,7 @@ public interface Container {
 
     /**
      * An <code>Event</code> object specifying the Container whose Item set
-     * has changed. Note that these events are triggered only through succesful
-     * calls to the <code>newItem</code> and <code>removeAllItems</code>
-     * methods in the Container.Managed interface.
+     * has changed.
      */
     public interface ItemSetChangeEvent {
 
@@ -696,11 +692,6 @@ public interface Container {
     /**
      * An <code>Event</code> object specifying the Container whose Property
      * set has changed.
-     * <p>
-     * Note: These events are triggered only through succesful calls to the
-     * <code>addProperty</code> and <code>removeProperty</code> methods in
-     * the Container.Managed interface.
-     * </p>
      */
     public interface PropertySetChangeEvent {
 

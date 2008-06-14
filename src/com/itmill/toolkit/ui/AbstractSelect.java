@@ -356,7 +356,7 @@ public abstract class AbstractSelect extends AbstractField implements
      *      java.util.Map)
      */
     public void changeVariables(Object source, Map variables) {
-    	super.changeVariables(source, variables);
+        super.changeVariables(source, variables);
 
         // New option entered (and it is allowed)
         final String newitem = (String) variables.get("newitem");
@@ -703,8 +703,6 @@ public abstract class AbstractSelect extends AbstractField implements
         return items.getContainerProperty(itemId, propertyId);
     }
 
-    /* Container.Managed methods ******************************************** */
-
     /**
      * Adds the new property to all items. Adds a property with given id, type
      * and default value to all items in the container.
@@ -955,8 +953,7 @@ public abstract class AbstractSelect extends AbstractField implements
     /**
      * Does the select allow adding new options by the user. If true, the new
      * options can be added to the Container. The text entered by the user is
-     * used as id. No that data-source must allow adding new items (it must
-     * implement Container.Managed).
+     * used as id. No that data-source must allow adding new items.
      * 
      * @return True if additions are allowed.
      */
