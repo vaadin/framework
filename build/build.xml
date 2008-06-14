@@ -35,6 +35,9 @@
 	<target name="package-mac" depends="clean-all, init, build, docs, internal-package-mac" description="Create public tar.gz package for Mac.">
 	</target>
 
+	<target name="package-mac_leopard" depends="clean-all, init, build, docs, internal-package-mac_leopard" description="Create public tar.gz package for Mac.">
+	</target>
+
 	<target name="package-windows" depends="clean-all, init, build, docs, internal-package-windows" description="Create public ZIP package for Windows.">
 	</target>
 
