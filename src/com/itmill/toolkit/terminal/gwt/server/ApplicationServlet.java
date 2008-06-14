@@ -816,6 +816,9 @@ public class ApplicationServlet extends HttpServlet {
         }
 
         String appId = appUrl;
+        if ("".equals(appUrl)) {
+            appId = "ROOT";
+        }
         appId = appId.replaceAll("[^a-zA-Z0-9]", "");
 
         if (isGecko17(request)) {
