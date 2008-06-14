@@ -43,6 +43,9 @@ import com.itmill.toolkit.terminal.gwt.client.ui.Notification.HideEvent;
  */
 public class ApplicationConnection {
     private static final String MODIFIED_CLASSNAME = "i-modified";
+
+    private static final String REQUIRED_CLASSNAME_EXT = "-required";
+
     private static final String ERROR_CLASSNAME_EXT = "-error";
 
     public static final String VAR_RECORD_SEPARATOR = "\u001e";
@@ -90,13 +93,13 @@ public class ApplicationConnection {
      * 
      * @SuppressWarnings
      */
-    private JavaScriptObject ttClientWrapper = null;
+    private final JavaScriptObject ttClientWrapper = null;
 
     private int activeRequests = 0;
 
-    private ApplicationConfiguration configuration;
+    private final ApplicationConfiguration configuration;
 
-    private Vector pendingVariableBursts = new Vector();
+    private final Vector pendingVariableBursts = new Vector();
 
     public ApplicationConnection(WidgetSet widgetSet,
             ApplicationConfiguration cnf) {
@@ -813,6 +816,13 @@ public class ApplicationConnection {
             tooltipInfo.setErrorUidl(uidl.getErrors());
         } else {
             tooltipInfo.setErrorUidl(null);
+        }
+
+        // add required style to required components
+        if (uidl.hasAttribute("required")) {
+            styleBuf.append(" ");
+            styleBuf.append(primaryName);
+            styleBuf.append(REQUIRED_CLASSNAME_EXT);
         }
 
         // Styles + disabled & readonly
