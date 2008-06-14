@@ -32,7 +32,7 @@ public class Ticket1819 extends com.itmill.toolkit.Application {
         for (Iterator i = listOfAllFields.iterator(); i.hasNext();) {
             s = (Select) i.next();
             main.addComponent(s);
-            s.addItem("<null>");
+            s.addItem("-null-");
             s.addItem("");
             s.addItem("foo");
             s.addItem("bar");
