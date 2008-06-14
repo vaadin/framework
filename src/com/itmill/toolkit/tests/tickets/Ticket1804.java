@@ -35,7 +35,7 @@ public class Ticket1804 extends com.itmill.toolkit.Application {
         s.setWidth(190);
         s.setNullSelectionAllowed(false);
         TestPojo myPojo = new TestPojo();
-        s.setPropertyDataSource(new MethodProperty(myPojo, "id"));
+        Select selectToBeBoundToExternalDatasource = s;
         s.addValidator(new EmptyStringValidator(
                 "Selection required for test-field"));
         listOfAllFields.add(s);
@@ -43,14 +43,19 @@ public class Ticket1804 extends com.itmill.toolkit.Application {
         for (Iterator i = listOfAllFields.iterator(); i.hasNext();) {
             s = (Select) i.next();
             main.addComponent(s);
-            s.addItem("<null>");
             s.addItem("foo");
             s.addItem("");
             s.addItem("bar");
-            s.setNullSelectionItemId("<null>");
+            if (s.isNullSelectionAllowed()) {
+                s.addItem("<null>");
+                s.setNullSelectionItemId("<null>");
+            }
             s.setImmediate(true);
             s.setRequired(true);
         }
+
+        selectToBeBoundToExternalDatasource
+                .setPropertyDataSource(new MethodProperty(myPojo, "id"));
 
         Button checkValidity = new Button("Check validity of the fields");
         main.addComponent(checkValidity);
@@ -78,7 +83,7 @@ public class Ticket1804 extends com.itmill.toolkit.Application {
         });
     }
 
-    class TestPojo {
+    public class TestPojo {
         String id = "";
 
         public String getId() {
