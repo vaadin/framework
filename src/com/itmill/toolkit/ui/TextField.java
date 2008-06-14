@@ -229,7 +229,13 @@ public class TextField extends AbstractField {
             }
             if (newValue != oldValue
                     && (newValue == null || !newValue.equals(oldValue))) {
+                boolean wasModified = isModified();
                 setValue(newValue, true);
+
+                // If the modified status changes, repaint is needed after all
+                if (wasModified != isModified()) {
+                    requestRepaint();
+                }
             }
         }
 
