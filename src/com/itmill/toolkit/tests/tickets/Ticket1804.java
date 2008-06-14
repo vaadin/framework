@@ -25,19 +25,40 @@ public class Ticket1804 extends com.itmill.toolkit.Application {
 
         s = new Select("Select with null selection allowed; required=true");
         s.setNullSelectionAllowed(true);
+        s.setRequired(true);
         listOfAllFields.add(s);
 
         s = new Select("Select with null selection NOT allowed; required=true");
         s.setNullSelectionAllowed(false);
+        s.setRequired(true);
         listOfAllFields.add(s);
 
         s = new Select("Testcase from the ticket #1804");
-        s.setWidth(190);
         s.setNullSelectionAllowed(false);
-        TestPojo myPojo = new TestPojo();
-        Select selectToBeBoundToExternalDatasource = s;
+        s.setPropertyDataSource(new MethodProperty(new TestPojo(), "id"));
         s.addValidator(new EmptyStringValidator(
                 "Selection required for test-field"));
+        s.setRequired(true);
+        listOfAllFields.add(s);
+
+        s = new Select("Testcase from the ticket #1804, but without validator");
+        s.setNullSelectionAllowed(false);
+        s.setPropertyDataSource(new MethodProperty(new TestPojo(), "id"));
+        s.setRequired(true);
+        listOfAllFields.add(s);
+
+        s = new Select(
+                "Testcase from the ticket #1804, but with required=false");
+        s.setNullSelectionAllowed(false);
+        s.setPropertyDataSource(new MethodProperty(new TestPojo(), "id"));
+        s.addValidator(new EmptyStringValidator(
+                "Selection required for test-field"));
+        listOfAllFields.add(s);
+
+        s = new Select(
+                "Testcase from the ticket #1804, but without validator and with required=false");
+        s.setNullSelectionAllowed(false);
+        s.setPropertyDataSource(new MethodProperty(new TestPojo(), "id"));
         listOfAllFields.add(s);
 
         for (Iterator i = listOfAllFields.iterator(); i.hasNext();) {
@@ -51,11 +72,7 @@ public class Ticket1804 extends com.itmill.toolkit.Application {
                 s.setNullSelectionItemId("<null>");
             }
             s.setImmediate(true);
-            s.setRequired(true);
         }
-
-        selectToBeBoundToExternalDatasource
-                .setPropertyDataSource(new MethodProperty(myPojo, "id"));
 
         Button checkValidity = new Button("Check validity of the fields");
         main.addComponent(checkValidity);
