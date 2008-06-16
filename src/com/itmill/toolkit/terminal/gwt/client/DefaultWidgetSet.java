@@ -212,13 +212,18 @@ public class DefaultWidgetSet implements WidgetSet {
         } else if ("window".equals(tag)) {
             return "com.itmill.toolkit.terminal.gwt.client.ui.IWindow";
         } else if ("orderedlayout".equals(tag)) {
-            if (uidl.hasAttribute("height")) {
-                return "com.itmill.toolkit.terminal.gwt.client.ui.absolutegrid.ISizeableOrderedLayout";
-            } else if ("horizontal".equals(uidl
-                    .getStringAttribute("orientation"))) {
-                return "com.itmill.toolkit.terminal.gwt.client.ui.IOrderedLayoutHorizontal";
+            if ("horizontal".equals(uidl.getStringAttribute("orientation"))) {
+                if (uidl.hasAttribute("height") && uidl.hasAttribute("width")) {
+                    return "com.itmill.toolkit.terminal.gwt.client.ui.absolutegrid.ISizeableOrderedLayout";
+                } else {
+                    return "com.itmill.toolkit.terminal.gwt.client.ui.IOrderedLayoutHorizontal";
+                }
             } else {
-                return "com.itmill.toolkit.terminal.gwt.client.ui.IOrderedLayoutVertical";
+                if (uidl.hasAttribute("height")) {
+                    return "com.itmill.toolkit.terminal.gwt.client.ui.absolutegrid.ISizeableOrderedLayout";
+                } else {
+                    return "com.itmill.toolkit.terminal.gwt.client.ui.IOrderedLayoutVertical";
+                }
             }
         } else if ("label".equals(tag)) {
             return "com.itmill.toolkit.terminal.gwt.client.ui.ILabel";

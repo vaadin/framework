@@ -54,6 +54,8 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
 
     private boolean hasComponentSpacing;
 
+    private MarginInfo margins = new MarginInfo(0);
+
     public IOrderedLayout(int orientation) {
         orientationMode = orientation;
         constructDOM();
@@ -85,7 +87,9 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
         }
 
         // Handle layout margins
-        handleMargins(uidl);
+        if (margins.getBitMask() != uidl.getIntAttribute("margins")) {
+            handleMargins(uidl);
+        }
 
         //
         hasComponentSpacing = uidl.getBooleanAttribute("spacing");
@@ -148,7 +152,11 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
                 this.insert(child, index);
             } else {
                 // insert new child before old one
-                final int index = getPaintableIndex(oldChild); // TODO this returns wrong value if captions are used
+                final int index = getPaintableIndex(oldChild); // TODO this
+                // returns wrong
+                // value if
+                // captions are
+                // used
                 insert(child, index);
             }
             ((Paintable) child).updateFromUIDL(childUidl, client);
@@ -307,7 +315,7 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
 
     public int getPaintableCount() {
         int size = 0;
-        for(Iterator it = getChildren().iterator(); it.hasNext();) {
+        for (Iterator it = getChildren().iterator(); it.hasNext();) {
             Widget w = (Widget) it.next();
             if (!(w instanceof Caption)) {
                 size++;
@@ -318,7 +326,7 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
 
     public int getPaintableIndex(Widget child) {
         int i = 0;
-        for(Iterator it = getChildren().iterator(); it.hasNext();) {
+        for (Iterator it = getChildren().iterator(); it.hasNext();) {
             Widget w = (Widget) it.next();
             if (w == child) {
                 return i;
@@ -330,8 +338,7 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
     }
 
     protected void handleMargins(UIDL uidl) {
-        final MarginInfo margins = new MarginInfo(uidl
-                .getIntAttribute("margins"));
+        margins = new MarginInfo(uidl.getIntAttribute("margins"));
         setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_TOP,
                 margins.hasTop());
         setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_RIGHT,
