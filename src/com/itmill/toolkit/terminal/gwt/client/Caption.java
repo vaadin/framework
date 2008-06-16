@@ -105,6 +105,7 @@ public class Caption extends HTML {
         }
 
         if (uidl.getBooleanAttribute("required")) {
+	    isEmpty = false;
             if (requiredFieldIndicator == null) {
                 requiredFieldIndicator = DOM.createSpan();
                 DOM.setInnerText(requiredFieldIndicator, "*");
