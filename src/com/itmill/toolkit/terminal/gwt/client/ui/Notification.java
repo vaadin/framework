@@ -14,6 +14,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
+import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
 
 public class Notification extends ToolkitOverlay {
 
@@ -133,6 +134,13 @@ public class Notification extends ToolkitOverlay {
                 if (opacity <= 0) {
                     cancel();
                     hide();
+                    if (BrowserInfo.get().isOpera()) {
+                        // tray notification on opera needs to explicitly define
+                        // size, reset it
+                        DOM.setStyleAttribute(getElement(), "width", "");
+                        DOM.setStyleAttribute(getElement(), "height", "");
+                    }
+
                 }
             }
         };
@@ -157,6 +165,11 @@ public class Notification extends ToolkitOverlay {
             break;
         case BOTTOM_RIGHT:
             DOM.setStyleAttribute(el, "position", "absolute");
+            if (BrowserInfo.get().isOpera()) {
+                // tray notification on opera needs explicitly defined size
+                DOM.setStyleAttribute(el, "width", getOffsetWidth() + "px");
+                DOM.setStyleAttribute(el, "height", getOffsetHeight() + "px");
+            }
             DOM.setStyleAttribute(el, "bottom", "0px");
             DOM.setStyleAttribute(el, "right", "0px");
             break;
