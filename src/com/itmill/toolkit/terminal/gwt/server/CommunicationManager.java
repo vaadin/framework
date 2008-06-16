@@ -456,6 +456,10 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
                         outWriter.print("\""
                                 + JsonPaintTarget.escapeJSON(layout.toString())
                                 + "\"");
+                    } else {
+                        System.err.println("CustomLayout " + "/"
+                                + ApplicationServlet.THEME_DIRECTORY_PATH
+                                + themeName + "/" + resource + " not found!");
                     }
                 }
                 outWriter.print("}");
