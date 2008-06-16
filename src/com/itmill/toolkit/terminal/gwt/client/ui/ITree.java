@@ -138,7 +138,11 @@ public class ITree extends FlowPanel implements Paintable {
                 while (selectedIds.size() > 0) {
                     final String id = (String) selectedIds.iterator().next();
                     final TreeNode oldSelection = (TreeNode) keyToNode.get(id);
-                    oldSelection.setSelected(false);
+                    if (oldSelection != null) {
+                        // can be null if the node is not visible (parent
+                        // expanded)
+                        oldSelection.setSelected(false);
+                    }
                     selectedIds.remove(id);
                 }
             }
