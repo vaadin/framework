@@ -193,14 +193,8 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
         locationToElement.clear();
         scanForLocations(getElement());
 
-        String themeName = client.getTheme();
-        String prefix;
-        if (uriEndsWithSlash()) {
-            prefix = "../ITMILL/themes/";
-        } else {
-            prefix = "ITMILL/themes/";
-        }
-        prefixImgSrcs(getElement(), prefix + themeName + "/layouts/");
+        String themeUri = client.getThemeUri();
+        prefixImgSrcs(getElement(), themeUri + "/layouts/");
 
         publishResizedFunction(DOM.getFirstChild(getElement()));
 
@@ -265,8 +259,10 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
           for (var i = 0; i < divs.length; i++) {
               var div = divs[i];
               var src = div.getAttribute("src");
-              if (src.indexOf(base) == 0) div.setAttribute("src",base + srcPrefix + src.substring(base.length));
-              else if (src.indexOf("http") != 0) div.setAttribute("src",srcPrefix + src);
+              if (src.indexOf("/")==0 || src.match(/\w+:\/\//)) {
+                  continue;
+              }
+              div.setAttribute("src",srcPrefix + src);             
           }			
       } catch (e) { alert(e + " " + srcPrefix);}
     }-*/;
