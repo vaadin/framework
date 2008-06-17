@@ -615,18 +615,22 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
         }
 
         if (enabled) {
-            DeferredCommand.addCommand(new Command() {
-                public void execute() {
-                    if (totalRows - 1 > tBody.getLastRendered()) {
-                        // fetch cache rows
-                        rowRequestHandler.setReqFirstRow(tBody
-                                .getLastRendered() + 1);
-                        rowRequestHandler
-                                .setReqRows((int) (pageLength * CACHE_RATE));
-                        rowRequestHandler.deferRowFetch(1);
+            // Do we need cache rows
+            if (tBody.getLastRendered() + 1 < firstRowInViewPort + pageLength
+                    + CACHE_REACT_RATE * pageLength) {
+                DeferredCommand.addCommand(new Command() {
+                    public void execute() {
+                        if (totalRows - 1 > tBody.getLastRendered()) {
+                            // fetch cache rows
+                            rowRequestHandler.setReqFirstRow(tBody
+                                    .getLastRendered() + 1);
+                            rowRequestHandler
+                                    .setReqRows((int) (pageLength * CACHE_RATE));
+                            rowRequestHandler.deferRowFetch(1);
+                        }
                     }
-                }
-            });
+                });
+            }
         }
         initializedAndAttached = true;
     }
