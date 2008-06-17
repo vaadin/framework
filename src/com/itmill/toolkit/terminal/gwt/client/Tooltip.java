@@ -155,8 +155,7 @@ public class Tooltip extends ToolkitOverlay {
                 hideTooltip();
             }
         } else {
-            ApplicationConnection.getConsole().log(
-                    "Hiding tooltip on" + DOM.eventGetTypeString(event));
+            // non-tooltip event, hide tooltip
             hideTooltip();
         }
     }
