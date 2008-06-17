@@ -99,7 +99,7 @@ public class IFormLayout extends FlexTable implements Container {
         }
 
         while (getRowCount() > i) {
-            final Paintable p = (Paintable) getWidget(i, 1);
+            final Paintable p = (Paintable) getWidget(i, 2);
             client.unregisterPaintable(p);
             componentToCaption.remove(p);
             removeRow(i);
