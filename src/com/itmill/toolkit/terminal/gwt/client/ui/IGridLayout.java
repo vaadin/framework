@@ -137,31 +137,8 @@ public class IGridLayout extends SimplePanel implements Paintable, Container,
                             } else {
                                 w = 1;
                             }
-                            AlignmentInfo alignmentInfo = new AlignmentInfo(
-                                    alignments[alignmentIndex++]);
-
-                            VerticalAlignmentConstant va;
-                            if (alignmentInfo.isBottom()) {
-                                va = HasVerticalAlignment.ALIGN_BOTTOM;
-                            } else if (alignmentInfo.isTop()) {
-                                va = HasVerticalAlignment.ALIGN_TOP;
-                            } else {
-                                va = HasVerticalAlignment.ALIGN_MIDDLE;
-                            }
-
-                            HorizontalAlignmentConstant ha;
-
-                            if (alignmentInfo.isLeft()) {
-                                ha = HasHorizontalAlignment.ALIGN_LEFT;
-                            } else if (alignmentInfo.isHorizontalCenter()) {
-                                ha = HasHorizontalAlignment.ALIGN_CENTER;
-                            } else {
-                                ha = HasHorizontalAlignment.ALIGN_RIGHT;
-                            }
 
                             FlexCellFormatter formatter = (FlexCellFormatter) getCellFormatter();
-
-                            formatter.setAlignment(row, column, ha, va);
 
                             // set col span
                             formatter.setColSpan(row, column, w);
@@ -187,6 +164,31 @@ public class IGridLayout extends SimplePanel implements Paintable, Container,
 
                             final UIDL u = c.getChildUIDL(0);
                             if (u != null) {
+
+                                AlignmentInfo alignmentInfo = new AlignmentInfo(
+                                        alignments[alignmentIndex++]);
+
+                                VerticalAlignmentConstant va;
+                                if (alignmentInfo.isBottom()) {
+                                    va = HasVerticalAlignment.ALIGN_BOTTOM;
+                                } else if (alignmentInfo.isTop()) {
+                                    va = HasVerticalAlignment.ALIGN_TOP;
+                                } else {
+                                    va = HasVerticalAlignment.ALIGN_MIDDLE;
+                                }
+
+                                HorizontalAlignmentConstant ha;
+
+                                if (alignmentInfo.isLeft()) {
+                                    ha = HasHorizontalAlignment.ALIGN_LEFT;
+                                } else if (alignmentInfo.isHorizontalCenter()) {
+                                    ha = HasHorizontalAlignment.ALIGN_CENTER;
+                                } else {
+                                    ha = HasHorizontalAlignment.ALIGN_RIGHT;
+                                }
+
+                                formatter.setAlignment(row, column, ha, va);
+
                                 final Paintable child = client.getPaintable(u);
                                 CaptionWrapper wr;
                                 if (widgetToCaptionWrapper.containsKey(child)) {
