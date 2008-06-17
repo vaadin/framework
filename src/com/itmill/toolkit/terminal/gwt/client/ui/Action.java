@@ -5,7 +5,6 @@
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import com.google.gwt.user.client.Command;
-import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 
 /**
  * 
@@ -53,20 +52,4 @@ public abstract class Action implements Command {
     public void setIconUrl(String url) {
         iconUrl = url;
     }
-}
-
-/**
- * Action owner must provide a set of actions for context menu and IAction
- * objects.
- */
-interface ActionOwner {
-
-    /**
-     * @return Array of IActions
-     */
-    public Action[] getActions();
-
-    public ApplicationConnection getClient();
-
-    public String getPaintableId();
 }
