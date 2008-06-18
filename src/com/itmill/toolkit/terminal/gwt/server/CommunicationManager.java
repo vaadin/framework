@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.ServletException;
+import javax.servlet.ServletInputStream;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -47,7 +48,6 @@ import com.itmill.toolkit.terminal.URIHandler;
 import com.itmill.toolkit.terminal.UploadStream;
 import com.itmill.toolkit.terminal.VariableOwner;
 import com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent;
-import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.Upload;
 import com.itmill.toolkit.ui.Window;
@@ -71,9 +71,11 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
     private static final int VAR_TYPE = 3;
     private static final int VAR_VALUE = 0;
 
-    private static final String VAR_RECORD_SEPARATOR = ApplicationConnection.VAR_RECORD_SEPARATOR;
+    private static final String VAR_RECORD_SEPARATOR = "\u001e";
 
-    private static final String VAR_FIELD_SEPARATOR = ApplicationConnection.VAR_FIELD_SEPARATOR;
+    private static final String VAR_FIELD_SEPARATOR = "\u001f";
+
+    private static final int MAX_BUFFER_SIZE = 64 * 1024;
 
     private final ArrayList dirtyPaintabletSet = new ArrayList();
 
@@ -503,17 +505,24 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
      * @param request
      * @param application2
      * @return true if successful, false if there was an inconsistency
+     * @throws IOException
      */
     private boolean handleVariables(HttpServletRequest request,
-            Application application2) {
+            Application application2) throws IOException {
         boolean success = true;
-        final Map params = new HashMap(request.getParameterMap());
-        final String changes = (String) ((params.get("changes") instanceof String[]) ? ((String[]) params
-                .get("changes"))[0]
-                : params.get("changes"));
-        params.remove("changes");
 
-        if (changes != null && changes.length() > 0) {
+        if (request.getContentLength() > 0) {
+
+            byte[] buffer = new byte[request.getContentLength()];
+            ServletInputStream inputStream = request.getInputStream();
+            int totalBytesRead = 0;
+            int bytesRead;
+            while ((bytesRead = inputStream.read(buffer, totalBytesRead,
+                    MAX_BUFFER_SIZE)) != -1) {
+                totalBytesRead += bytesRead;
+            }
+
+            String changes = new String(buffer, "utf-8");
             // extract variables to two dim string array
             final String[] tmp = changes.split(VAR_RECORD_SEPARATOR);
             final String[][] variableRecords = new String[tmp.length][4];

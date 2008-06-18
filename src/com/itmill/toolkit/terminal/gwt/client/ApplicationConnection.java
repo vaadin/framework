@@ -48,9 +48,9 @@ public class ApplicationConnection {
 
     private static final String ERROR_CLASSNAME_EXT = "-error";
 
-    public static final String VAR_RECORD_SEPARATOR = escapeString("\u001e");
+    public static final String VAR_RECORD_SEPARATOR = "\u001e";
 
-    public static final String VAR_FIELD_SEPARATOR = escapeString("\u001f");
+    public static final String VAR_FIELD_SEPARATOR = "\u001f";
 
     private final HashMap resourcesMap = new HashMap();
 
@@ -131,7 +131,7 @@ public class ApplicationConnection {
         // TODO remove hard coded id name
         view = new IView(cnf.getRootPanelId());
 
-        makeUidlRequest("repaintAll=1");
+        makeUidlRequest("", true);
         applicationRunning = true;
     }
 
@@ -229,15 +229,18 @@ public class ApplicationConnection {
         return (activeRequests > 0);
     }
 
-    private void makeUidlRequest(String requestData) {
+    private void makeUidlRequest(String requestData, boolean repaintAll) {
         startRequest();
 
         console.log("Making UIDL Request with params: " + requestData);
-        final String uri = getAppUri() + "UIDL" + configuration.getPathInfo();
+        String uri = getAppUri() + "UIDL" + configuration.getPathInfo();
+        if (repaintAll) {
+            uri += "?repaintAll=1";
+        }
         final RequestBuilder rb = new RequestBuilder(RequestBuilder.POST, uri);
-        rb.setHeader("Content-Type",
-                "application/x-www-form-urlencoded; charset=utf-8");
-        // rb.setHeader("Content-Type", "text/plain;charset=utf-8");
+        // rb.setHeader("Content-Type",
+        // "application/x-www-form-urlencoded; charset=utf-8");
+        rb.setHeader("Content-Type", "text/plain;charset=utf-8");
         try {
             rb.sendRequest(requestData, new RequestCallback() {
                 public void onError(Request request, Throwable exception) {
@@ -620,7 +623,6 @@ public class ApplicationConnection {
     private void buildAndSendVariableBurst(Vector pendingVariables) {
         final StringBuffer req = new StringBuffer();
 
-        req.append("changes=");
         for (int i = 0; i < pendingVariables.size(); i++) {
             if (i > 0) {
                 if (i % 2 == 0) {
@@ -633,18 +635,12 @@ public class ApplicationConnection {
         }
 
         pendingVariables.clear();
-        makeUidlRequest(req.toString());
+        makeUidlRequest(req.toString(), false);
     }
-
-    private static native String escapeString(String value)
-    /*-{
-     return encodeURIComponent(value);
-     }-*/;
 
     public void updateVariable(String paintableId, String variableName,
             String newValue, boolean immediate) {
-        addVariableToQueue(paintableId, variableName, escapeString(newValue),
-                immediate, 's');
+        addVariableToQueue(paintableId, variableName, newValue, immediate, 's');
     }
 
     public void updateVariable(String paintableId, String variableName,
@@ -684,7 +680,7 @@ public class ApplicationConnection {
             if (i > 0) {
                 buf.append(",");
             }
-            buf.append(escapeString(values[i].toString()));
+            buf.append(values[i].toString());
         }
         addVariableToQueue(paintableId, variableName, buf.toString(),
                 immediate, 'a');
