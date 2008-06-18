@@ -180,6 +180,11 @@ public class Table extends AbstractSelect implements Action.Container,
     private final HashMap columnWidths = new HashMap();
 
     /**
+     * Holds column generators
+     */
+    private final HashMap columnGenerators = new HashMap();
+
+    /**
      * Holds value of property pageLength. 0 disables paging.
      */
     private int pageLength = 15;
@@ -319,13 +324,14 @@ public class Table extends AbstractSelect implements Action.Container,
     /* Table functionality ************************************************** */
 
     /**
-     * Gets the array of visible column property id:s.
+     * Gets the array of visible column id:s, including generated columns.
      * 
      * <p>
      * The columns are show in the order of their appearance in this array.
      * </p>
      * 
-     * @return the Value of property availableColumns.
+     * @return an array of currently visible propertyIds and generated column
+     *         ids.
      */
     public Object[] getVisibleColumns() {
         if (visibleColumns == null) {
@@ -357,15 +363,16 @@ public class Table extends AbstractSelect implements Action.Container,
         final Collection properties = getContainerPropertyIds();
         for (int i = 0; i < visibleColumns.length; i++) {
             if (visibleColumns[i] == null) {
-                throw new NullPointerException("Properties must be non-nulls");
-            } else if (!properties.contains(visibleColumns[i])) {
+                throw new NullPointerException("Ids must be non-nulls");
+            } else if (!properties.contains(visibleColumns[i])
+                    && !columnGenerators.containsKey(visibleColumns[i])) {
                 throw new IllegalArgumentException(
-                        "Properties must exist in the Container, missing property: "
+                        "Ids must exist in the Container or as a generated column , missing id: "
                                 + visibleColumns[i]);
             }
         }
 
-        // If this is called befor the constructor is finished, it might be
+        // If this is called before the constructor is finished, it might be
         // uninitialized
         final LinkedList newVC = new LinkedList();
         for (int i = 0; i < visibleColumns.length; i++) {
@@ -374,13 +381,19 @@ public class Table extends AbstractSelect implements Action.Container,
 
         // Removes alignments, icons and headers from hidden columns
         if (this.visibleColumns != null) {
-            for (final Iterator i = this.visibleColumns.iterator(); i.hasNext();) {
-                final Object col = i.next();
-                if (!newVC.contains(col)) {
-                    setColumnHeader(col, null);
-                    setColumnAlignment(col, null);
-                    setColumnIcon(col, null);
+            disableContentRefreshing();
+            try {
+                for (final Iterator i = this.visibleColumns.iterator(); i
+                        .hasNext();) {
+                    final Object col = i.next();
+                    if (!newVC.contains(col)) {
+                        setColumnHeader(col, null);
+                        setColumnAlignment(col, null);
+                        setColumnIcon(col, null);
+                    }
                 }
+            } finally {
+                enableContentRefreshing(false);
             }
         }
 
@@ -1199,8 +1212,8 @@ public class Table extends AbstractSelect implements Action.Container,
             final int headmode = getRowHeaderMode();
             final boolean[] iscomponent = new boolean[cols];
             for (int i = 0; i < cols; i++) {
-                iscomponent[i] = Component.class
-                        .isAssignableFrom(getType(colids[i]));
+                iscomponent[i] = columnGenerators.containsKey(colids[i])
+                        || Component.class.isAssignableFrom(getType(colids[i]));
             }
             int firstIndexNotInCache;
             if (pageBuffer != null && pageBuffer[CELL_ITEMID].length > 0) {
@@ -1229,11 +1242,18 @@ public class Table extends AbstractSelect implements Action.Container,
 
                 if (cols > 0) {
                     for (int j = 0; j < cols; j++) {
-                        final Property p = getContainerProperty(id, colids[j]);
-                        Object value = null;
+                        Property p = null;
+                        Object value = "";
+                        boolean isGenerated = columnGenerators
+                                .containsKey(colids[j]);
+
+                        if (!isGenerated) {
+                            p = getContainerProperty(id, colids[j]);
+                        }
+
                         // check in current pageBuffer already has row
                         int index = firstIndex + i;
-                        if (p != null) {
+                        if (p != null || isGenerated) {
                             if (p instanceof Property.ValueChangeNotifier) {
                                 if (oldListenedProperties == null
                                         || !oldListenedProperties.contains(p)) {
@@ -1251,8 +1271,13 @@ public class Table extends AbstractSelect implements Action.Container,
                                         - pageBufferFirstIndex;
                                 value = pageBuffer[CELL_FIRSTCOL + j][indexInOldBuffer];
                             } else {
+                                if (isGenerated) {
+                                    ColumnGenerator cg = (ColumnGenerator) columnGenerators
+                                            .get(colids[j]);
+                                    value = cg
+                                            .generateCell(this, id, colids[j]);
 
-                                if (iscomponent[j]) {
+                                } else if (iscomponent[j]) {
                                     value = p.getValue();
                                 } else if (p != null) {
                                     value = getPropertyValue(id, colids[j], p);
@@ -1261,8 +1286,6 @@ public class Table extends AbstractSelect implements Action.Container,
                                             null);
                                 }
                             }
-                        } else {
-                            value = "";
                         }
 
                         if (value instanceof Component) {
@@ -1470,13 +1493,28 @@ public class Table extends AbstractSelect implements Action.Container,
         if (collapsedColumns != null) {
             collapsedColumns.clear();
         }
-        setVisibleColumns(getContainerPropertyIds().toArray());
+
+        // columnGenerators 'override' properties, don't add the same id twice
+        Collection col = new LinkedList();
+        for (Iterator it = getContainerPropertyIds().iterator(); it.hasNext();) {
+            Object id = it.next();
+            if (columnGenerators == null || !columnGenerators.containsKey(id)) {
+                col.add(id);
+            }
+        }
+        // generators added last
+        if (columnGenerators != null && columnGenerators.size() > 0) {
+            col.addAll(columnGenerators.keySet());
+        }
+
+        setVisibleColumns(col.toArray());
 
         // null value as we may not be sure that currently selected identifier
         // exits in new ds
         setValue(null);
 
         // Assure visual refresh
+        resetPageBuffer();
         refreshRenderedCells();
     }
 
@@ -1739,9 +1777,13 @@ public class Table extends AbstractSelect implements Action.Container,
         for (final Iterator it = visibleColumns.iterator(); it.hasNext()
                 && iscomponentIndex < iscomponent.length;) {
             final Object columnId = it.next();
-            final Class colType = getType(columnId);
-            iscomponent[iscomponentIndex++] = colType != null
-                    && Component.class.isAssignableFrom(colType);
+            if (columnGenerators.containsKey(columnId)) {
+                iscomponent[iscomponentIndex++] = true;
+            } else {
+                final Class colType = getType(columnId);
+                iscomponent[iscomponentIndex++] = colType != null
+                        && Component.class.isAssignableFrom(colType);
+            }
         }
         target.startTag("rows");
         // cells array contains all that are supposed to be visible on client,
@@ -2235,6 +2277,66 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     /**
+     * Adds a generated column to the Table.
+     * <p>
+     * A generated column is a column that exists only in the Table, not as a
+     * property in the underlying Container. It shows up just as a regular
+     * column.
+     * </p>
+     * <p>
+     * A generated column will override a property with the same id, so that the
+     * generated column is shown instead of the column representing the
+     * property. Note that getContainerProperty() will still get the real
+     * property.
+     * </p>
+     * <p>
+     * Also note that getVisibleColumns() will return the generated columns,
+     * while getContainerPropertyIds() will not.
+     * </p>
+     * 
+     * @param id
+     *                the id of the column to be added
+     * @param generatedColumn
+     *                the {@link ColumnGenerator} to use for this column
+     */
+    public void addGeneratedColumn(Object id, ColumnGenerator generatedColumn) {
+        if (generatedColumn == null) {
+            throw new IllegalArgumentException(
+                    "Can not add null as a GeneratedColumn");
+        }
+        if (columnGenerators.containsKey(id)) {
+            throw new IllegalArgumentException(
+                    "Can not add the same GeneratedColumn twice, id:" + id);
+        } else {
+            columnGenerators.put(id, generatedColumn);
+            visibleColumns.add(id);
+            resetPageBuffer();
+            refreshRenderedCells();
+        }
+    }
+
+    /**
+     * Removes a generated column previously added with addGeneratedColumn.
+     * 
+     * @param id
+     *                id of the generated column to remove
+     * @return true if the column could be removed (existed in the Table)
+     */
+    public boolean removeGeneratedColumn(Object id) {
+        if (columnGenerators.containsKey(id)) {
+            columnGenerators.remove(id);
+            if (!items.containsId(id)) {
+                visibleColumns.remove(id);
+            }
+            resetPageBuffer();
+            refreshRenderedCells();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * Returns the list of items on the current page
      * 
      * @see com.itmill.toolkit.ui.Select#getVisibleItemIds()
@@ -2652,4 +2754,29 @@ public class Table extends AbstractSelect implements Action.Container,
                 + super.toString();
     }
 
+    /**
+     * Used to create "generated columns"; columns that exist only in the Table,
+     * not in the underlying Container. Implement this interface and pass it to
+     * Table.addGeneratedColumn along with an id for the column to be generated.
+     * 
+     */
+    public interface ColumnGenerator {
+
+        /**
+         * Called by Table when a cell in a generated column needs to be
+         * generated.
+         * 
+         * @param source
+         *                the source Table
+         * @param itemId
+         *                the itemId (aka rowId) for the of the cell to be
+         *                generated
+         * @param columnId
+         *                the id for the generated column (as specified in
+         *                addGeneratedColumn)
+         * @return
+         */
+        public abstract Component generateCell(Table source, Object itemId,
+                Object columnId);
+    }
 }
