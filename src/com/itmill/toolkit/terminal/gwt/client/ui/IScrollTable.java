@@ -1311,7 +1311,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 
         public void enableColumn(String cid, int index) {
             final HeaderCell c = getHeaderCell(cid);
-            if (!c.isEnabled()) {
+            if (!c.isEnabled() || getHeaderCell(index) != c) {
                 setHeaderCell(index, c);
                 if (c.getWidth() == -1) {
                     if (initializedAndAttached) {
@@ -1351,6 +1351,11 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
         }
 
         public void setHeaderCell(int index, HeaderCell cell) {
+            if (cell.isEnabled()) {
+                // we're moving the cell
+                DOM.removeChild(tr, cell.getElement());
+                orphan(cell);
+            }
             if (index < visibleCells.size()) {
                 // insert to right slot
                 DOM.insertChild(tr, cell.getElement(), index);
