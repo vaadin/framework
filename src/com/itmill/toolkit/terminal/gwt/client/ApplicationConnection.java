@@ -48,9 +48,9 @@ public class ApplicationConnection {
 
     private static final String ERROR_CLASSNAME_EXT = "-error";
 
-    public static final String VAR_RECORD_SEPARATOR = "\u001e";
+    public static final String VAR_RECORD_SEPARATOR = escapeString("\u001e");
 
-    public static final String VAR_FIELD_SEPARATOR = "\u001f";
+    public static final String VAR_FIELD_SEPARATOR = escapeString("\u001f");
 
     private final HashMap resourcesMap = new HashMap();
 
@@ -237,6 +237,7 @@ public class ApplicationConnection {
         final RequestBuilder rb = new RequestBuilder(RequestBuilder.POST, uri);
         rb.setHeader("Content-Type",
                 "application/x-www-form-urlencoded; charset=utf-8");
+        // rb.setHeader("Content-Type", "text/plain;charset=utf-8");
         try {
             rb.sendRequest(requestData, new RequestCallback() {
                 public void onError(Request request, Throwable exception) {
