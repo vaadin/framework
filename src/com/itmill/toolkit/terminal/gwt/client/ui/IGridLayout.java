@@ -8,7 +8,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -18,6 +20,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
 import com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConstant;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
+import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
 import com.itmill.toolkit.terminal.gwt.client.CaptionWrapper;
 import com.itmill.toolkit.terminal.gwt.client.Container;
 import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
@@ -34,6 +37,8 @@ public class IGridLayout extends SimplePanel implements Paintable, Container,
     private Grid grid = new Grid();
 
     private boolean needsLayout = false;
+
+    private boolean needsFF2Hack = BrowserInfo.get().isFF2();
 
     private Element margin = DOM.createDiv();
 
@@ -223,6 +228,27 @@ public class IGridLayout extends SimplePanel implements Paintable, Container,
                 final CaptionWrapper w = (CaptionWrapper) it.next();
                 client.unregisterPaintable(w.getPaintable());
                 widgetToCaptionWrapper.remove(w.getPaintable());
+            }
+            // fix rendering bug on FF2 (#1838)
+            if (needsFF2Hack) {
+                DeferredCommand.addCommand(new Command() {
+                    public void execute() {
+                        Element firstcell = getCellFormatter().getElement(0, 0);
+                        if (firstcell != null) {
+                            String styleAttribute = DOM.getStyleAttribute(
+                                    firstcell, "verticalAlign");
+                            DOM.setStyleAttribute(firstcell, "verticalAlign",
+                                    "");
+                            int elementPropertyInt = DOM.getElementPropertyInt(
+                                    firstcell, "offsetWidth");
+                            DOM.setStyleAttribute(firstcell, "verticalAlign",
+                                    styleAttribute);
+                            if (elementPropertyInt > 0) {
+                                needsFF2Hack = false;
+                            }
+                        }
+                    }
+                });
             }
         }
 
