@@ -701,19 +701,23 @@
 
 	<!-- Definitions for building local components, i.e., not for an installation package. -->
 	<target name="init-nonpackage" depends="init-platform">
-        <property file="build/build.properties" />
         <property file="build/VERSION.properties" />
 
-		<!-- Definitions for building the client-side. -->
+        <!-- Definitions for building the client-side. -->
         <property name="output-dir" value="."/>
-		
-		<!-- Override the result path defined in build.properties. -->
-		<property name="result-path" value="."/>
+        
+        <!-- The "result-path" simply contains the sources. -->
+        <property name="result-path" value="."/>
 
-		<!-- required when compiling WebContent/ITMILL/widgetsets (and also Java server-side classes) -->
+        <!-- Path to GWT directory. TODO: This should be read from build.properties file. -->
+        <property name="gwt-dir" value="build/gwt"/>
+
+        <!-- required when compiling WebContent/ITMILL/widgetsets (and also Java server-side classes) -->
         <property name="lib-gwt-dev" value="gwt-dev-${platform}.jar" />
 
         <echo>We are on ${platform} platform, using ${gwt-dir}/${platform}/${lib-gwt-dev}.</echo>
+        <echo>GWT dir:    ${gwt-dir}</echo>
+        <echo>Output dir: ${output-dir}</echo>
 	</target>
 	
 	<!-- Builds all widgetsets locally, i.e., not for an installation package. -->
