@@ -154,8 +154,12 @@ input.i-modified,
 	cursor:pointer;
 }
 
+/**
+ * Label has tiny paddings to include contents margins.
+ */
 .i-label {
-	overflow: hidden;
+	padding-top:1px;
+	padding-bottom: 1px;
 }
 
 /* Loading indicator states */
