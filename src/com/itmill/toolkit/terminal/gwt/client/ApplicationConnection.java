@@ -560,8 +560,7 @@ public class ApplicationConnection {
             final Widget w = (Widget) it.next();
             if (w instanceof Paintable) {
                 unregisterPaintable((Paintable) w);
-            }
-            if (w instanceof HasWidgets) {
+            } else if (w instanceof HasWidgets) {
                 unregisterChildPaintables((HasWidgets) w);
             }
         }
