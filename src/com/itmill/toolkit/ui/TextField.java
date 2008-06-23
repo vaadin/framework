@@ -232,8 +232,9 @@ public class TextField extends AbstractField {
                 boolean wasModified = isModified();
                 setValue(newValue, true);
 
-                // If the modified status changes, repaint is needed after all
-                if (wasModified != isModified()) {
+                // If the modified status changes, or if we have a formatter,
+                // repaint is needed after all.
+                if (format != null || wasModified != isModified()) {
                     requestRepaint();
                 }
             }
