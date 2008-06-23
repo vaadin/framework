@@ -5,6 +5,8 @@
 package com.itmill.toolkit.automatedtests.featurebrowser;
 
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
@@ -232,7 +234,15 @@ public class TableExample extends CustomComponent implements Action.Handler,
             // loop each selected and copy to "saved" table
             final Set selected = (Set) source.getValue();
             int s = 0;
-            for (final Iterator it = selected.iterator(); it.hasNext();) {
+            
+            // The set can return the items in quite any order, but
+            // for testing purposes they always have to be in the
+            // same order.
+            List ordered = new LinkedList(selected);
+            java.util.Collections.sort(ordered);
+            
+            // Now move the items to the other table
+            for (final Iterator it = ordered.iterator(); it.hasNext();) {
                 final Object id = it.next();
                 if (!saved.containsId(id)) {
                     final Item item = source.getItem(id);
