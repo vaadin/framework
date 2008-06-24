@@ -1449,6 +1449,11 @@ public class Table extends AbstractSelect implements Action.Container,
             item.getItemProperty(cols[i]).setValue(cells[i]);
         }
 
+        if (!(items instanceof Container.ItemSetChangeNotifier)) {
+            resetPageBuffer();
+            refreshRenderedCells();
+        }
+
         return itemId;
     }
 
@@ -2192,6 +2197,10 @@ public class Table extends AbstractSelect implements Action.Container,
         if (ret && (itemId != null) && (itemId.equals(currentPageFirstItemId))) {
             currentPageFirstItemId = nextItemId;
         }
+        if (!(items instanceof Container.ItemSetChangeNotifier)) {
+            resetPageBuffer();
+            refreshRenderedCells();
+        }
         return ret;
     }
 
@@ -2238,6 +2247,10 @@ public class Table extends AbstractSelect implements Action.Container,
                 visibleColumns.remove(propertyId);
             }
             return false;
+        }
+        if (!(items instanceof Container.PropertySetChangeNotifier)) {
+            resetPageBuffer();
+            refreshRenderedCells();
         }
         return true;
     }
@@ -2479,7 +2492,13 @@ public class Table extends AbstractSelect implements Action.Container,
      */
     public Object addItemAfter(Object previousItemId)
             throws UnsupportedOperationException {
-        return ((Container.Ordered) items).addItemAfter(previousItemId);
+        Object itemId = ((Container.Ordered) items)
+                .addItemAfter(previousItemId);
+        if (!(items instanceof Container.ItemSetChangeNotifier)) {
+            resetPageBuffer();
+            refreshRenderedCells();
+        }
+        return itemId;
     }
 
     /**
@@ -2490,8 +2509,13 @@ public class Table extends AbstractSelect implements Action.Container,
      */
     public Item addItemAfter(Object previousItemId, Object newItemId)
             throws UnsupportedOperationException {
-        return ((Container.Ordered) items).addItemAfter(previousItemId,
+        Item item = ((Container.Ordered) items).addItemAfter(previousItemId,
                 newItemId);
+        if (!(items instanceof Container.ItemSetChangeNotifier)) {
+            resetPageBuffer();
+            refreshRenderedCells();
+        }
+        return item;
     }
 
     /**
