@@ -176,8 +176,8 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
         }
 
         if (isScrollable()) {
-            target.addVariable(this, "scrollleft", getScrollLeft());
-            target.addVariable(this, "scrolltop", getScrollTop());
+            target.addVariable(this, "scrollLeft", getScrollLeft());
+            target.addVariable(this, "scrollTop", getScrollTop());
         }
 
         if (actionHandlers != null && !actionHandlers.isEmpty()) {
@@ -292,8 +292,8 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
         }
 
         // Scrolling
-        final Integer newScrollX = (Integer) variables.get("scrollleft");
-        final Integer newScrollY = (Integer) variables.get("scrolltop");
+        final Integer newScrollX = (Integer) variables.get("scrollLeft");
+        final Integer newScrollY = (Integer) variables.get("scrollTop");
         if (newScrollX != null && newScrollX.intValue() != getScrollLeft()) {
             // set internally, not to fire request repaint
             scrollOffsetX = newScrollX.intValue();

@@ -68,6 +68,7 @@ public class Ticket1834PanelScrolling extends com.itmill.toolkit.Application {
         main.addComponent(b);
 
         p = new Panel("TestPanel");
+        p.setScrollable(true);
 
         for (int i = 0; i < ROWS; i++) {
             p
