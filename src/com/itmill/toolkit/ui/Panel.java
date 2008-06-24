@@ -176,8 +176,8 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
         }
 
         if (isScrollable()) {
-            target.addVariable(this, "scrollleft", getScrollOffsetX());
-            target.addVariable(this, "scrolldown", getScrollOffsetY());
+            target.addVariable(this, "scrollleft", getScrollLeft());
+            target.addVariable(this, "scrolltop", getScrollTop());
         }
 
         if (actionHandlers != null && !actionHandlers.isEmpty()) {
@@ -293,12 +293,12 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
 
         // Scrolling
         final Integer newScrollX = (Integer) variables.get("scrollleft");
-        final Integer newScrollY = (Integer) variables.get("scrolldown");
-        if (newScrollX != null && newScrollX.intValue() != getScrollOffsetX()) {
-            setScrollOffsetX(newScrollX.intValue());
+        final Integer newScrollY = (Integer) variables.get("scrolltop");
+        if (newScrollX != null && newScrollX.intValue() != getScrollLeft()) {
+            setScrollLeft(newScrollX.intValue());
         }
-        if (newScrollY != null && newScrollY.intValue() != getScrollOffsetY()) {
-            setScrollOffsetY(newScrollY.intValue());
+        if (newScrollY != null && newScrollY.intValue() != getScrollTop()) {
+            setScrollTop(newScrollY.intValue());
         }
 
         // Actions
@@ -318,13 +318,27 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
     /* Scrolling functionality */
 
     /* Documented in interface */
-    public int getScrollOffsetX() {
+    public int getScrollLeft() {
         return scrollOffsetX;
     }
 
+    /**
+     * @deprecated use getScrollLeft() instead
+     */
+    public int getScrollOffsetX() {
+        return getScrollLeft();
+    }
+
     /* Documented in interface */
-    public int getScrollOffsetY() {
+    public int getScrollTop() {
         return scrollOffsetY;
+    }
+
+    /**
+     * @deprecated use getScrollTop() instead
+     */
+    public int getScrollOffsetY() {
+        return getScrollTop();
     }
 
     /* Documented in interface */
@@ -341,19 +355,26 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
     }
 
     /* Documented in interface */
-    public void setScrollOffsetX(int pixelsScrolledLeft) {
-        if (pixelsScrolledLeft < 0) {
+    public void setScrollLeft(int pixelsScrolled) {
+        if (pixelsScrolled < 0) {
             throw new IllegalArgumentException(
                     "Scroll offset must be at least 0");
         }
-        if (scrollOffsetX != pixelsScrolledLeft) {
-            scrollOffsetX = pixelsScrolledLeft;
+        if (scrollOffsetX != pixelsScrolled) {
+            scrollOffsetX = pixelsScrolled;
             requestRepaint();
         }
     }
 
+    /**
+     * @deprecated use setScrollLeft() method instead
+     */
+    public void setScrollOffsetX(int pixels) {
+        setScrollLeft(pixels);
+    }
+
     /* Documented in interface */
-    public void setScrollOffsetY(int pixelsScrolledDown) {
+    public void setScrollTop(int pixelsScrolledDown) {
         if (pixelsScrolledDown < 0) {
             throw new IllegalArgumentException(
                     "Scroll offset must be at least 0");
@@ -362,6 +383,13 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
             scrollOffsetY = pixelsScrolledDown;
             requestRepaint();
         }
+    }
+
+    /**
+     * @deprecated use setScrollTop() method instead
+     */
+    public void setScrollOffsetY(int pixels) {
+        setScrollTop(pixels);
     }
 
     /* Documented in superclass */

@@ -18,54 +18,54 @@ package com.itmill.toolkit.terminal;
 public interface Scrollable {
 
     /**
-     * Gets scroll X offset.
+     * Gets scroll left offset.
      * 
      * <p>
      * Scrolling offset is the number of pixels this scrollable has been
-     * scrolled to left.
+     * scrolled right.
      * </p>
      * 
      * @return Horizontal scrolling position in pixels.
      */
-    public int getScrollOffsetX();
+    public int getScrollLeft();
 
     /**
-     * Sets scroll X offset.
+     * Sets scroll left offset.
      * 
      * <p>
      * Scrolling offset is the number of pixels this scrollable has been
-     * scrolled to left.
+     * scrolled right.
      * </p>
      * 
-     * @param pixelsScrolledLeft
+     * @param pixelsScrolled
      *                the xOffset.
      */
-    public void setScrollOffsetX(int pixelsScrolledLeft);
+    public void setScrollLeft(int pixelsScrolled);
 
     /**
-     * Gets scroll Y offset.
+     * Gets scroll top offset.
      * 
      * <p>
      * Scrolling offset is the number of pixels this scrollable has been
-     * scrolled to down.
+     * scrolled down.
      * </p>
      * 
      * @return Vertical scrolling position in pixels.
      */
-    public int getScrollOffsetY();
+    public int getScrollTop();
 
     /**
-     * Sets scroll Y offset.
+     * Sets scroll top offset.
      * 
      * <p>
      * Scrolling offset is the number of pixels this scrollable has been
-     * scrolled to down.
+     * scrolled down.
      * </p>
      * 
-     * @param pixelsScrolledDown
+     * @param pixelsScrolled
      *                the yOffset.
      */
-    public void setScrollOffsetY(int pixelsScrolledDown);
+    public void setScrollTop(int pixelsScrolled);
 
     /**
      * Is the scrolling enabled.
