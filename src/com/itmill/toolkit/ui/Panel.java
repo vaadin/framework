@@ -295,10 +295,12 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
         final Integer newScrollX = (Integer) variables.get("scrollleft");
         final Integer newScrollY = (Integer) variables.get("scrolltop");
         if (newScrollX != null && newScrollX.intValue() != getScrollLeft()) {
-            setScrollLeft(newScrollX.intValue());
+            // set internally, not to fire request repaint
+            scrollOffsetX = newScrollX.intValue();
         }
         if (newScrollY != null && newScrollY.intValue() != getScrollTop()) {
-            setScrollTop(newScrollY.intValue());
+            // set internally, not to fire request repaint
+            scrollOffsetY = newScrollY.intValue();
         }
 
         // Actions
