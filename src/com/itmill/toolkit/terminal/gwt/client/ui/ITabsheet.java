@@ -325,24 +325,22 @@ public class ITabsheet extends ITabsheetBase implements
      * Layouts the tab-scroller elements, and applies styles.
      */
     private void updateTabScroller() {
-
-        DOM.setStyleAttribute(tabs, "width", getOffsetWidth() + "px");
-
+        if (width != null) {
+            DOM.setStyleAttribute(tabs, "width", width);
+        }
         if (scrollerIndex > tb.getTabCount()) {
             scrollerIndex = 0;
         }
         boolean scrolled = isScrolledTabs();
         boolean clipped = isClippedTabs();
         if (tb.isVisible() && (scrolled || clipped)) {
-            DOM.setStyleAttribute(scrollerNext, "display", "");
-            DOM.setStyleAttribute(scrollerPrev, "display", "");
+            DOM.setStyleAttribute(scroller, "display", "");
             DOM.setElementProperty(scrollerPrev, "className",
                     SCROLLER_CLASSNAME + (scrolled ? "Prev" : "Prev-disabled"));
             DOM.setElementProperty(scrollerNext, "className",
                     SCROLLER_CLASSNAME + (clipped ? "Next" : "Next-disabled"));
         } else {
-            DOM.setStyleAttribute(scrollerNext, "display", "none");
-            DOM.setStyleAttribute(scrollerPrev, "display", "none");
+            DOM.setStyleAttribute(scroller, "display", "none");
         }
 
     }
