@@ -46,7 +46,7 @@ public class WindowingExample extends CustomComponent {
         l.setContentMode(Label.CONTENT_XHTML);
         main.addComponent(l);
 
-        main.addComponent(new Button("Create a new subwindow",
+        Button b = new Button("Create a new subwindow",
                 new Button.ClickListener() {
                     public void buttonClick(ClickEvent event) {
                         final Window w = new Window("Subwindow");
@@ -55,20 +55,22 @@ public class WindowingExample extends CustomComponent {
                         w.addComponent(l);
                         getApplication().getMainWindow().addWindow(w);
                     }
-                }));
-        main.addComponent(new Button("Create a new modal window",
-                new Button.ClickListener() {
-                    public void buttonClick(ClickEvent event) {
-                        final Window w = new Window("Modal window");
-                        w.setModal(true);
-                        final Label l = new Label(txt);
-                        l.setContentMode(Label.CONTENT_XHTML);
-                        w.addComponent(l);
-                        getApplication().getMainWindow().addWindow(w);
-                    }
-                }));
-        main.addComponent(new Button(
-                "Open a application-level window, with shared state",
+                });
+        b.setStyleName(Button.STYLE_LINK);
+        main.addComponent(b);
+        b = new Button("Create a new modal window", new Button.ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                final Window w = new Window("Modal window");
+                w.setModal(true);
+                final Label l = new Label(txt);
+                l.setContentMode(Label.CONTENT_XHTML);
+                w.addComponent(l);
+                getApplication().getMainWindow().addWindow(w);
+            }
+        });
+        b.setStyleName(Button.STYLE_LINK);
+        main.addComponent(b);
+        b = new Button("Open a application-level window, with shared state",
                 new Button.ClickListener() {
                     public void buttonClick(ClickEvent event) {
                         if (windowUrl == null) {
@@ -82,8 +84,10 @@ public class WindowingExample extends CustomComponent {
                         getApplication().getMainWindow().open(
                                 new ExternalResource(windowUrl), "_new");
                     }
-                }));
-        main.addComponent(new Button(
+                });
+        b.setStyleName(Button.STYLE_LINK);
+        main.addComponent(b);
+        b = new Button(
                 "Create a new application-level window, with it's own state",
                 new Button.ClickListener() {
                     public void buttonClick(ClickEvent event) {
@@ -97,7 +101,9 @@ public class WindowingExample extends CustomComponent {
                         getApplication().getMainWindow().open(
                                 new ExternalResource(w.getURL()), "_new");
                     }
-                }));
+                });
+        b.setStyleName(Button.STYLE_LINK);
+        main.addComponent(b);
 
     }
 
