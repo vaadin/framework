@@ -352,9 +352,24 @@ public class IExpandLayout extends ComplexPanel implements
 
     public void iLayout() {
         if (orientationMode == ORIENTATION_HORIZONTAL) {
-            int pixels = getOffsetHeight() - getTopMargin() - getBottomMargin();
-            if (pixels < 0) {
-                pixels = 0;
+            int pixels;
+            if ("".equals(height)) {
+                // try to find minimum height by looping all widgets
+                int maxHeight = 0;
+                Iterator iterator = getPaintables().iterator();
+                while (iterator.hasNext()) {
+                    Widget w = (Widget) iterator.next();
+                    int h = w.getOffsetHeight();
+                    if (h > maxHeight) {
+                        maxHeight = h;
+                    }
+                }
+                pixels = maxHeight;
+            } else {
+                pixels = getOffsetHeight() - getTopMargin() - getBottomMargin();
+                if (pixels < 0) {
+                    pixels = 0;
+                }
             }
             DOM.setStyleAttribute(marginElement, "height", pixels + "px");
             DOM.setStyleAttribute(marginElement, "overflow", "hidden");
