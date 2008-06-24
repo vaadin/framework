@@ -22,23 +22,23 @@
 .i-tabsheet-scroller {
 	white-space: nowrap;
 	text-align: right;
-	height: 1px;
+	margin-top: -37px;
 }
 
 .i-tabsheet-scrollerPrev,
 .i-tabsheet-scrollerNext {
 	border: none;
 	width: 12px;
-	height: 37px;
-	margin-top: 11px;
+	height: 38px;
 	opacity: 0.9999;
+	margin-top: -1px;
 }
 .i-tabsheet-scrollerPrev-disabled,
 .i-tabsheet-scrollerNext-disabled {
 	border: none;
 	width: 12px;
-	height: 37px;
-	margin-top: 11px;
+	height: 38px;
+	margin-top: -1px;
 	opacity: 0.9999;
 }
 

@@ -96,7 +96,7 @@ public class ITabsheet extends ITabsheetBase implements
         tabs = DOM.createDiv();
         DOM.setElementProperty(tabs, "className", TABS_CLASSNAME);
         scroller = DOM.createDiv();
-        DOM.appendChild(tabs, scroller);
+
         DOM.setElementProperty(scroller, "className", SCROLLER_CLASSNAME);
         scrollerPrev = DOM.createButton();
         DOM.setElementProperty(scrollerPrev, "className", SCROLLER_CLASSNAME
@@ -130,6 +130,8 @@ public class ITabsheet extends ITabsheetBase implements
         DOM.appendChild(getElement(), contentNode);
         add(tp, contentNode);
         DOM.appendChild(getElement(), deco);
+
+        DOM.appendChild(tabs, scroller);
 
         tb.addTabListener(tl);
 
