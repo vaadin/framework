@@ -25,6 +25,7 @@ import com.itmill.toolkit.terminal.gwt.client.ui.IHorizontalExpandLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.ILabel;
 import com.itmill.toolkit.terminal.gwt.client.ui.ILink;
 import com.itmill.toolkit.terminal.gwt.client.ui.IListSelect;
+import com.itmill.toolkit.terminal.gwt.client.ui.IMenuBar;
 import com.itmill.toolkit.terminal.gwt.client.ui.INativeSelect;
 import com.itmill.toolkit.terminal.gwt.client.ui.IOptionGroup;
 import com.itmill.toolkit.terminal.gwt.client.ui.IOrderedLayoutHorizontal;
@@ -190,6 +191,9 @@ public class DefaultWidgetSet implements WidgetSet {
         } else if ("com.itmill.toolkit.terminal.gwt.client.ui.IAccordion"
                 .equals(className)) {
             return new IAccordion();
+        } else if ("com.itmill.toolkit.terminal.gwt.client.ui.IMenuBar"
+                .equals(className)) {
+            return new IMenuBar();
         }
 
         return new IUnknownComponent();
@@ -320,6 +324,8 @@ public class DefaultWidgetSet implements WidgetSet {
             } else {
                 return "com.itmill.toolkit.terminal.gwt.client.ui.IExpandLayout";
             }
+        } else if ("menubar".equals(tag)) {
+            return "com.itmill.toolkit.terminal.gwt.client.ui.IMenuBar";
         }
 
         return "com.itmill.toolkit.terminal.gwt.client.ui.IUnknownComponent";
