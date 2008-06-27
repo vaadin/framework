@@ -49,9 +49,11 @@ public class Tooltip extends ToolkitOverlay {
         }
         if (info.getTitle() != null && !"".equals(info.getTitle())) {
             DOM.setInnerHTML(description, info.getTitle());
+            DOM.setStyleAttribute(description, "display", "");
             hasContent = true;
         } else {
             DOM.setInnerHTML(description, "");
+            DOM.setStyleAttribute(description, "display", "none");
         }
         if (hasContent) {
             setPopupPositionAndShow(new PositionCallback() {
