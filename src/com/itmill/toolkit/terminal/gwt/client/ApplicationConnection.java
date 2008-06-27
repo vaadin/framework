@@ -966,4 +966,19 @@ public class ApplicationConnection {
         tooltip.handleTooltipEvent(event, owner);
 
     }
+
+    /**
+     * Adds PNG-fix conditionally (only for IE6) to the specified IMG -element.
+     * 
+     * @param el
+     *                the IMG element to fix
+     */
+    public void addPngFix(Element el) {
+        BrowserInfo b = BrowserInfo.get();
+        if (b.isIE6()) {
+            Util.addPngFix(el, getThemeUri()
+                    + "/../default/common/img/blank.gif");
+        }
+    }
+
 }

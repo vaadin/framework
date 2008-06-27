@@ -124,4 +124,26 @@ public class Util {
         DOM.setInnerText(escapeHtmlHelper, html);
         return DOM.getInnerHTML(escapeHtmlHelper);
     }
+
+    /**
+     * Adds transparent PNG fix to image element; only use for IE6.
+     * 
+     * @param el
+     *                IMG element
+     * @param blankImageUrl
+     *                URL to transparent one-pixel gif
+     */
+    public native static void addPngFix(Element el, String blankImageUrl)
+    /*-{
+        el.attachEvent("onload", function() {
+            var src = el.src;
+            if (src.indexOf(".png")<1) return;
+            var w = el.width||16; 
+            var h = el.height||16;
+            el.src =blankImageUrl;
+            el.style.height = h+"px";
+            el.style.width = w+"px";
+            el.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='"+src+"', sizingMethod='crop');";  
+        },false);
+    }-*/;
 }
