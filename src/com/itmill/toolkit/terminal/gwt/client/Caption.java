@@ -47,22 +47,6 @@ public class Caption extends HTML {
 
         boolean isEmpty = true;
 
-        if (uidl.hasAttribute("error")) {
-            isEmpty = false;
-            if (errorIndicatorElement == null) {
-                errorIndicatorElement = DOM.createDiv();
-                if (Util.isIE()) {
-                    DOM.setInnerHTML(errorIndicatorElement, "&nbsp;");
-                }
-                DOM.setElementProperty(errorIndicatorElement, "className",
-                        "i-errorindicator");
-                DOM.appendChild(getElement(), errorIndicatorElement);
-            }
-        } else if (errorIndicatorElement != null) {
-            DOM.removeChild(getElement(), errorIndicatorElement);
-            errorIndicatorElement = null;
-        }
-
         if (uidl.hasAttribute("icon")) {
             if (icon == null) {
                 icon = new Icon(client);
@@ -105,7 +89,7 @@ public class Caption extends HTML {
         }
 
         if (uidl.getBooleanAttribute("required")) {
-	    isEmpty = false;
+            isEmpty = false;
             if (requiredFieldIndicator == null) {
                 requiredFieldIndicator = DOM.createSpan();
                 DOM.setInnerText(requiredFieldIndicator, "*");
@@ -118,6 +102,22 @@ public class Caption extends HTML {
                 DOM.removeChild(getElement(), requiredFieldIndicator);
                 requiredFieldIndicator = null;
             }
+        }
+
+        if (uidl.hasAttribute("error")) {
+            isEmpty = false;
+            if (errorIndicatorElement == null) {
+                errorIndicatorElement = DOM.createDiv();
+                if (Util.isIE()) {
+                    DOM.setInnerHTML(errorIndicatorElement, "&nbsp;");
+                }
+                DOM.setElementProperty(errorIndicatorElement, "className",
+                        "i-errorindicator");
+                DOM.appendChild(getElement(), errorIndicatorElement);
+            }
+        } else if (errorIndicatorElement != null) {
+            DOM.removeChild(getElement(), errorIndicatorElement);
+            errorIndicatorElement = null;
         }
 
         // Workaround for IE weirdness, sometimes returns bad height in some
