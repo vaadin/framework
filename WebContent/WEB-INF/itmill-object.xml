@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE deployments PUBLIC
+   "-//JBoss Portal//DTD Portal Object 2.6//EN"
+   "http://www.jboss.org/portal/dtd/portal-object_2_6.dtd">
+<deployments>
+   <deployment>
+      <parent-ref>default.default</parent-ref>
+      <if-exists>overwrite</if-exists>      <window>
+         <window-name>PortletDemoPortletWindow</window-name>
+         <content>
+                <content-type>portlet</content-type>
+                <content-uri>PortletDemoPortletInstance</content-uri>
+         </content>
+         <region>center</region>
+         <height>1</height>
+      </window>
+   </deployment>
+   <deployment>
+      <parent-ref>default.default</parent-ref>
+      <if-exists>overwrite</if-exists>      <window>
+         <window-name>SimpleReserverPortletWindow</window-name>
+         <content>
+                <content-type>portlet</content-type>
+                <content-uri>SimpleReserverPortletInstance</content-uri>
+         </content>
+         <region>center</region>
+         <height>1</height>
+      </window>
+   </deployment>
+   <deployment>
+      <parent-ref>default.default</parent-ref>
+      <if-exists>overwrite</if-exists>      <window>
+         <window-name>SelectDemoPortletWindow</window-name>
+         <content>
+                <content-type>portlet</content-type>
+                <content-uri>SelectDemoPortletInstance</content-uri>
+         </content>
+         <region>center</region>
+         <height>1</height>
+      </window>
+   </deployment>
+   <deployment>
+      <parent-ref>default.default</parent-ref>
+      <if-exists>overwrite</if-exists>      <window>
+         <window-name>TableDemoPortletWindow</window-name>
+         <content>
+                <content-type>portlet</content-type>
+                <content-uri>TableDemoPortletInstance</content-uri>
+         </content>
+         <region>center</region>
+         <height>1</height>
+      </window>
+   </deployment>
+   <deployment>
+      <parent-ref>default.default</parent-ref>
+      <if-exists>overwrite</if-exists>      <window>
+         <window-name>FilterSelectPortletWindow</window-name>
+         <content>
+                <content-type>portlet</content-type>
+                <content-uri>FilterSelectPortletInstance</content-uri>
+         </content>
+         <region>center</region>
+         <height>1</height>
+      </window>
+   </deployment>
+   <deployment>
+      <parent-ref>default.default</parent-ref>
+      <if-exists>overwrite</if-exists>      <window>
+         <window-name>FeatureBrowserPortletWindow</window-name>
+         <content>
+                <content-type>portlet</content-type>
+                <content-uri>FeatureBrowserPortletInstance</content-uri>
+         </content>
+         <region>center</region>
+         <height>1</height>
+      </window>
+   </deployment>
+   <deployment>
+      <parent-ref>default.default</parent-ref>
+      <if-exists>overwrite</if-exists>      <window>
+         <window-name>ModalWindowPortletWindow</window-name>
+         <content>
+                <content-type>portlet</content-type>
+                <content-uri>ModalWindowPortletInstance</content-uri>
+         </content>
+         <region>center</region>
+         <height>1</height>
+      </window>
+   </deployment>
+   <deployment>
+      <parent-ref>default.default</parent-ref>
+      <if-exists>overwrite</if-exists>      <window>
+         <window-name>CalcPortletWindow</window-name>
+         <content>
+                <content-type>portlet</content-type>
+                <content-uri>CalcPortletInstance</content-uri>
+         </content>
+         <region>center</region>
+         <height>1</height>
+      </window>
+   </deployment>
+   <deployment>
+      <parent-ref>default.default</parent-ref>
+      <if-exists>overwrite</if-exists>      <window>
+         <window-name>NotificationDemoPortletWindow</window-name>
+         <content>
+                <content-type>portlet</content-type>
+                <content-uri>NotificationDemoPortletInstance</content-uri>
+         </content>
+         <region>center</region>
+         <height>1</height>
+      </window>
+   </deployment>
+   <deployment>
+      <parent-ref>default.default</parent-ref>
+      <if-exists>overwrite</if-exists>      <window>
+         <window-name>ChatServletPortletWindow</window-name>
+         <content>
+                <content-type>portlet</content-type>
+                <content-uri>ChatServletPortletInstance</content-uri>
+         </content>
+         <region>center</region>
+         <height>1</height>
+      </window>
+   </deployment>
+   <deployment>
+      <parent-ref>default.default</parent-ref>
+      <if-exists>overwrite</if-exists>      <window>
+         <window-name>BrowserDemoPortletWindow</window-name>
+         <content>
+                <content-type>portlet</content-type>
+                <content-uri>BrowserDemoPortletInstance</content-uri>
+         </content>
+         <region>center</region>
+         <height>1</height>
+      </window>
+   </deployment>
+</deployments>

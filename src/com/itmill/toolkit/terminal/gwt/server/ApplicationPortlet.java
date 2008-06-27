@@ -50,6 +50,7 @@ public class ApplicationPortlet implements Portlet {
     protected void writeAjaxWindow(RenderRequest request,
             RenderResponse response) throws IOException {
 
+        response.setContentType("text/html");
         if (app != null) {
             PortletSession sess = request.getPortletSession();
             PortletApplicationContext ctx = PortletApplicationContext
@@ -72,7 +73,6 @@ public class ApplicationPortlet implements Portlet {
                 dispatcher.include(request, response);
 
             } catch (PortletException e) {
-                response.setContentType("text/html");
                 PrintWriter out = response.getWriter();
                 out.print("<h1>Servlet include failed!</h1>");
                 out.print("<div>" + e + "</div>");

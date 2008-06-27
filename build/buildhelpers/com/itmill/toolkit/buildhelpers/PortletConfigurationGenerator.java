@@ -31,6 +31,8 @@ public class PortletConfigurationGenerator {
     private static final String PORTLET_XML_FILE = "portlet.xml";
     private static final String LIFERAY_PORTLET_XML_FILE = "liferay-portlet.xml";
     private static final String LIFERAY_DISPLAY_XML_FILE = "liferay-display.xml";
+    private static final String JBOSS_OBJECT_FILE = "itmill-object.xml";
+    private static final String JBOSS_INSTANCE_FILE = "portlet-instances.xml";
 
     // "templates" follow;
     private static final String PORTLET_XML_HEAD = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
@@ -106,6 +108,35 @@ public class PortletConfigurationGenerator {
     private static final String LIFERAY_DISPLAY_XML_SECTION = "                <portlet id=\"%PORTLETNAME%\" />\n";
     private static final String LIFERAY_DISPLAY_XML_FOOT = "\n"
             + "        </category>\n" + "</display>";
+
+    private static final String JBOSS_INSTANCE_HEAD = "<?xml version=\"1.0\" standalone=\"yes\"?>\r\n"
+            + "<!DOCTYPE deployments PUBLIC\r\n"
+            + "   \"-//JBoss Portal//DTD Portlet Instances 2.6//EN\"\r\n"
+            + "   \"http://www.jboss.org/portal/dtd/portlet-instances_2_6.dtd\">\r\n"
+            + "<deployments>\r\n";
+    private static final String JBOSS_INSTANCE_SECTION = "   <deployment>\r\n      <instance>\r\n"
+            + "         <instance-id>%PORTLETNAME%Instance</instance-id>\r\n"
+            + "         <portlet-ref>%PORTLETNAME%</portlet-ref>\r\n"
+            + "      </instance>\r\n   </deployment>\r\n";
+    private static final String JBOSS_INSTANCE_FOOT = "</deployments>";
+    private static final String JBOSS_OBJECT_HEAD = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n"
+            + "<!DOCTYPE deployments PUBLIC\r\n"
+            + "   \"-//JBoss Portal//DTD Portal Object 2.6//EN\"\r\n"
+            + "   \"http://www.jboss.org/portal/dtd/portal-object_2_6.dtd\">\r\n"
+            + "<deployments>\r\n";
+    private static final String JBOSS_OBJECT_SECTION = "   <deployment>\r\n"
+            + "      <parent-ref>default.default</parent-ref>\r\n"
+            + "      <if-exists>overwrite</if-exists>"
+            + "      <window>\r\n"
+            + "         <window-name>%PORTLETNAME%Window</window-name>\r\n"
+            + "         <content>\r\n"
+            + "                <content-type>portlet</content-type>\r\n"
+            + "                <content-uri>%PORTLETNAME%Instance</content-uri>\r\n"
+            + "         </content>\r\n"
+            + "         <region>center</region>\r\n"
+            + "         <height>1</height>\r\n"
+            + "      </window>\r\n   </deployment>\r\n";
+    private static final String JBOSS_OBJECT_FOOT = "</deployments>";
 
     /**
      * @param args
@@ -193,12 +224,35 @@ public class PortletConfigurationGenerator {
         } catch (FileNotFoundException e) {
             System.out.println(liferayDisplayXmlFile + " not found!");
         }
+        // open jboss object.xml
+        File jbossObjectXmlFile = new File(args[0] + File.separatorChar
+                + JBOSS_OBJECT_FILE);
+        OutputStreamWriter joout = null;
+        try {
+            joout = new OutputStreamWriter(new FileOutputStream(
+                    jbossObjectXmlFile), Charset.forName("UTF-8"));
+        } catch (FileNotFoundException e) {
+            System.out.println(jbossObjectXmlFile + " not found!");
+        }
+        // open jboss insrance.xml
+        File jbossInstanceXmlFile = new File(args[0] + File.separatorChar
+                + JBOSS_INSTANCE_FILE);
+        OutputStreamWriter jiout = null;
+        try {
+            jiout = new OutputStreamWriter(new FileOutputStream(
+                    jbossInstanceXmlFile), Charset.forName("UTF-8"));
+        } catch (FileNotFoundException e) {
+            System.out.println(jbossInstanceXmlFile + " not found!");
+        }
 
-        if (pout != null && lpout != null && ldout != null) {
+        if (pout != null && lpout != null && ldout != null && joout != null
+                && jiout != null) {
 
             String pstring = PORTLET_XML_HEAD;
             String lpstring = LIFERAY_PORTLET_XML_HEAD;
             String ldstring = LIFERAY_DISPLAY_XML_HEAD;
+            String jostring = JBOSS_OBJECT_HEAD;
+            String jistring = JBOSS_INSTANCE_HEAD;
 
             Pattern p1 = Pattern
                     .compile("<servlet-mapping>.*?<servlet-name>(.*?)<\\/servlet-name>.*?<url-pattern>(.*?)<\\/url-pattern>(.*?)<\\/servlet-mapping>");
@@ -264,16 +318,32 @@ public class PortletConfigurationGenerator {
                 s = s.replaceAll("%URL%", url);
                 ldstring += s;
 
+                s = JBOSS_OBJECT_SECTION;
+                s = s.replaceAll("%NAME%", name);
+                s = s.replaceAll("%PORTLETNAME%", pname);
+                s = s.replaceAll("%URL%", url);
+                jostring += s;
+
+                s = JBOSS_INSTANCE_SECTION;
+                s = s.replaceAll("%NAME%", name);
+                s = s.replaceAll("%PORTLETNAME%", pname);
+                s = s.replaceAll("%URL%", url);
+                jistring += s;
+
             }
 
             pstring += PORTLET_XML_FOOT;
             lpstring += LIFERAY_PORTLET_XML_FOOT;
             ldstring += LIFERAY_DISPLAY_XML_FOOT;
+            jostring += JBOSS_OBJECT_FOOT;
+            jistring += JBOSS_INSTANCE_FOOT;
 
             try {
                 pout.write(pstring);
                 lpout.write(lpstring);
                 ldout.write(ldstring);
+                joout.write(jostring);
+                jiout.write(jistring);
             } catch (IOException e) {
                 System.out.println("Write FAILED:" + e);
             }
@@ -289,6 +359,12 @@ public class PortletConfigurationGenerator {
             }
             if (ldout != null) {
                 ldout.close();
+            }
+            if (joout != null) {
+                joout.close();
+            }
+            if (jiout != null) {
+                jiout.close();
             }
         } catch (IOException e) {
             System.out.println("Close FAILED: " + e);
