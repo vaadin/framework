@@ -801,6 +801,8 @@ public class ApplicationConnection {
         TooltipInfo tooltipInfo = getTitleInfo((Paintable) component);
         if (uidl.hasAttribute("description")) {
             tooltipInfo.setTitle(uidl.getStringAttribute("description"));
+        } else {
+            tooltipInfo.setTitle(null);
         }
 
         // add error classname to components w/ error
