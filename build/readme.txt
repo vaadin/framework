@@ -13,5 +13,5 @@ See documentation on build.xml how product is build.
 4. Update Eclipse project classpath build/gwt/<platform>/gwt-user.jar and gwt-dev-<platform>.jar
 
 Note: All GWT distributions have been moved to 
-https://svn.itmill.com/svn/itmill-toolkit/gwt
+http://dev.itmill.com/svn/gwt/
 
