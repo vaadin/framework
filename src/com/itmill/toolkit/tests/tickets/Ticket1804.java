@@ -5,6 +5,7 @@ import java.util.LinkedList;
 
 import com.itmill.toolkit.data.Validator;
 import com.itmill.toolkit.data.util.MethodProperty;
+import com.itmill.toolkit.terminal.SystemError;
 import com.itmill.toolkit.ui.AbstractField;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.Label;
@@ -61,6 +62,15 @@ public class Ticket1804 extends com.itmill.toolkit.Application {
         s.setPropertyDataSource(new MethodProperty(new TestPojo(), "id"));
         listOfAllFields.add(s);
 
+        s = new Select(
+                "Required=true, custom error message, null selection not allowed");
+        s.setRequired(true);
+        s.setNullSelectionAllowed(false);
+        s.setPropertyDataSource(new MethodProperty(new TestPojo(), "id"));
+        s.setValue(null);
+        s.setComponentError(new SystemError("Test error message"));
+        listOfAllFields.add(s);
+
         for (Iterator i = listOfAllFields.iterator(); i.hasNext();) {
             s = (Select) i.next();
             main.addComponent(s);
@@ -94,6 +104,9 @@ public class Ticket1804 extends com.itmill.toolkit.Application {
                 }
                 Window w = new Window("Status of the fields");
                 w.setModal(true);
+                w.setScrollable(true);
+                w.setHeight(80);
+                w.setHeightUnits(w.UNITS_PERCENTAGE);
                 w.addComponent(new Label(msg.toString(), Label.CONTENT_XHTML));
                 main.addWindow(w);
             }
