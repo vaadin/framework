@@ -20,6 +20,7 @@ import com.google.gwt.user.client.ui.ScrollListener;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
+import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.Util;
@@ -359,27 +360,40 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
         super.show();
 
         setFF2CaretFixEnabled(true);
-
+        fixFF3OverflowBug();
     }
 
-    private void setFF2CaretFixEnabled(boolean enable) {
-        // "missing cursor" browser bug workaround for FF2 in Windows andLinux
-        if (!Util.isFF2()) {
-            return;
-        }
-        if (enable) {
+    /** Disable overflow auto with FF3 to fix #1837. */
+    private void fixFF3OverflowBug() {
+        if (BrowserInfo.get().isFF3()) {
             DeferredCommand.addCommand(new Command() {
                 public void execute() {
-                    String overflow = DOM.getStyleAttribute(getElement(),
-                            "overflow");
-                    DOM.setStyleAttribute(getElement(), "overflow", "auto");
+                    DOM.setStyleAttribute(getElement(), "overflow", "");
                 }
-
             });
-        } else {
-            DOM.setStyleAttribute(getElement(), "overflow", "");
         }
+    }
 
+    /**
+     * Fix "missing cursor" browser bug workaround for FF2 in Windows and Linux.
+     * 
+     * Calling this method has no effect on other browsers than the ones based
+     * on Gecko 1.8
+     * 
+     * @param enable
+     */
+    private void setFF2CaretFixEnabled(boolean enable) {
+        if (BrowserInfo.get().isFF2()) {
+            if (enable) {
+                DeferredCommand.addCommand(new Command() {
+                    public void execute() {
+                        DOM.setStyleAttribute(getElement(), "overflow", "auto");
+                    }
+                });
+            } else {
+                DOM.setStyleAttribute(getElement(), "overflow", "");
+            }
+        }
     }
 
     public void hide() {
