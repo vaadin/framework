@@ -53,6 +53,8 @@ public class Ticket1710 extends com.itmill.toolkit.Application {
         TextField t5 = new TextField();
         t5.setValue("With caption - WIDE");
         t5.setComponentError(new SystemError("Error"));
+        t5.setWidth(100);
+        t5.setWidthUnits(Sizeable.UNITS_PERCENTAGE);
         lo.addComponent(t5);
 
         TextField t6 = new TextField();
