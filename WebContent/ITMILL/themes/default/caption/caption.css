@@ -14,9 +14,9 @@
 	background: transparent url(../icons/16/error.png) no-repeat top right;
 }
 * html .i-errorindicator {
-	margin-left:-3px;
 	background: transparent none;
-	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../icons/16/error.png", sizingMethod="scale");
+	/* gif for transparency */
+	background: transparent url(../icons/16/error.gif) no-repeat top right;
 }
 *+html .i-errorindicator {
 	margin-left:-3px;

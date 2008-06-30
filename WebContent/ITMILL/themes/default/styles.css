@@ -78,7 +78,9 @@
 	background: transparent url(icons/16/error.png) no-repeat top right;
 }
 * html .i-errorindicator {
-	margin-left:-3px;
+	background: transparent none;
+	/* gif for transparency */
+	background: transparent url(icons/16/error.gif) no-repeat top right;
 }
 *+html .i-errorindicator {
 	margin-left:-3px;
@@ -602,64 +604,6 @@ input.i-modified,
 .i-gridlayout-spacing .i-gridlayout-firstrow {
 	padding-top: 0;
 }
-/*Set the style for the menu bar itself */
-.i-menubar table{
-    border-right: 2px solid #c6cbcc;
-	border-bottom: 2px solid #c6cbcc;
-	border-top: 1px solid #d0d4d5;
-	border-left: 1px solid #d0d4d5;
-	
-	padding 3px;
-}
-
-/*Set the style for the main menu menu items */
-.i-menubar .gwt-MenuItem {
-    cursor                      :   hand;
-    cursor                      :   pointer;
-	
-	padding : 1px 10px;
-	margin : 1px 10px;	
-	}
-
-/*Set the style for the selected main menu menu item */
-.i-menubar .gwt-MenuItem-selected {
-		 background-color            :   #fff;
-	}
-
-
-/*Set the style for the submenus */
-.gwt-MenuBar { 
-    font-size                   :   12px;
-    padding                     :   3px;
-    font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
-    color: #464f52;
-    
-    border-right: 2px solid #c6cbcc;
-	border-bottom: 2px solid #c6cbcc;
-	border-top: 1px solid #d0d4d5;
-	border-left: 1px solid #d0d4d5;
-}
-
-/*Set style for the submenu menu items */
-.gwt-MenuBar .gwt-MenuItem { 
-    cursor                      :   hand;
-    cursor                      :   pointer;
-
-    //border                      :   1px solid #999;
-    //background-color            :   #eee;
-    padding                     :   2px 10px;
-}
-
-/*Set style for the selected submenu item */
-.gwt-MenuBar .gwt-MenuItem-selected { 
-	 background-color            :   #fff;
-}
-
-.gwt-MenuItem p{
- 	padding : 0;
- 	margin : 0;
- 	line-height : normal;
- }
 
 .i-Notification {
 	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
@@ -1622,23 +1566,23 @@ input.i-modified,
 .i-tabsheet-scroller {
 	white-space: nowrap;
 	text-align: right;
-	height: 1px;
+	margin-top: -37px;
 }
 
 .i-tabsheet-scrollerPrev,
 .i-tabsheet-scrollerNext {
 	border: none;
 	width: 12px;
-	height: 37px;
-	margin-top: 11px;
+	height: 38px;
 	opacity: 0.9999;
+	margin-top: -1px;
 }
 .i-tabsheet-scrollerPrev-disabled,
 .i-tabsheet-scrollerNext-disabled {
 	border: none;
 	width: 12px;
-	height: 37px;
-	margin-top: 11px;
+	height: 38px;
+	margin-top: -1px;
 	opacity: 0.9999;
 }
 
