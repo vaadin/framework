@@ -97,6 +97,10 @@ public class BrowserInfo {
         return isGecko && geckoVersion == 1.8;
     }
 
+    public boolean isFF3() {
+        return isGecko && geckoVersion == 1.9;
+    }
+
     public float getGeckoVersion() {
         return geckoVersion;
     }
