@@ -15,7 +15,7 @@ public class Ticket1869 extends com.itmill.toolkit.Application {
     public void init() {
 
         GridLayout lo = new GridLayout(2, 1);
-        setMainWindow(new Window("#869", lo));
+        setMainWindow(new Window("#1869", lo));
         lo.setMargin(true);
         lo.setSpacing(true);
 
