@@ -141,7 +141,7 @@ public class IDateField extends FlowPanel implements Paintable, Field {
             int s, int ms)
     /*-{
        try {
-       	var date = new Date();
+       	var date = new Date(2000,1,1,1); // don't use current date here
        	if(y && y >= 0) date.setFullYear(y);
        	if(m && m >= 1) date.setMonth(m-1);
        	if(d && d >= 0) date.setDate(d);
