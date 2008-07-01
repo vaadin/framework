@@ -1,6 +1,23 @@
 @import url(../default/styles.css);
 
 /*****************************************************************************/
+/* Ticket 1710                                                               */
+/*****************************************************************************/
+
+.i-orderedlayout-controls {
+	background-color: #eee;
+	border-bottom: 2px solid #aaa;
+}
+
+.i-orderedlayout-tested-layout, .i-gridlayout-tested-layout, .i-expandllayout-tested-layout {
+	background-color: #fff;
+}
+	
+.i-panel-content-layout-testing-panel {
+	background-color: #bbb;	
+}
+	
+/*****************************************************************************/
 /* Ticket 1857                                                               */
 /*****************************************************************************/
 
