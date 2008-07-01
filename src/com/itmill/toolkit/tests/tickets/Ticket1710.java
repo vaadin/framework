@@ -18,10 +18,12 @@ import com.itmill.toolkit.ui.Form;
 import com.itmill.toolkit.ui.GridLayout;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.Layout;
+import com.itmill.toolkit.ui.NativeSelect;
 import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Panel;
 import com.itmill.toolkit.ui.TextField;
 import com.itmill.toolkit.ui.Window;
+import com.itmill.toolkit.ui.Layout.AlignmentHandler;
 
 public class Ticket1710 extends com.itmill.toolkit.Application {
 
@@ -192,6 +194,11 @@ public class Ticket1710 extends com.itmill.toolkit.Application {
             testedLayout = layout;
             internalLayout.addComponent(controls);
             internalLayout.addComponent(testedLayout);
+            internalLayout.setMargin(true);
+            internalLayout.setSpacing(true);
+            internalLayout.setComponentAlignment(testedLayout,
+                    OrderedLayout.ALIGNMENT_HORIZONTAL_CENTER,
+                    OrderedLayout.ALIGNMENT_VERTICAL_CENTER);
 
             controls.setWidth(100, OrderedLayout.UNITS_PERCENTAGE);
             controls.setStyleName("controls");
@@ -211,9 +218,8 @@ public class Ticket1710 extends com.itmill.toolkit.Application {
             controls.addComponent(marginRight);
             controls.addComponent(marginTop);
             controls.addComponent(marginBottom);
-            controls.addComponent(spacing);
-            for (Iterator i = controls.getComponentIterator(); i.hasNext();) {
-                ((AbstractComponent) i.next()).setImmediate(true);
+            if (testedLayout instanceof Layout.SpacingHandler) {
+                controls.addComponent(spacing);
             }
 
             Property.ValueChangeListener marginSpacingListener = new Property.ValueChangeListener() {
@@ -229,8 +235,78 @@ public class Ticket1710 extends com.itmill.toolkit.Application {
             spacing.addListener(marginSpacingListener);
             updateMarginsAndSpacing();
 
+            addAlignmentControls();
+
             testedLayout.setStyleName("tested-layout");
             setStyleName("layout-testing-panel");
+
+            for (Iterator i = controls.getComponentIterator(); i.hasNext();) {
+                ((AbstractComponent) i.next()).setImmediate(true);
+            }
+        }
+
+        private void addAlignmentControls() {
+            if (!(testedLayout instanceof Layout.AlignmentHandler)) {
+                return;
+            }
+            final Layout.AlignmentHandler ah = (AlignmentHandler) testedLayout;
+
+            final NativeSelect vAlign = new NativeSelect();
+            final NativeSelect hAlign = new NativeSelect();
+            controls.addComponent(new Label("alignment"));
+            controls.addComponent(hAlign);
+            controls.addComponent(vAlign);
+
+            vAlign.addItem(new Integer(Layout.AlignmentHandler.ALIGNMENT_TOP));
+            vAlign.setItemCaption(new Integer(
+                    Layout.AlignmentHandler.ALIGNMENT_TOP), "top");
+            vAlign.addItem(new Integer(
+                    Layout.AlignmentHandler.ALIGNMENT_VERTICAL_CENTER));
+            vAlign.setItemCaption(new Integer(
+                    Layout.AlignmentHandler.ALIGNMENT_VERTICAL_CENTER),
+                    "center");
+            vAlign
+                    .addItem(new Integer(
+                            Layout.AlignmentHandler.ALIGNMENT_BOTTOM));
+            vAlign.setItemCaption(new Integer(
+                    Layout.AlignmentHandler.ALIGNMENT_BOTTOM), "bottom");
+
+            hAlign.addItem(new Integer(Layout.AlignmentHandler.ALIGNMENT_LEFT));
+            hAlign.setItemCaption(new Integer(
+                    Layout.AlignmentHandler.ALIGNMENT_LEFT), "left");
+            hAlign.addItem(new Integer(
+                    Layout.AlignmentHandler.ALIGNMENT_HORIZONTAL_CENTER));
+            hAlign.setItemCaption(new Integer(
+                    Layout.AlignmentHandler.ALIGNMENT_HORIZONTAL_CENTER),
+                    "center");
+            hAlign
+                    .addItem(new Integer(
+                            Layout.AlignmentHandler.ALIGNMENT_RIGHT));
+            hAlign.setItemCaption(new Integer(
+                    Layout.AlignmentHandler.ALIGNMENT_RIGHT), "right");
+
+            Property.ValueChangeListener alignmentChangeListener = new Property.ValueChangeListener() {
+                public void valueChange(ValueChangeEvent event) {
+                    updateAlignments(((Integer) hAlign.getValue()).intValue(),
+                            ((Integer) vAlign.getValue()).intValue());
+                }
+
+            };
+
+            hAlign
+                    .setValue(new Integer(
+                            Layout.AlignmentHandler.ALIGNMENT_LEFT));
+            vAlign.addListener(alignmentChangeListener);
+            hAlign.addListener(alignmentChangeListener);
+            vAlign.setValue(new Integer(Layout.AlignmentHandler.ALIGNMENT_TOP));
+
+        }
+
+        private void updateAlignments(int h, int v) {
+            for (Iterator i = testedLayout.getComponentIterator(); i.hasNext();) {
+                ((Layout.AlignmentHandler) testedLayout).setComponentAlignment(
+                        (Component) i.next(), h, v);
+            }
         }
 
         private void updateMarginsAndSpacing() {
@@ -239,12 +315,10 @@ public class Ticket1710 extends com.itmill.toolkit.Application {
                     .booleanValue(), ((Boolean) marginBottom.getValue())
                     .booleanValue(), ((Boolean) marginLeft.getValue())
                     .booleanValue());
-            if (testedLayout instanceof OrderedLayout) {
-                ((OrderedLayout) testedLayout).setSpacing(((Boolean) spacing
-                        .getValue()).booleanValue());
-            } else if (testedLayout instanceof GridLayout) {
-                ((GridLayout) testedLayout).setSpacing(((Boolean) spacing
-                        .getValue()).booleanValue());
+            if (testedLayout instanceof Layout.SpacingHandler) {
+                ((Layout.SpacingHandler) testedLayout)
+                        .setSpacing(((Boolean) spacing.getValue())
+                                .booleanValue());
             }
         }
 

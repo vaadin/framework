@@ -5,8 +5,8 @@
 /*****************************************************************************/
 
 .i-orderedlayout-controls {
-	background-color: #eee;
-	border-bottom: 2px solid #aaa;
+	overflow: auto;
+	white-space : nowrap; 
 }
 
 .i-orderedlayout-tested-layout, .i-gridlayout-tested-layout, .i-expandllayout-tested-layout {
@@ -14,7 +14,7 @@
 }
 	
 .i-panel-content-layout-testing-panel {
-	background-color: #bbb;	
+	background-color: #eee;	
 }
 	
 /*****************************************************************************/
