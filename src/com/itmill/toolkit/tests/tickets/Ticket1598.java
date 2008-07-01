@@ -8,7 +8,7 @@ import com.itmill.toolkit.terminal.ThemeResource;
 import com.itmill.toolkit.ui.MenuBar;
 import com.itmill.toolkit.ui.Window;
 import com.itmill.toolkit.ui.MenuBar.Command;
-import com.itmill.toolkit.ui.MenuBar.Item;
+import com.itmill.toolkit.ui.MenuBar.MenuItem;
 
 public class Ticket1598 extends Application {
 
@@ -26,59 +26,59 @@ public class Ticket1598 extends Application {
             itemList.add(menuBar.addItem(new String("Menu " + i), null, null));
         }
 
-        Item first = (Item) itemList.get(0);
+        MenuItem first = (MenuItem) itemList.get(0);
 
         for (int i = 0; i < 5; i++) {
             first.addItem(new String("Submenu item" + i), null, new Command() {
 
-                public void menuSelected(Item selected) {
+                public void menuSelected(MenuItem selected) {
                     main.showNotification("Action " + selected.getText());
                 }
             });
         }
 
-        Item firstSecond = (Item) first.getChildren().get(1);
+        MenuItem firstSecond = (MenuItem) first.getChildren().get(1);
 
         for (int i = 0; i < 3; i++) {
             firstSecond.addItem(new String("Subsubmenu item" + i), null,
                     new Command() {
 
-                        public void menuSelected(Item selected) {
+                        public void menuSelected(MenuItem selected) {
                             main.showNotification("Action "
                                     + selected.getText());
                         }
                     });
         }
 
-        Item second = (Item) menuBar.getItems().get(1);
+        MenuItem second = (MenuItem) menuBar.getItems().get(1);
 
         for (int i = 0; i < 5; i++) {
             second.addItem(new String("Second submenu item" + i), null,
                     new Command() {
 
-                        public void menuSelected(Item selected) {
+                        public void menuSelected(MenuItem selected) {
                             main.showNotification("Action "
                                     + selected.getText());
                         }
                     });
         }
 
-        Item third = (Item) menuBar.getItems().get(2);
+        MenuItem third = (MenuItem) menuBar.getItems().get(2);
         third.setIcon(new ThemeResource("icons/16/document.png"));
 
         for (int i = 2; i <= 3; i++)
-            ((Item) menuBar.getItems().get(i)).setCommand(new Command() {
+            ((MenuItem) menuBar.getItems().get(i)).setCommand(new Command() {
 
-                public void menuSelected(Item selectedItem) {
+                public void menuSelected(MenuItem selectedItem) {
                     main.showNotification("Action " + selectedItem.getText());
                 }
             });
 
-        final Item fourth = (Item) menuBar.getItems().get(3);
+        final MenuItem fourth = (MenuItem) menuBar.getItems().get(3);
         fourth.setText("Toggle animation");
 
         fourth.setCommand(new Command() {
-            public void menuSelected(Item selected) {
+            public void menuSelected(MenuItem selected) {
                 menuBar
                         .addItemBefore("No animation yet...", null, null,
                                 fourth);
@@ -86,14 +86,14 @@ public class Ticket1598 extends Application {
             }
         });
 
-        final Item last = (Item) menuBar.getItems().get(menuBar.getSize() - 1);
+        final MenuItem last = (MenuItem) menuBar.getItems().get(menuBar.getSize() - 1);
         last.setText("Remove me!");
 
         // A command for removing the selected menuitem
         Command removeCommand = new Command() {
 
-            public void menuSelected(Item selected) {
-                Item parent = selected.getParent();
+            public void menuSelected(MenuItem selected) {
+                MenuItem parent = selected.getParent();
                 if (parent != null) {
                     parent.removeChild(selected);
                 } else {
