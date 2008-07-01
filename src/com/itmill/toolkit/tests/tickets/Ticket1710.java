@@ -13,6 +13,7 @@ import com.itmill.toolkit.ui.AbstractComponent;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.ComponentContainer;
+import com.itmill.toolkit.ui.DateField;
 import com.itmill.toolkit.ui.ExpandLayout;
 import com.itmill.toolkit.ui.Form;
 import com.itmill.toolkit.ui.GridLayout;
@@ -172,8 +173,20 @@ public class Ticket1710 extends com.itmill.toolkit.Application {
         t7.setValue("With icon and required and icon");
         t7.setComponentError(new SystemError("Error"));
         t7.setRequired(true);
-        t7.setIcon(new ThemeResource("icons/16/ok.png"));
+        t7.setIcon(new ThemeResource("../default/icons/16/ok.png"));
         lo.addComponent(t7);
+
+        DateField d1 = new DateField(
+                "Datefield with caption and icon, next one without caption");
+        d1.setComponentError(new SystemError("Error"));
+        d1.setRequired(true);
+        d1.setIcon(new ThemeResource("../default/icons/16/ok.png"));
+        lo.addComponent(d1);
+
+        DateField d2 = new DateField();
+        d2.setComponentError(new SystemError("Error"));
+        d2.setRequired(true);
+        lo.addComponent(d2);
     }
 
     public class LayoutTestingPanel extends Panel {
