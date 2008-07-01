@@ -18,7 +18,7 @@ import com.itmill.toolkit.terminal.Resource;
 public class MenuBar extends AbstractComponent {
 
     // Items of the top-level menu
-    private List menuItems;
+    private final List menuItems;
 
     // Number of items in this menu
     private static int numberOfItems = 0;
@@ -49,7 +49,7 @@ public class MenuBar extends AbstractComponent {
         // This generates the tree from the contents of the menu
         while (itr.hasNext()) {
 
-            Item item = (Item) itr.next();
+            MenuItem item = (MenuItem) itr.next();
 
             target.startTag("item");
 
@@ -95,16 +95,16 @@ public class MenuBar extends AbstractComponent {
         if (variables.containsKey("clickedId")) {
 
             Integer clickedId = (Integer) variables.get("clickedId");
-            Iterator itr = this.getItems().iterator();
+            Iterator itr = getItems().iterator();
             while (itr.hasNext()) {
-                items.push((Item) itr.next());
+                items.push(itr.next());
             }
 
-            Item tmpItem = null;
+            MenuItem tmpItem = null;
 
             // Go through all the items in the menu
             while (!found && !items.empty()) {
-                tmpItem = (Item) items.pop();
+                tmpItem = (MenuItem) items.pop();
                 found = (clickedId.intValue() == tmpItem.getId());
 
                 if (tmpItem.hasChildren()) {
@@ -142,12 +142,12 @@ public class MenuBar extends AbstractComponent {
      *                the command for the menu item
      * @throws IllegalArgumentException
      */
-    public MenuBar.Item addItem(String caption, Resource icon,
+    public MenuBar.MenuItem addItem(String caption, Resource icon,
             MenuBar.Command command) {
         if (caption == null) {
             throw new IllegalArgumentException("caption cannot be null");
         }
-        Item newItem = new Item(caption, icon, command);
+        MenuItem newItem = new MenuItem(caption, icon, command);
         menuItems.add(newItem);
         requestRepaint();
 
@@ -170,13 +170,13 @@ public class MenuBar extends AbstractComponent {
      *                the item that will be after the new item
      * @throws IllegalArgumentException
      */
-    public MenuBar.Item addItemBefore(String caption, Resource icon,
-            MenuBar.Command command, MenuBar.Item itemToAddBefore) {
+    public MenuBar.MenuItem addItemBefore(String caption, Resource icon,
+            MenuBar.Command command, MenuBar.MenuItem itemToAddBefore) {
         if (caption == null) {
             throw new IllegalArgumentException("caption cannot be null");
         }
 
-        Item newItem = new Item(caption, icon, command);
+        MenuItem newItem = new MenuItem(caption, icon, command);
         if (menuItems.contains(itemToAddBefore)) {
             int index = menuItems.indexOf(itemToAddBefore);
             menuItems.add(index, newItem);
@@ -205,7 +205,7 @@ public class MenuBar extends AbstractComponent {
      * @param item
      *                The item to be removed
      */
-    public void removeItem(MenuBar.Item item) {
+    public void removeItem(MenuBar.MenuItem item) {
         if (item != null) {
             menuItems.remove(item);
         }
@@ -256,7 +256,7 @@ public class MenuBar extends AbstractComponent {
      * The selected item is given as an argument.
      */
     public interface Command {
-        public void menuSelected(MenuBar.Item selectedItem);
+        public void menuSelected(MenuBar.MenuItem selectedItem);
     }
 
     /**
@@ -264,15 +264,15 @@ public class MenuBar extends AbstractComponent {
      * fired on user click by implementing the MenuBar.Command interface.
      * 
      */
-    public class Item {
+    public class MenuItem {
 
         /** Private members * */
-        private int itsId;
+        private final int itsId;
         private Command itsCommand;
         private String itsText;
         private List itsChildren;
         private Resource itsIcon;
-        private Item itsParent;
+        private MenuItem itsParent;
 
         /**
          * Constructs a new menu item that can optionally have an icon and a
@@ -285,7 +285,7 @@ public class MenuBar extends AbstractComponent {
          *                The command to be fired
          * @throws IllegalArgumentException
          */
-        public Item(String caption, Resource icon, MenuBar.Command command) {
+        public MenuItem(String caption, Resource icon, MenuBar.Command command) {
             if (caption == null) {
                 throw new IllegalArgumentException("caption cannot be null");
             }
@@ -315,7 +315,7 @@ public class MenuBar extends AbstractComponent {
          * @param command
          *                the command for the menu item
          */
-        public MenuBar.Item addItem(String caption, Resource icon,
+        public MenuBar.MenuItem addItem(String caption, Resource icon,
                 MenuBar.Command command) {
             if (caption == null) {
                 throw new IllegalArgumentException("caption cannot be null");
@@ -325,7 +325,7 @@ public class MenuBar extends AbstractComponent {
                 itsChildren = new ArrayList();
             }
 
-            Item newItem = new Item(caption, icon, command);
+            MenuItem newItem = new MenuItem(caption, icon, command);
 
             // The only place where the parent is set
             newItem.setParent(this);
@@ -351,14 +351,14 @@ public class MenuBar extends AbstractComponent {
          *                the item that will be after the new item
          * 
          */
-        public MenuBar.Item addItemBefore(String caption, Resource icon,
-                MenuBar.Command command, MenuBar.Item itemToAddBefore) {
+        public MenuBar.MenuItem addItemBefore(String caption, Resource icon,
+                MenuBar.Command command, MenuBar.MenuItem itemToAddBefore) {
 
-            Item newItem = null;
+            MenuItem newItem = null;
 
             if (hasChildren() && itsChildren.contains(itemToAddBefore)) {
                 int index = itsChildren.indexOf(itemToAddBefore);
-                newItem = new Item(caption, icon, command);
+                newItem = new MenuItem(caption, icon, command);
                 newItem.setParent(this);
                 itsChildren.add(index, newItem);
 
@@ -395,7 +395,7 @@ public class MenuBar extends AbstractComponent {
          * 
          * @return The containing MenuBar.MenuItem, or null if there is none
          */
-        public MenuBar.Item getParent() {
+        public MenuBar.MenuItem getParent() {
             return itsParent;
         }
 
@@ -475,7 +475,7 @@ public class MenuBar extends AbstractComponent {
          * @param item
          *                The item to be removed
          */
-        public void removeChild(MenuBar.Item item) {
+        public void removeChild(MenuBar.MenuItem item) {
             if (item != null && itsChildren != null) {
                 itsChildren.remove(item);
                 if (itsChildren.isEmpty()) {
@@ -502,7 +502,7 @@ public class MenuBar extends AbstractComponent {
          * @param parent
          *                The parent item
          */
-        protected void setParent(MenuBar.Item parent) {
+        protected void setParent(MenuBar.MenuItem parent) {
             itsParent = parent;
         }
 
