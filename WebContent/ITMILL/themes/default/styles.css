@@ -99,6 +99,7 @@
 	padding: 7px;
 	background-color: #FFE0E0;
 	border: 1px solid #FFB0B0;
+	overflow: auto;
 }
 /* body tag created by servlet */
 .i-generated-body {

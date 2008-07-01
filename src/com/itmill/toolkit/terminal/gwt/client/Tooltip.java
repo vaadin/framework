@@ -20,12 +20,12 @@ public class Tooltip extends ToolkitOverlay {
     public static final int TOOLTIP_EVENTS = Event.ONKEYDOWN
             | Event.ONMOUSEOVER | Event.ONMOUSEOUT | Event.ONMOUSEMOVE
             | Event.ONCLICK;
-    protected static final int MAX_WIDTH = 280;
+    protected static final int MAX_WIDTH = 500;
     ErrorMessage em = new ErrorMessage();
     Element description = DOM.createDiv();
     private Paintable tooltipOwner;
-    private boolean closing;
-    private boolean opening;
+    private boolean closing = false;
+    private boolean opening = false;
     private ApplicationConnection ac;
 
     public Tooltip(ApplicationConnection client) {
@@ -79,6 +79,7 @@ public class Tooltip extends ToolkitOverlay {
                     }
 
                     setPopupPosition(x, y);
+                    sinkEvents(Event.ONMOUSEOVER | Event.ONMOUSEOUT);
                 }
             });
         } else {
@@ -135,6 +136,7 @@ public class Tooltip extends ToolkitOverlay {
             return;
         }
         closeTimer.schedule(300);
+        closing = true;
     }
 
     private int tooltipEventMouseX;
@@ -159,6 +161,24 @@ public class Tooltip extends ToolkitOverlay {
         } else {
             // non-tooltip event, hide tooltip
             hideTooltip();
+        }
+    }
+
+    public void onBrowserEvent(Event event) {
+        final int type = DOM.eventGetType(event);
+        // cancel closing event if tooltip is mouseovered; the user might want
+        // to scroll of cut&paste
+
+        switch (type) {
+        case Event.ONMOUSEOVER:
+            closeTimer.cancel();
+            closing = false;
+            break;
+        case Event.ONMOUSEOUT:
+            hideTooltip();
+            break;
+        default:
+            // NOP
         }
     }
 
