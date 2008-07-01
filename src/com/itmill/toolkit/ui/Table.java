@@ -290,6 +290,11 @@ public class Table extends AbstractSelect implements Action.Container,
 
     private boolean containerChangeToBeRendered = false;
 
+    /**
+     * Table cell specific style generator
+     */
+    private CellStyleGenerator cellStyleGenerator = null;
+
     /* Table constructors *************************************************** */
 
     /**
@@ -1864,6 +1869,20 @@ public class Table extends AbstractSelect implements Action.Container,
                 if (columnId == null || isColumnCollapsed(columnId)) {
                     continue;
                 }
+                /*
+                 * For each cell, if a cellStyleGenerator is specified, get the
+                 * specific style for the cell. If there is any, add it to the
+                 * target.
+                 */
+                if (cellStyleGenerator != null) {
+                    String cellStyle = cellStyleGenerator.getStyle(itemId,
+                            columnId);
+                    if (cellStyle != null && !cellStyle.equals("")) {
+                        target
+                                .addAttribute("style-" + currentColumn,
+                                        cellStyle);
+                    }
+                }
                 if ((iscomponent[currentColumn] || iseditable)
                         && Component.class.isInstance(cells[CELL_FIRSTCOL
                                 + currentColumn][i])) {
@@ -2802,5 +2821,45 @@ public class Table extends AbstractSelect implements Action.Container,
          */
         public abstract Component generateCell(Table source, Object itemId,
                 Object columnId);
+    }
+
+    /**
+     * Set cell style generator for Table.
+     * 
+     * @param cellStyleGenerator
+     *                New cell style generator or null to remove generator.
+     */
+    public void setCellStyleGenerator(CellStyleGenerator cellStyleGenerator) {
+        this.cellStyleGenerator = cellStyleGenerator;
+        requestRepaint();
+    }
+
+    /**
+     * Get the current cell style generator.
+     * 
+     */
+    public CellStyleGenerator getCellStyleGenerator() {
+        return cellStyleGenerator;
+    }
+
+    /**
+     * Allow to define specific style on cells contents. Implements this
+     * interface and pass it to Table.setCellStyleGenerator. The CSS class name
+     * that will be added to the cell content is
+     * <tt>i-table-cell-content-[style name]</tt>
+     */
+    public interface CellStyleGenerator {
+
+        /**
+         * Called by Table when a cell is painted.
+         * 
+         * @param itemId
+         *                The itemId of the painted cell
+         * @param propertyId
+         *                The propertyId of the
+         * @return The style name to add to this cell (the CSS class name will
+         *         be i-table-cell-content-[style name] )
+         */
+        public abstract String getStyle(Object itemId, Object propertyId);
     }
 }

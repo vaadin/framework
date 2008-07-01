@@ -1959,7 +1959,8 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
                 int col = 0;
                 // row header
                 if (showRowHeaders) {
-                    addCell(uidl.getStringAttribute("caption"), aligns[col++]);
+                    addCell(uidl.getStringAttribute("caption"), aligns[col++],
+                            "");
                 }
 
                 if (uidl.hasAttribute("al")) {
@@ -1970,12 +1971,20 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
                 while (cells.hasNext()) {
                     final Object cell = cells.next();
                     if (cell instanceof String) {
-                        addCell(cell.toString(), aligns[col++]);
+                        String style = "";
+                        if (uidl.hasAttribute("style-" + col)) {
+                            style = uidl.getStringAttribute("style-" + col);
+                        }
+                        addCell(cell.toString(), aligns[col++], style);
                     } else {
                         final Paintable cellContent = client
                                 .getPaintable((UIDL) cell);
                         (cellContent).updateFromUIDL((UIDL) cell, client);
-                        addCell((Widget) cellContent, aligns[col++]);
+                        String style = "";
+                        if (uidl.hasAttribute("style")) {
+                            style = uidl.getStringAttribute("style");
+                        }
+                        addCell((Widget) cellContent, aligns[col++], style);
                     }
                 }
                 if (uidl.hasAttribute("selected") && !isSelected()) {
@@ -1983,12 +1992,16 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
                 }
             }
 
-            public void addCell(String text, char align) {
+            public void addCell(String text, char align, String style) {
                 // String only content is optimized by not using Label widget
                 final Element td = DOM.createTD();
                 final Element container = DOM.createDiv();
-                DOM.setElementProperty(container, "className", CLASSNAME
-                        + "-cell-content");
+                String className = CLASSNAME + "-cell-content";
+                if (style != null && !style.equals("")) {
+                    className += " " + CLASSNAME + "-cell-content-" + style;
+                }
+
+                DOM.setElementProperty(container, "className", className);
                 DOM.setInnerHTML(container, text);
                 if (align != ALIGN_LEFT) {
                     switch (align) {
@@ -2005,11 +2018,14 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
                 DOM.appendChild(getElement(), td);
             }
 
-            public void addCell(Widget w, char align) {
+            public void addCell(Widget w, char align, String style) {
                 final Element td = DOM.createTD();
                 final Element container = DOM.createDiv();
-                DOM.setElementProperty(container, "className", CLASSNAME
-                        + "-cell-content");
+                String className = CLASSNAME + "-cell-content";
+                if (style != null && !style.equals("")) {
+                    className += " " + CLASSNAME + "-cell-content-" + style;
+                }
+                DOM.setElementProperty(container, "className", className);
                 // TODO most components work with this, but not all (e.g.
                 // Select)
                 // Old comment: make widget cells respect align.
