@@ -6,13 +6,38 @@
 	text-align: left /* Force default alignment */
 }
 
-.i-errorindicator {
-	width: 10px;
-	height: 16px;
-	padding-right:13px;
-	display: inline;
-	background: transparent url(../icons/16/error.png) no-repeat top right;
+.i-caption * { 
+	float:left; 
+	display: block;
 }
+.i-orderedlayout-wrap-e {
+	float:left; 	
+}
+	
+.i-caption:after, .i-orderedlayout-wrap:after {
+  	content: ".";
+	display: block;
+	height: 0;
+    clear: both;
+    visibility: hidden;
+}
+		
+.i-caption, .i-orderedlayout-wrap {
+	display: inline-block;
+}
+
+/* Hides from IE-mac \*/
+* html .i-caption, * html .i-orderedlayout-wrap { height: 1%; }
+.i-caption, .i-orderedlayout-wrap { display: block; }
+/* End hide from IE-mac */
+
+.i-errorindicator {
+	background:transparent url(../icons/16/error.png) no-repeat scroll right top;
+	height:16px;
+	width:10px;
+	margin-left: 3px;
+}
+
 * html .i-errorindicator {
 	background: transparent none;
 	/* gif for transparency */

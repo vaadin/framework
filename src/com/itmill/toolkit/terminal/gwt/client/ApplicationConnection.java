@@ -735,14 +735,6 @@ public class ApplicationConnection {
         // Visibility
         boolean visible = !uidl.getBooleanAttribute("invisible");
         component.setVisible(visible);
-        // Set captions
-        if (manageCaption) {
-            final Container parent = Util.getParentLayout(component);
-            if (parent != null) {
-                parent.updateCaption((Paintable) component, uidl);
-            }
-        }
-
         if (!visible) {
             return true;
         }
@@ -825,6 +817,14 @@ public class ApplicationConnection {
 
         // Styles + disabled & readonly
         component.setStyleName(styleBuf.toString());
+
+        // Set captions
+        if (manageCaption) {
+            final Container parent = Util.getParentLayout(component);
+            if (parent != null) {
+                parent.updateCaption((Paintable) component, uidl);
+            }
+        }
 
         if (usePaintableIdsInDOM) {
             DOM.setElementProperty(component.getElement(), "id", uidl.getId());

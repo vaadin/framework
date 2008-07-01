@@ -26,6 +26,8 @@ public class Caption extends HTML {
 
     private final ApplicationConnection client;
 
+    private boolean placedAfterComponent = false;
+
     /**
      * 
      * @param component
@@ -47,10 +49,12 @@ public class Caption extends HTML {
 
         boolean isEmpty = true;
 
+        placedAfterComponent = true;
+
         if (uidl.hasAttribute("icon")) {
             if (icon == null) {
                 icon = new Icon(client);
-
+                placedAfterComponent = false;
                 DOM.insertChild(getElement(), icon.getElement(), 0);
             }
             icon.setUri(uidl.getStringAttribute("icon"));
@@ -74,6 +78,7 @@ public class Caption extends HTML {
                 c = "";
             } else {
                 isEmpty = false;
+                placedAfterComponent = false;
             }
             DOM.setInnerText(captionText, c);
         } else {
@@ -168,5 +173,9 @@ public class Caption extends HTML {
      */
     public Paintable getOwner() {
         return owner;
+    }
+
+    public boolean shouldBePlacedAfterComponent() {
+        return placedAfterComponent;
     }
 }

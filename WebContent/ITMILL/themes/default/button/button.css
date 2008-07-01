@@ -31,3 +31,24 @@
 	background-color: #FFE0E0;
 }
 */
+
+.i-checkbox *, .i-button * {
+	float: left;
+}
+
+.i-checkbox:after, .i-button:after {
+  	content: ".";
+	display: block;
+	height: 0;
+    clear: both;
+    visibility: hidden;
+}
+		
+.i-checkbox, .i-button {
+	display: inline-block;
+}
+
+/* Hides from IE-mac \*/
+* html .i-caption, * html .i-orderedlayout-wrap { height: 1%; }
+.i-caption, .i-orderedlayout-wrap { display: block; }
+/* End hide from IE-mac */
