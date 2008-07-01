@@ -765,12 +765,15 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
                 .getElementPropertyInt(getElement(), "offsetHeight") - 2)
                 + "px");
 
-        int last = (firstRowInViewPort + pageLength);
+        // indexes go from 1-totalRows, as rowheaders in index-mode indicate
+        int last = (firstRowInViewPort + (bodyContainer.getOffsetHeight() / tBody
+                .getRowHeight()));
         if (last > totalRows) {
             last = totalRows;
         }
-        DOM.setInnerHTML(scrollPositionElement, "<span>" + firstRowInViewPort
-                + " &ndash; " + last + "..." + "</span>");
+        DOM.setInnerHTML(scrollPositionElement, "<span>"
+                + (firstRowInViewPort + 1) + " &ndash; " + last + "..."
+                + "</span>");
         DOM.setStyleAttribute(scrollPositionElement, "display", "block");
     }
 
