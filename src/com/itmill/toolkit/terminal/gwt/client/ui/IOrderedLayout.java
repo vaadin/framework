@@ -331,6 +331,9 @@ public abstract class IOrderedLayout extends Panel implements Container {
             }
         }
 
+        /**
+         * Set alignments for this wrapper.
+         */
         void setAlignment(String verticalAlignment, String horizontalAlignment) {
 
             // Set vertical alignment
@@ -352,38 +355,63 @@ public abstract class IOrderedLayout extends Panel implements Container {
                 // build one cell table
                 if (!horizontalAlignment.equals("left")) {
                     if (td == null) {
+
+                        // The previous positioning has been left (or
+                        // unspecified).
+                        // Thus we need to create a one-cell-table to position
+                        // this
+                        // element.
+
                         final Element table = DOM.createTable();
                         final Element tBody = DOM.createTBody();
                         final Element tr = DOM.createTR();
                         td = DOM.createTD();
+                        final Element itable = DOM.createTable();
+                        final Element itBody = DOM.createTBody();
+                        final Element itr = DOM.createTR();
+                        final Element itd = DOM.createTD();
                         DOM.appendChild(table, tBody);
                         DOM.appendChild(tBody, tr);
                         DOM.appendChild(tr, td);
+                        DOM.appendChild(td, itable);
+                        DOM.appendChild(itable, itBody);
+                        DOM.appendChild(itBody, itr);
+                        DOM.appendChild(itr, itd);
                         DOM.setElementAttribute(table, "cellpadding", "0");
                         DOM.setElementAttribute(table, "cellspacing", "0");
                         DOM.setStyleAttribute(table, "width", "100%");
-                        // use className for identification
-                        DOM.setElementProperty(td, "className", "i_align");
+                        DOM.setElementAttribute(itable, "cellpadding", "0");
+                        DOM.setElementAttribute(itable, "cellspacing", "0");
+
                         // move possible content to cell
                         while (DOM.getChildCount(getElement()) > 0) {
                             Element content = DOM.getFirstChild(getElement());
                             if (content != null) {
                                 DOM.removeChild(getElement(), content);
-                                DOM.appendChild(td, content);
+                                DOM.appendChild(itd, content);
                             }
                         }
+
                         DOM.appendChild(getElement(), table);
                     }
                     DOM.setElementAttribute(td, "align", horizontalAlignment);
                 } else if (td != null) {
+
+                    // In this case we are requested to position this left
+                    // while as it has had some other position in the past.
+                    // Thus the one-cell wrapper table must be removed.
+
                     // Move content to main container
                     while (DOM.getChildCount(td) > 0) {
+                        Element itd = DOM.getFirstChild(DOM.getFirstChild(DOM
+                                .getFirstChild(DOM.getFirstChild(td))));
                         Element content = DOM.getFirstChild(td);
                         if (content != null) {
                             DOM.removeChild(td, content);
                             DOM.appendChild(getElement(), content);
                         }
                     }
+
                     // Remove unneeded table element
                     DOM.removeChild(getElement(), DOM
                             .getFirstChild(getElement()));
