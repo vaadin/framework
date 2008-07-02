@@ -4,22 +4,21 @@
 
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Vector;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.ui.ComplexPanel;
+import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
+import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
 import com.itmill.toolkit.terminal.gwt.client.Caption;
 import com.itmill.toolkit.terminal.gwt.client.Container;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.StyleConstants;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
-import com.itmill.toolkit.terminal.gwt.client.Util;
 
 /**
  * Abstract base class for ordered layouts. Use either vertical or horizontal
@@ -27,7 +26,7 @@ import com.itmill.toolkit.terminal.gwt.client.Util;
  * 
  * @author IT Mill Ltd
  */
-public abstract class IOrderedLayout extends ComplexPanel implements Container {
+public abstract class IOrderedLayout extends Panel implements Container {
 
     public static final String CLASSNAME = "i-orderedlayout";
 
@@ -36,15 +35,13 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
 
     int orientationMode = ORIENTATION_VERTICAL;
 
-    private final HashMap widgetToWrapper = new HashMap();
-
     protected ApplicationConnection client;
 
     /**
-     * Reference to Element where wrapped child Paintables are contained.
-     * Normally a TR or a TBODY element.
+     * Reference to Element where wrapped childred are contained. Normally a TR
+     * or a TBODY element.
      */
-    private Element childContainer;
+    private Element wrappedChildContainer;
 
     /**
      * Elements that provides the Layout interface implementation. Root element
@@ -57,6 +54,18 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
      * root.
      */
     protected Element margin;
+
+    /**
+     * List of child widgets. This is not the list of wrappers, but the actual
+     * widgets
+     */
+    private final Vector childWidgets = new Vector();
+
+    /**
+     * List of child widget wrappers. These wrappers are in exact same indexes
+     * as the widgets in childWidgets list.
+     */
+    private final Vector childWidgetWrappers = new Vector();
 
     /** Whether the component has spacing enabled. */
     private boolean hasComponentSpacing;
@@ -94,10 +103,10 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
         if (orientationMode == ORIENTATION_HORIZONTAL) {
             final String structure = "<table cellspacing=\"0\" cellpadding=\"0\"><tbody><tr></tr></tbody></table>";
             DOM.setInnerHTML(margin, structure);
-            childContainer = DOM.getFirstChild(DOM.getFirstChild(DOM
+            wrappedChildContainer = DOM.getFirstChild(DOM.getFirstChild(DOM
                     .getFirstChild(margin)));
         } else {
-            childContainer = margin;
+            wrappedChildContainer = margin;
         }
         setElement(root);
     }
@@ -121,7 +130,7 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
         hasComponentSpacing = uidl.getBooleanAttribute("spacing");
 
         // Collect the list of contained widgets after this update
-        final ArrayList newWidgets = new ArrayList();
+        final Vector newWidgets = new Vector();
         for (final Iterator it = uidl.getChildIterator(); it.hasNext();) {
             final UIDL uidlForChild = (UIDL) it.next();
             final Paintable child = client.getPaintable(uidlForChild);
@@ -129,7 +138,8 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
         }
 
         // Iterator for old widgets
-        final Iterator oldWidgetsIterator = getChildrenAsArraylist().iterator();
+        final Iterator oldWidgetsIterator = (new Vector(childWidgets))
+                .iterator();
 
         // Iterator for new widgets
         final Iterator newWidgetsIterator = newWidgets.iterator();
@@ -139,7 +149,7 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
 
         // List to collect all now painted widgets to in order to remove
         // unpainted ones later
-        final ArrayList paintedWidgets = new ArrayList();
+        final Vector paintedWidgets = new Vector();
 
         // Add any new widgets to the ordered layout
         Widget oldChild = null;
@@ -160,7 +170,7 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
                     } else if (newWidgets.contains(oldChild)) {
                         break;
                     } else {
-                        removePaintable((Paintable) oldChild);
+                        remove(oldChild);
                         oldChild = null;
                     }
                 }
@@ -173,17 +183,14 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
                 // child already attached in correct position
                 oldChild = null;
             } else if (hasChildComponent(newChild)) {
+
                 // current child has been moved, re-insert before current
                 // oldChild
-                // TODO this might be optimized by moving only container element
-                // to correct position
-                int index = getPaintableIndex(oldChild);
-                remove(newChild);
-                this.insert(newChild, index);
+                add(newChild, childWidgets.indexOf(oldChild));
+
             } else {
                 // insert new child before old one
-                final int index = getPaintableIndex(oldChild); // TODO this
-                insert(newChild, index);
+                add(newChild, childWidgets.indexOf(oldChild));
             }
 
             // Update the child component
@@ -194,127 +201,16 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
             paintedWidgets.add(newChild);
         }
 
-        // Remove possibly remaining old widgets which were not updated
+        // Remove possibly remaining old widgets which were not in painted UIDL
         while (oldWidgetsIterator.hasNext()) {
             oldChild = (Widget) oldWidgetsIterator.next();
-            final Paintable p = (Paintable) oldChild;
-            if (!newWidgets.contains(p)) {
-                removePaintable(p);
+            if (!newWidgets.contains(oldChild)) {
+                remove(oldChild);
             }
         }
 
         // Handle component alignments
         handleAlignments(uidl);
-    }
-
-    private ArrayList getChildrenAsArraylist() {
-        final ArrayList al = new ArrayList();
-        final Iterator it = iterator();
-        while (it.hasNext()) {
-            al.add(it.next());
-        }
-        return al;
-    }
-
-    /**
-     * Removes Paintable from DOM and its reference from ApplicationConnection.
-     * 
-     * Also removes Paintable's Caption if one exists
-     * 
-     * @param p
-     *                Paintable to be removed
-     */
-    protected boolean removePaintable(Paintable p) {
-        client.unregisterPaintable(p);
-        return remove((Widget) p);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.itmill.toolkit.terminal.gwt.client.Layout#replaceChildComponent(com.google.gwt.user.client.ui.Widget,
-     *      com.google.gwt.user.client.ui.Widget)
-     */
-    public void replaceChildComponent(Widget from, Widget to) {
-        client.unregisterPaintable((Paintable) from);
-        final int index = getPaintableIndex(from);
-        if (index >= 0) {
-            remove(index);
-            insert(to, index);
-        }
-    }
-
-    protected void insert(Widget w, int beforeIndex) {
-        WidgetWrapper wr = new WidgetWrapper();
-        widgetToWrapper.put(w, wr);
-        DOM.insertChild(childContainer, wr.getElement(), beforeIndex);
-        insert(w, wr.getContainerElement(), beforeIndex, false);
-    }
-
-    public boolean hasChildComponent(Widget component) {
-        return getPaintableIndex(component) >= 0;
-    }
-
-    public void updateCaption(Paintable component, UIDL uidl) {
-        ((WidgetWrapper) widgetToWrapper.get(component)).updateCaption(uidl,
-                component);
-    }
-
-    public void add(Widget w) {
-        WidgetWrapper wr = new WidgetWrapper();
-        widgetToWrapper.put(w, wr);
-        DOM.appendChild(childContainer, wr.getElement());
-        super.add(w, wr.getContainerElement());
-    }
-
-    public boolean remove(int index) {
-        return remove(getWidget(index));
-    }
-
-    public boolean remove(Widget w) {
-        final Element wrapper = ((WidgetWrapper) widgetToWrapper.get(w))
-                .getElement();
-        final boolean removed = super.remove(w);
-        if (removed) {
-            DOM.removeChild(childContainer, wrapper);
-            widgetToWrapper.remove(w);
-            return true;
-        }
-        return false;
-    }
-
-    public Widget getWidget(int index) {
-        return getChildren().get(index);
-    }
-
-    public int getWidgetCount() {
-        return getChildren().size();
-    }
-
-    public int getWidgetIndex(Widget child) {
-        return getChildren().indexOf(child);
-    }
-
-    public int getPaintableCount() {
-        int size = 0;
-        for (Iterator it = getChildren().iterator(); it.hasNext();) {
-            Widget w = (Widget) it.next();
-            size++;
-        }
-        return size;
-    }
-
-    protected int getPaintableIndex(Widget child) {
-        int i = 0;
-        for (Iterator it = getChildren().iterator(); it.hasNext();) {
-            Widget w = (Widget) it.next();
-            if (w == child) {
-                return i;
-            } else {
-                i++;
-            }
-        }
-        return -1;
     }
 
     protected void handleMargins(UIDL uidl) {
@@ -329,33 +225,30 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
                 margins.hasLeft());
     }
 
-    protected void handleAlignments(UIDL uidl) {
+    private void handleAlignments(UIDL uidl) {
         // Component alignments as a comma separated list.
         // See com.itmill.toolkit.terminal.gwt.client.ui.AlignmentInfo.java for
         // possible values.
         final int[] alignments = uidl.getIntArrayAttribute("alignments");
         int alignmentIndex = 0;
+
         // Insert alignment attributes
-        final Iterator it = getChildrenAsArraylist().iterator();
-        boolean first = true;
+        final Iterator it = childWidgetWrappers.iterator();
+
         while (it.hasNext()) {
 
             // Calculate alignment info
             final AlignmentInfo ai = new AlignmentInfo(
                     alignments[alignmentIndex++]);
 
-            final WidgetWrapper wr = ((WidgetWrapper) widgetToWrapper.get(it
-                    .next()));
+            final WidgetWrapper wr = (WidgetWrapper) it.next();
+
             wr.setAlignment(ai.getVerticalAlignment(), ai
                     .getHorizontalAlignment());
 
             // Handle spacing in this loop as well
-            if (first) {
-                wr.setSpacingEnabled(false);
-                first = false;
-            } else {
-                wr.setSpacingEnabled(hasComponentSpacing);
-            }
+            wr.setSpacingEnabled(alignmentIndex == 1 ? false
+                    : hasComponentSpacing);
         }
     }
 
@@ -373,7 +266,7 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
                 setElement(DOM.createDiv());
                 // Apply 'hasLayout' for IE (needed to get accurate dimension
                 // calculations)
-                if (Util.isIE()) {
+                if (BrowserInfo.get().isIE()) {
                     DOM.setStyleAttribute(getElement(), "zoom", "1");
                 }
             } else {
@@ -441,7 +334,7 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
         void setAlignment(String verticalAlignment, String horizontalAlignment) {
 
             // Set vertical alignment
-            if (Util.isIE()) {
+            if (BrowserInfo.get().isIE()) {
                 DOM.setElementAttribute(getElement(), "vAlign",
                         verticalAlignment);
             } else {
@@ -450,7 +343,7 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
             }
 
             // Set horizontal alignment
-            if (Util.isIE()) {
+            if (BrowserInfo.get().isIE()) {
                 DOM.setElementAttribute(getElement(), "align",
                         horizontalAlignment);
             } else {
@@ -508,4 +401,158 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
         }
 
     }
+
+    /* documented at super */
+    public void add(Widget child) {
+        add(child, childWidgets.size());
+    }
+
+    /**
+     * Add widget to this layout at given position.
+     * 
+     * This methods supports reinserting exiting child into layout - it just
+     * moves the position of the child in the layout.
+     */
+    public void add(Widget child, int atIndex) {
+        /*
+         * <b>Validate:</b> Perform any sanity checks to ensure the Panel can
+         * accept a new Widget. Examples: checking for a valid index on
+         * insertion; checking that the Panel is not full if there is a max
+         * capacity.
+         */
+        if (atIndex < 0 || atIndex > childWidgets.size()) {
+            return;
+        }
+
+        /*
+         * <b>Adjust for Reinsertion:</b> Some Panels need to handle the case
+         * where the Widget is already a child of this Panel. Example: when
+         * performing a reinsert, the index might need to be adjusted to account
+         * for the Widget's removal. See
+         * {@link ComplexPanel#adjustIndex(Widget, int)}.
+         */
+        if (childWidgets.contains(child)) {
+            if (childWidgets.indexOf(child) == atIndex) {
+                return;
+            }
+
+            final int removeFromIndex = childWidgets.indexOf(child);
+            final WidgetWrapper wrapper = (WidgetWrapper) childWidgetWrappers
+                    .get(removeFromIndex);
+            Element wrapperElement = wrapper.getElement();
+            final int nonWidgetChildElements = DOM
+                    .getChildCount(wrappedChildContainer)
+                    - childWidgets.size();
+            DOM.removeChild(wrappedChildContainer, wrapperElement);
+            DOM.insertChild(wrappedChildContainer, wrapperElement, atIndex
+                    + nonWidgetChildElements);
+            childWidgets.remove(removeFromIndex);
+            childWidgetWrappers.remove(removeFromIndex);
+            childWidgets.insertElementAt(child, atIndex);
+            childWidgetWrappers.insertElementAt(wrapper, atIndex);
+            return;
+        }
+
+        /*
+         * <b>Detach Child:</b> Remove the Widget from its existing parent, if
+         * any. Most Panels will simply call {@link Widget#removeFromParent()}
+         * on the Widget.
+         */
+        child.removeFromParent();
+
+        /*
+         * <b>Logical Attach:</b> Any state variables of the Panel should be
+         * updated to reflect the addition of the new Widget. Example: the
+         * Widget is added to the Panel's {@link WidgetCollection} at the
+         * appropriate index.
+         */
+        childWidgets.insertElementAt(child, atIndex);
+
+        /*
+         * <b>Physical Attach:</b> The Widget's Element must be physically
+         * attached to the Panel's Element, either directly or indirectly.
+         */
+        final WidgetWrapper wrapper = new WidgetWrapper();
+        final int nonWidgetChildElements = DOM
+                .getChildCount(wrappedChildContainer)
+                - childWidgetWrappers.size();
+        childWidgetWrappers.insertElementAt(wrapper, atIndex);
+        DOM.insertChild(wrappedChildContainer, wrapper.getElement(), atIndex
+                + nonWidgetChildElements);
+        DOM.appendChild(wrapper.getElement(), child.getElement());
+
+        /*
+         * <b>Adopt:</b> Call {@link #adopt(Widget)} to finalize the add as the
+         * very last step.
+         */
+        adopt(child);
+    }
+
+    /* documented at super */
+    public boolean remove(Widget child) {
+
+        /*
+         * <b>Validate:</b> Make sure this Panel is actually the parent of the
+         * child Widget; return <code>false</code> if it is not.
+         */
+        if (!childWidgets.contains(child)) {
+            return false;
+        }
+
+        /*
+         * <b>Orphan:</b> Call {@link #orphan(Widget)} first while the child
+         * Widget is still attached.
+         */
+        orphan(child);
+
+        /*
+         * <b>Physical Detach:</b> Adjust the DOM to account for the removal of
+         * the child Widget. The Widget's Element must be physically removed
+         * from the DOM.
+         */
+        final int index = childWidgets.indexOf(child);
+        final WidgetWrapper wrapper = (WidgetWrapper) childWidgetWrappers
+                .get(index);
+        DOM.removeChild(wrappedChildContainer, wrapper.getElement());
+        childWidgetWrappers.remove(index);
+
+        /*
+         * <b>Logical Detach:</b> Update the Panel's state variables to reflect
+         * the removal of the child Widget. Example: the Widget is removed from
+         * the Panel's {@link WidgetCollection}.
+         */
+        childWidgets.remove(index);
+
+        return true;
+    }
+
+    /* documented at super */
+    public boolean hasChildComponent(Widget component) {
+        return childWidgets.contains(component);
+    }
+
+    /* documented at super */
+    public void replaceChildComponent(Widget oldComponent, Widget newComponent) {
+        final int index = childWidgets.indexOf(oldComponent);
+        if (index >= 0) {
+            client.unregisterPaintable((Paintable) oldComponent);
+            remove(oldComponent);
+            add(newComponent, index);
+        }
+    }
+
+    /* documented at super */
+    public void updateCaption(Paintable component, UIDL uidl) {
+        final int index = childWidgets.indexOf(component);
+        if (index >= 0) {
+            ((WidgetWrapper) childWidgetWrappers.get(index)).updateCaption(
+                    uidl, component);
+        }
+    }
+
+    /* documented at super */
+    public Iterator iterator() {
+        return childWidgets.iterator();
+    }
+
 }
