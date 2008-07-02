@@ -209,9 +209,6 @@ public class Ticket1710 extends com.itmill.toolkit.Application {
             internalLayout.addComponent(testedLayout);
             internalLayout.setMargin(true);
             internalLayout.setSpacing(true);
-            internalLayout.setComponentAlignment(testedLayout,
-                    OrderedLayout.ALIGNMENT_HORIZONTAL_CENTER,
-                    OrderedLayout.ALIGNMENT_VERTICAL_CENTER);
 
             controls.setWidth(100, OrderedLayout.UNITS_PERCENTAGE);
             controls.setStyleName("controls");
@@ -266,9 +263,11 @@ public class Ticket1710 extends com.itmill.toolkit.Application {
 
             final NativeSelect vAlign = new NativeSelect();
             final NativeSelect hAlign = new NativeSelect();
-            controls.addComponent(new Label("alignment"));
+            controls.addComponent(new Label("component alignment"));
             controls.addComponent(hAlign);
             controls.addComponent(vAlign);
+            hAlign.setNullSelectionAllowed(false);
+            vAlign.setNullSelectionAllowed(false);
 
             vAlign.addItem(new Integer(Layout.AlignmentHandler.ALIGNMENT_TOP));
             vAlign.setItemCaption(new Integer(
@@ -313,6 +312,31 @@ public class Ticket1710 extends com.itmill.toolkit.Application {
             hAlign.addListener(alignmentChangeListener);
             vAlign.setValue(new Integer(Layout.AlignmentHandler.ALIGNMENT_TOP));
 
+            controls.addComponent(new Label("layout alignment"));
+            final NativeSelect lAlign = new NativeSelect();
+            controls.addComponent(lAlign);
+            lAlign.setNullSelectionAllowed(false);
+            lAlign.addItem(new Integer(Layout.AlignmentHandler.ALIGNMENT_LEFT));
+            lAlign.setItemCaption(new Integer(
+                    Layout.AlignmentHandler.ALIGNMENT_LEFT), "left");
+            lAlign.addItem(new Integer(
+                    Layout.AlignmentHandler.ALIGNMENT_HORIZONTAL_CENTER));
+            lAlign.setItemCaption(new Integer(
+                    Layout.AlignmentHandler.ALIGNMENT_HORIZONTAL_CENTER),
+                    "center");
+            lAlign
+                    .addItem(new Integer(
+                            Layout.AlignmentHandler.ALIGNMENT_RIGHT));
+            lAlign.setItemCaption(new Integer(
+                    Layout.AlignmentHandler.ALIGNMENT_RIGHT), "right");
+
+            lAlign.addListener(new Property.ValueChangeListener() {
+                public void valueChange(ValueChangeEvent event) {
+                    internalLayout.setComponentAlignment(testedLayout,
+                            ((Integer) lAlign.getValue()).intValue(),
+                            OrderedLayout.ALIGNMENT_TOP);
+                }
+            });
         }
 
         private void updateAlignments(int h, int v) {
