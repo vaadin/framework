@@ -402,12 +402,12 @@ public abstract class IOrderedLayout extends Panel implements Container {
                     // Thus the one-cell wrapper table must be removed.
 
                     // Move content to main container
-                    while (DOM.getChildCount(td) > 0) {
-                        Element itd = DOM.getFirstChild(DOM.getFirstChild(DOM
-                                .getFirstChild(DOM.getFirstChild(td))));
-                        Element content = DOM.getFirstChild(td);
+                    Element itd = DOM.getFirstChild(DOM.getFirstChild(DOM
+                            .getFirstChild(DOM.getFirstChild(td))));
+                    while (DOM.getChildCount(itd) > 0) {
+                        Element content = DOM.getFirstChild(itd);
                         if (content != null) {
-                            DOM.removeChild(td, content);
+                            DOM.removeChild(itd, content);
                             DOM.appendChild(getElement(), content);
                         }
                     }
@@ -415,6 +415,8 @@ public abstract class IOrderedLayout extends Panel implements Container {
                     // Remove unneeded table element
                     DOM.removeChild(getElement(), DOM
                             .getFirstChild(getElement()));
+
+                    td = null;
                 }
             }
         }
