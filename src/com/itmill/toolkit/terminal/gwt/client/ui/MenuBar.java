@@ -53,6 +53,8 @@ import com.google.gwt.user.client.ui.Widget;
  * <h3>Example</h3>
  * {@example com.google.gwt.examples.MenuBarExample}
  * </p>
+ * 
+ * @deprecated
  */
 public class MenuBar extends Widget implements PopupListener {
 

@@ -31,6 +31,8 @@ import com.google.gwt.user.client.ui.UIObject;
  * {@link com.google.gwt.user.client.ui.MenuBar}. Menu items can either fire a
  * {@link com.google.gwt.user.client.Command} when they are clicked, or open a
  * cascading sub-menu.
+ * 
+ * @deprecated
  */
 public class MenuItem extends UIObject implements HasHTML {
 
