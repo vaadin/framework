@@ -41,28 +41,53 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
     protected ApplicationConnection client;
 
     /**
-     * Contains reference to Element where Paintables are wrapped. Normally a TR
-     * or a TBODY element.
+     * Reference to Element where wrapped child Paintables are contained.
+     * Normally a TR or a TBODY element.
      */
-    protected Element childContainer;
+    private Element childContainer;
 
-    /*
-     * Elements that provides the Layout interface implementation.
+    /**
+     * Elements that provides the Layout interface implementation. Root element
+     * of the component. In vertical mode this is the outmost div.
      */
-    protected Element root;
+    private Element root;
+
+    /**
+     * Margin element of the component. In vertical mode, this is div inside
+     * root.
+     */
     protected Element margin;
 
+    /** Whether the component has spacing enabled. */
     private boolean hasComponentSpacing;
 
+    /** Information about margin states. */
     private MarginInfo margins = new MarginInfo(0);
 
+    /** Construct a nre IOrderedLayout in given orientation mode. */
     public IOrderedLayout(int orientation) {
         orientationMode = orientation;
         constructDOM();
         setStyleName(CLASSNAME);
     }
 
-    protected void constructDOM() {
+    /**
+     * Construct the DOM of the orderder layout.
+     * 
+     * <p>
+     * There are two modes - vertical and horizontal.
+     * <ul>
+     * <li>Vertical mode uses structure: div-root ( div-margin-childcontainer (
+     * div-wrap ( child ) div-wrap ( child )))).</li>
+     * <li>Horizontal mode uses structure: div-root ( div-margin ( table (
+     * tbody ( tr-childcontainer ( td-wrap ( child ) td-wrap ( child) )) )</li>
+     * </ul>
+     * where root, margin and childcontainer refer to the root element, margin
+     * element and the element that contain WidgetWrappers.
+     * </p>
+     * 
+     */
+    private void constructDOM() {
         root = DOM.createDiv();
         margin = DOM.createDiv();
         DOM.appendChild(root, margin);
@@ -77,6 +102,7 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
         setElement(root);
     }
 
+    /** Update the contents of the layout from UIDL. */
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 
         this.client = client;
@@ -91,38 +117,47 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
             handleMargins(uidl);
         }
 
-        //
+        // Handle component spacing later in handleAlignments() method
         hasComponentSpacing = uidl.getBooleanAttribute("spacing");
 
-        // Update contained components
-
-        final ArrayList uidlWidgets = new ArrayList();
+        // Collect the list of contained widgets after this update
+        final ArrayList newWidgets = new ArrayList();
         for (final Iterator it = uidl.getChildIterator(); it.hasNext();) {
             final UIDL uidlForChild = (UIDL) it.next();
             final Paintable child = client.getPaintable(uidlForChild);
-            uidlWidgets.add(child);
+            newWidgets.add(child);
         }
 
-        final ArrayList oldWidgets = getChildrenAsArraylist();
-        final Iterator oldIt = oldWidgets.iterator();
-        final Iterator newIt = uidlWidgets.iterator();
-        final Iterator newUidl = uidl.getChildIterator();
+        // Iterator for old widgets
+        final Iterator oldWidgetsIterator = getChildrenAsArraylist().iterator();
+
+        // Iterator for new widgets
+        final Iterator newWidgetsIterator = newWidgets.iterator();
+
+        // Iterator for new UIDL
+        final Iterator newUIDLIterator = uidl.getChildIterator();
+
+        // List to collect all now painted widgets to in order to remove
+        // unpainted ones later
         final ArrayList paintedWidgets = new ArrayList();
 
+        // Add any new widgets to the ordered layout
         Widget oldChild = null;
-        while (newIt.hasNext()) {
-            final Widget child = (Widget) newIt.next();
-            final UIDL childUidl = (UIDL) newUidl.next();
+        while (newWidgetsIterator.hasNext()) {
 
-            if (oldChild == null && oldIt.hasNext()) {
+            final Widget newChild = (Widget) newWidgetsIterator.next();
+            final UIDL newChildUIDL = (UIDL) newUIDLIterator.next();
+
+            // Remove any unneeded old widgets
+            if (oldChild == null && oldWidgetsIterator.hasNext()) {
                 // search for next old Paintable which still exists in layout
                 // and delete others
-                while (oldIt.hasNext()) {
-                    oldChild = (Widget) oldIt.next();
+                while (oldWidgetsIterator.hasNext()) {
+                    oldChild = (Widget) oldWidgetsIterator.next();
                     // now oldChild is an instance of Paintable
                     if (paintedWidgets.contains(oldChild)) {
                         continue;
-                    } else if (uidlWidgets.contains(oldChild)) {
+                    } else if (newWidgets.contains(oldChild)) {
                         break;
                     } else {
                         removePaintable((Paintable) oldChild);
@@ -130,34 +165,40 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
                     }
                 }
             }
+
             if (oldChild == null) {
-                // we are adding components to layout
-                add(child);
-            } else if (child == oldChild) {
-                // child already attached and updated
+                // we are adding components to the end of layout
+                add(newChild);
+            } else if (newChild == oldChild) {
+                // child already attached in correct position
                 oldChild = null;
-            } else if (hasChildComponent(child)) {
+            } else if (hasChildComponent(newChild)) {
                 // current child has been moved, re-insert before current
                 // oldChild
                 // TODO this might be optimized by moving only container element
                 // to correct position
                 int index = getPaintableIndex(oldChild);
-                remove(child);
-                this.insert(child, index);
+                remove(newChild);
+                this.insert(newChild, index);
             } else {
                 // insert new child before old one
                 final int index = getPaintableIndex(oldChild); // TODO this
-                insert(child, index);
+                insert(newChild, index);
             }
-            ((Paintable) child).updateFromUIDL(childUidl, client);
-            paintedWidgets.add(child);
+
+            // Update the child component
+            ((Paintable) newChild).updateFromUIDL(newChildUIDL, client);
+
+            // Add this newly handled component to the list of painted
+            // components
+            paintedWidgets.add(newChild);
         }
 
-        // remove possibly remaining old Paintable object which were not updated
-        while (oldIt.hasNext()) {
-            oldChild = (Widget) oldIt.next();
+        // Remove possibly remaining old widgets which were not updated
+        while (oldWidgetsIterator.hasNext()) {
+            oldChild = (Widget) oldWidgetsIterator.next();
             final Paintable p = (Paintable) oldChild;
-            if (!uidlWidgets.contains(p)) {
+            if (!newWidgets.contains(p)) {
                 removePaintable(p);
             }
         }
@@ -341,6 +382,7 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
         }
 
         public void updateCaption(UIDL uidl, Paintable paintable) {
+            final Widget widget = (Widget) paintable;
             if (Caption.isNeeded(uidl)) {
                 boolean justAdded = false;
                 if (caption == null) {
@@ -350,19 +392,13 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
                 caption.updateCaption(uidl);
                 final boolean after = caption.shouldBePlacedAfterComponent();
                 final Element captionElement = caption.getElement();
-                final Element widgetElement = ((Widget) paintable).getElement();
-                String currentWidgetClass = DOM.getElementAttribute(
-                        widgetElement, "class");
-                if (null == currentWidgetClass) {
-                    currentWidgetClass = "";
-                }
+                final Element widgetElement = widget.getElement();
                 if (justAdded) {
                     if (after) {
                         DOM.appendChild(getElement(), captionElement);
                         DOM.setElementAttribute(getElement(), "class",
                                 "i-orderedlayout-wrap");
-                        DOM.setElementAttribute(widgetElement, "class",
-                                currentWidgetClass + " i-orderedlayout-wrap-e");
+                        widget.addStyleName("i-orderedlayout-wrap-e");
                     } else {
                         DOM.insertChild(getElement(), captionElement, 0);
                     }
@@ -378,10 +414,9 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
                     DOM.setElementAttribute(getElement(), "class",
                             after ? "i-orderedlayout-wrap" : "");
                     if (after) {
-                        DOM.setElementAttribute(widgetElement, "class",
-                                currentWidgetClass + " i-orderedlayout-wrap-e");
+                        widget.addStyleName("i-orderedlayout-wrap-e");
                     } else {
-                        removeClass(widgetElement, "i-orderedlayout-wrap-e");
+                        widget.removeStyleName("i-orderedlayout-wrap-e");
                     }
                 }
 
@@ -390,27 +425,9 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
                     DOM.removeChild(getElement(), caption.getElement());
                     caption = null;
                     DOM.setElementAttribute(getElement(), "class", "");
-                    removeClass(DOM.getFirstChild(getElement()),
-                            "i-orderedlayout-wrap-e");
+                    widget.removeStyleName("i-orderedlayout-wrap-e");
                 }
             }
-        }
-
-        private void removeClass(Element e, String name) {
-            String classes = DOM.getElementAttribute(e, "class");
-            if (e == null) {
-                return;
-            }
-            int i = classes.indexOf(name);
-            if (i < 0) {
-                return;
-            }
-            while (i >= 0) {
-                classes = classes.substring(0, i)
-                        + classes.substring(i + name.length());
-                i = classes.indexOf(name);
-            }
-            DOM.setElementAttribute(e, "class", classes);
         }
 
         Element getContainerElement() {
