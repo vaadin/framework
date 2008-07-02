@@ -5,6 +5,7 @@
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import com.google.gwt.user.client.DOM;
@@ -34,6 +35,8 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
     public static final int ORIENTATION_HORIZONTAL = 1;
 
     int orientationMode = ORIENTATION_VERTICAL;
+
+    private final HashMap widgetToWrapper = new HashMap();
 
     protected ApplicationConnection client;
 
@@ -202,6 +205,7 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
 
     protected void insert(Widget w, int beforeIndex) {
         WidgetWrapper wr = new WidgetWrapper();
+        widgetToWrapper.put(w, wr);
         DOM.insertChild(childContainer, wr.getElement(), beforeIndex);
         insert(w, wr.getContainerElement(), beforeIndex, false);
     }
@@ -211,11 +215,13 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
     }
 
     public void updateCaption(Paintable component, UIDL uidl) {
-        getWidgetWrapperFor((Widget) component).updateCaption(uidl, component);
+        ((WidgetWrapper) widgetToWrapper.get(component)).updateCaption(uidl,
+                component);
     }
 
     public void add(Widget w) {
         WidgetWrapper wr = new WidgetWrapper();
+        widgetToWrapper.put(w, wr);
         DOM.appendChild(childContainer, wr.getElement());
         super.add(w, wr.getContainerElement());
     }
@@ -225,10 +231,12 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
     }
 
     public boolean remove(Widget w) {
-        final Element wrapper = getWidgetWrapperFor(w).getElement();
+        final Element wrapper = ((WidgetWrapper) widgetToWrapper.get(w))
+                .getElement();
         final boolean removed = super.remove(w);
         if (removed) {
             DOM.removeChild(childContainer, wrapper);
+            widgetToWrapper.remove(w);
             return true;
         }
         return false;
@@ -255,7 +263,7 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
         return size;
     }
 
-    public int getPaintableIndex(Widget child) {
+    protected int getPaintableIndex(Widget child) {
         int i = 0;
         for (Iterator it = getChildren().iterator(); it.hasNext();) {
             Widget w = (Widget) it.next();
@@ -295,7 +303,8 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
             final AlignmentInfo ai = new AlignmentInfo(
                     alignments[alignmentIndex++]);
 
-            final WidgetWrapper wr = getWidgetWrapperFor((Widget) it.next());
+            final WidgetWrapper wr = ((WidgetWrapper) widgetToWrapper.get(it
+                    .next()));
             wr.setAlignment(ai.getVerticalAlignment(), ai
                     .getHorizontalAlignment());
 
@@ -329,8 +338,6 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
             } else {
                 setElement(DOM.createTD());
             }
-            // DOM.setElementAttribute(getElement(), "class",
-            // "i-orderedlayout-wrap");
         }
 
         public void updateCaption(UIDL uidl, Paintable paintable) {
@@ -343,10 +350,7 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
                 caption.updateCaption(uidl);
                 final boolean after = caption.shouldBePlacedAfterComponent();
                 final Element captionElement = caption.getElement();
-                final Element firstElement = DOM.getFirstChild(getElement());
-                final Element widgetElement = firstElement == captionElement ? DOM
-                        .getChild(getElement(), 1)
-                        : firstElement;
+                final Element widgetElement = ((Widget) paintable).getElement();
                 String currentWidgetClass = DOM.getElementAttribute(
                         widgetElement, "class");
                 if (null == currentWidgetClass) {
@@ -360,13 +364,15 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
                         DOM.setElementAttribute(widgetElement, "class",
                                 currentWidgetClass + " i-orderedlayout-wrap-e");
                     } else {
-                        DOM.insertBefore(getElement(), captionElement,
-                                firstElement);
+                        DOM.insertChild(getElement(), captionElement, 0);
                     }
 
                 } else
                 // Swap caption and widget if needed or add
-                if (caption.shouldBePlacedAfterComponent() == (firstElement == captionElement)) {
+                if (after == (DOM.getChildIndex(getElement(), widgetElement) > DOM
+                        .getChildIndex(getElement(), captionElement))) {
+                    Element firstElement = DOM.getChild(getElement(), DOM
+                            .getChildCount(getElement()) - 2);
                     DOM.removeChild(getElement(), firstElement);
                     DOM.appendChild(getElement(), firstElement);
                     DOM.setElementAttribute(getElement(), "class",
@@ -375,7 +381,7 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
                         DOM.setElementAttribute(widgetElement, "class",
                                 currentWidgetClass + " i-orderedlayout-wrap-e");
                     } else {
-                        // TODO remove unnecessary wrap-e
+                        removeClass(widgetElement, "i-orderedlayout-wrap-e");
                     }
                 }
 
@@ -384,20 +390,27 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
                     DOM.removeChild(getElement(), caption.getElement());
                     caption = null;
                     DOM.setElementAttribute(getElement(), "class", "");
-
-                    // TODO Also remove wrap-e
+                    removeClass(DOM.getFirstChild(getElement()),
+                            "i-orderedlayout-wrap-e");
                 }
             }
         }
 
-        public WidgetWrapper(Element element) {
-            if (DOM.getElementProperty(element, "className").equals("i_align")) {
-                td = element;
-                setElement(DOM.getParent(DOM.getParent(DOM.getParent(DOM
-                        .getParent(td)))));
-            } else {
-                setElement(element);
+        private void removeClass(Element e, String name) {
+            String classes = DOM.getElementAttribute(e, "class");
+            if (e == null) {
+                return;
             }
+            int i = classes.indexOf(name);
+            if (i < 0) {
+                return;
+            }
+            while (i >= 0) {
+                classes = classes.substring(0, i)
+                        + classes.substring(i + name.length());
+                i = classes.indexOf(name);
+            }
+            DOM.setElementAttribute(e, "class", classes);
         }
 
         Element getContainerElement() {
@@ -478,16 +491,4 @@ public abstract class IOrderedLayout extends ComplexPanel implements Container {
         }
 
     }
-
-    /**
-     * Returns given widgets WidgetWrapper
-     * 
-     * @param child
-     * @return
-     */
-    protected WidgetWrapper getWidgetWrapperFor(Widget child) {
-        final Element containerElement = DOM.getParent(child.getElement());
-        return new WidgetWrapper(containerElement);
-    }
-
 }
