@@ -1318,7 +1318,7 @@ input.i-modified,
     filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="ITMILL/themes/default/shadow/img/top.png", sizingMethod='scale');
     filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../ITMILL/themes/default/shadow/img/top.png", sizingMethod='scale');
     filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../../ITMILL/themes/default/shadow/img/top.png", sizingMethod='scale');
-    width: expression(this.parentNode.offsetWidth - this.previousSibling.offsetWidth - this.nextSibling.offsetWidth);
+    width: expression((this.parentNode.offsetWidth - this.previousSibling.offsetWidth - this.nextSibling.offsetWidth) + "px");
 }
 
 * html .i-shadow .top-right {
@@ -1333,7 +1333,7 @@ input.i-modified,
     filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="ITMILL/themes/default/shadow/img/left.png", sizingMethod='scale');
     filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../ITMILL/themes/default/shadow/img/left.png", sizingMethod='scale');
     filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../../ITMILL/themes/default/shadow/img/left.png", sizingMethod='scale');
-    height: expression(this.parentNode.offsetHeight - this.parentNode.firstChild.offsetHeight - this.parentNode.childNodes[6].offsetHeight);
+    height: expression((this.parentNode.offsetHeight - this.parentNode.firstChild.offsetHeight - this.parentNode.childNodes[6].offsetHeight) + "px");
 }
 
 * html .i-shadow .center {
@@ -1342,7 +1342,7 @@ input.i-modified,
     filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../ITMILL/themes/default/shadow/img/center.png", sizingMethod='scale');
     filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../../ITMILL/themes/default/shadow/img/center.png", sizingMethod='scale');
     height: expression(this.parentNode.offsetHeight - this.parentNode.firstChild.offsetHeight - this.parentNode.childNodes[6].offsetHeight);
-    width: expression(this.parentNode.offsetWidth - this.previousSibling.offsetWidth - this.nextSibling.offsetWidth);
+    width: expression((this.parentNode.offsetWidth - this.previousSibling.offsetWidth - this.nextSibling.offsetWidth) + "px");
 }
 
 * html .i-shadow .right {
@@ -1350,7 +1350,7 @@ input.i-modified,
     filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="ITMILL/themes/default/shadow/img/right.png", sizingMethod='scale');
     filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../ITMILL/themes/default/shadow/img/right.png", sizingMethod='scale');
     filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../../ITMILL/themes/default/shadow/img/right.png", sizingMethod='scale');
-    height: expression(this.parentNode.offsetHeight - this.parentNode.firstChild.offsetHeight - this.parentNode.childNodes[6].offsetHeight);
+    height: expression((this.parentNode.offsetHeight - this.parentNode.firstChild.offsetHeight - this.parentNode.childNodes[6].offsetHeight) + "px");
 }
 
 * html .i-shadow .bottom-left {
@@ -1365,7 +1365,7 @@ input.i-modified,
     filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="ITMILL/themes/default/shadow/img/bottom.png", sizingMethod='scale');
     filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../ITMILL/themes/default/shadow/img/bottom.png", sizingMethod='scale');
     filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../../ITMILL/themes/default/shadow/img/bottom.png", sizingMethod='scale');
-    width: expression(this.parentNode.offsetWidth - this.previousSibling.offsetWidth - this.nextSibling.offsetWidth);
+    width: expression((this.parentNode.offsetWidth - this.previousSibling.offsetWidth - this.nextSibling.offsetWidth) + "px");
 }
 
 * html .i-shadow .bottom-right {
