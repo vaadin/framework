@@ -7,7 +7,6 @@ import com.itmill.toolkit.data.Item;
 import com.itmill.toolkit.data.Property;
 import com.itmill.toolkit.data.Validator;
 import com.itmill.toolkit.data.util.BeanItem;
-import com.itmill.toolkit.terminal.UserError;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.CustomComponent;
@@ -15,7 +14,6 @@ import com.itmill.toolkit.ui.ExpandLayout;
 import com.itmill.toolkit.ui.Field;
 import com.itmill.toolkit.ui.FieldFactory;
 import com.itmill.toolkit.ui.Form;
-import com.itmill.toolkit.ui.FormLayout;
 import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Select;
 import com.itmill.toolkit.ui.TextField;
@@ -65,20 +63,22 @@ public class FormExample extends CustomComponent {
 
         public void setPostalCode(String postalCode) {
             try {
-                if (postalCode != null)
+                if (postalCode != null) {
                     this.postalCode = Integer.parseInt(postalCode);
-                else
+                } else {
                     this.postalCode = 0;
+                }
             } catch (NumberFormatException e) {
                 this.postalCode = 0;
             }
         }
 
         public String getPostalCode() {
-            if (postalCode > 0)
+            if (postalCode > 0) {
                 return String.valueOf(postalCode);
-            else
+            } else {
                 return "";
+            }
         }
 
         public void setCity(String city) {
@@ -107,27 +107,31 @@ public class FormExample extends CustomComponent {
         public Field createField(Item item, Object propertyId,
                 Component uiContext) {
             String pid = (String) propertyId;
-            if (pid.equals("name"))
+            if (pid.equals("name")) {
                 return new TextField("Name");
-            if (pid.equals("address"))
+            }
+            if (pid.equals("address")) {
                 return new TextField("Street Address");
+            }
             if (pid.equals("postalCode")) {
                 TextField field = new TextField("Postal Code");
                 field.setColumns(5);
                 Validator postalCodeValidator = new Validator() {
 
                     public boolean isValid(Object value) {
-                        if (value == null || !(value instanceof String))
+                        if (value == null || !(value instanceof String)) {
                             return false;
-                        
-                        return ((String)value).matches("[0-9]{5}");
+                        }
+
+                        return ((String) value).matches("[0-9]{5}");
                     }
 
                     public void validate(Object value)
                             throws InvalidValueException {
-                        if (!isValid(value))
+                        if (!isValid(value)) {
                             throw new InvalidValueException(
                                     "Postal code must be a number 10000-99999.");
+                        }
                     }
                 };
                 field.addValidator(postalCodeValidator);
@@ -139,8 +143,9 @@ public class FormExample extends CustomComponent {
                         "Helsinki", "Hong Kong", "London", "Luxemburg",
                         "New York", "Oslo", "Paris", "Rome", "Stockholm",
                         "Tokyo", "Turku" };
-                for (int i = 0; i < cities.length; i++)
+                for (int i = 0; i < cities.length; i++) {
                     select.addItem(cities[i]);
+                }
                 return select;
             }
             return null;
@@ -158,7 +163,8 @@ public class FormExample extends CustomComponent {
 
         // Set form caption and description texts.
         form.setCaption("Contact Information");
-        form.setDescription("Please enter valid name and address. Fields marked with * are required.");
+        form
+                .setDescription("Please enter valid name and address. Fields marked with * are required.");
 
         // Use custom field factory to create the fields in the form.
         form.setFieldFactory(new MyFieldFactory());
@@ -173,7 +179,7 @@ public class FormExample extends CustomComponent {
         form.setItemDataSource(item);
 
         // Set the order of the items in the form.
-        Vector<String> order = new Vector<String>();
+        Vector order = new Vector();
         order.add("name");
         order.add("address");
         order.add("postalCode");
@@ -202,7 +208,7 @@ public class FormExample extends CustomComponent {
         // Add Commit and Discard controls to the form.
         ExpandLayout footer = new ExpandLayout(
                 OrderedLayout.ORIENTATION_HORIZONTAL);
-        
+
         // The Commit button calls form.commit().
         Button commit = new Button("Commit");
         commit.addListener(new Button.ClickListener() {
@@ -211,7 +217,7 @@ public class FormExample extends CustomComponent {
                 form.commit();
             }
         });
-        
+
         // The Discard button calls form.discard().
         Button discard = new Button("Discard", form, "discard");
         footer.addComponent(commit);
@@ -224,6 +230,6 @@ public class FormExample extends CustomComponent {
         OrderedLayout root = new OrderedLayout();
         root.setWidth(400, OrderedLayout.UNITS_PIXELS);
         root.addComponent(form);
-        this.setCompositionRoot(root);
+        setCompositionRoot(root);
     }
 }
