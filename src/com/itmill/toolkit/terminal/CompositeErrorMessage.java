@@ -107,6 +107,27 @@ public class CompositeErrorMessage implements ErrorMessage {
     public Iterator iterator() {
         return errors.iterator();
     }
+    
+    /**
+     * Checks recursively if one of the error messages of the composite message
+     * is given class or contains one inside further composition.
+     * 
+     * @param exceptionClass Class to search for.
+     * @return true if an error message of the given class was found inside.
+     */
+    public boolean hasErrorMessageClass(Class exceptionClass) {
+        for (Iterator i = iterator(); i.hasNext();) {
+            ErrorMessage msg = (ErrorMessage) i.next();
+            if (exceptionClass.isInstance(msg))
+                return true;
+            if (msg instanceof CompositeErrorMessage) {
+                boolean recursionResult = ((CompositeErrorMessage)msg).hasErrorMessageClass(exceptionClass);
+                if (recursionResult)
+                    return true; // Was found
+            }
+        }
+        return false;
+    }
 
     /**
      * @see com.itmill.toolkit.terminal.Paintable#paint(com.itmill.toolkit.terminal.PaintTarget)

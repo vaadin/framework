@@ -15,8 +15,10 @@ import com.itmill.toolkit.data.Item;
 import com.itmill.toolkit.data.Property;
 import com.itmill.toolkit.data.Validatable;
 import com.itmill.toolkit.data.Validator;
+import com.itmill.toolkit.data.Validator.EmptyValueException;
 import com.itmill.toolkit.data.Validator.InvalidValueException;
 import com.itmill.toolkit.data.util.BeanItem;
+import com.itmill.toolkit.terminal.CompositeErrorMessage;
 import com.itmill.toolkit.terminal.ErrorMessage;
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
@@ -169,6 +171,17 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
         if (formFooter != null) {
             formFooter.paint(target);
         }
+        
+        // AbstractComponent.paint() does not paint EmptyValueExceptions and
+        // filters them out, but Form wants to paint them, so we have to
+        // see if the error was skipped.
+        // Efficiency note: also AbstractComponent.paint() calls
+        // getErrorMessage(), which is a bit heavy call.
+        final ErrorMessage error = getErrorMessage();
+        if (error instanceof EmptyValueException ||
+            (error instanceof CompositeErrorMessage &&
+             ((CompositeErrorMessage)error).hasErrorMessageClass(EmptyValueException.class)))
+            error.paint(target);
     }
 
     /**
@@ -182,22 +195,39 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * validation fails also on empty errors.
      */
     public ErrorMessage getErrorMessage() {
+        // Reimplement the checking of validation error by using
+        // getErrorMessage() recursively instead of validate().
+        ErrorMessage validationError = null;
         for (final Iterator i = propertyIds.iterator(); i.hasNext();) {
             try {
                 AbstractComponent field = (AbstractComponent) fields.get(i
                         .next());
-                ErrorMessage e = field.getErrorMessage();
-                if (e != null) {
+                validationError = field.getErrorMessage();
+                if (validationError != null) {
                     // Skip empty errors
-                    if ("".equals(e.toString())) {
+                    if (validationError.toString().isEmpty())
                         continue;
-                    }
-                    return e;
+                    break;
                 }
             } catch (ClassCastException ignored) {
             }
         }
-        return null;
+        
+        // The rest is reimplementation of the latter part of
+        // AbstractField.getErrorMessage()
+        
+        // Check if there are any systems errors
+        final ErrorMessage superError = super.getErrorMessage();
+
+        // Return if there are no errors at all
+        if (superError == null && validationError == null
+                && currentBufferedSourceException == null) {
+            return null;
+        }
+
+        // Throw combination of the error types
+        return new CompositeErrorMessage(new ErrorMessage[] { superError,
+                validationError, currentBufferedSourceException });
     }
 
     /*
