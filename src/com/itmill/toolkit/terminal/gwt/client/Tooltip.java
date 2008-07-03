@@ -29,6 +29,7 @@ public class Tooltip extends ToolkitOverlay {
     private ApplicationConnection ac;
 
     public Tooltip(ApplicationConnection client) {
+        super(false, false, true);
         ac = client;
         setStyleName(CLASSNAME);
         FlowPanel layout = new FlowPanel();

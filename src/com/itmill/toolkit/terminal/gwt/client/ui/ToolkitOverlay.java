@@ -10,6 +10,7 @@ import com.google.gwt.user.client.ui.PopupListener;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
 
 /**
  * In Toolkit UI this Overlay should always be used for all elements that
@@ -60,6 +61,7 @@ public class ToolkitOverlay extends PopupPanel {
         super.show();
         if (shadow != null) {
             DOM.appendChild(RootPanel.get().getElement(), shadow.getElement());
+            shadow.updateSizeAndPosition();
         }
     }
     
@@ -105,6 +107,11 @@ public class ToolkitOverlay extends PopupPanel {
             }
 
             // Calculate position and size
+            if(BrowserInfo.get().isIE()) {
+                // Shake IE
+                overlay.getOffsetHeight();
+                overlay.getOffsetWidth();
+            }
             int x = overlay.getAbsoluteLeft() - left;
             int y = overlay.getAbsoluteTop() - top;
             int width = overlay.getOffsetWidth() + left + right;
