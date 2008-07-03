@@ -11,6 +11,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
+import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.Tooltip;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
@@ -73,6 +74,11 @@ public class IButton extends Button implements Paintable {
                         "i-errorindicator");
             }
             DOM.insertChild(getElement(), errorIndicatorElement, 0);
+
+            // Fix for IE6, IE7
+            if (BrowserInfo.get().isIE()) {
+                DOM.setInnerText(errorIndicatorElement, " ");
+            }
 
         } else if (errorIndicatorElement != null) {
             DOM.removeChild(getElement(), errorIndicatorElement);

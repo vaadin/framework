@@ -33,6 +33,21 @@
 	width: expression(this.offsetWidth + "px");
 }
 
+	
+/* Error indicator on checkbox fix for IE6 */
+* html .i-checkbox * { display: block; float: left;}
+* html .i-checkbox .i-errorindicator {padding-right:4px;}
+
+/* Error indicator on checkbox fix for IE7 */
+*+ html .i-checkbox * { display: block; float: left;}
+*+ html .i-checkbox .i-errorindicator {padding-right:7px;}
+
+/* Error indicator on button fix for IE7 */
+*+ html button .i-errorindicator { display:inline; padding-right:5px; }
+
+/* Error indicator on button fix for IE6 */
+* html button .i-errorindicator { display:inline; padding-right:5px;}
+
 
 /* Disabled by default
 .i-checkbox-error {
