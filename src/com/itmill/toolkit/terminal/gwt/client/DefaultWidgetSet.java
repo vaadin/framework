@@ -28,8 +28,7 @@ import com.itmill.toolkit.terminal.gwt.client.ui.IListSelect;
 import com.itmill.toolkit.terminal.gwt.client.ui.IMenuBar;
 import com.itmill.toolkit.terminal.gwt.client.ui.INativeSelect;
 import com.itmill.toolkit.terminal.gwt.client.ui.IOptionGroup;
-import com.itmill.toolkit.terminal.gwt.client.ui.IOrderedLayoutHorizontal;
-import com.itmill.toolkit.terminal.gwt.client.ui.IOrderedLayoutVertical;
+import com.itmill.toolkit.terminal.gwt.client.ui.IOrderedLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.IPanel;
 import com.itmill.toolkit.terminal.gwt.client.ui.IPasswordField;
 import com.itmill.toolkit.terminal.gwt.client.ui.IPopupCalendar;
@@ -79,12 +78,9 @@ public class DefaultWidgetSet implements WidgetSet {
         } else if ("com.itmill.toolkit.terminal.gwt.client.ui.IWindow"
                 .equals(className)) {
             return new IWindow();
-        } else if ("com.itmill.toolkit.terminal.gwt.client.ui.IOrderedLayoutVertical"
+        } else if ("com.itmill.toolkit.terminal.gwt.client.ui.IOrderedLayout"
                 .equals(className)) {
-            return new IOrderedLayoutVertical();
-        } else if ("com.itmill.toolkit.terminal.gwt.client.ui.IOrderedLayoutHorizontal"
-                .equals(className)) {
-            return new IOrderedLayoutHorizontal();
+            return new IOrderedLayout();
         } else if ("com.itmill.toolkit.terminal.gwt.client.ui.ILabel"
                 .equals(className)) {
             return new ILabel();
@@ -212,11 +208,7 @@ public class DefaultWidgetSet implements WidgetSet {
         } else if ("window".equals(tag)) {
             return "com.itmill.toolkit.terminal.gwt.client.ui.IWindow";
         } else if ("orderedlayout".equals(tag)) {
-            if ("horizontal".equals(uidl.getStringAttribute("orientation"))) {
-                return "com.itmill.toolkit.terminal.gwt.client.ui.IOrderedLayoutHorizontal";
-            } else {
-                return "com.itmill.toolkit.terminal.gwt.client.ui.IOrderedLayoutVertical";
-            }
+            return "com.itmill.toolkit.terminal.gwt.client.ui.IOrderedLayout";
         } else if ("label".equals(tag)) {
             return "com.itmill.toolkit.terminal.gwt.client.ui.ILabel";
         } else if ("link".equals(tag)) {

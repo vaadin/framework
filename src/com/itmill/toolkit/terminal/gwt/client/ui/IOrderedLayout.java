@@ -16,9 +16,11 @@ import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
 import com.itmill.toolkit.terminal.gwt.client.Caption;
 import com.itmill.toolkit.terminal.gwt.client.Container;
+import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.StyleConstants;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
+import com.itmill.toolkit.terminal.gwt.client.Util;
 
 /**
  * Abstract base class for ordered layouts. Use either vertical or horizontal
@@ -26,7 +28,8 @@ import com.itmill.toolkit.terminal.gwt.client.UIDL;
  * 
  * @author IT Mill Ltd
  */
-public abstract class IOrderedLayout extends Panel implements Container {
+public class IOrderedLayout extends Panel implements Container,
+        ContainerResizedListener {
 
     public static final String CLASSNAME = "i-orderedlayout";
 
@@ -50,7 +53,7 @@ public abstract class IOrderedLayout extends Panel implements Container {
      * Elements that provides the Layout interface implementation. Root element
      * of the component. In vertical mode this is the outmost div.
      */
-    private Element root;
+    private final Element root;
 
     /**
      * Margin element of the component. In vertical mode, this is div inside
@@ -85,13 +88,6 @@ public abstract class IOrderedLayout extends Panel implements Container {
     /** Information about margin states. */
     private MarginInfo margins = new MarginInfo(0);
 
-    /** Construct a nre IOrderedLayout in given orientation mode. */
-    public IOrderedLayout(int orientation) {
-        orientationMode = orientation;
-        constructDOM();
-        setStyleName(CLASSNAME);
-    }
-
     /**
      * Construct the DOM of the orderder layout.
      * 
@@ -108,10 +104,18 @@ public abstract class IOrderedLayout extends Panel implements Container {
      * </p>
      * 
      */
-    private void constructDOM() {
+    public IOrderedLayout() {
+
         root = DOM.createDiv();
         margin = DOM.createDiv();
         DOM.appendChild(root, margin);
+        DOM.setStyleAttribute(margin, "overflow", "hidden");
+        createAndEmptyWrappedChildContainer();
+        setElement(root);
+        setStyleName(CLASSNAME);
+    }
+
+    private void createAndEmptyWrappedChildContainer() {
         if (orientationMode == ORIENTATION_HORIZONTAL) {
             final String structure = "<table cellspacing=\"0\" cellpadding=\"0\"><tbody><tr></tr></tbody></table>";
             DOM.setInnerHTML(margin, structure);
@@ -119,14 +123,39 @@ public abstract class IOrderedLayout extends Panel implements Container {
                     .getFirstChild(margin)));
         } else {
             wrappedChildContainer = margin;
+            DOM.setInnerHTML(margin, "");
         }
-        setElement(root);
+    }
+
+    /** Update orientation, if it has changed */
+    private void updateOrientation(int newOrientationMode) {
+
+        // Only change when needed
+        if (orientationMode == newOrientationMode) {
+            return;
+        }
+
+        orientationMode = newOrientationMode;
+
+        createAndEmptyWrappedChildContainer();
+
+        // Reinsert all widget wrappers to this container
+        for (int i = 0; i < childWidgetWrappers.size(); i++) {
+            DOM.appendChild(wrappedChildContainer,
+                    ((WidgetWrapper) childWidgetWrappers.get(i)).getElement());
+        }
+
+        Util.runDescendentsLayout(this);
     }
 
     /** Update the contents of the layout from UIDL. */
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 
         this.client = client;
+
+        updateOrientation("horizontal".equals(uidl
+                .getStringAttribute("orientation")) ? ORIENTATION_HORIZONTAL
+                : ORIENTATION_VERTICAL);
 
         // Ensure correct implementation
         if (client.updateComponent(this, uidl, false)) {
@@ -229,33 +258,35 @@ public abstract class IOrderedLayout extends Panel implements Container {
 
     public void setWidth(String width) {
         super.setWidth(width);
-        if (ORIENTATION_VERTICAL == orientationMode) {
-            return;
-        }
-        if (width == null || "".equals(width)) {
 
-            // Removing fixed size is needed only when it is in use
-            if (fixedCellSize) {
+        if (width == null || "".equals(width)) {
+            DOM.setStyleAttribute(margin, "width", "");
+            if (fixedCellSize && orientationMode == ORIENTATION_HORIZONTAL) {
                 removeFixedSizes();
             }
         } else {
-            fixedCellSize = true;
+            DOM.setStyleAttribute(margin, "width", "100%");
+            if (orientationMode == ORIENTATION_HORIZONTAL) {
+                fixedCellSize = true;
+            }
         }
     }
 
     public void setHeight(String height) {
         super.setHeight(height);
-        if (ORIENTATION_HORIZONTAL == orientationMode) {
-            return;
-        }
+
         if (height == null || "".equals(height)) {
+            DOM.setStyleAttribute(margin, "height", "");
 
             // Removing fixed size is needed only when it is in use
-            if (fixedCellSize) {
+            if (fixedCellSize && orientationMode == ORIENTATION_VERTICAL) {
                 removeFixedSizes();
             }
         } else {
-            fixedCellSize = true;
+            DOM.setStyleAttribute(margin, "height", "100%");
+            if (orientationMode == ORIENTATION_VERTICAL) {
+                fixedCellSize = true;
+            }
         }
     }
 
@@ -276,13 +307,10 @@ public abstract class IOrderedLayout extends Panel implements Container {
         for (Iterator i = childWidgetWrappers.iterator(); i.hasNext();) {
             Element we = ((WidgetWrapper) i.next()).getElement();
             DOM.setStyleAttribute(we, wh, "");
-            DOM.setStyleAttribute(we, overflow, "");
+            DOM.setStyleAttribute(we, "overflow", "");
         }
 
         // margin
-        DOM.setStyleAttribute(margin,
-                (orientationMode == ORIENTATION_HORIZONTAL) ? "overflowX"
-                        : "overflowY", "");
         DOM.setStyleAttribute(margin,
                 (orientationMode == ORIENTATION_HORIZONTAL) ? "width"
                         : "height", "");
@@ -307,9 +335,6 @@ public abstract class IOrderedLayout extends Panel implements Container {
             return;
         }
 
-        DOM.setStyleAttribute(margin,
-                (orientationMode == ORIENTATION_HORIZONTAL) ? "overflowX"
-                        : "overflowY", "hidden");
         DOM.setStyleAttribute(margin,
                 (orientationMode == ORIENTATION_HORIZONTAL) ? "width"
                         : "height", "100%");
@@ -352,11 +377,13 @@ public abstract class IOrderedLayout extends Panel implements Container {
             size -= ws;
             DOM.setStyleAttribute(we, wh, "" + ws + "px");
             if (firstTime) {
-                DOM.setStyleAttribute(we, overflow, "hidden");
+                DOM.setStyleAttribute(we, "overflow", "hidden");
             }
         }
 
         fixedCellSize = true;
+
+        Util.runDescendentsLayout(this);
     }
 
     protected void handleMargins(UIDL uidl) {
@@ -735,4 +762,9 @@ public abstract class IOrderedLayout extends Panel implements Container {
         return childWidgets.iterator();
     }
 
+    /* documented at super */
+    public void iLayout() {
+        updateFixedSizes();
+        Util.runDescendentsLayout(this);
+    }
 }
