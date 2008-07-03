@@ -728,7 +728,10 @@ input.i-modified,
 .i-orderedlayout-c * { float:left; display: block;}
 .i-orderedlayout-w-e { float:left;}
 * html .i-orderedlayout-c, * html .i-orderedlayout-w { height: 1%; }
-.i-orderedlayout-c, .i-orderedlayout-w { display: block; }
+.i-orderedlayout-w { display: block; }
+.i-orderedlayout-c { float:left; display: block;}
+*+ html .i-orderedlayout-c { float:none; }
+* html .i-orderedlayout-c { float:none; }
 .i-panel,
 .i-panel-caption,
 .i-panel-content,
