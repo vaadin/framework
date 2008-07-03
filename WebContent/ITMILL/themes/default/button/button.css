@@ -18,6 +18,19 @@
 	text-decoration: underline;
 }
 
+/* fixes streched buttons in IE6 */
+* html .i-button {
+	overflow: visible;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+/* fixes streched buttons in IE7 */
+*+html .i-button {
+	overflow: visible;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
 /* Disabled by default
 .i-checkbox-error {
 	background:transparent;
