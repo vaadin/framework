@@ -75,23 +75,34 @@ input.i-modified,
 */
 
 /**
- * Custom toolktip
+ * Custom tooltip
  */
  .i-tooltip {
- 	background-color: #ffffcc;
- 	border: 1px solid #464f52;
- 	font-size: 12px;
- 	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
-	color: #464f52;
+ 	background-color: #fffcdd;
+ 	border: 1px solid #b8b295;
+ 	border-top-color: #d5d2c1;
+ 	border-left-color: #d5d2c1;
+ 	font-size: 11px;
+ 	line-height: 13px;
+ 	font-family: arial, helvetica, tahoma, verdana, sans-serif;
+	color: #5d5444;
+	overflow: auto;
  }
 
 .i-tooltip-text {
-	margin: 4px;
+	padding: 2px 4px;
+	border: none;
+	border-top: 1px solid #fffef5;
+	border-bottom: 1px solid #fbf8d9;
 }
 
  .i-tooltip .i-errormessage {
-	padding: 4px;
-	border-width: 0  0 1px 0;
+	padding: 3px 4px 3px 4px;
+	background: #ffecc6;
+	color: #b74100;
+	border: none;
+	border-top: 1px solid #fff3dc;
+	border-bottom: 1px solid #ead7b1;
  }
 
 /**
