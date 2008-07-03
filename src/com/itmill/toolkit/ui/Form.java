@@ -205,18 +205,16 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
             }
         }
 
-        // Check if there are any systems errors
-        final ErrorMessage superError = super.getErrorMessage();
-
         // Return if there are no errors at all
-        if (superError == null && validationError == null
+        if (getComponentError() == null && validationError == null
                 && currentBufferedSourceException == null) {
             return null;
         }
 
         // Throw combination of the error types
-        return new CompositeErrorMessage(new ErrorMessage[] { superError,
-                validationError, currentBufferedSourceException });
+        return new CompositeErrorMessage(new ErrorMessage[] {
+                getComponentError(), validationError,
+                currentBufferedSourceException });
     }
 
     /*
