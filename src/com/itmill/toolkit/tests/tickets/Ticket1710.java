@@ -148,6 +148,17 @@ public class Ticket1710 extends com.itmill.toolkit.Application {
         t3.setComponentError(new SystemError("Error"));
         lo.addComponent(t3);
 
+        lo.addComponent(new TextField("Textfield with no error in it"));
+
+        TextField tt1 = new TextField("100% wide Textfield with no error in it");
+        tt1.setWidth("100%");
+        lo.addComponent(tt1);
+
+        TextField tt2 = new TextField();
+        tt2.setWidth("100%");
+        tt2.setValue("100% wide Textfield with no error in it and no caption");
+        lo.addComponent(tt2);
+
         TextField t4 = new TextField();
         t4.setValue("Without caption, With required");
         t4.setComponentError(new SystemError("Error"));
