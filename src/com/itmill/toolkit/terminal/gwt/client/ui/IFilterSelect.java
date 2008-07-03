@@ -154,6 +154,17 @@ public class IFilterSelect extends Composite implements Paintable, Field,
             } else {
                 DOM.setInnerText(status, "");
             }
+            // We don't need to show arrows or statusbar if there is only one
+            // page
+            if (matches <= PAGELENTH) {
+                DOM.setStyleAttribute(status, "display", "none");
+                DOM.setStyleAttribute(up, "display", "none");
+                DOM.setStyleAttribute(down, "display", "none");
+            } else {
+                DOM.setStyleAttribute(status, "display", "");
+                DOM.setStyleAttribute(up, "display", "");
+                DOM.setStyleAttribute(down, "display", "");
+            }
             setPrevButtonActive(first > 1);
             setNextButtonActive(last < matches);
 
