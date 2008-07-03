@@ -91,36 +91,12 @@
 	text-align: left /* Force default alignment */
 }
 
-.i-caption * { 
-	float:left; 
-	display: block;
-}
-.i-orderedlayout-wrap-e {
-	float:left; 	
-}
-	
-.i-caption:after, .i-orderedlayout-wrap:after {
-  	content: ".";
-	display: block;
-	height: 0;
-    clear: both;
-    visibility: hidden;
-}
-		
-.i-caption, .i-orderedlayout-wrap {
-	display: inline-block;
-}
-
-/* Hides from IE-mac \*/
-* html .i-caption, * html .i-orderedlayout-wrap { height: 1%; }
-.i-caption, .i-orderedlayout-wrap { display: block; }
-/* End hide from IE-mac */
-
 .i-errorindicator {
-	background:transparent url(icons/16/error.png) no-repeat scroll right top;
-	height:16px;
-	width:10px;
-	margin-left: 3px;
+	width: 10px;
+	height: 16px;
+	padding-right:13px;
+	display: inline;
+	background: transparent url(icons/16/error.png) no-repeat top right;
 }
 
 * html .i-errorindicator {
@@ -724,6 +700,44 @@ input.i-modified,
 .i-orderedlayout-hspacing {
 	padding-left: 8px;
 }
+
+.i-orderedlayout-w2 .i-caption * { 
+	float:left; 
+	display: block;
+}
+.i-orderedlayout-w-e {
+	float:left; 	
+}
+	
+.i-orderedlayout-w1 {
+	text-align:left;	
+}
+	
+.i-orderedlayout-w2 .i-caption:after, .i-orderedlayout-w2:after {
+  	content: ".";
+	display: block;
+	height: 0;
+    clear: both;
+    visibility: hidden;
+}
+		
+.i-orderedlayout-w2 .i-caption, .i-orderedlayout-w2 {
+	display: inline-block;
+}
+
+/* Hides from IE-mac \*/
+* html .i-orderedlayout-w2 .i-caption, * html .i-orderedlayout-w2 { height: 1%; }
+.i-orderedlayout-w2 .i-caption, .i-orderedlayout-w2 { display: block; }
+/* End hide from IE-mac */
+
+/*
+.i-errorindicator {
+	background:transparent url(icons/16/error.png) no-repeat scroll right top;
+	height:16px;
+	width:10px;
+	margin-left: 3px;
+}
+*/
 .i-panel,
 .i-panel-caption,
 .i-panel-content,

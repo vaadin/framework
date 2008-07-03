@@ -272,6 +272,9 @@ public abstract class IOrderedLayout extends Panel implements Container {
             } else {
                 setElement(DOM.createTD());
             }
+            DOM
+                    .setElementAttribute(getElement(), "class",
+                            "i-orderedlayout-w1");
         }
 
         public void updateCaption(UIDL uidl, Paintable paintable) {
@@ -290,8 +293,8 @@ public abstract class IOrderedLayout extends Panel implements Container {
                     if (after) {
                         DOM.appendChild(getElement(), captionElement);
                         DOM.setElementAttribute(getElement(), "class",
-                                "i-orderedlayout-wrap");
-                        widget.addStyleName("i-orderedlayout-wrap-e");
+                                "i-orderedlayout-w2");
+                        widget.addStyleName("i-orderedlayout-w-e");
                     } else {
                         DOM.insertChild(getElement(), captionElement, 0);
                     }
@@ -304,12 +307,14 @@ public abstract class IOrderedLayout extends Panel implements Container {
                             .getChildCount(getElement()) - 2);
                     DOM.removeChild(getElement(), firstElement);
                     DOM.appendChild(getElement(), firstElement);
-                    DOM.setElementAttribute(getElement(), "class",
-                            after ? "i-orderedlayout-wrap" : "");
+                    DOM
+                            .setElementAttribute(getElement(), "class",
+                                    after ? "i-orderedlayout-w2"
+                                            : "i-orderedlayout-w1");
                     if (after) {
-                        widget.addStyleName("i-orderedlayout-wrap-e");
+                        widget.addStyleName("i-orderedlayout-w-e");
                     } else {
-                        widget.removeStyleName("i-orderedlayout-wrap-e");
+                        widget.removeStyleName("i-orderedlayout-w-e");
                     }
                 }
 
@@ -317,8 +322,9 @@ public abstract class IOrderedLayout extends Panel implements Container {
                 if (caption != null) {
                     DOM.removeChild(getElement(), caption.getElement());
                     caption = null;
-                    DOM.setElementAttribute(getElement(), "class", "");
-                    widget.removeStyleName("i-orderedlayout-wrap-e");
+                    DOM.setElementAttribute(getElement(), "class",
+                            "i-orderedlayout-w1");
+                    widget.removeStyleName("i-orderedlayout-w-e");
                 }
             }
         }
@@ -379,6 +385,9 @@ public abstract class IOrderedLayout extends Panel implements Container {
                     DOM.setStyleAttribute(table, "width", "100%");
                     DOM.setElementAttribute(itable, "cellpadding", "0");
                     DOM.setElementAttribute(itable, "cellspacing", "0");
+                    // TODO DOM.setStyleAttribute(itd, "align", "left");
+                    // TODO DEBUG DOM.setStyleAttribute(itd, "border", "1px
+                    // solid red");
 
                     // move possible content to cell
                     while (DOM.getChildCount(getElement()) > 0) {
