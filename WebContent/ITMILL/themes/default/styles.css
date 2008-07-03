@@ -49,6 +49,19 @@
 	text-decoration: underline;
 }
 
+/* fixes streched buttons in IE6 */
+* html .i-button {
+	overflow: visible;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+/* fixes streched buttons in IE7 */
+*+html .i-button {
+	overflow: visible;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
 /* Disabled by default
 .i-checkbox-error {
 	background:transparent;
@@ -62,27 +75,6 @@
 	background-color: #FFE0E0;
 }
 */
-
-.i-checkbox *, .i-button * {
-	float: left;
-}
-
-.i-checkbox:after, .i-button:after {
-  	content: ".";
-	display: block;
-	height: 0;
-    clear: both;
-    visibility: hidden;
-}
-		
-.i-checkbox, .i-button {
-	display: inline-block;
-}
-
-/* Hides from IE-mac \*/
-* html .i-caption, * html .i-orderedlayout-wrap { height: 1%; }
-.i-caption, .i-orderedlayout-wrap { display: block; }
-/* End hide from IE-mac */
 /* Provide some extra whitespace for wrapped elements
    (these elements usually need the extra space, since 
    they aren't even handling their own caption) */
