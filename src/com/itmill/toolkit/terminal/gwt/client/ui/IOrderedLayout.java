@@ -392,8 +392,21 @@ public abstract class IOrderedLayout extends Panel implements Container {
                     }
 
                     DOM.appendChild(getElement(), table);
+                } else {
+
+                    // Go around optimization bug in WebKit and ensure repaint
+                    if (BrowserInfo.get().isSafari()) {
+                        String prevValue = DOM.getElementAttribute(td, "align");
+                        if (!horizontalAlignment.equals(prevValue)) {
+                            Element parent = DOM.getParent(td);
+                            DOM.removeChild(parent, td);
+                            DOM.appendChild(parent, td);
+                        }
+                    }
+
                 }
                 DOM.setElementAttribute(td, "align", horizontalAlignment);
+
             } else if (td != null) {
 
                 // In this case we are requested to position this left
