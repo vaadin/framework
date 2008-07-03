@@ -49,7 +49,6 @@ import com.itmill.toolkit.terminal.gwt.client.ui.IUnknownComponent;
 import com.itmill.toolkit.terminal.gwt.client.ui.IUpload;
 import com.itmill.toolkit.terminal.gwt.client.ui.IWindow;
 import com.itmill.toolkit.terminal.gwt.client.ui.absolutegrid.ISizeableGridLayout;
-import com.itmill.toolkit.terminal.gwt.client.ui.absolutegrid.ISizeableOrderedLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.richtextarea.IRichTextArea;
 
 public class DefaultWidgetSet implements WidgetSet {
@@ -80,9 +79,6 @@ public class DefaultWidgetSet implements WidgetSet {
         } else if ("com.itmill.toolkit.terminal.gwt.client.ui.IWindow"
                 .equals(className)) {
             return new IWindow();
-        } else if ("com.itmill.toolkit.terminal.gwt.client.ui.absolutegrid.ISizeableOrderedLayout"
-                .equals(className)) {
-            return new ISizeableOrderedLayout();
         } else if ("com.itmill.toolkit.terminal.gwt.client.ui.IOrderedLayoutVertical"
                 .equals(className)) {
             return new IOrderedLayoutVertical();
@@ -217,17 +213,9 @@ public class DefaultWidgetSet implements WidgetSet {
             return "com.itmill.toolkit.terminal.gwt.client.ui.IWindow";
         } else if ("orderedlayout".equals(tag)) {
             if ("horizontal".equals(uidl.getStringAttribute("orientation"))) {
-                if (uidl.hasAttribute("height") && uidl.hasAttribute("width")) {
-                    return "com.itmill.toolkit.terminal.gwt.client.ui.absolutegrid.ISizeableOrderedLayout";
-                } else {
-                    return "com.itmill.toolkit.terminal.gwt.client.ui.IOrderedLayoutHorizontal";
-                }
+                return "com.itmill.toolkit.terminal.gwt.client.ui.IOrderedLayoutHorizontal";
             } else {
-                if (uidl.hasAttribute("height")) {
-                    return "com.itmill.toolkit.terminal.gwt.client.ui.absolutegrid.ISizeableOrderedLayout";
-                } else {
-                    return "com.itmill.toolkit.terminal.gwt.client.ui.IOrderedLayoutVertical";
-                }
+                return "com.itmill.toolkit.terminal.gwt.client.ui.IOrderedLayoutVertical";
             }
         } else if ("label".equals(tag)) {
             return "com.itmill.toolkit.terminal.gwt.client.ui.ILabel";

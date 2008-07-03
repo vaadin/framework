@@ -33,6 +33,9 @@ public abstract class IOrderedLayout extends Panel implements Container {
     public static final int ORIENTATION_VERTICAL = 0;
     public static final int ORIENTATION_HORIZONTAL = 1;
 
+    // TODO Read this from CSS as in #1904
+    private static final int SPACING_SIZE = 8;
+
     int orientationMode = ORIENTATION_VERTICAL;
 
     protected ApplicationConnection client;
@@ -62,6 +65,12 @@ public abstract class IOrderedLayout extends Panel implements Container {
     private final Vector childWidgets = new Vector();
 
     /**
+     * Fixed cell-size mode is used when height/width is explicitly given for
+     * vertical/horizontal orderedlayout.
+     */
+    private boolean fixedCellSize = false;
+
+    /**
      * List of child widget wrappers. These wrappers are in exact same indexes
      * as the widgets in childWidgets list.
      */
@@ -69,6 +78,9 @@ public abstract class IOrderedLayout extends Panel implements Container {
 
     /** Whether the component has spacing enabled. */
     private boolean hasComponentSpacing;
+
+    /** Whether the component has spacing enabled. */
+    private int previouslyAppliedFixedSize = -1;
 
     /** Information about margin states. */
     private MarginInfo margins = new MarginInfo(0);
@@ -211,6 +223,140 @@ public abstract class IOrderedLayout extends Panel implements Container {
 
         // Handle component alignments
         handleAlignments(uidl);
+
+        updateFixedSizes();
+    }
+
+    public void setWidth(String width) {
+        super.setWidth(width);
+        if (ORIENTATION_VERTICAL == orientationMode) {
+            return;
+        }
+        if (width == null || "".equals(width)) {
+
+            // Removing fixed size is needed only when it is in use
+            if (fixedCellSize) {
+                removeFixedSizes();
+            }
+        } else {
+            fixedCellSize = true;
+        }
+    }
+
+    public void setHeight(String height) {
+        super.setHeight(height);
+        if (ORIENTATION_HORIZONTAL == orientationMode) {
+            return;
+        }
+        if (height == null || "".equals(height)) {
+
+            // Removing fixed size is needed only when it is in use
+            if (fixedCellSize) {
+                removeFixedSizes();
+            }
+        } else {
+            fixedCellSize = true;
+        }
+    }
+
+    /** Remove fixed sizes from use */
+    private void removeFixedSizes() {
+
+        // If already removed, do not do it twice
+        if (!fixedCellSize) {
+            return;
+        }
+
+        // Remove unneeded attributes from each wrapper
+        String wh = (orientationMode == ORIENTATION_HORIZONTAL) ? "width"
+                : "height";
+        String overflow = (orientationMode == ORIENTATION_HORIZONTAL) ? (BrowserInfo
+                .get().isFF2() ? "overflow" : "overflowX")
+                : "overflowY";
+        for (Iterator i = childWidgetWrappers.iterator(); i.hasNext();) {
+            Element we = ((WidgetWrapper) i.next()).getElement();
+            DOM.setStyleAttribute(we, wh, "");
+            DOM.setStyleAttribute(we, overflow, "");
+        }
+
+        // margin
+        DOM.setStyleAttribute(margin,
+                (orientationMode == ORIENTATION_HORIZONTAL) ? "overflowX"
+                        : "overflowY", "");
+        DOM.setStyleAttribute(margin,
+                (orientationMode == ORIENTATION_HORIZONTAL) ? "width"
+                        : "height", "");
+
+        // Remove unneeded attributes from horizontal layouts table
+        if (orientationMode == ORIENTATION_HORIZONTAL) {
+            Element table = DOM.getParent(DOM.getParent(wrappedChildContainer));
+            DOM.setStyleAttribute(table, "tableLayout", "auto");
+            DOM.setStyleAttribute(table, "width", "");
+        }
+
+        fixedCellSize = false;
+        previouslyAppliedFixedSize = -1;
+
+    }
+
+    /** Reset the fixed cell-sizes for children. */
+    private void updateFixedSizes() {
+
+        // Do not do anything if we really should not be doing this
+        if (!fixedCellSize) {
+            return;
+        }
+
+        DOM.setStyleAttribute(margin,
+                (orientationMode == ORIENTATION_HORIZONTAL) ? "overflowX"
+                        : "overflowY", "hidden");
+        DOM.setStyleAttribute(margin,
+                (orientationMode == ORIENTATION_HORIZONTAL) ? "width"
+                        : "height", "100%");
+
+        int size = DOM.getElementPropertyInt(margin,
+                (orientationMode == ORIENTATION_HORIZONTAL) ? "offsetWidth"
+                        : "offsetHeight");
+
+        // Horizontal layouts need fixed mode tables
+        if (orientationMode == ORIENTATION_HORIZONTAL) {
+            Element table = DOM.getParent(DOM.getParent(wrappedChildContainer));
+            DOM.setStyleAttribute(table, "tableLayout", "fixed");
+            DOM.setStyleAttribute(table, "width", "" + size + "px");
+        }
+
+        // Reduce spacing from the size
+        int numChild = childWidgets.size();
+        if (hasComponentSpacing) {
+            size -= SPACING_SIZE * (numChild - 1);
+        }
+
+        // Have we set fixed sizes before?
+        boolean firstTime = (previouslyAppliedFixedSize < 0);
+
+        // If so, are they already correct?
+        if (size == previouslyAppliedFixedSize) {
+            return;
+        }
+        previouslyAppliedFixedSize = size;
+
+        // Set the sizes for each child
+        String wh = (orientationMode == ORIENTATION_HORIZONTAL) ? "width"
+                : "height";
+        String overflow = (orientationMode == ORIENTATION_HORIZONTAL) ? (BrowserInfo
+                .get().isFF2() ? "overflow" : "overflowX")
+                : "overflowY";
+        for (Iterator i = childWidgetWrappers.iterator(); i.hasNext();) {
+            Element we = ((WidgetWrapper) i.next()).getElement();
+            final int ws = Math.round(((float) size) / (numChild--));
+            size -= ws;
+            DOM.setStyleAttribute(we, wh, "" + ws + "px");
+            if (firstTime) {
+                DOM.setStyleAttribute(we, overflow, "hidden");
+            }
+        }
+
+        fixedCellSize = true;
     }
 
     protected void handleMargins(UIDL uidl) {
