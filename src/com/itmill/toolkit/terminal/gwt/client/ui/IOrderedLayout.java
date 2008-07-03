@@ -358,44 +358,34 @@ public abstract class IOrderedLayout extends Panel implements Container {
             if (!horizontalAlignment.equals("left")) {
                 if (td == null) {
 
-                    // The previous positioning has been left (or
-                    // unspecified).
+                    // The previous positioning has been left (or unspecified).
                     // Thus we need to create a one-cell-table to position
-                    // this
-                    // element.
+                    // this element.
 
-                    final Element table = DOM.createTable();
-                    final Element tBody = DOM.createTBody();
-                    final Element tr = DOM.createTR();
-                    td = DOM.createTD();
-                    final Element itable = DOM.createTable();
-                    final Element itBody = DOM.createTBody();
-                    final Element itr = DOM.createTR();
-                    final Element itd = DOM.createTD();
-                    DOM.appendChild(table, tBody);
-                    DOM.appendChild(tBody, tr);
-                    DOM.appendChild(tr, td);
-                    DOM.appendChild(td, itable);
-                    DOM.appendChild(itable, itBody);
-                    DOM.appendChild(itBody, itr);
-                    DOM.appendChild(itr, itd);
-                    DOM.setElementAttribute(table, "cellpadding", "0");
-                    DOM.setElementAttribute(table, "cellspacing", "0");
-                    DOM.setStyleAttribute(table, "width", "100%");
-                    DOM.setElementAttribute(itable, "cellpadding", "0");
-                    DOM.setElementAttribute(itable, "cellspacing", "0");
-                    DOM.setElementAttribute(itd, "align", "left");
-
-                    // move possible content to cell
-                    while (DOM.getChildCount(getElement()) > 0) {
-                        Element content = DOM.getFirstChild(getElement());
-                        if (content != null) {
-                            DOM.removeChild(getElement(), content);
-                            DOM.appendChild(itd, content);
-                        }
+                    // Store and remove the current childs (widget and caption)
+                    Element c1 = DOM.getFirstChild(getElement());
+                    DOM.removeChild(getElement(), c1);
+                    Element c2 = DOM.getFirstChild(getElement());
+                    if (c2 != null) {
+                        DOM.removeChild(getElement(), c2);
                     }
 
-                    DOM.appendChild(getElement(), table);
+                    // Construct table structure to align children
+                    final String t = "<table cellpadding='0' cellspacing='0' width='100%'><tbody><tr><td>"
+                            + "<table cellpadding='0' cellspacing='0' ><tbody><tr><td align='left'>"
+                            + "</td></tr></tbody></table></td></tr></tbody></table>";
+                    DOM.setInnerHTML(getElement(), t);
+                    td = DOM.getFirstChild(DOM.getFirstChild(DOM
+                            .getFirstChild(DOM.getFirstChild(getElement()))));
+                    Element itd = DOM.getFirstChild(DOM.getFirstChild(DOM
+                            .getFirstChild(DOM.getFirstChild(td))));
+
+                    // Restore children inside the
+                    DOM.appendChild(itd, c1);
+                    if (c2 != null) {
+                        DOM.appendChild(itd, c2);
+                    }
+
                 } else {
 
                     // Go around optimization bug in WebKit and ensure repaint
