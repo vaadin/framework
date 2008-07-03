@@ -272,9 +272,6 @@ public abstract class IOrderedLayout extends Panel implements Container {
             } else {
                 setElement(DOM.createTD());
             }
-            DOM
-                    .setElementAttribute(getElement(), "class",
-                            "i-orderedlayout-w1");
         }
 
         public void updateCaption(UIDL uidl, Paintable paintable) {
@@ -307,10 +304,8 @@ public abstract class IOrderedLayout extends Panel implements Container {
                             .getChildCount(getElement()) - 2);
                     DOM.removeChild(getElement(), firstElement);
                     DOM.appendChild(getElement(), firstElement);
-                    DOM
-                            .setElementAttribute(getElement(), "class",
-                                    after ? "i-orderedlayout-w2"
-                                            : "i-orderedlayout-w1");
+                    DOM.setElementAttribute(getElement(), "class",
+                            after ? "i-orderedlayout-w2" : "");
                     if (after) {
                         widget.addStyleName("i-orderedlayout-w-e");
                     } else {
@@ -322,8 +317,7 @@ public abstract class IOrderedLayout extends Panel implements Container {
                 if (caption != null) {
                     DOM.removeChild(getElement(), caption.getElement());
                     caption = null;
-                    DOM.setElementAttribute(getElement(), "class",
-                            "i-orderedlayout-w1");
+                    DOM.setElementAttribute(getElement(), "class", "");
                     widget.removeStyleName("i-orderedlayout-w-e");
                 }
             }
@@ -343,6 +337,7 @@ public abstract class IOrderedLayout extends Panel implements Container {
         void setAlignment(String verticalAlignment, String horizontalAlignment) {
 
             // Set vertical alignment
+
             if (BrowserInfo.get().isIE()) {
                 DOM.setElementAttribute(getElement(), "vAlign",
                         verticalAlignment);
@@ -385,9 +380,7 @@ public abstract class IOrderedLayout extends Panel implements Container {
                     DOM.setStyleAttribute(table, "width", "100%");
                     DOM.setElementAttribute(itable, "cellpadding", "0");
                     DOM.setElementAttribute(itable, "cellspacing", "0");
-                    // TODO DOM.setStyleAttribute(itd, "align", "left");
-                    // TODO DEBUG DOM.setStyleAttribute(itd, "border", "1px
-                    // solid red");
+                    DOM.setElementAttribute(itd, "align", "left");
 
                     // move possible content to cell
                     while (DOM.getChildCount(getElement()) > 0) {

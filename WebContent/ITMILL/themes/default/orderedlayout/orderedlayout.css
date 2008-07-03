@@ -26,10 +26,6 @@
 	float:left; 	
 }
 	
-.i-orderedlayout-w1 {
-	text-align:left;	
-}
-	
 .i-orderedlayout-w2 .i-caption:after, .i-orderedlayout-w2:after {
   	content: ".";
 	display: block;
