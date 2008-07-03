@@ -109,7 +109,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      * Required field.
      */
     private boolean required = false;
-    
+
     /**
      * The error message for the exception that is thrown when the field is
      * required but empty.
@@ -616,14 +616,14 @@ public abstract class AbstractField extends AbstractComponent implements Field,
 
         return true;
     }
-    
+
     /**
      * Checks the validity of the Validatable by validating the field with all
      * attached validators.
      * 
      * The "required" validation is a built-in validation feature. If the field
-     * is required, but empty, validation will throw an EmptyValueException
-     * with the error message set with setRequiredError().
+     * is required, but empty, validation will throw an EmptyValueException with
+     * the error message set with setRequiredError().
      * 
      * @see com.itmill.toolkit.data.Validatable#validate()
      */
@@ -729,7 +729,9 @@ public abstract class AbstractField extends AbstractComponent implements Field,
             try {
                 validate();
             } catch (Validator.InvalidValueException e) {
-                validationError = e;
+                if (!"".equals(e.getMessage())) {
+                    validationError = e;
+                }
             }
         }
 
@@ -1030,9 +1032,9 @@ public abstract class AbstractField extends AbstractComponent implements Field,
         this.required = required;
         requestRepaint();
     }
-    
+
     public void setRequiredError(String requiredMessage) {
-        this.requiredError = requiredMessage;
+        requiredError = requiredMessage;
         requestRepaint();
     }
 
