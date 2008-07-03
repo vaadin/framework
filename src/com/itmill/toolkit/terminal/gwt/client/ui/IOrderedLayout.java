@@ -290,7 +290,8 @@ public abstract class IOrderedLayout extends Panel implements Container {
                     if (after) {
                         DOM.appendChild(getElement(), captionElement);
                         DOM.setElementAttribute(getElement(), "class",
-                                "i-orderedlayout-w2");
+                                "i-orderedlayout-w");
+                        caption.addStyleName("i-orderedlayout-c");
                         widget.addStyleName("i-orderedlayout-w-e");
                     } else {
                         DOM.insertChild(getElement(), captionElement, 0);
@@ -305,11 +306,13 @@ public abstract class IOrderedLayout extends Panel implements Container {
                     DOM.removeChild(getElement(), firstElement);
                     DOM.appendChild(getElement(), firstElement);
                     DOM.setElementAttribute(getElement(), "class",
-                            after ? "i-orderedlayout-w2" : "");
+                            after ? "i-orderedlayout-w" : "");
                     if (after) {
+                        caption.addStyleName("i-orderedlayout-c");
                         widget.addStyleName("i-orderedlayout-w-e");
                     } else {
                         widget.removeStyleName("i-orderedlayout-w-e");
+                        caption.removeStyleName("i-orderedlayout-w-c");
                     }
                 }
 
@@ -319,6 +322,7 @@ public abstract class IOrderedLayout extends Panel implements Container {
                     caption = null;
                     DOM.setElementAttribute(getElement(), "class", "");
                     widget.removeStyleName("i-orderedlayout-w-e");
+                    caption.removeStyleName("i-orderedlayout-w-c");
                 }
             }
         }
