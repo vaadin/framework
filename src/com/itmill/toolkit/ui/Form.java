@@ -181,20 +181,21 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * the calculation of the error message is separate from validation, because
      * validation fails also on empty errors.
      */
-    @SuppressWarnings("unchecked")
-    @Override
     public ErrorMessage getErrorMessage() {
         for (final Iterator i = propertyIds.iterator(); i.hasNext();) {
             try {
-                AbstractComponent field = (AbstractComponent)fields.get(i.next());
+                AbstractComponent field = (AbstractComponent) fields.get(i
+                        .next());
                 ErrorMessage e = field.getErrorMessage();
                 if (e != null) {
                     // Skip empty errors
-                    if (e.toString().isEmpty())
+                    if ("".equals(e.toString())) {
                         continue;
+                    }
                     return e;
                 }
-            } catch (ClassCastException ignored) {}
+            } catch (ClassCastException ignored) {
+            }
         }
         return null;
     }
