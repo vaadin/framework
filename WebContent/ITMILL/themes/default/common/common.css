@@ -108,8 +108,8 @@ input.i-modified,
 }
 
 .i-contextmenu .gwt-MenuBar {
-	border-right: 2px solid #c6cbcc;
-	border-bottom: 2px solid #c6cbcc;
+	border-right: 1px solid #c6cbcc;
+	border-bottom: 1px solid #c6cbcc;
 	border-top: 1px solid #d0d4d5;
 	border-left: 1px solid #d0d4d5;
 }

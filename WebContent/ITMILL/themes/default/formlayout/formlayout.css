@@ -50,3 +50,9 @@
 * html .i-form-errormessage {
 	height: 20px
 }
+
+.i-form {
+	border: none;
+	margin: 0;
+	padding: 0;
+}
