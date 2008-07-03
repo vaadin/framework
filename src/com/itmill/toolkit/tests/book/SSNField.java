@@ -64,8 +64,7 @@ public class SSNField extends CustomComponent implements
         myfield.setColumns(11);
 
         /* Create and set the validator object for the field. */
-        final SSNValidator ssnvalidator = new SSNValidator();
-        myfield.addValidator(ssnvalidator);
+        myfield.addValidator(new SSNValidator());
 
         /* ValueChageEvent will be generated immediately when the component
            loses focus. */

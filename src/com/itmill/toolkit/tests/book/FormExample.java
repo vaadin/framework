@@ -7,6 +7,7 @@ import com.itmill.toolkit.data.Item;
 import com.itmill.toolkit.data.Property;
 import com.itmill.toolkit.data.Validator;
 import com.itmill.toolkit.data.util.BeanItem;
+import com.itmill.toolkit.terminal.UserError;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.CustomComponent;
@@ -18,6 +19,7 @@ import com.itmill.toolkit.ui.FormLayout;
 import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Select;
 import com.itmill.toolkit.ui.TextField;
+import com.itmill.toolkit.ui.Button.ClickEvent;
 
 /**
  * This example demonstrates the most important features of the Form component:
@@ -117,8 +119,8 @@ public class FormExample extends CustomComponent {
                     public boolean isValid(Object value) {
                         if (value == null || !(value instanceof String))
                             return false;
-                        int val = Integer.parseInt((String) value);
-                        return val >= 10000 && val < 100000;
+                        
+                        return ((String)value).matches("[0-9]{5}");
                     }
 
                     public void validate(Object value)
@@ -151,12 +153,10 @@ public class FormExample extends CustomComponent {
     }
 
     public FormExample() {
-        // Create a form and use FormLayout as its layout.
+        // Create a form. It will use FormLayout as its layout by default.
         final Form form = new Form();
-        final FormLayout layout = new FormLayout();
-        form.setLayout(layout);
 
-        // Set form caption and description texts
+        // Set form caption and description texts.
         form.setCaption("Contact Information");
         form.setDescription("Please enter valid name and address. Fields marked with * are required.");
 
@@ -173,7 +173,7 @@ public class FormExample extends CustomComponent {
         form.setItemDataSource(item);
 
         // Set the order of the items in the form.
-        Vector order = new Vector();
+        Vector<String> order = new Vector<String>();
         order.add("name");
         order.add("address");
         order.add("postalCode");
@@ -182,31 +182,43 @@ public class FormExample extends CustomComponent {
 
         // Set required fields.
         form.getField("name").setRequired(true);
+        form.getField("name").setRequiredError("Name is missing");
+        form.getField("address").setRequired(true);
+        form.getField("address").setRequiredError("Address is missing");
 
         // Set the form to act immediately on user input. This is
         // Necessary for the validation to occur immediately when the
         // input focus changes.
         form.setImmediate(true);
+        form.setValidationVisible(false);
+        form.setRequired(true);
 
-        // Have the validation error indicator area visible.
-        form.setValidationVisible(true);
-        
         // Set buffering so that commit() must be called for the form
         // before input is written to the data. (Input is not written
         // immediately through).
         form.setWriteThrough(false);
         form.setReadThrough(false);
 
-        // Add Ok and Reset controls to the form.
+        // Add Commit and Discard controls to the form.
         ExpandLayout footer = new ExpandLayout(
                 OrderedLayout.ORIENTATION_HORIZONTAL);
-        Button ok = new Button("Ok", form, "commit");
-        Button reset = new Button("Reset", form, "discard");
-        footer.addComponent(ok);
-        footer.setComponentAlignment(ok, ExpandLayout.ALIGNMENT_RIGHT,
+        
+        // The Commit button calls form.commit().
+        Button commit = new Button("Commit");
+        commit.addListener(new Button.ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                form.setValidationVisible(true);
+                form.commit();
+            }
+        });
+        
+        // The Discard button calls form.discard().
+        Button discard = new Button("Discard", form, "discard");
+        footer.addComponent(commit);
+        footer.setComponentAlignment(commit, ExpandLayout.ALIGNMENT_RIGHT,
                 ExpandLayout.ALIGNMENT_TOP);
-        footer.setHeight("30px");
-        footer.addComponent(reset);
+        footer.setHeight("25px");
+        footer.addComponent(discard);
         form.setFooter(footer);
 
         OrderedLayout root = new OrderedLayout();

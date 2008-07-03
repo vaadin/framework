@@ -110,7 +110,7 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
                     "select/select", "select/native", "select/optiongroup",
                     "select/twincol", "filterselect", "validator", "table", "table/select",
                     "upload", "link", "gridlayout", "orderedlayout",
-                    "formlayout", "form", "panel", "expandlayout", "tabsheet",
+                    "formlayout", "form", "form/simple", "form/layout", "panel", "expandlayout", "expandlayout/root", "tabsheet",
                     "alignment", "alignment/grid", "window", "window/opener",
                     "window/multiple", "classresource", "usererror",
                     "progress/window", "progress/thread", "progress",
@@ -500,13 +500,37 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
     }
 
     void example_Validator(Window main, String param) {
+        if (param != null && param.equals("required")) {
+            Form form = new Form();
+            form.setCaption("My Form");
+            form.setRequired(true);
+            main.addComponent(form);
+            
+            TextField text = new TextField("This is a required text field");
+            text.setRequired(true);
+            text.setImmediate(true);
+            form.getLayout().addComponent(text);
+            return;
+        }
         main.addComponent(new SSNField());
     }
 
+    class PagingTable extends Table {
+        public String getTag() {
+            return "pagingtable";
+        }
+    }
+    
     void example_Table(Window main, String param) {
-        if (param.equals("select")) {
+        if (param != null && param.equals("select")) {
             main.addComponent(new TableExample2());
-        } else
+        } else if (param != null && param.equals("paging")) {
+            PagingTable table = new PagingTable();
+            table.addContainerProperty("Column 1", String.class, null);
+            for (int i=0; i<100; i++)
+                table.addItem(new Object[]{"Item "+i}, new Integer(i));
+            main.addComponent(table);
+        }else
             main.addComponent(new TableExample1());
     }
 
@@ -607,6 +631,16 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
     }
 
     void example_GridLayout(Window main, String param) {
+        if (param.equals("embedded")) {
+            final GridLayout grid = new GridLayout(3,3);
+            for (int i=0; i<3*3; i++) {
+                ClassResource img = new ClassResource("smiley.jpg", main.getApplication());
+                Embedded embedded = new Embedded("", img);
+                grid.addComponent(embedded);
+            }
+            main.addComponent(grid);
+            return;
+        }
         /* Create a 4 by 4 grid layout. */
         final GridLayout grid = new GridLayout(4, 4);
         grid.addStyleName("example-gridlayout");
@@ -648,8 +682,8 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
             
              Object cells[][] = {
                      {new Button("Top Left"),      new Integer(OrderedLayout.ALIGNMENT_LEFT),              new Integer(OrderedLayout.ALIGNMENT_TOP)},
-                     {new Label("Top Center"),    new Integer(OrderedLayout.ALIGNMENT_HORIZONTAL_CENTER), new Integer(OrderedLayout.ALIGNMENT_TOP)},
-                     {new Label("Top Right"),     new Integer(OrderedLayout.ALIGNMENT_RIGHT),             new Integer(OrderedLayout.ALIGNMENT_TOP)},
+                     {new Label ("Top Center"),    new Integer(OrderedLayout.ALIGNMENT_HORIZONTAL_CENTER), new Integer(OrderedLayout.ALIGNMENT_TOP)},
+                     {new Label ("Top Right"),     new Integer(OrderedLayout.ALIGNMENT_RIGHT),             new Integer(OrderedLayout.ALIGNMENT_TOP)},
                      {new Button("Center Left"),   new Integer(OrderedLayout.ALIGNMENT_LEFT),              new Integer(OrderedLayout.ALIGNMENT_VERTICAL_CENTER)},
                      {new Button("Center Center"), new Integer(OrderedLayout.ALIGNMENT_HORIZONTAL_CENTER), new Integer(OrderedLayout.ALIGNMENT_VERTICAL_CENTER)},
                      {new Button("Center Right"),  new Integer(OrderedLayout.ALIGNMENT_RIGHT),             new Integer(OrderedLayout.ALIGNMENT_VERTICAL_CENTER)},
@@ -683,14 +717,49 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
 
     void example_FormLayout(Window main, String param) {
         final FormLayout layout = new FormLayout();
-        layout.addComponent(new TextField("Name"));
-        layout.addComponent(new TextField("Street address"));
-        layout.addComponent(new TextField("Postal code"));
+        layout.addComponent(new TextField("Text Field"));
+        layout.addComponent(new CheckBox("Check Box"));
+        layout.addComponent(new Select("Select"));
         main.addComponent(layout);
     }
 
     void example_Form(Window main, String param) {
-        main.addComponent(new FormExample());
+        if (param != null && param.equals("simple")) {
+            main.addComponent(new FormExample2());
+        } else if (param != null && param.equals("layout")) {
+            Form form = new Form();
+            form.setCaption("Form Caption");
+            form.setDescription("This is a description of the Form that is " +
+                    "displayed in the upper part of the form. You normally enter some " +
+                    "descriptive text about the form and its use here.");
+            
+            // Add a field directly to the layout. This field will not be bound to
+            // the data source Item of the form. 
+            form.getLayout().addComponent(new TextField("A Field"));
+            
+            // Add a field and bind it to an named item property.
+            form.addField("another", new TextField("Another Field"));
+            
+            form.setComponentError(new UserError("This is the error indicator of the Form."));
+
+            // Set the footer layout and add some text.
+            form.setFooter(new OrderedLayout());
+            form.getFooter().addComponent(new Label("This is the footer area of the Form. "+
+                                        "You can use any layout here. This is nice for buttons."));
+            
+            // Add an Ok (commit), Reset (discard), and Cancel buttons for the form.
+            ExpandLayout okbar = new ExpandLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
+            okbar.setHeight("25px");
+            Button okbutton = new Button("OK", form, "commit");
+            okbar.addComponent(okbutton);
+            okbar.setComponentAlignment(okbutton, ExpandLayout.ALIGNMENT_RIGHT, ExpandLayout.ALIGNMENT_TOP);
+            okbar.addComponent(new Button("Reset", form, "discard"));
+            okbar.addComponent(new Button("Cancel"));
+            form.getFooter().addComponent(okbar);
+            
+            main.addComponent(form);
+        } else 
+            main.addComponent(new FormExample());
     }
 
     void example_ExpandLayout(Window main, String param) {
@@ -723,6 +792,26 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
             layout.setComponentAlignment(progress, OrderedLayout.ALIGNMENT_HORIZONTAL_CENTER, OrderedLayout.ALIGNMENT_VERTICAL_CENTER);
             window.setLayout(layout);
             window.addComponent(progress);
+            
+            return;
+        } else if (param != null && param.equals("root")) {
+            final Window mainwin = main;
+            
+            // Layout to switch to
+            final OrderedLayout expand2 = new OrderedLayout();
+            expand2.addComponent(new Label("I am layout too."));
+            
+            // Original layout
+            final OrderedLayout expand1 = new OrderedLayout();
+            Button switchButton = new Button("Switch to other layout");
+            switchButton.addListener(new Button.ClickListener() {
+                public void buttonClick(ClickEvent event) {
+                    mainwin.setLayout(null);
+                    mainwin.setLayout(expand2);
+                }
+            });
+            expand1.addComponent(switchButton);
+            main.setLayout(expand1);
             
             return;
         } else if (param != null && param.equals("size")) {
@@ -1062,7 +1151,7 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
         
         // Create the custom layout and set it as the root layout of
         // the containing window.
-        CustomLayout custom = new CustomLayout("layoutname");
+        final CustomLayout custom = new CustomLayout("layoutname");
         sub.setLayout(custom);
         
         // Create components and bind them to the location tags
@@ -1073,8 +1162,26 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
         TextField password = new TextField();
         custom.addComponent(password, "password");
         
-        Button ok = new Button("Login");
+        final Button ok = new Button("Login");
         custom.addComponent(ok, "okbutton");
+        
+        final Button deny = new Button("No can do!");
+        
+        Button.ClickListener listener = new Button.ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                // Switch between ok and deny
+                if (custom.getComponent("okbutton") == ok) {
+                    System.out.println("Changing to deny button.");
+                    custom.addComponent(deny, "okbutton");
+                } else {
+                    System.out.println("Changing to ok button.");
+                    custom.addComponent(ok, "okbutton");
+                }
+             } 
+         };
+        
+        ok.addListener(listener);
+        deny.addListener(listener);
     }
 
     void example_Spacing(final Window main, String param) {
