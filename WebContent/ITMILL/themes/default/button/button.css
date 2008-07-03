@@ -20,6 +20,7 @@
 
 /* fixes streched buttons in IE6 */
 * html .i-button {
+	width: 1px;
 	overflow: visible;
 	padding-left: 10px;
 	padding-right: 10px;
@@ -30,6 +31,7 @@
 	padding-left: 10px;
 	padding-right: 10px;
 }
+
 
 /* Disabled by default
 .i-checkbox-error {
