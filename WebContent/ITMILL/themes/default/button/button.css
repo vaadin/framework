@@ -30,6 +30,7 @@
 	overflow: visible;
 	padding-left: 10px;
 	padding-right: 10px;
+	width: expression(this.offsetWidth + "px");
 }
 
 
