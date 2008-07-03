@@ -17,6 +17,7 @@ import com.itmill.toolkit.data.Validatable;
 import com.itmill.toolkit.data.Validator;
 import com.itmill.toolkit.data.Validator.InvalidValueException;
 import com.itmill.toolkit.data.util.BeanItem;
+import com.itmill.toolkit.terminal.ErrorMessage;
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
 
@@ -168,6 +169,34 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
         if (formFooter != null) {
             formFooter.paint(target);
         }
+    }
+
+    /**
+     * The error message of a Form is the error of the first field with a
+     * non-empty error.
+     * 
+     * Empty error messages of the contained fields are skipped, because an
+     * empty error indicator would be confusing to the user, especially if there
+     * are errors that have something to display. This is also the reason why
+     * the calculation of the error message is separate from validation, because
+     * validation fails also on empty errors.
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public ErrorMessage getErrorMessage() {
+        for (final Iterator i = propertyIds.iterator(); i.hasNext();) {
+            try {
+                AbstractComponent field = (AbstractComponent)fields.get(i.next());
+                ErrorMessage e = field.getErrorMessage();
+                if (e != null) {
+                    // Skip empty errors
+                    if (e.toString().isEmpty())
+                        continue;
+                    return e;
+                }
+            } catch (ClassCastException ignored) {}
+        }
+        return null;
     }
 
     /*

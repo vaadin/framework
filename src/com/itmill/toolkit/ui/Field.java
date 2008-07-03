@@ -53,6 +53,24 @@ public interface Field extends Component, BufferedValidatable, Property,
     public void setRequired(boolean required);
 
     /**
+     * Sets the error message to be displayed if a required field is empty.
+     * 
+     * @param requiredMessage
+     *            Error message.
+     * @since 5.2.6
+     */
+    public void setRequiredError(String requiredMessage);
+
+    /**
+     * Gets the error message that is to be displayed if a required field is
+     * empty.
+     * 
+     * @return Error message.
+     * @since 5.2.6
+     */
+    public String getRequiredError();
+    
+    /**
      * An <code>Event</code> object specifying the Field whose value has been
      * changed.
      * 
