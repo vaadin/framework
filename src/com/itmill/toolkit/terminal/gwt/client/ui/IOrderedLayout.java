@@ -115,6 +115,10 @@ public class IOrderedLayout extends Panel implements Container,
         setStyleName(CLASSNAME);
     }
 
+    /**
+     * Constuct base DOM-scrtucture and clean any already attached
+     * widgetwrappers from DOM.
+     */
     private void createAndEmptyWrappedChildContainer() {
         if (orientationMode == ORIENTATION_HORIZONTAL) {
             final String structure = "<table cellspacing=\"0\" cellpadding=\"0\"><tbody><tr></tr></tbody></table>";
@@ -256,6 +260,10 @@ public class IOrderedLayout extends Panel implements Container,
         updateFixedSizes();
     }
 
+    /**
+     * While setting width, ensure that margin div is also resized properly.
+     * Furthermore, enable/disable fixed mode
+     */
     public void setWidth(String width) {
         super.setWidth(width);
 
@@ -272,6 +280,10 @@ public class IOrderedLayout extends Panel implements Container,
         }
     }
 
+    /**
+     * While setting height, ensure that margin div is also resized properly.
+     * Furthermore, enable/disable fixed mode
+     */
     public void setHeight(String height) {
         super.setHeight(height);
 
@@ -301,9 +313,6 @@ public class IOrderedLayout extends Panel implements Container,
         // Remove unneeded attributes from each wrapper
         String wh = (orientationMode == ORIENTATION_HORIZONTAL) ? "width"
                 : "height";
-        String overflow = (orientationMode == ORIENTATION_HORIZONTAL) ? (BrowserInfo
-                .get().isFF2() ? "overflow" : "overflowX")
-                : "overflowY";
         for (Iterator i = childWidgetWrappers.iterator(); i.hasNext();) {
             Element we = ((WidgetWrapper) i.next()).getElement();
             DOM.setStyleAttribute(we, wh, "");
@@ -368,9 +377,6 @@ public class IOrderedLayout extends Panel implements Container,
         // Set the sizes for each child
         String wh = (orientationMode == ORIENTATION_HORIZONTAL) ? "width"
                 : "height";
-        String overflow = (orientationMode == ORIENTATION_HORIZONTAL) ? (BrowserInfo
-                .get().isFF2() ? "overflow" : "overflowX")
-                : "overflowY";
         for (Iterator i = childWidgetWrappers.iterator(); i.hasNext();) {
             Element we = ((WidgetWrapper) i.next()).getElement();
             final int ws = Math.round(((float) size) / (numChild--));
@@ -386,6 +392,7 @@ public class IOrderedLayout extends Panel implements Container,
         Util.runDescendentsLayout(this);
     }
 
+    /** Enable/disable margic classes for the margin div when needed */
     protected void handleMargins(UIDL uidl) {
         margins = new MarginInfo(uidl.getIntAttribute("margins"));
         setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_TOP,
@@ -398,6 +405,7 @@ public class IOrderedLayout extends Panel implements Container,
                 margins.hasLeft());
     }
 
+    /** Parse alignments from UIDL and pass whem to correct widgetwrappers */
     private void handleAlignments(UIDL uidl) {
         // Component alignments as a comma separated list.
         // See com.itmill.toolkit.terminal.gwt.client.ui.AlignmentInfo.java for
