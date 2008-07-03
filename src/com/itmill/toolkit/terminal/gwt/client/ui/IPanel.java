@@ -348,7 +348,9 @@ public class IPanel extends SimplePanel implements Paintable,
         // Let browser handle 100% width (DIV element takes all size by
         // default).
         // This way we can specify borders for Panel's outer element.
-        if (!width.equals("100%")) {
+        if (width.equals("100%")) {
+            super.setWidth("");
+        } else {
             super.setWidth(width);
         }
     }
