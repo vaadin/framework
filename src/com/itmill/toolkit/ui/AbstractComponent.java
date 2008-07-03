@@ -13,10 +13,8 @@ import java.util.Locale;
 import java.util.Map;
 
 import com.itmill.toolkit.Application;
-import com.itmill.toolkit.data.Validator.EmptyValueException;
 import com.itmill.toolkit.event.EventRouter;
 import com.itmill.toolkit.event.MethodEventSource;
-import com.itmill.toolkit.terminal.CompositeErrorMessage;
 import com.itmill.toolkit.terminal.ErrorMessage;
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
@@ -626,12 +624,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
 
                 final ErrorMessage error = getErrorMessage();
                 if (error != null) {
-                    // Do not display empty value errors for
-                    // empty required fields.
-                    if (!(error instanceof EmptyValueException ||
-                          (error instanceof CompositeErrorMessage &&
-                           ((CompositeErrorMessage)error).hasErrorMessageClass(EmptyValueException.class))))
-                        error.paint(target);
+                    error.paint(target);
                 }
             } else {
                 target.addAttribute("invisible", true);
