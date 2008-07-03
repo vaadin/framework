@@ -27,7 +27,7 @@ public class ContextMenu extends ToolkitOverlay {
      *                to be set as an owner of menu
      */
     public ContextMenu() {
-        super(true);
+        super(true, false, true);
         setWidget(menu);
         setStyleName("i-contextmenu");
     }
@@ -99,5 +99,19 @@ public class ContextMenu extends ToolkitOverlay {
             super.onPopupClosed(sender, autoClosed);
             ContextMenu.this.hide();
         }
+
+        /*public void onBrowserEvent(Event event) {
+            // Remove current selection when mouse leaves
+            if (DOM.eventGetType(event) == Event.ONMOUSEOUT) {
+                Element to = DOM.eventGetToElement(event);
+                if (!DOM.isOrHasChild(getElement(), to)) {
+                    DOM.setElementProperty(
+                            super.getSelectedItem().getElement(), "className",
+                            super.getSelectedItem().getStylePrimaryName());
+                }
+            }
+
+            super.onBrowserEvent(event);
+        }*/
     }
 }

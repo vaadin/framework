@@ -105,7 +105,7 @@ public class IFilterSelect extends Composite implements Paintable, Field,
         private long lastAutoClosed;
 
         SuggestionPopup() {
-            super(true);
+            super(true, false, true);
             menu = new SuggestionMenu();
             setWidget(menu);
             setStyleName(CLASSNAME + "-suggestpopup");
