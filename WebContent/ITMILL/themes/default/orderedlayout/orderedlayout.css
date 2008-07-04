@@ -1,4 +1,9 @@
-.i-orderedlayout-margin-top {
+.
+/* Ordered layout spacing and margins are currently fixed.
+   This is considered to be a bug. For more info, see
+   http://dev.itmill.com/ticket/1904
+
+i-orderedlayout-margin-top {
 	padding-top: 15px;
 }
 .i-orderedlayout-margin-right {
@@ -17,6 +22,8 @@
 .i-orderedlayout-hspacing {
 	padding-left: 8px;
 }
+
+*/
 
 /* Placing error indicator right after the widget with empty caption */
 .i-orderedlayout-w:after, .i-orderedlayout-c:after {

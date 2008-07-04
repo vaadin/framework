@@ -18,7 +18,6 @@ import com.itmill.toolkit.terminal.gwt.client.Caption;
 import com.itmill.toolkit.terminal.gwt.client.Container;
 import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
-import com.itmill.toolkit.terminal.gwt.client.StyleConstants;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.Util;
 
@@ -39,8 +38,13 @@ public class IOrderedLayout extends Panel implements Container,
     public static final int ORIENTATION_VERTICAL = 0;
     public static final int ORIENTATION_HORIZONTAL = 1;
 
-    // TODO Read this from CSS as in #1904
-    private static final int SPACING_SIZE = 8;
+    // TODO Read these from CSS as in #1904
+    private static final int HSPACING = 8;
+    private static final int VSPACING = 8;
+    private static final int MARGIN_TOP = 15;
+    private static final int MARGIN_BOTTOM = 15;
+    private static final int MARGIN_LEFT = 18;
+    private static final int MARGIN_RIGHT = 18;
 
     int orientationMode = ORIENTATION_VERTICAL;
 
@@ -202,11 +206,6 @@ public class IOrderedLayout extends Panel implements Container,
 
         updateOrientation(uidl);
 
-        // Ensure correct implementation
-        if (client.updateComponent(this, uidl, false)) {
-            return;
-        }
-
         // Handle layout margins
         if (margins.getBitMask() != uidl.getIntAttribute("margins")) {
             handleMargins(uidl);
@@ -214,6 +213,11 @@ public class IOrderedLayout extends Panel implements Container,
 
         // Handle component spacing later in handleAlignments() method
         hasComponentSpacing = uidl.getBooleanAttribute("spacing");
+
+        // Update sizes, ...
+        if (client.updateComponent(this, uidl, false)) {
+            return;
+        }
 
         // Collect the list of contained widgets after this update
         final Vector newWidgets = new Vector();
@@ -317,11 +321,18 @@ public class IOrderedLayout extends Panel implements Container,
 
         if (width == null || "".equals(width)) {
             DOM.setStyleAttribute(margin, "width", "");
+
             if (fixedCellSize && orientationMode == ORIENTATION_HORIZONTAL) {
                 removeFixedSizes();
             }
         } else {
-            DOM.setStyleAttribute(margin, "width", "100%");
+
+            // Calculate margin pixel width
+            int cw = DOM.getElementPropertyInt(root, "offsetWidth");
+            cw -= margins.hasLeft() ? MARGIN_LEFT : 0;
+            cw -= margins.hasRight() ? MARGIN_RIGHT : 0;
+            DOM.setStyleAttribute(margin, "width", cw + "px");
+
             if (orientationMode == ORIENTATION_HORIZONTAL) {
                 fixedCellSize = true;
             }
@@ -346,7 +357,14 @@ public class IOrderedLayout extends Panel implements Container,
                 removeFixedSizes();
             }
         } else {
-            DOM.setStyleAttribute(margin, "height", "100%");
+
+            // Calculate margin pixel height
+            int ch = DOM.getElementPropertyInt(root, "offsetHeight");
+            ch -= margins.hasTop() ? MARGIN_TOP : 0;
+            ch -= margins.hasBottom() ? MARGIN_BOTTOM : 0;
+            DOM.setStyleAttribute(margin, "height", ch + "px");
+
+            // Turn on vertical orientation mode if needed
             if (orientationMode == ORIENTATION_VERTICAL) {
                 fixedCellSize = true;
             }
@@ -398,13 +416,17 @@ public class IOrderedLayout extends Panel implements Container,
             return;
         }
 
-        DOM.setStyleAttribute(margin,
-                (orientationMode == ORIENTATION_HORIZONTAL) ? "width"
-                        : "height", "100%");
-
-        int size = DOM.getElementPropertyInt(margin,
+        // Calculate the space for fixed contents minus marginals
+        int size = DOM.getElementPropertyInt(root,
                 (orientationMode == ORIENTATION_HORIZONTAL) ? "offsetWidth"
                         : "offsetHeight");
+        if (orientationMode == ORIENTATION_HORIZONTAL) {
+            size -= margins.hasLeft() ? MARGIN_LEFT : 0;
+            size -= margins.hasRight() ? MARGIN_RIGHT : 0;
+        } else {
+            size -= margins.hasTop() ? MARGIN_TOP : 0;
+            size -= margins.hasBottom() ? MARGIN_BOTTOM : 0;
+        }
 
         // Horizontal layouts need fixed mode tables
         if (orientationMode == ORIENTATION_HORIZONTAL) {
@@ -416,7 +438,9 @@ public class IOrderedLayout extends Panel implements Container,
         // Reduce spacing from the size
         int numChild = childWidgets.size();
         if (hasComponentSpacing) {
-            size -= SPACING_SIZE * (numChild - 1);
+            size -= ((orientationMode == ORIENTATION_HORIZONTAL) ? HSPACING
+                    : VSPACING)
+                    * (numChild - 1);
         }
 
         // Have we set fixed sizes before?
@@ -458,14 +482,30 @@ public class IOrderedLayout extends Panel implements Container,
         margins = newMargins;
 
         // Update margin classes
-        setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_TOP,
-                margins.hasTop());
-        setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_RIGHT,
-                margins.hasRight());
-        setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_BOTTOM,
-                margins.hasBottom());
-        setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_LEFT,
-                margins.hasLeft());
+        DOM.setStyleAttribute(margin, "paddingTop",
+                margins.hasTop() ? MARGIN_TOP + "px" : "0");
+        DOM.setStyleAttribute(margin, "paddingLeft",
+                margins.hasLeft() ? MARGIN_LEFT + "px" : "0");
+        DOM.setStyleAttribute(margin, "paddingBottom",
+                margins.hasBottom() ? MARGIN_BOTTOM + "px" : "0");
+        DOM.setStyleAttribute(margin, "paddingRight",
+                margins.hasRight() ? MARGIN_RIGHT + "px" : "0");
+
+        // Update calculated height if needed
+        String currentMarginHeight = DOM.getStyleAttribute(margin, "height");
+        if (currentMarginHeight != null && !"".equals(currentMarginHeight)) {
+            int ch = DOM.getElementPropertyInt(root, "offsetHeight");
+            ch -= margins.hasTop() ? MARGIN_TOP : 0;
+            ch -= margins.hasBottom() ? MARGIN_BOTTOM : 0;
+            DOM.setStyleAttribute(margin, "height", ch + "px");
+        }
+        String currentMarginWidth = DOM.getStyleAttribute(margin, "width");
+        if (currentMarginWidth != null && !"".equals(currentMarginWidth)) {
+            int cw = DOM.getElementPropertyInt(root, "offsetWidth");
+            cw -= margins.hasLeft() ? MARGIN_LEFT : 0;
+            cw -= margins.hasRight() ? MARGIN_RIGHT : 0;
+            DOM.setStyleAttribute(margin, "width", cw + "px");
+        }
 
         // Update child layouts
         childLayoutsHaveChanged = true;
@@ -702,14 +742,13 @@ public class IOrderedLayout extends Panel implements Container,
 
         /** Set class for spacing */
         void setSpacingEnabled(boolean b) {
-            setStyleName(
-                    getElement(),
-                    CLASSNAME
-                            + "-"
-                            + (orientationMode == ORIENTATION_HORIZONTAL ? StyleConstants.HORIZONTAL_SPACING
-                                    : StyleConstants.VERTICAL_SPACING), b);
+            DOM.setStyleAttribute(getElement(),
+                    orientationMode == ORIENTATION_HORIZONTAL ? "paddingLeft"
+                            : "marginTop",
+                    b ? (orientationMode == ORIENTATION_HORIZONTAL ? HSPACING
+                            : VSPACING)
+                            + "px" : "0");
         }
-
     }
 
     /* documented at super */
