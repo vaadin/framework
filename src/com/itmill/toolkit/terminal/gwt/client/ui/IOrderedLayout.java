@@ -128,7 +128,9 @@ public class IOrderedLayout extends Panel implements Container,
             DOM.setInnerHTML(root, structure);
             wrappedChildContainer = DOM.getFirstChild(DOM.getFirstChild(DOM
                     .getFirstChild(root)));
-            DOM.setStyleAttribute(root, "display", "table");
+            if (!BrowserInfo.get().isIE()) {
+                DOM.setStyleAttribute(root, "display", "table");
+            }
         } else {
             wrappedChildContainer = root;
             DOM.setInnerHTML(root, "");
@@ -559,7 +561,7 @@ public class IOrderedLayout extends Panel implements Container,
                 // Apply 'hasLayout' for IE (needed to get accurate dimension
                 // calculations)
                 if (BrowserInfo.get().isIE()) {
-                    DOM.setStyleAttribute(e, "zoom", "1");
+                    DOM.setStyleAttribute(getElement(), "zoom", "1");
                 }
             } else {
                 setElement(DOM.createTD());
@@ -644,22 +646,22 @@ public class IOrderedLayout extends Panel implements Container,
         void setAlignment(String verticalAlignment, String horizontalAlignment) {
 
             // Set vertical alignment
-            if (orientationMode == ORIENTATION_VERTICAL) {
-                if (verticalAlignment == null
-                        || verticalAlignment.equals("top")) {
-                    DOM.setStyleAttribute(getElement(), "display", "block");
-                    DOM.setStyleAttribute(getElement(), "width", "");
-                } else {
-                    DOM
-                            .setStyleAttribute(getElement(), "display",
-                                    "table-cell");
-                    DOM.setStyleAttribute(getElement(), "width", "1000000px");
-                }
-            }
             if (BrowserInfo.get().isIE()) {
                 DOM.setElementAttribute(getElement(), "vAlign",
                         verticalAlignment);
             } else {
+                if (orientationMode == ORIENTATION_VERTICAL) {
+                    if (verticalAlignment == null
+                            || verticalAlignment.equals("top")) {
+                        DOM.setStyleAttribute(getElement(), "display", "block");
+                        DOM.setStyleAttribute(getElement(), "width", "");
+                    } else {
+                        DOM.setStyleAttribute(getElement(), "display",
+                                "table-cell");
+                        DOM.setStyleAttribute(getElement(), "width",
+                                "1000000px");
+                    }
+                }
                 DOM.setStyleAttribute(getElement(), "verticalAlign",
                         verticalAlignment);
             }
