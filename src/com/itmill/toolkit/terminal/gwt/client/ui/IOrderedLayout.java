@@ -644,7 +644,6 @@ public class IOrderedLayout extends Panel implements Container,
         void setAlignment(String verticalAlignment, String horizontalAlignment) {
 
             // Set vertical alignment
-            // TODO BROKEN #1903
             if (orientationMode == ORIENTATION_VERTICAL) {
                 if (verticalAlignment == null
                         || verticalAlignment.equals("top")) {
