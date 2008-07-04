@@ -725,18 +725,18 @@ i-orderedlayout-margin-top {
 */
 
 /* Placing error indicator right after the widget with empty caption */
-.i-orderedlayout-w:after, .i-orderedlayout-c:after {
+.i-orderedlayout-c * { float:left; display: block;}
+.i-orderedlayout-w-e { float:left;}
+* html .i-orderedlayout-c, * html .i-orderedlayout-w { height: 1%; }
+.i-orderedlayout-w { display: block; }
+.i-orderedlayout-c { float:left; display: block;}
+.i-orderedlayout-w:after, .i-orderedlayout-c:after  {
   	content: ".";
 	display: block;
 	height: 0;
     clear: both;
     visibility: hidden;
 }
-.i-orderedlayout-c * { float:left; display: block;}
-.i-orderedlayout-w-e { float:left;}
-* html .i-orderedlayout-c, * html .i-orderedlayout-w { height: 1%; }
-.i-orderedlayout-w { display: block; }
-.i-orderedlayout-c { float:left; display: block;}
 *+ html .i-orderedlayout-c { float:none; }
 * html .i-orderedlayout-c { float:none; }
 .i-panel,
