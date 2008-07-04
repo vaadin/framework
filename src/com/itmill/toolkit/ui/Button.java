@@ -214,7 +214,7 @@ public class Button extends AbstractField {
      * 
      * @return True iff the button is pressed down or checked.
      */
-    boolean booleanValue() {
+    public boolean booleanValue() {
         return ((Boolean) getValue()).booleanValue();
     }
 
