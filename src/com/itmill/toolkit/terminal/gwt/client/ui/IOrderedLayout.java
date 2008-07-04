@@ -38,13 +38,12 @@ public class IOrderedLayout extends Panel implements Container,
     public static final int ORIENTATION_VERTICAL = 0;
     public static final int ORIENTATION_HORIZONTAL = 1;
 
-    // TODO Read these from CSS as in #1904
-    private static final int HSPACING = 8;
-    private static final int VSPACING = 8;
-    private static final int MARGIN_TOP = 15;
-    private static final int MARGIN_BOTTOM = 15;
-    private static final int MARGIN_LEFT = 18;
-    private static final int MARGIN_RIGHT = 18;
+    private int hSpacing = -1;
+    private int vSpacing = -1;
+    private int marginTop = -1;
+    private int marginBottom = -1;
+    private int marginLeft = -1;
+    private int marginRight = -1;
 
     int orientationMode = ORIENTATION_VERTICAL;
 
@@ -207,6 +206,8 @@ public class IOrderedLayout extends Panel implements Container,
         // Only non-cached UIDL:s can introduce changes
         if (!uidl.getBooleanAttribute("cached")) {
 
+            updateMarginAndSpacingSizesFromCSS(uidl);
+
             // Swith between orientation modes if necessary
             updateOrientation(uidl);
 
@@ -317,6 +318,18 @@ public class IOrderedLayout extends Panel implements Container,
         }
     }
 
+    private void updateMarginAndSpacingSizesFromCSS(UIDL uidl) {
+        // TODO Read spacing and margins from CSS as documented in #1904.
+        // Somehow refresh after updates
+
+        hSpacing = 8;
+        vSpacing = 8;
+        marginTop = 15;
+        marginBottom = 15;
+        marginLeft = 18;
+        marginRight = 18;
+    }
+
     /**
      * While setting width, ensure that margin div is also resized properly.
      * Furthermore, enable/disable fixed mode
@@ -334,8 +347,8 @@ public class IOrderedLayout extends Panel implements Container,
 
             // Calculate margin pixel width
             int cw = DOM.getElementPropertyInt(root, "offsetWidth");
-            cw -= margins.hasLeft() ? MARGIN_LEFT : 0;
-            cw -= margins.hasRight() ? MARGIN_RIGHT : 0;
+            cw -= margins.hasLeft() ? marginLeft : 0;
+            cw -= margins.hasRight() ? marginRight : 0;
             DOM.setStyleAttribute(margin, "width", cw + "px");
 
             if (orientationMode == ORIENTATION_HORIZONTAL) {
@@ -365,8 +378,8 @@ public class IOrderedLayout extends Panel implements Container,
 
             // Calculate margin pixel height
             int ch = DOM.getElementPropertyInt(root, "offsetHeight");
-            ch -= margins.hasTop() ? MARGIN_TOP : 0;
-            ch -= margins.hasBottom() ? MARGIN_BOTTOM : 0;
+            ch -= margins.hasTop() ? marginTop : 0;
+            ch -= margins.hasBottom() ? marginBottom : 0;
             DOM.setStyleAttribute(margin, "height", ch + "px");
 
             // Turn on vertical orientation mode if needed
@@ -426,11 +439,11 @@ public class IOrderedLayout extends Panel implements Container,
                 (orientationMode == ORIENTATION_HORIZONTAL) ? "offsetWidth"
                         : "offsetHeight");
         if (orientationMode == ORIENTATION_HORIZONTAL) {
-            size -= margins.hasLeft() ? MARGIN_LEFT : 0;
-            size -= margins.hasRight() ? MARGIN_RIGHT : 0;
+            size -= margins.hasLeft() ? marginLeft : 0;
+            size -= margins.hasRight() ? marginRight : 0;
         } else {
-            size -= margins.hasTop() ? MARGIN_TOP : 0;
-            size -= margins.hasBottom() ? MARGIN_BOTTOM : 0;
+            size -= margins.hasTop() ? marginTop : 0;
+            size -= margins.hasBottom() ? marginBottom : 0;
         }
 
         // Horizontal layouts need fixed mode tables
@@ -443,8 +456,8 @@ public class IOrderedLayout extends Panel implements Container,
         // Reduce spacing from the size
         int numChild = childWidgets.size();
         if (hasComponentSpacing) {
-            size -= ((orientationMode == ORIENTATION_HORIZONTAL) ? HSPACING
-                    : VSPACING)
+            size -= ((orientationMode == ORIENTATION_HORIZONTAL) ? hSpacing
+                    : vSpacing)
                     * (numChild - 1);
         }
 
@@ -488,27 +501,27 @@ public class IOrderedLayout extends Panel implements Container,
 
         // Update margin classes
         DOM.setStyleAttribute(margin, "paddingTop",
-                margins.hasTop() ? MARGIN_TOP + "px" : "0");
+                margins.hasTop() ? marginTop + "px" : "0");
         DOM.setStyleAttribute(margin, "paddingLeft",
-                margins.hasLeft() ? MARGIN_LEFT + "px" : "0");
+                margins.hasLeft() ? marginLeft + "px" : "0");
         DOM.setStyleAttribute(margin, "paddingBottom",
-                margins.hasBottom() ? MARGIN_BOTTOM + "px" : "0");
+                margins.hasBottom() ? marginBottom + "px" : "0");
         DOM.setStyleAttribute(margin, "paddingRight",
-                margins.hasRight() ? MARGIN_RIGHT + "px" : "0");
+                margins.hasRight() ? marginRight + "px" : "0");
 
         // Update calculated height if needed
         String currentMarginHeight = DOM.getStyleAttribute(margin, "height");
         if (currentMarginHeight != null && !"".equals(currentMarginHeight)) {
             int ch = DOM.getElementPropertyInt(root, "offsetHeight");
-            ch -= margins.hasTop() ? MARGIN_TOP : 0;
-            ch -= margins.hasBottom() ? MARGIN_BOTTOM : 0;
+            ch -= margins.hasTop() ? marginTop : 0;
+            ch -= margins.hasBottom() ? marginBottom : 0;
             DOM.setStyleAttribute(margin, "height", ch + "px");
         }
         String currentMarginWidth = DOM.getStyleAttribute(margin, "width");
         if (currentMarginWidth != null && !"".equals(currentMarginWidth)) {
             int cw = DOM.getElementPropertyInt(root, "offsetWidth");
-            cw -= margins.hasLeft() ? MARGIN_LEFT : 0;
-            cw -= margins.hasRight() ? MARGIN_RIGHT : 0;
+            cw -= margins.hasLeft() ? marginLeft : 0;
+            cw -= margins.hasRight() ? marginRight : 0;
             DOM.setStyleAttribute(margin, "width", cw + "px");
         }
 
@@ -750,8 +763,8 @@ public class IOrderedLayout extends Panel implements Container,
             DOM.setStyleAttribute(getElement(),
                     orientationMode == ORIENTATION_HORIZONTAL ? "paddingLeft"
                             : "marginTop",
-                    b ? (orientationMode == ORIENTATION_HORIZONTAL ? HSPACING
-                            : VSPACING)
+                    b ? (orientationMode == ORIENTATION_HORIZONTAL ? hSpacing
+                            : vSpacing)
                             + "px" : "0");
         }
     }
