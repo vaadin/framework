@@ -62,12 +62,6 @@ public class IOrderedLayout extends Panel implements Container,
     private final Element root;
 
     /**
-     * Margin element of the component. In vertical mode, this is div inside
-     * root.
-     */
-    protected Element margin;
-
-    /**
      * List of child widgets. This is not the list of wrappers, but the actual
      * widgets
      */
@@ -119,8 +113,6 @@ public class IOrderedLayout extends Panel implements Container,
     public IOrderedLayout() {
 
         root = DOM.createDiv();
-        margin = DOM.createDiv();
-        DOM.appendChild(root, margin);
         createAndEmptyWrappedChildContainer();
         setElement(root);
         setStyleName(CLASSNAME);
@@ -133,16 +125,14 @@ public class IOrderedLayout extends Panel implements Container,
     private void createAndEmptyWrappedChildContainer() {
         if (orientationMode == ORIENTATION_HORIZONTAL) {
             final String structure = "<table cellspacing=\"0\" cellpadding=\"0\"><tbody><tr></tr></tbody></table>";
-            DOM.setInnerHTML(margin, structure);
+            DOM.setInnerHTML(root, structure);
             wrappedChildContainer = DOM.getFirstChild(DOM.getFirstChild(DOM
-                    .getFirstChild(margin)));
+                    .getFirstChild(root)));
             DOM.setStyleAttribute(root, "display", "table");
-            DOM.setStyleAttribute(margin, "display", "table");
         } else {
-            wrappedChildContainer = margin;
-            DOM.setInnerHTML(margin, "");
+            wrappedChildContainer = root;
+            DOM.setInnerHTML(root, "");
             DOM.setStyleAttribute(root, "display", "block");
-            DOM.setStyleAttribute(margin, "display", "block");
         }
     }
 
@@ -189,10 +179,12 @@ public class IOrderedLayout extends Panel implements Container,
         }
 
         // Reconsider being fixed
-        if ((orientationMode == ORIENTATION_HORIZONTAL && "100%".equals(DOM
-                .getStyleAttribute(margin, "width")))
-                || (orientationMode == ORIENTATION_VERTICAL && "100%"
-                        .equals(DOM.getStyleAttribute(margin, "height")))) {
+        String rootWidth = DOM.getStyleAttribute(root, "width");
+        String rootHeight = DOM.getStyleAttribute(root, "height");
+        if ((orientationMode == ORIENTATION_HORIZONTAL && rootWidth != null && !""
+                .equals(rootWidth))
+                || (orientationMode == ORIENTATION_VERTICAL
+                        && rootHeight != null && !"".equals(rootHeight))) {
             fixedCellSize = true;
             updateFixedSizes();
         }
@@ -341,20 +333,14 @@ public class IOrderedLayout extends Panel implements Container,
         super.setWidth(width);
 
         if (width == null || "".equals(width)) {
-            DOM.setStyleAttribute(margin, "width", "");
-            DOM.setStyleAttribute(margin, "overflowX", "");
+            DOM.setStyleAttribute(root, "overflowX", "");
 
             if (fixedCellSize && orientationMode == ORIENTATION_HORIZONTAL) {
                 removeFixedSizes();
             }
         } else {
 
-            // Calculate margin pixel width
-            int cw = DOM.getElementPropertyInt(root, "offsetWidth");
-            cw -= margins.hasLeft() ? marginLeft : 0;
-            cw -= margins.hasRight() ? marginRight : 0;
-            DOM.setStyleAttribute(margin, "width", cw + "px");
-            DOM.setStyleAttribute(margin, "overflowX", "hidden");
+            DOM.setStyleAttribute(root, "overflowX", "hidden");
 
             if (orientationMode == ORIENTATION_HORIZONTAL) {
                 fixedCellSize = true;
@@ -372,27 +358,28 @@ public class IOrderedLayout extends Panel implements Container,
     public void setHeight(String height) {
         super.setHeight(height);
 
+        // Horizontal Table height must follow root height
+        if (orientationMode == ORIENTATION_HORIZONTAL) {
+            DOM.setStyleAttribute(DOM.getFirstChild(root), "height", height);
+        }
+
         if (height == null || "".equals(height)) {
-            DOM.setStyleAttribute(margin, "height", "");
-            DOM.setStyleAttribute(margin, "overflowY", "");
+            DOM.setStyleAttribute(root, "overflowY", "");
 
             // Removing fixed size is needed only when it is in use
             if (fixedCellSize && orientationMode == ORIENTATION_VERTICAL) {
                 removeFixedSizes();
             }
+
         } else {
 
-            // Calculate margin pixel height
-            int ch = DOM.getElementPropertyInt(root, "offsetHeight");
-            ch -= margins.hasTop() ? marginTop : 0;
-            ch -= margins.hasBottom() ? marginBottom : 0;
-            DOM.setStyleAttribute(margin, "height", ch + "px");
-            DOM.setStyleAttribute(margin, "overflowY", "hidden");
+            DOM.setStyleAttribute(root, "overflowY", "hidden");
 
             // Turn on vertical orientation mode if needed
             if (orientationMode == ORIENTATION_VERTICAL) {
                 fixedCellSize = true;
             }
+
         }
 
         // Update child layouts
@@ -415,11 +402,6 @@ public class IOrderedLayout extends Panel implements Container,
             DOM.setStyleAttribute(we, wh, "");
             DOM.setStyleAttribute(we, "overflow", "");
         }
-
-        // margin
-        DOM.setStyleAttribute(margin,
-                (orientationMode == ORIENTATION_HORIZONTAL) ? "width"
-                        : "height", "");
 
         // Remove unneeded attributes from horizontal layouts table
         if (orientationMode == ORIENTATION_HORIZONTAL) {
@@ -507,30 +489,14 @@ public class IOrderedLayout extends Panel implements Container,
         margins = newMargins;
 
         // Update margin classes
-        DOM.setStyleAttribute(margin, "paddingTop",
-                margins.hasTop() ? marginTop + "px" : "0");
-        DOM.setStyleAttribute(margin, "paddingLeft",
+        DOM.setStyleAttribute(root, "paddingTop", margins.hasTop() ? marginTop
+                + "px" : "0");
+        DOM.setStyleAttribute(root, "paddingLeft",
                 margins.hasLeft() ? marginLeft + "px" : "0");
-        DOM.setStyleAttribute(margin, "paddingBottom",
+        DOM.setStyleAttribute(root, "paddingBottom",
                 margins.hasBottom() ? marginBottom + "px" : "0");
-        DOM.setStyleAttribute(margin, "paddingRight",
+        DOM.setStyleAttribute(root, "paddingRight",
                 margins.hasRight() ? marginRight + "px" : "0");
-
-        // Update calculated height if needed
-        String currentMarginHeight = DOM.getStyleAttribute(margin, "height");
-        if (currentMarginHeight != null && !"".equals(currentMarginHeight)) {
-            int ch = DOM.getElementPropertyInt(root, "offsetHeight");
-            ch -= margins.hasTop() ? marginTop : 0;
-            ch -= margins.hasBottom() ? marginBottom : 0;
-            DOM.setStyleAttribute(margin, "height", ch + "px");
-        }
-        String currentMarginWidth = DOM.getStyleAttribute(margin, "width");
-        if (currentMarginWidth != null && !"".equals(currentMarginWidth)) {
-            int cw = DOM.getElementPropertyInt(root, "offsetWidth");
-            cw -= margins.hasLeft() ? marginLeft : 0;
-            cw -= margins.hasRight() ? marginRight : 0;
-            DOM.setStyleAttribute(margin, "width", cw + "px");
-        }
 
         // Update child layouts
         childLayoutsHaveChanged = true;
@@ -679,6 +645,18 @@ public class IOrderedLayout extends Panel implements Container,
 
             // Set vertical alignment
             // TODO BROKEN #1903
+            if (orientationMode == ORIENTATION_VERTICAL) {
+                if (verticalAlignment == null
+                        || verticalAlignment.equals("top")) {
+                    DOM.setStyleAttribute(getElement(), "display", "block");
+                    DOM.setStyleAttribute(getElement(), "width", "");
+                } else {
+                    DOM
+                            .setStyleAttribute(getElement(), "display",
+                                    "table-cell");
+                    DOM.setStyleAttribute(getElement(), "width", "1000000px");
+                }
+            }
             if (BrowserInfo.get().isIE()) {
                 DOM.setElementAttribute(getElement(), "vAlign",
                         verticalAlignment);
