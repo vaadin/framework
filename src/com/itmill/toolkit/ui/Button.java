@@ -152,7 +152,7 @@ public class Button extends AbstractField {
      * @param variables
      */
     public void changeVariables(Object source, Map variables) {
-    	super.changeVariables(source, variables);
+        super.changeVariables(source, variables);
         if (isReadOnly()) {
             System.err.println("Button: ignoring variable change for"
                     + " read-only component, caption=" + getCaption());
@@ -207,6 +207,15 @@ public class Button extends AbstractField {
             setImmediate(true);
             setValue(new Boolean(false));
         }
+    }
+
+    /**
+     * Get the boolean value of the button state.
+     * 
+     * @return True iff the button is pressed down or checked.
+     */
+    boolean booleanValue() {
+        return ((Boolean) getValue()).booleanValue();
     }
 
     /**
