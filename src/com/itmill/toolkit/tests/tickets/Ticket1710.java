@@ -222,15 +222,19 @@ public class Ticket1710 extends com.itmill.toolkit.Application {
             super(caption);
             setLayout(internalLayout);
             testedLayout = layout;
-            internalLayout.addComponent(controls);
-            internalLayout.addComponent(testedLayout);
+            Panel controlWrapper = new Panel();
+            controlWrapper.addComponent(controls);
+            controlWrapper.setWidth("100%");
+            controlWrapper.setScrollable(true);
+            controlWrapper.setStyleName("controls");
+            internalLayout.addComponent(controlWrapper);
+            Panel testPanel = new Panel(testedLayout);
+            testPanel.setStyleName("testarea");
+            internalLayout.addComponent(testPanel);
             internalLayout.setMargin(true);
             internalLayout.setSpacing(true);
-
-            controls.setWidth(100, OrderedLayout.UNITS_PERCENTAGE);
-            controls.setStyleName("controls");
             controls.setSpacing(true);
-            controls.setMargin(true);
+            controls.setMargin(false);
             controls.addComponent(new Label("width"));
             controls.addComponent(new TextField(new MethodProperty(
                     testedLayout, "width")));
