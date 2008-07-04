@@ -204,15 +204,20 @@ public class IOrderedLayout extends Panel implements Container,
 
         this.client = client;
 
-        updateOrientation(uidl);
+        // Only non-cached UIDL:s can introduce changes
+        if (!uidl.getBooleanAttribute("cached")) {
 
-        // Handle layout margins
-        if (margins.getBitMask() != uidl.getIntAttribute("margins")) {
-            handleMargins(uidl);
+            // Swith between orientation modes if necessary
+            updateOrientation(uidl);
+
+            // Handle layout margins
+            if (margins.getBitMask() != uidl.getIntAttribute("margins")) {
+                handleMargins(uidl);
+            }
+
+            // Handle component spacing later in handleAlignments() method
+            hasComponentSpacing = uidl.getBooleanAttribute("spacing");
         }
-
-        // Handle component spacing later in handleAlignments() method
-        hasComponentSpacing = uidl.getBooleanAttribute("spacing");
 
         // Update sizes, ...
         if (client.updateComponent(this, uidl, false)) {
