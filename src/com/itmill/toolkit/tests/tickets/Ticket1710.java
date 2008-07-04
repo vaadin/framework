@@ -40,17 +40,23 @@ public class Ticket1710 extends com.itmill.toolkit.Application {
         lo.setSpacing(true);
 
         // OrderedLayout
-        OrderedLayout orderedVertical = new OrderedLayout();
-        lo.addComponent(new LayoutTestingPanel("OrderedLayout Vertical",
-                orderedVertical));
-        orderedVertical.setSpacing(true);
-        addFields(orderedVertical);
-        OrderedLayout orderedHorizontal = new OrderedLayout(
-                OrderedLayout.ORIENTATION_HORIZONTAL);
-        lo.addComponent(new LayoutTestingPanel("OrderedLayout Horizontal",
-                orderedHorizontal));
-        orderedHorizontal.setSpacing(true);
-        addFields(orderedHorizontal);
+        final OrderedLayout orderedLayout = new OrderedLayout();
+        LayoutTestingPanel oltp = new LayoutTestingPanel("OrderedLayout",
+                orderedLayout);
+        lo.addComponent(oltp);
+        orderedLayout.setSpacing(false);
+        addFields(orderedLayout);
+        final Button orientationButton = new Button("horizontal orientation",
+                false);
+        orientationButton.addListener(new Property.ValueChangeListener() {
+            public void valueChange(ValueChangeEvent event) {
+                orderedLayout
+                        .setOrientation(orientationButton.booleanValue() ? OrderedLayout.ORIENTATION_HORIZONTAL
+                                : OrderedLayout.ORIENTATION_VERTICAL);
+            }
+        });
+        orientationButton.setImmediate(true);
+        oltp.controls.addComponent(orientationButton);
 
         // GridLayout
         GridLayout grid = new GridLayout(1, 1);
