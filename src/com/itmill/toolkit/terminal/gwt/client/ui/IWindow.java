@@ -431,7 +431,7 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
     }
 
     private void showModalityCurtain() {
-        if (Util.isFF2()) {
+        if (BrowserInfo.get().isFF2()) {
             DOM.setStyleAttribute(modalityCurtain, "height", DOM
                     .getElementPropertyInt(RootPanel.getBodyElement(),
                             "offsetHeight")
@@ -513,7 +513,8 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 
         final Element target = DOM.eventGetTarget(event);
 
-        if (client != null && !DOM.compare(target, header)) {
+        // Handle window caption tooltips
+        if (client != null && DOM.isOrHasChild(header, target)) {
             client.handleTooltipEvent(event, this);
         }
 
