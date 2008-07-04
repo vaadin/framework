@@ -157,14 +157,38 @@ public class IOrderedLayout extends Panel implements Container,
             return;
         }
 
+        // Remove fixed state
+        removeFixedSizes();
+
         orientationMode = newOrientationMode;
 
         createAndEmptyWrappedChildContainer();
 
         // Reinsert all widget wrappers to this container
         for (int i = 0; i < childWidgetWrappers.size(); i++) {
-            DOM.appendChild(wrappedChildContainer,
-                    ((WidgetWrapper) childWidgetWrappers.get(i)).getElement());
+            WidgetWrapper wr = (WidgetWrapper) childWidgetWrappers.get(i);
+            Element oldWrElement = wr.resetRootElement();
+            Element newWrElement = wr.getElement();
+            String oldStyle = DOM.getElementAttribute(oldWrElement, "class");
+            if (oldStyle != null) {
+                DOM.setElementAttribute(newWrElement, "class", oldStyle);
+            }
+            while (DOM.getChildCount(oldWrElement) > 0) {
+                Element c = DOM.getFirstChild(oldWrElement);
+                DOM.removeChild(oldWrElement, c);
+                DOM.appendChild(newWrElement, c);
+            }
+
+            DOM.appendChild(wrappedChildContainer, newWrElement);
+        }
+
+        // Reconsider being fixed
+        if ((orientationMode == ORIENTATION_HORIZONTAL && "100%".equals(DOM
+                .getStyleAttribute(margin, "width")))
+                || (orientationMode == ORIENTATION_VERTICAL && "100%"
+                        .equals(DOM.getStyleAttribute(margin, "height")))) {
+            fixedCellSize = true;
+            updateFixedSizes();
         }
 
         // Update child layouts
@@ -486,18 +510,30 @@ public class IOrderedLayout extends Panel implements Container,
         Element td;
         Caption caption = null;
 
-        /** Created td or div - depending on the orientation of the layout. */
+        /** Set the root element */
         public WidgetWrapper() {
+            resetRootElement();
+        }
+
+        /**
+         * Create td or div - depending on the orientation of the layout and set
+         * it as root.
+         * 
+         * @return Previous root element.
+         */
+        private Element resetRootElement() {
+            Element e = getElement();
             if (orientationMode == ORIENTATION_VERTICAL) {
                 setElement(DOM.createDiv());
                 // Apply 'hasLayout' for IE (needed to get accurate dimension
                 // calculations)
                 if (BrowserInfo.get().isIE()) {
-                    DOM.setStyleAttribute(getElement(), "zoom", "1");
+                    DOM.setStyleAttribute(e, "zoom", "1");
                 }
             } else {
                 setElement(DOM.createTD());
             }
+            return e;
         }
 
         /** Update the caption of the element contained in this wrapper. */

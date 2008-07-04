@@ -218,15 +218,7 @@ public class OrderedLayout extends AbstractLayout implements
 
         this.orientation = orientation;
 
-        // requestRepaint()
-        // FIXME remove lines below and uncomment above
-        // Workaround to bypass IOrderedLayouts limitations (separate classes
-        // for different orientation + subtreecacing)
-        final Iterator it = getComponentIterator();
-        while (it.hasNext()) {
-            final Component c = (Component) it.next();
-            c.requestRepaint();
-        }
+        requestRepaint();
     }
 
     /* Documented in superclass */
