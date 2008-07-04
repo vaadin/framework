@@ -121,7 +121,6 @@ public class IOrderedLayout extends Panel implements Container,
         root = DOM.createDiv();
         margin = DOM.createDiv();
         DOM.appendChild(root, margin);
-        DOM.setStyleAttribute(margin, "overflow", "hidden");
         createAndEmptyWrappedChildContainer();
         setElement(root);
         setStyleName(CLASSNAME);
@@ -137,9 +136,13 @@ public class IOrderedLayout extends Panel implements Container,
             DOM.setInnerHTML(margin, structure);
             wrappedChildContainer = DOM.getFirstChild(DOM.getFirstChild(DOM
                     .getFirstChild(margin)));
+            DOM.setStyleAttribute(root, "display", "table");
+            DOM.setStyleAttribute(margin, "display", "table");
         } else {
             wrappedChildContainer = margin;
             DOM.setInnerHTML(margin, "");
+            DOM.setStyleAttribute(root, "display", "block");
+            DOM.setStyleAttribute(margin, "display", "block");
         }
     }
 
@@ -339,6 +342,7 @@ public class IOrderedLayout extends Panel implements Container,
 
         if (width == null || "".equals(width)) {
             DOM.setStyleAttribute(margin, "width", "");
+            DOM.setStyleAttribute(margin, "overflowX", "");
 
             if (fixedCellSize && orientationMode == ORIENTATION_HORIZONTAL) {
                 removeFixedSizes();
@@ -350,6 +354,7 @@ public class IOrderedLayout extends Panel implements Container,
             cw -= margins.hasLeft() ? marginLeft : 0;
             cw -= margins.hasRight() ? marginRight : 0;
             DOM.setStyleAttribute(margin, "width", cw + "px");
+            DOM.setStyleAttribute(margin, "overflowX", "hidden");
 
             if (orientationMode == ORIENTATION_HORIZONTAL) {
                 fixedCellSize = true;
@@ -369,6 +374,7 @@ public class IOrderedLayout extends Panel implements Container,
 
         if (height == null || "".equals(height)) {
             DOM.setStyleAttribute(margin, "height", "");
+            DOM.setStyleAttribute(margin, "overflowY", "");
 
             // Removing fixed size is needed only when it is in use
             if (fixedCellSize && orientationMode == ORIENTATION_VERTICAL) {
@@ -381,6 +387,7 @@ public class IOrderedLayout extends Panel implements Container,
             ch -= margins.hasTop() ? marginTop : 0;
             ch -= margins.hasBottom() ? marginBottom : 0;
             DOM.setStyleAttribute(margin, "height", ch + "px");
+            DOM.setStyleAttribute(margin, "overflowY", "hidden");
 
             // Turn on vertical orientation mode if needed
             if (orientationMode == ORIENTATION_VERTICAL) {
