@@ -56,4 +56,13 @@ public class MarginInfo {
             bitMask = 0;
         }
     }
+
+    public boolean equals(Object obj) {
+        if (!(obj instanceof MarginInfo)) {
+            return false;
+        }
+
+        return ((MarginInfo) obj).bitMask == bitMask;
+    }
+
 }
