@@ -40,10 +40,10 @@ public class IView extends SimplePanel implements Paintable,
 
     private ShortcutActionHandler actionHandler;
 
-    /** stored width for IE resize optiomization */
+    /** stored width for IE resize optimization */
     private int width;
 
-    /** stored height for IE resize optiomization */
+    /** stored height for IE resize optimization */
     private int height;
 
     /**
