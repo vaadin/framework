@@ -23,8 +23,11 @@ import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.Util;
 
 /**
- * Abstract base class for ordered layouts. Use either vertical or horizontal
- * subclass.
+ * Full implementation of OrderedLayout client peer.
+ * 
+ * This class implements all features of OrderedLayout. It currently only
+ * supports use through UIDL updates. Direct client side use is not (currently)
+ * suported in all operation modes.
  * 
  * @author IT Mill Ltd
  */
@@ -89,6 +92,12 @@ public class IOrderedLayout extends Panel implements Container,
     private MarginInfo margins = new MarginInfo(0);
 
     /**
+     * Flag that indicates that the child layouts must be updated as soon as
+     * possible.
+     */
+    private boolean childLayoutsHaveChanged = false;
+
+    /**
      * Construct the DOM of the orderder layout.
      * 
      * <p>
@@ -131,10 +140,19 @@ public class IOrderedLayout extends Panel implements Container,
         }
     }
 
-    /** Update orientation, if it has changed */
-    private void updateOrientation(int newOrientationMode) {
+    /**
+     * Update orientation, if it has changed.
+     * 
+     * @param newOrientationMode
+     */
+    private void updateOrientation(UIDL uidl) {
 
-        // Only change when needed
+        // Parse new mode from UIDL
+        int newOrientationMode = "horizontal".equals(uidl
+                .getStringAttribute("orientation")) ? ORIENTATION_HORIZONTAL
+                : ORIENTATION_VERTICAL;
+
+        // Only change the mode if when needed
         if (orientationMode == newOrientationMode) {
             return;
         }
@@ -149,7 +167,8 @@ public class IOrderedLayout extends Panel implements Container,
                     ((WidgetWrapper) childWidgetWrappers.get(i)).getElement());
         }
 
-        Util.runDescendentsLayout(this);
+        // Update child layouts
+        childLayoutsHaveChanged = true;
     }
 
     /** Update the contents of the layout from UIDL. */
@@ -157,9 +176,7 @@ public class IOrderedLayout extends Panel implements Container,
 
         this.client = client;
 
-        updateOrientation("horizontal".equals(uidl
-                .getStringAttribute("orientation")) ? ORIENTATION_HORIZONTAL
-                : ORIENTATION_VERTICAL);
+        updateOrientation(uidl);
 
         // Ensure correct implementation
         if (client.updateComponent(this, uidl, false)) {
@@ -257,7 +274,14 @@ public class IOrderedLayout extends Panel implements Container,
         // Handle component alignments
         handleAlignments(uidl);
 
+        // If the layout has fixed width|height, recalculate cell-sizes
         updateFixedSizes();
+
+        // Update child layouts
+        if (childLayoutsHaveChanged) {
+            Util.runDescendentsLayout(this);
+            childLayoutsHaveChanged = false;
+        }
     }
 
     /**
@@ -278,6 +302,9 @@ public class IOrderedLayout extends Panel implements Container,
                 fixedCellSize = true;
             }
         }
+
+        // Update child layouts
+        childLayoutsHaveChanged = true;
     }
 
     /**
@@ -300,6 +327,9 @@ public class IOrderedLayout extends Panel implements Container,
                 fixedCellSize = true;
             }
         }
+
+        // Update child layouts
+        childLayoutsHaveChanged = true;
     }
 
     /** Remove fixed sizes from use */
@@ -389,12 +419,21 @@ public class IOrderedLayout extends Panel implements Container,
 
         fixedCellSize = true;
 
-        Util.runDescendentsLayout(this);
+        // Update child layouts
+        childLayoutsHaveChanged = true;
     }
 
-    /** Enable/disable margic classes for the margin div when needed */
+    /** Enable/disable margins classes for the margin div when needed */
     protected void handleMargins(UIDL uidl) {
-        margins = new MarginInfo(uidl.getIntAttribute("margins"));
+
+        // Only update margins when they have changed
+        MarginInfo newMargins = new MarginInfo(uidl.getIntAttribute("margins"));
+        if (newMargins.equals(margins)) {
+            return;
+        }
+        margins = newMargins;
+
+        // Update margin classes
         setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_TOP,
                 margins.hasTop());
         setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_RIGHT,
@@ -403,10 +442,14 @@ public class IOrderedLayout extends Panel implements Container,
                 margins.hasBottom());
         setStyleName(margin, CLASSNAME + "-" + StyleConstants.MARGIN_LEFT,
                 margins.hasLeft());
+
+        // Update child layouts
+        childLayoutsHaveChanged = true;
     }
 
     /** Parse alignments from UIDL and pass whem to correct widgetwrappers */
     private void handleAlignments(UIDL uidl) {
+
         // Component alignments as a comma separated list.
         // See com.itmill.toolkit.terminal.gwt.client.ui.AlignmentInfo.java for
         // possible values.
@@ -434,7 +477,8 @@ public class IOrderedLayout extends Panel implements Container,
     }
 
     /**
-     * WidgetWrapper classe. Helper classe for spacing and alignment handling.
+     * Cell contained in the orderedlayout. This helper also manages for spacing
+     * and alignment for individual cells handling.
      * 
      */
     class WidgetWrapper extends UIObject {
@@ -442,6 +486,7 @@ public class IOrderedLayout extends Panel implements Container,
         Element td;
         Caption caption = null;
 
+        /** Created td or div - depending on the orientation of the layout. */
         public WidgetWrapper() {
             if (orientationMode == ORIENTATION_VERTICAL) {
                 setElement(DOM.createDiv());
@@ -455,19 +500,31 @@ public class IOrderedLayout extends Panel implements Container,
             }
         }
 
+        /** Update the caption of the element contained in this wrapper. */
         public void updateCaption(UIDL uidl, Paintable paintable) {
+
             final Widget widget = (Widget) paintable;
+
+            // The widget needs caption
             if (Caption.isNeeded(uidl)) {
+
+                // If the caption element is missing, create it
                 boolean justAdded = false;
                 if (caption == null) {
                     justAdded = true;
                     caption = new Caption(paintable, client);
                 }
+
+                // Update caption contents
                 caption.updateCaption(uidl);
+
                 final boolean after = caption.shouldBePlacedAfterComponent();
                 final Element captionElement = caption.getElement();
                 final Element widgetElement = widget.getElement();
+
                 if (justAdded) {
+
+                    // As the caption has just been created, insert it to DOM
                     if (after) {
                         DOM.appendChild(getElement(), captionElement);
                         DOM.setElementAttribute(getElement(), "class",
@@ -479,7 +536,8 @@ public class IOrderedLayout extends Panel implements Container,
                     }
 
                 } else
-                // Swap caption and widget if needed or add
+
+                // Caption exists. Move it to correct position if needed
                 if (after == (DOM.getChildIndex(getElement(), widgetElement) > DOM
                         .getChildIndex(getElement(), captionElement))) {
                     Element firstElement = DOM.getChild(getElement(), DOM
@@ -497,7 +555,12 @@ public class IOrderedLayout extends Panel implements Container,
                     }
                 }
 
-            } else {
+            }
+
+            // Caption is not needed
+            else {
+
+                // Remove existing caption from DOM
                 if (caption != null) {
                     DOM.removeChild(getElement(), caption.getElement());
                     caption = null;
@@ -508,21 +571,13 @@ public class IOrderedLayout extends Panel implements Container,
             }
         }
 
-        Element getContainerElement() {
-            if (td != null) {
-                return td;
-            } else {
-                return getElement();
-            }
-        }
-
         /**
          * Set alignments for this wrapper.
          */
         void setAlignment(String verticalAlignment, String horizontalAlignment) {
 
             // Set vertical alignment
-
+            // TODO BROKEN #1903
             if (BrowserInfo.get().isIE()) {
                 DOM.setElementAttribute(getElement(), "vAlign",
                         verticalAlignment);
@@ -537,11 +592,11 @@ public class IOrderedLayout extends Panel implements Container,
             // for values other than "left" (which is default)
             // build one cell table
             if (!horizontalAlignment.equals("left")) {
-                if (td == null) {
 
-                    // The previous positioning has been left (or unspecified).
-                    // Thus we need to create a one-cell-table to position
-                    // this element.
+                // The previous positioning has been left (or unspecified).
+                // Thus we need to create a one-cell-table to position
+                // this element.
+                if (td == null) {
 
                     // Store and remove the current childs (widget and caption)
                     Element c1 = DOM.getFirstChild(getElement());
@@ -580,13 +635,16 @@ public class IOrderedLayout extends Panel implements Container,
                     }
 
                 }
+
+                // Seth the alignment in td
                 DOM.setElementAttribute(td, "align", horizontalAlignment);
 
-            } else if (td != null) {
+            } else
 
-                // In this case we are requested to position this left
-                // while as it has had some other position in the past.
-                // Thus the one-cell wrapper table must be removed.
+            // In this case we are requested to position this left
+            // while as it has had some other position in the past.
+            // Thus the one-cell wrapper table must be removed.
+            if (td != null) {
 
                 // Move content to main container
                 Element itd = DOM.getFirstChild(DOM.getFirstChild(DOM
@@ -606,6 +664,7 @@ public class IOrderedLayout extends Panel implements Container,
             }
         }
 
+        /** Set class for spacing */
         void setSpacingEnabled(boolean b) {
             setStyleName(
                     getElement(),
