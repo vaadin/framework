@@ -409,6 +409,7 @@ public class IFilterSelect extends Composite implements Paintable, Field,
                             enteredItemValue, immediate);
                 }
             } else if (item != null
+                    && !"".equals(lastFilter)
                     && item.getText().toLowerCase().startsWith(
                             lastFilter.toLowerCase())) {
                 doItemAction(item, true);
