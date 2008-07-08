@@ -7,6 +7,7 @@ package com.itmill.toolkit.tests.book;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
@@ -21,8 +22,10 @@ import com.itmill.toolkit.data.validator.StringLengthValidator;
 import com.itmill.toolkit.terminal.ClassResource;
 import com.itmill.toolkit.terminal.DownloadStream;
 import com.itmill.toolkit.terminal.ExternalResource;
+import com.itmill.toolkit.terminal.ParameterHandler;
 import com.itmill.toolkit.terminal.Sizeable;
 import com.itmill.toolkit.terminal.StreamResource;
+import com.itmill.toolkit.terminal.URIHandler;
 import com.itmill.toolkit.terminal.UserError;
 import com.itmill.toolkit.terminal.gwt.server.WebApplicationContext;
 import com.itmill.toolkit.ui.AbstractSelect;
@@ -68,135 +71,157 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
     StreamResource strres;
     OrderedLayout ol;
     int getwincount = 0;
-
+    
     public void init() {
         setTheme("tests-book");
         
         setMainWindow(main);
+
+        // Demo the use of parameter and URI handlers
+        main.addParameterHandler(new MyParameterHandler());
+        main.addURIHandler(new MyURIHandler());
+        
+        MyDynamicResource myresource = new MyDynamicResource();
+        main.addParameterHandler(myresource);
+        main.addURIHandler(myresource);
+
+        main.addURIHandler(new BookTestURIHandler());
+    }
+    
+    class MyParameterHandler implements ParameterHandler {
+        public void handleParameters(Map parameters) {
+            // Print out the parameters to standard output
+            for (Iterator it = parameters.keySet().iterator(); it.hasNext();) {
+                String key   = (String) it.next();
+                String value = ((String[]) parameters.get(key))[0];
+                System.out.println("Key: "+key+", value: "+value);
+            }
+        }
+    }
+    class MyURIHandler implements URIHandler {
+        public DownloadStream handleURI(URL context, String relativeUri) {
+            System.out.println("Context: "+context.toString()+", relative: "+relativeUri);
+            return null; // Let the Application provide the response
+        }
     }
 
-    public DownloadStream handleURI(URL context, String relativeUri) {
-        // Let default implementation handle requests for
-        // application resources.
-        if (relativeUri.startsWith("APP"))
-            return super.handleURI(context, relativeUri);
-        if (relativeUri.startsWith("win-"))
-            return super.handleURI(context, relativeUri);
-        
-        String example;
-        String param = null;
+    class BookTestURIHandler implements URIHandler {
+        public DownloadStream handleURI(URL context, String relativeUri) {
+            String example;
+            String param = null;
 
-        final int slashPos = relativeUri.indexOf("/");
-        if (slashPos > 0) {
-            example = relativeUri.substring(0, slashPos);
-            param = relativeUri.substring(slashPos + 1);
-        } else {
-            example = relativeUri;
-        }
-
-        /* Remove existing components and windows. */
-        main.removeAllComponents();
-        final Set childwindows = main.getChildWindows();
-        for (final Iterator cwi = childwindows.iterator(); cwi.hasNext();) {
-            final Window child = (Window) cwi.next();
-            main.removeWindow(child);
-        }
-        main.setLayout(new OrderedLayout());
-
-        if (example.equals("index")) {
-            final String examples[] = { "defaultbutton", "label",
-                    "labelcontent", "tree", "embedded", "textfield",
-                    "textfieldvalidation", "datefield", "button",
-                    "select/select", "select/native", "select/optiongroup",
-                    "select/twincol", "filterselect", "validator", "table", "table/select",
-                    "upload", "link", "gridlayout", "orderedlayout",
-                    "formlayout", "form", "form/simple", "form/layout", "panel", "expandlayout", "expandlayout/root", "tabsheet",
-                    "alignment", "alignment/grid", "window", "window/opener",
-                    "window/multiple", "classresource", "usererror",
-                    "progress/window", "progress/thread", "progress",
-                    "customlayout", "spacing", "margin", "clientinfo",
-                    "fillinform/templates"};
-            for (int i = 0; i < examples.length; i++) {
-                main.addComponent(new Label("<a href='" + context.toString() +
-                        examples[i] + "'>" + examples[i] + "</a>",
-                        Label.CONTENT_XHTML));
+            final int slashPos = relativeUri.indexOf("/");
+            if (slashPos > 0) {
+                example = relativeUri.substring(0, slashPos);
+                param = relativeUri.substring(slashPos + 1);
+            } else {
+                example = relativeUri;
             }
+
+            /* Remove existing components and windows. */
+            main.removeAllComponents();
+            final Set childwindows = main.getChildWindows();
+            for (final Iterator cwi = childwindows.iterator(); cwi.hasNext();) {
+                final Window child = (Window) cwi.next();
+                main.removeWindow(child);
+            }
+            main.setLayout(new OrderedLayout());
+
+            if (example.equals("index")) {
+                final String examples[] = { "defaultbutton", "label",
+                        "labelcontent", "tree", "embedded", "textfield",
+                        "textfieldvalidation", "datefield", "button",
+                        "select/select", "select/native", "select/optiongroup",
+                        "select/twincol", "filterselect", "validator", "table", "table/select",
+                        "upload", "link", "gridlayout", "orderedlayout",
+                        "formlayout", "form", "form/simple", "form/layout", "panel", "expandlayout", "expandlayout/root", "tabsheet",
+                        "alignment", "alignment/grid", "window", "window/opener",
+                        "window/multiple", "classresource", "usererror",
+                        "progress/window", "progress/thread", "progress",
+                        "customlayout", "spacing", "margin", "clientinfo",
+                        "fillinform/templates"};
+                for (int i = 0; i < examples.length; i++) {
+                    main.addComponent(new Label("<a href='" + context.toString() +
+                            examples[i] + "'>" + examples[i] + "</a>",
+                            Label.CONTENT_XHTML));
+                }
+                return null;
+            }
+
+            if (example.equals("defaultbutton")) {
+                example_defaultButton(main, param);
+            } else if (example.equals("label")) {
+                example_Label(main, param);
+            } else if (example.equals("labelcontent")) {
+                example_LabelContent(main, param);
+            } else if (example.equals("tree")) {
+                example_Tree(main, param);
+            } else if (example.equals("embedded")) {
+                example_Embedded(main, param);
+            } else if (example.equals("textfield")) {
+                example_TextField(main, param);
+            } else if (example.equals("textfieldvalidation")) {
+                example_TextFieldValidation(main, param);
+            } else if (example.equals("usererror")) {
+                example_UserError(main, param);
+            } else if (example.equals("datefield")) {
+                example_DateField(main, param);
+            } else if (example.equals("button")) {
+                example_Button(main, param);
+            } else if (example.equals("checkbox")) {
+                example_CheckBox(main, param);
+            } else if (example.equals("select")) {
+                example_Select(main, param);
+            } else if (example.equals("filterselect")) {
+                example_FilterSelect(main, param);
+            } else if (example.equals("validator")) {
+                example_Validator(main, param);
+            } else if (example.equals("table")) {
+                example_Table(main, param);
+            } else if (example.equals("upload")) {
+                example_Upload(main, param);
+            } else if (example.equals("link")) {
+                example_Link(main, param);
+            } else if (example.equals("gridlayout")) {
+                example_GridLayout(main, param);
+            } else if (example.equals("orderedlayout")) {
+                example_OrderedLayout(main, param);
+            } else if (example.equals("formlayout")) {
+                example_FormLayout(main, param);
+            } else if (example.equals("form")) {
+                example_Form(main, param);
+            } else if (example.equals("tabsheet")) {
+                example_TabSheet(main, param);
+            } else if (example.equals("panel")) {
+                example_Panel(main, param);
+            } else if (example.equals("expandlayout")) {
+                example_ExpandLayout(main, param);
+            } else if (example.equals("alignment")) {
+                example_Alignment(main, param);
+            } else if (example.equals("window")) {
+                example_Window(main, param);
+            } else if (example.equals("classresource")) {
+                example_ClassResource(main, param);
+            } else if (example.equals("progress")) {
+                example_ProgressIndicator(main, param);
+            } else if (example.equals("customlayout")) {
+                example_CustomLayout(main, param);
+            } else if (example.equals("spacing")) {
+                example_Spacing(main, param);
+            } else if (example.equals("margin")) {
+                example_Margin(main, param);
+            } else if (example.equals("clientinfo")) {
+                example_ClientInfo(main, param);
+            } else if (example.equals("fillinform")) {
+                example_FillInForm(main, param);
+            } else {
+                ; // main.addComponent(new Label("Unknown test '"+example+"'."));
+            }
+
             return null;
         }
-
-        if (example.equals("defaultbutton")) {
-            example_defaultButton(main, param);
-        } else if (example.equals("label")) {
-            example_Label(main, param);
-        } else if (example.equals("labelcontent")) {
-            example_LabelContent(main, param);
-        } else if (example.equals("tree")) {
-            example_Tree(main, param);
-        } else if (example.equals("embedded")) {
-            example_Embedded(main, param);
-        } else if (example.equals("textfield")) {
-            example_TextField(main, param);
-        } else if (example.equals("textfieldvalidation")) {
-            example_TextFieldValidation(main, param);
-        } else if (example.equals("usererror")) {
-            example_UserError(main, param);
-        } else if (example.equals("datefield")) {
-            example_DateField(main, param);
-        } else if (example.equals("button")) {
-            example_Button(main, param);
-        } else if (example.equals("checkbox")) {
-            example_CheckBox(main, param);
-        } else if (example.equals("select")) {
-            example_Select(main, param);
-        } else if (example.equals("filterselect")) {
-            example_FilterSelect(main, param);
-        } else if (example.equals("validator")) {
-            example_Validator(main, param);
-        } else if (example.equals("table")) {
-            example_Table(main, param);
-        } else if (example.equals("upload")) {
-            example_Upload(main, param);
-        } else if (example.equals("link")) {
-            example_Link(main, param);
-        } else if (example.equals("gridlayout")) {
-            example_GridLayout(main, param);
-        } else if (example.equals("orderedlayout")) {
-            example_OrderedLayout(main, param);
-        } else if (example.equals("formlayout")) {
-            example_FormLayout(main, param);
-        } else if (example.equals("form")) {
-            example_Form(main, param);
-        } else if (example.equals("tabsheet")) {
-            example_TabSheet(main, param);
-        } else if (example.equals("panel")) {
-            example_Panel(main, param);
-        } else if (example.equals("expandlayout")) {
-            example_ExpandLayout(main, param);
-        } else if (example.equals("alignment")) {
-            example_Alignment(main, param);
-        } else if (example.equals("window")) {
-            example_Window(main, param);
-        } else if (example.equals("classresource")) {
-            example_ClassResource(main, param);
-        } else if (example.equals("progress")) {
-            example_ProgressIndicator(main, param);
-        } else if (example.equals("customlayout")) {
-            example_CustomLayout(main, param);
-        } else if (example.equals("spacing")) {
-            example_Spacing(main, param);
-        } else if (example.equals("margin")) {
-            example_Margin(main, param);
-        } else if (example.equals("clientinfo")) {
-            example_ClientInfo(main, param);
-        } else if (example.equals("fillinform")) {
-            example_FillInForm(main, param);
-        } else {
-            ; // main.addComponent(new Label("Unknown test '"+example+"'."));
-        }
-
-        return null;
     }
-
+    
     /*
      * public Window getWindow(String name) { Window superwin =
      * super.getWindow(name); if (superwin != null) return superwin;

@@ -110,6 +110,10 @@ public class FormExample2 extends CustomComponent {
         order.add("name");
         order.add("city");
         form.setVisibleItemProperties(order);
+        
+        form.getField("name").setRequired(true);
+        form.getField("name").setRequiredError("You must enter a name.");
+        form.getField("city").setRequired(true);
 
         OrderedLayout root = new OrderedLayout();
         root.setWidth(300, OrderedLayout.UNITS_PIXELS);

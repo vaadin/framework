@@ -186,19 +186,19 @@ public class FormExample extends CustomComponent {
         order.add("city");
         form.setVisibleItemProperties(order);
 
-        // Set required fields.
+        // Set required fields. The required error is displayed in
+        // the error indication are of the Form if a required
+        // field is empty. If it is not set, no error is displayed
+        // about an empty required field.
         form.getField("name").setRequired(true);
         form.getField("name").setRequiredError("Name is missing");
-        form.getField("address").setRequired(true);
-        form.getField("address").setRequiredError("Address is missing");
+        form.getField("address").setRequired(true); // No error message
 
         // Set the form to act immediately on user input. This is
-        // Necessary for the validation to occur immediately when the
-        // input focus changes.
+        // necessary for the validation of the fields to occur immediately when
+        // the input focus changes and not just on commit.
         form.setImmediate(true);
-        form.setValidationVisible(false);
-        form.setRequired(true);
-
+        
         // Set buffering so that commit() must be called for the form
         // before input is written to the data. (Input is not written
         // immediately through).
