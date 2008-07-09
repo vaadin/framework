@@ -20,6 +20,7 @@ public class IProgressIndicator extends Widget implements Paintable {
     private ApplicationConnection client;
     private final Poller poller;
     private boolean indeterminate = false;
+    private boolean pollerSuspendedDueDetach;
 
     public IProgressIndicator() {
         setElement(wrapper);
@@ -62,6 +63,19 @@ public class IProgressIndicator extends Widget implements Paintable {
         if (!uidl.getBooleanAttribute("disabled")) {
             poller.scheduleRepeating(uidl.getIntAttribute("pollinginterval"));
         }
+    }
+
+    protected void onAttach() {
+        super.onAttach();
+        if (pollerSuspendedDueDetach) {
+            poller.run();
+        }
+    }
+
+    protected void onDetach() {
+        super.onDetach();
+        poller.cancel();
+        pollerSuspendedDueDetach = true;
     }
 
     public void setVisible(boolean visible) {
