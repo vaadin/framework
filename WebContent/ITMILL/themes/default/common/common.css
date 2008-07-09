@@ -77,7 +77,7 @@ input.i-modified,
 /**
  * Custom tooltip
  */
- .i-tooltip {
+.i-tooltip {
  	background-color: #fffcdd;
  	border: 1px solid #b8b295;
  	border-top-color: #d5d2c1;
@@ -87,7 +87,7 @@ input.i-modified,
  	font-family: arial, helvetica, tahoma, verdana, sans-serif;
 	color: #5d5444;
 	overflow: auto;
- }
+}
 
 .i-tooltip-text {
 	padding: 2px 4px;
@@ -96,7 +96,7 @@ input.i-modified,
 	border-bottom: 1px solid #fbf8d9;
 }
 
- .i-tooltip .i-errormessage {
+.i-tooltip .i-errormessage {
 	padding: 3px 4px 3px 4px;
 	background: #ffecc6;
 	color: #b74100;
@@ -104,6 +104,19 @@ input.i-modified,
 	border-top: 1px solid #fff3dc;
 	border-bottom: 1px solid #ead7b1;
  }
+
+.i-tooltip .i-errormessage h2 {
+	font-size: 16px;
+	font-weight: normal;
+	color: #ab3101;
+	margin: 2px 0 8px 0;
+}
+
+.i-tooltip .i-errormessage h3 {
+	font-size: 13px;
+	font-weight: bold;
+	margin: 1px 0 4px 0;
+}
 
 /**
  * Context menu styles 
