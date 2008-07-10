@@ -50,6 +50,10 @@ public class IPanel extends SimplePanel implements Paintable,
 
     private Element geckoCaptionMeter;
 
+    private int scrollTop;
+
+    private int scrollLeft;
+
     public IPanel() {
         super();
         DOM.appendChild(getElement(), captionNode);
@@ -66,6 +70,7 @@ public class IPanel extends SimplePanel implements Paintable,
         DOM.setElementProperty(bottomDecoration, "className", CLASSNAME
                 + "-deco");
         DOM.sinkEvents(getElement(), Event.ONKEYDOWN);
+        DOM.sinkEvents(contentNode, Event.ONSCROLL);
     }
 
     protected Element getContainerElement() {
@@ -167,6 +172,18 @@ public class IPanel extends SimplePanel implements Paintable,
                     shortcutHandler.updateActionMap(childUidl);
                 }
             }
+        }
+
+        if (uidl.hasVariable("scrollTop")
+                && uidl.getIntVariable("scrollTop") != scrollTop) {
+            scrollTop = uidl.getIntVariable("scrollTop");
+            DOM.setElementPropertyInt(contentNode, "scrollTop", scrollTop);
+        }
+
+        if (uidl.hasVariable("scrollLeft")
+                && uidl.getIntVariable("scrollLeft") != scrollLeft) {
+            scrollLeft = uidl.getIntVariable("scrollLeft");
+            DOM.setElementPropertyInt(contentNode, "scrollLeft", scrollLeft);
         }
 
     }
@@ -310,7 +327,20 @@ public class IPanel extends SimplePanel implements Paintable,
             shortcutHandler.handleKeyboardEvent(event);
             return;
         }
-        if (errorIndicatorElement != null
+        if (type == Event.ONSCROLL) {
+            int newscrollTop = DOM.getElementPropertyInt(contentNode,
+                    "scrollTop");
+            int newscrollLeft = DOM.getElementPropertyInt(contentNode,
+                    "scrollLeft");
+            if (client != null
+                    && (newscrollLeft != scrollLeft || newscrollTop != scrollTop)) {
+                ApplicationConnection.getConsole().log("scrollded panel");
+                scrollLeft = newscrollLeft;
+                scrollTop = newscrollTop;
+                client.updateVariable(id, "scrollTop", scrollTop, false);
+                client.updateVariable(id, "scrollLeft", scrollLeft, false);
+            }
+        } else if (errorIndicatorElement != null
                 && DOM.compare(target, errorIndicatorElement)) {
             switch (type) {
             case Event.ONMOUSEOVER:
