@@ -4,11 +4,6 @@
 /* Ticket 1710                                                               */
 /*****************************************************************************/
 
-.i-orderedlayout-controls {
-	overflow: auto;
-	white-space : nowrap; 
-}
-
 .i-orderedlayout-tested-layout, .i-gridlayout-tested-layout, .i-expandllayout-tested-layout {
 	background-color: #fff;
 }
@@ -17,7 +12,13 @@
 	background-color: #eee;	
 }
 
+.i-panel-content-testarea {
+	background-color: #f4f4f4;	
+}
 
+
+
+	
 /*****************************************************************************/
 /* Ticket 1857                                                               */
 /*****************************************************************************/
@@ -37,6 +38,18 @@
 .i-orderedlayout-red-background {
 	background: red;
 	}
+	
+/*****************************************************************************/
+/* Ticket 1921                                                               */
+/*****************************************************************************/
+
+.i-orderedlayout-red {
+	background: red;
+}
+
+.i-orderedlayout-blue {
+	background: blue;
+}
 
 /*****************************************************************************/
 /* Ticket 1924                                                               */
@@ -45,4 +58,3 @@
 .i-label-red {
 	background: red;
 }
-	
