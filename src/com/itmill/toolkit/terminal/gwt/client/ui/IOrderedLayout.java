@@ -50,16 +50,16 @@ public class IOrderedLayout extends Panel implements Container,
     protected ApplicationConnection client;
 
     /**
-     * Reference to Element where wrapped childred are contained. Normally a TR
-     * or a TBODY element.
+     * Reference to Element where wrapped childred are contained. Normally a
+     * DIV, TR or a TBODY element.
      */
     private Element wrappedChildContainer;
 
     /**
      * Elements that provides the Layout interface implementation. Root element
-     * of the component. In vertical mode this is the outmost div.
+     * of the component. This is the outmost div or table.
      */
-    private final Element root;
+    private Element root;
 
     /**
      * List of child widgets. This is not the list of wrappers, but the actual
@@ -68,11 +68,18 @@ public class IOrderedLayout extends Panel implements Container,
     private final Vector childWidgets = new Vector();
 
     /**
-     * Fixed cell-size mode is used when height/width is explicitly given for
-     * vertical/horizontal orderedlayout.
+     * In table mode, the root element is table instead of div.
      */
-    private boolean fixedCellSize = false;
+    private boolean tableMode = false;
 
+    /** Last set width of the component. Null if undefined (instead of being ""). */
+    private String width = null;
+
+    /**
+     * Last set height of the component. Null if undefined (instead of being
+     * "").
+     */
+    private String height = null;
     /**
      * List of child widget wrappers. These wrappers are in exact same indexes
      * as the widgets in childWidgets list.
@@ -82,15 +89,12 @@ public class IOrderedLayout extends Panel implements Container,
     /** Whether the component has spacing enabled. */
     private boolean hasComponentSpacing;
 
-    /** Whether the component has spacing enabled. */
-    private int previouslyAppliedFixedSize = -1;
-
     /** Information about margin states. */
     private MarginInfo margins = new MarginInfo(0);
 
     /**
      * Flag that indicates that the child layouts must be updated as soon as
-     * possible.
+     * possible. This will be done in the end of updateFromUIDL.
      */
     private boolean childLayoutsHaveChanged = false;
 
@@ -100,42 +104,20 @@ public class IOrderedLayout extends Panel implements Container,
      * <p>
      * There are two modes - vertical and horizontal.
      * <ul>
-     * <li>Vertical mode uses structure: div-root ( div-margin-childcontainer (
-     * div-wrap ( child ) div-wrap ( child )))).</li>
-     * <li>Horizontal mode uses structure: div-root ( div-margin ( table (
-     * tbody ( tr-childcontainer ( td-wrap ( child ) td-wrap ( child) )) )</li>
+     * <li>Vertical mode uses structure: div-root ( div-wrap ( child ) div-wrap (
+     * child ))).</li>
+     * <li>Horizontal mode uses structure: table ( tbody ( tr-childcontainer (
+     * td-wrap ( child ) td-wrap ( child) )) )</li>
      * </ul>
-     * where root, margin and childcontainer refer to the root element, margin
-     * element and the element that contain WidgetWrappers.
+     * where root and childcontainer refer to the root element and the element
+     * that contain WidgetWrappers.
      * </p>
      * 
      */
     public IOrderedLayout() {
-
-        root = DOM.createDiv();
-        createAndEmptyWrappedChildContainer();
+        wrappedChildContainer = root = DOM.createDiv();
         setElement(root);
         setStyleName(CLASSNAME);
-    }
-
-    /**
-     * Constuct base DOM-scrtucture and clean any already attached
-     * widgetwrappers from DOM.
-     */
-    private void createAndEmptyWrappedChildContainer() {
-        if (orientationMode == ORIENTATION_HORIZONTAL) {
-            final String structure = "<table cellspacing=\"0\" cellpadding=\"0\"><tbody><tr></tr></tbody></table>";
-            DOM.setInnerHTML(root, structure);
-            wrappedChildContainer = DOM.getFirstChild(DOM.getFirstChild(DOM
-                    .getFirstChild(root)));
-            if (!BrowserInfo.get().isIE()) {
-                DOM.setStyleAttribute(root, "display", "table");
-            }
-        } else {
-            wrappedChildContainer = root;
-            DOM.setInnerHTML(root, "");
-            DOM.setStyleAttribute(root, "display", "block");
-        }
     }
 
     /**
@@ -143,52 +125,56 @@ public class IOrderedLayout extends Panel implements Container,
      * 
      * @param newOrientationMode
      */
-    private void updateOrientation(UIDL uidl) {
+    private void rebuildRootDomStructure(boolean forceUpdate) {
 
-        // Parse new mode from UIDL
-        int newOrientationMode = "horizontal".equals(uidl
-                .getStringAttribute("orientation")) ? ORIENTATION_HORIZONTAL
-                : ORIENTATION_VERTICAL;
+        // Should we have table as a root element?
+        boolean newTableMode = !(orientationMode == ORIENTATION_VERTICAL && width != null);
 
-        // Only change the mode if when needed
-        if (orientationMode == newOrientationMode) {
+        // Already in correct mode?
+        if (!forceUpdate && newTableMode == tableMode) {
             return;
         }
+        tableMode = newTableMode;
 
-        // Remove fixed state
-        removeFixedSizes();
+        // Constuct base DOM-structure and clean any already attached
+        // widgetwrappers from DOM.
+        if (tableMode) {
+            Element tmp = DOM.createDiv();
+            final String structure = "<table cellspacing=\"0\" cellpadding=\"0\"><tbody><tr></tr></tbody></table>";
+            DOM.setInnerHTML(tmp, structure);
+            root = DOM.getFirstChild(tmp);
+            DOM.removeChild(tmp, root);
+            wrappedChildContainer = DOM.getFirstChild(DOM.getFirstChild(root));
+        } else {
+            wrappedChildContainer = root = DOM.createDiv();
+        }
 
-        orientationMode = newOrientationMode;
+        // Restore component size
+        if (width != null && !"".equals(width)) {
+            DOM.setStyleAttribute(root, "width", width);
+        }
+        if (height != null && !"".equals(height)) {
+            DOM.setStyleAttribute(root, "height", height);
+        }
 
-        createAndEmptyWrappedChildContainer();
+        // Reset widget main element
+        String styles = getStyleName();
+        setElement(root);
+        setStyleName(styles);
 
         // Reinsert all widget wrappers to this container
         for (int i = 0; i < childWidgetWrappers.size(); i++) {
             WidgetWrapper wr = (WidgetWrapper) childWidgetWrappers.get(i);
-            Element oldWrElement = wr.resetRootElement();
-            Element newWrElement = wr.getElement();
-            String oldStyle = DOM.getElementAttribute(oldWrElement, "class");
-            if (oldStyle != null) {
-                DOM.setElementAttribute(newWrElement, "class", oldStyle);
-            }
+            Element oldWrElement = wr.getWrappingElement();
+            wr.resetRootElement();
+            Element newWrElement = wr.getWrappingElement();
             while (DOM.getChildCount(oldWrElement) > 0) {
                 Element c = DOM.getFirstChild(oldWrElement);
                 DOM.removeChild(oldWrElement, c);
                 DOM.appendChild(newWrElement, c);
             }
 
-            DOM.appendChild(wrappedChildContainer, newWrElement);
-        }
-
-        // Reconsider being fixed
-        String rootWidth = DOM.getStyleAttribute(root, "width");
-        String rootHeight = DOM.getStyleAttribute(root, "height");
-        if ((orientationMode == ORIENTATION_HORIZONTAL && rootWidth != null && !""
-                .equals(rootWidth))
-                || (orientationMode == ORIENTATION_VERTICAL
-                        && rootHeight != null && !"".equals(rootHeight))) {
-            fixedCellSize = true;
-            updateFixedSizes();
+            DOM.appendChild(wrappedChildContainer, wr.getElement());
         }
 
         // Update child layouts
@@ -201,26 +187,26 @@ public class IOrderedLayout extends Panel implements Container,
         this.client = client;
 
         // Only non-cached UIDL:s can introduce changes
-        if (!uidl.getBooleanAttribute("cached")) {
-
-            updateMarginAndSpacingSizesFromCSS(uidl);
-
-            // Swith between orientation modes if necessary
-            updateOrientation(uidl);
-
-            // Handle layout margins
-            if (margins.getBitMask() != uidl.getIntAttribute("margins")) {
-                handleMargins(uidl);
-            }
-
-            // Handle component spacing later in handleAlignments() method
-            hasComponentSpacing = uidl.getBooleanAttribute("spacing");
+        if (uidl.getBooleanAttribute("cached")) {
+            return;
         }
+
+        updateMarginAndSpacingSizesFromCSS(uidl);
 
         // Update sizes, ...
         if (client.updateComponent(this, uidl, false)) {
             return;
         }
+
+        // Rebuild DOM tree root if necessary
+        int oldO = orientationMode;
+        orientationMode = "horizontal".equals(uidl
+                .getStringAttribute("orientation")) ? ORIENTATION_HORIZONTAL
+                : ORIENTATION_VERTICAL;
+        rebuildRootDomStructure(oldO != orientationMode);
+
+        // Handle component spacing later in handleAlignments() method
+        hasComponentSpacing = uidl.getBooleanAttribute("spacing");
 
         // Collect the list of contained widgets after this update
         final Vector newWidgets = new Vector();
@@ -243,6 +229,8 @@ public class IOrderedLayout extends Panel implements Container,
         // List to collect all now painted widgets to in order to remove
         // unpainted ones later
         final Vector paintedWidgets = new Vector();
+
+        final Vector childsToPaint = new Vector();
 
         // Add any new widgets to the ordered layout
         Widget oldChild = null;
@@ -287,7 +275,7 @@ public class IOrderedLayout extends Panel implements Container,
             }
 
             // Update the child component
-            ((Paintable) newChild).updateFromUIDL(newChildUIDL, client);
+            childsToPaint.add(new Object[] { newChild, newChildUIDL });
 
             // Add this newly handled component to the list of painted
             // components
@@ -303,12 +291,22 @@ public class IOrderedLayout extends Panel implements Container,
         }
 
         // Handle component alignments
-        handleAlignments(uidl);
+        handleAlignmentsSpacingAndMargins(uidl);
 
-        // If the layout has fixed width|height, recalculate cell-sizes
-        updateFixedSizes();
+        // Reset sizes for the children
+        // TODO These might be optimized by combining these methods
+        updateChildHeights();
+        updateChildWidths();
+
+        // Paint children
+        for (int i = 0; i < childsToPaint.size(); i++) {
+            Object[] t = (Object[]) childsToPaint.get(i);
+            ((Paintable) t[0]).updateFromUIDL((UIDL) t[1], client);
+        }
 
         // Update child layouts
+        // TODO This is most probably unnedessary and should be done within
+        // update Child H/W
         if (childLayoutsHaveChanged) {
             Util.runDescendentsLayout(this);
             childLayoutsHaveChanged = false;
@@ -331,22 +329,16 @@ public class IOrderedLayout extends Panel implements Container,
      * While setting width, ensure that margin div is also resized properly.
      * Furthermore, enable/disable fixed mode
      */
-    public void setWidth(String width) {
-        super.setWidth(width);
+    public void setWidth(String newWidth) {
 
-        if (width == null || "".equals(width)) {
-            DOM.setStyleAttribute(root, "overflowX", "");
+        width = newWidth == null || "".equals(newWidth) ? null : newWidth;
 
-            if (fixedCellSize && orientationMode == ORIENTATION_HORIZONTAL) {
-                removeFixedSizes();
-            }
+        // When we use divs at root - for them using 100% width should be
+        // calculated with ""
+        if (!tableMode && "100%".equals(newWidth)) {
+            super.setWidth("");
         } else {
-
-            DOM.setStyleAttribute(root, "overflowX", "hidden");
-
-            if (orientationMode == ORIENTATION_HORIZONTAL) {
-                fixedCellSize = true;
-            }
+            super.setWidth(newWidth);
         }
 
         // Update child layouts
@@ -357,155 +349,128 @@ public class IOrderedLayout extends Panel implements Container,
      * While setting height, ensure that margin div is also resized properly.
      * Furthermore, enable/disable fixed mode
      */
-    public void setHeight(String height) {
-        super.setHeight(height);
-
-        // Horizontal Table height must follow root height
-        if (orientationMode == ORIENTATION_HORIZONTAL) {
-            DOM.setStyleAttribute(DOM.getFirstChild(root), "height", height);
-        }
-
-        if (height == null || "".equals(height)) {
-            DOM.setStyleAttribute(root, "overflowY", "");
-
-            // Removing fixed size is needed only when it is in use
-            if (fixedCellSize && orientationMode == ORIENTATION_VERTICAL) {
-                removeFixedSizes();
-            }
-
-        } else {
-
-            DOM.setStyleAttribute(root, "overflowY", "hidden");
-
-            // Turn on vertical orientation mode if needed
-            if (orientationMode == ORIENTATION_VERTICAL) {
-                fixedCellSize = true;
-            }
-
-        }
+    public void setHeight(String newHeight) {
+        super.setHeight(newHeight);
+        height = newHeight == null || "".equals(newHeight) ? null : newHeight;
 
         // Update child layouts
         childLayoutsHaveChanged = true;
     }
 
-    /** Remove fixed sizes from use */
-    private void removeFixedSizes() {
+    /** Recalculate and apply child heights */
+    private void updateChildHeights() {
 
-        // If already removed, do not do it twice
-        if (!fixedCellSize) {
-            return;
-        }
+        // Vertical layout is calculated by us
+        if (height != null) {
 
-        // Remove unneeded attributes from each wrapper
-        String wh = (orientationMode == ORIENTATION_HORIZONTAL) ? "width"
-                : "height";
-        for (Iterator i = childWidgetWrappers.iterator(); i.hasNext();) {
-            Element we = ((WidgetWrapper) i.next()).getElement();
-            DOM.setStyleAttribute(we, wh, "");
-            DOM.setStyleAttribute(we, "overflow", "");
-        }
+            // Calculate the space for fixed contents minus marginals
+            int size;
+            if (tableMode) {
+                size = rootOffsetMeasure("offsetHeight");
+            } else {
+                size = DOM.getElementPropertyInt(root, "offsetHeight");
+            }
 
-        // Remove unneeded attributes from horizontal layouts table
-        if (orientationMode == ORIENTATION_HORIZONTAL) {
-            Element table = DOM.getParent(DOM.getParent(wrappedChildContainer));
-            DOM.setStyleAttribute(table, "tableLayout", "auto");
-            DOM.setStyleAttribute(table, "width", "");
-        }
-
-        fixedCellSize = false;
-        previouslyAppliedFixedSize = -1;
-
-    }
-
-    /** Reset the fixed cell-sizes for children. */
-    private void updateFixedSizes() {
-
-        // Do not do anything if we really should not be doing this
-        if (!fixedCellSize) {
-            return;
-        }
-
-        // Calculate the space for fixed contents minus marginals
-        int size = DOM.getElementPropertyInt(root,
-                (orientationMode == ORIENTATION_HORIZONTAL) ? "offsetWidth"
-                        : "offsetHeight");
-        if (orientationMode == ORIENTATION_HORIZONTAL) {
-            size -= margins.hasLeft() ? marginLeft : 0;
-            size -= margins.hasRight() ? marginRight : 0;
-        } else {
             size -= margins.hasTop() ? marginTop : 0;
             size -= margins.hasBottom() ? marginBottom : 0;
-        }
 
-        // Horizontal layouts need fixed mode tables
-        if (orientationMode == ORIENTATION_HORIZONTAL) {
-            Element table = DOM.getParent(DOM.getParent(wrappedChildContainer));
-            DOM.setStyleAttribute(table, "tableLayout", "fixed");
-            DOM.setStyleAttribute(table, "width", "" + size + "px");
-        }
+            // Reduce spacing from the size
+            int numChild = childWidgets.size();
+            if (hasComponentSpacing) {
+                size -= ((orientationMode == ORIENTATION_HORIZONTAL) ? hSpacing
+                        : vSpacing)
+                        * (numChild - 1);
+            }
 
-        // Reduce spacing from the size
-        int numChild = childWidgets.size();
-        if (hasComponentSpacing) {
-            size -= ((orientationMode == ORIENTATION_HORIZONTAL) ? hSpacing
-                    : vSpacing)
-                    * (numChild - 1);
-        }
-
-        // Have we set fixed sizes before?
-        boolean firstTime = (previouslyAppliedFixedSize < 0);
-
-        // If so, are they already correct?
-        if (size == previouslyAppliedFixedSize) {
-            return;
-        }
-        previouslyAppliedFixedSize = size;
-
-        // Set the sizes for each child
-        String wh = (orientationMode == ORIENTATION_HORIZONTAL) ? "width"
-                : "height";
-        for (Iterator i = childWidgetWrappers.iterator(); i.hasNext();) {
-            Element we = ((WidgetWrapper) i.next()).getElement();
-            final int ws = Math.round(((float) size) / (numChild--));
-            size -= ws;
-            DOM.setStyleAttribute(we, wh, "" + ws + "px");
-            if (firstTime) {
-                DOM.setStyleAttribute(we, "overflow", "hidden");
+            // Set the sizes for each child
+            if (orientationMode == ORIENTATION_HORIZONTAL) {
+                for (Iterator i = childWidgetWrappers.iterator(); i.hasNext();) {
+                    ((WidgetWrapper) i.next()).forceHeight(size);
+                }
+            } else {
+                for (Iterator i = childWidgetWrappers.iterator(); i.hasNext();) {
+                    final int ws = Math.round(((float) size) / (numChild--));
+                    size -= ws;
+                    ((WidgetWrapper) i.next()).forceHeight(ws);
+                }
             }
         }
 
-        fixedCellSize = true;
-
-        // Update child layouts
-        childLayoutsHaveChanged = true;
+        // Vertically layout is calculated by the browsers
+        else {
+            for (Iterator i = childWidgetWrappers.iterator(); i.hasNext();) {
+                ((WidgetWrapper) i.next()).forceHeight(-1);
+            }
+        }
     }
 
-    /** Enable/disable margins classes for the margin div when needed */
-    protected void handleMargins(UIDL uidl) {
+    /**
+     * Measure how much space the root element could get.
+     * 
+     * This measures the space allocated by the parent for the root element
+     * without letting root element to affect the calculation.
+     * 
+     * @param offset
+     *                offsetWidth or offsetHeight
+     */
+    private int rootOffsetMeasure(String offset) {
+        Element measure = DOM.createDiv();
+        DOM.setStyleAttribute(measure, "height", "100%");
+        Element parent = DOM.getParent(root);
+        DOM.insertBefore(parent, measure, getElement());
+        DOM.removeChild(parent, root);
+        int size = DOM.getElementPropertyInt(measure, offset);
+        DOM.insertBefore(parent, root, measure);
+        DOM.removeChild(parent, measure);
+        return size;
+    }
 
-        // Only update margins when they have changed
-        MarginInfo newMargins = new MarginInfo(uidl.getIntAttribute("margins"));
-        if (newMargins.equals(margins)) {
-            return;
+    /** Recalculate and apply child widths */
+    private void updateChildWidths() {
+        // Horizontal layout is calculated by us
+        if (width != null && orientationMode == ORIENTATION_HORIZONTAL) {
+
+            // Calculate the space for fixed contents minus marginals
+            int size = rootOffsetMeasure("offsetWidth");
+
+            size -= margins.hasLeft() ? marginLeft : 0;
+            size -= margins.hasRight() ? marginRight : 0;
+
+            // Reduce spacing from the size
+            int numChild = childWidgets.size();
+            if (hasComponentSpacing) {
+                size -= hSpacing * (numChild - 1);
+            }
+
+            // Set the sizes for each child
+            if (orientationMode == ORIENTATION_HORIZONTAL) {
+                for (Iterator i = childWidgetWrappers.iterator(); i.hasNext();) {
+                    final int ws = Math.round(((float) size) / (numChild--));
+                    size -= ws;
+                    ((WidgetWrapper) i.next()).forceWidth(ws);
+                }
+            } else {
+                for (Iterator i = childWidgetWrappers.iterator(); i.hasNext();) {
+                    ((WidgetWrapper) i.next()).forceWidth(size);
+                }
+            }
         }
-        margins = newMargins;
 
-        // Update margin classes
-        DOM.setStyleAttribute(root, "paddingTop", margins.hasTop() ? marginTop
-                + "px" : "0");
-        DOM.setStyleAttribute(root, "paddingLeft",
-                margins.hasLeft() ? marginLeft + "px" : "0");
-        DOM.setStyleAttribute(root, "paddingBottom",
-                margins.hasBottom() ? marginBottom + "px" : "0");
-        DOM.setStyleAttribute(root, "paddingRight",
-                margins.hasRight() ? marginRight + "px" : "0");
+        // Horizontal layout is calculated by the browsers
+        else {
+            for (Iterator i = childWidgetWrappers.iterator(); i.hasNext();) {
+                ((WidgetWrapper) i.next()).forceWidth(-1);
+            }
+        }
 
-        // Update child layouts
-        childLayoutsHaveChanged = true;
     }
 
     /** Parse alignments from UIDL and pass whem to correct widgetwrappers */
-    private void handleAlignments(UIDL uidl) {
+    private void handleAlignmentsSpacingAndMargins(UIDL uidl) {
+
+        // Only update margins when they have changed
+        // TODO this should be optimized to avoid reupdating these
+        margins = new MarginInfo(uidl.getIntAttribute("margins"));
 
         // Component alignments as a comma separated list.
         // See com.itmill.toolkit.terminal.gwt.client.ui.AlignmentInfo.java for
@@ -527,9 +492,9 @@ public class IOrderedLayout extends Panel implements Container,
             wr.setAlignment(ai.getVerticalAlignment(), ai
                     .getHorizontalAlignment());
 
-            // Handle spacing in this loop as well
-            wr.setSpacingEnabled(alignmentIndex == 1 ? false
-                    : hasComponentSpacing);
+            // Handle spacing and margins in this loop as well
+            wr.setSpacingAndMargins(alignmentIndex == 1,
+                    alignmentIndex == alignments.length);
         }
     }
 
@@ -541,7 +506,10 @@ public class IOrderedLayout extends Panel implements Container,
     class WidgetWrapper extends UIObject {
 
         Element td;
+        Element clipperDiv;
         Caption caption = null;
+        int lastForcedPixelHeight = -1;
+        int lastForcedPixelWidth = -1;
 
         /** Set the root element */
         public WidgetWrapper() {
@@ -549,24 +517,135 @@ public class IOrderedLayout extends Panel implements Container,
         }
 
         /**
-         * Create td or div - depending on the orientation of the layout and set
-         * it as root.
+         * Set the height given for the wrapped widget in pixels.
+         * 
+         * -1 if unconstrained.
+         */
+        public void forceHeight(int pixelHeight) {
+
+            // If we are already at the correct size, do nothing
+            if (lastForcedPixelHeight == pixelHeight) {
+                return;
+            }
+
+            // Clipper DIV is needed?
+            if (tableMode) {
+                if (pixelHeight >= 0) {
+                    if (clipperDiv == null) {
+                        createClipperDiv();
+                    }
+                }
+                // Needed to remove unnecessary clipper DIV
+                else if (clipperDiv != null && lastForcedPixelWidth < 0) {
+                    removeClipperDiv();
+                }
+            }
+            Element e = clipperDiv != null ? clipperDiv : getWrappingElement();
+
+            // Overflow
+            DOM.setStyleAttribute(e, "overflowY", pixelHeight < 0 ? ""
+                    : "hidden");
+
+            // Set height
+            DOM.setStyleAttribute(e, "height",
+                    pixelHeight < 0 ? (e == clipperDiv || !tableMode ? "100%"
+                            : "") : pixelHeight + "px");
+
+            lastForcedPixelHeight = pixelHeight;
+        }
+
+        /**
+         * Set the width given for the wrapped widget in pixels.
+         * 
+         * -1 if unconstrained.
+         */
+        public void forceWidth(int pixelWidth) {
+
+            // If we are already at the correct size, do nothing
+            if (lastForcedPixelWidth == pixelWidth) {
+                return;
+            }
+
+            // Clipper DIV needed
+            if (tableMode) {
+                if (pixelWidth >= 0) {
+                    if (clipperDiv == null) {
+                        createClipperDiv();
+                    }
+                }
+                // Needed to remove unnecessary clipper DIV
+                else if (clipperDiv != null && lastForcedPixelHeight < 0) {
+                    removeClipperDiv();
+                }
+            }
+            Element e = clipperDiv != null ? clipperDiv : getWrappingElement();
+
+            // Overflow
+            DOM.setStyleAttribute(e, "overflowX", pixelWidth < 0 ? ""
+                    : "hidden");
+
+            // Set width
+            DOM.setStyleAttribute(e, "width", pixelWidth < 0 ? "" : pixelWidth
+                    + "px");
+
+            lastForcedPixelWidth = pixelWidth;
+        }
+
+        /** Create a DIV inside TD for clipping child */
+        private void createClipperDiv() {
+            clipperDiv = DOM.createDiv();
+            final Element e = getWrappingElement();
+            while (DOM.getChildCount(e) > 0) {
+                final Element c = DOM.getFirstChild(e);
+                DOM.removeChild(e, c);
+                DOM.appendChild(clipperDiv, c);
+            }
+            DOM.appendChild(e, clipperDiv);
+        }
+
+        /** Undo createClipperDiv() */
+        private void removeClipperDiv() {
+            final Element e = getWrappingElement();
+            while (DOM.getChildCount(clipperDiv) > 0) {
+                final Element c = DOM.getFirstChild(clipperDiv);
+                DOM.removeChild(clipperDiv, c);
+                DOM.appendChild(e, c);
+            }
+            DOM.removeChild(e, clipperDiv);
+            clipperDiv = null;
+        }
+
+        /** Get the element containing the caption and the wrapped widget. */
+        private Element getWrappingElement() {
+            if (!tableMode || orientationMode == ORIENTATION_HORIZONTAL) {
+                return getElement();
+            }
+            return DOM.getFirstChild(getElement());
+        }
+
+        /**
+         * Create tr, td or div - depending on the orientation of the layout and
+         * set it as root.
          * 
          * @return Previous root element.
          */
-        private Element resetRootElement() {
-            Element e = getElement();
-            if (orientationMode == ORIENTATION_VERTICAL) {
+        private void resetRootElement() {
+            if (tableMode) {
+                if (orientationMode == ORIENTATION_HORIZONTAL) {
+                    setElement(DOM.createTD());
+                } else {
+                    Element tr = DOM.createTR();
+                    DOM.appendChild(tr, DOM.createTD());
+                    setElement(tr);
+                }
+            } else {
                 setElement(DOM.createDiv());
                 // Apply 'hasLayout' for IE (needed to get accurate dimension
                 // calculations)
                 if (BrowserInfo.get().isIE()) {
                     DOM.setStyleAttribute(getElement(), "zoom", "1");
                 }
-            } else {
-                setElement(DOM.createTD());
             }
-            return e;
         }
 
         /** Update the caption of the element contained in this wrapper. */
@@ -595,25 +674,30 @@ public class IOrderedLayout extends Panel implements Container,
 
                     // As the caption has just been created, insert it to DOM
                     if (after) {
-                        DOM.appendChild(getElement(), captionElement);
-                        DOM.setElementAttribute(getElement(), "class",
+                        DOM.appendChild(getWrappingElement(), captionElement);
+                        DOM.setElementAttribute(getWrappingElement(), "class",
                                 "i-orderedlayout-w");
                         caption.addStyleName("i-orderedlayout-c");
                         widget.addStyleName("i-orderedlayout-w-e");
                     } else {
-                        DOM.insertChild(getElement(), captionElement, 0);
+                        DOM
+                                .insertChild(getWrappingElement(),
+                                        captionElement, 0);
                     }
 
                 } else
 
                 // Caption exists. Move it to correct position if needed
-                if (after == (DOM.getChildIndex(getElement(), widgetElement) > DOM
-                        .getChildIndex(getElement(), captionElement))) {
-                    Element firstElement = DOM.getChild(getElement(), DOM
-                            .getChildCount(getElement()) - 2);
-                    DOM.removeChild(getElement(), firstElement);
-                    DOM.appendChild(getElement(), firstElement);
-                    DOM.setElementAttribute(getElement(), "class",
+                if (after == (DOM.getChildIndex(getWrappingElement(),
+                        widgetElement) > DOM.getChildIndex(
+                        getWrappingElement(), captionElement))) {
+                    Element firstElement = DOM.getChild(getWrappingElement(),
+                            DOM.getChildCount(getWrappingElement()) - 2);
+                    if (firstElement != null) {
+                        DOM.removeChild(getWrappingElement(), firstElement);
+                        DOM.appendChild(getWrappingElement(), firstElement);
+                    }
+                    DOM.setElementAttribute(getWrappingElement(), "class",
                             after ? "i-orderedlayout-w" : "");
                     if (after) {
                         caption.addStyleName("i-orderedlayout-c");
@@ -631,9 +715,9 @@ public class IOrderedLayout extends Panel implements Container,
 
                 // Remove existing caption from DOM
                 if (caption != null) {
-                    DOM.removeChild(getElement(), caption.getElement());
+                    DOM.removeChild(getWrappingElement(), caption.getElement());
                     caption = null;
-                    DOM.setElementAttribute(getElement(), "class", "");
+                    DOM.setElementAttribute(getWrappingElement(), "class", "");
                     widget.removeStyleName("i-orderedlayout-w-e");
                     caption.removeStyleName("i-orderedlayout-w-c");
                 }
@@ -647,22 +731,25 @@ public class IOrderedLayout extends Panel implements Container,
 
             // Set vertical alignment
             if (BrowserInfo.get().isIE()) {
-                DOM.setElementAttribute(getElement(), "vAlign",
+                DOM.setElementAttribute(getWrappingElement(), "vAlign",
                         verticalAlignment);
             } else {
                 if (orientationMode == ORIENTATION_VERTICAL) {
                     if (verticalAlignment == null
                             || verticalAlignment.equals("top")) {
-                        DOM.setStyleAttribute(getElement(), "display", "block");
-                        DOM.setStyleAttribute(getElement(), "width", "");
+                        DOM.setStyleAttribute(getWrappingElement(), "display",
+                                "block");
+                        DOM
+                                .setStyleAttribute(getWrappingElement(),
+                                        "width", "");
                     } else {
-                        DOM.setStyleAttribute(getElement(), "display",
+                        DOM.setStyleAttribute(getWrappingElement(), "display",
                                 "table-cell");
-                        DOM.setStyleAttribute(getElement(), "width",
+                        DOM.setStyleAttribute(getWrappingElement(), "width",
                                 "1000000px");
                     }
                 }
-                DOM.setStyleAttribute(getElement(), "verticalAlign",
+                DOM.setStyleAttribute(getWrappingElement(), "verticalAlign",
                         verticalAlignment);
             }
 
@@ -679,27 +766,32 @@ public class IOrderedLayout extends Panel implements Container,
                 if (td == null) {
 
                     // Store and remove the current childs (widget and caption)
-                    Element c1 = DOM.getFirstChild(getElement());
-                    DOM.removeChild(getElement(), c1);
-                    Element c2 = DOM.getFirstChild(getElement());
+                    Element c1 = DOM.getFirstChild(getWrappingElement());
+                    if (c1 != null) {
+                        DOM.removeChild(getWrappingElement(), c1);
+                    }
+                    Element c2 = DOM.getFirstChild(getWrappingElement());
                     if (c2 != null) {
-                        DOM.removeChild(getElement(), c2);
+                        DOM.removeChild(getWrappingElement(), c2);
                     }
 
                     // Construct table structure to align children
                     final String t = "<table cellpadding='0' cellspacing='0' width='100%'><tbody><tr><td>"
                             + "<table cellpadding='0' cellspacing='0' ><tbody><tr><td align='left'>"
                             + "</td></tr></tbody></table></td></tr></tbody></table>";
-                    DOM.setInnerHTML(getElement(), t);
+                    DOM.setInnerHTML(getWrappingElement(), t);
                     td = DOM.getFirstChild(DOM.getFirstChild(DOM
-                            .getFirstChild(DOM.getFirstChild(getElement()))));
+                            .getFirstChild(DOM
+                                    .getFirstChild(getWrappingElement()))));
                     Element itd = DOM.getFirstChild(DOM.getFirstChild(DOM
                             .getFirstChild(DOM.getFirstChild(td))));
 
                     // Restore children inside the
-                    DOM.appendChild(itd, c1);
-                    if (c2 != null) {
-                        DOM.appendChild(itd, c2);
+                    if (c1 != null) {
+                        DOM.appendChild(itd, c1);
+                        if (c2 != null) {
+                            DOM.appendChild(itd, c2);
+                        }
                     }
 
                 } else {
@@ -733,25 +825,48 @@ public class IOrderedLayout extends Panel implements Container,
                     Element content = DOM.getFirstChild(itd);
                     if (content != null) {
                         DOM.removeChild(itd, content);
-                        DOM.appendChild(getElement(), content);
+                        DOM.appendChild(getWrappingElement(), content);
                     }
                 }
 
                 // Remove unneeded table element
-                DOM.removeChild(getElement(), DOM.getFirstChild(getElement()));
+                DOM.removeChild(getWrappingElement(), DOM
+                        .getFirstChild(getWrappingElement()));
 
                 td = null;
             }
         }
 
         /** Set class for spacing */
-        void setSpacingEnabled(boolean b) {
-            DOM.setStyleAttribute(getElement(),
-                    orientationMode == ORIENTATION_HORIZONTAL ? "paddingLeft"
-                            : "marginTop",
-                    b ? (orientationMode == ORIENTATION_HORIZONTAL ? hSpacing
-                            : vSpacing)
-                            + "px" : "0");
+        void setSpacingAndMargins(boolean first, boolean last) {
+
+            if (orientationMode == ORIENTATION_HORIZONTAL) {
+                DOM
+                        .setStyleAttribute(getWrappingElement(), "paddingLeft",
+                                first ? (margins.hasLeft() ? marginLeft + "px"
+                                        : "0")
+                                        : (hasComponentSpacing ? hSpacing
+                                                + "px" : "0"));
+                DOM.setStyleAttribute(getWrappingElement(), "paddingRight",
+                        last ? (margins.hasRight() ? marginRight + "px" : "0")
+                                : "");
+                DOM.setStyleAttribute(getWrappingElement(), "paddingTop",
+                        margins.hasTop() ? marginTop + "px" : "");
+                DOM.setStyleAttribute(getWrappingElement(), "paddingBottom",
+                        margins.hasBottom() ? marginBottom + "px" : "");
+            } else {
+                DOM.setStyleAttribute(getWrappingElement(), "paddingLeft",
+                        margins.hasLeft() ? marginLeft + "px" : "0");
+                DOM.setStyleAttribute(getWrappingElement(), "paddingRight",
+                        margins.hasRight() ? marginRight + "px" : "0");
+                DOM
+                        .setStyleAttribute(getWrappingElement(), "paddingTop",
+                                first ? (margins.hasTop() ? marginTop + "px"
+                                        : "") : (hasComponentSpacing ? vSpacing
+                                        + "px" : "0"));
+                DOM.setStyleAttribute(getWrappingElement(), "paddingBottom",
+                        last && margins.hasBottom() ? marginBottom + "px" : "");
+            }
         }
     }
 
@@ -832,7 +947,7 @@ public class IOrderedLayout extends Panel implements Container,
         childWidgetWrappers.insertElementAt(wrapper, atIndex);
         DOM.insertChild(wrappedChildContainer, wrapper.getElement(), atIndex
                 + nonWidgetChildElements);
-        DOM.appendChild(wrapper.getElement(), child.getElement());
+        DOM.appendChild(wrapper.getWrappingElement(), child.getElement());
 
         /*
          * <b>Adopt:</b> Call {@link #adopt(Widget)} to finalize the add as the
@@ -910,7 +1025,9 @@ public class IOrderedLayout extends Panel implements Container,
 
     /* documented at super */
     public void iLayout() {
-        updateFixedSizes();
+        updateChildHeights();
+        updateChildWidths();
         Util.runDescendentsLayout(this);
+        childLayoutsHaveChanged = false;
     }
 }

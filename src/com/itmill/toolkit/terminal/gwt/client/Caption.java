@@ -113,9 +113,7 @@ public class Caption extends HTML {
             isEmpty = false;
             if (errorIndicatorElement == null) {
                 errorIndicatorElement = DOM.createDiv();
-                if (Util.isIE()) {
-                    DOM.setInnerHTML(errorIndicatorElement, "&nbsp;");
-                }
+                DOM.setInnerHTML(errorIndicatorElement, "&nbsp;");
                 DOM.setElementProperty(errorIndicatorElement, "className",
                         "i-errorindicator");
                 DOM.appendChild(getElement(), errorIndicatorElement);

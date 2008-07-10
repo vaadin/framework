@@ -68,6 +68,8 @@ public class OrderedLayout extends AbstractLayout implements
      */
     public OrderedLayout() {
         orientation = ORIENTATION_VERTICAL;
+        setWidth(100);
+        setWidthUnits(UNITS_PERCENTAGE);
     }
 
     /**
@@ -79,6 +81,10 @@ public class OrderedLayout extends AbstractLayout implements
      */
     public OrderedLayout(int orientation) {
         this.orientation = orientation;
+        if (orientation == ORIENTATION_VERTICAL) {
+            setWidth(100);
+            setWidthUnits(UNITS_PERCENTAGE);
+        }
     }
 
     /**
