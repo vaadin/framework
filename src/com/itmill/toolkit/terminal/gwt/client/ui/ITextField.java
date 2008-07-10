@@ -12,9 +12,11 @@ import com.google.gwt.user.client.ui.FocusListener;
 import com.google.gwt.user.client.ui.TextBoxBase;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
+import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.Tooltip;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
+import com.itmill.toolkit.terminal.gwt.client.Util;
 
 /**
  * This class represents a basic text input field with one row.
@@ -23,7 +25,7 @@ import com.itmill.toolkit.terminal.gwt.client.UIDL;
  * 
  */
 public class ITextField extends TextBoxBase implements Paintable, Field,
-        ChangeListener, FocusListener {
+        ChangeListener, FocusListener, ContainerResizedListener {
 
     /**
      * The input node CSS classname.
@@ -39,6 +41,10 @@ public class ITextField extends TextBoxBase implements Paintable, Field,
     protected ApplicationConnection client;
 
     private boolean immediate = false;
+    private float proportionalHeight = -1;
+    private float proportionalWidth = -1;
+    private int extraHorizontalPixels = -1;
+    private int extraVerticalPixels = -1;
 
     public ITextField() {
         this(DOM.createInputText());
@@ -117,5 +123,81 @@ public class ITextField extends TextBoxBase implements Paintable, Field,
     	}
     } catch (e) {}
     }-*/;
+
+    public void setHeight(String height) {
+        if (height != null && height.indexOf("%") > 0) {
+            // special handling for proportional height
+            proportionalHeight = Float.parseFloat(height.substring(0, height
+                    .indexOf("%"))) / 100;
+            iLayout();
+        } else {
+            super.setHeight(height);
+            proportionalHeight = -1;
+        }
+    }
+
+    public void setWidth(String width) {
+        if (width != null && width.indexOf("%") > 0) {
+            // special handling for proportional w
+            proportionalWidth = Float.parseFloat(width.substring(0, width
+                    .indexOf("%"))) / 100;
+            iLayout();
+        } else {
+            super.setHeight(width);
+            proportionalWidth = -1;
+        }
+    }
+
+    public void iLayout() {
+        if (proportionalWidth >= 0) {
+            int availPixels = (int) (DOM.getElementPropertyInt(DOM
+                    .getParent(getElement()), "clientWidth") * proportionalWidth);
+            availPixels -= getExtraHorizontalPixels();
+            super.setWidth(availPixels + "px");
+        }
+        if (proportionalHeight >= 0) {
+            int availPixels = (int) (DOM.getElementPropertyInt(DOM
+                    .getParent(getElement()), "clientHeight") * proportionalHeight);
+            availPixels -= getExtraVerticalPixels();
+            super.setHeight(availPixels + "px");
+        }
+    }
+
+    /**
+     * @return space used by components paddings and borders
+     */
+    private int getExtraHorizontalPixels() {
+        if (extraHorizontalPixels < 0) {
+            detectExtraSizes();
+        }
+        return extraHorizontalPixels;
+    }
+
+    /**
+     * @return space used by components paddings and borders
+     */
+    private int getExtraVerticalPixels() {
+        if (extraVerticalPixels < 0) {
+            detectExtraSizes();
+        }
+        return extraVerticalPixels;
+    }
+
+    /**
+     * Detects space used by components paddings and borders. Used when
+     * relational size are used.
+     */
+    private void detectExtraSizes() {
+        Element clone = Util.cloneNode(getElement(), false);
+        DOM.setElementAttribute(clone, "id", "");
+        DOM.setStyleAttribute(clone, "visibility", "hidden");
+        DOM.setStyleAttribute(clone, "position", "absolute");
+        DOM.setStyleAttribute(clone, "width", "0");
+        DOM.setStyleAttribute(clone, "height", "0");
+        DOM.appendChild(DOM.getParent(getElement()), clone);
+        extraHorizontalPixels = DOM.getElementPropertyInt(clone, "offsetWidth");
+        extraVerticalPixels = DOM.getElementPropertyInt(clone, "offsetHeight");
+        DOM.removeChild(DOM.getParent(getElement()), clone);
+    }
 
 }

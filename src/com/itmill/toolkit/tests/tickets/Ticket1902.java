@@ -35,7 +35,7 @@ public class Ticket1902 extends Application {
                 }));
 
         // 100% wide component
-        Button b2 = new Button("100% wide button");
+        TextField b2 = new TextField("100% wide field");
         mainLayout.addComponent(b2);
         b2.setWidth("100%");
 
@@ -57,7 +57,7 @@ public class Ticket1902 extends Application {
         OrderedLayout lo2 = new OrderedLayout();
         lo2.setStyleName("red-background");
         mainLayout.addComponent(lo2);
-        lo2.setWidth(400);
+        lo2.setWidth("50%");
         lo2.setHeight(200);
 
         Button b3 = new Button("100% wide button");
@@ -67,5 +67,13 @@ public class Ticket1902 extends Application {
         TextField tf2 = new TextField("100% wide textfield");
         lo2.addComponent(tf2);
         tf2.setWidth("100%");
+        // tf2 = new TextField("50% wide, 100% height textfield"); // does not
+        // work with caption (10.7.2008 mac hosted mode) due layouts are broken
+        // in trunk
+        tf2 = new TextField();
+        tf2.setRows(2); // trigger textArea impl.
+        tf2.setHeight("100%");
+        tf2.setWidth("50%");
+        lo2.addComponent(tf2);
     }
 }
