@@ -101,12 +101,26 @@ public class IView extends SimplePanel implements Paintable,
         return theme;
     }
 
+    /**
+     * Used to reload host page on theme changes.
+     */
+    private static native void reloadHostPage()
+    /*-{
+         $wnd.location.reload(); 
+     }-*/;
+
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 
         id = uidl.getId();
 
-        // Some attributes to note
-        theme = uidl.getStringAttribute("theme");
+        String newTheme = uidl.getStringAttribute("theme");
+        if (theme != null && !newTheme.equals(theme)) {
+            // Complete page refresh is needed due css can affect layout
+            // calculations etc
+            reloadHostPage();
+        } else {
+            theme = newTheme;
+        }
         if (uidl.hasAttribute("style")) {
             addStyleName(uidl.getStringAttribute("style"));
         }
