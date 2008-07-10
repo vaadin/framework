@@ -209,7 +209,7 @@ public class Ticket1710 extends com.itmill.toolkit.Application {
     public class LayoutTestingPanel extends Panel {
 
         Layout testedLayout;
-        OrderedLayout internalLayout = new OrderedLayout();
+
         OrderedLayout controls = new OrderedLayout(
                 OrderedLayout.ORIENTATION_HORIZONTAL);
         Button marginLeft = new Button("m-left", false);
@@ -217,9 +217,11 @@ public class Ticket1710 extends com.itmill.toolkit.Application {
         Button marginTop = new Button("m-top", false);
         Button marginBottom = new Button("m-bottom", false);
         Button spacing = new Button("spacing", false);
+        OrderedLayout testPanelLayout = new OrderedLayout();
 
         LayoutTestingPanel(String caption, Layout layout) {
             super(caption);
+            OrderedLayout internalLayout = new OrderedLayout();
             setLayout(internalLayout);
             testedLayout = layout;
             Panel controlWrapper = new Panel();
@@ -228,8 +230,9 @@ public class Ticket1710 extends com.itmill.toolkit.Application {
             controlWrapper.setScrollable(true);
             controlWrapper.setStyleName("controls");
             internalLayout.addComponent(controlWrapper);
-            Panel testPanel = new Panel(testedLayout);
+            Panel testPanel = new Panel(testPanelLayout);
             testPanel.setStyleName("testarea");
+            testPanelLayout.addComponent(testedLayout);
             internalLayout.addComponent(testPanel);
             internalLayout.setMargin(true);
             internalLayout.setSpacing(true);
@@ -353,7 +356,7 @@ public class Ticket1710 extends com.itmill.toolkit.Application {
 
             lAlign.addListener(new Property.ValueChangeListener() {
                 public void valueChange(ValueChangeEvent event) {
-                    internalLayout.setComponentAlignment(testedLayout,
+                    testPanelLayout.setComponentAlignment(testedLayout,
                             ((Integer) lAlign.getValue()).intValue(),
                             OrderedLayout.ALIGNMENT_TOP);
                 }
