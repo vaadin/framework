@@ -134,6 +134,7 @@ public class IOrderedLayout extends Panel implements Container,
         if (oldOrientationMode == orientationMode && newTableMode == tableMode) {
             return;
         }
+        boolean oldTableMode = tableMode;
         tableMode = newTableMode;
 
         // Constuct base DOM-structure and clean any already attached
@@ -175,10 +176,16 @@ public class IOrderedLayout extends Panel implements Container,
         for (int i = 0; i < childWidgetWrappers.size(); i++) {
             WidgetWrapper wr = (WidgetWrapper) childWidgetWrappers.get(i);
             orientationMode = oldOrientationMode;
+            tableMode = oldTableMode;
             Element oldWrElement = wr.getElementWrappingWidgetAndCaption();
             orientationMode = currentOrientationMode;
+            tableMode = newTableMode;
+            String classe = DOM.getElementAttribute(oldWrElement, "class");
             wr.resetRootElement();
             Element newWrElement = wr.getElementWrappingWidgetAndCaption();
+            if (classe != null && classe.length() > 0) {
+                DOM.setElementAttribute(newWrElement, "class", classe);
+            }
             while (DOM.getChildCount(oldWrElement) > 0) {
                 Element c = DOM.getFirstChild(oldWrElement);
                 DOM.removeChild(oldWrElement, c);
@@ -305,9 +312,7 @@ public class IOrderedLayout extends Panel implements Container,
         handleAlignmentsSpacingAndMargins(uidl);
 
         // Reset sizes for the children
-        // TODO These might be optimized by combining these methods
-        updateChildHeights();
-        updateChildWidths();
+        updateChildSizes();
 
         // Paint children
         for (int i = 0; i < childsToPaint.size(); i++) {
@@ -368,71 +373,124 @@ public class IOrderedLayout extends Panel implements Container,
         childLayoutsHaveChanged = true;
     }
 
-    /** Recalculate and apply child heights */
-    private void updateChildHeights() {
+    /** Recalculate and apply the space given for each child in this layout. */
+    private void updateChildSizes() {
+
+        int numChild = childWidgets.size();
+        int childHeightTotal = -1;
+        int childHeightDivisor = 1;
+        int childWidthTotal = -1;
+        int childWidthDivisor = 1;
 
         // Vertical layout is calculated by us
         if (height != null) {
 
             // Calculate the space for fixed contents minus marginals
-            int size;
             if (tableMode) {
 
                 // If we know explicitly set pixel-size, use that
                 if (height != null && height.endsWith("px")) {
                     try {
-                        size = Integer.parseInt(height.substring(0, height
-                                .length() - 2));
+                        childHeightTotal = Integer.parseInt(height.substring(0,
+                                height.length() - 2));
 
                         // For negative sizes, use measurements
-                        if (size < 0) {
-                            size = rootOffsetMeasure("offsetHeight");
+                        if (childHeightTotal < 0) {
+                            childHeightTotal = rootOffsetMeasure("offsetHeight");
                         }
                     } catch (NumberFormatException e) {
 
                         // In case of invalid number, try to measure the size;
-                        size = rootOffsetMeasure("offsetHeight");
+                        childHeightTotal = rootOffsetMeasure("offsetHeight");
                     }
                 }
                 // If not, try to measure the size
                 else {
-                    size = rootOffsetMeasure("offsetHeight");
+                    childHeightTotal = rootOffsetMeasure("offsetHeight");
                 }
 
             } else {
-                size = DOM.getElementPropertyInt(root, "offsetHeight");
+                childHeightTotal = DOM.getElementPropertyInt(root,
+                        "offsetHeight");
             }
 
-            size -= margins.hasTop() ? marginTop : 0;
-            size -= margins.hasBottom() ? marginBottom : 0;
+            childHeightTotal -= margins.hasTop() ? marginTop : 0;
+            childHeightTotal -= margins.hasBottom() ? marginBottom : 0;
 
             // Reduce spacing from the size
-            int numChild = childWidgets.size();
             if (hasComponentSpacing) {
-                size -= ((orientationMode == ORIENTATION_HORIZONTAL) ? hSpacing
+                childHeightTotal -= ((orientationMode == ORIENTATION_HORIZONTAL) ? hSpacing
                         : vSpacing)
                         * (numChild - 1);
             }
 
-            // Set the sizes for each child
-            if (orientationMode == ORIENTATION_HORIZONTAL) {
-                for (Iterator i = childWidgetWrappers.iterator(); i.hasNext();) {
-                    ((WidgetWrapper) i.next()).forceHeight(size);
-                }
-            } else {
-                for (Iterator i = childWidgetWrappers.iterator(); i.hasNext();) {
-                    final int ws = Math.round(((float) size) / (numChild--));
-                    size -= ws;
-                    ((WidgetWrapper) i.next()).forceHeight(ws);
-                }
+            // Total space is divided among the children
+            if (orientationMode == ORIENTATION_VERTICAL) {
+                childHeightDivisor = numChild;
             }
         }
 
-        // Vertically layout is calculated by the browsers
-        else {
-            for (Iterator i = childWidgetWrappers.iterator(); i.hasNext();) {
-                ((WidgetWrapper) i.next()).forceHeight(-1);
+        // layout is calculated by us
+        if (width != null) {
+
+            // Calculate the space for fixed contents minus marginals
+            // If we know explicitly set pixel-size, use that
+            if (width != null && width.endsWith("px")) {
+                try {
+                    childWidthTotal = Integer.parseInt(width.substring(0, width
+                            .length() - 2));
+
+                    // For negative sizes, use measurements
+                    if (childWidthTotal < 0) {
+                        childWidthTotal = rootOffsetMeasure("offsetWidth");
+                    }
+
+                } catch (NumberFormatException e) {
+
+                    // In case of invalid number, try to measure the size;
+                    childWidthTotal = rootOffsetMeasure("offsetWidth");
+                }
             }
+            // If not, try to measure the size
+            else {
+                childWidthTotal = rootOffsetMeasure("offsetWidth");
+            }
+
+            childWidthTotal -= margins.hasLeft() ? marginLeft : 0;
+            childWidthTotal -= margins.hasRight() ? marginRight : 0;
+
+            // Reduce spacing from the size
+            if (hasComponentSpacing
+                    && orientationMode == ORIENTATION_HORIZONTAL) {
+                childWidthTotal -= hSpacing * (numChild - 1);
+            }
+
+            // Total space is divided among the children
+            if (orientationMode == ORIENTATION_HORIZONTAL) {
+                childWidthDivisor = numChild;
+            }
+        }
+
+        // Set the sizes for each child
+        for (Iterator i = childWidgetWrappers.iterator(); i.hasNext();) {
+            int w, h;
+            if (childHeightDivisor > 1) {
+                h = Math.round(((float) childHeightTotal)
+                        / (childHeightDivisor--));
+                childHeightTotal -= h;
+            } else {
+                h = childHeightTotal;
+            }
+            if (childWidthDivisor > 1) {
+                w = Math.round(((float) childWidthTotal)
+                        / (childWidthDivisor--));
+                childWidthTotal -= h;
+            } else {
+                w = childWidthTotal;
+            }
+            WidgetWrapper ww = (WidgetWrapper) i.next();
+            // TODO COMBINE THESE
+            ww.forceSize(w, h);
         }
     }
 
@@ -457,68 +515,6 @@ public class IOrderedLayout extends Panel implements Container,
         // In case the no space would be given for this element
         // without pushing, use the current side of the root
         return size;
-    }
-
-    /** Recalculate and apply child widths */
-    private void updateChildWidths() {
-        // layout is calculated by us
-        if (width != null) {
-
-            // Calculate the space for fixed contents minus marginals
-            int size;
-            // If we know explicitly set pixel-size, use that
-            if (width != null && width.endsWith("px")) {
-                try {
-                    size = Integer.parseInt(width.substring(0,
-                            width.length() - 2));
-
-                    // For negative sizes, use measurements
-                    if (size < 0) {
-                        size = rootOffsetMeasure("offsetWidth");
-                    }
-
-                } catch (NumberFormatException e) {
-
-                    // In case of invalid number, try to measure the size;
-                    size = rootOffsetMeasure("offsetWidth");
-                }
-            }
-            // If not, try to measure the size
-            else {
-                size = rootOffsetMeasure("offsetWidth");
-            }
-
-            size -= margins.hasLeft() ? marginLeft : 0;
-            size -= margins.hasRight() ? marginRight : 0;
-
-            // Reduce spacing from the size
-            int numChild = childWidgets.size();
-            if (hasComponentSpacing
-                    && orientationMode == ORIENTATION_HORIZONTAL) {
-                size -= hSpacing * (numChild - 1);
-            }
-
-            // Set the sizes for each child
-            if (orientationMode == ORIENTATION_HORIZONTAL) {
-                for (Iterator i = childWidgetWrappers.iterator(); i.hasNext();) {
-                    final int ws = Math.round(((float) size) / (numChild--));
-                    size -= ws;
-                    ((WidgetWrapper) i.next()).forceWidth(ws);
-                }
-            } else {
-                for (Iterator i = childWidgetWrappers.iterator(); i.hasNext();) {
-                    ((WidgetWrapper) i.next()).forceWidth(size);
-                }
-            }
-        }
-
-        // Layout is calculated by the browsers
-        else {
-            for (Iterator i = childWidgetWrappers.iterator(); i.hasNext();) {
-                ((WidgetWrapper) i.next()).forceWidth(-1);
-            }
-        }
-
     }
 
     /** Parse alignments from UIDL and pass whem to correct widgetwrappers */
@@ -599,90 +595,64 @@ public class IOrderedLayout extends Panel implements Container,
         }
 
         /**
-         * Set the height given for the wrapped widget in pixels.
+         * Set the width and height given for the wrapped widget in pixels.
          * 
          * -1 if unconstrained.
          */
-        public void forceHeight(int pixelHeight) {
+        public void forceSize(int pixelWidth, int pixelHeight) {
 
             // If we are already at the correct size, do nothing
-            if (lastForcedPixelHeight == pixelHeight) {
+            if (lastForcedPixelHeight == pixelHeight
+                    && lastForcedPixelWidth == pixelWidth) {
                 return;
             }
 
             // Clipper DIV is needed?
-            if (tableMode) {
-                if (pixelHeight >= 0) {
-                    if (clipperDiv == null) {
-                        createClipperDiv();
-                    }
-                }
-                // Needed to remove unnecessary clipper DIV
-                else if (clipperDiv != null && lastForcedPixelWidth < 0) {
-                    removeClipperDiv();
+            if (tableMode && (pixelHeight >= 0 || pixelWidth >= 0)) {
+                if (clipperDiv == null) {
+                    createClipperDiv();
                 }
             }
-            Element e = clipperDiv != null ? clipperDiv
-                    : getElementWrappingAlignmentStructures();
 
-            // Overflow
-            DOM.setStyleAttribute(e, "overflowY", pixelHeight < 0 ? ""
-                    : "hidden");
-
-            // Set height
-            DOM.setStyleAttribute(e, "height",
-                    pixelHeight < 0 ? (e == clipperDiv || !tableMode ? "100%"
-                            : "") : pixelHeight + "px");
-
-            lastForcedPixelHeight = pixelHeight;
-        }
-
-        /**
-         * Set the width given for the wrapped widget in pixels.
-         * 
-         * -1 if unconstrained.
-         */
-        public void forceWidth(int pixelWidth) {
-
-            // If we are already at the correct size, do nothing
-            if (lastForcedPixelWidth == pixelWidth) {
-                return;
+            // ClipperDiv is not needed, remove if necessary
+            else if (clipperDiv != null) {
+                removeClipperDiv();
             }
 
-            // Clipper DIV needed
-            if (tableMode) {
-                if (pixelWidth >= 0) {
-                    if (clipperDiv == null) {
-                        createClipperDiv();
-                    }
-                }
-                // Needed to remove unnecessary clipper DIV
-                else if (clipperDiv != null && lastForcedPixelHeight < 0) {
-                    removeClipperDiv();
-                }
-            }
             Element e = clipperDiv != null ? clipperDiv
                     : getElementWrappingAlignmentStructures();
 
             // Overflow
             DOM.setStyleAttribute(e, "overflowX", pixelWidth < 0 ? ""
                     : "hidden");
+            DOM.setStyleAttribute(e, "overflowY", pixelHeight < 0 ? ""
+                    : "hidden");
 
-            // Set width
+            // Set size
             DOM.setStyleAttribute(e, "width", pixelWidth < 0 ? "" : pixelWidth
                     + "px");
+            DOM.setStyleAttribute(e, "height",
+                    pixelHeight < 0 ? (e == clipperDiv || !tableMode ? "100%"
+                            : "") : pixelHeight + "px");
 
+            // Set cached values
             lastForcedPixelWidth = pixelWidth;
+            lastForcedPixelHeight = pixelHeight;
         }
 
         /** Create a DIV for clipping the child */
         private void createClipperDiv() {
             clipperDiv = DOM.createDiv();
             final Element e = getElementWrappingClipperDiv();
+            String classe = DOM.getElementAttribute(e, "class");
             while (DOM.getChildCount(e) > 0) {
                 final Element c = DOM.getFirstChild(e);
                 DOM.removeChild(e, c);
                 DOM.appendChild(clipperDiv, c);
+            }
+            if (classe != null && classe.length() > 0) {
+                DOM.removeElementAttribute(e, "class");
+                DOM.setElementAttribute(clipperDiv, "class", classe);
             }
             DOM.appendChild(e, clipperDiv);
         }
@@ -690,6 +660,7 @@ public class IOrderedLayout extends Panel implements Container,
         /** Undo createClipperDiv() */
         private void removeClipperDiv() {
             final Element e = getElementWrappingClipperDiv();
+            String classe = DOM.getElementAttribute(clipperDiv, "class");
             while (DOM.getChildCount(clipperDiv) > 0) {
                 final Element c = DOM.getFirstChild(clipperDiv);
                 DOM.removeChild(clipperDiv, c);
@@ -697,6 +668,9 @@ public class IOrderedLayout extends Panel implements Container,
             }
             DOM.removeChild(e, clipperDiv);
             clipperDiv = null;
+            if (classe != null && classe.length() > 0) {
+                DOM.setElementAttribute(e, "class", classe);
+            }
         }
 
         /**
@@ -1170,8 +1144,7 @@ public class IOrderedLayout extends Panel implements Container,
 
     /* documented at super */
     public void iLayout() {
-        updateChildHeights();
-        updateChildWidths();
+        updateChildSizes();
         Util.runDescendentsLayout(this);
         childLayoutsHaveChanged = false;
     }
