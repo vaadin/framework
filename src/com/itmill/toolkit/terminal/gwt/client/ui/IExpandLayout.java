@@ -713,7 +713,7 @@ public class IExpandLayout extends ComplexPanel implements
                     client);
         }
 
-        // workaround for safari bug #1869
+        // workaround for safari bug #1870
         float wkv = BrowserInfo.get().getWebkitVersion();
         if (wkv > 0 && wkv < 526.9) {
             DeferredCommand.addCommand(new Command() {
