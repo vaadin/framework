@@ -125,13 +125,13 @@ public class IOrderedLayout extends Panel implements Container,
      * 
      * @param newOrientationMode
      */
-    private void rebuildRootDomStructure(boolean forceUpdate) {
+    private void rebuildRootDomStructure(int oldOrientationMode) {
 
         // Should we have table as a root element?
         boolean newTableMode = !(orientationMode == ORIENTATION_VERTICAL && width != null);
 
         // Already in correct mode?
-        if (!forceUpdate && newTableMode == tableMode) {
+        if (oldOrientationMode == orientationMode && newTableMode == tableMode) {
             return;
         }
         tableMode = newTableMode;
@@ -140,11 +140,19 @@ public class IOrderedLayout extends Panel implements Container,
         // widgetwrappers from DOM.
         if (tableMode) {
             Element tmp = DOM.createDiv();
-            final String structure = "<table cellspacing=\"0\" cellpadding=\"0\"><tbody><tr></tr></tbody></table>";
+            final String structure = "<table cellspacing=\"0\" cellpadding=\"0\"><tbody>"
+                    + (orientationMode == ORIENTATION_HORIZONTAL ? "<tr></tr>"
+                            : "") + "</tbody></table>";
             DOM.setInnerHTML(tmp, structure);
             root = DOM.getFirstChild(tmp);
             DOM.removeChild(tmp, root);
-            wrappedChildContainer = DOM.getFirstChild(DOM.getFirstChild(root));
+            // set TBODY to be the wrappedChildContainer
+            wrappedChildContainer = DOM.getFirstChild(root);
+            // In case of horizontal layouts, we must user TR instead of TBODY
+            if (orientationMode == ORIENTATION_HORIZONTAL) {
+                wrappedChildContainer = DOM
+                        .getFirstChild(wrappedChildContainer);
+            }
         } else {
             wrappedChildContainer = root = DOM.createDiv();
         }
@@ -163,11 +171,14 @@ public class IOrderedLayout extends Panel implements Container,
         setStyleName(styles);
 
         // Reinsert all widget wrappers to this container
+        final int currentOrientationMode = orientationMode;
         for (int i = 0; i < childWidgetWrappers.size(); i++) {
             WidgetWrapper wr = (WidgetWrapper) childWidgetWrappers.get(i);
-            Element oldWrElement = wr.getWrappingElement();
+            orientationMode = oldOrientationMode;
+            Element oldWrElement = wr.getElementWrappingWidgetAndCaption();
+            orientationMode = currentOrientationMode;
             wr.resetRootElement();
-            Element newWrElement = wr.getWrappingElement();
+            Element newWrElement = wr.getElementWrappingWidgetAndCaption();
             while (DOM.getChildCount(oldWrElement) > 0) {
                 Element c = DOM.getFirstChild(oldWrElement);
                 DOM.removeChild(oldWrElement, c);
@@ -203,7 +214,7 @@ public class IOrderedLayout extends Panel implements Container,
         orientationMode = "horizontal".equals(uidl
                 .getStringAttribute("orientation")) ? ORIENTATION_HORIZONTAL
                 : ORIENTATION_VERTICAL;
-        rebuildRootDomStructure(oldO != orientationMode);
+        rebuildRootDomStructure(oldO);
 
         // Handle component spacing later in handleAlignments() method
         hasComponentSpacing = uidl.getBooleanAttribute("spacing");
@@ -305,7 +316,7 @@ public class IOrderedLayout extends Panel implements Container,
         }
 
         // Update child layouts
-        // TODO This is most probably unnedessary and should be done within
+        // TODO This is most probably unnecessary and should be done within
         // update Child H/W
         if (childLayoutsHaveChanged) {
             Util.runDescendentsLayout(this);
@@ -366,7 +377,28 @@ public class IOrderedLayout extends Panel implements Container,
             // Calculate the space for fixed contents minus marginals
             int size;
             if (tableMode) {
-                size = rootOffsetMeasure("offsetHeight");
+
+                // If we know explicitly set pixel-size, use that
+                if (height != null && height.endsWith("px")) {
+                    try {
+                        size = Integer.parseInt(height.substring(0, height
+                                .length() - 2));
+
+                        // For negative sizes, use measurements
+                        if (size < 0) {
+                            size = rootOffsetMeasure("offsetHeight");
+                        }
+                    } catch (NumberFormatException e) {
+
+                        // In case of invalid number, try to measure the size;
+                        size = rootOffsetMeasure("offsetHeight");
+                    }
+                }
+                // If not, try to measure the size
+                else {
+                    size = rootOffsetMeasure("offsetHeight");
+                }
+
             } else {
                 size = DOM.getElementPropertyInt(root, "offsetHeight");
             }
@@ -417,11 +449,13 @@ public class IOrderedLayout extends Panel implements Container,
         Element measure = DOM.createDiv();
         DOM.setStyleAttribute(measure, "height", "100%");
         Element parent = DOM.getParent(root);
-        DOM.insertBefore(parent, measure, getElement());
+        DOM.insertBefore(parent, measure, root);
         DOM.removeChild(parent, root);
         int size = DOM.getElementPropertyInt(measure, offset);
         DOM.insertBefore(parent, root, measure);
         DOM.removeChild(parent, measure);
+        // In case the no space would be given for this element
+        // without pushing, use the current side of the root
         return size;
     }
 
@@ -431,7 +465,28 @@ public class IOrderedLayout extends Panel implements Container,
         if (width != null && orientationMode == ORIENTATION_HORIZONTAL) {
 
             // Calculate the space for fixed contents minus marginals
-            int size = rootOffsetMeasure("offsetWidth");
+            int size;
+            // If we know explicitly set pixel-size, use that
+            if (width != null && width.endsWith("px")) {
+                try {
+                    size = Integer.parseInt(width.substring(0,
+                            width.length() - 2));
+
+                    // For negative sizes, use measurements
+                    if (size < 0) {
+                        size = rootOffsetMeasure("offsetWidth");
+                    }
+
+                } catch (NumberFormatException e) {
+
+                    // In case of invalid number, try to measure the size;
+                    size = rootOffsetMeasure("offsetWidth");
+                }
+            }
+            // If not, try to measure the size
+            else {
+                size = rootOffsetMeasure("offsetWidth");
+            }
 
             size -= margins.hasLeft() ? marginLeft : 0;
             size -= margins.hasRight() ? marginRight : 0;
@@ -499,16 +554,42 @@ public class IOrderedLayout extends Panel implements Container,
     }
 
     /**
-     * Cell contained in the orderedlayout. This helper also manages for spacing
-     * and alignment for individual cells handling.
+     * Wrapper around single child in the layout.
+     * 
+     * This helper also manages spacing, margins and alignment for individual
+     * cells handling. It also can put hard size limits for its contens by
+     * clipping the content to given pixel size.
      * 
      */
     class WidgetWrapper extends UIObject {
 
-        Element td;
+        /**
+         * When alignment table structure is used, these elements correspond to
+         * the TD elements within the structure. If alignment is not used, these
+         * are null.
+         */
+        Element alignmentTD, innermostTDinAlignmnetStructure;
+
+        /**
+         * When clipping must be done and the element wrapping clipped content
+         * would be TD instead of DIV, this element points to additional DIV
+         * that is used for clipping.
+         */
         Element clipperDiv;
+
+        /** Caption element when used. */
         Caption caption = null;
+
+        /**
+         * Last set pixel height for the wrapper. -1 if vertical clipping is not
+         * used.
+         */
         int lastForcedPixelHeight = -1;
+
+        /**
+         * Last set pidel width for the wrapper. -1 if horizontal clipping is
+         * not used.
+         */
         int lastForcedPixelWidth = -1;
 
         /** Set the root element */
@@ -540,7 +621,8 @@ public class IOrderedLayout extends Panel implements Container,
                     removeClipperDiv();
                 }
             }
-            Element e = clipperDiv != null ? clipperDiv : getWrappingElement();
+            Element e = clipperDiv != null ? clipperDiv
+                    : getElementWrappingAlignmentStructures();
 
             // Overflow
             DOM.setStyleAttribute(e, "overflowY", pixelHeight < 0 ? ""
@@ -578,7 +660,8 @@ public class IOrderedLayout extends Panel implements Container,
                     removeClipperDiv();
                 }
             }
-            Element e = clipperDiv != null ? clipperDiv : getWrappingElement();
+            Element e = clipperDiv != null ? clipperDiv
+                    : getElementWrappingAlignmentStructures();
 
             // Overflow
             DOM.setStyleAttribute(e, "overflowX", pixelWidth < 0 ? ""
@@ -591,10 +674,10 @@ public class IOrderedLayout extends Panel implements Container,
             lastForcedPixelWidth = pixelWidth;
         }
 
-        /** Create a DIV inside TD for clipping child */
+        /** Create a DIV for clipping the child */
         private void createClipperDiv() {
             clipperDiv = DOM.createDiv();
-            final Element e = getWrappingElement();
+            final Element e = getElementWrappingClipperDiv();
             while (DOM.getChildCount(e) > 0) {
                 final Element c = DOM.getFirstChild(e);
                 DOM.removeChild(e, c);
@@ -605,7 +688,7 @@ public class IOrderedLayout extends Panel implements Container,
 
         /** Undo createClipperDiv() */
         private void removeClipperDiv() {
-            final Element e = getWrappingElement();
+            final Element e = getElementWrappingClipperDiv();
             while (DOM.getChildCount(clipperDiv) > 0) {
                 final Element c = DOM.getFirstChild(clipperDiv);
                 DOM.removeChild(clipperDiv, c);
@@ -615,17 +698,91 @@ public class IOrderedLayout extends Panel implements Container,
             clipperDiv = null;
         }
 
-        /** Get the element containing the caption and the wrapped widget. */
-        private Element getWrappingElement() {
+        /**
+         * Get the element containing the caption and the wrapped widget.
+         * Returned element can one of the following:
+         * <ul>
+         * <li>(a) Root DIV of the WrapperElement when not in tableMode</li>
+         * <li>(b) TD in just below the root TR of the WrapperElement when in
+         * tableMode</li>
+         * <li>(c) clipperDiv inside the (a) or (b)</li>
+         * <li>(d) The innermost TD within alignment structures located in (a),
+         * (b) or (c)</li>
+         * </ul>
+         * 
+         * @return Element described above
+         */
+        private Element getElementWrappingWidgetAndCaption() {
+
+            // When alignment is used, we will can safely return the innermost
+            // TD
+            if (innermostTDinAlignmnetStructure != null) {
+                return innermostTDinAlignmnetStructure;
+            }
+
+            // In all other cases element wrapping the potential alignment
+            // structures is the correct one
+            return getElementWrappingAlignmentStructures();
+        }
+
+        /**
+         * Get the element where alignment structures should be placed in if
+         * they are in use.
+         * 
+         * Returned element can one of the following:
+         * <ul>
+         * <li>(a) Root DIV of the WrapperElement when not in tableMode</li>
+         * <li>(b) TD in just below the root TR of the WrapperElement when in
+         * tableMode</li>
+         * <li>(c) clipperDiv inside the (a) or (b)</li>
+         * </ul>
+         * 
+         * @return Element described above
+         */
+        private Element getElementWrappingAlignmentStructures() {
+
+            // Clipper DIV wraps the alignment structures if present
+            if (clipperDiv != null) {
+                return clipperDiv;
+            }
+
+            // When Clipper DIV is not used, we just give the element
+            // that would wrap it if it would be used
+            return getElementWrappingClipperDiv();
+        }
+
+        /**
+         * Get the element where clipperDiv should be placed in if they it is in
+         * use.
+         * 
+         * Returned element can one of the following:
+         * <ul>
+         * <li>(a) Root DIV of the WrapperElement when not in tableMode</li>
+         * <li>(b) TD in just below the root TR of the WrapperElement when in
+         * tableMode</li>
+         * </ul>
+         * 
+         * @return Element described above
+         */
+        private Element getElementWrappingClipperDiv() {
+
+            // Only vertical layouts in non-table mode use TR as root, for the
+            // rest we can safely give root element
             if (!tableMode || orientationMode == ORIENTATION_HORIZONTAL) {
                 return getElement();
             }
+
+            // The root is TR, we'll thus give the TD that is immediately within
+            // the root
             return DOM.getFirstChild(getElement());
         }
 
         /**
          * Create tr, td or div - depending on the orientation of the layout and
          * set it as root.
+         * 
+         * All contents of the wrapper are cleared. Caller is responsible for
+         * preserving the contents and moving them into new root.
          * 
          * @return Previous root element.
          */
@@ -646,12 +803,16 @@ public class IOrderedLayout extends Panel implements Container,
                     DOM.setStyleAttribute(getElement(), "zoom", "1");
                 }
             }
+
+            // Clear any references to intermediate elements
+            clipperDiv = alignmentTD = innermostTDinAlignmnetStructure = null;
         }
 
         /** Update the caption of the element contained in this wrapper. */
         public void updateCaption(UIDL uidl, Paintable paintable) {
 
             final Widget widget = (Widget) paintable;
+            final Element captionWrapper = getElementWrappingWidgetAndCaption();
 
             // The widget needs caption
             if (Caption.isNeeded(uidl)) {
@@ -674,30 +835,27 @@ public class IOrderedLayout extends Panel implements Container,
 
                     // As the caption has just been created, insert it to DOM
                     if (after) {
-                        DOM.appendChild(getWrappingElement(), captionElement);
-                        DOM.setElementAttribute(getWrappingElement(), "class",
+                        DOM.appendChild(captionWrapper, captionElement);
+                        DOM.setElementAttribute(captionWrapper, "class",
                                 "i-orderedlayout-w");
                         caption.addStyleName("i-orderedlayout-c");
                         widget.addStyleName("i-orderedlayout-w-e");
                     } else {
-                        DOM
-                                .insertChild(getWrappingElement(),
-                                        captionElement, 0);
+                        DOM.insertChild(captionWrapper, captionElement, 0);
                     }
 
                 } else
 
                 // Caption exists. Move it to correct position if needed
-                if (after == (DOM.getChildIndex(getWrappingElement(),
-                        widgetElement) > DOM.getChildIndex(
-                        getWrappingElement(), captionElement))) {
-                    Element firstElement = DOM.getChild(getWrappingElement(),
-                            DOM.getChildCount(getWrappingElement()) - 2);
+                if (after == (DOM.getChildIndex(captionWrapper, widgetElement) > DOM
+                        .getChildIndex(captionWrapper, captionElement))) {
+                    Element firstElement = DOM.getChild(captionWrapper, DOM
+                            .getChildCount(captionWrapper) - 2);
                     if (firstElement != null) {
-                        DOM.removeChild(getWrappingElement(), firstElement);
-                        DOM.appendChild(getWrappingElement(), firstElement);
+                        DOM.removeChild(captionWrapper, firstElement);
+                        DOM.appendChild(captionWrapper, firstElement);
                     }
-                    DOM.setElementAttribute(getWrappingElement(), "class",
+                    DOM.setElementAttribute(captionWrapper, "class",
                             after ? "i-orderedlayout-w" : "");
                     if (after) {
                         caption.addStyleName("i-orderedlayout-c");
@@ -715,9 +873,9 @@ public class IOrderedLayout extends Panel implements Container,
 
                 // Remove existing caption from DOM
                 if (caption != null) {
-                    DOM.removeChild(getWrappingElement(), caption.getElement());
+                    DOM.removeChild(captionWrapper, caption.getElement());
                     caption = null;
-                    DOM.setElementAttribute(getWrappingElement(), "class", "");
+                    DOM.setElementAttribute(captionWrapper, "class", "");
                     widget.removeStyleName("i-orderedlayout-w-e");
                     caption.removeStyleName("i-orderedlayout-w-c");
                 }
@@ -729,68 +887,51 @@ public class IOrderedLayout extends Panel implements Container,
          */
         void setAlignment(String verticalAlignment, String horizontalAlignment) {
 
-            // Set vertical alignment
-            if (BrowserInfo.get().isIE()) {
-                DOM.setElementAttribute(getWrappingElement(), "vAlign",
-                        verticalAlignment);
-            } else {
-                if (orientationMode == ORIENTATION_VERTICAL) {
-                    if (verticalAlignment == null
-                            || verticalAlignment.equals("top")) {
-                        DOM.setStyleAttribute(getWrappingElement(), "display",
-                                "block");
-                        DOM
-                                .setStyleAttribute(getWrappingElement(),
-                                        "width", "");
-                    } else {
-                        DOM.setStyleAttribute(getWrappingElement(), "display",
-                                "table-cell");
-                        DOM.setStyleAttribute(getWrappingElement(), "width",
-                                "1000000px");
-                    }
-                }
-                DOM.setStyleAttribute(getWrappingElement(), "verticalAlign",
-                        verticalAlignment);
-            }
-
-            // Set horizontal alignment
-
             // use one-cell table to implement horizontal alignments, only
-            // for values other than "left" (which is default)
-            // build one cell table
-            if (!horizontalAlignment.equals("left")) {
+            // for values other than top-left (which is default)
+            if (!horizontalAlignment.equals("left")
+                    || !verticalAlignment.equals("top")) {
 
                 // The previous positioning has been left (or unspecified).
                 // Thus we need to create a one-cell-table to position
                 // this element.
-                if (td == null) {
+                if (alignmentTD == null) {
 
                     // Store and remove the current childs (widget and caption)
-                    Element c1 = DOM.getFirstChild(getWrappingElement());
+                    Element c1 = DOM
+                            .getFirstChild(getElementWrappingWidgetAndCaption());
                     if (c1 != null) {
-                        DOM.removeChild(getWrappingElement(), c1);
+                        DOM.removeChild(getElementWrappingWidgetAndCaption(),
+                                c1);
                     }
-                    Element c2 = DOM.getFirstChild(getWrappingElement());
+                    Element c2 = DOM
+                            .getFirstChild(getElementWrappingWidgetAndCaption());
                     if (c2 != null) {
-                        DOM.removeChild(getWrappingElement(), c2);
+                        DOM.removeChild(getElementWrappingWidgetAndCaption(),
+                                c2);
                     }
 
                     // Construct table structure to align children
-                    final String t = "<table cellpadding='0' cellspacing='0' width='100%'><tbody><tr><td>"
+                    final String t = "<table cellpadding='0' cellspacing='0' width='100%' height='100%'><tbody><tr><td>"
                             + "<table cellpadding='0' cellspacing='0' ><tbody><tr><td align='left'>"
                             + "</td></tr></tbody></table></td></tr></tbody></table>";
-                    DOM.setInnerHTML(getWrappingElement(), t);
-                    td = DOM.getFirstChild(DOM.getFirstChild(DOM
+                    DOM.setInnerHTML(getElementWrappingWidgetAndCaption(), t);
+                    alignmentTD = DOM
                             .getFirstChild(DOM
-                                    .getFirstChild(getWrappingElement()))));
-                    Element itd = DOM.getFirstChild(DOM.getFirstChild(DOM
-                            .getFirstChild(DOM.getFirstChild(td))));
+                                    .getFirstChild(DOM
+                                            .getFirstChild(DOM
+                                                    .getFirstChild(getElementWrappingWidgetAndCaption()))));
+                    innermostTDinAlignmnetStructure = DOM.getFirstChild(DOM
+                            .getFirstChild(DOM.getFirstChild(DOM
+                                    .getFirstChild(alignmentTD))));
 
                     // Restore children inside the
                     if (c1 != null) {
-                        DOM.appendChild(itd, c1);
+                        DOM.appendChild(innermostTDinAlignmnetStructure, c1);
                         if (c2 != null) {
-                            DOM.appendChild(itd, c2);
+                            DOM
+                                    .appendChild(
+                                            innermostTDinAlignmnetStructure, c2);
                         }
                     }
 
@@ -798,74 +939,76 @@ public class IOrderedLayout extends Panel implements Container,
 
                     // Go around optimization bug in WebKit and ensure repaint
                     if (BrowserInfo.get().isSafari()) {
-                        String prevValue = DOM.getElementAttribute(td, "align");
+                        String prevValue = DOM.getElementAttribute(alignmentTD,
+                                "align");
                         if (!horizontalAlignment.equals(prevValue)) {
-                            Element parent = DOM.getParent(td);
-                            DOM.removeChild(parent, td);
-                            DOM.appendChild(parent, td);
+                            Element parent = DOM.getParent(alignmentTD);
+                            DOM.removeChild(parent, alignmentTD);
+                            DOM.appendChild(parent, alignmentTD);
                         }
                     }
 
                 }
 
-                // Seth the alignment in td
-                DOM.setElementAttribute(td, "align", horizontalAlignment);
+                // Set the alignment in td
+                DOM.setElementAttribute(alignmentTD, "align",
+                        horizontalAlignment);
+                DOM.setElementAttribute(alignmentTD, "valign",
+                        verticalAlignment);
 
-            } else
+            } else {
 
-            // In this case we are requested to position this left
-            // while as it has had some other position in the past.
-            // Thus the one-cell wrapper table must be removed.
-            if (td != null) {
+                // In this case we are requested to position this left
+                // while as it has had some other position in the past.
+                // Thus the one-cell wrapper table must be removed.
+                if (alignmentTD != null) {
 
-                // Move content to main container
-                Element itd = DOM.getFirstChild(DOM.getFirstChild(DOM
-                        .getFirstChild(DOM.getFirstChild(td))));
-                while (DOM.getChildCount(itd) > 0) {
-                    Element content = DOM.getFirstChild(itd);
-                    if (content != null) {
-                        DOM.removeChild(itd, content);
-                        DOM.appendChild(getWrappingElement(), content);
+                    // Move content to main container
+                    final Element itd = innermostTDinAlignmnetStructure;
+                    final Element alignmentTable = DOM.getParent(DOM
+                            .getParent(DOM.getParent(alignmentTD)));
+                    final Element target = DOM.getParent(alignmentTable);
+                    while (DOM.getChildCount(itd) > 0) {
+                        Element content = DOM.getFirstChild(itd);
+                        if (content != null) {
+                            DOM.removeChild(itd, content);
+                            DOM.appendChild(target, content);
+                        }
                     }
+
+                    // Remove unneeded table element
+                    DOM.removeChild(target, alignmentTable);
+
+                    alignmentTD = innermostTDinAlignmnetStructure = null;
                 }
-
-                // Remove unneeded table element
-                DOM.removeChild(getWrappingElement(), DOM
-                        .getFirstChild(getWrappingElement()));
-
-                td = null;
             }
         }
 
         /** Set class for spacing */
         void setSpacingAndMargins(boolean first, boolean last) {
 
+            final Element e = getElementWrappingWidgetAndCaption();
+
             if (orientationMode == ORIENTATION_HORIZONTAL) {
-                DOM
-                        .setStyleAttribute(getWrappingElement(), "paddingLeft",
-                                first ? (margins.hasLeft() ? marginLeft + "px"
-                                        : "0")
-                                        : (hasComponentSpacing ? hSpacing
-                                                + "px" : "0"));
-                DOM.setStyleAttribute(getWrappingElement(), "paddingRight",
-                        last ? (margins.hasRight() ? marginRight + "px" : "0")
-                                : "");
-                DOM.setStyleAttribute(getWrappingElement(), "paddingTop",
+                DOM.setStyleAttribute(e, "paddingLeft", first ? (margins
+                        .hasLeft() ? marginLeft + "px" : "0")
+                        : (hasComponentSpacing ? hSpacing + "px" : "0"));
+                DOM.setStyleAttribute(e, "paddingRight", last ? (margins
+                        .hasRight() ? marginRight + "px" : "0") : "");
+                DOM.setStyleAttribute(e, "paddingTop",
                         margins.hasTop() ? marginTop + "px" : "");
-                DOM.setStyleAttribute(getWrappingElement(), "paddingBottom",
+                DOM.setStyleAttribute(e, "paddingBottom",
                         margins.hasBottom() ? marginBottom + "px" : "");
             } else {
-                DOM.setStyleAttribute(getWrappingElement(), "paddingLeft",
+                DOM.setStyleAttribute(e, "paddingLeft",
                         margins.hasLeft() ? marginLeft + "px" : "0");
-                DOM.setStyleAttribute(getWrappingElement(), "paddingRight",
+                DOM.setStyleAttribute(e, "paddingRight",
                         margins.hasRight() ? marginRight + "px" : "0");
-                DOM
-                        .setStyleAttribute(getWrappingElement(), "paddingTop",
-                                first ? (margins.hasTop() ? marginTop + "px"
-                                        : "") : (hasComponentSpacing ? vSpacing
-                                        + "px" : "0"));
-                DOM.setStyleAttribute(getWrappingElement(), "paddingBottom",
-                        last && margins.hasBottom() ? marginBottom + "px" : "");
+                DOM.setStyleAttribute(e, "paddingTop", first ? (margins
+                        .hasTop() ? marginTop + "px" : "")
+                        : (hasComponentSpacing ? vSpacing + "px" : "0"));
+                DOM.setStyleAttribute(e, "paddingBottom", last
+                        && margins.hasBottom() ? marginBottom + "px" : "");
             }
         }
     }
@@ -947,7 +1090,8 @@ public class IOrderedLayout extends Panel implements Container,
         childWidgetWrappers.insertElementAt(wrapper, atIndex);
         DOM.insertChild(wrappedChildContainer, wrapper.getElement(), atIndex
                 + nonWidgetChildElements);
-        DOM.appendChild(wrapper.getWrappingElement(), child.getElement());
+        DOM.appendChild(wrapper.getElementWrappingWidgetAndCaption(), child
+                .getElement());
 
         /*
          * <b>Adopt:</b> Call {@link #adopt(Widget)} to finalize the add as the
