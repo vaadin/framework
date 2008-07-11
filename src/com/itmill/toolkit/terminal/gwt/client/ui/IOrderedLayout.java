@@ -631,9 +631,8 @@ public class IOrderedLayout extends Panel implements Container,
             // Set size
             DOM.setStyleAttribute(e, "width", pixelWidth < 0 ? "" : pixelWidth
                     + "px");
-            DOM.setStyleAttribute(e, "height",
-                    pixelHeight < 0 ? (e == clipperDiv || !tableMode ? "100%"
-                            : "") : pixelHeight + "px");
+            DOM.setStyleAttribute(e, "height", pixelHeight < 0 ? ""
+                    : pixelHeight + "px");
 
             // Set cached values
             lastForcedPixelWidth = pixelWidth;
