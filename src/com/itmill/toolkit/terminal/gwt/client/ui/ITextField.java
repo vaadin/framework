@@ -192,11 +192,12 @@ public class ITextField extends TextBoxBase implements Paintable, Field,
         DOM.setElementAttribute(clone, "id", "");
         DOM.setStyleAttribute(clone, "visibility", "hidden");
         DOM.setStyleAttribute(clone, "position", "absolute");
-        DOM.setStyleAttribute(clone, "width", "0");
-        DOM.setStyleAttribute(clone, "height", "0");
+        // due FF3 bug set size to 10px and later subtract it from extra pixels
+        DOM.setStyleAttribute(clone, "width", "10px");
+        DOM.setStyleAttribute(clone, "height", "10px");
         DOM.appendChild(DOM.getParent(getElement()), clone);
-        extraHorizontalPixels = DOM.getElementPropertyInt(clone, "offsetWidth");
-        extraVerticalPixels = DOM.getElementPropertyInt(clone, "offsetHeight");
+        extraHorizontalPixels = DOM.getElementPropertyInt(clone, "offsetWidth") - 10;
+        extraVerticalPixels = DOM.getElementPropertyInt(clone, "offsetHeight") - 10;
         DOM.removeChild(DOM.getParent(getElement()), clone);
     }
 
