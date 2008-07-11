@@ -38,6 +38,7 @@ public class Ticket1710 extends com.itmill.toolkit.Application {
         setMainWindow(new Window("#1710", lo));
         lo.setMargin(true);
         lo.setSpacing(true);
+        lo.setWidth("100%");
 
         // Hiding controls
         OrderedLayout hidingControls = new OrderedLayout(
@@ -250,6 +251,7 @@ public class Ticket1710 extends com.itmill.toolkit.Application {
         LayoutTestingPanel(String caption, Layout layout) {
             super(caption);
             OrderedLayout internalLayout = new OrderedLayout();
+            internalLayout.setWidth("100%");
             setLayout(internalLayout);
             testedLayout = layout;
             Panel controlWrapper = new Panel();
