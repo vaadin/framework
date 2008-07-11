@@ -461,8 +461,8 @@ public class IOrderedLayout extends Panel implements Container,
 
     /** Recalculate and apply child widths */
     private void updateChildWidths() {
-        // Horizontal layout is calculated by us
-        if (width != null && orientationMode == ORIENTATION_HORIZONTAL) {
+        // layout is calculated by us
+        if (width != null) {
 
             // Calculate the space for fixed contents minus marginals
             int size;
@@ -493,7 +493,8 @@ public class IOrderedLayout extends Panel implements Container,
 
             // Reduce spacing from the size
             int numChild = childWidgets.size();
-            if (hasComponentSpacing) {
+            if (hasComponentSpacing
+                    && orientationMode == ORIENTATION_HORIZONTAL) {
                 size -= hSpacing * (numChild - 1);
             }
 
@@ -511,7 +512,7 @@ public class IOrderedLayout extends Panel implements Container,
             }
         }
 
-        // Horizontal layout is calculated by the browsers
+        // Layout is calculated by the browsers
         else {
             for (Iterator i = childWidgetWrappers.iterator(); i.hasNext();) {
                 ((WidgetWrapper) i.next()).forceWidth(-1);
