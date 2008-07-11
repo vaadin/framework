@@ -254,6 +254,7 @@ public class Ticket1710 extends com.itmill.toolkit.Application {
             internalLayout.setWidth("100%");
             setLayout(internalLayout);
             testedLayout = layout;
+            testPanelLayout.setWidth("100%");
             Panel controlWrapper = new Panel();
             controlWrapper.addComponent(controls);
             controlWrapper.setWidth("100%");
