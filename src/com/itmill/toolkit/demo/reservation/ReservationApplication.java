@@ -61,10 +61,13 @@ public class ReservationApplication extends Application {
         setMainWindow(mainWindow);
         setTheme("reservr");
 
+        mainWindow.getLayout().setWidth("100%");
+
         final TabSheet mainTabs = new TabSheet();
         mainWindow.addComponent(mainTabs);
 
         final OrderedLayout reservationTab = new OrderedLayout();
+        reservationTab.setWidth("100%");
         mainTabs.addTab(reservationTab, "Make reservation", null);
 
         resourcePanel = new ResourceSelectorPanel("Resources");
