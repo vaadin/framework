@@ -17,8 +17,8 @@ public class Ticket1934 extends Application {
 
         ExpandLayout testedLayout = new ExpandLayout(
                 ExpandLayout.ORIENTATION_HORIZONTAL);
-        testedLayout.setWidth(500);
-        testedLayout.setHeight(200);
+        testedLayout.setWidth("500px");
+        testedLayout.setHeight("200px");
 
         Button b1 = new Button("b1");
         testedLayout.addComponent(b1);
