@@ -39,10 +39,17 @@ public class Ticket1710 extends com.itmill.toolkit.Application {
         lo.setMargin(true);
         lo.setSpacing(true);
 
+        // Hiding controls
+        OrderedLayout hidingControls = new OrderedLayout(
+                OrderedLayout.ORIENTATION_HORIZONTAL);
+        lo.addComponent(hidingControls);
+
         // OrderedLayout
         final OrderedLayout orderedLayout = new OrderedLayout();
         LayoutTestingPanel oltp = new LayoutTestingPanel("OrderedLayout",
                 orderedLayout);
+        hidingControls.addComponent(new Button("OrderedLayout",
+                new MethodProperty(oltp, "visible")));
         lo.addComponent(oltp);
         orderedLayout.setSpacing(false);
         addFields(orderedLayout);
@@ -60,14 +67,19 @@ public class Ticket1710 extends com.itmill.toolkit.Application {
 
         // GridLayout
         GridLayout grid = new GridLayout(1, 1);
-        lo
-                .addComponent(new LayoutTestingPanel(
-                        "Gridlayout with 1 column", grid));
+        Panel g1tp = new LayoutTestingPanel("Gridlayout with 1 column", grid);
+        hidingControls.addComponent(new Button("GridLayout (1col)",
+                new MethodProperty(g1tp, "visible")));
+        g1tp.setVisible(false);
+        lo.addComponent(g1tp);
         grid.setSpacing(true);
         addFields(grid);
         GridLayout grid2 = new GridLayout(2, 1);
-        lo.addComponent(new LayoutTestingPanel("Gridlayout with 2 columns",
-                grid2));
+        Panel g2tp = new LayoutTestingPanel("Gridlayout with 2 columns", grid2);
+        hidingControls.addComponent(new Button("GridLayout (2cols)",
+                new MethodProperty(g2tp, "visible")));
+        g2tp.setVisible(false);
+        lo.addComponent(g2tp);
         grid2.setSpacing(true);
         addFields(grid2);
 
@@ -75,6 +87,9 @@ public class Ticket1710 extends com.itmill.toolkit.Application {
         ExpandLayout el = new ExpandLayout();
         Panel elp = new LayoutTestingPanel(
                 "ExpandLayout width first component expanded", el);
+        hidingControls.addComponent(new Button("ExpandLayout (vertical)",
+                new MethodProperty(elp, "visible")));
+        elp.setVisible(false);
         el.setHeight(700);
         addFields(el);
         Component firstComponent = (Component) el.getComponentIterator().next();
@@ -84,6 +99,9 @@ public class Ticket1710 extends com.itmill.toolkit.Application {
         ExpandLayout elh = new ExpandLayout(ExpandLayout.ORIENTATION_HORIZONTAL);
         Panel elhp = new LayoutTestingPanel(
                 "ExpandLayout width first component expanded; horizontal", elh);
+        hidingControls.addComponent(new Button("ExpandLayout (horizontal)",
+                new MethodProperty(elhp, "visible")));
+        elhp.setVisible(false);
         elhp.setScrollable(true);
         elh.setWidth(2000);
         elh.setHeight(100);
@@ -97,13 +115,23 @@ public class Ticket1710 extends com.itmill.toolkit.Application {
         // CustomLayout
         OrderedLayout cl = new OrderedLayout();
         Panel clp = new LayoutTestingPanel("CustomLayout", cl);
+        hidingControls.addComponent(new Button("CustomLayout",
+                new MethodProperty(clp, "visible")));
+        clp.setVisible(false);
         lo.addComponent(clp);
         cl.addComponent(new Label("<<< Add customlayout testcase here >>>"));
 
         // Form
         Panel formPanel = new Panel("Form");
+        hidingControls.addComponent(new Button("Form", new MethodProperty(
+                formPanel, "visible")));
+        formPanel.setVisible(false);
         formPanel.addComponent(getFormPanelExample());
         lo.addComponent(formPanel);
+
+        for (Iterator i = hidingControls.getComponentIterator(); i.hasNext();) {
+            ((AbstractComponent) i.next()).setImmediate(true);
+        }
 
     }
 
