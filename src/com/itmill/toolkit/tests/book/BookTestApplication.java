@@ -132,7 +132,7 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
                         "labelcontent", "tree", "embedded", "textfield",
                         "textfieldvalidation", "datefield", "button",
                         "select/select", "select/native", "select/optiongroup",
-                        "select/twincol", "filterselect", "validator", "table", "table/select",
+                        "select/twincol", "filterselect", "validator", "table", "table/select", "table/component", "table/paging", "table/editable",
                         "upload", "link", "gridlayout", "orderedlayout",
                         "formlayout", "form", "form/simple", "form/layout", "panel", "expandlayout", "expandlayout/root", "tabsheet",
                         "alignment", "alignment/grid", "window", "window/opener",
@@ -547,14 +547,20 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
     }
     
     void example_Table(Window main, String param) {
-        if (param != null && param.equals("select")) {
-            main.addComponent(new TableExample2());
-        } else if (param != null && param.equals("paging")) {
-            PagingTable table = new PagingTable();
-            table.addContainerProperty("Column 1", String.class, null);
-            for (int i=0; i<100; i++)
-                table.addItem(new Object[]{"Item "+i}, new Integer(i));
-            main.addComponent(table);
+        if (param != null) {
+            if (param.equals("select")) {
+                main.addComponent(new TableExample2());
+            } else if (param.equals("component")) {
+                main.addComponent(new TableExample3());
+            } else if (param.equals("editable")) {
+                main.addComponent(new TableEditable());
+            } else if (param.equals("paging")) {
+                PagingTable table = new PagingTable();
+                table.addContainerProperty("Column 1", String.class, null);
+                for (int i=0; i<100; i++)
+                    table.addItem(new Object[]{"Item "+i}, new Integer(i));
+                main.addComponent(table);
+            }
         }else
             main.addComponent(new TableExample1());
     }
