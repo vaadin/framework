@@ -146,4 +146,19 @@ public class Util {
             el.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='"+src+"', sizingMethod='crop');";  
         },false);
     }-*/;
+
+    /**
+     * Clones given element as in JavaScript.
+     * 
+     * Deprecate this if there appears similar method into GWT someday.
+     * 
+     * @param element
+     * @param deep
+     *                clone child tree also
+     * @return
+     */
+    public static native Element cloneNode(Element element, boolean deep)
+    /*-{
+        return element.cloneNode(deep);
+    }-*/;
 }
