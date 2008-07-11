@@ -458,6 +458,10 @@ public class ApplicationServlet extends HttpServlet {
             // Finds the window within the application
             Window window = null;
             window = getApplicationWindow(request, application);
+            if (window == null) {
+                throw new ServletException(
+                        "Application did not give any window, did you remember to setMainWindow()?");
+            }
 
             // Handle parameters
             final Map parameters = request.getParameterMap();
