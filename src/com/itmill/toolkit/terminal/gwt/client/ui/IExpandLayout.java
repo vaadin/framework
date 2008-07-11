@@ -8,13 +8,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
+import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
 import com.itmill.toolkit.terminal.gwt.client.Caption;
 import com.itmill.toolkit.terminal.gwt.client.Container;
 import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
@@ -93,12 +96,12 @@ public class IExpandLayout extends ComplexPanel implements
 
         if (orientationMode == ORIENTATION_HORIZONTAL) {
             marginElement = DOM.createDiv();
-            if (Util.isIE()) {
+            if (BrowserInfo.get().isIE()) {
                 DOM.setStyleAttribute(marginElement, "zoom", "1");
                 DOM.setStyleAttribute(marginElement, "overflow", "hidden");
             }
             childContainer = DOM.createDiv();
-            if (Util.isIE()) {
+            if (BrowserInfo.get().isIE()) {
                 DOM.setStyleAttribute(childContainer, "zoom", "1");
                 DOM.setStyleAttribute(childContainer, "overflow", "hidden");
             }
@@ -212,7 +215,7 @@ public class IExpandLayout extends ComplexPanel implements
         public HorizontalWidgetWrapper() {
             setElement(DOM.createDiv());
             DOM.setStyleAttribute(getElement(), "cssFloat", "left");
-            if (Util.isIE()) {
+            if (BrowserInfo.get().isIE()) {
                 DOM.setStyleAttribute(getElement(), "styleFloat", "left");
             }
             DOM.setStyleAttribute(getElement(), "height", "100%");
@@ -472,11 +475,11 @@ public class IExpandLayout extends ComplexPanel implements
     private int getAvailableSpace() {
         int size;
         if (orientationMode == ORIENTATION_VERTICAL) {
-            if (Util.isIE6()) {
+            if (BrowserInfo.get().isIE6()) {
                 DOM.setStyleAttribute(getElement(), "overflow", "hidden");
             }
             size = getOffsetHeight();
-            if (Util.isIE6()) {
+            if (BrowserInfo.get().isIE6()) {
                 DOM.setStyleAttribute(getElement(), "overflow", "visible");
             }
 
@@ -708,6 +711,16 @@ public class IExpandLayout extends ComplexPanel implements
         if (expandedWidget != null) {
             ((Paintable) expandedWidget).updateFromUIDL(expandedWidgetUidl,
                     client);
+        }
+
+        // workaround for safari bug #1869
+        float wkv = BrowserInfo.get().getWebkitVersion();
+        if (wkv > 0 && wkv < 526.9) {
+            DeferredCommand.addCommand(new Command() {
+                public void execute() {
+                    iLayout();
+                }
+            });
         }
     }
 }
