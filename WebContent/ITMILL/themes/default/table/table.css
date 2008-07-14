@@ -112,10 +112,20 @@
 }
 
 /* Fix textfield size to correspond label size inside table */
-.i-table-cell-content .i-textfield {
+.i-table-cell-content .i-textfield,
+.i-table-cell-content .i-datefield {
 	height: auto;
 	margin: -2px 0 -3px -3px;
 	width: 97%; /* approximate */
+}
+/* ...but not for datefield textarea */
+.i-table-cell-content .i-datefield .i-textfield {
+	width: auto;
+	margin: 0;
+}
+/* datefield button is too high for table cell */
+.i-table-cell-content .i-datefield-button {
+	height: 20px;
 }
 
 
