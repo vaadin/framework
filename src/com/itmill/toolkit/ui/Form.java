@@ -117,6 +117,11 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
     private Layout formFooter;
 
     /**
+     * If this is true, commit implicitly calls setValidationVisible(true).
+     */
+    private boolean validationVisibleOnCommit = true;
+
+    /**
      * Contructs a new form with default layout.
      * 
      * <p>
@@ -217,6 +222,36 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
                 currentBufferedSourceException });
     }
 
+    /**
+     * Controls the making validation visible implicitly on commit.
+     * 
+     * Having commit() call setValidationVisible(true) implicitly is the default
+     * behaviour. You can disable the implicit setting by setting this property
+     * as false.
+     * 
+     * It is useful, because you usually want to start with the form free of
+     * errors and only display them after the user clicks Ok. You can disable
+     * the implicit setting by setting this property as false.
+     * 
+     * @param makeVisible
+     *            If true (default), validation is made visible when commit() is
+     *            called. If false, the visibility is left as it is.
+     */
+    public void setValidationVisibleOnCommit(boolean makeVisible) {
+        validationVisibleOnCommit = makeVisible;
+    }
+
+    /**
+     * Is validation made automatically visible on commit?
+     * 
+     *  See setValidationVisibleOnCommit().
+     * 
+     * @return true if validation is made automatically visible on commit.
+     */
+    public boolean isValidationVisibleOnCommit() {
+        return validationVisibleOnCommit;
+    }
+    
     /*
      * Commit changes to the data source Don't add a JavaDoc comment here, we
      * use the default one from the interface.
@@ -227,6 +262,8 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
 
         // Only commit on valid state if so requested
         if (!isInvalidCommitted() && !isValid()) {
+            if (validationVisibleOnCommit)
+                setValidationVisible(true);
             return;
         }
 
