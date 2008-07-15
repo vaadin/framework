@@ -43,7 +43,7 @@
 }
 
 .i-window-header .i-icon {
-	vertical-align: bottom;
+	vertical-align: middle; /* This has to be 'middle', not 'bottom', to allow larger icons than 16px */
 }
 
 
