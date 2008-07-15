@@ -157,13 +157,9 @@ public class IFilterSelect extends Composite implements Paintable, Field,
             // We don't need to show arrows or statusbar if there is only one
             // page
             if (matches <= PAGELENTH) {
-                DOM.setStyleAttribute(status, "display", "none");
-                DOM.setStyleAttribute(up, "display", "none");
-                DOM.setStyleAttribute(down, "display", "none");
+                setPagingEnabled(false);
             } else {
-                DOM.setStyleAttribute(status, "display", "");
-                DOM.setStyleAttribute(up, "display", "");
-                DOM.setStyleAttribute(down, "display", "");
+                setPagingEnabled(true);
             }
             setPrevButtonActive(first > 1);
             setNextButtonActive(last < matches);
@@ -262,9 +258,9 @@ public class IFilterSelect extends Composite implements Paintable, Field,
                 return;
             }
             if (paging) {
-                DOM.setStyleAttribute(down, "display", "block");
-                DOM.setStyleAttribute(up, "display", "block");
-                DOM.setStyleAttribute(status, "display", "block");
+                DOM.setStyleAttribute(down, "display", "");
+                DOM.setStyleAttribute(up, "display", "");
+                DOM.setStyleAttribute(status, "display", "");
             } else {
                 DOM.setStyleAttribute(down, "display", "none");
                 DOM.setStyleAttribute(up, "display", "none");
@@ -704,6 +700,20 @@ public class IFilterSelect extends Composite implements Paintable, Field,
                     tb.selectAll();
                     break;
                 }
+            case KeyboardListener.KEY_ESCAPE:
+                if (currentSuggestion != null) {
+                    String text = currentSuggestion.getReplacementString();
+                    tb.setText((text.equals("") ? emptyText : text));
+                    // TODO add/remove class CLASSNAME_EMPTY
+                    selectedOptionKey = currentSuggestion.key;
+                } else {
+                    tb.setText(emptyText);
+                    // TODO add class CLASSNAME_EMPTY
+                    selectedOptionKey = null;
+                }
+                lastFilter = "";
+                suggestionPopup.hide();
+                break;
             default:
                 filterOptions(currentPage);
                 break;
