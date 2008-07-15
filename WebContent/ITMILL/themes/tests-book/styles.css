@@ -9,7 +9,15 @@
 }
 
 /*****************************************************************************/
-/* For example_Tree()                                                  */
+/* For example_Table()                                                       */
+/*****************************************************************************/
+/* Table rows contain three-row TextField components. */
+.i-table-components-inside .i-table-cell-content {
+	height: 54px; /* 3*18px = 54px. */
+}
+
+/*****************************************************************************/
+/* For example_Tree()                                                        */
 /*****************************************************************************/
 
 .i-expandlayout-treeexample .i-panel .i-orderedlayout {

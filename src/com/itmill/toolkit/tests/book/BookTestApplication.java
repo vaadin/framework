@@ -56,6 +56,7 @@ import com.itmill.toolkit.ui.TextField;
 import com.itmill.toolkit.ui.Tree;
 import com.itmill.toolkit.ui.Window;
 import com.itmill.toolkit.ui.Button.ClickEvent;
+import com.itmill.toolkit.ui.Window.Notification;
 
 public class BookTestApplication extends com.itmill.toolkit.Application {
     Window main = new Window("Application window");
@@ -139,7 +140,7 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
                         "window/multiple", "classresource", "usererror",
                         "progress/window", "progress/thread", "progress",
                         "customlayout", "spacing", "margin", "clientinfo",
-                        "fillinform/templates"};
+                        "fillinform/templates", "notification", "print"};
                 for (int i = 0; i < examples.length; i++) {
                     main.addComponent(new Label("<a href='" + context.toString() +
                             examples[i] + "'>" + examples[i] + "</a>",
@@ -214,6 +215,10 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
                 example_ClientInfo(main, param);
             } else if (example.equals("fillinform")) {
                 example_FillInForm(main, param);
+            } else if (example.equals("notification")) {
+                example_Notification(main, param);
+            } else if (example.equals("print")) {
+                example_Print(main, param);
             } else {
                 ; // main.addComponent(new Label("Unknown test '"+example+"'."));
             }
@@ -1330,5 +1335,47 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
     			}
     		}
     	}
+    }
+
+    void example_Notification(final Window main, String param) {
+        final Window sub1 = new Window("");
+        main.addWindow(sub1);
+        
+        sub1.showNotification("The default notification");
+        
+        //Notification notif = new Notification("Title");
+    }
+
+    void example_Print(final Window main, String param) {
+        if (param != null && param.equals("simple")) {        
+            main.addComponent(new Label("<input type='button' onClick='print()' value='Click to Print'/>", Label.CONTENT_XHTML));
+            return;
+        }
+
+        // A button to open the printer-friendly page.
+        Button printButton = new Button("Click to Print");
+        main.addComponent(printButton);
+        printButton.addListener(new Button.ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                // Create a window that contains stuff you want to print.
+                Window printWindow = new Window("Window to Print");
+                
+                // Have some content to print.
+                printWindow.addComponent(new Label("Here's some dynamic content."));
+                
+                // To execute the print() JavaScript, we need to run it
+                // from a custom layout.
+                CustomLayout scriptLayout = new CustomLayout("printpage");
+                printWindow.addComponent (scriptLayout);
+                
+                // Add the printing window as an application-level window.
+                main.getApplication().addWindow(printWindow);
+        
+                // Open the printing window as a new browser window
+                main.open(new ExternalResource(printWindow.getURL()), "_new");
+            } 
+        });
+
+        //main.addComponent(new Label("<p>Print this!</p>\n<script type='text/javascript'>print();</script>", Label.CONTENT_XHTML));
     }
 }
