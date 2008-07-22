@@ -729,7 +729,15 @@
 		<property name="gwt-dir" value="build/gwt" />
 
 		<!-- required when compiling WebContent/ITMILL/widgetsets (and also Java server-side classes) -->
-		<property name="lib-gwt-dev" value="gwt-dev-${platform}.jar" />
+		<if>
+			<equals arg1="${platform}" arg2="mac_leopard" />
+			<then>
+				<property name="lib-gwt-dev" value="gwt-dev-mac.jar" />
+			</then>
+			<else>
+				<property name="lib-gwt-dev" value="gwt-dev-${platform}.jar" />
+			</else>
+		</if>
 
 		<echo>We are on ${platform} platform, using ${gwt-dir}/${platform}/${lib-gwt-dev}.</echo>
 		<echo>GWT dir:    ${gwt-dir}</echo>
