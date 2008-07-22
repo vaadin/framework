@@ -49,6 +49,7 @@ import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Panel;
 import com.itmill.toolkit.ui.PopupDateField;
 import com.itmill.toolkit.ui.ProgressIndicator;
+import com.itmill.toolkit.ui.RichTextArea;
 import com.itmill.toolkit.ui.Select;
 import com.itmill.toolkit.ui.TabSheet;
 import com.itmill.toolkit.ui.Table;
@@ -140,7 +141,8 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
                         "window/multiple", "classresource", "usererror",
                         "progress/window", "progress/thread", "progress",
                         "customlayout", "spacing", "margin", "clientinfo",
-                        "fillinform/templates", "notification", "print"};
+                        "fillinform/templates", "notification", "print",
+                        "richtextfield"};
                 for (int i = 0; i < examples.length; i++) {
                     main.addComponent(new Label("<a href='" + context.toString() +
                             examples[i] + "'>" + examples[i] + "</a>",
@@ -219,6 +221,8 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
                 example_Notification(main, param);
             } else if (example.equals("print")) {
                 example_Print(main, param);
+            } else if (example.equals("richtextfield")) {
+                example_RichTextField(main, param);
             } else {
                 ; // main.addComponent(new Label("Unknown test '"+example+"'."));
             }
@@ -1377,5 +1381,26 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
         });
 
         //main.addComponent(new Label("<p>Print this!</p>\n<script type='text/javascript'>print();</script>", Label.CONTENT_XHTML));
+    }
+
+    void example_RichTextField(final Window main, String param) {
+        // Create the rich text area
+        final RichTextArea rtarea = new RichTextArea();
+        
+        // Set initial content as HTML
+        rtarea.setValue("<h1>Hello</h1>\n<p>This contains some text.</p>");
+        
+        // Show the text edited in the rich text area as HTML.
+        final Button show = new Button("Show HTML");
+        final Label html = new Label((String) rtarea.getValue());
+        show.addListener(new Button.ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                html.setValue(rtarea.getValue());
+            }
+        });
+
+        main.addComponent(rtarea);
+        main.addComponent(show);
+        main.addComponent(html);
     }
 }

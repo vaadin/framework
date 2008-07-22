@@ -210,13 +210,13 @@ public class FormExample extends CustomComponent {
                 OrderedLayout.ORIENTATION_HORIZONTAL);
 
         // The Commit button calls form.commit().
-        Button commit = new Button("Commit");
-        commit.addListener(new Button.ClickListener() {
+        Button commit = new Button("Commit", form, "commit");
+        /*commit.addListener(new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
                 form.setValidationVisible(true);
                 form.commit();
             }
-        });
+        });*/
 
         // The Discard button calls form.discard().
         Button discard = new Button("Discard", form, "discard");
