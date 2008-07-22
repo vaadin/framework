@@ -24,6 +24,9 @@ public class MenuBar extends AbstractComponent {
     private static int numberOfItems = 0;
 
     private boolean animationEnabled;
+    private boolean collapseItems;
+    private Resource submenuIcon;
+    private MenuItem moreItem;
 
     /** Tag is the UIDL element name for client-server communications. */
     public java.lang.String getTag() {
@@ -41,6 +44,22 @@ public class MenuBar extends AbstractComponent {
 
         target.startTag("options");
         target.addAttribute("animationEnabled", animationEnabled);
+
+        if (submenuIcon != null) {
+            target.addAttribute("submenuIcon", submenuIcon);
+        }
+
+        target.addAttribute("collapseItems", collapseItems);
+
+        if (collapseItems) {
+            target.startTag("moreItem");
+            target.addAttribute("text", moreItem.getText());
+            if (moreItem.getIcon() != null) {
+                target.addAttribute("icon", moreItem.getIcon());
+            }
+            target.endTag("moreItem");
+        }
+
         target.endTag("options");
         target.startTag("items");
 
@@ -77,7 +96,8 @@ public class MenuBar extends AbstractComponent {
                 target.endTag("item"); // Item had no children, end description
             }
 
-            if (!itr.hasNext() && !iteratorStack.empty()) { // The end submenu
+            // The end submenu. More than one submenu may end at once.
+            while (!itr.hasNext() && !iteratorStack.empty()) {
                 itr = (Iterator) iteratorStack.pop();
                 target.endTag("item");
             }
@@ -114,11 +134,12 @@ public class MenuBar extends AbstractComponent {
                     }
                 }
 
-            }
+            }// while
+
             // If we got the clicked item, launch the command.
             if (found) {
                 tmpItem.getCommand().menuSelected(tmpItem);
-            }// while
+            }
         }// if
     }// changeVariables
 
@@ -127,7 +148,9 @@ public class MenuBar extends AbstractComponent {
      */
     public MenuBar() {
         menuItems = new ArrayList();
-        animationEnabled = false;
+        setAnimation(false);
+        setCollapse(true);
+        setMoreMenuItem(null);
     }
 
     /**
@@ -135,11 +158,11 @@ public class MenuBar extends AbstractComponent {
      * caption must be given.
      * 
      * @param caption
-     *                the text for the menu item
+     *            the text for the menu item
      * @param icon
-     *                the icon for the menu item
+     *            the icon for the menu item
      * @param command
-     *                the command for the menu item
+     *            the command for the menu item
      * @throws IllegalArgumentException
      */
     public MenuBar.MenuItem addItem(String caption, Resource icon,
@@ -161,13 +184,13 @@ public class MenuBar extends AbstractComponent {
      * caption must be given.
      * 
      * @param caption
-     *                the text for the menu item
+     *            the text for the menu item
      * @param icon
-     *                the icon for the menu item
+     *            the icon for the menu item
      * @param command
-     *                the command for the menu item
+     *            the command for the menu item
      * @param itemToAddBefore
-     *                the item that will be after the new item
+     *            the item that will be after the new item
      * @throws IllegalArgumentException
      */
     public MenuBar.MenuItem addItemBefore(String caption, Resource icon,
@@ -203,7 +226,7 @@ public class MenuBar extends AbstractComponent {
      * Remove first occurrence the specified item from the main menu
      * 
      * @param item
-     *                The item to be removed
+     *            The item to be removed
      */
     public void removeItem(MenuBar.MenuItem item) {
         if (item != null) {
@@ -231,12 +254,13 @@ public class MenuBar extends AbstractComponent {
 
     /**
      * Enable or disable animated menubar appearance. Animation is disabled by
-     * default.
+     * default. Currently does nothing.
      * 
      * @param hasAnimation
      */
     public void setAnimation(boolean animation) {
         animationEnabled = animation;
+        requestRepaint();
     }
 
     /**
@@ -251,8 +275,75 @@ public class MenuBar extends AbstractComponent {
     }
 
     /**
-     * This interface contains the layer for menu commands of the MenuBar class .
-     * It's method will fire when the user clicks on the containing MenuItem.
+     * Set the icon to be used if a sub-menu has children. Defaults to null;
+     * 
+     * @param icon
+     */
+    public void setSubmenuIcon(Resource icon) {
+        submenuIcon = icon;
+        requestRepaint();
+    }
+
+    /**
+     * Get the icon used for sub-menus. Returns null if no icon is set.
+     * 
+     * @return
+     */
+    public Resource getSubmenuIcon() {
+        return submenuIcon;
+    }
+
+    /**
+     * Enable or disable collapsing top-level items. Top-level items will
+     * collapse to if there is not enough room for them. Items that don't fit
+     * will be placed under the "More" menu item.
+     * 
+     * Collapsing is enabled by default.
+     * 
+     * @param collapse
+     */
+    public void setCollapse(boolean collapse) {
+        collapseItems = collapse;
+        requestRepaint();
+    }
+
+    /**
+     * Collapsing is enabled by default.
+     * 
+     * @return true if the top-level items will be collapsed
+     */
+    public boolean getCollapse() {
+        return collapseItems;
+    }
+
+    /**
+     * Set the item that is used when collapsing the top level menu. The item
+     * command will be ignored. If set to null, the default item with the "More"
+     * text will be used.
+     * 
+     * @param item
+     */
+    public void setMoreMenuItem(MenuItem item) {
+        if (item != null) {
+            moreItem = item;
+        } else {
+            moreItem = new MenuItem("More", null, null);
+        }
+        requestRepaint();
+    }
+
+    /**
+     * Get the MenuItem used as the collapse menu item.
+     * 
+     * @return
+     */
+    public MenuItem getMoreMenuItem() {
+        return moreItem;
+    }
+
+    /**
+     * This interface contains the layer for menu commands of the MenuBar class
+     * . It's method will fire when the user clicks on the containing MenuItem.
      * The selected item is given as an argument.
      */
     public interface Command {
@@ -280,9 +371,9 @@ public class MenuBar extends AbstractComponent {
          * caption must be given.
          * 
          * @param text
-         *                The text associated with the command
+         *            The text associated with the command
          * @param command
-         *                The command to be fired
+         *            The command to be fired
          * @throws IllegalArgumentException
          */
         public MenuItem(String caption, Resource icon, MenuBar.Command command) {
@@ -309,11 +400,11 @@ public class MenuBar extends AbstractComponent {
          * command can be null, but a caption must be given.
          * 
          * @param caption
-         *                the text for the menu item
+         *            the text for the menu item
          * @param icon
-         *                the icon for the menu item
+         *            the icon for the menu item
          * @param command
-         *                the command for the menu item
+         *            the command for the menu item
          */
         public MenuBar.MenuItem addItem(String caption, Resource icon,
                 MenuBar.Command command) {
@@ -342,13 +433,13 @@ public class MenuBar extends AbstractComponent {
          * but a caption must be given.
          * 
          * @param caption
-         *                the text for the menu item
+         *            the text for the menu item
          * @param icon
-         *                the icon for the menu item
+         *            the icon for the menu item
          * @param command
-         *                the command for the menu item
+         *            the command for the menu item
          * @param itemToAddBefore
-         *                the item that will be after the new item
+         *            the item that will be after the new item
          * 
          */
         public MenuBar.MenuItem addItemBefore(String caption, Resource icon,
@@ -439,7 +530,7 @@ public class MenuBar extends AbstractComponent {
          * Set the command for this item. Set null to remove.
          * 
          * @param command
-         *                The MenuCommand of this item
+         *            The MenuCommand of this item
          */
         public void setCommand(MenuBar.Command command) {
             itsCommand = command;
@@ -449,7 +540,7 @@ public class MenuBar extends AbstractComponent {
          * Sets the icon. Set null to remove.
          * 
          * @param icon
-         *                The icon for this item
+         *            The icon for this item
          */
         public void setIcon(Resource icon) {
             itsIcon = icon;
@@ -460,7 +551,7 @@ public class MenuBar extends AbstractComponent {
          * Set the text of this object.
          * 
          * @param text
-         *                Text for this object
+         *            Text for this object
          */
         public void setText(java.lang.String text) {
             if (text != null) {
@@ -473,7 +564,7 @@ public class MenuBar extends AbstractComponent {
          * Remove the first occurrence of the item.
          * 
          * @param item
-         *                The item to be removed
+         *            The item to be removed
          */
         public void removeChild(MenuBar.MenuItem item) {
             if (item != null && itsChildren != null) {
@@ -500,7 +591,7 @@ public class MenuBar extends AbstractComponent {
          * Set the parent of this item. This is called by the addItem method.
          * 
          * @param parent
-         *                The parent item
+         *            The parent item
          */
         protected void setParent(MenuBar.MenuItem parent) {
             itsParent = parent;

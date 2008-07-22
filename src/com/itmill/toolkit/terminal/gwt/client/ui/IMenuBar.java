@@ -1,9 +1,11 @@
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Stack;
 
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
@@ -15,26 +17,42 @@ public class IMenuBar extends MenuBar implements Paintable {
     /** Set the CSS class name to allow styling. */
     public static final String CLASSNAME = "i-menubar";
 
-    /** Component identifier in UIDL communications. */
+    /** For server connections **/
     protected String uidlId;
-
-    /** Reference to the server connection object. */
     protected ApplicationConnection client;
 
-    /** A host reference for the Command objects */
     protected final IMenuBar hostReference = this;
+    protected static final boolean vertical = true;
+    protected String submenuIcon = null;
+    protected boolean collapseItems = true;
+
+    protected MenuItem moreItem = null;
+
+    // Construct an empty command to be used when the item has no command
+    // associated
+    protected static final Command emptyCommand = null;
 
     /**
      * The constructor should first call super() to initialize the component and
      * then handle any initialization relevant to IT Mill Toolkit.
      */
     public IMenuBar() {
-        // The superclass has a lot of relevant initialization
+        // Create an empty horizontal menubar
         super();
+        DOM.setStyleAttribute(this.getElement(), "white-space", "nowrap");
 
         // This method call of the Paintable interface sets the component
         // style name in DOM tree
         setStyleName(CLASSNAME);
+    }
+
+    public IMenuBar(boolean vertical) {
+        super(vertical);
+        DOM.setStyleAttribute(this.getElement(), "white-space", "nowrap");
+
+        // This method call of the Paintable interface sets the component
+        // style name in DOM tree
+        setStyleName(CLASSNAME + "_submenu");
     }
 
     /**
@@ -51,11 +69,8 @@ public class IMenuBar extends MenuBar implements Paintable {
             return;
         }
 
-        // Save reference to server connection object to be able to send
-        // user interaction later
+        // For future connections
         this.client = client;
-
-        // Save the UIDL identifier for the component
         uidlId = uidl.getId();
 
         // Empty the menu every time it receives new information
@@ -63,26 +78,47 @@ public class IMenuBar extends MenuBar implements Paintable {
             this.clearItems();
         }
 
-        /* Get tree received from server and actualize it in the GWT-MenuBar */
-
+        UIDL options = uidl.getChildUIDL(0);
         // For GWT 1.5
-        // this.setAnimationEnabled(uidl.getBooleanAttribute("animationEnabled"));
+        //this.setAnimationEnabled(options.getBooleanAttribute("animationEnabled"
+        // ))
+        // ;
+
+        if (options.hasAttribute("submenuIcon")) {
+            submenuIcon = client.translateToolkitUri(uidl.getChildUIDL(0)
+                    .getStringAttribute("submenuIcon"));
+        } else {
+            submenuIcon = null;
+        }
+
+        collapseItems = options.getBooleanAttribute("collapseItems");
+
+        if (collapseItems) {
+            UIDL moreItemUIDL = options.getChildUIDL(0);
+            StringBuffer itemHTML = new StringBuffer();
+            itemHTML.append("<p>");
+            if (moreItemUIDL.hasAttribute("icon")) {
+                itemHTML.append("<img src=\""
+                        + client.translateToolkitUri(moreItemUIDL
+                                .getStringAttribute("icon"))
+                        + "\" align=\"left\" />");
+            }
+            itemHTML.append(moreItemUIDL.getStringAttribute("text"));
+            itemHTML.append("</p>");
+            moreItem = new MenuItem(itemHTML.toString(), true, emptyCommand);
+        }
+
         UIDL items = uidl.getChildUIDL(1);
         Iterator itr = items.getChildIterator();
         Stack iteratorStack = new Stack();
         Stack menuStack = new Stack();
         MenuBar currentMenu = this;
 
-        // Construct an empty command to be used when the item has no command
-        // associated
-        Command emptyCommand = new Command() {
-            public void execute() {
-            }
-        };
+        // int topLevelWidth = 0;
 
         while (itr.hasNext()) {
             UIDL item = (UIDL) itr.next();
-            MenuItem menuItem = null; // For receiving the item
+            MenuItem currentItem = null; // For receiving the item
 
             String itemText = item.getStringAttribute("text");
             final int itemId = item.getIntAttribute("id");
@@ -90,46 +126,96 @@ public class IMenuBar extends MenuBar implements Paintable {
             boolean itemHasCommand = item.getBooleanAttribute("command");
 
             // Construct html from the text and the optional icon
-            if (!item.hasAttribute("icon")) {
-                itemText = "<p>" + itemText + "</p>";
-            } else {
-                itemText = "<p>"
-                        + "<img src=\""
+            StringBuffer itemHTML = new StringBuffer();
+
+            itemHTML.append("<p>");
+
+            if (item.hasAttribute("icon")) {
+                itemHTML.append("<img src=\""
                         + client.translateToolkitUri(item
-                                .getStringAttribute("icon")) + "\"</img>"
-                        + itemText + "</p>";
+                                .getStringAttribute("icon"))
+                        + "\" align=\"left\" />");
             }
 
-            // Check if we need to attach a command to this item
+            itemHTML.append(itemText);
+
+            if (currentMenu != this && item.getChildCount() > 0
+                    && submenuIcon != null) {
+                itemHTML.append("<img src=\"" + submenuIcon
+                        + "\" align=\"right\" />");
+            }
+
+            itemHTML.append("</p>");
+
+            Command cmd = null;
+
+            // Check if we need to create a command to this item
             if (itemHasCommand) {
                 // Construct a command that fires onMenuClick(int) with the
                 // item's id-number
-                Command normalCommand = new Command() {
+                cmd = new Command() {
                     public void execute() {
                         hostReference.onMenuClick(itemId);
                     }
                 };
-
-                menuItem = currentMenu.addItem(itemText, true, normalCommand);
-
-            } else {
-                menuItem = currentMenu.addItem(itemText, true, emptyCommand);
             }
+
+            currentItem = currentMenu.addItem(itemHTML.toString(), true, cmd);
 
             if (item.getChildCount() > 0) {
                 menuStack.push(currentMenu);
                 iteratorStack.push(itr);
                 itr = item.getChildIterator();
-                currentMenu = new MenuBar(true);
-                menuItem.setSubMenu(currentMenu);
+                currentMenu = new IMenuBar(vertical);
+                currentItem.setSubMenu(currentMenu);
             }
 
-            if (!itr.hasNext() && !iteratorStack.empty()) {
+            while (!itr.hasNext() && !iteratorStack.empty()) {
                 itr = (Iterator) iteratorStack.pop();
                 currentMenu = (MenuBar) menuStack.pop();
             }
         }// while
 
+        // we might need to collapse the top-level menu
+        if (collapseItems) {
+            int topLevelWidth = 0;
+
+            int ourWidth = this.getOffsetWidth();
+
+            int i = 0;
+            for (; i < getItems().size() && topLevelWidth < ourWidth; i++) {
+                MenuItem item = (MenuItem) getItems().get(i);
+                topLevelWidth += item.getOffsetWidth();
+            }
+
+            if (topLevelWidth > this.getOffsetWidth()) {
+                ArrayList toBeCollapsed = new ArrayList();
+                MenuBar collapsed = new IMenuBar(vertical);
+                for (int j = i - 2; j < getItems().size(); j++) {
+                    toBeCollapsed.add(getItems().get(j));
+                }
+
+                for (int j = 0; j < toBeCollapsed.size(); j++) {
+                    MenuItem item = (MenuItem) toBeCollapsed.get(j);
+                    removeItem(item);
+
+                    // it's ugly, but we have to insert the submenu icon
+                    if (item.getSubMenu() != null && submenuIcon != null) {
+                        String itemHTML = item.getHTML();
+                        StringBuffer itemText = new StringBuffer(itemHTML
+                                .substring(0, itemHTML.length() - 4));
+                        itemText.append("<img src=\"" + submenuIcon
+                                + "\" align=\"right\" /></p>");
+                        item.setHTML(itemText.toString());
+                    }
+
+                    collapsed.addItem(item);
+                }
+
+                moreItem.setSubMenu(collapsed);
+                addItem(moreItem);
+            }
+        }
     }// updateFromUIDL
 
     /**
@@ -137,7 +223,7 @@ public class IMenuBar extends MenuBar implements Paintable {
      * information to the server
      * 
      * @param clickedItemId
-     *                id of the item that was clicked
+     *            id of the item that was clicked
      */
     public void onMenuClick(int clickedItemId) {
         // Updating the state to the server can not be done before
@@ -149,4 +235,5 @@ public class IMenuBar extends MenuBar implements Paintable {
             client.updateVariable(uidlId, "clickedId", clickedItemId, true);
         }
     }
+
 }// class IMenuBar
