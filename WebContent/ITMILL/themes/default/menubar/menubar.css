@@ -1,0 +1,45 @@
+/*
+ *MenuBar styles
+ */
+ 
+/*Top menu */
+.i-menubar table {
+	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
+
+	border-right: 2px solid #c6cbcc;
+	border-bottom: 2px solid #c6cbcc;
+	border-top: 1px solid #d0d4d5;
+	border-left: 1px solid #d0d4d5;
+
+ 	background-color : #e9eced;
+ 	white-space: nowrap;
+}
+
+.i-menubar .gwt-MenuItem {
+	 cursor : default;
+	
+	 padding : 0px 10px;
+	 margin : 0px 10px;
+	
+	 background-color : #e9eced;
+ }
+
+.i-menubar .gwt-MenuItem-selected {
+	 background-color : #fff;
+ }
+
+/*Submenu*/
+.i-menubar_submenu {
+	 font-size : 12px;
+	 padding : 3px;
+	 font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
+	 color: #464f52;
+	 background-color : #e9eced;
+	 white-space: nowrap;
+	
+	 border-right: 2px solid #c6cbcc;
+	 border-bottom: 2px solid #c6cbcc;
+	 border-top: 1px solid #d0d4d5;
+	 border-left: 1px solid #d0d4d5;
+
+}

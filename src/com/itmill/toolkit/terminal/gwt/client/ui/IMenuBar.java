@@ -5,7 +5,6 @@ import java.util.Iterator;
 import java.util.Stack;
 
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
@@ -39,7 +38,6 @@ public class IMenuBar extends MenuBar implements Paintable {
     public IMenuBar() {
         // Create an empty horizontal menubar
         super();
-        DOM.setStyleAttribute(this.getElement(), "white-space", "nowrap");
 
         // This method call of the Paintable interface sets the component
         // style name in DOM tree
@@ -48,7 +46,6 @@ public class IMenuBar extends MenuBar implements Paintable {
 
     public IMenuBar(boolean vertical) {
         super(vertical);
-        DOM.setStyleAttribute(this.getElement(), "white-space", "nowrap");
 
         // This method call of the Paintable interface sets the component
         // style name in DOM tree
@@ -113,8 +110,6 @@ public class IMenuBar extends MenuBar implements Paintable {
         Stack iteratorStack = new Stack();
         Stack menuStack = new Stack();
         MenuBar currentMenu = this;
-
-        // int topLevelWidth = 0;
 
         while (itr.hasNext()) {
             UIDL item = (UIDL) itr.next();
