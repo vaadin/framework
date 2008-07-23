@@ -308,30 +308,30 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
 
         final Tree tree = new Tree();
 
-        /* Add planets as root items in the tree. */
+        // Add planets as root items in the tree.
         for (int i = 0; i < planets.length; i++) {
             final String planet = (String) (planets[i][0]);
             tree.addItem(planet);
 
             if (planets[i].length == 1) {
-                /* The planet has no moons so make it a leaf. */
+                // The planet has no moons so make it a leaf.
                 tree.setChildrenAllowed(planet, false);
             } else {
-                /* Add children (moons) under the planets. */
+                // Add children (moons) under the planets.
                 for (int j = 1; j < planets[i].length; j++) {
                     final String moon = (String) planets[i][j];
 
-                    /* Add the item as a regular item. */
+                    // Add the item as a regular item.
                     tree.addItem(moon);
 
-                    /* Set it to be a child. */
+                    // Set it to be a child.
                     tree.setParent(moon, planet);
 
-                    /* Make the moons look like leaves. */
+                    // Make the moons look like leaves.
                     tree.setChildrenAllowed(moon, false);
                 }
 
-                /* Expand the subtree. */
+                // Expand the subtree.
                 tree.expandItemsRecursively(planet);
             }
         }
@@ -352,17 +352,31 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
         final OrderedLayout detailslayout = new OrderedLayout();
         detailspanel.setLayout(detailslayout);
         
-        // When a tree item (planet or moon) is clicked, open the item in Details view.
-        tree.setImmediate(true);
-        tree.addListener(new ValueChangeListener() {
-            public void valueChange(ValueChangeEvent event) {
-                String planet = (String) tree.getValue();
+		// Allow null selection - this is the default actually.
+		tree.setNullSelectionAllowed(true);
+		
+		// When a tree item (planet or moon) is clicked, open the item in Details view.
+		tree.setImmediate(true);
+		tree.addListener(new ValueChangeListener() {
+		    String lastselected = null;
+		    
+		    public void valueChange(ValueChangeEvent event) {
+		        String planet = (String) tree.getValue();
+		
+		        // Reselect a selected item if it is unselected by clicking it.
+		        if (planet == null) {
+		        	planet = lastselected;
+		        	tree.setValue(planet);
+		        }
+		        lastselected = planet;
+                
                 detailspanel.setCaption("Details on " + planet);
                 detailslayout.removeAllComponents();
                 
                 // Put some stuff in the Details view.
                 detailslayout.addComponent(new Label("Where is the cat?"));
                 detailslayout.addComponent(new Label("The cat is in " + planet + "."));
+                
             }
         });
 
@@ -563,6 +577,8 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
                 main.addComponent(new TableExample3());
             } else if (param.equals("editable")) {
                 main.addComponent(new TableEditable());
+            } else if (param.equals("bean")) {
+                main.addComponent(new TableEditableBean());
             } else if (param.equals("paging")) {
                 PagingTable table = new PagingTable();
                 table.addContainerProperty("Column 1", String.class, null);

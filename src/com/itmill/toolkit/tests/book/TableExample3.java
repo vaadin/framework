@@ -33,7 +33,7 @@ public class TableExample3 extends CustomComponent {
         table.addContainerProperty("Is Transferred", CheckBox.class,  null);
         table.addContainerProperty("Comments",       TextField.class, null);
         table.addContainerProperty("Details",        Button.class,    null);
-
+        
         /* Add a few items in the table. */
         for (int i=0; i<100; i++) {
             // Create the fields for the current table row
@@ -69,10 +69,14 @@ public class TableExample3 extends CustomComponent {
                                         commentsField, detailsField},
                           itemId);
         }
-        
-        /* Show just three rows because they are so high. */
+
+        // Show just three rows because they are so high.
         table.setPageLength(3);
 
+        // Initially show the 50th item in the top of the table.
+        table.setCurrentPageFirstItemIndex(50);
+        //table.setCurrentPageFirstItemId(initial);
+        
         layout.addComponent(table);
     }
 }
