@@ -491,7 +491,7 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
     }
 
     public void setCaption(String c, String icon) {
-        String html = c;
+        String html = Util.escapeHTML(c);
         if (icon != null) {
             icon = client.translateToolkitUri(icon);
             html = "<img src=\"" + icon + "\" class=\"i-icon\" />" + html;
