@@ -5,19 +5,25 @@
 package com.itmill.toolkit.tests.book;
 
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.Vector;
 
-import com.itmill.toolkit.data.Container;
+import org.hsqldb.*;
+
 import com.itmill.toolkit.data.Item;
-import com.itmill.toolkit.data.Property;
 import com.itmill.toolkit.data.Validator;
+import com.itmill.toolkit.data.Container.PropertySetChangeEvent;
+import com.itmill.toolkit.data.Container.PropertySetChangeListener;
 import com.itmill.toolkit.data.Property.ValueChangeEvent;
 import com.itmill.toolkit.data.Property.ValueChangeListener;
-import com.itmill.toolkit.data.util.BeanItem;
+import com.itmill.toolkit.data.util.QueryContainer;
 import com.itmill.toolkit.data.validator.StringLengthValidator;
 import com.itmill.toolkit.terminal.ClassResource;
 import com.itmill.toolkit.terminal.DownloadStream;
@@ -36,8 +42,6 @@ import com.itmill.toolkit.ui.CustomLayout;
 import com.itmill.toolkit.ui.DateField;
 import com.itmill.toolkit.ui.Embedded;
 import com.itmill.toolkit.ui.ExpandLayout;
-import com.itmill.toolkit.ui.Field;
-import com.itmill.toolkit.ui.FieldFactory;
 import com.itmill.toolkit.ui.Form;
 import com.itmill.toolkit.ui.FormLayout;
 import com.itmill.toolkit.ui.GridLayout;
@@ -57,7 +61,6 @@ import com.itmill.toolkit.ui.TextField;
 import com.itmill.toolkit.ui.Tree;
 import com.itmill.toolkit.ui.Window;
 import com.itmill.toolkit.ui.Button.ClickEvent;
-import com.itmill.toolkit.ui.Window.Notification;
 
 public class BookTestApplication extends com.itmill.toolkit.Application {
     Window main = new Window("Application window");
@@ -142,7 +145,7 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
                         "progress/window", "progress/thread", "progress",
                         "customlayout", "spacing", "margin", "clientinfo",
                         "fillinform/templates", "notification", "print",
-                        "richtextfield"};
+                        "richtextfield", "querycontainer"};
                 for (int i = 0; i < examples.length; i++) {
                     main.addComponent(new Label("<a href='" + context.toString() +
                             examples[i] + "'>" + examples[i] + "</a>",
@@ -223,6 +226,8 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
                 example_Print(main, param);
             } else if (example.equals("richtextfield")) {
                 example_RichTextField(main, param);
+            } else if (example.equals("querycontainer")) {
+                example_QueryContainer(main, param);
             } else {
                 ; // main.addComponent(new Label("Unknown test '"+example+"'."));
             }
@@ -1418,5 +1423,63 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
         main.addComponent(rtarea);
         main.addComponent(show);
         main.addComponent(html);
+    }
+
+    void example_QueryContainer(final Window main, String param) {
+        try {
+            // Create a database connection
+            Class.forName("org.hsqldb.jdbcDriver");
+            final Connection c = DriverManager.getConnection("jdbc:hsqldb:mem:qcexample", "sa", "");
+            
+            // Create an example table and put some data in it.
+            Statement st = c.createStatement();
+            st.executeQuery("CREATE TABLE Prisoners (id INTEGER, name VARCHAR)");
+            st.close();
+            for (int i=0; i<100; i++) {
+                st = c.createStatement();
+                st.executeQuery("INSERT INTO Prisoners (id, name) VALUES ("+i+",'I am number "+(i+1)+"')");
+                st.close();
+            }
+            
+            // Query the database
+            final QueryContainer qc = new QueryContainer("SELECT id,name FROM Prisoners", c);
+            
+            // Create a component for selecting a query result item.
+            Select select = new Select("Select an item");
+            
+            // The items shown in the selection component are obtained from the query.
+            select.setContainerDataSource(qc);
+            
+            // The item captions are obtained from a field in the query result. 
+            select.setItemCaptionMode(Select.ITEM_CAPTION_MODE_PROPERTY);
+            
+            // Set the name of the field from which the item captions are obtained.
+            select.setItemCaptionPropertyId("name");
+        
+            // When selection changes, display the selected item.
+            select.setImmediate(true);
+            final Label selection = new Label("Currently selected: -");
+            select.addListener(new ValueChangeListener() {
+                public void valueChange(ValueChangeEvent event) {
+                    // Get the item id of the currently selected item
+                    Integer itemId = (Integer) event.getProperty().getValue();
+                    
+                    // Use the item ID to get the actual row from the query result.
+                    Item qrItem = qc.getItem(itemId);
+                    
+                    // Display the item ID
+                    selection.setValue("Currently selected: result row "+itemId.intValue() +
+                                       " (id="+qrItem.getItemProperty("id")+", " +
+                                       "name="+qrItem.getItemProperty("name")+")");
+                }
+            });
+            
+            main.addComponent(select);
+            main.addComponent(selection);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 }
