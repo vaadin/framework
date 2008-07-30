@@ -115,7 +115,7 @@ public class SplitPanel extends AbstractLayout {
     public void setSecondComponent(Component c) {
         if (secondComponent != null) {
             // detach old
-            removeComponent(c);
+            removeComponent(secondComponent);
         }
         secondComponent = c;
         super.addComponent(c);
