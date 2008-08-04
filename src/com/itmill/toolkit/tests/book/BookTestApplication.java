@@ -1429,20 +1429,20 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
         try {
             // Create a database connection
             Class.forName("org.hsqldb.jdbcDriver");
-            final Connection c = DriverManager.getConnection("jdbc:hsqldb:mem:qcexample", "sa", "");
+            final Connection connection = DriverManager.getConnection("jdbc:hsqldb:mem:qcexample", "sa", "");
             
             // Create an example table and put some data in it.
-            Statement st = c.createStatement();
+            Statement st = connection.createStatement();
             st.executeQuery("CREATE TABLE Prisoners (id INTEGER, name VARCHAR)");
             st.close();
             for (int i=0; i<100; i++) {
-                st = c.createStatement();
+                st = connection.createStatement();
                 st.executeQuery("INSERT INTO Prisoners (id, name) VALUES ("+i+",'I am number "+(i+1)+"')");
                 st.close();
             }
             
             // Query the database
-            final QueryContainer qc = new QueryContainer("SELECT id,name FROM Prisoners", c);
+            final QueryContainer qc = new QueryContainer("SELECT id,name FROM Prisoners", connection);
             
             // Create a component for selecting a query result item.
             Select select = new Select("Select an item");
