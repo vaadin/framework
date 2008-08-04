@@ -192,3 +192,14 @@
 .i-datefield-rendererror .i-textfield {
 	background: #ff9999;
 }
+
+/* IE somehow loses generic i-disabled alpha. See #1960 */
+* html .i-disabled .i-datefield-button,
+* html .i-disabled .i-datefield-textfield {
+	filter: alpha(opacity=30);
+}
+*+ html .i-disabled .i-datefield-button,
+*+ html .i-disabled .i-datefield-textfield {
+	filter: alpha(opacity=30);
+}
+

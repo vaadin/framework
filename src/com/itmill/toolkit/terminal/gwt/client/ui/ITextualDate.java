@@ -7,16 +7,18 @@ package com.itmill.toolkit.terminal.gwt.client.ui;
 import java.util.Date;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.ChangeListener;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
+import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
 import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.Focusable;
 import com.itmill.toolkit.terminal.gwt.client.LocaleNotLoadedException;
 import com.itmill.toolkit.terminal.gwt.client.LocaleService;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
-import com.itmill.toolkit.terminal.gwt.client.Util;
 
 public class ITextualDate extends IDateField implements Paintable, Field,
         ChangeListener, ContainerResizedListener, Focusable {
@@ -24,7 +26,7 @@ public class ITextualDate extends IDateField implements Paintable, Field,
     private static final String PARSE_ERROR_CLASSNAME = CLASSNAME
             + "-parseerror";
 
-    private final ITextField text;
+    private final TextBox text;
 
     private String formatStr;
 
@@ -36,7 +38,11 @@ public class ITextualDate extends IDateField implements Paintable, Field,
 
     public ITextualDate() {
         super();
-        text = new ITextField();
+        text = new TextBox();
+        // use normal textfield styles as a basis
+        text.setStyleName(ITextField.CLASSNAME);
+        // add datefield spesific style name also
+        text.addStyleName(CLASSNAME + "-textfield");
         text.addChangeListener(this);
         add(text);
     }
@@ -222,8 +228,9 @@ public class ITextualDate extends IDateField implements Paintable, Field,
 
     public void setWidth(String newWidth) {
         if (!"".equals(newWidth) && (width == null || !newWidth.equals(width))) {
-            if (Util.isIE6()) {
-                text.setColumns(1); // in IE6 cols ~ min-width
+            if (BrowserInfo.get().isIE6()) {
+                // in IE6 cols ~ min-width
+                DOM.setElementProperty(text.getElement(), "size", "1");
             }
             needLayout = true;
             width = newWidth;
@@ -234,6 +241,10 @@ public class ITextualDate extends IDateField implements Paintable, Field,
             }
         } else {
             if ("".equals(newWidth) && width != null && !"".equals(width)) {
+                if (BrowserInfo.get().isIE6()) {
+                    // revert IE6 hack
+                    DOM.setElementProperty(text.getElement(), "size", "");
+                }
                 super.setWidth("");
                 needLayout = true;
                 iLayout();
