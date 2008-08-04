@@ -7,7 +7,6 @@ package com.itmill.toolkit.tests.book;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Iterator;
@@ -15,12 +14,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import org.hsqldb.*;
-
 import com.itmill.toolkit.data.Item;
 import com.itmill.toolkit.data.Validator;
-import com.itmill.toolkit.data.Container.PropertySetChangeEvent;
-import com.itmill.toolkit.data.Container.PropertySetChangeListener;
 import com.itmill.toolkit.data.Property.ValueChangeEvent;
 import com.itmill.toolkit.data.Property.ValueChangeListener;
 import com.itmill.toolkit.data.util.QueryContainer;
@@ -48,6 +43,7 @@ import com.itmill.toolkit.ui.GridLayout;
 import com.itmill.toolkit.ui.InlineDateField;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.Link;
+import com.itmill.toolkit.ui.MenuBar;
 import com.itmill.toolkit.ui.NativeSelect;
 import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Panel;
@@ -61,6 +57,7 @@ import com.itmill.toolkit.ui.TextField;
 import com.itmill.toolkit.ui.Tree;
 import com.itmill.toolkit.ui.Window;
 import com.itmill.toolkit.ui.Button.ClickEvent;
+import com.itmill.toolkit.ui.MenuBar.MenuItem;
 
 public class BookTestApplication extends com.itmill.toolkit.Application {
     Window main = new Window("Application window");
@@ -130,7 +127,12 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
                 final Window child = (Window) cwi.next();
                 main.removeWindow(child);
             }
+            
+            // The index is listed inside a grid layout
             main.setLayout(new OrderedLayout());
+            GridLayout grid = new GridLayout(4,4);
+            grid.addStyleName("index");
+            main.addComponent(grid);
 
             if (example.equals("index")) {
                 final String examples[] = { "defaultbutton", "label",
@@ -145,9 +147,9 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
                         "progress/window", "progress/thread", "progress",
                         "customlayout", "spacing", "margin", "clientinfo",
                         "fillinform/templates", "notification", "print",
-                        "richtextfield", "querycontainer"};
+                        "richtextfield", "querycontainer", "menubar"};
                 for (int i = 0; i < examples.length; i++) {
-                    main.addComponent(new Label("<a href='" + context.toString() +
+                    grid.addComponent(new Label("<a href='" + context.toString() +
                             examples[i] + "'>" + examples[i] + "</a>",
                             Label.CONTENT_XHTML));
                 }
@@ -228,6 +230,8 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
                 example_RichTextField(main, param);
             } else if (example.equals("querycontainer")) {
                 example_QueryContainer(main, param);
+            } else if (example.equals("menubar")) {
+                example_MenuBar(main, param);
             } else {
                 ; // main.addComponent(new Label("Unknown test '"+example+"'."));
             }
@@ -1482,4 +1486,38 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
             e.printStackTrace();
         }
     }
+
+    void example_MenuBar(final Window main, String param) {
+        // Create a menu bar
+        final MenuBar menubar = new MenuBar();
+        main.addComponent(menubar);
+        
+        // A feedback component
+        final Label selection = new Label("");
+        main.addComponent(selection);
+        
+        // Define a common menu command for all the menu items.
+        MenuBar.Command mycommand = new MenuBar.Command() {
+            public void menuSelected(MenuItem selectedItem) {
+                selection.setValue("Ordered a " + selectedItem.getText() + " from menu.");
+            }  
+        };
+        
+        // Put some items in the menu hierarchically
+        MenuBar.MenuItem beverages = menubar.addItem("Beverages", null, null);
+        MenuBar.MenuItem hot_beverages = beverages.addItem("Hot", null, null);
+        hot_beverages.addItem("Tea", null, mycommand);
+        hot_beverages.addItem("Coffee", null, mycommand);
+        MenuBar.MenuItem cold_beverages = beverages.addItem("Cold", null, null);
+        cold_beverages.addItem("Milk", null, mycommand);
+        
+        // Another top-level item
+        MenuBar.MenuItem snacks = menubar.addItem("Snacks", null, null);
+        snacks.addItem("Weisswurst", null, mycommand);
+        snacks.addItem("Salami", null, mycommand);
+        
+        // Yet another top-level item
+        MenuBar.MenuItem services = menubar.addItem("Services", null, null);
+        services.addItem("Car Service", null, mycommand);
+   }
 }
