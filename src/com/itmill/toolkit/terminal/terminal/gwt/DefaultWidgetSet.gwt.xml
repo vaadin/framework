@@ -1,0 +1,7 @@
+<module>
+	<source path="client"/>
+
+	<!-- This module just defines a entrypoint for the DefaultWidgetSet -->
+	<inherits name="com.itmill.toolkit.terminal.gwt.DefaultWidgetSetNoEntry"/>
+  	<entry-point class="com.itmill.toolkit.terminal.gwt.client.DefaultWidgetSet"/>
+</module>
