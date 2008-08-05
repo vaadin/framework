@@ -66,7 +66,7 @@ public class ShortcutActionHandler {
         }
     }
 
-    public void handleKeyboardEvent(Event event) {
+    public void handleKeyboardEvent(final Event event) {
         final int modifiers = KeyboardListenerCollection
                 .getKeyboardModifiers(event);
         final char keyCode = (char) DOM.eventGetKeyCode(event);
@@ -76,6 +76,7 @@ public class ShortcutActionHandler {
         while (it.hasNext()) {
             final ShortcutAction a = (ShortcutAction) it.next();
             if (a.getShortcutCombination().equals(kc)) {
+                DOM.eventPreventDefault(event);
                 shakeTarget(DOM.eventGetTarget(event));
                 DeferredCommand.addCommand(new Command() {
                     public void execute() {
