@@ -206,7 +206,7 @@ public class Label extends AbstractComponent implements Property,
         } else if (contentMode == CONTENT_RAW) {
             target.startTag("data");
             target.addAttribute("escape", false);
-            target.addCharacterData(toString());
+            target.addText(toString());
             target.endTag("data");
         }
 
