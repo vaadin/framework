@@ -344,13 +344,15 @@ public class ApplicationConnection {
                     DOM.setElementProperty(loadElement, "className",
                             "i-loading-indicator");
                     DOM.setStyleAttribute(loadElement, "display", "block");
-                    DOM.setStyleAttribute(loadElement, "left", (view
-                            .getAbsoluteLeft()
+                    final int updatedX = Window.getScrollLeft()
+                            + view.getAbsoluteLeft()
                             + view.getOffsetWidth()
                             - DOM.getElementPropertyInt(loadElement,
-                                    "offsetWidth") - 5)
-                            + "px");
-
+                                    "offsetWidth") - 5;
+                    DOM.setStyleAttribute(loadElement, "left", updatedX + "px");
+                    final int updatedY = Window.getScrollTop() + 6
+                            + view.getAbsoluteTop();
+                    DOM.setStyleAttribute(loadElement, "top", updatedY + "px");
                     // Initialize other timers
                     loadTimer2 = new Timer() {
                         public void run() {
