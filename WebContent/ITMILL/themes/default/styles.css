@@ -820,6 +820,9 @@ i-orderedlayout-margin-top {
 	text-align: left /* Force default alignment */
 }
 
+.i-panel {
+	background: transparent url(panel/img/top-left.png) no-repeat;
+}
 .i-panel:before {
 	display: block;
 	content: "";
@@ -851,6 +854,12 @@ i-orderedlayout-margin-top {
 	border: 1px solid #babfc0;
 	border-top: none;
 	background: #fff;
+	overflow:hidden;
+}
+
+.i-panel-caption,
+.i-panel-caption-light {
+	text-overflow: ellipsis;
 }
 
 .i-panel-nocaption {
@@ -865,7 +874,6 @@ i-orderedlayout-margin-top {
 	position: relative;
 	width: 9px;
 	height: 9px;
-	background: transparent url(panel/img/top-left.png) no-repeat;
 	margin: -15px 0 5px -19px;
 }
 
@@ -903,6 +911,9 @@ i-orderedlayout-margin-top {
 
 /* Light panel style */
 
+.i-panel-light {
+	background: transparent;
+}
 .i-panel-light:before {
 	display: none;
 }
