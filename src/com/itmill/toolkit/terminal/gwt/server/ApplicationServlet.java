@@ -851,13 +851,11 @@ public class ApplicationServlet extends HttpServlet {
             page.write("pathInfo: '" + pathInfo + "', ");
             page.write("themeUri:");
             page.write(themeUri != null ? "'" + themeUri + "'" : "null");
-            if (testingApplication) {
-                page.write(", versionInfo : {toolkitVersion:\"");
-                page.write(VERSION);
-                page.write("\",applicationVersion:\"");
-                page.write(application.getVersion());
-                page.write("\"}");
-            }
+            page.write(", versionInfo : {toolkitVersion:\"");
+            page.write(VERSION);
+            page.write("\",applicationVersion:\"");
+            page.write(application.getVersion());
+            page.write("\"}");
             page.write("};\n//]]>\n</script>\n");
 
             if (themeName != null) {
@@ -901,13 +899,11 @@ public class ApplicationServlet extends HttpServlet {
             page.write("pathInfo: '" + pathInfo + "', ");
             page.write("themeUri:");
             page.write(themeUri != null ? "'" + themeUri + "'" : "null");
-            if (testingApplication) {
-                page.write(", versionInfo : {toolkitVersion:\"");
-                page.write(VERSION);
-                page.write("\",applicationVersion:\"");
-                page.write(application.getVersion());
-                page.write("\"}");
-            }
+            page.write(", versionInfo : {toolkitVersion:\"");
+            page.write(VERSION);
+            page.write("\",applicationVersion:\"");
+            page.write(application.getVersion());
+            page.write("\"}");
             page.write("};\n//]]>\n</script>\n");
 
             if (themeName != null) {

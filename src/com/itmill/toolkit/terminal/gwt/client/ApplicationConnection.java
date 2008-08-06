@@ -107,7 +107,7 @@ public class ApplicationConnection {
         configuration = cnf;
 
         if (isDebugMode()) {
-            console = new DebugConsole(this);
+            console = new DebugConsole(this, cnf);
         } else {
             console = new NullConsole();
         }

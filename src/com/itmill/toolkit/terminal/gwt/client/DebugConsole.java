@@ -18,9 +18,24 @@ import com.itmill.toolkit.terminal.gwt.client.ui.IWindow;
 
 public final class DebugConsole extends IWindow implements Console {
 
+    /**
+     * Builds number. For example 0-custom_tag in 5.0.0-custom_tag.
+     */
+    public static final String VERSION;
+
+    /* Initialize version numbers from string replaced by build-script. */
+    static {
+        if ("@VERSION@".equals("@" + "VERSION" + "@")) {
+            VERSION = "5.9.9-INTERNAL-NONVERSIONED-DEBUG-BUILD";
+        } else {
+            VERSION = "@VERSION@";
+        }
+    }
+
     private final Panel panel;
 
-    public DebugConsole(ApplicationConnection client) {
+    public DebugConsole(ApplicationConnection client,
+            ApplicationConfiguration cnf) {
         super();
         this.client = client;
         panel = new FlowPanel();
@@ -30,6 +45,18 @@ public final class DebugConsole extends IWindow implements Console {
         setCaption("Debug window");
         minimize();
         show();
+
+        ;
+
+        log("Toolkit application servlet version: " + cnf.getSerletVersion());
+        log("Widget set is built on version: " + VERSION);
+        log("Application version: " + cnf.getApplicationVersion());
+
+        if (!cnf.getSerletVersion().equals(VERSION)) {
+            error("Warning: your widget set seems to be built with different "
+                    + "version than the one used on server. Unexpected "
+                    + "behavior may occur.");
+        }
     }
 
     private void minimize() {

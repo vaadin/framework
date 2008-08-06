@@ -75,4 +75,13 @@ public class ApplicationConfiguration {
         return conf;
     }
 
+    public native String getSerletVersion()
+    /*-{
+        return this.@com.itmill.toolkit.terminal.gwt.client.ApplicationConfiguration::versionInfo.toolkitVersion;
+    }-*/;
+
+    public native String getApplicationVersion()
+    /*-{
+        return this.@com.itmill.toolkit.terminal.gwt.client.ApplicationConfiguration::versionInfo.applicationVersion;
+    }-*/;
 }
