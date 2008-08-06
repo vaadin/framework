@@ -285,21 +285,25 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
         secondChild = w;
     }
 
-    public void setHeight(String height) {
+    public void setHeight(final String height) {
         super.setHeight(height);
-        // give sane height
-        getOffsetHeight(); // shake IE
-        if (getOffsetHeight() < MIN_SIZE) {
-            super.setHeight(MIN_SIZE + "px");
+        if (isAttached()) {
+            // give sane height
+            getOffsetHeight(); // shake IE
+            if (getOffsetHeight() < MIN_SIZE) {
+                super.setHeight(MIN_SIZE + "px");
+            }
         }
     }
 
     public void setWidth(String width) {
         super.setWidth(width);
-        // give sane width
-        getOffsetWidth(); // shake IE
-        if (getOffsetWidth() < MIN_SIZE) {
-            super.setWidth(MIN_SIZE + "px");
+        if (isAttached()) {
+            // give sane width
+            getOffsetWidth(); // shake IE
+            if (getOffsetWidth() < MIN_SIZE) {
+                super.setWidth(MIN_SIZE + "px");
+            }
         }
     }
 
