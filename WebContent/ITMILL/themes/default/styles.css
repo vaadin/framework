@@ -675,42 +675,53 @@ input.i-modified,
 .i-menubar table {
 	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
 
-	border-right: 2px solid #c6cbcc;
-	border-bottom: 2px solid #c6cbcc;
-	border-top: 1px solid #d0d4d5;
-	border-left: 1px solid #d0d4d5;
+	border-style:ridge;
+	border-width:thin;
+	border-color:	#D3D3D3;
 
- 	background-color : #e9eced;
+ 	background-color : white;
  	white-space: nowrap;
+ 
 }
 
-.i-menubar .gwt-MenuItem {
+.i-menubar .menuitem{
 	 cursor : default;
 	
 	 padding : 0px 10px;
 	 margin : 0px 10px;
 	
-	 background-color : #e9eced;
+	 background-color : white;
  }
 
-.i-menubar .gwt-MenuItem-selected {
-	 background-color : #fff;
+.i-menubar .menuitem-selected {
+	 background-color : 	#EEEEFF;
  }
 
 /*Submenu*/
-.i-menubar_submenu {
-	 font-size : 12px;
+.i-menubar-submenu {
+	 font-size: 13px;
 	 padding : 3px;
+	 
 	 font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
-	 color: #464f52;
-	 background-color : #e9eced;
+	 background-color : white;
 	 white-space: nowrap;
-	
-	 border-right: 2px solid #c6cbcc;
-	 border-bottom: 2px solid #c6cbcc;
-	 border-top: 1px solid #d0d4d5;
-	 border-left: 1px solid #d0d4d5;
+		
+	 border-style:ridge;
+	 border-width:thin;
+	 border-color:	#D3D3D3;
+	 
 
+}
+
+.i-menubar-submenu .menuitem { 
+    cursor                      :   default;
+
+    background-color            :   white;
+    padding                     :   2px 10px;
+}
+
+.i-menubar-submenu .menuitem-selected {
+	background-color : 	#EEEEFF;
 }
 
 .i-Notification {
@@ -855,11 +866,6 @@ i-orderedlayout-margin-top {
 	border-top: none;
 	background: #fff;
 	overflow:hidden;
-}
-
-.i-panel-caption,
-.i-panel-caption-light {
-	text-overflow: ellipsis;
 }
 
 .i-panel-nocaption {
