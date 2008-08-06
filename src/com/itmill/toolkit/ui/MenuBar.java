@@ -154,6 +154,20 @@ public class MenuBar extends AbstractComponent {
     }
 
     /**
+     * Add a new item to the menubar. Command can be null, but a caption must be
+     * given.
+     * 
+     * @param caption
+     *            the text for the menu item
+     * @param command
+     *            the command for the menu item
+     * @throws IllegalArgumentException
+     */
+    public MenuBar.MenuItem addItem(String caption, MenuBar.Command command) {
+        return addItem(caption, null, command);
+    }
+
+    /**
      * Add a new item to the menubar. Icon and command can be null, but a
      * caption must be given.
      * 
@@ -393,6 +407,19 @@ public class MenuBar extends AbstractComponent {
          */
         public boolean hasChildren() {
             return itsChildren != null;
+        }
+
+        /**
+         * Add a new item inside this item, thus creating a submenu. Command can
+         * be null, but a caption must be given.
+         * 
+         * @param caption
+         *            the text for the menu item
+         * @param command
+         *            the command for the menu item
+         */
+        public MenuBar.MenuItem addItem(String caption, MenuBar.Command command) {
+            return addItem(caption, null, command);
         }
 
         /**
