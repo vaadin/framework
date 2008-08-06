@@ -1959,8 +1959,14 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
                 int col = 0;
                 // row header
                 if (showRowHeaders) {
-                    addCell(uidl.getStringAttribute("caption"), aligns[col++],
-                            "");
+                    String caption = uidl.getStringAttribute("caption");
+                    if (uidl.hasAttribute("icon")) {
+                        caption = "<img src=\""
+                                + client.translateToolkitUri(uidl
+                                        .getStringAttribute("icon"))
+                                + "\" alt=\"icon\" class=\"i-icon\">" + caption;
+                    }
+                    addCell(caption, aligns[col++], "");
                 }
 
                 if (uidl.hasAttribute("al")) {
