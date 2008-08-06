@@ -87,6 +87,9 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
             // Wrangling data: Tree
             { "Wrangling data", "Tree", "A hierarchy of things",
                     TreeExample.class },
+            // Misc: Forms
+            { "Misc", "Forms", "Every application needs forms",
+                    FormExample.class },
             // Misc: Notifications
             { "Misc", "Notifications", "Notifications can improve usability",
                     NotificationExample.class },

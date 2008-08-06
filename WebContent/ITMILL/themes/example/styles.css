@@ -5,3 +5,13 @@
 	avoids excess scrollbars if moving sub-window over the window area */
 	overflow:hidden;
 }
+
+.i-form {
+	border: 1px solid;
+	margin: 10px;
+	padding: 5px;
+}
+
+.i-orderedlayout-formroot td {
+	vertical-align: top;
+}
