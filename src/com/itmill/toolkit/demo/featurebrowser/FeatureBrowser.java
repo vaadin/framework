@@ -84,12 +84,12 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
                     "Table (\"grid\")",
                     "Table with bells, whistles, editmode and actions (contextmenu)",
                     TableExample.class },
+            // Wrangling data: Form
+            { "Wrangling data", "Form", "Every application needs forms",
+                    FormExample.class },
             // Wrangling data: Tree
             { "Wrangling data", "Tree", "A hierarchy of things",
                     TreeExample.class },
-            // Misc: Forms
-            { "Misc", "Forms", "Every application needs forms",
-                    FormExample.class },
             // Misc: Notifications
             { "Misc", "Notifications", "Notifications can improve usability",
                     NotificationExample.class },
