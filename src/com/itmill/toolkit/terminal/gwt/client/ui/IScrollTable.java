@@ -1269,9 +1269,11 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
                 final UIDL col = (UIDL) it.next();
                 final String cid = col.getStringAttribute("cid");
                 updated.add(cid);
+
+                String caption = buildCaptionHtmlSnippet(col);
                 HeaderCell c = getHeaderCell(cid);
                 if (c == null) {
-                    c = new HeaderCell(cid, col.getStringAttribute("caption"));
+                    c = new HeaderCell(cid, caption);
                     availableCells.put(cid, c);
                     if (initializedAndAttached) {
                         // we will need a column width recalculation
@@ -1280,7 +1282,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
                         isNewBody = true;
                     }
                 } else {
-                    c.setText(col.getStringAttribute("caption"));
+                    c.setText(caption);
                 }
 
                 if (col.hasAttribute("sortable")) {
@@ -1298,7 +1300,6 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
                     final String width = col.getStringAttribute("width");
                     c.setWidth(Integer.parseInt(width));
                 }
-                // TODO icon
             }
             // check for orphaned header cells
             it = availableCells.keySet().iterator();
@@ -1959,14 +1960,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
                 int col = 0;
                 // row header
                 if (showRowHeaders) {
-                    String caption = uidl.getStringAttribute("caption");
-                    if (uidl.hasAttribute("icon")) {
-                        caption = "<img src=\""
-                                + client.translateToolkitUri(uidl
-                                        .getStringAttribute("icon"))
-                                + "\" alt=\"icon\" class=\"i-icon\">" + caption;
-                    }
-                    addCell(caption, aligns[col++], "");
+                    addCell(buildCaptionHtmlSnippet(uidl), aligns[col++], "");
                 }
 
                 if (uidl.hasAttribute("al")) {
@@ -2247,6 +2241,24 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
                 }
             }
         }
+    }
+
+    /**
+     * Helper function to build html snippet for column or row headers
+     * 
+     * @param uidl
+     *                possibly with values caption and icon
+     * @return html snippet containing possibly an icon + caption text
+     */
+    private String buildCaptionHtmlSnippet(UIDL uidl) {
+        String s = uidl.getStringAttribute("caption");
+        if (uidl.hasAttribute("icon")) {
+            s = "<img src=\""
+                    + client.translateToolkitUri(uidl
+                            .getStringAttribute("icon"))
+                    + "\" alt=\"icon\" class=\"i-icon\">" + s;
+        }
+        return s;
     }
 
 }
