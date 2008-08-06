@@ -142,6 +142,8 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
     }
 
     protected void constructDOM() {
+        setStyleName(CLASSNAME);
+
         header = DOM.createDiv();
         DOM.setElementProperty(header, "className", CLASSNAME + "-outerheader");
         headerText = DOM.createDiv();
@@ -177,11 +179,11 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
         DOM.appendChild(wrapper2, footer);
         DOM.appendChild(wrapper, wrapper2);
         DOM.appendChild(super.getContainerElement(), wrapper);
-        DOM.setElementProperty(getElement(), "className", CLASSNAME);
 
         sinkEvents(Event.MOUSEEVENTS);
 
         setWidget(contentPanel);
+
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
