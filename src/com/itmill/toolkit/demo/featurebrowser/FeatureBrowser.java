@@ -75,6 +75,9 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
             // Layouts
             { "Getting started", "Layouts", "Laying out components",
                     LayoutExample.class },
+            // Layouts
+            { "Layouts", "Accordion", "Play the Accordion!",
+                    AccordionExample.class },
             // Wrangling data: ComboBox
             { "Wrangling data", "ComboBox", "ComboBox - the swiss army select",
                     ComboBoxExample.class },
