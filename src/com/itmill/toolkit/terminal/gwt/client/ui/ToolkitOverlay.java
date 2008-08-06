@@ -9,7 +9,6 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.PopupListener;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
 
 /**
@@ -41,7 +40,7 @@ public class ToolkitOverlay extends PopupPanel {
     public ToolkitOverlay(boolean autoHide, boolean modal, boolean showShadow) {
         super(autoHide, modal);
         if (showShadow) {
-            shadow = new Shadow(this);
+            shadow = new Shadow();
         }
         adjustZIndex();
     }
@@ -64,9 +63,9 @@ public class ToolkitOverlay extends PopupPanel {
             shadow.updateSizeAndPosition();
         }
     }
-    
+
     public void setShadowOffset(int top, int right, int bottom, int left) {
-        if(shadow != null) {
+        if (shadow != null) {
             shadow.setOffset(top, right, bottom, left);
         }
     }
@@ -77,45 +76,43 @@ public class ToolkitOverlay extends PopupPanel {
 
         private static final String HTML = "<div class=\"top-left\"></div><div class=\"top\"></div><div class=\"top-right\"></div><div class=\"left\"></div><div class=\"center\"></div><div class=\"right\"></div><div class=\"bottom-left\"></div><div class=\"bottom\"></div><div class=\"bottom-right\"></div>";
 
-        private Widget overlay;
-
         // Amount of shadow on each side.
         private int top = 2;
         private int right = 5;
         private int bottom = 6;
         private int left = 5;
 
-        public Shadow(ToolkitOverlay overlay) {
+        public Shadow() {
             super(HTML);
             setStyleName(CLASSNAME);
             DOM.setStyleAttribute(getElement(), "position", "absolute");
 
-            this.overlay = overlay;
-            overlay.addPopupListener(new PopupListener() {
+            addPopupListener(new PopupListener() {
                 public void onPopupClosed(PopupPanel sender, boolean autoClosed) {
-                    DOM.removeChild(RootPanel.get().getElement(), shadow.getElement());
+                    DOM.removeChild(RootPanel.get().getElement(), shadow
+                            .getElement());
                 }
             });
         }
 
         public void updateSizeAndPosition() {
             // Calculate proper z-index
-            String zIndex = DOM.getStyleAttribute(overlay.getElement(),
-                    "zIndex");
+            String zIndex = DOM.getStyleAttribute(ToolkitOverlay.this
+                    .getElement(), "zIndex");
             if (zIndex == null) {
                 zIndex = "" + Z_INDEX;
             }
 
             // Calculate position and size
-            if(BrowserInfo.get().isIE()) {
+            if (BrowserInfo.get().isIE()) {
                 // Shake IE
-                overlay.getOffsetHeight();
-                overlay.getOffsetWidth();
+                ToolkitOverlay.this.getOffsetHeight();
+                ToolkitOverlay.this.getOffsetWidth();
             }
-            int x = overlay.getAbsoluteLeft() - left;
-            int y = overlay.getAbsoluteTop() - top;
-            int width = overlay.getOffsetWidth() + left + right;
-            int height = overlay.getOffsetHeight() + top + bottom;
+            int x = ToolkitOverlay.this.getAbsoluteLeft() - left;
+            int y = ToolkitOverlay.this.getAbsoluteTop() - top;
+            int width = ToolkitOverlay.this.getOffsetWidth() + left + right;
+            int height = ToolkitOverlay.this.getOffsetHeight() + top + bottom;
             if (width < 0) {
                 width = 0;
             }
@@ -131,13 +128,13 @@ public class ToolkitOverlay extends PopupPanel {
             DOM.setStyleAttribute(getElement(), "top", y + "px");
             DOM.setStyleAttribute(getElement(), "left", x + "px");
         }
-        
+
         public void setOffset(int top, int right, int bottom, int left) {
             this.top = top;
             this.right = right;
             this.bottom = bottom;
             this.left = left;
-            if(overlay.isAttached()) {
+            if (ToolkitOverlay.this.isAttached()) {
                 updateSizeAndPosition();
             }
         }
