@@ -58,3 +58,43 @@
 .i-label-red {
 	background: red;
 }
+
+/**  #1953 */
+.i-gridlayout-borders td,
+.i-gridlayout-borders {
+	border: 1px solid black;
+	border-collapse: collapse;
+}
+
+.i-button-test-heading
+ {
+ 	width: 100px;
+ 	height: 50px;	
+ }
+ 
+ .i-label-test-spacer
+ {
+ 	width: 20px;
+ 	height: 48px;
+ 	background-color: black;
+ }
+ 
+ .i-label-test-cell
+ {
+ 	width: 100px;
+ 	height: 48px;
+ }
+ 
+ .i-label-test-col-head
+ {
+ 	width: 100px;
+ 	height: 48px;
+ 	background-color: navy;
+ 	text-align: center;
+ }
+ 
+ .i-button-test-page-change
+ {
+ 	width: 100px;
+ 	height: 50px;
+ }
