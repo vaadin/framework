@@ -215,7 +215,7 @@ public class IGridLayout extends SimplePanel implements Paintable, Container,
                                     child.updateFromUIDL(u, client);
                                 }
                             }
-                            column += w;
+                            column++;
                         }
                     }
                     row++;

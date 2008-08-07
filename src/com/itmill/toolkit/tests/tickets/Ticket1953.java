@@ -34,12 +34,12 @@ public class Ticket1953 extends Application {
         gl.addComponent(new Label("3,0"), 3, 0);
         gl.addComponent(new Label("4,0"), 4, 0);
 
-        gl.addComponent(new Label("4,1"), 1, 4);
-        gl.addComponent(new Label("4,2"), 2, 4);
+        gl.addComponent(new Label("1,4"), 1, 4);
+        gl.addComponent(new Label("2,4"), 2, 4);
         gl.addComponent(new Label("3,4"), 3, 4);
-        gl.addComponent(new Label("4,3"), 4, 4);
+        gl.addComponent(new Label("4,4"), 4, 4);
 
-        gl.addComponent(new Label("1-2,1-2"), 1, 1, 2, 2);
+        gl.addComponent(new Label("1-1 -> 2-2"), 1, 1, 2, 2);
         gl.addComponent(new Label("3,1"), 3, 1);
         gl.addComponent(new Label("3,2"), 3, 2);
         gl.addComponent(new Label("3,3"), 3, 3);
