@@ -15,6 +15,7 @@ import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.CheckBox;
 import com.itmill.toolkit.ui.CustomComponent;
 import com.itmill.toolkit.ui.OrderedLayout;
+import com.itmill.toolkit.ui.TabSheet;
 import com.itmill.toolkit.ui.Table;
 import com.itmill.toolkit.ui.Button.ClickEvent;
 
@@ -50,10 +51,16 @@ public class TableExample extends CustomComponent implements Action.Handler,
     Button deselect;
 
     public TableExample() {
+        TabSheet root = new TabSheet();
+        root.setSizeFull();
+        setCompositionRoot(root);
+        setSizeFull();
+        
         // main layout
         final OrderedLayout main = new OrderedLayout();
+        root.addComponent(main);
+        main.setCaption("Basic Table");
         main.setMargin(true);
-        setCompositionRoot(main);
 
         // "source" table with bells & whistlesenabled
         source = new Table("All creatures");
@@ -120,6 +127,9 @@ public class TableExample extends CustomComponent implements Action.Handler,
         b.setImmediate(true);
         main.addComponent(b);
 
+        GeneratedColumnExample gencols = new GeneratedColumnExample();
+        gencols.setCaption("Generated Columns");
+        root.addComponent(gencols);
     }
 
     // set up the properties (columns)
