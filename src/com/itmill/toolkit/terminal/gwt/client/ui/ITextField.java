@@ -153,7 +153,9 @@ public class ITextField extends TextBoxBase implements Paintable, Field,
             int availPixels = (int) (DOM.getElementPropertyInt(DOM
                     .getParent(getElement()), "clientWidth") * proportionalWidth);
             availPixels -= getExtraHorizontalPixels();
-            super.setWidth(availPixels + "px");
+            if (availPixels >= 0) {
+                super.setWidth(availPixels + "px");
+            }
         }
         if (proportionalHeight >= 0) {
             int availPixels = (int) (DOM.getElementPropertyInt(DOM
