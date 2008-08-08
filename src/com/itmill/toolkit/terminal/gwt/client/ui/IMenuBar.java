@@ -106,10 +106,6 @@ public class IMenuBar extends Widget implements Paintable, PopupListener {
         }
 
         UIDL options = uidl.getChildUIDL(0);
-        // For GWT 1.5
-        //this.setAnimationEnabled(options.getBooleanAttribute("animationEnabled"
-        // ))
-        // ;
 
         if (options.hasAttribute("submenuIcon")) {
             submenuIcon = client.translateToolkitUri(uidl.getChildUIDL(0)
@@ -123,7 +119,7 @@ public class IMenuBar extends Widget implements Paintable, PopupListener {
         if (collapseItems) {
             UIDL moreItemUIDL = options.getChildUIDL(0);
             StringBuffer itemHTML = new StringBuffer();
-            // itemHTML.append("<p>");
+
             if (moreItemUIDL.hasAttribute("icon")) {
                 itemHTML.append("<img src=\""
                         + client.translateToolkitUri(moreItemUIDL
@@ -131,7 +127,7 @@ public class IMenuBar extends Widget implements Paintable, PopupListener {
                         + "\" align=\"left\" />");
             }
             itemHTML.append(moreItemUIDL.getStringAttribute("text"));
-            // itemHTML.append("</p>");
+
             moreItem = new CustomMenuItem(itemHTML.toString(), emptyCommand);
         }
 
@@ -153,8 +149,6 @@ public class IMenuBar extends Widget implements Paintable, PopupListener {
             // Construct html from the text and the optional icon
             StringBuffer itemHTML = new StringBuffer();
 
-            // itemHTML.append("<p>");
-
             if (item.hasAttribute("icon")) {
                 itemHTML.append("<img src=\""
                         + client.translateToolkitUri(item
@@ -169,8 +163,6 @@ public class IMenuBar extends Widget implements Paintable, PopupListener {
                 itemHTML.append("<img src=\"" + submenuIcon
                         + "\" align=\"right\" />");
             }
-
-            // itemHTML.append("</p>");
 
             Command cmd = null;
 
@@ -371,13 +363,13 @@ public class IMenuBar extends Widget implements Paintable, PopupListener {
                 break;
 
             case Event.ONMOUSEOVER:
-                // System.err.println("ONMOUSEOVER");
+
                 itemOver(targetItem);
 
                 break;
 
             case Event.ONMOUSEOUT:
-                // System.err.println("ONMOUSEOUT");
+
                 itemOut(targetItem);
                 break;
             }
@@ -452,8 +444,7 @@ public class IMenuBar extends Widget implements Paintable, PopupListener {
         popup = new ToolkitOverlay(true, false, true);
         popup.setWidget(item.getSubMenu());
         popup.addPopupListener(this);
-        // System.err.println("Popup created " + number);
-        // popup.setTitle(String.valueOf(number++));
+
         if (subMenu) {
             popup.setPopupPosition(item.getParentMenu().getAbsoluteLeft()
                     + item.getParentMenu().getOffsetWidth(), item
@@ -568,7 +559,7 @@ public class IMenuBar extends Widget implements Paintable, PopupListener {
      * Listener method, fired when this menu is closed
      */
     public void onPopupClosed(PopupPanel sender, boolean autoClosed) {
-        // System.err.println("Popup hide " + sender.getTitle());
+
         hideChildren();
         if (autoClosed) {
             hideParents();
