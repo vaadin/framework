@@ -805,6 +805,8 @@ public class ApplicationServlet extends HttpServlet {
 
             page.write("<html xmlns=\"http://www.w3.org/1999/xhtml\""
                     + ">\n<head>\n");
+            page
+                    .write("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>\n");
             page.write("<style type=\"text/css\">"
                     + "html, body {height:100%;}</style>");
             page.write("<title>" + title + "</title>");
