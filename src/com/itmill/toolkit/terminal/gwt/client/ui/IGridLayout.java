@@ -121,7 +121,22 @@ public class IGridLayout extends SimplePanel implements Paintable, Container,
             for (final Iterator iterator = iterator(); iterator.hasNext();) {
                 oldWidgetWrappers.add(iterator.next());
             }
+
+            /* Clear() removes all widgets but leaves the tr and td tags */
             clear();
+
+            boolean structuralChange = uidl
+                    .getBooleanAttribute("structuralChange");
+
+            /*
+             * If a row has been inserted or removed at the middle of the table
+             * we need to remove all old tr and td tags.
+             */
+            if (structuralChange) {
+                while (getRowCount() > 0) {
+                    removeRow(0);
+                }
+            }
 
             final int[] alignments = uidl.getIntArrayAttribute("alignments");
             int alignmentIndex = 0;

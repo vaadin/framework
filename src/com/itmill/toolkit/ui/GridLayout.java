@@ -82,6 +82,11 @@ public class GridLayout extends AbstractLayout implements
     private static final int ALIGNMENT_DEFAULT = ALIGNMENT_TOP + ALIGNMENT_LEFT;
 
     /**
+     * Has there been rows inserted or deleted in the middle of the layout since the last paint operation.
+     */
+    private boolean structuralChange = false;
+
+    /**
      * Constructor for grid of given size (number of cells). Note that grid's
      * final size depends on the items that are added into the grid. Grid grows
      * if you add components outside the grid's area.
@@ -119,11 +124,11 @@ public class GridLayout extends AbstractLayout implements
      * @param c
      *                the component to be added.
      * @param column1
-     *                the column of the upper left corner of the area
-     *                <code>c</code> is supposed to occupy.
+     *                the column of the upper left corner of the area <code>c</code>
+     *                is supposed to occupy.
      * @param row1
-     *                the row of the upper left corner of the area
-     *                <code>c</code> is supposed to occupy.
+     *                the row of the upper left corner of the area <code>c</code> is
+     *                supposed to occupy.
      * @param column2
      *                the column of the lower right corner of the area
      *                <code>c</code> is supposed to occupy.
@@ -363,6 +368,9 @@ public class GridLayout extends AbstractLayout implements
         target.addAttribute("h", rows);
         target.addAttribute("w", cols);
 
+        target.addAttribute("structuralChange", structuralChange);
+        structuralChange = false;
+
         if (spacing) {
             target.addAttribute("spacing", spacing);
         }
@@ -561,7 +569,7 @@ public class GridLayout extends AbstractLayout implements
         /**
          * The row of the upper left corner cell of the area.
          */
-        private final int row1;
+        private int row1;
 
         /**
          * The column of the lower right corner cell of the area.
@@ -571,7 +579,7 @@ public class GridLayout extends AbstractLayout implements
         /**
          * The row of the lower right corner cell of the area.
          */
-        private final int row2;
+        private int row2;
 
         /**
          * Component painted on the area.
@@ -982,6 +990,82 @@ public class GridLayout extends AbstractLayout implements
      */
     public boolean isSpacingEnabled() {
         return spacing;
+    }
+
+    /**
+     * Inserts an empty row at the chosen position in the grid.
+     * 
+     * @param row
+     *            Number of the row the new row will be inserted before
+     */
+    public void insertRow(int row) {
+        if (row > rows) {
+            throw new IllegalArgumentException("Cannot insert row at " + row
+                    + " in a gridlayout with height " + rows);
+        }
+
+        for (Iterator i = areas.iterator(); i.hasNext();) {
+            Area existingArea = (Area) i.next();
+            // Areas ending below the row needs to be moved down or stretched
+            if (existingArea.row2 >= row) {
+                existingArea.row2++;
+
+                // Stretch areas that span over the selected row
+                if (existingArea.row1 >= row) {
+                    existingArea.row1++;
+                }
+
+            }
+        }
+
+        if (cursorY >= row) {
+            cursorY++;
+        }
+
+        setRows(rows + 1);
+        structuralChange = true;
+        requestRepaint();
+    }
+
+    /**
+     * Removes row and all components in the row. Components which span over
+     * several rows are removed if the selected row is the component's first
+     * row.
+     * 
+     * @param row
+     *            The row number to remove
+     */
+    public void removeRow(int row) {
+        if (row >= rows) {
+            throw new IllegalArgumentException("Cannot delete row " + row
+                    + " from a gridlayout with height " + rows);
+        }
+
+        // Remove all components in row
+        for (int col = 0; col < getColumns(); col++) {
+            removeComponent(col, row);
+        }
+
+        // Shrink or remove areas in the selected row
+        for (Iterator i = areas.iterator(); i.hasNext();) {
+            Area existingArea = (Area) i.next();
+            if (existingArea.row2 >= row) {
+                existingArea.row2--;
+
+                if (existingArea.row1 > row) {
+                    existingArea.row1--;
+                }
+            }
+        }
+
+        setRows(rows - 1);
+        if (cursorY > row) {
+            cursorY--;
+        }
+
+        structuralChange = true;
+        requestRepaint();
+
     }
 
 }
