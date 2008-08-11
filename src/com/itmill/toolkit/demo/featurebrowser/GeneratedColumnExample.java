@@ -21,34 +21,38 @@ public class GeneratedColumnExample extends CustomComponent {
      * The business model: fill-up at a gas station.
      */
     public class FillUp {
-        Date   date;
+        Date date;
         double quantity;
         double total;
-        
+
         public FillUp() {
         }
 
-        public FillUp(int day, int month, int year, double quantity, double total) {
-            this.date     = new GregorianCalendar(year,month-1,day).getTime();
+        public FillUp(int day, int month, int year, double quantity,
+                double total) {
+            date = new GregorianCalendar(year, month - 1, day).getTime();
             this.quantity = quantity;
-            this.total    = total;
+            this.total = total;
         }
-        
+
         /** Calculates price per unit of quantity (€/l). */
         public double price() {
-            if (quantity != 0.0)
-                return total/quantity;
-            else
+            if (quantity != 0.0) {
+                return total / quantity;
+            } else {
                 return 0.0;
+            }
         }
-        
+
         /** Calculates average daily consumption between two fill-ups. */
         public double dailyConsumption(FillUp other) {
             double difference_ms = date.getTime() - other.date.getTime();
-            double days = difference_ms/1000/3600/24;
-            if (days < 0.5)
-                days = 1.0; // Avoid division by zero if two fill-ups on the same day.
-            return quantity/days;
+            double days = difference_ms / 1000 / 3600 / 24;
+            if (days < 0.5) {
+                days = 1.0; // Avoid division by zero if two fill-ups on the
+                            // same day.
+            }
+            return quantity / days;
         }
 
         /** Calculates average daily consumption between two fill-ups. */
@@ -57,22 +61,27 @@ public class GeneratedColumnExample extends CustomComponent {
         }
 
         // Getters and setters
-        
+
         public Date getDate() {
             return date;
         }
+
         public void setDate(Date date) {
             this.date = date;
         }
+
         public double getQuantity() {
             return quantity;
         }
+
         public void setQuantity(double quantity) {
             this.quantity = quantity;
         }
+
         public double getTotal() {
             return total;
         }
+
         public void setTotal(double total) {
             this.total = total;
         }
@@ -80,19 +89,19 @@ public class GeneratedColumnExample extends CustomComponent {
 
     /**
      * This is a custom container that allows adding BeanItems inside it. The
-     * BeanItem objects must be bound to an object. The item ID is an
-     * Integer from 0 to 99.
+     * BeanItem objects must be bound to an object. The item ID is an Integer
+     * from 0 to 99.
      * 
      * Most of the interface methods are implemented with just dummy
      * implementations, as they are not needed in this example.
      */
-    public class MyContainer implements Container,Indexed {
-        Vector<BeanItem> items;
-        Object           itemtemplate;
-        
+    public class MyContainer implements Container, Indexed {
+        Vector items;
+        Object itemtemplate;
+
         public MyContainer(Object itemtemplate) {
             this.itemtemplate = itemtemplate;
-            items = new Vector<BeanItem>(); // Yeah this is just a test
+            items = new Vector(); // Yeah this is just a test
         }
 
         public boolean addContainerProperty(Object propertyId, Class type,
@@ -109,8 +118,8 @@ public class GeneratedColumnExample extends CustomComponent {
         }
 
         /**
-         *  This addItem method is specific for this container and allows adding
-         *  BeanItem objects. The BeanItems must be bound to MyBean objects.   
+         * This addItem method is specific for this container and allows adding
+         * BeanItem objects. The BeanItems must be bound to MyBean objects.
          */
         public void addItem(BeanItem item) throws UnsupportedOperationException {
             items.add(item);
@@ -118,9 +127,10 @@ public class GeneratedColumnExample extends CustomComponent {
 
         public boolean containsId(Object itemId) {
             if (itemId instanceof Integer) {
-                int pos = ((Integer)itemId).intValue();
-                if (pos >= 0 && pos < items.size())
+                int pos = ((Integer) itemId).intValue();
+                if (pos >= 0 && pos < items.size()) {
                     return items.get(pos) != null;
+                }
             }
             return false;
         }
@@ -132,10 +142,10 @@ public class GeneratedColumnExample extends CustomComponent {
          */
         public Property getContainerProperty(Object itemId, Object propertyId) {
             if (itemId instanceof Integer) {
-                int pos = ((Integer)itemId).intValue();
+                int pos = ((Integer) itemId).intValue();
                 if (pos >= 0 && pos < items.size()) {
-                    Item item = items.get(pos);
-                    
+                    Item item = (Item) items.get(pos);
+
                     // The BeanItem provides the property objects for the items.
                     return item.getItemProperty(propertyId);
                 }
@@ -146,24 +156,26 @@ public class GeneratedColumnExample extends CustomComponent {
         /** Table calls this to get the column names. */
         public Collection getContainerPropertyIds() {
             Item item = new BeanItem(itemtemplate);
-            
+
             // The BeanItem knows how to get the property names from the bean.
             return item.getItemPropertyIds();
         }
 
         public Item getItem(Object itemId) {
             if (itemId instanceof Integer) {
-                int pos = ((Integer)itemId).intValue();
-                if (pos >= 0 && pos < items.size())
-                    return items.get(pos);
+                int pos = ((Integer) itemId).intValue();
+                if (pos >= 0 && pos < items.size()) {
+                    return (Item) items.get(pos);
+                }
             }
             return null;
         }
 
         public Collection getItemIds() {
             Vector ids = new Vector(items.size());
-            for (int i=0; i<items.size(); i++)
+            for (int i = 0; i < items.size(); i++) {
                 ids.add(Integer.valueOf(i));
+            }
             return ids;
         }
 
@@ -205,7 +217,7 @@ public class GeneratedColumnExample extends CustomComponent {
         }
 
         public int indexOfId(Object itemId) {
-            return ((Integer)itemId).intValue();
+            return ((Integer) itemId).intValue();
         }
 
         public Object addItemAfter(Object previousItemId)
@@ -225,29 +237,31 @@ public class GeneratedColumnExample extends CustomComponent {
         }
 
         public boolean isFirstId(Object itemId) {
-            return ((Integer)itemId).intValue() == 0;
+            return ((Integer) itemId).intValue() == 0;
         }
 
         public boolean isLastId(Object itemId) {
-            return ((Integer)itemId).intValue() == (items.size()-1);
+            return ((Integer) itemId).intValue() == (items.size() - 1);
         }
 
         public Object lastItemId() {
-            return items.size()-1;
+            return new Integer(items.size() - 1);
         }
 
         public Object nextItemId(Object itemId) {
             int pos = indexOfId(itemId);
-            if (pos >= items.size()-1)
+            if (pos >= items.size() - 1) {
                 return null;
-            return getIdByIndex(pos+1);
+            }
+            return getIdByIndex(pos + 1);
         }
 
         public Object prevItemId(Object itemId) {
             int pos = indexOfId(itemId);
-            if (pos <= 0)
+            if (pos <= 0) {
                 return null;
-            return getIdByIndex(pos-1);
+            }
+            return getIdByIndex(pos - 1);
         }
     }
 
@@ -257,22 +271,26 @@ public class GeneratedColumnExample extends CustomComponent {
          * Generates the cell containing the Date value. The column is
          * irrelevant in this use case.
          */
-        public Component generateCell(Table source, Object itemId, Object columnId) {
+        public Component generateCell(Table source, Object itemId,
+                Object columnId) {
             Property prop = source.getItem(itemId).getItemProperty(columnId);
             if (prop.getType().equals(Date.class)) {
-                Label label = new Label(String.format("%tF", (Date)prop.getValue()));
+                Label label = new Label(String.format("%tF",
+                        new Object[] { (Date) prop.getValue() }));
                 label.addStyleName("column-type-date");
                 return label;
             }
-            
+
             return null;
         }
     }
 
     /** Formats the value in a column containing Double objects. */
     class ValueColumnGenerator implements Table.ColumnGenerator {
-        String format; /** Format string for the Double values. */
-        
+        String format;
+
+        /** Format string for the Double values. */
+
         /** Creates double value column formatter with the given format string. */
         public ValueColumnGenerator(String format) {
             this.format = format;
@@ -282,38 +300,43 @@ public class GeneratedColumnExample extends CustomComponent {
          * Generates the cell containing the Double value. The column is
          * irrelevant in this use case.
          */
-        public Component generateCell(Table source, Object itemId, Object columnId) {
+        public Component generateCell(Table source, Object itemId,
+                Object columnId) {
             Property prop = source.getItem(itemId).getItemProperty(columnId);
             if (prop.getType().equals(Double.class)) {
-                Label label = new Label(String.format(format, (Double) prop.getValue()));
-                
-                // Set styles for the column: one indicating that it's a value and a more
-                // specific one with the column name in it. This assumes that the column
+                Label label = new Label(String.format(format,
+                        new Object[] { (Double) prop.getValue() }));
+
+                // Set styles for the column: one indicating that it's a value
+                // and a more
+                // specific one with the column name in it. This assumes that
+                // the column
                 // name is proper for CSS.
                 label.addStyleName("column-type-value");
-                label.addStyleName("column-"+(String)columnId);
+                label.addStyleName("column-" + (String) columnId);
                 return label;
             }
             return null;
         }
     }
-    
+
     /** Table column generator for calculating price column. */
     class PriceColumnGenerator implements Table.ColumnGenerator {
         public Component generateCell(Table source, Object itemId,
                 Object columnId) {
             // Retrieve the item.
             BeanItem item = (BeanItem) source.getItem(itemId);
-            
+
             // Retrieves the underlying POJO from the item.
             FillUp fillup = (FillUp) item.getBean();
-            
+
             // Do the business logic
             double price = fillup.price();
-            
+
             // Create the generated component for displaying the calcucated
             // value.
-            Label label = new Label(String.format("%1.2f €", new Object[]{new Double(price)}));
+            Label label = new Label(String.format("%1.2f €",
+                    new Object[] { new Double(price) }));
 
             // We set the style here. You can't use a CellStyleGenerator for
             // generated columns.
@@ -327,32 +350,38 @@ public class GeneratedColumnExample extends CustomComponent {
         /**
          * Generates a cell containing value calculated from the item.
          */
-        public Component generateCell(Table source, Object itemId, Object columnId) {
-            Indexed indexedSource = (Indexed)source.getContainerDataSource();
-            
+        public Component generateCell(Table source, Object itemId,
+                Object columnId) {
+            Indexed indexedSource = (Indexed) source.getContainerDataSource();
+
             // Can not calculate consumption for the first item.
             if (indexedSource.isFirstId(itemId)) {
                 Label label = new Label("N/A");
                 label.addStyleName("column-consumption");
                 return label;
             }
-            
+
             // Index of the previous item.
-            Object prevItemId = indexedSource.indexOfId(indexedSource.prevItemId(itemId));
+            Object prevItemId = new Integer(indexedSource
+                    .indexOfId(indexedSource.prevItemId(itemId)));
 
             // Retrieve the POJOs.
-            FillUp fillup = (FillUp) ((BeanItem) indexedSource.getItem(itemId)).getBean();
-            FillUp prev   = (FillUp) ((BeanItem) source.getItem(prevItemId)).getBean();;
-            
+            FillUp fillup = (FillUp) ((BeanItem) indexedSource.getItem(itemId))
+                    .getBean();
+            FillUp prev = (FillUp) ((BeanItem) source.getItem(prevItemId))
+                    .getBean();
+            ;
+
             // Do the business logic
             return generateCell(fillup, prev);
         }
-        
+
         public Component generateCell(FillUp fillup, FillUp prev) {
             double consumption = fillup.dailyConsumption(prev);
-            
+
             // Generate the component for displaying the calculated value.
-            Label label = new Label(String.format("%3.2f l", new Object[]{new Double(consumption)}));
+            Label label = new Label(String.format("%3.2f l",
+                    new Object[] { new Double(consumption) }));
 
             // We set the style here. You can't use a CellStyleGenerator for
             // generated columns.
@@ -367,57 +396,69 @@ public class GeneratedColumnExample extends CustomComponent {
             double dailycost = fillup.dailyCost(prev);
 
             // Generate the component for displaying the calculated value.
-            Label label = new Label(String.format("%3.2f €", new Object[]{new Double(dailycost)}));
-            
+            Label label = new Label(String.format("%3.2f €",
+                    new Object[] { new Double(dailycost) }));
+
             // We set the style here. You can't use a CellStyleGenerator for
             // generated columns.
             label.addStyleName("column-dailycost");
             return label;
         }
     }
-    
+
     public GeneratedColumnExample() {
         final Table table = new Table();
-        
+
         // Define table columns. These include also the column for the generated
         // column, because we want to set the column label to something
         // different than the property ID.
-        table.addContainerProperty("date",        Date.class,   null, "Date", null, null);
-        table.addContainerProperty("quantity",    Double.class, null, "Quantity (l)", null, null);
-        table.addContainerProperty("price",       Double.class, null, "Price (€/l)", null, null);
-        table.addContainerProperty("total",       Double.class, null, "Total (€)", null, null);
-        table.addContainerProperty("consumption", Double.class, null, "Consumption (l/day)", null, null);
-        table.addContainerProperty("dailycost",   Double.class, null, "Daily Cost (€/day)", null, null);
+        table
+                .addContainerProperty("date", Date.class, null, "Date", null,
+                        null);
+        table.addContainerProperty("quantity", Double.class, null,
+                "Quantity (l)", null, null);
+        table.addContainerProperty("price", Double.class, null, "Price (€/l)",
+                null, null);
+        table.addContainerProperty("total", Double.class, null, "Total (€)",
+                null, null);
+        table.addContainerProperty("consumption", Double.class, null,
+                "Consumption (l/day)", null, null);
+        table.addContainerProperty("dailycost", Double.class, null,
+                "Daily Cost (€/day)", null, null);
 
         // Define the generated columns and their generators.
-        table.addGeneratedColumn("date",        new DateColumnGenerator());
-        table.addGeneratedColumn("quantity",    new ValueColumnGenerator("%.2f l"));
-        table.addGeneratedColumn("price",       new PriceColumnGenerator());
-        table.addGeneratedColumn("total",       new ValueColumnGenerator("%.2f €"));
-        table.addGeneratedColumn("consumption", new ConsumptionColumnGenerator());
-        table.addGeneratedColumn("dailycost",   new DailyCostColumnGenerator());
-        
+        table.addGeneratedColumn("date", new DateColumnGenerator());
+        table
+                .addGeneratedColumn("quantity", new ValueColumnGenerator(
+                        "%.2f l"));
+        table.addGeneratedColumn("price", new PriceColumnGenerator());
+        table.addGeneratedColumn("total", new ValueColumnGenerator("%.2f €"));
+        table.addGeneratedColumn("consumption",
+                new ConsumptionColumnGenerator());
+        table.addGeneratedColumn("dailycost", new DailyCostColumnGenerator());
+
         // Create a data source and bind it to the table.
         MyContainer data = new MyContainer(new FillUp());
         table.setContainerDataSource(data);
-        
+
         // Generated columns are automatically placed after property columns, so
         // we have to set the order of the columns explicitly.
-        table.setVisibleColumns(new Object[]{"date","quantity","price","total","consumption", "dailycost"});
-        
+        table.setVisibleColumns(new Object[] { "date", "quantity", "price",
+                "total", "consumption", "dailycost" });
+
         // Add some data.
-        data.addItem(new BeanItem(new FillUp(19, 2,  2005, 44.96, 51.21)));
-        data.addItem(new BeanItem(new FillUp(30, 3,  2005, 44.91, 53.67)));
-        data.addItem(new BeanItem(new FillUp(20, 4,  2005, 42.96, 49.06)));
-        data.addItem(new BeanItem(new FillUp(23, 5,  2005, 47.37, 55.28)));
-        data.addItem(new BeanItem(new FillUp(6,  6,  2005, 35.34, 41.52)));
-        data.addItem(new BeanItem(new FillUp(30, 6,  2005, 16.07, 20.00)));
-        data.addItem(new BeanItem(new FillUp(2,  7,  2005, 36.40, 36.19)));
-        data.addItem(new BeanItem(new FillUp(6,  7,  2005, 39.17, 50.90)));
-        data.addItem(new BeanItem(new FillUp(27, 7,  2005, 43.43, 53.03)));
-        data.addItem(new BeanItem(new FillUp(17, 8,  2005, 20,    29.18)));
-        data.addItem(new BeanItem(new FillUp(30, 8,  2005, 46.06, 59.09)));
-        data.addItem(new BeanItem(new FillUp(22, 9,  2005, 46.11, 60.36)));
+        data.addItem(new BeanItem(new FillUp(19, 2, 2005, 44.96, 51.21)));
+        data.addItem(new BeanItem(new FillUp(30, 3, 2005, 44.91, 53.67)));
+        data.addItem(new BeanItem(new FillUp(20, 4, 2005, 42.96, 49.06)));
+        data.addItem(new BeanItem(new FillUp(23, 5, 2005, 47.37, 55.28)));
+        data.addItem(new BeanItem(new FillUp(6, 6, 2005, 35.34, 41.52)));
+        data.addItem(new BeanItem(new FillUp(30, 6, 2005, 16.07, 20.00)));
+        data.addItem(new BeanItem(new FillUp(2, 7, 2005, 36.40, 36.19)));
+        data.addItem(new BeanItem(new FillUp(6, 7, 2005, 39.17, 50.90)));
+        data.addItem(new BeanItem(new FillUp(27, 7, 2005, 43.43, 53.03)));
+        data.addItem(new BeanItem(new FillUp(17, 8, 2005, 20, 29.18)));
+        data.addItem(new BeanItem(new FillUp(30, 8, 2005, 46.06, 59.09)));
+        data.addItem(new BeanItem(new FillUp(22, 9, 2005, 46.11, 60.36)));
         data.addItem(new BeanItem(new FillUp(14, 10, 2005, 41.51, 50.19)));
         data.addItem(new BeanItem(new FillUp(12, 11, 2005, 35.24, 40.00)));
         data.addItem(new BeanItem(new FillUp(28, 11, 2005, 45.26, 53.27)));
@@ -425,9 +466,13 @@ public class GeneratedColumnExample extends CustomComponent {
         table.setHeight("100%");
 
         ExpandLayout layout = new ExpandLayout();
-        layout.addComponent(new Label("Table with column generators that format and calculate cell values."));
+        layout
+                .addComponent(new Label(
+                        "Table with column generators that format and calculate cell values."));
         layout.addComponent(table);
-        layout.addComponent(new Label("Columns displayed in blue are calculated. Others are simply formatted."));
+        layout
+                .addComponent(new Label(
+                        "Columns displayed in blue are calculated. Others are simply formatted."));
         layout.expand(table);
         layout.setSizeFull();
         setCompositionRoot(layout);
