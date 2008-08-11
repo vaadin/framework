@@ -44,6 +44,9 @@ public class ITabsheetPanel extends ComplexPanel {
 
     private Element createContainerElement() {
         Element el = DOM.createDiv();
+        if (fullheight) {
+            DOM.setStyleAttribute(el, "height", "100%");
+        }
         hide(el);
         return el;
     }
@@ -108,13 +111,15 @@ public class ITabsheetPanel extends ComplexPanel {
 
     public void setHeight(String height) {
         super.setHeight(height);
-        if ("100%".equals(height) && !fullheight) {
-            int childCount = DOM.getChildCount(getElement());
-            for (int i = 0; i < childCount; i++) {
-                DOM.setStyleAttribute(DOM.getChild(getElement(), i), "height",
-                        "100%");
+        if ("100%".equals(height)) {
+            if (!fullheight) {
+                int childCount = DOM.getChildCount(getElement());
+                for (int i = 0; i < childCount; i++) {
+                    DOM.setStyleAttribute(DOM.getChild(getElement(), i),
+                            "height", "100%");
+                }
+                fullheight = true;
             }
-            fullheight = true;
         } else if (fullheight) {
             int childCount = DOM.getChildCount(getElement());
             for (int i = 0; i < childCount; i++) {
