@@ -39,6 +39,7 @@ public class ITabsheet extends ITabsheetBase implements
             DOM.appendChild(tbody, tr);
             setStyleName(spacerTd, CLASSNAME + "-spacertd");
             DOM.appendChild(tr, spacerTd);
+            DOM.appendChild(spacerTd, DOM.createDiv());
             setElement(el);
         }
 
@@ -57,7 +58,7 @@ public class ITabsheet extends ITabsheetBase implements
             setStyleName(td, CLASSNAME + "-tabitemcell");
 
             if (getWidgetCount() == 0) {
-                setStyleName(td, CLASSNAME + "-tabitemcell-first");
+                setStyleName(td, CLASSNAME + "-tabitemcell-first", true);
             }
 
             Element div = DOM.createDiv();
