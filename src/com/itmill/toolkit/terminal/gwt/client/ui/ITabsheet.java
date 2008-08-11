@@ -139,6 +139,7 @@ public class ITabsheet extends ITabsheetBase implements
             return;
         }
         if (client != null && activeTabIndex != tabIndex) {
+            tb.selectTab(tabIndex);
             addStyleDependentName("loading");
             // run updating variables in deferred command to bypass some
             // FF
