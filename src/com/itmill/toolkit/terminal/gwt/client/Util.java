@@ -21,7 +21,7 @@ public class Util {
      */
     public static native void browserDebugger()
     /*-{
-        if(window.console)
+        if($wnd.console)
             debugger;
     }-*/;
 
