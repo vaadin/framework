@@ -55,7 +55,12 @@ public class ITabsheet extends ITabsheetBase implements
         public void addTab(Caption c) {
             Element td = DOM.createTD();
             setStyleName(td, CLASSNAME + "-tabitemcell");
-            Element div = DOM.createTD();
+
+            if (getWidgetCount() == 0) {
+                setStyleName(td, CLASSNAME + "-tabitemcell-first");
+            }
+
+            Element div = DOM.createDiv();
             setStyleName(div, CLASSNAME + "-tabitem");
             DOM.appendChild(td, div);
             DOM.insertBefore(tr, td, spacerTd);
