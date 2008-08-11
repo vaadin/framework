@@ -77,7 +77,7 @@ public class ITabsheet extends ITabsheetBase implements
             Widget newSelected = getWidget(index);
             Widget.setStyleName(DOM.getParent(newSelected.getElement()),
                     CLASSNAME + "-tabitem-selected", true);
-            if (oldSelected != null) {
+            if (oldSelected != null && oldSelected != newSelected) {
                 Widget.setStyleName(DOM.getParent(oldSelected.getElement()),
                         CLASSNAME + "-tabitem-selected", false);
             }
