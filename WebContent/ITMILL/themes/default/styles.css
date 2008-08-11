@@ -1858,7 +1858,7 @@ i-orderedlayout-margin-top {
 	margin:0;
 	padding:0;
 	border:0;
-	height: 38px;
+	height: 48px;
 	background: transparent url(tabsheet/img/tabs-bg.png) repeat-x bottom left;
 	width: 100%;
 	overflow:hidden;
@@ -1867,12 +1867,16 @@ i-orderedlayout-margin-top {
 .i-tabsheet-tabs td {
 	margin:0;
 	padding:0;
+	vertical-align: bottom;
 }
 
-.i-tabsheet-tabs .i-tabsheet-spacertd {
+.i-tabsheet-spacertd {
 	width: 100%;
+}
+.i-tabsheet-spacertd div {
 	height: 37px;
 	border: 1px solid #b6bbbc;
+	background: transparent url(tabsheet/img/tab-bg.png);
 }
 
 .i-tabsheet-hidetabs .i-tabsheet-tabcontainer {
@@ -1932,20 +1936,27 @@ i-orderedlayout-margin-top {
 	white-space: nowrap;
 }
 
-.i-tabsheet-tabs .i-tabsheet-tabitem {
+
+
+.i-tabsheet-tabitem {
 	border: 1px solid #b6bbbc;
 	border-right: none;
-	height: 20px;
-	padding: 9px 15px 8px 15px;
+	height: 37px;
+	padding: 0;
 	margin-top: 9px;
 	color: #777f85;
 	font-size: 15px;
-	line-height: 15px;
+	line-height: 18px;
 	background: #f8f9f9 url(tabsheet/img/tab-bg.png);
 	cursor: pointer;
 }
 
-.i-tabsheet-tabs .i-tabsheet-tabitem-selected {
+.i-tabsheet-tabitem .i-caption {
+	height: 20px;
+	padding: 9px 15px 8px 15px;
+}
+
+.i-tabsheet-tabitem-selected {
 	border: none;
 	background: transparent url(panel/img/top-left.png) no-repeat;
 	margin: 0;
@@ -1955,19 +1966,19 @@ i-orderedlayout-margin-top {
 	color: #ee5311;
 }
 
-.i-tabsheet-tabs .i-tabsheet-tabitem:hover {
+.i-tabsheet-tabitem:hover {
 	color: #4b5257;
 }
 
-.i-tabsheet-tabs .i-tabsheet-tabitem-selected:hover {
+.i-tabsheet-tabitem-selected:hover {
 	color: #ee5311;
 }
 
-.i-tabsheet-tabs .i-tabsheet-tabitem-selected .i-caption {
+.i-tabsheet-tabitem-selected .i-caption {
 	background: transparent url(panel/img/top-right.png) repeat-x right top;
 	margin: 0 -1px 0 9px;
 	height: 18px;
-	padding: 16px 16px 0 7px
+	padding: 16px 16px 14px 7px
 }
 
 .i-tabsheet-content {
@@ -2000,7 +2011,7 @@ i-orderedlayout-margin-top {
 
 /* Progress indication */
 
-.i-tabsheet-loading .i-tabsheet-tabs .i-tabsheet-tabitem-selected span{
+.i-tabsheet-loading .i-tabsheet-tabs .i-tabsheet-tabitem-selected span {
 	background: transparent url(common/img/ajax-loader.gif) no-repeat;
 	display: block;
 	margin-left: -10px;
