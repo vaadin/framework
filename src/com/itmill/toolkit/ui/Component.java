@@ -169,12 +169,31 @@ public interface Component extends Paintable, VariableOwner, Sizeable {
     public String getCaption();
 
     /**
+     * Sets the component's caption <code>String</code>. Caption is the
+     * visible name of the component. This method will trigger a
+     * {@link com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent RepaintRequestEvent}.
+     * 
+     * @param caption
+     *                the new caption <code>String</code> for the component.
+     */
+    public void setCaption(String caption);
+
+    /**
      * Gets the component's icon. A component may have a graphical icon
      * associated with it, this method retrieves it if it is defined.
      * 
      * @return the component's icon or <code>null</code> if it not defined.
      */
     public Resource getIcon();
+
+    /**
+     * Sets the component's icon. This method will trigger a
+     * {@link com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent RepaintRequestEvent}.
+     * 
+     * @param icon
+     *                the icon to be shown with the component's caption.
+     */
+    public void setIcon(Resource icon);
 
     /**
      * Gets the component's parent window. If the component does not yet belong

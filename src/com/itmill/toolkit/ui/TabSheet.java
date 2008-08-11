@@ -5,7 +5,6 @@
 package com.itmill.toolkit.ui;
 
 import java.lang.reflect.Method;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
@@ -31,16 +30,6 @@ public class TabSheet extends AbstractComponentContainer implements
      * Linked list of component tabs.
      */
     private final LinkedList tabs = new LinkedList();
-
-    /**
-     * Tab -> caption mapping.
-     */
-    private final Hashtable tabCaptions = new Hashtable();
-
-    /**
-     * Tab -> icon mapping .
-     */
-    private final Hashtable tabIcons = new Hashtable();
 
     /**
      * Selected tab.
@@ -85,7 +74,6 @@ public class TabSheet extends AbstractComponentContainer implements
             super.removeComponent(c);
             keyMapper.remove(c);
             tabs.remove(c);
-            tabCaptions.remove(c);
             if (c.equals(selected)) {
                 if (tabs.isEmpty()) {
                     selected = null;
@@ -94,7 +82,6 @@ public class TabSheet extends AbstractComponentContainer implements
                     fireSelectedTabChange();
                 }
             }
-            c.removeListener(this);
             requestRepaint();
         }
     }
@@ -111,21 +98,24 @@ public class TabSheet extends AbstractComponentContainer implements
     }
 
     /**
-     * Adds a new tab into TabSheet with overridden caption and icon.
+     * Adds a new tab into TabSheet.
      * 
      * @param c
      *                the component to be added onto tab.
      * @param caption
-     *                the caption of the tab to be used instead of components
-     *                own.
+     *                the caption to be set for the component and used rendered
+     *                in tab bar
      * @param icon
-     *                the icon of the tab to be used instead of components own.
+     *                the icon to be set for the component and used rendered in
+     *                tab bar
      */
     public void addTab(Component c, String caption, Resource icon) {
         if (c != null) {
-            tabCaptions.put(c, caption != null ? caption : "");
+            if (caption != null) {
+                c.setCaption(caption);
+            }
             if (icon != null) {
-                tabIcons.put(c, icon);
+                c.setIcon(icon);
             }
             addTab(c);
         }
@@ -147,7 +137,6 @@ public class TabSheet extends AbstractComponentContainer implements
             }
             super.addComponent(c);
             requestRepaint();
-            c.addListener(this);
         }
     }
 
@@ -273,20 +262,15 @@ public class TabSheet extends AbstractComponentContainer implements
      *                the component.
      */
     public String getTabCaption(Component c) {
-        String caption = (String) tabCaptions.get(c);
-        if (caption == null) {
-            caption = c.getCaption();
+        if (c.getCaption() == null) {
+            return "";
+        } else {
+            return c.getCaption();
         }
-        if (caption == null) {
-            caption = "";
-        }
-        return caption;
     }
 
     /**
-     * Sets overridden tab caption for given component.
-     * 
-     * Normally TabSheet uses caption from component
+     * Sets tabs captions.
      * 
      * @param c
      *                the component.
@@ -294,8 +278,9 @@ public class TabSheet extends AbstractComponentContainer implements
      *                the caption to set.
      */
     public void setTabCaption(Component c, String caption) {
-        tabCaptions.put(c, caption);
-        requestRepaint();
+        if (tabs.contains(c)) {
+            c.setCaption(caption);
+        }
     }
 
     /**
@@ -305,11 +290,7 @@ public class TabSheet extends AbstractComponentContainer implements
      *                the component.
      */
     public Resource getTabIcon(Component c) {
-        if (tabIcons.containsKey(c)) {
-            return (Resource) tabIcons.get(c);
-        } else {
-            return c.getIcon();
-        }
+        return c.getIcon();
     }
 
     /**
@@ -321,12 +302,9 @@ public class TabSheet extends AbstractComponentContainer implements
      * @param icon
      */
     public void setTabIcon(Component c, Resource icon) {
-        if (icon == null) {
-            tabIcons.remove(c);
-        } else {
-            tabIcons.put(c, icon);
+        if (tabs.contains(c)) {
+            c.setIcon(icon);
         }
-        requestRepaint();
     }
 
     /**
@@ -527,11 +505,13 @@ public class TabSheet extends AbstractComponentContainer implements
     }
 
     /*
-     * We need to repaint on child repaint due the way captions and icons are
-     * handled
+     * If child is not rendered on the client we need to repaint on child
+     * repaint due the way captions and icons are handled.
      */
     public void repaintRequested(RepaintRequestEvent event) {
-        requestRepaint();
+        if (!paintedTabs.contains(event.getPaintable())) {
+            requestRepaint();
+        }
     }
 
     public void detach() {

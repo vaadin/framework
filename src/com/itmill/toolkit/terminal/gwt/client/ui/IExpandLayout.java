@@ -616,8 +616,7 @@ public class IExpandLayout extends ComplexPanel implements
         // Modify layout margins
         handleMargins(uidl);
 
-        // Ensure correct implementation
-        if (client.updateComponent(this, uidl, false)) {
+        if (client.updateComponent(this, uidl, true)) {
             return;
         }
 

@@ -4,6 +4,7 @@
 
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
+import java.util.HashMap;
 import java.util.Iterator;
 
 import com.google.gwt.user.client.Command;
@@ -11,10 +12,9 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.SourcesTabEvents;
-import com.google.gwt.user.client.ui.TabBar;
-import com.google.gwt.user.client.ui.TabListener;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Caption;
@@ -25,6 +25,77 @@ import com.itmill.toolkit.terminal.gwt.client.Util;
 
 public class ITabsheet extends ITabsheetBase implements
         ContainerResizedListener {
+
+    class TabBar extends ComplexPanel implements ClickListener {
+
+        private Element tr = DOM.createTR();
+
+        private Element spacerTd = DOM.createTD();
+
+        TabBar() {
+            Element el = DOM.createTable();
+            Element tbody = DOM.createTBody();
+            DOM.appendChild(el, tbody);
+            DOM.appendChild(tbody, tr);
+            setStyleName(spacerTd, CLASSNAME + "-spacertd");
+            DOM.appendChild(tr, spacerTd);
+            setElement(el);
+        }
+
+        protected Element getContainerElement() {
+            return tr;
+        }
+
+        private Widget oldSelected;
+
+        public int getTabCount() {
+            return getWidgetCount();
+        }
+
+        public void addTab(Caption c) {
+            Element td = DOM.createTD();
+            setStyleName(td, CLASSNAME + "-tabitemcell");
+            Element div = DOM.createTD();
+            setStyleName(div, CLASSNAME + "-tabitem");
+            DOM.appendChild(td, div);
+            DOM.insertBefore(tr, td, spacerTd);
+            c.addClickListener(this);
+            add(c, div);
+        }
+
+        public void onClick(Widget sender) {
+            int index = getWidgetIndex(sender);
+            onTabSelected(index);
+        }
+
+        public void selectTab(int index) {
+            Widget newSelected = getWidget(index);
+            Widget.setStyleName(DOM.getParent(newSelected.getElement()),
+                    CLASSNAME + "-tabitem-selected", true);
+            if (oldSelected != null) {
+                Widget.setStyleName(DOM.getParent(oldSelected.getElement()),
+                        CLASSNAME + "-tabitem-selected", false);
+            }
+            oldSelected = newSelected;
+        }
+
+        public void removeTab(int i) {
+            remove(i);
+        }
+
+        public boolean remove(Widget w) {
+            ((Caption) w).removeClickListener(this);
+            return super.remove(w);
+        }
+
+        public Caption getTab(int index) {
+            if (index >= getWidgetCount()) {
+                return null;
+            }
+            return (Caption) getWidget(index);
+        }
+
+    }
 
     public static final String CLASSNAME = "i-tabsheet";
 
@@ -40,6 +111,8 @@ public class ITabsheet extends ITabsheetBase implements
     private final ITabsheetPanel tp;
     private final Element contentNode, deco;
 
+    private final HashMap captions = new HashMap();
+
     private String height;
     private String width;
 
@@ -52,41 +125,31 @@ public class ITabsheet extends ITabsheetBase implements
      */
     private Widget previousVisibleWidget;
 
-    private final TabListener tl = new TabListener() {
-
-        public void onTabSelected(SourcesTabEvents sender, final int tabIndex) {
-            if (client != null && activeTabIndex != tabIndex) {
-                addStyleDependentName("loading");
-                // run updating variables in deferred command to bypass some
-                // FF
-                // optimization issues
-                DeferredCommand.addCommand(new Command() {
-                    public void execute() {
-                        previousVisibleWidget = tp.getWidget(tp
-                                .getVisibleWidget());
-                        DOM.setStyleAttribute(previousVisibleWidget
-                                .getElement(), "visibility", "hidden");
-                        client.updateVariable(id, "selected", tabKeys.get(
-                                tabIndex).toString(), true);
-                    }
-                });
-                waitingForResponse = true;
-            }
+    private void onTabSelected(final int tabIndex) {
+        if (disabled || waitingForResponse) {
+            return;
         }
-
-        public boolean onBeforeTabSelected(SourcesTabEvents sender, int tabIndex) {
-            if (disabled || waitingForResponse) {
-                return false;
-            }
-            final Object tabKey = tabKeys.get(tabIndex);
-            if (disabledTabKeys.contains(tabKey)) {
-                return false;
-            }
-
-            return true;
+        final Object tabKey = tabKeys.get(tabIndex);
+        if (disabledTabKeys.contains(tabKey)) {
+            return;
         }
-
-    };
+        if (client != null && activeTabIndex != tabIndex) {
+            addStyleDependentName("loading");
+            // run updating variables in deferred command to bypass some
+            // FF
+            // optimization issues
+            DeferredCommand.addCommand(new Command() {
+                public void execute() {
+                    previousVisibleWidget = tp.getWidget(tp.getVisibleWidget());
+                    DOM.setStyleAttribute(previousVisibleWidget.getElement(),
+                            "visibility", "hidden");
+                    client.updateVariable(id, "selected", tabKeys.get(tabIndex)
+                            .toString(), true);
+                }
+            });
+            waitingForResponse = true;
+        }
+    }
 
     public ITabsheet() {
         super(CLASSNAME);
@@ -133,11 +196,9 @@ public class ITabsheet extends ITabsheetBase implements
 
         DOM.appendChild(tabs, scroller);
 
-        tb.addTabListener(tl);
-
         // TODO Use for Safari only. Fix annoying 1px first cell in TabBar.
-        DOM.setStyleAttribute(DOM.getFirstChild(DOM.getFirstChild(DOM
-                .getFirstChild(tb.getElement()))), "display", "none");
+        // DOM.setStyleAttribute(DOM.getFirstChild(DOM.getFirstChild(DOM
+        // .getFirstChild(tb.getElement()))), "display", "none");
 
     }
 
@@ -217,21 +278,30 @@ public class ITabsheet extends ITabsheetBase implements
     }
 
     protected void renderTab(final UIDL tabUidl, int index, boolean selected) {
-        // TODO check indexes, now new tabs get placed last (changing tab order
-        // is not supported from server-side)
-        Caption c = new Caption(null, client);
+        Caption c = tb.getTab(index);
+        if (c == null) {
+            c = new Caption(null, client);
+            tb.addTab(c);
+        }
         c.updateCaption(tabUidl);
-        tb.addTab(c);
+        captions.put("" + index, c);
         if (selected) {
             renderContent(tabUidl.getChildUIDL(0));
             tb.selectTab(index);
-        } else if (tabUidl.getChildCount() > 0) {
-            // updating a drawn child on hidden tab
-            Paintable paintable = client.getPaintable(tabUidl.getChildUIDL(0));
-            paintable.updateFromUIDL(tabUidl.getChildUIDL(0), client);
+        } else {
+            if (tabUidl.getChildCount() > 0) {
+                // updating a drawn child on hidden tab
+                Paintable paintable = client.getPaintable(tabUidl
+                        .getChildUIDL(0));
+
+                if (tp.getWidgetIndex((Widget) paintable) < 0) {
+                    tp.insert((Widget) paintable, index);
+                }
+                paintable.updateFromUIDL(tabUidl.getChildUIDL(0), client);
+            } else if (tp.getWidgetCount() <= index) {
+                tp.add(new Label(""));
+            }
         }
-        // Add place-holder content
-        tp.add(new Label(""));
     }
 
     protected void selectTab(int index, final UIDL contentUidl) {
@@ -347,9 +417,9 @@ public class ITabsheet extends ITabsheetBase implements
 
     private void showAllTabs() {
         scrollerIndex = 0;
+        Element tr = DOM.getFirstChild(DOM.getFirstChild(tb.getElement()));
         for (int i = 0; i < tb.getTabCount(); i++) {
-            DOM.setStyleAttribute(DOM.getChild(DOM.getFirstChild(DOM
-                    .getFirstChild(tb.getElement())), i + 1), "display", "");
+            DOM.setStyleAttribute(DOM.getChild(tr, i), "display", "");
         }
     }
 
@@ -369,15 +439,29 @@ public class ITabsheet extends ITabsheetBase implements
         }
         tp.clear();
 
-        // Get rid of unnecessary 100% cell heights in TabBar (really ugly hack)
-        final Element tr = DOM.getChild(DOM.getChild(tb.getElement(), 0), 0);
-        final Element rest = DOM.getChild(DOM.getChild(tr, DOM
-                .getChildCount(tr) - 1), 0);
-        DOM.removeElementAttribute(rest, "style");
-
     }
 
     protected Iterator getPaintableIterator() {
         return tp.iterator();
+    }
+
+    public boolean hasChildComponent(Widget component) {
+        if (tp.getWidgetIndex(component) < 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public void replaceChildComponent(Widget oldComponent, Widget newComponent) {
+        int widgetIndex = tp.getWidgetIndex(oldComponent);
+        tp.remove(oldComponent);
+        tp.insert(newComponent, widgetIndex);
+    }
+
+    public void updateCaption(Paintable component, UIDL uidl) {
+        int i = tp.getWidgetIndex((Widget) component);
+        Caption c = (Caption) captions.get("" + i);
+        c.updateCaption(uidl);
     }
 }

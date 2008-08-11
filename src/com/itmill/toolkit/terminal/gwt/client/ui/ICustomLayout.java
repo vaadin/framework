@@ -109,12 +109,11 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
     /** Update the layout from UIDL */
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         this.client = client;
-        // Client manages general cases
-        if (client.updateComponent(this, uidl, false)) {
+        // ApplicationConnection manages generic component features
+        if (client.updateComponent(this, uidl, true)) {
             return;
         }
 
-        // Update PID
         pid = uidl.getId();
         if (!hasTemplate()) {
             // Update HTML template only once

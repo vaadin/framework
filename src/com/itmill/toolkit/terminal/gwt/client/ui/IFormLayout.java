@@ -34,7 +34,7 @@ public class IFormLayout extends FlexTable implements Container {
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         this.client = client;
 
-        if (client.updateComponent(this, uidl, false)) {
+        if (client.updateComponent(this, uidl, true)) {
             return;
         }
 

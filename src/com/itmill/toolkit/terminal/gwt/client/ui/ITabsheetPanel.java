@@ -5,13 +5,14 @@
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
  * A panel that displays all of its child widgets in a 'deck', where only one
  * can be visible at a time. It is used by
- * {@link com.itmill.toolkit.terminal.gwt.client.ui.ITabsheetPanel}.
+ * {@link com.itmill.toolkit.terminal.gwt.client.ui.ITabsheet}.
  * 
  * This class has the same basic functionality as the GWT DeckPanel
  * {@link com.google.gwt.user.client.ui.DeckPanel}, with the exception that it
@@ -20,6 +21,7 @@ import com.google.gwt.user.client.ui.Widget;
 public class ITabsheetPanel extends ComplexPanel {
 
     private Widget visibleWidget;
+    private boolean fullheight = false;
 
     /**
      * Creates an empty tabsheet panel.
@@ -35,8 +37,15 @@ public class ITabsheetPanel extends ComplexPanel {
      *                the widget to be added
      */
     public void add(Widget w) {
-        super.add(w, getElement());
-        initChildWidget(w);
+        Element el = createContainerElement();
+        DOM.appendChild(getElement(), el);
+        super.add(w, el);
+    }
+
+    private Element createContainerElement() {
+        Element el = DOM.createDiv();
+        hide(el);
+        return el;
     }
 
     /**
@@ -59,18 +68,21 @@ public class ITabsheetPanel extends ComplexPanel {
      *                 if <code>beforeIndex</code> is out of range
      */
     public void insert(Widget w, int beforeIndex) {
-        super.insert(w, getElement(), beforeIndex, true);
-        initChildWidget(w);
+        Element el = createContainerElement();
+        DOM.insertChild(getElement(), el, beforeIndex);
+        super.insert(w, el, beforeIndex, false);
     }
 
     public boolean remove(Widget w) {
+        final int index = getWidgetIndex(w);
         final boolean removed = super.remove(w);
         if (removed) {
-            resetChildWidget(w);
-
             if (visibleWidget == w) {
                 visibleWidget = null;
             }
+            Element child = DOM.getChild(getElement(), index);
+            DOM.removeChild(getElement(), child);
+            unHide(child);
         }
         return removed;
     }
@@ -87,26 +99,39 @@ public class ITabsheetPanel extends ComplexPanel {
         Widget newVisible = getWidget(index);
         if (visibleWidget != newVisible) {
             if (visibleWidget != null) {
-                visibleWidget.setVisible(false);
+                hide(DOM.getParent(visibleWidget.getElement()));
             }
             visibleWidget = newVisible;
-            visibleWidget.setVisible(true);
+            unHide(DOM.getParent(visibleWidget.getElement()));
         }
     }
 
-    /**
-     * Make the widget invisible, and set its width and height to full.
-     */
-    private void initChildWidget(Widget w) {
-        w.setVisible(false);
+    public void setHeight(String height) {
+        super.setHeight(height);
+        if ("100%".equals(height) && !fullheight) {
+            int childCount = DOM.getChildCount(getElement());
+            for (int i = 0; i < childCount; i++) {
+                DOM.setStyleAttribute(DOM.getChild(getElement(), i), "height",
+                        "100%");
+            }
+            fullheight = true;
+        } else if (fullheight) {
+            int childCount = DOM.getChildCount(getElement());
+            for (int i = 0; i < childCount; i++) {
+                DOM.setStyleAttribute(DOM.getChild(getElement(), i), "height",
+                        "");
+            }
+            fullheight = false;
+        }
     }
 
-    /**
-     * Make the widget visible, and clear the widget's width and height
-     * attributes. This is done so that any changes to the visibility, height,
-     * or width of the widget that were done by the panel are undone.
-     */
-    private void resetChildWidget(Widget w) {
-        w.setVisible(true);
+    private void hide(Element e) {
+        DOM.setStyleAttribute(e, "visibility", "hidden");
+        DOM.setStyleAttribute(e, "position", "absolute");
+    }
+
+    private void unHide(Element e) {
+        DOM.setStyleAttribute(e, "visibility", "");
+        DOM.setStyleAttribute(e, "position", "");
     }
 }

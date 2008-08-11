@@ -212,7 +212,7 @@ public class IOrderedLayout extends Panel implements Container,
         updateMarginAndSpacingSizesFromCSS(uidl);
 
         // Update sizes, ...
-        if (client.updateComponent(this, uidl, false)) {
+        if (client.updateComponent(this, uidl, true)) {
             return;
         }
 

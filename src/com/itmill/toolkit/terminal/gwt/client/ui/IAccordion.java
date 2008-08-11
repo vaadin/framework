@@ -13,6 +13,7 @@ import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
+import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
 import com.itmill.toolkit.terminal.gwt.client.Caption;
 import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
@@ -33,7 +34,7 @@ public class IAccordion extends ITabsheetBase implements
     public IAccordion() {
         super(CLASSNAME);
         // IE6 needs this to calculate offsetHeight correctly
-        if (Util.isIE6()) {
+        if (BrowserInfo.get().isIE6()) {
             DOM.setStyleAttribute(getElement(), "zoom", "1");
         }
     }
@@ -51,25 +52,24 @@ public class IAccordion extends ITabsheetBase implements
     }
 
     protected void renderTab(UIDL tabUidl, int index, boolean selected) {
-        // TODO check indexes, now new tabs get placed last (changing tab order
-        // is not supported from server-side)
-
-        StackItem item = new StackItem(tabUidl);
-
-        if (stack.size() == 0) {
-            item.addStyleDependentName("first");
+        StackItem item;
+        if (stack.size() <= index) {
+            item = new StackItem(tabUidl);
+            if (stack.size() == 0) {
+                item.addStyleDependentName("first");
+            }
+            stack.add(item);
+            add(item, getElement());
+        } else {
+            item = (StackItem) stack.get(index);
+            item.updateCaption(tabUidl);
         }
-
-        stack.add(item);
-        add(item, getElement());
 
         if (selected) {
             item.open();
             item.setContent(tabUidl.getChildUIDL(0));
         } else if (tabUidl.getChildCount() > 0) {
-            // updating a drawn child on hidden tab
-            Paintable paintable = client.getPaintable(tabUidl.getChildUIDL(0));
-            paintable.updateFromUIDL(tabUidl.getChildUIDL(0), client);
+            item.setContent(tabUidl.getChildUIDL(0));
         }
     }
 
@@ -169,16 +169,14 @@ public class IAccordion extends ITabsheetBase implements
 
         private Caption caption;
         private boolean open = false;
-        private Element content;
-        private Element captionNode;
+        private Element content = DOM.createDiv();
+        private Element captionNode = DOM.createDiv();
         private Paintable paintable;
 
         public StackItem(UIDL tabUidl) {
             setElement(DOM.createDiv());
             caption = new Caption(null, client);
             caption.addClickListener(this);
-            content = DOM.createDiv();
-            captionNode = DOM.createDiv();
             super.add(caption, captionNode);
             DOM.appendChild(captionNode, caption.getElement());
             DOM.appendChild(getElement(), captionNode);
@@ -189,13 +187,13 @@ public class IAccordion extends ITabsheetBase implements
             DOM.setElementProperty(captionNode, "className", CLASSNAME
                     + "-item-caption");
             DOM.setStyleAttribute(content, "overflow", "auto");
-            DOM.setStyleAttribute(content, "display", "none");
             // Force 'hasLayout' in IE6 (prevents layout problems)
-            if (Util.isIE6()) {
+            if (BrowserInfo.get().isIE6()) {
                 DOM.setStyleAttribute(content, "zoom", "1");
             }
+            close();
 
-            caption.updateCaption(tabUidl);
+            updateCaption(tabUidl);
         }
 
         public Element getContainerElement() {
@@ -212,7 +210,11 @@ public class IAccordion extends ITabsheetBase implements
 
         public void open() {
             open = true;
-            DOM.setStyleAttribute(content, "display", "");
+            if (getPaintable() != null) {
+                remove(getPaintable());
+            }
+            DOM.setStyleAttribute(content, "visibility", "");
+            DOM.setStyleAttribute(content, "position", "");
             addStyleDependentName("open");
             if (getPaintable() != null) {
                 add(getPaintable(), content);
@@ -221,10 +223,8 @@ public class IAccordion extends ITabsheetBase implements
 
         public void close() {
             open = false;
-            if (getPaintable() != null) {
-                remove(getPaintable());
-            }
-            DOM.setStyleAttribute(content, "display", "none");
+            DOM.setStyleAttribute(content, "visibility", "hidden");
+            DOM.setStyleAttribute(content, "position", "absolute");
             removeStyleDependentName("open");
         }
 
@@ -234,8 +234,6 @@ public class IAccordion extends ITabsheetBase implements
 
         public void setContent(UIDL contentUidl) {
             final Paintable newPntbl = client.getPaintable(contentUidl);
-            // due hack #1 in ITabsheetBase
-            ((Widget) newPntbl).setVisible(true);
             if (getPaintable() == null) {
                 add((Widget) newPntbl, content);
                 paintables.add(newPntbl);
@@ -253,6 +251,10 @@ public class IAccordion extends ITabsheetBase implements
         public void onClick(Widget sender) {
             onSelectTab(this);
         }
+
+        public void updateCaption(UIDL uidl) {
+            caption.updateCaption(uidl);
+        }
     }
 
     protected void clearPaintables() {
@@ -262,6 +264,28 @@ public class IAccordion extends ITabsheetBase implements
 
     protected Iterator getPaintableIterator() {
         return paintables.iterator();
+    }
+
+    public boolean hasChildComponent(Widget component) {
+        if (paintables.contains(component)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void replaceChildComponent(Widget oldComponent, Widget newComponent) {
+        // TODO Auto-generated method stub
+    }
+
+    public void updateCaption(Paintable component, UIDL uidl) {
+        for (Iterator iterator = stack.iterator(); iterator.hasNext();) {
+            StackItem si = (StackItem) iterator.next();
+            if (si.getPaintable() == component) {
+                si.updateCaption(uidl);
+                return;
+            }
+        }
     }
 
 }

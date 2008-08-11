@@ -70,7 +70,7 @@ public class IGridLayout extends SimplePanel implements Paintable, Container,
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 
-        if (client.updateComponent(this, uidl, false)) {
+        if (client.updateComponent(this, uidl, true)) {
             return;
         }
         final MarginInfo margins = new MarginInfo(uidl
