@@ -5,7 +5,6 @@ import com.itmill.toolkit.ui.Window;
 
 public class Ticket1925 extends Application {
 
-    @Override
     public void init() {
         Window mainWindow = new Window("Test åäö");
         setMainWindow(mainWindow);
