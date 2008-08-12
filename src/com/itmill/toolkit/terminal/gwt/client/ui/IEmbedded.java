@@ -6,6 +6,7 @@ package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTML;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
@@ -18,6 +19,8 @@ public class IEmbedded extends HTML implements Paintable {
     private String width;
     private Element browserElement;
 
+    private ApplicationConnection client;
+
     public IEmbedded() {
         setStyleName(CLASSNAME);
     }
@@ -26,6 +29,7 @@ public class IEmbedded extends HTML implements Paintable {
         if (client.updateComponent(this, uidl, true)) {
             return;
         }
+        this.client = client;
 
         boolean clearBrowserElement = true;
 
@@ -44,9 +48,13 @@ public class IEmbedded extends HTML implements Paintable {
                 } else {
                     h = "";
                 }
+
                 setHTML("<img src=\"" + getSrc(uidl, client) + "\"" + w + h
                         + "/>");
-                client.addPngFix(DOM.getFirstChild(getElement()));
+
+                Element el = DOM.getFirstChild(getElement());
+                DOM.sinkEvents(el, Event.ONLOAD);
+                client.addPngFix(el);
 
             } else if (type.equals("browser")) {
                 if (browserElement == null) {
@@ -123,5 +131,12 @@ public class IEmbedded extends HTML implements Paintable {
             DOM.setElementAttribute(browserElement, "src", "javascript:false");
         }
         super.onDetach();
+    }
+
+    public void onBrowserEvent(Event event) {
+        super.onBrowserEvent(event);
+        if (DOM.eventGetType(event) == Event.ONLOAD) {
+            client.requestLayoutPhase();
+        }
     }
 }

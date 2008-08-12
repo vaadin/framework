@@ -983,4 +983,33 @@ public class ApplicationConnection {
         }
     }
 
+    /*
+     * Helper to run layout functions triggered by child components with a
+     * decent interval.
+     */
+    private final Timer layoutTimer = new Timer() {
+
+        private boolean isPending = false;
+
+        public void schedule(int delayMillis) {
+            if (!isPending) {
+                super.schedule(delayMillis);
+                isPending = true;
+            }
+        }
+
+        public void run() {
+            getConsole().log("Running re-layout");
+            Util.runDescendentsLayout(view);
+            isPending = false;
+        }
+    };
+
+    /**
+     * Components can call this function to run all layout functions. This is
+     * usually done, when component knows that its size has changed.
+     */
+    public void requestLayoutPhase() {
+        layoutTimer.schedule(500);
+    }
 }
