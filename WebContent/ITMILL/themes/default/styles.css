@@ -656,6 +656,11 @@ input.i-modified,
 	padding:0;
 }
 
+/* spacing value used by css detector */
+.i-gridlayout-spacing-element {
+	padding-left:8px;
+}
+
 .i-gridlayout-spacing .i-gridlayout-cell {
 	padding-left: 8px;
 	padding-top: 8px;
