@@ -27,13 +27,25 @@ import com.itmill.toolkit.terminal.PaintTarget;
 import com.itmill.toolkit.terminal.Resource;
 
 /**
+ * <p>
  * <code>TableComponent</code> is used for representing data or components in
  * pageable and selectable table.
+ * </p>
+ * 
+ * <p>
+ * Note! Since version 5, components in Table will not have their caption nor
+ * icon rendered. In order to workaround this limitation, wrap your component in
+ * a Layout.
+ * </p>
  * 
  * @author IT Mill Ltd.
  * @version
  * @VERSION@
  * @since 3.0
+ */
+/**
+ * @author mattitahvonen
+ * 
  */
 public class Table extends AbstractSelect implements Action.Container,
         Container.Ordered, Container.Sortable {
@@ -1695,13 +1707,10 @@ public class Table extends AbstractSelect implements Action.Container,
         }
     }
 
-    /**
-     * Paints the content of this component.
+    /*
+     * (non-Javadoc)
      * 
-     * @param target
-     *                the Paint target.
-     * @throws PaintException
-     *                 if the paint operation failed.
+     * @see com.itmill.toolkit.ui.AbstractSelect#paintContent(com.itmill.toolkit.terminal.PaintTarget)
      */
     public void paintContent(PaintTarget target) throws PaintException {
 
@@ -2016,10 +2025,10 @@ public class Table extends AbstractSelect implements Action.Container,
         target.endTag("visiblecolumns");
     }
 
-    /**
-     * Gets the UIDL tag corresponding to component.
+    /*
+     * (non-Javadoc)
      * 
-     * @return the UIDL tag as string.
+     * @see com.itmill.toolkit.ui.AbstractSelect#getTag()
      */
     public String getTag() {
         return "table";
