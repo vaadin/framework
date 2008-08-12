@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.DeferredCommand;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Caption;
@@ -24,6 +28,8 @@ public class ISizeableGridLayout extends AbsoluteGrid implements Paintable,
     private int spacing;
     private HashMap paintableToCellMap = new HashMap();
     private ApplicationConnection client;
+    private MarginPixels mp;
+    private String oldStyleString = "";
 
     public ISizeableGridLayout() {
         super();
@@ -34,12 +40,31 @@ public class ISizeableGridLayout extends AbsoluteGrid implements Paintable,
         return spacing;
     }
 
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+    public void updateFromUIDL(UIDL uidl, final ApplicationConnection client) {
         this.client = client;
 
         if (client.updateComponent(this, uidl, true)) {
             return;
         }
+
+        // act properly in rare case where style name changes
+        String newStyleString = "";
+        if (uidl.hasAttribute("style")) {
+            newStyleString = uidl.getStringAttribute("style");
+        }
+        if (!newStyleString.equals(oldStyleString)) {
+            // reset detected margin values as they may change due style change
+            mp = null;
+            // also force extra layout phase after render (fails initially if
+            // changed)
+            DeferredCommand.addCommand(new Command() {
+                public void execute() {
+                    client.requestLayoutPhase();
+                }
+            });
+
+        }
+        oldStyleString = newStyleString;
 
         if (uidl.hasAttribute("caption")) {
             setTitle(uidl.getStringAttribute("caption"));
@@ -127,16 +152,20 @@ public class ISizeableGridLayout extends AbsoluteGrid implements Paintable,
     protected void handleMargins(UIDL uidl) {
         final MarginInfo margins = new MarginInfo(uidl
                 .getIntAttribute("margins"));
-        // TODO build CSS detector to make margins configurable through css
-        marginTop = margins.hasTop() ? 15 : 0;
-        marginRight = margins.hasRight() ? 15 : 0;
-        marginBottom = margins.hasBottom() ? 15 : 0;
-        marginLeft = margins.hasLeft() ? 15 : 0;
+        if (mp == null) {
+            mp = detectMargins(getElement(), CLASSNAME);
+        }
+        marginTop = margins.hasTop() ? mp.top : 0;
+        marginRight = margins.hasRight() ? mp.right : 0;
+        marginBottom = margins.hasBottom() ? mp.bottom : 0;
+        marginLeft = margins.hasLeft() ? mp.left : 0;
     }
 
     private int detectSpacingSize() {
-        // TODO Auto-generated method stub
-        return 15;
+        if (mp == null) {
+            mp = detectMargins(getElement(), CLASSNAME);
+        }
+        return mp.spacing;
     }
 
     public boolean hasChildComponent(Widget component) {
@@ -163,4 +192,69 @@ public class ISizeableGridLayout extends AbsoluteGrid implements Paintable,
         c.updateCaption(uidl);
     }
 
+    /**
+     * Helper method to detect proper sizes (set via css) for margins and
+     * spacings.
+     * 
+     * @param baseElement
+     *                measurements will be done withing this element
+     * @param baseStyleName
+     *                base style name
+     * @return
+     */
+    public static MarginPixels detectMargins(Element baseElement,
+            String baseStyleName) {
+        Element wrap = DOM.createDiv();
+        DOM.setStyleAttribute(wrap, "position", "absolute");
+        DOM.setStyleAttribute(wrap, "visibility", "hidden");
+
+        Element left = DOM.createDiv();
+        DOM.setElementProperty(left, "className", baseStyleName
+                + "-margin-left");
+        DOM.setStyleAttribute(left, "width", "0");
+        DOM.appendChild(wrap, left);
+        Element right = DOM.createDiv();
+        DOM.setElementProperty(right, "className", baseStyleName
+                + "-margin-right");
+        DOM.setStyleAttribute(right, "width", "0");
+        DOM.appendChild(wrap, right);
+        Element top = DOM.createDiv();
+        DOM.setElementProperty(top, "className", baseStyleName + "-margin-top");
+        DOM.setStyleAttribute(top, "width", "0");
+        DOM.appendChild(wrap, top);
+        Element bottom = DOM.createDiv();
+        DOM.setElementProperty(bottom, "className", baseStyleName
+                + "-margin-bottom");
+        DOM.setStyleAttribute(bottom, "width", "0");
+        DOM.appendChild(wrap, bottom);
+
+        Element spacing = DOM.createDiv();
+        DOM.setElementProperty(spacing, "className", baseStyleName
+                + "-spacing-element");
+        DOM.setStyleAttribute(spacing, "width", "0");
+        DOM.appendChild(wrap, spacing);
+
+        DOM.insertChild(baseElement, wrap, 0);
+
+        MarginPixels marginPixels = new MarginPixels();
+        marginPixels.top = DOM.getElementPropertyInt(top, "offsetHeight");
+        marginPixels.right = DOM.getElementPropertyInt(right, "offsetWidth");
+        marginPixels.bottom = DOM.getElementPropertyInt(bottom, "offsetHeight");
+        marginPixels.left = DOM.getElementPropertyInt(left, "offsetWidth");
+        marginPixels.spacing = DOM
+                .getElementPropertyInt(spacing, "offsetWidth");
+
+        DOM.removeChild(baseElement, wrap);
+
+        return marginPixels;
+    }
+
+}
+
+class MarginPixels {
+    public int spacing;
+    public int top;
+    public int bottom;
+    public int left;
+    public int right;
 }
