@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -42,10 +43,6 @@ import com.itmill.toolkit.terminal.Resource;
  * @version
  * @VERSION@
  * @since 3.0
- */
-/**
- * @author mattitahvonen
- * 
  */
 public class Table extends AbstractSelect implements Action.Container,
         Container.Ordered, Container.Sortable {
@@ -232,15 +229,18 @@ public class Table extends AbstractSelect implements Action.Container,
     private Object[][] pageBuffer = null;
 
     /**
-     * List of properties listened - the list is kept to release the listeners
+     * Set of properties listened - the list is kept to release the listeners
      * later.
+     * 
+     * Note: This should be set or list. IdentityHashMap used due very heavy
+     * hashCode in indexed container
      */
-    private LinkedList listenedProperties = null;
+    private Map listenedProperties = null;
 
     /**
-     * List of visible components - the is used for needsRepaint calculation.
+     * Set of visible components - the is used for needsRepaint calculation.
      */
-    private LinkedList visibleComponents = null;
+    private HashSet visibleComponents = null;
 
     /**
      * List of action handlers.
@@ -1166,12 +1166,12 @@ public class Table extends AbstractSelect implements Action.Container,
 
         if (isContentRefreshesEnabled) {
 
-            LinkedList oldListenedProperties = listenedProperties;
-            LinkedList oldVisibleComponents = visibleComponents;
+            Map oldListenedProperties = listenedProperties;
+            HashSet oldVisibleComponents = visibleComponents;
 
             // initialize the listener collections
-            listenedProperties = new LinkedList();
-            visibleComponents = new LinkedList();
+            listenedProperties = new IdentityHashMap();
+            visibleComponents = new HashSet();
 
             // Collects the basic facts about the table page
             final Object[] colids = getVisibleColumns();
@@ -1273,11 +1273,12 @@ public class Table extends AbstractSelect implements Action.Container,
                         if (p != null || isGenerated) {
                             if (p instanceof Property.ValueChangeNotifier) {
                                 if (oldListenedProperties == null
-                                        || !oldListenedProperties.contains(p)) {
+                                        || !oldListenedProperties
+                                                .containsKey(p)) {
                                     ((Property.ValueChangeNotifier) p)
                                             .addListener(this);
                                 }
-                                listenedProperties.add(p);
+                                listenedProperties.put(p, null);
                             }
                             if (index < firstIndexNotInCache
                                     && index >= pageBufferFirstIndex) {
@@ -1348,11 +1349,11 @@ public class Table extends AbstractSelect implements Action.Container,
             }
 
             if (oldListenedProperties != null) {
-                for (final Iterator i = oldListenedProperties.iterator(); i
-                        .hasNext();) {
+                for (final Iterator i = oldListenedProperties.keySet()
+                        .iterator(); i.hasNext();) {
                     Property.ValueChangeNotifier o = (ValueChangeNotifier) i
                             .next();
-                    if (!listenedProperties.contains(o)) {
+                    if (!listenedProperties.containsKey(o)) {
                         o.removeListener(this);
                     }
                 }
