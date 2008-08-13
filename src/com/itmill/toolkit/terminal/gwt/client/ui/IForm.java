@@ -54,7 +54,7 @@ public class IForm extends ComplexPanel implements Paintable,
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        if (client.updateComponent(this, uidl, true)) {
+        if (client.updateComponent(this, uidl, false)) {
             return;
         }
 
