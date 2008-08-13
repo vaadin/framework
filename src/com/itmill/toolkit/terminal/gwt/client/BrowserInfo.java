@@ -40,7 +40,7 @@ public class BrowserInfo {
         try {
             String ua = getBrowserString().toLowerCase();
             // browser engine name
-            isGecko = ua.indexOf("gecko") != -1 && ua.indexOf("safari") == -1;
+            isGecko = ua.indexOf("gecko") != -1 && ua.indexOf("webkit") == -1;
             isAppleWebKit = ua.indexOf("applewebkit") != -1;
 
             // browser name
