@@ -398,7 +398,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
         // Removes alignments, icons and headers from hidden columns
         if (this.visibleColumns != null) {
-            disableContentRefreshing();
+            boolean disabledHere = disableContentRefreshing();
             try {
                 for (final Iterator i = this.visibleColumns.iterator(); i
                         .hasNext();) {
@@ -410,7 +410,9 @@ public class Table extends AbstractSelect implements Action.Container,
                     }
                 }
             } finally {
-                enableContentRefreshing(false);
+                if (disabledHere) {
+                    enableContentRefreshing(false);
+                }
             }
         }
 
@@ -1495,6 +1497,8 @@ public class Table extends AbstractSelect implements Action.Container,
      */
     public void setContainerDataSource(Container newDataSource) {
 
+        disableContentRefreshing();
+
         if (newDataSource == null) {
             newDataSource = new IndexedContainer();
         }
@@ -1538,7 +1542,8 @@ public class Table extends AbstractSelect implements Action.Container,
 
         // Assure visual refresh
         resetPageBuffer();
-        refreshRenderedCells();
+        enableContentRefreshing(true);
+
     }
 
     /* Component basics ***************************************************** */
@@ -1690,9 +1695,12 @@ public class Table extends AbstractSelect implements Action.Container,
      * bypass expensive content for some reason (like when we know we may have
      * other content changes on their way).
      * 
+     * @return true if content refresh flag was enabled prior this call
      */
-    protected void disableContentRefreshing() {
+    protected boolean disableContentRefreshing() {
+        boolean wasDisabled = isContentRefreshesEnabled;
         isContentRefreshesEnabled = false;
+        return wasDisabled;
     }
 
     /**
