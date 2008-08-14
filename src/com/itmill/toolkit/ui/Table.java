@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -235,7 +234,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * Note: This should be set or list. IdentityHashMap used due very heavy
      * hashCode in indexed container
      */
-    private Map listenedProperties = null;
+    private HashSet listenedProperties = null;
 
     /**
      * Set of visible components - the is used for needsRepaint calculation.
@@ -1168,11 +1167,11 @@ public class Table extends AbstractSelect implements Action.Container,
 
         if (isContentRefreshesEnabled) {
 
-            Map oldListenedProperties = listenedProperties;
+            HashSet oldListenedProperties = listenedProperties;
             HashSet oldVisibleComponents = visibleComponents;
 
             // initialize the listener collections
-            listenedProperties = new IdentityHashMap();
+            listenedProperties = new HashSet();
             visibleComponents = new HashSet();
 
             // Collects the basic facts about the table page
@@ -1275,12 +1274,11 @@ public class Table extends AbstractSelect implements Action.Container,
                         if (p != null || isGenerated) {
                             if (p instanceof Property.ValueChangeNotifier) {
                                 if (oldListenedProperties == null
-                                        || !oldListenedProperties
-                                                .containsKey(p)) {
+                                        || !oldListenedProperties.contains(p)) {
                                     ((Property.ValueChangeNotifier) p)
                                             .addListener(this);
                                 }
-                                listenedProperties.put(p, null);
+                                listenedProperties.add(p);
                             }
                             if (index < firstIndexNotInCache
                                     && index >= pageBufferFirstIndex) {
@@ -1351,11 +1349,11 @@ public class Table extends AbstractSelect implements Action.Container,
             }
 
             if (oldListenedProperties != null) {
-                for (final Iterator i = oldListenedProperties.keySet()
-                        .iterator(); i.hasNext();) {
+                for (final Iterator i = oldListenedProperties.iterator(); i
+                        .hasNext();) {
                     Property.ValueChangeNotifier o = (ValueChangeNotifier) i
                             .next();
-                    if (!listenedProperties.containsKey(o)) {
+                    if (!listenedProperties.contains(o)) {
                         o.removeListener(this);
                     }
                 }
