@@ -1109,7 +1109,7 @@ public class IndexedContainer implements Container, Container.Indexed,
          * @return A locally unique hash-code as integer
          */
         public int hashCode() {
-            return getHost().hashCode() ^ itemId.hashCode();
+            return itemId.hashCode();
         }
 
         /**
