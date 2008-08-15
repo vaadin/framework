@@ -21,7 +21,7 @@ public class ICustomComponent extends SimplePanel implements Container {
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        if (client.updateComponent(this, uidl, false)) {
+        if (client.updateComponent(this, uidl, true)) {
             return;
         }
 
