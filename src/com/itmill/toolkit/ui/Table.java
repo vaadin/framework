@@ -1751,14 +1751,26 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         // selection support
-        String[] selectedKeys;
+        LinkedList selectedKeys = new LinkedList();
         if (isMultiSelect()) {
-            selectedKeys = new String[((Set) getValue()).size()];
+            // only paint selections that are currently visible in the client
+            HashSet sel = new HashSet((Set) getValue());
+            Collection vids = getVisibleItemIds();
+            for (Iterator it = vids.iterator(); it.hasNext();) {
+                Object id = it.next();
+                if (sel.contains(id)) {
+                    selectedKeys.add(itemIdMapper.key(id));
+                }
+            }
         } else {
-            selectedKeys = new String[(getValue() == null
-                    && getNullSelectionItemId() == null ? 0 : 1)];
+            Object value = getValue();
+            if (value == null) {
+                value = getNullSelectionItemId();
+            }
+            if (value != null) {
+                selectedKeys.add(itemIdMapper.key(value));
+            }
         }
-        int keyIndex = 0;
 
         // Table attributes
         if (isSelectable()) {
@@ -1854,9 +1866,8 @@ public class Table extends AbstractSelect implements Action.Container,
             target.addAttribute("key", Integer.parseInt(cells[CELL_KEY][i]
                     .toString()));
             if (actionHandlers != null || isSelectable()) {
-                if (isSelected(itemId) && keyIndex < selectedKeys.length) {
+                if (isSelected(itemId)) {
                     target.addAttribute("selected", true);
-                    selectedKeys[keyIndex++] = (String) cells[CELL_KEY][i];
                 }
             }
 
@@ -1927,8 +1938,9 @@ public class Table extends AbstractSelect implements Action.Container,
         target.endTag("rows");
 
         // The select variable is only enabled if selectable
-        if (selectable) {
-            target.addVariable(this, "selected", selectedKeys);
+        if (selectable && selectedKeys.size() > 0) {
+            target.addVariable(this, "selected", (String[]) selectedKeys
+                    .toArray(new String[selectedKeys.size()]));
         }
 
         // The cursors are only shown on pageable table
