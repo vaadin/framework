@@ -130,7 +130,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     public void paintContent(PaintTarget target) throws PaintException {
 
         // The tab ordering number
-        if (tabIndex > 0) {
+        if (tabIndex != 0) {
             target.addAttribute("tabindex", tabIndex);
         }
 
@@ -941,23 +941,19 @@ public abstract class AbstractField extends AbstractComponent implements Field,
         return new TextField();
     }
 
-    /**
-     * Gets the tab index of this field. The tab index property is used to
-     * specify the natural tab ordering of fields.
+    /*
+     * (non-Javadoc)
      * 
-     * @return the Tab index of this field. Negative value means unspecified.
+     * @see com.itmill.toolkit.ui.Component.Focusable#getTabIndex()
      */
     public int getTabIndex() {
         return tabIndex;
     }
 
-    /**
-     * Gets the tab index of this field. The tab index property is used to
-     * specify the natural tab ordering of fields.
+    /*
+     * (non-Javadoc)
      * 
-     * @param tabIndex
-     *                the tab order of this component. Negative value means
-     *                unspecified.
+     * @see com.itmill.toolkit.ui.Component.Focusable#setTabIndex(int)
      */
     public void setTabIndex(int tabIndex) {
         this.tabIndex = tabIndex;

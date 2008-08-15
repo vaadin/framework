@@ -390,17 +390,18 @@ public interface Component extends Paintable, VariableOwner, Sizeable {
         /**
          * Gets the Tabulator index of this Focusable component.
          * 
-         * @return the Positive tab order of this focusable. Negative of zero
-         *         means unspecified tab order.
+         * @return tab index set for this Focusable component
          */
         public int getTabIndex();
 
         /**
-         * Sets the Tabulator index of this Focusable component.
+         * Sets the tab index of this field. The tab index property is used to
+         * specify the natural tab order of fields.
          * 
          * @param tabIndex
-         *                the Positive tab order of this focusable. Negative of
-         *                zero means unspecified tab order.
+         *                the tab order of this component. Indexes usually start
+         *                from 1. Negative value means that field is not wanted
+         *                to tabbing sequence.
          */
         public void setTabIndex(int tabIndex);
 
