@@ -1889,6 +1889,18 @@ public class Table extends AbstractSelect implements Action.Container,
                 target.addAttribute("al", keys.toArray());
             }
 
+            /*
+             * For each row, if a cellStyleGenerator is specified, get the
+             * specific style for the cell, using null as propertyId. If there
+             * is any, add it to the target.
+             */
+            if (cellStyleGenerator != null) {
+                String rowStyle = cellStyleGenerator.getStyle(itemId, null);
+                if (rowStyle != null && !rowStyle.equals("")) {
+                    target.addAttribute("rowstyle", rowStyle);
+                }
+            }
+
             // cells
             int currentColumn = 0;
             for (final Iterator it = visibleColumns.iterator(); it.hasNext(); currentColumn++) {
@@ -2871,22 +2883,25 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     /**
-     * Allow to define specific style on cells contents. Implements this
-     * interface and pass it to Table.setCellStyleGenerator. The CSS class name
-     * that will be added to the cell content is
-     * <tt>i-table-cell-content-[style name]</tt>
+     * Allow to define specific style on cells (and rows) contents. Implements
+     * this interface and pass it to Table.setCellStyleGenerator. Row styles are
+     * generated when porpertyId is null. The CSS class name that will be added
+     * to the cell content is <tt>i-table-cell-content-[style name]</tt>, and
+     * the row style will be <tt>i-table-row-[style name]</tt>.
      */
     public interface CellStyleGenerator {
 
         /**
-         * Called by Table when a cell is painted.
+         * Called by Table when a cell (and row) is painted.
          * 
          * @param itemId
          *                The itemId of the painted cell
          * @param propertyId
-         *                The propertyId of the
-         * @return The style name to add to this cell (the CSS class name will
-         *         be i-table-cell-content-[style name] )
+         *                The propertyId of the cell, null when getting row
+         *                style
+         * @return The style name to add to this cell or row. (the CSS class
+         *         name will be i-table-cell-content-[style name], or
+         *         i-table-row-[style name] for rows)
          */
         public abstract String getStyle(Object itemId, Object propertyId);
     }

@@ -1762,7 +1762,9 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
                 first = (IScrollTableRow) renderedRows.get(0);
             }
             if (first != null && first.getStyleName().indexOf("-odd") == -1) {
-                row.setStyleName(CLASSNAME + "-row-odd");
+                row.addStyleName(CLASSNAME + "-row-odd");
+            } else {
+                row.addStyleName(CLASSNAME + "-row");
             }
             if (row.isSelected()) {
                 row.addStyleName("i-selected");
@@ -1779,7 +1781,9 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
                         .get(renderedRows.size() - 1);
             }
             if (last != null && last.getStyleName().indexOf("-odd") == -1) {
-                row.setStyleName(CLASSNAME + "-row-odd");
+                row.addStyleName(CLASSNAME + "-row-odd");
+            } else {
+                row.addStyleName(CLASSNAME + "-row");
             }
             if (row.isSelected()) {
                 row.addStyleName("i-selected");
@@ -1923,7 +1927,6 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
                 setElement(DOM.createElement("tr"));
                 DOM.sinkEvents(getElement(), Event.ONCLICK);
                 attachContextMenuEvent(getElement());
-                setStyleName(CLASSNAME + "-row");
             }
 
             protected void onDetach() {
@@ -1956,6 +1959,11 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
             public IScrollTableRow(UIDL uidl, char[] aligns) {
                 this(uidl.getIntAttribute("key"));
 
+                String rowStyle = uidl.getStringAttribute("rowstyle");
+                if (rowStyle != null) {
+                    addStyleName(CLASSNAME + "-row-" + rowStyle);
+                }
+
                 tHead.getColumnAlignments();
                 int col = 0;
                 // row header
@@ -1972,8 +1980,10 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
                     final Object cell = cells.next();
                     if (cell instanceof String) {
                         String style = "";
-                        if (uidl.hasAttribute("style-" + col)) {
-                            style = uidl.getStringAttribute("style-" + col);
+                        if (uidl.hasAttribute("style-"
+                                + (showRowHeaders ? col - 1 : col))) {
+                            style = uidl.getStringAttribute("style-"
+                                    + (showRowHeaders ? col - 1 : col));
                         }
                         addCell(cell.toString(), aligns[col++], style);
                     } else {
