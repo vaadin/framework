@@ -497,7 +497,7 @@ public class IExpandLayout extends ComplexPanel implements
             size -= (marginTop + marginBottom);
         } else {
             // horizontal mode
-            size = DOM.getElementPropertyInt(childContainer, "offsetWidth");
+            size = DOM.getElementPropertyInt(breakElement, "offsetWidth");
         }
         return size;
     }
