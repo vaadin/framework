@@ -99,7 +99,7 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
         getCaptionChangeListener().clear();
 
         // The tab ordering number
-        if (getTabIndex() > 0) {
+        if (getTabIndex() != 0) {
             target.addAttribute("tabindex", getTabIndex());
         }
 
