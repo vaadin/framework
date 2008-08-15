@@ -1551,106 +1551,14 @@ public class IndexedContainer implements Container, Container.Indexed,
         return nc;
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Note! In Toolkit version 5.2.6 removed complex equals method due the old
+     * one was practically useless and caused serious performance issues.
      * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
     public boolean equals(Object obj) {
-
-        // Only ones of the objects of the same class can be equal
-        if (!(obj instanceof IndexedContainer)) {
-            return false;
-        }
-        final IndexedContainer o = (IndexedContainer) obj;
-
-        // Checks the properties one by one
-        if (itemIds != o.itemIds && o.itemIds != null
-                && !o.itemIds.equals(itemIds)) {
-            return false;
-        }
-        if (filters != o.filters && o.filters != null
-                && !o.filters.equals(filters)) {
-            return false;
-        }
-        if (items != o.items && o.items != null && !o.items.equals(items)) {
-            return false;
-        }
-        if (itemSetChangeListeners != o.itemSetChangeListeners
-                && o.itemSetChangeListeners != null
-                && !o.itemSetChangeListeners.equals(itemSetChangeListeners)) {
-            return false;
-        }
-        if (propertyIds != o.propertyIds && o.propertyIds != null
-                && !o.propertyIds.equals(propertyIds)) {
-            return false;
-        }
-        if (propertySetChangeListeners != o.propertySetChangeListeners
-                && o.propertySetChangeListeners != null
-                && !o.propertySetChangeListeners
-                        .equals(propertySetChangeListeners)) {
-            return false;
-        }
-        if (propertyValueChangeListeners != o.propertyValueChangeListeners
-                && o.propertyValueChangeListeners != null
-                && !o.propertyValueChangeListeners
-                        .equals(propertyValueChangeListeners)) {
-            return false;
-        }
-        if (readOnlyProperties != o.readOnlyProperties
-                && o.readOnlyProperties != null
-                && !o.readOnlyProperties.equals(readOnlyProperties)) {
-            return false;
-        }
-        if (singlePropertyValueChangeListeners != o.singlePropertyValueChangeListeners
-                && o.singlePropertyValueChangeListeners != null
-                && !o.singlePropertyValueChangeListeners
-                        .equals(singlePropertyValueChangeListeners)) {
-            return false;
-        }
-        if (sortDirection != o.sortDirection && o.sortDirection != null
-                && !o.sortDirection.equals(sortDirection)) {
-            return false;
-        }
-        if (sortPropertyId != o.sortPropertyId && o.sortPropertyId != null
-                && !o.sortPropertyId.equals(sortPropertyId)) {
-            return false;
-        }
-        if (types != o.types && o.types != null && !o.types.equals(types)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#hashCode()
-     */
-    public int hashCode() {
-
-        // The hash-code is calculated as combination hash of the members
-        return (itemIds != null ? itemIds.hashCode() : 0)
-                ^ (items != null ? items.hashCode() : 0)
-                ^ (filters != null ? filters.hashCode() : 0)
-                ^ (itemSetChangeListeners != null ? itemSetChangeListeners
-                        .hashCode() : 0)
-                ^ (propertyIds != null ? propertyIds.hashCode() : 0)
-                ^ (propertySetChangeListeners != null ? propertySetChangeListeners
-                        .hashCode()
-                        : 0)
-                ^ (propertyValueChangeListeners != null ? propertyValueChangeListeners
-                        .hashCode()
-                        : 0)
-                ^ (readOnlyProperties != null ? readOnlyProperties.hashCode()
-                        : 0)
-                ^ (singlePropertyValueChangeListeners != null ? singlePropertyValueChangeListeners
-                        .hashCode()
-                        : 0)
-                ^ (sortPropertyId != null ? sortPropertyId.hashCode() : 0)
-                ^ (types != null ? types.hashCode() : 0)
-                ^ (sortDirection != null ? sortDirection.hashCode() : 0);
+        return super.equals(obj);
     }
 
     private class Filter {
