@@ -9,6 +9,7 @@ import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
 import com.itmill.toolkit.terminal.gwt.client.Caption;
 import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.Util;
@@ -122,6 +123,9 @@ public class AbsoluteGrid extends Composite implements ContainerResizedListener 
 
         AbsoluteGridCell(int colIndex, int rowIndex) {
             super();
+            if (BrowserInfo.get().isIE6()) {
+                DOM.setStyleAttribute(getElement(), "overflow", "hidden");
+            }
             DOM.appendChild(getElement(), container);
             this.rowIndex = rowIndex;
             this.colIndex = colIndex;
