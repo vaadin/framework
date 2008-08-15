@@ -549,6 +549,11 @@ public class IFilterSelect extends Composite implements Paintable, Field,
             return;
         }
 
+        // not a FocusWidget -> needs own tabindex handling
+        if (uidl.hasAttribute("tabindex")) {
+            tb.setTabIndex(uidl.getIntAttribute("tabindex"));
+        }
+
         immediate = uidl.hasAttribute("immediate");
 
         nullSelectionAllowed = uidl.hasAttribute("nullselect");
