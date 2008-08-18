@@ -207,18 +207,6 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
             setModal(!modal);
         }
 
-        // Initialize the size from UIDL
-        // FIXME relational size is for outer size, others are applied for
-        // content
-        if (uidl.hasVariable("width")) {
-            final String width = uidl.getStringVariable("width");
-            if (width.indexOf("px") < 0) {
-                DOM.setStyleAttribute(getElement(), "width", width);
-            } else {
-                setWidth(width);
-            }
-        }
-
         // Initialize the position form UIDL
         try {
             final int positionx = uidl.getIntVariable("positionx");
@@ -233,6 +221,32 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 
         if (!isAttached()) {
             show();
+        }
+
+        // Initialize the size from UIDL
+        /*
+         * FIXME non-pixel size is set as "outer size", pixels are applied for
+         * content area. This is due history as earlier only pixels where
+         * allowed.
+         */
+        if (uidl.hasVariable("width")) {
+            final String width = uidl.getStringVariable("width");
+            if (width.indexOf("px") < 0) {
+                /*
+                 * Only using non-pixel size for initial size measurement. Then
+                 * fix content area with pixels.
+                 */
+                DOM.setStyleAttribute(getElement(), "width", width);
+                int elementPropertyInt = DOM.getElementPropertyInt(
+                        getElement(), "offsetWidth");
+                DOM.setStyleAttribute(getElement(), "width", "");
+                elementPropertyInt -= (DOM.getElementPropertyInt(getElement(),
+                        "offsetWidth") - DOM.getElementPropertyInt(contents,
+                        "offsetWidth"));
+                setWidth(elementPropertyInt + "px");
+            } else {
+                setWidth(width);
+            }
         }
 
         // Height set after show so we can detect space used by decorations
