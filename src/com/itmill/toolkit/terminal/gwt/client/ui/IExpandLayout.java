@@ -433,7 +433,8 @@ public class IExpandLayout extends ComplexPanel implements
         final Iterator it = iterator();
         while (it.hasNext()) {
             final Widget w = (Widget) it.next();
-            if (w != expandedWidget) {
+            
+            if (w instanceof Paintable && w != expandedWidget) {
                 final WidgetWrapper wr = getWidgetWrapperFor(w);
                 if (orientationMode == ORIENTATION_VERTICAL) {
                     total += wr.getOffsetHeight();
