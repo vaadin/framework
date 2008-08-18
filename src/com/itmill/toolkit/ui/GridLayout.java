@@ -82,7 +82,8 @@ public class GridLayout extends AbstractLayout implements
     private static final int ALIGNMENT_DEFAULT = ALIGNMENT_TOP + ALIGNMENT_LEFT;
 
     /**
-     * Has there been rows inserted or deleted in the middle of the layout since the last paint operation.
+     * Has there been rows inserted or deleted in the middle of the layout since
+     * the last paint operation.
      */
     private boolean structuralChange = false;
 
@@ -124,11 +125,11 @@ public class GridLayout extends AbstractLayout implements
      * @param c
      *                the component to be added.
      * @param column1
-     *                the column of the upper left corner of the area <code>c</code>
-     *                is supposed to occupy.
+     *                the column of the upper left corner of the area
+     *                <code>c</code> is supposed to occupy.
      * @param row1
-     *                the row of the upper left corner of the area <code>c</code> is
-     *                supposed to occupy.
+     *                the row of the upper left corner of the area
+     *                <code>c</code> is supposed to occupy.
      * @param column2
      *                the column of the lower right corner of the area
      *                <code>c</code> is supposed to occupy.
@@ -192,6 +193,19 @@ public class GridLayout extends AbstractLayout implements
         if (!done) {
             areas.addLast(area);
             components.addLast(component);
+        }
+
+        // update cursor position, if it's within this area; use first position
+        // outside this area, even if it's occupied
+        if (cursorX >= column1 && cursorX <= column2 && cursorY >= row1
+                && cursorY <= row2) {
+            cursorX = column2 + 1;
+            if (cursorX >= cols) {
+                cursorX = 0;
+                cursorY = (column1 == 0 ? row2 : row1) + 1;
+            } else {
+                cursorY = row1;
+            }
         }
 
         requestRepaint();
@@ -996,7 +1010,7 @@ public class GridLayout extends AbstractLayout implements
      * Inserts an empty row at the chosen position in the grid.
      * 
      * @param row
-     *            Number of the row the new row will be inserted before
+     *                Number of the row the new row will be inserted before
      */
     public void insertRow(int row) {
         if (row > rows) {
@@ -1033,7 +1047,7 @@ public class GridLayout extends AbstractLayout implements
      * row.
      * 
      * @param row
-     *            The row number to remove
+     *                The row number to remove
      */
     public void removeRow(int row) {
         if (row >= rows) {
