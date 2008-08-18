@@ -143,7 +143,7 @@ public class ITextField extends TextBoxBase implements Paintable, Field,
                     .indexOf("%"))) / 100;
             iLayout();
         } else {
-            super.setHeight(width);
+            super.setWidth(width);
             proportionalWidth = -1;
         }
     }
