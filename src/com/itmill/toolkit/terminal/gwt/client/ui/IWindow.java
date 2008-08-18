@@ -349,9 +349,9 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
         }
 
         // setting scrollposition must happen after children is rendered
-        contentPanel.setScrollPosition(uidl.getIntVariable("scrolltop"));
+        contentPanel.setScrollPosition(uidl.getIntVariable("scrollTop"));
         contentPanel.setHorizontalScrollPosition(uidl
-                .getIntVariable("scrollleft"));
+                .getIntVariable("scrollLeft"));
 
     }
 
@@ -666,8 +666,8 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
     }
 
     public void onScroll(Widget widget, int scrollLeft, int scrollTop) {
-        client.updateVariable(id, "scrolltop", scrollTop, false);
-        client.updateVariable(id, "scrollleft", scrollLeft, false);
+        client.updateVariable(id, "scrollTop", scrollTop, false);
+        client.updateVariable(id, "scrollLeft", scrollLeft, false);
     }
 
     public void addStyleDependentName(String styleSuffix) {
