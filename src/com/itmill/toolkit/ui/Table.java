@@ -1425,7 +1425,8 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     /**
-     * Adds the new row to table and fill the visible cells with given values.
+     * Adds the new row to table and fill the visible cells (except generated
+     * columns) with given values.
      * 
      * @param cells
      *                the Object array that is used for filling the visible
@@ -1440,10 +1441,16 @@ public class Table extends AbstractSelect implements Action.Container,
     public Object addItem(Object[] cells, Object itemId)
             throws UnsupportedOperationException {
 
-        final Object[] cols = getVisibleColumns();
-
+        // remove generated columns from the list of columns being assigned
+        final LinkedList availableCols = new LinkedList();
+        for (Iterator it = visibleColumns.iterator(); it.hasNext();) {
+            Object id = it.next();
+            if (!columnGenerators.containsKey(id)) {
+                availableCols.add(id);
+            }
+        }
         // Checks that a correct number of cells are given
-        if (cells.length != cols.length) {
+        if (cells.length != availableCols.size()) {
             return null;
         }
 
@@ -1463,8 +1470,8 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         // Fills the item properties
-        for (int i = 0; i < cols.length; i++) {
-            item.getItemProperty(cols[i]).setValue(cells[i]);
+        for (int i = 0; i < availableCols.size(); i++) {
+            item.getItemProperty(availableCols.get(i)).setValue(cells[i]);
         }
 
         if (!(items instanceof Container.ItemSetChangeNotifier)) {
