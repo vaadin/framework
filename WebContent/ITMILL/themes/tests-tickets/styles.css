@@ -105,3 +105,25 @@
 .i-gridlayout-border td {
 	border: 1px solid black;
 }
+
+/* #1919 */
+
+.i-gridlayout-test .i-gridlayout-margin-top {
+	padding-top: 100px;
+}
+
+.i-gridlayout-test .i-gridlayout-margin-left {
+	padding-left: 5px;
+}
+.i-gridlayout-test .i-gridlayout-margin-right {
+	padding-right: 50px;
+}
+.i-gridlayout-test .i-gridlayout-margin-bottom {
+	padding-bottom: 0 px;
+}
+
+.i-gridlayout-test .i-gridlayout-margin-spacing {
+	padding-left: 40px;
+	padding-top: 40px;
+}
+
