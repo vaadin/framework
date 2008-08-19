@@ -215,20 +215,20 @@ public class ITabsheet extends ITabsheetBase implements
         if (isScrolledTabs()
                 && DOM.compare(DOM.eventGetTarget(event), scrollerPrev)) {
             if (scrollerIndex > 0) {
+                scrollerIndex--;
                 DOM.setStyleAttribute(DOM.getChild(DOM.getFirstChild(DOM
                         .getFirstChild(tb.getElement())), scrollerIndex),
                         "display", "");
-                scrollerIndex--;
                 updateTabScroller();
             }
         } else if (isClippedTabs()
                 && DOM.compare(DOM.eventGetTarget(event), scrollerNext)) {
             int tabs = tb.getTabCount();
             if (scrollerIndex + 1 <= tabs) {
-                scrollerIndex++;
                 DOM.setStyleAttribute(DOM.getChild(DOM.getFirstChild(DOM
                         .getFirstChild(tb.getElement())), scrollerIndex),
                         "display", "none");
+                scrollerIndex++;
                 updateTabScroller();
             }
         } else {
