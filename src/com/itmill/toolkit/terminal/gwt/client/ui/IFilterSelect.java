@@ -690,6 +690,9 @@ public class IFilterSelect extends Composite implements Paintable, Field,
             switch (keyCode) {
             case KeyboardListener.KEY_ENTER:
             case KeyboardListener.KEY_TAB:
+            case KeyboardListener.KEY_SHIFT:
+            case KeyboardListener.KEY_CTRL:
+            case KeyboardListener.KEY_ALT:
                 ; // NOP
                 break;
             case KeyboardListener.KEY_DOWN:
