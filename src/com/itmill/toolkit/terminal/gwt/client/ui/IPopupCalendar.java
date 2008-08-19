@@ -73,17 +73,18 @@ public class IPopupCalendar extends ITextualDate implements Paintable, Field,
                         l = Window.getClientWidth() + Window.getScrollLeft()
                                 - w;
                     }
-                    if (t + h > Window.getClientHeight()
+                    if (t + h + calendarToggle.getOffsetHeight() + 30 > Window
+                            .getClientHeight()
                             + Window.getScrollTop()) {
                         t = Window.getClientHeight() + Window.getScrollTop()
                                 - h - calendarToggle.getOffsetHeight() - 30;
                         l += calendarToggle.getOffsetWidth();
                     }
-                    
+
                     // fix size
                     popup.setWidth(w + "px");
                     popup.setHeight(h + "px");
-                    
+
                     popup.setPopupPosition(l, t
                             + calendarToggle.getOffsetHeight() + 2);
 
