@@ -10,7 +10,6 @@ import java.util.Vector;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Panel;
-import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
@@ -56,12 +55,6 @@ public class IOrderedLayout extends Panel implements Container,
     private Element wrappedChildContainer;
 
     /**
-     * Elements that provides the Layout interface implementation. Root element
-     * of the component. This is the outmost div or table.
-     */
-    private Element root;
-
-    /**
      * List of child widgets. This is not the list of wrappers, but the actual
      * widgets
      */
@@ -72,7 +65,16 @@ public class IOrderedLayout extends Panel implements Container,
      */
     private boolean tableMode = false;
 
-    /** Last set width of the component. Null if undefined (instead of being ""). */
+    /**
+     * Root element. This element points to the outmost table-element (in table
+     * mode) or outmost div (in non-table-mode). This non-table-mode this equals
+     * to the getElement().
+     */
+    private Element root = null;
+
+    /**
+     * Last set width of the component. Null if undefined (instead of being "").
+     */
     private String width = null;
 
     /**
@@ -104,8 +106,8 @@ public class IOrderedLayout extends Panel implements Container,
      * <p>
      * There are two modes - vertical and horizontal.
      * <ul>
-     * <li>Vertical mode uses structure: div-root ( div-wrap ( child ) div-wrap (
-     * child ))).</li>
+     * <li>Vertical mode uses structure: div-root ( div-wrap ( child ) div-wrap
+     * ( child ))).</li>
      * <li>Horizontal mode uses structure: table ( tbody ( tr-childcontainer (
      * td-wrap ( child ) td-wrap ( child) )) )</li>
      * </ul>
@@ -116,7 +118,7 @@ public class IOrderedLayout extends Panel implements Container,
      */
     public IOrderedLayout() {
         wrappedChildContainer = root = DOM.createDiv();
-        setElement(root);
+        setElement(wrappedChildContainer);
         setStyleName(CLASSNAME);
     }
 
@@ -140,13 +142,11 @@ public class IOrderedLayout extends Panel implements Container,
         // Constuct base DOM-structure and clean any already attached
         // widgetwrappers from DOM.
         if (tableMode) {
-            Element tmp = DOM.createDiv();
             final String structure = "<table cellspacing=\"0\" cellpadding=\"0\"><tbody>"
-                    + (orientationMode == ORIENTATION_HORIZONTAL ? "<tr></tr>"
+                    + (orientationMode == ORIENTATION_HORIZONTAL ? "<tr valign=\"top\"></tr>"
                             : "") + "</tbody></table>";
-            DOM.setInnerHTML(tmp, structure);
-            root = DOM.getFirstChild(tmp);
-            DOM.removeChild(tmp, root);
+            DOM.setInnerHTML(getElement(), structure);
+            root = DOM.getFirstChild(getElement());
             // set TBODY to be the wrappedChildContainer
             wrappedChildContainer = DOM.getFirstChild(root);
             // In case of horizontal layouts, we must user TR instead of TBODY
@@ -155,21 +155,9 @@ public class IOrderedLayout extends Panel implements Container,
                         .getFirstChild(wrappedChildContainer);
             }
         } else {
-            wrappedChildContainer = root = DOM.createDiv();
+            root = wrappedChildContainer = getElement();
+            DOM.setInnerHTML(getElement(), "");
         }
-
-        // Restore component size
-        if (width != null && !"".equals(width)) {
-            DOM.setStyleAttribute(root, "width", width);
-        }
-        if (height != null && !"".equals(height)) {
-            DOM.setStyleAttribute(root, "height", height);
-        }
-
-        // Reset widget main element
-        String styles = getStyleName();
-        setElement(root);
-        setStyleName(styles);
 
         // Reinsert all widget wrappers to this container
         final int currentOrientationMode = orientationMode;
@@ -349,13 +337,9 @@ public class IOrderedLayout extends Panel implements Container,
 
         width = newWidth == null || "".equals(newWidth) ? null : newWidth;
 
-        // When we use divs at root - for them using 100% width should be
+        // As we use divs at root - for them using 100% width should be
         // calculated with ""
-        if (!tableMode && "100%".equals(newWidth)) {
-            super.setWidth("");
-        } else {
-            super.setWidth(newWidth);
-        }
+        super.setWidth("");
 
         // Update child layouts
         childLayoutsHaveChanged = true;
@@ -410,7 +394,7 @@ public class IOrderedLayout extends Panel implements Container,
                 }
 
             } else {
-                childHeightTotal = DOM.getElementPropertyInt(root,
+                childHeightTotal = DOM.getElementPropertyInt(getElement(),
                         "offsetHeight");
             }
 
@@ -484,12 +468,11 @@ public class IOrderedLayout extends Panel implements Container,
             if (childWidthDivisor > 1) {
                 w = Math.round(((float) childWidthTotal)
                         / (childWidthDivisor--));
-                childWidthTotal -= h;
+                childWidthTotal -= w;
             } else {
                 w = childWidthTotal;
             }
             WidgetWrapper ww = (WidgetWrapper) i.next();
-            // TODO COMBINE THESE
             ww.forceSize(w, h);
         }
     }
@@ -501,16 +484,17 @@ public class IOrderedLayout extends Panel implements Container,
      * without letting root element to affect the calculation.
      * 
      * @param offset
-     *                offsetWidth or offsetHeight
+     *            offsetWidth or offsetHeight
      */
     private int rootOffsetMeasure(String offset) {
+        // TODO This method must be optimized!
         Element measure = DOM.createDiv();
         DOM.setStyleAttribute(measure, "height", "100%");
-        Element parent = DOM.getParent(root);
-        DOM.insertBefore(parent, measure, root);
-        DOM.removeChild(parent, root);
+        Element parent = DOM.getParent(getElement());
+        DOM.insertBefore(parent, measure, getElement());
+        DOM.removeChild(parent, getElement());
         int size = DOM.getElementPropertyInt(measure, offset);
-        DOM.insertBefore(parent, root, measure);
+        DOM.insertBefore(parent, getElement(), measure);
         DOM.removeChild(parent, measure);
         // In case the no space would be given for this element
         // without pushing, use the current side of the root
@@ -558,7 +542,7 @@ public class IOrderedLayout extends Panel implements Container,
      * clipping the content to given pixel size.
      * 
      */
-    class WidgetWrapper extends UIObject {
+    class WidgetWrapper {
 
         /**
          * When alignment table structure is used, these elements correspond to
@@ -589,9 +573,16 @@ public class IOrderedLayout extends Panel implements Container,
          */
         int lastForcedPixelWidth = -1;
 
+        /** Widget Wrapper root element */
+        Element wrapperElement;
+
         /** Set the root element */
         public WidgetWrapper() {
             resetRootElement();
+        }
+
+        public Element getElement() {
+            return wrapperElement;
         }
 
         /**
@@ -631,8 +622,9 @@ public class IOrderedLayout extends Panel implements Container,
             // Set size
             DOM.setStyleAttribute(e, "width", pixelWidth < 0 ? "" : pixelWidth
                     + "px");
-            DOM.setStyleAttribute(e, "height", pixelHeight < 0 ? ""
-                    : pixelHeight + "px");
+            DOM.setStyleAttribute(e, "height",
+                    pixelHeight < 0 ? (e == clipperDiv ? "100%" : "")
+                            : pixelHeight + "px");
 
             // Set cached values
             lastForcedPixelWidth = pixelWidth;
@@ -743,12 +735,12 @@ public class IOrderedLayout extends Panel implements Container,
             // Only vertical layouts in non-table mode use TR as root, for the
             // rest we can safely give root element
             if (!tableMode || orientationMode == ORIENTATION_HORIZONTAL) {
-                return getElement();
+                return wrapperElement;
             }
 
             // The root is TR, we'll thus give the TD that is immediately within
             // the root
-            return DOM.getFirstChild(getElement());
+            return DOM.getFirstChild(wrapperElement);
         }
 
         /**
@@ -761,20 +753,20 @@ public class IOrderedLayout extends Panel implements Container,
          * @return Previous root element.
          */
         private void resetRootElement() {
+            // TODO Should we remove the existing element?
             if (tableMode) {
                 if (orientationMode == ORIENTATION_HORIZONTAL) {
-                    setElement(DOM.createTD());
+                    wrapperElement = DOM.createTD();
                 } else {
-                    Element tr = DOM.createTR();
-                    DOM.appendChild(tr, DOM.createTD());
-                    setElement(tr);
+                    wrapperElement = DOM.createTR();
+                    DOM.appendChild(wrapperElement, DOM.createTD());
                 }
             } else {
-                setElement(DOM.createDiv());
+                wrapperElement = DOM.createDiv();
                 // Apply 'hasLayout' for IE (needed to get accurate dimension
                 // calculations)
                 if (BrowserInfo.get().isIE()) {
-                    DOM.setStyleAttribute(getElement(), "zoom", "1");
+                    DOM.setStyleAttribute(wrapperElement, "zoom", "1");
                 }
             }
 
@@ -1013,8 +1005,8 @@ public class IOrderedLayout extends Panel implements Container,
          * <b>Adjust for Reinsertion:</b> Some Panels need to handle the case
          * where the Widget is already a child of this Panel. Example: when
          * performing a reinsert, the index might need to be adjusted to account
-         * for the Widget's removal. See
-         * {@link ComplexPanel#adjustIndex(Widget, int)}.
+         * for the Widget's removal. See {@link ComplexPanel#adjustIndex(Widget,
+         * int)}.
          */
         if (childWidgets.contains(child)) {
             if (childWidgets.indexOf(child) == atIndex) {
