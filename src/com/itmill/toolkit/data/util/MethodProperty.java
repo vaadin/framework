@@ -31,12 +31,20 @@ import com.itmill.toolkit.data.Property;
  * resulting MethodProperty is read-only.
  * </p>
  * 
+ * <p>
+ * MethodProperty implements Property.ValueChangeNotifier, but does not
+ * automatically know whether or not the getter method will actually return a
+ * new value - value change listeners are always notified when setValue is
+ * called, without verifying what the getter returns.
+ * </p>
+ * 
  * @author IT Mill Ltd.
  * @version
  * @VERSION@
  * @since 3.0
  */
-public class MethodProperty implements Property {
+public class MethodProperty implements Property, Property.ValueChangeNotifier,
+        Property.ReadOnlyStatusChangeNotifier {
 
     /**
      * The object that includes the property the MethodProperty is bound to.
@@ -75,6 +83,12 @@ public class MethodProperty implements Property {
      * the MethodProperty
      */
     private LinkedList readOnlyStatusChangeListeners = null;
+
+    /**
+     * List of listeners who are interested in the value changes of the
+     * MethodProperty
+     */
+    private LinkedList valueChangeListeners = null;
 
     /**
      * <p>
@@ -628,6 +642,7 @@ public class MethodProperty implements Property {
             // Creates new object from the string
             invokeSetMethod(value);
         }
+        fireValueChange();
     }
 
     /**
@@ -812,6 +827,68 @@ public class MethodProperty implements Property {
             for (int i = 0; i < l.length; i++) {
                 ((Property.ReadOnlyStatusChangeListener) l[i])
                         .readOnlyStatusChange(event);
+            }
+        }
+    }
+
+    /**
+     * An <code>Event</code> object specifying the Property whose value has
+     * been changed.
+     * 
+     * @author IT Mill Ltd.
+     * @version
+     * @VERSION@
+     * @since 5.3
+     */
+    private class ValueChangeEvent extends java.util.EventObject implements
+            Property.ValueChangeEvent {
+
+        /**
+         * Constructs a new value change event for this object.
+         * 
+         * @param source
+         *                source object of the event.
+         */
+        protected ValueChangeEvent(MethodProperty source) {
+            super(source);
+        }
+
+        /**
+         * Gets the Property whose value has changed.
+         * 
+         * @return source Property of the event.
+         */
+        public Property getProperty() {
+            return (Property) getSource();
+        }
+
+    }
+
+    public void addListener(ValueChangeListener listener) {
+        if (valueChangeListeners == null) {
+            valueChangeListeners = new LinkedList();
+        }
+        valueChangeListeners.add(listener);
+
+    }
+
+    public void removeListener(ValueChangeListener listener) {
+        if (valueChangeListeners != null) {
+            valueChangeListeners.remove(listener);
+        }
+
+    }
+
+    /**
+     * Sends a value change event to all registered listeners.
+     */
+    private void fireValueChange() {
+        if (valueChangeListeners != null) {
+            final Object[] l = valueChangeListeners.toArray();
+            final Property.ValueChangeEvent event = new MethodProperty.ValueChangeEvent(
+                    this);
+            for (int i = 0; i < l.length; i++) {
+                ((Property.ValueChangeListener) l[i]).valueChange(event);
             }
         }
     }
