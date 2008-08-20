@@ -19,6 +19,7 @@ import java.util.StringTokenizer;
 
 import com.itmill.toolkit.data.Container;
 import com.itmill.toolkit.data.util.ContainerHierarchicalWrapper;
+import com.itmill.toolkit.data.util.IndexedContainer;
 import com.itmill.toolkit.event.Action;
 import com.itmill.toolkit.terminal.KeyMapper;
 import com.itmill.toolkit.terminal.PaintException;
@@ -659,6 +660,12 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * @see com.itmill.toolkit.data.Container.Viewer#setContainerDataSource(Container)
      */
     public void setContainerDataSource(Container newDataSource) {
+        if (newDataSource == null) {
+            // Note: using wrapped IndexedContainer to match constructor (super
+            // creates an IndexedContainer, which is then wrapped).
+            newDataSource = new ContainerHierarchicalWrapper(
+                    new IndexedContainer());
+        }
 
         // Assure that the data source is ordered by making unordered
         // containers ordered by wrapping them
