@@ -745,7 +745,7 @@ public class ApplicationConnection {
         if (!widgetSet.isCorrectImplementation(component, uidl)) {
             final Container parent = Util.getParentLayout(component);
             if (parent != null) {
-                final Widget w = widgetSet.createWidget(uidl);
+                final Widget w = (Widget) widgetSet.createWidget(uidl);
                 parent.replaceChildComponent(component, w);
                 registerPaintable(uidl.getId(), (Paintable) w);
                 ((Paintable) w).updateFromUIDL(uidl, this);
@@ -866,7 +866,7 @@ public class ApplicationConnection {
         if (w != null) {
             return w;
         }
-        w = (Paintable) widgetSet.createWidget(uidl);
+        w = widgetSet.createWidget(uidl);
         registerPaintable(id, w);
         return w;
     }

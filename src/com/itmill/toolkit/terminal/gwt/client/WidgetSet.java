@@ -10,14 +10,15 @@ import com.google.gwt.user.client.ui.Widget;
 public interface WidgetSet extends EntryPoint {
 
     /**
-     * Create an uninitialized component that best matches given UIDL.
+     * Create an uninitialized component that best matches given UIDL. The
+     * component must be a {@link Widget} that implements {@link Paintable}.
      * 
      * @param uidl
      *                UIDL to be painted with returned component.
      * @return New uninitialized and unregistered component that can paint given
      *         UIDL.
      */
-    public Widget createWidget(UIDL uidl);
+    public Paintable createWidget(UIDL uidl);
 
     /**
      * Test if the given component implementation conforms to UIDL.

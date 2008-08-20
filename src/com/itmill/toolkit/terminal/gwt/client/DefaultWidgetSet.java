@@ -66,7 +66,7 @@ public class DefaultWidgetSet implements WidgetSet {
         }
     }
 
-    public Widget createWidget(UIDL uidl) {
+    public Paintable createWidget(UIDL uidl) {
 
         final String className = resolveWidgetTypeName(uidl);
         if ("com.itmill.toolkit.terminal.gwt.client.ui.ICheckBox"
