@@ -10,7 +10,7 @@ import com.itmill.toolkit.ui.Window;
 public class Ticket1986 extends Application {
 
     public void init() {
-        Window w = new Window(getClass().getSimpleName());
+        Window w = new Window(getClass().getName());
         setMainWindow(w);
 
         GridLayout layout = new GridLayout(2, 2);
