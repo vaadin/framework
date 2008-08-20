@@ -516,6 +516,10 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
     }
 
     protected Element getContainerElement() {
+        // in GWT 1.5 this method is used in PopupPanel constructor
+        if (contents == null) {
+            return super.getContainerElement();
+        }
         return contents;
     }
 
