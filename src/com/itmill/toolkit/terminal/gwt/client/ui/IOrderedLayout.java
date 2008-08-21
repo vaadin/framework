@@ -614,10 +614,8 @@ public class IOrderedLayout extends Panel implements Container,
                     : getElementWrappingAlignmentStructures();
 
             // Overflow
-            DOM.setStyleAttribute(e, "overflowX", pixelWidth < 0 ? ""
-                    : "hidden");
-            DOM.setStyleAttribute(e, "overflowY", pixelHeight < 0 ? ""
-                    : "hidden");
+            DOM.setStyleAttribute(e, "overflow", pixelWidth < 0
+                    && pixelHeight < 0 ? "" : "hidden");
 
             // Set size
             DOM.setStyleAttribute(e, "width", pixelWidth < 0 ? "" : pixelWidth
