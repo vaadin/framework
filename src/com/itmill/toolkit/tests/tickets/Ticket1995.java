@@ -37,7 +37,6 @@ public class Ticket1995 extends Application {
         mainWin.addComponent(new Button("Add item",
                 new com.itmill.toolkit.ui.Button.ClickListener() {
 
-                    @Override
                     public void buttonClick(ClickEvent event) {
                         addItem();
                     }
