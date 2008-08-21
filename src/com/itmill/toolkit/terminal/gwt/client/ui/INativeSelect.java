@@ -34,14 +34,23 @@ public class INativeSelect extends IOptionGroupBase implements Field {
             // can't unselect last item in singleselect mode
             select.addItem("", null);
         }
+        boolean selected = false;
         for (final Iterator i = uidl.getChildIterator(); i.hasNext();) {
             final UIDL optionUidl = (UIDL) i.next();
             select.addItem(optionUidl.getStringAttribute("caption"), optionUidl
                     .getStringAttribute("key"));
             if (optionUidl.hasAttribute("selected")) {
                 select.setItemSelected(select.getItemCount() - 1, true);
+                selected = true;
             }
         }
+        if (!selected && !isNullSelectionAllowed()) {
+            // null-select not allowed, but value not selected yet; add null and
+            // remove when something is selected
+            select.insertItem("", null, 0);
+            select.setItemSelected(0, true);
+        }
+
     }
 
     protected Object[] getSelectedItems() {
@@ -55,12 +64,17 @@ public class INativeSelect extends IOptionGroupBase implements Field {
     }
 
     public void onChange(Widget sender) {
+
         if (select.isMultipleSelect()) {
             client.updateVariable(id, "selected", getSelectedItems(),
                     isImmediate());
         } else {
             client.updateVariable(id, "selected", new String[] { ""
                     + getSelectedItem() }, isImmediate());
+        }
+        if (!isNullSelectionAllowed() && "null".equals(select.getValue(0))) {
+            // remove temporary empty item
+            select.removeItem(0);
         }
     }
 
