@@ -33,7 +33,7 @@ import com.itmill.toolkit.terminal.Resource;
  */
 public abstract class AbstractComponent implements Component, MethodEventSource {
 
-    /* Private members ************************************************* */
+    /* Private members */
 
     /**
      * Style names.
@@ -121,7 +121,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
     private int widthUnit = UNITS_PIXELS;
     private int heightUnit = UNITS_PIXELS;
 
-    /* Constructor ***************************************************** */
+    /* Constructor */
 
     /**
      * Constructs a new Component.
@@ -129,7 +129,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
     public AbstractComponent() {
     }
 
-    /* Get/Set component properties ************************************ */
+    /* Get/Set component properties */
 
     /**
      * Gets the UIDL tag corresponding to the component.
@@ -161,10 +161,11 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
     /**
      * Sets and replaces all previous style names of the component. This method
      * will trigger a
-     * {@link com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent RepaintRequestEvent}.
+     * {@link com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent
+     * RepaintRequestEvent}.
      * 
      * @param style
-     *                the new style of the component.
+     *            the new style of the component.
      * @deprecated Use setStyleName() instead; renamed for consistency and to
      *             indicate that "style" should not be used to switch client
      *             side implementation, only to style the component.
@@ -235,12 +236,13 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
     }
 
     /**
-     * Sets the component's caption <code>String</code>. Caption is the
-     * visible name of the component. This method will trigger a
-     * {@link com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent RepaintRequestEvent}.
+     * Sets the component's caption <code>String</code>. Caption is the visible
+     * name of the component. This method will trigger a
+     * {@link com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent
+     * RepaintRequestEvent}.
      * 
      * @param caption
-     *                the new caption <code>String</code> for the component.
+     *            the new caption <code>String</code> for the component.
      */
     public void setCaption(String caption) {
         this.caption = caption;
@@ -269,7 +271,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * Sets the locale of this component.
      * 
      * @param locale
-     *                the locale to become this component's locale.
+     *            the locale to become this component's locale.
      */
     public void setLocale(Locale locale) {
         this.locale = locale;
@@ -285,10 +287,11 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
 
     /**
      * Sets the component's icon. This method will trigger a
-     * {@link com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent RepaintRequestEvent}.
+     * {@link com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent
+     * RepaintRequestEvent}.
      * 
      * @param icon
-     *                the icon to be shown with the component's caption.
+     *            the icon to be shown with the component's caption.
      */
     public void setIcon(Resource icon) {
         this.icon = icon;
@@ -326,11 +329,12 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
     /**
      * Sets the component's immediate mode to the specified status. This method
      * will trigger a
-     * {@link com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent RepaintRequestEvent}.
+     * {@link com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent
+     * RepaintRequestEvent}.
      * 
      * @param immediate
-     *                the boolean value specifying if the component should be in
-     *                the immediate mode after the call.
+     *            the boolean value specifying if the component should be in the
+     *            immediate mode after the call.
      * @see Component#isImmediate()
      */
     public void setImmediate(boolean immediate) {
@@ -425,10 +429,11 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
     /**
      * Sets the component's description. See {@link #getDescription()} for more
      * information on what the description is. This method will trigger a
-     * {@link com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent RepaintRequestEvent}.
+     * {@link com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent
+     * RepaintRequestEvent}.
      * 
      * @param description
-     *                the new description string for the component.
+     *            the new description string for the component.
      */
     public void setDescription(String description) {
         this.description = description;
@@ -503,7 +508,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * @link Component.ErrorMessage#ErrorMessage(String, int)
      * 
      * @param componentError
-     *                the new <code>ErrorMessage</code> of the component.
+     *            the new <code>ErrorMessage</code> of the component.
      */
     public void setComponentError(ErrorMessage componentError) {
         this.componentError = componentError;
@@ -568,7 +573,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
         }
     }
 
-    /* Component painting ********************************************** */
+    /* Component painting */
 
     /* Documented in super interface */
     public void requestRepaintRequests() {
@@ -646,10 +651,10 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * any component-specific attributes to the UIDL stream.
      * 
      * @param target
-     *                the target UIDL stream where the component should paint
-     *                itself to
+     *            the target UIDL stream where the component should paint itself
+     *            to
      * @throws PaintException
-     *                 if the paint operation failed.
+     *             if the paint operation failed.
      */
     public void paintContent(PaintTarget target) throws PaintException {
 
@@ -727,7 +732,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
         }
     }
 
-    /* Component variable changes ************************************** */
+    /* Component variable changes */
 
     /*
      * Invoked when the value of a variable has changed. Don't add a JavaDoc
@@ -737,7 +742,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
     public void changeVariables(Object source, Map variables) {
     }
 
-    /* General event framework *************************************** */
+    /* General event framework */
 
     private static final Method COMPONENT_EVENT_METHOD;
 
@@ -763,16 +768,17 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * 
      * <p>
      * For more information on the inheritable event mechanism see the
-     * {@link com.itmill.toolkit.event com.itmill.toolkit.event package documentation}.
+     * {@link com.itmill.toolkit.event com.itmill.toolkit.event package
+     * documentation}.
      * </p>
      * 
      * @param eventType
-     *                the type of the listened event. Events of this type or its
-     *                subclasses activate the listener.
+     *            the type of the listened event. Events of this type or its
+     *            subclasses activate the listener.
      * @param object
-     *                the object instance who owns the activation method.
+     *            the object instance who owns the activation method.
      * @param method
-     *                the activation method.
+     *            the activation method.
      */
     public void addListener(Class eventType, Object object, Method method) {
         if (eventRouter == null) {
@@ -790,15 +796,16 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * </p>
      * 
      * <p>
-     * This version of <code>addListener</code> gets the name of the
-     * activation method as a parameter. The actual method is reflected from
+     * This version of <code>addListener</code> gets the name of the activation
+     * method as a parameter. The actual method is reflected from
      * <code>object</code>, and unless exactly one match is found,
      * <code>java.lang.IllegalArgumentException</code> is thrown.
      * </p>
      * 
      * <p>
      * For more information on the inheritable event mechanism see the
-     * {@link com.itmill.toolkit.event com.itmill.toolkit.event package documentation}.
+     * {@link com.itmill.toolkit.event com.itmill.toolkit.event package
+     * documentation}.
      * </p>
      * 
      * <p>
@@ -808,12 +815,12 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * </p>
      * 
      * @param eventType
-     *                the type of the listened event. Events of this type or its
-     *                subclasses activate the listener.
+     *            the type of the listened event. Events of this type or its
+     *            subclasses activate the listener.
      * @param object
-     *                the object instance who owns the activation method.
+     *            the object instance who owns the activation method.
      * @param methodName
-     *                the name of the activation method.
+     *            the name of the activation method.
      */
     public void addListener(Class eventType, Object object, String methodName) {
         if (eventRouter == null) {
@@ -825,20 +832,21 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
     /**
      * Removes all registered listeners matching the given parameters. Since
      * this method receives the event type and the listener object as
-     * parameters, it will unregister all <code>object</code>'s methods that
-     * are registered to listen to events of type <code>eventType</code>
-     * generated by this component.
+     * parameters, it will unregister all <code>object</code>'s methods that are
+     * registered to listen to events of type <code>eventType</code> generated
+     * by this component.
      * 
      * <p>
      * For more information on the inheritable event mechanism see the
-     * {@link com.itmill.toolkit.event com.itmill.toolkit.event package documentation}.
+     * {@link com.itmill.toolkit.event com.itmill.toolkit.event package
+     * documentation}.
      * </p>
      * 
      * @param eventType
-     *                the exact event type the <code>object</code> listens to.
+     *            the exact event type the <code>object</code> listens to.
      * @param target
-     *                the target object that has registered to listen to events
-     *                of type <code>eventType</code> with one or more methods.
+     *            the target object that has registered to listen to events of
+     *            type <code>eventType</code> with one or more methods.
      */
     public void removeListener(Class eventType, Object target) {
         if (eventRouter != null) {
@@ -853,18 +861,18 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * 
      * <p>
      * For more information on the inheritable event mechanism see the
-     * {@link com.itmill.toolkit.event com.itmill.toolkit.event package documentation}.
+     * {@link com.itmill.toolkit.event com.itmill.toolkit.event package
+     * documentation}.
      * </p>
      * 
      * @param eventType
-     *                the exact event type the <code>object</code> listens to.
+     *            the exact event type the <code>object</code> listens to.
      * @param target
-     *                target object that has registered to listen to events of
-     *                type <code>eventType</code> with one or more methods.
+     *            target object that has registered to listen to events of type
+     *            <code>eventType</code> with one or more methods.
      * @param method
-     *                the method owned by <code>target</code> that's
-     *                registered to listen to events of type
-     *                <code>eventType</code>.
+     *            the method owned by <code>target</code> that's registered to
+     *            listen to events of type <code>eventType</code>.
      */
     public void removeListener(Class eventType, Object target, Method method) {
         if (eventRouter != null) {
@@ -888,18 +896,18 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * 
      * <p>
      * For more information on the inheritable event mechanism see the
-     * {@link com.itmill.toolkit.event com.itmill.toolkit.event package documentation}.
+     * {@link com.itmill.toolkit.event com.itmill.toolkit.event package
+     * documentation}.
      * </p>
      * 
      * @param eventType
-     *                the exact event type the <code>object</code> listens to.
+     *            the exact event type the <code>object</code> listens to.
      * @param target
-     *                the target object that has registered to listen to events
-     *                of type <code>eventType</code> with one or more methods.
+     *            the target object that has registered to listen to events of
+     *            type <code>eventType</code> with one or more methods.
      * @param methodName
-     *                the name of the method owned by <code>target</code>
-     *                that's registered to listen to events of type
-     *                <code>eventType</code>.
+     *            the name of the method owned by <code>target</code> that's
+     *            registered to listen to events of type <code>eventType</code>.
      */
     public void removeListener(Class eventType, Object target, String methodName) {
         if (eventRouter != null) {
@@ -911,7 +919,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * Sends the event to all listeners.
      * 
      * @param event
-     *                the Event to be sent to all listeners.
+     *            the Event to be sent to all listeners.
      */
     protected void fireEvent(Component.Event event) {
         if (eventRouter != null) {
@@ -920,7 +928,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
 
     }
 
-    /* Component event framework *************************************** */
+    /* Component event framework */
 
     /*
      * Registers a new listener to listen events generated by this component.
@@ -969,7 +977,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * The component does not use or modify this data.
      * 
      * @param data
-     *                the Application specific data.
+     *            the Application specific data.
      * @since 3.1
      */
     public void setData(Object data) {
@@ -1118,27 +1126,45 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
     private static int[] parseStringSize(String s) {
         int[] values = new int[2];
         s = s.trim();
+
+        // Percentages
         if (s.indexOf("%") != -1) {
             values[1] = UNITS_PERCENTAGE;
             values[0] = (int) Float.parseFloat(s.substring(0, s.indexOf("%")));
         } else {
-            values[0] = (int) Float.parseFloat(s.substring(0, s.length() - 2));
-            if (s.endsWith("px")) {
-                values[1] = UNITS_PIXELS;
-            } else if (s.endsWith("em")) {
-                values[1] = UNITS_EM;
-            } else if (s.endsWith("ex")) {
-                values[1] = UNITS_EX;
-            } else if (s.endsWith("in")) {
-                values[1] = UNITS_INCH;
-            } else if (s.endsWith("cm")) {
-                values[1] = UNITS_CM;
-            } else if (s.endsWith("mm")) {
-                values[1] = UNITS_MM;
-            } else if (s.endsWith("pt")) {
-                values[1] = UNITS_POINTS;
-            } else if (s.endsWith("pc")) {
-                values[1] = UNITS_PICAS;
+
+            // We default to pixels
+            values[1] = UNITS_PIXELS;
+            try {
+
+                // If no units are specified
+                values[0] = (int) Float.parseFloat(s);
+                return values;
+            } catch (NumberFormatException e) {
+
+                // Unit is specified and we assume 2 characters unit length
+                values[0] = (int) Float.parseFloat(s.substring(0,
+                        s.length() - 2));
+
+                // Resolve unit
+                String unit = s.substring(s.length() - 2).toLowerCase();
+                if (unit.equals("px")) {
+                    // Already set
+                } else if (unit.equals("em")) {
+                    values[1] = UNITS_EM;
+                } else if (unit.equals("ex")) {
+                    values[1] = UNITS_EX;
+                } else if (unit.equals("in")) {
+                    values[1] = UNITS_INCH;
+                } else if (unit.equals("cm")) {
+                    values[1] = UNITS_CM;
+                } else if (unit.equals("mm")) {
+                    values[1] = UNITS_MM;
+                } else if (unit.equals("pt")) {
+                    values[1] = UNITS_POINTS;
+                } else if (unit.equals("pc")) {
+                    values[1] = UNITS_PICAS;
+                }
             }
         }
         return values;
