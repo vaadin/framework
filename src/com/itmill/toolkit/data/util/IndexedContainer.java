@@ -43,7 +43,7 @@ public class IndexedContainer implements Container, Container.Indexed,
         Property.ValueChangeNotifier, Container.Sortable, Comparator,
         Cloneable, Container.Filterable {
 
-    /* Internal structure *************************************************** */
+    /* Internal structure */
 
     /**
      * Linked list of ordered Item IDs.
@@ -114,7 +114,7 @@ public class IndexedContainer implements Container, Container.Indexed,
      */
     private HashSet filters;
 
-    /* Container constructors *********************************************** */
+    /* Container constructors */
 
     public IndexedContainer() {
     }
@@ -127,7 +127,7 @@ public class IndexedContainer implements Container, Container.Indexed,
         }
     }
 
-    /* Container methods **************************************************** */
+    /* Container methods */
 
     /**
      * Gets the Item with the given Item ID from the list. If the list does not
@@ -135,7 +135,7 @@ public class IndexedContainer implements Container, Container.Indexed,
      * <code>null</code> is returned.
      * 
      * @param itemId
-     *                the ID of the Item to retrieve.
+     *            the ID of the Item to retrieve.
      * @return the Item with the given ID or <code>null</code> if the Item is
      *         not found in the list
      */
@@ -180,7 +180,7 @@ public class IndexedContainer implements Container, Container.Indexed,
      * Gets the type of a Property stored in the list.
      * 
      * @param id
-     *                the ID of the Property.
+     *            the ID of the Property.
      * @return Type of the requested Property
      */
     public Class getType(Object propertyId) {
@@ -189,13 +189,13 @@ public class IndexedContainer implements Container, Container.Indexed,
 
     /**
      * Gets the Property identified by the given Item ID and Property ID from
-     * the lsit. If the list does not contain the Property, <code>null</code>
-     * is returned.
+     * the lsit. If the list does not contain the Property, <code>null</code> is
+     * returned.
      * 
      * @param itemId
-     *                the ID of the Item which contains the requested Property.
+     *            the ID of the Item which contains the requested Property.
      * @param propertyId
-     *                the ID of the Property to retrieve.
+     *            the ID of the Property to retrieve.
      * @return Property with the given ID or <code>null</code>
      * 
      * @see com.itmill.toolkit.data.Container#getContainerProperty(Object,
@@ -229,9 +229,9 @@ public class IndexedContainer implements Container, Container.Indexed,
      * Tests if the list contains the specified Item
      * 
      * @param itemId
-     *                the ID the of Item to be tested for.
-     * @return <code>true</code> if the operation succeeded,
-     *         <code>false</code> if not
+     *            the ID the of Item to be tested for.
+     * @return <code>true</code> if the operation succeeded, <code>false</code>
+     *         if not
      */
     public boolean containsId(Object itemId) {
         if (filteredItemIds != null) {
@@ -245,13 +245,13 @@ public class IndexedContainer implements Container, Container.Indexed,
      * and default value of the new Property are given as parameters.
      * 
      * @param propertyId
-     *                the ID of the new Property.
+     *            the ID of the new Property.
      * @param type
-     *                the Data type of the new Property.
+     *            the Data type of the new Property.
      * @param defaultValue
-     *                the value all created Properties are initialized to.
-     * @return <code>true</code> if the operation succeeded,
-     *         <code>false</code> if not
+     *            the value all created Properties are initialized to.
+     * @return <code>true</code> if the operation succeeded, <code>false</code>
+     *         if not
      */
     public boolean addContainerProperty(Object propertyId, Class type,
             Object defaultValue) {
@@ -290,8 +290,8 @@ public class IndexedContainer implements Container, Container.Indexed,
      * Note : The Property ID and type information is preserved.
      * </p>
      * 
-     * @return <code>true</code> if the operation succeeded,
-     *         <code>false</code> if not
+     * @return <code>true</code> if the operation succeeded, <code>false</code>
+     *         if not
      */
     public boolean removeAllItems() {
 
@@ -311,9 +311,8 @@ public class IndexedContainer implements Container, Container.Indexed,
     /**
      * Creates a new Item into the list, and assign it an automatic ID. The new
      * ID is returned, or <code>null</code> if the operation fails. After a
-     * successful call you can use the
-     * {@link #getItem(Object ItemId) <code>getItem</code>}method to fetch the
-     * Item.
+     * successful call you can use the {@link #getItem(Object ItemId)
+     * <code>getItem</code>}method to fetch the Item.
      * 
      * @return ID of the newly created Item, or <code>null</code> in case of a
      *         failure
@@ -336,7 +335,7 @@ public class IndexedContainer implements Container, Container.Indexed,
      * contains a Item with the given ID.
      * 
      * @param itemId
-     *                the ID of the Item to be created.
+     *            the ID of the Item to be created.
      * @return Created new Item, or <code>null</code> in case of a failure
      */
     public Item addItem(Object itemId) {
@@ -354,7 +353,7 @@ public class IndexedContainer implements Container, Container.Indexed,
         // Adds the Item to container
         itemIds.add(itemId);
         items.put(itemId, new Hashtable());
-        final Item item = getItem(itemId);
+        final Item item = new IndexedContainerItem(itemId);
         if (filteredItemIds != null) {
             if (passesFilters(item)) {
                 filteredItemIds.add(itemId);
@@ -371,9 +370,9 @@ public class IndexedContainer implements Container, Container.Indexed,
      * Removes the Item corresponding to the given Item ID from the list.
      * 
      * @param itemId
-     *                the ID of the Item to remove.
-     * @return <code>true</code> if the operation succeeded,
-     *         <code>false</code> if not
+     *            the ID of the Item to remove.
+     * @return <code>true</code> if the operation succeeded, <code>false</code>
+     *         if not
      */
     public boolean removeItem(Object itemId) {
 
@@ -395,9 +394,9 @@ public class IndexedContainer implements Container, Container.Indexed,
      * that the Property will be removed from all Items in the list.
      * 
      * @param propertyId
-     *                the ID of the Property to remove.
-     * @return <code>true</code> if the operation succeeded,
-     *         <code>false</code> if not
+     *            the ID of the Property to remove.
+     * @return <code>true</code> if the operation succeeded, <code>false</code>
+     *         if not
      */
     public boolean removeContainerProperty(Object propertyId) {
 
@@ -421,7 +420,7 @@ public class IndexedContainer implements Container, Container.Indexed,
         return true;
     }
 
-    /* Container.Ordered methods ******************************************** */
+    /* Container.Ordered methods */
 
     /**
      * Gets the ID of the first Item in the list.
@@ -467,7 +466,7 @@ public class IndexedContainer implements Container, Container.Indexed,
      * <code>null</code> is returned.
      * 
      * @param itemId
-     *                the ID of an Item in the list.
+     *            the ID of an Item in the list.
      * @return ID of the next Item or <code>null</code>
      */
     public Object nextItemId(Object itemId) {
@@ -500,7 +499,7 @@ public class IndexedContainer implements Container, Container.Indexed,
      * <code>null</code> is returned.
      * 
      * @param itemId
-     *                the ID of an Item in the list.
+     *            the ID of an Item in the list.
      * @return ID of the previous Item or <code>null</code>
      */
     public Object prevItemId(Object itemId) {
@@ -531,7 +530,7 @@ public class IndexedContainer implements Container, Container.Indexed,
      * the list.
      * 
      * @param itemId
-     *                the ID of an Item in the list.
+     *            the ID of an Item in the list.
      * @return <code>true</code> if the Item is first in the list,
      *         <code>false</code> if not
      */
@@ -552,7 +551,7 @@ public class IndexedContainer implements Container, Container.Indexed,
      * the list.
      * 
      * @param itemId
-     *                the ID of an Item in the list.
+     *            the ID of an Item in the list.
      * @return <code>true</code> if the Item is last in the list,
      *         <code>false</code> if not
      */
@@ -613,7 +612,7 @@ public class IndexedContainer implements Container, Container.Indexed,
      * 
      * @return ID in the given index.
      * @param index
-     *                Index of the requested ID in the container.
+     *            Index of the requested ID in the container.
      */
     public Object getIdByIndex(int index) {
 
@@ -636,12 +635,12 @@ public class IndexedContainer implements Container, Container.Indexed,
     }
 
     /**
-     * Gets the index of an id. The following is true for the index: 0 <= index <
-     * size().
+     * Gets the index of an id. The following is true for the index: 0 <= index
+     * < size().
      * 
      * @return Index of the Item or -1 if the Item is not in the container.
      * @param itemId
-     *                ID of an Item in the collection
+     *            ID of an Item in the collection
      */
     public int indexOfId(Object itemId) {
         if (filteredItemIds != null) {
@@ -699,7 +698,7 @@ public class IndexedContainer implements Container, Container.Indexed,
         return id;
     }
 
-    /* Event notifiers ****************************************************** */
+    /* Event notifiers */
 
     /**
      * An <code>event</code> object specifying the list whose Property set has
@@ -748,7 +747,7 @@ public class IndexedContainer implements Container, Container.Indexed,
          * Serial generated by eclipse.
          */
         private static final long serialVersionUID = 3832616279386372147L;
-        private int addedItemIndex;
+        private final int addedItemIndex;
 
         private ItemSetChangeEvent(IndexedContainer source, int addedItemIndex) {
             super(source);
@@ -777,8 +776,8 @@ public class IndexedContainer implements Container, Container.Indexed,
     }
 
     /**
-     * An <code>event</code> object specifying the Propery in a list whose
-     * value has changed.
+     * An <code>event</code> object specifying the Propery in a list whose value
+     * has changed.
      * 
      * @author IT Mill Ltd.
      * @version
@@ -812,7 +811,7 @@ public class IndexedContainer implements Container, Container.Indexed,
      * Registers a new Property set change listener for this list.
      * 
      * @param listener
-     *                the new Listener to be registered.
+     *            the new Listener to be registered.
      */
     public void addListener(Container.PropertySetChangeListener listener) {
         if (propertySetChangeListeners == null) {
@@ -825,7 +824,7 @@ public class IndexedContainer implements Container, Container.Indexed,
      * Removes a previously registered Property set change listener.
      * 
      * @param listener
-     *                the listener to be removed.
+     *            the listener to be removed.
      */
     public void removeListener(Container.PropertySetChangeListener listener) {
         if (propertySetChangeListeners != null) {
@@ -837,7 +836,7 @@ public class IndexedContainer implements Container, Container.Indexed,
      * Adds a Item set change listener for the list.
      * 
      * @param listener
-     *                the listener to be added.
+     *            the listener to be added.
      */
     public void addListener(Container.ItemSetChangeListener listener) {
         if (itemSetChangeListeners == null) {
@@ -850,7 +849,7 @@ public class IndexedContainer implements Container, Container.Indexed,
      * Removes a Item set change listener from the object.
      * 
      * @param listener
-     *                the listener to be removed.
+     *            the listener to be removed.
      */
     public void removeListener(Container.ItemSetChangeListener listener) {
         if (itemSetChangeListeners != null) {
@@ -862,7 +861,7 @@ public class IndexedContainer implements Container, Container.Indexed,
      * Registers a new value change listener for this object.
      * 
      * @param listener
-     *                the new Listener to be registered
+     *            the new Listener to be registered
      */
     public void addListener(Property.ValueChangeListener listener) {
         if (propertyValueChangeListeners == null) {
@@ -875,7 +874,7 @@ public class IndexedContainer implements Container, Container.Indexed,
      * Removes a previously registered value change listener.
      * 
      * @param listener
-     *                the listener to be removed.
+     *            the listener to be removed.
      */
     public void removeListener(Property.ValueChangeListener listener) {
         if (propertyValueChangeListeners != null) {
@@ -887,7 +886,7 @@ public class IndexedContainer implements Container, Container.Indexed,
      * Sends a Property value change event to all interested listeners.
      * 
      * @param source
-     *                the IndexedContainerProperty object.
+     *            the IndexedContainerProperty object.
      */
     private void firePropertyValueChange(IndexedContainerProperty source) {
 
@@ -941,7 +940,7 @@ public class IndexedContainer implements Container, Container.Indexed,
      * Sends Item set change event to all registered interested listeners.
      * 
      * @param addedItemIndex
-     *                index of new item if change event was an item addition
+     *            index of new item if change event was an item addition
      */
     private void fireContentsChange(int addedItemIndex) {
         if (itemSetChangeListeners != null) {
@@ -959,11 +958,11 @@ public class IndexedContainer implements Container, Container.Indexed,
      * Adds new single Property change listener.
      * 
      * @param propertyId
-     *                the ID of the Property to add.
+     *            the ID of the Property to add.
      * @param itemId
-     *                the ID of the Item .
+     *            the ID of the Item .
      * @param listener
-     *                the listener to be added.
+     *            the listener to be added.
      */
     private void addSinglePropertyChangeListener(Object propertyId,
             Object itemId, Property.ValueChangeListener listener) {
@@ -992,11 +991,11 @@ public class IndexedContainer implements Container, Container.Indexed,
      * Removes a previously registered single Property change listener.
      * 
      * @param propertyId
-     *                the ID of the Property to remove.
+     *            the ID of the Property to remove.
      * @param itemId
-     *                the ID of the Item.
+     *            the ID of the Item.
      * @param listener
-     *                the listener to be removed.
+     *            the listener to be removed.
      */
     private void removeSinglePropertyChangeListener(Object propertyId,
             Object itemId, Property.ValueChangeListener listener) {
@@ -1022,13 +1021,14 @@ public class IndexedContainer implements Container, Container.Indexed,
         }
     }
 
-    /* Internal Item and Property implementations *************************** */
+    /* Internal Item and Property implementations */
 
     /*
      * A class implementing the com.itmill.toolkit.data.Item interface to be
      * contained in the list. @author IT Mill Ltd.
      * 
      * @version @VERSION@
+     * 
      * @since 3.0
      */
     class IndexedContainerItem implements Item {
@@ -1043,7 +1043,7 @@ public class IndexedContainer implements Container, Container.Indexed,
          * container.
          * 
          * @param itemId
-         *                the Item ID of the new Item.
+         *            the Item ID of the new Item.
          */
         private IndexedContainerItem(Object itemId) {
 
@@ -1060,7 +1060,7 @@ public class IndexedContainer implements Container, Container.Indexed,
          * <code>null</code> is returned.
          * 
          * @param id
-         *                the identifier of the Property to get.
+         *            the identifier of the Property to get.
          * @return the Property with the given ID or <code>null</code>
          */
         public Property getItemProperty(Object id) {
@@ -1117,7 +1117,7 @@ public class IndexedContainer implements Container, Container.Indexed,
          * got from a list container with the same ID are equal.
          * 
          * @param obj
-         *                an object to compare with this object
+         *            an object to compare with this object
          * @return <code>true</code> if the given object is the same as this
          *         object, <code>false</code> if not
          */
@@ -1190,12 +1190,12 @@ public class IndexedContainer implements Container, Container.Indexed,
          * a ListContainer.
          * 
          * @param itemId
-         *                the ID of the Item to connect the new Property to.
+         *            the ID of the Item to connect the new Property to.
          * @param propertyId
-         *                the Property ID of the new Property.
+         *            the Property ID of the new Property.
          * @param host
-         *                the list that contains the Item to contain the new
-         *                Property.
+         *            the list that contains the Item to contain the new
+         *            Property.
          */
         private IndexedContainerProperty(Object itemId, Object propertyId) {
             if (itemId == null || propertyId == null) {
@@ -1209,10 +1209,10 @@ public class IndexedContainer implements Container, Container.Indexed,
 
         /**
          * Returns the type of the Property. The methods <code>getValue</code>
-         * and <code>setValue</code> must be compatible with this type: one
-         * must be able to safely cast the value returned from
-         * <code>getValue</code> to the given type and pass any variable
-         * assignable to this type as a parameter to <code>setValue</code.
+         * and <code>setValue</code> must be compatible with this type: one must
+         * be able to safely cast the value returned from <code>getValue</code>
+         * to the given type and pass any variable assignable to this type as a
+         * parameter to <code>setValue</code.
          * 
          * @return the type of the Property.
          */
@@ -1230,12 +1230,10 @@ public class IndexedContainer implements Container, Container.Indexed,
         }
 
         /**
-         * <p>
-         * Tests if the Property is in read-only mode. In read-only mode calls
-         * to the method <code>setValue</code> will throw
-         * <code>ReadOnlyException</code> s and will not modify the value of
-         * the Property.
-         * </p>
+         * <p> Tests if the Property is in read-only mode. In read-only mode
+         * calls to the method <code>setValue</code> will throw
+         * <code>ReadOnlyException</code> s and will not modify the value of the
+         * Property. </p>
          * 
          * @return <code>true</code> if the Property is in read-only mode,
          *         <code>false</code> if it's not.
@@ -1248,7 +1246,7 @@ public class IndexedContainer implements Container, Container.Indexed,
          * Sets the Property's read-only mode to the specified status.
          * 
          * @param newStatus
-         *                the new read-only status of the Property.
+         *            the new read-only status of the Property.
          */
         public void setReadOnly(boolean newStatus) {
             if (newStatus) {
@@ -1261,20 +1259,20 @@ public class IndexedContainer implements Container, Container.Indexed,
         /**
          * Sets the value of the Property. By default this method will try to
          * assign the value directly, but if it is unassignable, it will try to
-         * use the <code>String</code> constructor of the internal data type
-         * to assign the value,
+         * use the <code>String</code> constructor of the internal data type to
+         * assign the value,
          * 
          * @param newValue
-         *                the New value of the Property. This should be
-         *                assignable to the Property's internal type or support
-         *                <code>toString</code>.
+         *            the New value of the Property. This should be assignable
+         *            to the Property's internal type or support
+         *            <code>toString</code>.
          * 
          * @throws Property.ReadOnlyException
-         *                 if the object is in read-only mode
+         *             if the object is in read-only mode
          * @throws Property.ConversionException
-         *                 if <code>newValue</code> can't be converted into
-         *                 the Property's native type directly or through
-         *                 <code>String</code>
+         *             if <code>newValue</code> can't be converted into the
+         *             Property's native type directly or through
+         *             <code>String</code>
          */
         public void setValue(Object newValue)
                 throws Property.ReadOnlyException, Property.ConversionException {
@@ -1314,8 +1312,8 @@ public class IndexedContainer implements Container, Container.Indexed,
          * The return value should be assignable to the <code>setValue</code>
          * method if the Property is not in read-only mode.
          * 
-         * @return <code>String</code> representation of the value stored in
-         *         the Property
+         * @return <code>String</code> representation of the value stored in the
+         *         Property
          */
         public String toString() {
             final Object value = getValue();
@@ -1343,7 +1341,7 @@ public class IndexedContainer implements Container, Container.Indexed,
          * Properties got from an Item with the same ID are equal.
          * 
          * @param obj
-         *                an object to compare with this object
+         *            an object to compare with this object
          * @return <code>true</code> if the given object is the same as this
          *         object, <code>false</code> if not
          */
@@ -1362,7 +1360,7 @@ public class IndexedContainer implements Container, Container.Indexed,
          * Registers a new value change listener for this Property.
          * 
          * @param listener
-         *                the new Listener to be registered.
+         *            the new Listener to be registered.
          * @see com.itmill.toolkit.data.Property.ValueChangeNotifier#addListener(ValueChangeListener)
          */
         public void addListener(Property.ValueChangeListener listener) {
@@ -1373,7 +1371,7 @@ public class IndexedContainer implements Container, Container.Indexed,
          * Removes a previously registered value change listener.
          * 
          * @param listener
-         *                listener to be removed
+         *            listener to be removed
          * @see com.itmill.toolkit.data.Property.ValueChangeNotifier#removeListener(ValueChangeListener)
          */
         public void removeListener(Property.ValueChangeListener listener) {
@@ -1430,7 +1428,9 @@ public class IndexedContainer implements Container, Container.Indexed,
     /*
      * (non-Javadoc)
      * 
-     * @see com.itmill.toolkit.data.Container.Sortable#getSortableContainerPropertyIds()
+     * @see
+     * com.itmill.toolkit.data.Container.Sortable#getSortableContainerPropertyIds
+     * ()
      */
     public Collection getSortableContainerPropertyIds() {
 
@@ -1499,7 +1499,7 @@ public class IndexedContainer implements Container, Container.Indexed,
      * Supports cloning of the IndexedContainer cleanly.
      * 
      * @throws CloneNotSupportedException
-     *                 if an object cannot be cloned. .
+     *             if an object cannot be cloned. .
      */
     public Object clone() throws CloneNotSupportedException {
 
