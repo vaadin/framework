@@ -32,6 +32,7 @@ import com.itmill.toolkit.terminal.gwt.client.ui.IOrderedLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.IPanel;
 import com.itmill.toolkit.terminal.gwt.client.ui.IPasswordField;
 import com.itmill.toolkit.terminal.gwt.client.ui.IPopupCalendar;
+import com.itmill.toolkit.terminal.gwt.client.ui.IPopupView;
 import com.itmill.toolkit.terminal.gwt.client.ui.IProgressIndicator;
 import com.itmill.toolkit.terminal.gwt.client.ui.IScrollTable;
 import com.itmill.toolkit.terminal.gwt.client.ui.ISlider;
@@ -186,6 +187,9 @@ public class DefaultWidgetSet implements WidgetSet {
         } else if ("com.itmill.toolkit.terminal.gwt.client.ui.IMenuBar"
                 .equals(className)) {
             return new IMenuBar();
+        } else if ("com.itmill.toolkit.terminal.gwt.client.ui.IPopupView"
+                .equals(className)) {
+            return new IPopupView();
         }
 
         return new IUnknownComponent();
@@ -306,6 +310,8 @@ public class DefaultWidgetSet implements WidgetSet {
             }
         } else if ("menubar".equals(tag)) {
             return "com.itmill.toolkit.terminal.gwt.client.ui.IMenuBar";
+        } else if ("popupview".equals(tag)) {
+            return "com.itmill.toolkit.terminal.gwt.client.ui.IPopupView";
         }
 
         return "com.itmill.toolkit.terminal.gwt.client.ui.IUnknownComponent";
