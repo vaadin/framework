@@ -2280,6 +2280,11 @@ i-orderedlayout-margin-top {
 	background: transparent url(window/img/resize.png);
 }
 
+.i-window-resizebox-disabled {
+	cursor: default;
+	background: transparent;
+}
+
 .i-window-closebox {
 	position:absolute;
 	top: 33px;
@@ -2354,6 +2359,9 @@ i-orderedlayout-margin-top {
 	width: 15px;
 	height: 12px;
 	background: url(window/img/resize.png);
+}
+* html .i-window-resizebox-disabled {
+	background: transparent;
 }
 *+html .i-window-resizebox {
 	bottom: 0;

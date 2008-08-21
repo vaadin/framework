@@ -42,11 +42,11 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 
     public static final String CLASSNAME = "i-window";
 
-    /** pixels used by inner borders and paddings horizontally */
-    protected static final int BORDER_WIDTH_HORIZONTAL = 41;
-
-    /** pixels used by headers, footers, inner borders and paddings vertically */
-    protected static final int BORDER_WIDTH_VERTICAL = 58;
+    /**
+     * pixels used by inner borders and paddings horizontally (calculated on
+     * attach)
+     */
+    private int borderWidthHorizontal = 0;
 
     private static final int STACKING_OFFSET_PIXELS = 15;
 
@@ -95,6 +95,8 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
     private int uidlPositionY = -1;
 
     private boolean modal = false;
+
+    private boolean resizable = true;
 
     private Element modalityCurtain;
     private Element draggingCurtain;
@@ -205,6 +207,10 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 
         if (uidl.getBooleanAttribute("modal") != modal) {
             setModal(!modal);
+        }
+
+        if (uidl.getBooleanAttribute("resizable") != resizable) {
+            setResizable(!resizable);
         }
 
         // Initialize the position form UIDL
@@ -367,6 +373,13 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
         contentPanel.setHorizontalScrollPosition(uidl
                 .getIntVariable("scrollLeft"));
 
+        // Center this window on screen if requested
+        // This has to be here because we might not know the content size before
+        // everything is painted into the window
+        if (uidl.getBooleanAttribute("center")) {
+            center();
+        }
+
     }
 
     public void show() {
@@ -490,6 +503,17 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 
     }
 
+    private void setResizable(boolean resizability) {
+        resizable = resizability;
+        if (resizability) {
+            DOM.setElementProperty(resizeBox, "className", CLASSNAME
+                    + "-resizebox");
+        } else {
+            DOM.setElementProperty(resizeBox, "className", CLASSNAME
+                    + "-resizebox " + CLASSNAME + "-resizebox-disabled");
+        }
+    }
+
     public void setPopupPosition(int left, int top) {
         super.setPopupPosition(left, top);
         if (left != uidlPositionX && client != null) {
@@ -562,38 +586,40 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
     }
 
     private void onResizeEvent(Event event) {
-        switch (DOM.eventGetType(event)) {
-        case Event.ONMOUSEDOWN:
-            if (!isActive()) {
-                bringToFront();
-            }
-            showDraggingCurtain(true);
-            resizing = true;
-            startX = DOM.eventGetScreenX(event);
-            startY = DOM.eventGetScreenY(event);
-            origW = getWidget().getOffsetWidth();
-            origH = getWidget().getOffsetHeight();
-            DOM.setCapture(getElement());
-            DOM.eventPreventDefault(event);
-            break;
-        case Event.ONMOUSEUP:
-            showDraggingCurtain(false);
-            resizing = false;
-            DOM.releaseCapture(getElement());
-            setSize(event, true);
-            break;
-        case Event.ONLOSECAPTURE:
-            showDraggingCurtain(false);
-            resizing = false;
-        case Event.ONMOUSEMOVE:
-            if (resizing) {
-                setSize(event, false);
+        if (resizable) {
+            switch (DOM.eventGetType(event)) {
+            case Event.ONMOUSEDOWN:
+                if (!isActive()) {
+                    bringToFront();
+                }
+                showDraggingCurtain(true);
+                resizing = true;
+                startX = DOM.eventGetScreenX(event);
+                startY = DOM.eventGetScreenY(event);
+                origW = getWidget().getOffsetWidth();
+                origH = getWidget().getOffsetHeight();
+                DOM.setCapture(getElement());
                 DOM.eventPreventDefault(event);
+                break;
+            case Event.ONMOUSEUP:
+                showDraggingCurtain(false);
+                resizing = false;
+                DOM.releaseCapture(getElement());
+                setSize(event, true);
+                break;
+            case Event.ONLOSECAPTURE:
+                showDraggingCurtain(false);
+                resizing = false;
+            case Event.ONMOUSEMOVE:
+                if (resizing) {
+                    setSize(event, false);
+                    DOM.eventPreventDefault(event);
+                }
+                break;
+            default:
+                DOM.eventPreventDefault(event);
+                break;
             }
-            break;
-        default:
-            DOM.eventPreventDefault(event);
-            break;
         }
     }
 
@@ -624,7 +650,7 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
                             getElement(),
                             "width",
                             (Integer.parseInt(width.substring(0,
-                                    width.length() - 2)) + BORDER_WIDTH_HORIZONTAL)
+                                    width.length() - 2)) + borderWidthHorizontal)
                                     + "px");
         }
     }
@@ -693,6 +719,17 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
         // getElement(), so we need to override this.
         setStyleName(getElement(), getStylePrimaryName() + "-" + styleSuffix,
                 true);
+    }
+
+    protected void onAttach() {
+        super.onAttach();
+        // Calculate space required by window borders, so we can accurately
+        // calculate space for content
+        final int contentWidth = DOM.getElementPropertyInt(contentPanel
+                .getElement(), "offsetWidth");
+        final int windowWidth = DOM.getElementPropertyInt(getElement(),
+                "offsetWidth");
+        borderWidthHorizontal = windowWidth - contentWidth;
     }
 
 }

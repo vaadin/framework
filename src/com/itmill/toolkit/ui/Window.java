@@ -108,6 +108,10 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
     private boolean modal = false;
 
+    private boolean resizable = true;
+
+    private boolean centerRequested = false;
+
     /* ********************************************************************* */
 
     /**
@@ -468,6 +472,15 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
         if (modal) {
             target.addAttribute("modal", true);
+        }
+
+        if (resizable) {
+            target.addAttribute("resizable", true);
+        }
+        
+        if(centerRequested) {
+            target.addAttribute("center", true);
+            centerRequested = false;
         }
 
         // Marks the main window
@@ -1023,12 +1036,50 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
     /**
      * Sets sub-window modal, so that widgets behind it cannot be accessed.
+     * <b>Note:</b> affects sub-windows only.
      * 
      * @param modality
      *                true if modality is to be turned on
      */
     public void setModal(boolean modality) {
         modal = modality;
+        center();
+        requestRepaint();
+    }
+
+    /**
+     * @return true if this window is modal.
+     */
+    public boolean isModal() {
+        return modal;
+    }
+
+    /**
+     * Sets sub-window resizable.
+     * <b>Note:</b> affects sub-windows only.
+     * 
+     * @param resizable
+     *                true if resizability is to be turned on
+     */
+    public void setResizable(boolean resizeability) {
+        resizable = resizeability;
+        requestRepaint();
+    }
+
+    /**
+     * 
+     * @return true if window is resizable by the end-user, otherwise false.
+     */
+    public boolean isResizable() {
+        return resizable;
+    }
+
+    /**
+     * Request to center this window on the screen.
+     * <b>Note:</b> affects sub-windows only.
+     */
+    public void center() {
+        centerRequested = true;
     }
 
     /**

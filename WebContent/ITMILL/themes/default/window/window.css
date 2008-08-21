@@ -97,6 +97,11 @@
 	background: transparent url(img/resize.png);
 }
 
+.i-window-resizebox-disabled {
+	cursor: default;
+	background: transparent;
+}
+
 .i-window-closebox {
 	position:absolute;
 	top: 33px;
@@ -171,6 +176,9 @@
 	width: 15px;
 	height: 12px;
 	background: url(img/resize.png);
+}
+* html .i-window-resizebox-disabled {
+	background: transparent;
 }
 *+html .i-window-resizebox {
 	bottom: 0;
