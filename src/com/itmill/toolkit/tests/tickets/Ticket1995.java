@@ -22,9 +22,9 @@ public class Ticket1995 extends Application {
         table.addContainerProperty(PROPERTY_1, String.class, "");
         table.setPageLength(4);
 
-        Item item = table.addItem(1);
+        Item item = table.addItem("1");
         item.getItemProperty(PROPERTY_1).setValue("Row 1");
-        item = table.addItem(2);
+        item = table.addItem("2");
         item.getItemProperty(PROPERTY_1).setValue("Row 2");
 
         Filterable filterable = (Container.Filterable) table
@@ -47,7 +47,6 @@ public class Ticket1995 extends Application {
         Filterable filterable = (Container.Filterable) table
                 .getContainerDataSource();
 
-        filterable.removeAllContainerFilters();
         Item i = table.addItem("abc");
         String res = "";
         if (i == null) {
