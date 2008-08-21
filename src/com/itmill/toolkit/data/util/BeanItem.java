@@ -8,6 +8,7 @@ import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -62,7 +63,7 @@ public class BeanItem extends PropertysetItem {
                 final Class type = pd[i].getPropertyType();
                 final String name = pd[i].getName();
 
-                if ((getMethod != null) && (setMethod != null)) {
+                if ((getMethod != null)) {
                     final Property p = new MethodProperty(type, bean,
                             getMethod, setMethod);
                     addItemProperty(name, p);
@@ -109,10 +110,11 @@ public class BeanItem extends PropertysetItem {
                         final Method getMethod = pd[i].getReadMethod();
                         final Method setMethod = pd[i].getWriteMethod();
                         final Class type = pd[i].getPropertyType();
-
-                        final Property p = new MethodProperty(type, bean,
-                                getMethod, setMethod);
-                        addItemProperty(name, p);
+                        if ((getMethod != null)) {
+                            final Property p = new MethodProperty(type, bean,
+                                    getMethod, setMethod);
+                            addItemProperty(name, p);
+                        }
                     }
                 }
             }
@@ -141,33 +143,7 @@ public class BeanItem extends PropertysetItem {
      *                ids of the properties.
      */
     public BeanItem(Object bean, String[] propertyIds) {
-        this.bean = bean;
-
-        // Try to introspect, if it fails, we just have an empty Item
-        try {
-            // Create bean information
-            final BeanInfo info = Introspector.getBeanInfo(bean.getClass());
-            final PropertyDescriptor[] pd = info.getPropertyDescriptors();
-
-            // Add all the bean properties as MethodProperties to this Item
-            for (int j = 0; j < propertyIds.length; j++) {
-                final Object id = propertyIds[j];
-                for (int i = 0; i < pd.length; i++) {
-                    final String name = pd[i].getName();
-                    if (name.equals(id)) {
-                        final Method getMethod = pd[i].getReadMethod();
-                        final Method setMethod = pd[i].getWriteMethod();
-                        final Class type = pd[i].getPropertyType();
-
-                        final Property p = new MethodProperty(type, bean,
-                                getMethod, setMethod);
-                        addItemProperty(name, p);
-                    }
-                }
-            }
-
-        } catch (final java.beans.IntrospectionException ignored) {
-        }
+        this(bean, Arrays.asList(propertyIds));
     }
 
     /**
