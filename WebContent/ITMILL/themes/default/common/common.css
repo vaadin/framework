@@ -86,7 +86,6 @@ input.i-modified,
  	line-height: 13px;
  	font-family: arial, helvetica, tahoma, verdana, sans-serif;
 	color: #5d5444;
-	overflow: auto;
 }
 
 .i-tooltip-text {
@@ -94,6 +93,7 @@ input.i-modified,
 	border: none;
 	border-top: 1px solid #fffef5;
 	border-bottom: 1px solid #fbf8d9;
+	overflow: auto;
 }
 
 .i-tooltip .i-errormessage {
@@ -103,6 +103,7 @@ input.i-modified,
 	border: none;
 	border-top: 1px solid #fff3dc;
 	border-bottom: 1px solid #ead7b1;
+	overflow: auto;
  }
 
 .i-tooltip .i-errormessage h2 {
