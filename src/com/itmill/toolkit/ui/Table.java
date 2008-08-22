@@ -678,8 +678,6 @@ public class Table extends AbstractSelect implements Action.Container,
     public void setPageLength(int pageLength) {
         if (pageLength >= 0 && this.pageLength != pageLength) {
             this.pageLength = pageLength;
-            // "scroll" to first row
-            setCurrentPageFirstItemIndex(0);
             // Assures the visual refresh
             resetPageBuffer();
             refreshRenderedCells();
@@ -747,6 +745,7 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         // Assures the visual refresh
+        resetPageBuffer();
         refreshRenderedCells();
 
     }
@@ -1077,6 +1076,9 @@ public class Table extends AbstractSelect implements Action.Container,
                 newIndex = currentPageFirstItemIndex = size() - 1;
             }
         }
+        // Assures the visual refresh
+        resetPageBuffer();
+        refreshRenderedCells();
     }
 
     /**
