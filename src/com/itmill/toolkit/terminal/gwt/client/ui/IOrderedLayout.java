@@ -4,6 +4,7 @@
 
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 
@@ -37,12 +38,22 @@ public class IOrderedLayout extends Panel implements Container,
     public static final int ORIENTATION_VERTICAL = 0;
     public static final int ORIENTATION_HORIZONTAL = 1;
 
-    private int hSpacing = -1;
-    private int vSpacing = -1;
-    private int marginTop = -1;
-    private int marginBottom = -1;
-    private int marginLeft = -1;
-    private int marginRight = -1;
+    /**
+     * If margin and spacing values has been calculated, this holds the values
+     * for the given UIDL style attribute .
+     */
+    private static HashMap measuredMargins = new HashMap();
+
+    /**
+     * Spacing. Correct values will be set in
+     * updateMarginAndSpacingFromCSS(UIDL)
+     */
+    private int hSpacing, vSpacing;
+
+    /**
+     * Margin. Correct values will be set in updateMarginAndSpacingFromCSS(UIDL)
+     */
+    private int marginTop, marginBottom, marginLeft, marginRight;
 
     int orientationMode = ORIENTATION_VERTICAL;
 
@@ -318,15 +329,79 @@ public class IOrderedLayout extends Panel implements Container,
     }
 
     private void updateMarginAndSpacingSizesFromCSS(UIDL uidl) {
-        // TODO Read spacing and margins from CSS as documented in #1904.
-        // Somehow refresh after updates
 
-        hSpacing = 8;
-        vSpacing = 8;
-        marginTop = 15;
-        marginBottom = 15;
-        marginLeft = 18;
-        marginRight = 18;
+        // Style for this layout
+        String style = uidl.getStringAttribute("style");
+        if (style == null) {
+            style = "";
+        }
+
+        // Try to find measured from cache
+        int[] r = (int[]) measuredMargins.get(style);
+
+        // Measure from DOM
+        if (r == null) {
+            r = new int[] { 0, 0, 0, 0, 0, 0 };
+
+            // Construct DOM for measurements
+            Element e1 = DOM.createTable();
+            DOM.setStyleAttribute(e1, "position", "absolute");
+            DOM.setElementProperty(e1, "cellSpacing", "0");
+            DOM.setElementProperty(e1, "cellPadding", "0");
+            Element e11 = DOM.createTBody();
+            Element e12 = DOM.createTR();
+            Element e13 = DOM.createTD();
+            Element e2 = DOM.createDiv();
+            Element e3 = DOM.createDiv();
+            DOM.setStyleAttribute(e3, "width", "100px");
+            DOM.setStyleAttribute(e3, "height", "100px");
+            DOM.appendChild(getElement(), e1);
+            DOM.appendChild(e1, e11);
+            DOM.appendChild(e11, e12);
+            DOM.appendChild(e12, e13);
+            DOM.appendChild(e13, e2);
+            DOM.appendChild(e2, e3);
+            DOM.setInnerText(e3, ".");
+
+            // Measure different properties
+            final String[] classes = { "margin-top", "margin-right",
+                    "margin-bottom", "margin-left", "vspacing", "hspacing" };
+            for (int c = 0; c < 6; c++) {
+                StringBuffer styleBuf = new StringBuffer();
+                final String primaryName = getStylePrimaryName();
+                styleBuf.append(primaryName + "-" + classes[c]);
+                if (style.length() > 0) {
+                    final String[] styles = style.split(" ");
+                    for (int i = 0; i < styles.length; i++) {
+                        styleBuf.append(" ");
+                        styleBuf.append(primaryName);
+                        styleBuf.append("-");
+                        styleBuf.append(styles[i]);
+                        styleBuf.append("-");
+                        styleBuf.append(classes[c]);
+                    }
+                }
+                DOM.setElementProperty(e2, "className", styleBuf.toString());
+
+                // Measure
+                r[c] = DOM.getElementPropertyInt(e1,
+                        (c % 2) == 1 ? "offsetWidth" : "offsetHeight") - 100;
+            }
+
+            // Clean-up
+            DOM.removeChild(getElement(), e1);
+
+            // Cache for further use
+            measuredMargins.put(style, r);
+        }
+
+        // Set the properties
+        marginTop = r[0];
+        marginRight = r[1];
+        marginBottom = r[2];
+        marginLeft = r[3];
+        vSpacing = r[4];
+        hSpacing = r[5];
     }
 
     /**
