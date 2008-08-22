@@ -21,6 +21,7 @@ import com.itmill.toolkit.terminal.CompositeErrorMessage;
 import com.itmill.toolkit.terminal.ErrorMessage;
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
+import com.itmill.toolkit.terminal.Terminal;
 
 /**
  * <p>
@@ -120,6 +121,8 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      * Is automatic validation enabled.
      */
     private boolean validationVisible = true;
+
+    private ComponentErrorHandler errorHandler = null;
 
     /* Component basics ************************************************ */
 
@@ -1080,6 +1083,66 @@ public abstract class AbstractField extends AbstractComponent implements Field,
             requestRepaint();
             validationVisible = validateAutomatically;
         }
+    }
+
+    public interface ComponentErrorHandler {
+        /**
+         * Handle the component error
+         * 
+         * @param event
+         * @return True if the error has been handled False, otherwise
+         */
+        public boolean handleComponentError(ComponentErrorEvent event);
+    }
+
+    /**
+     * Gets the error handler for the component.
+     * 
+     * The error handler is dispatched whenever there is an error processing the
+     * data coming from the client.
+     * 
+     * @return
+     */
+    public ComponentErrorHandler getErrorHandler() {
+        return errorHandler;
+    }
+
+    /**
+     * Sets the error handler for the component.
+     * 
+     * The error handler is dispatched whenever there is an error processing the
+     * data coming from the client.
+     * 
+     * If the error handler is not set, the application error handler is used to
+     * handle the exception.
+     * 
+     * @param errorHandler
+     *                AbstractField specific error handler
+     */
+    public void setErrorHandler(ComponentErrorHandler errorHandler) {
+        this.errorHandler = errorHandler;
+    }
+
+    public boolean handleError(ComponentErrorEvent error) {
+        if (errorHandler != null) {
+            return errorHandler.handleComponentError(error);
+        }
+        return false;
+
+    }
+
+    /**
+     * Sets the current buffered source exception.
+     * 
+     * @param currentBufferedSourceException
+     */
+    public void setCurrentBufferedSourceException(
+            Buffered.SourceException currentBufferedSourceException) {
+        this.currentBufferedSourceException = currentBufferedSourceException;
+        requestRepaint();
+    }
+
+    public interface ComponentErrorEvent extends Terminal.ErrorEvent {
     }
 
 }

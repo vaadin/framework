@@ -5,6 +5,7 @@
 package com.itmill.toolkit;
 
 import java.net.MalformedURLException;
+import java.net.SocketException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
@@ -27,6 +28,7 @@ import com.itmill.toolkit.terminal.SystemError;
 import com.itmill.toolkit.terminal.Terminal;
 import com.itmill.toolkit.terminal.URIHandler;
 import com.itmill.toolkit.terminal.VariableOwner;
+import com.itmill.toolkit.terminal.gwt.server.ChangeVariablesErrorEvent;
 import com.itmill.toolkit.ui.AbstractComponent;
 import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.Window;
@@ -176,6 +178,12 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
     private static final SystemMessages DEFAULT_SYSTEM_MESSAGES = new SystemMessages();
 
     private Focusable pendingFocus;
+
+    /**
+     * Application wide error handler which is used by default if an error is
+     * left unhandled.
+     */
+    private Terminal.ErrorListener errorHandler = this;
 
     /**
      * <p>
@@ -1074,8 +1082,17 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
      * @see com.itmill.toolkit.terminal.Terminal.ErrorListener#terminalError(com.itmill.toolkit.terminal.Terminal.ErrorEvent)
      */
     public void terminalError(Terminal.ErrorEvent event) {
-        // throw it to standard error stream too
-        event.getThrowable().printStackTrace();
+        Throwable t = event.getThrowable();
+        if (t instanceof SocketException) {
+            // Most likely client browser closed socket
+            System.err
+                    .println("Warning: SocketException in CommunicationManager."
+                            + " Most likely client (browser) closed socket.");
+
+        } else {
+            // throw it to standard error stream too
+            t.printStackTrace();
+        }
 
         // Finds the original source of the error/exception
         Object owner = null;
@@ -1085,6 +1102,8 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
             owner = ((URIHandler.ErrorEvent) event).getURIHandler();
         } else if (event instanceof ParameterHandler.ErrorEvent) {
             owner = ((ParameterHandler.ErrorEvent) event).getParameterHandler();
+        } else if (event instanceof ChangeVariablesErrorEvent) {
+            owner = ((ChangeVariablesErrorEvent) event).getComponent();
         }
 
         // Shows the error in AbstractComponent
@@ -1143,6 +1162,28 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
      */
     public String getVersion() {
         return "NONVERSIONED";
+    }
+
+    /**
+     * Gets the application error handler.
+     * 
+     * The default error handler is the application itself.
+     * 
+     * @return Application error handler
+     */
+    public Terminal.ErrorListener getErrorHandler() {
+        return errorHandler;
+    }
+
+    /**
+     * Sets the application error handler.
+     * 
+     * The default error handler is the application itself.
+     * 
+     * @param errorHandler
+     */
+    public void setErrorHandler(Terminal.ErrorListener errorHandler) {
+        this.errorHandler = errorHandler;
     }
 
     /**
