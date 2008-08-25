@@ -590,6 +590,10 @@ public abstract class AbstractSelect extends AbstractField implements
      */
     public void setValue(Object newValue) throws Property.ReadOnlyException,
             Property.ConversionException {
+        if (newValue == null) {
+            newValue = getNullSelectionItemId();
+        }
+
         setValue(newValue, false);
     }
 
@@ -1318,16 +1322,13 @@ public abstract class AbstractSelect extends AbstractField implements
      * 
      */
     public void select(Object itemId) {
-        if (!isSelected(itemId) && items.containsId(itemId)) {
-            if (isMultiSelect()) {
-                final Set s = new HashSet((Set) getValue());
-                s.add(itemId);
-                setValue(s);
-            } else if (itemId.equals(getNullSelectionItemId())) {
-                setValue(null);
-            } else {
-                setValue(itemId);
-            }
+        if (!isMultiSelect()) {
+            setValue(itemId);
+        } else if (!isSelected(itemId) && itemId != null
+                && items.containsId(itemId)) {
+            final Set s = new HashSet((Set) getValue());
+            s.add(itemId);
+            setValue(s);
         }
     }
 

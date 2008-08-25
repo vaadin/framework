@@ -20,7 +20,7 @@ public class Ticket1230 extends Application {
         Window w = new Window(getClass().getSimpleName());
         setMainWindow(w);
 
-        GridLayout layout = new GridLayout(3, 5);
+        GridLayout layout = new GridLayout(5, 5);
         w.setLayout(layout);
 
         layout.setSpacing(true);
@@ -33,6 +33,22 @@ public class Ticket1230 extends Application {
 
                 public void buttonClick(ClickEvent event) {
                     selectWithoutNullItem.select(NULL_ITEM_ID);
+
+                }
+            });
+            layout.addComponent(b);
+            b = new Button("Select 1", new ClickListener() {
+
+                public void buttonClick(ClickEvent event) {
+                    selectWithoutNullItem.select("1");
+
+                }
+            });
+            layout.addComponent(b);
+            b = new Button("Select 2", new ClickListener() {
+
+                public void buttonClick(ClickEvent event) {
+                    selectWithoutNullItem.select("2");
 
                 }
             });
@@ -59,6 +75,23 @@ public class Ticket1230 extends Application {
 
                 public void buttonClick(ClickEvent event) {
                     selectWithNullItem.select(NULL_ITEM_ID);
+
+                }
+            });
+            layout.addComponent(b);
+
+            b = new Button("Select 1", new ClickListener() {
+
+                public void buttonClick(ClickEvent event) {
+                    selectWithNullItem.select("1");
+
+                }
+            });
+            layout.addComponent(b);
+            b = new Button("Select 2", new ClickListener() {
+
+                public void buttonClick(ClickEvent event) {
+                    selectWithNullItem.select("2");
 
                 }
             });
