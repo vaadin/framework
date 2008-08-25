@@ -2,6 +2,8 @@ package com.itmill.toolkit.tests.tickets;
 
 import com.itmill.toolkit.Application;
 import com.itmill.toolkit.ui.Button;
+import com.itmill.toolkit.ui.DateField;
+import com.itmill.toolkit.ui.Form;
 import com.itmill.toolkit.ui.GridLayout;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.OrderedLayout;
@@ -13,7 +15,12 @@ import com.itmill.toolkit.ui.Button.ClickListener;
 
 public class Ticket677 extends Application {
 
+    private static final Object P1 = new Object();
+    private static final Object P2 = new Object();
+    private static final Object P3 = new Object();
+
     private Panel panel;
+    private Form form;
 
     public void init() {
         Window w = new Window(getClass().getSimpleName());
@@ -25,12 +32,14 @@ public class Ticket677 extends Application {
     }
 
     private void createUI(GridLayout layout) {
-        panel = new Panel("panel caption");
-        layout.addComponent(panel);
+        createPanel(layout);
+        createForm(layout);
+
         layout.addComponent(new Button("Enable", new ClickListener() {
 
             public void buttonClick(ClickEvent event) {
                 panel.setEnabled(true);
+                form.setEnabled(true);
             }
 
         }));
@@ -39,9 +48,25 @@ public class Ticket677 extends Application {
 
             public void buttonClick(ClickEvent event) {
                 panel.setEnabled(false);
+                form.setEnabled(false);
             }
 
         }));
+
+    }
+
+    private void createForm(GridLayout layout) {
+        form = new Form();
+        form.addField(P1, new TextField());
+        form.addField(P2, new DateField());
+        form.addField(P3, new DateField());
+
+        layout.addComponent(form);
+    }
+
+    private void createPanel(GridLayout layout) {
+        panel = new Panel("panel caption");
+        layout.addComponent(panel);
 
         panel.addComponent(new Label("Label 1"));
 

@@ -234,8 +234,9 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * the implicit setting by setting this property as false.
      * 
      * @param makeVisible
-     *            If true (default), validation is made visible when commit() is
-     *            called. If false, the visibility is left as it is.
+     *                If true (default), validation is made visible when
+     *                commit() is called. If false, the visibility is left as it
+     *                is.
      */
     public void setValidationVisibleOnCommit(boolean makeVisible) {
         validationVisibleOnCommit = makeVisible;
@@ -244,14 +245,14 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
     /**
      * Is validation made automatically visible on commit?
      * 
-     *  See setValidationVisibleOnCommit().
+     * See setValidationVisibleOnCommit().
      * 
      * @return true if validation is made automatically visible on commit.
      */
     public boolean isValidationVisibleOnCommit() {
         return validationVisibleOnCommit;
     }
-    
+
     /*
      * Commit changes to the data source Don't add a JavaDoc comment here, we
      * use the default one from the interface.
@@ -1072,6 +1073,29 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
         }
         formFooter = newFormFooter;
         formFooter.setParent(this);
+    }
+
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+
+        updateComponentDisabledState(!enabled);
+    }
+
+    public void setDisabledByContainer(boolean disabledByContainer) {
+        super.setDisabledByContainer(disabledByContainer);
+
+        updateComponentDisabledState(disabledByContainer);
+    }
+
+    private void updateComponentDisabledState(boolean disabled) {
+        // Update the disabledByContainer state for all subcomponents
+        for (Iterator i = fields.values().iterator(); i.hasNext();) {
+            Component c = (Component) i.next();
+            if (c instanceof AbstractComponent) {
+                ((AbstractComponent) c).setDisabledByContainer(disabled);
+            }
+        }
+
     }
 
 }
