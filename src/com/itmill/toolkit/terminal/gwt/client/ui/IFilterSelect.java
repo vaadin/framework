@@ -583,6 +583,7 @@ public class IFilterSelect extends Composite implements Paintable, Field,
             if (optionUidl.hasAttribute("selected")) {
                 if (!filtering) {
                     tb.setText(suggestion.getReplacementString());
+                    selectedOptionKey = "" + suggestion.getOptionKey();
                 }
                 currentSuggestion = suggestion;
             }
