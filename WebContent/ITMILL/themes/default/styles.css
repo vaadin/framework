@@ -176,6 +176,9 @@
 	opacity: 0.3;
 	filter: Alpha(opacity=30);
 }
+.i-disabled .i-disabled {
+	opacity: 1.0;
+}
 .i-required-field-indicator {
 	padding-left:2px;
 	color: red;

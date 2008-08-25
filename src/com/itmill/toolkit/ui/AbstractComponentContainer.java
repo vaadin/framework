@@ -205,4 +205,27 @@ public abstract class AbstractComponentContainer extends AbstractComponent
         }
     }
 
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+
+        updateComponentDisabledState(!enabled);
+    }
+
+    public void setDisabledByContainer(boolean disabledByContainer) {
+        super.setDisabledByContainer(disabledByContainer);
+
+        updateComponentDisabledState(disabledByContainer);
+    }
+
+    private void updateComponentDisabledState(boolean disabled) {
+        // Update the disabledByContainer state for all subcomponents
+        for (Iterator i = getComponentIterator(); i.hasNext();) {
+            Component c = (Component) i.next();
+            if (c instanceof AbstractComponent) {
+                ((AbstractComponent) c).setDisabledByContainer(disabled);
+            }
+        }
+
+    }
+
 }

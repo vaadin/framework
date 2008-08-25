@@ -50,16 +50,28 @@ public class Ticket677 extends Application {
         innerLayout1.setSpacing(true);
         panel.addComponent(innerLayout1);
 
-        innerLayout1.addComponent(new TextField(
-                "TextField inside orderedLayout"));
-        innerLayout1.addComponent(new Button("Button inside orderedLayout"));
+        TextField tf = new TextField("TextField inside orderedLayout");
+        tf.setImmediate(true);
+        innerLayout1.addComponent(tf);
+        innerLayout1.addComponent(new Button("Button inside orderedLayout",
+                new ClickListener() {
+
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        System.out.println("Clicked "
+                                + event.getButton().getCaption());
+                    }
+
+                }));
         innerLayout1.addComponent(new Label("Label inside orderedLayout"));
 
         panel.addComponent(new Label("Label 2"));
 
         GridLayout innerLayout2 = new GridLayout(3, 3);
         innerLayout2.setSpacing(true);
-        innerLayout2.addComponent(new TextField("TextField inside gridLayout"));
+        tf = new TextField("TextField inside gridLayout");
+        tf.setImmediate(true);
+        innerLayout2.addComponent(tf);
         innerLayout2.addComponent(new Button("Button inside gridLayout"));
         innerLayout2.addComponent(new Label("Label inside gridLayout"));
         panel.addComponent(innerLayout2);
