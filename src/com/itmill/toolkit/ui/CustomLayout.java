@@ -4,6 +4,9 @@
 
 package com.itmill.toolkit.ui;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -39,15 +42,50 @@ import com.itmill.toolkit.terminal.PaintTarget;
  */
 public class CustomLayout extends AbstractLayout {
 
+    private static final int BUFFER_SIZE = 10000;
+
     /**
      * Custom layout slots containing the components.
      */
     private final HashMap slots = new HashMap();
 
-    private String templateName;
+    private String templateContents = null;
+
+    private String templateName = null;
 
     /**
-     * Constructor for custom layout with given template name.
+     * Constructs a custom layout with the template given in the stream.
+     * 
+     * @param templateStream
+     *                Stream containing template data. Must be using UTF-8
+     *                encoding. To use a String as a template use for instance
+     *                new ByteArrayInputStream("<template>".getBytes()).
+     * @param streamLength
+     *                Length of the templateStream
+     * @throws IOException
+     */
+    public CustomLayout(InputStream templateStream) throws IOException {
+
+        InputStreamReader reader = new InputStreamReader(templateStream);
+        StringBuffer b = new StringBuffer(BUFFER_SIZE);
+
+        char[] cbuf = new char[BUFFER_SIZE];
+        int offset = 0;
+
+        while (true) {
+            int nrRead = reader.read(cbuf, offset, BUFFER_SIZE);
+            b.append(cbuf, 0, nrRead);
+            if (nrRead < BUFFER_SIZE) {
+                break;
+            }
+        }
+
+        templateContents = b.toString();
+    }
+
+    /**
+     * Constructor for custom layout with given template name. Template file is
+     * fetched from "<theme>/layout/<templateName>".
      */
     public CustomLayout(String template) {
         templateName = template;
@@ -153,7 +191,11 @@ public class CustomLayout extends AbstractLayout {
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);
 
-        target.addAttribute("template", templateName);
+        if (templateName != null) {
+            target.addAttribute("template", templateName);
+        } else {
+            target.addAttribute("templateContents", templateContents);
+        }
         // Adds all items in all the locations
         for (final Iterator i = slots.keySet().iterator(); i.hasNext();) {
             // Gets the (location,component)
@@ -225,6 +267,7 @@ public class CustomLayout extends AbstractLayout {
      */
     public void setTemplateName(String templateName) {
         this.templateName = templateName;
+        templateContents = null;
         requestRepaint();
     }
 

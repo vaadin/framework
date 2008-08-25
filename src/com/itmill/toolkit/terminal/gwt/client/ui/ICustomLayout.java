@@ -42,8 +42,8 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
     /** Widget to captionwrapper map */
     private final HashMap widgetToCaptionWrapper = new HashMap();
 
-    /** Currently rendered style */
-    String currentTemplate;
+    /** Name of the currently rendered style */
+    String currentTemplateName;
 
     /** Unexecuted scripts loaded from the template */
     private String scripts = "";
@@ -52,6 +52,9 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
     private String pid;
 
     private ApplicationConnection client;
+
+    /** Has the template been loaded from contents passed in UIDL **/
+    private boolean hasTemplateContents = false;
 
     public ICustomLayout() {
         setElement(DOM.createDiv());
@@ -171,17 +174,27 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
     /** Initialize HTML-layout. */
     private void initializeHTML(UIDL uidl, ApplicationConnection client) {
 
+        final String newTemplateContents = uidl
+                .getStringAttribute("templateContents");
         final String newTemplate = uidl.getStringAttribute("template");
 
-        // Get the HTML-template from client
-        String template = client
-                .getResource("layouts/" + newTemplate + ".html");
-        if (template == null) {
-            template = "<em>Layout file layouts/"
-                    + newTemplate
-                    + ".html is missing. Components will be drawn for debug purposes.</em>";
+        currentTemplateName = null;
+        hasTemplateContents = false;
+
+        String template = "";
+        if (newTemplate != null) {
+            // Get the HTML-template from client
+            template = client.getResource("layouts/" + newTemplate + ".html");
+            if (template == null) {
+                template = "<em>Layout file layouts/"
+                        + newTemplate
+                        + ".html is missing. Components will be drawn for debug purposes.</em>";
+            } else {
+                currentTemplateName = newTemplate;
+            }
         } else {
-            currentTemplate = newTemplate;
+            hasTemplateContents = true;
+            template = newTemplateContents;
         }
 
         // Connect body of the template to DOM
@@ -208,7 +221,7 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
     }-*/;
 
     private boolean hasTemplate() {
-        if (currentTemplate == null) {
+        if (currentTemplateName == null && !hasTemplateContents) {
             return false;
         } else {
             return true;
