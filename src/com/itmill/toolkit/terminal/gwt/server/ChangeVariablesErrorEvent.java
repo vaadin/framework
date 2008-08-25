@@ -3,7 +3,7 @@ package com.itmill.toolkit.terminal.gwt.server;
 import java.util.Map;
 
 import com.itmill.toolkit.ui.Component;
-import com.itmill.toolkit.ui.AbstractField.ComponentErrorEvent;
+import com.itmill.toolkit.ui.AbstractComponent.ComponentErrorEvent;
 
 public class ChangeVariablesErrorEvent implements ComponentErrorEvent {
 

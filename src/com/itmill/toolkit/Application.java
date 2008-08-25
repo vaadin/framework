@@ -1088,10 +1088,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
             System.err
                     .println("Warning: SocketException in CommunicationManager."
                             + " Most likely client (browser) closed socket.");
-
-        } else {
-            // throw it to standard error stream too
-            t.printStackTrace();
+            return;
         }
 
         // Finds the original source of the error/exception
@@ -1115,6 +1112,13 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
                 ((AbstractComponent) owner)
                         .setComponentError(new SystemError(e));
             }
+        } else {
+            /*
+             * Can't show it to the user in any way so we print to standard
+             * error
+             */
+            t.printStackTrace();
+
         }
     }
 
