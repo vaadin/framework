@@ -1707,41 +1707,36 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
                     lastRendered++;
                 }
                 fixSpacers();
-                DeferredCommand.addCommand(new Command() {
-                    public void execute() {
-                        // this may be a new set of rows due content change,
-                        // ensure we have proper cache rows
-                        int reactFirstRow = (int) (firstRowInViewPort - pageLength
-                                * CACHE_REACT_RATE);
-                        int reactLastRow = (int) (firstRowInViewPort
-                                + pageLength + pageLength * CACHE_REACT_RATE);
-                        if (reactFirstRow < 0) {
-                            reactFirstRow = 0;
-                        }
-                        if (reactLastRow > totalRows) {
-                            reactLastRow = totalRows - 1;
-                        }
-                        if (reactFirstRow < firstRendered
-                                || reactLastRow > lastRendered) {
-                            // re-fetch full cache area
-                            reactFirstRow = (int) (firstRowInViewPort - pageLength
-                                    * CACHE_RATE);
-                            reactLastRow = (int) (firstRowInViewPort
-                                    + pageLength + pageLength * CACHE_RATE);
-                            if (reactFirstRow < 0) {
-                                reactFirstRow = 0;
-                            }
-                            if (reactLastRow > totalRows) {
-                                reactLastRow = totalRows - 1;
-                            }
-                            // fetch some lines before
-                            rowRequestHandler.setReqFirstRow(reactFirstRow);
-                            rowRequestHandler.setReqRows((int) (2 * pageLength
-                                    * CACHE_RATE + pageLength));
-                            rowRequestHandler.deferRowFetch(1);
-                        }
-                    }
-                });
+            }
+            // this may be a new set of rows due content change,
+            // ensure we have proper cache rows
+            int reactFirstRow = (int) (firstRowInViewPort - pageLength
+                    * CACHE_REACT_RATE);
+            int reactLastRow = (int) (firstRowInViewPort + pageLength + pageLength
+                    * CACHE_REACT_RATE);
+            if (reactFirstRow < 0) {
+                reactFirstRow = 0;
+            }
+            if (reactLastRow > totalRows) {
+                reactLastRow = totalRows - 1;
+            }
+            if (lastRendered < reactLastRow) {
+                // get some cache rows below visible area
+                rowRequestHandler.setReqFirstRow(lastRendered + 1);
+                rowRequestHandler.setReqRows(reactLastRow - lastRendered - 1);
+                rowRequestHandler.deferRowFetch(1);
+            } else if (IScrollTable.this.tBody.getFirstRendered() > reactFirstRow) {
+                /*
+                 * Branch for fetching cache above visible area.
+                 * 
+                 * If cache needed for both before and after visible area, this
+                 * will be rendered after-cache is reveived and rendered. So in
+                 * some rare situations table may take two cache visits to
+                 * server.
+                 */
+                rowRequestHandler.setReqFirstRow(reactFirstRow);
+                rowRequestHandler.setReqRows(firstRendered - reactFirstRow);
+                rowRequestHandler.deferRowFetch(1);
             }
         }
 
