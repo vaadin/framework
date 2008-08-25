@@ -74,6 +74,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
     public static final char ALIGN_RIGHT = 'e';
     private int firstRowInViewPort = 0;
     private int pageLength = 15;
+    private int lastRequestedFirstvisible = 0; // to detect "serverside scroll"
 
     private boolean showRowHeaders = false;
 
@@ -169,6 +170,12 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
         }
         firstvisible = uidl.hasVariable("firstvisible") ? uidl
                 .getIntVariable("firstvisible") : 0;
+        if (firstvisible != lastRequestedFirstvisible) {
+            // received 'surprising' firstvisible from server: scroll there
+            firstRowInViewPort = firstvisible;
+            bodyContainer
+                    .setScrollPosition(firstvisible * tBody.getRowHeight());
+        }
 
         showRowHeaders = uidl.getBooleanAttribute("rowheaders");
         showColHeaders = uidl.getBooleanAttribute("colheaders");
@@ -699,6 +706,9 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
         final int firstRendered = tBody.getFirstRendered();
 
         if (postLimit <= lastRendered && preLimit >= firstRendered) {
+            // remember which firstvisible we requested, in case the server has
+            // a differing opinion
+            lastRequestedFirstvisible = firstRowInViewPort;
             client.updateVariable(paintableId, "firstvisible",
                     firstRowInViewPort, false);
             return; // scrolled withing "non-react area"
@@ -852,7 +862,9 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 
             client.updateVariable(paintableId, "lastToBeRendered",
                     lastToBeRendered, false);
-
+            // remember which firstvisible we requested, in case the server has
+            // a differing opinion
+            lastRequestedFirstvisible = firstRowInViewPort;
             client.updateVariable(paintableId, "firstvisible",
                     firstRowInViewPort, false);
             client.updateVariable(paintableId, "reqfirstrow", reqFirstRow,
