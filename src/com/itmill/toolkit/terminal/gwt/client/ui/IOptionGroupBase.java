@@ -173,7 +173,12 @@ abstract class IOptionGroupBase extends Composite implements Paintable, Field,
             container.remove(newItemButton);
         }
 
+        setTabIndex(uidl.hasAttribute("tabindex") ? uidl
+                .getIntAttribute("tabindex") : 0);
+
     }
+
+    abstract protected void setTabIndex(int tabIndex);
 
     public void onClick(Widget sender) {
         if (sender == newItemButton && !newItemField.getText().equals("")) {

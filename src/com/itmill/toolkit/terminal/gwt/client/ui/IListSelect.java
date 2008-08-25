@@ -94,6 +94,10 @@ public class IListSelect extends IOptionGroupBase {
         super.setWidth(width);
     }
 
+    protected void setTabIndex(int tabIndex) {
+        ((TooltipListBox) optionsContainer).setTabIndex(tabIndex);
+    }
+
 }
 
 /**

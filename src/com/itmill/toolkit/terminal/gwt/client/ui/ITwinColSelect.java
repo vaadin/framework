@@ -217,4 +217,11 @@ public class ITwinColSelect extends IOptionGroupBase {
         selections.setWidth("42%");
         widthSet = true;
     }
+
+    protected void setTabIndex(int tabIndex) {
+        options.setTabIndex(tabIndex);
+        selections.setTabIndex(tabIndex);
+        add.setTabIndex(tabIndex);
+        remove.setTabIndex(tabIndex);
+    }
 }

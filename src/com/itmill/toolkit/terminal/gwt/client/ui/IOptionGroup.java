@@ -75,4 +75,16 @@ public class IOptionGroup extends IOptionGroupBase {
         }
     }
 
+    protected void setTabIndex(int tabIndex) {
+        for (Iterator iterator = panel.iterator(); iterator.hasNext();) {
+            if (isMultiselect()) {
+                ICheckBox cb = (ICheckBox) iterator.next();
+                cb.setTabIndex(tabIndex);
+            } else {
+                RadioButton rb = (RadioButton) iterator.next();
+                rb.setTabIndex(tabIndex);
+            }
+        }
+    }
+
 }

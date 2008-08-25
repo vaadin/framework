@@ -88,4 +88,8 @@ public class INativeSelect extends IOptionGroupBase implements Field {
         super.setWidth(width);
     }
 
+    protected void setTabIndex(int tabIndex) {
+        ((TooltipListBox) optionsContainer).setTabIndex(tabIndex);
+    }
+
 }
