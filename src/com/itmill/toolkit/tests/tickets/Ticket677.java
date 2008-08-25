@@ -81,7 +81,6 @@ public class Ticket677 extends Application {
         innerLayout1.addComponent(new Button("Button inside orderedLayout",
                 new ClickListener() {
 
-                    @Override
                     public void buttonClick(ClickEvent event) {
                         System.out.println("Clicked "
                                 + event.getButton().getCaption());
