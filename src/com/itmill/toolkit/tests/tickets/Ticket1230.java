@@ -17,7 +17,7 @@ public class Ticket1230 extends Application {
     private Select selectWithNullItem;
 
     public void init() {
-        Window w = new Window(getClass().getSimpleName());
+        Window w = new Window(getClass().getName());
         setMainWindow(w);
 
         GridLayout layout = new GridLayout(5, 5);
