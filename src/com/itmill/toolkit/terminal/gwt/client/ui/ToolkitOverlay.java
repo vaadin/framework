@@ -5,6 +5,7 @@
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.PopupListener;
 import com.google.gwt.user.client.ui.PopupPanel;
@@ -62,7 +63,16 @@ public class ToolkitOverlay extends PopupPanel {
             DOM.appendChild(RootPanel.get().getElement(), shadow.getElement());
             shadow.updateSizeAndPosition();
         }
+        if (BrowserInfo.get().isIE6()) {
+            adjustIE6Frame(getElement(), Z_INDEX - 1);
+        }
     }
+
+    private native void adjustIE6Frame(Element popup, int zindex)
+    /*-{
+        // relies on PopupImplIE6
+        popup.__frame.style.zIndex = zindex;
+    }-*/;
 
     public void setShadowOffset(int top, int right, int bottom, int left) {
         if (shadow != null) {
