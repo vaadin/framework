@@ -23,7 +23,7 @@ public class Ticket677 extends Application {
     private Form form;
 
     public void init() {
-        Window w = new Window(getClass().getSimpleName());
+        Window w = new Window(getClass().getName());
         setMainWindow(w);
         // setTheme("tests-ticket");
         GridLayout layout = new GridLayout(10, 10);

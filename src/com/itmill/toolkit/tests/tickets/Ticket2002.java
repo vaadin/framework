@@ -27,7 +27,7 @@ public class Ticket2002 extends Application {
     }
 
     public void init() {
-        Window w = new Window(getClass().getSimpleName());
+        Window w = new Window(getClass().getName());
         setMainWindow(w);
 
         GridLayout layout = new GridLayout(2, 2);

@@ -8,7 +8,7 @@ import com.itmill.toolkit.ui.Window;
 public class Ticket2011 extends Application {
 
     public void init() {
-        Window w = new Window(getClass().getSimpleName());
+        Window w = new Window(getClass().getName());
         setMainWindow(w);
         // setTheme("tests-ticket");
         GridLayout layout = new GridLayout(10, 10);

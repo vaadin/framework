@@ -15,7 +15,7 @@ public class Ticket1995 extends Application {
     private Table table;
 
     public void init() {
-        final Window mainWin = new Window(getClass().getSimpleName());
+        final Window mainWin = new Window(getClass().getName());
         setMainWindow(mainWin);
 
         table = new Table();

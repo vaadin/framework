@@ -19,7 +19,7 @@ public class Ticket1975 extends Application {
     private CustomLayout cl2;
 
     public void init() {
-        Window w = new Window(getClass().getSimpleName());
+        Window w = new Window(getClass().getName());
         setMainWindow(w);
         setTheme("tests-tickets");
         GridLayout layout = new GridLayout(1, 10);
@@ -46,8 +46,9 @@ public class Ticket1975 extends Application {
 
                     }));
             File f = new File(wc.getBaseDirectory().getAbsoluteFile()
-                    + "/ITMILL/themes/" + getTheme() + "/layouts/Ticket1975.html");
-                    
+                    + "/ITMILL/themes/" + getTheme()
+                    + "/layouts/Ticket1975.html");
+
             cl2 = new CustomLayout(new FileInputStream(f));
             layout.addComponent(cl2);
 
