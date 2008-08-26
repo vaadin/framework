@@ -2,6 +2,27 @@
 	text-align: left /* Force default alignment */
 }
 
+/* ie6compatnode is hidden from non ie6 browsers, for ie6 
+ * uses weird hack to sink all events properly 
+ */
+.i-tree-node-ie6compatnode {
+	display: none;
+}
+
+* html .i-tree-node-ie6compatnode {
+	display: inline;
+	float:left;
+	background: orange;
+	margin:0;
+	width:14px;
+	height:10px;
+	padding:1px;
+	filter: Alpha(opacity=0);
+}
+* html .i-tree-node {
+	clear: both;
+}
+
 .i-tree-node {
 	background: transparent url(img/collapsed.png) no-repeat 2px 1px;
 }
@@ -14,6 +35,7 @@
 .i-tree-node-caption {
 	margin-left: 16px;
 }
+
 .i-tree-node span {
 	padding: 0 2px;
 	cursor: pointer;

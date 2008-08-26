@@ -185,6 +185,8 @@ public class ITree extends FlowPanel implements Paintable {
 
         private Icon icon;
 
+        private Element ie6compatnode;
+
         public TreeNode() {
             constructDom();
             sinkEvents(Event.ONCLICK);
@@ -195,13 +197,20 @@ public class ITree extends FlowPanel implements Paintable {
             if (disabled) {
                 return;
             }
-            final Element target = DOM.eventGetTarget(event);
-            if (DOM.compare(getElement(), target)) {
-                // state change
-                toggleState();
-            } else if (!readonly && DOM.compare(target, nodeCaptionSpan)) {
-                // caption click = selection change
-                toggleSelection();
+            if (DOM.eventGetType(event) == Event.ONCLICK) {
+                final Element target = DOM.eventGetTarget(event);
+                if (DOM.compare(getElement(), target)
+                        || DOM.compare(ie6compatnode, target)) {
+                    // state change
+                    toggleState();
+                } else if (!readonly && DOM.compare(target, nodeCaptionSpan)) {
+                    // caption click = selection change
+                    toggleSelection();
+                }
+                DOM.eventCancelBubble(event, true);
+            } else {
+                ApplicationConnection.getConsole().log(
+                        "ITree event?? " + DOM.eventToString(event));
             }
 
         }
@@ -217,6 +226,14 @@ public class ITree extends FlowPanel implements Paintable {
         }
 
         protected void constructDom() {
+            // workaround for a very weird IE6 issue #1245
+            ie6compatnode = DOM.createDiv();
+            setStyleName(ie6compatnode, CLASSNAME + "-ie6compatnode");
+            DOM.setInnerText(ie6compatnode, " ");
+            DOM.appendChild(getElement(), ie6compatnode);
+
+            DOM.sinkEvents(ie6compatnode, Event.ONCLICK);
+
             nodeCaptionDiv = DOM.createDiv();
             DOM.setElementProperty(nodeCaptionDiv, "className", CLASSNAME
                     + "-caption");
