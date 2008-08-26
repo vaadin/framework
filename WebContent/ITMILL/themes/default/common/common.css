@@ -52,6 +52,12 @@
 	opacity: 0.3;
 	filter: Alpha(opacity=30);
 }
+* html .i-disabled {
+	zoom: 1;
+}
+*+html .i-disabled {
+	zoom: 1;
+}
 .i-disabled .i-disabled {
 	opacity: 1.0;
 	filter: Alpha(opacity=100);
