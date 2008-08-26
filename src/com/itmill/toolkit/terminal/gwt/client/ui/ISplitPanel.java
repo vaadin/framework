@@ -12,6 +12,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
+import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
 import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
@@ -192,8 +193,10 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
         int wholeSize;
         int pixelPosition;
 
-        DOM.setStyleAttribute(firstContainer, "overflow", "hidden");
-        DOM.setStyleAttribute(secondContainer, "overflow", "hidden");
+        if (!(resizing && BrowserInfo.get().isGecko())) {
+            DOM.setStyleAttribute(firstContainer, "overflow", "hidden");
+            DOM.setStyleAttribute(secondContainer, "overflow", "hidden");
+        }
 
         switch (orientation) {
         case ORIENTATION_HORIZONTAL:
@@ -263,8 +266,10 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
             });
         } else {
             Util.runDescendentsLayout(this);
-            DOM.setStyleAttribute(firstContainer, "overflow", "auto");
-            DOM.setStyleAttribute(secondContainer, "overflow", "auto");
+            if (!(resizing && BrowserInfo.get().isGecko())) {
+                DOM.setStyleAttribute(firstContainer, "overflow", "auto");
+                DOM.setStyleAttribute(secondContainer, "overflow", "auto");
+            }
         }
 
     }
