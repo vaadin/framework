@@ -1000,14 +1000,8 @@ public class Table extends AbstractSelect implements Action.Container,
         return currentPageFirstItemIndex;
     }
 
-    /**
-     * Setter for property currentPageFirstItem.
-     * 
-     * @param newIndex
-     *                the New value of property currentPageFirstItem.
-     */
-    public void setCurrentPageFirstItemIndex(int newIndex) {
-
+    private void setCurrentPageFirstItemIndex(int newIndex,
+            boolean needsPageBufferReset) {
         // Ensures that the new value is valid
         if (newIndex >= size()) {
             newIndex = size() - pageLength;
@@ -1076,9 +1070,21 @@ public class Table extends AbstractSelect implements Action.Container,
                 newIndex = currentPageFirstItemIndex = size() - 1;
             }
         }
-        // Assures the visual refresh
-        resetPageBuffer();
-        refreshRenderedCells();
+        if (needsPageBufferReset) {
+            // Assures the visual refresh
+            resetPageBuffer();
+            refreshRenderedCells();
+        }
+    }
+
+    /**
+     * Setter for property currentPageFirstItem.
+     * 
+     * @param newIndex
+     *                the New value of property currentPageFirstItem.
+     */
+    public void setCurrentPageFirstItemIndex(int newIndex) {
+        setCurrentPageFirstItemIndex(newIndex, true);
     }
 
     /**
@@ -1580,7 +1586,7 @@ public class Table extends AbstractSelect implements Action.Container,
         if (variables.containsKey("firstvisible")) {
             final Integer value = (Integer) variables.get("firstvisible");
             if (value != null) {
-                setCurrentPageFirstItemIndex(value.intValue());
+                setCurrentPageFirstItemIndex(value.intValue(), false);
             }
         }
 
