@@ -109,6 +109,9 @@ public class ITabsheetPanel extends ComplexPanel {
         }
     }
 
+    /*
+     * Gets only called with 100% or ""
+     */
     public void setHeight(String height) {
         super.setHeight(height);
         if ("100%".equals(height)) {
@@ -133,10 +136,12 @@ public class ITabsheetPanel extends ComplexPanel {
     private void hide(Element e) {
         DOM.setStyleAttribute(e, "visibility", "hidden");
         DOM.setStyleAttribute(e, "position", "absolute");
+        DOM.setStyleAttribute(e, "top", "0px");
     }
 
     private void unHide(Element e) {
         DOM.setStyleAttribute(e, "visibility", "");
         DOM.setStyleAttribute(e, "position", "");
+        DOM.setStyleAttribute(e, "top", "");
     }
 }
