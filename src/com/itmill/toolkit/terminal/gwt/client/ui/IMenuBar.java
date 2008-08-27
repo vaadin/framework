@@ -66,16 +66,18 @@ public class IMenuBar extends Widget implements Paintable, PopupListener {
         visibleChildMenu = null;
 
         Element table = DOM.createTable();
+        Element tbody = DOM.createTBody();
         DOM.appendChild(this.getElement(), table);
+        DOM.appendChild(table, tbody);
 
         if (!subMenu) {
             setStyleName(CLASSNAME);
             Element tr = DOM.createTR();
-            DOM.appendChild(table, tr);
+            DOM.appendChild(tbody, tr);
             containerElement = tr;
         } else {
             setStyleName(CLASSNAME + "-submenu");
-            containerElement = table;
+            containerElement = tbody;
         }
         this.subMenu = subMenu;
 
