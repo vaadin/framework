@@ -170,7 +170,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
         }
         firstvisible = uidl.hasVariable("firstvisible") ? uidl
                 .getIntVariable("firstvisible") : 0;
-        if (firstvisible != lastRequestedFirstvisible) {
+        if (firstvisible != lastRequestedFirstvisible && tBody != null) {
             // received 'surprising' firstvisible from server: scroll there
             firstRowInViewPort = firstvisible;
             bodyContainer
