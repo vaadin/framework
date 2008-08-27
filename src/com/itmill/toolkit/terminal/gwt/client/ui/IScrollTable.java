@@ -156,12 +156,15 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
         immediate = uidl.getBooleanAttribute("immediate");
         final int newTotalRows = uidl.getIntAttribute("totalrows");
         if (newTotalRows != totalRows) {
-            totalRows = newTotalRows;
             if (tBody != null) {
+                if (totalRows == 0) {
+                    tHead.clear();
+                }
                 initializedAndAttached = false;
                 initialContentReceived = false;
                 isNewBody = true;
             }
+            totalRows = newTotalRows;
         }
 
         pageLength = uidl.getIntAttribute("pagelength");
@@ -1271,6 +1274,13 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
             DOM.sinkEvents(columnSelector, Event.ONCLICK);
 
             availableCells.put("0", new RowHeadersHeaderCell());
+        }
+
+        public void clear() {
+            super.clear();
+            availableCells.clear();
+            availableCells.put("0", new RowHeadersHeaderCell());
+
         }
 
         public void updateCellsFromUIDL(UIDL uidl) {
