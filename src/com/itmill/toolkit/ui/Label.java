@@ -20,15 +20,15 @@ import com.itmill.toolkit.terminal.PaintTarget;
  * <p>
  * The contents of the label may contain simple formatting:
  * <ul>
- * <li> <b>&lt;b></b> Bold
- * <li> <b>&lt;i></b> Italic
- * <li> <b>&lt;u></b> Underlined
- * <li> <b>&lt;br/></b> Linebreak
- * <li> <b>&lt;ul>&lt;li>item 1&lt;/li>&lt;li>item 2&lt;/li>&lt;/ul></b> List
- * of items
+ * <li><b>&lt;b></b> Bold
+ * <li><b>&lt;i></b> Italic
+ * <li><b>&lt;u></b> Underlined
+ * <li><b>&lt;br/></b> Linebreak
+ * <li><b>&lt;ul>&lt;li>item 1&lt;/li>&lt;li>item 2&lt;/li>&lt;/ul></b> List of
+ * items
  * </ul>
- * The <b>b</b>,<b>i</b>,<b>u</b> and <b>li</b> tags can contain all the
- * tags in the list recursively.
+ * The <b>b</b>,<b>i</b>,<b>u</b> and <b>li</b> tags can contain all the tags in
+ * the list recursively.
  * </p>
  * 
  * @author IT Mill Ltd.
@@ -154,7 +154,7 @@ public class Label extends AbstractComponent implements Property,
      * Set the component to read-only. Readonly is not used in label.
      * 
      * @param readOnly
-     *                True to enable read-only mode, False to disable it.
+     *            True to enable read-only mode, False to disable it.
      */
     public void setReadOnly(boolean readOnly) {
         if (dataSource == null) {
@@ -180,9 +180,9 @@ public class Label extends AbstractComponent implements Property,
      * Paints the content of this component.
      * 
      * @param target
-     *                the Paint Event.
+     *            the Paint Event.
      * @throws PaintException
-     *                 if the Paint Operation fails.
+     *             if the Paint Operation fails.
      */
     public void paintContent(PaintTarget target) throws PaintException {
         if (contentMode != CONTENT_TEXT) {
@@ -230,7 +230,7 @@ public class Label extends AbstractComponent implements Property,
      * label.
      * 
      * @param newValue
-     *                the New value of the label.
+     *            the New value of the label.
      */
     public void setValue(Object newValue) {
         if (dataSource == null) {
@@ -275,7 +275,7 @@ public class Label extends AbstractComponent implements Property,
      * Sets the property as data-source for viewing.
      * 
      * @param newDataSource
-     *                the new data source Property
+     *            the new data source Property
      * @see com.itmill.toolkit.data.Property.Viewer#setPropertyDataSource(com.itmill.toolkit.data.Property)
      */
     public void setPropertyDataSource(Property newDataSource) {
@@ -303,23 +303,23 @@ public class Label extends AbstractComponent implements Property,
      * <p>
      * Possible content modes include:
      * <ul>
-     * <li><b>CONTENT_TEXT</b> Content mode, where the label contains only
-     * plain text. The getValue() result is coded to XML when painting.</li>
+     * <li><b>CONTENT_TEXT</b> Content mode, where the label contains only plain
+     * text. The getValue() result is coded to XML when painting.</li>
      * <li><b>CONTENT_PREFORMATTED</b> Content mode, where the label contains
      * preformatted text.</li>
-     * <li><b>CONTENT_UIDL</b> Formatted content mode, where the contents is
-     * XML restricted to the UIDL 1.0 formatting markups.</li>
+     * <li><b>CONTENT_UIDL</b> Formatted content mode, where the contents is XML
+     * restricted to the UIDL 1.0 formatting markups.</li>
      * <li><b>CONTENT_XHTML</b> Content mode, where the label contains XHTML.
      * Contents is then enclosed in DIV elements having namespace of
      * "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd".</li>
-     * <li><b>CONTENT_XML</b> Content mode, where the label contains
-     * well-formed or well-balanced XML. Each of the root elements must have
-     * their default namespace specified.</li>
-     * <li><b>CONTENT_RAW</b> Content mode, where the label contains RAW
-     * output. Output is not required to comply to with XML. In Web Adapter
-     * output is inserted inside the resulting HTML document as-is. This is
-     * useful for some specific purposes where possibly broken HTML content
-     * needs to be shown, but in most cases XHTML mode should be preferred.</li>
+     * <li><b>CONTENT_XML</b> Content mode, where the label contains well-formed
+     * or well-balanced XML. Each of the root elements must have their default
+     * namespace specified.</li>
+     * <li><b>CONTENT_RAW</b> Content mode, where the label contains RAW output.
+     * Output is not required to comply to with XML. In Web Adapter output is
+     * inserted inside the resulting HTML document as-is. This is useful for
+     * some specific purposes where possibly broken HTML content needs to be
+     * shown, but in most cases XHTML mode should be preferred.</li>
      * </ul>
      * </p>
      * 
@@ -335,28 +335,28 @@ public class Label extends AbstractComponent implements Property,
      * <p>
      * Possible content modes include:
      * <ul>
-     * <li><b>CONTENT_TEXT</b> Content mode, where the label contains only
-     * plain text. The getValue() result is coded to XML when painting.</li>
+     * <li><b>CONTENT_TEXT</b> Content mode, where the label contains only plain
+     * text. The getValue() result is coded to XML when painting.</li>
      * <li><b>CONTENT_PREFORMATTED</b> Content mode, where the label contains
      * preformatted text.</li>
-     * <li><b>CONTENT_UIDL</b> Formatted content mode, where the contents is
-     * XML restricted to the UIDL 1.0 formatting markups.</li>
+     * <li><b>CONTENT_UIDL</b> Formatted content mode, where the contents is XML
+     * restricted to the UIDL 1.0 formatting markups.</li>
      * <li><b>CONTENT_XHTML</b> Content mode, where the label contains XHTML.
      * Contents is then enclosed in DIV elements having namespace of
      * "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd".</li>
-     * <li><b>CONTENT_XML</b> Content mode, where the label contains
-     * well-formed or well-balanced XML. Each of the root elements must have
-     * their default namespace specified.</li>
-     * <li><b>CONTENT_RAW</b> Content mode, where the label contains RAW
-     * output. Output is not required to comply to with XML. In Web Adapter
-     * output is inserted inside the resulting HTML document as-is. This is
-     * useful for some specific purposes where possibly broken HTML content
-     * needs to be shown, but in most cases XHTML mode should be preferred.</li>
+     * <li><b>CONTENT_XML</b> Content mode, where the label contains well-formed
+     * or well-balanced XML. Each of the root elements must have their default
+     * namespace specified.</li>
+     * <li><b>CONTENT_RAW</b> Content mode, where the label contains RAW output.
+     * Output is not required to comply to with XML. In Web Adapter output is
+     * inserted inside the resulting HTML document as-is. This is useful for
+     * some specific purposes where possibly broken HTML content needs to be
+     * shown, but in most cases XHTML mode should be preferred.</li>
      * </ul>
      * </p>
      * 
      * @param contentMode
-     *                the New content mode of the label.
+     *            the New content mode of the label.
      */
     public void setContentMode(int contentMode) {
         if (contentMode >= CONTENT_TEXT && contentMode <= CONTENT_RAW) {
@@ -364,7 +364,7 @@ public class Label extends AbstractComponent implements Property,
         }
     }
 
-    /* Value change events ****************************************** */
+    /* Value change events */
 
     private static final Method VALUE_CHANGE_METHOD;
 
@@ -375,7 +375,8 @@ public class Label extends AbstractComponent implements Property,
                             new Class[] { Property.ValueChangeEvent.class });
         } catch (final java.lang.NoSuchMethodException e) {
             // This should never happen
-            throw new java.lang.RuntimeException();
+            throw new java.lang.RuntimeException(
+                    "Internal error finding methods in Label");
         }
     }
 
@@ -399,7 +400,7 @@ public class Label extends AbstractComponent implements Property,
          * New instance of text change event
          * 
          * @param source
-         *                the Source of the event.
+         *            the Source of the event.
          */
         public ValueChangeEvent(Label source) {
             super(source);
@@ -419,7 +420,7 @@ public class Label extends AbstractComponent implements Property,
      * Adds the value change listener.
      * 
      * @param listener
-     *                the Listener to be added.
+     *            the Listener to be added.
      * @see com.itmill.toolkit.data.Property.ValueChangeNotifier#addListener(com.itmill.toolkit.data.Property.ValueChangeListener)
      */
     public void addListener(Property.ValueChangeListener listener) {
@@ -430,7 +431,7 @@ public class Label extends AbstractComponent implements Property,
      * Removes the value change listener.
      * 
      * @param listener
-     *                the Listener to be removed.
+     *            the Listener to be removed.
      * @see com.itmill.toolkit.data.Property.ValueChangeNotifier#removeListener(com.itmill.toolkit.data.Property.ValueChangeListener)
      */
     public void removeListener(Property.ValueChangeListener listener) {
@@ -472,7 +473,7 @@ public class Label extends AbstractComponent implements Property,
      * </p>
      * 
      * @param other
-     *                the Other object to compare to.
+     *            the Other object to compare to.
      * @return a negative integer, zero, or a positive integer as this object is
      *         less than, equal to, or greater than the specified object.
      * @see java.lang.Comparable#compareTo(java.lang.Object)
@@ -505,7 +506,7 @@ public class Label extends AbstractComponent implements Property,
      * Strips the tags from the XML.
      * 
      * @param xml
-     *                the String containing a XML snippet.
+     *            the String containing a XML snippet.
      * @return the original XML without tags.
      */
     private String stripTags(String xml) {

@@ -331,7 +331,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * actual enabled state of the component.
      * 
      * @param disabledByContainer
-     *                Should the component be disabled
+     *            Should the component be disabled
      */
     public void setDisabledByContainer(boolean disabledByContainer) {
         if (disabledByContainer != this.disabledByContainer) {
@@ -776,8 +776,8 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
                             new Class[] { Component.Event.class });
         } catch (final java.lang.NoSuchMethodException e) {
             // This should never happen
-            e.printStackTrace();
-            throw new java.lang.RuntimeException();
+            throw new java.lang.RuntimeException(
+                    "Internal error finding methods in AbstractComponent");
         }
     }
 
@@ -1228,7 +1228,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * handle the exception.
      * 
      * @param errorHandler
-     *                AbstractField specific error handler
+     *            AbstractField specific error handler
      */
     public void setErrorHandler(ComponentErrorHandler errorHandler) {
         this.errorHandler = errorHandler;

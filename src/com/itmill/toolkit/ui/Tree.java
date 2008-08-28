@@ -38,7 +38,7 @@ import com.itmill.toolkit.terminal.Resource;
 public class Tree extends AbstractSelect implements Container.Hierarchical,
         Action.Container {
 
-    /* Static members ***************************************************** */
+    /* Static members */
 
     private static final Method EXPAND_METHOD;
 
@@ -52,13 +52,12 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
                     "nodeCollapse", new Class[] { CollapseEvent.class });
         } catch (final java.lang.NoSuchMethodException e) {
             // This should never happen
-            e.printStackTrace();
             throw new java.lang.RuntimeException(
-                    "Internal error, please report");
+                    "Internal error finding methods in Tree");
         }
     }
 
-    /* Private members **************************************************** */
+    /* Private members */
 
     /**
      * Set of expanded nodes.
@@ -96,7 +95,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      */
     private boolean initialPaint = true;
 
-    /* Tree constructors ************************************************** */
+    /* Tree constructors */
 
     /**
      * Creates a new empty tree.
@@ -124,13 +123,13 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         setContainerDataSource(dataSource);
     }
 
-    /* Expanding and collapsing ******************************************* */
+    /* Expanding and collapsing */
 
     /**
      * Check is an item is expanded
      * 
      * @param itemId
-     *                the item id.
+     *            the item id.
      * @return true iff the item is expanded.
      */
     public boolean isExpanded(Object itemId) {
@@ -141,7 +140,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * Expands an item.
      * 
      * @param itemId
-     *                the item id.
+     *            the item id.
      * @return True iff the expand operation succeeded
      */
     public boolean expandItem(Object itemId) {
@@ -152,10 +151,10 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * Expands an item.
      * 
      * @param itemId
-     *                the item id.
+     *            the item id.
      * @param sendChildTree
-     *                flag to indicate if client needs subtree or not (may be
-     *                cached)
+     *            flag to indicate if client needs subtree or not (may be
+     *            cached)
      * @return True iff the expand operation succeeded
      */
     private boolean expandItem(Object itemId, boolean sendChildTree) {
@@ -229,7 +228,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * Collapses an item.
      * 
      * @param itemId
-     *                the item id.
+     *            the item id.
      * @return True iff the collapse operation succeeded
      */
     public boolean collapseItem(Object itemId) {
@@ -299,7 +298,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * </p>
      * 
      * @param selectable
-     *                the New value of property selectable.
+     *            the New value of property selectable.
      */
     public void setSelectable(boolean selectable) {
         if (this.selectable != selectable) {
@@ -308,7 +307,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         }
     }
 
-    /* Component API ****************************************************** */
+    /* Component API */
 
     /**
      * Gets the UIDL tag corresponding to the component.
@@ -565,7 +564,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         }
     }
 
-    /* Container.Hierarchical API ***************************************** */
+    /* Container.Hierarchical API */
 
     /**
      * Tests if the Item with given ID can have any children.
@@ -595,8 +594,8 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     }
 
     /**
-     * Tests if the Item specified with <code>itemId</code> has any child
-     * Items, that is, is it a leaf Item.
+     * Tests if the Item specified with <code>itemId</code> has any child Items,
+     * that is, is it a leaf Item.
      * 
      * @see com.itmill.toolkit.data.Container.Hierarchical#hasChildren(Object)
      */
@@ -652,7 +651,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         return success;
     }
 
-    /* Overriding select behavior******************************************** */
+    /* Overriding select behavior */
 
     /**
      * Sets the Container that serves as the data source of the viewer.
@@ -678,7 +677,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         }
     }
 
-    /* Expand event and listener ****************************************** */
+    /* Expand event and listener */
 
     /**
      * Event to fired when a node is expanded. ExapandEvent is fired when a node
@@ -703,7 +702,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
          * New instance of options change event
          * 
          * @param source
-         *                the Source of the event.
+         *            the Source of the event.
          * @param expandedItemId
          */
         public ExpandEvent(Component source, Object expandedItemId) {
@@ -735,7 +734,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
          * A node has been expanded.
          * 
          * @param event
-         *                the Expand event.
+         *            the Expand event.
          */
         public void nodeExpand(ExpandEvent event);
     }
@@ -744,7 +743,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * Adds the expand listener.
      * 
      * @param listener
-     *                the Listener to be added.
+     *            the Listener to be added.
      */
     public void addListener(ExpandListener listener) {
         addListener(ExpandEvent.class, listener, EXPAND_METHOD);
@@ -754,7 +753,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * Removes the expand listener.
      * 
      * @param listener
-     *                the Listener to be removed.
+     *            the Listener to be removed.
      */
     public void removeListener(ExpandListener listener) {
         removeListener(ExpandEvent.class, listener, EXPAND_METHOD);
@@ -764,13 +763,13 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * Emits the expand event.
      * 
      * @param itemId
-     *                the item id.
+     *            the item id.
      */
     protected void fireExpandEvent(Object itemId) {
         fireEvent(new ExpandEvent(this, itemId));
     }
 
-    /* Collapse event ****************************************** */
+    /* Collapse event */
 
     /**
      * Collapse event
@@ -793,7 +792,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
          * New instance of options change event.
          * 
          * @param source
-         *                the Source of the event.
+         *            the Source of the event.
          * @param collapsedItemId
          */
         public CollapseEvent(Component source, Object collapsedItemId) {
@@ -825,7 +824,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
          * A node has been collapsed.
          * 
          * @param event
-         *                the Collapse event.
+         *            the Collapse event.
          */
         public void nodeCollapse(CollapseEvent event);
     }
@@ -834,7 +833,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * Adds the collapse listener.
      * 
      * @param listener
-     *                the Listener to be added.
+     *            the Listener to be added.
      */
     public void addListener(CollapseListener listener) {
         addListener(CollapseEvent.class, listener, COLLAPSE_METHOD);
@@ -844,7 +843,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * Removes the collapse listener.
      * 
      * @param listener
-     *                the Listener to be removed.
+     *            the Listener to be removed.
      */
     public void removeListener(CollapseListener listener) {
         removeListener(CollapseEvent.class, listener, COLLAPSE_METHOD);
@@ -854,13 +853,13 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * Emits collapse event.
      * 
      * @param itemId
-     *                the item id.
+     *            the item id.
      */
     protected void fireCollapseEvent(Object itemId) {
         fireEvent(new CollapseEvent(this, itemId));
     }
 
-    /* Action container *************************************************** */
+    /* Action container */
 
     /**
      * Adds an action handler.
@@ -963,7 +962,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * Adding new items is not supported.
      * 
      * @throws UnsupportedOperationException
-     *                 if set to true.
+     *             if set to true.
      * @see com.itmill.toolkit.ui.Select#setNewItemsAllowed(boolean)
      */
     public void setNewItemsAllowed(boolean allowNewOptions)
@@ -977,7 +976,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * Focusing to this component is not supported.
      * 
      * @throws UnsupportedOperationException
-     *                 if invoked.
+     *             if invoked.
      * @see com.itmill.toolkit.ui.AbstractField#focus()
      */
     public void focus() throws UnsupportedOperationException {

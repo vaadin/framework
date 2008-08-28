@@ -67,7 +67,7 @@ public class TabSheet extends AbstractComponentContainer implements
      * Removes the component from this container.
      * 
      * @param c
-     *                the component to be removed.
+     *            the component to be removed.
      */
     public void removeComponent(Component c) {
         if (c != null && tabs.contains(c)) {
@@ -91,7 +91,7 @@ public class TabSheet extends AbstractComponentContainer implements
      * into tab.
      * 
      * @param c
-     *                the component to be added.
+     *            the component to be added.
      */
     public void addComponent(Component c) {
         addTab(c);
@@ -101,13 +101,13 @@ public class TabSheet extends AbstractComponentContainer implements
      * Adds a new tab into TabSheet.
      * 
      * @param c
-     *                the component to be added onto tab.
+     *            the component to be added onto tab.
      * @param caption
-     *                the caption to be set for the component and used rendered
-     *                in tab bar
+     *            the caption to be set for the component and used rendered in
+     *            tab bar
      * @param icon
-     *                the icon to be set for the component and used rendered in
-     *                tab bar
+     *            the icon to be set for the component and used rendered in tab
+     *            bar
      */
     public void addTab(Component c, String caption, Resource icon) {
         if (c != null) {
@@ -126,7 +126,7 @@ public class TabSheet extends AbstractComponentContainer implements
      * into tab.
      * 
      * @param c
-     *                the component to be added onto tab.
+     *            the component to be added onto tab.
      */
     public void addTab(Component c) {
         if (c != null) {
@@ -154,7 +154,7 @@ public class TabSheet extends AbstractComponentContainer implements
      * components are removed from the other container.
      * 
      * @param source
-     *                the container components are removed from.
+     *            the container components are removed from.
      */
     public void moveComponentsFrom(ComponentContainer source) {
         for (final Iterator i = source.getComponentIterator(); i.hasNext();) {
@@ -175,9 +175,9 @@ public class TabSheet extends AbstractComponentContainer implements
      * Paints the content of this component.
      * 
      * @param event
-     *                the Paint Event.
+     *            the Paint Event.
      * @throws PaintException
-     *                 if the paint operation failed.
+     *             if the paint operation failed.
      */
     public void paintContent(PaintTarget target) throws PaintException {
 
@@ -248,7 +248,7 @@ public class TabSheet extends AbstractComponentContainer implements
      * Setter for property tabsHidden.
      * 
      * @param tabsHidden
-     *                True if the tabs should be hidden.
+     *            True if the tabs should be hidden.
      */
     public void hideTabs(boolean tabsHidden) {
         this.tabsHidden = tabsHidden;
@@ -259,7 +259,7 @@ public class TabSheet extends AbstractComponentContainer implements
      * Gets the caption for a component.
      * 
      * @param c
-     *                the component.
+     *            the component.
      */
     public String getTabCaption(Component c) {
         if (c.getCaption() == null) {
@@ -273,9 +273,9 @@ public class TabSheet extends AbstractComponentContainer implements
      * Sets tabs captions.
      * 
      * @param c
-     *                the component.
+     *            the component.
      * @param caption
-     *                the caption to set.
+     *            the caption to set.
      */
     public void setTabCaption(Component c, String caption) {
         if (tabs.contains(c)) {
@@ -287,7 +287,7 @@ public class TabSheet extends AbstractComponentContainer implements
      * Gets the icon for a component.
      * 
      * @param c
-     *                the component.
+     *            the component.
      */
     public Resource getTabIcon(Component c) {
         return c.getIcon();
@@ -405,7 +405,7 @@ public class TabSheet extends AbstractComponentContainer implements
 
     }
 
-    /* Click event ************************************************ */
+    /* Click event */
 
     private static final Method SELECTED_TAB_CHANGE_METHOD;
     static {
@@ -415,7 +415,8 @@ public class TabSheet extends AbstractComponentContainer implements
                             new Class[] { SelectedTabChangeEvent.class });
         } catch (final java.lang.NoSuchMethodException e) {
             // This should never happen
-            throw new java.lang.RuntimeException();
+            throw new java.lang.RuntimeException(
+                    "Internal error finding methods in TabSheet");
         }
     }
 
@@ -439,7 +440,7 @@ public class TabSheet extends AbstractComponentContainer implements
          * New instance of selected tab change event
          * 
          * @param source
-         *                the Source of the event.
+         *            the Source of the event.
          */
         public SelectedTabChangeEvent(Component source) {
             super(source);
@@ -470,7 +471,7 @@ public class TabSheet extends AbstractComponentContainer implements
          * Visible tab in tab sheet has has been changed.
          * 
          * @param event
-         *                the Selected tab change event.
+         *            the Selected tab change event.
          */
         public void selectedTabChange(SelectedTabChangeEvent event);
     }
@@ -479,7 +480,7 @@ public class TabSheet extends AbstractComponentContainer implements
      * Adds the selected tab change listener
      * 
      * @param listener
-     *                the Listener to be added.
+     *            the Listener to be added.
      */
     public void addListener(SelectedTabChangeListener listener) {
         addListener(SelectedTabChangeEvent.class, listener,
@@ -490,7 +491,7 @@ public class TabSheet extends AbstractComponentContainer implements
      * Removes the selected tab change listener
      * 
      * @param listener
-     *                the Listener to be removed.
+     *            the Listener to be removed.
      */
     public void removeListener(SelectedTabChangeListener listener) {
         removeListener(SelectedTabChangeEvent.class, listener,

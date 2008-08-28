@@ -216,7 +216,8 @@ public class LoginForm extends CustomComponent {
                     new Class[] { LoginEvent.class });
         } catch (final java.lang.NoSuchMethodException e) {
             // This should never happen
-            throw new java.lang.RuntimeException();
+            throw new java.lang.RuntimeException(
+                    "Internal error finding methods in LoginForm");
         }
     }
 

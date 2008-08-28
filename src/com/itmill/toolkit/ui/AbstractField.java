@@ -51,7 +51,7 @@ import com.itmill.toolkit.terminal.PaintTarget;
 public abstract class AbstractField extends AbstractComponent implements Field,
         Property.ReadOnlyStatusChangeNotifier {
 
-    /* Private members ************************************************* */
+    /* Private members */
 
     private boolean delayedFocus;
 
@@ -121,7 +121,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      */
     private boolean validationVisible = true;
 
-    /* Component basics ************************************************ */
+    /* Component basics */
 
     /*
      * Paints the field. Don't add a JavaDoc comment here, we use the default
@@ -337,7 +337,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
         }
     }
 
-    /* Property interface implementation ******************************* */
+    /* Property interface implementation */
 
     /**
      * Returns the value of the Property in human readable textual format.
@@ -381,7 +381,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      * Sets the value of the field.
      * 
      * @param newValue
-     *                the New value of the field.
+     *            the New value of the field.
      * @throws Property.ReadOnlyException
      * @throws Property.ConversionException
      */
@@ -394,9 +394,9 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      * Sets the value of the field.
      * 
      * @param newValue
-     *                the New value of the field.
+     *            the New value of the field.
      * @param repaintIsNotNeeded
-     *                True iff caller is sure that repaint is not needed.
+     *            True iff caller is sure that repaint is not needed.
      * @throws Property.ReadOnlyException
      * @throws Property.ConversionException
      */
@@ -459,7 +459,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
         }
     }
 
-    /* External data source ******************************************** */
+    /* External data source */
 
     /**
      * Gets the current data source of the field, if any.
@@ -488,7 +488,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      * </p>
      * 
      * @param newDataSource
-     *                the new data source Property.
+     *            the new data source Property.
      */
     public void setPropertyDataSource(Property newDataSource) {
 
@@ -546,14 +546,14 @@ public abstract class AbstractField extends AbstractComponent implements Field,
         }
     }
 
-    /* Validation ****************************************************** */
+    /* Validation */
 
     /**
      * Adds a new validator for the field's value. All validators added to a
      * field are checked each time the its value changes.
      * 
      * @param validator
-     *                the new validator to be added.
+     *            the new validator to be added.
      */
     public void addValidator(Validator validator) {
         if (validators == null) {
@@ -580,7 +580,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      * Removes the validator from the field.
      * 
      * @param validator
-     *                the validator to remove.
+     *            the validator to remove.
      */
     public void removeValidator(Validator validator) {
         if (validators != null) {
@@ -750,7 +750,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
 
     }
 
-    /* Value change events ****************************************** */
+    /* Value change events */
 
     private static final Method VALUE_CHANGE_METHOD;
 
@@ -761,7 +761,8 @@ public abstract class AbstractField extends AbstractComponent implements Field,
                             new Class[] { Property.ValueChangeEvent.class });
         } catch (final java.lang.NoSuchMethodException e) {
             // This should never happen
-            throw new java.lang.RuntimeException();
+            throw new java.lang.RuntimeException(
+                    "Internal error finding methods in AbstractField");
         }
     }
 
@@ -795,7 +796,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
         }
     }
 
-    /* Read-only status change events *************************************** */
+    /* Read-only status change events */
 
     private static final Method READ_ONLY_STATUS_CHANGE_METHOD;
 
@@ -807,7 +808,8 @@ public abstract class AbstractField extends AbstractComponent implements Field,
                             new Class[] { Property.ReadOnlyStatusChangeEvent.class });
         } catch (final java.lang.NoSuchMethodException e) {
             // This should never happen
-            throw new java.lang.RuntimeException();
+            throw new java.lang.RuntimeException(
+                    "Internal error finding methods in AbstractField");
         }
     }
 
@@ -832,7 +834,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
          * New instance of text change event.
          * 
          * @param source
-         *                the Source of the event.
+         *            the Source of the event.
          */
         public ReadOnlyStatusChangeEvent(AbstractField source) {
             super(source);
@@ -881,8 +883,8 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      * forwards.
      * 
      * @param event
-     *                the value change event telling the data source contents
-     *                have changed.
+     *            the value change event telling the data source contents have
+     *            changed.
      */
     public void valueChange(Property.ValueChangeEvent event) {
         if (isReadThrough() || !isModified()) {
@@ -915,7 +917,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      * </p>
      * 
      * @param propertyType
-     *                the Type of the property, that needs to be edited.
+     *            the Type of the property, that needs to be edited.
      */
     public static AbstractField constructField(Class propertyType) {
 
@@ -966,7 +968,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      * variables.
      * 
      * @param newValue
-     *                the new value to be set.
+     *            the new value to be set.
      */
     protected void setInternalValue(Object newValue) {
         value = newValue;
@@ -1022,7 +1024,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      * field isEmpty() regardless of any attached validators.
      * 
      * @param required
-     *                Is the field required.
+     *            Is the field required.
      */
     public void setRequired(boolean required) {
         this.required = required;
@@ -1073,7 +1075,7 @@ public abstract class AbstractField extends AbstractComponent implements Field,
      * validation in their own code.
      * 
      * @param validateAutomatically
-     *                True, if automatic validation is enabled.
+     *            True, if automatic validation is enabled.
      */
     public void setValidationVisible(boolean validateAutomatically) {
         if (validationVisible != validateAutomatically) {

@@ -60,9 +60,9 @@ public class ListenerMethod implements EventListener {
     private Object[] arguments;
 
     /**
-     * Optional index to <code>arguments</code> that point out which one
-     * should be replaced with the triggering event object and thus be passed to
-     * the trigger method.
+     * Optional index to <code>arguments</code> that point out which one should
+     * be replaced with the triggering event object and thus be passed to the
+     * trigger method.
      */
     private int eventArgumentIndex;
 
@@ -79,25 +79,24 @@ public class ListenerMethod implements EventListener {
      * </p>
      * 
      * @param eventType
-     *                the event type that is listener listens to. All events of
-     *                this kind (or its subclasses) result in calling the
-     *                trigger method.
+     *            the event type that is listener listens to. All events of this
+     *            kind (or its subclasses) result in calling the trigger method.
      * @param object
-     *                the object instance that contains the trigger method
+     *            the object instance that contains the trigger method
      * @param method
-     *                the trigger method
+     *            the trigger method
      * @param arguments
-     *                the arguments to be passed to the trigger method
+     *            the arguments to be passed to the trigger method
      * @param eventArgumentIndex
-     *                An index to the argument list. This index points out the
-     *                argument that is replaced with the event object before the
-     *                argument set is passed to the trigger method. If the
-     *                eventArgumentIndex is negative, the triggering event
-     *                object will not be passed to the trigger method, though it
-     *                is still called.
+     *            An index to the argument list. This index points out the
+     *            argument that is replaced with the event object before the
+     *            argument set is passed to the trigger method. If the
+     *            eventArgumentIndex is negative, the triggering event object
+     *            will not be passed to the trigger method, though it is still
+     *            called.
      * @throws java.lang.IllegalArgumentException
-     *                 if <code>method</code> is not a member of
-     *                 <code>object</code>.
+     *             if <code>method</code> is not a member of <code>object</code>
+     *             .
      */
     public ListenerMethod(Class eventType, Object object, Method method,
             Object[] arguments, int eventArgumentIndex)
@@ -132,34 +131,31 @@ public class ListenerMethod implements EventListener {
      * Constructs a new event listener from a trigger method name, it's
      * arguments and the argument index specifying which one is replaced with
      * the event object. The actual trigger method is reflected from
-     * <code>object</code>, and
-     * <code>java.lang.IllegalArgumentException</code> is thrown unless
-     * exactly one match is found.
+     * <code>object</code>, and <code>java.lang.IllegalArgumentException</code>
+     * is thrown unless exactly one match is found.
      * </p>
      * 
      * @param eventType
-     *                the event type that is listener listens to. All events of
-     *                this kind (or its subclasses) result in calling the
-     *                trigger method.
+     *            the event type that is listener listens to. All events of this
+     *            kind (or its subclasses) result in calling the trigger method.
      * @param object
-     *                the object instance that contains the trigger method.
+     *            the object instance that contains the trigger method.
      * @param methodName
-     *                the name of the trigger method. If the object does not
-     *                contain the method or it contains more than one matching
-     *                methods <code>java.lang.IllegalArgumentException</code>
-     *                is thrown.
+     *            the name of the trigger method. If the object does not contain
+     *            the method or it contains more than one matching methods
+     *            <code>java.lang.IllegalArgumentException</code> is thrown.
      * @param arguments
-     *                the arguments to be passed to the trigger method.
+     *            the arguments to be passed to the trigger method.
      * @param eventArgumentIndex
-     *                An index to the argument list. This index points out the
-     *                argument that is replaced with the event object before the
-     *                argument set is passed to the trigger method. If the
-     *                eventArgumentIndex is negative, the triggering event
-     *                object will not be passed to the trigger method, though it
-     *                is still called.
+     *            An index to the argument list. This index points out the
+     *            argument that is replaced with the event object before the
+     *            argument set is passed to the trigger method. If the
+     *            eventArgumentIndex is negative, the triggering event object
+     *            will not be passed to the trigger method, though it is still
+     *            called.
      * @throws java.lang.IllegalArgumentException
-     *                 unless exactly one match <code>methodName</code> is
-     *                 found in <code>object</code>.
+     *             unless exactly one match <code>methodName</code> is found in
+     *             <code>object</code>.
      */
     public ListenerMethod(Class eventType, Object object, String methodName,
             Object[] arguments, int eventArgumentIndex)
@@ -210,18 +206,17 @@ public class ListenerMethod implements EventListener {
      * </p>
      * 
      * @param eventType
-     *                the event type that is listener listens to. All events of
-     *                this kind (or its subclasses) result in calling the
-     *                trigger method.
+     *            the event type that is listener listens to. All events of this
+     *            kind (or its subclasses) result in calling the trigger method.
      * @param object
-     *                the object instance that contains the trigger method.
+     *            the object instance that contains the trigger method.
      * @param method
-     *                the trigger method.
+     *            the trigger method.
      * @param arguments
-     *                the arguments to be passed to the trigger method.
+     *            the arguments to be passed to the trigger method.
      * @throws java.lang.IllegalArgumentException
-     *                 if <code>method</code> is not a member of
-     *                 <code>object</code>.
+     *             if <code>method</code> is not a member of <code>object</code>
+     *             .
      */
     public ListenerMethod(Class eventType, Object object, Method method,
             Object[] arguments) throws java.lang.IllegalArgumentException {
@@ -248,26 +243,24 @@ public class ListenerMethod implements EventListener {
      * 
      * <p>
      * The actual trigger method is reflected from <code>object</code>, and
-     * <code>java.lang.IllegalArgumentException</code> is thrown unless
-     * exactly one match is found.
+     * <code>java.lang.IllegalArgumentException</code> is thrown unless exactly
+     * one match is found.
      * </p>
      * 
      * @param eventType
-     *                the event type that is listener listens to. All events of
-     *                this kind (or its subclasses) result in calling the
-     *                trigger method.
+     *            the event type that is listener listens to. All events of this
+     *            kind (or its subclasses) result in calling the trigger method.
      * @param object
-     *                the object instance that contains the trigger method.
+     *            the object instance that contains the trigger method.
      * @param methodName
-     *                the name of the trigger method. If the object does not
-     *                contain the method or it contains more than one matching
-     *                methods <code>java.lang.IllegalArgumentException</code>
-     *                is thrown.
+     *            the name of the trigger method. If the object does not contain
+     *            the method or it contains more than one matching methods
+     *            <code>java.lang.IllegalArgumentException</code> is thrown.
      * @param arguments
-     *                the arguments to be passed to the trigger method.
+     *            the arguments to be passed to the trigger method.
      * @throws java.lang.IllegalArgumentException
-     *                 unless exactly one match <code>methodName</code> is
-     *                 found in <code>object</code>.
+     *             unless exactly one match <code>methodName</code> is found in
+     *             <code>object</code>.
      */
     public ListenerMethod(Class eventType, Object object, String methodName,
             Object[] arguments) throws java.lang.IllegalArgumentException {
@@ -304,16 +297,15 @@ public class ListenerMethod implements EventListener {
      * </p>
      * 
      * @param eventType
-     *                the event type that is listener listens to. All events of
-     *                this kind (or its subclasses) result in calling the
-     *                trigger method.
+     *            the event type that is listener listens to. All events of this
+     *            kind (or its subclasses) result in calling the trigger method.
      * @param object
-     *                the object instance that contains the trigger method.
+     *            the object instance that contains the trigger method.
      * @param method
-     *                the trigger method.
+     *            the trigger method.
      * @throws java.lang.IllegalArgumentException
-     *                 if <code>method</code> is not a member of
-     *                 <code>object</code>.
+     *             if <code>method</code> is not a member of <code>object</code>
+     *             .
      */
     public ListenerMethod(Class eventType, Object object, Method method)
             throws java.lang.IllegalArgumentException {
@@ -349,24 +341,22 @@ public class ListenerMethod implements EventListener {
      * 
      * <p>
      * The actual trigger method is reflected from <code>object</code>, and
-     * <code>java.lang.IllegalArgumentException</code> is thrown unless
-     * exactly one match is found.
+     * <code>java.lang.IllegalArgumentException</code> is thrown unless exactly
+     * one match is found.
      * </p>
      * 
      * @param eventType
-     *                the event type that is listener listens to. All events of
-     *                this kind (or its subclasses) result in calling the
-     *                trigger method.
+     *            the event type that is listener listens to. All events of this
+     *            kind (or its subclasses) result in calling the trigger method.
      * @param object
-     *                the object instance that contains the trigger method.
+     *            the object instance that contains the trigger method.
      * @param methodName
-     *                the name of the trigger method. If the object does not
-     *                contain the method or it contains more than one matching
-     *                methods <code>java.lang.IllegalArgumentException</code>
-     *                is thrown.
+     *            the name of the trigger method. If the object does not contain
+     *            the method or it contains more than one matching methods
+     *            <code>java.lang.IllegalArgumentException</code> is thrown.
      * @throws java.lang.IllegalArgumentException
-     *                 unless exactly one match <code>methodName</code> is
-     *                 found in <code>object</code>.
+     *             unless exactly one match <code>methodName</code> is found in
+     *             <code>object</code>.
      */
     public ListenerMethod(Class eventType, Object object, String methodName)
             throws java.lang.IllegalArgumentException {
@@ -407,9 +397,9 @@ public class ListenerMethod implements EventListener {
      * result in the trigger method to be called.
      * 
      * @param event
-     *                the fired event. Unless the trigger method's argument list
-     *                and the index to the to be replaced argument is specified,
-     *                this event will not be passed to the trigger method.
+     *            the fired event. Unless the trigger method's argument list and
+     *            the index to the to be replaced argument is specified, this
+     *            event will not be passed to the trigger method.
      */
     public void receiveEvent(EventObject event) {
         // Only send events supported by the method
@@ -432,13 +422,11 @@ public class ListenerMethod implements EventListener {
 
             } catch (final java.lang.IllegalAccessException e) {
                 // This should never happen
-                e.printStackTrace();
                 throw new java.lang.RuntimeException(
-                        "Internal error - please report: " + e.toString());
+                        "Internal error - please report",e);
             } catch (final java.lang.reflect.InvocationTargetException e) {
                 // This should never happen
-                e.printStackTrace();
-                throw new MethodException("Invocation if method " + method
+                throw new MethodException("Invocation of method " + method
                         + " failed.", e.getTargetException());
             }
         }
@@ -449,14 +437,14 @@ public class ListenerMethod implements EventListener {
      * listener.
      * 
      * @param target
-     *                the object to be matched against the object stored by this
-     *                listener.
+     *            the object to be matched against the object stored by this
+     *            listener.
      * @param eventType
-     *                the type to be tested for equality against the type stored
-     *                by this listener.
-     * @return <code>true</code> if <code>target</code> is the same object
-     *         as the one stored in this object and <code>eventType</code>
-     *         equals the event type stored in this object. *
+     *            the type to be tested for equality against the type stored by
+     *            this listener.
+     * @return <code>true</code> if <code>target</code> is the same object as
+     *         the one stored in this object and <code>eventType</code> equals
+     *         the event type stored in this object. *
      */
     public boolean matches(Class eventType, Object target) {
         return (target == object) && (eventType.equals(this.eventType));
@@ -467,17 +455,17 @@ public class ListenerMethod implements EventListener {
      * in this listener.
      * 
      * @param target
-     *                the object to be matched against the object stored by this
-     *                listener.
+     *            the object to be matched against the object stored by this
+     *            listener.
      * @param eventType
-     *                the type to be tested for equality against the type stored
-     *                by this listener.
+     *            the type to be tested for equality against the type stored by
+     *            this listener.
      * @param method
-     *                the method to be tested for equality against the method
-     *                stored by this listener.
-     * @return <code>true</code> if <code>target</code> is the same object
-     *         as the one stored in this object, <code>eventType</code> equals
-     *         with the event type stored in this object and <code>method</code>
+     *            the method to be tested for equality against the method stored
+     *            by this listener.
+     * @return <code>true</code> if <code>target</code> is the same object as
+     *         the one stored in this object, <code>eventType</code> equals with
+     *         the event type stored in this object and <code>method</code>
      *         equals with the method stored in this object
      */
     public boolean matches(Class eventType, Object target, Method method) {
@@ -499,12 +487,14 @@ public class ListenerMethod implements EventListener {
 
     public boolean equals(Object obj) {
 
-        if (this == obj)
+        if (this == obj) {
             return true;
+        }
 
         // return false if obj is a subclass (do not use instanceof check)
-        if ((obj == null) || (obj.getClass() != this.getClass()))
+        if ((obj == null) || (obj.getClass() != getClass())) {
             return false;
+        }
 
         // obj is of same class, test it further
         ListenerMethod t = (ListenerMethod) obj;
@@ -551,8 +541,8 @@ public class ListenerMethod implements EventListener {
          * Retrieves the cause of this throwable or <code>null</code> if the
          * cause does not exist or not known.
          * 
-         * @return the cause of this throwable or <code>null</code> if the
-         *         cause is nonexistent or unknown.
+         * @return the cause of this throwable or <code>null</code> if the cause
+         *         is nonexistent or unknown.
          * @see java.lang.Throwable#getCause()
          */
         public Throwable getCause() {

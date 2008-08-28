@@ -88,11 +88,10 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      * stream given by the Receiver.
      * 
      * @param caption
-     *                Normal component caption. You can set the caption of the
-     *                upload submit button with setButtonCaption().
+     *            Normal component caption. You can set the caption of the
+     *            upload submit button with setButtonCaption().
      * @param uploadReceiver
-     *                Receiver to call to retrieve output stream when upload
-     *                starts.
+     *            Receiver to call to retrieve output stream when upload starts.
      */
     public Upload(String caption, Receiver uploadReceiver) {
         setCaption(caption);
@@ -200,9 +199,9 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      * Paints the content of this component.
      * 
      * @param target
-     *                Target to paint the content on.
+     *            Target to paint the content on.
      * @throws PaintException
-     *                 if the paint operation failed.
+     *             if the paint operation failed.
      */
     public void paintContent(PaintTarget target) throws PaintException {
         // The field should be focused
@@ -239,16 +238,16 @@ public class Upload extends AbstractComponent implements Component.Focusable {
          * Invoked when a new upload arrives.
          * 
          * @param filename
-         *                the desired filename of the upload, usually as
-         *                specified by the client.
+         *            the desired filename of the upload, usually as specified
+         *            by the client.
          * @param MIMEType
-         *                the MIME type of the uploaded file.
+         *            the MIME type of the uploaded file.
          * @return Stream to which the uploaded file should be written.
          */
         public OutputStream receiveUpload(String filename, String MIMEType);
     }
 
-    /* Upload events ************************************************ */
+    /* Upload events */
 
     private static final Method UPLOAD_FINISHED_METHOD;
 
@@ -271,7 +270,8 @@ public class Upload extends AbstractComponent implements Component.Focusable {
                             new Class[] { SucceededEvent.class });
         } catch (final java.lang.NoSuchMethodException e) {
             // This should never happen
-            throw new java.lang.RuntimeException("Internal error");
+            throw new java.lang.RuntimeException(
+                    "Internal error finding methods in Upload");
         }
     }
 
@@ -311,13 +311,13 @@ public class Upload extends AbstractComponent implements Component.Focusable {
         /**
          * 
          * @param source
-         *                the source of the file.
+         *            the source of the file.
          * @param filename
-         *                the received file name.
+         *            the received file name.
          * @param MIMEType
-         *                the MIME type of the received file.
+         *            the MIME type of the received file.
          * @param length
-         *                the length of the received file.
+         *            the length of the received file.
          */
         public FinishedEvent(Upload source, String filename, String MIMEType,
                 long length) {
@@ -570,7 +570,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
          * Upload has started.
          * 
          * @param event
-         *                the Upload started event.
+         *            the Upload started event.
          */
         public void uploadStarted(StartedEvent event);
     }
@@ -589,7 +589,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
          * Upload has finished.
          * 
          * @param event
-         *                the Upload finished event.
+         *            the Upload finished event.
          */
         public void uploadFinished(FinishedEvent event);
     }
@@ -608,7 +608,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
          * Upload has finished unsuccessfully.
          * 
          * @param event
-         *                the Upload failed event.
+         *            the Upload failed event.
          */
         public void uploadFailed(FailedEvent event);
     }
@@ -627,7 +627,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
          * Upload successfull..
          * 
          * @param event
-         *                the Upload successfull event.
+         *            the Upload successfull event.
          */
         public void uploadSucceeded(SucceededEvent event);
     }
@@ -636,7 +636,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      * Adds the upload started event listener.
      * 
      * @param listener
-     *                the Listener to be added.
+     *            the Listener to be added.
      */
     public void addListener(StartedListener listener) {
         addListener(StartedEvent.class, listener, UPLOAD_STARTED_METHOD);
@@ -646,7 +646,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      * Removes the upload started event listener.
      * 
      * @param listener
-     *                the Listener to be removed.
+     *            the Listener to be removed.
      */
     public void removeListener(StartedListener listener) {
         removeListener(StartedEvent.class, listener, UPLOAD_STARTED_METHOD);
@@ -656,7 +656,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      * Adds the upload received event listener.
      * 
      * @param listener
-     *                the Listener to be added.
+     *            the Listener to be added.
      */
     public void addListener(FinishedListener listener) {
         addListener(FinishedEvent.class, listener, UPLOAD_FINISHED_METHOD);
@@ -666,7 +666,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      * Removes the upload received event listener.
      * 
      * @param listener
-     *                the Listener to be removed.
+     *            the Listener to be removed.
      */
     public void removeListener(FinishedListener listener) {
         removeListener(FinishedEvent.class, listener, UPLOAD_FINISHED_METHOD);
@@ -676,7 +676,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      * Adds the upload interrupted event listener.
      * 
      * @param listener
-     *                the Listener to be added.
+     *            the Listener to be added.
      */
     public void addListener(FailedListener listener) {
         addListener(FailedEvent.class, listener, UPLOAD_FAILED_METHOD);
@@ -686,7 +686,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      * Removes the upload interrupted event listener.
      * 
      * @param listener
-     *                the Listener to be removed.
+     *            the Listener to be removed.
      */
     public void removeListener(FailedListener listener) {
         removeListener(FailedEvent.class, listener, UPLOAD_FAILED_METHOD);
@@ -696,7 +696,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      * Adds the upload success event listener.
      * 
      * @param listener
-     *                the Listener to be added.
+     *            the Listener to be added.
      */
     public void addListener(SucceededListener listener) {
         addListener(SucceededEvent.class, listener, UPLOAD_SUCCEEDED_METHOD);
@@ -706,7 +706,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      * Removes the upload success event listener.
      * 
      * @param listener
-     *                the Listener to be removed.
+     *            the Listener to be removed.
      */
     public void removeListener(SucceededListener listener) {
         removeListener(SucceededEvent.class, listener, UPLOAD_SUCCEEDED_METHOD);
@@ -716,7 +716,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      * Adds the upload success event listener.
      * 
      * @param listener
-     *                the Listener to be added.
+     *            the Listener to be added.
      */
     public void addListener(ProgressListener listener) {
         if (progressListeners == null) {
@@ -729,7 +729,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      * Removes the upload success event listener.
      * 
      * @param listener
-     *                the Listener to be removed.
+     *            the Listener to be removed.
      */
     public void removeListener(ProgressListener listener) {
         if (progressListeners != null) {
@@ -806,9 +806,9 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      * Emits the progress event.
      * 
      * @param totalBytes
-     *                bytes received so far
+     *            bytes received so far
      * @param contentLength
-     *                actual size of the file being uploaded, if known
+     *            actual size of the file being uploaded, if known
      * 
      */
     protected void fireUpdateProgress(long totalBytes, long contentLength) {
@@ -839,7 +839,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      * Sets the receiver.
      * 
      * @param receiver
-     *                the receiver to set.
+     *            the receiver to set.
      */
     public void setReceiver(Receiver receiver) {
         this.receiver = receiver;
@@ -965,10 +965,9 @@ public class Upload extends AbstractComponent implements Component.Focusable {
          * Updates progress to listener
          * 
          * @param readBytes
-         *                bytes transferred
+         *            bytes transferred
          * @param contentLength
-         *                total size of file currently being uploaded, -1 if
-         *                unknown
+         *            total size of file currently being uploaded, -1 if unknown
          */
         public void updateProgress(long readBytes, long contentLength);
     }
@@ -985,7 +984,7 @@ public class Upload extends AbstractComponent implements Component.Focusable {
      * method is used to set text in that button.
      * 
      * @param buttonCaption
-     *                text for uploads button.
+     *            text for uploads button.
      */
     public void setButtonCaption(String buttonCaption) {
         this.buttonCaption = buttonCaption;

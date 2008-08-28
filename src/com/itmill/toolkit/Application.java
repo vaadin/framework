@@ -38,9 +38,8 @@ import com.itmill.toolkit.ui.Component.Focusable;
  * <p>
  * Base class required for all IT Mill Toolkit applications. This class provides
  * all the basic services required by the toolkit. These services allow external
- * discovery and manipulation of the user,
- * {@link com.itmill.toolkit.ui.Window windows} and themes, and starting and
- * stopping the application.
+ * discovery and manipulation of the user, {@link com.itmill.toolkit.ui.Window
+ * windows} and themes, and starting and stopping the application.
  * </p>
  * 
  * <p>
@@ -63,8 +62,8 @@ import com.itmill.toolkit.ui.Component.Focusable;
  * </p>
  * 
  * <p>
- * <strong>Window access.</strong> <code>Application</code> provides methods
- * to list, add and remove the windows it contains.
+ * <strong>Window access.</strong> <code>Application</code> provides methods to
+ * list, add and remove the windows it contains.
  * </p>
  * 
  * <p>
@@ -194,8 +193,8 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
      * <p>
      * Since version 5.0 all windows can be referenced by their names in url
      * <code>http://host:port/foo/bar/</code> where
-     * <code>http://host:port/foo/</code> is the application url as returned
-     * by getURL() and <code>bar</code> is the name of the window.
+     * <code>http://host:port/foo/</code> is the application url as returned by
+     * getURL() and <code>bar</code> is the name of the window.
      * </p>
      * 
      * <p>
@@ -207,10 +206,11 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
      * <p>
      * The method should return null if the window does not exists (and is not
      * created as a side-effect) or if the application is not running anymore
-     * </p>.
+     * </p>
+     * .
      * 
      * @param name
-     *                the name of the window.
+     *            the name of the window.
      * @return the window associated with the given URI or <code>null</code>
      */
     public Window getWindow(String name) {
@@ -237,22 +237,22 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
      * <p>
      * Note that all application-level windows can be accessed by their names in
      * url <code>http://host:port/foo/bar/</code> where
-     * <code>http://host:port/foo/</code> is the application url as returned
-     * by getURL() and <code>bar</code> is the name of the window. Also note
-     * that not all windows should be added to application - one can also add
-     * windows inside other windows - these windows show as smaller windows
-     * inside those windows.
+     * <code>http://host:port/foo/</code> is the application url as returned by
+     * getURL() and <code>bar</code> is the name of the window. Also note that
+     * not all windows should be added to application - one can also add windows
+     * inside other windows - these windows show as smaller windows inside those
+     * windows.
      * </p>
      * 
      * @param window
-     *                the new <code>Window</code> to add. If the name of the
-     *                window is <code>null</code>, an unique name is
-     *                automatically given for the window.
+     *            the new <code>Window</code> to add. If the name of the window
+     *            is <code>null</code>, an unique name is automatically given
+     *            for the window.
      * @throws IllegalArgumentException
-     *                 if a window with the same name as the new window already
-     *                 exists in the application.
+     *             if a window with the same name as the new window already
+     *             exists in the application.
      * @throws NullPointerException
-     *                 if the given <code>Window</code> is <code>null</code>.
+     *             if the given <code>Window</code> is <code>null</code>.
      */
     public void addWindow(Window window) throws IllegalArgumentException,
             NullPointerException {
@@ -327,7 +327,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
      * Removes the specified window from the application.
      * 
      * @param window
-     *                the window to be removed.
+     *            the window to be removed.
      */
     public void removeWindow(Window window) {
         if (window != null && windows.contains(window)) {
@@ -382,7 +382,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
      * </p>
      * 
      * @param user
-     *                the new user.
+     *            the new user.
      */
     public void setUser(Object user) {
         final Object prevUser = this.user;
@@ -428,12 +428,12 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
      * {@link javax.servlet.ServletContext}.
      * 
      * @param applicationUrl
-     *                the URL the application should respond to.
+     *            the URL the application should respond to.
      * @param applicationProperties
-     *                the Application properties as specified by the servlet
-     *                configuration.
+     *            the Application properties as specified by the servlet
+     *            configuration.
      * @param context
-     *                the context application will be running in.
+     *            the context application will be running in.
      * 
      */
     public void start(URL applicationUrl, Properties applicationProperties,
@@ -494,7 +494,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
      * </p>
      * 
      * @param theme
-     *                the new theme for this application.
+     *            the new theme for this application.
      */
     public void setTheme(String theme) {
 
@@ -537,7 +537,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
      * </p>
      * 
      * @param mainWindow
-     *                the mainWindow to set.
+     *            the mainWindow to set.
      */
     public void setMainWindow(Window mainWindow) {
 
@@ -567,7 +567,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
      * are defined.
      * 
      * @param name
-     *                the name of the property.
+     *            the name of the property.
      * @return the value in this property list with the specified key value.
      */
     public String getProperty(String name) {
@@ -579,7 +579,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
      * user of the application.
      * 
      * @param resource
-     *                the resource to add.
+     *            the resource to add.
      */
     public void addResource(ApplicationResource resource) {
 
@@ -600,7 +600,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
      * Removes the resource from the application.
      * 
      * @param resource
-     *                the resource to remove.
+     *            the resource to remove.
      */
     public void removeResource(ApplicationResource resource) {
         final Object key = resourceKeyMap.get(resource);
@@ -614,7 +614,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
      * Gets the relative uri of the resource.
      * 
      * @param resource
-     *                the resource to get relative location.
+     *            the resource to get relative location.
      * @return the relative uri of the resource.
      */
     public String getRelativeLocation(ApplicationResource resource) {
@@ -692,6 +692,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
                         : "";
                 return window.handleURI(windowContext, windowUri);
             } catch (final MalformedURLException e) {
+                terminalError(new ApplicationError(e));
                 return null;
             }
         }
@@ -722,7 +723,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
      * Sets the default locale for this application.
      * 
      * @param locale
-     *                the Locale object.
+     *            the Locale object.
      * 
      */
     public void setLocale(Locale locale) {
@@ -761,11 +762,11 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
          * Constructor for user change event.
          * 
          * @param source
-         *                the application source.
+         *            the application source.
          * @param newUser
-         *                the new User.
+         *            the new User.
          * @param prevUser
-         *                the previous User.
+         *            the previous User.
          */
         public UserChangeEvent(Application source, Object newUser,
                 Object prevUser) {
@@ -818,7 +819,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
          * application user has changed.
          * 
          * @param event
-         *                the change event.
+         *            the change event.
          */
         public void applicationUserChanged(Application.UserChangeEvent event);
     }
@@ -827,7 +828,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
      * Adds the user change listener.
      * 
      * @param listener
-     *                the user change listener to add.
+     *            the user change listener to add.
      */
     public void addListener(UserChangeListener listener) {
         if (userChangeListeners == null) {
@@ -840,7 +841,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
      * Removes the user change listener.
      * 
      * @param listener
-     *                the user change listener to remove.
+     *            the user change listener to remove.
      */
     public void removeListener(UserChangeListener listener) {
         if (userChangeListeners == null) {
@@ -868,7 +869,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
          * Creates a event.
          * 
          * @param window
-         *                the Detached window.
+         *            the Detached window.
          */
         public WindowDetachEvent(Window window) {
             super(Application.this);
@@ -910,7 +911,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
          * Creates a event.
          * 
          * @param window
-         *                the Attached window.
+         *            the Attached window.
          */
         public WindowAttachEvent(Window window) {
             super(Application.this);
@@ -945,7 +946,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
          * Window attached
          * 
          * @param event
-         *                the window attach event.
+         *            the window attach event.
          */
         public void windowAttached(WindowAttachEvent event);
     }
@@ -959,7 +960,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
          * Window detached.
          * 
          * @param event
-         *                the window detach event.
+         *            the window detach event.
          */
         public void windowDetached(WindowDetachEvent event);
     }
@@ -968,7 +969,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
      * Adds the window attach listener.
      * 
      * @param listener
-     *                the window attach listener to add.
+     *            the window attach listener to add.
      */
     public void addListener(WindowAttachListener listener) {
         if (windowAttachListeners == null) {
@@ -981,7 +982,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
      * Adds the window detach listener.
      * 
      * @param listener
-     *                the window detach listener to add.
+     *            the window detach listener to add.
      */
     public void addListener(WindowDetachListener listener) {
         if (windowDetachListeners == null) {
@@ -994,7 +995,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
      * Removes the window attach listener.
      * 
      * @param listener
-     *                the window attach listener to remove.
+     *            the window attach listener to remove.
      */
     public void removeListener(WindowAttachListener listener) {
         if (windowAttachListeners != null) {
@@ -1009,7 +1010,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
      * Removes the window detach listener.
      * 
      * @param listener
-     *                the window detach listener to remove.
+     *            the window detach listener to remove.
      */
     public void removeListener(WindowDetachListener listener) {
         if (windowDetachListeners != null) {
@@ -1022,8 +1023,8 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 
     /**
      * Returns the URL user is redirected to on application close. If the URL is
-     * <code>null</code>, the application is closed normally as defined by
-     * the application running environment.
+     * <code>null</code>, the application is closed normally as defined by the
+     * application running environment.
      * <p>
      * Desktop application just closes the application window and
      * web-application redirects the browser to application main URL.
@@ -1037,13 +1038,13 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 
     /**
      * Sets the URL user is redirected to on application close. If the URL is
-     * <code>null</code>, the application is closed normally as defined by
-     * the application running environment: Desktop application just closes the
+     * <code>null</code>, the application is closed normally as defined by the
+     * application running environment: Desktop application just closes the
      * application window and web-application redirects the browser to
      * application main URL.
      * 
      * @param logoutURL
-     *                the logoutURL to set.
+     *            the logoutURL to set.
      */
     public void setLogoutURL(String logoutURL) {
         this.logoutURL = logoutURL;
@@ -1068,9 +1069,9 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
      * <p>
      * Invoked by the terminal on any exception that occurs in application and
      * is thrown by the <code>setVariable</code> to the terminal. The default
-     * implementation sets the exceptions as <code>ComponentErrors</code> to
-     * the component that initiated the exception and prints stack trace to
-     * standard error stream.
+     * implementation sets the exceptions as <code>ComponentErrors</code> to the
+     * component that initiated the exception and prints stack trace to standard
+     * error stream.
      * </p>
      * <p>
      * You can safely override this method in your application in order to
@@ -1078,7 +1079,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
      * </p>
      * 
      * @param event
-     *                the change event.
+     *            the change event.
      * @see com.itmill.toolkit.terminal.Terminal.ErrorListener#terminalError(com.itmill.toolkit.terminal.Terminal.ErrorEvent)
      */
     public void terminalError(Terminal.ErrorEvent event) {
@@ -1324,18 +1325,18 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
      * <p>
      * The default behavior is to show a notification, and restart the
      * application the the user clicks the message. <br/> Instead of restarting
-     * the application, you can set a specific URL that the user is taken to.<br/>
-     * Setting both caption and message to null will restart the application (or
-     * go to the specified URL) without displaying a notification.
-     * set*NotificationEnabled(false) will achieve the same thing.
+     * the application, you can set a specific URL that the user is taken
+     * to.<br/> Setting both caption and message to null will restart the
+     * application (or go to the specified URL) without displaying a
+     * notification. set*NotificationEnabled(false) will achieve the same thing.
      * </p>
      * <p>
      * The situations are:
-     * <li> Session expired: the user session has expired, usually due to
+     * <li>Session expired: the user session has expired, usually due to
      * inactivity.</li>
-     * <li> Internal error: unhandled critical server error (e.g out of memory,
+     * <li>Internal error: unhandled critical server error (e.g out of memory,
      * database crash)
-     * <li> Out of sync: the client is not in sync with the server. E.g the user
+     * <li>Out of sync: the client is not in sync with the server. E.g the user
      * opens two windows showing the same application, and makes changes in one
      * of the windows - the other window is no longer in sync, and (for
      * instance) pressing a button that is no longer present in the UI will
@@ -1351,7 +1352,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
          * Sets the URL to go to when the session has expired.
          * 
          * @param sessionExpiredURL
-         *                the URL to go to, or null to reload current
+         *            the URL to go to, or null to reload current
          */
         public void setSessionExpiredURL(String sessionExpiredURL) {
             this.sessionExpiredURL = sessionExpiredURL;
@@ -1362,7 +1363,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
          * current) is loaded directly.
          * 
          * @param sessionExpiredNotificationEnabled
-         *                true = enabled, false = disabled
+         *            true = enabled, false = disabled
          */
         public void setSessionExpiredNotificationEnabled(
                 boolean sessionExpiredNotificationEnabled) {
@@ -1374,7 +1375,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
          * both caption and message is null, the notification is disabled;
          * 
          * @param sessionExpiredCaption
-         *                the caption
+         *            the caption
          */
         public void setSessionExpiredCaption(String sessionExpiredCaption) {
             this.sessionExpiredCaption = sessionExpiredCaption;
@@ -1385,7 +1386,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
          * both caption and message is null, the notification is disabled;
          * 
          * @param sessionExpiredMessage
-         *                the message
+         *            the message
          */
         public void setSessionExpiredMessage(String sessionExpiredMessage) {
             this.sessionExpiredMessage = sessionExpiredMessage;
@@ -1395,7 +1396,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
          * Sets the URL to go to when an internal error occurs.
          * 
          * @param internalErrorURL
-         *                the URL to go to, or null to reload current
+         *            the URL to go to, or null to reload current
          */
         public void setInternalErrorURL(String internalErrorURL) {
             this.internalErrorURL = internalErrorURL;
@@ -1406,7 +1407,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
          * current) is loaded directly.
          * 
          * @param internalErrorNotificationEnabled
-         *                true = enabled, false = disabled
+         *            true = enabled, false = disabled
          */
         public void setInternalErrorNotificationEnabled(
                 boolean internalErrorNotificationEnabled) {
@@ -1418,7 +1419,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
          * both caption and message is null, the notification is disabled;
          * 
          * @param internalErrorCaption
-         *                the caption
+         *            the caption
          */
         public void setInternalErrorCaption(String internalErrorCaption) {
             this.internalErrorCaption = internalErrorCaption;
@@ -1429,7 +1430,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
          * both caption and message is null, the notification is disabled;
          * 
          * @param internalErrorMessage
-         *                the message
+         *            the message
          */
         public void setInternalErrorMessage(String internalErrorMessage) {
             this.internalErrorMessage = internalErrorMessage;
@@ -1439,7 +1440,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
          * Sets the URL to go to when the client is out-of-sync.
          * 
          * @param outOfSyncURL
-         *                the URL to go to, or null to reload current
+         *            the URL to go to, or null to reload current
          */
         public void setOutOfSyncURL(String outOfSyncURL) {
             this.outOfSyncURL = outOfSyncURL;
@@ -1450,7 +1451,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
          * current) is loaded directly.
          * 
          * @param outOfSyncNotificationEnabled
-         *                true = enabled, false = disabled
+         *            true = enabled, false = disabled
          */
         public void setOutOfSyncNotificationEnabled(
                 boolean outOfSyncNotificationEnabled) {
@@ -1462,7 +1463,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
          * both caption and message is null, the notification is disabled;
          * 
          * @param outOfSyncCaption
-         *                the caption
+         *            the caption
          */
         public void setOutOfSyncCaption(String outOfSyncCaption) {
             this.outOfSyncCaption = outOfSyncCaption;
@@ -1473,7 +1474,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
          * both caption and message is null, the notification is disabled;
          * 
          * @param outOfSyncMessage
-         *                the message
+         *            the message
          */
         public void setOutOfSyncMessage(String outOfSyncMessage) {
             this.outOfSyncMessage = outOfSyncMessage;
@@ -1481,4 +1482,17 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 
     }
 
+    public class ApplicationError implements Terminal.ErrorEvent {
+
+        private Throwable throwable;
+
+        public ApplicationError(Throwable throwable) {
+            this.throwable = throwable;
+        }
+
+        public Throwable getThrowable() {
+            return throwable;
+        }
+
+    }
 }

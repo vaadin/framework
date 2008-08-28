@@ -13,6 +13,7 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
+import com.itmill.toolkit.terminal.gwt.client.ClientExceptionHandler;
 import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.Focusable;
 import com.itmill.toolkit.terminal.gwt.client.LocaleNotLoadedException;
@@ -98,8 +99,7 @@ public class ITextualDate extends IDateField implements Paintable, Field,
 
                     formatStr = frmString;
                 } catch (LocaleNotLoadedException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    ClientExceptionHandler.displayError(e);
                 }
             }
         }
@@ -139,7 +139,8 @@ public class ITextualDate extends IDateField implements Paintable, Field,
                     // remove possibly added invalid value indication
                     removeStyleName(PARSE_ERROR_CLASSNAME);
                 } catch (final Exception e) {
-                    ApplicationConnection.getConsole().log(e.getMessage());
+                    ClientExceptionHandler.displayError(e.getMessage());
+
                     addStyleName(PARSE_ERROR_CLASSNAME);
                     client.updateVariable(id, "lastInvalidDateString", text
                             .getText(), false);

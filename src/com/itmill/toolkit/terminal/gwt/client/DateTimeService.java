@@ -38,7 +38,7 @@ public class DateTimeService {
      * Creates a new date time service with a given locale.
      * 
      * @param locale
-     *                e.g. fi, en etc.
+     *            e.g. fi, en etc.
      * @throws LocaleNotLoadedException
      */
     public DateTimeService(String locale) throws LocaleNotLoadedException {
@@ -61,8 +61,7 @@ public class DateTimeService {
         try {
             return LocaleService.getMonthNames(currentLocale)[month];
         } catch (final LocaleNotLoadedException e) {
-            // TODO redirect to console
-            System.out.println(e + ":" + e.getMessage());
+            ClientExceptionHandler.displayError(e);
         }
         return null;
     }
@@ -71,8 +70,7 @@ public class DateTimeService {
         try {
             return LocaleService.getShortMonthNames(currentLocale)[month];
         } catch (final LocaleNotLoadedException e) {
-            // TODO redirect to console
-            System.out.println(e + ":" + e.getMessage());
+            ClientExceptionHandler.displayError(e);
         }
         return null;
     }
@@ -81,8 +79,7 @@ public class DateTimeService {
         try {
             return LocaleService.getDayNames(currentLocale)[day];
         } catch (final LocaleNotLoadedException e) {
-            // TODO redirect to console
-            System.out.println(e + ":" + e.getMessage());
+            ClientExceptionHandler.displayError(e);
         }
         return null;
     }
@@ -91,8 +88,7 @@ public class DateTimeService {
         try {
             return LocaleService.getShortDayNames(currentLocale)[day];
         } catch (final LocaleNotLoadedException e) {
-            // TODO redirect to console
-            System.out.println(e + ":" + e.getMessage());
+            ClientExceptionHandler.displayError(e);
         }
         return null;
     }
@@ -101,8 +97,7 @@ public class DateTimeService {
         try {
             return LocaleService.getFirstDayOfWeek(currentLocale);
         } catch (final LocaleNotLoadedException e) {
-            // TODO redirect to console
-            System.out.println(e + ":" + e.getMessage());
+            ClientExceptionHandler.displayError(e);
         }
         return 0;
     }
@@ -111,8 +106,7 @@ public class DateTimeService {
         try {
             return LocaleService.isTwelveHourClock(currentLocale);
         } catch (final LocaleNotLoadedException e) {
-            // TODO redirect to console
-            System.out.println(e + ":" + e.getMessage());
+            ClientExceptionHandler.displayError(e);
         }
         return false;
     }
@@ -121,8 +115,7 @@ public class DateTimeService {
         try {
             return LocaleService.getClockDelimiter(currentLocale);
         } catch (final LocaleNotLoadedException e) {
-            // TODO redirect to console
-            System.out.println(e + ":" + e.getMessage());
+            ClientExceptionHandler.displayError(e);
         }
         return ":";
     }
@@ -131,8 +124,7 @@ public class DateTimeService {
         try {
             return LocaleService.getAmPmStrings(currentLocale);
         } catch (final LocaleNotLoadedException e) {
-            // TODO redirect to console
-            System.out.println(e + ":" + e.getMessage());
+            ClientExceptionHandler.displayError(e);
         }
         final String[] temp = new String[2];
         temp[0] = "AM";
@@ -148,8 +140,7 @@ public class DateTimeService {
             firstDay = LocaleService.getFirstDayOfWeek(currentLocale);
         } catch (final LocaleNotLoadedException e) {
             firstDay = 0;
-            // TODO redirect to console
-            System.out.println(e + ":" + e.getMessage());
+            ClientExceptionHandler.displayError(e);
         }
         int start = dateForFirstOfThisMonth.getDay() - firstDay;
         if (start < 0) {

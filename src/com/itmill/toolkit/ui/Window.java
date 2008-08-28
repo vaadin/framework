@@ -127,7 +127,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * </p>
      * 
      * @param caption
-     *                the Title of the window.
+     *            the Title of the window.
      */
     public Window() {
         this("", null);
@@ -146,7 +146,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * </p>
      * 
      * @param caption
-     *                the Title of the window.
+     *            the Title of the window.
      */
     public Window(String caption) {
         this(caption, null);
@@ -165,9 +165,9 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * </p>
      * 
      * @param caption
-     *                the Title of the window.
+     *            the Title of the window.
      * @param layout
-     *                the Layout of the window.
+     *            the Layout of the window.
      */
     public Window(String caption, Layout layout) {
         super(caption, layout);
@@ -220,8 +220,8 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * 
      * <p>
      * For windows attached directly to the application, parent is
-     * <code>null</code>. For windows inside other windows, parent is the
-     * window containing this window.
+     * <code>null</code>. For windows inside other windows, parent is the window
+     * containing this window.
      * </p>
      * 
      * @return the Value of property parent.
@@ -239,7 +239,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * </p>
      * 
      * @param parent
-     *                the New value of property parent.
+     *            the New value of property parent.
      */
     public void setParent(Component parent) {
         super.setParent(parent);
@@ -261,7 +261,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * are attached to root level window.
      * 
      * @param handler
-     *                the URI handler to add.
+     *            the URI handler to add.
      */
     public void addURIHandler(URIHandler handler) {
         if (getParent() != null) {
@@ -285,7 +285,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * Removes the given URI handler from this window.
      * 
      * @param handler
-     *                the URI handler to remove.
+     *            the URI handler to remove.
      */
     public void removeURIHandler(URIHandler handler) {
         if (getParent() != null) {
@@ -342,7 +342,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * handlers are attached to parent windows.
      * 
      * @param handler
-     *                the parameter handler to add.
+     *            the parameter handler to add.
      */
     public void addParameterHandler(ParameterHandler handler) {
         if (getParent() != null) {
@@ -367,7 +367,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * Removes the given URI handler from this window.
      * 
      * @param handler
-     *                the parameter handler to remove.
+     *            the parameter handler to remove.
      */
     public void removeParameterHandler(ParameterHandler handler) {
         if (getParent() != null) {
@@ -439,13 +439,12 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * In Toolkit 5 terminal will reload its host page on theme changes.
      * 
      * @param theme
-     *                the New theme for this window. Null implies the default
-     *                theme.
+     *            the New theme for this window. Null implies the default theme.
      */
     public void setTheme(String theme) {
         if (getParent() != null) {
             throw new UnsupportedOperationException(
-                    "Setting theme for sub-windws is not supported.");
+                    "Setting theme for sub-windows is not supported.");
         }
         this.theme = theme;
         requestRepaint();
@@ -455,9 +454,9 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * Paints the content of this component.
      * 
      * @param event
-     *                the Paint Event.
+     *            the Paint Event.
      * @throws PaintException
-     *                 if the paint operation failed.
+     *             if the paint operation failed.
      */
     public synchronized void paintContent(PaintTarget target)
             throws PaintException {
@@ -477,8 +476,8 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
         if (resizable) {
             target.addAttribute("resizable", true);
         }
-        
-        if(centerRequested) {
+
+        if (centerRequested) {
             target.addAttribute("center", true);
             centerRequested = false;
         }
@@ -568,9 +567,9 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * window.
      * 
      * @param resource
-     *                the resource.
+     *            the resource.
      * @param windowName
-     *                the name of the window.
+     *            the name of the window.
      */
     public void open(Resource resource, String windowName) {
         synchronized (openList) {
@@ -623,7 +622,8 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
         try {
             return new URL(application.getURL(), getName() + "/");
         } catch (final MalformedURLException e) {
-            throw new RuntimeException("Internal problem, please report");
+            throw new RuntimeException(
+                    "Internal problem getting window URL, please report");
         }
     }
 
@@ -635,11 +635,11 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * not used for windows inside other windows. all application-level windows
      * can be accessed by their names in url
      * <code>http://host:port/foo/bar/</code> where
-     * <code>http://host:port/foo/</code> is the application url as returned
-     * by getURL() and <code>bar</code> is the name of the window. Also note
-     * that not all windows should be added to application - one can also add
-     * windows inside other windows - these windows show as smaller windows
-     * inside those windows.
+     * <code>http://host:port/foo/</code> is the application url as returned by
+     * getURL() and <code>bar</code> is the name of the window. Also note that
+     * not all windows should be added to application - one can also add windows
+     * inside other windows - these windows show as smaller windows inside those
+     * windows.
      * </p>
      * 
      * @return the Name of the Window.
@@ -661,7 +661,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * Sets the border.
      * 
      * @param border
-     *                the border to set.
+     *            the border to set.
      */
     public void setBorder(int border) {
         this.border = border;
@@ -685,7 +685,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * <p>
      * 
      * @param application
-     *                the application to set.
+     *            the application to set.
      */
     public void setApplication(Application application) {
 
@@ -720,7 +720,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * </p>
      * 
      * @param name
-     *                the name to set.
+     *            the name to set.
      */
     public void setName(String name) {
 
@@ -739,7 +739,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * adapter and may change from time to time.
      * 
      * @param type
-     *                the terminal type to set.
+     *            the terminal type to set.
      */
     public void setTerminal(Terminal type) {
         terminal = type;
@@ -782,9 +782,9 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
          * Paints the open-tag inside the window.
          * 
          * @param target
-         *                the Paint Event.
+         *            the Paint Event.
          * @throws PaintException
-         *                 if the Paint Operation fails.
+         *             if the Paint Operation fails.
          */
         private void paintContent(PaintTarget target) throws PaintException {
             target.startTag("open");
@@ -874,9 +874,8 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * containing (main window).
      * 
      * @param positionX
-     *                the Distance of Window left border in pixels from left
-     *                border of the containing (main window). or -1 if
-     *                unspecified.
+     *            the Distance of Window left border in pixels from left border
+     *            of the containing (main window). or -1 if unspecified.
      * @since 4.0.0
      */
     public void setPositionX(int positionX) {
@@ -901,9 +900,8 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * containing (main window).
      * 
      * @param positionY
-     *                the Distance of Window top border in pixels from top
-     *                border of the containing (main window). or -1 if
-     *                unspecified
+     *            the Distance of Window top border in pixels from top border of
+     *            the containing (main window). or -1 if unspecified
      * 
      * @since 4.0.0
      */
@@ -918,7 +916,8 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
                     "windowClose", new Class[] { CloseEvent.class });
         } catch (final java.lang.NoSuchMethodException e) {
             // This should never happen
-            throw new java.lang.RuntimeException();
+            throw new java.lang.RuntimeException(
+                    "Internal error, window close method not found");
         }
     }
 
@@ -955,7 +954,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * Adds the listener.
      * 
      * @param listener
-     *                the listener to add.
+     *            the listener to add.
      */
     public void addListener(CloseListener listener) {
         addListener(CloseEvent.class, listener, WINDOW_CLOSE_METHOD);
@@ -965,7 +964,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * Removes the listener.
      * 
      * @param listener
-     *                the listener to remove.
+     *            the listener to remove.
      */
     public void removeListener(CloseListener listener) {
         addListener(CloseEvent.class, listener, WINDOW_CLOSE_METHOD);
@@ -991,9 +990,9 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * 
      * @param window
      * @throws IllegalArgumentException
-     *                 if a window is added inside non-application level window.
+     *             if a window is added inside non-application level window.
      * @throws NullPointerException
-     *                 if the given <code>Window</code> is <code>null</code>.
+     *             if the given <code>Window</code> is <code>null</code>.
      */
     public void addWindow(Window window) throws IllegalArgumentException,
             NullPointerException {
@@ -1016,7 +1015,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * Remove the given subwindow from this window.
      * 
      * @param window
-     *                Window to be removed.
+     *            Window to be removed.
      */
     public void removeWindow(Window window) {
         subwindows.remove(window);
@@ -1039,7 +1038,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * <b>Note:</b> affects sub-windows only.
      * 
      * @param modality
-     *                true if modality is to be turned on
+     *            true if modality is to be turned on
      */
     public void setModal(boolean modality) {
         modal = modality;
@@ -1055,11 +1054,10 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     }
 
     /**
-     * Sets sub-window resizable.
-     * <b>Note:</b> affects sub-windows only.
+     * Sets sub-window resizable. <b>Note:</b> affects sub-windows only.
      * 
      * @param resizable
-     *                true if resizability is to be turned on
+     *            true if resizability is to be turned on
      */
     public void setResizable(boolean resizeability) {
         resizable = resizeability;
@@ -1075,8 +1073,8 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     }
 
     /**
-     * Request to center this window on the screen.
-     * <b>Note:</b> affects sub-windows only.
+     * Request to center this window on the screen. <b>Note:</b> affects
+     * sub-windows only.
      */
     public void center() {
         centerRequested = true;
@@ -1090,7 +1088,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * @see Notification
      * 
      * @param caption
-     *                The message
+     *            The message
      */
     public void showNotification(String caption) {
         addNotification(new Notification(caption));
@@ -1105,9 +1103,9 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * @see Notification
      * 
      * @param caption
-     *                The message
+     *            The message
      * @param type
-     *                The message type
+     *            The message type
      */
     public void showNotification(String caption, int type) {
         addNotification(new Notification(caption, type));
@@ -1122,9 +1120,9 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * @see Notification
      * 
      * @param caption
-     *                The caption of the message
+     *            The caption of the message
      * @param description
-     *                The message description
+     *            The message description
      * 
      */
     public void showNotification(String caption, String description) {
@@ -1141,11 +1139,11 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * @see Notification
      * 
      * @param caption
-     *                The caption of the message
+     *            The caption of the message
      * @param description
-     *                The message description
+     *            The message description
      * @param type
-     *                The message type
+     *            The message type
      */
     public void showNotification(String caption, String description, int type) {
         addNotification(new Notification(caption, description, type));
@@ -1161,7 +1159,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * @see #showNotification(String, String, int)
      * 
      * @param notification
-     *                The notification message to show
+     *            The notification message to show
      */
     public void showNotification(Notification notification) {
         addNotification(notification);
@@ -1188,25 +1186,25 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * still drawing needed attention. There are several basic types of messages
      * that can be used in different situations:
      * <ul>
-     * <li> TYPE_HUMANIZED_MESSAGE fades away quickly as soon as the user uses
+     * <li>TYPE_HUMANIZED_MESSAGE fades away quickly as soon as the user uses
      * the mouse or types something. It can be used to show fairly unimportant
-     * messages, such as feedback that an operation succeeded ("Document Saved") -
-     * the kind of messages the user ignores once the application is familiar.</li>
+     * messages, such as feedback that an operation succeeded ("Document Saved")
+     * - the kind of messages the user ignores once the application is familiar.
+     * </li>
      * <li>TYPE_WARNING_MESSAGE is shown for a short while after the user uses
      * the mouse or types something. It's default style is also more noticeable
      * than the humanized message. It can be used for messages that do not
      * contain a lot of important information, but should be noticed by the
      * user. Despite the name, it does not have to be a warning, but can be used
      * instead of the humanized message whenever you want to make the message a
-     * little more noticeable. </li>
+     * little more noticeable.</li>
      * <li>TYPE_ERROR_MESSAGE requires to user to click it before disappearing,
      * and can be used for critical messages.</li>
      * <li>TYPE_TRAY_NOTIFICATION is shown for a while in the lower left corner
      * of the window, and can be used for "convenience notifications" that do
      * not have to be noticed immediately, and should not interfere with the
      * current task - for instance to show "You have a new message in your
-     * inbox" while the user is working in some other area of the application.
-     * </li>
+     * inbox" while the user is working in some other area of the application.</li>
      * </ul>
      * </p>
      * <p>
@@ -1244,7 +1242,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
          * Creates a "humanized" notification message.
          * 
          * @param caption
-         *                The message to show
+         *            The message to show
          */
         public Notification(String caption) {
             this(caption, null, TYPE_HUMANIZED_MESSAGE);
@@ -1254,9 +1252,9 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
          * Creates a notification message of the specified type.
          * 
          * @param caption
-         *                The message to show
+         *            The message to show
          * @param type
-         *                The type of message
+         *            The type of message
          */
         public Notification(String caption, int type) {
             this(caption, null, type);
@@ -1267,9 +1265,9 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
          * smaller description.
          * 
          * @param caption
-         *                The message caption
+         *            The message caption
          * @param description
-         *                The message description
+         *            The message description
          */
         public Notification(String caption, String description) {
             this(caption, description, TYPE_HUMANIZED_MESSAGE);
@@ -1280,11 +1278,11 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
          * caption and smaller description.
          * 
          * @param caption
-         *                The message caption
+         *            The message caption
          * @param description
-         *                The message description
+         *            The message description
          * @param type
-         *                The type of message
+         *            The type of message
          */
         public Notification(String caption, String description, int type) {
             this.caption = caption;
@@ -1327,7 +1325,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
          * Sets the caption part of the notification message
          * 
          * @param caption
-         *                The message caption
+         *            The message caption
          */
         public void setCaption(String caption) {
             this.caption = caption;
@@ -1380,7 +1378,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
          * Sets the position of the notification message.
          * 
          * @param position
-         *                The desired notification position
+         *            The desired notification position
          */
         public void setPosition(int position) {
             this.position = position;
@@ -1399,7 +1397,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
          * Sets the icon part of the notification message.
          * 
          * @param icon
-         *                The desired message icon
+         *            The desired message icon
          */
         public void setIcon(Resource icon) {
             this.icon = icon;
@@ -1419,8 +1417,8 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
          * Sets the delay before the notification disappears.
          * 
          * @param delayMsec
-         *                the desired delay in msec, -1 to require the user to
-         *                click the message
+         *            the desired delay in msec, -1 to require the user to click
+         *            the message
          */
         public void setDelayMsec(int delayMsec) {
             this.delayMsec = delayMsec;
@@ -1430,7 +1428,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
          * Sets the style name for the notification message.
          * 
          * @param styleName
-         *                The desired style name.
+         *            The desired style name.
          */
         public void setStyleName(String styleName) {
             this.styleName = styleName;

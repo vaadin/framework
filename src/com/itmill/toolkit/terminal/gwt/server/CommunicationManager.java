@@ -103,9 +103,11 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
      * @param request
      * @param response
      * @throws IOException
+     * @throws FileUploadException
      */
     public void handleFileUpload(HttpServletRequest request,
-            HttpServletResponse response) throws IOException {
+            HttpServletResponse response) throws IOException,
+            FileUploadException {
         // Create a new file upload handler
         final ServletFileUpload upload = new ServletFileUpload();
 
@@ -174,7 +176,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
                 }
             }
         } catch (final FileUploadException e) {
-            e.printStackTrace();
+            throw e;
         }
 
         // Send short response to acknowledge client that request was done
@@ -240,6 +242,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
                             "getSystemMessages", null);
                     ci = (Application.SystemMessages) m.invoke(null, null);
                 } catch (Exception e2) {
+                    // FIXME: Handle exception
                     // Not critical, but something is still wrong; print
                     // stacktrace
                     e2.printStackTrace();
@@ -433,6 +436,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
                                             + ApplicationServlet.THEME_DIRECTORY_PATH
                                             + themeName + "/" + resource);
                 } catch (final Exception e) {
+                    // FIXME: Handle exception
                     e.printStackTrace();
                 }
                 if (is != null) {
@@ -450,6 +454,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
                         }
                         r.close();
                     } catch (final java.io.IOException e) {
+                        // FIXME: Handle exception
                         System.err.println("Resource transfer failed:  "
                                 + request.getRequestURI() + ". ("
                                 + e.getMessage() + ")");
@@ -458,6 +463,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
                             + JsonPaintTarget.escapeJSON(layout.toString())
                             + "\"");
                 } else {
+                    // FIXME: Handle exception
                     System.err.println("CustomLayout " + "/"
                             + ApplicationServlet.THEME_DIRECTORY_PATH
                             + themeName + "/" + resource + " not found!");
@@ -736,12 +742,12 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
             /*
              * Time formatting (24 or 12 hour clock and AM/PM suffixes)
              */
-            final String timeformat = df.substring(timeStart, df.length()); // Doesn't
-            // return
-            // second
-            // or
-            // milliseconds
-            // We use timeformat to determine 12/24-hour clock
+            final String timeformat = df.substring(timeStart, df.length());
+            /*
+             * Doesn't return second or milliseconds.
+             * 
+             * We use timeformat to determine 12/24-hour clock
+             */
             final boolean twelve_hour_clock = timeformat.indexOf("a") > -1;
             // TODO there are other possibilities as well, like 'h' in french
             // (ignore them, too complicated)
@@ -771,13 +777,13 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
      * application based on the requested URI.
      * 
      * @param request
-     *                the HTTP Request.
+     *            the HTTP Request.
      * @param application
-     *                the Application to query for window.
+     *            the Application to query for window.
      * @return Window mathing the given URI or null if not found.
      * @throws ServletException
-     *                 if an exception has occurred that interferes with the
-     *                 servlet's normal operation.
+     *             if an exception has occurred that interferes with the
+     *             servlet's normal operation.
      */
     private Window getApplicationWindow(HttpServletRequest request,
             Application application) throws ServletException {
@@ -821,13 +827,13 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
      * Ends the Application.
      * 
      * @param request
-     *                the HTTP request instance.
+     *            the HTTP request instance.
      * @param response
-     *                the HTTP response to write to.
+     *            the HTTP response to write to.
      * @param application
-     *                the Application to end.
+     *            the Application to end.
      * @throws IOException
-     *                 if the writing failed due to input/output error.
+     *             if the writing failed due to input/output error.
      */
     private void endApplication(HttpServletRequest request,
             HttpServletResponse response, Application application)
@@ -883,7 +889,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
 
     /**
      * @param w
-     *                root window for which dirty components is to be fetched
+     *            root window for which dirty components is to be fetched
      * @return
      */
     private ArrayList getDirtyComponents(Window w) {

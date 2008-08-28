@@ -21,6 +21,7 @@ import javax.servlet.http.HttpSessionBindingListener;
 
 import com.itmill.toolkit.Application;
 import com.itmill.toolkit.service.ApplicationContext;
+import com.itmill.toolkit.terminal.gwt.client.ClientExceptionHandler;
 
 /**
  * Web application context for the IT Mill Toolkit applications.
@@ -85,7 +86,7 @@ public class WebApplicationContext implements ApplicationContext,
      * Gets the application context for HttpSession.
      * 
      * @param session
-     *                the HTTP session.
+     *            the HTTP session.
      * @return the application context for HttpSession.
      */
     static public WebApplicationContext getApplicationContext(
@@ -108,7 +109,7 @@ public class WebApplicationContext implements ApplicationContext,
      * boolean value as this object.
      * 
      * @param obj
-     *                the object to compare with.
+     *            the object to compare with.
      * @see java.lang.Object#equals(java.lang.Object)
      */
     public boolean equals(Object obj) {
@@ -153,7 +154,7 @@ public class WebApplicationContext implements ApplicationContext,
      * 
      * @param application
      * @param request
-     *                the HTTP request.
+     *            the HTTP request.
      */
     protected void startTransaction(Application application,
             HttpServletRequest request) {
@@ -171,7 +172,7 @@ public class WebApplicationContext implements ApplicationContext,
      * 
      * @param application
      * @param request
-     *                the HTTP request.
+     *            the HTTP request.
      */
     protected void endTransaction(Application application,
             HttpServletRequest request) {
@@ -244,6 +245,7 @@ public class WebApplicationContext implements ApplicationContext,
             // thread doing HTTP socket write and another thread trying to
             // remove same application here. Possible if you got e.g. session
             // lifetime 1 min but socket write may take longer than 1 min.
+            // FIXME: Handle exception
             System.err.println("Could not remove application, leaking memory.");
             e.printStackTrace();
         }

@@ -47,8 +47,8 @@ public abstract class AbstractSelect extends AbstractField implements
         Container.ItemSetChangeListener {
 
     /**
-     * Item caption mode: Item's ID's <code>String</code> representation is
-     * used as caption.
+     * Item caption mode: Item's ID's <code>String</code> representation is used
+     * as caption.
      */
     public static final int ITEM_CAPTION_MODE_ID = 0;
     /**
@@ -87,8 +87,8 @@ public abstract class AbstractSelect extends AbstractField implements
      * entered value. The value is matched to the item caption.
      * <code>FILTERINGMODE_OFF</code> (0) turns the filtering off.
      * <code>FILTERINGMODE_STARTSWITH</code> (1) matches from the start of the
-     * caption. <code>FILTERINGMODE_CONTAINS</code> (1) matches anywhere in
-     * the caption.
+     * caption. <code>FILTERINGMODE_CONTAINS</code> (1) matches anywhere in the
+     * caption.
      */
     public interface Filtering {
         public static final int FILTERINGMODE_OFF = 0;
@@ -99,7 +99,7 @@ public abstract class AbstractSelect extends AbstractField implements
          * Sets the option filtering mode.
          * 
          * @param filteringMode
-         *                the filtering mode to use
+         *            the filtering mode to use
          */
         public void setFilteringMode(int filteringMode);
 
@@ -185,7 +185,7 @@ public abstract class AbstractSelect extends AbstractField implements
     // Caption (Item / Property) change listeners
     CaptionChangeListener captionChangeListener;
 
-    /* Constructors ********************************************************* */
+    /* Constructors */
 
     /**
      * Creates an empty Select. The caption is not used.
@@ -206,10 +206,9 @@ public abstract class AbstractSelect extends AbstractField implements
      * Creates a new select that is connected to a data-source.
      * 
      * @param caption
-     *                the Caption of the component.
+     *            the Caption of the component.
      * @param dataSource
-     *                the Container datasource to be selected from by this
-     *                select.
+     *            the Container datasource to be selected from by this select.
      */
     public AbstractSelect(String caption, Container dataSource) {
         setCaption(caption);
@@ -220,9 +219,9 @@ public abstract class AbstractSelect extends AbstractField implements
      * Creates a new select that is filled from a collection of option values.
      * 
      * @param caption
-     *                the Caption of this field.
+     *            the Caption of this field.
      * @param options
-     *                the Collection containing the options.
+     *            the Collection containing the options.
      */
     public AbstractSelect(String caption, Collection options) {
 
@@ -238,15 +237,15 @@ public abstract class AbstractSelect extends AbstractField implements
         setContainerDataSource(c);
     }
 
-    /* Component methods **************************************************** */
+    /* Component methods */
 
     /**
      * Paints the content of this component.
      * 
      * @param target
-     *                the Paint Event.
+     *            the Paint Event.
      * @throws PaintException
-     *                 if the paint operation failed.
+     *             if the paint operation failed.
      */
     public void paintContent(PaintTarget target) throws PaintException {
 
@@ -489,9 +488,10 @@ public abstract class AbstractSelect extends AbstractField implements
                                 getItemCaptionPropertyId()).setValue(
                                 newItemCaption);
                     } catch (final Property.ConversionException ignored) {
-                        // The conversion exception is safely ignored, the
-                        // caption is
-                        // just missing
+                        /*
+                         * The conversion exception is safely ignored, the
+                         * caption is just missing
+                         */
                     }
                 }
                 if (isMultiSelect()) {
@@ -526,13 +526,13 @@ public abstract class AbstractSelect extends AbstractField implements
         return null;
     }
 
-    /* Property methods ***************************************************** */
+    /* Property methods */
 
     /**
      * Returns the type of the property. <code>getValue</code> and
-     * <code>setValue</code> methods must be compatible with this type: one
-     * can safely cast <code>getValue</code> to given type and pass any
-     * variable assignable to this type as a parameter to <code>setValue</code>.
+     * <code>setValue</code> methods must be compatible with this type: one can
+     * safely cast <code>getValue</code> to given type and pass any variable
+     * assignable to this type as a parameter to <code>setValue</code>.
      * 
      * @return the Type of the property.
      */
@@ -585,7 +585,7 @@ public abstract class AbstractSelect extends AbstractField implements
      * </p>
      * 
      * @param newValue
-     *                the New selected item or collection of selected items.
+     *            the New selected item or collection of selected items.
      * @see com.itmill.toolkit.ui.AbstractField#setValue(java.lang.Object)
      */
     public void setValue(Object newValue) throws Property.ReadOnlyException,
@@ -607,9 +607,9 @@ public abstract class AbstractSelect extends AbstractField implements
      * </p>
      * 
      * @param newValue
-     *                the New selected item or collection of selected items.
+     *            the New selected item or collection of selected items.
      * @param repaintIsNotNeeded
-     *                True if caller is sure that repaint is not needed.
+     *            True if caller is sure that repaint is not needed.
      * @see com.itmill.toolkit.ui.AbstractField#setValue(java.lang.Object,
      *      java.lang.Boolean)
      */
@@ -628,14 +628,14 @@ public abstract class AbstractSelect extends AbstractField implements
         }
     }
 
-    /* Container methods **************************************************** */
+    /* Container methods */
 
     /**
      * Gets the item from the container with given id. If the container does not
      * contain the requested item, null is returned.
      * 
      * @param itemId
-     *                the item id.
+     *            the item id.
      * @return the item from the container.
      */
     public Item getItem(Object itemId) {
@@ -664,7 +664,7 @@ public abstract class AbstractSelect extends AbstractField implements
      * Gets the property type.
      * 
      * @param propertyId
-     *                the Id identifying the property.
+     *            the Id identifying the property.
      * @see com.itmill.toolkit.data.Container#getType(java.lang.Object)
      */
     public Class getType(Object propertyId) {
@@ -686,7 +686,7 @@ public abstract class AbstractSelect extends AbstractField implements
      * Tests, if the collection contains an item with given id.
      * 
      * @param itemId
-     *                the Id the of item to be tested.
+     *            the Id the of item to be tested.
      */
     public boolean containsId(Object itemId) {
         if (itemId != null) {
@@ -779,7 +779,7 @@ public abstract class AbstractSelect extends AbstractField implements
      * returns null.
      * 
      * @param itemId
-     *                the Identification of the item to be created.
+     *            the Identification of the item to be created.
      * @return the Created item with the given id, or null in case of failure.
      * @see com.itmill.toolkit.data.Container#addItem(java.lang.Object)
      */
@@ -833,13 +833,13 @@ public abstract class AbstractSelect extends AbstractField implements
         return retval;
     }
 
-    /* Container.Viewer methods ********************************************* */
+    /* Container.Viewer methods */
 
     /**
      * Sets the container as data-source for viewing.
      * 
      * @param newDataSource
-     *                the new data source.
+     *            the new data source.
      */
     public void setContainerDataSource(Container newDataSource) {
         if (newDataSource == null) {
@@ -852,17 +852,13 @@ public abstract class AbstractSelect extends AbstractField implements
 
             // Removes listeners from the old datasource
             if (items != null) {
-                try {
+                if (items instanceof Container.ItemSetChangeListener) {
                     ((Container.ItemSetChangeNotifier) items)
                             .removeListener(this);
-                } catch (final ClassCastException ignored) {
-                    // Ignored
                 }
-                try {
+                if (items instanceof Container.PropertySetChangeNotifier) {
                     ((Container.PropertySetChangeNotifier) items)
                             .removeListener(this);
-                } catch (final ClassCastException ignored) {
-                    // Ignored
                 }
             }
 
@@ -874,16 +870,12 @@ public abstract class AbstractSelect extends AbstractField implements
 
             // Adds listeners
             if (items != null) {
-                try {
+                if (items instanceof Container.ItemSetChangeListener) {
                     ((Container.ItemSetChangeNotifier) items).addListener(this);
-                } catch (final ClassCastException ignored) {
-                    // Ignored
                 }
-                try {
+                if (items instanceof Container.PropertySetChangeNotifier) {
                     ((Container.PropertySetChangeNotifier) items)
                             .addListener(this);
-                } catch (final ClassCastException ignored) {
-                    // Ignored
                 }
             }
 
@@ -901,7 +893,7 @@ public abstract class AbstractSelect extends AbstractField implements
         return items;
     }
 
-    /* Select attributes **************************************************** */
+    /* Select attributes */
 
     /**
      * Is the select in multiselect mode? In multiselect mode
@@ -918,7 +910,7 @@ public abstract class AbstractSelect extends AbstractField implements
      * selected items, only one of the selected items is kept as selected.
      * 
      * @param multiSelect
-     *                the New value of property multiSelect.
+     *            the New value of property multiSelect.
      */
     public void setMultiSelect(boolean multiSelect) {
         if (multiSelect && getNullSelectionItemId() != null) {
@@ -970,7 +962,7 @@ public abstract class AbstractSelect extends AbstractField implements
      * Enables or disables possibility to add new options by the user.
      * 
      * @param allowNewOptions
-     *                the New value of property allowNewOptions.
+     *            the New value of property allowNewOptions.
      */
     public void setNewItemsAllowed(boolean allowNewOptions) {
 
@@ -988,9 +980,9 @@ public abstract class AbstractSelect extends AbstractField implements
      * item and index captions.
      * 
      * @param itemId
-     *                the id of the item to be recaptioned.
+     *            the id of the item to be recaptioned.
      * @param caption
-     *                the New caption.
+     *            the New caption.
      */
     public void setItemCaption(Object itemId, String caption) {
         if (itemId != null) {
@@ -1005,7 +997,7 @@ public abstract class AbstractSelect extends AbstractField implements
      * details.
      * 
      * @param itemId
-     *                the id of the item to be queried.
+     *            the id of the item to be queried.
      * @return the caption for specified item.
      */
     public String getItemCaption(Object itemId) {
@@ -1024,10 +1016,11 @@ public abstract class AbstractSelect extends AbstractField implements
             break;
 
         case ITEM_CAPTION_MODE_INDEX:
-            try {
+            if (items instanceof Container.Indexed) {
                 caption = String.valueOf(((Container.Indexed) items)
                         .indexOfId(itemId));
-            } catch (final ClassCastException ignored) {
+            } else {
+                caption = "ERROR: Container is not indexed";
             }
             break;
 
@@ -1066,9 +1059,9 @@ public abstract class AbstractSelect extends AbstractField implements
      * Sets the icon for an item.
      * 
      * @param itemId
-     *                the id of the item to be assigned an icon.
+     *            the id of the item to be assigned an icon.
      * @param icon
-     *                the New icon.
+     *            the New icon.
      */
     public void setItemIcon(Object itemId, Resource icon) {
         if (itemId != null) {
@@ -1085,7 +1078,7 @@ public abstract class AbstractSelect extends AbstractField implements
      * Gets the item icon.
      * 
      * @param itemId
-     *                the id of the item to be assigned an icon.
+     *            the id of the item to be assigned an icon.
      * @return the Icon for the item or null, if not specified.
      */
     public Resource getItemIcon(Object itemId) {
@@ -1124,13 +1117,13 @@ public abstract class AbstractSelect extends AbstractField implements
      * <code>toString</code> is used as item caption.</li>
      * <li><code>ITEM_CAPTION_MODE_ITEM</code> : Item-objects
      * <code>toString</code> is used as item caption.</li>
-     * <li><code>ITEM_CAPTION_MODE_INDEX</code> : The index of the item is
-     * used as item caption. The index mode can only be used with the containers
+     * <li><code>ITEM_CAPTION_MODE_INDEX</code> : The index of the item is used
+     * as item caption. The index mode can only be used with the containers
      * implementing <code>Container.Indexed</code> interface.</li>
-     * <li><code>ITEM_CAPTION_MODE_EXPLICIT</code> : The item captions must
-     * be explicitly specified.</li>
-     * <li><code>ITEM_CAPTION_MODE_PROPERTY</code> : The item captions are
-     * read from property, that must be specified with
+     * <li><code>ITEM_CAPTION_MODE_EXPLICIT</code> : The item captions must be
+     * explicitly specified.</li>
+     * <li><code>ITEM_CAPTION_MODE_PROPERTY</code> : The item captions are read
+     * from property, that must be specified with
      * <code>setItemCaptionPropertyId</code>.</li>
      * </ul>
      * The <code>ITEM_CAPTION_MODE_EXPLICIT_DEFAULTS_ID</code> is the default
@@ -1138,7 +1131,7 @@ public abstract class AbstractSelect extends AbstractField implements
      * </p>
      * 
      * @param mode
-     *                the One of the modes listed above.
+     *            the One of the modes listed above.
      */
     public void setItemCaptionMode(int mode) {
         if (ITEM_CAPTION_MODE_ID <= mode && mode <= ITEM_CAPTION_MODE_PROPERTY) {
@@ -1160,13 +1153,13 @@ public abstract class AbstractSelect extends AbstractField implements
      * <code>toString</code> is used as item caption.</li>
      * <li><code>ITEM_CAPTION_MODE_ITEM</code> : Item-objects
      * <code>toString</code> is used as item caption.</li>
-     * <li><code>ITEM_CAPTION_MODE_INDEX</code> : The index of the item is
-     * used as item caption. The index mode can only be used with the containers
+     * <li><code>ITEM_CAPTION_MODE_INDEX</code> : The index of the item is used
+     * as item caption. The index mode can only be used with the containers
      * implementing <code>Container.Indexed</code> interface.</li>
-     * <li><code>ITEM_CAPTION_MODE_EXPLICIT</code> : The item captions must
-     * be explicitly specified.</li>
-     * <li><code>ITEM_CAPTION_MODE_PROPERTY</code> : The item captions are
-     * read from property, that must be specified with
+     * <li><code>ITEM_CAPTION_MODE_EXPLICIT</code> : The item captions must be
+     * explicitly specified.</li>
+     * <li><code>ITEM_CAPTION_MODE_PROPERTY</code> : The item captions are read
+     * from property, that must be specified with
      * <code>setItemCaptionPropertyId</code>.</li>
      * </ul>
      * The <code>ITEM_CAPTION_MODE_EXPLICIT_DEFAULTS_ID</code> is the default
@@ -1185,18 +1178,19 @@ public abstract class AbstractSelect extends AbstractField implements
      * <p>
      * Setting the id to a existing property implicitly sets the item caption
      * mode to <code>ITEM_CAPTION_MODE_PROPERTY</code>. If the object is in
-     * <code>ITEM_CAPTION_MODE_PROPERTY</code> mode, setting caption property
-     * id null resets the item caption mode to
+     * <code>ITEM_CAPTION_MODE_PROPERTY</code> mode, setting caption property id
+     * null resets the item caption mode to
      * <code>ITEM_CAPTION_EXPLICIT_DEFAULTS_ID</code>.
      * </p>
      * 
      * <p>
      * Setting the property id to null disables this feature. The id is null by
      * default
-     * </p>.
+     * </p>
+     * .
      * 
      * @param propertyId
-     *                the id of the property.
+     *            the id of the property.
      * 
      */
     public void setItemCaptionPropertyId(Object propertyId) {
@@ -1232,17 +1226,18 @@ public abstract class AbstractSelect extends AbstractField implements
      * </p>
      * 
      * <p>
-     * Note : The icons set with <code>setItemIcon</code> function override
-     * the icons from the property.
+     * Note : The icons set with <code>setItemIcon</code> function override the
+     * icons from the property.
      * </p>
      * 
      * <p>
      * Setting the property id to null disables this feature. The id is null by
      * default
-     * </p>.
+     * </p>
+     * .
      * 
      * @param propertyId
-     *                the Id of the property that specifies icons for items.
+     *            the Id of the property that specifies icons for items.
      */
     public void setItemIconPropertyId(Object propertyId) {
         if ((propertyId != null)
@@ -1264,14 +1259,15 @@ public abstract class AbstractSelect extends AbstractField implements
      * </p>
      * 
      * <p>
-     * Note : The icons set with <code>setItemIcon</code> function override
-     * the icons from the property.
+     * Note : The icons set with <code>setItemIcon</code> function override the
+     * icons from the property.
      * </p>
      * 
      * <p>
      * Setting the property id to null disables this feature. The id is null by
      * default
-     * </p>.
+     * </p>
+     * .
      * 
      * @return the Id of the property containing the item icons.
      */
@@ -1289,7 +1285,7 @@ public abstract class AbstractSelect extends AbstractField implements
      * </p>
      * 
      * @param itemId
-     *                the Id the of the item to be tested.
+     *            the Id the of the item to be tested.
      * @see #getNullSelectionItemId()
      * @see #setNullSelectionItemId(Object)
      * 
@@ -1316,7 +1312,7 @@ public abstract class AbstractSelect extends AbstractField implements
      * </p>
      * 
      * @param itemId
-     *                the tem to be selected.
+     *            the tem to be selected.
      * @see #getNullSelectionItemId()
      * @see #setNullSelectionItemId(Object)
      * 
@@ -1336,7 +1332,7 @@ public abstract class AbstractSelect extends AbstractField implements
      * Unselects an item.
      * 
      * @param itemId
-     *                the Item to be unselected.
+     *            the Item to be unselected.
      * @see #getNullSelectionItemId()
      * @see #setNullSelectionItemId(Object)
      * 
@@ -1495,11 +1491,11 @@ public abstract class AbstractSelect extends AbstractField implements
     /**
      * Allow of disallow empty selection. If the select is in single-select
      * mode, you can make an item represent the empty selection by calling
-     * <code>setNullSelectionItemId()</code>. This way you can for instance
-     * set an icon and caption for the null selection item.
+     * <code>setNullSelectionItemId()</code>. This way you can for instance set
+     * an icon and caption for the null selection item.
      * 
      * @param nullSelectionAllowed
-     *                whether or not to allow empty selection
+     *            whether or not to allow empty selection
      * @see #setNullSelectionItemId(Object)
      * @see #isNullSelectionAllowed()
      */
@@ -1546,7 +1542,7 @@ public abstract class AbstractSelect extends AbstractField implements
      * </p>
      * 
      * @param nullSelectionItemId
-     *                the nullSelectionItemId to set.
+     *            the nullSelectionItemId to set.
      * @see #getNullSelectionItemId()
      * @see #isSelected(Object)
      * @see #select(Object)

@@ -93,7 +93,7 @@ public abstract class AbstractComponentContainer extends AbstractComponent
         }
     }
 
-    /* Events ************************************************************ */
+    /* Events */
 
     private static final Method COMPONENT_ATTACHED_METHOD;
 
@@ -109,7 +109,8 @@ public abstract class AbstractComponentContainer extends AbstractComponent
                             new Class[] { ComponentDetachEvent.class });
         } catch (final java.lang.NoSuchMethodException e) {
             // This should never happen
-            throw new java.lang.RuntimeException();
+            throw new java.lang.RuntimeException(
+                    "Internal error finding methods in AbstractComponentContainer");
         }
     }
 
@@ -143,7 +144,7 @@ public abstract class AbstractComponentContainer extends AbstractComponent
      * container.
      * 
      * @param component
-     *                the component that has been added to this container.
+     *            the component that has been added to this container.
      */
     protected void fireComponentAttachEvent(Component component) {
         fireEvent(new ComponentAttachEvent(this, component));
@@ -155,7 +156,7 @@ public abstract class AbstractComponentContainer extends AbstractComponent
      * container.
      * 
      * @param component
-     *                the component that has been removed from this container.
+     *            the component that has been removed from this container.
      */
     protected void fireComponentDetachEvent(Component component) {
         fireEvent(new ComponentDetachEvent(this, component));

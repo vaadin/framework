@@ -167,11 +167,11 @@ public class ApplicationServlet extends HttpServlet {
      * is being placed into service.
      * 
      * @param servletConfig
-     *                the object containing the servlet's configuration and
-     *                initialization parameters
+     *            the object containing the servlet's configuration and
+     *            initialization parameters
      * @throws javax.servlet.ServletException
-     *                 if an exception has occurred that interferes with the
-     *                 servlet's normal operation.
+     *             if an exception has occurred that interferes with the
+     *             servlet's normal operation.
      */
     public void init(javax.servlet.ServletConfig servletConfig)
             throws javax.servlet.ServletException {
@@ -244,9 +244,9 @@ public class ApplicationServlet extends HttpServlet {
                 classLoader = (ClassLoader) c
                         .newInstance(new Object[] { getClass().getClassLoader() });
             } catch (final Exception e) {
-                System.err.println("Could not find specified class loader: "
-                        + classLoaderName);
-                throw new ServletException(e);
+                throw new ServletException(
+                        "Could not find specified class loader: "
+                                + classLoaderName, e);
             }
         }
         this.classLoader = classLoader;
@@ -278,9 +278,9 @@ public class ApplicationServlet extends HttpServlet {
      * Gets an application or system property value.
      * 
      * @param parameterName
-     *                the Name or the parameter.
+     *            the Name or the parameter.
      * @param defaultValue
-     *                the Default to be used.
+     *            the Default to be used.
      * @return String value or default if not found
      */
     private String getApplicationOrSystemProperty(String parameterName,
@@ -328,16 +328,16 @@ public class ApplicationServlet extends HttpServlet {
      * dispatches them.
      * 
      * @param request
-     *                the object that contains the request the client made of
-     *                the servlet.
+     *            the object that contains the request the client made of the
+     *            servlet.
      * @param response
-     *                the object that contains the response the servlet returns
-     *                to the client.
+     *            the object that contains the response the servlet returns to
+     *            the client.
      * @throws ServletException
-     *                 if an input or output error occurs while the servlet is
-     *                 handling the TRACE request.
+     *             if an input or output error occurs while the servlet is
+     *             handling the TRACE request.
      * @throws IOException
-     *                 if the request for the TRACE cannot be handled.
+     *             if the request for the TRACE cannot be handled.
      */
     protected void service(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
@@ -508,20 +508,24 @@ public class ApplicationServlet extends HttpServlet {
 
         } catch (final SessionExpired e) {
             // Session has expired, notify user
-            Application.SystemMessages ci = getSystemMessages();
-            if (!UIDLrequest) {
-                // 'plain' http req - e.g. browser reload;
-                // just go ahead redirect the browser
-                response.sendRedirect(ci.getSessionExpiredURL());
-            } else {
-                // send uidl redirect
-                criticalNotification(request, response, ci
-                        .getSessionExpiredCaption(), ci
-                        .getSessionExpiredMessage(), ci.getSessionExpiredURL());
+            try {
+                Application.SystemMessages ci = getSystemMessages();
+                if (!UIDLrequest) {
+                    // 'plain' http req - e.g. browser reload;
+                    // just go ahead redirect the browser
+                    response.sendRedirect(ci.getSessionExpiredURL());
+                } else {
+                    // send uidl redirect
+                    criticalNotification(request, response, ci
+                            .getSessionExpiredCaption(), ci
+                            .getSessionExpiredMessage(), ci
+                            .getSessionExpiredURL());
+                }
+            } catch (SystemMessageException ee) {
+                throw new ServletException(ee);
             }
 
         } catch (final Throwable e) {
-            e.printStackTrace();
             // if this was an UIDL request, response UIDL back to client
             if (UIDLrequest) {
                 Application.SystemMessages ci = getSystemMessages();
@@ -553,23 +557,21 @@ public class ApplicationServlet extends HttpServlet {
             return (Application.SystemMessages) m.invoke(null, null);
         } catch (ClassNotFoundException e) {
             // This should never happen
-            e.printStackTrace();
+            throw new SystemMessageException(e);
         } catch (SecurityException e) {
-            e.printStackTrace();
-            System.out
-                    .print("Error: getSystemMessage() should be static public");
+            throw new SystemMessageException(
+                    "Application.getSystemMessage() should be static public", e);
         } catch (NoSuchMethodException e) {
             // This is completely ok and should be silently ignored
         } catch (IllegalArgumentException e) {
             // This should never happen
-            e.printStackTrace();
+            throw new SystemMessageException(e);
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
-            System.out
-                    .print("Error: getSystemMessage() should be static public");
+            throw new SystemMessageException(
+                    "Application.getSystemMessage() should be static public", e);
         } catch (InvocationTargetException e) {
             // This should never happen
-            e.printStackTrace();
+            throw new SystemMessageException(e);
         }
         return Application.getSystemMessages();
     }
@@ -588,13 +590,11 @@ public class ApplicationServlet extends HttpServlet {
         InputStream is = sc.getResourceAsStream(filename);
         if (is == null) {
             // try if requested file is found from classloader
-            try {
-                // strip leading "/" otherwise stream from JAR wont work
-                filename = filename.substring(1);
-                is = classLoader.getResourceAsStream(filename);
-            } catch (final Exception e) {
-                e.printStackTrace();
-            }
+
+            // strip leading "/" otherwise stream from JAR wont work
+            filename = filename.substring(1);
+            is = classLoader.getResourceAsStream(filename);
+
             if (is == null) {
                 // cannot serve requested file
                 System.err
@@ -624,17 +624,17 @@ public class ApplicationServlet extends HttpServlet {
      * no knowledge of what application client refers to.
      * 
      * @param request
-     *                the HTTP request instance.
+     *            the HTTP request instance.
      * @param response
-     *                the HTTP response to write to.
+     *            the HTTP response to write to.
      * @param caption
-     *                for the notification
+     *            for the notification
      * @param message
-     *                for the notification
+     *            for the notification
      * @param url
-     *                url to load after message, null for current page
+     *            url to load after message, null for current page
      * @throws IOException
-     *                 if the writing failed due to input/output error.
+     *             if the writing failed due to input/output error.
      */
     void criticalNotification(HttpServletRequest request,
             HttpServletResponse response, String caption, String message,
@@ -676,8 +676,10 @@ public class ApplicationServlet extends HttpServlet {
      * @param request
      * @return string array consisting of application url first and then
      *         widgetset url.
+     * @throws MalformedURLException
      */
-    private String[] getAppAndWidgetUrl(HttpServletRequest request) {
+    private String[] getAppAndWidgetUrl(HttpServletRequest request)
+            throws MalformedURLException {
         // don't use server and port in uri. It may cause problems with some
         // virtual server configurations which lose the server name
         String appUrl = null;
@@ -691,32 +693,28 @@ public class ApplicationServlet extends HttpServlet {
             appUrl = URIparts[1];
         } else {
             String[] urlParts;
-            try {
-                urlParts = getApplicationUrl(request).toString().split("\\/");
-                appUrl = "";
-                widgetsetUrl = "";
-                // if context is specified add it to widgetsetUrl
-                String ctxPath = request.getContextPath();
-                if (ctxPath.length() == 0
-                        && request
-                                .getAttribute("javax.servlet.include.context_path") != null) {
-                    // include request (e.g portlet), get contex path from
-                    // attribute
-                    ctxPath = (String) request
-                            .getAttribute("javax.servlet.include.context_path");
-                }
-                if (urlParts.length > 3
-                        && urlParts[3].equals(ctxPath.replaceAll("\\/", ""))) {
-                    widgetsetUrl += "/" + urlParts[3];
-                }
-                for (int i = 3; i < urlParts.length; i++) {
-                    appUrl += "/" + urlParts[i];
-                }
-                if (appUrl.endsWith("/")) {
-                    appUrl = appUrl.substring(0, appUrl.length() - 1);
-                }
-            } catch (final MalformedURLException e) {
-                e.printStackTrace();
+            urlParts = getApplicationUrl(request).toString().split("\\/");
+            appUrl = "";
+            widgetsetUrl = "";
+            // if context is specified add it to widgetsetUrl
+            String ctxPath = request.getContextPath();
+            if (ctxPath.length() == 0
+                    && request
+                            .getAttribute("javax.servlet.include.context_path") != null) {
+                // include request (e.g portlet), get contex path from
+                // attribute
+                ctxPath = (String) request
+                        .getAttribute("javax.servlet.include.context_path");
+            }
+            if (urlParts.length > 3
+                    && urlParts[3].equals(ctxPath.replaceAll("\\/", ""))) {
+                widgetsetUrl += "/" + urlParts[3];
+            }
+            for (int i = 3; i < urlParts.length; i++) {
+                appUrl += "/" + urlParts[i];
+            }
+            if (appUrl.endsWith("/")) {
+                appUrl = appUrl.substring(0, appUrl.length() - 1);
             }
 
         }
@@ -726,19 +724,19 @@ public class ApplicationServlet extends HttpServlet {
     /**
      * 
      * @param request
-     *                the HTTP request.
+     *            the HTTP request.
      * @param response
-     *                the HTTP response to write to.
+     *            the HTTP response to write to.
      * @param out
      * @param unhandledParameters
      * @param window
      * @param terminalType
      * @param theme
      * @throws IOException
-     *                 if the writing failed due to input/output error.
+     *             if the writing failed due to input/output error.
      * @throws MalformedURLException
-     *                 if the application is denied access the persistent data
-     *                 store represented by the given URL.
+     *             if the application is denied access the persistent data store
+     *             represented by the given URL.
      */
     private void writeAjaxPage(HttpServletRequest request,
             HttpServletResponse response, Window window, String themeName,
@@ -763,8 +761,9 @@ public class ApplicationServlet extends HttpServlet {
         try {
             widgetset = (String) reqParam;
         } catch (Exception e) {
-            System.err.println("Warning: request param " + REQUEST_WIDGETSET
-                    + " could not be used (not a String?)" + e);
+            // FIXME: Handle exception
+            System.err.println("Warning: request param '" + REQUEST_WIDGETSET
+                    + "' could not be used (is not a String)" + e);
         }
         if (widgetset == null) {
             widgetset = applicationProperties.getProperty(PARAMETER_WIDGETSET);
@@ -987,14 +986,13 @@ public class ApplicationServlet extends HttpServlet {
      * it is sent to the client.
      * 
      * @param application
-     *                the Application owning the URI.
+     *            the Application owning the URI.
      * @param request
-     *                the HTTP request instance.
+     *            the HTTP request instance.
      * @param response
-     *                the HTTP response to write to.
-     * @return boolean <code>true</code> if the request was handled and
-     *         further processing should be suppressed, <code>false</code>
-     *         otherwise.
+     *            the HTTP response to write to.
+     * @return boolean <code>true</code> if the request was handled and further
+     *         processing should be suppressed, <code>false</code> otherwise.
      * @see com.itmill.toolkit.terminal.URIHandler
      */
     private DownloadStream handleURI(Application application,
@@ -1035,17 +1033,19 @@ public class ApplicationServlet extends HttpServlet {
      * it is sent to the client.
      * 
      * @param stream
-     *                the download stream.
+     *            the download stream.
      * 
      * @param request
-     *                the HTTP request instance.
+     *            the HTTP request instance.
      * @param response
-     *                the HTTP response to write to.
+     *            the HTTP response to write to.
+     * @throws IOException
      * 
      * @see com.itmill.toolkit.terminal.URIHandler
      */
     private void handleDownload(DownloadStream stream,
-            HttpServletRequest request, HttpServletResponse response) {
+            HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
 
         if (stream.getParameter("Location") != null) {
             response.setStatus(HttpServletResponse.SC_FOUND);
@@ -1093,19 +1093,13 @@ public class ApplicationServlet extends HttpServlet {
             final byte[] buffer = new byte[bufferSize];
             int bytesRead = 0;
 
-            try {
-                final OutputStream out = response.getOutputStream();
+            final OutputStream out = response.getOutputStream();
 
-                while ((bytesRead = data.read(buffer)) > 0) {
-                    out.write(buffer, 0, bytesRead);
-                    out.flush();
-                }
-                out.close();
-            } catch (final IOException ignored) {
-                System.err
-                        .println("Warning: ApplicationServlet.handleDownload()"
-                                + " threw IOException.");
+            while ((bytesRead = data.read(buffer)) > 0) {
+                out.write(buffer, 0, bytesRead);
+                out.flush();
             }
+            out.close();
 
         }
 
@@ -1116,15 +1110,14 @@ public class ApplicationServlet extends HttpServlet {
      * are provided by the WebAdapterServlet.
      * 
      * @param request
-     *                the HTTP request.
+     *            the HTTP request.
      * @param response
-     *                the HTTP response.
-     * @return boolean <code>true</code> if the request was handled and
-     *         further processing should be suppressed, <code>false</code>
-     *         otherwise.
+     *            the HTTP response.
+     * @return boolean <code>true</code> if the request was handled and further
+     *         processing should be suppressed, <code>false</code> otherwise.
      * @throws ServletException
-     *                 if an exception has occurred that interferes with the
-     *                 servlet's normal operation.
+     *             if an exception has occurred that interferes with the
+     *             servlet's normal operation.
      */
     private boolean handleResourceRequest(HttpServletRequest request,
             HttpServletResponse response, String themeName)
@@ -1154,6 +1147,7 @@ public class ApplicationServlet extends HttpServlet {
             data = getServletContext().getResourceAsStream(
                     THEME_DIRECTORY_PATH + themeName + "/" + resourceId);
         } catch (final Exception e) {
+            // FIXME: Handle exception
             e.printStackTrace();
             data = null;
         }
@@ -1187,6 +1181,7 @@ public class ApplicationServlet extends HttpServlet {
             }
 
         } catch (final java.io.IOException e) {
+            // FIXME: Handle exception
             System.err.println("Resource transfer failed:  "
                     + request.getRequestURI() + ". (" + e.getMessage() + ")");
         }
@@ -1198,46 +1193,40 @@ public class ApplicationServlet extends HttpServlet {
      * Gets the current application URL from request.
      * 
      * @param request
-     *                the HTTP request.
+     *            the HTTP request.
      * @throws MalformedURLException
-     *                 if the application is denied access to the persistent
-     *                 data store represented by the given URL.
+     *             if the application is denied access to the persistent data
+     *             store represented by the given URL.
      */
     private URL getApplicationUrl(HttpServletRequest request)
             throws MalformedURLException {
 
         URL applicationUrl;
-        try {
-            final URL reqURL = new URL(
-                    (request.isSecure() ? "https://" : "http://")
-                            + request.getServerName()
-                            + ((request.isSecure() && request.getServerPort() == 443)
-                                    || (!request.isSecure() && request
-                                            .getServerPort() == 80) ? "" : ":"
-                                    + request.getServerPort())
-                            + request.getRequestURI());
-            String servletPath = "";
-            if (request.getAttribute("javax.servlet.include.servlet_path") != null) {
-                // this is an include request
-                servletPath = request.getAttribute(
-                        "javax.servlet.include.context_path").toString()
-                        + request
-                                .getAttribute("javax.servlet.include.servlet_path");
 
-            } else {
-                servletPath = request.getContextPath()
-                        + request.getServletPath();
-            }
-            if (servletPath.length() == 0
-                    || servletPath.charAt(servletPath.length() - 1) != '/') {
-                servletPath = servletPath + "/";
-            }
-            applicationUrl = new URL(reqURL, servletPath);
-        } catch (final MalformedURLException e) {
-            System.err.println("Error constructing application url "
-                    + request.getRequestURI() + " (" + e + ")");
-            throw e;
+        final URL reqURL = new URL(
+                (request.isSecure() ? "https://" : "http://")
+                        + request.getServerName()
+                        + ((request.isSecure() && request.getServerPort() == 443)
+                                || (!request.isSecure() && request
+                                        .getServerPort() == 80) ? "" : ":"
+                                + request.getServerPort())
+                        + request.getRequestURI());
+        String servletPath = "";
+        if (request.getAttribute("javax.servlet.include.servlet_path") != null) {
+            // this is an include request
+            servletPath = request.getAttribute(
+                    "javax.servlet.include.context_path").toString()
+                    + request
+                            .getAttribute("javax.servlet.include.servlet_path");
+
+        } else {
+            servletPath = request.getContextPath() + request.getServletPath();
         }
+        if (servletPath.length() == 0
+                || servletPath.charAt(servletPath.length() - 1) != '/') {
+            servletPath = servletPath + "/";
+        }
+        applicationUrl = new URL(reqURL, servletPath);
 
         return applicationUrl;
     }
@@ -1287,13 +1276,13 @@ public class ApplicationServlet extends HttpServlet {
      * instance for given request based on the requested URL.
      * 
      * @param request
-     *                the HTTP request.
+     *            the HTTP request.
      * @param response
      * @return Application instance, or null if the URL does not map to valid
      *         application.
      * @throws MalformedURLException
-     *                 if the application is denied access to the persistent
-     *                 data store represented by the given URL.
+     *             if the application is denied access to the persistent data
+     *             store represented by the given URL.
      * @throws SAXException
      * @throws IllegalAccessException
      * @throws InstantiationException
@@ -1345,13 +1334,13 @@ public class ApplicationServlet extends HttpServlet {
      * Creates new application for given request.
      * 
      * @param request
-     *                the HTTP request.
+     *            the HTTP request.
      * @param response
      * @return Application instance, or null if the URL does not map to valid
      *         application.
      * @throws MalformedURLException
-     *                 if the application is denied access to the persistent
-     *                 data store represented by the given URL.
+     *             if the application is denied access to the persistent data
+     *             store represented by the given URL.
      * @throws SAXException
      * @throws IllegalAccessException
      * @throws InstantiationException
@@ -1396,12 +1385,8 @@ public class ApplicationServlet extends HttpServlet {
             return application;
 
         } catch (final IllegalAccessException e) {
-            System.err.println("Illegal access to application class "
-                    + applicationClass.getName());
             throw e;
         } catch (final InstantiationException e) {
-            System.err.println("Failed to instantiate application class: "
-                    + applicationClass.getName());
             throw e;
         }
     }
@@ -1410,13 +1395,13 @@ public class ApplicationServlet extends HttpServlet {
      * Ends the application.
      * 
      * @param request
-     *                the HTTP request.
+     *            the HTTP request.
      * @param response
-     *                the HTTP response to write to.
+     *            the HTTP response to write to.
      * @param application
-     *                the application to end.
+     *            the application to end.
      * @throws IOException
-     *                 if the writing failed due to input/output error.
+     *             if the writing failed due to input/output error.
      */
     private void endApplication(HttpServletRequest request,
             HttpServletResponse response, Application application)
@@ -1441,13 +1426,13 @@ public class ApplicationServlet extends HttpServlet {
      * application based on the requested URI.
      * 
      * @param request
-     *                the HTTP Request.
+     *            the HTTP Request.
      * @param application
-     *                the Application to query for window.
+     *            the Application to query for window.
      * @return Window matching the given URI or null if not found.
      * @throws ServletException
-     *                 if an exception has occurred that interferes with the
-     *                 servlet's normal operation.
+     *             if an exception has occurred that interferes with the
+     *             servlet's normal operation.
      */
     private Window getApplicationWindow(HttpServletRequest request,
             Application application) throws ServletException {
@@ -1494,9 +1479,9 @@ public class ApplicationServlet extends HttpServlet {
      * Gets relative location of a theme resource.
      * 
      * @param theme
-     *                the Theme name.
+     *            the Theme name.
      * @param resource
-     *                the Theme resource.
+     *            the Theme resource.
      * @return External URI specifying the resource
      */
     public String getResourceLocation(String theme, ThemeResource resource) {
@@ -1512,8 +1497,8 @@ public class ApplicationServlet extends HttpServlet {
      * when debug mode is enabled.
      * 
      * @param parameters
-     * @return <code>true</code> if the web adapter is in debug mode.
-     *         otherwise <code>false</code>.
+     * @return <code>true</code> if the web adapter is in debug mode. otherwise
+     *         <code>false</code>.
      */
     public boolean isDebugMode(Map parameters) {
         if (parameters != null) {
@@ -1621,7 +1606,7 @@ public class ApplicationServlet extends HttpServlet {
      * 
      * @param servletContext
      * @param path
-     *                the resource path.
+     *            the resource path.
      * @return the resource path.
      */
     protected static String getResourcePath(ServletContext servletContext,
@@ -1635,6 +1620,7 @@ public class ApplicationServlet extends HttpServlet {
                 final URL url = servletContext.getResource(path);
                 resultPath = url.getFile();
             } catch (final Exception e) {
+                // FIXME: Handle exception
                 e.printStackTrace();
             }
         }

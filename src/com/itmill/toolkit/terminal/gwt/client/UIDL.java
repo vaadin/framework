@@ -316,7 +316,7 @@ public class UIDL {
                 item.addItem(tmp);
             }
         } catch (final Exception e) {
-            // Ingonered, no variables
+            // Ignored, no variables
         }
 
         final Iterator i = getChildIterator();

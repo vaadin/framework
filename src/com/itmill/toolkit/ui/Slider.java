@@ -14,31 +14,31 @@ import com.itmill.toolkit.terminal.PaintTarget;
  * 
  * Example code: <code>
  * 	class MyPlayer extends CustomComponent implements ValueChangeListener {
- *		
- *		Label volumeIndicator = new Label();
- *		Slider slider;
- *		
- *		public MyPlayer() {
- *			OrderedLayout ol = new OrderedLayout();
- *			setCompositionRoot(ol);
- *			slider = new Slider("Volume", 0, 100);
- *			slider.setImmediate(true);
- *			ol.addComponent(slider);
- *			ol.addComponent(volumeIndicator);
- *			volumeIndicator.setValue(new Double(50));
- *			slider.addListener(this);
- *			
- *		}
- *		
- *		public void setVolume(double d) {
- *			volumeIndicator.setValue("Current volume : " + d);
- *		}
- *
- *		public void valueChange(ValueChangeEvent event) {
- *			Double d = (Double) event.getProperty().getValue();
- *			setVolume(d.doubleValue());
- *		}
- *	}
+ * 		
+ * 		Label volumeIndicator = new Label();
+ * 		Slider slider;
+ * 		
+ * 		public MyPlayer() {
+ * 			OrderedLayout ol = new OrderedLayout();
+ * 			setCompositionRoot(ol);
+ * 			slider = new Slider("Volume", 0, 100);
+ * 			slider.setImmediate(true);
+ * 			ol.addComponent(slider);
+ * 			ol.addComponent(volumeIndicator);
+ * 			volumeIndicator.setValue(new Double(50));
+ * 			slider.addListener(this);
+ * 			
+ * 		}
+ * 		
+ * 		public void setVolume(double d) {
+ * 			volumeIndicator.setValue("Current volume : " + d);
+ * 		}
+ * 
+ * 		public void valueChange(ValueChangeEvent event) {
+ * 			Double d = (Double) event.getProperty().getValue();
+ * 			setVolume(d.doubleValue());
+ * 		}
+ * 	}
  *
  * </code>
  * 
@@ -113,7 +113,7 @@ public class Slider extends AbstractField {
      * values set to defaults.
      * 
      * @param caption
-     *                The caption for this Slider (e.g. "Volume").
+     *            The caption for this Slider (e.g. "Volume").
      */
     public Slider(String caption) {
         this();
@@ -173,7 +173,7 @@ public class Slider extends AbstractField {
      * is out of new bounds, the value is set to new minimum.
      * 
      * @param max
-     *                New maximum value of the Slider.
+     *            New maximum value of the Slider.
      */
     public void setMax(double max) {
         this.max = max;
@@ -182,6 +182,11 @@ public class Slider extends AbstractField {
                 super.setValue(new Double(max));
             }
         } catch (final ClassCastException e) {
+            // FIXME: Handle exception
+            /*
+             * Where does ClassCastException come from? Can't see any casts
+             * above
+             */
             super.setValue(new Double(max));
         }
         requestRepaint();
@@ -201,7 +206,7 @@ public class Slider extends AbstractField {
      * is out of new bounds, the value is set to new minimum.
      * 
      * @param min
-     *                New minimum value of the Slider.
+     *            New minimum value of the Slider.
      */
     public void setMin(double min) {
         this.min = min;
@@ -210,6 +215,11 @@ public class Slider extends AbstractField {
                 super.setValue(new Double(min));
             }
         } catch (final ClassCastException e) {
+            // FIXME: Handle exception
+            /*
+             * Where does ClassCastException come from? Can't see any casts
+             * above
+             */
             super.setValue(new Double(min));
         }
         requestRepaint();
@@ -227,8 +237,7 @@ public class Slider extends AbstractField {
     /**
      * Set the orientation of the Slider.
      * 
-     * @param int
-     *                new orientation
+     * @param int new orientation
      */
     public void setOrientation(int orientation) {
         this.orientation = orientation;
@@ -261,10 +270,10 @@ public class Slider extends AbstractField {
      * Set the value of this Slider.
      * 
      * @param value
-     *                New value of Slider. Must be within Sliders range (min -
-     *                max), otherwise throws an exception.
+     *            New value of Slider. Must be within Sliders range (min - max),
+     *            otherwise throws an exception.
      * @param repaintIsNotNeeded
-     *                If true, client-side is not requested to repaint itself.
+     *            If true, client-side is not requested to repaint itself.
      * @throws ValueOutOfBoundsException
      */
     public void setValue(Double value, boolean repaintIsNotNeeded)
@@ -291,8 +300,8 @@ public class Slider extends AbstractField {
      * Set the value of this Slider.
      * 
      * @param value
-     *                New value of Slider. Must be within Sliders range (min -
-     *                max), otherwise throws an exception.
+     *            New value of Slider. Must be within Sliders range (min - max),
+     *            otherwise throws an exception.
      * @throws ValueOutOfBoundsException
      */
     public void setValue(Double value) throws ValueOutOfBoundsException {
@@ -303,8 +312,8 @@ public class Slider extends AbstractField {
      * Set the value of this Slider.
      * 
      * @param value
-     *                New value of Slider. Must be within Sliders range (min -
-     *                max), otherwise throws an exception.
+     *            New value of Slider. Must be within Sliders range (min - max),
+     *            otherwise throws an exception.
      * @throws ValueOutOfBoundsException
      */
     public void setValue(double value) throws ValueOutOfBoundsException {
@@ -325,7 +334,7 @@ public class Slider extends AbstractField {
      * Set the size for this Slider.
      * 
      * @param size
-     *                in pixels, or -1 auto sizing.
+     *            in pixels, or -1 auto sizing.
      * @deprecated use standard setWidth/setHeight instead
      */
     public void setSize(int size) {
@@ -356,7 +365,7 @@ public class Slider extends AbstractField {
      * Set the handle size of this Slider.
      * 
      * @param handleSize
-     *                in percentages relative to slider base size.
+     *            in percentages relative to slider base size.
      */
     public void setHandleSize(int handleSize) {
         if (handleSize < 0) {
@@ -376,17 +385,17 @@ public class Slider extends AbstractField {
      * 
      * @param visible
      *//*
-         * public void setArrows(boolean visible) { arrows = visible;
-         * requestRepaint(); }
-         */
+        * public void setArrows(boolean visible) { arrows = visible;
+        * requestRepaint(); }
+        */
 
     /*
      * Does the slider have arrows?
      * 
      * @return arrows visible
      *//*
-         * public boolean isArrowsVisible() { return arrows; }
-         */
+        * public boolean isArrowsVisible() { return arrows; }
+        */
 
     public String getTag() {
         return "slider";

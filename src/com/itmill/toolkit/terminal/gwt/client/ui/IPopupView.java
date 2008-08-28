@@ -55,11 +55,11 @@ public class IPopupView extends HTML implements Paintable, Container {
         setStyleName(CLASSNAME);
         popup.setStylePrimaryName(CLASSNAME + "-popup");
 
-        this.setHTML("PopupPanel");
+        setHTML("PopupPanel");
         popup.setWidget(loading);
 
         // When we click to open the popup...
-        this.addClickListener(new ClickListener() {
+        addClickListener(new ClickListener() {
             public void onClick(Widget sender) {
                 updateState(true);
             }
@@ -94,10 +94,10 @@ public class IPopupView extends HTML implements Paintable, Container {
         updateWindowSize();
 
         hostPopupVisible = uidl.getBooleanAttribute("popupVisible");
-        this.setHTML(uidl.getStringAttribute("html"));
+        setHTML(uidl.getStringAttribute("html"));
 
         if (uidl.hasAttribute("description")) {
-            this.setTitle(uidl.getStringAttribute("description"));
+            setTitle(uidl.getStringAttribute("description"));
         }
 
         // Render the popup if visible and show it. The component inside can
@@ -175,7 +175,7 @@ public class IPopupView extends HTML implements Paintable, Container {
             popup.hide();
 
             if (popup != null) {
-                client.unregisterPaintable((Paintable) popup);
+                client.unregisterPaintable(popup);
             }
             popup = (CustomPopup) newComponent;
 
@@ -191,10 +191,10 @@ public class IPopupView extends HTML implements Paintable, Container {
     }
 
     public static native void nativeBlur(Element e) /*-{ 
-                                             if(e.focus) {
-                                                 e.blur();
-                                               }
-                                           }-*/;
+                                                if(e.focus) {
+                                                    e.blur();
+                                                  }
+                                              }-*/;
 
     private class CustomPopup extends ToolkitOverlay implements Container {
 
@@ -277,12 +277,12 @@ public class IPopupView extends HTML implements Paintable, Container {
 
         public void replaceChildComponent(Widget oldComponent,
                 Widget newComponent) {
-            System.out.println("CustomPopup replacechildcomponent");
+            // System.out.println("CustomPopup replacechildcomponent");
             if (oldComponent != null) {
                 client.unregisterPaintable((Paintable) oldComponent);
             }
 
-            popupComponentWidget = (Widget) newComponent;
+            popupComponentWidget = newComponent;
 
             setWidget(popupComponentWidget);
         }

@@ -130,7 +130,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * </p>
      * 
      * @param formLayout
-     *                the layout of the form.
+     *            the layout of the form.
      */
     public Form() {
         this(null);
@@ -141,7 +141,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * Contructs a new form with given layout.
      * 
      * @param formLayout
-     *                the layout of the form.
+     *            the layout of the form.
      */
     public Form(Layout formLayout) {
         this(formLayout, new BaseFieldFactory());
@@ -151,9 +151,9 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * Contructs a new form with given layout and FieldFactory.
      * 
      * @param formLayout
-     *                the layout of the form.
+     *            the layout of the form.
      * @param fieldFactory
-     *                the FieldFactory of the form.
+     *            the FieldFactory of the form.
      */
     public Form(Layout formLayout, FieldFactory fieldFactory) {
         super();
@@ -194,9 +194,10 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
         ErrorMessage validationError = null;
         if (isValidationVisible()) {
             for (final Iterator i = propertyIds.iterator(); i.hasNext();) {
-                try {
-                    AbstractComponent field = (AbstractComponent) fields.get(i
-                            .next());
+                Object f = fields.get(i.next());
+                if (f instanceof AbstractComponent) {
+                    AbstractComponent field = (AbstractComponent) f;
+
                     validationError = field.getErrorMessage();
                     if (validationError != null) {
                         // Skip empty errors
@@ -205,7 +206,6 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
                         }
                         break;
                     }
-                } catch (ClassCastException ignored) {
                 }
             }
         }
@@ -234,9 +234,8 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * the implicit setting by setting this property as false.
      * 
      * @param makeVisible
-     *                If true (default), validation is made visible when
-     *                commit() is called. If false, the visibility is left as it
-     *                is.
+     *            If true (default), validation is made visible when commit() is
+     *            called. If false, the visibility is left as it is.
      */
     public void setValidationVisibleOnCommit(boolean makeVisible) {
         validationVisibleOnCommit = makeVisible;
@@ -263,8 +262,9 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
 
         // Only commit on valid state if so requested
         if (!isInvalidCommitted() && !isValid()) {
-            if (validationVisibleOnCommit)
+            if (validationVisibleOnCommit) {
                 setValidationVisible(true);
+            }
             return;
         }
 
@@ -465,9 +465,9 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * </p>
      * 
      * @param propertyId
-     *                the Property id the the field.
+     *            the Property id the the field.
      * @param field
-     *                the New field added to the form.
+     *            the New field added to the form.
      */
     public void addField(Object propertyId, Field field) {
 
@@ -520,7 +520,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * Gets the field identified by the propertyid.
      * 
      * @param propertyId
-     *                the id of the property.
+     *            the id of the property.
      */
     public Field getField(Object propertyId) {
         return (Field) fields.get(propertyId);
@@ -634,7 +634,8 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * Gets the layout of the form.
      * 
      * <p>
-     * By default form uses <code>OrderedLayout</code> with <code>form</code>-style.
+     * By default form uses <code>OrderedLayout</code> with <code>form</code>
+     * -style.
      * </p>
      * 
      * @return the Layout of the form.
@@ -647,11 +648,12 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * Sets the layout of the form.
      * 
      * <p>
-     * By default form uses <code>OrderedLayout</code> with <code>form</code>-style.
+     * By default form uses <code>OrderedLayout</code> with <code>form</code>
+     * -style.
      * </p>
      * 
      * @param newLayout
-     *                the Layout of the form.
+     *            the Layout of the form.
      */
     public void setLayout(Layout newLayout) {
 
@@ -681,7 +683,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * </p>
      * 
      * @param propertyId
-     *                the id of the property.
+     *            the id of the property.
      * @param values
      * @param descriptions
      * @return the select property generated
@@ -867,7 +869,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * By default the form uses BaseFieldFactory to create Field instances.
      * 
      * @param fieldFactory
-     *                the New factory used to create the fields.
+     *            the New factory used to create the fields.
      * @see Field
      * @see FieldFactory
      */
@@ -974,7 +976,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * Sets the visibleProperties.
      * 
      * @param visibleProperties
-     *                the visibleProperties to set.
+     *            the visibleProperties to set.
      */
     public void setVisibleItemProperties(Collection visibleProperties) {
         visibleItemProperties = visibleProperties;
@@ -1065,7 +1067,7 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
      * Sets the layout that is rendered below normal form contens.
      * 
      * @param newFormFooter
-     *                the new Layout
+     *            the new Layout
      */
     public void setFooter(Layout newFormFooter) {
         if (formFooter != null) {

@@ -19,8 +19,8 @@ import com.itmill.toolkit.terminal.PaintTarget;
  * </p>
  * 
  * <p>
- * Since <code>TextField</code> extends <code>AbstractField</code> it
- * implements the {@link com.itmill.toolkit.data.Buffered} interface. A
+ * Since <code>TextField</code> extends <code>AbstractField</code> it implements
+ * the {@link com.itmill.toolkit.data.Buffered} interface. A
  * <code>TextField</code> is in write-through mode by default, so
  * {@link com.itmill.toolkit.ui.AbstractField#setWriteThrough(boolean)} must be
  * called to enable buffering.
@@ -33,7 +33,7 @@ import com.itmill.toolkit.terminal.PaintTarget;
  */
 public class TextField extends AbstractField {
 
-    /* Private members ************************************************* */
+    /* Private members */
 
     /**
      * Value formatter used to format the string contents.
@@ -73,7 +73,7 @@ public class TextField extends AbstractField {
      */
     private boolean nullSettingAllowed = false;
 
-    /* Constructors **************************************************** */
+    /* Constructors */
 
     /**
      * Constructs an empty <code>TextField</code> with no caption.
@@ -86,7 +86,7 @@ public class TextField extends AbstractField {
      * Constructs an empty <code>TextField</code> with given caption.
      * 
      * @param caption
-     *                the caption <code>String</code> for the editor.
+     *            the caption <code>String</code> for the editor.
      */
     public TextField(String caption) {
         setValue("");
@@ -98,7 +98,7 @@ public class TextField extends AbstractField {
      * <code>Property</code> and has no caption.
      * 
      * @param dataSource
-     *                the Property to be edited with this editor.
+     *            the Property to be edited with this editor.
      */
     public TextField(Property dataSource) {
         setPropertyDataSource(dataSource);
@@ -109,9 +109,9 @@ public class TextField extends AbstractField {
      * <code>Property</code> and has the given caption <code>String</code>.
      * 
      * @param caption
-     *                the caption <code>String</code> for the editor.
+     *            the caption <code>String</code> for the editor.
      * @param dataSource
-     *                the Property to be edited with this editor.
+     *            the Property to be edited with this editor.
      */
     public TextField(String caption, Property dataSource) {
         this(dataSource);
@@ -126,16 +126,16 @@ public class TextField extends AbstractField {
      * is called to bind it.
      * 
      * @param caption
-     *                the caption <code>String</code> for the editor.
+     *            the caption <code>String</code> for the editor.
      * @param text
-     *                the initial text content of the editor.
+     *            the initial text content of the editor.
      */
     public TextField(String caption, String value) {
         setValue(value);
         setCaption(caption);
     }
 
-    /* Component basic features ********************************************* */
+    /* Component basic features */
 
     /*
      * Paints this component. Don't add a JavaDoc comment here, we use the
@@ -188,8 +188,8 @@ public class TextField extends AbstractField {
         if (format != null && value != null) {
             try {
                 return format.format(value);
-            } catch (final IllegalArgumentException ignored) {
-                // Ignored exception
+            } catch (final IllegalArgumentException e) {
+                // FIXME: Handle exception ?
             }
         }
         if (value != null) {
@@ -242,7 +242,7 @@ public class TextField extends AbstractField {
 
     }
 
-    /* Text field configuration ********************************************* */
+    /* Text field configuration */
 
     /**
      * Gets the number of columns in the editor. If the number of columns is set
@@ -261,7 +261,7 @@ public class TextField extends AbstractField {
      * adapter.
      * 
      * @param columns
-     *                the number of columns to set.
+     *            the number of columns to set.
      */
     public void setColumns(int columns) {
         if (columns < 0) {
@@ -288,7 +288,7 @@ public class TextField extends AbstractField {
      * adapter.
      * 
      * @param rows
-     *                the number of rows for this editor.
+     *            the number of rows for this editor.
      */
     public void setRows(int rows) {
         if (rows < 0) {
@@ -312,14 +312,14 @@ public class TextField extends AbstractField {
      * Sets the editor's word-wrap mode on or off.
      * 
      * @param wordwrap
-     *                the boolean value specifying if the editor should be in
-     *                word-wrap mode after the call or not.
+     *            the boolean value specifying if the editor should be in
+     *            word-wrap mode after the call or not.
      */
     public void setWordwrap(boolean wordwrap) {
         this.wordwrap = wordwrap;
     }
 
-    /* Property features **************************************************** */
+    /* Property features */
 
     /*
      * Gets the edited property's type. Don't add a JavaDoc comment here, we use
@@ -345,8 +345,8 @@ public class TextField extends AbstractField {
      * secretinformation the information is not echoed to display.
      * 
      * @param secret
-     *                the value specifying if the field is used to enter secret
-     *                information.
+     *            the value specifying if the field is used to enter secret
+     *            information.
      */
     public void setSecret(boolean secret) {
         this.secret = secret;
@@ -411,7 +411,7 @@ public class TextField extends AbstractField {
      * </p>
      * 
      * @param nullRepresentation
-     *                Textual representation for null strings.
+     *            Textual representation for null strings.
      * @see TextField#setNullSettingAllowed(boolean)
      */
     public void setNullRepresentation(String nullRepresentation) {
@@ -435,8 +435,8 @@ public class TextField extends AbstractField {
      * </p>
      * 
      * @param nullSettingAllowed
-     *                Should the null-string represenation be allways converted
-     *                to null-values.
+     *            Should the null-string represenation be allways converted to
+     *            null-values.
      * @see TextField#getNullRepresentation()
      */
     public void setNullSettingAllowed(boolean nullSettingAllowed) {
@@ -456,8 +456,8 @@ public class TextField extends AbstractField {
      * Gets the value formatter of TextField.
      * 
      * @param format
-     *                the Format used to format the value. Null disables the
-     *                formatting.
+     *            the Format used to format the value. Null disables the
+     *            formatting.
      */
     public void setFormat(Format format) {
         this.format = format;

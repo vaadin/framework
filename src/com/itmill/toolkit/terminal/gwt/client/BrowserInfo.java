@@ -68,8 +68,7 @@ public class BrowserInfo {
                 ieVersion = Float.parseFloat(ieVersionString);
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            ApplicationConnection.getConsole().error(e.getMessage());
+            ClientExceptionHandler.displayError(e);
         }
     }
 

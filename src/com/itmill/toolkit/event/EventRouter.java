@@ -60,14 +60,10 @@ public class EventRouter implements MethodEventSource {
         if (listenerList != null) {
             final Iterator i = listenerList.iterator();
             while (i.hasNext()) {
-                try {
-                    final ListenerMethod lm = (ListenerMethod) i.next();
-                    if (lm.matches(eventType, target)) {
-                        i.remove();
-                        return;
-                    }
-                } catch (final java.lang.ClassCastException e) {
-                    // Class cast exceptions are ignored
+                final ListenerMethod lm = (ListenerMethod) i.next();
+                if (lm.matches(eventType, target)) {
+                    i.remove();
+                    return;
                 }
             }
         }
@@ -82,14 +78,10 @@ public class EventRouter implements MethodEventSource {
         if (listenerList != null) {
             final Iterator i = listenerList.iterator();
             while (i.hasNext()) {
-                try {
-                    final ListenerMethod lm = (ListenerMethod) i.next();
-                    if (lm.matches(eventType, target, method)) {
-                        i.remove();
-                        return;
-                    }
-                } catch (final java.lang.ClassCastException e) {
-                    // Class cast exceptions are ignored
+                final ListenerMethod lm = (ListenerMethod) i.next();
+                if (lm.matches(eventType, target, method)) {
+                    i.remove();
+                    return;
                 }
             }
         }
@@ -118,14 +110,10 @@ public class EventRouter implements MethodEventSource {
         if (listenerList != null) {
             final Iterator i = listenerList.iterator();
             while (i.hasNext()) {
-                try {
-                    final ListenerMethod lm = (ListenerMethod) i.next();
-                    if (lm.matches(eventType, target, method)) {
-                        i.remove();
-                        return;
-                    }
-                } catch (final java.lang.ClassCastException e) {
-                    // Class cast exceptions are ignored
+                final ListenerMethod lm = (ListenerMethod) i.next();
+                if (lm.matches(eventType, target, method)) {
+                    i.remove();
+                    return;
                 }
             }
         }
@@ -144,7 +132,7 @@ public class EventRouter implements MethodEventSource {
      * the activation method should be called or not.
      * 
      * @param event
-     *                the Event to be sent to all listeners.
+     *            the Event to be sent to all listeners.
      */
     public void fireEvent(EventObject event) {
         // It is not necessary to send any events if there are no listeners

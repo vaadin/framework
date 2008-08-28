@@ -85,7 +85,8 @@ public class FilesystemContainer implements Container.Hierarchical {
             FILEITEM_ICON = FileItem.class.getMethod("getIcon", new Class[] {});
             FILEITEM_SIZE = FileItem.class.getMethod("getSize", new Class[] {});
         } catch (final NoSuchMethodException e) {
-
+            throw new RuntimeException(
+                    "Internal error finding methods in FilesystemContainer");
         }
     }
 
@@ -96,12 +97,12 @@ public class FilesystemContainer implements Container.Hierarchical {
     private boolean recursive = true;
 
     /**
-     * Constructs a new <code>FileSystemContainer</code> with the specified
-     * file as the root of the filesystem. The files are included recursively.
+     * Constructs a new <code>FileSystemContainer</code> with the specified file
+     * as the root of the filesystem. The files are included recursively.
      * 
      * @param root
-     *                the root file for the new file-system container. Null
-     *                values are ignored.
+     *            the root file for the new file-system container. Null values
+     *            are ignored.
      */
     public FilesystemContainer(File root) {
         if (root != null) {
@@ -110,13 +111,13 @@ public class FilesystemContainer implements Container.Hierarchical {
     }
 
     /**
-     * Constructs a new <code>FileSystemContainer</code> with the specified
-     * file as the root of the filesystem. The files are included recursively.
+     * Constructs a new <code>FileSystemContainer</code> with the specified file
+     * as the root of the filesystem. The files are included recursively.
      * 
      * @param root
-     *                the root file for the new file-system container.
+     *            the root file for the new file-system container.
      * @param recursive
-     *                should the container recursively contain subdirectories.
+     *            should the container recursively contain subdirectories.
      */
     public FilesystemContainer(File root, boolean recursive) {
         this(root);
@@ -124,16 +125,16 @@ public class FilesystemContainer implements Container.Hierarchical {
     }
 
     /**
-     * Constructs a new <code>FileSystemContainer</code> with the specified
-     * file as the root of the filesystem.
+     * Constructs a new <code>FileSystemContainer</code> with the specified file
+     * as the root of the filesystem.
      * 
      * @param root
-     *                the root file for the new file-system container.
+     *            the root file for the new file-system container.
      * @param extension
-     *                the Filename extension (w/o separator) to limit the files
-     *                in container.
+     *            the Filename extension (w/o separator) to limit the files in
+     *            container.
      * @param recursive
-     *                should the container recursively contain subdirectories.
+     *            should the container recursively contain subdirectories.
      */
     public FilesystemContainer(File root, String extension, boolean recursive) {
         this(root);
@@ -142,15 +143,15 @@ public class FilesystemContainer implements Container.Hierarchical {
     }
 
     /**
-     * Constructs a new <code>FileSystemContainer</code> with the specified
-     * root and recursivity status.
+     * Constructs a new <code>FileSystemContainer</code> with the specified root
+     * and recursivity status.
      * 
      * @param root
-     *                the root file for the new file-system container.
+     *            the root file for the new file-system container.
      * @param filter
-     *                the Filename filter to limit the files in container.
+     *            the Filename filter to limit the files in container.
      * @param recursive
-     *                should the container recursively contain subdirectories.
+     *            should the container recursively contain subdirectories.
      */
     public FilesystemContainer(File root, FilenameFilter filter,
             boolean recursive) {
@@ -164,8 +165,8 @@ public class FilesystemContainer implements Container.Hierarchical {
      * directory in the <code>FilesystemContainer</code>.
      * 
      * @param root
-     *                the File to be added as root directory. Null values are
-     *                ignored.
+     *            the File to be added as root directory. Null values are
+     *            ignored.
      */
     public void addRoot(File root) {
         if (root != null) {
@@ -184,7 +185,7 @@ public class FilesystemContainer implements Container.Hierarchical {
      * method returns <code>true</code> for directory Items only.
      * 
      * @param itemId
-     *                the id of the item.
+     *            the id of the item.
      * @return <code>true</code> if the specified Item is a directory,
      *         <code>false</code> otherwise.
      */
@@ -303,14 +304,14 @@ public class FilesystemContainer implements Container.Hierarchical {
      * not supported.
      * 
      * @param itemId
-     *                the ID of the item.
+     *            the ID of the item.
      * @param areChildrenAllowed
-     *                the boolean value specifying if the Item can have children
-     *                or not.
+     *            the boolean value specifying if the Item can have children or
+     *            not.
      * @return <code>true</code> if the operaton is successful otherwise
      *         <code>false</code>.
      * @throws UnsupportedOperationException
-     *                 if the setChildrenAllowed is not supported.
+     *             if the setChildrenAllowed is not supported.
      */
     public boolean setChildrenAllowed(Object itemId, boolean areChildrenAllowed)
             throws UnsupportedOperationException {
@@ -320,18 +321,18 @@ public class FilesystemContainer implements Container.Hierarchical {
     }
 
     /**
-     * Returns <code>false</code> when moving files around in the filesystem
-     * is not supported.
+     * Returns <code>false</code> when moving files around in the filesystem is
+     * not supported.
      * 
      * @param itemId
-     *                the ID of the item.
+     *            the ID of the item.
      * @param newParentId
-     *                the ID of the Item that's to be the new parent of the Item
-     *                identified with itemId.
+     *            the ID of the Item that's to be the new parent of the Item
+     *            identified with itemId.
      * @return <code>true</code> if the operation is successful otherwise
      *         <code>false</code>.
      * @throws UnsupportedOperationException
-     *                 if the setParent is not supported.
+     *             if the setParent is not supported.
      */
     public boolean setParent(Object itemId, Object newParentId)
             throws UnsupportedOperationException {
@@ -385,9 +386,9 @@ public class FilesystemContainer implements Container.Hierarchical {
      * to the collection.
      * 
      * @param col
-     *                the collection where the found items are added
+     *            the collection where the found items are added
      * @param f
-     *                the root file where to start adding files
+     *            the root file where to start adding files
      */
     private void addItemIds(Collection col, File f) {
         File[] l;
@@ -450,9 +451,9 @@ public class FilesystemContainer implements Container.Hierarchical {
      * not one of those, <code>null</code> is returned.
      * 
      * @param itemId
-     *                the ID of the file whose property is requested.
+     *            the ID of the file whose property is requested.
      * @param propertyId
-     *                the property's ID.
+     *            the property's ID.
      * @return the requested property's value, or <code>null</code>
      */
     public Property getContainerProperty(Object itemId, Object propertyId) {
@@ -495,11 +496,11 @@ public class FilesystemContainer implements Container.Hierarchical {
 
     /**
      * Gets the specified property's data type. "Name" is a <code>String</code>,
-     * "Size" is a <code>Long</code>, "Last Modified" is a <code>Date</code>.
-     * If propertyId is not one of those, <code>null</code> is returned.
+     * "Size" is a <code>Long</code>, "Last Modified" is a <code>Date</code>. If
+     * propertyId is not one of those, <code>null</code> is returned.
      * 
      * @param propertyId
-     *                the ID of the property whose type is requested.
+     *            the ID of the property whose type is requested.
      * @return data type of the requested property, or <code>null</code>
      */
     public Class getType(Object propertyId) {
@@ -524,7 +525,7 @@ public class FilesystemContainer implements Container.Hierarchical {
      * directory.
      * 
      * @param f
-     *                the root to start counting from.
+     *            the root to start counting from.
      */
     private int getFileCounts(File f) {
         File[] l;
@@ -636,7 +637,7 @@ public class FilesystemContainer implements Container.Hierarchical {
          * Properties got from an Item with the same ID are equal.
          * 
          * @param obj
-         *                an object to compare with this object.
+         *            an object to compare with this object.
          * @return <code>true</code> if the given object is the same as this
          *         object, <code>false</code> if not
          */
@@ -745,7 +746,7 @@ public class FilesystemContainer implements Container.Hierarchical {
          * Constructs a new FileExtensionFilter using given extension.
          * 
          * @param fileExtension
-         *                the File extension without the separator (dot).
+         *            the File extension without the separator (dot).
          */
         public FileExtensionFilter(String fileExtension) {
             filter = "." + fileExtension;
@@ -778,7 +779,7 @@ public class FilesystemContainer implements Container.Hierarchical {
      * Sets the file filter used to limit the files in this container.
      * 
      * @param filter
-     *                The filter to set. <code>null</code> disables filtering.
+     *            The filter to set. <code>null</code> disables filtering.
      */
     public void setFilter(FilenameFilter filter) {
         this.filter = filter;
@@ -788,8 +789,8 @@ public class FilesystemContainer implements Container.Hierarchical {
      * Sets the file filter used to limit the files in this container.
      * 
      * @param extension
-     *                the Filename extension (w/o separator) to limit the files
-     *                in container.
+     *            the Filename extension (w/o separator) to limit the files in
+     *            container.
      */
     public void setFilter(String extension) {
         filter = new FileExtensionFilter(extension);
@@ -813,7 +814,7 @@ public class FilesystemContainer implements Container.Hierarchical {
      * </p>
      * 
      * @param recursive
-     *                the New value for recursive property.
+     *            the New value for recursive property.
      */
     public void setRecursive(boolean recursive) {
         this.recursive = recursive;
@@ -822,8 +823,9 @@ public class FilesystemContainer implements Container.Hierarchical {
     /*
      * (non-Javadoc)
      * 
-     * @see com.itmill.toolkit.data.Container#addContainerProperty(java.lang.Object,
-     *      java.lang.Class, java.lang.Object)
+     * @see
+     * com.itmill.toolkit.data.Container#addContainerProperty(java.lang.Object,
+     * java.lang.Class, java.lang.Object)
      */
     public boolean addContainerProperty(Object propertyId, Class type,
             Object defaultValue) throws UnsupportedOperationException {
@@ -875,7 +877,9 @@ public class FilesystemContainer implements Container.Hierarchical {
     /*
      * (non-Javadoc)
      * 
-     * @see com.itmill.toolkit.data.Container#removeContainerProperty(java.lang.Object)
+     * @see
+     * com.itmill.toolkit.data.Container#removeContainerProperty(java.lang.Object
+     * )
      */
     public boolean removeContainerProperty(Object propertyId)
             throws UnsupportedOperationException {

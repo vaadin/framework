@@ -22,7 +22,7 @@ import com.itmill.toolkit.terminal.PaintTarget;
  */
 public class Button extends AbstractField {
 
-    /* Private members ************************************************* */
+    /* Private members */
 
     boolean switchMode = false;
 
@@ -42,7 +42,7 @@ public class Button extends AbstractField {
      * default.
      * 
      * @param caption
-     *                the Button caption.
+     *            the Button caption.
      */
     public Button(String caption) {
         setCaption(caption);
@@ -53,9 +53,9 @@ public class Button extends AbstractField {
      * Creates a new push button with click listener.
      * 
      * @param caption
-     *                the Button caption.
+     *            the Button caption.
      * @param listener
-     *                the Button click listener.
+     *            the Button click listener.
      */
     public Button(String caption, ClickListener listener) {
         this(caption);
@@ -71,12 +71,12 @@ public class Button extends AbstractField {
      * of Button.ClickEvent type.
      * 
      * @param caption
-     *                the Button caption.
+     *            the Button caption.
      * @param target
-     *                the Object having the method for listening button clicks.
+     *            the Object having the method for listening button clicks.
      * @param methodName
-     *                the name of the method in target object, that receives
-     *                button click events.
+     *            the name of the method in target object, that receives button
+     *            click events.
      */
     public Button(String caption, Object target, String methodName) {
         this(caption);
@@ -87,7 +87,7 @@ public class Button extends AbstractField {
      * Creates a new switch button with initial value.
      * 
      * @param state
-     *                the Initial state of the switch-button.
+     *            the Initial state of the switch-button.
      * @param initialState
      */
     public Button(String caption, boolean initialState) {
@@ -100,7 +100,7 @@ public class Button extends AbstractField {
      * Creates a new switch button that is connected to a boolean property.
      * 
      * @param state
-     *                the Initial state of the switch-button.
+     *            the Initial state of the switch-button.
      * @param dataSource
      */
     public Button(String caption, Property dataSource) {
@@ -122,11 +122,11 @@ public class Button extends AbstractField {
      * Paints the content of this component.
      * 
      * @param event
-     *                the PaintEvent.
+     *            the PaintEvent.
      * @throws IOException
-     *                 if the writing failed due to input/output error.
+     *             if the writing failed due to input/output error.
      * @throws PaintException
-     *                 if the paint operation failed.
+     *             if the paint operation failed.
      */
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);
@@ -153,10 +153,8 @@ public class Button extends AbstractField {
      */
     public void changeVariables(Object source, Map variables) {
         super.changeVariables(source, variables);
-        if (isReadOnly()) {
-            System.err.println("Button: ignoring variable change for"
-                    + " read-only component, caption=" + getCaption());
-        } else if (variables.containsKey("state")) {
+
+        if (!isReadOnly() && variables.containsKey("state")) {
             // Gets the new and old button states
             final Boolean newValue = (Boolean) variables.get("state");
             final Boolean oldValue = (Boolean) getValue();
@@ -199,7 +197,7 @@ public class Button extends AbstractField {
      * Sets the switchMode.
      * 
      * @param switchMode
-     *                The switchMode to set.
+     *            The switchMode to set.
      */
     public void setSwitchMode(boolean switchMode) {
         this.switchMode = switchMode;
@@ -237,7 +235,7 @@ public class Button extends AbstractField {
         return Boolean.class;
     }
 
-    /* Click event ************************************************ */
+    /* Click event */
 
     private static final Method BUTTON_CLICK_METHOD;
 
@@ -250,7 +248,8 @@ public class Button extends AbstractField {
                     "buttonClick", new Class[] { ClickEvent.class });
         } catch (final java.lang.NoSuchMethodException e) {
             // This should never happen
-            throw new java.lang.RuntimeException();
+            throw new java.lang.RuntimeException(
+                    "Internal error finding methods in Button");
         }
     }
 
@@ -273,7 +272,7 @@ public class Button extends AbstractField {
          * New instance of text change event.
          * 
          * @param source
-         *                the Source of the event.
+         *            the Source of the event.
          */
         public ClickEvent(Component source) {
             super(source);
@@ -303,7 +302,7 @@ public class Button extends AbstractField {
          * Button has been pressed.
          * 
          * @param event
-         *                Button click event.
+         *            Button click event.
          */
         public void buttonClick(ClickEvent event);
     }
@@ -312,7 +311,7 @@ public class Button extends AbstractField {
      * Adds the button click listener.
      * 
      * @param listener
-     *                the Listener to be added.
+     *            the Listener to be added.
      */
     public void addListener(ClickListener listener) {
         addListener(ClickEvent.class, listener, BUTTON_CLICK_METHOD);
@@ -322,7 +321,7 @@ public class Button extends AbstractField {
      * Removes the button click listener.
      * 
      * @param listener
-     *                the Listener to be removed.
+     *            the Listener to be removed.
      */
     public void removeListener(ClickListener listener) {
         removeListener(ClickEvent.class, listener, BUTTON_CLICK_METHOD);
