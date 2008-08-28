@@ -10,6 +10,7 @@
 }
 
 .i-slider-base {
+	/* changing the borders will require adjustments to ISlider.java */
 	height: 2px;
 	border-top: 1px solid #cbcdce;
 	background: #f3f3f4;

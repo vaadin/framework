@@ -47,6 +47,7 @@ public class ISlider extends Widget implements Paintable, Field,
 
     /* DOM element for slider's base */
     private final Element base;
+    private final int BASE_BORDER_WIDTH = 1;
 
     /* DOM element for slider's handle */
     private final Element handle;
@@ -236,11 +237,9 @@ public class ISlider extends Widget implements Paintable, Field,
         final String domProperty = vertical ? "offsetHeight" : "offsetWidth";
         final int handleSize = Integer.parseInt(DOM.getElementProperty(handle,
                 domProperty));
-
-        DOM.setStyleAttribute(base, "borderWidth", "0px");
         final int baseSize = Integer.parseInt(DOM.getElementProperty(base,
-                domProperty));
-        DOM.setStyleAttribute(base, "borderWidth", "");
+                domProperty))
+                - (2 * BASE_BORDER_WIDTH);
 
         final int range = baseSize - handleSize;
         double v = value.doubleValue();
