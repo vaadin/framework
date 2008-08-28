@@ -238,6 +238,26 @@ public class IPanel extends SimplePanel implements Paintable,
     }
 
     public void iLayout(boolean runGeckoFix) {
+
+        // IE6 width fix
+        if (BrowserInfo.get().isIE6()) {
+            int captionOffsetWidth = DOM.getElementPropertyInt(captionNode,
+                    "offsetWidth");
+            int borderWidthGuess = 200;
+            int widthGuess = captionOffsetWidth - borderWidthGuess;
+            DOM.setStyleAttribute(contentNode, "width", widthGuess + "px");
+
+            int actualBorder = DOM.getElementPropertyInt(contentNode,
+                    "offsetWidth")
+                    - widthGuess;
+            if (actualBorder != borderWidthGuess) {
+                int realWidthIncludingBorder = captionOffsetWidth
+                        - actualBorder;
+                DOM.setStyleAttribute(contentNode, "width",
+                        realWidthIncludingBorder + "px");
+            }
+        }
+
         if (height != null && height != "") {
             final boolean hasChildren = getWidget() != null;
             Element contentEl = null;
