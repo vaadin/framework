@@ -7,9 +7,18 @@ import java.util.Map;
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
 
+/**
+ * 
+ * A component for displaying a two different views to data. The minmized view
+ * is normally used to render the component, and when it is clicked the full
+ * view is displayed on a popup. The inner class {@link PopupView.Content} is
+ * used to deliver contents to this component.
+ * 
+ * @author IT Mill Ltd.
+ */
 public class PopupView extends AbstractComponentContainer {
 
-    Content itsContent;
+    Content content;
     boolean popupVisible;
     ArrayList componentList;
 
@@ -17,8 +26,8 @@ public class PopupView extends AbstractComponentContainer {
 
     /**
      * A simple way to create a PopupPanel. Note that the minimal representation
-     * may not be dynamically updated, to achieve this create your own Content
-     * object.
+     * may not be dynamically updated, in order to achieve this create your own
+     * Content object and use {@link PopupView#PopupView(Content)}.
      * 
      * @param small
      *            the minimal textual representation as HTML
@@ -47,33 +56,40 @@ public class PopupView extends AbstractComponentContainer {
      */
     public PopupView(PopupView.Content content) {
         super();
-        this.itsContent = content;
+        setContent(content);
         popupVisible = false;
         componentList = new ArrayList(1);
     }
 
     /**
      * This method will replace the current content of the panel with a new one.
-     * Give null to remove current content.
      * 
      * @param newContent
      *            PopupView.Content object containing new information for the
      *            PopupView
-     * 
+     * @throws IllegalArgumentException
+     *             if the method is passed a null value, or if one of the
+     *             content methods returns null
      */
-    public void setContent(PopupView.Content content) {
-        this.itsContent = content;
+    public void setContent(PopupView.Content newContent)
+            throws IllegalArgumentException {
+        if (newContent == null || newContent.getMinimizedValueAsHTML() == null
+                || newContent.getPopupComponent() == null) {
+            throw new IllegalArgumentException(
+                    "Content object is or contains null");
+        }
+
+        this.content = newContent;
         requestRepaint();
     }
 
     /**
-     * Returns the content-package for this PopupView. Returns null if the
-     * PopupView has no content.
+     * Returns the content-package for this PopupView.
      * 
      * @return the PopupView.Content for this object or null
      */
     public PopupView.Content getContent() {
-        return itsContent;
+        return content;
     }
 
     /**
@@ -91,7 +107,7 @@ public class PopupView extends AbstractComponentContainer {
      */
 
     /**
-     * Not supported in this implementation. Will return an empty iterator.
+     * This class only contains other components when the popup is showing.
      * 
      * @see com.itmill.toolkit.ui.ComponentContainer#getComponentIterator()
      */
@@ -111,8 +127,7 @@ public class PopupView extends AbstractComponentContainer {
     }
 
     /**
-     * In this implementation, moveComponents is not supported. It always throws
-     * UnsupportedOperationException.
+     * Not supported in this implementation.
      * 
      * @see com.itmill.toolkit.ui.AbstractComponentContainer#moveComponentsFrom(com.itmill.toolkit.ui.ComponentContainer)
      * @throws UnsupportedOperationException
@@ -135,8 +150,7 @@ public class PopupView extends AbstractComponentContainer {
     }
 
     /**
-     * Not supported in this implementation. Always throws
-     * UnsupportedOperationException.
+     * Not supported in this implementation.
      * 
      * @see com.itmill.toolkit.ui.ComponentContainer#replaceComponent(com.itmill.toolkit.ui.Component,
      *      com.itmill.toolkit.ui.Component)
@@ -179,11 +193,22 @@ public class PopupView extends AbstractComponentContainer {
         // Superclass writes any common attributes in the paint target.
         super.paintContent(target);
 
-        target.addAttribute("html", itsContent.getMinimizedValueAsHTML());
+        String html = content.getMinimizedValueAsHTML();
+        if (html == null) {
+            throw new PaintException(
+                    "Recieved null when trying to paint minimized value.");
+        }
+        target.addAttribute("html", content.getMinimizedValueAsHTML());
         target.addAttribute("popupVisible", popupVisible);
 
+        // Only paint component to client if we know that the popup is showing
         if (popupVisible) {
-            Component c = itsContent.getPopupComponent();
+            Component c = content.getPopupComponent();
+
+            if (c == null) {
+                throw new PaintException(
+                        "Received null when trying to paint popup component");
+            }
 
             target.startTag("popupComponent");
             c.paint(target);
@@ -201,14 +226,14 @@ public class PopupView extends AbstractComponentContainer {
     public void changeVariables(Object source, Map variables) {
         if (variables.containsKey("popupVisibility")) {
 
-            // TODO we could use boolean allowPopup here to prevent popups from
-            // showing
+            // TODO we could use server-side boolean allowPopup here to prevent
+            // popups from showing
 
             popupVisible = ((Boolean) variables.get("popupVisibility"))
                     .booleanValue();
 
             if (popupVisible) {
-                Component c = itsContent.getPopupComponent();
+                Component c = content.getPopupComponent();
                 componentList.add(c);
                 super.addComponent(c);
             } else if (!componentList.isEmpty()) {
@@ -221,7 +246,8 @@ public class PopupView extends AbstractComponentContainer {
 
     /**
      * Used to deliver customized content-packages to the PopupView. These are
-     * dynamically loaded when they are redrawn.
+     * dynamically loaded when they are redrawn. The user must take care that
+     * neither of these methods ever return null.
      */
     public interface Content {
 
