@@ -14,9 +14,9 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
-import com.itmill.toolkit.terminal.gwt.client.ICaption;
 import com.itmill.toolkit.terminal.gwt.client.Container;
 import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
+import com.itmill.toolkit.terminal.gwt.client.ICaption;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.Util;
@@ -149,6 +149,21 @@ public class IOrderedLayout extends Panel implements Container,
         }
         boolean oldTableMode = tableMode;
         tableMode = newTableMode;
+
+        /*
+         * If the child are not detached before the parent is cleared with
+         * setInnerHTML the children will also be cleared in IE
+         */
+        if (BrowserInfo.get().isIE()) {
+            while (true) {
+                Element child = DOM.getFirstChild(getElement());
+                if (child != null) {
+                    DOM.removeChild(getElement(), child);
+                } else {
+                    break;
+                }
+            }
+        }
 
         // Constuct base DOM-structure and clean any already attached
         // widgetwrappers from DOM.
