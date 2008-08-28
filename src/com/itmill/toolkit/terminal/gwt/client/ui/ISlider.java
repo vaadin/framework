@@ -236,8 +236,12 @@ public class ISlider extends Widget implements Paintable, Field,
         final String domProperty = vertical ? "offsetHeight" : "offsetWidth";
         final int handleSize = Integer.parseInt(DOM.getElementProperty(handle,
                 domProperty));
+
+        DOM.setStyleAttribute(base, "borderWidth", "0px");
         final int baseSize = Integer.parseInt(DOM.getElementProperty(base,
                 domProperty));
+        DOM.setStyleAttribute(base, "borderWidth", "");
+
         final int range = baseSize - handleSize;
         double v = value.doubleValue();
         // Round value to resolution
