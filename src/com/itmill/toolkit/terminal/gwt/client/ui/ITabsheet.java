@@ -17,7 +17,7 @@ import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
-import com.itmill.toolkit.terminal.gwt.client.Caption;
+import com.itmill.toolkit.terminal.gwt.client.ICaption;
 import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
@@ -53,7 +53,7 @@ public class ITabsheet extends ITabsheetBase implements
             return getWidgetCount();
         }
 
-        public void addTab(Caption c) {
+        public void addTab(ICaption c) {
             Element td = DOM.createTD();
             setStyleName(td, CLASSNAME + "-tabitemcell");
 
@@ -90,15 +90,15 @@ public class ITabsheet extends ITabsheetBase implements
         }
 
         public boolean remove(Widget w) {
-            ((Caption) w).removeClickListener(this);
+            ((ICaption) w).removeClickListener(this);
             return super.remove(w);
         }
 
-        public Caption getTab(int index) {
+        public ICaption getTab(int index) {
             if (index >= getWidgetCount()) {
                 return null;
             }
-            return (Caption) getWidget(index);
+            return (ICaption) getWidget(index);
         }
 
     }
@@ -285,9 +285,9 @@ public class ITabsheet extends ITabsheetBase implements
     }
 
     protected void renderTab(final UIDL tabUidl, int index, boolean selected) {
-        Caption c = tb.getTab(index);
+        ICaption c = tb.getTab(index);
         if (c == null) {
-            c = new Caption(null, client);
+            c = new ICaption(null, client);
             tb.addTab(c);
         }
         c.updateCaption(tabUidl);
@@ -468,7 +468,7 @@ public class ITabsheet extends ITabsheetBase implements
 
     public void updateCaption(Paintable component, UIDL uidl) {
         int i = tp.getWidgetIndex((Widget) component);
-        Caption c = (Caption) captions.get("" + i);
+        ICaption c = (ICaption) captions.get("" + i);
         c.updateCaption(uidl);
     }
 }

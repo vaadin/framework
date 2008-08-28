@@ -12,7 +12,7 @@ import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
-import com.itmill.toolkit.terminal.gwt.client.ErrorMessage;
+import com.itmill.toolkit.terminal.gwt.client.IErrorMessage;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
@@ -42,7 +42,7 @@ public class ILink extends HTML implements Paintable, ClickListener {
 
     private final Element captionElement = DOM.createSpan();
 
-    private ErrorMessage errorMessage;
+    private IErrorMessage errorMessage;
 
     private Icon icon;
 
@@ -101,7 +101,7 @@ public class ILink extends HTML implements Paintable, ClickListener {
             }
             DOM.insertChild(getElement(), errorIndicatorElement, 0);
             if (errorMessage == null) {
-                errorMessage = new ErrorMessage();
+                errorMessage = new IErrorMessage();
             }
             errorMessage.updateFromUIDL(errorUidl);
 

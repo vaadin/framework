@@ -30,7 +30,7 @@ import com.google.gwt.user.client.ui.SuggestOracle.Suggestion;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Focusable;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
-import com.itmill.toolkit.terminal.gwt.client.Tooltip;
+import com.itmill.toolkit.terminal.gwt.client.ITooltip;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.Util;
 
@@ -88,7 +88,7 @@ public class IFilterSelect extends Composite implements Paintable, Field,
      * @author mattitahvonen
      * 
      */
-    public class SuggestionPopup extends ToolkitOverlay implements
+    public class SuggestionPopup extends IToolkitOverlay implements
             PositionCallback, PopupListener {
         private static final int EXTRASPACE = 8;
 
@@ -481,7 +481,7 @@ public class IFilterSelect extends Composite implements Paintable, Field,
     public IFilterSelect() {
         selectedItemIcon.setVisible(false);
         panel.add(selectedItemIcon);
-        tb.sinkEvents(Tooltip.TOOLTIP_EVENTS);
+        tb.sinkEvents(ITooltip.TOOLTIP_EVENTS);
         panel.add(tb);
         panel.add(popupOpener);
         initWidget(panel);

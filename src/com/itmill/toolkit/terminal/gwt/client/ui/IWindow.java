@@ -361,7 +361,7 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
                         final int position = notification
                                 .getIntAttribute("position");
                         final int delay = notification.getIntAttribute("delay");
-                        new Notification(delay).show(html, position, style);
+                        new INotification(delay).show(html, position, style);
                     }
                 }
             }
@@ -490,7 +490,7 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
             DOM.setStyleAttribute(draggingCurtain, "width", "100%");
             DOM.setStyleAttribute(draggingCurtain, "height", "100%");
             DOM.setStyleAttribute(draggingCurtain, "zIndex", ""
-                    + ToolkitOverlay.Z_INDEX);
+                    + IToolkitOverlay.Z_INDEX);
 
             DOM.appendChild(RootPanel.getBodyElement(), draggingCurtain);
         } else if (!show && draggingCurtain != null) {

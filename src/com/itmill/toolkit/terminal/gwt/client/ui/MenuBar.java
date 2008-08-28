@@ -42,12 +42,9 @@ import com.google.gwt.user.client.ui.Widget;
  * <img class='gallery' src='MenuBar.png'/>
  * </p>
  * 
- * <h3>CSS Style Rules</h3>
- * <ul class='css'>
- * <li>.gwt-MenuBar { the menu bar itself }</li>
- * <li>.gwt-MenuBar .gwt-MenuItem { menu items }</li>
- * <li>.gwt-MenuBar .gwt-MenuItem-selected { selected menu items }</li>
- * </ul>
+ * <h3>CSS Style Rules</h3> <ul class='css'> <li>.gwt-MenuBar { the menu bar
+ * itself }</li> <li>.gwt-MenuBar .gwt-MenuItem { menu items }</li> <li>
+ * .gwt-MenuBar .gwt-MenuItem-selected { selected menu items }</li> </ul>
  * 
  * <p>
  * <h3>Example</h3>
@@ -78,7 +75,7 @@ public class MenuBar extends Widget implements PopupListener {
      * Creates an empty menu bar.
      * 
      * @param vertical
-     *                <code>true</code> to orient the menu bar vertically
+     *            <code>true</code> to orient the menu bar vertically
      */
     public MenuBar(boolean vertical) {
         super();
@@ -106,7 +103,7 @@ public class MenuBar extends Widget implements PopupListener {
      * Adds a menu item to the bar.
      * 
      * @param item
-     *                the item to be added
+     *            the item to be added
      */
     public void addItem(MenuItem item) {
         Element tr;
@@ -129,11 +126,11 @@ public class MenuBar extends Widget implements PopupListener {
      * selected.
      * 
      * @param text
-     *                the item's text
+     *            the item's text
      * @param asHTML
-     *                <code>true</code> to treat the specified text as html
+     *            <code>true</code> to treat the specified text as html
      * @param cmd
-     *                the command to be fired
+     *            the command to be fired
      * @return the {@link MenuItem} object created
      */
     public MenuItem addItem(String text, boolean asHTML, Command cmd) {
@@ -147,11 +144,11 @@ public class MenuBar extends Widget implements PopupListener {
      * selected.
      * 
      * @param text
-     *                the item's text
+     *            the item's text
      * @param asHTML
-     *                <code>true</code> to treat the specified text as html
+     *            <code>true</code> to treat the specified text as html
      * @param popup
-     *                the menu to be cascaded from it
+     *            the menu to be cascaded from it
      * @return the {@link MenuItem} object created
      */
     public MenuItem addItem(String text, boolean asHTML, MenuBar popup) {
@@ -165,9 +162,9 @@ public class MenuBar extends Widget implements PopupListener {
      * selected.
      * 
      * @param text
-     *                the item's text
+     *            the item's text
      * @param cmd
-     *                the command to be fired
+     *            the command to be fired
      * @return the {@link MenuItem} object created
      */
     public MenuItem addItem(String text, Command cmd) {
@@ -181,9 +178,9 @@ public class MenuBar extends Widget implements PopupListener {
      * selected.
      * 
      * @param text
-     *                the item's text
+     *            the item's text
      * @param popup
-     *                the menu to be cascaded from it
+     *            the menu to be cascaded from it
      * @return the {@link MenuItem} object created
      */
     public MenuItem addItem(String text, MenuBar popup) {
@@ -259,7 +256,7 @@ public class MenuBar extends Widget implements PopupListener {
      * Removes the specified menu item from the bar.
      * 
      * @param item
-     *                the item to be removed
+     *            the item to be removed
      */
     public void removeItem(MenuItem item) {
         final int idx = items.indexOf(item);
@@ -277,7 +274,7 @@ public class MenuBar extends Widget implements PopupListener {
      * moved over it.
      * 
      * @param autoOpen
-     *                <code>true</code> to cause child menus to auto-open
+     *            <code>true</code> to cause child menus to auto-open
      */
     public void setAutoOpen(boolean autoOpen) {
         this.autoOpen = autoOpen;
@@ -340,8 +337,8 @@ public class MenuBar extends Widget implements PopupListener {
      * fired. Popups associated with other items will be hidden.
      * 
      * @param item the item whose popup is to be shown. @param fireCommand
-     * <code>true</code> if the item's command should be fired, <code>false</code>
-     * otherwise.
+     * <code>true</code> if the item's command should be fired,
+     * <code>false</code> otherwise.
      */
     void doItemAction(final MenuItem item, boolean fireCommand) {
         // If the given item is already showing its menu, we're done.
@@ -376,7 +373,7 @@ public class MenuBar extends Widget implements PopupListener {
         // Create a new popup for this item, and position it next to
         // the item (below if this is a horizontal menu bar, to the
         // right if it's a vertical bar).
-        popup = new ToolkitOverlay(true) {
+        popup = new IToolkitOverlay(true) {
             {
                 setWidget(item.getSubMenu());
                 item.getSubMenu().onShow();

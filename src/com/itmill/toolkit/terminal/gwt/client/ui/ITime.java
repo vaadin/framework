@@ -11,7 +11,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 
-public class Time extends FlowPanel implements ChangeListener {
+public class ITime extends FlowPanel implements ChangeListener {
 
     private final IDateField datefield;
 
@@ -29,7 +29,7 @@ public class Time extends FlowPanel implements ChangeListener {
 
     private boolean readonly;
 
-    public Time(IDateField parent) {
+    public ITime(IDateField parent) {
         super();
         datefield = parent;
         setStyleName(IDateField.CLASSNAME + "-time");

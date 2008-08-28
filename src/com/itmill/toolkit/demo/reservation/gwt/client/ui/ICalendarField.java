@@ -21,12 +21,12 @@ import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.DateTimeService;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.ui.CalendarEntry;
-import com.itmill.toolkit.terminal.gwt.client.ui.CalendarPanel;
+import com.itmill.toolkit.terminal.gwt.client.ui.ICalendarPanel;
 import com.itmill.toolkit.terminal.gwt.client.ui.IDateField;
 
 public class ICalendarField extends IDateField {
 
-    private final CalendarPanel calPanel;
+    private final ICalendarPanel calPanel;
 
     private SimplePanel hourPanel;
 
@@ -44,7 +44,7 @@ public class ICalendarField extends IDateField {
     public ICalendarField() {
         super();
         setStyleName(CLASSNAME);
-        calPanel = new CalendarPanel(this);
+        calPanel = new ICalendarPanel(this);
         add(calPanel);
         entrySource = new EntrySource();
         calPanel.setCalendarEntrySource(entrySource);
@@ -212,7 +212,7 @@ public class ICalendarField extends IDateField {
 
     }
 
-    private class EntrySource implements CalendarPanel.CalendarEntrySource {
+    private class EntrySource implements ICalendarPanel.CalendarEntrySource {
 
         private final HashMap dates = new HashMap();
 

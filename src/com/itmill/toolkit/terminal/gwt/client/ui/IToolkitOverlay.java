@@ -17,28 +17,28 @@ import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
  * temporary float over other components like context menus etc. This is to deal
  * stacking order correctly with IWindow objects.
  */
-public class ToolkitOverlay extends PopupPanel {
+public class IToolkitOverlay extends PopupPanel {
 
     public static final int Z_INDEX = 20000;
 
     private Shadow shadow;
 
-    public ToolkitOverlay() {
+    public IToolkitOverlay() {
         super();
         adjustZIndex();
     }
 
-    public ToolkitOverlay(boolean autoHide) {
+    public IToolkitOverlay(boolean autoHide) {
         super(autoHide);
         adjustZIndex();
     }
 
-    public ToolkitOverlay(boolean autoHide, boolean modal) {
+    public IToolkitOverlay(boolean autoHide, boolean modal) {
         super(autoHide, modal);
         adjustZIndex();
     }
 
-    public ToolkitOverlay(boolean autoHide, boolean modal, boolean showShadow) {
+    public IToolkitOverlay(boolean autoHide, boolean modal, boolean showShadow) {
         super(autoHide, modal);
         if (showShadow) {
             shadow = new Shadow();
@@ -107,7 +107,7 @@ public class ToolkitOverlay extends PopupPanel {
 
         public void updateSizeAndPosition() {
             // Calculate proper z-index
-            String zIndex = DOM.getStyleAttribute(ToolkitOverlay.this
+            String zIndex = DOM.getStyleAttribute(IToolkitOverlay.this
                     .getElement(), "zIndex");
             if (zIndex == null) {
                 zIndex = "" + Z_INDEX;
@@ -116,13 +116,13 @@ public class ToolkitOverlay extends PopupPanel {
             // Calculate position and size
             if (BrowserInfo.get().isIE()) {
                 // Shake IE
-                ToolkitOverlay.this.getOffsetHeight();
-                ToolkitOverlay.this.getOffsetWidth();
+                IToolkitOverlay.this.getOffsetHeight();
+                IToolkitOverlay.this.getOffsetWidth();
             }
-            int x = ToolkitOverlay.this.getAbsoluteLeft() - left;
-            int y = ToolkitOverlay.this.getAbsoluteTop() - top;
-            int width = ToolkitOverlay.this.getOffsetWidth() + left + right;
-            int height = ToolkitOverlay.this.getOffsetHeight() + top + bottom;
+            int x = IToolkitOverlay.this.getAbsoluteLeft() - left;
+            int y = IToolkitOverlay.this.getAbsoluteTop() - top;
+            int width = IToolkitOverlay.this.getOffsetWidth() + left + right;
+            int height = IToolkitOverlay.this.getOffsetHeight() + top + bottom;
             if (width < 0) {
                 width = 0;
             }
@@ -144,7 +144,7 @@ public class ToolkitOverlay extends PopupPanel {
             this.right = right;
             this.bottom = bottom;
             this.left = left;
-            if (ToolkitOverlay.this.isAttached()) {
+            if (IToolkitOverlay.this.isAttached()) {
                 updateSizeAndPosition();
             }
         }

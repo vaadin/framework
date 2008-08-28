@@ -11,7 +11,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Container;
 import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
-import com.itmill.toolkit.terminal.gwt.client.ErrorMessage;
+import com.itmill.toolkit.terminal.gwt.client.IErrorMessage;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.Util;
@@ -27,7 +27,7 @@ public class IForm extends ComplexPanel implements Paintable,
     private Element errorIndicatorElement = DOM.createDiv();
     private Element desc = DOM.createDiv();
     private Icon icon;
-    private ErrorMessage errorMessage = new ErrorMessage();
+    private IErrorMessage errorMessage = new IErrorMessage();
 
     private Element fieldContainer = DOM.createDiv();
 

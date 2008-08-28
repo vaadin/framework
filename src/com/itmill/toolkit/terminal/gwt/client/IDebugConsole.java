@@ -16,7 +16,7 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ui.IWindow;
 
-public final class DebugConsole extends IWindow implements Console {
+public final class IDebugConsole extends IWindow implements Console {
 
     /**
      * Builds number. For example 0-custom_tag in 5.0.0-custom_tag.
@@ -34,7 +34,7 @@ public final class DebugConsole extends IWindow implements Console {
 
     private final Panel panel;
 
-    public DebugConsole(ApplicationConnection client,
+    public IDebugConsole(ApplicationConnection client,
             ApplicationConfiguration cnf) {
         super();
         this.client = client;
@@ -62,8 +62,7 @@ public final class DebugConsole extends IWindow implements Console {
     private void minimize() {
         // TODO stack to bottom (create window manager of some sort)
         setPixelSize(60, 60);
-        setPopupPosition(Window.getClientWidth()
-                - 142, 0);
+        setPopupPosition(Window.getClientWidth() - 142, 0);
     }
 
     /*
@@ -79,7 +78,8 @@ public final class DebugConsole extends IWindow implements Console {
     /*
      * (non-Javadoc)
      * 
-     * @see com.itmill.toolkit.terminal.gwt.client.Console#error(java.lang.String)
+     * @see
+     * com.itmill.toolkit.terminal.gwt.client.Console#error(java.lang.String)
      */
     public void error(String msg) {
         panel.add((new HTML(msg)));
@@ -89,7 +89,9 @@ public final class DebugConsole extends IWindow implements Console {
     /*
      * (non-Javadoc)
      * 
-     * @see com.itmill.toolkit.terminal.gwt.client.Console#printObject(java.lang.Object)
+     * @see
+     * com.itmill.toolkit.terminal.gwt.client.Console#printObject(java.lang.
+     * Object)
      */
     public void printObject(Object msg) {
         panel.add((new Label(msg.toString())));
@@ -98,7 +100,9 @@ public final class DebugConsole extends IWindow implements Console {
     /*
      * (non-Javadoc)
      * 
-     * @see com.itmill.toolkit.terminal.gwt.client.Console#dirUIDL(com.itmill.toolkit.terminal.gwt.client.UIDL)
+     * @see
+     * com.itmill.toolkit.terminal.gwt.client.Console#dirUIDL(com.itmill.toolkit
+     * .terminal.gwt.client.UIDL)
      */
     public void dirUIDL(UIDL u) {
         panel.add(u.print_r());

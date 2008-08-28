@@ -10,7 +10,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTML;
 import com.itmill.toolkit.terminal.gwt.client.ui.Icon;
 
-public class Caption extends HTML {
+public class ICaption extends HTML {
 
     public static final String CLASSNAME = "i-caption";
 
@@ -31,11 +31,11 @@ public class Caption extends HTML {
     /**
      * 
      * @param component
-     *                optional owner of caption. If not set, getOwner will
-     *                return null
+     *            optional owner of caption. If not set, getOwner will return
+     *            null
      * @param client
      */
-    public Caption(Paintable component, ApplicationConnection client) {
+    public ICaption(Paintable component, ApplicationConnection client) {
         super();
         this.client = client;
         owner = component;

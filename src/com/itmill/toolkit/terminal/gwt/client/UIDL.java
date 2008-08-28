@@ -237,12 +237,12 @@ public class UIDL {
         return s;
     }
 
-    public UIDLBrowser print_r() {
-        return new UIDLBrowser();
+    public IUIDLBrowser print_r() {
+        return new IUIDLBrowser();
     }
 
-    private class UIDLBrowser extends Tree {
-        public UIDLBrowser() {
+    private class IUIDLBrowser extends Tree {
+        public IUIDLBrowser() {
 
             DOM.setStyleAttribute(getElement(), "position", "");
 
@@ -254,7 +254,7 @@ public class UIDL {
                 public void onTreeItemStateChanged(TreeItem item) {
                     if (item == root) {
                         removeItem(root);
-                        UIDLBrowser.this.removeTreeListener(this);
+                        IUIDLBrowser.this.removeTreeListener(this);
                         addItem(dir());
                         final Iterator it = treeItemIterator();
                         while (it.hasNext()) {

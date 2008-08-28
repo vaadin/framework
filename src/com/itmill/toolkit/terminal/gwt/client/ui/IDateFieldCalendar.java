@@ -9,11 +9,11 @@ import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
 public class IDateFieldCalendar extends IDateField {
 
-    private final CalendarPanel date;
+    private final ICalendarPanel date;
 
     public IDateFieldCalendar() {
         super();
-        date = new CalendarPanel(this);
+        date = new ICalendarPanel(this);
         add(date);
     }
 

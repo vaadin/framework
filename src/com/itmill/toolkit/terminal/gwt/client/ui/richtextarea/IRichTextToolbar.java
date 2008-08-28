@@ -37,7 +37,7 @@ import com.google.gwt.user.client.ui.Widget;
  * for all rich text formatting, dynamically displayed only for the available
  * functionality.
  */
-public class RichTextToolbar extends Composite {
+public class IRichTextToolbar extends Composite {
 
     /**
      * This {@link ImageBundle} is used for all the button icons. Using an image
@@ -360,9 +360,9 @@ public class RichTextToolbar extends Composite {
      * Creates a new toolbar that drives the given rich text area.
      * 
      * @param richText
-     *                the rich text area to be controlled
+     *            the rich text area to be controlled
      */
-    public RichTextToolbar(RichTextArea richText) {
+    public IRichTextToolbar(RichTextArea richText) {
         this.richText = richText;
         basic = richText.getBasicFormatter();
         extended = richText.getExtendedFormatter();

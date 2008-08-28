@@ -210,7 +210,7 @@ public class IView extends SimplePanel implements Paintable,
                     final int position = notification
                             .getIntAttribute("position");
                     final int delay = notification.getIntAttribute("delay");
-                    new Notification(delay).show(html, position, style);
+                    new INotification(delay).show(html, position, style);
                 }
             }
         }

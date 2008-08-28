@@ -16,7 +16,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
 
-public class Notification extends ToolkitOverlay {
+public class INotification extends IToolkitOverlay {
 
     public static final int CENTERED = 1;
     public static final int CENTERED_TOP = 2;
@@ -47,18 +47,18 @@ public class Notification extends ToolkitOverlay {
 
     private ArrayList listeners;
 
-    public Notification() {
+    public INotification() {
         setStylePrimaryName(STYLENAME);
         sinkEvents(Event.ONCLICK);
         DOM.setStyleAttribute(getElement(), "zIndex", "" + Z_INDEX_BASE);
     }
 
-    public Notification(int delayMsec) {
+    public INotification(int delayMsec) {
         this();
         this.delayMsec = delayMsec;
     }
 
-    public Notification(int delayMsec, int fadeMsec, int startOpacity) {
+    public INotification(int delayMsec, int fadeMsec, int startOpacity) {
         this(delayMsec);
         this.fadeMsec = fadeMsec;
         this.startOpacity = startOpacity;

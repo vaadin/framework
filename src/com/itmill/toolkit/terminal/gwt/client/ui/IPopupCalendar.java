@@ -22,9 +22,9 @@ public class IPopupCalendar extends ITextualDate implements Paintable, Field,
 
     private final Button calendarToggle;
 
-    private final CalendarPanel calendar;
+    private final ICalendarPanel calendar;
 
-    private final ToolkitOverlay popup;
+    private final IToolkitOverlay popup;
     private boolean open = false;
 
     public IPopupCalendar() {
@@ -36,8 +36,8 @@ public class IPopupCalendar extends ITextualDate implements Paintable, Field,
         calendarToggle.addClickListener(this);
         add(calendarToggle);
 
-        calendar = new CalendarPanel(this);
-        popup = new ToolkitOverlay(true, true, true);
+        calendar = new ICalendarPanel(this);
+        popup = new IToolkitOverlay(true, true, true);
         popup.setStyleName(IDateField.CLASSNAME + "-popup");
         popup.setWidget(calendar);
         popup.addPopupListener(this);

@@ -21,7 +21,7 @@ import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentC
 import com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConstant;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
-import com.itmill.toolkit.terminal.gwt.client.CaptionWrapper;
+import com.itmill.toolkit.terminal.gwt.client.ICaptionWrapper;
 import com.itmill.toolkit.terminal.gwt.client.Container;
 import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
@@ -210,13 +210,13 @@ public class IGridLayout extends SimplePanel implements Paintable, Container,
                                 formatter.setAlignment(row, column, ha, va);
 
                                 final Paintable child = client.getPaintable(u);
-                                CaptionWrapper wr;
+                                ICaptionWrapper wr;
                                 if (widgetToCaptionWrapper.containsKey(child)) {
-                                    wr = (CaptionWrapper) widgetToCaptionWrapper
+                                    wr = (ICaptionWrapper) widgetToCaptionWrapper
                                             .get(child);
                                     oldWidgetWrappers.remove(wr);
                                 } else {
-                                    wr = new CaptionWrapper(child, client);
+                                    wr = new ICaptionWrapper(child, client);
                                     widgetToCaptionWrapper.put(child, wr);
                                 }
 
@@ -240,7 +240,7 @@ public class IGridLayout extends SimplePanel implements Paintable, Container,
             // loop oldWidgetWrappers that where not re-attached and unregister
             // them
             for (final Iterator it = oldWidgetWrappers.iterator(); it.hasNext();) {
-                final CaptionWrapper w = (CaptionWrapper) it.next();
+                final ICaptionWrapper w = (ICaptionWrapper) it.next();
                 client.unregisterPaintable(w.getPaintable());
                 widgetToCaptionWrapper.remove(w.getPaintable());
             }
@@ -281,7 +281,7 @@ public class IGridLayout extends SimplePanel implements Paintable, Container,
         }
 
         public void updateCaption(Paintable component, UIDL uidl) {
-            final CaptionWrapper wrapper = (CaptionWrapper) widgetToCaptionWrapper
+            final ICaptionWrapper wrapper = (ICaptionWrapper) widgetToCaptionWrapper
                     .get(component);
             wrapper.updateCaption(uidl);
         }

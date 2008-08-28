@@ -13,7 +13,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
-import com.itmill.toolkit.terminal.gwt.client.Tooltip;
+import com.itmill.toolkit.terminal.gwt.client.ITooltip;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
 public class IButton extends Button implements Paintable {
@@ -48,7 +48,7 @@ public class IButton extends Button implements Paintable {
                 client.updateVariable(id, "state", true, true);
             }
         });
-        sinkEvents(Tooltip.TOOLTIP_EVENTS);
+        sinkEvents(ITooltip.TOOLTIP_EVENTS);
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {

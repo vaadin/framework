@@ -7,14 +7,14 @@ package com.itmill.toolkit.terminal.gwt.client;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class CaptionWrapper extends FlowPanel {
+public class ICaptionWrapper extends FlowPanel {
 
     public static final String CLASSNAME = "i-captionwrapper";
-    Caption caption;
+    ICaption caption;
     Paintable widget;
 
-    public CaptionWrapper(Paintable toBeWrapped, ApplicationConnection client) {
-        caption = new Caption(toBeWrapped, client);
+    public ICaptionWrapper(Paintable toBeWrapped, ApplicationConnection client) {
+        caption = new ICaption(toBeWrapped, client);
         add(caption);
         widget = toBeWrapped;
         add((Widget) widget);

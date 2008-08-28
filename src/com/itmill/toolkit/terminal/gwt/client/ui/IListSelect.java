@@ -12,7 +12,7 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
-import com.itmill.toolkit.terminal.gwt.client.Tooltip;
+import com.itmill.toolkit.terminal.gwt.client.ITooltip;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
 public class IListSelect extends IOptionGroupBase {
@@ -110,7 +110,7 @@ class TooltipListBox extends ListBox {
 
     TooltipListBox(boolean isMultiselect) {
         super(isMultiselect);
-        sinkEvents(Tooltip.TOOLTIP_EVENTS);
+        sinkEvents(ITooltip.TOOLTIP_EVENTS);
     }
 
     public void setClient(ApplicationConnection client) {

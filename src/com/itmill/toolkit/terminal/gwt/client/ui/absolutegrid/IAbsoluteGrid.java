@@ -10,7 +10,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
-import com.itmill.toolkit.terminal.gwt.client.Caption;
+import com.itmill.toolkit.terminal.gwt.client.ICaption;
 import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.Util;
 import com.itmill.toolkit.terminal.gwt.client.ui.AlignmentInfo;
@@ -20,7 +20,8 @@ import com.itmill.toolkit.terminal.gwt.client.ui.AlignmentInfo;
  * GridLayout and OrderedLayout. Supports size, margins, spacing, but has bit
  * expensive layout function.
  */
-public class AbsoluteGrid extends Composite implements ContainerResizedListener {
+public class IAbsoluteGrid extends Composite implements
+        ContainerResizedListener {
 
     protected HashMap cells = new HashMap();
 
@@ -38,15 +39,15 @@ public class AbsoluteGrid extends Composite implements ContainerResizedListener 
 
     private int offsetHeight;
 
-    public AbsoluteGrid() {
+    public IAbsoluteGrid() {
         ap = new AbsolutePanel();
         initWidget(ap);
     }
 
-    public AbsoluteGridCell getCell(int col, int row) {
-        AbsoluteGridCell p = (AbsoluteGridCell) cells.get(col + "." + row);
+    public IAbsoluteGridCell getCell(int col, int row) {
+        IAbsoluteGridCell p = (IAbsoluteGridCell) cells.get(col + "." + row);
         if (p == null) {
-            p = new AbsoluteGridCell(col, row);
+            p = new IAbsoluteGridCell(col, row);
             cells.put(col + "." + row, p);
             ap.add(p);
         }
@@ -109,7 +110,7 @@ public class AbsoluteGrid extends Composite implements ContainerResizedListener 
      * TODO contains Caption (which is a widget) in a very bad way, cannot be
      * simple panel
      */
-    public class AbsoluteGridCell extends SimplePanel {
+    public class IAbsoluteGridCell extends SimplePanel {
 
         int rowIndex;
         int colIndex;
@@ -117,11 +118,11 @@ public class AbsoluteGrid extends Composite implements ContainerResizedListener 
         int rowSpan = 1;
         private Element container = DOM.createDiv();
 
-        private Caption caption;
+        private ICaption caption;
         private AlignmentInfo alignmentInfo = new AlignmentInfo(
                 AlignmentInfo.ALIGNMENT_TOP + AlignmentInfo.ALIGNMENT_LEFT);
 
-        AbsoluteGridCell(int colIndex, int rowIndex) {
+        IAbsoluteGridCell(int colIndex, int rowIndex) {
             super();
             if (BrowserInfo.get().isIE6()) {
                 DOM.setStyleAttribute(getElement(), "overflow", "hidden");
@@ -224,11 +225,11 @@ public class AbsoluteGrid extends Composite implements ContainerResizedListener 
             return (caption == null) ? 0 : caption.getOffsetHeight();
         }
 
-        public Caption getCaption() {
+        public ICaption getCaption() {
             return caption;
         }
 
-        public void setCaption(Caption newCaption) {
+        public void setCaption(ICaption newCaption) {
             // TODO check for existing, shouldn't happen though
             caption = newCaption;
             DOM.insertChild(getElement(), caption.getElement(), 0);
@@ -277,7 +278,7 @@ public class AbsoluteGrid extends Composite implements ContainerResizedListener 
         }
         if (sizeChanged) {
             for (Iterator it = cells.values().iterator(); it.hasNext();) {
-                AbsoluteGridCell cell = (AbsoluteGridCell) it.next();
+                IAbsoluteGridCell cell = (IAbsoluteGridCell) it.next();
                 cell.render();
                 cell.vAling();
             }

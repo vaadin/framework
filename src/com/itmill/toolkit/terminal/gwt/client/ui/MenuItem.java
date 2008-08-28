@@ -45,9 +45,9 @@ public class MenuItem extends UIObject implements HasHTML {
      * Constructs a new menu item that fires a command when it is selected.
      * 
      * @param text
-     *                the item's text
+     *            the item's text
      * @param cmd
-     *                the command to be fired when it is selected
+     *            the command to be fired when it is selected
      */
     public MenuItem(String text, Command cmd) {
         this(text, false);
@@ -58,11 +58,11 @@ public class MenuItem extends UIObject implements HasHTML {
      * Constructs a new menu item that fires a command when it is selected.
      * 
      * @param text
-     *                the item's text
+     *            the item's text
      * @param asHTML
-     *                <code>true</code> to treat the specified text as html
+     *            <code>true</code> to treat the specified text as html
      * @param cmd
-     *                the command to be fired when it is selected
+     *            the command to be fired when it is selected
      */
     public MenuItem(String text, boolean asHTML, Command cmd) {
         this(text, asHTML);
@@ -74,9 +74,9 @@ public class MenuItem extends UIObject implements HasHTML {
      * selected.
      * 
      * @param text
-     *                the item's text
+     *            the item's text
      * @param subMenu
-     *                the sub-menu to be displayed when it is selected
+     *            the sub-menu to be displayed when it is selected
      */
     public MenuItem(String text, MenuBar subMenu) {
         this(text, false);
@@ -88,11 +88,11 @@ public class MenuItem extends UIObject implements HasHTML {
      * selected.
      * 
      * @param text
-     *                the item's text
+     *            the item's text
      * @param asHTML
-     *                <code>true</code> to treat the specified text as html
+     *            <code>true</code> to treat the specified text as html
      * @param subMenu
-     *                the sub-menu to be displayed when it is selected
+     *            the sub-menu to be displayed when it is selected
      */
     public MenuItem(String text, boolean asHTML, MenuBar subMenu) {
         this(text, asHTML);
@@ -150,7 +150,7 @@ public class MenuItem extends UIObject implements HasHTML {
      * Sets the command associated with this item.
      * 
      * @param cmd
-     *                the command to be associated with this item
+     *            the command to be associated with this item
      */
     public void setCommand(Command cmd) {
         command = cmd;
@@ -164,7 +164,7 @@ public class MenuItem extends UIObject implements HasHTML {
      * Sets the sub-menu associated with this item.
      * 
      * @param subMenu
-     *                this item's new sub-menu
+     *            this item's new sub-menu
      */
     public void setSubMenu(MenuBar subMenu) {
         this.subMenu = subMenu;

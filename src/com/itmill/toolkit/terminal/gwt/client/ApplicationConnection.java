@@ -32,11 +32,11 @@ import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HasFocus;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
-import com.itmill.toolkit.terminal.gwt.client.ui.ContextMenu;
+import com.itmill.toolkit.terminal.gwt.client.ui.IContextMenu;
 import com.itmill.toolkit.terminal.gwt.client.ui.Field;
 import com.itmill.toolkit.terminal.gwt.client.ui.IView;
-import com.itmill.toolkit.terminal.gwt.client.ui.Notification;
-import com.itmill.toolkit.terminal.gwt.client.ui.Notification.HideEvent;
+import com.itmill.toolkit.terminal.gwt.client.ui.INotification;
+import com.itmill.toolkit.terminal.gwt.client.ui.INotification.HideEvent;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -69,7 +69,7 @@ public class ApplicationConnection {
 
     private final WidgetSet widgetSet;
 
-    private ContextMenu contextMenu = null;
+    private IContextMenu contextMenu = null;
 
     private Timer loadTimer;
     private Timer loadTimer2;
@@ -107,7 +107,7 @@ public class ApplicationConnection {
         configuration = cnf;
 
         if (isDebugMode()) {
-            console = new DebugConsole(this, cnf);
+            console = new IDebugConsole(this, cnf);
         } else {
             console = new NullConsole();
         }
@@ -512,9 +512,9 @@ public class ApplicationConnection {
                 }
 
                 if (html.length() != 0) {
-                    Notification n = new Notification(1000 * 60 * 45); // 45min
+                    INotification n = new INotification(1000 * 60 * 45); // 45min
                     n.addEventListener(new NotificationRedirect(url));
-                    n.show(html, Notification.CENTERED_TOP, "system");
+                    n.show(html, INotification.CENTERED_TOP, "system");
                 } else {
                     redirect(url);
                 }
@@ -880,9 +880,9 @@ public class ApplicationConnection {
      * 
      * @return IContextMenu object
      */
-    public ContextMenu getContextMenu() {
+    public IContextMenu getContextMenu() {
         if (contextMenu == null) {
-            contextMenu = new ContextMenu();
+            contextMenu = new IContextMenu();
             if (usePaintableIdsInDOM) {
                 DOM.setElementProperty(contextMenu.getElement(), "id",
                         "PID_TOOLKIT_CM");
@@ -925,7 +925,7 @@ public class ApplicationConnection {
      * messages, such as session expired.
      * 
      */
-    private class NotificationRedirect implements Notification.EventListener {
+    private class NotificationRedirect implements INotification.EventListener {
         String url;
 
         NotificationRedirect(String url) {
@@ -956,7 +956,7 @@ public class ApplicationConnection {
         return info;
     }
 
-    private final Tooltip tooltip = new Tooltip(this);
+    private final ITooltip tooltip = new ITooltip(this);
 
     /**
      * Component may want to delegate Tooltip handling to client. Layouts add

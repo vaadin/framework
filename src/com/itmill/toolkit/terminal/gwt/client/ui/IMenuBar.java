@@ -43,7 +43,7 @@ public class IMenuBar extends Widget implements Paintable, PopupListener {
     boolean subMenu;
     ArrayList items;
     Element containerElement;
-    ToolkitOverlay popup;
+    IToolkitOverlay popup;
     IMenuBar visibleChildMenu;
     IMenuBar parentMenu;
     CustomMenuItem selected;
@@ -443,7 +443,7 @@ public class IMenuBar extends Widget implements Paintable, PopupListener {
      * @param item
      */
     public void showChildMenu(CustomMenuItem item) {
-        popup = new ToolkitOverlay(true, false, true);
+        popup = new IToolkitOverlay(true, false, true);
         popup.setWidget(item.getSubMenu());
         popup.addPopupListener(this);
 

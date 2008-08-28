@@ -13,7 +13,7 @@ import com.itmill.toolkit.terminal.gwt.client.ClientExceptionHandler;
 import com.itmill.toolkit.terminal.gwt.client.DateTimeService;
 import com.itmill.toolkit.terminal.gwt.client.LocaleNotLoadedException;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
-import com.itmill.toolkit.terminal.gwt.client.Tooltip;
+import com.itmill.toolkit.terminal.gwt.client.ITooltip;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
 public class IDateField extends FlowPanel implements Paintable, Field {
@@ -51,7 +51,7 @@ public class IDateField extends FlowPanel implements Paintable, Field {
     public IDateField() {
         setStyleName(CLASSNAME);
         dts = new DateTimeService();
-        sinkEvents(Tooltip.TOOLTIP_EVENTS);
+        sinkEvents(ITooltip.TOOLTIP_EVENTS);
     }
 
     public void onBrowserEvent(Event event) {

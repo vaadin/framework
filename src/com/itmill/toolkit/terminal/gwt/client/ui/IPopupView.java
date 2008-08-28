@@ -16,8 +16,8 @@ import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
-import com.itmill.toolkit.terminal.gwt.client.Caption;
-import com.itmill.toolkit.terminal.gwt.client.CaptionWrapper;
+import com.itmill.toolkit.terminal.gwt.client.ICaption;
+import com.itmill.toolkit.terminal.gwt.client.ICaptionWrapper;
 import com.itmill.toolkit.terminal.gwt.client.Container;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
@@ -196,11 +196,11 @@ public class IPopupView extends HTML implements Paintable, Container {
                                                   }
                                               }-*/;
 
-    private class CustomPopup extends ToolkitOverlay implements Container {
+    private class CustomPopup extends IToolkitOverlay implements Container {
 
         private Paintable popupComponentPaintable = null;
         private Widget popupComponentWidget = null;
-        private CaptionWrapper captionWrapper = null;
+        private ICaptionWrapper captionWrapper = null;
 
         private boolean hasHadMouseOver = false;
         private Set activeChildren;
@@ -288,11 +288,11 @@ public class IPopupView extends HTML implements Paintable, Container {
         }
 
         public void updateCaption(Paintable component, UIDL uidl) {
-            if (Caption.isNeeded(uidl)) {
+            if (ICaption.isNeeded(uidl)) {
                 if (captionWrapper != null) {
                     captionWrapper.updateCaption(uidl);
                 } else {
-                    captionWrapper = new CaptionWrapper(component, client);
+                    captionWrapper = new ICaptionWrapper(component, client);
                     setWidget(captionWrapper);
                     captionWrapper.updateCaption(uidl);
                 }

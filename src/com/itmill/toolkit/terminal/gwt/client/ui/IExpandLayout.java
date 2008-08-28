@@ -18,7 +18,7 @@ import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
-import com.itmill.toolkit.terminal.gwt.client.Caption;
+import com.itmill.toolkit.terminal.gwt.client.ICaption;
 import com.itmill.toolkit.terminal.gwt.client.Container;
 import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
@@ -504,8 +504,8 @@ public class IExpandLayout extends ComplexPanel implements
     }
 
     protected void insert(Widget w, int beforeIndex) {
-        if (w instanceof Caption) {
-            final Caption c = (Caption) w;
+        if (w instanceof ICaption) {
+            final ICaption c = (ICaption) w;
             // captions go into same container element as their
             // owners
             final Element container = DOM.getParent(((UIObject) c.getOwner())
@@ -528,7 +528,7 @@ public class IExpandLayout extends ComplexPanel implements
         final WidgetWrapper ww = getWidgetWrapperFor(w);
         final boolean removed = super.remove(w);
         if (removed) {
-            if (!(w instanceof Caption)) {
+            if (!(w instanceof ICaption)) {
                 DOM.removeChild(childContainer, ww.getElement());
             }
             return true;
@@ -537,7 +537,7 @@ public class IExpandLayout extends ComplexPanel implements
     }
 
     public void removeCaption(Widget w) {
-        final Caption c = (Caption) componentToCaption.get(w);
+        final ICaption c = (ICaption) componentToCaption.get(w);
         if (c != null) {
             this.remove(c);
             componentToCaption.remove(w);
@@ -545,7 +545,7 @@ public class IExpandLayout extends ComplexPanel implements
     }
 
     public boolean removePaintable(Paintable p) {
-        final Caption c = (Caption) componentToCaption.get(p);
+        final ICaption c = (ICaption) componentToCaption.get(p);
         if (c != null) {
             componentToCaption.remove(c);
             remove(c);
@@ -559,7 +559,7 @@ public class IExpandLayout extends ComplexPanel implements
 
     public void replaceChildComponent(Widget from, Widget to) {
         client.unregisterPaintable((Paintable) from);
-        final Caption c = (Caption) componentToCaption.get(from);
+        final ICaption c = (ICaption) componentToCaption.get(from);
         if (c != null) {
             remove(c);
             componentToCaption.remove(c);
@@ -573,12 +573,12 @@ public class IExpandLayout extends ComplexPanel implements
 
     public void updateCaption(Paintable component, UIDL uidl) {
 
-        Caption c = (Caption) componentToCaption.get(component);
+        ICaption c = (ICaption) componentToCaption.get(component);
 
-        if (Caption.isNeeded(uidl)) {
+        if (ICaption.isNeeded(uidl)) {
             if (c == null) {
                 final int index = getWidgetIndex((Widget) component);
-                c = new Caption(component, client);
+                c = new ICaption(component, client);
                 insert(c, index);
                 componentToCaption.put(component, c);
             }

@@ -14,7 +14,7 @@ import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
-import com.itmill.toolkit.terminal.gwt.client.Caption;
+import com.itmill.toolkit.terminal.gwt.client.ICaption;
 import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
@@ -167,7 +167,7 @@ public class IAccordion extends ITabsheetBase implements
      */
     protected class StackItem extends ComplexPanel implements ClickListener {
 
-        private Caption caption;
+        private ICaption caption;
         private boolean open = false;
         private Element content = DOM.createDiv();
         private Element captionNode = DOM.createDiv();
@@ -175,7 +175,7 @@ public class IAccordion extends ITabsheetBase implements
 
         public StackItem(UIDL tabUidl) {
             setElement(DOM.createDiv());
-            caption = new Caption(null, client);
+            caption = new ICaption(null, client);
             caption.addClickListener(this);
             super.add(caption, captionNode);
             DOM.appendChild(captionNode, caption.getElement());

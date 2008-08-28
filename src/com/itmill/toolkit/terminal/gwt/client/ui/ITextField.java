@@ -14,7 +14,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
-import com.itmill.toolkit.terminal.gwt.client.Tooltip;
+import com.itmill.toolkit.terminal.gwt.client.ITooltip;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.Util;
 
@@ -55,7 +55,7 @@ public class ITextField extends TextBoxBase implements Paintable, Field,
         setStyleName(CLASSNAME);
         addChangeListener(this);
         addFocusListener(this);
-        sinkEvents(Tooltip.TOOLTIP_EVENTS);
+        sinkEvents(ITooltip.TOOLTIP_EVENTS);
     }
 
     public void onBrowserEvent(Event event) {

@@ -14,7 +14,7 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
-import com.itmill.toolkit.terminal.gwt.client.Caption;
+import com.itmill.toolkit.terminal.gwt.client.ICaption;
 import com.itmill.toolkit.terminal.gwt.client.Container;
 import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
@@ -634,7 +634,7 @@ public class IOrderedLayout extends Panel implements Container,
         Element clipperDiv;
 
         /** Caption element when used. */
-        Caption caption = null;
+        ICaption caption = null;
 
         /**
          * Last set pixel height for the wrapper. -1 if vertical clipping is not
@@ -854,13 +854,13 @@ public class IOrderedLayout extends Panel implements Container,
             final Element captionWrapper = getElementWrappingWidgetAndCaption();
 
             // The widget needs caption
-            if (Caption.isNeeded(uidl)) {
+            if (ICaption.isNeeded(uidl)) {
 
                 // If the caption element is missing, create it
                 boolean justAdded = false;
                 if (caption == null) {
                     justAdded = true;
-                    caption = new Caption(paintable, client);
+                    caption = new ICaption(paintable, client);
                 }
 
                 // Update caption contents

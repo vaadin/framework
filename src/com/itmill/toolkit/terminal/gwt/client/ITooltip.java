@@ -9,26 +9,26 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.itmill.toolkit.terminal.gwt.client.ui.ToolkitOverlay;
+import com.itmill.toolkit.terminal.gwt.client.ui.IToolkitOverlay;
 
 /**
  * TODO open for extension
  */
-public class Tooltip extends ToolkitOverlay {
+public class ITooltip extends IToolkitOverlay {
     private static final String CLASSNAME = "i-tooltip";
     private static final int MARGIN = 4;
     public static final int TOOLTIP_EVENTS = Event.ONKEYDOWN
             | Event.ONMOUSEOVER | Event.ONMOUSEOUT | Event.ONMOUSEMOVE
             | Event.ONCLICK;
     protected static final int MAX_WIDTH = 500;
-    ErrorMessage em = new ErrorMessage();
+    IErrorMessage em = new IErrorMessage();
     Element description = DOM.createDiv();
     private Paintable tooltipOwner;
     private boolean closing = false;
     private boolean opening = false;
     private ApplicationConnection ac;
 
-    public Tooltip(ApplicationConnection client) {
+    public ITooltip(ApplicationConnection client) {
         super(false, false, true);
         ac = client;
         setStyleName(CLASSNAME);
@@ -151,7 +151,7 @@ public class Tooltip extends ToolkitOverlay {
 
     public void handleTooltipEvent(Event event, Paintable owner) {
         final int type = DOM.eventGetType(event);
-        if ((Tooltip.TOOLTIP_EVENTS & type) == type) {
+        if ((ITooltip.TOOLTIP_EVENTS & type) == type) {
             if (type == Event.ONMOUSEOVER) {
                 showTooltip(owner, event);
             } else if (type == Event.ONMOUSEMOVE) {

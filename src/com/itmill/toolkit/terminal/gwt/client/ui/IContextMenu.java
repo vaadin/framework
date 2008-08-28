@@ -9,7 +9,7 @@ import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.PopupPanel;
 
-public class ContextMenu extends ToolkitOverlay {
+public class IContextMenu extends IToolkitOverlay {
 
     private ActionOwner actionOwner;
 
@@ -24,9 +24,9 @@ public class ContextMenu extends ToolkitOverlay {
      * should exists. Request an instance via client.getContextMenu();
      * 
      * @param cli
-     *                to be set as an owner of menu
+     *            to be set as an owner of menu
      */
-    public ContextMenu() {
+    public IContextMenu() {
         super(true, false, true);
         setWidget(menu);
         setStyleName("i-contextmenu");
@@ -62,8 +62,8 @@ public class ContextMenu extends ToolkitOverlay {
                 // mac FF gets bad width due GWT popups overflow hacks,
                 // re-determine width
                 offsetWidth = menu.getOffsetWidth();
-                int left = ContextMenu.this.left;
-                int top = ContextMenu.this.top;
+                int left = IContextMenu.this.left;
+                int top = IContextMenu.this.top;
                 if (offsetWidth + left > Window.getClientWidth()) {
                     left = left - offsetWidth;
                     if (left < 0) {
@@ -97,21 +97,18 @@ public class ContextMenu extends ToolkitOverlay {
 
         public void onPopupClosed(PopupPanel sender, boolean autoClosed) {
             super.onPopupClosed(sender, autoClosed);
-            ContextMenu.this.hide();
+            hide();
         }
 
-        /*public void onBrowserEvent(Event event) {
-            // Remove current selection when mouse leaves
-            if (DOM.eventGetType(event) == Event.ONMOUSEOUT) {
-                Element to = DOM.eventGetToElement(event);
-                if (!DOM.isOrHasChild(getElement(), to)) {
-                    DOM.setElementProperty(
-                            super.getSelectedItem().getElement(), "className",
-                            super.getSelectedItem().getStylePrimaryName());
-                }
-            }
-
-            super.onBrowserEvent(event);
-        }*/
+        /*
+         * public void onBrowserEvent(Event event) { // Remove current selection
+         * when mouse leaves if (DOM.eventGetType(event) == Event.ONMOUSEOUT) {
+         * Element to = DOM.eventGetToElement(event); if
+         * (!DOM.isOrHasChild(getElement(), to)) { DOM.setElementProperty(
+         * super.getSelectedItem().getElement(), "className",
+         * super.getSelectedItem().getStylePrimaryName()); } }
+         * 
+         * super.onBrowserEvent(event); }
+         */
     }
 }

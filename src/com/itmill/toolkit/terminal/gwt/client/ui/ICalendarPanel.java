@@ -22,7 +22,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.DateTimeService;
 import com.itmill.toolkit.terminal.gwt.client.LocaleService;
 
-public class CalendarPanel extends FlexTable implements MouseListener,
+public class ICalendarPanel extends FlexTable implements MouseListener,
         ClickListener {
 
     private final IDateField datefield;
@@ -35,7 +35,7 @@ public class CalendarPanel extends FlexTable implements MouseListener,
 
     private IEventButton nextMonth;
 
-    private Time time;
+    private ITime time;
 
     private Date minDate = null;
 
@@ -49,14 +49,14 @@ public class CalendarPanel extends FlexTable implements MouseListener,
     /* Needed to identify locale changes */
     private String locale = LocaleService.getDefaultLocale();
 
-    public CalendarPanel(IDateField parent) {
+    public ICalendarPanel(IDateField parent) {
         datefield = parent;
         setStyleName(IDateField.CLASSNAME + "-calendarpanel");
         // buildCalendar(true);
         addTableListener(new DateClickListener(this));
     }
 
-    public CalendarPanel(IDateField parent, Date min, Date max) {
+    public ICalendarPanel(IDateField parent, Date min, Date max) {
         datefield = parent;
         setStyleName(IDateField.CLASSNAME + "-calendarpanel");
         // buildCalendar(true);
@@ -236,7 +236,7 @@ public class CalendarPanel extends FlexTable implements MouseListener,
 
     private void buildTime(boolean forceRedraw) {
         if (time == null) {
-            time = new Time(datefield);
+            time = new ITime(datefield);
             setText(8, 0, ""); // Add new row
             getFlexCellFormatter().setColSpan(8, 0, 7);
             setWidget(8, 0, time);
@@ -247,7 +247,7 @@ public class CalendarPanel extends FlexTable implements MouseListener,
     /**
      * 
      * @param forceRedraw
-     *                Build all from scratch, in case of e.g. locale changes
+     *            Build all from scratch, in case of e.g. locale changes
      */
     public void updateCalendar() {
         // Locale and resolution changes force a complete redraw
@@ -382,9 +382,9 @@ public class CalendarPanel extends FlexTable implements MouseListener,
 
     private class DateClickListener implements TableListener {
 
-        private final CalendarPanel cal;
+        private final ICalendarPanel cal;
 
-        public DateClickListener(CalendarPanel panel) {
+        public DateClickListener(ICalendarPanel panel) {
             cal = panel;
         }
 
@@ -433,7 +433,7 @@ public class CalendarPanel extends FlexTable implements MouseListener,
 
                 if (datefield instanceof ITextualDate
                         && resolution < IDateField.RESOLUTION_HOUR) {
-                    ((ToolkitOverlay) getParent()).hide();
+                    ((IToolkitOverlay) getParent()).hide();
                 } else {
                     updateCalendar();
                 }

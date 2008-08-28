@@ -14,8 +14,8 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
-import com.itmill.toolkit.terminal.gwt.client.Caption;
-import com.itmill.toolkit.terminal.gwt.client.CaptionWrapper;
+import com.itmill.toolkit.terminal.gwt.client.ICaption;
+import com.itmill.toolkit.terminal.gwt.client.ICaptionWrapper;
 import com.itmill.toolkit.terminal.gwt.client.Container;
 import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
@@ -348,13 +348,13 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
 
     /** Update caption for given widget */
     public void updateCaption(Paintable component, UIDL uidl) {
-        CaptionWrapper wrapper = (CaptionWrapper) widgetToCaptionWrapper
+        ICaptionWrapper wrapper = (ICaptionWrapper) widgetToCaptionWrapper
                 .get(component);
-        if (Caption.isNeeded(uidl)) {
+        if (ICaption.isNeeded(uidl)) {
             if (wrapper == null) {
                 final String loc = getLocation((Widget) component);
                 super.remove((Widget) component);
-                wrapper = new CaptionWrapper(component, client);
+                wrapper = new ICaptionWrapper(component, client);
                 super.add(wrapper, (Element) locationToElement.get(loc));
                 widgetToCaptionWrapper.put(component, wrapper);
             }
@@ -389,7 +389,7 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
         if (location != null) {
             locationToWidget.remove(location);
         }
-        final CaptionWrapper cw = (CaptionWrapper) widgetToCaptionWrapper
+        final ICaptionWrapper cw = (ICaptionWrapper) widgetToCaptionWrapper
                 .get(w);
         if (cw != null) {
             widgetToCaptionWrapper.remove(w);

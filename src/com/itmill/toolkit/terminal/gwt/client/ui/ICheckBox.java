@@ -11,7 +11,7 @@ import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
-import com.itmill.toolkit.terminal.gwt.client.Tooltip;
+import com.itmill.toolkit.terminal.gwt.client.ITooltip;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
 public class ICheckBox extends com.google.gwt.user.client.ui.CheckBox implements
@@ -43,7 +43,7 @@ public class ICheckBox extends com.google.gwt.user.client.ui.CheckBox implements
             }
 
         });
-        sinkEvents(Tooltip.TOOLTIP_EVENTS);
+        sinkEvents(ITooltip.TOOLTIP_EVENTS);
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {

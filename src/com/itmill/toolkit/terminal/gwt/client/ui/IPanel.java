@@ -12,7 +12,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
 import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
-import com.itmill.toolkit.terminal.gwt.client.ErrorMessage;
+import com.itmill.toolkit.terminal.gwt.client.IErrorMessage;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.Util;
@@ -38,7 +38,7 @@ public class IPanel extends SimplePanel implements Paintable,
 
     private Element errorIndicatorElement;
 
-    private ErrorMessage errorMessage;
+    private IErrorMessage errorMessage;
 
     private String height;
 
@@ -200,7 +200,7 @@ public class IPanel extends SimplePanel implements Paintable,
             }
             DOM.insertBefore(captionNode, errorIndicatorElement, captionText);
             if (errorMessage == null) {
-                errorMessage = new ErrorMessage();
+                errorMessage = new IErrorMessage();
             }
             errorMessage.updateFromUIDL(errorUidl);
 

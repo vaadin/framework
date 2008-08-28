@@ -10,12 +10,12 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
-import com.itmill.toolkit.terminal.gwt.client.ui.ToolkitOverlay;
+import com.itmill.toolkit.terminal.gwt.client.ui.IToolkitOverlay;
 
-public class ErrorMessage extends FlowPanel {
+public class IErrorMessage extends FlowPanel {
     public static final String CLASSNAME = "i-errormessage";
 
-    public ErrorMessage() {
+    public IErrorMessage() {
         super();
         setStyleName(CLASSNAME);
     }
@@ -34,7 +34,7 @@ public class ErrorMessage extends FlowPanel {
                     final UIDL.XML xml = (UIDL.XML) child;
                     add(new HTML(xml.getXMLAsString()));
                 } else {
-                    final ErrorMessage childError = new ErrorMessage();
+                    final IErrorMessage childError = new IErrorMessage();
                     add(childError);
                     childError.updateFromUIDL((UIDL) child);
                 }
@@ -48,9 +48,9 @@ public class ErrorMessage extends FlowPanel {
      * @param indicatorElement
      */
     public void showAt(Element indicatorElement) {
-        ToolkitOverlay errorContainer = (ToolkitOverlay) getParent();
+        IToolkitOverlay errorContainer = (IToolkitOverlay) getParent();
         if (errorContainer == null) {
-            errorContainer = new ToolkitOverlay();
+            errorContainer = new IToolkitOverlay();
             errorContainer.setWidget(this);
         }
         errorContainer.setPopupPosition(DOM.getAbsoluteLeft(indicatorElement)
@@ -65,7 +65,7 @@ public class ErrorMessage extends FlowPanel {
     }
 
     public void hide() {
-        final ToolkitOverlay errorContainer = (ToolkitOverlay) getParent();
+        final IToolkitOverlay errorContainer = (IToolkitOverlay) getParent();
         if (errorContainer != null) {
             errorContainer.hide();
         }

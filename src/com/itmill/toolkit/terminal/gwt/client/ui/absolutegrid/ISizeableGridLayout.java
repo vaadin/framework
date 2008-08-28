@@ -10,7 +10,7 @@ import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
-import com.itmill.toolkit.terminal.gwt.client.Caption;
+import com.itmill.toolkit.terminal.gwt.client.ICaption;
 import com.itmill.toolkit.terminal.gwt.client.Container;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
@@ -22,7 +22,7 @@ import com.itmill.toolkit.terminal.gwt.client.ui.MarginInfo;
  * All cell's will be equally sized.
  * 
  */
-public class ISizeableGridLayout extends AbsoluteGrid implements Paintable,
+public class ISizeableGridLayout extends IAbsoluteGrid implements Paintable,
         Container {
     public static final String CLASSNAME = "i-gridlayout";
     private int spacing;
@@ -113,7 +113,7 @@ public class ISizeableGridLayout extends AbsoluteGrid implements Paintable,
                         final UIDL u = c.getChildUIDL(0);
                         if (u != null) {
                             final Paintable child = client.getPaintable(u);
-                            AbsoluteGridCell cell = getCell(column, row);
+                            IAbsoluteGridCell cell = getCell(column, row);
                             paintableToCellMap.put(child, cell);
                             cell.rowSpan = rowSpan;
                             cell.colSpan = colSpan;
@@ -141,7 +141,7 @@ public class ISizeableGridLayout extends AbsoluteGrid implements Paintable,
 
         // loop oldWidgetWrappers that where not re-attached and unregister them
         for (final Iterator it = oldCells.iterator(); it.hasNext();) {
-            final AbsoluteGridCell w = (AbsoluteGridCell) it.next();
+            final IAbsoluteGridCell w = (IAbsoluteGridCell) it.next();
             client.unregisterPaintable((Paintable) w.getWidget());
             w.removeFromParent();
             paintableToCellMap.remove(w.getWidget());
@@ -182,11 +182,11 @@ public class ISizeableGridLayout extends AbsoluteGrid implements Paintable,
     }
 
     public void updateCaption(Paintable component, UIDL uidl) {
-        AbsoluteGridCell cell = (AbsoluteGridCell) paintableToCellMap
+        IAbsoluteGridCell cell = (IAbsoluteGridCell) paintableToCellMap
                 .get(component);
-        Caption c = cell.getCaption();
+        ICaption c = cell.getCaption();
         if (c == null) {
-            c = new Caption(component, client);
+            c = new ICaption(component, client);
             cell.setCaption(c);
         }
         c.updateCaption(uidl);

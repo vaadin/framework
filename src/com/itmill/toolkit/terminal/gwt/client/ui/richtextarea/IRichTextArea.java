@@ -38,7 +38,7 @@ public class IRichTextArea extends Composite implements Paintable, Field,
 
     private RichTextArea rta = new RichTextArea();
 
-    private RichTextToolbar formatter = new RichTextToolbar(rta);
+    private IRichTextToolbar formatter = new IRichTextToolbar(rta);
 
     private HTML html = new HTML();
 
