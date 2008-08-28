@@ -16,13 +16,13 @@ import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
+import com.itmill.toolkit.terminal.gwt.client.Container;
 import com.itmill.toolkit.terminal.gwt.client.ICaption;
 import com.itmill.toolkit.terminal.gwt.client.ICaptionWrapper;
-import com.itmill.toolkit.terminal.gwt.client.Container;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
-public class IPopupView extends HTML implements Paintable, Container {
+public class IPopupView extends HTML implements Paintable {
 
     public static final String CLASSNAME = "i-popupview";
 
@@ -86,7 +86,6 @@ public class IPopupView extends HTML implements Paintable, Container {
         if (client.updateComponent(this, uidl, false)) {
             return;
         }
-
         // These are for future server connections
         this.client = client;
         uidlId = uidl.getId();
@@ -100,16 +99,17 @@ public class IPopupView extends HTML implements Paintable, Container {
             setTitle(uidl.getStringAttribute("description"));
         }
 
-        // Render the popup if visible and show it. The component inside can
-        // change dynamically.
+        // Render the popup if visible and show it.
         if (hostPopupVisible) {
             UIDL popupUIDL = uidl.getChildUIDL(0);
 
             popup.updateFromUIDL(popupUIDL, client);
             showPopupOnTop(popup, hostReference);
 
-        } else { // The popup isn't visible so we should remove its child
-            popup.setWidget(null);
+            // The popup isn't visible so we should remove its child. The popup
+            // handles hiding so we don't need to hide it here.
+        } else {
+            popup.clear();
         }
     }// updateFromUIDL
 
@@ -166,35 +166,11 @@ public class IPopupView extends HTML implements Paintable, Container {
         windowBottom = windowTop + RootPanel.get().getOffsetHeight();
     }
 
-    public boolean hasChildComponent(Widget component) {
-        return popup.equals(component);
-    }
-
-    public void replaceChildComponent(Widget oldComponent, Widget newComponent) {
-        if (newComponent == null || newComponent instanceof CustomPopup) {
-            popup.hide();
-
-            if (popup != null) {
-                client.unregisterPaintable(popup);
-            }
-            popup = (CustomPopup) newComponent;
-
-        } else {
-            throw new IllegalArgumentException(
-                    "PopupPanel only supports components of type CustomPopup");
-        }
-
-    }
-
-    public void updateCaption(Paintable component, UIDL uidl) {
-
-    }
-
     public static native void nativeBlur(Element e) /*-{ 
-                                                if(e.focus) {
-                                                    e.blur();
-                                                  }
-                                              }-*/;
+                         if(e.focus) {
+                         e.blur();
+                         }
+                         }-*/;
 
     private class CustomPopup extends IToolkitOverlay implements Container {
 
@@ -245,26 +221,25 @@ public class IPopupView extends HTML implements Paintable, Container {
                 ((HasFocus) popupComponentWidget).setFocus(false);
             }
 
+            // Notify children that have used the keyboard
             for (Iterator iterator = activeChildren.iterator(); iterator
                     .hasNext();) {
                 nativeBlur((Element) iterator.next());
             }
             activeChildren.clear();
-
+            remove(popupComponentWidget);
             super.hide();
         }
 
-        public void setWidget(Widget w) {
-            super.setWidget(w);
+        public boolean remove(Widget w) {
 
-            if (w == null) {
+            unregisterPaintables();
 
-                unregisterPaintables();
+            popupComponentPaintable = null;
+            popupComponentWidget = null;
+            captionWrapper = null;
 
-                popupComponentPaintable = null;
-                popupComponentWidget = null;
-                captionWrapper = null;
-            }
+            return super.remove(w);
         }
 
         public boolean hasChildComponent(Widget component) {
@@ -277,7 +252,7 @@ public class IPopupView extends HTML implements Paintable, Container {
 
         public void replaceChildComponent(Widget oldComponent,
                 Widget newComponent) {
-            // System.out.println("CustomPopup replacechildcomponent");
+
             if (oldComponent != null) {
                 client.unregisterPaintable((Paintable) oldComponent);
             }
@@ -320,9 +295,10 @@ public class IPopupView extends HTML implements Paintable, Container {
 
                 popup.setWidget(popupComponentWidget);
                 popupComponentPaintable = newPopupComponent;
-                popupComponentPaintable.updateFromUIDL(uidl.getChildUIDL(0),
-                        client);
             }
+
+            popupComponentPaintable
+                    .updateFromUIDL(uidl.getChildUIDL(0), client);
 
         }
 

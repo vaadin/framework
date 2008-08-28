@@ -45,9 +45,9 @@ public class PopupView extends AbstractComponentContainer {
      * @param content
      *            the PopupView.Content that contains the information for this
      */
-    public PopupView(final PopupView.Content content) {
+    public PopupView(PopupView.Content content) {
         super();
-        itsContent = content;
+        this.itsContent = content;
         popupVisible = false;
         componentList = new ArrayList(1);
     }
@@ -61,8 +61,8 @@ public class PopupView extends AbstractComponentContainer {
      *            PopupView
      * 
      */
-    public void setContent(PopupView.Content newContent) {
-        itsContent = newContent;
+    public void setContent(PopupView.Content content) {
+        this.itsContent = content;
         requestRepaint();
     }
 
@@ -87,7 +87,7 @@ public class PopupView extends AbstractComponentContainer {
 
     /*
      * Methods inherited from AbstractComponentContainer. These are unnecessary
-     * (but mandatory). They are not supported in this implementation.
+     * (but mandatory). Most of them are not supported in this implementation.
      */
 
     /**
@@ -200,12 +200,19 @@ public class PopupView extends AbstractComponentContainer {
      */
     public void changeVariables(Object source, Map variables) {
         if (variables.containsKey("popupVisibility")) {
+
+            // TODO we could use boolean allowPopup here to prevent popups from
+            // showing
+
             popupVisible = ((Boolean) variables.get("popupVisibility"))
                     .booleanValue();
 
             if (popupVisible) {
-                componentList.add(itsContent.getPopupComponent());
-            } else {
+                Component c = itsContent.getPopupComponent();
+                componentList.add(c);
+                super.addComponent(c);
+            } else if (!componentList.isEmpty()) {
+                super.removeComponent((Component) componentList.get(0));
                 componentList.clear();
             }
             requestRepaint();
