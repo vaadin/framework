@@ -103,6 +103,20 @@ public class IButton extends Button implements Paintable {
         }
     }
 
+    public void setStyleName(String style) {
+        super.setStyleName(style);
+        if (BrowserInfo.get().isIE7()) {
+            /*
+             * Workaround for IE7 bug (#2014) where button width is growing when
+             * changing styles
+             */
+            Element e = getElement();
+            String w = DOM.getStyleAttribute(e, "width");
+            DOM.setStyleAttribute(e, "width", "1px");
+            DOM.setStyleAttribute(e, "width", w);
+        }
+    }
+
     public void setText(String text) {
         DOM.setInnerText(captionElement, text);
     }
