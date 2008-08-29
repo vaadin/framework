@@ -4,10 +4,7 @@
 
 package com.itmill.toolkit.tests.book;
 
-import com.itmill.toolkit.data.Property;
-import com.itmill.toolkit.data.Property.ValueChangeEvent;
 import com.itmill.toolkit.ui.CustomComponent;
-import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Table;
 

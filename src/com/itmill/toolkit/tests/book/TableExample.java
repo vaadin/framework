@@ -26,19 +26,16 @@ public class TableExample extends CustomComponent {
         layout.addComponent(table);
 
         /* Define the names, data types, and default values of columns. */
-        table.addContainerProperty("First Name", String.class,
-                "(no first name)");
-        table.addContainerProperty("Last Name", String.class, "(no last name)");
-        table.addContainerProperty("Year", Integer.class, null);
+        table.addContainerProperty("First Name", String.class,  "(no first name)");
+        table.addContainerProperty("Last Name",  String.class,  "(no last name)");
+        table.addContainerProperty("Year",       Integer.class, null);
 
         /* We use these entries to generate random items in a table. */
-        final String[] firstnames = new String[] { "Donald", "Patty", "Sally",
-                "Douglas" };
-        final String[] lastnames = new String[] { "Smith", "Jones", "   Adams",
-                "Knuth" };
+        final String[] firstnames = new String[] { "Donald", "Patty", "Sally", "Douglas" };
+        final String[] lastnames  = new String[] { "Smith", "Jones", "Adams", "Knuth" };
 
         /* Add some items in the table and assign them an Item ID (IID). */
-        for (int i = 0; i < 500; i++) {
+        for (int i = 0; i < 1000; i++) {
             /* Add a randomly generated item in the Table. */
             table.addItem(new Object[] {
                         firstnames[(int) (Math.random() * (firstnames.length - 0.01))],

@@ -25,6 +25,40 @@
 	height: 54px; /* 3*18px = 54px. */
 }
 
+/******************************************************************************
+ * For TableCellStyle.java.
+ ******************************************************************************/
+/* Center the text in header. */
+.i-table-header-cell {
+    text-align: center;
+}
+
+/* Basic style for all cells. */
+.i-table-checkerboard .i-table-cell-content {
+    text-align: center;
+    vertical-align: middle;
+    padding-top: 12px;
+    width: 20px;
+    height: 28px;
+}
+
+/* Style specifically for the row header cells. */
+.i-table-cell-content-rowheader {
+	background: #E7EDF3 url(../default/table/img/header-bg.png) repeat-x scroll 0 0;
+}
+
+/* Style specifically for the "white" cells. */
+.i-table-cell-content-white {
+    background: white;
+    color: black;
+}
+
+/* Style specifically for the "black" cells. */
+.i-table-cell-content-black {
+    background: black;
+    color: white;
+}
+
 /*****************************************************************************/
 /* For example_Tree()                                                        */
 /*****************************************************************************/

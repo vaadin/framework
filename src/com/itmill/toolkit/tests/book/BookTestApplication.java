@@ -588,6 +588,12 @@ public class BookTestApplication extends com.itmill.toolkit.Application {
                 main.addComponent(new TableEditable());
             } else if (param.equals("bean")) {
                 main.addComponent(new TableEditableBean());
+            } else if (param.equals("long")) {
+                main.addComponent(new TableExample());
+            } else if (param.equals("cellstyle")) {
+                main.addComponent(new TableCellStyle());
+            } else if (param.equals("huge")) {
+                main.addComponent(new TableHuge());
             } else if (param.equals("paging")) {
                 PagingTable table = new PagingTable();
                 table.addContainerProperty("Column 1", String.class, null);
