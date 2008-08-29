@@ -30,6 +30,11 @@ public class IFormLayout extends FlexTable implements Container {
     HashMap componentToCaption = new HashMap();
     private ApplicationConnection client;
     private HashMap componentToError = new HashMap();
+    
+    public IFormLayout() {
+        super();
+        setStylePrimaryName(CLASSNAME);
+    }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         this.client = client;
