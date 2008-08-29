@@ -1575,6 +1575,8 @@ public class Table extends AbstractSelect implements Action.Container,
 
         boolean clientNeedsContentRefresh = false;
 
+        handleClickEvent(variables);
+
         disableContentRefreshing();
 
         if (!isSelectable() && variables.containsKey("selected")) {
@@ -1710,14 +1712,7 @@ public class Table extends AbstractSelect implements Action.Container,
             }
         }
 
-        // handle clicks before content refresh if content is refreshed anyway
-        if (clientNeedsContentRefresh) {
-            handleClickEvent(variables);
-            enableContentRefreshing(clientNeedsContentRefresh);
-        } else {
-            enableContentRefreshing(clientNeedsContentRefresh);
-            handleClickEvent(variables);
-        }
+        enableContentRefreshing(clientNeedsContentRefresh);
     }
 
     /**
