@@ -1,3 +1,7 @@
+/* 
+@ITMillApache2LicenseForJavaFiles@
+ */
+
 package com.itmill.toolkit.demo.featurebrowser;
 
 import java.util.Collection;
@@ -250,25 +254,25 @@ public class GeneratedColumnExample extends CustomComponent {
         }
 
         public boolean isLastId(Object itemId) {
-            return ((Integer) itemId).intValue() == (items.size() - 1);
+            return ((Integer) itemId).intValue() == (items.size()-1);
         }
 
         public Object lastItemId() {
-            return new Integer(items.size() - 1);
+            return new Integer(items.size()-1);
         }
 
         public Object nextItemId(Object itemId) {
             int pos = indexOfId(itemId);
-            if (pos >= items.size() - 1)
+            if (pos >= items.size()-1)
                 return null;
-            return getIdByIndex(pos + 1);
+            return getIdByIndex(pos+1);
         }
 
         public Object prevItemId(Object itemId) {
             int pos = indexOfId(itemId);
             if (pos <= 0)
                 return null;
-            return getIdByIndex(pos - 1);
+            return getIdByIndex(pos-1);
         }
     }
 
@@ -293,15 +297,13 @@ public class GeneratedColumnExample extends CustomComponent {
 
     /** Formats the value in a column containing Double objects. */
     class ValueColumnGenerator implements Table.ColumnGenerator {
-        String format;
-
-        /** Format string for the Double values. */
-
+        String format; /* Format string for the Double values. */
+    
         /** Creates double value column formatter with the given format string. */
         public ValueColumnGenerator(String format) {
             this.format = format;
         }
-
+    
         /**
          * Generates the cell containing the Double value. The column is
          * irrelevant in this use case.
@@ -367,7 +369,7 @@ public class GeneratedColumnExample extends CustomComponent {
 
             // Retrieve the POJOs.
             FillUp fillup = (FillUp) ((BeanItem) indexedSource.getItem(itemId)).getBean();
-            FillUp prev = (FillUp) ((BeanItem) source.getItem(prevItemId)).getBean();
+            FillUp prev   = (FillUp) ((BeanItem) source.getItem(prevItemId)).getBean();
 
             // Do the business logic
             return generateCell(fillup, prev);
