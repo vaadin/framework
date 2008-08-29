@@ -27,6 +27,7 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
+import com.itmill.toolkit.terminal.gwt.client.MouseEventDetails;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.Util;
@@ -128,6 +129,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
      * for container element. Then this value is used as a fallback.
      */
     private int oldAvailPixels;
+    private boolean emitClickEvents;
 
     public IScrollTable() {
 
@@ -154,6 +156,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
         this.client = client;
         paintableId = uidl.getStringAttribute("id");
         immediate = uidl.getBooleanAttribute("immediate");
+        emitClickEvents = uidl.getBooleanAttribute("listenClicks");
         final int newTotalRows = uidl.getIntAttribute("totalrows");
         if (newTotalRows != totalRows) {
             if (tBody != null) {
@@ -1942,7 +1945,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
             private IScrollTableRow(int rowKey) {
                 this.rowKey = rowKey;
                 setElement(DOM.createElement("tr"));
-                DOM.sinkEvents(getElement(), Event.ONCLICK);
+                DOM.sinkEvents(getElement(), Event.ONCLICK | Event.ONDBLCLICK);
                 attachContextMenuEvent(getElement());
             }
 
@@ -2084,26 +2087,55 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
                 return false;
             }
 
+            private void handleClickEvent(Event event) {
+                if (emitClickEvents) {
+                    boolean dbl = DOM.eventGetType(event) == Event.ONDBLCLICK;
+                    final Element tdOrTr = DOM.getParent(DOM
+                            .eventGetTarget(event));
+                    client.updateVariable(paintableId, "clickedKey", ""
+                            + rowKey, false);
+                    if (DOM.compare(getElement(), DOM.getParent(tdOrTr))) {
+                        int childIndex = DOM
+                                .getChildIndex(getElement(), tdOrTr);
+                        String colKey = null;
+                        colKey = tHead.getHeaderCell(childIndex).getColKey();
+                        client.updateVariable(paintableId, "clickedColKey",
+                                colKey, false);
+                    }
+                    MouseEventDetails details = new MouseEventDetails(event);
+                    client
+                            .updateVariable(
+                                    paintableId,
+                                    "clickEvent",
+                                    details.toString(),
+                                    !(!dbl
+                                            && selectMode > Table.SELECT_MODE_NONE && immediate));
+                }
+            }
+
             /*
              * React on click that occur on content cells only
              */
             public void onBrowserEvent(Event event) {
-                switch (DOM.eventGetType(event)) {
-                case Event.ONCLICK:
-                    final Element tdOrTr = DOM.getParent(DOM
-                            .eventGetTarget(event));
-                    if (DOM.compare(getElement(), tdOrTr)
-                            || DOM.compare(getElement(), DOM.getParent(tdOrTr))) {
+                final Element tdOrTr = DOM.getParent(DOM.eventGetTarget(event));
+                if (DOM.compare(getElement(), tdOrTr)
+                        || DOM.compare(getElement(), DOM.getParent(tdOrTr))) {
+                    switch (DOM.eventGetType(event)) {
+                    case Event.ONCLICK:
+                        handleClickEvent(event);
                         if (selectMode > Table.SELECT_MODE_NONE) {
                             toggleSelection();
                             client.updateVariable(paintableId, "selected",
                                     selectedRowKeys.toArray(), immediate);
                         }
-                    }
-                    break;
+                        break;
+                    case Event.ONDBLCLICK:
+                        handleClickEvent(event);
+                        break;
 
-                default:
-                    break;
+                    default:
+                        break;
+                    }
                 }
                 super.onBrowserEvent(event);
             }

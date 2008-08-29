@@ -16,6 +16,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
+import com.itmill.toolkit.terminal.gwt.client.MouseEventDetails;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.Util;
@@ -48,6 +49,8 @@ public class ITree extends FlowPanel implements Paintable {
     private boolean disabled = false;
 
     private boolean readonly;
+
+    private boolean emitClickEvents;
 
     public ITree() {
         super();
@@ -97,6 +100,7 @@ public class ITree extends FlowPanel implements Paintable {
 
         disabled = uidl.getBooleanAttribute("disabled");
         readonly = uidl.getBooleanAttribute("readonly");
+        emitClickEvents = uidl.getBooleanAttribute("listenClicks");
 
         isNullSelectionAllowed = uidl.getBooleanAttribute("nullselect");
 
@@ -189,7 +193,7 @@ public class ITree extends FlowPanel implements Paintable {
 
         public TreeNode() {
             constructDom();
-            sinkEvents(Event.ONCLICK);
+            sinkEvents(Event.ONCLICK | Event.ONDBLCLICK | Event.ONMOUSEUP);
         }
 
         public void onBrowserEvent(Event event) {
@@ -197,14 +201,19 @@ public class ITree extends FlowPanel implements Paintable {
             if (disabled) {
                 return;
             }
-            if (DOM.eventGetType(event) == Event.ONCLICK) {
-                final Element target = DOM.eventGetTarget(event);
+            final int type = DOM.eventGetType(event);
+            final Element target = DOM.eventGetTarget(event);
+            if (emitClickEvents && DOM.compare(target, nodeCaptionSpan)
+                    && (type == Event.ONDBLCLICK || type == Event.ONMOUSEUP)) {
+                fireClick(event);
+            }
+            if (type == Event.ONCLICK) {
                 if (DOM.compare(getElement(), target)
                         || DOM.compare(ie6compatnode, target)) {
                     // state change
                     toggleState();
                 } else if (!readonly && DOM.compare(target, nodeCaptionSpan)) {
-                    // caption click = selection change
+                    // caption click = selection change && possible click event
                     toggleSelection();
                 }
                 DOM.eventCancelBubble(event, true);
@@ -213,6 +222,13 @@ public class ITree extends FlowPanel implements Paintable {
                         "ITree event?? " + DOM.eventToString(event));
             }
 
+        }
+
+        private void fireClick(Event evt) {
+            MouseEventDetails details = new MouseEventDetails(evt);
+            client.updateVariable(paintableId, "clickedKey", key, false);
+            client.updateVariable(paintableId, "clickEvent",
+                    details.toString(), !(selectable && immediate));
         }
 
         private void toggleSelection() {

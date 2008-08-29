@@ -302,8 +302,6 @@ public class IPanel extends SimplePanel implements Paintable,
 
             // Restore content to flow
             if (hasChildren) {
-                ApplicationConnection.getConsole().log(
-                        "positioning:" + origPositioning);
                 DOM.setStyleAttribute(contentEl, "position", origPositioning);
             }
             // restore scroll position

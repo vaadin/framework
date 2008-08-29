@@ -21,10 +21,14 @@ import com.itmill.toolkit.data.Container;
 import com.itmill.toolkit.data.util.ContainerHierarchicalWrapper;
 import com.itmill.toolkit.data.util.IndexedContainer;
 import com.itmill.toolkit.event.Action;
+import com.itmill.toolkit.event.ItemClickEvent;
+import com.itmill.toolkit.event.ItemClickEvent.ItemClickListener;
+import com.itmill.toolkit.event.ItemClickEvent.ItemClickSource;
 import com.itmill.toolkit.terminal.KeyMapper;
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
 import com.itmill.toolkit.terminal.Resource;
+import com.itmill.toolkit.terminal.gwt.client.MouseEventDetails;
 
 /**
  * MenuTree component. MenuTree can be used to select an item (or multiple
@@ -36,7 +40,7 @@ import com.itmill.toolkit.terminal.Resource;
  * @since 3.0
  */
 public class Tree extends AbstractSelect implements Container.Hierarchical,
-        Action.Container {
+        Action.Container, ItemClickSource {
 
     /* Static members */
 
@@ -327,6 +331,15 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      */
     public void changeVariables(Object source, Map variables) {
 
+        if (clickListenerCount > 0 && variables.containsKey("clickedKey")) {
+            String key = (String) variables.get("clickedKey");
+
+            Object id = itemIdMapper.get(key);
+            MouseEventDetails details = MouseEventDetails.deSerialize((String) variables
+                    .get("clickEvent"));
+            fireEvent(new ItemClickEvent(this, getItem(id), id, null, details));
+        }
+
         if (!isSelectable() && variables.containsKey("selected")) {
             // Not-selectable is a special case, AbstractSelect does not support
             // TODO could be optimized.
@@ -416,6 +429,10 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 
             if (isNullSelectionAllowed()) {
                 target.addAttribute("nullselect", true);
+            }
+
+            if (clickListenerCount > 0) {
+                target.addAttribute("listenClicks", true);
             }
 
         }
@@ -993,6 +1010,29 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         if (useLazyLoading) {
             throw new UnsupportedOperationException(
                     "Lazy options loading is not supported by Tree.");
+        }
+    }
+
+    private int clickListenerCount = 0;
+
+    public void addListener(ItemClickListener listener) {
+        addListener(ItemClickEvent.class, listener,
+                ItemClickEvent.ITEM_CLICK_METHOD);
+        clickListenerCount++;
+        // repaint needed only if click listening became necessary
+        if (clickListenerCount == 1) {
+            requestRepaint();
+        }
+    }
+
+    public void removeListener(ItemClickListener listener) {
+        removeListener(ItemClickEvent.class, listener,
+                ItemClickEvent.ITEM_CLICK_METHOD);
+        clickListenerCount++;
+        // repaint needed only if click listening is not needed in client
+        // anymore
+        if (clickListenerCount == 0) {
+            requestRepaint();
         }
     }
 
