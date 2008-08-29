@@ -23,6 +23,7 @@ implements Upload.SucceededListener, Upload.FailedListener, Upload.Receiver {
 
         // Create the Upload component.
         final Upload upload = new Upload("Upload the file here", this);
+        upload.setButtonCaption("Upload Now");
 
         // Listen for Upload.SucceededEvent and FailedEvent events.
         upload.addListener((Upload.SucceededListener) this);
