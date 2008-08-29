@@ -30,10 +30,12 @@ public class IFormLayout extends FlexTable implements Container {
     HashMap componentToCaption = new HashMap();
     private ApplicationConnection client;
     private HashMap componentToError = new HashMap();
-    
+
     public IFormLayout() {
         super();
         setStylePrimaryName(CLASSNAME);
+        DOM.setElementProperty(getElement(), "cellPadding", "0");
+        DOM.setElementProperty(getElement(), "cellSpacing", "0");
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
