@@ -47,9 +47,9 @@ public class Ticket1878 extends Application {
 
         GridLayout l1 = new GridLayout(1, 3);
         createOrderedLayout(l1, OrderedLayout.ORIENTATION_HORIZONTAL, "1000",
-                "150");
+                "150", "100%", null);
         createOrderedLayout(l1, OrderedLayout.ORIENTATION_HORIZONTAL, "1000",
-                "100");
+                "100", "100%", null);
         GridLayout l2 = new GridLayout(6, 1);
         createOrderedLayout(l2, OrderedLayout.ORIENTATION_VERTICAL, "200",
                 "500");
@@ -74,9 +74,9 @@ public class Ticket1878 extends Application {
 
         GridLayout l1 = new GridLayout(1, 3);
         createGridLayout(l1, OrderedLayout.ORIENTATION_HORIZONTAL, "1000",
-                "150");
+                "150", "100%", null);
         createGridLayout(l1, OrderedLayout.ORIENTATION_HORIZONTAL, "1000",
-                "100");
+                "100", "100%", null);
         GridLayout l2 = new GridLayout(6, 1);
         createGridLayout(l2, OrderedLayout.ORIENTATION_VERTICAL, "200", "500");
         createGridLayout(l2, OrderedLayout.ORIENTATION_VERTICAL, "200", "500",
