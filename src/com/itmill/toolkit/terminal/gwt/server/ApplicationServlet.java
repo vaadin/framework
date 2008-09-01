@@ -938,13 +938,21 @@ public class ApplicationServlet extends HttpServlet {
                 + (style != null ? style : "") + "></div>\n");
 
         if (!fragment) {
+        	page.write("<noscript>" + getNoScriptMessage() + "</noscript>");
             page.write("</body>\n</html>\n");
         }
         page.close();
 
     }
 
-    private boolean isGecko17(HttpServletRequest request) {
+    /**
+     * Returns a message printed for browsers without scripting support or if browsers scripting support is disabled.
+     */
+    protected String getNoScriptMessage() {
+		return "You have to enable javascript in your browser to use an application built with IT Mill Toolkit.";
+	}
+
+	private boolean isGecko17(HttpServletRequest request) {
         final WebBrowser browser = WebApplicationContext.getApplicationContext(
                 request.getSession()).getBrowser();
         if (browser != null && browser.getBrowserApplication() != null) {
