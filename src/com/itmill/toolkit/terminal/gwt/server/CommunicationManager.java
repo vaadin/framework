@@ -446,7 +446,8 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
                     final StringBuffer layout = new StringBuffer();
 
                     try {
-                        final InputStreamReader r = new InputStreamReader(is);
+                        final InputStreamReader r = new InputStreamReader(is,
+                                "UTF-8");
                         final char[] buffer = new char[20000];
                         int charsRead = 0;
                         while ((charsRead = r.read(buffer)) > 0) {

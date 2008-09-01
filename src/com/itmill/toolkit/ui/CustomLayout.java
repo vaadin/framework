@@ -57,16 +57,17 @@ public class CustomLayout extends AbstractLayout {
      * Constructs a custom layout with the template given in the stream.
      * 
      * @param templateStream
-     *                Stream containing template data. Must be using UTF-8
-     *                encoding. To use a String as a template use for instance
-     *                new ByteArrayInputStream("<template>".getBytes()).
+     *            Stream containing template data. Must be using UTF-8 encoding.
+     *            To use a String as a template use for instance new
+     *            ByteArrayInputStream("<template>".getBytes()).
      * @param streamLength
-     *                Length of the templateStream
+     *            Length of the templateStream
      * @throws IOException
      */
     public CustomLayout(InputStream templateStream) throws IOException {
 
-        InputStreamReader reader = new InputStreamReader(templateStream);
+        InputStreamReader reader = new InputStreamReader(templateStream,
+                "UTF-8");
         StringBuffer b = new StringBuffer(BUFFER_SIZE);
 
         char[] cbuf = new char[BUFFER_SIZE];
@@ -105,9 +106,9 @@ public class CustomLayout extends AbstractLayout {
      * is already populated, the old component is removed.
      * 
      * @param c
-     *                the component to be added.
+     *            the component to be added.
      * @param location
-     *                the location of the component.
+     *            the location of the component.
      */
     public void addComponent(Component c, String location) {
         final Component old = (Component) slots.get(location);
@@ -127,7 +128,7 @@ public class CustomLayout extends AbstractLayout {
      * components into that location overwrites the old components.
      * 
      * @param c
-     *                the component to be added.
+     *            the component to be added.
      */
     public void addComponent(Component c) {
         this.addComponent(c, "");
@@ -137,7 +138,7 @@ public class CustomLayout extends AbstractLayout {
      * Removes the component from this container.
      * 
      * @param c
-     *                the component to be removed.
+     *            the component to be removed.
      */
     public void removeComponent(Component c) {
         if (c == null) {
@@ -153,7 +154,7 @@ public class CustomLayout extends AbstractLayout {
      * Removes the component from this container from given location.
      * 
      * @param location
-     *                the Location identifier of the component.
+     *            the Location identifier of the component.
      */
     public void removeComponent(String location) {
         this.removeComponent((Component) slots.get(location));
@@ -173,8 +174,8 @@ public class CustomLayout extends AbstractLayout {
      * Gets the child-component by its location.
      * 
      * @param location
-     *                the name of the location where the requested component
-     *                resides.
+     *            the name of the location where the requested component
+     *            resides.
      * @return the Component in the given location or null if not found.
      */
     public Component getComponent(String location) {
@@ -186,7 +187,7 @@ public class CustomLayout extends AbstractLayout {
      * 
      * @param target
      * @throws PaintException
-     *                 if the paint operation failed.
+     *             if the paint operation failed.
      */
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);
@@ -245,7 +246,7 @@ public class CustomLayout extends AbstractLayout {
      * setStyle. Overriding to improve backwards compatibility.
      * 
      * @param name
-     *                template name
+     *            template name
      */
     public void setStyle(String name) {
         setTemplateName(name);
