@@ -46,94 +46,58 @@ public class IRichTextToolbar extends Composite {
      */
     public interface Images extends ImageBundle {
 
-        /**
-         * @gwt.resource bold.gif
-         */
+        @ImageBundle.Resource("bold.gif")
         AbstractImagePrototype bold();
 
-        /**
-         * @gwt.resource createLink.gif
-         */
+        @ImageBundle.Resource("createLink.gif")
         AbstractImagePrototype createLink();
 
-        /**
-         * @gwt.resource hr.gif
-         */
+        @ImageBundle.Resource("hr.gif")
         AbstractImagePrototype hr();
 
-        /**
-         * @gwt.resource indent.gif
-         */
+        @ImageBundle.Resource("indent.gif")
         AbstractImagePrototype indent();
 
-        /**
-         * @gwt.resource insertImage.gif
-         */
+        @ImageBundle.Resource("insertImage.gif")
         AbstractImagePrototype insertImage();
 
-        /**
-         * @gwt.resource italic.gif
-         */
+        @ImageBundle.Resource("italic.gif")
         AbstractImagePrototype italic();
 
-        /**
-         * @gwt.resource justifyCenter.gif
-         */
+        @ImageBundle.Resource("justifyCenter.gif")
         AbstractImagePrototype justifyCenter();
 
-        /**
-         * @gwt.resource justifyLeft.gif
-         */
+        @ImageBundle.Resource("justifyLeft.gif")
         AbstractImagePrototype justifyLeft();
 
-        /**
-         * @gwt.resource justifyRight.gif
-         */
+        @ImageBundle.Resource("justifyRight.gif")
         AbstractImagePrototype justifyRight();
 
-        /**
-         * @gwt.resource ol.gif
-         */
+        @ImageBundle.Resource("ol.gif")
         AbstractImagePrototype ol();
 
-        /**
-         * @gwt.resource outdent.gif
-         */
+        @ImageBundle.Resource("outdent.gif")
         AbstractImagePrototype outdent();
 
-        /**
-         * @gwt.resource removeFormat.gif
-         */
+        @ImageBundle.Resource("removeFormat.gif")
         AbstractImagePrototype removeFormat();
 
-        /**
-         * @gwt.resource removeLink.gif
-         */
+        @ImageBundle.Resource("removeLink.gif")
         AbstractImagePrototype removeLink();
 
-        /**
-         * @gwt.resource strikeThrough.gif
-         */
+        @ImageBundle.Resource("strikeThrough.gif")
         AbstractImagePrototype strikeThrough();
 
-        /**
-         * @gwt.resource subscript.gif
-         */
+        @ImageBundle.Resource("subscript.gif")
         AbstractImagePrototype subscript();
 
-        /**
-         * @gwt.resource superscript.gif
-         */
+        @ImageBundle.Resource("superscript.gif")
         AbstractImagePrototype superscript();
 
-        /**
-         * @gwt.resource ul.gif
-         */
+        @ImageBundle.Resource("ul.gif")
         AbstractImagePrototype ul();
 
-        /**
-         * @gwt.resource underline.gif
-         */
+        @ImageBundle.Resource("underline.gif")
         AbstractImagePrototype underline();
     }
 
