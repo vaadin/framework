@@ -43,7 +43,7 @@ public class BeanItem extends PropertysetItem {
      * </p>
      * 
      * @param bean
-     *                the Java Bean to copy properties from.
+     *            the Java Bean to copy properties from.
      * 
      */
     public BeanItem(Object bean) {
@@ -63,7 +63,8 @@ public class BeanItem extends PropertysetItem {
                 final Class type = pd[i].getPropertyType();
                 final String name = pd[i].getName();
 
-                if ((getMethod != null)) {
+                if ((getMethod != null)
+                        && getMethod.getDeclaringClass() != Object.class) {
                     final Property p = new MethodProperty(type, bean,
                             getMethod, setMethod);
                     addItemProperty(name, p);
@@ -87,9 +88,9 @@ public class BeanItem extends PropertysetItem {
      * </p>
      * 
      * @param bean
-     *                the Java Bean to copy properties from.
+     *            the Java Bean to copy properties from.
      * @param propertyIds
-     *                id of the property.
+     *            id of the property.
      */
     public BeanItem(Object bean, Collection propertyIds) {
 
@@ -138,9 +139,9 @@ public class BeanItem extends PropertysetItem {
      * </p>
      * 
      * @param bean
-     *                the Java Bean to copy properties from.
+     *            the Java Bean to copy properties from.
      * @param propertyIds
-     *                ids of the properties.
+     *            ids of the properties.
      */
     public BeanItem(Object bean, String[] propertyIds) {
         this(bean, Arrays.asList(propertyIds));
