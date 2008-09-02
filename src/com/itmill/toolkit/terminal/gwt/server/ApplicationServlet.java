@@ -553,8 +553,8 @@ public class ApplicationServlet extends HttpServlet {
                 appCls = getClass().getClassLoader().loadClass(
                         applicationRunnerClassname);
             }
-            Method m = appCls.getMethod("getSystemMessages", null);
-            return (Application.SystemMessages) m.invoke(null, null);
+            Method m = appCls.getMethod("getSystemMessages", (Class[]) null);
+            return (Application.SystemMessages) m.invoke(null, (Object[]) null);
         } catch (ClassNotFoundException e) {
             // This should never happen
             throw new SystemMessageException(e);

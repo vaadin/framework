@@ -239,8 +239,9 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
                 SystemMessages ci = null;
                 try {
                     Method m = application.getClass().getMethod(
-                            "getSystemMessages", null);
-                    ci = (Application.SystemMessages) m.invoke(null, null);
+                            "getSystemMessages", (Class[]) null);
+                    ci = (Application.SystemMessages) m.invoke(null,
+                            (Object[]) null);
                 } catch (Exception e2) {
                     // FIXME: Handle exception
                     // Not critical, but something is still wrong; print
