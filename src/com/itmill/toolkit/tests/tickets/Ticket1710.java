@@ -314,6 +314,7 @@ public class Ticket1710 extends com.itmill.toolkit.Application {
             if (!(testedLayout instanceof Layout.AlignmentHandler)) {
                 return;
             }
+            @SuppressWarnings("unused")
             final Layout.AlignmentHandler ah = (AlignmentHandler) testedLayout;
 
             final NativeSelect vAlign = new NativeSelect();
@@ -415,21 +416,21 @@ public class Ticket1710 extends com.itmill.toolkit.Application {
         }
 
         public boolean getWidthPercents() {
-            return testedLayout.getWidthUnits() == testedLayout.UNITS_PERCENTAGE;
+            return testedLayout.getWidthUnits() == Sizeable.UNITS_PERCENTAGE;
         }
 
         public void setWidthPercents(boolean b) {
-            testedLayout.setWidthUnits(b ? testedLayout.UNITS_PERCENTAGE
-                    : testedLayout.UNITS_PIXELS);
+            testedLayout.setWidthUnits(b ? Sizeable.UNITS_PERCENTAGE
+                    : Sizeable.UNITS_PIXELS);
         }
 
         public boolean getHeightPercents() {
-            return testedLayout.getHeightUnits() == testedLayout.UNITS_PERCENTAGE;
+            return testedLayout.getHeightUnits() == Sizeable.UNITS_PERCENTAGE;
         }
 
         public void setHeightPercents(boolean b) {
-            testedLayout.setHeightUnits(b ? testedLayout.UNITS_PERCENTAGE
-                    : testedLayout.UNITS_PIXELS);
+            testedLayout.setHeightUnits(b ? Sizeable.UNITS_PERCENTAGE
+                    : Sizeable.UNITS_PIXELS);
         }
     }
 }

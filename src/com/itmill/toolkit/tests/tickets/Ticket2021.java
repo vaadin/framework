@@ -104,6 +104,7 @@ public class Ticket2021 extends Application {
         // createUI(orderedLayout);
     }
 
+    @SuppressWarnings("unused")
     private void createUI(Layout layout) {
         Label l = new Label("Label");
         Button b = new Button("Enable/disable caption and watch button move",

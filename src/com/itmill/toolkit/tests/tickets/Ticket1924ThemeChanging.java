@@ -11,6 +11,7 @@ public class Ticket1924ThemeChanging extends com.itmill.toolkit.Application {
 
     private Label l = new Label("Background should be red with test theme");
 
+    @SuppressWarnings("unused")
     private Panel p;
 
     public void init() {

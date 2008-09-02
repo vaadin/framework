@@ -30,6 +30,7 @@ public class Ticket161 extends Application {
 
                 Container containerDataSource = t.getContainerDataSource();
                 Object[] itemIds = containerDataSource.getItemIds().toArray();
+                @SuppressWarnings("unused")
                 int c = 0;
                 for (int i = 0; i < itemIds.length; i++) {
                     if (i > 19) {

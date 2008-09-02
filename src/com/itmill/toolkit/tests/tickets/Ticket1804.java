@@ -5,6 +5,7 @@ import java.util.LinkedList;
 
 import com.itmill.toolkit.data.Validator;
 import com.itmill.toolkit.data.util.MethodProperty;
+import com.itmill.toolkit.terminal.Sizeable;
 import com.itmill.toolkit.terminal.SystemError;
 import com.itmill.toolkit.ui.AbstractField;
 import com.itmill.toolkit.ui.Button;
@@ -106,7 +107,7 @@ public class Ticket1804 extends com.itmill.toolkit.Application {
                 w.setModal(true);
                 w.setScrollable(true);
                 w.setHeight(80);
-                w.setHeightUnits(w.UNITS_PERCENTAGE);
+                w.setHeightUnits(Sizeable.UNITS_PERCENTAGE);
                 w.addComponent(new Label(msg.toString(), Label.CONTENT_XHTML));
                 main.addWindow(w);
             }

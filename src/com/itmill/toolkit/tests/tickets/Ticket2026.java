@@ -14,6 +14,7 @@ public class Ticket2026 extends Application {
         GridLayout layout = new GridLayout(2, 2);
         layout.setSpacing(true);
 
+        @SuppressWarnings("unused")
         int nr = 5;
         TextField tf;
         tf = new TextField("TextField (tabIndex 1)");
