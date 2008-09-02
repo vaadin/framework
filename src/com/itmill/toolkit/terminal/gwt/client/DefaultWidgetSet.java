@@ -7,7 +7,6 @@ package com.itmill.toolkit.terminal.gwt.client;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ui.IAccordion;
 import com.itmill.toolkit.terminal.gwt.client.ui.IButton;
@@ -322,7 +321,7 @@ public class DefaultWidgetSet implements WidgetSet {
     }
 
     public boolean isCorrectImplementation(Widget currentWidget, UIDL uidl) {
-        return GWT.getTypeName(currentWidget).equals(
+        return currentWidget.getClass().getName().equals(
                 resolveWidgetTypeName(uidl));
     }
 
