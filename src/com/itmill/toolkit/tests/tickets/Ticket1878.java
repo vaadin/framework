@@ -1,11 +1,20 @@
 package com.itmill.toolkit.tests.tickets;
 
+import java.util.Date;
+import java.util.Iterator;
+import java.util.Random;
+
 import com.itmill.toolkit.Application;
+import com.itmill.toolkit.data.util.BeanItem;
+import com.itmill.toolkit.data.validator.StringLengthValidator;
 import com.itmill.toolkit.terminal.Resource;
 import com.itmill.toolkit.terminal.ThemeResource;
 import com.itmill.toolkit.terminal.UserError;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.ExpandLayout;
+import com.itmill.toolkit.ui.Field;
+import com.itmill.toolkit.ui.Form;
+import com.itmill.toolkit.ui.FormLayout;
 import com.itmill.toolkit.ui.GridLayout;
 import com.itmill.toolkit.ui.Layout;
 import com.itmill.toolkit.ui.OrderedLayout;
@@ -21,10 +30,12 @@ public class Ticket1878 extends Application {
     private Layout orderedLayout;
     private Layout gridLayout;
     private Layout expandLayout;
+    private Layout formLayout;
     private GridLayout mainLayout;
     private Button switchToGridButton;
     private Button switchToOrderedButton;
     private Button switchToExpandButton;
+    private Button switchToFormsButton;
 
     public void init() {
         Window w = new Window(getClass().getSimpleName());
@@ -36,6 +47,7 @@ public class Ticket1878 extends Application {
         orderedLayout = createOL();
         gridLayout = createGL();
         expandLayout = createEL();
+        formLayout = createForms();
 
         switchToGridButton = new Button("Switch to GridLayout",
                 new ClickListener() {
@@ -63,11 +75,20 @@ public class Ticket1878 extends Application {
 
                 });
 
+        switchToFormsButton = new Button("Switch to Form", new ClickListener() {
+
+            public void buttonClick(ClickEvent event) {
+                changeLayout(switchToFormsButton, formLayout);
+            }
+
+        });
+
         OrderedLayout buttonLayout = new OrderedLayout(
                 OrderedLayout.ORIENTATION_HORIZONTAL);
         buttonLayout.addComponent(switchToOrderedButton);
         buttonLayout.addComponent(switchToGridButton);
         buttonLayout.addComponent(switchToExpandButton);
+        buttonLayout.addComponent(switchToFormsButton);
 
         mainLayout.addComponent(buttonLayout);
         mainLayout.addComponent(orderedLayout);
@@ -83,7 +104,7 @@ public class Ticket1878 extends Application {
                 "1000", "150", "100%", null, true);
         createLayout(l1,
                 new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL),
-                "1000", "150", "100", null, false);
+                "1000", "150", "50", null, false);
         GridLayout l2 = new GridLayout(6, 1);
         createLayout(l2, new OrderedLayout(OrderedLayout.ORIENTATION_VERTICAL),
                 "200", "500", true);
@@ -109,8 +130,7 @@ public class Ticket1878 extends Application {
         GridLayout l1 = new GridLayout(1, 3);
         createLayout(l1, new GridLayout(8, 1), "1000", "150", "100%", null,
                 true);
-        createLayout(l1, new GridLayout(8, 1), "1000", "150", "100", null,
-                false);
+        createLayout(l1, new GridLayout(8, 1), "1000", "150", "50", null, false);
         GridLayout l2 = new GridLayout(6, 1);
         createLayout(l2, new GridLayout(1, 8), "200", "500", true);
         createLayout(l2, new GridLayout(1, 8), "200", "500", "100%", null, true);
@@ -152,10 +172,115 @@ public class Ticket1878 extends Application {
         return layout;
     }
 
+    public class FormObject {
+        private String stringValue = "abc";
+        private int intValue = 1;
+        private long longValue = 2L;
+        private Date dateValue = new Date(34587034750L);
+
+        public String getStringValue() {
+            return stringValue;
+        }
+
+        public void setStringValue(String stringValue) {
+            this.stringValue = stringValue;
+        }
+
+        public int getIntValue() {
+            return intValue;
+        }
+
+        public void setIntValue(int intValue) {
+            this.intValue = intValue;
+        }
+
+        public long getLongValue() {
+            return longValue;
+        }
+
+        public void setLongValue(long longValue) {
+            this.longValue = longValue;
+        }
+
+        public Date getDateValue() {
+            return dateValue;
+        }
+
+        public void setDateValue(Date dateValue) {
+            this.dateValue = dateValue;
+        }
+
+    }
+
+    private Layout createForms() {
+        GridLayout layout = new GridLayout(1, 5);
+        Form form;
+
+        Random r = new Random();
+        GridLayout l1 = new GridLayout(1, 3);
+        form = createForm(l1, "200", "500");
+        BeanItem item = new BeanItem(new FormObject());
+        form.setItemDataSource(item);
+        for (Iterator i = item.getItemPropertyIds().iterator(); i.hasNext();) {
+            Object property = i.next();
+            Field f = form.getField(property);
+
+            f.setRequired(r.nextBoolean());
+            if (r.nextBoolean()) {
+                f.setIcon(new ThemeResource("icons/16/document-add.png"));
+            }
+            if (r.nextBoolean()) {
+                f.setCaption(null);
+            }
+
+            f.addValidator(new StringLengthValidator("Error", 10, 8, false));
+        }
+        // createLayout(l1, new
+        // ExpandLayout(ExpandLayout.ORIENTATION_HORIZONTAL),
+        // "1000", "150", "50", null, false);
+
+        // GridLayout l2 = new GridLayout(6, 1);
+        // createLayout(l2, new ExpandLayout(ExpandLayout.ORIENTATION_VERTICAL),
+        // "200", "500", true);
+        // createLayout(l2, new ExpandLayout(ExpandLayout.ORIENTATION_VERTICAL),
+        // "200", "500", "100%", null, true);
+        // createLayout(l2, new ExpandLayout(ExpandLayout.ORIENTATION_VERTICAL),
+        // "150", "500", true);
+        // createLayout(l2, new ExpandLayout(ExpandLayout.ORIENTATION_VERTICAL),
+        // "150", "500", "100%", null, true);
+        // createLayout(l2, new ExpandLayout(ExpandLayout.ORIENTATION_VERTICAL),
+        // "100", "500", true);
+        // createLayout(l2, new ExpandLayout(ExpandLayout.ORIENTATION_VERTICAL),
+        // "100", "500", "100%", null, true);
+        layout.addComponent(l1);
+        // layout.addComponent(l2);
+
+        return layout;
+    }
+
+    private Form createForm(GridLayout parentLayout, String w, String h) {
+        FormLayout formLayout = new FormLayout();
+        Form form = new Form(formLayout);
+
+        Panel p = new Panel("Form " + w + "x" + h);
+
+        p.setWidth(w);
+        p.setHeight(h);
+
+        p.getLayout().setSizeFull();
+
+        parentLayout.addComponent(p);
+        p.addComponent(form);
+        formLayout.setSizeFull();
+
+        return form;
+    }
+
     protected void changeLayout(Button b, Layout newLayout) {
         switchToOrderedButton.setEnabled(true);
         switchToGridButton.setEnabled(true);
         switchToExpandButton.setEnabled(true);
+        switchToFormsButton.setEnabled(true);
 
         b.setEnabled(false);
         java.util.Iterator i = mainLayout.getComponentIterator();
@@ -224,7 +349,7 @@ public class Ticket1878 extends Application {
 
                     if (align) {
                         ((AlignmentHandler) newLayout).setComponentAlignment(
-                                tf, OrderedLayout.ALIGNMENT_LEFT,
+                                tf, OrderedLayout.ALIGNMENT_RIGHT,
                                 OrderedLayout.ALIGNMENT_BOTTOM);
                     }
                 }
