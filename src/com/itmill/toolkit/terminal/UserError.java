@@ -50,7 +50,7 @@ public class UserError implements ErrorMessage {
      * Creates a textual error message of level ERROR.
      * 
      * @param textErrorMessage
-     *                the text of the error message.
+     *            the text of the error message.
      */
     public UserError(String textErrorMessage) {
         msg = textErrorMessage;
@@ -60,11 +60,11 @@ public class UserError implements ErrorMessage {
      * Creates a error message with level and content mode.
      * 
      * @param message
-     *                the error message.
+     *            the error message.
      * @param contentMode
-     *                the content Mode.
+     *            the content Mode.
      * @param errorLevel
-     *                the level of error.
+     *            the level of error.
      */
     public UserError(String message, int contentMode, int errorLevel) {
 

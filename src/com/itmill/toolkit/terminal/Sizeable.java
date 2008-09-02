@@ -103,8 +103,8 @@ public interface Sizeable {
      * (terminal is free to set the size).
      * 
      * @param width
-     *                the width of the object in units specified by widthUnits
-     *                property.
+     *            the width of the object in units specified by widthUnits
+     *            property.
      */
     public void setWidth(int width);
 
@@ -121,8 +121,8 @@ public interface Sizeable {
      * (terminal is free to set the size).
      * 
      * @param height
-     *                the height of the object in units specified by heightUnits
-     *                property.
+     *            the height of the object in units specified by heightUnits
+     *            property.
      */
     public void setHeight(int height);
 
@@ -137,7 +137,7 @@ public interface Sizeable {
      * Sets the width property units.
      * 
      * @param units
-     *                the units used in width property.
+     *            the units used in width property.
      */
     public void setWidthUnits(int units);
 
@@ -152,7 +152,7 @@ public interface Sizeable {
      * Sets the height property units.
      * 
      * @param units
-     *                the units used in height property.
+     *            the units used in height property.
      */
     public void setHeightUnits(int units);
 
@@ -167,7 +167,7 @@ public interface Sizeable {
      * spesification</a> for more details.
      * 
      * @param height
-     *                in CSS style string representation
+     *            in CSS style string representation
      */
     public void setHeight(String height);
 
@@ -182,7 +182,7 @@ public interface Sizeable {
      * spesification</a> for more details.
      * 
      * @param width
-     *                in CSS style string representation
+     *            in CSS style string representation
      */
     public void setWidth(String width);
 

@@ -49,9 +49,8 @@ public interface Buffered {
      * when <code>commit</code> is called.
      * 
      * @throws SourceException
-     *                 if the operation fails because of an exception is thrown
-     *                 by the data source. The cause is included in the
-     *                 exception.
+     *             if the operation fails because of an exception is thrown by
+     *             the data source. The cause is included in the exception.
      */
     public void commit() throws SourceException;
 
@@ -60,9 +59,8 @@ public interface Buffered {
      * the data source.
      * 
      * @throws SourceException
-     *                 if the operation fails because of an exception is thrown
-     *                 by the data source. The cause is included in the
-     *                 exception.
+     *             if the operation fails because of an exception is thrown by
+     *             the data source. The cause is included in the exception.
      */
     public void discard() throws SourceException;
 
@@ -82,11 +80,11 @@ public interface Buffered {
      * will be performed.
      * 
      * @param writeThrough
-     *                Boolean value to indicate if the object should be in
-     *                write-through mode after the call.
+     *            Boolean value to indicate if the object should be in
+     *            write-through mode after the call.
      * @throws SourceException
-     *                 If the operation fails because of an exception is thrown
-     *                 by the data source.
+     *             If the operation fails because of an exception is thrown by
+     *             the data source.
      * 
      */
     public void setWriteThrough(boolean writeThrough) throws SourceException;
@@ -113,13 +111,12 @@ public interface Buffered {
      * data source.
      * 
      * @param readThrough
-     *                Boolean value to indicate if the object should be in
-     *                read-through mode after the call.
+     *            Boolean value to indicate if the object should be in
+     *            read-through mode after the call.
      * 
      * @throws SourceException
-     *                 If the operation fails because of an exception is thrown
-     *                 by the data source. The cause is included in the
-     *                 exception.
+     *             If the operation fails because of an exception is thrown by
+     *             the data source. The cause is included in the exception.
      */
     public void setReadThrough(boolean readThrough) throws SourceException;
 
@@ -160,7 +157,7 @@ public interface Buffered {
          * Creates a source exception that does not include a cause.
          * 
          * @param source
-         *                the source object implementing the Buffered interface.
+         *            the source object implementing the Buffered interface.
          */
         public SourceException(Buffered source) {
             this.source = source;
@@ -170,9 +167,9 @@ public interface Buffered {
          * Creates a source exception from a cause exception.
          * 
          * @param source
-         *                the source object implementing the Buffered interface.
+         *            the source object implementing the Buffered interface.
          * @param cause
-         *                the original cause for this exception.
+         *            the original cause for this exception.
          */
         public SourceException(Buffered source, Throwable cause) {
             this.source = source;
@@ -183,9 +180,9 @@ public interface Buffered {
          * Creates a source exception from multiple causes.
          * 
          * @param source
-         *                the source object implementing the Buffered interface.
+         *            the source object implementing the Buffered interface.
          * @param causes
-         *                the original causes for this exception.
+         *            the original causes for this exception.
          */
         public SourceException(Buffered source, Throwable[] causes) {
             this.source = source;
@@ -197,9 +194,9 @@ public interface Buffered {
          * 
          * @return The cause for the exception.
          * @throws MoreThanOneCauseException
-         *                 if there is more than one cause for the exception.
-         *                 This is possible if the commit operation triggers
-         *                 more than one error at the same time.
+         *             if there is more than one cause for the exception. This
+         *             is possible if the commit operation triggers more than
+         *             one error at the same time.
          */
         public final Throwable getCause() {
             if (causes.length == 0) {

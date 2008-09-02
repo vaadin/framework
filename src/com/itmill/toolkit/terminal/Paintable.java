@@ -31,10 +31,10 @@ public interface Paintable extends java.util.EventListener {
      * </p>
      * 
      * @param target
-     *                the target UIDL stream where the component should paint
-     *                itself to.
+     *            the target UIDL stream where the component should paint itself
+     *            to.
      * @throws PaintException
-     *                 if the paint operation failed.
+     *             if the paint operation failed.
      */
     public void paint(PaintTarget target) throws PaintException;
 
@@ -49,7 +49,7 @@ public interface Paintable extends java.util.EventListener {
      * instance is on programmers responsibility.
      * 
      * @param id
-     *                A short (< 20 chars) alphanumeric id
+     *            A short (< 20 chars) alphanumeric id
      */
     public void setDebugId(String id);
 
@@ -76,7 +76,7 @@ public interface Paintable extends java.util.EventListener {
          * Constructs a new event.
          * 
          * @param source
-         *                the paintable needing repaint.
+         *            the paintable needing repaint.
          */
         public RepaintRequestEvent(Paintable source) {
             super(source);
@@ -85,8 +85,8 @@ public interface Paintable extends java.util.EventListener {
         /**
          * Gets the paintable needing repainting.
          * 
-         * @return Paintable for which the <code>paint</code> method will
-         *         return dissimilar UIDL from the previous call of the method.
+         * @return Paintable for which the <code>paint</code> method will return
+         *         dissimilar UIDL from the previous call of the method.
          */
         public Paintable getPaintable() {
             return (Paintable) getSource();
@@ -96,8 +96,8 @@ public interface Paintable extends java.util.EventListener {
     /**
      * Listens repaint requests. The <code>repaintRequested</code> method is
      * called when the paintable needs to be repainted. This is typically done
-     * when the <code>paint</code> method would return dissimilar UIDL from
-     * the previous call of the method.
+     * when the <code>paint</code> method would return dissimilar UIDL from the
+     * previous call of the method.
      */
     public interface RepaintRequestListener {
 
@@ -105,8 +105,7 @@ public interface Paintable extends java.util.EventListener {
          * Receives repaint request events.
          * 
          * @param event
-         *                the repaint request event specifying the paintable
-         *                source.
+         *            the repaint request event specifying the paintable source.
          */
         public void repaintRequested(RepaintRequestEvent event);
     }
@@ -117,7 +116,7 @@ public interface Paintable extends java.util.EventListener {
      * right after adding itself as listener.
      * 
      * @param listener
-     *                the listener to be added.
+     *            the listener to be added.
      */
     public void addListener(RepaintRequestListener listener);
 
@@ -125,7 +124,7 @@ public interface Paintable extends java.util.EventListener {
      * Removes repaint request listener.
      * 
      * @param listener
-     *                the listener to be removed.
+     *            the listener to be removed.
      */
     public void removeListener(RepaintRequestListener listener);
 

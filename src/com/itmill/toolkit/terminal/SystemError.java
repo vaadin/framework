@@ -10,8 +10,8 @@ import java.io.StringWriter;
 /**
  * <code>SystemError</code> is a runtime exception caused by error in system.
  * The system error can be shown to the user as it implements
- * <code>ErrorMessage</code> interface, but contains technical information
- * such as stack trace and exception.
+ * <code>ErrorMessage</code> interface, but contains technical information such
+ * as stack trace and exception.
  * 
  * @author IT Mill Ltd.
  * @version
@@ -35,7 +35,7 @@ public class SystemError extends RuntimeException implements ErrorMessage {
      * Constructor for SystemError with error message specified.
      * 
      * @param message
-     *                the Textual error description.
+     *            the Textual error description.
      */
     public SystemError(String message) {
         super(message);
@@ -45,9 +45,9 @@ public class SystemError extends RuntimeException implements ErrorMessage {
      * Constructor for SystemError with causing exception and error message.
      * 
      * @param message
-     *                the Textual error description.
+     *            the Textual error description.
      * @param cause
-     *                the throwable causing the system error.
+     *            the throwable causing the system error.
      */
     public SystemError(String message, Throwable cause) {
         super(message);
@@ -58,7 +58,7 @@ public class SystemError extends RuntimeException implements ErrorMessage {
      * Constructor for SystemError with cause.
      * 
      * @param cause
-     *                the throwable causing the system error.
+     *            the throwable causing the system error.
      */
     public SystemError(Throwable cause) {
         this.cause = cause;

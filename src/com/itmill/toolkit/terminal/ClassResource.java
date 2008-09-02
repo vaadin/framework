@@ -52,10 +52,9 @@ public class ClassResource implements ApplicationResource {
      * to the location of the application class.
      * 
      * @param resourceName
-     *                the Unique identifier of the resource within the
-     *                application.
+     *            the Unique identifier of the resource within the application.
      * @param application
-     *                the application this resource will be added to.
+     *            the application this resource will be added to.
      */
     public ClassResource(String resourceName, Application application) {
         associatedClass = application.getClass();
@@ -71,12 +70,11 @@ public class ClassResource implements ApplicationResource {
      * Creates a new application resource instance.
      * 
      * @param associatedClass
-     *                the class of the which the resource is associated.
+     *            the class of the which the resource is associated.
      * @param resourceName
-     *                the Unique identifier of the resource within the
-     *                application.
+     *            the Unique identifier of the resource within the application.
      * @param application
-     *                the application this resource will be added to.
+     *            the application this resource will be added to.
      */
     public ClassResource(Class associatedClass, String resourceName,
             Application application) {
@@ -146,7 +144,7 @@ public class ClassResource implements ApplicationResource {
      * Sets the size of the download buffer used for this resource.
      * 
      * @param bufferSize
-     *                the size of the buffer in bytes.
+     *            the size of the buffer in bytes.
      */
     public void setBufferSize(int bufferSize) {
         this.bufferSize = bufferSize;
@@ -168,7 +166,7 @@ public class ClassResource implements ApplicationResource {
      * </p>
      * 
      * @param cacheTime
-     *                the cache time in milliseconds.
+     *            the cache time in milliseconds.
      * 
      */
     public void setCacheTime(long cacheTime) {

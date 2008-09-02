@@ -95,7 +95,8 @@ public class TestComponentsAndLayouts extends Application implements Listener,
                                 + "All components are in immmediate mode. See source how to tweak this test."));
         main.addComponent(eventListenerFeedback);
 
-        // //////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////
+        // ////
         if (false) {
             window = new Window("Components inside Window (TEST: Window)");
 
@@ -109,7 +110,8 @@ public class TestComponentsAndLayouts extends Application implements Listener,
             getMainWindow().addWindow(window);
         }
 
-        // //////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////
+        // ////
         if (false) {
             target
                     .addComponent(new Label(
@@ -121,7 +123,8 @@ public class TestComponentsAndLayouts extends Application implements Listener,
             target.addComponent(ol);
         }
 
-        // //////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////
+        // ////
         if (false) {
             target
                     .addComponent(new Label(
@@ -133,7 +136,8 @@ public class TestComponentsAndLayouts extends Application implements Listener,
             target.addComponent(ol2);
         }
 
-        // //////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////
+        // ////
         if (false) {
             target.addComponent(new Label(
                     "<hr /><h1>Components inside TabSheet</h3>",
@@ -154,7 +158,8 @@ public class TestComponentsAndLayouts extends Application implements Listener,
             // test(expandLayout);
         }
 
-        // //////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////
+        // ////
         if (true) {
             target.addComponent(new Label(
                     "<hr /><h1>Components inside Accordion</h3>",
@@ -176,7 +181,8 @@ public class TestComponentsAndLayouts extends Application implements Listener,
             // test(expandLayout);
         }
 
-        // //////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////
+        // ////
         if (false) {
             target.addComponent(new Label(
                     "<hr /><h1>Components inside GridLayout</h3>",
@@ -187,7 +193,8 @@ public class TestComponentsAndLayouts extends Application implements Listener,
             // test(gridLayout);
         }
 
-        // //////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////
+        // ////
         if (false) {
             target
                     .addComponent(new Label(
@@ -200,7 +207,8 @@ public class TestComponentsAndLayouts extends Application implements Listener,
             target.addComponent(el);
         }
 
-        // //////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////
+        // ////
         if (false) {
             target.addComponent(new Label(
                     "<hr /><h1>Components inside Panel</h3>",
@@ -210,7 +218,8 @@ public class TestComponentsAndLayouts extends Application implements Listener,
             target.addComponent(panel);
         }
 
-        // //////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////
+        // ////
         if (false) {
             target
                     .addComponent(new Label(
@@ -230,7 +239,8 @@ public class TestComponentsAndLayouts extends Application implements Listener,
             target.addComponent(sp1l);
         }
 
-        // //////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////
+        // ////
         if (false) {
             target
                     .addComponent(new Label(

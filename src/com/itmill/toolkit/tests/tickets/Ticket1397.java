@@ -42,8 +42,7 @@ public class Ticket1397 extends Application {
         panel.addComponent(pe);
 
         // Second test component
-        PopupView pe2 = new PopupView("fooLabel", new Label(
-                "Foooooooooo..."));
+        PopupView pe2 = new PopupView("fooLabel", new Label("Foooooooooo..."));
         pe2.setDescription("Click to view");
         panel.addComponent(pe2);
 

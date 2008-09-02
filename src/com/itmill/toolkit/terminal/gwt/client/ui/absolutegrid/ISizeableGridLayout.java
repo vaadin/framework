@@ -10,8 +10,8 @@ import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
-import com.itmill.toolkit.terminal.gwt.client.ICaption;
 import com.itmill.toolkit.terminal.gwt.client.Container;
+import com.itmill.toolkit.terminal.gwt.client.ICaption;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.ui.MarginInfo;
@@ -197,9 +197,9 @@ public class ISizeableGridLayout extends IAbsoluteGrid implements Paintable,
      * spacings.
      * 
      * @param baseElement
-     *                measurements will be done withing this element
+     *            measurements will be done withing this element
      * @param baseStyleName
-     *                base style name
+     *            base style name
      * @return
      */
     public static MarginPixels detectMargins(Element baseElement,

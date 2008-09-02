@@ -98,18 +98,21 @@ public class CalendarDemo extends com.itmill.toolkit.Application {
             e.printStackTrace();
         }
         /*
-         * // Calendar will use the first date property as start if you do not //
-         * explicitly specify the property id. Our start -property will be the //
-         * first one, so it's intentionally left out. // Start is the only
-         * mandatory property, but you'll probably want to // specify title as
-         * well.
+         * // Calendar will use the first date property as start if you do not
+         * // explicitly specify the property id. Our start -property will be
+         * the // first one, so it's intentionally left out. // Start is the
+         * only mandatory property, but you'll probably want to // specify title
+         * as well.
          * from.setItemEndPropertyId(SampleCalendarDatabase.PROPERTY_ID_END);
-         * from.setItemTitlePropertyId(SampleCalendarDatabase.PROPERTY_ID_TITLE);
-         * from.setItemNotimePropertyId(SampleCalendarDatabase.PROPERTY_ID_NOTIME);
+         * from
+         * .setItemTitlePropertyId(SampleCalendarDatabase.PROPERTY_ID_TITLE);
+         * from
+         * .setItemNotimePropertyId(SampleCalendarDatabase.PROPERTY_ID_NOTIME);
          * 
          * to.setItemEndPropertyId(SampleCalendarDatabase.PROPERTY_ID_END);
          * to.setItemTitlePropertyId(SampleCalendarDatabase.PROPERTY_ID_TITLE);
-         * to.setItemNotimePropertyId(SampleCalendarDatabase.PROPERTY_ID_NOTIME);
+         * to
+         * .setItemNotimePropertyId(SampleCalendarDatabase.PROPERTY_ID_NOTIME);
          */
     }
 

@@ -18,9 +18,9 @@ import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
-import com.itmill.toolkit.terminal.gwt.client.ICaption;
 import com.itmill.toolkit.terminal.gwt.client.Container;
 import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
+import com.itmill.toolkit.terminal.gwt.client.ICaption;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.StyleConstants;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
@@ -433,7 +433,7 @@ public class IExpandLayout extends ComplexPanel implements
         final Iterator it = iterator();
         while (it.hasNext()) {
             final Widget w = (Widget) it.next();
-            
+
             if (w instanceof Paintable && w != expandedWidget) {
                 final WidgetWrapper wr = getWidgetWrapperFor(w);
                 if (orientationMode == ORIENTATION_VERTICAL) {

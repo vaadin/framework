@@ -35,13 +35,13 @@ public class HttpUploadStream implements
      * Creates a new instance of UploadStreamImpl.
      * 
      * @param name
-     *                the name of the stream.
+     *            the name of the stream.
      * @param stream
-     *                the input stream.
+     *            the input stream.
      * @param contentName
-     *                the name of the content.
+     *            the name of the content.
      * @param contentType
-     *                the type of the content.
+     *            the type of the content.
      */
     public HttpUploadStream(String name, InputStream stream,
             String contentName, String contentType) {

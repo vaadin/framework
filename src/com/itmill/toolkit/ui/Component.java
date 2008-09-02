@@ -37,10 +37,11 @@ public interface Component extends Paintable, VariableOwner, Sizeable {
     /**
      * Sets and replaces all previous style names of the component. This method
      * will trigger a
-     * {@link com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent RepaintRequestEvent}.
+     * {@link com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent
+     * RepaintRequestEvent}.
      * 
      * @param style
-     *                the new style of the component.
+     *            the new style of the component.
      */
     public void setStyleName(String style);
 
@@ -50,10 +51,11 @@ public interface Component extends Paintable, VariableOwner, Sizeable {
      * classes as given on server side.
      * 
      * This method will trigger a
-     * {@link com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent RepaintRequestEvent}.
+     * {@link com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent
+     * RepaintRequestEvent}.
      * 
      * @param style
-     *                the new style to be added to the component
+     *            the new style to be added to the component
      */
     public void addStyleName(String style);
 
@@ -61,7 +63,7 @@ public interface Component extends Paintable, VariableOwner, Sizeable {
      * Removes given style name from component.
      * 
      * @param style
-     *                the style to be removed
+     *            the style to be removed
      */
     public void removeStyleName(String style);
 
@@ -77,8 +79,8 @@ public interface Component extends Paintable, VariableOwner, Sizeable {
      * Components should be enabled by default.
      * </p>
      * 
-     * @return <code>true</code> if the component is enabled,
-     *         <code>false</code> if not.
+     * @return <code>true</code> if the component is enabled, <code>false</code>
+     *         if not.
      * @see VariableOwner#isEnabled()
      */
     public boolean isEnabled();
@@ -86,11 +88,12 @@ public interface Component extends Paintable, VariableOwner, Sizeable {
     /**
      * Enables or disables the component. Being enabled means that the component
      * can be edited. This method will trigger a
-     * {@link com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent RepaintRequestEvent}.
+     * {@link com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent
+     * RepaintRequestEvent}.
      * 
      * @param enabled
-     *                the boolean value specifying if the component should be
-     *                enabled after the call or not
+     *            the boolean value specifying if the component should be
+     *            enabled after the call or not
      */
     public void setEnabled(boolean enabled);
 
@@ -108,8 +111,8 @@ public interface Component extends Paintable, VariableOwner, Sizeable {
      * component is shown in the UI or not.
      * 
      * @param visible
-     *                the Boolean value specifying if the component should be
-     *                visible after the call or not.
+     *            the Boolean value specifying if the component should be
+     *            visible after the call or not.
      */
     public void setVisible(boolean visible);
 
@@ -127,8 +130,8 @@ public interface Component extends Paintable, VariableOwner, Sizeable {
      * <p>
      * This method calls automatically {@link #attach()} if the parent is
      * attached to a window (or is itself a window}, and {@link #detach()} if
-     * <code>parent</code> is set <code>null</code>, but the component was
-     * in the application.
+     * <code>parent</code> is set <code>null</code>, but the component was in
+     * the application.
      * </p>
      * 
      * <p>
@@ -137,7 +140,7 @@ public interface Component extends Paintable, VariableOwner, Sizeable {
      * components to container, which call this method implicitly.
      * 
      * @param parent
-     *                the new parent component.
+     *            the new parent component.
      */
     public void setParent(Component parent);
 
@@ -152,11 +155,12 @@ public interface Component extends Paintable, VariableOwner, Sizeable {
     /**
      * Sets the component's to read-only mode to the specified state. This
      * method will trigger a
-     * {@link com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent RepaintRequestEvent}.
+     * {@link com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent
+     * RepaintRequestEvent}.
      * 
      * @param readOnly
-     *                the boolean value specifying if the component should be in
-     *                read-only mode after the call or not.
+     *            the boolean value specifying if the component should be in
+     *            read-only mode after the call or not.
      */
     public void setReadOnly(boolean readOnly);
 
@@ -169,12 +173,13 @@ public interface Component extends Paintable, VariableOwner, Sizeable {
     public String getCaption();
 
     /**
-     * Sets the component's caption <code>String</code>. Caption is the
-     * visible name of the component. This method will trigger a
-     * {@link com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent RepaintRequestEvent}.
+     * Sets the component's caption <code>String</code>. Caption is the visible
+     * name of the component. This method will trigger a
+     * {@link com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent
+     * RepaintRequestEvent}.
      * 
      * @param caption
-     *                the new caption <code>String</code> for the component.
+     *            the new caption <code>String</code> for the component.
      */
     public void setCaption(String caption);
 
@@ -188,10 +193,11 @@ public interface Component extends Paintable, VariableOwner, Sizeable {
 
     /**
      * Sets the component's icon. This method will trigger a
-     * {@link com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent RepaintRequestEvent}.
+     * {@link com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent
+     * RepaintRequestEvent}.
      * 
      * @param icon
-     *                the icon to be shown with the component's caption.
+     *            the icon to be shown with the component's caption.
      */
     public void setIcon(Resource icon);
 
@@ -216,8 +222,8 @@ public interface Component extends Paintable, VariableOwner, Sizeable {
      * Notifies the component that it is connected to an application. This
      * method is always called before the component is first time painted and is
      * suitable to be extended. The <code>getApplication</code> and
-     * <code>getWindow</code> methods might return <code>null</code> before
-     * this method is called.
+     * <code>getWindow</code> methods might return <code>null</code> before this
+     * method is called.
      * </p>
      * 
      * <p>
@@ -265,16 +271,16 @@ public interface Component extends Paintable, VariableOwner, Sizeable {
      * themselves.
      * 
      * @param alreadyNotified
-     *                the collection of repaint request listeners that have been
-     *                already notified by the child. This component should not
-     *                renotify the listed listeners again. The container given
-     *                as parameter must be modifiable as the component might
-     *                modify it and pass it forwards. Null parameter is
-     *                interpreted as empty collection.
+     *            the collection of repaint request listeners that have been
+     *            already notified by the child. This component should not
+     *            renotify the listed listeners again. The container given as
+     *            parameter must be modifiable as the component might modify it
+     *            and pass it forwards. Null parameter is interpreted as empty
+     *            collection.
      */
     public void childRequestedRepaint(Collection alreadyNotified);
 
-    /* Component event framework *************************************** */
+    /* Component event framework */
 
     /**
      * Superclass of all component originated <code>Event</code>s.
@@ -290,7 +296,7 @@ public interface Component extends Paintable, VariableOwner, Sizeable {
          * Constructs a new event with a specified source component.
          * 
          * @param source
-         *                the source component of the event.
+         *            the source component of the event.
          */
         public Event(Component source) {
             super(source);
@@ -306,7 +312,7 @@ public interface Component extends Paintable, VariableOwner, Sizeable {
          * Notifies the listener of a component event.
          * 
          * @param event
-         *                the event that has occured.
+         *            the event that has occured.
          */
         public void componentEvent(Component.Event event);
     }
@@ -315,7 +321,7 @@ public interface Component extends Paintable, VariableOwner, Sizeable {
      * Registers a new component event listener for this component.
      * 
      * @param listener
-     *                the new Listener to be registered.
+     *            the new Listener to be registered.
      */
     public void addListener(Component.Listener listener);
 
@@ -324,7 +330,7 @@ public interface Component extends Paintable, VariableOwner, Sizeable {
      * component.
      * 
      * @param listener
-     *                the listener to be removed.
+     *            the listener to be removed.
      */
     public void removeListener(Component.Listener listener);
 
@@ -344,9 +350,9 @@ public interface Component extends Paintable, VariableOwner, Sizeable {
          * Constructs a new event with a specified source component.
          * 
          * @param message
-         *                the error message.
+         *            the error message.
          * @param component
-         *                the source component.
+         *            the source component.
          */
         public ErrorEvent(ErrorMessage message, Component component) {
             super(component);
@@ -372,7 +378,7 @@ public interface Component extends Paintable, VariableOwner, Sizeable {
          * Notifies the listener of a component error.
          * 
          * @param event
-         *                the event that has occured.
+         *            the event that has occured.
          */
         public void componentError(Component.ErrorEvent event);
     }
@@ -399,9 +405,9 @@ public interface Component extends Paintable, VariableOwner, Sizeable {
          * specify the natural tab order of fields.
          * 
          * @param tabIndex
-         *                the tab order of this component. Indexes usually start
-         *                from 1. Negative value means that field is not wanted
-         *                to tabbing sequence.
+         *            the tab order of this component. Indexes usually start
+         *            from 1. Negative value means that field is not wanted to
+         *            tabbing sequence.
          */
         public void setTabIndex(int tabIndex);
 

@@ -13,9 +13,8 @@ package com.itmill.toolkit.data;
  * 
  * <p>
  * The <code>Property</code> also defines the events
- * <code>ReadOnlyStatusChangeEvent</code> and <code>ValueChangeEvent</code>,
- * and the associated <code>listener</code> and <code>notifier</code>
- * interfaces.
+ * <code>ReadOnlyStatusChangeEvent</code> and <code>ValueChangeEvent</code>, and
+ * the associated <code>listener</code> and <code>notifier</code> interfaces.
  * </p>
  * 
  * <p>
@@ -25,8 +24,8 @@ package com.itmill.toolkit.data;
  * </p>
  * 
  * <p>
- * The <code>Property.editor</code> interface should be implemented if the
- * value needs to be changed through the implementing class.
+ * The <code>Property.editor</code> interface should be implemented if the value
+ * needs to be changed through the implementing class.
  * </p>
  * 
  * @author IT Mill Ltd
@@ -51,31 +50,31 @@ public interface Property {
      * throw <code>Property.ReadOnlyException</code> in this function.
      * </p>
      * Note : It is not required, but highly recommended to support setting the
-     * value also as a <code>String</code> in addition to the native type of
-     * the Property (as given by the <code>getType</code> method). If the
-     * <code>String</code> conversion fails or is unsupported, the method
-     * should throw <code>Property.ConversionException</code>. The string
-     * conversion should at least understand the format returned by the
+     * value also as a <code>String</code> in addition to the native type of the
+     * Property (as given by the <code>getType</code> method). If the
+     * <code>String</code> conversion fails or is unsupported, the method should
+     * throw <code>Property.ConversionException</code>. The string conversion
+     * should at least understand the format returned by the
      * <code>toString</code> method of the Property.
      * 
      * @param newValue
-     *                New value of the Property. This should be assignable to
-     *                the type returned by getType, but also String type should
-     *                be supported
+     *            New value of the Property. This should be assignable to the
+     *            type returned by getType, but also String type should be
+     *            supported
      * 
      * @throws Property.ReadOnlyException
-     *                 if the object is in read-only mode
+     *             if the object is in read-only mode
      * @throws Property.ConversionException
-     *                 if newValue can't be converted into the Property's native
-     *                 type directly or through String
+     *             if newValue can't be converted into the Property's native
+     *             type directly or through String
      */
     public void setValue(Object newValue) throws Property.ReadOnlyException,
             Property.ConversionException;
 
     /**
      * Returns the value of the Property in human readable textual format. The
-     * return value should be assignable to the <code>setValue</code> method
-     * if the Property is not in read-only mode.
+     * return value should be assignable to the <code>setValue</code> method if
+     * the Property is not in read-only mode.
      * 
      * @return <code>String</code> representation of the value stored in the
      *         Property
@@ -84,10 +83,10 @@ public interface Property {
 
     /**
      * Returns the type of the Property. The methods <code>getValue</code> and
-     * <code>setValue</code> must be compatible with this type: one must be
-     * able to safely cast the value returned from <code>getValue</code> to
-     * the given type and pass any variable assignable to this type as an
-     * argument to <code>setValue</code>.
+     * <code>setValue</code> must be compatible with this type: one must be able
+     * to safely cast the value returned from <code>getValue</code> to the given
+     * type and pass any variable assignable to this type as an argument to
+     * <code>setValue</code>.
      * 
      * @return type of the Property
      */
@@ -111,7 +110,7 @@ public interface Property {
      * <code>isReadOnly</code> mode query correctly.
      * 
      * @param newStatus
-     *                new read-only status of the Property
+     *            new read-only status of the Property
      */
     public void setReadOnly(boolean newStatus);
 
@@ -143,7 +142,7 @@ public interface Property {
          * detail message.
          * 
          * @param msg
-         *                the detail message
+         *            the detail message
          */
         public ReadOnlyException(String msg) {
             super(msg);
@@ -152,8 +151,8 @@ public interface Property {
 
     /**
      * An exception that signals that the value passed to the
-     * <code>setValue</code> method couldn't be converted to the native type
-     * of the Property.
+     * <code>setValue</code> method couldn't be converted to the native type of
+     * the Property.
      * 
      * @author IT Mill Ltd
      * @version
@@ -175,11 +174,11 @@ public interface Property {
         }
 
         /**
-         * Constructs a new <code>ConversionException</code> with the
-         * specified detail message.
+         * Constructs a new <code>ConversionException</code> with the specified
+         * detail message.
          * 
          * @param msg
-         *                the detail message
+         *            the detail message
          */
         public ConversionException(String msg) {
             super(msg);
@@ -190,7 +189,7 @@ public interface Property {
          * exception.
          * 
          * @param cause
-         *                The cause of the the conversion failure
+         *            The cause of the the conversion failure
          */
         public ConversionException(Throwable cause) {
             super(cause.toString());
@@ -212,7 +211,7 @@ public interface Property {
          * Sets the Property that serves as the data source of the viewer.
          * 
          * @param newDataSource
-         *                the new data source Property
+         *            the new data source Property
          */
         public void setPropertyDataSource(Property newDataSource);
 
@@ -244,11 +243,11 @@ public interface Property {
 
     }
 
-    /* Value change event ******************************************* */
+    /* Value change event */
 
     /**
-     * An <code>Event</code> object specifying the Property whose value has
-     * been changed.
+     * An <code>Event</code> object specifying the Property whose value has been
+     * changed.
      * 
      * @author IT Mill Ltd.
      * @version
@@ -280,7 +279,7 @@ public interface Property {
          * Notifies this listener that the Property's value has changed.
          * 
          * @param event
-         *                value change event object
+         *            value change event object
          */
         public void valueChange(Property.ValueChangeEvent event);
     }
@@ -293,10 +292,10 @@ public interface Property {
      * <p>
      * Note : The general Java convention is not to explicitly declare that a
      * class generates events, but to directly define the
-     * <code>addListener</code> and <code>removeListener</code> methods.
-     * That way the caller of these methods has no real way of finding out if
-     * the class really will send the events, or if it just defines the methods
-     * to be able to implement an interface.
+     * <code>addListener</code> and <code>removeListener</code> methods. That
+     * way the caller of these methods has no real way of finding out if the
+     * class really will send the events, or if it just defines the methods to
+     * be able to implement an interface.
      * </p>
      * 
      * @author IT Mill Ltd.
@@ -310,7 +309,7 @@ public interface Property {
          * Registers a new value change listener for this Property.
          * 
          * @param listener
-         *                the new Listener to be registered
+         *            the new Listener to be registered
          */
         public void addListener(Property.ValueChangeListener listener);
 
@@ -318,12 +317,12 @@ public interface Property {
          * Removes a previously registered value change listener.
          * 
          * @param listener
-         *                listener to be removed
+         *            listener to be removed
          */
         public void removeListener(Property.ValueChangeListener listener);
     }
 
-    /* ReadOnly Status change event ***************************************** */
+    /* ReadOnly Status change event */
 
     /**
      * An <code>Event</code> object specifying the Property whose read-only
@@ -360,7 +359,7 @@ public interface Property {
          * changed.
          * 
          * @param event
-         *                Read-only status change event object
+         *            Read-only status change event object
          */
         public void readOnlyStatusChange(
                 Property.ReadOnlyStatusChangeEvent event);
@@ -368,16 +367,16 @@ public interface Property {
 
     /**
      * The interface for adding and removing
-     * <code>ReadOnlyStatusChangeEvent</code> listeners. If a Property wishes
-     * to allow other objects to receive <code>ReadOnlyStatusChangeEvent</code>
+     * <code>ReadOnlyStatusChangeEvent</code> listeners. If a Property wishes to
+     * allow other objects to receive <code>ReadOnlyStatusChangeEvent</code>
      * generated by it, it must implement this interface.
      * <p>
      * Note : The general Java convention is not to explicitly declare that a
      * class generates events, but to directly define the
-     * <code>addListener</code> and <code>removeListener</code> methods.
-     * That way the caller of these methods has no real way of finding out if
-     * the class really will send the events, or if it just defines the methods
-     * to be able to implement an interface.
+     * <code>addListener</code> and <code>removeListener</code> methods. That
+     * way the caller of these methods has no real way of finding out if the
+     * class really will send the events, or if it just defines the methods to
+     * be able to implement an interface.
      * </p>
      * 
      * @author IT Mill Ltd.
@@ -391,7 +390,7 @@ public interface Property {
          * Registers a new read-only status change listener for this Property.
          * 
          * @param listener
-         *                the new Listener to be registered
+         *            the new Listener to be registered
          */
         public void addListener(Property.ReadOnlyStatusChangeListener listener);
 
@@ -399,7 +398,7 @@ public interface Property {
          * Removes a previously registered read-only status change listener.
          * 
          * @param listener
-         *                listener to be removed
+         *            listener to be removed
          */
         public void removeListener(
                 Property.ReadOnlyStatusChangeListener listener);

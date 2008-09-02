@@ -64,7 +64,7 @@ public class DownloadStream {
      * Sets the stream.
      * 
      * @param stream
-     *                The stream to set
+     *            The stream to set
      */
     public void setStream(InputStream stream) {
         this.stream = stream;
@@ -83,7 +83,7 @@ public class DownloadStream {
      * Sets stream content type.
      * 
      * @param contentType
-     *                the contentType to set
+     *            the contentType to set
      */
     public void setContentType(String contentType) {
         this.contentType = contentType;
@@ -102,7 +102,7 @@ public class DownloadStream {
      * Sets the file name.
      * 
      * @param fileName
-     *                the file name to set.
+     *            the file name to set.
      */
     public void setFileName(String fileName) {
         this.fileName = fileName;
@@ -117,9 +117,9 @@ public class DownloadStream {
      * If the parameters by this name exists, the old value is replaced.
      * 
      * @param name
-     *                the Name of the parameter to set.
+     *            the Name of the parameter to set.
      * @param value
-     *                the Value of the parameter to set.
+     *            the Value of the parameter to set.
      */
     public void setParameter(String name, String value) {
         if (params == null) {
@@ -135,7 +135,7 @@ public class DownloadStream {
      * headers.
      * 
      * @param name
-     *                the Name of the parameter to set.
+     *            the Name of the parameter to set.
      * @return Value of the parameter or null if the parameter does not exist.
      */
     public String getParameter(String name) {
@@ -176,7 +176,7 @@ public class DownloadStream {
      * value disbales the caching of this stream.
      * 
      * @param cacheTime
-     *                the cache time in milliseconds.
+     *            the cache time in milliseconds.
      */
     public void setCacheTime(long cacheTime) {
         this.cacheTime = cacheTime;
@@ -195,7 +195,7 @@ public class DownloadStream {
      * Sets the size of the download buffer.
      * 
      * @param bufferSize
-     *                the size of the buffer in bytes.
+     *            the size of the buffer in bytes.
      */
     public void setBufferSize(int bufferSize) {
         this.bufferSize = bufferSize;

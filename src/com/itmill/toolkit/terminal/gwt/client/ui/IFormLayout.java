@@ -159,8 +159,8 @@ public class IFormLayout extends FlexTable implements Container {
         /**
          * 
          * @param component
-         *                optional owner of caption. If not set, getOwner will
-         *                return null
+         *            optional owner of caption. If not set, getOwner will
+         *            return null
          * @param client
          */
         public Caption(Paintable component, ApplicationConnection client) {

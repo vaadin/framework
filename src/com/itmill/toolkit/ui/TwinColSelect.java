@@ -50,7 +50,7 @@ public class TwinColSelect extends AbstractSelect {
      * adapter.
      * 
      * @param columns
-     *                the number of columns to set.
+     *            the number of columns to set.
      */
     public void setColumns(int columns) {
         if (columns < 0) {
@@ -76,7 +76,7 @@ public class TwinColSelect extends AbstractSelect {
      * adapter.
      * 
      * @param rows
-     *                the number of rows to set.
+     *            the number of rows to set.
      */
     public void setRows(int rows) {
         if (rows < 0) {

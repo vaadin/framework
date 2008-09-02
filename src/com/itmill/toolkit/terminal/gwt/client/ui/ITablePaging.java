@@ -173,7 +173,7 @@ public class ITablePaging extends Composite implements Table, Paintable,
      * can be initial row data, scroll up, scroll down...
      * 
      * @param uidl
-     *                which contains row data
+     *            which contains row data
      */
     private void updateBody(UIDL uidl) {
         final Iterator it = uidl.getChildIterator();
@@ -395,8 +395,8 @@ public class ITablePaging extends Composite implements Table, Paintable,
          * Shows context menu for this row.
          * 
          * @param event
-         *                Event which triggered context menu. Correct place for
-         *                context menu can be determined with it.
+         *            Event which triggered context menu. Correct place for
+         *            context menu can be determined with it.
          */
         public void showContextMenu(Event event) {
             System.out.println("TODO: Show context menu");

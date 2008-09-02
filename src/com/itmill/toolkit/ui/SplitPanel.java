@@ -22,7 +22,7 @@ import com.itmill.toolkit.terminal.PaintTarget;
  */
 public class SplitPanel extends AbstractLayout {
 
-    /* Predefined orientations ***************************************** */
+    /* Predefined orientations */
 
     /**
      * Components are to be layed out vertically.
@@ -63,7 +63,7 @@ public class SplitPanel extends AbstractLayout {
      * parameters.
      * 
      * @param orientation
-     *                the Orientation of the layout.
+     *            the Orientation of the layout.
      */
     public SplitPanel(int orientation) {
         this();
@@ -88,7 +88,7 @@ public class SplitPanel extends AbstractLayout {
      * or under the previous component.
      * 
      * @param c
-     *                the component to be added.
+     *            the component to be added.
      */
     public void addComponent(Component c) {
         if (firstComponent == null) {
@@ -125,7 +125,7 @@ public class SplitPanel extends AbstractLayout {
      * Removes the component from this container.
      * 
      * @param c
-     *                the component to be removed.
+     *            the component to be removed.
      */
     public void removeComponent(Component c) {
         super.removeComponent(c);
@@ -188,9 +188,9 @@ public class SplitPanel extends AbstractLayout {
      * Paints the content of this component.
      * 
      * @param target
-     *                the Paint Event.
+     *            the Paint Event.
      * @throws PaintException
-     *                 if the paint operation failed.
+     *             if the paint operation failed.
      */
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);
@@ -228,7 +228,7 @@ public class SplitPanel extends AbstractLayout {
      * Set the orientation of the container.
      * 
      * @param orientation
-     *                the New value of property orientation.
+     *            the New value of property orientation.
      */
     public void setOrientation(int orientation) {
 
@@ -256,7 +256,7 @@ public class SplitPanel extends AbstractLayout {
      * Moves the position of the splitter.
      * 
      * @param pos
-     *                the new size of the first region in persentage
+     *            the new size of the first region in persentage
      */
     public void setSplitPosition(int pos) {
         setSplitPosition(pos, UNITS_PERCENTAGE);
@@ -266,9 +266,9 @@ public class SplitPanel extends AbstractLayout {
      * Moves the position of the splitter with given position and unit.
      * 
      * @param pos
-     *                size of the first region
+     *            size of the first region
      * @param unit
-     *                the unit (from {@link Size}) in which the size is given.
+     *            the unit (from {@link Size}) in which the size is given.
      */
     public void setSplitPosition(int pos, int unit) {
         this.pos = pos;
@@ -280,8 +280,7 @@ public class SplitPanel extends AbstractLayout {
      * handle.
      * 
      * @param locked
-     *                Set <code>true</code> if locked, <code>false</code>
-     *                otherwise.
+     *            Set <code>true</code> if locked, <code>false</code> otherwise.
      */
     public void setLocked(boolean locked) {
         this.locked = locked;

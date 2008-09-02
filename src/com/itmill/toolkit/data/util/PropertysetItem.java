@@ -28,7 +28,7 @@ import com.itmill.toolkit.data.Property;
 public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
         Cloneable {
 
-    /* Private representation of the item *********************************** */
+    /* Private representation of the item */
 
     /**
      * Mapping from property id to property.
@@ -45,7 +45,7 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
      */
     private LinkedList propertySetChangeListeners = null;
 
-    /* Item methods ******************************************************** */
+    /* Item methods */
 
     /**
      * Gets the Property corresponding to the given Property ID stored in the
@@ -53,7 +53,7 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
      * returned.
      * 
      * @param id
-     *                the identifier of the Property to get.
+     *            the identifier of the Property to get.
      * @return the Property with the given ID or <code>null</code>
      */
     public Property getItemProperty(Object id) {
@@ -70,7 +70,7 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
         return Collections.unmodifiableCollection(list);
     }
 
-    /* Item.Managed methods ************************************************* */
+    /* Item.Managed methods */
 
     /**
      * Removes the Property identified by ID from the Item. This functionality
@@ -78,7 +78,7 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
      * <code>false</code>.
      * 
      * @param id
-     *                the ID of the Property to be removed.
+     *            the ID of the Property to be removed.
      * @return <code>true</code> if the operation succeeded <code>false</code>
      *         if not
      */
@@ -100,16 +100,17 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
      * Tries to add a new Property into the Item.
      * 
      * @param id
-     *                the ID of the new Property.
+     *            the ID of the new Property.
      * @param property
-     *                the Property to be added and associated with the id.
-     * @return <code>true</code> if the operation succeeded,
-     *         <code>false</code> if not
+     *            the Property to be added and associated with the id.
+     * @return <code>true</code> if the operation succeeded, <code>false</code>
+     *         if not
      */
     public boolean addItemProperty(Object id, Property property) {
 
-    	// Null ids are not accepted
-    	if (id == null) throw new NullPointerException("Item property id can not be null");
+        // Null ids are not accepted
+        if (id == null)
+            throw new NullPointerException("Item property id can not be null");
 
         // Cant add a property twice
         if (map.containsKey(id)) {
@@ -127,8 +128,8 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
     }
 
     /**
-     * Gets the <code>String</code> representation of the contents of the
-     * Item. The format of the string is a space separated catenation of the
+     * Gets the <code>String</code> representation of the contents of the Item.
+     * The format of the string is a space separated catenation of the
      * <code>String</code> representations of the Properties contained by the
      * Item.
      * 
@@ -148,7 +149,7 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
         return retValue;
     }
 
-    /* Notifiers ************************************************************ */
+    /* Notifiers */
 
     /**
      * An <code>event</code> object specifying an Item whose Property set has
@@ -185,7 +186,7 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
      * Registers a new property set change listener for this Item.
      * 
      * @param listener
-     *                the new Listener to be registered.
+     *            the new Listener to be registered.
      */
     public void addListener(Item.PropertySetChangeListener listener) {
         if (propertySetChangeListeners == null) {
@@ -198,7 +199,7 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
      * Removes a previously registered property set change listener.
      * 
      * @param listener
-     *                the Listener to be removed.
+     *            the Listener to be removed.
      */
     public void removeListener(Item.PropertySetChangeListener listener) {
         if (propertySetChangeListeners != null) {
@@ -237,8 +238,8 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
      * </p>
      * 
      * @throws CloneNotSupportedException
-     *                 if the object's class does not support the Cloneable
-     *                 interface.
+     *             if the object's class does not support the Cloneable
+     *             interface.
      * 
      * @see java.lang.Object#clone()
      */
@@ -261,9 +262,9 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
      * boolean value as this object.
      * 
      * @param obj
-     *                the object to compare with.
-     * @return <code>true</code> if the Boolean objects represent the same
-     *         value otherwise <code>false</code>.
+     *            the object to compare with.
+     * @return <code>true</code> if the Boolean objects represent the same value
+     *         otherwise <code>false</code>.
      * @see java.lang.Object#equals(java.lang.Object)
      */
     public boolean equals(Object obj) {

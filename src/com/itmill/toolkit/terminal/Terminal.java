@@ -56,7 +56,7 @@ public interface Terminal {
          * Invoked when terminal error occurs.
          * 
          * @param event
-         *                the fired event.
+         *            the fired event.
          */
         public void terminalError(Terminal.ErrorEvent event);
     }

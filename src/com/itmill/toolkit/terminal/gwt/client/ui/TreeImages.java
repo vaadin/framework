@@ -12,7 +12,9 @@ public interface TreeImages extends com.google.gwt.user.client.ui.TreeImages {
      * An image indicating an open branch.
      * 
      * @return a prototype of this image
-     * @gwt.resource com/itmill/toolkit/terminal/gwt/public/default/tree/img/expanded.png
+     * @gwt.resource 
+     *               com/itmill/toolkit/terminal/gwt/public/default/tree/img/expanded
+     *               .png
      */
     AbstractImagePrototype treeOpen();
 
@@ -20,7 +22,9 @@ public interface TreeImages extends com.google.gwt.user.client.ui.TreeImages {
      * An image indicating a closed branch.
      * 
      * @return a prototype of this image
-     * @gwt.resource com/itmill/toolkit/terminal/gwt/public/default/tree/img/collapsed.png
+     * @gwt.resource 
+     *               com/itmill/toolkit/terminal/gwt/public/default/tree/img/collapsed
+     *               .png
      */
     AbstractImagePrototype treeClosed();
 

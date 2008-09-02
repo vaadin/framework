@@ -69,7 +69,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      * Creates a new empty panel with given layout. Layout must be non-null.
      * 
      * @param layout
-     *                the layout used in the panel.
+     *            the layout used in the panel.
      */
     public Panel(Layout layout) {
         setLayout(layout);
@@ -79,7 +79,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      * Creates a new empty panel with caption. Default layout is used.
      * 
      * @param caption
-     *                the caption used in the panel.
+     *            the caption used in the panel.
      */
     public Panel(String caption) {
         this(caption, null);
@@ -89,9 +89,9 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      * Creates a new empty panel with caption.
      * 
      * @param caption
-     *                the caption of the panel.
+     *            the caption of the panel.
      * @param layout
-     *                the layout used in the panel.
+     *            the layout used in the panel.
      */
     public Panel(String caption, Layout layout) {
         this(layout);
@@ -116,7 +116,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      * (changed in 5.2.2). Use function in Layout interface manually.
      * 
      * @param newLayout
-     *                the New layout of the panel.
+     *            the New layout of the panel.
      */
     public void setLayout(Layout newLayout) {
 
@@ -158,9 +158,9 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      * Paints the content of this component.
      * 
      * @param target
-     *                the Paint Event.
+     *            the Paint Event.
      * @throws PaintException
-     *                 if the paint operation failed.
+     *             if the paint operation failed.
      */
     public void paintContent(PaintTarget target) throws PaintException {
         layout.paint(target);
@@ -233,7 +233,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      * Adds the component into this container.
      * 
      * @param c
-     *                the component to be added.
+     *            the component to be added.
      * @see com.itmill.toolkit.ui.AbstractComponentContainer#addComponent(com.itmill.toolkit.ui.Component)
      */
     public void addComponent(Component c) {
@@ -246,7 +246,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      * Removes the component from this container.
      * 
      * @param c
-     *                The component to be added.
+     *            The component to be added.
      * @see com.itmill.toolkit.ui.AbstractComponentContainer#removeComponent(com.itmill.toolkit.ui.Component)
      */
     public void removeComponent(Component c) {

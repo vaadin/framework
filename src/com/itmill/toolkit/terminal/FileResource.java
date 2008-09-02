@@ -12,8 +12,8 @@ import com.itmill.toolkit.Application;
 import com.itmill.toolkit.service.FileTypeResolver;
 
 /**
- * <code>FileResources</code> are files or directories on local filesystem.
- * The files and directories are served through URI:s to the client terminal and
+ * <code>FileResources</code> are files or directories on local filesystem. The
+ * files and directories are served through URI:s to the client terminal and
  * thus must be registered to an URI context before they can be used. The
  * resource is automatically registered to the application when it is created.
  * 
@@ -84,7 +84,7 @@ public class FileResource implements ApplicationResource {
      * Sets the source file.
      * 
      * @param sourceFile
-     *                the source file to set.
+     *            the source file to set.
      */
     public void setSourceFile(File sourceFile) {
         this.sourceFile = sourceFile;
@@ -130,7 +130,7 @@ public class FileResource implements ApplicationResource {
      * value disbales the caching of this stream.
      * 
      * @param cacheTime
-     *                the cache time in milliseconds.
+     *            the cache time in milliseconds.
      */
     public void setCacheTime(long cacheTime) {
         this.cacheTime = cacheTime;
@@ -145,7 +145,7 @@ public class FileResource implements ApplicationResource {
      * Sets the size of the download buffer used for this resource.
      * 
      * @param bufferSize
-     *                the size of the buffer in bytes.
+     *            the size of the buffer in bytes.
      */
     public void setBufferSize(int bufferSize) {
         this.bufferSize = bufferSize;

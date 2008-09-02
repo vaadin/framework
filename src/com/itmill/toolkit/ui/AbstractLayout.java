@@ -43,7 +43,7 @@ public abstract class AbstractLayout extends AbstractComponentContainer
      * (non-Javadoc)
      * 
      * @see com.itmill.toolkit.ui.Layout#setMargin(boolean, boolean, boolean,
-     *      boolean)
+     * boolean)
      */
     public void setMargin(boolean topEnabled, boolean rightEnabled,
             boolean bottomEnabled, boolean leftEnabled) {
@@ -56,7 +56,9 @@ public abstract class AbstractLayout extends AbstractComponentContainer
     /*
      * (non-Javadoc)
      * 
-     * @see com.itmill.toolkit.ui.AbstractComponent#paintContent(com.itmill.toolkit.terminal.PaintTarget)
+     * @see
+     * com.itmill.toolkit.ui.AbstractComponent#paintContent(com.itmill.toolkit
+     * .terminal.PaintTarget)
      */
     public void paintContent(PaintTarget target) throws PaintException {
 

@@ -17,9 +17,9 @@ public interface Container extends Paintable {
      * is responsible is for unregistering it.
      * 
      * @param oldComponent
-     *                Child to be replaced
+     *            Child to be replaced
      * @param newComponent
-     *                Child that replaces the oldComponent
+     *            Child that replaces the oldComponent
      */
     void replaceChildComponent(Widget oldComponent, Widget newComponent);
 
@@ -27,7 +27,7 @@ public interface Container extends Paintable {
      * Is a given component child of this layout.
      * 
      * @param component
-     *                Component to test.
+     *            Component to test.
      * @return true iff component is a child of this layout.
      */
     boolean hasChildComponent(Widget component);
@@ -43,9 +43,9 @@ public interface Container extends Paintable {
      * </p>
      * 
      * @param component
-     *                Child component for which service is requested.
+     *            Child component for which service is requested.
      * @param uidl
-     *                UIDL of the child component.
+     *            UIDL of the child component.
      */
     void updateCaption(Paintable component, UIDL uidl);
 

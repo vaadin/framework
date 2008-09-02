@@ -224,7 +224,7 @@ public class FileTypeResolver {
      * only on the file name extension.
      * 
      * @param fileName
-     *                the name of the file whose mime-type is requested.
+     *            the name of the file whose mime-type is requested.
      * @return mime-type <code>String</code> for the given filename
      */
     public static String getMIMEType(String fileName) {
@@ -261,7 +261,7 @@ public class FileTypeResolver {
      * not found the default icon is returned.
      * 
      * @param fileName
-     *                the name of the file whose icon is requested.
+     *            the name of the file whose icon is requested.
      * @return the icon corresponding to the given file
      */
     public static Resource getIcon(String fileName) {
@@ -284,7 +284,7 @@ public class FileTypeResolver {
      * icon is returned.
      * 
      * @param file
-     *                the file whose icon is requested.
+     *            the file whose icon is requested.
      * @return the icon corresponding to the given file
      */
     public static Resource getIcon(File file) {
@@ -305,7 +305,7 @@ public class FileTypeResolver {
      * resolved by the filename extension only.
      * 
      * @param file
-     *                the file whose mime-type is requested.
+     *            the file whose mime-type is requested.
      * @return the files mime-type <code>String</code>
      */
     public static String getMIMEType(File file) {
@@ -334,10 +334,10 @@ public class FileTypeResolver {
      * extension is already in the internal mapping it is overwritten.
      * 
      * @param extension
-     *                the filename extension to be associated with
-     *                <code>MIMEType</code>.
+     *            the filename extension to be associated with
+     *            <code>MIMEType</code>.
      * @param MIMEType
-     *                the new mime-type for <code>extension</code>.
+     *            the new mime-type for <code>extension</code>.
      */
     public static void addExtension(String extension, String MIMEType) {
         extToMIMEMap.put(extension, MIMEType);
@@ -348,9 +348,9 @@ public class FileTypeResolver {
      * corresponding icon, it is replaced with the new icon.
      * 
      * @param MIMEType
-     *                the mime-type whose icon is to be changed.
+     *            the mime-type whose icon is to be changed.
      * @param icon
-     *                the new icon to be associated with <code>MIMEType</code>.
+     *            the new icon to be associated with <code>MIMEType</code>.
      */
     public static void addIcon(String MIMEType, Resource icon) {
         MIMEToIconMap.put(MIMEType, icon);

@@ -22,22 +22,21 @@ public class PaintException extends IOException {
     private static final long serialVersionUID = 3762535607221891897L;
 
     /**
-     * Constructs an instance of <code>PaintExeception</code> with the
-     * specified detail message.
+     * Constructs an instance of <code>PaintExeception</code> with the specified
+     * detail message.
      * 
      * @param msg
-     *                the detail message.
+     *            the detail message.
      */
     public PaintException(String msg) {
         super(msg);
     }
 
     /**
-     * Constructs an instance of <code>PaintExeception</code> from
-     * IOException.
+     * Constructs an instance of <code>PaintExeception</code> from IOException.
      * 
      * @param exception
-     *                the original exception.
+     *            the original exception.
      */
     public PaintException(IOException exception) {
         super(exception.getMessage());

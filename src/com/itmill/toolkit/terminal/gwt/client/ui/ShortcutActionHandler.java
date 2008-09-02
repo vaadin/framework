@@ -32,9 +32,9 @@ public class ShortcutActionHandler {
     /**
      * 
      * @param pid
-     *                Paintable id
+     *            Paintable id
      * @param c
-     *                reference to application connections
+     *            reference to application connections
      */
     public ShortcutActionHandler(String pid, ApplicationConnection c) {
         paintableId = pid;
@@ -45,7 +45,7 @@ public class ShortcutActionHandler {
      * Updates list of actions this handler listens to.
      * 
      * @param c
-     *                UIDL snippet containing actions
+     *            UIDL snippet containing actions
      */
     public void updateActionMap(UIDL c) {
         actions.clear();

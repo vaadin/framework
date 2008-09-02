@@ -423,7 +423,7 @@ public class ListenerMethod implements EventListener {
             } catch (final java.lang.IllegalAccessException e) {
                 // This should never happen
                 throw new java.lang.RuntimeException(
-                        "Internal error - please report",e);
+                        "Internal error - please report", e);
             } catch (final java.lang.reflect.InvocationTargetException e) {
                 // This should never happen
                 throw new MethodException("Invocation of method " + method

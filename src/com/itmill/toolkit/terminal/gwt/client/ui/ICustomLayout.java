@@ -14,10 +14,10 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
-import com.itmill.toolkit.terminal.gwt.client.ICaption;
-import com.itmill.toolkit.terminal.gwt.client.ICaptionWrapper;
 import com.itmill.toolkit.terminal.gwt.client.Container;
 import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
+import com.itmill.toolkit.terminal.gwt.client.ICaption;
+import com.itmill.toolkit.terminal.gwt.client.ICaptionWrapper;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.Util;
@@ -71,12 +71,12 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
      * If location already contains a widget it will be removed.
      * 
      * @param widget
-     *                Widget to be set into location.
+     *            Widget to be set into location.
      * @param location
-     *                location name where widget will be added
+     *            location name where widget will be added
      * 
      * @throws IllegalArgumentException
-     *                 if no such location is found in the layout.
+     *             if no such location is found in the layout.
      */
     public void setWidget(Widget widget, String location) {
 
@@ -287,7 +287,7 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
      * all _UID_ tags with an unique id-string.
      * 
      * @param html
-     *                Original HTML-template received from server
+     *            Original HTML-template received from server
      * @return html that is used to create the HTMLPanel.
      */
     private String extractBodyAndScriptsFromTemplate(String html) {

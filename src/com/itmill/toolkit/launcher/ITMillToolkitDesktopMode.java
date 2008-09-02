@@ -83,7 +83,7 @@ public class ITMillToolkitDesktopMode {
      * Open a control dialog for embedded server.
      * 
      * @param applicationUrl
-     *                Application URL
+     *            Application URL
      */
     private static void openServerControlDialog(final String applicationUrl) {
 

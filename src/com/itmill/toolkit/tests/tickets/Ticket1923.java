@@ -26,11 +26,11 @@ public class Ticket1923 extends com.itmill.toolkit.Application {
                                     + i
                                     + " 5067w09adsfasdjfahlsdfjhalfjhaldjfhalsjdfhlajdhflajhdfljahdslfjahldsjfhaljdfhaljfdhlajsdhflajshdflkajhsdlfkjahsldfkjahsldfhalskjfdhlksjfdh857idifhaljsdfhlajsdhflajhdflajhdfljahldfjhaljdfhalsjdfhalkjdhflkajhdfljahsdlfjahlsdjfhaldjfhaljfdhlajdhflajshdfljahsdlfjhalsjdfhalskjhfdlhusfglksuhdflgjshflgjhslfghslfjghsljfglsjhfglsjhfgljshfgljshflgjhslfghsljfgsljdfglsdjhfglsjhflgkjshfldjgh"));
         }
-        //main.getLayout().setSizeFull();
+        // main.getLayout().setSizeFull();
 
         p.setHeight("300px");
         p.setWidth("250px");
-        //p.setWidth("50%");
+        // p.setWidth("50%");
 
         p.setScrollTop(100);
         p.setScrollLeft(100);

@@ -20,9 +20,9 @@ import com.itmill.toolkit.ui.Window;
  * Containers. QueryContainer is used to bind SQL table rows into Toolkit UI
  * components. Table has few example actions added. Also embedding XHTML through
  * Label components is used. Demonstrates: how to create
- * <code>com.itmill.toolkit.data.Container</code> and set it as datasource to
- * UI components <code>com.itmill.toolkit.ui.Component.Tree</code>, how to
- * receive ExpandEvent and implement
+ * <code>com.itmill.toolkit.data.Container</code> and set it as datasource to UI
+ * components <code>com.itmill.toolkit.ui.Component.Tree</code>, how to receive
+ * ExpandEvent and implement
  * <code>com.itmill.toolkit.ui.Tree.ExpandListener</code>, how to use
  * <code>com.itmill.toolkit.event.Action</code>.
  * 

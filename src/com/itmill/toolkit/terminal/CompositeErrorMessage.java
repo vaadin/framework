@@ -33,8 +33,8 @@ public class CompositeErrorMessage implements ErrorMessage {
      * Constructor for CompositeErrorMessage.
      * 
      * @param errorMessages
-     *                the Array of error messages that are listed togeter. Nulls
-     *                are ignored, but at least one message is required.
+     *            the Array of error messages that are listed togeter. Nulls are
+     *            ignored, but at least one message is required.
      */
     public CompositeErrorMessage(ErrorMessage[] errorMessages) {
         errors = new ArrayList(errorMessages.length);
@@ -55,8 +55,8 @@ public class CompositeErrorMessage implements ErrorMessage {
      * Constructor for CompositeErrorMessage.
      * 
      * @param errorMessages
-     *                the Collection of error messages that are listed togeter.
-     *                At least one message is required.
+     *            the Collection of error messages that are listed togeter. At
+     *            least one message is required.
      */
     public CompositeErrorMessage(Collection errorMessages) {
         errors = new ArrayList(errorMessages.size());
@@ -86,8 +86,7 @@ public class CompositeErrorMessage implements ErrorMessage {
      * field.
      * 
      * @param error
-     *                the error message to be added. Duplicate errors are
-     *                ignored.
+     *            the error message to be added. Duplicate errors are ignored.
      */
     private void addErrorMessage(ErrorMessage error) {
         if (error != null && !errors.contains(error)) {
@@ -107,7 +106,7 @@ public class CompositeErrorMessage implements ErrorMessage {
     public Iterator iterator() {
         return errors.iterator();
     }
-    
+
     /**
      * @see com.itmill.toolkit.terminal.Paintable#paint(com.itmill.toolkit.terminal.PaintTarget)
      */

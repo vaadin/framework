@@ -37,21 +37,20 @@ public class Ticket124 extends Application {
             }
         });
 
-//        gl.addComponent(new Label("0-0"), 0, 0);
-//        gl.addComponent(new Label("0-1"), 1, 0);
-         gl.addComponent(new Label("1-0"), 1, 0);
-         gl.addComponent(new Label("1-1"), 1, 1);
-         gl.addComponent(new Label("0,0-1,0"), 0, 0, 1, 0);
-         gl.addComponent(new Label("2,0-3,0"), 2, 0, 3, 0);
-         Label l = new
-         Label("Large cell 0,1-2,2<br/>yadayada<br/>lorem ipsum");
-         l.setContentMode(Label.CONTENT_XHTML);
-         gl.addComponent(l, 0, 1, 2, 2);
-         gl.addComponent(new Label("3-1"), 3, 1);
-         gl.addComponent(new Label("3,2-3,3"), 3, 2, 3, 3);
+        // gl.addComponent(new Label("0-0"), 0, 0);
+        // gl.addComponent(new Label("0-1"), 1, 0);
+        gl.addComponent(new Label("1-0"), 1, 0);
+        gl.addComponent(new Label("1-1"), 1, 1);
+        gl.addComponent(new Label("0,0-1,0"), 0, 0, 1, 0);
+        gl.addComponent(new Label("2,0-3,0"), 2, 0, 3, 0);
+        Label l = new Label("Large cell 0,1-2,2<br/>yadayada<br/>lorem ipsum");
+        l.setContentMode(Label.CONTENT_XHTML);
+        gl.addComponent(l, 0, 1, 2, 2);
+        gl.addComponent(new Label("3-1"), 3, 1);
+        gl.addComponent(new Label("3,2-3,3"), 3, 2, 3, 3);
         gl.addComponent(tf, 0, 3);
         gl.addComponent(insert, 1, 3);
-         gl.addComponent(delete, 2, 3);
+        gl.addComponent(delete, 2, 3);
 
         gl.setStyleName("border");
         w.addComponent(gl);
@@ -79,8 +78,7 @@ public class Ticket124 extends Application {
         int pos = Integer.parseInt(tf.getValue().toString());
         gl.insertRow(pos);
         try {
-            TextField t = new TextField("",
-                    "Newly added row");
+            TextField t = new TextField("", "Newly added row");
             t.setWidth("100%");
             gl.addComponent(t, 0, pos, 3, pos);
         } catch (Exception e) {

@@ -17,9 +17,8 @@ import com.itmill.toolkit.ui.Tree.ExpandEvent;
 /**
  * Browsable file explorer using Toolkit Tree component. Demonstrates: how to
  * add items hierarchially into
- * <code>com.itmill.toolkit.ui.Component.Tree</code>, how to receive
- * ExpandEvent and implement
- * <code>com.itmill.toolkit.ui.Tree.ExpandListener</code>.
+ * <code>com.itmill.toolkit.ui.Component.Tree</code>, how to receive ExpandEvent
+ * and implement <code>com.itmill.toolkit.ui.Tree.ExpandListener</code>.
  * 
  * @since 4.0.0
  * 
@@ -73,10 +72,9 @@ public class TreeFilesystem extends com.itmill.toolkit.Application implements
      * parent and children properties are updated.
      * 
      * @param file
-     *                path which contents are added to tree
+     *            path which contents are added to tree
      * @param parent
-     *                for added nodes, if null then new nodes are added to root
-     *                node
+     *            for added nodes, if null then new nodes are added to root node
      */
     private void populateNode(String file, Object parent) {
         final File subdir = new File(file);

@@ -322,11 +322,11 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 
     /**
      * @param uidl
-     *                which contains row data
+     *            which contains row data
      * @param firstRow
-     *                first row in data set
+     *            first row in data set
      * @param reqRows
-     *                amount of rows in data set
+     *            amount of rows in data set
      */
     private void updateBody(UIDL uidl, int firstRow, int reqRows) {
         if (uidl == null || reqRows < 1) {
@@ -506,7 +506,6 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
          * divide extra space relatively to each column which has not width set.
          * 
          * Overflow pixels are added to last column.
-         * 
          */
 
         Iterator headCells = tHead.iterator();
@@ -1416,7 +1415,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
          * Note that this returns HeaderCell even if it is currently collapsed.
          * 
          * @param cid
-         *                Column key of accessed HeaderCell
+         *            Column key of accessed HeaderCell
          * @return HeaderCell
          */
         public HeaderCell getHeaderCell(String cid) {
@@ -1959,7 +1958,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
              * handler fires showContextMenu function.
              * 
              * @param el
-             *                element where to attach contenxt menu event
+             *            element where to attach contenxt menu event
              */
             private native void attachContextMenuEvent(Element el)
             /*-{
@@ -2172,7 +2171,9 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
             /*
              * (non-Javadoc)
              * 
-             * @see com.itmill.toolkit.terminal.gwt.client.ui.IActionOwner#getActions()
+             * @see
+             * com.itmill.toolkit.terminal.gwt.client.ui.IActionOwner#getActions
+             * ()
              */
             public Action[] getActions() {
                 if (actionKeys == null) {
@@ -2306,7 +2307,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
      * Helper function to build html snippet for column or row headers
      * 
      * @param uidl
-     *                possibly with values caption and icon
+     *            possibly with values caption and icon
      * @return html snippet containing possibly an icon + caption text
      */
     private String buildCaptionHtmlSnippet(UIDL uidl) {

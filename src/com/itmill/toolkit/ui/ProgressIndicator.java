@@ -83,7 +83,7 @@ public class ProgressIndicator extends AbstractField implements Property,
      * ProgressIndicator.
      * 
      * @param readOnly
-     *                True to enable read-only mode, False to disable it.
+     *            True to enable read-only mode, False to disable it.
      */
     public void setReadOnly(boolean readOnly) {
         if (dataSource == null) {
@@ -109,9 +109,9 @@ public class ProgressIndicator extends AbstractField implements Property,
      * Paints the content of this component.
      * 
      * @param target
-     *                the Paint Event.
+     *            the Paint Event.
      * @throws PaintException
-     *                 if the Paint Operation fails.
+     *             if the Paint Operation fails.
      */
     public void paintContent(PaintTarget target) throws PaintException {
         target.addAttribute("indeterminate", indeterminate);
@@ -138,7 +138,7 @@ public class ProgressIndicator extends AbstractField implements Property,
      * is the Float between 0 and 1.
      * 
      * @param newValue
-     *                the New value of the ProgressIndicator.
+     *            the New value of the ProgressIndicator.
      * @see com.itmill.toolkit.ui.AbstractField#setValue(java.lang.Object)
      */
     public void setValue(Object newValue) {
@@ -182,7 +182,7 @@ public class ProgressIndicator extends AbstractField implements Property,
      * Sets the property as data-source for viewing.
      * 
      * @param newDataSource
-     *                the new data source.
+     *            the new data source.
      * @see com.itmill.toolkit.ui.AbstractField#setPropertyDataSource(com.itmill.toolkit.data.Property)
      */
     public void setPropertyDataSource(Property newDataSource) {
@@ -217,7 +217,7 @@ public class ProgressIndicator extends AbstractField implements Property,
      * Sets wheter or not the ProgressIndicator is indeterminate.
      * 
      * @param newValue
-     *                true to set to indeterminate mode.
+     *            true to set to indeterminate mode.
      */
     public void setIndeterminate(boolean newValue) {
         indeterminate = newValue;
@@ -237,7 +237,7 @@ public class ProgressIndicator extends AbstractField implements Property,
      * Sets the interval that component checks for progress.
      * 
      * @param newValue
-     *                the interval in milliseconds.
+     *            the interval in milliseconds.
      */
     public void setPollingInterval(int newValue) {
         pollingInterval = newValue;

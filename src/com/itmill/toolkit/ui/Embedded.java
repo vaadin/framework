@@ -91,7 +91,7 @@ public class Embedded extends AbstractComponent {
      * 
      * @param caption
      * @param source
-     *                the Source of the embedded object.
+     *            the Source of the embedded object.
      */
     public Embedded(String caption, Resource source) {
         setCaption(caption);
@@ -163,9 +163,9 @@ public class Embedded extends AbstractComponent {
      * parameter.
      * 
      * @param name
-     *                the name of the parameter.
+     *            the name of the parameter.
      * @param value
-     *                the value of the parameter.
+     *            the value of the parameter.
      */
     public void setParameter(String name, String value) {
         parameters.put(name, value);
@@ -187,7 +187,7 @@ public class Embedded extends AbstractComponent {
      * Removes an object parameter from the list.
      * 
      * @param name
-     *                the name of the parameter to remove.
+     *            the name of the parameter to remove.
      */
     public void removeParameter(String name) {
         parameters.remove(name);
@@ -245,7 +245,7 @@ public class Embedded extends AbstractComponent {
      * paths.
      * 
      * @param codebase
-     *                the codebase to set.
+     *            the codebase to set.
      */
     public void setCodebase(String codebase) {
         if (codebase != this.codebase
@@ -259,7 +259,7 @@ public class Embedded extends AbstractComponent {
      * Sets the codetype, the MIME-Type of the code.
      * 
      * @param codetype
-     *                the codetype to set.
+     *            the codetype to set.
      */
     public void setCodetype(String codetype) {
         if (codetype != this.codetype
@@ -273,7 +273,7 @@ public class Embedded extends AbstractComponent {
      * Sets the mimeType, the MIME-Type of the object.
      * 
      * @param mimeType
-     *                the mimeType to set.
+     *            the mimeType to set.
      */
     public void setMimeType(String mimeType) {
         if (mimeType != this.mimeType
@@ -287,7 +287,7 @@ public class Embedded extends AbstractComponent {
      * Sets the standby, the text to display while loading the object.
      * 
      * @param standby
-     *                the standby to set.
+     *            the standby to set.
      */
     public void setStandby(String standby) {
         if (standby != this.standby
@@ -310,7 +310,7 @@ public class Embedded extends AbstractComponent {
      * Sets the classId attribute.
      * 
      * @param classId
-     *                the classId to set.
+     *            the classId to set.
      */
     public void setClassId(String classId) {
         if (classId != this.classId
@@ -350,7 +350,7 @@ public class Embedded extends AbstractComponent {
      * The type is guessed from resource.
      * 
      * @param source
-     *                the source to set.
+     *            the source to set.
      */
     public void setSource(Resource source) {
         if (source != null && !source.equals(this.source)) {
@@ -376,7 +376,7 @@ public class Embedded extends AbstractComponent {
      * </p>
      * 
      * @param type
-     *                the type to set.
+     *            the type to set.
      */
     public void setType(int type) {
         if (type != TYPE_OBJECT && type != TYPE_IMAGE && type != TYPE_BROWSER) {
@@ -401,7 +401,7 @@ public class Embedded extends AbstractComponent {
      * Sets the archive attribute.
      * 
      * @param archive
-     *                the archive string to set.
+     *            the archive string to set.
      */
     public void setArchive(String archive) {
         if (archive != this.archive

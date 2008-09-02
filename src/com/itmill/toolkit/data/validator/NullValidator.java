@@ -25,9 +25,9 @@ public class NullValidator implements Validator {
      * Creates a new NullValidator.
      * 
      * @param errorMessage
-     *                the error message to display on invalidation.
+     *            the error message to display on invalidation.
      * @param onlyNullAllowed
-     *                Are only nulls allowed?
+     *            Are only nulls allowed?
      */
     public NullValidator(String errorMessage, boolean onlyNullAllowed) {
         setErrorMessage(errorMessage);
@@ -38,9 +38,9 @@ public class NullValidator implements Validator {
      * Validates the data given in value.
      * 
      * @param value
-     *                the value to validate.
+     *            the value to validate.
      * @throws Validator.InvalidValueException
-     *                 if the value was invalid.
+     *             if the value was invalid.
      */
     public void validate(Object value) throws Validator.InvalidValueException {
         if ((onlyNullAllowed && value != null)
@@ -53,9 +53,8 @@ public class NullValidator implements Validator {
      * Tests if the given value is valid.
      * 
      * @param value
-     *                the value to validate.
-     * @returns <code>true</code> for valid value, otherwise
-     *          <code>false</code>.
+     *            the value to validate.
+     * @returns <code>true</code> for valid value, otherwise <code>false</code>.
      */
     public boolean isValid(Object value) {
         return onlyNullAllowed ? value == null : value != null;
@@ -73,8 +72,8 @@ public class NullValidator implements Validator {
      * Sets if nulls (and only nulls) are to be allowed.
      * 
      * @param onlyNullAllowed
-     *                If true, only nulls are allowed. If false only non-nulls
-     *                are allowed. Do we allow nulls?
+     *            If true, only nulls are allowed. If false only non-nulls are
+     *            allowed. Do we allow nulls?
      */
     public void setNullAllowed(boolean onlyNullAllowed) {
         this.onlyNullAllowed = onlyNullAllowed;
@@ -93,7 +92,7 @@ public class NullValidator implements Validator {
      * Sets the error message to be displayed on invalid value.
      * 
      * @param errorMessage
-     *                the Error Message to set.
+     *            the Error Message to set.
      */
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;

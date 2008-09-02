@@ -27,10 +27,10 @@ public interface VariableOwner {
      * changed.
      * 
      * @param source
-     *                the Source of the variable change. This is the origin of
-     *                the event. For example in Web Adapter this is the request.
+     *            the Source of the variable change. This is the origin of the
+     *            event. For example in Web Adapter this is the request.
      * @param variables
-     *                the Mapping from variable names to new variable values.
+     *            the Mapping from variable names to new variable values.
      */
     public void changeVariables(Object source, Map variables);
 
@@ -53,8 +53,8 @@ public interface VariableOwner {
      * </p>
      * 
      * <p>
-     * <strong>Note:</strong> <code>VariableOwner</code> does not include a
-     * set- method for the immediateness property. This is because not all
+     * <strong>Note:</strong> <code>VariableOwner</code> does not include a set-
+     * method for the immediateness property. This is because not all
      * VariableOwners wish to offer the functionality. Such VariableOwners are
      * never in the immediate mode, thus they always return <code>false</code>
      * in {@link #isImmediate()}.

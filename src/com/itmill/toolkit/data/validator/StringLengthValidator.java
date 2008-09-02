@@ -29,8 +29,7 @@ public class StringLengthValidator implements Validator {
      * Creates a new StringLengthValidator with a given error message.
      * 
      * @param errorMessage
-     *                the message to display in case the value does not
-     *                validate.
+     *            the message to display in case the value does not validate.
      */
     public StringLengthValidator(String errorMessage) {
         setErrorMessage(errorMessage);
@@ -41,14 +40,13 @@ public class StringLengthValidator implements Validator {
      * permissable lengths and null-string allowance.
      * 
      * @param errorMessage
-     *                the message to display in case the value does not
-     *                validate.
+     *            the message to display in case the value does not validate.
      * @param minLength
-     *                the minimum permissable length of the string.
+     *            the minimum permissable length of the string.
      * @param maxLength
-     *                the maximum permissable length of the string.
+     *            the maximum permissable length of the string.
      * @param allowNull
-     *                Are null strings permissable?
+     *            Are null strings permissable?
      */
     public StringLengthValidator(String errorMessage, int minLength,
             int maxLength, boolean allowNull) {
@@ -62,9 +60,9 @@ public class StringLengthValidator implements Validator {
      * Validates the value.
      * 
      * @param value
-     *                the value to validate.
+     *            the value to validate.
      * @throws Validator.InvalidValueException
-     *                 if the value was invalid.
+     *             if the value was invalid.
      */
     public void validate(Object value) throws Validator.InvalidValueException {
         if (value == null) {
@@ -93,7 +91,7 @@ public class StringLengthValidator implements Validator {
      * Checks if the given value is valid.
      * 
      * @param value
-     *                the value to validate.
+     *            the value to validate.
      * @return <code>true</code> for valid value, otherwise <code>false</code>.
      */
     public boolean isValid(Object value) {
@@ -151,7 +149,7 @@ public class StringLengthValidator implements Validator {
      * Sets the maximum permissable length of the string.
      * 
      * @param maxLength
-     *                the length to set.
+     *            the length to set.
      */
     public void setMaxLength(int maxLength) {
         if (maxLength < -1) {
@@ -164,7 +162,7 @@ public class StringLengthValidator implements Validator {
      * Sets the minimum permissable length.
      * 
      * @param minLength
-     *                the length to set.
+     *            the length to set.
      */
     public void setMinLength(int minLength) {
         if (minLength < -1) {
@@ -186,7 +184,7 @@ public class StringLengthValidator implements Validator {
      * Sets the message to be displayer in case the value does not validate.
      * 
      * @param errorMessage
-     *                the Error Message to set.
+     *            the Error Message to set.
      */
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;

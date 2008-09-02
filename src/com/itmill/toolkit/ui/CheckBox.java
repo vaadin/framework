@@ -20,9 +20,9 @@ public class CheckBox extends Button {
      * Creates a new switch button with a caption and a set initial state.
      * 
      * @param caption
-     *                the caption of the switch button
+     *            the caption of the switch button
      * @param initialState
-     *                the initial state of the switch button
+     *            the initial state of the switch button
      */
     public CheckBox(String caption, boolean initialState) {
         setCaption(caption);
@@ -34,9 +34,9 @@ public class CheckBox extends Button {
      * Creates a new switch button with a caption and a click listener.
      * 
      * @param caption
-     *                the caption of the switch button
+     *            the caption of the switch button
      * @param listener
-     *                the click listener
+     *            the click listener
      */
     public CheckBox(String caption, ClickListener listener) {
         setCaption(caption);
@@ -54,12 +54,12 @@ public class CheckBox extends Button {
      * Button.ClickEvent type.
      * 
      * @param caption
-     *                the Button caption.
+     *            the Button caption.
      * @param target
-     *                the Object having the method for listening button clicks.
+     *            the Object having the method for listening button clicks.
      * @param methodName
-     *                the name of the method in target object, that receives
-     *                button click events.
+     *            the name of the method in target object, that receives button
+     *            click events.
      */
     public CheckBox(String caption, Object target, String methodName) {
         setCaption(caption);
@@ -71,7 +71,7 @@ public class CheckBox extends Button {
      * Creates a new switch button that is connected to a boolean property.
      * 
      * @param state
-     *                the Initial state of the switch-button.
+     *            the Initial state of the switch-button.
      * @param dataSource
      */
     public CheckBox(String caption, Property dataSource) {
@@ -87,7 +87,7 @@ public class CheckBox extends Button {
      * default.
      * 
      * @param caption
-     *                the Button caption.
+     *            the Button caption.
      */
 
     public CheckBox(String caption) {

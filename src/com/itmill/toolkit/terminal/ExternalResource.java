@@ -29,7 +29,7 @@ public class ExternalResource implements Resource {
      * Creates a new download component for downloading directly from given URL.
      * 
      * @param sourceURL
-     *                the source URL.
+     *            the source URL.
      */
     public ExternalResource(URL sourceURL) {
         if (sourceURL == null) {
@@ -43,7 +43,7 @@ public class ExternalResource implements Resource {
      * Creates a new download component for downloading directly from given URL.
      * 
      * @param sourceURL
-     *                the source URL.
+     *            the source URL.
      */
     public ExternalResource(String sourceURL) {
         if (sourceURL == null) {

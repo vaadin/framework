@@ -86,7 +86,8 @@ public class Ticket1598 extends Application {
             }
         });
 
-        final MenuItem last = (MenuItem) menuBar.getItems().get(menuBar.getSize() - 1);
+        final MenuItem last = (MenuItem) menuBar.getItems().get(
+                menuBar.getSize() - 1);
         last.setText("Remove me!");
 
         // A command for removing the selected menuitem

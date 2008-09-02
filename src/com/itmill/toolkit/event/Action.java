@@ -32,7 +32,7 @@ public class Action {
      * Constructs a new action with the given caption.
      * 
      * @param caption
-     *                the caption for the new action.
+     *            the caption for the new action.
      */
     public Action(String caption) {
         this.caption = caption;
@@ -42,9 +42,9 @@ public class Action {
      * Constructs a new action with the given caption string and icon.
      * 
      * @param caption
-     *                the caption for the new action.
+     *            the caption for the new action.
      * @param icon
-     *                the icon for the new action.
+     *            the icon for the new action.
      */
     public Action(String caption, Resource icon) {
         this.caption = caption;
@@ -83,11 +83,11 @@ public class Action {
          * Gets the list of actions applicable to this handler.
          * 
          * @param target
-         *                the target handler to list actions for. For item
-         *                containers this is the item id.
+         *            the target handler to list actions for. For item
+         *            containers this is the item id.
          * @param sender
-         *                the party that would be sending the actions. Most of
-         *                this is the action container.
+         *            the party that would be sending the actions. Most of this
+         *            is the action container.
          * @return the list of Action
          */
         public Action[] getActions(Object target, Object sender);
@@ -97,13 +97,13 @@ public class Action {
          * discard the action if it's not suitable.
          * 
          * @param action
-         *                the action to be handled.
+         *            the action to be handled.
          * @param sender
-         *                the sender of the action. This is most often the
-         *                action container.
+         *            the sender of the action. This is most often the action
+         *            container.
          * @param target
-         *                the target of the action. For item containers this is
-         *                the item id.
+         *            the target of the action. For item containers this is the
+         *            item id.
          */
         public void handleAction(Action action, Object sender, Object target);
     }
@@ -126,7 +126,7 @@ public class Action {
          * Registers a new action handler for this container
          * 
          * @param actionHandler
-         *                the new handler to be added.
+         *            the new handler to be added.
          */
         public void addActionHandler(Action.Handler actionHandler);
 
@@ -135,7 +135,7 @@ public class Action {
          * this container.
          * 
          * @param actionHandler
-         *                the handler to be removed.
+         *            the handler to be removed.
          */
         public void removeActionHandler(Action.Handler actionHandler);
     }
@@ -144,7 +144,7 @@ public class Action {
      * Sets the caption.
      * 
      * @param caption
-     *                the caption to set.
+     *            the caption to set.
      */
     public void setCaption(String caption) {
         this.caption = caption;
@@ -154,7 +154,7 @@ public class Action {
      * Sets the icon.
      * 
      * @param icon
-     *                the icon to set.
+     *            the icon to set.
      */
     public void setIcon(Resource icon) {
         this.icon = icon;

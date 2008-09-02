@@ -83,13 +83,13 @@ public interface Layout extends ComponentContainer {
          * is calculated as a bit mask of the two passed values.
          * 
          * @param childComponent
-         *                the component to align within it's layout cell.
+         *            the component to align within it's layout cell.
          * @param horizontalAlignment
-         *                the horizontal alignment for the child component
-         *                (left, center, right). Use ALIGNMENT constants.
+         *            the horizontal alignment for the child component (left,
+         *            center, right). Use ALIGNMENT constants.
          * @param verticalAlignment
-         *                the vertical alignment for the child component (top,
-         *                center, bottom). Use ALIGNMENT constants.
+         *            the vertical alignment for the child component (top,
+         *            center, bottom). Use ALIGNMENT constants.
          */
         public void setComponentAlignment(Component childComponent,
                 int horizontalAlignment, int verticalAlignment);

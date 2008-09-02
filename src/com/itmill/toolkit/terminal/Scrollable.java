@@ -38,7 +38,7 @@ public interface Scrollable {
      * </p>
      * 
      * @param pixelsScrolled
-     *                the xOffset.
+     *            the xOffset.
      */
     public void setScrollLeft(int pixelsScrolled);
 
@@ -63,7 +63,7 @@ public interface Scrollable {
      * </p>
      * 
      * @param pixelsScrolled
-     *                the yOffset.
+     *            the yOffset.
      */
     public void setScrollTop(int pixelsScrolled);
 
@@ -89,7 +89,7 @@ public interface Scrollable {
      * </p>
      * 
      * @param isScrollingEnabled
-     *                true if the scrolling is allowed.
+     *            true if the scrolling is allowed.
      */
     public void setScrollable(boolean isScrollingEnabled);
 

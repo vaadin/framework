@@ -47,7 +47,7 @@ public interface Field extends Component, BufferedValidatable, Property,
      * Sets the field required. Required fields must filled by the user.
      * 
      * @param required
-     *                Is the field required.
+     *            Is the field required.
      * @since 3.1
      */
     public void setRequired(boolean required);
@@ -69,7 +69,7 @@ public interface Field extends Component, BufferedValidatable, Property,
      * @since 5.2.6
      */
     public String getRequiredError();
-    
+
     /**
      * An <code>Event</code> object specifying the Field whose value has been
      * changed.
@@ -91,7 +91,7 @@ public interface Field extends Component, BufferedValidatable, Property,
          * Constructs a new event object with the specified source field object.
          * 
          * @param source
-         *                the field that caused the event.
+         *            the field that caused the event.
          */
         public ValueChangeEvent(Field source) {
             super(source);

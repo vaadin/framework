@@ -139,9 +139,9 @@ public class TreeExample extends CustomComponent implements Action.Handler,
      * Helper to add an item with specified caption and (optional) parent.
      * 
      * @param caption
-     *                The item caption
+     *            The item caption
      * @param parent
-     *                The (optional) parent item id
+     *            The (optional) parent item id
      * @return the created item's id
      */
     private Object addCaptionedItem(String caption, Object parent) {

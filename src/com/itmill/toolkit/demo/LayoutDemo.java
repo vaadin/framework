@@ -135,9 +135,9 @@ public class LayoutDemo extends com.itmill.toolkit.Application {
      * Add multiple demo component to given layout.
      * 
      * @param layout
-     *                where components are added
+     *            where components are added
      * @param numberOfComponents
-     *                to add
+     *            to add
      */
     private void fillLayout(Layout layout, int numberOfComponents) {
         for (int i = 1; i <= numberOfComponents; i++) {

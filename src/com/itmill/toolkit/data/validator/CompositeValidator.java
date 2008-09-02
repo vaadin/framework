@@ -26,15 +26,15 @@ import com.itmill.toolkit.data.Validator;
 public class CompositeValidator implements Validator {
 
     /**
-     * The validators are combined with <code>AND</code> clause: validity of
-     * the composite implies validity of the all validators it is composed of
-     * must be valid.
+     * The validators are combined with <code>AND</code> clause: validity of the
+     * composite implies validity of the all validators it is composed of must
+     * be valid.
      */
     public static final int MODE_AND = 0;
 
     /**
-     * The validators are combined with <code>OR</code> clause: validity of
-     * the composite implies that some of validators it is composed of must be
+     * The validators are combined with <code>OR</code> clause: validity of the
+     * composite implies that some of validators it is composed of must be
      * valid.
      */
     public static final int MODE_OR = 1;
@@ -90,9 +90,9 @@ public class CompositeValidator implements Validator {
      * </p>
      * 
      * @param value
-     *                the value to check.
+     *            the value to check.
      * @throws Validator.InvalidValueException
-     *                 if the value is not valid.
+     *             if the value is not valid.
      */
     public void validate(Object value) throws Validator.InvalidValueException {
         switch (mode) {
@@ -136,7 +136,7 @@ public class CompositeValidator implements Validator {
      * </ul>
      * 
      * @param value
-     *                the value to check.
+     *            the value to check.
      */
     public boolean isValid(Object value) {
         switch (mode) {
@@ -180,7 +180,7 @@ public class CompositeValidator implements Validator {
      * </ul>
      * 
      * @param mode
-     *                the mode to set.
+     *            the mode to set.
      */
     public void setMode(int mode) {
         if (mode != MODE_AND && mode != MODE_OR) {
@@ -208,7 +208,7 @@ public class CompositeValidator implements Validator {
      * is null, original error messages of the sub-validators are used instead.
      * 
      * @param errorMessage
-     *                the Error Message to set.
+     *            the Error Message to set.
      */
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
@@ -218,8 +218,8 @@ public class CompositeValidator implements Validator {
      * Adds validator to the interface.
      * 
      * @param validator
-     *                the Validator object which performs validation checks on
-     *                this set of data field values.
+     *            the Validator object which performs validation checks on this
+     *            set of data field values.
      */
     public void addValidator(Validator validator) {
         if (validator == null) {
@@ -232,8 +232,8 @@ public class CompositeValidator implements Validator {
      * Removes a validator from the composite.
      * 
      * @param validator
-     *                the Validator object which performs validation checks on
-     *                this set of data field values.
+     *            the Validator object which performs validation checks on this
+     *            set of data field values.
      */
     public void removeValidator(Validator validator) {
         validators.remove(validator);

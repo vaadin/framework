@@ -21,8 +21,8 @@ import com.itmill.toolkit.terminal.PaintTarget;
  * compatible with <code>java.util.Date</code>.
  * </p>
  * <p>
- * Since <code>DateField</code> extends <code>AbstractField</code> it
- * implements the {@link com.itmill.toolkit.data.Buffered}interface. A
+ * Since <code>DateField</code> extends <code>AbstractField</code> it implements
+ * the {@link com.itmill.toolkit.data.Buffered}interface. A
  * <code>DateField</code> is in write-through mode by default, so
  * {@link com.itmill.toolkit.ui.AbstractField#setWriteThrough(boolean)}must be
  * called to enable buffering.
@@ -35,7 +35,7 @@ import com.itmill.toolkit.terminal.PaintTarget;
  */
 public class DateField extends AbstractField {
 
-    /* Private members ************************************************* */
+    /* Private members */
 
     /**
      * Resolution identifier: milliseconds.
@@ -102,7 +102,7 @@ public class DateField extends AbstractField {
      */
     private Calendar calendar;
 
-    /* Constructors **************************************************** */
+    /* Constructors */
 
     /**
      * Constructs an empty <code>DateField</code> with no caption.
@@ -114,7 +114,7 @@ public class DateField extends AbstractField {
      * Constructs an empty <code>DateField</code> with caption.
      * 
      * @param caption
-     *                the caption of the datefield.
+     *            the caption of the datefield.
      */
     public DateField(String caption) {
         setCaption(caption);
@@ -125,9 +125,9 @@ public class DateField extends AbstractField {
      * <code>Property</code> and has the given caption <code>String</code>.
      * 
      * @param caption
-     *                the caption <code>String</code> for the editor.
+     *            the caption <code>String</code> for the editor.
      * @param dataSource
-     *                the Property to be edited with this editor.
+     *            the Property to be edited with this editor.
      */
     public DateField(String caption, Property dataSource) {
         this(dataSource);
@@ -139,7 +139,7 @@ public class DateField extends AbstractField {
      * <code>Property</code> and has no caption.
      * 
      * @param dataSource
-     *                the Property to be edited with this editor.
+     *            the Property to be edited with this editor.
      */
     public DateField(Property dataSource) throws IllegalArgumentException {
         if (!Date.class.isAssignableFrom(dataSource.getType())) {
@@ -159,16 +159,16 @@ public class DateField extends AbstractField {
      * is called to bind it.
      * 
      * @param caption
-     *                the caption <code>String</code> for the editor.
+     *            the caption <code>String</code> for the editor.
      * @param value
-     *                the Date value.
+     *            the Date value.
      */
     public DateField(String caption, Date value) {
         setValue(value);
         setCaption(caption);
     }
 
-    /* Component basic features ********************************************* */
+    /* Component basic features */
 
     /*
      * Paints this component. Don't add a JavaDoc comment here, we use the
@@ -238,7 +238,7 @@ public class DateField extends AbstractField {
      * interface.
      */
     public void changeVariables(Object source, Map variables) {
-    	super.changeVariables(source, variables);
+        super.changeVariables(source, variables);
 
         if (!isReadOnly()
                 && (variables.containsKey("year")
@@ -318,7 +318,7 @@ public class DateField extends AbstractField {
         }
     }
 
-    /* Property features **************************************************** */
+    /* Property features */
 
     /*
      * Gets the edited property's type. Don't add a JavaDoc comment here, we use
@@ -397,7 +397,7 @@ public class DateField extends AbstractField {
      * Sets the resolution of the DateField.
      * 
      * @param resolution
-     *                the resolution to set.
+     *            the resolution to set.
      */
     public void setResolution(int resolution) {
         this.resolution = resolution;

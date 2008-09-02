@@ -98,9 +98,9 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
      * property.
      * </p>
      * <p>
-     * The getter method of a <code>MethodProperty</code> instantiated with
-     * this constructor will be called with no arguments, and the setter method
-     * with only the new value as the sole argument.
+     * The getter method of a <code>MethodProperty</code> instantiated with this
+     * constructor will be called with no arguments, and the setter method with
+     * only the new value as the sole argument.
      * </p>
      * 
      * <p>
@@ -116,9 +116,9 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
      * </p>
      * 
      * @param instance
-     *                the object that includes the property.
+     *            the object that includes the property.
      * @param beanPropertyName
-     *                the name of the property to bind to.
+     *            the name of the property to bind to.
      */
     public MethodProperty(Object instance, String beanPropertyName) {
 
@@ -204,13 +204,13 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
      * </p>
      * 
      * @param type
-     *                the type of the property.
+     *            the type of the property.
      * @param instance
-     *                the object that includes the property.
+     *            the object that includes the property.
      * @param getMethodName
-     *                the name of the getter method.
+     *            the name of the getter method.
      * @param setMethodName
-     *                the name of the setter method.
+     *            the name of the setter method.
      * 
      */
     public MethodProperty(Class type, Object instance, String getMethodName,
@@ -221,8 +221,8 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
 
     /**
      * <p>
-     * Creates a new instance of <code>MethodProperty</code> with the getter
-     * and setter methods. The getter method of a <code>MethodProperty</code>
+     * Creates a new instance of <code>MethodProperty</code> with the getter and
+     * setter methods. The getter method of a <code>MethodProperty</code>
      * instantiated with this constructor will be called with no arguments, and
      * the setter method with only the new value as the sole argument.
      * </p>
@@ -234,13 +234,13 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
      * </p>
      * 
      * @param type
-     *                the type of the property.
+     *            the type of the property.
      * @param instance
-     *                the object that includes the property.
+     *            the object that includes the property.
      * @param getMethod
-     *                the getter method.
+     *            the getter method.
      * @param setMethod
-     *                the setter method.
+     *            the setter method.
      */
     public MethodProperty(Class type, Object instance, Method getMethod,
             Method setMethod) {
@@ -262,28 +262,27 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
      * <p>
      * For example, if the <code>setArgs</code> contains <code>A</code>,
      * <code>B</code> and <code>C</code>, and <code>setArgumentIndex =
-     * 1</code>,
-     * the call <code>methodProperty.setValue(X)</code> would result in the
-     * setter method to be called with the parameter set of
+     * 1</code>, the call <code>methodProperty.setValue(X)</code> would result
+     * in the setter method to be called with the parameter set of
      * <code>{A, X, C}</code>
      * </p>
      * 
      * @param type
-     *                the type of the property.
+     *            the type of the property.
      * @param instance
-     *                the object that includes the property.
+     *            the object that includes the property.
      * @param getMethodName
-     *                the name of the getter method.
+     *            the name of the getter method.
      * @param setMethodName
-     *                the name of the setter method.
+     *            the name of the setter method.
      * @param getArgs
-     *                the fixed argument list to be passed to the getter method.
+     *            the fixed argument list to be passed to the getter method.
      * @param setArgs
-     *                the fixed argument list to be passed to the setter method.
+     *            the fixed argument list to be passed to the setter method.
      * @param setArgumentIndex
-     *                the index of the argument in <code>setArgs</code> to be
-     *                replaced with <code>newValue</code> when
-     *                {@link #setValue(Object newValue)} is called.
+     *            the index of the argument in <code>setArgs</code> to be
+     *            replaced with <code>newValue</code> when
+     *            {@link #setValue(Object newValue)} is called.
      */
     public MethodProperty(Class type, Object instance, String getMethodName,
             String setMethodName, Object[] getArgs, Object[] setArgs,
@@ -438,33 +437,32 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
 
     /**
      * <p>
-     * Creates a new instance of <code>MethodProperty</code> from the getter
-     * and setter methods, and argument lists.
+     * Creates a new instance of <code>MethodProperty</code> from the getter and
+     * setter methods, and argument lists.
      * </p>
      * <p>
      * This constructor behaves exactly like
-     * {@link #MethodProperty(Class type, Object instance, String getMethodName,
-     * String setMethodName, Object [] getArgs, Object [] setArgs, int
-     * setArgumentIndex)} except that instead of names of the getter and setter
-     * methods this constructor is given the actual methods themselves.
+     * {@link #MethodProperty(Class type, Object instance, String getMethodName, String setMethodName, Object [] getArgs, Object [] setArgs, int setArgumentIndex)}
+     * except that instead of names of the getter and setter methods this
+     * constructor is given the actual methods themselves.
      * </p>
      * 
      * @param type
-     *                the type of the property.
+     *            the type of the property.
      * @param instance
-     *                the object that includes the property.
+     *            the object that includes the property.
      * @param getMethod
-     *                the getter method.
+     *            the getter method.
      * @param setMethod
-     *                the setter method.
+     *            the setter method.
      * @param getArgs
-     *                the fixed argument list to be passed to the getter method.
+     *            the fixed argument list to be passed to the getter method.
      * @param setArgs
-     *                the fixed argument list to be passed to the setter method.
+     *            the fixed argument list to be passed to the setter method.
      * @param setArgumentIndex
-     *                the index of the argument in <code>setArgs</code> to be
-     *                replaced with <code>newValue</code> when
-     *                {@link #setValue(Object newValue)} is called.
+     *            the index of the argument in <code>setArgs</code> to be
+     *            replaced with <code>newValue</code> when
+     *            {@link #setValue(Object newValue)} is called.
      */
     public MethodProperty(Class type, Object instance, Method getMethod,
             Method setMethod, Object[] getArgs, Object[] setArgs,
@@ -517,10 +515,10 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
 
     /**
      * Returns the type of the Property. The methods <code>getValue</code> and
-     * <code>setValue</code> must be compatible with this type: one must be
-     * able to safely cast the value returned from <code>getValue</code> to
-     * the given type and pass any variable assignable to this type as an
-     * argument to <code>setValue</code>.
+     * <code>setValue</code> must be compatible with this type: one must be able
+     * to safely cast the value returned from <code>getValue</code> to the given
+     * type and pass any variable assignable to this type as an argument to
+     * <code>setValue</code>.
      * 
      * @return type of the Property
      */
@@ -530,8 +528,8 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
 
     /**
      * Tests if the object is in read-only mode. In read-only mode calls to
-     * <code>setValue</code> will throw <code>ReadOnlyException</code> and
-     * will not modify the value of the Property.
+     * <code>setValue</code> will throw <code>ReadOnlyException</code> and will
+     * not modify the value of the Property.
      * 
      * @return <code>true</code> if the object is in read-only mode,
      *         <code>false</code> if it's not
@@ -575,13 +573,13 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
      * </p>
      * 
      * @param getArgs
-     *                the fixed argument list to be passed to the getter method.
+     *            the fixed argument list to be passed to the getter method.
      * @param setArgs
-     *                the fixed argument list to be passed to the setter method.
+     *            the fixed argument list to be passed to the setter method.
      * @param setArgumentIndex
-     *                the index of the argument in <code>setArgs</code> to be
-     *                replaced with <code>newValue</code> when
-     *                {@link #setValue(Object newValue)} is called.
+     *            the index of the argument in <code>setArgs</code> to be
+     *            replaced with <code>newValue</code> when
+     *            {@link #setValue(Object newValue)} is called.
      */
     public void setArguments(Object[] getArgs, Object[] setArgs,
             int setArgumentIndex) {
@@ -598,18 +596,16 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
 
     /**
      * Sets the value of the property. This method supports setting from
-     * <code>String</code>s if either <code>String</code> is directly
-     * assignable to property type, or the type class contains a string
-     * constructor.
+     * <code>String</code>s if either <code>String</code> is directly assignable
+     * to property type, or the type class contains a string constructor.
      * 
      * @param newValue
-     *                the New value of the property.
+     *            the New value of the property.
      * @throws <code>Property.ReadOnlyException</code> if the object is in
-     *                 read-only mode.
+     *         read-only mode.
      * @throws <code>Property.ConversionException</code> if
-     *                 <code>newValue</code> can't be converted into the
-     *                 Property's native type directly or through
-     *                 <code>String</code>.
+     *         <code>newValue</code> can't be converted into the Property's
+     *         native type directly or through <code>String</code>.
      * @see #invokeSetMethod(Object)
      */
     public void setValue(Object newValue) throws Property.ReadOnlyException,
@@ -678,7 +674,7 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
      * Sets the Property's read-only mode to the specified status.
      * 
      * @param newStatus
-     *                the new read-only status of the Property.
+     *            the new read-only status of the Property.
      */
     public void setReadOnly(boolean newStatus) {
         final boolean prevStatus = readOnly;
@@ -719,18 +715,17 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
          * detail message.
          * 
          * @param msg
-         *                the detail message.
+         *            the detail message.
          */
         public MethodException(String msg) {
             super(msg);
         }
 
         /**
-         * Constructs a new <code>MethodException</code> from another
-         * exception.
+         * Constructs a new <code>MethodException</code> from another exception.
          * 
          * @param cause
-         *                the cause of the exception.
+         *            the cause of the exception.
          */
         public MethodException(Throwable cause) {
             this.cause = cause;
@@ -751,7 +746,7 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
         }
     }
 
-    /* Events *************************************************************** */
+    /* Events */
 
     /**
      * An <code>Event</code> object specifying the Property whose read-only
@@ -774,7 +769,7 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
          * Constructs a new read-only status change event for this object.
          * 
          * @param source
-         *                source object of the event.
+         *            source object of the event.
          */
         protected ReadOnlyStatusChangeEvent(MethodProperty source) {
             super(source);
@@ -795,7 +790,7 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
      * Registers a new read-only status change listener for this Property.
      * 
      * @param listener
-     *                the new Listener to be registered.
+     *            the new Listener to be registered.
      */
     public void addListener(Property.ReadOnlyStatusChangeListener listener) {
         if (readOnlyStatusChangeListeners == null) {
@@ -808,7 +803,7 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
      * Removes a previously registered read-only status change listener.
      * 
      * @param listener
-     *                the listener to be removed.
+     *            the listener to be removed.
      */
     public void removeListener(Property.ReadOnlyStatusChangeListener listener) {
         if (readOnlyStatusChangeListeners != null) {
@@ -832,8 +827,8 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
     }
 
     /**
-     * An <code>Event</code> object specifying the Property whose value has
-     * been changed.
+     * An <code>Event</code> object specifying the Property whose value has been
+     * changed.
      * 
      * @author IT Mill Ltd.
      * @version
@@ -847,7 +842,7 @@ public class MethodProperty implements Property, Property.ValueChangeNotifier,
          * Constructs a new value change event for this object.
          * 
          * @param source
-         *                source object of the event.
+         *            source object of the event.
          */
         protected ValueChangeEvent(MethodProperty source) {
             super(source);

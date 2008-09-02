@@ -167,10 +167,10 @@ public class IPopupView extends HTML implements Paintable {
     }
 
     public static native void nativeBlur(Element e) /*-{ 
-                         if(e.focus) {
-                         e.blur();
-                         }
-                         }-*/;
+                            if(e.focus) {
+                            e.blur();
+                            }
+                            }-*/;
 
     private class CustomPopup extends IToolkitOverlay implements Container {
 

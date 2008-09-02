@@ -57,7 +57,7 @@ public class CustomComponent extends AbstractComponentContainer {
      * </p>
      * 
      * @param compositionRoot
-     *                the root of the composition component tree.
+     *            the root of the composition component tree.
      */
     public CustomComponent(Component compositionRoot) {
         setCompositionRoot(compositionRoot);
@@ -80,7 +80,7 @@ public class CustomComponent extends AbstractComponentContainer {
      * </p>
      * 
      * @param compositionRoot
-     *                the root of the composition component tree.
+     *            the root of the composition component tree.
      */
     protected final void setCompositionRoot(Component compositionRoot) {
         if (compositionRoot != root) {
@@ -131,7 +131,7 @@ public class CustomComponent extends AbstractComponentContainer {
      * the UIDL as component tag attribute.
      * 
      * @param componentType
-     *                the componentType to set.
+     *            the componentType to set.
      */
     public void setComponentType(String componentType) {
         this.componentType = componentType;

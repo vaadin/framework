@@ -23,8 +23,8 @@ import com.itmill.toolkit.ui.Component.Event;
  * 
  * @since 5.3
  * 
- * TODO extract generic super class/interfaces if we implement some other click
- * events.
+ *        TODO extract generic super class/interfaces if we implement some other
+ *        click events.
  */
 public class ItemClickEvent extends Event {
     public static final int BUTTON_LEFT = MouseEventDetails.BUTTON_LEFT;
@@ -143,7 +143,7 @@ public class ItemClickEvent extends Event {
          * This feature is EXPERIMENTAL
          * 
          * @param listener
-         *                ItemClickListener to be registered
+         *            ItemClickListener to be registered
          */
         public void addListener(ItemClickListener listener);
 

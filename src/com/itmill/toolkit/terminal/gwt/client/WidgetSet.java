@@ -14,7 +14,7 @@ public interface WidgetSet extends EntryPoint {
      * component must be a {@link Widget} that implements {@link Paintable}.
      * 
      * @param uidl
-     *                UIDL to be painted with returned component.
+     *            UIDL to be painted with returned component.
      * @return New uninitialized and unregistered component that can paint given
      *         UIDL.
      */
@@ -24,9 +24,9 @@ public interface WidgetSet extends EntryPoint {
      * Test if the given component implementation conforms to UIDL.
      * 
      * @param currentWidget
-     *                Current implementation of the component
+     *            Current implementation of the component
      * @param uidl
-     *                UIDL to test against
+     *            UIDL to test against
      * @return true iff createWidget would return a new component of the same
      *         class than currentWidget
      */

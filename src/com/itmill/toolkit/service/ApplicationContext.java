@@ -48,7 +48,7 @@ public interface ApplicationContext {
      * Adds transaction listener to this context.
      * 
      * @param listener
-     *                the listener to be added.
+     *            the listener to be added.
      * @see TransactionListener
      */
     public void addTransactionListener(TransactionListener listener);
@@ -57,7 +57,7 @@ public interface ApplicationContext {
      * Removes transaction listener from this context.
      * 
      * @param listener
-     *                the listener to be removed.
+     *            the listener to be removed.
      * @see TransactionListener
      */
     public void removeTransactionListener(TransactionListener listener);
@@ -74,9 +74,9 @@ public interface ApplicationContext {
          * Invoked at the beginning of every transaction.
          * 
          * @param application
-         *                the Application object.
+         *            the Application object.
          * @param transactionData
-         *                the Data identifying the transaction.
+         *            the Data identifying the transaction.
          */
         public void transactionStart(Application application,
                 Object transactionData);
@@ -85,9 +85,9 @@ public interface ApplicationContext {
          * Invoked at the end of every transaction.
          * 
          * @param applcation
-         *                the Application object.
+         *            the Application object.
          * @param transactionData
-         *                the Data identifying the transaction.
+         *            the Data identifying the transaction.
          */
         public void transactionEnd(Application application,
                 Object transactionData);

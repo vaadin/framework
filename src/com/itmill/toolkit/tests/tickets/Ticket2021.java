@@ -48,7 +48,6 @@ public class Ticket2021 extends Application {
         /*
          * 
          * OrderedLayout
-         * 
          */
 
         Panel p2 = new Panel();
@@ -70,7 +69,6 @@ public class Ticket2021 extends Application {
         /*
          * 
          * GridLayout
-         * 
          */
 
         Panel p3 = new Panel();

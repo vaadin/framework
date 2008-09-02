@@ -77,7 +77,7 @@ public class CalendarField extends DateField implements Container.Viewer {
      * RESOLUTION_HOUR are supported.
      * 
      * @param resolution
-     *                the resolution to set.
+     *            the resolution to set.
      * @see com.itmill.toolkit.ui.DateField#setResolution(int)
      */
     public void setResolution(int resolution) {
@@ -228,9 +228,9 @@ public class CalendarField extends DateField implements Container.Viewer {
      * Paints the content of this component.
      * 
      * @param target
-     *                the Paint Event.
+     *            the Paint Event.
      * @throws PaintException
-     *                 if the paint operation failed.
+     *             if the paint operation failed.
      */
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);

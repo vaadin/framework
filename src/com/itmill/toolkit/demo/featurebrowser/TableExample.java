@@ -55,7 +55,7 @@ public class TableExample extends CustomComponent implements Action.Handler,
         root.setSizeFull();
         setCompositionRoot(root);
         setSizeFull();
-        
+
         // main layout
         final OrderedLayout main = new OrderedLayout();
         root.addComponent(main);

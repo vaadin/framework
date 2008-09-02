@@ -26,7 +26,7 @@ import com.itmill.toolkit.terminal.PaintTarget;
 public class OrderedLayout extends AbstractLayout implements
         Layout.AlignmentHandler, Layout.SpacingHandler {
 
-    /* Predefined orientations ***************************************** */
+    /* Predefined orientations */
 
     /**
      * Components are to be laid out vertically.
@@ -45,7 +45,7 @@ public class OrderedLayout extends AbstractLayout implements
      */
     protected LinkedList components = new LinkedList();
 
-    /* Child component alignments ************************************** */
+    /* Child component alignments */
 
     /**
      * Mapping from components to alignments (horizontal + vertical).
@@ -75,7 +75,7 @@ public class OrderedLayout extends AbstractLayout implements
      * parameters.
      * 
      * @param orientation
-     *                the Orientation of the layout.
+     *            the Orientation of the layout.
      */
     public OrderedLayout(int orientation) {
         this.orientation = orientation;
@@ -95,7 +95,7 @@ public class OrderedLayout extends AbstractLayout implements
      * or under the previous component.
      * 
      * @param c
-     *                the component to be added.
+     *            the component to be added.
      */
     public void addComponent(Component c) {
         super.addComponent(c);
@@ -108,7 +108,7 @@ public class OrderedLayout extends AbstractLayout implements
      * or on top of the other components.
      * 
      * @param c
-     *                the component to be added.
+     *            the component to be added.
      */
     public void addComponentAsFirst(Component c) {
         super.addComponent(c);
@@ -120,10 +120,10 @@ public class OrderedLayout extends AbstractLayout implements
      * Adds a component into indexed position in this container.
      * 
      * @param c
-     *                the component to be added.
+     *            the component to be added.
      * @param index
-     *                the Index of the component position. The components
-     *                currently in and after the position are shifted forwards.
+     *            the Index of the component position. The components currently
+     *            in and after the position are shifted forwards.
      */
     public void addComponent(Component c, int index) {
         super.addComponent(c);
@@ -135,7 +135,7 @@ public class OrderedLayout extends AbstractLayout implements
      * Removes the component from this container.
      * 
      * @param c
-     *                the component to be removed.
+     *            the component to be removed.
      */
     public void removeComponent(Component c) {
         super.removeComponent(c);
@@ -158,9 +158,9 @@ public class OrderedLayout extends AbstractLayout implements
      * Paints the content of this component.
      * 
      * @param target
-     *                the Paint Event.
+     *            the Paint Event.
      * @throws PaintException
-     *                 if the paint operation failed.
+     *             if the paint operation failed.
      */
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);
@@ -206,7 +206,7 @@ public class OrderedLayout extends AbstractLayout implements
      * Set the orientation of the container.
      * 
      * @param orientation
-     *                the New value of property orientation.
+     *            the New value of property orientation.
      */
     public void setOrientation(int orientation) {
 
@@ -268,8 +268,9 @@ public class OrderedLayout extends AbstractLayout implements
     /*
      * (non-Javadoc)
      * 
-     * @see com.itmill.toolkit.ui.Layout.AlignmentHandler#setComponentAlignment(com.itmill.toolkit.ui.Component,
-     *      int, int)
+     * @see
+     * com.itmill.toolkit.ui.Layout.AlignmentHandler#setComponentAlignment(com
+     * .itmill.toolkit.ui.Component, int, int)
      */
     public void setComponentAlignment(Component childComponent,
             int horizontalAlignment, int verticalAlignment) {
@@ -281,7 +282,9 @@ public class OrderedLayout extends AbstractLayout implements
     /*
      * (non-Javadoc)
      * 
-     * @see com.itmill.toolkit.ui.Layout.AlignmentHandler#getComponentAlignment(com.itmill.toolkit.ui.Component)
+     * @see
+     * com.itmill.toolkit.ui.Layout.AlignmentHandler#getComponentAlignment(com
+     * .itmill.toolkit.ui.Component)
      */
     public int getComponentAlignment(Component childComponent) {
         final Integer bitMask = (Integer) componentToAlignment

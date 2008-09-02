@@ -31,9 +31,9 @@ public class BaseFieldFactory implements FieldFactory {
      * 
      * 
      * @param type
-     *                the type of data presented in field.
+     *            the type of data presented in field.
      * @param uiContext
-     *                the context where the Field is presented.
+     *            the context where the Field is presented.
      * 
      * @see com.itmill.toolkit.ui.FieldFactory#createField(Class, Component)
      */

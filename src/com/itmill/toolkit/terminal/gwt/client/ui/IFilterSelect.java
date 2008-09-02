@@ -29,8 +29,8 @@ import com.google.gwt.user.client.ui.PopupPanel.PositionCallback;
 import com.google.gwt.user.client.ui.SuggestOracle.Suggestion;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Focusable;
-import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.ITooltip;
+import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.Util;
 
@@ -272,8 +272,9 @@ public class IFilterSelect extends Composite implements Paintable, Field,
         /*
          * (non-Javadoc)
          * 
-         * @see com.google.gwt.user.client.ui.PopupPanel$PositionCallback#setPosition(int,
-         *      int)
+         * @see
+         * com.google.gwt.user.client.ui.PopupPanel$PositionCallback#setPosition
+         * (int, int)
          */
         public void setPosition(int offsetWidth, int offsetHeight) {
 

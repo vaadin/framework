@@ -10,10 +10,10 @@ import com.itmill.toolkit.Application;
 import com.itmill.toolkit.service.FileTypeResolver;
 
 /**
- * <code>StreamResource</code> is a resource provided to the client directly
- * by the application. The strean resource is fetched from URI that is most
- * often in the context of the application or window. The resource is
- * automatically registered to window in creation.
+ * <code>StreamResource</code> is a resource provided to the client directly by
+ * the application. The strean resource is fetched from URI that is most often
+ * in the context of the application or window. The resource is automatically
+ * registered to window in creation.
  * 
  * @author IT Mill Ltd.
  * @version
@@ -56,11 +56,11 @@ public class StreamResource implements ApplicationResource {
      * Creates a new stream resource for downloading from stream.
      * 
      * @param streamSource
-     *                the source Stream.
+     *            the source Stream.
      * @param filename
-     *                the name of the file.
+     *            the name of the file.
      * @param application
-     *                the Application object.
+     *            the Application object.
      */
     public StreamResource(StreamSource streamSource, String filename,
             Application application) {
@@ -88,15 +88,15 @@ public class StreamResource implements ApplicationResource {
      * Sets the mime type of the resource.
      * 
      * @param MIMEType
-     *                the MIME type to be set.
+     *            the MIME type to be set.
      */
     public void setMIMEType(String MIMEType) {
         this.MIMEType = MIMEType;
     }
 
     /**
-     * Returns the source for this <code>StreamResource</code>. StreamSource
-     * is queried when the resource is about to be streamed to the client.
+     * Returns the source for this <code>StreamResource</code>. StreamSource is
+     * queried when the resource is about to be streamed to the client.
      * 
      * @return Source of the StreamResource.
      */
@@ -110,7 +110,7 @@ public class StreamResource implements ApplicationResource {
      * streamed to the client.
      * 
      * @param streamSource
-     *                the source to set.
+     *            the source to set.
      */
     public void setStreamSource(StreamSource streamSource) {
         this.streamSource = streamSource;
@@ -129,7 +129,7 @@ public class StreamResource implements ApplicationResource {
      * Sets the filename.
      * 
      * @param filename
-     *                the filename to set.
+     *            the filename to set.
      */
     public void setFilename(String filename) {
         this.filename = filename;
@@ -182,7 +182,7 @@ public class StreamResource implements ApplicationResource {
      * Sets the size of the download buffer used for this resource.
      * 
      * @param bufferSize
-     *                the size of the buffer in bytes.
+     *            the size of the buffer in bytes.
      */
     public void setBufferSize(int bufferSize) {
         this.bufferSize = bufferSize;
@@ -204,7 +204,7 @@ public class StreamResource implements ApplicationResource {
      * </p>
      * 
      * @param cacheTime
-     *                the cache time in milliseconds.
+     *            the cache time in milliseconds.
      * 
      */
     public void setCacheTime(long cacheTime) {

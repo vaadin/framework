@@ -12,25 +12,25 @@ import com.itmill.toolkit.ui.Window;
 import com.itmill.toolkit.ui.Window.CloseEvent;
 
 /** Component contains a button that allows opening a window. */
-public class WindowOpener extends CustomComponent
-                          implements Window.CloseListener {
-    Window mainwindow;  // Reference to main window
-    Window mywindow;    // The window to be opened
-    Button openbutton;  // Button for opening the window
+public class WindowOpener extends CustomComponent implements
+        Window.CloseListener {
+    Window mainwindow; // Reference to main window
+    Window mywindow; // The window to be opened
+    Button openbutton; // Button for opening the window
     Button closebutton; // A button in the window
-    Label  explanation; // A descriptive text
+    Label explanation; // A descriptive text
 
     public WindowOpener(String label, Window main) {
         mainwindow = main;
 
         /* The component consists of a button that opens the window. */
         final OrderedLayout layout = new OrderedLayout();
-        
+
         openbutton = new Button("Open Window", this, "openButtonClick");
         explanation = new Label("Explanation");
         layout.addComponent(openbutton);
         layout.addComponent(explanation);
-        
+
         setCompositionRoot(layout);
     }
 

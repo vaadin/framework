@@ -52,7 +52,7 @@ public interface ErrorMessage extends Paintable {
      * method should be implemented as empty.
      * 
      * @param listener
-     *                the listener to be added.
+     *            the listener to be added.
      * @see com.itmill.toolkit.terminal.Paintable#addListener(Paintable.RepaintRequestListener)
      */
     public void addListener(RepaintRequestListener listener);
@@ -62,7 +62,7 @@ public interface ErrorMessage extends Paintable {
      * method should be implemented as empty.
      * 
      * @param listener
-     *                the listener to be removed.
+     *            the listener to be removed.
      * @see com.itmill.toolkit.terminal.Paintable#removeListener(Paintable.RepaintRequestListener)
      */
     public void removeListener(RepaintRequestListener listener);

@@ -70,7 +70,7 @@ public class WindowedDemos extends com.itmill.toolkit.Application {
      * the demo has not been shown already, re-uses old window otherwise.
      * 
      * @param demoName
-     *                the name of the demo to be shown
+     *            the name of the demo to be shown
      */
     private void show(String demoName) {
         Window w = (Window) windows.get(demoName);

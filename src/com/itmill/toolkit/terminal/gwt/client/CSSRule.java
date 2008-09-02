@@ -64,6 +64,7 @@ public class CSSRule {
 
     /**
      * Returns a specific property value from this CSS rule.
+     * 
      * @param propertyName
      * @return
      */

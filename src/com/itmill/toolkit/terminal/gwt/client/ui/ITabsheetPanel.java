@@ -34,7 +34,7 @@ public class ITabsheetPanel extends ComplexPanel {
      * Adds the specified widget to the deck.
      * 
      * @param w
-     *                the widget to be added
+     *            the widget to be added
      */
     public void add(Widget w) {
         Element el = createContainerElement();
@@ -64,11 +64,11 @@ public class ITabsheetPanel extends ComplexPanel {
      * Inserts a widget before the specified index.
      * 
      * @param w
-     *                the widget to be inserted
+     *            the widget to be inserted
      * @param beforeIndex
-     *                the index before which it will be inserted
+     *            the index before which it will be inserted
      * @throws IndexOutOfBoundsException
-     *                 if <code>beforeIndex</code> is out of range
+     *             if <code>beforeIndex</code> is out of range
      */
     public void insert(Widget w, int beforeIndex) {
         Element el = createContainerElement();
@@ -95,7 +95,7 @@ public class ITabsheetPanel extends ComplexPanel {
      * visible widget to be hidden.
      * 
      * @param index
-     *                the index of the widget to be shown
+     *            the index of the widget to be shown
      */
     public void showWidget(int index) {
         checkIndexBoundsForAccess(index);

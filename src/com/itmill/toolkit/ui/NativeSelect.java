@@ -43,7 +43,7 @@ public class NativeSelect extends AbstractSelect {
      * adapter.
      * 
      * @param columns
-     *                the number of columns to set.
+     *            the number of columns to set.
      */
     public void setColumns(int columns) {
         if (columns < 0) {

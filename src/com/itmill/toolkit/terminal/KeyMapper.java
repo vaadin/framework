@@ -7,8 +7,8 @@ package com.itmill.toolkit.terminal;
 import java.util.Hashtable;
 
 /**
- * <code>KeyMapper</code> is the simple two-way map for generating textual
- * keys for objects and retrieving the objects later with the key.
+ * <code>KeyMapper</code> is the simple two-way map for generating textual keys
+ * for objects and retrieving the objects later with the key.
  * 
  * @author IT Mill Ltd.
  * @version
@@ -27,7 +27,7 @@ public class KeyMapper {
      * Gets key for an object.
      * 
      * @param o
-     *                the object.
+     *            the object.
      */
     public String key(Object o) {
 
@@ -53,7 +53,7 @@ public class KeyMapper {
      * Retrieves object with the key.
      * 
      * @param key
-     *                the name with the desired value.
+     *            the name with the desired value.
      * @return the object with the key.
      */
     public Object get(String key) {
@@ -65,7 +65,7 @@ public class KeyMapper {
      * Removes object from the mapper.
      * 
      * @param removeobj
-     *                the object to be removed.
+     *            the object to be removed.
      */
     public void remove(Object removeobj) {
         final String key = (String) objectKeyMap.get(removeobj);

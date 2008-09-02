@@ -21,7 +21,6 @@ import javax.servlet.http.HttpSessionBindingListener;
 
 import com.itmill.toolkit.Application;
 import com.itmill.toolkit.service.ApplicationContext;
-import com.itmill.toolkit.terminal.gwt.client.ClientExceptionHandler;
 
 /**
  * Web application context for the IT Mill Toolkit applications.

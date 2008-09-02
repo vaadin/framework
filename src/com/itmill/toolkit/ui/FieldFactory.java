@@ -23,9 +23,9 @@ public interface FieldFactory {
      * Creates a field based on type of data.
      * 
      * @param type
-     *                the type of data presented in field.
+     *            the type of data presented in field.
      * @param uiContext
-     *                the component where the field is presented.
+     *            the component where the field is presented.
      * @return Field the field suitable for editing the specified data.
      * 
      */
@@ -35,9 +35,9 @@ public interface FieldFactory {
      * Creates a field based on the property datasource.
      * 
      * @param property
-     *                the property datasource.
+     *            the property datasource.
      * @param uiContext
-     *                the component where the field is presented.
+     *            the component where the field is presented.
      * @return Field the field suitable for editing the specified data.
      */
     Field createField(Property property, Component uiContext);
@@ -46,11 +46,11 @@ public interface FieldFactory {
      * Creates a field based on the item and property id.
      * 
      * @param item
-     *                the item where the property belongs to.
+     *            the item where the property belongs to.
      * @param propertyId
-     *                the Id of the property.
+     *            the Id of the property.
      * @param uiContext
-     *                the component where the field is presented.
+     *            the component where the field is presented.
      * @return Field the field suitable for editing the specified data.
      */
     Field createField(Item item, Object propertyId, Component uiContext);
@@ -59,13 +59,13 @@ public interface FieldFactory {
      * Creates a field based on the container item id and property id.
      * 
      * @param container
-     *                the Container where the property belongs to.
+     *            the Container where the property belongs to.
      * @param itemId
-     *                the item Id.
+     *            the item Id.
      * @param propertyId
-     *                the Id of the property.
+     *            the Id of the property.
      * @param uiContext
-     *                the component where the field is presented.
+     *            the component where the field is presented.
      * @return Field the field suitable for editing the specified data.
      */
     Field createField(Container container, Object itemId, Object propertyId,

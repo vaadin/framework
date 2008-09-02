@@ -30,19 +30,19 @@ public interface Validatable {
      * </p>
      * 
      * @param validator
-     *                the new validator
+     *            the new validator
      */
     void addValidator(Validator validator);
 
     /**
      * <p>
      * Removes a previously registered validator from the object. The specified
-     * validator is removed from the object and its <code>validate</code>
-     * method is no longer called in {@link #isValid()}.
+     * validator is removed from the object and its <code>validate</code> method
+     * is no longer called in {@link #isValid()}.
      * </p>
      * 
      * @param validator
-     *                the validator to remove
+     *            the validator to remove
      */
     void removeValidator(Validator validator);
 
@@ -78,7 +78,7 @@ public interface Validatable {
      * </p>
      * 
      * @throws Validator.InvalidValueException
-     *                 if the value is not valid
+     *             if the value is not valid
      */
     public void validate() throws Validator.InvalidValueException;
 
@@ -101,7 +101,7 @@ public interface Validatable {
      * @param invalidValueAllowed
      * 
      * @throws UnsupportedOperationException
-     *                 if the setInvalidAllowed is not supported.
+     *             if the setInvalidAllowed is not supported.
      */
     public void setInvalidAllowed(boolean invalidValueAllowed)
             throws UnsupportedOperationException;

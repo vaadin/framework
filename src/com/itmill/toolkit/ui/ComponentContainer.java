@@ -22,7 +22,7 @@ public interface ComponentContainer extends Component {
      * Adds the component into this container.
      * 
      * @param c
-     *                the component to be added.
+     *            the component to be added.
      */
     public void addComponent(Component c);
 
@@ -30,7 +30,7 @@ public interface ComponentContainer extends Component {
      * Removes the component from this container.
      * 
      * @param c
-     *                the component to be added.
+     *            the component to be added.
      */
     public void removeComponent(Component c);
 
@@ -53,9 +53,9 @@ public interface ComponentContainer extends Component {
      * </p>
      * 
      * @param oldComponent
-     *                the old component that will be replaced.
+     *            the old component that will be replaced.
      * @param newComponent
-     *                the new component to be replaced.
+     *            the new component to be replaced.
      */
     public void replaceComponent(Component oldComponent, Component newComponent);
 
@@ -73,8 +73,8 @@ public interface ComponentContainer extends Component {
      * components are removed from <code>source</code>.
      * 
      * @param source
-     *                the container which contains the components that are to be
-     *                moved to this container.
+     *            the container which contains the components that are to be
+     *            moved to this container.
      */
     public void moveComponentsFrom(ComponentContainer source);
 
@@ -82,7 +82,7 @@ public interface ComponentContainer extends Component {
      * Listens the component attach events.
      * 
      * @param listener
-     *                the listener to add.
+     *            the listener to add.
      */
     public void addListener(ComponentAttachListener listener);
 
@@ -90,7 +90,7 @@ public interface ComponentContainer extends Component {
      * Stops the listening component attach events.
      * 
      * @param listener
-     *                the listener to removed.
+     *            the listener to removed.
      */
     public void removeListener(ComponentAttachListener listener);
 
@@ -113,7 +113,7 @@ public interface ComponentContainer extends Component {
          * A new component is attached to container.
          * 
          * @param event
-         *                the component attach event.
+         *            the component attach event.
          */
         public void componentAttachedToContainer(ComponentAttachEvent event);
     }
@@ -127,7 +127,7 @@ public interface ComponentContainer extends Component {
          * A component has been detached from container.
          * 
          * @param event
-         *                the component detach event.
+         *            the component detach event.
          */
         public void componentDetachedFromContainer(ComponentDetachEvent event);
     }
@@ -148,10 +148,10 @@ public interface ComponentContainer extends Component {
          * Creates a new attach event.
          * 
          * @param container
-         *                the component container the component has been
-         *                detached to.
+         *            the component container the component has been detached
+         *            to.
          * @param attachedComponent
-         *                the component that has been attached.
+         *            the component that has been attached.
          */
         public ComponentAttachEvent(ComponentContainer container,
                 Component attachedComponent) {
@@ -163,7 +163,7 @@ public interface ComponentContainer extends Component {
          * Gets the component container.
          * 
          * @param the
-         *                component container.
+         *            component container.
          */
         public ComponentContainer getContainer() {
             return (ComponentContainer) getSource();
@@ -173,7 +173,7 @@ public interface ComponentContainer extends Component {
          * Gets the attached component.
          * 
          * @param the
-         *                attach component.
+         *            attach component.
          */
         public Component getAttachedComponent() {
             return component;
@@ -196,10 +196,10 @@ public interface ComponentContainer extends Component {
          * Creates a new detach event.
          * 
          * @param container
-         *                the component container the component has been
-         *                detached from.
+         *            the component container the component has been detached
+         *            from.
          * @param detachedComponent
-         *                the component that has been detached.
+         *            the component that has been detached.
          */
         public ComponentDetachEvent(ComponentContainer container,
                 Component detachedComponent) {
@@ -211,7 +211,7 @@ public interface ComponentContainer extends Component {
          * Gets the component container.
          * 
          * @param the
-         *                component container.
+         *            component container.
          */
         public ComponentContainer getContainer() {
             return (ComponentContainer) getSource();

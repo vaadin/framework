@@ -104,7 +104,7 @@ public class Calc extends com.itmill.toolkit.Application implements
      * </p>
      * 
      * @param event
-     *                the button click event specifying which button was pressed
+     *            the button click event specifying which button was pressed
      */
     public void buttonClick(Button.ClickEvent event) {
 

@@ -512,7 +512,7 @@ public class ApplicationConnection {
                 }
 
                 if (html.length() != 0) {
-                    INotification n = new INotification(1000 * 60 * 45); // 45min
+                    INotification n = new INotification(1000 * 60 * 45); //45min
                     n.addEventListener(new NotificationRedirect(url));
                     n.show(html, INotification.CENTERED_TOP, "system");
                 } else {
@@ -572,7 +572,7 @@ public class ApplicationConnection {
      * Returns Paintable element by its id
      * 
      * @param id
-     *                Paintable ID
+     *            Paintable ID
      */
     public Paintable getPaintable(String id) {
         return (Paintable) idToPaintable.get(id);
@@ -716,13 +716,13 @@ public class ApplicationConnection {
      * when needed.
      * 
      * @param component
-     *                Widget to be updated, expected to implement an instance of
-     *                Paintable
+     *            Widget to be updated, expected to implement an instance of
+     *            Paintable
      * @param uidl
-     *                UIDL to be painted
+     *            UIDL to be painted
      * @param manageCaption
-     *                True if you want to delegate caption, icon, description
-     *                and error message management to parent.
+     *            True if you want to delegate caption, icon, description and
+     *            error message management to parent.
      * 
      * @return Returns true iff no further painting is needed by caller
      */
@@ -858,7 +858,7 @@ public class ApplicationConnection {
      * parent.
      * 
      * @param uidl
-     *                UIDL to create Paintable from.
+     *            UIDL to create Paintable from.
      * @return Either existing or new Paintable corresponding to UIDL.
      */
     public Paintable getPaintable(UIDL uidl) {
@@ -898,7 +898,7 @@ public class ApplicationConnection {
      * to browser due URI's in UIDL may contain custom protocols like theme://.
      * 
      * @param toolkitUri
-     *                toolkit URI from uidl
+     *            toolkit URI from uidl
      * @return translated URI ready for browser
      */
     public String translateToolkitUri(String toolkitUri) {
@@ -978,7 +978,7 @@ public class ApplicationConnection {
      * Adds PNG-fix conditionally (only for IE6) to the specified IMG -element.
      * 
      * @param el
-     *                the IMG element to fix
+     *            the IMG element to fix
      */
     public void addPngFix(Element el) {
         BrowserInfo b = BrowserInfo.get();

@@ -39,7 +39,7 @@ public class ExpandLayout extends OrderedLayout {
 
     /**
      * @param c
-     *                Component which container will be maximized
+     *            Component which container will be maximized
      */
     public void expand(Component c) {
         expanded = c;

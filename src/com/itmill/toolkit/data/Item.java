@@ -9,8 +9,8 @@ import java.util.Collection;
 /**
  * <p>
  * Provides a mechanism for handling a set of Properties, each associated to a
- * locally unique non-null identifier. The interface is split into subinterfaces to
- * enable a class to implement only the functionalities it needs.
+ * locally unique non-null identifier. The interface is split into subinterfaces
+ * to enable a class to implement only the functionalities it needs.
  * </p>
  * 
  * @author IT Mill Ltd
@@ -26,7 +26,7 @@ public interface Item {
      * returned.
      * 
      * @param id
-     *                identifier of the Property to get
+     *            identifier of the Property to get
      * @return the Property with the given ID or <code>null</code>
      */
     public Property getItemProperty(Object id);
@@ -47,13 +47,13 @@ public interface Item {
      * </p>
      * 
      * @param id
-     *                ID of the new Property
+     *            ID of the new Property
      * @param property
-     *                the Property to be added and associated with the id
-     * @return <code>true</code> if the operation succeeded,
-     *         <code>false</code> if not
+     *            the Property to be added and associated with the id
+     * @return <code>true</code> if the operation succeeded, <code>false</code>
+     *         if not
      * @throws UnsupportedOperationException
-     *                 if the operation is not supported.
+     *             if the operation is not supported.
      */
     public boolean addItemProperty(Object id, Property property)
             throws UnsupportedOperationException;
@@ -66,11 +66,10 @@ public interface Item {
      * </p>
      * 
      * @param id
-     *                ID of the Property to be removed
+     *            ID of the Property to be removed
      * @return <code>true</code> if the operation succeeded
      * @throws UnsupportedOperationException
-     *                 if the operation is not supported. <code>false</code>
-     *                 if not
+     *             if the operation is not supported. <code>false</code> if not
      */
     public boolean removeItemProperty(Object id)
             throws UnsupportedOperationException;
@@ -85,7 +84,7 @@ public interface Item {
          * Sets the Item that serves as the data source of the viewer.
          * 
          * @param newDataSource
-         *                The new data source Item
+         *            The new data source Item
          */
         public void setItemDataSource(Item newDataSource);
 
@@ -110,11 +109,11 @@ public interface Item {
 
     }
 
-    /* Property set change event ******************************************** */
+    /* Property set change event */
 
     /**
-     * An <code>Event</code> object specifying the Item whose contents has
-     * been changed through the <code>Property</code> interface.
+     * An <code>Event</code> object specifying the Item whose contents has been
+     * changed through the <code>Property</code> interface.
      * <p>
      * Note: The values stored in the Properties may change without triggering
      * this event.
@@ -140,7 +139,7 @@ public interface Item {
          * Notifies this listener that the Item's property set has changed.
          * 
          * @param event
-         *                Property set change event object
+         *            Property set change event object
          */
         public void itemPropertySetChange(Item.PropertySetChangeEvent event);
     }
@@ -153,10 +152,10 @@ public interface Item {
      * <p>
      * Note : The general Java convention is not to explicitly declare that a
      * class generates events, but to directly define the
-     * <code>addListener</code> and <code>removeListener</code> methods.
-     * That way the caller of these methods has no real way of finding out if
-     * the class really will send the events, or if it just defines the methods
-     * to be able to implement an interface.
+     * <code>addListener</code> and <code>removeListener</code> methods. That
+     * way the caller of these methods has no real way of finding out if the
+     * class really will send the events, or if it just defines the methods to
+     * be able to implement an interface.
      * </p>
      */
     public interface PropertySetChangeNotifier {
@@ -165,7 +164,7 @@ public interface Item {
          * Registers a new property set change listener for this Item.
          * 
          * @param listener
-         *                The new Listener to be registered.
+         *            The new Listener to be registered.
          */
         public void addListener(Item.PropertySetChangeListener listener);
 
@@ -173,7 +172,7 @@ public interface Item {
          * Removes a previously registered property set change listener.
          * 
          * @param listener
-         *                Listener to be removed.
+         *            Listener to be removed.
          */
         public void removeListener(Item.PropertySetChangeListener listener);
     }

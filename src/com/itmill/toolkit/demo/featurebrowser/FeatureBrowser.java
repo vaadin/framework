@@ -164,11 +164,12 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
         tree.addListener(this);
         tree.setImmediate(true);
         tree.expandItemsRecursively(rootId);
-        for (Iterator i=container.getItemIds().iterator(); i.hasNext();) {
-        	Object id = i.next();
-        	if (container.getChildren(id)==null) tree.setChildrenAllowed(id, false);
+        for (Iterator i = container.getItemIds().iterator(); i.hasNext();) {
+            Object id = i.next();
+            if (container.getChildren(id) == null)
+                tree.setChildrenAllowed(id, false);
         }
-        
+
         split.addComponent(tree);
 
         final SplitPanel split2 = new SplitPanel();
@@ -308,7 +309,8 @@ public class FeatureBrowser extends com.itmill.toolkit.Application implements
     public void valueChange(ValueChangeEvent event) {
         if (event.getProperty() == tree) {
             final Object id = tree.getValue();
-            if (id == null) return; 
+            if (id == null)
+                return;
             final Item item = tree.getItem(id);
             //
             String newSection;

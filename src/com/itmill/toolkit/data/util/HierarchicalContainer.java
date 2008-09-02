@@ -113,13 +113,13 @@ public class HierarchicalContainer extends IndexedContainer implements
      * </p>
      * 
      * @param itemId
-     *                the ID of the Item in the container whose child capability
-     *                is to be set.
+     *            the ID of the Item in the container whose child capability is
+     *            to be set.
      * @param childrenAllowed
-     *                the boolean value specifying if the Item can have children
-     *                or not.
-     * @return <code>true</code> if the operation succeeded,
-     *         <code>false</code> if not
+     *            the boolean value specifying if the Item can have children or
+     *            not.
+     * @return <code>true</code> if the operation succeeded, <code>false</code>
+     *         if not
      */
     public boolean setChildrenAllowed(Object itemId, boolean childrenAllowed) {
 
@@ -141,19 +141,19 @@ public class HierarchicalContainer extends IndexedContainer implements
     /**
      * <p>
      * Sets the parent of an Item. The new parent item must exist and be able to
-     * have children. (<code>canHaveChildren(newParentId) == true</code>).
-     * It is also possible to detach a node from the hierarchy (and thus make it
-     * root) by setting the parent <code>null</code>.
+     * have children. (<code>canHaveChildren(newParentId) == true</code>). It is
+     * also possible to detach a node from the hierarchy (and thus make it root)
+     * by setting the parent <code>null</code>.
      * </p>
      * 
      * @param itemId
-     *                the ID of the item to be set as the child of the Item
-     *                identified with newParentId.
+     *            the ID of the item to be set as the child of the Item
+     *            identified with newParentId.
      * @param newParentId
-     *                the ID of the Item that's to be the new parent of the Item
-     *                identified with itemId.
-     * @return <code>true</code> if the operation succeeded,
-     *         <code>false</code> if not
+     *            the ID of the Item that's to be the new parent of the Item
+     *            identified with itemId.
+     * @return <code>true</code> if the operation succeeded, <code>false</code>
+     *         if not
      */
     public boolean setParent(Object itemId, Object newParentId) {
 
@@ -249,7 +249,8 @@ public class HierarchicalContainer extends IndexedContainer implements
     /*
      * (non-Javadoc)
      * 
-     * @see com.itmill.toolkit.data.util.IndexedContainer#addItem(java.lang.Object)
+     * @see
+     * com.itmill.toolkit.data.util.IndexedContainer#addItem(java.lang.Object)
      */
     public Item addItem(Object itemId) {
         final Item item = super.addItem(itemId);
@@ -279,7 +280,9 @@ public class HierarchicalContainer extends IndexedContainer implements
     /*
      * (non-Javadoc)
      * 
-     * @see com.itmill.toolkit.data.util.IndexedContainer#removeItem(java.lang.Object)
+     * @see
+     * com.itmill.toolkit.data.util.IndexedContainer#removeItem(java.lang.Object
+     * )
      */
     public boolean removeItem(Object itemId) {
         final boolean success = super.removeItem(itemId);

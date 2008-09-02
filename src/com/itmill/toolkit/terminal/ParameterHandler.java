@@ -30,12 +30,11 @@ public interface ParameterHandler {
      * <p>
      * Handles the given parameters. The parameters are given as inmodifieable
      * name to value map. All parameters names are of type:
-     * {@link java.lang.String}. All the parameter values are arrays of
-     * strings.
+     * {@link java.lang.String}. All the parameter values are arrays of strings.
      * </p>
      * 
      * @param parameters
-     *                the Inmodifiable name to value[] mapping.
+     *            the Inmodifiable name to value[] mapping.
      * 
      */
     public void handleParameters(Map parameters);

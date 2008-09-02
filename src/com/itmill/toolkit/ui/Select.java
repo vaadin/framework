@@ -58,9 +58,9 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
      */
     private boolean optionRequest;
 
-    /* Constructors ********************************************************* */
+    /* Constructors */
 
-    /* Component methods **************************************************** */
+    /* Component methods */
 
     public Select() {
         super();
@@ -82,9 +82,9 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
      * Paints the content of this component.
      * 
      * @param target
-     *                the Paint Event.
+     *            the Paint Event.
      * @throws PaintException
-     *                 if the paint operation failed.
+     *             if the paint operation failed.
      */
     public void paintContent(PaintTarget target) throws PaintException {
         if (isMultiSelect()) {
@@ -232,8 +232,8 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
      * 
      * @param options
      * @param needNullSelectOption
-     *                flag to indicate if nullselect option needs to be taken
-     *                into consideration
+     *            flag to indicate if nullselect option needs to be taken into
+     *            consideration
      */
     private List sanitetizeList(List options, boolean needNullSelectOption) {
 
@@ -445,7 +445,7 @@ public class Select extends AbstractSelect implements AbstractSelect.Filtering {
      * @deprecated
      * 
      * @param columns
-     *                the number of columns to set.
+     *            the number of columns to set.
      */
     public void setColumns(int columns) {
         if (columns < 0) {

@@ -129,9 +129,9 @@ public class Util {
      * Adds transparent PNG fix to image element; only use for IE6.
      * 
      * @param el
-     *                IMG element
+     *            IMG element
      * @param blankImageUrl
-     *                URL to transparent one-pixel gif
+     *            URL to transparent one-pixel gif
      */
     public native static void addPngFix(Element el, String blankImageUrl)
     /*-{
@@ -154,7 +154,7 @@ public class Util {
      * 
      * @param element
      * @param deep
-     *                clone child tree also
+     *            clone child tree also
      * @return
      */
     public static native Element cloneNode(Element element, boolean deep)

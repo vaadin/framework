@@ -27,9 +27,9 @@ public interface URIHandler {
      * stream is necessary, null should be returned instead.
      * 
      * @param context
-     *                the URl.
+     *            the URl.
      * @param relativeUri
-     *                the relative uri.
+     *            the relative uri.
      * @return the download stream object.
      */
     public DownloadStream handleURI(URL context, String relativeUri);

@@ -1,12 +1,15 @@
 package com.itmill.toolkit.tests.tickets;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.itmill.toolkit.data.Container;
 import com.itmill.toolkit.data.Item;
 import com.itmill.toolkit.data.Property;
-import com.itmill.toolkit.data.util.PropertysetItem;
 import com.itmill.toolkit.data.util.ObjectProperty;
-
-import java.util.*;
+import com.itmill.toolkit.data.util.PropertysetItem;
 
 /**
  * @author Efecte R&D
@@ -22,8 +25,10 @@ public class Ticket1506_TestContainer2 implements Container {
     private void loadItems() {
         for (int i = 1; i < 15; i++) {
             final PropertysetItem item = new PropertysetItem();
-            item.addItemProperty(PROPERTY_1_ID, new ObjectProperty("value " + i, String.class));
-            item.addItemProperty(PROPERTY_2_ID, new ObjectProperty("name " + i, String.class));
+            item.addItemProperty(PROPERTY_1_ID, new ObjectProperty(
+                    "value " + i, String.class));
+            item.addItemProperty(PROPERTY_2_ID, new ObjectProperty("name " + i,
+                    String.class));
             this.items.put(String.valueOf(i), item);
         }
     }
@@ -92,15 +97,18 @@ public class Ticket1506_TestContainer2 implements Container {
         throw new UnsupportedOperationException("Not implemented");
     }
 
-    public boolean removeItem(Object itemId) throws UnsupportedOperationException {
+    public boolean removeItem(Object itemId)
+            throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Not implemented");
     }
 
-    public boolean addContainerProperty(Object propertyId, Class type, Object defaultValue) throws UnsupportedOperationException {
+    public boolean addContainerProperty(Object propertyId, Class type,
+            Object defaultValue) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Not implemented");
     }
 
-    public boolean removeContainerProperty(Object propertyId) throws UnsupportedOperationException {
+    public boolean removeContainerProperty(Object propertyId)
+            throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Not implemented");
     }
 

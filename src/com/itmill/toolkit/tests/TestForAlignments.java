@@ -30,7 +30,7 @@ public class TestForAlignments extends CustomComponent {
         vert.addComponent(b2);
         vert.addComponent(t1);
         vert.addComponent(d1);
-        //vert.getSize().setWidth(500);
+        // vert.getSize().setWidth(500);
         vert.setComponentAlignment(b1, OrderedLayout.ALIGNMENT_RIGHT,
                 OrderedLayout.ALIGNMENT_TOP);
         vert.setComponentAlignment(b2, OrderedLayout.ALIGNMENT_LEFT,
@@ -46,7 +46,7 @@ public class TestForAlignments extends CustomComponent {
         hori.addComponent(b4);
         hori.addComponent(t2);
         hori.addComponent(d2);
-        //hori.getSize().setHeight(200);
+        // hori.getSize().setHeight(200);
         hori.setComponentAlignment(b3, OrderedLayout.ALIGNMENT_LEFT,
                 OrderedLayout.ALIGNMENT_BOTTOM);
         hori.setComponentAlignment(b4, OrderedLayout.ALIGNMENT_LEFT,

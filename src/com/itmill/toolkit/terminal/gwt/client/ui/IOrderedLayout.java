@@ -117,8 +117,8 @@ public class IOrderedLayout extends Panel implements Container,
      * <p>
      * There are two modes - vertical and horizontal.
      * <ul>
-     * <li>Vertical mode uses structure: div-root ( div-wrap ( child ) div-wrap (
-     * child ))).</li>
+     * <li>Vertical mode uses structure: div-root ( div-wrap ( child ) div-wrap
+     * ( child ))).</li>
      * <li>Horizontal mode uses structure: table ( tbody ( tr-childcontainer (
      * td-wrap ( child ) td-wrap ( child) )) )</li>
      * </ul>
@@ -574,7 +574,7 @@ public class IOrderedLayout extends Panel implements Container,
      * without letting root element to affect the calculation.
      * 
      * @param offset
-     *                offsetWidth or offsetHeight
+     *            offsetWidth or offsetHeight
      */
     private int rootOffsetMeasure(String offset) {
         // TODO This method must be optimized!

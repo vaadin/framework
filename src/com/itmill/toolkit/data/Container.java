@@ -33,8 +33,8 @@ import java.util.Collection;
  * 
  * <p>
  * Note that though uniquely identified, the Items in a Container are not
- * neccessarily {@link Container.Ordered ordered}or
- * {@link Container.Indexed indexed}.
+ * neccessarily {@link Container.Ordered ordered}or {@link Container.Indexed
+ * indexed}.
  * </p>
  * 
  * <p>
@@ -58,7 +58,7 @@ public interface Container {
      * does not contain the requested Item, <code>null</code> is returned.
      * 
      * @param itemId
-     *                ID of the Item to retrieve
+     *            ID of the Item to retrieve
      * @return the Item with the given ID or <code>null</code> if the Item is
      *         not found in the Container
      */
@@ -86,9 +86,9 @@ public interface Container {
      * <code>null</code> is returned.
      * 
      * @param itemId
-     *                ID of the Item which contains the Property
+     *            ID of the Item which contains the Property
      * @param propertyId
-     *                ID of the Property to retrieve
+     *            ID of the Property to retrieve
      * @return Property with the given ID or <code>null</code>
      */
     public Property getContainerProperty(Object itemId, Object propertyId);
@@ -97,7 +97,7 @@ public interface Container {
      * Gets the data type of all Properties identified by the given Property ID.
      * 
      * @param propertyId
-     *                ID identifying the Properties
+     *            ID identifying the Properties
      * @return data type of the Properties
      */
     public Class getType(Object propertyId);
@@ -113,7 +113,7 @@ public interface Container {
      * Tests if the Container contains the specified Item
      * 
      * @param itemId
-     *                ID the of Item to be tested
+     *            ID the of Item to be tested
      * @return boolean indicating if the Container holds the specified Item
      */
     public boolean containsId(Object itemId);
@@ -122,8 +122,8 @@ public interface Container {
      * Creates a new Item with the given ID into the Container. The new
      * <p>
      * Item is returned, and it is ready to have its Properties modified.
-     * Returns <code>null</code> if the operation fails or the Container
-     * already contains a Item with the given ID.
+     * Returns <code>null</code> if the operation fails or the Container already
+     * contains a Item with the given ID.
      * </p>
      * 
      * <p>
@@ -131,7 +131,7 @@ public interface Container {
      * </p>
      * 
      * @param itemId
-     *                ID of the Item to be created
+     *            ID of the Item to be created
      * @return Created new Item, or <code>null</code> in case of a failure
      */
     public Item addItem(Object itemId) throws UnsupportedOperationException;
@@ -141,9 +141,8 @@ public interface Container {
      * 
      * <p>
      * The new ID is returned, or <code>null</code> if the operation fails.
-     * After a successful call you can use the
-     * {@link #getItem(Object ItemId) <code>getItem</code>}method to fetch the
-     * Item.
+     * After a successful call you can use the {@link #getItem(Object ItemId)
+     * <code>getItem</code>}method to fetch the Item.
      * </p>
      * 
      * <p>
@@ -160,9 +159,9 @@ public interface Container {
      * This functionality is optional.
      * 
      * @param itemId
-     *                ID of the Item to remove
-     * @return <code>true</code> if the operation succeeded,
-     *         <code>false</code> if not
+     *            ID of the Item to remove
+     * @return <code>true</code> if the operation succeeded, <code>false</code>
+     *         if not
      */
     public boolean removeItem(Object itemId)
             throws UnsupportedOperationException;
@@ -174,13 +173,13 @@ public interface Container {
      * This functionality is optional.
      * 
      * @param propertyId
-     *                ID of the Property
+     *            ID of the Property
      * @param type
-     *                Data type of the new Property
+     *            Data type of the new Property
      * @param defaultValue
-     *                The value all created Properties are initialized to
-     * @return <code>true</code> if the operation succeeded,
-     *         <code>false</code> if not
+     *            The value all created Properties are initialized to
+     * @return <code>true</code> if the operation succeeded, <code>false</code>
+     *         if not
      */
     public boolean addContainerProperty(Object propertyId, Class type,
             Object defaultValue) throws UnsupportedOperationException;
@@ -192,9 +191,9 @@ public interface Container {
      * This functionality is optional.
      * 
      * @param propertyId
-     *                ID of the Property to remove
-     * @return <code>true</code> if the operation succeeded,
-     *         <code>false</code> if not
+     *            ID of the Property to remove
+     * @return <code>true</code> if the operation succeeded, <code>false</code>
+     *         if not
      */
     public boolean removeContainerProperty(Object propertyId)
             throws UnsupportedOperationException;
@@ -207,8 +206,8 @@ public interface Container {
      * functionality is optional.
      * </p>
      * 
-     * @return <code>true</code> if the operation succeeded,
-     *         <code>false</code> if not
+     * @return <code>true</code> if the operation succeeded, <code>false</code>
+     *         if not
      */
     public boolean removeAllItems() throws UnsupportedOperationException;
 
@@ -223,18 +222,18 @@ public interface Container {
          * the Container, <code>null</code> is returned.
          * 
          * @param itemId
-         *                ID of an Item in the Container
+         *            ID of an Item in the Container
          * @return ID of the next Item or <code>null</code>
          */
         public Object nextItemId(Object itemId);
 
         /**
          * Gets the ID of the Item preceding the Item that corresponds to
-         * <code>itemId</code>. If the given Item is the first or not found
-         * in the Container, <code>null</code> is returned.
+         * <code>itemId</code>. If the given Item is the first or not found in
+         * the Container, <code>null</code> is returned.
          * 
          * @param itemId
-         *                ID of an Item in the Container
+         *            ID of an Item in the Container
          * @return ID of the previous Item or <code>null</code>
          */
         public Object prevItemId(Object itemId);
@@ -258,7 +257,7 @@ public interface Container {
          * Item in the Container.
          * 
          * @param itemId
-         *                ID of an Item in the Container
+         *            ID of an Item in the Container
          * @return <code>true</code> if the Item is first in the Container,
          *         <code>false</code> if not
          */
@@ -281,7 +280,7 @@ public interface Container {
          * </p>
          * 
          * @param previousItemId
-         *                Id of the previous item in ordered container.
+         *            Id of the previous item in ordered container.
          * @return Returns item id the the created new item or null if the
          *         operation fails.
          */
@@ -296,9 +295,9 @@ public interface Container {
          * </p>
          * 
          * @param previousItemId
-         *                Id of the previous item in ordered container.
+         *            Id of the previous item in ordered container.
          * @param newItemId
-         *                Id of the new item to be added.
+         *            Id of the new item to be added.
          * @return Returns new item or null if the operation fails.
          */
         public Item addItemAfter(Object previousItemId, Object newItemId)
@@ -315,18 +314,18 @@ public interface Container {
          * Sorts the container items.
          * 
          * @param propertyId
-         *                Array of container property IDs, which values are used
-         *                to sort the items in container as primary, secondary,
-         *                ... sorting criterion. All of the item IDs must be in
-         *                the collection returned by
-         *                <code>getSortableContainerPropertyIds</code>
+         *            Array of container property IDs, which values are used to
+         *            sort the items in container as primary, secondary, ...
+         *            sorting criterion. All of the item IDs must be in the
+         *            collection returned by
+         *            <code>getSortableContainerPropertyIds</code>
          * @param ascending
-         *                Array of sorting order flags corresponding to each
-         *                property ID used in sorting. If this array is shorter
-         *                than propertyId array, ascending order is assumed for
-         *                items where the order is not specified. Use
-         *                <code>true</code> to sort in ascending order,
-         *                <code>false</code> to use descending order.
+         *            Array of sorting order flags corresponding to each
+         *            property ID used in sorting. If this array is shorter than
+         *            propertyId array, ascending order is assumed for items
+         *            where the order is not specified. Use <code>true</code> to
+         *            sort in ascending order, <code>false</code> to use
+         *            descending order.
          */
         void sort(Object[] propertyId, boolean[] ascending);
 
@@ -347,7 +346,7 @@ public interface Container {
          * is <code>true</code> for the returned index: 0 <= index < size().
          * 
          * @param itemId
-         *                ID of an Item in the Container
+         *            ID of an Item in the Container
          * @return index of the Item, or -1 if the Container does not include
          *         the Item
          */
@@ -357,7 +356,7 @@ public interface Container {
          * Gets the ID of an Item by an index number.
          * 
          * @param index
-         *                Index of the requested id in the Container
+         *            Index of the requested id in the Container
          * @return ID of the Item in the given index
          */
         public Object getIdByIndex(int index);
@@ -370,7 +369,7 @@ public interface Container {
          * </p>
          * 
          * @param index
-         *                Index to add the new item.
+         *            Index to add the new item.
          * @return Returns item id the the created new item or null if the
          *         operation fails.
          */
@@ -384,9 +383,9 @@ public interface Container {
          * </p>
          * 
          * @param index
-         *                Index to add the new item.
+         *            Index to add the new item.
          * @param newItemId
-         *                Id of the new item to be added.
+         *            Id of the new item to be added.
          * @return Returns new item or null if the operation fails.
          */
         public Item addItemAt(int index, Object newItemId)
@@ -396,9 +395,9 @@ public interface Container {
 
     /**
      * <p>
-     * Interface for <code>Container</code> classes whose Items can be
-     * arranged hierarchically. This means that the Items in the container
-     * belong in a tree-like structure, with the following quirks:
+     * Interface for <code>Container</code> classes whose Items can be arranged
+     * hierarchically. This means that the Items in the container belong in a
+     * tree-like structure, with the following quirks:
      * </p>
      * 
      * <ul>
@@ -414,8 +413,7 @@ public interface Container {
          * The returned collection is unmodifiable.
          * 
          * @param itemId
-         *                ID of the Item whose children the caller is interested
-         *                in
+         *            ID of the Item whose children the caller is interested in
          * @return An unmodifiable {@link java.util.Collection collection}
          *         containing the IDs of all other Items that are children in
          *         the container hierarchy
@@ -426,8 +424,7 @@ public interface Container {
          * Gets the ID of the parent Item of the specified Item.
          * 
          * @param itemId
-         *                ID of the Item whose parent the caller wishes to find
-         *                out.
+         *            ID of the Item whose parent the caller wishes to find out.
          * @return the ID of the parent Item. Will be <code>null</code> if the
          *         specified Item is a root element.
          */
@@ -457,11 +454,11 @@ public interface Container {
          * </p>
          * 
          * @param itemId
-         *                ID of the item to be set as the child of the Item
-         *                identified with <code>newParentId</code>
+         *            ID of the item to be set as the child of the Item
+         *            identified with <code>newParentId</code>
          * @param newParentId
-         *                ID of the Item that's to be the new parent of the Item
-         *                identified with <code>itemId</code>
+         *            ID of the Item that's to be the new parent of the Item
+         *            identified with <code>itemId</code>
          * @return <code>true</code> if the operation succeeded,
          *         <code>false</code> if not
          */
@@ -472,8 +469,8 @@ public interface Container {
          * Tests if the Item with given ID can have any children.
          * 
          * @param itemId
-         *                ID of the Item in the container whose child capability
-         *                is to be tested
+         *            ID of the Item in the container whose child capability is
+         *            to be tested
          * @return <code>true</code> if the specified Item exists in the
          *         Container and it can have children, <code>false</code> if
          *         it's not found from the container or it can't have children.
@@ -499,11 +496,11 @@ public interface Container {
          * </p>
          * 
          * @param itemId
-         *                ID of the Item in the container whose child capability
-         *                is to be set
+         *            ID of the Item in the container whose child capability is
+         *            to be set
          * @param areChildrenAllowed
-         *                boolean value specifying if the Item can have children
-         *                or not
+         *            boolean value specifying if the Item can have children or
+         *            not
          * @return <code>true</code> if the operation succeeded,
          *         <code>false</code> if not
          */
@@ -512,14 +509,13 @@ public interface Container {
                 throws UnsupportedOperationException;
 
         /**
-         * Tests if the Item specified with <code>itemId</code> is a root
-         * Item. The hierarchical container can have more than one root and must
-         * have at least one unless it is empty. The
-         * {@link #getParent(Object itemId)}method always returns
-         * <code>null</code> for root Items.
+         * Tests if the Item specified with <code>itemId</code> is a root Item.
+         * The hierarchical container can have more than one root and must have
+         * at least one unless it is empty. The {@link #getParent(Object itemId)}
+         * method always returns <code>null</code> for root Items.
          * 
          * @param itemId
-         *                ID of the Item whose root status is to be tested
+         *            ID of the Item whose root status is to be tested
          * @return <code>true</code> if the specified Item is a root,
          *         <code>false</code> if not
          */
@@ -536,10 +532,11 @@ public interface Container {
          * <p>
          * Note that being a leaf does not imply whether or not an Item is
          * allowed to have children.
-         * </p>.
+         * </p>
+         * .
          * 
          * @param itemId
-         *                ID of the Item whose leaf status is to be tested
+         *            ID of the Item whose leaf status is to be tested
          * @return <code>true</code> if the specified Item is a leaf,
          *         <code>false</code> if not
          */
@@ -568,14 +565,14 @@ public interface Container {
          * starts with given filterString are visible in the container.
          * 
          * @param propertyId
-         *                Property for which the filter is applied to.
+         *            Property for which the filter is applied to.
          * @param filterString
-         *                String that must match contents of the property
+         *            String that must match contents of the property
          * @param ignoreCase
-         *                Determine if the casing can be ignored when comparing
-         *                strings.
+         *            Determine if the casing can be ignored when comparing
+         *            strings.
          * @param onlyMatchPrefix
-         *                Only match prefixes; no other matches are included.
+         *            Only match prefixes; no other matches are included.
          */
         public void addContainerFilter(Object propertyId, String filterString,
                 boolean ignoreCase, boolean onlyMatchPrefix);
@@ -597,7 +594,7 @@ public interface Container {
          * Sets the Container that serves as the data source of the viewer.
          * 
          * @param newDataSource
-         *                The new data source Item
+         *            The new data source Item
          */
         public void setContainerDataSource(Container newDataSource);
 
@@ -626,11 +623,11 @@ public interface Container {
 
     }
 
-    /* Contents change event ******************************************* */
+    /* Contents change event */
 
     /**
-     * An <code>Event</code> object specifying the Container whose Item set
-     * has changed.
+     * An <code>Event</code> object specifying the Container whose Item set has
+     * changed.
      */
     public interface ItemSetChangeEvent {
 
@@ -649,7 +646,7 @@ public interface Container {
          * Lets the listener know a Containers Item set has changed.
          * 
          * @param event
-         *                change event text
+         *            change event text
          */
         public void containerItemSetChange(Container.ItemSetChangeEvent event);
     }
@@ -657,15 +654,15 @@ public interface Container {
     /**
      * The interface for adding and removing <code>ItemSetChangeEvent</code>
      * listeners. By implementing this interface a class explicitly announces
-     * that it will generate a <code>ItemSetChangeEvent</code> when its
-     * contents are modified.
+     * that it will generate a <code>ItemSetChangeEvent</code> when its contents
+     * are modified.
      * <p>
      * Note: The general Java convention is not to explicitly declare that a
      * class generates events, but to directly define the
-     * <code>addListener</code> and <code>removeListener</code> methods.
-     * That way the caller of these methods has no real way of finding out if
-     * the class really will send the events, or if it just defines the methods
-     * to be able to implement an interface.
+     * <code>addListener</code> and <code>removeListener</code> methods. That
+     * way the caller of these methods has no real way of finding out if the
+     * class really will send the events, or if it just defines the methods to
+     * be able to implement an interface.
      * </p>
      */
     public interface ItemSetChangeNotifier {
@@ -674,7 +671,7 @@ public interface Container {
          * Adds an Item set change listener for the object.
          * 
          * @param listener
-         *                listener to be added
+         *            listener to be added
          */
         public void addListener(Container.ItemSetChangeListener listener);
 
@@ -682,16 +679,16 @@ public interface Container {
          * Removes the Item set change listener from the object.
          * 
          * @param listener
-         *                listener to be removed
+         *            listener to be removed
          */
         public void removeListener(Container.ItemSetChangeListener listener);
     }
 
-    /* Property set change event ******************************************** */
+    /* Property set change event */
 
     /**
-     * An <code>Event</code> object specifying the Container whose Property
-     * set has changed.
+     * An <code>Event</code> object specifying the Container whose Property set
+     * has changed.
      */
     public interface PropertySetChangeEvent {
 
@@ -713,7 +710,7 @@ public interface Container {
          * Notifies this listener that the Containers contents has changed.
          * 
          * @param event
-         *                Change event.
+         *            Change event.
          */
         public void containerPropertySetChange(
                 Container.PropertySetChangeEvent event);
@@ -729,10 +726,10 @@ public interface Container {
      * <p>
      * Note that the general Java convention is not to explicitly declare that a
      * class generates events, but to directly define the
-     * <code>addListener</code> and <code>removeListener</code> methods.
-     * That way the caller of these methods has no real way of finding out if
-     * the class really will send the events, or if it just defines the methods
-     * to be able to implement an interface.
+     * <code>addListener</code> and <code>removeListener</code> methods. That
+     * way the caller of these methods has no real way of finding out if the
+     * class really will send the events, or if it just defines the methods to
+     * be able to implement an interface.
      * </p>
      */
     public interface PropertySetChangeNotifier {
@@ -741,7 +738,7 @@ public interface Container {
          * Registers a new Property set change listener for this Container.
          * 
          * @param listener
-         *                The new Listener to be registered
+         *            The new Listener to be registered
          */
         public void addListener(Container.PropertySetChangeListener listener);
 
@@ -749,7 +746,7 @@ public interface Container {
          * Removes a previously registered Property set change listener.
          * 
          * @param listener
-         *                Listener to be removed
+         *            Listener to be removed
          */
         public void removeListener(Container.PropertySetChangeListener listener);
     }

@@ -1,15 +1,14 @@
 package com.itmill.toolkit.demo.featurebrowser;
 
 import com.itmill.toolkit.ui.Accordion;
-import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.CustomComponent;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.TextField;
 
 /**
- * Accordion is a derivative of TabSheet, a vertical tabbed layout
- * that places the tab contents between the vertical tabs. 
+ * Accordion is a derivative of TabSheet, a vertical tabbed layout that places
+ * the tab contents between the vertical tabs.
  */
 public class AccordionExample extends CustomComponent {
     public AccordionExample() {
@@ -18,19 +17,20 @@ public class AccordionExample extends CustomComponent {
         setCompositionRoot(accordion);
 
         // Add a few tabs to the accordion.
-        for (int i=0; i<5; i++) {
+        for (int i = 0; i < 5; i++) {
             // Create a root component for a accordion tab
             OrderedLayout layout = new OrderedLayout();
             accordion.addComponent(layout);
-            
+
             // The accordion tab label is taken from the caption of the root
             // component. Notice that layouts can have a caption too.
-            layout.setCaption("Tab "+(i+1));
+            layout.setCaption("Tab " + (i + 1));
 
             // Add some components in each accordion tab
-            Label label = new Label("These are the contents of Tab "+(i+1)+".");
+            Label label = new Label("These are the contents of Tab " + (i + 1)
+                    + ".");
             layout.addComponent(label);
-            
+
             TextField textfield = new TextField("Some text field");
             layout.addComponent(textfield);
         }

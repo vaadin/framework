@@ -53,7 +53,7 @@ public class ObjectProperty implements Property, Property.ValueChangeNotifier,
      * value.
      * 
      * @param value
-     *                the Initial value of the Property.
+     *            the Initial value of the Property.
      */
     public ObjectProperty(Object value) {
         this(value, value.getClass());
@@ -63,10 +63,10 @@ public class ObjectProperty implements Property, Property.ValueChangeNotifier,
      * Creates a new instance of ObjectProperty with the given value and type.
      * 
      * @param value
-     *                the Initial value of the Property.
+     *            the Initial value of the Property.
      * @param type
-     *                the type of the value. The value must be assignable to
-     *                given type.
+     *            the type of the value. The value must be assignable to given
+     *            type.
      */
     public ObjectProperty(Object value, Class type) {
 
@@ -80,12 +80,12 @@ public class ObjectProperty implements Property, Property.ValueChangeNotifier,
      * read-only mode status.
      * 
      * @param value
-     *                the Initial value of the property.
+     *            the Initial value of the property.
      * @param type
-     *                the type of the value. <code>value</code> must be
-     *                assignable to this type.
+     *            the type of the value. <code>value</code> must be assignable
+     *            to this type.
      * @param readOnly
-     *                Sets the read-only mode.
+     *            Sets the read-only mode.
      */
     public ObjectProperty(Object value, Class type, boolean readOnly) {
         this(value, type);
@@ -94,10 +94,10 @@ public class ObjectProperty implements Property, Property.ValueChangeNotifier,
 
     /**
      * Returns the type of the ObjectProperty. The methods <code>getValue</code>
-     * and <code>setValue</code> must be compatible with this type: one must
-     * be able to safely cast the value returned from <code>getValue</code> to
-     * the given type and pass any variable assignable to this type as an
-     * argument to <code>setValue</code>.
+     * and <code>setValue</code> must be compatible with this type: one must be
+     * able to safely cast the value returned from <code>getValue</code> to the
+     * given type and pass any variable assignable to this type as an argument
+     * to <code>setValue</code>.
      * 
      * @return type of the Property
      */
@@ -116,8 +116,8 @@ public class ObjectProperty implements Property, Property.ValueChangeNotifier,
 
     /**
      * Returns the value of the ObjectProperty in human readable textual format.
-     * The return value should be assignable to the <code>setValue</code>
-     * method if the Property is not in read-only mode.
+     * The return value should be assignable to the <code>setValue</code> method
+     * if the Property is not in read-only mode.
      * 
      * @return <code>String</code> representation of the value stored in the
      *         ObjectProperty
@@ -148,7 +148,7 @@ public class ObjectProperty implements Property, Property.ValueChangeNotifier,
      * Sets the Property's read-only mode to the specified status.
      * 
      * @param newStatus
-     *                the new read-only status of the Property.
+     *            the new read-only status of the Property.
      */
     public void setReadOnly(boolean newStatus) {
         if (newStatus != readOnly) {
@@ -159,17 +159,16 @@ public class ObjectProperty implements Property, Property.ValueChangeNotifier,
 
     /**
      * Sets the value of the property. This method supports setting from
-     * <code>String</code> if either <code>String</code> is directly
-     * assignable to property type, or the type class contains a string
-     * constructor.
+     * <code>String</code> if either <code>String</code> is directly assignable
+     * to property type, or the type class contains a string constructor.
      * 
      * @param newValue
-     *                the New value of the property.
+     *            the New value of the property.
      * @throws <code>Property.ReadOnlyException</code> if the object is in
-     *                 read-only mode
-     * @throws <code>Property.ConversionException</code> if the newValue
-     *                 can't be converted into the Property's native type
-     *                 directly or through <code>String</code>
+     *         read-only mode
+     * @throws <code>Property.ConversionException</code> if the newValue can't
+     *         be converted into the Property's native type directly or through
+     *         <code>String</code>
      */
     public void setValue(Object newValue) throws Property.ReadOnlyException,
             Property.ConversionException {
@@ -201,7 +200,7 @@ public class ObjectProperty implements Property, Property.ValueChangeNotifier,
         fireValueChange();
     }
 
-    /* Events *************************************************************** */
+    /* Events */
 
     /**
      * An <code>Event</code> object specifying the ObjectProperty whose value
@@ -224,7 +223,7 @@ public class ObjectProperty implements Property, Property.ValueChangeNotifier,
          * Constructs a new value change event for this object.
          * 
          * @param source
-         *                the source object of the event.
+         *            the source object of the event.
          */
         protected ValueChangeEvent(ObjectProperty source) {
             super(source);
@@ -261,7 +260,7 @@ public class ObjectProperty implements Property, Property.ValueChangeNotifier,
          * Constructs a new read-only status change event for this object.
          * 
          * @param source
-         *                source object of the event
+         *            source object of the event
          */
         protected ReadOnlyStatusChangeEvent(ObjectProperty source) {
             super(source);
@@ -281,7 +280,7 @@ public class ObjectProperty implements Property, Property.ValueChangeNotifier,
      * Removes a previously registered value change listener.
      * 
      * @param listener
-     *                the listener to be removed.
+     *            the listener to be removed.
      */
     public void removeListener(Property.ValueChangeListener listener) {
         if (valueChangeListeners != null) {
@@ -293,7 +292,7 @@ public class ObjectProperty implements Property, Property.ValueChangeNotifier,
      * Registers a new value change listener for this ObjectProperty.
      * 
      * @param listener
-     *                the new Listener to be registered
+     *            the new Listener to be registered
      */
     public void addListener(Property.ValueChangeListener listener) {
         if (valueChangeListeners == null) {
@@ -306,7 +305,7 @@ public class ObjectProperty implements Property, Property.ValueChangeNotifier,
      * Registers a new read-only status change listener for this Property.
      * 
      * @param listener
-     *                the new Listener to be registered
+     *            the new Listener to be registered
      */
     public void addListener(Property.ReadOnlyStatusChangeListener listener) {
         if (readOnlyStatusChangeListeners == null) {
@@ -319,7 +318,7 @@ public class ObjectProperty implements Property, Property.ValueChangeNotifier,
      * Removes a previously registered read-only status change listener.
      * 
      * @param listener
-     *                the listener to be removed.
+     *            the listener to be removed.
      */
     public void removeListener(Property.ReadOnlyStatusChangeListener listener) {
         if (readOnlyStatusChangeListeners != null) {

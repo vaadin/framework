@@ -43,7 +43,7 @@ public class TestBench extends com.itmill.toolkit.Application implements
             "com.itmill.toolkit.demo", "com.itmill.toolkit.demo.colorpicker",
             "com.itmill.toolkit.demo.reservation",
             "com.itmill.toolkit.demo.features",
-            "com.itmill.toolkit.tests.tickets"};
+            "com.itmill.toolkit.tests.tickets" };
 
     HierarchicalContainer testables = new HierarchicalContainer();
 

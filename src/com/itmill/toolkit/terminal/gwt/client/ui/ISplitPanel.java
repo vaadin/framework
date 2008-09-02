@@ -103,7 +103,6 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
              * 
              * With IE7 one will sometimes get scrollbars with overflow auto
              * even though there is nothing to scroll (content fits into area).
-             * 
              */
             DOM.setStyleAttribute(firstContainer, "overflow", "hidden");
             DOM.setStyleAttribute(secondContainer, "overflow", "hidden");

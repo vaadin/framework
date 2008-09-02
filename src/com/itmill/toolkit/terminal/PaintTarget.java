@@ -21,11 +21,11 @@ public interface PaintTarget {
      * surrounded by XML start and end-tags.
      * 
      * @param sectionTagName
-     *                the name of the tag.
+     *            the name of the tag.
      * @param sectionData
-     *                the scetion data.
+     *            the scetion data.
      * @throws PaintException
-     *                 if the paint operation failed.
+     *             if the paint operation failed.
      */
     public void addSection(String sectionTagName, String sectionData)
             throws PaintException;
@@ -42,13 +42,13 @@ public interface PaintTarget {
      * </p>
      * 
      * @param paintable
-     *                the paintable to start.
+     *            the paintable to start.
      * @param tag
-     *                the name of the start tag.
-     * @return <code>true</code> if paintable found in cache,
-     *         <code>false</code> otherwise.
+     *            the name of the start tag.
+     * @return <code>true</code> if paintable found in cache, <code>false</code>
+     *         otherwise.
      * @throws PaintException
-     *                 if the paint operation failed.
+     *             if the paint operation failed.
      * @see #startTag(String)
      * @since 3.1
      */
@@ -64,7 +64,7 @@ public interface PaintTarget {
      * in future.
      * 
      * @param paintable
-     *                the Paintable to reference
+     *            the Paintable to reference
      * @param referenceName
      * @throws PaintException
      * 
@@ -82,9 +82,9 @@ public interface PaintTarget {
      * </pre>
      * 
      * @param tagName
-     *                the name of the start tag.
+     *            the name of the start tag.
      * @throws PaintException
-     *                 if the paint operation failed.
+     *             if the paint operation failed.
      */
     public void startTag(String tagName) throws PaintException;
 
@@ -95,9 +95,9 @@ public interface PaintTarget {
      * PaintException is raised.
      * 
      * @param tagName
-     *                the name of the end tag.
+     *            the name of the end tag.
      * @throws PaintException
-     *                 if the paint operation failed.
+     *             if the paint operation failed.
      */
     public void endTag(String tagName) throws PaintException;
 
@@ -106,12 +106,12 @@ public interface PaintTarget {
      * content is written.
      * 
      * @param name
-     *                the Attribute name.
+     *            the Attribute name.
      * @param value
-     *                the Attribute value.
+     *            the Attribute value.
      * 
      * @throws PaintException
-     *                 if the paint operation failed.
+     *             if the paint operation failed.
      */
     public void addAttribute(String name, boolean value) throws PaintException;
 
@@ -120,12 +120,12 @@ public interface PaintTarget {
      * content is written.
      * 
      * @param name
-     *                the Attribute name.
+     *            the Attribute name.
      * @param value
-     *                the Attribute value.
+     *            the Attribute value.
      * 
      * @throws PaintException
-     *                 if the paint operation failed.
+     *             if the paint operation failed.
      */
     public void addAttribute(String name, int value) throws PaintException;
 
@@ -134,12 +134,12 @@ public interface PaintTarget {
      * any content is written.
      * 
      * @param name
-     *                the Attribute name
+     *            the Attribute name
      * @param value
-     *                the Attribute value
+     *            the Attribute value
      * 
      * @throws PaintException
-     *                 if the paint operation failed.
+     *             if the paint operation failed.
      */
     public void addAttribute(String name, Resource value) throws PaintException;
 
@@ -148,12 +148,12 @@ public interface PaintTarget {
      * content is written.
      * 
      * @param name
-     *                the Attribute name.
+     *            the Attribute name.
      * @param value
-     *                the Attribute value.
+     *            the Attribute value.
      * 
      * @throws PaintException
-     *                 if the paint operation failed.
+     *             if the paint operation failed.
      */
     public void addAttribute(String name, long value) throws PaintException;
 
@@ -162,12 +162,12 @@ public interface PaintTarget {
      * content is written.
      * 
      * @param name
-     *                the Attribute name.
+     *            the Attribute name.
      * @param value
-     *                the Attribute value.
+     *            the Attribute value.
      * 
      * @throws PaintException
-     *                 if the paint operation failed.
+     *             if the paint operation failed.
      */
     public void addAttribute(String name, float value) throws PaintException;
 
@@ -176,12 +176,12 @@ public interface PaintTarget {
      * content is written.
      * 
      * @param name
-     *                the Attribute name.
+     *            the Attribute name.
      * @param value
-     *                the Attribute value.
+     *            the Attribute value.
      * 
      * @throws PaintException
-     *                 if the paint operation failed.
+     *             if the paint operation failed.
      */
     public void addAttribute(String name, double value) throws PaintException;
 
@@ -190,12 +190,12 @@ public interface PaintTarget {
      * content is written.
      * 
      * @param name
-     *                the Boolean attribute name.
+     *            the Boolean attribute name.
      * @param value
-     *                the Boolean attribute value.
+     *            the Boolean attribute value.
      * 
      * @throws PaintException
-     *                 if the paint operation failed.
+     *             if the paint operation failed.
      */
     public void addAttribute(String name, String value) throws PaintException;
 
@@ -203,14 +203,14 @@ public interface PaintTarget {
      * Adds a string type variable.
      * 
      * @param owner
-     *                the Listener for variable changes.
+     *            the Listener for variable changes.
      * @param name
-     *                the Variable name.
+     *            the Variable name.
      * @param value
-     *                the Variable initial value.
+     *            the Variable initial value.
      * 
      * @throws PaintException
-     *                 if the paint operation failed.
+     *             if the paint operation failed.
      */
     public void addVariable(VariableOwner owner, String name, String value)
             throws PaintException;
@@ -219,14 +219,14 @@ public interface PaintTarget {
      * Adds a int type variable.
      * 
      * @param owner
-     *                the Listener for variable changes.
+     *            the Listener for variable changes.
      * @param name
-     *                the Variable name.
+     *            the Variable name.
      * @param value
-     *                the Variable initial value.
+     *            the Variable initial value.
      * 
      * @throws PaintException
-     *                 if the paint operation failed.
+     *             if the paint operation failed.
      */
     public void addVariable(VariableOwner owner, String name, int value)
             throws PaintException;
@@ -235,14 +235,14 @@ public interface PaintTarget {
      * Adds a long type variable.
      * 
      * @param owner
-     *                the Listener for variable changes.
+     *            the Listener for variable changes.
      * @param name
-     *                the Variable name.
+     *            the Variable name.
      * @param value
-     *                the Variable initial value.
+     *            the Variable initial value.
      * 
      * @throws PaintException
-     *                 if the paint operation failed.
+     *             if the paint operation failed.
      */
     public void addVariable(VariableOwner owner, String name, long value)
             throws PaintException;
@@ -251,14 +251,14 @@ public interface PaintTarget {
      * Adds a float type variable.
      * 
      * @param owner
-     *                the Listener for variable changes.
+     *            the Listener for variable changes.
      * @param name
-     *                the Variable name.
+     *            the Variable name.
      * @param value
-     *                the Variable initial value.
+     *            the Variable initial value.
      * 
      * @throws PaintException
-     *                 if the paint operation failed.
+     *             if the paint operation failed.
      */
     public void addVariable(VariableOwner owner, String name, float value)
             throws PaintException;
@@ -267,14 +267,14 @@ public interface PaintTarget {
      * Adds a double type variable.
      * 
      * @param owner
-     *                the Listener for variable changes.
+     *            the Listener for variable changes.
      * @param name
-     *                the Variable name.
+     *            the Variable name.
      * @param value
-     *                the Variable initial value.
+     *            the Variable initial value.
      * 
      * @throws PaintException
-     *                 if the paint operation failed.
+     *             if the paint operation failed.
      */
     public void addVariable(VariableOwner owner, String name, double value)
             throws PaintException;
@@ -283,14 +283,14 @@ public interface PaintTarget {
      * Adds a boolean type variable.
      * 
      * @param owner
-     *                the Listener for variable changes.
+     *            the Listener for variable changes.
      * @param name
-     *                the Variable name.
+     *            the Variable name.
      * @param value
-     *                the Variable initial value.
+     *            the Variable initial value.
      * 
      * @throws PaintException
-     *                 if the paint operation failed.
+     *             if the paint operation failed.
      */
     public void addVariable(VariableOwner owner, String name, boolean value)
             throws PaintException;
@@ -299,14 +299,14 @@ public interface PaintTarget {
      * Adds a string array type variable.
      * 
      * @param owner
-     *                the Listener for variable changes.
+     *            the Listener for variable changes.
      * @param name
-     *                the Variable name.
+     *            the Variable name.
      * @param value
-     *                the Variable initial value.
+     *            the Variable initial value.
      * 
      * @throws PaintException
-     *                 if the paint operation failed.
+     *             if the paint operation failed.
      */
     public void addVariable(VariableOwner owner, String name, String[] value)
             throws PaintException;
@@ -315,12 +315,12 @@ public interface PaintTarget {
      * Adds a upload stream type variable.
      * 
      * @param owner
-     *                the Listener for variable changes.
+     *            the Listener for variable changes.
      * @param name
-     *                the Variable name.
+     *            the Variable name.
      * 
      * @throws PaintException
-     *                 if the paint operation failed.
+     *             if the paint operation failed.
      */
     public void addUploadStreamVariable(VariableOwner owner, String name)
             throws PaintException;
@@ -333,13 +333,13 @@ public interface PaintTarget {
      * </p>
      * 
      * @param sectionTagName
-     *                the tag name.
+     *            the tag name.
      * @param sectionData
-     *                the section data to be printed.
+     *            the section data to be printed.
      * @param namespace
-     *                the namespace.
+     *            the namespace.
      * @throws PaintException
-     *                 if the paint operation failed.
+     *             if the paint operation failed.
      */
     public void addXMLSection(String sectionTagName, String sectionData,
             String namespace) throws PaintException;
@@ -349,9 +349,9 @@ public interface PaintTarget {
      * UIDL.dtd
      * 
      * @param uidl
-     *                the UIDL to be added.
+     *            the UIDL to be added.
      * @throws PaintException
-     *                 if the paint operation failed.
+     *             if the paint operation failed.
      */
     public void addUIDL(java.lang.String uidl) throws PaintException;
 
@@ -359,9 +359,9 @@ public interface PaintTarget {
      * Adds text node. All the contents of the text are XML-escaped.
      * 
      * @param text
-     *                the Text to add
+     *            the Text to add
      * @throws PaintException
-     *                 if the paint operation failed.
+     *             if the paint operation failed.
      */
     void addText(String text) throws PaintException;
 
@@ -369,9 +369,9 @@ public interface PaintTarget {
      * Adds CDATA node to target UIDL-tree.
      * 
      * @param text
-     *                the Character data to add
+     *            the Character data to add
      * @throws PaintException
-     *                 if the paint operation failed.
+     *             if the paint operation failed.
      * @since 3.1
      */
     void addCharacterData(String text) throws PaintException;
