@@ -81,10 +81,10 @@ public class ILink extends HTML implements Paintable, ClickListener {
             borderStyle = BORDER_STYLE_DEFAULT;
         }
 
-        targetHeight = uidl.hasAttribute("height") ? uidl
+        targetHeight = uidl.hasAttribute("targetHeight") ? uidl
                 .getIntAttribute("targetHeight") : -1;
-        targetWidth = uidl.hasAttribute("width") ? uidl
-                .getIntAttribute("targetHeidth") : -1;
+        targetWidth = uidl.hasAttribute("targetWidth") ? uidl
+                .getIntAttribute("targetWidth") : -1;
 
         // Set link caption
         DOM.setInnerText(captionElement, uidl.getStringAttribute("caption"));
