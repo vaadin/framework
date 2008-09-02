@@ -275,6 +275,15 @@ public class IView extends SimplePanel implements Paintable,
             }
             resizeTimer.schedule(200);
         } else {
+            if (width == IView.this.width && height == IView.this.height) {
+                // No point in doing resize operations if window size has not
+                // changed
+                return;
+            }
+
+            IView.this.width = Window.getClientWidth();
+            IView.this.height = Window.getClientHeight();
+
             // temporary set overflow hidden, not to let scrollbars disturb
             // layout functions
             final String overflow = DOM.getStyleAttribute(getElement(),
