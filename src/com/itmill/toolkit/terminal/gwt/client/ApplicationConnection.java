@@ -107,7 +107,7 @@ public class ApplicationConnection {
         configuration = cnf;
 
         if (isDebugMode()) {
-            console = new IDebugConsole(this, cnf);
+            console = new IDebugConsole(this, cnf, !isQuietDebugMode());
         } else {
             console = new NullConsole();
         }
@@ -218,6 +218,13 @@ public class ApplicationConnection {
     /*-{
      var uri = $wnd.location;
      var re = /debug[^\/]*$/;
+     return re.test(uri);
+     }-*/;
+
+    private native static boolean isQuietDebugMode()
+    /*-{
+     var uri = $wnd.location;
+     var re = /debug=q[^\/]*$/;
      return re.test(uri);
      }-*/;
 
@@ -1004,7 +1011,8 @@ public class ApplicationConnection {
         }
 
         public void run() {
-            getConsole().log("Running re-layout");
+            getConsole().log(
+                    "Running re-layout of " + view.getClass().getName());
             Util.runDescendentsLayout(view);
             isPending = false;
         }

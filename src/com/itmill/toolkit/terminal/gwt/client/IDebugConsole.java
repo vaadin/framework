@@ -7,7 +7,9 @@ package com.itmill.toolkit.terminal.gwt.client;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
@@ -16,7 +18,8 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ui.IWindow;
 
-public final class IDebugConsole extends IWindow implements Console {
+public final class IDebugConsole extends IWindow implements Console,
+        EventListener {
 
     /**
      * Builds number. For example 0-custom_tag in 5.0.0-custom_tag.
@@ -33,18 +36,39 @@ public final class IDebugConsole extends IWindow implements Console {
     }
 
     private final Panel panel;
+    private com.google.gwt.dom.client.Element restartApplicationElement;
+    private Element clearButtonElement;
 
     public IDebugConsole(ApplicationConnection client,
-            ApplicationConfiguration cnf) {
+            ApplicationConfiguration cnf, boolean showWindow) {
         super();
+
         this.client = client;
         panel = new FlowPanel();
-        final ScrollPanel p = new ScrollPanel();
-        p.add(panel);
+
+        Element buttonDiv = DOM.createDiv();
+        getContainerElement().appendChild(buttonDiv);
+
+        final ScrollPanel p = new ScrollPanel(panel);
+
+        Button clearButton = new Button("Clear");
+        clearButtonElement = clearButton.getElement();
+
+        Button restartApplicationButton = new Button("Restart application");
+        restartApplicationElement = restartApplicationButton.getElement();
+        buttonDiv.appendChild(clearButtonElement);
+        buttonDiv.appendChild(restartApplicationElement);
+        DOM.sinkEvents(clearButton.getElement(), Event.ONCLICK);
+
         setWidget(p);
         setCaption("Debug window");
-        minimize();
-        show();
+
+        setPixelSize(400, 300);
+        setPopupPosition(Window.getClientWidth() - 400 - 20, 0);
+
+        if (showWindow) {
+            show();
+        }
 
         ;
 
@@ -73,7 +97,15 @@ public final class IDebugConsole extends IWindow implements Console {
     public void log(String msg) {
         panel.add(new HTML(msg));
         System.out.println(msg);
+        logFirebug(msg);
     }
+
+    private static native void logFirebug(String msg)
+    /*-{
+    if (typeof(console) != "undefined") {
+      console.log(msg);
+    }
+    }-*/;
 
     /*
      * (non-Javadoc)
@@ -84,6 +116,7 @@ public final class IDebugConsole extends IWindow implements Console {
     public void error(String msg) {
         panel.add((new HTML(msg)));
         System.out.println(msg);
+        logFirebug(msg);
     }
 
     /*
@@ -95,6 +128,7 @@ public final class IDebugConsole extends IWindow implements Console {
      */
     public void printObject(Object msg) {
         panel.add((new Label(msg.toString())));
+        logFirebug(msg.toString());
     }
 
     /*
@@ -140,4 +174,28 @@ public final class IDebugConsole extends IWindow implements Console {
         DOM.setStyleAttribute(elem, "top", top + "px");
     }
 
+    public void onBrowserEvent(Event event) {
+        super.onBrowserEvent(event);
+
+        final int type = DOM.eventGetType(event);
+        if (type == Event.BUTTON_LEFT) {
+
+            if (event.getTarget() == restartApplicationElement) {
+                String href = Window.Location.getHref();
+                if (Window.Location.getParameter("restartApplication") == null) {
+                    if (href.contains("?")) {
+                        href += "&restartApplication";
+                    } else {
+                        href += "?restartApplication";
+                    }
+
+                    Window.Location.replace(href);
+                } else {
+                    Window.Location.replace(href);
+                }
+            } else if (event.getTarget() == clearButtonElement) {
+                panel.clear();
+            }
+        }
+    }
 }
