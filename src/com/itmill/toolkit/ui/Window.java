@@ -859,10 +859,6 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
      * </p>
      */
     protected void close() {
-        if (getApplication() != null
-                && getApplication().getMainWindow() == this) {
-            return;
-        }
         Window parent = (Window) getParent();
         if (parent == null) {
             fireClose();
