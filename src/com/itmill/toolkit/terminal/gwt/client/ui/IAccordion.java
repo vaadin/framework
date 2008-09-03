@@ -120,52 +120,55 @@ public class IAccordion extends ITabsheetBase implements
             return;
         }
 
-        if (height != null && height != "") {
-            // Detach visible widget from document flow for a while to calculate
-            // used height correctly
-            Widget w = item.getPaintable();
-            String originalPositioning = "";
-            if (w != null) {
-                originalPositioning = DOM.getStyleAttribute(w.getElement(),
-                        "position");
-                DOM.setStyleAttribute(w.getElement(), "visibility", "hidden");
-                DOM.setStyleAttribute(w.getElement(), "position", "absolute");
+        if (height != null && !height.equals("")) {
+
+            int usedPixels = 0;
+            for (Iterator iterator = stack.iterator(); iterator.hasNext();) {
+                StackItem si = (StackItem) iterator.next();
+                if (si != item) {
+                    usedPixels += si.getOffsetHeight();
+                }
             }
-            DOM.setStyleAttribute(item.getContainerElement(), "height", "0");
 
             // Calculate target height
             super.setHeight(height);
-            int targetHeight = DOM.getElementPropertyInt(DOM
-                    .getParent(getElement()), "offsetHeight");
-            super.setHeight("");
 
-            // Calculate used height
-            int usedHeight = getOffsetHeight();
+            int offsetHeight = getOffsetHeight();
 
-            int h = targetHeight - usedHeight;
-            if (h < 0) {
-                h = 0;
+            int spaceForOpenItem = offsetHeight - usedPixels;
+
+            if (spaceForOpenItem > 0) {
+                item.setHeight(spaceForOpenItem + "px");
             }
-            DOM.setStyleAttribute(item.getContainerElement(), "height", h
-                    + "px");
 
-            // Put widget back into normal flow
-            if (w != null) {
-                DOM.setStyleAttribute(w.getElement(), "position",
-                        originalPositioning);
-                DOM.setStyleAttribute(w.getElement(), "visibility", "");
-            }
         } else {
-            DOM.setStyleAttribute(item.getContainerElement(), "height", "");
+            super.setHeight("");
+            item.setHeight("");
         }
 
-        Util.runDescendentsLayout(this);
+        Util.runDescendentsLayout(item);
     }
 
     /**
-     * TODO Caption widget not properly attached
+     * 
      */
     protected class StackItem extends ComplexPanel implements ClickListener {
+
+        public void setHeight(String height) {
+            super.setHeight(height);
+            if (!"".equals(height)) {
+                int offsetHeight = getOffsetHeight();
+                int captionHeight = DOM.getElementPropertyInt(captionNode,
+                        "offsetHeight");
+                int contentSpace = offsetHeight - captionHeight;
+                if (contentSpace > 0) {
+                    DOM.setStyleAttribute(content, "height", contentSpace
+                            + "px");
+                }
+            } else {
+                DOM.setStyleAttribute(content, "height", "");
+            }
+        }
 
         private ICaption caption;
         private boolean open = false;
@@ -190,6 +193,7 @@ public class IAccordion extends ITabsheetBase implements
             // Force 'hasLayout' in IE6 (prevents layout problems)
             if (BrowserInfo.get().isIE6()) {
                 DOM.setStyleAttribute(content, "zoom", "1");
+                DOM.setStyleAttribute(getElement(), "overflow", "hidden");
             }
             close();
 
@@ -215,6 +219,7 @@ public class IAccordion extends ITabsheetBase implements
             }
             DOM.setStyleAttribute(content, "visibility", "");
             DOM.setStyleAttribute(content, "position", "");
+            DOM.setStyleAttribute(content, "top", "");
             addStyleDependentName("open");
             if (getPaintable() != null) {
                 add(getPaintable(), content);
@@ -225,7 +230,9 @@ public class IAccordion extends ITabsheetBase implements
             open = false;
             DOM.setStyleAttribute(content, "visibility", "hidden");
             DOM.setStyleAttribute(content, "position", "absolute");
+            DOM.setStyleAttribute(content, "top", "0");
             removeStyleDependentName("open");
+            setHeight(""); // only open StackItem may contain height
         }
 
         public boolean isOpen() {
