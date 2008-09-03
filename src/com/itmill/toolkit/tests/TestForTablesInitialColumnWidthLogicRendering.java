@@ -7,9 +7,11 @@ package com.itmill.toolkit.tests;
 import java.util.Iterator;
 import java.util.Vector;
 
+import com.itmill.toolkit.terminal.UserError;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.CustomComponent;
 import com.itmill.toolkit.ui.Label;
+import com.itmill.toolkit.ui.Layout;
 import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Table;
 import com.itmill.toolkit.ui.Button.ClickEvent;
@@ -39,6 +41,16 @@ public class TestForTablesInitialColumnWidthLogicRendering extends
                         "Below are same tables that all should render somewhat nice. Also when testing, you might want to try resizing window."));
 
         Table t;
+
+        Layout lo = new OrderedLayout();
+        lo.setWidth("600px");
+        lo.setHeight("250px");
+
+        t = getTestTable(4, 50);
+        t.setSizeFull();
+        lo.setCaption("Fullsize table insize 400x250px layout");
+        lo.addComponent(t);
+        main.addComponent(lo);
 
         // t = new Table("Empty table");
         // main.addComponent(t);
@@ -111,13 +123,16 @@ public class TestForTablesInitialColumnWidthLogicRendering extends
             for (int j = 0; j < cols; j++) {
                 content.add(rndString());
             }
-            content.add(new Button("b", new Button.ClickListener() {
+            Button button = new Button("b", new Button.ClickListener() {
 
                 public void buttonClick(ClickEvent event) {
                     System.out.println("b click");
 
                 }
-            }));
+            });
+            button.setDescription("Yep yep");
+            button.setComponentError(new UserError("Error"));
+            content.add(button);
             t.addItem(content.toArray(), "" + i);
         }
         return t;
