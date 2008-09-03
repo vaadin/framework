@@ -147,7 +147,7 @@
 			<pathelement path="${gwt-dir}/${platform}/gwt-user.jar" />
 			<pathelement path="${gwt-dir}/${platform}/${lib-gwt-dev}" />
 			<pathelement path="build/external/fileupload/classes" />
-			<pathelement path="lib/reservr/googlemaps_gwt.jar" />
+			<pathelement path="lib/reservr/gwt-maps.jar" />
 			<pathelement path="lib/jetty/jetty-6.1.7.jar" />
 			<pathelement path="lib/jetty/jetty-util-6.1.7.jar" />
 			<pathelement path="lib/jetty/servlet-api-2.5-6.1.7.jar" />
