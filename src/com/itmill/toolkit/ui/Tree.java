@@ -148,7 +148,9 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * @return True iff the expand operation succeeded
      */
     public boolean expandItem(Object itemId) {
-        return expandItem(itemId, true);
+        boolean success = expandItem(itemId, true);
+        requestRepaint();
+        return success;
     }
 
     /**
