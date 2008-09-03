@@ -86,15 +86,19 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
 
     private int idSequence = 0;
 
+    private final ApplicationServlet applicationServlet;
+
     private final Application application;
 
     private List locales;
 
     private int pendingLocalesIndex;
 
-    public CommunicationManager(Application application) {
+    public CommunicationManager(Application application,
+            ApplicationServlet applicationServlet) {
         this.application = application;
         requireLocale(application.getLocale().toString());
+        this.applicationServlet = applicationServlet;
     }
 
     /**
@@ -587,7 +591,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
 
     public class ErrorHandlerErrorEvent implements ErrorEvent {
 
-        private Throwable throwable;
+        private final Throwable throwable;
 
         public ErrorHandlerErrorEvent(Throwable throwable) {
             this.throwable = throwable;
@@ -794,6 +798,13 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
 
         // Find the window where the request is handled
         String path = request.getPathInfo();
+
+        // Remove app-runner class-name!
+        if (applicationServlet.isApplicationRunnerServlet) {
+            path = path
+                    .substring(1 + applicationServlet.applicationRunnerClassname
+                            .length());
+        }
 
         // Remove UIDL from the path
         path = path.substring("/UIDL".length());

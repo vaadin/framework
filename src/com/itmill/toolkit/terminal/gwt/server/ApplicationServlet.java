@@ -151,10 +151,10 @@ public class ApplicationServlet extends HttpServlet {
     private String debugMode = "";
 
     // Is this servlet application runner
-    private boolean isApplicationRunnerServlet = false;
+    boolean isApplicationRunnerServlet = false;
 
     // If servlet is application runner, store request's classname
-    private String applicationRunnerClassname = null;
+    String applicationRunnerClassname = null;
 
     private ClassLoader classLoader;
 
@@ -750,8 +750,12 @@ public class ApplicationServlet extends HttpServlet {
 
         final BufferedWriter page = new BufferedWriter(new OutputStreamWriter(
                 response.getOutputStream()));
-        final String pathInfo = request.getPathInfo() == null ? "/" : request
+        String pathInfo = request.getPathInfo() == null ? "/" : request
                 .getPathInfo();
+        if (isApplicationRunnerServlet) {
+            pathInfo = pathInfo
+                    .substring(applicationRunnerClassname.length() + 1);
+        }
         String title = ((window == null || window.getCaption() == null) ? "IT Mill Toolkit 5"
                 : window.getCaption());
 
@@ -1602,7 +1606,7 @@ public class ApplicationServlet extends HttpServlet {
 
         if (mgr == null) {
             // Creates new manager
-            mgr = new CommunicationManager(application);
+            mgr = new CommunicationManager(application, this);
             applicationToAjaxAppMgrMap.put(application, mgr);
         }
         return mgr;
