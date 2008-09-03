@@ -16,10 +16,12 @@
 		Append your Google Maps API key to the src -attribute below, like so:
 			src="http://maps.google.com/maps?gwt=1&amp;file=api&amp;v=2.x&key=XXXXXXXX"
 		where the X:s represent your key.
-		Example for http://toolkit.itmill.com:
-		<script src="http://maps.google.com/maps?gwt=1&amp;file=api&amp;v=2.x&key=ABQIAAAA4q5gw_y_N1Anvvn1KqbLwRTHuC2ERVOT66iQW8-FqpCQQUlHqBTZ0rGKdlKh9fxQOKN87TCwVNlIXQ" type="text/javascript"></script>	
 	-->
-	<script src="http://maps.google.com/maps?gwt=1&amp;file=api&amp;v=2.x" />
+	<!-- Works w/o key for localhost:
+		<script src="http://maps.google.com/maps?gwt=1&amp;file=api&amp;v=2.x" />
+	-->
+	<!-- Using key for http://toolkit.itmill.com: -->
+	<script src="http://maps.google.com/maps?gwt=1&amp;file=api&amp;v=2.x&amp;key=ABQIAAAA4q5gw_y_N1Anvvn1KqbLwRTHuC2ERVOT66iQW8-FqpCQQUlHqBTZ0rGKdlKh9fxQOKN87TCwVNlIXQ" />
 
 	<!-- Entry point -->
 	<entry-point class="com.itmill.toolkit.demo.reservation.gwt.client.ReservationWidgetSet"/>
