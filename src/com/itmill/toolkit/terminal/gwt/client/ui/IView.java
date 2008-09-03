@@ -12,6 +12,7 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.WindowCloseListener;
 import com.google.gwt.user.client.WindowResizeListener;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -26,7 +27,7 @@ import com.itmill.toolkit.terminal.gwt.client.Util;
  * 
  */
 public class IView extends SimplePanel implements Paintable,
-        WindowResizeListener {
+        WindowResizeListener, WindowCloseListener {
 
     private static final String CLASSNAME = "i-view";
 
@@ -45,6 +46,8 @@ public class IView extends SimplePanel implements Paintable,
 
     /** stored height for IE resize optimization */
     private int height;
+
+    private ApplicationConnection connection;
 
     /**
      * We are postponing resize process with IE. IE bugs with scrollbars in some
@@ -65,6 +68,7 @@ public class IView extends SimplePanel implements Paintable,
         RootPanel.get(elementId).add(this);
 
         Window.addWindowResizeListener(this);
+        Window.addWindowCloseListener(this);
 
         // set focus to iview element by default to listen possible keyboard
         // shortcuts
@@ -112,6 +116,7 @@ public class IView extends SimplePanel implements Paintable,
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 
         id = uidl.getId();
+        connection = client;
 
         String newTheme = uidl.getStringAttribute("theme");
         if (theme != null && !newTheme.equals(theme)) {
@@ -300,5 +305,23 @@ public class IView extends SimplePanel implements Paintable,
     /*-{
        $wnd.location = url;
      }-*/;
+
+    public void onWindowClosed() {
+        // Change focus on this window in order to ensure that all state is
+        // collected from textfields
+        ITextField.flushChangesFromFocusedTextField();
+
+        // Send the closing state to server
+        connection.updateVariable(id, "close", true, false);
+        connection.sendPendingVariableChangesSync();
+    }
+
+    private static native void focusElement(Element e) /*-{ 
+          e.focus();
+          }-*/;
+
+    public String onWindowClosing() {
+        return null;
+    }
 
 }

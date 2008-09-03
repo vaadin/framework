@@ -40,6 +40,8 @@ public class ITextField extends TextBoxBase implements Paintable, Field,
 
     protected ApplicationConnection client;
 
+    private String valueBeforeEdit = null;
+
     private boolean immediate = false;
     private float proportionalHeight = -1;
     private float proportionalWidth = -1;
@@ -86,21 +88,36 @@ public class ITextField extends TextBoxBase implements Paintable, Field,
         }
 
         setText(uidl.getStringVariable("text"));
-
+        valueBeforeEdit = uidl.getStringVariable("text");
     }
 
     public void onChange(Widget sender) {
         if (client != null && id != null) {
-            client.updateVariable(id, "text", getText(), immediate);
+            String newText = getText();
+            if (newText != null && !newText.equals(valueBeforeEdit)) {
+                client.updateVariable(id, "text", getText(), immediate);
+                valueBeforeEdit = newText;
+            }
+        }
+    }
+
+    private static ITextField focusedTextField;
+
+    public static void flushChangesFromFocusedTextField() {
+        if (focusedTextField != null) {
+            focusedTextField.onChange(null);
         }
     }
 
     public void onFocus(Widget sender) {
         addStyleDependentName(CLASSNAME_FOCUS);
+        focusedTextField = this;
     }
 
     public void onLostFocus(Widget sender) {
         removeStyleDependentName(CLASSNAME_FOCUS);
+        focusedTextField = null;
+        onChange(sender);
     }
 
     public void setColumns(int columns) {

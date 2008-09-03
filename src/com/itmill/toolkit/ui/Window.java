@@ -843,9 +843,14 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     /**
      * Method that handles window closing (from UI). If one wants to have window
      * that cannot be closed (with server side check), override this with and
-     * empty method.
+     * empty method. Main window of the application can not be closed (on the
+     * server-side).
      */
     protected void close() {
+        if (getApplication() != null
+                && getApplication().getMainWindow() == this) {
+            return;
+        }
         Window parent = (Window) getParent();
         if (parent == null) {
             setVisible(false);

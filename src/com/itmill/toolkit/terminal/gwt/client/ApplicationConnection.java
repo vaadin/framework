@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
@@ -28,6 +29,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.WindowCloseListener;
+import com.google.gwt.user.client.impl.HTTPRequestImpl;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HasFocus;
 import com.google.gwt.user.client.ui.HasWidgets;
@@ -131,7 +133,7 @@ public class ApplicationConnection {
         // TODO remove hard coded id name
         view = new IView(cnf.getRootPanelId());
 
-        makeUidlRequest("", true);
+        makeUidlRequest("", true, false);
         applicationRunning = true;
     }
 
@@ -236,7 +238,8 @@ public class ApplicationConnection {
         return (activeRequests > 0);
     }
 
-    private void makeUidlRequest(String requestData, boolean repaintAll) {
+    private void makeUidlRequest(String requestData, boolean repaintAll,
+            boolean forceSync) {
         startRequest();
 
         console.log("Making UIDL Request with params: " + requestData);
@@ -244,30 +247,50 @@ public class ApplicationConnection {
         if (repaintAll) {
             uri += "?repaintAll=1";
         }
-        final RequestBuilder rb = new RequestBuilder(RequestBuilder.POST, uri);
-        // rb.setHeader("Content-Type",
-        // "application/x-www-form-urlencoded; charset=utf-8");
-        rb.setHeader("Content-Type", "text/plain;charset=utf-8");
-        try {
-            rb.sendRequest(requestData, new RequestCallback() {
-                public void onError(Request request, Throwable exception) {
-                    // TODO Better reporting to user
-                    console.error("Got error");
-                    endRequest();
-                }
 
-                public void onResponseReceived(Request request,
-                        Response response) {
-                    handleReceivedJSONMessage(response);
-                }
+        if (!forceSync) {
+            final RequestBuilder rb = new RequestBuilder(RequestBuilder.POST,
+                    uri);
+            rb.setHeader("Content-Type", "text/plain;charset=utf-8");
+            try {
+                rb.sendRequest(requestData, new RequestCallback() {
+                    public void onError(Request request, Throwable exception) {
+                        // TODO Better reporting to user
+                        console.error("Got error");
+                        endRequest();
+                    }
 
-            });
+                    public void onResponseReceived(Request request,
+                            Response response) {
+                        handleReceivedJSONMessage(response);
+                    }
 
-        } catch (final RequestException e) {
-            ClientExceptionHandler.displayError(e);
-            endRequest();
+                });
+
+            } catch (final RequestException e) {
+                ClientExceptionHandler.displayError(e);
+                endRequest();
+            }
+        } else {
+            // Synchronized call, discarded response
+
+            syncSendForce(((HTTPRequestImpl) GWT.create(HTTPRequestImpl.class))
+                    .createXmlHTTPRequest(), uri, requestData);
         }
     }
+
+    private native void syncSendForce(JavaScriptObject xmlHttpRequest,
+            String uri, String requestData)
+    /*-{
+         try {
+             xmlHttpRequest.open("POST", uri, false);
+             xmlHttpRequest.setRequestHeader("Content-Type", "text/plain;charset=utf-8");
+             xmlHttpRequest.send(requestData);
+    } catch (e) {
+        // No errors are managed as this is synchronous forceful send that can just fail
+    }
+                    
+    }-*/;
 
     private void startRequest() {
         activeRequests++;
@@ -304,7 +327,7 @@ public class ApplicationConnection {
             }
             Vector nextBurst = (Vector) pendingVariableBursts.firstElement();
             pendingVariableBursts.remove(0);
-            buildAndSendVariableBurst(nextBurst);
+            buildAndSendVariableBurst(nextBurst, false);
         }
     }
 
@@ -537,6 +560,17 @@ public class ApplicationConnection {
         endRequest();
     }
 
+    /**
+     * This method assures that all pending variable changes are sent to server.
+     * Method uses synchronized xmlhttprequest and does not return before the
+     * changes are sent. No UIDL updates are processed and thut UI is left in
+     * inconsistent state. This method should be called only when closing
+     * windows - normally sendPendingVariableChanges() should be used.
+     */
+    public void sendPendingVariableChangesSync() {
+        buildAndSendVariableBurst(pendingVariables, true);
+    }
+
     // Redirect browser, null reloads current page
     private static native void redirect(String url)
     /*-{
@@ -624,12 +658,13 @@ public class ApplicationConnection {
                     pendingVariables.clear();
                 }
             } else {
-                buildAndSendVariableBurst(pendingVariables);
+                buildAndSendVariableBurst(pendingVariables, false);
             }
         }
     }
 
-    private void buildAndSendVariableBurst(Vector pendingVariables) {
+    private void buildAndSendVariableBurst(Vector pendingVariables,
+            boolean forceSync) {
         final StringBuffer req = new StringBuffer();
 
         for (int i = 0; i < pendingVariables.size(); i++) {
@@ -644,7 +679,7 @@ public class ApplicationConnection {
         }
 
         pendingVariables.clear();
-        makeUidlRequest(req.toString(), false);
+        makeUidlRequest(req.toString(), false, forceSync);
     }
 
     public void updateVariable(String paintableId, String variableName,
