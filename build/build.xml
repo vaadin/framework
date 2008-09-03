@@ -660,11 +660,11 @@
 	</target>
 
 	<target name="compile-widgetset-reserver">
-		<condition property="googlemaps-jar" value="${output-dir}/WebContent/demo/lib/reservr/googlemaps_gwt.jar">
-			<available file="${output-dir}/WebContent/demo/lib/reservr/googlemaps_gwt.jar" />
+		<condition property="googlemaps-jar" value="${output-dir}/WebContent/demo/lib/reservr/gwt-maps.jar">
+			<available file="${output-dir}/WebContent/demo/lib/reservr/gwt-maps.jar" />
 		</condition>
-		<condition property="googlemaps-jar" value="lib/reservr/googlemaps_gwt.jar">
-			<available file="lib/reservr/googlemaps_gwt.jar" />
+		<condition property="googlemaps-jar" value="lib/reservr/gwt-maps.jar">
+			<available file="lib/reservr/gwt-maps.jar" />
 		</condition>
 		<echo>com.itmill.toolkit.demo.reservation.gwt.ReservationWidgetSet</echo>
 		<java classname="com.google.gwt.dev.GWTCompiler" failonerror="yes" fork="yes" maxmemory="512m">

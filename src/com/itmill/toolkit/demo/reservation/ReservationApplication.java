@@ -90,7 +90,7 @@ public class ReservationApplication extends Application {
         resourceName.setCaption("Choose resource");
         infoLayout.addComponent(resourceName);
         description = new TextField();
-        description.setColumns(20);
+        description.setWidth("250px");
         description.setRows(5);
         infoLayout.addComponent(description);
         reservationButton = new Button("Make reservation", this,
@@ -98,10 +98,8 @@ public class ReservationApplication extends Application {
         infoLayout.addComponent(reservationButton);
 
         map = new GoogleMap();
-        // TODO support EM
-        // map.setWidthUnits(Size.UNITS_EM);
-        map.setWidth(266);
-        map.setHeight(210);
+        map.setWidth("250px");
+        map.setHeight("250px");
         map.setItemMarkerHtmlPropertyId(SampleDB.Resource.PROPERTY_ID_NAME);
         map.setItemMarkerXPropertyId(SampleDB.Resource.PROPERTY_ID_LOCATIONX);
         map.setItemMarkerYPropertyId(SampleDB.Resource.PROPERTY_ID_LOCATIONY);

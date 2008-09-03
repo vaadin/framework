@@ -21,8 +21,6 @@ public class GoogleMap extends AbstractComponent implements Sizeable,
         Container.Viewer {
     private final String TAG_MARKERS = "markers";
     private final String TAG_MARKER = "marker";
-    private int width = 400;
-    private int height = 300;
     private int zoomLevel = 15;
     private Point2D.Double mapCenter;
 
@@ -37,13 +35,20 @@ public class GoogleMap extends AbstractComponent implements Sizeable,
 
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);
+        // Add size info as variables
+        if (getHeight() > -1) {
+            target.addVariable(this, "height", getHeight()
+                    + UNIT_SYMBOLS[getHeightUnits()]);
+        }
+        if (getWidth() > -1) {
+            target.addVariable(this, "width", getWidth()
+                    + UNIT_SYMBOLS[getWidthUnits()]);
+        }
         if (null != mapCenter) {
             target.addAttribute("centerX", mapCenter.getX());
             target.addAttribute("centerY", mapCenter.getY());
         }
         target.addAttribute("zoom", zoomLevel);
-        target.addAttribute("width", width);
-        target.addAttribute("height", height);
 
         if (dataSource != null) {
             target.startTag(TAG_MARKERS);
@@ -81,38 +86,12 @@ public class GoogleMap extends AbstractComponent implements Sizeable,
 
     // Sizeable methods:
 
-    public int getHeight() {
-        return height;
-    }
-
     public int getHeightUnits() {
         return Sizeable.UNITS_PIXELS;
     }
 
-    public int getWidth() {
-        return width;
-    }
-
     public int getWidthUnits() {
         return Sizeable.UNITS_PIXELS;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
-        requestRepaint();
-    }
-
-    public void setHeightUnits(int units) {
-        throw new UnsupportedOperationException();
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
-        requestRepaint();
-    }
-
-    public void setWidthUnits(int units) {
-        throw new UnsupportedOperationException();
     }
 
     public void setMapCenter(Point2D.Double center) {
@@ -221,13 +200,4 @@ public class GoogleMap extends AbstractComponent implements Sizeable,
         setContainerDataSource(null);
     }
 
-    public void setSizeFull() {
-        // TODO Auto-generated method stub
-
-    }
-
-    public void setSizeUndefined() {
-        // TODO Auto-generated method stub
-
-    }
 }

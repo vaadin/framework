@@ -6,36 +6,35 @@ package com.itmill.toolkit.demo.reservation.gwt.client.ui;
 
 import java.util.Iterator;
 
+import com.google.gwt.maps.client.InfoWindowContent;
+import com.google.gwt.maps.client.MapWidget;
+import com.google.gwt.maps.client.control.SmallMapControl;
+import com.google.gwt.maps.client.event.MarkerClickHandler;
+import com.google.gwt.maps.client.geom.LatLng;
+import com.google.gwt.maps.client.overlay.Marker;
+import com.google.gwt.user.client.ui.Composite;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
-import com.mapitz.gwt.googleMaps.client.GControl;
-import com.mapitz.gwt.googleMaps.client.GLatLng;
-import com.mapitz.gwt.googleMaps.client.GMap2;
-import com.mapitz.gwt.googleMaps.client.GMap2EventManager;
-import com.mapitz.gwt.googleMaps.client.GMap2Widget;
-import com.mapitz.gwt.googleMaps.client.GMarker;
-import com.mapitz.gwt.googleMaps.client.GMarkerEventClickListener;
-import com.mapitz.gwt.googleMaps.client.GMarkerEventManager;
 
-public class IGoogleMap extends GMap2Widget implements Paintable {
+public class IGoogleMap extends Composite implements Paintable {
 
     public static final String CLASSNAME = "i-googlemap";
 
-    GMap2EventManager mapEventManager;
-    GMarkerEventManager markerEventManager;
-    GMap2 map;
+    private final MapWidget widget = new MapWidget();
 
     public IGoogleMap() {
+        initWidget(widget);
+        setWidth("200px");
+        setHeight("200px");
         setStyleName(CLASSNAME);
-        mapEventManager = GMap2EventManager.getInstance();
-        map = getGmap();
-        map.addControl(GControl.GSmallZoomControl());
+        widget.addControl(new SmallMapControl());
+
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        map.clearOverlays();
-        GLatLng pos = null;
+        widget.clearOverlays();
+        LatLng pos = null;
         for (final Iterator it = uidl.getChildIterator(); it.hasNext();) {
             final UIDL u = (UIDL) it.next();
             if (u.getTag().equals("markers")) {
@@ -46,9 +45,9 @@ public class IGoogleMap extends GMap2Widget implements Paintable {
                             + umarker.getStringAttribute("html") + "</span>";
                     final double x = umarker.getDoubleAttribute("x");
                     final double y = umarker.getDoubleAttribute("y");
-                    pos = new GLatLng(x, y);
-                    final GMarker marker = new GMarker(pos);
-                    map.addOverlay(marker);
+                    pos = new LatLng(x, y);
+                    final Marker marker = new Marker(pos);
+                    widget.addOverlay(marker);
                     if (html != null) {
                         addMarkerPopup(marker, html);
                     }
@@ -56,48 +55,37 @@ public class IGoogleMap extends GMap2Widget implements Paintable {
             }
         }
         if (uidl.hasAttribute("width")) {
-            setWidth("" + uidl.getIntAttribute("width"));
+            widget.setWidth(uidl.getStringAttribute("width"));
         }
         if (uidl.hasAttribute("height")) {
-            setHeight("" + uidl.getIntAttribute("height"));
+            widget.setHeight(uidl.getStringAttribute("height"));
         }
         if (uidl.hasAttribute("zoom")) {
-            map.setZoom(uidl.getIntAttribute("zoom"));
+            widget.setZoomLevel(uidl.getIntAttribute("zoom"));
         }
         if (uidl.hasAttribute("centerX") && uidl.hasAttribute("centerY")) {
-            final GLatLng center = new GLatLng(uidl
-                    .getDoubleAttribute("centerX"), uidl
-                    .getDoubleAttribute("centerY"));
-            map.setCenter(center);
+            final LatLng center = new LatLng(
+                    uidl.getDoubleAttribute("centerX"), uidl
+                            .getDoubleAttribute("centerY"));
+            widget.setCenter(center);
         } else if (pos != null) {
             // use last marker position
-            map.setCenter(pos);
+            widget.setCenter(pos);
         }
 
     }
 
-    private void addMarkerPopup(GMarker marker, String html) {
-        if (markerEventManager == null) {
-            markerEventManager = GMarkerEventManager.getInstance();
-        }
+    private void addMarkerPopup(Marker marker, final String html) {
+        marker.addMarkerClickHandler(new MarkerClickHandler() {
 
-        markerEventManager.addOnClickListener(marker, new MarkerEventListener(
-                html));
+            public void onClick(MarkerClickEvent event) {
+                widget.getInfoWindow().open(event.getSender().getPoint(),
+                        new InfoWindowContent(html));
+
+            }
+
+        });
 
     }
 
-    private class MarkerEventListener implements GMarkerEventClickListener {
-        String html;
-
-        public MarkerEventListener(String html) {
-            this.html = html;
-        }
-
-        public void onClick(GMarker marker) {
-            marker.openInfoWindowHtml(html);
-        }
-
-        public void onDblClick(GMarker marker) {
-        }
-    }
 }
