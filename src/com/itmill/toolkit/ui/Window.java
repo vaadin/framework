@@ -841,10 +841,22 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     }
 
     /**
-     * Method that handles window closing (from UI). If one wants to have window
-     * that cannot be closed (with server side check), override this with and
-     * empty method. Main window of the application can not be closed (on the
-     * server-side).
+     * Method that handles window closing (from UI).
+     * 
+     * <p>
+     * By default, sub-windows are removed from their respective parent windows
+     * and thus visually closed on browser-side. Browser-level windows also
+     * closed on the client-side, but they are not implicitly removed from the
+     * application.
+     * </p>
+     * 
+     * <p>
+     * If one wants change the default behavior, register a window close
+     * listenter and do something else. For example, you could re-open the
+     * browser-level window with mainWindow.open(), re-add the removed
+     * sub-window back to its parent or remove browser-level window
+     * automatically from the application.
+     * </p>
      */
     protected void close() {
         if (getApplication() != null
@@ -853,7 +865,6 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
         }
         Window parent = (Window) getParent();
         if (parent == null) {
-            setVisible(false);
             fireClose();
         } else {
             // subwindow is removed from parent
