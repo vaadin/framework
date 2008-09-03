@@ -18,10 +18,10 @@
 	 * itmill-toolkit-mac-<version>.tar.gz
 	 * itmill-toolkit-mac-<version>.dmg
 
-	NOTE: This build script requires directories named ${gwt-dir}/(linux|windows|mac|mac_leopard) .
+	NOTE: This build script requires directories named ${gwt-dir}/(linux|windows|mac) .
 	See build.properties to define path where your gwt installation is located.
 	You must unpack platform specific binaries under linux, windows and mac directories.
-	${gwt-dir}/${platform} (linux|windows|mac|mac_leopard) are used for
+	${gwt-dir}/${platform} (linux|windows|mac) are used for
   	a) compile WebContent/ITMILL/widgetsets
 	b) creating platform specific release ZIP/TGZ packages.
 	-->
@@ -29,13 +29,10 @@
 	<!-- 
 	Call one of package-* targets unless you understand what you are doing 
 	-->
-	<target name="package-all" depends="clean-all, init, build, docs, internal-package-mac, internal-package-mac_leopard, internal-package-windows, internal-package-linux, internal-package-war" description="Build public packages for Windows, Linux and Mac platforms.">
+	<target name="package-all" depends="clean-all, init, build, docs, internal-package-mac, internal-package-windows, internal-package-linux, internal-package-war" description="Build public packages for Windows, Linux and Mac platforms.">
 	</target>
 
 	<target name="package-mac" depends="clean-all, init, build, docs, internal-package-mac" description="Create public tar.gz package for Mac.">
-	</target>
-
-	<target name="package-mac_leopard" depends="clean-all, init, build, docs, internal-package-mac_leopard" description="Create public tar.gz package for Mac.">
 	</target>
 
 	<target name="package-windows" depends="clean-all, init, build, docs, internal-package-windows" description="Create public ZIP package for Windows.">
@@ -102,15 +99,7 @@
 		<if>
 			<equals arg1="${os.name}" arg2="Mac OS X" />
 			<then>
-				<if>
-					<contains string="${os.version}" substring="10.5." />
-					<then>
-						<property name="platform" value="mac_leopard" />
-					</then>
-					<else>
-						<property name="platform" value="mac" />
-					</else>
-				</if>
+				<property name="platform" value="mac" />
 			</then>
 		</if>
 	</target>
@@ -129,15 +118,7 @@
 		<mkdir dir="${result-path}" />
 
 		<!-- required when compiling WebContent/ITMILL/widgetsets (and also Java server-side classes) -->
-		<if>
-			<equals arg1="${platform}" arg2="mac_leopard" />
-			<then>
-				<property name="lib-gwt-dev" value="gwt-dev-mac.jar" />
-			</then>
-			<else>
-				<property name="lib-gwt-dev" value="gwt-dev-${platform}.jar" />
-			</else>
-		</if>
+		<property name="lib-gwt-dev" value="gwt-dev-${platform}.jar" />
 
 		<echo>We are on ${platform} platform (${os.name} ${os.version}), using ${gwt-dir}/${platform}/${lib-gwt-dev}.</echo>
 
@@ -223,28 +204,6 @@
 		<echo>Creating package for ${package-platform} platform.</echo>
 		<var name="eclipse-launch-vmargs" value="-XstartOnFirstThread -Xms256M -Xmx512M" />
 		<antcall target="add-platform-specific-files" inheritAll="true" inheritRefs="true" />
-		<tar destfile="${result-path}/${product-file}-${package-platform}-${version}.tar.gz" compression="gzip" longfile="gnu">
-			<tarfileset prefix="${product-file}-${package-platform}-${version}" dir="${result-path}/${product-file}-${version}">
-				<patternset>
-					<include name="**/*" />
-				</patternset>
-			</tarfileset>
-			<tarfileset prefix="${product-file}-${package-platform}-${version}/gwt" dir="${gwt-dir}/${package-platform}">
-				<patternset>
-					<include name="**/*" />
-				</patternset>
-			</tarfileset>
-		</tar>
-		<!-- TODO: remove me: DISABLE for speed -->
-		<!-- <antcall target="create-mac-diskimage" inheritAll="true" inheritRefs="true" /> -->
-	</target>
-
-	<target name="internal-package-mac_leopard">
-		<var name="package-platform" value="mac" />
-		<echo>Creating package for ${package-platform}_leopard platform.</echo>
-		<var name="eclipse-launch-vmargs" value="-XstartOnFirstThread -Xms256M -Xmx512M" />
-		<antcall target="add-platform-specific-files" inheritAll="true" inheritRefs="true" />
-		<var name="package-platform" value="mac_leopard" />
 		<tar destfile="${result-path}/${product-file}-${package-platform}-${version}.tar.gz" compression="gzip" longfile="gnu">
 			<tarfileset prefix="${product-file}-${package-platform}-${version}" dir="${result-path}/${product-file}-${version}">
 				<patternset>
@@ -629,7 +588,7 @@
 	<target name="defaulttheme">
 		<echo>Combining default themes css files</echo>
 		<!-- ensure buildhelpers are compiled -->
-		<javac source="1.4" target="1.4" srcdir="build/buildhelpers" />
+		<javac source="1.5" target="1.5" srcdir="build/buildhelpers" />
 		<java classname="com.itmill.toolkit.buildhelpers.CompileDefaultTheme" failonerror="yes" fork="yes">
 			<classpath>
 				<pathelement location="build/buildhelpers" />
@@ -729,15 +688,7 @@
 		<property name="gwt-dir" value="build/gwt" />
 
 		<!-- required when compiling WebContent/ITMILL/widgetsets (and also Java server-side classes) -->
-		<if>
-			<equals arg1="${platform}" arg2="mac_leopard" />
-			<then>
-				<property name="lib-gwt-dev" value="gwt-dev-mac.jar" />
-			</then>
-			<else>
-				<property name="lib-gwt-dev" value="gwt-dev-${platform}.jar" />
-			</else>
-		</if>
+		<property name="lib-gwt-dev" value="gwt-dev-${platform}.jar" />
 
 		<echo>We are on ${platform} platform, using ${gwt-dir}/${platform}/${lib-gwt-dev}.</echo>
 		<echo>GWT dir:    ${gwt-dir}</echo>
