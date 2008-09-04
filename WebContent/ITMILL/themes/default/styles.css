@@ -342,6 +342,29 @@ input.i-modified,
 .i-loading-indicator-wait {
 	background: transparent url(common/img/loading-indicator-wait.gif);
 }
+
+/* debug dialog */
+
+.i-debug-console {
+	background:white;
+	opacity: 0.85;	
+	border: 1px solid black;
+	font-family:sans-serif;
+}
+.i-debug-console-caption {
+	background:black;
+	border-bottom: 1px solid grey;
+	color: white;
+	font-weight: bold;
+}
+.i-debug-console-content {
+	font-size:x-small;
+	overflow: auto;
+}
+.i-debug-console-content input {
+	font-size:xx-small;
+}
+
 .i-datefield-button {
 	font-size:13px;
 	width: 22px;
