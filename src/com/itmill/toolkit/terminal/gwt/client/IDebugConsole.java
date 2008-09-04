@@ -7,19 +7,19 @@ package com.itmill.toolkit.terminal.gwt.client;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
-import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.itmill.toolkit.terminal.gwt.client.ui.IWindow;
+import com.itmill.toolkit.terminal.gwt.client.ui.IToolkitOverlay;
 
-public final class IDebugConsole extends IWindow implements Console,
-        EventListener {
+public final class IDebugConsole extends IToolkitOverlay implements Console {
 
     /**
      * Builds number. For example 0-custom_tag in 5.0.0-custom_tag.
@@ -35,42 +35,96 @@ public final class IDebugConsole extends IWindow implements Console,
         }
     }
 
+    Element caption = DOM.createDiv();
+
     private final Panel panel;
-    private com.google.gwt.dom.client.Element restartApplicationElement;
-    private Element clearButtonElement;
+
+    private Button clear = new Button("Clear console");
+    private Button restart = new Button("Restart app");
+    private HorizontalPanel actions;
+    private boolean collapsed = false;
+
+    private boolean resizing;
+    private int startX;
+    private int startY;
+    private int initialW;
+    private int initialH;
+
+    private boolean moving = false;
+
+    private int origTop;
+
+    private int origLeft;
 
     public IDebugConsole(ApplicationConnection client,
             ApplicationConfiguration cnf, boolean showWindow) {
-        super();
+        super(false, false);
 
-        this.client = client;
         panel = new FlowPanel();
-
-        Element buttonDiv = DOM.createDiv();
-        getContainerElement().appendChild(buttonDiv);
-
-        final ScrollPanel p = new ScrollPanel(panel);
-
-        Button clearButton = new Button("Clear");
-        clearButtonElement = clearButton.getElement();
-
-        Button restartApplicationButton = new Button("Restart application");
-        restartApplicationElement = restartApplicationButton.getElement();
-        buttonDiv.appendChild(clearButtonElement);
-        buttonDiv.appendChild(restartApplicationElement);
-        DOM.sinkEvents(clearButton.getElement(), Event.ONCLICK);
-
-        setWidget(p);
-        setCaption("Debug window");
-
-        setPixelSize(400, 300);
-        setPopupPosition(Window.getClientWidth() - 400 - 20, 0);
-
         if (showWindow) {
-            show();
-        }
+            DOM.appendChild(getContainerElement(), caption);
+            setWidget(panel);
+            caption.setClassName("i-debug-console-caption");
+            setStyleName("i-debug-console");
+            DOM.setStyleAttribute(getElement(), "zIndex", 20000 + "");
+            DOM.setStyleAttribute(getElement(), "overflow", "hidden");
 
-        ;
+            sinkEvents(Event.ONDBLCLICK);
+
+            sinkEvents(Event.MOUSEEVENTS);
+
+            panel.setStyleName("i-debug-console-content");
+
+            caption.setInnerHTML("Debug window");
+            caption.setTitle("Move from caption, resize from content by "
+                    + "draggin with shift key. DblClick to "
+                    + "minimize. Use debug=quiet to log only"
+                    + " to browser console");
+
+            setWidget(panel);
+            show();
+            minimize();
+
+            actions = new HorizontalPanel();
+            actions.add(clear);
+            actions.add(restart);
+
+            panel.add(actions);
+
+            clear.addClickListener(new ClickListener() {
+                public void onClick(Widget sender) {
+                    panel.clear();
+                    panel.add(actions);
+                }
+            });
+
+            restart.addClickListener(new ClickListener() {
+                public void onClick(Widget sender) {
+
+                    String queryString = Window.Location.getQueryString();
+                    if (queryString != null
+                            && queryString.contains("restartApplications")) {
+                        Window.Location.reload();
+                    } else {
+                        String url = Location.getHref();
+                        if (!url.contains("?")) {
+                            url += "?";
+                        } else {
+                            url += "&";
+                        }
+                        if (!url.contains("restartApplication")) {
+                            url += "restartApplication";
+                        }
+                        if (!"".equals(Location.getHash())) {
+                            String hash = Location.getHash();
+                            url = url.replace(hash, "") + hash;
+                        }
+                        Window.Location.replace(url);
+                    }
+
+                }
+            });
+        }
 
         log("Toolkit application servlet version: " + cnf.getSerletVersion());
         log("Widget set is built on version: " + VERSION);
@@ -83,10 +137,97 @@ public final class IDebugConsole extends IWindow implements Console,
         }
     }
 
+    public void onBrowserEvent(Event event) {
+        super.onBrowserEvent(event);
+        switch (DOM.eventGetType(event)) {
+        case Event.ONMOUSEDOWN:
+            if (DOM.eventGetShiftKey(event)) {
+                resizing = true;
+                DOM.setCapture(getElement());
+                startX = DOM.eventGetScreenX(event);
+                startY = DOM.eventGetScreenY(event);
+                initialW = IDebugConsole.this.getOffsetWidth();
+                initialH = IDebugConsole.this.getOffsetHeight();
+                DOM.eventCancelBubble(event, true);
+                DOM.eventPreventDefault(event);
+            } else if (DOM.eventGetTarget(event) == caption) {
+                moving = true;
+                startX = DOM.eventGetScreenX(event);
+                startY = DOM.eventGetScreenY(event);
+                origTop = getAbsoluteTop();
+                origLeft = getAbsoluteLeft();
+                DOM.eventCancelBubble(event, true);
+                DOM.eventPreventDefault(event);
+            }
+
+            break;
+        case Event.ONMOUSEMOVE:
+            if (resizing) {
+                int deltaX = startX - DOM.eventGetScreenX(event);
+                int detalY = startY - DOM.eventGetScreenY(event);
+                int w = initialW - deltaX;
+                if (w < 30) {
+                    w = 30;
+                }
+                int h = initialH - detalY;
+                if (h < 40) {
+                    h = 40;
+                }
+                IDebugConsole.this.setPixelSize(w, h);
+                DOM.eventCancelBubble(event, true);
+                DOM.eventPreventDefault(event);
+            } else if (moving) {
+                int deltaX = startX - DOM.eventGetScreenX(event);
+                int detalY = startY - DOM.eventGetScreenY(event);
+                int left = origLeft - deltaX;
+                if (left < 0) {
+                    left = 0;
+                }
+                int top = origTop - detalY;
+                if (top < 0) {
+                    top = 0;
+                }
+                IDebugConsole.this.setPopupPosition(left, top);
+                DOM.eventCancelBubble(event, true);
+                DOM.eventPreventDefault(event);
+            }
+            break;
+        case Event.ONLOSECAPTURE:
+        case Event.ONMOUSEUP:
+            if (resizing) {
+                DOM.releaseCapture(getElement());
+                resizing = false;
+            } else if (moving) {
+                DOM.releaseCapture(getElement());
+                moving = false;
+            }
+            break;
+        case Event.ONDBLCLICK:
+            if (DOM.eventGetTarget(event) == caption) {
+                if (collapsed) {
+                    panel.setVisible(true);
+                    setPixelSize(220, 300);
+                } else {
+                    panel.setVisible(false);
+                    setPixelSize(120, 20);
+                }
+                collapsed = !collapsed;
+            }
+            break;
+        default:
+            break;
+        }
+
+    }
+
     private void minimize() {
-        // TODO stack to bottom (create window manager of some sort)
-        setPixelSize(60, 60);
-        setPopupPosition(Window.getClientWidth() - 142, 0);
+        setPixelSize(200, 100);
+        setPopupPosition(Window.getClientWidth() - 210, 0);
+    }
+
+    public void setPixelSize(int width, int height) {
+        panel.setHeight((height - 20) + "px");
+        panel.setWidth((width - 2) + "px");
     }
 
     /*
@@ -97,15 +238,8 @@ public final class IDebugConsole extends IWindow implements Console,
     public void log(String msg) {
         panel.add(new HTML(msg));
         System.out.println(msg);
-        logFirebug(msg);
+        consoleLog(msg);
     }
-
-    private static native void logFirebug(String msg)
-    /*-{
-    if (typeof(console) != "undefined") {
-      console.log(msg);
-    }
-    }-*/;
 
     /*
      * (non-Javadoc)
@@ -115,8 +249,8 @@ public final class IDebugConsole extends IWindow implements Console,
      */
     public void error(String msg) {
         panel.add((new HTML(msg)));
-        System.out.println(msg);
-        logFirebug(msg);
+        System.err.println(msg);
+        consoleErr(msg);
     }
 
     /*
@@ -128,7 +262,7 @@ public final class IDebugConsole extends IWindow implements Console,
      */
     public void printObject(Object msg) {
         panel.add((new Label(msg.toString())));
-        logFirebug(msg.toString());
+        consoleLog(msg.toString());
     }
 
     /*
@@ -140,62 +274,24 @@ public final class IDebugConsole extends IWindow implements Console,
      */
     public void dirUIDL(UIDL u) {
         panel.add(u.print_r());
+        consoleLog(u.getChildrenAsXML());
     }
 
-    public void setSize(Event event, boolean updateVariables) {
-        super.setSize(event, false);
-    }
+    private static native void consoleLog(String msg)
+    /*-{
+         if($wnd.console && $wnd.console.log) {
+             $wnd.console.log(msg);
+         }
+     }-*/;
 
-    public void onScroll(Widget widget, int scrollLeft, int scrollTop) {
+    private static native void consoleErr(String msg)
+    /*-{
+         if($wnd.console) {
+             if ($wnd.console.error)
+                 $wnd.console.error(msg);
+             else if ($wnd.console.log)
+                 $wnd.console.log(msg);
+         }
+     }-*/;
 
-    }
-
-    public void setPopupPosition(int left, int top) {
-        // Keep the popup within the browser's client area, so that they can't
-        // get
-        // 'lost' and become impossible to interact with. Note that we don't
-        // attempt
-        // to keep popups pegged to the bottom and right edges, as they will
-        // then
-        // cause scrollbars to appear, so the user can't lose them.
-        if (left < 0) {
-            left = 0;
-        }
-        if (top < 0) {
-            top = 0;
-        }
-
-        // Set the popup's position manually, allowing setPopupPosition() to be
-        // called before show() is called (so a popup can be positioned without
-        // it
-        // 'jumping' on the screen).
-        Element elem = getElement();
-        DOM.setStyleAttribute(elem, "left", left + "px");
-        DOM.setStyleAttribute(elem, "top", top + "px");
-    }
-
-    public void onBrowserEvent(Event event) {
-        super.onBrowserEvent(event);
-
-        final int type = DOM.eventGetType(event);
-        if (type == Event.BUTTON_LEFT) {
-
-            if (event.getTarget() == restartApplicationElement) {
-                String href = Window.Location.getHref();
-                if (Window.Location.getParameter("restartApplication") == null) {
-                    if (href.contains("?")) {
-                        href += "&restartApplication";
-                    } else {
-                        href += "?restartApplication";
-                    }
-
-                    Window.Location.replace(href);
-                } else {
-                    Window.Location.replace(href);
-                }
-            } else if (event.getTarget() == clearButtonElement) {
-                panel.clear();
-            }
-        }
-    }
 }
