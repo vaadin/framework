@@ -23,9 +23,9 @@ public class TableHuge extends CustomComponent {
      * This is a virtual container that generates the items on the fly when
      * requested.
      */
-    public class HugeContainer implements Container, Indexed {
+    public class HugeContainer implements Container,Indexed {
         int numberofitems;
-
+        
         public HugeContainer(int numberofitems) {
             this.numberofitems = numberofitems;
         }
@@ -68,8 +68,7 @@ public class TableHuge extends CustomComponent {
             if (itemId instanceof Integer) {
                 int pos = ((Integer) itemId).intValue();
                 if (pos >= 0 && pos < numberofitems) {
-                    return new ObjectProperty("This is the item " + pos
-                            + " in the huge table");
+                    return new ObjectProperty("This is the item "+pos+" in the huge table");
                 }
             }
             return null;
@@ -84,11 +83,10 @@ public class TableHuge extends CustomComponent {
 
         public Item getItem(Object itemId) {
             if (itemId instanceof Integer) {
-                int pos = ((Integer) itemId).intValue();
+                int pos = ((Integer)itemId).intValue();
                 if (pos >= 0 && pos < numberofitems) {
                     Item item = new PropertysetItem();
-                    item.addItemProperty("id", new ObjectProperty(
-                            "This is the item " + pos + " in the huge table"));
+                    item.addItemProperty("id", new ObjectProperty("This is the item "+pos+" in the huge table"));
                     return item;
                 }
             }
@@ -162,25 +160,25 @@ public class TableHuge extends CustomComponent {
         }
 
         public boolean isLastId(Object itemId) {
-            return ((Integer) itemId).intValue() == (numberofitems - 1);
+            return ((Integer) itemId).intValue() == (numberofitems-1);
         }
 
         public Object lastItemId() {
-            return new Integer(numberofitems - 1);
+            return new Integer(numberofitems-1);
         }
 
         public Object nextItemId(Object itemId) {
             int pos = indexOfId(itemId);
-            if (pos >= numberofitems - 1)
+            if (pos >= numberofitems-1)
                 return null;
-            return getIdByIndex(pos + 1);
+            return getIdByIndex(pos+1);
         }
 
         public Object prevItemId(Object itemId) {
             int pos = indexOfId(itemId);
             if (pos <= 0)
                 return null;
-            return getIdByIndex(pos - 1);
+            return getIdByIndex(pos-1);
         }
     }
 
@@ -188,7 +186,7 @@ public class TableHuge extends CustomComponent {
         Table table = new Table("HUGE table, REALLY HUGE");
         table.setContainerDataSource(new HugeContainer(500000));
         table.setPageLength(20);
-
+        
         setCompositionRoot(table);
     }
 }

@@ -9,17 +9,13 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 
 import com.itmill.toolkit.terminal.FileResource;
-import com.itmill.toolkit.ui.CustomComponent;
-import com.itmill.toolkit.ui.Embedded;
-import com.itmill.toolkit.ui.Label;
-import com.itmill.toolkit.ui.Panel;
-import com.itmill.toolkit.ui.Upload;
+import com.itmill.toolkit.ui.*;
 
-public class MyUploader extends CustomComponent implements
-        Upload.SucceededListener, Upload.FailedListener, Upload.Receiver {
-    Panel root; // Root element for contained components.
-    Panel imagePanel; // Panel that contains the uploaded image.
-    File file; // File to write to.
+public class MyUploader extends CustomComponent
+implements Upload.SucceededListener, Upload.FailedListener, Upload.Receiver {
+    Panel root;         // Root element for contained components.
+    Panel imagePanel;   // Panel that contains the uploaded image.
+    File  file;         // File to write to.
 
     MyUploader() {
         root = new Panel("My Upload Component");
@@ -34,8 +30,7 @@ public class MyUploader extends CustomComponent implements
         upload.addListener((Upload.FailedListener) this);
 
         root.addComponent(upload);
-        root.addComponent(new Label(
-                "Click 'Browse' to select a file and then click 'Upload'."));
+        root.addComponent(new Label("Click 'Browse' to select a file and then click 'Upload'."));
 
         // Create a panel for displaying the uploaded file (image).
         imagePanel = new Panel("Uploaded image");
@@ -64,10 +59,9 @@ public class MyUploader extends CustomComponent implements
         // Log the upload on screen.
         root.addComponent(new Label("File " + event.getFilename()
                 + " of type '" + event.getMIMEType() + "' uploaded."));
-
+        
         // Display the uploaded file in the image panel.
-        final FileResource imageResource = new FileResource(file,
-                getApplication());
+        final FileResource imageResource = new FileResource(file, getApplication());
         imagePanel.removeAllComponents();
         imagePanel.addComponent(new Embedded("", imageResource));
     }
