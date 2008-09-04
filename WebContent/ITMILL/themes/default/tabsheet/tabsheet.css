@@ -137,7 +137,7 @@
 .i-tabsheet-content {
 	border: 1px solid #babfc0;
 	background-color: #fff;
-	border-bottom: none;
+	border-bottom: 1px solid #dee2e3;
 	border-top: none;
 }
 
@@ -220,6 +220,13 @@
 	background: transparent;
 	padding: 0;
 	margin: 0;
+}
+
+* html .i-tabsheet-content {
+	border-bottom: none;
+}
+*+html .i-tabsheet-content {
+	border-bottom: none;
 }
 
 * html .i-tabsheet-deco {
