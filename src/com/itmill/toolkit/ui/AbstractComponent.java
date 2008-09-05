@@ -11,6 +11,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.itmill.toolkit.Application;
 import com.itmill.toolkit.event.EventRouter;
@@ -126,6 +128,8 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
     private int height = SIZE_UNDEFINED;
     private int widthUnit = UNITS_PIXELS;
     private int heightUnit = UNITS_PIXELS;
+    private static final Pattern sizePattern = Pattern
+            .compile("^(\\d+)(%|px|em|ex|in|cm|mm|pt|pc)$");
 
     private ComponentErrorHandler errorHandler = null;
 
@@ -1144,51 +1148,45 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
     }
 
     /*
-     * returns array with size in index 0 unit in index 1
+     * Returns array with size in index 0 unit in index 1. Null or empty string
+     * will produce {-1,-1}
      */
     private static int[] parseStringSize(String s) {
-        int[] values = new int[2];
+        int[] values = { -1, -1 };
+        if (s == null) {
+            return values;
+        }
         s = s.trim();
+        if ("".equals(s)) {
+            return values;
+        }
 
-        // Percentages
-        if (s.indexOf("%") != -1) {
-            values[1] = UNITS_PERCENTAGE;
-            values[0] = (int) Float.parseFloat(s.substring(0, s.indexOf("%")));
-        } else {
-
-            // We default to pixels
-            values[1] = UNITS_PIXELS;
-            try {
-
-                // If no units are specified
-                values[0] = (int) Float.parseFloat(s);
-                return values;
-            } catch (NumberFormatException e) {
-
-                // Unit is specified and we assume 2 characters unit length
-                values[0] = (int) Float.parseFloat(s.substring(0,
-                        s.length() - 2));
-
-                // Resolve unit
-                String unit = s.substring(s.length() - 2).toLowerCase();
-                if (unit.equals("px")) {
-                    // Already set
-                } else if (unit.equals("em")) {
-                    values[1] = UNITS_EM;
-                } else if (unit.equals("ex")) {
-                    values[1] = UNITS_EX;
-                } else if (unit.equals("in")) {
-                    values[1] = UNITS_INCH;
-                } else if (unit.equals("cm")) {
-                    values[1] = UNITS_CM;
-                } else if (unit.equals("mm")) {
-                    values[1] = UNITS_MM;
-                } else if (unit.equals("pt")) {
-                    values[1] = UNITS_POINTS;
-                } else if (unit.equals("pc")) {
-                    values[1] = UNITS_PICAS;
-                }
+        Matcher matcher = sizePattern.matcher(s);
+        if (matcher.find()) {
+            values[0] = Integer.parseInt(matcher.group(1));
+            String unit = matcher.group(2);
+            if (unit.equals("%")) {
+                values[1] = UNITS_PICAS;
+            } else if (unit.equals("px")) {
+                values[1] = UNITS_PIXELS;
+            } else if (unit.equals("em")) {
+                values[1] = UNITS_EM;
+            } else if (unit.equals("ex")) {
+                values[1] = UNITS_EX;
+            } else if (unit.equals("in")) {
+                values[1] = UNITS_INCH;
+            } else if (unit.equals("cm")) {
+                values[1] = UNITS_CM;
+            } else if (unit.equals("mm")) {
+                values[1] = UNITS_MM;
+            } else if (unit.equals("pt")) {
+                values[1] = UNITS_POINTS;
+            } else if (unit.equals("pc")) {
+                values[1] = UNITS_PICAS;
             }
+        } else {
+            throw new IllegalArgumentException("Invalid size argument: \"" + s
+                    + "\" (should match " + sizePattern.pattern() + ")");
         }
         return values;
     }
