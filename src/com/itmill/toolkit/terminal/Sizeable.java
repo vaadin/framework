@@ -62,7 +62,7 @@ public interface Sizeable {
     public static final int UNITS_PERCENTAGE = 8;
 
     /**
-     * Unit code representing in rows of text. This unit is only applicaple to
+     * Unit code representing in rows of text. This unit is only applicable to
      * some components can it's meaning is specified by component
      * implementation.
      */
@@ -105,6 +105,10 @@ public interface Sizeable {
      * @param width
      *            the width of the object in units specified by widthUnits
      *            property.
+     * @deprecated Consider using {@link #setWidth(String)} instead. This method
+     *             works, but is error-prone since the unit must be set
+     *             separately (and components might have different default
+     *             unit).
      */
     public void setWidth(int width);
 
@@ -123,6 +127,10 @@ public interface Sizeable {
      * @param height
      *            the height of the object in units specified by heightUnits
      *            property.
+     * @deprecated Consider using {@link #setHeight(String)} instead. This
+     *             method works, but is error-prone since the unit must be set
+     *             separately (and components might have different default
+     *             unit).
      */
     public void setHeight(int height);
 
@@ -138,6 +146,8 @@ public interface Sizeable {
      * 
      * @param units
      *            the units used in width property.
+     * @deprecated Consider setting width and unit simultaneously using
+     *             {@link #setWidth(String)}, which is less error-prone.
      */
     public void setWidthUnits(int units);
 
@@ -153,6 +163,8 @@ public interface Sizeable {
      * 
      * @param units
      *            the units used in height property.
+     * @deprecated Consider setting height and unit simultaneously using
+     *             {@link #setHeight(String)}, which is less error-prone.
      */
     public void setHeightUnits(int units);
 
@@ -164,7 +176,7 @@ public interface Sizeable {
      * 
      * See <a
      * href="http://www.w3.org/TR/REC-CSS2/syndata.html#value-def-length">CSS
-     * spesification</a> for more details.
+     * specification</a> for more details.
      * 
      * @param height
      *            in CSS style string representation
@@ -179,7 +191,7 @@ public interface Sizeable {
      * 
      * See <a
      * href="http://www.w3.org/TR/REC-CSS2/syndata.html#value-def-length">CSS
-     * spesification</a> for more details.
+     * specification</a> for more details.
      * 
      * @param width
      *            in CSS style string representation
