@@ -1176,7 +1176,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
             values[0] = Integer.parseInt(matcher.group(1));
             String unit = matcher.group(2);
             if (unit.equals("%")) {
-                values[1] = UNITS_PICAS;
+                values[1] = UNITS_PERCENTAGE;
             } else if (unit.equals("px")) {
                 values[1] = UNITS_PIXELS;
             } else if (unit.equals("em")) {
