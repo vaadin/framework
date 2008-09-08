@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.FocusListener;
 import com.google.gwt.user.client.ui.TextBoxBase;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
+import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
 import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.ITooltip;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
@@ -217,6 +218,11 @@ public class ITextField extends TextBoxBase implements Paintable, Field,
         DOM.appendChild(DOM.getParent(getElement()), clone);
         extraHorizontalPixels = DOM.getElementPropertyInt(clone, "offsetWidth") - 10;
         extraVerticalPixels = DOM.getElementPropertyInt(clone, "offsetHeight") - 10;
+        if (BrowserInfo.get().isIE()) {
+            // IE just don't accept 0 margin for textarea #2058
+            extraVerticalPixels += 2;
+        }
+
         DOM.removeChild(DOM.getParent(getElement()), clone);
     }
 
