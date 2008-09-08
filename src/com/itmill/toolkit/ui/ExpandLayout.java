@@ -10,18 +10,16 @@ import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
 
 /**
- * TODO finish documentation
+ * A layout that will give one of it's components as much space as possible,
+ * while still showing the other components in the layout. The other components
+ * will in effect be given a fixed sized space, while the space given to the
+ * expanded component will grow/shrink to fill the rest of the space available -
+ * for instance when re-sizing the window.
  * 
- * our layouts (except custom layout of course) don't currently work at all with
- * relative widths. This layout tries to cope with this issue.
- * 
- * basically this is ordered layout which has Sizeable interface 100 % height &
- * width by default
- * 
- * all contained components may also have Sizeable interfaces sizes
- * 
- * can be used to build flexible layout where some component gets all the space
- * other components don't use. Or just provide expanded container.
+ * Note that this layout is 100% in both directions by default ({link
+ * {@link #setSizeFull()}). Remember to set the units if you want to specify a
+ * fixed size. If the layout fails to show up, check that the parent layout is
+ * actually giving some space.
  * 
  */
 public class ExpandLayout extends OrderedLayout {
