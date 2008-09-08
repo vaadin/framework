@@ -101,23 +101,23 @@ public class Ticket1878 extends Application {
         GridLayout l1 = new GridLayout(1, 3);
         createLayout(l1,
                 new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL),
-                "1000", "150", "100%", null, true);
+                "1000px", "150px", "100%", null, true);
         createLayout(l1,
                 new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL),
-                "1000", "150", "50", null, false);
+                "1000px", "150px", "50px", null, false);
         GridLayout l2 = new GridLayout(6, 1);
         createLayout(l2, new OrderedLayout(OrderedLayout.ORIENTATION_VERTICAL),
-                "200", "500", true);
+                "200px", "500px", true);
         createLayout(l2, new OrderedLayout(OrderedLayout.ORIENTATION_VERTICAL),
-                "200", "500", "100%", null, true);
+                "200px", "500px", "100%", null, true);
         createLayout(l2, new OrderedLayout(OrderedLayout.ORIENTATION_VERTICAL),
-                "150", "500", true);
+                "150px", "500px", true);
         createLayout(l2, new OrderedLayout(OrderedLayout.ORIENTATION_VERTICAL),
-                "150", "500", "100%", null, true);
+                "150px", "500px", "100%", null, true);
         createLayout(l2, new OrderedLayout(OrderedLayout.ORIENTATION_VERTICAL),
-                "100", "500", true);
+                "100px", "500px", true);
         createLayout(l2, new OrderedLayout(OrderedLayout.ORIENTATION_VERTICAL),
-                "100", "500", "100%", null, true);
+                "100px", "500px", "100%", null, true);
         layout.addComponent(l1);
         layout.addComponent(l2);
 
@@ -128,16 +128,20 @@ public class Ticket1878 extends Application {
         GridLayout layout = new GridLayout(1, 5);
 
         GridLayout l1 = new GridLayout(1, 3);
-        createLayout(l1, new GridLayout(8, 1), "1000", "150", "100%", null,
+        createLayout(l1, new GridLayout(8, 1), "1000px", "150px", "100%", null,
                 true);
-        createLayout(l1, new GridLayout(8, 1), "1000", "150", "50", null, false);
+        createLayout(l1, new GridLayout(8, 1), "1000px", "150px", "50px", null,
+                false);
         GridLayout l2 = new GridLayout(6, 1);
-        createLayout(l2, new GridLayout(1, 8), "200", "500", true);
-        createLayout(l2, new GridLayout(1, 8), "200", "500", "100%", null, true);
-        createLayout(l2, new GridLayout(1, 8), "150", "500", true);
-        createLayout(l2, new GridLayout(1, 8), "150", "500", "100%", null, true);
-        createLayout(l2, new GridLayout(1, 8), "100", "500", true);
-        createLayout(l2, new GridLayout(1, 8), "100", "500", "100%", null, true);
+        createLayout(l2, new GridLayout(1, 8), "200px", "500px", true);
+        createLayout(l2, new GridLayout(1, 8), "200px", "500px", "100%", null,
+                true);
+        createLayout(l2, new GridLayout(1, 8), "150px", "500px", true);
+        createLayout(l2, new GridLayout(1, 8), "150px", "500px", "100%", null,
+                true);
+        createLayout(l2, new GridLayout(1, 8), "100px", "500px", true);
+        createLayout(l2, new GridLayout(1, 8), "100px", "500px", "100%", null,
+                true);
         layout.addComponent(l1);
         layout.addComponent(l2);
 
@@ -149,23 +153,23 @@ public class Ticket1878 extends Application {
 
         GridLayout l1 = new GridLayout(1, 3);
         createLayout(l1, new ExpandLayout(ExpandLayout.ORIENTATION_HORIZONTAL),
-                "1000", "150", "100", null, true);
+                "1000px", "150px", "100px", null, true);
         createLayout(l1, new ExpandLayout(ExpandLayout.ORIENTATION_HORIZONTAL),
-                "1000", "150", "50", null, false);
+                "1000px", "150px", "50px", null, false);
 
         GridLayout l2 = new GridLayout(6, 1);
         createLayout(l2, new ExpandLayout(ExpandLayout.ORIENTATION_VERTICAL),
-                "200", "500", true);
+                "200px", "500px", true);
         createLayout(l2, new ExpandLayout(ExpandLayout.ORIENTATION_VERTICAL),
-                "200", "500", "100%", null, true);
+                "200px", "500px", "100%", null, true);
         createLayout(l2, new ExpandLayout(ExpandLayout.ORIENTATION_VERTICAL),
-                "150", "500", true);
+                "150px", "500px", true);
         createLayout(l2, new ExpandLayout(ExpandLayout.ORIENTATION_VERTICAL),
-                "150", "500", "100%", null, true);
+                "150px", "500px", "100%", null, true);
         createLayout(l2, new ExpandLayout(ExpandLayout.ORIENTATION_VERTICAL),
-                "100", "500", true);
+                "100px", "500px", true);
         createLayout(l2, new ExpandLayout(ExpandLayout.ORIENTATION_VERTICAL),
-                "100", "500", "100%", null, true);
+                "100px", "500px", "100%", null, true);
         layout.addComponent(l1);
         layout.addComponent(l2);
 
@@ -218,7 +222,7 @@ public class Ticket1878 extends Application {
 
         Random r = new Random();
         GridLayout l1 = new GridLayout(1, 3);
-        form = createForm(l1, "200", "500");
+        form = createForm(l1, "200px", "500px");
         BeanItem item = new BeanItem(new FormObject());
         form.setItemDataSource(item);
         for (Iterator i = item.getItemPropertyIds().iterator(); i.hasNext();) {
@@ -237,21 +241,21 @@ public class Ticket1878 extends Application {
         }
         // createLayout(l1, new
         // ExpandLayout(ExpandLayout.ORIENTATION_HORIZONTAL),
-        // "1000", "150", "50", null, false);
+        // "1000px", "150px", "50px", null, false);
 
         // GridLayout l2 = new GridLayout(6, 1);
         // createLayout(l2, new ExpandLayout(ExpandLayout.ORIENTATION_VERTICAL),
-        // "200", "500", true);
+        // "200px", "500px", true);
         // createLayout(l2, new ExpandLayout(ExpandLayout.ORIENTATION_VERTICAL),
-        // "200", "500", "100%", null, true);
+        // "200px", "500px", "100%", null, true);
         // createLayout(l2, new ExpandLayout(ExpandLayout.ORIENTATION_VERTICAL),
-        // "150", "500", true);
+        // "150px", "500px", true);
         // createLayout(l2, new ExpandLayout(ExpandLayout.ORIENTATION_VERTICAL),
-        // "150", "500", "100%", null, true);
+        // "150px", "500px", "100%", null, true);
         // createLayout(l2, new ExpandLayout(ExpandLayout.ORIENTATION_VERTICAL),
-        // "100", "500", true);
+        // "100px", "500px", true);
         // createLayout(l2, new ExpandLayout(ExpandLayout.ORIENTATION_VERTICAL),
-        // "100", "500", "100%", null, true);
+        // "100px", "500px", "100%", null, true);
         layout.addComponent(l1);
         // layout.addComponent(l2);
 

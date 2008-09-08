@@ -18,8 +18,8 @@ public class Ticket2029 extends Application {
         setMainWindow(w);
         // setTheme("tests-tickets");
         Panel p = new Panel("1000x150");
-        p.setWidth("1000");
-        p.setHeight("150");
+        p.setWidth("1000px");
+        p.setHeight("150px");
 
         OrderedLayout layout = new OrderedLayout(
                 OrderedLayout.ORIENTATION_HORIZONTAL);
