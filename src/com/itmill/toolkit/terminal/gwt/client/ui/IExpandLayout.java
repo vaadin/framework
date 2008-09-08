@@ -73,6 +73,7 @@ public class IExpandLayout extends ComplexPanel implements
     private int bottomMargin = -1;
     private boolean hasComponentSpacing;
     private int spacingSize = -1;
+    private boolean rendering;
 
     public IExpandLayout() {
         this(IExpandLayout.ORIENTATION_VERTICAL);
@@ -140,15 +141,20 @@ public class IExpandLayout extends ComplexPanel implements
         if (orientationMode == ORIENTATION_HORIZONTAL) {
             return new HorizontalWidgetWrapper(containerElement);
         } else {
-            return new VerticalWidgetWrapper(containerElement);
+            return new VerticalWidgetWrapper(DOM.getParent(containerElement));
         }
     }
 
     abstract class WidgetWrapper extends UIObject {
+
         /**
          * @return element that contains Widget
          */
         public Element getContainerElement() {
+            return getElement();
+        }
+
+        public Element getCaptionContainer() {
             return getElement();
         }
 
@@ -168,20 +174,25 @@ public class IExpandLayout extends ComplexPanel implements
 
         public VerticalWidgetWrapper() {
             setElement(DOM.createDiv());
+            DOM.appendChild(getElement(), DOM.createDiv());
+            DOM.setStyleAttribute(getElement(), "overflow", "hidden");
             // Set to 'hidden' at first (prevent IE6 content overflows), and set
             // to 'auto' later.
             DOM.setStyleAttribute(getContainerElement(), "overflow", "hidden");
         }
 
-        void setExpandedSize(int pixels) {
-            final int spaceForMarginsAndSpacings = getOffsetHeight()
-                    - DOM.getElementPropertyInt(getElement(), "clientHeight");
-            int fixedInnerSize = pixels - spaceForMarginsAndSpacings;
+        public void setExpandedSize(int pixels) {
+            Element firstChild = DOM.getFirstChild(getElement());
+            int captionHeight = 0;
+            if (firstChild != getContainerElement()) {
+                captionHeight = firstChild.getOffsetHeight();
+            }
+            int fixedInnerSize = pixels - captionHeight;
             if (fixedInnerSize < 0) {
                 fixedInnerSize = 0;
             }
-            setHeight(fixedInnerSize + "px");
-            DOM.setStyleAttribute(getContainerElement(), "overflow", "auto");
+            DOM.setStyleAttribute(getContainerElement(), "height",
+                    fixedInnerSize + "px");
         }
 
         void setAlignment(String verticalAlignment, String horizontalAlignment) {
@@ -194,6 +205,15 @@ public class IExpandLayout extends ComplexPanel implements
             setStyleName(getElement(), CLASSNAME + "-"
                     + StyleConstants.VERTICAL_SPACING, b);
         }
+
+        public Element getContainerElement() {
+            return getElement().getLastChild().cast();
+        }
+
+        public Element getCaptionElement() {
+            return getElement();
+        }
+
     }
 
     class HorizontalWidgetWrapper extends WidgetWrapper {
@@ -221,7 +241,7 @@ public class IExpandLayout extends ComplexPanel implements
             DOM.setStyleAttribute(getElement(), "height", "100%");
         }
 
-        void setExpandedSize(int pixels) {
+        public void setExpandedSize(int pixels) {
             setWidth(pixels + "px");
             DOM.setStyleAttribute(getElement(), "overflow", "hidden");
         }
@@ -396,8 +416,17 @@ public class IExpandLayout extends ComplexPanel implements
         final WidgetWrapper wr = getWidgetWrapperFor(expandedWidget);
         wr.setExpandedSize(spaceForExpandedWidget);
 
+        // setting overflow auto lazy off during layout function
+        DOM.setStyleAttribute(DOM.getParent(expandedWidget.getElement()),
+                "overflow", "hidden");
+
         // TODO save previous size and only propagate if really changed
         Util.runDescendentsLayout(this);
+
+        // setting overflow back to auto
+        DOM.setStyleAttribute(DOM.getParent(expandedWidget.getElement()),
+                "overflow", "auto");
+
     }
 
     private int getTopMargin() {
@@ -506,13 +535,11 @@ public class IExpandLayout extends ComplexPanel implements
     protected void insert(Widget w, int beforeIndex) {
         if (w instanceof ICaption) {
             final ICaption c = (ICaption) w;
-            // captions go into same container element as their
-            // owners
-            final Element container = DOM.getParent(((UIObject) c.getOwner())
-                    .getElement());
-            final Element captionContainer = DOM.createDiv();
-            DOM.insertChild(container, captionContainer, 0);
-            insert(w, captionContainer, beforeIndex, false);
+            WidgetWrapper wrapper = getWidgetWrapperFor((Widget) c.getOwner());
+            Element captionContainer = wrapper.getCaptionContainer();
+            final Element captionElement = DOM.createDiv();
+            DOM.insertChild(captionContainer, captionElement, 0);
+            insert(w, captionElement, beforeIndex, false);
         } else {
             final WidgetWrapper wrapper = createWidgetWrappper();
             DOM.insertChild(childContainer, wrapper.getElement(), beforeIndex);
@@ -575,19 +602,25 @@ public class IExpandLayout extends ComplexPanel implements
 
         ICaption c = (ICaption) componentToCaption.get(component);
 
+        boolean captionSizeMayHaveChanged = false;
         if (ICaption.isNeeded(uidl)) {
             if (c == null) {
                 final int index = getWidgetIndex((Widget) component);
                 c = new ICaption(component, client);
                 insert(c, index);
                 componentToCaption.put(component, c);
+                captionSizeMayHaveChanged = true;
             }
             c.updateCaption(uidl);
         } else {
             if (c != null) {
                 remove(c);
                 componentToCaption.remove(component);
+                captionSizeMayHaveChanged = true;
             }
+        }
+        if (!rendering && captionSizeMayHaveChanged) {
+            iLayout();
         }
     }
 
@@ -612,12 +645,15 @@ public class IExpandLayout extends ComplexPanel implements
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 
+        rendering = true;
+
         this.client = client;
 
         // Modify layout margins
         handleMargins(uidl);
 
         if (client.updateComponent(this, uidl, true)) {
+            rendering = false;
             return;
         }
 
@@ -711,6 +747,10 @@ public class IExpandLayout extends ComplexPanel implements
         if (expandedWidget != null) {
             ((Paintable) expandedWidget).updateFromUIDL(expandedWidgetUidl,
                     client);
+            // setting overflow auto lazy, not to disturb possible layout
+            // functions
+            DOM.setStyleAttribute(DOM.getParent(expandedWidget.getElement()),
+                    "overflow", "auto");
         }
 
         // workaround for safari bug #1870
@@ -722,5 +762,6 @@ public class IExpandLayout extends ComplexPanel implements
                 }
             });
         }
+        rendering = false;
     }
 }
