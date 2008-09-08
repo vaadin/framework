@@ -84,16 +84,6 @@ public class GoogleMap extends AbstractComponent implements Sizeable,
         return zoomLevel;
     }
 
-    // Sizeable methods:
-
-    public int getHeightUnits() {
-        return Sizeable.UNITS_PIXELS;
-    }
-
-    public int getWidthUnits() {
-        return Sizeable.UNITS_PIXELS;
-    }
-
     public void setMapCenter(Point2D.Double center) {
         mapCenter = center;
     }
