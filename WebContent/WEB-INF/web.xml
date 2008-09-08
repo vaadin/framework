@@ -5,13 +5,13 @@
     "http://java.sun.com/dtd/web-app_2_3.dtd">
 
 <web-app>
-
+Applica
   <display-name>IT Mill Toolkit</display-name>
   <description>
      IT Mill Toolkit examples
   </description>
 
-  <!-- Permit use of IT Mill Testing Tools for this servlet container -->
+  <!-- Permit use of IT Mill Testing Tools for this servlet continer -->
   <context-param>
   	<param-name>testingToolsActive</param-name>
   	<param-value>true</param-value>
@@ -73,7 +73,7 @@
   
 <servlet>
         <servlet-name>iWork</servlet-name>
-        <servlet-class>com.itmill.toolkit.terminal.web.ApplicationServlet</servlet-class>
+        <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
         <init-param>
             <param-name>application</param-name>
             <param-value>com.itmill.iwork.IWork</param-value>
