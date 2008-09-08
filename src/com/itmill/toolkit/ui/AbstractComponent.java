@@ -21,6 +21,7 @@ import com.itmill.toolkit.terminal.ErrorMessage;
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
 import com.itmill.toolkit.terminal.Resource;
+import com.itmill.toolkit.terminal.Sizeable;
 import com.itmill.toolkit.terminal.Terminal;
 
 /**
@@ -1059,11 +1060,16 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
         return widthUnit;
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Sets the height without setting the height unit.
      * 
-     * @see com.itmill.toolkit.terminal.Sizeable#setHeight(int)
+     * @see link {@link Sizeable#setHeight(int)}
+     * @see link {@link Sizeable#setHeight(String)}
+     * @see link {@link Sizeable#setHeightUnits(int)}
+     * @deprecated Error-prone; consider using {link {@link #setHeight(String)}
+     *             or {link {@link #setHeight(int, int)} instead.
      */
+
     public void setHeight(int height) {
         this.height = height;
         requestRepaint();
@@ -1110,10 +1116,14 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
         requestRepaint();
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Sets the width without setting the width unit.
      * 
-     * @see com.itmill.toolkit.terminal.Sizeable#setWidth(int)
+     * @see link {@link Sizeable#setWidth(int)}
+     * @see link {@link Sizeable#setWidth(String)}
+     * @see link {@link Sizeable#setWidthUnits(int)}
+     * @deprecated Error-prone; consider using {link {@link #setWidth(String)}
+     *             or {link {@link #setWidth(int, int)} instead.
      */
     public void setWidth(int width) {
         this.width = width;
@@ -1149,10 +1159,10 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
 
     /*
      * Returns array with size in index 0 unit in index 1. Null or empty string
-     * will produce {-1,-1}
+     * will produce {-1,UNITS_PIXELS}
      */
     private static int[] parseStringSize(String s) {
-        int[] values = { -1, -1 };
+        int[] values = { -1, UNITS_PIXELS };
         if (s == null) {
             return values;
         }

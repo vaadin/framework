@@ -174,6 +174,9 @@ public interface Sizeable {
      * String presentation is similar to what is used in Cascading Style Sheets.
      * Size can be length or percentage of available size.
      * 
+     * The empty string ("") or null will unset the height and set the units to
+     * pixels.
+     * 
      * See <a
      * href="http://www.w3.org/TR/REC-CSS2/syndata.html#value-def-length">CSS
      * specification</a> for more details.
@@ -189,12 +192,16 @@ public interface Sizeable {
      * String presentation is similar to what is used in Cascading Style Sheets.
      * Size can be length or percentage of available size.
      * 
+     * The empty string ("") or null will unset the width and set the units to
+     * pixels.
+     * 
      * See <a
      * href="http://www.w3.org/TR/REC-CSS2/syndata.html#value-def-length">CSS
      * specification</a> for more details.
      * 
      * @param width
-     *            in CSS style string representation
+     *            in CSS style string representation, null or empty string to
+     *            reset
      */
     public void setWidth(String width);
 
