@@ -262,10 +262,7 @@ public class IPanel extends SimplePanel implements Paintable,
             final boolean hasChildren = getWidget() != null;
             Element contentEl = null;
             String origPositioning = null;
-            // save scroll position
-            int scrollTop = DOM.getElementPropertyInt(contentNode, "scrollTop");
-            int scrollLeft = DOM.getElementPropertyInt(contentNode,
-                    "scrollLeft");
+
             if (hasChildren) {
                 // Remove children temporary form normal flow to detect proper
                 // size
@@ -352,7 +349,6 @@ public class IPanel extends SimplePanel implements Paintable,
                     "scrollLeft");
             if (client != null
                     && (newscrollLeft != scrollLeft || newscrollTop != scrollTop)) {
-                ApplicationConnection.getConsole().log("scrollded panel");
                 scrollLeft = newscrollLeft;
                 scrollTop = newscrollTop;
                 client.updateVariable(id, "scrollTop", scrollTop, false);
