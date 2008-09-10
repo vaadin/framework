@@ -196,6 +196,7 @@ public class ITree extends FlowPanel implements Paintable {
             sinkEvents(Event.ONCLICK | Event.ONDBLCLICK | Event.ONMOUSEUP);
         }
 
+        @Override
         public void onBrowserEvent(Event event) {
             super.onBrowserEvent(event);
             if (disabled) {
@@ -253,20 +254,24 @@ public class ITree extends FlowPanel implements Paintable {
             nodeCaptionDiv = DOM.createDiv();
             DOM.setElementProperty(nodeCaptionDiv, "className", CLASSNAME
                     + "-caption");
+            Element wrapper = DOM.createDiv();
             nodeCaptionSpan = DOM.createSpan();
             DOM.appendChild(getElement(), nodeCaptionDiv);
-            DOM.appendChild(nodeCaptionDiv, nodeCaptionSpan);
+            DOM.appendChild(nodeCaptionDiv, wrapper);
+            DOM.appendChild(wrapper, nodeCaptionSpan);
 
             childNodeContainer = new FlowPanel();
             childNodeContainer.setStylePrimaryName(CLASSNAME + "-children");
             setWidget(childNodeContainer);
         }
 
+        @Override
         public void onDetach() {
             Util.removeContextMenuEvent(nodeCaptionSpan);
             super.onDetach();
         }
 
+        @Override
         public void onAttach() {
             attachContextMenuEvent(nodeCaptionSpan);
             super.onAttach();
@@ -305,13 +310,14 @@ public class ITree extends FlowPanel implements Paintable {
             if (uidl.hasAttribute("icon")) {
                 if (icon == null) {
                     icon = new Icon(client);
-                    DOM.insertBefore(nodeCaptionDiv, icon.getElement(),
-                            nodeCaptionSpan);
+                    DOM.insertBefore(DOM.getFirstChild(nodeCaptionDiv), icon
+                            .getElement(), nodeCaptionSpan);
                 }
                 icon.setUri(uidl.getStringAttribute("icon"));
             } else {
                 if (icon != null) {
-                    DOM.removeChild(nodeCaptionDiv, icon.getElement());
+                    DOM.removeChild(DOM.getFirstChild(nodeCaptionDiv), icon
+                            .getElement());
                     icon = null;
                 }
             }
