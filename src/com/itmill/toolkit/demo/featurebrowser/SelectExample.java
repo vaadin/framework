@@ -72,7 +72,7 @@ public class SelectExample extends CustomComponent {
         single.addComponent(sel);
         // combobox
         sel = new ComboBox("ComboBox");
-        ((ComboBox) sel).setColumns(15);
+        ((ComboBox) sel).setWidth("15em");
         initSelect(sel);
         single.addComponent(sel);
         // "twin column" select

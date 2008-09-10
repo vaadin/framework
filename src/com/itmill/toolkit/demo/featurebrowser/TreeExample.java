@@ -45,7 +45,7 @@ public class TreeExample extends CustomComponent implements Action.Handler,
         // Panel w/ Tree
         Panel p = new Panel("Select item");
         p.setStyleName(Panel.STYLE_LIGHT);
-        p.setWidth(250);
+        p.setWidth("250px");
         // Description
         p.addComponent(new Label(desc));
         // Tree with a few items
