@@ -73,6 +73,7 @@ public class IPanel extends SimplePanel implements Paintable,
         DOM.sinkEvents(contentNode, Event.ONSCROLL);
     }
 
+    @Override
     protected Element getContainerElement() {
         return contentNode;
     }
@@ -245,6 +246,9 @@ public class IPanel extends SimplePanel implements Paintable,
                     "offsetWidth");
             int borderWidthGuess = 200;
             int widthGuess = captionOffsetWidth - borderWidthGuess;
+            if (widthGuess < 0) {
+                widthGuess = 0;
+            }
             DOM.setStyleAttribute(contentNode, "width", widthGuess + "px");
 
             int actualBorder = DOM.getElementPropertyInt(contentNode,
@@ -253,6 +257,9 @@ public class IPanel extends SimplePanel implements Paintable,
             if (actualBorder != borderWidthGuess) {
                 int realWidthIncludingBorder = captionOffsetWidth
                         - actualBorder;
+                if (realWidthIncludingBorder < 0) {
+                    realWidthIncludingBorder = 0;
+                }
                 DOM.setStyleAttribute(contentNode, "width",
                         realWidthIncludingBorder + "px");
             }
@@ -335,6 +342,7 @@ public class IPanel extends SimplePanel implements Paintable,
         Util.runDescendentsLayout(this);
     }
 
+    @Override
     public void onBrowserEvent(Event event) {
         final Element target = DOM.eventGetTarget(event);
         final int type = DOM.eventGetType(event);
@@ -380,6 +388,7 @@ public class IPanel extends SimplePanel implements Paintable,
     /**
      * Panel handles dimensions by itself.
      */
+    @Override
     public void setHeight(String height) {
         // NOP
     }
@@ -387,6 +396,7 @@ public class IPanel extends SimplePanel implements Paintable,
     /**
      * Panel handles dimensions by itself.
      */
+    @Override
     public void setWidth(String width) {
         this.width = width;
         // Let browser handle 100% width (DIV element takes all size by
