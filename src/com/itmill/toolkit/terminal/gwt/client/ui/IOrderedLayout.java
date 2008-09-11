@@ -1189,6 +1189,10 @@ public class IOrderedLayout extends Panel implements Container,
          */
         childWidgets.remove(index);
 
+        if (child instanceof Paintable) {
+            client.unregisterPaintable((Paintable) child);
+        }
+
         return true;
     }
 
