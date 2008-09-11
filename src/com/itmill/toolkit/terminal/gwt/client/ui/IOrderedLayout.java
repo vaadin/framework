@@ -28,6 +28,214 @@ import com.itmill.toolkit.terminal.gwt.client.Util;
  * supports use through UIDL updates. Direct client side use is not (currently)
  * suported in all operation modes.
  * 
+ * 
+ * <h2>Features</h2>
+ * 
+ * <h3>Orientation</h3>
+ * 
+ * <p>
+ * Orientation of the ordered layout declared whether the children are layouted
+ * horizontally or vertically.
+ * </p>
+ * 
+ * <img src="IOrderedLayout_horizontal.png"/> <img
+ * src="IOrderedLayout_vertical.png"/>
+ * 
+ * <h3>Spacing</h3>
+ * 
+ * <p>
+ * Spacing determines if there should be space between the children. Note that
+ * this does not imply margin.
+ * </p>
+ * 
+ * <img src="IOrderedLayout_horizontal_spacing.png"/> <img
+ * src="IOrderedLayout_vertical_spacing.png"/>
+ * 
+ * <h3>Margin</h3>
+ * 
+ * <p>
+ * Margin determines if there should be margin around children. Note that this
+ * does not imply spacing.
+ * </p>
+ * 
+ * <img src="IOrderedLayout_margin.png"/>
+ * 
+ * <h3>Positioning the caption, icon, required indicator and error</h3>
+ * 
+ * <p>
+ * If the child lets the layout to handle captions, by icon, caption, required
+ * marker (*) and error icon are placed on top of the component area. Icon will
+ * be first and is followed by the caption. Required marker is placed right
+ * after the caption text and error icon is placed last. Note that all of these
+ * are optional:
+ * </p>
+ * 
+ * <img src="IOrderedLayout_normal_caption.png"/>
+ * 
+ * <p>
+ * If the child lets the layout to handle captions, but the caption and icon are
+ * both missing, no line is reserved for the required marker (*) and error icon.
+ * Instead they are placed on the right side of the top of the component area.
+ * Required marker is placed right after the component text and error icon is
+ * placed last. If the component is tall, the indicators are aligned along the
+ * top of the component. Note that both of these indicators are optional:
+ * </p>
+ * 
+ * <img src="IOrderedLayout_no_caption.png"/>
+ * 
+ * <p>
+ * In case the child want to handle the caption by itself, layout does not
+ * repeat the caption.
+ * </p>
+ * 
+ * <img src="IOrderedLayout_component_handles_the_caption.png"/>
+ * 
+ * <h3>Aligning the children</h3>
+ * 
+ * <p>
+ * The children of the layout can be aligned horizontally and vertically:
+ * </p>
+ * 
+ * <img src="IOrderedLayout_alignment.png"/>
+ * 
+ * <h3>Fixed height, width or both</h3>
+ * 
+ * <p>
+ * When no size is explicitly specified, the size of the layout depends on the
+ * size of its children. If the size if specified, either explicitly or as
+ * percertages of the parent size, the size is equally divided between the
+ * children. In case some children might overflow out of the given space, they
+ * are cut to fit the given space. Note that the size can be independently
+ * specified for horizontal and vertical dimensions and is independent of the
+ * orientation. For example, layout can be horizontal and have fixed 300px
+ * height, but still measure its width from the child sizes.
+ * </p>
+ * 
+ * <p>
+ * Horizontal layout with fixed width of 300px and height of 150px:
+ * </p>
+ * <img src="IOrderedLayout_w300_h150.png"/>
+ * 
+ * <p>
+ * Horizontal layout with fixed width of 300px:
+ * </p>
+ * <img src="IOrderedLayout_w300.png"/>
+ * 
+ * <p>
+ * Horizontal layout with fixed height of 150px:
+ * </p>
+ * <img src="IOrderedLayout_h150.png"/>
+ * 
+ * 
+ * <h3>CSS attributes</h3>
+ * 
+ * <p>
+ * Sizes for marginals and spacing can be specified for the ordered layout in
+ * CSS. For example, here are the defaults for OrderedLayout:
+ * </p>
+ * 
+ * <pre>
+ * .i-orderedlayout-margin-top {
+ *         padding-top: 15px;
+ * }
+ * .i-orderedlayout-margin-right {
+ *         padding-right: 18px;
+ * }
+ * .i-orderedlayout-margin-bottom {
+ *         padding-bottom: 15px;
+ * }
+ * .i-orderedlayout-margin-left {
+ *         padding-left: 18px;
+ * }
+ * 
+ * .i-orderedlayout-vspacing {
+ *         margin-top: 8px;
+ * }
+ * .i-orderedlayout-hspacing {
+ *         padding-left: 8px;
+ * }
+ * </pre>
+ * 
+ * <p>
+ * When a style-name is set for the layout, this name is included in the style.
+ * Note that the unspecified dimensions still default to the values given for
+ * the layout without style. For example, if we would like to give each layout
+ * with "tested-layout" style quite a bit larger right margin:
+ * </p>
+ * 
+ * <pre>
+ * .i-orderedlayout-tested-layout-margin-right {
+ *         padding-right: 100px;
+ * }
+ * </pre>
+ * 
+ * <p>
+ * Here is the rendering with getMargin(true). Note that all the other margins
+ * are set to the default values defined for the layout without stylename:
+ * </p>
+ * <img src="IOrderedLayout_special-margin.png"/>
+ * 
+ * 
+ * <h3>DOM-structure</h3>
+ * 
+ * Note that DOM-structure is an implementation specific and might change in the
+ * future versions of IT Mill Toolkit. The purpose of this documentation is to
+ * to ease reading of the implementation and thus to make implementation of your
+ * own layouts easier.
+ * 
+ * <div style="border: 1px solid black; padding: 3px;">OUTERDIV
+ * 
+ * <div style="border: 1px solid black; padding: 3px;">Optional STRUCTURE
+ * 
+ * <div style="border: 1px solid black; padding: 3px;">CHILDWRAPPER (for each
+ * child)
+ * 
+ * <div style="border: 1px solid black; padding: 3px;">Optional ALIGNMENTWRAPPER
+ * 
+ * <div style="border: 1px solid black; padding: 3px;">Optional CLIPPER
+ * 
+ * <div style="border: 1px solid black; padding: 3px;">CAPTION <span
+ * style="border: 1px solid black; padding: 3px;">ICON-IMG</span> <span
+ * style="border: 1px solid black; padding: 3px;">CAPTION-SPAN</span> <span
+ * style="border: 1px solid black; padding: 3px;">REQUIRED-SPAN</span> <span
+ * style="border: 1px solid black; padding: 3px;">ERRORINDICATOR-DIV</span>
+ * </div>
+ * 
+ * <div style="border: 1px solid black; padding: 3px; margin-top:3px;">Widget
+ * component</div>
+ * 
+ * </div></div></div>
+ * 
+ * </div></div>
+ * 
+ * <p>
+ * Notes:
+ * <ul>
+ * <li>If caption and icon are missing from child, <i>Widget component</i> and
+ * <i>CAPTION</i> elements are swithched</li>
+ * <li>If either child manages caption, or it has no caption, icon, required or
+ * error, <i>CAPTION</i> element is not needed at all</li>
+ * <li>If layout is vertical and its width is specified, <i>Optional
+ * STRUCTURE</i> is not present. Otherwise it looks like <div
+ * style="border: 1px solid black; padding: 3px;">TABLE <div
+ * style="border: 1px solid black; padding: 3px;">TBODY <div
+ * style="border: 1px solid black; padding: 3px;">Optional TR only included in
+ * case of horizontal layouts </div></div></div></li>
+ * <li><i>CHILDWRAPPER</i> is a DIV in case of the layout is vertical and width
+ * is specified. For vertical layouts with unknown width it is TR-TD. For
+ * horizontal layouts, it is TR-TD.</li>
+ * <li><i>Optionasl ALIGNMENTWRAPPER</i> are only used alignment is not the
+ * default - top-left. Alignment wrapper structure is
+ * TABLE-TBODY-TR-TD-TABLE-TBODY-TR-TD, where the outer table td is used to
+ * specify the alignments and inner table td to reset the table defaults to
+ * top-left.</li>
+ * <li><i>Optional CLIPPERDIV</i> included in the structure only if alignment
+ * structure is in place and <i>CHILDWRAPPER</i> is not a div and thus can not
+ * be used for clipping</li>
+ * </ul>
+ * </p>
+ * 
+ * 
  * @author IT Mill Ltd
  */
 public class IOrderedLayout extends Panel implements Container,
