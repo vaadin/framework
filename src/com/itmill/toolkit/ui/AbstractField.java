@@ -244,7 +244,8 @@ public abstract class AbstractField extends AbstractComponent implements Field,
             try {
 
                 // Discards buffer by overwriting from datasource
-                newValue = dataSource.getValue();
+                newValue = String.class == getType() ? dataSource.toString()
+                        : dataSource.getValue();
 
                 // If successful, remove set the buffering state to be ok
                 if (currentBufferedSourceException != null) {
@@ -332,7 +333,8 @@ public abstract class AbstractField extends AbstractComponent implements Field,
         }
         readTroughMode = readTrough;
         if (!isModified() && readTroughMode && dataSource != null) {
-            setInternalValue(dataSource.getValue());
+            setInternalValue(String.class == getType() ? dataSource.toString()
+                    : dataSource.getValue());
             fireValueChange(false);
         }
     }
@@ -353,10 +355,27 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     }
 
     /**
-     * Gets the current value of the field. This is the visible, modified and
-     * possible invalid value the user have entered to the field. In the
-     * read-through mode, the abstract buffer is also updated and validation is
-     * performed.
+     * Gets the current value of the field.
+     * 
+     * <p>
+     * This is the visible, modified and possible invalid value the user have
+     * entered to the field. In the read-through mode, the abstract buffer is
+     * also updated and validation is performed.
+     * </p>
+     * 
+     * <p>
+     * Note that the object returned is compatible with getType(). For example,
+     * if the type is String, this returns Strings even when the underlying
+     * datasource is of some other type. In order to access the datasources
+     * native type, use getPropertyDatasource().getValue() instead.
+     * </p>
+     * 
+     * <p>
+     * Note that when you extend AbstractField, you must reimplement this method
+     * if datasource.getValue() is not assignable to class returned by getType()
+     * AND getType() is not String. In case of Strings, getValue() calls
+     * datasource.toString() instead of datasource.getValue().
+     * </p>
      * 
      * @return the current value of the field.
      */
@@ -367,7 +386,8 @@ public abstract class AbstractField extends AbstractComponent implements Field,
             return value;
         }
 
-        final Object newValue = dataSource.getValue();
+        Object newValue = String.class == getType() ? dataSource.toString()
+                : dataSource.getValue();
         if ((newValue == null && value != null)
                 || (newValue != null && !newValue.equals(value))) {
             setInternalValue(newValue);
@@ -514,7 +534,8 @@ public abstract class AbstractField extends AbstractComponent implements Field,
         // Gets the value from source
         try {
             if (dataSource != null) {
-                setInternalValue(dataSource.getValue());
+                setInternalValue(String.class == getType() ? dataSource
+                        .toString() : dataSource.getValue());
             }
             modified = false;
         } catch (final Throwable e) {
