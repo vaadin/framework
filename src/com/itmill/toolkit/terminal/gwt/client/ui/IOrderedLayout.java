@@ -38,8 +38,8 @@ import com.itmill.toolkit.terminal.gwt.client.Util;
  * horizontally or vertically.
  * </p>
  * 
- * <img src="IOrderedLayout_horizontal.png"/> <img
- * src="IOrderedLayout_vertical.png"/>
+ * <img src="doc-files/IOrderedLayout_horizontal.png"/> <img
+ * src="doc-files/IOrderedLayout_vertical.png"/>
  * 
  * <h3>Spacing</h3>
  * 
@@ -48,8 +48,8 @@ import com.itmill.toolkit.terminal.gwt.client.Util;
  * this does not imply margin.
  * </p>
  * 
- * <img src="IOrderedLayout_horizontal_spacing.png"/> <img
- * src="IOrderedLayout_vertical_spacing.png"/>
+ * <img src="doc-files/IOrderedLayout_horizontal_spacing.png"/> <img
+ * src="doc-files/IOrderedLayout_vertical_spacing.png"/>
  * 
  * <h3>Margin</h3>
  * 
@@ -58,7 +58,7 @@ import com.itmill.toolkit.terminal.gwt.client.Util;
  * does not imply spacing.
  * </p>
  * 
- * <img src="IOrderedLayout_margin.png"/>
+ * <img src="doc-files/IOrderedLayout_margin.png"/>
  * 
  * <h3>Positioning the caption, icon, required indicator and error</h3>
  * 
@@ -70,7 +70,7 @@ import com.itmill.toolkit.terminal.gwt.client.Util;
  * are optional:
  * </p>
  * 
- * <img src="IOrderedLayout_normal_caption.png"/>
+ * <img src="doc-files/IOrderedLayout_normal_caption.png"/>
  * 
  * <p>
  * If the child lets the layout to handle captions, but the caption and icon are
@@ -81,14 +81,14 @@ import com.itmill.toolkit.terminal.gwt.client.Util;
  * top of the component. Note that both of these indicators are optional:
  * </p>
  * 
- * <img src="IOrderedLayout_no_caption.png"/>
+ * <img src="doc-files/IOrderedLayout_no_caption.png"/>
  * 
  * <p>
  * In case the child want to handle the caption by itself, layout does not
  * repeat the caption.
  * </p>
  * 
- * <img src="IOrderedLayout_component_handles_the_caption.png"/>
+ * <img src="doc-files/IOrderedLayout_component_handles_the_caption.png"/>
  * 
  * <h3>Aligning the children</h3>
  * 
@@ -96,7 +96,7 @@ import com.itmill.toolkit.terminal.gwt.client.Util;
  * The children of the layout can be aligned horizontally and vertically:
  * </p>
  * 
- * <img src="IOrderedLayout_alignment.png"/>
+ * <img src="doc-files/IOrderedLayout_alignment.png"/>
  * 
  * <h3>Fixed height, width or both</h3>
  * 
@@ -114,17 +114,17 @@ import com.itmill.toolkit.terminal.gwt.client.Util;
  * <p>
  * Horizontal layout with fixed width of 300px and height of 150px:
  * </p>
- * <img src="IOrderedLayout_w300_h150.png"/>
+ * <img src="doc-files/IOrderedLayout_w300_h150.png"/>
  * 
  * <p>
  * Horizontal layout with fixed width of 300px:
  * </p>
- * <img src="IOrderedLayout_w300.png"/>
+ * <img src="doc-files/IOrderedLayout_w300.png"/>
  * 
  * <p>
  * Horizontal layout with fixed height of 150px:
  * </p>
- * <img src="IOrderedLayout_h150.png"/>
+ * <img src="doc-files/IOrderedLayout_h150.png"/>
  * 
  * 
  * <h3>CSS attributes</h3>
@@ -173,7 +173,7 @@ import com.itmill.toolkit.terminal.gwt.client.Util;
  * Here is the rendering with getMargin(true). Note that all the other margins
  * are set to the default values defined for the layout without stylename:
  * </p>
- * <img src="IOrderedLayout_special-margin.png"/>
+ * <img src="doc-files/IOrderedLayout_special-margin.png"/>
  * 
  * 
  * <h3>DOM-structure</h3>
