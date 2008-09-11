@@ -312,6 +312,12 @@ public class Table extends AbstractSelect implements Action.Container,
 
     private int clickListenerCount;
 
+    /*
+     * EXPERIMENTAL feature: will tell the client to re-calculate column widths
+     * if set to true. Currently no setter: extend to enable.
+     */
+    protected boolean alwaysRecalculateColumnWidths = false;
+
     /* Table constructors */
 
     /**
@@ -1795,6 +1801,13 @@ public class Table extends AbstractSelect implements Action.Container,
             rows = reqRowsToPaint;
         } else {
             rows = cells[0].length;
+            if (alwaysRecalculateColumnWidths) {
+                // TODO experimental feature for now: tell the client to
+                // recalculate column widths.
+                // We'll only do this for paints that do not originate from
+                // table scroll/cache requests (i.e when reqRowsToPaint<0)
+                target.addAttribute("recalcWidths", true);
+            }
         }
 
         if (!isNullSelectionAllowed() && getNullSelectionItemId() != null

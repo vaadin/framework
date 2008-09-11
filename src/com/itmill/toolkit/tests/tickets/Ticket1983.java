@@ -9,6 +9,7 @@ import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.SplitPanel;
 import com.itmill.toolkit.ui.Table;
 import com.itmill.toolkit.ui.Window;
+import com.itmill.toolkit.ui.Button.ClickEvent;
 
 /**
  * Test class for ticket 1983
@@ -23,6 +24,9 @@ public class Ticket1983 extends Application {
 
     private static class TestLayout extends SplitPanel {
         boolean isLong = true;
+        final Table table = new MyTable();
+        final String propId = "col";
+        final String propId2 = "col2";
 
         public TestLayout() {
             super(ORIENTATION_HORIZONTAL);
@@ -44,13 +48,26 @@ public class Ticket1983 extends Application {
             leftSide.setHeight("100%");
 
             final IndexedContainer dataSource = new IndexedContainer();
-            final String propId = "col";
             dataSource.addContainerProperty(propId, String.class, null);
+            dataSource.addContainerProperty(propId2, String.class, null);
             final Object itemId = dataSource.addItem();
             dataSource.getItem(itemId).getItemProperty(propId).setValue(
                     "Very long value that makes a scrollbar appear for sure");
+            dataSource.getItem(itemId).getItemProperty(propId2).setValue(
+                    "Very long value that makes a scrollbar appear for sure");
 
-            final Table table = new Table();
+            for (int i = 0; i < 150; i++) {
+                Object id = dataSource.addItem();
+                dataSource
+                        .getItem(id)
+                        .getItemProperty(propId)
+                        .setValue(
+                                (i == 100 ? "Very long value that makes a scrollbar appear for sure"
+                                        : "Short"));
+                dataSource.getItem(id).getItemProperty(propId2).setValue(
+                        "Short");
+            }
+
             table.setSizeFull();
             table.setContainerDataSource(dataSource);
             table.setVisibleColumns(new Object[] { propId });
@@ -65,11 +82,18 @@ public class Ticket1983 extends Application {
                     if (isLong) {
                         dataSource.getItem(itemId).getItemProperty(propId)
                                 .setValue("Short value");
+                        dataSource.getItem(itemId).getItemProperty(propId2)
+                                .setValue("Short value");
                         isLong = false;
                     } else {
                         dataSource
                                 .getItem(itemId)
                                 .getItemProperty(propId)
+                                .setValue(
+                                        "Very long value that makes a scrollbar appear for sure");
+                        dataSource
+                                .getItem(itemId)
+                                .getItemProperty(propId2)
                                 .setValue(
                                         "Very long value that makes a scrollbar appear for sure");
                         isLong = true;
@@ -78,9 +102,36 @@ public class Ticket1983 extends Application {
                     table.requestRepaint();
                 }
             });
-            leftSide.setFirstComponent(button);
+
+            OrderedLayout ol = new OrderedLayout();
+            ol.addComponent(button);
+            leftSide.setFirstComponent(ol);
+
+            button = new Button("Two col");
+            button.addListener(new Button.ClickListener() {
+                public void buttonClick(ClickEvent event) {
+                    Button b = event.getButton();
+                    if (((Boolean) b.getValue()).booleanValue()) {
+                        table
+                                .setVisibleColumns(new Object[] { propId,
+                                        propId2 });
+                    } else {
+                        table.setVisibleColumns(new Object[] { propId });
+                    }
+
+                }
+
+            });
+            button.setSwitchMode(true);
+            ol.addComponent(button);
 
             return leftSide;
+        }
+    }
+
+    static class MyTable extends Table {
+        MyTable() {
+            alwaysRecalculateColumnWidths = true;
         }
     }
 }

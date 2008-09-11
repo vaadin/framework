@@ -131,6 +131,13 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
     private int oldAvailPixels;
     private boolean emitClickEvents;
 
+    /*
+     * Read from the "recalcWidths" -attribute. When it is true, the table will
+     * recalculate the widths for columns - desirable in some cases. For #1983,
+     * marked experimental.
+     */
+    boolean recalcWidths = false;
+
     public IScrollTable() {
 
         bodyContainer.addScrollListener(this);
@@ -169,6 +176,8 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
             }
             totalRows = newTotalRows;
         }
+
+        recalcWidths = uidl.hasAttribute("recalcWidths");
 
         pageLength = uidl.getIntAttribute("pagelength");
         if (pageLength == 0) {
@@ -245,7 +254,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
         }
         updateHeader(uidl.getStringArrayAttribute("vcolorder"));
 
-        if (initializedAndAttached) {
+        if (!recalcWidths && initializedAndAttached) {
             updateBody(rowData, uidl.getIntAttribute("firstrow"), uidl
                     .getIntAttribute("rows"));
         } else {
@@ -973,10 +982,15 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
                 DOM.setStyleAttribute(captionContainer, "overflow", "");
             }
             width = w;
-            DOM.setStyleAttribute(captionContainer, "width", (w
-                    - DRAG_WIDGET_WIDTH - 4)
-                    + "px");
-            setWidth(w + "px");
+            if (w == -1) {
+                DOM.setStyleAttribute(captionContainer, "width", "");
+                setWidth("");
+            } else {
+                DOM.setStyleAttribute(captionContainer, "width", (w
+                        - DRAG_WIDGET_WIDTH - 4)
+                        + "px");
+                setWidth(w + "px");
+            }
         }
 
         public int getWidth() {
@@ -1323,6 +1337,8 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
                 if (col.hasAttribute("width")) {
                     final String width = col.getStringAttribute("width");
                     c.setWidth(Integer.parseInt(width));
+                } else if (recalcWidths) {
+                    c.setWidth(-1);
                 }
             }
             // check for orphaned header cells
