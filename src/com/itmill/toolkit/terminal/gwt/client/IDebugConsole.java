@@ -56,6 +56,9 @@ public final class IDebugConsole extends IToolkitOverlay implements Console {
 
     private int origLeft;
 
+    private static final String help = "Drag=move, shift-drag=resize, doubleclick=min/max."
+            + "Use debug=quiet to log only to browser console.";
+
     public IDebugConsole(ApplicationConnection client,
             ApplicationConfiguration cnf, boolean showWindow) {
         super(false, false);
@@ -76,10 +79,7 @@ public final class IDebugConsole extends IToolkitOverlay implements Console {
             panel.setStyleName("i-debug-console-content");
 
             caption.setInnerHTML("Debug window");
-            caption.setTitle("Move from caption, resize from content by "
-                    + "draggin with shift key. DblClick to "
-                    + "minimize. Use debug=quiet to log only"
-                    + " to browser console");
+            caption.setTitle(help);
 
             setWidget(panel);
             show();
@@ -90,6 +90,8 @@ public final class IDebugConsole extends IToolkitOverlay implements Console {
             actions.add(restart);
 
             panel.add(actions);
+
+            panel.add(new HTML("<i>" + help + "</i>"));
 
             clear.addClickListener(new ClickListener() {
                 public void onClick(Widget sender) {
