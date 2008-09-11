@@ -36,7 +36,8 @@ package com.itmill.toolkit.data;
 public interface Property {
 
     /**
-     * Gets the value stored in the Property.
+     * Gets the value stored in the Property. The returned object is compatible
+     * with the class returned by getType().
      * 
      * @return the value stored in the Property
      */
