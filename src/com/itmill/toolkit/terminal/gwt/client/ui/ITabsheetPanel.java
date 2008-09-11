@@ -137,11 +137,14 @@ public class ITabsheetPanel extends ComplexPanel {
         DOM.setStyleAttribute(e, "visibility", "hidden");
         DOM.setStyleAttribute(e, "position", "absolute");
         DOM.setStyleAttribute(e, "top", "0px");
+        // Display: none fixes #2062
+        DOM.setStyleAttribute(e, "display", "none");
     }
 
     private void unHide(Element e) {
         DOM.setStyleAttribute(e, "visibility", "");
         DOM.setStyleAttribute(e, "position", "");
         DOM.setStyleAttribute(e, "top", "");
+        DOM.setStyleAttribute(e, "display", "");
     }
 }
