@@ -1,48 +1,26 @@
 @import url(../default/styles.css);
 
 /* Reservr styles */
-body {
+#Reservr {
 	background-color: #E9ECED;
 	background-image: url(bmw.jpg);
 	background-repeat: no-repeat;
 	background-position: top right;
-	margin: 0;
 }
 
-#Reservr {
-	background-color: transparent;
-}
-
-#header {
+#Reservr .i-label-logo {
 	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
-	padding: 10px;
-}
-
-#logo {
-	line-height: 43px;
+	padding-left: 13px;
+	padding-bottom: 10px;
 	color: #F14C1A;
 	font-size: 22px;
 	letter-spacing: -0.03em;
 }
-
-#slogan {
-	color: #464F52;
-	font-style: italic;
-	font-size: 12px;
-}
-
-/* Default widgetset overrides */
-.i-label,.i-caption {
-	min-height: 1em;
-}
-
-.i-datefield-entrycalendar-hours {
-	height: 250px;
-	overflow: auto;
-}
-
-.i-datefield-calendarpanel {
-	width: 20em;
+#Reservr .i-label-slogan {
+	color: black;
+	padding-left: 15px;
+	padding-bottom: 10px;
+	font-style: italic;	
 }
 
 .i-caption {
@@ -50,26 +28,13 @@ body {
 	font-size: 16px;
 }
 
+
 .i-label-arrow {
 	line-height: 160px;
 	font-family: Times New Roman;
 	color: #F14C1A;
 	font-size: 65px;
 	margin: 0 20px 0 12px;
-}
-
-textarea.i-textfield {
-	font-size: 13px;
-	width: 320px;
-	height: 110px;
-	margin-right: 30px;
-}
-
-.i-button-link {
-	border: 0px;
-	text-align: left;
-	text-decoration: none;
-	background: none;
 }
 
 .i-button-important-link {
@@ -87,13 +52,4 @@ textarea.i-textfield {
 	background: #5daee8;
 	font-weight: bold;
 	color: #fff;
-}
-
-.i-orderedlayout {
-	margin: 0px;
-	padding: 0px;
-}
-
-.i-orderedlayout td {
-	vertical-align: top;
 }

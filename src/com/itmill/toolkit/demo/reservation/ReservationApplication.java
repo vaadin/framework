@@ -60,8 +60,15 @@ public class ReservationApplication extends Application {
         final Window mainWindow = new Window("Reservr ");
         setMainWindow(mainWindow);
         setTheme("reservr");
-
         mainWindow.getLayout().setWidth("100%");
+
+        Label logo = new Label("Reservr");
+        logo.setStyleName("logo");
+        mainWindow.addComponent(logo);
+
+        Label slogan = new Label("Representational vehicles on-the-road");
+        slogan.setStyleName("slogan");
+        mainWindow.addComponent(slogan);
 
         final TabSheet mainTabs = new TabSheet();
         mainWindow.addComponent(mainTabs);
