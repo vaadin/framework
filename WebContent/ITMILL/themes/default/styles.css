@@ -872,13 +872,6 @@ input.i-modified,
 .i-panel {
 	background: transparent url(panel/img/top-left.png) no-repeat;
 }
-.i-panel:before {
-	display: block;
-	content: "";
-	background: transparent url(panel/img/top-right.png) repeat-x right top;
-	height: 9px;
-	margin-left: 9px;
-}
 
 .i-panel-caption .i-errorindicator {
 	float: none;
@@ -899,35 +892,21 @@ input.i-modified,
 	color: #f14c1a;
 	white-space: nowrap;
 	height: 18px;
-	padding: 6px 18px 14px 18px;
-	border: 1px solid #babfc0;
-	border-top: none;
-	background: #fff;
+	padding: 15px 18px 14px 8px;
+	margin-left: 10px;
+	background: transparent url(panel/img/top-right.png) no-repeat right top;
 	overflow:hidden;
 }
 
 .i-panel-nocaption {
 	height: 9px;
-	border-bottom: 1px solid #dee2e3;
-}
-
-.i-panel-caption:before,
-.i-panel-nocaption:before {
-	display: block;
-	content: "";
-	position: relative;
-	width: 9px;
-	height: 9px;
-	margin: -15px 0 5px -19px;
-}
-
-.i-panel-nocaption:before {
-	margin: -9px 0 0 0;
+	margin-left: 10px;
+	background: transparent url(panel/img/top-right.png) no-repeat right top;
+	overflow: hidden;
 }
 
 .i-panel-content {
 	border: 1px solid #babfc0;
-	border-top: none;
 	border-bottom: 1px solid #dee2e3;
 	background-color: #fff;
 	overflow: auto;
@@ -955,35 +934,20 @@ input.i-modified,
 
 /* Light panel style */
 
-.i-panel-light {
-	background: transparent;
-}
-.i-panel-light:before {
-	display: none;
-}
-
+.i-panel-light,
 .i-panel-caption-light {
-	border-left: none;
-	border-right: none;
 	background: transparent;
-	padding-top: 14px;
-	overflow: hidden;
-}
-
-.i-panel-caption-light:before,
-.i-panel-nocaption-light:before {
-	display: none;
 }
 
 .i-panel-nocaption-light {
-	height: 1px;
-	background: #babfc0;
-	overflow: hidden;
-	border: none;
+	background: transparent;
+	height: 0;
+	margin: 0;
 }
 
 .i-panel-content-light {
 	border: none;
+	border-top: 1px solid #babfc0;
 	background: transparent;
 }
 
@@ -996,16 +960,6 @@ input.i-modified,
 
 
 
-/* Light panel contained within another panel or a tabsheet */
-
-.i-panel .i-panel-caption-light,
-.i-tabsheet .i-panel-caption-light {
-	margin-top: -1px;
-	padding-top: 14px;
-	border-top: 1px solid #babfc0;
-}
-
-
 
 
 
@@ -1014,22 +968,26 @@ input.i-modified,
  * apply them if they are grouped together 
  * (it doesn't recognize the '+' selector).
 */
+* html .i-panel {
+	background: transparent;
+}
 * html .i-panel-caption {
 	border: 1px solid #babfc0;
-	padding-top: 14px;
+	border-bottom: none;
+	background: #fff;
+	margin: 0;
+	padding-left: 18px
 }
-*+html .i-panel-caption {
-	border: 1px solid #babfc0;
-	padding-top: 14px;
+* html .i-panel-nocaption {
+	border: none;
+	background: transparent;
+	margin: 0;
+	height: 0;
 }
 
 * html .i-panel-caption-light {
-	border-left: none;
-	border-right: none;
-}
-*+html .i-panel-caption-light {
-	border-left: none;
-	border-right: none;
+	border: none;
+	background: transparent;
 }
 
 * html .i-panel-content {
@@ -1053,20 +1011,6 @@ input.i-modified,
 *+html .i-panel-deco {
 	height: 0;
 	overflow: hidden;
-}
-
-/* Without caption */
-* html .i-panel-nocaption {
-	height: 1px;
-	overflow: hidden;
-	background: #c1c6cc;
-	border: none;
-}
-*+html .i-panel-nocaption {
-	height: 1px;
-	overflow: hidden;
-	background: #c1c6cc;
-	border: none;
 }
 /*
  * PopupView styles
