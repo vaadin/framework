@@ -182,20 +182,31 @@ public class TextField extends AbstractField {
      * @return the Formatted value.
      * @see #setFormat(Format)
      * @see Format
+     * @deprecated
      */
     protected String getFormattedValue() {
-        final Object value = getValue();
-        if (format != null && value != null) {
-            try {
-                return format.format(value);
-            } catch (final IllegalArgumentException e) {
-                // FIXME: Handle exception ?
-            }
+        Object v = getValue();
+        if (v == null) {
+            return null;
         }
-        if (value != null) {
-            return value.toString();
+        return v.toString();
+    }
+
+    /*
+     * Gets the value of the field, but uses formatter is given. Don't add a
+     * JavaDoc comment here, we use the default documentation from implemented
+     * interface.
+     */
+    public Object getValue() {
+        Object v = super.getValue();
+        if (format == null || v == null) {
+            return v;
         }
-        return null;
+        try {
+            return format.format(v);
+        } catch (final IllegalArgumentException e) {
+            return v;
+        }
     }
 
     /*
