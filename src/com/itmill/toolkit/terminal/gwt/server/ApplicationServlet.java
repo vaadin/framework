@@ -520,6 +520,10 @@ public class ApplicationServlet extends HttpServlet {
                             .getSessionExpiredCaption(), ci
                             .getSessionExpiredMessage(), ci
                             .getSessionExpiredURL());
+                    // Invalidate session (weird to have session if we're saying
+                    // that it's expired, and worse: portal integration will
+                    // fail since the session is not created by the portal.
+                    request.getSession().invalidate();
                 }
             } catch (SystemMessageException ee) {
                 throw new ServletException(ee);
