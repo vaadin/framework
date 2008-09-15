@@ -137,7 +137,6 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
     public void setWindowOrder(int order) {
         int zIndex = (order + Z_INDEX_BASE);
         if (modal) {
-            zIndex += 1000;
             DOM.setStyleAttribute(modalityCurtain, "zIndex", "" + zIndex);
         }
         DOM.setStyleAttribute(getElement(), "zIndex", "" + zIndex);
@@ -382,6 +381,7 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 
     }
 
+    @Override
     public void show() {
         if (modal) {
             showModalityCurtain();
@@ -425,6 +425,7 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
         }
     }
 
+    @Override
     public void hide() {
         if (modal) {
             hideModalityCurtain();
@@ -467,6 +468,8 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
                     + "px");
             DOM.setStyleAttribute(modalityCurtain, "position", "absolute");
         }
+        DOM.setStyleAttribute(modalityCurtain, "zIndex", ""
+                + (windowOrder.indexOf(this) + Z_INDEX_BASE));
         DOM.appendChild(RootPanel.getBodyElement(), modalityCurtain);
     }
 
@@ -514,6 +517,7 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
         }
     }
 
+    @Override
     public void setPopupPosition(int left, int top) {
         super.setPopupPosition(left, top);
         if (left != uidlPositionX && client != null) {
@@ -539,6 +543,7 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
         DOM.setInnerHTML(headerText, html);
     }
 
+    @Override
     protected Element getContainerElement() {
         // in GWT 1.5 this method is used in PopupPanel constructor
         if (contents == null) {
@@ -547,6 +552,7 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
         return contents;
     }
 
+    @Override
     public void onBrowserEvent(final Event event) {
         final int type = DOM.eventGetType(event);
 
@@ -643,6 +649,7 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
         Util.runDescendentsLayout(this);
     }
 
+    @Override
     public void setWidth(String width) {
         if (!"".equals(width)) {
             DOM
@@ -692,6 +699,7 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
         }
     }
 
+    @Override
     public boolean onEventPreview(Event event) {
         if (dragging) {
             onDragEvent(event);
@@ -714,6 +722,7 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
         client.updateVariable(id, "scrollLeft", scrollLeft, false);
     }
 
+    @Override
     public void addStyleDependentName(String styleSuffix) {
         // IWindow's getStyleElement() does not return the same element as
         // getElement(), so we need to override this.
@@ -721,6 +730,7 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
                 true);
     }
 
+    @Override
     protected void onAttach() {
         super.onAttach();
         // Calculate space required by window borders, so we can accurately
