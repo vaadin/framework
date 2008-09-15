@@ -2264,6 +2264,16 @@ input.i-modified,
 	line-height: 18px;
 }
 
+/* Partial fix for bug #1106 */
+/* Target Firefox 2 (somehow this will force almost all window borders on top of a flash object) */
+.i-window-contents, x:-moz-any-link {
+	overflow: hidden;
+}
+/* Target Firefox 3 (it doesn't need any trickery) */
+.i-window-contents, x:-moz-any-link, x:default {
+	overflow: visible;
+}
+
 .i-window-footer {
 	height: 0;
 	font-size: 0px;
