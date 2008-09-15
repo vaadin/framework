@@ -10,6 +10,7 @@ import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ComplexPanel;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
@@ -55,6 +56,8 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
     private boolean locked;
 
     private String splitterStyleName;
+
+    private Element draggingCurtain;
 
     public ISplitPanel() {
         this(ORIENTATION_HORIZONTAL);
@@ -340,6 +343,9 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
         if (DOM.compare(trg, splitter)
                 || DOM.compare(trg, DOM.getChild(splitter, 0))) {
             resizing = true;
+            if (BrowserInfo.get().isGecko()) {
+                showDraggingCurtain();
+            }
             DOM.setCapture(getElement());
             origX = DOM.getElementPropertyInt(splitter, "offsetLeft");
             origY = DOM.getElementPropertyInt(splitter, "offsetTop");
@@ -390,8 +396,39 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
 
     public void onMouseUp(Event event) {
         DOM.releaseCapture(getElement());
+        if (BrowserInfo.get().isGecko()) {
+            hideDraggingCurtain();
+        }
         resizing = false;
         onMouseMove(event);
+    }
+
+    /**
+     * Used in FF to avoid losing mouse capture when pointer is moved on an
+     * iframe.
+     */
+    private void showDraggingCurtain() {
+        if (draggingCurtain == null) {
+            draggingCurtain = DOM.createDiv();
+            DOM.setStyleAttribute(draggingCurtain, "position", "absolute");
+            DOM.setStyleAttribute(draggingCurtain, "top", "0px");
+            DOM.setStyleAttribute(draggingCurtain, "left", "0px");
+            DOM.setStyleAttribute(draggingCurtain, "width", "100%");
+            DOM.setStyleAttribute(draggingCurtain, "height", "100%");
+            DOM.setStyleAttribute(draggingCurtain, "zIndex", ""
+                    + IToolkitOverlay.Z_INDEX);
+            DOM.appendChild(RootPanel.getBodyElement(), draggingCurtain);
+        }
+    }
+
+    /**
+     * Hides dragging curtain
+     */
+    private void hideDraggingCurtain() {
+        if (draggingCurtain != null) {
+            DOM.removeChild(RootPanel.getBodyElement(), draggingCurtain);
+            draggingCurtain = null;
+        }
     }
 
     private static int splitterSize = -1;
