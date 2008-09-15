@@ -314,11 +314,18 @@ public class ICalendarPanel extends FlexTable implements MouseListener,
         if (sender instanceof IEventButton) {
             processClickEvent(sender, false);
             timer = new Timer() {
+                @Override
                 public void run() {
-                    processClickEvent(sender, false);
+                    timer = new Timer() {
+                        @Override
+                        public void run() {
+                            processClickEvent(sender, false);
+                        }
+                    };
+                    timer.scheduleRepeating(150);
                 }
             };
-            timer.scheduleRepeating(100);
+            timer.schedule(500);
         }
     }
 
@@ -364,6 +371,7 @@ public class ICalendarPanel extends FlexTable implements MouseListener,
             }
         }
 
+        @Override
         public void onBrowserEvent(Event event) {
             super.onBrowserEvent(event);
             switch (DOM.eventGetType(event)) {
