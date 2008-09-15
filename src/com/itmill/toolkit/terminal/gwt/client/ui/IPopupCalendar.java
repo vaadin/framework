@@ -47,6 +47,7 @@ public class IPopupCalendar extends ITextualDate implements Paintable, Field,
 
     }
 
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         super.updateFromUIDL(uidl, client);
         if (date != null) {
@@ -99,6 +100,7 @@ public class IPopupCalendar extends ITextualDate implements Paintable, Field,
             buildDate();
             // Sigh.
             Timer t = new Timer() {
+                @Override
                 public void run() {
                     open = false;
                 }
@@ -116,6 +118,7 @@ public class IPopupCalendar extends ITextualDate implements Paintable, Field,
         calendar.setFocus(focus);
     }
 
+    @Override
     protected int getFieldExtraWidth() {
         if (fieldExtraWidth < 0) {
             fieldExtraWidth = super.getFieldExtraWidth();

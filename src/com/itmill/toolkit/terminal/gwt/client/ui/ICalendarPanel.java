@@ -11,7 +11,6 @@ import java.util.List;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.MouseListener;
 import com.google.gwt.user.client.ui.MouseListenerCollection;
@@ -22,8 +21,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.DateTimeService;
 import com.itmill.toolkit.terminal.gwt.client.LocaleService;
 
-public class ICalendarPanel extends FlexTable implements MouseListener,
-        ClickListener {
+public class ICalendarPanel extends FlexTable implements MouseListener {
 
     private final IDateField datefield;
 
@@ -68,6 +66,7 @@ public class ICalendarPanel extends FlexTable implements MouseListener,
         final boolean needsMonth = datefield.getCurrentResolution() > IDateField.RESOLUTION_YEAR;
         boolean needsBody = datefield.getCurrentResolution() >= IDateField.RESOLUTION_DAY;
         final boolean needsTime = datefield.getCurrentResolution() >= IDateField.RESOLUTION_HOUR;
+        forceRedraw = prevYear == null ? true : forceRedraw;
         buildCalendarHeader(forceRedraw, needsMonth);
         clearCalendarBody(!needsBody);
         if (needsBody) {
@@ -106,8 +105,6 @@ public class ICalendarPanel extends FlexTable implements MouseListener,
                 nextYear.setStyleName("i-button-nextyear");
                 prevYear.addMouseListener(this);
                 nextYear.addMouseListener(this);
-                prevYear.addClickListener(this);
-                nextYear.addClickListener(this);
                 setWidget(0, 0, prevYear);
                 setWidget(0, 4, nextYear);
 
@@ -120,8 +117,6 @@ public class ICalendarPanel extends FlexTable implements MouseListener,
                     nextMonth.setStyleName("i-button-nextmonth");
                     prevMonth.addMouseListener(this);
                     nextMonth.addMouseListener(this);
-                    prevMonth.addClickListener(this);
-                    nextMonth.addClickListener(this);
                     setWidget(0, 3, nextMonth);
                     setWidget(0, 1, prevMonth);
                 }
@@ -131,9 +126,7 @@ public class ICalendarPanel extends FlexTable implements MouseListener,
                         IDateField.CLASSNAME + "-calendarpanel-header");
             } else if (!needsMonth) {
                 // Remove month traverse buttons
-                prevMonth.removeClickListener(this);
                 prevMonth.removeMouseListener(this);
-                nextMonth.removeClickListener(this);
                 nextMonth.removeMouseListener(this);
                 remove(prevMonth);
                 remove(nextMonth);
@@ -260,10 +253,6 @@ public class ICalendarPanel extends FlexTable implements MouseListener,
         resolution = datefield.getCurrentResolution();
     }
 
-    public void onClick(Widget sender) {
-        // processClickEvent(sender, true);
-    }
-
     private boolean isEnabledDate(Date date) {
         if ((minDate != null && date.before(minDate))
                 || (maxDate != null && date.after(maxDate))) {
@@ -311,6 +300,10 @@ public class ICalendarPanel extends FlexTable implements MouseListener,
     private Timer timer;
 
     public void onMouseDown(final Widget sender, int x, int y) {
+        // Allow user to click-n-hold for fast-forward or fast-rewind.
+        // Timer is first used for a 500ms delay after mousedown. After that has
+        // elapsed, another timer is triggered to go off every 150ms. Both
+        // timers are cancelled on mouseup or mouseout.
         if (sender instanceof IEventButton) {
             processClickEvent(sender, false);
             timer = new Timer() {
