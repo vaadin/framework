@@ -40,7 +40,7 @@ public class ICaption extends HTML {
         this.client = client;
         owner = component;
         setStyleName(CLASSNAME);
-        // sinkEvents(ITooltip.TOOLTIP_EVENTS);
+        sinkEvents(ITooltip.TOOLTIP_EVENTS);
     }
 
     public void updateCaption(UIDL uidl) {
