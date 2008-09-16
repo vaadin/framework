@@ -380,9 +380,12 @@ public class ITabsheet extends ITabsheetBase implements
         if (height != null && height != "") {
             super.setHeight(height);
 
-            final int contentHeight = getOffsetHeight()
+            int contentHeight = getOffsetHeight()
                     - DOM.getElementPropertyInt(deco, "offsetHeight")
                     - tb.getOffsetHeight();
+            if (contentHeight < 0) {
+                contentHeight = 0;
+            }
 
             // Set proper values for content element
             DOM.setStyleAttribute(contentNode, "height", contentHeight + "px");
