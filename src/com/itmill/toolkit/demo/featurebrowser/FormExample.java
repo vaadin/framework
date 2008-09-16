@@ -2,11 +2,16 @@ package com.itmill.toolkit.demo.featurebrowser;
 
 import java.util.Vector;
 
+import org.apache.commons.digester.SetRootRule;
+
 import com.itmill.toolkit.data.Container;
 import com.itmill.toolkit.data.Item;
 import com.itmill.toolkit.data.Property;
 import com.itmill.toolkit.data.Validator;
+import com.itmill.toolkit.data.Item.PropertySetChangeEvent;
+import com.itmill.toolkit.data.Item.PropertySetChangeListener;
 import com.itmill.toolkit.data.util.BeanItem;
+import com.itmill.toolkit.data.util.ObjectProperty;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.Component;
 import com.itmill.toolkit.ui.CustomComponent;
@@ -14,9 +19,12 @@ import com.itmill.toolkit.ui.ExpandLayout;
 import com.itmill.toolkit.ui.Field;
 import com.itmill.toolkit.ui.FieldFactory;
 import com.itmill.toolkit.ui.Form;
+import com.itmill.toolkit.ui.FormLayout;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.OrderedLayout;
+import com.itmill.toolkit.ui.Panel;
 import com.itmill.toolkit.ui.Select;
+import com.itmill.toolkit.ui.Table;
 import com.itmill.toolkit.ui.TextField;
 import com.itmill.toolkit.ui.Button.ClickEvent;
 
@@ -32,9 +40,9 @@ import com.itmill.toolkit.ui.Button.ClickEvent;
 public class FormExample extends CustomComponent {
     /** Contact information data model. */
     public class Contact {
-        String name = "";
-        String address = "";
-        int postalCode = 0;
+        String name       = "";
+        String address    = "";
+        int    postalCode = 0;
         String city;
     }
 
@@ -106,10 +114,10 @@ public class FormExample extends CustomComponent {
 
             if (pid.equals("name"))
                 return new TextField("Name");
-
+            
             if (pid.equals("address"))
                 return new TextField("Street Address");
-
+            
             if (pid.equals("postalCode")) {
                 TextField field = new TextField("Postal Code");
                 field.setColumns(5);
@@ -123,8 +131,7 @@ public class FormExample extends CustomComponent {
                         return ((String) value).matches("[0-9]{5}");
                     }
 
-                    public void validate(Object value)
-                            throws InvalidValueException {
+                    public void validate(Object value) throws InvalidValueException {
                         if (!isValid(value)) {
                             throw new InvalidValueException(
                                     "Postal code must be a number 10000-99999.");
@@ -134,7 +141,7 @@ public class FormExample extends CustomComponent {
                 field.addValidator(postalCodeValidator);
                 return field;
             }
-
+            
             if (pid.equals("city")) {
                 Select select = new Select("City");
                 final String cities[] = new String[] { "Amsterdam", "Berlin",
@@ -164,23 +171,22 @@ public class FormExample extends CustomComponent {
      **/
     public class ContactDisplay extends CustomComponent {
         ContactBean contact;
-        Label name;
-        Label address;
-        Label postalCode;
-        Label city;
+        Label       name;
+        Label       address;
+        Label       postalCode;
+        Label       city;
 
-        public ContactDisplay(ContactBean contact) {
+        public ContactDisplay (ContactBean contact) {
             this.contact = contact;
-
+            
             // Use a Form merely as a layout component. The CSS will add
             // a border to the form.
             Form layout = new Form();
             setCompositionRoot(layout);
             layout.setCaption("Data Model State");
-            layout
-                    .setDescription("Below is the state of the actual stored data. "
-                            + "It is updated only when the form is committed successfully. "
-                            + "Discarding the form input reverts the form to this state.");
+            layout.setDescription("Below is the state of the actual stored data. "+
+                    "It is updated only when the form is committed successfully. "+
+                    "Discarding the form input reverts the form to this state.");
             layout.setWidth("400px");
 
             // Manually create read-only components for each of the fields.
@@ -192,7 +198,7 @@ public class FormExample extends CustomComponent {
             postalCode.setCaption("Postal Code:");
             city = new Label(contact.getCity());
             city.setCaption("City:");
-
+            
             layout.getLayout().addComponent(name);
             layout.getLayout().addComponent(address);
             layout.getLayout().addComponent(postalCode);
@@ -213,11 +219,10 @@ public class FormExample extends CustomComponent {
 
     public FormExample() {
         // The root layout of the custom component.
-        OrderedLayout root = new OrderedLayout(
-                OrderedLayout.ORIENTATION_HORIZONTAL);
+        OrderedLayout root = new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
         root.addStyleName("formroot");
         setCompositionRoot(root);
-
+        
         // Create a form. It will use FormLayout as its layout by default.
         final Form form = new Form();
         root.addComponent(form);
@@ -228,10 +233,9 @@ public class FormExample extends CustomComponent {
         form.setCaption("Contact Information");
 
         // Set description that will appear on top of the form.
-        form
-                .setDescription("Please enter valid name and address. Fields marked with * are required. "
-                        + "If you try to commit with invalid values, a form error message is displayed. "
-                        + "(Address is required but failing to give it a value does not display an error.)");
+        form.setDescription("Please enter valid name and address. Fields marked with * are required. "+
+                "If you try to commit with invalid values, a form error message is displayed. " +
+                "(Address is required but failing to give it a value does not display an error.)");
 
         // Use custom field factory to create the fields in the form.
         form.setFieldFactory(new MyFieldFactory());
@@ -265,25 +269,23 @@ public class FormExample extends CustomComponent {
         // necessary for the validation of the fields to occur immediately when
         // the input focus changes and not just on commit.
         form.setImmediate(true);
-
+        
         // Set buffering so that commit() must be called for the form
         // before input is written to the data. (Form input is not written
         // immediately through to the underlying object.)
         form.setWriteThrough(false);
-
+        
         // If the state of the bound data source changes, the changes are shown
-        // immediately in the form, so there is no buffering. (This is the
-        // default.)
+        // immediately in the form, so there is no buffering. (This is the default.)
         form.setReadThrough(true);
 
         // Have a read-only component to display the actual current state
         // of the bean (POJO).
         final ContactDisplay display = new ContactDisplay(bean);
         root.addComponent(display);
-
+        
         // Add Commit and Discard controls to the form.
-        ExpandLayout footer = new ExpandLayout(
-                OrderedLayout.ORIENTATION_HORIZONTAL);
+        ExpandLayout footer = new ExpandLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
 
         // The Commit button calls form.commit().
         Button commit = new Button("Commit", new Button.ClickListener() {
@@ -297,7 +299,7 @@ public class FormExample extends CustomComponent {
         Button discard = new Button("Discard", form, "discard");
         footer.addComponent(commit);
         footer.setComponentAlignment(commit, ExpandLayout.ALIGNMENT_RIGHT,
-                ExpandLayout.ALIGNMENT_TOP);
+                                     ExpandLayout.ALIGNMENT_TOP);
         footer.setHeight("25px"); // Has to be set explicitly for ExpandLayout.
         footer.addComponent(discard);
         form.setFooter(footer);
