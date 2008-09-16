@@ -458,6 +458,7 @@ public class TextField extends AbstractField {
      * Gets the value formatter of TextField.
      * 
      * @return the Format used to format the value.
+     * @deprecated
      */
     public Format getFormat() {
         return format;
@@ -469,9 +470,11 @@ public class TextField extends AbstractField {
      * @param format
      *            the Format used to format the value. Null disables the
      *            formatting.
+     * @deprecated
      */
     public void setFormat(Format format) {
         this.format = format;
+        requestRepaint();
     }
 
     protected boolean isEmpty() {
