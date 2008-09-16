@@ -12,7 +12,6 @@ import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
-import com.itmill.toolkit.terminal.gwt.client.IErrorMessage;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
@@ -42,9 +41,9 @@ public class ILink extends HTML implements Paintable, ClickListener {
 
     private final Element captionElement = DOM.createSpan();
 
-    private IErrorMessage errorMessage;
-
     private Icon icon;
+
+    private ApplicationConnection client;
 
     public ILink() {
         super();
@@ -60,6 +59,8 @@ public class ILink extends HTML implements Paintable, ClickListener {
         if (client.updateComponent(this, uidl, false)) {
             return;
         }
+
+        this.client = client;
 
         enabled = uidl.hasAttribute("disabled") ? false : true;
         readonly = uidl.hasAttribute("readonly") ? true : false;
@@ -100,11 +101,6 @@ public class ILink extends HTML implements Paintable, ClickListener {
                 sinkEvents(Event.MOUSEEVENTS);
             }
             DOM.insertChild(getElement(), errorIndicatorElement, 0);
-            if (errorMessage == null) {
-                errorMessage = new IErrorMessage();
-            }
-            errorMessage.updateFromUIDL(errorUidl);
-
         } else if (errorIndicatorElement != null) {
             DOM.setStyleAttribute(errorIndicatorElement, "display", "none");
         }
@@ -115,11 +111,6 @@ public class ILink extends HTML implements Paintable, ClickListener {
                 DOM.insertChild(getElement(), icon.getElement(), 0);
             }
             icon.setUri(uidl.getStringAttribute("icon"));
-        }
-
-        // handle description
-        if (uidl.hasAttribute("description")) {
-            setTitle(uidl.getStringAttribute("description"));
         }
 
     }
@@ -157,36 +148,12 @@ public class ILink extends HTML implements Paintable, ClickListener {
 
     public void onBrowserEvent(Event event) {
         final Element target = DOM.eventGetTarget(event);
-        if (errorIndicatorElement != null
-                && DOM.compare(target, errorIndicatorElement)) {
-            switch (DOM.eventGetType(event)) {
-            case Event.ONMOUSEOVER:
-                showErrorMessage();
-                break;
-            case Event.ONMOUSEOUT:
-                hideErrorMessage();
-                break;
-            case Event.ONCLICK:
-                ApplicationConnection.getConsole().log(
-                        DOM.getInnerHTML(errorMessage.getElement()));
-                return;
-            default:
-                break;
-            }
+        if (client != null) {
+            client.handleTooltipEvent(event, this);
         }
         if (DOM.compare(target, captionElement)
                 || (icon != null && DOM.compare(target, icon.getElement()))) {
             super.onBrowserEvent(event);
-        }
-    }
-
-    private void hideErrorMessage() {
-        errorMessage.hide();
-    }
-
-    private void showErrorMessage() {
-        if (errorMessage != null) {
-            errorMessage.showAt(errorIndicatorElement);
         }
     }
 
