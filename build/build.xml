@@ -800,7 +800,8 @@
 			<packageset dir="${result-path}/src">
 				<include name="${toolkit-package}/**" />
 				<exclude name="${toolkit-package}/demo/**" />
-				<exclude name="${toolkit-package}/tests/**/*" />
+				<exclude name="${toolkit-package}/tests/**" />
+				<exclude name="${toolkit-package}/automatedtests/**" />
 			</packageset>
 			<doctitle>${javadoc.doctitle}</doctitle>
 			<!-- <header><![CDATA[<script type="text/javascript" src=".html-style/style.js"></script>]]></header> -->
