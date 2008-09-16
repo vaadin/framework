@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
+import com.itmill.toolkit.terminal.gwt.client.ITooltip;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
@@ -49,6 +50,7 @@ public class ILink extends HTML implements Paintable, ClickListener {
         super();
         DOM.appendChild(getElement(), captionElement);
         addClickListener(this);
+        sinkEvents(ITooltip.TOOLTIP_EVENTS);
         setStyleName(CLASSNAME);
     }
 
@@ -97,8 +99,6 @@ public class ILink extends HTML implements Paintable, ClickListener {
                 errorIndicatorElement = DOM.createDiv();
                 DOM.setElementProperty(errorIndicatorElement, "className",
                         "i-errorindicator");
-                DOM.sinkEvents(errorIndicatorElement, Event.MOUSEEVENTS);
-                sinkEvents(Event.MOUSEEVENTS);
             }
             DOM.insertChild(getElement(), errorIndicatorElement, 0);
         } else if (errorIndicatorElement != null) {
