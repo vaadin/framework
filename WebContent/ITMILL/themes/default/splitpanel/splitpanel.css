@@ -1,3 +1,7 @@
+.i-splitpanel-horizontal, .i-splitpanel-vertical {
+	overflow: hidden;
+}
+
 .i-splitpanel-horizontal .i-splitpanel-hsplitter {
 	width: 6px;
 	font-size: 1px; /* for IE6 */

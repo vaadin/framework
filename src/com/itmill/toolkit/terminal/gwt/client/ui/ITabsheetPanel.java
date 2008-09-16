@@ -134,17 +134,27 @@ public class ITabsheetPanel extends ComplexPanel {
     }
 
     private void hide(Element e) {
+        DOM.setStyleAttribute(e, "width", getOffsetWidth() + "px");
+        DOM.setStyleAttribute(e, "height", getOffsetHeight() + "px");
+        DOM.setStyleAttribute(e, "overflow", "hidden");
         DOM.setStyleAttribute(e, "visibility", "hidden");
         DOM.setStyleAttribute(e, "position", "absolute");
         DOM.setStyleAttribute(e, "top", "0px");
-        // Display: none fixes #2062
-        DOM.setStyleAttribute(e, "display", "none");
+        DOM.setStyleAttribute(e, "left", "0px");
     }
 
     private void unHide(Element e) {
-        DOM.setStyleAttribute(e, "visibility", "");
         DOM.setStyleAttribute(e, "position", "");
         DOM.setStyleAttribute(e, "top", "");
-        DOM.setStyleAttribute(e, "display", "");
+        DOM.setStyleAttribute(e, "left", "");
+        DOM.setStyleAttribute(e, "visibility", "");
+        DOM.setStyleAttribute(e, "width", "");
+        if (fullheight) {
+            DOM.setStyleAttribute(e, "height", "100%");
+        } else {
+            DOM.setStyleAttribute(e, "height", "");
+        }
+        DOM.setStyleAttribute(e, "overflow", "");
+
     }
 }

@@ -1577,6 +1577,10 @@ input.i-modified,
 * html .i-slider-vertical .i-slider-handle {
 	margin: 0 -1px;
 }
+.i-splitpanel-horizontal, .i-splitpanel-vertical {
+	overflow: hidden;
+}
+
 .i-splitpanel-horizontal .i-splitpanel-hsplitter {
 	width: 6px;
 	font-size: 1px; /* for IE6 */
