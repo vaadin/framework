@@ -99,6 +99,10 @@ public class IPopupView extends HTML implements Paintable {
             setTitle(uidl.getStringAttribute("description"));
         }
 
+        if (uidl.hasAttribute("animation")) {
+            popup.setAnimationEnabled(uidl.getBooleanAttribute("animation"));
+        }
+
         // Render the popup if visible and show it.
         if (hostPopupVisible) {
             UIDL popupUIDL = uidl.getChildUIDL(0);
@@ -167,10 +171,10 @@ public class IPopupView extends HTML implements Paintable {
     }
 
     public static native void nativeBlur(Element e) /*-{ 
-                            if(e.focus) {
-                            e.blur();
-                            }
-                            }-*/;
+                                     if(e.focus) {
+                                     e.blur();
+                                     }
+                                     }-*/;
 
     private class CustomPopup extends IToolkitOverlay implements Container {
 
@@ -179,11 +183,11 @@ public class IPopupView extends HTML implements Paintable {
         private ICaptionWrapper captionWrapper = null;
 
         private boolean hasHadMouseOver = false;
-        private Set activeChildren;
+        private Set<Element> activeChildren;
 
         public CustomPopup() {
             super(true, false, true); // autoHide, not modal, dropshadow
-            activeChildren = new HashSet();
+            activeChildren = new HashSet<Element>();
         }
 
         // For some reason ONMOUSEOUT events are not always recieved, so we have
@@ -222,7 +226,7 @@ public class IPopupView extends HTML implements Paintable {
             }
 
             // Notify children that have used the keyboard
-            for (Iterator iterator = activeChildren.iterator(); iterator
+            for (Iterator<Element> iterator = activeChildren.iterator(); iterator
                     .hasNext();) {
                 nativeBlur((Element) iterator.next());
             }

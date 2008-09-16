@@ -18,9 +18,10 @@ import com.itmill.toolkit.terminal.PaintTarget;
  */
 public class PopupView extends AbstractComponentContainer {
 
-    Content content;
-    boolean popupVisible;
-    ArrayList componentList;
+    private Content content;
+    private boolean popupVisible;
+    private ArrayList<Component> componentList;
+    private boolean animationEnabled;
 
     /* Constructors */
 
@@ -58,7 +59,8 @@ public class PopupView extends AbstractComponentContainer {
         super();
         setContent(content);
         popupVisible = false;
-        componentList = new ArrayList(1);
+        animationEnabled = false;
+        componentList = new ArrayList<Component>(1);
     }
 
     /**
@@ -99,6 +101,24 @@ public class PopupView extends AbstractComponentContainer {
      */
     public boolean getPopupVisibility() {
         return popupVisible;
+    }
+
+    /**
+     * Enable / disable popup viewing animation
+     * 
+     * @param enabled
+     */
+    public void setAnimation(boolean enabled) {
+        animationEnabled = enabled;
+    }
+
+    /**
+     * Query if the viewing animation is enabled.
+     * 
+     * @return true if the animation is enabled
+     */
+    public boolean isAnimationEnabled() {
+        return animationEnabled;
     }
 
     /*
@@ -200,7 +220,7 @@ public class PopupView extends AbstractComponentContainer {
         }
         target.addAttribute("html", content.getMinimizedValueAsHTML());
         target.addAttribute("popupVisible", popupVisible);
-
+        target.addAttribute("animation", animationEnabled);
         // Only paint component to client if we know that the popup is showing
         if (popupVisible) {
             Component c = content.getPopupComponent();
