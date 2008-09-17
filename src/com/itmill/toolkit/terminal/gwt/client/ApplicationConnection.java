@@ -54,6 +54,8 @@ public class ApplicationConnection {
 
     public static final String VAR_FIELD_SEPARATOR = "\u001f";
 
+    public static final String VAR_BURST_SEPARATOR = "\u001d";
+
     private final HashMap resourcesMap = new HashMap();
 
     private static Console console;
@@ -569,7 +571,10 @@ public class ApplicationConnection {
      * windows - normally sendPendingVariableChanges() should be used.
      */
     public void sendPendingVariableChangesSync() {
-        buildAndSendVariableBurst(pendingVariables, true);
+        pendingVariableBursts.add(pendingVariables);
+        Vector nextBurst = (Vector) pendingVariableBursts.firstElement();
+        pendingVariableBursts.remove(0);
+        buildAndSendVariableBurst(nextBurst, true);
     }
 
     // Redirect browser, null reloads current page
@@ -664,22 +669,43 @@ public class ApplicationConnection {
         }
     }
 
+    /**
+     * Build the variable burst and send it to server.
+     * 
+     * When sync is forced, we also force sending of all pending variable-bursts
+     * at the same time. This is ok as we can assume that DOM will newer be
+     * updated after this.
+     * 
+     * @param pendingVariables
+     *            Vector of variablechanges to send
+     * @param forceSync
+     *            Should we use synchronous request?
+     */
     private void buildAndSendVariableBurst(Vector pendingVariables,
             boolean forceSync) {
         final StringBuffer req = new StringBuffer();
 
-        for (int i = 0; i < pendingVariables.size(); i++) {
-            if (i > 0) {
-                if (i % 2 == 0) {
-                    req.append(VAR_RECORD_SEPARATOR);
-                } else {
-                    req.append(VAR_FIELD_SEPARATOR);
+        while (!pendingVariables.isEmpty()) {
+            for (int i = 0; i < pendingVariables.size(); i++) {
+                if (i > 0) {
+                    if (i % 2 == 0) {
+                        req.append(VAR_RECORD_SEPARATOR);
+                    } else {
+                        req.append(VAR_FIELD_SEPARATOR);
+                    }
                 }
+                req.append(pendingVariables.get(i));
             }
-            req.append(pendingVariables.get(i));
-        }
 
-        pendingVariables.clear();
+            pendingVariables.clear();
+            // Append all the busts to this synchronous request
+            if (forceSync && !pendingVariableBursts.isEmpty()) {
+                pendingVariables = (Vector) pendingVariableBursts
+                        .firstElement();
+                pendingVariableBursts.remove(0);
+                req.append(VAR_BURST_SEPARATOR);
+            }
+        }
         makeUidlRequest(req.toString(), false, forceSync);
     }
 

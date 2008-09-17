@@ -46,6 +46,22 @@ public class Ticket2053 extends Application {
                                 + tf.toString()));
                     }
                 });
+                for (int i = 0; i < 3; i++) {
+                    final String caption = "Slow button " + i;
+                    c.addComponent(new Button(caption,
+                            new Button.ClickListener() {
+                                public synchronized void buttonClick(
+                                        ClickEvent event) {
+                                    try {
+                                        this.wait(2000);
+                                    } catch (InterruptedException e) {
+                                    }
+                                    main.addComponent(new Label(caption
+                                            + " pressed"));
+                                }
+                            }));
+                }
+
             }
         });
         main.addComponent(add);

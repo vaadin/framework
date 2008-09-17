@@ -5,6 +5,7 @@
 package com.itmill.toolkit.terminal.gwt.server;
 
 import java.io.BufferedWriter;
+import java.io.CharArrayWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -42,6 +43,7 @@ import com.itmill.toolkit.external.org.apache.commons.fileupload.FileItemStream;
 import com.itmill.toolkit.external.org.apache.commons.fileupload.FileUploadException;
 import com.itmill.toolkit.external.org.apache.commons.fileupload.ProgressListener;
 import com.itmill.toolkit.external.org.apache.commons.fileupload.servlet.ServletFileUpload;
+import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.Paintable;
 import com.itmill.toolkit.terminal.URIHandler;
 import com.itmill.toolkit.terminal.UploadStream;
@@ -75,6 +77,8 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
     private static final String VAR_RECORD_SEPARATOR = "\u001e";
 
     private static final String VAR_FIELD_SEPARATOR = "\u001f";
+
+    public static final String VAR_BURST_SEPARATOR = "\u001d";
 
     private static final int MAX_BUFFER_SIZE = 64 * 1024;
 
@@ -238,7 +242,8 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
             }
 
             // Change all variables based on request parameters
-            if (!handleVariables(request, application)) {
+            if (!handleVariables(request, response, application, window)) {
+
                 // var inconsistency; the client is probably out-of-sync
                 SystemMessages ci = null;
                 try {
@@ -263,230 +268,233 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
                     }
                 }
                 // No message to show, let's just repaint all.
-                System.err
-                        .println("Warning: variable inconsistency - client is probably out-of-sync, repainting all.");
                 repaintAll = true;
 
             }
 
-            // If repaint is requested, clean all ids in this root window
-            if (repaintAll) {
-                for (final Iterator it = idPaintableMap.keySet().iterator(); it
-                        .hasNext();) {
-                    final Component c = (Component) idPaintableMap.get(it
-                            .next());
-                    if (isChildOf(window, c)) {
-                        it.remove();
-                        paintableIdMap.remove(c);
-                    }
-                }
-            }
-
-            // Removes application if it has stopped during variable changes
-            if (!application.isRunning()) {
-                endApplication(request, response, application);
-                return;
-            }
-
-            // Sets the response type
-            response.setContentType("application/json; charset=UTF-8");
-            // some dirt to prevent cross site scripting
-            outWriter.print("for(;;);[{");
-
-            outWriter.print("\"changes\":[");
-
-            // re-get mainwindow - may have been changed
-            Window newWindow = getApplicationWindow(request, application);
-            if (newWindow != window) {
-                window = newWindow;
-                repaintAll = true;
-            }
-
-            JsonPaintTarget paintTarget = new JsonPaintTarget(this, outWriter,
-                    !repaintAll);
-
-            // Paints components
-            ArrayList paintables;
-            if (repaintAll) {
-                paintables = new ArrayList();
-                paintables.add(window);
-
-                // Reset sent locales
-                locales = null;
-                requireLocale(application.getLocale().toString());
-
-            } else {
-                // remove detached components from paintableIdMap so they
-                // can be GC'ed
-                for (Iterator it = paintableIdMap.keySet().iterator(); it
-                        .hasNext();) {
-                    Component p = (Component) it.next();
-                    if (p.getApplication() == null) {
-                        idPaintableMap.remove(paintableIdMap.get(p));
-                        it.remove();
-                        dirtyPaintabletSet.remove(p);
-                        p.removeListener(this);
-                    }
-                }
-                paintables = getDirtyComponents(window);
-            }
-            if (paintables != null) {
-
-                // We need to avoid painting children before parent.
-                // This is ensured by ordering list by depth in component
-                // tree
-                Collections.sort(paintables, new Comparator() {
-                    public int compare(Object o1, Object o2) {
-                        Component c1 = (Component) o1;
-                        Component c2 = (Component) o2;
-                        int d1 = 0;
-                        while (c1.getParent() != null) {
-                            d1++;
-                            c1 = c1.getParent();
-                        }
-                        int d2 = 0;
-                        while (c2.getParent() != null) {
-                            d2++;
-                            c2 = c2.getParent();
-                        }
-                        if (d1 < d2) {
-                            return -1;
-                        }
-                        if (d1 > d2) {
-                            return 1;
-                        }
-                        return 0;
-                    }
-                });
-
-                for (final Iterator i = paintables.iterator(); i.hasNext();) {
-                    final Paintable p = (Paintable) i.next();
-
-                    // TODO CLEAN
-                    if (p instanceof Window) {
-                        final Window w = (Window) p;
-                        if (w.getTerminal() == null) {
-                            w.setTerminal(application.getMainWindow()
-                                    .getTerminal());
-                        }
-                    }
-                    /*
-                     * This does not seem to happen in tk5, but remember this
-                     * case: else if (p instanceof Component) { if (((Component)
-                     * p).getParent() == null || ((Component)
-                     * p).getApplication() == null) { // Component requested
-                     * repaint, but is no // longer attached: skip
-                     * paintablePainted(p); continue; } }
-                     */
-
-                    // TODO we may still get changes that have been
-                    // rendered already (changes with only cached flag)
-                    if (paintTarget.needsToBePainted(p)) {
-                        paintTarget.startTag("change");
-                        paintTarget.addAttribute("format", "uidl");
-                        final String pid = getPaintableId(p);
-                        paintTarget.addAttribute("pid", pid);
-
-                        p.paint(paintTarget);
-
-                        paintTarget.endTag("change");
-                    }
-                    paintablePainted(p);
-                }
-            }
-
-            paintTarget.close();
-            outWriter.print("]"); // close changes
-
-            outWriter.print(", \"meta\" : {");
-            boolean metaOpen = false;
-
-            if (repaintAll) {
-                metaOpen = true;
-                outWriter.write("\"repaintAll\":true");
-            }
-
-            // add meta instruction for client to set focus if it is set
-            final Paintable f = (Paintable) application.consumeFocus();
-            if (f != null) {
-                if (metaOpen) {
-                    outWriter.write(",");
-                }
-                outWriter.write("\"focus\":\"" + getPaintableId(f) + "\"");
-            }
-
-            outWriter.print("}, \"resources\" : {");
-
-            // Precache custom layouts
-            String themeName = window.getTheme();
-            if (request.getParameter("theme") != null) {
-                themeName = request.getParameter("theme");
-            }
-            if (themeName == null) {
-                themeName = "default";
-            }
-
-            // TODO We should only precache the layouts that are not
-            // cached already
-            int resourceIndex = 0;
-            for (final Iterator i = paintTarget.getPreCachedResources()
-                    .iterator(); i.hasNext();) {
-                final String resource = (String) i.next();
-                InputStream is = null;
-                try {
-                    is = applicationServlet
-                            .getServletContext()
-                            .getResourceAsStream(
-                                    "/"
-                                            + ApplicationServlet.THEME_DIRECTORY_PATH
-                                            + themeName + "/" + resource);
-                } catch (final Exception e) {
-                    // FIXME: Handle exception
-                    e.printStackTrace();
-                }
-                if (is != null) {
-
-                    outWriter.print((resourceIndex++ > 0 ? ", " : "") + "\""
-                            + resource + "\" : ");
-                    final StringBuffer layout = new StringBuffer();
-
-                    try {
-                        final InputStreamReader r = new InputStreamReader(is,
-                                "UTF-8");
-                        final char[] buffer = new char[20000];
-                        int charsRead = 0;
-                        while ((charsRead = r.read(buffer)) > 0) {
-                            layout.append(buffer, 0, charsRead);
-                        }
-                        r.close();
-                    } catch (final java.io.IOException e) {
-                        // FIXME: Handle exception
-                        System.err.println("Resource transfer failed:  "
-                                + request.getRequestURI() + ". ("
-                                + e.getMessage() + ")");
-                    }
-                    outWriter.print("\""
-                            + JsonPaintTarget.escapeJSON(layout.toString())
-                            + "\"");
-                } else {
-                    // FIXME: Handle exception
-                    System.err.println("CustomLayout " + "/"
-                            + ApplicationServlet.THEME_DIRECTORY_PATH
-                            + themeName + "/" + resource + " not found!");
-                }
-            }
-            outWriter.print("}");
-
-            printLocaleDeclarations(outWriter);
-
-            outWriter.print("}]");
-
-            outWriter.flush();
-            outWriter.close();
+            paintAfterVariablechanges(request, response, applicationServlet,
+                    repaintAll, outWriter, window);
         }
 
         out.flush();
         out.close();
+    }
+
+    private void paintAfterVariablechanges(HttpServletRequest request,
+            HttpServletResponse response,
+            ApplicationServlet applicationServlet, boolean repaintAll,
+            final PrintWriter outWriter, Window window) throws IOException,
+            ServletException, PaintException {
+
+        // If repaint is requested, clean all ids in this root window
+        if (repaintAll) {
+            for (final Iterator it = idPaintableMap.keySet().iterator(); it
+                    .hasNext();) {
+                final Component c = (Component) idPaintableMap.get(it.next());
+                if (isChildOf(window, c)) {
+                    it.remove();
+                    paintableIdMap.remove(c);
+                }
+            }
+        }
+
+        // Removes application if it has stopped during variable changes
+        if (!application.isRunning()) {
+            endApplication(request, response, application);
+            return;
+        }
+
+        // Sets the response type
+        response.setContentType("application/json; charset=UTF-8");
+        // some dirt to prevent cross site scripting
+        outWriter.print("for(;;);[{");
+
+        outWriter.print("\"changes\":[");
+
+        // re-get mainwindow - may have been changed
+        Window newWindow = getApplicationWindow(request, application);
+        if (newWindow != window) {
+            window = newWindow;
+            repaintAll = true;
+        }
+
+        JsonPaintTarget paintTarget = new JsonPaintTarget(this, outWriter,
+                !repaintAll);
+
+        // Paints components
+        ArrayList paintables;
+        if (repaintAll) {
+            paintables = new ArrayList();
+            paintables.add(window);
+
+            // Reset sent locales
+            locales = null;
+            requireLocale(application.getLocale().toString());
+
+        } else {
+            // remove detached components from paintableIdMap so they
+            // can be GC'ed
+            for (Iterator it = paintableIdMap.keySet().iterator(); it.hasNext();) {
+                Component p = (Component) it.next();
+                if (p.getApplication() == null) {
+                    idPaintableMap.remove(paintableIdMap.get(p));
+                    it.remove();
+                    dirtyPaintabletSet.remove(p);
+                    p.removeListener(this);
+                }
+            }
+            paintables = getDirtyComponents(window);
+        }
+        if (paintables != null) {
+
+            // We need to avoid painting children before parent.
+            // This is ensured by ordering list by depth in component
+            // tree
+            Collections.sort(paintables, new Comparator() {
+                public int compare(Object o1, Object o2) {
+                    Component c1 = (Component) o1;
+                    Component c2 = (Component) o2;
+                    int d1 = 0;
+                    while (c1.getParent() != null) {
+                        d1++;
+                        c1 = c1.getParent();
+                    }
+                    int d2 = 0;
+                    while (c2.getParent() != null) {
+                        d2++;
+                        c2 = c2.getParent();
+                    }
+                    if (d1 < d2) {
+                        return -1;
+                    }
+                    if (d1 > d2) {
+                        return 1;
+                    }
+                    return 0;
+                }
+            });
+
+            for (final Iterator i = paintables.iterator(); i.hasNext();) {
+                final Paintable p = (Paintable) i.next();
+
+                // TODO CLEAN
+                if (p instanceof Window) {
+                    final Window w = (Window) p;
+                    if (w.getTerminal() == null) {
+                        w
+                                .setTerminal(application.getMainWindow()
+                                        .getTerminal());
+                    }
+                }
+                /*
+                 * This does not seem to happen in tk5, but remember this case:
+                 * else if (p instanceof Component) { if (((Component)
+                 * p).getParent() == null || ((Component) p).getApplication() ==
+                 * null) { // Component requested repaint, but is no // longer
+                 * attached: skip paintablePainted(p); continue; } }
+                 */
+
+                // TODO we may still get changes that have been
+                // rendered already (changes with only cached flag)
+                if (paintTarget.needsToBePainted(p)) {
+                    paintTarget.startTag("change");
+                    paintTarget.addAttribute("format", "uidl");
+                    final String pid = getPaintableId(p);
+                    paintTarget.addAttribute("pid", pid);
+
+                    p.paint(paintTarget);
+
+                    paintTarget.endTag("change");
+                }
+                paintablePainted(p);
+            }
+        }
+
+        paintTarget.close();
+        outWriter.print("]"); // close changes
+
+        outWriter.print(", \"meta\" : {");
+        boolean metaOpen = false;
+
+        if (repaintAll) {
+            metaOpen = true;
+            outWriter.write("\"repaintAll\":true");
+        }
+
+        // add meta instruction for client to set focus if it is set
+        final Paintable f = (Paintable) application.consumeFocus();
+        if (f != null) {
+            if (metaOpen) {
+                outWriter.write(",");
+            }
+            outWriter.write("\"focus\":\"" + getPaintableId(f) + "\"");
+        }
+
+        outWriter.print("}, \"resources\" : {");
+
+        // Precache custom layouts
+        String themeName = window.getTheme();
+        if (request.getParameter("theme") != null) {
+            themeName = request.getParameter("theme");
+        }
+        if (themeName == null) {
+            themeName = "default";
+        }
+
+        // TODO We should only precache the layouts that are not
+        // cached already
+        int resourceIndex = 0;
+        for (final Iterator i = paintTarget.getPreCachedResources().iterator(); i
+                .hasNext();) {
+            final String resource = (String) i.next();
+            InputStream is = null;
+            try {
+                is = applicationServlet.getServletContext()
+                        .getResourceAsStream(
+                                "/" + ApplicationServlet.THEME_DIRECTORY_PATH
+                                        + themeName + "/" + resource);
+            } catch (final Exception e) {
+                // FIXME: Handle exception
+                e.printStackTrace();
+            }
+            if (is != null) {
+
+                outWriter.print((resourceIndex++ > 0 ? ", " : "") + "\""
+                        + resource + "\" : ");
+                final StringBuffer layout = new StringBuffer();
+
+                try {
+                    final InputStreamReader r = new InputStreamReader(is,
+                            "UTF-8");
+                    final char[] buffer = new char[20000];
+                    int charsRead = 0;
+                    while ((charsRead = r.read(buffer)) > 0) {
+                        layout.append(buffer, 0, charsRead);
+                    }
+                    r.close();
+                } catch (final java.io.IOException e) {
+                    // FIXME: Handle exception
+                    System.err.println("Resource transfer failed:  "
+                            + request.getRequestURI() + ". (" + e.getMessage()
+                            + ")");
+                }
+                outWriter.print("\""
+                        + JsonPaintTarget.escapeJSON(layout.toString()) + "\"");
+            } else {
+                // FIXME: Handle exception
+                System.err.println("CustomLayout " + "/"
+                        + ApplicationServlet.THEME_DIRECTORY_PATH + themeName
+                        + "/" + resource + " not found!");
+            }
+        }
+        outWriter.print("}");
+
+        printLocaleDeclarations(outWriter);
+
+        outWriter.print("}]");
+
+        outWriter.flush();
+        outWriter.close();
     }
 
     /**
@@ -500,7 +508,8 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
      * @throws IOException
      */
     private boolean handleVariables(HttpServletRequest request,
-            Application application2) throws IOException {
+            HttpServletResponse response, Application application2,
+            Window window) throws IOException {
         boolean success = true;
 
         if (request.getContentLength() > 0) {
@@ -515,75 +524,106 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
             }
 
             String changes = new String(buffer, "utf-8");
-            // extract variables to two dim string array
-            final String[] tmp = changes.split(VAR_RECORD_SEPARATOR);
-            final String[][] variableRecords = new String[tmp.length][4];
-            for (int i = 0; i < tmp.length; i++) {
-                variableRecords[i] = tmp[i].split(VAR_FIELD_SEPARATOR);
-            }
 
-            for (int i = 0; i < variableRecords.length; i++) {
-                String[] variable = variableRecords[i];
-                String[] nextVariable = null;
-                if (i + 1 < variableRecords.length) {
-                    nextVariable = variableRecords[i + 1];
+            // Manage bursts one by one
+            final String[] bursts = changes.split(VAR_BURST_SEPARATOR);
+
+            for (int bi = 0; bi < bursts.length; bi++) {
+
+                // extract variables to two dim string array
+                final String[] tmp = bursts[bi].split(VAR_RECORD_SEPARATOR);
+                final String[][] variableRecords = new String[tmp.length][4];
+                for (int i = 0; i < tmp.length; i++) {
+                    variableRecords[i] = tmp[i].split(VAR_FIELD_SEPARATOR);
                 }
-                final VariableOwner owner = (VariableOwner) idPaintableMap
-                        .get(variable[VAR_PID]);
-                if (owner != null && owner.isEnabled()) {
-                    Map m;
-                    if (nextVariable != null
-                            && variable[VAR_PID].equals(nextVariable[VAR_PID])) {
-                        // we have more than one value changes in row for one
-                        // variable owner, collect em in HashMap
-                        m = new HashMap();
-                        m.put(variable[VAR_NAME], convertVariableValue(
-                                variable[VAR_TYPE].charAt(0),
-                                variable[VAR_VALUE]));
-                    } else {
-                        // use optimized single value map
-                        m = new SingleValueMap(variable[VAR_NAME],
-                                convertVariableValue(variable[VAR_TYPE]
-                                        .charAt(0), variable[VAR_VALUE]));
-                    }
 
-                    // collect following variable changes for this owner
-                    while (nextVariable != null
-                            && variable[VAR_PID].equals(nextVariable[VAR_PID])) {
-                        i++;
-                        variable = nextVariable;
-                        if (i + 1 < variableRecords.length) {
-                            nextVariable = variableRecords[i + 1];
+                for (int i = 0; i < variableRecords.length; i++) {
+                    String[] variable = variableRecords[i];
+                    String[] nextVariable = null;
+                    if (i + 1 < variableRecords.length) {
+                        nextVariable = variableRecords[i + 1];
+                    }
+                    final VariableOwner owner = (VariableOwner) idPaintableMap
+                            .get(variable[VAR_PID]);
+                    if (owner != null && owner.isEnabled()) {
+                        Map m;
+                        if (nextVariable != null
+                                && variable[VAR_PID]
+                                        .equals(nextVariable[VAR_PID])) {
+                            // we have more than one value changes in row for
+                            // one
+                            // variable owner, collect em in HashMap
+                            m = new HashMap();
+                            m.put(variable[VAR_NAME], convertVariableValue(
+                                    variable[VAR_TYPE].charAt(0),
+                                    variable[VAR_VALUE]));
                         } else {
-                            nextVariable = null;
+                            // use optimized single value map
+                            m = new SingleValueMap(variable[VAR_NAME],
+                                    convertVariableValue(variable[VAR_TYPE]
+                                            .charAt(0), variable[VAR_VALUE]));
                         }
-                        m.put(variable[VAR_NAME], convertVariableValue(
-                                variable[VAR_TYPE].charAt(0),
-                                variable[VAR_VALUE]));
-                    }
-                    try {
-                        owner.changeVariables(request, m);
-                    } catch (Exception e) {
-                        handleChangeVariablesError(application2,
-                                (Component) owner, e, m);
-                    }
-                } else {
-                    // Ignore variable change
-                    String msg = "Warning: Ignoring variable change for ";
-                    if (owner != null) {
-                        msg += "disabled component " + owner.getClass();
-                        String caption = ((Component) owner).getCaption();
-                        if (caption != null) {
-                            msg += ", caption=" + caption;
+
+                        // collect following variable changes for this owner
+                        while (nextVariable != null
+                                && variable[VAR_PID]
+                                        .equals(nextVariable[VAR_PID])) {
+                            i++;
+                            variable = nextVariable;
+                            if (i + 1 < variableRecords.length) {
+                                nextVariable = variableRecords[i + 1];
+                            } else {
+                                nextVariable = null;
+                            }
+                            m.put(variable[VAR_NAME], convertVariableValue(
+                                    variable[VAR_TYPE].charAt(0),
+                                    variable[VAR_VALUE]));
+                        }
+                        try {
+                            owner.changeVariables(request, m);
+                        } catch (Exception e) {
+                            handleChangeVariablesError(application2,
+                                    (Component) owner, e, m);
                         }
                     } else {
-                        msg += "non-existent component, VAR_PID="
-                                + variable[VAR_PID];
-                        success = false;
+                        // Ignore variable change
+                        String msg = "Warning: Ignoring variable change for ";
+                        if (owner != null) {
+                            msg += "disabled component " + owner.getClass();
+                            String caption = ((Component) owner).getCaption();
+                            if (caption != null) {
+                                msg += ", caption=" + caption;
+                            }
+                        } else {
+                            msg += "non-existent component, VAR_PID="
+                                    + variable[VAR_PID];
+                            success = false;
+                        }
+                        System.err.println(msg);
+                        continue;
                     }
-                    System.err.println(msg);
-                    continue;
                 }
+
+                // In case that there were multiple bursts, we know that this is
+                // a special synchronous case for closing window. Thus we are
+                // not interested in sending any UIDL changes back to client.
+                // Still we must clear component tree between bursts to ensure
+                // that no removed components are updated. The painting after
+                // the
+                // last burst is handled normally by the calling method.
+                if (bi < bursts.length - 1) {
+
+                    // We will be discarding all changes
+                    final PrintWriter outWriter = new PrintWriter(
+                            new CharArrayWriter());
+                    try {
+                        paintAfterVariablechanges(request, response,
+                                applicationServlet, true, outWriter, window);
+                    } catch (ServletException e) {
+                        // We will ignore all servlet exceptions
+                    }
+                }
+
             }
         }
         return success;
