@@ -99,8 +99,10 @@ public class ApplicationConnection {
 
     private int activeRequests = 0;
 
+    /** Parameters for this application connection loaded from the web-page */
     private final ApplicationConfiguration configuration;
 
+    /** List of pending variable change bursts that must be submitted in order */
     private final Vector pendingVariableBursts = new Vector();
 
     public ApplicationConnection(WidgetSet widgetSet,
@@ -130,7 +132,6 @@ public class ApplicationConnection {
 
         initializeClientHooks();
 
-        // TODO remove hard coded id name
         view = new IView(cnf.getRootPanelId());
 
         makeUidlRequest("", true, false);
