@@ -936,7 +936,7 @@
 			<pathelement path="build/lib/xercesImpl.jar" />
 			<pathelement path="build/lib/xml-apis.jar" />
 		</path>
-		<java classname="org.apache.xalan.xslt.Process" failonerror="yes" fork="yes" maxmemory="1300m">
+		<java classname="org.apache.xalan.xslt.Process" failonerror="yes" fork="yes" maxmemory="512m">
 			<arg value="-in" />
 			<arg value="doc/manual/book.xml" />
 			<arg value="-xsl" />
