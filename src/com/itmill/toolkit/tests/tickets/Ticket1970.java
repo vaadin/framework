@@ -9,9 +9,17 @@ import com.itmill.toolkit.ui.Button.ClickEvent;
 public class Ticket1970 extends Application {
 
     public void init() {
-
         setMainWindow(createWindow());
+    }
 
+    public Window getWindow(String name) {
+        Window w = super.getWindow(name);
+        if (w == null) {
+            w = new Window("Extra window: " + name);
+            w.setName(name);
+            addWindow(w);
+        }
+        return w;
     }
 
     private Window createWindow() {
