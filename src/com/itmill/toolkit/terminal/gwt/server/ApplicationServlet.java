@@ -1458,6 +1458,9 @@ public class ApplicationServlet extends HttpServlet {
 
         // Finds the window where the request is handled
         String path = request.getPathInfo();
+        if (isApplicationRunnerServlet) {
+            path = path.substring(1 + applicationRunnerClassname.length());
+        }
 
         // Main window as the URI is empty
         if (path == null || path.length() == 0 || path.equals("/")) {

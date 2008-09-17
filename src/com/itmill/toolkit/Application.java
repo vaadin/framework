@@ -191,7 +191,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
      * </p>
      * 
      * <p>
-     * Since version 5.0 all windows can be referenced by their names in url
+     * All windows can be referenced by their names in url
      * <code>http://host:port/foo/bar/</code> where
      * <code>http://host:port/foo/</code> is the application url as returned by
      * getURL() and <code>bar</code> is the name of the window.
@@ -204,10 +204,34 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
      * </p>
      * 
      * <p>
-     * The method should return null if the window does not exists (and is not
-     * created as a side-effect) or if the application is not running anymore
+     * If for some reason user opens another window with same url that is
+     * already open, name is modified by adding "_12345678" postfix to the name,
+     * where 12345678 is a random number. One can decide to create another
+     * window-object for those windows (recommended) or to discard the postfix.
+     * If the user has two browser windows pointing to the same window-object on
+     * server, synchronization errors are likely to occur.
      * </p>
-     * .
+     * 
+     * <p>
+     * If no browser-level windowing is used, all defaults are fine and this
+     * method can be left as is. In case browser-level windows are needed, it is
+     * recommended to create new window-objects on this method from their names
+     * if the super.getWindow() does not find existing windows. See below for
+     * implementation example:
+     * <code>  // If we already have the requested window, use it
+        Window w = super.getWindow(name);
+        if (w == null) {
+
+            // If no window found, create it
+            w = createNewWindow(name);
+        }
+        return w;</code>
+     * </p>
+     * 
+     * <p>
+     * The method should return null if the window does not exists (and is not
+     * created as a side-effect) or if the application is not running anymore.
+     * </p>
      * 
      * @param name
      *            the name of the window.
@@ -682,24 +706,26 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
         }
 
         // If the uri is in some window, handle the window uri
-        Window window = getWindow(prefix);
-        if (window != null) {
-            URL windowContext;
-            try {
-                windowContext = new URL(context, prefix + "/");
-                final String windowUri = relativeUri.length() > prefix.length() + 1 ? relativeUri
-                        .substring(prefix.length() + 1)
-                        : "";
-                return window.handleURI(windowContext, windowUri);
-            } catch (final MalformedURLException e) {
-                terminalError(new ApplicationError(e));
-                return null;
+        if (prefix != null && prefix.length() > 0) {
+            Window window = getWindow(prefix);
+            if (window != null) {
+                URL windowContext;
+                try {
+                    windowContext = new URL(context, prefix + "/");
+                    final String windowUri = relativeUri.length() > prefix
+                            .length() + 1 ? relativeUri.substring(prefix
+                            .length() + 1) : "";
+                    return window.handleURI(windowContext, windowUri);
+                } catch (final MalformedURLException e) {
+                    terminalError(new ApplicationError(e));
+                    return null;
+                }
             }
         }
 
         // If the uri was not pointing to a window, handle the
         // uri in main window
-        window = getMainWindow();
+        Window window = getMainWindow();
         if (window != null) {
             return window.handleURI(context, relativeUri);
         }
@@ -1484,7 +1510,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 
     public class ApplicationError implements Terminal.ErrorEvent {
 
-        private Throwable throwable;
+        private final Throwable throwable;
 
         public ApplicationError(Throwable throwable) {
             this.throwable = throwable;

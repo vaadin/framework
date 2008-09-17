@@ -67,9 +67,6 @@ public class IView extends SimplePanel implements Paintable,
 
         RootPanel.get(elementId).add(this);
 
-        Window.addWindowResizeListener(this);
-        Window.addWindowCloseListener(this);
-
         // set focus to iview element by default to listen possible keyboard
         // shortcuts
         if (BrowserInfo.get().isOpera() || BrowserInfo.get().isSafari()
@@ -116,6 +113,7 @@ public class IView extends SimplePanel implements Paintable,
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 
         id = uidl.getId();
+        boolean firstPaint = connection == null;
         connection = client;
 
         String newTheme = uidl.getStringAttribute("theme");
@@ -128,6 +126,10 @@ public class IView extends SimplePanel implements Paintable,
         }
         if (uidl.hasAttribute("style")) {
             addStyleName(uidl.getStringAttribute("style"));
+        }
+
+        if (uidl.hasAttribute("name")) {
+            client.setWindowName(uidl.getStringAttribute("name"));
         }
 
         com.google.gwt.user.client.Window.setTitle(uidl
@@ -228,6 +230,13 @@ public class IView extends SimplePanel implements Paintable,
             w.hide();
         }
 
+        // Add window listeners on first paint, to prevent premature
+        // variablechanges
+        if (firstPaint) {
+            Window.addWindowCloseListener(this);
+            Window.addWindowResizeListener(this);
+        }
+
         onWindowResized(Window.getClientWidth(), Window.getClientHeight());
         // IE somehow fails some layout on first run, force layout
         // functions
@@ -317,8 +326,8 @@ public class IView extends SimplePanel implements Paintable,
     }
 
     private static native void focusElement(Element e) /*-{ 
-          e.focus();
-          }-*/;
+                                        e.focus();
+                                        }-*/;
 
     public String onWindowClosing() {
         return null;

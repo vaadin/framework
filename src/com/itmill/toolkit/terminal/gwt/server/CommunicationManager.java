@@ -80,6 +80,8 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
 
     public static final String VAR_BURST_SEPARATOR = "\u001d";
 
+    private final HashSet currentlyOpenWindowsInClient = new HashSet();
+
     private static final int MAX_BUFFER_SIZE = 64 * 1024;
 
     private final ArrayList dirtyPaintabletSet = new ArrayList();
@@ -93,6 +95,10 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
     private final ApplicationServlet applicationServlet;
 
     private final Application application;
+
+    // Note that this is only accessed from synchronized block and
+    // thus should be thread-safe.
+    private String closingWindowName = null;
 
     private List locales;
 
@@ -225,7 +231,7 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
             // Finds the window within the application
             Window window = null;
             if (application.isRunning()) {
-                window = getApplicationWindow(request, application);
+                window = getApplicationWindow(request, application, null);
                 // Returns if no window found
                 if (window == null) {
                     // This should not happen, no windows exists but
@@ -274,6 +280,13 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
 
             paintAfterVariablechanges(request, response, applicationServlet,
                     repaintAll, outWriter, window);
+
+            // Mark this window to be open on client
+            currentlyOpenWindowsInClient.add(window.getName());
+            if (closingWindowName != null) {
+                currentlyOpenWindowsInClient.remove(closingWindowName);
+                closingWindowName = null;
+            }
         }
 
         out.flush();
@@ -311,188 +324,197 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
 
         outWriter.print("\"changes\":[");
 
-        // re-get mainwindow - may have been changed
-        Window newWindow = getApplicationWindow(request, application);
-        if (newWindow != window) {
-            window = newWindow;
-            repaintAll = true;
-        }
+        // If the browser-window has been closed - we do not need to paint it at
+        // all
+        if (!window.getName().equals(closingWindowName)) {
 
-        JsonPaintTarget paintTarget = new JsonPaintTarget(this, outWriter,
-                !repaintAll);
-
-        // Paints components
-        ArrayList paintables;
-        if (repaintAll) {
-            paintables = new ArrayList();
-            paintables.add(window);
-
-            // Reset sent locales
-            locales = null;
-            requireLocale(application.getLocale().toString());
-
-        } else {
-            // remove detached components from paintableIdMap so they
-            // can be GC'ed
-            for (Iterator it = paintableIdMap.keySet().iterator(); it.hasNext();) {
-                Component p = (Component) it.next();
-                if (p.getApplication() == null) {
-                    idPaintableMap.remove(paintableIdMap.get(p));
-                    it.remove();
-                    dirtyPaintabletSet.remove(p);
-                    p.removeListener(this);
-                }
+            // re-get window - may have been changed
+            Window newWindow = getApplicationWindow(request, application,
+                    window);
+            if (newWindow != window) {
+                window = newWindow;
+                repaintAll = true;
             }
-            paintables = getDirtyComponents(window);
-        }
-        if (paintables != null) {
 
-            // We need to avoid painting children before parent.
-            // This is ensured by ordering list by depth in component
-            // tree
-            Collections.sort(paintables, new Comparator() {
-                public int compare(Object o1, Object o2) {
-                    Component c1 = (Component) o1;
-                    Component c2 = (Component) o2;
-                    int d1 = 0;
-                    while (c1.getParent() != null) {
-                        d1++;
-                        c1 = c1.getParent();
-                    }
-                    int d2 = 0;
-                    while (c2.getParent() != null) {
-                        d2++;
-                        c2 = c2.getParent();
-                    }
-                    if (d1 < d2) {
-                        return -1;
-                    }
-                    if (d1 > d2) {
-                        return 1;
-                    }
-                    return 0;
-                }
-            });
+            JsonPaintTarget paintTarget = new JsonPaintTarget(this, outWriter,
+                    !repaintAll);
 
-            for (final Iterator i = paintables.iterator(); i.hasNext();) {
-                final Paintable p = (Paintable) i.next();
+            // Paints components
+            ArrayList paintables;
+            if (repaintAll) {
+                paintables = new ArrayList();
+                paintables.add(window);
 
-                // TODO CLEAN
-                if (p instanceof Window) {
-                    final Window w = (Window) p;
-                    if (w.getTerminal() == null) {
-                        w
-                                .setTerminal(application.getMainWindow()
-                                        .getTerminal());
-                    }
-                }
-                /*
-                 * This does not seem to happen in tk5, but remember this case:
-                 * else if (p instanceof Component) { if (((Component)
-                 * p).getParent() == null || ((Component) p).getApplication() ==
-                 * null) { // Component requested repaint, but is no // longer
-                 * attached: skip paintablePainted(p); continue; } }
-                 */
+                // Reset sent locales
+                locales = null;
+                requireLocale(application.getLocale().toString());
 
-                // TODO we may still get changes that have been
-                // rendered already (changes with only cached flag)
-                if (paintTarget.needsToBePainted(p)) {
-                    paintTarget.startTag("change");
-                    paintTarget.addAttribute("format", "uidl");
-                    final String pid = getPaintableId(p);
-                    paintTarget.addAttribute("pid", pid);
-
-                    p.paint(paintTarget);
-
-                    paintTarget.endTag("change");
-                }
-                paintablePainted(p);
-            }
-        }
-
-        paintTarget.close();
-        outWriter.print("]"); // close changes
-
-        outWriter.print(", \"meta\" : {");
-        boolean metaOpen = false;
-
-        if (repaintAll) {
-            metaOpen = true;
-            outWriter.write("\"repaintAll\":true");
-        }
-
-        // add meta instruction for client to set focus if it is set
-        final Paintable f = (Paintable) application.consumeFocus();
-        if (f != null) {
-            if (metaOpen) {
-                outWriter.write(",");
-            }
-            outWriter.write("\"focus\":\"" + getPaintableId(f) + "\"");
-        }
-
-        outWriter.print("}, \"resources\" : {");
-
-        // Precache custom layouts
-        String themeName = window.getTheme();
-        if (request.getParameter("theme") != null) {
-            themeName = request.getParameter("theme");
-        }
-        if (themeName == null) {
-            themeName = "default";
-        }
-
-        // TODO We should only precache the layouts that are not
-        // cached already
-        int resourceIndex = 0;
-        for (final Iterator i = paintTarget.getPreCachedResources().iterator(); i
-                .hasNext();) {
-            final String resource = (String) i.next();
-            InputStream is = null;
-            try {
-                is = applicationServlet.getServletContext()
-                        .getResourceAsStream(
-                                "/" + ApplicationServlet.THEME_DIRECTORY_PATH
-                                        + themeName + "/" + resource);
-            } catch (final Exception e) {
-                // FIXME: Handle exception
-                e.printStackTrace();
-            }
-            if (is != null) {
-
-                outWriter.print((resourceIndex++ > 0 ? ", " : "") + "\""
-                        + resource + "\" : ");
-                final StringBuffer layout = new StringBuffer();
-
-                try {
-                    final InputStreamReader r = new InputStreamReader(is,
-                            "UTF-8");
-                    final char[] buffer = new char[20000];
-                    int charsRead = 0;
-                    while ((charsRead = r.read(buffer)) > 0) {
-                        layout.append(buffer, 0, charsRead);
-                    }
-                    r.close();
-                } catch (final java.io.IOException e) {
-                    // FIXME: Handle exception
-                    System.err.println("Resource transfer failed:  "
-                            + request.getRequestURI() + ". (" + e.getMessage()
-                            + ")");
-                }
-                outWriter.print("\""
-                        + JsonPaintTarget.escapeJSON(layout.toString()) + "\"");
             } else {
-                // FIXME: Handle exception
-                System.err.println("CustomLayout " + "/"
-                        + ApplicationServlet.THEME_DIRECTORY_PATH + themeName
-                        + "/" + resource + " not found!");
+                // remove detached components from paintableIdMap so they
+                // can be GC'ed
+                for (Iterator it = paintableIdMap.keySet().iterator(); it
+                        .hasNext();) {
+                    Component p = (Component) it.next();
+                    if (p.getApplication() == null) {
+                        idPaintableMap.remove(paintableIdMap.get(p));
+                        it.remove();
+                        dirtyPaintabletSet.remove(p);
+                        p.removeListener(this);
+                    }
+                }
+                paintables = getDirtyComponents(window);
             }
+            if (paintables != null) {
+
+                // We need to avoid painting children before parent.
+                // This is ensured by ordering list by depth in component
+                // tree
+                Collections.sort(paintables, new Comparator() {
+                    public int compare(Object o1, Object o2) {
+                        Component c1 = (Component) o1;
+                        Component c2 = (Component) o2;
+                        int d1 = 0;
+                        while (c1.getParent() != null) {
+                            d1++;
+                            c1 = c1.getParent();
+                        }
+                        int d2 = 0;
+                        while (c2.getParent() != null) {
+                            d2++;
+                            c2 = c2.getParent();
+                        }
+                        if (d1 < d2) {
+                            return -1;
+                        }
+                        if (d1 > d2) {
+                            return 1;
+                        }
+                        return 0;
+                    }
+                });
+
+                for (final Iterator i = paintables.iterator(); i.hasNext();) {
+                    final Paintable p = (Paintable) i.next();
+
+                    // TODO CLEAN
+                    if (p instanceof Window) {
+                        final Window w = (Window) p;
+                        if (w.getTerminal() == null) {
+                            w.setTerminal(application.getMainWindow()
+                                    .getTerminal());
+                        }
+                    }
+                    /*
+                     * This does not seem to happen in tk5, but remember this
+                     * case: else if (p instanceof Component) { if (((Component)
+                     * p).getParent() == null || ((Component)
+                     * p).getApplication() == null) { // Component requested
+                     * repaint, but is no // longer attached: skip
+                     * paintablePainted(p); continue; } }
+                     */
+
+                    // TODO we may still get changes that have been
+                    // rendered already (changes with only cached flag)
+                    if (paintTarget.needsToBePainted(p)) {
+                        paintTarget.startTag("change");
+                        paintTarget.addAttribute("format", "uidl");
+                        final String pid = getPaintableId(p);
+                        paintTarget.addAttribute("pid", pid);
+
+                        p.paint(paintTarget);
+
+                        paintTarget.endTag("change");
+                    }
+                    paintablePainted(p);
+                }
+            }
+
+            paintTarget.close();
+            outWriter.print("]"); // close changes
+
+            outWriter.print(", \"meta\" : {");
+            boolean metaOpen = false;
+
+            if (repaintAll) {
+                metaOpen = true;
+                outWriter.write("\"repaintAll\":true");
+            }
+
+            // add meta instruction for client to set focus if it is set
+            final Paintable f = (Paintable) application.consumeFocus();
+            if (f != null) {
+                if (metaOpen) {
+                    outWriter.write(",");
+                }
+                outWriter.write("\"focus\":\"" + getPaintableId(f) + "\"");
+            }
+
+            outWriter.print("}, \"resources\" : {");
+
+            // Precache custom layouts
+            String themeName = window.getTheme();
+            if (request.getParameter("theme") != null) {
+                themeName = request.getParameter("theme");
+            }
+            if (themeName == null) {
+                themeName = "default";
+            }
+
+            // TODO We should only precache the layouts that are not
+            // cached already
+            int resourceIndex = 0;
+            for (final Iterator i = paintTarget.getPreCachedResources()
+                    .iterator(); i.hasNext();) {
+                final String resource = (String) i.next();
+                InputStream is = null;
+                try {
+                    is = applicationServlet
+                            .getServletContext()
+                            .getResourceAsStream(
+                                    "/"
+                                            + ApplicationServlet.THEME_DIRECTORY_PATH
+                                            + themeName + "/" + resource);
+                } catch (final Exception e) {
+                    // FIXME: Handle exception
+                    e.printStackTrace();
+                }
+                if (is != null) {
+
+                    outWriter.print((resourceIndex++ > 0 ? ", " : "") + "\""
+                            + resource + "\" : ");
+                    final StringBuffer layout = new StringBuffer();
+
+                    try {
+                        final InputStreamReader r = new InputStreamReader(is,
+                                "UTF-8");
+                        final char[] buffer = new char[20000];
+                        int charsRead = 0;
+                        while ((charsRead = r.read(buffer)) > 0) {
+                            layout.append(buffer, 0, charsRead);
+                        }
+                        r.close();
+                    } catch (final java.io.IOException e) {
+                        // FIXME: Handle exception
+                        System.err.println("Resource transfer failed:  "
+                                + request.getRequestURI() + ". ("
+                                + e.getMessage() + ")");
+                    }
+                    outWriter.print("\""
+                            + JsonPaintTarget.escapeJSON(layout.toString())
+                            + "\"");
+                } else {
+                    // FIXME: Handle exception
+                    System.err.println("CustomLayout " + "/"
+                            + ApplicationServlet.THEME_DIRECTORY_PATH
+                            + themeName + "/" + resource + " not found!");
+                }
+            }
+            outWriter.print("}");
+
+            printLocaleDeclarations(outWriter);
+
+            outWriter.print("}]");
         }
-        outWriter.print("}");
-
-        printLocaleDeclarations(outWriter);
-
-        outWriter.print("}]");
-
         outWriter.flush();
         outWriter.close();
     }
@@ -581,6 +603,18 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
                         }
                         try {
                             owner.changeVariables(request, m);
+
+                            // Special-case of closing browser-level
+                            // windows: track browser-windows currently open in
+                            // client
+                            if (owner instanceof Window
+                                    && ((Window) owner).getParent() == null) {
+                                final Boolean close = (Boolean) m.get("close");
+                                if (close != null && close.booleanValue()) {
+                                    closingWindowName = ((Window) owner)
+                                            .getName();
+                                }
+                            }
                         } catch (Exception e) {
                             handleChangeVariablesError(application2,
                                     (Component) owner, e, m);
@@ -826,48 +860,81 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
      *            the HTTP Request.
      * @param application
      *            the Application to query for window.
+     * @param assumedWindow
+     *            if the window has been already resolved once, this parameter
+     *            must contain the window.
      * @return Window mathing the given URI or null if not found.
      * @throws ServletException
      *             if an exception has occurred that interferes with the
      *             servlet's normal operation.
      */
     private Window getApplicationWindow(HttpServletRequest request,
-            Application application) throws ServletException {
+            Application application, Window assumedWindow)
+            throws ServletException {
 
         Window window = null;
 
-        // Find the window where the request is handled
-        String path = request.getPathInfo();
-
-        // Remove app-runner class-name!
-        if (applicationServlet.isApplicationRunnerServlet) {
-            path = path
-                    .substring(1 + applicationServlet.applicationRunnerClassname
-                            .length());
+        // If the client knows which window to use, use it if possible
+        String windowClientRequestedName = request.getParameter("windowName");
+        if (assumedWindow != null
+                && application.getWindows().contains(assumedWindow)) {
+            windowClientRequestedName = assumedWindow.getName();
+        }
+        if (windowClientRequestedName != null) {
+            window = application.getWindow(windowClientRequestedName);
+            if (window != null) {
+                return window;
+            }
         }
 
-        // Remove UIDL from the path
-        path = path.substring("/UIDL".length());
+        // If client does not know what window it wants
+        if (window == null) {
 
-        // Main window as the URI is empty
-        if (path == null || path.length() == 0 || path.equals("/")) {
+            // Get the path from URL
+            String path = request.getPathInfo();
+            if (applicationServlet.isApplicationRunnerServlet) {
+                path = path
+                        .substring(1 + applicationServlet.applicationRunnerClassname
+                                .length());
+            }
+            path = path.substring("/UIDL".length());
+
+            // If the path is specified, create name from it
+            if (path != null && path.length() > 0 && !path.equals("/")) {
+                String windowUrlName = null;
+                if (path.charAt(0) == '/') {
+                    path = path.substring(1);
+                }
+                final int index = path.indexOf('/');
+                if (index < 0) {
+                    windowUrlName = path;
+                    path = "";
+                } else {
+                    windowUrlName = path.substring(0, index);
+                    path = path.substring(index + 1);
+                }
+
+                window = application.getWindow(windowUrlName);
+            }
+        }
+
+        // By default, use mainwindow
+        if (window == null) {
             window = application.getMainWindow();
-        } else {
-            String windowName = null;
-            if (path.charAt(0) == '/') {
-                path = path.substring(1);
-            }
-            final int index = path.indexOf('/');
-            if (index < 0) {
-                windowName = path;
-                path = "";
-            } else {
-                windowName = path.substring(0, index);
-                path = path.substring(index + 1);
-            }
-            window = application.getWindow(windowName);
+        }
 
-            // By default, we use main window
+        // If the requested window is already open, resolve conflict
+        if (currentlyOpenWindowsInClient.contains(window.getName())) {
+            String newWindowName = window.getName();
+            while (currentlyOpenWindowsInClient.contains(newWindowName)) {
+                newWindowName = window.getName() + "_"
+                        + ((int) (Math.random() * 100000000));
+            }
+
+            window = application.getWindow(newWindowName);
+
+            // If everything else fails, use main window even in case of
+            // conflicts
             if (window == null) {
                 window = application.getMainWindow();
             }

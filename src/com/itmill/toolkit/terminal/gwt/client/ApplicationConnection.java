@@ -250,6 +250,9 @@ public class ApplicationConnection {
         if (repaintAll) {
             uri += "?repaintAll=1";
         }
+        if (windowName != null && windowName.length() > 0) {
+            uri += (repaintAll ? "&" : "?") + "windowName=" + windowName;
+        }
 
         if (!forceSync) {
             final RequestBuilder rb = new RequestBuilder(RequestBuilder.POST,
@@ -1086,5 +1089,19 @@ public class ApplicationConnection {
      */
     public void requestLayoutPhase() {
         layoutTimer.schedule(500);
+    }
+
+    private String windowName = null;
+
+    /**
+     * Reset the name of the current browser-window. This should reflect the
+     * window-name used in the server, but might be different from the
+     * window-object target-name on client.
+     * 
+     * @param stringAttribute
+     *            New name for the window.
+     */
+    public void setWindowName(String newName) {
+        windowName = newName;
     }
 }
