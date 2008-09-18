@@ -143,6 +143,10 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
         bodyContainer.addScrollListener(this);
         bodyContainer.setStyleName(CLASSNAME + "-body");
 
+        // GWT 1.5 ScrollPanel applies position:relative to fix some IE bug, but
+        // this of course breaks IE
+        DOM.setStyleAttribute(bodyContainer.getElement(), "position", "");
+
         panel = new FlowPanel();
         panel.setStyleName(CLASSNAME);
         panel.add(tHead);
