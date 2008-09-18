@@ -135,9 +135,9 @@ public class ApplicationConnection {
         initializeClientHooks();
 
         view = new IView(cnf.getRootPanelId());
+        showLoadingIndicator();
 
         makeUidlRequest("", true, false);
-        applicationRunning = true;
     }
 
     /**
@@ -268,7 +268,36 @@ public class ApplicationConnection {
 
                     public void onResponseReceived(Request request,
                             Response response) {
-                        handleReceivedJSONMessage(response);
+                        if (applicationRunning) {
+                            handleReceivedJSONMessage(response);
+                        } else {
+                            applicationRunning = true;
+                            handleWhenCSSLoaded(response);
+                        }
+                    }
+
+                    int cssWaits = 0;
+                    static final int MAX_CSS_WAITS = 20;
+
+                    private void handleWhenCSSLoaded(final Response response) {
+                        int heightOfLoadElement = DOM.getElementPropertyInt(loadElement, "offsetHeight");
+                        if (heightOfLoadElement == 0
+                                && cssWaits < MAX_CSS_WAITS) {
+                            (new Timer() {
+                                public void run() {
+                                    handleWhenCSSLoaded(response);
+                                }
+                            }).schedule(50);
+                            console
+                                    .log("Assuming CSS loading is not complete, postponing render phase. (.i-loading-indicator height == 0)");
+                            cssWaits++;
+                        } else {
+                            handleReceivedJSONMessage(response);
+                            if (cssWaits >= MAX_CSS_WAITS) {
+                                console
+                                        .error("CSS files may have not loaded properly.");
+                            }
+                        }
                     }
 
                 });
@@ -300,7 +329,16 @@ public class ApplicationConnection {
 
     private void startRequest() {
         activeRequests++;
-        showLoadingIndicator();
+        // show initial throbber
+        if (loadTimer == null) {
+            loadTimer = new Timer() {
+                public void run() {
+                    showLoadingIndicator();
+                }
+            };
+            // First one kicks in at 300ms
+        }
+        loadTimer.schedule(300);
     }
 
     private void endRequest() {
@@ -360,57 +398,38 @@ public class ApplicationConnection {
 
     private void showLoadingIndicator() {
         // show initial throbber
-        if (loadTimer == null) {
-            loadTimer = new Timer() {
-                public void run() {
-                    // show initial throbber
-                    if (loadElement == null) {
-                        loadElement = DOM.createDiv();
-                        DOM.setStyleAttribute(loadElement, "position",
-                                "absolute");
-                        DOM.appendChild(view.getElement(), loadElement);
-                        ApplicationConnection.getConsole().log(
-                                "inserting load indicator");
-                        // Position
-                        DOM.setStyleAttribute(loadElement, "top", (view
-                                .getAbsoluteTop() + 6)
-                                + "px");
-                    }
-                    DOM.setElementProperty(loadElement, "className",
-                            "i-loading-indicator");
-                    DOM.setStyleAttribute(loadElement, "display", "block");
-                    final int updatedX = Window.getScrollLeft()
-                            + view.getAbsoluteLeft()
-                            + view.getOffsetWidth()
-                            - DOM.getElementPropertyInt(loadElement,
-                                    "offsetWidth") - 5;
-                    DOM.setStyleAttribute(loadElement, "left", updatedX + "px");
-                    final int updatedY = Window.getScrollTop() + 6
-                            + view.getAbsoluteTop();
-                    DOM.setStyleAttribute(loadElement, "top", updatedY + "px");
-                    // Initialize other timers
-                    loadTimer2 = new Timer() {
-                        public void run() {
-                            DOM.setElementProperty(loadElement, "className",
-                                    "i-loading-indicator-delay");
-                        }
-                    };
-                    // Second one kicks in at 1500ms
-                    loadTimer2.schedule(1200);
-
-                    loadTimer3 = new Timer() {
-                        public void run() {
-                            DOM.setElementProperty(loadElement, "className",
-                                    "i-loading-indicator-wait");
-                        }
-                    };
-                    // Third one kicks in at 5000ms
-                    loadTimer3.schedule(4700);
-                }
-            };
-            // First one kicks in at 300ms
-            loadTimer.schedule(300);
+        if (loadElement == null) {
+            loadElement = DOM.createDiv();
+            DOM.setStyleAttribute(loadElement, "position", "absolute");
+            DOM.appendChild(view.getElement(), loadElement);
+            ApplicationConnection.getConsole().log("inserting load indicator");
         }
+        DOM.setElementProperty(loadElement, "className", "i-loading-indicator");
+        DOM.setStyleAttribute(loadElement, "display", "block");
+        final int updatedX = Window.getScrollLeft() + view.getAbsoluteLeft()
+                + view.getOffsetWidth()
+                - DOM.getElementPropertyInt(loadElement, "offsetWidth") - 5;
+        DOM.setStyleAttribute(loadElement, "left", updatedX + "px");
+        final int updatedY = Window.getScrollTop() + 6 + view.getAbsoluteTop();
+        DOM.setStyleAttribute(loadElement, "top", updatedY + "px");
+        // Initialize other timers
+        loadTimer2 = new Timer() {
+            public void run() {
+                DOM.setElementProperty(loadElement, "className",
+                        "i-loading-indicator-delay");
+            }
+        };
+        // Second one kicks in at 1500ms from request start
+        loadTimer2.schedule(1200);
+
+        loadTimer3 = new Timer() {
+            public void run() {
+                DOM.setElementProperty(loadElement, "className",
+                        "i-loading-indicator-wait");
+            }
+        };
+        // Third one kicks in at 5000ms from request start
+        loadTimer3.schedule(4700);
     }
 
     private void hideLoadingIndicator() {
@@ -423,8 +442,7 @@ public class ApplicationConnection {
             loadTimer = null;
         }
         if (loadElement != null) {
-            DOM.removeChild(view.getElement(), loadElement);
-            loadElement = null;
+            DOM.setStyleAttribute(loadElement, "display", "none");
         }
     }
 

@@ -197,7 +197,10 @@ input.i-modified,
 	padding-bottom: 1px;
 }
 
-/* Loading indicator states */
+/* Loading indicator states
+ * Note: client side expects that loading indicator has a height. It depends on
+ * this css property to ensure browsers have applied all required styles.
+ */
 
 .i-loading-indicator,
 .i-loading-indicator-delay,
