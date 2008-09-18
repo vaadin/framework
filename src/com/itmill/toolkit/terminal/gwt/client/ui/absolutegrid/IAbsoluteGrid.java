@@ -264,7 +264,7 @@ public class IAbsoluteGrid extends Composite implements
         }
     }
 
-    public void iLayout() {
+    public void iLayout(int availableWidth, int availableHeight) {
         boolean sizeChanged = false;
         int newWidth = getOffsetWidth();
         if (offsetWidth != newWidth) {

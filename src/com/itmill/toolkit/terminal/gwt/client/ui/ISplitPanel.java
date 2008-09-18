@@ -183,12 +183,16 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
         iLayout();
     }
 
+    private void iLayout() {
+        iLayout(-1, -1);
+    }
+
     /*
      * Calculates absolutely positioned container places/sizes (non-Javadoc)
      * 
      * @see com.itmill.toolkit.terminal.gwt.client.NeedsLayout#layout()
      */
-    public void iLayout() {
+    public void iLayout(int availableWidth, int availableHeight) {
         if (!isAttached()) {
             return;
         }

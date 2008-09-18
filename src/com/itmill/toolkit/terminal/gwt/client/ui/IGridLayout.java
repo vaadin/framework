@@ -288,7 +288,11 @@ public class IGridLayout extends SimplePanel implements Paintable, Container,
 
     }
 
-    public void iLayout() {
+    private void iLayout() {
+        iLayout(-1, -1);
+    }
+
+    public void iLayout(int availableWidth, int availableHeight) {
         if (needsLayout) {
             super.setWidth(width);
             if (meterElement == null) {

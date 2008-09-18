@@ -98,7 +98,7 @@ public class IForm extends ComplexPanel implements Paintable,
             DOM.setInnerHTML(desc, "");
         }
 
-        iLayout();
+        iLayout(-1, -1);
 
         final UIDL layoutUidl = uidl.getChildUIDL(0);
         Container newLo = (Container) client.getPaintable(layoutUidl);
@@ -135,7 +135,7 @@ public class IForm extends ComplexPanel implements Paintable,
         }
     }
 
-    public void iLayout() {
+    public void iLayout(int availableWidth, int availableHeight) {
         Util.runDescendentsLayout(this);
     }
 

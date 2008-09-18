@@ -412,7 +412,11 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
         widgetToCaptionWrapper.clear();
     }
 
-    public void iLayout() {
+    private void iLayout() {
+        iLayout(-1, -1);
+    }
+
+    public void iLayout(int availableWidth, int availableHeight) {
         if (!iLayoutJS(DOM.getFirstChild(getElement()))) {
             Util.runDescendentsLayout(this);
         }

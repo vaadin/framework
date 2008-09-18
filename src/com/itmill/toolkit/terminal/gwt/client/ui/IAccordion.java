@@ -114,7 +114,11 @@ public class IAccordion extends ITabsheetBase implements
         this.height = height;
     }
 
-    public void iLayout() {
+    private void iLayout() {
+        iLayout(-1, -1);
+    }
+
+    public void iLayout(int availableWidth, int availableHeight) {
         StackItem item = getSelectedStack();
         if (item == null) {
             return;

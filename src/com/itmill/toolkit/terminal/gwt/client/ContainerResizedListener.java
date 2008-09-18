@@ -15,6 +15,12 @@ public interface ContainerResizedListener {
      * function on its ancestors that implement NeedsLayout in case their
      * container has resized. runAnchestorsLayout(HasWidgets parent) function
      * from Util class may be a good helper for this.
+     * 
+     * The width and height parameters specifies the space available for the
+     * component (in pixels) if the parent container can or want to produce
+     * these numbers. If the parent container does not know (has not calculated)
+     * or cannot produce (undefined dimensions) one of these numbers -1 is
+     * passed.
      */
-    public void iLayout();
+    public void iLayout(int availableWidth, int availableHeight);
 }

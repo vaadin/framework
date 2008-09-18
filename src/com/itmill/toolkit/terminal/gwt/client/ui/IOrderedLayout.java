@@ -20,6 +20,7 @@ import com.itmill.toolkit.terminal.gwt.client.ICaption;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.Util;
+import com.itmill.toolkit.terminal.gwt.client.Util.WidgetSpaceAllocator;
 
 /**
  * Full implementation of OrderedLayout client peer.
@@ -239,7 +240,7 @@ import com.itmill.toolkit.terminal.gwt.client.Util;
  * @author IT Mill Ltd
  */
 public class IOrderedLayout extends Panel implements Container,
-        ContainerResizedListener {
+        ContainerResizedListener, WidgetSpaceAllocator {
 
     public static final String CLASSNAME = "i-orderedlayout";
 
@@ -305,7 +306,7 @@ public class IOrderedLayout extends Panel implements Container,
      * List of child widget wrappers. These wrappers are in exact same indexes
      * as the widgets in childWidgets list.
      */
-    private final Vector childWidgetWrappers = new Vector();
+    private final Vector<WidgetWrapper> childWidgetWrappers = new Vector<WidgetWrapper>();
 
     /** Whether the component has spacing enabled. */
     private boolean hasComponentSpacing;
@@ -396,7 +397,7 @@ public class IOrderedLayout extends Panel implements Container,
         // Reinsert all widget wrappers to this container
         final int currentOrientationMode = orientationMode;
         for (int i = 0; i < childWidgetWrappers.size(); i++) {
-            WidgetWrapper wr = (WidgetWrapper) childWidgetWrappers.get(i);
+            WidgetWrapper wr = childWidgetWrappers.get(i);
             orientationMode = oldOrientationMode;
             tableMode = oldTableMode;
             Element oldWrElement = wr.getElementWrappingWidgetAndCaption();
@@ -1273,6 +1274,23 @@ public class IOrderedLayout extends Panel implements Container,
                         && margins.hasBottom() ? marginBottom + "px" : "");
             }
         }
+
+        public int getAllocatedHeight() {
+            if (lastForcedPixelHeight == -1) {
+                return -1;
+            }
+
+            int available = lastForcedPixelHeight;
+            // Must remove caption height to report correct size to child
+            if (caption != null) {
+                available -= caption.getOffsetHeight();
+            }
+            return available;
+        }
+
+        public int getAllocatedWidth() {
+            return lastForcedPixelWidth;
+        }
     }
 
     /* documented at super */
@@ -1310,7 +1328,7 @@ public class IOrderedLayout extends Panel implements Container,
             }
 
             final int removeFromIndex = childWidgets.indexOf(child);
-            final WidgetWrapper wrapper = (WidgetWrapper) childWidgetWrappers
+            final WidgetWrapper wrapper = childWidgetWrappers
                     .get(removeFromIndex);
             Element wrapperElement = wrapper.getElement();
             final int nonWidgetChildElements = DOM
@@ -1385,8 +1403,7 @@ public class IOrderedLayout extends Panel implements Container,
          * from the DOM.
          */
         final int index = childWidgets.indexOf(child);
-        final WidgetWrapper wrapper = (WidgetWrapper) childWidgetWrappers
-                .get(index);
+        final WidgetWrapper wrapper = childWidgetWrappers.get(index);
         DOM.removeChild(wrappedChildContainer, wrapper.getElement());
         childWidgetWrappers.remove(index);
 
@@ -1423,8 +1440,7 @@ public class IOrderedLayout extends Panel implements Container,
     public void updateCaption(Paintable component, UIDL uidl) {
         final int index = childWidgets.indexOf(component);
         if (index >= 0) {
-            ((WidgetWrapper) childWidgetWrappers.get(index)).updateCaption(
-                    uidl, component);
+            childWidgetWrappers.get(index).updateCaption(uidl, component);
         }
     }
 
@@ -1434,9 +1450,29 @@ public class IOrderedLayout extends Panel implements Container,
     }
 
     /* documented at super */
-    public void iLayout() {
+    public void iLayout(int availableWidth, int availableHeight) {
         updateChildSizes();
         Util.runDescendentsLayout(this);
         childLayoutsHaveChanged = false;
+    }
+
+    public int getAllocatedHeight(Widget child) {
+        final int index = childWidgets.indexOf(child);
+        if (index >= 0) {
+            WidgetWrapper wrapper = childWidgetWrappers.get(index);
+            return wrapper.getAllocatedHeight();
+        }
+
+        return -1;
+    }
+
+    public int getAllocatedWidth(Widget child) {
+        final int index = childWidgets.indexOf(child);
+        if (index >= 0) {
+            WidgetWrapper wrapper = childWidgetWrappers.get(index);
+            return wrapper.getAllocatedWidth();
+        }
+
+        return -1;
     }
 }

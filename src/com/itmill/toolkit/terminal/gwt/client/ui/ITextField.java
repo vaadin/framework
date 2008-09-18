@@ -166,20 +166,36 @@ public class ITextField extends TextBoxBase implements Paintable, Field,
         }
     }
 
-    public void iLayout() {
+    private void iLayout() {
+        iLayout(-1, -1);
+    }
+
+    public void iLayout(int availableWidth, int availableHeight) {
         if (proportionalWidth >= 0) {
-            int availPixels = (int) (DOM.getElementPropertyInt(DOM
-                    .getParent(getElement()), "clientWidth") * proportionalWidth);
+            int availPixels = availableWidth;
+            if (availPixels < 0) {
+                availPixels = (DOM.getElementPropertyInt(DOM
+                        .getParent(getElement()), "clientWidth"));
+            }
+            availPixels *= proportionalWidth;
+
             availPixels -= getExtraHorizontalPixels();
             if (availPixels >= 0) {
                 super.setWidth(availPixels + "px");
             }
         }
         if (proportionalHeight >= 0) {
-            int availPixels = (int) (DOM.getElementPropertyInt(DOM
-                    .getParent(getElement()), "clientHeight") * proportionalHeight);
+            int availPixels = availableHeight;
+            if (availPixels < 0) {
+                availPixels = (DOM.getElementPropertyInt(DOM
+                        .getParent(getElement()), "clientHeight"));
+            }
+            availPixels *= proportionalHeight;
             availPixels -= getExtraVerticalPixels();
-            super.setHeight(availPixels + "px");
+
+            if (availPixels >= 0) {
+                super.setHeight(availPixels + "px");
+            }
         }
     }
 

@@ -376,7 +376,11 @@ public class ITabsheet extends ITabsheetBase implements
         }
     }
 
-    public void iLayout() {
+    private void iLayout() {
+        iLayout(-1, -1);
+    }
+
+    public void iLayout(int availableWidth, int availableHeight) {
         if (height != null && height != "") {
             super.setHeight(height);
 

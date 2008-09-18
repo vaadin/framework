@@ -373,7 +373,11 @@ public class IExpandLayout extends ComplexPanel implements
         return getWidgetIndex(component) >= 0;
     }
 
-    public void iLayout() {
+    private void iLayout() {
+        iLayout(-1, -1);
+    }
+
+    public void iLayout(int availableWidth, int availableHeight) {
         if (orientationMode == ORIENTATION_HORIZONTAL) {
             int pixels;
             if ("".equals(height)) {

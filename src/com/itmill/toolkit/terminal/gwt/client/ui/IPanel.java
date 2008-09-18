@@ -234,7 +234,7 @@ public class IPanel extends SimplePanel implements Paintable,
         }
     }
 
-    public void iLayout() {
+    public void iLayout(int availableWidth, int availableHeight) {
         iLayout(true);
     }
 

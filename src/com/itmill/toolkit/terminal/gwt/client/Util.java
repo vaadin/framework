@@ -48,12 +48,27 @@ public class Util {
         while (childWidgets.hasNext()) {
             final Widget child = (Widget) childWidgets.next();
             if (child instanceof ContainerResizedListener) {
-                ((ContainerResizedListener) child).iLayout();
+                int w = -1, h = -1;
+
+                if (container instanceof WidgetSpaceAllocator) {
+                    w = ((WidgetSpaceAllocator) container)
+                            .getAllocatedWidth(child);
+                    h = ((WidgetSpaceAllocator) container)
+                            .getAllocatedHeight(child);
+                }
+
+                ((ContainerResizedListener) child).iLayout(w, h);
             } else if (child instanceof HasWidgets) {
                 final HasWidgets childContainer = (HasWidgets) child;
                 runDescendentsLayout(childContainer);
             }
         }
+    }
+
+    public interface WidgetSpaceAllocator {
+        int getAllocatedWidth(Widget child);
+
+        int getAllocatedHeight(Widget child);
     }
 
     /**

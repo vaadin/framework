@@ -272,7 +272,11 @@ public class ITextualDate extends IDateField implements Paintable, Field,
         return fieldExtraWidth;
     }
 
-    public void iLayout() {
+    private void iLayout() {
+        iLayout(-1, -1);
+    }
+
+    public void iLayout(int availableWidth, int availableHeight) {
         if (needLayout) {
             text.setWidth((getOffsetWidth() - getFieldExtraWidth()) + "px");
         }
