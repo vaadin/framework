@@ -280,7 +280,8 @@ public class ApplicationConnection {
                     static final int MAX_CSS_WAITS = 20;
 
                     private void handleWhenCSSLoaded(final Response response) {
-                        int heightOfLoadElement = DOM.getElementPropertyInt(loadElement, "offsetHeight");
+                        int heightOfLoadElement = DOM.getElementPropertyInt(
+                                loadElement, "offsetHeight");
                         if (heightOfLoadElement == 0
                                 && cssWaits < MAX_CSS_WAITS) {
                             (new Timer() {
@@ -289,7 +290,9 @@ public class ApplicationConnection {
                                 }
                             }).schedule(50);
                             console
-                                    .log("Assuming CSS loading is not complete, postponing render phase. (.i-loading-indicator height == 0)");
+                                    .log("Assuming CSS loading is not complete, "
+                                            + "postponing render phase. "
+                                            + "(.i-loading-indicator height == 0)");
                             cssWaits++;
                         } else {
                             handleReceivedJSONMessage(response);
@@ -342,9 +345,7 @@ public class ApplicationConnection {
     }
 
     private void endRequest() {
-
         checkForPendingVariableBursts();
-
         activeRequests--;
         // deferring to avoid flickering
         DeferredCommand.addCommand(new Command() {

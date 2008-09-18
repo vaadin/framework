@@ -331,7 +331,6 @@ input.i-modified,
  * Note: client side expects that loading indicator has a height. It depends on
  * this css property to ensure browsers have applied all required styles.
  */
-
 .i-loading-indicator,
 .i-loading-indicator-delay,
 .i-loading-indicator-wait {
