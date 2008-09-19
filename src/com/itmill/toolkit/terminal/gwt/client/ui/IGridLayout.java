@@ -286,6 +286,11 @@ public class IGridLayout extends SimplePanel implements Paintable, Container,
             wrapper.updateCaption(uidl);
         }
 
+        public boolean childComponentSizesUpdated() {
+            // TODO Auto-generated method stub
+            return false;
+        }
+
     }
 
     private void iLayout() {
@@ -310,6 +315,11 @@ public class IGridLayout extends SimplePanel implements Paintable, Container,
             grid.setWidth("");
         }
         Util.runDescendentsLayout(this);
+    }
+
+    public boolean childComponentSizesUpdated() {
+        // TODO Auto-generated method stub
+        return false;
     }
 
 }

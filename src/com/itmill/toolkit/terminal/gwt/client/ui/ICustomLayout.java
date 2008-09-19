@@ -476,4 +476,10 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
     		return false;
     	}
     }-*/;
+
+    public boolean childComponentSizesUpdated() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
 }

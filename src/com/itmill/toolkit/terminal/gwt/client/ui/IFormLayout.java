@@ -301,4 +301,10 @@ public class IFormLayout extends FlexTable implements Container {
         }
 
     }
+
+    public boolean childComponentSizesUpdated() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
 }

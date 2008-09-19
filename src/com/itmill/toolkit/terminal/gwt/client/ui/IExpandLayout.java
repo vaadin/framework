@@ -768,4 +768,10 @@ public class IExpandLayout extends ComplexPanel implements
         }
         rendering = false;
     }
+
+    public boolean childComponentSizesUpdated() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
 }

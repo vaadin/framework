@@ -49,4 +49,12 @@ public interface Container extends Paintable {
      */
     void updateCaption(Paintable component, UIDL uidl);
 
+    /**
+     * Called when a child components size has been updated in the rendering
+     * phase.
+     * 
+     * @return true if the size of the Container remains the same, false if the
+     *         event need to be propagated to the Containers parent
+     */
+    boolean childComponentSizesUpdated();
 }

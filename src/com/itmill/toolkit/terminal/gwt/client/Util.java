@@ -4,7 +4,9 @@
 
 package com.itmill.toolkit.terminal.gwt.client;
 
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -36,6 +38,43 @@ public class Util {
     /*-{
       	el.oncontextmenu = null;
     }-*/;
+
+    /**
+     * Called when the size of one or more widgets have changed during
+     * rendering. Finds parent container and notifies them of the size change.
+     * 
+     * @param widgets
+     */
+    public static void componentSizeUpdated(Set<Widget> widgets) {
+        if (widgets.isEmpty()) {
+            return;
+        }
+
+        Set<Container> parents = new HashSet<Container>();
+
+        for (Widget widget : widgets) {
+/*            ApplicationConnection.getConsole().log(
+                    "Size changed for widget: "
+                            + widget.toString().split(">")[0]);
+*/
+            Widget parent = widget.getParent();
+            while (parent != null && !(parent instanceof Container)) {
+                parent = parent.getParent();
+            }
+            if (parent != null) {
+                parents.add((Container) parent);
+            }
+        }
+
+        Set<Widget> parentChanges = new HashSet<Widget>();
+        for (Container parent : parents) {
+            if (!parent.childComponentSizesUpdated()) {
+                parentChanges.add((Widget) parent);
+            }
+        }
+
+        componentSizeUpdated(parentChanges);
+    }
 
     /**
      * Traverses recursively ancestors until ContainerResizedListener child

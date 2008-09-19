@@ -299,4 +299,9 @@ public class IAccordion extends ITabsheetBase implements
         }
     }
 
+    public boolean childComponentSizesUpdated() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
 }

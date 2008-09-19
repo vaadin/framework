@@ -478,4 +478,9 @@ public class ITabsheet extends ITabsheetBase implements
         ICaption c = (ICaption) captions.get("" + i);
         c.updateCaption(uidl);
     }
+
+    public boolean childComponentSizesUpdated() {
+        // TODO Auto-generated method stub
+        return false;
+    }
 }

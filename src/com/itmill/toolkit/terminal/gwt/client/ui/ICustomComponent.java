@@ -61,4 +61,9 @@ public class ICustomComponent extends SimplePanel implements Container {
         // TODO custom component could handle its composition roots caption
     }
 
+    public boolean childComponentSizesUpdated() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
 }

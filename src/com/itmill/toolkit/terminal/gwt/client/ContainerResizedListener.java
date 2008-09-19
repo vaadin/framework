@@ -21,6 +21,12 @@ public interface ContainerResizedListener {
      * these numbers. If the parent container does not know (has not calculated)
      * or cannot produce (undefined dimensions) one of these numbers -1 is
      * passed.
+     * 
+     * Note that these numbers should not be considered the maximum size for the
+     * widget if the layout has undefined dimension. In that case the currently
+     * allocated space is passed (eg. OrderedLayout with undefined width might
+     * pass availableWidth 100 if the widest component in the layout is 100 but
+     * it will still stretch if another 200 pixel wide component is rendered)
      */
     public void iLayout(int availableWidth, int availableHeight);
 }

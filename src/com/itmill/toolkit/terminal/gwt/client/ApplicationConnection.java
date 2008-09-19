@@ -6,7 +6,9 @@ package com.itmill.toolkit.terminal.gwt.client;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.Vector;
 
 import com.google.gwt.core.client.GWT;
@@ -503,6 +505,9 @@ public class ApplicationConnection {
         // Process changes
         final JSONArray changes = (JSONArray) ((JSONObject) json)
                 .get("changes");
+
+        Set<Widget> sizeUpdatedWidgets = new HashSet<Widget>();
+
         for (int i = 0; i < changes.size(); i++) {
             try {
                 final UIDL change = new UIDL((JSONArray) changes.get(i));
@@ -517,7 +522,16 @@ public class ApplicationConnection {
                 final UIDL uidl = change.getChildUIDL(0);
                 final Paintable paintable = getPaintable(uidl.getId());
                 if (paintable != null) {
+                    Widget widget = (Widget) paintable;
+                    int w = widget.getOffsetWidth();
+                    int h = widget.getOffsetHeight();
+
                     paintable.updateFromUIDL(uidl, this);
+
+                    if (w != widget.getOffsetWidth()
+                            || h != widget.getOffsetHeight()) {
+                        sizeUpdatedWidgets.add((Widget) paintable);
+                    }
                 } else {
                     if (!uidl.getTag().equals("window")) {
                         ClientExceptionHandler
@@ -533,6 +547,8 @@ public class ApplicationConnection {
                 ClientExceptionHandler.displayError(e);
             }
         }
+
+        Util.componentSizeUpdated(sizeUpdatedWidgets);
 
         if (meta != null) {
             if (meta.containsKey("focus")) {

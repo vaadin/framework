@@ -171,10 +171,10 @@ public class IPopupView extends HTML implements Paintable {
     }
 
     public static native void nativeBlur(Element e) /*-{ 
-                                     if(e.focus) {
-                                     e.blur();
-                                     }
-                                     }-*/;
+                                        if(e.focus) {
+                                        e.blur();
+                                        }
+                                        }-*/;
 
     private class CustomPopup extends IToolkitOverlay implements Container {
 
@@ -228,7 +228,7 @@ public class IPopupView extends HTML implements Paintable {
             // Notify children that have used the keyboard
             for (Iterator<Element> iterator = activeChildren.iterator(); iterator
                     .hasNext();) {
-                nativeBlur((Element) iterator.next());
+                nativeBlur(iterator.next());
             }
             activeChildren.clear();
             remove(popupComponentWidget);
@@ -310,6 +310,11 @@ public class IPopupView extends HTML implements Paintable {
             if (popupComponentPaintable != null) {
                 client.unregisterPaintable(popupComponentPaintable);
             }
+        }
+
+        public boolean childComponentSizesUpdated() {
+            // TODO Auto-generated method stub
+            return false;
         }
 
     }// class CustomPopup

@@ -249,6 +249,11 @@ public class ISizeableGridLayout extends IAbsoluteGrid implements Paintable,
         return marginPixels;
     }
 
+    public boolean childComponentSizesUpdated() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
 }
 
 class MarginPixels {
