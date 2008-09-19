@@ -240,29 +240,37 @@ public class IPanel extends SimplePanel implements Paintable,
 
     public void iLayout(boolean runGeckoFix) {
 
-        // IE6 width fix
-        if (BrowserInfo.get().isIE6()) {
-            int captionOffsetWidth = DOM.getElementPropertyInt(captionNode,
-                    "offsetWidth");
-            int borderWidthGuess = 200;
-            int widthGuess = captionOffsetWidth - borderWidthGuess;
-            if (widthGuess < 0) {
-                widthGuess = 0;
-            }
-            DOM.setStyleAttribute(contentNode, "width", widthGuess + "px");
+        if (BrowserInfo.get().isIE6() && width != null && !width.equals("")) {
+            /*
+             * IE6 requires overflow-hidden elements to have a width specified
+             */
+            /*
+             * Fixes #1923 IPanel: Horizontal scrollbar does not appear in IE6
+             * with wide content
+             */
 
-            int actualBorder = DOM.getElementPropertyInt(contentNode,
-                    "offsetWidth")
-                    - widthGuess;
-            if (actualBorder != borderWidthGuess) {
-                int realWidthIncludingBorder = captionOffsetWidth
-                        - actualBorder;
-                if (realWidthIncludingBorder < 0) {
-                    realWidthIncludingBorder = 0;
-                }
-                DOM.setStyleAttribute(contentNode, "width",
-                        realWidthIncludingBorder + "px");
-            }
+            /*
+             * Caption must be shrunk for parent measurements to return correct
+             * result in IE6
+             */
+            DOM.setStyleAttribute(captionNode, "width", "1px");
+
+            int parentPadding = Util.measureHorizontalPadding(getElement(), 0);
+
+            int parentWidthExcludingPadding = getElement().getOffsetWidth()
+                    - parentPadding;
+
+            int captionMarginLeft = captionNode.getAbsoluteLeft()
+                    - getElement().getAbsoluteLeft();
+            Util.setWidthExcludingPadding(captionNode,
+                    parentWidthExcludingPadding - captionMarginLeft, 26);
+
+            int contentMarginLeft = contentNode.getAbsoluteLeft()
+                    - getElement().getAbsoluteLeft();
+
+            Util.setWidthExcludingPadding(contentNode,
+                    parentWidthExcludingPadding - contentMarginLeft, 2);
+
         }
 
         if (height != null && height != "") {

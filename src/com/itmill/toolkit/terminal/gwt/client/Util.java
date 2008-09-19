@@ -53,10 +53,6 @@ public class Util {
         Set<Container> parents = new HashSet<Container>();
 
         for (Widget widget : widgets) {
-/*            ApplicationConnection.getConsole().log(
-                    "Size changed for widget: "
-                            + widget.toString().split(">")[0]);
-*/
             Widget parent = widget.getParent();
             while (parent != null && !(parent instanceof Container)) {
                 parent = parent.getParent();
@@ -215,4 +211,38 @@ public class Util {
     /*-{
         return element.cloneNode(deep);
     }-*/;
+
+    public static int measureHorizontalPadding(Element element, int paddingGuess) {
+        String originalWidth = DOM.getStyleAttribute(element, "width");
+        int originalOffsetWidth = element.getOffsetWidth();
+        int widthGuess = (originalOffsetWidth + paddingGuess);
+        DOM.setStyleAttribute(element, "width", widthGuess + "px");
+        int padding = widthGuess - element.getOffsetWidth();
+
+        DOM.setStyleAttribute(element, "width", originalWidth);
+        return padding;
+    }
+
+    public static void setWidthExcludingPadding(Element element,
+            int requestedWidth, int paddingGuess) {
+
+        int widthGuess = requestedWidth - paddingGuess;
+        if (widthGuess < 0) {
+            widthGuess = 0;
+        }
+
+        DOM.setStyleAttribute(element, "width", widthGuess + "px");
+        int captionOffsetWidth = DOM.getElementPropertyInt(element,
+                "offsetWidth");
+
+        int actualPadding = captionOffsetWidth - widthGuess;
+
+        if (actualPadding != paddingGuess) {
+            DOM.setStyleAttribute(element, "width", requestedWidth
+                    - actualPadding + "px");
+
+        }
+
+    }
+
 }
