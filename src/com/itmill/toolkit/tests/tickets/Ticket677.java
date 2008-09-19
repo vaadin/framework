@@ -1,11 +1,17 @@
 package com.itmill.toolkit.tests.tickets;
 
+import java.util.Date;
+import java.util.Set;
+
 import com.itmill.toolkit.Application;
+import com.itmill.toolkit.data.Property.ValueChangeEvent;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.DateField;
 import com.itmill.toolkit.ui.Form;
 import com.itmill.toolkit.ui.GridLayout;
 import com.itmill.toolkit.ui.Label;
+import com.itmill.toolkit.ui.Layout;
+import com.itmill.toolkit.ui.OptionGroup;
 import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Panel;
 import com.itmill.toolkit.ui.TextField;
@@ -29,6 +35,78 @@ public class Ticket677 extends Application {
         GridLayout layout = new GridLayout(10, 10);
         w.setLayout(layout);
         createUI(layout);
+
+        createMultiLevelHierarchy();
+    }
+
+    private void createMultiLevelHierarchy() {
+
+        Layout lo = new OrderedLayout();
+
+        final OptionGroup disabled = new OptionGroup("Levels to disable");
+        disabled.addItem("L1");
+        disabled.addItem("L2");
+        disabled.addItem("L3");
+        disabled.setMultiSelect(true);
+        disabled.setImmediate(true);
+        lo.addComponent(disabled);
+
+        final Label lastClick = new Label("-");
+        lastClick.setCaption("Last Click:");
+        lo.addComponent(lastClick);
+
+        ClickListener clickListener = new Button.ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                lastClick.setValue(event.getButton().getCaption() + " : "
+                        + new Date());
+            }
+        };
+
+        final Panel[] p = new Panel[4];
+
+        p[1] = new Panel("Level1");
+        lo.addComponent(p[1]);
+        Button b1 = new Button("Inside level1");
+        b1.addListener(clickListener);
+        p[1].addComponent(b1);
+        Button b1d = new Button("Disabked Inside level1");
+        b1d.setEnabled(false);
+        b1d.addListener(clickListener);
+        p[1].addComponent(b1d);
+
+        p[2] = new Panel("Level2");
+        p[1].addComponent(p[2]);
+        Button b2 = new Button("Inside level2");
+        b2.addListener(clickListener);
+        p[2].addComponent(b2);
+        Button b2d = new Button("Disabled Inside level2");
+        b2d.setEnabled(false);
+        b2d.addListener(clickListener);
+        p[2].addComponent(b2d);
+
+        p[3] = new Panel("Level3");
+        p[2].addComponent(p[3]);
+        Button b3 = new Button("Inside level3");
+        b3.addListener(clickListener);
+        p[3].addComponent(b3);
+        Button b3d = new Button("Disabled Inside level3");
+        b3d.setEnabled(false);
+        b3d.addListener(clickListener);
+        p[3].addComponent(b3d);
+
+        disabled.addListener(new OptionGroup.ValueChangeListener() {
+            public void valueChange(ValueChangeEvent event) {
+                Set disabledIds = (Set) disabled.getValue();
+                for (int i = 1; i < 4; i++) {
+                    boolean ena = !disabledIds.contains("L" + i);
+                    if (p[i].isEnabled() != ena) {
+                        p[i].setEnabled(ena);
+                    }
+                }
+            }
+        });
+
+        getMainWindow().addComponent(lo);
     }
 
     private void createUI(GridLayout layout) {
