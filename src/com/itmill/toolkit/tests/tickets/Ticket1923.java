@@ -1,12 +1,13 @@
 package com.itmill.toolkit.tests.tickets;
 
 import com.itmill.toolkit.ui.Label;
+import com.itmill.toolkit.ui.OrderedLayout;
 import com.itmill.toolkit.ui.Panel;
 import com.itmill.toolkit.ui.Window;
 
 public class Ticket1923 extends com.itmill.toolkit.Application {
 
-    private static final int ROWS = 1;
+    private static final int ROWS = 50;
 
     private Panel p;
 
@@ -15,7 +16,7 @@ public class Ticket1923 extends com.itmill.toolkit.Application {
                 getClass().getName().lastIndexOf(".") + 1));
         setMainWindow(main);
 
-        p = new Panel("TestPanel");
+        p = new Panel("TestPanel 250x300");
         // p.getLayout().setWidth("100%");
         p.setScrollable(true);
         // p.setLayout(new GridLayout(1, 100));
@@ -37,5 +38,44 @@ public class Ticket1923 extends com.itmill.toolkit.Application {
 
         main.addComponent(p);
 
+        OrderedLayout ol = new OrderedLayout();
+        p = new Panel("a");
+        p.addComponent(new Label("Longer than caption"));
+        ol.addComponent(p);
+
+        main.addComponent(ol);
+
+        ol = new OrderedLayout();
+        p = new Panel("captionasdfjahsdjfh this should be clipped god damn it");
+        // p.getLayout().setSizeFull();
+        p.setWidth("50px");
+        p.setHeight("100px");
+        p
+                .addComponent(new Label(
+                        "aasdfaasdfja dslkfj lakfdj lakjdf lkaj dflkaj ldfkj alsdfj laksdj flkajs dflkj sdfsadfasdfasd"));
+        ol.addComponent(p);
+
+        main.addComponent(ol);
+
+        ol = new OrderedLayout();
+        p = new Panel("300x-1");
+        // p.getLayout().setSizeFull();
+        p.setWidth("300px");
+        p.addComponent(new Label("Short"));
+        p.addComponent(new Label("Short"));
+        p.addComponent(new Label("Short"));
+        p.addComponent(new Label("Short"));
+        p.addComponent(new Label("Short"));
+        p.addComponent(new Label("Short"));
+        p.addComponent(new Label("Short"));
+        p.addComponent(new Label("Short"));
+        p.addComponent(new Label("Short"));
+        p.addComponent(new Label("Short"));
+        p.addComponent(new Label("Short"));
+        p.addComponent(new Label("Short"));
+        p.addComponent(new Label("Short"));
+        ol.addComponent(p);
+
+        main.addComponent(ol);
     }
 }
