@@ -1158,7 +1158,6 @@ public class IOrderedLayout extends Panel implements Container,
                     caption = null;
                     DOM.setElementAttribute(captionWrapper, "class", "");
                     widget.removeStyleName("i-orderedlayout-w-e");
-                    caption.removeStyleName("i-orderedlayout-w-c");
                 }
             }
         }
