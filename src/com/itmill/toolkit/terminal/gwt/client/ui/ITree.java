@@ -218,11 +218,7 @@ public class ITree extends FlowPanel implements Paintable {
                     toggleSelection();
                 }
                 DOM.eventCancelBubble(event, true);
-            } else {
-                ApplicationConnection.getConsole().log(
-                        "ITree event?? " + DOM.eventToString(event));
             }
-
         }
 
         private void fireClick(Event evt) {
