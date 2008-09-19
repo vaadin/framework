@@ -381,9 +381,16 @@ public class IOrderedLayout extends Panel implements Container,
         // Constuct base DOM-structure and clean any already attached
         // widgetwrappers from DOM.
         if (tableMode) {
-            final String structure = "<table cellspacing=\"0\" cellpadding=\"0\"><tbody>"
+            String structure = "<table cellspacing=\"0\" cellpadding=\"0\"";
+
+            if (orientationMode == ORIENTATION_HORIZONTAL) {
+                // Needed for vertical alignment to work
+                structure += " height=\"100%\"";
+            }
+            structure += "><tbody>"
                     + (orientationMode == ORIENTATION_HORIZONTAL ? "<tr valign=\"top\"></tr>"
                             : "") + "</tbody></table>";
+
             DOM.setInnerHTML(getElement(), structure);
             root = DOM.getFirstChild(getElement());
             // set TBODY to be the wrappedChildContainer
