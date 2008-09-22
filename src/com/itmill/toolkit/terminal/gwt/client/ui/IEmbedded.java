@@ -64,7 +64,9 @@ public class IEmbedded extends HTML implements Paintable {
             } else if (type.equals("browser")) {
                 if (browserElement == null) {
                     setHTML("<iframe width=\"100%\" height=\"100%\" frameborder=\"0\" src=\""
-                            + getSrc(uidl, client) + "\"></iframe>");
+                            + getSrc(uidl, client)
+                            + "\" name=\""
+                            + uidl.getId() + "\"></iframe>");
                     browserElement = DOM.getFirstChild(getElement());
                 } else {
                     DOM.setElementAttribute(browserElement, "src", getSrc(uidl,
