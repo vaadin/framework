@@ -1,0 +1,25 @@
+<html>
+<head>
+<script type="text/javascript">
+
+function openPopup() {
+	// possible workaround if IEmbedded was not modified to add name
+	// window.name = "foo";
+	var popup = window.open('ticket2095_popup.html','mypopup');
+	popup._parentName = this.name;
+}
+</script>
+</head>
+<body>
+<p>
+This is file is part of test case for #2095. Embedded.TYPE_BROWSER like iframes 
+wants to have name, so popups opened by them may submit forms into them.
+
+</p>
+
+
+<a href="#" onclick="openPopup();">Open popup, will hit debuggger;</a>
+
+</body>
+
+</html>
