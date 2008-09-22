@@ -814,6 +814,9 @@ public class IOrderedLayout extends Panel implements Container,
         DOM.setStyleAttribute(measure, "height", "100%");
         Element parent = DOM.getParent(getElement());
         DOM.insertBefore(parent, measure, getElement());
+        // FIXME Do not detach from DOM this way. At least proper detach, attach
+        // must be called. Affects odd behavior in childs, performance issues
+        // and flickering. See #2102
         DOM.removeChild(parent, getElement());
         int size = DOM.getElementPropertyInt(measure, offset);
         DOM.insertBefore(parent, getElement(), measure);
