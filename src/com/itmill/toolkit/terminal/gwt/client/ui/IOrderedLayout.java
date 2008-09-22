@@ -1202,10 +1202,17 @@ public class IOrderedLayout extends Panel implements Container,
                     }
 
                     // Construct table structure to align children
-                    final String t = "<table cellpadding='0' cellspacing='0' width='100%' height='100%'><tbody><tr><td>"
+                    String alignmentTableStructure = "<table cellpadding='0' cellspacing='0' width='100%'";
+                    if (BrowserInfo.get().isIE()) {
+                        alignmentTableStructure += " style='height: expression(this.parentElement.offsetHeight+\"px\")'";
+                    } else {
+                        alignmentTableStructure += " height='100%'";
+                    }
+                    alignmentTableStructure += "><tbody><tr><td>"
                             + "<table cellpadding='0' cellspacing='0' ><tbody><tr><td align='left'>"
                             + "</td></tr></tbody></table></td></tr></tbody></table>";
-                    DOM.setInnerHTML(getElementWrappingWidgetAndCaption(), t);
+                    DOM.setInnerHTML(getElementWrappingWidgetAndCaption(),
+                            alignmentTableStructure);
                     alignmentTD = DOM
                             .getFirstChild(DOM
                                     .getFirstChild(DOM
@@ -1243,7 +1250,7 @@ public class IOrderedLayout extends Panel implements Container,
                 // Set the alignment in td
                 DOM.setElementAttribute(alignmentTD, "align",
                         horizontalAlignment);
-                DOM.setElementAttribute(alignmentTD, "valign",
+                DOM.setElementAttribute(alignmentTD, "vAlign",
                         verticalAlignment);
 
             } else {
