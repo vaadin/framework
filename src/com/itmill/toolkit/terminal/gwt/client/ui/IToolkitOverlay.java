@@ -50,6 +50,7 @@ public class IToolkitOverlay extends PopupPanel {
         DOM.setStyleAttribute(getElement(), "zIndex", "" + Z_INDEX);
     }
 
+    @Override
     public void setPopupPosition(int left, int top) {
         super.setPopupPosition(left, top);
         if (shadow != null) {
@@ -57,6 +58,7 @@ public class IToolkitOverlay extends PopupPanel {
         }
     }
 
+    @Override
     public void show() {
         super.show();
         if (shadow != null) {
@@ -107,8 +109,18 @@ public class IToolkitOverlay extends PopupPanel {
 
         public void updateSizeAndPosition() {
             // Calculate proper z-index
-            String zIndex = DOM.getStyleAttribute(IToolkitOverlay.this
-                    .getElement(), "zIndex");
+            String zIndex = null;
+            if (IToolkitOverlay.this.isAttached()) {
+                // Odd behaviour with Windows Hosted Mode forces us to use a
+                // redundant try/catch block (See dev.itmill.com #2011)
+                try {
+                    zIndex = DOM.getStyleAttribute(IToolkitOverlay.this
+                            .getElement(), "zIndex");
+                } catch (Exception ignore) {
+                    // Ignored, will cause no harm, other than a little
+                    // eye-candy missing
+                }
+            }
             if (zIndex == null) {
                 zIndex = "" + Z_INDEX;
             }
