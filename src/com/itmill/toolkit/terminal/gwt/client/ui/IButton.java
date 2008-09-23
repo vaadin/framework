@@ -30,6 +30,8 @@ public class IButton extends Button implements Paintable {
 
     private Icon icon;
 
+    private boolean clickPending;
+
     public IButton() {
         setStyleName(CLASSNAME);
 
@@ -49,6 +51,8 @@ public class IButton extends Button implements Paintable {
             }
         });
         sinkEvents(ITooltip.TOOLTIP_EVENTS);
+        sinkEvents(Event.ONMOUSEDOWN);
+        sinkEvents(Event.ONMOUSEUP);
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -123,6 +127,23 @@ public class IButton extends Button implements Paintable {
 
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
+
+        // Handle special-case where the button is moved from under mouse
+        // while clicking it. In this case mouse leaves the button without
+        // moving.
+        if (DOM.eventGetType(event) == Event.ONMOUSEDOWN) {
+            clickPending = true;
+        }
+        if (DOM.eventGetType(event) == Event.ONMOUSEMOVE) {
+            clickPending = false;
+        }
+        if (DOM.eventGetType(event) == Event.ONMOUSEOUT) {
+            if (clickPending) {
+                click();
+            }
+            clickPending = false;
+        }
+
         if (client != null) {
             client.handleTooltipEvent(event, this);
         }
