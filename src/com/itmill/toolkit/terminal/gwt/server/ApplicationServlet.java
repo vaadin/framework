@@ -1103,6 +1103,17 @@ public class ApplicationServlet extends HttpServlet {
                 }
             }
 
+            // suggest local filename from DownloadStream if Content-Disposition
+            // not explicitly set
+            String contentDispositionValue = stream
+                    .getParameter("Content-Disposition");
+            if (contentDispositionValue == null) {
+                contentDispositionValue = "filename=\"" + stream.getFileName()
+                        + "\"";
+                response.setHeader("Content-Disposition",
+                        contentDispositionValue);
+            }
+
             int bufferSize = stream.getBufferSize();
             if (bufferSize <= 0 || bufferSize > MAX_BUFFER_SIZE) {
                 bufferSize = DEFAULT_BUFFER_SIZE;
