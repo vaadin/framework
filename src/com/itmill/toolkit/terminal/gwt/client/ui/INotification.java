@@ -32,6 +32,7 @@ public class INotification extends IToolkitOverlay {
     private static final String STYLENAME = "i-Notification";
     private static final int mouseMoveThreshold = 7;
     private static final int Z_INDEX_BASE = 20000;
+    public static final String STYLE_SYSTEM = "system";
 
     private int startOpacity = 90;
     private int fadeMsec = 400;
@@ -223,14 +224,18 @@ public class INotification extends IToolkitOverlay {
     public boolean onEventPreview(Event event) {
         int type = DOM.eventGetType(event);
         // "modal"
-        if (delayMsec == -1) {
-            if (type == Event.ONCLICK
-                    && DOM
-                            .isOrHasChild(getElement(), DOM
-                                    .eventGetTarget(event))) {
-                fade();
+        if (delayMsec == -1 || temporaryStyle == STYLE_SYSTEM) {
+            if (type == Event.ONCLICK) {
+                if (DOM.isOrHasChild(getElement(), DOM.eventGetTarget(event))) {
+                    fade();
+                    return false;
+                }
             }
-            return false;
+            if (temporaryStyle == STYLE_SYSTEM) {
+                return true;
+            } else {
+                return false;
+            }
         }
         // default
         switch (type) {
