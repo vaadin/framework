@@ -431,6 +431,12 @@ public abstract class AbstractField extends AbstractComponent implements Field,
                 throw new Property.ReadOnlyException();
             }
 
+            // Repaint is needed even when the client thinks that it knows the
+            // new state if validity of the component may change
+            if (repaintIsNotNeeded && (isRequired() || getValidators() != null)) {
+                repaintIsNotNeeded = false;
+            }
+
             // If invalid values are not allowed, the value must be checked
             if (!isInvalidAllowed()) {
                 final Collection v = getValidators();
@@ -750,7 +756,8 @@ public abstract class AbstractField extends AbstractComponent implements Field,
             try {
                 validate();
             } catch (Validator.InvalidValueException e) {
-                if (!"".equals(e.getMessage())) {
+                String msg = e.getMessage();
+                if (msg != null && !"".equals(msg)) {
                     validationError = e;
                 }
             }
@@ -1052,6 +1059,15 @@ public abstract class AbstractField extends AbstractComponent implements Field,
         requestRepaint();
     }
 
+    /**
+     * Set the error that is show if this field is required, but empty. When
+     * setting requiredMessage to be "" or null, no error pop-up or exclamation
+     * mark is shown for a empty required field. This faults to "". Even in
+     * those cases isValid() returns false for empty required fields.
+     * 
+     * @param requiredMessage
+     *            Message to be shown when this field is required, but empty.
+     */
     public void setRequiredError(String requiredMessage) {
         requiredError = requiredMessage;
         requestRepaint();
