@@ -1243,10 +1243,10 @@ public abstract class AbstractSelect extends AbstractField implements
         if ((propertyId != null)
                 && Resource.class.isAssignableFrom(getType(propertyId))) {
             itemIconPropertyId = propertyId;
-            requestRepaint();
         } else {
             itemIconPropertyId = null;
         }
+        requestRepaint();
     }
 
     /**
@@ -1500,7 +1500,10 @@ public abstract class AbstractSelect extends AbstractField implements
      * @see #isNullSelectionAllowed()
      */
     public void setNullSelectionAllowed(boolean nullSelectionAllowed) {
-        this.nullSelectionAllowed = nullSelectionAllowed;
+        if (nullSelectionAllowed != this.nullSelectionAllowed) {
+            this.nullSelectionAllowed = nullSelectionAllowed;
+            requestRepaint();
+        }
     }
 
     /**
