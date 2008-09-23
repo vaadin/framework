@@ -2126,6 +2126,11 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
                                 colKey, false);
                     }
                     MouseEventDetails details = new MouseEventDetails(event);
+                    // Note: the 'immediate' logic would need to be more
+                    // involved (see #2104), but iscrolltable always sends
+                    // select event, even though nullselectionallowed wont let
+                    // the change trough. Will need to be updated if that is
+                    // changed.
                     client
                             .updateVariable(
                                     paintableId,
@@ -2148,6 +2153,9 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
                         handleClickEvent(event);
                         if (selectMode > Table.SELECT_MODE_NONE) {
                             toggleSelection();
+                            // Note: changing the immediateness of this might
+                            // require changes to "clickEvent" immediateness
+                            // also.
                             client.updateVariable(paintableId, "selected",
                                     selectedRowKeys.toArray(), immediate);
                         }

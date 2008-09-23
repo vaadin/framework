@@ -222,10 +222,15 @@ public class ITree extends FlowPanel implements Paintable {
         }
 
         private void fireClick(Event evt) {
+            // non-immediate iff an immediate select event is going to happen
+            boolean imm = !immediate
+                    || !selectable
+                    || (!isNullSelectionAllowed && isSelected() && selectedIds
+                            .size() == 1);
             MouseEventDetails details = new MouseEventDetails(evt);
             client.updateVariable(paintableId, "clickedKey", key, false);
             client.updateVariable(paintableId, "clickEvent",
-                    details.toString(), !(selectable && immediate));
+                    details.toString(), imm);
         }
 
         private void toggleSelection() {
