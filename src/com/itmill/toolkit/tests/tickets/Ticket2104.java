@@ -8,6 +8,7 @@ import com.itmill.toolkit.terminal.ExternalResource;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.OrderedLayout;
+import com.itmill.toolkit.ui.Table;
 import com.itmill.toolkit.ui.Tree;
 import com.itmill.toolkit.ui.Window;
 import com.itmill.toolkit.ui.Button.ClickEvent;
@@ -19,6 +20,7 @@ public class Ticket2104 extends Application {
             Label.CONTENT_RAW);
 
     Tree tree = new Tree();
+    Table table = new Table();
 
     public void init() {
         Window main = new Window();
@@ -81,6 +83,38 @@ public class Ticket2104 extends Application {
             }
         });
 
+        ol = new OrderedLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
+        main.addComponent(ol);
+        b = new Button("immediate", new MethodProperty(table, "immediate"));
+        b.setImmediate(true);
+        ol.addComponent(b);
+        b = new Button("selectable", new MethodProperty(table, "selectable"));
+        b.setImmediate(true);
+        ol.addComponent(b);
+        b = new Button("nullsel", new MethodProperty(table,
+                "nullSelectionAllowed"));
+        b.setImmediate(true);
+        ol.addComponent(b);
+        b = new Button("multi", new MethodProperty(table, "multiSelect"));
+        b.setImmediate(true);
+        ol.addComponent(b);
+        main.addComponent(table);
+        table.setWidth("150px");
+        table.setImmediate(true);
+        table.setSelectable(true);
+        table.setNullSelectionAllowed(false);
+        for (int i = 0; i < 10; i++) {
+            table.addItem("Item " + i);
+        }
+        table.addListener(new ItemClickListener() {
+            public void itemClick(ItemClickEvent event) {
+                getMainWindow().addComponent(
+                        new Label(event.toString() + " // " + event.getItemId()
+                                + "//" + event.getSource()));
+
+            }
+        });
+        table.addContainerProperty("Column", String.class, "value");
     }
 
 }
