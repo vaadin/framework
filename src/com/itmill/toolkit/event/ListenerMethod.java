@@ -425,7 +425,8 @@ public class ListenerMethod implements EventListener {
                 throw new java.lang.RuntimeException(
                         "Internal error - please report", e);
             } catch (final java.lang.reflect.InvocationTargetException e) {
-                // This should never happen
+                // An exception was thrown by the invocation target. Throw it
+                // forwards.
                 throw new MethodException("Invocation of method " + method
                         + " failed.", e.getTargetException());
             }
