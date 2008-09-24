@@ -4,6 +4,7 @@
 
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
+import com.google.gwt.animation.client.Animation;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.HTML;
@@ -54,7 +55,7 @@ public class IToolkitOverlay extends PopupPanel {
     public void setPopupPosition(int left, int top) {
         super.setPopupPosition(left, top);
         if (shadow != null) {
-            shadow.updateSizeAndPosition();
+            shadow.updateSizeAndPosition(isAnimationEnabled() ? 0 : 1);
         }
     }
 
@@ -63,7 +64,12 @@ public class IToolkitOverlay extends PopupPanel {
         super.show();
         if (shadow != null) {
             DOM.appendChild(RootPanel.get().getElement(), shadow.getElement());
-            shadow.updateSizeAndPosition();
+            if (isAnimationEnabled()) {
+                ShadowAnimation sa = new ShadowAnimation();
+                sa.run(200);
+            } else {
+                shadow.updateSizeAndPosition(1.0);
+            }
         }
         if (BrowserInfo.get().isIE6()) {
             adjustIE6Frame(getElement(), Z_INDEX - 1);
@@ -107,7 +113,7 @@ public class IToolkitOverlay extends PopupPanel {
             });
         }
 
-        public void updateSizeAndPosition() {
+        public void updateSizeAndPosition(double phase) {
             // Calculate proper z-index
             String zIndex = null;
             if (IToolkitOverlay.this.isAttached()) {
@@ -142,7 +148,15 @@ public class IToolkitOverlay extends PopupPanel {
                 height = 0;
             }
 
+            // Animate the shadow size
+            x += (int) (width * (1.0 - phase) / 2.0);
+            y += (int) (height * (1.0 - phase) / 2.0);
+            width = (int) (width * phase);
+            height = (int) (height * phase);
+
             // Update correct values
+            DOM.setStyleAttribute(getElement(), "display", phase < 0.9 ? "none"
+                    : "");
             DOM.setStyleAttribute(shadow.getElement(), "zIndex", ""
                     + (Integer.parseInt(zIndex) - 1));
             DOM.setStyleAttribute(getElement(), "width", width + "px");
@@ -157,10 +171,19 @@ public class IToolkitOverlay extends PopupPanel {
             this.bottom = bottom;
             this.left = left;
             if (IToolkitOverlay.this.isAttached()) {
-                updateSizeAndPosition();
+                updateSizeAndPosition(1.0);
             }
         }
 
     }
 
+    class ShadowAnimation extends Animation {
+
+        protected void onUpdate(double progress) {
+            if (shadow != null) {
+                shadow.updateSizeAndPosition(progress);
+            }
+        }
+
+    }
 }
