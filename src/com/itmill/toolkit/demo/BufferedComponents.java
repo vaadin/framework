@@ -12,6 +12,7 @@ import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.TextField;
 import com.itmill.toolkit.ui.Window;
 import com.itmill.toolkit.ui.Button.ClickEvent;
+import com.itmill.toolkit.ui.Window.Notification;
 
 public class BufferedComponents extends Application {
 
@@ -63,11 +64,19 @@ public class BufferedComponents extends Application {
                 text.discard();
             }
         }));
-        w.addComponent(new Button("commit", new Button.ClickListener() {
+        Button commit = new Button("commit", new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
-                text.commit();
+                try {
+                    text.commit();
+                    w.showNotification("Committed " + property
+                            + " to datasource.");
+                } catch (Throwable e) {
+                    w.showNotification("Error committing an invalid value: "
+                            + text, Notification.TYPE_WARNING_MESSAGE);
+                }
             }
-        }));
+        });
+        w.addComponent(commit);
 
         // Restart button for application
         // (easier debugging when you dont have to restart the server to
