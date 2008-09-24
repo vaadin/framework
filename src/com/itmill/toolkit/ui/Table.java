@@ -440,8 +440,8 @@ public class Table extends AbstractSelect implements Action.Container,
      * <p>
      * The headers match the property id:s given my the set visible column
      * headers. The table must be set in either
-     * <code>ROW_HEADER_MODE_EXPLICIT</code> or
-     * <code>ROW_HEADER_MODE_EXPLICIT_DEFAULTS_ID</code> mode to show the
+     * <code>COLUMN_HEADER_MODE_EXPLICIT</code> or
+     * <code>COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID</code> mode to show the
      * headers. In the defaults mode any nulls in the headers array are replaced
      * with id.toString() outputs when rendering.
      * </p>
@@ -466,8 +466,8 @@ public class Table extends AbstractSelect implements Action.Container,
      * <p>
      * The headers match the property id:s given my the set visible column
      * headers. The table must be set in either
-     * <code>ROW_HEADER_MODE_EXPLICIT</code> or
-     * <code>ROW_HEADER_MODE_EXPLICIT_DEFAULTS_ID</code> mode to show the
+     * <code>COLUMN_HEADER_MODE_EXPLICIT</code> or
+     * <code>COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID</code> mode to show the
      * headers. In the defaults mode any nulls in the headers array are replaced
      * with id.toString() outputs when rendering.
      * </p>
@@ -501,8 +501,8 @@ public class Table extends AbstractSelect implements Action.Container,
      * <p>
      * The icons in headers match the property id:s given my the set visible
      * column headers. The table must be set in either
-     * <code>ROW_HEADER_MODE_EXPLICIT</code> or
-     * <code>ROW_HEADER_MODE_EXPLICIT_DEFAULTS_ID</code> mode to show the
+     * <code>COLUMN_HEADER_MODE_EXPLICIT</code> or
+     * <code>COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID</code> mode to show the
      * headers with icons.
      * </p>
      * 
@@ -527,8 +527,8 @@ public class Table extends AbstractSelect implements Action.Container,
      * <p>
      * The icons in headers match the property id:s given my the set visible
      * column headers. The table must be set in either
-     * <code>ROW_HEADER_MODE_EXPLICIT</code> or
-     * <code>ROW_HEADER_MODE_EXPLICIT_DEFAULTS_ID</code> mode to show the
+     * <code>COLUMN_HEADER_MODE_EXPLICIT</code> or
+     * <code>COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID</code> mode to show the
      * headers with icons.
      * </p>
      * 
