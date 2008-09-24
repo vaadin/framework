@@ -1,6 +1,7 @@
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -31,6 +32,8 @@ public class IAccordion extends ITabsheetBase implements
 
     private String height;
 
+    private HashMap lazyUpdateMap = new HashMap();
+
     public IAccordion() {
         super(CLASSNAME);
         // IE6 needs this to calculate offsetHeight correctly
@@ -42,6 +45,15 @@ public class IAccordion extends ITabsheetBase implements
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         super.updateFromUIDL(uidl, client);
         iLayout();
+        // finally render possible hidden tabs
+        if (lazyUpdateMap.size() > 0) {
+            for (Iterator iterator = lazyUpdateMap.keySet().iterator(); iterator
+                    .hasNext();) {
+                StackItem item = (StackItem) iterator.next();
+                item.setContent((UIDL) lazyUpdateMap.get(item));
+            }
+            lazyUpdateMap.clear();
+        }
     }
 
     private StackItem getSelectedStack() {
@@ -67,15 +79,24 @@ public class IAccordion extends ITabsheetBase implements
 
         if (selected) {
             item.open();
+            // content node is expected to be prepared prior render phase, force
+            // layout phase
+            iLayout();
             item.setContent(tabUidl.getChildUIDL(0));
         } else if (tabUidl.getChildCount() > 0) {
-            item.setContent(tabUidl.getChildUIDL(0));
+            // content node is expected to be prepared prior render phase, force
+            // layout phase
+            lazyUpdateMap.put(item, tabUidl.getChildUIDL(0));
         }
     }
 
     protected void selectTab(final int index, final UIDL contentUidl) {
         StackItem item = (StackItem) stack.get(index);
         if (index != activeTabIndex) {
+            StackItem old = (StackItem) stack.get(activeTabIndex);
+            if (old.isOpen()) {
+                old.close();
+            }
             activeTabIndex = index;
             item.open();
             iLayout();
@@ -102,16 +123,9 @@ public class IAccordion extends ITabsheetBase implements
         }
     }
 
-    public void setWidth(String width) {
-        if (width.equals("100%")) {
-            super.setWidth("");
-        } else {
-            super.setWidth(width);
-        }
-    }
-
     public void setHeight(String height) {
         this.height = height;
+        super.setHeight(height);
     }
 
     private void iLayout() {
@@ -134,9 +148,6 @@ public class IAccordion extends ITabsheetBase implements
                 }
             }
 
-            // Calculate target height
-            super.setHeight(height);
-
             int offsetHeight = getOffsetHeight();
 
             int spaceForOpenItem = offsetHeight - usedPixels;
@@ -144,7 +155,6 @@ public class IAccordion extends ITabsheetBase implements
             if (spaceForOpenItem > 0) {
                 item.setHeight(spaceForOpenItem + "px");
             }
-
         } else {
             super.setHeight("");
             item.setHeight("");
@@ -165,12 +175,22 @@ public class IAccordion extends ITabsheetBase implements
                 int captionHeight = DOM.getElementPropertyInt(captionNode,
                         "offsetHeight");
                 int contentSpace = offsetHeight - captionHeight;
-                if (contentSpace > 0) {
-                    DOM.setStyleAttribute(content, "height", contentSpace
-                            + "px");
+                if (contentSpace < 0) {
+                    contentSpace = 0;
                 }
+                fixContentNodeSize(contentSpace);
             } else {
                 DOM.setStyleAttribute(content, "height", "");
+            }
+        }
+
+        void fixContentNodeSize(int contentHeight) {
+            DOM.setStyleAttribute(content, "height", contentHeight + "px");
+            if (!open) {
+                // fix also width
+                DOM
+                        .setStyleAttribute(content, "width", getOffsetWidth()
+                                + "px");
             }
         }
 
@@ -218,25 +238,31 @@ public class IAccordion extends ITabsheetBase implements
 
         public void open() {
             open = true;
-            if (getPaintable() != null) {
-                remove(getPaintable());
-            }
-            DOM.setStyleAttribute(content, "visibility", "");
             DOM.setStyleAttribute(content, "position", "");
             DOM.setStyleAttribute(content, "top", "");
-            addStyleDependentName("open");
-            if (getPaintable() != null) {
-                add(getPaintable(), content);
+            DOM.setStyleAttribute(content, "left", "");
+            DOM.setStyleAttribute(content, "visibility", "");
+            DOM.setStyleAttribute(content, "width", "");
+            if (height != null && !"".equals(height)) {
+                setHeight("100%");
+            } else {
+                setHeight("");
             }
+            DOM.setStyleAttribute(content, "overflow", "auto");
+            addStyleDependentName("open");
         }
 
         public void close() {
-            open = false;
+            DOM.setStyleAttribute(content, "width", getOffsetWidth() + "px");
+            DOM.setStyleAttribute(content, "height", getOffsetHeight() + "px");
+            DOM.setStyleAttribute(content, "overflow", "hidden");
             DOM.setStyleAttribute(content, "visibility", "hidden");
             DOM.setStyleAttribute(content, "position", "absolute");
             DOM.setStyleAttribute(content, "top", "0");
+            DOM.setStyleAttribute(content, "left", "0px");
             removeStyleDependentName("open");
             setHeight(""); // only open StackItem may contain height
+            open = false;
         }
 
         public boolean isOpen() {
@@ -244,6 +270,15 @@ public class IAccordion extends ITabsheetBase implements
         }
 
         public void setContent(UIDL contentUidl) {
+            if (!isOpen()) {
+                // ensure content node has right size
+                StackItem openItem = getSelectedStack();
+                int availableH = openItem.getOffsetHeight()
+                        - DOM
+                                .getElementPropertyInt(captionNode,
+                                        "offsetHeight");
+                fixContentNodeSize(availableH);
+            }
             final Paintable newPntbl = client.getPaintable(contentUidl);
             if (getPaintable() == null) {
                 add((Widget) newPntbl, content);
