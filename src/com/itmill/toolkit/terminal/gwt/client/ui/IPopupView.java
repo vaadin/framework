@@ -36,7 +36,7 @@ public class IPopupView extends HTML implements Paintable {
     /** This variable helps to communicate popup visibility to the server */
     private boolean hostPopupVisible;
 
-    private CustomPopup popup;
+    private final CustomPopup popup;
     private final Label loading = new Label("Loading...");
 
     // Browser window sizes
@@ -72,6 +72,7 @@ public class IPopupView extends HTML implements Paintable {
             }
         });
 
+        popup.setAnimationEnabled(true);
     }
 
     /**
@@ -92,15 +93,12 @@ public class IPopupView extends HTML implements Paintable {
 
         updateWindowSize();
 
-        hostPopupVisible = uidl.getBooleanAttribute("popupVisible");
+        hostPopupVisible = uidl.getBooleanVariable("popupVisibility");
+
         setHTML(uidl.getStringAttribute("html"));
 
         if (uidl.hasAttribute("description")) {
             setTitle(uidl.getStringAttribute("description"));
-        }
-
-        if (uidl.hasAttribute("animation")) {
-            popup.setAnimationEnabled(uidl.getBooleanAttribute("animation"));
         }
 
         // Render the popup if visible and show it.
@@ -171,10 +169,10 @@ public class IPopupView extends HTML implements Paintable {
     }
 
     public static native void nativeBlur(Element e) /*-{ 
-                                        if(e.focus) {
-                                        e.blur();
-                                        }
-                                        }-*/;
+                                              if(e.focus) {
+                                              e.blur();
+                                              }
+                                              }-*/;
 
     private class CustomPopup extends IToolkitOverlay implements Container {
 
@@ -183,7 +181,7 @@ public class IPopupView extends HTML implements Paintable {
         private ICaptionWrapper captionWrapper = null;
 
         private boolean hasHadMouseOver = false;
-        private Set<Element> activeChildren;
+        private final Set<Element> activeChildren;
 
         public CustomPopup() {
             super(true, false, true); // autoHide, not modal, dropshadow

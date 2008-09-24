@@ -20,8 +20,7 @@ public class PopupView extends AbstractComponentContainer {
 
     private Content content;
     private boolean popupVisible;
-    private ArrayList<Component> componentList;
-    private boolean animationEnabled;
+    private final ArrayList<Component> componentList;
 
     /* Constructors */
 
@@ -59,7 +58,6 @@ public class PopupView extends AbstractComponentContainer {
         super();
         setContent(content);
         popupVisible = false;
-        animationEnabled = false;
         componentList = new ArrayList<Component>(1);
     }
 
@@ -81,7 +79,7 @@ public class PopupView extends AbstractComponentContainer {
                     "Content object is or contains null");
         }
 
-        this.content = newContent;
+        content = newContent;
         requestRepaint();
     }
 
@@ -101,24 +99,6 @@ public class PopupView extends AbstractComponentContainer {
      */
     public boolean getPopupVisibility() {
         return popupVisible;
-    }
-
-    /**
-     * Enable / disable popup viewing animation
-     * 
-     * @param enabled
-     */
-    public void setAnimation(boolean enabled) {
-        animationEnabled = enabled;
-    }
-
-    /**
-     * Query if the viewing animation is enabled.
-     * 
-     * @return true if the animation is enabled
-     */
-    public boolean isAnimationEnabled() {
-        return animationEnabled;
     }
 
     /*
@@ -219,11 +199,18 @@ public class PopupView extends AbstractComponentContainer {
                     "Recieved null when trying to paint minimized value.");
         }
         target.addAttribute("html", content.getMinimizedValueAsHTML());
-        target.addAttribute("popupVisible", popupVisible);
-        target.addAttribute("animation", animationEnabled);
+
         // Only paint component to client if we know that the popup is showing
         if (popupVisible) {
-            Component c = content.getPopupComponent();
+            Component c = componentList.get(0);
+
+            if (c == null) {
+                c = content.getPopupComponent();
+                if (c != null) {
+                    componentList.add(c);
+                    super.addComponent(c);
+                }
+            }
 
             if (c == null) {
                 throw new PaintException(
@@ -235,6 +222,7 @@ public class PopupView extends AbstractComponentContainer {
             target.endTag("popupComponent");
         }
 
+        target.addVariable(this, "popupVisibility", popupVisible);
     }
 
     /**
@@ -246,18 +234,21 @@ public class PopupView extends AbstractComponentContainer {
     public void changeVariables(Object source, Map variables) {
         if (variables.containsKey("popupVisibility")) {
 
-            // TODO we could use server-side boolean allowPopup here to prevent
-            // popups from showing
-
             popupVisible = ((Boolean) variables.get("popupVisibility"))
                     .booleanValue();
 
             if (popupVisible) {
-                Component c = content.getPopupComponent();
-                componentList.add(c);
-                super.addComponent(c);
+                if (componentList.isEmpty()) {
+                    Component c = content.getPopupComponent();
+                    if (c != null) {
+                        componentList.add(c);
+                        super.addComponent(c);
+                    } else {
+                        popupVisible = false;
+                    }
+                }
             } else if (!componentList.isEmpty()) {
-                super.removeComponent((Component) componentList.get(0));
+                super.removeComponent(componentList.get(0));
                 componentList.clear();
             }
             requestRepaint();
