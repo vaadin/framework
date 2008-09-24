@@ -1025,6 +1025,11 @@ input.i-modified,
 	padding:				3px;
 	margin:					3px;
 }
+
+.i-popupview {
+	cursor: 				pointer; 
+	cursor: 				hand;
+}
 .i-progressindicator {
 	background: #dfe2e4 url(progressindicator/img/base.gif);
 	height: 9px;

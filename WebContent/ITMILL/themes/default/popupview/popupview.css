@@ -9,3 +9,8 @@
 	padding:				3px;
 	margin:					3px;
 }
+
+.i-popupview {
+	cursor: 				pointer; 
+	cursor: 				hand;
+}
