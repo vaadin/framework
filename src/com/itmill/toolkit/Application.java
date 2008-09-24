@@ -286,6 +286,13 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
             return;
         }
 
+        // Check that one is not adding a sub-window to application
+        if (window.getParent() != null) {
+            throw new IllegalArgumentException(
+                    "Window was already added inside another window"
+                            + " - it can not be added to application also.");
+        }
+
         // Gets the naming proposal from window
         String name = window.getName();
 

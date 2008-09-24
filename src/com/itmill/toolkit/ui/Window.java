@@ -1009,13 +1009,19 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
     public void addWindow(Window window) throws IllegalArgumentException,
             NullPointerException {
 
+        if (window == null) {
+            throw new NullPointerException("Argument must not be null");
+        }
+
+        if (application.getWindows().contains(window)) {
+            throw new IllegalArgumentException(
+                    "Window was already added to application"
+                            + " - it can not be added to another window also.");
+        }
+
         if (getParent() != null) {
             throw new IllegalArgumentException(
                     "You can only add windows inside application-level windows");
-        }
-
-        if (window == null) {
-            throw new NullPointerException("Argument must not be null");
         }
 
         subwindows.add(window);
