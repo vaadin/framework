@@ -1242,6 +1242,15 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
         this.errorHandler = errorHandler;
     }
 
+    /**
+     * Handle the component error event.
+     * 
+     * @param error
+     *            Error event to handle
+     * @return True if the error has been handled False, otherwise. If the error
+     *         haven't been handled by this component, it will be handled in the
+     *         application error handler.
+     */
     public boolean handleError(ComponentErrorEvent error) {
         if (errorHandler != null) {
             return errorHandler.handleComponentError(error);
