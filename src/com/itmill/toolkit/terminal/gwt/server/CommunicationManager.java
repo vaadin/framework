@@ -620,6 +620,16 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
                                     (Component) owner, e, m);
                         }
                     } else {
+
+                        // Handle special case where window-close is called
+                        // after the window has been removed from the
+                        // application or the application has closed
+                        if ("close".equals(variable[VAR_NAME])
+                                && "true".equals(variable[VAR_VALUE])) {
+                            // Silently ignore this
+                            continue;
+                        }
+
                         // Ignore variable change
                         String msg = "Warning: Ignoring variable change for ";
                         if (owner != null) {
