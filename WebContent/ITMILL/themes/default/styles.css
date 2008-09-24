@@ -26,6 +26,7 @@
 	border-top-color: #cbd7de;
 	border-bottom-color: #bfc9d4;
 	text-shadow: #fafafa 1px 1px 0;
+	border-bottom: 1px solid #c8cccd;
 }
 
 .i-accordion-item-open .i-accordion-item-caption .i-caption {
@@ -33,7 +34,6 @@
 }
 
 .i-accordion-item-content {
-	border-top: 1px solid #c8cccd;
 }
 .i-button {
 	cursor: pointer;
