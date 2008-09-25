@@ -122,11 +122,12 @@ public class Ticket677 extends Application {
         root.addComponent(form);
 
         table = new Table("Enabled");
+        table.setPageLength(7);
         table.addContainerProperty("Text", String.class, null);
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 150; i++) {
             Item item = table.addItem("Item" + i);
             Property p = item.getItemProperty("Text");
-            p.setValue(i > 1 ? "enabled" : "disabled");
+            p.setValue(i % 5 == 0 ? "enabled" : "disabled");
         }
 
         table.setFieldFactory(new BaseFieldFactory() {
