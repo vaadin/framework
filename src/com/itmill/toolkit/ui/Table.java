@@ -1233,6 +1233,8 @@ public class Table extends AbstractSelect implements Action.Container,
             Object[][] cells = new Object[cols + CELL_FIRSTCOL][rows];
             if (rows == 0) {
                 pageBuffer = cells;
+                unregisterPropertiesAndComponents(oldListenedProperties,
+                        oldVisibleComponents);
                 return;
             }
 
@@ -1357,30 +1359,45 @@ public class Table extends AbstractSelect implements Action.Container,
             // Saves the results to internal buffer
             pageBuffer = cells;
 
-            if (oldVisibleComponents != null) {
-                for (final Iterator i = oldVisibleComponents.iterator(); i
-                        .hasNext();) {
-                    Component c = (Component) i.next();
-                    if (!visibleComponents.contains(c)) {
-                        c.setParent(null);
-                    }
-                }
-            }
-
-            if (oldListenedProperties != null) {
-                for (final Iterator i = oldListenedProperties.iterator(); i
-                        .hasNext();) {
-                    Property.ValueChangeNotifier o = (ValueChangeNotifier) i
-                            .next();
-                    if (!listenedProperties.contains(o)) {
-                        o.removeListener(this);
-                    }
-                }
-            }
+            unregisterPropertiesAndComponents(oldListenedProperties,
+                    oldVisibleComponents);
 
             requestRepaint();
         }
 
+    }
+
+    /**
+     * Helper method to remove listeners and maintain correct component
+     * hierarchy. Detaches properties and components if those are no more
+     * rendered in client.
+     * 
+     * @param oldListenedProperties
+     *            set of properties that where listened in last render
+     * @param oldVisibleComponents
+     *            set of components that where attached in last render
+     */
+    private void unregisterPropertiesAndComponents(
+            HashSet oldListenedProperties, HashSet oldVisibleComponents) {
+        if (oldVisibleComponents != null) {
+            for (final Iterator i = oldVisibleComponents.iterator(); i
+                    .hasNext();) {
+                Component c = (Component) i.next();
+                if (!visibleComponents.contains(c)) {
+                    c.setParent(null);
+                }
+            }
+        }
+
+        if (oldListenedProperties != null) {
+            for (final Iterator i = oldListenedProperties.iterator(); i
+                    .hasNext();) {
+                Property.ValueChangeNotifier o = (ValueChangeNotifier) i.next();
+                if (!listenedProperties.contains(o)) {
+                    o.removeListener(this);
+                }
+            }
+        }
     }
 
     /**
@@ -1565,6 +1582,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
         // Assure visual refresh
         resetPageBuffer();
+
         enableContentRefreshing(true);
 
     }
@@ -2001,12 +2019,6 @@ public class Table extends AbstractSelect implements Action.Container,
                     if (c == null) {
                         target.addText("");
                     } else {
-                        /*
-                         * FIXME ensuring that table never gets "cached" child
-                         * paints by calling requestRepaint for child component
-                         * IScrollTable currently can's survive those.
-                         */
-                        c.requestRepaint();
                         c.paint(target);
                     }
                 } else {

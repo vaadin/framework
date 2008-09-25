@@ -7,6 +7,7 @@ package com.itmill.toolkit.terminal.gwt.client.ui;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
@@ -20,6 +21,7 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ScrollListener;
@@ -137,6 +139,8 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
      * marked experimental.
      */
     boolean recalcWidths = false;
+
+    private LinkedList lazyUnregistryBag = new LinkedList();
 
     public IScrollTable() {
 
@@ -264,7 +268,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
         } else {
             if (tBody != null) {
                 tBody.removeFromParent();
-                client.unregisterChildPaintables(tBody);
+                lazyUnregistryBag.add(tBody);
             }
             tBody = new IScrollTableBody();
 
@@ -277,6 +281,20 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
             }
         }
         hideScrollPositionAnnotation();
+        purgeUnregistryBag();
+    }
+
+    /**
+     * Unregisters Paintables in "trashed" HasWidgets (IScrollTableBodys or
+     * IScrollTableRows). This is done lazily as Table must survive from
+     * "subtreecaching" logic.
+     */
+    private void purgeUnregistryBag() {
+        for (Iterator iterator = lazyUnregistryBag.iterator(); iterator
+                .hasNext();) {
+            client.unregisterChildPaintables((HasWidgets) iterator.next());
+        }
+        lazyUnregistryBag.clear();
     }
 
     private void updateActionMap(UIDL c) {
@@ -1857,7 +1875,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
             }
             final IScrollTableRow toBeRemoved = (IScrollTableRow) renderedRows
                     .get(index);
-            client.unregisterChildPaintables(toBeRemoved);
+            lazyUnregistryBag.add(toBeRemoved);
             DOM.removeChild(tBody, toBeRemoved.getElement());
             orphan(toBeRemoved);
             renderedRows.remove(index);
@@ -2096,6 +2114,9 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
                 }
                 DOM.appendChild(td, container);
                 DOM.appendChild(getElement(), td);
+                // ensure widget not attached to another element (possible tBody
+                // change)
+                w.removeFromParent();
                 DOM.appendChild(container, w.getElement());
                 adopt(w);
                 childWidgets.add(w);
@@ -2106,8 +2127,15 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
             }
 
             public boolean remove(Widget w) {
-                // TODO Auto-generated method stub
-                return false;
+                if (childWidgets.contains(w)) {
+                    orphan(w);
+                    DOM.removeChild(DOM.getParent(w.getElement()), w
+                            .getElement());
+                    childWidgets.remove(w);
+                    return true;
+                } else {
+                    return false;
+                }
             }
 
             private void handleClickEvent(Event event) {
