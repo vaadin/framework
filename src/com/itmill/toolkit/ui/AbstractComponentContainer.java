@@ -225,6 +225,8 @@ public abstract class AbstractComponentContainer extends AbstractComponent
                 // Form has children in layout, but is not ComponentContainer
                 c.requestRepaint();
                 ((Form) c).getLayout().requestRepaintAll();
+            } else if (c instanceof Table) {
+                ((Table) c).requestRepaintAll();
             } else if (c instanceof ComponentContainer) {
                 ((ComponentContainer) c).requestRepaintAll();
             } else {
