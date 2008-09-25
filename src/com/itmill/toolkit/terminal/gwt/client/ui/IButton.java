@@ -48,6 +48,7 @@ public class IButton extends Button implements Paintable {
                  */
                 IButton.this.setFocus(true);
                 client.updateVariable(id, "state", true, true);
+                clickPending = false;
             }
         });
         sinkEvents(ITooltip.TOOLTIP_EVENTS);
