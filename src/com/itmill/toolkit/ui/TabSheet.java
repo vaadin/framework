@@ -192,6 +192,9 @@ public class TabSheet extends AbstractComponentContainer implements
             if (!c.isVisible()) {
                 continue;
             }
+            if (selected == null || !selected.isVisible()) {
+                selected = c;
+            }
             target.startTag("tab");
             if (!c.isEnabled()) {
                 target.addAttribute("disabled", true);
