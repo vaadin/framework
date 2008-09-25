@@ -1079,25 +1079,12 @@ public class Form extends AbstractField implements Item.Editor, Buffered, Item,
 
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
-
-        updateComponentDisabledState(!enabled);
-    }
-
-    public void setDisabledByContainer(boolean disabledByContainer) {
-        super.setDisabledByContainer(disabledByContainer);
-
-        updateComponentDisabledState(disabledByContainer);
-    }
-
-    private void updateComponentDisabledState(boolean disabled) {
-        // Update the disabledByContainer state for all subcomponents
-        for (Iterator i = fields.values().iterator(); i.hasNext();) {
-            Component c = (Component) i.next();
-            if (c instanceof AbstractComponent) {
-                ((AbstractComponent) c).setDisabledByContainer(disabled);
-            }
+        if (getParent() != null && !getParent().isEnabled()) {
+            // some ancestor still disabled, don't update children
+            return;
+        } else {
+            getLayout().requestRepaintAll();
         }
-
     }
 
 }

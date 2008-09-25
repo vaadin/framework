@@ -208,25 +208,29 @@ public abstract class AbstractComponentContainer extends AbstractComponent
 
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
-
-        updateComponentDisabledState(!enabled);
+        if (getParent() != null && !getParent().isEnabled()) {
+            // some ancestor still disabled, don't update children
+            return;
+        } else {
+            requestRepaintAll();
+        }
     }
 
-    public void setDisabledByContainer(boolean disabledByContainer) {
-        super.setDisabledByContainer(disabledByContainer);
-
-        updateComponentDisabledState(disabledByContainer);
-    }
-
-    private void updateComponentDisabledState(boolean disabled) {
-        // Update the disabledByContainer state for all subcomponents
-        for (Iterator i = getComponentIterator(); i.hasNext();) {
-            Component c = (Component) i.next();
-            if (c instanceof AbstractComponent) {
-                ((AbstractComponent) c).setDisabledByContainer(disabled);
+    public void requestRepaintAll() {
+        requestRepaint();
+        for (Iterator childIterator = getComponentIterator(); childIterator
+                .hasNext();) {
+            Component c = (Component) childIterator.next();
+            if (c instanceof Form) {
+                // Form has children in layout, but is not ComponentContainer
+                c.requestRepaint();
+                ((Form) c).getLayout().requestRepaintAll();
+            } else if (c instanceof ComponentContainer) {
+                ((ComponentContainer) c).requestRepaintAll();
+            } else {
+                c.requestRepaint();
             }
         }
-
     }
 
 }

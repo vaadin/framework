@@ -220,6 +220,12 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
         }
     }
 
+    public void requestRepaintAll() {
+        // Panel has odd structure, delegate to layout
+        requestRepaint();
+        getLayout().requestRepaintAll();
+    }
+
     /**
      * Gets the component UIDL tag.
      * 

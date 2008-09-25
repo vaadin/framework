@@ -76,11 +76,16 @@ public interface Component extends Paintable, VariableOwner, Sizeable {
      * </p>
      * 
      * <p>
+     * <b>Note</b> The component is considered disabled if it's parent is
+     * disabled.
+     * </p>
+     * 
+     * <p>
      * Components should be enabled by default.
      * </p>
      * 
-     * @return <code>true</code> if the component is enabled, <code>false</code>
-     *         if not.
+     * @return <code>true</code> if the component, and it's parent, is enabled
+     *         <code>false</code> otherwise.
      * @see VariableOwner#isEnabled()
      */
     public boolean isEnabled();
@@ -90,6 +95,16 @@ public interface Component extends Paintable, VariableOwner, Sizeable {
      * can be edited. This method will trigger a
      * {@link com.itmill.toolkit.terminal.Paintable.RepaintRequestEvent
      * RepaintRequestEvent}.
+     * 
+     * <p>
+     * <b>Note</b> that after enabling a component, {@link #isEnabled()} might
+     * still return false if the parent is disabled.
+     * </p>
+     * 
+     * <p>
+     * <b>Also note</b> that if the component contains child-components, it
+     * should recursively call requestRepaint() for all descendant components.
+     * </p>
      * 
      * @param enabled
      *            the boolean value specifying if the component should be

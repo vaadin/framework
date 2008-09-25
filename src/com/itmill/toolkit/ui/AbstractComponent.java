@@ -66,11 +66,6 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
     private boolean enabled = true;
 
     /**
-     * Has the component been disabled by the container
-     */
-    private boolean disabledByContainer = false;
-
-    /**
      * Is the component visible (it is rendered).
      */
     private boolean visible = true;
@@ -316,7 +311,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      * here, we use the default documentation from implemented interface.
      */
     public boolean isEnabled() {
-        return enabled && !disabledByContainer && isVisible();
+        return enabled && (parent == null || parent.isEnabled()) && isVisible();
     }
 
     /*
@@ -325,23 +320,12 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      */
     public void setEnabled(boolean enabled) {
         if (this.enabled != enabled) {
+            boolean wasEnabled = isEnabled();
             this.enabled = enabled;
-            requestRepaint();
-        }
-    }
-
-    /**
-     * Enable or disable the component by the container. Normally used to
-     * disable the component when the container is disabled without altering the
-     * actual enabled state of the component.
-     * 
-     * @param disabledByContainer
-     *            Should the component be disabled
-     */
-    public void setDisabledByContainer(boolean disabledByContainer) {
-        if (disabledByContainer != this.disabledByContainer) {
-            this.disabledByContainer = disabledByContainer;
-            requestRepaint();
+            // don't repaint if ancestor is disabled
+            if (wasEnabled != isEnabled()) {
+                requestRepaint();
+            }
         }
     }
 
