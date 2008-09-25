@@ -35,6 +35,8 @@ public class Ticket677 extends Application {
     Panel root = new Panel("Enabled");
     Panel one = new Panel("Enabled");
     Panel two = new Panel("Enabled");
+    Form form;
+    Table table;
 
     public void init() {
         Window main = new Window();
@@ -46,19 +48,32 @@ public class Ticket677 extends Application {
                 OrderedLayout.ORIENTATION_HORIZONTAL);
         main.addComponent(l);
 
-        l.addComponent(new Button("Toggle root", new Button.ClickListener() {
+        l.addComponent(new Button("Toggle root panel",
+                new Button.ClickListener() {
+                    public void buttonClick(ClickEvent event) {
+                        toggle(root);
+                    }
+                }));
+        l.addComponent(new Button("Toggle panel one",
+                new Button.ClickListener() {
+                    public void buttonClick(ClickEvent event) {
+                        toggle(one);
+                    }
+                }));
+        l.addComponent(new Button("Toggle panel two",
+                new Button.ClickListener() {
+                    public void buttonClick(ClickEvent event) {
+                        toggle(two);
+                    }
+                }));
+        l.addComponent(new Button("Toggle form", new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
-                toggle(root);
+                toggle(form);
             }
         }));
-        l.addComponent(new Button("Toggle one", new Button.ClickListener() {
+        l.addComponent(new Button("Toggle table", new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
-                toggle(one);
-            }
-        }));
-        l.addComponent(new Button("Toggle two", new Button.ClickListener() {
-            public void buttonClick(ClickEvent event) {
-                toggle(two);
+                toggle(table);
             }
         }));
 
@@ -91,8 +106,9 @@ public class Ticket677 extends Application {
         tf.setEnabled(false);
         two.addComponent(tf);
 
-        Form f = new Form();
-        f.setFieldFactory(new BaseFieldFactory() {
+        form = new Form();
+        form.setCaption("Enabled");
+        form.setFieldFactory(new BaseFieldFactory() {
 
             public Field createField(Item item, Object propertyId,
                     Component uiContext) {
@@ -102,18 +118,18 @@ public class Ticket677 extends Application {
             }
 
         });
-        f.setItemDataSource(new BeanItem(new MyBean()));
-        root.addComponent(f);
+        form.setItemDataSource(new BeanItem(new MyBean()));
+        root.addComponent(form);
 
-        Table t = new Table();
-        t.addContainerProperty("Text", String.class, null);
+        table = new Table("Enabled");
+        table.addContainerProperty("Text", String.class, null);
         for (int i = 0; i < 5; i++) {
-            Item item = t.addItem("Item" + i);
+            Item item = table.addItem("Item" + i);
             Property p = item.getItemProperty("Text");
             p.setValue(i > 1 ? "enabled" : "disabled");
         }
 
-        t.setFieldFactory(new BaseFieldFactory() {
+        table.setFieldFactory(new BaseFieldFactory() {
 
             public Field createField(Container container, Object itemId,
                     Object propertyId, Component uiContext) {
@@ -128,17 +144,20 @@ public class Ticket677 extends Application {
             }
 
         });
-        t.setEditable(true);
-        root.addComponent(t);
+        table.setEditable(true);
+        root.addComponent(table);
 
     }
 
-    private void toggle(ComponentContainer c) {
+    private void toggle(Component c) {
         boolean enable = "Disabled".equals(c.getCaption());
         c.setEnabled(enable);
         c.setCaption((enable ? "Enabled" : "Disabled"));
-        TextField tf = (TextField) c.getComponentIterator().next();
-        tf.focus();
+        if (c instanceof ComponentContainer) {
+            TextField tf = (TextField) ((ComponentContainer) c)
+                    .getComponentIterator().next();
+            tf.focus();
+        }
     }
 
     class MyBean {
