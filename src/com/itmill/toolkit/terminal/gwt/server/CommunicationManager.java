@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
@@ -103,6 +104,8 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
     private List locales;
 
     private int pendingLocalesIndex;
+
+    private int timeoutInterval = -1;
 
     public CommunicationManager(Application application,
             ApplicationServlet applicationServlet) {
@@ -438,6 +441,42 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
             if (repaintAll) {
                 metaOpen = true;
                 outWriter.write("\"repaintAll\":true");
+            }
+
+            SystemMessages ci = null;
+            try {
+                Method m = application.getClass().getMethod(
+                        "getSystemMessages", null);
+                ci = (Application.SystemMessages) m.invoke(null, null);
+            } catch (NoSuchMethodException e1) {
+                e1.printStackTrace();
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+
+            // meta instruction for client to enable auto-forward to
+            // sessionExpiredURL after timer expires.
+            if (ci != null && ci.getSessionExpiredMessage() == null
+                    && ci.getSessionExpiredCaption() == null
+                    && ci.isSessionExpiredNotificationEnabled()) {
+                int newTimeoutInterval = request.getSession()
+                        .getMaxInactiveInterval();
+                if (repaintAll || (timeoutInterval != newTimeoutInterval)) {
+                    String escapedURL = ci.getSessionExpiredURL() == null ? ""
+                            : ci.getSessionExpiredURL().replace("/", "\\/");
+                    if (metaOpen) {
+                        outWriter.write(",");
+                    }
+                    outWriter.write("\"timedRedirect\":{\"interval\":"
+                            + (newTimeoutInterval + 15) + ",\"url\":\""
+                            + escapedURL + "\"}");
+                    metaOpen = true;
+                }
+                timeoutInterval = newTimeoutInterval;
             }
 
             // add meta instruction for client to set focus if it is set

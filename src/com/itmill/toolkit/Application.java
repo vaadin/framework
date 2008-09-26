@@ -1393,10 +1393,11 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 
         /**
          * Enables or disables the notification. If disabled, the set URL (or
-         * current) is loaded directly.
+         * current) is loaded directly when next transaction between server and
+         * client happens.
          * 
          * @param sessionExpiredNotificationEnabled
-         *            true = enabled, false = disabled
+         *                true = enabled, false = disabled
          */
         public void setSessionExpiredNotificationEnabled(
                 boolean sessionExpiredNotificationEnabled) {
@@ -1405,7 +1406,9 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 
         /**
          * Sets the caption of the notification. Set to null for no caption. If
-         * both caption and message is null, the notification is disabled;
+         * both caption and message are null, client automatically forwards to
+         * sessionExpiredUrl after timeout timer expires. Timer uses value read
+         * from HTTPSession.getMaxInactiveInterval()
          * 
          * @param sessionExpiredCaption
          *            the caption
@@ -1416,10 +1419,12 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
 
         /**
          * Sets the message of the notification. Set to null for no message. If
-         * both caption and message is null, the notification is disabled;
+         * both caption and message are null, client automatically forwards to
+         * sessionExpiredUrl after timeout timer expires. Timer uses value read
+         * from HTTPSession.getMaxInactiveInterval()
          * 
          * @param sessionExpiredMessage
-         *            the message
+         *                the message
          */
         public void setSessionExpiredMessage(String sessionExpiredMessage) {
             this.sessionExpiredMessage = sessionExpiredMessage;

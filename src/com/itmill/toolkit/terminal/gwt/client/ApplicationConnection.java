@@ -108,6 +108,12 @@ public class ApplicationConnection {
 
     /** List of pending variable change bursts that must be submitted in order */
     private final Vector pendingVariableBursts = new Vector();
+    
+    /** Timer for automatic refirect to SessionExpiredURL */
+    private Timer redirectTimer; 
+    
+    /** redirectTimer scheduling interval in seconds */ 
+    private int sessionExpirationInterval; 
 
     public ApplicationConnection(WidgetSet widgetSet,
             ApplicationConfiguration cnf) {
@@ -500,8 +506,19 @@ public class ApplicationConnection {
                 idToPaintable.clear();
                 paintableToId.clear();
             }
+            if (meta.containsKey("timedRedirect")) {
+                final JSONObject timedRedirect = meta.get("timedRedirect").isObject();
+                redirectTimer = new Timer() { 
+                    public void run() { 
+                        redirect(timedRedirect.get("url").isString().stringValue()); 
+                    }
+                };                
+                sessionExpirationInterval = Integer.parseInt(timedRedirect.get("interval").toString());
+            }
         }
-
+        if (redirectTimer != null) {
+            redirectTimer.schedule(1000 * sessionExpirationInterval);
+        }
         // Process changes
         final JSONArray changes = (JSONArray) ((JSONObject) json)
                 .get("changes");
