@@ -1747,16 +1747,19 @@ input.i-modified,
 	overflow: hidden;
 	padding: 3px 0 3px 3px;
 	margin-right: 5px;
-	height: 18px;
+	line-height: 23px;
 }
 
 /* Fix textfield size to correspond label size inside table */
+.i-table-cell-content input.i-textfield,
+.i-table-cell-content .i-button {
+	margin: -2px 0 -2px -3px;
+}
 .i-table-cell-content .i-textfield,
 .i-table-cell-content .i-datefield {
-	height: auto;
-	margin: -2px 0 -3px -3px;
 	width: 97%; /* approximate */
 }
+
 /* ...but not for datefield textarea */
 .i-table-cell-content .i-datefield .i-textfield {
 	width: auto;
@@ -1764,7 +1767,7 @@ input.i-modified,
 }
 /* datefield button is too high for table cell */
 .i-table-cell-content .i-datefield-button {
-	height: 20px;
+	height: 25px;
 }
 
 

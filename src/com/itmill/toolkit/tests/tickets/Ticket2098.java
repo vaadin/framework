@@ -1,23 +1,23 @@
 package com.itmill.toolkit.tests.tickets;
 
 import com.itmill.toolkit.Application;
-import com.itmill.toolkit.ui.GridLayout;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.TabSheet;
 import com.itmill.toolkit.ui.Window;
 
 public class Ticket2098 extends Application {
 
+    private static final String info = "First tab hidden, second should initially be selected";
+
     public void init() {
         Window w = new Window(getClass().getSimpleName());
         setMainWindow(w);
         // setTheme("tests-tickets");
-        GridLayout layout = new GridLayout(10, 10);
-        w.setLayout(layout);
-        createUI(layout);
+        w.addComponent(new Label(info));
+        createUI(w);
     }
 
-    private void createUI(GridLayout layout) {
+    private void createUI(Window w) {
         TabSheet ts = new TabSheet();
         Label l1 = new Label("111");
         Label l2 = new Label("222");
@@ -30,8 +30,7 @@ public class Ticket2098 extends Application {
         ts.addTab(l4, "4", null);
 
         l1.setVisible(false);
-        ts.setSelectedTab(l3);
 
-        layout.addComponent(ts);
+        w.addComponent(ts);
     }
 }
