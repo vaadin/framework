@@ -842,7 +842,7 @@ public class ApplicationServlet extends HttpServlet {
             // there are multiple toolkit portlets visible at the same time.
             // TODO remove this when hosted mode on linux gets newer gecko
 
-            page.write("<iframe id=\"__gwt_historyFrame\" "
+            page.write("<iframe tabIndex=\"-1\" id=\"__gwt_historyFrame\" "
                     + "style=\"width:0;height:0;border:0;overflow:"
                     + "hidden\" src=\"javascript:false\"></iframe>\n");
             page.write("<script language='javascript' src='" + staticFilePath
@@ -895,9 +895,10 @@ public class ApplicationServlet extends HttpServlet {
                     + "if(!itmill) { var itmill = {}} \n"
                     + "itmill.toolkitConfigurations = {};\n"
                     + "itmill.themesLoaded = {};\n");
-            page.write("document.write('<iframe id=\"__gwt_historyFrame\" "
-                    + "style=\"width:0;height:0;border:0;overflow:"
-                    + "hidden\" src=\"javascript:false\"></iframe>');\n");
+            page
+                    .write("document.write('<iframe tabIndex=\"-1\" id=\"__gwt_historyFrame\" "
+                            + "style=\"width:0;height:0;border:0;overflow:"
+                            + "hidden\" src=\"javascript:false\"></iframe>');\n");
             page.write("document.write(\"<script language='javascript' src='"
                     + staticFilePath + "/" + WIDGETSET_DIRECTORY_PATH
                     + widgetset + "/" + widgetset

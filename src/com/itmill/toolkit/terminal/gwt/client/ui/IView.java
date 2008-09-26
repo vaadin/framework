@@ -63,7 +63,9 @@ public class IView extends SimplePanel implements Paintable,
 
         DOM.sinkEvents(getElement(), Event.ONKEYDOWN);
 
-        DOM.setElementProperty(getElement(), "tabIndex", "0");
+        // iview is focused when created so element needs tabIndex
+        // 1 due 0 is at the end of natural tabbing order
+        DOM.setElementProperty(getElement(), "tabIndex", "1");
 
         RootPanel.get(elementId).add(this);
 
@@ -326,8 +328,8 @@ public class IView extends SimplePanel implements Paintable,
     }
 
     private static native void focusElement(Element e) /*-{ 
-                                        e.focus();
-                                        }-*/;
+                                                    e.focus();
+                                                    }-*/;
 
     public String onWindowClosing() {
         return null;
