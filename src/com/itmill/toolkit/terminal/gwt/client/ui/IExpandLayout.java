@@ -420,6 +420,22 @@ public class IExpandLayout extends ComplexPanel implements
         final WidgetWrapper wr = getWidgetWrapperFor(expandedWidget);
         wr.setExpandedSize(spaceForExpandedWidget);
 
+        /*
+         * Workaround for issue #2093. Gecko base brosers have some rounding
+         * issues every now and then. If all elements didn't fit on same row,
+         * decrease expanded space until they do.
+         */
+        if (orientationMode == ORIENTATION_HORIZONTAL
+                && BrowserInfo.get().isGecko()) {
+            int tries = 0;
+            while (tries < 30
+                    && spaceForExpandedWidget > EXPANDED_ELEMENTS_MIN_WIDTH
+                    && isLastElementDropped()) {
+                spaceForExpandedWidget--;
+                wr.setExpandedSize(spaceForExpandedWidget);
+            }
+        }
+
         // setting overflow auto lazy off during layout function
         DOM.setStyleAttribute(DOM.getParent(expandedWidget.getElement()),
                 "overflow", "hidden");
@@ -431,6 +447,18 @@ public class IExpandLayout extends ComplexPanel implements
         DOM.setStyleAttribute(DOM.getParent(expandedWidget.getElement()),
                 "overflow", "auto");
 
+    }
+
+    /**
+     * Helper method to build workaround for Gecko issue.
+     * 
+     * @return true if last element has dropped to another line
+     */
+    private boolean isLastElementDropped() {
+        int firstTop = DOM.getAbsoluteTop(DOM.getFirstChild(childContainer));
+        int lastTop = DOM.getAbsoluteTop(DOM.getChild(childContainer,
+                (getWidgetCount() - 1)));
+        return firstTop != lastTop;
     }
 
     private int getTopMargin() {
