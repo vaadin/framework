@@ -68,7 +68,7 @@ public interface Sizeable {
      */
     public static final int UNITS_ROWS = 9;
 
-    public static final int SIZE_UNDEFINED = -1;
+    public static final float SIZE_UNDEFINED = -1;
 
     /**
      * Textual representations of units symbols. Supported units and their
@@ -96,7 +96,7 @@ public interface Sizeable {
      * 
      * @return width of the object in units specified by widthUnits property.
      */
-    public int getWidth();
+    public float getWidth();
 
     /**
      * Sets the width of the object. Negative number implies unspecified size
@@ -110,7 +110,7 @@ public interface Sizeable {
      *             separately (and components might have different default
      *             unit).
      */
-    public void setWidth(int width);
+    public void setWidth(float width);
 
     /**
      * Gets the height of the object. Negative number implies unspecified size
@@ -118,7 +118,7 @@ public interface Sizeable {
      * 
      * @return height of the object in units specified by heightUnits property.
      */
-    public int getHeight();
+    public float getHeight();
 
     /**
      * Sets the height of the object. Negative number implies unspecified size
@@ -127,12 +127,12 @@ public interface Sizeable {
      * @param height
      *            the height of the object in units specified by heightUnits
      *            property.
-     * @deprecated Consider using {@link #setHeight(String)} instead. This
-     *             method works, but is error-prone since the unit must be set
-     *             separately (and components might have different default
-     *             unit).
+     * @deprecated Consider using {@link #setHeight(String)} or
+     *             {@link #setHeight(float, int)} instead. This method works,
+     *             but is error-prone since the unit must be set separately (and
+     *             components might have different default unit).
      */
-    public void setHeight(int height);
+    public void setHeight(float height);
 
     /**
      * Gets the width property units.
@@ -147,7 +147,8 @@ public interface Sizeable {
      * @param units
      *            the units used in width property.
      * @deprecated Consider setting width and unit simultaneously using
-     *             {@link #setWidth(String)}, which is less error-prone.
+     *             {@link #setWidth(String)} or {@link #setWidth(float, int)},
+     *             which is less error-prone.
      */
     public void setWidthUnits(int units);
 
@@ -164,7 +165,8 @@ public interface Sizeable {
      * @param units
      *            the units used in height property.
      * @deprecated Consider setting height and unit simultaneously using
-     *             {@link #setHeight(String)}, which is less error-prone.
+     *             {@link #setHeight(String)} or {@link #setHeight(float, int)},
+     *             which is less error-prone.
      */
     public void setHeightUnits(int units);
 
@@ -185,6 +187,32 @@ public interface Sizeable {
      *            in CSS style string representation
      */
     public void setHeight(String height);
+
+    /**
+     * Sets the width of the object. Negative number implies unspecified size
+     * (terminal is free to set the size).
+     * 
+     * @param width
+     *            the width of the object.
+     * @param unit
+     *            the unit used for the width. Possible values include
+     *            UNITS_PIXELS, UNITS_POINTS, UNITS_PICAS, UNITS_EM, UNITS_EX,
+     *            UNITS_MM, UNITS_CM, UNITS_INCH, UNITS_PERCENTAGE, UNITS_ROWS.
+     */
+    public void setWidth(float width, int unit);
+
+    /**
+     * Sets the height of the object. Negative number implies unspecified size
+     * (terminal is free to set the size).
+     * 
+     * @param height
+     *            the height of the object.
+     * @param unit
+     *            the unit used for the width. Possible values include
+     *            UNITS_PIXELS, UNITS_POINTS, UNITS_PICAS, UNITS_EM, UNITS_EX,
+     *            UNITS_MM, UNITS_CM, UNITS_INCH, UNITS_PERCENTAGE, UNITS_ROWS.
+     */
+    public void setHeight(float height, int unit);
 
     /**
      * Sets the width of the component using String presentation.

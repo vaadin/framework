@@ -341,12 +341,10 @@ public class Slider extends AbstractField {
         this.size = size;
         switch (orientation) {
         case ORIENTATION_HORIZONTAL:
-            setWidth(size);
-            setWidthUnits(UNITS_PIXELS);
+            setWidth(size, UNITS_PIXELS);
             break;
         default:
-            setHeight(size);
-            setHeightUnits(UNITS_PIXELS);
+            setHeight(size, UNITS_PIXELS);
             break;
         }
         requestRepaint();

@@ -21,7 +21,6 @@ import com.itmill.toolkit.terminal.ErrorMessage;
 import com.itmill.toolkit.terminal.PaintException;
 import com.itmill.toolkit.terminal.PaintTarget;
 import com.itmill.toolkit.terminal.Resource;
-import com.itmill.toolkit.terminal.Sizeable;
 import com.itmill.toolkit.terminal.Terminal;
 
 /**
@@ -120,12 +119,12 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
 
     /* Sizeable fields */
 
-    private int width = SIZE_UNDEFINED;
-    private int height = SIZE_UNDEFINED;
+    private float width = SIZE_UNDEFINED;
+    private float height = SIZE_UNDEFINED;
     private int widthUnit = UNITS_PIXELS;
     private int heightUnit = UNITS_PIXELS;
     private static final Pattern sizePattern = Pattern
-            .compile("^(\\d+)(%|px|em|ex|in|cm|mm|pt|pc)$");
+            .compile("^(-?\\d+(\\.\\d+)?)(%|px|em|ex|in|cm|mm|pt|pc)?$");
 
     private ComponentErrorHandler errorHandler = null;
 
@@ -1008,77 +1007,59 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
 
     /* Sizeable and other size related methods */
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.itmill.toolkit.terminal.Sizeable#getHeight()
-     */
-    public int getHeight() {
+    public float getHeight() {
         return height;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.itmill.toolkit.terminal.Sizeable#getHeightUnits()
-     */
     public int getHeightUnits() {
         return heightUnit;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.itmill.toolkit.terminal.Sizeable#getWidth()
-     */
-    public int getWidth() {
+    public float getWidth() {
         return width;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.itmill.toolkit.terminal.Sizeable#getWidthUnits()
-     */
     public int getWidthUnits() {
         return widthUnit;
     }
 
-    /**
-     * Sets the height without setting the height unit.
-     * 
-     * @see link {@link Sizeable#setHeight(int)}
-     * @see link {@link Sizeable#setHeight(String)}
-     * @see link {@link Sizeable#setHeightUnits(int)}
-     * @deprecated Error-prone; consider using {link {@link #setHeight(String)}
-     *             or {link {@link #setHeight(int, int)} instead.
-     */
-
-    public void setHeight(int height) {
+    public void setHeight(float height) {
         this.height = height;
         requestRepaint();
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Sets the height property units.
      * 
-     * @see com.itmill.toolkit.terminal.Sizeable#setHeightUnits(int)
+     * @param units
+     *            the units used in height property.
+     * @deprecated Consider setting height and unit simultaneously using
+     *             {@link #setHeight(String)} or {@link #setHeight(float, int)},
+     *             which is less error-prone.
      */
     public void setHeightUnits(int unit) {
         heightUnit = unit;
         requestRepaint();
     }
 
-    public void setHeight(int height, int unit) {
-        setHeight(height);
-        setHeightUnits(unit);
+    /**
+     * Sets the height of the object. Negative number implies unspecified size
+     * (terminal is free to set the size).
+     * 
+     * @param height
+     *            the height of the object in units specified by heightUnits
+     *            property.
+     * @deprecated Consider using {@link #setHeight(String)} or
+     *             {@link #setHeight(float, int)} instead. This method works,
+     *             but is error-prone since the unit must be set separately (and
+     *             components might have different default unit).
+     */
+    public void setHeight(float height, int unit) {
+        this.height = height;
+        heightUnit = unit;
+        requestRepaint();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.itmill.toolkit.terminal.Sizeable#setSizeFull()
-     */
     public void setSizeFull() {
         height = 100;
         width = 100;
@@ -1087,11 +1068,6 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
         requestRepaint();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.itmill.toolkit.terminal.Sizeable#setSizeUndefined()
-     */
     public void setSizeUndefined() {
         height = -1;
         width = -1;
@@ -1101,52 +1077,62 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
     }
 
     /**
-     * Sets the width without setting the width unit.
+     * Sets the width of the object. Negative number implies unspecified size
+     * (terminal is free to set the size).
      * 
-     * @see link {@link Sizeable#setWidth(int)}
-     * @see link {@link Sizeable#setWidth(String)}
-     * @see link {@link Sizeable#setWidthUnits(int)}
-     * @deprecated Error-prone; consider using {link {@link #setWidth(String)}
-     *             or {link {@link #setWidth(int, int)} instead.
+     * @param width
+     *            the width of the object in units specified by widthUnits
+     *            property.
+     * @deprecated Consider using {@link #setWidth(String)} instead. This method
+     *             works, but is error-prone since the unit must be set
+     *             separately (and components might have different default
+     *             unit).
      */
-    public void setWidth(int width) {
+    public void setWidth(float width) {
         this.width = width;
         requestRepaint();
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Sets the width property units.
      * 
-     * @see com.itmill.toolkit.terminal.Sizeable#setWidthUnits(int)
+     * @param units
+     *            the units used in width property.
+     * @deprecated Consider setting width and unit simultaneously using
+     *             {@link #setWidth(String)} or {@link #setWidth(float, int)},
+     *             which is less error-prone.
      */
     public void setWidthUnits(int unit) {
         widthUnit = unit;
         requestRepaint();
     }
 
-    public void setWidth(int width, int unit) {
-        setWidth(width);
-        setWidthUnits(unit);
+    public void setWidth(float width, int unit) {
+        this.width = width;
+        widthUnit = unit;
+        requestRepaint();
     }
 
     public void setWidth(String width) {
-        int[] p = parseStringSize(width);
-        setWidth(p[0]);
-        setWidthUnits(p[1]);
+        float[] p = parseStringSize(width);
+        this.width = p[0];
+        widthUnit = (int) p[1];
+        requestRepaint();
     }
 
     public void setHeight(String height) {
-        int[] p = parseStringSize(height);
-        setHeight(p[0]);
-        setHeightUnits(p[1]);
+        float[] p = parseStringSize(height);
+        this.height = p[0];
+        heightUnit = (int) p[1];
+        requestRepaint();
     }
 
     /*
      * Returns array with size in index 0 unit in index 1. Null or empty string
      * will produce {-1,UNITS_PIXELS}
      */
-    private static int[] parseStringSize(String s) {
-        int[] values = { -1, UNITS_PIXELS };
+    private static float[] parseStringSize(String s) {
+        float[] values = { -1, UNITS_PIXELS };
         if (s == null) {
             return values;
         }
@@ -1157,26 +1143,32 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
 
         Matcher matcher = sizePattern.matcher(s);
         if (matcher.find()) {
-            values[0] = Integer.parseInt(matcher.group(1));
-            String unit = matcher.group(2);
-            if (unit.equals("%")) {
-                values[1] = UNITS_PERCENTAGE;
-            } else if (unit.equals("px")) {
-                values[1] = UNITS_PIXELS;
-            } else if (unit.equals("em")) {
-                values[1] = UNITS_EM;
-            } else if (unit.equals("ex")) {
-                values[1] = UNITS_EX;
-            } else if (unit.equals("in")) {
-                values[1] = UNITS_INCH;
-            } else if (unit.equals("cm")) {
-                values[1] = UNITS_CM;
-            } else if (unit.equals("mm")) {
-                values[1] = UNITS_MM;
-            } else if (unit.equals("pt")) {
-                values[1] = UNITS_POINTS;
-            } else if (unit.equals("pc")) {
-                values[1] = UNITS_PICAS;
+            values[0] = Float.parseFloat(matcher.group(1));
+            if (values[0] < 0) {
+                values[0] = -1;
+            } else {
+                String unit = matcher.group(3);
+                if (unit == null) {
+                    values[1] = UNITS_PIXELS;
+                } else if (unit.equals("px")) {
+                    values[1] = UNITS_PIXELS;
+                } else if (unit.equals("%")) {
+                    values[1] = UNITS_PERCENTAGE;
+                } else if (unit.equals("em")) {
+                    values[1] = UNITS_EM;
+                } else if (unit.equals("ex")) {
+                    values[1] = UNITS_EX;
+                } else if (unit.equals("in")) {
+                    values[1] = UNITS_INCH;
+                } else if (unit.equals("cm")) {
+                    values[1] = UNITS_CM;
+                } else if (unit.equals("mm")) {
+                    values[1] = UNITS_MM;
+                } else if (unit.equals("pt")) {
+                    values[1] = UNITS_POINTS;
+                } else if (unit.equals("pc")) {
+                    values[1] = UNITS_PICAS;
+                }
             }
         } else {
             throw new IllegalArgumentException("Invalid size argument: \"" + s

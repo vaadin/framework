@@ -280,7 +280,7 @@ public class FeatureBrowser extends CustomComponent implements
 
     }
 
-    public int getHeight() {
+    public float getHeight() {
         // TODO Auto-generated method stub
         return 0;
     }
@@ -290,7 +290,7 @@ public class FeatureBrowser extends CustomComponent implements
         return 0;
     }
 
-    public int getWidth() {
+    public float getWidth() {
         // TODO Auto-generated method stub
         return 0;
     }
@@ -300,7 +300,7 @@ public class FeatureBrowser extends CustomComponent implements
         return 0;
     }
 
-    public void setHeight(int height) {
+    public void setHeight(float height) {
         // TODO Auto-generated method stub
 
     }
@@ -320,7 +320,7 @@ public class FeatureBrowser extends CustomComponent implements
 
     }
 
-    public void setWidth(int width) {
+    public void setWidth(float width) {
         // TODO Auto-generated method stub
 
     }

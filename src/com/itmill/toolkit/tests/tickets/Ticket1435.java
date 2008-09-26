@@ -52,7 +52,7 @@ public class Ticket1435 extends Application {
         Panel container = new Panel();
 
         // Last known height before the panel was collapsed
-        private int lastHeight = -1;
+        private float lastHeight = -1;
         private int lastHeightUnit = -1;
 
         public ButtonPanel(String labelString) {
