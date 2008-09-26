@@ -3,6 +3,7 @@ package com.itmill.toolkit.tests.tickets;
 import com.itmill.toolkit.Application;
 import com.itmill.toolkit.data.Property;
 import com.itmill.toolkit.data.util.ObjectProperty;
+import com.itmill.toolkit.terminal.ExternalResource;
 import com.itmill.toolkit.ui.Button;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.Layout;
@@ -34,6 +35,7 @@ public class Ticket2119 extends Application {
             // If no window found, create it
             w = createWindow();
             addWindow(w);
+            w.open(new ExternalResource(w.getURL()));
         }
         return w;
     }

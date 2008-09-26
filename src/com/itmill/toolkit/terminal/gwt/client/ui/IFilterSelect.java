@@ -476,6 +476,10 @@ public class IFilterSelect extends Composite implements Paintable, Field,
 
     // shown in unfocused empty field, disappears on focus (e.g "Search here")
     private String emptyText = "";
+    // Set true when popupopened has been clicked. Cleared on each UIDL-update.
+    // This handles the special case where are not filtering yet and the
+    // selected value has changed on the server-side. See #2119
+    private boolean popupOpenerClicked;
     private static final String CLASSNAME_EMPTY = "empty";
     private static final String ATTR_EMPTYTEXT = "emptytext";
 
@@ -582,7 +586,7 @@ public class IFilterSelect extends Composite implements Paintable, Field,
                     optionUidl);
             currentSuggestions.add(suggestion);
             if (optionUidl.hasAttribute("selected")) {
-                if (!filtering) {
+                if (!filtering || popupOpenerClicked) {
                     tb.setText(suggestion.getReplacementString());
                     selectedOptionKey = "" + suggestion.getOptionKey();
                 }
@@ -596,7 +600,7 @@ public class IFilterSelect extends Composite implements Paintable, Field,
             captions += suggestion.getReplacementString();
         }
 
-        if (!filtering && uidl.hasVariable("selected")
+        if ((!filtering || popupOpenerClicked) && uidl.hasVariable("selected")
                 && uidl.getStringArrayVariable("selected").length == 0) {
             // select nulled
             tb.setText(emptyText);
@@ -619,6 +623,8 @@ public class IFilterSelect extends Composite implements Paintable, Field,
         DOM.setStyleAttribute(spacer, "height", "0");
         DOM.setStyleAttribute(spacer, "overflow", "hidden");
         DOM.appendChild(panel.getElement(), spacer);
+
+        popupOpenerClicked = false;
 
     }
 
@@ -741,6 +747,7 @@ public class IFilterSelect extends Composite implements Paintable, Field,
             // auto close feature
             if (!suggestionPopup.isJustClosed()) {
                 filterOptions(-1, "");
+                popupOpenerClicked = true;
                 lastFilter = "";
             }
             DOM.eventPreventDefault(DOM.eventGetCurrentEvent());
