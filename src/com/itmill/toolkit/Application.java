@@ -170,9 +170,8 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
     private String logoutURL = null;
 
     /**
-     * Experimental API, not finalized. The default SystemMessages (read-only).
-     * Change by overriding getSystemMessages() and returning
-     * CustomizedSystemMessages
+     * The default SystemMessages (read-only). Change by overriding
+     * getSystemMessages() and returning CustomizedSystemMessages
      */
     private static final SystemMessages DEFAULT_SYSTEM_MESSAGES = new SystemMessages();
 
@@ -1084,10 +1083,9 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
     }
 
     /**
-     * Experimental API, not finalized. Gets the SystemMessages for this
-     * application. SystemMessages are used to notify the user of various
-     * critical situations that can occur, such as session expiration,
-     * client/server out of sync, and internal server error.
+     * Gets the SystemMessages for this application. SystemMessages are used to
+     * notify the user of various critical situations that can occur, such as
+     * session expiration, client/server out of sync, and internal server error.
      * 
      * You can customize the messages by overriding this method and returning
      * {@link CustomizedSystemMessages}
@@ -1225,8 +1223,8 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
     }
 
     /**
-     * Experimental API, not finalized. Contains the system messages used to
-     * notify the user about various critical situations that can occur.
+     * Contains the system messages used to notify the user about various
+     * critical situations that can occur.
      * <p>
      * Customize by overriding the static Application.getSystemMessages() and
      * returning {@link CustomizedSystemMessages}
@@ -1347,8 +1345,8 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
     }
 
     /**
-     * Experimental API, not finalized. Contains the system messages used to
-     * notify the user about various critical situations that can occur.
+     * Contains the system messages used to notify the user about various
+     * critical situations that can occur.
      * <p>
      * Customize by overriding the static Application.getSystemMessages() and
      * returning CustomizedSystemMessages. Note that getSystemMessages() is
@@ -1397,7 +1395,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
          * client happens.
          * 
          * @param sessionExpiredNotificationEnabled
-         *                true = enabled, false = disabled
+         *            true = enabled, false = disabled
          */
         public void setSessionExpiredNotificationEnabled(
                 boolean sessionExpiredNotificationEnabled) {
@@ -1424,7 +1422,7 @@ public abstract class Application implements URIHandler, Terminal.ErrorListener 
          * from HTTPSession.getMaxInactiveInterval()
          * 
          * @param sessionExpiredMessage
-         *                the message
+         *            the message
          */
         public void setSessionExpiredMessage(String sessionExpiredMessage) {
             this.sessionExpiredMessage = sessionExpiredMessage;
