@@ -72,5 +72,8 @@ public class CompileDefaultTheme {
         out.write(combinedCss.toString());
         out.close();
 
+        System.out.println("Compibed CSS to " + SRCDIR + "/styles.css ("
+                + combinedCss.toString().length() + " bytes)");
+
     }
 }
