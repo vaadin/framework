@@ -147,6 +147,9 @@ public class IView extends SimplePanel implements Paintable,
             final String url = open.getStringAttribute("src");
             final String target = open.getStringAttribute("name");
             if (target == null) {
+                // This window is closing. Send close event before
+                // going to the new url
+                onWindowClosed();
                 goTo(url);
             } else {
                 // TODO width & height
@@ -327,9 +330,10 @@ public class IView extends SimplePanel implements Paintable,
         connection.sendPendingVariableChangesSync();
     }
 
-    private static native void focusElement(Element e) /*-{ 
-                                                    e.focus();
-                                                    }-*/;
+    private static native void focusElement(Element e) 
+    /*-{ 
+       e.focus();
+    }-*/;
 
     public String onWindowClosing() {
         return null;
