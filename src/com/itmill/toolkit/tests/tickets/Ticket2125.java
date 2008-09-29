@@ -31,8 +31,7 @@ public class Ticket2125 extends Application {
                 table.addItem(new Integer(i));
             }
             table.addContainerProperty("String", String.class, "a string");
-            table.addContainerProperty("Label", Label.class, new Label(
-                    "a label"));
+            table.addContainerProperty("Boolean", Boolean.class, Boolean.TRUE);
             table.addGeneratedColumn("Generated", new ColumnGenerator() {
                 public Component generateCell(Table source, Object itemId,
                         Object columnId) {
@@ -52,8 +51,10 @@ public class Ticket2125 extends Application {
                 }
 
             });
-            addComponent(new Button("editmode", new MethodProperty(table,
-                    "editable")));
+            Button b = new Button("editmode", new MethodProperty(table,
+                    "editable"));
+            b.setImmediate(true);
+            addComponent(b);
         }
     }
 

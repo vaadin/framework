@@ -2052,8 +2052,10 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
                                 .getPaintable((UIDL) cell);
                         (cellContent).updateFromUIDL((UIDL) cell, client);
                         String style = "";
-                        if (uidl.hasAttribute("style")) {
-                            style = uidl.getStringAttribute("style");
+                        if (uidl.hasAttribute("style-"
+                                + (showRowHeaders ? col - 1 : col))) {
+                            style = uidl.getStringAttribute("style-"
+                                    + (showRowHeaders ? col - 1 : col));
                         }
                         addCell((Widget) cellContent, aligns[col++], style);
                     }
