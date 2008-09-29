@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Map;
@@ -194,7 +195,7 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * Holds column generators
      */
-    private final HashMap columnGenerators = new HashMap();
+    private final HashMap columnGenerators = new LinkedHashMap();
 
     /**
      * Holds value of property pageLength. 0 disables paging.
