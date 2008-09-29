@@ -4,10 +4,10 @@
 
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
@@ -140,7 +140,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
      */
     boolean recalcWidths = false;
 
-    private LinkedList lazyUnregistryBag = new LinkedList();
+    private ArrayList lazyUnregistryBag = new ArrayList();
 
     public IScrollTable() {
 
