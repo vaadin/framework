@@ -165,16 +165,6 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
     public void paintContent(PaintTarget target) throws PaintException {
         layout.paint(target);
 
-        // Add size info as variables
-        if (getHeight() > -1) {
-            target.addVariable(this, "height", getHeight()
-                    + UNIT_SYMBOLS[getHeightUnits()]);
-        }
-        if (getWidth() > -1) {
-            target.addVariable(this, "width", getWidth()
-                    + UNIT_SYMBOLS[getWidthUnits()]);
-        }
-
         if (isScrollable()) {
             target.addVariable(this, "scrollLeft", getScrollLeft());
             target.addVariable(this, "scrollTop", getScrollTop());
