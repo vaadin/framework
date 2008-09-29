@@ -1031,52 +1031,66 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
 
     /* Sizeable and other size related methods */
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.itmill.toolkit.terminal.Sizeable#getHeight()
+     */
     public float getHeight() {
         return height;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.itmill.toolkit.terminal.Sizeable#getHeightUnits()
+     */
     public int getHeightUnits() {
         return heightUnit;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.itmill.toolkit.terminal.Sizeable#getWidth()
+     */
     public float getWidth() {
         return width;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.itmill.toolkit.terminal.Sizeable#getWidthUnits()
+     */
     public int getWidthUnits() {
         return widthUnit;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.itmill.toolkit.terminal.Sizeable#setHeight(float)
+     */
     public void setHeight(float height) {
         this.height = height;
         requestRepaint();
     }
 
-    /**
-     * Sets the height property units.
+    /*
+     * (non-Javadoc)
      * 
-     * @param units
-     *            the units used in height property.
-     * @deprecated Consider setting height and unit simultaneously using
-     *             {@link #setHeight(String)} or {@link #setHeight(float, int)},
-     *             which is less error-prone.
+     * @see com.itmill.toolkit.terminal.Sizeable#setHeightUnits(int)
      */
     public void setHeightUnits(int unit) {
         heightUnit = unit;
         requestRepaint();
     }
 
-    /**
-     * Sets the height of the object. Negative number implies unspecified size
-     * (terminal is free to set the size).
+    /*
+     * (non-Javadoc)
      * 
-     * @param height
-     *            the height of the object in units specified by heightUnits
-     *            property.
-     * @deprecated Consider using {@link #setHeight(String)} or
-     *             {@link #setHeight(float, int)} instead. This method works,
-     *             but is error-prone since the unit must be set separately (and
-     *             components might have different default unit).
+     * @see com.itmill.toolkit.terminal.Sizeable#setHeight(float, int)
      */
     public void setHeight(float height, int unit) {
         this.height = height;
@@ -1084,6 +1098,11 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
         requestRepaint();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.itmill.toolkit.terminal.Sizeable#setSizeFull()
+     */
     public void setSizeFull() {
         height = 100;
         width = 100;
@@ -1092,6 +1111,11 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
         requestRepaint();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.itmill.toolkit.terminal.Sizeable#setSizeUndefined()
+     */
     public void setSizeUndefined() {
         height = -1;
         width = -1;
@@ -1100,43 +1124,42 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
         requestRepaint();
     }
 
-    /**
-     * Sets the width of the object. Negative number implies unspecified size
-     * (terminal is free to set the size).
+    /*
+     * (non-Javadoc)
      * 
-     * @param width
-     *            the width of the object in units specified by widthUnits
-     *            property.
-     * @deprecated Consider using {@link #setWidth(String)} instead. This method
-     *             works, but is error-prone since the unit must be set
-     *             separately (and components might have different default
-     *             unit).
+     * @see com.itmill.toolkit.terminal.Sizeable#setWidth(float)
      */
     public void setWidth(float width) {
         this.width = width;
         requestRepaint();
     }
 
-    /**
-     * Sets the width property units.
+    /*
+     * (non-Javadoc)
      * 
-     * @param units
-     *            the units used in width property.
-     * @deprecated Consider setting width and unit simultaneously using
-     *             {@link #setWidth(String)} or {@link #setWidth(float, int)},
-     *             which is less error-prone.
+     * @see com.itmill.toolkit.terminal.Sizeable#setWidthUnits(int)
      */
     public void setWidthUnits(int unit) {
         widthUnit = unit;
         requestRepaint();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.itmill.toolkit.terminal.Sizeable#setWidth(float, int)
+     */
     public void setWidth(float width, int unit) {
         this.width = width;
         widthUnit = unit;
         requestRepaint();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.itmill.toolkit.terminal.Sizeable#setWidth(java.lang.String)
+     */
     public void setWidth(String width) {
         float[] p = parseStringSize(width);
         this.width = p[0];
@@ -1144,6 +1167,11 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
         requestRepaint();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.itmill.toolkit.terminal.Sizeable#setHeight(java.lang.String)
+     */
     public void setHeight(String height) {
         float[] p = parseStringSize(height);
         this.height = p[0];
