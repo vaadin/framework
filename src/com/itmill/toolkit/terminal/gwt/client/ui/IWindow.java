@@ -234,8 +234,8 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
          * content area. This is due history as earlier only pixels where
          * allowed.
          */
-        if (uidl.hasVariable("width")) {
-            final String width = uidl.getStringVariable("width");
+        if (uidl.hasAttribute("width")) {
+            final String width = uidl.getStringAttribute("width");
             if (width.indexOf("px") < 0) {
                 /*
                  * Only using non-pixel size for initial size measurement. Then
@@ -255,8 +255,8 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
         }
 
         // Height set after show so we can detect space used by decorations
-        if (uidl.hasVariable("height")) {
-            final String height = uidl.getStringVariable("height");
+        if (uidl.hasAttribute("height")) {
+            final String height = uidl.getStringAttribute("height");
             if (height.indexOf("%") > 0) {
                 int winHeight = Window.getClientHeight();
                 float percent = Float.parseFloat(height.substring(0, height

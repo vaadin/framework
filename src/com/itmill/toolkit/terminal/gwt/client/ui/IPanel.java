@@ -92,9 +92,9 @@ public class IPanel extends SimplePanel implements Paintable,
         id = uidl.getId();
 
         // Panel size. Height needs to be saved for later use
-        height = uidl.hasVariable("height") ? uidl.getStringVariable("height")
-                : null;
-        setWidth(uidl.hasVariable("width") ? uidl.getStringVariable("width")
+        height = uidl.hasAttribute("height") ? uidl
+                .getStringAttribute("height") : null;
+        setWidth(uidl.hasAttribute("width") ? uidl.getStringAttribute("width")
                 : "");
 
         // Restore default stylenames
