@@ -45,7 +45,7 @@ public class IGoogleMap extends Composite implements Paintable {
                             + umarker.getStringAttribute("html") + "</span>";
                     final double x = umarker.getDoubleAttribute("x");
                     final double y = umarker.getDoubleAttribute("y");
-                    pos = new LatLng(x, y);
+                    pos = LatLng.newInstance(x, y);
                     final Marker marker = new Marker(pos);
                     widget.addOverlay(marker);
                     if (html != null) {
@@ -64,9 +64,9 @@ public class IGoogleMap extends Composite implements Paintable {
             widget.setZoomLevel(uidl.getIntAttribute("zoom"));
         }
         if (uidl.hasAttribute("centerX") && uidl.hasAttribute("centerY")) {
-            final LatLng center = new LatLng(
-                    uidl.getDoubleAttribute("centerX"), uidl
-                            .getDoubleAttribute("centerY"));
+            final LatLng center = LatLng.newInstance(uidl
+                    .getDoubleAttribute("centerX"), uidl
+                    .getDoubleAttribute("centerY"));
             widget.setCenter(center);
         } else if (pos != null) {
             // use last marker position
