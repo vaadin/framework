@@ -2,6 +2,7 @@
 	color: #464f52;
 	font-size: 13px;
 	line-height: 18px;
+	background: transparent url(img/top-left.png) no-repeat top left;
 }
 
 .i-window:before {
@@ -44,16 +45,6 @@
 
 .i-window-header .i-icon {
 	vertical-align: middle; /* This has to be 'middle', not 'bottom', to allow larger icons than 16px */
-}
-
-
-.i-window-outerheader:before {
-	display: block;
-	content: "";
-	width: 21px;
-	height: 21px;
-	margin: -29px 0 6px -32px;
-	background: transparent url(img/top-left.png);
 }
 
 .i-window-contents {
