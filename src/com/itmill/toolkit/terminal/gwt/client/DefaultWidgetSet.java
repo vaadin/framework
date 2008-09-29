@@ -11,6 +11,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ui.IAccordion;
 import com.itmill.toolkit.terminal.gwt.client.ui.IButton;
 import com.itmill.toolkit.terminal.gwt.client.ui.ICheckBox;
+import com.itmill.toolkit.terminal.gwt.client.ui.ICoordinateLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.ICustomComponent;
 import com.itmill.toolkit.terminal.gwt.client.ui.ICustomLayout;
 import com.itmill.toolkit.terminal.gwt.client.ui.IDateFieldCalendar;
@@ -189,6 +190,9 @@ public class DefaultWidgetSet implements WidgetSet {
         } else if ("com.itmill.toolkit.terminal.gwt.client.ui.IPopupView"
                 .equals(className)) {
             return new IPopupView();
+        } else if ("com.itmill.toolkit.terminal.gwt.client.ui.ICoordinateLayout"
+                .equals(className)) {
+            return new ICoordinateLayout();
         }
 
         return new IUnknownComponent();
@@ -311,6 +315,8 @@ public class DefaultWidgetSet implements WidgetSet {
             return "com.itmill.toolkit.terminal.gwt.client.ui.IMenuBar";
         } else if ("popupview".equals(tag)) {
             return "com.itmill.toolkit.terminal.gwt.client.ui.IPopupView";
+        } else if ("coordinatelayout".equals(tag)) {
+            return "com.itmill.toolkit.terminal.gwt.client.ui.ICoordinateLayout";
         }
 
         return "com.itmill.toolkit.terminal.gwt.client.ui.IUnknownComponent";

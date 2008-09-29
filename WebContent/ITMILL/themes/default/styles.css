@@ -367,6 +367,16 @@ input.i-modified,
 	font-size:xx-small;
 }
 
+/*
+ *	CoordinateLayout
+ */
+
+.i-coordinatelayout-margin-values{
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+}
 .i-datefield-button {
 	font-size:13px;
 	width: 22px;
