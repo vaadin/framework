@@ -604,12 +604,10 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
             if (isVisible()) {
 
                 if (getHeight() >= 0) {
-                    target.addAttribute("height", "" + getHeight()
-                            + UNIT_SYMBOLS[getHeightUnits()]);
+                    target.addAttribute("height", "" + getCSSHeight());
                 }
                 if (getWidth() >= 0) {
-                    target.addAttribute("width", "" + getWidth()
-                            + UNIT_SYMBOLS[getWidthUnits()]);
+                    target.addAttribute("width", "" + getCSSWidth());
                 }
 
                 if (styles != null && styles.size() > 0) {
@@ -653,6 +651,32 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
         target.endTag(getTag());
 
         repaintRequestListenersNotified = false;
+    }
+
+    /**
+     * Build CSS compatible string representation of height.
+     * 
+     * @return CSS height
+     */
+    private String getCSSHeight() {
+        if (getHeightUnits() == UNITS_PIXELS) {
+            return ((int) getHeight()) + UNIT_SYMBOLS[getHeightUnits()];
+        } else {
+            return getHeight() + UNIT_SYMBOLS[getHeightUnits()];
+        }
+    }
+
+    /**
+     * Build CSS compatible string representation of width.
+     * 
+     * @return CSS width
+     */
+    private String getCSSWidth() {
+        if (getWidthUnits() == UNITS_PIXELS) {
+            return ((int) getWidth()) + UNIT_SYMBOLS[getWidthUnits()];
+        } else {
+            return getWidth() + UNIT_SYMBOLS[getWidthUnits()];
+        }
     }
 
     /**
