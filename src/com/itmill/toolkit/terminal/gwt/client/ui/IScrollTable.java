@@ -1319,10 +1319,13 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
         }
 
         public void clear() {
-            super.clear();
+            for (Iterator iterator = availableCells.keySet().iterator(); iterator
+                    .hasNext();) {
+                String cid = (String) iterator.next();
+                removeCell(cid);
+            }
             availableCells.clear();
             availableCells.put("0", new RowHeadersHeaderCell());
-
         }
 
         public void updateCellsFromUIDL(UIDL uidl) {
