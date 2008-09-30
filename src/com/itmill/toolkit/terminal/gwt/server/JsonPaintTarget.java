@@ -759,9 +759,12 @@ public class JsonPaintTarget implements PaintTarget {
         uidlBuffer.flush();
     }
 
-    /**
-     * @see com.itmill.toolkit.terminal.PaintTarget#startTag(com.itmill.toolkit.terminal.Paintable,
-     *      java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.itmill.toolkit.terminal.PaintTarget#startTag(com.itmill.toolkit.terminal
+     * .Paintable, java.lang.String)
      */
     public boolean startTag(Paintable paintable, String tagName)
             throws PaintException {
@@ -780,8 +783,12 @@ public class JsonPaintTarget implements PaintTarget {
         addAttribute(referenceName, id);
     }
 
-    /**
-     * @see com.itmill.toolkit.terminal.PaintTarget#addCharacterData(java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.itmill.toolkit.terminal.PaintTarget#addCharacterData(java.lang.String
+     * )
      */
     public void addCharacterData(String text) throws PaintException {
         if (text != null) {
