@@ -288,7 +288,7 @@ public class FormExample extends CustomComponent {
         ExpandLayout footer = new ExpandLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
 
         // The Commit button calls form.commit().
-        Button commit = new Button("Commit", new Button.ClickListener() {
+        Button commit = new Button("CCommit", new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
                 form.commit();
                 display.refresh();

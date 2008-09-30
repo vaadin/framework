@@ -15,24 +15,25 @@ import com.itmill.toolkit.terminal.PaintTarget;
 
 /**
  * <p>
- * A container component with freely designed layout and style. The container
+ * A container component with freely designed layout and style. The layout
  * consists of items with textually represented locations. Each item contains
- * one sub-component. The adapter and theme are responsible for rendering the
- * layout with given style by placing the items on the screen in defined
+ * one sub-component, which can be any Toolkit component, such as a layout.
+ * The adapter and theme are responsible for rendering the
+ * layout with a given style by placing the items in the defined
  * locations.
  * </p>
  * 
  * <p>
- * The definition of locations is not fixed - the each style can define its
- * locations in a way that is suitable for it. One typical example would be to
+ * The placement of the locations is not fixed - different themes can define the
+ * locations in a way that is suitable for them. One typical example would be to
  * create visual design for a web site as a custom layout: the visual design
- * could define locations for "menu", "body" and "title" for example. The layout
- * would then be implemented as XLS-template with for given style.
+ * would define locations for "menu", "body", and "title", for example. The layout
+ * would then be implemented as an XHTML template for each theme.
  * </p>
  * 
  * <p>
- * The default theme handles the styles that are not defined by just drawing the
- * subcomponents as in OrderedLayout.
+ * The default theme handles the styles that are not defined by drawing the
+ * subcomponents just as in OrderedLayout.
  * </p>
  * 
  * @author IT Mill Ltd.

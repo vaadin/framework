@@ -109,6 +109,7 @@ public class FormExample extends CustomComponent {
                 return new TextField("Street Address");
             
             if (pid.equals("postalCode")) {
+                // Postal code that must be 5 digits (10000-99999).
                 TextField field = new TextField("Postal Code");
                 field.setColumns(5);
                 Validator postalCodeValidator = new Validator() {
@@ -156,7 +157,7 @@ public class FormExample extends CustomComponent {
         final Form form = new Form();
 
         // Set form caption and description texts.
-        form.setCaption("Contact Information");
+        form.setCaption("Contsgsdgact Information");
         form.setDescription("Please enter valid name and address. Fields marked with * are required.");
 
         // Use custom field factory to create the fields in the form.
@@ -201,6 +202,8 @@ public class FormExample extends CustomComponent {
         // Add Commit and Discard controls to the form.
         ExpandLayout footer = new ExpandLayout(OrderedLayout.ORIENTATION_HORIZONTAL);
 
+        form.setValidationVisibleOnCommit(false);
+        form.setValidationVisible(false);
         // The Commit button calls form.commit().
         Button commit = new Button("Commit", form, "commit");
 
