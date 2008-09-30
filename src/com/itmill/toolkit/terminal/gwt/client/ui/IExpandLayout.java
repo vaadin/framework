@@ -456,8 +456,8 @@ public class IExpandLayout extends ComplexPanel implements
      */
     private boolean isLastElementDropped() {
         int firstTop = DOM.getAbsoluteTop(DOM.getFirstChild(childContainer));
-        int lastTop = DOM.getAbsoluteTop(DOM.getChild(childContainer,
-                (getWidgetCount() - 1)));
+        int lastTop = DOM.getAbsoluteTop(DOM.getChild(childContainer, (DOM
+                .getChildCount(childContainer) - 1)));
         return firstTop != lastTop;
     }
 
