@@ -790,7 +790,8 @@ public class IFilterSelect extends Composite implements Paintable, Field,
     }
 
     public void onLostFocus(Widget sender) {
-        if (suggestionPopup.isJustClosed()) {
+        if (!suggestionPopup.isAttached() || suggestionPopup.isJustClosed()) {
+            // typing so fast the popup was never opened, or it's just closed
             suggestionPopup.menu.doSelectedItemAction();
         }
         if ("".equals(tb.getText())) {
