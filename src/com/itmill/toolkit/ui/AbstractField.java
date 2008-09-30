@@ -925,13 +925,16 @@ public abstract class AbstractField extends AbstractComponent implements Field,
 
     }
 
-    /**
-     * Asks the terminal to place the cursor to this field.
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.itmill.toolkit.ui.Component.Focusable#focus()
      */
     public void focus() {
         final Application app = getApplication();
         if (app != null) {
-            app.setFocusedComponent(this);
+            getWindow().setFocusedComponent(this);
+            delayedFocus = false;
         } else {
             delayedFocus = true;
         }
@@ -1013,8 +1016,6 @@ public abstract class AbstractField extends AbstractComponent implements Field,
     public void attach() {
         super.attach();
         if (delayedFocus) {
-
-            delayedFocus = false;
             focus();
         }
     }

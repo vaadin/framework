@@ -401,7 +401,7 @@ public interface Component extends Paintable, VariableOwner, Sizeable {
     /**
      * Interface implemented by components which can obtain input focus.
      */
-    public interface Focusable {
+    public interface Focusable extends Component {
 
         /**
          * Sets the focus to this component.

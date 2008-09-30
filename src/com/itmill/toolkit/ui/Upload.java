@@ -845,15 +845,16 @@ public class Upload extends AbstractComponent implements Component.Focusable {
         this.receiver = receiver;
     }
 
-    /**
-     * Sets the focus to this component.
+    /*
+     * (non-Javadoc)
      * 
      * @see com.itmill.toolkit.ui.Component.Focusable#focus()
      */
     public void focus() {
         final Application app = getApplication();
         if (app != null) {
-            app.setFocusedComponent(this);
+            getWindow().setFocusedComponent(this);
+            delayedFocus = false;
         } else {
             delayedFocus = true;
         }
@@ -998,7 +999,6 @@ public class Upload extends AbstractComponent implements Component.Focusable {
     public void attach() {
         super.attach();
         if (delayedFocus) {
-            delayedFocus = false;
             focus();
         }
     }

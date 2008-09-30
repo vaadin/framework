@@ -112,6 +112,8 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
 
     private boolean centerRequested = false;
 
+    private Focusable pendingFocus;
+
     /* ********************************************************************* */
 
     /**
@@ -538,6 +540,16 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
             }
             target.endTag("notifications");
             notifications = null;
+        }
+
+        if (pendingFocus != null) {
+            // ensure focused component is still attached to this main window
+            if (pendingFocus.getWindow() == this
+                    || (pendingFocus.getWindow() != null && pendingFocus
+                            .getWindow().getParent() == this)) {
+                target.paintReference(pendingFocus, "focused");
+            }
+            pendingFocus = null;
         }
 
     }
@@ -1191,6 +1203,29 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
         }
         notifications.add(notification);
         requestRepaint();
+    }
+
+    /**
+     * This method is used by Component.Focusable objects to request focus to
+     * themselves. Focus renders must be handled at window level (instead of
+     * Component.Focusable) due we want the last focused component to be focused
+     * in client too. Not the one that is rendered last (the case we'd get if
+     * implemented in Focusable only).
+     * 
+     * To focus component from Toolkit application, use Focusable.focus(). See
+     * {@link Focusable}.
+     * 
+     * @param focusable
+     *            to be focused on next paint
+     */
+    void setFocusedComponent(Focusable focusable) {
+        if (getParent() != null) {
+            // focus is handled by main windows
+            ((Window) getParent()).setFocusedComponent(focusable);
+        } else {
+            pendingFocus = focusable;
+            requestRepaint();
+        }
     }
 
     /**

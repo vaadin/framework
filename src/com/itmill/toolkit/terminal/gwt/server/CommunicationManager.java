@@ -479,15 +479,6 @@ public class CommunicationManager implements Paintable.RepaintRequestListener {
                 timeoutInterval = newTimeoutInterval;
             }
 
-            // add meta instruction for client to set focus if it is set
-            final Paintable f = (Paintable) application.consumeFocus();
-            if (f != null) {
-                if (metaOpen) {
-                    outWriter.write(",");
-                }
-                outWriter.write("\"focus\":\"" + getPaintableId(f) + "\"");
-            }
-
             outWriter.print("}, \"resources\" : {");
 
             // Precache custom layouts
