@@ -833,10 +833,12 @@ public class Window extends Panel implements URIHandler, ParameterHandler {
             setPositionY(y < 0 ? -1 : y);
         }
 
-        // Closing
-        final Boolean close = (Boolean) variables.get("close");
-        if (close != null && close.booleanValue()) {
-            close();
+        if (!isReadOnly()) {
+            // Closing
+            final Boolean close = (Boolean) variables.get("close");
+            if (close != null && close.booleanValue()) {
+                close();
+            }
         }
     }
 

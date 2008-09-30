@@ -103,6 +103,8 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 
     private Element headerText;
 
+    private boolean readonly;
+
     public IWindow() {
         super();
         final int order = windowOrder.size();
@@ -210,6 +212,10 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 
         if (uidl.getBooleanAttribute("resizable") != resizable) {
             setResizable(!resizable);
+        }
+
+        if (isReadOnly() != uidl.getBooleanAttribute("readonly")) {
+            setReadOnly(!isReadOnly());
         }
 
         // Initialize the position form UIDL
@@ -379,6 +385,19 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
             center();
         }
 
+    }
+
+    private void setReadOnly(boolean readonly) {
+        this.readonly = readonly;
+        if (readonly) {
+            DOM.setStyleAttribute(closeBox, "display", "none");
+        } else {
+            DOM.setStyleAttribute(closeBox, "display", "");
+        }
+    }
+
+    private boolean isReadOnly() {
+        return readonly;
     }
 
     @Override
