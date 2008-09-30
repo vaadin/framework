@@ -32,11 +32,13 @@
  * needs application specific planning and CSS tuning.
  */
 @media print {
+	
 	.i-generated-body {
 		height: auto;
 		min-height: 20cm;
 		overflow: visible;
 	}
+
 	.i-app {
 		height:auto;
 		min-height: 20cm;
@@ -44,6 +46,10 @@
 	
 	.i-view {
 		overflow: visible;
+	}
+	
+	.i-gridlayout {
+		overflow: visible !important;
 	}
 	
 }

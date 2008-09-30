@@ -176,6 +176,10 @@
 		overflow: visible;
 	}
 	
+	.i-gridlayout {
+		overflow: visible !important;
+	}
+	
 }
 
 .i-view:active, .i-view:focus { 
