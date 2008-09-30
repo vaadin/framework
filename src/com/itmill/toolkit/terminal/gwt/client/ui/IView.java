@@ -7,18 +7,22 @@ package com.itmill.toolkit.terminal.gwt.client.ui;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.WindowCloseListener;
 import com.google.gwt.user.client.WindowResizeListener;
+import com.google.gwt.user.client.ui.HasFocus;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
+import com.itmill.toolkit.terminal.gwt.client.Focusable;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.Util;
@@ -235,6 +239,32 @@ public class IView extends SimplePanel implements Paintable,
             w.hide();
         }
 
+        if (uidl.hasAttribute("focused")) {
+            final String focusPid = uidl.getStringAttribute("focused");
+            // set focused component when render phase is finished
+            DeferredCommand.addCommand(new Command() {
+                public void execute() {
+                    final Paintable toBeFocused = connection
+                            .getPaintable(focusPid);
+
+                    /*
+                     * Two types of Widgets can be focused, either implementing
+                     * GWT HasFocus of a thinner Toolkit specific Focusable
+                     * interface.
+                     */
+                    if (toBeFocused instanceof HasFocus) {
+                        final HasFocus toBeFocusedWidget = (HasFocus) toBeFocused;
+                        toBeFocusedWidget.setFocus(true);
+                    } else if (toBeFocused instanceof Focusable) {
+                        ((Focusable) toBeFocused).focus();
+                    } else {
+                        ApplicationConnection.getConsole().log(
+                                "Could not focus component");
+                    }
+                }
+            });
+        }
+
         // Add window listeners on first paint, to prevent premature
         // variablechanges
         if (firstPaint) {
@@ -330,7 +360,7 @@ public class IView extends SimplePanel implements Paintable,
         connection.sendPendingVariableChangesSync();
     }
 
-    private static native void focusElement(Element e) 
+    private static native void focusElement(Element e)
     /*-{ 
        e.focus();
     }-*/;

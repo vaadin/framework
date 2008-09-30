@@ -33,7 +33,6 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.WindowCloseListener;
 import com.google.gwt.user.client.impl.HTTPRequestImpl;
 import com.google.gwt.user.client.ui.FocusWidget;
-import com.google.gwt.user.client.ui.HasFocus;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ui.Field;
@@ -108,12 +107,12 @@ public class ApplicationConnection {
 
     /** List of pending variable change bursts that must be submitted in order */
     private final Vector pendingVariableBursts = new Vector();
-    
+
     /** Timer for automatic refirect to SessionExpiredURL */
-    private Timer redirectTimer; 
-    
-    /** redirectTimer scheduling interval in seconds */ 
-    private int sessionExpirationInterval; 
+    private Timer redirectTimer;
+
+    /** redirectTimer scheduling interval in seconds */
+    private int sessionExpirationInterval;
 
     public ApplicationConnection(WidgetSet widgetSet,
             ApplicationConfiguration cnf) {
@@ -507,13 +506,16 @@ public class ApplicationConnection {
                 paintableToId.clear();
             }
             if (meta.containsKey("timedRedirect")) {
-                final JSONObject timedRedirect = meta.get("timedRedirect").isObject();
-                redirectTimer = new Timer() { 
-                    public void run() { 
-                        redirect(timedRedirect.get("url").isString().stringValue()); 
+                final JSONObject timedRedirect = meta.get("timedRedirect")
+                        .isObject();
+                redirectTimer = new Timer() {
+                    public void run() {
+                        redirect(timedRedirect.get("url").isString()
+                                .stringValue());
                     }
-                };                
-                sessionExpirationInterval = Integer.parseInt(timedRedirect.get("interval").toString());
+                };
+                sessionExpirationInterval = Integer.parseInt(timedRedirect.get(
+                        "interval").toString());
             }
         }
         if (redirectTimer != null) {
@@ -568,20 +570,6 @@ public class ApplicationConnection {
         Util.componentSizeUpdated(sizeUpdatedWidgets);
 
         if (meta != null) {
-            if (meta.containsKey("focus")) {
-                final String focusPid = meta.get("focus").isString()
-                        .stringValue();
-                final Paintable toBeFocused = getPaintable(focusPid);
-                if (toBeFocused instanceof HasFocus) {
-                    final HasFocus toBeFocusedWidget = (HasFocus) toBeFocused;
-                    toBeFocusedWidget.setFocus(true);
-                } else if (toBeFocused instanceof Focusable) {
-                    ((Focusable) toBeFocused).focus();
-                } else {
-                    getConsole().log("Could not focus component");
-                }
-
-            }
             if (meta.containsKey("appError")) {
                 JSONObject error = meta.get("appError").isObject();
                 JSONValue val = error.get("caption");
