@@ -51,8 +51,16 @@
     </init-param>
   </servlet>
   
+  <servlet>
+    <servlet-name>TestFeatureBrowser</servlet-name>
+    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+    <init-param>
+      <param-name>application</param-name>
+      <param-value>com.itmill.toolkit.automatedtests.featurebrowser.FeatureBrowser</param-value>
+    </init-param>
+  </servlet>
   
- <servlet>
+  <servlet>
     <servlet-name>DemoTestBench</servlet-name>
     <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
     <init-param>
@@ -603,6 +611,11 @@
   </servlet-mapping>
 
   <servlet-mapping>
+    <servlet-name>TestFeatureBrowser</servlet-name>
+    <url-pattern>/TestFeatureBrowser/*</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
     <servlet-name>BookTestServlet</servlet-name>
     <url-pattern>/book/*</url-pattern>
   </servlet-mapping>
@@ -627,6 +640,20 @@
   <servlet-mapping>
     <servlet-name>WindowedDemos</servlet-name>
     <url-pattern>/WindowedDemos/*</url-pattern>
+  </servlet-mapping>
+
+   <servlet>
+    <servlet-name>Forum434</servlet-name>
+    <servlet-class>com.itmill.toolkit.terminal.gwt.server.ApplicationServlet</servlet-class>
+    <init-param>
+      <param-name>application</param-name>
+      <param-value>com.itmill.toolkit.tests.book.MainClass</param-value>
+    </init-param>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>Forum434</servlet-name>
+    <url-pattern>/forum434/*</url-pattern>
   </servlet-mapping>
 
   <welcome-file-list>
