@@ -92,4 +92,8 @@ public class INativeSelect extends IOptionGroupBase implements Field {
         ((TooltipListBox) optionsContainer).setTabIndex(tabIndex);
     }
 
+    public void focus() {
+        select.setFocus(true);
+    }
+
 }

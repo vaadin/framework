@@ -14,11 +14,12 @@ import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
+import com.itmill.toolkit.terminal.gwt.client.Focusable;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
 abstract class IOptionGroupBase extends Composite implements Paintable, Field,
-        ClickListener, ChangeListener, KeyboardListener {
+        ClickListener, ChangeListener, KeyboardListener, Focusable {
 
     public static final String CLASSNAME_OPTION = "i-select-option";
 

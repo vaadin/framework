@@ -224,4 +224,8 @@ public class ITwinColSelect extends IOptionGroupBase {
         add.setTabIndex(tabIndex);
         remove.setTabIndex(tabIndex);
     }
+
+    public void focus() {
+        options.setFocus(true);
+    }
 }

@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.HasFocus;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.Widget;
@@ -84,6 +85,13 @@ public class IOptionGroup extends IOptionGroupBase {
                 RadioButton rb = (RadioButton) iterator.next();
                 rb.setTabIndex(tabIndex);
             }
+        }
+    }
+
+    public void focus() {
+        Iterator<Widget> iterator = panel.iterator();
+        if (iterator.hasNext()) {
+            ((HasFocus) iterator.next()).setFocus(true);
         }
     }
 

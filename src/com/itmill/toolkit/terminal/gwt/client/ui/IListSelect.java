@@ -98,6 +98,10 @@ public class IListSelect extends IOptionGroupBase {
         ((TooltipListBox) optionsContainer).setTabIndex(tabIndex);
     }
 
+    public void focus() {
+        select.setFocus(true);
+    }
+
 }
 
 /**
