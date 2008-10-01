@@ -1114,11 +1114,11 @@ public class IOrderedLayout extends Panel implements Container,
                     }
 
                     captionDimensionOrPositionUpdated = true;
-                } else
-
-                // Caption exists. Move it to correct position if needed
-                if (after == (DOM.getChildIndex(captionWrapper, widgetElement) > DOM
-                        .getChildIndex(captionWrapper, captionElement))) {
+                } else if (after == (DOM.getChildIndex(captionWrapper,
+                        widgetElement) > DOM.getChildIndex(captionWrapper,
+                        captionElement))) {
+                    // Caption exists. Move it to correct position if it is not
+                    // there
                     Element firstElement = DOM.getChild(captionWrapper, DOM
                             .getChildCount(captionWrapper) - 2);
                     if (firstElement != null) {
@@ -1136,6 +1136,12 @@ public class IOrderedLayout extends Panel implements Container,
                     }
 
                     captionDimensionOrPositionUpdated = true;
+                } else {
+                    if (after) {
+                        widget.addStyleName("i-orderedlayout-w-e");
+                    } else {
+                        widget.removeStyleName("i-orderedlayout-w-e");
+                    }
                 }
 
             } else {
