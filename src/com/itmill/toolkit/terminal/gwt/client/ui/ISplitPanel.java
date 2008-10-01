@@ -4,6 +4,8 @@
 
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
+import java.util.Set;
+
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
@@ -14,12 +16,15 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
+import com.itmill.toolkit.terminal.gwt.client.Container;
 import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
+import com.itmill.toolkit.terminal.gwt.client.RenderInformation;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.Util;
+import com.itmill.toolkit.terminal.gwt.client.RenderInformation.Size;
 
-public class ISplitPanel extends ComplexPanel implements Paintable,
+public class ISplitPanel extends ComplexPanel implements Container,
         ContainerResizedListener {
     public static final String CLASSNAME = "i-splitpanel";
 
@@ -58,6 +63,15 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
     private String splitterStyleName;
 
     private Element draggingCurtain;
+
+    private ApplicationConnection client;
+
+    private String width = null;
+
+    private String height = null;
+
+    private RenderInformation renderInformationFirst = new RenderInformation();
+    private RenderInformation renderInformationSecond = new RenderInformation();
 
     public ISplitPanel() {
         this(ORIENTATION_HORIZONTAL);
@@ -131,9 +145,13 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+        this.client = client;
+
         if (client.updateComponent(this, uidl, true)) {
             return;
         }
+
+        renderInformationFirst.updateSize(getElement());
 
         setSplitPosition(uidl.getStringAttribute("position"));
 
@@ -183,19 +201,18 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
         iLayout();
     }
 
-    private void iLayout() {
-        iLayout(-1, -1);
-    }
-
     /*
      * Calculates absolutely positioned container places/sizes (non-Javadoc)
      * 
      * @see com.itmill.toolkit.terminal.gwt.client.NeedsLayout#layout()
      */
-    public void iLayout(int availableWidth, int availableHeight) {
+    public void iLayout() {
         if (!isAttached()) {
             return;
         }
+
+        renderInformationFirst.updateSize(getElement());
+
         int wholeSize;
         int pixelPosition;
 
@@ -232,6 +249,13 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
             DOM.setStyleAttribute(secondContainer, "left",
                     (pixelPosition + getSplitterSize()) + "px");
 
+            int contentHeight = renderInformationFirst.getRenderedSize()
+                    .getHeight();
+            renderInformationFirst.setContentAreaHeight(contentHeight);
+            renderInformationFirst.setContentAreaWidth(getSplitterSize());
+            renderInformationSecond.setContentAreaHeight(contentHeight);
+            renderInformationSecond.setContentAreaWidth(secondContainerWidth);
+
             break;
         case ORIENTATION_VERTICAL:
             wholeSize = DOM.getElementPropertyInt(wrapper, "clientHeight");
@@ -258,12 +282,20 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
                     secondContainerHeight + "px");
             DOM.setStyleAttribute(secondContainer, "top",
                     (pixelPosition + getSplitterSize()) + "px");
+
+            int contentWidth = renderInformationFirst.getRenderedSize()
+                    .getWidth();
+            renderInformationFirst.setContentAreaHeight(getSplitterSize());
+            renderInformationFirst.setContentAreaWidth(contentWidth);
+            renderInformationSecond.setContentAreaHeight(secondContainerHeight);
+            renderInformationSecond.setContentAreaWidth(contentWidth);
+
             break;
         }
 
         if (Util.isIE7()) {
             // Part I of IE7 weirdness hack, will be set to auto in layout phase
-            Util.runDescendentsLayout(this);
+            client.runDescendentsLayout(this);
             DeferredCommand.addCommand(new Command() {
                 public void execute() {
                     DOM.setStyleAttribute(firstContainer, "overflow", "auto");
@@ -271,12 +303,14 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
                 }
             });
         } else {
-            Util.runDescendentsLayout(this);
+            client.runDescendentsLayout(this);
             if (!(resizing && BrowserInfo.get().isGecko())) {
                 DOM.setStyleAttribute(firstContainer, "overflow", "auto");
                 DOM.setStyleAttribute(secondContainer, "overflow", "auto");
             }
         }
+
+        renderInformationFirst.updateSize(getElement());
 
     }
 
@@ -432,6 +466,59 @@ public class ISplitPanel extends ComplexPanel implements Paintable,
             }
         }
         return splitterSize;
+    }
+
+    @Override
+    public void setHeight(String height) {
+        this.height = height;
+        super.setHeight(height);
+    }
+
+    @Override
+    public void setWidth(String width) {
+        this.width = width;
+        super.setWidth(width);
+    }
+
+    public Size getAllocatedSpace(Widget child) {
+        if (child == firstChild) {
+            return renderInformationFirst.getContentAreaSize();
+        } else if (child == secondChild) {
+            return renderInformationSecond.getContentAreaSize();
+        }
+
+        return null;
+    }
+
+    public boolean hasChildComponent(Widget component) {
+        return (component != null && (component == firstChild || component == secondChild));
+    }
+
+    public void replaceChildComponent(Widget oldComponent, Widget newComponent) {
+        // TODO Auto-generated method stub
+    }
+
+    public boolean requestLayout(Set<Paintable> child) {
+        if (height != null && width != null) {
+            /*
+             * If the height and width has been specified the child components
+             * cannot make the size of the layout change
+             */
+
+            return true;
+        }
+
+        if (renderInformationFirst.updateSize(getElement())) {
+            return false;
+        } else {
+            return true;
+        }
+
+    }
+
+    public void updateCaption(Paintable component, UIDL uidl) {
+        // TODO Auto-generated method stub
+
     }
 
 }

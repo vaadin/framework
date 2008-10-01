@@ -9,9 +9,11 @@ import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
 import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.ICaption;
+import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.Util;
 import com.itmill.toolkit.terminal.gwt.client.ui.AlignmentInfo;
 
@@ -38,6 +40,8 @@ public class IAbsoluteGrid extends Composite implements
     private int offsetWidth;
 
     private int offsetHeight;
+
+    protected ApplicationConnection client;
 
     public IAbsoluteGrid() {
         ap = new AbsolutePanel();
@@ -264,7 +268,7 @@ public class IAbsoluteGrid extends Composite implements
         }
     }
 
-    public void iLayout(int availableWidth, int availableHeight) {
+    public void iLayout() {
         boolean sizeChanged = false;
         int newWidth = getOffsetWidth();
         if (offsetWidth != newWidth) {
@@ -282,7 +286,7 @@ public class IAbsoluteGrid extends Composite implements
                 cell.render();
                 cell.vAling();
             }
-            Util.runDescendentsLayout(ap);
+            client.runDescendentsLayout(ap);
         }
     }
 
@@ -307,4 +311,9 @@ public class IAbsoluteGrid extends Composite implements
         offsetHeight = 0;
         offsetWidth = 0;
     }
+
+    public void updateFromUIDL(UIDL uidl, final ApplicationConnection client) {
+        this.client = client;
+    }
+
 }

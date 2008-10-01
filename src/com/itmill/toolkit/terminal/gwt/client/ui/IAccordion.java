@@ -19,7 +19,7 @@ import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.ICaption;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
-import com.itmill.toolkit.terminal.gwt.client.Util;
+import com.itmill.toolkit.terminal.gwt.client.RenderInformation.Size;
 
 public class IAccordion extends ITabsheetBase implements
         ContainerResizedListener {
@@ -128,11 +128,7 @@ public class IAccordion extends ITabsheetBase implements
         super.setHeight(height);
     }
 
-    private void iLayout() {
-        iLayout(-1, -1);
-    }
-
-    public void iLayout(int availableWidth, int availableHeight) {
+    public void iLayout() {
         StackItem item = getSelectedStack();
         if (item == null) {
             return;
@@ -160,7 +156,7 @@ public class IAccordion extends ITabsheetBase implements
             item.setHeight("");
         }
 
-        Util.runDescendentsLayout(item);
+        client.runDescendentsLayout(item);
     }
 
     /**
@@ -334,9 +330,14 @@ public class IAccordion extends ITabsheetBase implements
         }
     }
 
-    public boolean childComponentSizesUpdated() {
+    public boolean requestLayout(Set<Paintable> child) {
         // TODO Auto-generated method stub
         return false;
+    }
+
+    public Size getAllocatedSpace(Widget child) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

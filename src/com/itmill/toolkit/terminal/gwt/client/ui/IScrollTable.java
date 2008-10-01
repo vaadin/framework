@@ -678,11 +678,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
         initializedAndAttached = true;
     }
 
-    private void iLayout() {
-        iLayout(-1, -1);
-    }
-
-    public void iLayout(int availableWidth, int availableHeight) {
+    public void iLayout() {
         if (height != null) {
             if (height.equals("100%")) {
                 /*

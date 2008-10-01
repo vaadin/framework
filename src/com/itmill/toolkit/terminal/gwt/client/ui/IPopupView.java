@@ -21,6 +21,7 @@ import com.itmill.toolkit.terminal.gwt.client.ICaption;
 import com.itmill.toolkit.terminal.gwt.client.ICaptionWrapper;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
+import com.itmill.toolkit.terminal.gwt.client.RenderInformation.Size;
 
 public class IPopupView extends HTML implements Paintable {
 
@@ -169,10 +170,10 @@ public class IPopupView extends HTML implements Paintable {
     }
 
     public static native void nativeBlur(Element e) /*-{ 
-                                              if(e.focus) {
-                                              e.blur();
-                                              }
-                                              }-*/;
+                                                    if(e.focus) {
+                                                    e.blur();
+                                                    }
+                                                    }-*/;
 
     private class CustomPopup extends IToolkitOverlay implements Container {
 
@@ -310,9 +311,14 @@ public class IPopupView extends HTML implements Paintable {
             }
         }
 
-        public boolean childComponentSizesUpdated() {
+        public boolean requestLayout(Set<Paintable> child) {
             // TODO Auto-generated method stub
             return false;
+        }
+
+        public Size getAllocatedSpace(Widget child) {
+            // TODO Auto-generated method stub
+            return null;
         }
 
     }// class CustomPopup

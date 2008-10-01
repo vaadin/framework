@@ -20,7 +20,7 @@ import com.itmill.toolkit.terminal.gwt.client.ICaption;
 import com.itmill.toolkit.terminal.gwt.client.ICaptionWrapper;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
-import com.itmill.toolkit.terminal.gwt.client.Util;
+import com.itmill.toolkit.terminal.gwt.client.RenderInformation.Size;
 
 /**
  * Custom Layout implements complex layout defined with HTML template.
@@ -412,13 +412,9 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
         widgetToCaptionWrapper.clear();
     }
 
-    private void iLayout() {
-        iLayout(-1, -1);
-    }
-
-    public void iLayout(int availableWidth, int availableHeight) {
+    public void iLayout() {
         if (!iLayoutJS(DOM.getFirstChild(getElement()))) {
-            Util.runDescendentsLayout(this);
+            client.runDescendentsLayout(this);
         }
     }
 
@@ -428,7 +424,7 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
      * containers in custom layout he/she can notify children after resize.
      */
     public void notifyChildrenOfSizeChange() {
-        Util.runDescendentsLayout(this);
+        client.runDescendentsLayout(this);
     }
 
     public void onDetach() {
@@ -477,9 +473,14 @@ public class ICustomLayout extends ComplexPanel implements Paintable,
     	}
     }-*/;
 
-    public boolean childComponentSizesUpdated() {
+    public boolean requestLayout(Set<Paintable> child) {
         // TODO Auto-generated method stub
         return false;
+    }
+
+    public Size getAllocatedSpace(Widget child) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

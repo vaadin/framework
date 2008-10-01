@@ -3,6 +3,7 @@ package com.itmill.toolkit.terminal.gwt.client.ui.absolutegrid;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Set;
 
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
@@ -14,6 +15,7 @@ import com.itmill.toolkit.terminal.gwt.client.Container;
 import com.itmill.toolkit.terminal.gwt.client.ICaption;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
+import com.itmill.toolkit.terminal.gwt.client.RenderInformation.Size;
 import com.itmill.toolkit.terminal.gwt.client.ui.MarginInfo;
 
 /**
@@ -27,7 +29,6 @@ public class ISizeableGridLayout extends IAbsoluteGrid implements Paintable,
     public static final String CLASSNAME = "i-gridlayout";
     private int spacing;
     private HashMap paintableToCellMap = new HashMap();
-    private ApplicationConnection client;
     private MarginPixels mp;
     private String oldStyleString = "";
 
@@ -41,7 +42,7 @@ public class ISizeableGridLayout extends IAbsoluteGrid implements Paintable,
     }
 
     public void updateFromUIDL(UIDL uidl, final ApplicationConnection client) {
-        this.client = client;
+        super.updateFromUIDL(uidl, client);
 
         if (client.updateComponent(this, uidl, true)) {
             return;
@@ -249,9 +250,14 @@ public class ISizeableGridLayout extends IAbsoluteGrid implements Paintable,
         return marginPixels;
     }
 
-    public boolean childComponentSizesUpdated() {
+    public boolean requestLayout(Set<Paintable> child) {
         // TODO Auto-generated method stub
         return false;
+    }
+
+    public Size getAllocatedSpace(Widget child) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

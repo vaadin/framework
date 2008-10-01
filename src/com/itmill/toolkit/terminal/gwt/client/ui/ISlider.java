@@ -391,7 +391,7 @@ public class ISlider extends Widget implements Paintable, Field,
         setValue(new Double(v), animate, roundup);
     }
 
-    public void iLayout(int availableWidth, int availableHeight) {
+    public void iLayout() {
         if (vertical) {
             setHeight();
         }

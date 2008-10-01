@@ -18,6 +18,8 @@ import com.itmill.toolkit.terminal.gwt.client.UIDL;
 
 public class IButton extends Button implements Paintable {
 
+    private String width = null;
+
     public static final String CLASSNAME = "i-button";
 
     String id;
@@ -108,20 +110,6 @@ public class IButton extends Button implements Paintable {
         }
     }
 
-    public void setStyleName(String style) {
-        super.setStyleName(style);
-        if (BrowserInfo.get().isIE7()) {
-            /*
-             * Workaround for IE7 bug (#2014) where button width is growing when
-             * changing styles
-             */
-            Element e = getElement();
-            String w = DOM.getStyleAttribute(e, "width");
-            DOM.setStyleAttribute(e, "width", "1px");
-            DOM.setStyleAttribute(e, "width", w);
-        }
-    }
-
     public void setText(String text) {
         DOM.setInnerText(captionElement, text);
     }
@@ -147,6 +135,28 @@ public class IButton extends Button implements Paintable {
 
         if (client != null) {
             client.handleTooltipEvent(event, this);
+        }
+    }
+
+    @Override
+    public void setWidth(String width) {
+        /* Workaround for IE7 button size part 1 (#2014) */
+        if (BrowserInfo.get().isIE7() && this.width != null) {
+            if (this.width.equals(width)) {
+                return;
+            }
+
+            if (width == null) {
+                width = "";
+            }
+        }
+
+        this.width = width;
+        super.setWidth(width);
+
+        /* Workaround for IE7 button size part 2 (#2014) */
+        if (BrowserInfo.get().isIE7()) {
+            super.setWidth(width);
         }
     }
 

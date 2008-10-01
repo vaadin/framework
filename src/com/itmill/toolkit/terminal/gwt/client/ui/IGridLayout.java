@@ -7,6 +7,7 @@ package com.itmill.toolkit.terminal.gwt.client.ui;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Set;
 
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
@@ -27,7 +28,7 @@ import com.itmill.toolkit.terminal.gwt.client.ICaptionWrapper;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.StyleConstants;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
-import com.itmill.toolkit.terminal.gwt.client.Util;
+import com.itmill.toolkit.terminal.gwt.client.RenderInformation.Size;
 
 public class IGridLayout extends SimplePanel implements Paintable, Container,
         ContainerResizedListener {
@@ -45,6 +46,8 @@ public class IGridLayout extends SimplePanel implements Paintable, Container,
     private Element meterElement;
 
     private String width;
+
+    private ApplicationConnection client;
 
     public IGridLayout() {
         super();
@@ -69,6 +72,7 @@ public class IGridLayout extends SimplePanel implements Paintable, Container,
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+        this.client = client;
 
         if (client.updateComponent(this, uidl, true)) {
             return;
@@ -286,18 +290,19 @@ public class IGridLayout extends SimplePanel implements Paintable, Container,
             wrapper.updateCaption(uidl);
         }
 
-        public boolean childComponentSizesUpdated() {
+        public boolean requestLayout(Set<Paintable> child) {
             // TODO Auto-generated method stub
             return false;
         }
 
+        public Size getAllocatedSpace(Widget child) {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
     }
 
-    private void iLayout() {
-        iLayout(-1, -1);
-    }
-
-    public void iLayout(int availableWidth, int availableHeight) {
+    public void iLayout() {
         if (needsLayout) {
             super.setWidth(width);
             if (meterElement == null) {
@@ -314,12 +319,17 @@ public class IGridLayout extends SimplePanel implements Paintable, Container,
         } else {
             grid.setWidth("");
         }
-        Util.runDescendentsLayout(this);
+        client.runDescendentsLayout(this);
     }
 
-    public boolean childComponentSizesUpdated() {
+    public boolean requestLayout(Set<Paintable> child) {
         // TODO Auto-generated method stub
         return false;
+    }
+
+    public Size getAllocatedSpace(Widget child) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

@@ -8,6 +8,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTML;
+import com.itmill.toolkit.terminal.gwt.client.RenderInformation.Size;
 import com.itmill.toolkit.terminal.gwt.client.ui.Icon;
 
 public class ICaption extends HTML {
@@ -27,6 +28,8 @@ public class ICaption extends HTML {
     private final ApplicationConnection client;
 
     private boolean placedAfterComponent = false;
+
+    private Size requiredSpace = new Size(0, 0);
 
     /**
      * 
@@ -138,6 +141,8 @@ public class ICaption extends HTML {
 
         }
 
+        requiredSpace.setWidth(getOffsetWidth());
+        requiredSpace.setHeight(getOffsetHeight());
     }
 
     public void onBrowserEvent(Event event) {
@@ -176,5 +181,43 @@ public class ICaption extends HTML {
 
     public boolean shouldBePlacedAfterComponent() {
         return placedAfterComponent;
+    }
+
+    public Size getRequiredSpace() {
+        return requiredSpace;
+    }
+
+    public int getWidth() {
+        int width = 0;
+        if (icon != null) {
+            width += icon.getOffsetWidth();
+        }
+        if (captionText != null) {
+            width += captionText.getOffsetWidth();
+        }
+        if (requiredFieldIndicator != null) {
+            width += requiredFieldIndicator.getOffsetWidth();
+        }
+        if (errorIndicatorElement != null) {
+            width += errorIndicatorElement.getOffsetWidth();
+        }
+
+        if (BrowserInfo.get().isIE6() && shouldBePlacedAfterComponent()) {
+            // FIXME: Should find out what the real issue is
+            // Workaround for IE6 weirdness
+            width += 3;
+        }
+
+        return width;
+
+    }
+
+    public int getHeight() {
+        return getOffsetHeight();
+    }
+
+    public void setAlignment(String alignment) {
+        DOM.setStyleAttribute(getElement(), "textAlign", alignment);
+
     }
 }

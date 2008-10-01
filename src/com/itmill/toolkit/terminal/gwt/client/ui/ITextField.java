@@ -26,7 +26,7 @@ import com.itmill.toolkit.terminal.gwt.client.Util;
  * 
  */
 public class ITextField extends TextBoxBase implements Paintable, Field,
-        ChangeListener, FocusListener, ContainerResizedListener {
+        ChangeListener, FocusListener {
 
     /**
      * The input node CSS classname.
@@ -44,8 +44,6 @@ public class ITextField extends TextBoxBase implements Paintable, Field,
     private String valueBeforeEdit = null;
 
     private boolean immediate = false;
-    private float proportionalHeight = -1;
-    private float proportionalWidth = -1;
     private int extraHorizontalPixels = -1;
     private int extraVerticalPixels = -1;
 
@@ -142,63 +140,6 @@ public class ITextField extends TextBoxBase implements Paintable, Field,
     } catch (e) {}
     }-*/;
 
-    public void setHeight(String height) {
-        if (height != null && height.indexOf("%") > 0) {
-            // special handling for proportional height
-            proportionalHeight = Float.parseFloat(height.substring(0, height
-                    .indexOf("%"))) / 100;
-            iLayout();
-        } else {
-            super.setHeight(height);
-            proportionalHeight = -1;
-        }
-    }
-
-    public void setWidth(String width) {
-        if (width != null && width.indexOf("%") > 0) {
-            // special handling for proportional w
-            proportionalWidth = Float.parseFloat(width.substring(0, width
-                    .indexOf("%"))) / 100;
-            iLayout();
-        } else {
-            super.setWidth(width);
-            proportionalWidth = -1;
-        }
-    }
-
-    private void iLayout() {
-        iLayout(-1, -1);
-    }
-
-    public void iLayout(int availableWidth, int availableHeight) {
-        if (proportionalWidth >= 0) {
-            int availPixels = availableWidth;
-            if (availPixels < 0) {
-                availPixels = (DOM.getElementPropertyInt(DOM
-                        .getParent(getElement()), "clientWidth"));
-            }
-            availPixels *= proportionalWidth;
-
-            availPixels -= getExtraHorizontalPixels();
-            if (availPixels >= 0) {
-                super.setWidth(availPixels + "px");
-            }
-        }
-        if (proportionalHeight >= 0) {
-            int availPixels = availableHeight;
-            if (availPixels < 0) {
-                availPixels = (DOM.getElementPropertyInt(DOM
-                        .getParent(getElement()), "clientHeight"));
-            }
-            availPixels *= proportionalHeight;
-            availPixels -= getExtraVerticalPixels();
-
-            if (availPixels >= 0) {
-                super.setHeight(availPixels + "px");
-            }
-        }
-    }
-
     /**
      * @return space used by components paddings and borders
      */
@@ -240,6 +181,32 @@ public class ITextField extends TextBoxBase implements Paintable, Field,
         }
 
         DOM.removeChild(DOM.getParent(getElement()), clone);
+    }
+
+    @Override
+    public void setHeight(String height) {
+        if (height.endsWith("px")) {
+            int h = Integer.parseInt(height.substring(0, height.length() - 2));
+            h -= getExtraVerticalPixels();
+            super.setHeight(h + "px");
+        } else {
+            super.setHeight(height);
+        }
+    }
+
+    @Override
+    public void setWidth(String width) {
+        if (width.endsWith("px")) {
+            int h = Integer.parseInt(width.substring(0, width.length() - 2));
+            h -= getExtraHorizontalPixels();
+            if (h <= 0) {
+                h = 0;
+            }
+
+            super.setWidth(h + "px");
+        } else {
+            super.setWidth(width);
+        }
     }
 
 }

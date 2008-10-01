@@ -4,13 +4,13 @@
 
 package com.itmill.toolkit.terminal.gwt.client;
 
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 
 public class Util {
@@ -50,7 +50,7 @@ public class Util {
             return;
         }
 
-        Set<Container> parents = new HashSet<Container>();
+        Map<Container, Set<Paintable>> childWidgets = new HashMap<Container, Set<Paintable>>();
 
         for (Widget widget : widgets) {
             Widget parent = widget.getParent();
@@ -58,13 +58,18 @@ public class Util {
                 parent = parent.getParent();
             }
             if (parent != null) {
-                parents.add((Container) parent);
+                Set<Paintable> set = childWidgets.get(parent);
+                if (set == null) {
+                    set = new HashSet<Paintable>();
+                    childWidgets.put((Container) parent, set);
+                }
+                set.add((Paintable) widget);
             }
         }
 
         Set<Widget> parentChanges = new HashSet<Widget>();
-        for (Container parent : parents) {
-            if (!parent.childComponentSizesUpdated()) {
+        for (Container parent : childWidgets.keySet()) {
+            if (!parent.requestLayout(childWidgets.get(parent))) {
                 parentChanges.add((Widget) parent);
             }
         }
@@ -72,38 +77,19 @@ public class Util {
         componentSizeUpdated(parentChanges);
     }
 
-    /**
-     * Traverses recursively ancestors until ContainerResizedListener child
-     * widget is found. They will delegate it futher if needed.
-     * 
-     * @param container
-     */
-    public static void runDescendentsLayout(HasWidgets container) {
-        final Iterator childWidgets = container.iterator();
-        while (childWidgets.hasNext()) {
-            final Widget child = (Widget) childWidgets.next();
-            if (child instanceof ContainerResizedListener) {
-                int w = -1, h = -1;
-
-                if (container instanceof WidgetSpaceAllocator) {
-                    w = ((WidgetSpaceAllocator) container)
-                            .getAllocatedWidth(child);
-                    h = ((WidgetSpaceAllocator) container)
-                            .getAllocatedHeight(child);
-                }
-
-                ((ContainerResizedListener) child).iLayout(w, h);
-            } else if (child instanceof HasWidgets) {
-                final HasWidgets childContainer = (HasWidgets) child;
-                runDescendentsLayout(childContainer);
-            }
+    public static float parseRelativeSize(String size) {
+        if (size == null || !size.endsWith("%")) {
+            return -1;
         }
-    }
 
-    public interface WidgetSpaceAllocator {
-        int getAllocatedWidth(Widget child);
+        try {
+            return Float.parseFloat(size.substring(0, size.length() - 1));
+        } catch (Exception e) {
+            ClientExceptionHandler.displayError(
+                    "Unable to parse relative size", e);
+        }
 
-        int getAllocatedHeight(Widget child);
+        return -1;
     }
 
     /**
@@ -113,12 +99,14 @@ public class Util {
      * @param component
      * @return closest parent Container
      */
-    public static Container getParentLayout(Widget component) {
+    public static Container getLayout(Widget component) {
         Widget parent = component.getParent();
         while (parent != null && !(parent instanceof Container)) {
             parent = parent.getParent();
         }
-        if (parent != null && ((Container) parent).hasChildComponent(component)) {
+        if (parent != null) {
+            assert ((Container) parent).hasChildComponent(component);
+
             return (Container) parent;
         }
         return null;

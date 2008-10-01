@@ -665,7 +665,7 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
             client.updateVariable(id, "height", h, false);
         }
         // Update child widget dimensions
-        Util.runDescendentsLayout(this);
+        client.runDescendentsLayout(this);
     }
 
     @Override

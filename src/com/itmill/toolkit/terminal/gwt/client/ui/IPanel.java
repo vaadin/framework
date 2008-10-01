@@ -4,6 +4,8 @@
 
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
+import java.util.Set;
+
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
@@ -11,13 +13,17 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
+import com.itmill.toolkit.terminal.gwt.client.ClientExceptionHandler;
+import com.itmill.toolkit.terminal.gwt.client.Container;
 import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.IErrorMessage;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
+import com.itmill.toolkit.terminal.gwt.client.RenderInformation;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.Util;
+import com.itmill.toolkit.terminal.gwt.client.RenderInformation.Size;
 
-public class IPanel extends SimplePanel implements Paintable,
+public class IPanel extends SimplePanel implements Container,
         ContainerResizedListener {
 
     public static final String CLASSNAME = "i-panel";
@@ -53,6 +59,10 @@ public class IPanel extends SimplePanel implements Paintable,
     private int scrollTop;
 
     private int scrollLeft;
+
+    private RenderInformation renderInformation = new RenderInformation();
+
+    private int borderPaddingHorizontal = 0;
 
     public IPanel() {
         super();
@@ -90,12 +100,6 @@ public class IPanel extends SimplePanel implements Paintable,
 
         this.client = client;
         id = uidl.getId();
-
-        // Panel size. Height needs to be saved for later use
-        height = uidl.hasAttribute("height") ? uidl
-                .getStringAttribute("height") : null;
-        setWidth(uidl.hasAttribute("width") ? uidl.getStringAttribute("width")
-                : "");
 
         // Restore default stylenames
         DOM
@@ -234,11 +238,12 @@ public class IPanel extends SimplePanel implements Paintable,
         }
     }
 
-    public void iLayout(int availableWidth, int availableHeight) {
+    public void iLayout() {
         iLayout(true);
     }
 
     public void iLayout(boolean runGeckoFix) {
+        renderInformation.updateSize(getElement());
 
         if (BrowserInfo.get().isIE6() && width != null && !width.equals("")) {
             /*
@@ -296,32 +301,49 @@ public class IPanel extends SimplePanel implements Paintable,
 
             // Calculate used height
             super.setHeight("");
-            final int usedHeight = DOM.getElementPropertyInt(bottomDecoration,
-                    "offsetTop")
-                    + DOM.getElementPropertyInt(bottomDecoration,
-                            "offsetHeight")
-                    - DOM.getElementPropertyInt(getElement(), "offsetTop");
-
-            // Calculate content area height (don't allow negative values)
-            int h = targetHeight - usedHeight;
-            if (h < 0) {
-                h = 0;
+            if (BrowserInfo.get().isIE() && !hasChildren) {
+                DOM.setStyleAttribute(contentNode, "height", "0px");
             }
 
+            final int bottomTop = DOM.getElementPropertyInt(bottomDecoration,
+                    "offsetTop");
+            final int bottomHeight = DOM.getElementPropertyInt(
+                    bottomDecoration, "offsetHeight");
+            final int elementTop = DOM.getElementPropertyInt(getElement(),
+                    "offsetTop");
+
+            final int usedHeight = bottomTop + bottomHeight - elementTop;
+
+            // Calculate content area height (don't allow negative values)
+            int contentAreaHeight = targetHeight - usedHeight;
+            if (contentAreaHeight < 0) {
+                contentAreaHeight = 0;
+            }
+
+            renderInformation.setContentAreaHeight(contentAreaHeight);
+
             // Set proper values for content element
-            DOM.setStyleAttribute(contentNode, "height", h + "px");
+            DOM.setStyleAttribute(contentNode, "height", contentAreaHeight
+                    + "px");
             DOM.setStyleAttribute(contentNode, "overflow", "auto");
 
             // Restore content to flow
             if (hasChildren) {
                 DOM.setStyleAttribute(contentEl, "position", origPositioning);
             }
+
             // restore scroll position
             DOM.setElementPropertyInt(contentNode, "scrollTop", scrollTop);
             DOM.setElementPropertyInt(contentNode, "scrollLeft", scrollLeft);
 
         } else {
             DOM.setStyleAttribute(contentNode, "height", "");
+        }
+
+        if (width != null && !width.equals("")) {
+            renderInformation.setContentAreaWidth(renderInformation
+                    .getRenderedSize().getWidth()
+                    - borderPaddingHorizontal);
         }
 
         if (runGeckoFix && BrowserInfo.get().isGecko()) {
@@ -347,7 +369,8 @@ public class IPanel extends SimplePanel implements Paintable,
                 }
             }
         }
-        Util.runDescendentsLayout(this);
+
+        client.runDescendentsLayout(this);
     }
 
     @Override
@@ -398,7 +421,7 @@ public class IPanel extends SimplePanel implements Paintable,
      */
     @Override
     public void setHeight(String height) {
-        // NOP
+        this.height = height;
     }
 
     /**
@@ -407,14 +430,61 @@ public class IPanel extends SimplePanel implements Paintable,
     @Override
     public void setWidth(String width) {
         this.width = width;
-        // Let browser handle 100% width (DIV element takes all size by
-        // default).
-        // This way we can specify borders for Panel's outer element.
-        if (width.equals("100%")) {
-            super.setWidth("");
-        } else {
-            super.setWidth(width);
+
+        super.setWidth(width);
+
+        if (width.endsWith("px")) {
+            try {
+                // FIXME: More sane implementation
+                borderPaddingHorizontal = Util.measureHorizontalPadding(
+                        contentNode, -2);
+                if (borderPaddingHorizontal < 0) {
+                    borderPaddingHorizontal = -borderPaddingHorizontal;
+                }
+            } catch (Exception e) {
+                ClientExceptionHandler.displayError(e);
+            }
         }
+
+    }
+
+    public boolean hasChildComponent(Widget component) {
+        if (component != null && component == layout) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void replaceChildComponent(Widget oldComponent, Widget newComponent) {
+        // TODO
+    }
+
+    public Size getAllocatedSpace(Widget child) {
+        return renderInformation.getContentAreaSize();
+    }
+
+    public boolean requestLayout(Set<Paintable> child) {
+
+        if (height != null && width != null) {
+            /*
+             * If the height and width has been specified the child components
+             * cannot make the size of the layout change
+             */
+
+            return true;
+        }
+
+        if (renderInformation.updateSize(getElement())) {
+            return false;
+        } else {
+            return true;
+        }
+
+    }
+
+    public void updateCaption(Paintable component, UIDL uidl) {
+        // TODO
     }
 
 }

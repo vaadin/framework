@@ -3,6 +3,7 @@ package com.itmill.toolkit.terminal.gwt.client.ui;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Set;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.DOM;
@@ -18,11 +19,10 @@ import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.ICaption;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
-import com.itmill.toolkit.terminal.gwt.client.Util;
-import com.itmill.toolkit.terminal.gwt.client.Util.WidgetSpaceAllocator;
+import com.itmill.toolkit.terminal.gwt.client.RenderInformation.Size;
 
 public class ICoordinateLayout extends ComplexPanel implements Container,
-        ContainerResizedListener, WidgetSpaceAllocator {
+        ContainerResizedListener {
 
     /** Class name, prefix in styling */
     public static final String CLASSNAME = "i-coordinatelayout";
@@ -222,7 +222,7 @@ public class ICoordinateLayout extends ComplexPanel implements Container,
         if (!toUpdate.isEmpty()) {
 
             // Run layout functions for children
-            Util.runDescendentsLayout(this);
+            client.runDescendentsLayout(this);
 
             // Go over all children and calculate their positions
             for (Iterator<Widget> componentIterator = toUpdate.iterator(); componentIterator
@@ -230,9 +230,9 @@ public class ICoordinateLayout extends ComplexPanel implements Container,
 
                 Widget componentWidget = componentIterator.next();
                 CustomCaption componentHeader = componentToHeader
-                        .get((Paintable) componentWidget);
+                        .get(componentWidget);
                 CustomCaption componentMarker = componentToMarker
-                        .get((Paintable) componentWidget);
+                        .get(componentWidget);
 
                 // Reset position info
                 resetPositionAttributes(componentWidget);
@@ -360,8 +360,8 @@ public class ICoordinateLayout extends ComplexPanel implements Container,
         resetPositionAttributes(w);
         Element widgetElement = w.getElement();
         Element areaElement;
-        CustomCaption componentHeader = componentToHeader.get((Paintable) w);
-        CustomCaption componentMarker = componentToMarker.get((Paintable) w);
+        CustomCaption componentHeader = componentToHeader.get(w);
+        CustomCaption componentMarker = componentToMarker.get(w);
 
         // Attach the widget to the sides of the surrounding area element
         if (sidesToAttach[TOP] || sidesToAttach[HEIGHT]) {
@@ -536,7 +536,7 @@ public class ICoordinateLayout extends ComplexPanel implements Container,
             DOM.appendChild(areaElement, c.getElement());
         }
 
-        resetPositionAttributes((Widget) c);
+        resetPositionAttributes(c);
 
         parentTop = getPositionValue(parentElement, "top");
         parentRight = getPositionValue(parentElement, "right");
@@ -591,12 +591,12 @@ public class ICoordinateLayout extends ComplexPanel implements Container,
         componentToZ.put(component, new Integer(zIndex));
 
         // Set caption z-index (same as parent components z)
-        if (componentToHeader.get((Paintable) component) != null) {
-            CustomCaption h = componentToHeader.get((Paintable) component);
+        if (componentToHeader.get(component) != null) {
+            CustomCaption h = componentToHeader.get(component);
             DOM.setStyleAttribute(h.getElement(), "zIndex", "" + zIndex);
         }
-        if (componentToMarker.get((Paintable) component) != null) {
-            CustomCaption m = componentToMarker.get((Paintable) component);
+        if (componentToMarker.get(component) != null) {
+            CustomCaption m = componentToMarker.get(component);
             DOM.setStyleAttribute(m.getElement(), "zIndex", "" + zIndex);
         }
     }
@@ -680,10 +680,10 @@ public class ICoordinateLayout extends ComplexPanel implements Container,
                 float multiplier = (float) relative[i] / 100;
 
                 if (i == LEFT || i == RIGHT || i == WIDTH) {
-                    float width = (float) layout[WIDTH];
+                    float width = layout[WIDTH];
                     relative[i] = (int) (width * multiplier);
                 } else {
-                    float height = (float) layout[HEIGHT];
+                    float height = layout[HEIGHT];
                     relative[i] = (int) (height * multiplier);
                 }
             }
@@ -703,9 +703,8 @@ public class ICoordinateLayout extends ComplexPanel implements Container,
         newSize[TOP] = marginInfo.hasTop() ? margins[0] : 0;
         newSize[BOTTOM] = marginInfo.hasBottom() ? margins[2] : 0;
         newSize[RIGHT] = marginInfo.hasRight() ? margins[1] : 0;
-        newSize[WIDTH] = this.getOffsetWidth() - newSize[LEFT] - newSize[RIGHT];
-        newSize[HEIGHT] = this.getOffsetHeight() - newSize[TOP]
-                - newSize[BOTTOM];
+        newSize[WIDTH] = getOffsetWidth() - newSize[LEFT] - newSize[RIGHT];
+        newSize[HEIGHT] = getOffsetHeight() - newSize[TOP] - newSize[BOTTOM];
 
         return newSize;
     }
@@ -801,7 +800,7 @@ public class ICoordinateLayout extends ComplexPanel implements Container,
         String[] cssValues = new String[cssProperties.length];
 
         Element e = DOM.createDiv();
-        DOM.appendChild(this.getElement(), e);
+        DOM.appendChild(getElement(), e);
         DOM.setStyleAttribute(e, "position", "absolute");
         DOM.setStyleAttribute(e, "height", "100px");
         DOM.setStyleAttribute(e, "width", "100px");
@@ -853,7 +852,7 @@ public class ICoordinateLayout extends ComplexPanel implements Container,
                 margins[i] = 0;
             }
         }
-        DOM.removeChild(this.getElement(), e);
+        DOM.removeChild(getElement(), e);
         return margins;
     }
 
@@ -870,8 +869,8 @@ public class ICoordinateLayout extends ComplexPanel implements Container,
      * @return
      */
     protected native String getMargin(Element e, String CSSProp)/*-{
-                                                                                                                                                                                                                                                                                                                                                                                                        return $wnd.getComputedStyle(e,null).getPropertyValue(CSSProp);
-                                                                                                                                                                                                                                                                                                                                                                                                        }-*/;
+                                                                                                                                                                                                                                                                                                                                                                                                                            return $wnd.getComputedStyle(e,null).getPropertyValue(CSSProp);
+                                                                                                                                                                                                                                                                                                                                                                                                                            }-*/;
 
     /**
      * Retrieves margin info in IE
@@ -880,8 +879,8 @@ public class ICoordinateLayout extends ComplexPanel implements Container,
      * @return
      */
     protected native String getIEMargin(Element e)/*-{ 
-                                                                                                                                                                                                                                                                                                                                                                                                        return e.currentStyle.margin;
-                                                                                                                                                                                                                                                                                                                                                                                                        }-*/;
+                                                                                                                                                                                                                                                                                                                                                                                                                            return e.currentStyle.margin;
+                                                                                                                                                                                                                                                                                                                                                                                                                            }-*/;
 
     /**
      * @return all components that are not captions
@@ -968,7 +967,7 @@ public class ICoordinateLayout extends ComplexPanel implements Container,
 
             // If removing a component, remove its area
             if (!(w instanceof CustomCaption)) {
-                DOM.removeChild(this.getElement(), componentToArea.get(w));
+                DOM.removeChild(getElement(), componentToArea.get(w));
             }
 
             componentList.remove(w);
@@ -976,24 +975,6 @@ public class ICoordinateLayout extends ComplexPanel implements Container,
             componentToArea.remove(w);
         }
         return wasRemoved;
-    }
-
-    public int getAllocatedHeight(Widget child) {
-        Element area = componentToArea.get(child);
-        if (area != null) {
-            return area.getOffsetHeight();
-        } else {
-            return layout[HEIGHT];
-        }
-    }
-
-    public int getAllocatedWidth(Widget child) {
-        Element area = componentToArea.get(child);
-        if (area != null) {
-            return area.getOffsetWidth();
-        } else {
-            return layout[WIDTH];
-        }
     }
 
     /**
@@ -1160,6 +1141,25 @@ public class ICoordinateLayout extends ComplexPanel implements Container,
         public boolean isMode(int value) {
             return (mode & value) == value;
         }
+    }
+
+    public Size getAllocatedSpace(Widget child) {
+        Element area = componentToArea.get(child);
+        if (area != null) {
+            return new Size(area.getOffsetWidth(), area.getOffsetHeight());
+        } else {
+            return new Size(layout[WIDTH], layout[HEIGHT]);
+        }
+    }
+
+    public boolean requestLayout(Set<Paintable> child) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    public void iLayout() {
+        // TODO Auto-generated method stub
+
     }
 
 }// class ICoordinateLayout

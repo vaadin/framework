@@ -6,6 +6,7 @@ package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Set;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -19,6 +20,7 @@ import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.StyleConstants;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.Util;
+import com.itmill.toolkit.terminal.gwt.client.RenderInformation.Size;
 
 /**
  * Two col Layout that places caption on left col and field on right col
@@ -302,9 +304,14 @@ public class IFormLayout extends FlexTable implements Container {
 
     }
 
-    public boolean childComponentSizesUpdated() {
+    public boolean requestLayout(Set<Paintable> child) {
         // TODO Auto-generated method stub
         return false;
+    }
+
+    public Size getAllocatedSpace(Widget child) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

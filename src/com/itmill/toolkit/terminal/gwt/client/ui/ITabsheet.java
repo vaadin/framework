@@ -6,6 +6,7 @@ package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Set;
 
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
@@ -20,8 +21,9 @@ import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.ICaption;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
+import com.itmill.toolkit.terminal.gwt.client.RenderInformation;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
-import com.itmill.toolkit.terminal.gwt.client.Util;
+import com.itmill.toolkit.terminal.gwt.client.RenderInformation.Size;
 
 public class ITabsheet extends ITabsheetBase implements
         ContainerResizedListener {
@@ -123,6 +125,8 @@ public class ITabsheet extends ITabsheetBase implements
     private String width;
 
     private boolean waitingForResponse;
+
+    private RenderInformation renderInformation = new RenderInformation();
 
     /**
      * Previous visible widget is set invisible with CSS (not display: none, but
@@ -372,15 +376,13 @@ public class ITabsheet extends ITabsheetBase implements
                 || (this.width == null && width != null)
                 || !width.equals(oldWidth)) {
             // Run descendant layout functions
-            Util.runDescendentsLayout(this);
+            client.runDescendentsLayout(this);
         }
     }
 
-    private void iLayout() {
-        iLayout(-1, -1);
-    }
+    public void iLayout() {
+        renderInformation.updateSize(getElement());
 
-    public void iLayout(int availableWidth, int availableHeight) {
         if (height != null && height != "") {
             super.setHeight(height);
 
@@ -400,9 +402,17 @@ public class ITabsheet extends ITabsheetBase implements
             DOM.setStyleAttribute(contentNode, "height", "");
             DOM.setStyleAttribute(contentNode, "overflow", "");
         }
-        Util.runDescendentsLayout(this);
+
+        if (client != null) {
+            client.runDescendentsLayout(this);
+        }
+
+        renderInformation.setContentAreaWidth(tp.getElement().getOffsetWidth());
+        renderInformation.setContentAreaHeight(tp.getElement()
+                .getOffsetHeight());
 
         updateTabScroller();
+
     }
 
     /**
@@ -479,8 +489,37 @@ public class ITabsheet extends ITabsheetBase implements
         c.updateCaption(uidl);
     }
 
-    public boolean childComponentSizesUpdated() {
-        // TODO Auto-generated method stub
-        return false;
+    public boolean requestLayout(Set<Paintable> child) {
+        if (height != null && width != null) {
+            /*
+             * If the height and width has been specified for this container the
+             * child components cannot make the size of the layout change
+             */
+
+            return true;
+        }
+
+        if (renderInformation.updateSize(getElement())) {
+            /*
+             * Size has changed so we let the child components know about the
+             * new size.
+             */
+            iLayout();
+
+            return false;
+        } else {
+            /*
+             * Size has not changed so we do not need to propagate the event
+             * further
+             */
+            return true;
+        }
+
+    }
+
+    public Size getAllocatedSpace(Widget child) {
+        // All tabs have equal amount of space allocated
+
+        return renderInformation.getContentAreaSize();
     }
 }

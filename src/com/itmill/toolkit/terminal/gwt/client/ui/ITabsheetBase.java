@@ -30,6 +30,7 @@ abstract class ITabsheetBase extends ComplexPanel implements Container {
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+        this.client = client;
 
         // Ensure correct implementation
         if (client.updateComponent(this, uidl, true)) {
@@ -37,7 +38,6 @@ abstract class ITabsheetBase extends ComplexPanel implements Container {
         }
 
         // Update member references
-        this.client = client;
         id = uidl.getId();
         disabled = uidl.hasAttribute("disabled");
 

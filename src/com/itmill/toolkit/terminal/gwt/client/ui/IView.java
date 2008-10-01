@@ -6,6 +6,7 @@ package com.itmill.toolkit.terminal.gwt.client.ui;
 
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
@@ -22,15 +23,18 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
+import com.itmill.toolkit.terminal.gwt.client.Container;
 import com.itmill.toolkit.terminal.gwt.client.Focusable;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
+import com.itmill.toolkit.terminal.gwt.client.RenderInformation;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.Util;
+import com.itmill.toolkit.terminal.gwt.client.RenderInformation.Size;
 
 /**
  * 
  */
-public class IView extends SimplePanel implements Paintable,
+public class IView extends SimplePanel implements Container,
         WindowResizeListener, WindowCloseListener {
 
     private static final String CLASSNAME = "i-view";
@@ -60,6 +64,8 @@ public class IView extends SimplePanel implements Paintable,
      * (scrollbars).
      */
     private Timer resizeTimer;
+
+    private RenderInformation renderInformation = new RenderInformation();
 
     public IView(String elementId) {
         super();
@@ -178,6 +184,9 @@ public class IView extends SimplePanel implements Paintable,
             setWidget((Widget) lo);
             layout = lo;
         }
+
+        updateContentAreaSize();
+
         layout.updateFromUIDL(childUidl, client);
 
         // Update subwindows
@@ -275,8 +284,16 @@ public class IView extends SimplePanel implements Paintable,
         onWindowResized(Window.getClientWidth(), Window.getClientHeight());
         // IE somehow fails some layout on first run, force layout
         // functions
-        // Util.runDescendentsLayout(this);
+        // client.runDescendentsLayout(this);
 
+    }
+
+    private void updateContentAreaSize() {
+        renderInformation.setContentAreaWidth(getElement().getOffsetWidth());
+
+        // For some reason IView has a 1 pixel padding
+        renderInformation
+                .setContentAreaHeight(getElement().getOffsetHeight() - 1);
     }
 
     public void onBrowserEvent(Event event) {
@@ -315,7 +332,7 @@ public class IView extends SimplePanel implements Paintable,
                                     .getConsole()
                                     .log(
                                             "Running layout functions due window resize");
-                            Util.runDescendentsLayout(IView.this);
+                            connection.runDescendentsLayout(IView.this);
                         }
                     }
                 };
@@ -340,9 +357,12 @@ public class IView extends SimplePanel implements Paintable,
             DOM.setStyleAttribute(getElement(), "overflow", "hidden");
             ApplicationConnection.getConsole().log(
                     "Running layout functions due window resize");
-            Util.runDescendentsLayout(this);
+            connection.runDescendentsLayout(this);
             DOM.setStyleAttribute(getElement(), "overflow", overflow);
         }
+
+        updateContentAreaSize();
+
     }
 
     public native static void goTo(String url)
@@ -367,6 +387,31 @@ public class IView extends SimplePanel implements Paintable,
 
     public String onWindowClosing() {
         return null;
+    }
+
+    public Size getAllocatedSpace(Widget child) {
+        return renderInformation.getContentAreaSize();
+    }
+
+    public boolean hasChildComponent(Widget component) {
+        return (component != null && component == layout);
+    }
+
+    public void replaceChildComponent(Widget oldComponent, Widget newComponent) {
+        // TODO Auto-generated method stub
+    }
+
+    public boolean requestLayout(Set<Paintable> child) {
+        /*
+         * Can never propagate further and we do not want need to re-layout the
+         * layout which has caused this request.
+         */
+        return true;
+
+    }
+
+    public void updateCaption(Paintable component, UIDL uidl) {
+        // TODO Auto-generated method stub
     }
 
 }

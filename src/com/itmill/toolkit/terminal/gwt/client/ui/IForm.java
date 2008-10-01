@@ -4,20 +4,28 @@
 
 package com.itmill.toolkit.terminal.gwt.client.ui;
 
+import java.util.Set;
+
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
+import com.itmill.toolkit.terminal.gwt.client.ClientExceptionHandler;
 import com.itmill.toolkit.terminal.gwt.client.Container;
 import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.IErrorMessage;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
+import com.itmill.toolkit.terminal.gwt.client.RenderInformation;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
-import com.itmill.toolkit.terminal.gwt.client.Util;
+import com.itmill.toolkit.terminal.gwt.client.RenderInformation.Size;
 
-public class IForm extends ComplexPanel implements Paintable,
+public class IForm extends ComplexPanel implements Container,
         ContainerResizedListener {
+
+    private String height;
+
+    private String width;
 
     public static final String CLASSNAME = "i-form";
 
@@ -34,6 +42,14 @@ public class IForm extends ComplexPanel implements Paintable,
     private Element footerContainer = DOM.createDiv();
 
     private Container footer;
+
+    private ApplicationConnection client;
+
+    private RenderInformation renderInformation = new RenderInformation();
+
+    private int borderPaddingHorizontal;
+
+    private int borderPaddingVertical;
 
     public IForm() {
         setElement(DOM.createFieldSet());
@@ -54,6 +70,8 @@ public class IForm extends ComplexPanel implements Paintable,
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+        this.client = client;
+
         if (client.updateComponent(this, uidl, false)) {
             return;
         }
@@ -98,7 +116,7 @@ public class IForm extends ComplexPanel implements Paintable,
             DOM.setInnerHTML(desc, "");
         }
 
-        iLayout(-1, -1);
+        iLayout();
 
         final UIDL layoutUidl = uidl.getChildUIDL(0);
         Container newLo = (Container) client.getPaintable(layoutUidl);
@@ -135,8 +153,89 @@ public class IForm extends ComplexPanel implements Paintable,
         }
     }
 
-    public void iLayout(int availableWidth, int availableHeight) {
-        Util.runDescendentsLayout(this);
+    public void iLayout() {
+
+        renderInformation.updateSize(getElement());
+
+        renderInformation.setContentAreaHeight(renderInformation
+                .getRenderedSize().getHeight()
+                - borderPaddingVertical);
+        renderInformation.setContentAreaWidth(renderInformation
+                .getRenderedSize().getWidth()
+                - borderPaddingHorizontal);
+
+        client.runDescendentsLayout(this);
     }
 
+    public Size getAllocatedSpace(Widget child) {
+        return renderInformation.getContentAreaSize();
+    }
+
+    public boolean hasChildComponent(Widget component) {
+        return component != null && (component == lo || component == footer);
+    }
+
+    public void replaceChildComponent(Widget oldComponent, Widget newComponent) {
+        // TODO Auto-generated method stub
+
+    }
+
+    public boolean requestLayout(Set<Paintable> child) {
+
+        if (height != null && width != null) {
+            /*
+             * If the height and width has been specified the child components
+             * cannot make the size of the layout change
+             */
+
+            return true;
+        }
+
+        if (renderInformation.updateSize(getElement())) {
+            return false;
+        } else {
+            return true;
+        }
+
+    }
+
+    public void updateCaption(Paintable component, UIDL uidl) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void setHeight(String height) {
+        this.height = height;
+
+        super.setHeight(height);
+
+        if (height.endsWith("px")) {
+            try {
+                borderPaddingVertical = getElement().getOffsetHeight()
+                        - Integer.parseInt(height.substring(0,
+                                height.length() - 2));
+            } catch (Exception e) {
+                ClientExceptionHandler.displayError(e);
+            }
+        }
+
+    }
+
+    @Override
+    public void setWidth(String width) {
+        this.width = width;
+
+        super.setWidth(width);
+
+        if (width.endsWith("px")) {
+            try {
+                borderPaddingHorizontal = getElement().getOffsetWidth()
+                        - Integer.parseInt(width.substring(0,
+                                width.length() - 2));
+            } catch (Exception e) {
+                ClientExceptionHandler.displayError(e);
+            }
+        }
+    }
 }

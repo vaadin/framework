@@ -4,7 +4,10 @@
 
 package com.itmill.toolkit.terminal.gwt.client;
 
+import java.util.Set;
+
 import com.google.gwt.user.client.ui.Widget;
+import com.itmill.toolkit.terminal.gwt.client.RenderInformation.Size;
 
 public interface Container extends Paintable {
 
@@ -53,8 +56,19 @@ public interface Container extends Paintable {
      * Called when a child components size has been updated in the rendering
      * phase.
      * 
+     * @param child
+     *            Set of child widgets whose size have changed
      * @return true if the size of the Container remains the same, false if the
      *         event need to be propagated to the Containers parent
      */
-    boolean childComponentSizesUpdated();
+    boolean requestLayout(Set<Paintable> child);
+
+    /**
+     * Returns the size currently allocated for the child component.
+     * 
+     * @param child
+     * @return
+     */
+    Size getAllocatedSpace(Widget child);
+
 }

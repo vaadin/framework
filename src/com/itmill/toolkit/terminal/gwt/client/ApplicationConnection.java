@@ -35,6 +35,8 @@ import com.google.gwt.user.client.impl.HTTPRequestImpl;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
+import com.itmill.toolkit.terminal.gwt.client.RenderInformation.FloatSize;
+import com.itmill.toolkit.terminal.gwt.client.RenderInformation.Size;
 import com.itmill.toolkit.terminal.gwt.client.ui.Field;
 import com.itmill.toolkit.terminal.gwt.client.ui.IContextMenu;
 import com.itmill.toolkit.terminal.gwt.client.ui.INotification;
@@ -65,12 +67,15 @@ public class ApplicationConnection {
 
     private final Vector pendingVariables = new Vector();
 
-    private final HashMap idToPaintable = new HashMap();
+    private final HashMap<String, Paintable> idToPaintable = new HashMap<String, Paintable>();
 
-    private final HashMap paintableToId = new HashMap();
+    private final HashMap<Paintable, String> paintableToId = new HashMap<Paintable, String>();
 
     /** Contains ExtendedTitleInfo by paintable id */
-    private final HashMap paintableToTitle = new HashMap();
+    private final HashMap<Paintable, TooltipInfo> paintableToTitle = new HashMap<Paintable, TooltipInfo>();
+
+    private final HashMap<Widget, FloatSize> componentRelativeSizes = new HashMap<Widget, FloatSize>();
+    private final HashMap<Widget, Size> componentOffsetSizes = new HashMap<Widget, Size>();
 
     private final WidgetSet widgetSet;
 
@@ -525,7 +530,7 @@ public class ApplicationConnection {
         final JSONArray changes = (JSONArray) ((JSONObject) json)
                 .get("changes");
 
-        Set<Widget> sizeUpdatedWidgets = new HashSet<Widget>();
+        Vector<Widget> updatedWidgets = new Vector<Widget>();
 
         for (int i = 0; i < changes.size(); i++) {
             try {
@@ -542,15 +547,10 @@ public class ApplicationConnection {
                 final Paintable paintable = getPaintable(uidl.getId());
                 if (paintable != null) {
                     Widget widget = (Widget) paintable;
-                    int w = widget.getOffsetWidth();
-                    int h = widget.getOffsetHeight();
 
                     paintable.updateFromUIDL(uidl, this);
 
-                    if (w != widget.getOffsetWidth()
-                            || h != widget.getOffsetHeight()) {
-                        sizeUpdatedWidgets.add((Widget) paintable);
-                    }
+                    updatedWidgets.add(widget);
                 } else {
                     if (!uidl.getTag().equals("window")) {
                         ClientExceptionHandler
@@ -565,6 +565,21 @@ public class ApplicationConnection {
             } catch (final Throwable e) {
                 ClientExceptionHandler.displayError(e);
             }
+        }
+
+        // Check which widgets' size has been updated
+        Set<Widget> sizeUpdatedWidgets = new HashSet<Widget>();
+
+        for (Widget widget : updatedWidgets) {
+            Size oldSize = componentOffsetSizes.get(widget);
+            Size newSize = new Size(widget.getOffsetWidth(), widget
+                    .getOffsetHeight());
+
+            if (oldSize == null || !oldSize.equals(newSize)) {
+                sizeUpdatedWidgets.add(widget);
+                componentOffsetSizes.put(widget, newSize);
+            }
+
         }
 
         Util.componentSizeUpdated(sizeUpdatedWidgets);
@@ -588,7 +603,7 @@ public class ApplicationConnection {
                 }
 
                 if (html.length() != 0) {
-                    INotification n = new INotification(1000 * 60 * 45); //45min
+                    INotification n = new INotification(1000 * 60 * 45); // 45min
                     n.addEventListener(new NotificationRedirect(url));
                     n.show(html, INotification.CENTERED_TOP,
                             INotification.STYLE_SYSTEM);
@@ -637,7 +652,7 @@ public class ApplicationConnection {
     }
 
     public void unregisterPaintable(Paintable p) {
-        Object id = paintableToId.get(p);
+        String id = paintableToId.get(p);
         idToPaintable.remove(id);
         paintableToTitle.remove(id);
         paintableToId.remove(p);
@@ -666,7 +681,7 @@ public class ApplicationConnection {
      *            Paintable ID
      */
     public Paintable getPaintable(String id) {
-        return (Paintable) idToPaintable.get(id);
+        return idToPaintable.get(id);
     }
 
     private void addVariableToQueue(String paintableId, String variableName,
@@ -857,7 +872,7 @@ public class ApplicationConnection {
 
         // Switch to correct implementation if needed
         if (!widgetSet.isCorrectImplementation(component, uidl)) {
-            final Container parent = Util.getParentLayout(component);
+            final Container parent = Util.getLayout(component);
             if (parent != null) {
                 final Widget w = (Widget) widgetSet.createWidget(uidl);
                 parent.replaceChildComponent(component, w);
@@ -866,8 +881,6 @@ public class ApplicationConnection {
                 return true;
             }
         }
-
-        updateComponentSize(component, uidl);
 
         boolean enabled = !uidl.getBooleanAttribute("disabled");
         if (component instanceof FocusWidget) {
@@ -940,7 +953,7 @@ public class ApplicationConnection {
 
         // Set captions
         if (manageCaption) {
-            final Container parent = Util.getParentLayout(component);
+            final Container parent = Util.getLayout(component);
             if (parent != null) {
                 parent.updateCaption((Paintable) component, uidl);
             }
@@ -950,16 +963,129 @@ public class ApplicationConnection {
             DOM.setElementProperty(component.getElement(), "id", uidl.getId());
         }
 
+        /*
+         * updateComponentSize need to be after caption update so caption can be
+         * taken into account
+         */
+
+        updateComponentSize(component, uidl);
+
         return false;
     }
 
     private void updateComponentSize(Widget component, UIDL uidl) {
         String w = uidl.hasAttribute("width") ? uidl
                 .getStringAttribute("width") : "";
-        component.setWidth(w);
+
         String h = uidl.hasAttribute("height") ? uidl
                 .getStringAttribute("height") : "";
-        component.setHeight(h);
+
+        float relativeWidth = Util.parseRelativeSize(w);
+        float relativeHeight = Util.parseRelativeSize(h);
+
+        if (relativeHeight >= 0.0 || relativeWidth >= 0.0) {
+            // One or both is relative
+            FloatSize relativeSize = new FloatSize(relativeWidth,
+                    relativeHeight);
+            componentRelativeSizes.put(component, relativeSize);
+            handleComponentRelativeSize(component);
+        } else if (relativeHeight < 0.0 && relativeWidth < 0.0) {
+            // No relative sizes
+            componentRelativeSizes.remove(component);
+        }
+
+        if (relativeHeight < 0.0) {
+            component.setHeight(h);
+        }
+        if (relativeWidth < 0.0) {
+            component.setWidth(w);
+        }
+    }
+
+    /**
+     * Traverses recursively ancestors until ContainerResizedListener child
+     * widget is found. They will delegate it further if needed.
+     * 
+     * @param container
+     */
+    public void runDescendentsLayout(HasWidgets container) {
+//        getConsole().log(
+//                "runDescendentsLayout("
+//                        + container.getClass().getName().replaceAll(
+//                                "[^\\.]*\\.", "") + "/" + container.hashCode()
+//                        + ")");
+        final Iterator childWidgets = container.iterator();
+        while (childWidgets.hasNext()) {
+            final Widget child = (Widget) childWidgets.next();
+
+            if (child instanceof Paintable) {
+                handleComponentRelativeSize(child);
+            }
+
+            if (child instanceof ContainerResizedListener) {
+                ((ContainerResizedListener) child).iLayout();
+            } else if (child instanceof HasWidgets) {
+                final HasWidgets childContainer = (HasWidgets) child;
+                runDescendentsLayout(childContainer);
+            }
+
+        }
+    }
+
+    public void handleComponentRelativeSize(Widget child) {
+        Widget widget = child;
+        FloatSize relativeSize = componentRelativeSizes.get(widget);
+        if (relativeSize == null) {
+            return;
+        }
+
+        Size availPixels = Util.getLayout(widget).getAllocatedSpace(widget);
+        if (relativeSize.getWidth() >= 0) {
+
+            if (availPixels != null) {
+
+                int width = availPixels.getWidth();
+                width *= relativeSize.getWidth() / 100.0;
+
+                if (width >= 0) {
+//                    getConsole().log(
+//                            "Widget " + widget.getClass().getName() + "/"
+//                                    + widget.hashCode() + " relative width "
+//                                    + relativeSize.getWidth() + "%: " + width
+//                                    + "px");
+                    widget.setWidth(width + "px");
+                }
+            } else {
+                widget.setWidth(relativeSize.getWidth() + "%");
+                ApplicationConnection.getConsole().error(
+                        Util.getLayout(widget).getClass().getName()
+                                + " did not produce allocatedSpace for "
+                                + widget.getClass().getName());
+            }
+        }
+        if (relativeSize.getHeight() >= 0) {
+            if (availPixels != null) {
+
+                int height = availPixels.getHeight();
+                height *= relativeSize.getHeight() / 100.0;
+
+                if (height >= 0) {
+//                    getConsole().log(
+//                            "Widget " + widget.getClass().getName() + "/"
+//                                    + widget.hashCode() + " relative height "
+//                                    + relativeSize.getHeight() + "%: " + height
+//                                    + "px");
+                    widget.setHeight(height + "px");
+                }
+            } else {
+                widget.setHeight(relativeSize.getHeight() + "%");
+                ApplicationConnection.getConsole().error(
+                        Util.getLayout(widget).getClass().getName()
+                                + " did not produce allocatedSpace for "
+                                + widget.getClass().getName());
+            }
+        }
+
     }
 
     /**
@@ -1062,7 +1188,7 @@ public class ApplicationConnection {
      * 
      */
     public TooltipInfo getTitleInfo(Paintable titleOwner) {
-        TooltipInfo info = (TooltipInfo) paintableToTitle.get(titleOwner);
+        TooltipInfo info = paintableToTitle.get(titleOwner);
         if (info == null) {
             info = new TooltipInfo();
             paintableToTitle.put(titleOwner, info);
@@ -1119,7 +1245,7 @@ public class ApplicationConnection {
         public void run() {
             getConsole().log(
                     "Running re-layout of " + view.getClass().getName());
-            Util.runDescendentsLayout(view);
+            runDescendentsLayout(view);
             isPending = false;
         }
     };
