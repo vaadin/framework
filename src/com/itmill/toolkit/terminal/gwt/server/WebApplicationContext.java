@@ -102,24 +102,10 @@ public class WebApplicationContext implements ApplicationContext,
         return cx;
     }
 
-    /**
-     * Returns <code>true</code> if and only if the argument is not
-     * <code>null</code> and is a Boolean object that represents the same
-     * boolean value as this object.
-     * 
-     * @param obj
-     *            the object to compare with.
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
     public boolean equals(Object obj) {
         return session.equals(obj);
     }
 
-    /**
-     * Returns the hash code value .
-     * 
-     * @see java.lang.Object#hashCode()
-     */
     public int hashCode() {
         return session.hashCode();
     }
