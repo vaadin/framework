@@ -109,12 +109,12 @@ public final class IDebugConsole extends IToolkitOverlay implements Console {
                         Window.Location.reload();
                     } else {
                         String url = Location.getHref();
-                        if (!url.contains("?")) {
-                            url += "?";
-                        } else {
-                            url += "&";
+                        String separator = "?";
+                        if (url.contains("?")) {
+                            separator = "&";
                         }
                         if (!url.contains("restartApplication")) {
+                            url += separator;
                             url += "restartApplication";
                         }
                         if (!"".equals(Location.getHash())) {
