@@ -28,11 +28,13 @@ import com.google.gwt.user.client.ui.ScrollListener;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
+import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
 import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.MouseEventDetails;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.Util;
+import com.itmill.toolkit.terminal.gwt.client.RenderInformation.Size;
 import com.itmill.toolkit.terminal.gwt.client.ui.IScrollTable.IScrollTableBody.IScrollTableRow;
 
 /**
@@ -141,6 +143,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
     boolean recalcWidths = false;
 
     private ArrayList lazyUnregistryBag = new ArrayList();
+    private int borderSpace = -1;
 
     public IScrollTable() {
 
@@ -576,6 +579,14 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
         if (height == null) {
             bodyContainer.setHeight((tBody.getRowHeight() * pageLength) + "px");
         } else {
+            // FIXME: Use standard way for relative sizes
+
+            if (BrowserInfo.get().isIE6()) {
+                // Workaround for IE6 clientHeight == 0
+                super.setHeight("0px");
+                getBorderSpace();
+            }
+
             mySetHeight(height);
             iLayout();
         }
@@ -592,13 +603,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
                 tHead.setWidth(width);
                 super.setWidth(width);
             } else if (width.indexOf("%") > 0) {
-                if (!width.equals("100%")) {
-                    super.setWidth(width);
-                }
-                // contained blocks are relatively to container element
-                bodyContainer.setWidth("100%");
-                tHead.setWidth("100%");
-
+                setRelativeWidth(width);
             }
         }
 
@@ -678,6 +683,28 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
         initializedAndAttached = true;
     }
 
+    private void setRelativeWidth(String width) {
+        float relativeWidth = Util.parseRelativeSize(width);
+        if (relativeWidth < 0.0) {
+            return;
+        }
+
+        Size available = Util.getLayout(this).getAllocatedSpace(this);
+        int actual = available.getWidth();
+        actual -= getBorderSpace();
+        actual *= relativeWidth / 100.0;
+
+        if (actual < 0) {
+            actual = 0;
+        }
+
+        String actualWidth = actual + "px";
+
+        bodyContainer.setWidth(actualWidth);
+        tHead.setWidth(actualWidth);
+        super.setWidth(actualWidth);
+    }
+
     public void iLayout() {
         if (height != null) {
             if (height.equals("100%")) {
@@ -695,6 +722,9 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
                 contentH = 0;
             }
             bodyContainer.setHeight(contentH + "px");
+        }
+        if (width != null) {
+            setRelativeWidth(width);
         }
     }
 
@@ -2293,36 +2323,30 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
     }
 
     public void mySetHeight(String height) {
-        // workaround very common 100% height problem - extract borders
-        if (height.equals("100%")) {
+        float relativeHeight = Util.parseRelativeSize(height);
+        if (relativeHeight >= 0) {
             final int borders = getBorderSpace();
-            final Element parentElem = DOM.getParent(getElement());
+            ApplicationConnection.getConsole().log("Table borders: " + borders);
 
-            // put table away from flow for a moment
-            DOM.setStyleAttribute(getElement(), "position", "absolute");
-            // get containers natural space for table
-            int availPixels = DOM.getElementPropertyInt(parentElem,
-                    "offsetHeight");
-            if (Util.isIE()) {
-                if (availPixels == 0) {
-                    // In complex layouts IE sometimes rather randomly returns 0
-                    // although container really has height. Use old value if
-                    // one exits.
-                    if (oldAvailPixels > 0) {
-                        availPixels = oldAvailPixels;
-                    }
-                } else {
-                    oldAvailPixels = availPixels;
-                }
+            Size available = Util.getLayout(this).getAllocatedSpace(this);
+            ApplicationConnection.getConsole().log(
+                    "Table available space: " + available);
+
+            int actual = available.getHeight();
+            ApplicationConnection.getConsole().log("actual 1: " + actual);
+            actual -= borders;
+            ApplicationConnection.getConsole().log("actual 2: " + actual);
+            actual *= relativeHeight / 100.0;
+
+            ApplicationConnection.getConsole().log(
+                    "Table height: " + actual + "px");
+            if (actual < 0) {
+                actual = 0;
             }
-            // put table back to flow
-            DOM.setStyleAttribute(getElement(), "position", "static");
-            // set 100% height with borders
-            int pixelSize = (availPixels - borders);
-            if (pixelSize < 0) {
-                pixelSize = 0;
-            }
-            super.setHeight(pixelSize + "px");
+
+            String actualHeight = actual + "px";
+
+            super.setHeight(actualHeight);
         } else {
             // normally height don't include borders
             super.setHeight(height);
@@ -2330,9 +2354,15 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
     }
 
     private int getBorderSpace() {
-        final Element el = getElement();
-        return DOM.getElementPropertyInt(el, "offsetHeight")
-                - DOM.getElementPropertyInt(el, "clientHeight");
+        if (borderSpace == -1) {
+            final Element el = getElement();
+            int oh = el.getOffsetHeight();
+            int ch = DOM.getElementPropertyInt(el, "clientHeight");
+            borderSpace = oh - ch;
+        }
+
+        return borderSpace;
+
     }
 
     public void setWidth(String width) {
