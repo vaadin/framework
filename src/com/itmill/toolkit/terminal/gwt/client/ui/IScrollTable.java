@@ -707,7 +707,7 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 
     public void iLayout() {
         if (height != null) {
-            if (height.equals("100%")) {
+            if (height.contains("%")) {
                 /*
                  * We define height in pixels with 100% not to include borders
                  * which is what users usually want. So recalculate pixels via
@@ -2326,20 +2326,13 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
         float relativeHeight = Util.parseRelativeSize(height);
         if (relativeHeight >= 0) {
             final int borders = getBorderSpace();
-            ApplicationConnection.getConsole().log("Table borders: " + borders);
 
             Size available = Util.getLayout(this).getAllocatedSpace(this);
-            ApplicationConnection.getConsole().log(
-                    "Table available space: " + available);
 
             int actual = available.getHeight();
-            ApplicationConnection.getConsole().log("actual 1: " + actual);
             actual -= borders;
-            ApplicationConnection.getConsole().log("actual 2: " + actual);
             actual *= relativeHeight / 100.0;
 
-            ApplicationConnection.getConsole().log(
-                    "Table height: " + actual + "px");
             if (actual < 0) {
                 actual = 0;
             }
