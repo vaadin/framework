@@ -328,6 +328,8 @@ public class IView extends SimplePanel implements Container,
                                     "window h" + IView.this.height);
                         }
                         if (changed) {
+                            updateContentAreaSize();
+
                             ApplicationConnection
                                     .getConsole()
                                     .log(
@@ -357,11 +359,13 @@ public class IView extends SimplePanel implements Container,
             DOM.setStyleAttribute(getElement(), "overflow", "hidden");
             ApplicationConnection.getConsole().log(
                     "Running layout functions due window resize");
-            connection.runDescendentsLayout(this);
-            DOM.setStyleAttribute(getElement(), "overflow", overflow);
-        }
 
-        updateContentAreaSize();
+            updateContentAreaSize();
+            connection.runDescendentsLayout(this);
+
+            DOM.setStyleAttribute(getElement(), "overflow", overflow);
+
+        }
 
     }
 
