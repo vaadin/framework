@@ -252,7 +252,7 @@ public class ISplitPanel extends ComplexPanel implements Container,
             int contentHeight = renderInformationFirst.getRenderedSize()
                     .getHeight();
             renderInformationFirst.setContentAreaHeight(contentHeight);
-            renderInformationFirst.setContentAreaWidth(getSplitterSize());
+            renderInformationFirst.setContentAreaWidth(pixelPosition);
             renderInformationSecond.setContentAreaHeight(contentHeight);
             renderInformationSecond.setContentAreaWidth(secondContainerWidth);
 
@@ -285,7 +285,7 @@ public class ISplitPanel extends ComplexPanel implements Container,
 
             int contentWidth = renderInformationFirst.getRenderedSize()
                     .getWidth();
-            renderInformationFirst.setContentAreaHeight(getSplitterSize());
+            renderInformationFirst.setContentAreaHeight(pixelPosition);
             renderInformationFirst.setContentAreaWidth(contentWidth);
             renderInformationSecond.setContentAreaHeight(secondContainerHeight);
             renderInformationSecond.setContentAreaWidth(contentWidth);
