@@ -149,6 +149,16 @@ public class ApplicationConnection {
         view = new IView(cnf.getRootPanelId());
         showLoadingIndicator();
 
+    }
+
+    /**
+     * Starts this application. Don't call this method directly - it's called by
+     * {@link ApplicationConfiguration#startNextApplication()}, which should be
+     * called once this application has started (first response received) or
+     * failed to start. This ensures that the applications are started in order,
+     * to avoid session-id problems.
+     */
+    void start() {
         makeUidlRequest("", true, false);
     }
 
@@ -276,6 +286,10 @@ public class ApplicationConnection {
                         // TODO Better reporting to user
                         console.error("Got error");
                         endRequest();
+                        if (!applicationRunning) {
+                            // start failed, let's try to start the next app
+                            configuration.startNextApplication();
+                        }
                     }
 
                     public void onResponseReceived(Request request,
@@ -285,6 +299,7 @@ public class ApplicationConnection {
                         } else {
                             applicationRunning = true;
                             handleWhenCSSLoaded(response);
+                            configuration.startNextApplication();
                         }
                     }
 
@@ -603,7 +618,7 @@ public class ApplicationConnection {
                 }
 
                 if (html.length() != 0) {
-                    INotification n = new INotification(1000 * 60 * 45); // 45min
+                    INotification n = new INotification(1000 * 60 * 45); //45min
                     n.addEventListener(new NotificationRedirect(url));
                     n.show(html, INotification.CENTERED_TOP,
                             INotification.STYLE_SYSTEM);
@@ -1009,11 +1024,11 @@ public class ApplicationConnection {
      * @param container
      */
     public void runDescendentsLayout(HasWidgets container) {
-//        getConsole().log(
-//                "runDescendentsLayout("
-//                        + container.getClass().getName().replaceAll(
-//                                "[^\\.]*\\.", "") + "/" + container.hashCode()
-//                        + ")");
+        // getConsole().log(
+        // "runDescendentsLayout("
+        // + container.getClass().getName().replaceAll(
+        // "[^\\.]*\\.", "") + "/" + container.hashCode()
+        // + ")");
         final Iterator childWidgets = container.iterator();
         while (childWidgets.hasNext()) {
             final Widget child = (Widget) childWidgets.next();
@@ -1048,11 +1063,11 @@ public class ApplicationConnection {
                 width *= relativeSize.getWidth() / 100.0;
 
                 if (width >= 0) {
-//                    getConsole().log(
-//                            "Widget " + widget.getClass().getName() + "/"
-//                                    + widget.hashCode() + " relative width "
-//                                    + relativeSize.getWidth() + "%: " + width
-//                                    + "px");
+                    // getConsole().log(
+                    // "Widget " + widget.getClass().getName() + "/"
+                    // + widget.hashCode() + " relative width "
+                    // + relativeSize.getWidth() + "%: " + width
+                    // + "px");
                     widget.setWidth(width + "px");
                 }
             } else {
@@ -1070,11 +1085,11 @@ public class ApplicationConnection {
                 height *= relativeSize.getHeight() / 100.0;
 
                 if (height >= 0) {
-//                    getConsole().log(
-//                            "Widget " + widget.getClass().getName() + "/"
-//                                    + widget.hashCode() + " relative height "
-//                                    + relativeSize.getHeight() + "%: " + height
-//                                    + "px");
+                    // getConsole().log(
+                    // "Widget " + widget.getClass().getName() + "/"
+                    // + widget.hashCode() + " relative height "
+                    // + relativeSize.getHeight() + "%: " + height
+                    // + "px");
                     widget.setHeight(height + "px");
                 }
             } else {

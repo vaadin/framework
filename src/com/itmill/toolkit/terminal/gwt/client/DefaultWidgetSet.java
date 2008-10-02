@@ -4,9 +4,6 @@
 
 package com.itmill.toolkit.terminal.gwt.client;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ui.IAccordion;
 import com.itmill.toolkit.terminal.gwt.client.ui.IButton;
@@ -54,17 +51,11 @@ import com.itmill.toolkit.terminal.gwt.client.ui.richtextarea.IRichTextArea;
 public class DefaultWidgetSet implements WidgetSet {
 
     /**
-     * This is the entry point method.
+     * This is the entry point method. It will start the first
      */
     public void onModuleLoad() {
-        ArrayList appIds = new ArrayList();
-        ApplicationConfiguration.loadAppIdListFromDOM(appIds);
-        for (Iterator iterator = appIds.iterator(); iterator.hasNext();) {
-            String appId = (String) iterator.next();
-            ApplicationConfiguration appConf = ApplicationConfiguration
-                    .getConfigFromDOM(appId);
-            new ApplicationConnection(this, appConf);
-        }
+        ApplicationConfiguration.initConfigurations(this);
+        ApplicationConfiguration.startNextApplication(); // start first app
     }
 
     public Paintable createWidget(UIDL uidl) {
