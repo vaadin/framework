@@ -1365,17 +1365,10 @@ public class IOrderedLayout extends Panel implements Container,
 
                 // This should not be possible...
                 return 0;
+            } else {
+                return lastForcedPixelHeight;
             }
 
-            int available = lastForcedPixelHeight;
-            available -= reduce;
-
-            // Must remove caption height to report correct size to child
-            // if (caption != null) {
-            // available -= caption.getOffsetHeight();
-            // }
-
-            return available;
         }
 
         public int getAllocatedWidth() {
@@ -1391,7 +1384,7 @@ public class IOrderedLayout extends Panel implements Container,
                  */
                 return getElementWrappingClipperDiv().getOffsetWidth() - reduce;
             } else if (lastForcedPixelWidth > -1) {
-                return lastForcedPixelWidth - reduce;
+                return lastForcedPixelWidth;
             } else {
                 return 0;
             }
