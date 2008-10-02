@@ -9,134 +9,72 @@ import com.itmill.toolkit.ui.GridLayout;
 import com.itmill.toolkit.ui.Label;
 import com.itmill.toolkit.ui.Window;
 
-/**
- * <p>
- * An example application implementing a simple web-based calculator using IT
- * Mill Toolkit. The application opens up a window and places the needed UI
- * components (display label, buttons etc.) on it, and registers a button click
- * listener for them.
- * </p>
- * 
- * <p>
- * When any of the buttons are pressed the application finds out which button
- * was pressed, figures what that button does, and updates the user interface
- * accordingly.
- * </p>
- * 
- * @see com.itmill.toolkit.Application
- * @see com.itmill.toolkit.ui.Button.ClickListener
- */
-public class Calc extends com.itmill.toolkit.Application implements
-        Button.ClickListener {
+// Calculator is created by extending Application-class. Application is
+// deployed by adding ApplicationServlet to web.xml and this class as
+// "application" parameter to the servlet.
+public class Calc extends com.itmill.toolkit.Application {
 
-    /** The label used as the display */
-    private Label display = null;
-
-    /** Last completed result */
-    private double stored = 0.0;
-
-    /** The number being currently edited. */
+    // Calculation data model is automatically stored in the user session
     private double current = 0.0;
+    private double stored = 0.0;
+    private char lastOperationRequested = 'C';
 
-    /** Last activated operation. */
-    private String operation = "C";
+    // User interface components
+    private final Label display = new Label("0.0");
+    private final GridLayout layout = new GridLayout(4, 5);
 
-    /** Button captions. */
-    private static String[] captions = // Captions for the buttons
-    { "7", "8", "9", "/", "4", "5", "6", "*", "1", "2", "3", "-", "0", "=",
-            "C", "+" };
-
-    /**
-     * <p>
-     * Initializes the application. This is the only method an application is
-     * required to implement. It's called by the framework and it should perform
-     * whatever initialization tasks the application needs to perform.
-     * </p>
-     * 
-     * <p>
-     * In this case we create the main window, the display, the grid to hold the
-     * buttons, and the buttons themselves.
-     * </p>
-     */
+    // Application initialization creates UI and connects it to business logic
     public void init() {
 
-        // Create a new layout for the components used by the calculator
-        final GridLayout layout = new GridLayout(4, 5);
+        // Place the layout to a floating dialog inside the browser main window
+        setMainWindow(new Window("Calculator Application"));
+        getMainWindow().addWindow(new Window("Calc", layout));
 
-        // Styling: fix grids size, cells will become equally sized
-        layout.setWidth("15em");
-        layout.setHeight("18em");
-        // Styling: leave margin around layout
-        layout.setMargin(true);
-
-        // Create a new label component for displaying the result
-        display = new Label(Double.toString(current));
-        display.setCaption("Result");
-
-        // Place the label to the top of the previously created grid.
+        // Create and add the components to the layout
         layout.addComponent(display, 0, 0, 3, 0);
+        for (String caption : new String[] { "7", "8", "9", "/", "4", "5", "6",
+                "*", "1", "2", "3", "-", "0", "=", "C", "+" }) {
+            Button button = new Button(caption, new Button.ClickListener() {
+                public void buttonClick(Button.ClickEvent event) {
 
-        // Create the buttons and place them in the grid
-        for (int i = 0; i < captions.length; i++) {
-            final Button button = new Button(captions[i], this);
-            button.setSizeFull(); // use all size given by grid
+                    // On button click, calculate and show the result
+                    display.setValue(calculate(event.getButton()));
+                }
+            });
             layout.addComponent(button);
         }
-
-        // Create the main window with a caption and add it to the application.
-        addWindow(new Window("Calculator", layout));
-
     }
 
-    /**
-     * <p>
-     * The button listener method called any time a button is pressed. This
-     * method catches all button presses, figures out what the user wanted the
-     * application to do, and updates the UI accordingly.
-     * </p>
-     * 
-     * <p>
-     * The button click event passed to this method contains information about
-     * which button was pressed. If it was a number, the currently edited number
-     * is updated. If it was something else, the requested operation is
-     * performed. In either case the display label is updated to include the
-     * outcome of the button click.
-     * </p>
-     * 
-     * @param event
-     *            the button click event specifying which button was pressed
-     */
-    public void buttonClick(Button.ClickEvent event) {
-
-        try {
-            // Number button pressed
+    // Calculator "business logic" implemented here to keep the example minimal
+    private double calculate(Button buttonClicked) {
+        char requestedOperation = buttonClicked.getCaption().charAt(0);
+        if ('0' <= requestedOperation && requestedOperation <= '9') {
             current = current * 10
-                    + Double.parseDouble(event.getButton().getCaption());
-            display.setValue(Double.toString(current));
-        } catch (final java.lang.NumberFormatException e) {
-
-            // Operation button pressed
-            if (operation.equals("+")) {
-                stored += current;
-            }
-            if (operation.equals("-")) {
-                stored -= current;
-            }
-            if (operation.equals("*")) {
-                stored *= current;
-            }
-            if (operation.equals("/")) {
-                stored /= current;
-            }
-            if (operation.equals("C")) {
-                stored = current;
-            }
-            if (event.getButton().getCaption().equals("C")) {
-                stored = 0.0;
-            }
-            operation = event.getButton().getCaption();
-            current = 0.0;
-            display.setValue(Double.toString(stored));
+                    + Double.parseDouble("" + requestedOperation);
+            return current;
         }
+        switch (lastOperationRequested) {
+        case '+':
+            stored += current;
+            break;
+        case '-':
+            stored -= current;
+            break;
+        case '/':
+            stored /= current;
+            break;
+        case '*':
+            stored *= current;
+            break;
+        case 'C':
+            stored = current;
+            break;
+        }
+        lastOperationRequested = requestedOperation;
+        current = 0.0;
+        if (requestedOperation == 'C') {
+            stored = 0.0;
+        }
+        return stored;
     }
 }
