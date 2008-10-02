@@ -89,14 +89,6 @@ public class Ticket1267 extends Application {
         final Coordinates xy = new Coordinates("0,0");
 
         testField.addListener(new ValueChangeListener() {
-
-            /*
-             * (non-Javadoc)
-             * 
-             * @see
-             * com.itmill.toolkit.data.Property.ValueChangeListener#valueChange
-             * (com.itmill.toolkit.data.Property.ValueChangeEvent)
-             */
             public void valueChange(ValueChangeEvent event) {
                 String str = (String) event.getProperty().getValue();
                 try {
