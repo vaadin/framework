@@ -1,10 +1,9 @@
 .i-table {
-	border: 1px solid #b6bbbc;
 	overflow: hidden;
 	text-align: left /* Force default alignment */
 }
 
-.i-table.table-inline {
+.i-table.table-inline .i-table-header-wrap {
 	border-left: none;
 	border-right: none;
 	/*margin: -16px -18px 0 -18px;*/
@@ -13,7 +12,7 @@
 .i-table-header-wrap {
 	height: 36px;
 	background: #e7edf3 url(img/header-bg.png) repeat-x;
-	border-bottom: 1px solid #b6bbbc;
+	border: 1px solid #b6bbbc;
 	overflow: hidden;
 }
 
@@ -73,6 +72,8 @@
 
 .i-table-body {
 	background: #fff;
+	border: 1px solid #b6bbbc;
+	border-top: none;
 }
 
 .i-table-row-spacer {

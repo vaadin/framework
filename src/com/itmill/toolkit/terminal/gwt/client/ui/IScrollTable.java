@@ -19,7 +19,6 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Panel;
@@ -28,13 +27,10 @@ import com.google.gwt.user.client.ui.ScrollListener;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
-import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
-import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.MouseEventDetails;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
 import com.itmill.toolkit.terminal.gwt.client.Util;
-import com.itmill.toolkit.terminal.gwt.client.RenderInformation.Size;
 import com.itmill.toolkit.terminal.gwt.client.ui.IScrollTable.IScrollTableBody.IScrollTableRow;
 
 /**
@@ -60,8 +56,7 @@ import com.itmill.toolkit.terminal.gwt.client.ui.IScrollTable.IScrollTableBody.I
  * 
  * TODO implement unregistering for child components in Cells
  */
-public class IScrollTable extends Composite implements Table, ScrollListener,
-        ContainerResizedListener {
+public class IScrollTable extends FlowPanel implements Table, ScrollListener {
 
     public static final String CLASSNAME = "i-table";
     /**
@@ -106,8 +101,6 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 
     private final RowRequestHandler rowRequestHandler;
     private IScrollTableBody tBody;
-    private String width;
-    private String height;
     private int firstvisible = 0;
     private boolean sortAscending;
     private String sortColumn;
@@ -121,7 +114,6 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
     private String[] visibleColOrder;
     private boolean initialContentReceived = false;
     private Element scrollPositionElement;
-    private final FlowPanel panel;
     private boolean enabled;
     private boolean showColHeaders;
 
@@ -143,10 +135,10 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
     boolean recalcWidths = false;
 
     private ArrayList lazyUnregistryBag = new ArrayList();
-    private int borderSpace = -1;
+    private String height;
+    private String width;
 
     public IScrollTable() {
-
         bodyContainer.addScrollListener(this);
         bodyContainer.setStyleName(CLASSNAME + "-body");
 
@@ -154,14 +146,12 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
         // this of course breaks IE
         DOM.setStyleAttribute(bodyContainer.getElement(), "position", "");
 
-        panel = new FlowPanel();
-        panel.setStyleName(CLASSNAME);
-        panel.add(tHead);
-        panel.add(bodyContainer);
+        setStyleName(CLASSNAME);
+        add(tHead);
+        add(bodyContainer);
 
         rowRequestHandler = new RowRequestHandler();
 
-        initWidget(panel);
     }
 
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -205,13 +195,6 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 
         showRowHeaders = uidl.getBooleanAttribute("rowheaders");
         showColHeaders = uidl.getBooleanAttribute("colheaders");
-
-        if (uidl.hasAttribute("width")) {
-            width = uidl.getStringAttribute("width");
-        }
-        if (uidl.hasAttribute("height")) {
-            height = uidl.getStringAttribute("height");
-        }
 
         if (uidl.hasVariable("sortascending")) {
             sortAscending = uidl.getBooleanVariable("sortascending");
@@ -549,13 +532,6 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 
         final int[] widths = new int[tHead.visibleCells.size()];
 
-        if (width == null) {
-            // if this is a re-init, remove old manually fixed size
-            bodyContainer.setWidth("");
-            tHead.setWidth("");
-            super.setWidth("");
-        }
-
         tHead.enableBrowserIntelligence();
         // first loop: collect natural widths
         while (headCells.hasNext()) {
@@ -576,35 +552,16 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 
         tHead.disableBrowserIntelligence();
 
-        if (height == null) {
+        // fix "natural" height if height not set
+        if (height == null || "".equals(height)) {
             bodyContainer.setHeight((tBody.getRowHeight() * pageLength) + "px");
-        } else {
-            // FIXME: Use standard way for relative sizes
-
-            if (BrowserInfo.get().isIE6()) {
-                // Workaround for IE6 clientHeight == 0
-                super.setHeight("0px");
-                getBorderSpace();
-            }
-
-            mySetHeight(height);
-            iLayout();
         }
 
-        if (width == null) {
+        // fix "natural" width if width not set
+        if (width == null || "".equals(width)) {
             int w = total;
             w += getScrollbarWidth();
-            bodyContainer.setWidth(w + "px");
-            tHead.setWidth(w + "px");
-            super.setWidth(w + "px");
-        } else {
-            if (width.indexOf("px") > 0) {
-                bodyContainer.setWidth(width);
-                tHead.setWidth(width);
-                super.setWidth(width);
-            } else if (width.indexOf("%") > 0) {
-                setRelativeWidth(width);
-            }
+            setContentWidth(w);
         }
 
         int availW = tBody.getAvailableWidth();
@@ -681,51 +638,6 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
             }
         }
         initializedAndAttached = true;
-    }
-
-    private void setRelativeWidth(String width) {
-        float relativeWidth = Util.parseRelativeSize(width);
-        if (relativeWidth < 0.0) {
-            return;
-        }
-
-        Size available = Util.getLayout(this).getAllocatedSpace(this);
-        int actual = available.getWidth();
-        actual -= getBorderSpace();
-        actual *= relativeWidth / 100.0;
-
-        if (actual < 0) {
-            actual = 0;
-        }
-
-        String actualWidth = actual + "px";
-
-        bodyContainer.setWidth(actualWidth);
-        tHead.setWidth(actualWidth);
-        super.setWidth(actualWidth);
-    }
-
-    public void iLayout() {
-        if (height != null) {
-            if (height.contains("%")) {
-                /*
-                 * We define height in pixels with 100% not to include borders
-                 * which is what users usually want. So recalculate pixels via
-                 * setHeight.
-                 */
-                mySetHeight(height);
-            }
-
-            int contentH = (DOM.getElementPropertyInt(getElement(),
-                    "clientHeight") - tHead.getOffsetHeight());
-            if (contentH < 0) {
-                contentH = 0;
-            }
-            bodyContainer.setHeight(contentH + "px");
-        }
-        if (width != null) {
-            setRelativeWidth(width);
-        }
     }
 
     private int getScrollbarWidth() {
@@ -2033,13 +1945,13 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
              */
             private native void attachContextMenuEvent(Element el)
             /*-{
-            	var row = this;
-            	el.oncontextmenu = function(e) {
-            		if(!e)
-            			e = $wnd.event;
-            		row.@com.itmill.toolkit.terminal.gwt.client.ui.IScrollTable.IScrollTableBody.IScrollTableRow::showContextMenu(Lcom/google/gwt/user/client/Event;)(e);
-            		return false;
-            	};
+                var row = this;
+                el.oncontextmenu = function(e) {
+                        if(!e)
+                                e = $wnd.event;
+                        row.@com.itmill.toolkit.terminal.gwt.client.ui.IScrollTable.IScrollTableBody.IScrollTableRow::showContextMenu(Lcom/google/gwt/user/client/Event;)(e);
+                        return false;
+                };
             }-*/;
 
             public String getKey() {
@@ -2305,65 +2217,81 @@ public class IScrollTable extends Composite implements Table, ScrollListener,
 
     }
 
-    public void add(Widget w) {
-        throw new UnsupportedOperationException(
-                "ITable can contain only rows created by itself.");
-    }
-
-    public void clear() {
-        panel.clear();
-    }
-
-    public Iterator iterator() {
-        return panel.iterator();
-    }
-
-    public boolean remove(Widget w) {
-        return panel.remove(w);
-    }
-
-    public void mySetHeight(String height) {
-        float relativeHeight = Util.parseRelativeSize(height);
-        if (relativeHeight >= 0) {
-            final int borders = getBorderSpace();
-
-            Size available = Util.getLayout(this).getAllocatedSpace(this);
-
-            int actual = available.getHeight();
-            actual -= borders;
-            actual *= relativeHeight / 100.0;
-
-            if (actual < 0) {
-                actual = 0;
-            }
-
-            String actualHeight = actual + "px";
-
-            super.setHeight(actualHeight);
-        } else {
-            // normally height don't include borders
-            super.setHeight(height);
-        }
-    }
-
-    private int getBorderSpace() {
-        if (borderSpace == -1) {
-            final Element el = getElement();
-            int oh = el.getOffsetHeight();
-            int ch = DOM.getElementPropertyInt(el, "clientHeight");
-            borderSpace = oh - ch;
-        }
-
-        return borderSpace;
-
-    }
-
     public void setWidth(String width) {
-        // NOP size handled internally
+        this.width = width;
+        if (width != null && !"".equals(width)) {
+            super.setWidth(width);
+            int innerPixels = getOffsetWidth() - getBorderWidth();
+            if (innerPixels < 0) {
+                innerPixels = 0;
+            }
+            setContentWidth(innerPixels);
+        } else {
+            super.setWidth("");
+        }
+    }
+
+    /**
+     * helper to set pixel size of head and body part
+     * 
+     * @param pixels
+     */
+    private void setContentWidth(int pixels) {
+        tHead.setWidth(pixels + "px");
+        bodyContainer.setWidth(pixels + "px");
+    }
+
+    private int borderWidth = -1;
+
+    /**
+     * @return border left + border right
+     */
+    private int getBorderWidth() {
+        if (borderWidth < 0) {
+            borderWidth = bodyContainer.getOffsetWidth()
+                    - bodyContainer.getElement().getPropertyInt("clientWidth");
+            if (borderWidth < 0) {
+                borderWidth = 0;
+            }
+        }
+        return borderWidth;
+    }
+
+    /**
+     * Ensures scrollable area is properly sized.
+     */
+    private void setContainerHeight() {
+        if (height != null && !"".equals(height)) {
+            int contentH = getOffsetHeight() - tHead.getOffsetHeight();
+            contentH -= getContentAreaBorderHeight();
+            if (contentH < 0) {
+                contentH = 0;
+            }
+            bodyContainer.setHeight(contentH + "px");
+        }
+    }
+
+    private int contentAreaBorderHeight = -1;
+
+    /**
+     * @return border top + border bottom of the scrollable area of table
+     */
+    private int getContentAreaBorderHeight() {
+        if (contentAreaBorderHeight < 0) {
+            DOM.setStyleAttribute(bodyContainer.getElement(), "overflow",
+                    "hidden");
+            contentAreaBorderHeight = bodyContainer.getOffsetHeight()
+                    - bodyContainer.getElement().getPropertyInt("clientHeight");
+            DOM.setStyleAttribute(bodyContainer.getElement(), "overflow",
+                    "auto");
+        }
+        return contentAreaBorderHeight;
     }
 
     public void setHeight(String height) {
-        // NOP size handled internally
+        this.height = height;
+        super.setHeight(height);
+        setContainerHeight();
     }
 
     /*
