@@ -19,7 +19,6 @@ import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.MouseEventDetails;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
-import com.itmill.toolkit.terminal.gwt.client.Util;
 
 /**
  * 
@@ -193,7 +192,8 @@ public class ITree extends FlowPanel implements Paintable {
 
         public TreeNode() {
             constructDom();
-            sinkEvents(Event.ONCLICK | Event.ONDBLCLICK | Event.ONMOUSEUP);
+            sinkEvents(Event.ONCLICK | Event.ONDBLCLICK | Event.ONMOUSEUP
+                    | Event.ONCONTEXTMENU);
         }
 
         @Override
@@ -204,20 +204,21 @@ public class ITree extends FlowPanel implements Paintable {
             }
             final int type = DOM.eventGetType(event);
             final Element target = DOM.eventGetTarget(event);
-            if (emitClickEvents && DOM.compare(target, nodeCaptionSpan)
+            if (emitClickEvents && target == nodeCaptionSpan
                     && (type == Event.ONDBLCLICK || type == Event.ONMOUSEUP)) {
                 fireClick(event);
             }
             if (type == Event.ONCLICK) {
-                if (DOM.compare(getElement(), target)
-                        || DOM.compare(ie6compatnode, target)) {
+                if (getElement() == target || ie6compatnode == target) {
                     // state change
                     toggleState();
-                } else if (!readonly && DOM.compare(target, nodeCaptionSpan)) {
+                } else if (!readonly && target == nodeCaptionSpan) {
                     // caption click = selection change && possible click event
                     toggleSelection();
                 }
                 DOM.eventCancelBubble(event, true);
+            } else if (type == Event.ONCONTEXTMENU) {
+                showContextMenu(event);
             }
         }
 
@@ -264,18 +265,6 @@ public class ITree extends FlowPanel implements Paintable {
             childNodeContainer = new FlowPanel();
             childNodeContainer.setStylePrimaryName(CLASSNAME + "-children");
             setWidget(childNodeContainer);
-        }
-
-        @Override
-        public void onDetach() {
-            Util.removeContextMenuEvent(nodeCaptionSpan);
-            super.onDetach();
-        }
-
-        @Override
-        public void onAttach() {
-            attachContextMenuEvent(nodeCaptionSpan);
-            super.onAttach();
         }
 
         public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
@@ -423,27 +412,15 @@ public class ITree extends FlowPanel implements Paintable {
         public void showContextMenu(Event event) {
             if (!readonly && !disabled) {
                 if (actionKeys != null) {
-                    int left = DOM.eventGetClientX(event);
-                    int top = DOM.eventGetClientY(event);
+                    int left = event.getClientX();
+                    int top = event.getClientY();
                     top += Window.getScrollTop();
                     left += Window.getScrollLeft();
                     client.getContextMenu().showAt(this, left, top);
                 }
-                DOM.eventCancelBubble(event, true);
+                event.cancelBubble(true);
+                event.preventDefault();
             }
-
         }
-
-        private native void attachContextMenuEvent(Element el)
-        /*-{
-        	var node = this;
-        	el.oncontextmenu = function(e) {
-        		if(!e)
-        			e = $wnd.event;
-        		node.@com.itmill.toolkit.terminal.gwt.client.ui.ITree.TreeNode::showContextMenu(Lcom/google/gwt/user/client/Event;)(e);
-        		return false;
-        	};
-        }-*/;
-
     }
 }

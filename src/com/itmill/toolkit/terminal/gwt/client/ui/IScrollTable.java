@@ -30,7 +30,6 @@ import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
 import com.itmill.toolkit.terminal.gwt.client.MouseEventDetails;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
-import com.itmill.toolkit.terminal.gwt.client.Util;
 import com.itmill.toolkit.terminal.gwt.client.ui.IScrollTable.IScrollTableBody.IScrollTableRow;
 
 /**
@@ -986,9 +985,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
          */
         public void onBrowserEvent(Event event) {
             if (enabled) {
-                if (isResizing
-                        || DOM.compare(DOM.eventGetTarget(event),
-                                colResizeWidget)) {
+                if (isResizing || event.getTarget() == colResizeWidget) {
                     onResizeEvent(event);
                 } else {
                     handleCaptionEvent(event);
@@ -1465,7 +1462,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
 
         public void onBrowserEvent(Event event) {
             if (enabled) {
-                if (DOM.compare(DOM.eventGetTarget(event), columnSelector)) {
+                if (event.getTarget() == columnSelector) {
                     final int left = DOM.getAbsoluteLeft(columnSelector);
                     final int top = DOM.getAbsoluteTop(columnSelector)
                             + DOM.getElementPropertyInt(columnSelector,
@@ -1927,32 +1924,9 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
             private IScrollTableRow(int rowKey) {
                 this.rowKey = rowKey;
                 setElement(DOM.createElement("tr"));
-                DOM.sinkEvents(getElement(), Event.ONCLICK | Event.ONDBLCLICK);
-                attachContextMenuEvent(getElement());
+                DOM.sinkEvents(getElement(), Event.ONCLICK | Event.ONDBLCLICK
+                        | Event.ONCONTEXTMENU);
             }
-
-            protected void onDetach() {
-                Util.removeContextMenuEvent(getElement());
-                super.onDetach();
-            }
-
-            /**
-             * Attaches context menu event handler to given element. Attached
-             * handler fires showContextMenu function.
-             * 
-             * @param el
-             *            element where to attach contenxt menu event
-             */
-            private native void attachContextMenuEvent(Element el)
-            /*-{
-                var row = this;
-                el.oncontextmenu = function(e) {
-                        if(!e)
-                                e = $wnd.event;
-                        row.@com.itmill.toolkit.terminal.gwt.client.ui.IScrollTable.IScrollTableBody.IScrollTableRow::showContextMenu(Lcom/google/gwt/user/client/Event;)(e);
-                        return false;
-                };
-            }-*/;
 
             public String getKey() {
                 return String.valueOf(rowKey);
@@ -2088,7 +2062,7 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
                             .eventGetTarget(event));
                     client.updateVariable(paintableId, "clickedKey", ""
                             + rowKey, false);
-                    if (DOM.compare(getElement(), DOM.getParent(tdOrTr))) {
+                    if (getElement() == tdOrTr.getParentElement()) {
                         int childIndex = DOM
                                 .getChildIndex(getElement(), tdOrTr);
                         String colKey = null;
@@ -2117,8 +2091,8 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
              */
             public void onBrowserEvent(Event event) {
                 final Element tdOrTr = DOM.getParent(DOM.eventGetTarget(event));
-                if (DOM.compare(getElement(), tdOrTr)
-                        || DOM.compare(getElement(), DOM.getParent(tdOrTr))) {
+                if (getElement() == tdOrTr
+                        || getElement() == tdOrTr.getParentElement()) {
                     switch (DOM.eventGetType(event)) {
                     case Event.ONCLICK:
                         handleClickEvent(event);
@@ -2134,7 +2108,9 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
                     case Event.ONDBLCLICK:
                         handleClickEvent(event);
                         break;
-
+                    case Event.ONCONTEXTMENU:
+                        showContextMenu(event);
+                        break;
                     default:
                         break;
                     }
@@ -2143,14 +2119,15 @@ public class IScrollTable extends FlowPanel implements Table, ScrollListener {
             }
 
             public void showContextMenu(Event event) {
-                ApplicationConnection.getConsole().log("Context menu");
                 if (enabled && actionKeys != null) {
-                    int left = DOM.eventGetClientX(event);
-                    int top = DOM.eventGetClientY(event);
+                    int left = event.getClientX();
+                    int top = event.getClientY();
                     top += Window.getScrollTop();
                     left += Window.getScrollLeft();
                     client.getContextMenu().showAt(this, left, top);
                 }
+                event.cancelBubble(true);
+                event.preventDefault();
             }
 
             public boolean isSelected() {
