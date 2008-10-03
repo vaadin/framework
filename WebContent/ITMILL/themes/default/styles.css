@@ -1343,71 +1343,69 @@ input.i-modified,
 
 .i-shadow {
 	position: absolute;
-	overflow: auto;
 }
 
 .i-shadow .top-left {
     position: absolute; overflow: hidden;
-    top: 0;             left: 0;
+    top: -3px;             left: -4px;
     width: 8px;         height: 8px;
     background: transparent url(shadow/img/top-left.png);
 }
 
 .i-shadow .top {
     position: absolute; overflow: hidden;
-    top: 0;             left: 8px;
-    height: 8px;
-    right: 8px;
+    top: -3px;             left: 4px;
+    height: 8px;           right: 4px;
     background: transparent url(shadow/img/top.png);
 }
 
 .i-shadow .top-right {
     position: absolute; overflow: hidden;
-    top: 0;             right: 0;
+    top: -3px;             right: -4px;
     width: 8px;         height: 8px;
     background: transparent url(shadow/img/top-right.png);
 }
 
 .i-shadow .left {
     position: absolute; overflow: hidden;
-    top: 8px;           left: 0;
+    top: 5px;           left: -4px;
     width: 8px;
-    bottom: 8px;
+    bottom: 3px;
     background: transparent url(shadow/img/left.png);
 }
 
 .i-shadow .center {
     position: absolute; overflow: hidden;
-    top: 8px;           left: 8px;
-    bottom: 8px;        right: 8px;
+    top: 5px;           left: 4px;
+    bottom: 3px;        right: 4px;
     background: transparent url(shadow/img/center.png);
 }
 
 .i-shadow .right {
     position: absolute; overflow: hidden;
-    top: 8px;           right: 0;
+    top: 5px;           right: -4px;
     width: 8px;
-    bottom: 8px;
+    bottom: 3px;
     background: transparent url(shadow/img/right.png);
 }
 
 .i-shadow .bottom-left {
     position: absolute; overflow: hidden;
-    bottom: 0;           left: 0;
+    bottom: -5px;           left: -4px;
     width: 8px;          height: 8px;
     background: transparent url(shadow/img/bottom-left.png);
 }
 
 .i-shadow .bottom {
     position: absolute; overflow: hidden;
-    bottom: 0;           left: 8px;
-    right: 8px;          height: 8px;
+    bottom: -5px;           left: 4px;
+    right: 4px;          height: 8px;
     background: transparent url(shadow/img/bottom.png);
 }
 
 .i-shadow .bottom-right {
     position: absolute; overflow: hidden;
-    bottom: 0;           right: 0;
+    bottom: -5px;           right: -4px;
     width: 8px;          height: 8px;
     background: transparent url(shadow/img/bottom-right.png);
 }
@@ -1416,76 +1414,18 @@ input.i-modified,
 
 
 
-/* And all the same for IE6 (transparent png's) */
+/* For IE6 (no transparent png's, we use a blur filter) */
 
-* html .i-shadow .top-left {
-    background: transparent;
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="ITMILL/themes/default/shadow/img/top-left.png", sizingMethod='crop');
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../ITMILL/themes/default/shadow/img/top-left.png", sizingMethod='crop');
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../../ITMILL/themes/default/shadow/img/top-left.png", sizingMethod='crop');
+* html .i-shadow * {
+	display: none;
 }
 
-* html .i-shadow .top {
-    background: transparent;
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="ITMILL/themes/default/shadow/img/top.png", sizingMethod='scale');
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../ITMILL/themes/default/shadow/img/top.png", sizingMethod='scale');
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../../ITMILL/themes/default/shadow/img/top.png", sizingMethod='scale');
-    width: expression((this.parentNode.offsetWidth - this.previousSibling.offsetWidth - this.nextSibling.offsetWidth) + "px");
-}
-
-* html .i-shadow .top-right {
-    background: transparent;
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="ITMILL/themes/default/shadow/img/top-right.png", sizingMethod='crop');
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../ITMILL/themes/default/shadow/img/top-right.png", sizingMethod='crop');
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../../ITMILL/themes/default/shadow/img/top-right.png", sizingMethod='crop');
-}
-
-* html .i-shadow .left {
-    background: transparent;
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="ITMILL/themes/default/shadow/img/left.png", sizingMethod='scale');
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../ITMILL/themes/default/shadow/img/left.png", sizingMethod='scale');
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../../ITMILL/themes/default/shadow/img/left.png", sizingMethod='scale');
-    height: expression((this.parentNode.offsetHeight - this.parentNode.firstChild.offsetHeight - this.parentNode.childNodes[6].offsetHeight) + "px");
-}
-
-* html .i-shadow .center {
-    background: transparent;
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="ITMILL/themes/default/shadow/img/center.png", sizingMethod='scale');
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../ITMILL/themes/default/shadow/img/center.png", sizingMethod='scale');
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../../ITMILL/themes/default/shadow/img/center.png", sizingMethod='scale');
-    height: expression(this.parentNode.offsetHeight - this.parentNode.firstChild.offsetHeight - this.parentNode.childNodes[6].offsetHeight);
-    width: expression((this.parentNode.offsetWidth - this.previousSibling.offsetWidth - this.nextSibling.offsetWidth) + "px");
-}
-
-* html .i-shadow .right {
-    background: transparent;
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="ITMILL/themes/default/shadow/img/right.png", sizingMethod='scale');
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../ITMILL/themes/default/shadow/img/right.png", sizingMethod='scale');
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../../ITMILL/themes/default/shadow/img/right.png", sizingMethod='scale');
-    height: expression((this.parentNode.offsetHeight - this.parentNode.firstChild.offsetHeight - this.parentNode.childNodes[6].offsetHeight) + "px");
-}
-
-* html .i-shadow .bottom-left {
-    background: transparent;
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="ITMILL/themes/default/shadow/img/bottom-left.png", sizingMethod='crop');
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../ITMILL/themes/default/shadow/img/bottom-left.png", sizingMethod='crop');
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../../ITMILL/themes/default/shadow/img/bottom-left.png", sizingMethod='crop');
-}
-
-* html .i-shadow .bottom {
-    background: transparent;
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="ITMILL/themes/default/shadow/img/bottom.png", sizingMethod='scale');
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../ITMILL/themes/default/shadow/img/bottom.png", sizingMethod='scale');
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../../ITMILL/themes/default/shadow/img/bottom.png", sizingMethod='scale');
-    width: expression((this.parentNode.offsetWidth - this.previousSibling.offsetWidth - this.nextSibling.offsetWidth) + "px");
-}
-
-* html .i-shadow .bottom-right {
-    background: transparent;
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="ITMILL/themes/default/shadow/img/bottom-right.png", sizingMethod='crop');
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../ITMILL/themes/default/shadow/img/bottom-right.png", sizingMethod='crop');
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../../ITMILL/themes/default/shadow/img/bottom-right.png", sizingMethod='crop');
-}
+* html .i-shadow {
+	background: #000;
+	filter: progid:DXImageTransform.Microsoft.Blur(pixelRadius=2) alpha(opacity=20);
+	margin-top: -3px;
+	margin-left: -4px;
+}  
 /*--------------------------
   Default (horizontal) styles
   --------------------------*/
@@ -2255,45 +2195,39 @@ input.i-modified,
 	color: #464f52;
 	font-size: 13px;
 	line-height: 18px;
-	background: transparent url(window/img/top-left.png) no-repeat top left;
-}
-
-.i-window:before {
-	display: block;
-	content: "";
-	background: transparent url(window/img/top-right.png) repeat-x right top;
-	height: 21px;
-	margin-left: 21px;
+	background: transparent url(window/img/bottom-left.png) no-repeat left bottom;
 }
 
 .i-window-wrap {
-	padding-left: 20px;
-	background: transparent url(window/img/left-bg.png) repeat-y;
-	/* somehow this won't inherit from .i-window */
+	background: transparent url(window/img/top-left.png) no-repeat;
+	/* Somehow this won't inherit from .i-window */
 	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
+	zoom: 1; /* For IE, otherwise it won't render properly (width will be out of control) */
 }
 
 .i-window-wrap2 {
-	padding-right: 20px;
-	background: transparent url(window/img/right-bg.png) repeat-y top right;
+	zoom: 1; /* For IE, otherwise it won't render properly (width will be out of control) */
 }
 
 .i-window-outerheader {
-	height: 18px;
-	padding: 8px 34px 14px 12px;
-	background: #fff;
+	height: 22px;
+	margin-left: 9px;
+	padding: 15px 34px 11px 12px;
+	background: transparent url(window/img/top-right.png) no-repeat right top;
+	cursor: move;
 }
 
 .i-window-header {
 	font-size: 18px;
-	line-height: 18px;
+	line-height: 1.2;
 	font-weight: normal;
 	letter-spacing: -0.03em;
 	color: #f14c1a;
 	white-space: nowrap;
-	cursor: move;
-	text-overflow:ellipsis;
-	overflow:hidden;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	width: 100%;
+	text-shadow: 0 1px 0 #fff;
 }
 
 .i-window-header .i-icon {
@@ -2302,9 +2236,9 @@ input.i-modified,
 
 .i-window-contents {
 	background: #fff;
-	border: 1px solid #babfc0;
-	font-size: 13px;
-	line-height: 18px;
+	border: 2px solid #acb2b3;
+	border-top-width: 1px;
+	border-bottom: none;
 }
 
 /* Partial fix for bug #1106 */
@@ -2312,43 +2246,26 @@ input.i-modified,
 .i-window-contents, x:-moz-any-link {
 	overflow: hidden;
 }
-/* Target Firefox 3 (it doesn't need any trickery) */
+/* Target Firefox 3 (it doesn't need any trickery, so revert the previous) */
 .i-window-contents, x:-moz-any-link, x:default {
 	overflow: visible;
 }
 
 .i-window-footer {
-	height: 0;
-	font-size: 0px;
-	/* Occupy more height to prevent scrollbars in Mac FF */
-	margin-bottom: 46px;
-}
-
-.i-window-footer:before {
-	display: block;
-	content: "";
-	width: 21px;
-	height: 46px;
-	background: transparent url(window/img/bottom-left.png);
-	margin-left: -20px;
-}
-
-.i-window-footer:after {
-	display: block;
-	content: "";
-	height: 46px;
-	background: transparent url(window/img/bottom-right.png) no-repeat top right;
-	margin: -46px -20px 0 1px;
+	height: 8px;
+	margin-left: 9px;
+	background: transparent url(window/img/bottom-right.png) no-repeat right top;
 }
 
 .i-window-resizebox {
-	position:absolute;
-	bottom: 24px;
-	right: 0;
-	width: 25px;
-	height: 21px;
+	position: absolute;
+	bottom: 4px;
+	right: 4px;
+	width: 10px;
+	height: 10px;
 	cursor: se-resize;
 	background: transparent url(window/img/resize.png);
+	overflow: hidden;
 }
 
 .i-window-resizebox-disabled {
@@ -2357,27 +2274,27 @@ input.i-modified,
 }
 
 .i-window-closebox {
-	position:absolute;
-	top: 33px;
-	right: 36px;
+	position: absolute;
+	top: 21px;
+	right: 24px;
 	width: 12px;
-	height: 11px;
+	height: 12px;
 	background: transparent url(window/img/close.png);
 	cursor: pointer;
 	overflow: hidden;
 }
 .i-window-closebox:hover {
-	background-position: 0 -11px;
+	background-position: 0 -12px;
 }
 
 .i-window-modalitycurtain {
-	top:0;
-	left:0;
-	background:white;
+	top: 0;
+	left: 0;
+	background: white;
 	opacity: 0.5;
-	position:fixed;
-	width:100%;
-	height:100%;
+	position: fixed;
+	width: 100%;
+	height: 100%;
 	filter: alpha(opacity=50);
 }
 
@@ -2390,51 +2307,107 @@ input.i-modified,
 /* IE specific styles */
 
 * html .i-window {
-	width: 0;
+	width: 0; /* min-size for IE6 */
+	overflow: hidden;
+	zoom: 1;
 }
 
-* html .i-window-wrap {
-	padding: 12px;
-	border: 1px solid #e8e9e9;
-	background: #d8dee0;
-	/*filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../ITMILL/widgetsets/com.itmill.toolkit.terminal.gwt.DefaultWidgetSet/default/window/img/bg-color.png", sizingMethod="scale");*/
-	/*zoom: 1;  to gain hasLayout, IE won't apply filter otherwise */
-}
-*+html .i-window-wrap {
-	padding: 12px;
-	border: 1px solid #e8e9e9;
-	background: transparent url(window/img/bg-color.png) repeat;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Shadow for window */
+
+.i-shadow-window {
+	position: absolute;
 }
 
-* html .i-window-wrap2 {
-	padding: 6px;
-	border: 1px solid #babfc0;
-	background: #fff;
-}
-*+html .i-window-wrap2 {
-	padding: 6px;
-	border: 1px solid #babfc0;
-	background: #fff;
+.i-shadow-window .top-left {
+    position: absolute; overflow: hidden;
+    top: -13px;             left: -20px;
+    width: 39px;         height: 39px;
+    background: transparent url(window/img/shadow/top-left.png);
 }
 
-* html .i-window-footer {
-	margin-bottom: 0;
-}
-*+html .i-window-footer {
-	margin-bottom: 0;
+.i-shadow-window .top {
+    position: absolute; overflow: hidden;
+    top: -13px;             left: 19px;
+    height: 39px;
+    right: 19px;
+    background: transparent url(window/img/shadow/top.png);
 }
 
-* html .i-window-resizebox {
-	bottom: 1px;
-	right:  1px;
-	width: 15px;
-	height: 12px;
-	background: url(window/img/resize.png);
+.i-shadow-window .top-right {
+    position: absolute; overflow: hidden;
+    top: -13px;             right: -20px;
+    width: 39px;         height: 39px;
+    background: transparent url(window/img/shadow/top-right.png);
 }
-* html .i-window-resizebox-disabled {
-	background: transparent;
+
+.i-shadow-window .left {
+    position: absolute; overflow: hidden;
+    top: 26px;           left: -20px;
+    width: 39px;
+    bottom: 12px;
+    background: transparent url(window/img/shadow/left.png);
 }
-*+html .i-window-resizebox {
-	bottom: 0;
-	background-position: 3px 3px;
+
+.i-shadow-window .center {
+    position: absolute; overflow: hidden;
+    top: 26px;           left: 19px;
+    bottom: 12px;        right: 19px;
+    background: transparent url(window/img/shadow/center.png);
+}
+
+.i-shadow-window .right {
+    position: absolute; overflow: hidden;
+    top: 26px;           right: -20px;
+    width: 39px;
+    bottom: 12px;
+    background: transparent url(window/img/shadow/right.png);
+}
+
+.i-shadow-window .bottom-left {
+    position: absolute; overflow: hidden;
+    bottom: -27px;           left: -20px;
+    width: 39px;          height: 39px;
+    background: transparent url(window/img/shadow/bottom-left.png);
+}
+
+.i-shadow-window .bottom {
+    position: absolute; overflow: hidden;
+    bottom: -27px;           left: 19px;
+    right: 19px;          height: 39px;
+    background: transparent url(window/img/shadow/bottom.png);
+}
+
+.i-shadow-window .bottom-right {
+    position: absolute; overflow: hidden;
+    bottom: -27px;           right: -20px;
+    width: 39px;          height: 39px;
+    background: transparent url(window/img/shadow/bottom-right.png);
+}
+
+
+/* For IE6 (no transparent png's, we use a blur filter) */
+
+* html .i-shadow-window * {
+	display: none;
+}
+
+* html .i-shadow-window {
+	background: #000;
+	filter: progid:DXImageTransform.Microsoft.Blur(pixelRadius=6) alpha(opacity=20);
+	margin-top: -4px;
+	margin-left: -6px;
 }

@@ -7,7 +7,6 @@ package com.itmill.toolkit.terminal.gwt.client.ui;
 import com.google.gwt.animation.client.Animation;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.PopupListener;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -20,9 +19,44 @@ import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
  */
 public class IToolkitOverlay extends PopupPanel {
 
-    public static final int Z_INDEX = 20000;
+    /*
+     * The z-index value from where all overlays live. This can be overridden in
+     * any extending class.
+     */
+    protected static int Z_INDEX = 20000;
 
-    private Shadow shadow;
+    /*
+     * Shadow element style. If an extending class wishes to use a different
+     * style of shadow, it can use setShadowStyle(String) to give the shadow
+     * element a new style name.
+     */
+    public static final String CLASSNAME_SHADOW = "i-shadow";
+
+    /*
+     * The shadow element for this overlay.
+     */
+    private Element shadow;
+
+    /**
+     * The HTML snippet that is used to render the actual shadow. In consists of
+     * nine different DIV-elements with the following class names:
+     * 
+     * <pre>
+     *   .i-shadow[-stylename]
+     *   ----------------------------------------------
+     *   | .top-left     |   .top    |     .top-right |
+     *   |---------------|-----------|----------------|
+     *   |               |           |                |
+     *   | .left         |  .center  |         .right |
+     *   |               |           |                |
+     *   |---------------|-----------|----------------|
+     *   | .bottom-left  |  .bottom  |  .bottom-right |
+     *   ----------------------------------------------
+     * </pre>
+     * 
+     * See default theme 'shadow.css' for implementation example.
+     */
+    private static final String SHADOW_HTML = "<div class=\"top-left\"></div><div class=\"top\"></div><div class=\"top-right\"></div><div class=\"left\"></div><div class=\"center\"></div><div class=\"right\"></div><div class=\"bottom-left\"></div><div class=\"bottom\"></div><div class=\"bottom-right\"></div>";
 
     public IToolkitOverlay() {
         super();
@@ -42,20 +76,54 @@ public class IToolkitOverlay extends PopupPanel {
     public IToolkitOverlay(boolean autoHide, boolean modal, boolean showShadow) {
         super(autoHide, modal);
         if (showShadow) {
-            shadow = new Shadow();
+            shadow = DOM.createDiv();
+            shadow.setClassName(CLASSNAME_SHADOW);
+            shadow.setInnerHTML(SHADOW_HTML);
+            DOM.setStyleAttribute(shadow, "position", "absolute");
+
+            addPopupListener(new PopupListener() {
+                public void onPopupClosed(PopupPanel sender, boolean autoClosed) {
+                    DOM.removeChild(RootPanel.get().getElement(), shadow);
+                }
+            });
         }
         adjustZIndex();
     }
 
     private void adjustZIndex() {
-        DOM.setStyleAttribute(getElement(), "zIndex", "" + Z_INDEX);
+        setZIndex(Z_INDEX);
+    }
+
+    /**
+     * Set the z-index (visual stack position) for this overlay.
+     * 
+     * @param zIndex
+     *            The new z-index
+     */
+    protected void setZIndex(int zIndex) {
+        DOM.setStyleAttribute(getElement(), "zIndex", "" + zIndex);
+        if (shadow != null) {
+            DOM.setStyleAttribute(shadow, "zIndex", "" + zIndex);
+        }
+        if (BrowserInfo.get().isIE6()) {
+            adjustIE6Frame(getElement(), zIndex - 1);
+        }
+    }
+
+    /**
+     * Get the z-index (visual stack position) of this overlay.
+     * 
+     * @return The z-index for this overlay.
+     */
+    private int getZIndex() {
+        return Integer.parseInt(DOM.getStyleAttribute(getElement(), "zIndex"));
     }
 
     @Override
     public void setPopupPosition(int left, int top) {
         super.setPopupPosition(left, top);
         if (shadow != null) {
-            shadow.updateSizeAndPosition(isAnimationEnabled() ? 0 : 1);
+            updateShadowSizeAndPosition(isAnimationEnabled() ? 0 : 1);
         }
     }
 
@@ -63,127 +131,142 @@ public class IToolkitOverlay extends PopupPanel {
     public void show() {
         super.show();
         if (shadow != null) {
-            DOM.appendChild(RootPanel.get().getElement(), shadow.getElement());
+            DOM
+                    .insertBefore(RootPanel.get().getElement(), shadow,
+                            getElement());
             if (isAnimationEnabled()) {
                 ShadowAnimation sa = new ShadowAnimation();
                 sa.run(200);
             } else {
-                shadow.updateSizeAndPosition(1.0);
+                updateShadowSizeAndPosition(1.0);
             }
         }
         if (BrowserInfo.get().isIE6()) {
-            adjustIE6Frame(getElement(), Z_INDEX - 1);
+            adjustIE6Frame(getElement(), getZIndex());
         }
     }
 
+    /*
+     * Needed to position overlays on top of native SELECT elements in IE6. See
+     * bug #2004
+     */
     private native void adjustIE6Frame(Element popup, int zindex)
     /*-{
         // relies on PopupImplIE6
-        popup.__frame.style.zIndex = zindex;
+        if(popup.__frame) 
+            popup.__frame.style.zIndex = zindex;
     }-*/;
 
-    public void setShadowOffset(int top, int right, int bottom, int left) {
+    @Override
+    public void setWidth(String width) {
+        super.setWidth(width);
         if (shadow != null) {
-            shadow.setOffset(top, right, bottom, left);
+            updateShadowSizeAndPosition(1.0);
         }
     }
 
-    private class Shadow extends HTML {
-
-        private static final String CLASSNAME = "i-shadow";
-
-        private static final String HTML = "<div class=\"top-left\"></div><div class=\"top\"></div><div class=\"top-right\"></div><div class=\"left\"></div><div class=\"center\"></div><div class=\"right\"></div><div class=\"bottom-left\"></div><div class=\"bottom\"></div><div class=\"bottom-right\"></div>";
-
-        // Amount of shadow on each side.
-        private int top = 2;
-        private int right = 5;
-        private int bottom = 6;
-        private int left = 5;
-
-        public Shadow() {
-            super(HTML);
-            setStyleName(CLASSNAME);
-            DOM.setStyleAttribute(getElement(), "position", "absolute");
-
-            addPopupListener(new PopupListener() {
-                public void onPopupClosed(PopupPanel sender, boolean autoClosed) {
-                    DOM.removeChild(RootPanel.get().getElement(), shadow
-                            .getElement());
-                }
-            });
+    @Override
+    public void setHeight(String height) {
+        super.setHeight(height);
+        if (shadow != null) {
+            updateShadowSizeAndPosition(1.0);
         }
-
-        public void updateSizeAndPosition(double phase) {
-            // Calculate proper z-index
-            String zIndex = null;
-            if (IToolkitOverlay.this.isAttached()) {
-                // Odd behaviour with Windows Hosted Mode forces us to use a
-                // redundant try/catch block (See dev.itmill.com #2011)
-                try {
-                    zIndex = DOM.getStyleAttribute(IToolkitOverlay.this
-                            .getElement(), "zIndex");
-                } catch (Exception ignore) {
-                    // Ignored, will cause no harm, other than a little
-                    // eye-candy missing
-                }
-            }
-            if (zIndex == null) {
-                zIndex = "" + Z_INDEX;
-            }
-
-            // Calculate position and size
-            if (BrowserInfo.get().isIE()) {
-                // Shake IE
-                IToolkitOverlay.this.getOffsetHeight();
-                IToolkitOverlay.this.getOffsetWidth();
-            }
-            int x = IToolkitOverlay.this.getAbsoluteLeft() - left;
-            int y = IToolkitOverlay.this.getAbsoluteTop() - top;
-            int width = IToolkitOverlay.this.getOffsetWidth() + left + right;
-            int height = IToolkitOverlay.this.getOffsetHeight() + top + bottom;
-            if (width < 0) {
-                width = 0;
-            }
-            if (height < 0) {
-                height = 0;
-            }
-
-            // Animate the shadow size
-            x += (int) (width * (1.0 - phase) / 2.0);
-            y += (int) (height * (1.0 - phase) / 2.0);
-            width = (int) (width * phase);
-            height = (int) (height * phase);
-
-            // Update correct values
-            DOM.setStyleAttribute(getElement(), "display", phase < 0.9 ? "none"
-                    : "");
-            DOM.setStyleAttribute(shadow.getElement(), "zIndex", ""
-                    + (Integer.parseInt(zIndex) - 1));
-            DOM.setStyleAttribute(getElement(), "width", width + "px");
-            DOM.setStyleAttribute(getElement(), "height", height + "px");
-            DOM.setStyleAttribute(getElement(), "top", y + "px");
-            DOM.setStyleAttribute(getElement(), "left", x + "px");
-        }
-
-        public void setOffset(int top, int right, int bottom, int left) {
-            this.top = top;
-            this.right = right;
-            this.bottom = bottom;
-            this.left = left;
-            if (IToolkitOverlay.this.isAttached()) {
-                updateSizeAndPosition(1.0);
-            }
-        }
-
     }
 
-    class ShadowAnimation extends Animation {
+    /**
+     * Sets the shadow style for this overlay. Will override any previous style
+     * for the shadow. The default style name is defined by CLASSNAME_SHADOW.
+     * The given style will be prefixed with CLASSNAME_SHADOW.
+     * 
+     * @param style
+     *            The new style name for the shadow element. Will be prefixed by
+     *            CLASSNAME_SHADOW, e.g. style=='foobar' -> actual style
+     *            name=='i-shadow-foobar'.
+     */
+    protected void setShadowStyle(String style) {
+        if (shadow != null) {
+            shadow.setClassName(CLASSNAME_SHADOW + "-" + style);
+        }
+    }
 
+    /*
+     * Extending classes should always call this method after they change the
+     * size of overlay without using normal 'setWidth(String)' and
+     * 'setHeight(String)' methods.
+     */
+    protected void updateShadowSizeAndPosition() {
+        updateShadowSizeAndPosition(1.0);
+    }
+
+    /**
+     * Recalculates proper position and dimensions for the shadow element. Can
+     * be used to animate the shadow, using the 'progress' parameter (used to
+     * animate the shadow in sync with GWT PopupPanel's default animation
+     * 'PopupPanel.AnimationType.CENTER').
+     * 
+     * @param progress
+     *            A value between 0.0 and 1.0, indicating the progress of the
+     *            animation (0=start, 1=end).
+     */
+    private void updateShadowSizeAndPosition(double progress) {
+        // Don't do anything if overlay element is not attached
+        if (!isAttached()) {
+            return;
+        }
+
+        // Calculate proper z-index
+        String zIndex = null;
+        try {
+            // Odd behaviour with Windows Hosted Mode forces us to use this
+            // redundant try/catch block (See dev.itmill.com #2011)
+            zIndex = DOM.getStyleAttribute(getElement(), "zIndex");
+        } catch (Exception ignore) {
+            // Ignored, will cause no harm, other than a little eye-candy
+            // missing
+        }
+        if (zIndex == null) {
+            zIndex = "" + Z_INDEX;
+        }
+        // Calculate position and size
+        if (BrowserInfo.get().isIE()) {
+            // Shake IE
+            getOffsetHeight();
+            getOffsetWidth();
+        }
+
+        int x = getAbsoluteLeft();
+        int y = getAbsoluteTop();
+        int width = getOffsetWidth();
+        int height = getOffsetHeight();
+
+        if (width < 0) {
+            width = 0;
+        }
+        if (height < 0) {
+            height = 0;
+        }
+
+        // Animate the shadow size
+        x += (int) (width * (1.0 - progress) / 2.0);
+        y += (int) (height * (1.0 - progress) / 2.0);
+        width = (int) (width * progress);
+        height = (int) (height * progress);
+
+        // Update correct values
+        DOM.setStyleAttribute(shadow, "display", progress < 0.9 ? "none" : "");
+        DOM.setStyleAttribute(shadow, "zIndex", zIndex);
+        DOM.setStyleAttribute(shadow, "width", width + "px");
+        DOM.setStyleAttribute(shadow, "height", height + "px");
+        DOM.setStyleAttribute(shadow, "top", y + "px");
+        DOM.setStyleAttribute(shadow, "left", x + "px");
+    }
+
+    protected class ShadowAnimation extends Animation {
+        @Override
         protected void onUpdate(double progress) {
             if (shadow != null) {
-                shadow.updateSizeAndPosition(progress);
+                updateShadowSizeAndPosition(progress);
             }
         }
-
     }
 }

@@ -14,7 +14,6 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Frame;
-import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ScrollListener;
 import com.google.gwt.user.client.ui.ScrollPanel;
@@ -28,17 +27,18 @@ import com.itmill.toolkit.terminal.gwt.client.Util;
 /**
  * "Sub window" component.
  * 
- * TODO update position / scrollposition / size to client
+ * TODO update position / scroll position / size to client
  * 
  * @author IT Mill Ltd
  */
-public class IWindow extends PopupPanel implements Paintable, ScrollListener {
+public class IWindow extends IToolkitOverlay implements Paintable,
+        ScrollListener {
 
     private static final int MIN_HEIGHT = 60;
 
     private static final int MIN_WIDTH = 80;
 
-    private static Vector windowOrder = new Vector();
+    private static Vector<IWindow> windowOrder = new Vector<IWindow>();
 
     public static final String CLASSNAME = "i-window";
 
@@ -50,7 +50,7 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 
     private static final int STACKING_OFFSET_PIXELS = 15;
 
-    private static final int Z_INDEX_BASE = 10000;
+    public static final int Z_INDEX = 10000;
 
     private Paintable layout;
 
@@ -106,7 +106,10 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
     private boolean readonly;
 
     public IWindow() {
-        super();
+        super(false, false, true); // no autohide, not modal, shadow
+        // Different style of shadow for windows
+        setShadowStyle("window");
+
         final int order = windowOrder.size();
         setWindowOrder(order);
         windowOrder.add(this);
@@ -122,7 +125,7 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
             windowOrder.remove(this);
             windowOrder.add(this);
             for (; curIndex < windowOrder.size(); curIndex++) {
-                ((IWindow) windowOrder.get(curIndex)).setWindowOrder(curIndex);
+                windowOrder.get(curIndex).setWindowOrder(curIndex);
             }
         }
     }
@@ -137,11 +140,15 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
     }
 
     public void setWindowOrder(int order) {
-        int zIndex = (order + Z_INDEX_BASE);
+        setZIndex(order + Z_INDEX);
+    }
+
+    @Override
+    protected void setZIndex(int zIndex) {
+        super.setZIndex(zIndex);
         if (modal) {
             DOM.setStyleAttribute(modalityCurtain, "zIndex", "" + zIndex);
         }
-        DOM.setStyleAttribute(getElement(), "zIndex", "" + zIndex);
     }
 
     protected void constructDOM() {
@@ -272,7 +279,7 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
                         "offsetHeight") - DOM.getElementPropertyInt(contents,
                         "offsetHeight"));
                 // FIXME hardcoded contents elements border size
-                contentPixels -= 2;
+                contentPixels -= 1;
 
                 setHeight(contentPixels + "px");
             } else {
@@ -385,6 +392,7 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
             center();
         }
 
+        updateShadowSizeAndPosition();
     }
 
     private void setReadOnly(boolean readonly) {
@@ -488,7 +496,7 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
             DOM.setStyleAttribute(modalityCurtain, "position", "absolute");
         }
         DOM.setStyleAttribute(modalityCurtain, "zIndex", ""
-                + (windowOrder.indexOf(this) + Z_INDEX_BASE));
+                + (windowOrder.indexOf(this) + Z_INDEX));
         DOM.appendChild(RootPanel.getBodyElement(), modalityCurtain);
     }
 
@@ -573,7 +581,7 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
 
     @Override
     public void onBrowserEvent(final Event event) {
-        final int type = DOM.eventGetType(event);
+        final int type = event.getTypeInt();
 
         if (type == Event.ONKEYDOWN && shortcutHandler != null) {
             shortcutHandler.handleKeyboardEvent(event);
@@ -587,10 +595,10 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
             client.handleTooltipEvent(event, this);
         }
 
-        if (resizing || DOM.compare(resizeBox, target)) {
+        if (resizing || resizeBox == target) {
             onResizeEvent(event);
             DOM.eventCancelBubble(event, true);
-        } else if (DOM.compare(target, closeBox)) {
+        } else if (target == closeBox) {
             if (type == Event.ONCLICK) {
                 onCloseClick();
                 DOM.eventCancelBubble(event, true);
@@ -664,8 +672,12 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
             client.updateVariable(id, "width", w, false);
             client.updateVariable(id, "height", h, false);
         }
+        // Update shadow size & position
+
         // Update child widget dimensions
-        client.runDescendentsLayout(this);
+        if (client != null) {
+            client.runDescendentsLayout(this);
+        }
     }
 
     @Override
@@ -679,6 +691,7 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
                                     width.length() - 2)) + borderWidthHorizontal)
                                     + "px");
         }
+        updateShadowSizeAndPosition();
     }
 
     private void onDragEvent(Event event) {
@@ -728,7 +741,7 @@ public class IWindow extends PopupPanel implements Paintable, ScrollListener {
             return false;
         } else if (modal) {
             // return false when modal and outside window
-            final Element target = DOM.eventGetTarget(event);
+            final Element target = event.getTarget().cast();
             if (!DOM.isOrHasChild(getElement(), target)) {
                 return false;
             }

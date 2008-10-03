@@ -1,70 +1,68 @@
 .i-shadow {
 	position: absolute;
-	overflow: auto;
 }
 
 .i-shadow .top-left {
     position: absolute; overflow: hidden;
-    top: 0;             left: 0;
+    top: -3px;             left: -4px;
     width: 8px;         height: 8px;
     background: transparent url(img/top-left.png);
 }
 
 .i-shadow .top {
     position: absolute; overflow: hidden;
-    top: 0;             left: 8px;
-    height: 8px;
-    right: 8px;
+    top: -3px;             left: 4px;
+    height: 8px;           right: 4px;
     background: transparent url(img/top.png);
 }
 
 .i-shadow .top-right {
     position: absolute; overflow: hidden;
-    top: 0;             right: 0;
+    top: -3px;             right: -4px;
     width: 8px;         height: 8px;
     background: transparent url(img/top-right.png);
 }
 
 .i-shadow .left {
     position: absolute; overflow: hidden;
-    top: 8px;           left: 0;
+    top: 5px;           left: -4px;
     width: 8px;
-    bottom: 8px;
+    bottom: 3px;
     background: transparent url(img/left.png);
 }
 
 .i-shadow .center {
     position: absolute; overflow: hidden;
-    top: 8px;           left: 8px;
-    bottom: 8px;        right: 8px;
+    top: 5px;           left: 4px;
+    bottom: 3px;        right: 4px;
     background: transparent url(img/center.png);
 }
 
 .i-shadow .right {
     position: absolute; overflow: hidden;
-    top: 8px;           right: 0;
+    top: 5px;           right: -4px;
     width: 8px;
-    bottom: 8px;
+    bottom: 3px;
     background: transparent url(img/right.png);
 }
 
 .i-shadow .bottom-left {
     position: absolute; overflow: hidden;
-    bottom: 0;           left: 0;
+    bottom: -5px;           left: -4px;
     width: 8px;          height: 8px;
     background: transparent url(img/bottom-left.png);
 }
 
 .i-shadow .bottom {
     position: absolute; overflow: hidden;
-    bottom: 0;           left: 8px;
-    right: 8px;          height: 8px;
+    bottom: -5px;           left: 4px;
+    right: 4px;          height: 8px;
     background: transparent url(img/bottom.png);
 }
 
 .i-shadow .bottom-right {
     position: absolute; overflow: hidden;
-    bottom: 0;           right: 0;
+    bottom: -5px;           right: -4px;
     width: 8px;          height: 8px;
     background: transparent url(img/bottom-right.png);
 }
@@ -73,73 +71,15 @@
 
 
 
-/* And all the same for IE6 (transparent png's) */
+/* For IE6 (no transparent png's, we use a blur filter) */
 
-* html .i-shadow .top-left {
-    background: transparent;
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="ITMILL/themes/default/shadow/img/top-left.png", sizingMethod='crop');
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../ITMILL/themes/default/shadow/img/top-left.png", sizingMethod='crop');
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../../ITMILL/themes/default/shadow/img/top-left.png", sizingMethod='crop');
+* html .i-shadow * {
+	display: none;
 }
 
-* html .i-shadow .top {
-    background: transparent;
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="ITMILL/themes/default/shadow/img/top.png", sizingMethod='scale');
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../ITMILL/themes/default/shadow/img/top.png", sizingMethod='scale');
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../../ITMILL/themes/default/shadow/img/top.png", sizingMethod='scale');
-    width: expression((this.parentNode.offsetWidth - this.previousSibling.offsetWidth - this.nextSibling.offsetWidth) + "px");
-}
-
-* html .i-shadow .top-right {
-    background: transparent;
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="ITMILL/themes/default/shadow/img/top-right.png", sizingMethod='crop');
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../ITMILL/themes/default/shadow/img/top-right.png", sizingMethod='crop');
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../../ITMILL/themes/default/shadow/img/top-right.png", sizingMethod='crop');
-}
-
-* html .i-shadow .left {
-    background: transparent;
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="ITMILL/themes/default/shadow/img/left.png", sizingMethod='scale');
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../ITMILL/themes/default/shadow/img/left.png", sizingMethod='scale');
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../../ITMILL/themes/default/shadow/img/left.png", sizingMethod='scale');
-    height: expression((this.parentNode.offsetHeight - this.parentNode.firstChild.offsetHeight - this.parentNode.childNodes[6].offsetHeight) + "px");
-}
-
-* html .i-shadow .center {
-    background: transparent;
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="ITMILL/themes/default/shadow/img/center.png", sizingMethod='scale');
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../ITMILL/themes/default/shadow/img/center.png", sizingMethod='scale');
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../../ITMILL/themes/default/shadow/img/center.png", sizingMethod='scale');
-    height: expression(this.parentNode.offsetHeight - this.parentNode.firstChild.offsetHeight - this.parentNode.childNodes[6].offsetHeight);
-    width: expression((this.parentNode.offsetWidth - this.previousSibling.offsetWidth - this.nextSibling.offsetWidth) + "px");
-}
-
-* html .i-shadow .right {
-    background: transparent;
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="ITMILL/themes/default/shadow/img/right.png", sizingMethod='scale');
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../ITMILL/themes/default/shadow/img/right.png", sizingMethod='scale');
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../../ITMILL/themes/default/shadow/img/right.png", sizingMethod='scale');
-    height: expression((this.parentNode.offsetHeight - this.parentNode.firstChild.offsetHeight - this.parentNode.childNodes[6].offsetHeight) + "px");
-}
-
-* html .i-shadow .bottom-left {
-    background: transparent;
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="ITMILL/themes/default/shadow/img/bottom-left.png", sizingMethod='crop');
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../ITMILL/themes/default/shadow/img/bottom-left.png", sizingMethod='crop');
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../../ITMILL/themes/default/shadow/img/bottom-left.png", sizingMethod='crop');
-}
-
-* html .i-shadow .bottom {
-    background: transparent;
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="ITMILL/themes/default/shadow/img/bottom.png", sizingMethod='scale');
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../ITMILL/themes/default/shadow/img/bottom.png", sizingMethod='scale');
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../../ITMILL/themes/default/shadow/img/bottom.png", sizingMethod='scale');
-    width: expression((this.parentNode.offsetWidth - this.previousSibling.offsetWidth - this.nextSibling.offsetWidth) + "px");
-}
-
-* html .i-shadow .bottom-right {
-    background: transparent;
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="ITMILL/themes/default/shadow/img/bottom-right.png", sizingMethod='crop');
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../ITMILL/themes/default/shadow/img/bottom-right.png", sizingMethod='crop');
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../../ITMILL/themes/default/shadow/img/bottom-right.png", sizingMethod='crop');
-}
+* html .i-shadow {
+	background: #000;
+	filter: progid:DXImageTransform.Microsoft.Blur(pixelRadius=2) alpha(opacity=20);
+	margin-top: -3px;
+	margin-left: -4px;
+}  
