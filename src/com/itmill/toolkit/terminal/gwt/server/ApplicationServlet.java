@@ -954,7 +954,7 @@ public class ApplicationServlet extends HttpServlet {
         if (reqParam != null) {
             style = "style=\"" + reqParam + "\"";
         }
-        page.write("<div id=\"" + appId + "\" class=\"i-app\" "
+        page.write("<div id=\"" + appId + "\" class=\"i-app i-app-loading\" "
                 + (style != null ? style : "") + "></div>\n");
 
         if (!fragment) {

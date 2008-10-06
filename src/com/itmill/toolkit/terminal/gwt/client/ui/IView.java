@@ -78,6 +78,7 @@ public class IView extends SimplePanel implements Container,
         DOM.setElementProperty(getElement(), "tabIndex", "1");
 
         RootPanel.get(elementId).add(this);
+        RootPanel.get(elementId).removeStyleName("i-app-loading");
 
         // set focus to iview element by default to listen possible keyboard
         // shortcuts
@@ -296,6 +297,7 @@ public class IView extends SimplePanel implements Container,
                 .setContentAreaHeight(getElement().getOffsetHeight() - 1);
     }
 
+    @Override
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
         if (DOM.eventGetType(event) == Event.ONKEYDOWN && actionHandler != null) {
@@ -313,6 +315,7 @@ public class IView extends SimplePanel implements Container,
              */
             if (resizeTimer == null) {
                 resizeTimer = new Timer() {
+                    @Override
                     public void run() {
                         boolean changed = false;
                         if (IView.this.width != getOffsetWidth()) {
