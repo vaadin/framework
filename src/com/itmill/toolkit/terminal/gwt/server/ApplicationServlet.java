@@ -173,6 +173,7 @@ public class ApplicationServlet extends HttpServlet {
      *             if an exception has occurred that interferes with the
      *             servlet's normal operation.
      */
+    @Override
     public void init(javax.servlet.ServletConfig servletConfig)
             throws javax.servlet.ServletException {
         super.init(servletConfig);
@@ -339,6 +340,7 @@ public class ApplicationServlet extends HttpServlet {
      * @throws IOException
      *             if the request for the TRACE cannot be handled.
      */
+    @Override
     protected void service(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
 
@@ -816,6 +818,15 @@ public class ApplicationServlet extends HttpServlet {
                     .write("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>\n");
             page.write("<style type=\"text/css\">"
                     + "html, body {height:100%;}</style>");
+
+            // Add favicon links
+            page
+                    .write("<link rel=\"shortcut icon\" type=\"image/vnd.microsoft.icon\" href=\""
+                            + themeUri + "/favicon.ico\" />");
+            page
+                    .write("<link rel=\"icon\" type=\"image/vnd.microsoft.icon\" href=\""
+                            + themeUri + "/favicon.ico\" />");
+
             page.write("<title>" + title + "</title>");
 
             if (testingApplication) {
