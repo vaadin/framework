@@ -9,12 +9,13 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Widget;
 import com.itmill.toolkit.terminal.gwt.client.ApplicationConnection;
+import com.itmill.toolkit.terminal.gwt.client.BrowserInfo;
 import com.itmill.toolkit.terminal.gwt.client.ContainerResizedListener;
 import com.itmill.toolkit.terminal.gwt.client.Paintable;
 import com.itmill.toolkit.terminal.gwt.client.UIDL;
-import com.itmill.toolkit.terminal.gwt.client.Util;
 
 public class ISlider extends Widget implements Paintable, Field,
         ContainerResizedListener {
@@ -144,12 +145,12 @@ public class ISlider extends Widget implements Paintable, Field,
             DeferredCommand.addCommand(new Command() {
                 public void execute() {
                     buildHandle();
-                    setValue(value, false, false);
+                    setValue(value, false);
                 }
             });
         } else {
             buildHandle();
-            setValue(value, false, false);
+            setValue(value, false);
         }
     }
 
@@ -179,7 +180,7 @@ public class ISlider extends Widget implements Paintable, Field,
                                 DOM.setStyleAttribute(base, styleAttribute, "");
                             }
                             // Ensure correct position
-                            setValue(value, false, false);
+                            setValue(value, false);
                         }
                     }
                 });
@@ -221,7 +222,7 @@ public class ISlider extends Widget implements Paintable, Field,
 
     }
 
-    private void setValue(Double value, boolean animate, boolean updateToServer) {
+    private void setValue(Double value, boolean updateToServer) {
         if (value == null) {
             return;
         }
@@ -261,11 +262,9 @@ public class ISlider extends Widget implements Paintable, Field,
         if (vertical) {
             // IE6 rounding behaves a little unstable, reduce one pixel so the
             // containing element (base) won't expand without limits
-            p = range - p - (Util.isIE6() ? 1 : 0);
+            p = range - p - (BrowserInfo.get().isIE6() ? 1 : 0);
         }
         final double pos = p;
-
-        final int current = DOM.getIntStyleAttribute(handle, styleAttribute);
 
         DOM.setStyleAttribute(handle, styleAttribute, (Math.round(pos)) + "px");
 
@@ -276,11 +275,11 @@ public class ISlider extends Widget implements Paintable, Field,
         this.value = new Double(v);
 
         if (updateToServer) {
-            client.updateVariable(id, "value", this.value.doubleValue(),
-                    immediate);
+            updateValueToServer();
         }
     }
 
+    @Override
     public void onBrowserEvent(Event event) {
         if (disabled || readonly) {
             return;
@@ -289,24 +288,39 @@ public class ISlider extends Widget implements Paintable, Field,
 
         if (DOM.eventGetType(event) == Event.ONMOUSEWHEEL) {
             processMouseWheelEvent(event);
-        } else if (dragging || DOM.compare(targ, handle)) {
+        } else if (dragging || targ == handle) {
             processHandleEvent(event);
-        } else if (DOM.compare(targ, smaller)) {
-            decreaseValue(event);
-        } else if (DOM.compare(targ, bigger)) {
-            increaseValue(event);
+        } else if (targ == smaller) {
+            decreaseValue(true);
+        } else if (targ == bigger) {
+            increaseValue(true);
         } else {
             processBaseEvent(event);
         }
     }
 
-    private void processMouseWheelEvent(Event event) {
+    private Timer scrollTimer;
+
+    private void processMouseWheelEvent(final Event event) {
         final int dir = DOM.eventGetMouseWheelVelocityY(event);
+
         if (dir < 0) {
-            increaseValue(event);
+            increaseValue(false);
         } else {
-            decreaseValue(event);
+            decreaseValue(false);
         }
+
+        if (scrollTimer != null) {
+            scrollTimer.cancel();
+        }
+        scrollTimer = new Timer() {
+            @Override
+            public void run() {
+                updateValueToServer();
+            }
+        };
+        scrollTimer.schedule(100);
+
         DOM.eventPreventDefault(event);
         DOM.eventCancelBubble(event, true);
     }
@@ -324,13 +338,13 @@ public class ISlider extends Widget implements Paintable, Field,
         case Event.ONMOUSEMOVE:
             if (dragging) {
                 // DOM.setCapture(getElement());
-                setValueByEvent(event, false, false);
+                setValueByEvent(event, false);
             }
             break;
         case Event.ONMOUSEUP:
             dragging = false;
             DOM.releaseCapture(getElement());
-            setValueByEvent(event, true, true);
+            setValueByEvent(event, true);
             break;
         default:
             break;
@@ -340,27 +354,27 @@ public class ISlider extends Widget implements Paintable, Field,
     private void processBaseEvent(Event event) {
         if (DOM.eventGetType(event) == Event.ONMOUSEDOWN) {
             if (!disabled && !readonly && !dragging) {
-                setValueByEvent(event, true, true);
+                setValueByEvent(event, true);
                 DOM.eventCancelBubble(event, true);
             }
         } else if (DOM.eventGetType(event) == Event.ONMOUSEDOWN && dragging) {
             dragging = false;
             DOM.releaseCapture(getElement());
-            setValueByEvent(event, true, true);
+            setValueByEvent(event, true);
         }
     }
 
-    private void decreaseValue(Event event) {
+    private void decreaseValue(boolean updateToServer) {
         setValue(new Double(value.doubleValue() - Math.pow(10, -resolution)),
-                false, true);
+                updateToServer);
     }
 
-    private void increaseValue(Event event) {
+    private void increaseValue(boolean updateToServer) {
         setValue(new Double(value.doubleValue() + Math.pow(10, -resolution)),
-                false, true);
+                updateToServer);
     }
 
-    private void setValueByEvent(Event event, boolean animate, boolean roundup) {
+    private void setValueByEvent(Event event, boolean updateToServer) {
         double v = min; // Fallback to min
 
         final int coord = vertical ? DOM.eventGetClientY(event) : DOM
@@ -388,7 +402,7 @@ public class ISlider extends Widget implements Paintable, Field,
             v = max;
         }
 
-        setValue(new Double(v), animate, roundup);
+        setValue(new Double(v), updateToServer);
     }
 
     public void iLayout() {
@@ -396,7 +410,7 @@ public class ISlider extends Widget implements Paintable, Field,
             setHeight();
         }
         // Update handle position
-        setValue(value, false, false);
+        setValue(value, false);
     }
 
     private void setHeight() {
@@ -413,6 +427,10 @@ public class ISlider extends Widget implements Paintable, Field,
             DOM.setStyleAttribute(base, "height", size + "px");
         }
         DOM.setStyleAttribute(base, "overflow", "");
+    }
+
+    private void updateValueToServer() {
+        client.updateVariable(id, "value", value.doubleValue(), immediate);
     }
 
 }
